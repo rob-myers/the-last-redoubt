@@ -5,9 +5,11 @@
  * - Migrate <NavMini>
  */
 import React from "react";
+import { MDXProvider } from "@mdx-js/react";
 // import { useRouter } from 'next/router';
 import { useNavigate } from '@reach/router';
 import { cx, css } from '@emotion/css';
+import TitleMdx from 'articles/title.mdx';
 // import ReactMarkdown from 'react-markdown';
 
 // import NavMini from './NavMini';
@@ -19,11 +21,19 @@ export default function Title() {
     <header className={cx('title', titleCss)}>
       {/* <NavMini/> */}
       {/* <Continue /> */}
+
       {/* <ReactMarkdown components={titleComponents} children={`
 # The Last Redoubt
 
 $( video game | web dev | game ai )
       `}/> */}
+      <MDXProvider
+        components={{
+          // h1: () => <p>Foo</p>
+        }}
+      >
+        <TitleMdx />
+      </MDXProvider>
     </header>
   );
 }
