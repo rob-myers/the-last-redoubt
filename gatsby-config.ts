@@ -14,6 +14,7 @@ const config: GatsbyConfig = {
         "name": "pages",
         "path": "./src/pages/"
       },
+      //@ts-ignore
       __key: "pages"
     },
     "gatsby-plugin-tsconfig-paths",

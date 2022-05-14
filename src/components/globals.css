@@ -1,0 +1,72 @@
+:root {
+  --body-bg: #eee;
+  --focus-bg: #fff;
+  --border-bg: #ccc;
+  --blog-border-width: 2px;
+  /** Pixel 5: white lines when 8px */
+  --tabs-border-width: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+@media(max-width: 600px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  /* background: var(--body-bg); */
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
+  /* -webkit-font-smoothing: antialiased; */
+  overflow-anchor: none;
+}
+
+#__next {
+  display: flex;
+  justify-content: center;
+}
+
+a {
+  color: #00f;
+  text-decoration: none;
+}
+
+.scrollable ::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+  overflow: auto;
+}
+
+.scrollable ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable ::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}
+
+.no-select {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.no-select:focus {
+  outline: none !important;
+}
