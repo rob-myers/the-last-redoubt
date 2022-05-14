@@ -1,11 +1,11 @@
 import React from "react";
-import { cx, css } from "@emotion/css";
-// import Title from "./Title";
+import { css } from "@emotion/css";
+import Title from "./Title";
 
 export default function Main({ children }: React.PropsWithChildren<{}>) {
   return (
     <section className={rootCss}>
-      {/* <Title /> */}
+      <Title />
       <main>
         {children}
       </main>
