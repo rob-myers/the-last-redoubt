@@ -1,36 +1,23 @@
 /**
  * TODO
- * - ReactMarkdown -> MDX (?)
- * - Remove <Continue>
- * - Migrate <NavMini>
+ * - ReactMarkdown -> MDX ✅
+ * - Remove <Continue> ✅
+ * - Migrate <NavMini> 🚧
  */
 import React from "react";
 import { MDXProvider } from "@mdx-js/react";
-// import { useRouter } from 'next/router';
-import { useNavigate } from '@reach/router';
+import { navigate } from '@reach/router';
 import { cx, css } from '@emotion/css';
 import TitleMdx from 'articles/title.mdx';
-// import ReactMarkdown from 'react-markdown';
 
 // import NavMini from './NavMini';
-// Continue reads from localStorage, so avoid SSR
-// import { Continue } from '../dynamic';
 
 export default function Title() {
   return (
     <header className={cx('title', titleCss)}>
       {/* <NavMini/> */}
-      {/* <Continue /> */}
-
-      {/* <ReactMarkdown components={titleComponents} children={`
-# The Last Redoubt
-
-$( video game | web dev | game ai )
-      `}/> */}
       <MDXProvider
-        components={{
-          // h1: () => <p>Foo</p>
-        }}
+        components={titleComponents}
       >
         <TitleMdx />
       </MDXProvider>
@@ -38,9 +25,8 @@ $( video game | web dev | game ai )
   );
 }
 
-const titleComponents = {
-  h1({ children, node, ...props }: any) {
-    const navigate = useNavigate();
+const titleComponents: Record<string, React.FC<{ children: React.ReactNode }>> = {
+  h1({ children }) {
     return (
       <h1 onClick={() => navigate('/')}>
         {children}
