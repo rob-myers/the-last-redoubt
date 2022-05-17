@@ -4,8 +4,7 @@ import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
 import { KeyedLookup, last } from 'model/generic.model';
-// import type { TabMeta } from 'model/tabs/tabs.model';
-type TabMeta = any; // TODO
+import type { TabMeta } from 'model/tabs/tabs.model';
 import type { ArticleKey } from 'articles/index';
 
 export type State = {
