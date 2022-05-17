@@ -32,12 +32,15 @@
     "gatsby": "^4.13.1",
     "gatsby-plugin-emotion": "^7.13.0",
     "gatsby-plugin-mdx": "^3.13.0",
+    "gatsby-plugin-react-helmet": "^5.14.0",
     "gatsby-source-filesystem": "^4.13.0",
     "poly2tri": "^1.5.0",
     "polygon-clipping": "^0.15.3",
     "react": "^17.0.1",
     "react-beforeunload": "^2.5.3",
     "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
+    "react-query": "^3.39.0",
     "react-reverse-portal": "^2.1.0",
     "safe-stable-stringify": "^2.3.1",
     "zustand": "^3.4.1"
@@ -53,6 +56,7 @@
     "@types/react": "^18.0.9",
     "@types/react-beforeunload": "^2.1.1",
     "@types/react-dom": "^17.0.16",
+    "@types/react-helmet": "^6.1.5",
     "@types/webpack-env": "^1.16.4",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",
     "typescript": "^4.6.4"

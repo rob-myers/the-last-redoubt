@@ -18,6 +18,7 @@ const config: GatsbyConfig = {
       __key: "pages"
     },
     "gatsby-plugin-tsconfig-paths",
+    "gatsby-plugin-react-helmet",
   ],
 };
 
