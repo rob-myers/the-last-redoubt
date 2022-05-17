@@ -1,5 +1,5 @@
 import React from "react";
-import type { WrapPageElementBrowserArgs } from "gatsby";
+import type { WrapPageElementBrowserArgs, WrapPageElementNodeArgs } from "gatsby";
 import { Helmet } from "react-helmet";
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -9,7 +9,7 @@ import Main from "components/page/Main"
 import Portals from "components/page/Portals";
 import { queryClient } from 'projects/service/query-client';
 
-export function wrapPageElement({ element, props }: WrapPageElementBrowserArgs) {
+export function wrapPageElement({ element, props }: WrapPageElementBrowserArgs | WrapPageElementNodeArgs) {
   return (
     <>
       <Helmet>
