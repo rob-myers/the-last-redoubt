@@ -6,8 +6,6 @@ import { css, cx } from "@emotion/css";
  */
 export default function Images(props) {
 
-  console.log('foo')
-
   if (props.srcKey === 'geomorph-301') {
     return (
       <div className={cx('scrollable', rootCss)}>

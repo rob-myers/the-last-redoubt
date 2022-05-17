@@ -92,6 +92,5 @@ function useRegisterTabs(props: Props, model: Model) {
 
 function factory(node: TabNode) {
   const meta = node.getConfig() as TabMeta;
-  console.log({meta});
   return <Portal {...meta} />;
 }
