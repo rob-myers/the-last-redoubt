@@ -26,7 +26,7 @@ export default function Article(props: React.PropsWithChildren<{
 
   const components = React.useMemo(
     () => articleComponents(props.articleKey, { dateTime: props.dateTime, dateText, tags: props.tags }),
-    [props.articleKey],
+    [props.articleKey, props.dateTime, props.tags],
   );
 
   return <>
