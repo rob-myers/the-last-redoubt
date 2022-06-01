@@ -1,9 +1,10 @@
+import { navigate } from "gatsby";
 import React from "react";
 import { MDXProvider } from "@mdx-js/react";
-import { navigate } from "@reach/router";
 import { cx, css } from "@emotion/css";
+
 import TitleMdx from "articles/title.mdx";
-import NavMini from './NavMini';
+import NavMini from "./NavMini";
 
 export default function Title() {
   return (

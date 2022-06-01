@@ -10,7 +10,7 @@ import ObjectiveMdx from "articles/objective.mdx";
  * - ✅ index.tsx -> index.mdx and links to above
  * - ✅ start using frontmatter
  * - ✅ infer date and tags via frontmatter lookup
- * - fix link in homepage.mdx
+ * - ✅ fix link in homepage.mdx
  * - remove articleMeta
  */
 
@@ -19,5 +19,5 @@ export default function ObjectivePage() {
     <Article articleKey="objective">
       <ObjectiveMdx />
     </Article>
-  )
+  );
 }

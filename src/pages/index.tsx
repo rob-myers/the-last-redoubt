@@ -7,5 +7,5 @@ export default function IndexPage() {
     <Article articleKey="homepage">
       <HomepageMdx />
     </Article>
-  )
+  );
 }

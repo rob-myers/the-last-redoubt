@@ -1,5 +1,5 @@
-import React from 'react';
-import { navigate } from '@reach/router';
+import { navigate } from "gatsby";
+import React from "react";
 import { Actions, IJsonModel, Layout as FlexLayout, Model, TabNode } from 'flexlayout-react';
 import { useBeforeunload } from 'react-beforeunload';
 

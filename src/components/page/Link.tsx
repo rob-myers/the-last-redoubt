@@ -1,5 +1,5 @@
 import React from "react";
-import { navigate } from '@reach/router';
+import { navigate } from "gatsby";
 import { pause } from 'model/generic.model';
 import { maxScrollHeight, scrollFinished } from 'model/dom.model';
 
