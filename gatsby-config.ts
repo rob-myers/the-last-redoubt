@@ -17,6 +17,14 @@ const config: GatsbyConfig = {
       //@ts-ignore
       __key: "pages"
     },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: `articles`,
+        path: `./src/articles/`,
+        ignore: [`**/*.ts`],
+      },
+    },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
   ],

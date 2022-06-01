@@ -1,15 +1,16 @@
+import { StaticQuery, graphql } from 'gatsby';
 import React from 'react';
 import { css, cx } from '@emotion/css';
+import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId, TabMeta } from 'model/tabs/tabs.model';
 import { ArticleKey, articlesMeta } from 'articles/index';
 import useSiteStore from 'store/site.store';
-// import Markdown from './Markdown';
+
 import Link from './Link';
 import Sep from './Sep';
 import Tabs from './Tabs';
 import { iconCss } from './Icons';
-import { MDXProvider } from '@mdx-js/react';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -29,15 +30,43 @@ export default function Article(props: React.PropsWithChildren<{
     [props.articleKey, props.dateTime, props.tags],
   );
 
-  return <>
-    <article className={cx(props.className, articleCss)}>
-      <span className="anchor" id={props.articleKey} />
-      <MDXProvider components={components} >
-        {props.children}
-      </MDXProvider>
-    </article>
-    <Sep/>
-  </>;
+  // Assume only one article per page
+  React.useEffect(() => useSiteStore.setState({ articleKey: props.articleKey }) ,[]);
+
+  return (
+    <StaticQuery
+      query={graphql`
+        query {
+          allMdx {
+            edges {
+              node {
+                frontmatter {
+                  key
+                  date(formatString: "MMMM DD, YYYY")
+                  tags
+                }
+              }
+            }
+          }
+        }
+    `}
+      render={data => {
+        console.log({data}); // TODO 🚧
+        return (
+          <>
+            <article className={cx(props.className, articleCss)}>
+              <span className="anchor" id={props.articleKey} />
+              <MDXProvider components={components} >
+                {props.children}
+              </MDXProvider>
+            </article>
+            <Sep/>
+          </>
+        );
+      }}
+    />
+  );
+  
 }
 
 const articleCss = css`

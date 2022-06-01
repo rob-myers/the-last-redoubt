@@ -1,5 +1,4 @@
 import * as React from "react"
-import useSiteStore from "store/site.store";
 import Article from "components/page/Article";
 import ObjectiveMdx from "articles/objective.mdx";
 
@@ -9,14 +8,13 @@ import ObjectiveMdx from "articles/objective.mdx";
  * - ✅ one article per page (centered)
  * - ✅ move to pages/objective.mdx
  * - ✅ index.tsx -> index.mdx and links to above
- * - articleKey provided via frontmatter
+ * - ✅ start using frontmatter
+ * - infer date and tags via frontmatter lookup
+ * - fix link in homepage.mdx
  * - remove articleMeta
  */
 
 export default function ObjectivePage() {
-  // TODO move elsewhere (used by Nav/NavMini)
-  React.useEffect(() => useSiteStore.setState({ articleKey: 'objective' }) ,[]);
-  
   return (
     <Article
       articleKey="objective"
