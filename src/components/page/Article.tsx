@@ -14,21 +14,9 @@ import { iconCss } from './Icons';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
-  dateTime: string;
   articleKey: ArticleKey;
   children: React.ReactNode;
-  tags: string[];
 }>) {
-
-  const dateText = React.useMemo(() => {
-    const d = new Date(props.dateTime);
-    return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  }, [props.dateTime]);
-
-  const components = React.useMemo(
-    () => articleComponents(props.articleKey, { dateTime: props.dateTime, dateText, tags: props.tags }),
-    [props.articleKey, props.dateTime, props.tags],
-  );
 
   // Assume only one article per page
   React.useEffect(() => useSiteStore.setState({ articleKey: props.articleKey }) ,[]);
@@ -42,7 +30,7 @@ export default function Article(props: React.PropsWithChildren<{
               node {
                 frontmatter {
                   key
-                  date(formatString: "MMMM DD, YYYY")
+                  date
                   tags
                 }
               }
@@ -50,8 +38,32 @@ export default function Article(props: React.PropsWithChildren<{
           }
         }
     `}
-      render={data => {
-        console.log({data}); // TODO 🚧
+      render={(data: FrontmatterData) => {
+
+        const frontmatter = React.useMemo(() => {
+          const output = data.allMdx.edges.find(x => x.node.frontmatter.key === props.articleKey)?.node.frontmatter
+          if (!output) {
+            console.error(`article ${props.articleKey}: frontmatter not found`);
+          } else {
+            console.log({frontmatter: output}); // DEBUG
+          }
+          return output;
+        }, []);
+
+        const dateText = React.useMemo(() => {
+          const d = frontmatter ? new Date(frontmatter.date) : new Date;
+          return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+        }, []);
+      
+        const components = React.useMemo(() =>
+          articleComponents(props.articleKey, {
+            dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
+            dateText,
+            tags: frontmatter?.tags || [],
+          }),
+          [],
+        );
+
         return (
           <>
             <article className={cx(props.className, articleCss)}>
@@ -546,4 +558,19 @@ function getAsideId(
   asideName: string,
 ) {
   return `${articleKey}--aside--${asideName}`;
+}
+
+interface FrontmatterData {
+  allMdx: {
+    edges: {
+      node: {
+        /** Values are technically possibly null */
+        frontmatter: {
+          key: string;
+          date: string;
+          tags: string[];
+        };
+      };
+    }[];
+  };
 }
