@@ -121,3 +121,27 @@ export function keys(record) {
 export function removeDups(items) {
   return Array.from(new Set(items));
 }
+
+/**
+ * @param {string} key 
+ */
+ export function tryLocalStorageGet(key, logErr = false) {
+  try {
+    return localStorage.getItem(key);
+  } catch (e) {
+    logErr && console.error(e);
+    return null;
+  };
+}
+
+/**
+ * @param {string} key 
+ * @param {string} value 
+ */
+export function tryLocalStorageSet(key, value, logErr = true) {
+  try {
+    localStorage.setItem(key, value);
+  } catch (e) {
+    logErr && console.error(e);
+  };
+}
