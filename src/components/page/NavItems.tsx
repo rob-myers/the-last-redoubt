@@ -1,12 +1,14 @@
 import React from "react";
 import { css } from "@emotion/css";
 
-// TODO infer navGroups elsewhere from all frontmatter
-import { getArticleHref, navGroups } from "articles/index";
 import type { FrontMatterProps } from "./Root";
 import Link from './Link'
+import useSiteStore from "store/site.store";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
+
+  const groupedMetas = useSiteStore(x => x.groupedMetas);
+
   return (
     <section className={rootCss}>
 
@@ -16,16 +18,16 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
         </Link>
       </h3>
 
-      {navGroups.map((navItems, i) =>
+      {groupedMetas.map((navItems, i) =>
         <ul key={i}>
           {navItems.map((meta) =>
             <li key={meta.key} className={meta.key === frontmatter.key ? 'current' : undefined} >
               <Link
-                href={getArticleHref(meta)}
+                href={meta.path}
                 title={meta.info}
                 // backward={!!part && meta.part < part}
               >
-                {meta.index} {meta.label}
+                {meta.label}
               </Link>
             </li>
           )}

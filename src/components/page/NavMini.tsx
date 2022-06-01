@@ -1,31 +1,34 @@
 import React from "react";
 import { cx, css } from "@emotion/css";
-import { articlesMeta, getArticleHref } from "articles/index";
 import useSiteStore from "store/site.store";
 import { cssName } from "../css-names";
 import Link from "./Link";
 import { barHeight } from "./Nav";
 
 export default function NavMini() {
-  const meta = useSiteStore(x => x.articleKey ? articlesMeta[x.articleKey] : null);
-  const prev = meta?.prev ? articlesMeta[meta.prev] : null;
-  const next = meta?.next ? articlesMeta[meta.next] : null;
 
-  return meta?.index ? (
+  const { meta, prev, next } = useSiteStore(x => {
+    const meta = x.articleKey ? x.articlesMeta[x.articleKey] : null;
+    const prev = meta?.prev ? x.articlesMeta[meta.prev] : null;
+    const next = meta?.next ? x.articlesMeta[meta.next] : null;
+    return { meta, prev, next };
+  }, () => true);
+
+  return meta && (meta.navGroup !== null)  ? (
     <nav className={cx(cssName.navMini, rootCss)}>
       <ul>
         <li>
-          <Link href={getArticleHref(prev || meta)} backward>
+          <Link href={prev?.path || meta.path} backward>
             <span className="prev">prev</span>
           </Link>
         </li>
         <li>
-          <Link href={getArticleHref(meta)}>
-            <span className="primary">{meta.index}</span>
+          <Link href={meta.path}>
+            <span className="primary">⬆</span>
           </Link>
         </li>
         <li>
-          <Link href={getArticleHref(next || meta)}>
+          <Link href={next?.path || meta.path}>
             <span className="next">next</span>
           </Link>
         </li>

@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
-import type { AllFrontmatter, FrontMatter } from "store/site.store";
+import useSiteStore, { AllFrontmatter as AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav"
 import Main from "./Main"
@@ -17,7 +17,7 @@ export function wrapPageElement({
   props,
 }: WrapPageElementBrowserArgs | WrapPageElementNodeArgs) {
 
-  const frontmatter = (
+  const frontMatter = (
     props.pageResources?.json.pageContext?.frontmatter
   ) as FrontMatter | undefined;
 
@@ -32,22 +32,28 @@ export function wrapPageElement({
           query { allMdx {
             edges { node { frontmatter {
               key
+              path
+              info
+              label
               date
+              navGroup
+              prev
+              next
               tags
             } } } }
           }
       `}
-        render={(allFrontmatter: AllFrontmatter) => {
+        render={(allFrontMatter: AllFrontMatter) => {
 
-          // TODO build pagesMeta in site.store
-          console.log({ allFrontmatter })
+          // console.log({ allFrontmatter })
+          useSiteStore.api.initiate(allFrontMatter, frontMatter);
 
           return <>
-            {frontmatter &&
+            {frontMatter &&
               <QueryClientProvider client={queryClient} >
-                <Nav frontmatter={frontmatter} />
+                <Nav frontmatter={frontMatter} />
                 <Main>
-                  <Article frontmatter={frontmatter}>
+                  <Article frontmatter={frontMatter}>
                     {element}
                   </Article>
                 </Main>
@@ -56,7 +62,7 @@ export function wrapPageElement({
               </QueryClientProvider>
             }
       
-            {!frontmatter &&
+            {!frontMatter &&
               <Main>{element}</Main>
             }
           </>;
