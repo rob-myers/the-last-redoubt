@@ -48,7 +48,7 @@ export function wrapPageElement({
 
           React.useEffect(() =>
             useSiteStore.api.initiate(allFrontMatter, frontMatter),
-            [],
+            [allFrontMatter, frontMatter],
           );
 
           return <>

@@ -34,7 +34,9 @@ const useStore = create<State>(devtools((set, get) => ({
     initiate({ allMdx: { edges } }, fm) {
       const articlesMeta = {} as State['articlesMeta'];
       for (const { node: { frontmatter: fm } } of edges) {
-        articlesMeta[fm.key] = { ...fm, tags: [...fm.tags] };
+        if (fm) {
+          articlesMeta[fm.key] = { ...fm, tags: [...(fm.tags || [])] };
+        }
       }
       const groupedMetas = Object.values(articlesMeta).reduce((agg, item) => {
         item.navGroup !== null && (agg[item.navGroup] = agg[item.navGroup] || []).push(item);
