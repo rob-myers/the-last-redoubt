@@ -31,7 +31,7 @@ body {
   overflow-anchor: none;
 }
 
-#__next {
+#gatsby-focus-wrapper {
   display: flex;
   justify-content: center;
 }

@@ -6,7 +6,7 @@ import ObjectiveMdx from "articles/objective.mdx";
 /**
  * TODO 🚧
  * - ✅ wrapper -> gatsby-{browser,ssr}.js
- * - one article per page (centered)
+ * - ✅ one article per page (centered)
  * - move to pages/objective.mdx
  * - index.tsx -> index.mdx and links to above
  * - articleKey provided via frontmatter
