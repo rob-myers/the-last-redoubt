@@ -4,9 +4,10 @@ import { css, cx } from "@emotion/css";
 
 import useSiteStore from "store/site.store";
 import { cssName } from '../css-names';
+import type { FrontMatterProps } from "./Root";
 import NavItems from './NavItems';
 
-export default function Nav() {
+export default function Nav({ frontmatter }: FrontMatterProps) {
   const navOpen = useSiteStore(x => x.navOpen);
 
   React.useEffect(() => {
@@ -32,7 +33,7 @@ export default function Nav() {
             {navOpen ? '<' : '>'}
           </div>
         </div>
-        <NavItems/>
+        <NavItems frontmatter={frontmatter} />
       </nav>
 
       <div

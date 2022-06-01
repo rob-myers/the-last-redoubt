@@ -1,13 +1,12 @@
 import React from "react";
 import { css } from "@emotion/css";
-import { articlesMeta, getArticleHref, navGroups } from "articles/index";
-import Link from 'components/page/Link'
-import useSiteStore from "store/site.store";
 
-export default function NavItems() {
-  const articleKey = useSiteStore(x => x.articleKey);
-  const part = articleKey ? articlesMeta[articleKey].part : null;
+// TODO infer navGroups elsewhere from all frontmatter
+import { getArticleHref, navGroups } from "articles/index";
+import type { FrontMatterProps } from "./Root";
+import Link from './Link'
 
+export default function NavItems({ frontmatter }: FrontMatterProps) {
   return (
     <section className={rootCss}>
 
@@ -20,11 +19,11 @@ export default function NavItems() {
       {navGroups.map((navItems, i) =>
         <ul key={i}>
           {navItems.map((meta) =>
-            <li key={meta.key} className={meta.key === articleKey ? 'current' : undefined} >
+            <li key={meta.key} className={meta.key === frontmatter.key ? 'current' : undefined} >
               <Link
                 href={getArticleHref(meta)}
                 title={meta.info}
-                backward={!!part && meta.part < part}
+                // backward={!!part && meta.part < part}
               >
                 {meta.index} {meta.label}
               </Link>

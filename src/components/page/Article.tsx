@@ -7,6 +7,7 @@ import { getTabsId, TabMeta } from 'model/tabs/tabs.model';
 import { ArticleKey, articlesMeta } from 'articles/index';
 import useSiteStore from 'store/site.store';
 
+import type { FrontMatter } from './Root';
 import Link from './Link';
 import Sep from './Sep';
 import Tabs from './Tabs';
@@ -14,41 +15,28 @@ import { iconCss } from './Icons';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
-  articleKey: ArticleKey;
+  frontmatter: FrontMatter;
   children: React.ReactNode;
 }>) {
 
-  // Assume only one article per page
-  React.useEffect(() => useSiteStore.setState({ articleKey: props.articleKey }) ,[]);
+  const { frontmatter } = props;
 
   return (
     <StaticQuery
       query={graphql`
         query {
           allMdx {
-            edges {
-              node {
-                frontmatter {
-                  key
-                  date
-                  tags
-                }
-              }
-            }
+            edges { node { frontmatter {
+              key
+              date
+              tags
+            } } }
           }
         }
     `}
-      render={(data: FrontmatterData) => {
+      render={(allFrontmatter: FrontmatterData) => {
 
-        const frontmatter = React.useMemo(() => {
-          const output = data.allMdx.edges.find(x => x.node.frontmatter.key === props.articleKey)?.node.frontmatter
-          if (!output) {
-            console.error(`article ${props.articleKey}: frontmatter not found`);
-          } else {
-            console.log({frontmatter: output}); // DEBUG
-          }
-          return output;
-        }, []);
+        console.log({ allFrontmatter })
 
         const dateText = React.useMemo(() => {
           const d = frontmatter ? new Date(frontmatter.date) : new Date;
@@ -56,7 +44,7 @@ export default function Article(props: React.PropsWithChildren<{
         }, []);
       
         const components = React.useMemo(() =>
-          articleComponents(props.articleKey, {
+          articleComponents(frontmatter.key as any, {
             dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
             dateText,
             tags: frontmatter?.tags || [],
@@ -67,7 +55,7 @@ export default function Article(props: React.PropsWithChildren<{
         return (
           <>
             <article className={cx(props.className, articleCss)}>
-              <span className="anchor" id={props.articleKey} />
+              <span className="anchor" id={frontmatter.key} />
               <MDXProvider components={components} >
                 {props.children}
               </MDXProvider>
