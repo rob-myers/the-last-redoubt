@@ -14,6 +14,8 @@ tags:
   - geomorph
 ---
 
+import Tabs from 'components/page/Tabs';
+
 ## Objective
 
 We are going to create a **video game**.
@@ -38,16 +40,14 @@ Where does it take place?
 
 </aside>
 
-<!-- TODO replace <div> by <Tabs> -->
-
-<div
-  class="tabs"
-  name="redoubt-sketch"
-  height="[400, 580]"
-  enabled="true"
-  tabs="[
-    { type: 'component', filepath: 'example/Images#redoubt-sketches' },
-  ]"
+<Tabs
+  id="redoubt-sketch"
+  tabs={[
+    [{ type: 'component', filepath: 'example/Images#redoubt-sketches' }],
+    [],
+  ]}
+  height={[400, 580]}
+  initEnabled={true}
 />
 
 But how will you make the game?

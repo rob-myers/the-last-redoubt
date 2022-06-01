@@ -2,12 +2,11 @@ import React from 'react';
 import { css, cx } from '@emotion/css';
 import { MDXProvider } from '@mdx-js/react';
 
-import { getTabsId, TabMeta } from 'model/tabs/tabs.model';
+import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
 
 import Link from './Link';
 import Sep from './Sep';
-import Tabs from './Tabs';
 import { iconCss } from './Icons';
 
 export default function Article(props: React.PropsWithChildren<{
@@ -411,36 +410,6 @@ const articleComponents = (
         {children}
       </aside>
     );
-  },
-
-  div({ node, ...props }: any) {
-    switch (props.className) {
-      case 'tabs': {
-        const height = React.useMemo<number | number[]>(
-          () => Function(`return ${props.height}`)(),
-          [props.height],
-        );
-        /** Flat list of tab metas */
-        const flatTabs = React.useMemo<TabMeta[]>(
-          () => Function(`return ${props.tabs || '[]'}`)(),
-          [props.tabs],
-        );
-        /** Number of tabs shown initially */
-        const show = Number(props.show) || 1;
-        const tabs: [TabMeta[], TabMeta[]] = [flatTabs.slice(0, show), flatTabs.slice(show)];
-
-        return (
-          <Tabs
-            id={props.name ? getTabsId(articleKey, props.name) : ''}
-            tabs={tabs}
-            height={height}
-            initEnabled={props.enabled === 'true'}
-          />
-        );
-      }
-      default:
-        return <div {...props} />;
-    }
   },
 
   // Occurs once in each article
