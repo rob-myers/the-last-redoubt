@@ -1,5 +1,6 @@
-import React from "react";
 import type { WrapPageElementBrowserArgs, WrapPageElementNodeArgs } from "gatsby";
+import { StaticQuery, graphql } from 'gatsby';
+import React from "react";
 import { Helmet } from "react-helmet";
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -22,27 +23,44 @@ export function wrapPageElement({
   return (
     <>
       <Helmet>
-        <title>
-          The Last Redoubt
-        </title>
+        <title>The Last Redoubt</title>
       </Helmet>
 
-      {frontmatter &&
-        <QueryClientProvider client={queryClient} >
-          <Nav frontmatter={frontmatter} />
-          <Main>
-            <Article frontmatter={frontmatter}>
-              {element}
-            </Article>
-          </Main>
-          <Portals />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      }
+      <StaticQuery
+        query={graphql`
+          query { allMdx {
+            edges { node { frontmatter {
+              key
+              date
+              tags
+            } } } }
+          }
+        `}
+        render={(allFrontmatter: AllFrontmatter) => {
 
-      {!frontmatter &&
-        <Main>{element}</Main>
-      }
+          console.log({ allFrontmatter })
+
+          return <>
+            {frontmatter &&
+              <QueryClientProvider client={queryClient} >
+                <Nav frontmatter={frontmatter} />
+                <Main>
+                  <Article frontmatter={frontmatter}>
+                    {element}
+                  </Article>
+                </Main>
+                <Portals />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </QueryClientProvider>
+            }
+      
+            {!frontmatter &&
+              <Main>{element}</Main>
+            }
+          </>;
+        }}
+      />
+
 
     </>
   );
@@ -60,4 +78,19 @@ export interface FrontMatter {
   prev: null | string;
   next: null | string;
   tags: string[];
+}
+
+interface AllFrontmatter {
+  allMdx: {
+    edges: {
+      node: {
+        /** Values are technically possibly null */
+        frontmatter: {
+          key: string;
+          date: string;
+          tags: string[];
+        };
+      };
+    }[];
+  };
 }

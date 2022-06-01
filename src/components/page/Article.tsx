@@ -1,4 +1,3 @@
-import { StaticQuery, graphql } from 'gatsby';
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { MDXProvider } from '@mdx-js/react';
@@ -21,52 +20,29 @@ export default function Article(props: React.PropsWithChildren<{
 
   const { frontmatter } = props;
 
-  return (
-    <StaticQuery
-      query={graphql`
-        query {
-          allMdx {
-            edges { node { frontmatter {
-              key
-              date
-              tags
-            } } }
-          }
-        }
-    `}
-      render={(allFrontmatter: FrontmatterData) => {
+  const dateText = React.useMemo(() => {
+    const d = frontmatter ? new Date(frontmatter.date) : new Date;
+    return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  }, []);
 
-        console.log({ allFrontmatter })
-
-        const dateText = React.useMemo(() => {
-          const d = frontmatter ? new Date(frontmatter.date) : new Date;
-          return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
-        }, []);
-      
-        const components = React.useMemo(() =>
-          articleComponents(frontmatter.key as any, {
-            dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
-            dateText,
-            tags: frontmatter?.tags || [],
-          }),
-          [],
-        );
-
-        return (
-          <>
-            <article className={cx(props.className, articleCss)}>
-              <span className="anchor" id={frontmatter.key} />
-              <MDXProvider components={components} >
-                {props.children}
-              </MDXProvider>
-            </article>
-            <Sep/>
-          </>
-        );
-      }}
-    />
+  const components = React.useMemo(() =>
+    articleComponents(frontmatter.key as any, {
+      dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
+      dateText,
+      tags: frontmatter?.tags || [],
+    }),
+    [],
   );
-  
+
+  return <>
+    <article className={cx(props.className, articleCss)}>
+      <span className="anchor" id={frontmatter.key} />
+      <MDXProvider components={components} >
+        {props.children}
+      </MDXProvider>
+    </article>
+    <Sep/>
+  </>;
 }
 
 const articleCss = css`
