@@ -44,8 +44,10 @@ export default function Link(props: Props) {
           // Push hash into history if we didn't change page,
           // otherwise we'll overwrite the prePush
           navigate(hash);
+          // history.pushState({}, '', hash)
         } else {
-          navigate(hash, { replace: true });
+          // navigate(hash, { replace: true });
+          history.replaceState({}, '', hash);
         }
 
         props.postPush?.();
@@ -83,7 +85,7 @@ async function navigateNatively(props: Props) {
     if (! await scrollFinished(window.pageYOffset + top)) {
       return;
     }
-    location.href = `#${props.id}`;
+    history.replaceState({}, '', `#${props.id}`);
   }
   location.href = props.href;
 }
