@@ -3,9 +3,8 @@ import { css, cx } from '@emotion/css';
 import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId, TabMeta } from 'model/tabs/tabs.model';
-import useSiteStore from 'store/site.store';
+import useSiteStore, { FrontMatter } from 'store/site.store';
 
-import type { FrontMatter } from './Root';
 import Link from './Link';
 import Sep from './Sep';
 import Tabs from './Tabs';

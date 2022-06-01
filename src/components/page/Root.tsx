@@ -5,6 +5,7 @@ import { Helmet } from "react-helmet";
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
 
+import type { AllFrontmatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav"
 import Main from "./Main"
@@ -35,9 +36,10 @@ export function wrapPageElement({
               tags
             } } } }
           }
-        `}
+      `}
         render={(allFrontmatter: AllFrontmatter) => {
 
+          // TODO build pagesMeta in site.store
           console.log({ allFrontmatter })
 
           return <>
@@ -61,36 +63,10 @@ export function wrapPageElement({
         }}
       />
 
-
     </>
   );
 }
 
 export interface FrontMatterProps {
   frontmatter: FrontMatter;
-}
-
-export interface FrontMatter {
-  key: string;
-  path: string;
-  info: string;
-  date: string;
-  prev: null | string;
-  next: null | string;
-  tags: string[];
-}
-
-interface AllFrontmatter {
-  allMdx: {
-    edges: {
-      node: {
-        /** Values are technically possibly null */
-        frontmatter: {
-          key: string;
-          date: string;
-          tags: string[];
-        };
-      };
-    }[];
-  };
 }

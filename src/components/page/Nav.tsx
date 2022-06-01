@@ -1,5 +1,4 @@
 import React from "react";
-import debounce from "debounce";
 import { css, cx } from "@emotion/css";
 
 import useSiteStore from "store/site.store";
@@ -9,13 +8,6 @@ import NavItems from './NavItems';
 
 export default function Nav({ frontmatter }: FrontMatterProps) {
   const navOpen = useSiteStore(x => x.navOpen);
-
-  React.useEffect(() => {
-    // Detect currently viewed article
-    const onScroll = debounce(() => useSiteStore.api.updateArticleKey(), 5);
-    window.addEventListener('scroll', onScroll);
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   return (
     <>

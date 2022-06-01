@@ -3,56 +3,62 @@ import { devtools } from 'zustand/middleware';
 import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
-import { KeyedLookup, last } from 'model/generic.model';
+import { KeyedLookup } from 'model/generic.model';
 import type { TabMeta } from 'model/tabs/tabs.model';
 import type { ArticleKey } from 'articles/index';
 
 export type State = {
   /** Key of currently viewed article */
   articleKey: null | ArticleKey;
-  /** <Article>s on current page */
-  articles: KeyedLookup<ArticleState>;
+  articlesMeta: {
+    [articleKey: string]: FrontMatter
+  };
   navOpen: boolean;
   /** Site-wide portals, corresponding to individual tabs */
   portal: KeyedLookup<PortalState>;
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
+  api: {
 
-  readonly api: {
-    updateArticleKey: () => void;
   };
 };
 
 const useStore = create<State>(devtools((set, get) => ({
   articleKey: null,
-  articles: {},
+  articlesMeta: {
+
+  },
   navOpen: false,
   portal: {},
   tabs: {},
-
   api: {
-    updateArticleKey: () => {
-      const articles = Object.values(get().articles);
-      let article = undefined as undefined | ArticleState;
-      const offset = 64; // Offset must cover `article > div.anchor`
 
-      if (window.scrollY + offset >= document.body.offsetHeight - window.innerHeight) {
-        article = last(articles);
-      } else {
-        article = articles.find(x => window.scrollY + offset <= x.rect.bottom);
-      }
-
-      if (article && article.key !== get().articleKey) {
-        set({ articleKey: article.key });
-      }
-    },
   },
 }), 'site'));
 
-interface ArticleState {
-  key: ArticleKey;
-  /** Article bounds in coords relative to page (not viewport) */
-  rect: Geom.Rect;
+export interface FrontMatter {
+  key: string;
+  path: string;
+  info: string;
+  date: string;
+  prev: null | string;
+  next: null | string;
+  tags: string[];
+}
+
+export interface AllFrontmatter {
+  allMdx: {
+    edges: {
+      node: {
+        /** Values are technically possibly null */
+        frontmatter: {
+          key: string;
+          date: string;
+          tags: string[];
+        };
+      };
+    }[];
+  };
 }
 
 export interface PortalState {
