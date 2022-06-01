@@ -8,6 +8,7 @@ import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic
 import useUpdate from 'projects/hooks/use-update';
 import useStateRef from 'projects/hooks/use-state-ref';
 import { Layout } from 'components/dynamic';
+import { cssName } from 'components/css-names';
 import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
 
 export default function Tabs(props: Props) {
@@ -99,7 +100,7 @@ export default function Tabs(props: Props) {
 
   return (
     <figure
-      className={cx("tabs", "scrollable", rootCss)}
+      className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
     >

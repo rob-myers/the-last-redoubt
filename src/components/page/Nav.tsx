@@ -12,7 +12,11 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
   return (
     <>
       <nav
-        className={cx(cssName.navMain, navCss, navOpen ? cssName.navMainOpen : cssName.navMainClosed)}
+        className={cx(
+          cssName.navMain,
+          navCss,
+          navOpen ? cssName.navMainOpen : cssName.navMainClosed,
+        )}
         onClick={(e) => {
           e.stopPropagation();
           if (e.target instanceof HTMLAnchorElement) return;
@@ -20,7 +24,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
         }}
       >
         <div className="article-overlay" />
-        <div className="handle">
+        <div className={cssName.topBarHandle}>
           <div className="icon">
             {navOpen ? '<' : '>'}
           </div>
@@ -29,7 +33,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
       </nav>
 
       <div
-        className={topBarCss}
+        className={cx(cssName.topBar,topBarCss)}
         onClick={(e) => {
           e.stopPropagation();
           if (e.target instanceof HTMLAnchorElement) return;

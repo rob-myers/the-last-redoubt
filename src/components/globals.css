@@ -21,19 +21,28 @@ html {
 }
 
 body {
-  /* background: var(--body-bg); */
   padding: 0;
   margin: 0;
   font-family: sans-serif;
-  /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
-  /* -webkit-font-smoothing: antialiased; */
   overflow-anchor: none;
 }
 
 #gatsby-focus-wrapper {
   display: flex;
   justify-content: center;
+}
+
+body.dark-mode {
+  background: black;
+}
+body.dark-mode #gatsby-focus-wrapper > section main {
+  filter: invert(100%);
+}
+body.dark-mode #gatsby-focus-wrapper > section header > :not(div) {
+  filter: invert(100%);
+}
+body.dark-mode #gatsby-focus-wrapper > section figure.tabs {
+  filter: invert(100%);
 }
 
 a {
