@@ -19,7 +19,7 @@ export type State = {
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
   api: {
-    initiate(allFm: AllFrontmatter, fm: FrontMatter | undefined): void;
+    initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
   };
 };
 
@@ -34,7 +34,7 @@ const useStore = create<State>(devtools((set, get) => ({
     initiate({ allMdx: { edges } }, fm) {
       const articlesMeta = {} as State['articlesMeta'];
       for (const { node: { frontmatter: fm } } of edges) {
-        if (fm) {
+        if (fm && fm.key) {
           articlesMeta[fm.key] = { ...fm, tags: [...(fm.tags || [])] };
         }
       }
@@ -65,7 +65,7 @@ export interface FrontMatter {
   tags: string[];
 }
 
-export interface AllFrontmatter {
+export interface AllFrontMatter {
   allMdx: {
     edges: {
       node: {
@@ -87,7 +87,7 @@ interface TabsState {
   key: string;
   def: TabMeta[];
   disabled: boolean;
-  /** e.g. `/part/1` */
+  /** e.g. `/objective` */
   pagePathname: string;
   selectTab: (tabId: string) => void;
   scrollTo: () => void;

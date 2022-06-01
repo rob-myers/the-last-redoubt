@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
-import useSiteStore, { AllFrontmatter as AllFrontMatter, FrontMatter } from "store/site.store";
+import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav";
 import Main from "./Main";
