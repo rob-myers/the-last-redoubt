@@ -1,6 +1,5 @@
 import { navigate } from "gatsby";
 import React from "react";
-import { MDXProvider } from "@mdx-js/react";
 import { cx, css } from "@emotion/css";
 
 import NavMini from "./NavMini";
@@ -9,25 +8,15 @@ export default function Title() {
   return (
     <header className={cx('title', titleCss)}>
       <NavMini/>
-      <MDXProvider
-        components={titleComponents}
-      >
-        <h1>The Last Redoubt</h1>
-        <p>$( video game | web dev | game ai )</p>
-      </MDXProvider>
+      <h1 onClick={() => navigate('/')}>
+        The Last Redoubt
+      </h1>
+      <p>
+        $( video game | web dev | game ai )
+      </p>
     </header>
   );
 }
-
-const titleComponents: Record<string, React.FC<{ children: React.ReactNode }>> = {
-  h1({ children }) {
-    return (
-      <h1 onClick={() => navigate('/')}>
-        {children}
-      </h1>
-    );
-  },
-};
 
 const titleCss = css`
   position: relative;
