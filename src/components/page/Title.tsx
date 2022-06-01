@@ -3,7 +3,6 @@ import React from "react";
 import { MDXProvider } from "@mdx-js/react";
 import { cx, css } from "@emotion/css";
 
-import TitleMdx from "articles/title.mdx";
 import NavMini from "./NavMini";
 
 export default function Title() {
@@ -13,7 +12,8 @@ export default function Title() {
       <MDXProvider
         components={titleComponents}
       >
-        <TitleMdx />
+        <h1>The Last Redoubt</h1>
+        <p>$( video game | web dev | game ai )</p>
       </MDXProvider>
     </header>
   );

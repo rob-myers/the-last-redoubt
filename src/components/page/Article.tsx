@@ -3,7 +3,6 @@ import { css, cx } from '@emotion/css';
 import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId, TabMeta } from 'model/tabs/tabs.model';
-import { ArticleKey, articlesMeta } from 'articles/index';
 import useSiteStore from 'store/site.store';
 
 import type { FrontMatter } from './Root';
@@ -313,7 +312,7 @@ const articleCss = css`
 `;
 
 const articleComponents = (
-  articleKey: ArticleKey,
+  articleKey: string,
   meta: {
     dateTime: string;
     dateText: string;
@@ -334,7 +333,7 @@ const articleComponents = (
           id={id}
           prePush={`#${id}`}
           title={title}
-          backward={!!part && (part < articlesMeta[articleKey].part)}
+          // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
         </Link>
