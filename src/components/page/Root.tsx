@@ -1,16 +1,17 @@
 import type { WrapPageElementBrowserArgs, WrapPageElementNodeArgs } from "gatsby";
-import { StaticQuery, graphql } from 'gatsby';
+import { StaticQuery, graphql } from "gatsby";
 import React from "react";
 import { Helmet } from "react-helmet";
-import { QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools'
+import { QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import useSiteStore, { AllFrontmatter as AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
-import Nav from "./Nav"
-import Main from "./Main"
+import Nav from "./Nav";
+import Main from "./Main";
 import Portals from "./Portals";
 import Article from "./Article";
+import NextArticle from "./NextArticle";
 
 export function wrapPageElement({
   element,
@@ -45,8 +46,10 @@ export function wrapPageElement({
       `}
         render={(allFrontMatter: AllFrontMatter) => {
 
-          // console.log({ allFrontmatter })
-          useSiteStore.api.initiate(allFrontMatter, frontMatter);
+          React.useEffect(() =>
+            useSiteStore.api.initiate(allFrontMatter, frontMatter),
+            [],
+          );
 
           return <>
             {frontMatter &&
@@ -56,6 +59,7 @@ export function wrapPageElement({
                   <Article frontmatter={frontMatter}>
                     {element}
                   </Article>
+                  <NextArticle frontMatter={frontMatter}/>
                 </Main>
                 <Portals />
                 <ReactQueryDevtools initialIsOpen={false} />
