@@ -1,31 +1,19 @@
 import * as React from "react"
 import useSiteStore from "store/site.store";
 import Article from "components/page/Article";
-import ObjectiveMdx from "articles/objective.mdx";
+import HomepageMdx from "articles/homepage.mdx";
 
-/**
- * TODO 🚧
- * - ✅ wrapper -> gatsby-{browser,ssr}.js
- * - ✅ one article per page (centered)
- * - move to pages/objective.mdx
- * - index.tsx -> index.mdx and links to above
- * - articleKey provided via frontmatter
- * - remove articleMeta
- */
-
-const IndexPage = () => {
+export default function IndexPage() {
   // TODO move elsewhere (used by Nav/NavMini)
-  React.useEffect(() => useSiteStore.setState({ articleKey: 'objective' }) ,[]);
+  React.useEffect(() => useSiteStore.setState({ articleKey: 'homepage' }) ,[]);
   
   return (
     <Article
-      articleKey="objective"
+      articleKey="homepage"
       dateTime="2022-05-22"
-      tags={['night land', 'web dev', 'shell', 'geomorph']}
+      tags={['night land', 'web dev', 'game ai']}
     >
-      <ObjectiveMdx />
+      <HomepageMdx />
     </Article>
   )
 }
-
-export default IndexPage
