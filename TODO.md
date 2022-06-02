@@ -7,3 +7,5 @@
 
 - Fix dark-mode i.e. `Tabs` position `fixed` breaks.
   Try alternative approach.
+
+- Fix prev/up/next vert spacing when window max
