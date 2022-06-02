@@ -13,7 +13,7 @@ export default function NavMini() {
     const prev = meta?.prev ? x.articlesMeta[meta.prev] : null;
     const next = meta?.next ? x.articlesMeta[meta.next] : null;
     return { meta, prev, next };
-  }, (a, b) => !!a.meta === !!b.meta);
+  }, (a, b) => a.meta?.key === b.meta?.key);
 
   return (
     <div className={rootCss}>

@@ -7,6 +7,7 @@ import type { FrontMatterProps } from "./Root";
 import NavItems from './NavItems';
 
 export default function Nav({ frontmatter }: FrontMatterProps) {
+
   const navOpen = useSiteStore(x => x.navOpen);
 
   return (

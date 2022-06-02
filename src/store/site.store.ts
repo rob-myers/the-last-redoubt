@@ -32,6 +32,10 @@ const useStore = create<State>(devtools((set, get) => ({
   tabs: {},
   api: {
     initiate({ allMdx: { edges } }, fm) {
+      if (get().groupedMetas.length) {
+        return set({ articleKey: fm ? fm.key : null });
+      }
+
       const articlesMeta = {} as State['articlesMeta'];
       for (const { node: { frontmatter: fm } } of edges) {
         if (fm && fm.key) {
