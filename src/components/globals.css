@@ -35,16 +35,16 @@ body {
 body.dark-mode {
   background-color: black;
 }
-body.dark-mode #gatsby-focus-wrapper > section main {
+body.dark-mode section article {
+  border-color: rgb(95, 95, 95);
+}
+body.dark-mode section article > :not(figure.tabs) {
   filter: invert(100%);
 }
-body.dark-mode #gatsby-focus-wrapper > div.top-bar {
+body.dark-mode div.top-bar {
   background-color: #333;
 }
-body.dark-mode #gatsby-focus-wrapper > section header > :not(div) {
-  filter: invert(100%);
-}
-body.dark-mode #gatsby-focus-wrapper > section figure.tabs {
+body.dark-mode section header > :not(div) {
   filter: invert(100%);
 }
 
