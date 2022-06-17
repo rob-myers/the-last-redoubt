@@ -1,0 +1,84 @@
+:root {
+  --body-bg: #eee;
+  --focus-bg: #fff;
+  --border-bg: #ccc;
+  --blog-border-width: 2px;
+  /** Pixel 5: white lines when 8px */
+  --tabs-border-width: 6px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+@media(max-width: 600px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  overflow-anchor: none;
+}
+
+#gatsby-focus-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+body.dark-mode {
+  background-color: black;
+}
+body.dark-mode section article {
+  border-color: rgb(95, 95, 95);
+}
+body.dark-mode section article > :not(figure.tabs) {
+  filter: invert(100%);
+}
+body.dark-mode div.top-bar {
+  background-color: #333;
+}
+body.dark-mode section header > :not(div) {
+  filter: invert(100%);
+}
+
+a {
+  color: #00f;
+  text-decoration: none;
+}
+
+.scrollable ::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+  overflow: auto;
+}
+
+.scrollable ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollable ::-webkit-scrollbar-thumb {
+  background-color: rgba(155, 155, 155, 0.5);
+  border-radius: 20px;
+  border: transparent;
+}
+
+.no-select {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.no-select:focus {
+  outline: none !important;
+}
