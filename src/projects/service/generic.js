@@ -123,6 +123,15 @@ export function removeDups(items) {
 }
 
 /**
+ * Usage `default: throw testNever(x)`.
+ * @param {never} x 
+ * @returns {string}
+ */
+ export function testNever(x, message = `testNever: ${JSON.stringify(x)} not implemented.`) {
+  return message;
+}
+
+/**
  * @param {string} key 
  */
  export function tryLocalStorageGet(key, logErr = false) {
