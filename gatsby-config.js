@@ -1,6 +1,10 @@
-import type { GatsbyConfig } from "gatsby";
+/**
+ * NOTE gatsby-plugin-preact does not seem to
+ * support typescript format config gatsby-config.ts
+ */
 
-const config: GatsbyConfig = {
+/** @type {import('gatsby').GatsbyConfig} */
+const config = {
   siteMetadata: {
     title: `the-last-redoubt`,
     siteUrl: `https://www.yourdomain.tld`
@@ -19,7 +23,8 @@ const config: GatsbyConfig = {
     },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
+    "gatsby-plugin-preact",
   ],
 };
 
-export default config;
+module.exports = config;
