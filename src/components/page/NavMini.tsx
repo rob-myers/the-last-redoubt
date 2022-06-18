@@ -1,5 +1,6 @@
 import React from "react";
 import { cx, css } from "@emotion/css";
+import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
 import { cssName } from "../css-names";
 import Link from "./Link";
@@ -46,7 +47,8 @@ export default function NavMini() {
           iconCss('eye'),
         )}
         onClick={(e) => {
-          document.body.classList.toggle('dark-mode');
+          const enabled = document.body.classList.toggle('dark-mode');
+          tryLocalStorageSet('dark-mode-enabled', `${enabled}`);
         }}
       />
     </div>

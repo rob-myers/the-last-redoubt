@@ -6,6 +6,7 @@ import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
+import { tryLocalStorageGet } from "projects/service/generic";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav";
 import Main from "./Main";
@@ -21,6 +22,12 @@ export function wrapPageElement({
   const frontMatter = (
     props.pageContext?.frontmatter
   ) as FrontMatter | undefined;
+
+  React.useLayoutEffect(() => {
+    if (tryLocalStorageGet('dark-mode-enabled') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  }, []);
 
   return (
     <>
