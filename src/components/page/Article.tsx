@@ -58,7 +58,7 @@ const articleCss = css`
   }
   @media(max-width: 600px) {
     padding: 8px 12px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border: none;
     line-height: 2;
     font-weight: 300;
