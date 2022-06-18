@@ -44,8 +44,6 @@ export default function Article(props: React.PropsWithChildren<{
 
 const articleCss = css`
   line-height: 2.2;
-  /* background: var(--focus-bg); */
-  /* border: var(--blog-border-width) solid var(--border-bg); */
   border: 0 solid var(--border-bg);
   border-width: 1px 0 0 1px;
   font-size: 1rem;
@@ -62,7 +60,6 @@ const articleCss = css`
     border: none;
     line-height: 2;
     font-weight: 300;
-    background: white;
   }
 
   a {
