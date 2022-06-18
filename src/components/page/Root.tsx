@@ -19,7 +19,7 @@ export function wrapPageElement({
 }: WrapPageElementBrowserArgs | WrapPageElementNodeArgs) {
 
   const frontMatter = (
-    props.pageResources?.json.pageContext?.frontmatter
+    props.pageContext?.frontmatter
   ) as FrontMatter | undefined;
 
   return (

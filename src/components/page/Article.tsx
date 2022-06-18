@@ -1,5 +1,5 @@
 import React from 'react';
-import { css } from '@emotion/react'
+import { css, cx } from '@emotion/css'
 import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId } from 'model/tabs/tabs.model';
@@ -32,7 +32,7 @@ export default function Article(props: React.PropsWithChildren<{
   );
 
   return <>
-    <article className={props.className} css={articleCss}>
+    <article className={cx(props.className, articleCss)}>
       <span className="anchor" id={frontmatter.key} />
       <MDXProvider components={components} >
         {props.children}
@@ -327,8 +327,7 @@ const articleComponents = (
       return (
         <Link
           href={href}
-          className={"anchor-link"}
-          css={iconCss('anchor-icon', '0 2px 0 4px')}
+          className={cx("anchor-link", iconCss('anchor-icon', '0 2px 0 4px'))}
           id={id}
           prePush={`#${id}`}
           title={title}
@@ -345,8 +344,7 @@ const articleComponents = (
         <a
           href={href}
           title={title}
-          className="new-tab-link"
-          css={iconCss('ext-link-icon', '0 2px 0 4px')}
+          className={cx("new-tab-link", iconCss('ext-link-icon', '0 2px 0 4px'))}
           target="_blank"
           rel="noopener"
         >
