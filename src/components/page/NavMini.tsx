@@ -29,7 +29,7 @@ export default function NavMini() {
             </li>
             <li>
               <Link href={meta.path}>
-                <span className="primary">⬆</span>
+                <span className="primary">id</span>
               </Link>
             </li>
             <li>
@@ -44,7 +44,7 @@ export default function NavMini() {
       <div
         className={cx(
           'toggle-dark-mode',
-          iconCss('eye'),
+          iconCss('light-bulb'),
         )}
         onClick={(e) => {
           const enabled = document.body.classList.toggle('dark-mode');
@@ -106,5 +106,6 @@ const rootCss = css`
     justify-content: center;
     color: white;
     cursor: pointer;
+    filter: invert(100%);
   }
 `;
