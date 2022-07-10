@@ -9,3 +9,8 @@ export const CodeEditor = loadable(
   () => import('./code/CodeEditor'),
   { ssr: false },
 );
+
+export const Terminal = loadable(
+  () => import('./sh/Terminal'),
+  { ssr: false },
+);

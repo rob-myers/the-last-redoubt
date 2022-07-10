@@ -12,6 +12,7 @@ tags:
 ---
 
 import Tabs from "components/page/Tabs";
+import { profileLookup } from "projects/sh/scripts";
 
 ## Test page
 
@@ -22,8 +23,9 @@ import Tabs from "components/page/Tabs";
   tabs={[
     // { key: 'component', filepath: 'example/GeomorphEdit' },
     [
-      { type: 'component', filepath: 'example/NavDemo1' },
-      { type: 'terminal', filepath: 'test', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: 'profile-1-a' } },
+      // { type: 'component', filepath: 'example/NavDemo1' },
+      // { type: 'terminal', filepath: 'test', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: 'profile-1-a' } },
+      { type: 'terminal', filepath: 'test', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: profileLookup['profile-1'] } },
     ],
     // { key: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
     // { key: 'component', filepath: 'example/Css3dForeignObject#301' },
