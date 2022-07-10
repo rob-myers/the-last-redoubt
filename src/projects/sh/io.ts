@@ -14,20 +14,20 @@ export enum SigEnum {
 //#region model
 
 export function makeShellIo<R, W>() {
-  return new ShellIo(new ShellWire<R>(), new ShellWire<W>());
+  return new shellIoClass(new shellWireClass<R>(), new shellWireClass<W>());
 }
 
 /**
  * Two ShellSubjects i.e. the man in the middle.
  * Currently only used for TTY.
  */
-export class ShellIo<R, W> {
+class shellIoClass<R, W> {
 
   constructor(
     /** Readers will read from here */
-    public readable: ShellWire<R>,
+    public readable: shellWireClass<R>,
     /** Writers will write to here */
-    public writable: ShellWire<W>,
+    public writable: shellWireClass<W>,
   ) {}
 
   /** Register a callback to handle writes to this file */
@@ -53,8 +53,10 @@ export class ShellIo<R, W> {
   }
 }
 
+export type ShellIo<R, W> = shellIoClass<R, W>;
+
 /** A wire with two ends */
-class ShellWire<T> {
+class shellWireClass<T> {
 
   private internal: Subject<T>;
   private cbToSub: Map<(msg: T) => void, Subscription>;

@@ -6,7 +6,7 @@ import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead } from './io';
 import useSession, { ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
-import { TtyShell } from './tty.shell';
+import { ttyShellClass } from './tty.shell';
 
 import { scriptLookup } from './scripts';
 import { getCached, queryCache } from '../service/query-client';
@@ -53,9 +53,10 @@ const commandKeys = {
   /** Unset top-level variables and shell functions */
   unset: true,
 };
+
 type CommandName = keyof typeof commandKeys;
 
-class CmdService {
+class cmdServiceClass {
 
   isCmd(word: string): word is CommandName {
     return word in commandKeys;
@@ -495,7 +496,7 @@ class CmdService {
 
     if (device === undefined) {
       return;
-    } else if (device instanceof TtyShell && process.pgid !== 0) {
+    } else if (device instanceof ttyShellClass && process.pgid !== 0) {
       throw new ShError('background process tried to read tty', 1);
     }
 
@@ -583,6 +584,6 @@ function throwError(message: string, exitCode?: number) {
 
 //#endregion
 
-export const cmdService = new CmdService;
+export const cmdService = new cmdServiceClass;
 
-export type CmdServiceType = typeof cmdService;
+export type CmdService = typeof cmdService;

@@ -214,7 +214,7 @@ export const defaultStdInOut = 'unassigned-tty';
   return cloneWithRefs(parsed);
 }
 
-export function getChildren(node: ParsedSh): ParsedSh[] {
+function getChildren(node: ParsedSh): ParsedSh[] {
   switch (node.type) {
     case 'ArithmCmd': return [node.X];
     case 'ArithmExp': return [node.X];
@@ -307,22 +307,6 @@ export function getOpts(args: string[], options?: getopts.Options) {
   };
 }
 
-function findAncestral(node: ParsedSh, predicate: (ancestor: ParsedSh) => boolean) {
-  let ancestor = node as null | ParsedSh;
-  while (ancestor = ancestor!.parent) {
-    if (predicate(ancestor)) {
-      break;
-    }
-  }
-  return ancestor;
-}
-
-export function hasAncestralIterator(node: ParsedSh) {
-  return findAncestral(node, ({ type }) =>
-    type === 'ForClause' || type === 'WhileClause'
-  );
-}
-
 /**
  * `getopts` handles dup options by providing an array.
  * We restrict it to the final item. We also store list
@@ -346,7 +330,7 @@ export function traverseParsed(node: ParsedSh, act: (node: ParsedSh) => void) {
   getChildren(node).forEach(child => traverseParsed(child, act));
 }
 
-export function withParents<T extends ParsedSh>(root: T) {
+function withParents<T extends ParsedSh>(root: T) {
   traverseParsed(root, (node) => {
     getChildren(node).forEach(child => (child as BaseNode).parent = node);
   });
@@ -390,7 +374,7 @@ export function reconstructReplParamExp(Repl: NonNullable<ParamExp['Repl']>) {
 
 //#region src
 
-export class SrcService {
+class srcServiceClass {
 
   private onOneLine = true;
 
@@ -687,7 +671,7 @@ export class SrcService {
 
 }
 
-export const srcService = new SrcService;
+export const srcService = new srcServiceClass;
 
 //#endregion
 

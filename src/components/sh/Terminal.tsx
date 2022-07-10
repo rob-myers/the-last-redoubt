@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import { debounce } from 'debounce';
 import type { ITerminalOptions } from 'xterm';
 
-import { TtyXterm } from 'projects/sh/tty.xterm';
+import { ttyXtermClass } from 'projects/sh/tty.xterm';
 import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
 import { getCached } from 'projects/service/query-client';
@@ -73,7 +73,7 @@ export default function Terminal(props: Props) {
           // `xterm` is an xterm.js instance
           onMount={(xterm) => {
             const session = assertNonNull(state.session);
-            const ttyXterm = new TtyXterm(xterm, {
+            const ttyXterm = new ttyXtermClass(xterm, {
               key: session.key,
               io: session.ttyIo,
               rememberLastValue: (msg) => session.var._ = msg,

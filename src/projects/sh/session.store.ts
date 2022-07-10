@@ -1,15 +1,13 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-// FROM HERE
-
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet } from '../service/generic';
 import { ansiColor, computeNormalizedParts, resolveNormalized, ShError } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
 import { srcService } from './parse';
-import { TtyShell } from './tty.shell';
+import { ttyShellClass } from './tty.shell';
 
 export type State = {
   session: TypeUtil.KeyedLookup<Session>;
@@ -63,7 +61,7 @@ export interface Session {
    * This could be changed e.g. `ttys: { io, shell }[]`.
    */
   ttyIo: ShellIo<MessageFromXterm, MessageFromShell>;
-  ttyShell: TtyShell,
+  ttyShell: ttyShellClass,
   var: Record<string, any>;
   nextPid: number;
   process: TypeUtil.KeyedLookup<ProcessMeta>;
@@ -146,7 +144,7 @@ const useStore = create<State>(devtools((set, get) => ({
     createSession(sessionKey, env) {
       const persisted = api.rehydrate(sessionKey);
       const ttyIo = makeShellIo<MessageFromXterm, MessageFromShell>();
-      const ttyShell = new TtyShell(sessionKey, ttyIo, persisted.history || []);
+      const ttyShell = new ttyShellClass(sessionKey, ttyIo, persisted.history || []);
       get().device[ttyShell.key] = ttyShell;
       get().device['/dev/null'] = new NullDevice('/dev/null');
 

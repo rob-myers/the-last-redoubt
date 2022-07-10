@@ -1,18 +1,18 @@
 import type * as Sh from './parse';
 import { testNever } from '../service/generic';
-import type { MessageFromShell, MessageFromXterm } from './io';
-import { Device, ReadResult, ShellIo, SigEnum } from './io';
+import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
+import { Device, ReadResult, SigEnum } from './io';
 
 import { ProcessError } from './util';
 import { ParseService, srcService, wrapInFile } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
-import { TtyXterm } from './tty.xterm';
+import { ttyXtermClass } from './tty.xterm';
 
-export class TtyShell implements Device {
+export class ttyShellClass implements Device {
 
   public key: string;
-  public xterm!: TtyXterm;
+  public xterm!: ttyXtermClass;
   /** Lines received from a TtyXterm. */
   private inputs = [] as { line: string; resolve: () => void }[];
   private input = null as null | { line: string; resolve: () => void };
@@ -35,7 +35,7 @@ export class TtyShell implements Device {
     this.key = `/dev/tty-${sessionKey}`;
   }
   
-  async initialise(xterm: TtyXterm) {
+  async initialise(xterm: ttyXtermClass) {
     this.xterm = xterm;
     this.io.read(this.onMessage.bind(this));
 

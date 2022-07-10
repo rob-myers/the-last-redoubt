@@ -6,7 +6,7 @@ import { safeStringify, testNever } from '../service/generic';
 /**
  * Wraps xtermjs `Terminal`.
  */
-export class TtyXterm {
+export class ttyXtermClass {
   /**
    * Commands include writing a line, clearing the screen.
    * They're induced by user input and/or processes in respective session.

@@ -10,7 +10,7 @@ import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
 
-class SemanticsService {
+class semanticsServiceClass {
 
   private async *assignVars(node: Sh.CallExpr) {
     for (const assign of node.Assigns) {
@@ -540,7 +540,7 @@ class SemanticsService {
 
 }
 
-export const semanticsService = new SemanticsService;
+export const semanticsService = new semanticsServiceClass;
 
 /** Local shortcut */
 const sem = semanticsService;

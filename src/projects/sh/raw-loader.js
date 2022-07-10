@@ -16,7 +16,7 @@
 
 /**
  * @typedef RunArg @type {object}
- * @property {import('./cmd.service').CmdServiceType['processApi'] & { getCached(key: '__NPCS_KEY_VALUE__'): NPC.NPCs }} api
+ * @property {import('./cmd.service').CmdService['processApi'] & { getCached(key: '__NPCS_KEY_VALUE__'): NPC.NPCs }} api
  * @property {string[]} args
  * @property {{ [key: string]: any; 'NPCS_KEY': '__NPCS_KEY_VALUE__'; }} home
  * @property {*} [datum] A shortcut for declaring a variable
