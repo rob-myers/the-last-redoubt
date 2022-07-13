@@ -15,7 +15,9 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit --incremental true",
-    "types": "yarn typecheck"
+    "types": "yarn typecheck",
+    "render-layout": "yarn ts-script src/scripts/render-layout",
+    "ts-script": "ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'"
   },
   "dependencies": {
     "@emotion/css": "^11.9.0",
@@ -40,7 +42,7 @@
     "gatsby-plugin-react-helmet": "^5.14.0",
     "gatsby-source-filesystem": "^4.13.0",
     "getopts": "^2.3.0",
-    "json-stringify-pretty-compact": "^4.0.0",
+    "json-stringify-pretty-compact": "^3.0.0",
     "lodash.clonedeep": "^4.5.0",
     "mvdan-sh": "^0.5.0",
     "poly2tri": "^1.5.0",
@@ -80,6 +82,7 @@
     "@types/webpack": "^5.28.0",
     "@types/webpack-env": "^1.16.4",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",
+    "ts-node": "^10.0.0",
     "typescript": "^4.6.4"
   }
 }

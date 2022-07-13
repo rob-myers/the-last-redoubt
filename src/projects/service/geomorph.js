@@ -8,6 +8,7 @@ import { RoomGraph } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { hullOutset, obstacleOutset, precision, wallOutset } from './const';
 import { error, warn } from './log';
+import { fillRing } from "../service/dom";
 
 /**
  * Create a layout, given a definition and all symbols.
@@ -689,4 +690,23 @@ export function filterSingles(singles, ...tagOrTags) {
       ? spec.every(tag => x.tags.includes(tag))
       : x.tags.includes(spec))
   );
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt 
+ * @param {Nav.Zone} navZone 
+ */
+ export function drawTriangulation(ctxt, navZone) {
+	const { groups, vertices } = navZone;
+	for (const [index, tris] of groups.entries()) {
+		if (index > 0) {
+			warn(`drawTriangulation: drawing extra navZone group ${index} with ${tris.length} tris`);
+			// continue;
+		}
+		for (const { vertexIds } of tris) {
+			ctxt.beginPath();
+			fillRing(ctxt, vertexIds.map(i => vertices[i]), false);
+			ctxt.stroke();
+		}
+	}
 }
