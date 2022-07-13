@@ -7,6 +7,11 @@ export function TabsOverlay(props: Props) {
   return (
     <div className={controlsCss}>
       <div className="top-right">
+        <div
+          className={iconCss({ basename: 'refresh', invert: true })}
+          onClick={props.reset}
+          title="reset"
+        />
         <Link
           href={`#${props.parentTabsId}`}
           className={iconCss({ basename: 'hash-icon', invert: true })}
@@ -40,8 +45,9 @@ interface Props {
   enabled: boolean;
   expanded: boolean;
   parentTabsId: string;
-  toggleExpand: () => void;
-  toggleEnabled: () => void;
+  reset(): void;
+  toggleExpand(): void;
+  toggleEnabled(): void;
 }
 
 const controlsCss = css`

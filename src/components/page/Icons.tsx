@@ -13,6 +13,7 @@ export const iconCss = ({
     | 'expand'
     | 'hash-icon'
     | 'light-bulb'
+    | 'refresh'
   );
   margin?: string;
   dimPx?: number;
