@@ -8,7 +8,7 @@
     "gatsby"
   ],
   "scripts": {
-    "develop": "gatsby develop -p 8001",
+    "develop": "gatsby develop -p 8001 -H 0.0.0.0",
     "dev": "yarn develop",
     "start": "gatsby develop",
     "build": "gatsby build",
