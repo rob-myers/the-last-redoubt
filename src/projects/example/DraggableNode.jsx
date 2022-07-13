@@ -4,8 +4,6 @@ import { Vect } from "../geom";
 import { getSvgPos } from "../service/dom";
 import useUpdate from '../hooks/use-update';
 
-// TODO change icons
-
 /** @param {DraggableNodeProps} props */
 export default function DraggableNode(props) {
 
@@ -117,44 +115,23 @@ export default function DraggableNode(props) {
     return output;
   });
 
-  const radius = props.radius || 8;
+  const radius = props.radius || 16;
 
   return (
     <g className={rootCss} ref={state.rootRef}>
       {props.icon && (
         {
-          eye: (
-            <image
-              className="icon"
-              href="/icon/Simple_Icon_Eye.svg"
-              width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
-            />
-          ),
-          down: (
-            <image
-              className="icon"
-              href="/icon/solid_arrow-circle-down.svg"
-              width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
-            />
-          ),
-          right: (
-            <image
-              className="icon"
-              href="/icon/solid_arrow-circle-right.svg"
-              width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
-            />
-          ),
           run: (
             <image
               className="icon"
-              href="/icon/person-running-fa6.svg"
+              href="/icon/running.svg"
               width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
             />
             ),
           finish: (
             <image
               className="icon"
-              href="/icon/flag-checkered-fa6.svg"
+              href="/icon/target.svg"
               width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
             />
           ),
@@ -205,7 +182,7 @@ const rootCss = css`
  * @typedef DraggableNodeProps @type {object}
  * @property {Geom.VectJson} initial
  * @property {number} [radius]
- * @property {'eye' | 'down' | 'right' | 'run' | 'finish'} [icon]
+ * @property {'run' | 'finish'} [icon]
  * @property {string} [stroke]
  * @property {(api: DraggableNodeApi) => void} [onLoad]
  * @property {() => void} [onStart]
