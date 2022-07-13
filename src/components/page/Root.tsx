@@ -23,12 +23,6 @@ export function wrapPageElement({
     props.pageContext?.frontmatter
   ) as FrontMatter | undefined;
 
-  React.useLayoutEffect(() => {
-    if (tryLocalStorageGet('dark-mode-enabled') === 'true') {
-      document.body.classList.add('dark-mode');
-    }
-  }, []);
-
   return (
     <>
       <Helmet>
@@ -57,6 +51,12 @@ export function wrapPageElement({
             useSiteStore.api.initiate(allFrontMatter, frontMatter),
             [frontMatter],
           );
+
+          React.useLayoutEffect(() => {
+            if (tryLocalStorageGet('dark-mode-enabled') === 'true') {
+              document.body.classList.add('dark-mode');
+            }
+          }, []);
 
           return <>
             {frontMatter &&
