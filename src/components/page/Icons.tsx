@@ -1,21 +1,23 @@
 import { css } from "@emotion/css";
 
-export const iconCss = (
+export const iconCss = ({
+  basename,
+  margin= 'auto',
+  dimPx= 13,
+  invert,
+}: {
   basename: (
-    | 'anchor-icon'
-    | 'anchor-icon-white'
-    | 'circle-xmark'
+    | 'cross-circle'
     | 'compress'
-    | 'eye'
-    | 'eye-slash'
-    | 'ext-link-icon'
-    | 'expand-solid'
+    | 'ext-link'
+    | 'expand'
     | 'hash-icon'
     | 'light-bulb'
-  ),
-  margin = 'auto',
-  dimPx = 13
-) => css`
+  );
+  margin?: string;
+  dimPx?: number;
+  invert?: boolean;
+}) => css`
   &::after {
     display: inline-block;
     content: '';
@@ -24,5 +26,6 @@ export const iconCss = (
     height: ${dimPx}px;
     width: ${dimPx}px;
     margin: ${margin};
+    filter: ${invert ? 'invert(100%)' : 'none'};
   }
 `;

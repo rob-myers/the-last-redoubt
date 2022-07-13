@@ -44,7 +44,7 @@ export default function NavMini() {
       <div
         className={cx(
           'toggle-dark-mode',
-          iconCss('light-bulb'),
+          iconCss({ basename: 'light-bulb' }),
         )}
         onClick={(e) => {
           const enabled = document.body.classList.toggle('dark-mode');

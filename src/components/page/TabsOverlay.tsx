@@ -9,18 +9,18 @@ export function TabsOverlay(props: Props) {
       <div className="top-right">
         <Link
           href={`#${props.parentTabsId}`}
-          className={iconCss('hash-icon', 'auto', 13)}
+          className={iconCss({ basename: 'hash-icon', invert: true })}
           title="anchor"
         />
         <div
-          className={iconCss(props.expanded ? 'compress' : 'expand-solid', 'auto', 13)}
+          className={iconCss({ basename: props.expanded ? 'compress' : 'expand', dimPx: 12, invert: true })}
           onClick={props.toggleExpand}
           title={props.expanded ? 'minimise' : 'maximise'}
         />
         <div
           className={cx(
             'disable-icon',
-            iconCss('circle-xmark', 'auto', 16),
+            iconCss({ basename: 'cross-circle', dimPx: 16, invert: true }),
             props.enabled && 'enabled',
           )}
           onClick={props.enabled ? props.toggleEnabled : undefined}

@@ -324,7 +324,7 @@ const articleComponents = (
       return (
         <Link
           href={href}
-          className={cx("anchor-link", iconCss('anchor-icon', '0 2px 0 4px'))}
+          className={cx("anchor-link", iconCss({ basename: 'hash-icon', margin: '0 2px 0 4px' }))}
           id={id}
           prePush={`#${id}`}
           title={title}
@@ -341,7 +341,7 @@ const articleComponents = (
         <a
           href={href}
           title={title}
-          className={cx("new-tab-link", iconCss('ext-link-icon', '0 2px 0 4px'))}
+          className={cx("new-tab-link", iconCss({ basename: 'ext-link', margin: '0 2px 0 4px' }))}
           target="_blank"
           rel="noopener"
         >
