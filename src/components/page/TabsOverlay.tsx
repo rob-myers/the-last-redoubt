@@ -9,7 +9,7 @@ export function TabsOverlay(props: Props) {
       <div className="top-right">
         <Link
           href={`#${props.parentTabsId}`}
-          className={iconCss('anchor-icon-white', 'auto', 13)}
+          className={iconCss('hash-icon', 'auto', 13)}
           title="anchor"
         />
         <div

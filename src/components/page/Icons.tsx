@@ -10,6 +10,7 @@ export const iconCss = (
     | 'eye-slash'
     | 'ext-link-icon'
     | 'expand-solid'
+    | 'hash-icon'
     | 'light-bulb'
   ),
   margin = 'auto',
