@@ -115,10 +115,10 @@ export default function Tabs(props: Props) {
       disableBodyScroll(state.contentEl);
       // To prevent touch event default, seems cannot use React events
       ((['touchstart', 'mousedown']) as const).forEach(evt =>
-        state.backdropEl.addEventListener(evt, state.onModalBgPress)
+        state.backdropEl.addEventListener?.(evt, state.onModalBgPress)
       );
       return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
-        state.backdropEl.removeEventListener(evt, state.onModalBgPress)
+        state.backdropEl.removeEventListener?.(evt, state.onModalBgPress)
       );
     } else {
       enableBodyScroll(state.contentEl);
