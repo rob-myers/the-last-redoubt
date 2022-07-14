@@ -45,7 +45,7 @@ declare namespace Graph {
 
   export type BaseGraphJson = GraphJson<BaseNode, BaseEdgeOpts>;
 
-  //#region RoomGraph
+//#region RoomGraph
 
   export interface RoomGraphNodeRoom {
     type: 'room';
@@ -82,9 +82,9 @@ declare namespace Graph {
 
   export type RoomGraph = import('./room-graph').RoomGraph;
 
-  //#endregion 
+//#endregion 
 
-  //#region GmGraph
+//#region GmGraph
 
   /** A transformed geomorph */
   export interface GmGraphNodeGm {
@@ -153,9 +153,31 @@ declare namespace Graph {
     adjDoorId: number;
   }
 
-  //#endregion
+  export interface NavGmTransition {
+    srcGmId: number;
+    srcDoorId: number;
+    srcHullDoorId: number;
+    srcRoomId: number;
+    /**
+     * Entrypoint of the hull door from geomorph `srcGmId`,
+     * in world coordinates.
+     */
+    srcDoorEntry: Geom.Vect;
+
+    dstGmId: number;
+    dstRoomId: number;
+    dstDoorId: number;
+    dstHullDoorId: number;
+    /**
+     * Entrypoint of the hull door from geomorph `dstGmId`,
+     * in world coordinates.
+     */
+    dstDoorEntry: Geom.Vect;
+  }
+
+//#endregion
   
-  //#region FloorGraph
+//#region FloorGraph
 
   /**
    * Based on `Nav.GraphNode`
@@ -202,6 +224,48 @@ declare namespace Graph {
 
   export type FloorGraph = import('./floor-graph').floorGraphClass;
 
-  //#endregion
+  export interface NavNodeMeta {
+    doorId: number;
+    roomId: number;
+    nearDoorId?: number;
+  }
+
+  export type NavPartition = ({ nodes: Graph.FloorGraphNode[] } & (
+    | { key: 'door'; doorId: number; }
+    | { key: 'room'; roomId: number; }
+  ))[]
+
+  export interface PfData {
+    graph: Graph.FloorGraph;
+  }
+
+  /**
+   * A path through a `FloorGraph`.
+   */
+  export interface FloorGraphNavPath {
+    fullPath: Geom.Vect[];
+    navMetas: FloorGraphNavMeta[];
+    /** `[startDoorId, endDoorId]` respectively, both possibly -1 */
+    doorIds: [number, number];
+  }
+
+  /**
+   * Metadata concerning some point along a path through a `FloorGraph`.
+   */
+  export type FloorGraphNavMeta = {
+    /** Pointer into `fullPath` */
+    index: number;
+  } & (
+    | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
+    | { key: 'exit-room'; exitedRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
+    | { key: 'pre-collide'; otherNpcKey: string; }
+    | { key: 'pre-exit-room'; willExitRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
+    | { key: 'pre-near-door'; currentRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
+    | { key: 'start-seg'; }
+  );
+
+  export type NavMetaKey = FloorGraphNavMeta['key'];
+
+//#endregion
 
 }

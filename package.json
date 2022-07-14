@@ -17,6 +17,7 @@
     "typecheck": "tsc --noEmit --incremental true",
     "types": "yarn typecheck",
     "render-layout": "yarn ts-script src/scripts/render-layout",
+    "render-npc": "yarn ts-script src/scripts/render-npc",
     "ts-script": "ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'"
   },
   "dependencies": {

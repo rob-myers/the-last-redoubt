@@ -4,7 +4,7 @@
 /// <reference path="../projects/graph/graph-types.d.ts"/>
 /// <reference path="../projects/panzoom/panzoom-types.d.ts"/>
 /// <reference path="../projects/pathfinding/pathfinding-types.d.ts"/>
-/// <reference path="../projects/npc/npc-types.d.ts"/>
+/// <reference path="../projects/world/npc-types.d.ts"/>
 
 /// <reference path="../types/triangle-wasm/index.d.ts"/>
 

@@ -5,7 +5,6 @@ import { useQuery } from "react-query";
  * @param {string} zoneKey 
  * @param {Geomorph.GeomorphData | undefined} gm
  * @param {boolean} [disabled]
- * @returns {import("react-query").UseQueryResult<NPC.PfData>}
  */
 export default function usePathfinding(zoneKey, gm, disabled) {
   return useQuery(zoneKeyToQueryKey(zoneKey), () => {

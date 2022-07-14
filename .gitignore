@@ -4,5 +4,6 @@ public/*
 !public/icon
 !public/pics
 !public/geomorph
+!public/npc
 tsconfig.tsbuildinfo
 .DS_Store
