@@ -8,24 +8,24 @@ export function TabsOverlay(props: Props) {
     <div className={controlsCss}>
       <div className="top-right">
         <div
-          className={iconCss({ basename: 'refresh', invert: true })}
+          className={iconCss({ basename: 'refresh', dim: 11, invert: true })}
           onClick={props.reset}
           title="reset"
         />
         <Link
           href={`#${props.parentTabsId}`}
-          className={iconCss({ basename: 'hash-icon', invert: true })}
+          className={iconCss({ basename: 'hash-icon', dim: 11, invert: true })}
           title="anchor"
         />
         <div
-          className={iconCss({ basename: props.expanded ? 'compress' : 'expand', dimPx: 12, invert: true })}
+          className={iconCss({ basename: props.expanded ? 'compress' : 'expand', dim: 11, invert: true })}
           onClick={props.toggleExpand}
           title={props.expanded ? 'minimise' : 'maximise'}
         />
         <div
           className={cx(
             'disable-icon',
-            iconCss({ basename: 'cross-circle', dimPx: 16, invert: true }),
+            iconCss({ basename: 'cross-circle', dim: 11, invert: true }),
             props.enabled && 'enabled',
           )}
           onClick={props.enabled ? props.toggleEnabled : undefined}
@@ -78,13 +78,8 @@ const controlsCss = css`
       align-items: center;
     }
     
-    > div.disable-icon {
-      position: relative;
-      transform: translateY(0.25px) scale(0.88);
-      
-      &:not(.enabled) {
-        filter: brightness(70%);
-      }
+    > div.disable-icon:not(.enabled) {
+      filter: brightness(70%);
     }
 
     cursor: pointer;

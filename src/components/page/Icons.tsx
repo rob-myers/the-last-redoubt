@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 export const iconCss = ({
   basename,
   margin= 'auto',
-  dimPx= 13,
+  dim: dimPx= 13,
   invert,
 }: {
   basename: (
@@ -16,7 +16,8 @@ export const iconCss = ({
     | 'refresh'
   );
   margin?: string;
-  dimPx?: number;
+  /** Pixels */
+  dim?: number;
   invert?: boolean;
 }) => css`
   &::after {
