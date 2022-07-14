@@ -111,6 +111,11 @@ function restoreJsonModel(props: Props) {
   if (jsonModelString) {
     try {
       const jsonModel = JSON.parse(jsonModelString) as IJsonModel;
+
+      // Larger splitter hit test area
+      // (jsonModel.global = jsonModel.global || {}).splitterSize = 12;
+      (jsonModel.global = jsonModel.global || {}).splitterExtra = 12;
+
       const model = Model.fromJson(jsonModel);
       
       // Validate i.e. props.tabs must mention same ids
