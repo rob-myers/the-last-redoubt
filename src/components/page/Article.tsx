@@ -50,12 +50,12 @@ const articleCss = css`
   overflow-wrap: break-word;
   position: relative; /** For anchors */
   
-  padding: 64px 164px 96px 164px;
+  padding: 12px 64px 12px 64px;
   @media(max-width: 1024px) {
-    padding: 64px 48px;
+    padding: 0px 48px;
   }
   @media(max-width: 600px) {
-    padding: 8px 12px;
+    padding: 0px 12px;
     font-size: 1rem;
     border: none;
     line-height: 2;
@@ -156,9 +156,9 @@ const articleCss = css`
     }
   }
   h2 {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     @media(max-width: 1024px) {
-      font-size: 2.6rem;
+      font-size: 2.2rem;
     }
     @media(max-width: 600px) {
       margin: 16px 0 16px;
@@ -172,12 +172,12 @@ const articleCss = css`
     font-size: 0.7rem;
     line-height: 3;
     > span {
-      margin-right: 16px;
+      margin-right: 8px;
       white-space: pre;
       > span {
         padding: 6px 10px;
-        margin: 0 1px;
-        border: 1px solid #aaa;
+        margin: 0 0px;
+        border: 1px solid #aaaaaa77;
         border-radius: 2px;
         color: #333;
       }
@@ -419,9 +419,12 @@ const articleComponents = (
       </h2>
       <time dateTime={meta.dateTime}>
         {meta.dateText.split(' ').map(
-          (word) => <span key={word}>
-            {Array.from(word).map((letter, i) => <span key={i}>{letter}</span>)}
-          </span>
+          (word, i, { length }) => (
+            <span key={word}>
+              {Array.from(word).map((letter, i) => <span key={i}>{letter}</span>)}
+              {i < length - 1 ? ' ' : ''}
+            </span>
+          )
         )}
       </time>
       <div className="tags" title="tags">
