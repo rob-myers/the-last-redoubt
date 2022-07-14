@@ -18,13 +18,14 @@ export default function Tabs(props: Props) {
 
   const state = useStateRef(() => ({
     enabled: !!props.initEnabled,
-    /**
-     * Initially `'black'`, and afterwards always in `['faded', 'clear']`
-     */
+    /** Initially `'black'`, afterwards always in `['faded', 'clear']` */
     colour: 'black' as 'black' | 'faded' | 'clear',
     expanded: false,
-    contentDiv: undefined as undefined | HTMLDivElement,
     resets: 0,
+
+    rootEl: {} as HTMLElement,
+    contentEl: {} as HTMLDivElement,
+    backdropEl: {} as HTMLDivElement,
 
     // TODO doesn't fire if click on Tabs
     onKeyUp(e: React.KeyboardEvent) {
@@ -32,13 +33,16 @@ export default function Tabs(props: Props) {
         state.toggleExpand();
       }
     },
-    onModalBgPress() {
-      if (state.expanded) {
-        state.toggleExpand();
-      }
-    },
-    preventTouch(e: React.TouchEvent) {
+    /** Prevent any underlying element from being clicked on click outside modal */
+    onModalBgPress(e: TouchEvent | MouseEvent) {
       e.preventDefault();
+      state.toggleExpand();
+    },
+    /** Prevent background moving when tab dragged */
+    preventTabTouch(e: TouchEvent) {
+      if ((e.target as HTMLElement).classList.contains('flexlayout__tab_button_content')) {
+        e.preventDefault();
+      }
     },
 
     reset() {
@@ -89,6 +93,7 @@ export default function Tabs(props: Props) {
 
   React.useEffect(() => {// Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
+    state.rootEl.addEventListener('touchstart', state.preventTabTouch, { passive: false });
 
     if (tryLocalStorageGet(expandedStorageKey) === 'true') {
       if (!useSiteStore.getState().navOpen) {
@@ -99,15 +104,31 @@ export default function Tabs(props: Props) {
       }
     }
     update();
+
+    return () => {
+      state.rootEl.removeEventListener('touchstart', state.preventTabTouch);
+    };
   }, []);
 
-  React.useEffect(() => void (state.contentDiv &&
-    (state.expanded ? disableBodyScroll : enableBodyScroll)(state.contentDiv)
-  ), [state.expanded]);
+  React.useEffect(() => {
+    if (state.expanded) {
+      disableBodyScroll(state.contentEl);
+      // To prevent touch event default, seems cannot use React events
+      ((['touchstart', 'mousedown']) as const).forEach(evt =>
+        state.backdropEl.addEventListener(evt, state.onModalBgPress)
+      );
+      return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
+        state.backdropEl.removeEventListener(evt, state.onModalBgPress)
+      );
+    } else {
+      enableBodyScroll(state.contentEl);
+    }
+  }, [state.expanded]);
 
   return (
     <figure
       key={`${props.id}-${state.resets}`}
+      ref={el => el && (state.rootEl = el)}
       className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
@@ -116,9 +137,8 @@ export default function Tabs(props: Props) {
 
       {state.expanded && <>
         <div
+          ref={el => el && (state.backdropEl = el)}
           className="modal-backdrop"
-          onPointerDown={state.onModalBgPress}
-          onTouchStart={state.preventTouch}
         />
         <div
           className={fillInlineSpaceCss(props.height)}
@@ -126,7 +146,7 @@ export default function Tabs(props: Props) {
       </>}
 
       <div
-        ref={(el) => el && (state.contentDiv = el)}
+        ref={(el) => el && (state.contentEl = el)}
         className={state.expanded ? expandedCss : unexpandedCss(props.height)}
       >
         {state.colour !== 'black' && (
