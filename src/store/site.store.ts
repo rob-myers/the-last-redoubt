@@ -20,6 +20,7 @@ export type State = {
   tabs: KeyedLookup<TabsState>;
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
+    removePortals(...portalKeys: string[]): void;
   };
 };
 
@@ -31,6 +32,7 @@ const useStore = create<State>(devtools((set, get) => ({
   portal: {},
   tabs: {},
   api: {
+
     initiate({ allMdx: { edges } }, fm) {
       if (get().groupedMetas.length) {
         return set({ articleKey: fm ? fm.key : null });
@@ -53,6 +55,16 @@ const useStore = create<State>(devtools((set, get) => ({
         articlesMeta,
         groupedMetas,
       });
+    },
+
+    removePortals(...portalKeys) {
+      const { portal: portalLookup } = get();
+      portalKeys.forEach(portalKey => {
+        const portal = portalLookup[portalKey];
+        portal.portal.unmount();
+        delete portalLookup[portalKey];
+      });
+      set({});
     },
   },
 }), 'site'));

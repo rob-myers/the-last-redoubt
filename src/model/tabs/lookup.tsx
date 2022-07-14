@@ -32,8 +32,8 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
   // 'example/SvgDoorsDemo#301': () => import('projects/example/SvgDoorsDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
-  // 'example/SvgStringPull': () => import('projects/example/SvgStringPull')
-  //   .then(x => (props:any) => <x.default disabled {...props} />),
+  'example/SvgStringPull': () => import('projects/example/SvgStringPull')
+    .then(x => (props:any) => <x.default disabled {...props} />),
   // 'example/SvgNavGraph#301': () => import('projects/example/SvgNavGraph')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   // 'example/SvgNavGraph#302': () => import('projects/example/SvgNavGraph')
@@ -64,9 +64,3 @@ export async function getComponent(key: ComponentFilepathKey) {
 
 export type CodeFilepathKey = keyof typeof code;
 export type ComponentFilepathKey = keyof typeof component;
-
-// TODO remove
-if (module.hot) {
-  // Avoid breaking preact-prefresh of raw-loader imported jsx
-  module.hot.accept();
-}

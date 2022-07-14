@@ -75,9 +75,9 @@ const rootCss = css`
     a {
       padding: 10px 12px;
       width: 100%;
-      color: #888;
+      color: #ccc;
       &:hover {
-        color: #ccc;
+        color: #fff;
       }
     }
   }

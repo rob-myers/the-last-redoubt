@@ -6,9 +6,8 @@ import { useBeforeunload } from 'react-beforeunload';
 import { getCode, getComponent } from 'model/tabs/lookup';
 import useSiteStore from "store/site.store";
 // import useSession from "store/session.store";
-// import { CodeEditor, Terminal } from 'components/dynamic';
-import { CodeEditor } from 'components/dynamic';
-// import { isProfileKey, profileLookup } from 'model/sh/sh.lib';
+import { CodeEditor, Terminal } from 'components/dynamic';
+import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
   const lookup = useSiteStore(site => site.portal);
@@ -56,21 +55,14 @@ export default function Portals() {
           );
         }
         case 'terminal': {
+          const env = meta.env || {};
+          env.PROFILE = env.PROFILE || profileLookup['profile-1']();
 
-          // const env = meta.env || {};
-          // if (typeof env.PROFILE === 'string') {
-          //   // Can specify profile via key
-          //   if (isProfileKey(env.PROFILE)) env.PROFILE = profileLookup[env.PROFILE]();
-          // } else {
-          //   env.PROFILE = profileLookup['profile-1']();
-          // }
-
-          // return (
-          //   <portals.InPortal key={key} node={portal}>
-          //     <Terminal sessionKey={meta.filepath} env={env} />
-          //   </portals.InPortal>
-          // );
-          return null;
+          return (
+            <portals.InPortal key={key} node={portal}>
+              <Terminal sessionKey={meta.filepath} env={env} />
+            </portals.InPortal>
+          );
         }
         default:
           return (

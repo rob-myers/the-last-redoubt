@@ -2,7 +2,7 @@ import React from 'react';
 import { css, cx } from '@emotion/css';
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 
-import type { TabMeta } from 'model/tabs/tabs.model';
+import { getTabName, TabMeta } from 'model/tabs/tabs.model';
 import useSiteStore from 'store/site.store';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
 import useUpdate from 'projects/hooks/use-update';
@@ -24,25 +24,45 @@ export default function Tabs(props: Props) {
     colour: 'black' as 'black' | 'faded' | 'clear',
     expanded: false,
     contentDiv: undefined as undefined | HTMLDivElement,
+    resets: 0,
 
+    // TODO doesn't fire if click on Tabs
+    onKeyUp(e: React.KeyboardEvent) {
+      if (state.expanded && e.key === 'Escape') {
+        state.toggleExpand();
+      }
+    },
+    onModalBgPress() {
+      if (state.expanded) {
+        state.toggleExpand();
+      }
+    },
+    preventTouch(e: React.TouchEvent) {
+      e.preventDefault();
+    },
+
+    reset() {
+      const portalKeys = props.tabs.flatMap(x => x.map(y => getTabName(y)));
+      useSiteStore.api.removePortals(...portalKeys);
+      state.resets++;
+      update();
+    },
     toggleEnabled() {
       state.enabled = !state.enabled;
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
-      if (!state.enabled && state.expanded) {
-        state.toggleExpand(); // Disable triggers minimize
-      }
 
       const tabs = useSiteStore.getState().tabs[props.id];
       if (tabs) {
-        // Set disabled `false` for all visible tabs
+        // Set disabled (converse) for all visible tabs
+        const disabled = !state.enabled;
         const portalLookup = useSiteStore.getState().portal;
         const tabKeys = tabs.getTabNodes()
           .filter(x => x.isVisible())
           .map(x => x.getId())
           .filter(x => x in portalLookup);
-        tabKeys.forEach(key => portalLookup[key].portal.setPortalProps({ disabled: !state.enabled }));
-        // Other tab portals may not exist yet, so we record in `tabs` too
-        tabs.disabled = !state.enabled;
+        tabKeys.forEach(key => portalLookup[key].portal.setPortalProps({ disabled }));
+        // Other tab portals may not exist yet, so record in `tabs` too
+        tabs.disabled = disabled;
       } else {
         console.warn(
           `Tabs not found for id "${props.id}". ` +
@@ -64,20 +84,7 @@ export default function Tabs(props: Props) {
       }
       update();
     },
-    // TODO doesn't fire if click on Tabs
-    onKeyUp(e: React.KeyboardEvent) {
-      if (state.expanded && e.key === 'Escape') {
-        state.toggleExpand();
-      }
-    },
-    onModalBgPress() {
-      if (state.expanded) {
-        state.toggleExpand();
-      }
-    },
-    preventTouch(e: React.TouchEvent) {
-      e.preventDefault();
-    },
+
   }));
 
   React.useEffect(() => {// Initially trigger CSS animation
@@ -100,6 +107,7 @@ export default function Tabs(props: Props) {
 
   return (
     <figure
+      key={`${props.id}-${state.resets}`}
       className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
@@ -132,6 +140,7 @@ export default function Tabs(props: Props) {
           enabled={state.enabled}
           expanded={state.expanded}
           parentTabsId={props.id}
+          reset={state.reset}
           toggleExpand={state.toggleExpand}
           toggleEnabled={state.toggleEnabled}
         />
@@ -157,8 +166,6 @@ const rootCss = css`
   @media(max-width: 600px) {
     margin: 40px 0 32px 0;
   }
-
-  background: var(--focus-bg);
 
   position: relative;
   > span.anchor {

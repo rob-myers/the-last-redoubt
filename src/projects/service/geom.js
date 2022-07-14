@@ -1,8 +1,42 @@
-import { Poly, Rect, Vect } from '../geom';
+import { Mat, Poly, Rect, Vect } from '../geom';
 
-class geomService {
+class geomServiceClass {
+  /**
+   * @param {Geom.AngledRect<Geom.Rect>} input 
+   * @returns {Geom.Poly}
+   */
+   angledRectToPoly(input) {
+    const poly = Poly.fromRect(input.baseRect);
+    poly.translate(-input.baseRect.x, -input.baseRect.y);
+    poly.applyMatrix((new Mat).setRotation(input.angle));
+    poly.translate(input.baseRect.x, input.baseRect.y);
+    return poly;
+  }
+  
+  /**
+   * https://github.com/davidfig/intersects/blob/master/polygon-circle.js
+   * @param {Geom.VectJson} center 
+   * @param {number} radius 
+   * @param {Geom.Poly} convexPoly 
+   */
+  circleIntersectsConvexPolygon(center, radius, convexPoly) {
+    if (convexPoly.outlineContains(center)) {
+      return true;
+    }
+    const vs = convexPoly.outline;
+    const count = vs.length;
+
+    for (let i = 0; i < count - 1; i++) {
+      if (geom.lineSegIntersectsCircle(vs[i], vs[i + 1], center, radius)) {
+        return true;
+      }
+    }
+    return geom.lineSegIntersectsCircle(vs[0], vs[count - 1], center, radius);
+  }
 
   /**
+   * Return the two compass points with angle
+   * nearest to direction.
    * @param {Vect} p 
    * @returns {[Geom.Direction, Geom.Direction]}
    */
@@ -20,6 +54,49 @@ class geomService {
         return -p.x > -p.y ? [3, 0] : [0, 3]; // { 'w', 'n' }
       }
     }
+  }
+
+  /**
+   * See Separating Axis Theorem for convex polygons.
+   * https://github.com/davidfig/intersects/blob/9fba4c88dcf28998ced7df7c6e744646eac1917d/polygon-polygon.js#L10
+   * @param {Geom.VectJson[]} ps1 
+   * @param {Geom.VectJson[]} ps2 
+   */
+  convexPolysIntersect(ps1, ps2) {
+    const polygons = [ps1, ps2];
+    let minA, maxA, projected, minB, maxB, j;
+    for (let i = 0; i < polygons.length; i++) {
+      let polygon = polygons[i];
+      for (let i1 = 0; i1 < polygon.length; i1++) {
+        let i2 = (i1 + 1) % polygon.length;
+        let normal = { x: polygon[i2].y - polygon[i1].y, y: polygon[i1].x - polygon[i2].x };
+        minA = maxA = null
+        for (j = 0; j < ps1.length; j++) {
+          projected = normal.x * ps1[j].x + normal.y * ps1[j].y;
+          if (minA === null || projected < minA) {
+            minA = projected;
+          }
+          if (maxA === null || projected > maxA) {
+            maxA = projected;
+          }
+        }
+        minB = maxB = null;
+        for (j = 0; j < ps2.length; j++) {
+          projected = normal.x * ps2[j].x + normal.y * ps2[j].y;
+          if (minB === null || projected < minB) {
+            minB = projected;
+          }
+          if (maxB === null || projected > maxB) {
+            maxB = projected
+          }
+        }
+        // @ts-ignore
+        if (maxA < minB || maxB < minA) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   /**
@@ -79,6 +156,26 @@ class geomService {
   }
 
   /**
+   * https://stackoverflow.com/a/1079478/2917822
+   * https://github.com/davidfig/intersects/blob/master/line-circle.js
+   * @param {Geom.VectJson} a 
+   * @param {Geom.VectJson} b 
+   * @param {Geom.VectJson} center 
+   * @param {number} radius 
+   */
+  lineSegIntersectsCircle(a, b, center, radius) {
+    const ab = tempVect.copy(b).sub(a);
+    const ac = tempVect2.copy(center).sub(a);
+    const ab2 = ab.dot(ab); // |ab|^2
+    const acab = ac.dot(ab);
+    let t = acab / ab2;
+    t = (t < 0) ? 0 : t;
+    t = (t > 1) ? 1 : t;
+    const h = tempVect2.set((ab.x * t + a.x) - center.x, (ab.y * t + a.y) - center.y);
+    return h.dot(h) <= radius * radius;
+  }
+
+  /**
    * https://github.com/davidfig/intersects/blob/master/line-point.js
    * @param {Geom.Vect} u 
    * @param {Geom.Vect} v 
@@ -97,11 +194,11 @@ class geomService {
    * Get segment through center along 'x+'.
    * @param {Geom.AngledRect<Geom.Rect>} _ 
    */
-  getAngledRectSeg({ angle, rect }) {
+  getAngledRectSeg({ angle, baseRect }) {
     const widthNormal = tempVect.set(Math.cos(angle), Math.sin(angle));
     const heightNormal = tempVect2.set(-Math.sin(angle), Math.cos(angle));
-    const src = rect.topLeft.addScaledVector(heightNormal, 0.5 * rect.height);
-    return [src, src.clone().addScaledVector(widthNormal, rect.width)];
+    const src = baseRect.topLeft.addScaledVector(heightNormal, 0.5 * baseRect.height);
+    return [src, src.clone().addScaledVector(widthNormal, baseRect.width)];
   }
 
   /**
@@ -365,12 +462,12 @@ class geomService {
 
     if (w >= h) {
       return {
-        rect: new Rect(ps[0].x, ps[0].y, w, h),
+        baseRect: new Rect(ps[0].x, ps[0].y, w, h),
         angle: Math.atan2(tempVect.y, tempVect.x),
       };
     } else {
       return {
-        rect: new Rect(ps[1].x, ps[1].y, h, w),
+        baseRect: new Rect(ps[1].x, ps[1].y, h, w),
         angle: Math.atan2(tempVect2.y, tempVect2.x),
       };
     }
@@ -386,16 +483,32 @@ class geomService {
     return radian >= 0 ? radian : (2 * Math.PI + radian);
   }
 
-  /** @param {Vect[]} path */
+  /**
+   * @param {Geom.Rect} rect 
+   * @param {Geom.VectJson[]} points 
+   */
+  rectIntersectsConvexPoly(rect, points) {
+    return this.convexPolysIntersect(
+      rect.points,
+      points,
+    );
+  }
+
+  /**
+   * @template {Geom.VectJson} T
+   * @param {T[]} path
+   * @returns {T[]}
+   */
   removePathReps(path) {
-    /** @type {Geom.VectJson} */
-    let prev;
-    return path.reduce((agg, p) => {
-      if (!(prev && (p.x === prev.x) && (p.y === prev.y))) {
-        agg.push(prev = p);
-      }
-      return agg;
-    }, /** @type {typeof path} */ ([]));
+    let prev = path[0];
+    return prev
+      ? path.reduce((agg, p) => {
+          if (!((p.x === prev.x) && (p.y === prev.y))) {
+            agg.push(prev = p);
+          }
+          return agg;
+        }, /** @type {typeof path} */ ([prev]))
+      : path;
   }
 
   /**
@@ -412,7 +525,7 @@ class geomService {
 const tempVect = new Vect;
 const tempVect2 = new Vect;
 
-export const geom = new geomService;
+export const geom = new geomServiceClass;
 
 /**
  * Aligned to `Geom.Direction`.

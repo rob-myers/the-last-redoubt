@@ -7,20 +7,25 @@ export function TabsOverlay(props: Props) {
   return (
     <div className={controlsCss}>
       <div className="top-right">
+        <div
+          className={iconCss({ basename: 'refresh', dim: 11, invert: true })}
+          onClick={props.reset}
+          title="reset"
+        />
         <Link
           href={`#${props.parentTabsId}`}
-          className={iconCss('anchor-icon-white', 'auto', 13)}
+          className={iconCss({ basename: 'hash-icon', dim: 11, invert: true })}
           title="anchor"
         />
         <div
-          className={iconCss(props.expanded ? 'compress' : 'expand-solid', 'auto', 13)}
+          className={iconCss({ basename: props.expanded ? 'compress' : 'expand', dim: 11, invert: true })}
           onClick={props.toggleExpand}
           title={props.expanded ? 'minimise' : 'maximise'}
         />
         <div
           className={cx(
             'disable-icon',
-            iconCss('circle-xmark', 'auto', 16),
+            iconCss({ basename: 'cross-circle', dim: 11, invert: true }),
             props.enabled && 'enabled',
           )}
           onClick={props.enabled ? props.toggleEnabled : undefined}
@@ -40,8 +45,9 @@ interface Props {
   enabled: boolean;
   expanded: boolean;
   parentTabsId: string;
-  toggleExpand: () => void;
-  toggleEnabled: () => void;
+  reset(): void;
+  toggleExpand(): void;
+  toggleEnabled(): void;
 }
 
 const controlsCss = css`
@@ -72,13 +78,8 @@ const controlsCss = css`
       align-items: center;
     }
     
-    > div.disable-icon {
-      position: relative;
-      transform: translateY(0.25px) scale(0.88);
-      
-      &:not(.enabled) {
-        filter: brightness(70%);
-      }
+    > div.disable-icon:not(.enabled) {
+      filter: brightness(70%);
     }
 
     cursor: pointer;

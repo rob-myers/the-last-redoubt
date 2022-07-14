@@ -24,13 +24,17 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
           useSiteStore.setState({ navOpen: !navOpen });
         }}
       >
-        <div className="article-overlay" />
+        <div
+          className="article-overlay"
+        />
         <div className={cssName.topBarHandle}>
           <div className="icon">
             {navOpen ? '<' : '>'}
           </div>
         </div>
-        <NavItems frontmatter={frontmatter} />
+        <NavItems
+          frontmatter={frontmatter}
+        />
       </nav>
 
       <div
