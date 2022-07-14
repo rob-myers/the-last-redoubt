@@ -79,6 +79,7 @@ export default function defer() {
 
 /** @typedef {typeof otag} otag */
 
+/* eslint-disable import/first */
 import { filter, first, map, take } from 'rxjs/operators';
 
 /** @typedef {typeof filter} filter */

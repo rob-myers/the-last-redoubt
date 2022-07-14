@@ -22,6 +22,7 @@ export default function DebugWorld(props) {
   const roomPoly = gm.rooms[roomId];
   const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
 
+  /* eslint-disable react-hooks/rules-of-hooks */
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
 

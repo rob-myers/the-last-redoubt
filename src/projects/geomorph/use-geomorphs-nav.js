@@ -23,6 +23,7 @@ export default function useGeomorphsNav(g, disabled) {
     }
   }, [g]);
 
+  /* eslint-disable react-hooks/rules-of-hooks */
   const queries = gmKeys.map(key => {
     // Choose zoneKey to be geomorph key e.g. g-101--multipurpose
     return usePathfinding(key, g.gmData[key], disabled)

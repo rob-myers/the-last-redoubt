@@ -19,6 +19,7 @@ export default function useGeomorphs(defs) {
     }
   }, [defs]);
 
+  /* eslint-disable react-hooks/rules-of-hooks */
   const queries = gmKeys.map(layoutKey => useGeomorphData(layoutKey));
   const ready = (
     defs.every(x => gmKeys.includes(x.layoutKey)) 
