@@ -39,7 +39,12 @@ export default function SvgStringPull(props) {
   }), { deps: [pf] });
 
   return (
-    <PanZoom gridBounds={defaults.gridBounds} initViewBox={defaults.initViewBox} maxZoom={6}>
+    <PanZoom
+      dark
+      gridBounds={defaults.gridBounds}
+      initViewBox={defaults.initViewBox}
+      maxZoom={6}
+    >
       <g
         className={cx(rootCss, !props.disabled && animateNavpathCss)}
         ref={(el) => {

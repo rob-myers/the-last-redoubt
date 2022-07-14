@@ -127,7 +127,7 @@ export default function PanZoom(props) {
       <g className={cx("content", props.className)}>
         {props.children}
       </g>
-      <Grid bounds={props.gridBounds} dark={props.dark} />
+      <Grid bounds={props.gridBounds}  />
     </svg>
   );
 }
@@ -144,7 +144,7 @@ export default function PanZoom(props) {
  * @property {(el: SVGSVGElement) => void} [onUpdate]
  */
 
-/** @param {{ bounds: Geom.Rect; dark?: boolean }} props */
+/** @param {{ bounds: Geom.Rect }} props */
 export function Grid(props) {
   const uid = React.useMemo(() => gridPatternCount++, []);
 
@@ -160,7 +160,7 @@ export function Grid(props) {
           <path
             d={`M ${dim} 0 L 0 0 0 ${dim}`}
             fill="none"
-            stroke={props.dark ? "rgba(200,200,200,0.2)" : 'rgba(0,0,0,0.5)'}
+            stroke="rgba(0,0,0,0.5)"
             strokeWidth="0.3"
           />
         </pattern>
