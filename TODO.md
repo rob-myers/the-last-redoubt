@@ -1,11 +1,8 @@
 # TODO
 
-- Remove articles/index articlesMeta ✅
-  - ✅ use `allFrontmatter` to build analogous in useSiteStore
-  - ✅ cleanup NavItems
-  - ✅ cleanup NavMini
-
-- Fix dark-mode i.e. `Tabs` position `fixed` breaks.
-  Try alternative approach.
-
-- Fix prev/up/next vert spacing when window max
+- ✅ Migrate projects/world
+- Show in test.mdx
+- Start new page intro.mdx
+  - it will replace objective.mdx
+- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+- Modularise access to npc json/png

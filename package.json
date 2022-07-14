@@ -55,6 +55,7 @@
     "react-query": "^3.39.0",
     "react-reverse-portal": "^2.1.0",
     "react-sizeme": "^3.0.2",
+    "react-use-measure": "^2.1.1",
     "safe-json-stringify": "^1.2.0",
     "safe-stable-stringify": "^2.3.1",
     "svg-path-parser": "^1.1.0",
