@@ -1,9 +1,6 @@
 :root {
-  --body-bg: #eee;
-  --focus-bg: #fff;
-  --border-bg: #ccc;
-  --blog-border-width: 2px;
-  /** Pixel 5: white lines when 8px */
+  --article-border-color: #ccc;
+  /** Saw white lines at 8px and zoomed */
   --tabs-border-width: 6px;
 }
 

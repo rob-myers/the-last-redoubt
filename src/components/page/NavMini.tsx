@@ -1,5 +1,6 @@
 import React from "react";
 import { cx, css } from "@emotion/css";
+import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
 import { cssName } from "../css-names";
 import Link from "./Link";
@@ -28,7 +29,7 @@ export default function NavMini() {
             </li>
             <li>
               <Link href={meta.path}>
-                <span className="primary">⬆</span>
+                <span className="primary">id</span>
               </Link>
             </li>
             <li>
@@ -43,10 +44,11 @@ export default function NavMini() {
       <div
         className={cx(
           'toggle-dark-mode',
-          iconCss('eye'),
+          iconCss({ basename: 'light-bulb' }),
         )}
         onClick={(e) => {
-          document.body.classList.toggle('dark-mode');
+          const enabled = document.body.classList.toggle('dark-mode');
+          tryLocalStorageSet('dark-mode-enabled', `${enabled}`);
         }}
       />
     </div>
@@ -61,8 +63,7 @@ const rootCss = css`
   position: absolute;
   z-index: 10;
   right: ${width}px;
-  top: -40px;
-  @media(max-width: 1024px) { top: -32px; }
+  top: -32px;
   @media(max-width: 600px) { top: 0; }
 
   display: flex;
@@ -105,5 +106,6 @@ const rootCss = css`
     justify-content: center;
     color: white;
     cursor: pointer;
+    filter: invert(100%);
   }
 `;

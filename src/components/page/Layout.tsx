@@ -2,6 +2,7 @@ import { navigate } from "gatsby";
 import React from "react";
 import { Actions, IJsonModel, Layout as FlexLayout, Model, TabNode } from 'flexlayout-react';
 import { useBeforeunload } from 'react-beforeunload';
+import debounce from "debounce";
 
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
 import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
@@ -47,6 +48,7 @@ export default function Layout(props: Props) {
       model={model}
       factory={factory}
       realtimeResize
+      onModelChange={debounce(() => storeModelAsJson(props.id, model), 300)}
     />
   );
 }
@@ -94,9 +96,8 @@ function useRegisterTabs(props: Props, model: Model) {
     return () => void delete useSiteStore.getState().tabs[props.id];
   }, [model]);
 
-  useBeforeunload(() => {
-    tryLocalStorageSet(`model@${props.id}`, JSON.stringify(model.toJson()));
-  });
+  useBeforeunload(() => storeModelAsJson(props.id, model));
+
 }
 
 function factory(node: TabNode) {
@@ -126,4 +127,8 @@ function restoreJsonModel(props: Props) {
     }
   }
   return Model.fromJson(computeJsonModel(props.tabs));
+}
+
+function storeModelAsJson(id: string, model: Model) {
+  tryLocalStorageSet(`model@${id}`, JSON.stringify(model.toJson()));
 }

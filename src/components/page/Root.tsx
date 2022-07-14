@@ -6,6 +6,7 @@ import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
+import { tryLocalStorageGet } from "projects/service/generic";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav";
 import Main from "./Main";
@@ -19,7 +20,7 @@ export function wrapPageElement({
 }: WrapPageElementBrowserArgs | WrapPageElementNodeArgs) {
 
   const frontMatter = (
-    props.pageResources?.json.pageContext?.frontmatter
+    props.pageContext?.frontmatter
   ) as FrontMatter | undefined;
 
   return (
@@ -50,6 +51,12 @@ export function wrapPageElement({
             useSiteStore.api.initiate(allFrontMatter, frontMatter),
             [frontMatter],
           );
+
+          React.useLayoutEffect(() => {
+            if (tryLocalStorageGet('dark-mode-enabled') === 'true') {
+              document.body.classList.add('dark-mode');
+            }
+          }, []);
 
           return <>
             {frontMatter &&

@@ -26,6 +26,7 @@ function useEnsurePortal(
       const htmlPortalNode = portals.createHtmlPortalNode({
         attributes: { class: 'portal' },
       });
+
       useSiteStore.setState(({ portal }) => ({
         portal: { ...portal, [portalKey]: {
           key: portalKey,
@@ -47,7 +48,7 @@ function useEnsurePortal(
       });
 
     } else if (JSON.stringify(portal.meta) !== JSON.stringify(meta)) {
-      console.warn('Detected different TabMetas with same portalKey', portal.meta, meta);
+      console.warn('Saw different TabMetas with same portalKey', portal.meta, meta);
     }
   }, []);
 }

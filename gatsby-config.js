@@ -23,7 +23,7 @@ const config = {
     },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
-    "gatsby-plugin-preact",
+    // "gatsby-plugin-preact",
   ],
 };
 

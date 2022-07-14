@@ -43,7 +43,8 @@ declare namespace Geom {
   }
 
   export interface AngledRect<T> {
-    rect: T;
+    /** The unrotated rectangle */
+    baseRect: T;
     /** Radians */
     angle: number;
   }
