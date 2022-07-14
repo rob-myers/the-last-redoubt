@@ -234,7 +234,7 @@ const rootCss = css`
       border-radius: ${debugRadius}px;
     }
     div.debug-door-arrow {
-      background-image: url('/icon/solid_arrow-circle-right.svg');
+      background-image: url('/icon/circle-right.svg');
     }
     div.debug-label-info {
       background-image: url('/icon/info-icon.svg');
