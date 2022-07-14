@@ -4,9 +4,11 @@
 - ✅ Show in test.mdx
 - ✅ Migrate to React 18
 
-- 🚧 Get profile-1-a working
+- ✅ Get profile-1-a working
   - Fix initial lit issue
   - Fix persistent PROFILE issue
+
+- Hidden tab component should not be mounted
 
 - Start new page intro.mdx
   - it will replace objective.mdx

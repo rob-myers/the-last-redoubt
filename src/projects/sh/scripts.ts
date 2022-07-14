@@ -31,12 +31,38 @@ export const utilFunctions = [
 },
 ];
 
+/**
+ * - Index in array denotes version
+ * - We further populate using raw-loader.js below.
+ */
 export const gameFunctions = [
-  // TODO
+{
+
+goLoop: `{
+  click |
+    filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
+    map 'x => ({ npcKey: "'$1'", point: x })' |
+    nav |
+    walk $1
+}`,
+
+goOnce: `{
+  nav $1 $(click 1) | walk $1
+}`,
+
+lookLoop: `{
+  click |
+    filter 'x => !x.tags.includes("nav")' |
+    look $1
+}`,
+
+},
 ];
 
 /**
- * Some possible values of env.PROFILE
+ * Possible values for env.PROFILE.
+ * Use functions so can reference other profiles.
+ * Remember to invoke function (MDX lacks intellisense).
  */
 export const profileLookup = {
   'profile-1': () => `
@@ -55,7 +81,10 @@ ${profileLookup["profile-1"]()}
 ready
 
 spawn andros '{"x":185,"y":390}'
-# spawn andros '{"x":598.95,"y":1160.13}'
+
+# why now needed?
+sleep 0.2
+
 npc set-player andros
 
 # camera follows andros
@@ -68,7 +97,6 @@ goLoop andros &
 lookLoop andros &
 `,
 };
-
 
 //@ts-ignore
 import rawLoaderJs from './raw-loader';
@@ -87,8 +115,7 @@ export const scriptLookup = {
     .map(([funcName, funcBody]) => `${funcName} () ${funcBody.trim()}`
   ).join('\n\n'),
 
-  'game-1': '',
-  // 'game-1': Object.entries(gameFunctions[0])
-  //   .map(([funcName, funcBody]) => `${funcName} () ${funcBody.trim()}`
-  // ).join('\n\n'),
+  'game-1': Object.entries(gameFunctions[0])
+    .map(([funcName, funcBody]) => `${funcName} () ${funcBody.trim()}`
+  ).join('\n\n'),
 };

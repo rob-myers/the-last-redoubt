@@ -34,6 +34,10 @@ export default function World(props) {
       filter, first, map, take, otag,
     },
 
+    get ready() {
+      return [state.doors, state.fov, state.npcs, state.panZoom].every(x => x.ready);
+    },
+
     updateAll() {
       state.fov.updateClipPath();
       state.doors.updateVisibleDoors();
@@ -110,6 +114,7 @@ export default function World(props) {
  * @property {PanZoom.CssApi} panZoom
  * @property {NpcsApi} npcs
  * @property {FovApi} fov
+ * @property {boolean} ready
  * @property {() => void} updateAll
  * @property {StateUtil} lib
  */
