@@ -10,8 +10,11 @@
 
 - ✅ When tab initially maximised, unseen tabs should not be rendered
 
-- Initially paused tabs should have initially paused session?
-- Fix collision detection?
+- If Tabs initially disabled:
+  - ✅ World won't request unseen geomorphs
+  - session initially paused?
+
+- Avoid full refresh on toggle CssPanZoom grid
 
 - Start new page intro.mdx
   - it will replace objective.mdx

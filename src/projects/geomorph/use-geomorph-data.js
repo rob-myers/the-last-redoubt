@@ -11,7 +11,7 @@ import { geom } from "../service/geom";
  * 
  * @param {Geomorph.LayoutKey} layoutKey
  */
-export default function useGeomorphData(layoutKey) {
+export default function useGeomorphData(layoutKey, disabled = false) {
   
   return useQuery(geomorphJsonPath(layoutKey), async () => {
     
@@ -139,6 +139,7 @@ export default function useGeomorphData(layoutKey) {
     cacheTime: Infinity,
     keepPreviousData: true,
     staleTime: Infinity,
+    enabled: !disabled,
   });
 }
 

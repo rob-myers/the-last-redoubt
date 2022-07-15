@@ -7,7 +7,7 @@ import useGeomorphData from "./use-geomorph-data";
 /**
  * @param {Geomorph.UseGeomorphsDefItem[]} defs 
  */
-export default function useGeomorphs(defs) {
+export default function useGeomorphs(defs, disabled = false) {
 
   const [gmKeys, setLayoutKeys] = React.useState(() => defs.map(x => x.layoutKey));
 
@@ -20,7 +20,7 @@ export default function useGeomorphs(defs) {
   }, [defs]);
 
   /* eslint-disable react-hooks/rules-of-hooks */
-  const queries = gmKeys.map(layoutKey => useGeomorphData(layoutKey));
+  const queries = gmKeys.map(layoutKey => useGeomorphData(layoutKey, disabled));
   const ready = (
     defs.every(x => gmKeys.includes(x.layoutKey)) 
     && queries.every(x => x.data)

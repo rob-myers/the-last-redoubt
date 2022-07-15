@@ -20,9 +20,8 @@ export default function World(props) {
 
   const update = useUpdate();
 
-  const { gms, gmGraph } = useGeomorphs(props.gms);
-
   const state = useStateRef(/** @type {() => State} */ () => ({
+    everEnabled: false,
 
     doors: /** @type {DoorsApi} */  ({ ready: false }),
     fov: /** @type {FovApi} */  ({ ready: false }),
@@ -45,6 +44,11 @@ export default function World(props) {
     },
 
   }));
+
+  const { gms, gmGraph } = useGeomorphs(
+    props.gms, 
+    !(state.everEnabled = state.everEnabled || !props.disabled),
+  );
 
   useHandleEvents(state, gmGraph);
 
@@ -110,10 +114,11 @@ export default function World(props) {
 
 /**
  * @typedef State @type {object}
+ * @property {boolean} everEnabled
  * @property {DoorsApi} doors
- * @property {PanZoom.CssApi} panZoom
- * @property {NpcsApi} npcs
  * @property {FovApi} fov
+ * @property {NpcsApi} npcs
+ * @property {PanZoom.CssApi} panZoom
  * @property {boolean} ready
  * @property {() => void} updateAll
  * @property {StateUtil} lib
