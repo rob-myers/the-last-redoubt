@@ -25,7 +25,6 @@ export type State = {
     }) => ProcessMeta;
     createFifo: (fifoKey: string, size?: number) => FifoDevice;
     createVarDevice: (sessionKey: string, varPath: string, mode: VarDeviceMode) => VarDevice;
-    ensureSession: (sessionKey: string, env: Record<string, any>) => Session;
     getFunc: (sessionKey: string, funcName: string) => NamedFunction | undefined;
     getFuncs: (sessionKey: string) => NamedFunction[];
     getNextPid: (sessionKey: string) => number;
@@ -170,12 +169,6 @@ const useStore = create<State>(devtools((set, get) => ({
     createVarDevice(sessionKey, varPath, mode) {
       const device = new VarDevice(sessionKey, varPath, mode);
       return get().device[device.key] = device;
-    },
-
-    ensureSession(sessionKey, env) {
-      const { session } = get();
-      return session[sessionKey] = session[sessionKey]
-        || get().api.createSession(sessionKey, env);
     },
 
     getFunc(sessionKey, funcName) {
