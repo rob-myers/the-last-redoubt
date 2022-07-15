@@ -61,8 +61,10 @@ const useStore = create<State>(devtools((set, get) => ({
       const { portal: portalLookup } = get();
       portalKeys.forEach(portalKey => {
         const portal = portalLookup[portalKey];
-        portal.portal.unmount();
-        delete portalLookup[portalKey];
+        if (portal) {
+          portal.portal.unmount();
+          delete portalLookup[portalKey];
+        } // Hidden tab portals may not exist
       });
       set({});
     },
