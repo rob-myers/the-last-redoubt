@@ -41,14 +41,31 @@ export default function Layout(props: Props) {
     return output;
   }, [JSON.stringify(props.tabs)]);
 
+  /**
+   * If some tab initially maximised, we don't want to render any other tabs.
+   * However, `flexlayout-react` renders those tabs which'll be visible on minimize.
+   * We prevent these initial renders by not mounting these tabs initially.
+   */
+  const [maxInit, setMaxInit] = React.useState(() => {
+    const tabset = model.getMaximizedTabset();
+    const meta = tabset ? (tabset.getChildren()[tabset.getSelected()] as TabNode)?.getConfig() as TabMeta : undefined;
+    return meta || null;
+  });
+
   useRegisterTabs(props, model);
 
   return (
     <FlexLayout
       model={model}
-      factory={factory}
+      factory={node => factory(node, maxInit)}
       realtimeResize
       onModelChange={debounce(() => storeModelAsJson(props.id, model), 300)}
+      onAction={act => {
+        if (act.type === Actions.MAXIMIZE_TOGGLE && maxInit) {
+          setMaxInit(null); // Happens at most once in component lifetime
+        }
+        return act;
+      }}
     />
   );
 }
@@ -100,9 +117,13 @@ function useRegisterTabs(props: Props, model: Model) {
 
 }
 
-function factory(node: TabNode) {
+function factory(node: TabNode, maxMeta: TabMeta | null) {
   const meta = node.getConfig() as TabMeta;
-  return <Portal {...meta} />;
+  if (!maxMeta || meta === maxMeta) {
+    return <Portal {...meta} />;
+  } else {
+    return null;
+  }
 }
 
 function restoreJsonModel(props: Props) {
@@ -110,11 +131,12 @@ function restoreJsonModel(props: Props) {
 
   if (jsonModelString) {
     try {
-      const jsonModel = JSON.parse(jsonModelString) as IJsonModel;
+    const jsonModel = JSON.parse(jsonModelString) as IJsonModel;
 
       // Larger splitter hit test area
       // (jsonModel.global = jsonModel.global || {}).splitterSize = 12;
-      (jsonModel.global = jsonModel.global || {}).splitterExtra = 12;
+      jsonModel.global = jsonModel.global || {};
+      jsonModel.global.splitterExtra = 12;
 
       const model = Model.fromJson(jsonModel);
       

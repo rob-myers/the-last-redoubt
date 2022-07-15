@@ -8,7 +8,10 @@
   - Fix initial lit issue
   - Fix persistent PROFILE issue
 
-- Hidden tab component should not be mounted
+- ✅ When tab initially maximised, unseen tabs should not be rendered
+
+- Initially paused tabs should have initially paused session?
+- Fix collision detection?
 
 - Start new page intro.mdx
   - it will replace objective.mdx

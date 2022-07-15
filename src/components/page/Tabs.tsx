@@ -211,6 +211,8 @@ const rootCss = css`
     background: #444;
   }
   .flexlayout__tab {
+    /** Avoids flicker when Portal initially unmounted */
+    background-color: black;
     /** Pixel 5: white lines when 4px */
     border-top: 3px solid #444;
     position: relative;
