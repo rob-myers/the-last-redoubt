@@ -27,24 +27,21 @@ export default function Terminal(props: Props) {
     isTouchDevice: canTouchDevice(),
     offset: 0,
     session: null as null | Session,
-    wasDisabled: false,
+    hasUserDisabled: false,
     xtermReady: false,
   }));
 
   useOnResize(() => state.isTouchDevice = canTouchDevice());
 
   React.useEffect(() => {
-    state.session = useSession.api.createSession(props.sessionKey, props.env);
-    update();
-    return () => {
-      useSession.api.removeSession(props.sessionKey);
-      state.xtermReady = false;
-    };
-  }, [props.sessionKey]);
+    if (state.session === null && !props.disabled) {
+      state.session = useSession.api.createSession(props.sessionKey, props.env);
+      update();
+      return;
+    }
 
-  React.useEffect(() => {
-    if (props.disabled) {
-      state.wasDisabled = true;
+    if (props.disabled && state.xtermReady) {
+      state.hasUserDisabled = true;
       useSession.api.writeMsgCleanly(props.sessionKey, 'ℹ️  paused session', { prompt: false });
 
       // Pause running processes
@@ -53,8 +50,9 @@ export default function Terminal(props: Props) {
         p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
         p.status = ProcessStatus.Suspended;
       });
+    }
 
-    } else if (!props.disabled && state.wasDisabled && state.xtermReady) {
+    if (!props.disabled && state.hasUserDisabled && state.xtermReady) {
       useSession.api.writeMsgCleanly(props.sessionKey, 'ℹ️  resumed session');
 
       // Resume suspended processes
@@ -67,6 +65,8 @@ export default function Terminal(props: Props) {
     }
   }, [props.disabled]);
 
+  React.useEffect(() => () => useSession.api.removeSession(props.sessionKey), []);
+  
   return (
     <div className={rootCss}>
       {state.session && (

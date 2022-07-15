@@ -60,7 +60,7 @@ export default function Portals() {
 
           return (
             <portals.InPortal key={key} node={portal}>
-              <Terminal sessionKey={meta.filepath} env={env} />
+              <Terminal disabled sessionKey={meta.filepath} env={env} />
             </portals.InPortal>
           );
         }

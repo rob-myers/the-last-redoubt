@@ -12,8 +12,10 @@
 
 - If Tabs initially disabled:
   - ✅ World won't request unseen geomorphs
-  - session initially paused?
+  - ✅ Terminal initially lacks session
 
+
+- Weird animation pause on disable Tabs
 - Avoid full refresh on toggle CssPanZoom grid
 
 - Start new page intro.mdx
