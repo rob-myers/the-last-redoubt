@@ -48,8 +48,8 @@ export default function Layout(props: Props) {
    */
   const [maxInit, setMaxInit] = React.useState(() => {
     const tabset = model.getMaximizedTabset();
-    const meta = tabset ? (tabset.getChildren()[tabset.getSelected()] as TabNode)?.getConfig() as TabMeta : undefined;
-    return meta || null;
+    const tabnode = tabset ? (tabset.getChildren()[tabset.getSelected()] as TabNode) : undefined;
+    return tabnode || null;
   });
 
   useRegisterTabs(props, model);
@@ -117,9 +117,9 @@ function useRegisterTabs(props: Props, model: Model) {
 
 }
 
-function factory(node: TabNode, maxMeta: TabMeta | null) {
-  const meta = node.getConfig() as TabMeta;
-  if (!maxMeta || meta === maxMeta) {
+function factory(node: TabNode, maxTabNode: TabNode | null) {
+  if (!maxTabNode || node.getParent() === maxTabNode.getParent()) {
+    const meta = node.getConfig() as TabMeta;
     return <Portal {...meta} />;
   } else {
     return null;
