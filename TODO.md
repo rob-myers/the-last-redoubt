@@ -14,15 +14,18 @@
   - ✅ World won't request unseen geomorphs
   - ✅ Terminal initially lacks session
 
-
-- Weird animation pause on disable Tabs
-- Avoid full refresh on toggle CssPanZoom grid
-
 - Start new page intro.mdx
   - it will replace objective.mdx
-- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+
+- ✅ Weird animation pause on disable Tabs
+
+- Avoid full refresh on toggle CssPanZoom grid
+
 - Modularise access to npc json/png
-- Change Tabs splitter size on mobile
+
+- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+
+- ✅ Change Tabs splitter size on mobile
   ```tsx
   (jsonModel.global = jsonModel.global || {}).splitterSize = 16;
   (jsonModel.global = jsonModel.global || {}).splitterExtra = 12;

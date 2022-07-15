@@ -296,6 +296,9 @@ export default function createNpc(
       }
 
       if (anim.spriteSheet === 'walk') {
+        //  Remove pre-existing, else seen strange behaviour on pause
+        this.el.root.getAnimations().forEach(x => x.cancel());
+
         // Animate position and rotation
         const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
         anim.translate = this.el.root.animate(translateKeyframes, opts);
@@ -318,9 +321,9 @@ export default function createNpc(
         this.setLookTarget(this.getAngle());
 
         // Below needed?
-        anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
-        anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
-        anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+        // anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
+        // anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+        // anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
       }
     },
     updateAnimAux() {
