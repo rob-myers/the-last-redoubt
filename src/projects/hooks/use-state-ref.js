@@ -7,7 +7,7 @@ import { equals, isPlainObject } from '../service/generic';
  * - Its `initializer` is typically properties and an API for mutating it.
  * - On HMR it will update these properties "suitably", relative to options.
  * 
- * @template State 
+ * @template {object} State 
  * @param {() => State} initializer Should be side-effect free...
  * @param {{ overwrite?: TypeUtil.KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
  */
