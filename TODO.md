@@ -24,34 +24,25 @@
 - ✅ create-npc now State of `<NPC>`
   - consequently, hot-reloadable
 
-- NPC spawn too "slow" for initial collision detect?
-
-- modularise npc JSON
-
 - 🚧 Avoid error on reload Tabs during `ready` or similar
   - can reset while profile running
   - cleanup session xterm
     - cancel ongoing commands
     - unlink tty
 
+- NPC spawn too "slow" for initial collision detect?
+  - Saw walk-vs-walk collision fail
+- modularise npc JSON
 - `ready` -> `await-world`
-
 - Initial panzoom error (cancelled) should not propagate 
+- Avoid full refresh on toggle CssPanZoom grid
 
 - Start new page intro.mdx
   - it will replace objective.mdx
 
-
-- Avoid full refresh on toggle CssPanZoom grid
-
-- Modularise access to npc json/png
-
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 
-- Saw walk-vs-walk collision fail
-
 - ✅ Weird animation pause on disable Tabs
-
 - ✅ Change Tabs splitter size on mobile
   ```tsx
   (jsonModel.global = jsonModel.global || {}).splitterSize = 16;
