@@ -590,11 +590,18 @@ export class ttyXtermClass {
       // console.log({ command });
       switch (command.key) {
         case 'await-prompt': {
-          // Blocks other commands except 'line'
+          /**
+           * Blocks other commands except 'line' and 'resolve'.
+           */
           if (this.commandBuffer[0]?.key === 'line') {
             this.commandBuffer.splice(1, 0, command);
             break;
+          } else if (this.commandBuffer[0]?.key === 'resolve') {
+            this.commandBuffer[0].resolve();
+            this.commandBuffer.splice(0, 1, command);
+            break;
           }
+
           this.commandBuffer.unshift(command);
           return;
         }

@@ -18,13 +18,15 @@
 - ✅ profile paste suppresses prompt and history
 - ✅ 'await-prompt' does not block 'line' commands
 - ❌ non-bg source also pastes into tty
+- ✅ 'await-prompt' does not block 'resolve' commands
 
-- Avoid error on reload Tabs during `ready` or similar
-- can reset while profile running
+- 🚧 Avoid error on reload Tabs during `ready` or similar
+  - can reset while profile running
+  - cleanup session xterm
+    - cancel ongoing commands
+    - unlink tty
 
-- cleanup session xterm
-  - cancel ongoing commands
-  - unlink tty
+- `ready` -> `await-world`
 
 - Initial panzoom error (cancelled) should not propagate 
 
