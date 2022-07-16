@@ -131,14 +131,28 @@ function restoreJsonModel(props: Props) {
 
   if (jsonModelString) {
     try {
-    const jsonModel = JSON.parse(jsonModelString) as IJsonModel;
+      const serializable = JSON.parse(jsonModelString) as IJsonModel;
+
+      /**
+       * Overwrite persisted TabMetas with their value from `props`.
+       * Otherwise their values will be fixed.
+       */
+      const tabKeyToMeta = props.tabs.flatMap(x => x).reduce(
+        (agg, item) => Object.assign(agg, { [getTabName(item)]: item }), 
+        {} as Record<string, TabMeta>,
+      );
+      serializable.layout.children.forEach(x => x.type === 'tabset' &&
+        x.children.forEach((y) => y.type === 'tab' &&
+          Object.assign(y.config, tabKeyToMeta[y.id!])
+        )
+      );
 
       // Larger splitter hit test area
-      // (jsonModel.global = jsonModel.global || {}).splitterSize = 12;
-      jsonModel.global = jsonModel.global || {};
-      jsonModel.global.splitterExtra = 12;
+      serializable.global = serializable.global || {};
+      serializable.global.splitterExtra = 12;
+      // jsonModel.global.splitterSize = 12;
 
-      const model = Model.fromJson(jsonModel);
+      const model = Model.fromJson(serializable);
       
       // Validate i.e. props.tabs must mention same ids
       const prevTabNodeIds = [] as string[];
@@ -157,5 +171,6 @@ function restoreJsonModel(props: Props) {
 }
 
 function storeModelAsJson(id: string, model: Model) {
-  tryLocalStorageSet(`model@${id}`, JSON.stringify(model.toJson()));
+  const serializable = model.toJson();
+  tryLocalStorageSet(`model@${id}`, JSON.stringify(serializable));
 }

@@ -19,6 +19,10 @@
 - ✅ 'await-prompt' does not block 'line' commands
 - ❌ non-bg source also pastes into tty
 - ✅ 'await-prompt' does not block 'resolve' commands
+- ✅ avoid persisting PROFILE
+
+- `create-npc` -> State of `<NPC>`
+- modularise npc JSON
 
 - 🚧 Avoid error on reload Tabs during `ready` or similar
   - can reset while profile running
