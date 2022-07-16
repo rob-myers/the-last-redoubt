@@ -1183,6 +1183,24 @@
         }
       },
       {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[219.992, 755], [179.992, 755], [179.992, 745], [219.992, 745]]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[180, 755.023], [140, 755.023], [140, 745.023], [180, 745.023]]
+          ]
+        }
+      },
+      {
         "tags": ["label", "fuel", "|", "room"],
         "poly": {
           "type": "Polygon",

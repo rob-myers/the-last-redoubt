@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "develop": "gatsby develop -p 8001 -H 0.0.0.0",
-    "dev": "yarn develop",
+    "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta'",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -18,7 +18,9 @@
     "types": "yarn typecheck",
     "render-layout": "yarn ts-script src/scripts/render-layout",
     "render-npc": "yarn ts-script src/scripts/render-npc",
-    "ts-script": "ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'"
+    "svg-meta": "yarn ts-script src/scripts/svg-meta",
+    "ts-script": "ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",
+    "watch-svg-meta": "nodemon --delay 2s --config src/scripts/svg-meta.nodemon.json --exec 'yarn svg-meta'"
   },
   "dependencies": {
     "@emotion/css": "^11.9.0",
@@ -59,6 +61,7 @@
     "safe-json-stringify": "^1.2.0",
     "safe-stable-stringify": "^2.3.1",
     "svg-path-parser": "^1.1.0",
+    "tiny-async-pool": "^1.2.0",
     "triangle-wasm": "^1.0.0",
     "uid": "^2.0.0",
     "xterm": "^4.18.0",
@@ -81,9 +84,12 @@
     "@types/react-helmet": "^6.1.5",
     "@types/safe-json-stringify": "^1.1.2",
     "@types/svg-path-parser": "^1.1.3",
+    "@types/tiny-async-pool": "^2.0.0",
     "@types/webpack": "^5.28.0",
     "@types/webpack-env": "^1.16.4",
+    "concurrently": "^6.0.1",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",
+    "nodemon": "^2.0.7",
     "ts-node": "^10.0.0",
     "typescript": "^4.6.4"
   }
