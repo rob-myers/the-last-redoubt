@@ -235,6 +235,7 @@ const rootCss = css`
     }
     div.debug-door-arrow {
       background-image: url('/icon/circle-right.svg');
+      /* filter: invert(100%); */
     }
     div.debug-label-info {
       background-image: url('/icon/info-icon.svg');
