@@ -67,9 +67,7 @@ lookLoop: `{
 export const profileLookup = {
   'profile-1': () => `
 
-# load util functions
 source /etc/util-1
-# load game functions
 source /etc/game-1
 
 `.trim(),
@@ -81,18 +79,14 @@ ${profileLookup["profile-1"]()}
 ready
 
 spawn andros '{"x":185,"y":390}'
-
 # why now needed?
 sleep 0.2
-
 npc set-player andros
 
 # camera follows andros
 track andros &
-
 # click navmesh to move
 goLoop andros &
-
 # click outside navmesh to look
 lookLoop andros &
 `,

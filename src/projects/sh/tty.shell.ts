@@ -3,7 +3,7 @@ import { testNever } from '../service/generic';
 import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
-import { ProcessError } from './util';
+import { ansiColor, ProcessError } from './util';
 import { ParseService, srcService, wrapInFile } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
@@ -53,8 +53,6 @@ export class ttyShellClass implements Device {
     }
 
     await this.runProfile();
-
-    this.prompt('$');
   }
 
   private onMessage(msg: MessageFromXterm) {
@@ -147,11 +145,22 @@ export class ttyShellClass implements Device {
     });
   }
 
+  /**
+   * We run the profile by pasting it into the terminal.
+   * This explicit approach can be avoided via `source`.
+   */
   private async runProfile() {
     const profile = useSession.api.getVar(this.sessionKey, 'PROFILE') || '';
-    const parsed = parseService.parse(profile);
-    this.provideContextToParsed(parsed);
-    await this.spawn(parsed, { leading: true });
+    const { ttyShell } = useSession.api.getSession(this.sessionKey);
+
+    try {
+      ttyShell.xterm.historyEnabled = false;
+      useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Running ${ansiColor.Blue}home/PROFILE${ansiColor.Reset}`, 'info');
+      await ttyShell.xterm.pasteLines(profile.split('\n'), true);
+      this.prompt('$');
+    } catch {} finally {
+      ttyShell.xterm.historyEnabled = true;
+    }
   }
 
   /** Spawn a process, assigning pid to non-leading ones */
@@ -189,7 +198,7 @@ export class ttyShellClass implements Device {
       // const process = useSession.api.getProcess(meta);
       // process.cleanups.forEach(cleanup => cleanup());
       
-      // TODO why is opts.leading false and meta.pid 0
+      // NOTE can have `!opts.leading && meta.pid === 0` because ...
       !opts.leading && meta.pid && useSession.api.removeProcess(meta.pid, this.sessionKey);
     }
   }
@@ -224,9 +233,10 @@ export class ttyShellClass implements Device {
         }
         case 'complete': {
           this.buffer.length = 0;
-          // Store command in history
           const singleLineSrc = srcService.src(result.parsed);
-          singleLineSrc && this.storeSrcLine(singleLineSrc);
+          if (singleLineSrc && this.xterm.historyEnabled) {
+            this.storeSrcLine(singleLineSrc); // Store command in history
+          }
 
           // Run command
           this.process.src = singleLineSrc;

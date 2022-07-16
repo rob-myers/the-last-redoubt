@@ -14,16 +14,33 @@
   - ✅ World won't request unseen geomorphs
   - ✅ Terminal initially lacks session
 
+- ✅ profile pastes into tty
+- ✅ profile paste suppresses prompt and history
+- ✅ 'await-prompt' does not block 'line' commands
+- ❌ non-bg source also pastes into tty
+
+- Avoid error on reload Tabs during `ready` or similar
+- can reset while profile running
+
+- cleanup session xterm
+  - cancel ongoing commands
+  - unlink tty
+
+- Initial panzoom error (cancelled) should not propagate 
+
 - Start new page intro.mdx
   - it will replace objective.mdx
 
-- ✅ Weird animation pause on disable Tabs
 
 - Avoid full refresh on toggle CssPanZoom grid
 
 - Modularise access to npc json/png
 
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+
+- Saw walk-vs-walk collision fail
+
+- ✅ Weird animation pause on disable Tabs
 
 - ✅ Change Tabs splitter size on mobile
   ```tsx

@@ -8,7 +8,7 @@ import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
 import { getCached } from 'projects/service/query-client';
 
-import { stripAnsi } from 'projects/sh/util';
+import { ansiColor, stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
@@ -32,6 +32,10 @@ export default function Terminal(props: Props) {
   }));
 
   useOnResize(() => state.isTouchDevice = canTouchDevice());
+
+  // React.useEffect(() => {
+  //   useSession.api.removeSession(props.sessionKey);
+  // }, []);
 
   React.useEffect(() => {
     if (state.session === null && !props.disabled) {
@@ -79,7 +83,9 @@ export default function Terminal(props: Props) {
               io: session.ttyIo,
               rememberLastValue: (msg) => session.var._ = msg,
             });
+
             ttyXterm.initialise();
+            useSession.api.writeMsg(props.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${props.sessionKey}${ansiColor.Reset}`, 'info');
             session.ttyShell.initialise(ttyXterm);
             state.xtermReady = true;
             update();

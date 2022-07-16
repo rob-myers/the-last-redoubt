@@ -50,6 +50,11 @@ export class ttyXtermClass {
    * This makes sense because we monotonically output lines.
    */
   totalLinesOutput = 0;
+  /**
+   * History will be disabled during initial profile,
+   * which is actually pasted into the terminal.
+   */
+  historyEnabled = true;
 
   constructor(
     public xterm: Terminal,
@@ -67,7 +72,7 @@ export class ttyXtermClass {
     this.promptReady = false;
     this.commandBuffer = [];
     this.nextPrintId = null;
-    this.cursorRow = 0;
+    this.cursorRow = 1;
     this.historyIndex = -1;
     this.preHistory = this.input;
   }
@@ -76,13 +81,6 @@ export class ttyXtermClass {
     // this.xterm.onData((data) => document.body.append('DATA: ' + data));
     this.xterm.onData(this.handleXtermInput.bind(this));
     this.session.io.handleWriters(this.onMessage.bind(this));
-
-    this.xterm.writeln(
-      `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.session.key}${ansiColor.Reset}`
-    );
-    this.clearInput();
-    this.cursorRow = 2;
-    this.trackTotalOutput(+1);
   }
 
   /**
@@ -258,26 +256,16 @@ export class ttyXtermClass {
       const lines = text.split('\n');
       lines[0] = `${this.input}${lines[0]}`;
       const last = !text.endsWith('\n') && lines.pop();
-      for (const line of lines) {
-        await new Promise<void>(resolve => {
-          this.queueCommands([
-            { key: 'paste-line', line },
-            /**
-             * TODO this is preventing others processes from
-             * writing lines/errors
-             */
-            { key: 'await-prompt' },
-            { key: 'resolve', resolve },
-          ]);
-        });
-      }
+      await this.pasteLines(lines);
+
       if (last) {// Set as pending input but don't send
-        this.queueCommands([
-          { key: 'resolve', resolve: () => {
+        this.queueCommands([{
+          key: 'resolve',
+          resolve: () => {
             this.clearInput();
             this.setInput(last);
-          }}
-        ]);
+          },
+        }]);
       }
     } else {
       this.handleXtermKeypresses(data);
@@ -544,6 +532,17 @@ export class ttyXtermClass {
     return 1 + this.offsetToColRow(this.input, this.input.length + 2).row;
   }
 
+  async pasteLines(lines: string[], fromProfile = false) {
+    for (const line of lines) {
+      await new Promise<void>((resolve, reject) => {
+        this.queueCommands([
+          { key: 'paste-line', line },
+          { key: 'await-prompt', noPrint: fromProfile, resolve, reject },
+        ]);
+      });
+    }
+  }
+
   prepareForCleanMsg() {
     if (this.promptReady && this.input.length > 0) {
       if (this.xterm.buffer.active.cursorX > 0) {
@@ -561,8 +560,8 @@ export class ttyXtermClass {
     }
   }
 
+  // NOTE have seen stack overflow for `push(...commands)`
   queueCommands(commands: XtermOutputCommand[]) {
-    // We avoid stack overflow for push(...commands)
     for (const command of commands) {
       this.commandBuffer.push(command);
     }
@@ -591,6 +590,11 @@ export class ttyXtermClass {
       // console.log({ command });
       switch (command.key) {
         case 'await-prompt': {
+          // Blocks other commands except 'line'
+          if (this.commandBuffer[0]?.key === 'line') {
+            this.commandBuffer.splice(1, 0, command);
+            break;
+          }
           this.commandBuffer.unshift(command);
           return;
         }
@@ -666,6 +670,7 @@ export class ttyXtermClass {
     this.trackCursorRow(1);
     this.cursor = 0;
     // Immediately forget any pending output
+    this.commandBuffer.forEach(cmd => cmd.key === 'resolve' || cmd.key === 'await-prompt' && cmd.reject?.());
     this.commandBuffer.length = 0;
     // Reset controlling process
     this.session.io.writeToReaders({ key: 'send-kill-sig' });
@@ -734,10 +739,13 @@ export class ttyXtermClass {
   setPrompt(prompt: string) {
     this.prompt = prompt;
     const [first] = this.commandBuffer;
-    if (first && first.key === 'await-prompt') {
+    if (first?.key === 'await-prompt') {
       this.commandBuffer.shift();
+      first.resolve();
+      this.queueCommands(first.noPrint ? [] : [{ key: 'prompt', prompt }]);
+    } else {
+      this.queueCommands([{ key: 'prompt', prompt }]);
     }
-    this.queueCommands([{ key: 'prompt', prompt }]);
   }
 
   showPendingInput() {
@@ -781,8 +789,18 @@ export class ttyXtermClass {
 
 type XtermOutputCommand = (
   | {
-    /** Wait for next prompt from tty */
+    /**
+     * Wait for next prompt from tty.
+     * - ≤ 1 in commandBuffer
+     * - blocks other commands except 'line'
+     * - unblocked by prompt from tty; invokes `resolve`
+     * - `reject` invoked on Ctrl-C
+     */
     key: 'await-prompt';
+    /** Should we suppress the prompt?  */
+    noPrint?: boolean;
+    resolve(): void;
+    reject(): void;
   } | {
     /** Clear the screen */
     key: 'clear';
@@ -798,9 +816,13 @@ type XtermOutputCommand = (
     key: 'paste-line';
     line: string;
   } | {
-    /** Invoke the function `resolve` */
+    /**
+     * - Invoke the function `resolve`.
+     * - Optional function `reject` invoked on Ctrl-C.
+     */
     key: 'resolve';
-    resolve: () => void;
+    resolve(): void;
+    reject?(): void;
   } | {
     /** Write prompt */
     key: 'prompt';
