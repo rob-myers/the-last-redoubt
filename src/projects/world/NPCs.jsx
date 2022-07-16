@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { merge, of, Subject } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { Rect, Vect } from "../geom";
+import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { scrollback } from "../sh/io";
 import { testNever } from "../service/generic";
@@ -11,12 +11,12 @@ import { geom } from "../service/geom";
 import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
 import { cssName } from "../service/const";
 import { getNumericCssVar } from "../service/dom";
-import createNpc, { defaultNpcInteractRadius, npcSpeed } from "./create-npc";
+import { defaultNpcInteractRadius, npcSpeed } from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
 import useSessionStore from "../sh/session.store";
-import NPC from "./NPC";
+import NPC, { PropsDef } from "./NPC";
 import Decor from "./Decor";
 
 /** @param {Props} props */
@@ -29,7 +29,10 @@ export default function NPCs(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     decor: {},
     events: new Subject,
+
+    npcKeys: [],
     npc: {},
+
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
@@ -416,18 +419,18 @@ export default function NPCs(props) {
       } else if (!state.isPointLegal(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
-      state.npc[e.npcKey]= createNpc(
-        {
-          npcKey: e.npcKey,
-          position: e.point,
-          angle: 0,
-          speed: npcSpeed,
-        },
-        {
-          api: props.api,
-          disabled: props.disabled,
-        },
-      );
+      state.npcKeys = state.npcKeys
+        .filter(({ key }) => key !== e.npcKey)
+        .concat({
+          key: e.npcKey,
+          epochMs: Date.now(),
+          def: {
+            npcKey: e.npcKey,
+            position: e.point,
+            angle: e.angle,
+            speed: npcSpeed,
+          },
+        });
       update();
       state.events.next({ key: 'spawned-npc', npcKey: e.npcKey });
     },
@@ -529,12 +532,20 @@ export default function NPCs(props) {
         <Decor key={key} item={item} />
       )}
 
-      {Object.values(state.npc).map(npc => (
+      {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
+        <NPC // Respawn remounts
+          key={`${key}@${epochMs}`}
+          api={props.api}
+          def={def}
+          disabled={props.disabled}
+        />
+      ))}
+      {/* {Object.values(state.npc).map(npc => (
         <NPC // Respawn remounts
           key={`${npc.key}@${npc.epochMs}`}
           npc={npc}
         />
-      ))}
+      ))} */}
     </div>
   );
 }
@@ -575,11 +586,17 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
+ *
+ * @property {{ key: string; epochMs: number; def: PropsDef }[]} npcKeys
+ * These items cause `<NPC>`s to mount
  * @property {Record<string, NPC.NPC>} npc
+ * These items are created as a result of an `<NPC>` mounting
+ *
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {HTMLElement} rootEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
+ *
  * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
  * @property {(npcA: NPC.NPC, npcB: NPC.NPC) => null | NPC.NpcCollision} detectCollision
@@ -598,7 +615,7 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(decorKey: string, decor: null | NPC.DecorDef) => void} setDecor
  * @property {(npcKey: string) => void} setRoomByNpc
- * @property {(e: { npcKey: string; point: Geom.VectJson }) => void} spawn
+ * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => void} spawn
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  */

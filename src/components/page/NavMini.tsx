@@ -2,7 +2,7 @@ import React from "react";
 import { cx, css } from "@emotion/css";
 import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
-import { cssName } from "../css-names";
+import { cssName } from 'projects/service/const';
 import Link from "./Link";
 import { barHeight } from "./Nav";
 import { iconCss } from "./Icons";

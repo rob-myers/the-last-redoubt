@@ -1,7 +1,9 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 
-import { npcOffsetRadians, npcScale } from "./create-npc";
+import { cssName } from 'projects/service/const';
+import createNpc, { npcOffsetRadians, npcScale } from "./create-npc";
+import useStateRef from "projects/hooks/use-state-ref";
 /**
  * TODO modularise
  */
@@ -9,13 +11,19 @@ import npcJson from '../../../public/npc/first-npc.json'
 const { animLookup } = npcJson;
 
 /** @param {Props} props  */
-export default function NPC({ npc }) {
+export default function NPC({ api, def, disabled }) {
+
+  const npc = useStateRef(() =>
+    createNpc(def, { disabled, api }),
+  );
 
   React.useEffect(() => {
+    api.npcs.npc[def.npcKey] = npc;
     if (npc.anim.spriteSheet === 'idle') {
       npc.startAnimation(); // Start idle animation
     }
     return () => {
+      delete api.npcs.npc[def.npcKey];
       window.clearTimeout(npc.anim.wayTimeoutId);
     };
   }, []);
@@ -23,11 +31,11 @@ export default function NPC({ npc }) {
   return (
     <div
       ref={npc.npcRef.bind(npc)}
-      className={cx('npc', npc.key, npc.anim.spriteSheet, npcCss)}
+      className={cx(cssName.npc, npc.key, npc.anim.spriteSheet, npcCss)}
       data-npc-key={npc.key}
     >
       <div
-        className={cx('body', npc.key, 'no-select')}
+        className={cx(cssName.npcBody, npc.key, 'no-select')}
         data-npc-key={npc.key}
       />
       <div className="interact-circle" />
@@ -38,7 +46,9 @@ export default function NPC({ npc }) {
 
 /**
  * @typedef Props @type {object}
- * @property {NPC.NPC} npc
+ * @property {import('./World').State} api
+ * @property {PropsDef} def
+ * @property {boolean} [disabled]
  */
 
 const npcCss = css`
@@ -50,7 +60,7 @@ const npcCss = css`
     filter: grayscale(100%) brightness(140%);
     /** Animate turning */
     transition: transform 1s;
-    transform: rotate(calc(${npcOffsetRadians}rad + var(--npc-target-look-angle))) scale(${npcScale});
+    transform: rotate(calc(${npcOffsetRadians}rad + var(${cssName.npcTargetLookAngle}))) scale(${npcScale});
   }
   
   &.walk .body {
@@ -76,22 +86,30 @@ const npcCss = css`
   .interact-circle {
     display: var(--npcs-debug-display);
     position: absolute;
-    width: calc(2 * var(--npcs-interact-radius));
-    height: calc(2 * var(--npcs-interact-radius));
-    left: calc(-1 * var(--npcs-interact-radius));
-    top: calc(-1 * var(--npcs-interact-radius));
-    border-radius: calc(2 * var(--npcs-interact-radius));
+    width: calc(2 * var(${cssName.npcsInteractRadius}));
+    height: calc(2 * var(${cssName.npcsInteractRadius}));
+    left: calc(-1 * var(${cssName.npcsInteractRadius}));
+    top: calc(-1 * var(${cssName.npcsInteractRadius}));
+    border-radius: calc(2 * var(${cssName.npcsInteractRadius}));
     border: 1px solid rgba(0, 0, 255, 0.25);
   }
 
   .bounds-circle {
-    display: var(--npcs-debug-display);
+    display: var(${cssName.npcsDebugDisplay});
     position: absolute;
-    width: calc(2 * var(--npc-bounds-radius));
-    height: calc(2 * var(--npc-bounds-radius));
-    left: calc(-1 * var(--npc-bounds-radius));
-    top: calc(-1 * var(--npc-bounds-radius));
-    border-radius: calc(2 * var(--npc-bounds-radius));
+    width: calc(2 * var(${cssName.npcBoundsRadius}));
+    height: calc(2 * var(${cssName.npcBoundsRadius}));
+    left: calc(-1 * var(${cssName.npcBoundsRadius}));
+    top: calc(-1 * var(${cssName.npcBoundsRadius}));
+    border-radius: calc(2 * var(${cssName.npcBoundsRadius}));
     border: 1px solid rgba(255, 0, 0, 0.25);
   }
 `;
+
+/**
+ * @typedef PropsDef @type {object}
+ * @property {string} npcKey
+ * @property {Geom.VectJson} position: ;
+ * @property {number} speed
+ * @property {number} angle
+ */

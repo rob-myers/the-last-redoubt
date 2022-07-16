@@ -223,8 +223,9 @@
     },
   
     /**
-     * Spawn character(s) at a position(s),
-     * - e.g. `spawn andros "$( click 1 )"`
+     * Spawn character(s) at a position(s) and angle,
+     * - e.g. `spawn andros "$( click 1 )"
+     * - e.g. `spawn andros "$( click 1 )" "$( call '() => Math.PI/2' )"`
      * - e.g. `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
      */
     spawn: async function* ({ api, args, home, datum }) {
@@ -232,7 +233,8 @@
       if (api.isTtyAt(0)) {
         const npcKey = args[0]
         const point = api.safeJsonParse(args[1])
-        npcs.spawn({ npcKey, point })
+        const angle = Number(args[2]) || 0
+        npcs.spawn({ npcKey, point, angle })
       } else {
         while ((datum = await api.read()) !== null)
           npcs.spawn(datum)

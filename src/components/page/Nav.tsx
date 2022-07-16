@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 
 import useSiteStore from "store/site.store";
-import { cssName } from '../css-names';
+import { cssName } from 'projects/service/const';
 import type { FrontMatterProps } from "./Root";
 import NavItems from './NavItems';
 

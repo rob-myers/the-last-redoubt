@@ -21,7 +21,11 @@
 - ✅ 'await-prompt' does not block 'resolve' commands
 - ✅ avoid persisting PROFILE
 
-- `create-npc` -> State of `<NPC>`
+- ✅ create-npc now State of `<NPC>`
+  - consequently, hot-reloadable
+
+- NPC spawn too "slow" for initial collision detect?
+
 - modularise npc JSON
 
 - 🚧 Avoid error on reload Tabs during `ready` or similar
