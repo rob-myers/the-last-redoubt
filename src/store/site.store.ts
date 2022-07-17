@@ -3,7 +3,6 @@ import { devtools } from 'zustand/middleware';
 import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
-import { KeyedLookup } from 'model/generic.model';
 import type { TabMeta } from 'model/tabs/tabs.model';
 
 export type State = {
@@ -15,9 +14,9 @@ export type State = {
   
   navOpen: boolean;
   /** Site-wide portals, corresponding to individual tabs */
-  portal: KeyedLookup<PortalState>;
+  portal: TypeUtil.KeyedLookup<PortalState>;
   /** <Tabs> on current page */
-  tabs: KeyedLookup<TabsState>;
+  tabs: TypeUtil.KeyedLookup<TabsState>;
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
     removePortals(...portalKeys: string[]): void;

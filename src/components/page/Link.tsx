@@ -1,7 +1,7 @@
 import React from "react";
 import { navigate } from "gatsby";
-import { pause } from 'model/generic.model';
 import { maxScrollHeight, scrollFinished } from 'model/dom.model';
+import { pause } from 'projects/service/generic';
 
 export default function Link(props: Props) {
   return (
