@@ -2,13 +2,18 @@ import React from "react";
 import { css, cx } from '@emotion/css';
 import { iconCss } from './Icons';
 import Link from './Link';
+import { cssName } from "projects/service/const";
 
 export function TabsOverlay(props: Props) {
   return (
     <div className={controlsCss}>
-      <div className="top-right">
+      <div className={cssName.topRight}>
         <div
-          className={iconCss({ basename: 'refresh', dim: 11, invert: true })}
+          className={cx(
+            cssName.resetIcon,
+            iconCss({ basename: 'refresh', dim: 11, invert: true }),
+            !props.enabled && cssName.disabled,
+          )}
           onClick={props.reset}
           title="reset"
         />
@@ -24,16 +29,15 @@ export function TabsOverlay(props: Props) {
         />
         <div
           className={cx(
-            'disable-icon',
+            cssName.disableIcon,
             iconCss({ basename: 'cross-circle', dim: 11, invert: true }),
-            props.enabled && 'enabled',
+            !props.enabled && cssName.disabled,
           )}
-          onClick={props.enabled ? props.toggleEnabled : undefined}
-          title={props.enabled ? 'disable' : undefined}
+          onClick={props.toggleEnabled}
         />
       </div>
       {!props.enabled && (
-        <div className="central" onClick={props.toggleEnabled}>
+        <div className={cssName.central} onClick={props.toggleEnabled}>
           interact
         </div>
       )}
@@ -53,7 +57,7 @@ interface Props {
 const controlsCss = css`
   font-family: Roboto, Arial, sans-serif;
 
-  > .top-right {
+  > .${cssName.topRight} {
     position: absolute;
     right: calc(-1 * var(--tabs-border-width));
     top: -38px;
@@ -77,15 +81,15 @@ const controlsCss = css`
       display: flex;
       align-items: center;
     }
-    
-    > div.disable-icon:not(.enabled) {
-      filter: brightness(70%);
-    }
-
     cursor: pointer;
+    
+    > div.disabled {
+      filter: brightness(50%);
+      pointer-events: none;
+    }
   }
 
-  > .central {
+  > .${cssName.central} {
     position: absolute;
     z-index: 6;
     left: calc(50% - (128px / 2));
@@ -108,15 +112,15 @@ export function LoadingOverlay({ colour }: {
   return (
     <div
       className={cx(interactOverlayCss, {
-        'clear': colour === 'clear',
-        'faded': colour === 'faded',
+        [cssName.clear]: colour === 'clear',
+        [cssName.faded]: colour === 'faded',
       })}
     />
   );
 }
 
 const interactOverlayCss = css`
-  &:not(.faded) {
+  &:not(.${cssName.faded}) {
     pointer-events: none;
   }
 
@@ -129,11 +133,11 @@ const interactOverlayCss = css`
 
   opacity: 1;
   transition: opacity 1s ease-in;
-  &.clear {
+  &.${cssName.clear} {
     opacity: 0;
     transition: opacity 0.5s ease-in;
   }
-  &.faded {
+  &.${cssName.faded} {
     opacity: 0.5;
     transition: opacity 0.5s ease-in;
   }

@@ -1,7 +1,13 @@
 export const cssName = {
+  central: 'central',
+  clear: 'clear',
+  disableIcon: 'disable-icon',
+  disabled: 'disabled',
   door: 'door',
   doors: 'doors',
   doorTouchUi: 'door-touch-ui',
+  enabled: 'enabled',
+  faded: 'faded',
   hull: 'hull',
   iris: 'iris',
   navMain: 'nav-main',
@@ -21,9 +27,11 @@ export const cssName = {
   npcTargetLookAngle: '--npc-target-look-angle',
 
   open: 'open',
+  resetIcon: 'reset-icon',
   tabs: 'tabs',
   topBar: 'top-bar',
   topBarHandle: 'handle',
+  topRight: 'top-right',
 } as const;
 
 /** Decimal place precision */
