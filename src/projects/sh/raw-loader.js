@@ -279,7 +279,7 @@
       const npcKey = args[0]
   
       const process = api.getProcess()
-      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }))
+      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => {}))
       process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
       process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "play" }); return true; })
   

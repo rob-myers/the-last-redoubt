@@ -24,7 +24,11 @@
 - ✅ create-npc now State of `<NPC>`
   - consequently, hot-reloadable
 
-- 🚧 Avoid error on reload Tabs during `ready` or similar
+- ✅ Fix reload Tabs error:
+  - NPCs.jsx:277 Uncaught (in promise) Error: npc "andros" does not exist
+  - Concerns  {npcKey: 'andros', action: 'cancel'}
+
+- 🚧 Avoid reload Tabs error during `ready` or similar
   - can reset while profile running
   - cleanup session xterm
     - cancel ongoing commands
