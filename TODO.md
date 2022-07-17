@@ -39,7 +39,7 @@
 - ✅ Disable/Enable Tabs should not make idle npc walk again
 
 - ✅ `ready` -> `awaitWorld`
-- Initial panzoom error (cancelled) should not propagate 
+- ✅ Initial panzoom error (cancelled) should not propagate 
 - Avoid full refresh on toggle CssPanZoom grid
 
 - Start new page intro.mdx

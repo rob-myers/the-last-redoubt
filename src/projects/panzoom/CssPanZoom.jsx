@@ -338,7 +338,7 @@ export default function CssPanZoom(props) {
     props.onLoad?.(state);
     // Apply initial zoom and centering
     state.setStyles();
-    state.panZoomTo(props.initZoom || 1, props.initCenter || { x: 0, y: 0 }, 1000);
+    state.panZoomTo(props.initZoom || 1, props.initCenter || { x: 0, y: 0 }, 1000)?.catch(_x => {});
   }, []);
 
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: false });
