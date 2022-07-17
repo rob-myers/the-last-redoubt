@@ -268,13 +268,15 @@ export default function createNpc(
     },
     play() {
       console.log(`play: resuming ${this.def.key}`);
-      anim.translate.play();
-      anim.rotate.play();
-      anim.sprites.play();
-      this.nextWayTimeout();
-      if (this.def.key === api.npcs.playerKey) {
-        // Resume camera tracking
-        api.panZoom.animationAction('play');
+      if (anim.spriteSheet === 'walk') {
+        anim.translate.play();
+        anim.rotate.play();
+        anim.sprites.play();
+        this.nextWayTimeout();
+        if (this.def.key === api.npcs.playerKey) {
+          // Resume camera tracking
+          api.panZoom.animationAction('play');
+        }
       }
     },
     setLookTarget(radians) {
@@ -320,7 +322,7 @@ export default function createNpc(
         // Post walk, set target as current angle 
         this.setLookTarget(this.getAngle());
 
-        // Below needed?
+        // Replace with dummy animations?
         // anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
         // anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
         // anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });

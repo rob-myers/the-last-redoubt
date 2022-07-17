@@ -36,6 +36,8 @@
     - ✅ cancel ongoing commands
     - ✅ unlink tty
 
+- ✅ Disable/Enable Tabs should not make idle npc walk again
+
 - NPC spawn too "slow" for initial collision detect?
   - Saw walk-vs-walk collision fail
   - Spawn should trigger a player collision test
