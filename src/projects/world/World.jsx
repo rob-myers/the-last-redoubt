@@ -33,7 +33,7 @@ export default function World(props) {
       filter, first, map, take, otag,
     },
 
-    get ready() {
+    isReady() {
       return [state.doors, state.fov, state.npcs, state.panZoom].every(x => x.ready);
     },
 
@@ -61,7 +61,7 @@ export default function World(props) {
     <CssPanZoom
       initZoom={1.5}
       initCenter={{ x: 300, y: 300 }}
-      dark
+      background="#000"
       // grid
       onLoad={api => {state.panZoom = api; update(); }}
     >
@@ -119,7 +119,7 @@ export default function World(props) {
  * @property {FovApi} fov
  * @property {NpcsApi} npcs
  * @property {PanZoom.CssApi} panZoom
- * @property {boolean} ready
+ * @property {() => boolean} isReady
  * @property {() => void} updateAll
  * @property {StateUtil} lib
  */

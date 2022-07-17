@@ -350,9 +350,12 @@ export default function CssPanZoom(props) {
 
   return (
     <div
-      className={cx("panzoom-parent", rootCss, backgroundCss(props))}
+      className={cx("panzoom-parent", rootCss)}
       data-tags="no-ui"
       ref={measureRef}
+      style={{
+        backgroundColor: props.background || '#fff',
+      }}
     >
       <div
         ref={state.rootRef}
@@ -422,15 +425,10 @@ const rootCss = css`
   }
 `;
 
-/** @param {Props} props */
-const backgroundCss = (props) => css`
-  background-color: ${props.dark ? '#000' : '#fff'};
-`;
-
 /**
  * @typedef Props @type {object}
  * @property {string} [className]
- * @property {boolean} [dark]
+ * @property {string} [background]
  * @property {boolean} [grid]
  * @property {number} [initZoom] e.g. `1`
  * @property {Geom.VectJson} [initCenter]

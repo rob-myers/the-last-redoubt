@@ -40,7 +40,8 @@
 
 - ✅ `ready` -> `awaitWorld`
 - ✅ Initial panzoom error (cancelled) should not propagate 
-- Avoid full refresh on toggle CssPanZoom grid
+- ✅ Avoid full refresh on change `World`
+  - ISSUE with getter inside `useStateRef` i.e. `state` was undefined
 
 - Start new page intro.mdx
   - it will replace objective.mdx

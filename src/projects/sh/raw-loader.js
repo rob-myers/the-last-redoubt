@@ -210,7 +210,7 @@
       const { sessionKey } = api.getProcess();
   
       /** @type {import('../world/World').State} */ let worldApi;
-      while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.ready) {
+      while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
         api.info(`polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`)
         yield* api.sleep(1);
       }
