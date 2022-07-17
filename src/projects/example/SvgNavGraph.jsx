@@ -31,6 +31,7 @@ export default function SvgSvgNavGraph(props) {
           <g key={id}>
             {neighbours.map(id => (
               <line
+                key={id}
                 className="edge"
                 x1={centroid.x}
                 y1={centroid.y}
@@ -43,6 +44,7 @@ export default function SvgSvgNavGraph(props) {
 
         {pf.graph.nodesArray.map(({ vertexIds }, nodeId) =>
           <polygon
+            key={nodeId}
             // className="navtri"
             points={`${vertexIds.map(id => pf.graph.vectors[id])}`}
             stroke="#00000044"
