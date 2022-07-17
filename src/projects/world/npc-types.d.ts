@@ -210,12 +210,13 @@ declare namespace NPC {
   );
 
   export type NPCsEvent = (
+    | { key: 'decor'; meta: DecorDef; }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
+    | { key: 'unmounted-npc'; npcKey: string; }
     | NPCsWayEvent
-    | { key: 'decor'; meta: DecorDef; }
   );
 
   export interface NPCsWayEvent {

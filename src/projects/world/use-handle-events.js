@@ -105,12 +105,20 @@ export default function useHandleEvents(api, gmGraph) {
             e.npcKey && api.npcs.setRoomByNpc(e.npcKey);
             break;
           case 'spawned-npc':
+            // This event also happens on hot-reload NPC.jsx
             if (api.npcs.playerKey === e.npcKey) {
               api.npcs.setRoomByNpc(e.npcKey);
             }
+            /**
+             * TODO collision test for player
+             */
             break;
           case 'started-walking':
           case 'stopped-walking':
+            break;
+          case 'unmounted-npc':
+            // This event also happens on hot-reload NPC.jsx
+            delete api.npcs.npc[e.npcKey];
             break;
           case 'way-point':
             if (e.npcKey === api.npcs.playerKey) {

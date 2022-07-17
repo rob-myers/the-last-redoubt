@@ -43,9 +43,10 @@
 - ✅ Avoid full refresh on change `World`
   - ISSUE with getter inside `useStateRef` i.e. `state` was undefined
 
-- Start new page intro.mdx
+- 🚧 Start new page intro.mdx
   - it will replace objective.mdx
 
+- Fix HMR of NPC (walks without going anywhere)
 - NPC spawn too "slow" for initial collision detect?
   - Spawn should trigger a player collision test
 - modularise npc JSON

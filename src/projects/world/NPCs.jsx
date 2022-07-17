@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { merge, of, Subject } from "rxjs";
+import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Vect } from "../geom";
@@ -411,7 +411,7 @@ export default function NPCs(props) {
         console.error(`set-player ${npcKey}: no room contains ${JSON.stringify(position)}`)
       }
     },
-    spawn(e) {
+    async spawn(e) {
       if (!(e.npcKey && typeof e.npcKey === 'string' && e.npcKey.trim())) {
         throw Error(`invalid npc key: ${JSON.stringify(e.npcKey)}`);
       } else if (!(e.point && typeof e.point.x === 'number' && typeof e.point.y === 'number')) {
@@ -432,7 +432,10 @@ export default function NPCs(props) {
           },
         });
       update();
-      state.events.next({ key: 'spawned-npc', npcKey: e.npcKey });
+
+      await firstValueFrom(state.events.pipe(
+        filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
+      ));
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
@@ -615,7 +618,7 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(decorKey: string, decor: null | NPC.DecorDef) => void} setDecor
  * @property {(npcKey: string) => void} setRoomByNpc
- * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => void} spawn
+ * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  */

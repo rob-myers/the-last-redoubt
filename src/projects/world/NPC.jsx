@@ -19,12 +19,14 @@ export default function NPC({ api, def, disabled }) {
 
   React.useEffect(() => {
     api.npcs.npc[def.npcKey] = npc;
-    if (npc.anim.spriteSheet === 'idle') {
-      npc.startAnimation(); // Start idle animation
-    }
+    api.npcs.events.next({ key: 'spawned-npc', npcKey: def.npcKey });
+    // if (npc.anim.spriteSheet === 'idle') {
+    //   npc.startAnimation(); // Start idle animation
+    // }
     return () => {
+      // window.clearTimeout(npc.anim.wayTimeoutId);
       delete api.npcs.npc[def.npcKey];
-      window.clearTimeout(npc.anim.wayTimeoutId);
+      api.npcs.events.next({ key: 'unmounted-npc', npcKey: def.npcKey });
     };
   }, []);
 

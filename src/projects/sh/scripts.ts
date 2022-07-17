@@ -78,7 +78,6 @@ ${profileLookup["profile-1"]()}
 awaitWorld
 
 spawn andros '{"x":185,"y":390}'
-sleep 0.2 # why needed?
 npc set-player andros
 
 # camera follows andros

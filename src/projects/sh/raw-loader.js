@@ -119,6 +119,24 @@
   const gameFunctionsRunDefs = [
   {
   
+    /** Ping per second until query WORLD_KEY found */
+    awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
+      const ansiColor = api.getColors();
+      const { sessionKey } = api.getProcess();
+  
+      /** @type {import('../world/World').State} */ let worldApi;
+      while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
+        api.info(`polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`)
+        yield* api.sleep(1);
+      }
+
+      const { npcs } = worldApi;
+      if (!npcs.session[sessionKey]) {
+        npcs.session[sessionKey] = { key: sessionKey, receiveMsgs: true, tty: {} };
+      }
+      api.info(`found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
+    },
+
     /**
      * Output world position clicks sent via panZoomApi.events.
      * e.g. `click`, `click 1`
@@ -204,24 +222,6 @@
       })
     },
   
-    /** Ping per second until query WORLD_KEY found */
-    awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
-      const ansiColor = api.getColors();
-      const { sessionKey } = api.getProcess();
-  
-      /** @type {import('../world/World').State} */ let worldApi;
-      while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
-        api.info(`polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`)
-        yield* api.sleep(1);
-      }
-
-      const { npcs } = worldApi;
-      if (!npcs.session[sessionKey]) {
-        npcs.session[sessionKey] = { key: sessionKey, receiveMsgs: true, tty: {} };
-      }
-      api.info(`found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
-    },
-  
     /**
      * Spawn character(s) at a position(s) and angle,
      * - e.g. `spawn andros "$( click 1 )"
@@ -234,10 +234,10 @@
         const npcKey = args[0]
         const point = api.safeJsonParse(args[1])
         const angle = Number(args[2]) || 0
-        npcs.spawn({ npcKey, point, angle })
+        await npcs.spawn({ npcKey, point, angle })
       } else {
         while ((datum = await api.read()) !== null)
-          npcs.spawn(datum)
+          await npcs.spawn(datum)
       }
     },
   
