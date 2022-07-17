@@ -28,6 +28,8 @@
   - NPCs.jsx:277 Uncaught (in promise) Error: npc "andros" does not exist
   - Concerns  {npcKey: 'andros', action: 'cancel'}
 
+- ✅ on reload Tabs ensure store.tabs.enabled `true`
+
 - 🚧 Avoid reload Tabs error during `ready` or similar
   - can reset while profile running
   - cleanup session xterm
@@ -36,6 +38,7 @@
 
 - NPC spawn too "slow" for initial collision detect?
   - Saw walk-vs-walk collision fail
+  - Spawn should trigger a player collision test
 - modularise npc JSON
 - `ready` -> `await-world`
 - Initial panzoom error (cancelled) should not propagate 

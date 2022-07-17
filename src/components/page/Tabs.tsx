@@ -67,6 +67,7 @@ export default function Tabs(props: Props) {
         tabKeys.forEach(key => portalLookup[key].portal.setPortalProps({ disabled }));
         // Other tab portals may not exist yet, so record in `tabs` too
         tabs.disabled = disabled;
+        useSiteStore.setState({});
       } else {
         console.warn(
           `Tabs not found for id "${props.id}". ` +
@@ -146,14 +147,14 @@ export default function Tabs(props: Props) {
       </>}
 
       <div
-        ref={(el) => el && (state.contentEl = el)}
+        ref={el => el && (state.contentEl = el)}
         className={state.expanded ? expandedCss : unexpandedCss(props.height)}
       >
         {state.colour !== 'black' && (
           <Layout
             id={props.id}
             tabs={props.tabs}
-            initEnabled={!!props.initEnabled}
+            initEnabled={!!props.initEnabled || state.resets > 0}
           />
         )}
         <TabsOverlay
