@@ -30,11 +30,11 @@
 
 - ✅ on reload Tabs ensure store.tabs.enabled `true`
 
-- 🚧 Avoid reload Tabs error during `ready` or similar
-  - can reset while profile running
-  - cleanup session xterm
-    - cancel ongoing commands
-    - unlink tty
+- ✅ Can reset while profile running, without tty errors
+  - ✅ cancel pending pastes
+  - ✅ cleanup session xterm
+    - ✅ cancel ongoing commands
+    - ✅ unlink tty
 
 - NPC spawn too "slow" for initial collision detect?
   - Saw walk-vs-walk collision fail

@@ -33,10 +33,6 @@ export default function Terminal(props: Props) {
 
   useOnResize(() => state.isTouchDevice = canTouchDevice());
 
-  // React.useEffect(() => {
-  //   useSession.api.removeSession(props.sessionKey);
-  // }, []);
-
   React.useEffect(() => {
     if (state.session === null && !props.disabled) {
       state.session = useSession.api.createSession(props.sessionKey, props.env);

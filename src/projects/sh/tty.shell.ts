@@ -20,6 +20,7 @@ export class ttyShellClass implements Device {
   private buffer = [] as string[];
   private readonly maxLines = 500;
   private process!: ProcessMeta;
+  private cleanups = [] as (() => void)[];
 
   private oneTimeReaders = [] as {
     resolve: (msg: any) => void;
@@ -34,10 +35,16 @@ export class ttyShellClass implements Device {
   ) {
     this.key = `/dev/tty-${sessionKey}`;
   }
+
+  dispose() {
+    this.xterm.dispose();
+    this.cleanups.forEach(cleanup => cleanup());
+    this.cleanups.length = 0;
+  }
   
   async initialise(xterm: ttyXtermClass) {
     this.xterm = xterm;
-    this.io.read(this.onMessage.bind(this));
+    this.cleanups.push(this.io.read(this.onMessage.bind(this)));
 
     // session corresponds to leading process where pid = ppid = pgid = 0
     useSession.api.createProcess({

@@ -55,6 +55,7 @@ export class ttyXtermClass {
    * which is actually pasted into the terminal.
    */
   historyEnabled = true;
+  cleanups = [] as (() => void)[];
 
   constructor(
     public xterm: Terminal,
@@ -77,10 +78,18 @@ export class ttyXtermClass {
     this.preHistory = this.input;
   }
 
+  dispose() {
+    this.sendSigKill();
+    this.cleanups.forEach(cleanup => cleanup());
+    this.cleanups.length = 0;
+    this.xterm.dispose();
+  }
+
   initialise() {
     // this.xterm.onData((data) => document.body.append('DATA: ' + data));
-    this.xterm.onData(this.handleXtermInput.bind(this));
-    this.session.io.handleWriters(this.onMessage.bind(this));
+    const xtermDisposable = this.xterm.onData(this.handleXtermInput.bind(this));
+    const unregisterWriters = this.session.io.handleWriters(this.onMessage.bind(this));
+    this.cleanups.push(() => xtermDisposable.dispose(), unregisterWriters);
   }
 
   /**
