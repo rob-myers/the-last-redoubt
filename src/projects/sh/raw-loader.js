@@ -205,7 +205,7 @@
     },
   
     /** Ping per second until query WORLD_KEY found */
-    ready: async function* ({ api, home: { WORLD_KEY } }) {
+    awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
       const ansiColor = api.getColors();
       const { sessionKey } = api.getProcess();
   

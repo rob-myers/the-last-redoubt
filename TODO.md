@@ -38,17 +38,16 @@
 
 - ✅ Disable/Enable Tabs should not make idle npc walk again
 
-- NPC spawn too "slow" for initial collision detect?
-  - Saw walk-vs-walk collision fail
-  - Spawn should trigger a player collision test
-- modularise npc JSON
-- `ready` -> `await-world`
+- ✅ `ready` -> `awaitWorld`
 - Initial panzoom error (cancelled) should not propagate 
 - Avoid full refresh on toggle CssPanZoom grid
 
 - Start new page intro.mdx
   - it will replace objective.mdx
 
+- NPC spawn too "slow" for initial collision detect?
+  - Spawn should trigger a player collision test
+- modularise npc JSON
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 
 - ✅ Weird animation pause on disable Tabs

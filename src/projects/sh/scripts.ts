@@ -75,12 +75,10 @@ source /etc/game-1
   'profile-1-a': () => `
 ${profileLookup["profile-1"]()}
 
-# await world
-ready
+awaitWorld
 
 spawn andros '{"x":185,"y":390}'
-# why now needed?
-sleep 0.2
+sleep 0.2 # why needed?
 npc set-player andros
 
 # camera follows andros
