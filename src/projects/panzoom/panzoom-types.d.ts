@@ -37,6 +37,7 @@ declare namespace PanZoom {
     /** [translate, scale] */
     anims: [null | Animation, null | Animation];
     worldPointerDown: Geom.Vect;
+    pointerUpExtras: Record<string, any>[];
 
     animationAction(type: 'cancel' | 'pause' | 'play'): void;
     private computePathKeyframes(path: Geom.Vect[]): { keyframes: Keyframe[]; distance: number; };
@@ -63,21 +64,24 @@ declare namespace PanZoom {
   }
 
   type CssInternalEvent = (
-    | CssInternalTransitionEvent
-    | {
-      key: 'pointerup';
-      point: Geom.VectJson;
-      /** Distance from pointerdown in world coords */
-      distance: number;
-      tags: string[];
-    }
+    | CssTransitionEvent
+    | CssPointerUpEvent
     | { key: "ui-idle" }
     | { key: "resized-bounds"; bounds: Geom.RectJson }
   )
 
-  type CssInternalTransitionEvent = (
+  type CssTransitionEvent = (
     | { key: "cancelled-panzoom-to" }
     | { key: "completed-panzoom-to" }
   )
+
+  interface CssPointerUpEvent {
+    key: 'pointerup';
+    point: Geom.VectJson;
+    /** Distance from pointerdown in world coords */
+    distance: number;
+    tags: string[];
+    extra: Record<string, any>;
+  }
 
 }

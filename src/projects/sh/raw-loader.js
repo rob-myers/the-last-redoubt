@@ -136,39 +136,50 @@
       }
       api.info(`found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
     },
-
+    
     /**
-     * Output world position clicks sent via panZoomApi.events.
-     * e.g. `click`, `click 1`
+     * Output world position clicks from panZoomApi.events, e.g.
+     * - `click` forwards all clicks
+     * - `click 1` forwards exactly one click, suppressing other `click`s
+     * 
+     * Our approach via `otag` is relatively efficient.
+     * Otherwise we'd have to keep creating short-term subscriptions.
      */
     click: async function* ({ api, args, home }) {
       const numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
+      const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
       if (!Number.isFinite(numClicks)) {
-        api.throwError("format: \`click [{numberOfClicks}]\`")
+        api.throwError("format: \`click [{numberOfClicks}] [!]\`")
       }
+
       const { lib, npcs, panZoom } = api.getCached(home.WORLD_KEY)
-      const { filter, map, take, otag } = lib
       const process = api.getProcess()
+      extra && panZoom.pointerUpExtras.push(extra);
       
-      yield* otag(
+      yield* lib.otag(
         panZoom.events.pipe(
-          filter(
-            /** @type function(*): x is Extract<PanZoom.CssInternalEvent, { key: "pointerup" }> */
-            x => x.key === "pointerup" && x.distance < 5 && process.status === 1
-          ),
-          take(numClicks),
-          map(e => ({
+          lib.filter(
+            /**
+             * @type {function(*): x is PanZoom.CssPointerUpEvent}
+             * @param {PanZoom.CssInternalEvent} x 
+             */
+            x => x.key === "pointerup" && x.distance < 5 && process.status === 1 && (
+              x.extra.clickEpoch ? !!extra && (extra.clickEpoch === x.extra.clickEpoch) : true
+          )),
+          lib.take(numClicks),
+          lib.map((e) => ({
             x: Number(e.point.x.toFixed(2)),
             y: Number(e.point.y.toFixed(2)),
             tags: [...e.tags, ...npcs.getPointTags(e.point)],
           })),
         ),
-        (deferred, subscription) => (
+        (deferred, subscription) => {
           process.cleanups.push(
             () => deferred.promise.reject(api.getKillError()),
             () => subscription.unsubscribe(),
-          )
-        ),
+          ); // This teardown amounts to a `finally { ... }`
+          subscription.add(() => panZoom.pointerUpExtras = panZoom.pointerUpExtras.filter(x => x !== extra));
+        },
       )
     },
   

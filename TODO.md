@@ -42,8 +42,19 @@
 - ✅ Initial panzoom error (cancelled) should not propagate 
 - ✅ Avoid full refresh on change `World`
   - ISSUE with getter inside `useStateRef` i.e. `state` was undefined
+- ✅ `spawn` should not finish until npc mounted and NPCS.npc[key] exists
 
-- 🚧 Start new page intro.mdx
+- ✅ `spawn foo $( click 1 )` should not trigger a walk
+  - seems `goLoop` is receiving click before npc has moved, so plans a walk
+  - we force click to be ignored by earlier handlers
+
+- 🚧 stop npc `foo` from walking through doors
+  ```sh
+  nav foo $( click 1 ) | walk foo
+  ```
+
+
+- Start new page intro.mdx
   - it will replace objective.mdx
 
 - Fix HMR of NPC (walks without going anywhere)

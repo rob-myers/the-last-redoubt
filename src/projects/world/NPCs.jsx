@@ -418,7 +418,10 @@ export default function NPCs(props) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (!state.isPointLegal(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
+      } else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
+        throw Error(`cannot spawn whilst walking`)
       }
+
       state.npcKeys = state.npcKeys
         .filter(({ key }) => key !== e.npcKey)
         .concat({
@@ -508,7 +511,7 @@ export default function NPCs(props) {
       try {// Walk along a global navpath
         const globalNavPath = e;
         const allPoints = globalNavPath.fullPath;
-        console.log('global navMetas', globalNavPath.navMetas); // DEBUG
+        // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
         await npc.followNavPath(allPoints, { globalNavMetas: globalNavPath.navMetas });
 
       } catch (err) {

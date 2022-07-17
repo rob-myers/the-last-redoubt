@@ -40,6 +40,7 @@ export default function CssPanZoom(props) {
       transitionTimeoutId: 0,
       anims: [null, null],
       worldPointerDown: new Vect,
+      pointerUpExtras: [],
 
       evt: {
         wheel(e) {
@@ -123,6 +124,7 @@ export default function CssPanZoom(props) {
             point: worldPointerUp,
             distance: state.worldPointerDown.distanceTo(worldPointerUp),
             tags: (/** @type {HTMLElement} */ (e.target).getAttribute('data-tags') || '').split(' '),
+            extra: Object.assign({}, ...state.pointerUpExtras),
           });
 
           state.panning = false;
