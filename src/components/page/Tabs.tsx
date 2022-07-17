@@ -148,7 +148,10 @@ export default function Tabs(props: Props) {
 
       <div
         ref={el => el && (state.contentEl = el)}
-        className={state.expanded ? expandedCss : unexpandedCss(props.height)}
+        className={cx(
+          cssName.expanded,
+          state.expanded ? expandedCss : unexpandedCss(props.height),
+        )}
       >
         {state.colour !== 'black' && (
           <Layout
@@ -271,11 +274,12 @@ const fillInlineSpaceCss = (height: number | number[]) => css`
 `;
 
 const expandedCss = css`
+  ${cssName.tabsExpandedMaxWidth}: 1200px;
   position: fixed;
   z-index: 20;
   top: 80px;
-  left: calc(max(5%, (100% - 1000px) / 2));
-  width: calc(min(90%, 1000px));
+  left: calc(max(5%, (100% - var(${cssName.tabsExpandedMaxWidth})) / 2));
+  width: calc(min(90%, var(${cssName.tabsExpandedMaxWidth})));
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
   @media(max-width: 600px) {
