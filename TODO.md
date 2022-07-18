@@ -1,5 +1,22 @@
 # TODO
 
+- 🚧 Start new page intro.mdx
+  - it will replace objective.mdx
+  - ✅ better Tabs props
+  - 🚧 can have multiple World tabs `World ${worldKey}`
+  - sessionKey gets suffix from parent Tabs e.g. `test@test-tabs`
+  - disable Tabs on leave viewport
+  - anchor/action link sends user back to Tabs, displaying text in session
+    - perhaps text added to "queue", and opens respective `Terminal`?
+
+- Nav should weight closed doors
+- Fix HMR of NPC (walks without going anywhere)
+- Spawn should trigger a player collision test
+- modularise npc JSON
+- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+- Saw `World` fail silently due to use-geomorph-data bug
+
+
 - ✅ Migrate projects/world
 - ✅ Show in test.mdx
 - ✅ Migrate to React 18
@@ -54,17 +71,6 @@
   ```sh
   nav foo $( click 1 ) | walk foo
   ```
-
-- Start new page intro.mdx
-  - it will replace objective.mdx
-
-- Nav should weight closed doors
-- Fix HMR of NPC (walks without going anywhere)
-- Spawn should trigger a player collision test
-- modularise npc JSON
-- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
-- Saw `World` fail silently due to use-geomorph-data bug
-
 - ✅ rethink light through nearby doors
 - ✅ Weird animation pause on disable Tabs
 - ✅ Change Tabs splitter size on mobile

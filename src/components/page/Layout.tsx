@@ -127,10 +127,9 @@ function factory(node: TabNode, maxTabNode: TabNode | null) {
 }
 
 function restoreJsonModel(props: Props) {
-  const jsonModelString = tryLocalStorageGet(`model@${props.id}`);
-
-  if (jsonModelString) {
-    try {
+  try {
+    const jsonModelString = tryLocalStorageGet(`model@${props.id}`);
+    if (jsonModelString) {
       const serializable = JSON.parse(jsonModelString) as IJsonModel;
 
       // Larger splitter hit test area
@@ -160,9 +159,9 @@ function restoreJsonModel(props: Props) {
       }
 
       console.error(`restoreJsonModel: prev/next ids differ ${JSON.stringify(prevTabNodeIds)} versus ${JSON.stringify(nextTabNodeIds)}`);
-    } catch (e) {
-      console.error(e);
     }
+  } catch (e) {
+    console.error(e);
   }
 
   return Model.fromJson(computeJsonModel(props.tabs));

@@ -179,8 +179,8 @@ export default function Tabs(props: Props) {
 export interface Props {
   /** Required */
   id: string;
-  /** First tabs are shown initially, rest are background */
-  tabs: [TabMeta[], TabMeta[]];
+  /** List of rows each with a single tabset */
+  tabs: TabMeta[][];
   initEnabled?: boolean;
   height: number | number[];
 }
