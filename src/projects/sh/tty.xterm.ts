@@ -56,6 +56,7 @@ export class ttyXtermClass {
    */
   historyEnabled = true;
   cleanups = [] as (() => void)[];
+  maxStringifyLength = 2 * scrollback * 100;
 
   constructor(
     public xterm: Terminal,
@@ -524,9 +525,10 @@ export class ttyXtermClass {
           this.trackTotalOutput(+Math.max(0, items.length - 2 * scrollback));
           items.slice(-2 * scrollback).forEach(x => this.onMessage(x));
         } else {
+          const stringified = safeStringify(msg);
           this.queueCommands([{
             key: 'line',
-            line: `${ansiColor.Yellow}${safeStringify(msg)}${ansiColor.Reset}`,
+            line: `${ansiColor.Yellow}${stringified.slice(-this.maxStringifyLength)}${ansiColor.Reset}`,
           }]);
           this.session.rememberLastValue(msg);
         }
