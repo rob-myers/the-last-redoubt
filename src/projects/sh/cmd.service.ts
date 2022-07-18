@@ -9,7 +9,7 @@ import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
 import { scriptLookup } from './scripts';
-import { getCached, queryCache } from '../service/query-client';
+import { getCached } from '../service/query-client';
 
 const commandKeys = {
   /** Change current key prefix */
@@ -445,7 +445,8 @@ class cmdServiceClass {
     const session = useSession.api.getSession(meta.sessionKey);
     return new Proxy({
       home: session.var,
-      cache: queryCache,
+      // cache: queryCache,
+      // dev: useSession.getState().device,
       etc: scriptLookup,
     }, {
       get: (_, key) => {
