@@ -75,8 +75,7 @@ source /etc/game-1
   'profile-1-a': () => `
 ${profileLookup["profile-1"]()}
 
-awaitWorld
-
+await-world
 spawn andros '{"x":185,"y":390}'
 npc set-player andros
 
