@@ -6,7 +6,7 @@ import * as React from "react";
 import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 
-import { Rect } from "../geom";
+import { hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { geom } from "../service/geom";
 import { labelMeta, singlesToPolys } from "../service/geomorph";
@@ -19,7 +19,8 @@ import PanZoom from '../panzoom/PanZoom';
 
 const scale = 2;
 
-export default function GeomorphDemo() {
+/** @param {{ disabled?: boolean }} props */
+export default function GeomorphEdit({ disabled }) {
   return (
     <div className={rootCss}>
       <PanZoom initViewBox={defaults.initViewBox} gridBounds={defaults.gridBounds} maxZoom={6}>
@@ -28,33 +29,31 @@ export default function GeomorphDemo() {
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} /> */}
         {/* <Geomorph def={layoutDefs["g-302--xboat-repair-bay"]} /> */}
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} transform="matrix(1,0,0,1,-1200,0)" /> */}
-        <Geomorph def={layoutDefs["g-303--passenger-deck"]} />
+        <Geomorph def={layoutDefs["g-303--passenger-deck"]} disabled={disabled} />
       </PanZoom>
     </div>
   );
 }
 
-/** @param {{ def: Geomorph.LayoutDef; transform?: string }} _ */
-function Geomorph({ def, transform }) {
-  const { data: gm, error } = useQuery(`layout: ${def.key}`, async () => computeLayout(def));
+/** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
+function Geomorph({ def, transform, disabled }) {
+
+  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
+
+  const { data: gm, error } = useQuery(
+    `GeomorphEdit--${def.key}--${hash}`,
+    async () => computeLayout(def),
+    {
+      keepPreviousData: true,
+      enabled: !disabled,
+    },
+  );
 
   return gm ? (
     <g className={cx("geomorph", def.key)} transform={transform}>
       <image className="geomorph" href={gm.dataUrl} x={gm.pngRect.x * scale} y={gm.pngRect.y * scale} />
       <ForeignObject gm={gm} />
       <image className="debug" href={gm.pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
-
-      {/* {gm.outlines.slice(1).map((polys, i) =>
-        polys.map((poly, j) =>
-          <path
-            key={`${i}:${j}`}
-            fill="rgba(200, 0, 0, 0.2)"
-            stroke="black"
-            d={poly.svgPath}
-          />
-        )
-      )} */}
-      
     </g>
   ) : null;
 }
@@ -71,8 +70,9 @@ function ForeignObject({ gm }) {
   return (
     <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
       <div onClick={onClick}>
-        {gm.doors.map(({ baseRect, angle }) =>
+        {gm.doors.map(({ baseRect, angle }, doorId) =>
           <div
+            key={doorId}
             className="door"
             style={{
               left: baseRect.x - gm.pngRect.x,
@@ -83,8 +83,9 @@ function ForeignObject({ gm }) {
               transform: `rotate(${angle}rad)`,
             }} />
         )}
-        {gm.labels.map(({ text, padded }) => (
+        {gm.labels.map(({ text, padded }, labelId) => (
           <div
+            key={labelId}
             className="label"
             style={{
               left: padded.x - gm.pngRect.x,

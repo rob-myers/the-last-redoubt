@@ -115,6 +115,14 @@ export function equals(x, y, depth = 0) {
 }
 
 /**
+ * https://stackoverflow.com/a/15710692/2917822
+ * @param {string} s
+ */
+export function hashText(s){
+  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+}
+
+/**
  * https://github.com/sindresorhus/is-plain-obj/blob/main/index.js
  * @param {*} value 
  * @returns 

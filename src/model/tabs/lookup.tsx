@@ -23,7 +23,7 @@ const component = {
   // 'example/Css3dForeignObject#301': () => import('projects/example/Css3dForeignObject')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   'geomorph/GeomorphEdit': () => import('projects/geomorph/GeomorphEdit')
-    .then(x => x.default),
+    .then(x => (props: any) => <x.default disabled {...props} />),
   // 'example/SvgPanZoomDemo': () => import('projects/example/SvgPanZoomDemo')
   //   .then(x => x.default),
   // 'example/Pyramid3dDemo': () => import('projects/example/Pyramid3dDemo')
@@ -33,7 +33,7 @@ const component = {
   // 'example/SvgDoorsDemo#301': () => import('projects/example/SvgDoorsDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   'example/SvgStringPull': () => import('projects/example/SvgStringPull')
-    .then(x => (props:any) => <x.default disabled {...props} />),
+    .then(x => (props: any) => <x.default disabled {...props} />),
   
   'world/World': () => import('projects/world/World')
     .then(x => (props: any) =>
