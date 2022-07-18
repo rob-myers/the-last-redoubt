@@ -37,6 +37,7 @@ export default function Doors(props) {
       ctxt.clearRect(0, 0, canvas.width, canvas.height);
       ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
       ctxt.fillStyle = '#555';
+      ctxt.strokeStyle = '#000';
 
       // Handle extension of open visible doors (orig via `relate-connectors` tag)
       const relDoorIds = gm.doors.flatMap((_, i) =>
@@ -46,6 +47,7 @@ export default function Doors(props) {
       gm.doors.forEach(({ poly }, doorId) => {
         if (!state.vis[gmId][doorId] && !relDoorIds.includes(doorId)) {
           fillPolygon(ctxt, [poly]);
+          ctxt.stroke();
         }
       });
     },
@@ -230,7 +232,8 @@ const rootCss = css`
     }
 
     &:not(.iris) {
-      background: #444;
+      /* background: #444; */
+      background: #fff;
       border: 1px solid #999;
 
       transition: width 300ms ease-in;
