@@ -48,14 +48,12 @@
   - seems `goLoop` is receiving click before npc has moved, so plans a walk
   - we force click to be ignored by earlier handlers
 
-- fix stateroom 100 (as seen in gm 303)
+- ✅ fix stateroom 100 (as seen in gm 303)
 
 - 🚧 stop npc `foo` from walking through doors
   ```sh
   nav foo $( click 1 ) | walk foo
   ```
-
-- rethink light through nearby doors
 
 - Start new page intro.mdx
   - it will replace objective.mdx
@@ -67,6 +65,7 @@
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 - Saw `World` fail silently due to use-geomorph-data bug
 
+- ✅ rethink light through nearby doors
 - ✅ Weird animation pause on disable Tabs
 - ✅ Change Tabs splitter size on mobile
   ```tsx
