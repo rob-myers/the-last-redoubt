@@ -11,7 +11,7 @@ export default function useHandleEvents(api, gmGraph) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
-    handleCollisions(e) {
+    async handleCollisions(e) {
       switch (e.meta.key) {
         case 'pre-collide': {
           const npc = api.npcs.getNpc(e.npcKey);
@@ -21,10 +21,12 @@ export default function useHandleEvents(api, gmGraph) {
           break;
         }
         case 'start-seg': {
+          /**
+           * TODO only check when `npc` or `other` is player.
+           */
           const npc = api.npcs.getNpc(e.npcKey);
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
-          // TODO efficiency
           for (const other of others) {
             const collision = api.npcs.detectCollision(npc, other);
 
@@ -43,10 +45,19 @@ export default function useHandleEvents(api, gmGraph) {
           }
           break;
         }
+        case 'pre-exit-room':
+        case 'pre-near-door': {
+          // If upcoming door is closed, stop npc
+          if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
+            const npc = api.npcs.getNpc(e.npcKey);
+            await npc.cancel();
+          }
+          break;
+        }
       }
     },
 
-    async handlePlayerWayEvent(e) {
+    handlePlayerWayEvent(e) {
       // console.log('player way event', e);
       switch (e.meta.key) {
         case 'exit-room':
@@ -66,12 +77,6 @@ export default function useHandleEvents(api, gmGraph) {
           break;
         case 'pre-exit-room':
         case 'pre-near-door':
-          // If upcoming door is closed, stop player
-          if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
-            const player = api.npcs.getNpc(e.npcKey);
-            await player.cancel();
-          }
-          break;
         case 'start-seg':
         case 'pre-collide':
           break;
@@ -110,7 +115,8 @@ export default function useHandleEvents(api, gmGraph) {
               api.npcs.setRoomByNpc(e.npcKey);
             }
             /**
-             * TODO collision test for player
+             * TODO collision test against player,
+             * in case e.g. they've already started final segment
              */
             break;
           case 'started-walking':
@@ -124,9 +130,7 @@ export default function useHandleEvents(api, gmGraph) {
             if (e.npcKey === api.npcs.playerKey) {
               state.handlePlayerWayEvent(e);
             }
-            if (e.meta.key === 'start-seg' || e.meta.key === 'pre-collide') {
-              state.handleCollisions(e); // Player agnostic?
-            }
+            state.handleCollisions(e);
             break;
           default:
             throw testNever(e);
@@ -144,6 +148,6 @@ export default function useHandleEvents(api, gmGraph) {
 
 /**
  * @typedef State @type {object}
- * @property {(e: NPC.NPCsWayEvent) => void} handleCollisions
+ * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleCollisions
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */

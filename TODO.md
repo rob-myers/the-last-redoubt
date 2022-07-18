@@ -50,7 +50,7 @@
 
 - ✅ fix stateroom 100 (as seen in gm 303)
 
-- 🚧 stop npc `foo` from walking through doors
+- ✅ stop npc from walking through doors
   ```sh
   nav foo $( click 1 ) | walk foo
   ```
