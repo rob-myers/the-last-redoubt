@@ -152,8 +152,11 @@ class semanticsServiceClass {
         try {
           const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
           for (const [i, file] of clones.slice(0, -1).entries()) {
-            // At most one pipeline can be running in any process
-            const fifoKey = `/dev/fifo-${file.meta.pid}-${i}`;
+            /**
+             * At most one pipeline can be running in any process in a given session.
+             * Must prefix with `sessionKey` to avoid device collision.
+             */
+            const fifoKey = `/dev/fifo-${file.meta.sessionKey}-${file.meta.pid}-${i}`;
             fifos.push(useSession.api.createFifo(fifoKey));
             clones[i + 1].meta.fd[0] = file.meta.fd[1] = fifoKey;
           }
