@@ -65,26 +65,24 @@ lookLoop: `{
  * Remember to invoke function (MDX lacks intellisense).
  */
 export const profileLookup = {
-  'profile-1': () => `
-
+'profile-1': () => `
 source /etc/util-1
 source /etc/game-1
-
 `.trim(),
 
-  'profile-1-a': () => `
-${profileLookup["profile-1"]()}
-
+'profile-1-a': (npcKey = 'andros') => `${
+  profileLookup["profile-1"]()
+}
 await-world
-spawn andros '{"x":185,"y":390}'
-npc set-player andros
+spawn ${npcKey} '{"x":185,"y":390}'
+npc set-player ${npcKey}
 
-# camera follows andros
-track andros &
+# camera follows ${npcKey}
+track ${npcKey} &
 # click navmesh to move
-goLoop andros &
+goLoop ${npcKey} &
 # click outside navmesh to look
-lookLoop andros &
+lookLoop ${npcKey} &
 `,
 };
 
