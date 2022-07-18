@@ -1,19 +1,15 @@
 # TODO
 
-- ✅ BUG with multiple world click handling?
-  - try simplifying PROFILE
-  - occurs with both`goLoop andros &`, and both `lookLoop andros &`
-  - problem was name-collision in `/dev`
-
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
   - ✅ can have multiple World tabs `${worldKey}`  
-  - sessionKey gets suffix from parent Tabs e.g. `test@test-tabs`
+  - ✅ avoid sessionKeys like `test` -- global over site
   - disable Tabs on leave viewport
   - anchor/action link sends user back to Tabs, displaying text in session
     - perhaps text added to "queue", and opens respective `Terminal`?
 
+- Start using `_` i.e. last value shortcut
 - Always show navpath (no need for DEBUG=true)
 - Nav should weight closed doors
 - Fix HMR of NPC (walks without going anywhere)
@@ -22,7 +18,10 @@
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 - Saw `World` fail silently due to use-geomorph-data bug
 
-
+- ✅ BUG with multiple world click handling?
+  - try simplifying PROFILE
+  - occurs with both`goLoop andros &`, and both `lookLoop andros &`
+  - problem was name-collision in `/dev`
 - ✅ Migrate projects/world
 - ✅ Show in test.mdx
 - ✅ Migrate to React 18

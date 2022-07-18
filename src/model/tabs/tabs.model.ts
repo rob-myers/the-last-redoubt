@@ -1,32 +1,16 @@
 import type { IJsonModel } from 'flexlayout-react';
 import type { CodeFilepathKey, ComponentFilepathKey } from './lookup';
-import { deepClone, testNever } from 'projects/service/generic';
-
-/**
- * Internal tab uid used by npm module `flexlayout-react`,
- * and also as portal keys.
- */
-export function getTabInternalId(meta: TabMeta) {
-  return `${getTabName(meta)}${meta.idSuffix || ''}`;
-}
+import { deepClone } from 'projects/service/generic';
 
 export function getTabName(meta: TabMeta) {
-  switch (meta.type) {
-    case 'code':
-    case 'component':
-      return meta.filepath;
-    case 'terminal':
-      return `@${meta.filepath}`;
-    default:
-      throw testNever(meta);
-  }
+  return meta.filepath;
 }
 
 export function getTabsId(articleKey: string, tabsName: string) {
   return `${articleKey}--tabs--${tabsName}`;
 }
 
-export type TabMeta = { idSuffix?: string; weight?: number; } & (
+export type TabMeta = { weight?: number; } & (
   | { type: 'code'; filepath: CodeFilepathKey; folds?: CodeMirror.Position[] }
   | { type: 'component'; filepath: ComponentFilepathKey; }
   | { type: 'terminal'; /** Session identifier */ filepath: string; env?: Record<string, any>; }
@@ -61,10 +45,9 @@ export function computeJsonModel(tabs: TabMeta[][]): IJsonModel {
              * Tabs must not be duplicated within same `Tabs`,
              * for otherwise this internal `id` will conflict.
              */
-            id: getTabInternalId(meta),
+            id: getTabName(meta),
             name: getTabName(meta),
             config: deepClone(meta),
-            // component: meta.key === 'terminal' ? 'terminal' : meta.filepath,
           })),
         }],
       })),

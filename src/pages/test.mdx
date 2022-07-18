@@ -24,10 +24,10 @@ import { profileLookup } from "projects/sh/scripts";
     [
       { type: 'component', filepath: 'world-demo-1' },
       { type: 'component', filepath: 'world-demo-2' },
-      { type: 'terminal', filepath: 'test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
     ],
     [
-      { type: 'terminal', filepath: 'other', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
       { type: 'component', filepath: 'geomorph/GeomorphEdit' },
       // { type: 'component', filepath: 'example/SvgStringPull' },
       // { type: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
