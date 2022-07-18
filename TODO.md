@@ -3,7 +3,7 @@
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
-  - 🚧 can have multiple World tabs `World ${worldKey}`
+  - ✅ can have multiple World tabs `${worldKey}`
   - sessionKey gets suffix from parent Tabs e.g. `test@test-tabs`
   - disable Tabs on leave viewport
   - anchor/action link sends user back to Tabs, displaying text in session

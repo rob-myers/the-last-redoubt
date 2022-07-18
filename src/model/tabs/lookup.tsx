@@ -18,12 +18,20 @@ const component = {
     .then(x => (props: any) => <x.default {...props} srcKey='geomorph-301' />),
   'example/Images#redoubt-sketches': () => import('projects/example/Images')
     .then(x => (props: any) => <x.default {...props} srcKey='redoubt-sketches' />),
+  'example/SvgStringPull': () => import('projects/example/SvgStringPull')
+    .then(x => (props: any) => <x.default disabled {...props} />),
+  'example/SvgNavGraph#101': () => import('projects/example/SvgNavGraph')
+    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
+  'example/SvgNavGraph#301': () => import('projects/example/SvgNavGraph')
+    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
+
+  'geomorph/GeomorphEdit': () => import('projects/geomorph/GeomorphEdit')
+    .then(x => (props: any) => <x.default disabled {...props} />),
+
   // 'example/SvgVisibilityDemo#301': () => import('projects/example/SvgVisibilityDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   // 'example/Css3dForeignObject#301': () => import('projects/example/Css3dForeignObject')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
-  'geomorph/GeomorphEdit': () => import('projects/geomorph/GeomorphEdit')
-    .then(x => (props: any) => <x.default disabled {...props} />),
   // 'example/SvgPanZoomDemo': () => import('projects/example/SvgPanZoomDemo')
   //   .then(x => x.default),
   // 'example/Pyramid3dDemo': () => import('projects/example/Pyramid3dDemo')
@@ -32,30 +40,39 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
   // 'example/SvgDoorsDemo#301': () => import('projects/example/SvgDoorsDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
-  'example/SvgStringPull': () => import('projects/example/SvgStringPull')
-    .then(x => (props: any) => <x.default disabled {...props} />),
   
-  'world/World': () => import('projects/world/World')
+  'world-demo-1': () => import('projects/world/World')
     .then(x => (props: any) =>
       <x.default
         disabled
         init={{ open: { 0: [24] } }}
         worldKey="world-demo-1"
         gms={[
-        { layoutKey: 'g-301--bridge' },
-        { layoutKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 0, 600] },
-        { layoutKey: 'g-302--xboat-repair-bay', transform: [1, 0, 0, 1, -1200, 600] },
-        { layoutKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, -1200, 1200 + 600] },
-        { layoutKey: 'g-302--xboat-repair-bay', transform: [-1, 0, 0, 1, 1200 + 1200, 600] },
-        { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 1200 + 600], },
+          { layoutKey: 'g-301--bridge' },
+          { layoutKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 0, 600] },
+          { layoutKey: 'g-302--xboat-repair-bay', transform: [1, 0, 0, 1, -1200, 600] },
+          { layoutKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, -1200, 1200 + 600] },
+          { layoutKey: 'g-302--xboat-repair-bay', transform: [-1, 0, 0, 1, 1200 + 1200, 600] },
+          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 1200 + 600], },
         ]}
         {...props}
       />
     ),
-  'example/SvgNavGraph#101': () => import('projects/example/SvgNavGraph')
-    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
-  'example/SvgNavGraph#301': () => import('projects/example/SvgNavGraph')
-    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
+
+  'world-demo-2': () => import('projects/world/World')
+    .then(x => (props: any) =>
+      <x.default
+        disabled
+        init={{ open: { 0: [24] } }}
+        worldKey="world-demo-2"
+        gms={[
+          { layoutKey: 'g-301--bridge' },
+          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        ]}
+        {...props}
+      />
+    ),
+  
   // 'example/SvgNavGraph#302': () => import('projects/example/SvgNavGraph')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-302--xboat-repair-bay' />),
   // 'example/LightsTest': () => import('projects/example/LightsTest')
