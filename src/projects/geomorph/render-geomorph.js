@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { Poly, Vect } from "../geom";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { error } from "../service/log";

@@ -22,8 +22,8 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   // 'example/Css3dForeignObject#301': () => import('projects/example/Css3dForeignObject')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
-  // 'example/GeomorphEdit': () => import('projects/example/GeomorphEdit')
-  //   .then(x => x.default),
+  'geomorph/GeomorphEdit': () => import('projects/geomorph/GeomorphEdit')
+    .then(x => x.default),
   // 'example/SvgPanZoomDemo': () => import('projects/example/SvgPanZoomDemo')
   //   .then(x => x.default),
   // 'example/Pyramid3dDemo': () => import('projects/example/Pyramid3dDemo')
@@ -35,7 +35,7 @@ const component = {
   'example/SvgStringPull': () => import('projects/example/SvgStringPull')
     .then(x => (props:any) => <x.default disabled {...props} />),
   
-  'example/World': () => import('projects/world/World')
+  'world/World': () => import('projects/world/World')
     .then(x => (props: any) =>
       <x.default
         disabled
