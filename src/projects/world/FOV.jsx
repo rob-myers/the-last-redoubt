@@ -50,11 +50,24 @@ export default function FOV(props) {
       const maskPolys = /** @type {Poly[][]} */ (gms.map(_ => []));
       gms.forEach((otherGm, otherGmId) => {
         const polys = lightPolys.filter(x => otherGmId === x.gmIndex).map(x => x.poly.precision(2));
-        if (otherGm === gm) {// Lights for current geomorph includes _current room_
+
+        if (otherGm === gm) {
           const roomWithDoors = gm.roomsWithDoors[state.roomId]
-          // Cut one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
+          /**
+           * Lights for current geomorph includes current room.
+           * Cutting one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
+           */
           maskPolys[otherGmId] = polys.concat(roomWithDoors).reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), [otherGm.hullOutline])
           // maskPolys[otherGmId] = Poly.cutOut(polys.concat(roomWithDoors), [otherGm.hullOutline]);
+          /**
+           * We try to eliminate "small black no-light intersections",
+           * which often look triangular. As part of mask they have no holes.
+           * However, polygons sans holes also arise e.g. when light borders a hull door.
+           */
+          maskPolys[otherGmId] = maskPolys[otherGmId].filter(
+            x => x.holes.length
+            || x.outline.length > 8
+          )
         } else {
           maskPolys[otherGmId] = Poly.cutOut(polys, [otherGm.hullOutline]);
         }
