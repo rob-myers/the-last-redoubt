@@ -27,7 +27,7 @@
   <g style="pointer-events: none;">
     <title>singles</title>
     <path d="M 543.806 78.697 L 615.787 117.899 L 692.381 165.749 L 803.9 248.5 L 942.1 386.4 L 1027.836 508.649 L 1106 637.5 L 1054.3 667.2 L 880.9 416.8 L 715.8 256.6 L 517.7 139.6 L 543.806 78.697 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); fill-opacity: 0.5;">
-      <title>window one-way</title>
+      <title>window</title>
     </path>
     <rect x="227.6" y="578" width="220" height="48" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 1764, 697.39917)">
       <title>door</title>
@@ -48,6 +48,12 @@
       <title>light reverse</title>
     </rect>
     <rect x="128" y="-80" width="40" height="100" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+      <title>light reverse</title>
+    </rect>
+    <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5; pointer-events: auto;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
+      <title>light</title>
+    </rect>
+    <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5; pointer-events: auto;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
       <title>light reverse</title>
     </rect>
   </g>

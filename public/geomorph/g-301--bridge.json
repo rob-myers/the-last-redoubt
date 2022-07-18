@@ -869,6 +869,15 @@
         }
       },
       {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[91.7168, 60], [91.7168, 240], [87.7168, 240], [87.7168, 60]]
+          ]
+        }
+      },
+      {
         "tags": ["door", "s"],
         "poly": {
           "type": "Polygon",
@@ -1570,6 +1579,20 @@
         }
       },
       {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1112.2832, 60],
+              [1112.2832, 240],
+              [1108.2832, 240],
+              [1108.2832, 60]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -1772,6 +1795,15 @@
           "type": "Polygon",
           "coordinates": [
             [[22.96, 551.44], [42.96, 551.44], [42.96, 571.44], [22.96, 571.44]]
+          ]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[60, 508.2832], [240, 508.2832], [240, 512.2832], [60, 512.2832]]
           ]
         }
       },

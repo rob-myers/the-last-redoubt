@@ -113,11 +113,23 @@
     <rect y="659.992" width="10" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="565.024">
       <title>light reverse</title>
     </rect>
-    <rect y="720" width="10" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="174.489" transform="matrix(0, 1, -1, 0, 939.992004, 570.510986)">
-      <title>light reverse</title>
+    <rect x="139.992" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 191.793045, 421.60791)">
+      <title>relate-connectors</title>
     </rect>
-    <rect y="759.992" width="10" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="174.512" transform="matrix(0, 1, -1, 0, 939.992004, 570.510986)">
-      <title>light reverse</title>
+    <rect x="327.566" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="564.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="622.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="507.566" width="10" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="240">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, -182.758469)">
+      <title>relate-connectors</title>
     </rect>
   </g>
 </svg>

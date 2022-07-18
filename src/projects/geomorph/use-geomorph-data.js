@@ -70,23 +70,28 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       default: x.center,
       labels: [],
       light: {},
+      lightWindow: {},
       spawn: [],
     }));
 
     lightMetas.forEach(({ center: p, poly, reverse }, i) => {
       let roomId = layout.rooms.findIndex(poly => poly.contains(p));
       const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
+      const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
 
-      if (roomId === -1 || doorId === -1) {
-        console.warn(`useGeomorphData: light ${i} has room/doorId ${roomId}/${doorId}`);
+      if (roomId === -1 || (doorId === -1 && windowId === -1)) {
+        console.warn(`useGeomorphData: light ${i} has room/door/windowId ${roomId}/${doorId}/${windowId}`);
       } else if (reverse) {// Reversed light comes from otherRoomId
-        const otherRoomId = layout.doors[doorId].roomIds.find(x => x !== roomId);
+        const otherRoomId = doorId >= 0
+          ? layout.doors[doorId].roomIds.find(x => x !== roomId)
+          : layout.windows[windowId].roomIds.find(x => x !== roomId);
         if (typeof otherRoomId !== 'number') {
           console.warn(`useGeomorphData: reverse light ${i} lacks other roomId (room/doorId ${roomId}/${doorId})`);
         } else roomId = otherRoomId;
       }// NOTE roomId could be -1
 
-      pointsByRoom[roomId].light[doorId] = p;
+      doorId >= 0 && (pointsByRoom[roomId].light[doorId] = p);
+      windowId >= 0 && (pointsByRoom[roomId].lightWindow[windowId] = p);
     });
 
     layout.groups.singles.filter(x => x.tags.includes('spawn'))

@@ -361,13 +361,16 @@ export class gmGraphClass extends BaseGraph {
       })
       .map(x => x.windowIndex);
 
-    const windowLights = adjWindowIds.map(windowIndex => ({
+    const windowLights = adjWindowIds.map(windowId => ({
       gmIndex: gmId,
       poly: geom.lightPolygon({
-        // We move light inside current room
-        position: computeLightPosition(gm.windows[windowIndex], rootRoomId, lightWindowOffset),
+        position: (
+          gm.point[rootRoomId]?.lightWindow[windowId]
+          // We move light inside current room
+          || computeLightPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
+        ),
         range: 1000,
-        exterior: this.getOpenWindowPolygon(gmId, windowIndex),
+        exterior: this.getOpenWindowPolygon(gmId, windowId),
       }),
     }));
 
