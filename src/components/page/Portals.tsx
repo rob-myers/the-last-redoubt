@@ -1,22 +1,15 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
-import { useBeforeunload } from 'react-beforeunload';
 
 import { getCode, getComponent } from 'model/tabs/lookup';
 import useSiteStore from "store/site.store";
-// import useSession from "store/session.store";
 import { CodeEditor, Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
   const lookup = useSiteStore(site => site.portal);
-  const items = React.useMemo(() => Object.values(lookup), [lookup]);
-
-  useBeforeunload(() => {
-    // const sessionKeys = Object.keys(useSession.getState().session);
-    // sessionKeys.forEach(sessionKey => useSession.api.persist(sessionKey));
-  });
+  const items = Object.values(lookup);
 
   const [, setCount] = React.useState(0);
   React.useLayoutEffect(() => {
