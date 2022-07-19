@@ -3,8 +3,9 @@ import { css, cx } from '@emotion/css';
 import { iconCss } from './Icons';
 import Link from './Link';
 import { cssName } from "projects/service/const";
+import type { State } from "./Tabs";
 
-export function TabsOverlay(props: Props) {
+export function TabsOverlay({ api, tabsId }: Props) {
   return (
     <div className={controlsCss}>
       <div className={cssName.topRight}>
@@ -12,32 +13,31 @@ export function TabsOverlay(props: Props) {
           className={cx(
             cssName.resetIcon,
             iconCss({ basename: 'refresh', dim: 11, invert: true }),
-            !props.enabled && cssName.disabled,
           )}
-          onClick={props.reset}
+          onClick={api.reset}
           title="reset"
         />
         <Link
-          href={`#${props.parentTabsId}`}
+          href={`#${tabsId}`}
           className={iconCss({ basename: 'hash-icon', dim: 11, invert: true })}
           title="anchor"
         />
         <div
-          className={iconCss({ basename: props.expanded ? 'compress' : 'expand', dim: 11, invert: true })}
-          onClick={props.toggleExpand}
-          title={props.expanded ? 'minimise' : 'maximise'}
+          className={iconCss({ basename: api.expanded ? 'compress' : 'expand', dim: 11, invert: true })}
+          onClick={api.toggleExpand}
+          title={api.expanded ? 'minimise' : 'maximise'}
         />
         <div
           className={cx(
             cssName.disableIcon,
             iconCss({ basename: 'cross-circle', dim: 11, invert: true }),
-            !props.enabled && cssName.disabled,
+            !api.enabled && cssName.disabled,
           )}
-          onClick={props.toggleEnabled}
+          onClick={api.toggleEnabled}
         />
       </div>
-      {!props.enabled && (
-        <div className={cssName.central} onClick={props.toggleEnabled}>
+      {!api.enabled && (
+        <div className={cssName.central} onClick={api.toggleEnabled}>
           interact
         </div>
       )}
@@ -46,12 +46,8 @@ export function TabsOverlay(props: Props) {
 }
 
 interface Props {
-  enabled: boolean;
-  expanded: boolean;
-  parentTabsId: string;
-  reset(): void;
-  toggleExpand(): void;
-  toggleEnabled(): void;
+  api: State;
+  tabsId: string;
 }
 
 const controlsCss = css`

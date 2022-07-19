@@ -22,18 +22,7 @@ function useEnsurePortal(
 ) {
   React.useEffect(() => {
     if (!portal) {
-      const portalKey = getTabName(meta);
-      const htmlPortalNode = portals.createHtmlPortalNode({
-        attributes: { class: 'portal' },
-      });
-
-      useSiteStore.setState(({ portal }) => ({
-        portal: { ...portal, [portalKey]: {
-          key: portalKey,
-          meta,
-          portal: htmlPortalNode,
-        }},
-      }));
+      const { portal: htmlPortalNode } = createPortal(meta);
 
       window.setTimeout(() => {
         // If parent <Tabs/> not disabled, wake this portal up, e.g.
@@ -51,4 +40,23 @@ function useEnsurePortal(
       console.warn('Saw different TabMetas with same portalKey', portal.meta, meta);
     }
   }, []);
+}
+
+export function createPortal(meta: TabMeta) {
+  const portalKey = getTabName(meta);
+  const htmlPortalNode = portals.createHtmlPortalNode({
+    attributes: { class: 'portal' },
+  });
+
+  const portalItem = {
+    key: portalKey,
+    meta,
+    portal: htmlPortalNode,
+  };
+
+  useSiteStore.setState(({ portal }) => ({
+    portal: { ...portal, [portalKey]: portalItem },
+  }));
+
+  return portalItem;
 }

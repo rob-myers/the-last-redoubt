@@ -7,7 +7,7 @@ import debounce from "debounce";
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
 import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
-import useSiteStore from 'store/site.store';
+import useSiteStore, { State } from 'store/site.store';
 import type { Props as TabsProps } from './Tabs';
 import Portal from './Portal';
 
@@ -21,17 +21,20 @@ export default function Layout(props: Props) {
       if (node.getType() === 'tab') {
         node.setEventListener('visibility', () => {
           /**
-           * - Disable if tab becomes invisible.
            * - Enable if tab becomes visible and parent Tabs enabled.
+           * - Disable 'component' tabs if they become invisible.
+           *   We don't disable invisible 'terminal' tabs.
            */
           window.setTimeout(() => {
             const [key, visible] = [node.getId(), node.isVisible()];
             const portal = useSiteStore.getState().portal[key];
             const tabs = Object.values(useSiteStore.getState().tabs)
-              .find(x => x.def.some(y => y.filepath === portal?.key));
+              .find(x => x.def.some(y => getTabName(y) === portal?.key));
             if (portal && tabs) {
-              // console.log(key, visible, tabs);
-              portal.portal.setPortalProps({ disabled: !visible || tabs.disabled });
+              const disabled = tabs.disabled || (
+                !visible && portal.meta.type !== 'terminal'
+              );
+              portal.portal.setPortalProps({ disabled });
             }
           });
         });
@@ -46,23 +49,20 @@ export default function Layout(props: Props) {
    * However, `flexlayout-react` renders those tabs which'll be visible on minimize.
    * We prevent these initial renders by not mounting these tabs initially.
    */
-  const [maxInit, setMaxInit] = React.useState(() => {
-    const tabset = model.getMaximizedTabset();
-    const tabnode = tabset ? (tabset.getChildren()[tabset.getSelected()] as TabNode) : undefined;
-    return tabnode || null;
-  });
+  const maximisedTabNode = (model.getMaximizedTabset()?.getSelectedNode()??null) as TabNode | null; 
+  const portalLookup = useSiteStore.getState().portal;
 
   useRegisterTabs(props, model);
 
   return (
     <FlexLayout
       model={model}
-      factory={node => factory(node, maxInit)}
+      factory={node => factory(node, maximisedTabNode, portalLookup)}
       realtimeResize
       onModelChange={debounce(() => storeModelAsJson(props.id, model), 300)}
       onAction={act => {
-        if (act.type === Actions.MAXIMIZE_TOGGLE && maxInit) {
-          setMaxInit(null); // Happens at most once in component lifetime
+        if (act.type === Actions.MAXIMIZE_TOGGLE && maximisedTabNode) {
+          props.update();
         }
         return act;
       }}
@@ -72,7 +72,8 @@ export default function Layout(props: Props) {
 
 interface Props extends Pick<TabsProps, 'tabs'> {
   id: string;
-  readonly initEnabled: boolean;
+  initEnabled: boolean;
+  update(): void;
 }
 
 /**
@@ -90,19 +91,24 @@ function useRegisterTabs(props: Props, model: Model) {
       tabs[props.id] = {
         key: props.id,
         def: props.tabs[0].concat(props.tabs[1]),
-        selectTab: (tabId: string) =>
-          model.doAction(Actions.selectTab(tabId)),
-        scrollTo: async () => {
+        selectTab(tabId: string) {
+          model.doAction(Actions.selectTab(tabId));
+        },
+        async scrollTo() {
           const id = props.id;
           const { top } = document.getElementById(id)!.getBoundingClientRect();
           window.scrollBy({ top, behavior: 'smooth' });
           if (! await scrollFinished(window.pageYOffset + top)) return;
           navigate(`#${id}`);
         },
-        getTabNodes: () => {
+        getTabNodes() {
           const output = [] as TabNode[];
           model.visitNodes(x => x instanceof TabNode && output.push(x));
           return output;
+        },
+        getVisibleTabNodes() {
+          const maxTabset = model.getMaximizedTabset();
+          return maxTabset ? [maxTabset.getSelectedNode() as TabNode] : this.getTabNodes().filter(x => x.isVisible());
         },
         disabled: !props.initEnabled,
         pagePathname: location.pathname,
@@ -117,8 +123,18 @@ function useRegisterTabs(props: Props, model: Model) {
 
 }
 
-function factory(node: TabNode, maxTabNode: TabNode | null) {
-  if (!maxTabNode || node.getParent() === maxTabNode.getParent()) {
+/**
+ * This function defines the contents of a Tab, triggered whenever it becomes visible.
+ * But according to flexlayout-react, a selected tab is "visible" when obscured by a maximised tab.
+ * To fix this, if some tab is maximised, we only render siblings of the maximised tab,
+ * and also those tabs that have previously been rendered.
+ */
+function factory(node: TabNode, maxTabNode: TabNode | null, portalLookup: State['portal']) {
+  if (
+    !maxTabNode
+    || node.getParent() === maxTabNode.getParent()
+    || node.getId() in portalLookup
+  ) {
     const meta = node.getConfig() as TabMeta;
     return <Portal {...meta} />;
   } else {

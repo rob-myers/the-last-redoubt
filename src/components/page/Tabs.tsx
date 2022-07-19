@@ -10,22 +10,25 @@ import useStateRef from 'projects/hooks/use-state-ref';
 import { Layout } from 'components/dynamic';
 import { cssName } from 'projects/service/const';
 import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
+import { createPortal } from './Portal';
 
 export default function Tabs(props: Props) {
 
   const update = useUpdate();
   const expandedStorageKey = `expanded@tab-${props.id}`;
 
-  const state = useStateRef(() => ({
+  const state = useStateRef((): State => ({
+    colour: 'black',
     enabled: !!props.initEnabled,
-    /** Initially `'black'`, afterwards always in `['faded', 'clear']` */
-    colour: 'black' as 'black' | 'faded' | 'clear',
     expanded: false,
     resets: 0,
+    resetWhileDisabled: false,
 
-    rootEl: {} as HTMLElement,
-    contentEl: {} as HTMLDivElement,
-    backdropEl: {} as HTMLDivElement,
+    el: {
+      root: {} as HTMLElement,
+      content: {} as HTMLDivElement,
+      backdrop: {} as HTMLDivElement,
+    },
 
     // TODO doesn't fire if click on Tabs
     onKeyUp(e: React.KeyboardEvent) {
@@ -48,25 +51,39 @@ export default function Tabs(props: Props) {
     reset() {
       const portalKeys = props.tabs.flatMap(x => x.map(y => getTabName(y)));
       useSiteStore.api.removePortals(...portalKeys);
-      state.resets++;
-      update();
+
+      if (state.enabled) {
+        state.resets++;
+        update();
+      }
+      state.resetWhileDisabled = !state.enabled;
     },
     toggleEnabled() {
-      state.enabled = !state.enabled;
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
-
+      state.enabled = !state.enabled;
       const tabs = useSiteStore.getState().tabs[props.id];
+
       if (tabs) {
-        // Set disabled (converse) for all visible tabs
         const disabled = !state.enabled;
-        const portalLookup = useSiteStore.getState().portal;
-        const tabKeys = tabs.getTabNodes()
-          .filter(x => x.isVisible())
-          .map(x => x.getId())
-          .filter(x => x in portalLookup);
-        tabKeys.forEach(key => portalLookup[key].portal.setPortalProps({ disabled }));
+        const lookup = useSiteStore.getState().portal;
+
+        if (state.resetWhileDisabled) {
+          // Need to ensure portals before setting disabled `false`
+          const visibleTabNodes = tabs.getVisibleTabNodes();
+          visibleTabNodes.forEach(tabNode =>
+            lookup[tabNode.getId()] = lookup[tabNode.getId()] || createPortal(tabNode.getConfig())
+          );
+          setTimeout(() => {
+            visibleTabNodes.forEach(tabNode => lookup[tabNode.getId()].portal.setPortalProps({ disabled: false }));
+          }, 300);
+        } else {
+          // Set `disabled` for each mounted Portal
+          Object.values(lookup).forEach(x => x.portal.setPortalProps({ disabled }));
+        }
+        
         // Other tab portals may not exist yet, so record in `tabs` too
         tabs.disabled = disabled;
+
         useSiteStore.setState({});
       } else {
         console.warn(
@@ -94,7 +111,7 @@ export default function Tabs(props: Props) {
 
   React.useEffect(() => {// Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
-    state.rootEl.addEventListener('touchstart', state.preventTabTouch, { passive: false });
+    state.el.root.addEventListener('touchstart', state.preventTabTouch, { passive: false });
 
     if (tryLocalStorageGet(expandedStorageKey) === 'true') {
       if (!useSiteStore.getState().navOpen) {
@@ -107,29 +124,29 @@ export default function Tabs(props: Props) {
     update();
 
     return () => {
-      state.rootEl.removeEventListener('touchstart', state.preventTabTouch);
+      state.el.root.removeEventListener('touchstart', state.preventTabTouch);
     };
   }, []);
 
   React.useEffect(() => {
     if (state.expanded) {
-      disableBodyScroll(state.contentEl);
+      disableBodyScroll(state.el.content);
       // To prevent touch event default, seems cannot use React events
       ((['touchstart', 'mousedown']) as const).forEach(evt =>
-        state.backdropEl.addEventListener?.(evt, state.onModalBgPress)
+        state.el.backdrop.addEventListener?.(evt, state.onModalBgPress)
       );
       return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
-        state.backdropEl.removeEventListener?.(evt, state.onModalBgPress)
+        state.el.backdrop.removeEventListener?.(evt, state.onModalBgPress)
       );
     } else {
-      enableBodyScroll(state.contentEl);
+      enableBodyScroll(state.el.content);
     }
   }, [state.expanded]);
 
   return (
     <figure
       key={`${props.id}-${state.resets}`}
-      ref={el => el && (state.rootEl = el)}
+      ref={el => el && (state.el.root = el)}
       className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
@@ -138,7 +155,7 @@ export default function Tabs(props: Props) {
 
       {state.expanded && <>
         <div
-          ref={el => el && (state.backdropEl = el)}
+          ref={el => el && (state.el.backdrop = el)}
           className="modal-backdrop"
         />
         <div
@@ -147,7 +164,7 @@ export default function Tabs(props: Props) {
       </>}
 
       <div
-        ref={el => el && (state.contentEl = el)}
+        ref={el => el && (state.el.content = el)}
         className={cx(
           cssName.expanded,
           state.expanded ? expandedCss : unexpandedCss(props.height),
@@ -156,17 +173,14 @@ export default function Tabs(props: Props) {
         {state.colour !== 'black' && (
           <Layout
             id={props.id}
-            tabs={props.tabs}
             initEnabled={!!props.initEnabled || state.resets > 0}
+            tabs={props.tabs}
+            update={update}
           />
         )}
         <TabsOverlay
-          enabled={state.enabled}
-          expanded={state.expanded}
-          parentTabsId={props.id}
-          reset={state.reset}
-          toggleExpand={state.toggleExpand}
-          toggleEnabled={state.toggleEnabled}
+          api={state}
+          tabsId={props.id}
         />
         <LoadingOverlay
           colour={state.colour}
@@ -184,6 +198,30 @@ export interface Props {
   initEnabled?: boolean;
   height: number | number[];
 }
+
+export interface State {
+  /** Initially `'black'`, afterwards always in `['faded', 'clear']` */
+  colour: 'black' | 'faded' | 'clear';
+  enabled: boolean;
+  expanded: boolean;
+  resets: number;
+  resetWhileDisabled: boolean;
+
+  el: {
+    root: HTMLElement;
+    content: HTMLDivElement;
+    backdrop: HTMLDivElement;
+  };
+
+  onKeyUp(e: React.KeyboardEvent): void;
+  onModalBgPress(e: TouchEvent | MouseEvent): void;
+  preventTabTouch(e: TouchEvent): void;
+
+  reset(): void;
+  toggleEnabled(): void;
+  toggleExpand(): void;
+}
+
 
 const rootCss = css`
   margin: 64px 0;

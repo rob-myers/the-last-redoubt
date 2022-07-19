@@ -106,9 +106,11 @@ interface TabsState {
   disabled: boolean;
   /** e.g. `/objective` */
   pagePathname: string;
-  selectTab: (tabId: string) => void;
-  scrollTo: () => void;
-  getTabNodes: () => TabNode[];
+  selectTab(tabId: string): void;
+  scrollTo(): void;
+  getTabNodes(): TabNode[];
+  /** The _actually_ visible `TabNodes` e.g. only 1 when a tab maximised */
+  getVisibleTabNodes(): TabNode[];
 }
 
 const api = useStore.getState().api;
