@@ -1,11 +1,13 @@
 # TODO
 
+- BUG terminals not getting disabled after Tabs reset
+
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
   - ✅ can have multiple World tabs `${worldKey}`  
   - ✅ avoid sessionKeys like `test` -- global over site
-  - disable Tabs on leave viewport
+  - ✅ disable Tabs when outside viewport for 1 second
   - anchor/action link sends user back to Tabs, displaying text in session
     - perhaps text added to "queue", and opens respective `Terminal`?
 

@@ -1,14 +1,16 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
+import debounce from 'debounce';
 
 import { getTabName, TabMeta } from 'model/tabs/tabs.model';
 import useSiteStore from 'store/site.store';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
+import { cssName } from 'projects/service/const';
 import useUpdate from 'projects/hooks/use-update';
 import useStateRef from 'projects/hooks/use-state-ref';
+import { useIntersection } from 'projects/hooks/use-intersection';
 import { Layout } from 'components/dynamic';
-import { cssName } from 'projects/service/const';
 import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
 import { createPortal } from './Portal';
 
@@ -108,6 +110,12 @@ export default function Tabs(props: Props) {
     },
 
   }));
+
+  useIntersection(state.el.root, {
+    cb: debounce((intersects: boolean) => {
+      !intersects && state.enabled && state.toggleEnabled()
+    }, 1000),
+  });
 
   React.useEffect(() => {// Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
