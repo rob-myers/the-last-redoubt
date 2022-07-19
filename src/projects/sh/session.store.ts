@@ -156,7 +156,7 @@ const useStore = create<State>(devtools((set, get) => ({
           ttyIo,
           ttyShell,
           var: {
-            PWD: '',
+            PWD: 'home',
             OLDPWD: '',
             ...persisted.var,
             ...deepClone(env),
