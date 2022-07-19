@@ -22,7 +22,7 @@ export default function Tabs(props: Props) {
     enabled: !!props.initEnabled,
     expanded: false,
     resets: 0,
-    resetWhileDisabled: false,
+    justResetWhileDisabled: false,
 
     el: {
       root: {} as HTMLElement,
@@ -56,7 +56,7 @@ export default function Tabs(props: Props) {
         state.resets++;
         update();
       }
-      state.resetWhileDisabled = !state.enabled;
+      state.justResetWhileDisabled = !state.enabled;
     },
     toggleEnabled() {
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
@@ -67,8 +67,11 @@ export default function Tabs(props: Props) {
         const disabled = !state.enabled;
         const lookup = useSiteStore.getState().portal;
 
-        if (state.resetWhileDisabled) {
-          // Need to ensure portals before setting disabled `false`
+        if (!state.justResetWhileDisabled) {
+          // Set `disabled` for each mounted Portal
+          Object.values(lookup).forEach(x => x.portal.setPortalProps({ disabled }));
+        } else {
+          // Special case: having previously reset Tabs while disabled, we now enable 
           const visibleTabNodes = tabs.getVisibleTabNodes();
           visibleTabNodes.forEach(tabNode =>
             lookup[tabNode.getId()] = lookup[tabNode.getId()] || createPortal(tabNode.getConfig())
@@ -76,14 +79,11 @@ export default function Tabs(props: Props) {
           setTimeout(() => {
             visibleTabNodes.forEach(tabNode => lookup[tabNode.getId()].portal.setPortalProps({ disabled: false }));
           }, 300);
-        } else {
-          // Set `disabled` for each mounted Portal
-          Object.values(lookup).forEach(x => x.portal.setPortalProps({ disabled }));
+          state.justResetWhileDisabled = false;
         }
         
         // Other tab portals may not exist yet, so record in `tabs` too
         tabs.disabled = disabled;
-
         useSiteStore.setState({});
       } else {
         console.warn(
@@ -135,13 +135,13 @@ export default function Tabs(props: Props) {
       ((['touchstart', 'mousedown']) as const).forEach(evt =>
         state.el.backdrop.addEventListener?.(evt, state.onModalBgPress)
       );
-      return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
-        state.el.backdrop.removeEventListener?.(evt, state.onModalBgPress)
-      );
+      // return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
+      //   state.el.backdrop.removeEventListener?.(evt, state.onModalBgPress)
+      // );
     } else {
       enableBodyScroll(state.el.content);
     }
-  }, [state.expanded]);
+  }, [state.expanded, state.el.backdrop]);
 
   return (
     <figure
@@ -205,7 +205,7 @@ export interface State {
   enabled: boolean;
   expanded: boolean;
   resets: number;
-  resetWhileDisabled: boolean;
+  justResetWhileDisabled: boolean;
 
   el: {
     root: HTMLElement;
