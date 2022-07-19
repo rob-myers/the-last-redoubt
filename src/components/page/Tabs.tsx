@@ -289,6 +289,12 @@ const rootCss = css`
   .flexlayout__splitter_vert, .flexlayout__splitter_horz {
     background: #827575;
   }
+  .flexlayout__tab_toolbar_button {
+    cursor: pointer;
+  }
+  .flexlayout__tab_toolbar_button-max svg {
+    background: white;
+  }
 `;
 
 const unexpandedCss = (height: number | number[]) => css`
