@@ -7,6 +7,8 @@
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
   - ✅ use a 'code' Tab
+  - Render something with graphviz extension
+  - Some graphs between early paragraphs
   - ...
 
 - CodeSandbox

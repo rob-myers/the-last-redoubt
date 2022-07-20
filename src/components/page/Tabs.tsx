@@ -27,7 +27,7 @@ export default function Tabs(props: Props) {
     justResetWhileDisabled: false,
 
     el: {
-      root: {} as HTMLDivElement,
+      root: null,
       content: {} as HTMLDivElement,
       backdrop: {} as HTMLDivElement,
     },
@@ -115,7 +115,7 @@ export default function Tabs(props: Props) {
   }));
 
   useIntersection({
-    elRef: () => state.el.root instanceof HTMLElement ? state.el.root : null,
+    elRef: () => state.el.root,
     cb: state.onChangeIntersect,
   });
 
@@ -134,7 +134,7 @@ export default function Tabs(props: Props) {
     update();
 
     return () => {
-      state.el.root.removeEventListener('touchstart', state.preventTabTouch);
+      state.el.root?.removeEventListener('touchstart', state.preventTabTouch);
     };
   }, []);
 
@@ -156,7 +156,7 @@ export default function Tabs(props: Props) {
   return (
     <figure
       key={`${props.id}-${state.resets}`}
-      ref={el => el && (state.el.root = el)}
+      ref={el => state.el.root = el}
       className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
@@ -218,7 +218,8 @@ export interface State {
   justResetWhileDisabled: boolean;
 
   el: {
-    root: HTMLElement;
+    /** Align to `useIntersection` hook; avoid HTMLElement in SSR  */
+    root: HTMLElement | null;
     content: HTMLDivElement;
     backdrop: HTMLDivElement;
   };
@@ -304,7 +305,7 @@ const rootCss = css`
     cursor: pointer;
   }
   .flexlayout__tab_toolbar_button-max svg {
-    background: white;
+    outline: 1px solid white;
   }
 `;
 
