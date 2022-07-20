@@ -6,9 +6,17 @@
   - ✅ can have multiple World tabs `${worldKey}`  
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
+  - 
 
+- CodeSandbox
+  - 🚧 with new terminal
+  - terminal + World
+- StackBlitz too
+
+- Can see on GitHub Comments site
+
+- ✅ Always show navpath (no need for DEBUG=true)
 - Start using `_` i.e. last value shortcut
-- Always show navpath (no need for DEBUG=true)
 - Nav should weight closed doors
 - Fix HMR of NPC (walks without going anywhere)
 - Spawn should trigger a player collision test

@@ -13,26 +13,66 @@ tags:
   - game ai
 ---
 
+import Tabs from "components/page/Tabs";
+import { profileLookup } from "projects/sh/scripts";
+
 ## Introduction
 
 > Game AI.
 >
 > That's what this website is about.
 
-_Game_ refers to [video game](https://en.wikipedia.org/wiki/Video_game) and _AI_ stands for Artificial Intelligence. 
-Putting these words together, _Game AI_ is a loose collection of algorithms, techniques and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
-It does not stand on its own as an academic subject.
-Then to discuss and develop Game AI we'll need to create a game.
+By _game_ we mean [video game](https://en.wikipedia.org/wiki/Video_game).
+By _AI_ we mean Artificial Intelligence. 
+Putting these words together, _Game AI_ is a loose collection of algorithms, interfaces and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
+It derives much of its meaning from its context, and is not an academic subject.
+Then to develop meaningful Game AI we'll need to create a game.
 
 Now, video games are a _lot of work_.
-There's the story, characters, graphical style, user interface, graphical assets, animation, level design, scripting and NPC behaviour.
+There's the story, characters, graphical style, user interface, assets, animation, level design, scripting and NPC behaviour.
 Many systems must be created, collectively forming a cohesive whole.
-Concerning cohesion, games are often presented like films.
-The _story_ and _characters_ sit on the podium, while everything else brings the stars of the show to life.
+One popular approach takes inspiration from films.
+That is, the _story_ and _characters_ (including the player) sit on the podium, and the other systems bring them to life.
 
-> But for Game AI to sit on the podium, we'll need a different role model:
+> To put Game AI on the podium, we've chosen a different role model:
 >
 > Web Development.
 
+Web Development is a particular kind of Software Development.
+It uses special purpose languages i.e. HTML, CSS and JavaScript.
+We'll develop our game using the _everyday practices_ of the Web Developer.
+This rules out game-centric technologies like Flash, Game Frameworks, CSS 3D transforms, and WebGL.
+But it also makes our approach relevant to a wide audience.
+
+<!-- TODO not just using Web as a platform; we're using it as a dev env too -->
+
+Concerning the underlying game systems, we've already done most of the groundwork.
+This is just as well, else our investigation of Game AI would be on the distant horizon.
+Consider the component below:
+
+<Tabs
+  id="intro-1"
+  initEnabled={false}
+  height={600}
+  tabs={[
+    [{ type: 'component', filepath: 'intro-world-1' }],
+    [{
+        type: 'terminal',
+        filepath: 'intro-tty-1',
+        env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
+    }],
+  ]}
+/>
+
+
+- What do we mean?
+- This doesn't mean the story and characters are unimportant.
+- But when _Game AI_ plays second fiddle to _Story_ ...
+- We do not mean "use the Web as a platform"
+- We do not mean "Web Games" like Flash, WebGL etc.
+- Story and Characters still sit on podium
+
 
 <!-- TODO alignment with web dev -->
+
+<!-- TODO bring Tabs into this early -->

@@ -259,6 +259,13 @@ const articleCss = css`
       margin-top: -4px;
     }
   }
+  
+  p + ul {
+    margin-top: -32px;
+    @media(max-width: 600px) {
+      margin-top: -4px;
+    }
+  }
 
   span.cmd {
     color: #555;
