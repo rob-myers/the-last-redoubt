@@ -111,10 +111,14 @@ export default function Tabs(props: Props) {
 
   }));
 
-  useIntersection(state.el.root, {
-    cb: debounce((intersects: boolean) => {
-      !intersects && state.enabled && state.toggleEnabled()
-    }, 1000),
+  useIntersection({
+    el: state.el.root,
+    cb() {
+      const result = debounce((intersects: boolean) => {
+        !intersects && state.enabled && state.toggleEnabled()
+      }, 1000);
+      return () => result.clear();
+    },
   });
 
   React.useEffect(() => {// Initially trigger CSS animation
