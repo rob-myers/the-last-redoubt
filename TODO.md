@@ -1,15 +1,11 @@
 # TODO
 
-- BUG terminals not getting disabled after Tabs reset
-
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
   - ✅ can have multiple World tabs `${worldKey}`  
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
-  - anchor/action link sends user back to Tabs, displaying text in session
-    - perhaps text added to "queue", and opens respective `Terminal`?
 
 - Start using `_` i.e. last value shortcut
 - Always show navpath (no need for DEBUG=true)
@@ -19,7 +15,10 @@
 - modularise npc JSON
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 - Saw `World` fail silently due to use-geomorph-data bug
+- anchor/action link sends user back to Tabs, displaying text in session
+  - perhaps text added to "queue", and opens respective `Terminal`?
 
+- ✅ BUG terminals not getting disabled after Tabs reset
 - ✅ BUG with multiple world click handling?
   - try simplifying PROFILE
   - occurs with both`goLoop andros &`, and both `lookLoop andros &`

@@ -118,12 +118,16 @@ const articleCss = css`
     border-left: 8px solid #ddd;
     padding-left: 30px;
     font-weight: 300;
+    p {
+      margin: 16px 0;
+    }
     
     @media(max-width: 600px) {
       margin: 20px 0;
       padding-left: 20px;
       font-style: italic;
     }
+
   }
   blockquote + p {
     margin-top: -12px;
@@ -169,7 +173,7 @@ const articleCss = css`
     display: block;
     margin-top: -24px;
     margin-bottom: 32px;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
     line-height: 3;
     > span {
       margin-right: 8px;
