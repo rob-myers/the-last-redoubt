@@ -329,12 +329,12 @@ const fillInlineSpaceCss = (height: number | number[]) => css`
 `;
 
 const expandedCss = css`
-  ${cssName.tabsExpandedMaxWidth}: 1200px;
+  ${cssName.tabsExpandedMaxWidth}: 2400px;
   position: fixed;
   z-index: 20;
   top: 80px;
-  left: calc(max(5%, (100% - var(${cssName.tabsExpandedMaxWidth})) / 2));
-  width: calc(min(90%, var(${cssName.tabsExpandedMaxWidth})));
+  left: calc(min(40px, 5%));
+  width: calc(max(100% - 40px, 95%));
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
   @media(max-width: 600px) {

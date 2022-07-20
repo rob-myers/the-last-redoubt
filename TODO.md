@@ -16,6 +16,7 @@
 
 - Can see on GitHub Comments site
 
+- BUG CssPanZoom zoom out which pointer down and drag around
 - ✅ Always show navpath (no need for DEBUG=true)
 - ❌ CodeMirror highlighting for JSDoc types?
 - Fix eslint warns
