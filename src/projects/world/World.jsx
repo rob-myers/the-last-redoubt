@@ -105,7 +105,7 @@ export default function World(props) {
 }
 
 /**
- * @typedef Props @type {object}
+ * @typedef Props
  * @property {boolean} [disabled]
  * @property {Geomorph.UseGeomorphsDefItem[]} gms
  * @property {{ open?: {[gmId: number]: number[]} }} init
@@ -113,7 +113,7 @@ export default function World(props) {
  */
 
 /**
- * @typedef State @type {object}
+ * @typedef State
  * @property {boolean} everEnabled
  * @property {DoorsApi} doors
  * @property {FovApi} fov
@@ -126,7 +126,6 @@ export default function World(props) {
 
 /**
  * @typedef StateUtil Utility classes and `rxjs` functions
- * @type {object}
  * @property {typeof import('../geom').Vect} Vect
  * @property {import('../service/rxjs').filter} filter
  * @property {import('../service/rxjs').first} first

@@ -11,6 +11,10 @@ const code = {
   //   import('!!raw-loader!projects/example/jsx-to-js.jsx'),
   'geom/rect.js': () =>
     import('!!raw-loader!projects/geom/rect'),
+  'world/NPCs.jsx': () =>
+    import('!!raw-loader!projects/world/NPCs.jsx'),
+  'world/World.jsx': () =>
+    import('!!raw-loader!projects/world/World.jsx'),
 } as const;
 
 const component = {

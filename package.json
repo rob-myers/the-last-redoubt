@@ -16,6 +16,7 @@
     "clean": "gatsby clean",
     "typecheck": "tsc --noEmit --incremental true",
     "types": "yarn typecheck",
+    "postinstall": "patch-package",
     "render-layout": "yarn ts-script src/scripts/render-layout",
     "render-npc": "yarn ts-script src/scripts/render-npc",
     "svg-meta": "yarn ts-script src/scripts/svg-meta",
@@ -91,6 +92,7 @@
     "concurrently": "^6.0.1",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",
     "nodemon": "^2.0.7",
+    "patch-package": "^6.4.7",
     "ts-node": "^10.0.0",
     "typescript": "^4.6.4"
   }

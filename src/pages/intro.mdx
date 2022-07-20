@@ -22,7 +22,7 @@ import { profileLookup } from "projects/sh/scripts";
 >
 > That's what this website is about.
 
-By _game_ we mean [video game](https://en.wikipedia.org/wiki/Video_game).
+By _Game_ we mean [Video game](https://en.wikipedia.org/wiki/Video_game).
 By _AI_ we mean Artificial Intelligence. 
 Putting these words together, _Game AI_ is a loose collection of algorithms, interfaces and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
 It derives much of its meaning from its context, and is not an academic subject.
@@ -40,13 +40,13 @@ That is, the _story_ and _characters_ (including the player) sit on the podium, 
 
 Web Development is a particular kind of Software Development.
 It uses special purpose languages i.e. HTML, CSS and JavaScript.
-We'll develop our game using the _everyday practices_ of the Web Developer.
+We'll develop our game using the _everyday practices_ of a Web Developer.
 This rules out game-centric technologies like Flash, Game Frameworks, CSS 3D transforms, and WebGL.
 But it also makes our approach relevant to a wide audience.
 
 <!-- TODO not just using Web as a platform; we're using it as a dev env too -->
 
-Concerning the underlying game systems, we've already done most of the groundwork.
+Concerning the game systems, we've done the groundwork already.
 This is just as well, else our investigation of Game AI would be on the distant horizon.
 Consider the component below:
 
@@ -55,7 +55,11 @@ Consider the component below:
   initEnabled={false}
   height={600}
   tabs={[
-    [{ type: 'component', filepath: 'intro-world-1' }],
+    [
+      { type: 'component', filepath: 'intro-world-1' },
+      { type: 'code', filepath: 'world/World.jsx' },
+      { type: 'code', filepath: 'world/NPCs.jsx' },
+    ],
     [{
         type: 'terminal',
         filepath: 'intro-tty-1',

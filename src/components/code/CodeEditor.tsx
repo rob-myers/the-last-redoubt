@@ -26,6 +26,9 @@ export default function CodeEditor({
 
   useEffect(() => {
 
+    /**
+     * TODO useQuery
+     */
     (async function() {
       const text = (await code) || '';
       

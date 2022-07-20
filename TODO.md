@@ -6,7 +6,8 @@
   - ✅ can have multiple World tabs `${worldKey}`  
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
-  - 
+  - ✅ use a 'code' Tab
+  - ...
 
 - CodeSandbox
   - 🚧 with new terminal
@@ -16,6 +17,8 @@
 - Can see on GitHub Comments site
 
 - ✅ Always show navpath (no need for DEBUG=true)
+- ❌ CodeMirror highlighting for JSDoc types?
+- Fix eslint warns
 - Start using `_` i.e. last value shortcut
 - Nav should weight closed doors
 - Fix HMR of NPC (walks without going anywhere)
