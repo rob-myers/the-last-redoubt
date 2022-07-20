@@ -207,7 +207,7 @@
       if (api.isTtyAt(0)) {
         const npcKey = args[0]
         const point = api.safeJsonParse(args[1])
-        yield npcs.getNpcGlobalNav({ npcKey, point, debug: home.DEBUG === "true" })
+        yield npcs.getNpcGlobalNav({ npcKey, point })
       } else {
         while ((datum = await api.read()) !== null) {
           try {

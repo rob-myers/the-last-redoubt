@@ -263,9 +263,8 @@ export default function NPCs(props) {
         throw Error(`outside navPoly: ${JSON.stringify(e.point)}`);
       }
       const result = state.getGlobalNavPath(npc.getPosition(), e.point);
-      if (e.debug) {
-        state.setDecor(e.npcKey, { key: e.npcKey, type: 'path', path: result.fullPath });
-      }
+      // Always show path
+      state.setDecor(e.npcKey, { key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -608,7 +607,7 @@ const rootCss = css`
  * @property {(npcA: NPC.NPC, npcB: NPC.NPC) => null | NPC.NpcCollision} detectCollision
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
- * @property {(e: { npcKey: string; point: Geom.VectJson; debug?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
+ * @property {(e: { npcKey: string; point: Geom.VectJson }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string) => NPC.NPC} getNpc
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
