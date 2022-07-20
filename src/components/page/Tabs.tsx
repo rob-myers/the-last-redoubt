@@ -27,12 +27,15 @@ export default function Tabs(props: Props) {
     justResetWhileDisabled: false,
 
     el: {
-      root: {} as HTMLElement,
+      root: {} as HTMLDivElement,
       content: {} as HTMLDivElement,
       backdrop: {} as HTMLDivElement,
     },
 
-    // TODO doesn't fire if click on Tabs
+    onChangeIntersect: debounce((intersects: boolean) => {
+      !intersects && state.enabled && state.toggleEnabled();
+    }, 1000),
+
     onKeyUp(e: React.KeyboardEvent) {
       if (state.expanded && e.key === 'Escape') {
         state.toggleExpand();
@@ -112,18 +115,13 @@ export default function Tabs(props: Props) {
   }));
 
   useIntersection({
-    el: state.el.root,
-    cb() {
-      const result = debounce((intersects: boolean) => {
-        !intersects && state.enabled && state.toggleEnabled()
-      }, 1000);
-      return () => result.clear();
-    },
+    elRef: () => state.el.root instanceof HTMLElement ? state.el.root : null,
+    cb: state.onChangeIntersect,
   });
 
   React.useEffect(() => {// Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
-    state.el.root.addEventListener('touchstart', state.preventTabTouch, { passive: false });
+    state.el.root?.addEventListener('touchstart', state.preventTabTouch, { passive: false });
 
     if (tryLocalStorageGet(expandedStorageKey) === 'true') {
       if (!useSiteStore.getState().navOpen) {
@@ -225,6 +223,7 @@ export interface State {
     backdrop: HTMLDivElement;
   };
 
+  onChangeIntersect(intersects: boolean): void;
   onKeyUp(e: React.KeyboardEvent): void;
   onModalBgPress(e: TouchEvent | MouseEvent): void;
   preventTabTouch(e: TouchEvent): void;

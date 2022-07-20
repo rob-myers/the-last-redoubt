@@ -6,27 +6,36 @@ import React from "react";
  * @param {Opts} opts
  */
 export function useIntersection({
-  el, threshold = 0, root = null, rootMargin = '0%', cb,
+  elRef,
+  cb,
+  threshold = 0, root = null, rootMargin = '0%',
 }) {
+  const el = elRef();
+
   React.useEffect(() => {
-    if (!window.IntersectionObserver || !(el instanceof HTMLElement)) {
+    if (!window.IntersectionObserver || !el) {
       return;
     }
-    /**
-     * If callback is `debounce(foo)` and parent component is remounted,
-     * we may need to cancel a pending invocation via this cleanup.
-     */    
-    let cleanup = /** @type {void | (() => void)} */ (undefined);
-    const observer = new IntersectionObserver(
-      ([e]) => cleanup = cb(e.isIntersecting, e),
-      { threshold, root, rootMargin },
-    )
-    observer.observe(el)
 
-    return () => {
-      observer.disconnect();
-      cleanup?.();
-    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        /**
+         * Remounting can trigger an observation with
+         * `isIntersecting` false before we can unobserve.
+         * Thankfully we can catch it here.
+         */
+        const currEl = elRef();
+        if (entry.target !== currEl) {
+          observer.unobserve(entry.target);
+          currEl && observer.observe(currEl);
+        } else {
+          cb(entry.isIntersecting, entry);
+        }
+      },
+      { threshold, root, rootMargin },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [el, JSON.stringify(threshold), root, rootMargin])
@@ -35,8 +44,8 @@ export function useIntersection({
 
 /**
  * @typedef ExtraOpts
- * @property {HTMLElement} [el] Undefined iff not mounted yet
- * @property {(intersects: boolean, entry: IntersectionObserverEntry) => (void | (() => void))} cb
+ * @property {() => HTMLElement | null} elRef
+ * @property {(intersects: boolean, entry: IntersectionObserverEntry) => void} cb
  * 
  * @typedef {IntersectionObserverInit & ExtraOpts} Opts
  */
