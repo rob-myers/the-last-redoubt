@@ -1,7 +1,5 @@
 # TODO
 
-- BUG multiple tabs: enable one seems to initially mount all
-
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
@@ -50,6 +48,7 @@
 - anchor/action link sends user back to Tabs, displaying text in session
   - perhaps text added to "queue", and opens respective `Terminal`?
 
+- ✅ BUG multiple tabs: enable one seems to initially mount all
 - ✅ BUG terminals not getting disabled after Tabs reset
 - ✅ BUG with multiple world click handling?
   - try simplifying PROFILE

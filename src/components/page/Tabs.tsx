@@ -72,11 +72,20 @@ export default function Tabs(props: Props) {
         const disabled = !state.enabled;
         const lookup = useSiteStore.getState().portal;
 
-        if (!state.justResetWhileDisabled) {
-          // Set `disabled` for each mounted Portal
-          Object.values(lookup).forEach(x => x.portal.setPortalProps({ disabled }));
+        if (state.justResetWhileDisabled === false) {
+          /**
+           * Standard case:
+           * Set `disabled` for each mounted `Portal` within this `Tabs`.
+           */
+          const visibleTabKeys = tabs.getVisibleTabNodes().map(x => x.getId());
+          visibleTabKeys.forEach(portalKey => portalKey in lookup &&
+            lookup[portalKey].portal.setPortalProps({ disabled })
+          );
         } else {
-          // Special case: having previously reset Tabs while disabled, we now enable 
+          /**
+           * Special case:
+           * Having previously reset Tabs while disabled, we now enable.
+           */
           const visibleTabNodes = tabs.getVisibleTabNodes();
           visibleTabNodes.forEach(tabNode =>
             lookup[tabNode.getId()] = lookup[tabNode.getId()] || createPortal(tabNode.getConfig())
