@@ -7,9 +7,21 @@
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
   - ✅ use a 'code' Tab
+  - Better way to generated World/Terminal components
   - Render something with graphviz extension
   - Some graphs between early paragraphs
-  - ...
+  - Convert a screen recording to a GIF
+  - Make some GIFs explaining how to use `<Tabs/>`
+
+- movie to gif
+  - https://stackoverflow.com/a/12026739/2917822
+  - https://stackoverflow.com/a/71193315/2917822
+  ```sh
+  ffmpeg -i input.mov -qscale 0 output.mp4
+  ffmpeg -i input.mov -q:v 0 output.mp4
+  ffmpeg -i input.mp4 -qscale 0 output.gif
+  ```
+
 
 - CodeSandbox
   - 🚧 with new terminal

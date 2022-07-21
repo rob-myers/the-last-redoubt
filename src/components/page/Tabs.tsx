@@ -238,7 +238,7 @@ export interface State {
 const rootCss = css`
   margin: 64px 0;
   @media(max-width: 600px) {
-    margin: 40px 0 32px 0;
+    margin: 48px 0 32px 0;
   }
 
   position: relative;
@@ -334,10 +334,11 @@ const expandedCss = css`
   position: fixed;
   z-index: 20;
   top: 80px;
-  left: calc(min(40px, 5%));
-  width: calc(max(100% - 40px, 95%));
+  left: calc(max(min(40px, 5%), 100% - 1200px));
+  width: calc(min(max(100% - 40px, 95%), 1200px));
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
+
   @media(max-width: 600px) {
     left: 0;
     top: 80px;

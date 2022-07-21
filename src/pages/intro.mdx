@@ -18,15 +18,35 @@ import { profileLookup } from "projects/sh/scripts";
 
 ## Introduction
 
-> Game AI.
+> What's this website about?
 >
-> That's what this website is about.
+> Game AI.
 
-By _Game_ we mean [Video game](https://en.wikipedia.org/wiki/Video_game).
-By _AI_ we mean Artificial Intelligence. 
-Putting these words together, _Game AI_ is a loose collection of algorithms, interfaces and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
-It derives much of its meaning from its context, and is not an academic subject.
+Here _game_ refers to [video games](https://en.wikipedia.org/wiki/Video_game),
+whereas _AI_ stands for Artificial Intelligence. 
+The area of _Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
+We control these Non-Player Characters to create a realistic environment,
+drawing the player into the fabrication.
+This "realistic environment" is highly contextual i.e. a particular setting, characters, and user experience at a particular time.
 Then to develop meaningful Game AI we'll need to create a game.
+
+> Thankfully, we've done the groundwork already.
+
+<!-- TODO make some animated gifs here -->
+
+<Tabs
+  id="intro-1"
+  initEnabled={false}
+  height={600}
+  tabs={[
+    [{ type: 'component', filepath: 'intro-world-1' }],
+    [{
+        type: 'terminal',
+        filepath: 'intro-tty-1',
+        env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
+    }],
+  ]}
+/>
 
 Now, video games are a _lot of work_.
 There's the story, characters, graphical style, user interface, assets, animation, level design, scripting and NPC behaviour.
@@ -51,19 +71,15 @@ This is just as well, else our investigation of Game AI would be on the distant 
 Consider the component below:
 
 <Tabs
-  id="intro-1"
+  id="intro-2"
   initEnabled={false}
   height={600}
   tabs={[
-    [
-      { type: 'component', filepath: 'intro-world-1' },
-      { type: 'code', filepath: 'world/World.jsx' },
-      { type: 'code', filepath: 'world/NPCs.jsx' },
-    ],
+    [{ type: 'component', filepath: 'intro-world-2' }],
     [{
         type: 'terminal',
-        filepath: 'intro-tty-1',
-        env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
+        filepath: 'intro-tty-2',
+        env: { WORLD_KEY: 'intro-world-2', PROFILE: profileLookup['profile-1-a']() },
     }],
   ]}
 />

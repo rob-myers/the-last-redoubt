@@ -59,6 +59,20 @@ const component = {
       />
     ),
 
+  'intro-world-2': () => import('projects/world/World')
+    .then(x => (props: any) =>
+      <x.default
+        disabled
+        init={{ open: { 0: [24] } }}
+        worldKey="intro-world-2"
+        gms={[
+          { layoutKey: 'g-301--bridge' },
+          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        ]}
+        {...props}
+      />
+    ),
+
   'world-demo-1': () => import('projects/world/World')
     .then(x => (props: any) =>
       <x.default
