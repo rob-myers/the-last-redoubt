@@ -118,8 +118,11 @@ const articleCss = css`
     border-left: 8px solid #ddd;
     padding-left: 30px;
     font-weight: 300;
-    p {
-      margin: 16px 0;
+    p:first-child:not(:last-child) {
+      margin-bottom: 0;
+    }
+    p:nth-child(n + 2) {
+      margin-top: 0;
     }
     
     @media(max-width: 600px) {
@@ -173,13 +176,13 @@ const articleCss = css`
     display: block;
     margin-top: -24px;
     margin-bottom: 32px;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     line-height: 3;
     > span {
       margin-right: 8px;
       white-space: pre;
       > span {
-        padding: 6px 10px;
+        padding: 6px 8px;
         margin: 0 0px;
         border: 1px solid #aaaaaa77;
         border-radius: 2px;
