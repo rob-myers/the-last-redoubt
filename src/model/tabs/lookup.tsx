@@ -45,66 +45,6 @@ const component = {
   // 'example/SvgDoorsDemo#301': () => import('projects/example/SvgDoorsDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
   
-  'intro-world-1': () => import('projects/world/World')
-    .then(x => (props: any) =>
-      <x.default
-        disabled
-        init={{ open: { 0: [24] } }}
-        worldKey="intro-world-1"
-        gms={[
-          { layoutKey: 'g-301--bridge' },
-          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
-        ]}
-        {...props}
-      />
-    ),
-
-  'intro-world-2': () => import('projects/world/World')
-    .then(x => (props: any) =>
-      <x.default
-        disabled
-        init={{ open: { 0: [24] } }}
-        worldKey="intro-world-2"
-        gms={[
-          { layoutKey: 'g-301--bridge' },
-          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
-        ]}
-        {...props}
-      />
-    ),
-
-  'world-demo-1': () => import('projects/world/World')
-    .then(x => (props: any) =>
-      <x.default
-        disabled
-        init={{ open: { 0: [24] } }}
-        worldKey="world-demo-1"
-        gms={[
-          { layoutKey: 'g-301--bridge' },
-          { layoutKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 0, 600] },
-          { layoutKey: 'g-302--xboat-repair-bay', transform: [1, 0, 0, 1, -1200, 600] },
-          { layoutKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, -1200, 1200 + 600] },
-          { layoutKey: 'g-302--xboat-repair-bay', transform: [-1, 0, 0, 1, 1200 + 1200, 600] },
-          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 1200 + 600], },
-        ]}
-        {...props}
-      />
-    ),
-
-  'world-demo-2': () => import('projects/world/World')
-    .then(x => (props: any) =>
-      <x.default
-        disabled
-        init={{ open: { 0: [24] } }}
-        worldKey="world-demo-2"
-        gms={[
-          { layoutKey: 'g-301--bridge' },
-          { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
-        ]}
-        {...props}
-      />
-    ),
-  
   // 'example/SvgNavGraph#302': () => import('projects/example/SvgNavGraph')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-302--xboat-repair-bay' />),
   // 'example/LightsTest': () => import('projects/example/LightsTest')
@@ -131,5 +71,25 @@ export async function getComponent(key: ComponentFilepathKey) {
   );
 }
 
+export async function ensureWorldComponent({
+  key,
+  props,
+}: WorldComponentDef) {
+  const lookup = component as Record<string, (typeof component)[ComponentFilepathKey]>;
+  if (!lookup[key]) {
+    lookup[key] = () => import('projects/world/World')
+      // `extraProps` may include { disabled: false }
+      .then(x => (extraProps: WorldComponentDef['props']) =>
+        <x.default disabled {...props} {...extraProps} />
+      )
+  }
+}
+
 export type CodeFilepathKey = keyof typeof code;
 export type ComponentFilepathKey = keyof typeof component;
+
+export interface WorldComponentDef {
+  /** Tab name and unique identifier e.g. `props.worldKey` */
+  key: string;
+  props: import('projects/world/World').Props;
+}

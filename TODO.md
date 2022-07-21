@@ -1,5 +1,7 @@
 # TODO
 
+- BUG multiple tabs: enable one seems to initially mount all
+
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
@@ -7,11 +9,15 @@
   - ✅ avoid sessionKeys like `test` -- global over site
   - ✅ disable Tabs when outside viewport for 1 second
   - ✅ use a 'code' Tab
-  - Better way to generated World/Terminal components
-  - Render something with graphviz extension
-  - Some graphs between early paragraphs
+  - ✅ Better way to generate World components
+  - Better maximised Tab centering + body lock?
   - Convert a screen recording to a GIF
   - Make some GIFs explaining how to use `<Tabs/>`
+  - Render something with graphviz extension
+  - Some graphs between early paragraphs
+  - Remove codemirror
+    - Approach is too complex
+    - Use a simple component and highlight CSS-in-JS separately if possible
 
 - movie to gif
   - https://stackoverflow.com/a/12026739/2917822
