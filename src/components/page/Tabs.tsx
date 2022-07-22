@@ -128,8 +128,10 @@ export default function Tabs(props: Props) {
     cb: state.onChangeIntersect,
   });
 
-  React.useEffect(() => {// Initially trigger CSS animation
+  React.useEffect(() => {
+    // Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
+
     state.el.root?.addEventListener('touchstart', state.preventTabTouch, { passive: false });
 
     if (tryLocalStorageGet(expandedStorageKey) === 'true') {
@@ -266,9 +268,6 @@ const rootCss = css`
     background: rgba(0, 0, 0, 0.6);
   }
 
-  .flexlayout__tabset, .flexlayout__tab {
-    background: white;
-  }
 
   .flexlayout__layout {
     background: #444;
@@ -278,13 +277,12 @@ const rootCss = css`
     background-color: black;
     /** Pixel 5: white lines when 4px */
     border-top: 3px solid #444;
-    position: relative;
     overflow: hidden;
 
     /** react-reverse-portal wraps things in a div  */
     > div.portal {
       width: 100%;
-      height: 100%;
+      height: inherit;
     }
   }
   .flexlayout__tabset_tabbar_outer {

@@ -14,7 +14,7 @@ import { scrollback } from 'projects/sh/io';
 
 import useOnResize from 'projects/hooks/use-on-resize';
 import useStateRef from 'projects/hooks/use-state-ref';
-import XTerm from './XTerm'; // TODO absorb?
+import XTerm from './XTerm';
 import { TouchHelperUI } from './TouchHelperUi';
 import useUpdate from 'projects/hooks/use-update';
 import type { State as WorldApi } from 'projects/world/World';
@@ -25,7 +25,6 @@ export default function Terminal(props: Props) {
 
   const state = useStateRef(() => ({
     isTouchDevice: canTouchDevice(),
-    offset: 0,
     session: null as null | Session,
     hasUserDisabled: false,
     xtermReady: false,
@@ -66,9 +65,10 @@ export default function Terminal(props: Props) {
   }, [props.disabled]);
 
   React.useEffect(() => () => useSession.api.removeSession(props.sessionKey), []);
-  
+
   return (
     <div className={rootCss}>
+
       {state.session && (
         <XTerm
           // `xterm` is an xterm.js instance
@@ -81,17 +81,14 @@ export default function Terminal(props: Props) {
             });
 
             ttyXterm.initialise();
-            useSession.api.writeMsg(props.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${props.sessionKey}${ansiColor.Reset}`, 'info');
             session.ttyShell.initialise(ttyXterm);
             state.xtermReady = true;
-            update();
 
-            ttyXterm.xterm.onLineFeed(debounce(() => {
-              if (state.isTouchDevice) {
-                state.offset = Math.max(1, parseInt(xterm.textarea!.style.top) - 100);
-                update();
-              }
-            }, 100));
+            setTimeout(() => {
+              useSession.api.writeMsg(props.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${props.sessionKey}${ansiColor.Reset}`, 'info');
+            })
+
+            update();
           }}
           options={options}
           linkProviderDef={{
@@ -118,10 +115,10 @@ export default function Terminal(props: Props) {
           }}
         />
       )}
+
       {state.isTouchDevice && state.session && state.xtermReady &&
         <TouchHelperUI
           session={state.session}
-          offset={state.offset}
         />
       }
     </div>
@@ -136,11 +133,10 @@ interface Props {
 }
 
 const rootCss = css`
-  grid-area: terminal;
-  background: black;
+  /* // DEBUG xterm fit issue
+  background: purple; */
   height: 100%;
   padding: 4px;
-  /** TODO fix padding without scrollbar offset */
 `;
 
 const options: ITerminalOptions = {

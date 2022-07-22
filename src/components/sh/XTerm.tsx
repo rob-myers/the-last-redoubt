@@ -16,8 +16,19 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
       const xterm = xtermRef.current = new Terminal(props.options);
     
       const fitAddon = new FitAddon;
-      xterm.loadAddon(fitAddon); // Saw error: This API only accepts integers
-      resizeRef.current = () => { try { fitAddon.fit(); } catch {} };
+      xterm.loadAddon(fitAddon);
+      resizeRef.current = () => {
+        try {
+          fitAddon.fit();
+          /**
+           * This empty paste fixes a bad fit(),
+           * i.e. in Tabs on mobile after focus (keyboard changes height).
+           */
+          xterm.paste('');
+        } catch {
+          /** Saw error: This API only accepts integers */
+        }
+      };
       window.addEventListener('resize', resizeRef.current);
 
       props.linkProviderDef &&
@@ -46,7 +57,7 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
     return (
       <div
         ref={containerRef}
-        className={cx("scrollable", rootCss)}
+        className={cx("xterm-container", "scrollable", rootCss)}
         onKeyDown={stopKeysPropagating}
       />
     );
@@ -69,6 +80,9 @@ interface Props {
 
 const rootCss = css`
   height: inherit;
+  /* // DEBUG xterm fit issue
+  background: yellow; */
+
   > div {
     width: 100%;
   }
