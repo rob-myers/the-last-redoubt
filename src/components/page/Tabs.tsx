@@ -268,9 +268,12 @@ const rootCss = css`
     background: rgba(0, 0, 0, 0.6);
   }
 
-
   .flexlayout__layout {
     background: #444;
+  }
+  .flexlayout__tabset_content {
+    /** Avoid flicker due to xterm.fit() issue */
+    background-color: black;
   }
   .flexlayout__tab {
     /** Avoids flicker when Portal initially unmounted */
