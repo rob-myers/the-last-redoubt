@@ -179,9 +179,7 @@ export default function Tabs(props: Props) {
           ref={el => el && (state.el.backdrop = el)}
           className="modal-backdrop"
         />
-        <div
-          className={fillInlineSpaceCss(props.height)}
-        />
+        <div className={fillInlineSpaceCss(props.height)} />
       </>}
 
       <div
@@ -199,13 +197,8 @@ export default function Tabs(props: Props) {
             update={update}
           />
         )}
-        <TabsOverlay
-          api={state}
-          tabsId={props.id}
-        />
-        <LoadingOverlay
-          colour={state.colour}
-        />
+        <TabsOverlay api={state} tabsId={props.id} />
+        <LoadingOverlay colour={state.colour} />
       </div>
     </figure>
   );
@@ -268,17 +261,8 @@ const rootCss = css`
     background: rgba(0, 0, 0, 0.6);
   }
 
-  .flexlayout__layout {
-    background: #444;
-  }
-  .flexlayout__tabset_content {
-    /** Avoid flicker due to xterm.fit() issue */
-    background-color: black;
-  }
   .flexlayout__tab {
-    /** Avoids flicker when Portal initially unmounted */
     background-color: black;
-    /** Pixel 5: white lines when 4px */
     border-top: 3px solid #444;
     overflow: hidden;
 

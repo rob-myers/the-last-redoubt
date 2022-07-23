@@ -5,31 +5,25 @@ import { withSize } from 'react-sizeme';
 import { Terminal, ITerminalOptions } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { ExtraHandlerContext, LinkProvider } from './xterm-link-provider';
+import useStateRef from 'projects/hooks/use-state-ref';
 
 export default withSize({ monitorHeight: true, monitorWidth: true })(
   function XTermComponent(props: Props) {
-    const containerRef = React.useRef<HTMLDivElement>(null);
-    const xtermRef = React.useRef<Terminal>();
-    const resizeRef = React.useRef<() => void>();
+
+    const state = useStateRef(() => ({
+      container: {} as HTMLDivElement,
+      fitAddon: new FitAddon,
+      resize() {
+        try { state.fitAddon.fit(); }
+        catch { /** Saw error: This API only accepts integers */ }
+      },
+      xterm: {} as Terminal,
+    }));
 
     React.useEffect(() => {
-      const xterm = xtermRef.current = new Terminal(props.options);
-    
-      const fitAddon = new FitAddon;
-      xterm.loadAddon(fitAddon);
-      resizeRef.current = () => {
-        try {
-          fitAddon.fit();
-          /**
-           * This empty paste fixes a bad fit(),
-           * i.e. in Tabs on mobile after focus (keyboard changes height).
-           */
-          xterm.paste('');
-        } catch {
-          /** Saw error: This API only accepts integers */
-        }
-      };
-      window.addEventListener('resize', resizeRef.current);
+      const xterm = state.xterm = new Terminal(props.options);
+      xterm.loadAddon(state.fitAddon);
+      window.addEventListener('resize', state.resize);
 
       props.linkProviderDef &&
         xterm.registerLinkProvider(new LinkProvider(
@@ -38,25 +32,25 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
           props.linkProviderDef.callback,
         ));
       
-      xterm.open(containerRef.current!);
-      resizeRef.current();
+      xterm.open(state.container);
+      state.resize();
       props.onMount(xterm);
       // xterm.focus();
 
       return () => {
-        window.removeEventListener('resize', resizeRef.current!);
+        window.removeEventListener('resize', state.resize);
         xterm.dispose();
       };
     }, []);
 
     React.useEffect(
-      () => void resizeRef.current?.(),
+      () => void state.resize(),
       [props.size?.height, props.size?.width],
     );
 
     return (
       <div
-        ref={containerRef}
+        ref={x => x && (state.container = x)}
         className={cx("xterm-container", "scrollable", rootCss)}
         onKeyDown={stopKeysPropagating}
       />
@@ -80,11 +74,16 @@ interface Props {
 
 const rootCss = css`
   height: inherit;
-  /* // DEBUG xterm fit issue
-  background: yellow; */
+  /* background: yellow; // DEBUG */
+  background: black;
 
   > div {
     width: 100%;
+  }
+
+  /** Fix xterm-addon-fit when open keyboard on mobile */
+  .xterm-helper-textarea {
+    top: 0 !important;
   }
 `;
 

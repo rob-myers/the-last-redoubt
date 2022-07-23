@@ -2,11 +2,6 @@
 
 ## In progress
 
-- ✅ BUG non-maximised Terminal on Mobile
-  - ⛔️ xterm fit addon has an issue
-    - avoid tall TouchHelperUI
-    - `xterm.paste('')` redraws correctly
-
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
   - ✅ better Tabs props
@@ -99,6 +94,14 @@ How to embed video?
 
 ## Done
 
+- ✅ Better fix for non-maximised Terminal on Mobile
+  - ✅ https://developer.chrome.com/docs/devtools/remote-debugging/
+  - ✅ https://developer.android.com/studio/debug/dev-options
+- Fix xterm links on mobile (Chrome Android)
+- ✅ BUG non-maximised Terminal on Mobile
+  - ⛔️ xterm fit addon has an issue
+    - avoid tall TouchHelperUI
+    - `xterm.paste('')` redraws correctly
 - ✅ BUG multiple tabs: enable one seems to initially mount all
 - ✅ BUG terminals not getting disabled after Tabs reset
 - ✅ BUG with multiple world click handling?
