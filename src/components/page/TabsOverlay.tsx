@@ -73,11 +73,16 @@ const controlsCss = css`
     align-items: center;
     > * {
       padding: 0 8px;
+      @media(max-width: 600px) {
+        padding: 2px 12px;
+        transform: scale(1.1);
+      }
       height: 100%;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
-    cursor: pointer;
+
     
     > div.disabled {
       filter: brightness(50%);

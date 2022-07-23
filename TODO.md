@@ -13,9 +13,9 @@
   - Make some GIFs explaining how to use `<Tabs/>`
   - Render something with graphviz extension
   - Some graphs between early paragraphs
-  - Remove codemirror
-    - Approach is too complex
-    - Use a simple component and highlight CSS-in-JS separately if possible
+  - 🚧 Remove codemirror
+    - Find replacement first
+    - Can highlight CSS-in-JS separately if possible
   - Better maximised Tab centering + body lock?
 
 
