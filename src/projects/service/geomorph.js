@@ -53,7 +53,7 @@ export async function createLayout(def, lookup, triangleService) {
      * We avoid outwards outset for cleanliness.
      */
     const transformedHull = hull.map(x => x.applyMatrix(m));
-    const inwardsOutsetHull = Poly.intersect(transformedHull.map(x => x.clone().removeHoles()), transformedHull.flatMap(x => x.createOutset(hullOutset)));
+    const inwardsOutsetHull = Poly.intersect(transformedHull.map(x => x.clone().removeHoles()), transformedHull.flatMap(x => geom.createOutset(x, hullOutset)));
     groups.walls.push(...Poly.union([
       ...walls.map(x => x.clone().applyMatrix(m)),
       // singles can also have walls e.g. to support optional doors
@@ -155,10 +155,10 @@ export async function createLayout(def, lookup, triangleService) {
   const navPolyWithDoors = Poly.cutOut([
     // Non-unioned walls avoids outset issue (self-intersection)
     ...unjoinedWalls.flatMap(x =>
-      x.createOutset(wallOutset)
+      geom.createOutset(x, wallOutset)
     ),
     ...groups.obstacles.flatMap(x =>
-      x.createOutset(obstacleOutset)
+      geom.createOutset(x, obstacleOutset)
     ),
   ], hullOutline).map(
     x => x.cleanFinalReps().fixOrientation().precision(precision)

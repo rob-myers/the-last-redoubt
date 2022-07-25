@@ -4,7 +4,6 @@ import earcut from 'earcut';
 import { Rect } from "./rect";
 import { Vect } from "./vect";
 import { Mat } from './mat';
-import { geom } from '../service/geom';
 
 export class Poly {
 
@@ -199,83 +198,6 @@ export class Poly {
   }
 
   /**
-   * https://github.com/davidfig/intersects/blob/master/polygon-point.js
-   * polygon-point collision
-   * based on https://stackoverflow.com/a/17490923/1955997
-   * @param {Geom.VectJson} p point
-   * @param {number} [tolerance] maximum distance of point to polygon's edges that triggers collision (see pointLine)
-   */
-  outlineContains(p, tolerance = 0.1) {
-    const points = this.outline;
-    const length = points.length
-    let c = false
-    let i, j
-    for (i = 0, j = length - 1; i < length; i++) {
-      if (
-        (points[i].y > p.y) !== (points[j].y > p.y)
-        &&
-        (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
-      ) {
-        c = !c
-      }
-      j = i
-    }
-    if (c) {
-      return true
-    }
-    for (i = 0; i < length; i++) {
-      tempPoint1.copy(i === length - 1 ? points[0] : points[i + 1])
-      if (geom.lineSegIntersectsPoint(points[i], tempPoint1, tempPoint2.copy(p), tolerance)) {
-        return true
-      }
-    }
-    return false
-  }
-
-  /**
-   * Create a new inset or outset version of this polygon,
-   * by cutting/unioning quads.
-   * - assume outer points have anticlockwise orientation.
-   * - assume holes have clockwise orientation.
-   * @param {number} amount
-   */
-  createInset(amount) {
-    if (amount === 0) return [this.clone()];
-    this.cleanFinalReps(); // Required
-
-    // Compute 4-gons inset or outset along edge normals by `amount`
-    const [outerQuads, ...holesQuads] = [
-      {
-        ring: this.outline,
-        inset: Poly.insetRing(this.outline, amount),
-      },
-      ...this.holes.map(ring => ({
-        ring,
-        inset: Poly.insetRing(ring, amount),
-      }))
-    ].map(({ ring, inset }) =>
-      ring.map((_, i) =>
-        new Poly([
-          ring[i].clone(),
-          inset[i],
-          inset[(i + 1) % ring.length],
-          ring[(i + 1) % ring.length].clone()
-        ]))
-    );
-
-    if (amount > 0) {// Inset
-      return Poly.cutOut(outerQuads.concat(...holesQuads), [this.clone()]);
-    } else {// Outset
-      return Poly.union([this.clone()].concat(outerQuads, ...holesQuads));
-    }
-  }
-
-  /** @param {number} amount */
-  createOutset(amount) {
-    return this.createInset(-amount);
-  }
-
-  /**
    * Cut `cuttingPolys` from `polys`.
    * @param {Poly[]} cuttingPolys
    * @param {Poly[]} polys
@@ -344,35 +266,6 @@ export class Poly {
     poly.applyMatrix(new Mat().setRotation(angled.angle));
     poly.translate(angled.baseRect.x, angled.baseRect.y);
     return poly;
-  }
-
-  /**
-   * Inset/outset a ring by amount.
-   * @private
-   * @param {Vect[]} ring 
-   * @param {number} amount 
-   * @returns {Vect[]}
-   */
-  static insetRing(ring, amount) {
-    const poly = new Poly(ring);
-    const tangents = poly.tangents.outer;
-    const edges = ring.map((p, i) => /** @type {[Vect, Vect]} */ ([
-      p.clone().translate(amount * -tangents[i].y, amount * tangents[i].x),
-      ring[(i + 1) % ring.length].clone().translate(amount * -tangents[i].y, amount * tangents[i].x)
-    ]));
-    return edges.map((edge, i) => {
-      const nextIndex = (i + 1) % edges.length;
-      const nextEdge = edges[nextIndex];
-      const lambda = geom.getLinesIntersect(
-        edge[1],
-        tangents[i],
-        nextEdge[0],
-        tangents[nextIndex]
-      );
-      return lambda
-        ? edge[1].translate(lambda * tangents[i].x, lambda * tangents[i].y)
-        : Vect.average([edge[1], nextEdge[0]]); // Fallback
-    });
   }
 
   /**
@@ -519,5 +412,3 @@ export class Poly {
   
 }
 
-const tempPoint1 = new Vect;
-const tempPoint2 = new Vect;

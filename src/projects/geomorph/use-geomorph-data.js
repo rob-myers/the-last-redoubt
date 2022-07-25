@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { geomorphJsonPath } from "../service/geomorph";
 import { Poly, Rect, Vect } from "../geom";
+import { geomorphJsonPath } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";

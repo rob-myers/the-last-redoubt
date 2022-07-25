@@ -20,7 +20,7 @@ class geomServiceClass {
    * @param {Geom.Poly} convexPoly 
    */
   circleIntersectsConvexPolygon(center, radius, convexPoly) {
-    if (convexPoly.outlineContains(center)) {
+    if (this.outlineContains(convexPoly, center)) {
       return true;
     }
     const vs = convexPoly.outline;
@@ -100,6 +100,82 @@ class geomServiceClass {
   }
 
   /**
+   * Create a new inset or outset version of polygon,
+   * by cutting/unioning quads.
+   * - assume outer points have anticlockwise orientation.
+   * - assume holes have clockwise orientation.
+   * @param {Geom.Poly} polygon
+   * @param {number} amount
+   */
+  createInset(polygon, amount) {
+    if (amount === 0) return [polygon.clone()];
+    polygon.cleanFinalReps(); // Required
+
+    // Compute 4-gons inset or outset along edge normals by `amount`
+    const [outerQuads, ...holesQuads] = [
+      {
+        ring: polygon.outline,
+        inset: this.insetRing(polygon.outline, amount),
+      },
+      ...polygon.holes.map(ring => ({
+        ring,
+        inset: this.insetRing(ring, amount),
+      }))
+    ].map(({ ring, inset }) =>
+      ring.map((_, i) =>
+        new Poly([
+          ring[i].clone(),
+          inset[i],
+          inset[(i + 1) % ring.length],
+          ring[(i + 1) % ring.length].clone()
+        ]))
+    );
+
+    if (amount > 0) {// Inset
+      return Poly.cutOut(outerQuads.concat(...holesQuads), [polygon.clone()]);
+    } else {// Outset
+      return Poly.union([polygon.clone()].concat(outerQuads, ...holesQuads));
+    }
+  }
+
+  /**
+   * @param {Geom.Poly} polygon 
+   * @param {number} amount 
+   */
+  createOutset(polygon, amount) {
+    return this.createInset(polygon, -amount);
+  }
+
+  /**
+   * Inset/outset a ring by amount.
+   * @private
+   * @param {Vect[]} ring 
+   * @param {number} amount 
+   * @returns {Vect[]}
+   */
+  insetRing(ring, amount) {
+    const poly = new Poly(ring);
+    const tangents = poly.tangents.outer;
+    const edges = ring.map((p, i) => /** @type {[Vect, Vect]} */ ([
+      p.clone().translate(amount * -tangents[i].y, amount * tangents[i].x),
+      ring[(i + 1) % ring.length].clone().translate(amount * -tangents[i].y, amount * tangents[i].x)
+    ]));
+    return edges.map((edge, i) => {
+      const nextIndex = (i + 1) % edges.length;
+      const nextEdge = edges[nextIndex];
+      const lambda = geom.getLinesIntersect(
+        edge[1],
+        tangents[i],
+        nextEdge[0],
+        tangents[nextIndex]
+      );
+      return lambda
+        ? edge[1].translate(lambda * tangents[i].x, lambda * tangents[i].y)
+        : Vect.average([edge[1], nextEdge[0]]); // Fallback
+    });
+  }
+
+  /**
    * https://github.com/davidfig/intersects/blob/master/line-polygon.js
    * Does line segment intersect polygon?
    * - we ignore holes
@@ -113,7 +189,7 @@ class geomServiceClass {
     const length = points.length
   
     // check if first point is inside the shape (this covers if the line is completely enclosed by the shape)
-    if (polygon.outlineContains(u, tolerance)) {
+    if (this.outlineContains(polygon, u, tolerance)) {
       return true
     }
 
@@ -438,6 +514,41 @@ class geomServiceClass {
     );
 
     return new Poly(deltas.map((p) => p.add(pos)));
+  }
+
+  /**
+   * https://github.com/davidfig/intersects/blob/master/polygon-point.js
+   * polygon-point collision
+   * based on https://stackoverflow.com/a/17490923/1955997
+   * @param {Geom.Poly} polygon
+   * @param {Geom.VectJson} p point
+   * @param {number} [tolerance] maximum distance of point to polygon's edges that triggers collision (see pointLine)
+   */
+   outlineContains(polygon, p, tolerance = 0.1) {
+    const points = polygon.outline;
+    const length = points.length
+    let c = false
+    let i, j
+    for (i = 0, j = length - 1; i < length; i++) {
+      if (
+        (points[i].y > p.y) !== (points[j].y > p.y)
+        &&
+        (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
+      ) {
+        c = !c
+      }
+      j = i
+    }
+    if (c) {
+      return true
+    }
+    for (i = 0; i < length; i++) {
+      tempVect.copy(i === length - 1 ? points[0] : points[i + 1])
+      if (geom.lineSegIntersectsPoint(points[i], tempVect, tempVect2.copy(p), tolerance)) {
+        return true
+      }
+    }
+    return false
   }
 
   /**
