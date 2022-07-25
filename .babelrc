@@ -4,10 +4,11 @@
     ["prismjs", {
       "languages": [
         "javascript",
+        "html",
+        "jsdoc", // Doesn't work in language-jsx sadly
+        "js-extras",
         "css", "js-templates",
-        "html", "jsx",
-        "jsdoc",
-        "js-extras" // Richer syntax highlighting
+        "jsx"
       ],
       "plugins": [
         "line-numbers"
