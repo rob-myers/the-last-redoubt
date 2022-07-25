@@ -11,7 +11,7 @@ export function getTabsId(articleKey: string, tabsName: string) {
 }
 
 export type TabMeta = { weight?: number; } & (
-  | { type: 'code'; filepath: CodeFilepathKey; folds?: CodeMirror.Position[] }
+  | { type: 'code'; filepath: CodeFilepathKey; }
   | { type: 'component'; filepath: ComponentFilepathKey; }
   | { type: 'terminal'; /** Session identifier */ filepath: string; env?: Record<string, any>; }
 );

@@ -13,18 +13,22 @@
   - Make some GIFs explaining how to use `<Tabs/>`
   - Render something with graphviz extension
   - Some graphs between early paragraphs
-  - 🚧 Remove codemirror
-    - Find replacement first
-    - Can highlight CSS-in-JS separately if possible
+  - ✅ Remove codemirror
+  - 🚧 Replace codemirror with `prismjs`
+    > https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708
   - Better maximised Tab centering + body lock?
-
 
 - CodeSandbox
   - 🚧 with new terminal
   - terminal + World
 - StackBlitz too
 
-- Can see on GitHub Comments site
+- Can see GitHub Comments on site
+
+- Bigger white doors
+- Better door collision detection
+  - circle along line seg vs a door line-seg
+  - perhaps quadratic in two variables?
 
 ## Screen captures
 

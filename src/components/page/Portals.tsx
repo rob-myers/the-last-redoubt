@@ -31,11 +31,11 @@ export default function Portals() {
             <portals.InPortal key={key} node={portal}>
               <div style={{ height: '100%', background: '#444' }}>
                 <CodeEditor
+                  filepath={meta.filepath}
                   height="100%"
                   lineNumbers
                   readOnly
                   code={getCode(meta.filepath)}
-                  folds={meta.folds}
                 />
               </div>
             </portals.InPortal>

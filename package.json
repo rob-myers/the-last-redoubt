@@ -36,7 +36,6 @@
     "canvas": "^2.8.0",
     "cheerio": "^1.0.0-rc.10",
     "cli-columns": "^4.0.0",
-    "codemirror": "^5.62.0",
     "debounce": "^1.2.1",
     "earcut": "^2.2.3",
     "flexlayout-react": "^0.7.3",
@@ -73,7 +72,6 @@
   "devDependencies": {
     "@types/body-scroll-lock": "^3.1.0",
     "@types/braces": "^3.0.1",
-    "@types/codemirror": "^5.60.5",
     "@types/debounce": "^1.2.1",
     "@types/earcut": "^2.1.1",
     "@types/loadable__component": "^5.13.4",

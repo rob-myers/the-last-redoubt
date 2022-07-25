@@ -22,6 +22,7 @@ import { profileLookup } from "projects/sh/scripts";
   height={600}
   tabs={[
     [
+      { type: 'code', filepath: 'world/NPCs.jsx' },
       { type: 'component', filepath: 'world-demo-1' },
       { type: 'component', filepath: 'world-demo-2' },
       { type: 'component', filepath: 'geomorph/GeomorphEdit' },
@@ -29,8 +30,8 @@ import { profileLookup } from "projects/sh/scripts";
     [
       { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
       { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
-      { type: 'code', filepath: 'world/World.jsx' },
-      { type: 'code', filepath: 'world/NPCs.jsx' },
+      // { type: 'code', filepath: 'world/World.jsx' },
+      // { type: 'code', filepath: 'world/NPCs.jsx' },
       // { type: 'component', filepath: 'example/SvgStringPull' },
       // { type: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
       // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
