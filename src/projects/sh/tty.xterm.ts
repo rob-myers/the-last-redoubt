@@ -1,4 +1,4 @@
-import { Terminal } from 'xterm';
+import type { Terminal } from 'xterm';
 import { ansiColor } from './util';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk } from './io';
 import { safeStringify, testNever } from '../service/generic';

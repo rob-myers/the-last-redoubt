@@ -4,7 +4,7 @@ import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
 import { ansiColor, ProcessError } from './util';
-import { ParseService, srcService, wrapInFile } from './parse';
+import { parseService, srcService, wrapInFile } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
 import { ttyXtermClass } from './tty.xterm';
@@ -56,10 +56,6 @@ export class ttyShellClass implements Device {
     this.process = useSession.api.getSession(this.sessionKey).process[0];
 
     useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.sessionKey}${ansiColor.Reset}`, 'info');
-
-    if (!parseService.parse) {// Wait for parse.service
-      await new Promise<void>(resolve => initializers.push(resolve));
-    }
 
     await this.runProfile();
   }
@@ -300,13 +296,3 @@ export class ttyShellClass implements Device {
   }
   //#endregion
 }
-
-// Lazyload saves ~220kb initially
-let parseService = { tryParseBuffer:
-  (_) => ({ key: 'failed', error: 'not ready' })} as ParseService;
-const initializers = [] as (() => void)[]; 
-import('./parse').then(x => {
-  parseService = x.parseService;
-  initializers.forEach(initialize => initialize());
-  initializers.length = 0;
-});

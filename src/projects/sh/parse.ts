@@ -1,9 +1,24 @@
 import type Sh from 'mvdan-sh';
-import { syntax } from 'mvdan-sh';
 import cloneWithRefs from 'lodash.clonedeep';
 import getopts from 'getopts';
-
 import { testNever, last } from "../service/generic";
+
+/**
+ * We lazyload the shell parser `mvdan-sh`.
+ */
+let syntax = {
+  NewParser: class NewParser {
+    Interactive() {
+      throw Error('mvdan-sh not ready');
+    }
+    Parse() {
+      throw Error('mvdan-sh not ready');
+    }
+  } as any,
+
+} as typeof MvdanSh.syntax;
+
+import('mvdan-sh').then(x => syntax = x.syntax)
 
 //#region model
 
