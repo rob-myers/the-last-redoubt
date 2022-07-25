@@ -2,7 +2,13 @@
   "presets": ["babel-preset-gatsby"],
   "plugins": [
     ["prismjs", {
-      "languages": ["javascript", "css", "js-templates", "jsdoc"],
+      "languages": [
+        "javascript",
+        "css", "js-templates",
+        "html", "jsx",
+        "jsdoc",
+        "js-extras" // Richer syntax highlighting
+      ],
       "plugins": [
         "line-numbers"
       ],

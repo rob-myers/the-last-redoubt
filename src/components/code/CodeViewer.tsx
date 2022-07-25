@@ -22,7 +22,10 @@ export default function CodeViewer({
       className={cx("code-container", rootCss)}
     >
       <pre className="line-numbers">
-        <code className="language-javascript">
+        <code
+          // className="language-javascript"
+          className="language-jsx"
+        >
           {text}
         </code>
       </pre>

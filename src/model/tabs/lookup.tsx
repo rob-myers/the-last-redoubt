@@ -11,6 +11,8 @@ const code = {
   //   import('!!raw-loader!projects/example/jsx-to-js.jsx'),
   'geom/rect.js': () =>
     import('!!raw-loader!projects/geom/rect'),
+  'world/NPC.jsx': () =>
+    import('!!raw-loader!projects/world/NPC.jsx'),
   'world/NPCs.jsx': () =>
     import('!!raw-loader!projects/world/NPCs.jsx'),
   'world/World.jsx': () =>
