@@ -14,7 +14,7 @@
   - Render something with graphviz extension
   - Some graphs between early paragraphs
   - ✅ Remove codemirror
-  - 🚧 Replace codemirror with `prismjs`
+  - ✅ Replace codemirror with `prismjs`
     > https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708
   - Better maximised Tab centering + body lock?
 

@@ -32,9 +32,6 @@ export default function Portals() {
               <div style={{ height: '100%', background: '#444' }}>
                 <CodeEditor
                   filepath={meta.filepath}
-                  height="100%"
-                  lineNumbers
-                  readOnly
                   code={getCode(meta.filepath)}
                 />
               </div>

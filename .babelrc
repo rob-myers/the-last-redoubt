@@ -1,0 +1,12 @@
+{
+  "presets": ["babel-preset-gatsby"],
+  "plugins": [
+    ["prismjs", {
+      "languages": ["javascript", "css", "js-templates", "jsdoc"],
+      "plugins": [
+        "line-numbers"
+      ],
+      "css": true // Needed to get line-numbers working
+    }]
+  ]
+}

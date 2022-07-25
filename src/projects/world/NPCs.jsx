@@ -545,12 +545,7 @@ export default function NPCs(props) {
           disabled={props.disabled}
         />
       ))}
-      {/* {Object.values(state.npc).map(npc => (
-        <NPC // Respawn remounts
-          key={`${npc.key}@${npc.epochMs}`}
-          npc={npc}
-        />
-      ))} */}
+
     </div>
   );
 }
