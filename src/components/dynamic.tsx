@@ -1,23 +1,30 @@
-import loadable from '@loadable/component'
+import React from 'react';
 import type ActualLayout from './page/Layout';
 import type ActualCodeViewer from './code/CodeViewer';
 import type ActualTerminal from './sh/Terminal';
 import { ensureWorldComponent, WorldComponentDef } from 'model/tabs/lookup';
 
-export const Layout = loadable(
-  () => import('./page/Layout'),
-  { ssr: false },
-) as typeof ActualLayout;
+export function Layout(props: React.ComponentProps<typeof ActualLayout>) {
+  return typeof window !== "undefined"
+    ? <LayoutLazy {...props} />
+    : null;
+}
 
-export const CodeViewer = loadable(
-  () => import('./code/CodeViewer'),
-  { ssr: false },
-) as typeof ActualCodeViewer;
+export function CodeViewer(props: React.ComponentProps<typeof ActualCodeViewer>) {
+  return typeof window !== "undefined"
+    ? <CodeViewerLazy {...props} />
+    : null;
+}
 
-export const Terminal = loadable(
-  () => import('./sh/Terminal'),
-  { ssr: false },
-) as typeof ActualTerminal;
+export function Terminal(props: React.ComponentProps<typeof ActualTerminal>) {
+  return typeof window !== "undefined"
+    ? <TerminalLazy {...props} />
+    : null;
+}
+
+const LayoutLazy = React.lazy(() => import('./page/Layout'));
+const CodeViewerLazy = React.lazy(() => import('./code/CodeViewer'));
+const TerminalLazy = React.lazy(() => import('./sh/Terminal'));
 
 const worldComponents: WorldComponentDef[] = [
   {

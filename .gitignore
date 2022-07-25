@@ -7,5 +7,6 @@ public/*
 !public/npc
 !public/pics
 !public/symbol
+!public/favicon.ico
 tsconfig.tsbuildinfo
 .DS_Store
