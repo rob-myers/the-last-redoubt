@@ -55,6 +55,8 @@ export class ttyShellClass implements Device {
     });
     this.process = useSession.api.getSession(this.sessionKey).process[0];
 
+    useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.sessionKey}${ansiColor.Reset}`, 'info');
+
     if (!parseService.parse) {// Wait for parse.service
       await new Promise<void>(resolve => initializers.push(resolve));
     }

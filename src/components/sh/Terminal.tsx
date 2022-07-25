@@ -1,6 +1,5 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import { debounce } from 'debounce';
 import type { ITerminalOptions } from 'xterm';
 
 import { ttyXtermClass } from 'projects/sh/tty.xterm';
@@ -8,7 +7,7 @@ import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
 import { getCached } from 'projects/service/query-client';
 
-import { ansiColor, stripAnsi } from 'projects/sh/util';
+import { stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
@@ -83,10 +82,6 @@ export default function Terminal(props: Props) {
             ttyXterm.initialise();
             session.ttyShell.initialise(ttyXterm);
             state.xtermReady = true;
-
-            setTimeout(() => {
-              useSession.api.writeMsg(props.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${props.sessionKey}${ansiColor.Reset}`, 'info');
-            })
 
             update();
           }}
