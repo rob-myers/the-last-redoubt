@@ -13,7 +13,7 @@ export default function CodeEditor({
   const { data: text = '' } = useQuery(filepath, () => code);
 
   React.useEffect(() =>
-    void text && rootRef.current && Prism.highlightAllUnder(rootRef.current)
+    void (text && rootRef.current && Prism.highlightAllUnder(rootRef.current))
   , [text]);
 
   return (
