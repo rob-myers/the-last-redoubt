@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 import Prism from "prismjs";
 
-export default function CodeEditor({
+export default function CodeViewer({
   filepath,
   code,
 }: Props) {
@@ -46,7 +46,9 @@ const rootCss = css`
   pre[class*="language-"],
   code[class*="language-"] {
     color: #d4d4d4;
-    font-size: 13px;
+    font-size: 11px;
+    letter-spacing: 0;
+    line-height: 1.4;
     text-shadow: none;
     font-family: Menlo, Monaco, Consolas, "Andale Mono", "Ubuntu Mono", "Courier New", monospace;
     direction: ltr;
@@ -54,10 +56,9 @@ const rootCss = css`
     white-space: pre;
     word-spacing: normal;
     word-break: normal;
-    line-height: 1.5;
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
+    -moz-tab-size: 2;
+    -o-tab-size: 2;
+    tab-size: 2;
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;

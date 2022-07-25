@@ -1,6 +1,6 @@
 import loadable from '@loadable/component'
 import type ActualLayout from './page/Layout';
-import type ActualCodeEditor from './code/CodeEditor';
+import type ActualCodeViewer from './code/CodeEditor';
 import type ActualTerminal from './sh/Terminal';
 import { ensureWorldComponent, WorldComponentDef } from 'model/tabs/lookup';
 
@@ -9,10 +9,10 @@ export const Layout = loadable(
   { ssr: false },
 ) as typeof ActualLayout;
 
-export const CodeEditor = loadable(
+export const CodeViewer = loadable(
   () => import('./code/CodeEditor'),
   { ssr: false },
-) as typeof ActualCodeEditor;
+) as typeof ActualCodeViewer;
 
 export const Terminal = loadable(
   () => import('./sh/Terminal'),

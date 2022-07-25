@@ -4,7 +4,7 @@ import * as portals from "react-reverse-portal";
 
 import { getCode, getComponent } from 'model/tabs/lookup';
 import useSiteStore from "store/site.store";
-import { CodeEditor, Terminal } from 'components/dynamic';
+import { CodeViewer, Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
@@ -30,7 +30,7 @@ export default function Portals() {
           return (
             <portals.InPortal key={key} node={portal}>
               <div style={{ height: '100%', background: '#444' }}>
-                <CodeEditor
+                <CodeViewer
                   filepath={meta.filepath}
                   code={getCode(meta.filepath)}
                 />
