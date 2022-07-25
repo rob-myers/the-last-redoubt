@@ -532,7 +532,7 @@ function getProcess(meta: Sh.BaseMeta) {
 }
 
 /** js parse with string fallback */
-function parseJsArg(input: string) {
+export function parseJsArg(input: string) {
   try {
     return Function(`return ${input}`)();
   } catch (e) {

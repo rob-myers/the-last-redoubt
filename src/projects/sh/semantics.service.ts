@@ -5,7 +5,7 @@ import type * as Sh from './parse';
 import { last } from '../service/generic';
 import useSession, { ProcessStatus } from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes } from './util';
-import { cmdService } from './cmd.service';
+import { cmdService, parseJsArg } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
@@ -112,10 +112,14 @@ class semanticsServiceClass {
   }
 
   private async *Assign({ meta, Name, Value, Naked }: Sh.Assign) {
-    useSession.api.setVar(meta.sessionKey, Name.Value,
-      !Naked && Value
-        ? (await this.lastExpanded(sem.Expand(Value))).value
-        : ''
+    const textValue = !Naked && Value
+      ? (await this.lastExpanded(sem.Expand(Value))).value
+      : '';
+    useSession.api.setVar(
+      meta.sessionKey,
+      Name.Value,
+      // Attempt to interpret as number, dictionary etc.
+      parseJsArg(textValue),
     );
   }
 

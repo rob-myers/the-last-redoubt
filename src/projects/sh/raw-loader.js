@@ -224,13 +224,17 @@
     npc: async function* ({ api, args, home }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const action = args[0]
-      const opts = api.parseJsArg(args[1])
-      yield await npcs.npcAct({
-        action,
-        ...typeof opts === "string"
-          ? action.includes("decor") ? { decorKey: opts } : { npcKey: opts }
-          : opts,
-      })
+      let opts = api.parseJsArg(args[1]);
+
+      if (typeof opts === "string") {
+        ["add-decor", "remove-decor", "rm-decor"].includes(action) && (opts = { decorKey: opts });
+        ["cancel", "get", "pause", "play", "set-player"].includes(action) && (opts = { npcKey: opts });
+      }
+      if (action === "config") {
+        opts = { ...{ debug: !!home.DEBUG }, ...opts };
+      }
+
+      yield await npcs.npcAct({ action, ...opts })
     },
   
     /**

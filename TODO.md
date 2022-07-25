@@ -10,13 +10,17 @@
   - ✅ disable Tabs when outside viewport for 1 second
   - ✅ use a 'code' Tab
   - ✅ Better way to generate World components
-  - Make some GIFs explaining how to use `<Tabs/>`
-  - Render something with graphviz extension
-  - Some graphs between early paragraphs
+  - Make some ~~GIFs~~ MP4s initially demoing Game
   - ✅ Remove codemirror
   - ✅ Replace codemirror with `prismjs`
     > https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708
+  - ✅ `npc config` sets `debug` via `home.DEBUG`
+  - ✅ shell var assigns attempt to interpret js value
+    - e.g. DEBUG=0 assigns `0` which is falsy
+  - In DEBUG mode, animate a circle on `click`
   - Better maximised Tab centering + body lock?
+  - Render something with graphviz extension
+  - Some graphs between early paragraphs
 
 - CodeSandbox
   - 🚧 with new terminal
