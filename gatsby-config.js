@@ -24,13 +24,14 @@ const config = {
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
     // "gatsby-plugin-preact",
+    "gatsby-plugin-loadable-components-ssr",
   ],
   flags: {
     /**
      * https://stackoverflow.com/questions/63066974/how-to-use-react-lazy-in-gatsby#comment125726318_63066975
      * https://github.com/gatsbyjs/gatsby/discussions/28138
      */
-    DEV_SSR: true,
+    // DEV_SSR: true,
   },
 };
 

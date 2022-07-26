@@ -1,12 +1,11 @@
 {
-  "presets": ["babel-preset-gatsby"],
   "plugins": [
     [
       "prismjs", {
         "languages": [
           "javascript",
           "html",
-          "jsdoc", // Doesn't work in language-jsx sadly
+          "jsdoc",
           "js-extras",
           "css", "js-templates",
           "jsx"
@@ -14,8 +13,9 @@
         "plugins": [
           "line-numbers"
         ],
-        "css": true // Needed to get line-numbers working
+        "css": true
       }
-    ],
-  ]
+    ]
+  ],
+  "presets": ["babel-preset-gatsby"]
 }

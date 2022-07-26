@@ -1,6 +1,8 @@
 
 /** @param {import('gatsby').CreateWebpackConfigArgs} opts */
 exports.onCreateWebpackConfig = (opts) => {
+
+  console.log({ 'GATSBY STAGE': opts.stage });
  
   /** @type {import('webpack').Configuration} */
   const cfg = {

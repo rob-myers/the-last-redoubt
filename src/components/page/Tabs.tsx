@@ -14,6 +14,10 @@ import { Layout } from 'components/dynamic';
 import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
 import { createPortal } from './Portal';
 
+/**
+ * Possibly only imported from MDX,
+ * which lacks intellisense.
+ */
 export default function Tabs(props: Props) {
 
   const update = useUpdate();
