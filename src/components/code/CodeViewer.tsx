@@ -19,7 +19,7 @@ export default function CodeViewer({
   return (
     <div
       ref={rootRef}
-      className={cx("code-container", rootCss)}
+      className={cx("code-container", "scrollable", rootCss)}
     >
       <pre className="line-numbers">
         <code

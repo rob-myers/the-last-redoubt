@@ -3,18 +3,19 @@
   "plugins": [
     [
       "prismjs", {
-      "languages": [
-        "javascript",
-        "html",
-        "jsdoc", // Doesn't work in language-jsx sadly
-        "js-extras",
-        "css", "js-templates",
-        "jsx"
-      ],
-      "plugins": [
-        "line-numbers"
-      ],
-      "css": true // Needed to get line-numbers working
-    }]
+        "languages": [
+          "javascript",
+          "html",
+          "jsdoc", // Doesn't work in language-jsx sadly
+          "js-extras",
+          "css", "js-templates",
+          "jsx"
+        ],
+        "plugins": [
+          "line-numbers"
+        ],
+        "css": true // Needed to get line-numbers working
+      }
+    ],
   ]
 }
