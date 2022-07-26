@@ -45,7 +45,7 @@ export default function Layout(props: Props) {
   }, [JSON.stringify(props.tabs)]);
 
   /**
-   * If some tab initially maximised, we don't want to render any other tabs.
+   * If some tab is initially maximised, we don't want to render any other tabs.
    * However, `flexlayout-react` renders those tabs which'll be visible on minimize.
    * We prevent these initial renders by not mounting these tabs initially.
    */
@@ -129,7 +129,11 @@ function useRegisterTabs(props: Props, model: Model) {
  * To fix this, if some tab is maximised, we only render siblings of the maximised tab,
  * and also those tabs that have previously been rendered.
  */
-function factory(node: TabNode, maxTabNode: TabNode | null, portalLookup: State['portal']) {
+function factory(
+  node: TabNode,
+  maxTabNode: TabNode | null,
+  portalLookup: State['portal'],
+) {
   if (
     !maxTabNode
     || node.getParent() === maxTabNode.getParent()
