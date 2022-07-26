@@ -45,6 +45,8 @@ export default function World(props) {
 
   }));
 
+  // gms.length can be truthy without ever enabling,
+  // by viewing another World with same `props.gms`
   const { gms, gmGraph } = useGeomorphs(
     props.gms, 
     !(state.everEnabled = state.everEnabled || !props.disabled),
@@ -57,7 +59,7 @@ export default function World(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-  return gms.length ? (
+  return state.everEnabled && gms.length ? (
     <CssPanZoom
       initZoom={1.5}
       initCenter={{ x: 300, y: 300 }}

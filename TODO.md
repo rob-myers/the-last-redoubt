@@ -2,11 +2,13 @@
 
 ## In progress
 
+- BUG ✅ intro-world-2 awakened by enabling other Tabs
+
 - Only `terminal` and certain `component`s portalised
   - ✅ `code` not inside react-reverse-portal
   - 🚧 How to specify that a component should be kept in a portal?
-  - 🚧 How can we set disabled if components are not inside a portal?
-    - IDEA: HOC with `setDisabled` and auto async load via `useQuery`
+  - 🚧 How can we set a component disabled if not inside a portal?
+    - _IDEA_ HOC with `setDisabled` and auto async load via `useQuery`
 
 - ✅ Migrate code lookup to @loadable.
 - ✅ Migrate component lookup to @loadable.
