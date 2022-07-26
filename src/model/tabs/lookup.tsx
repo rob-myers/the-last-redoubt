@@ -1,4 +1,5 @@
 import React from 'react';
+import loadable, { LoadableLibrary } from '@loadable/component';
 
 const code = {
   // 'panzoom/PanZoom.jsx': () =>
@@ -9,14 +10,10 @@ const code = {
   //   import('!!raw-loader!projects/example/SvgStringPull.jsx'),
   // 'example/jsx-to-js.jsx': () =>
   //   import('!!raw-loader!projects/example/jsx-to-js.jsx'),
-  'geom/rect.js': () =>
-    import('!!raw-loader!projects/geom/rect'),
-  'world/NPC.jsx': () =>
-    import('!!raw-loader!projects/world/NPC.jsx'),
-  'world/NPCs.jsx': () =>
-    import('!!raw-loader!projects/world/NPCs.jsx'),
-  'world/World.jsx': () =>
-    import('!!raw-loader!projects/world/World.jsx'),
+  'geom/rect.js': loadable.lib(() => import('!!raw-loader!projects/geom/rect')),
+  'world/NPC.jsx': loadable.lib(() => import('!!raw-loader!projects/world/NPC.jsx')),
+  'world/NPCs.jsx': loadable.lib(() => import('!!raw-loader!projects/world/NPCs.jsx')),
+  'world/World.jsx': loadable.lib(() => import('!!raw-loader!projects/world/World.jsx')),
 } as const;
 
 const component = {
@@ -61,10 +58,8 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
 };
 
-export async function getCode(key: CodeFilepathKey) {
-  return code[key]?.().then(x => x.default) || (
-    `Code not found: ${key}`
-  );
+export function getCode(key: CodeFilepathKey): LoadableLibrary<any> | undefined {
+  return code[key];
 }
 
 export async function getComponent(key: ComponentFilepathKey) {

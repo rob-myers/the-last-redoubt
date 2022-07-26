@@ -2,15 +2,20 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 import Prism from "prismjs";
+import type { LoadableLibrary } from "@loadable/component";
 
 export default function CodeViewer({
   filepath,
-  code,
+  code = '',
 }: Props) {
 
   const rootRef = React.useRef<HTMLDivElement>(null);
 
-  const { data: text = '' } = useQuery(filepath, () => code);
+  const { data: text = '' } = useQuery(filepath, async () =>
+    typeof code === 'string'
+      ? code
+      : (await code.load() as any).default as string
+  );
 
   React.useEffect(() =>
     void (text && rootRef.current && Prism.highlightAllUnder(rootRef.current))
@@ -35,7 +40,7 @@ export default function CodeViewer({
 
 export interface Props {
   filepath: string;
-  code: string | Promise<string>;
+  code?: string | LoadableLibrary<{ default: string }>;
 }
 
 const rootCss = css`
