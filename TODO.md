@@ -2,14 +2,13 @@
 
 ## In progress
 
-- BUG ✅ intro-world-2 awakened by enabling other Tabs
-
 - Only `terminal` and certain `component`s portalised
   - ✅ `code` not inside react-reverse-portal
   - 🚧 How to specify that a component should be kept in a portal?
   - 🚧 How can we set a component disabled if not inside a portal?
     - _IDEA_ HOC with `setDisabled` and auto async load via `useQuery`
 
+- ✅ BUG intro-world-2 awakened by enabling other Tabs
 - ✅ Migrate code lookup to @loadable.
 - ✅ Migrate component lookup to @loadable.
 - ✅ Debug @loadable code-splitting
@@ -106,6 +105,7 @@ How to embed video?
 
 ## Future
 
+- BUG CssPanZoom zoom via info is a bit jerky at one point
 - BUG CssPanZoom zoom out which pointer down and drag around
 - ✅ Always show navpath (no need for DEBUG=true)
 - ❌ CodeMirror highlighting for JSDoc types?
@@ -119,6 +119,9 @@ How to embed video?
 - Saw `World` fail silently due to use-geomorph-data bug
 - anchor/action link sends user back to Tabs, displaying text in session
   - perhaps text added to "queue", and opens respective `Terminal`?
+- BUG firefox mobile jerky
+  - problem with `track andros &`
+  - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
 

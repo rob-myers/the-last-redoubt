@@ -491,6 +491,9 @@ export default function NPCs(props) {
           if (msg.key === 'started-walking') {
             status = 'follow-walk';
             console.warn('@', status);
+            /**
+             * TODO could skip this on Firefox Android -- it is very jerky
+             */
             try {
               const path = npc.getTargets().map(x => x.point);
               await panZoom.followPath(path, { animScaleFactor: npc.getAnimScaleFactor() });

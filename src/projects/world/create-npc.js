@@ -133,7 +133,11 @@ export default function createNpc(
             transform: `rotateZ(${aux.angs[i] || aux.angs[i - 1] || 0}rad) scale(${npcScale})`
           },
         ]),
-        opts: { duration: aux.total * this.getAnimScaleFactor(), direction: 'normal', fill: 'forwards' },
+        opts: {
+          duration: aux.total * this.getAnimScaleFactor(),
+          direction: 'normal',
+          fill: 'forwards',
+        },
       };
     },
     getAnimScaleFactor() {

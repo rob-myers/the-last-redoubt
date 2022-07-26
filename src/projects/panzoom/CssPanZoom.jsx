@@ -171,6 +171,7 @@ export default function CssPanZoom(props) {
             transform: `translate(${screenWidth/2 - (current.scale * path[i].x)}px, ${screenHeight/2 - (current.scale * path[i].y)}px)`,
           })),
         ];
+
         return { keyframes, distance: total };
       },
       delayIdle() {
@@ -187,7 +188,10 @@ export default function CssPanZoom(props) {
         const duration = distance * animScaleFactor;
 
         state.anims[0] = state.translateRoot.animate(keyframes, {
-          duration, direction: 'normal', fill: 'forwards', easing: 'linear',
+          duration,
+          direction: 'normal',
+          fill: 'forwards',
+          easing: 'linear',
         });
         await new Promise((resolve, reject) => {
           const translateAnim = /** @type {Animation} */ (state.anims[0]);
