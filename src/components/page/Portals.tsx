@@ -3,7 +3,7 @@ import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
 
 import { getComponent } from 'model/tabs/lookup';
-import useSiteStore, { PortalState } from "store/site.store";
+import useSiteStore, { KeyedComponent } from "store/site.store";
 import { Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
@@ -12,10 +12,11 @@ export default function Portals() {
   const items = Object.values(lookup);
 
   const [, setCount] = React.useState(0);
+
   React.useLayoutEffect(() => {
     items.forEach(async item => {
       if (item.meta.type === 'component' && !item.component) {
-        item.component = await getComponent(item.meta.filepath) as PortalState['component'];
+        item.component = await getComponent(item.meta.filepath) as KeyedComponent['component'];
         setCount(x => ++x);
       }
     });

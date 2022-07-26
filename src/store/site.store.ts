@@ -4,6 +4,7 @@ import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
 import type { TabMeta } from 'model/tabs/tabs.model';
+import type { KeyedLookup } from 'projects/service/generic';
 
 export type State = {
   /** Key of currently viewed article */
@@ -14,9 +15,9 @@ export type State = {
   
   navOpen: boolean;
   /** Site-wide portals, corresponding to individual tabs */
-  portal: TypeUtil.KeyedLookup<PortalState>;
+  portal: KeyedLookup<KeyedComponent>;
   /** <Tabs> on current page */
-  tabs: TypeUtil.KeyedLookup<TabsState>;
+  tabs: KeyedLookup<TabsState>;
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
     removePortals(...portalKeys: string[]): void;
@@ -67,7 +68,7 @@ const useStore = create<State>(devtools((set, get) => ({
       set({ portal: { ...lookup } });
     },
   },
-}), 'site'));
+})));
 
 export interface FrontMatter {
   key: string;
@@ -92,7 +93,10 @@ export interface AllFrontMatter {
   };
 }
 
-export interface PortalState {
+/**
+ * TODO support components without portals.
+ */
+export interface KeyedComponent {
   key: string;
   meta: TabMeta;
   portal: HtmlPortalNode;

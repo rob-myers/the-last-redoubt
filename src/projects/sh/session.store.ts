@@ -1,7 +1,7 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet } from '../service/generic';
+import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
 import { ansiColor, computeNormalizedParts, resolveNormalized, ShError } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
@@ -10,8 +10,8 @@ import { srcService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
 export type State = {
-  session: TypeUtil.KeyedLookup<Session>;
-  device: TypeUtil.KeyedLookup<Device>;
+  session: KeyedLookup<Session>;
+  device: KeyedLookup<Device>;
   
   readonly api: {
     addFunc: (sessionKey: string, funcName: string, wrappedFile: FileWithMeta) => void;
@@ -53,7 +53,7 @@ export type State = {
 
 export interface Session {
   key: string;
-  func: TypeUtil.KeyedLookup<NamedFunction>;
+  func: KeyedLookup<NamedFunction>;
   /**
    * Currently only support one tty per session,
    * i.e. cannot have two terminals in same session.
@@ -63,7 +63,7 @@ export interface Session {
   ttyShell: ttyShellClass,
   var: Record<string, any>;
   nextPid: number;
-  process: TypeUtil.KeyedLookup<ProcessMeta>;
+  process: KeyedLookup<ProcessMeta>;
 }
 
 interface Rehydrated {

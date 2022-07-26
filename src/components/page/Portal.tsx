@@ -1,6 +1,6 @@
 import React from "react";
 import * as portals from "react-reverse-portal";
-import useSiteStore, { PortalState } from "store/site.store";
+import useSiteStore, { KeyedComponent } from "store/site.store";
 import { getTabName, TabMeta } from "model/tabs/tabs.model";
 
 export default function Portal(props: TabMeta) {
@@ -18,7 +18,7 @@ export default function Portal(props: TabMeta) {
 
 function useEnsurePortal(
   meta: TabMeta,
-  portal: PortalState | null,
+  portal: KeyedComponent | null,
 ) {
   React.useEffect(() => {
     if (!portal) {

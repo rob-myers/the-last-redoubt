@@ -4,8 +4,8 @@ import safeStableStringify from 'safe-stable-stringify';
 /**
  * @template {{ key: string }} LookupItem
  * @param {LookupItem} newItem 
- * @param {TypeUtil.KeyedLookup<LookupItem>} lookup 
- * @returns {TypeUtil.KeyedLookup<LookupItem>}
+ * @param {KeyedLookup<LookupItem>} lookup 
+ * @returns {KeyedLookup<LookupItem>}
  */
 export function addToLookup(newItem, lookup) {
   return { ...lookup, [newItem.key]: newItem };
@@ -236,8 +236,8 @@ export function removeDups(items) {
 /**
  * @template {{ key: string }} LookupItem
  * @param {string} itemKey 
- * @param {TypeUtil.KeyedLookup<LookupItem>} lookup 
- * @returns {TypeUtil.KeyedLookup<LookupItem>}
+ * @param {KeyedLookup<LookupItem>} lookup 
+ * @returns {KeyedLookup<LookupItem>}
  */
 export function removeFromLookup(itemKey, lookup) {
   const { [itemKey]: _, ...rest } = lookup;
@@ -332,3 +332,16 @@ function zealousTrim(input) {
     sum + Array.from(item.split(/[\ufe00-\ufe0f]/).join("")).length
   , 0) / split.length;
 }
+
+/**
+ * @typedef KeyedLookup
+ * @type {{ [key: string]: Value }}
+ * @template {{ key: K}} Value
+ * @template {string | number} [K=string|number]
+ */
+
+/**
+ * @typedef KeyedTrue
+ * @type {{ [Key in keyof T]?: true }}
+ * @template {Record<string, any>} T
+ */

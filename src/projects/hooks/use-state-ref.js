@@ -1,5 +1,5 @@
 import React from 'react';
-import { equals, isPlainObject } from '../service/generic';
+import { equals, isPlainObject, KeyedTrue } from '../service/generic';
 
 /**
  * This hook is a mixture between React.useState and React.useRef.
@@ -9,7 +9,7 @@ import { equals, isPlainObject } from '../service/generic';
  * 
  * @template {object} State 
  * @param {() => State} initializer Should be side-effect free...
- * @param {{ overwrite?: TypeUtil.KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
+ * @param {{ overwrite?: KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
  */
 export default function useStateRef(
   initializer,
