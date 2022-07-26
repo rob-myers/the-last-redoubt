@@ -1,6 +1,9 @@
-import React from 'react';
-import loadable, { LoadableLibrary } from '@loadable/component';
+import React, { ComponentProps } from 'react';
+import loadable, { LoadableComponent, LoadableLibrary } from '@loadable/component';
 
+/**
+ * Dynamically loaded code lookup.
+ */
 const code = {
   // 'panzoom/PanZoom.jsx': () =>
   //   import('!!raw-loader!projects/panzoom/PanZoom.jsx'),
@@ -16,20 +19,41 @@ const code = {
   'world/World.jsx': loadable.lib(() => import('!!raw-loader!projects/world/World.jsx')),
 } as const;
 
+/**
+ * Dynamically loaded component lookup.
+ */
 const component = {
-  'example/Images#geomorph-301': () => import('projects/example/Images')
-    .then(x => (props: any) => <x.default {...props} srcKey='geomorph-301' />),
-  'example/Images#redoubt-sketches': () => import('projects/example/Images')
-    .then(x => (props: any) => <x.default {...props} srcKey='redoubt-sketches' />),
-  'example/SvgStringPull': () => import('projects/example/SvgStringPull')
-    .then(x => (props: any) => <x.default disabled {...props} />),
-  'example/SvgNavGraph#101': () => import('projects/example/SvgNavGraph')
-    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
-  'example/SvgNavGraph#301': () => import('projects/example/SvgNavGraph')
-    .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
 
-  'geomorph/GeomorphEdit': () => import('projects/geomorph/GeomorphEdit')
-    .then(x => (props: any) => <x.default disabled {...props} />),
+  'example/Images#geomorph-301': {
+    loadable: loadable.lib(() => import('projects/example/Images')),
+    get: (module: typeof import('projects/example/Images')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default {...props} srcKey='geomorph-301' />,
+  },
+  'example/SvgStringPull': {
+    loadable: loadable.lib(() => import('projects/example/SvgStringPull')),
+    get: (module: typeof import('projects/example/SvgStringPull')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} />,
+  },
+  'example/SvgNavGraph#101': {
+    loadable: loadable.lib(() => import('projects/example/SvgNavGraph')),
+    get: (module: typeof import('projects/example/SvgNavGraph')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} layoutKey='g-101--multipurpose' />,
+  },
+  'example/SvgNavGraph#301': {
+    loadable: loadable.lib(() => import('projects/example/SvgNavGraph')),
+    get: (module: typeof import('projects/example/SvgNavGraph')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} layoutKey='g-301--bridge' />,
+  },
+  'geomorph/GeomorphEdit': {
+    loadable: loadable.lib(() => import('projects/geomorph/GeomorphEdit')),
+    get: (module: typeof import('projects/geomorph/GeomorphEdit')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} />,
+  },
 
   // 'example/SvgVisibilityDemo#301': () => import('projects/example/SvgVisibilityDemo')
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-301--bridge' />),
@@ -63,22 +87,29 @@ export function getCode(key: CodeFilepathKey): LoadableLibrary<any> | undefined 
 }
 
 export async function getComponent(key: ComponentFilepathKey) {
-  return component[key]?.() || (
-    () => <div>Component not found: {key}</div>
-  );
+  return component[key]
+    ? component[key].get(await component[key].loadable.load() as any)
+    : FallbackComponentFactory(key)
 }
 
 export async function ensureWorldComponent({
   key,
   props,
 }: WorldComponentDef) {
-  const lookup = component as Record<string, (typeof component)[ComponentFilepathKey]>;
+
+  const lookup = component as Record<string, {
+    loadable: LoadableComponent<any>;
+    get: (module: { default: (props: any) => JSX.Element }) => (props: any) => JSX.Element;
+  }>;
+
   if (!lookup[key]) {
-    lookup[key] = () => import('projects/world/World')
-      // `extraProps` may include { disabled: false }
-      .then(x => (extraProps: WorldComponentDef['props']) =>
-        <x.default disabled {...props} {...extraProps} />
-      )
+    lookup[key] = {
+      loadable: loadable(() => import('projects/world/World')),
+      get: (module: typeof import('projects/world/World')) =>
+        // `extraProps` may include { disabled: false }
+        (extraProps: ComponentProps<typeof module['default']>) =>
+          <module.default disabled {...props} {...extraProps} />,
+    };
   }
 }
 
@@ -89,4 +120,12 @@ export interface WorldComponentDef {
   /** Tab name and unique identifier e.g. `props.worldKey` */
   key: string;
   props: import('projects/world/World').Props;
+}
+
+function FallbackComponentFactory(componentKey: string) {
+  return () => (
+    <div style={{ color: 'white', padding: '0 8px', fontSize: 20 }}>
+      Component "{componentKey}" not found
+    </div>
+  );
 }

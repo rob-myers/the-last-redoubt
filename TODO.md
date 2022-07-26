@@ -2,8 +2,8 @@
 
 ## In progress
 
-- 🚧 Migrate component lookup to @loadable.
 - ✅ Migrate code lookup to @loadable.
+- ✅ Migrate component lookup to @loadable.
 - Only `terminal` and certain `component`s portalised
 
 - ✅ Debug @loadable code-splitting
