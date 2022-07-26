@@ -2,10 +2,14 @@
 
 ## In progress
 
+- Only `terminal` and certain `component`s portalised
+  - ✅ `code` not inside react-reverse-portal
+  - 🚧 How to specify that a component should be kept in a portal?
+  - 🚧 How can we set disabled if components are not inside a portal?
+    - IDEA: HOC with `setDisabled` and auto async load via `useQuery`
+
 - ✅ Migrate code lookup to @loadable.
 - ✅ Migrate component lookup to @loadable.
-- Only `terminal` and certain `component`s portalised
-
 - ✅ Debug @loadable code-splitting
   - Works well without .babelrc (see below)
   - Fixed by upgrading gatsby `yarn add gatsby`

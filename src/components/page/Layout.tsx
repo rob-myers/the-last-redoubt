@@ -8,8 +8,10 @@ import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic
 import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
+import { getCode } from "model/tabs/lookup";
 import type { Props as TabsProps } from './Tabs';
 import Portal from './Portal';
+import { CodeViewer } from "../dynamic";
 
 export default function Layout(props: Props) {
 
@@ -140,7 +142,20 @@ function factory(
     || node.getId() in portalLookup
   ) {
     const meta = node.getConfig() as TabMeta;
-    return <Portal {...meta} />;
+
+    if (meta.type === 'code') {
+      return (// No need to persist CodeViewer
+        <div style={{ height: '100%', background: '#444' }}>
+          <CodeViewer
+            filepath={meta.filepath}
+            code={getCode(meta.filepath)}
+          />
+        </div>
+      );
+    } else {
+      return <Portal {...meta} />;
+    }
+
   } else {
     return null;
   }
