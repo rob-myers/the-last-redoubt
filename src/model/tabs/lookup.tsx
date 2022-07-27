@@ -25,30 +25,35 @@ const code = {
 const component = {
 
   'example/Images#geomorph-301': {
+    persist: false,
     loadable: loadable.lib(() => import('projects/example/Images')),
     get: (module: typeof import('projects/example/Images')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default {...props} srcKey='geomorph-301' />,
   },
   'example/SvgStringPull': {
+    persist: false,
     loadable: loadable.lib(() => import('projects/example/SvgStringPull')),
     get: (module: typeof import('projects/example/SvgStringPull')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} />,
   },
   'example/SvgNavGraph#101': {
+    persist: false,
     loadable: loadable.lib(() => import('projects/example/SvgNavGraph')),
     get: (module: typeof import('projects/example/SvgNavGraph')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} layoutKey='g-101--multipurpose' />,
   },
   'example/SvgNavGraph#301': {
+    persist: false,
     loadable: loadable.lib(() => import('projects/example/SvgNavGraph')),
     get: (module: typeof import('projects/example/SvgNavGraph')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} layoutKey='g-301--bridge' />,
   },
   'geomorph/GeomorphEdit': {
+    persist: false,
     loadable: loadable.lib(() => import('projects/geomorph/GeomorphEdit')),
     get: (module: typeof import('projects/geomorph/GeomorphEdit')) =>
       (props: ComponentProps<typeof module['default']>) =>
@@ -92,18 +97,28 @@ export async function getComponent(key: ComponentFilepathKey) {
     : FallbackComponentFactory(key)
 }
 
+export function isComponentPersisted(key: string) {
+  return key in component ? component[key as ComponentFilepathKey].persist : false;
+}
+
 export async function ensureWorldComponent({
   key,
   props,
 }: WorldComponentDef) {
 
   const lookup = component as Record<string, {
+    persist: boolean;
     loadable: LoadableComponent<any>;
     get: (module: { default: (props: any) => JSX.Element }) => (props: any) => JSX.Element;
   }>;
 
   if (!lookup[key]) {
     lookup[key] = {
+      /**
+       * Worlds are persisted over the entire site.
+       * That is, changing page won't destroy them.
+       */
+      persist: true,
       loadable: loadable(() => import('projects/world/World')),
       get: (module: typeof import('projects/world/World')) =>
         // `extraProps` may include { disabled: false }

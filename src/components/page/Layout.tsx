@@ -8,7 +8,7 @@ import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic
 import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
-import { getCode } from "model/tabs/lookup";
+import { getCode, isComponentPersisted } from "model/tabs/lookup";
 import type { Props as TabsProps } from './Tabs';
 import Portal from './Portal';
 import { CodeViewer } from "../dynamic";
@@ -25,18 +25,18 @@ export default function Layout(props: Props) {
           /**
            * - Enable if tab becomes visible and parent Tabs enabled.
            * - Disable 'component' tabs if they become invisible.
-           *   We don't disable invisible 'terminal' tabs.
+           * - We don't disable invisible 'terminal' tabs.
            */
           window.setTimeout(() => {
             const [key, visible] = [node.getId(), node.isVisible()];
-            const portal = useSiteStore.getState().portal[key];
+            const component = useSiteStore.getState().component[key];
             const tabs = Object.values(useSiteStore.getState().tabs)
-              .find(x => x.def.some(y => getTabName(y) === portal?.key));
-            if (portal && tabs) {
+              .find(x => x.def.some(y => getTabName(y) === component?.key));
+            if (component && tabs) {
               const disabled = tabs.disabled || (
-                !visible && portal.meta.type !== 'terminal'
+                !visible && component.meta.type !== 'terminal'
               );
-              portal.portal.setPortalProps({ disabled });
+              component.setDisabled(disabled);
             }
           });
         });
@@ -52,19 +52,19 @@ export default function Layout(props: Props) {
    * We prevent these initial renders by not mounting these tabs initially.
    */
   const maximisedTabNode = (model.getMaximizedTabset()?.getSelectedNode()??null) as TabNode | null; 
-  const portalLookup = useSiteStore.getState().portal;
+  const componentLookup = useSiteStore.getState().component;
 
   useRegisterTabs(props, model);
 
   return (
     <FlexLayout
       model={model}
-      factory={node => factory(node, maximisedTabNode, portalLookup)}
+      factory={node => factory(node, maximisedTabNode, componentLookup)}
       realtimeResize
       onModelChange={debounce(() => storeModelAsJson(props.id, model), 300)}
       onAction={act => {
         if (act.type === Actions.MAXIMIZE_TOGGLE && maximisedTabNode) {
-          props.update();
+          props.update(); // We are minimizing a maximized tab
         }
         return act;
       }}
@@ -134,31 +134,41 @@ function useRegisterTabs(props: Props, model: Model) {
 function factory(
   node: TabNode,
   maxTabNode: TabNode | null,
-  portalLookup: State['portal'],
+  componentLookup: State['component'],
 ) {
   if (
-    !maxTabNode
-    || node.getParent() === maxTabNode.getParent()
-    || node.getId() in portalLookup
+    maxTabNode
+    && node.getParent() !== maxTabNode.getParent()
+    && !componentLookup[node.getId()]
   ) {
-    const meta = node.getConfig() as TabMeta;
-
-    if (meta.type === 'code') {
-      return (// No need to persist CodeViewer
-        <div style={{ height: '100%', background: '#444' }}>
-          <CodeViewer
-            filepath={meta.filepath}
-            code={getCode(meta.filepath)}
-          />
-        </div>
-      );
-    } else {
-      return <Portal {...meta} />;
-    }
-
-  } else {
     return null;
   }
+
+  const meta = node.getConfig() as TabMeta;
+
+  if (meta.type === 'code') {
+    // TODO ensure item in siteStore.component
+    // e.g. via HOC
+    return (
+      <div style={{ height: '100%', background: '#444' }}>
+        <CodeViewer
+          filepath={meta.filepath}
+          code={getCode(meta.filepath)}
+        />
+      </div>
+    );
+  } else if (
+    meta.type === 'terminal'
+    || (meta.type === 'component' && isComponentPersisted(getTabName(meta)))
+  ) {
+    return <Portal {...meta} />;
+  } else {
+    /**
+     * TODO replace Portal with HOC
+     */
+    return <Portal {...meta} />;
+  }
+
 }
 
 function restoreJsonModel(props: Props) {

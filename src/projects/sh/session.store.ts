@@ -309,7 +309,7 @@ const useStore = create<State>(devtools((set, get) => ({
     },
   },
 
-}), 'session'));
+}), { name: "session.store" }));
 
 const api = useStore.getState().api;
 const useSessionStore = Object.assign(useStore, { api });

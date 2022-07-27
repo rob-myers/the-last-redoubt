@@ -1,17 +1,17 @@
 import React from "react";
 import * as portals from "react-reverse-portal";
-import useSiteStore, { KeyedComponent } from "store/site.store";
+import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
 import { getTabName, TabMeta } from "model/tabs/tabs.model";
 
 export default function Portal(props: TabMeta) {
-  const portalKey = getTabName(props);
-  const state = useSiteStore(
-    ({ portal }) => portalKey in portal ? portal[portalKey] : null,
+  const componentKey = getTabName(props);
+  const state = useSiteStore(({ component }) =>
+    componentKey in component ? component[componentKey] : null,
   );
 
   useEnsurePortal(props, state);
 
-  return state
+  return state?.portal
     ? <portals.OutPortal node={state.portal} />
     : null;
 }
@@ -43,20 +43,24 @@ function useEnsurePortal(
 }
 
 export function createPortal(meta: TabMeta) {
-  const portalKey = getTabName(meta);
+  const componentKey = getTabName(meta);
   const htmlPortalNode = portals.createHtmlPortalNode({
     attributes: { class: 'portal' },
   });
 
-  const portalItem = {
-    key: portalKey,
+  const item: KeyedPortal = {
+    key: componentKey,
+    instances: 1,
     meta,
     portal: htmlPortalNode,
+    setDisabled(disabled) {
+      htmlPortalNode.setPortalProps({ disabled });
+    },
   };
 
-  useSiteStore.setState(({ portal }) => ({
-    portal: { ...portal, [portalKey]: portalItem },
+  useSiteStore.setState(({ component }) => ({
+    component: { ...component, [componentKey]: item },
   }));
 
-  return portalItem;
+  return item;
 }

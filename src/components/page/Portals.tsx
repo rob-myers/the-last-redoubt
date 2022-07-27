@@ -3,13 +3,13 @@ import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
 
 import { getComponent } from 'model/tabs/lookup';
-import useSiteStore, { KeyedComponent } from "store/site.store";
+import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
 import { Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
-  const lookup = useSiteStore(site => site.portal);
-  const items = Object.values(lookup);
+  const lookup = useSiteStore(site => site.component);
+  const items = Object.values(lookup).filter((x): x is KeyedPortal => !!x.portal);
 
   const [, setCount] = React.useState(0);
 

@@ -14,13 +14,16 @@ export type State = {
   groupedMetas: FrontMatter[][];
   
   navOpen: boolean;
-  /** Site-wide portals, corresponding to individual tabs */
-  portal: KeyedLookup<KeyedComponent>;
+  /**
+   * Components occurring in Tabs.
+   * Some have portals, so they persist when pages change.
+   */
+  component: KeyedLookup<KeyedComponent>;
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
-    removePortals(...portalKeys: string[]): void;
+    removeComponents(...componentKeys: string[]): void;
   };
 };
 
@@ -29,7 +32,7 @@ const useStore = create<State>(devtools((set, get) => ({
   articlesMeta: {},
   groupedMetas: [],
   navOpen: false,
-  portal: {},
+  component: {},
   tabs: {},
   api: {
 
@@ -57,18 +60,18 @@ const useStore = create<State>(devtools((set, get) => ({
       });
     },
 
-    removePortals(...portalKeys) {
-      const { portal: lookup } = get();
-      portalKeys.forEach(portalKey => {
+    removeComponents(...componentKeys) {
+      const { component: lookup } = get();
+      componentKeys.forEach(portalKey => {
         if (lookup[portalKey]) {
-          lookup[portalKey].portal.unmount();
+          lookup[portalKey].portal?.unmount();
           delete lookup[portalKey];
         } // Hidden tab portals may not exist
       });
-      set({ portal: { ...lookup } });
+      set({ component: { ...lookup } });
     },
   },
-})));
+}), { name: "site.store" } ));
 
 export interface FrontMatter {
   key: string;
@@ -98,9 +101,18 @@ export interface AllFrontMatter {
  */
 export interface KeyedComponent {
   key: string;
-  meta: TabMeta;
-  portal: HtmlPortalNode;
+  /** This is retrieved from lookup.tsx */
   component?: ((props: { disabled?: boolean; }) => JSX.Element);
+  /** If `portal` is truthy this must be `1` */
+  instances: number;
+  /** Original definition provided to `<Tabs/>` */
+  meta: TabMeta;
+  portal: null | HtmlPortalNode;
+  setDisabled(next: boolean): void;
+}
+
+export interface KeyedPortal extends KeyedComponent {
+  portal: HtmlPortalNode;
 }
 
 interface TabsState {

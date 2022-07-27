@@ -59,7 +59,7 @@ export default function Tabs(props: Props) {
 
     reset() {
       const portalKeys = props.tabs.flatMap(x => x.map(y => getTabName(y)));
-      useSiteStore.api.removePortals(...portalKeys);
+      useSiteStore.api.removeComponents(...portalKeys);
 
       if (state.enabled) {
         state.resets++;
@@ -74,28 +74,28 @@ export default function Tabs(props: Props) {
 
       if (tabs) {
         const disabled = !state.enabled;
-        const lookup = useSiteStore.getState().portal;
+        const lookup = useSiteStore.getState().component;
 
         if (state.justResetWhileDisabled === false) {
           /**
-           * Standard case:
-           * Set `disabled` for each mounted `Portal` within this `Tabs`.
+           * Standard case
+           * > Set `disabled` for each mounted `Portal` within this `Tabs`.
            */
           const visibleTabKeys = tabs.getVisibleTabNodes().map(x => x.getId());
-          visibleTabKeys.forEach(portalKey => portalKey in lookup &&
-            lookup[portalKey].portal.setPortalProps({ disabled })
+          visibleTabKeys.forEach(componentKey => componentKey in lookup &&
+            lookup[componentKey].setDisabled(disabled)
           );
         } else {
           /**
-           * Special case:
-           * Having previously reset Tabs while disabled, we now enable.
+           * Special case
+           * > Having previously reset Tabs while disabled, we now enable.
            */
           const visibleTabNodes = tabs.getVisibleTabNodes();
           visibleTabNodes.forEach(tabNode =>
             lookup[tabNode.getId()] = lookup[tabNode.getId()] || createPortal(tabNode.getConfig())
           );
           setTimeout(() => {
-            visibleTabNodes.forEach(tabNode => lookup[tabNode.getId()].portal.setPortalProps({ disabled: false }));
+            visibleTabNodes.forEach(tabNode => lookup[tabNode.getId()].setDisabled(false));
           }, 300);
           state.justResetWhileDisabled = false;
         }

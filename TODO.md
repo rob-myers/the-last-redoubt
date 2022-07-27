@@ -4,9 +4,10 @@
 
 - Only `terminal` and certain `component`s portalised
   - ✅ `code` not inside react-reverse-portal
-  - 🚧 How to specify that a component should be kept in a portal?
-  - 🚧 How can we set a component disabled if not inside a portal?
-    - _IDEA_ HOC with `setDisabled` and auto async load via `useQuery`
+  - ✅ siteStore.portal -> siteStore.component
+  - 🚧 `code` Tabs have entry in siteStore.component
+  - 🚧 can have non-portalised `component` Tabs, with entry in siteStore.component
+      > Need HOC with `setDisabled` and perhaps `useQuery`
 
 - ✅ BUG intro-world-2 awakened by enabling other Tabs
 - ✅ Migrate code lookup to @loadable.

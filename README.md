@@ -12,4 +12,4 @@ cd public
 npx http-server
 ```
 
-More dev info of a [general nature](/DEV-INFO.md).
+[Some more dev info](/DEV-INFO.md).
