@@ -8,10 +8,8 @@ import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic
 import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
-import { getCode, isComponentPersisted } from "model/tabs/lookup";
 import type { Props as TabsProps } from './Tabs';
-import Portal from './Portal';
-import { CodeViewer } from "../dynamic";
+import Tab from './Tab';
 
 export default function Layout(props: Props) {
 
@@ -32,13 +30,18 @@ export default function Layout(props: Props) {
             const component = useSiteStore.getState().component[key];
             const tabs = Object.values(useSiteStore.getState().tabs)
               .find(x => x.def.some(y => getTabName(y) === component?.key));
+
             if (component && tabs) {
               const disabled = tabs.disabled || (
                 !visible && component.meta.type !== 'terminal'
               );
-              component.setDisabled(disabled);
+              useSiteStore.api.setTabDisabled(tabs.key, key, disabled);
             }
-          });
+          /**
+           * Need delay for component registration
+           * TODO better approach
+           */
+          }, 300);
         });
       }
     });
@@ -46,24 +49,24 @@ export default function Layout(props: Props) {
     return output;
   }, [JSON.stringify(props.tabs)]);
 
+  useRegisterTabs(props, model);
+
   /**
    * If some tab is initially maximised, we don't want to render any other tabs.
    * However, `flexlayout-react` renders those tabs which'll be visible on minimize.
    * We prevent these initial renders by not mounting these tabs initially.
    */
-  const maximisedTabNode = (model.getMaximizedTabset()?.getSelectedNode()??null) as TabNode | null; 
-  const componentLookup = useSiteStore.getState().component;
-
-  useRegisterTabs(props, model);
+  const maxTabNode = (model.getMaximizedTabset()?.getSelectedNode()??null) as TabNode | null; 
+  const factoryDeps = { maxTabNode, componentLookup: useSiteStore.getState().component, tabsKey: props.id };
 
   return (
     <FlexLayout
       model={model}
-      factory={node => factory(node, maximisedTabNode, componentLookup)}
+      factory={node => factory(node, factoryDeps)}
       realtimeResize
       onModelChange={debounce(() => storeModelAsJson(props.id, model), 300)}
       onAction={act => {
-        if (act.type === Actions.MAXIMIZE_TOGGLE && maximisedTabNode) {
+        if (act.type === Actions.MAXIMIZE_TOGGLE && maxTabNode) {
           props.update(); // We are minimizing a maximized tab
         }
         return act;
@@ -133,41 +136,26 @@ function useRegisterTabs(props: Props, model: Model) {
  */
 function factory(
   node: TabNode,
-  maxTabNode: TabNode | null,
-  componentLookup: State['component'],
+  deps: {
+    maxTabNode: TabNode | null,
+    componentLookup: State['component'],
+    tabsKey: string,
+  },
 ) {
   if (
-    maxTabNode
-    && node.getParent() !== maxTabNode.getParent()
-    && !componentLookup[node.getId()]
+    deps.maxTabNode
+    && node.getParent() !== deps.maxTabNode.getParent()
+    && !deps.componentLookup[node.getId()]
   ) {
     return null;
   }
 
-  const meta = node.getConfig() as TabMeta;
-
-  if (meta.type === 'code') {
-    // TODO ensure item in siteStore.component
-    // e.g. via HOC
-    return (
-      <div style={{ height: '100%', background: '#444' }}>
-        <CodeViewer
-          filepath={meta.filepath}
-          code={getCode(meta.filepath)}
-        />
-      </div>
-    );
-  } else if (
-    meta.type === 'terminal'
-    || (meta.type === 'component' && isComponentPersisted(getTabName(meta)))
-  ) {
-    return <Portal {...meta} />;
-  } else {
-    /**
-     * TODO replace Portal with HOC
-     */
-    return <Portal {...meta} />;
-  }
+  return (
+    <Tab
+      tabsKey={deps.tabsKey}
+      {...node.getConfig() as TabMeta}
+    />
+  );
 
 }
 

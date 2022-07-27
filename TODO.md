@@ -5,9 +5,8 @@
 - Only `terminal` and certain `component`s portalised
   - ✅ `code` not inside react-reverse-portal
   - ✅ siteStore.portal -> siteStore.component
-  - 🚧 `code` Tabs have entry in siteStore.component
-  - 🚧 can have non-portalised `component` Tabs, with entry in siteStore.component
-      > Need HOC with `setDisabled` and perhaps `useQuery`
+  - ✅ `code` Tabs have entry in siteStore.component
+  - ✅ can have non-portalised `component` Tabs, with entry in siteStore.component
 
 - ✅ BUG intro-world-2 awakened by enabling other Tabs
 - ✅ Migrate code lookup to @loadable.
@@ -106,6 +105,7 @@ How to embed video?
 
 ## Future
 
+- Tabs remember scroll (e.g. for `code`)
 - BUG CssPanZoom zoom via info is a bit jerky at one point
 - BUG CssPanZoom zoom out which pointer down and drag around
 - ✅ Always show navpath (no need for DEBUG=true)

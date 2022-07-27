@@ -12,14 +12,13 @@ import useStateRef from 'projects/hooks/use-state-ref';
 import { useIntersection } from 'projects/hooks/use-intersection';
 import { Layout } from 'components/dynamic';
 import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
-import { createPortal } from './Portal';
+import { createKeyedComponent } from './Tab';
 
 /**
  * Possibly only imported from MDX,
  * which lacks intellisense.
  */
 export default function Tabs(props: Props) {
-
   const update = useUpdate();
   const expandedStorageKey = `expanded@tab-${props.id}`;
 
@@ -83,7 +82,7 @@ export default function Tabs(props: Props) {
            */
           const visibleTabKeys = tabs.getVisibleTabNodes().map(x => x.getId());
           visibleTabKeys.forEach(componentKey => componentKey in lookup &&
-            lookup[componentKey].setDisabled(disabled)
+            useSiteStore.api.setTabDisabled(tabs.key, componentKey, disabled)
           );
         } else {
           /**
@@ -91,11 +90,13 @@ export default function Tabs(props: Props) {
            * > Having previously reset Tabs while disabled, we now enable.
            */
           const visibleTabNodes = tabs.getVisibleTabNodes();
-          visibleTabNodes.forEach(tabNode =>
-            lookup[tabNode.getId()] = lookup[tabNode.getId()] || createPortal(tabNode.getConfig())
+          visibleTabNodes.forEach(tabNode => !lookup[tabNode.getId()]
+            && createKeyedComponent(tabs.key, tabNode.getConfig())
           );
           setTimeout(() => {
-            visibleTabNodes.forEach(tabNode => lookup[tabNode.getId()].setDisabled(false));
+            visibleTabNodes.forEach((tabNode) => {
+              useSiteStore.api.setTabDisabled(tabs.key, tabNode.getId(), false);
+            });
           }, 300);
           state.justResetWhileDisabled = false;
         }

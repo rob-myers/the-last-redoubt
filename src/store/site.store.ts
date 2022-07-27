@@ -24,6 +24,7 @@ export type State = {
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
     removeComponents(...componentKeys: string[]): void;
+    setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
   };
 };
 
@@ -63,13 +64,30 @@ const useStore = create<State>(devtools((set, get) => ({
     removeComponents(...componentKeys) {
       const { component: lookup } = get();
       componentKeys.forEach(portalKey => {
-        if (lookup[portalKey]) {
-          lookup[portalKey].portal?.unmount();
+        const component = lookup[portalKey];
+        if (!component) {
+          return; // Hidden tabs may lack item in `lookup`
+        }
+        if (component.portal) {
+          component.portal.unmount();
           delete lookup[portalKey];
-        } // Hidden tab portals may not exist
+        } else {
+          component.instances--;
+          !component.instances && delete lookup[portalKey];
+        }
       });
       set({ component: { ...lookup } });
     },
+
+    setTabDisabled(tabsKey, componentKey, disabled) {
+      const component = useSiteStore.getState().component[componentKey];
+      component.disabled[tabsKey] = disabled;
+      component.portal?.setPortalProps({ disabled });
+      useSiteStore.setState(({ component: lookup }) => {
+        lookup[componentKey] = { ...component }; // ?
+        return {};
+      });
+    }
   },
 }), { name: "site.store" } ));
 
@@ -108,7 +126,14 @@ export interface KeyedComponent {
   /** Original definition provided to `<Tabs/>` */
   meta: TabMeta;
   portal: null | HtmlPortalNode;
-  setDisabled(next: boolean): void;
+  /**
+   * Parametric in parent Tabs.
+   * If `portal` truthy it will have exactly one key-value pair,
+   * although we won't actually use it.
+   */
+  disabled: {
+    [tabsKey: string]: boolean;
+  };
 }
 
 export interface KeyedPortal extends KeyedComponent {

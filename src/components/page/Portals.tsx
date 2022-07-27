@@ -2,9 +2,9 @@ import React from 'react';
 import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
 
-import { getComponent } from 'model/tabs/lookup';
+import { getCode, getComponent } from 'model/tabs/lookup';
 import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
-import { Terminal } from 'components/dynamic';
+import { CodeViewer, Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
@@ -13,7 +13,7 @@ export default function Portals() {
 
   const [, setCount] = React.useState(0);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     items.forEach(async item => {
       if (item.meta.type === 'component' && !item.component) {
         item.component = await getComponent(item.meta.filepath) as KeyedComponent['component'];
@@ -26,6 +26,17 @@ export default function Portals() {
     {items.map((state) => {
       const { key, meta, portal } = state;
       switch (meta.type) {
+        case 'code':
+          // Currently no reason to persist,
+          // yet we include it for uniformity
+          return (
+            <portals.InPortal key={key} node={portal}>
+              <CodeViewer
+                filepath={meta.filepath}
+                code={getCode(meta.filepath)}
+              />
+            </portals.InPortal>
+          );
         case 'component': {
           return (
             <portals.InPortal key={key} node={portal}>
@@ -43,7 +54,6 @@ export default function Portals() {
             </portals.InPortal>
           );
         }
-        case 'code': // Unreachable
         default:
           return (
             <portals.InPortal key={key} node={portal}>
