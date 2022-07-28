@@ -7,14 +7,28 @@ import { Rect } from "../geom";
 import PanZoom from "../panzoom/PanZoom";
 import useGeomorphData from "../geomorph/use-geomorph-data";
 import usePathfinding from "../geomorph/use-pathfinding";
+import { svgNavGraph } from "./jsx-dom";
 
 /** @param {{ layoutKey: Geomorph.LayoutKey; disabled?: boolean; }} props */
-export default function SvgSvgNavGraph(props) {
+export default function SvgNavGraph(props) {
 
   const { data: gm } = useGeomorphData(props.layoutKey);
   const { data: pf } = usePathfinding(props.layoutKey, gm, props.disabled);
 
-  const nodeMetas = pf ? pf.graph.nodesArray.map((_, i) => pf.graph.nodeToMeta[i]) : [];
+  /** @type {React.RefObject<SVGGElement>} */
+  const groupRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const g = groupRef.current;
+    if (!props.disabled && pf && g) {
+      /**
+       * We do direct DOM manipulation,
+       * because React was incredibly slow.
+       */
+      svgNavGraph(g, pf.graph);
+      return () => Array.from(g.children).forEach(x => x.remove());
+    }
+  }, [props.disabled, pf]);
 
   return (
     <PanZoom
@@ -26,52 +40,8 @@ export default function SvgSvgNavGraph(props) {
     >
       {gm && <image {...gm.pngRect} className="geomorph" href={geomorphPngPath(props.layoutKey)} />}
 
-      {pf && !props.disabled && <>
-        {pf.graph.nodesArray.map(({ id, centroid, neighbours }, _, nodes) =>
-          <g key={id}>
-            {neighbours.map(id => (
-              <line
-                key={id}
-                className="edge"
-                x1={centroid.x}
-                y1={centroid.y}
-                x2={nodes[id].centroid.x}
-                y2={nodes[id].centroid.y}
-              />
-            ))}
-          </g>
-        )}
+      <g ref={groupRef} />
 
-        {pf.graph.nodesArray.map(({ vertexIds }, nodeId) =>
-          <polygon
-            key={nodeId}
-            // className="navtri"
-            points={`${vertexIds.map(id => pf.graph.vectors[id])}`}
-            stroke="#00000044"
-            strokeWidth={0.1}
-            fill={
-              pf.graph.nodeToMeta[nodeId].doorId >= 0
-                ? pf.graph.nodeToMeta[nodeId].roomId >= 0 ? '#ffff0066' : '#ff000066'
-                : pf.graph.nodeToMeta[nodeId].roomId >= 0 ? '#00ff0066' : 'none'}
-          />
-        )}
-
-        {pf.graph.nodesArray.map(({ id, centroid }, i) =>
-          <circle
-            key={id}
-            className="node"
-            cx={centroid.x}
-            cy={centroid.y}
-            r={2}
-          >
-            <title>
-              {i}:{' '}
-              {JSON.stringify(nodeMetas[i])}
-            </title>
-          </circle>
-        )}
-      </>
-      }
     </PanZoom>
   );
 }
@@ -84,7 +54,7 @@ const rootCss = css`
     fill: #ff000068;
     /* pointer-events: none; */
   }
-  line.edge {
+  path.edge, line.edge {
     stroke: #900;
     stroke-width: 1;
     pointer-events: none;

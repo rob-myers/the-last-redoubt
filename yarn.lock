@@ -5345,6 +5345,11 @@ csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.11.tgz#d66700c5eacfac1940deb4e3ee5642792d85cd33"
   integrity sha512-sa6P2wJ+CAbgyy4KFssIb/JNMLxFvKF1pCYCSXS8ZMuqZnMsrxqI2E5sPyoTpxoPU/gVZMzr2zjOfg8GIZOMsw==
 
+csstype@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
+  integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"
@@ -8663,6 +8668,13 @@ jsonfile@^6.0.1:
   dependencies:
     array-includes "^3.1.4"
     object.assign "^4.1.2"
+
+jsx-dom-cjs@^8.0.1-beta.8:
+  version "8.0.1-beta.8"
+  resolved "https://registry.yarnpkg.com/jsx-dom-cjs/-/jsx-dom-cjs-8.0.1-beta.8.tgz#6932e9db707f577b230e8df09365034b1402a5fc"
+  integrity sha512-DI5yHzjE0UfvNZG+a89h8frRf0QPhxGIWZiHuFYP4i3S7ysAgyddGaT0/1WLmjwAn/wNfFtefxnDyByzcmbnqw==
+  dependencies:
+    csstype "^3.1.0"
 
 keyv@^3.0.0:
   version "3.1.0"
