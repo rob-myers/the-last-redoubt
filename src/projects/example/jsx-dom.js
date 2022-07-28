@@ -1,5 +1,5 @@
-/** @jsx jsx */
-import { jsx, createElement } from "jsx-dom-cjs";
+/** @jsx React.createElement */
+import React from "jsx-dom-cjs";
 
 /**
  * @param {SVGElement} root
