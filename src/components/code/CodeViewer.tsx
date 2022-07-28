@@ -17,9 +17,12 @@ export default function CodeViewer({
       : (await code.load() as any).default as string
   );
 
-  React.useEffect(() =>
-    void (text && rootRef.current && Prism.highlightAllUnder(rootRef.current))
-  , [text]);
+  React.useEffect(() => {
+    const rootEl = rootRef.current;
+    if (rootEl && text && !rootEl.querySelector('code > span')) {
+      Prism.highlightAllUnder(rootRef.current);
+    }
+  }, [text]);
 
   return (
     <div
