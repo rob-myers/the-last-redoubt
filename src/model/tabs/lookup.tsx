@@ -1,26 +1,9 @@
 import React, { ComponentProps } from 'react';
-import loadable, { LoadableComponent, LoadableLibrary } from '@loadable/component';
-
-/**
- * Dynamically loaded code lookup.
- */
-const code = {
-  // 'panzoom/PanZoom.jsx': () =>
-  //   import('!!raw-loader!projects/panzoom/PanZoom.jsx'),
-  // 'example/SvgPanZoomDemo.jsx': () =>
-  //   import('!!raw-loader!projects/example/SvgPanZoomDemo.jsx'),
-  // 'example/SvgStringPull.jsx': () =>
-  //   import('!!raw-loader!projects/example/SvgStringPull.jsx'),
-  // 'example/jsx-to-js.jsx': () =>
-  //   import('!!raw-loader!projects/example/jsx-to-js.jsx'),
-  'geom/rect.js': loadable.lib(() => import('!!raw-loader!projects/geom/rect')),
-  'world/NPC.jsx': loadable.lib(() => import('!!raw-loader!projects/world/NPC.jsx')),
-  'world/NPCs.jsx': loadable.lib(() => import('!!raw-loader!projects/world/NPCs.jsx')),
-  'world/World.jsx': loadable.lib(() => import('!!raw-loader!projects/world/World.jsx')),
-} as const;
+import loadable, { LoadableComponent } from '@loadable/component';
 
 /**
  * Dynamically loaded component lookup.
+ * TODO simplify
  */
 const component = {
 
@@ -87,10 +70,6 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
 };
 
-export function getCode(key: CodeFilepathKey): LoadableLibrary<any> | undefined {
-  return code[key];
-}
-
 export async function getComponent(key: ComponentFilepathKey) {
   return component[key]
     ? component[key].get(await component[key].loadable.load() as any)
@@ -128,7 +107,6 @@ export async function ensureWorldComponent({
   }
 }
 
-export type CodeFilepathKey = keyof typeof code;
 export type ComponentFilepathKey = keyof typeof component;
 
 export interface WorldComponentDef {

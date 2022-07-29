@@ -2,12 +2,8 @@
 
 ## In progress
 
-- ✅ BUG world does not pause when associated terminal not visible
-- ✅ BUG prev open tab did not awaken post reset
-- ✅ BUG prevent fast re-reset with error:
-  > Uncaught TypeError: Cannot read properties of undefined (reading 'dispose') - Avoid duplicating loaded components + cleanup
-
-- Remove code lookup
+- ✅ Remove code lookup
+- Make first video
 - Avoid dup loaded components
 
 - 🚧 Start new page intro.mdx
@@ -30,9 +26,6 @@
   - Fix Tab body lock when initially maximised
   - Render something with graphviz extension
   - Some graphs between early paragraphs
-
-- ✅ Fix larger builds
-  - code/components in lookup should be outside bundle
 
 - CodeSandbox
   - 🚧 with new terminal
@@ -118,6 +111,13 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- ✅ Fix larger builds
+  - code/components in lookup should be outside bundle
+- ✅ BUG world does not pause when associated terminal not visible
+- ✅ BUG prev open tab did not awaken post reset
+- ✅ BUG prevent fast re-reset with error:
+  > Uncaught TypeError: Cannot read properties of undefined (reading 'dispose') - Avoid duplicating loaded components + cleanup
 
 - ✅ BUG /test crashes mobile
   - ✅ fix slow SvgNavGraph via direct DOM manipulation

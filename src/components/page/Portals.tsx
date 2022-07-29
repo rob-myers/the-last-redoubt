@@ -2,7 +2,7 @@ import React from 'react';
 import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
 
-import { getCode, getComponent } from 'model/tabs/lookup';
+import { getComponent } from 'model/tabs/lookup';
 import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
 import { Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
