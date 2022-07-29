@@ -3,7 +3,7 @@ import { css, cx } from '@emotion/css';
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import debounce from 'debounce';
 
-import { getTabName, TabMeta } from 'model/tabs/tabs.model';
+import { TabMeta } from 'model/tabs/tabs.model';
 import useSiteStore from 'store/site.store';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
 import { cssName } from 'projects/service/const';
@@ -25,8 +25,10 @@ export default function Tabs(props: Props) {
     colour: 'black',
     enabled: !!props.initEnabled,
     expanded: false,
+
     resets: 0,
     justResetWhileDisabled: false,
+    resetDisabled: false,
 
     el: {
       root: null,
@@ -57,16 +59,19 @@ export default function Tabs(props: Props) {
     },
 
     reset() {
+      state.resetDisabled = true;
       const tabs = useSiteStore.getState().tabs[props.id];
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
       useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
-
-      if (state.enabled) {
-        state.resets++;
-        update();
-      }
       state.justResetWhileDisabled = !state.enabled;
+      if (state.enabled) {
+        // Force remount to reset, which loses any subcomponent state
+        state.resets++;
+      }
+      update();
+      setTimeout(() => { state.resetDisabled = false; update(); }, 500);
     },
+
     async toggleEnabled() {
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
       state.enabled = !state.enabled;
@@ -111,6 +116,7 @@ export default function Tabs(props: Props) {
 
       update();
     },
+
     async toggleExpand() {
       state.expanded = !state.expanded;
       if (state.expanded) {
@@ -123,7 +129,6 @@ export default function Tabs(props: Props) {
       }
       update();
     },
-
   }));
 
   useIntersection({
@@ -221,8 +226,16 @@ export interface State {
   colour: 'black' | 'faded' | 'clear';
   enabled: boolean;
   expanded: boolean;
+
+  /** Number of times we have reset */
   resets: number;
+  /**
+   * Did we just reset whilst Tabs disabled?
+   * If so, we'll need to reawaken all visible tabs.
+   */
   justResetWhileDisabled: boolean;
+  /** Is the reset button disabled? */
+  resetDisabled: boolean;
 
   el: {
     /** Align to `useIntersection` hook; avoid HTMLElement in SSR  */

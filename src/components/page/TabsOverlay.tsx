@@ -13,6 +13,7 @@ export function TabsOverlay({ api, tabsId }: Props) {
           className={cx(
             cssName.resetIcon,
             iconCss({ basename: 'refresh', dim: 11, invert: true }),
+            api.resetDisabled && cssName.disabled,
           )}
           onClick={api.reset}
           title="reset"

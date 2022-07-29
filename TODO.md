@@ -4,8 +4,11 @@
 
 - ✅ BUG world does not pause when associated terminal not visible
 - ✅ BUG prev open tab did not awaken post reset
-- BUG click reset many times
-- Avoid duplicating loaded components + cleanup
+- ✅ BUG prevent fast re-reset with error:
+  > Uncaught TypeError: Cannot read properties of undefined (reading 'dispose') - Avoid duplicating loaded components + cleanup
+
+- Remove code lookup
+- Avoid dup loaded components
 
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
