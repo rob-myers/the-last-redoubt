@@ -23,7 +23,7 @@ export type State = {
   tabs: KeyedLookup<TabsState>;
   api: {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
-    removeComponents(...componentKeys: string[]): void;
+    removeComponents(tabsKey: string, ...componentKeys: string[]): void;
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
   };
 };
@@ -61,7 +61,7 @@ const useStore = create<State>(devtools((set, get) => ({
       });
     },
 
-    removeComponents(...componentKeys) {
+    removeComponents(tabsKey, ...componentKeys) {
       const { component: lookup } = get();
       componentKeys.forEach(portalKey => {
         const component = lookup[portalKey];
@@ -72,6 +72,7 @@ const useStore = create<State>(devtools((set, get) => ({
           component.portal.unmount();
           delete lookup[portalKey];
         } else {
+          delete component.disabled[tabsKey];
           component.instances--;
           !component.instances && delete lookup[portalKey];
         }

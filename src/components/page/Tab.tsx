@@ -63,7 +63,11 @@ function useEnsureComponent(
 
 type Props = TabMeta & { tabsKey: string };
 
-export async function createKeyedComponent(tabsKey: string, meta: TabMeta) {
+export async function createKeyedComponent(
+  tabsKey: string,
+  meta: TabMeta,
+  disabled = true,
+) {
   const componentKey = getTabName(meta);
   let item: KeyedComponent;
 
@@ -77,7 +81,7 @@ export async function createKeyedComponent(tabsKey: string, meta: TabMeta) {
       meta,
       portal: htmlPortalNode,
       // Unused in case of portal, yet kept up-to-date
-      disabled: { [tabsKey]: true },
+      disabled: { [tabsKey]: disabled },
     };
   } else {
     item = {
@@ -85,7 +89,7 @@ export async function createKeyedComponent(tabsKey: string, meta: TabMeta) {
       instances: 1,
       meta,
       portal: null,
-      disabled: { [tabsKey]: true },
+      disabled: { [tabsKey]: disabled },
       // This is done later in case of portal
       component: await getComponent(meta.filepath as any) as KeyedComponent['component'],
     };

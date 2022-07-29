@@ -9,7 +9,7 @@ import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
 import type { Props as TabsProps } from './Tabs';
-import Tab from './Tab';
+import Tab, { createKeyedComponent } from './Tab';
 
 export default function Layout(props: Props) {
 
@@ -19,29 +19,24 @@ export default function Layout(props: Props) {
 
     output.visitNodes((node) => {
       if (node.getType() === 'tab') {
-        node.setEventListener('visibility', () => {
+        node.setEventListener('visibility', ({ visible }) => {
+          if (!visible) {
+            return;
+          }
           /**
            * - Enable if tab becomes visible and parent Tabs enabled.
            * - Disable 'component' tabs if they become invisible.
            * - We don't disable invisible 'terminal' tabs.
            */
-          window.setTimeout(() => {
-            const [key, visible] = [node.getId(), node.isVisible()];
-            const component = useSiteStore.getState().component[key];
-            const tabs = Object.values(useSiteStore.getState().tabs)
-              .find(x => x.def.some(y => getTabName(y) === component?.key));
-
-            if (component && tabs) {
-              const disabled = tabs.disabled || (
-                !visible && component.meta.type !== 'terminal'
-              );
-              useSiteStore.api.setTabDisabled(tabs.key, key, disabled);
+          window.setTimeout(async () => {
+            const [key, visible, tabMeta] = [node.getId(), node.isVisible(), (node as TabNode).getConfig()];
+            const tabs = useSiteStore.getState().tabs[props.id];
+            if (!useSiteStore.getState().component[key]) {
+              await createKeyedComponent(tabs.key, tabMeta);
             }
-          /**
-           * Need delay for component registration
-           * TODO better approach
-           */
-          }, 300);
+            const disabled = tabs.disabled || (!visible && tabMeta.type !== 'terminal');
+            useSiteStore.api.setTabDisabled(tabs.key, key, disabled);
+          }, 300); // Delay needed for component registration?
         });
       }
     });

@@ -15,8 +15,7 @@ import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
 import { createKeyedComponent } from './Tab';
 
 /**
- * Possibly only imported from MDX,
- * which lacks intellisense.
+ * Possibly only imported from MDX, which lacks intellisense.
  */
 export default function Tabs(props: Props) {
   const update = useUpdate();
@@ -35,19 +34,20 @@ export default function Tabs(props: Props) {
       backdrop: {} as HTMLDivElement,
     },
 
-    onChangeIntersect: debounce((intersects: boolean) => {
-      !intersects && state.enabled && state.toggleEnabled();
+    onChangeIntersect: debounce(async (intersects: boolean) => {
+      if (!intersects && state.enabled)
+        await state.toggleEnabled();
     }, 1000),
 
-    onKeyUp(e: React.KeyboardEvent) {
+    async onKeyUp(e: React.KeyboardEvent) {
       if (state.expanded && e.key === 'Escape') {
-        state.toggleExpand();
+        await state.toggleExpand();
       }
     },
     /** Prevent any underlying element from being clicked on click outside modal */
-    onModalBgPress(e: TouchEvent | MouseEvent) {
+    async onModalBgPress(e: TouchEvent | MouseEvent) {
       e.preventDefault();
-      state.toggleExpand();
+      await state.toggleExpand();
     },
     /** Prevent background moving when tab dragged */
     preventTabTouch(e: TouchEvent) {
@@ -59,7 +59,7 @@ export default function Tabs(props: Props) {
     reset() {
       const tabs = useSiteStore.getState().tabs[props.id];
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
-      useSiteStore.api.removeComponents(...componentKeys);
+      useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
 
       if (state.enabled) {
         state.resets++;
@@ -67,61 +67,56 @@ export default function Tabs(props: Props) {
       }
       state.justResetWhileDisabled = !state.enabled;
     },
-    toggleEnabled() {
+    async toggleEnabled() {
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
       state.enabled = !state.enabled;
       const tabs = useSiteStore.getState().tabs[props.id];
 
-      if (tabs) {
-        const disabled = !state.enabled;
+      if (!tabs) {
+        return console.warn(`Tabs not found with id "${props.id}".`);
+      }
+
+      const disabled = !state.enabled;
+      // Other tab portals may not exist yet, so record in `tabs` too
+      tabs.disabled = disabled;
+      useSiteStore.setState({});
+
+      if (state.justResetWhileDisabled === false) {
+        /**
+         * Standard case
+         * > Set `disabled` for each mounted `Portal` within this `Tabs`.
+         */
         const lookup = useSiteStore.getState().component;
-
-        if (state.justResetWhileDisabled === false) {
-          /**
-           * Standard case
-           * > Set `disabled` for each mounted `Portal` within this `Tabs`.
-           */
-          const componentKeys = tabs.getTabNodes().map(node => node.getId());
-          componentKeys.forEach(componentKey => componentKey in lookup &&
-            useSiteStore.api.setTabDisabled(tabs.key, componentKey, disabled)
-          );
-        } else {
-          // TODO why does previously opened tab fail to load post-reset?
-
-          /**
-           * Special case
-           * > Having previously reset Tabs while disabled, we now enable.
-           */
-          const visibleTabNodes = tabs.getVisibleTabNodes();
-          visibleTabNodes.forEach(tabNode => !lookup[tabNode.getId()]
-            && createKeyedComponent(tabs.key, tabNode.getConfig())
-          );
-          setTimeout(() => {
-            visibleTabNodes.forEach((tabNode) => {
-              useSiteStore.api.setTabDisabled(tabs.key, tabNode.getId(), false);
-            });
-          }, 300);
-          state.justResetWhileDisabled = false;
-        }
-        
-        // Other tab portals may not exist yet, so record in `tabs` too
-        tabs.disabled = disabled;
-        useSiteStore.setState({});
-      } else {
-        console.warn(
-          `Tabs not found for id "${props.id}". ` +
-          `Expected Markdown syntax <div class="tabs" name="my-identifier" ...>`
+        const componentKeys = tabs.getTabNodes().map(node => node.getId());
+        componentKeys.forEach(componentKey => componentKey in lookup &&
+          useSiteStore.api.setTabDisabled(tabs.key, componentKey, disabled)
         );
+      } else {
+        /**
+         * Special case
+         * > Having previously reset Tabs while disabled, we now enable.
+         */
+        state.justResetWhileDisabled = false;
+
+        await Promise.all(tabs.getVisibleTabNodes().map(async (tabNode) => {
+          if (!useSiteStore.getState().component[tabNode.getId()]) {
+            await createKeyedComponent(tabs.key, tabNode.getConfig(), false);
+          }
+          setTimeout(() => // Needed to awaken portal
+            useSiteStore.api.setTabDisabled(tabs.key, tabNode.getId(), false),
+            300,
+          );
+        }))
       }
 
       update();
     },
-    toggleExpand() {
+    async toggleExpand() {
       state.expanded = !state.expanded;
       if (state.expanded) {
         tryLocalStorageSet(expandedStorageKey, 'true');
         if (!state.enabled) {// Auto-enable on expand
-          state.toggleEnabled();
+          await state.toggleEnabled();
         }
       } else {
         localStorage.removeItem(expandedStorageKey);
@@ -242,8 +237,8 @@ export interface State {
   preventTabTouch(e: TouchEvent): void;
 
   reset(): void;
-  toggleEnabled(): void;
-  toggleExpand(): void;
+  toggleEnabled(): Promise<void>;
+  toggleExpand(): Promise<void>;
 }
 
 

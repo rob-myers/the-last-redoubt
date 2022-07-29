@@ -3,7 +3,8 @@
 ## In progress
 
 - ✅ BUG world does not pause when associated terminal not visible
-- 🚧 BUG prev open tab did not awaken post reset
+- ✅ BUG prev open tab did not awaken post reset
+- BUG click reset many times
 - Avoid duplicating loaded components + cleanup
 
 - 🚧 Start new page intro.mdx
