@@ -84,6 +84,7 @@ export const vscDarkPlusCss = css`
 
   pre[class*="language-"] {
     padding: 1em;
+    padding: 32px;
     margin: .5em 0;
     overflow: auto;
     background: #1e1e1e;
@@ -100,9 +101,18 @@ export const vscDarkPlusCss = css`
   * Tokens
   */
 
-  /** __CUSTOM__ for css-in-js */
-  .token.template-string {
+  /**
+   * __CUSTOM__ for css-in-js
+   * TODO better approach
+   */
+  .language-css.template-string {
     color: #ce9178;
+  }
+  .language-css.template-string.number, .language-css.template-string.unit {
+    color: rgb(161, 196, 149);
+  }
+  .language-css.atrule.rule {
+    color: #c586c0;
   }
 
   .namespace {
@@ -329,7 +339,10 @@ export const vscDarkPlusCss = css`
     z-index: 0;
   }
 
-  /* __CUSTOM__ for js */
+  /**
+   * __CUSTOM__ for js
+   * TODO better approach
+   */
   .token.tag.class-name {
     color: rgb(69, 187, 151);
   }

@@ -34,12 +34,16 @@ const rootCss = css`
   transform: translate(2px, 2px);
   transition: 2s ease-in;
   /* ... */
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 ```
 
 
 <Tabs
-  id="test"
+  id="test-tabs"
   initEnabled={false}
   height={600}
   tabs={[
