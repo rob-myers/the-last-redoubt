@@ -2,31 +2,9 @@
 
 ## In progress
 
-- 🚧 BUG /test crashes mobile
-  - ✅ fix slow SvgNavGraph via direct DOM manipulation
-  - ⛔️ seems to be a mobile issue with prismjs
-    > https://github.com/PrismJS/prism/issues/3339
-  - ✅ highlight MDX code blocks via `prism-react-render`
-  - ✅ remove `code` Tabs and babel-plugin-prismjs
-
-- 🚧 BUG world does not pause when associated terminal not visible
-- Ensure react devtools are not somehow bundled?
-
-
-- Only `terminal` and certain `component`s portalised
-  - ✅ `code` not inside react-reverse-portal
-  - ✅ siteStore.portal -> siteStore.component
-  - ✅ `code` Tabs have entry in siteStore.component
-  - ✅ can have non-portalised `component` Tabs, with entry in siteStore.component
-  - Avoid duplicating loaded components
-
-- ✅ BUG intro-world-2 awakened by enabling other Tabs
-- ✅ Migrate code lookup to @loadable.
-- ✅ Migrate component lookup to @loadable.
-- ✅ Debug @loadable code-splitting
-  - Works well without .babelrc (see below)
-  - Fixed by upgrading gatsby `yarn add gatsby`
-- ✅ Issue with npm module `canvas` (not built)
+- ✅ BUG world does not pause when associated terminal not visible
+- 🚧 BUG prev open tab did not awaken post reset
+- Avoid duplicating loaded components + cleanup
 
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
@@ -43,14 +21,13 @@
   - ✅ `npc config` sets `debug` via `home.DEBUG`
   - ✅ shell var assigns attempt to interpret js value
     - e.g. DEBUG=0 assigns `0` which is falsy
-  - In DEBUG mode, animate a circle on `click`
-    - attach fading, auto-removed decor
-    - this will help with videos
-  - Better maximised Tab centering + body lock?
+  - ❌ In DEBUG mode, animate a circle on `click`
+    - Can already see mouse in video
+  - Fix Tab body lock when initially maximised
   - Render something with graphviz extension
   - Some graphs between early paragraphs
 
-- Fix larger builds
+- ✅ Fix larger builds
   - code/components in lookup should be outside bundle
 
 - CodeSandbox
@@ -137,6 +114,27 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- ✅ BUG /test crashes mobile
+  - ✅ fix slow SvgNavGraph via direct DOM manipulation
+  - ⛔️ seems to be a mobile issue with prismjs
+    > https://github.com/PrismJS/prism/issues/3339
+  - ✅ highlight MDX code blocks via `prism-react-render`
+  - ✅ remove `code` Tabs and babel-plugin-prismjs
+
+- ✅ Only `terminal` and certain `component`s portalised
+  - ✅ `code` not inside react-reverse-portal
+  - ✅ siteStore.portal -> siteStore.component
+  - ✅ `code` Tabs have entry in siteStore.component
+  - ✅ can have non-portalised `component` Tabs, with entry in siteStore.component
+
+- ✅ BUG intro-world-2 awakened by enabling other Tabs
+- ✅ Migrate code lookup to @loadable.
+- ✅ Migrate component lookup to @loadable.
+- ✅ Debug @loadable code-splitting
+  - Works well without .babelrc (see below)
+  - Fixed by upgrading gatsby `yarn add gatsby`
+- ✅ Issue with npm module `canvas` (not built)
 
 - ✅ Better fix for non-maximised Terminal on Mobile
   - ✅ https://developer.chrome.com/docs/devtools/remote-debugging/

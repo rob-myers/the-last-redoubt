@@ -57,8 +57,9 @@ export default function Tabs(props: Props) {
     },
 
     reset() {
-      const portalKeys = props.tabs.flatMap(x => x.map(y => getTabName(y)));
-      useSiteStore.api.removeComponents(...portalKeys);
+      const tabs = useSiteStore.getState().tabs[props.id];
+      const componentKeys = tabs.getTabNodes().map(node => node.getId());
+      useSiteStore.api.removeComponents(...componentKeys);
 
       if (state.enabled) {
         state.resets++;
@@ -80,11 +81,13 @@ export default function Tabs(props: Props) {
            * Standard case
            * > Set `disabled` for each mounted `Portal` within this `Tabs`.
            */
-          const visibleTabKeys = tabs.getVisibleTabNodes().map(x => x.getId());
-          visibleTabKeys.forEach(componentKey => componentKey in lookup &&
+          const componentKeys = tabs.getTabNodes().map(node => node.getId());
+          componentKeys.forEach(componentKey => componentKey in lookup &&
             useSiteStore.api.setTabDisabled(tabs.key, componentKey, disabled)
           );
         } else {
+          // TODO why does previously opened tab fail to load post-reset?
+
           /**
            * Special case
            * > Having previously reset Tabs while disabled, we now enable.
