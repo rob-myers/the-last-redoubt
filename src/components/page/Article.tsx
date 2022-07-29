@@ -8,7 +8,7 @@ import useSiteStore, { FrontMatter } from 'store/site.store';
 import Link from './Link';
 import Sep from './Sep';
 import { iconCss } from './Icons';
-import { pre, vscDarkPlusCss } from '../code/PrismMDX';
+import { pre, vscDarkPlusCss } from './CodeBlock';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;

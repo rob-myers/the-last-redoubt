@@ -1,21 +1,3 @@
 {
-  "plugins": [
-    [
-      "prismjs", {
-        "languages": [
-          "javascript",
-          "html",
-          "jsdoc",
-          "js-extras",
-          "css", "js-templates",
-          "jsx"
-        ],
-        "plugins": [
-          "line-numbers"
-        ],
-        "css": true
-      }
-    ]
-  ],
   "presets": ["babel-preset-gatsby"]
 }

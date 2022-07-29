@@ -4,7 +4,7 @@ import * as portals from "react-reverse-portal";
 
 import { getCode, getComponent } from 'model/tabs/lookup';
 import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
-import { CodeViewer, Terminal } from 'components/dynamic';
+import { Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
@@ -26,17 +26,6 @@ export default function Portals() {
     {items.map((state) => {
       const { key, meta, portal } = state;
       switch (meta.type) {
-        case 'code':
-          // Currently no reason to persist,
-          // yet we include it for uniformity
-          return (
-            <portals.InPortal key={key} node={portal}>
-              <CodeViewer
-                filepath={meta.filepath}
-                code={getCode(meta.filepath)}
-              />
-            </portals.InPortal>
-          );
         case 'component': {
           return (
             <portals.InPortal key={key} node={portal}>

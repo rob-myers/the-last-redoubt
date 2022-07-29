@@ -92,7 +92,6 @@
     "@types/tiny-async-pool": "^2.0.0",
     "@types/webpack": "^5.28.0",
     "@types/webpack-env": "^1.16.4",
-    "babel-plugin-prismjs": "^2.1.0",
     "babel-preset-gatsby": "^2.19.0",
     "concurrently": "^6.0.1",
     "gatsby-plugin-tsconfig-paths": "^1.0.5",

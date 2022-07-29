@@ -7,7 +7,7 @@
   - ⛔️ seems to be a mobile issue with prismjs
     > https://github.com/PrismJS/prism/issues/3339
   - ✅ highlight MDX code blocks via `prism-react-render`
-  - remove babel-plugin-prismjs
+  - ✅ remove `code` Tabs and babel-plugin-prismjs
 
 - 🚧 BUG world does not pause when associated terminal not visible
 - Ensure react devtools are not somehow bundled?
