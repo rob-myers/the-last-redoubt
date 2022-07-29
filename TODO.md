@@ -2,11 +2,23 @@
 
 ## In progress
 
+- 🚧 BUG /test crashes mobile
+  - ✅ fix slow SvgNavGraph via direct DOM manipulation
+  - ⛔️ seems to be a mobile issue with prismjs
+    > https://github.com/PrismJS/prism/issues/3339
+  - ✅ highlight MDX code blocks via `prism-react-render`
+  - remove babel-plugin-prismjs
+
+- 🚧 BUG world does not pause when associated terminal not visible
+- Ensure react devtools are not somehow bundled?
+
+
 - Only `terminal` and certain `component`s portalised
   - ✅ `code` not inside react-reverse-portal
   - ✅ siteStore.portal -> siteStore.component
   - ✅ `code` Tabs have entry in siteStore.component
   - ✅ can have non-portalised `component` Tabs, with entry in siteStore.component
+  - Avoid duplicating loaded components
 
 - ✅ BUG intro-world-2 awakened by enabling other Tabs
 - ✅ Migrate code lookup to @loadable.

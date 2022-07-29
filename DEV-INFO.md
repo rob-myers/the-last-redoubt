@@ -95,6 +95,7 @@ convert Screenshot_20220712-153359.png  -resize 256x256  resize_Screenshot_20220
 Remote debug Android Chrome via USB
 - https://developer.android.com/studio/debug/dev-options
 - https://developer.chrome.com/docs/devtools/remote-debugging/
+- ℹ️ chrome://inspect#devices
 
 ---
 
@@ -121,4 +122,8 @@ ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=
 
 # 250kb
 ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" -b:v 0 -crf 25 output.mp4
+```
+
+```sh
+ffmpeg -i filename -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 output.mp4
 ```

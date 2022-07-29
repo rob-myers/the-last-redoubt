@@ -8,6 +8,7 @@ import useSiteStore, { FrontMatter } from 'store/site.store';
 import Link from './Link';
 import Sep from './Sep';
 import { iconCss } from './Icons';
+import { pre, vscDarkPlusCss } from '../code/PrismMDX';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -23,16 +24,23 @@ export default function Article(props: React.PropsWithChildren<{
   }, []);
 
   const components = React.useMemo(() =>
-    articleComponents(frontmatter.key as any, {
-      dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
-      dateText,
-      tags: frontmatter?.tags || [],
-    }),
+    Object.assign(
+      articleComponents(frontmatter.key as any, {
+        dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
+        dateText,
+        tags: frontmatter?.tags || [],
+      }),
+      { pre },
+    ),
     [],
   );
 
   return <>
-    <article className={cx(props.className, articleCss)}>
+    <article className={cx(
+      props.className,
+      articleCss,
+      vscDarkPlusCss,
+    )}>
       <span className="anchor" id={frontmatter.key} />
       <MDXProvider components={components} >
         {props.children}
