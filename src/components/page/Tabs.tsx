@@ -341,12 +341,12 @@ const expandedCss = css`
   position: fixed;
   z-index: 20;
   top: 80px;
-  left: calc(max(min(40px, 5%), 100% - 1200px));
-  width: calc(min(max(100% - 40px, 95%), 1200px));
+  left: 40px;
+  width: calc(100% - 80px);
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
 
-  @media(max-width: 600px) {
+  @media(max-width: 800px) {
     left: 0;
     top: 80px;
     width: 100%;
