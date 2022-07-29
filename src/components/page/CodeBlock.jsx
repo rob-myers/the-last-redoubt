@@ -83,8 +83,10 @@ export const vscDarkPlusCss = css`
   }
 
   pre[class*="language-"] {
-    padding: 1em;
     padding: 32px;
+    @media (max-width: 600px) {
+      padding: 16px 8px;
+    }
     margin: .5em 0;
     overflow: auto;
     background: #1e1e1e;
