@@ -326,6 +326,12 @@ const articleCss = css`
     margin: 4px 0;
   }
 
+  video {
+    width: 100% !important;
+    background-color: #000;
+    padding-top: 20px;
+  }
+
 `;
 
 const articleComponents = (

@@ -3,9 +3,10 @@
 ## In progress
 
 - ✅ Remove code lookup
-- 🚧 Make first video
+- 🚧 Make first videos
   - Dim (768, 672) for outset 20 height 600 Tabs at window width 864
   - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
+  - Use black background via dark-mode
 - Continue /intro as per ...
 
 - 🚧 Start new page intro.mdx
