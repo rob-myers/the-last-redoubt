@@ -3,29 +3,12 @@
 ## In progress
 
 - ✅ Remove code lookup
+- ✅ NPC can start walk with either foot
 - 🚧 Make first videos
   - Dim (768, 672) for outset 20 height 600 Tabs at window width 864
   - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
   - Use black background via dark-mode
 - Continue /intro as per ...
-
-- 🚧 Start new page intro.mdx
-  - it will replace objective.mdx
-  - ✅ better Tabs props
-  - ✅ can have multiple World tabs `${worldKey}`  
-  - ✅ avoid sessionKeys like `test` -- global over site
-  - ✅ disable Tabs when outside viewport for 1 second
-  - ✅ use a 'code' Tab
-  - ✅ Better way to generate World components
-  - Make some ~~GIFs~~ MP4s initially demoing Game
-  - ✅ Remove codemirror
-  - ✅ Replace codemirror with `prismjs`
-    > https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708
-  - ✅ `npc config` sets `debug` via `home.DEBUG`
-  - ✅ shell var assigns attempt to interpret js value
-    - e.g. DEBUG=0 assigns `0` which is falsy
-  - ❌ In DEBUG mode, animate a circle on `click`
-    - Can already see mouse in video
 
 - CodeSandbox
   - 🚧 with new terminal
@@ -115,6 +98,24 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- ✅ Start new page intro.mdx
+  - it will replace objective.mdx
+  - ✅ better Tabs props
+  - ✅ can have multiple World tabs `${worldKey}`  
+  - ✅ avoid sessionKeys like `test` -- global over site
+  - ✅ disable Tabs when outside viewport for 1 second
+  - ✅ use a 'code' Tab
+  - ✅ Better way to generate World components
+  - Make some ~~GIFs~~ MP4s initially demoing Game
+  - ✅ Remove codemirror
+  - ✅ Replace codemirror with `prismjs`
+    > https://dev.to/fidelve/the-definitive-guide-for-using-prismjs-in-gatsby-4708
+  - ✅ `npc config` sets `debug` via `home.DEBUG`
+  - ✅ shell var assigns attempt to interpret js value
+    - e.g. DEBUG=0 assigns `0` which is falsy
+  - ❌ In DEBUG mode, animate a circle on `click`
+    - Can already see mouse in video
 
 - ✅ Fix larger builds
   - code/components in lookup should be outside bundle

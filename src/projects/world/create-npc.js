@@ -302,7 +302,7 @@ export default function createNpc(
       }
 
       if (anim.spriteSheet === 'walk') {
-        //  Remove pre-existing, else seen strange behaviour on pause
+        //  Remove pre-existing (else strange behaviour on pause)
         this.el.root.getAnimations().forEach(x => x.cancel());
 
         // Animate position and rotation
@@ -312,14 +312,20 @@ export default function createNpc(
 
         // Animate spritesheet
         const spriteMs = this.getSpriteDuration(opts.duration);
-        anim.sprites = this.el.body.animate([
-          { offset: 0, backgroundPosition: '0px' },
-          { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
-        ], {
-          easing: `steps(${animLookup.walk.frameCount})`,
-          duration: spriteMs, // ~ npcWalkAnimDurationMs
-          iterations: Infinity,
-        });
+        const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
+        anim.sprites = this.el.body.animate(firstFootLeads
+          ? [
+            { offset: 0, backgroundPosition: '0px' },
+            { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
+          ] : [// We assume an even number of frames
+            { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
+            { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
+          ], {
+            easing: `steps(${animLookup.walk.frameCount})`,
+            duration: spriteMs, // ~ npcWalkAnimDurationMs
+            iterations: Infinity,
+          },
+        );
 
       } else if (anim.spriteSheet === 'idle') {
         this.clearWayMetas();
