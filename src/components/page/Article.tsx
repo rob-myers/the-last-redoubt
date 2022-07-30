@@ -330,6 +330,7 @@ const articleCss = css`
     width: 100% !important;
     background-color: #000;
     padding-top: 20px;
+    cursor: pointer;
   }
 
 `;
