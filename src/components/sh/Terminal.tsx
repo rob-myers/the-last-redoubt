@@ -32,10 +32,13 @@ export default function Terminal(props: Props) {
   useOnResize(() => state.isTouchDevice = canTouchDevice());
 
   React.useEffect(() => {
-    if (state.session === null && !props.disabled) {
-      state.session = useSession.api.createSession(props.sessionKey, props.env);
-      update();
-      return;
+
+    if (!props.disabled && state.session === null && !state.xtermReady) {
+      update(); // Ensure XTerm unmount in HMR
+      setTimeout(() => {
+        state.session = useSession.api.createSession(props.sessionKey, props.env);
+        update();
+      });
     }
 
     if (props.disabled && state.xtermReady) {
@@ -61,9 +64,14 @@ export default function Terminal(props: Props) {
         p.status = ProcessStatus.Running;
       });
     }
+
   }, [props.disabled]);
 
-  React.useEffect(() => () => useSession.api.removeSession(props.sessionKey), []);
+  React.useEffect(() => () => {
+    useSession.api.removeSession(props.sessionKey);
+    state.session = null;
+    state.xtermReady = false;
+  }, []);
 
   return (
     <div className={rootCss}>
