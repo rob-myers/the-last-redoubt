@@ -3,8 +3,10 @@
 ## In progress
 
 - ✅ Remove code lookup
-- Make first video
-- Avoid dup loaded components
+- 🚧 Make first video
+  - Dim (768, 672) for outset 20 height 600 Tabs at window width 864
+  - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
+- Continue /intro as per ...
 
 - 🚧 Start new page intro.mdx
   - it will replace objective.mdx
@@ -23,9 +25,6 @@
     - e.g. DEBUG=0 assigns `0` which is falsy
   - ❌ In DEBUG mode, animate a circle on `click`
     - Can already see mouse in video
-  - Fix Tab body lock when initially maximised
-  - Render something with graphviz extension
-  - Some graphs between early paragraphs
 
 - CodeSandbox
   - 🚧 with new terminal
@@ -34,6 +33,10 @@
 
 - Can see GitHub Comments on site
 
+- Avoid dup loaded components
+- Fix Tab body lock when initially maximised
+- Render something with graphviz extension
+- Some graphs between early paragraphs
 - Bigger white doors
 - Better door collision detection
   - circle along line seg vs a door line-seg
