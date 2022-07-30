@@ -330,6 +330,9 @@ const articleCss = css`
     width: 100% !important;
     background-color: #000;
     padding-top: 20px;
+    @media (max-width: 600px) {
+      padding-top: 0px;
+    }
     cursor: pointer;
   }
 
