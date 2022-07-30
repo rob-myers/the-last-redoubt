@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 
 import useSiteStore from "store/site.store";
-import { cssName } from 'projects/service/const';
+import { cssName, zIndex } from 'projects/service/const';
 import type { FrontMatterProps } from "./Root";
 import NavItems from './NavItems';
 
@@ -59,7 +59,7 @@ export const barHeight = 40;
 
 const navCss = css`
   position: fixed;
-  z-index: 11;
+  z-index: ${zIndex.nav};
   height: calc(100% + 200px);
   width: ${sidebarWidth}px;
 
@@ -129,7 +129,7 @@ const navCss = css`
 const topBarCss = css`
   position: fixed;
   cursor: pointer;
-  z-index: 7;
+  z-index: ${zIndex.navTopBar};
   left: 0;
   width: calc(100vw + ${sidebarWidth}px);
   height: ${barHeight}px;

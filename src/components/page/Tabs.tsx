@@ -6,12 +6,12 @@ import debounce from 'debounce';
 import { TabMeta } from 'model/tabs/tabs.model';
 import useSiteStore from 'store/site.store';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
-import { cssName } from 'projects/service/const';
+import { cssName, zIndex } from 'projects/service/const';
 import useUpdate from 'projects/hooks/use-update';
 import useStateRef from 'projects/hooks/use-state-ref';
 import { useIntersection } from 'projects/hooks/use-intersection';
 import { Layout } from 'components/dynamic';
-import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
+import { TabsControls, FaderOverlay } from './TabsControls';
 import { createKeyedComponent } from './Tab';
 
 /**
@@ -205,8 +205,8 @@ export default function Tabs(props: Props) {
             update={update}
           />
         )}
-        <TabsOverlay api={state} tabsId={props.id} />
-        <LoadingOverlay colour={state.colour} />
+        <TabsControls api={state} tabsId={props.id} />
+        <FaderOverlay colour={state.colour} />
       </div>
     </figure>
   );
@@ -269,7 +269,7 @@ const rootCss = css`
 
   .modal-backdrop {
     position: fixed;
-    z-index: 19;
+    z-index: ${zIndex.tabsExpandedBackdrop};
     left: 0;
     top: 0;
     width: 100vw;
@@ -350,7 +350,7 @@ const fillInlineSpaceCss = (height: number | number[]) => css`
 const expandedCss = css`
   ${cssName.tabsExpandedMaxWidth}: 2400px;
   position: fixed;
-  z-index: 20;
+  z-index: ${zIndex.tabsExpanded};
   top: 80px;
   left: 40px;
   width: calc(100% - 80px);

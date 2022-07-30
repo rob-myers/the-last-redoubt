@@ -1,6 +1,7 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
+import { zIndex } from 'projects/service/const';
 import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
 import useSessionStore from 'projects/sh/session.store';
@@ -74,7 +75,7 @@ const localStorageKey = 'touch-tty-force-lowercase';
 
 const rootCss = css`
   position: absolute;
-  z-index: 10;
+  z-index: ${zIndex.ttyTouchHelper};
   top: 0;
   right: 0;
 

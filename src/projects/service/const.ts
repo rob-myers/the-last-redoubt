@@ -36,6 +36,18 @@ export const cssName = {
   topRight: 'top-right',
 } as const;
 
+export const zIndex = {
+  nav: 11,
+  navMini: 10,
+  navTopBar: 7,
+  tabsExpandedBackdrop: 19,
+  tabsExpanded: 20,
+  tabsTopRightButtons: 2,
+  tabsCentralButton: 6,
+  tabsFaderOverlay: 4,
+  ttyTouchHelper: 5,
+} as const;
+
 /** Decimal place precision */
 export const precision = 4;
 

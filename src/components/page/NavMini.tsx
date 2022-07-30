@@ -2,7 +2,7 @@ import React from "react";
 import { cx, css } from "@emotion/css";
 import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
-import { cssName } from 'projects/service/const';
+import { cssName, zIndex } from 'projects/service/const';
 import Link from "./Link";
 import { barHeight } from "./Nav";
 import { iconCss } from "./Icons";
@@ -61,7 +61,7 @@ const width = 140;
 
 const rootCss = css`
   position: absolute;
-  z-index: 10;
+  z-index: ${zIndex.navMini};
   right: ${width}px;
   top: -32px;
   @media(max-width: 600px) { top: 0; }

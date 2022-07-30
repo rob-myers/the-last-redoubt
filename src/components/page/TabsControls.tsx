@@ -2,12 +2,13 @@ import React from "react";
 import { css, cx } from '@emotion/css';
 import { iconCss } from './Icons';
 import Link from './Link';
-import { cssName } from "projects/service/const";
+import { cssName, zIndex } from "projects/service/const";
 import type { State } from "./Tabs";
 
-export function TabsOverlay({ api, tabsId }: Props) {
+export function TabsControls({ api, tabsId }: Props) {
   return (
     <div className={controlsCss}>
+
       <div className={cssName.topRight}>
         <div
           className={cx(
@@ -37,11 +38,13 @@ export function TabsOverlay({ api, tabsId }: Props) {
           onClick={api.toggleEnabled}
         />
       </div>
+
       {!api.enabled && (
         <div className={cssName.central} onClick={api.toggleEnabled}>
           interact
         </div>
       )}
+
     </div>
   );
 }
@@ -58,7 +61,7 @@ const controlsCss = css`
     position: absolute;
     right: calc(-1 * var(--tabs-border-width));
     top: -38px;
-    z-index: 2;
+    z-index: ${zIndex.tabsTopRightButtons};
     height: 38px;
 
     background: #444;
@@ -93,7 +96,7 @@ const controlsCss = css`
 
   > .${cssName.central} {
     position: absolute;
-    z-index: 6;
+    z-index: ${zIndex.tabsCentralButton};
     left: calc(50% - (128px / 2));
     top: calc(50% - 20px);
     
@@ -108,12 +111,12 @@ const controlsCss = css`
   }
 `;
 
-export function LoadingOverlay({ colour }: {
+export function FaderOverlay({ colour }: {
   colour: 'black' | 'faded' | 'clear';
 }) {
   return (
     <div
-      className={cx(interactOverlayCss, {
+      className={cx(faderOverlayCss, {
         [cssName.clear]: colour === 'clear',
         [cssName.faded]: colour === 'faded',
       })}
@@ -121,17 +124,17 @@ export function LoadingOverlay({ colour }: {
   );
 }
 
-const interactOverlayCss = css`
-  &:not(.${cssName.faded}) {
-    pointer-events: none;
-  }
-
+const faderOverlayCss = css`
   position: absolute;
-  z-index: 4;
+  z-index: ${zIndex.tabsFaderOverlay};
   width: 100%;
   height: 100%;
   background: #000;
   font-family: sans-serif;
+
+  &:not(.${cssName.faded}) {
+    pointer-events: none;
+  }
 
   opacity: 1;
   transition: opacity 1s ease-in;
