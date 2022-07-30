@@ -24,25 +24,27 @@ import { profileLookup } from "projects/sh/scripts";
 
 By _game_ we mean [video game](https://en.wikipedia.org/wiki/Video_game),
 whereas _AI_ stands for Artificial Intelligence. 
-_Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
+_Game AI_ can be viewed as loose collection of algorithms and data structures for _[NPC](https://en.wikipedia.org/wiki/Non-player_character) control_.
 These all-important Non-Player Characters must move realistically,
 steadily drawing the Player into the fabrication.
 
-Reading Game AI tutorials, one gets the impression that intelligent behaviour simply emerges from the right ingredients.
-Given NPCs with their own desires and stratagems, one can certainly run them in parallel with the Player.
-But the result is almost always a mess.
+Reading Game AI tutorials, one gets the impression intelligent behaviour simply emerges from the right ingredients.
+Given NPCs with their own desires and stratagems, we can certainly run them in parallel with the Player.
+However, the result is almost always a mess.
 The _combinatorial explosion of possibilities_ inevitably gives rise to
 unrealistic and unpredictable behaviour.
 
-Focusing on what the Player _actually experiences_ yields a far more successful approach.
-There's the Player and the _Environment_, the latter controlled by the _Director_.
-A simulated world of NPCs is only needed inasmuch as the Player notices it.
-This is definitely the way to go.
-However, it means we'll need to **create a game** in order to make meaningful Game AI.
+Focusing on what the Player _actually experiences_ is a better idea.
+There's the Player and the _Environment_, controlled by a highly opinionated _Director_.
+They only care about NPC simulation inasmuch as the Player notices.
+This is definitely the way to go,
+but requires us to **create a game** for meaningful Game AI.
 
 > Thankfully, we've done the groundwork already.
 
 <!-- TODO intro some mp4s here -->
+The videos below illustrate the graphical assets, level design, character/camera animation, and the Player's UI.
+
 
 <!-- TODO provide mp4s here (one desktop, one mobile) -->
 
