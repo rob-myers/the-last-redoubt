@@ -26,9 +26,8 @@ export default function Article(props: React.PropsWithChildren<{
   const components = React.useMemo(() =>
     Object.assign(
       articleComponents(frontmatter.key as any, {
-        dateTime: frontmatter?.date || `${(new Date).getFullYear()}-${(new Date).getDate()}-${(new Date).getDay()}`,
-        dateText,
-        tags: frontmatter?.tags || [],
+        dateTime: frontmatter.date,
+        tags: [dateText].concat(frontmatter.tags),
       }),
       { pre },
     ),
@@ -41,8 +40,13 @@ export default function Article(props: React.PropsWithChildren<{
       articleCss,
       vscDarkPlusCss,
     )}>
-      <span className="anchor" id={frontmatter.key} />
-      <MDXProvider components={components} >
+      <span
+        className="anchor"
+        id={frontmatter.key}
+      />
+      <MDXProvider
+        components={components}
+      >
         {props.children}
       </MDXProvider>
     </article>
@@ -122,29 +126,24 @@ const articleCss = css`
   }
 
   blockquote {
-    margin: 32px 0;
-    border-left: 8px solid #ddd;
     padding-left: 30px;
-    font-weight: 300;
+    margin: 0 0 32px 0;
+
+    @media(max-width: 600px) {
+      margin: 0 0 20px 0;
+      padding-left: 20px;
+      font-style: italic;
+    }
+
     p:first-child:not(:last-child) {
       margin-bottom: 0;
     }
     p:nth-child(n + 2) {
       margin-top: 0;
     }
-    
-    @media(max-width: 600px) {
-      margin: 20px 0;
-      padding-left: 20px;
-      font-style: italic;
-    }
 
-  }
-  blockquote + p {
-    margin-top: -12px;
-    @media(max-width: 600px) {
-      margin-top: 0;
-    }
+    border-left: 8px solid #ddd;
+    font-weight: 300;
   }
   
   code {
@@ -175,41 +174,19 @@ const articleCss = css`
     @media(max-width: 1024px) {
       font-size: 2.2rem;
     }
+    margin: 24px 0 16px 0;
     @media(max-width: 600px) {
       margin: 16px 0 16px;
       font-size: 1.7rem;
     }
   }
-  h2 + time {
-    display: block;
-    margin-top: -24px;
-    margin-bottom: 32px;
-    font-size: 0.7rem;
-    line-height: 3;
-    > span {
-      margin-right: 8px;
-      white-space: pre;
-      > span {
-        padding: 6px 8px;
-        margin: 0 0px;
-        border: 1px solid #aaaaaa77;
-        border-radius: 2px;
-        color: #333;
-      }
-    }
-    @media(max-width: 600px) {
-      margin-top: 0;
-      > span {
-        padding: 4px 0px;
-        margin-right: 12px;
-        > span {
-          padding: 6px 8px;
-        }
-      }
-    }
-  }
   h2 + time + div.tags {
-    margin-top: -12px;
+
+    margin-bottom: 32px;
+    @media(max-width: 600px) {
+      margin-bottom: 16px;
+    }
+
     display: flex;
     flex-wrap: wrap;
     font-size: 0.7rem;
@@ -221,12 +198,6 @@ const articleCss = css`
       margin-bottom: 4px;
       border-radius: 3px;
       border: 2px solid rgba(0, 0, 0, 0.1);
-      background: #555;
-      color: #fff;
-    }
-    @media(max-width: 600px) {
-      margin-top: -16px;
-      margin-bottom: 32px;
     }
   }
   h3 {
@@ -254,14 +225,15 @@ const articleCss = css`
   }
 
   p {
-   margin: 40px 0;
-   @media(max-width: 600px) {
-     margin: 16px 0;
-   }
+    margin-top: 0;
+    margin-bottom: 40px;
+    @media(max-width: 600px) {
+      margin-bottom: 16px;
+    }
 
-   code {
-     font-size: 1rem;
-   }
+    code {
+      font-size: 1rem;
+    }
   }
 
   p + blockquote {
@@ -342,7 +314,6 @@ const articleComponents = (
   articleKey: string,
   meta: {
     dateTime: string;
-    dateText: string;
     tags: string[];
   },
 ) => ({
@@ -449,16 +420,9 @@ const articleComponents = (
           <span>{children}</span>
         </Link>
       </h2>
-      <time dateTime={meta.dateTime}>
-        {meta.dateText.split(' ').map(
-          (word, i, { length }) => (
-            <span key={word}>
-              {Array.from(word).map((letter, i) => <span key={i}>{letter}</span>)}
-              {i < length - 1 ? ' ' : ''}
-            </span>
-          )
-        )}
-      </time>
+      <time
+        dateTime={meta.dateTime}
+      />
       <div className="tags" title="tags">
         {meta.tags.map(tag => <span key={tag}>{tag}</span>)}
       </div>
