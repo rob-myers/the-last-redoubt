@@ -4,10 +4,15 @@
 
 - ✅ Remove code lookup
 - ✅ NPC can start walk with either foot
-- 🚧 Make first videos
-  - Dim (768, 672) for outset 20 height 600 Tabs at window width 864
+- ✅ Make first videos
+  - Desktop dim (768, 672) (outset 20) (tabs height 600) (window width 864)
+  - Mobile dim (560, 640) (outset 4)
   - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
   - Use black background via dark-mode
+- Basic Carousel for two videos
+  - Small viewport defaults to mobile video
+
+- Render something with graphviz extension
 - Continue /intro as per ...
 
 - CodeSandbox
@@ -19,7 +24,6 @@
 
 - Avoid dup loaded components
 - Fix Tab body lock when initially maximised
-- Render something with graphviz extension
 - Some graphs between early paragraphs
 - Bigger white doors
 - Better door collision detection
