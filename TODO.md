@@ -9,8 +9,8 @@
   - Mobile dim (560, 640) (outset 4)
   - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
   - Use black background via dark-mode
-- Basic Carousel for two videos
-  - Small viewport defaults to mobile video
+- ✅ Basic Carousel for two videos
+- Small viewport Carousel defaults to mobile video
 
 - Render something with graphviz extension
 - Continue /intro as per ...
