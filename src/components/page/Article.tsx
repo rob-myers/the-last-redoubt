@@ -198,6 +198,7 @@ const articleCss = css`
       margin-bottom: 4px;
       border-radius: 3px;
       border: 2px solid rgba(0, 0, 0, 0.1);
+      background-color: white; /** For dark-mode */
     }
   }
   h3 {
