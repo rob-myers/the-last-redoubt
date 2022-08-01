@@ -11,16 +11,17 @@
   - Use black background via dark-mode
 - ✅ Basic Carousel for two videos
 - ✅ BUG World was incorrectly initiating when reset Tabs
+- Redo mobile video
 - Small viewport Carousel defaults to mobile video
 
-- Render something with graphviz extension
-- Continue /intro as per ...
+- Continue /intro
 
 - CodeSandbox
-  - 🚧 with new terminal
+  - with new terminal
   - terminal + World
 - StackBlitz too
 
+- ✅ Render a graphviz graph
 - Can see GitHub Comments on site
 
 - Avoid dup loaded components

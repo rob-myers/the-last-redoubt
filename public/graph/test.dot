@@ -1,0 +1,149 @@
+// ```sh
+// # Render this graph using `dot`
+// # @osx `brew install graphviz` provides `dot`
+// dot -Tsvg test.dot >test.svg
+// ```
+
+// Preview in VSCode:
+// 1. Get extension "Graphviz (dot) language support for Visual Studio Code"
+// 2. Right-Click a *.dot file and "Open Preview To Side"
+
+digraph DemoGraph {
+
+  // Permits arrows between clusters
+  compound=true
+  // rankdir=LR
+
+  node [
+    shape=plain
+    fontsize=10
+  ]
+  edge [
+    arrowhead=open
+    arrowtail=open
+    fontsize=10
+  ]
+
+//#section clusterA
+
+  node_a_1 [label=<
+    <table border='1' cellborder='0'>
+      <tr><td>
+        <b>Node A1 title</b>
+      </td></tr>
+    <tr><td>
+      <table border='1' cellborder='0'>
+        <tr>
+          <td>Sub</td>
+          <td bgcolor='#dddddd'>Table</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td>
+      Final row
+    </td></tr>
+    </table>
+  >]
+  node_a_2 [label=<
+    <table border='1' cellborder='0'>
+      <tr><td>
+        <b>Node A2 title</b>
+      </td></tr>
+    <tr><td>
+      <table border='1' cellborder='0'>
+        <tr>
+          <td>Sub</td>
+          <td bgcolor='#dddddd'>Table</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td>
+      Final row
+    </td></tr>
+    </table>
+  >]
+
+  subgraph clusterA {
+    label=<
+      <table border='0' cellborder='0'>
+        <tr><td>
+          <b>Cluster A Title</b>
+        </td></tr>
+        <tr><td>
+          Subtitle
+        </td></tr>
+      </table>
+    >
+    href="https://my.gumtree.com/manage-account/"
+    fontcolor=blue
+    fontsize=12
+    node_a_1 -> node_a_2
+  }
+
+//#section clusterB
+
+  node_b_1 [label=<
+    <table border='1' cellborder='0'>
+      <tr><td>
+        <b>Node B1 title</b>
+      </td></tr>
+    <tr><td>
+      <table border='1' cellborder='0'>
+        <tr>
+          <td>Sub</td>
+          <td bgcolor='#dddddd'>Table</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td>
+      Final row
+    </td></tr>
+    </table>
+  >]
+  node_b_2 [label=<
+    <table border='1' cellborder='0'>
+      <tr><td>
+        <b>Node B2 title</b>
+      </td></tr>
+    <tr><td>
+      <table border='1' cellborder='0'>
+        <tr>
+          <td>Sub</td>
+          <td bgcolor='#dddddd'>Table</td>
+        </tr>
+      </table>
+    </td></tr>
+    <tr><td>
+      Final row
+    </td></tr>
+    </table>
+  >]
+
+  subgraph clusterB {
+    label=<
+      <table border='0' cellborder='0'>
+        <tr><td>
+          <b>Cluster B Title</b>
+        </td></tr>
+        <tr><td>
+          Subtitle
+        </td></tr>
+      </table>
+    >
+    href="https://my.gumtree.com/manage-account/"
+    fontcolor=blue
+    fontsize=12
+    node_b_1 -> node_b_2
+  }
+
+//#section edges between different clusters
+
+  node_b_2 -> node_a_1
+
+  node_a_2 -> node_b_1 [
+    ltail=clusterA
+    lhead=clusterB
+    minlen=2
+  ]
+
+}

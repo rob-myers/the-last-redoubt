@@ -3,6 +3,7 @@ node_modules/
 public/*
 !public/debug
 !public/geomorph
+!public/graph
 !public/icon
 !public/npc
 !public/pics
