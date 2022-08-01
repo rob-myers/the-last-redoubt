@@ -10,6 +10,7 @@
   - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
   - Use black background via dark-mode
 - ✅ Basic Carousel for two videos
+- ✅ BUG World was incorrectly initiating when reset Tabs
 - Small viewport Carousel defaults to mobile video
 
 - Render something with graphviz extension

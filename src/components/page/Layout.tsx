@@ -19,24 +19,29 @@ export default function Layout(props: Props) {
 
     output.visitNodes((node) => {
       if (node.getType() === 'tab') {
+        /**
+         * Enable and disable tabs relative to conditions
+         */
         node.setEventListener('visibility', ({ visible }) => {
-          if (!visible) {
-            return;
+          if (model.getMaximizedTabset()) {
+            return; // If some tab maximised don't enable "visible" tabs covered by it
           }
-          /**
-           * - Enable if tab becomes visible and parent Tabs enabled.
-           * - Disable 'component' tabs if they become invisible.
-           * - We don't disable invisible 'terminal' tabs.
-           */
-          window.setTimeout(async () => {
-            const [key, visible, tabMeta] = [node.getId(), node.isVisible(), (node as TabNode).getConfig()];
-            const tabs = useSiteStore.getState().tabs[props.id];
-            if (!useSiteStore.getState().component[key]) {
-              await createKeyedComponent(tabs.key, tabMeta);
+
+          const [key, tabMeta] = [node.getId(), (node as TabNode).getConfig() as TabMeta];
+          const tabs = useSiteStore.getState().tabs[props.id];
+
+          if (!visible) {// tab now hidden
+            if (tabMeta.type === 'component') {// Don't disable hidden terminals
+              useSiteStore.api.setTabDisabled(tabs.key, key, true);
             }
-            const disabled = tabs.disabled || (!visible && tabMeta.type !== 'terminal');
-            useSiteStore.api.setTabDisabled(tabs.key, key, disabled);
-          }, 300); // Delay needed for component registration?
+          } else {// tab now visible
+            window.setTimeout(async () => {
+              if (!useSiteStore.getState().component[key]) {
+                await createKeyedComponent(tabs.key, tabMeta);
+              }
+              useSiteStore.api.setTabDisabled(tabs.key, key, tabs.disabled);
+            }, 300); // Delay needed for component registration?
+          }
         });
       }
     });
@@ -90,7 +95,7 @@ function useRegisterTabs(props: Props, model: Model) {
     if (!tabs[props.id]) {
       tabs[props.id] = {
         key: props.id,
-        def: props.tabs[0].concat(props.tabs[1]),
+        def: props.tabs.flatMap(x => x),
         selectTab(tabId: string) {
           model.doAction(Actions.selectTab(tabId));
         },
@@ -116,7 +121,17 @@ function useRegisterTabs(props: Props, model: Model) {
     }
     useSiteStore.setState({});
 
-    return () => void delete useSiteStore.getState().tabs[props.id];
+    return () => {
+      // Remove non-portal components
+      const { tabs: tabsLookup, component } = useSiteStore.getState();
+      const tabs = tabsLookup[props.id];
+      const nonPortalKeys = tabs.getTabNodes().map(x => x.getId()).filter(
+        key => component[key]?.portal === null
+      );
+      useSiteStore.api.removeComponents(tabs.key, ...nonPortalKeys);
+      // Remove tabs
+      delete tabsLookup[props.id];
+    };
   }, [model]);
 
   useBeforeunload(() => storeModelAsJson(props.id, model));
@@ -181,7 +196,7 @@ function restoreJsonModel(props: Props) {
       // Validate i.e. props.tabs must mention same ids
       const prevTabNodeIds = [] as string[];
       model.visitNodes(node => node.getType() === 'tab' && prevTabNodeIds.push(node.getId()));
-      const nextTabNodeIds = props.tabs[0].concat(props.tabs[1]).map(getTabName)
+      const nextTabNodeIds = props.tabs.flatMap(x => x.map(getTabName));
       if (prevTabNodeIds.length === nextTabNodeIds.length && prevTabNodeIds.every(id => nextTabNodeIds.includes(id))) {
         return model;
       }

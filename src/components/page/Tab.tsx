@@ -25,7 +25,6 @@ function useEnsureComponent(
   { tabsKey, ...meta }: Props,
   component: KeyedComponent | null,
 ) {
-
   React.useEffect(() => {
     if (component) {
       if (JSON.stringify(component.meta) !== JSON.stringify(meta)) {
@@ -33,31 +32,26 @@ function useEnsureComponent(
       }
       if (component.portal === null) {
         component.instances++;
-        // component.setDisabled = setDisabled; // Overwrite...
-        return () => void component.instances--;
+        component.disabled[tabsKey] = true; // ?
       }
-      return;
+    } else {
+      createKeyedComponent(tabsKey, meta).then(
+        createdComponent => {
+          window.setTimeout(() => {
+            // If parent tabs not disabled, wake this component, e.g.
+            // - wake 1st tab if tabs initially enabled
+            // - wake 2nd tab on 1st show
+            // - don't wake 1st tab when initially disabled
+            const parentTabs = useSiteStore.getState().tabs[tabsKey];
+            if (parentTabs?.disabled === false) {
+              setTimeout(() => {
+                useSiteStore.api.setTabDisabled(parentTabs.key, createdComponent.key, false);
+              }, 300);
+            }
+          });
+        }
+      );
     }
-
-    createKeyedComponent(tabsKey, meta).then(
-      createdComponent => {
-        window.setTimeout(() => {
-          // If parent <Tabs/> not disabled, wake this portal up, e.g.
-          // - wake 1st tab if tabs initially enabled
-          // - wake 2nd tab on 1st show
-          // - don't wake 1st tab when initially disabled
-          const parentTabs = useSiteStore.getState().tabs[tabsKey];
-          if (parentTabs && !parentTabs.disabled) {
-            // setTimeout(() => htmlPortalNode.setPortalProps({ disabled: false }), 300);
-            // setTimeout(() => createdComponent.setDisabled(false), 300);
-            setTimeout(() => {
-              useSiteStore.api.setTabDisabled(parentTabs.key, createdComponent.key, false);
-            }, 300);
-          }
-        });
-      }
-    );
-
   }, []);
 }
 
