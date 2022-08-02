@@ -24,9 +24,9 @@ export default function createNpc(
     aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0 },
     spriteSheet: 'idle',
 
-    translate: new Animation,
-    rotate: new Animation,
-    sprites: new Animation,
+    translate: /** @type {Animation} */ ({}),
+    rotate: /** @type {Animation} */ ({}),
+    sprites: /** @type {Animation} */ ({}),
 
     wayMetas: [],
     wayTimeoutId: 0,

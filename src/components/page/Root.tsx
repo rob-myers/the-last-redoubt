@@ -28,7 +28,7 @@ export function wrapPageElement({
       <Helmet>
         <title>The Last Redoubt</title>
         {typeof window !== 'undefined' && (
-          !window.Animation && <script src="/polyfill/web-animations.min.js" />
+          !document.body.animate && <script src="/polyfill/web-animations.min.js" />
         )}
       </Helmet>
 
