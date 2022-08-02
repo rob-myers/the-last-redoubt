@@ -72,6 +72,7 @@ export default function World(props) {
       />
 
       <DebugWorld
+        // canClickArrows
         // localNav
         // outlines
         // roomOutlines

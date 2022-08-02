@@ -26,7 +26,7 @@ export default function DebugWorld(props) {
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
 
-    if (target.className === 'debug-door-arrow') {
+    if (target.classList.contains('debug-door-arrow')) {
       /**
        * Manual light control.
        */
@@ -128,6 +128,9 @@ export default function DebugWorld(props) {
           </svg>
         )}
 
+        {
+          // Arrows and room/door ids
+        }
         {visDoorIds.map(doorId => {
           const { poly, normal, roomIds } = gm.doors[doorId];
           const sign = roomIds[0] === roomId ? 1 : -1;
@@ -139,7 +142,7 @@ export default function DebugWorld(props) {
               key={doorId}
               data-debug-door-id={doorId}
               data-tags="debug door-arrow"
-              className="debug-door-arrow"
+              className={cx("debug-door-arrow", { interactive: !!props.canClickArrows })}
               style={{
                 left: arrowPos.x - debugRadius,
                 top: arrowPos.y - debugRadius,
@@ -212,6 +215,7 @@ export default function DebugWorld(props) {
 /**
  * @typedef Props @type {object}
  * @property {Graph.GmGraph} gmGraph
+ * @property {boolean} [canClickArrows]
  * @property {boolean} [localNav]
  * @property {boolean} [outlines]
  * @property {boolean} [roomOutlines]
@@ -228,14 +232,16 @@ const rootCss = css`
   div.debug {
     position: absolute;
 
-    div.debug-door-arrow, div.debug-label-info {
-      cursor: pointer;
-      position: absolute;
-      border-radius: ${debugRadius}px;
-    }
     div.debug-door-arrow {
       background-image: url('/icon/circle-right.svg');
+      position: absolute;
+      border-radius: ${debugRadius}px;
+      pointer-events: none;
       /* filter: invert(100%); */
+    }
+    div.debug-door-arrow.interactive, div.debug-label-info {
+      cursor: pointer;
+      pointer-events: all;
     }
     div.debug-label-info {
       background-image: url('/icon/info-icon.svg');
