@@ -27,12 +27,12 @@ What's this website about?
 By _game_ we mean [video game](https://en.wikipedia.org/wiki/Video_game),
 whereas _AI_ stands for Artificial Intelligence. 
 _Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
-The all-important Non-Player Characters must behave realistically,
+These all-important Non-Player Characters must behave realistically,
 steadily drawing the Player into the fabrication.
 
-Reading Game AI tutorials, one might think intelligent behaviour _emerges_ from the right ingredients.
+Game AI tutorials give the impression that intelligent behaviour _emerges_ from the right ingredients.
 Given NPCs with their own desires and strategies, we can certainly run them in parallel with the Player.
-However, for anything much beyond a [Koopa Troopa](https://en.wikipedia.org/wiki/Koopa_Troopa) the result is almost always a mess.
+However, for anything beyond a [Koopa Troopa](https://en.wikipedia.org/wiki/Koopa_Troopa) the result is almost always a mess.
 The _combinatorial explosion of possibilities_ inevitably yields
 unrealistic and unpredictable behaviour.
 
@@ -40,27 +40,28 @@ Focusing on what the Player actually experiences is a better idea.
 There's the Player and there's the _environment_, controlled by a highly opinionated _Director_ (an amalgam of people and software).
 The Director and Player interact via the environment.
 The Director controls it and the Player has certain degrees of freedom within it.
-In this approach we must **create a game** to make meaningful Game AI.
+But the Director needs something to direct,
+so we must **create a game** to make meaningful Game AI.
 
 > Thankfully, we've done the groundwork already.
+>
+> Check out the videos below.
 
-The videos below illustrate the graphical assets, level design, character animation, and in-game UI.
+<!-- TODO redo playlist below -->
 
-<Carousel id="first-videos" height={600}>
-  <video controls height="600">
-    <source
-      src="/videos/first-video-desktop.mov.mp4"
-      type="video/mp4"
-    />
-    Apologies, your browser doesn't support embedded videos.
-  </video>
-  <video controls height="600">
-    <source
-      src="/videos/first-video-mobile.mov.mp4"
-      type="video/mp4"
-    />
-    Apologies, your browser doesn't support embedded videos.
-  </video>
+<iframe width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X44xR7KCxSnD2twoKMEIIr-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+<!-- TODO use Carousel to label certain things that occur in videos -->
+
+Let's take a moment to review what we've just seen.
+
+<Carousel id="first-videos" height={400}>
+  <div style="color: white">
+    1
+  </div>
+  <div style="color: white">
+    2
+  </div>
 </Carousel>
 
 <!-- TODO intro Tabs below -->

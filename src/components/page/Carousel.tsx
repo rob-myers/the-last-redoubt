@@ -93,7 +93,8 @@ const rootCss = css`
     scroll-snap-align: start;
     flex-shrink: 0;
     width: 100%;
-    /* margin-right: 50px; */
+    /** Needed otherwise scrolling breaks */
+    margin-right: 1px;
     background: #eee;
     transform-origin: center center;
     transform: scale(1);

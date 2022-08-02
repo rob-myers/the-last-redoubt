@@ -11,8 +11,13 @@
   - Use black background via dark-mode
 - ✅ Basic Carousel for two videos
 - ✅ BUG World was incorrectly initiating when reset Tabs
-- Redo mobile video
-- Small viewport Carousel defaults to mobile video
+
+- Rethink video
+  - ✅ Embed test YouTube playlist instead
+  - Embed actual YouTube playlist instead
+    - Redo mobile video
+  - Carousel has `i / n` overlay on each slide
+  - Carousel showing images from video
 
 - Continue /intro
 
