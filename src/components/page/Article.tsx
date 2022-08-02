@@ -183,13 +183,14 @@ const articleCss = css`
   h2 + time + div.tags {
 
     margin-bottom: 32px;
+    font-size: 0.7rem;
     @media(max-width: 600px) {
       margin-bottom: 16px;
+      font-size: 0.8rem;
     }
 
     display: flex;
     flex-wrap: wrap;
-    font-size: 0.7rem;
     font-family: sans-serif;
     letter-spacing: 2px;
     span {

@@ -25,7 +25,7 @@ export default function Carousel(props: Props) {
 
       <div className="slides" style={{ height: props.height + 20 }}>
         {items.map((item, i) => (
-          <div>
+          <div key={i}>
             <div className="anchor" id={`${props.id}-slide-${i + 1}`} />
             {item}
           </div>
@@ -45,29 +45,20 @@ const rootCss = css`
   width: 100%;
   text-align: center;
   overflow: hidden;
-  background-color: #222;
+  /* background-color: #222; */
 
   > a {
     display: inline-flex;
     width: 1.5rem;
     height: 1.5rem;
-    color: white;
-    background: black;
+    color: black;
+    background: white;
     text-decoration: none;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    margin: 0 0 0.5rem 0;
+    margin: 8px 4px 8px 0;
     position: relative; 
-  }
-  > a:active {
-    top: 1px;
-  }
-  > a:focus {
-    background: #000;
-  }
-  > a:not(:last-child) {
-    margin-right: 4px;
   }
 
   .slides {
@@ -84,14 +75,16 @@ const rootCss = css`
       position: absolute;
       top: -100px;
     }
+
+    padding-bottom: 2px;
   }
   .slides::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   .slides::-webkit-scrollbar-thumb {
-    background: black;
-    border-radius: 10px;
+    background: #777;
+    /* border-radius: 10px; */
   }
   .slides::-webkit-scrollbar-track {
     background: transparent;
@@ -100,7 +93,7 @@ const rootCss = css`
     scroll-snap-align: start;
     flex-shrink: 0;
     width: 100%;
-    margin-right: 50px;
+    /* margin-right: 50px; */
     background: #eee;
     transform-origin: center center;
     transform: scale(1);
