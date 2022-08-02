@@ -9,6 +9,15 @@ import NavItems from './NavItems';
 export default function Nav({ frontmatter }: FrontMatterProps) {
 
   const navOpen = useSiteStore(x => x.navOpen);
+  const onClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (
+      !(e.target instanceof HTMLAnchorElement)
+      && window.matchMedia('(max-width: 1400px)').matches
+    ) {
+      useSiteStore.setState({ navOpen: !navOpen });
+    }
+  };
 
   return (
     <>
@@ -18,11 +27,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
           navCss,
           navOpen ? cssName.navMainOpen : cssName.navMainClosed,
         )}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (e.target instanceof HTMLAnchorElement) return;
-          useSiteStore.setState({ navOpen: !navOpen });
-        }}
+        onClick={onClick}
       >
         <div
           className="article-overlay"
@@ -39,11 +44,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
 
       <div
         className={cx(cssName.topBar,topBarCss)}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (e.target instanceof HTMLAnchorElement) return;
-          useSiteStore.setState({ navOpen: !navOpen });
-        }}
+        onClick={onClick}
       />
 
       <HorizontalFillBar
@@ -77,8 +78,11 @@ const navCss = css`
   &.open {
     transform: translateX(0px);
   }
-  &.closed {
-    transform: translateX(-${sidebarWidth}px);
+  /** Cannot close nav when width > 1400px */
+  @media(max-width: 1400px) {
+    &.closed {
+      transform: translateX(-${sidebarWidth}px);
+    }
   }
 
   > .article-overlay {
@@ -95,6 +99,7 @@ const navCss = css`
       background: rgba(0, 0, 0, .25);
     }
   }
+
   > .handle {
     position: absolute;
     top: -1px;
@@ -149,8 +154,11 @@ function HorizontalFillBar({ navOpen } : { navOpen: boolean }) {
 const fillBarCss = css`
   min-width: ${sidebarWidth}px;
   transition: min-width 500ms ease;
-  &.closed {
-    min-width: 0;
+  /** Cannot close nav when width > 1400px */
+  @media(max-width: 1400px) {
+    &.closed {
+      min-width: 0;
+    }
   }
   @media(max-width: 1280px) {
     display: none;

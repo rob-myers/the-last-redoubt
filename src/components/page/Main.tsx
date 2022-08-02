@@ -14,7 +14,7 @@ export default function Main({ children }: React.PropsWithChildren<{}>) {
 }
 
 export const rootCss = css`
-  max-width: 1280px;
+  max-width: 1024px;
   width: 100%;
 
   padding: 32px 0 32px 40px;
