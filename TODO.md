@@ -2,16 +2,6 @@
 
 ## In progress
 
-- ✅ Remove code lookup
-- ✅ NPC can start walk with either foot
-- ✅ Make first videos
-  - Desktop dim (768, 672) (outset 20) (tabs height 600) (window width 864)
-  - Mobile dim (560, 640) (outset 4)
-  - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
-  - Use black background via dark-mode
-- ✅ Basic Carousel for two videos
-- ✅ BUG World was incorrectly initiating when reset Tabs
-
 - Rethink video
   - ✅ Embed test YouTube playlist instead
   - 🚧 Embed actual YouTube playlist instead
@@ -36,6 +26,7 @@
 - Better door collision detection
   - circle along line seg vs a door line-seg
   - perhaps quadratic in two variables?
+- Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Screen captures
 
@@ -109,6 +100,16 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- ✅ Remove code lookup
+- ✅ NPC can start walk with either foot
+- ✅ Make first videos
+  - Desktop dim (768, 672) (outset 20) (tabs height 600) (window width 864)
+  - Mobile dim (560, 640) (outset 4)
+  - `ffmpeg -i 'first-video-desktop.mov' -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 first-video-desktop.mov.mp4`
+  - Use black background via dark-mode
+- ✅ Basic Carousel for two videos
+- ✅ BUG World was incorrectly initiating when reset Tabs
 
 - ✅ Start new page intro.mdx
   - it will replace objective.mdx
