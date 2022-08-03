@@ -10,6 +10,16 @@ if (!window.ResizeObserver) {
   window.ResizeObserver = ResizeObserver;
 }
 
+if (!document.documentElement.onpointerdown) {
+  import('pepjs');
+}
+
+if (!window.Animation) {
+  // Doesn't actually provide window.Animation
+  // Does provide element.animate()
+  import('web-animations-js');
+}
+
 //#endregion
 
 export { wrapPageElement } from "./src/components/page/Root";
