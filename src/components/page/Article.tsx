@@ -308,12 +308,6 @@ const articleCss = css`
   ul li, ol li {
     margin: 4px 0;
   }
-
-  video {
-    width: 100% !important;
-    cursor: pointer;
-  }
-
 `;
 
 const articleComponents = (
