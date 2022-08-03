@@ -17,7 +17,7 @@ if (!document.documentElement.onpointerdown) {
 if (!window.Animation) {
   // Doesn't actually provide window.Animation
   // Does provide element.animate()
-  import('web-animations-js');
+  import('web-animations-js/web-animations-next.min.js');
 }
 
 //#endregion
