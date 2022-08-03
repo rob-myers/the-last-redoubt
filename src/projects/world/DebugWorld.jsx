@@ -254,6 +254,7 @@ const rootCss = css`
       font-size: 8px;
       line-height: 1;
       border: 1px solid black;
+      pointer-events: none;
     }
     div.debug-room-id-icon {
       color: #4f4;
