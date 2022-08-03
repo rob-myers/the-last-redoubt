@@ -4,10 +4,10 @@
 
 - Rethink video
   - ✅ Embed test YouTube playlist instead
-  - 🚧 Embed actual YouTube playlist instead
-    - Redo mobile video
-  - Carousel has `i / n` overlay on each slide
-  - Carousel showing images from video
+  - ✅ Embed actual YouTube playlist instead
+    - `ffmpeg -i 'intro-desktop.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 intro-desktop.mov.mp4`
+  - 🚧 Carousel has `i / n` overlay on each slide
+  - 🚧 Carousel shows images from video
 
 - Continue /intro
 
