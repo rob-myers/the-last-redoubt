@@ -47,7 +47,8 @@ const rootCss = css`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: #eee;
+  background-color: #222;
+  border-radius: 10px;
 
   > a {
     display: inline-flex;
@@ -79,14 +80,14 @@ const rootCss = css`
     }
 
     /** Separate scrollbar */
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
   }
   .slides::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   .slides::-webkit-scrollbar-thumb {
-    background: #444;
+    background: #777;
   }
   .slides::-webkit-scrollbar-track {
     background: transparent;
