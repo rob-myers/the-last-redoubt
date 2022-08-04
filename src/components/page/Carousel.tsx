@@ -134,7 +134,7 @@ export function ImageCarousel(props: ImageCarouselProps) {
       {props.items.map(({ src, label }) =>
         <div className="slide">
           {label && (
-            <div className="slide-label">
+            <div className="slide-label" style={{ top: props.labelTop }}>
               {label}
             </div>
           )}
@@ -159,27 +159,27 @@ interface ImageCarouselProps {
     label?: string;
   }[];
   imgStyles?: React.CSSProperties;
+  labelTop?: string;
 }
 
 const imageCarouselRootCss = css`
   .slide-container {
-    /* border: 2px solid #667; */
     border-radius: 16px 16px 0 0;
   }
   .slide {
-    height:100%;
-    overflow:hidden;
+    height: 100%;
+    overflow: hidden;
     position: relative;
   }
   .slide-label {
     position: absolute;
-    top: 8%;
+    /* top: 10%; */
     color: white;
     font-size: 28px;
     font-family: Monaco;
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid #aaa;
+    border: 1px solid #888;
     padding: 16px 4px;
     text-transform: lowercase;
   }

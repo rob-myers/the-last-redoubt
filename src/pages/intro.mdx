@@ -51,9 +51,11 @@ __TODO__ mention Starship Geomorphs as source here
 <iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Then our game has a Birdseye viewpoint.
-The Player moves through rooms by opening nearby doors, and navigating the navmesh.
-The Player is _situated_, with limited visual awareness determined by their position.
+The Player moves by navigating the navmesh and opening nearby doors.
+The Player is _situated_, with visual awareness limited by their position.
 They can also peek further afield by panning and zooming.
+Importantly the video shows some kind of terminal.
+Before diving into that, let's summarise with some slides.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -69,21 +71,13 @@ They can also peek further afield by panning and zooming.
     { src: 'open-door-see-more.png', label: 'Open door to see more' },
     { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
-  imgStyles={{ marginTop: '-32px', height: 'calc(100% + 32px)' }}  // Crop
+  imgStyles={{ marginTop: '-24px', height: 'calc(100% + 24px)' }}  // Crop
+  labelTop="10%"
 />
 
 <!-- TODO intro Tabs below -->
 
-Creating video games is _hard_. Many systems must collectively operate as one:
-assets, animation, level design, pathfinding, scripting, controls, UI, dialogue etc.
-Often games unify these systems by following the approach of Films.
-That is, the story and characters (including the Player) sit on the podium,
-with everything else playing a supporting role.
-Even if the 
-
-But to put Game AI on the podium, we need a different role model:
-
-> Web Development.
+But what about the terminal? __TODO__
 
 <Tabs
   id="intro-1"
