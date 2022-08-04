@@ -46,7 +46,9 @@ so we must **create a game** to make meaningful Game AI.
 > Thankfully we've done the groundwork,
 > see the videos below.
 
-<iframe width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+__TODO__ mention Starship Geomorphs as source here
+
+<iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 Then our game has a Birdseye viewpoint.
 The Player moves through rooms by opening nearby doors, and navigating the navmesh.
@@ -64,13 +66,22 @@ They can also peek further afield by panning and zooming.
     { src: 'click-navmesh.png', label: 'Click navmesh to walk' },
     { src: 'enter-door.png', label: 'Entering door changes view'},
     { src: 'can-go-round-corners.png', label: 'Navigate around corners' },
-    { src: 'open-door-see-more.png', label: 'Open door and see more' },
+    { src: 'open-door-see-more.png', label: 'Open door to see more' },
     { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
   imgStyles={{ marginTop: '-32px', height: 'calc(100% + 32px)' }}  // Crop
 />
 
 <!-- TODO intro Tabs below -->
+
+Creating video games is _hard_. Many systems must collectively operate as one,
+e.g. assets, animation, level design, scripting, controls, UI, dialogue etc.
+Films have inspired a popular unification strategy.
+That is, the story and characters (including the Player) sit on the podium,
+with everything else playing a supporting role.
+But to put Game AI on the podium, we've chosen a different role model:
+
+> Web Development.
 
 <Tabs
   id="intro-1"
