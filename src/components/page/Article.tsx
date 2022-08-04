@@ -157,7 +157,7 @@ const articleCss = css`
   div.carousel {
     margin-bottom: 32px;
     @media(max-width: 600px) {
-      margin-bottom: 8px;
+      margin-bottom: 16px;
     }
   }
 
@@ -261,6 +261,12 @@ const articleCss = css`
     }
   }
   
+  p + div.carousel {
+    @media(max-width: 600px) {
+      margin-top: 20px;
+    }
+  }
+
   p + ul {
     margin-top: -32px;
     @media(max-width: 600px) {
