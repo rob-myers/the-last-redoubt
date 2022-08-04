@@ -51,7 +51,7 @@ const carouselRootCss = css`
   justify-content: center;
   background-color: #222;
   /* border-radius: 10px; */
-  line-height: 1;
+  line-height: 1.4;
   padding: 16px 16px 0 16px;
 
   .slides {
@@ -94,13 +94,13 @@ const carouselRootCss = css`
 
   .slides::-webkit-scrollbar {
     width: 10px;
-    height: 10px;
+    height: 20px;
   }
   .slides::-webkit-scrollbar-thumb {
     background: #777;
   }
   .slides::-webkit-scrollbar-track {
-    background: transparent;
+    background: black;
   }
   .slides > div {
     scroll-snap-align: start;
@@ -162,6 +162,10 @@ interface ImageCarouselProps {
 }
 
 const imageCarouselRootCss = css`
+  .slide-container {
+    /* border: 2px solid #667; */
+    border-radius: 16px 16px 0 0;
+  }
   .slide {
     height:100%;
     overflow:hidden;
