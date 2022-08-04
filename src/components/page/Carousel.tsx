@@ -176,11 +176,12 @@ const imageCarouselRootCss = css`
     position: absolute;
     top: 8%;
     color: white;
-    font-size: 32px;
+    font-size: 28px;
     font-family: Monaco;
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
-    padding: 8px 4px;
+    border: 1px solid #aaa;
+    padding: 16px 4px;
     text-transform: lowercase;
   }
 `;

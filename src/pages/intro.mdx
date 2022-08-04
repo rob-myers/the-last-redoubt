@@ -30,7 +30,7 @@ _Game AI_ amounts to a loose collection of algorithms and data structures for co
 These all-important Non-Player Characters must behave realistically,
 steadily drawing the Player into the fabrication.
 
-Reading Game AI tutorials, one gets the impression that intelligent behaviour _emerges_ from the right ingredients.
+Reading Game AI tutorials, one can get the impression that intelligent behaviour will _emerge_ from the right ingredients.
 Given NPCs with their own desires and strategies, we can certainly run them in parallel with the Player.
 But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)), the result is a mess.
 The _combinatorial explosion of possibilities_ inevitably yields
@@ -48,10 +48,10 @@ so we must **create a game** to make meaningful Game AI.
 
 <iframe width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-<!-- TODO use Carousel to label certain things that occur in videos -->
-
-TODO
-- describe images below.
+Then our game has a Birdseye viewpoint.
+The Player moves through rooms by opening nearby doors, and navigating the navmesh.
+The Player is _situated_, with limited visual awareness determined by their position.
+They can also peek further afield by panning and zooming.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -65,7 +65,7 @@ TODO
     { src: 'enter-door.png', label: 'Entering door changes view'},
     { src: 'can-go-round-corners.png', label: 'Navigate around corners' },
     { src: 'open-door-see-more.png', label: 'Open door and see more' },
-    { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to temporarily change view' },
+    { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
   imgStyles={{ marginTop: '-32px', height: 'calc(100% + 32px)' }}  // Crop
 />
