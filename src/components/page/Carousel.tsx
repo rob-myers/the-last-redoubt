@@ -9,39 +9,36 @@ export default function Carousel(props: Props) {
   const items = React.Children.toArray(props.children);
 
   return (
-    <div className={cx("carousel", rootCss)}>
-
-      {/* {items.map((_item, i) => (
-        <Link
-          key={i}
-          href={`#${props.id}-slide-${i + 1}`}
-          // Native navigate for horizontal scroll
-          postPush={() => location.href = `#${props.id}-slide-${i + 1}`}
-        >
-          {i + 1}
-        </Link>
-      ))} */}
-
+    <div className={cx("carousel", carouselRootCss, props.className)}>
       <div className="slides" style={{ width: props.width, height: props.height }}>
         {items.map((item, i) => (
-          <div key={i} style={{ width: props.width }}>
-            <div className="anchor" id={`${props.id}-slide-${i + 1}`} />
-            {item}
+          <div
+            key={i}
+            className="slide-container"
+            style={{ width: props.width }}
+          >
+            {/* <div
+              className="anchor"
+              id={`${props.id}-slide-${i + 1}`}
+            /> */}
+            {
+              item // The slide
+            }
           </div>
         ))}
       </div>
-
     </div>
   );
 }
 
 type Props = React.PropsWithChildren<{
   id: string;
-  width: number;
-  height: number;
+  width: number | string;
+  height: number | string;
+  className?: string;
 }>;
 
-const rootCss = css`
+const carouselRootCss = css`
   text-align: center;
   overflow: hidden;
   width: 100%;
@@ -113,3 +110,60 @@ const rootCss = css`
   }
 `;
 
+export function ImageCarousel(props: ImageCarouselProps) {
+  return (
+    <Carousel
+      id="intro-video-frames"
+      width={props.width}
+      height={props.height}
+      className={imageCarouselRootCss}
+    >
+      {props.items.map(({ src, label }) =>
+        <div className="slide">
+          {label && (
+            <div className="slide-label">
+              {label}
+            </div>
+          )}
+          <img
+            key={src}
+            src={`${props.baseSrc || ''}${src}`}
+            style={props.imgStyles}
+          />
+        </div>
+      )}
+    </Carousel>
+  );
+}
+
+interface ImageCarouselProps {
+  id: string;
+  width: number | string;
+  height: number | string;
+  baseSrc?: string;
+  items: {
+    src: string;
+    label?: string;
+  }[];
+  imgStyles?: React.CSSProperties;
+}
+
+const imageCarouselRootCss = css`
+  .slide {
+    height:100%;
+    overflow:hidden;
+    position: relative;
+  }
+  .slide-label {
+    position: absolute;
+    top: 8%;
+    color: white;
+    line-height: 1;
+    font-size: 32px;
+    font-family: Monaco;
+    font-weight: 300;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 4px;
+    text-transform: lowercase;
+  }
+`;

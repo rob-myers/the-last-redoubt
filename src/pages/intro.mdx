@@ -15,7 +15,7 @@ tags:
 ---
 
 import Tabs from "components/page/Tabs";
-import Carousel from "components/page/Carousel";
+import { ImageCarousel } from "components/page/Carousel";
 import { profileLookup } from "projects/sh/scripts";
 
 ## Introduction
@@ -51,31 +51,25 @@ so we must **create a game** to make meaningful Game AI.
 <!-- TODO use Carousel to label certain things that occur in videos -->
 
 TODO
-- extra image open-nearby-door
-- wrap below into new component ImageCarousel,
+- Carousel has slide index indicator
 - describe images below.
 
-<Carousel id="intro-video-frames" height={550} width={300}>
-  {[
+<ImageCarousel
+  id="intro-video-frames"
+  width={300}
+  height={550}
+  baseSrc="/pics/intro-carousel/"
+  items={[
     { src: 'birdseye.png', label: 'Birdseye Viewpoint' },
+    { src: 'open-nearby-door.png', label: 'Open door via click/touch' },
     { src: 'click-navmesh.png', label: 'Click navmesh to walk' },
-    { src: 'enter-door.png', label: 'Enter door to change view'},
-    { src: 'can-go-round-corners.png', label: 'Navigate round corners' },
-    { src: 'open-door-see-more.png', label: 'Open door & see more' },
-    { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to change view' },
-  ].map(({ src, label }) =>
-    <div style="height:100%; overflow:hidden; position: relative">
-      <div style="position: absolute; top: 8%; color: white; line-height: 1; font-size: 32px; font-family: Monaco; font-weight: 300; background: rgba(0, 0, 0, 0.4); padding: 8px 4px; text-transform: lowercase">
-        {label}
-      </div>
-      <img
-        key={src}
-        src={`/pics/intro-carousel/${src}`}
-        style="height:calc(100% + 32px); margin-top: -32px"
-      />
-    </div>
-  )}
-</Carousel>
+    { src: 'enter-door.png', label: 'Entering door changes view'},
+    { src: 'can-go-round-corners.png', label: 'Navigate around corners' },
+    { src: 'open-door-see-more.png', label: 'Open door and see more' },
+    { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to temporarily change view' },
+  ]}
+  imgStyles={{ marginTop: '-32px', height: 'calc(100% + 32px)' }}  // Crop
+/>
 
 <!-- TODO intro Tabs below -->
 
