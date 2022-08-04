@@ -48,6 +48,7 @@ const carouselRootCss = css`
   background-color: #222;
   border-radius: 10px;
   line-height: 1;
+  padding: 16px 16px 0 16px;
 
   > a {
     display: inline-flex;

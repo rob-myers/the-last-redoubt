@@ -154,6 +154,13 @@ const articleCss = css`
     padding: 0 2px;
   }
 
+  div.carousel {
+    margin-bottom: 32px;
+    @media(max-width: 600px) {
+      margin-bottom: 8px;
+    }
+  }
+
   figcaption {
     text-align: center;
   }
@@ -219,10 +226,10 @@ const articleCss = css`
     margin-top: 0px;
   }
 
-  iframe {
-    margin-bottom: 16px;
-    padding: 32px 0;
+  iframe.youtube {
+    padding: 16px 0;
     background-color: #222;
+    margin-bottom: 24px;
     @media(max-width: 600px) {
       margin-bottom: 8px;
     }
