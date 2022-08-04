@@ -2,12 +2,15 @@
 
 ## In progress
 
+- Can specify horizonal initial tabs
+- ✅ BUG terminal is not persisting over pages
+
 - Rethink Carousel
-  - 🚧 Redo screen grabs via mobile, but without captions
-  - 🚧 Carousel has `i / n` overlay on each slide
-  - 🚧 Carousel can have captions over each slide
+  - ✅ Redo screen grabs via mobile, but without captions
+  - ✅ Carousel has `i / n` overlay on each slide
+  - ✅ Carousel can have captions over each slide
     - Should support crop in Carousel so can avoid manual crop on mobile
-  - 🚧 Add captions in Carousel props
+  - ✅ Add captions in Carousel props
 
 - Continue /intro
 

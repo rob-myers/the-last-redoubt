@@ -65,7 +65,7 @@ export async function createKeyedComponent(
   const componentKey = getTabName(meta);
   let item: KeyedComponent;
 
-  if (isComponentPersisted(componentKey)) {
+  if (meta.type === 'terminal' || isComponentPersisted(componentKey)) {
     const htmlPortalNode = portals.createHtmlPortalNode({
       attributes: { class: 'portal' },
     });
