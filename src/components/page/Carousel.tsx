@@ -21,9 +21,10 @@ export default function Carousel(props: Props) {
               className="anchor"
               id={`${props.id}-slide-${i + 1}`}
             /> */}
-            {
-              item // The slide
-            }
+            {item /** The slide */}
+            <div className="slide-index">
+              {i + 1} <span className="of">/</span> {items.length}
+            </div>
           </div>
         ))}
       </div>
@@ -46,6 +47,7 @@ const carouselRootCss = css`
   justify-content: center;
   background-color: #222;
   border-radius: 10px;
+  line-height: 1;
 
   > a {
     display: inline-flex;
@@ -71,14 +73,30 @@ const carouselRootCss = css`
     -webkit-overflow-scrolling: touch;
     
     position: relative;
-    > div > div.anchor {
-      position: absolute;
-      top: -100px;
-    }
-
     /** Separate scrollbar */
     /* padding-bottom: 10px; */
   }
+  .slide-container {
+    > .anchor {
+      position: absolute;
+      top: -100px;
+    }
+    > .slide-index {
+      position: absolute;
+      color: white;
+      font-size: 16px;
+      bottom: 0;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      background-color: rgba(0, 0, 0, 0.75);
+      border: 1px solid #888;
+      border-radius: 4px;
+      .of {
+        color: #aaa;
+      }
+    }
+  }
+
   .slides::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -158,7 +176,6 @@ const imageCarouselRootCss = css`
     position: absolute;
     top: 8%;
     color: white;
-    line-height: 1;
     font-size: 32px;
     font-family: Monaco;
     font-weight: 300;
