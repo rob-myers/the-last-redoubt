@@ -1,5 +1,6 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
+import { iconCss } from './Icons';
 
 /**
  * https://css-tricks.com/css-only-carousel/
@@ -23,7 +24,10 @@ export default function Carousel(props: Props) {
             /> */}
             {item /** The slide */}
             <div className="slide-index">
-              {i + 1} <span className="of">/</span> {items.length}
+              {i + 1}
+              <span className="of">
+                /
+              </span> {items.length}
             </div>
           </div>
         ))}
@@ -46,23 +50,9 @@ const carouselRootCss = css`
   display: flex;
   justify-content: center;
   background-color: #222;
-  border-radius: 10px;
+  /* border-radius: 10px; */
   line-height: 1;
   padding: 16px 16px 0 16px;
-
-  > a {
-    display: inline-flex;
-    width: 1.5rem;
-    height: 1.5rem;
-    color: black;
-    background: white;
-    text-decoration: none;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    margin: 8px 4px 8px 0;
-    position: relative; 
-  }
 
   .slides {
     display: flex;
@@ -84,14 +74,18 @@ const carouselRootCss = css`
     }
     > .slide-index {
       position: absolute;
-      color: white;
-      font-size: 16px;
-      bottom: 0;
+      right: 0;
       margin-bottom: 8px;
       padding: 8px 12px;
+      display: flex;
+      align-items: center;
+
+      color: white;
+      font-size: 16px;
       background-color: rgba(0, 0, 0, 0.75);
       border: 1px solid #888;
       border-radius: 4px;
+
       .of {
         color: #aaa;
       }
