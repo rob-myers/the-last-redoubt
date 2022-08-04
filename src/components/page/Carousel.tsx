@@ -1,6 +1,5 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
-import Link from './Link';
 
 /**
  * https://css-tricks.com/css-only-carousel/
@@ -12,7 +11,7 @@ export default function Carousel(props: Props) {
   return (
     <div className={cx("carousel", rootCss)}>
 
-      {items.map((_item, i) => (
+      {/* {items.map((_item, i) => (
         <Link
           key={i}
           href={`#${props.id}-slide-${i + 1}`}
@@ -21,11 +20,11 @@ export default function Carousel(props: Props) {
         >
           {i + 1}
         </Link>
-      ))}
+      ))} */}
 
-      <div className="slides" style={{ height: props.height + 20 }}>
+      <div className="slides" style={{ width: props.width, height: props.height }}>
         {items.map((item, i) => (
-          <div key={i}>
+          <div key={i} style={{ width: props.width }}>
             <div className="anchor" id={`${props.id}-slide-${i + 1}`} />
             {item}
           </div>
@@ -38,14 +37,17 @@ export default function Carousel(props: Props) {
 
 type Props = React.PropsWithChildren<{
   id: string;
+  width: number;
   height: number;
 }>;
 
 const rootCss = css`
-  width: 100%;
   text-align: center;
   overflow: hidden;
-  /* background-color: #222; */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: #eee;
 
   > a {
     display: inline-flex;
@@ -76,15 +78,15 @@ const rootCss = css`
       top: -100px;
     }
 
-    padding-bottom: 2px;
+    /** Separate scrollbar */
+    padding-bottom: 10px;
   }
   .slides::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   .slides::-webkit-scrollbar-thumb {
-    background: #777;
-    /* border-radius: 10px; */
+    background: #444;
   }
   .slides::-webkit-scrollbar-track {
     background: transparent;
@@ -92,9 +94,6 @@ const rootCss = css`
   .slides > div {
     scroll-snap-align: start;
     flex-shrink: 0;
-    width: 100%;
-    /** Needed otherwise scrolling breaks */
-    margin-right: 1px;
     background: #eee;
     transform-origin: center center;
     transform: scale(1);
@@ -106,6 +105,10 @@ const rootCss = css`
     align-items: center;
     font-size: 100px;
     background-color: #000;
+  }
+  .slides > div:not(:last-child) {
+    /** Needed, otherwise scrolling breaks */
+    margin-right: 12px;
   }
 `;
 

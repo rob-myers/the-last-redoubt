@@ -44,6 +44,9 @@ body.dark-mode div.top-bar {
 body.dark-mode section header > :not(div) {
   filter: invert(100%);
 }
+body.dark-mode div.carousel {
+  background-color: #000;
+}
 
 a {
   color: #00f;

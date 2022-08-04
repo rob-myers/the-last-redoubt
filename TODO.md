@@ -2,12 +2,12 @@
 
 ## In progress
 
-- Rethink video
-  - ✅ Embed test YouTube playlist instead
-  - ✅ Embed actual YouTube playlist instead
-    - `ffmpeg -i 'intro-desktop.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 intro-desktop.mov.mp4`
+- Rethink Carousel
+  - 🚧 Redo screen grabs via mobile, but without captions
   - 🚧 Carousel has `i / n` overlay on each slide
-  - 🚧 Carousel shows images from video
+  - 🚧 Carousel can have captions over each slide
+    - Should support crop in Carousel so can avoid manual crop on mobile
+  - 🚧 Add captions in Carousel props
 
 - Continue /intro
 
@@ -100,6 +100,12 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- Rethink video
+  - ✅ Embed test YouTube playlist instead
+  - ✅ Embed actual YouTube playlist instead
+    - `ffmpeg -i 'intro-desktop.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 intro-desktop.mov.mp4`
+  - ✅ Decided against making screen grabs on mobile with captions
 
 - ✅ Remove code lookup
 - ✅ NPC can start walk with either foot
