@@ -46,27 +46,27 @@ interface Props {
 const rootCss = css`
   .slide-container {
     border-radius: 16px 16px 0 0;
-    border: 1px solid #bbb;
+    border: 4px solid #777;
     border-bottom-width: 0;
   }
   .slides::-webkit-scrollbar-track {
-    border: 1px solid #bbb;
-    border-width: 0 1px;
+    border: 0 solid #777;
+    border-width: 0 4px;
   }
   .slide {
     height: 100%;
     overflow: hidden;
-    position: relative;
   }
   .slide-label {
     position: absolute;
-    /* top: 10%; */
+    left: 0px;
+    width: 100%;
     color: white;
     font-size: 28px;
     font-family: Monaco;
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
-    border: 1px solid #888;
+    border: 1px solid #444;
     padding: 16px 4px;
     text-transform: lowercase;
   }
