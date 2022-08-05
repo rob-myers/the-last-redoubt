@@ -78,6 +78,7 @@ export default function Layout(props: Props) {
 interface Props extends Pick<TabsProps, 'tabs'> {
   id: string;
   initEnabled: boolean;
+  rootOrientationVertical?: boolean;
   update(): void;
 }
 
@@ -207,7 +208,10 @@ function restoreJsonModel(props: Props) {
     console.error(e);
   }
 
-  return Model.fromJson(computeJsonModel(props.tabs));
+  return Model.fromJson(computeJsonModel(
+    props.tabs,
+    props.rootOrientationVertical,
+  ));
 }
 
 function storeModelAsJson(id: string, model: Model) {

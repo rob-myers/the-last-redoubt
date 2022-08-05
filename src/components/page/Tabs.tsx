@@ -201,6 +201,8 @@ export default function Tabs(props: Props) {
           <Layout
             id={props.id}
             initEnabled={!!props.initEnabled || state.resets > 0}
+            // Horizontal splitter ~ rootOrientationVertical `true`
+            rootOrientationVertical={!!props.initHorizontal}
             tabs={props.tabs}
             update={update}
           />
@@ -219,6 +221,8 @@ export interface Props {
   tabs: TabMeta[][];
   initEnabled?: boolean;
   height: number | number[];
+  /** Does the initial Tabs layout have a horizontal splitter? */
+  initHorizontal?: boolean;
 }
 
 export interface State {

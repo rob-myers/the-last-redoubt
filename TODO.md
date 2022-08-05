@@ -2,7 +2,7 @@
 
 ## In progress
 
-- Can specify horizonal initial tabs
+- ✅ Can specify tabs splitter horizontal or vertical
 - ✅ BUG terminal is not persisting over pages
 
 - Rethink Carousel

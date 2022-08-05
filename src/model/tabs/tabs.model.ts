@@ -15,11 +15,14 @@ export type TabMeta = { weight?: number; } & (
   | { type: 'terminal'; /** Session identifier */ filepath: string; env?: Record<string, any>; }
 );
 
-export function computeJsonModel(tabs: TabMeta[][]): IJsonModel {
+export function computeJsonModel(
+  tabs: TabMeta[][],
+  rootOrientationVertical?: boolean,
+): IJsonModel {
   return {
     global: {
       tabEnableRename: false,
-      rootOrientationVertical: true,
+      rootOrientationVertical,
       tabEnableClose: false,
     },
     layout: {
