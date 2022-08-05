@@ -90,11 +90,11 @@ Before diving into that, let's summarise with some slides.
 
 So, what about the [terminal](https://en.wikipedia.org/wiki/Xterm)?
 We're talking about that black window with mostly green text.
-When prompted by a `$`, we may enter textual commands into it and press _enter_ to run them.
-To _run_ a textual command one must (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
+When prompted by a `$` we may type commands into it and press _enter_ to run them.
+To _run_ a command one must (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
 We use the wonderful [mvdan-sh](https://github.com/mvdan/sh) to parse commands,
 and our own specially written interpreter.
-Collectively, the parser and interpreter convert textual POSIX-like commands into JavaScript.
+Collectively, the parser and interpreter convert POSIX-like commands into JavaScript.
 
 The terminal lies at the heart of our approach to Game AI.
 The Director _directs_ by running commands in a terminal, including scripts and long-running processes. Each terminal runs a script initially, its _profile_.
