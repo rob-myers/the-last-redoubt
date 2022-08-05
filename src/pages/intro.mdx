@@ -55,17 +55,17 @@ Let's start with some videos.
 
 <aside>
 
-  The above videos involve **Geomorph 301** (a.k.a. _Bridge_) from Robert Pearce's [Starship Geomorphs 2.0](http://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html).
+  The videos above involve **Geomorph 301** (a.k.a. _Bridge_) from Robert Pearce's [Starship Geomorphs 2.0](http://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html).
   Actually, we've recreated it using 9 of his [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
 
 </aside>
 
-So our game has a Birdseye viewpoint.
+Our game has a Birdseye viewpoint.
 The Player moves by navigating the navmesh and opening nearby doors.
-Both are achieved via mouse click or screen touch.
-The Player is _situated_, with vision limited by their position.
-They can peek further afield by panning and zooming.
-The videos show some kind of _terminal_.
+These actions are achieved by clicking the mouse or touching the screen.
+The Player is _situated_ i.e. their vision is limited by their current position.
+The camera further restricts what can be seen, although one can peek by panning and zooming.
+The videos also show some kind of _terminal_.
 Before diving into that, let's summarise with some slides.
 
 <ImageCarousel
@@ -88,7 +88,15 @@ Before diving into that, let's summarise with some slides.
 
 <!-- TODO intro Tabs below -->
 
-But what about the terminal? __TODO__
+So, what about the [terminal](https://en.wikipedia.org/wiki/Xterm)?
+We're talking about that black window with mostly green text.
+When [prompted](https://en.wikipedia.org/wiki/Command-line_interface#Command_prompt) by a `$`, we may enter textual commands into it and press _enter_ to run them.
+To _run_ a textual command one must (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
+We use the wonderful [mvdan-sh](https://github.com/mvdan/sh) to parse commands,
+and our own specially written interpreter.
+Collectively, the parser and interpreter convert textual POSIX-like commands into JavaScript.
+
+The terminal lies at the heart of our approach to Game AI. __TODO__
 
 <Tabs
   id="intro-1"
