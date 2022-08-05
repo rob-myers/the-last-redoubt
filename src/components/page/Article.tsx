@@ -211,7 +211,7 @@ const articleCss = css`
     }
   }
   h3 {
-    font-size: 1.7rem;
+    font-size: 1.6rem;
     @media(max-width: 600px) {
       font-size: 1.3rem;
     }
@@ -454,7 +454,7 @@ const articleComponents = (
       <h3>
         <span id={id} className="anchor" />
         <Link href={`#${id}`}>
-          <a>{children}</a>
+          {children}
         </Link>
       </h3>
     );

@@ -11,14 +11,16 @@ export default function ImageCarousel(props: Props) {
       className={rootCss}
     >
       {props.items.map(({ src, label }) =>
-        <div className="slide">
+        <div key={src} className="slide">
           {label && (
-            <div className="slide-label" style={{ top: props.labelTop }}>
+            <div
+              className="slide-label"
+              style={{ top: props.labelTop }}
+            >
               {label}
             </div>
           )}
           <img
-            key={src}
             src={`${props.baseSrc || ''}${src}`}
             style={props.imgStyles}
           />
