@@ -48,7 +48,6 @@ const rootCss = css`
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: #222;
   line-height: 1.4;
   padding: 16px 16px 0 16px;
 
