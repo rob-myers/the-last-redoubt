@@ -86,7 +86,7 @@ const articleCss = css`
   }
 
   aside {
-    margin: 24px 0;
+    margin: 0 0 24px 0;
     padding: 36px 48px;
     font-size: 0.9rem;
     font-weight: 300;
@@ -101,6 +101,7 @@ const articleCss = css`
     }
     
     @media(max-width: 600px) {
+      margin: 0 0 16px 0;
       padding: 8px 20px;
       font-size: 0.9rem;
       border-radius: 12px;
