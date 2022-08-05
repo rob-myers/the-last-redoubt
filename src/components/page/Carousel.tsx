@@ -57,26 +57,23 @@ const rootCss = css`
     
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     
-    position: relative;
-    /** Separate scrollbar */
+    // Separate scrollbar
     /* padding-bottom: 10px; */
   }
   .slide-container {
-    > .anchor {
+    /* > .anchor {
       position: absolute;
       top: -100px;
-    }
+    } */
     > .slide-index {
       position: absolute;
       right: 0;
-      margin-bottom: 8px;
-      padding: 8px 12px;
       display: flex;
       align-items: center;
+      padding: 8px 12px;
 
       color: white;
       font-size: 16px;
@@ -86,6 +83,7 @@ const rootCss = css`
 
       .of {
         color: #aaa;
+        margin: 0 2px;
       }
     }
   }
@@ -115,8 +113,16 @@ const rootCss = css`
     font-size: 100px;
     background-color: #000;
   }
-  .slides > div:not(:last-child) {
-    /** Needed, otherwise scrolling breaks */
+  .slides > div {
+    /**
+     * - Separate slides
+     * - Final slide peek beyond
+     * - May also be important for scroll into view
+     */
     margin-right: 12px;
+  }
+  .slides > div:first-child {
+    /** Initial slide peek before */
+    margin-left: 12px;
   }
 `;
