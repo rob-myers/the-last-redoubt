@@ -168,9 +168,6 @@ const articleCss = css`
 
   figure.tabs {
     margin: calc(32px + 16px) 0 32px 0;
-    @media(max-width: 600px) {
-      margin: 32px 0;
-    }
   }
 
   h1, h2, h3, h4 {

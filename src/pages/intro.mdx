@@ -48,15 +48,17 @@ so we must **create a game** to make meaningful Game AI.
 
 ### Building a World
 
-Thankfully we've already done the groundwork.
+We need a Story and Characters which inhabit a World.
+Concerning the latter, thankfully we've already done the groundwork.
 Let's start with some videos.
 
 <iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <aside>
 
-  The videos above involve **Geomorph 301** (a.k.a. _Bridge_) from Robert Pearce's [Starship Geomorphs 2.0](http://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html).
+  Above we've used **Geomorph 301** (a.k.a. _Bridge_) from Robert Pearce's [Starship Geomorphs 2.0](http://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html).
   Actually, we've recreated it using 9 of his [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
+  These wonderful assets provide a foundation upon which our game is built.
 
 </aside>
 
@@ -88,16 +90,17 @@ Before diving into that, let's summarise with some slides.
 
 <!-- TODO intro Tabs below -->
 
-So, what about the [terminal](https://en.wikipedia.org/wiki/Xterm)?
-We're talking about that black window with mostly green text.
-When prompted by a `$` we may type commands into it and press _enter_ to run them.
-To _run_ a command one must (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
-We use the wonderful [mvdan-sh](https://github.com/mvdan/sh) to parse commands,
-and our own specially written interpreter.
-Collectively, the parser and interpreter convert POSIX-like commands into JavaScript.
+We now turn our attention to the [terminal](https://en.wikipedia.org/wiki/Xterm),
+the black pane with mostly green text.
+When prompted by `$` we may type commands into it and press _enter_ to run them.
+What does this mean?
+Well, to _run_ a command we (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
+We use the excellent [mvdan-sh](https://github.com/mvdan/sh) to parse commands,
+and then apply our own specially written interpreter.
+Collectively, the parser and interpreter convert POSIX-like commands into JavaScript and execute it.
 
 The terminal lies at the heart of our approach to Game AI.
-The Director _directs_ by running commands in a terminal, including scripts and long-running processes. Each terminal runs a script initially, its _profile_.
+The Director _directs_ by running commands in a terminal, including scripts and long-running processes. Each terminal runs a script initially, called its _profile_.
 Here's a live example.
 
 <Tabs
