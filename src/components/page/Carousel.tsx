@@ -1,16 +1,15 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
-import { iconCss } from './Icons';
 
 /**
  * https://css-tricks.com/css-only-carousel/
  */
-export default function Carousel(props: Props) {
+export default function ImageCarousel(props: Props) {
 
   const items = React.Children.toArray(props.children);
 
   return (
-    <div className={cx("carousel", carouselRootCss, props.className)}>
+    <div className={cx("carousel", rootCss, props.className)}>
       <div className="slides" style={{ width: props.width, height: props.height }}>
         {items.map((item, i) => (
           <div
@@ -43,14 +42,13 @@ type Props = React.PropsWithChildren<{
   className?: string;
 }>;
 
-const carouselRootCss = css`
+const rootCss = css`
   text-align: center;
   overflow: hidden;
   width: 100%;
   display: flex;
   justify-content: center;
   background-color: #222;
-  /* border-radius: 10px; */
   line-height: 1.4;
   padding: 16px 16px 0 16px;
 
@@ -120,67 +118,5 @@ const carouselRootCss = css`
   .slides > div:not(:last-child) {
     /** Needed, otherwise scrolling breaks */
     margin-right: 12px;
-  }
-`;
-
-export function ImageCarousel(props: ImageCarouselProps) {
-  return (
-    <Carousel
-      id="intro-video-frames"
-      width={props.width}
-      height={props.height}
-      className={imageCarouselRootCss}
-    >
-      {props.items.map(({ src, label }) =>
-        <div className="slide">
-          {label && (
-            <div className="slide-label" style={{ top: props.labelTop }}>
-              {label}
-            </div>
-          )}
-          <img
-            key={src}
-            src={`${props.baseSrc || ''}${src}`}
-            style={props.imgStyles}
-          />
-        </div>
-      )}
-    </Carousel>
-  );
-}
-
-interface ImageCarouselProps {
-  id: string;
-  width: number | string;
-  height: number | string;
-  baseSrc?: string;
-  items: {
-    src: string;
-    label?: string;
-  }[];
-  imgStyles?: React.CSSProperties;
-  labelTop?: string;
-}
-
-const imageCarouselRootCss = css`
-  .slide-container {
-    border-radius: 16px 16px 0 0;
-  }
-  .slide {
-    height: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-  .slide-label {
-    position: absolute;
-    /* top: 10%; */
-    color: white;
-    font-size: 28px;
-    font-family: Monaco;
-    font-weight: 300;
-    background: rgba(0, 0, 0, 0.4);
-    border: 1px solid #888;
-    padding: 16px 4px;
-    text-transform: lowercase;
   }
 `;
