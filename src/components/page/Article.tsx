@@ -148,11 +148,11 @@ const articleCss = css`
   }
   
   code {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     letter-spacing: 1px;
-    color: #444;
+    color: #0f0;
+    background-color: #000;
     letter-spacing: 2px;
-    padding: 0 2px;
+    padding-left: 2px;
   }
 
   div.carousel {
