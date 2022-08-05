@@ -63,28 +63,26 @@ const rootCss = css`
     // Separate scrollbar
     /* padding-bottom: 10px; */
   }
-  .slide-container {
-    /* > .anchor {
-      position: absolute;
-      top: -100px;
-    } */
-    > .slide-index {
-      position: absolute;
-      right: 0;
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
+  /* .slide-container > .anchor {
+    position: absolute;
+    top: -100px;
+  } */
+  .slide-container > .slide-index {
+    position: absolute;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
 
-      color: white;
-      font-size: 16px;
-      background-color: rgba(0, 0, 0, 0.75);
-      border: 1px solid #888;
-      border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.75);
+    border: 1px solid #888;
+    border-radius: 4px;
 
-      .of {
-        color: #aaa;
-        margin: 0 2px;
-      }
+    .of {
+      color: #aaa;
+      margin: 0 2px;
     }
   }
 

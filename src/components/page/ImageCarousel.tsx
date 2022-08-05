@@ -46,6 +46,12 @@ interface Props {
 const rootCss = css`
   .slide-container {
     border-radius: 16px 16px 0 0;
+    border: 1px solid #bbb;
+    border-bottom-width: 0;
+  }
+  .slides::-webkit-scrollbar-track {
+    border: 1px solid #bbb;
+    border-width: 0 1px;
   }
   .slide {
     height: 100%;
