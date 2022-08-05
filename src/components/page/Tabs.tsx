@@ -260,10 +260,7 @@ export interface State {
 
 
 const rootCss = css`
-  margin: 64px 0;
-  @media(max-width: 600px) {
-    margin: 48px 0 32px 0;
-  }
+  margin: 32px 0 0 0;
 
   position: relative;
   > span.anchor {

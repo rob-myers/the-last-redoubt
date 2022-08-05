@@ -158,12 +158,19 @@ const articleCss = css`
   div.carousel {
     margin-bottom: 32px;
     @media(max-width: 600px) {
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
   }
 
   figcaption {
     text-align: center;
+  }
+
+  figure.tabs {
+    margin: calc(32px + 16px) 0 32px 0;
+    @media(max-width: 600px) {
+      margin: 32px 0;
+    }
   }
 
   h1, h2, h3, h4 {
@@ -248,10 +255,6 @@ const articleCss = css`
     margin-bottom: 40px;
     @media(max-width: 600px) {
       margin-bottom: 16px;
-    }
-
-    code {
-      font-size: 1rem;
     }
   }
 
