@@ -62,12 +62,12 @@ const rootCss = css`
     left: 0px;
     width: 100%;
     color: white;
-    font-size: 28px;
+    font-size: 24px;
     font-family: Monaco;
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid #444;
-    padding: 16px 4px;
+    padding: 16px 0;
     text-transform: lowercase;
   }
 `;
