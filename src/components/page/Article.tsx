@@ -125,9 +125,7 @@ const articleCss = css`
     p:nth-child(n + 2) {
       margin-top: 0;
     }
-
     border-left: 8px solid #ddd;
-    font-weight: 300;
   }
   
   code {
