@@ -771,7 +771,7 @@ export class ttyXtermClass {
       this.setInput(prevInput.slice(0, prevCursor) + input + prevInput.slice(prevCursor));
     } else {
       this.queueCommands([
-        { key: 'line', line: `ℹ️ not ready, ignored paste: ${input}` },
+        { key: 'line', line: `ℹ️  not ready, ignored paste: ${input}` },
       ]);
     }
   }

@@ -37,7 +37,7 @@ body.dark-mode {
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
 }
-body.dark-mode section article > :not(div.tags, figure.tabs, pre, iframe, div.carousel) {
+body.dark-mode section article > :not(code, div.carousel, div.tags, figure.tabs, iframe, pre) {
   filter: invert(100%);
 }
 body.dark-mode div.top-bar {
