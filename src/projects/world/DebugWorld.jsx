@@ -130,6 +130,8 @@ export default function DebugWorld(props) {
 
         {
           // Arrows and room/door ids
+          
+          // TODO issue with transformed geomorphs 🚧
         }
         {visDoorIds.map(doorId => {
           const { poly, normal, roomIds } = gm.doors[doorId];
@@ -232,16 +234,15 @@ const rootCss = css`
   div.debug {
     position: absolute;
 
+    div.debug-door-arrow, div.debug-label-info {
+      position: absolute;
+    }
     div.debug-door-arrow {
       background-image: url('/icon/circle-right.svg');
-      position: absolute;
-      border-radius: ${debugRadius}px;
       pointer-events: none;
-      /* filter: invert(100%); */
-    }
-    div.debug-door-arrow.interactive, div.debug-label-info {
-      cursor: pointer;
-      pointer-events: all;
+      &.interactive {
+        pointer-events: all;
+      }
     }
     div.debug-label-info {
       background-image: url('/icon/info-icon.svg');
