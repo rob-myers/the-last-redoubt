@@ -17,11 +17,10 @@ export default function ImageCarousel(props: Props) {
             className="slide-container"
             style={{ width: props.width }}
           >
-            {/* <div
-              className="anchor"
-              id={`${props.id}-slide-${i + 1}`}
-            /> */}
-            {item /** The slide */}
+            {
+              item // The slide
+            }
+
             <div className="slide-index">
               {i + 1}
               <span className="of">
@@ -53,19 +52,13 @@ const rootCss = css`
 
   .slides {
     display: flex;
+    position: relative;
     
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    
-    // Separate scrollbar
-    /* padding-bottom: 10px; */
   }
-  /* .slide-container > .anchor {
-    position: absolute;
-    top: -100px;
-  } */
   .slide-container > .slide-index {
     position: absolute;
     right: -8px;
@@ -87,7 +80,7 @@ const rootCss = css`
 
   .slides::-webkit-scrollbar {
     width: 10px;
-    height: 20px;
+    height: 10px;
   }
   .slides::-webkit-scrollbar-thumb {
     background: #777;
@@ -102,15 +95,12 @@ const rootCss = css`
     transform-origin: center center;
     transform: scale(1);
     transition: transform 0.5s;
-    position: relative;
     
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 100px;
     background-color: #000;
-  }
-  .slides > div {
     /**
      * - Separate slides
      * - Final slide peek beyond

@@ -47,11 +47,11 @@ const rootCss = css`
   .slide-container {
     border-radius: 16px 16px 0 0;
     border: 4px solid #777;
-    border-bottom-width: 0;
+    border-width: 20px 0 0 0;
   }
   .slides::-webkit-scrollbar-track {
     border: 0 solid #777;
-    border-width: 0 4px;
+    /* border-width: 0 4px; */
   }
   .slide {
     height: 100%;
