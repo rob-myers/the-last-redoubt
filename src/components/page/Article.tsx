@@ -113,11 +113,6 @@ const articleCss = css`
       margin: 0;
       border-left: 8px solid #ccc;
     }
-    figure.tabs {
-      @media(min-width: 600px) {
-        margin: 40px 0;
-      }
-    }
 
     position: relative;
     .anchor {
@@ -194,10 +189,10 @@ const articleCss = css`
   }
   h2 + time + div.tags {
 
-    margin-bottom: 32px;
+    margin-bottom: 20px;
     font-size: 0.7rem;
     @media(max-width: 600px) {
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       font-size: 0.8rem;
     }
 
@@ -215,9 +210,11 @@ const articleCss = css`
     }
   }
   h3 {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
+    margin: 12px 0;
     @media(max-width: 600px) {
       font-size: 1.3rem;
+      margin: 8px 0;
     }
 
     position: relative;
@@ -249,7 +246,7 @@ const articleCss = css`
 
   p {
     margin-top: 0;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
     @media(max-width: 600px) {
       margin-bottom: 16px;
     }
