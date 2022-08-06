@@ -26,7 +26,7 @@ What's this website about?
 
 > Game AI.
 
-We're talking of course about [_video games_](https://en.wikipedia.org/wiki/Video_game)
+We're talking about [_video games_](https://en.wikipedia.org/wiki/Video_game)
 where the acronym _AI_ stands for Artificial Intelligence. 
 Roughly speaking, _Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
 These Non-Player Characters must behave realistically,
@@ -48,13 +48,15 @@ so we must **create a game** to make meaningful Game AI.
 
 ### Building a World
 
-To make a game, we need narratives involving characters inhabiting a world.
+We need narratives and characters and a world they inhabit.
 Our setting is _The Last Redoubt_: a gigantic pyramid containing the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land).
-Let us name two characters i.e. Andros (the protagonist) and Cartesius (his Preceptor);
+We mention two characters: Andros (the protagonist) and Cartesius (his Preceptor);
 these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels).
-Our overall narrative is familiar: the protagonist defends the inhabitants of the pyramid from invading evil forces.
-Then we need to build this pyramid (The Last Redoubt).
-Thankfully we've already done the groundwork, as shown in the videos below.
+Our chosen overarching narrative will be familiar: Andros must defend the inhabitants of the pyramid from invading evil forces.
+But what about the pyramid?
+How should we build The Last Redoubt?
+
+> Thankfully we've already done the groundwork, as shown in the videos below.
 
 <iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -85,7 +87,7 @@ Before diving into that, let's summarise with some slides.
     { src: 'click-navmesh.png', label: 'Click navmesh to walk' },
     { src: 'enter-door.png', label: 'Entering door changes view'},
     { src: 'can-go-round-corners.png', label: 'Navigate around corners' },
-    { src: 'open-door-see-more.png', label: 'Open door to see more' },
+    { src: 'open-door-see-more.png', label: 'Open door & see more' },
     { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
   imgStyles={{ marginTop: '-24px', height: 'calc(100% + 24px)' }}  // Crop
