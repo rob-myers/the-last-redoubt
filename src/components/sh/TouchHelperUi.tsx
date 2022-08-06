@@ -10,11 +10,14 @@ export function TouchHelperUI(props: { session: Session }) {
 
   const state = useStateRef(() => {
     return {
-      onClick(e: React.MouseEvent) {
+      async onClick(e: React.MouseEvent) {
         const target = e.target as HTMLElement;
         const { xterm } = props.session.ttyShell;
         xterm.xterm.scrollToBottom();
-        if (target.classList.contains('lowercase')) {
+        if (target.classList.contains('paste')) {
+          const textToPaste = await navigator.clipboard.readText();
+          xterm.spliceInput(textToPaste);
+        } else if (target.classList.contains('lowercase')) {
           const forced = (xterm.forceLowerCase = !xterm.forceLowerCase);
           const message = `⚠️  input ${forced ? 'forced as' : 'not forced as'} lowercase`;
           useSessionStore.api.writeMsgCleanly(props.session.key, message);
@@ -49,6 +52,9 @@ export function TouchHelperUI(props: { session: Session }) {
       className={rootCss}
       onClick={state.onClick}
     >
+      <div className="icon paste">
+        paste
+      </div>
       <div className={cx(
         'icon lowercase',
         { enabled: props.session.ttyShell.xterm.forceLowerCase },
@@ -87,12 +93,13 @@ const rootCss = css`
   color: white;
 
   display: flex;
+  flex-direction: column;
 
   .icon {
     cursor: pointer;
     width: 100%;
     text-align: center;
-    padding: 16px;
+    padding: 12px;
     transform: scale(1.2);
   }
 

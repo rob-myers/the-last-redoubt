@@ -107,18 +107,6 @@ export class ttyXtermClass {
     return this.prompt + input;
   }
 
-  /**
-   * TODO unused, but possibly useful for mobile.
-   */
-  autoSendCode(input: string) {
-    if (this.promptReady) {
-      this.clearInput();
-      this.input = input
-      this.sendLine();
-    } else {
-      this.onMessage({ key: 'info', msg: `not ready, ignored code: ${input}` });
-    }
-  }
 
   /**
    * Clears the input possibly over many lines.
@@ -769,6 +757,20 @@ export class ttyXtermClass {
   showPendingInput() {
     if (this.promptReady) {
       this.setInput(this.input);
+    }
+  }
+
+  /**
+   * Splice `input` into `this.input`.
+   */
+  spliceInput(input: string) {
+    if (this.promptReady) {
+      const prevInput = this.input;
+      const prevCursor = this.cursor;
+      this.clearInput();
+      this.setInput(prevInput.slice(0, prevCursor) + input + prevInput.slice(prevCursor));
+    } else {
+      this.onMessage({ key: 'info', msg: `not ready, ignored paste: ${input}` });
     }
   }
 
