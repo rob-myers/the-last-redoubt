@@ -26,14 +26,14 @@ What's this website about?
 
 > Game AI.
 
-By _game_ we mean [video game](https://en.wikipedia.org/wiki/Video_game)
-whereas _AI_ stands for Artificial Intelligence. 
-_Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
-These all-important Non-Player Characters must behave realistically,
+Here we're taking about [video games](https://en.wikipedia.org/wiki/Video_game)
+where the acronym _AI_ stands for Artificial Intelligence. 
+Roughly speaking, _Game AI_ amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
+These Non-Player Characters must behave realistically,
 steadily drawing the Player into the fabrication.
 
 Reading Game AI tutorials, one gets the impression that intelligent behaviour just _emerges_ from the right ingredients.
-Given NPCs with their own desires and strategies, we can certainly run them in parallel with the Player.
+Now, given NPCs with their own desires and strategies, we can certainly run them in parallel with the Player.
 But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)), the result is a mess.
 The _combinatorial explosion of possibilities_ inevitably yields
 unrealistic and unpredictable behaviour.
@@ -48,9 +48,13 @@ so we must **create a game** to make meaningful Game AI.
 
 ### Building a World
 
-We need a Story and Characters which inhabit a World.
-Concerning the latter, thankfully we've already done the groundwork.
-Let's start with some videos.
+To make a game, we need narratives involving characters inhabiting a world.
+Our setting is _The Last Redoubt_: a gigantic pyramid containing the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land).
+Let us name two characters i.e. Andros (the protagonist) and Cartesius (his Preceptor);
+these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels).
+Our overall narrative is familiar: the protagonist defends the inhabitants of the pyramid from invading evil forces.
+Then we need to build this pyramid (The Last Redoubt).
+Thankfully we've already done the groundwork, as shown in the videos below.
 
 <iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -90,11 +94,11 @@ Before diving into that, let's summarise with some slides.
 
 <!-- TODO intro Tabs below -->
 
-We now turn our attention to the [terminal](https://en.wikipedia.org/wiki/Xterm),
+We now turn our attention to the [terminal](https://xtermjs.org/),
 the black pane with mostly green text.
 When prompted by `$` we may type commands into it and press _enter_ to run them.
 What does this mean?
-Well, to _run_ a command we (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) [interpret it](https://en.wikipedia.org/wiki/List_of_command-line_interpreters) e.g. invoke functions previously defined by the system or user.
+Well, to _run_ a command we (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) interpret it e.g. invoke functions previously defined by the system or user.
 We use the excellent [mvdan-sh](https://github.com/mvdan/sh) to parse commands,
 and then apply our own specially written interpreter.
 Collectively, the parser and interpreter convert POSIX-like commands into JavaScript and execute it.
@@ -117,6 +121,8 @@ Here's a live example.
   ]}
   initHorizontal={true}
 />
+
+__TODO__ afresh below
 
 Now, video games are a _lot of work_.
 There's the story, characters, graphical style, user interface, assets, animation, level design, scripting and NPC behaviour.
