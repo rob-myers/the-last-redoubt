@@ -87,7 +87,7 @@ const articleCss = css`
 
   aside {
     margin: 0 0 24px 0;
-    padding: 36px 48px;
+    padding: 24px 36px;
     font-size: 0.9rem;
     font-weight: 300;
     border: 0 solid #ddd;
@@ -108,30 +108,18 @@ const articleCss = css`
       border-width: 0 2px 2px 0;
       line-height: 1.9;
     }
-
-    blockquote {
-      margin: 0;
-      border-left: 8px solid #ccc;
-    }
-
-    position: relative;
-    .anchor {
-      position: absolute;
-      top: -48px;
-    }
   }
 
   blockquote {
     padding-left: 30px;
-    margin: 0 0 32px 0;
-
+    margin: 0 0 24px 0;
     @media(max-width: 600px) {
-      margin: 0 0 20px 0;
       padding-left: 20px;
+      margin: 0 0 20px 0;
       font-style: italic;
     }
 
-    p:first-child:not(:last-child) {
+    p:first-child {
       margin-bottom: 0;
     }
     p:nth-child(n + 2) {
@@ -249,13 +237,6 @@ const articleCss = css`
     margin-bottom: 24px;
     @media(max-width: 600px) {
       margin-bottom: 16px;
-    }
-  }
-
-  p + blockquote {
-    margin-top: -20px;
-    @media(max-width: 600px) {
-      margin-top: -4px;
     }
   }
   
