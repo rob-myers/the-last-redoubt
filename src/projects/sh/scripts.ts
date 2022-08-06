@@ -83,7 +83,7 @@ track ${npcKey} &
 goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
-`,
+`.trimEnd(),
 };
 
 //@ts-ignore
