@@ -199,7 +199,7 @@ const articleCss = css`
   }
   h3 {
     font-size: 1.3rem;
-    margin: 12px 0;
+    margin: 12px 0 16px 0;
     @media(max-width: 600px) {
       font-size: 1.3rem;
       margin: 8px 0;
@@ -219,6 +219,7 @@ const articleCss = css`
   iframe.youtube {
     padding: 16px 0;
     background-color: #222;
+    margin-top: 16px;
     margin-bottom: 24px;
     @media(max-width: 600px) {
       margin-bottom: 8px;

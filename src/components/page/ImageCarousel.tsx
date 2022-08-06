@@ -67,7 +67,7 @@ const rootCss = css`
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid #444;
-    padding: 16px 0;
+    padding: 16px;
     text-transform: lowercase;
   }
 `;
