@@ -132,8 +132,6 @@ const articleCss = css`
     font-family: "Ubuntu Mono", "Courier New", monospace;
     color: #0f0;
     background-color: #000;
-    padding-left: 2px;
-    cursor: pointer;
   }
 
   div.carousel {
@@ -239,6 +237,26 @@ const articleCss = css`
     }
   }
   
+  /** Inline code */
+  p code {
+    cursor: pointer;
+    position: relative;
+
+    &.just-copied::after {
+      content: 'Copied';
+      position: absolute;
+      top: -34px;
+      right: 0;
+      padding: 8px;
+      line-height: 1;
+      color: white;
+      background: black;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: sans-serif;
+      animation: fadeInOut 1s linear both;
+    }
+  }
   p + div.carousel {
     @media(max-width: 600px) {
       margin-top: 20px;
@@ -298,6 +316,12 @@ const articleCss = css`
 
   ul li, ol li {
     margin: 4px 0;
+  }
+
+  @keyframes fadeInOut {
+    from { opacity: 0; }
+    50% { opacity: 1; }
+    to   { opacity: 0; }
   }
 `;
 

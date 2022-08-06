@@ -11,6 +11,7 @@ export const cssName = {
   faded: 'faded',
   hull: 'hull',
   iris: 'iris',
+  justCopied: 'just-copied',
   navMain: 'nav-main',
   navMainOpen: 'open',
   navMainClosed: 'closed',
@@ -46,6 +47,10 @@ export const zIndex = {
   tabsCentralButton: 6,
   tabsFaderOverlay: 4,
   ttyTouchHelper: 5,
+} as const;
+
+export const cssTimeMs = {
+  justCopied: 2000,
 } as const;
 
 /** Decimal place precision */

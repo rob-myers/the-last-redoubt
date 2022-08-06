@@ -5,6 +5,7 @@ import type { TabNode } from 'flexlayout-react';
 
 import type { TabMeta } from 'model/tabs/tabs.model';
 import type { KeyedLookup } from 'projects/service/generic';
+import { cssName, cssTimeMs } from 'projects/service/const';
 
 export type State = {
   /** Key of currently viewed article */
@@ -38,9 +39,12 @@ const useStore = create<State>(devtools((set, get) => ({
   tabs: {},
   api: {
     async clickToClipboard(e) {
-      const { textContent } = (e.target as HTMLElement);
+      const el = e.target as HTMLElement;
+      const { textContent } = el;
       if (textContent) {
         await navigator.clipboard.writeText(textContent);
+        el.classList.add(cssName.justCopied);
+        window.setTimeout(() => el.classList.remove(cssName.justCopied), cssTimeMs.justCopied);
       }
     },
 
