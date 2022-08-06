@@ -52,24 +52,24 @@ We're writing about Game AI and we're gonna make a game.
 Then it is natural to apply web technologies, building the game right here, on this site.
 But which web technologies?
 
-> We'll use the _everyday practices_ of a Web Developer.
+> We'll use the **everyday techniques** of a Web Developer.
 >
 > This rules out game-centric technologies like Flash, HTMLCanvas frameworks, CSS 3D transforms, and WebGL.
 
-Importantly, it also makes our approach relevant to a wide audience.
+Importantly, it also makes our approach relevant to a much wider audience.
 
 
 ### Building a world
 
 We need narratives and characters and a world they inhabit.
 Our setting is _The Last Redoubt_: a gigantic pyramid containing the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land).
-We mention two characters: Andros (the protagonist) and Cartesius (his Preceptor);
+We mention two characters: Andros (the protagonist) and Cartesius (his preceptor);
 these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels).
-Our chosen overarching narrative will be familiar: Andros must defend the inhabitants of the pyramid from invading evil forces.
+Our chosen overarching narrative will be familiar: we must defend the pyramid from invading "Evil Forces".
 But what about the pyramid?
 How should we build The Last Redoubt?
 
-> Thankfully we've already done the groundwork, as shown in the videos below.
+> Thankfully we've done the groundwork, as shown in the videos below.
 
 <iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
@@ -81,13 +81,13 @@ How should we build The Last Redoubt?
 
 </aside>
 
-Our game has a Birdseye viewpoint.
-The Player moves by navigating the navmesh and opening nearby doors.
+Our game has a birdseye viewpoint.
+The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their vision is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
-The videos also show some kind of _terminal_.
-Before diving into that, let's summarise with some slides.
+The videos also show some kind of _terminal_,
+but first we summarise with some slides.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -107,8 +107,8 @@ Before diving into that, let's summarise with some slides.
   labelTop="10%"
 />
 
-Let us turn our attention to the [terminal](https://xtermjs.org/),
-the black pane with mostly green text.
+Let's turn to the [terminal](https://xtermjs.org/) i.e.
+that black pane with mostly green text.
 When prompted by `$` we may type commands into it and press _enter_ to run them.
 What does this mean?
 Well, to _run_ a command we (a) [parse it](https://en.wikipedia.org/wiki/Parsing#Computer_languages), and (b) interpret it e.g. invoke functions previously defined by the system or user.
@@ -117,13 +117,16 @@ and then apply our own specially written interpreter.
 Collectively, the parser and interpreter convert POSIX-like commands into JavaScript and execute it.
 
 The terminal lies at the heart of our approach to Game AI.
-The Director _directs_ by running commands in a terminal, including scripts and long-running processes. Each terminal runs a script initially, called its _profile_.
+We view Game AI (NPC behaviour) as interaction between the Director and the Player.
+In our approach, the Director _directs_ by running commands in a terminal.
+These commands may include scripts and long-running processes.
+For example each terminal runs a script initially -- its _profile_.
 Here's a live example.
 
 <Tabs
   id="intro-1"
   initEnabled={false}
-  height={600}
+  height={400}
   tabs={[
     [{ type: 'component', filepath: 'intro-world-1' }],
     [{
@@ -135,11 +138,9 @@ Here's a live example.
   initHorizontal={true}
 />
 
-<!-- FROM HERE -->
+First things first, try entering `/home/PROFILE` into the terminal.
 
-__TODO__ afresh below
-
-Now, video games are a _lot of work_.
+<!-- Now, video games are a _lot of work_.
 There's the story, characters, graphical style, user interface, assets, animation, level design, scripting and NPC behaviour.
 Many systems must be created, collectively forming a cohesive whole.
 One popular approach takes inspiration from films.
@@ -153,13 +154,13 @@ Web Development is a particular kind of Software Development.
 It uses special purpose languages i.e. HTML, CSS and JavaScript.
 We'll develop our game using the _everyday practices_ of a Web Developer.
 This rules out game-centric technologies like Flash, Game Frameworks, CSS 3D transforms, and WebGL.
-But it also makes our approach relevant to a wide audience.
+But it also makes our approach relevant to a wide audience. -->
 
 <!-- TODO not just using Web as a platform; we're using it as a dev env too -->
 
-Concerning the game systems, we've done the groundwork already.
+<!-- Concerning the game systems, we've done the groundwork already.
 This is just as well, else our investigation of Game AI would be on the distant horizon.
-Consider the component below:
+Consider the component below: -->
 
 <Tabs
   id="intro-2"
