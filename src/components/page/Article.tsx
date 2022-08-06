@@ -129,11 +129,11 @@ const articleCss = css`
   }
   
   code {
-    letter-spacing: 1px;
+    font-family: "Ubuntu Mono", "Courier New", monospace;
     color: #0f0;
     background-color: #000;
-    letter-spacing: 2px;
     padding-left: 2px;
+    cursor: pointer;
   }
 
   div.carousel {
@@ -400,6 +400,20 @@ const articleComponents = (
         <span {...title && { id }} className="anchor" />
         {children}
       </aside>
+    );
+  },
+
+  /**
+   * <code />
+   */
+  inlineCode({ node, children, ...props }: any) {
+    return (
+      <code
+        onClick={useSiteStore.api.clickToClipboard}
+        {...props}
+      >
+        {children}
+      </code>
     );
   },
 

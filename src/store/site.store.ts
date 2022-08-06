@@ -22,6 +22,7 @@ export type State = {
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
   api: {
+    clickToClipboard(e: React.MouseEvent): Promise<void>;
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
     removeComponents(tabsKey: string, ...componentKeys: string[]): void;
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
@@ -36,6 +37,12 @@ const useStore = create<State>(devtools((set, get) => ({
   component: {},
   tabs: {},
   api: {
+    async clickToClipboard(e) {
+      const { textContent } = (e.target as HTMLElement);
+      if (textContent) {
+        await navigator.clipboard.writeText(textContent);
+      }
+    },
 
     initiate({ allMdx: { edges } }, fm) {
       if (get().groupedMetas.length) {
