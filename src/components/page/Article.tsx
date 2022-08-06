@@ -127,12 +127,6 @@ const articleCss = css`
     }
     border-left: 8px solid #ddd;
   }
-  
-  code {
-    font-family: "Ubuntu Mono", "Courier New", monospace;
-    color: #0f0;
-    background-color: #000;
-  }
 
   div.carousel {
     margin-bottom: 32px;
@@ -239,22 +233,29 @@ const articleCss = css`
   
   /** Inline code */
   p code {
+    font-family: "Ubuntu Mono", "Courier New", monospace;
+    color: #0f0;
+    background-color: #000;
+    padding: 1px 4px;
+    border: 2px solid #999;
+
     cursor: pointer;
+    /** For "Copied" */
     position: relative;
 
     &.just-copied::after {
       content: 'Copied';
       position: absolute;
-      top: -34px;
+      top: -28px;
       right: 0;
       padding: 8px;
       line-height: 1;
       color: white;
-      background: black;
+      background: #444;
       border-radius: 4px;
       font-size: 12px;
       font-family: sans-serif;
-      animation: fadeInOut 1s linear both;
+      animation: fadeInOut 1s ease-in-out both;
     }
   }
   p + div.carousel {
