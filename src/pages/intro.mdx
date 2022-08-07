@@ -20,25 +20,24 @@ import { profileLookup } from "projects/sh/scripts";
 
 ## Introduction
 
-### Motivation
-
 What's this website about?
 
 > Game AI.
+>
+> The algorithms and data structures used to control [NPCs](https://en.wikipedia.org/wiki/Non-player_character) in video games.
 
-We want to understand and improve Artificial Intelligence (AI) in [_video games_](https://en.wikipedia.org/wiki/Video_game).
-This subject amounts to a loose collection of algorithms and data structures for controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character).
 These Non-Player Characters must behave realistically,
 steadily drawing the Player into the fabrication.
+We want to explain how Game AI works, providing copious examples in the process.
 
-Reading Game AI tutorials, one can get the impression that believable behaviour just _emerges_ from the right ingredients.
+Some believe Game AI should _emerge_ from the right ingredients.
 Given NPCs with their own desires and strategies, we can certainly run them in parallel with the Player.
 But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)), the result is a mess.
-The _combinatorial explosion of possibilities_ inevitably yields
-unrealistic and unpredictable behaviour.
+The _combinatorial explosion of possibilities_ inevitably results in
+unrealistic hard-to-debug behaviour.
 
 Focusing on what the Player actually experiences is a better idea.
-There's the Player and there's the _environment_, controlled by a highly opinionated _Director_ (an amalgam of people and software).
+There's the Player and the _environment_, controlled by a highly opinionated _Director_ (an amalgam of people and software).
 The Director and Player interact via the environment.
 The Director controls it and the Player has certain degrees of freedom within it.
 But the Director needs something to direct,
@@ -47,21 +46,21 @@ so we must **create a game** to make meaningful Game AI.
 
 ### Web development
 
-We're investigating Game AI and also creating a game.
+We're writing about Game AI and also creating a game.
 Then it is natural to use web technologies, building the game right here on this site.
 But which web technologies?
 
-> We'll use **everyday web dev tech** e.g. CSS, React and Node.js.
+> We'll use **everyday web dev tech** e.g. CSS, React, Node.js.
 >
-> We won't use game-centric technology like Flash, HTMLCanvas frameworks, CSS 3D transforms, or WebGL.
-> We'll avoid JavaScript-driven rendering and simulation too.
+> We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
+> and JavaScript-driven rendering/simulation.
 
 Importantly, this makes our approach relevant to a much wider audience.
 
 
 ### Building a world
 
-We need narratives and characters and a world they inhabit.
+We need narratives, characters, and a world they inhabit.
 Our setting is _The Last Redoubt_, a gigantic pyramid protecting the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land) (1912).
 We mention two characters: Andros (the protagonist) and Cartesius (his preceptor);
 these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels) (2011).

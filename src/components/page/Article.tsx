@@ -130,9 +130,9 @@ const articleCss = css`
   }
 
   div.carousel {
-    margin-bottom: 32px;
+    margin: 32px 0 40px 0;
     @media(max-width: 600px) {
-      margin-bottom: 24px;
+      margin: 0 0 24px 0;
     }
   }
 
@@ -141,7 +141,10 @@ const articleCss = css`
   }
 
   figure.tabs {
-    margin: calc(32px + 16px) 0 32px 0;
+    margin: calc(40px + 16px) 0 40px 0;
+    @media(max-width: 600px) {
+      margin: calc(32px + 16px) 0 32px 0;
+    }
   }
 
   h1, h2, h3, h4 {
@@ -208,11 +211,12 @@ const articleCss = css`
   }
 
   iframe.youtube {
-    padding: 16px 0;
-    background-color: #222;
+    padding: 48px 0;
+    background-color: #eee;
     margin-top: 16px;
     margin-bottom: 24px;
     @media(max-width: 600px) {
+      padding: 8px 0;
       margin-bottom: 8px;
     }
   }

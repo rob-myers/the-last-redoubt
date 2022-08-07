@@ -46,6 +46,9 @@ body.dark-mode div.top-bar {
 body.dark-mode section header > :not(div) {
   filter: invert(100%);
 }
+body.dark-mode iframe.youtube {
+  background-color: #222;
+}
 
 a {
   color: #00f;
