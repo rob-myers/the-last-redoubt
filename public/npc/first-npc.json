@@ -30,6 +30,14 @@
       ],
       "deltas": [0, 30, 18, 10, 16, 92, 50, 8, 8, 31, 86],
       "totalDist": 349
+    },
+    "sit": {
+      "animName": "sit",
+      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+      "frameCount": 1,
+      "contacts": [{}],
+      "deltas": [0, 0],
+      "totalDist": 0
     }
   },
   "zoom": 2
