@@ -2,13 +2,8 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 
 import { cssName } from 'projects/service/const';
-import createNpc, { npcOffsetRadians, npcScale } from "./create-npc";
+import createNpc from "./create-npc";
 import useStateRef from "projects/hooks/use-state-ref";
-/**
- * TODO modularise
- */
-import npcJson from '../../../public/npc/first-npc.json'
-const { animLookup } = npcJson;
 
 /** @param {Props} props  */
 export default function NPC({ api, def, disabled }) {
@@ -33,7 +28,13 @@ export default function NPC({ api, def, disabled }) {
   return (
     <div
       ref={npc.npcRef.bind(npc)}
-      className={cx(cssName.npc, npc.key, npc.anim.spriteSheet, npcCss)}
+      className={cx(
+        cssName.npc,
+        npc.key,
+        npc.anim.spriteSheet,
+        rootCss,
+        npc.anim.css,
+      )}
       data-npc-key={npc.key}
     >
       <div
@@ -53,7 +54,7 @@ export default function NPC({ api, def, disabled }) {
  * @property {boolean} [disabled]
  */
 
-const npcCss = css`
+const rootCss = css`
   position: absolute;
   pointer-events: none;
   
@@ -62,24 +63,9 @@ const npcCss = css`
     filter: grayscale(100%) brightness(140%);
     /** Animate turning */
     transition: transform 1s;
-    transform: rotate(calc(${npcOffsetRadians}rad + var(${cssName.npcTargetLookAngle}))) scale(${npcScale});
   }
   
   // TODO replace below with service/npc-json 🚧
-  &.walk .body {
-    width: ${animLookup.walk.aabb.width}px;
-    height: ${animLookup.walk.aabb.height}px;
-    left: ${-animLookup.walk.aabb.width * 0.5}px;
-    top: ${-animLookup.walk.aabb.height * 0.5}px;
-    background: url('/npc/first-npc--walk.png');
-  }
-  &.idle .body {
-    width: ${animLookup.idle.aabb.width}px;
-    height: ${animLookup.idle.aabb.height}px;
-    left: ${-animLookup.idle.aabb.width * 0.5}px;
-    top: ${-animLookup.idle.aabb.height * 0.5}px;
-    background: url('/npc/first-npc--idle.png');
-  }
 
   &.disabled .body {
     animation-play-state: paused;
@@ -111,7 +97,8 @@ const npcCss = css`
 /**
  * @typedef PropsDef @type {object}
  * @property {string} npcKey
- * @property {Geom.VectJson} position: ;
+ * @property {NPC.NpcJsonKey} npcJsonKey
+ * @property {Geom.VectJson} position
  * @property {number} speed
  * @property {number} angle
  */

@@ -1,15 +1,10 @@
 import { Poly, Rect, Vect } from '../geom';
 import { cssName } from '../service/const';
 import { getNumericCssVar } from '../service/dom';
+import { npcJson } from '../service/npc-json';
 
 /**
- * TODO modularise
- */
-import npcJson from '../../../public/npc/first-npc.json'
-const {animLookup} = npcJson;
-
-/**
- * @param {{ npcKey: string; position: Geom.VectJson; speed: number; angle: number; }} def 
+ * @param {import('./NPC').PropsDef} def 
  * @param {{ disabled?: boolean; api: import('./World').State; }} deps
  * @returns {NPC.NPC}
  */
@@ -20,6 +15,7 @@ export default function createNpc(
 
   /** @type {NPC.NPC['anim']} shortcut */
   const anim = {
+    css: npcJson['first-npc'].css,
     path: [],
     aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0 },
     spriteSheet: 'idle',
@@ -34,8 +30,8 @@ export default function createNpc(
 
   return {
     key: def.npcKey,
+    jsonKey: def.npcJsonKey,
     epochMs: Date.now(),
-    // TODO hook up initial angle
     def: { key: def.npcKey, position: def.position, angle: def.angle, paused: !!disabled },
     el: {
       root: /** @type {HTMLDivElement} */ ({}),
@@ -116,6 +112,7 @@ export default function createNpc(
     },
     getAnimDef() {
       const { aux } = anim;
+      const { scale: npcScale } = npcJson[this.jsonKey];
       return {
         translateKeyframes: anim.path.flatMap((p, i) => [
           {
@@ -181,6 +178,7 @@ export default function createNpc(
      * - we use an offset `motionMs` to end mid-frame
      */
     getSpriteDuration(nextMotionMs) {
+      const { parsed: { animLookup }, scale: npcScale } = npcJson[this.jsonKey];
       const npcWalkAnimDurationMs = 1000 * ( 1 / this.getSpeed() ) * (animLookup.walk.totalDist * npcScale);
       const baseSpriteMs = npcWalkAnimDurationMs;
       const motionMs = nextMotionMs - (0.5 * (npcWalkAnimDurationMs / animLookup.walk.frameCount));
@@ -247,6 +245,7 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
         this.setLookTarget(def.angle); // Set CSS variable
+        const { radius: npcRadius } = npcJson[this.jsonKey];
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${npcRadius}px`);
         this.mounted = true;
       }
@@ -311,6 +310,7 @@ export default function createNpc(
         anim.rotate = this.el.body.animate(rotateKeyframes, opts);
 
         // Animate spritesheet
+        const { animLookup } = npcJson[this.jsonKey].parsed;
         const spriteMs = this.getSpriteDuration(opts.duration);
         const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
         anim.sprites = this.el.body.animate(firstFootLeads
@@ -390,40 +390,17 @@ export default function createNpc(
   };
 }
 
-// TODO replace below with service/npc-json 🚧
-
-/**
- * Scale factor we'll apply to sprites.
- * Beware that sprites are probably themselves scaled up relative to original SVG.
- * See zoom factor in json.
- */
-export const npcScale = 0.19;
-
-/** Radius inside SVG */
-const npcRadiusInSvg = 40;
-
-/** Ensure NPC faces along positive x-axis */
-export const npcOffsetRadians = 0;
-
-export const npcRadius = npcRadiusInSvg * npcScale * npcJson.zoom;
-
-export const defaultNpcInteractRadius = npcRadius * 3;
-// export const defaultNpcInteractRadius = npcRadius;
-
-/** Number of world units per second. */
-export const npcSpeed = 70;
-// export const npcSpeed = 10;
-
 /** @type {Record<Graph.NavMetaKey, number>} */
 const navMetaOffsets = {
-  'enter-room': -0.02, // Ensure triggered
-  'exit-room': -0.02, // Ensure triggered
-  'pre-collide': -0.02,
+  'enter-room': -0.02, // To ensure triggered
+  'exit-room': -0.02, // To ensure triggered
+  'pre-collide': -0.02, // To ensure triggered
+
   /**
-   * TODO compute analytically,
-   * so needn't depend on npc here
+   * TODO compute analytically
    */
-  "pre-exit-room": -(npcRadius + 10), // TODO better way
-  "pre-near-door": -(npcRadius + 10), // TODO better way
+  "pre-exit-room": -(npcJson['first-npc'].radius + 10), // TODO better way
+  "pre-near-door": -(npcJson['first-npc'].radius + 10), // TODO better way
+
   "start-seg": 0,
 };

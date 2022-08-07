@@ -2,7 +2,7 @@
 declare namespace NPC {
 
   type NpcJsonKey = (
-    | 'first-npc.json'
+    | 'first-npc'
   );
 
   interface NpcJson {
@@ -30,6 +30,8 @@ declare namespace NPC {
   export interface NPC {
     /** User specified e.g. `andros` */
     key: string;
+    /** Refers to `/public/npc/${jsonKey}.json` */
+    jsonKey: NPC.NpcJsonKey;
     /** Epoch ms when spawned */
     epochMs: number;
     /** Definition of NPC */
@@ -84,6 +86,8 @@ declare namespace NPC {
   }
 
   interface NPCAnimData {
+    /** Stylesheet-related CSS */
+    css: string;
     /** The path we'll walk along */
     path: Geom.Vect[];
     /** Data derived entirely from `anim.path` */

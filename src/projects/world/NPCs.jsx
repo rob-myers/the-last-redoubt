@@ -11,7 +11,7 @@ import { geom } from "../service/geom";
 import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
 import { cssName } from "../service/const";
 import { getNumericCssVar } from "../service/dom";
-import { defaultNpcInteractRadius, npcSpeed } from "./create-npc";
+import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
@@ -428,9 +428,10 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
+            npcJsonKey: 'first-npc', // TODO remove hard-coding
             position: e.point,
             angle: e.angle,
-            speed: npcSpeed,
+            speed: npcJson["first-npc"].speed,
           },
         });
       update();

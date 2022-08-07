@@ -1,11 +1,14 @@
 import { css } from '@emotion/css';
+import { cssName } from './const';
+
 import firstNpcJson from '../../../public/npc/first-npc.json'
 
 /** @type {Record<NPC.NpcJsonKey, NPC.NpcJson>} */
 export const npcJson = {
-  "first-npc.json": (() => {
+  'first-npc': (() => {
 
     const parsed = firstNpcJson;
+    const offsetRadians = 0;
     const radiusInSvg = 40;
     const scale = 0.19;
     const radius = radiusInSvg * scale * parsed.zoom;
@@ -15,12 +18,33 @@ export const npcJson = {
       parsed,
       scale,
       radiusInSvg,
-      offsetRadians: 0,
+      offsetRadians,
       radius,
       defaultInteractRadius: radius * 3,
       speed: 70,
+      css: computeSpritesheetCss(parsed, offsetRadians, scale),
+    };
 
-      css: css`
+    return output;
+  })(),
+
+};
+
+export const defaultNpcInteractRadius = 50;
+
+/**
+ * 
+ * @param {NPC.ParsedNpc} parsed 
+ * @param {number} offsetRadians 
+ * @param {number} scale 
+ */
+function computeSpritesheetCss(parsed, offsetRadians, scale) {
+  return css`
+
+  .body {
+    transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcTargetLookAngle}))) scale(${scale});
+  }
+  
 ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
   &.${animName} .body {
     width: ${animMeta.aabb.width}px;
@@ -29,11 +53,7 @@ ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
     top: ${-animMeta.aabb.height * 0.5}px;
     background: url('/npc/first-npc--${animName}.png'); 
   }
-`).join('\n\n')}`,
+`).join('\n\n')}
 
-    };
-
-    return output;
-  })(),
-
-};
+`;
+}

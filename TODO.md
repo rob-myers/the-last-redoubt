@@ -2,7 +2,9 @@
 
 ## In progress
 
-- Clean and modularise NPC JSON imports
+- ✅ Clean and modularise NPC JSON imports
+  - ✅ create service/npc-json
+  - ✅ migrate previous approach
 - Create 1 frame sit animation
 - Can stand <--> sit
 
