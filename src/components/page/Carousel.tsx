@@ -16,6 +16,7 @@ export default function Carousel(props: Props) {
         style={{
           width: `calc(${parseCssDim(props.width)} + ${parseCssDim(props.peekWidth)})`,
           height: props.height,
+          scrollPaddingLeft: `calc(0.5 * ${parseCssDim(props.peekWidth)})`,
         }}
       >
         {items.map((item, i) => (
@@ -68,6 +69,8 @@ const rootCss = css`
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+
+    scroll-padding-left: 30px;
   }
   .slide-container > .slide-index {
     position: absolute;
