@@ -65,6 +65,7 @@ const npcCss = css`
     transform: rotate(calc(${npcOffsetRadians}rad + var(${cssName.npcTargetLookAngle}))) scale(${npcScale});
   }
   
+  // TODO replace below with service/npc-json 🚧
   &.walk .body {
     width: ${animLookup.walk.aabb.width}px;
     height: ${animLookup.walk.aabb.height}px;
@@ -72,7 +73,6 @@ const npcCss = css`
     top: ${-animLookup.walk.aabb.height * 0.5}px;
     background: url('/npc/first-npc--walk.png');
   }
-
   &.idle .body {
     width: ${animLookup.idle.aabb.width}px;
     height: ${animLookup.idle.aabb.height}px;

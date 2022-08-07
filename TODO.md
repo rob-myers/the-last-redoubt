@@ -2,9 +2,9 @@
 
 ## In progress
 
-- Clean and modularise NPC JSON import
-- Add basic sit pose
-  - Can stand <--> sit
+- Clean and modularise NPC JSON imports
+- Create 1 frame sit animation
+- Can stand <--> sit
 
 - Continue /intro
 

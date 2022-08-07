@@ -6,7 +6,24 @@ declare namespace NPC {
   );
 
   interface NpcJson {
-    // TODO
+    parsed: NPC.ParsedNpc;
+    /**
+     * Scale factor we'll apply to sprites.
+     * Beware that sprites are probably themselves scaled up relative to original SVG.
+     * See zoom factor in json.
+     */
+    scale: number;
+    /** Radius inside SVG */
+    radiusInSvg: number;
+    /** Ensure NPC faces along positive x-axis */
+    offsetRadians: number;
+    radius: number;
+    defaultInteractRadius: number;
+    speed: number;
+    /**
+     * @emotion/css
+     */
+    css: string;
   }
 
   /** API for a single NPC */
@@ -255,7 +272,7 @@ declare namespace NPC {
 
   interface NpcAnimMeta {
     animName: string;
-    aabb: Geom.Rect;
+    aabb: Geom.RectJson;
     frameCount: number;
     /** Aligned to frames i.e. positions of feet contacts (if any) */
     contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];

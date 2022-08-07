@@ -2,7 +2,7 @@ import cheerio, { CheerioAPI, Element } from 'cheerio';
 import { Image, createCanvas, Canvas } from 'canvas';
 import path from 'path';
 
-import { Vect } from '../geom';
+import { Rect, Vect } from '../geom';
 import { extractGeom, extractGeomsAt, hasTitle, matchesTitle } from './cheerio';
 import { saveCanvasAsFile } from './file';
 import { warn } from './log';
@@ -45,7 +45,7 @@ async function drawFrame(anim, frameId, canvas, zoom) {
       xmlns:bx="https://boxy-svg.com"
       viewBox="${
         // We zoom the SVG here
-        anim.aabb.clone().scale(1/zoom).toString()
+        Rect.fromJson(anim.aabb).clone().scale(1/zoom).toString()
       }"
       width="${anim.aabb.width}"
       height="${anim.aabb.height}"

@@ -390,6 +390,8 @@ export default function createNpc(
   };
 }
 
+// TODO replace below with service/npc-json 🚧
+
 /**
  * Scale factor we'll apply to sprites.
  * Beware that sprites are probably themselves scaled up relative to original SVG.
@@ -417,6 +419,10 @@ const navMetaOffsets = {
   'enter-room': -0.02, // Ensure triggered
   'exit-room': -0.02, // Ensure triggered
   'pre-collide': -0.02,
+  /**
+   * TODO compute analytically,
+   * so needn't depend on npc here
+   */
   "pre-exit-room": -(npcRadius + 10), // TODO better way
   "pre-near-door": -(npcRadius + 10), // TODO better way
   "start-seg": 0,
