@@ -51,7 +51,7 @@ We're investigating Game AI and also creating a game.
 Then it is natural to use web technologies, building the game right here on this site.
 But which web technologies?
 
-> We'll use **everyday web developer techniques**.
+> We'll use **everyday web dev techniques**.
 >
 > This excludes game-centric technology like Flash, HTMLCanvas frameworks, CSS 3D transforms, and WebGL.
 > It also excludes JavaScript-driven rendering and simulation.
@@ -86,8 +86,7 @@ The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navig
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their vision is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
-The videos also show some kind of _terminal_,
-but first we summarise with some slides.
+The videos also show some kind of _terminal_, but first we summarise the preceding sentences.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -119,22 +118,23 @@ Collectively, the parser and interpreter convert POSIX-like commands into JavaSc
 
 The terminal lies at the heart of our approach to Game AI.
 We view Game AI (NPC behaviour) as interaction between the Director and the Player.
-In our approach, the Director _directs_ by running commands in a terminal.
+In our system, the Director _directs_ by running commands in a terminal.
 These commands may include scripts and long-running processes.
-For example each terminal runs a script initially -- its _profile_.
-Here's a live example.
+For example, each terminal runs a script initially called its _profile_.
 
 <Tabs
   id="intro-1"
   initEnabled={false}
   height={500}
   tabs={[
-    [{ type: 'component', filepath: 'intro-world-1' }],
-    [{
-        type: 'terminal',
-        filepath: 'intro-tty-1',
-        env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
-    }],
+    [
+      {
+          type: 'terminal',
+          filepath: 'intro-tty-1',
+          env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
+      },
+      { type: 'component', filepath: 'intro-world-1' },
+    ],
   ]}
   initHorizontal={true}
 />

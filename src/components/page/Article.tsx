@@ -238,10 +238,8 @@ const articleCss = css`
     color: #0f0;
     background-color: #000;
     padding: 1px 4px;
-    border: 2px solid #999;
 
     cursor: pointer;
-    /** For "Copied" */
     position: relative;
 
     &.just-copied::after {
@@ -437,6 +435,7 @@ const articleComponents = (
     return (
       <code
         onClick={useSiteStore.api.clickToClipboard}
+        title="click to copy text"
         {...props}
       >
         {children}
