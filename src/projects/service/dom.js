@@ -227,3 +227,12 @@ export function canTouchDevice() {
 export function getNumericCssVar(el, varName) {
 	return parseFloat(assertNonNull(el.style.getPropertyValue(varName)));
 }
+
+/**
+ * @param {string | number} [value] 
+ */
+export function parseCssDim(value) {
+	return typeof value === 'number' || value === undefined
+		? `${value??0}px`
+		: value;
+}

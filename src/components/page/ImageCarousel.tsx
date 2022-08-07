@@ -9,6 +9,7 @@ export default function ImageCarousel(props: Props) {
       width={props.width}
       height={props.height}
       className={rootCss}
+      peekWidth={props.peekWidth}
     >
       {props.items.map(({ src, label }) =>
         <div key={src} className="slide">
@@ -34,6 +35,7 @@ interface Props {
   id: string;
   width: number | string;
   height: number | string;
+  peekWidth?: number | string;
   baseSrc?: string;
   items: {
     src: string;
@@ -47,6 +49,7 @@ const rootCss = css`
   .slide-container {
     border-radius: 16px 16px 0 0;
     border-width: 8px 0 0 0;
+    border: 1px solid #555;
   }
   .slides::-webkit-scrollbar-track {
     border: 0 solid #777;
@@ -54,6 +57,7 @@ const rootCss = css`
   .slide {
     height: 100%;
     overflow: hidden;
+    /* border: 1px solid #555; */
   }
   .slide-label {
     position: absolute;

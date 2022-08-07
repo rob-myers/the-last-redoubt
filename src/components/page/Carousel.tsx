@@ -1,16 +1,23 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
+import { parseCssDim } from 'projects/service/dom';
 
 /**
  * https://css-tricks.com/css-only-carousel/
  */
-export default function ImageCarousel(props: Props) {
+export default function Carousel(props: Props) {
 
   const items = React.Children.toArray(props.children);
 
   return (
     <div className={cx("carousel", rootCss, props.className)}>
-      <div className="slides" style={{ width: props.width, height: props.height }}>
+      <div
+        className="slides"
+        style={{
+          width: `calc(${parseCssDim(props.width)} + ${parseCssDim(props.peekWidth)})`,
+          height: props.height,
+        }}
+      >
         {items.map((item, i) => (
           <div
             key={i}
@@ -25,7 +32,8 @@ export default function ImageCarousel(props: Props) {
               {i + 1}
               <span className="of">
                 /
-              </span> {items.length}
+              </span>
+              {items.length}
             </div>
           </div>
         ))}
@@ -38,6 +46,8 @@ type Props = React.PropsWithChildren<{
   id: string;
   width: number | string;
   height: number | string;
+  /** To reveal the next slide */
+  peekWidth?: number | string;
   className?: string;
 }>;
 
@@ -61,7 +71,7 @@ const rootCss = css`
   }
   .slide-container > .slide-index {
     position: absolute;
-    right: -8px;
+    right: 0;
     display: flex;
     align-items: center;
     padding: 8px 12px;
@@ -69,8 +79,9 @@ const rootCss = css`
     color: white;
     font-size: 16px;
     background-color: rgba(0, 0, 0, 0.75);
-    border: 1px solid #888;
-    border-radius: 4px;
+    border: 1px solid #777;
+    border-radius: 4px 0 0 4px;
+    border-right-width: 0;
 
     .of {
       color: #aaa;
@@ -102,14 +113,17 @@ const rootCss = css`
     font-size: 100px;
     background-color: #000;
     /**
-     * - Separate slides
-     * - Final slide peek beyond
-     * - May also be important for scroll into view
+     * - Separates slides
+     * - May be important for scroll-into-view to work
      */
     margin-right: 12px;
   }
   .slides > div:first-child {
     /** Initial slide peek before */
     margin-left: 12px;
+  }
+  .slides > div:last-child {
+    /** No final slide peek beyond (use extraWidth instead) */
+    margin-right: 0;
   }
 `;
