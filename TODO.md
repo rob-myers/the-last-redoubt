@@ -2,15 +2,9 @@
 
 ## In progress
 
-- ✅ Can specify tabs splitter horizontal or vertical
-- ✅ BUG terminal is not persisting over pages
-
-- Rethink Carousel
-  - ✅ Redo screen grabs via mobile, but without captions
-  - ✅ Carousel has `i / n` overlay on each slide
-  - ✅ Carousel can have captions over each slide
-    - Should support crop in Carousel so can avoid manual crop on mobile
-  - ✅ Add captions in Carousel props
+- Clean and modularise NPC JSON import
+- Add basic sit pose
+  - Can stand <--> sit
 
 - Continue /intro
 
@@ -18,6 +12,13 @@
   - with new terminal
   - terminal + World
 - StackBlitz too
+
+- pages for initial release
+  - / and /home
+  - /intro
+  - /components
+  - /about/terminal
+  - /about/me
 
 - ✅ Render a graphviz graph
 - Can see GitHub Comments on site
@@ -93,7 +94,6 @@ How to embed video?
 - Nav should weight closed doors
 - Fix HMR of NPC (walks without going anywhere)
 - Spawn should trigger a player collision test
-- modularise npc JSON
 - Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
 - Saw `World` fail silently due to use-geomorph-data bug
 - anchor/action link sends user back to Tabs, displaying text in session
@@ -103,6 +103,16 @@ How to embed video?
   - perhaps a race-condition between two transforms (camera, npc)
 
 ## Done
+
+- ✅ Can specify tabs splitter horizontal or vertical
+- ✅ BUG terminal is not persisting over pages
+
+- Rethink Carousel
+  - ✅ Redo screen grabs via mobile, but without captions
+  - ✅ Carousel has `i / n` overlay on each slide
+  - ✅ Carousel can have captions over each slide
+    - Should support crop in Carousel so can avoid manual crop on mobile
+  - ✅ Add captions in Carousel props
 
 - Rethink video
   - ✅ Embed test YouTube playlist instead
