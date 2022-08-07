@@ -126,7 +126,7 @@
   
       /** @type {import('../world/World').State} */ let worldApi;
       while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
-        api.info(`polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`)
+        api.info(`${ansiColor.White}polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`)
         yield* api.sleep(1);
       }
 
