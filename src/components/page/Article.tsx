@@ -265,12 +265,12 @@ const articleCss = css`
     }
   }
 
-  p + ul {
+  /* p + ul {
     margin-top: -32px;
     @media(max-width: 600px) {
       margin-top: -4px;
     }
-  }
+  } */
 
   span.cmd {
     color: #555;
@@ -308,6 +308,7 @@ const articleCss = css`
   }
 
   ul, ol {
+    margin-top: 0;
     @media(max-width: 600px) {
       padding-left: 20px;
     }
