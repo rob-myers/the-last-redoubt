@@ -50,7 +50,7 @@ export const zIndex = {
 } as const;
 
 export const cssTimeMs = {
-  justCopied: 2000,
+  justCopied: 1000,
 } as const;
 
 /** Decimal place precision */

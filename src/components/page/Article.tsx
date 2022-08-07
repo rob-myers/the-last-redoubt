@@ -9,6 +9,7 @@ import Link from './Link';
 import Sep from './Sep';
 import { iconCss } from './Icons';
 import { pre, vscDarkPlusCss } from './CodeBlock';
+import { cssTimeMs } from 'projects/service/const';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -246,7 +247,7 @@ const articleCss = css`
     &.just-copied::after {
       content: 'Copied';
       position: absolute;
-      top: -28px;
+      top: -32px;
       right: 0;
       padding: 8px;
       line-height: 1;
@@ -255,7 +256,7 @@ const articleCss = css`
       border-radius: 4px;
       font-size: 12px;
       font-family: sans-serif;
-      animation: fadeInOut 1s ease-in-out both;
+      animation: fadeInOut ${cssTimeMs.justCopied}ms ease-in-out both;
     }
   }
   p + div.carousel {
