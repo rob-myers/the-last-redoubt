@@ -8,26 +8,7 @@ import { saveCanvasAsFile } from './file';
 import { warn } from './log';
 
 /**
- * @param {ServerTypes.ParsedNpcCheerio} parsed 
- * @param {string} outputDir 
- * @param {{ zoom: number; animNames: string[] }} opts
- */
-export async function renderNpcSpriteSheets(parsed, outputDir, opts) {
-  const { animNames, zoom } = opts;
-
-  const anims = animNames.length
-    ? Object.values(parsed.animLookup).filter(x => animNames.includes(x.animName))
-    : Object.values(parsed.animLookup);
-
-  for (const anim of anims) {
-    const canvas = await drawAnimSpriteSheet(anim, zoom);
-    const outputPath = path.resolve(outputDir, `${parsed.npcName}--${anim.animName}.png`);
-    saveCanvasAsFile(canvas, outputPath);
-  }
-}
-
-/**
- * @param {ServerTypes.NpcAnimCheerio} anim 
+ * @param {NPC.NpcAnimCheerio} anim 
  * @param {number} zoom
  */
 async function drawAnimSpriteSheet(anim, zoom) {
@@ -49,7 +30,7 @@ async function drawAnimSpriteSheet(anim, zoom) {
  * - Render by recreating an SVG and assigning as Image src.
  * - Permits complex SVG <path>s, non-trivial to draw directly into canvas.
  * - Need <def> e.g. for head symbol.
- * @param {ServerTypes.NpcAnimCheerio} anim 
+ * @param {NPC.NpcAnimCheerio} anim 
  * @param {number} frameId 0-based frame index
  * @param {Canvas} canvas 
  * @param {number} zoom
@@ -88,7 +69,7 @@ async function drawFrame(anim, frameId, canvas, zoom) {
  * @param {string} npcName 
  * @param {string} svgContents
  * @param {number} [zoom] 
- * @returns {ServerTypes.ParsedNpcCheerio}
+ * @returns {NPC.ParsedNpcCheerio}
  */
 export function parseNpc(npcName, svgContents, zoom = 1) {
   const $ = cheerio.load(svgContents);
@@ -118,7 +99,7 @@ export function parseNpc(npcName, svgContents, zoom = 1) {
         const defsNode = topNodes.find(x => x.type === 'tag' && x.name === 'defs') || null;
         const frameNodes = extractNpcFrameNodes($, topNodes, animName);
 
-        /** @type {ServerTypes.NpcAnimMeta['contacts']} */
+        /** @type {NPC.NpcAnimMeta['contacts']} */
         const contacts = frameNodes.map((group, frameId) => {
           const polys = $(group).find('rect').toArray()
             .flatMap(x => extractGeom($, x)).filter(x => ['meta', 'contact']
@@ -151,7 +132,7 @@ export function parseNpc(npcName, svgContents, zoom = 1) {
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
         };
         return agg;
-      }, /** @type {ServerTypes.ParsedNpcCheerio['animLookup']} */ ({})),
+      }, /** @type {NPC.ParsedNpcCheerio['animLookup']} */ ({})),
     zoom,
   };
 }
@@ -204,13 +185,33 @@ function extractNpcFrameNodes(api, topNodes, title) {
   return groups;
 }
 
-/** @param {NPC.LocalNavPath} input */
-export function verifyLocalNavPath(input) {
-  let x = /** @type {Partial<NPC.LocalNavPath>} */ (input);
-  return x?.key === 'local-nav'
-    && x.fullPath?.every?.(Vect.isVectJson)
-    // TODO check navMetas
-    || false;
+/**
+ * @param {NPC.ParsedNpcCheerio} parsed 
+ * @param {string} outputDir 
+ * @param {{ zoom: number; animNames: string[] }} opts
+ */
+ export async function renderNpcSpriteSheets(parsed, outputDir, opts) {
+  const { animNames, zoom } = opts;
+
+  const anims = animNames.length
+    ? Object.values(parsed.animLookup).filter(x => animNames.includes(x.animName))
+    : Object.values(parsed.animLookup);
+
+  for (const anim of anims) {
+    const canvas = await drawAnimSpriteSheet(anim, zoom);
+    const outputPath = path.resolve(outputDir, `${parsed.npcName}--${anim.animName}.png`);
+    saveCanvasAsFile(canvas, outputPath);
+  }
+}
+
+/** @param {NPC.DecorDef} input */
+export function verifyDecor(input) {
+  if (input && input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
+    return true;
+  } else if (input && input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
+    return true;
+  }
+  return false;
 }
 
 /** @param {NPC.GlobalNavPath} input */
@@ -223,12 +224,11 @@ export function verifyGlobalNavPath(input) {
     || false;
 }
 
-/** @param {NPC.DecorDef} input */
-export function verifyDecor(input) {
-  if (input && input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
-    return true;
-  } else if (input && input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
-    return true;
-  }
-  return false;
+/** @param {NPC.LocalNavPath} input */
+export function verifyLocalNavPath(input) {
+  let x = /** @type {Partial<NPC.LocalNavPath>} */ (input);
+  return x?.key === 'local-nav'
+    && x.fullPath?.every?.(Vect.isVectJson)
+    // TODO check navMetas
+    || false;
 }

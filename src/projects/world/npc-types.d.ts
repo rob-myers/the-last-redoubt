@@ -1,6 +1,14 @@
 
 declare namespace NPC {
 
+  type NpcJsonKey = (
+    | 'first-npc.json'
+  );
+
+  interface NpcJson {
+    // TODO
+  }
+
   /** API for a single NPC */
   export interface NPC {
     /** User specified e.g. `andros` */
@@ -224,5 +232,42 @@ declare namespace NPC {
     npcKey: string;
     meta: NpcWayMeta;
   }
+
+  //#region parse
+  interface ParsedNpc {
+    npcName: string;
+    animLookup: { [animName: string]: NpcAnimMeta };
+    /** How much the rendered PNGs have been scaled up. */
+    zoom: number;
+  }
+
+  interface ParsedNpcCheerio {
+    npcName: string;
+    animLookup: { [animName: string]: NPC.NpcAnimCheerio };
+    /** How much animLookup and rendered PNGs have been scaled up. */
+    zoom: number;
+  }
+
+  interface NpcAnimCheerio extends NpcAnimMeta {
+    defsNode: import('cheerio').Element | null;
+    frameNodes: import('cheerio').Element[];
+  }
+
+  interface NpcAnimMeta {
+    animName: string;
+    aabb: Geom.Rect;
+    frameCount: number;
+    /** Aligned to frames i.e. positions of feet contacts (if any) */
+    contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];
+    /**
+     * One more than number of frames i.e. how far we move to the right.
+     * Final number is distance from last to first.
+     */
+    deltas: number[];
+    /** The sum of `deltas` */
+    totalDist: number;
+  }
+
+  //#endregion
 
 }

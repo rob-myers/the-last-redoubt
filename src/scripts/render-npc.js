@@ -32,7 +32,7 @@ const zoom = 2;
 const parsed = parseNpc(npcName, svgContents, zoom);
 renderNpcSpriteSheets(parsed, npcOutputDir, { zoom, animNames });
 
-/** @type {ServerTypes.ParsedNpc} */
+/** @type {NPC.ParsedNpc} */
 const serializable = {
   ...parsed,
   animLookup: mapValues(
