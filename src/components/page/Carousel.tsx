@@ -121,10 +121,6 @@ const rootCss = css`
      */
     margin-right: 12px;
   }
-  .slides > div:first-child {
-    /** Initial slide peek before */
-    margin-left: 12px;
-  }
   .slides > div:last-child {
     /** No final slide peek beyond (use extraWidth instead) */
     margin-right: 0;
