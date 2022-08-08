@@ -75,8 +75,8 @@ const rootCss = css`
 
 const blurCss = css`
   .slide {
-    filter: blur(2px);
-    transition: filter 300ms;
+    filter: blur(1.5px);
+    transition: filter 300ms ease-in-out;
     &:hover, &:focus {
       filter: blur(0px);
     }
