@@ -14,6 +14,7 @@ export const iconCss = ({
     | 'ext-link'
     | 'expand'
     | 'hash-icon'
+    | 'info-icon'
     | 'light-bulb'
     | 'refresh'
   );

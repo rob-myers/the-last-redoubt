@@ -1,5 +1,6 @@
-import React from "react";
 import { navigate } from "gatsby";
+import React from "react";
+import { cx } from "@emotion/css";
 import { maxScrollHeight, scrollFinished } from 'model/dom.model';
 import { pause } from 'projects/service/generic';
 
@@ -7,7 +8,7 @@ export default function Link(props: Props) {
   return (
     <a
       href={props.href}
-      className={props.className}
+      className={cx(props.className, props.hasAnchor ? 'has-anchor' : undefined)}
       title={props.title}
       onClick={async (e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey) {
@@ -53,7 +54,7 @@ export default function Link(props: Props) {
         props.postPush?.();
       }}
     >
-      {props.id && (
+      {props.id && props.hasAnchor && (
         <span id={props.id} className="anchor" />
       )}
       {props.children}
@@ -66,16 +67,17 @@ type Props = React.PropsWithChildren<{
   title?: string;
   className?: string;
   id?: string;
+  hasAnchor?: boolean;
   /**
    * Optional path to push before navigating, so can return afterwards.
    */
   prePush?: string;
+  postPush?: () => void;
   /**
    * If true (backward) goto end of next page, then smooth scroll up.
    * If false (forward) goto start of next page, then smooth scroll down.
    */
   backward?: boolean;
-  postPush?: () => void;
 }>
 
 async function navigateNatively(props: Props) {

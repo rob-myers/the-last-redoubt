@@ -1,4 +1,5 @@
 export const cssName = {
+  anchor: 'anchor',
   central: 'central',
   clear: 'clear',
   disableIcon: 'disable-icon',
@@ -10,6 +11,7 @@ export const cssName = {
   enabled: 'enabled',
   faded: 'faded',
   hull: 'hull',
+  infoIcon: 'info-icon',
   iris: 'iris',
   justCopied: 'just-copied',
   navMain: 'nav-main',

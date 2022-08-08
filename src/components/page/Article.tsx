@@ -9,7 +9,7 @@ import Link from './Link';
 import Sep from './Sep';
 import { iconCss } from './Icons';
 import { pre, vscDarkPlusCss } from './CodeBlock';
-import { cssTimeMs } from 'projects/service/const';
+import { cssName, cssTimeMs } from 'projects/service/const';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -79,20 +79,21 @@ const articleCss = css`
     code {
       color: unset;
     }
-    position: relative;
-    > span.anchor {
-      position: absolute;
-      top: -96px;
+    &.has-anchor {
+      position: relative;
+      > span.anchor {
+        position: absolute;
+        top: -96px;
+      }
     }
   }
 
   aside {
     margin: 0 0 24px 0;
-    padding: 24px 36px;
+    padding: 36px;
     font-size: 0.9rem;
     font-weight: 300;
-    border: 0 solid #ddd;
-    background: #eee;
+    border: 1px solid #bbb;
     
     p {
       margin: 12px 0;
@@ -100,14 +101,31 @@ const articleCss = css`
     p + blockquote, blockquote + p {
       margin-top: 0px;
     }
-    
+
+    position: relative;
+    .${cssName.anchor} {
+      position: absolute;
+      top: -64px;
+    }
+    .${cssName.infoIcon} {
+      position: absolute;
+      top: -12px;
+      left: calc(50% - 12px - 2px);
+      transform: scale(1.8);
+      transform-origin: center;
+      border: 2px solid black;
+      border-radius: 24px;
+    }
+
     @media(max-width: 600px) {
       margin: 0 0 16px 0;
       padding: 8px 20px;
-      font-size: 0.9rem;
       border-radius: 12px;
-      border-width: 0 2px 2px 0;
-      line-height: 1.9;
+      border-width: 1px;
+      line-height: 2;
+      .${cssName.infoIcon} {
+        transform: scale(1.4);
+      }
     }
   }
 
@@ -211,13 +229,13 @@ const articleCss = css`
   }
 
   iframe.youtube {
-    padding: 48px 0;
+    padding: 48px;
     background-color: #eee;
     margin-top: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 36px;
     @media(max-width: 600px) {
       padding: 8px 0;
-      margin-bottom: 8px;
+      margin-bottom: 20px;
     }
   }
 
@@ -343,7 +361,6 @@ const articleComponents = (
     // Relative link with added auto-anchor
     if (title === '@anchor') {
       const id = getArticleLinkId(articleKey, children);
-      const part = Number((href || '').split('#')[0]) || null;
       return (
         <Link
           href={href}
@@ -351,6 +368,7 @@ const articleComponents = (
           id={id}
           prePush={`#${id}`}
           title={title}
+          hasAnchor
           // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
@@ -415,6 +433,7 @@ const articleComponents = (
         href={href}
         title={title}
         id={getArticleLinkId(articleKey, children)}
+        hasAnchor
       >
         {children}
       </Link>
@@ -427,6 +446,9 @@ const articleComponents = (
     return (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
+        <Link href={`#${id}`}>
+          <div className={cx(cssName.infoIcon, iconCss({ basename: 'info-icon', center: true, invert: true }))} />
+        </Link>
         {children}
       </aside>
     );
@@ -520,19 +542,4 @@ function getAsideId(
   asideName: string,
 ) {
   return `${articleKey}--aside--${asideName}`;
-}
-
-interface FrontmatterData {
-  allMdx: {
-    edges: {
-      node: {
-        /** Values are technically possibly null */
-        frontmatter: {
-          key: string;
-          date: string;
-          tags: string[];
-        };
-      };
-    }[];
-  };
 }
