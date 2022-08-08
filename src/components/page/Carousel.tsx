@@ -5,7 +5,7 @@ import { parseCssDim } from 'projects/service/dom';
 /**
  * https://css-tricks.com/css-only-carousel/
  */
-export default function Carousel(props: Props) {
+export default function Carousel(props: React.PropsWithChildren<BaseProps>) {
 
   const items = React.Children.toArray(props.children);
 
@@ -14,7 +14,8 @@ export default function Carousel(props: Props) {
       <div
         className="slides"
         style={{
-          width: `calc(${parseCssDim(props.width)} + ${parseCssDim(props.peekWidth)})`,
+          // width: `calc(${parseCssDim(props.width)} + ${parseCssDim(props.peekWidth)})`,
+          width: '100%',
           height: props.height,
           scrollPaddingLeft: `calc(0.5 * ${parseCssDim(props.peekWidth)})`,
         }}
@@ -43,14 +44,14 @@ export default function Carousel(props: Props) {
   );
 }
 
-type Props = React.PropsWithChildren<{
+export interface BaseProps {
   id: string;
   width: number | string;
   height: number | string;
   /** To reveal the next slide */
   peekWidth?: number | string;
   className?: string;
-}>;
+}
 
 const rootCss = css`
   text-align: center;

@@ -1,6 +1,6 @@
 import React from "react";
-import { css } from "@emotion/css";
-import Carousel from "./Carousel";
+import { css, cx } from "@emotion/css";
+import Carousel, { BaseProps as CarouselProps } from "./Carousel";
 
 export default function ImageCarousel(props: Props) {
   return (
@@ -8,7 +8,11 @@ export default function ImageCarousel(props: Props) {
       id="intro-video-frames"
       width={props.width}
       height={props.height}
-      className={rootCss}
+      className={cx(
+        props.className,
+        rootCss,
+        props.blur ? blurCss : undefined,
+      )}
       peekWidth={props.peekWidth}
     >
       {props.items.map(({ src, label }) =>
@@ -31,23 +35,18 @@ export default function ImageCarousel(props: Props) {
   );
 }
 
-interface Props {
-  id: string;
-  width: number | string;
-  height: number | string;
-  peekWidth?: number | string;
+interface Props extends CarouselProps {
+  items: { src: string; label?: string; }[];
   baseSrc?: string;
-  items: {
-    src: string;
-    label?: string;
-  }[];
+
+  blur?: boolean;
   imgStyles?: React.CSSProperties;
   labelTop?: string;
 }
 
 const rootCss = css`
   .slide-container {
-    border-radius: 16px 16px 0 0;
+    border-radius: 8px 8px 0 0;
     border-width: 8px 0 0 0;
     border: 1px solid #555;
   }
@@ -64,12 +63,22 @@ const rootCss = css`
     left: 0px;
     width: 100%;
     color: white;
-    font-size: 24px;
+    font-size: 18px;
     font-family: Monaco;
     font-weight: 300;
     background: rgba(0, 0, 0, 0.4);
     border: 1px solid #444;
     padding: 16px;
     text-transform: lowercase;
+  }
+`;
+
+const blurCss = css`
+  .slide {
+    filter: blur(2px);
+    transition: filter 300ms;
+    &:hover, &:focus {
+      filter: blur(0px);
+    }
   }
 `;
