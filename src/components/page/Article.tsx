@@ -89,8 +89,8 @@ const articleCss = css`
   }
 
   aside {
-    margin: 0 0 24px 0;
-    padding: 36px;
+    margin: 0 0 32px 0;
+    padding: 20px;
     font-size: 0.9rem;
     font-weight: 300;
     border: 1px solid #bbb;
