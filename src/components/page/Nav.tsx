@@ -33,7 +33,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
           className="article-overlay"
         />
         <div className={cssName.topBarHandle}>
-          <div className="icon">
+          <div className="nav-arrow">
             {navOpen ? '<' : '>'}
           </div>
         </div>
@@ -108,7 +108,7 @@ const navCss = css`
     align-items: center;
     user-select: none;
     
-    .icon {
+    .nav-arrow {
       display: flex;
       justify-content: center;
       align-items: center;

@@ -7,7 +7,6 @@ import useSiteStore, { FrontMatter } from 'store/site.store';
 
 import Link from './Link';
 import Sep from './Sep';
-import { iconCss } from './Icons';
 import { pre, vscDarkPlusCss } from './CodeBlock';
 import { cssName, cssTimeMs } from 'projects/service/const';
 
@@ -364,7 +363,7 @@ const articleComponents = (
       return (
         <Link
           href={href}
-          className={cx("anchor-link", iconCss({ basename: 'hash-icon', margin: '0 2px 0 4px' }))}
+          className="icon hash-icon inline-icon"
           id={id}
           prePush={`#${id}`}
           title={title}
@@ -382,7 +381,7 @@ const articleComponents = (
         <a
           href={href}
           title={title}
-          className={cx("new-tab-link", iconCss({ basename: 'ext-link', margin: '0 2px 0 4px' }))}
+          className="icon ext-link inline-icon"
           target="_blank"
           rel="noopener"
         >
@@ -447,7 +446,7 @@ const articleComponents = (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
         <Link href={`#${id}`}>
-          <div className={cx(cssName.infoIcon, iconCss({ basename: 'info-icon', center: true, invert: true }))} />
+          <div className={cx(cssName.infoIcon, "icon info-icon invert-icon")} />
         </Link>
         {children}
       </aside>

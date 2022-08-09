@@ -5,7 +5,6 @@ import useSiteStore from "store/site.store";
 import { cssName, zIndex } from 'projects/service/const';
 import Link from "./Link";
 import { barHeight } from "./Nav";
-import { iconCss } from "./Icons";
 
 export default function NavMini() {
 
@@ -42,10 +41,7 @@ export default function NavMini() {
       )}
 
       <div
-        className={cx(
-          'toggle-dark-mode',
-          iconCss({ basename: 'light-bulb' }),
-        )}
+        className="icon light-bulb toggle-dark-mode"
         onClick={(e) => {
           const enabled = document.body.classList.toggle('dark-mode');
           tryLocalStorageSet('dark-mode-enabled', `${enabled}`);
@@ -104,6 +100,7 @@ const rootCss = css`
     height: ${barHeight}px;
     display: flex;
     justify-content: center;
+    align-items: center;
     color: white;
     cursor: pointer;
     filter: invert(100%);

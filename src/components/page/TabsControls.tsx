@@ -1,6 +1,5 @@
 import React from "react";
 import { css, cx } from '@emotion/css';
-import { iconCss } from './Icons';
 import Link from './Link';
 import { cssName, zIndex } from "projects/service/const";
 import type { State } from "./Tabs";
@@ -13,7 +12,7 @@ export function TabsControls({ api, tabsId }: Props) {
         <div
           className={cx(
             cssName.resetIcon,
-            iconCss({ basename: 'refresh', dim: 11, invert: true }),
+            "icon small-icon refresh invert-icon",
             api.resetDisabled && cssName.disabled,
           )}
           onClick={api.reset}
@@ -21,18 +20,18 @@ export function TabsControls({ api, tabsId }: Props) {
         />
         <Link
           href={`#${tabsId}`}
-          className={iconCss({ basename: 'hash-icon', dim: 11, invert: true })}
+          className="icon small-icon hash-icon invert-icon"
           title="anchor"
         />
         <div
-          className={iconCss({ basename: api.expanded ? 'compress' : 'expand', dim: 11, invert: true })}
+          className={cx("icon small-icon invert-icon", api.expanded ? "compress" : "expand")}
           onClick={api.toggleExpand}
           title={api.expanded ? 'minimise' : 'maximise'}
         />
         <div
           className={cx(
             cssName.disableIcon,
-            iconCss({ basename: 'cross-circle', dim: 11, invert: true }),
+            "icon cross-circle small-icon invert-icon",
             !api.enabled && cssName.disabled,
           )}
           onClick={api.toggleEnabled}
