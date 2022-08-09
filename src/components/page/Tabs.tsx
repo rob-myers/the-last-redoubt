@@ -36,10 +36,9 @@ export default function Tabs(props: Props) {
       backdrop: {} as HTMLDivElement,
     },
 
-    onChangeIntersect: debounce(async (intersects: boolean) => {
-      if (!intersects && state.enabled)
-        await state.toggleEnabled();
-    }, 1000),
+    onChangeIntersect: debounce(async (intersects: boolean) =>
+      (!intersects && state.enabled) && await state.toggleEnabled()
+    , 1000),
 
     async onKeyUp(e: React.KeyboardEvent) {
       if (state.expanded && e.key === 'Escape') {
@@ -64,10 +63,7 @@ export default function Tabs(props: Props) {
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
       useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
       state.justResetWhileDisabled = !state.enabled;
-      if (state.enabled) {
-        // Force remount to reset, which loses any subcomponent state
-        state.resets++;
-      }
+      state.resets++; // Remount
       update();
       setTimeout(() => { state.resetDisabled = false; update(); }, 500);
     },
@@ -122,6 +118,7 @@ export default function Tabs(props: Props) {
       if (state.expanded) {
         tryLocalStorageSet(expandedStorageKey, 'true');
         if (!state.enabled) {// Auto-enable on expand
+          console.log('toggleExpand')
           await state.toggleEnabled();
         }
       } else {
@@ -200,9 +197,16 @@ export default function Tabs(props: Props) {
         {state.colour !== 'black' && (
           <Layout
             id={props.id}
-            initEnabled={!!props.initEnabled || state.resets > 0}
+            /**
+             * On reset with state.enabled,
+             * we should not initially disable layout.
+             */
+            initEnabled={state.enabled}
             persistLayout={props.persistLayout}
-            // Horizontal splitter ~ rootOrientationVertical `true`
+            /**
+             * Horizontal splitter corresponds to
+             * rootOrientationVertical being `true`.
+             */
             rootOrientationVertical={!!props.initHorizontal}
             tabs={props.tabs}
             update={update}

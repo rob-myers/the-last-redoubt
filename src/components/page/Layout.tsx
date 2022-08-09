@@ -95,6 +95,7 @@ function useRegisterTabs(props: Props, model: Model) {
     if (!props.id) {
       return console.warn('Tabs has no id', props.tabs);
     }
+
     // Register tabs with state
     if (!tabs[props.id]) {
       tabs[props.id] = {

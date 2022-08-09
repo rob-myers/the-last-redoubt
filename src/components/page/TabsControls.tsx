@@ -40,7 +40,10 @@ export function TabsControls({ api, tabsId }: Props) {
       </div>
 
       {!api.enabled && (
-        <div className={cssName.central} onClick={api.toggleEnabled}>
+        <div
+          className={cssName.central}
+          onClick={api.toggleEnabled}
+        >
           interact
         </div>
       )}

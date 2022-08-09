@@ -2,7 +2,7 @@
 
 ## In progress
 
-- ✅ Tabs need not persist layout
+- ✅ BUG disable and reset does not reset non-persisted layout
 
 - CodeSandbox
   - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
@@ -94,7 +94,7 @@ How to embed video?
 
 ## Future
 
-- Tabs remember scroll (e.g. for `code`)
+- Tabs remember scroll (use case?)
 - BUG CssPanZoom zoom via info is a bit jerky at one point
 - BUG CssPanZoom zoom out which pointer down and drag around
 - ✅ Always show navpath (no need for DEBUG=true)
@@ -114,6 +114,7 @@ How to embed video?
 
 ## Done
 
+- ✅ Tabs need not persist layout
 - ✅ Can specify tabs splitter horizontal or vertical
 - ✅ BUG terminal is not persisting over pages
 
