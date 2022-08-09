@@ -85,7 +85,7 @@ How should we build The Last Redoubt?
 Then our game has a birdseye viewpoint.
 The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
-The Player is _situated_ i.e. their vision is limited by their current position.
+The Player is _situated_ i.e. their awareness is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
 Let's summarise the preceding sentences.
 
@@ -135,7 +135,8 @@ Lets see an example.
       { type: 'component', filepath: 'intro-world-1' },
     ],
   ]}
-  initHorizontal={true}
+  initHorizontal
+  // persistLayout
 />
 
 __TODO__ 
