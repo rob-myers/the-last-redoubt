@@ -15,7 +15,7 @@ import { TabsControls, FaderOverlay } from './TabsControls';
 import { createKeyedComponent } from './Tab';
 
 /**
- * Possibly only imported from MDX, which lacks intellisense.
+ * Possibly only imported from MDX (which lacks intellisense).
  */
 export default function Tabs(props: Props) {
   const update = useUpdate();

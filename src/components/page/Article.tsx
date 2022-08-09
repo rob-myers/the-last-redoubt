@@ -130,6 +130,7 @@ const articleCss = css`
   }
 
   blockquote {
+    line-height: 2;
     padding-left: 30px;
     margin: 0 0 24px 0;
     @media(max-width: 600px) {
@@ -139,7 +140,7 @@ const articleCss = css`
     }
 
     p:first-child {
-      margin-bottom: 0;
+      margin-bottom: 12px;
     }
     p:nth-child(n + 2) {
       margin-top: 0;
@@ -194,6 +195,7 @@ const articleCss = css`
     @media(max-width: 600px) {
       margin-bottom: 12px;
       font-size: 0.8rem;
+      font-weight: 500;
     }
 
     display: flex;
