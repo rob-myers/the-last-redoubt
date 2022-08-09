@@ -3,34 +3,6 @@
   --icon-size-small: 11px;
 }
 
-.icon::after {
-  display: flex;
-  align-items: center;
-  content: '';
-
-  background-size: var(--icon-size-base) var(--icon-size-base);
-  height: var(--icon-size-base);
-  width: var(--icon-size-base);
-}
-
-.icon.invert-icon::after {
-  filter: invert(100%);
-}
-.icon.inline-icon {
-  display: inline-flex;
-}
-.icon.inline-icon::after {
-  display: flex;
-  align-items: stretch;
-  margin: 0 2px;
-}
-
-.icon.small-icon::after {
-  background-size: var(--icon-size-small) var(--icon-size-small);
-  height: var(--icon-size-small);
-  width: var(--icon-size-small);
-}
-
 .icon.hash-icon::after {
   background-image: url('/icon/hash-icon.svg');
 }

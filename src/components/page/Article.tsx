@@ -4,11 +4,12 @@ import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
+import { cssName, cssTimeMs } from 'projects/service/const';
 
 import Link from './Link';
 import Sep from './Sep';
 import { pre, vscDarkPlusCss } from './CodeBlock';
-import { cssName, cssTimeMs } from 'projects/service/const';
+import Icon from './Icon';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -363,7 +364,6 @@ const articleComponents = (
       return (
         <Link
           href={href}
-          className="icon hash-icon inline-icon"
           id={id}
           prePush={`#${id}`}
           title={title}
@@ -371,6 +371,7 @@ const articleComponents = (
           // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
+          <Icon icon="hash-icon" inline />
         </Link>
       );
     }
@@ -381,11 +382,11 @@ const articleComponents = (
         <a
           href={href}
           title={title}
-          className="icon ext-link inline-icon"
           target="_blank"
           rel="noopener"
         >
           {children}
+          <Icon icon="ext-link" inline />
         </a>
       );
     }
@@ -446,7 +447,7 @@ const articleComponents = (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
         <Link href={`#${id}`}>
-          <div className={cx(cssName.infoIcon, "icon info-icon invert-icon")} />
+          <Icon icon="info-icon" invert />
         </Link>
         {children}
       </aside>

@@ -3,38 +3,41 @@ import { css, cx } from '@emotion/css';
 import Link from './Link';
 import { cssName, zIndex } from "projects/service/const";
 import type { State } from "./Tabs";
+import Icon from "./Icon";
 
 export function TabsControls({ api, tabsId }: Props) {
   return (
     <div className={controlsCss}>
 
       <div className={cssName.topRight}>
-        <div
-          className={cx(
-            cssName.resetIcon,
-            "icon small-icon refresh invert-icon",
-            api.resetDisabled && cssName.disabled,
-          )}
+        <Icon
+          icon="refresh"
+          small
+          invert
           onClick={api.reset}
           title="reset"
         />
-        <Link
-          href={`#${tabsId}`}
-          className="icon small-icon hash-icon invert-icon"
-          title="anchor"
-        />
-        <div
-          className={cx("icon small-icon invert-icon", api.expanded ? "compress" : "expand")}
+        <Link href={`#${tabsId}`}>
+          <Icon
+            icon="hash-icon"
+            small
+            invert
+            title="anchor"
+          /> 
+        </Link>
+        <Icon
+          icon={api.expanded ? "compress" : "expand"}
+          small
+          invert
           onClick={api.toggleExpand}
           title={api.expanded ? 'minimise' : 'maximise'}
         />
-        <div
-          className={cx(
-            cssName.disableIcon,
-            "icon cross-circle small-icon invert-icon",
-            !api.enabled && cssName.disabled,
-          )}
+        <Icon
+          icon="cross-circle"
+          small
+          invert
           onClick={api.toggleEnabled}
+          className={!api.enabled ? cssName.disabled : undefined}
         />
       </div>
 
@@ -90,7 +93,8 @@ const controlsCss = css`
     }
 
     
-    > div.disabled {
+    /** Move to Icon */
+    > .disabled {
       filter: brightness(50%);
       pointer-events: none;
     }
