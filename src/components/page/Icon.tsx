@@ -46,7 +46,7 @@ const baseIconCss = css`
   &.inline-icon::after {
     display: flex;
     align-items: stretch;
-    margin: 0 4px;
+    margin: 0 2px;
   }
 
   &.small-icon::after {
