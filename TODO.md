@@ -2,18 +2,26 @@
 
 ## In progress
 
+- CodeSandbox
+  - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
+  - ✅ with new terminal
+    - https://codesandbox.io/s/tty-demo-2-3oh1x8
+  - 🚧 new terminal supports mobile touch helper
+  - terminal + World
+
+- Can tell Tabs not to remember layout
+
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json
   - ✅ migrate previous approach
-- Create 1 frame sit animation
-- Can stand <--> sit
 
-- Continue /intro
+- ✅ Create 1 frame sit animation
+- ✅ Can `sit` by applying class
+- 🚧 Explain how and where spritesheet is changed
+- Can change spritesheet from CLI e.g. `npc sheet andros sit`
+- Improve sit animation
 
-- CodeSandbox
-  - with new terminal
-  - terminal + World
-- StackBlitz too
+- ✅ ImageCarousel wider 
 
 - pages for initial release
   - / and /home

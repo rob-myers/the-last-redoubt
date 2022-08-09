@@ -111,7 +111,7 @@ const articleCss = css`
       position: absolute;
       top: -12px;
       left: calc(50% - 12px - 2px);
-      transform: scale(1.8);
+      transform: scale(1.4);
       transform-origin: center;
       border: 2px solid black;
       border-radius: 24px;
@@ -124,7 +124,7 @@ const articleCss = css`
       border-width: 1px;
       line-height: 2;
       .${cssName.infoIcon} {
-        transform: scale(1.4);
+        transform: scale(1.2);
       }
     }
   }
