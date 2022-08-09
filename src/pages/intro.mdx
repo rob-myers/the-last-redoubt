@@ -30,14 +30,14 @@ What's this website about?
 NPC stands for _Non-Player Character_ - 
 every friendly or unfriendly character except for the Player.
 They must behave realistically, steadily drawing the Player into the fabrication.
-Then our main motivation is _lacklustre NPC behaviour in modern video games_.
+Then our motivation is the _lacklustre NPC behaviour in modern video games_.
 Can we clarify the problem?
 Can we do better?
 
-Sometimes Game AI is _emergent_.
-For example, the brilliant Super Mario 3 consists of mostly independent individual NPC behaviours running in parallel.
-But for anything much beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
-the result becomes a mess.
+Sometimes Game AI is emergent.
+For example, Super Mario 3 consists of mostly independent individual NPC behaviours running in parallel.
+But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
+the result is usually a mess.
 The _combinatorial explosion of possibilities_ results in
 unrealistic hard-to-debug behaviour.
 
@@ -51,7 +51,7 @@ so we must **create a game** to make meaningful Game AI.
 ### Tech stack
 
 We're writing about Game AI and also creating a game.
-Then it is natural to use web technologies, building the game right here on this site.
+Then it's natural to use web technologies, building the game right here on this site.
 But which ones?
 
 > We'll use **everyday web dev tech** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
@@ -83,12 +83,12 @@ How should we build The Last Redoubt?
 
 </aside>
 
-Then our game has a birdseye viewpoint.
+So our game has a birdseye viewpoint.
 The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their awareness is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
-Let's summarise the preceding sentences.
+Let's summarise with slides.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -120,7 +120,14 @@ The terminal lies at the heart of our approach.
 We view Game AI (NPC behaviour) as interaction between the Director and the Player.
 In our approach, the Director _directs_ by running commands in one or more terminals,
 including scripts and long-running processes.
-Lets see an example.
+Let's see an example.
+
+> Try clicking _interact_ below.
+>
+> You'll see a few lines then repeated messages __polling for cached query__
+> (if not, click reset <Icon icon="refresh" small inline />).
+> Once the repeated messages are seen, click disable <Icon icon="cross-circle" small inline />.
+> You'll see __paused session__ and the _interact_ button again.
 
 <Tabs
   id="intro-1"
@@ -139,13 +146,6 @@ Lets see an example.
   initHorizontal
   // persistLayout
 />
-
-> Try clicking _interact_ above.
->
-> You'll see a few lines then repeated messages "__polling for cached query__"
-> (if not, click reset <Icon icon="refresh" small inline />).
-> Once the repeated messages are seen, click disable <Icon icon="cross-circle" small inline />.
-> You'll see a line "__paused session__" and the _interact_ button again.
 
 <!-- Each terminal initially runs a script - its _profile_.
 
@@ -173,29 +173,7 @@ But it also makes our approach relevant to a wide audience. -->
 This is just as well, else our investigation of Game AI would be on the distant horizon.
 Consider the component below: -->
 
-<Tabs
-  id="intro-2"
-  initEnabled={false}
-  height={600}
-  tabs={[
-    [{ type: 'component', filepath: 'intro-world-2' }],
-    [{
-        type: 'terminal',
-        filepath: 'intro-tty-2',
-        env: { WORLD_KEY: 'intro-world-2', PROFILE: profileLookup['profile-1-a']() },
-    }],
-  ]}
-/>
-
-
-- What do we mean?
+<!--
 - This doesn't mean the story and characters are unimportant.
-- But when _Game AI_ plays second fiddle to _Story_ ...
 - We do not mean "use the Web as a platform"
-- We do not mean "Web Games" like Flash, WebGL etc.
-- Story and Characters still sit on podium
-
-
-<!-- TODO alignment with web dev -->
-
-<!-- TODO bring Tabs into this early -->
+-->
