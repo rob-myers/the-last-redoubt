@@ -8,7 +8,7 @@ exports.onCreateWebpackConfig = (opts) => {
   const cfg = {
     module: {
       rules: [
-        { test: /\/raw-loader.js$/, use: 'raw-loader' },
+        // { test: /\/raw-loader.js$/, use: 'raw-loader' },
         /**
          * Fixes `yarn build` error due to npm module `canvas`.
          * Only need `canvas` for scripts e.g. `yarn render-layout 301`.

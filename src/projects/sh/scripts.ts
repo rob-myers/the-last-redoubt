@@ -86,8 +86,7 @@ lookLoop ${npcKey} &
 `.trimEnd(),
 };
 
-//@ts-ignore
-import rawLoaderJs from './raw-loader';
+import rawLoaderJs from '!!raw-loader!./raw-loader';
 Function(
   'utilFunctions',
   'gameFunctions',
