@@ -75,9 +75,12 @@ export default function Layout(props: Props) {
   );
 }
 
-interface Props extends Pick<TabsProps, 'tabs'> {
-  id: string;
-  initEnabled: boolean;
+interface Props extends Pick<TabsProps, (
+  | 'id'
+  | 'tabs'
+  | 'initEnabled'
+  | 'persistLayout'
+)> {
   rootOrientationVertical?: boolean;
   update(): void;
 }
@@ -171,9 +174,10 @@ function factory(
 }
 
 function restoreJsonModel(props: Props) {
-  try {
-    const jsonModelString = tryLocalStorageGet(`model@${props.id}`);
-    if (jsonModelString) {
+  const jsonModelString = tryLocalStorageGet(`model@${props.id}`);
+
+  if (props.persistLayout && jsonModelString) {
+    try {
       const serializable = JSON.parse(jsonModelString) as IJsonModel;
 
       // Larger splitter hit test area
@@ -203,9 +207,9 @@ function restoreJsonModel(props: Props) {
       }
 
       console.error(`restoreJsonModel: prev/next ids differ ${JSON.stringify(prevTabNodeIds)} versus ${JSON.stringify(nextTabNodeIds)}`);
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
   }
 
   return Model.fromJson(computeJsonModel(

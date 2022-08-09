@@ -201,28 +201,37 @@ export default function Tabs(props: Props) {
           <Layout
             id={props.id}
             initEnabled={!!props.initEnabled || state.resets > 0}
+            persistLayout={props.persistLayout}
             // Horizontal splitter ~ rootOrientationVertical `true`
             rootOrientationVertical={!!props.initHorizontal}
             tabs={props.tabs}
             update={update}
           />
         )}
-        <TabsControls api={state} tabsId={props.id} />
-        <FaderOverlay colour={state.colour} />
+        <TabsControls
+          api={state}
+          tabsId={props.id}
+        />
+        <FaderOverlay
+          colour={state.colour}
+        />
       </div>
     </figure>
   );
 }
 
 export interface Props {
-  /** Required */
+  /** Required e.g. as identifier */
   id: string;
   /** List of rows each with a single tabset */
   tabs: TabMeta[][];
-  initEnabled?: boolean;
   height: number | number[];
-  /** Does the initial Tabs layout have a horizontal splitter? */
+
+  /** Initially enabled? */
+  initEnabled?: boolean;
+  /** Does the _initial Tabs layout_ have a horizontal splitter? */
   initHorizontal?: boolean;
+  persistLayout?: boolean;
 }
 
 export interface State {
