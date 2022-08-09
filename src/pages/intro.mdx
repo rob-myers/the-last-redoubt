@@ -24,18 +24,20 @@ import { profileLookup } from "projects/sh/scripts";
 
 What's this website about?
 
-> Making **Game AI** i.e. controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character) in video games.
+> **Making Game AI** i.e. controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character) in video games.
 
-The acronym NPC means Non-Player Character i.e.
-every character (enemy or friendly) except for the Player.
-NPCs must behave realistically, steadily drawing the Player into the fabrication.
-Our underlying motivation is _lacklustre NPC behaviour in modern video games_.
-Can we do better? Can we understand the problem?
+NPC stands for _Non-Player Character_ - 
+every friendly or unfriendly character except for the Player.
+They must behave realistically, steadily drawing the Player into the fabrication.
+Then the motivation for this website is _lacklustre NPC behaviour in modern video games_.
+Can we understand the problem?
+Can we do better?
 
-Sometimes Game AI _emerges_ from mostly independent individual NPC behaviours.
-But for anything much beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)),
+Sometimes Game AI _emerges_ from mostly independent individual NPC behaviours,
+e.g. Super Mario 3.
+But for anything much beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
 the result is a mess.
-The _combinatorial explosion of possibilities_ inevitably results in
+The _combinatorial explosion of possibilities_ results in
 unrealistic hard-to-debug behaviour.
 
 Focusing on what the Player actually experiences is a better idea.
@@ -80,7 +82,7 @@ How should we build The Last Redoubt?
 
 </aside>
 
-Our game has a birdseye viewpoint.
+Then our game has a birdseye viewpoint.
 The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their vision is limited by their current position.
