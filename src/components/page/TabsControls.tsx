@@ -16,6 +16,7 @@ export function TabsControls({ api, tabsId }: Props) {
           invert
           onClick={api.reset}
           title="reset"
+          className={api.resetDisabled ? cssName.disabled : undefined}
         />
         <Link href={`#${tabsId}`}>
           <Icon
