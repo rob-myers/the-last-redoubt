@@ -397,7 +397,7 @@ const articleComponents = (
           // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
-          <Icon icon="hash-icon" inline small />
+          (<Icon icon="hash-icon" inline small />)
         </Link>
       );
     }
@@ -412,7 +412,8 @@ const articleComponents = (
           rel="noopener"
         >
           {children}
-          <Icon icon="ext-link" inline />
+          &nbsp;
+          <Icon icon="ext-link" inline small />
         </a>
       );
     }
