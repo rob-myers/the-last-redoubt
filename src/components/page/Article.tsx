@@ -90,7 +90,7 @@ const articleCss = css`
 
   aside {
     margin: 0 0 32px 0;
-    padding: 20px;
+    padding: 12px 32px;
     font-size: 0.9rem;
     font-weight: 300;
     border: 1px solid #bbb;
@@ -154,8 +154,11 @@ const articleCss = css`
 
   div.carousel {
     margin: 32px 0 40px 0;
+    padding: 48px;
+    background-color: #eee;
     @media(max-width: 600px) {
       margin: 0 0 24px 0;
+      padding: 8px 0;
     }
   }
 
@@ -165,8 +168,11 @@ const articleCss = css`
 
   figure.tabs {
     margin: calc(40px + 16px) 0 40px 0;
+    padding: 48px;
+    background-color: #eee;
     @media(max-width: 600px) {
       margin: calc(32px + 16px) 0 32px 0;
+      padding: 32px 0 8px 0;
     }
   }
 
