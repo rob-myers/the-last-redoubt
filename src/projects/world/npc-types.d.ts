@@ -43,11 +43,11 @@ declare namespace NPC {
     mounted: boolean;
     anim: NPCAnimData;
 
-    async cancel(): Promise<void>;
+    cancel(): Promise<void>;
     clearWayMetas(): void;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
-    async followNavPath(
+    followNavPath(
       path: Geom.VectJson[],
       opts?: { globalNavMetas?: NPC.GlobalNavMeta[]; },
     ): Promise<void>;

@@ -1,9 +1,9 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 
-import { cssName } from 'projects/service/const';
+import { cssName } from '../service/const';
 import createNpc from "./create-npc";
-import useStateRef from "projects/hooks/use-state-ref";
+import useStateRef from "../hooks/use-state-ref";
 
 /** @param {Props} props  */
 export default function NPC({ api, def, disabled }) {

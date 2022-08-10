@@ -1,5 +1,6 @@
 import * as poly2tri from 'poly2tri';
-import * as polygonClipping from 'polygon-clipping';
+// Namespace import broke CodeSandbox
+import polygonClipping from 'polygon-clipping';
 import earcut from 'earcut';
 import { Rect } from "./rect";
 import { Vect } from "./vect";
