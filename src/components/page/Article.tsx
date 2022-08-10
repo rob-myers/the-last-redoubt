@@ -250,6 +250,21 @@ const articleCss = css`
     }
   }
 
+  li {
+    line-height: 2;
+    p:first-child {
+      margin-bottom: 12px;
+    }
+    p:nth-child(n + 2) {
+      margin-top: 0;
+    }
+    @media(max-width: 600px) {
+      p:first-child {
+        margin-bottom: 8px;
+      }
+    }
+  }
+
   li blockquote {
     margin: 0;
     p {
