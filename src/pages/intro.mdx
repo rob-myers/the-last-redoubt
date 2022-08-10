@@ -88,7 +88,7 @@ The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navig
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their awareness is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
-Let's summarise with slides.
+Let's summarise with some slides.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -110,7 +110,14 @@ Let's summarise with slides.
   labelTop="10%"
 />
 
-Importantly, the videos also show a [terminal](https://xtermjs.org/) (a black window with mostly green text).
+We [mentioned](#intro--tech-stack "@anchor") our restriction to standard web dev techniques.
+For example, the lighting above is achieved via two PNGs (a light and dark one) and a [CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path).
+We'll play the actual game in the next subsection.
+For those itching to see how it is built, [check out this CodeSandbox](__TODO__).
+
+### How to direct
+
+Importantly, the videos above show a [terminal](https://xtermjs.org/) (a black window with mostly green text).
 We can type commands into it and press enter to run them.
 Commands are parsed using the excellent [mvdan-sh](https://github.com/mvdan/sh),
 and then interpreted by our own specially written interpreter.
@@ -146,6 +153,10 @@ Let's see an example.
   initHorizontal
   // persistLayout
 />
+
+__TODO__
+
+### What to direct
 
 <!-- Each terminal initially runs a script - its _profile_.
 

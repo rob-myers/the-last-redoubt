@@ -2,14 +2,12 @@
 
 ## In progress
 
-- ✅ BUG disable and reset does not reset non-persisted layout
-
 - CodeSandbox
   - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
   - ✅ with new terminal
     - https://codesandbox.io/s/tty-demo-2-3oh1x8
-  - 🚧 new terminal supports mobile touch helper
-  - terminal + World
+  - ✅ new terminal supports mobile touch helper
+  - 🚧 Terminal + World
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json
@@ -114,6 +112,7 @@ How to embed video?
 
 ## Done
 
+- ✅ BUG disable and reset does not reset non-persisted layout
 - ✅ Tabs need not persist layout
 - ✅ Can specify tabs splitter horizontal or vertical
 - ✅ BUG terminal is not persisting over pages
