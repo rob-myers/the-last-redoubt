@@ -24,8 +24,9 @@ export default function Link(props: Props) {
         const { pathname, hash } = new URL(props.href, location.href);
         const changePage = pathname !== location.pathname;
 
-        if (props.prePush) {
-          await navigate(props.prePush);
+        if (props.prePush && props.prePush !== hash) {
+          // await navigate(props.prePush);
+          history.pushState({}, '', props.prePush);
         }
 
         if (changePage) {
@@ -44,7 +45,7 @@ export default function Link(props: Props) {
         if (props.prePush && !changePage) {
           // Push hash into history if we didn't change page,
           // otherwise we'll overwrite the prePush
-          navigate(hash);
+          await navigate(hash);
           // history.pushState({}, '', hash)
         } else {
           // navigate(hash, { replace: true });

@@ -382,7 +382,7 @@ const articleComponents = (
           // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
-          <Icon icon="hash-icon" inline />
+          <Icon icon="hash-icon" inline small />
         </Link>
       );
     }
