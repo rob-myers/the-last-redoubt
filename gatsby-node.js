@@ -1,4 +1,3 @@
-
 /** @param {import('gatsby').CreateWebpackConfigArgs} opts */
 exports.onCreateWebpackConfig = (opts) => {
 
@@ -27,5 +26,21 @@ exports.onCreateWebpackConfig = (opts) => {
   };
 
   opts.actions.setWebpackConfig(cfg);
+
+}
+
+/** @type {(args: import('gatsby').CreatePagesArgs) => Promise<void>} */
+exports.createPages = async function ({ actions: { createPage }, reporter }) {
+
+  /**
+   * Cannot use /pages/404.tsx because allFrontmatter is not provided to it,
+   * so we cannot show navigation.
+   */
+  reporter.info(`Creating page /404`);
+  const NotFoundPageTemplate = require('path').resolve('src/templates/404.jsx');
+  createPage({
+    path: '/404',
+    component: NotFoundPageTemplate,
+  });
 
 }

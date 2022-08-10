@@ -21,7 +21,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
       {groupedMetas.map((navItems, i) =>
         <ul key={i}>
           {navItems.map((meta) =>
-            <li key={meta.key} className={meta.key === frontmatter.key ? 'current' : undefined} >
+            <li key={meta.key} className={meta.key === frontmatter?.key ? 'current' : undefined} >
               <Link
                 href={meta.path}
                 title={meta.info}

@@ -2,12 +2,17 @@
 
 ## In progress
 
+- Move all assets into public/assets
+
 - CodeSandbox
   - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
   - ✅ with new terminal
     - https://codesandbox.io/s/tty-demo-2-3oh1x8
   - ✅ new terminal supports mobile touch helper
-  - 🚧 Terminal + World
+  - ✅ Terminal + World
+    - https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/sh/raw-loader.js
+
+- Can see GitHub comments
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json

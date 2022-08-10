@@ -58,25 +58,22 @@ export function wrapPageElement({
             }
           }, []);
 
-          return <>
-            {frontMatter &&
-              <QueryClientProvider client={queryClient} >
-                <Nav frontmatter={frontMatter} />
-                <Main>
+          return (
+            <QueryClientProvider client={queryClient} >
+              <Nav frontmatter={frontMatter} />
+              <Main>
+                {frontMatter && <>
                   <Article frontmatter={frontMatter}>
                     {element}
                   </Article>
                   <NextArticle frontMatter={frontMatter}/>
-                </Main>
-                <Portals />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            }
-      
-            {!frontMatter &&
-              <Main>{element}</Main>
-            }
-          </>;
+                </>}
+                {!frontMatter && element}
+              </Main>
+              <Portals />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+          );
         }}
       />
 
@@ -85,5 +82,5 @@ export function wrapPageElement({
 }
 
 export interface FrontMatterProps {
-  frontmatter: FrontMatter;
+  frontmatter?: FrontMatter;
 }
