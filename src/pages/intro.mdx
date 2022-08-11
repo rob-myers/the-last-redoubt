@@ -159,14 +159,14 @@ Let's see an example.
   // persistLayout
 />
 
-3. Finally return to the 1st tab and scroll to the top (if necessary).
+3. Finally return to the 1st tab and scroll to the top.
 
   | Line | Info |
   | --- | ----------- |
-  | <small>`ℹ️  Running /home/PROFILE`</small> | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
-  | <small>`source /etc/util-1`</small> | The 1st line of the script at `/home/PROFILE`. This command executes the script at <InlineCode>/etc/util-1</InlineCode>, defining various util functions. |
-  | <small>`source /etc/game-1`</small> | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. Try listing all functions in the console: <InlineCode>declare \| log</InlineCode>. |
-  | <small>`await-world`</small> | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
+  | `ℹ️  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
+  | `source /etc/util-1` | The 1st line of the script at `/home/PROFILE`. This command executes the script at <InlineCode>/etc/util-1</InlineCode>, defining various util functions. |
+  | `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. List all functions in the console via <InlineCode>declare \| log</InlineCode>. |
+  | `await-world` | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
 
 What about the rest of `/home/PROFILE`?
 > It spawns Andros, sets him as the Player,
@@ -175,6 +175,10 @@ What about the rest of `/home/PROFILE`?
 > (a) the camera tracks Andros,
 > (b) clicking the navmesh makes him walk,
 > (c) clicking outside the navmesh makes him turn.
+
+We've made some videos illustrating the above remarks, plus some additional features.
+
+__TODO__
 
 ### What we'll direct
 

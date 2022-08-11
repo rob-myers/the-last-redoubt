@@ -9,7 +9,7 @@ export default function InlineCode({ children, ...props }: Props) {
       onClick={useSiteStore.api.clickToClipboard}
       title="click to copy text"
       {...props}
-      className={cx(rootCss, props.className)}
+      className={cx('inline-code', rootCss, props.className)}
     >
       {children}
     </code>
@@ -19,12 +19,16 @@ export default function InlineCode({ children, ...props }: Props) {
 type Props = React.HTMLAttributes<HTMLElement>;
 
 const rootCss = css`
-  font-family: "Ubuntu Mono", "Courier New", monospace;
-  color: #0f0;
-  background-color: #000;
-  padding: 0 4px;
-  font-size: 1rem;
-  letter-spacing: 1px;
+  
+  /** Add specificity to override Article code */
+  &.inline-code {
+    font-family: "Ubuntu Mono", "Courier New", monospace;
+    font-size: 0.9rem;
+    color: #0f0;
+    letter-spacing: 1px;
+    padding: 0 4px;
+    background-color: #000;
+  }
 
   cursor: pointer;
   position: relative;

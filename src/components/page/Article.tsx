@@ -152,6 +152,14 @@ const articleCss = css`
     }
   }
 
+  code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9rem;
+    background-color: #eee;
+    padding: 2px 0;
+    margin-right: 2px;
+  }
+
   div.carousel {
     margin: 32px 0 40px 0;
     padding: 48px;
@@ -312,20 +320,25 @@ const articleCss = css`
 
   table {
     padding: 8px;
-    border: 1px solid #bbb;
     width: 100%;
     margin: 0 0 40px 0;
+    border: 1px solid #bbb;
     line-height: 1.4;
 
     @media(max-width: 600px) {
       margin: 0 0 20px 0;
     }
+    th {
+      text-transform: uppercase;
+      font-size: 1rem;
+      font-family: sans-serif;
+    }
     th, td {
-      padding: 6px;
+      padding: 16px;
       text-align: left;
       vertical-align: top;
       @media(max-width: 600px) {
-        padding: 4px 2px;
+        padding: 8px;
       }
     }
   }
