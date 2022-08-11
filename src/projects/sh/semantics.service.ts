@@ -430,6 +430,7 @@ class semanticsServiceClass {
     const clonedBody = cloneParsed(node.Body);
     const wrappedFile = wrapInFile(clonedBody);
     useSession.api.addFunc(node.meta.sessionKey, node.Name.Value, wrappedFile);
+    node.exitCode = 0;
   }
 
   private async *IfClause(node: Sh.IfClause) {
@@ -457,6 +458,7 @@ class semanticsServiceClass {
    * 4. ${foo:-bar} Default when empty
    * 5. ${_/foo/bar/baz} Path into last interactive non-string
    * 6. $$ PID of current process (Not quite the same as bash)
+   * 7. $? Exit code of last completed process
    */
   private async *ParamExp(node: Sh.ParamExp): AsyncGenerator<Expanded, void, unknown> {
     const { meta, Param, Slice, Repl, Length, Excl, Exp } = node;
@@ -481,6 +483,8 @@ class semanticsServiceClass {
       yield expand(useSession.api.getProcess(meta).positionals.slice(1));
     } else if (Param.Value === '$') {
       yield expand(`${meta.pid}`);
+    } else if (Param.Value === '?') {
+      yield expand(`${useSession.api.getSession(meta.sessionKey).lastExitCode}`);
     } else {
       yield expand(this.expandParameter(meta, Param.Value));
     }

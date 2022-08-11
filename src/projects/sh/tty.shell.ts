@@ -192,15 +192,20 @@ export class ttyShellClass implements Device {
     }
 
     try {
-      for await (const _ of semanticsService.File(parsed));
+      for await (const _ of semanticsService.File(parsed)) { /** NOOP */ }
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
+        parsed.exitCode = 1; // TODO more codes?
         console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`)
       }
       throw e;
     } finally {
-      // const process = useSession.api.getProcess(meta);
+      if (typeof parsed.exitCode === 'number') {
+        useSession.api.getSession(this.sessionKey).lastExitCode = parsed.exitCode;
+      } else {
+        console.warn(`process ${meta.pid} had no exitCode`);
+      }
       // process.cleanups.forEach(cleanup => cleanup());
       
       // NOTE can have `!opts.leading && meta.pid === 0` because ...

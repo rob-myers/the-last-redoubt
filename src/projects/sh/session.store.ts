@@ -64,6 +64,7 @@ export interface Session {
   var: Record<string, any>;
   nextPid: number;
   process: KeyedLookup<ProcessMeta>;
+  lastExitCode: number;
 }
 
 interface Rehydrated {
@@ -151,8 +152,6 @@ const useStore = create<State>(devtools((set, get) => ({
         session: addToLookup({
           key: sessionKey,
           func: {},
-          nextPid: 0,
-          process: {},
           ttyIo,
           ttyShell,
           var: {
@@ -161,6 +160,9 @@ const useStore = create<State>(devtools((set, get) => ({
             ...persisted.var,
             ...deepClone(env),
           },
+          nextPid: 0,
+          process: {},
+          lastExitCode: 0,
         }, session),
       }));
       return get().session[sessionKey];
