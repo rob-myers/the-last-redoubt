@@ -117,7 +117,7 @@ The top one is inverted via [CSS filter](https://developer.mozilla.org/en-US/doc
 We'll play the actual game in the next subsection.
 For those itching to see how it is built, [check out this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
-### How we can direct
+### How we'll direct
 
 Importantly, the videos above show a [_terminal_](https://xtermjs.org/) (the black window with mostly green text).
 We can type commands into it and press enter to run them.
@@ -165,13 +165,23 @@ Let's see an example.
   | --- | ----------- |
   | <small>`ℹ️  Running /home/PROFILE`</small> | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
   | <small>`source /etc/util-1`</small> | The 1st line of the script at `/home/PROFILE`. This command executes the script at <InlineCode>/etc/util-1</InlineCode>, defining various util functions. |
-  | <small>`source /etc/game-1`</small> | From `/home/PROFILE`, this script <InlineCode>/etc/util-1</InlineCode> defines various game-related functions. |
-  | <small>`await-world`</small> | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it repeatedly sends lines, as we saw. |
+  | <small>`source /etc/game-1`</small> | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. Try listing all functions in the console: <InlineCode>declare \| log</InlineCode>. |
+  | <small>`await-world`</small> | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
 
 What about the rest of `/home/PROFILE`?
-> It spawns Andros, sets him as the Player, and finally initiates 3 long-running processes. That is, (a) the camera tracks Andros, (b) clicking the navmesh makes him walk, (c) clicking outside the navmesh makes him turn.
+> It spawns Andros, sets him as the Player,
+> and finally initiates 3 long-running background processes.
+> That is,
+> (a) the camera tracks Andros,
+> (b) clicking the navmesh makes him walk,
+> (c) clicking outside the navmesh makes him turn.
 
-### What to direct
+### What we'll direct
+
+__TODO__
+- Story provides some guidance
+- Teleglitch provides some guidance
+- ...
 
 <!-- Each terminal initially runs a script - its _profile_.
 

@@ -22,7 +22,9 @@ const rootCss = css`
   font-family: "Ubuntu Mono", "Courier New", monospace;
   color: #0f0;
   background-color: #000;
-  padding: 1px 4px;
+  padding: 0 4px;
+  font-size: 1rem;
+  letter-spacing: 1px;
 
   cursor: pointer;
   position: relative;
