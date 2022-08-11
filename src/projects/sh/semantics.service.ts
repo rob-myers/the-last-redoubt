@@ -462,9 +462,9 @@ class semanticsServiceClass {
    */
   private async *ParamExp(node: Sh.ParamExp): AsyncGenerator<Expanded, void, unknown> {
     const { meta, Param, Slice, Repl, Length, Excl, Exp } = node;
-    if (Repl) {
+    if (Repl) {// ${_/foo/bar/baz}
       const origParam = reconstructReplParamExp(Repl)
-      yield expand(safeJsonStringify(cmdService.get(node, [origParam])));
+      yield expand(safeJsonStringify(cmdService.get(node, [origParam])[0]));
     } else if (Excl || Length || Slice) {
       throw new ShError(`ParamExp: ${Param.Value}: unsupported operation`, 2);
     } else if (Exp) {

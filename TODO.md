@@ -4,7 +4,7 @@
 
 - ✅ BUG process sometimes needs shallow scope for `PWD` and `OLDPWD`
   - e.g. bg processes will modify "globals" `/home/PWD`
-- BUG `echo ${_/foo}` surrounded by square brackets?
+- ✅ BUG `echo ${_/foo}` should not be surrounded by square brackets
 - Move all assets into public/assets
 
 - CodeSandbox
