@@ -451,11 +451,12 @@ class semanticsServiceClass {
   }
 
   /**
-   * 1. Positionals $0, $1, ...
-   * 2. All positionals "${@}"
-   * 3. Vanilla $x, ${foo}
-   * 4. Default when empty ${foo:-bar}
-   * 5. ${_/foo/bar/baz} into last interactive non-string
+   * 1. $0, $1, ... Positionals 
+   * 2. "${@}" All positionals 
+   * 3. $x, ${foo} Vanilla expansions
+   * 4. ${foo:-bar} Default when empty
+   * 5. ${_/foo/bar/baz} Path into last interactive non-string
+   * 6. $$ PID of current process (Not quite the same as bash)
    */
   private async *ParamExp(node: Sh.ParamExp): AsyncGenerator<Expanded, void, unknown> {
     const { meta, Param, Slice, Repl, Length, Excl, Exp } = node;
@@ -478,6 +479,8 @@ class semanticsServiceClass {
       }
     } else if (Param.Value === '@') {
       yield expand(useSession.api.getProcess(meta).positionals.slice(1));
+    } else if (Param.Value === '$') {
+      yield expand(`${meta.pid}`);
     } else {
       yield expand(this.expandParameter(meta, Param.Value));
     }

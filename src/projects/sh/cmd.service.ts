@@ -324,6 +324,7 @@ class cmdServiceClass {
           // We clone meta; pid will be overwritten in `ttyShell.spawn`
           parsed.meta = { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() };
           const { ttyShell } = useSession.api.getSession(meta.sessionKey);
+          // We spawn a new process, unlike bash `source` which runs in current one
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });
         }
         break;
