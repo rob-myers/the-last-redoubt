@@ -194,7 +194,7 @@ const articleCss = css`
     }
     margin: 24px 0 16px 0;
     @media(max-width: 600px) {
-      margin: 16px 0 16px;
+      margin: 16px 0;
       font-size: 1.7rem;
     }
   }
@@ -225,7 +225,7 @@ const articleCss = css`
     margin: 12px 0 16px 0;
     @media(max-width: 600px) {
       font-size: 1.3rem;
-      margin: 8px 0;
+      margin: 0 0 12px 0;
     }
 
     position: relative;
@@ -280,31 +280,6 @@ const articleCss = css`
     }
   }
   
-  /** Inline code */
-  p code {
-    font-family: "Ubuntu Mono", "Courier New", monospace;
-    color: #0f0;
-    background-color: #000;
-    padding: 1px 4px;
-
-    cursor: pointer;
-    position: relative;
-
-    &.just-copied::after {
-      content: 'Copied';
-      position: absolute;
-      top: -32px;
-      right: 0;
-      padding: 8px;
-      line-height: 1;
-      color: white;
-      background: #444;
-      border-radius: 4px;
-      font-size: 12px;
-      font-family: sans-serif;
-      animation: fadeInOut ${cssTimeMs.justCopied}ms ease-in-out both;
-    }
-  }
   p + div.carousel {
     @media(max-width: 600px) {
       margin-top: 20px;
@@ -478,21 +453,6 @@ const articleComponents = (
         </Link>
         {children}
       </aside>
-    );
-  },
-
-  /**
-   * <code />
-   */
-  inlineCode({ node, children, ...props }: any) {
-    return (
-      <code
-        onClick={useSiteStore.api.clickToClipboard}
-        title="click to copy text"
-        {...props}
-      >
-        {children}
-      </code>
     );
   },
 
