@@ -35,7 +35,7 @@ class semanticsServiceClass {
       return useSession.api.getPositional(meta.pid, meta.sessionKey, Number(varName));
     }
     // Otherwise we're retrieving a variable
-    const varValue = useSession.api.getVar(meta.sessionKey, varName);
+    const varValue = useSession.api.getVar(meta, varName);
     if (varValue === undefined || typeof varValue === 'string') {
       return varValue || '';
     }
@@ -116,7 +116,7 @@ class semanticsServiceClass {
       ? (await this.lastExpanded(sem.Expand(Value))).value
       : '';
     useSession.api.setVar(
-      meta.sessionKey,
+      meta,
       Name.Value,
       // Attempt to interpret as number, dictionary etc.
       parseJsArg(textValue),
@@ -171,7 +171,7 @@ class semanticsServiceClass {
             new Promise<void>(async (resolve, reject) => {
               try {
                 process.cleanups.push(() => reject()); // Handle Ctrl-C
-                await ttyShell.spawn(file);
+                await ttyShell.spawn(file, { localVar: true });
                 stdOuts[i].finishedWriting();
                 stdOuts[i - 1]?.finishedReading();
                 if (node.exitCode = file.exitCode) {
@@ -398,7 +398,7 @@ class semanticsServiceClass {
         cloned.meta.fd[1] = device.key;
 
         const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
-        await ttyShell.spawn(cloned);
+        await ttyShell.spawn(cloned, { localVar: true });
 
         try {
           yield expand(device.readAll()
@@ -497,7 +497,7 @@ class semanticsServiceClass {
         return redirectNode(node.parent!, { 1: '/dev/null' });
       } else {
         const varDevice = useSession.api.createVarDevice(
-          node.meta.sessionKey,
+          node.meta,
           value,
           node.Op === '>' ? 'last' : 'array',
         );
@@ -518,7 +518,7 @@ class semanticsServiceClass {
       const file = wrapInFile(cloneParsed(stmt));
       file.meta.ppid = stmt.meta.pid;
       file.meta.pgid = useSession.api.getSession(stmt.meta.sessionKey).nextPid;
-      ttyShell.spawn(file).catch((e) => {
+      ttyShell.spawn(file, { localVar: true }).catch((e) => {
           if (e instanceof ProcessError) {
             this.handleTopLevelProcessError(e);
           } else {
@@ -539,7 +539,7 @@ class semanticsServiceClass {
   private async *Subshell(node: Sh.Subshell) {
     const cloned = wrapInFile(cloneParsed(node));
     const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
-    await ttyShell.spawn(cloned);
+    await ttyShell.spawn(cloned, { localVar: true });
   }
 
   private async *TimeClause(node: Sh.TimeClause) {

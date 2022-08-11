@@ -69,30 +69,30 @@ class cmdServiceClass {
         if (args.length > 1) {
           throw new ShError('usage: `cd /`, `cd`, `cd foo/bar`, `cd /foo/bar`, `cd ..` and `cd -`', 1);
         }
-        const prevPwd: string = useSession.api.getVar(meta.sessionKey, 'OLDPWD');
-        const currPwd: string = useSession.api.getVar(meta.sessionKey, 'PWD');
-        useSession.api.setVar(meta.sessionKey, 'OLDPWD', currPwd);
+        const prevPwd: string = useSession.api.getVar(meta, 'OLDPWD');
+        const currPwd: string = useSession.api.getVar(meta, 'PWD');
+        useSession.api.setVar(meta, 'OLDPWD', currPwd);
 
         try {
           if (!args[0]) {
-            useSession.api.setVar(meta.sessionKey, 'PWD', 'home');
+            useSession.api.setVar(meta, 'PWD', 'home');
           } else if (args[0] === '-') {
-            useSession.api.setVar(meta.sessionKey, 'PWD', prevPwd);
+            useSession.api.setVar(meta, 'PWD', prevPwd);
           } else if (args[0].startsWith('/')) {
             const parts = normalizeAbsParts(args[0].split('/'));
             if (resolveNormalized(parts, this.provideProcessCtxt(node.meta)) === undefined) {
               throw Error;
             }
-            useSession.api.setVar(meta.sessionKey, 'PWD', parts.join('/'));
+            useSession.api.setVar(meta, 'PWD', parts.join('/'));
           } else {
             const parts = normalizeAbsParts(currPwd.split('/').concat(args[0].split('/')));
             if (resolveNormalized(parts, this.provideProcessCtxt(node.meta)) === undefined) {
               throw Error;
             }
-            useSession.api.setVar(meta.sessionKey, 'PWD', parts.join(('/')));
+            useSession.api.setVar(meta, 'PWD', parts.join(('/')));
           }
         } catch {
-          useSession.api.setVar(meta.sessionKey, 'OLDPWD', prevPwd);
+          useSession.api.setVar(meta, 'OLDPWD', prevPwd);
           throw new ShError(`${args[0]} not found`, 1);
         }
         break;
@@ -193,7 +193,7 @@ class cmdServiceClass {
           'r', /** Recursive properties (prototype) */
           'a', /** Show capitalized vars at top level */
         ] });
-        const pwd = useSession.api.getVar(meta.sessionKey, 'PWD');
+        const pwd = useSession.api.getVar(meta, 'PWD');
         const queries = operands.length ? operands.slice() : [''];
         const root = this.provideProcessCtxt(meta);
         const roots = queries.map(path => resolvePath(path, root, pwd));
@@ -255,7 +255,7 @@ class cmdServiceClass {
         break;
       }
       case 'pwd': {
-        yield '/' + (useSession.api.getVar(meta.sessionKey, 'PWD'));
+        yield '/' + (useSession.api.getVar(meta, 'PWD'));
         break;
       }
       case 'return': {
@@ -265,9 +265,9 @@ class cmdServiceClass {
       }
       case 'rm': {
         const root = this.provideProcessCtxt(meta);
-        const pwd = useSession.api.getVar<string>(meta.sessionKey, 'PWD');
+        const pwd = useSession.api.getVar<string>(meta, 'PWD');
         for (const path of args) {
-          const parts = computeNormalizedParts(path, root, pwd);
+          const parts = computeNormalizedParts(path, pwd);
           if (parts[0] === 'home' && parts.length > 1) {
             const last = parts.pop() as string;
             delete resolveNormalized(parts, root)[last];
@@ -324,7 +324,7 @@ class cmdServiceClass {
           // We clone meta; pid will be overwritten in `ttyShell.spawn`
           parsed.meta = { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() };
           const { ttyShell } = useSession.api.getSession(meta.sessionKey);
-          // We spawn a new process, unlike bash `source` which runs in current one
+          // We spawn a new process (unlike bash `source`), but we don't localize PWD
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });
         }
         break;
@@ -347,14 +347,14 @@ class cmdServiceClass {
 
   get(node: Sh.BaseNode, args: string[]) {
     const root = this.provideProcessCtxt(node.meta);
-    const pwd = useSession.api.getVar<string>(node.meta.sessionKey, 'PWD');
+    const pwd = useSession.api.getVar<string>(node.meta, 'PWD');
     const outputs = args.map(arg => resolvePath(arg, root, pwd));
     node.exitCode = outputs.length && outputs.every(x => x === undefined) ? 1 : 0;
     return outputs;
   }
 
   private computeCwd(meta: Sh.BaseMeta, root: any) {
-    const pwd = useSession.api.getVar(meta.sessionKey, 'PWD');
+    const pwd = useSession.api.getVar(meta, 'PWD');
     return resolveNormalized(pwd.split('/'), root);
   }
 
@@ -366,6 +366,7 @@ class cmdServiceClass {
       ppid: node.meta.pid,
       stack: node.meta.stack.concat(namedFunc.key), // TODO elsewhere?
     } as Sh.BaseMeta);
+    // Run function in own process, yet without localized PWD
     await ttyShell.spawn(cloned, { posPositionals: args.slice() });
   }
 

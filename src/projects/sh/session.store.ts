@@ -8,6 +8,7 @@ import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
 import { srcService } from './parse';
 import { ttyShellClass } from './tty.shell';
+import { scriptLookup } from './scripts';
 
 export type State = {
   session: KeyedLookup<Session>;
@@ -24,15 +25,15 @@ export type State = {
       posPositionals?: string[];
     }) => ProcessMeta;
     createFifo: (fifoKey: string, size?: number) => FifoDevice;
-    createVarDevice: (sessionKey: string, varPath: string, mode: VarDeviceMode) => VarDevice;
+    createVarDevice: (meta: BaseMeta, varPath: string, mode: VarDeviceMode) => VarDevice;
     getFunc: (sessionKey: string, funcName: string) => NamedFunction | undefined;
     getFuncs: (sessionKey: string) => NamedFunction[];
     getNextPid: (sessionKey: string) => number;
     getProcess: (meta: BaseMeta) => ProcessMeta;
     getProcesses: (sessionKey: string, pgid?: number) => ProcessMeta[];
     getPositional: (pid: number, sessionKey: string, varName: number) => string;
-    getVar: <T = any>(sessionKey: string, varName: string) => T;
-    getVarDeep: (sessionKey: string, varPath: string) => any | undefined;
+    getVar: <T = any>(meta: BaseMeta, varName: string) => T;
+    getVarDeep: (meta: BaseMeta, varPath: string) => any | undefined;
     getSession: (sessionKey: string) => Session;
     persist: (sessionKey: string) => void;
     rehydrate: (sessionKey: string) => Rehydrated;
@@ -40,8 +41,8 @@ export type State = {
     removeProcess: (pid: number, sessionKey: string) => void;
     removeSession: (sessionKey: string) => void;
     resolve: (fd: number, meta: BaseMeta) => Device;
-    setVar: (sessionKey: string, varName: string, varValue: any) => void;
-    setVarDeep: (sessionKey: string, varPath: string, varValue: any) => void;
+    setVar: (meta: BaseMeta, varName: string, varValue: any) => void;
+    setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
     writeMsg: (sessionKey: string, msg: string, level: 'info' | 'error') => void;
     /**
      * Returns global line number of written message,
@@ -102,6 +103,11 @@ export interface ProcessMeta {
    */
   onResumes: (() => void | boolean)[];
   positionals: string[];
+  /**
+   * Some processes (background, subshells)
+   * should have their own PWD and OLDPWD.
+   */
+  var: Record<string, any>;
 }
 
 const useStore = create<State>(devtools((set, get) => ({
@@ -137,6 +143,7 @@ const useStore = create<State>(devtools((set, get) => ({
         cleanups: [],
         onSuspends: [],
         onResumes: [],
+        var: {},
       };
       return processes[pid];
     },
@@ -168,8 +175,8 @@ const useStore = create<State>(devtools((set, get) => ({
       return get().session[sessionKey];
     },
 
-    createVarDevice(sessionKey, varPath, mode) {
-      const device = new VarDevice(sessionKey, varPath, mode);
+    createVarDevice(meta, varPath, mode) {
+      const device = new VarDevice(meta, varPath, mode);
       return get().device[device.key] = device;
     },
 
@@ -198,13 +205,24 @@ const useStore = create<State>(devtools((set, get) => ({
       return pgid === undefined ? processes : processes.filter(x => x.pgid === pgid);
     },
 
-    getVar(sessionKey, varName) {
-      return get().session[sessionKey].var[varName];
+    getVar(meta, varName): any {
+      const process = api.getProcess(meta);
+      if (varName in process?.var) {
+        return process.var[varName];
+      } else {
+        return get().session[meta.sessionKey].var[varName];
+      }
     },
 
-    getVarDeep(sessionKey, varPath) {
-      const root = get().session[sessionKey].var;
-      return Function('__', `return __.${varPath}`)(root);
+    getVarDeep(meta, varPath) {
+      const session = get().session[meta.sessionKey];
+      /**
+       * Can deep get /home/* and /etc/*
+       * TODO support deep get of local vars?
+       */
+      const root = { home: session.var, etc: scriptLookup };
+      const parts = computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
+      return Function('__', `return ${JSON.stringify(parts)}.reduce((agg, x) => agg[x], __)`)(root);
     },
 
     getSession(sessionKey) {
@@ -267,27 +285,44 @@ const useStore = create<State>(devtools((set, get) => ({
       return get().device[meta.fd[fd]];
     },
 
-    setVar(sessionKey, varName, varValue) {
-      api.getSession(sessionKey).var[varName] = varValue;
+    setVar(meta, varName, varValue) {
+      const session = api.getSession(meta.sessionKey);
+      const process = session.process[meta.pid];
+      if (varName in process?.var) {
+        process.var[varName] = varValue;
+      } else {
+        session.var[varName] = varValue;
+      }
     },
 
-    setVarDeep(sessionKey, varPath, varValue) {
-      /** Like root of process context, but only has `home` */
-      const root = { home : api.getSession(sessionKey).var };
-      const pwd = api.getVar(sessionKey, 'PWD') as string;
-      const parts = computeNormalizedParts(varPath, root, pwd);
+    setVarDeep(meta, varPath, varValue) {
 
-      if (parts[0] === 'home' && parts.length > 1) {
-        const childKey = parts.pop() as string;
-        try {
-          const parent = resolveNormalized(parts, root);
-          parent[childKey] = varValue;
-        } catch (e) {
-          throw new ShError(`cannot resolve /${parts.join('/')}`, 1);
-        }
-      } else {
+      const session = api.getSession(meta.sessionKey);
+      const process = session.process[meta.pid];
+      const varPathParts = varPath.split('/');
+
+      /**
+       * We support writing to local process variables,
+       * e.g. `( cd && echo 'pwn3d!'>PWD && pwd )`
+       */
+      const isLocalVar = varPathParts[0] in process.var;
+      const root = isLocalVar ? process.var : { home : session.var };
+      const parts = isLocalVar
+        ? varPathParts
+        : computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
+
+      if (!isLocalVar && !(parts[0] === 'home' && parts.length > 1)) {
         throw new ShError('only the home directory is writable', 1);
       }
+
+      try {
+        const leafKey = parts.pop() as string;
+        const parent = resolveNormalized(parts, root);
+        parent[leafKey] = varValue;
+      } catch (e) {
+        throw new ShError(`cannot resolve /${parts.join('/')}`, 1);
+      }
+
     },
 
     writeMsg(sessionKey, msg, level) {

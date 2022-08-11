@@ -123,7 +123,7 @@ export function resolvePath(path: string, root: any, pwd: string) {
   return resolveAbsParts(absParts, root);
 }
 
-export function computeNormalizedParts(varPath: string, root: any, pwd: string): string[] {
+export function computeNormalizedParts(varPath: string, pwd: string): string[] {
   const absParts = varPath.startsWith('/')
     ? varPath.split('/')
     : pwd.split('/').concat(varPath.split('/'));

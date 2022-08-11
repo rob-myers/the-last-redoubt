@@ -3,7 +3,7 @@ import { testNever } from '../service/generic';
 import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
-import { ansiColor, ProcessError } from './util';
+import { ansiColor, ProcessError, ShError } from './util';
 import { parseService, srcService, wrapInFile } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
@@ -155,7 +155,10 @@ export class ttyShellClass implements Device {
    * This explicit approach can be avoided via `source`.
    */
   private async runProfile() {
-    const profile = useSession.api.getVar(this.sessionKey, 'PROFILE') || '';
+    const profile = useSession.api.getVar(
+      { pid: 0, sessionKey: this.sessionKey } as Sh.BaseMeta,
+      'PROFILE',
+    ) || '';
     const { ttyShell } = useSession.api.getSession(this.sessionKey);
 
     try {
@@ -171,7 +174,7 @@ export class ttyShellClass implements Device {
   /** Spawn a process, assigning pid to non-leading ones */
   async spawn(
     parsed: Sh.FileWithMeta,
-    opts: { leading?: boolean, posPositionals?: string[] } = {},
+    opts: { leading?: boolean; posPositionals?: string[]; localVar?: boolean } = {},
   ) {
     const { meta } = parsed;
 
@@ -188,6 +191,13 @@ export class ttyShellClass implements Device {
         posPositionals: opts.posPositionals || positionals.slice(1),
       });
       meta.pid = process.key;
+      if (opts.localVar) {
+        // Sometimes processes (background, subshell) need their own variable scope
+        const session = useSession.api.getSession(meta.sessionKey);
+        const parent = session.process[meta.ppid];
+        process.var.PWD = (parent?.var.PWD)??session.var.PWD;
+        process.var.OLDPWD = (parent?.var.OLDPWD)??session.var.OLDPWD;
+      }
       // console.warn(ppid, 'launched', meta.pid, process, JSON.stringify(meta.fd));
     }
 
@@ -196,8 +206,10 @@ export class ttyShellClass implements Device {
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
-        parsed.exitCode = 1; // TODO more codes?
         console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`)
+        parsed.exitCode = 130; // Ctrl-C code
+      } else if (e instanceof ShError) {
+        parsed.exitCode = e.exitCode;
       }
       throw e;
     } finally {

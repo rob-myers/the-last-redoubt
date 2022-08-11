@@ -2,6 +2,9 @@
 
 ## In progress
 
+- ✅ BUG process sometimes needs shallow scope for `PWD` and `OLDPWD`
+  - e.g. bg processes will modify "globals" `/home/PWD`
+- BUG `echo ${_/foo}` surrounded by square brackets?
 - Move all assets into public/assets
 
 - CodeSandbox
@@ -114,6 +117,9 @@ How to embed video?
 - BUG firefox mobile jerky
   - problem with `track andros &`
   - perhaps a race-condition between two transforms (camera, npc)
+- Terminal Context-Menu Copy/Paste missing
+  - Works at xterm-helper-textarea, at top of terminal
+  - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
 
