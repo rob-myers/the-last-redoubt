@@ -117,7 +117,7 @@ The top one is inverted via [CSS filter](https://developer.mozilla.org/en-US/doc
 We'll play the actual game in the next subsection.
 For those itching to see how it is built, [check out this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
-### How to direct
+### How we can direct
 
 Importantly, the videos above show a [_terminal_](https://xtermjs.org/) (the black window with mostly green text).
 We can type commands into it and press enter to run them.
@@ -136,11 +136,10 @@ Let's see an example.
    After a few lines, you'll see repetitions __polling for cached query__
    (if not, click reset <Icon icon="refresh" small inline />).
    Clicking disable <Icon icon="cross-circle" small inline />,
-   you'll see __paused session__ and the _interact_ button again.
+   you'll see __paused session__ and the _interact_ button returns.
 
 2. Press _interact_ again, and this time click on the 2nd tab.
-   You'll see the world from the videos.
-   Maybe have a play around, re-enacting what you've seen.
+   You'll see the world from the videos, we suggest you have a play around.
 
 <Tabs
   id="intro-1"
@@ -160,12 +159,17 @@ Let's see an example.
   // persistLayout
 />
 
-3. Finally return to the 1st tab (or drag them apart),
-   scrolling to the top if necessary.
-   Then:
-   - <InlineCode>/home/PROFILE</InlineCode> is the string defined the initial script. Try copy-pasting it into the terminal.
-   - ok
+3. Finally return to the 1st tab and scroll to the top (if necessary).
 
+  | Line | Info |
+  | --- | ----------- |
+  | <small>`ℹ️  Running /home/PROFILE`</small> | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
+  | <small>`source /etc/util-1`</small> | The 1st line of the script at `/home/PROFILE`. This command executes the script at <InlineCode>/etc/util-1</InlineCode>, defining various util functions. |
+  | <small>`source /etc/game-1`</small> | From `/home/PROFILE`, this script <InlineCode>/etc/util-1</InlineCode> defines various game-related functions. |
+  | <small>`await-world`</small> | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it repeatedly sends lines, as we saw. |
+
+What about the rest of `/home/PROFILE`?
+> It spawns Andros, sets him as the Player, and finally initiates 3 long-running processes. That is, (a) the camera tracks Andros, (b) clicking the navmesh makes him walk, (c) clicking outside the navmesh makes him turn.
 
 ### What to direct
 
