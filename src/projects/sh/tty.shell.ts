@@ -160,7 +160,7 @@ export class ttyShellClass implements Device {
 
     try {
       ttyShell.xterm.historyEnabled = false;
-      useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Running ${ansiColor.Blue}home/PROFILE${ansiColor.Reset}`, 'info');
+      useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Running ${ansiColor.Blue}/home/PROFILE${ansiColor.Reset}`, 'info');
       await ttyShell.xterm.pasteLines(profile.split('\n'), true);
       this.prompt('$');
     } catch {} finally {
