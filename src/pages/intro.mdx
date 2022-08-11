@@ -17,6 +17,7 @@ tags:
 import Tabs from "components/page/Tabs";
 import Icon from "components/page/Icon";
 import ImageCarousel from "components/page/ImageCarousel";
+import InlineCode from "components/page/InlineCode";
 import { profileLookup } from "projects/sh/scripts";
 
 ## Introduction
@@ -35,7 +36,7 @@ Can we clarify the problem?
 Can we do better?
 
 Sometimes Game AI is emergent.
-For example, Super Mario 3 consists of mostly independent individual NPC behaviours running in parallel.
+For example, Super Mario 3 arises from many independent individual NPC behaviours running in parallel.
 But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
 the result is usually a mess.
 The _combinatorial explosion of possibilities_ results in
@@ -111,19 +112,20 @@ Let's summarise with some slides.
 />
 
 We [mentioned](#intro--tech-stack "@anchor") our restriction to standard web dev techniques.
-For example, the lighting above is achieved via two PNGs (a light and dark one) and a [CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path).
+For example, the lighting above is achieved via two copies of the same PNG.
+The top one is inverted via [CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) and masked by [CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path).
 We'll play the actual game in the next subsection.
 For those itching to see how it is built, [check out this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
-### Directing the game
+### How to direct
 
-Importantly, the videos above show a [terminal](https://xtermjs.org/) (a black window with mostly green text).
+Importantly, the videos above show a [_terminal_](https://xtermjs.org/) (the black window with mostly green text).
 We can type commands into it and press enter to run them.
 Commands are parsed using the excellent [mvdan-sh](https://github.com/mvdan/sh),
 and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 
-The terminal lies at the heart of our approach.
+The terminal is central to our approach.
 We view Game AI (NPC behaviour) as interaction between the Director and the Player.
 In our approach, the Director _directs_ by running commands in one or more terminals,
 including scripts and long-running processes.
@@ -133,11 +135,10 @@ Let's see an example.
 
    After a few lines, you'll see repetitions __polling for cached query__
    (if not, click reset <Icon icon="refresh" small inline />).
-   Then clicking disable <Icon icon="cross-circle" small inline />,
+   Clicking disable <Icon icon="cross-circle" small inline />,
    you'll see __paused session__ and the _interact_ button again.
 
 2. Press _interact_ again, and this time click on the 2nd tab.
-
    You'll see the world from the videos.
    Maybe have a play around, re-enacting what you've seen.
 
@@ -159,10 +160,14 @@ Let's see an example.
   // persistLayout
 />
 
-3. Finally click the 1st Tab again...
+3. Finally return to the 1st tab (or drag them apart),
+   scrolling to the top if necessary.
+   Then:
+   - <InlineCode>/home/PROFILE</InlineCode> is the string defined the initial script. Try copy-pasting it into the terminal.
+   - ok
 
 
-### The story ...
+### What to direct
 
 <!-- Each terminal initially runs a script - its _profile_.
 
