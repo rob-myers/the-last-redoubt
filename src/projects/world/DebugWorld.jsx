@@ -242,10 +242,12 @@ const rootCss = css`
       pointer-events: none;
       &.interactive {
         pointer-events: all;
+        cursor: pointer;
       }
     }
     div.debug-label-info {
       background-image: url('/icon/info-icon.svg');
+      cursor: pointer;
     }
 
     div.debug-door-id-icon, div.debug-room-id-icon {
