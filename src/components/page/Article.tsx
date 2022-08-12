@@ -4,7 +4,7 @@ import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
-import { cssName, cssTimeMs } from 'projects/service/const';
+import { cssName } from 'projects/service/const';
 
 import Link from './Link';
 import Sep from './Sep';
@@ -32,7 +32,7 @@ export default function Article(props: React.PropsWithChildren<{
       }),
       { pre },
     ),
-    [],
+    [frontmatter.tags],
   );
 
   return <>
