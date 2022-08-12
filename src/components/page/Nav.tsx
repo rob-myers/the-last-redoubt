@@ -134,7 +134,7 @@ const topBarCss = css`
   left: 0;
   width: calc(100vw + ${sidebarWidth}px);
   height: ${barHeight}px;
-  background: black;
+  background: #222;
 
   animation: fadeInTopBar ease-in 300ms forwards;
   @keyframes fadeInTopBar {
