@@ -42,9 +42,15 @@ const useStore = create<State>(devtools((set, get) => ({
       const el = e.target as HTMLElement;
       const { textContent } = el;
       if (textContent) {
-        await navigator.clipboard.writeText(textContent);
-        el.classList.add(cssName.justCopied);
-        window.setTimeout(() => el.classList.remove(cssName.justCopied), cssTimeMs.justCopied);
+        try {
+          await navigator.clipboard.writeText(textContent);
+          el.classList.add(cssName.justCopied);
+          window.setTimeout(() => el.classList.remove(cssName.justCopied), cssTimeMs.justCopied);
+        } catch (e) {
+          console.error(`Failed to copy text to clipboard: "${textContent}" (${e})`);
+          el.classList.add(cssName.copyJustFailed);
+          window.setTimeout(() => el.classList.remove(cssName.copyJustFailed), cssTimeMs.justCopied);
+        }
       }
     },
 

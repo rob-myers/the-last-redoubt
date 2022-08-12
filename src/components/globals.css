@@ -40,7 +40,7 @@ body.dark-mode section article {
 body.dark-mode section article > :not(code, div.carousel, div.tags, figure.tabs, iframe, pre) {
   filter: invert(100%);
 }
-body.dark-mode code.inline-code {
+body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
   filter: invert(100%);
 }
 body.dark-mode div.top-bar {

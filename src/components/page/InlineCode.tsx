@@ -9,7 +9,11 @@ export default function InlineCode({ children, ...props }: Props) {
       onClick={useSiteStore.api.clickToClipboard}
       title="click to copy text"
       {...props}
-      className={cx('inline-code', rootCss, props.className)}
+      className={cx(
+        'inline-code',
+        rootCss,
+        props.className,
+      )}
     >
       {children}
     </code>
@@ -19,25 +23,32 @@ export default function InlineCode({ children, ...props }: Props) {
 type Props = React.HTMLAttributes<HTMLElement>;
 
 const rootCss = css`
+  /** ISSUE with changing width via ::after when display: inline */
+  display: inline-block;
   
   /** Add specificity to override Article code */
   &.inline-code {
     font-family: "Ubuntu Mono", "Courier New", monospace;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: #0f0;
     letter-spacing: 1px;
     padding: 0 4px;
     background-color: #000;
+    
+    @media (max-width: 600px) {
+      font-size: 1rem;
+      padding: 2px 4px;
+    }
   }
 
   cursor: pointer;
   position: relative;
 
-  &.just-copied::after {
-    content: 'Copied';
+  &::after {
+    display: none;
     position: absolute;
     top: -32px;
-    right: 0;
+    left: 0;
     padding: 8px;
     line-height: 1;
     color: white;
@@ -46,5 +57,24 @@ const rootCss = css`
     font-size: 12px;
     font-family: sans-serif;
     animation: fadeInOut ${cssTimeMs.justCopied}ms ease-in-out both;
-  }  
+  }
+
+  &.just-copied::after {
+    content: 'Copied';
+    display: initial;
+  }
+
+  &.copy-just-failed::after {
+    content: 'Copy failed';
+    display: initial;
+  }
 `;
+
+// Currently copy-click unsupported
+export function InlineUniCode({ children, ...props }: Props) {
+  return (
+    <span className="inline-uni-code" style={{ fontSize: '0.9rem' }}>
+      {children}
+    </span>
+  );
+}

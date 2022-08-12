@@ -17,12 +17,10 @@ tags:
 import Tabs from "components/page/Tabs";
 import Icon from "components/page/Icon";
 import ImageCarousel from "components/page/ImageCarousel";
-import InlineCode from "components/page/InlineCode";
+import InlineCode, { InlineUniCode } from "components/page/InlineCode";
 import { profileLookup } from "projects/sh/scripts";
 
-## Introduction
-
-### Motivation
+## Introduction and Motivation
 
 What's this website about?
 
@@ -163,7 +161,7 @@ Let's see an example.
 
   | Line | Info |
   | --- | ----------- |
-  | `ℹ️  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
+  | <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string i.e. the terminal's initialisation script. Try typing it into the terminal, or click and paste (easier on a mobile). |
   | `source /etc/util-1` | The 1st line of the script at `/home/PROFILE`. This command executes the script at <InlineCode>/etc/util-1</InlineCode>, defining various util functions. |
   | `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. List all functions in the console via <InlineCode>declare \| log</InlineCode>. |
   | `await-world` | From `/home/PROFILE`, this command awaits a world with worldKey <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |

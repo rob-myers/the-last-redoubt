@@ -2,6 +2,7 @@ export const cssName = {
   anchor: 'anchor',
   central: 'central',
   clear: 'clear',
+  copyJustFailed: 'copy-just-failed',
   disableIcon: 'disable-icon',
   disabled: 'disabled',
   expanded: 'expanded',
