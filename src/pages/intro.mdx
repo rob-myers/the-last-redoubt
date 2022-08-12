@@ -63,11 +63,14 @@ This makes our approach relevant to a much wider audience.
 
 ### Building the world
 
-We need characters and a world they inhabit.
+To create a game we must fabricate a _world_ i.e. something we can see and move around in.
+A setting and characters are needed as guiding principles,
+not necessarily as driving forces.
+
 Our setting is _The Last Redoubt_, a gigantic pyramid protecting the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land) (1912).
 We mention two characters: Andros (the protagonist) and Cartesius (his preceptor);
 these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels) (2011).
-But how to build it?
+But how should we fabricate this pyramid?
 How should we build The Last Redoubt?
 
 > Thankfully we've done the groundwork, as shown in the videos below.
@@ -82,12 +85,13 @@ How should we build The Last Redoubt?
 
 </aside>
 
-So our game has a birdseye viewpoint.
+We now summarise some of what we've just seen.
+The game has a birdseye viewpoint (truly top-down).
 The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
 The Player is _situated_ i.e. their awareness is limited by their current position.
 The camera further restricts what can be seen, although one can peek by panning and zooming.
-Let's summarise with some slides.
+We've illustrated these points below.
 
 <ImageCarousel
   id="intro-video-frames"
@@ -109,11 +113,13 @@ Let's summarise with some slides.
   labelTop="10%"
 />
 
-We [mentioned](#intro--tech-stack "@anchor") our restriction to standard web dev techniques.
-For example, the lighting above is achieved via two copies of the same PNG.
-The top one is inverted via [CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) and masked by [CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path).
-We'll play the actual game in the next subsection.
-For those itching to see how it is built, [check out this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
+Let's [refer back](#intro--tech-stack "@anchor") to our standard web dev approach.
+Consider the "lighting" i.e. the lit part of the rooms, which changes as the Player opens/closes/enters doors.
+We achieve it using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one above the other.
+The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
+
+We'll interact with the actual world in the next subsection.
+For those itching to see how it is built, check out [this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
 ### How we'll direct
 

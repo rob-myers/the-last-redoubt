@@ -2,37 +2,22 @@
 
 ## In progress
 
-- ✅ BUG process sometimes needs shallow scope for `PWD` and `OLDPWD`
-  - e.g. bg processes will modify "globals" `/home/PWD`
-- ✅ BUG `echo ${_/foo}` should not be surrounded by square brackets
-- Move all assets into public/assets
-
-- CodeSandbox
-  - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
-  - ✅ with new terminal
-    - https://codesandbox.io/s/tty-demo-2-3oh1x8
-  - ✅ new terminal supports mobile touch helper
-  - ✅ Terminal + World
-    - https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/sh/raw-loader.js
-
 - Can see GitHub comments
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json
   - ✅ migrate previous approach
-
 - ✅ Create 1 frame sit animation
 - ✅ Can `sit` by applying class
 - 🚧 Explain how and where spritesheet is changed
 - Can change spritesheet from CLI e.g. `npc sheet andros sit`
 - Improve sit animation
 
-- ✅ ImageCarousel wider 
+- ✅ ImageCarousel wider
 
 - pages for initial release
-  - / and /home
-  - /intro
-  - /components
+  - / and /home 🚧
+  - /intro 🚧
   - /about/terminal
   - /about/me
 
@@ -122,6 +107,18 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ CodeSandbox
+  - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
+  - ✅ with new terminal
+    - https://codesandbox.io/s/tty-demo-2-3oh1x8
+  - ✅ new terminal supports mobile touch helper
+  - ✅ Terminal + World
+    - https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/sh/raw-loader.js
+
+- ✅ BUG process sometimes needs shallow scope for `PWD` and `OLDPWD`
+  - e.g. bg processes will modify "globals" `/home/PWD`
+- ✅ BUG `echo ${_/foo}` should not be surrounded by square brackets
 
 - ✅ BUG disable and reset does not reset non-persisted layout
 - ✅ Tabs need not persist layout

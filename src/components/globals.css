@@ -34,6 +34,10 @@ body.dark-mode {
   /** This color gets inverted */
   color: #444;
 }
+body.dark-mode p a {
+  /** This color gets inverted */
+  color: #006;
+}
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
 }
