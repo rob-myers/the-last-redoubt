@@ -25,6 +25,7 @@ type Props = React.HTMLAttributes<HTMLElement>;
 const rootCss = css`
   /** ISSUE with changing width via ::after when display: inline */
   display: inline-block;
+  -webkit-tap-highlight-color: transparent;
   
   /** Add specificity to override Article code */
   &.inline-code {
