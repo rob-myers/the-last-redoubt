@@ -2,6 +2,11 @@
 
 ## In progress
 
+- ✅ BUG switch/drag tabs hiding World whilst walking
+  ```sh
+  goLoop: walk: run: InvalidStateError: Failed to execute 'commitStyles' on 'Animation': Target element is not rendered.
+  ```
+
 - Can see GitHub comments
 
 - ✅ Clean and modularise NPC JSON imports

@@ -42,9 +42,16 @@ declare namespace NPC {
     };
     mounted: boolean;
     anim: NPCAnimData;
-
     cancel(): Promise<void>;
     clearWayMetas(): void;
+    /**
+     * We cannot use native `commitStyles` because it throws if respective
+     * element is not being rendered. This can happen if we pause/cancel or
+     * simply finish the walk whilst World tab is hidden.
+     * However we can infer position/rotation via animation `currentTime`
+     * together with `anim.path`, `anim.durationMs` and `anim.aux`.
+     */
+    commitWalkStyles(): void;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
     followNavPath(
@@ -106,6 +113,7 @@ declare namespace NPC {
     translate: Animation;
     rotate: Animation;
     sprites: Animation;
+    durationMs: number;
 
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;

@@ -23,6 +23,7 @@ export default function createNpc(
     translate: /** @type {Animation} */ ({}),
     rotate: /** @type {Animation} */ ({}),
     sprites: /** @type {Animation} */ ({}),
+    durationMs: 0,
 
     wayMetas: [],
     wayTimeoutId: 0,
@@ -45,21 +46,46 @@ export default function createNpc(
       if (anim.spriteSheet === 'idle') {
         return;
       }
-      this.clearWayMetas();
-      if (this.everAnimated()) {
-        anim.translate.commitStyles();
+      if (anim.spriteSheet === 'walk') {
+        this.clearWayMetas();
+        this.commitWalkStyles();
+        if (this.el.body instanceof HTMLDivElement) {
+          this.setLookTarget(this.getAngle());
+        }
+        await/** @type {Promise<void>} */ (new Promise(resolve => {
+          anim.translate.addEventListener('cancel', () => resolve());
+          anim.translate.cancel();
+          anim.rotate.cancel();
+        }));
       }
-      if (this.el.body instanceof HTMLDivElement) {
-        this.setLookTarget(this.getAngle());
-      }
-      await/** @type {Promise<void>} */ (new Promise(resolve => {
-        anim.translate.addEventListener('cancel', () => resolve());
-        anim.translate.cancel();
-        anim.rotate.cancel();
-      }));
     },
     clearWayMetas() {
       anim.wayMetas.length = 0;
+    },
+    commitWalkStyles() {
+      const position = new Vect;
+      const ratio = (anim.translate.currentTime || 0) / anim.durationMs;
+      let angle = 0;
+
+      if (ratio === 0) {
+        position.copy(anim.path[0]);
+        angle = anim.aux.angs[0];
+      } else if (ratio === 1) {
+        position.copy(anim.path[anim.path.length - 1]);
+        angle = anim.aux.angs[anim.aux.angs.length - 1];
+      } else {
+        const distance = ratio * anim.aux.total;
+        const vertexId = anim.aux.sofars.findIndex(sofar => sofar >= distance) - 1;
+        position.copy(anim.path[vertexId]).addScaledVector(
+          anim.path[vertexId + 1].clone().sub(anim.path[vertexId]),
+          anim.aux.total - distance,
+        );
+        angle = anim.aux.angs[vertexId];
+      }
+
+      this.el.root.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      const { scale: npcScale } = npcJson[this.jsonKey];
+      this.el.body.style.transform = `rotateZ(${angle}rad) scale(${npcScale})`;
     },
     everAnimated() {
       return this.el.root?.getAnimations().includes(anim.translate);
@@ -252,18 +278,20 @@ export default function createNpc(
     },
     pause() {
       console.log(`pause: pausing ${this.def.key}`);
-      if (this.everAnimated()) {
-        anim.translate.pause();
-        anim.rotate.pause();
-        anim.sprites.pause();
-        anim.translate.commitStyles();
-        this.setLookTarget(this.getAngle());
+      if (anim.spriteSheet === 'walk') {
+        if (this.everAnimated()) {
+          anim.translate.pause();
+          anim.rotate.pause();
+          anim.sprites.pause();
+          this.commitWalkStyles();
+          this.setLookTarget(this.getAngle());
+        }
+        /**
+         * Pending wayMeta is at anim.wayMetas[0].
+         * No need to adjust its `length` because we use animation currentTime.
+         */
+        window.clearTimeout(anim.wayTimeoutId);
       }
-      /**
-       * Pending wayMeta is at anim.wayMetas[0].
-       * No need to adjust its `length` because we use animation currentTime.
-       */
-      window.clearTimeout(anim.wayTimeoutId);
       if (this.def.key === api.npcs.playerKey) {
         // Pause camera tracking
         api.panZoom.animationAction('pause');
@@ -294,7 +322,10 @@ export default function createNpc(
     },
     startAnimation() {
       if (this.everAnimated()) {
-        anim.translate.commitStyles();
+        if (anim.spriteSheet === 'idle') {
+          // Assume we were previously walking
+          this.commitWalkStyles();
+        }
         anim.translate.cancel();
         this.setLookTarget(this.getAngle());
         anim.rotate.cancel();
@@ -308,6 +339,7 @@ export default function createNpc(
         const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
         anim.translate = this.el.root.animate(translateKeyframes, opts);
         anim.rotate = this.el.body.animate(rotateKeyframes, opts);
+        anim.durationMs = opts.duration;
 
         // Animate spritesheet
         const { animLookup } = npcJson[this.jsonKey].parsed;
