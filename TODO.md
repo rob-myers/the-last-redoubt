@@ -108,6 +108,9 @@ How to embed video?
 
 ## Done
 
+- ✅ BUG no scrollbar in Terminal if exceed scroll area when Terminal not visible
+  - e.g. switch to `World` triggers rest of script
+  
 - ✅ CodeSandbox
   - https://codesandbox.io/dashboard/all/The%20Last%20Redoubt?workspace=549801c1-91a6-4104-84da-16da83c0a5c8
   - ✅ with new terminal

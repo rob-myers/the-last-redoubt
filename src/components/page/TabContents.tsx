@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { getTabName } from 'model/tabs/tabs.model';
+import { getTabIdentifier } from 'model/tabs/tabs.model';
 import useSiteStore, { KeyedComponent } from 'store/site.store';
 import { Terminal } from 'components/dynamic';
 
 export default function TabContents({ tabsKey, component: { meta, component } }: Props) {
 
-  const componentKey = getTabName(meta);
+  const componentKey = getTabIdentifier(meta);
   const disabled = useSiteStore(({ component: lookup }) => lookup[componentKey].disabled[tabsKey]);
 
   return (

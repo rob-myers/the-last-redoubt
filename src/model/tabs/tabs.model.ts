@@ -2,7 +2,13 @@ import type { IJsonModel } from 'flexlayout-react';
 import type { ComponentFilepathKey } from './lookup';
 import { deepClone } from 'projects/service/generic';
 
-export function getTabName(meta: TabMeta) {
+/**
+ * - name of tab
+ * - id of tab
+ * - `componentKey`
+ * - `sessionKey` when `meta.type === 'terminal'`
+ */
+export function getTabIdentifier(meta: TabMeta) {
   return meta.filepath;
 }
 
@@ -47,8 +53,8 @@ export function computeJsonModel(
              * Tabs must not be duplicated within same `Tabs`,
              * for otherwise this internal `id` will conflict.
              */
-            id: getTabName(meta),
-            name: getTabName(meta),
+            id: getTabIdentifier(meta),
+            name: getTabIdentifier(meta),
             config: deepClone(meta),
           })),
         }],

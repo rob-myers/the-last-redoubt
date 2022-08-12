@@ -179,6 +179,16 @@ export class ttyXtermClass {
   }
 
   /**
+   * If xterm invisible and we paste exceeding scroll bounds for first time,
+   * then scrollbars do not appear (nor does fitAddon.fit() help).
+   * This hack makes them appear.
+   */
+  forceResize() {
+    this.xterm.resize(this.xterm.cols + 1, this.xterm.rows);
+    this.xterm.resize(this.xterm.cols - 1, this.xterm.rows);
+  }
+
+  /**
    * Erase a character at cursor location.
    */
   private handleCursorErase(backspace: boolean) {

@@ -5,11 +5,12 @@ import { useBeforeunload } from 'react-beforeunload';
 import debounce from "debounce";
 
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
-import { TabMeta, computeJsonModel, getTabName } from 'model/tabs/tabs.model';
+import { TabMeta, computeJsonModel, getTabIdentifier } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
 import type { Props as TabsProps } from './Tabs';
 import Tab, { createKeyedComponent } from './Tab';
+import useSessionStore from "projects/sh/session.store";
 
 export default function Layout(props: Props) {
 
@@ -19,9 +20,8 @@ export default function Layout(props: Props) {
 
     output.visitNodes((node) => {
       if (node.getType() === 'tab') {
-        /**
-         * Enable and disable tabs relative to conditions
-         */
+        
+        // Enable and disable tabs relative to conditions
         node.setEventListener('visibility', ({ visible }) => {
           if (model.getMaximizedTabset()) {
             return; // If some tab maximised don't enable "visible" tabs covered by it
@@ -35,6 +35,12 @@ export default function Layout(props: Props) {
               useSiteStore.api.setTabDisabled(tabs.key, key, true);
             }
           } else {// tab now visible
+            if (tabMeta.type === 'terminal') {
+              // Ensure scrollbar appears if exceeded scroll area when hidden
+              const session = useSessionStore.api.getSession(getTabIdentifier(tabMeta));
+              session?.ttyShell.xterm.forceResize();
+            }
+
             window.setTimeout(async () => {
               if (!useSiteStore.getState().component[key]) {
                 await createKeyedComponent(tabs.key, tabMeta);
@@ -192,7 +198,7 @@ function restoreJsonModel(props: Props) {
        * Overwrite persisted `TabMeta`s with their value from `props`.
        */
       const tabKeyToMeta = props.tabs.flatMap(x => x).reduce(
-        (agg, item) => Object.assign(agg, { [getTabName(item)]: item }), 
+        (agg, item) => Object.assign(agg, { [getTabIdentifier(item)]: item }), 
         {} as Record<string, TabMeta>,
       );
       model.visitNodes(x => x.getType() === 'tab' &&
@@ -202,7 +208,7 @@ function restoreJsonModel(props: Props) {
       // Validate i.e. props.tabs must mention same ids
       const prevTabNodeIds = [] as string[];
       model.visitNodes(node => node.getType() === 'tab' && prevTabNodeIds.push(node.getId()));
-      const nextTabNodeIds = props.tabs.flatMap(x => x.map(getTabName));
+      const nextTabNodeIds = props.tabs.flatMap(x => x.map(getTabIdentifier));
       if (prevTabNodeIds.length === nextTabNodeIds.length && prevTabNodeIds.every(id => nextTabNodeIds.includes(id))) {
         return model;
       }

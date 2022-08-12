@@ -1,13 +1,13 @@
 import React from "react";
 import * as portals from "react-reverse-portal";
 import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
-import { getTabName, TabMeta } from "model/tabs/tabs.model";
+import { getTabIdentifier, TabMeta } from "model/tabs/tabs.model";
 import { getComponent, isComponentPersisted } from "model/tabs/lookup";
 import TabContents from "./TabContents";
 
 export default function Tab(props: Props) {
 
-  const componentKey = getTabName(props);
+  const componentKey = getTabIdentifier(props);
   const component = useSiteStore(({ component }) =>
     componentKey in component ? component[componentKey] : null,
   );
@@ -62,7 +62,7 @@ export async function createKeyedComponent(
   meta: TabMeta,
   disabled = true,
 ) {
-  const componentKey = getTabName(meta);
+  const componentKey = getTabIdentifier(meta);
   let item: KeyedComponent;
 
   if (meta.type === 'terminal' || isComponentPersisted(componentKey)) {
