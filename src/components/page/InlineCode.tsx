@@ -48,7 +48,7 @@ const rootCss = css`
     display: none;
     position: absolute;
     top: -32px;
-    left: 0;
+    right: 0;
     padding: 8px;
     line-height: 1;
     color: white;
