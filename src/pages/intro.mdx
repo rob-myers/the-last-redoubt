@@ -75,7 +75,7 @@ How should we build The Last Redoubt?
 
 > Thankfully we've done the groundwork, as shown in the videos below.
 
-<iframe className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe id="intro-first-videos" className="youtube" width="100%" height="464" src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <aside title="starship-geomorphs">
 
@@ -118,20 +118,27 @@ Consider the "lighting" i.e. the lit part of the rooms, which changes as the Pla
 We achieve it using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one above the other.
 The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
 
-We'll interact with the actual world in the next subsection.
+We'll interact with the actual world in the next section.
 For those itching to see how it is built, check out [this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
-### How we'll direct
+### Directing the world
 
-Importantly, the videos above show a [_terminal_](https://xtermjs.org/) (the black window with mostly green text).
+Let's not lose sight of our motivation: **understanding and improving Game AI**.
+Rather than relying on the Player interacting with mostly independent parallel systems,
+we'll intentionally modify/monitor the Player's experience.
+Although a persistent world must exist from the Player's perspective,
+it is the latter we care about, not the former.
+We've made good progress fabricating a world, but how to shape/control/direct it?
+
+The [videos above](#intro-first-videos "@anchor") show a [_terminal_](https://xtermjs.org/) i.e. the black window with mostly green text.
 We can type commands into it and press enter to run them.
 Commands are parsed using the excellent [mvdan-sh](https://github.com/mvdan/sh),
 and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 
 The terminal is central to our approach.
-We view Game AI (NPC behaviour) as interaction between the Director and the Player.
-In our approach, the Director _directs_ by running commands in one or more terminals,
+If Game AI (NPC behaviour) is the interaction between the Director (a human-software amalgam) and the Player,
+then the Director _directs_ by running commands in one or more terminals,
 including scripts and long-running processes.
 Let's see an example.
 
