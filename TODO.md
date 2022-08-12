@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ BUG commitStyles was wrong e.g. try click past closed door
+
 - ✅ BUG switch/drag tabs hiding World whilst walking
   ```sh
   goLoop: walk: run: InvalidStateError: Failed to execute 'commitStyles' on 'Animation': Target element is not rendered.

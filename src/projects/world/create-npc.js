@@ -78,11 +78,10 @@ export default function createNpc(
         const vertexId = anim.aux.sofars.findIndex(sofar => sofar >= distance) - 1;
         position.copy(anim.path[vertexId]).addScaledVector(
           anim.path[vertexId + 1].clone().sub(anim.path[vertexId]),
-          anim.aux.total - distance,
+          (distance - anim.aux.sofars[vertexId]) / anim.aux.elens[vertexId],
         );
         angle = anim.aux.angs[vertexId];
       }
-
       this.el.root.style.transform = `translate(${position.x}px, ${position.y}px)`;
       const { scale: npcScale } = npcJson[this.jsonKey];
       this.el.body.style.transform = `rotateZ(${angle}rad) scale(${npcScale})`;
