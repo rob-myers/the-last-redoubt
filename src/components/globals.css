@@ -41,20 +41,20 @@ body.dark-mode p a {
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
 }
-body.dark-mode section article > :not(code, div.carousel, div.tags, figure.tabs, iframe, pre) {
+body.dark-mode section article > :not(code, div.carousel, div.tags, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }
 body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
   filter: invert(100%);
+}
+body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs {
+  background-color: #222;
 }
 body.dark-mode div.top-bar {
   background-color: #333;
 }
 body.dark-mode section header > :not(div) {
   filter: invert(100%);
-}
-body.dark-mode iframe.youtube, body.dark-mode div.carousel, body.dark-mode figure.tabs {
-  background-color: #222;
 }
 
 a {

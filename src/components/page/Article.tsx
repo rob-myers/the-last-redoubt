@@ -176,7 +176,7 @@ const articleCss = css`
     text-align: center;
   }
 
-  figure.tabs {
+  figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
     padding: 48px;
     background-color: #eee;
@@ -247,17 +247,6 @@ const articleCss = css`
 
   h2 + p, h3 + p {
     margin-top: 0px;
-  }
-
-  iframe.youtube {
-    padding: 48px;
-    background-color: #eee;
-    margin-top: 16px;
-    margin-bottom: 36px;
-    @media(max-width: 600px) {
-      padding: 8px 0;
-      margin-bottom: 20px;
-    }
   }
 
   li {
