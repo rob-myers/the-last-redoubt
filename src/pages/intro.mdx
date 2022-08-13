@@ -35,7 +35,7 @@ Can we clarify the problem?
 Can we do better?
 
 Sometimes Game AI is emergent.
-For example, Super Mario 3 arises from many independent individual NPC behaviours running in parallel.
+For example, Super Mario 3 arises from many individual independent NPC behaviours running in parallel.
 But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
 the result is usually a mess.
 The _combinatorial explosion of possibilities_ results in
@@ -64,14 +64,14 @@ This makes our approach relevant to a much wider audience.
 
 ### Building the world
 
-To create a game we must fabricate a _world_ i.e. something we can see and move around in.
+To create a game we must _create a world_ i.e. something we can see and move around in.
 A setting and characters are needed as guiding principles,
 not necessarily as driving forces.
 
 Our setting is _The Last Redoubt_, a gigantic pyramid protecting the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land) (1912).
 We mention two characters: Andros (the protagonist) and Cartesius (his preceptor);
 these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels) (2011).
-But how should we fabricate this pyramid?
+But how to fabricate this pyramid?
 How should we build The Last Redoubt?
 
 > Thankfully we've done the groundwork, as shown in the videos below.
@@ -86,7 +86,7 @@ How should we build The Last Redoubt?
 
 </aside>
 
-We now summarise some of what we've just seen.
+We summarise some of what we've seen.
 The game has a birdseye viewpoint (truly top-down).
 The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
 These actions are achieved by clicking the mouse or touching the screen.
@@ -114,9 +114,9 @@ We've illustrated these points below.
   labelTop="10%"
 />
 
-Let's [refer back](#intro--tech-stack "@anchor") to our standard web dev approach.
-Consider the lighting i.e. the lit part of the rooms, which changes as the Player opens/closes/enters doors.
-We achieve it using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one above the other.
+Let's [refer back](#intro--tech-stack "@anchor") to our everyday web dev approach.
+Consider the lighting (the lit part of the rooms) which changes as the Player opens/closes/enters doors.
+We achieve it using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one atop the other.
 The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
 
 We'll interact with the actual world in the next section.
@@ -125,15 +125,22 @@ For those itching to see how it is built, check out the CodeSandbox [here](https
 ### Directing the world
 
 Let's not lose sight of our motivation: **understanding and improving Game AI**.
-Rather than relying on the Player interacting with mostly independent parallel systems,
+Rather than relying on Player-interaction with mostly independent parallel systems,
 we'll intentionally modify/monitor the Player's experience.
-Although a persistent world must exist from the Player's perspective,
-it is the latter we care about, not the former.
-We've made good progress fabricating a world, but how to shape/control/direct it?
+Although a persistent world must exist,
+it is the Player's experience we care about, not an ongoing simulation.
 
-The [videos above](#intro-first-videos "@anchor") show a [_terminal_](https://xtermjs.org/) i.e. the black window with mostly green text.
+> Examples of a modify/monitor approach:
+> - Spawn nearby enemies if the Player walks through 3 doors.
+> - Build tension by only showing enemies at edge of sight-polygon.
+> - Tempt Player towards particular area, then ambush them.
+
+The previous section saw some good progress towards fabricating a world.
+But how to shape/control/direct it?
+
+The [videos above](#intro-first-videos "@anchor") show a [_terminal_](https://xtermjs.org/ "@new-tab") i.e. the black window with mostly green text.
 We can type commands into it and press enter to run them.
-Commands are parsed using the excellent [mvdan-sh](https://github.com/mvdan/sh),
+Commands are parsed using the excellent [mvdan-sh](https://www.npmjs.com/package/mvdan-sh),
 and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 
