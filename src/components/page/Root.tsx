@@ -32,8 +32,11 @@ export function wrapPageElement({
 
   try {
     const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
+    console.log({ darkModeEnabled });
     if (darkModeEnabled === 'true') document.body.classList.add('dark-mode');
-  } catch (e) {}
+  } catch (e) {
+    console.error(e)
+  }
         `}</script>
       </Helmet>
 
