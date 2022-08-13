@@ -7,7 +7,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
-import { localStorageKey } from "projects/service/const";
 import Nav from "./Nav";
 import Main from "./Main";
 import Portals from "./Portals";
@@ -29,14 +28,6 @@ export function wrapPageElement({
         <title>The Last Redoubt</title>
         <script>{`
   history.scrollRestoration = 'manual';
-
-  try {
-    const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
-    console.log({ darkModeEnabled });
-    if (darkModeEnabled === 'true') document.body.classList.add('dark-mode');
-  } catch (e) {
-    console.error(e)
-  }
         `}</script>
       </Helmet>
 
