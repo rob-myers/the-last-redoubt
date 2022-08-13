@@ -1,3 +1,7 @@
+export const localStorageKey = {
+  darkModeEnabled: 'dark-mode-enabled',
+};
+
 export const cssName = {
   anchor: 'anchor',
   central: 'central',

@@ -2,7 +2,7 @@ import React from "react";
 import { cx, css } from "@emotion/css";
 import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
-import { cssName, zIndex } from 'projects/service/const';
+import { cssName, localStorageKey, zIndex } from 'projects/service/const';
 import Link from "./Link";
 import { barHeight } from "./Nav";
 import Icon from "./Icon";
@@ -46,7 +46,7 @@ export default function NavMini() {
         className="toggle-dark-mode"
         onClick={(e) => {
           const enabled = document.body.classList.toggle('dark-mode');
-          tryLocalStorageSet('dark-mode-enabled', `${enabled}`);
+          tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
         }}
       />
     </div>
