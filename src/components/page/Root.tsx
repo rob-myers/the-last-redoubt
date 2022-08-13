@@ -28,10 +28,12 @@ export function wrapPageElement({
       <Helmet>
         <title>The Last Redoubt</title>
         <script>{`
-          try {
-            const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
-            if (darkModeEnabled === 'true') document.body.classList.add('dark-mode');
-          } catch (e) {}
+  history.scrollRestoration = 'manual';
+
+  try {
+    const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
+    if (darkModeEnabled === 'true') document.body.classList.add('dark-mode');
+  } catch (e) {}
         `}</script>
       </Helmet>
 

@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ Handle scroll restoration ourselves
+
 - ✅ BUG commitStyles was wrong e.g. try click past closed door
 
 - ✅ BUG switch/drag tabs hiding World whilst walking

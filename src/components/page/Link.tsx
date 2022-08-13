@@ -25,8 +25,7 @@ export default function Link(props: Props) {
         const changePage = pathname !== location.pathname;
 
         if (props.prePush && props.prePush !== hash) {
-          // await navigate(props.prePush);
-          history.pushState({}, '', props.prePush);
+          await navigate(props.prePush);
         }
 
         if (changePage) {
@@ -37,19 +36,16 @@ export default function Link(props: Props) {
         
         const el = document.getElementById(hash.slice(1));
         if (el) {
+          await pause(50);
           const { top } = el.getBoundingClientRect();
           window.scrollBy({ top, behavior: 'smooth' });
           if (! await scrollFinished(window.pageYOffset + top)) return;
         }
 
         if (props.prePush && !changePage) {
-          // Push hash into history if we didn't change page,
-          // otherwise we'll overwrite the prePush
           await navigate(hash);
-          // history.pushState({}, '', hash)
         } else {
-          // navigate(hash, { replace: true });
-          history.replaceState({}, '', hash);
+          navigate(hash, { replace: true });
         }
 
         props.postPush?.();
