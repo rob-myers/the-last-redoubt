@@ -126,4 +126,7 @@ ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=
 
 ```sh
 ffmpeg -i filename.mov -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 output.mp4
+ffmpeg -i filename.mov -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4
 ```
+
+My Pixel 5 dimensions: `464 * 851`

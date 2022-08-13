@@ -2,6 +2,16 @@
 
 ## In progress
 
+- pages for initial release
+  - /intro 🚧
+    - add video ✅
+    - write "What we'll direct"
+  - / and /home
+  - /about/terminal
+  - /about/me
+
+- Can see GitHub comments
+
 - ✅ Handle scroll restoration ourselves
 
 - ✅ BUG commitStyles was wrong e.g. try click past closed door
@@ -10,8 +20,6 @@
   ```sh
   goLoop: walk: run: InvalidStateError: Failed to execute 'commitStyles' on 'Animation': Target element is not rendered.
   ```
-
-- Can see GitHub comments
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json
@@ -24,14 +32,7 @@
 
 - ✅ ImageCarousel wider
 
-- pages for initial release
-  - / and /home 🚧
-  - /intro 🚧
-  - /about/terminal
-  - /about/me
-
 - ✅ Render a graphviz graph
-- Can see GitHub Comments on site
 
 - Avoid dup loaded components
 - Fix Tab body lock when initially maximised

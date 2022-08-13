@@ -16,7 +16,20 @@ export default function Video({ videoKey }: Props) {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
-        ) || null
+        )
+      }
+      {
+        videoKey === 'intro-world-tty-videos' && (
+          <iframe
+            width="100%"
+            height="464"
+            src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+        )
       }
     </figure>
   );
@@ -25,6 +38,7 @@ export default function Video({ videoKey }: Props) {
 interface Props {
   videoKey: (
     | 'intro-first-videos'
+    | 'intro-world-tty-videos'
   );
 }
 

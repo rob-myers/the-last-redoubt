@@ -185,6 +185,12 @@ const articleCss = css`
       padding: 32px 0 8px 0;
     }
   }
+  p + figure.tabs, p + figure.video {
+    margin: calc(40px) 0 40px 0;
+    @media(max-width: 600px) {
+      margin: calc(32px) 0 32px 0;
+    }
+  }
 
   h1, h2, h3, h4 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
@@ -265,7 +271,6 @@ const articleCss = css`
   }
 
   li blockquote {
-    margin: 0;
     p {
       margin: 16px 0;
     }
