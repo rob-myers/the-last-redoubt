@@ -1,5 +1,6 @@
 export const localStorageKey = {
   darkModeEnabled: 'dark-mode-enabled',
+  windowScrollY: 'window-scroll-y',
 };
 
 export const cssName = {
