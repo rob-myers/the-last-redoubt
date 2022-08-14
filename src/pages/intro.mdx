@@ -42,8 +42,8 @@ The _combinatorial explosion of possibilities_ results in
 unrealistic hard-to-debug behaviour.
 
 Focusing on what the Player actually experiences is a better idea.
-There's the Player and there's the _environment_, controlled by a highly opinionated _Director_ (an amalgam of people and software).
-The Director controls the environment (e.g. all the NPCs), and the Player has certain freedoms within it.
+Everything except the Player is the _environment_, controlled by a highly opinionated _Director_ (an amalgam of people and software).
+The Director controls the environment (including the NPCs), and the Player has certain freedoms within it.
 But the Director needs something to direct,
 so we must **create a game** to make meaningful Game AI.
 
@@ -59,12 +59,12 @@ But which ones?
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
 > and JavaScript-driven rendering or simulation.
 
-This makes our approach relevant to a much wider audience.
+This makes our approach relevant to a wide audience.
 
 
 ### Building the world
 
-To create a game we must _create a world_ i.e. something we can see and move around in.
+To create a game we must _create a world_.
 A setting and characters are needed as guiding principles,
 not necessarily as driving forces.
 
@@ -86,12 +86,23 @@ How should we build The Last Redoubt?
 
 </aside>
 
-We summarise some of what we've seen.
-The game has a birdseye viewpoint (truly top-down).
-The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.) and opening nearby doors.
-These actions are achieved by clicking the mouse or touching the screen.
-The Player is _situated_ i.e. their awareness is limited by their current position.
-The camera further restricts what can be seen, although one can peek by panning and zooming.
+What have we seen in the videos?
+
+> **The game has a birdseye viewpoint**.
+> Avoiding game-centric tech rules out 3D graphics, although isometric would still be possible.
+
+> **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
+> Mouse clicks are converted into world coordinates.
+> Doors are styled clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
+
+> **The Player interacts by clicking the mouse or touching the screen**.
+> We avoid game-centric controls, using standard site interaction instead.
+
+> **The Player is _situated_ with limited visual range**.
+> We achieve this using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one atop the other.
+> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
+
+The camera ([CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)) further restricts what can be seen, although one can peek by panning and zooming.
 We've illustrated these points below.
 
 <ImageCarousel
@@ -114,11 +125,7 @@ We've illustrated these points below.
   labelTop="10%"
 />
 
-Let's [refer back](#intro--tech-stack "@anchor") to our everyday web dev approach.
-Consider the lighting (the lit part of the rooms) which changes as the Player opens/closes/enters doors.
-We achieve it using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab"), one atop the other.
-The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
-
+Then our world is in-keeping with our [everyday web dev approach](#intro--tech-stack "@anchor").
 We'll interact with the actual world in the next section.
 For those itching to see how it is built, check out the CodeSandbox [here](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 

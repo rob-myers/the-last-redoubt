@@ -26,6 +26,10 @@ export const replaceRenderer = ({ bodyComponent, setHeadComponents }) => {
  */
 export function onRenderBody({ setPreBodyComponents }) {
   setPreBodyComponents([
+    /**
+     * Cannot append to <head> because
+     * `document.body` was null on Android Chrome.
+     */
     <script key="set-dark-mode"
       dangerouslySetInnerHTML={{
         __html: `

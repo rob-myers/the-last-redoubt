@@ -3,23 +3,14 @@
 ## In progress
 
 - pages for initial release
-  - /intro 🚧
+  - /intro
     - add video ✅
-    - write "What we'll direct"
+    - write "What we'll direct" 🚧
   - / and /home
   - /about/terminal
   - /about/me
 
 - Can see GitHub comments
-
-- ✅ Handle scroll restoration ourselves
-
-- ✅ BUG commitStyles was wrong e.g. try click past closed door
-
-- ✅ BUG switch/drag tabs hiding World whilst walking
-  ```sh
-  goLoop: walk: run: InvalidStateError: Failed to execute 'commitStyles' on 'Animation': Target element is not rendered.
-  ```
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json
@@ -29,8 +20,6 @@
 - 🚧 Explain how and where spritesheet is changed
 - Can change spritesheet from CLI e.g. `npc sheet andros sit`
 - Improve sit animation
-
-- ✅ ImageCarousel wider
 
 - ✅ Render a graphviz graph
 
@@ -117,6 +106,17 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ ImageCarousel wider
+
+- ✅ Handle scroll restoration ourselves
+
+- ✅ BUG commitStyles was wrong e.g. try click past closed door
+
+- ✅ BUG switch/drag tabs hiding World whilst walking
+  ```sh
+  goLoop: walk: run: InvalidStateError: Failed to execute 'commitStyles' on 'Animation': Target element is not rendered.
+  ```
 
 - ✅ BUG no scrollbar in Terminal if exceed scroll area when Terminal not visible
   - e.g. switch to `World` triggers rest of script
