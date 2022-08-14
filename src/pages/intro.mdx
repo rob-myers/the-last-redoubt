@@ -125,36 +125,36 @@ We've illustrated these points below.
   labelTop="10%"
 />
 
-Then our world is in-keeping with our [everyday web dev approach](#intro--tech-stack "@anchor").
-We'll interact with the actual world in the next section.
+Then our world is in-keeping with an [everyday web dev approach](#intro--tech-stack "@anchor").
+We'll interact with the real McCoy in the next section.
 For those itching to see how it is built, check out the CodeSandbox [here](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
 ### Directing the world
 
-Let's not lose sight of our motivation: **understanding and improving Game AI**.
-Rather than relying on Player-interaction with mostly independent parallel systems,
-we'll intentionally modify/monitor the Player's experience.
-Although a persistent world must exist,
-it is the Player's experience we care about, not an ongoing simulation.
+Let's recall our motivation:
+> understanding and improving Game AI.
 
-> Examples of PX (Player Experience) focused approach:
-> - Spawn nearby enemies if the Player walks through 3 doors.
-> - Build tension by only showing enemies at fringes of sight-polygon.
-> - Tempt Player towards particular area, then ambush them.
+Rather than rely upon the Player interacting with independent parallel systems,
+we'll intentionally modify the Player's experience.
+Examples include:
+- Spawn enemies if the Player walks through 3 doors.
+- Build tension by only showing enemies at fringes of sight-polygon.
+- Tempt Player to particular area, then ambush them.
 
-The previous section saw some good progress towards fabricating a world.
-But how to shape/control/direct it?
+We've made good progress towards building a world,
+but what about _directing it_ (e.g. specifying the behaviour of NPCs)?
 
-The [videos above](#intro-first-videos "@anchor") show a [_terminal_](https://xtermjs.org/ "@new-tab") i.e. the black window with mostly green text.
-We can type commands into it and press enter to run them.
+> The [videos above](#intro-first-videos "@anchor") show a [_terminal_](https://xtermjs.org/ "@new-tab") i.e. the black window with mostly green text.
+We can type commands and press enter to run them.
 Commands are parsed using the excellent [mvdan-sh](https://www.npmjs.com/package/mvdan-sh),
 and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 
-The terminal is central to our approach.
+> The terminal is central to our approach.
 If Game AI (NPC behaviour) is the interaction between the Director (a human-software amalgam) and the Player,
-then the Director _directs_ by running commands in one or more terminals,
-including scripts and long-running processes.
+then the Director _directs_ by running commands in one or more terminals.
+These include scripts and long-running processes.
+
 Let's see an example.
 
 1. Try clicking _interact_ below.
