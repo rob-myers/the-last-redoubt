@@ -62,7 +62,9 @@ const rootCss = css`
   z-index: ${zIndex.navMini};
   right: ${width}px;
   top: -32px;
-  @media(max-width: 600px) { top: 0; }
+  @media(max-width: 600px) {
+    top: 0;
+  }
 
   display: flex;
   font-size: 1rem;
@@ -72,6 +74,9 @@ const rootCss = css`
     width: ${width}px;
     height: ${barHeight}px;
     right: 30px;
+    @media(max-width: 600px) {
+      right: 12px;
+    }
 
     display: flex;
     justify-content: center;
