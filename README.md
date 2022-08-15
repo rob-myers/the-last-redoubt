@@ -1,7 +1,5 @@
 # The Last Redoubt
 
-[TODOs](/TODO.md).
-
 ```sh
 # Local development
 yarn dev
@@ -11,5 +9,12 @@ yarn build
 cd public
 npx http-server
 ```
+## Links
 
-[Some more dev info](/DEV-INFO.md).
+- [TODOs](/TODO.md).
+- [General dev info](/DEV-INFO.md).
+
+## Gotchas
+
+1.  MDX Frontmatter consistency
+    > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
