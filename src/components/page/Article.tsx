@@ -89,7 +89,7 @@ const articleCss = css`
   }
 
   aside {
-    margin: 0 0 32px 0;
+    margin: 40px 0 32px 0;
     padding: 12px 32px;
     font-size: 0.9rem;
     font-style: italic;
@@ -122,8 +122,8 @@ const articleCss = css`
     }
 
     @media(max-width: 600px) {
-      margin: 0 0 16px 0;
-      padding: 8px 20px;
+      margin: 24px 0 16px 0;
+      padding: 16px 24px;
       border-radius: 12px;
       border-width: 1px;
       line-height: 2;
@@ -185,14 +185,14 @@ const articleCss = css`
     padding: 48px;
     background-color: #eee;
     @media(max-width: 600px) {
-      margin: calc(32px + 16px) 0 32px 0;
+      margin: calc(32px + 16px) 0 24px 0;
       padding: 32px 0 8px 0;
     }
   }
   p + figure.tabs, p + figure.video {
     margin: calc(40px) 0 40px 0;
     @media(max-width: 600px) {
-      margin: calc(32px) 0 32px 0;
+      margin: 20px 0 20px 0;
     }
   }
 
@@ -242,7 +242,7 @@ const articleCss = css`
   }
   h3 {
     font-size: 1.3rem;
-    margin: 12px 0 16px 0;
+    margin: 0 0 4px 0;
     @media(max-width: 600px) {
       font-size: 1.3rem;
       margin: 0 0 12px 0;
