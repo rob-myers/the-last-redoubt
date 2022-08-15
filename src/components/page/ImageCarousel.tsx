@@ -28,6 +28,7 @@ export default function ImageCarousel(props: Props) {
           <img
             src={`${props.baseSrc || ''}${src}`}
             style={props.imgStyles}
+            loading="lazy"
           />
         </div>
       )}
