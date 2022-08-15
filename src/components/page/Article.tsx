@@ -186,11 +186,17 @@ const articleCss = css`
     background-color: #eee;
     @media(max-width: 600px) {
       margin: calc(32px + 16px) 0 24px 0;
-      padding: 32px 0 8px 0;
+      padding: 8px 0 8px 0;
     }
   }
-  p + figure.tabs, p + figure.video {
-    margin: calc(40px) 0 40px 0;
+  p + figure.tabs {
+    margin: 40px 0 40px 0;
+    @media(max-width: 600px) {
+      margin: 20px 0 20px 0;
+    }
+  }
+  p + figure.video {
+    margin: 32px 0 40px 0;
     @media(max-width: 600px) {
       margin: 20px 0 20px 0;
     }
