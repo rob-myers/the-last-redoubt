@@ -384,7 +384,7 @@ const articleComponents = (
           // backward={!!part && (part < articlesMeta[articleKey].part)}
         >
           {children}
-          (<Icon icon="hash-icon" inline small />)
+          &nbsp;{'['}<Icon icon="hash-icon" inline small />{']'}
         </Link>
       );
     }
@@ -399,8 +399,7 @@ const articleComponents = (
           rel="noopener"
         >
           {children}
-          &nbsp;
-          <Icon icon="ext-link" inline small />
+          &nbsp;<Icon icon="ext-link" inline small />
         </a>
       );
     }
