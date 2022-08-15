@@ -141,7 +141,7 @@ Examples include:
 - Build tension by showing enemies at fringes of vision.
 - Tempt Player to particular area and ambush them.
 - Indicate room purpose via ghostly replay.
-- Orchestrate enemy search party
+- Orchestrate enemy search party.
 
 We've made good progress towards _building_ a world,
 but what about _directing it_ (e.g. specifying the behaviour of NPCs)?
@@ -203,22 +203,37 @@ Let's see an example.
   > (b) clicking the navmesh makes him walk,
   > (c) clicking outside the navmesh makes him turn.
 
-  <aside>
+<aside>
 
-    Our [shell](https://en.wikipedia.org/wiki/Shell_(computing)#Command-line_shells) wraps JavaScript (JS) in a Command Line Interface.
-    JS is concerned with **values** (primitive or object) rather than files.
-    Each terminal has an associated root object where
-    e.g. `root.home.PROFILE` is a string defining the initialisation script.
-    Shells usually don't echo the initialisation script as it runs.
-    Ours pastes it into the terminal, producing the behaviour above.
+  Our [shell](https://en.wikipedia.org/wiki/Shell_(computing)#Command-line_shells) wraps JavaScript in a Command Line Interface.
+  JavaScript is concerned with **values** (primitive or object) rather than files.
+  Each terminal has an associated root object where
+  e.g. `root.home.PROFILE` is a string defining the initialisation script.
+  Shells usually don't echo the initialisation script.
+  Ours pastes it into the terminal, producing the above behaviour.
 
-  </aside>
+</aside>
 
-We've made some videos illustrating the example above.
+We've also made some illustrative videos.
 
 <Video videoKey="intro-world-tty-videos" />
 
-### Finished product?
+### Finished product
+
+Game developers suffer from a disease.
+They intend to make a game yet make a _game engine_ instead i.e.
+the supporting systems sans the unification.
+This is a _real problem_ - years of effort with zero result.
+However, our driving force is Game AI rather than publishing a game.
+We'll avoid _zero result_ by publishing the stepwise process right here.
+Our chosen approach is relevant to a wide audience i.e.
+not only game developers, but web developers in general.
+
+We don't believe Game AI can be studied abstractly.
+It has very little relationship with Artificial Intelligence in the academic sense.
+On the other hand, the [Turing Test](https://en.wikipedia.org/wiki/Computing_Machinery_and_Intelligence) was originally a gender-bending party game.
+Implementing convincing NPC behaviour is certainly some kind of Artificial Intelligence.
+We needn't identify AI with machine vision or driverless vehicles (amazing as they are).
 
 __TODO__
 - Story provides some guidance

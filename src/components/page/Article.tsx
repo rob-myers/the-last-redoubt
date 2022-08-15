@@ -102,6 +102,9 @@ const articleCss = css`
     p + blockquote, blockquote + p {
       margin-top: 0px;
     }
+    code {
+      font-size: inherit;
+    }
 
     position: relative;
     .${cssName.anchor} {
