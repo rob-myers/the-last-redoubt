@@ -3,6 +3,7 @@ import "src/components/icons.css"
 import "flexlayout-react/style/light.css"
 import "xterm/css/xterm.css"
 
+import { navigate } from "gatsby";
 import ResizeObserver from 'resize-observer-polyfill';
 
 import { tryLocalStorageGet } from './src/projects/service/generic';
@@ -45,7 +46,10 @@ export function shouldUpdateScroll({
  */
 export async function onRouteUpdate(location) {
   const { prevLocation, location: currentLocation } = location;
-  // console.log('onRouteUpdate', currentLocation.hash);
+  
+  /**
+   * TODO cancel smooth scroll on user scroll
+   */
 
   const el = document.getElementById(currentLocation.hash.slice(1));
   if (currentLocation.hash.length <= 1 || !el) {
@@ -53,25 +57,30 @@ export async function onRouteUpdate(location) {
   }
 
   if (!prevLocation) {
-    const { top } = el.getBoundingClientRect();
     // Immediate scroll to hash
+    const { top } = el.getBoundingClientRect();
     window.scrollBy({ top, behavior: 'auto' });
 
-    setTimeout(() => {// Smooth scroll to previous window.scrollY
+    setTimeout(() => {
       const prevScrollY = Number(tryLocalStorageGet(localStorageKey.windowScrollY)??-1);
-      prevScrollY !== -1 && window.scrollTo({ top: prevScrollY, behavior: 'smooth' });
+      if (prevScrollY >= 0) {// Smooth scroll to previous window.scrollY
+        window.scrollTo({ top: prevScrollY, behavior: 'smooth' });
+      }
+      if (Math.abs(prevScrollY - window.scrollY) > 400) {// Forget hash
+        setTimeout(() => navigate(`${currentLocation.pathname}#`), 1000);
+      }
     }, 300);
 
   } else if (prevLocation.hash !== currentLocation.hash) {
     const { top } = el.getBoundingClientRect();
     window.scrollBy({ top, behavior: 'smooth' });
-    /**
-     * TODO on user scroll, we should _stop scrolling_
-     * e.g. by scrolling to current
-     */
   }
 }
 
 //#endregion
 
+//#region root wrapper
+
 export { wrapPageElement } from "./src/components/page/Root";
+
+//#endregion
