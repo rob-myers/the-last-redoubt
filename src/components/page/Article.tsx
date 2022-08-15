@@ -258,14 +258,14 @@ const articleCss = css`
 
   li {
     line-height: 2;
-    p:first-child {
+    > p:first-child {
       margin-bottom: 12px;
     }
-    p:nth-child(n + 2) {
+    > p:nth-child(n + 2) {
       margin-top: 0;
     }
     @media(max-width: 600px) {
-      p:first-child {
+      > p:first-child {
         margin-bottom: 8px;
       }
     }
