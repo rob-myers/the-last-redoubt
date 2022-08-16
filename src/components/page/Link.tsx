@@ -20,7 +20,6 @@ export default function Link(props: Props) {
           return await navigateNatively(props);
         }
 
-        // Otherwise, use client-side routing
         const { pathname, hash } = new URL(props.href, location.href);
         const changePage = pathname !== location.pathname;
 
@@ -42,12 +41,7 @@ export default function Link(props: Props) {
           if (! await scrollFinished(window.pageYOffset + top)) return;
         }
 
-        if (props.prePush && !changePage) {
-          await navigate(hash);
-        } else {
-          navigate(hash, { replace: true });
-        }
-
+        await navigate(hash);
         props.postPush?.();
       }}
     >
