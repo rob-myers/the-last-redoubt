@@ -74,7 +74,6 @@ const rootCss = css`
   nav ul {
     width: ${controlsWidthPx}px;
     height: ${barHeight}px;
-    background-color: #444;
 
     display: flex;
     justify-content: center;
@@ -99,6 +98,7 @@ const rootCss = css`
   }
 
   nav .toggle-dark-mode {
+    background-color: #444;
     width: ${darkToggleWidthPx}px;
     right: ${5}px;
     height: ${barHeight}px;
