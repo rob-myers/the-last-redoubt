@@ -227,15 +227,16 @@ const articleCss = css`
   h2 + time + div.tags {
 
     margin-bottom: 20px;
-    font-size: 0.7rem;
     @media(max-width: 600px) {
       margin-bottom: 12px;
       font-size: 0.8rem;
+      font-weight: bold;
     }
-
+    
     display: flex;
     flex-wrap: wrap;
     font-family: sans-serif;
+    font-size: 0.7rem;
     letter-spacing: 2px;
     span {
       padding: 2px 8px;
@@ -243,7 +244,6 @@ const articleCss = css`
       margin-bottom: 4px;
       border-radius: 3px;
       border: 2px solid rgba(0, 0, 0, 0.1);
-      background-color: white; /** For dark-mode */
     }
   }
   h3 {
