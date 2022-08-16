@@ -84,9 +84,9 @@ const rootCss = css`
     li {
       list-style: none;
       list-style-position: inside;
-      padding: 0 5px;
     }
     a {
+      padding: 0 5px;
       color: #ccc;
       height: 100%;
       display: flex;
