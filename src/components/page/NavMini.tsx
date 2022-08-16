@@ -1,5 +1,5 @@
 import React from "react";
-import { cx, css } from "@emotion/css";
+import { css } from "@emotion/css";
 import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
 import { cssName, localStorageKey, zIndex } from 'projects/service/const';
@@ -38,45 +38,43 @@ export default function NavMini() {
               </Link>
             </li>
           </ul>
+          <Icon
+            icon="light-bulb"
+            className="toggle-dark-mode"
+            invert
+            onClick={(e) => {
+              const enabled = document.body.classList.toggle('dark-mode');
+              tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
+            }}
+          />
         </nav>
       )}
-
-      <Icon
-        icon="light-bulb"
-        className="toggle-dark-mode"
-        onClick={(e) => {
-          const enabled = document.body.classList.toggle('dark-mode');
-          tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
-        }}
-      />
     </div>
-  )
-  
+  );
   
 }
 
-const width = 140;
+const controlsWidthPx = 120;
+const darkToggleWidthPx = 40;
 
 const rootCss = css`
   position: absolute;
-  z-index: ${zIndex.navMini};
-  right: ${width}px;
+  right: ${controlsWidthPx + darkToggleWidthPx}px;
   top: -32px;
   @media(max-width: 600px) {
     top: 0;
   }
-
-  display: flex;
-  font-size: 1rem;
-
-  ul {
+  z-index: ${zIndex.navMini};
+  
+  nav {
     position: fixed;
-    width: ${width}px;
+    display: flex;
+  }
+
+  nav ul {
+    width: ${controlsWidthPx}px;
     height: ${barHeight}px;
-    right: 30px;
-    @media(max-width: 600px) {
-      right: 12px;
-    }
+    background-color: #444;
 
     display: flex;
     justify-content: center;
@@ -100,16 +98,13 @@ const rootCss = css`
     }
   }
 
-  .toggle-dark-mode {
-    position: fixed;
-    width: ${30}px;
+  nav .toggle-dark-mode {
+    width: ${darkToggleWidthPx}px;
     right: ${5}px;
     height: ${barHeight}px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     cursor: pointer;
-    filter: invert(100%);
   }
 `;
