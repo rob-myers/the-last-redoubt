@@ -130,6 +130,7 @@ const articleCss = css`
       .${cssName.infoIcon} {
         transform: scale(1.2);
       }
+      font-size: 1rem;
     }
   }
 
@@ -250,7 +251,7 @@ const articleCss = css`
     font-size: 1.3rem;
     margin: 0 0 4px 0;
     @media(max-width: 600px) {
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       margin: 0 0 12px 0;
     }
 
