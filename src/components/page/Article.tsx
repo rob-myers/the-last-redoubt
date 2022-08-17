@@ -254,7 +254,7 @@ const articleCss = css`
     flex-wrap: wrap;
     font-family: sans-serif;
     font-size: 0.7rem;
-    color: #555;
+    color: #fff;
     letter-spacing: 2px;
 
     margin-bottom: 20px;
@@ -269,7 +269,7 @@ const articleCss = css`
       margin-bottom: 4px;
       border-radius: 3px;
       border: 2px solid rgba(0, 0, 0, 0.1);
-      background-color: #ddf;
+      background-color: #000;
     }
   }
   h3 {

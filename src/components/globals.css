@@ -43,7 +43,7 @@ body.dark-mode section article {
 }
 body.dark-mode div.tags > span.tag {
   background-color: #cca;
-  font-weight: bold;
+  color: #000;
 }
 body.dark-mode figure.image {
   border-color: rgb(95, 95, 95);
