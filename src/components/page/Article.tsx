@@ -268,6 +268,16 @@ const articleCss = css`
     margin-top: 0px;
   }
 
+  > img {
+    margin: 32px 0;
+    border: 1px solid #ccc;
+    padding: 48px;
+    @media(max-width: 600px) {
+      padding: 24px;
+      margin: 8px 0;
+    } 
+  }
+
   li {
     line-height: 2;
     > p:first-child {
