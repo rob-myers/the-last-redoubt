@@ -177,23 +177,28 @@ const articleCss = css`
     }
   }
 
-  figcaption {
-    text-align: center;
-  }
-
   figure.image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
     margin: 32px 0;
     border: 1px solid #ccc;
-    padding: 48px 48px 24px 48px;
+    padding: 36px 24px 0 24px;
+    text-align: center;
+
     @media(max-width: 600px) {
-      padding: 24px;
-      margin: 8px 0;
+      padding: 0;
+      margin: 8px 0 16px 0;
     } 
 
     figcaption {
       font-style: italic;
       text-transform: uppercase;
       font-size: 0.9rem;
+      text-align: center;
+      padding: 8px 0;
     }
   }
   figure.tabs, figure.video {
