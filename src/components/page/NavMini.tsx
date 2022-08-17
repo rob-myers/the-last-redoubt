@@ -54,8 +54,8 @@ export default function NavMini() {
   
 }
 
-const controlsWidthPx = 120;
-const darkToggleWidthPx = 40;
+const controlsWidthPx = 140;
+const darkToggleWidthPx = 36;
 
 const rootCss = css`
   position: absolute;
@@ -76,14 +76,18 @@ const rootCss = css`
     height: ${barHeight}px;
 
     display: flex;
-    justify-content: center;
     align-items: stretch;
     padding: 0;
     margin: 0;
 
     li {
+      flex: 1;
+      display: flex;
+      justify-content: center;
       list-style: none;
       list-style-position: inside;
+      border: 0 solid #6d6d6d;
+      border-left-width: 1px;
     }
     a {
       padding: 0 5px;
