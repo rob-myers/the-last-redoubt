@@ -50,9 +50,6 @@ body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
 body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs {
   background-color: #222;
 }
-body.dark-mode div.tags > span {
-  background-color: #bba;
-}
 body.dark-mode div.top-bar {
   background-color: #333;
 }

@@ -230,21 +230,23 @@ const articleCss = css`
     flex-wrap: wrap;
     font-family: sans-serif;
     font-size: 0.7rem;
+    font-weight: bold;
+    color: #555;
     letter-spacing: 2px;
 
     margin-bottom: 20px;
     @media(max-width: 600px) {
       margin-bottom: 12px;
       font-size: 0.8rem;
-      font-weight: bold;
     }
 
-    span {
+    > span {
       padding: 2px 8px;
       margin-right: 4px;
       margin-bottom: 4px;
       border-radius: 3px;
       border: 2px solid rgba(0, 0, 0, 0.1);
+      background-color: #ddf;
     }
   }
   h3 {
