@@ -27,7 +27,10 @@ const titleCss = css`
   }
   
   h1 {
+    display: inline-block;
     margin: 0;
+    margin-top: 40px;
+
     font-size: 4.8rem;
     font-weight: 300;
     letter-spacing: 4px;
@@ -36,13 +39,12 @@ const titleCss = css`
     color: #444;
     text-transform: uppercase;
     text-shadow: 0 0 2px #888888bb;
-    padding-top: 40px;
     
     @media(max-width: 800px) {
       font-size: 3.5rem;
     }
     @media(max-width: 600px) {
-      padding-top: 72px;
+      margin-top: 72px;
       font-size: 2.2rem;
       color: #333;
     }
