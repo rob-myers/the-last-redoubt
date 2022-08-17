@@ -37,30 +37,36 @@ Can we clarify the problem?
 Can we do better?
 
 Sometimes Game AI is emergent.
-For example, Super Mario 3 arises from many individual independent NPC behaviours running in parallel.
-But for anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen),
-the result is usually a mess.
+For example, Super Mario 3 arises from many independent NPC behaviours running in parallel.
+But freely combining anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen) usually results in a mess.
 The _combinatorial explosion of possibilities_ results in
 unrealistic hard-to-debug behaviour.
 
 Focusing on the Player's experience is a better idea.
-Let us call everything except the Player the _environment_.
+Let everything except the Player be the _environment_.
 It is controlled by a highly opinionated _Director_ (an amalgam of people and software).
-The Director controls the environment (including the NPCs); the Player has certain freedoms within it.
+The Director controls the environment (e.g. the NPCs), while the Player has certain freedoms within it.
 But the Director needs something to direct,
 so we must **create a game** to make meaningful Game AI.
 
+<img
+  src="/pics/demo-pic-1.png"
+  title="A sneak peak"
+  alt="A first look at the World and Terminal"
+  style="width:100%"
+  loading="lazy"
+/>
 
 ### Tech stack
 
-We're writing about Game AI and also creating a game.
+We're writing about Game AI and creating a game.
 Then it's natural to use web technologies, building the game right here on this site.
 But which ones?
 
 > We'll use **everyday web dev tech** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
 >
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
-> and JavaScript-driven rendering or simulation.
+> and JavaScript-driven rendering or simulation (physics).
 
 This makes our approach relevant to a wide audience.
 
