@@ -45,6 +45,9 @@ body.dark-mode figure.image {
   border-color: rgb(95, 95, 95);
   color: #eee;
 }
+body.dark-mode table {
+  border-color: rgb(95, 95, 95);
+}
 body.dark-mode section article > :not(code, div.carousel, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }

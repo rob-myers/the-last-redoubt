@@ -191,7 +191,11 @@ const articleCss = css`
     @media(max-width: 600px) {
       padding: 0;
       margin: 8px 0 16px 0;
-    } 
+    }
+
+    img {
+      max-width: 100%;
+    }
 
     figcaption {
       font-style: italic;
@@ -323,13 +327,6 @@ const articleCss = css`
     }
   }
 
-  /* p + ul {
-    margin-top: -32px;
-    @media(max-width: 600px) {
-      margin-top: -4px;
-    }
-  } */
-
   span.cmd {
     color: #555;
     background: #eee;
@@ -351,11 +348,14 @@ const articleCss = css`
     padding: 8px;
     width: 100%;
     margin: 0 0 40px 0;
-    border: 1px solid #bbb;
+    border: 0 solid #eee;
+    border-width: 48px;
     line-height: 1.4;
 
     @media(max-width: 600px) {
       margin: 0 0 20px 0;
+      border-width: 1px;
+      border-color: #ddd;
     }
     th {
       text-transform: uppercase;

@@ -180,6 +180,8 @@ Let's see an example.
 2. Press _interact_ again, and this time click on the 2nd tab.
    You'll see the world from the videos, we suggest you have a play around.
 
+3. Finally return to the 1st tab and scroll to the top.
+
 <Tabs
   id="intro-1"
   initEnabled={false}
@@ -198,14 +200,14 @@ Let's see an example.
   // persistLayout
 />
 
-3. Finally return to the 1st tab and scroll to the top.
+Let's try to understand some of the lines above.
 
-  | Line | Info |
-  | --- | ----------- |
-  | <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
-  | `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode>/etc/util-1</InlineCode> which defines util functions. |
-  | `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. List all functions via <InlineCode>declare</InlineCode>. |
-  | `await-world` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
+| Line | Info |
+| --- | ----------- |
+| <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
+| `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode>/etc/util-1</InlineCode> which defines util functions. |
+| `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/util-1</InlineCode> defines game-related functions. List all functions via <InlineCode>declare</InlineCode>. Those with a dev console can <InlineCode>declare \| log</InlineCode>. |
+| `await-world` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
 
   What about the rest of `/home/PROFILE`?
 
