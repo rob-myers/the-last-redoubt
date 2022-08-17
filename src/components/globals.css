@@ -31,12 +31,18 @@ body {
 
 body.dark-mode {
   background-color: black;
-  /** This color gets inverted */
-  color: #333;
+  color: #333; /** This color gets inverted */
 }
 body.dark-mode p a {
-  /** This color gets inverted */
-  color: #006;
+  color: #006; /** This color gets inverted */
+}
+body.dark-mode table {
+  border-color: #ddd; /** This color gets inverted */
+}
+@media (max-width: 600px) {
+  body.dark-mode table {
+    border-color: #bbb; /** This color gets inverted */
+  }
 }
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
@@ -45,12 +51,14 @@ body.dark-mode div.tags > span.tag {
   background-color: #fff;
   color: #000;
 }
+@media (max-width: 600px) {
+  body.dark-mode div.tags > span.tag {
+    font-weight: bold;
+  }
+}
 body.dark-mode figure.image {
   border-color: rgb(95, 95, 95);
-  color: #eee;
-}
-body.dark-mode table {
-  border-color: rgb(95, 95, 95);
+  color: #aaa;
 }
 body.dark-mode section article > :not(code, div.carousel, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);

@@ -202,7 +202,10 @@ const articleCss = css`
       text-transform: uppercase;
       font-size: 0.9rem;
       text-align: center;
-      padding: 8px 0;
+      padding: 16px 0;
+      @media(max-width: 600px) {
+        padding: 8px 0;
+      }
     }
   }
   figure.tabs, figure.video {
