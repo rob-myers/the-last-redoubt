@@ -369,6 +369,18 @@ const articleCss = css`
         padding: 8px;
       }
     }
+    table {
+      border-width: 4px;
+      @media(max-width: 600px) {
+        border-width: 1px;
+      }
+      th, td {
+        padding: 8px;
+        @media(max-width: 600px) {
+          padding: 4px;
+        }
+      }
+    }
   }
 
   ul, ol {
