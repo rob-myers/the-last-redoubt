@@ -181,6 +181,21 @@ const articleCss = css`
     text-align: center;
   }
 
+  figure.image {
+    margin: 32px 0;
+    border: 1px solid #ccc;
+    padding: 48px 48px 24px 48px;
+    @media(max-width: 600px) {
+      padding: 24px;
+      margin: 8px 0;
+    } 
+
+    figcaption {
+      font-style: italic;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+  }
   figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
     padding: 48px;
@@ -266,16 +281,6 @@ const articleCss = css`
 
   h2 + p, h3 + p {
     margin-top: 0px;
-  }
-
-  > img {
-    margin: 32px 0;
-    border: 1px solid #ccc;
-    padding: 48px;
-    @media(max-width: 600px) {
-      padding: 24px;
-      margin: 8px 0;
-    } 
   }
 
   li {
