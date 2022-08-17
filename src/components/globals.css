@@ -41,6 +41,10 @@ body.dark-mode p a {
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
 }
+body.dark-mode div.tags > span.tag {
+  background-color: #cca;
+  font-weight: bold;
+}
 body.dark-mode figure.image {
   border-color: rgb(95, 95, 95);
   color: #eee;

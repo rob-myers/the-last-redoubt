@@ -254,7 +254,6 @@ const articleCss = css`
     flex-wrap: wrap;
     font-family: sans-serif;
     font-size: 0.7rem;
-    font-weight: bold;
     color: #555;
     letter-spacing: 2px;
 
@@ -511,7 +510,7 @@ const articleComponents = (
         dateTime={meta.dateTime}
       />
       <div className="tags" title="tags">
-        {meta.tags.map(tag => <span key={tag}>{tag}</span>)}
+        {meta.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}
       </div>
     </>;
   },
