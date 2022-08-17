@@ -217,7 +217,7 @@ const articleCss = css`
   h2 {
     font-size: 2.4rem;
     @media(max-width: 1024px) {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
     }
     margin: 24px 0 16px 0;
     @media(max-width: 600px) {
@@ -226,6 +226,11 @@ const articleCss = css`
     }
   }
   h2 + time + div.tags {
+    display: flex;
+    flex-wrap: wrap;
+    font-family: sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
 
     margin-bottom: 20px;
     @media(max-width: 600px) {
@@ -233,12 +238,7 @@ const articleCss = css`
       font-size: 0.8rem;
       font-weight: bold;
     }
-    
-    display: flex;
-    flex-wrap: wrap;
-    font-family: sans-serif;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
+
     span {
       padding: 2px 8px;
       margin-right: 4px;
@@ -248,7 +248,7 @@ const articleCss = css`
     }
   }
   h3 {
-    font-size: 1.3rem;
+    font-size: 1.8rem;
     margin: 0 0 4px 0;
     @media(max-width: 600px) {
       font-size: 1.4rem;
