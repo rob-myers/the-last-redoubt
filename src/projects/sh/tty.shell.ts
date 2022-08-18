@@ -191,12 +191,15 @@ export class ttyShellClass implements Device {
         posPositionals: opts.posPositionals || positionals.slice(1),
       });
       meta.pid = process.key;
+
+      const session = useSession.api.getSession(meta.sessionKey);
+      const parent = session.process[meta.ppid]; // Exists
+      // Shallow clone avoids mutation by descendants
+      process.inheritVar = { ...parent.inheritVar };
       if (opts.localVar) {
-        // Sometimes processes (background, subshell) need their own variable scope
-        const session = useSession.api.getSession(meta.sessionKey);
-        const parent = session.process[meta.ppid];
-        process.var.PWD = (parent?.var.PWD)??session.var.PWD;
-        process.var.OLDPWD = (parent?.var.OLDPWD)??session.var.OLDPWD;
+        // Sometimes processes (e.g. background, subshell) need their own PWD
+        process.localVar.PWD = (parent.inheritVar.PWD)??session.var.PWD;
+        process.localVar.OLDPWD = (parent.inheritVar.OLDPWD)??session.var.OLDPWD;
       }
       // console.warn(ppid, 'launched', meta.pid, process, JSON.stringify(meta.fd));
     }

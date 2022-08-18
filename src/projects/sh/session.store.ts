@@ -104,10 +104,15 @@ export interface ProcessMeta {
   onResumes: (() => void | boolean)[];
   positionals: string[];
   /**
-   * Some processes (background, subshells)
-   * should have their own PWD and OLDPWD.
+   * Variables specified locally in this process.
+   * Particularly helpful for background processes and subshells,
+   * which have their own PWD and OLDPWD.
    */
-  var: Record<string, any>;
+  localVar: Record<string, any>;
+  /**
+   * Inherited local variables.
+   */
+  inheritVar: Record<string, any>;
 }
 
 const useStore = create<State>(devtools((set, get) => ({
@@ -143,7 +148,8 @@ const useStore = create<State>(devtools((set, get) => ({
         cleanups: [],
         onSuspends: [],
         onResumes: [],
-        var: {},
+        localVar: {},
+        inheritVar: {},
       };
       return processes[pid];
     },
@@ -207,9 +213,14 @@ const useStore = create<State>(devtools((set, get) => ({
 
     getVar(meta, varName): any {
       const process = api.getProcess(meta);
-      if (varName in process?.var) {
-        return process.var[varName];
+      if (varName in process?.localVar) {
+        // Got locally specified variable
+        return process.localVar[varName];
+      } else if (varName in process?.inheritVar) {
+        // Got variable locally specified in ancestral process 
+        return process.inheritVar[varName];
       } else {
+        // Got top-level variable in "file-system" e.g. /home/foo
         return get().session[meta.sessionKey].var[varName];
       }
     },
@@ -288,8 +299,15 @@ const useStore = create<State>(devtools((set, get) => ({
     setVar(meta, varName, varValue) {
       const session = api.getSession(meta.sessionKey);
       const process = session.process[meta.pid];
-      if (varName in process?.var) {
-        process.var[varName] = varValue;
+      if (
+        varName in process?.localVar
+        || varName in process?.inheritVar
+      ) {
+        /**
+         * One can set a local variable from an ancestral process,
+         * but it will only change the value in current process.
+         */
+        process.localVar[varName] = varValue;
       } else {
         session.var[varName] = varValue;
       }
@@ -299,28 +317,37 @@ const useStore = create<State>(devtools((set, get) => ({
 
       const session = api.getSession(meta.sessionKey);
       const process = session.process[meta.pid];
-      const varPathParts = varPath.split('/');
+      const parts = varPath.split('/');
+
+      let root: Record<string, any>, normalParts: string[];
 
       /**
        * We support writing to local process variables,
        * e.g. `( cd && echo 'pwn3d!'>PWD && pwd )`
        */
-      const isLocalVar = varPathParts[0] in process.var;
-      const root = isLocalVar ? process.var : { home : session.var };
-      const parts = isLocalVar
-        ? varPathParts
-        : computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
+      const localCtxt = parts[0] in process.localVar
+        ? process.localVar
+        : parts[0] in process.inheritVar ? process.inheritVar : null
+      ;
+        
+      if (localCtxt) {
+        root = localCtxt;
+        normalParts = parts;
+      } else {
+        root = { home : session.var };
+        normalParts = computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
 
-      if (!isLocalVar && !(parts[0] === 'home' && parts.length > 1)) {
-        throw new ShError('only the home directory is writable', 1);
+        if (!(normalParts[0] === 'home' && normalParts.length > 1)) {
+          throw new ShError('only the home directory is writable', 1);
+        }
       }
 
       try {
-        const leafKey = parts.pop() as string;
-        const parent = resolveNormalized(parts, root);
+        const leafKey = normalParts.pop() as string;
+        const parent = resolveNormalized(normalParts, root);
         parent[leafKey] = varValue;
       } catch (e) {
-        throw new ShError(`cannot resolve /${parts.join('/')}`, 1);
+        throw new ShError(`cannot resolve /${normalParts.join('/')}`, 1);
       }
 
     },

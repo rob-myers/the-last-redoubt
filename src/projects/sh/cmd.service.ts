@@ -334,10 +334,20 @@ class cmdServiceClass {
         break;
       }
       case 'unset': {
-        const { var: v, func } = useSession.api.getSession(meta.sessionKey);
+        const {
+          var: home,
+          func,
+          process: { [meta.pid]: process },
+        } = useSession.api.getSession(meta.sessionKey);
+
         for (const arg of args) {
-          delete v[arg];
-          delete func[arg];
+          if (arg in process.localVar) {
+            // NOTE cannot unset ancestral variables
+            delete process.localVar[arg];
+          } else {
+            delete home[arg];
+            delete func[arg];
+          }
         }
         break;
       }
@@ -348,7 +358,20 @@ class cmdServiceClass {
   get(node: Sh.BaseNode, args: string[]) {
     const root = this.provideProcessCtxt(node.meta);
     const pwd = useSession.api.getVar<string>(node.meta, 'PWD');
-    const outputs = args.map(arg => resolvePath(arg, root, pwd));
+    const process = useSession.api.getProcess(node.meta);
+
+    const outputs = args.map(arg => {
+      const parts = arg.split('/');
+      const localCtxt = parts[0] in process.localVar
+        ? process.localVar
+        : parts[0] in process.inheritVar ? process.inheritVar : null
+      ;
+
+      return parts[0] && localCtxt
+        ? parts.reduce((agg, part) => agg[part], localCtxt)
+        : resolvePath(arg, root, pwd);
+    });
+
     node.exitCode = outputs.length && outputs.every(x => x === undefined) ? 1 : 0;
     return outputs;
   }

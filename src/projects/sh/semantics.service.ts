@@ -294,8 +294,18 @@ class semanticsServiceClass {
         node.exitCode = 0;
         yield* cmdService.runCmd(node, 'declare', []);
       }
+    } else if (node.Variant.Value === 'local') {
+      for (const arg of node.Args) {
+        const process = useSession.api.getProcess(node.meta);
+        if (process.key > 0) {
+          // Can only set local variable outside session leader,
+          // where variables are e.g. /home/foo
+          process.localVar[arg.Name.Value] = undefined;
+        }
+        yield* this.Assign(arg);
+      }
     } else {
-      throw new ShError(`Commmand: DeclClause: ${node.Variant.Value} unsupported`, 2);
+      throw new ShError(`Command: DeclClause: ${node.Variant.Value} unsupported`, 2);
     }
   }
 
