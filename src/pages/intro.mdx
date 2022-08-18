@@ -68,10 +68,44 @@ But which ones?
 > We'll use **everyday web dev tech** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
 >
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
-> and JavaScript-driven rendering or simulation (physics).
+> and JavaScript-driven rendering or physics simulation.
 
 This makes our approach relevant to a wide audience.
 
+```jsx
+/**
+ * Simplified JavaScript code for our World component.
+ */
+export default function World(props) {
+
+  const update = useUpdate();
+
+  const state = useStateRef(() => { /** ... */ });
+
+  const { gms, gmGraph } = useGeomorphs(props.gms);
+
+  useHandleEvents(state, gmGraph);
+
+  React.useEffect(() => {
+    setCached(props.worldKey, state);
+    return () => removeCached(props.worldKey);
+  }, []);
+
+  return gms.length ? (
+    <CssPanZoom>
+      <Geomorphs gms={gms} />
+      <DebugWorld/>
+      <NPCs/>
+      <FOV/>
+      <Doors/>
+    </CssPanZoom>
+  ) : null;
+}
+
+/** @typedef Props ... */
+/** @typedef State ... */
+
+```
 
 ### Building the world
 
@@ -101,14 +135,14 @@ How should we build The Last Redoubt?
 It is worth taking some time to make a few observations about the above videos.
 
 > **The game has a birdseye viewpoint**.
-> Avoiding game-centric tech rules out 3D graphics (except isometric).
+> Avoiding game-centric tech rules out 3D graphics (except perhaps isometric).
 
 > **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
 > Mouse clicks are converted into world coordinates.
 > Doors are styled clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
 
 > **The Player interacts via mouse clicks or touches**.
-> We avoid game-centric controls, using standard site interaction instead.
+> Websites rarely use keyboard controls.
 
 > **The Player is _situated_ with limited visual range**.
 > We achieve this using two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab") (one atop the other).
@@ -155,8 +189,8 @@ Examples include:
 - Indicate room purpose via ghostly replay.
 - Orchestrate enemy search party.
 
-We've made good progress towards _building_ a world,
-but what about _directing it_ (e.g. specifying the behaviour of NPCs)?
+We've made good progress towards _building_ a world.
+But what about _directing it_?
 
 > The [videos above](#intro-first-videos) show a [_terminal_](https://xtermjs.org/ "@new-tab") (the black window with mostly green text).
 We can type commands and press enter to run them.
@@ -164,8 +198,8 @@ Commands are parsed using the excellent [mvdan-sh](https://www.npmjs.com/package
 and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 
-> If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player,
-**the Director directs by running commands in one or more terminals**.
+<!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
+> Then the **Director directs by running commands in one or more terminals**.
 These commands may include scripts and long-running processes.
 
 Let's see an example.

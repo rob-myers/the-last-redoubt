@@ -329,6 +329,13 @@ const articleCss = css`
     }
   }
 
+  pre {
+    margin-bottom: 32px;
+    @media(max-width: 600px) {
+      margin-bottom: 16px;
+    }
+  }
+
   span.cmd {
     color: #555;
     background: #eee;
