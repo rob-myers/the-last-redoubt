@@ -183,10 +183,12 @@ const articleCss = css`
     align-items: center;
     justify-content: space-between;
 
-    margin: 32px 0;
+    margin: 48px 0;
     border: 1px solid #ccc;
-    padding: 36px 24px 0 24px;
+    padding-top: 64px;
     text-align: center;
+    background-color: #eee;
+    color: #000;
 
     @media(max-width: 600px) {
       padding: 0;
@@ -198,11 +200,11 @@ const articleCss = css`
     }
 
     figcaption {
+      text-align: center;
+      padding: 24px 0 48px;
       font-style: italic;
       text-transform: uppercase;
       font-size: 0.9rem;
-      text-align: center;
-      padding: 16px 0;
       @media(max-width: 600px) {
         padding: 8px 0;
       }
@@ -330,9 +332,11 @@ const articleCss = css`
   }
 
   pre {
-    margin-bottom: 32px;
+    margin: 32px 0;
+    border: 64px solid #eee;
     @media(max-width: 600px) {
-      margin-bottom: 16px;
+      border: 0 solid #eee;
+      margin: 16px 0;
     }
   }
 

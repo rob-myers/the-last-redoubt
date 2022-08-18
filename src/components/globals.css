@@ -31,17 +31,17 @@ body {
 
 body.dark-mode {
   background-color: black;
-  color: #333; /** This color gets inverted */
+  color: #222; /** Gets inverted */
 }
 body.dark-mode p a {
-  color: #006; /** This color gets inverted */
+  color: #006; /** Gets inverted */
 }
 body.dark-mode table {
-  border-color: #ddd; /** This color gets inverted */
+  border-color: #ddd; /** Gets inverted */
 }
 @media (max-width: 600px) {
   body.dark-mode table {
-    border-color: #bbb; /** This color gets inverted */
+    border-color: #bbb; /** Gets inverted */
   }
 }
 body.dark-mode section article {
@@ -57,8 +57,13 @@ body.dark-mode div.tags > span.tag {
   }
 }
 body.dark-mode figure.image {
-  border-color: rgb(95, 95, 95);
-  color: #aaa;
+  border-color: #666;
+  background-color: #000;
+  color: white;
+}
+body.dark-mode pre.prism-code {
+  border-color: #222;
+  background-color: #000;
 }
 body.dark-mode section article > :not(code, div.carousel, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
