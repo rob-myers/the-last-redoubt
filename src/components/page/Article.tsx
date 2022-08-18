@@ -1,3 +1,4 @@
+import { Link } from 'gatsby';
 import React from 'react';
 import { css, cx } from '@emotion/css'
 import { MDXProvider } from '@mdx-js/react';
@@ -6,7 +7,6 @@ import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
 import { cssName } from 'projects/service/const';
 
-import Link from './Link';
 import Sep from './Sep';
 import { pre, vscDarkPlusCss } from './CodeBlock';
 import Icon from './Icon';
@@ -415,28 +415,15 @@ const articleComponents = (
   },
 ) => ({
 
-  a({ node, href, title, children, ...props}: any) {
+  a({ node, href, title, children, ...props}: {
+    href: string;
+    title: string;
+    children: any;
+    node: any;
+  }) {
 
-    // Relative link with added auto-anchor
-    if (title === '@anchor') {
-      const id = getArticleLinkId(articleKey, children);
-      return (
-        <Link
-          href={href}
-          id={id}
-          prePush={`#${id}`}
-          title={title}
-          hasAnchor
-          // backward={!!part && (part < articlesMeta[articleKey].part)}
-        >
-          {children}
-          &nbsp;{'['}<Icon icon="hash-icon" inline small />{']'}
-        </Link>
-      );
-    }
-
-    // New tab link
     if (title === '@new-tab') {
+      // New tab link
       return (
         <a
           href={href}
@@ -450,8 +437,9 @@ const articleComponents = (
       );
     }
 
-    // Command link
     if (href === '#command') {
+      // TODO use this?
+      // Command link
       return (
         <a
           href={href}
@@ -486,13 +474,25 @@ const articleComponents = (
       );
     }
 
-    // Otherwise, external link or relative link sans auto-anchor
+    if (/^(?:http)|(?:mail)/.test(href)) {
+      // External link
+      return (
+        <a
+          href={href}
+          title={title}
+          id={getArticleLinkId(articleKey, children)}
+        >
+          {children}
+        </a>
+      );  
+    }
+
+    // Otherwise, assume Gatsby link
     return (
       <Link
-        href={href}
+        to={href}
         title={title}
         id={getArticleLinkId(articleKey, children)}
-        hasAnchor
       >
         {children}
       </Link>
@@ -505,7 +505,7 @@ const articleComponents = (
     return (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
-        <Link href={`#${id}`}>
+        <Link to={`#${id}`}>
           <Icon icon="info-icon" invert />
         </Link>
         {children}
@@ -517,7 +517,7 @@ const articleComponents = (
   h2({ children }: any) {
     return <>
       <h2>
-        <Link href={`#${articleKey}`}>
+        <Link to={`#${articleKey}`}>
           <span>{children}</span>
         </Link>
       </h2>
@@ -540,7 +540,7 @@ const articleComponents = (
     return (
       <h3>
         <span id={id} className="anchor" />
-        <Link href={`#${id}`}>
+        <Link to={`#${id}`}>
           {children}
         </Link>
       </h3>

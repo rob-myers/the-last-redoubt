@@ -1,9 +1,9 @@
+import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 import { tryLocalStorageSet } from "projects/service/generic";
 import useSiteStore from "store/site.store";
 import { cssName, localStorageKey, zIndex } from 'projects/service/const';
-import Link from "./Link";
 import { barHeight } from "./Nav";
 import Icon from "./Icon";
 
@@ -18,37 +18,36 @@ export default function NavMini() {
 
   return (
     <div className={rootCss}>
-
-      {meta && (meta.navGroup !== null) && (
-        <nav className={cssName.navMini}>
-          <ul>
+      <nav className={cssName.navMini}>
+        <ul>
+          {meta && (meta.navGroup !== null) && <>
             <li>
-              <Link href={prev?.path || meta.path} backward>
+              <Link to={prev?.path || meta.path}>
                 <span className="prev">prev</span>
               </Link>
             </li>
             <li>
-              <Link href={meta.path}>
+              <Link to={meta.path}>
                 <span className="primary">id</span>
               </Link>
             </li>
             <li>
-              <Link href={next?.path || meta.path}>
+              <Link to={next?.path || meta.path}>
                 <span className="next">next</span>
               </Link>
             </li>
-          </ul>
-          <Icon
-            icon="light-bulb"
-            className="toggle-dark-mode"
-            invert
-            onClick={(e) => {
-              const enabled = document.body.classList.toggle('dark-mode');
-              tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
-            }}
-          />
-        </nav>
-      )}
+          </>}
+        </ul>
+        <Icon
+          icon="light-bulb"
+          className="toggle-dark-mode"
+          invert
+          onClick={(e) => {
+            const enabled = document.body.classList.toggle('dark-mode');
+            tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
+          }}
+        />
+      </nav>
     </div>
   );
   

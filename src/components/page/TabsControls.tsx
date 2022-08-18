@@ -1,6 +1,6 @@
+import { Link } from "gatsby";
 import React from "react";
 import { css, cx } from '@emotion/css';
-import Link from './Link';
 import { cssName, zIndex } from "projects/service/const";
 import type { State } from "./Tabs";
 import Icon from "./Icon";
@@ -18,7 +18,7 @@ export function TabsControls({ api, tabsId }: Props) {
           title="reset"
           className={api.resetDisabled ? cssName.disabled : undefined}
         />
-        <Link href={`#${tabsId}`}>
+        <Link to={`#${tabsId}`}>
           <Icon
             icon="hash-icon"
             small

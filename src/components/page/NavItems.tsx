@@ -1,8 +1,8 @@
+import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 
 import type { FrontMatterProps } from "./Root";
-import Link from './Link'
 import useSiteStore from "store/site.store";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
@@ -13,7 +13,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
     <section className={rootCss}>
 
       <h3>
-        <Link href="/">
+        <Link to="/">
           The Last Redoubt
         </Link>
       </h3>
@@ -23,9 +23,8 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
           {navItems.map((meta) =>
             <li key={meta.key} className={meta.key === frontmatter?.key ? 'current' : undefined} >
               <Link
-                href={meta.path}
+                to={meta.path}
                 title={meta.info}
-                // backward={!!part && meta.part < part}
               >
                 {meta.label}
               </Link>

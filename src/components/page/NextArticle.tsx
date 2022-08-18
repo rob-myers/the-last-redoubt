@@ -1,7 +1,7 @@
+import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 import useSiteStore, { FrontMatter } from "store/site.store";
-import Link from "./Link";
 
 export default function NextArticle({ frontMatter }: Props) {
   const id = `next-article--${frontMatter.key}`;
@@ -12,10 +12,9 @@ export default function NextArticle({ frontMatter }: Props) {
   return nextPath ? (
     <div className={nextArticleCss}>
       <Link
-        href={nextPath}
+        to={nextPath}
         title="Continue to next article"
         id={id}
-        prePush={`#${id}`}
       >
         Next
       </Link>

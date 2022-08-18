@@ -4,11 +4,8 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { useBeforeunload } from "react-beforeunload";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
-import { tryLocalStorageSet } from "projects/service/generic";
-import { localStorageKey } from "projects/service/const";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav";
 import Main from "./Main";
@@ -29,9 +26,9 @@ export function wrapPageElement({
     <>
       <Helmet>
         <title>The Last Redoubt</title>
-        <script>{`
+        {/* <script>{`
   history.scrollRestoration = 'manual';
-        `}</script>
+        `}</script> */}
       </Helmet>
 
       <StaticQuery
@@ -52,14 +49,17 @@ export function wrapPageElement({
       `}
         render={(allFrontMatter: AllFrontMatter) => {
 
-          React.useMemo(() =>
-            useSiteStore.api.initiate(allFrontMatter, frontMatter),
-            [frontMatter],
-          );
+          React.useMemo(() => {
+            useSiteStore.api.initiate(allFrontMatter, frontMatter);
+            setTimeout(() => {
+              document.body.style.scrollBehavior = 'smooth';
+              document.documentElement.style.scrollBehavior = 'smooth';
+            }, 1000);
+          }, [frontMatter]);
 
-          useBeforeunload(() =>
-            tryLocalStorageSet(localStorageKey.windowScrollY, `${Math.round(window.scrollY)}`)
-          );
+          // useBeforeunload(() =>
+          //   tryLocalStorageSet(localStorageKey.windowScrollY, `${Math.round(window.scrollY)}`)
+          // );
 
           return (
             <QueryClientProvider client={queryClient} >
