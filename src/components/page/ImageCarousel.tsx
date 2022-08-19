@@ -1,30 +1,46 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
+import debounce  from "debounce";
 import Carousel, { BaseProps as CarouselProps } from "./Carousel";
 
 export default function ImageCarousel(props: Props) {
+
+  React.useEffect(() => {
+    const scrolled = document.querySelector(`#${props.id} .slides`);
+    const slideDim = props.slideWidth + (props.marginRight??0);
+    
+    if (scrolled) {
+      const cb = debounce(() => {
+        const slideId = Math.floor(scrolled.scrollLeft / slideDim);
+        const images = Array.from(scrolled.children).map(slideContainer =>
+          slideContainer.children[0].children[1] as HTMLImageElement
+        );
+        images.forEach((slide, id) => slide.style.opacity = `${Number(slideId === id)}`);
+      }, 50);
+      scrolled.addEventListener('scroll', cb);
+      cb();
+      return () => scrolled.removeEventListener('scroll', cb);
+    }
+
+  }, [props.id]);
+
   return (
     <Carousel
-      id="intro-video-frames"
+      id={props.id}
+      slideWidth={props.slideWidth}
       width={props.width}
       height={props.height}
-      className={cx(
-        props.className,
-        rootCss,
-        props.blur ? blurCss : undefined,
-      )}
-      peekWidth={props.peekWidth}
+      marginRight={props.marginRight}
+      className={cx(props.className, rootCss)}
     >
       {props.items.map(({ src, label }) =>
         <div key={src} className="slide">
-          {label && (
-            <div
-              className="slide-label"
-              style={{ top: props.labelTop }}
-            >
-              {label}
-            </div>
-          )}
+          <div
+            className="slide-label"
+            style={{ top: props.labelTop }}
+          >
+            {label}
+          </div>
           <img
             src={`${props.baseSrc || ''}${src}`}
             style={props.imgStyles}
@@ -37,17 +53,17 @@ export default function ImageCarousel(props: Props) {
 }
 
 interface Props extends CarouselProps {
-  items: { src: string; label?: string; }[];
+  id: string;
+  items: { src: string; label: string; }[];
   baseSrc?: string;
 
-  blur?: boolean;
   imgStyles?: React.CSSProperties;
   labelTop?: string;
 }
 
 const rootCss = css`
   .slide-container {
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px;
     border-width: 8px 0 0 0;
     border: 1px solid #555;
   }
@@ -57,7 +73,11 @@ const rootCss = css`
   .slide {
     height: 100%;
     overflow: hidden;
-    /* border: 1px solid #555; */
+  }
+  .slide img {
+    opacity: 0;
+    transition: opacity 300ms ease-in-out;
+    width: 100%; // Safari
   }
   .slide-label {
     position: absolute;
@@ -71,15 +91,6 @@ const rootCss = css`
     border: 1px solid #444;
     padding: 16px;
     text-transform: lowercase;
-  }
-`;
-
-const blurCss = css`
-  .slide {
-    filter: blur(1.5px);
-    transition: filter 300ms ease-in-out;
-    &:hover, &:focus {
-      filter: blur(0px);
-    }
+    z-index: 1;
   }
 `;

@@ -154,9 +154,10 @@ We've illustrated these points below.
 
 <ImageCarousel
   id="intro-video-frames"
-  width={200}
-  height={400}
-  peekWidth={80}
+  slideWidth={250}
+  marginRight={20}
+  width={250}
+  height={450}
   baseSrc="/pics/intro-carousel/"
   items={[
     { src: 'birdseye.png', label: 'Birdseye Viewpoint' },
@@ -167,7 +168,6 @@ We've illustrated these points below.
     { src: 'open-door-see-more.png', label: 'Open door & see more' },
     { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
-  blur
   imgStyles={{ marginTop: '-24px', height: 'calc(100% + 24px)' }}  // Crop
   labelTop="10%"
 />

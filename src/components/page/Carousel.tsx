@@ -1,42 +1,45 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
-import { parseCssDim } from 'projects/service/dom';
 
 /**
  * https://css-tricks.com/css-only-carousel/
  */
-export default function Carousel(props: React.PropsWithChildren<BaseProps>) {
+export default function Carousel(
+  props: React.PropsWithChildren<BaseProps>,
+) {
 
   const items = React.Children.toArray(props.children);
 
   return (
-    <div className={cx("carousel", rootCss, props.className)}>
+    <div
+      id={props.id}
+      className={cx("carousel", rootCss, props.className)}
+    >
       <div
         className="slides"
         style={{
-          // width: `calc(${parseCssDim(props.width)} + ${parseCssDim(props.peekWidth)})`,
-          width: '100%',
+          width: props.width,
           height: props.height,
-          scrollPaddingLeft: `calc(0.5 * ${parseCssDim(props.peekWidth)})`,
         }}
       >
         {items.map((item, i) => (
           <div
             key={i}
             className="slide-container"
-            style={{ width: props.width }}
+            style={{
+              width: props.slideWidth,
+              marginRight: props.marginRight,
+            }}
           >
-            {
-              item // The slide
-            }
+
+            {item}
 
             <div className="slide-index">
               {i + 1}
-              <span className="of">
-                /
-              </span>
+              <span className="of">/</span>
               {items.length}
             </div>
+
           </div>
         ))}
       </div>
@@ -46,21 +49,19 @@ export default function Carousel(props: React.PropsWithChildren<BaseProps>) {
 
 export interface BaseProps {
   id: string;
+  slideWidth: number;
   width: number | string;
   height: number | string;
-  /** To reveal the next slide */
-  peekWidth?: number | string;
+  marginRight?: number;
   className?: string;
 }
 
 const rootCss = css`
   text-align: center;
   overflow: hidden;
-  width: 100%;
   display: flex;
   justify-content: center;
   line-height: 1.4;
-  padding: 16px 16px 0 16px;
 
   .slides {
     display: flex;
@@ -70,8 +71,7 @@ const rootCss = css`
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-
-    scroll-padding-left: 30px;
+    /* scroll-padding-left: 30px; */
   }
   .slide-container > .slide-index {
     position: absolute;
@@ -103,7 +103,7 @@ const rootCss = css`
   .slides::-webkit-scrollbar-track {
     background: black;
   }
-  .slides > div {
+  .slides > .slide-container {
     scroll-snap-align: start;
     flex-shrink: 0;
     background: #eee;
@@ -116,14 +116,6 @@ const rootCss = css`
     align-items: center;
     font-size: 100px;
     background-color: #000;
-    /**
-     * - Separates slides
-     * - May be important for scroll-into-view to work
-     */
-    margin-right: 12px;
-  }
-  .slides > div:last-child {
-    /** No final slide peek beyond (use extraWidth instead) */
-    margin-right: 0;
+    margin-bottom: 8px;
   }
 `;
