@@ -6,26 +6,24 @@ import Carousel, { BaseProps as CarouselProps } from "./Carousel";
 export default function ImageCarousel(props: Props) {
 
   React.useEffect(() => {
-    const scrolled = document.querySelector(`#${props.id} .slides`);
     const slideDim = props.slideWidth + (props.marginRight??0);
-    
-    if (scrolled) {
-      const cb = debounce(() => {
-        const slideId = Math.floor(scrolled.scrollLeft / slideDim);
-        const images = Array.from(scrolled.children).map(slideContainer =>
-          slideContainer.children[0].children[1] as HTMLImageElement
-        );
-        images.forEach((slide, id) => slide.style.opacity = `${Number(slideId === id)}`);
-        console.log({
-          slideDim,
-          scrollLeft: scrolled.scrollLeft,
-          slideId,
-        })
-      }, 50);
-      scrolled.addEventListener('scroll', cb);
-      cb();
-      return () => scrolled.removeEventListener('scroll', cb);
+    const scrolled = document.querySelector(`#${props.id} .slides`);
+    if (!scrolled) {
+      return;
     }
+    const images = Array.from(scrolled.children).map(slideContainer =>
+      slideContainer.children[0].children[1] as HTMLImageElement
+    );
+
+    const onEndScroll = debounce(() => {
+      // Need offset for Android Chrome
+      const slideId = Math.floor((scrolled.scrollLeft + 5) / slideDim);
+      images.forEach((slide, id) => slide.style.opacity = `${Number(slideId === id)}`);
+    }, 50);
+
+    onEndScroll();
+    scrolled.addEventListener('scroll', onEndScroll);
+    return () => scrolled.removeEventListener('scroll', onEndScroll);
 
   }, [props.id]);
 
