@@ -212,7 +212,7 @@ const articleCss = css`
   }
   figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
-    padding: 48px;
+    padding: 64px;
     background-color: #eee;
     @media(max-width: 600px) {
       margin: calc(32px + 16px) 0 24px 0;
@@ -362,7 +362,7 @@ const articleCss = css`
     width: 100%;
     margin: 0 0 40px 0;
     border: 0 solid #eee;
-    border-width: 48px;
+    border-width: 64px;
     line-height: 1.4;
 
     @media(max-width: 600px) {
