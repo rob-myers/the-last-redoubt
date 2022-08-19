@@ -16,6 +16,11 @@ export default function ImageCarousel(props: Props) {
           slideContainer.children[0].children[1] as HTMLImageElement
         );
         images.forEach((slide, id) => slide.style.opacity = `${Number(slideId === id)}`);
+        console.log({
+          slideDim,
+          scrollLeft: scrolled.scrollLeft,
+          slideId,
+        })
       }, 50);
       scrolled.addEventListener('scroll', cb);
       cb();
