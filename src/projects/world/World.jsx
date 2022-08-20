@@ -10,7 +10,7 @@ import useGeomorphs from "../geomorph/use-geomorphs";
 import CssPanZoom from "../panzoom/CssPanZoom";
 import NPCs, { State as NpcsApi } from "./NPCs";
 import Doors, { State as DoorsApi } from "./Doors";
-import Geomorphs from "./Floor";
+import Geomorphs from "./Geomorphs";
 import FOV, { State as FovApi } from "./FOV";
 import DebugWorld from "./DebugWorld";
 import useHandleEvents from "./use-handle-events";
@@ -70,7 +70,7 @@ export default function World(props) {
       onLoad={api => (state.panZoom = api) && update()}
     >
       <Geomorphs
-        gms={gmGraph.gms}
+        api={state}
       />
 
       <DebugWorld

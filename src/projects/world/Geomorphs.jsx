@@ -7,9 +7,10 @@ import { geomorphPngPath } from "../service/geomorph";
  * @param {Props} props 
  */
 export default function Geomorphs(props) {
+  const { gmGraph } = props.api;
   return (
     <div className={cx("geomorphs", rootCss)}>
-      {props.gms.map((gm, gmId) => (
+      {gmGraph.gms.map((gm, gmId) => (
         <img
           key={gmId}
           className="geomorph"
@@ -31,7 +32,7 @@ export default function Geomorphs(props) {
 
 /**
  * @typedef Props @type {object}
- * @property {Geomorph.GeomorphDataInstance[]} gms
+ * @property {import('./World').State} api
  */
 
 const rootCss = css`
