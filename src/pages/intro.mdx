@@ -83,16 +83,16 @@ export default function World(props) {
 
   const state = useStateRef(() => { /** ... */ });
 
-  const gmGraph = useGeomorphs(props.gms);
+  state.gmGraph = useGeomorphs(props.gms);
 
-  useHandleEvents(state, gmGraph);
+  useHandleEvents(state, state.gmGraph);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);
     return () => removeCached(props.worldKey);
   }, []);
 
-  return gmGraph.gms.length ? (
+  return state.gmGraph.ready ? (
     <CssPanZoom onLoad={/** ... */}>
       <Geomorphs api={state} />
       <DebugWorld api={state} />
