@@ -59,7 +59,7 @@ so we must **create a game** to make meaningful Game AI.
 />
 
 
-### 2. Tech stack
+### 2. Underlying Tech
 
 We're writing about Game AI and creating a game.
 Then it's natural to use web technologies, building the game right here on this site.
@@ -74,7 +74,8 @@ This makes our approach relevant to a wide audience.
 
 ```jsx
 /**
- * Simplified JavaScript code for our World component.
+ * Our World component (simplified) written in JSX,
+ * i.e. JavaScript with syntactic sugar (the XML tags).
  */
 export default function World(props) {
 
@@ -82,7 +83,7 @@ export default function World(props) {
 
   const state = useStateRef(() => { /** ... */ });
 
-  const { gms, gmGraph } = useGeomorphs(props.gms);
+  const gmGraph = useGeomorphs(props.gms);
 
   useHandleEvents(state, gmGraph);
 
@@ -91,13 +92,13 @@ export default function World(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-  return gms.length ? (
-    <CssPanZoom>
-      <Geomorphs gms={gms} />
-      <DebugWorld/>
-      <NPCs/>
-      <FOV/>
-      <Doors/>
+  return gmGraph.gms.length ? (
+    <CssPanZoom onLoad={/** ... */}>
+      <Geomorphs gms={gmGraph.gms} />
+      <DebugWorld api={state} />
+      <NPCs api={state} gmGraph={gmGraph} onLoad={/** ... */} />
+      <FOV api={state} gmGraph={gmGraph} onLoad={/** ... */} />
+      <Doors api={state} gmGraph={gmGraph} onLoad={/** ... */} />
     </CssPanZoom>
   ) : null;
 }
