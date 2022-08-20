@@ -94,7 +94,8 @@ const articleCss = css`
     font-size: 0.9rem;
     font-style: italic;
     font-weight: 300;
-    border: 1px solid #bbb;
+    color: #333;
+    background-color: #ddd;
     
     p {
       margin: 12px 0;
@@ -124,13 +125,14 @@ const articleCss = css`
     @media(max-width: 600px) {
       margin: 24px 0 16px 0;
       padding: 16px 24px;
-      border-radius: 12px;
-      border-width: 1px;
       line-height: 2;
       .${cssName.infoIcon} {
         transform: scale(1.2);
       }
       font-size: 1rem;
+      p {
+        margin: 8px 0;
+      }
     }
   }
 
