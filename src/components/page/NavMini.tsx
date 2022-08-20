@@ -42,6 +42,7 @@ export default function NavMini() {
           icon="light-bulb"
           className="toggle-dark-mode"
           invert
+          small
           onClick={(e) => {
             const enabled = document.body.classList.toggle('dark-mode');
             tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
@@ -53,7 +54,7 @@ export default function NavMini() {
   
 }
 
-const controlsWidthPx = 140;
+const controlsWidthPx = 150;
 const darkToggleWidthPx = 36;
 
 const rootCss = css`
@@ -82,18 +83,20 @@ const rootCss = css`
     li {
       flex: 1;
       display: flex;
-      justify-content: center;
       list-style: none;
       list-style-position: inside;
-      border: 0 solid #6d6d6d;
-      border-left-width: 1px;
     }
     a {
-      padding: 0 5px;
+      flex: 1;
       color: #ccc;
       height: 100%;
       display: flex;
       align-items: center;
+      justify-content: center;
+      border: 0 solid #555;
+      border-left-width: 1px;
+      font-size: 1rem;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
     a.primary {
       color: #fff;

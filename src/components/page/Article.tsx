@@ -186,7 +186,7 @@ const articleCss = css`
     justify-content: space-between;
 
     margin: 48px 0;
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
     padding-top: 64px;
     text-align: center;
     background-color: #eee;
