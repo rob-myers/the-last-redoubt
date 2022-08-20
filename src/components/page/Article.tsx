@@ -95,7 +95,7 @@ const articleCss = css`
     font-style: italic;
     font-weight: 300;
     color: #333;
-    background-color: #ddd;
+    background-color: #eee;
     
     p {
       margin: 12px 0;
