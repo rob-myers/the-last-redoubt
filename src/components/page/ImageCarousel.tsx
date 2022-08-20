@@ -2,18 +2,16 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import debounce  from "debounce";
 import Carousel, { BaseProps as CarouselProps } from "./Carousel";
-import useUpdate from "projects/hooks/use-update";
 
 export default function ImageCarousel(props: Props) {
 
-  const update = useUpdate();
-
   React.useEffect(() => {
-    const slideDim = props.slideWidth + (props.marginRight??0);
     const scrolled = document.querySelector(`#${props.id} .slides`);
     if (!scrolled) {
       return;
     }
+    
+    const slideDim = props.slideWidth + (props.marginRight??0);
     const images = Array.from(scrolled.children).map(slideContainer =>
       slideContainer.children[0].children[1] as HTMLImageElement
     );
@@ -21,8 +19,12 @@ export default function ImageCarousel(props: Props) {
     const onEndScroll = debounce(() => {
       // Need offset (+5) for Android Chrome
       const slideId = Math.floor((scrolled.scrollLeft + 5) / slideDim);
-      !props.items[slideId].mounted && (props.items[slideId].mounted = true) && update();
-      images.forEach((slide, id) => slide.style.opacity = `${Number(slideId === id)}`);
+      images.forEach((slide, id) => {
+        if (Math.abs(id - slideId) <= 1) {// Ensure next/prev mounted
+          slide.src = `${props.baseSrc || ''}${props.items[id].src}`;
+        }
+        slide.style.opacity = `${slideId === id ? 1 : 0.2}`;
+      });
     }, 50);
 
     onEndScroll();
@@ -40,7 +42,7 @@ export default function ImageCarousel(props: Props) {
       marginRight={props.marginRight}
       className={cx(props.className, rootCss)}
     >
-      {props.items.map(({ src, label, mounted }) =>
+      {props.items.map(({ src, label }) =>
         <div key={src} className="slide">
           <div
             className="slide-label"
@@ -49,7 +51,6 @@ export default function ImageCarousel(props: Props) {
             {label}
           </div>
           <img
-            src={mounted ? `${props.baseSrc || ''}${src}` : undefined}
             style={props.imgStyles}
             loading="lazy"
           />
@@ -61,7 +62,7 @@ export default function ImageCarousel(props: Props) {
 
 interface Props extends CarouselProps {
   id: string;
-  items: { src: string; label: string; mounted?: true }[];
+  items: { src: string; label: string; }[];
   baseSrc?: string;
 
   imgStyles?: React.CSSProperties;
@@ -82,7 +83,7 @@ const rootCss = css`
     overflow: hidden;
   }
   .slide img {
-    opacity: 0;
+    opacity: 0.2;
     transition: opacity 300ms ease-in-out;
     width: 100%; // Safari
   }
