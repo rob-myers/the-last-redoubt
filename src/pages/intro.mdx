@@ -94,11 +94,11 @@ export default function World(props) {
 
   return gmGraph.gms.length ? (
     <CssPanZoom onLoad={/** ... */}>
-      <Geomorphs gms={gmGraph.gms} />
+      <Geomorphs api={state} />
       <DebugWorld api={state} />
-      <NPCs api={state} gmGraph={gmGraph} onLoad={/** ... */} />
-      <FOV api={state} gmGraph={gmGraph} onLoad={/** ... */} />
-      <Doors api={state} gmGraph={gmGraph} onLoad={/** ... */} />
+      <NPCs api={state} onLoad={/** ... */} />
+      <FOV api={state} onLoad={/** ... */} />
+      <Doors api={state} onLoad={/** ... */} />
     </CssPanZoom>
   ) : null;
 }
