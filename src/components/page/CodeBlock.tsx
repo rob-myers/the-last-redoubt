@@ -261,7 +261,10 @@ export const vscDarkPlusCss = css`
     color: #d7ba7d;
   }
 
-  .token.tag {
+  /* .token.tag {
+    color: #569cd6;
+  } */
+  .token.tag.punctuation {
     color: #569cd6;
   }
 
@@ -355,4 +358,8 @@ export const vscDarkPlusCss = css`
   .token.tag.attr-name + .punctuation {
     color: white;
   }
+  .token.comment.language-javascript {
+    color: #6a9955;
+  }
+
 `;
