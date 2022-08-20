@@ -45,11 +45,11 @@ export default function World(props) {
 
   }));
 
-  // gms.length can be truthy without ever enabling,
+  // graphGraph.gms.length can be truthy without ever enabling,
   // by viewing another World with same `props.gms`
-  const { gms, gmGraph } = useGeomorphs(
+  const gmGraph = useGeomorphs(
     props.gms, 
-    !(state.everEnabled = state.everEnabled || !props.disabled),
+    !(state.everEnabled ||= !props.disabled),
   );
 
   useHandleEvents(state, gmGraph);
@@ -59,16 +59,16 @@ export default function World(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-  return state.everEnabled && gms.length ? (
+  return state.everEnabled && gmGraph.gms.length ? (
     <CssPanZoom
       initZoom={1.5}
       initCenter={{ x: 300, y: 300 }}
       background="#000"
       // grid
-      onLoad={api => {state.panZoom = api; update(); }}
+      onLoad={api => (state.panZoom = api) && update()}
     >
       <Geomorphs
-        gms={gms}
+        gms={gmGraph.gms}
       />
 
       <DebugWorld
@@ -87,20 +87,20 @@ export default function World(props) {
         api={state}
         disabled={props.disabled}
         gmGraph={gmGraph}
-        onLoad={api => { state.npcs = api; update(); }}
+        onLoad={api => (state.npcs = api) && update()}
       />
 
       <FOV
         api={state}
         gmGraph={gmGraph}
-        onLoad={api => { state.fov = api; update(); }}
+        onLoad={api => (state.fov = api) && update()}
       />
 
       <Doors
         api={state}
         gmGraph={gmGraph}
         init={props.init.open}
-        onLoad={api => { state.doors = api; update(); }}
+        onLoad={api => (state.doors = api) && update()}
       />
 
     </CssPanZoom>
