@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { Vect } from "../geom";
+import { Vect, Rect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { scrollback } from "../sh/io";
 import { testNever } from "../service/generic";
@@ -22,9 +22,10 @@ import Decor from "./Decor";
 /** @param {Props} props */
 export default function NPCs(props) {
 
+  const {api} = props;
   const update = useUpdate();
 
-  const nav = useGeomorphsNav(props.gmGraph, props.disabled);
+  const nav = useGeomorphsNav(api.gmGraph, props.disabled);
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     decor: {},
@@ -144,9 +145,40 @@ export default function NPCs(props) {
       }
       return null;
     },
+    detectSegCollision(npc, seg) {
+      const rect = Rect.fromPoints(seg.src, seg.dst);
+      if (!npc.getWalkBounds().intersects(rect)) {
+        return null;
+      }
+      /**
+       * TODO
+       */
 
+      /**
+       * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
+       * - `k0 := u0^2`
+       * - `k1 := 1`
+       * - `k2 := -u0 * (t_0 · t_1)`
+       * - `k3 := -u0 * (t_0 · (a1 - a0))`
+       * - `k4 := t1 · (a1 - a0)`
+       * - `k5 := |a1 - a0|^2 - r0^2`
+       * 
+       * where
+       * - u0 is npc speed
+       * - r0 is npc radius.
+       * - a0, b0 are npc line seg ends
+       * - a1, b1 are line seg ends
+       * 
+       * Solutions are...
+      */
+
+      return {
+        dist: 0,
+        seconds: 0,
+      };
+    },
     getGlobalNavPath(src, dst) {
-      const {gms} = props.gmGraph
+      const {gms} = api.gmGraph
       const srcGmId = gms.findIndex(x => x.gridRect.contains(src));
       const dstGmId = gms.findIndex(x => x.gridRect.contains(dst));
 
@@ -163,7 +195,7 @@ export default function NPCs(props) {
       } else {
 
         // Compute global strategy i.e. edges in gmGraph
-        const gmEdges = props.gmGraph.findPath(src, dst);
+        const gmEdges = api.gmGraph.findPath(src, dst);
         if (!gmEdges) {
           throw Error(`getGlobalNavPath: gmGraph.findPath not found: ${JSON.stringify(src)} -> ${JSON.stringify(dst)}`);
         }
@@ -231,7 +263,7 @@ export default function NPCs(props) {
      * Wraps floorGraphClass.findPath
      */
     getLocalNavPath(gmId, src, dst) {
-      const gm = props.gmGraph.gms[gmId];
+      const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
       const pf = nav.pfs[gmId];
@@ -298,9 +330,9 @@ export default function NPCs(props) {
       return tags;
     },
     isPointLegal(p) {
-      const gmId = props.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
+      const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
       if (gmId === -1) return false;
-      const { navPoly, inverseMatrix } = props.gmGraph.gms[gmId];
+      const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
       const localPoint = inverseMatrix.transformPoint(Vect.from(p));
       return navPoly.some(poly => poly.contains(localPoint));
     },
@@ -361,7 +393,7 @@ export default function NPCs(props) {
       console.info('onTtyLink found', found); // DEBUG 🚧
       switch (found.key) {
         case 'room':
-          const gm = props.gmGraph.gms[found.gmId];
+          const gm = api.gmGraph.gms[found.gmId];
           const point = gm.matrix.transformPoint(gm.point[found.roomId].default.clone());
           state.panZoomTo({ zoom: 2, ms: 2000, point });
           break;
@@ -402,7 +434,7 @@ export default function NPCs(props) {
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);
       const position = npc.getPosition();
-      const found = props.gmGraph.findRoomContaining(position);
+      const found = api.gmGraph.findRoomContaining(position);
       if (found) {
         props.api.fov.setRoom(found.gmId, found.roomId);
         props.api.updateAll();
@@ -525,7 +557,7 @@ export default function NPCs(props) {
         }
       }
     },
-  }), { deps: [nav, props.api] });
+  }), { deps: [nav, api] });
   
   React.useEffect(() => {
     props.onLoad(state);
@@ -582,7 +614,6 @@ const rootCss = css`
  * @typedef Props @type {object}
  * @property {import('../world/World').State} api
  * @property {boolean} [disabled] 
- * @property {Graph.GmGraph} gmGraph
  * @property {(api: State) => void} onLoad
  */
 
@@ -604,6 +635,7 @@ const rootCss = css`
  * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
  * @property {(npcA: NPC.NPC, npcB: NPC.NPC) => null | NPC.NpcCollision} detectCollision
+ * @property {(npc: NPC.NPC, seg: Geom.Seg) => null | NPC.NpcSegCollision} detectSegCollision
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson }) => NPC.GlobalNavPath} getNpcGlobalNav

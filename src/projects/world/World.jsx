@@ -22,6 +22,7 @@ export default function World(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     everEnabled: false,
+    gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
     doors: /** @type {DoorsApi} */  ({ ready: false }),
     fov: /** @type {FovApi} */  ({ ready: false }),
@@ -51,6 +52,7 @@ export default function World(props) {
     props.gms, 
     !(state.everEnabled ||= !props.disabled),
   );
+  state.gmGraph = gmGraph;
 
   useHandleEvents(state, gmGraph);
 
@@ -80,25 +82,21 @@ export default function World(props) {
         showLabels
         // windows
         api={state}
-        gmGraph={gmGraph}
       />
 
       <NPCs
         api={state}
         disabled={props.disabled}
-        gmGraph={gmGraph}
         onLoad={api => (state.npcs = api) && update()}
       />
 
       <FOV
         api={state}
-        gmGraph={gmGraph}
         onLoad={api => (state.fov = api) && update()}
       />
 
       <Doors
         api={state}
-        gmGraph={gmGraph}
         init={props.init.open}
         onLoad={api => (state.doors = api) && update()}
       />
@@ -118,6 +116,7 @@ export default function World(props) {
 /**
  * @typedef State
  * @property {boolean} everEnabled
+ * @property {Graph.GmGraph} gmGraph
  * @property {DoorsApi} doors
  * @property {FovApi} fov
  * @property {NpcsApi} npcs

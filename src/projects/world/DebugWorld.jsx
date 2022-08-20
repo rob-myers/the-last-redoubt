@@ -8,13 +8,13 @@ import useSessionStore from "../sh/session.store";
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
-  const { fov } = props.api;
+  const { fov, gmGraph } = props.api;
   const { gmId, roomId } = fov;
   if (typeof gmId !== 'number') {
     return null;
   }
 
-  const gm = props.gmGraph.gms[gmId];
+  const gm = gmGraph.gms[gmId];
   const visDoorIds = props.api.doors.getVisible(gmId);
   const roomNavPoly = gm.lazy.roomNavPoly[roomId];
   const roomNavAabb = roomNavPoly.rect;
@@ -33,7 +33,7 @@ export default function DebugWorld(props) {
       const door = gm.doors[Number(target.getAttribute('data-debug-door-id'))];
       const hullDoorId = gm.getHullDoorId(door);
       if (hullDoorId >= 0) {
-        const ctxt = props.gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
+        const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
         if (ctxt) fov.setRoom(ctxt.adjGmId, ctxt.adjRoomId);
         else console.info('hull door is isolated', gmId, hullDoorId);
       } else {
@@ -71,7 +71,7 @@ export default function DebugWorld(props) {
       className={cx("debug-parent", rootCss)}
       onClick={onClick}
     >
-      {props.outlines && props.gmGraph.gms.map((gm, gmId) =>
+      {props.outlines && gmGraph.gms.map((gm, gmId) =>
         <div
           key={gmId}
           style={{
@@ -216,7 +216,6 @@ export default function DebugWorld(props) {
 
 /**
  * @typedef Props @type {object}
- * @property {Graph.GmGraph} gmGraph
  * @property {boolean} [canClickArrows]
  * @property {boolean} [localNav]
  * @property {boolean} [outlines]

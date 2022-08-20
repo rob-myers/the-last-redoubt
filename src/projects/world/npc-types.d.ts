@@ -197,6 +197,19 @@ declare namespace NPC {
     /** Distance from iB at which they will collide */
     distB: number;
   }
+  export interface NpcSegCollision {
+    /**
+     * Time when npc will collide,
+     * - `i0 + (seconds * speed) . tangent0`
+     * 
+     * where:
+     * - `i0` is current position
+     * - `speed` in world-units per second
+     */
+    seconds: number;
+    /** Distance from i0 at which npc will collide */
+    dist: number;
+  }
 
   export interface SessionCtxt {
     /** Session key */

@@ -15,7 +15,7 @@ export default function Doors(props) {
 
   const update = useUpdate();
 
-  const { gms } = props.gmGraph;
+  const { gmGraph, gmGraph: { gms } } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
@@ -66,7 +66,7 @@ export default function Doors(props) {
       const doorId = Number(/** @type {HTMLDivElement} */ (e.target).getAttribute('data-door-id'));
       const hullDoorId = Number(/** @type {HTMLDivElement} */ (e.target).getAttribute('data-hull-door-id'));
 
-      const gmDoorNode = hullDoorId === -1 ? null : props.gmGraph.getDoorNodeByIds(gmId, hullDoorId);
+      const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeByIds(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
 
       if (gmIdAttr === null || !state.vis[gmId][doorId] || sealed) {
@@ -93,7 +93,7 @@ export default function Doors(props) {
       state.events.next({ key, gmId, doorId });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
-      const adjHull = hullDoorId !== -1 ? props.gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
+      const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
       if (adjHull) {
         state.open[adjHull.adjGmId][adjHull.adjDoorId] = state.open[gmId][doorId];
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
@@ -130,13 +130,13 @@ export default function Doors(props) {
       const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
       nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).map(x => x.doorId);
       gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorIndex }) =>
-        props.gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorIndex) || []
+        gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorIndex) || []
       ).forEach(({ adjGmId, adjDoorId }) => (nextVis[adjGmId] = nextVis[adjGmId] || []).push(adjDoorId));
 
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
     },
   }), {
-    deps: [props.api],
+    deps: [props.api, gmGraph],
   });
 
   React.useEffect(() => {
@@ -266,7 +266,6 @@ const rootCss = css`
 /**
  * @typedef Props @type {object}
  * @property {import('../world/World').State} api
- * @property {Graph.GmGraph} gmGraph
  * @property {{ [gmId: number]: number[] }} [init]
  * @property {(doorsApi: State) => void} onLoad
  */

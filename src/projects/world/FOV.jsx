@@ -10,7 +10,7 @@ import useStateRef from "../hooks/use-state-ref";
  */
 export default function FOV(props) {
 
-  const { gmGraph, gmGraph: { gms } } = props;
+  const { gmGraph, gmGraph: { gms } } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     gmId: 0,
@@ -117,7 +117,6 @@ export default function FOV(props) {
 /**
  * @typedef Props @type {object}
  * @property {import('../world/World').State} api
- * @property {Graph.GmGraph} gmGraph
  * @property {(fovApi: State) => void} onLoad
  */
 
