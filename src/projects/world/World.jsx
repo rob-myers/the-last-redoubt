@@ -46,22 +46,21 @@ export default function World(props) {
 
   }));
 
-  // graphGraph.gms.length can be truthy without ever enabling,
+  // NOTE state.gmGraph.ready can be true without ever enabling,
   // by viewing another World with same `props.gms`
-  const gmGraph = useGeomorphs(
+  state.gmGraph = useGeomorphs(
     props.gms, 
     !(state.everEnabled ||= !props.disabled),
   );
-  state.gmGraph = gmGraph;
 
-  useHandleEvents(state, gmGraph);
+  useHandleEvents(state, state.gmGraph);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);
     return () => removeCached(props.worldKey);
   }, []);
 
-  return state.everEnabled && gmGraph.gms.length ? (
+  return state.everEnabled && state.gmGraph.ready ? (
     <CssPanZoom
       initZoom={1.5}
       initCenter={{ x: 300, y: 300 }}

@@ -169,6 +169,10 @@ export class gmGraphClass extends BaseGraph {
     return roomId === -1 ? null : { gmId, roomId };
   }
 
+  get ready() {
+    return this.gms.length > 0;
+  }
+
   /**
    * @param {Graph.GmGraphNode} node 
    */
