@@ -117,5 +117,9 @@ const rootCss = css`
     font-size: 100px;
     background-color: #000;
     margin-bottom: 8px;
+
+    &:first-child {
+      margin-left: 32px;
+    }
   }
 `;
