@@ -35,7 +35,9 @@ export function onRenderBody({ setPreBodyComponents }) {
         __html: `
   try {
     const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
-    if (darkModeEnabled === 'true') document.body.classList.add('dark-mode');
+    if (darkModeEnabled === 'true') {
+      document.body.classList.add('dark-mode');
+    }
   } catch (e) {
     console.error(e)
   }
