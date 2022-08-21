@@ -1,4 +1,5 @@
 import "src/components/globals.css"
+import "src/components/dark-mode.css"
 import "src/components/icons.css"
 import "flexlayout-react/style/light.css"
 import "xterm/css/xterm.css"
