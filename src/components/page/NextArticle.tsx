@@ -1,6 +1,6 @@
 import { Link } from "gatsby";
 import React from "react";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import useSiteStore, { FrontMatter } from "store/site.store";
 
 export default function NextArticle({ frontMatter }: Props) {
@@ -10,7 +10,7 @@ export default function NextArticle({ frontMatter }: Props) {
   );
 
   return nextPath ? (
-    <div className={nextArticleCss}>
+    <div className={cx('next-article', nextArticleCss)}>
       <Link
         to={nextPath}
         title="Continue to next article"
