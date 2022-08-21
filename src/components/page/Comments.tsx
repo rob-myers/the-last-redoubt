@@ -35,5 +35,8 @@ interface Props {
 const rootCss = css`
   min-height: 322px;
   border-top: 1px solid #eee;
-  padding-top: 8px;
+  padding-top: 16px;
+  @media(max-width: 600px) {
+    padding-top: 8px;
+  }
 `;

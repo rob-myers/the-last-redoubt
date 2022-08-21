@@ -26,9 +26,6 @@ export function wrapPageElement({
     <>
       <Helmet>
         <title>The Last Redoubt</title>
-        {/* <script>{`
-  history.scrollRestoration = 'manual';
-        `}</script> */}
       </Helmet>
 
       <StaticQuery
