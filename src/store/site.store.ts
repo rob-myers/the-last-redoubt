@@ -12,6 +12,7 @@ export type State = {
   articleKey: null | string;
   /** Frontmatter of every article */
   articlesMeta: { [articleKey: string]: FrontMatter };
+  comments: { [articleKey: string]: GiscusDiscussionMeta };
   groupedMetas: FrontMatter[][];
   
   darkMode: boolean;
@@ -26,6 +27,7 @@ export type State = {
   api: {
     clickToClipboard(e: React.MouseEvent): Promise<void>;
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
+    initiateBrowser(): void;
     removeComponents(tabsKey: string, ...componentKeys: string[]): void;
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
     toggleDarkMode(): void;
@@ -35,11 +37,14 @@ export type State = {
 const useStore = create<State>(devtools((set, get) => ({
   articleKey: null,
   articlesMeta: {},
+  comments: {},
   groupedMetas: [],
+
   navOpen: false,
   darkMode: false,
   component: {},
   tabs: {},
+
   api: {
     async clickToClipboard(e) {
       const el = e.target as HTMLElement;
@@ -79,6 +84,24 @@ const useStore = create<State>(devtools((set, get) => ({
         articlesMeta,
         groupedMetas,
         darkMode: typeof window !== 'undefined' && document.body.classList.contains('dark-mode'),
+      });
+    },
+
+    initiateBrowser() {
+      setTimeout(() => {
+        document.body.style.scrollBehavior = 'smooth';
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 1000);
+
+      window.addEventListener('message', (message) => {
+        if (message.origin === 'https://giscus.app' && message.data.giscus?.discussion) {
+          const discussion = message.data.giscus.discussion as GiscusDiscussionMeta;
+          console.log('giscus meta', discussion);
+          const { articleKey } = get();
+          if (articleKey) {
+            set(({ comments }) => ({ comments: { ...comments, [articleKey]: discussion } }));
+          }
+        }
       });
     },
 
@@ -179,6 +202,27 @@ interface TabsState {
   getTabNodes(): TabNode[];
   /** The _actually_ visible `TabNodes` e.g. only 1 when a tab maximised */
   getVisibleTabNodes(): TabNode[];
+}
+
+interface GiscusDiscussionMeta {
+  id: string;
+  locked: boolean;
+  reactionCount: number;
+  reactions: Record<(
+    | 'CONFUSED'
+    | 'EYES'
+    | 'HEART'
+    | 'HOORAY'
+    | 'LAUGH'
+    | 'ROCKET'
+    | 'THUMBS_DOWN'
+    | 'THUMBS_UP'
+  ), { count: number; viewerHasReacted: boolean; }>;
+  repository: { nameWithOwner: string; }
+  totalCommentCount: number;
+  totalReplyCount: number;
+  /** e.g. `"https://github.com/rob-myers/the-last-redoubt/discussions/5"` */
+  url: string;
 }
 
 const api = useStore.getState().api;

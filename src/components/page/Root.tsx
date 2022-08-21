@@ -50,12 +50,9 @@ export function wrapPageElement({
             useSiteStore.api.initiate(allFrontMatter, frontMatter);
           }, [frontMatter]);
           
-          React.useEffect(() => {
-            setTimeout(() => {
-              document.body.style.scrollBehavior = 'smooth';
-              document.documentElement.style.scrollBehavior = 'smooth';
-            }, 1000);
-          }, []);
+          React.useEffect(() =>
+            useSiteStore.api.initiateBrowser()
+          , []);
 
           return (
             <QueryClientProvider client={queryClient} >

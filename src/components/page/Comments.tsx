@@ -4,25 +4,38 @@ import Giscus from "@giscus/react";
 import useSiteStore from "store/site.store";
 
 export default function Comments(props: Props) {
-  const darkMode = useSiteStore(x => x.darkMode);
+  const { articleKey, darkMode, commentMeta } = useSiteStore(x => ({
+    articleKey: x.articleKey,
+    darkMode: x.darkMode,
+    commentMeta: x.articleKey ? x.comments[x.articleKey] : null,
+  }), (a, b) => (
+    a.articleKey === b.articleKey
+    && a.darkMode === b.darkMode
+    && a.commentMeta === b.commentMeta
+  ));
 
   return (
     <div className={cx("comments", rootCss)}>
-      <Giscus
+      <a href={commentMeta?.url} target="_blank">
+        View discussion on GitHub
+      </a>
+
+      {articleKey && <Giscus
         id={props.id}
         repo="rob-myers/the-last-redoubt"
         repoId="R_kgDOHVYh5w"
         category="Announcements"
         categoryId="DIC_kwDOHVYh584CQ8vc"
         mapping="specific"
-        term={props.term}
+        term={articleKey}
         reactionsEnabled="1"
-        emitMetadata="0"
+        // Emits message with data `{ giscus: { discussion, message } }` to window 
+        emitMetadata="1"
         inputPosition="top"
         theme={darkMode ? 'dark' : 'light'}
         lang="en"
         loading="lazy"
-      />
+      />}
     </div>
   );
 }
