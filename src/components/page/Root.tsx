@@ -51,15 +51,14 @@ export function wrapPageElement({
 
           React.useMemo(() => {
             useSiteStore.api.initiate(allFrontMatter, frontMatter);
+          }, [frontMatter]);
+          
+          React.useEffect(() => {
             setTimeout(() => {
               document.body.style.scrollBehavior = 'smooth';
               document.documentElement.style.scrollBehavior = 'smooth';
             }, 1000);
-          }, [frontMatter]);
-
-          // useBeforeunload(() =>
-          //   tryLocalStorageSet(localStorageKey.windowScrollY, `${Math.round(window.scrollY)}`)
-          // );
+          }, []);
 
           return (
             <QueryClientProvider client={queryClient} >

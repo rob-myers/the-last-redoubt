@@ -2,15 +2,31 @@
 
 ## In progress
 
+- ✅ Can see GitHub comments
+  - https://giscus.app/
+
+- Carousel
+  - ✅ image fade in/out
+  - ✅ do not mount until first visible
+  - ✅ auto-show based on current scroll
+    - $0.addEventListener('scroll', e => console.log(e.target.scrollLeft))
+    - need clear formula "scrollLeft -> slide"
+
+- ✅ BUG image needs fixed height for SSR
+
+- Move assets from public/* to /public/assets/*
+
 - pages for initial release
   - /intro
     - add video ✅
-    - write "What we'll direct" 🚧
+    - remake mobile video ✅
+    - finish "Finished product" 🚧
+    - pepper with screenshots?
   - / and /home
   - /about/terminal
   - /about/me
 
-- Can see GitHub comments
+- ❌ BUG with history after following ext link?
 
 - ✅ Clean and modularise NPC JSON imports
   - ✅ create service/npc-json

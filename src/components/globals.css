@@ -56,6 +56,9 @@ body.dark-mode div.tags > span.tag {
     font-weight: bold;
   }
 }
+body.dark-mode div.comments {
+  border-color: #666;
+}
 body.dark-mode figure.image {
   border-color: #555;
   border-width: 1px;
@@ -66,7 +69,7 @@ body.dark-mode pre.prism-code {
   border-color: #222;
   background-color: #000;
 }
-body.dark-mode section article > :not(code, div.carousel, div.tags, figure.image, figure.tabs, figure.video, pre) {
+body.dark-mode section article > :not(code, div.carousel, div.comments, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }
 body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {

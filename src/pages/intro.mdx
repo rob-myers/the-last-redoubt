@@ -14,10 +14,11 @@ tags:
   - web dev
 ---
 
+import Icon from "components/page/Icon";
 import Image from "components/page/Image";
 import Video from "components/page/Video";
 import Tabs from "components/page/Tabs";
-import Icon from "components/page/Icon";
+import Comments from "components/page/Comments";
 import ImageCarousel from "components/page/ImageCarousel";
 import InlineCode, { InlineUniCode } from "components/page/InlineCode";
 import { profileLookup } from "projects/sh/scripts";
@@ -314,9 +315,14 @@ Then a level/scenario should be kept in mind whenever we develop Game AI
 (each level being built from many scenarios).
 
 > **First level outline**.
-> Andros has travelled through the first 1000 cities,
-> and was encouraged to ordain into the Upper Pyramid by Cartesius.
-> Andros and other Novices begin by learning certain
+> Andros has just travelled through the first 1000 cities.
+> Cartesius encourages him to ordain into the Upper Pyramid.
+> Andros and the other Novices begin by learning certain
 > hidden knowledge concerning the Watchers.
 
 __TODO__ What's coming next
+
+<Comments
+  id="comments"
+  term="/intro"
+/>

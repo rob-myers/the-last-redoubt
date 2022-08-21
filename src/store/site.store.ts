@@ -4,8 +4,8 @@ import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
 import type { TabMeta } from 'model/tabs/tabs.model';
-import type { KeyedLookup } from 'projects/service/generic';
-import { cssName, cssTimeMs } from 'projects/service/const';
+import { KeyedLookup, tryLocalStorageSet } from 'projects/service/generic';
+import { cssName, cssTimeMs, localStorageKey } from 'projects/service/const';
 
 export type State = {
   /** Key of currently viewed article */
@@ -14,6 +14,7 @@ export type State = {
   articlesMeta: { [articleKey: string]: FrontMatter };
   groupedMetas: FrontMatter[][];
   
+  darkMode: boolean;
   navOpen: boolean;
   /**
    * Components occurring in Tabs.
@@ -27,6 +28,7 @@ export type State = {
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
     removeComponents(tabsKey: string, ...componentKeys: string[]): void;
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
+    toggleDarkMode(): void;
   };
 };
 
@@ -35,6 +37,7 @@ const useStore = create<State>(devtools((set, get) => ({
   articlesMeta: {},
   groupedMetas: [],
   navOpen: false,
+  darkMode: false,
   component: {},
   tabs: {},
   api: {
@@ -75,6 +78,7 @@ const useStore = create<State>(devtools((set, get) => ({
         articleKey: fm ? fm.key : null,
         articlesMeta,
         groupedMetas,
+        darkMode: typeof window !== 'undefined' && document.body.classList.contains('dark-mode'),
       });
     },
 
@@ -105,7 +109,13 @@ const useStore = create<State>(devtools((set, get) => ({
         lookup[componentKey] = { ...component }; // ?
         return {};
       });
-    }
+    },
+
+    toggleDarkMode() {
+      const enabled = document.body.classList.toggle('dark-mode');
+      tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
+      set({ darkMode: enabled });
+    },
   },
 }), { name: "site.store" } ));
 
