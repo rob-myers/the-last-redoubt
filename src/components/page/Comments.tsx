@@ -7,7 +7,7 @@ export default function Comments(props: Props) {
   const { articleKey, darkMode, commentMeta } = useSiteStore(x => ({
     articleKey: x.articleKey,
     darkMode: x.darkMode,
-    commentMeta: x.articleKey ? x.comments[x.articleKey] : null,
+    commentMeta: x.articleKey ? x.discussMeta[x.articleKey] : null,
   }), (a, b) => (
     a.articleKey === b.articleKey
     && a.darkMode === b.darkMode
@@ -16,6 +16,7 @@ export default function Comments(props: Props) {
 
   return (
     <div className={cx("comments", rootCss)}>
+
       <a href={commentMeta?.url} target="_blank">
         View discussion on GitHub
       </a>

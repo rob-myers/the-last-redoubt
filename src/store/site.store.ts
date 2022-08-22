@@ -12,7 +12,7 @@ export type State = {
   articleKey: null | string;
   /** Frontmatter of every article */
   articlesMeta: { [articleKey: string]: FrontMatter };
-  comments: { [articleKey: string]: GiscusDiscussionMeta };
+  discussMeta: { [articleKey: string]: GiscusDiscussionMeta };
   groupedMetas: FrontMatter[][];
   
   darkMode: boolean;
@@ -37,7 +37,7 @@ export type State = {
 const useStore = create<State>(devtools((set, get) => ({
   articleKey: null,
   articlesMeta: {},
-  comments: {},
+  discussMeta: {},
   groupedMetas: [],
 
   navOpen: false,
@@ -99,7 +99,7 @@ const useStore = create<State>(devtools((set, get) => ({
           console.log('giscus meta', discussion);
           const { articleKey } = get();
           if (articleKey) {
-            set(({ comments }) => ({ comments: { ...comments, [articleKey]: discussion } }));
+            set(({ discussMeta: comments }) => ({ discussMeta: { ...comments, [articleKey]: discussion } }));
           }
         }
       });

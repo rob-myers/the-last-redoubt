@@ -14,6 +14,12 @@ body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.
 body.dark-mode p a {
   color: #006; /** Gets inverted */
 }
+body.dark-mode aside a {
+  color: #ff9;
+}
+body.dark-mode div.comments > a {
+  color: #ff9;
+}
 
 body.dark-mode section article {
   border-color: rgb(95, 95, 95);
@@ -21,9 +27,6 @@ body.dark-mode section article {
 
 body.dark-mode aside {
   color: #bbb;
-}
-body.dark-mode aside a {
-  color: #ff9;
 }
 
 body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
