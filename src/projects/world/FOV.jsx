@@ -29,9 +29,12 @@ export default function FOV(props) {
     // gmId: 3, roomId: 26,
 
     clipPath: gms.map(_ => 'none'),
-    frontierClipPath: gms.map(_ => 'none'),
-    prevLightPolys: gms.map(_ => []),
-    prevHash: [-1, -1],
+    frontierClipPath: gms.map(_ => 'none'), 
+    prev: {
+      light: gms.map(_ => []),
+      frontier: gms.map(_ => []),
+      hash: [-1, -1],
+    },
     ready: true,
 
     setRoom(gmId, roomId) {
@@ -50,7 +53,11 @@ export default function FOV(props) {
 
       // Avoid useless updates, also to compute frontierPolys
       const stateHash = getLightHash(state, openDoorsIds);
-      if (`${stateHash}` === `${state.prevHash}`) {
+      const changedRoom = (
+        `${stateHash.slice(0, 2)}` !== `${state.prev.hash.slice(0, 2)}`
+        && state.prev.hash[0] !== -1
+      );
+      if (`${stateHash}` === `${state.prev.hash}`) {
         return;
       }
       
@@ -62,14 +69,16 @@ export default function FOV(props) {
         .concat({ gmIndex: state.gmId, poly: gm.roomsWithDoors[state.roomId] }
       );
 
-      const frontierPolys = state.prevLightPolys.slice();
+      const frontierPolys = state.prev.frontier;
 
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = gms.map((otherGm, altGmId) => {
         const polys = lightPolys.filter(x => x.gmIndex === altGmId).map(x => x.poly.precision(2));
-
-        frontierPolys[altGmId] = Poly.cutOutSafely(state.prevLightPolys[altGmId], polys);
-        state.prevLightPolys[altGmId] = polys;
+        if (changedRoom) {
+          frontierPolys[altGmId] = Poly.cutOutSafely(state.prev.light[altGmId], polys);
+        }
+        state.prev.frontier[altGmId] = frontierPolys[altGmId];
+        state.prev.light[altGmId] = polys;
 
         return Poly.cutOutSafely(polys, [otherGm.hullOutline]);
       });
@@ -82,9 +91,8 @@ export default function FOV(props) {
       );
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
-      state.frontierClipPath = gmMaskPolysToClipPaths(frontierPolys, gms);
-
-      state.prevHash = stateHash;
+      state.frontierClipPath = gmMaskPolysToClipPaths(frontierPolys, gms, 'inset(100000px)');
+      state.prev.hash = stateHash;
     },
   }), {
     overwrite: { gmId: true, roomId: true },
@@ -150,8 +158,7 @@ export default function FOV(props) {
  * @property {number} roomId
  * @property {string[]} clipPath
  * @property {string[]} frontierClipPath
- * @property {Poly[][]} prevLightPolys
- * @property {number[]} prevHash
+ * @property {{ light: Poly[][]; frontier: Poly[][]; hash: number[] }} prev
  * @property {(gmId: number, roomId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
  */
@@ -171,15 +178,12 @@ export default function FOV(props) {
  * @param {Poly[][]} maskPolys 
  * @param {Geomorph.GeomorphDataInstance[]} gms 
  */
-function gmMaskPolysToClipPaths(
-  maskPolys,
-  gms,
-) {
+function gmMaskPolysToClipPaths(maskPolys, gms, defaultClipPath = 'none') {
   return maskPolys.map((maskPoly, gmId) => {
     // <img> top-left needn't be at world origin
-    maskPoly.forEach(poly => poly.translate(-gms[gmId].pngRect.x, -gms[gmId].pngRect.y));
-    const svgPaths = maskPoly.map(poly => `${poly.svgPath}`).join(' ');
-    return svgPaths.length ? `path('${svgPaths}')` : 'none';
+    const polys = maskPoly.map(poly => poly.clone().translate(-gms[gmId].pngRect.x, -gms[gmId].pngRect.y));
+    const svgPaths = polys.map(poly => `${poly.svgPath}`).join(' ');
+    return svgPaths.length ? `path('${svgPaths}')` : defaultClipPath;
   });
 }
 
