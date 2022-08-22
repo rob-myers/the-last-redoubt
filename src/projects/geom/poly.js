@@ -204,13 +204,26 @@ export class Poly {
    * @param {Poly[]} polys
    */
   static cutOut(cuttingPolys, polys) {
-    return polygonClipping
-      .difference(
-        polys.map(({ geoJson: { coordinates } }) => coordinates),
-        ...cuttingPolys.map(({ geoJson: { coordinates } }) => coordinates),
-      )
-      // .map(coords => Poly.from(coords).cleanFinalReps());
-      .map(coords => Poly.from(coords));
+    return cuttingPolys.length
+      ? polygonClipping.difference(
+          polys.map(({ geoJson: { coordinates } }) => coordinates),
+          ...cuttingPolys.map(({ geoJson: { coordinates } }) => coordinates),
+        )
+        // .map(coords => Poly.from(coords).cleanFinalReps());
+        .map(coords => Poly.from(coords))
+      : polys.map(x => x.clone());
+  }
+
+  /**
+   * Cut `cuttingPolys` from `polys`.
+   * Cutting one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
+   * @param {Poly[]} cuttingPolys
+   * @param {Poly[]} polys
+   */
+   static cutOutSafely(cuttingPolys, polys) {
+    return cuttingPolys.length === 0
+      ? polys.map(x => x.clone())
+      : cuttingPolys.reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), polys);
   }
 
   /**
