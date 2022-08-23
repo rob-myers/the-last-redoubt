@@ -75,7 +75,7 @@ export default function createNpc(
         angle = anim.aux.angs[anim.aux.angs.length - 1];
       } else {
         const distance = ratio * anim.aux.total;
-        const vertexId = anim.aux.sofars.findIndex(sofar => sofar >= distance) - 1;
+        const vertexId = Math.max(0, anim.aux.sofars.findIndex(sofar => sofar >= distance) - 1);
         position.copy(anim.path[vertexId]).addScaledVector(
           anim.path[vertexId + 1].clone().sub(anim.path[vertexId]),
           (distance - anim.aux.sofars[vertexId]) / anim.aux.elens[vertexId],
