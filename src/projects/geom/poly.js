@@ -217,14 +217,15 @@ export class Poly {
   /**
    * Cut `cuttingPolys` from `polys`.
    * - Cutting one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
-   * - Taking union prevents Error like https://github.com/mfogel/polygon-clipping/issues/118
+   * - `Poly.union(polys)` prevents Error like https://github.com/mfogel/polygon-clipping/issues/118
+   * - `Poly.union(cuttingPolys)` prevents maximum stack Error like "Error in function RingOut.enclosingRing in ./node_modules/polygon-clipping/dist/polygon-clipping.umd.js:2090"
    * @param {Poly[]} cuttingPolys
    * @param {Poly[]} polys
    */
    static cutOutSafely(cuttingPolys, polys) {
     return cuttingPolys.length === 0
       ? polys.map(x => x.clone())
-      : cuttingPolys.reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), Poly.union(polys));
+      : Poly.union(cuttingPolys).reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), Poly.union(polys));
   }
 
   /**
