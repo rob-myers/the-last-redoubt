@@ -216,14 +216,15 @@ export class Poly {
 
   /**
    * Cut `cuttingPolys` from `polys`.
-   * Cutting one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
+   * - Cutting one-by-one prevents Error like https://github.com/mfogel/polygon-clipping/issues/115
+   * - Taking union prevents Error like https://github.com/mfogel/polygon-clipping/issues/118
    * @param {Poly[]} cuttingPolys
    * @param {Poly[]} polys
    */
    static cutOutSafely(cuttingPolys, polys) {
     return cuttingPolys.length === 0
       ? polys.map(x => x.clone())
-      : cuttingPolys.reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), polys);
+      : cuttingPolys.reduce((agg, cutPoly) => Poly.cutOut([cutPoly], agg), Poly.union(polys));
   }
 
   /**
