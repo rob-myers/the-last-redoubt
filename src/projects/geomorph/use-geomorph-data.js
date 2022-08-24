@@ -124,7 +124,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
 
       getHullDoorId(doorOrId) {
         const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId
-        return this.hullDoors.findIndex(x => x === door);
+        return this.hullDoors.indexOf(door);
       },
       getOtherRoomId(doorOrId, roomId) {
         return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)

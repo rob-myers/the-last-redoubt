@@ -153,20 +153,23 @@ declare namespace Graph {
     adjDoorId: number;
   }
 
-  export interface NavGmTransition {
+  export interface BaseNavGmTransition {
     srcGmId: number;
-    srcDoorId: number;
-    srcHullDoorId: number;
     srcRoomId: number;
+    srcDoorId: number;
+    dstGmId: number;
+    dstRoomId: number;
+    dstDoorId: number;
+  }
+
+  export interface NavGmTransition extends BaseNavGmTransition {
+    srcHullDoorId: number;
     /**
      * Entrypoint of the hull door from geomorph `srcGmId`,
      * in world coordinates.
      */
     srcDoorEntry: Geom.Vect;
 
-    dstGmId: number;
-    dstRoomId: number;
-    dstDoorId: number;
     dstHullDoorId: number;
     /**
      * Entrypoint of the hull door from geomorph `dstGmId`,

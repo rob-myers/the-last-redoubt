@@ -63,15 +63,15 @@ export default function useHandleEvents(api, gmGraph) {
         case 'exit-room':
           // Player left a room
           if (e.meta.otherRoomId !== null) {
-            api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId);
+            api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
             const adjCtxt = gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
-            adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId);
+            adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
           api.updateAll();
           break;
         case 'enter-room':
-          if (api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId)) {
+          if (api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId)) {
             api.updateAll();
           }
           break;

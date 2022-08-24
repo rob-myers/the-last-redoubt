@@ -82,6 +82,173 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * Compute lit area, determined by current room and open doors.
+   * @param {number} gmId 
+   * @param {number} rootRoomId 
+   * @param {number[]} openDoorIds 
+   * @returns {{ gmId: number; poly: Poly }[]}
+   */
+  computeDoorLights(gmId, rootRoomId, openDoorIds) {
+    const gm = this.gms[gmId];
+    const adjOpenDoorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
+      ({ doorId }) => openDoorIds.includes(doorId) ? doorId : []
+    );
+
+    const preDoorLights = adjOpenDoorIds.flatMap((doorId) =>
+      this.computeDoorLightArea(gmId, doorId, openDoorIds, adjOpenDoorIds)??[]
+    );
+
+    return preDoorLights.flatMap(({ area, relDoorIds }) => {
+      const doors = this.gms[area.gmId].doors;
+      /**
+       * These additional line segments are needed when 2 doors
+       * adjoin a single room e.g. double doors.
+       * _TODO_ use fewer segments
+       */
+      const closedDoorSegs = doors.filter((_, id) =>
+        id !== area.doorId && !relDoorIds.includes(id)
+      ).map(x => x.seg);
+
+      return {
+        gmId: area.gmId,
+        poly: geom.lightPolygon({
+          position: this.getDoorLightPosition(area.gmId, rootRoomId, area.doorId),
+          range: 2000,
+          exterior: area.poly,
+          extraSegs: closedDoorSegs,
+        }),
+      };
+    });
+  }
+
+  /**
+   * @param {number} gmId 
+   * @param {number} doorId 
+   * @param {number[]} openDoorIds 
+   * @param {number[]} adjOpenDoorIds 
+   */
+  computeDoorLightArea(gmId, doorId, openDoorIds, adjOpenDoorIds) {
+    const gm = this.gms[gmId];
+    const area = this.getOpenDoorArea(gmId, doorId);
+    if (!area) {
+      return null;
+    }
+
+    /**
+     * TODO test relations R(doorId, windowId)
+     * - Originally, `relate-connectors` tag induced a relation between doorIds.
+     *   We _extend_ light area when exactly one of them is in @see adjOpenDoorIds.
+     * - Light is extended through a door in an adjacent room, non-adjacent to current room.
+     */
+    const relDoorIds = (gm.relDoorId[doorId]?.doorIds || []).filter(relDoorId =>
+      openDoorIds.includes(relDoorId)
+      && !adjOpenDoorIds.includes(relDoorId)
+    );
+
+    // Windows are always open, and assumed visible if related door open
+    const relWindowIds = (gm.relDoorId[doorId]?.windowIds || []);
+    if (relDoorIds.length || relWindowIds.length) {
+      area.poly = Poly.union([area.poly,
+        ...relDoorIds.flatMap(relDoorId => this.getOpenDoorArea(gmId, relDoorId)?.poly || []),
+        ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
+      ])[0];
+    }
+
+    return { area, relDoorIds };
+  }
+
+  /**
+   * Compute lit area, determined by current room and open doors and windows.
+   * @param {number} gmId 
+   * @param {number} rootRoomId 
+   * @param {number[]} openDoorIds 
+   * @returns {{ gmId: number; poly: Poly }[]}
+   */
+  computeLightPolygons(gmId, rootRoomId, openDoorIds) {
+    const doorLights = this.computeDoorLights(gmId, rootRoomId, openDoorIds);
+    const windowLights = this.computeWindowLights(gmId, rootRoomId);
+    return doorLights.concat(windowLights);
+  }
+
+  /**
+   * TODO
+   * - support hull doors 🚧 (currently assume srcGmId === dstGmId)
+   * @param {Graph.BaseNavGmTransition} ts 
+   * @param {number[]} openDoorIds 
+   */
+  computeShadingLight(ts, openDoorIds) {
+    console.log(ts)
+    const gm = this.gms[ts.srcGmId];
+
+    // We include adjacent doors from both rooms
+    const adjOpenDoorIds = gm.roomGraph.getAdjacentDoors(ts.srcRoomId, ts.dstRoomId).flatMap(
+      ({ doorId }) => openDoorIds.includes(doorId) ? doorId : []
+    );
+    // Ensure original door in case we have closed it
+    !adjOpenDoorIds.includes(ts.srcDoorId) && adjOpenDoorIds.push(ts.srcDoorId);
+
+    const preLight = this.computeDoorLightArea(ts.srcGmId, ts.srcDoorId, openDoorIds, []);
+    if (!preLight) {
+      throw Error(`computingShadingLight empty: ${JSON.stringify(ts)}`);
+    }
+
+    // Extend preLight.area.poly with adjacent roomWithDoors
+    const adjRoomsWithDoors = adjOpenDoorIds.flatMap(x => gm.doors[x].roomIds).filter(x =>
+      x !== null && x !== ts.dstRoomId && x !== ts.srcRoomId
+    ).map(roomId => gm.roomsWithDoors[/** @type {number} */(roomId)]);
+    const lightArea = Poly.union(// TODO avoid outset 🚧
+      [preLight.area.poly].concat(adjRoomsWithDoors).flatMap(x => geom.createOutset(x, 0.1))
+    )[0];
+
+    const closedDoorSegs = gm.doors.filter((_, id) =>
+      !adjOpenDoorIds.includes(id) && !preLight.relDoorIds.includes(id)
+    ).map(x => x.seg);
+
+    return {
+      gmId: ts.srcGmId,
+      poly: geom.lightPolygon({
+        position: this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
+        range: 2000,
+        exterior: lightArea,
+        extraSegs: closedDoorSegs,
+      }),
+    };
+  }
+
+  /**
+   * Compute lit area, determined by current room and open windows.
+   * @param {number} gmId 
+   * @param {number} rootRoomId 
+   * @returns {{ gmId: number; poly: Poly }[]}
+   */
+  computeWindowLights(gmId, rootRoomId) {
+    const gm = this.gms[gmId];
+    const adjWindowIds = gm.roomGraph.getAdjacentWindows(rootRoomId)
+      .filter(x => {
+        const connector = gm.windows[x.windowIndex];
+          // Frosted windows opaque
+          if (connector.tags.includes('frosted')) return false;
+          // One-way mirror
+          if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
+          return true;
+      })
+      .map(x => x.windowIndex);
+
+    return adjWindowIds.map(windowId => ({
+      gmId,
+      poly: geom.lightPolygon({
+        position: (
+          gm.point[rootRoomId]?.lightWindow[windowId]
+          // We move light inside current room
+          || computeLightPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
+        ),
+        range: 1000,
+        exterior: this.getOpenWindowPolygon(gmId, windowId),
+      }),
+    }));
+  }
+
+  /**
    * Find path using simplistic global nav strategy.
    * @param {Geom.VectJson} src
    * @param {Geom.VectJson} dst 
@@ -223,6 +390,22 @@ export class gmGraphClass extends BaseGraph {
   getDoorEntry(doorNode) {
     return /** @type {Geom.Vect} */ (this.entry.get(doorNode));
   }
+
+  /**
+   * By default we move light inside current room by constant amount.
+   * Sometimes this breaks (lies outside current room) or looks bad when combined,
+   * so can override via 'light' tagged rects.
+   * @param {number} gmId
+   * @param {number} rootRoomId
+   * @param {number} doorId
+   */
+  getDoorLightPosition(gmId, rootRoomId, doorId) {
+    const gm = this.gms[gmId];
+    return (
+      gm.point[rootRoomId]?.light[doorId]
+      || computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
+    );
+  }
   
   /**
    * @param {string} nodeId 
@@ -288,100 +471,6 @@ export class gmGraphClass extends BaseGraph {
     const window = gm.windows[windowId];
     const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getWindowNode(windowId));
     return Poly.union(adjRoomNodes.map(x => gm.rooms[x.roomId]).concat(window.poly))[0];
-  }
-
-  /**
-   * @param {number} gmId 
-   * @param {number} rootRoomId 
-   * @param {number[]} openDoorIds 
-   * @returns {{ gmIndex: number; poly: Poly }[]}
-   */
-  computeLightPolygons(gmId, rootRoomId, openDoorIds) {
-    const gm = this.gms[gmId];
-    const adjOpenDoorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(({ doorId }) => openDoorIds.includes(doorId) ? doorId : []);
-
-    const preDoorLights = adjOpenDoorIds.flatMap((doorId) => {
-      const area = this.getOpenDoorArea(gmId, doorId);
-      if (!area) return [];
-      /**
-       * TODO test relations R(doorId, windowId)
-       * 
-       * - Originally, `relate-connectors` tag induced a relation between doorIds.
-       *   We _extend_ light area when exactly one of them is in @see adjOpenDoorIds.
-       * - Light is extended through a door in an adjacent room, non-adjacent to current room.
-       */
-      const relDoorIds = (gm.relDoorId[doorId]?.doorIds || [])
-        .filter(relDoorId => openDoorIds.includes(relDoorId) && !adjOpenDoorIds.includes(relDoorId));
-      // Windows are always open, and assumed visible if related door open
-      const relWindowIds = (gm.relDoorId[doorId]?.windowIds || []);
-      if (relDoorIds.length || relWindowIds.length) {
-        area.poly = Poly.union([area.poly,
-          ...relDoorIds.flatMap(relDoorId => this.getOpenDoorArea(gmId, relDoorId)?.poly || []),
-          ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
-        ])[0];
-      }
-      return { area, relDoorIds };
-    });
-
-    const doorLights = preDoorLights.flatMap(({ area, relDoorIds }) => {
-      const doors = this.gms[area.gmId].doors;
-      /**
-       * TODO fewer segments
-       * These additional line segments are needed when 2 doors
-       * adjoin a single room e.g. double doors.
-       */
-      const closedDoorSegs = doors.filter((_, id) =>
-        id !== area.doorId && !relDoorIds.includes(id)
-      ).map(x => x.seg);
-      /**
-       * By default we move light inside current room by constant amount.
-       * Sometimes this breaks (lies outside current room) or looks bad when combined,
-       * so can override via 'light' tagged rects.
-       */
-      const lightPosition = (
-        gm.point[rootRoomId]?.light[area.doorId]
-        || computeLightPosition(doors[area.doorId], rootRoomId, lightDoorOffset)
-      );
-
-      return {
-        gmIndex: area.gmId,
-        poly: geom.lightPolygon({
-          position: lightPosition,
-          range: 2000,
-          exterior: area.poly,
-          extraSegs: closedDoorSegs,
-        }),
-      };
-    });
-
-    const adjWindowIds = gm.roomGraph.getAdjacentWindows(rootRoomId)
-      .filter(x => {
-        const connector = gm.windows[x.windowIndex];
-          // Frosted windows opaque
-          if (connector.tags.includes('frosted')) return false;
-          // One-way mirror
-          if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
-          return true;
-      })
-      .map(x => x.windowIndex);
-
-    const windowLights = adjWindowIds.map(windowId => ({
-      gmIndex: gmId,
-      poly: geom.lightPolygon({
-        position: (
-          gm.point[rootRoomId]?.lightWindow[windowId]
-          // We move light inside current room
-          || computeLightPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
-        ),
-        range: 1000,
-        exterior: this.getOpenWindowPolygon(gmId, windowId),
-      }),
-    }));
-
-    return [
-      ...doorLights,
-      ...windowLights,
-    ];
   }
 
   /**

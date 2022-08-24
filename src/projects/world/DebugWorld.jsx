@@ -26,25 +26,24 @@ export default function DebugWorld(props) {
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
 
-    if (target.classList.contains('debug-door-arrow')) {
-      /**
-       * Manual light control.
-       */
-      const door = gm.doors[Number(target.getAttribute('data-debug-door-id'))];
+    if (target.classList.contains('debug-door-arrow')) {// Manual light control
+      const doorId = Number(target.getAttribute('data-debug-door-id'));
+      const door = gm.doors[doorId];
+
       const hullDoorId = gm.getHullDoorId(door);
-      if (hullDoorId >= 0) {
-        const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
-        if (ctxt) fov.setRoom(ctxt.adjGmId, ctxt.adjRoomId);
-        else console.info('hull door is isolated', gmId, hullDoorId);
+      if (hullDoorId === -1) {
+        fov.setRoom(gmId, gm.getOtherRoomId(door, roomId), doorId);
+      }
+
+      const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
+      if (ctxt) {
+        fov.setRoom(ctxt.adjGmId, ctxt.adjRoomId, ctxt.adjDoorId);
       } else {
-        return fov.setRoom(gmId, gm.getOtherRoomId(door, roomId));
+        console.info('hull door is isolated', gmId, hullDoorId);
       }
     }
 
-    if (target.className === 'debug-label-info') {
-      /**
-       * Send our first rich message.
-       */
+    if (target.className === 'debug-label-info') {// Send our first rich message
       const label = gm.labels[Number(target.getAttribute('data-debug-label-id'))];
 
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
