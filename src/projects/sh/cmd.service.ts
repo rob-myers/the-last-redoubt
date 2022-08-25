@@ -98,12 +98,42 @@ class cmdServiceClass {
         break;
       }
       case 'declare': {
-        const funcs = useSession.api.getFuncs(meta.sessionKey);
-        for (const { key, src } of funcs) {
-          const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
-          for (const line of lines) yield line;
-          yield '';
-        } 
+        const { opts, operands } = getOpts(args, { boolean: [
+          'f', // list functions
+          'x', // list variables (everything is exported)
+        ], });
+
+        const showVars = opts.x === true || !opts.f;
+        const showFunc = opts.f === true || !opts.x;
+        const prefixes = operands.length ? operands : null;
+
+        const {
+          var: home,
+          func,
+          ttyShell: { xterm },
+          process: { [meta.pid]: { inheritVar } }
+        } = useSession.api.getSession(meta.sessionKey);
+
+        const vars = { ...home, ...inheritVar };
+        const funcs = Object.values(func);
+
+        if (showVars) {
+          for (const [key, value] of Object.entries(vars)) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            yield `${ansiColor.Blue}${key}${ansiColor.Reset}=${
+              typeof value === 'string' ? ansiColor.White : ansiColor.Yellow
+            }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
+          }
+        }
+
+        if (showFunc) {
+          for (const { key, src } of funcs) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
+            for (const line of lines) yield line;
+            yield '';
+          }
+        }
         break;
       }
       case 'echo': {

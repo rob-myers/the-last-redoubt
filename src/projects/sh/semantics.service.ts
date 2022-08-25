@@ -255,6 +255,7 @@ class semanticsServiceClass {
         switch (node.type) {
           case 'Block': generator = this.Block(node); break;
           case 'BinaryCmd': generator = this.BinaryCmd(node); break;
+          // syntax.LangBash only
           case 'DeclClause': generator = this.DeclClause(node); break;
           case 'FuncDecl': generator = this.FuncDecl(node); break;
           case 'IfClause': generator = this.IfClause(node); break;

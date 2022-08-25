@@ -134,6 +134,7 @@ export type Command =
 | CoprocClause
 export type CoprocClause = Sh.CoprocClauseGeneric<BaseNode, Pos, string>
 export type DblQuoted = Sh.DblQuotedGeneric<BaseNode, Pos, string>
+/** syntax.LangBash only */
 export type DeclClause = Sh.DeclClauseGeneric<BaseNode, Pos, string>
 export type ExtGlob = Sh.ExtGlobGeneric<BaseNode, Pos, string>
 export type File = Sh.FileGeneric<BaseNode, Pos, string> & BaseNode
