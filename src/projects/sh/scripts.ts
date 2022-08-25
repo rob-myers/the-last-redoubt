@@ -73,7 +73,7 @@ source /etc/game-1
 'profile-1-a': (npcKey = 'andros') => `${
   profileLookup["profile-1"]()
 }
-await-world
+awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
 

@@ -750,8 +750,8 @@ class ParseShService {
     }
     const parser = syntax.NewParser(
       syntax.KeepComments(true),
-      syntax.Variant(syntax.LangBash),
-      // syntax.Variant(syntax.LangPOSIX),
+      // syntax.Variant(syntax.LangBash),
+      syntax.Variant(syntax.LangPOSIX),
       // syntax.Variant(syntax.LangMirBSDKorn),
     );
     const parsed = parser.Parse(src, 'src.sh');
