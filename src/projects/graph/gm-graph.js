@@ -3,7 +3,7 @@ import { BaseGraph } from "./graph";
 import { geom, directionChars } from "../service/geom";
 import { computeLightPosition } from "../service/geomorph";
 import { error } from "../service/log";
-import { lightDoorOffset, lightWindowOffset } from "../service/const";
+import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
 
 /**
  * `gmGraph` is short for _Geomorph Graph_
@@ -86,26 +86,30 @@ export class gmGraphClass extends BaseGraph {
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @param {number[]} openDoorIds 
-   * @returns {{ gmId: number; poly: Poly }[]}
+   * @returns {Poly[][]}
    */
   computeDoorLights(gmId, rootRoomId, openDoorIds) {
-    const gm = this.gms[gmId];
-    const adjOpenDoorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
+    /** Ids of open doors connected to rootRoom */
+    const doorIds = this.gms[gmId].roomGraph.getAdjacentDoors(rootRoomId).flatMap(
       ({ doorId }) => openDoorIds.includes(doorId) ? doorId : []
     );
-
-    const preDoorLights = adjOpenDoorIds.flatMap((doorId) =>
-      this.computeDoorLightArea(gmId, doorId, openDoorIds, adjOpenDoorIds)??[]
+    /**
+     * Each area is constructed by joining 2 roomWithDoors,
+     * i.e. either side of the door corresponding to `doorId`.
+     */
+    const doorLightAreas = doorIds.flatMap((doorId) =>
+      this.computeDoorLightArea(gmId, doorId, openDoorIds, doorIds)??[]
     );
-
-    return preDoorLights.flatMap(({ area, relDoorIds }) => {
-      const doors = this.gms[area.gmId].doors;
+    /**
+     * For each area we raycast a light from specific position.
+     */
+    const unjoinedLights = doorLightAreas.flatMap(({ area, relDoorIds }) => {
       /**
        * These additional line segments are needed when 2 doors
        * adjoin a single room e.g. double doors.
        * _TODO_ use fewer segments
        */
-      const closedDoorSegs = doors.filter((_, id) =>
+      const closedDoorSegs = this.gms[area.gmId].doors.filter((_, id) =>
         id !== area.doorId && !relDoorIds.includes(id)
       ).map(x => x.seg);
 
@@ -119,6 +123,10 @@ export class gmGraphClass extends BaseGraph {
         }),
       };
     });
+
+    return this.gms.map((_, gmId) =>
+      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(precision))
+    );
   }
 
   /**
@@ -135,10 +143,10 @@ export class gmGraphClass extends BaseGraph {
     }
 
     /**
-     * TODO test relations R(doorId, windowId)
      * - Originally, `relate-connectors` tag induced a relation between doorIds.
      *   We _extend_ light area when exactly one of them is in @see adjOpenDoorIds.
      * - Light is extended through a door in an adjacent room, non-adjacent to current room.
+     * - _TODO_ test relations R(doorId, windowId)
      */
     const relDoorIds = (gm.relDoorId[doorId]?.doorIds || []).filter(relDoorId =>
       openDoorIds.includes(relDoorId)
@@ -158,16 +166,16 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Compute lit area, determined by current room and open doors and windows.
+   * Compute lit area, determined by current room, open doors, and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @param {number[]} openDoorIds 
-   * @returns {{ gmId: number; poly: Poly }[]}
+   * @returns {Poly[][]}
    */
   computeLightPolygons(gmId, rootRoomId, openDoorIds) {
     const doorLights = this.computeDoorLights(gmId, rootRoomId, openDoorIds);
     const windowLights = this.computeWindowLights(gmId, rootRoomId);
-    return doorLights.concat(windowLights);
+    return doorLights.map((lights, i) => lights.concat(windowLights[i]));
   }
 
   /**
@@ -219,22 +227,21 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room and open windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @returns {{ gmId: number; poly: Poly }[]}
+   * @returns {Poly[][]}
    */
   computeWindowLights(gmId, rootRoomId) {
     const gm = this.gms[gmId];
-    const adjWindowIds = gm.roomGraph.getAdjacentWindows(rootRoomId)
-      .filter(x => {
-        const connector = gm.windows[x.windowIndex];
-          // Frosted windows opaque
-          if (connector.tags.includes('frosted')) return false;
-          // One-way mirror
-          if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
-          return true;
-      })
-      .map(x => x.windowIndex);
 
-    return adjWindowIds.map(windowId => ({
+    const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(x => {
+      const connector = gm.windows[x.windowIndex];
+        // Frosted windows opaque
+        if (connector.tags.includes('frosted')) return false;
+        // One-way mirror
+        if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
+        return true;
+    }).map(x => x.windowIndex);
+
+    const unjoinedLights = windowIds.map(windowId => ({
       gmId,
       poly: geom.lightPolygon({
         position: (
@@ -246,6 +253,10 @@ export class gmGraphClass extends BaseGraph {
         exterior: this.getOpenWindowPolygon(gmId, windowId),
       }),
     }));
+
+    return this.gms.map((_, gmId) =>
+      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(2))
+    );
   }
 
   /**
@@ -425,8 +436,13 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Get union of roomsWithDoors on either side of door.
-   * In case of a hull door, we transform into other geomorph.
+   * Non-hull doors:
+   * - output gmId is input gmId.
+   * - area is union of roomsWithDoors on either side of door.
+   *
+   * Hull doors:
+   * - output gmId is adjacent gmId
+   * - area is union of roomsWithDoors on either side, relative to adjacent gmId
    * @param {number} gmId 
    * @param {number} doorId
    * @returns {null | Graph.OpenDoorArea}
@@ -435,6 +451,7 @@ export class gmGraphClass extends BaseGraph {
     const gm = this.gms[gmId];
     const door = gm.doors[doorId];
     const hullDoorId = gm.hullDoors.indexOf(door);
+
     if (hullDoorId === -1) {
       const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getDoorNode(doorId));
       const adjRooms = adjRoomNodes.map(x => gm.roomsWithDoors[x.roomId]);

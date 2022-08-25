@@ -53,14 +53,13 @@ export default function FOV(props) {
       const openDoorsIds = props.api.doors.getOpen(state.gmId);
 
       const { prev } = state;
-      /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
-      const comp = compareCoreState(prev, curr);
-      if (!comp.changed) {// Avoid useless updates, also to compute 'frontier polygons'
-        return;
+      /** @type {CoreState} */ const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
+      const cmp = compareCoreState(prev, curr);
+      if (!cmp.changed) {
+        return; // Avoid useless updates, also to compute 'frontier polygons'
       }
 
-      if (comp.changedRoom) {
+      if (cmp.changedRoom) {
         const hullDoorId = gm.getHullDoorId(curr.doorId);
         const otherDoorId = hullDoorId >= 0 ? (gmGraph.getAdjacentRoomCtxt(curr.gmId, hullDoorId)?.adjDoorId)??-1 : -1;
 
@@ -74,30 +73,25 @@ export default function FOV(props) {
 
       /**
        * Light polygons for current geomorph and possibly adjacent ones
-       * We also include the current room.
+       * We also add the current room.
        */
-      const lightPolys = gmGraph
-        .computeLightPolygons(state.gmId, state.roomId, openDoorsIds)
-        .concat({ gmId: state.gmId, poly: gm.roomsWithDoors[state.roomId] }
-      );
-      const groupedLightPolys = gms.map((_, gmId) =>
-        lightPolys.filter(x => x.gmId === gmId).map(x => x.poly.precision(2))
-      );
+      const lightPolys = gmGraph.computeDoorLights(state.gmId, state.roomId, openDoorsIds)
+      lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
 
       /** Compute mask polygons by cutting light from hullPolygon */
-      const maskPolys = groupedLightPolys.map((polys, altGmId) =>
+      const maskPolys = lightPolys.map((polys, altGmId) =>
         Poly.cutOutSafely(polys, [gms[altGmId].hullOutline])
       );
 
       // TODO support hull doors
-      if (comp.firstUpdate) {
+      if (cmp.firstUpdate) {
         state.shade = gms.map(_ => []);
-      } else if (comp.changedRoom) {
+      } else if (cmp.changedRoom) {
         const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
-        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], groupedLightPolys[state.gmId]);
-      } else if (comp.openedDoor && state.roomTs.srcGmId !== -1) {
+        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
+      } else if (cmp.openedDoor && state.roomTs.srcGmId !== -1) {
         const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
-        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], groupedLightPolys[state.gmId]);
+        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
       }
 
       // Try to eliminate "small black no-light intersections" from current geomorph,
