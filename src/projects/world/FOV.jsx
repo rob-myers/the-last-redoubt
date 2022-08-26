@@ -49,11 +49,12 @@ export default function FOV(props) {
       }
     },
     updateClipPath() {
+      const { prev } = state;
       const gm = gms[state.gmId];
       const openDoorsIds = props.api.doors.getOpen(state.gmId);
 
-      const { prev } = state;
-      /** @type {CoreState} */ const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
+      /** @type {CoreState} */
+      const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
       const cmp = compareCoreState(prev, curr);
       if (!cmp.changed) {
         return; // Avoid useless updates, also to compute 'frontier polygons'
@@ -82,24 +83,26 @@ export default function FOV(props) {
       const maskPolys = lightPolys.map((polys, altGmId) =>
         Poly.cutOutSafely(polys, [gms[altGmId].hullOutline])
       );
-
-      // TODO support hull doors
-      if (cmp.firstUpdate) {
-        state.shade = gms.map(_ => []);
-      } else if (cmp.changedRoom) {
-        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
-        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
-      } else if (cmp.openedDoor && state.roomTs.srcGmId !== -1) {
-        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
-        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
-      }
-
       // Try to eliminate "small black no-light intersections" from current geomorph,
       // which often look triangular. As part of mask they have no holes.
       // However, polygons sans holes also arise e.g. when light borders a hull door.
       maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
         x.holes.length > 0 || x.outline.length > 8
       );
+
+      // TODO support hull doors 🚧
+      if (cmp.firstUpdate) {// Avoid shading everything initially
+        state.shade = gms.map(_ => []);
+      } else if (
+        cmp.changedRoom
+        || (cmp.openedDoor && state.roomTs.srcGmId !== -1)
+      ) {
+        // TODO
+        // - compute global polygon
+        // - for each gmId, cut localised polygon from lightPolys[gmId]
+        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds, props.api.doors);
+        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
+      }
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.shadeClipPath = gmMaskPolysToClipPaths(state.shade, gms, 'inset(100000px)');

@@ -175,17 +175,28 @@ export class gmGraphClass extends BaseGraph {
   computeLightPolygons(gmId, rootRoomId, openDoorIds) {
     const doorLights = this.computeDoorLights(gmId, rootRoomId, openDoorIds);
     const windowLights = this.computeWindowLights(gmId, rootRoomId);
-    return doorLights.map((lights, i) => lights.concat(windowLights[i]));
+    return doorLights.map((lights, i) => lights.concat(windowLights[i])); // Zipped
   }
 
   /**
    * TODO
    * - support hull doors 🚧 (currently assume srcGmId === dstGmId)
    * @param {Graph.BaseNavGmTransition} ts 
-   * @param {number[]} openDoorIds 
+   * @param {number[]} openDoorIds TODO remove
+   * @param {import('../world/Doors').State} doorsApi
    */
-  computeShadingLight(ts, openDoorIds) {
-    console.log(ts)
+  computeShadingLight(ts, openDoorIds, doorsApi) {
+
+    /**
+     * Tried (twice) computing roomWithDoors adj to prior/current room...
+     * 
+     * New approach:
+     * 1. Remove concept of related doors/windows,
+     *    instead extending light upto 2 doors/windows away.
+     * 2. Traverse gmGraph/roomGraphs to construct roomWithDoors
+     *    reachable from prior/current room in world coords.
+     */
+
     const gm = this.gms[ts.srcGmId];
 
     // We include adjacent doors from both rooms
