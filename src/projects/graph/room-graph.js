@@ -33,8 +33,8 @@ export class RoomGraph extends BaseGraph {
   getAdjacentHullDoorIds(gm, ...roomIds) {
     return this.getAdjacentDoors(...roomIds)
       .map(node => /** @type {const} */ ([node, gm.doors[node.doorId]]))
-      .flatMap(([{ doorId: doorIndex }, door]) => door.roomIds.some(x => x === null)
-        ? { doorIndex, hullDoorIndex: gm.hullDoors.indexOf(door) } : []
+      .flatMap(([{ doorId }, door]) => door.roomIds.some(x => x === null)
+        ? { doorId, hullDoorId: gm.hullDoors.indexOf(door) } : []
       );
   }
 
@@ -51,20 +51,51 @@ export class RoomGraph extends BaseGraph {
   }
 
   /**
-   * Given nodes, find all adjacent rooms.
-   * @param {...Graph.RoomGraphNode} nodes
+   * Given nodes or roomIds, find all "adjacent" rooms:
+   * - for door/window nodes, adjacent is usual graph-theoretic notion
+   * - for room nodes/ids, adjacent means _connected by some door/window_
+   * @param {...Graph.RoomGraphNode | number} nodeOrRoomIds
    */
-  getAdjacentRooms(...nodes) {
+  getAdjacentRooms(...nodeOrRoomIds) {
+    const nodes = nodeOrRoomIds.map(x => typeof x === 'number' ? this.nodesArray[x] : x);
     const rooms = /** @type {Set<Graph.RoomGraphNodeRoom>} */ (new Set);
-    nodes.forEach(node => this.getSuccs(node).forEach(other =>
-      other.type === 'room' && rooms.add(other))
-    );
+    nodes.forEach(node => {
+      switch (node.type) {
+        case 'door':
+        case 'window':
+          this.getSuccs(node)
+            .forEach(other => other.type === 'room' && rooms.add(other));
+          break;
+        case 'room':
+          this.getSuccs(node).forEach(adjNode => {
+            const other = this.getOtherRoom(
+              /** @type {Graph.RoomGraphNodeConnector} */ (adjNode),
+              node.roomId,
+            );
+            other && rooms.add(other);
+          });
+          break;
+      }
+    });
     return Array.from(rooms);
   }
 
   /** @param {number} doorId */
   getDoorNode(doorId) {
     return /** @type {Graph.RoomGraphNodeDoor} */ (this.getNodeById(`door-${doorId}`));
+  }
+
+  /**
+   * 
+   * @param {Graph.RoomGraphNodeConnector} doorOrWindowNode 
+   * @param {number} roomId 
+   */
+  getOtherRoom(doorOrWindowNode, roomId) {
+    return /** @type {null | Graph.RoomGraphNodeRoom} x */ (
+      this.getSuccs(doorOrWindowNode).find(
+        x => x.type === 'room' && x.roomId !== roomId
+      )??null
+    );
   }
 
   /** @param {number} roomId */
@@ -94,6 +125,8 @@ export class RoomGraph extends BaseGraph {
 
     /** @type {Graph.RoomGraphNode[]} */
     const roomGraphNodes = [
+      // Observe that `roomId` is the respective node id,
+      // because we start the nodes with the room nodes
       ...rooms.map((_, roomId) => ({
         id: `room-${roomId}`, type: /** @type {const} */ ('room'), roomId,
       })),

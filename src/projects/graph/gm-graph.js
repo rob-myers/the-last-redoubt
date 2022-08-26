@@ -1,5 +1,6 @@
 import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph } from "./graph";
+import { assertNonNull } from "../service/generic";
 import { geom, directionChars } from "../service/geom";
 import { computeLightPosition } from "../service/geomorph";
 import { error } from "../service/log";
@@ -191,11 +192,35 @@ export class gmGraphClass extends BaseGraph {
      * Tried (twice) computing roomWithDoors adj to prior/current room...
      * 
      * New approach:
-     * 1. Remove concept of related doors/windows,
-     *    instead extending light upto 2 doors/windows away.
-     * 2. Traverse gmGraph/roomGraphs to construct roomWithDoors
-     *    reachable from prior/current room in world coords.
+     * 1. ✅ All roomWithDoors adjacent to prior/current room,
+     *    extended with any adjacent windows, in world coords.
+     *    ⛔️ May lack related, but ignore for moment.
+     * 2. 🚧 For each gmId, convert global to local and cut from prev light...
      */
+
+    const { srcGmId, dstGmId, srcRoomId, dstRoomId } = ts;
+    /**
+     * Get ids of room accessible from prior/current room
+     * via a door or window, taking hull doors into account.
+     * Since srcRoomId -> dstRoomId in gmGraph,
+     * - they're included below.
+     * - there are no dups.
+     */
+    const adjRoomIds = this.getAdjacentRoomIds([
+      { gmId: srcGmId, roomId: srcRoomId },
+      { gmId: dstGmId, roomId: dstRoomId },
+    ]);
+    const globalPolys = Object.entries(adjRoomIds).flatMap(([gmIdKey, {roomIds, windowIds}]) => {
+      const gm = this.gms[Number(gmIdKey)];
+      return [
+        // Rooms next to prior/current contribute a roomWithDoor
+        ...roomIds.map(roomId => gm.roomsWithDoors[roomId].clone().applyMatrix(gm.matrix)),
+        // Windows next to prior/current contribute a 4-gon
+        ...windowIds.map(windowId => gm.windows[windowId].poly.clone().applyMatrix(gm.matrix)),
+      ];
+    });
+    const globalPoly = Poly.union(globalPolys);
+
 
     const gm = this.gms[ts.srcGmId];
 
@@ -371,6 +396,42 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * - We do include rooms adjacent via a door or window.
+   * - We don't ensure input roomIds are output.
+   *   However they're included if they're adjacent to another such input roomId.
+   * - We don't handle dups.
+   * @param {{ gmId: number; roomId: number; }[]} roomIds
+   * @returns {{ [gmId: number]: { roomIds: number[]; windowIds: number[]; } }}
+   */
+  getAdjacentRoomIds(roomIds) {
+    const output = /** @type {{ [gmId: number]: { roomIds: number[]; windowIds: number[]; } }} */ ({});
+
+    for (const { gmId, roomId } of roomIds) {
+      const gm = this.gms[gmId];
+      const windowIds = gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowIndex);
+      // Non-hull doors or windows induce an adjacent room
+      output[gmId] = output[gmId] || { roomIds: [], windowIds: [] };
+      output[gmId].roomIds.push(
+        ...gm.roomGraph.getAdjacentRooms(roomId).map(x => x.roomId),
+      );
+      output[gmId].windowIds = windowIds;
+      // Connected hull doors induce room in another geomorph
+      // NOTE we currently ignore hull windows 
+      const hullDoorIds = gm.roomGraph.getAdjacentHullDoorIds(gm, roomId);
+      hullDoorIds
+        .filter(({ hullDoorId }) => !this.isHullDoorSealed(gmId, hullDoorId))
+        .forEach(({ hullDoorId }) => {
+          const ctxt = assertNonNull(this.getAdjacentRoomCtxt(gmId, hullDoorId));
+          output[ctxt.adjGmId] = output[ctxt.adjGmId] || { roomIds: [], windowIds: [] };
+          output[ctxt.adjGmId].roomIds.push(ctxt.adjRoomId);
+        });
+    }
+
+    // return mapValues(output, value => removeDups(value));
+    return output;
+  }
+
+  /**
    * Get door nodes connecting `gms[gmId]` on side `sideDir`.
    * @param {number} gmId 
    * @param {Geom.Direction} sideDir 
@@ -499,6 +560,14 @@ export class gmGraphClass extends BaseGraph {
     const window = gm.windows[windowId];
     const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getWindowNode(windowId));
     return Poly.union(adjRoomNodes.map(x => gm.rooms[x.roomId]).concat(window.poly))[0];
+  }
+
+  /**
+   * @param {number} gmId 
+   * @param {number} hullDoorId 
+   */
+  isHullDoorSealed(gmId, hullDoorId) {
+    return this.getDoorNodeByIds(gmId, hullDoorId).sealed;
   }
 
   /**

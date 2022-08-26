@@ -129,8 +129,8 @@ export default function Doors(props) {
       /** Visible doors in current geomorph and possibly hull doors from other geomorphs */
       const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
       nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).map(x => x.doorId);
-      gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorIndex }) =>
-        gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorIndex) || []
+      gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
+        gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
       ).forEach(({ adjGmId, adjDoorId }) => (nextVis[adjGmId] = nextVis[adjGmId] || []).push(adjDoorId));
 
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));

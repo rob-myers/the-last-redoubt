@@ -76,6 +76,11 @@ declare namespace Graph {
     | RoomGraphNodeWindow
   );
 
+  export type RoomGraphNodeConnector = (
+    | RoomGraphNodeDoor
+    | RoomGraphNodeWindow
+  );
+
   export type RoomGraphEdgeOpts = BaseEdgeOpts;
 
   export type RoomGraphJson = GraphJson<RoomGraphNode, RoomGraphEdgeOpts>;
