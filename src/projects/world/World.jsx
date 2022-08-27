@@ -49,11 +49,12 @@ export default function World(props) {
   // NOTE state.gmGraph.ready can be true without ever enabling,
   // by viewing another World with same `props.gms`
   state.gmGraph = useGeomorphs(
-    props.gms, 
+    props.gms,
     !(state.everEnabled ||= !props.disabled),
   );
+  state.gmGraph.api = state;
 
-  useHandleEvents(state, state.gmGraph);
+  useHandleEvents(state);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);

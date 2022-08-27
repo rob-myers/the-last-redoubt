@@ -100,7 +100,7 @@ export default function FOV(props) {
         // TODO
         // - compute global polygon
         // - for each gmId, cut localised polygon from lightPolys[gmId]
-        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds, props.api.doors);
+        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
         state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
       }
 

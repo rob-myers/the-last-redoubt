@@ -51,38 +51,38 @@ export class RoomGraph extends BaseGraph {
   }
 
   /**
-   * Given nodes or roomIds, find all "adjacent" rooms:
-   * - for door/window nodes, adjacent is usual graph-theoretic notion
-   * - for room nodes/ids, adjacent means _connected by some door/window_
-   * @param {...Graph.RoomGraphNode | number} nodeOrRoomIds
+   * Given door/window nodes find all adjacent rooms.
+   * @param {...Graph.RoomGraphNodeConnector} nodes
    */
-  getAdjacentRooms(...nodeOrRoomIds) {
-    const nodes = nodeOrRoomIds.map(x => typeof x === 'number' ? this.nodesArray[x] : x);
+  getAdjacentRooms(...nodes) {
     const rooms = /** @type {Set<Graph.RoomGraphNodeRoom>} */ (new Set);
-    nodes.forEach(node => {
-      switch (node.type) {
-        case 'door':
-        case 'window':
-          this.getSuccs(node)
-            .forEach(other => other.type === 'room' && rooms.add(other));
-          break;
-        case 'room':
-          this.getSuccs(node).forEach(adjNode => {
-            const other = this.getOtherRoom(
-              /** @type {Graph.RoomGraphNodeConnector} */ (adjNode),
-              node.roomId,
-            );
-            other && rooms.add(other);
-          });
-          break;
-      }
-    });
+    nodes.forEach(node => this.getSuccs(node)
+      .forEach(other => other.type === 'room' && rooms.add(other))
+    );
     return Array.from(rooms);
   }
 
   /** @param {number} doorId */
   getDoorNode(doorId) {
     return /** @type {Graph.RoomGraphNodeDoor} */ (this.getNodeById(`door-${doorId}`));
+  }
+
+  /**
+   * Given room id, find all rooms reachable via a single window or open door.
+   * @param {number} roomId
+   * @param {number[]} openDoorIds
+   */
+   getOpenRoomIds(roomId, openDoorIds) {
+    return this.getSuccs(this.nodesArray[roomId]).flatMap((adjNode) => {
+      if (
+        adjNode.type === 'door' && openDoorIds.includes(adjNode.doorId)
+        || adjNode.type === 'window'
+      ) {
+        return (this.getOtherRoom(adjNode, roomId)?.roomId)??[];
+      } else {
+        return [];
+      }
+    });
   }
 
   /**

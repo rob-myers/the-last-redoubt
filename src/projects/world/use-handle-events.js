@@ -5,10 +5,8 @@ import useStateRef from "../hooks/use-state-ref";
 
 /**
  * @param {import('../world/World').State} api
- * @param {Graph.GmGraph} gmGraph
  */
-export default function useHandleEvents(api, gmGraph) {
-
+export default function useHandleEvents(api) {
   const state = useStateRef(/** @type {() => State} */ () => ({
 
     async handleCollisions(e) {
@@ -65,7 +63,7 @@ export default function useHandleEvents(api, gmGraph) {
           if (e.meta.otherRoomId !== null) {
             api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
-            const adjCtxt = gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
+            const adjCtxt = api.gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
             adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
           api.updateAll();
@@ -85,13 +83,11 @@ export default function useHandleEvents(api, gmGraph) {
       }
     },
   }), {
-    deps: [gmGraph],
+    deps: [api.gmGraph],
   });
 
-  const { gms } = gmGraph;
-
   React.useEffect(() => {
-    if (gms.length && api.doors.ready && api.npcs.ready) {
+    if (api.gmGraph.gms.length && api.doors.ready && api.npcs.ready) {
       api.updateAll();
 
       // Update doors and lights on change
@@ -142,7 +138,7 @@ export default function useHandleEvents(api, gmGraph) {
         npcsSub.unsubscribe();
       };
     }
-  }, [gms, api.doors.ready, api.npcs.ready]);
+  }, [api.gmGraph.gms, api.doors.ready, api.npcs.ready]);
 
 }
 
