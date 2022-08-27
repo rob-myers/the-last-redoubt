@@ -108,6 +108,7 @@ export default function useHandleEvents(api) {
           case 'spawned-npc':
             // This event also happens on hot-reload NPC.jsx
             if (api.npcs.playerKey === e.npcKey) {
+              api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
               api.npcs.setRoomByNpc(e.npcKey);
             }
             /**

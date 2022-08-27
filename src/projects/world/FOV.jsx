@@ -4,13 +4,6 @@ import { Poly } from "../geom";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 
-// TODO
-// - ✅ given (gmId, roomId) changed, compute doorId, otherRoomId etc.
-//   and store inside roomTransition
-// - ✅ fix open door while original room door closed by remembering doorId
-// - ✅ fix new bug i.e. sometimes frontier wrong on first traversal
-// - fix hull doors
-
 /**
  * Field Of View, implemented via dark parts of geomorphs
  * @param {Props} props 
@@ -90,18 +83,25 @@ export default function FOV(props) {
         x.holes.length > 0 || x.outline.length > 8
       );
 
-      // TODO support hull doors 🚧
-      if (cmp.firstUpdate) {// Avoid shading everything initially
+      if (cmp.justSpawned) {
+        // Avoid shading everything initially
         state.shade = gms.map(_ => []);
       } else if (
         cmp.changedRoom
         || (cmp.openedDoor && state.roomTs.srcGmId !== -1)
       ) {
-        // TODO
-        // - compute global polygon
-        // - for each gmId, cut localised polygon from lightPolys[gmId]
-        const shadingLight = gmGraph.computeShadingLight(state.roomTs, openDoorsIds);
-        state.shade[state.gmId] = Poly.cutOutSafely([shadingLight.poly], lightPolys[state.gmId]);
+        try {
+          // Project a single global light polygon
+          const shadingLight = gmGraph.computeShadingLight(state.roomTs);
+          // Create shading by cutting localised version from each lightPolys[gmId] 
+          state.shade = gms.map((gm, gmId) =>
+            lightPolys[gmId].length
+              ? Poly.cutOutSafely([shadingLight.clone().applyMatrix(gm.inverseMatrix)], lightPolys[gmId])
+              : []
+          );
+        } catch (e) {
+          console.error('failed to compute shading', e);
+        }
       }
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
@@ -145,6 +145,7 @@ export default function FOV(props) {
           height={gm.pngRect.height}
           style={{
             opacity: 0.2,
+            // filter: 'sepia(0.5) hue-rotate(90deg)',
             clipPath: state.shadeClipPath[gmId],
             WebkitClipPath: state.shadeClipPath[gmId],
             left: gm.pngRect.x,
@@ -224,6 +225,6 @@ function compareCoreState(prev, next) {
     openedDoor,
     closedDoor,
     changed: changedRoom || openedDoor || closedDoor,
-    firstUpdate: prev.gmId === -1,
+    justSpawned: prev.gmId === -1,
   };
 }

@@ -182,36 +182,23 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * TODO
-   * - support hull doors 🚧 (currently assume srcGmId === dstGmId)
+   * Compute global light polygon starting from prior room.
    * @param {Graph.BaseNavGmTransition} ts 
-   * @param {number[]} openDoorIds TODO remove
    */
-  computeShadingLight(ts, openDoorIds) {
-
-    /**
-     * Tried (twice) computing roomWithDoors adj to prior/current room...
-     * 
-     * New approach:
-     * 1. ✅ All roomWithDoors adjacent to prior/current room,
-     *    extended with any adjacent windows, in world coords.
-     *    ⛔️ May lack related, but ignore for moment.
-     * 2. 🚧 For each gmId, convert global to local and cut from prev light...
-     */
-
+  computeShadingLight(ts) {
     const { srcGmId, dstGmId, srcRoomId, dstRoomId } = ts;
+
     /**
      * Get ids of room accessible from prior/current room
      * via a door or window, taking hull doors into account.
-     * Since srcRoomId -> dstRoomId in gmGraph,
-     * - they're included below.
-     * - there are no dups.
+     * Dups may exist in roomIds e.g. window/door on same wall.
      */
-    const adjRoomIds = this.getAdjacentRoomIds([
+    const adjData = this.getAdjacentRoomIds([
       { gmId: srcGmId, roomId: srcRoomId },
       { gmId: dstGmId, roomId: dstRoomId },
     ]);
-    const globalPolys = Object.entries(adjRoomIds).flatMap(([gmIdKey, {roomIds, windowIds}]) => {
+
+    const globalPolys = Object.entries(adjData).flatMap(([gmIdKey, {roomIds, windowIds}]) => {
       const gm = this.gms[Number(gmIdKey)];
       return [
         // Rooms next to prior/current contribute a roomWithDoor
@@ -220,44 +207,29 @@ export class gmGraphClass extends BaseGraph {
         ...windowIds.map(windowId => gm.windows[windowId].poly.clone().applyMatrix(gm.matrix)),
       ];
     });
-    const globalPoly = Poly.union(globalPolys);
-
-
-    const gm = this.gms[ts.srcGmId];
-
-    // We include adjacent doors from both rooms
-    const adjOpenDoorIds = gm.roomGraph.getAdjacentDoors(ts.srcRoomId, ts.dstRoomId).flatMap(
-      ({ doorId }) => openDoorIds.includes(doorId) ? doorId : []
-    );
-    // Ensure original door in case we have closed it
-    !adjOpenDoorIds.includes(ts.srcDoorId) && adjOpenDoorIds.push(ts.srcDoorId);
-
-    const preLight = this.computeDoorLightArea(ts.srcGmId, ts.srcDoorId, openDoorIds, []);
-    if (!preLight) {
-      throw Error(`computingShadingLight empty: ${JSON.stringify(ts)}`);
-    }
-
-    // Extend preLight.area.poly with adjacent roomWithDoors
-    const adjRoomsWithDoors = adjOpenDoorIds.flatMap(x => gm.doors[x].roomIds).filter(x =>
-      x !== null && x !== ts.dstRoomId && x !== ts.srcRoomId
-    ).map(roomId => gm.roomsWithDoors[/** @type {number} */(roomId)]);
-    const lightArea = Poly.union(// TODO avoid outset 🚧
-      [preLight.area.poly].concat(adjRoomsWithDoors).flatMap(x => geom.createOutset(x, 0.1))
+    
+    const lightPoly = Poly.union(
+      globalPolys.flatMap(x => geom.createInset(x, 0.1)), // TODO
     )[0];
 
-    const closedDoorSegs = gm.doors.filter((_, id) =>
-      !adjOpenDoorIds.includes(id) && !preLight.relDoorIds.includes(id)
-    ).map(x => x.seg);
+    const closedDoorSegs = Object.entries(adjData).flatMap(([gmIdKey, {closedDoorIds}]) => {
+      const gm = this.gms[Number(gmIdKey)];
+      // TODO relDoorIds?
+      return closedDoorIds.map(doorId => /** @type {[Vect, Vect]} */ (
+        gm.doors[doorId].seg.map(p => gm.matrix.transformPoint(p.clone()))
+      ));
+    });
 
-    return {
-      gmId: ts.srcGmId,
-      poly: geom.lightPolygon({
-        position: this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
-        range: 2000,
-        exterior: lightArea,
-        extraSegs: closedDoorSegs,
-      }),
-    };
+    const lightPosition = this.gms[ts.srcGmId].matrix.transformPoint(
+      this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
+    );
+
+    return geom.lightPolygon({
+      position: lightPosition,
+      range: 2000,
+      exterior: lightPoly,
+      extraSegs: closedDoorSegs,
+    });
   }
 
   /**
@@ -490,7 +462,7 @@ export class gmGraphClass extends BaseGraph {
   getDoorLightPosition(gmId, rootRoomId, doorId) {
     const gm = this.gms[gmId];
     return (
-      gm.point[rootRoomId]?.light[doorId]
+      gm.point[rootRoomId]?.light[doorId].clone()
       || computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );
   }
@@ -572,6 +544,11 @@ export class gmGraphClass extends BaseGraph {
    * @param {number} hullDoorId 
    */
   isHullDoorSealed(gmId, hullDoorId) {
+    const doorNode = this.getDoorNodeByIds(gmId, hullDoorId);
+    if (doorNode === null) {
+      console.warn(`hull door not found`, gmId, hullDoorId);
+      return true;
+    }
     return this.getDoorNodeByIds(gmId, hullDoorId).sealed;
   }
 
