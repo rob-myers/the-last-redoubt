@@ -11,8 +11,8 @@ npx http-server
 ```
 ## Links
 
-- [TODOs](/TODO.md).
-- [General dev info](/DEV-INFO.md).
+- [TODOs](/docs/TODO.md).
+- [General dev info](/docs/DEV-INFO.md).
 
 ## Gotchas
 
