@@ -462,7 +462,7 @@ export class gmGraphClass extends BaseGraph {
   getDoorLightPosition(gmId, rootRoomId, doorId) {
     const gm = this.gms[gmId];
     return (
-      gm.point[rootRoomId]?.light[doorId].clone()
+      gm.point[rootRoomId].light[doorId]?.clone()
       || computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );
   }
