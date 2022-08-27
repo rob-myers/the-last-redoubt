@@ -382,7 +382,7 @@
         }
       },
       {
-        "tags": ["door"],
+        "tags": ["door", "hull", "sealed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1287,7 +1287,7 @@
         ]
       },
       "rect": {"x": 1074, "y": 12.0005, "width": 12, "height": 97},
-      "tags": ["door"],
+      "tags": ["door", "hull", "sealed"],
       "seg": [{"x": 1080, "y": 109.0005}, {"x": 1080, "y": 12.0005}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [8, null],
