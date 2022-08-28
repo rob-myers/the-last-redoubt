@@ -84,7 +84,7 @@ const useStore = create<State>()(devtools((set, get) => ({
         articlesMeta,
         groupedMetas,
         darkMode: typeof window !== 'undefined' && document.body.classList.contains('dark-mode'),
-      });
+      }, undefined, 'initiate');
     },
 
     initiateBrowser() {
@@ -99,7 +99,10 @@ const useStore = create<State>()(devtools((set, get) => ({
           console.log('giscus meta', discussion);
           const { articleKey } = get();
           if (articleKey) {
-            set(({ discussMeta: comments }) => ({ discussMeta: { ...comments, [articleKey]: discussion } }));
+            set(
+              ({ discussMeta: comments }) => ({ discussMeta: { ...comments, [articleKey]: discussion } }),
+              undefined, 'store-giscus-meta',
+            );
           }
         }
       });
@@ -121,7 +124,7 @@ const useStore = create<State>()(devtools((set, get) => ({
           !component.instances && delete lookup[portalKey];
         }
       });
-      set({ component: { ...lookup } });
+      set({ component: { ...lookup } }, undefined, 'remove-components');
     },
 
     setTabDisabled(tabsKey, componentKey, disabled) {
@@ -131,13 +134,13 @@ const useStore = create<State>()(devtools((set, get) => ({
       useSiteStore.setState(({ component: lookup }) => {
         lookup[componentKey] = { ...component }; // ?
         return {};
-      });
+      }, undefined, `${disabled ? 'disable' : 'enable'}-tabs`);
     },
 
     toggleDarkMode() {
       const enabled = document.body.classList.toggle('dark-mode');
       tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
-      set({ darkMode: enabled });
+      set({ darkMode: enabled }, undefined, `${enabled ? 'enable' : 'disable'}-dark-mode`);
     },
   },
 }), { name: "site.store" } ));

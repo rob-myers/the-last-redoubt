@@ -15,7 +15,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
       !(e.target instanceof HTMLAnchorElement)
       && window.matchMedia('(max-width: 1400px)').matches
     ) {
-      useSiteStore.setState({ navOpen: !navOpen });
+      useSiteStore.setState({ navOpen: !navOpen }, undefined, `${navOpen ? 'open' : 'close'}-nav`);
     }
   };
 

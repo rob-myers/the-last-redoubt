@@ -129,8 +129,8 @@ function useRegisterTabs(props: Props, model: Model) {
         disabled: !props.initEnabled,
         pagePathname: location.pathname,
       };
+      useSiteStore.setState({}, undefined, 'create-tabs');
     }
-    useSiteStore.setState({});
 
     return () => {
       // Remove non-portal components

@@ -2,17 +2,7 @@
 
 ## In progress
 
-- ✅ 2-shaded lights e.g. via light "frontier"
-  - represent in world coords
-  - converting to local coords and cut from extant
-
-- ✅ BUG `spawn andros $( click 1 )`
-- ✅ ISSUE with double doors light shade
-  - pretend other double door closed
-  - light shade ignores custom light positions
-  - fix missing closed doors (e.g. gm101 doorId 15)
-
-- BUG /test: if interact early with expanded then pauses again
+- 🚧 BUG /test: if interact early with expanded then pauses again
 - BUG turning is broken after walking
 - BUG door connector not working: gm301, opposite state-rooms (?)
 - BUG gm302 top-right locker doors not working
@@ -138,6 +128,16 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ 2-shaded lights e.g. via light "frontier"
+  - represent in world coords
+  - converting to local coords and cut from extant
+
+- ✅ BUG `spawn andros $( click 1 )`
+- ✅ ISSUE with double doors light shade
+  - pretend other double door closed
+  - light shade ignores custom light positions
+  - fix missing closed doors (e.g. gm101 doorId 15)
 
 - ✅ ImageCarousel wider
 

@@ -91,7 +91,7 @@ export async function createKeyedComponent(
 
   useSiteStore.setState(({ component }) => ({
     component: { ...component, [componentKey]: item },
-  }));
+  }), undefined, 'create-component');
 
   return item;
 }

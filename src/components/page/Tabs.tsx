@@ -80,7 +80,7 @@ export default function Tabs(props: Props) {
       const disabled = !state.enabled;
       // Other tab portals may not exist yet, so record in `tabs` too
       tabs.disabled = disabled;
-      useSiteStore.setState({});
+      useSiteStore.setState({}, undefined, `${disabled ? 'disable' : 'enabled'}-tabs`);
 
       if (state.justResetWhileDisabled === false) {
         /**
