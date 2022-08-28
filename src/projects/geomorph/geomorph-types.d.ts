@@ -146,6 +146,8 @@ declare namespace Geomorph {
      */
     getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
     isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
+    /** Returns -1 if not a double-door */
+    getAdjDoubleDoor(doorId: number): number;
   }
 
   export interface UseGeomorphsDefItem {

@@ -134,6 +134,20 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
           .roomIds.includes(null);
       },
+      /**
+       * IN PROGRESS
+       */
+      getAdjDoubleDoor(doorId) {
+        const door = this.doors[doorId];
+        const otherDoorId = this.doors.findIndex((otherDoor) => otherDoor !== door && (
+          otherDoor.angle === door.angle &&
+          (
+            otherDoor.seg[0].distanceToSquared(door.seg[1]) <= (30 ** 2)
+            || otherDoor.seg[1].distanceToSquared(door.seg[0]) <= (30 ** 2)
+          )
+        ));
+        return otherDoorId
+      },
     };
 
     output.lazy = createLazyProxy(output);

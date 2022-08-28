@@ -88,20 +88,21 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @param {number[]} openDoorIds 
    * @returns {Poly[][]}
    */
-  computeDoorLights(gmId, rootRoomId, openDoorIds) {
+  computeDoorLights(gmId, rootRoomId) {
+    const openDoorsIds = this.api.doors.getOpen(gmId);
+
     /** Ids of open doors connected to rootRoom */
     const doorIds = this.gms[gmId].roomGraph.getAdjacentDoors(rootRoomId).flatMap(
-      ({ doorId }) => openDoorIds.includes(doorId) ? doorId : []
+      ({ doorId }) => openDoorsIds.includes(doorId) ? doorId : []
     );
     /**
      * Each area is constructed by joining 2 roomWithDoors,
      * i.e. either side of the door corresponding to `doorId`.
      */
     const doorLightAreas = doorIds.flatMap((doorId) =>
-      this.computeDoorLightArea(gmId, doorId, openDoorIds, doorIds)??[]
+      this.computeDoorLightArea(gmId, doorId, openDoorsIds, doorIds)??[]
     );
     /**
      * For each area we raycast a light from specific position.
@@ -172,11 +173,10 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room, open doors, and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @param {number[]} openDoorIds 
    * @returns {Poly[][]}
    */
-  computeLightPolygons(gmId, rootRoomId, openDoorIds) {
-    const doorLights = this.computeDoorLights(gmId, rootRoomId, openDoorIds);
+  computeLightPolygons(gmId, rootRoomId) {
+    const doorLights = this.computeDoorLights(gmId, rootRoomId);
     const windowLights = this.computeWindowLights(gmId, rootRoomId);
     return doorLights.map((lights, i) => lights.concat(windowLights[i])); // Zipped
   }
@@ -193,7 +193,7 @@ export class gmGraphClass extends BaseGraph {
      * via a door or window, taking hull doors into account.
      * Dups may exist in roomIds e.g. window/door on same wall.
      */
-    const adjData = this.getAdjacentRoomIds([
+    const adjData = this.getRoomIdsAdjData([
       { gmId: srcGmId, roomId: srcRoomId },
       { gmId: dstGmId, roomId: dstRoomId },
     ]);
@@ -214,6 +214,11 @@ export class gmGraphClass extends BaseGraph {
 
     const closedDoorSegs = Object.entries(adjData).flatMap(([gmIdKey, {closedDoorIds}]) => {
       const gm = this.gms[Number(gmIdKey)];
+      // // Cover other double-door
+      // if (Number(gmIdKey) === srcGmId) {
+      //   const otherDoubleDoorId = gm.getAdjDoubleDoor(ts.srcDoorId);
+      //   otherDoubleDoorId >= 0 && (closedDoorIds = closedDoorIds.concat(otherDoubleDoorId));
+      // }
       // TODO relDoorIds?
       return closedDoorIds.map(doorId => /** @type {[Vect, Vect]} */ (
         gm.doors[doorId].seg.map(p => gm.matrix.transformPoint(p.clone()))
@@ -224,12 +229,15 @@ export class gmGraphClass extends BaseGraph {
       this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
     );
 
-    return geom.lightPolygon({
-      position: lightPosition,
-      range: 2000,
-      exterior: lightPoly,
-      extraSegs: closedDoorSegs,
-    });
+    return {
+      poly: geom.lightPolygon({
+        position: lightPosition,
+        range: 2000,
+        exterior: lightPoly,
+        extraSegs: closedDoorSegs,
+      }),
+      adjData,
+    };
   }
 
   /**
@@ -369,21 +377,16 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * @typedef GmRoomsAdjData
-   * @type {{ [gmId: number]: { roomIds: number[]; windowIds: number[]; closedDoorIds: number[]; } }}
-   */
-
-  /**
-   * TODO
+   * Given ids of rooms in gmGraph, provide "adjacency data".
    * - We do include rooms adjacent via a door or window.
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
    * - We don't handle dups e.g. window & door on same wall.
    * @param {{ gmId: number; roomId: number; }[]} roomIds
-   * @returns {GmRoomsAdjData}
+   * @returns {Graph.GmRoomsAdjData}
    */
-  getAdjacentRoomIds(roomIds) {
-    const output = /** @type {GmRoomsAdjData} */ ({});
+  getRoomIdsAdjData(roomIds) {
+    const output = /** @type {Graph.GmRoomsAdjData} */ ({});
 
     for (const { gmId, roomId } of roomIds) {
       const gm = this.gms[gmId];

@@ -27,7 +27,7 @@ export default function FOV(props) {
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     ready: true,
     roomTs: { srcGmId: -1, srcRoomId: -1, srcDoorId: -1, dstGmId: -1, dstRoomId: -1, dstDoorId: -1 },
-    shade: gms.map(_ => []), 
+    shade: gms.map(_ => []),
     shadeClipPath: gms.map(_ => 'none'), 
 
     setRoom(gmId, roomId, doorId) {
@@ -50,26 +50,14 @@ export default function FOV(props) {
       const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
       const cmp = compareCoreState(prev, curr);
       if (!cmp.changed) {
-        return; // Avoid useless updates, also to compute 'frontier polygons'
-      }
-
-      if (cmp.changedRoom) {
-        const hullDoorId = gm.getHullDoorId(curr.doorId);
-        const otherDoorId = hullDoorId >= 0 ? (gmGraph.getAdjacentRoomCtxt(curr.gmId, hullDoorId)?.adjDoorId)??-1 : -1;
-
-        state.roomTs = {
-          srcGmId: prev.gmId, srcRoomId: prev.roomId,
-          dstGmId: curr.gmId, dstRoomId: curr.roomId,
-          srcDoorId: hullDoorId >= 0 ? otherDoorId : curr.doorId,
-          dstDoorId: curr.doorId,
-        };
+        return; // Avoid useless updates, also to compute 'frontier' for light shade
       }
 
       /**
        * Light polygons for current geomorph and possibly adjacent ones
        * We also add the current room.
        */
-      const lightPolys = gmGraph.computeDoorLights(state.gmId, state.roomId, openDoorsIds)
+      const lightPolys = gmGraph.computeLightPolygons(state.gmId, state.roomId);
       lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
 
       /** Compute mask polygons by cutting light from hullPolygon */
@@ -83,30 +71,45 @@ export default function FOV(props) {
         x.holes.length > 0 || x.outline.length > 8
       );
 
-      if (cmp.justSpawned) {
-        // Avoid shading everything initially
+      state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
+      state.prev = curr;
+
+      /**
+       * Compute light shade
+       */
+      if (cmp.justSpawned || cmp.changedRoom) {
+        const hullDoorId = gm.getHullDoorId(curr.doorId);
+        const otherDoorId = hullDoorId >= 0 ? (gmGraph.getAdjacentRoomCtxt(curr.gmId, hullDoorId)?.adjDoorId)??-1 : -1;
+
+        state.roomTs = {
+          srcGmId: prev.gmId, srcRoomId: prev.roomId,
+          dstGmId: curr.gmId, dstRoomId: curr.roomId,
+          srcDoorId: hullDoorId >= 0 ? otherDoorId : curr.doorId,
+          dstDoorId: curr.doorId,
+        };
+      }
+      /** Have we ever left current room (post spawn)? */
+      const neverLeftRoom = state.roomTs.srcGmId === -1;
+
+      if (cmp.justSpawned || neverLeftRoom) {
         state.shade = gms.map(_ => []);
       } else if (
         cmp.changedRoom
-        || (cmp.openedDoor && state.roomTs.srcGmId !== -1)
+        || cmp.openedIds
       ) {
-        try {
-          // Project a single global light polygon
-          const shadingLight = gmGraph.computeShadingLight(state.roomTs);
-          // Create shading by cutting localised version from each lightPolys[gmId] 
-          state.shade = gms.map((gm, gmId) =>
-            lightPolys[gmId].length
-              ? Poly.cutOutSafely([shadingLight.clone().applyMatrix(gm.inverseMatrix)], lightPolys[gmId])
-              : []
-          );
-        } catch (e) {
-          console.error('failed to compute shading', e);
-        }
+        // TODO track roomIds in light.adjData, ignoring open door when
+        // they don't contribute any new roomIds
+
+        // Project a single global light polygon
+        const light = gmGraph.computeShadingLight(state.roomTs);
+        // Create shading by cutting localised version from each lightPolys[gmId] 
+        state.shade = gms.map((gm, gmId) => lightPolys[gmId].length > 0
+          ? Poly.cutOutSafely([light.poly.clone().applyMatrix(gm.inverseMatrix)], lightPolys[gmId])
+          : []
+        );
       }
 
-      state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.shadeClipPath = gmMaskPolysToClipPaths(state.shade, gms, 'inset(100000px)');
-      state.prev = curr;
     },
   }), {
     overwrite: { gmId: true, roomId: true },
@@ -217,14 +220,20 @@ function gmMaskPolysToClipPaths(maskPolys, gms, defaultClipPath = 'none') {
  * @param {CoreState} next
  */
 function compareCoreState(prev, next) {
-  const changedRoom = prev.gmId !== next.gmId || prev.roomId !== next.roomId;
-  const openedDoor = next.openDoorsIds.length > prev.openDoorsIds.length;
-  const closedDoor = next.openDoorsIds.length < prev.openDoorsIds.length;
+  const justSpawned = prev.gmId === -1;
+  const changedRoom = !justSpawned && ((prev.gmId !== next.gmId) || (prev.roomId !== next.roomId));
+  
+  // Currently only track whether doors opened/closed in Player's current geomorph
+  const openedDoorIds = justSpawned || (prev.gmId === next.gmId)
+    ? next.openDoorsIds.filter(x => !prev.openDoorsIds.includes(x)) : [];
+  const closedDoorIds = justSpawned || (prev.gmId === next.gmId)
+    ? prev.openDoorsIds.filter(x => !next.openDoorsIds.includes(x)) : [];
+
   return {
+    justSpawned,
     changedRoom,
-    openedDoor,
-    closedDoor,
-    changed: changedRoom || openedDoor || closedDoor,
-    justSpawned: prev.gmId === -1,
+    openedIds: openedDoorIds.length ? openedDoorIds : null,
+    closedIds: closedDoorIds.length ? closedDoorIds : null,
+    changed: justSpawned || changedRoom || openedDoorIds.length || closedDoorIds.length,
   };
 }

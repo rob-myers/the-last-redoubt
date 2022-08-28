@@ -39,8 +39,12 @@ export default function World(props) {
     },
 
     updateAll() {
-      state.fov.updateClipPath();
-      state.doors.updateVisibleDoors();
+      try {
+        state.fov.updateClipPath();
+        state.doors.updateVisibleDoors();
+      } catch (e) {
+        console.error('updateAll failed', e);
+      }
       update();
     },
 

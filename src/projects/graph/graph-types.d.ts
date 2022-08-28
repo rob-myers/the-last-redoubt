@@ -183,6 +183,16 @@ declare namespace Graph {
     dstDoorEntry: Geom.Vect;
   }
 
+  /** Indexed by `gmId` */
+  export type GmRoomsAdjData = Record<
+    number,
+    {
+      roomIds: number[];
+      windowIds: number[];
+      closedDoorIds: number[];
+    }
+  >;
+
 //#endregion
   
 //#region FloorGraph
