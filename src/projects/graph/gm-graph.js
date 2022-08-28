@@ -46,9 +46,10 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geomorph.ConnectorRect<Poly, Vect, Rect>} hullDoor
    * @param {number} hullDoorId
    * @param {[number, number, number, number, number, number]} transform
+   * @param {Geomorph.LayoutKey} gmKey
    * @returns {null | Geom.Direction}
    */
-  static computeHullDoorDirection(hullDoor, hullDoorId, transform) {
+  static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
     const found = hullDoor.tags.find(x => /^hull\-[nesw]$/.test(x));
     if (found) {
       const dirChar = /** @type {typeof directionChars[*]} */ (found.slice(-1));
@@ -79,7 +80,7 @@ export class gmGraphClass extends BaseGraph {
       }
       error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
     } else {
-      error(`hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
+      error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
     }
     return null;
   }
@@ -581,17 +582,17 @@ export class gmGraphClass extends BaseGraph {
         return gmNode;        
       }),
 
-      ...gms.flatMap(({ key: gmKey, hullDoors, transform, pngRect, doors }, gmIndex) => {
+      ...gms.flatMap(({ key: gmKey, hullDoors, transform, pngRect, doors }, gmId) => {
         return hullDoors.map((hullDoor, hullDoorId) => {
           const alongNormal = hullDoor.poly.center.addScaledVector(hullDoor.normal, 20);
           const gmInFront = pngRect.contains(alongNormal);
-          const direction = this.computeHullDoorDirection(hullDoor, hullDoorId, transform);
+          const direction = this.computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey);
 
           /** @type {Graph.GmGraphNodeDoor} */
           const doorNode = {
             type: 'door',
             gmKey,
-            gmId: gmIndex,
+            gmId,
             id: getGmDoorNodeId(gmKey, transform, hullDoorId),
             doorId: doors.indexOf(hullDoor),
             hullDoorId,

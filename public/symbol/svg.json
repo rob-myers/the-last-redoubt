@@ -1076,7 +1076,7 @@
         }
       },
       {
-        "tags": ["door", "hull", "sealed"],
+        "tags": ["door", "sealed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1227,7 +1227,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1661604197040.0208
+    "lastModified": 1661686066891.1787
   },
   "303--hull": {
     "key": "303--hull",
