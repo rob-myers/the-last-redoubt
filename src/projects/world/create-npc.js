@@ -83,8 +83,7 @@ export default function createNpc(
         angle = anim.aux.angs[vertexId];
       }
       this.el.root.style.transform = `translate(${position.x}px, ${position.y}px)`;
-      const { scale: npcScale } = npcJson[this.jsonKey];
-      this.el.body.style.transform = `rotateZ(${angle}rad) scale(${npcScale})`;
+      this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${angle}rad`);
     },
     everAnimated() {
       return this.el.root?.getAnimations().includes(anim.translate);
