@@ -51,7 +51,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
         const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
         doorIds.forEach(doorId => {
-          agg[doorId] = agg[doorId] || { doorIds: [], windowIds: [] };
+          agg[doorId] = agg[doorId] || { doorIds: [], windowIds: [], adjacentDoorIds: [] };
           agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId));
           agg[doorId].windowIds.push(...windowIds);
         });
@@ -63,6 +63,22 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       },
       /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
     );
+
+    // Detect double-doors and ensure relation
+    layout.doors.forEach((door, doorId) => {
+      // TODO better approach?
+      const otherDoorId = layout.doors.findIndex((otherDoor) => otherDoor !== door && (
+        otherDoor.angle === door.angle &&
+        (
+          otherDoor.seg[0].distanceToSquared(door.seg[1]) <= (30 ** 2)
+          || otherDoor.seg[1].distanceToSquared(door.seg[0]) <= (30 ** 2)
+        )
+      ));
+      if (otherDoorId >= 0) {
+        relDoorId[doorId] = relDoorId[doorId] || { doorIds: [], windowIds: [], adjacentDoorIds: [] };
+        relDoorId[doorId].adjacentDoorIds.push(otherDoorId);
+      }
+    });
     
     //#region points by room
     /** @type {Geomorph.GeomorphData['point']} */
@@ -133,20 +149,6 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       isHullDoor(doorOrId) {
         return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
           .roomIds.includes(null);
-      },
-      /**
-       * IN PROGRESS
-       */
-      getAdjDoubleDoor(doorId) {
-        const door = this.doors[doorId];
-        const otherDoorId = this.doors.findIndex((otherDoor) => otherDoor !== door && (
-          otherDoor.angle === door.angle &&
-          (
-            otherDoor.seg[0].distanceToSquared(door.seg[1]) <= (30 ** 2)
-            || otherDoor.seg[1].distanceToSquared(door.seg[0]) <= (30 ** 2)
-          )
-        ));
-        return otherDoorId
       },
     };
 

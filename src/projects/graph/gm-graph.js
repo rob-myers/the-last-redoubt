@@ -1,6 +1,6 @@
 import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph } from "./graph";
-import { assertNonNull } from "../service/generic";
+import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars } from "../service/geom";
 import { computeLightPosition } from "../service/geomorph";
 import { error } from "../service/log";
@@ -214,19 +214,21 @@ export class gmGraphClass extends BaseGraph {
 
     const closedDoorSegs = Object.entries(adjData).flatMap(([gmIdKey, {closedDoorIds}]) => {
       const gm = this.gms[Number(gmIdKey)];
-      // // Cover other double-door
-      // if (Number(gmIdKey) === srcGmId) {
-      //   const otherDoubleDoorId = gm.getAdjDoubleDoor(ts.srcDoorId);
-      //   otherDoubleDoorId >= 0 && (closedDoorIds = closedDoorIds.concat(otherDoubleDoorId));
-      // }
+      // If original door a double-door, we cover the
+      // other door to improve the way the light shade looks
+      if (Number(gmIdKey) === srcGmId) {
+        closedDoorIds = closedDoorIds.concat((gm.relDoorId[ts.srcDoorId]?.adjacentDoorIds)??[]);
+      }
       // TODO relDoorIds?
       return closedDoorIds.map(doorId => /** @type {[Vect, Vect]} */ (
         gm.doors[doorId].seg.map(p => gm.matrix.transformPoint(p.clone()))
       ));
     });
 
+
     const lightPosition = this.gms[ts.srcGmId].matrix.transformPoint(
-      this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
+      computeLightPosition(this.gms[ts.srcGmId].doors[ts.srcDoorId], ts.srcRoomId, lightDoorOffset)
+      // this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
     );
 
     return {
@@ -379,9 +381,9 @@ export class gmGraphClass extends BaseGraph {
   /**
    * Given ids of rooms in gmGraph, provide "adjacency data".
    * - We do include rooms adjacent via a door or window.
+   * - We handle dup roomIds e.g. via double doors.
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
-   * - We don't handle dups e.g. window & door on same wall.
    * @param {{ gmId: number; roomId: number; }[]} roomIds
    * @returns {Graph.GmRoomsAdjData}
    */
@@ -394,8 +396,8 @@ export class gmGraphClass extends BaseGraph {
       // Non-hull doors or windows induce an adjacent room
       output[gmId] = output[gmId] || { roomIds: [], windowIds: [], closedDoorIds: [] };
       output[gmId].roomIds.push(...gm.roomGraph.getOpenRoomIds(roomId, openDoorIds));
-      output[gmId].windowIds = gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowIndex);
-      output[gmId].closedDoorIds = gm.roomGraph.getAdjacentDoors(roomId).flatMap(x => openDoorIds.includes(x.doorId) ? [] : x.doorId);
+      output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowIndex));
+      output[gmId].closedDoorIds.push(...gm.roomGraph.getAdjacentDoors(roomId).flatMap(x => openDoorIds.includes(x.doorId) ? [] : x.doorId));
       // Connected hull doors induce room in another geomorph
       // NOTE we currently ignore hull windows 
       const hullDoorIds = gm.roomGraph.getAdjacentHullDoorIds(gm, roomId);
@@ -408,6 +410,7 @@ export class gmGraphClass extends BaseGraph {
         });
     }
 
+    Object.values(output).forEach(x => x.roomIds = removeDups(x.roomIds));
     return output;
   }
 

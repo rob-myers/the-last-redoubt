@@ -7,8 +7,11 @@
   - converting to local coords and cut from extant
 
 - ✅ BUG `spawn andros $( click 1 )`
-- 🚧 ISSUE with double doors light shade
-  - try ensuring other door closed
+- ✅ ISSUE with double doors light shade
+  - pretend other double door closed
+  - light shade ignores custom light positions
+  - fix missing closed doors (e.g. gm101 doorId 15)
+
 - BUG /test: if interact early with expanded then pauses again
 - BUG turning is broken after walking
 - BUG door connector not working: gm301, opposite state-rooms (?)

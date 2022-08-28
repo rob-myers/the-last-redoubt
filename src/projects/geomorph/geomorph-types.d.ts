@@ -114,7 +114,12 @@ declare namespace Geomorph {
     hullDoors: ConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
     hullOutline: Poly;
     pngRect: Geom.Rect;
-    relDoorId: Record<number, { doorIds: number[]; windowIds: number[] }>;
+    relDoorId: Record<number, {
+      doorIds: number[];
+      windowIds: number[];
+      /** Usually a double-door id (0 or 1) */
+      adjacentDoorIds: number[];
+    }>;
     
     /** Points grouped by room */
     point: {
@@ -146,8 +151,6 @@ declare namespace Geomorph {
      */
     getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
     isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
-    /** Returns -1 if not a double-door */
-    getAdjDoubleDoor(doorId: number): number;
   }
 
   export interface UseGeomorphsDefItem {
