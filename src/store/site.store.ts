@@ -134,13 +134,13 @@ const useStore = create<State>()(devtools((set, get) => ({
       useSiteStore.setState(({ component: lookup }) => {
         lookup[componentKey] = { ...component }; // ?
         return {};
-      }, undefined, `${disabled ? 'disable' : 'enable'}-tabs`);
+      }, undefined, disabled ? 'disable-tabs' : 'enable-tabs');
     },
 
     toggleDarkMode() {
       const enabled = document.body.classList.toggle('dark-mode');
       tryLocalStorageSet(localStorageKey.darkModeEnabled, `${enabled}`);
-      set({ darkMode: enabled }, undefined, `${enabled ? 'enable' : 'disable'}-dark-mode`);
+      set({ darkMode: enabled }, undefined, enabled ? 'enable-dark-mode' : 'disable-dark-mode');
     },
   },
 }), { name: "site.store" } ));
