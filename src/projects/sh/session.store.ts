@@ -115,7 +115,7 @@ export interface ProcessMeta {
   inheritVar: Record<string, any>;
 }
 
-const useStore = create<State>(devtools((set, get) => ({
+const useStore = create<State>()(devtools((set, get) => ({
   device: {},
   session: {},
   persist: {},

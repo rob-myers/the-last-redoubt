@@ -34,7 +34,7 @@ export type State = {
   };
 };
 
-const useStore = create<State>(devtools((set, get) => ({
+const useStore = create<State>()(devtools((set, get) => ({
   articleKey: null,
   articlesMeta: {},
   discussMeta: {},
