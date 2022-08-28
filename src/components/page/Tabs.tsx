@@ -37,7 +37,7 @@ export default function Tabs(props: Props) {
     },
 
     onChangeIntersect: debounce(async (intersects: boolean) =>
-      (!intersects && state.enabled) && await state.toggleEnabled()
+      (!intersects && state.enabled && !state.expanded) && await state.toggleEnabled()
     , 1000),
 
     async onKeyUp(e: React.KeyboardEvent) {
@@ -118,7 +118,6 @@ export default function Tabs(props: Props) {
       if (state.expanded) {
         tryLocalStorageSet(expandedStorageKey, 'true');
         if (!state.enabled) {// Auto-enable on expand
-          console.log('toggleExpand')
           await state.toggleEnabled();
         }
       } else {

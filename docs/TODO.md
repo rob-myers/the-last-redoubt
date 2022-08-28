@@ -2,7 +2,9 @@
 
 ## In progress
 
-- 🚧 BUG /test: if interact early with expanded then pauses again
+- ✅ BUG disable-tabs triggered twice initially
+  - prevent intersect-disable when Tabs initially expanded
+
 - BUG turning is broken after walking
 - BUG door connector not working: gm301, opposite state-rooms (?)
 - BUG gm302 top-right locker doors not working
