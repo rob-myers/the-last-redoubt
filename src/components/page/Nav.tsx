@@ -46,6 +46,14 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
         className={cx(cssName.topBar,topBarCss)}
         onClick={onClick}
       />
+
+      <div
+        className={cx(
+          'horizontal-fill',
+          horizFillCss,
+          navOpen && 'open',
+        )}
+      />
     </>
   );
 }
@@ -75,7 +83,7 @@ const navCss = css`
     transform: translateX(0px);
   }
   /** Cannot close nav when width > 1400px */
-  @media(max-width: 1400px) {
+  @media(max-width: 1450px) {
     &.closed {
       transform: translateX(-${sidebarWidth}px);
     }
@@ -140,5 +148,21 @@ const topBarCss = css`
   @keyframes fadeInTopBar {
     0% { opacity: 0; }
     100% { opacity: 1; }
+  }
+`;
+
+const horizFillCss = css`
+  background-color: #eee;
+  transition: min-width 500ms ease;
+
+  min-width: 0;
+  &.open {
+    min-width: ${sidebarWidth}px;
+  }
+  @media(max-width: 1024px) {
+    display: none;
+  }
+  @media(min-width: 1450px) {
+    min-width: ${sidebarWidth}px;
   }
 `;

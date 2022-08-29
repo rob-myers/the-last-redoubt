@@ -365,12 +365,12 @@ const expandedCss = css`
   position: fixed;
   z-index: ${zIndex.tabsExpanded};
   top: 80px;
-  left: 40px;
-  width: calc(100% - 80px);
+  left: 256px;
+  width: calc(100% - 256px);
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
 
-  @media(max-width: 800px) {
+  @media(max-width: 1240px) {
     left: 0;
     top: 80px;
     width: 100%;

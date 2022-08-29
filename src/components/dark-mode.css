@@ -9,6 +9,7 @@ body.dark-mode section article > :not(aside, code, div.carousel, div.comments, d
 }
 body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
   background-color: #222;
+  border-color: #222;
 }
 
 body.dark-mode p a {
