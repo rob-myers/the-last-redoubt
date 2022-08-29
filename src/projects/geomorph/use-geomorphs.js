@@ -34,6 +34,9 @@ export default function useGeomorphs(defs, disabled = false) {
         const transform = def.transform || [1, 0, 0, 1, 0, 0];
         return geomorphDataToInstance(data, transform);
       });
+      /**
+       * TODO ⛔️ throws on refetch a geomorph's json
+       */
       return gmGraphClass.fromGms(items);
     } else {
       return new gmGraphClass([]);

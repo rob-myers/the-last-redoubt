@@ -27,9 +27,9 @@ export default function GeomorphEdit({ disabled }) {
         {/* <Geomorph def={layoutDefs["g-101--multipurpose"]} /> */}
         {/* <Geomorph def={layoutDefs["g-102--research-deck"]} /> */}
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} /> */}
-        {/* <Geomorph def={layoutDefs["g-302--xboat-repair-bay"]} /> */}
+        <Geomorph def={layoutDefs["g-302--xboat-repair-bay"]} />
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} transform="matrix(1,0,0,1,-1200,0)" /> */}
-        <Geomorph def={layoutDefs["g-303--passenger-deck"]} disabled={disabled} />
+        {/* <Geomorph def={layoutDefs["g-303--passenger-deck"]} disabled={disabled} /> */}
       </PanZoom>
     </div>
   );
