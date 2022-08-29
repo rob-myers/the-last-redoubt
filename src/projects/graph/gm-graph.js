@@ -467,7 +467,8 @@ export class gmGraphClass extends BaseGraph {
    */
   getDoorLightPosition(gmId, rootRoomId, doorId, permitReversed = true) {
     const gm = this.gms[gmId];
-    const custom = gm.point[rootRoomId].light[doorId];
+    // Seems some geomorphs lack gm.point[x]
+    const custom = gm.point[rootRoomId]?.light[doorId];
     return (
       custom && (permitReversed || !custom.tags.includes('reverse'))
         ? custom.point.clone()

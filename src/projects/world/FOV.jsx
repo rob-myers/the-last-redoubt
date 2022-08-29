@@ -93,19 +93,16 @@ export default function FOV(props) {
 
       if (cmp.justSpawned || neverLeftRoom) {
         state.shade = gms.map(_ => []);
-      } else if (
-        cmp.changedRoom
-        || cmp.openedIds
-      ) {
-        // TODO track roomIds in light.adjData, ignoring open door when
-        // they don't contribute any new roomIds
+      } else if (cmp.changedRoom || cmp.openedIds) {
+        // TODO track roomIds in light.adjData, ignoring open door
+        // when they don't contribute any new roomIds
 
         // Project a single global light polygon
         const light = gmGraph.computeShadingLight(state.roomTs);
         // Create shading by cutting localised version from each lightPolys[gmId] 
         state.shade = gms.map((gm, gmId) => lightPolys[gmId].length > 0
-          ? Poly.cutOutSafely([light.poly.clone().applyMatrix(gm.inverseMatrix)], lightPolys[gmId])
-          : []
+          ? Poly.cutOutSafely([light.poly.clone().applyMatrix(gm.inverseMatrix)], [Poly.fromRect(gm.hullRect)])
+          : [] // Shades everything
         );
       }
 
