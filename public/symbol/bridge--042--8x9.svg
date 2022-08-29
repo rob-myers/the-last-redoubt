@@ -146,10 +146,13 @@
     <rect x="1022.856" y="913.5" width="50" height="50" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
       <title>label corridor | room</title>
     </rect>
-    <rect x="1679.944" y="714.635" width="70" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+    <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
       <title>light</title>
     </rect>
-    <rect x="647.944" y="714.635" width="70" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+    <rect x="647.944" y="714.635" width="20" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+      <title>light</title>
+    </rect>
+    <rect x="1731.948" y="1142.035" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 3175.512207, -399.684174)">
       <title>light</title>
     </rect>
   </g>
