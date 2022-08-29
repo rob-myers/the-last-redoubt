@@ -55,7 +55,7 @@
     <rect x="1168.5" y="58" width="28.4" height="4" style="">
       <title>wall</title>
     </rect>
-    <rect x="1167.458" width="5.584" height="240" style="">
+    <rect x="1167.458" width="5.5" height="240" style="">
       <title>wall</title>
     </rect>
     <rect x="-6" y="250" width="12" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
@@ -85,16 +85,16 @@
     <rect x="2093.7" y="335" width="105" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1417.5, -1726.699951)">
       <title>door</title>
     </rect>
-    <rect x="878" y="335" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1507.75, -691)">
+    <rect x="878" y="469" width="44" height="7" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1642.5, -691)">
       <title>door</title>
     </rect>
-    <rect x="878" y="335" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1507.75, -751)">
+    <rect x="878" y="469" width="44" height="7" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1642.5, -751)">
       <title>door</title>
     </rect>
-    <rect x="878" y="335" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1507.75, -811)">
+    <rect x="878" y="469" width="44" height="7" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1642.5, -811)">
       <title>door</title>
     </rect>
-    <rect x="878" y="335" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1507.75, -870)">
+    <rect x="878" y="469" width="44" height="7" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1642.5, -870)">
       <title>door</title>
     </rect>
     <rect width="22" height="22" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1159.1" y="18.6">
@@ -123,6 +123,18 @@
     </rect>
     <rect style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="728" y="472" height="22" width="22">
       <title>label repair bay | room</title>
+    </rect>
+    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
+      <title>light</title>
+    </rect>
+    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1003.927979)">
+      <title>light</title>
+    </rect>
+    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1063.927979)">
+      <title>light</title>
+    </rect>
+    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1123.927979)">
+      <title>light</title>
     </rect>
   </g>
   <g style="pointer-events: none;">
