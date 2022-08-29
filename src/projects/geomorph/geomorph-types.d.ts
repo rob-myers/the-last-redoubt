@@ -124,7 +124,7 @@ declare namespace Geomorph {
     /** Points grouped by room */
     point: {
       /** Can specify light position from room through door */
-      light: { [doorId?: number]: Vect };
+      light: { [doorId?: number]: { point: Vect; tags: string[]; } };
       /** Can specify light position from room through window */
       lightWindow: { [windowId?: number]: Vect };
       /** `labels` inside room. */

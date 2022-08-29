@@ -37,7 +37,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     const lightMetas = layout.groups.singles
       .filter(x => x.tags.includes('light'))
       .map(({ poly, tags }) => /** @type {const} */ (
-        { center: poly.center, poly, reverse: tags.includes('reverse') }
+        { center: poly.center, poly, reverse: tags.includes('reverse'), tags }
       ));
 
     /**
@@ -90,7 +90,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       spawn: [],
     }));
 
-    lightMetas.forEach(({ center: p, poly, reverse }, i) => {
+    lightMetas.forEach(({ center: p, poly, reverse, tags }, i) => {
       let roomId = layout.rooms.findIndex(poly => poly.contains(p));
       const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
       const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
@@ -106,7 +106,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         } else roomId = otherRoomId;
       }// NOTE roomId could be -1
 
-      doorId >= 0 && (pointsByRoom[roomId].light[doorId] = p);
+      doorId >= 0 && (pointsByRoom[roomId].light[doorId] = { point: p, tags });
       windowId >= 0 && (pointsByRoom[roomId].lightWindow[windowId] = p);
     });
 

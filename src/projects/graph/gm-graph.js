@@ -228,8 +228,7 @@ export class gmGraphClass extends BaseGraph {
 
 
     const lightPosition = this.gms[ts.srcGmId].matrix.transformPoint(
-      computeLightPosition(this.gms[ts.srcGmId].doors[ts.srcDoorId], ts.srcRoomId, lightDoorOffset)
-      // this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId),
+      this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId, false),
     );
 
     return {
@@ -466,11 +465,13 @@ export class gmGraphClass extends BaseGraph {
    * @param {number} rootRoomId
    * @param {number} doorId
    */
-  getDoorLightPosition(gmId, rootRoomId, doorId) {
+  getDoorLightPosition(gmId, rootRoomId, doorId, permitReversed = true) {
     const gm = this.gms[gmId];
+    const custom = gm.point[rootRoomId].light[doorId];
     return (
-      gm.point[rootRoomId].light[doorId]?.clone()
-      || computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
+      custom && (permitReversed || !custom.tags.includes('reverse'))
+        ? custom.point.clone()
+        : computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );
   }
   
