@@ -3,7 +3,9 @@
 ## In progress
 
 - Clarify strategy: if lights intersect use "light reverse" (?)
+
 - Carousel: handle no images (saw vertical white lines)
+
 - BUG 🤔 anim.translate can be removed if leave window for a while?
   - try leaving window for a while...
 
@@ -92,6 +94,7 @@ How to embed video?
 
 ## Future
 
+- GeomorphEdit: windows: fix console errors 
 - More efficient light shade
   - own component
   - avoid recompute when irrelevant doors opened/closed

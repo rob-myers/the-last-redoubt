@@ -127,6 +127,7 @@ async function computeLayout(def) {
 }
 
 const rootCss = css`
+  background-color: #444;
   height: 100%;
   g > image.debug {
     opacity: 0.2;

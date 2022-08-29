@@ -152,7 +152,7 @@ export class RoomGraph extends BaseGraph {
             { dst: `room-${roomId}`, src: `door-${doorIndex}` },
           ]);
         } else {
-          error(`door ${doorIndex}: unexpected adjacent rooms: ${roomIds}`)
+          error(`door ${doorIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),
@@ -164,7 +164,7 @@ export class RoomGraph extends BaseGraph {
             { dst: `room-${roomId}`, src: `window-${windowIndex}` },
           ]);
         } else {
-          error(`window ${windowIndex}: unexpected adjacent rooms: ${roomIds}`)
+          error(`window ${windowIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),
