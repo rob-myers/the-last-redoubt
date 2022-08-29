@@ -1312,10 +1312,54 @@
             ]
           ]
         }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [900.3662, 453.0675],
+              [754.0245, 537.558],
+              [756.5245, 541.8881],
+              [902.8662, 457.3976]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1080, 445], [900, 445], [900, 450], [1080, 450]]]
+        }
+      },
+      {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[746.496, 500], [746.496, 540], [751.496, 540], [751.496, 500]]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1080, 415.0145],
+              [1040, 415.0145],
+              [1040, 420.0145],
+              [1080, 420.0145]
+            ]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1661776435753.475
+    "lastModified": 1661778131141.0337
   },
   "303--hull": {
     "key": "303--hull",

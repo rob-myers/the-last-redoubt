@@ -2,25 +2,10 @@
 
 ## In progress
 
-- ✅ BUG disable-tabs triggered twice initially
-  - prevent intersect-disable when Tabs initially expanded
-- ✅ BUG turning is broken after walking
-- BUG door connector not working: gm301, opposite state-rooms (?)
-- BUG gm302 top-right locker doors not working
-
-- gm302 needs connector joining inner rooms
-
-- ✅ Can see GitHub comments
-  - https://giscus.app/
-
-- Carousel
-  - ✅ image fade in/out
-  - ✅ do not mount until first visible
-  - ✅ auto-show based on current scroll
-    - $0.addEventListener('scroll', e => console.log(e.target.scrollLeft))
-    - need clear formula "scrollLeft -> slide"
-
-- ✅ BUG image needs fixed height for SSR
+- Clarify strategy: if lights intersect use "light reverse" (?)
+- Carousel: handle no images (saw vertical white lines)
+- BUG 🤔 anim.translate can be removed if leave window for a while?
+  - try leaving window for a while...
 
 - Move assets from public/* to /public/assets/*
 
@@ -107,6 +92,9 @@ How to embed video?
 
 ## Future
 
+- More efficient light shade
+  - own component
+  - avoid recompute when irrelevant doors opened/closed
 - Tabs remember scroll (use case?)
 - BUG CssPanZoom zoom via info is a bit jerky at one point
 - BUG CssPanZoom zoom out which pointer down and drag around
@@ -129,6 +117,26 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ BUG disable-tabs triggered twice initially
+  - prevent intersect-disable when Tabs initially expanded
+- ✅ BUG turning is broken after walking
+- ✅ BUG door connector not working: gm301, opposite state-rooms (?)
+- ✅ BUG gm302 top-right locker doors not working
+
+- ✅ gm302 needs connector joining inner rooms
+
+- ✅ Can see GitHub comments
+  - https://giscus.app/
+
+- Carousel
+  - ✅ image fade in/out
+  - ✅ do not mount until first visible
+  - ✅ auto-show based on current scroll
+    - $0.addEventListener('scroll', e => console.log(e.target.scrollLeft))
+    - need clear formula "scrollLeft -> slide"
+
+- ✅ BUG image needs fixed height for SSR
 
 - ✅ 2-shaded lights e.g. via light "frontier"
   - represent in world coords

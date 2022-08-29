@@ -620,6 +620,50 @@
         }
       },
       {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [902.8662, 457.3976],
+              [756.5245, 541.8881],
+              [754.0245, 537.558],
+              [900.3662, 453.0675]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1080, 450], [900, 450], [900, 445], [1080, 445]]]
+        }
+      },
+      {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[751.496, 500], [751.496, 540], [746.496, 540], [746.496, 500]]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "reverse"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1080, 420.0145],
+              [1040, 420.0145],
+              [1040, 415.0145],
+              [1080, 415.0145]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["window"],
         "poly": {
           "type": "Polygon",
