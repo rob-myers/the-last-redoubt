@@ -67,7 +67,7 @@ declare namespace Graph {
     /** `window-${doorIndex} */
     id: string;
     /** Index of `Geomorph.Layout['windows']` */
-    windowIndex: number;
+    windowId: number;
   }
 
   export type RoomGraphNode = (

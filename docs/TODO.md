@@ -2,6 +2,18 @@
 
 ## In progress
 
+- ✅ BUG bridge window lighting
+  - frosted windows should not contribute to light shade
+- ISSUE cannot npc getPosition when tab hidden
+  - also cannot spawn?
+- ISSUE can open hull door late whilst walks so npc underneath
+
+- Alt approach to g302 light issue
+  - add extra wall/door to "break loop"
+  - support "always open doors" i.e. not even visible
+- ✅ Center page when nav menu open and ≥ 1450px (?)
+- ✅ BUG /test gm302 open door
+
 - Clarify strategy: if lights intersect use "light reverse" (?)
 
 - Carousel: handle no images (saw vertical white lines)

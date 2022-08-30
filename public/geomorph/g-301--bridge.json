@@ -1038,6 +1038,141 @@
           "type": "Polygon",
           "coordinates": [
             [
+              [540, 360.4],
+              [718.4, 360.4],
+              [718.4, 372.8],
+              [540, 372.8],
+              [540, 360.4]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [478.4, 208.6],
+              [482.4, 208.6],
+              [482.4, 240.4],
+              [478.4, 240.4],
+              [478.4, 208.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [538.2, 208.6],
+              [542.2, 208.6],
+              [542.2, 240.4],
+              [538.2, 240.4],
+              [538.2, 208.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [658.2, 208.6],
+              [662.2, 208.6],
+              [662.2, 240.4],
+              [658.2, 240.4],
+              [658.2, 208.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [718.2, 208.6],
+              [722.2, 208.6],
+              [722.2, 240.4],
+              [718.2, 240.4],
+              [718.2, 208.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [760.2, 328.6],
+              [764.2, 328.6],
+              [764.2, 360.4],
+              [760.2, 360.4],
+              [760.2, 328.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [796.4, 328.6],
+              [800.4, 328.6],
+              [800.4, 360.4],
+              [796.4, 360.4],
+              [796.4, 328.6]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [718, 298.4],
+              [842, 298.4],
+              [842, 302.6],
+              [718, 302.6],
+              [718, 298.4]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [718, 358.4],
+              [837, 358.4],
+              [837, 362.6],
+              [718, 362.6],
+              [718, 358.4]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
               [371.8, 358.4],
               [487, 358.4],
               [487, 362.6],
@@ -9996,9 +10131,9 @@
       {"id": "door-26", "type": "door", "doorId": 26},
       {"id": "door-27", "type": "door", "doorId": 27},
       {"id": "door-28", "type": "door", "doorId": 28},
-      {"id": "window-0", "type": "window", "windowIndex": 0},
-      {"id": "window-1", "type": "window", "windowIndex": 1},
-      {"id": "window-2", "type": "window", "windowIndex": 2}
+      {"id": "window-0", "type": "window", "windowId": 0},
+      {"id": "window-1", "type": "window", "windowId": 1},
+      {"id": "window-2", "type": "window", "windowId": 2}
     ],
     "edges": [
       {"src": "room-2", "dst": "door-0", "id": "room-2->door-0"},

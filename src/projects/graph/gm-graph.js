@@ -191,7 +191,7 @@ export class gmGraphClass extends BaseGraph {
 
     /**
      * Get ids of room accessible from prior/current room
-     * via a door or window, taking hull doors into account.
+     * via a door or non-frosted window, taking hull doors into account.
      * Dups may exist in roomIds e.g. window/door on same wall.
      */
     const adjData = this.getRoomIdsAdjData([
@@ -252,13 +252,13 @@ export class gmGraphClass extends BaseGraph {
     const gm = this.gms[gmId];
 
     const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(x => {
-      const connector = gm.windows[x.windowIndex];
+      const connector = gm.windows[x.windowId];
         // Frosted windows opaque
         if (connector.tags.includes('frosted')) return false;
         // One-way mirror
         if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
         return true;
-    }).map(x => x.windowIndex);
+    }).map(x => x.windowId);
 
     const unjoinedLights = windowIds.map(windowId => ({
       gmId,
@@ -380,7 +380,7 @@ export class gmGraphClass extends BaseGraph {
 
   /**
    * Given ids of rooms in gmGraph, provide "adjacency data".
-   * - We do include rooms adjacent via a door or window.
+   * - We do include rooms adjacent via a door or non-frosted window.
    * - We handle dup roomIds e.g. via double doors.
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
@@ -396,7 +396,7 @@ export class gmGraphClass extends BaseGraph {
       // Non-hull doors or windows induce an adjacent room
       output[gmId] = output[gmId] || { roomIds: [], windowIds: [], closedDoorIds: [] };
       output[gmId].roomIds.push(...gm.roomGraph.getOpenRoomIds(roomId, openDoorIds));
-      output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowIndex));
+      output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).flatMap(x => gm.windows[x.windowId].tags.includes('frosted') ? [] : x.windowId));
       output[gmId].closedDoorIds.push(...gm.roomGraph.getAdjacentDoors(roomId).flatMap(x => openDoorIds.includes(x.doorId) ? [] : x.doorId));
       // Connected hull doors induce room in another geomorph
       // NOTE we currently ignore hull windows 

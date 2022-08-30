@@ -130,14 +130,14 @@ export class RoomGraph extends BaseGraph {
       ...rooms.map((_, roomId) => ({
         id: `room-${roomId}`, type: /** @type {const} */ ('room'), roomId,
       })),
-      ...doors.map((_, doorIndex) => {
+      ...doors.map((_, doorId) => {
         /** @type {Graph.RoomGraphNodeDoor} */
-        const doorNode = { id: `door-${doorIndex}`, type: /** @type {const} */ ('door'), doorId: doorIndex };
+        const doorNode = { id: `door-${doorId}`, type: /** @type {const} */ ('door'), doorId };
         return doorNode;
       }),
-      ...windows.map((_, windowIndex) => {
+      ...windows.map((_, windowId) => {
         /** @type {Graph.RoomGraphNodeWindow} */
-        const windowNode = { id: `window-${windowIndex}`, type: /** @type {const} */ ('window'), windowIndex: windowIndex };
+        const windowNode = { id: `window-${windowId}`, type: /** @type {const} */ ('window'), windowId };
         return windowNode;
       }),
     ];

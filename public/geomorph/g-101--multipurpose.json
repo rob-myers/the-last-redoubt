@@ -14438,8 +14438,8 @@
       {"id": "door-38", "type": "door", "doorId": 38},
       {"id": "door-39", "type": "door", "doorId": 39},
       {"id": "door-40", "type": "door", "doorId": 40},
-      {"id": "window-0", "type": "window", "windowIndex": 0},
-      {"id": "window-1", "type": "window", "windowIndex": 1}
+      {"id": "window-0", "type": "window", "windowId": 0},
+      {"id": "window-1", "type": "window", "windowId": 1}
     ],
     "edges": [
       {"src": "room-0", "dst": "door-0", "id": "room-0->door-0"},

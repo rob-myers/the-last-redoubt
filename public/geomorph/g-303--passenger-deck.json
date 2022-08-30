@@ -13070,13 +13070,13 @@
       {"id": "door-31", "type": "door", "doorId": 31},
       {"id": "door-32", "type": "door", "doorId": 32},
       {"id": "door-33", "type": "door", "doorId": 33},
-      {"id": "window-0", "type": "window", "windowIndex": 0},
-      {"id": "window-1", "type": "window", "windowIndex": 1},
-      {"id": "window-2", "type": "window", "windowIndex": 2},
-      {"id": "window-3", "type": "window", "windowIndex": 3},
-      {"id": "window-4", "type": "window", "windowIndex": 4},
-      {"id": "window-5", "type": "window", "windowIndex": 5},
-      {"id": "window-6", "type": "window", "windowIndex": 6}
+      {"id": "window-0", "type": "window", "windowId": 0},
+      {"id": "window-1", "type": "window", "windowId": 1},
+      {"id": "window-2", "type": "window", "windowId": 2},
+      {"id": "window-3", "type": "window", "windowId": 3},
+      {"id": "window-4", "type": "window", "windowId": 4},
+      {"id": "window-5", "type": "window", "windowId": 5},
+      {"id": "window-6", "type": "window", "windowId": 6}
     ],
     "edges": [
       {"src": "room-1", "dst": "door-0", "id": "room-1->door-0"},

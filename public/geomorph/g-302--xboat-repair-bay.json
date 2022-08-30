@@ -4901,8 +4901,8 @@
       {"id": "door-17", "type": "door", "doorId": 17},
       {"id": "door-18", "type": "door", "doorId": 18},
       {"id": "door-19", "type": "door", "doorId": 19},
-      {"id": "window-0", "type": "window", "windowIndex": 0},
-      {"id": "window-1", "type": "window", "windowIndex": 1}
+      {"id": "window-0", "type": "window", "windowId": 0},
+      {"id": "window-1", "type": "window", "windowId": 1}
     ],
     "edges": [
       {"src": "room-2", "dst": "door-0", "id": "room-2->door-0"},
