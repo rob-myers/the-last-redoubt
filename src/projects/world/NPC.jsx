@@ -62,7 +62,7 @@ const rootCss = css`
     position: absolute;
     filter: grayscale(100%) brightness(140%);
     /** Animate turning */
-    transition: transform 1s;
+    transition: transform 1s ease;
   }
   
   // TODO replace below with service/npc-json 🚧

@@ -16,5 +16,9 @@ npx http-server
 
 ## Gotchas
 
-1.  MDX Frontmatter consistency
-    > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
+- MDX Frontmatter consistency
+  > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
+
+- Clearing persisted Tabs
+  > Try changing its config (in MDX) and refreshing.
+  > Otherwise a React hook will write it on page close.

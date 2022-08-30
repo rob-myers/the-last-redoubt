@@ -2,24 +2,24 @@
 
 ## In progress
 
-- ✅ BUG bridge window lighting
-  - frosted windows should not contribute to light shade
-- ISSUE cannot npc getPosition when tab hidden
-  - also cannot spawn?
-- ISSUE can open hull door late whilst walks so npc underneath
+- ✅ BUG cannot get{Position,Angle} when tab hidden
+  - Tabs now uses `visibility: hidden` instead of `display: none`
 
 - Alt approach to g302 light issue
   - add extra wall/door to "break loop"
   - support "always open doors" i.e. not even visible
+
+- ✅ BUG bridge window lighting
+  - frosted windows should not contribute to light shade
 - ✅ Center page when nav menu open and ≥ 1450px (?)
 - ✅ BUG /test gm302 open door
+
+- BUG anim.translate can be removed if don't use window for a while
+  - `goLoop: walk: run: TypeError: anim.translate.addEventListener is not a function`
 
 - Clarify strategy: if lights intersect use "light reverse" (?)
 
 - Carousel: handle no images (saw vertical white lines)
-
-- BUG 🤔 anim.translate can be removed if leave window for a while?
-  - try leaving window for a while...
 
 - Move assets from public/* to /public/assets/*
 
@@ -106,6 +106,7 @@ How to embed video?
 
 ## Future
 
+- BUG can open hull door late whilst walks so npc underneath
 - GeomorphEdit: windows: fix console errors 
 - More efficient light shade
   - own component

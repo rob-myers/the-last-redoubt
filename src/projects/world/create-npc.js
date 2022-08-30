@@ -363,7 +363,8 @@ export default function createNpc(
         this.setLookTarget(this.getAngle());
 
         // Replace with dummy animations?
-        // anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
+        // Maybe fixes "anim.translate.addEventListener is not a function"
+        anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
         // anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
         // anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
       }

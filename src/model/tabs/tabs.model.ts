@@ -30,6 +30,11 @@ export function computeJsonModel(
       tabEnableRename: false,
       rootOrientationVertical,
       tabEnableClose: false,
+      /**
+       * Use `visibility: hidden` instead of `display: none`,
+       * so we can e.g. getBoundingClientRect() for npc getPosition.
+       */
+      enableUseVisibility: true,
     },
     layout: {
       type: 'row',
