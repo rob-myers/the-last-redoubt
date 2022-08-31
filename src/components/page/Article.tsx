@@ -283,7 +283,7 @@ const articleCss = css`
     margin: 0 0 4px 0;
     @media(max-width: 600px) {
       font-size: 1.4rem;
-      margin: 0 0 12px 0;
+      margin: 20px 0 12px 0;
     }
 
     position: relative;
@@ -320,9 +320,9 @@ const articleCss = css`
 
   p {
     margin-top: 0;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     @media(max-width: 600px) {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
   }
   
