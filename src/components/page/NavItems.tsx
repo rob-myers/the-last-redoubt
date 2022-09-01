@@ -40,26 +40,26 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
 const rootCss = css`
   padding: 0;
   color: #aaa;
+  font-family: 'Courier New', Courier, monospace;
   
   h3 {
     padding: 20px 12px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 300;
     margin: 0;
     a {
       color: #ddd;
     }
-    border: 0 solid #aaa;
-    border-width: 0 0 2px;
+    border: 0 solid #444;
+    border-width: 0 0 4px;
   }
   
   ul {
     font-size: 1.1rem;
     padding: 6px 0;
     margin: 0;
-    border: 0 solid #aaa;
-    border-width: 0 0 2px;
+    border: 0 solid #777;
+    border-width: 0 0 1px;
 
     li {
       list-style: none;

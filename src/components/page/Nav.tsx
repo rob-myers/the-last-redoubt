@@ -95,12 +95,11 @@ const navCss = css`
     left: ${sidebarWidth}px;
     width: 100vw;
     height: 0;
-    background: rgba(0, 0, 0, .1);
+    background: rgba(0, 0, 0, .5);
   }
   @media(max-width: 1280px) {
     &.open > .article-overlay {
       height: 100%;
-      background: rgba(0, 0, 0, .25);
     }
   }
 
