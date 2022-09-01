@@ -94,7 +94,7 @@ const articleCss = css`
     font-size: 0.9rem;
     font-style: italic;
     font-weight: 300;
-    color: #333;
+    color: #222;
     background-color: #eee;
     
     p {
@@ -291,6 +291,13 @@ const articleCss = css`
     > span.anchor {
       position: absolute;
       top: -48px;
+    }
+  }
+  h4 {
+    font-size: 1.4rem;
+    font-style: italic;
+    @media(max-width: 600px) {
+      margin: 20px 0 12px 0;
     }
   }
 

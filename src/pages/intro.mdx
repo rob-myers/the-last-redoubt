@@ -38,11 +38,10 @@ Then our motivation is **lacklustre NPC behaviour in modern video games**.
 Can we clarify the problem?
 Can we do better?
 
-Sometimes Game AI is emergent.
-For example, Super Mario 3 arises from many independent NPC behaviours running in parallel.
+Sometimes Game AI is emergent
+e.g. Super Mario 3 runs many independent NPC behaviours in parallel.
 But freely combining anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen) usually results in a mess.
-The _combinatorial explosion of possibilities_ results in
-unrealistic hard-to-debug behaviour.
+The _combinatorial explosion of possibilities_ produces hard-to-debug behaviour.
 
 Focusing on the Player's experience is a better idea.
 Let everything except the Player be the _environment_.
@@ -181,6 +180,11 @@ For those itching to see how it is built, check out [this CodeSandbox](https://c
 
 ### 4. Directing the world
 
+We've made good progress towards _building_ a world.
+But what about _directing it_?
+
+<aside title="recall-our-motivation">
+
 Let's recall our motivation:
 > understanding and improving Game AI.
 
@@ -193,10 +197,9 @@ Examples include:
 - Indicate room purpose via ghostly replay.
 - Orchestrate enemy search party.
 
-We've made good progress towards _building_ a world.
-But what about _directing it_?
+</aside>
 
-> The [videos above](#intro-first-videos) show a [_terminal_](https://xtermjs.org/ "@new-tab") (the black window with mostly green text).
+The [videos above](#intro-first-videos) show a [_terminal_](https://xtermjs.org/ "@new-tab") (the black window with mostly green text).
 We can type commands and press enter to run them.
 Commands are parsed using the excellent [mvdan-sh](https://www.npmjs.com/package/mvdan-sh),
 and then interpreted by our own specially written interpreter.
@@ -204,9 +207,11 @@ Collectively they convert POSIX-like commands into JavaScript and execute it.
 
 <!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
 > Then the **Director directs by running commands in one or more terminals**.
-These commands may include scripts and long-running processes.
+>
+> These commands may include scripts and long-running processes.
 
-Let's see an example.
+
+#### Extended example 
 
 1. Try clicking _interact_ below.
 
