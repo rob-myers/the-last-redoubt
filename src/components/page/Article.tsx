@@ -89,7 +89,7 @@ const articleCss = css`
   }
 
   aside {
-    margin: 40px 0 32px 0;
+    margin: 48px 0 32px 0;
     padding: 12px 32px;
     font-size: 0.9rem;
     font-style: italic;
@@ -139,7 +139,7 @@ const articleCss = css`
   blockquote {
     line-height: 2;
     padding-left: 30px;
-    margin: 0 0 24px 0;
+    margin: 0 0 32px 0;
 
     p:first-child {
       margin-bottom: 12px;
@@ -216,6 +216,7 @@ const articleCss = css`
     padding: 64px;
     border: 1px solid #ccc;
     @media(max-width: 600px) {
+      border: none;
       margin: calc(32px + 16px) 0 24px 0;
       padding: 8px 0 8px 0;
     }
@@ -280,7 +281,7 @@ const articleCss = css`
   }
   h3 {
     font-size: 1.8rem;
-    margin: 0 0 4px 0;
+    margin: 0 0 20px 0;
     @media(max-width: 600px) {
       font-size: 1.4rem;
       margin: 20px 0 12px 0;
@@ -299,11 +300,8 @@ const articleCss = css`
 
   li {
     line-height: 2;
-    > p:first-child {
-      margin-bottom: 12px;
-    }
-    > p:nth-child(n + 2) {
-      margin-top: 0;
+    p {
+      margin-bottom: 18px;
     }
     @media(max-width: 600px) {
       > p:first-child {
@@ -333,11 +331,11 @@ const articleCss = css`
   }
 
   pre {
-    margin: 32px 0 48px 0;
-    border: 64px solid #eee;
+    margin: 48px 0 48px 0;
+    border: 1px solid #eee;
     @media(max-width: 600px) {
       border: 0 solid #eee;
-      margin: 16px 0;
+      margin: 24px 0;
     }
   }
 
@@ -359,11 +357,11 @@ const articleCss = css`
   }
 
   table {
-    padding: 8px;
+    padding: 16px;
     width: 100%;
     margin: 0 0 40px 0;
-    border: 0 solid #eee;
-    border-width: 64px;
+    border: 0 solid #ccc;
+    border-width: 1px;
     line-height: 1.4;
 
     @media(max-width: 600px) {
@@ -375,6 +373,7 @@ const articleCss = css`
       text-transform: uppercase;
       font-size: 1rem;
       font-family: sans-serif;
+      font-weight: 300;
     }
     th, td {
       padding: 16px;
@@ -385,7 +384,7 @@ const articleCss = css`
       }
     }
     table {
-      border-width: 4px;
+      border-width: 2px;
       @media(max-width: 600px) {
         border-width: 1px;
       }

@@ -152,7 +152,6 @@ const topBarCss = css`
 `;
 
 const horizFillCss = css`
-  background-color: #eee;
   transition: min-width 500ms ease;
 
   min-width: 0;

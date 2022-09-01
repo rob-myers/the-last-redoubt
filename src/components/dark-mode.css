@@ -7,9 +7,15 @@ body.dark-mode {
 body.dark-mode section article > :not(aside, code, div.carousel, div.comments, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }
-body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
+body.dark-mode aside {
   background-color: #222;
-  border-color: #222;
+}
+body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
+  border-color: #444;
+}
+
+body.dark-mode blockquote {
+  border-color: #aaa; /** Gets inverted */
 }
 
 body.dark-mode p a {
@@ -73,12 +79,12 @@ body.dark-mode hr {
 }
 
 body.dark-mode pre.prism-code {
-  border-color: #222;
+  border-color: #444;
   background-color: #000;
 }
 
 body.dark-mode table {
-  border-color: #ddd; /** Gets inverted */
+  border-color: #ccc; /** Gets inverted */
 }
 @media (max-width: 600px) {
   body.dark-mode table {
