@@ -4,7 +4,7 @@ import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
 import { ansiColor, ProcessError, ShError } from './util';
-import { parseService, srcService, wrapInFile } from './parse';
+import { parseService, srcService } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
 import { ttyXtermClass } from './tty.xterm';
@@ -113,21 +113,6 @@ export class ttyShellClass implements Device {
 
   getHistory() {
     return this.history.slice();
-  }
-
-  /** Input is a lookup `{ foo: '{ echo foo; }' }` */
-  loadShellFuncs(funcDefs: { [funcName: string]: string }) {
-    for (const [funcName, funcBody] of Object.entries(funcDefs)) {
-      try {
-        const parsed = parseService.parse(`${funcName} () ${funcBody.trim()}`);
-        const parsedBody = (parsed.Stmts[0].Cmd as Sh.FuncDecl).Body;
-        const wrappedBody = wrapInFile(parsedBody);
-        useSession.api.addFunc(this.sessionKey, funcName, wrappedBody);
-      } catch (e) {
-        console.error(`loadShellFuncs: failed to load function "${funcName}"`);
-        console.error(e);
-      }
-    }
   }
 
   /** `prompt` must not contain non-readable characters e.g. ansi color codes */
