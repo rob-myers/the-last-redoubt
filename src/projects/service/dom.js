@@ -1,4 +1,4 @@
-import { parseSVG, makeAbsolute, MoveToCommand } from 'svg-path-parser';
+import { parseSVG, makeAbsolute } from 'svg-path-parser';
 import { Vect } from '../geom/vect';
 import { Poly } from '../geom/poly';
 import { warn } from './log';
@@ -94,7 +94,7 @@ export function svgPathToPolygon(svgPathString) {
 			case 'H':
 			case 'V':
 			case 'Z':
-				add(/** @type {MoveToCommand} */ (cmd).x || 0, /** @type {MoveToCommand} */ (cmd).y || 0);
+				add(/** @type {import('svg-path-parser').MoveToCommand} */ (cmd).x || 0, /** @type {import('svg-path-parser').MoveToCommand} */ (cmd).y || 0);
 			break;
 			default:
 				throw Error(`svg command ${cmd.command} is not supported`);
