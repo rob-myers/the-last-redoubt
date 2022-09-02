@@ -169,14 +169,24 @@ const articleCss = css`
     }
   }
 
-  div.carousel {
+  figure.carousel {
     margin: 32px 0 40px 0;
     padding: 48px;
     border: 1px solid #ccc;
-    @media(max-width: 600px) {
+    /**
+     * max-width 600px causes difficulty with
+     * swiper carousel breakpoints
+     */
+    @media(max-width: 800px) {
       margin: 0 0 24px 0;
       padding: 8px 0;
     }
+    img {
+      border: 10px solid #444;
+      border-radius: 10px;
+      user-select: none;
+    }
+
   }
 
   figure.image {
@@ -331,7 +341,7 @@ const articleCss = css`
     }
   }
   
-  p + div.carousel {
+  p + figure.carousel {
     @media(max-width: 600px) {
       margin-top: 20px;
     }

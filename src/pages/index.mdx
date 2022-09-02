@@ -18,7 +18,7 @@ import Image from "components/page/Image";
 import Video from "components/page/Video";
 import Tabs from "components/page/Tabs";
 import Comments from "components/page/Comments";
-import ImageCarousel from "components/page/ImageCarousel";
+import Carousel from "components/page/Carousel";
 import InlineCode, { InlineUniCode } from "components/page/InlineCode";
 import { profileLookup } from "projects/sh/scripts";
 
@@ -83,8 +83,9 @@ export default function World(props) {
   const state = useStateRef(() => { /** ... */ });
 
   state.gmGraph = useGeomorphs(props.gms);
+  state.gmGraph.api = state;
 
-  useHandleEvents(state, state.gmGraph);
+  useHandleEvents(state);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);
@@ -152,13 +153,9 @@ It is worth taking the time to make some observations about the above videos.
 The camera ([CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)) further restricts what can be seen, although we can peek by panning and zooming.
 These points are illustrated below.
 
-<ImageCarousel
-  id="intro-video-frames"
-  slideWidth={250}
-  marginRight={20}
-  width={250}
-  height={450}
+<Carousel
   baseSrc="/pics/intro-carousel/"
+  height={450}
   items={[
     { src: 'birdseye.png', label: 'Birdseye Viewpoint' },
     { src: 'open-nearby-door.png', label: 'Open door via click/touch' },
@@ -168,8 +165,6 @@ These points are illustrated below.
     { src: 'open-door-see-more.png', label: 'Open door & see more' },
     { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
   ]}
-  imgStyles={{ marginTop: '-24px', height: 'calc(100% + 24px)' }}  // Crop
-  labelTop="10%"
 />
 
 So our approach uses [everyday web dev tech](#intro--tech-stack) as promised.

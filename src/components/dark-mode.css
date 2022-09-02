@@ -4,13 +4,13 @@ body.dark-mode {
 }
 
 /** Undo dark-mode */
-body.dark-mode section article > :not(aside, code, div.carousel, div.comments, div.tags, figure.image, figure.tabs, figure.video, pre) {
+body.dark-mode section article > :not(aside, code, figure.carousel, div.comments, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }
 body.dark-mode aside {
   background-color: #222;
 }
-body.dark-mode figure.video, body.dark-mode div.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
+body.dark-mode figure.video, body.dark-mode figure.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
   border-color: #444;
 }
 

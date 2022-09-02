@@ -2,13 +2,12 @@
 
 ## In progress
 
-- ✅ BUG cannot get{Position,Angle} when tab hidden
-  - Tabs now uses `visibility: hidden` instead of `display: none`
-
-- Alt approach to g302 light issue
+- 🚧 Alt approach to g302 light issue
   - add extra wall/door to "break loop"
   - support "always open doors" i.e. not even visible
 
+- ✅ BUG cannot get{Position,Angle} when tab hidden
+  - Tabs now uses `visibility: hidden` instead of `display: none`
 - ✅ BUG bridge window lighting
   - frosted windows should not contribute to light shade
 - ✅ Center page when nav menu open and ≥ 1450px (?)
