@@ -156,6 +156,17 @@ These points are illustrated below.
 <Carousel
   baseSrc="/pics/intro-carousel/"
   height={450}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    450: {
+      slidesPerView: 2,
+    },
+    900: {
+      slidesPerView: 3,
+    },
+  }}
   items={[
     { src: 'birdseye.png', label: 'Birdseye Viewpoint' },
     { src: 'open-nearby-door.png', label: 'Open door via click/touch' },
