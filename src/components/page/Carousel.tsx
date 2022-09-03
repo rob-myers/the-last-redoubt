@@ -9,7 +9,7 @@ export default function Carousel(props: Props) {
       className="carousel"
     >
       <Swiper
-        modules={[Navigation, Zoom]}
+        modules={[Zoom, Navigation]}
         navigation
         spaceBetween={20}
         breakpoints={props.breakpoints}
@@ -18,7 +18,7 @@ export default function Carousel(props: Props) {
       >
         {props.items.map(({ src, label }) =>
           <SwiperSlide key={src}>
-            <div className="slide-container">
+            <div className="slide-container swiper-zoom-container">
               <img
                 src={`${props.baseSrc??''}${src}`}
                 loading="lazy"

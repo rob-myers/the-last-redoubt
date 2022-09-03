@@ -181,15 +181,14 @@ const articleCss = css`
       margin: 0 0 24px 0;
       padding: 8px 0;
     }
-    img {
-      border: thin solid #000;
-      border-radius: 8px;
-      user-select: none;
-    }
     .slide-container {
       width: fit-content;
       position: relative;
       user-select: none;
+    }
+    img {
+      border: thin solid #000;
+      border-radius: 8px;
     }
     .slide-label {
       position: absolute;
