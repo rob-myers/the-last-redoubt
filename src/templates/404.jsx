@@ -14,9 +14,9 @@ export default function NotFoundPage() {
     <main className={rootCss}>
       <article>
         <p>
-          Status 404 i.e. requested path was not found:
+          Status 404: requested path not found:
           <blockquote>
-            {location.href}
+            {location.pathname}
           </blockquote>
         </p>
       </article>
@@ -36,7 +36,6 @@ const rootCss = css`
   blockquote {
     animation: fadeIn 1s;
     font-weight: 300;
-    color: #444;
   }
 
   @keyframes fadeIn {
