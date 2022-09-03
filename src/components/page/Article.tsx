@@ -231,7 +231,7 @@ const articleCss = css`
       margin: 20px 0 20px 0;
     }
   }
-  p + figure.video {
+  blockquote + figure.video, p + figure.video {
     margin: 32px 0 40px 0;
     @media(max-width: 600px) {
       margin: 20px 0 20px 0;
