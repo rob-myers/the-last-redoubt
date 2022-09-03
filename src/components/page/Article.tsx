@@ -182,7 +182,7 @@ const articleCss = css`
       padding: 8px 0;
     }
     img {
-      border: 8px solid #444;
+      border: thin solid #000;
       border-radius: 8px;
       user-select: none;
     }
