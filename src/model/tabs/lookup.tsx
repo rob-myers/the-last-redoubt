@@ -7,13 +7,6 @@ import loadable, { LoadableComponent } from '@loadable/component';
  */
 const component = {
 
-  'example/Images#geomorph-301': {
-    persist: false,
-    loadable: loadable.lib(() => import('projects/example/Images')),
-    get: (module: typeof import('projects/example/Images')) =>
-      (props: ComponentProps<typeof module['default']>) =>
-        <module.default {...props} srcKey='geomorph-301' />,
-  },
   'example/SvgStringPull': {
     persist: false,
     loadable: loadable.lib(() => import('projects/example/SvgStringPull')),
