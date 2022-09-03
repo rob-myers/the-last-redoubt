@@ -60,6 +60,7 @@ const rootCss = css`
     img {
       border: medium solid #444;
       border-radius: 8px;
+      background-color: #444;
     }
     .slide-label {
       position: absolute;
