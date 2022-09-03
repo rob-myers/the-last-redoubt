@@ -40,7 +40,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
 const rootCss = css`
   padding: 0;
   color: #aaa;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: sans-serif;
   
   h3 {
     padding: 20px 12px;
