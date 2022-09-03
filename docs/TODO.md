@@ -2,9 +2,21 @@
 
 ## In progress
 
-- 🚧 Alt approach to g302 light issue
-  - add extra wall/door to "break loop"
-  - support "always open doors" i.e. not even visible
+- Carousel: use lazy loading
+
+- Move light shade into hard-coded lighting in geomorph PNG
+
+- pages for initial release
+  - /
+    - Tidy
+    - Replace extended example with slides
+  - /intro/setup
+    - Assets Pipeline
+    - React + CSS
+    - JavaScript CLI
+    - Data Structures
+  - /about/terminal
+  - /about/me
 
 - ✅ BUG cannot get{Position,Angle} when tab hidden
   - Tabs now uses `visibility: hidden` instead of `display: none`
@@ -18,18 +30,7 @@
 
 - Clarify strategy: if lights intersect use "light reverse" (?)
 
-- Carousel: handle no images (saw vertical white lines)
-
 - Move assets from public/* to /public/assets/*
-
-- pages for initial release
-  - /intro
-    - add video ✅
-    - remake mobile video ✅
-    - finish "Finished product" ✅
-  - / and /home 🚧
-  - /about/terminal
-  - /about/me
 
 - ❌ BUG with history after following ext link?
 
@@ -46,7 +47,7 @@
 
 - Avoid dup loaded components
 - Fix Tab body lock when initially maximised
-- Some graphs between early paragraphs
+- ❌ Some graphs between early paragraphs
 - Bigger white doors
 - Better door collision detection
   - circle along line seg vs a door line-seg
@@ -105,6 +106,9 @@ How to embed video?
 
 ## Future
 
+- Alt approach to g302 light issue
+  - add extra wall/door to "break loop"
+  - support "always open doors" i.e. not even visible
 - BUG can open hull door late whilst walks so npc underneath
 - GeomorphEdit: windows: fix console errors 
 - More efficient light shade
