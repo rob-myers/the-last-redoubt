@@ -54,8 +54,9 @@ declare namespace Geomorph {
   }
 
   /**
-   * The layout of a single geomorph, 
-   * constructed from a `LayoutDef` and the `SymbolLookup`.
+   * The layout of a single geomorph constructed from a
+   * @see LayoutDef and the 
+   * @see SymbolLookup.
    */
   export interface Layout<P, G, V, R> {
     key: LayoutKey;

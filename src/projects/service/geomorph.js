@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import cheerio, { CheerioAPI, Element } from 'cheerio';
+import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
@@ -479,7 +479,7 @@ export function deserializeSvgJson(svgJson) {
  * Each symbol has a copy of the original PNG in group `background`.
  * It may have been offset e.g. so doors are aligned along border.
  * Then we need to extract the respective rectangle.
- * @param {CheerioAPI} api
+ * @param {import('cheerio').CheerioAPI} api
  * @param {Element[]} topNodes
  * @returns {Geom.RectJson}
  */

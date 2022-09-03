@@ -8,10 +8,10 @@ import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import CssPanZoom from "../panzoom/CssPanZoom";
-import NPCs, { State as NpcsApi } from "./NPCs";
-import Doors, { State as DoorsApi } from "./Doors";
+import NPCs from "./NPCs";
+import Doors from "./Doors";
 import Geomorphs from "./Geomorphs";
-import FOV, { State as FovApi } from "./FOV";
+import FOV from "./FOV";
 import DebugWorld from "./DebugWorld";
 import useHandleEvents from "./use-handle-events";
 
@@ -24,9 +24,9 @@ export default function World(props) {
     everEnabled: false,
     gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
-    doors: /** @type {DoorsApi} */  ({ ready: false }),
-    fov: /** @type {FovApi} */  ({ ready: false }),
-    npcs: /** @type {NpcsApi} */  ({ ready: false }),
+    doors: /** @type {State['doors']} */  ({ ready: false }),
+    fov: /** @type {State['fov']} */  ({ ready: false }),
+    npcs: /** @type {State['npcs']} */  ({ ready: false }),
     panZoom: /** @type {PanZoom.CssApi} */ ({ ready: false }),
 
     lib: {
@@ -121,9 +121,9 @@ export default function World(props) {
  * @typedef State
  * @property {boolean} everEnabled
  * @property {Graph.GmGraph} gmGraph
- * @property {DoorsApi} doors
- * @property {FovApi} fov
- * @property {NpcsApi} npcs
+ * @property {import("./Doors").State} doors
+ * @property {import("./FOV").State} fov
+ * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
  * @property {() => boolean} isReady
  * @property {() => void} updateAll
