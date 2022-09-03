@@ -182,11 +182,28 @@ const articleCss = css`
       padding: 8px 0;
     }
     img {
-      border: 10px solid #444;
-      border-radius: 10px;
+      border: 8px solid #444;
+      border-radius: 8px;
       user-select: none;
     }
+    .slide-container {
+      width: fit-content;
+      position: relative;
+      user-select: none;
+    }
+    .slide-label {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      padding: 8px;
 
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      font-size: 1rem;
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 8px;
+      text-align: center;
+    }
   }
 
   figure.image {

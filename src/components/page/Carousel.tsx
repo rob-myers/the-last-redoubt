@@ -1,6 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, SwiperOptions } from "swiper";
+import type { SwiperOptions } from "swiper";
+import { Navigation, Zoom } from "swiper";
 
 export default function Carousel(props: Props) {
   return (
@@ -8,20 +9,28 @@ export default function Carousel(props: Props) {
       className="carousel"
     >
       <Swiper
-        modules={[Navigation]}
+        modules={[Navigation, Zoom]}
         navigation
         spaceBetween={20}
         breakpoints={props.breakpoints}
         style={{ height: props.height }}
+        zoom
       >
         {props.items.map(({ src, label }) =>
           <SwiperSlide key={src}>
-            <img
-              src={`${props.baseSrc??''}${src}`}
-              loading="lazy"
-              title={label}
-              height={props.height}
-            />
+            <div className="slide-container">
+              <img
+                src={`${props.baseSrc??''}${src}`}
+                loading="lazy"
+                title={label}
+                height={props.height}
+              />
+              {label && (
+                <div className="slide-label">
+                  {label}
+                </div>
+              )}
+            </div>
           </SwiperSlide>
         )}
       </Swiper>
