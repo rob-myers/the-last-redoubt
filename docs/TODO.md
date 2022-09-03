@@ -2,7 +2,9 @@
 
 ## In progress
 
-- Carousel: use lazy loading
+- ✅ Carousel: show labels
+- ✅ Carousel: use lazy loading
+- YouTube: lazy load
 
 - Move light shade into hard-coded lighting in geomorph PNG
 

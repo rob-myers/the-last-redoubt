@@ -6,6 +6,7 @@ import "xterm/css/xterm.css"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/zoom"
+import "swiper/css/lazy"
 
 import ResizeObserver from 'resize-observer-polyfill';
 

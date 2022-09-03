@@ -1,31 +1,46 @@
 body.dark-mode {
   background-color: black;
-  color: #222; /** Gets inverted */
+  color: #222; /** Gets inverted in inverted children */
 }
 
-/** Undo dark-mode */
+/** Invert children of article (with some exceptions) */
 body.dark-mode section article > :not(aside, code, figure.carousel, div.comments, div.tags, figure.image, figure.tabs, figure.video, pre) {
   filter: invert(100%);
 }
+
+/* Invert inline code */
+body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
+  filter: invert(100%);
+}
+
+/* Invert header */
+body.dark-mode section header > :not(div) {
+  filter: invert(100%);
+}
+
+/**
+ * Adjustments
+ */
+
+ body.dark-mode p a {
+   color: #006; /** Gets inverted */
+ }
+ body.dark-mode aside a {
+   color: #ff9;
+ }
+ body.dark-mode div.comments > a {
+   color: #ff9;
+ }
+ body.dark-mode div.next-article a {
+   background-color: unset;
+   color: #ddd;
+}
+
 body.dark-mode aside {
   background-color: #222;
 }
-body.dark-mode figure.video, body.dark-mode figure.carousel, body.dark-mode figure.tabs, body.dark-mode aside {
+body.dark-mode aside, body.dark-mode figure.video, body.dark-mode figure.carousel, body.dark-mode figure.tabs {
   border-color: #444;
-}
-
-body.dark-mode blockquote {
-  border-color: #aaa; /** Gets inverted */
-}
-
-body.dark-mode p a {
-  color: #006; /** Gets inverted */
-}
-body.dark-mode aside a {
-  color: #ff9;
-}
-body.dark-mode div.comments > a {
-  color: #ff9;
 }
 
 body.dark-mode section article {
@@ -36,12 +51,34 @@ body.dark-mode aside {
   color: #bbb;
 }
 
-body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
-  filter: invert(100%);
+body.dark-mode blockquote {
+  border-color: #aaa; /** Gets inverted */
 }
 
 body.dark-mode div.comments {
   border-color: #444;
+}
+body.dark-mode div.swiper-lazy-preloader {
+  --swiper-preloader-color: #fff;
+}
+body.dark-mode div.top-bar {
+  background-color: #333;
+}
+
+body.dark-mode figure.image {
+  border-color: #555;
+  border-width: 1px;
+  background-color: #000;
+  color: white;
+}
+
+body.dark-mode hr {
+  border-color: #444;
+}
+
+body.dark-mode pre.prism-code {
+  border-color: #444;
+  background-color: #000;
 }
 
 body.dark-mode div.tags > span.tag {
@@ -52,35 +89,6 @@ body.dark-mode div.tags > span.tag {
   body.dark-mode div.tags > span.tag {
     font-weight: bold;
   }
-}
-
-body.dark-mode div.top-bar {
-  background-color: #333;
-}
-
-body.dark-mode div.next-article a {
-  background-color: unset;
-  color: #ddd;
-}
-
-body.dark-mode figure.image {
-  border-color: #555;
-  border-width: 1px;
-  background-color: #000;
-  color: white;
-}
-
-body.dark-mode section header > :not(div) {
-  filter: invert(100%);
-}
-
-body.dark-mode hr {
-  border-color: #444;
-}
-
-body.dark-mode pre.prism-code {
-  border-color: #444;
-  background-color: #000;
 }
 
 body.dark-mode table {

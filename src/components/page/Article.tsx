@@ -181,28 +181,6 @@ const articleCss = css`
       margin: 0 0 24px 0;
       padding: 8px 0;
     }
-    .slide-container {
-      width: fit-content;
-      position: relative;
-      user-select: none;
-    }
-    img {
-      border: thin solid #000;
-      border-radius: 8px;
-    }
-    .slide-label {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      padding: 8px;
-
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      font-size: 1rem;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 8px;
-      text-align: center;
-    }
   }
 
   figure.image {
