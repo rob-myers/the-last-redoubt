@@ -34,7 +34,7 @@ const rootCss = css`
     font-weight: 600;
   }
   blockquote {
-    animation: fadeIn 3s;
+    animation: fadeIn 1s;
     font-weight: 300;
     color: #444;
   }
