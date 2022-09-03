@@ -4,9 +4,13 @@ import { css, cx } from '@emotion/css';
 export default function Video({ videoKey }: Props) {
   return (
     <figure className={cx("video", rootCss)}>
-      <span id={videoKey} className="anchor" />
-      {
-        videoKey === 'intro-first-videos' && (
+      <span
+        id={videoKey}
+        className="anchor"
+      />
+
+      {{
+        'intro-first-videos': (
           <iframe
             width="100%"
             height="464"
@@ -15,11 +19,10 @@ export default function Video({ videoKey }: Props) {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            loading="lazy"
           />
-        )
-      }
-      {
-        videoKey === 'intro-world-tty-videos' && (
+        ),
+        'intro-world-tty-videos': (
           <iframe
             width="100%"
             height="464"
@@ -28,9 +31,11 @@ export default function Video({ videoKey }: Props) {
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
+            loading="lazy"
           />
-        )
-      }
+        ),
+      }[videoKey]}
+
     </figure>
   );
 }

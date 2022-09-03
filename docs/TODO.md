@@ -4,7 +4,8 @@
 
 - ✅ Carousel: show labels
 - ✅ Carousel: use lazy loading
-- YouTube: lazy load
+- 🚧 YouTube: lazy load
+  - https://web.dev/iframe-lazy-loading/
 
 - Move light shade into hard-coded lighting in geomorph PNG
 
