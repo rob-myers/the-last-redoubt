@@ -16,7 +16,7 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
 import useSessionStore from "../sh/session.store";
-import NPC, { PropsDef } from "./NPC";
+import NPC from "./NPC";
 import Decor from "./Decor";
 
 /** @param {Props} props */
@@ -622,8 +622,7 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
- *
- * @property {{ key: string; epochMs: number; def: PropsDef }[]} npcKeys
+ * @property {{ key: string; epochMs: number; def: import('./NPC').PropsDef }[]} npcKeys
  * These items cause `<NPC>`s to mount
  * @property {Record<string, NPC.NPC>} npc
  * These items are created as a result of an `<NPC>` mounting

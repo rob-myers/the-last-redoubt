@@ -4975,6 +4975,7 @@
       {"dst": "room-5", "src": "door-19", "id": "door-19->room-5"}
     ]
   },
+  "lightSrcs": [],
   "hullPoly": [
     {
       "type": "Polygon",

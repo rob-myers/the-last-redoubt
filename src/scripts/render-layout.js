@@ -15,6 +15,7 @@ import getOpts from 'getopts';
 
 import svgJson from '../../public/symbol/svg.json';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
+import { error } from '../projects/service/log';
 import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/service/geomorph';
 import { renderGeomorph } from '../projects/geomorph/render-geomorph';
 import { triangle } from '../projects/service/triangle';
@@ -43,7 +44,7 @@ const outputPath =  path.resolve(outputDir, `${layoutDef.key}${
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
     await saveCanvasAsFile(canvas, outputPath);
   } catch (e) {
-    console.log('ERROR', e)
+    error(e);
   }
 })();
 

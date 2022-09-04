@@ -442,6 +442,7 @@ class geomServiceClass {
   /**
    * @typedef LightPolyDef @type {object}
    * @property {Geom.Vect} position Position of light.
+   * @property {Geom.Vect} [direction] Direction of light.
    * @property {number} range 
    * @property {Geom.Poly[]} [tris] Triangles defining obstructions
    * @property {Geom.Poly} [exterior] Simple polygon (i.e. ring) we are inside
@@ -452,8 +453,17 @@ class geomServiceClass {
    * Compute light polygon.
    * @param {LightPolyDef} def
    */
-  lightPolygon({ position: pos, range, tris, exterior, extraSegs }) {
+  lightPolygon({ position: pos, direction, range, tris, exterior, extraSegs = [] }) {
     const lightBounds = new Rect(pos.x - range, pos.y - range, 2 * range, 2 * range);
+
+    if (direction) {
+      const d = direction.clone().normalize();
+      extraSegs.push([
+        pos.clone().addScaledVector(d, -2).translate(-d.y * range * 2, d.x * range * 2),
+        pos.clone().addScaledVector(d, -2).translate(-1 * -d.y * range * 2, -1 * d.x * range * 2),
+      ]);
+    }
+
     const closeTris = tris??[].filter(({ rect }) => lightBounds.intersects(rect));
     const points = new Set(
       closeTris.reduce((agg, { outline }) => agg.concat(outline), /** @type {Geom.Vect[]} */ ([]))
@@ -464,7 +474,7 @@ class geomServiceClass {
       /** @type {[Geom.Vect, Geom.Vect][]} */ ([]),
     ).concat(
       exterior?.lineSegs??[],
-      extraSegs??[],
+      extraSegs,
     );
 
     // These will be unit directional vectors.

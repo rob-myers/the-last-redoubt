@@ -5,6 +5,10 @@ import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
+ * TODO 🚧 migrate light shade into geomorph PNG render
+ */
+
+/**
  * Field Of View, implemented via dark parts of geomorphs
  * @param {Props} props 
  */
@@ -74,39 +78,39 @@ export default function FOV(props) {
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;
 
-      /**
-       * Compute light shade
-       */
-      if (cmp.justSpawned || cmp.changedRoom) {
-        const hullDoorId = gm.getHullDoorId(curr.doorId);
-        const otherDoorId = hullDoorId >= 0 ? (gmGraph.getAdjacentRoomCtxt(curr.gmId, hullDoorId)?.adjDoorId)??-1 : -1;
+      // /**
+      //  * Compute light shade
+      //  */
+      // if (cmp.justSpawned || cmp.changedRoom) {
+      //   const hullDoorId = gm.getHullDoorId(curr.doorId);
+      //   const otherDoorId = hullDoorId >= 0 ? (gmGraph.getAdjacentRoomCtxt(curr.gmId, hullDoorId)?.adjDoorId)??-1 : -1;
 
-        state.roomTs = {
-          srcGmId: prev.gmId, srcRoomId: prev.roomId,
-          dstGmId: curr.gmId, dstRoomId: curr.roomId,
-          srcDoorId: hullDoorId >= 0 ? otherDoorId : curr.doorId,
-          dstDoorId: curr.doorId,
-        };
-      }
-      /** Have we ever left current room (post spawn)? */
-      const neverLeftRoom = state.roomTs.srcGmId === -1;
+      //   state.roomTs = {
+      //     srcGmId: prev.gmId, srcRoomId: prev.roomId,
+      //     dstGmId: curr.gmId, dstRoomId: curr.roomId,
+      //     srcDoorId: hullDoorId >= 0 ? otherDoorId : curr.doorId,
+      //     dstDoorId: curr.doorId,
+      //   };
+      // }
+      // /** Have we ever left current room (post spawn)? */
+      // const neverLeftRoom = state.roomTs.srcGmId === -1;
 
-      if (cmp.justSpawned || neverLeftRoom) {
-        state.shade = gms.map(_ => []);
-      } else if (cmp.changedRoom || cmp.openedIds) {
-        // TODO track roomIds in light.adjData, ignoring open door
-        // when they don't contribute any new roomIds
+      // if (cmp.justSpawned || neverLeftRoom) {
+      //   state.shade = gms.map(_ => []);
+      // } else if (cmp.changedRoom || cmp.openedIds) {
+      //   // TODO track roomIds in light.adjData, ignoring open door
+      //   // when they don't contribute any new roomIds
 
-        // Project a single global light polygon
-        const light = gmGraph.computeShadingLight(state.roomTs);
-        // Create shading by cutting localised version from each lightPolys[gmId] 
-        state.shade = gms.map((gm, gmId) => lightPolys[gmId].length > 0
-          ? Poly.cutOutSafely([light.poly.clone().applyMatrix(gm.inverseMatrix)], [Poly.fromRect(gm.hullRect)])
-          : [] // Shades everything
-        );
-      }
+      //   // Project a single global light polygon
+      //   const light = gmGraph.computeShadingLight(state.roomTs);
+      //   // Create shading by cutting localised version from each lightPolys[gmId] 
+      //   state.shade = gms.map((gm, gmId) => lightPolys[gmId].length > 0
+      //     ? Poly.cutOutSafely([light.poly.clone().applyMatrix(gm.inverseMatrix)], [Poly.fromRect(gm.hullRect)])
+      //     : [] // Shades everything
+      //   );
+      // }
 
-      state.shadeClipPath = gmMaskPolysToClipPaths(state.shade, gms, 'inset(100000px)');
+      // state.shadeClipPath = gmMaskPolysToClipPaths(state.shade, gms, 'inset(100000px)');
     },
   }), {
     overwrite: { gmId: true, roomId: true },
@@ -136,24 +140,24 @@ export default function FOV(props) {
             transformOrigin: gm.transformOrigin,
           }}
         />,
-        <img
-          key={`${gmId}-shade`}
-          className="geomorph-dark geomorph-shade"
-          src={geomorphPngPath(gm.key)}
-          draggable={false}
-          width={gm.pngRect.width}
-          height={gm.pngRect.height}
-          style={{
-            opacity: 0.2,
-            // filter: 'sepia(0.5) hue-rotate(90deg)',
-            clipPath: state.shadeClipPath[gmId],
-            WebkitClipPath: state.shadeClipPath[gmId],
-            left: gm.pngRect.x,
-            top: gm.pngRect.y,
-            transform: gm.transformStyle,
-            transformOrigin: gm.transformOrigin,
-          }}
-        />,
+        // <img
+        //   key={`${gmId}-shade`}
+        //   className="geomorph-dark geomorph-shade"
+        //   src={geomorphPngPath(gm.key)}
+        //   draggable={false}
+        //   width={gm.pngRect.width}
+        //   height={gm.pngRect.height}
+        //   style={{
+        //     opacity: 0.2,
+        //     // filter: 'sepia(0.5) hue-rotate(90deg)',
+        //     clipPath: state.shadeClipPath[gmId],
+        //     WebkitClipPath: state.shadeClipPath[gmId],
+        //     left: gm.pngRect.x,
+        //     top: gm.pngRect.y,
+        //     transform: gm.transformStyle,
+        //     transformOrigin: gm.transformOrigin,
+        //   }}
+        // />,
         ]
       )}
     </div>
@@ -193,8 +197,8 @@ export default function FOV(props) {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: invert(100%) brightness(34%);
-    /* filter: invert(100%) brightness(75%) contrast(200%) brightness(50%); */
+    /* filter: invert(100%) brightness(34%); */
+    filter: invert(100%) brightness(75%) contrast(200%) brightness(50%);
   }
 `;
 

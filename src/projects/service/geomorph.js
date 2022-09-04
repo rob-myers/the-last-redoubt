@@ -237,6 +237,13 @@ export async function createLayout(def, lookup, triangleService) {
   const roomGraphJson = RoomGraph.json(rooms, doors, windows);
   const roomGraph = RoomGraph.from(roomGraphJson);
 
+  const lightSrcs = groups.singles.filter(x => x.tags.includes('light-source')).map(({ poly, tags }) => ({
+    position: poly.center,
+    direction: tags.reduce((agg, tag) =>
+      agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg,
+    /** @type {undefined | Vect} */ (undefined)),
+  }));
+
   return {
     key: def.key,
     id: def.id,
@@ -251,6 +258,7 @@ export async function createLayout(def, lookup, triangleService) {
     navPoly: navPolyWithDoors,
     navZone,
     roomGraph,
+    lightSrcs,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -339,7 +347,7 @@ function parseConnectRect(x) {
 /** @param {Geomorph.ParsedLayout} layout */
 export function serializeLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -362,6 +370,7 @@ export function serializeLayout({
     navPoly: navPoly.map(x => x.geoJson),
     navZone,
     roomGraph: roomGraph.plainJson(),
+    lightSrcs,
 
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -375,7 +384,7 @@ export function serializeLayout({
 /** @param {Geomorph.LayoutJson} layout */
 export function parseLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -398,6 +407,7 @@ export function parseLayout({
     navPoly: navPoly.map(Poly.from),
     navZone,
     roomGraph: RoomGraph.from(roomGraph),
+    lightSrcs: lightSrcs.map(x => ({ position: Vect.from(x.position), direction: x.direction ? Vect.from(x.direction) : undefined })),
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,

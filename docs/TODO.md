@@ -2,12 +2,18 @@
 
 ## In progress
 
+- Move light shade into hard-coded lighting in geomorph PNG
+  - ✅ Draw a red geom.lightPolygon
+  - ✅ Draw a partially transparent one
+  - ✅ Draw multiple
+  - ✅ move into separate PNG that can be layered
+  - 🚧 verify layering works
+
 - ✅ Carousel: show labels
 - ✅ Carousel: use lazy loading
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
 
-- Move light shade into hard-coded lighting in geomorph PNG
 
 - pages for initial release
   - /

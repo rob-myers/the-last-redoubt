@@ -887,10 +887,52 @@
             ]
           ]
         }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[205, 390], [205, 400], [215, 400], [215, 390]]]
+        }
+      },
+      {
+        "tags": ["light-source", "direction_1_0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[385, 275], [395, 275], [395, 265], [385, 265]]]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[445, 445], [445, 455], [455, 455], [455, 445]]]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[505, 225], [505, 235], [515, 235], [515, 225]]]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[925, 175], [925, 185], [935, 185], [935, 175]]]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1105, 95], [1105, 105], [1115, 105], [1115, 95]]]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1661706796103.3665
+    "lastModified": 1662223773469.0002
   },
   "302--hull": {
     "key": "302--hull",

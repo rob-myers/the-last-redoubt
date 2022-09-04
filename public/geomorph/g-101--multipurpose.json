@@ -14600,6 +14600,7 @@
       {"dst": "room-18", "src": "window-1", "id": "window-1->room-18"}
     ]
   },
+  "lightSrcs": [],
   "hullPoly": [
     {
       "type": "Polygon",

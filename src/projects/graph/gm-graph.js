@@ -183,6 +183,7 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * TODO 🚧 remove
    * Compute global light polygon starting from prior room.
    * @param {Graph.BaseNavGmTransition} ts 
    */
@@ -215,11 +216,11 @@ export class gmGraphClass extends BaseGraph {
 
     const closedDoorSegs = Object.entries(adjData).flatMap(([gmIdKey, {closedDoorIds}]) => {
       const gm = this.gms[Number(gmIdKey)];
-      // If original door a double-door, we cover the
-      // other door to improve the way the light shade looks
-      if (Number(gmIdKey) === srcGmId) {
-        closedDoorIds = closedDoorIds.concat((gm.relDoorId[ts.srcDoorId]?.adjacentDoorIds)??[]);
-      }
+      // // If original door a double-door, we cover the
+      // // other door to improve the way the light shade looks
+      // if (Number(gmIdKey) === srcGmId) {
+      //   closedDoorIds = closedDoorIds.concat((gm.relDoorId[ts.srcDoorId]?.adjacentDoorIds)??[]);
+      // }
       // TODO relDoorIds?
       return closedDoorIds.map(doorId => /** @type {[Vect, Vect]} */ (
         gm.doors[doorId].seg.map(p => gm.matrix.transformPoint(p.clone()))
@@ -264,7 +265,7 @@ export class gmGraphClass extends BaseGraph {
       gmId,
       poly: geom.lightPolygon({
         position: (
-          gm.point[rootRoomId]?.lightWindow[windowId]
+          gm.point[rootRoomId]?.windowLight[windowId]
           // We move light inside current room
           || computeLightPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
         ),
@@ -468,7 +469,7 @@ export class gmGraphClass extends BaseGraph {
   getDoorLightPosition(gmId, rootRoomId, doorId, permitReversed = true) {
     const gm = this.gms[gmId];
     // Seems some geomorphs lack gm.point[x]
-    const custom = gm.point[rootRoomId]?.light[doorId];
+    const custom = gm.point[rootRoomId]?.doorLight[doorId];
     return (
       custom && (permitReversed || !custom.tags.includes('reverse'))
         ? custom.point.clone()

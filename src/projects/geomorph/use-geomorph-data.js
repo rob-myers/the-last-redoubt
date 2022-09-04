@@ -17,7 +17,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     
     const layout = parseLayout(await fetch(geomorphJsonPath(layoutKey)).then(x => x.json()));
 
-    const roomGraph = layout.roomGraph;
+    const { roomGraph } = layout;
 
     const roomsWithDoors = roomGraph.nodesArray
       .filter(node => node.type === 'room') // Aligned to `rooms`
@@ -30,9 +30,9 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       });
 
     /**
-     * TODO move to json?
-     * `light`s override light position
-     * Convex polygon `poly` (e.g. rotated rect) should cover door and have center inside room.
+     * - `light`s override light position
+     * - convex polygon `poly` (e.g. rotated rect) should cover door and have center inside room.
+     * - TODO move to json?
      */
     const lightMetas = layout.groups.singles
       .filter(x => x.tags.includes('light'))
@@ -41,9 +41,9 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       ));
 
     /**
-     * TODO move to json?
-     * `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
-     * We'll use it to extend the light polygon i.e. improve the look of lighting under certain circumstances.
+     * - `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
+     * - we'll use it to extend the light polygon i.e. improve the look of lighting under certain circumstances.
+     * - TODO move to json?
      */
     const relDoorId = layout.groups.singles
       .filter(x => x.tags.includes('relate-connectors'))
@@ -51,7 +51,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
         const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
         doorIds.forEach(doorId => {
-          agg[doorId] = agg[doorId] || { doorIds: [], windowIds: [], adjacentDoorIds: [] };
+          agg[doorId] = agg[doorId] || { doorIds: [], windowIds: [] };
           agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId));
           agg[doorId].windowIds.push(...windowIds);
         });
@@ -64,29 +64,13 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
     );
 
-    // Detect double-doors and ensure relation
-    layout.doors.forEach((door, doorId) => {
-      // TODO better approach?
-      const otherDoorId = layout.doors.findIndex((otherDoor) => otherDoor !== door && (
-        otherDoor.angle === door.angle &&
-        (
-          otherDoor.seg[0].distanceToSquared(door.seg[1]) <= (30 ** 2)
-          || otherDoor.seg[1].distanceToSquared(door.seg[0]) <= (30 ** 2)
-        )
-      ));
-      if (otherDoorId >= 0) {
-        relDoorId[doorId] = relDoorId[doorId] || { doorIds: [], windowIds: [], adjacentDoorIds: [] };
-        relDoorId[doorId].adjacentDoorIds.push(otherDoorId);
-      }
-    });
-    
     //#region points by room
     /** @type {Geomorph.GeomorphData['point']} */
     const pointsByRoom = layout.rooms.map(x => ({
       default: x.center,
       labels: [],
-      light: {},
-      lightWindow: {},
+      doorLight: {},
+      windowLight: {},
       spawn: [],
     }));
 
@@ -106,8 +90,8 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         } else roomId = otherRoomId;
       }// NOTE roomId could be -1
 
-      doorId >= 0 && (pointsByRoom[roomId].light[doorId] = { point: p, tags });
-      windowId >= 0 && (pointsByRoom[roomId].lightWindow[windowId] = p);
+      doorId >= 0 && (pointsByRoom[roomId].doorLight[doorId] = { point: p, tags });
+      windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
     });
 
     layout.groups.singles.filter(x => x.tags.includes('spawn'))
