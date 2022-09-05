@@ -1247,6 +1247,55 @@
         }
       },
       {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [994.312, 765.935],
+              [994.312, 775.935],
+              [984.312, 775.935],
+              [984.312, 765.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [504.312, 445.935],
+              [504.312, 455.935],
+              [494.312, 455.935],
+              [494.312, 445.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[695, 720], [695, 730], [685, 730], [685, 720]]]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [144.312, 675.935],
+              [144.312, 685.935],
+              [134.312, 685.935],
+              [134.312, 675.935]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["label", "fuel", "|", "room"],
         "poly": {
           "type": "Polygon",
@@ -14600,7 +14649,12 @@
       {"dst": "room-18", "src": "window-1", "id": "window-1->room-18"}
     ]
   },
-  "lightSrcs": [],
+  "lightSrcs": [
+    {"position": {"x": 989.312, "y": 770.935}},
+    {"position": {"x": 499.312, "y": 450.935}},
+    {"position": {"x": 690, "y": 725}},
+    {"position": {"x": 139.312, "y": 680.935}}
+  ],
   "hullPoly": [
     {
       "type": "Polygon",

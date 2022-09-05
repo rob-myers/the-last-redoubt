@@ -183,67 +183,6 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * TODO 🚧 remove
-   * Compute global light polygon starting from prior room.
-   * @param {Graph.BaseNavGmTransition} ts 
-   */
-  computeShadingLight(ts) {
-    const { srcGmId, dstGmId, srcRoomId, dstRoomId } = ts;
-
-    /**
-     * Get ids of room accessible from prior/current room
-     * via a door or non-frosted window, taking hull doors into account.
-     * Dups may exist in roomIds e.g. window/door on same wall.
-     */
-    const adjData = this.getRoomIdsAdjData([
-      { gmId: srcGmId, roomId: srcRoomId },
-      { gmId: dstGmId, roomId: dstRoomId },
-    ]);
-
-    const globalPolys = Object.entries(adjData).flatMap(([gmIdKey, {roomIds, windowIds}]) => {
-      const gm = this.gms[Number(gmIdKey)];
-      return [
-        // Rooms next to prior/current contribute a roomWithDoor
-        ...roomIds.map(roomId => gm.roomsWithDoors[roomId].clone().applyMatrix(gm.matrix)),
-        // Windows next to prior/current contribute a 4-gon
-        ...windowIds.map(windowId => gm.windows[windowId].poly.clone().applyMatrix(gm.matrix)),
-      ];
-    });
-    
-    const lightPoly = Poly.union(
-      globalPolys.flatMap(x => geom.createInset(x, 0.1)), // TODO
-    )[0];
-
-    const closedDoorSegs = Object.entries(adjData).flatMap(([gmIdKey, {closedDoorIds}]) => {
-      const gm = this.gms[Number(gmIdKey)];
-      // // If original door a double-door, we cover the
-      // // other door to improve the way the light shade looks
-      // if (Number(gmIdKey) === srcGmId) {
-      //   closedDoorIds = closedDoorIds.concat((gm.relDoorId[ts.srcDoorId]?.adjacentDoorIds)??[]);
-      // }
-      // TODO relDoorIds?
-      return closedDoorIds.map(doorId => /** @type {[Vect, Vect]} */ (
-        gm.doors[doorId].seg.map(p => gm.matrix.transformPoint(p.clone()))
-      ));
-    });
-
-
-    const lightPosition = this.gms[ts.srcGmId].matrix.transformPoint(
-      this.getDoorLightPosition(ts.srcGmId, ts.srcRoomId, ts.srcDoorId, false),
-    );
-
-    return {
-      poly: geom.lightPolygon({
-        position: lightPosition,
-        range: 2000,
-        exterior: lightPoly,
-        extraSegs: closedDoorSegs,
-      }),
-      adjData,
-    };
-  }
-
-  /**
    * Compute lit area, determined by current room and open windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
@@ -367,6 +306,9 @@ export class gmGraphClass extends BaseGraph {
     return roomId === -1 ? null : { gmId, roomId };
   }
 
+  /**
+   * Works because we'll use a dummy instance where `this.gms` empty.
+   */
   get ready() {
     return this.gms.length > 0;
   }

@@ -2,12 +2,12 @@
 
 ## In progress
 
-- Move light shade into hard-coded lighting in geomorph PNG
+- Move light shade into shade PNG + `mix-blend-mode`
   - ✅ Draw a red geom.lightPolygon
   - ✅ Draw a partially transparent one
   - ✅ Draw multiple
   - ✅ move into separate PNG that can be layered
-  - 🚧 verify layering works
+  - ✅ verify layering works
 
 - ✅ Carousel: show labels
 - ✅ Carousel: use lazy loading
@@ -115,6 +115,8 @@ How to embed video?
 
 ## Future
 
+- BUG CssPanZoom zoom out with pointer down and drag around
+  - Also issues when click on `HTMLImageElement`s in devtools
 - Alt approach to g302 light issue
   - add extra wall/door to "break loop"
   - support "always open doors" i.e. not even visible
@@ -125,7 +127,6 @@ How to embed video?
   - avoid recompute when irrelevant doors opened/closed
 - Tabs remember scroll (use case?)
 - BUG CssPanZoom zoom via info is a bit jerky at one point
-- BUG CssPanZoom zoom out which pointer down and drag around
 - ✅ Always show navpath (no need for DEBUG=true)
 - ❌ CodeMirror highlighting for JSDoc types?
 - Fix eslint warns

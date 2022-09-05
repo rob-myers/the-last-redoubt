@@ -10,7 +10,7 @@ export default function Geomorphs(props) {
   const { gmGraph } = props.api;
   return (
     <div className={cx("geomorphs", rootCss)}>
-      {gmGraph.gms.map((gm, gmId) => (
+      {gmGraph.gms.map((gm, gmId) => <>
         <img
           key={gmId}
           className="geomorph"
@@ -25,7 +25,22 @@ export default function Geomorphs(props) {
             transformOrigin: gm.transformOrigin,
           }}
         />
-      ))}
+        <img
+          key={`${gmId}-shade`}
+          className="geomorph-shade"
+          src={geomorphPngPath(gm.key, 'shade')}
+          draggable={false}
+          width={gm.pngRect.width}
+          height={gm.pngRect.height}
+          style={{
+            left: gm.pngRect.x,
+            top: gm.pngRect.y,
+            transform: gm.transformStyle,
+            transformOrigin: gm.transformOrigin,
+          }}
+        />
+        </>
+      )}
     </div>
   );
 }
@@ -36,10 +51,21 @@ export default function Geomorphs(props) {
  */
 
 const rootCss = css`
+  isolation: isolate;
+
   img.geomorph {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: brightness(80%);
+    /* filter: brightness(80%); */
   }
+
+  img.geomorph-shade {
+    position: absolute;
+    transform-origin: top left;
+    pointer-events: none;
+    filter: none;
+    mix-blend-mode: hard-light;
+  }
+
 `;
