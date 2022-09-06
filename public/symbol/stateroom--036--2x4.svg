@@ -10,7 +10,7 @@
   <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect x="411" y="10" width="137" height="103" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
-    <rect x="241" y="10" width="118" height="146" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
+    <path d="M 241 10 L 359 10 L 343 97 L 324 141.2 L 272 141.2 L 255 97 L 241 10 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <rect x="37" y="340" width="263" height="419" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <rect x="59" y="1113" width="151" height="136" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.509954, -0.860202, 0.860202, 0.509954, -962.747375, 403.195221)"/>
     <rect x="59" y="1262" width="151" height="154" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.864947, -0.501863, 0.501863, 0.864947, -660.449951, 8.19891)"/>

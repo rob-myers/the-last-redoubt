@@ -118,8 +118,8 @@
     <rect x="745" y="415" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="95" y="30" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+    <rect x="25" y="195" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source direction_0_-1</title>
     </rect>
   </g>
 </svg>

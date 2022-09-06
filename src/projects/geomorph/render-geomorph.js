@@ -85,6 +85,9 @@ export async function renderGeomorph(
       fillPolygon(ctxt, [poly]);
     }
   });
+
+  ctxt.fillStyle = obsColor;
+  obsBounds && fillPolygon(ctxt, obstacles);
   //#endregion
 
   //#region symbol PNGs
@@ -100,8 +103,6 @@ export async function renderGeomorph(
   //#endregion
 
   //#region overlay
-  ctxt.fillStyle = obsColor;
-  obsBounds && fillPolygon(ctxt, obstacles);
 
   /**
    * Fill walls
