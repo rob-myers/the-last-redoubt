@@ -1,4 +1,3 @@
-import "src/components/globals.css"
 import "src/components/dark-mode.css"
 import "src/components/icons.css"
 import "flexlayout-react/style/light.css"
@@ -8,6 +7,7 @@ import "swiper/css/lazy"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
 import "swiper/css/zoom"
+import "src/components/globals.css"
 
 import ResizeObserver from 'resize-observer-polyfill';
 
