@@ -54,7 +54,7 @@ interface Props {
   breakpoints?: SwiperOptions['breakpoints'];
   height: number;
   items: CarouselItem[];
-  pagination?: boolean;
+  pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
   style?: React.CSSProperties;
 }
@@ -69,8 +69,18 @@ const rootCss = css`
       width: fit-content;
       position: relative;
       user-select: none;
-      line-height: 1.8;
+
       flex-direction: column;
+      line-height: 1.8;
+      p {
+        margin-bottom: 16px;
+      }
+      @media (max-width: 600px) {
+        line-height: 1.6;
+        p {
+          margin-bottom: 8px;
+        }
+      }
     }
     img {
       border: medium solid #444;
