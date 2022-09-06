@@ -216,19 +216,33 @@ Collectively they convert POSIX-like commands into JavaScript and execute it.
 > These commands may include scripts and long-running processes.
 
 
-#### Extended example 
+An extended example:
 
-1. Try clicking _interact_ below.
-
-   After a few lines, you'll see repetitions __polling for cached query__
-   (if not, click reset <Icon icon="refresh" small inline />).
-   Clicking disable <Icon icon="cross-circle" small inline />,
-   you'll see __paused session__ and the _interact_ button returns.
-
-2. Press _interact_ again, and this time click on the 2nd tab.
-   You'll see the world from the videos, we suggest you have a play around.
-
-3. Finally return to the 1st tab and scroll to the top.
+<Carousel
+  height={180}
+  style={{ padding: 16 }}
+  pagination
+  items={[
+    <>
+      <p>
+        Try clicking <i>interact</i> below.
+      </p>
+      <p>
+        After a few lines, you'll see repetitions <b>polling for cached query</b>{' '}
+        (if not, click reset <Icon icon="refresh" small inline />).
+        Clicking disable <Icon icon="cross-circle" small inline />,
+        you'll see <b>paused session</b> and the <i>interact</i> button returns.
+      </p>
+    </>,
+    <p>
+      Press <i>interact</i> again, and this time click on the 2nd tab.
+      You'll see the world from the videos, we suggest you have a play around.
+    </p>,
+    <p>
+      Finally return to the 1st tab and scroll to the top.
+    </p>,
+  ]}
+/>
 
 <Tabs
   id="intro-1"

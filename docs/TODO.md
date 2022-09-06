@@ -2,23 +2,15 @@
 
 ## In progress
 
-- Move light shade into shade PNG + `mix-blend-mode`
-  - ✅ Draw a red geom.lightPolygon
-  - ✅ Draw a partially transparent one
-  - ✅ Draw multiple
-  - ✅ move into separate PNG that can be layered
-  - ✅ verify layering works
+- Fix Carousel Zoom i.e. zoomed should be above
 
-- ✅ Carousel: show labels
-- ✅ Carousel: use lazy loading
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
-
 
 - pages for initial release
   - /
     - Tidy
-    - Replace extended example with slides
+    - 🚧 Replace extended example with slides
   - /intro/setup
     - Assets Pipeline
     - React + CSS
@@ -147,6 +139,15 @@ How to embed video?
 
 ## Done
 
+- Move light shade into shade PNG + `mix-blend-mode`
+  - ✅ Draw a red geom.lightPolygon
+  - ✅ Draw a partially transparent one
+  - ✅ Draw multiple
+  - ✅ move into separate PNG that can be layered
+  - ✅ verify layering works
+
+- ✅ Carousel: show labels
+- ✅ Carousel: use lazy loading
 - ✅ BUG disable-tabs triggered twice initially
   - prevent intersect-disable when Tabs initially expanded
 - ✅ BUG turning is broken after walking

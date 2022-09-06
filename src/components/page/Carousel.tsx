@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperOptions } from "swiper";
-import { Navigation, Zoom, Lazy } from "swiper";
+import { Navigation, Zoom, Lazy, Pagination } from "swiper";
 
 export default function Carousel(props: Props) {
   return (
@@ -12,32 +12,38 @@ export default function Carousel(props: Props) {
       <Swiper
         breakpoints={props.breakpoints}
         lazy
-        modules={[Zoom, Navigation, Lazy]}
+        modules={[Lazy, Navigation, Pagination, Zoom]}
         navigation
+        pagination={props.pagination}
         spaceBetween={props.spaceBetween??20}
-        style={{ height: props.height }}
+        style={{ height: props.height, ...props.style }}
         zoom
       >
-        {props.items.map(({ src, label }) =>
-          <SwiperSlide key={src}>
-            <div className="slide-container swiper-zoom-container">
-              <img
-                className="swiper-lazy"
-                data-src={`${props.baseSrc??''}${src}`}
-                height={props.height}
-                title={label}
-              />
-              {label && (
-                <div className="slide-label">
-                  {label}
-                </div>
-              )}
-              <div
-                className="swiper-lazy-preloader swiper-lazy-preloader-black"
-              />
-            </div>
-          </SwiperSlide>
-        )}
+        {props.items.map((item, i) => {
+          const isImage = isImageItem(item);
+          return (
+            <SwiperSlide key={isImage ? item.src : i}>
+              <div className={cx("slide-container", "swiper-zoom-container")}>
+                {isImage ? <>
+                  <img
+                    className="swiper-lazy"
+                    data-src={`${props.baseSrc??''}${item.src}`}
+                    height={props.height}
+                    title={item.label}
+                  />
+                  {item.label && (
+                    <div className="slide-label">
+                      {item.label}
+                    </div>
+                  )}
+                  <div
+                    className="swiper-lazy-preloader swiper-lazy-preloader-black"
+                  />
+                </> : item}
+              </div>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </figure>
   );
@@ -47,15 +53,24 @@ interface Props {
   baseSrc?: string;
   breakpoints?: SwiperOptions['breakpoints'];
   height: number;
-  items: { src: string; label: string; }[];
+  items: CarouselItem[];
+  pagination?: boolean;
   spaceBetween?: number;
+  style?: React.CSSProperties;
 }
+
+type CarouselItem = (
+  | { src: string; label: string; }
+  | React.ReactNode
+);
 
 const rootCss = css`
    .slide-container {
       width: fit-content;
       position: relative;
       user-select: none;
+      line-height: 1.8;
+      flex-direction: column;
     }
     img {
       border: medium solid #444;
@@ -89,3 +104,7 @@ const rootCss = css`
       visibility: visible;
     }
 `;
+
+function isImageItem(item: CarouselItem): item is Extract<CarouselItem, { src: string }> {
+  return !!item && typeof item === 'object' && 'src' in item;
+}
