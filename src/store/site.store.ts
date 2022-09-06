@@ -16,6 +16,7 @@ export type State = {
   groupedMetas: FrontMatter[][];
   
   darkMode: boolean;
+  loadVideo: boolean;
   navOpen: boolean;
   /**
    * Components occurring in Tabs.
@@ -24,6 +25,7 @@ export type State = {
   component: KeyedLookup<KeyedComponent>;
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
+
   api: {
     clickToClipboard(e: React.MouseEvent): Promise<void>;
     initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
@@ -41,6 +43,7 @@ const useStore = create<State>()(devtools((set, get) => ({
   groupedMetas: [],
 
   navOpen: false,
+  loadVideo: false,
   darkMode: false,
   component: {},
   tabs: {},
@@ -103,9 +106,12 @@ const useStore = create<State>()(devtools((set, get) => ({
               ({ discussMeta: comments }) => ({ discussMeta: { ...comments, [articleKey]: discussion } }),
               undefined, 'store-giscus-meta',
             );
+            return true;
           }
         }
-      });
+      }, { once: true });
+
+      set(() => ({ loadVideo: true }), undefined, 'load-video');
     },
 
     removeComponents(tabsKey, ...componentKeys) {

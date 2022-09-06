@@ -3,6 +3,8 @@ import type ActualLayout from './page/Layout';
 import type ActualTerminal from './sh/Terminal';
 import { ensureWorldComponent, WorldComponentDef } from 'model/tabs/lookup';
 
+//#region Individual components
+
 export const Layout = loadable(
   () => import('./page/Layout'),
   { ssr: false },
@@ -12,6 +14,10 @@ export const Terminal = loadable(
   () => import('./sh/Terminal'),
   { ssr: false },
 ) as typeof ActualTerminal;
+
+//#endregion
+
+//#region Worlds
 
 const worldComponents: WorldComponentDef[] = [
   {
@@ -70,3 +76,5 @@ const worldComponents: WorldComponentDef[] = [
  */
 
 worldComponents.forEach(ensureWorldComponent);
+
+//#endregion

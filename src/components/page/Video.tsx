@@ -1,9 +1,15 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
+import useSiteStore from 'store/site.store';
 
 export default function Video({ videoKey }: Props) {
+
+  const loadVideo = useSiteStore(x => x.loadVideo);
+
   return (
-    <figure className={cx("video", rootCss)}>
+    <figure
+      className={cx("video", rootCss)}
+    >
       <span
         id={videoKey}
         className="anchor"
@@ -14,7 +20,7 @@ export default function Video({ videoKey }: Props) {
           <iframe
             width="100%"
             height="464"
-            src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim"
+            {...loadVideo && {src: "https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim"}}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -26,7 +32,7 @@ export default function Video({ videoKey }: Props) {
           <iframe
             width="100%"
             height="464"
-            src="https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo"
+            {...loadVideo && {src: "https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo"}}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
