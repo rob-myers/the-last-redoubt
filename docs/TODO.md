@@ -2,7 +2,7 @@
 
 ## In progress
 
-- Fix Carousel Zoom i.e. zoomed should be above
+- ✅ Carousel: zoomed slide should be above
 
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/

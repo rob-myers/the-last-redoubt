@@ -115,6 +115,10 @@ const rootCss = css`
       font-size: 1rem;
     }
 
+    .swiper-slide.swiper-slide-zoomed {
+      z-index: 1;
+    }
+
     img {
       border: medium solid #444;
       border-radius: 8px;
