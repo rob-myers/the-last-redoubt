@@ -18,22 +18,32 @@ body.dark-mode section header > :not(div) {
   filter: invert(100%);
 }
 
+body.dark-mode figure.carousel span.icon {
+  filter: invert(100%);
+}
+
 /**
  * Adjustments
  */
 
- body.dark-mode p a {
-   color: #006; /** Gets inverted */
- }
- body.dark-mode aside a {
-   color: #ff9;
- }
- body.dark-mode div.comments > a {
-   color: #ff9;
- }
- body.dark-mode div.next-article a {
-   background-color: unset;
-   color: #ddd;
+body.dark-mode {
+  --swiper-pagination-color: #ddc;
+  --swiper-pagination-bullet-inactive-color: #777;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+}
+
+body.dark-mode p a {
+  color: #006; /** Gets inverted */
+}
+body.dark-mode aside a {
+  color: #ff9;
+}
+body.dark-mode div.comments > a {
+  color: #ff9;
+}
+body.dark-mode div.next-article a {
+  background-color: unset;
+  color: #ddd;
 }
 
 body.dark-mode aside {
@@ -63,6 +73,10 @@ body.dark-mode div.swiper-lazy-preloader {
 }
 body.dark-mode div.top-bar {
   background-color: #333;
+}
+
+body.dark-mode figure.carousel {
+  color: #ccc;
 }
 
 body.dark-mode figure.image {

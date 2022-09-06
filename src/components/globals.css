@@ -2,6 +2,9 @@
   --article-border-color: #ccc;
   /** Saw white lines at 8px and zoomed */
   --tabs-border-width: 6px;
+
+  --swiper-navigation-size: 28px;
+  --swiper-theme-color: rgb(181, 181, 181);
 }
 
 * {

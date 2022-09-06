@@ -4,7 +4,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperOptions } from "swiper";
 import { Navigation, Zoom, Lazy, Pagination } from "swiper";
 
+/**
+ * props.items should be either:
+ * - a list of images definitions, or
+ * - a list arbitrary `ReactNode`s
+ */
 export default function Carousel(props: Props) {
+
+  const items = props.items;
+  const isImages = isImageItems(items);
+
   return (
     <figure
       className={cx("carousel", rootCss)}
@@ -13,37 +22,47 @@ export default function Carousel(props: Props) {
         breakpoints={props.breakpoints}
         lazy
         modules={[Lazy, Navigation, Pagination, Zoom]}
-        navigation
+        navigation={{
+
+        }}
         pagination={props.pagination}
         spaceBetween={props.spaceBetween??20}
-        style={{ height: props.height, ...props.style }}
+        style={{ height: props.height }}
         zoom
       >
-        {props.items.map((item, i) => {
-          const isImage = isImageItem(item);
-          return (
-            <SwiperSlide key={isImage ? item.src : i}>
-              <div className={cx("slide-container", "swiper-zoom-container")}>
-                {isImage ? <>
-                  <img
-                    className="swiper-lazy"
-                    data-src={`${props.baseSrc??''}${item.src}`}
-                    height={props.height}
-                    title={item.label}
-                  />
-                  {item.label && (
-                    <div className="slide-label">
-                      {item.label}
-                    </div>
-                  )}
-                  <div
-                    className="swiper-lazy-preloader swiper-lazy-preloader-black"
-                  />
-                </> : item}
-              </div>
-            </SwiperSlide>
-          );
-        })}
+        {isImages
+          ? items.map(item =>
+              <SwiperSlide key={item.src}>
+                <div
+                  className={cx("slide-container", "swiper-zoom-container")}
+                >
+                <img
+                  className="swiper-lazy"
+                  data-src={`${props.baseSrc??''}${item.src}`}
+                  height={props.height}
+                  title={item.label}
+                />
+                {item.label && (
+                  <div className="slide-label">
+                    {item.label}
+                  </div>
+                )}
+                <div
+                  className="swiper-lazy-preloader swiper-lazy-preloader-black"
+                />
+                </div>
+              </SwiperSlide>
+            )
+          : items.map((item, i) =>
+              <SwiperSlide key={i}>
+                <div
+                  className={cx("slide-container", "slide-centered")}
+                >
+                  {item}
+                </div>
+              </SwiperSlide>
+          )
+        }
       </Swiper>
     </figure>
   );
@@ -53,16 +72,18 @@ interface Props {
   baseSrc?: string;
   breakpoints?: SwiperOptions['breakpoints'];
   height: number;
-  items: CarouselItem[];
+  items: CarouselItems;
   pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
-  style?: React.CSSProperties;
 }
 
-type CarouselItem = (
-  | { src: string; label: string; }
-  | React.ReactNode
+type CarouselItems = (
+  | ImageCarouselItem[]
+  | PlainCarouselItem[]
 );
+
+type ImageCarouselItem = { src: string; label: string; };
+type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
    .slide-container {
@@ -70,7 +91,6 @@ const rootCss = css`
       position: relative;
       user-select: none;
 
-      flex-direction: column;
       line-height: 1.8;
       p {
         margin-bottom: 16px;
@@ -82,6 +102,19 @@ const rootCss = css`
         }
       }
     }
+    .slide-centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      text-align: center;
+      height: 100%;
+
+      padding: 0 48px;
+      font-size: 1rem;
+    }
+
     img {
       border: medium solid #444;
       border-radius: 8px;
@@ -115,6 +148,9 @@ const rootCss = css`
     }
 `;
 
-function isImageItem(item: CarouselItem): item is Extract<CarouselItem, { src: string }> {
-  return !!item && typeof item === 'object' && 'src' in item;
+function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
+  return (
+    items.length === 0
+    || (!!items[0] && typeof items[0] === 'object' && 'src' in items[0])
+  );
 }
