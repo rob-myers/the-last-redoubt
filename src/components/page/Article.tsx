@@ -96,6 +96,7 @@ const articleCss = css`
     font-weight: 300;
     color: #222;
     background-color: #eee;
+    line-height: 2;
     
     p {
       margin: 12px 0;
@@ -125,7 +126,7 @@ const articleCss = css`
     @media(max-width: 600px) {
       margin: 24px 0 16px 0;
       padding: 16px 24px;
-      line-height: 2;
+      line-height: 1.8;
       .${cssName.infoIcon} {
         transform: scale(1.2);
       }
@@ -171,7 +172,7 @@ const articleCss = css`
 
   figure.carousel {
     margin: 32px 0 40px 0;
-    padding: 48px 0;
+    padding: 0;
     border: 1px solid #ccc;
     /**
      * max-width 600px causes difficulty with
@@ -179,7 +180,7 @@ const articleCss = css`
      */
     @media(max-width: 800px) {
       margin: 0 0 24px 0;
-      padding: 8px 0;
+      padding: 0;
     }
   }
 

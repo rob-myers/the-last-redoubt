@@ -91,7 +91,7 @@ const rootCss = css`
       position: relative;
       user-select: none;
 
-      line-height: 1.8;
+      line-height: 2;
       p {
         margin-bottom: 16px;
       }
@@ -112,7 +112,6 @@ const rootCss = css`
       height: 100%;
 
       padding: 0 48px;
-      font-size: 1rem;
     }
 
     .swiper-slide.swiper-slide-zoomed {
