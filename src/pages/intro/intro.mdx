@@ -1,0 +1,361 @@
+---
+
+key: intro/intro
+path: /intro/intro
+info: Introduction
+label: intro
+date: 2022-10-01
+navGroup: 0
+prev: index
+next: intro/setup
+tags:
+  - video game
+  - web dev
+  - game ai
+---
+
+import Carousel from "components/page/Carousel";
+import Comments from "components/page/Comments";
+import Icon from "components/page/Icon";
+import Image from "components/page/Image";
+import InlineCode, { InlineUniCode } from "components/page/InlineCode";
+import Tabs from "components/page/Tabs";
+import Video from "components/page/Video";
+import { profileLookup } from "projects/sh/scripts";
+
+## Introduction
+
+### 1. Motivation
+
+What's this website about?
+
+> **Making Game AI** i.e. controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character) in video games.
+
+NPC stands for _Non-Player Character_ - 
+every friendly or unfriendly character except for the Player.
+Their behaviour shapes the game, steadily drawing the Player into the fabrication.
+Then our motivation is **lacklustre NPC behaviour in modern video games**.
+Can we clarify the problem?
+Can we do better?
+
+Sometimes Game AI is emergent
+e.g. Super Mario 3 runs many independent NPC behaviours in parallel.
+But freely combining anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen) usually results in a mess.
+The _combinatorial explosion of possibilities_ produces hard-to-debug behaviour.
+
+Focusing on the Player's experience is a better idea.
+Let everything except the Player be the _environment_.
+It is controlled by a highly opinionated _Director_ (an amalgam of people and software).
+The Director controls the environment (e.g. the NPCs), while the Player has certain freedoms within it.
+But the Director needs something to direct,
+so we must **create a game** to make meaningful Game AI.
+
+<Image
+  src="/pics/demo-pic-1.png"
+  title="A sneak peek"
+  alt="A first look at the World and Terminal"
+  height="400"
+  loading="lazy"
+/>
+
+
+### 2. Underlying Tech
+
+We're writing about Game AI and creating a game.
+Then it's natural to use web technologies, building the game right here on this site.
+But which ones?
+
+> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
+>
+> We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
+> and JavaScript-driven rendering or physics simulation.
+
+This makes our approach relevant to a wide audience.
+
+```jsx
+/**
+ * Our World component (simplified) written in JSX,
+ * i.e. JavaScript with syntactic sugar (the XML tags).
+ */
+export default function World(props) {
+
+  const update = useUpdate();
+
+  const state = useStateRef(() => { /** ... */ });
+
+  state.gmGraph = useGeomorphs(props.gms);
+  state.gmGraph.api = state;
+
+  useHandleEvents(state);
+
+  React.useEffect(() => {
+    setCached(props.worldKey, state);
+    return () => removeCached(props.worldKey);
+  }, []);
+
+  return state.gmGraph.ready ? (
+    <CssPanZoom onLoad={/** ... */}>
+      <Geomorphs api={state} />
+      <DebugWorld api={state} />
+      <NPCs api={state} onLoad={/** ... */} />
+      <FOV api={state} onLoad={/** ... */} />
+      <Doors api={state} onLoad={/** ... */} />
+    </CssPanZoom>
+  ) : null;
+}
+
+/** @typedef Props ... */
+/** @typedef State ... */
+
+```
+
+
+### 3. Building the world
+
+To create a game we must _create a world_.
+A setting and characters are needed as guiding principles,
+although not necessarily as driving forces.
+
+Our setting is _The Last Redoubt_, a gigantic pyramid protecting the last of humanity, as described in [The Night Land](https://en.wikipedia.org/wiki/The_Night_Land) (1912).
+We mention two characters: Andros (the protagonist) and Cartesius (his preceptor);
+these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/wiki/The_Night_Land#Pastiche,_homages_and_sequels) (2011).
+But how to fabricate this pyramid?
+How should we build The Last Redoubt?
+
+> Thankfully we've done the groundwork, as shown in the videos below.
+
+<Video videoKey="intro-first-videos" />
+
+<aside title="starship-geomorphs">
+
+  The graphics above depict Geomorph 301 (a.k.a. _Bridge_) from Robert Pearce's [Starship Geomorphs 2.0](http://travellerrpgblog.blogspot.com/2018/10/the-starship-geomorphs-book-if-finally.html).
+  We've recreated it using 9 of his [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html),
+  available as PNGs thanks to [Eric Smith](http://ericbsmith.no-ip.org/geomorphs/).
+  These wonderful assets provide one of the foundation stones upon which our game is built.
+
+</aside>
+
+It is worth taking the time to make some observations about the above videos.
+
+> **The game has a birdseye viewpoint**.
+> Avoiding game-centric tech rules out 3D graphics (except perhaps isometric).
+
+> **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
+> Mouse clicks are converted into world coordinates.
+> Doors are styled clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
+
+> **The Player interacts via mouse clicks or touches**.
+> Websites rarely use keyboard controls.
+
+> **The Player is _situated_ with limited visual range**.
+> We use two copies of the [same PNG](/geomorph/g-301--bridge.png "@new-tab") (one atop the other).
+> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
+
+The camera ([CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)) further restricts what can be seen, although we can peek by panning and zooming.
+These points are illustrated below.
+
+<Carousel
+  baseSrc="/pics/intro-carousel/"
+  height={450}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    450: {
+      slidesPerView: 2,
+    },
+    900: {
+      slidesPerView: 3,
+    },
+  }}
+  items={[
+    { src: 'birdseye.png', label: 'Birdseye Viewpoint' },
+    { src: 'open-nearby-door.png', label: 'Open door via click/touch' },
+    { src: 'click-navmesh.png', label: 'Click navmesh to walk' },
+    { src: 'enter-door.png', label: 'Entering door changes view'},
+    { src: 'can-go-round-corners.png', label: 'Navigate around corners' },
+    { src: 'open-door-see-more.png', label: 'Open door & see more' },
+    { src: 'pan-zoom-see-more.png', label: 'Pan-zoom to peek' },
+  ]}
+/>
+
+So our approach uses [everyday web dev tech](#index--2.-underlying-tech) as promised.
+We'll interact with the real McCoy in the next section.
+For those itching to see how it is built, check out [this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
+
+
+### 4. Directing the world
+
+We've made good progress towards _building_ a world.
+But what about _directing it_?
+
+<aside title="recall-our-motivation">
+
+Recall our motivation i.e. understanding and improving Game AI.
+Rather than providing independent parallel systems,
+we'll intentionally modify the Player's experience, e.g.
+
+- Spawn enemy when Player walks through 3 doors.
+- Build tension by showing enemies at fringes of vision.
+- Tempt Player to particular area and ambush them.
+- Indicate room purpose via ghostly replay.
+- Orchestrate enemy search party.
+
+</aside>
+
+The [videos above](#intro-first-videos) show a [_terminal_](https://xtermjs.org/ "@new-tab") (the black window with mostly green text).
+We can type commands and press enter to run them.
+Commands are parsed using the excellent [mvdan-sh](https://www.npmjs.com/package/mvdan-sh),
+and then interpreted by our own specially written interpreter.
+Collectively they convert POSIX-like commands into JavaScript and execute it.
+
+<!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
+> Then the **Director directs by running commands in one or more terminals**.
+>
+> These commands may include scripts and long-running processes.
+
+
+An extended example:
+
+<Carousel
+  height={220}
+  pagination={{ clickable: true }}
+  items={[
+    <>
+      <p>
+        Try clicking <i>interact</i> below.
+      </p>
+      <p>
+        After a few lines, you'll see repetitions <b>polling for cached query</b>{' '}
+        (if not, click reset <Icon icon="refresh" small inline />).
+        Clicking disable <Icon icon="cross-circle" small inline />,
+        you'll see <b>paused session</b> and the <i>interact</i> button returns.
+      </p>
+    </>
+    ,
+    <p>
+      Press <i>interact</i> again, and this time click on the 2nd tab.
+      You'll see the world from the videos, we suggest you have a play around.
+    </p>
+    ,
+    <p>
+      Finally return to the 1st tab and scroll to the top.
+    </p>
+  ]}
+/>
+
+<Tabs
+  id="intro-1"
+  initEnabled={false}
+  height={500}
+  tabs={[
+    [
+      {
+          type: 'terminal',
+          filepath: 'intro-tty-1',
+          env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup['profile-1-a']() },
+      },
+      { type: 'component', filepath: 'intro-world-1' },
+    ],
+  ]}
+  initHorizontal
+  // persistLayout
+/>
+
+Let's try to understand some of the lines above.
+
+| Line | Info |
+| --- | ----------- |
+| <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
+| `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode>/etc/util-1</InlineCode> which defines util functions. |
+| `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/game-1</InlineCode> defines game-related functions. List all functions via <InlineCode>declare</InlineCode>. Those with a dev console can <InlineCode>declare \| log</InlineCode>. |
+| `awaitWorld` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
+
+  What about the rest of `/home/PROFILE`?
+
+  It spawns Andros, sets him as the Player,
+  and finally initiates 3 long-running background processes.
+  That is,
+  (a) the camera tracks Andros,
+  (b) clicking the navmesh makes him walk,
+  (c) clicking outside the navmesh makes him turn.
+
+<aside title="js-shell">
+
+  Our [shell](https://en.wikipedia.org/wiki/Shell_(computing)#Command-line_shells) wraps JavaScript in a Command Line Interface.
+  The central entities in JavaScript are **values** (primitive or object) rather than files.
+  Each terminal has an associated root object where
+  e.g. `root.home.PROFILE` is a string defining the initialisation script.
+
+</aside>
+
+We've recorded the above example on desktop and mobile.
+
+<Video videoKey="intro-world-tty-videos" />
+
+
+### 5. Finished product
+
+Game developers are prone to a particular disease.
+They try to make a game but create a _game engine_ instead.
+Years of effort with zero result.
+Thankfully, our driving force is _Game AI_ rather than releasing a game.
+We'll publish the process step-by-step right here.
+It is relevant to a wide audience: web developers and also video game enthusiasts.
+
+No one knows how to study Game AI abstractly.
+It rarely overlaps with the academic subject _Artificial Intelligence_.
+But we shouldn't forget
+(a) the [Turing Test](https://en.wikipedia.org/wiki/Computing_Machinery_and_Intelligence) was originally a gender-bending party game,
+(b) providing believable NPC behaviour is analogous to winning this game.
+This doesn't mean we are solving a problem of similar difficulty!
+The Turing Test handles _arbitrary_ textual input,
+whereas all existing implementations of believable NPC behaviour deal with very specific situations.
+
+Lacking an abstract approach,
+we know no alternative other than embedding into a video game.
+
+> So what's our game going to be?
+
+| | |
+| --- | ----------- |
+| **Setting** | A gargantuan pyramid housing the last of humanity, millions of years after the Sun has died. This structure is known as [The Last Redoubt](https://en.wikipedia.org/wiki/The_Night_Land). |
+| **Storyline** | Andros must help defend the pyramid against invaders: _mental effluents_ and _unnatural incarnations_ who've broken through the Air Clog. |
+| **Influences** | <table style="font-size:0.95rem; padding: 8px; margin-bottom: 8px"><tbody><tr><td>[The Night Land](https://en.wikipedia.org/wiki/The_Night_Land "@new-tab")</td><td>An early sci-fi story (1912).</td></tr><tr><td>[Theravada Buddhism](https://en.wikipedia.org/wiki/Theravada "@new-tab")</td><td>The religion of the last of humanity.</td></tr><tr><td> [Teleglitch](https://en.wikipedia.org/wiki/Teleglitch "@new-tab") </td><td> Top-down survival-horror roguelike.</td></tr><tr><td> [Fallout 1, 2](https://en.wikipedia.org/wiki/Fallout_(video_game) "@new-tab")</td><td>Oblique turn-based RPGs.</td></tr><tr><td> [GTA 1, 2](https://en.wikipedia.org/wiki/Grand_Theft_Auto_(video_game) "@new-tab") </td><td> Top-down open-world action games.</td></tr></tbody></table> |
+
+<aside title="game-influences">
+
+Teleglitch (2013) provides a strong influence.
+The protagonist must escape a military base.
+Levels are randomly generated by connecting "modules".
+The top-down line-of-sight view also provides inspiration.
+
+Fallout 1 & 2 and GTA 1 & 2 are breathtakingly brilliant open-world games from the late 90s.
+They'll serve as reference points and sources of inspiration.
+
+</aside>
+
+We expect to continually alternate between exposition and Game AI development.
+But we mustn't meander too much or we'll get lost.
+Then a level or scenario (part of a level) should be kept in mind whenever we develop Game AI.
+
+> **First level outline**.
+>
+> Andros has just travelled through the first 1000 cities.
+> Cartesius encourages him to ordain into the 320 temples of the Upper Pyramid.
+> Andros and the other Novices begin by learning certain
+> hidden knowledge concerning the Watchers.
+
+<aside>
+
+Articles up next:
+- **Setup** -- _how we built what we've built_.
+- **JS CLI** -- _introducing our online JavaScript Command Line Interface_.
+- **Baby steps** -- _applying the JS CLI to Game AI_.
+
+</aside>
+
+<Comments
+  id="comments"
+  term="/intro"
+/>

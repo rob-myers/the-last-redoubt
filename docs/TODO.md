@@ -2,15 +2,20 @@
 
 ## In progress
 
+- ✅ Create separate homepage after all
+  - has image Carousel with nice pics
+  - has changelog
+
 - ✅ Carousel: zoomed slide should be above
 
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
+  - Seems scripts are still being loaded
 
 - pages for initial release
   - /
     - Tidy
-    - 🚧 Replace extended example with slides
+    - ✅ Replace extended example with slides
   - /intro/setup
     - Assets Pipeline
     - React + CSS
