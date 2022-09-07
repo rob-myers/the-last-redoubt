@@ -574,6 +574,15 @@ export default function NPCs(props) {
         <Decor key={key} item={item} />
       )}
 
+      {/** Prioritise walk animations, to avoid load on start walk */}
+      {Object.keys(npcJson).map((key) => (
+        <img
+          key={key}
+          src={`/npc/${key}--${'walk'}.png`}
+          style={{ display: 'none' }}
+        />
+      ))}
+
       {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
         <NPC // Respawn remounts
           key={`${key}@${epochMs}`}
