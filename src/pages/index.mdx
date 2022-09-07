@@ -64,7 +64,7 @@ We're writing about Game AI and creating a game.
 Then it's natural to use web technologies, building the game right here on this site.
 But which ones?
 
-> We'll use **everyday web dev tech** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
+> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
 >
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
 > and JavaScript-driven rendering or physics simulation.
@@ -219,7 +219,7 @@ Collectively they convert POSIX-like commands into JavaScript and execute it.
 An extended example:
 
 <Carousel
-  height={180}
+  height={220}
   pagination={{ clickable: true }}
   items={[
     <>
@@ -232,14 +232,16 @@ An extended example:
         Clicking disable <Icon icon="cross-circle" small inline />,
         you'll see <b>paused session</b> and the <i>interact</i> button returns.
       </p>
-    </>,
+    </>
+    ,
     <p>
       Press <i>interact</i> again, and this time click on the 2nd tab.
       You'll see the world from the videos, we suggest you have a play around.
-    </p>,
+    </p>
+    ,
     <p>
       Finally return to the 1st tab and scroll to the top.
-    </p>,
+    </p>
   ]}
 />
 
