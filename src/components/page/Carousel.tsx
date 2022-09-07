@@ -20,18 +20,19 @@ export default function Carousel(props: Props) {
     >
       <Swiper
         breakpoints={props.breakpoints}
-        lazy
-        modules={[Lazy, Navigation, Pagination, Zoom]}
-        navigation={{
-
+        lazy={props.lazy??{
+          checkInView: true,
+          enabled: true,
         }}
+        modules={[Lazy, Navigation, Pagination, Zoom]}
+        navigation
         pagination={props.pagination}
         spaceBetween={props.spaceBetween??20}
         style={{ height: props.height }}
         zoom
       >
         {isImages
-          ? items.map(item =>
+          ? items.map((item, i) =>
               <SwiperSlide key={item.src}>
                 <div
                   className={cx("slide-container", "swiper-zoom-container")}
@@ -73,6 +74,7 @@ interface Props {
   breakpoints?: SwiperOptions['breakpoints'];
   height: number;
   items: CarouselItems;
+  lazy?: SwiperOptions['lazy'];
   pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
 }
@@ -86,69 +88,69 @@ type ImageCarouselItem = { src: string; label: string; };
 type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
-   .slide-container {
-      width: fit-content;
-      position: relative;
-      user-select: none;
+  .slide-container {
+    width: fit-content;
+    position: relative;
+    user-select: none;
 
-      line-height: 2;
+    line-height: 2;
+    p {
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) {
+      line-height: 1.6;
       p {
-        margin-bottom: 16px;
-      }
-      @media (max-width: 600px) {
-        line-height: 1.6;
-        p {
-          margin-bottom: 8px;
-        }
+        margin-bottom: 8px;
       }
     }
-    .slide-centered {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+  }
+  .slide-centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
-      text-align: center;
-      height: 100%;
+    text-align: center;
+    height: 100%;
 
-      padding: 0 48px;
-    }
+    padding: 0 48px;
+  }
 
-    .swiper-slide.swiper-slide-zoomed {
-      z-index: 1;
-    }
+  .swiper-slide.swiper-slide-zoomed {
+    z-index: 1;
+  }
 
-    img {
-      border: medium solid #444;
-      border-radius: 8px;
-      background-color: #444;
-    }
-    .slide-label {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      padding: 8px;
+  img {
+    border: medium solid #444;
+    border-radius: 8px;
+    background-color: #444;
+  }
+  .slide-label {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    padding: 8px;
 
-      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-      font-size: 1rem;
-      color: white;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 8px;
-      text-align: center;
-    }
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1rem;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    text-align: center;
+  }
 
-    img.swiper-lazy + .slide-label {
-      display: none;
-    }
-    img.swiper-lazy {
-      visibility: hidden;
-    }
-    img.swiper-lazy.swiper-lazy-loaded + .slide-label {
-      display: block;
-    }
-    img.swiper-lazy.swiper-lazy-loaded {
-      visibility: visible;
-    }
+  img.swiper-lazy + .slide-label {
+    display: none;
+  }
+  img.swiper-lazy {
+    visibility: hidden;
+  }
+  img.swiper-lazy.swiper-lazy-loaded + .slide-label {
+    display: block;
+  }
+  img.swiper-lazy.swiper-lazy-loaded {
+    visibility: visible;
+  }
 `;
 
 function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
