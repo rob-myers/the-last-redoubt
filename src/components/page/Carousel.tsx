@@ -89,6 +89,7 @@ type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
   .slide-container {
+    min-width: 80px;
     width: fit-content;
     position: relative;
     user-select: none;
