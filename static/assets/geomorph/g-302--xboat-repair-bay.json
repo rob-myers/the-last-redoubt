@@ -5154,7 +5154,7 @@
   "items": [
     {
       "key": "302--hull",
-      "pngHref": "/debug/g-302--xboat-repair-bay.png",
+      "pngHref": "/assets/debug/g-302--xboat-repair-bay.png",
       "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667}
     },
     {

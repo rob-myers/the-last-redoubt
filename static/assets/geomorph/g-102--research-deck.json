@@ -6252,7 +6252,7 @@
   "items": [
     {
       "key": "102--hull",
-      "pngHref": "/debug/g-102--research-deck.png",
+      "pngHref": "/assets/debug/g-102--research-deck.png",
       "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212}
     },
     {

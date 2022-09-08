@@ -215,8 +215,8 @@ declare namespace Geomorph {
 
   export interface LayoutDef {
     /**
-     * Corresponds to basename of original PNG,  e.g.
-     * `g-301--bridge` where public/debug/g-301--bridge.png exists.
+     * Corresponds to basename of original PNG, e.g.
+     * `g-301--bridge` where /assets/debug/g-301--bridge.png exists.
      */
     key: LayoutKey;
     id: number;

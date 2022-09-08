@@ -1,8 +1,8 @@
 node_modules/
 .cache/
 public/*
-!public/debug
-!public/geomorph
+!public/assets/debug
+!public/assets/geomorph
 !public/graph
 !public/icon
 !public/npc

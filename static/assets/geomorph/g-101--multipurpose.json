@@ -14738,7 +14738,7 @@
   "items": [
     {
       "key": "101--hull",
-      "pngHref": "/debug/g-101--multipurpose.png",
+      "pngHref": "/assets/debug/g-101--multipurpose.png",
       "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212}
     },
     {

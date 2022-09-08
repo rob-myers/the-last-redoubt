@@ -266,7 +266,7 @@ export async function createLayout(def, lookup, triangleService) {
 
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
-      pngHref: i ? `/symbol/${sym.key}.png` : `/debug/${def.key}.png`,
+      pngHref: i ? `/symbol/${sym.key}.png` : `/assets/debug/${def.key}.png`,
       pngRect: sym.pngRect,
       transformArray: def.items[i].transform,
       transform: def.items[i].transform ? `matrix(${def.items[i].transform})` : undefined,
@@ -665,12 +665,12 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
 
 /** @param {Geomorph.LayoutKey} layoutKey */
 export function geomorphJsonPath(layoutKey) {
-  return `/geomorph/${layoutKey}.json`
+  return `/assets/geomorph/${layoutKey}.json`
 }
 
 /** @param {Geomorph.LayoutKey} layoutKey */
 export function geomorphPngPath(layoutKey, suffix = '') {
-  return `/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
+  return `/assets/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
 }
 
 export const labelMeta = {
