@@ -156,6 +156,7 @@ export interface FrontMatter {
   path: string;
   info: string;
   label: string;
+  icon: string;
   date: string;
   navGroup: null | number;
   prev: null | string;

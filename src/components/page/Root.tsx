@@ -36,6 +36,7 @@ export function wrapPageElement({
               path
               info
               label
+              icon
               date
               navGroup
               prev

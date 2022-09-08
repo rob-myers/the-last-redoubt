@@ -21,13 +21,18 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
       {groupedMetas.map((navItems, i) =>
         <ul key={i}>
           {navItems.map((meta) =>
-            <li key={meta.key} className={meta.key === frontmatter?.key ? 'current' : undefined} >
+            <li
+              key={meta.key}
+              className={meta.key === frontmatter?.key ? 'current' : undefined}
+            >
               <Link
                 to={meta.path}
                 title={meta.info}
               >
                 {meta.label}
               </Link>
+              
+              <span>{meta?.icon}</span>
             </li>
           )}
         </ul>
@@ -65,6 +70,9 @@ const rootCss = css`
       list-style: none;
       list-style-position: inside;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
     }
     li.current {
       a {
@@ -72,7 +80,7 @@ const rootCss = css`
       }
     }
     a {
-      padding: 10px 12px;
+      padding: 10px 0;
       width: 100%;
       color: #ccc;
       &:hover {
