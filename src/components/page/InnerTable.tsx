@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default function InnerTable(props: React.PropsWithChildren<{}>) {
+export default function InnerTable(props: React.PropsWithChildren<{
+  style?: React.CSSProperties;
+}>) {
 
   const rows = React.Children.toArray(props.children).map(row => (
     React.Children.toArray((row as any)?.props?.children)
@@ -11,7 +13,8 @@ export default function InnerTable(props: React.PropsWithChildren<{}>) {
       style={{
         fontSize: '0.95rem',
         padding: 8,
-        marginBottom: 8
+        marginBottom: 8,
+        ...props.style,
       }}
     >
       <tbody>
