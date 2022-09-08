@@ -3,11 +3,11 @@ node_modules/
 public/*
 !public/assets/debug
 !public/assets/geomorph
-!public/graph
-!public/icon
-!public/npc
-!public/pics
-!public/symbol
+!public/assets/graph
+!public/assets/icon
+!public/assets/npc
+!public/assets/pics
+!public/assets/symbol
 !public/favicon.ico
 !public/*.css.map
 tsconfig.tsbuildinfo

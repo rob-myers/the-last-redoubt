@@ -1,7 +1,7 @@
 /**
- * - Parse every svg symbol in /public/symbol
- * - Write as a single json file /public/symbol/svg.json
- * - Update any changed /geomorph/{geomorph}.json
+ * - Parse every svg symbol in /static/assets/symbol
+ * - Write as a single json file /static/assets/symbol/svg.json
+ * - Update any changed /static/assets/geomorph/{geomorph}.json
  *
  * Usage:
  * - `yarn svg-meta`
@@ -21,9 +21,9 @@ import { triangle } from '../projects/service/triangle';
 import { writeAsJson } from '../projects/service/file';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 
-const publicDir = path.resolve(__dirname, '../../public');
-const symbolsDir = path.resolve(publicDir, 'symbol');
-const geomorphsDir = path.resolve(publicDir, 'geomorph');
+const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
+const symbolsDir = path.resolve(staticAssetsDir, 'symbol');
+const geomorphsDir = path.resolve(staticAssetsDir, 'geomorph');
 const svgFilenames = fs.readdirSync(symbolsDir).filter(x => x.endsWith('.svg'));
 const svgJsonFilename = path.resolve(symbolsDir, `svg.json`)
 

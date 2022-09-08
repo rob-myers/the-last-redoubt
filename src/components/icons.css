@@ -4,33 +4,33 @@
 }
 
 .icon.hash-icon::after {
-  background-image: url('/icon/hash-icon.svg');
+  background-image: url('/assets/icon/hash-icon.svg');
 }
 
 .icon.ext-link::after {
-  background-image: url('/icon/ext-link.svg');
+  background-image: url('/assets/icon/ext-link.svg');
 }
 
 .icon.info-icon::after {
-  background-image: url('/icon/info-icon.svg');
+  background-image: url('/assets/icon/info-icon.svg');
 }
 
 .icon.light-bulb::after {
-  background-image: url('/icon/light-bulb.svg');
+  background-image: url('/assets/icon/light-bulb.svg');
 }
 
 .icon.refresh::after {
-  background-image: url('/icon/refresh.svg');
+  background-image: url('/assets/icon/refresh.svg');
 }
 
 .icon.compress::after {
-  background-image: url('/icon/compress.svg');
+  background-image: url('/assets/icon/compress.svg');
 }
 
 .icon.expand::after {
-  background-image: url('/icon/expand.svg');
+  background-image: url('/assets/icon/expand.svg');
 }
 
 .icon.cross-circle::after {
-  background-image: url('/icon/cross-circle.svg');
+  background-image: url('/assets/icon/cross-circle.svg');
 }

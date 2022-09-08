@@ -14,7 +14,7 @@ import { createLayout, deserializeSvgJson } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
 import * as defaults from "../example/defaults";
-import svgJson from '../../../public/symbol/svg.json'; // CodeSandbox?
+import svgJson from '../../../static/assets/symbol/svg.json'; // CodeSandbox?
 import PanZoom from '../panzoom/PanZoom';
 
 const scale = 2;

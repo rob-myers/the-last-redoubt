@@ -266,7 +266,8 @@ export async function createLayout(def, lookup, triangleService) {
 
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
-      pngHref: i ? `/symbol/${sym.key}.png` : `/assets/debug/${def.key}.png`,
+      // `/assets/...` is a live URL, and also a dev env path if inside `/static`
+      pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${def.key}.png`,
       pngRect: sym.pngRect,
       transformArray: def.items[i].transform,
       transform: def.items[i].transform ? `matrix(${def.items[i].transform})` : undefined,
@@ -663,12 +664,18 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
   };
 }
 
-/** @param {Geomorph.LayoutKey} layoutKey */
+/**
+ * @param {Geomorph.LayoutKey} layoutKey
+ * @returns Live path to asset
+ */
 export function geomorphJsonPath(layoutKey) {
   return `/assets/geomorph/${layoutKey}.json`
 }
 
-/** @param {Geomorph.LayoutKey} layoutKey */
+/**
+ * @param {Geomorph.LayoutKey} layoutKey
+ * @returns Live path to asset
+ */
 export function geomorphPngPath(layoutKey, suffix = '') {
   return `/assets/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
 }

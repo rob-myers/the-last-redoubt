@@ -236,7 +236,7 @@ const rootCss = css`
       position: absolute;
     }
     div.debug-door-arrow {
-      background-image: url('/icon/circle-right.svg');
+      background-image: url('/assets/icon/circle-right.svg');
       pointer-events: none;
       &.interactive {
         pointer-events: all;
@@ -244,7 +244,7 @@ const rootCss = css`
       }
     }
     div.debug-label-info {
-      background-image: url('/icon/info-icon.svg');
+      background-image: url('/assets/icon/info-icon.svg');
       cursor: pointer;
     }
 

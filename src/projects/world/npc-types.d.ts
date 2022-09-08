@@ -30,7 +30,7 @@ declare namespace NPC {
   export interface NPC {
     /** User specified e.g. `andros` */
     key: string;
-    /** Refers to `/public/npc/${jsonKey}.json` */
+    /** Refers to `/assets/npc/${jsonKey}.json` */
     jsonKey: NPC.NpcJsonKey;
     /** Epoch ms when spawned */
     epochMs: number;

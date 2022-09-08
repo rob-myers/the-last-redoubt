@@ -23,8 +23,8 @@ if (!layoutDef) {
   process.exit(1);
 }
 
-const publicDir = path.resolve(__dirname, '../../public');
-const outputDir = path.resolve(publicDir, 'geomorph');
+const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
+const outputDir = path.resolve(staticAssetsDir, 'geomorph');
 const outputPath =  path.resolve(outputDir, `${layoutDef.key}.shade.png`);
 
 const geomorphJsonPath = path.resolve(outputDir, `${layoutDef.key}.json`);

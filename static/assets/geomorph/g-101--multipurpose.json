@@ -14743,285 +14743,285 @@
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639}
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 360, 0],
       "transform": "matrix(1,0,0,1,360,0)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 600, 0],
       "transform": "matrix(1,0,0,1,600,0)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [1, 0, 0, 1, 840, 0],
       "transform": "matrix(1,0,0,1,840,0)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 960, 0],
       "transform": "matrix(1,0,0,1,960,0)"
     },
     {
       "key": "machinery--158--1.8x3.6",
-      "pngHref": "/symbol/machinery--158--1.8x3.6.png",
+      "pngHref": "/assets/symbol/machinery--158--1.8x3.6.png",
       "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
       "transformArray": [0, -1, 1, 0, 0, 245],
       "transform": "matrix(0,-1,1,0,0,245)"
     },
     {
       "key": "stateroom--020--2x3",
-      "pngHref": "/symbol/stateroom--020--2x3.png",
+      "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, 1, 0, 360, 120],
       "transform": "matrix(0,1,1,0,360,120)"
     },
     {
       "key": "fresher--020--2x2",
-      "pngHref": "/symbol/fresher--020--2x2.png",
+      "pngHref": "/assets/symbol/fresher--020--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, 1, 0, 540, 120],
       "transform": "matrix(0,1,1,0,540,120)"
     },
     {
       "key": "lounge--009--2x3",
-      "pngHref": "/symbol/lounge--009--2x3.png",
+      "pngHref": "/assets/symbol/lounge--009--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [-1, 0, 0, -1, 840, 240],
       "transform": "matrix(-1,0,0,-1,840,240)"
     },
     {
       "key": "machinery--155--1.8x3.6",
-      "pngHref": "/symbol/machinery--155--1.8x3.6.png",
+      "pngHref": "/assets/symbol/machinery--155--1.8x3.6.png",
       "pngRect": {"x": 10, "y": -10, "width": 520, "height": 1100},
       "transformArray": [0, -1, 1, 0, 972, 236],
       "transform": "matrix(0,-1,1,0,972,236)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, -1, 1, 0, 0, 360],
       "transform": "matrix(0,-1,1,0,0,360)"
     },
     {
       "key": "stateroom--018--2x3",
-      "pngHref": "/symbol/stateroom--018--2x3.png",
+      "pngHref": "/assets/symbol/stateroom--018--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 360, 240],
       "transform": "matrix(1,0,0,1,360,240)"
     },
     {
       "key": "stateroom--019--2x3",
-      "pngHref": "/symbol/stateroom--019--2x3.png",
+      "pngHref": "/assets/symbol/stateroom--019--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 633, "height": 920},
       "transformArray": [-1, 0, 0, -1, 840, 420],
       "transform": "matrix(-1,0,0,-1,840,420)"
     },
     {
       "key": "empty-room--013--2x3",
-      "pngHref": "/symbol/empty-room--013--2x3.png",
+      "pngHref": "/assets/symbol/empty-room--013--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, -1, 0, 180, 360],
       "transform": "matrix(0,1,-1,0,180,360)"
     },
     {
       "key": "medical--008--2x3",
-      "pngHref": "/symbol/medical--008--2x3.png",
+      "pngHref": "/assets/symbol/medical--008--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, -1, -1, 0, 360, 540],
       "transform": "matrix(0,-1,-1,0,360,540)"
     },
     {
       "key": "stateroom--020--2x3",
-      "pngHref": "/symbol/stateroom--020--2x3.png",
+      "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, 1, 0, 360, 540],
       "transform": "matrix(0,-1,1,0,360,540)"
     },
     {
       "key": "stateroom--020--2x3",
-      "pngHref": "/symbol/stateroom--020--2x3.png",
+      "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, -1, 0, 840, 540],
       "transform": "matrix(0,-1,-1,0,840,540)"
     },
     {
       "key": "fresher--025--2x3",
-      "pngHref": "/symbol/fresher--025--2x3.png",
+      "pngHref": "/assets/symbol/fresher--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, -1, 1, 0, 840, 540],
       "transform": "matrix(0,-1,1,0,840,540)"
     },
     {
       "key": "office--023--2x3",
-      "pngHref": "/symbol/office--023--2x3.png",
+      "pngHref": "/assets/symbol/office--023--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 934},
       "transformArray": [0, -1, -1, 0, 1200, 480],
       "transform": "matrix(0,-1,-1,0,1200,480)"
     },
     {
       "key": "empty-room--039--3x4",
-      "pngHref": "/symbol/empty-room--039--3x4.png",
+      "pngHref": "/assets/symbol/empty-room--039--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 180, 480],
       "transform": "matrix(-1,0,0,1,180,480)"
     },
     {
       "key": "lifeboat--small-craft",
-      "pngHref": "/symbol/lifeboat--small-craft.png",
+      "pngHref": "/assets/symbol/lifeboat--small-craft.png",
       "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
       "transformArray": [1, 0, 0, 1, 0, 488],
       "transform": "matrix(1,0,0,1,0,488)"
     },
     {
       "key": "medical--007--2x3",
-      "pngHref": "/symbol/medical--007--2x3.png",
+      "pngHref": "/assets/symbol/medical--007--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, 1, -1, 0, 360, 660],
       "transform": "matrix(0,1,-1,0,360,660)"
     },
     {
       "key": "office--026--2x3",
-      "pngHref": "/symbol/office--026--2x3.png",
+      "pngHref": "/assets/symbol/office--026--2x3.png",
       "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
       "transformArray": [0, 1, -1, 0, 540, 660],
       "transform": "matrix(0,1,-1,0,540,660)"
     },
     {
       "key": "office--026--2x3",
-      "pngHref": "/symbol/office--026--2x3.png",
+      "pngHref": "/assets/symbol/office--026--2x3.png",
       "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
       "transformArray": [0, 1, 1, 0, 660, 660],
       "transform": "matrix(0,1,1,0,660,660)"
     },
     {
       "key": "office--020--2x3",
-      "pngHref": "/symbol/office--020--2x3.png",
+      "pngHref": "/assets/symbol/office--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 360, 780],
       "transform": "matrix(1,0,0,1,360,780)"
     },
     {
       "key": "office--020--2x3",
-      "pngHref": "/symbol/office--020--2x3.png",
+      "pngHref": "/assets/symbol/office--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [-1, 0, 0, 1, 840, 780],
       "transform": "matrix(-1,0,0,1,840,780)"
     },
     {
       "key": "empty-room--013--2x3",
-      "pngHref": "/symbol/empty-room--013--2x3.png",
+      "pngHref": "/assets/symbol/empty-room--013--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, -1, 0, 180, 840],
       "transform": "matrix(0,-1,-1,0,180,840)"
     },
     {
       "key": "fresher--025--2x3",
-      "pngHref": "/symbol/fresher--025--2x3.png",
+      "pngHref": "/assets/symbol/fresher--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, 1, 1, 0, 840, 660],
       "transform": "matrix(0,1,1,0,840,660)"
     },
     {
       "key": "office--061--3x4",
-      "pngHref": "/symbol/office--061--3x4.png",
+      "pngHref": "/assets/symbol/office--061--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
       "transformArray": [1, 0, 0, 1, 1020, 480],
       "transform": "matrix(1,0,0,1,1020,480)"
     },
     {
       "key": "office--023--2x3",
-      "pngHref": "/symbol/office--023--2x3.png",
+      "pngHref": "/assets/symbol/office--023--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 934},
       "transformArray": [0, 1, -1, 0, 1200, 720],
       "transform": "matrix(0,1,-1,0,1200,720)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, 1, 0, 1140, 840],
       "transform": "matrix(0,1,1,0,1140,840)"
     },
     {
       "key": "machinery--091--1.6x1.8",
-      "pngHref": "/symbol/machinery--091--1.6x1.8.png",
+      "pngHref": "/assets/symbol/machinery--091--1.6x1.8.png",
       "pngRect": {"x": -10, "y": -10, "width": 500, "height": 559},
       "transformArray": [1, 0, 0, 1, 550, 960],
       "transform": "matrix(1,0,0,1,550,960)"
     },
     {
       "key": "office--025--2x3",
-      "pngHref": "/symbol/office--025--2x3.png",
+      "pngHref": "/assets/symbol/office--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, 1, 0, 360, 960],
       "transform": "matrix(0,1,1,0,360,960)"
     },
     {
       "key": "machinery--156--1.8x3.6",
-      "pngHref": "/symbol/machinery--156--1.8x3.6.png",
+      "pngHref": "/assets/symbol/machinery--156--1.8x3.6.png",
       "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
       "transformArray": [0, -1, 1, 0, 0, 1074],
       "transform": "matrix(0,-1,1,0,0,1074)"
     },
     {
       "key": "office--025--2x3",
-      "pngHref": "/symbol/office--025--2x3.png",
+      "pngHref": "/assets/symbol/office--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, -1, 0, 840, 960],
       "transform": "matrix(0,1,-1,0,840,960)"
     },
     {
       "key": "machinery--357--2.2x4",
-      "pngHref": "/symbol/machinery--357--2.2x4.png",
+      "pngHref": "/assets/symbol/machinery--357--2.2x4.png",
       "pngRect": {"x": -10, "y": -72.5, "width": 1220, "height": 683},
       "transformArray": [1, 0, 0, 1, 960, 960],
       "transform": "matrix(1,0,0,1,960,960)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 0, 1080],
       "transform": "matrix(1,0,0,1,0,1080)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, 1, 360, 1140],
       "transform": "matrix(-1,0,0,1,360,1140)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 360, 1080],
       "transform": "matrix(1,0,0,1,360,1080)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 600, 1080],
       "transform": "matrix(1,0,0,1,600,1080)"
     },
     {
       "key": "fuel--010--2x4",
-      "pngHref": "/symbol/fuel--010--2x4.png",
+      "pngHref": "/assets/symbol/fuel--010--2x4.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 960, 1080],
       "transform": "matrix(1,0,0,1,960,1080)"

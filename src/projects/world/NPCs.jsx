@@ -578,7 +578,7 @@ export default function NPCs(props) {
       {Object.keys(npcJson).map((key) => (
         <img
           key={key}
-          src={`/npc/${key}--${'walk'}.png`}
+          src={`/assets/npc/${key}--${'walk'}.png`}
           style={{ display: 'none' }}
         />
       ))}

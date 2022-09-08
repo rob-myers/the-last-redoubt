@@ -15,17 +15,17 @@ import { mapValues } from '../projects/service/generic';
 import { parseNpc, renderNpcSpriteSheets } from '../projects/service/npc';
 
 const [,, npcName, ...animNames] = process.argv;
-const npcInputDir = 'public/npc'
+const npcInputDir = 'static/assets/npc'
 const npcSvgFilepath = path.resolve(npcInputDir, npcName + '.svg');
 if (!npcName || !fs.existsSync(npcSvgFilepath)) {
   error(`error: usage: yarn render-npc {npc-name} {...anim-name-0} ... where
-    - media/npc/{npc-name}.svg exists
+    - static/assets/npc/{npc-name}.svg exists
   `);
   process.exit(1);
 }
 
-const publicDir = path.resolve(__dirname, '../../public');
-const npcOutputDir = path.resolve(publicDir, 'npc');
+const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
+const npcOutputDir = path.resolve(staticAssetsDir, 'npc');
 const svgContents = fs.readFileSync(npcSvgFilepath).toString();
 
 const zoom = 2;

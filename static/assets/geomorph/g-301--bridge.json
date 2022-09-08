@@ -9887,117 +9887,117 @@
     },
     {
       "key": "weaponry--013--1x2",
-      "pngHref": "/symbol/weaponry--013--1x2.png",
+      "pngHref": "/assets/symbol/weaponry--013--1x2.png",
       "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
       "transformArray": [-1, 0, 0, 1, 360, -60],
       "transform": "matrix(-1,0,0,1,360,-60)"
     },
     {
       "key": "weaponry--013--1x2",
-      "pngHref": "/symbol/weaponry--013--1x2.png",
+      "pngHref": "/assets/symbol/weaponry--013--1x2.png",
       "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
       "transformArray": [1, 0, 0, 1, 840, -60],
       "transform": "matrix(1,0,0,1,840,-60)"
     },
     {
       "key": "stateroom--036--2x4",
-      "pngHref": "/symbol/stateroom--036--2x4.png",
+      "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220}
     },
     {
       "key": "office--001--2x2",
-      "pngHref": "/symbol/office--001--2x2.png",
+      "pngHref": "/assets/symbol/office--001--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [-1, 0, 0, 1, 240, 120],
       "transform": "matrix(-1,0,0,1,240,120)"
     },
     {
       "key": "bridge--042--8x9",
-      "pngHref": "/symbol/bridge--042--8x9.png",
+      "pngHref": "/assets/symbol/bridge--042--8x9.png",
       "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
       "transformArray": [1, 0, 0, 1, 360, 60],
       "transform": "matrix(1,0,0,1,360,60)"
     },
     {
       "key": "office--001--2x2",
-      "pngHref": "/symbol/office--001--2x2.png",
+      "pngHref": "/assets/symbol/office--001--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, 1, 960, 120],
       "transform": "matrix(1,0,0,1,960,120)"
     },
     {
       "key": "stateroom--036--2x4",
-      "pngHref": "/symbol/stateroom--036--2x4.png",
+      "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 0],
       "transform": "matrix(-1,0,0,1,1200,0)"
     },
     {
       "key": "stateroom--014--2x2",
-      "pngHref": "/symbol/stateroom--014--2x2.png",
+      "pngHref": "/assets/symbol/stateroom--014--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, -1, 0, 480],
       "transform": "matrix(1,0,0,-1,0,480)"
     },
     {
       "key": "stateroom--014--2x2",
-      "pngHref": "/symbol/stateroom--014--2x2.png",
+      "pngHref": "/assets/symbol/stateroom--014--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, -1, 120, 480],
       "transform": "matrix(1,0,0,-1,120,480)"
     },
     {
       "key": "stateroom--036--2x4",
-      "pngHref": "/symbol/stateroom--036--2x4.png",
+      "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [0, -1, 1, 0, 0, 600],
       "transform": "matrix(0,-1,1,0,0,600)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, -1, 1, 0, 0, 360],
       "transform": "matrix(0,-1,1,0,0,360)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, 1, 0, 1140, 240],
       "transform": "matrix(0,1,1,0,1140,240)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, 1, 360, 540],
       "transform": "matrix(-1,0,0,1,360,540)"
     },
     {
       "key": "iris-valves--005--1x1",
-      "pngHref": "/symbol/iris-valves--005--1x1.png",
+      "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, 1, 960, 540],
       "transform": "matrix(-1,0,0,1,960,540)"
     },
     {
       "key": "console--031--1x1.2",
-      "pngHref": "/symbol/console--031--1x1.2.png",
+      "pngHref": "/assets/symbol/console--031--1x1.2.png",
       "pngRect": {"x": -4, "y": -4, "width": 377, "height": 307},
       "transformArray": [-1, 0, 0, 1, 360, 60],
       "transform": "matrix(-1,0,0,1,360,60)"
     },
     {
       "key": "console--031--1x1.2",
-      "pngHref": "/symbol/console--031--1x1.2.png",
+      "pngHref": "/assets/symbol/console--031--1x1.2.png",
       "pngRect": {"x": -4, "y": -4, "width": 377, "height": 307},
       "transformArray": [1, 0, 0, 1, 840, 60],
       "transform": "matrix(1,0,0,1,840,60)"
     },
     {
       "key": "misc-stellar-cartography--023--4x4",
-      "pngHref": "/symbol/misc-stellar-cartography--023--4x4.png",
+      "pngHref": "/assets/symbol/misc-stellar-cartography--023--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 360],
       "transform": "matrix(-1,0,0,1,1200,360)"

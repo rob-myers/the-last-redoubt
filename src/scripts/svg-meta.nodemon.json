@@ -1,7 +1,7 @@
 {
   "ext": "svg",
   "watch": [
-    "public/symbol/",
+    "static/assets/symbol/",
     "src/scripts/svg-meta.js"
   ]
 }

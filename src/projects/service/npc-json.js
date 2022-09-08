@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { cssName } from './const';
 
-import firstNpcJson from '../../../public/npc/first-npc.json'
+import firstNpcJson from '../../../static/assets/npc/first-npc.json'
 
 /** @type {Record<NPC.NpcJsonKey, NPC.NpcJson>} */
 export const npcJson = {
@@ -51,7 +51,7 @@ ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
     height: ${animMeta.aabb.height}px;
     left: ${-animMeta.aabb.width * 0.5}px;
     top: ${-animMeta.aabb.height * 0.5}px;
-    background: url('/npc/first-npc--${animName}.png'); 
+    background: url('/assets/npc/first-npc--${animName}.png'); 
   }
 `).join('\n\n')}
 
