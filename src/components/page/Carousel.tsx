@@ -57,7 +57,7 @@ export default function Carousel(props: Props) {
           : items.map((item, i) =>
               <SwiperSlide key={i}>
                 <div
-                  className={cx("slide-container", "slide-centered")}
+                  className={cx("slide-container", "slide-plain")}
                 >
                   {item}
                 </div>
@@ -89,7 +89,7 @@ type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
   .slide-container {
-    min-width: 80px;
+    min-width: 120px;
     width: fit-content;
     position: relative;
     user-select: none;
@@ -105,7 +105,8 @@ const rootCss = css`
       }
     }
   }
-  .slide-centered {
+  .slide-plain {
+    border: 1px solid #ccc;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -113,6 +114,7 @@ const rootCss = css`
 
     text-align: center;
     height: 100%;
+    width: 100%;
 
     padding: 0 48px;
   }

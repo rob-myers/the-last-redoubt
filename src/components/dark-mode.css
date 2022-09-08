@@ -49,7 +49,7 @@ body.dark-mode div.next-article a {
 body.dark-mode aside {
   background-color: #222;
 }
-body.dark-mode aside, body.dark-mode figure.video, body.dark-mode figure.carousel, body.dark-mode figure.tabs {
+body.dark-mode aside, body.dark-mode figure.video, body.dark-mode figure.carousel .slide-plain, body.dark-mode figure.tabs {
   border-color: #444;
 }
 
