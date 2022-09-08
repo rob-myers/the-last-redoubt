@@ -2,6 +2,10 @@
 
 ## In progress
 
+- ✅ Fix 404
+
+- ✅ Fix homepage Carousel load
+
 - ✅ Create separate homepage after all
   - has image Carousel with nice pics
   - has changelog

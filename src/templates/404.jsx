@@ -1,22 +1,18 @@
 import React from 'react';
 import { css } from '@emotion/css';
-import { useLocation } from '@reach/router';
 
 /**
  * - This file should be JSX, because `path.resolve`d by gatsby-node.js.
  * - Didn't work when put inside src/components/page
  */
 export default function NotFoundPage() {
-
-  const location = useLocation();  
-
   return (
     <main className={rootCss}>
       <article>
         <p>
-          Status 404: requested path not found:
+          Status <b>404</b>: requested path not found:
           <blockquote>
-            {location.pathname}
+            {typeof window === 'undefined' ? '' : window.location.pathname}
           </blockquote>
         </p>
       </article>
@@ -30,9 +26,6 @@ const rootCss = css`
     margin: 32px 8px;
   }
 
-  p {
-    font-weight: 600;
-  }
   blockquote {
     animation: fadeIn 1s;
     font-weight: 300;
