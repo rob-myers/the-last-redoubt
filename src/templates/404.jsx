@@ -1,18 +1,22 @@
 import React from 'react';
 import { css } from '@emotion/css';
+import useSiteStore from 'store/site.store';
 
 /**
  * - This file should be JSX, because `path.resolve`d by gatsby-node.js.
  * - Didn't work when put inside src/components/page
  */
 export default function NotFoundPage() {
+
+  const browserLoad = useSiteStore(x => x.browserLoad);
+
   return (
     <main className={rootCss}>
       <article>
         <p>
           Status <b>404</b>: requested path not found:
           <blockquote>
-            {typeof window === 'undefined' ? '' : window.location.pathname}
+            {browserLoad ? window.location.pathname : ''}
           </blockquote>
         </p>
       </article>
@@ -27,7 +31,7 @@ const rootCss = css`
   }
 
   blockquote {
-    animation: fadeIn 1s;
+    animation: fadeIn 300ms;
     font-weight: 300;
   }
 

@@ -4,7 +4,7 @@ import useSiteStore from 'store/site.store';
 
 export default function Video({ videoKey }: Props) {
 
-  const loadVideo = useSiteStore(x => x.loadVideo);
+  const loadVideo = useSiteStore(x => x.browserLoad);
 
   return (
     <figure

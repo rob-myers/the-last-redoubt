@@ -16,7 +16,7 @@ export type State = {
   groupedMetas: FrontMatter[][];
   
   darkMode: boolean;
-  loadVideo: boolean;
+  browserLoad: boolean;
   navOpen: boolean;
   /**
    * Components occurring in Tabs.
@@ -43,7 +43,7 @@ const useStore = create<State>()(devtools((set, get) => ({
   groupedMetas: [],
 
   navOpen: false,
-  loadVideo: false,
+  browserLoad: false,
   darkMode: false,
   component: {},
   tabs: {},
@@ -111,7 +111,7 @@ const useStore = create<State>()(devtools((set, get) => ({
         }
       }, { once: true });
 
-      set(() => ({ loadVideo: true }), undefined, 'load-video');
+      set(() => ({ browserLoad: true }), undefined, 'browser-load');
     },
 
     removeComponents(tabsKey, ...componentKeys) {
