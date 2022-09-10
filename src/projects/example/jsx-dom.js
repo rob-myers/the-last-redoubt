@@ -61,3 +61,31 @@ export function svgNavGraph(root, graph) {
   );
 
 }
+
+/**
+ * @param {SVGElement} root
+ * @param {import('../graph/floor-graph').floorGraphClass} graph 
+ */
+export function svgStringPull(root, graph) {
+  root.append(
+    // @ts-ignore
+    ...graph.nodesArray.flatMap(({ id, centroid, neighbours }, _, nodes) =>
+      neighbours.map(nid => (
+        <path
+          key={`${id}-${nid}`}
+          className="edge"
+          d={`M ${centroid.x}, ${centroid.y} L ${nodes[nid].centroid.x},${nodes[nid].centroid.y}`}
+        />
+      ))
+    ),
+    // @ts-ignore
+    ...graph.nodesArray.map(({ vertexIds }, nodeId) =>
+      <polygon
+        key={nodeId}
+        className="navtri"
+        points={`${vertexIds.map(id => graph.vectors[id])}`}
+      />
+    ),
+  );
+
+}

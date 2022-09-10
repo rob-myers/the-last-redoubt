@@ -4,7 +4,7 @@ import { css } from "@emotion/css";
 import * as defaults from "./defaults";
 import { geomorphPngPath } from "../service/geomorph";
 import { Rect } from "../geom";
-import PanZoom from "../panzoom/PanZoom";
+import SvgPanZoom from "../panzoom/SvgPanZoom";
 import useGeomorphData from "../geomorph/use-geomorph-data";
 import usePathfinding from "../geomorph/use-pathfinding";
 import { svgNavGraph } from "./jsx-dom";
@@ -31,7 +31,7 @@ export default function SvgNavGraph(props) {
   }, [props.disabled, pf]);
 
   return (
-    <PanZoom
+    <SvgPanZoom
       gridBounds={defaults.gridBounds}
       initViewBox={initViewBox}
       maxZoom={6}
@@ -42,7 +42,7 @@ export default function SvgNavGraph(props) {
 
       <g ref={groupRef} />
 
-    </PanZoom>
+    </SvgPanZoom>
   );
 }
 

@@ -4,7 +4,7 @@ import { Vect } from '../geom';
 import { getSvgPos, getSvgMid, canTouchDevice, projectSvgEvt, isSvgEvent } from '../service/dom';
 
 /** @param {React.PropsWithChildren<Props>} props */
-export default function PanZoom(props) {
+export default function SvgPanZoom(props) {
 
   const [state] = React.useState(() => {
     const viewBox = props.initViewBox.clone();
