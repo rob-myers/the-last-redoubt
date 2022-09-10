@@ -285,8 +285,8 @@ const articleCss = css`
 
     /** 1st tag should be date */
     > span:first-child {
-      min-width: 180px;
       border-color: #aaa;
+      padding: 2px 16px;
       text-align: center;
     }
   }
