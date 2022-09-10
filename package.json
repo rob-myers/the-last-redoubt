@@ -17,6 +17,8 @@
     "typecheck": "tsc --noEmit --incremental true",
     "types": "yarn typecheck",
     "postinstall": "patch-package",
+    "minify-pngs": "yarn ts-script src/scripts/minify-pngs",
+    "rename-pngs": "yarn ts-script src/scripts/rename-pngs",
     "render-gm-shade": "yarn ts-script src/scripts/render-gm-shade",
     "render-layout": "yarn ts-script src/scripts/render-layout",
     "render-npc": "yarn ts-script src/scripts/render-npc",

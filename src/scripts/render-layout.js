@@ -4,7 +4,7 @@
  *   - `yarn render-layout 301 --debug`
  *   - `yarn render-layout 101 --debug --scale=4`
  *   - `yarn render-layout 301 --scale=1 --suffix=x1`
- * - Outputs a PNG and JSON in public/geomorph.
+ * - Outputs a PNG and JSON in static/assets/geomorph.
  * - Debug option creates a .debug.png with all features.
  */
 /// <reference path="./deps.d.ts"/>

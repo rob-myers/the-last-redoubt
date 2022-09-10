@@ -2,15 +2,16 @@
 
 ## In progress
 
-- ✅ Fix 404
+- Page stubs
+  - 🚧 Add some content to /intro/setup
+  - /info/sketch -> /about
+  - Add some content to /about
+  - Add page /intro/js-cli
+  - Add page /intro/ai-cli
+  - Add some content to /intro/js-cli
+  - Add some content to /intro/ai-cli
 
-- ✅ Fix homepage Carousel load
-
-- ✅ Create separate homepage after all
-  - has image Carousel with nice pics
-  - has changelog
-
-- ✅ Carousel: zoomed slide should be above
+- Consider not using invert(1) for dark-mode
 
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
@@ -39,8 +40,6 @@
   - `goLoop: walk: run: TypeError: anim.translate.addEventListener is not a function`
 
 - Clarify strategy: if lights intersect use "light reverse" (?)
-
-- Move assets from public/* to /public/assets/*
 
 - ❌ BUG with history after following ext link?
 
@@ -147,6 +146,15 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Move assets from public/* to /static/assets/*
+- ✅ Fix all scripts
+- ✅ Fix 404
+- ✅ Fix homepage Carousel load
+- ✅ Create separate homepage after all
+  - has image Carousel with nice pics
+  - has changelog
+- ✅ Carousel: zoomed slide should be above
 
 - Move light shade into shade PNG + `mix-blend-mode`
   - ✅ Draw a red geom.lightPolygon
