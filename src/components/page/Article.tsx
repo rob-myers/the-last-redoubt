@@ -282,6 +282,13 @@ const articleCss = css`
       border: 2px solid rgba(0, 0, 0, 0.1);
       background-color: #000;
     }
+
+    /** 1st tag should be date */
+    > span:first-child {
+      min-width: 180px;
+      border-color: #aaa;
+      text-align: center;
+    }
   }
   h3 {
     font-size: 1.8rem;
@@ -535,7 +542,7 @@ const articleComponents = (
     );
   },
 
-  // Occurs once in each article
+  /** Occurs once in each article */
   h2({ children }: any) {
     return <>
       <h2>
