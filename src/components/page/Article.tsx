@@ -375,7 +375,7 @@ const articleCss = css`
   }
 
   table {
-    padding: 16px;
+    padding: 8px;
     width: 100%;
     margin: 0 0 40px 0;
     border: 0 solid #ccc;
@@ -401,7 +401,7 @@ const articleCss = css`
         padding: 8px;
       }
     }
-    table {
+    /* table {
       border-width: 2px;
       @media(max-width: 600px) {
         border-width: 1px;
@@ -412,7 +412,7 @@ const articleCss = css`
           padding: 4px;
         }
       }
-    }
+    } */
   }
 
   ul, ol {
