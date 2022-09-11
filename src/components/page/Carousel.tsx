@@ -34,7 +34,7 @@ export default function Carousel(props: Props) {
         {isImages
           ? items.map((item, i) =>
               <SwiperSlide key={item.src}>
-                <figure className="slide-container swiper-zoom-container">
+                <div className="slide-container swiper-zoom-container">
                   <img
                     className="swiper-lazy"
                     data-src={`${props.baseSrc??''}${item.src}`}
@@ -42,12 +42,12 @@ export default function Carousel(props: Props) {
                     title={item.label}
                   />
                   {item.label && (
-                    <figcaption className="slide-label">
+                    <div className="slide-label">
                       {item.label}
-                    </figcaption>
+                    </div>
                   )}
                   <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
-                </figure>
+                </div>
               </SwiperSlide>
             )
           : items.map((item, i) =>
