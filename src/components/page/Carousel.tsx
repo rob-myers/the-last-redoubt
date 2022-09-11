@@ -5,8 +5,8 @@ import type { SwiperOptions } from "swiper";
 import { Navigation, Zoom, Lazy, Pagination } from "swiper";
 
 /**
- * props.items should be either:
- * - a list of images definitions, or
+ * props.items should be one of:
+ * - a list of images definitions (with optional short labels)
  * - a list arbitrary `ReactNode`s
  */
 export default function Carousel(props: Props) {
@@ -34,24 +34,20 @@ export default function Carousel(props: Props) {
         {isImages
           ? items.map((item, i) =>
               <SwiperSlide key={item.src}>
-                <div
-                  className={cx("slide-container", "swiper-zoom-container")}
-                >
-                <img
-                  className="swiper-lazy"
-                  data-src={`${props.baseSrc??''}${item.src}`}
-                  height={props.height}
-                  title={item.label}
-                />
-                {item.label && (
-                  <div className="slide-label">
-                    {item.label}
-                  </div>
-                )}
-                <div
-                  className="swiper-lazy-preloader swiper-lazy-preloader-black"
-                />
-                </div>
+                <figure className="slide-container swiper-zoom-container">
+                  <img
+                    className="swiper-lazy"
+                    data-src={`${props.baseSrc??''}${item.src}`}
+                    height={props.height}
+                    title={item.label}
+                  />
+                  {item.label && (
+                    <figcaption className="slide-label">
+                      {item.label}
+                    </figcaption>
+                  )}
+                  <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
+                </figure>
               </SwiperSlide>
             )
           : items.map((item, i) =>
@@ -89,6 +85,7 @@ type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
   .slide-container {
+    /* width: fit-content; */
     position: relative;
     user-select: none;
 
@@ -128,15 +125,14 @@ const rootCss = css`
   }
   .slide-label {
     position: absolute;
-    top: 0;
-    width: 100%;
+    top: 4px;
     padding: 8px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1rem;
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 8px;
+    border-radius: 4px;
     text-align: center;
   }
 
