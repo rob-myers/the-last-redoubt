@@ -92,7 +92,7 @@ const articleCss = css`
     margin: 48px 0 32px 0;
     padding: 12px 32px;
     font-size: 0.9rem;
-    font-style: italic;
+    /* font-style: italic; */
     font-weight: 300;
     color: #222;
     background-color: #eee;
@@ -401,18 +401,11 @@ const articleCss = css`
         padding: 8px;
       }
     }
-    /* table {
-      border-width: 2px;
-      @media(max-width: 600px) {
-        border-width: 1px;
-      }
+    table {
       th, td {
         padding: 8px;
-        @media(max-width: 600px) {
-          padding: 4px;
-        }
       }
-    } */
+    }
   }
 
   ul, ol {
