@@ -306,9 +306,9 @@ const articleCss = css`
   }
   h4 {
     font-size: 1.4rem;
-    font-style: italic;
+    margin: 20px 0 12px 0;
     @media(max-width: 600px) {
-      margin: 20px 0 12px 0;
+      margin: 12px 0 6px 0;
     }
   }
 
