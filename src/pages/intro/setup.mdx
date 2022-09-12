@@ -26,39 +26,53 @@ tags:
 
 #### Upcoming topics
 
-#### 1. Assets
+---
 
-- [starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
-- [starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab") as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
+#### Assets
+
+We'll describe our sources and pipelines.
+
+- [Starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/).
+- [Starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
   - e.g. [1](/assets/symbol/office--020--2x3.png "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
-- symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)
+- Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)
   - e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
   - collectively organised as [JSON](/assets/symbol/svg.json "@new-tab").
-- generated geomorphs PNG + JSON
+- Generated geomorphs PNG + JSON
   - e.g. [1](/assets/geomorph/g-301--bridge.png "@new-tab"), [2](/assets/geomorph/g-101--multipurpose.png "@new-tab"), [3](/assets/geomorph/g-303--passenger-deck.png "@new-tab").
-- npc SVG with animations e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
-- generated npc spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
+- NPC animation via Boxy SVG e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
+- Generated NPC spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
 
-#### 2. ReactJS + CSS
+<br/>
 
-- GeomorphEdit: preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using symbols
-- SvgPanZoom
-- CssPanZoom
-- World has subcomponents
-  - DebugWorld
-  - Decor
-  - Doors
-  - FOV
-  - Geomorphs
-  - NPCS
-  - NPC
-- Hooks
+---
 
-#### 3. JavaScript CLI
+#### ReactJS + CSS
 
-#### 4. Services
+Our JavaScript component framework is [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css).
 
-#### 5. Graphs
+- [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
+- [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
+- [CssPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/CssPanZoom.jsx "@new-tab"): pan and zoom using [CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
+- [World](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/World.jsx "@new-tab") has subcomponents like _Doors_ and _NPCs_.
+
+React custom hooks include:
+
+- [useUpdate](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-update.js "@new-tab"): a callback to trigger a component update.
+- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef with the HMR persistence of React.useState.
+- [useGeomorphData](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorph-data.js "@new-tab"): geomorph JSON plus derived data.
+- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitch together input geomorphs into a global geomorph graph.
+- [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
+
+<br/>
+
+---
+
+#### JavaScript CLI
+
+#### Services
+
+#### Graphs
 
 </aside>
 
