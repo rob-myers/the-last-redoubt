@@ -61,122 +61,6 @@ export default function NPCs(props) {
         } else delete state.session[sessionKey];
       }
     },
-    detectCollision(npcA, npcB) {
-      if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
-        return null;
-      }
-
-      const [segA, segB] = [npcA.getLineSeg(), npcB.getLineSeg()];
-      const [iA, iB] = [segA?.src || npcA.getPosition(), segB?.src || npcB.getPosition()];
-      /** i_AB := iA - iB is actually vector from B to A */
-      const iAB = iA.clone().sub(iB), distABSq = iAB.lengthSquared;
-      /** Minimum non-colliding distance between npcs */
-      const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
-
-      const dpA = segA ? segA.tangent.dot(iAB) : NaN;
-      const dpB = segB ? segB.tangent.dot(iAB) : NaN;
-      if (dpA >= 0 || dpB <= 0) {// Npcs not moving towards each other
-        return null;
-      }
-      if (distABSq <= minDist ** 2) {
-        return { seconds: 0, distA: 0, distB: 0 };
-      }
-
-      if (segA && segB) {
-        const dirDp = segA.tangent.dot(segB.tangent);
-        const [speedA, speedB] = [npcA.getSpeed(), npcB.getSpeed()];
-        /**
-         * seg vs seg
-         * 
-         * Solving `a.t^2 + b.t + c ≤ 0`,
-         * - `a := speedA^2 + speedB^2 - 2.speedA.speedB.dirDp`
-         * - `b := 2.(speedA.dpA - speedB.dpB)`
-         * - `c := distABSq - minDist^2`
-         * 
-         * Solutions are
-         * ```js
-         * (-b ± √(b^2 - 4ac)) / 2a // i.e.
-         * (-b ± √inSqrt) / 2a
-         */
-        const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
-        const b = 2 * (speedA * dpA - speedB * dpB);
-        const c = distABSq - (minDist ** 2);
-        const inSqrt = (b ** 2) - (4 * a * c);
-
-        let seconds = 0;
-        if (
-          inSqrt > 0 && (
-            seconds = (-b - Math.sqrt(inSqrt)) / (2 * a)
-          ) <= segA.src.distanceTo(segA.dst) / speedA
-        ) {
-          return { seconds, distA: seconds * speedA, distB: seconds * speedB };
-        }
-
-      } else if (segA || segB) {
-        const dp = /** @type {number} */ (segA ? dpA : -dpB);
-        const speed = segA ? npcA.getSpeed() : npcB.getSpeed();
-        const seg = /** @type {NPC.NpcLineSeg} */ (segA || segB);
-        /**
-         * seg vs static
-         * 
-         * Solving `a.t^2 + b.t + c ≤ 0`,
-         * - `a := speed^2`
-         * - `b := 2.speed.dp`
-         * - `c := distABSq - minDist^2`
-         * 
-         * Solutions are
-         * ```js
-         * (-b ± √(b^2 - 4ac)) / 2a // i.e.
-         * (-b ± 2.speed.√inSqrt) / 2a
-         * ```
-         */
-        const inSqrt = (dp ** 2) - distABSq + (minDist ** 2);
-        let seconds = 0;
-        if (// Real-valued solution(s) exist and occur during line seg
-          inSqrt > 0 && (
-            seconds = (-dp - Math.sqrt(inSqrt)) * (1 / speed)
-          ) <= seg.src.distanceTo(seg.dst) / speed
-        ) {
-          const distA = seconds * speed;
-          return { seconds, distA, distB: distA };
-        }
-      } else {
-        // Either static non-intersecting, or moving away from each other
-      }
-      return null;
-    },
-    detectSegCollision(npc, seg) {
-      const rect = Rect.fromPoints(seg.src, seg.dst);
-      if (!npc.getWalkBounds().intersects(rect)) {
-        return null;
-      }
-      /**
-       * TODO
-       */
-
-      /**
-       * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
-       * - `k0 := u0^2`
-       * - `k1 := 1`
-       * - `k2 := -u0 * (t_0 · t_1)`
-       * - `k3 := -u0 * (t_0 · (a1 - a0))`
-       * - `k4 := t1 · (a1 - a0)`
-       * - `k5 := |a1 - a0|^2 - r0^2`
-       * 
-       * where
-       * - u0 is npc speed
-       * - r0 is npc radius.
-       * - a0, b0 are npc line seg ends
-       * - a1, b1 are line seg ends
-       * 
-       * Solutions are...
-      */
-
-      return {
-        dist: 0,
-        seconds: 0,
-      };
-    },
     getGlobalNavPath(src, dst) {
       const {gms} = api.gmGraph
       const srcGmId = gms.findIndex(x => x.gridRect.contains(src));
@@ -643,8 +527,6 @@ const rootCss = css`
  *
  * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
- * @property {(npcA: NPC.NPC, npcB: NPC.NPC) => null | NPC.NpcCollision} detectCollision
- * @property {(npc: NPC.NPC, seg: Geom.Seg) => null | NPC.NpcSegCollision} detectSegCollision
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson }) => NPC.GlobalNavPath} getNpcGlobalNav

@@ -2,6 +2,10 @@
 
 ## In progress
 
+- ✅ Move NPC collision code into service/npc
+- 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
+- Hook it up
+
 - Page stubs
   - 🚧 Add some content to /intro/setup
   - /info/sketch -> /about

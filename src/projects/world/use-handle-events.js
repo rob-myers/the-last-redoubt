@@ -1,6 +1,7 @@
 import React from "react";
 import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
+import { detectNpcNpcCollision } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -26,7 +27,7 @@ export default function useHandleEvents(api) {
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
-            const collision = api.npcs.detectCollision(npc, other);
+            const collision = detectNpcNpcCollision(npc, other);
 
             if (collision) {// Add wayMeta cancelling motion
               console.warn(`${npc.key} will collide with ${other.key}`, collision);
