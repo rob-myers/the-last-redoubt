@@ -133,6 +133,7 @@ const rootCss = css`
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
+    border: thin #333 solid;
     text-align: center;
   }
 
