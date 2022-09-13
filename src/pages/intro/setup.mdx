@@ -79,10 +79,10 @@ Amongst interpreted commands are [simple commmands](https://www.gnu.org/software
 - <InlineCode>cd</InlineCode> mutates the string-valued variables <code>PWD</code> and <code>OLDPWD</code>.
 - <InlineCode>declare</InlineCode> lists variables and functions.
 - <InlineCode>echo</InlineCode> outputs its arguments as a single string.
-- <InlineCode>get</InlineCode> gets a value e.g. <InlineCode>get foo/bar/baz</InlineCode>.
+- <InlineCode>get</InlineCode> wraps recursive <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors">property accessors</a> using delimiter <code>/</code>.
 - <InlineCode>history</InlineCode> list previously executed commands.
 - <InlineCode>ls</InlineCode> wraps the JavaScript function <code>Object.keys</code>.
-- <InlineCode>ps</InlineCode> list running processes (<InlineCode>ps -a</InlineCode> shows all).
+- <InlineCode>ps</InlineCode> list running processes.
 - <InlineCode>pwd</InlineCode> outputs the variable <code>PWD</code>.
 - <InlineCode>rm</InlineCode> wraps the JavaScript keyword <code>delete</code>.
 - <InlineCode>run</InlineCode> runs an async generator.
@@ -100,19 +100,18 @@ To apply this CLI to Game AI we define various functions:
 - <InlineCode>spawn</InlineCode> spawns an NPC.
 - <InlineCode>track</InlineCode> follows an NPC using panning and zooming.
 - <InlineCode>view</InlineCode> pans and zooms.
-- <InlineCode>walk</InlineCode> makes an NPC walk somewhere.
+- <InlineCode>walk</InlineCode> makes an NPC walk.
 
 #### Services
 
-__TODO__ describe some of them
+We organise various functionality as _services_:
 
-- Cheerio
-- Dom
-- Geom
-- Geomorph
-- Npc
-  - Collision detection code
-- Triangle
+- _cheerio.js_ e.g. extract polygons from metadata in our Boxy-SVG-authored files.
+- _dom.js_ e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
+- _geom.js_ e.g. triangulation and intersection of 2d geometry.
+- _geomorph.js_ e.g. create a geomorph JSON given transformed symbols.
+- _npc.js_ e.g. render spritesheet; npc collision prediction.
+- _triangle.js_ is a wrapper around [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
 
 #### Graphs
 
