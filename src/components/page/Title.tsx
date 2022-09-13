@@ -46,7 +46,6 @@ const titleCss = css`
     @media(max-width: 600px) {
       margin-top: 72px;
       font-size: 2.2rem;
-      color: #333;
     }
   }
   

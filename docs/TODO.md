@@ -4,14 +4,8 @@
 
 - Fix abrupt NPC turn on finish walk
 
-- 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
-  - Write down solutions carefully
-
-- ✅ Move NPC collision code into service/npc
-- ✅ Consider not using invert(1) for dark-mode
-
 - Page stubs
-  - 🚧 Add some content to /intro/setup
+  - ✅ Add preview to /intro/setup
   - /info/sketch -> /about
   - Add some content to /about
   - Add page /intro/js-cli
@@ -19,6 +13,8 @@
   - Add some content to /intro/js-cli
   - Add some content to /intro/ai-cli
 
+- 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
+  - Write down solutions carefully
 
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
@@ -155,6 +151,8 @@ How to embed video?
 
 ## Done
 
+- ✅ Move NPC collision code into service/npc
+- ✅ Consider not using invert(1) for dark-mode
 - ✅ Move assets from public/* to /static/assets/*
 - ✅ Fix all scripts
 - ✅ Fix 404
