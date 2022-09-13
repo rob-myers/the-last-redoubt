@@ -5,7 +5,7 @@ class geomServiceClass {
    * @param {Geom.AngledRect<Geom.Rect>} input 
    * @returns {Geom.Poly}
    */
-   angledRectToPoly(input) {
+  angledRectToPoly(input) {
     const poly = Poly.fromRect(input.baseRect);
     poly.translate(-input.baseRect.x, -input.baseRect.y);
     poly.applyMatrix((new Mat).setRotation(input.angle));
@@ -534,7 +534,7 @@ class geomServiceClass {
    * @param {Geom.VectJson} p point
    * @param {number} [tolerance] maximum distance of point to polygon's edges that triggers collision (see pointLine)
    */
-   outlineContains(polygon, p, tolerance = 0.1) {
+  outlineContains(polygon, p, tolerance = 0.1) {
     const points = polygon.outline;
     const length = points.length
     let c = false

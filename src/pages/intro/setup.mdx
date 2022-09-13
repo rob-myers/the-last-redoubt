@@ -71,33 +71,47 @@ React custom hooks (shared component functionality) include:
 
 ---
 
-#### JavaScript CLI
+#### JavaScript and AI CLI
 
 We'll direct the game using our own [CLI](https://en.wikipedia.org/wiki/Command-line_interface).
 Amongst interpreted commands are [simple commmands](https://www.gnu.org/software/bash/manual/html_node/Simple-Commands.html), and amongst simple commands are builtins e.g.
-- <InlineCode>cd</InlineCode> mutates the strings <code>/home/PWD</code> and <code>/home/OLDPWD</code>.
-- <InlineCode>declare</InlineCode> lists declared variables and functions.
-- <InlineCode>echo</InlineCode> outputs its arguments as a string.
+
+- <InlineCode>cd</InlineCode> mutates the string-valued variables <code>PWD</code> and <code>OLDPWD</code>.
+- <InlineCode>declare</InlineCode> lists variables and functions.
+- <InlineCode>echo</InlineCode> outputs its arguments as a single string.
 - <InlineCode>get</InlineCode> gets a value e.g. <InlineCode>get foo/bar/baz</InlineCode>.
 - <InlineCode>history</InlineCode> list previously executed commands.
 - <InlineCode>ls</InlineCode> wraps the JavaScript function <code>Object.keys</code>.
 - <InlineCode>ps</InlineCode> list running processes (<InlineCode>ps -a</InlineCode> shows all).
-- <InlineCode>pwd</InlineCode> outputs the string <code>/home/PWD</code>.
+- <InlineCode>pwd</InlineCode> outputs the variable <code>PWD</code>.
 - <InlineCode>rm</InlineCode> wraps the JavaScript keyword <code>delete</code>.
 - <InlineCode>run</InlineCode> runs an async generator.
 - <InlineCode>source</InlineCode> interprets a string at a specified location.
 
 We also support e.g. parameter-expansion, brace-expansion, command substitution, function declaration, process output redirection, background processes, subshells, and pipelines.
 
+To apply this CLI to Game AI we define various functions:
+
+- <InlineCode>awaitWorld</InlineCode> awaits a <i>World</i> component with specified key.
+- <InlineCode>click</InlineCode> converts clicks/touches into world coordinates.
+- <InlineCode>look</InlineCode> makes an NPC look.
+- <InlineCode>nav</InlineCode> computes a navpath for an NPC.
+- <InlineCode>npc</InlineCode> permits NPC configuration.
+- <InlineCode>spawn</InlineCode> spawns an NPC.
+- <InlineCode>track</InlineCode> follows an NPC using panning and zooming.
+- <InlineCode>view</InlineCode> pans and zooms.
+- <InlineCode>walk</InlineCode> makes an NPC walk somewhere.
 
 #### Services
 
 __TODO__ describe some of them
+
 - Cheerio
 - Dom
 - Geom
 - Geomorph
 - Npc
+  - Collision detection code
 - Triangle
 
 #### Graphs
