@@ -20,6 +20,8 @@ tags:
   - graphs
 ---
 
+import InlineCode from "components/page/InlineCode";
+
 ## Our Setup 🚧
 
 <aside id="upcoming-article">
@@ -30,7 +32,7 @@ tags:
 
 #### Assets
 
-We'll describe our sources and pipelines.
+We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
 
 - [Starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/).
 - [Starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
@@ -49,19 +51,20 @@ We'll describe our sources and pipelines.
 
 #### ReactJS + CSS
 
-Our JavaScript component framework is [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css), e.g.
+Our component framework amounts to [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css) (CSS in JS).
+Important examples of components include:
 
 - [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
 - [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
 - [CssPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/CssPanZoom.jsx "@new-tab"): pan and zoom using [CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
 - [World](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/World.jsx "@new-tab") has subcomponents like _Doors_ and _NPCs_.
 
-React custom hooks include:
+React custom hooks (shared component functionality) include:
 
 - [useUpdate](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-update.js "@new-tab"): a callback to trigger a component update.
-- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef with the HMR persistence of React.useState.
+- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef and React.useState with HMR persistence.
 - [useGeomorphData](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorph-data.js "@new-tab"): geomorph JSON plus derived data.
-- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitch together input geomorphs into a global geomorph graph.
+- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitches geomorphs into a global geomorph graph.
 - [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
 
 <br/>
@@ -70,7 +73,22 @@ React custom hooks include:
 
 #### JavaScript CLI
 
-__TODO__ brief summary of builtins
+We'll direct the game using our own [CLI](https://en.wikipedia.org/wiki/Command-line_interface).
+Amongst the interpreted commands are [simple commmands](https://www.gnu.org/software/bash/manual/html_node/Simple-Commands.html), and amongst simple commands are builtins e.g.
+- <InlineCode>cd</InlineCode> mutates the strings /home/PWD and /home/OLDPWD.
+- <InlineCode>declare</InlineCode> lists declared variables and functions.
+- <InlineCode>echo</InlineCode> outputs its arguments as a string.
+- <InlineCode>get</InlineCode> gets a value e.g. `get foo/bar/baz`.
+- <InlineCode>history</InlineCode> list previously executed commands.
+- <InlineCode>ls</InlineCode> wraps the JavaScript function `Object.keys`.
+- <InlineCode>ps</InlineCode> list running processes (`ps -a` shows all).
+- <InlineCode>pwd</InlineCode> outputs the string /home/PWD.
+- <InlineCode>rm</InlineCode> wraps the JavaScript keyword **delete**.
+- <InlineCode>run</InlineCode> runs an async generator.
+- <InlineCode>source</InlineCode> interprets a string at a specified location.
+
+We also support e.g. parameter-expansion, brace-expansion, command substitution, function declaration, process output redirection, background processes, subshells, and pipelines.
+
 
 #### Services
 

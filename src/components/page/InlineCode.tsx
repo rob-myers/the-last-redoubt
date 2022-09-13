@@ -6,8 +6,11 @@ import { cssTimeMs } from 'projects/service/const';
 export default function InlineCode({ children, ...props }: Props) {
   return (
     <code
-      onClick={useSiteStore.api.clickToClipboard}
-      title="click to copy text"
+      {...props.copy && {
+        title: "click to copy text",
+        onClick: useSiteStore.api.clickToClipboard,
+        style: { cursor: 'pointer' },
+      }}
       {...props}
       className={cx(
         'inline-code',
@@ -20,12 +23,15 @@ export default function InlineCode({ children, ...props }: Props) {
   );
 }
 
-type Props = React.HTMLAttributes<HTMLElement>;
+type Props = React.HTMLAttributes<HTMLElement> & {
+  copy?: boolean;
+};
 
 const rootCss = css`
   /** ISSUE with changing width via ::after when display: inline */
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.2;
   
   /** Add specificity to override Article code */
   &.inline-code {
@@ -42,7 +48,7 @@ const rootCss = css`
     }
   }
 
-  cursor: pointer;
+  /* cursor: pointer; */
   position: relative;
 
   &::after {

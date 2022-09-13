@@ -205,7 +205,7 @@ we'll modify the Player's experience e.g.
 - Indicate room purpose via ghostly replay.
 - Orchestrate enemy search party.
 
-This ongoing mutation of the player's experience is _directing_.
+This ongoing fabrication of the player's experience is _directing_.
 
 </aside>
 
@@ -272,10 +272,10 @@ Let's try to understand some of the lines above.
 
 | Line | Info |
 | --- | ----------- |
-| <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
-| `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode>/etc/util-1</InlineCode> which defines util functions. |
-| `source /etc/game-1` | From `/home/PROFILE`, <InlineCode>/etc/game-1</InlineCode> defines game-related functions. List all functions via <InlineCode>declare</InlineCode>. Those with a dev console can <InlineCode>declare \| log</InlineCode>. |
-| `awaitWorld` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
+| <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode copy>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
+| `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode copy>/etc/util-1</InlineCode> which defines util functions. |
+| `source /etc/game-1` | From `/home/PROFILE`, <InlineCode copy>/etc/game-1</InlineCode> defines game-related functions. List all functions via <InlineCode copy>declare</InlineCode>. Those with a dev console can <InlineCode copy>declare \| log</InlineCode>. |
+| `awaitWorld` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode copy>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
 
   What about the rest of `/home/PROFILE`?
 
