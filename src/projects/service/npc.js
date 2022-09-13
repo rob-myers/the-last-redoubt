@@ -226,6 +226,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
      * ```js
      * (-b ± √(b^2 - 4ac)) / 2a // i.e.
      * (-b ± √inSqrt) / 2a
+     * ```
      */
     const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
     const b = 2 * (speedA * dpA - speedB * dpB);
@@ -304,21 +305,37 @@ export function predictNpcSegCollision(npc, seg) {
    *
    * - `r` be the npc's radius
    * 
-   * We seek any (t, λ) within bounds s.t. |p1(t) - p0(λ)|^2 ≤ r^2
+   * We seek any (t, λ) within bounds s.t.
+   * - |p0(t) - p1(λ)|^2 ≤ r^2
    * 
-   * TODO 🚧 establish we can rewrite as below
+   * The latter can be rewritten as follows:
    * 
    * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
    * - `k0 := u^2`
    * - `k1 := 1`
-   * - `k2 := -u * (τ0 · τ1)`
-   * - `k3 := -u * (t_0 · (a1 - a0))`
+   * - `k2 := -2u.(τ0 · τ1)`
+   * - `k3 := -u.(τ0 · (a1 - a0))`
    * - `k4 := τ1 · (a1 - a0)`
    * - `k5 := |a1 - a0|^2 - r^2`
    * 
+   * Fixing λ, solutions are ...
    * 
-   * Solutions are...
+   * TODO verify and clarify below on paper 🚧
+   * 
+   * ```js
+   * (-b ± √(b^2 - 4ac)) / 2a // i.e.
+   * (-(k2.λ + k3) ± √inSqrt) / 2·u^2 // i.e.
+   * [ (2u. τ0·τ1).λ + u. τ0·(a1 - a0) ± √inSqrt ] / 2·u^2
+   * ```
+   * 
+   * where inSqrt
+   * - := (k2.λ + k3)^2 - 4.u^2.(λ^2 + k5)
+   * - := ((2u. τ0·τ1).λ + u.(τ0 · (a1 - a0)))^2 - 4.u^2.(λ^2 + |a1 - a0|^2 - r^2)
+   * - := u^2.[ (2λ. τ0·τ1 + τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
+   * - := u^2.[  4λ^2 (τ0·τ1)^2 + 4λ.(τ0·τ1)(τ0·(a1 - a0)) + (τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
+   * - := (4.(τ0·τ1)^2 - 4). λ^2 + (4.(τ0·τ1)(τ0·(a1 - a0))). λ + ( (τ0·(a1 - a0))^2 - 4.(|a1 - a0|^2 - r^2) )
   */
+ const foo = 0;
 
   return {
     dist: 0,
