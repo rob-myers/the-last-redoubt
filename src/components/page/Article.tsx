@@ -531,7 +531,7 @@ const articleComponents = (
   },
 
   aside({ node, children, title, ...props }: any) {
-    const id = getAsideId(articleKey, title);
+    const id = getAsideId(title);
     return (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
@@ -607,13 +607,13 @@ function dayth(x: number) {
 function getArticleLinkId(
   articleKey: string,
   children: React.ReactNode | React.ReactNode[],
-  ) {
-    return `${articleKey}--link--${childrenToKebabText(children)}`;
-  }
-  
+) {
+  return `${articleKey}--link--${childrenToKebabText(children)}`;
+}
+
+/** One article per page */
 function getAsideId(
-  articleKey: string,
   asideName: string,
 ) {
-  return `${articleKey}--aside--${asideName}`;
+  return `aside--${asideName}`;
 }
