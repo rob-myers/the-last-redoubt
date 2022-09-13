@@ -190,7 +190,7 @@ function extractNpcFrameNodes(api, topNodes, title) {
  * @param {NPC.NPC} npcB
  * @returns {NPC.NpcCollision | null}
  */
-export function detectNpcNpcCollision(npcA, npcB) {
+export function predictNpcNpcCollision(npcA, npcB) {
   if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
     return null;
   }
@@ -280,7 +280,7 @@ export function detectNpcNpcCollision(npcA, npcB) {
  * @param {Geom.Seg} seg
  * @returns {NPC.NpcSegCollision | null}
  */
-export function detectNpcSegCollision(npc, seg) {
+export function predictNpcSegCollision(npc, seg) {
   const rect = Rect.fromPoints(seg.src, seg.dst);
   if (!npc.getWalkBounds().intersects(rect)) {
     return null;
@@ -290,19 +290,32 @@ export function detectNpcSegCollision(npc, seg) {
    */
 
   /**
-   * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
-   * - `k0 := u0^2`
-   * - `k1 := 1`
-   * - `k2 := -u0 * (t_0 · t_1)`
-   * - `k3 := -u0 * (t_0 · (a1 - a0))`
-   * - `k4 := t1 · (a1 - a0)`
-   * - `k5 := |a1 - a0|^2 - r0^2`
+   * Let
+   * - npc position be `p0(t) := a0 + t﹒u﹒τ0`
+   *   - u is npc speed
+   *   - a0, b0 is line seg npc traverses
+   *   - τ0 is unit vector for b0 - a0
+   *   - t ∊ [0, |b0 - a0| ╱ u]
+   *
+   * - line segment be `p1(λ) := a1 + λ﹒τ1`
+   *   - a1, b1 are endpoints
+   *   - τ1 is unit vector for b1 - a1
+   *   - λ ∊ [0, |b1 - a1|]
+   *
+   * - `r` be the npc's radius
    * 
-   * where
-   * - u0 is npc speed
-   * - r0 is npc radius.
-   * - a0, b0 are npc line seg ends
-   * - a1, b1 are line seg ends
+   * We seek any (t, λ) within bounds s.t. |p1(t) - p0(λ)|^2 ≤ r^2
+   * 
+   * TODO 🚧 establish we can rewrite as below
+   * 
+   * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
+   * - `k0 := u^2`
+   * - `k1 := 1`
+   * - `k2 := -u * (τ0 · τ1)`
+   * - `k3 := -u * (t_0 · (a1 - a0))`
+   * - `k4 := τ1 · (a1 - a0)`
+   * - `k5 := |a1 - a0|^2 - r^2`
+   * 
    * 
    * Solutions are...
   */
