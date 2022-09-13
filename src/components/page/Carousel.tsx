@@ -101,7 +101,7 @@ const rootCss = css`
     }
   }
   .slide-plain {
-    border: 1px solid #ccc;
+    border: 1px solid var(--article-border-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -130,6 +130,7 @@ const rootCss = css`
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1rem;
+    line-height: 1.2;
     color: white;
     background-color: rgba(0, 0, 0, 0.5);
     border-radius: 4px;
