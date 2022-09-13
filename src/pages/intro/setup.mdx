@@ -28,9 +28,7 @@ import InlineCode from "components/page/InlineCode";
 
 #### Upcoming topics
 
----
-
-#### Assets
+##### Assets
 
 We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
 
@@ -45,14 +43,10 @@ We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)
 - NPC animation via Boxy SVG e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
 - Generated NPC spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
 
-<br/>
 
----
+##### ReactJS and CSS
 
-#### ReactJS + CSS
-
-Our component framework amounts to [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css) (CSS in JS).
-Important examples of components include:
+Our components are built using [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css) e.g.
 
 - [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
 - [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
@@ -67,11 +61,8 @@ React custom hooks (shared component functionality) include:
 - [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitches geomorphs into a global geomorph graph.
 - [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
 
-<br/>
 
----
-
-#### JavaScript and AI CLI
+##### JavaScript CLI
 
 We'll direct the game using our own [CLI](https://en.wikipedia.org/wiki/Command-line_interface).
 Amongst interpreted commands are [simple commmands](https://www.gnu.org/software/bash/manual/html_node/Simple-Commands.html), and amongst simple commands are builtins e.g.
@@ -90,7 +81,9 @@ Amongst interpreted commands are [simple commmands](https://www.gnu.org/software
 
 We also support e.g. parameter-expansion, brace-expansion, command substitution, function declaration, process output redirection, background processes, subshells, and pipelines.
 
-To apply this CLI to Game AI we define various functions:
+##### Game AI CLI
+
+We apply the JavaScript CLI to Game AI by defining various functions:
 
 - <InlineCode>awaitWorld</InlineCode> awaits a <i>World</i> component with specified key.
 - <InlineCode>click</InlineCode> converts clicks/touches into world coordinates.
@@ -102,7 +95,7 @@ To apply this CLI to Game AI we define various functions:
 - <InlineCode>view</InlineCode> pans and zooms.
 - <InlineCode>walk</InlineCode> makes an NPC walk.
 
-#### Services
+##### Services
 
 We organise various functionality as _services_:
 
@@ -111,9 +104,9 @@ We organise various functionality as _services_:
 - _geom.js_ e.g. triangulation and intersection of 2d geometry.
 - _geomorph.js_ e.g. create a geomorph JSON given transformed symbols.
 - _npc.js_ e.g. render spritesheet; npc collision prediction.
-- _triangle.js_ is a wrapper around [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
+- _triangle.js_ wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
 
-#### Graphs
+##### Graphs
 
 __TODO__ outline graphs + pics?
 

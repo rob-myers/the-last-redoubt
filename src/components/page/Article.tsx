@@ -238,7 +238,7 @@ const articleCss = css`
     }
   }
 
-  h1, h2, h3, h4 {
+  h1, h2, h3, h4, h5 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: 300;
     letter-spacing: 2px;
@@ -309,6 +309,13 @@ const articleCss = css`
     margin: 20px 0 12px 0;
     @media(max-width: 600px) {
       margin: 12px 0 6px 0;
+    }
+  }
+  h5 {
+    font-size: 1.2rem;
+    margin: 12px 0;
+    @media(max-width: 600px) {
+      margin: 6px 0;
     }
   }
 

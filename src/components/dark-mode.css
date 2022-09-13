@@ -9,7 +9,7 @@ body.dark-mode section article > :not(aside, code, figure.carousel, div.comments
 }
 
 /* Invert inline code */
-body.dark-mode code.inline-code, body.dark-mode span.inline-uni-code {
+body.dark-mode table code.inline-code, body.dark-mode table span.inline-uni-code {
   filter: invert(100%);
 }
 
