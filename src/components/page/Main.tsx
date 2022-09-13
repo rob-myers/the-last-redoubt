@@ -19,6 +19,9 @@ export const rootCss = css`
   justify-content: center;
   width: 100%;
 
+  background-color: var(--page-background-color);
+  color: var(--page-font-color);
+
   padding: 32px 0 32px 40px;
   margin: 0;
   @media(max-width: 600px) {

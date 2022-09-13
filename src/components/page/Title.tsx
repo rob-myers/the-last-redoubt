@@ -36,7 +36,7 @@ const titleCss = css`
     letter-spacing: 4px;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     cursor: pointer;
-    color: #444;
+    color: var(--page-title-color);
     text-transform: uppercase;
     text-shadow: 0 0 2px #888888bb;
     
@@ -52,7 +52,7 @@ const titleCss = css`
   
   /** Site subtitle */
   p {
-    color: #424242;
+    color: var(--page-title-color);
     font-size: 1rem;
     font-family: 'Courier New', Courier, monospace;
     margin: 0;

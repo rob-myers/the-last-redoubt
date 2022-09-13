@@ -76,6 +76,7 @@ const articleCss = css`
   }
 
   a {
+    color: var(--page-link-color);
     code {
       color: unset;
     }
@@ -94,10 +95,10 @@ const articleCss = css`
     font-size: 0.9rem;
     /* font-style: italic; */
     font-weight: 300;
-    color: #222;
-    background-color: #eee;
+    color: var(--page-font-color);
+    background-color: var(--aside-background-color);
     line-height: 2;
-    
+
     p {
       margin: 12px 0;
     }
@@ -148,7 +149,7 @@ const articleCss = css`
     p:nth-child(n + 2) {
       margin-top: 0;
     }
-    border-left: 8px solid #ddd;
+    border-left: 8px solid var(--page-blockquote-border-color);
 
     @media(max-width: 600px) {
       padding-left: 20px;
@@ -190,10 +191,10 @@ const articleCss = css`
     justify-content: space-between;
 
     margin: 48px 0;
-    border: 1px solid #ccc;
+    border: 1px solid var(--article-border-color);
     padding-top: 64px;
     text-align: center;
-    color: #000;
+    /* color: var(--page-font-color); */
 
     @media(max-width: 600px) {
       padding: 0;
@@ -201,7 +202,7 @@ const articleCss = css`
     }
 
     img {
-      max-width: 100%;
+    max-width: 100%;
     }
 
     figcaption {
@@ -218,7 +219,7 @@ const articleCss = css`
   figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
     padding: 64px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--article-border-color);
     @media(max-width: 600px) {
       border: none;
       margin: calc(32px + 16px) 0 24px 0;
@@ -243,7 +244,7 @@ const articleCss = css`
     font-weight: 300;
     letter-spacing: 2px;
     a {
-      color: #444;
+      color: var(--page-header-color);
     }
     @media(max-width: 600px) {
       font-weight: 400;
@@ -357,9 +358,9 @@ const articleCss = css`
 
   pre {
     margin: 48px 0 48px 0;
-    border: 1px solid #eee;
+    border: 1px solid var(--article-border-color);
     @media(max-width: 600px) {
-      border: 0 solid #eee;
+      border: 0 solid var(--article-border-color);
       margin: 24px 0;
     }
   }
@@ -385,7 +386,7 @@ const articleCss = css`
     padding: 8px;
     width: 100%;
     margin: 0 0 40px 0;
-    border: 0 solid #ccc;
+    border: 0 solid var(--article-border-color);
     border-width: 1px;
     line-height: 1.4;
 

@@ -1,5 +1,13 @@
 :root {
   --article-border-color: #ccc;
+  --page-background-color: #fff;
+  --page-font-color: #000;
+  --page-link-color: #00f;
+  --page-header-color: #000;
+  --page-title-color: #444;
+  --page-blockquote-border-color: #ddd;
+  --aside-background-color: #eee;
+
   /** Saw white lines at 8px and zoomed */
   --tabs-border-width: 6px;
 
