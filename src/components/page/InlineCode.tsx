@@ -76,12 +76,3 @@ const rootCss = css`
     display: initial;
   }
 `;
-
-// Currently copy-click unsupported
-export function InlineUniCode({ children, ...props }: Props) {
-  return (
-    <span className="inline-uni-code" style={{ fontSize: '0.9rem' }}>
-      {children}
-    </span>
-  );
-}

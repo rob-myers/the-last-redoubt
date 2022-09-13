@@ -19,7 +19,7 @@ import Carousel from "components/page/Carousel";
 import Comments from "components/page/Comments";
 import Icon from "components/page/Icon";
 import Image from "components/page/Image";
-import InlineCode, { InlineUniCode } from "components/page/InlineCode";
+import InlineCode from "components/page/InlineCode";
 import InnerTable from "components/page/InnerTable";
 import Tabs from "components/page/Tabs";
 import Video from "components/page/Video";
@@ -272,7 +272,7 @@ Let's try to understand some of the lines above.
 
 | Line | Info |
 | --- | ----------- |
-| <InlineUniCode>ℹ️</InlineUniCode>`  Running /home/PROFILE` | The absolute path <InlineCode copy>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
+| ℹ️`  Running /home/PROFILE` | The absolute path <InlineCode copy>/home/PROFILE</InlineCode> refers to a string (the terminal's initialisation script). Try typing it into the terminal, or click and paste (easier on a mobile). |
 | `source /etc/util-1` | The 1st line of the string at `/home/PROFILE`. This command executes the string at <InlineCode copy>/etc/util-1</InlineCode> which defines util functions. |
 | `source /etc/game-1` | From `/home/PROFILE`, <InlineCode copy>/etc/game-1</InlineCode> defines game-related functions. List all functions via <InlineCode copy>declare</InlineCode>. Those with a dev console can <InlineCode copy>declare \| log</InlineCode>. |
 | `awaitWorld` | From `/home/PROFILE`, this command awaits a world whose identifier is the string at <InlineCode copy>/home/WORLD_KEY</InlineCode>. While polling it sends lines, as we saw. |
