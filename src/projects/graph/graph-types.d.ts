@@ -85,7 +85,7 @@ declare namespace Graph {
 
   export type RoomGraphJson = GraphJson<RoomGraphNode, RoomGraphEdgeOpts>;
 
-  export type RoomGraph = import('./room-graph').RoomGraph;
+  export type RoomGraph = import('./room-graph').roomGraphClass;
 
 //#endregion 
 

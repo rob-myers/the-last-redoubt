@@ -314,9 +314,9 @@ const articleCss = css`
   }
   h5 {
     font-size: 1.2rem;
-    margin: 12px 0;
+    margin: 16px 0 12px 0;
     @media(max-width: 600px) {
-      margin: 6px 0;
+      margin: 8px 0 4px 0;
     }
   }
 

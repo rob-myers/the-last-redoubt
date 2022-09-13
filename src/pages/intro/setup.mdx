@@ -99,20 +99,18 @@ We apply the JavaScript CLI to Game AI by defining various functions:
 
 We organise various functionality as _services_:
 
-- _cheerio.js_ e.g. extract polygons from metadata in our Boxy-SVG-authored files.
-- _dom.js_ e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
-- _geom.js_ e.g. triangulation and intersection of 2d geometry.
-- _geomorph.js_ e.g. create a geomorph JSON given transformed symbols.
-- _npc.js_ e.g. render spritesheet; npc collision prediction.
-- _triangle.js_ wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
+- [cheerio.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/cheerio.js "@new-tab") e.g. extract polygons from SVG metadata.
+- [dom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/dom.js "@new-tab") e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
+- [geom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geom.js "@new-tab") e.g. triangulation and intersection of 2d geometry.
+- [geomorph.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geomorph.js "@new-tab") e.g. create a geomorph JSON given transformed symbols.
+- [npc.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/npc.js "@new-tab") e.g. render spritesheet; npc collision prediction.
+- [triangle.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/triangle.js "@new-tab") wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
 
 ##### Graphs
 
-__TODO__ outline graphs + pics?
-
-- FloorGraph
-- RoomGraph
-- GmGraph
+- [floor graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/floor-graph.js "@new-tab") for a single geomorph is its navmesh.
+- [room graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/room-graph.js "@new-tab") for a single geomorph has rooms as nodes and doors as edges.
+- [geomorph graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/gm-graph.js "@new-tab") has geomorphs as nodes and hull doors as edges.
 
 </aside>
 

@@ -5,13 +5,13 @@ import { error } from "../service/log";
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
  */
-export class RoomGraph extends BaseGraph {
+export class roomGraphClass extends BaseGraph {
 
   /**
    * @param {Graph.RoomGraphJson} json 
    */  
   static from(json) {
-    return (new RoomGraph).plainFrom(json);
+    return (new roomGraphClass).plainFrom(json);
   }
 
   /**

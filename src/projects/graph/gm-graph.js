@@ -7,8 +7,10 @@ import { error } from "../service/log";
 import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
 
 /**
- * `gmGraph` is short for _Geomorph Graph_
- * - _NOTE_ use lowercase __gmGraph__ to get (p)react-(p)refresh working!
+ * Geomorph Graph i.e. a graph whose nodes are geomorphs.
+ * We use lowercase:
+ * @see gmGraphClass
+ * to get react-refresh to update the class.
  * @extends {BaseGraph<Graph.GmGraphNode, Graph.GmGraphEdgeOpts>}
  */
 export class gmGraphClass extends BaseGraph {

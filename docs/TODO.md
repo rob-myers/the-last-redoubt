@@ -2,9 +2,13 @@
 
 ## In progress
 
-- ✅ Move NPC collision code into service/npc
+- Fix abrupt NPC turn on finish walk
+
 - 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
-- Hook it up
+  - Write down solutions carefully
+
+- ✅ Move NPC collision code into service/npc
+- ✅ Consider not using invert(1) for dark-mode
 
 - Page stubs
   - 🚧 Add some content to /intro/setup
@@ -15,7 +19,6 @@
   - Add some content to /intro/js-cli
   - Add some content to /intro/ai-cli
 
-- Consider not using invert(1) for dark-mode
 
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
@@ -119,6 +122,7 @@ How to embed video?
 
 ## Future
 
+- Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
 - BUG CssPanZoom zoom out with pointer down and drag around
   - Also issues when click on `HTMLImageElement`s in devtools
 - Alt approach to g302 light issue

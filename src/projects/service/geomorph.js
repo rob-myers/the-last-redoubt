@@ -4,7 +4,7 @@ import { createCanvas } from 'canvas';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
-import { RoomGraph } from '../graph/room-graph';
+import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { hullOutset, obstacleOutset, precision, wallOutset } from './const';
 import { error, warn } from './log';
@@ -234,8 +234,8 @@ export async function createLayout(def, lookup, triangleService) {
     i > 0 && tris.length <= 12 && warn(`createLayout: unexpected small navZone group ${i} with ${tris.length} tris`)
   );
 
-  const roomGraphJson = RoomGraph.json(rooms, doors, windows);
-  const roomGraph = RoomGraph.from(roomGraphJson);
+  const roomGraphJson = roomGraphClass.json(rooms, doors, windows);
+  const roomGraph = roomGraphClass.from(roomGraphJson);
 
   const lightSrcs = groups.singles.filter(x => x.tags.includes('light-source')).map(({ poly, tags }) => ({
     position: poly.center,
@@ -407,7 +407,7 @@ export function parseLayout({
     labels,
     navPoly: navPoly.map(Poly.from),
     navZone,
-    roomGraph: RoomGraph.from(roomGraph),
+    roomGraph: roomGraphClass.from(roomGraph),
     lightSrcs: lightSrcs.map(x => ({ position: Vect.from(x.position), direction: x.direction ? Vect.from(x.direction) : undefined })),
 
     hullPoly: hullPoly.map(Poly.from),
