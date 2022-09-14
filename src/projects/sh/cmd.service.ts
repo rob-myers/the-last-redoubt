@@ -291,7 +291,11 @@ class cmdServiceClass {
       case 'return': {
         // Loop constructs like WhileClause are unsupported,
         // so we just kill the current process
-        throw killError(meta);
+        const exitCode = parseInt(args[0]);
+        throw killError(meta, Number.isInteger(exitCode)
+          ? exitCode
+          : useSession.api.getSession(meta.sessionKey).lastExitCode
+        );
       }
       case 'rm': {
         const root = this.provideProcessCtxt(meta);

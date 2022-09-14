@@ -106,14 +106,20 @@ export class ProcessError extends Error {
     public code: SigEnum,
     public pid: number,
     public sessionKey: string,
+    public exitCode?: number,
   ) {
     super(code);
     Object.setPrototypeOf(this, ProcessError.prototype);
   }
 }
 
-export function killError(meta: Sh.BaseMeta | ProcessMeta) {
-  return new ProcessError(SigEnum.SIGKILL, 'pid' in meta ? meta.pid : meta.key, meta.sessionKey);
+export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number) {
+  return new ProcessError(
+    SigEnum.SIGKILL,
+    'pid' in meta ? meta.pid : meta.key,
+    meta.sessionKey,
+    exitCode,
+  );
 }
 
 export function resolvePath(path: string, root: any, pwd: string) {

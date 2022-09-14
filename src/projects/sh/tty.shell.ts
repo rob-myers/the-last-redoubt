@@ -194,8 +194,9 @@ export class ttyShellClass implements Device {
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
-        console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`)
-        parsed.exitCode = 130; // Ctrl-C code
+        console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`);
+        // Ctrl-C code is 130 unless overriden
+        parsed.exitCode = e.exitCode??130;
       } else if (e instanceof ShError) {
         parsed.exitCode = e.exitCode;
       }
