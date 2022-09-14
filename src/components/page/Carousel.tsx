@@ -85,7 +85,6 @@ type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
   .slide-container {
-    /* width: fit-content; */
     position: relative;
     user-select: none;
 
@@ -119,20 +118,21 @@ const rootCss = css`
   }
 
   img {
-    border: medium solid #444;
+    border: thin solid var(--article-border-color);
     border-radius: 8px;
-    background-color: #444;
+    background-color: #111;
   }
   .slide-label {
     position: absolute;
-    top: 4px;
+    top: 16px;
     padding: 8px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1rem;
+    font-weight: 300;
     line-height: 1.2;
     color: white;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, .5);
     border-radius: 4px;
     border: thin #333 solid;
     text-align: center;

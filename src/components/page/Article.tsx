@@ -179,7 +179,7 @@ const articleCss = css`
      * swiper carousel breakpoints
      */
     @media(max-width: 800px) {
-      margin: 0 0 24px 0;
+      margin: 28px 0 24px 0;
       padding: 0;
     }
   }
@@ -350,11 +350,11 @@ const articleCss = css`
     }
   }
   
-  p + figure.carousel {
+  /* p + figure.carousel {
     @media(max-width: 600px) {
       margin-top: 20px;
     }
-  }
+  } */
 
   pre {
     margin: 48px 0 48px 0;
@@ -393,7 +393,7 @@ const articleCss = css`
     @media(max-width: 600px) {
       margin: 0 0 20px 0;
       border-width: 1px;
-      border-color: #ddd;
+      border-color: var(--article-border-color);
     }
     th {
       text-transform: uppercase;
