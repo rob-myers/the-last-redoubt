@@ -33,6 +33,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   overflow-anchor: none;
+  background-color: var(--page-background-color);
 }
 
 #gatsby-focus-wrapper {
