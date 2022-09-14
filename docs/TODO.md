@@ -6,11 +6,11 @@
 
 - Page stubs
   - ✅ Add preview to /intro/setup
-  - /info/sketch -> /about
-  - Add some content to /about
-  - Add page /intro/js-cli
-  - Add page /intro/ai-cli
-  - Add some content to /intro/js-cli
+  - ✅ /info/sketch -> /about
+  - ✅ Add some content to /about
+  - ✅ Add page /intro/js-cli
+  - ✅ Add page /intro/ai-cli
+  - 🚧 Add some content to /intro/js-cli
   - Add some content to /intro/ai-cli
 
 - 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
