@@ -18,7 +18,6 @@ tags:
 import Carousel from "components/page/Carousel";
 import Comments from "components/page/Comments";
 import Icon from "components/page/Icon";
-import Image from "components/page/Image";
 import InlineCode from "components/page/InlineCode";
 import InnerTable from "components/page/InnerTable";
 import Tabs from "components/page/Tabs";
@@ -42,22 +41,30 @@ Can we do better?
 
 Sometimes Game AI is emergent
 e.g. Super Mario 3 runs many independent NPC behaviours in parallel.
-But freely combining anything beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen) usually results in a mess.
-The _combinatorial explosion of possibilities_ produces hard-to-debug behaviour.
+But freely combining anything much beyond [Koopa Troopas](https://en.wikipedia.org/wiki/Koopa_Troopa) (fixed patrol route) or [Boo Diddleys](https://en.wikipedia.org/wiki/Boo_(character)) (approach Player when unseen) usually results in a mess.
+The _combinatorial explosion of possibilities_ is hard to debug.
 
 Focusing on the Player's experience is a better idea.
-Everything besides the Player is called the _environment_.
-It is controlled by the _Director_, which is just a fancy name we've given ourselves.
-The Director controls the environment (e.g. the NPCs), while the Player has certain freedoms within it.
+Call everything besides the Player the _environment_.
+It is controlled by the _Director_ (a fancy name we've given ourselves).
+The Director controls the environment e.g. the NPCs, while the Player has certain freedoms within it.
 But the Director needs something to direct,
 so we must **create a game** to make meaningful Game AI.
 
-<Image
-  src="/assets/pics/demo-pic-1.png"
-  title="A sneak peek"
-  alt="A first look at the World and Terminal"
-  height="400"
-  loading="lazy"
+<aside id="parallel-vs-player-xp">
+
+Technically we could implement parallel systems without making a game,
+e.g. a [demo](https://github.com/RafaelKuebler/Flocking) of Craig Reynolds' [boids](http://www.cs.toronto.edu/~dt/siggraph97-course/cwr87/).
+But when Game AI is viewed as an interactive protocol between Player and Director,
+we need an environment to make things meaningful.
+
+</aside>
+
+<Carousel
+  height={400}
+  items={[
+    { src: '/assets/pics/demo-pic-1.png', label: 'A sneak peek' },
+  ]}
 />
 
 

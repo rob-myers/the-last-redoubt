@@ -184,38 +184,6 @@ const articleCss = css`
     }
   }
 
-  figure.image {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-
-    margin: 48px 0;
-    border: 1px solid var(--article-border-color);
-    padding-top: 64px;
-    text-align: center;
-    /* color: var(--page-font-color); */
-
-    @media(max-width: 600px) {
-      padding: 0;
-      margin: 8px 0 16px 0;
-    }
-
-    img {
-    max-width: 100%;
-    }
-
-    figcaption {
-      text-align: center;
-      padding: 24px 0 48px;
-      font-style: italic;
-      text-transform: uppercase;
-      font-size: 0.9rem;
-      @media(max-width: 600px) {
-        padding: 8px 0;
-      }
-    }
-  }
   figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
     padding: 64px;
@@ -223,7 +191,7 @@ const articleCss = css`
     @media(max-width: 600px) {
       border: none;
       margin: calc(32px + 16px) 0 24px 0;
-      padding: 8px 0 8px 0;
+      padding: 8px 0;
     }
   }
   p + figure.tabs {
