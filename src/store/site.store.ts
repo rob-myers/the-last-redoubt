@@ -80,7 +80,9 @@ const useStore = create<State>()(devtools((set, get) => ({
         item.navGroup !== null && (agg[item.navGroup] = agg[item.navGroup] || []).push(item);
         return agg;
       }, [] as FrontMatter[][]);
-      groupedMetas.forEach(group => group.sort((a, b) => (b.prev === a.key || a.next === b.key || b.next === null) ? -1 : 1));
+      groupedMetas.forEach(group => group.sort((a, b) =>
+        (b.prev === a.key || a.next === b.key || b.next === null) ? -1 : 1
+      ));
 
       set({
         articleKey: fm ? fm.key : null,
