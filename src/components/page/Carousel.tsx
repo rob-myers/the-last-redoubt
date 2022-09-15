@@ -35,17 +35,17 @@ export default function Carousel(props: Props) {
           ? items.map((item, i) =>
               <SwiperSlide key={item.src}>
                 <div className="slide-container swiper-zoom-container">
-                  <img
-                    className="swiper-lazy"
-                    data-src={`${props.baseSrc??''}${item.src}`}
-                    height={props.height}
-                    title={item.label}
-                  />
                   {item.label && (
                     <div className="slide-label">
                       {item.label}
                     </div>
                   )}
+                  <img
+                    className="swiper-lazy"
+                    data-src={`${props.baseSrc??''}${item.src}`}
+                    height={props.height - (item.label ? labelHeightPx : 0)}
+                    title={item.label}
+                  />
                   <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
                 </div>
               </SwiperSlide>
@@ -64,6 +64,8 @@ export default function Carousel(props: Props) {
     </figure>
   );
 }
+
+const labelHeightPx = 38;
 
 interface Props {
   baseSrc?: string;
@@ -87,6 +89,8 @@ const rootCss = css`
   .slide-container {
     position: relative;
     user-select: none;
+    display: flex;
+    flex-direction: column;
 
     line-height: 2;
     p {
@@ -123,18 +127,14 @@ const rootCss = css`
     background-color: #111;
   }
   .slide-label {
-    position: absolute;
-    top: 16px;
     padding: 8px;
+    height: ${labelHeightPx}px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.2;
-    color: white;
-    background-color: rgba(0, 0, 0, .5);
-    border-radius: 4px;
-    border: thin #333 solid;
+    color: var(--page-font-color);
     text-align: center;
   }
 
