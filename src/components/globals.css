@@ -1,12 +1,13 @@
 :root {
-  --article-border-color: #ccc;
-  --page-background-color: #fff;
+  /* --page-background-color: #fff; */
+  --page-background: linear-gradient(to right, #fff 15%, #00000077 100%);
   --page-font-color: #000;
   --page-link-color: #00f;
   --page-header-color: #000;
   --page-title-color: #444;
   --page-blockquote-border-color: #ddd;
-  --aside-background-color: #eee;
+  --aside-background-color: #ffffff55;
+  --article-border-color: #ccc;
 
   /** Saw white lines at 8px and zoomed */
   --tabs-border-width: 6px;
@@ -33,7 +34,8 @@ body {
   margin: 0;
   font-family: sans-serif;
   overflow-anchor: none;
-  background-color: var(--page-background-color);
+  /* background-color: var(--page-background-color); */
+  background: var(--page-background);
 }
 
 #gatsby-focus-wrapper {

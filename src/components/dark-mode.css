@@ -1,12 +1,13 @@
 body.dark-mode {
-  --page-background-color: #000;
+  /* --page-background-color: #000; */
+  --page-background: #000;
   --page-font-color: #ccc;
   --page-header-color: #aaa;
   --page-title-color: #aaa;
   --page-blockquote-border-color: #444;
   --page-link-color: #dd7;
   --article-border-color: #444;
-  --aside-background-color: #333;
+  --aside-background-color: #333333aa;
   
   --swiper-pagination-color: #ddc;
   --swiper-pagination-bullet-inactive-color: #777;
