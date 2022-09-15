@@ -32,7 +32,14 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
                 {meta.label}
               </Link>
               
-              <span>{meta?.icon}</span>
+              <span>
+                <Link
+                  to={meta.path}
+                  title={meta.info}
+                >
+                  {meta?.icon}
+              </Link>
+              </span>
             </li>
           )}
         </ul>
