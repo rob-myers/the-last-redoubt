@@ -47,7 +47,7 @@
     "gatsby": "^4.19.2",
     "gatsby-plugin-emotion": "^7.13.0",
     "gatsby-plugin-loadable-components-ssr": "^4.2.0",
-    "gatsby-plugin-mdx": "^3.18.1",
+    "gatsby-plugin-mdx": "2.14.2",
     "gatsby-plugin-react-helmet": "^5.14.0",
     "gatsby-source-filesystem": "^4.13.0",
     "getopts": "^2.3.0",
