@@ -1,6 +1,6 @@
 :root {
   /* --page-background-color: #fff; */
-  --page-background: linear-gradient(to right, #fff 15%, #00000077 100%);
+  --page-background: linear-gradient(to left, #fff 15%, #00000077 100%);
   --page-font-color: #000;
   --page-link-color: #00f;
   --page-header-color: #000;
@@ -14,6 +14,12 @@
 
   --swiper-navigation-size: 28px;
   --swiper-theme-color: rgb(181, 181, 181);
+
+}
+@media(max-width: 600px) {
+  :root {
+    --page-background: #fff;
+  }
 }
 
 * {
