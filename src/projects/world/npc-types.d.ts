@@ -45,11 +45,8 @@ declare namespace NPC {
     cancel(): Promise<void>;
     clearWayMetas(): void;
     /**
-     * We cannot use native `commitStyles` because it throws if respective
-     * element is not being rendered. This can happen if we pause/cancel or
-     * simply finish the walk whilst World tab is hidden.
-     * However we can infer position/rotation via animation `currentTime`
-     * together with `anim.path`, `anim.durationMs` and `anim.aux`.
+     * We can use native commitStyles here because hidden tab is
+     * `visibility: hidden` i.e. this will still work when tab hidden.
      */
     commitWalkStyles(): void;
     /** Has respective el ever been animated? On remount this resets. */
@@ -78,6 +75,14 @@ declare namespace NPC {
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;
+    /**
+     * Given npc is walking and anim.transform.currentTime,
+     * infer position and angle.
+     * We originally needed this because hidden tabs had `display: none`,
+     * but no longer need it because `visibility: hidden`.
+     * Nevertheless we'll keep this computation handy.
+     */
+    inferWalkTransform(): { position: Geom.Vect; angle: number; }
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): number;
