@@ -5,7 +5,7 @@
   --page-link-color: #00f;
   --page-header-color: #000;
   --page-title-color: #444;
-  --page-blockquote-border-color: #ddd;
+  --page-blockquote-border-color: #bbb;
   --aside-background-color: #ffffff55;
   --article-border-color: #ccc;
 
@@ -13,7 +13,7 @@
   --tabs-border-width: 6px;
 
   --swiper-navigation-size: 28px;
-  --swiper-theme-color: rgb(181, 181, 181);
+  --swiper-theme-color: #777;
 
 }
 @media(max-width: 600px) {
