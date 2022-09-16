@@ -128,6 +128,7 @@ const articleCss = css`
       margin: 24px 0 16px 0;
       padding: 16px 24px;
       line-height: 1.8;
+      border: thin solid var(--article-border-color);
       .${cssName.infoIcon} {
         transform: scale(1.2);
       }
