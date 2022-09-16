@@ -332,8 +332,11 @@ export default function createNpc(
       }
 
       if (this.anim.spriteSheet === 'walk') {
-        //  Remove pre-existing (else strange behaviour on pause)
+        // Remove pre-existing, else
+        // - strange behaviour on pause
+        // - final body rotation can be wrong
         this.el.root.getAnimations().forEach(x => x.cancel());
+        this.el.body.getAnimations().forEach(x => x.cancel());
 
         // Animate position and rotation
         const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
