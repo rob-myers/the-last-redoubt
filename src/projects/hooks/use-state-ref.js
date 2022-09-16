@@ -1,5 +1,5 @@
 import React from 'react';
-import { equals, isPlainObject, KeyedTrue } from '../service/generic';
+import { equals, isPlainObject } from '../service/generic';
 
 /**
  * This hook is a mixture between React.useState and React.useRef.
@@ -9,7 +9,7 @@ import { equals, isPlainObject, KeyedTrue } from '../service/generic';
  * 
  * @template {object} State 
  * @param {() => State} initializer Should be side-effect free...
- * @param {{ overwrite?: KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
+ * @param {{ overwrite?: import('../service/generic').KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
  */
 export default function useStateRef(
   initializer,
@@ -25,9 +25,10 @@ export default function useStateRef(
       const changed = initializer.toString() !== state._prevFn;
 
       if (!state._prevFn) {// Initial mount
-        // TODO avoid in production
+        // TODO 🚧 avoid in production
         state._prevFn = initializer.toString();
-        state._prevInit = initializer();
+        // state._prevInit = initializer();
+        state._prevInit = { ...state };
       } else if (changed) {// HMR and `initializer` has changed
         /**
          * Attempt to update state using new initializer:
@@ -40,9 +41,12 @@ export default function useStateRef(
         for (const [k, v] of Object.entries(newInit)) {
           // console.log({ key: k })
           const key = /** @type {keyof State} */ (k);
+
           if (typeof v === 'function') {
             state[key] = v;
-          } else if (// Also update setters and getters
+          } else if (
+            // Also update setters and getters
+            // TODO 🚧 had issue with getter?
             Object.getOwnPropertyDescriptor(state, key)?.get
             || Object.getOwnPropertyDescriptor(state, key)?.set
           ) {
@@ -66,7 +70,7 @@ export default function useStateRef(
             // We could support arbitrary depth, but choose not to
             const innerNewInit = newInit[key];
             const innerState = /** @type {Record<string, any>} */ state[key];
-            for (const [innerK, innerV] of Object.entries(innerNewInit)) {
+            for (const [innerK, innerV] of Object.entries(/** @type {Record<string, State>} */ (innerNewInit))) {
               const innerKey = /** @type {keyof typeof innerState} */ (innerK);
               if (typeof innerV === 'function') {
                 innerState[innerKey] = innerV;
