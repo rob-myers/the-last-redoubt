@@ -37,7 +37,7 @@ export default function Comments(props: Props) {
               target="_blank"
             >
               GitHub discussion
-              &nbsp;<Icon icon="ext-link" inline small />
+              {' '}<Icon icon="ext-link" inline small />
             </a>
           </>
         )}
