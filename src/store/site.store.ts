@@ -111,7 +111,7 @@ const useStore = create<State>()(devtools((set, get) => ({
             return true;
           }
         }
-      }, { once: true });
+      });
 
       set(() => ({ browserLoad: true }), undefined, 'browser-load');
     },

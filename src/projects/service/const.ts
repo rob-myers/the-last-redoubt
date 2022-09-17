@@ -1,3 +1,5 @@
+export const discussionsUrl = "https://github.com/rob-myers/the-last-redoubt/discussions";
+
 export const localStorageKey = {
   darkModeEnabled: 'dark-mode-enabled',
   windowScrollY: 'window-scroll-y',

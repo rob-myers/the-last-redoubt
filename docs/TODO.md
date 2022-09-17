@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ Handle lack of extant Giscus discussion
+
 - ✅ Fix abrupt NPC turn on finish walk
 
 - Page stubs
