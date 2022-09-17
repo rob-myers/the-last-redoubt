@@ -58,14 +58,14 @@ export default function Article(props: React.PropsWithChildren<{
 const articleCss = css`
   line-height: 2.2;
   border: 0 solid var(--article-border-color);
-  border-width: 1px 0 0 1px;
+  border-width: 1px 0 0 0;
   font-size: 1rem;
   overflow-wrap: break-word;
   position: relative; /** For anchors */
   
-  padding: 24px 64px 12px 80px;
+  padding: 24px 128px 12px 0;
   @media(max-width: 1024px) {
-    padding: 16px 48px 0 72px;
+    padding: 16px 48px 0 0;
   }
   @media(max-width: 600px) {
     padding: 0px 12px;
