@@ -26,6 +26,7 @@ export const cssName = {
   navMainOpen: 'open',
   navMainClosed: 'closed',
   navMini: 'nav-mini',
+  nextArticle: 'next-article',
 
   npc: 'npc',
   npcBody: 'body',

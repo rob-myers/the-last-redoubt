@@ -72,7 +72,7 @@ interface Props {
 
 const rootCss = css`
   min-height: 322px;
-  border-top: 1px solid #eee;
+  /* border-top: 1px solid var(--page-border-color); */
   padding-top: 16px;
 
   @media(max-width: 600px) {
@@ -80,7 +80,7 @@ const rootCss = css`
   }
 
   header {
-    margin-bottom: 12px;;
+    margin-bottom: 24px;
     > a {
       cursor: pointer;
       color: var(--page-link-color);

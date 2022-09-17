@@ -61,13 +61,13 @@ export function wrapPageElement({
             <QueryClientProvider client={queryClient} >
               <Nav frontmatter={frontMatter} />
               <Main>
-                {frontMatter && <>
-                  <Article frontmatter={frontMatter}>
-                    {element}
-                  </Article>
-                  <NextArticle frontMatter={frontMatter}/>
-                </>}
-                {!frontMatter && element}
+                {frontMatter
+                  ? <>
+                      <Article frontmatter={frontMatter}>{element}</Article>
+                      <NextArticle frontMatter={frontMatter}/>
+                    </>
+                  : element
+                }
                 <Comments
                   id="comments"
                   term={frontMatter?.giscusTerm || frontMatter?.path || 'fallback-discussion'}

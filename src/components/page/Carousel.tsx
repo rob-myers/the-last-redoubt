@@ -104,7 +104,7 @@ const rootCss = css`
     }
   }
   .slide-plain {
-    border: 1px solid var(--article-border-color);
+    border: 1px solid var(--page-border-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -122,7 +122,7 @@ const rootCss = css`
   }
 
   img {
-    border: thin solid var(--article-border-color);
+    border: thin solid var(--page-border-color);
     border-radius: 8px;
     background-color: #111;
   }

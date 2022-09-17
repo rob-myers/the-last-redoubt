@@ -7,7 +7,6 @@ import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
 import { cssName } from 'projects/service/const';
 
-import Sep from './Sep';
 import { pre, vscDarkPlusCss } from './CodeBlock';
 import Icon from './Icon';
 
@@ -35,7 +34,7 @@ export default function Article(props: React.PropsWithChildren<{
     [frontmatter.tags],
   );
 
-  return <>
+  return (
     <article className={cx(
       props.className,
       articleCss,
@@ -51,13 +50,12 @@ export default function Article(props: React.PropsWithChildren<{
         {props.children}
       </MDXProvider>
     </article>
-    <Sep/>
-  </>;
+  );
 }
 
 const articleCss = css`
   line-height: 2.2;
-  border: 0 solid var(--article-border-color);
+  border: 0 solid var(--page-border-color);
   border-width: 1px 0 0 0;
   font-size: 1rem;
   overflow-wrap: break-word;
@@ -128,7 +126,7 @@ const articleCss = css`
       margin: 24px 0 16px 0;
       padding: 16px 24px;
       line-height: 1.8;
-      border: thin solid var(--article-border-color);
+      border: thin solid var(--page-border-color);
       .${cssName.infoIcon} {
         transform: scale(1.2);
       }
@@ -188,7 +186,7 @@ const articleCss = css`
   figure.tabs, figure.video {
     margin: calc(40px + 16px) 0 40px 0;
     padding: 64px;
-    border: 1px solid var(--article-border-color);
+    border: 1px solid var(--page-border-color);
     @media(max-width: 600px) {
       border: none;
       margin: calc(32px + 16px) 0 24px 0;
@@ -331,9 +329,9 @@ const articleCss = css`
   }
 
   pre {
-    border: 1px solid var(--article-border-color);
+    border: 1px solid var(--page-border-color);
     @media(max-width: 600px) {
-      border: 0 solid var(--article-border-color);
+      border: 0 solid var(--page-border-color);
     }
   }
 
@@ -358,14 +356,14 @@ const articleCss = css`
     padding: 8px;
     width: 100%;
     margin: 0 0 40px 0;
-    border: 0 solid var(--article-border-color);
+    border: 0 solid var(--page-border-color);
     border-width: 1px;
     line-height: 1.4;
 
     @media(max-width: 600px) {
       margin: 0 0 20px 0;
       border-width: 1px;
-      border-color: var(--article-border-color);
+      border-color: var(--page-border-color);
     }
     th {
       text-transform: uppercase;

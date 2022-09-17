@@ -1,16 +1,17 @@
 import { Link } from "gatsby";
 import React from "react";
 import { css, cx } from "@emotion/css";
+import { cssName } from "projects/service/const";
 import useSiteStore, { FrontMatter } from "store/site.store";
 
 export default function NextArticle({ frontMatter }: Props) {
   const id = `next-article--${frontMatter.key}`;
   const nextPath = useSiteStore(x =>
-    (x.articlesMeta?.[frontMatter.next || '']?.path)??null
+    (x.articlesMeta?.[frontMatter.next??'']?.path)??null
   );
 
   return nextPath ? (
-    <div className={cx('next-article', nextArticleCss)}>
+    <div className={cx(cssName.nextArticle, nextArticleCss)}>
       <Link
         to={nextPath}
         title="Continue to next article"
@@ -29,7 +30,6 @@ interface Props {
 const nextArticleCss = css`
   height: 64px;
   font-size: 1.1rem;
-  margin-top: -64px;
   @media(max-width: 800px) {
     margin-top: 0;
     font-size: 1rem;
