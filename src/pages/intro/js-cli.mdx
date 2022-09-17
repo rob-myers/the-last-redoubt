@@ -75,10 +75,10 @@ Useful shell functions are provided e.g.
 # `call '() => 42'` outputs the number `42`
 call () {
   run '(ctxt) {
-        const func = Function(`return ${ctxt.args[0]}`)()
-        ctxt.args = ctxt.args.slice(1)
-        yield await func(ctxt)
-      }' "${@}"
+    const func = Function(`return ${ctxt.args[0]}`)()
+    ctxt.args = ctxt.args.slice(1)
+    yield await func(ctxt)
+  }' "${@}"
 }
 
 # `range 5` outputs the array `[0, 1, 2, 3, 4]`
@@ -109,15 +109,15 @@ keys () {
 # `echo a,b,c,d | split ,` outputs 4 strings
 split () {
   run '({ api, args, datum }) {
-        const arg = args[0] || ""
-        while ((datum = await api.read()) !== null) {
-          if (datum instanceof Array) {
-            yield { __chunk__: true, items: datum };
-          } else if (typeof datum === "string") {
-            yield { __chunk__: true, items: datum.split(arg) };
-          }
-        }
-      }' "${@}"
+    const arg = args[0] || ""
+    while ((datum = await api.read()) !== null) {
+      if (datum instanceof Array) {
+        yield { __chunk__: true, items: datum };
+      } else if (typeof datum === "string") {
+        yield { __chunk__: true, items: datum.split(arg) };
+      }
+    }
+  }' "${@}"
 }
 
 # `seq 5` outputs 5 numbers i.e. `0`, `1`, `2`, `3`, `4`

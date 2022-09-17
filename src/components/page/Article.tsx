@@ -238,9 +238,8 @@ const articleCss = css`
     color: #fff;
     letter-spacing: 2px;
 
-    margin-bottom: 20px;
+    margin-bottom: 32px;
     @media(max-width: 600px) {
-      margin-bottom: 12px;
       font-size: 0.8rem;
     }
 
