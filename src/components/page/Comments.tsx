@@ -18,25 +18,30 @@ export default function Comments(props: Props) {
   ));
 
   return (
-    <div className={cx("comments", rootCss)}>
+    <section className={cx("comments", rootCss)}>
 
-      {commentMeta ? (
-        <a
-          href={commentMeta.url}
-          target="_blank"
-        >
-          View discussion on GitHub
-          &nbsp;<Icon icon="ext-link" inline small />
-        </a>
-      ) : (
-        <a
-          href={discussionsUrl}
-          target="_blank"
-        >
-          Start a discussion on GitHub
-          &nbsp;<Icon icon="ext-link" inline small />
-        </a>
-      )}
+      <header>
+        {commentMeta ? (
+          <a
+            href={commentMeta.url}
+            target="_blank"
+          >
+            View discussion on GitHub
+            &nbsp;<Icon icon="ext-link" inline small />
+          </a>
+        ) : (
+          <>
+            Comment below to start a&nbsp;
+            <a
+              href={discussionsUrl}
+              target="_blank"
+            >
+              GitHub discussion
+              &nbsp;<Icon icon="ext-link" inline small />
+            </a>
+          </>
+        )}
+      </header>
 
       {articleKey && (
         <Giscus
@@ -56,7 +61,7 @@ export default function Comments(props: Props) {
           loading="lazy"
         />
       )}
-    </div>
+    </section>
   );
 }
 
@@ -74,8 +79,12 @@ const rootCss = css`
     padding: 24px 8px 0 8px;
   }
 
-  > a {
-    cursor: pointer;
-    color: var(--page-link-color);
+  header {
+    margin-bottom: 12px;;
+    > a {
+      cursor: pointer;
+      color: var(--page-link-color);
+    }
   }
+
 `;
