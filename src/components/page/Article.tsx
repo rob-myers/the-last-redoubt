@@ -372,7 +372,7 @@ const articleCss = css`
       font-weight: 300;
     }
     th, td {
-      padding: 16px;
+      padding: 0 16px 20px 16px;
       text-align: left;
       vertical-align: top;
       @media(max-width: 600px) {
