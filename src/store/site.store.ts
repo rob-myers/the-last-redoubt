@@ -81,7 +81,7 @@ const useStore = create<State>()(devtools((set, get) => ({
         return agg;
       }, [] as FrontMatter[][]);
       groupedMetas.forEach(group => group.sort((a, b) =>
-        (b.prev === a.key || a.next === b.key || b.next === null) ? -1 : 1
+        (a.prev === null || b.prev === a.key || a.next === b.key || b.next === null) ? -1 : 1
       ));
 
       set({
