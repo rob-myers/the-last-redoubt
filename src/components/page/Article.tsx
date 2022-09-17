@@ -318,14 +318,13 @@ const articleCss = css`
       margin-bottom: 20px;
     }
   }
-  
   /* p + figure.carousel {
     @media(max-width: 600px) {
       margin-top: 20px;
     }
   } */
 
-  pre {
+  > pre {
     margin: 48px 0 48px 0;
     border: 1px solid var(--article-border-color);
     @media(max-width: 600px) {

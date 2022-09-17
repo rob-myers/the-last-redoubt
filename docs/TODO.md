@@ -2,7 +2,7 @@
 
 ## In progress
 
-- Fix abrupt NPC turn on finish walk
+- ✅ Fix abrupt NPC turn on finish walk
 
 - Page stubs
   - ✅ Add preview to /intro/setup
@@ -10,8 +10,8 @@
   - ✅ Add some content to /about
   - ✅ Add page /intro/js-cli
   - ✅ Add page /intro/ai-cli
-  - 🚧 Add some content to /intro/js-cli
-  - Add some content to /intro/ai-cli
+  - ✅ Add some content to /intro/js-cli
+  - 🚧 Add some content to /intro/ai-cli
 
 - 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
   - Write down solutions carefully

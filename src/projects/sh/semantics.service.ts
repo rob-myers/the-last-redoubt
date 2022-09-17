@@ -286,6 +286,7 @@ class semanticsServiceClass {
     }
   }
 
+  /** Bash language variant only? */
   private async *DeclClause(node: Sh.DeclClause) {
     if (node.Variant.Value === 'declare') {
       if (node.Args.length) {
@@ -553,6 +554,7 @@ class semanticsServiceClass {
     await ttyShell.spawn(cloned, { localVar: true });
   }
 
+  /** Bash language variant only? */
   private async *TimeClause(node: Sh.TimeClause) {
     const before = Date.now(); // Milliseconds since epoch
     if (node.Stmt) {

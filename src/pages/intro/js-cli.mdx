@@ -19,9 +19,14 @@ import InlineCode from "components/page/InlineCode";
 
 ## JavaScript CLI
 
+<!-- TODO Windows Ctrl-C etc? -->
+
 <aside title="upcoming-article">
 
 #### Upcoming topics
+
+Our CLI permits us to write and manage JavaScript inside the browser.
+Shells usually manipulate and output strings, whereas our CLI outputs arbitrary JavaScript values.
 
 ##### Builtins
 
@@ -45,6 +50,77 @@ import InlineCode from "components/page/InlineCode";
 - <InlineCode>true</InlineCode> has exit code 0.
 - <InlineCode>unset</InlineCode> unset variables and functions.
 
-#### TODO
+##### Operators and Expansion
+
+- <InlineCode>foo; bar</InlineCode> run "foo" then run "bar"
+- <InlineCode>foo &amp;&amp; bar</InlineCode> run "foo" and if exit code 0 run "bar"
+- <InlineCode>foo || bar</InlineCode> run "foo" and if exit code 1 run "bar"
+- <InlineCode>foo | bar</InlineCode> run "foo" and "bar", with former's output as latter's input
+- <InlineCode>( foo )</InlineCode> run "foo" in a subshell
+- <InlineCode>foo &amp;</InlineCode> run "foo" in the background
+- <InlineCode>foo () {'{'} ... {'}'}</InlineCode> declare function "foo" with body ...
+- <InlineCode>$foo</InlineCode> output the shell variable "foo" as a string
+- <InlineCode>${'{'}foo:-bar{'}'}</InlineCode> like $foo but if empty output literal "bar"
+- <InlineCode>$@</InlineCode> output positive positionals
+- <InlineCode>$$</InlineCode> output process id
+- <InlineCode>$?</InlineCode> output last exit code
+- <InlineCode>$( foo )</InlineCode> run "foo" and output a single string of all its outputs
+- <InlineCode>a{'{'}b,c{'}'}d{'{'}e..h{'}'}</InlineCode> brace expansion
+
+##### Shell Functions
+
+We provide useful shell functions "out of the box".
+Here are a few:
+
+```bash
+# e.g. `call '() => 42'` outputs the number `42`
+call () {
+  run '(ctxt) {
+        const func = Function(`return ${ctxt.args[0]}`)()
+        ctxt.args = ctxt.args.slice(1)
+        yield await func(ctxt)
+      }' "${@}"
+}
+
+# e.g. `range 5` outputs the array `[0, 1, 2, 3, 4]`
+range () {
+  call '({args}) =>
+    [...Array(Number(args[0]))].map((_, i) => i)
+  ' "$1" 
+}
+
+# e.g. `range 5 | map '() => x ** 2'` outputs `[0, 1, 4, 9, 16]`
+map () {
+  run '(ctxt) {
+    let { api, args, datum } = ctxt
+    const func = Function(`return ${args[0]}`)()
+    while ((datum = await api.read(true)) !== null) {
+      if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
+      else yield func(datum, ctxt)
+    }
+  }' "${@}"
+}
+
+# e.g. `range 5 | keys` outputs `['0', '1', '2', '3', '4']`
+keys () {
+  map Object.keys
+}
+```
+
+##### Interface
+
+- Ctrl-C kills ongoing process (_mobile_ 💀)
+- Up and Down for history (_mobile_ ⬆️ ⬇️)
+- Ctrl-L to clear (_mobile_ ∅)
+- Cmd-C to copy selected text
+- Cmd-V to paste (_mobile_ "paste")
+- Option-Right moves cursor to next word boundary
+- Option-Left moves cursor to previous word boundary
+- Ctrl-A moves cursor to start of input
+- Ctrl-E moves cursor to end of input
+- Ctrl-W clear from cursor to previous word boundary
+- Ctrl-U clear from cursor to start of input
+- Ctrl-K clear from cursor to end of input
+
 
 </aside>
