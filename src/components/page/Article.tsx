@@ -480,7 +480,7 @@ const articleComponents = (
         <a
           href={href}
           title={title}
-          id={getArticleLinkId(articleKey, children)}
+          id={getArticleLinkId(children)}
         >
           {children}
         </a>
@@ -492,7 +492,7 @@ const articleComponents = (
       <Link
         to={href}
         title={title}
-        id={getArticleLinkId(articleKey, children)}
+        id={getArticleLinkId(children)}
       >
         {children}
       </Link>
@@ -575,10 +575,9 @@ function dayth(x: number) {
  * Hacky e.g. does not support markdown `[_foo_](bar)`.
  */
 function getArticleLinkId(
-  articleKey: string,
   children: React.ReactNode | React.ReactNode[],
 ) {
-  return `${articleKey}--link--${childrenToKebabText(children)}`;
+  return `link--${childrenToKebabText(children)}`;
 }
 
 /** One article per page */
