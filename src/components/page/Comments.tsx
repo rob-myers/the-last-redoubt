@@ -73,7 +73,7 @@ interface Props {
 const rootCss = css`
   min-height: 322px;
   /* border-top: 1px solid var(--page-border-color); */
-  padding-top: 16px;
+  padding: 16px 16px 16px 0;
 
   @media(max-width: 600px) {
     padding: 24px 8px 0 8px;
