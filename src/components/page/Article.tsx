@@ -326,10 +326,15 @@ const articleCss = css`
 
   > pre {
     margin: 48px 0 48px 0;
+    @media(max-width: 600px) {
+      margin: 24px 0;
+    }
+  }
+
+  pre {
     border: 1px solid var(--article-border-color);
     @media(max-width: 600px) {
       border: 0 solid var(--article-border-color);
-      margin: 24px 0;
     }
   }
 

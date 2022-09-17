@@ -69,11 +69,10 @@ Shells usually manipulate and output strings, whereas our CLI outputs arbitrary 
 
 ##### Shell Functions
 
-We provide useful shell functions "out of the box".
-Here are a few:
+Useful shell functions are provided e.g.
 
 ```bash
-# e.g. `call '() => 42'` outputs the number `42`
+# `call '() => 42'` outputs the number `42`
 call () {
   run '(ctxt) {
         const func = Function(`return ${ctxt.args[0]}`)()
@@ -82,14 +81,14 @@ call () {
       }' "${@}"
 }
 
-# e.g. `range 5` outputs the array `[0, 1, 2, 3, 4]`
+# `range 5` outputs the array `[0, 1, 2, 3, 4]`
 range () {
   call '({args}) =>
     [...Array(Number(args[0]))].map((_, i) => i)
   ' "$1" 
 }
 
-# e.g. `range 5 | map '() => x ** 2'` outputs `[0, 1, 4, 9, 16]`
+# `range 5 | map '() => x ** 2'` outputs `[0, 1, 4, 9, 16]`
 map () {
   run '(ctxt) {
     let { api, args, datum } = ctxt
@@ -101,9 +100,29 @@ map () {
   }' "${@}"
 }
 
-# e.g. `range 5 | keys` outputs `['0', '1', '2', '3', '4']`
+# `range 5 | keys` outputs `['0', '1', '2', '3', '4']`
 keys () {
   map Object.keys
+}
+
+# `range 5 | split` outputs 5 numbers
+# `echo a,b,c,d | split ,` outputs 4 strings
+split () {
+  run '({ api, args, datum }) {
+        const arg = args[0] || ""
+        while ((datum = await api.read()) !== null) {
+          if (datum instanceof Array) {
+            yield { __chunk__: true, items: datum };
+          } else if (typeof datum === "string") {
+            yield { __chunk__: true, items: datum.split(arg) };
+          }
+        }
+      }' "${@}"
+}
+
+# `seq 5` outputs 5 numbers i.e. `0`, `1`, `2`, `3`, `4`
+seq () {
+  range "${1}" | split
 }
 ```
 
