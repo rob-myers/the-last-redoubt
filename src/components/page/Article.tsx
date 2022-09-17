@@ -91,7 +91,7 @@ const articleCss = css`
 
   aside {
     margin: 48px 0 32px 0;
-    padding: 12px 48px;
+    padding: 32px 64px;
     font-size: 0.9rem;
     /* font-style: italic; */
     font-weight: 300;
