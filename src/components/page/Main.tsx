@@ -18,6 +18,7 @@ export const rootCss = css`
   flex-direction: column;
   justify-content: center;
   width: 100%;
+  overflow: hidden;
 
   color: var(--page-font-color);
 
