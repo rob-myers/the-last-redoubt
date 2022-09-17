@@ -1,5 +1,6 @@
 :root {
   /* --page-background-color: #fff; */
+  --nav-background: #000;
   --page-background: linear-gradient(to left, #fff 15%, #00000077 100%);
   --page-font-color: #000;
   --page-link-color: #00f;

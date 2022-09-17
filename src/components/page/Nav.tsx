@@ -70,7 +70,7 @@ const navCss = css`
 
   font-weight: 300;
   font-family: sans-serif;
-  background-color: #222;
+  background: var(--nav-background);
   color: white;
   cursor: pointer;
   opacity: 0.975;
