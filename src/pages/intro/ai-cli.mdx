@@ -1,0 +1,58 @@
+---
+
+key: intro/ai-cli
+path: /intro/ai-cli
+info: Game AI CLI
+label: 'intro: ai cli'
+icon: 🚧
+date: 2022-10-01
+navGroup: 0
+prev: intro/js-cli
+next: null
+tags:
+  - js cli
+  - game ai
+---
+
+import InlineCode from "components/page/InlineCode";
+
+## Game AI CLI 🚧
+
+<aside title="upcoming-article">
+
+#### Upcoming topics
+
+##### Core API
+
+- <InlineCode>awaitWorld</InlineCode> awaits a <i>World</i> component with specified key.
+- <InlineCode>click</InlineCode> converts clicks/touches into world coordinates.
+- <InlineCode>look</InlineCode> makes an NPC look.
+- <InlineCode>nav</InlineCode> computes a navpath for an NPC.
+- <InlineCode>npc</InlineCode> permits NPC configuration.
+- <InlineCode>spawn</InlineCode> spawns an NPC.
+- <InlineCode>track</InlineCode> follows an NPC using panning and zooming.
+- <InlineCode>view</InlineCode> pans and zooms.
+- <InlineCode>walk</InlineCode> makes an NPC walk.
+
+##### Loops
+
+<InlineCode>goLoop andros</InlineCode> makes Andros walk where you click.
+
+```bash
+click |
+  filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
+  map 'x => ({ npcKey: "'$1'", point: x })' |
+  nav |
+  walk $1
+```
+
+<InlineCode>lookLoop andros</InlineCode> makes Andros look where you click.
+
+```bash
+click |
+  filter 'x => !x.tags.includes("nav")' |
+  look $1
+```
+
+
+</aside>

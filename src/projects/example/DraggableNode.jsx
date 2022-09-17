@@ -124,14 +124,14 @@ export default function DraggableNode(props) {
           run: (
             <image
               className="icon"
-              href="/icon/running.svg"
+              href="/assets/icon/running.svg"
               width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
             />
             ),
           finish: (
             <image
               className="icon"
-              href="/icon/target.svg"
+              href="/assets/icon/target.svg"
               width="20" height="20" x={state.position.x - 10} y={state.position.y - 10} 
             />
           ),

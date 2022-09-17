@@ -9,7 +9,7 @@ import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
 import { scriptLookup } from './scripts';
-import { getCached, queryCache } from '../service/query-client';
+import { getCached } from '../service/query-client';
 
 const commandKeys = {
   /** Change current key prefix */
@@ -69,41 +69,71 @@ class cmdServiceClass {
         if (args.length > 1) {
           throw new ShError('usage: `cd /`, `cd`, `cd foo/bar`, `cd /foo/bar`, `cd ..` and `cd -`', 1);
         }
-        const prevPwd: string = useSession.api.getVar(meta.sessionKey, 'OLDPWD');
-        const currPwd: string = useSession.api.getVar(meta.sessionKey, 'PWD');
-        useSession.api.setVar(meta.sessionKey, 'OLDPWD', currPwd);
+        const prevPwd: string = useSession.api.getVar(meta, 'OLDPWD');
+        const currPwd: string = useSession.api.getVar(meta, 'PWD');
+        useSession.api.setVar(meta, 'OLDPWD', currPwd);
 
         try {
           if (!args[0]) {
-            useSession.api.setVar(meta.sessionKey, 'PWD', 'home');
+            useSession.api.setVar(meta, 'PWD', 'home');
           } else if (args[0] === '-') {
-            useSession.api.setVar(meta.sessionKey, 'PWD', prevPwd);
+            useSession.api.setVar(meta, 'PWD', prevPwd);
           } else if (args[0].startsWith('/')) {
             const parts = normalizeAbsParts(args[0].split('/'));
             if (resolveNormalized(parts, this.provideProcessCtxt(node.meta)) === undefined) {
               throw Error;
             }
-            useSession.api.setVar(meta.sessionKey, 'PWD', parts.join('/'));
+            useSession.api.setVar(meta, 'PWD', parts.join('/'));
           } else {
             const parts = normalizeAbsParts(currPwd.split('/').concat(args[0].split('/')));
             if (resolveNormalized(parts, this.provideProcessCtxt(node.meta)) === undefined) {
               throw Error;
             }
-            useSession.api.setVar(meta.sessionKey, 'PWD', parts.join(('/')));
+            useSession.api.setVar(meta, 'PWD', parts.join(('/')));
           }
         } catch {
-          useSession.api.setVar(meta.sessionKey, 'OLDPWD', prevPwd);
+          useSession.api.setVar(meta, 'OLDPWD', prevPwd);
           throw new ShError(`${args[0]} not found`, 1);
         }
         break;
       }
       case 'declare': {
-        const funcs = useSession.api.getFuncs(meta.sessionKey);
-        for (const { key, src } of funcs) {
-          const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
-          for (const line of lines) yield line;
-          yield '';
-        } 
+        const { opts, operands } = getOpts(args, { boolean: [
+          'f', // list functions
+          'x', // list variables (everything is exported)
+        ], });
+
+        const showVars = opts.x === true || !opts.f;
+        const showFunc = opts.f === true || !opts.x;
+        const prefixes = operands.length ? operands : null;
+
+        const {
+          var: home,
+          func,
+          ttyShell: { xterm },
+          process: { [meta.pid]: { inheritVar } }
+        } = useSession.api.getSession(meta.sessionKey);
+
+        const vars = { ...home, ...inheritVar };
+        const funcs = Object.values(func);
+
+        if (showVars) {
+          for (const [key, value] of Object.entries(vars)) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            yield `${ansiColor.Blue}${key}${ansiColor.Reset}=${
+              typeof value === 'string' ? ansiColor.White : ansiColor.Yellow
+            }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
+          }
+        }
+
+        if (showFunc) {
+          for (const { key, src } of funcs) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
+            for (const line of lines) yield line;
+            yield '';
+          }
+        }
         break;
       }
       case 'echo': {
@@ -193,7 +223,7 @@ class cmdServiceClass {
           'r', /** Recursive properties (prototype) */
           'a', /** Show capitalized vars at top level */
         ] });
-        const pwd = useSession.api.getVar(meta.sessionKey, 'PWD');
+        const pwd = useSession.api.getVar(meta, 'PWD');
         const queries = operands.length ? operands.slice() : [''];
         const root = this.provideProcessCtxt(meta);
         const roots = queries.map(path => resolvePath(path, root, pwd));
@@ -255,19 +285,23 @@ class cmdServiceClass {
         break;
       }
       case 'pwd': {
-        yield '/' + (useSession.api.getVar(meta.sessionKey, 'PWD'));
+        yield '/' + (useSession.api.getVar(meta, 'PWD'));
         break;
       }
       case 'return': {
         // Loop constructs like WhileClause are unsupported,
         // so we just kill the current process
-        throw killError(meta);
+        const exitCode = parseInt(args[0]);
+        throw killError(meta, Number.isInteger(exitCode)
+          ? exitCode
+          : useSession.api.getSession(meta.sessionKey).lastExitCode
+        );
       }
       case 'rm': {
         const root = this.provideProcessCtxt(meta);
-        const pwd = useSession.api.getVar<string>(meta.sessionKey, 'PWD');
+        const pwd = useSession.api.getVar<string>(meta, 'PWD');
         for (const path of args) {
-          const parts = computeNormalizedParts(path, root, pwd);
+          const parts = computeNormalizedParts(path, pwd);
           if (parts[0] === 'home' && parts.length > 1) {
             const last = parts.pop() as string;
             delete resolveNormalized(parts, root)[last];
@@ -324,6 +358,7 @@ class cmdServiceClass {
           // We clone meta; pid will be overwritten in `ttyShell.spawn`
           parsed.meta = { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() };
           const { ttyShell } = useSession.api.getSession(meta.sessionKey);
+          // We spawn a new process (unlike bash `source`), but we don't localize PWD
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });
         }
         break;
@@ -333,10 +368,20 @@ class cmdServiceClass {
         break;
       }
       case 'unset': {
-        const { var: v, func } = useSession.api.getSession(meta.sessionKey);
+        const {
+          var: home,
+          func,
+          process: { [meta.pid]: process },
+        } = useSession.api.getSession(meta.sessionKey);
+
         for (const arg of args) {
-          delete v[arg];
-          delete func[arg];
+          if (arg in process.localVar) {
+            // NOTE cannot unset ancestral variables
+            delete process.localVar[arg];
+          } else {
+            delete home[arg];
+            delete func[arg];
+          }
         }
         break;
       }
@@ -346,14 +391,27 @@ class cmdServiceClass {
 
   get(node: Sh.BaseNode, args: string[]) {
     const root = this.provideProcessCtxt(node.meta);
-    const pwd = useSession.api.getVar<string>(node.meta.sessionKey, 'PWD');
-    const outputs = args.map(arg => resolvePath(arg, root, pwd));
+    const pwd = useSession.api.getVar<string>(node.meta, 'PWD');
+    const process = useSession.api.getProcess(node.meta);
+
+    const outputs = args.map(arg => {
+      const parts = arg.split('/');
+      const localCtxt = parts[0] in process.localVar
+        ? process.localVar
+        : parts[0] in process.inheritVar ? process.inheritVar : null
+      ;
+
+      return parts[0] && localCtxt
+        ? parts.reduce((agg, part) => agg[part], localCtxt)
+        : resolvePath(arg, root, pwd);
+    });
+
     node.exitCode = outputs.length && outputs.every(x => x === undefined) ? 1 : 0;
     return outputs;
   }
 
   private computeCwd(meta: Sh.BaseMeta, root: any) {
-    const pwd = useSession.api.getVar(meta.sessionKey, 'PWD');
+    const pwd = useSession.api.getVar(meta, 'PWD');
     return resolveNormalized(pwd.split('/'), root);
   }
 
@@ -365,6 +423,7 @@ class cmdServiceClass {
       ppid: node.meta.pid,
       stack: node.meta.stack.concat(namedFunc.key), // TODO elsewhere?
     } as Sh.BaseMeta);
+    // Run function in own process, yet without localized PWD
     await ttyShell.spawn(cloned, { posPositionals: args.slice() });
   }
 
@@ -445,7 +504,8 @@ class cmdServiceClass {
     const session = useSession.api.getSession(meta.sessionKey);
     return new Proxy({
       home: session.var,
-      cache: queryCache,
+      // cache: queryCache,
+      // dev: useSession.getState().device,
       etc: scriptLookup,
     }, {
       get: (_, key) => {
@@ -531,7 +591,7 @@ function getProcess(meta: Sh.BaseMeta) {
 }
 
 /** js parse with string fallback */
-function parseJsArg(input: string) {
+export function parseJsArg(input: string) {
   try {
     return Function(`return ${input}`)();
   } catch (e) {

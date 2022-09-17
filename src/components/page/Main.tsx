@@ -14,12 +14,23 @@ export default function Main({ children }: React.PropsWithChildren<{}>) {
 }
 
 export const rootCss = css`
-  max-width: 1280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   width: 100%;
+  overflow: hidden;
+
+  color: var(--page-font-color);
 
   padding: 32px 0 32px 40px;
   margin: 0;
   @media(max-width: 600px) {
     padding: 0;
+  }
+
+  > main, > header {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1024px;
   }
 `;

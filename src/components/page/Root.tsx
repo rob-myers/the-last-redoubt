@@ -6,13 +6,13 @@ import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
-import { tryLocalStorageGet } from "projects/service/generic";
 import { queryClient } from "projects/service/query-client";
 import Nav from "./Nav";
 import Main from "./Main";
 import Portals from "./Portals";
 import Article from "./Article";
 import NextArticle from "./NextArticle";
+import Comments from "./Comments";
 
 export function wrapPageElement({
   element,
@@ -34,49 +34,49 @@ export function wrapPageElement({
           query { allMdx {
             edges { node { frontmatter {
               key
-              path
+              date
+              icon
+              giscusTerm
               info
               label
-              date
               navGroup
-              prev
               next
+              path
+              prev
               tags
             } } } }
           }
       `}
         render={(allFrontMatter: AllFrontMatter) => {
 
-          React.useMemo(() =>
-            useSiteStore.api.initiate(allFrontMatter, frontMatter),
-            [frontMatter],
+          React.useMemo(() => {
+            useSiteStore.api.initiate(allFrontMatter, frontMatter);
+          }, [frontMatter]);
+          
+          React.useEffect(() =>
+            useSiteStore.api.initiateBrowser()
+          , []);
+
+          return (
+            <QueryClientProvider client={queryClient} >
+              <Nav frontmatter={frontMatter} />
+              <Main>
+                {frontMatter
+                  ? <>
+                      <Article frontmatter={frontMatter}>{element}</Article>
+                      <NextArticle frontMatter={frontMatter}/>
+                    </>
+                  : element
+                }
+                <Comments
+                  id="comments"
+                  term={frontMatter?.giscusTerm || frontMatter?.path || 'fallback-discussion'}
+                />
+              </Main>
+              <Portals />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
           );
-
-          React.useLayoutEffect(() => {
-            if (tryLocalStorageGet('dark-mode-enabled') === 'true') {
-              document.body.classList.add('dark-mode');
-            }
-          }, []);
-
-          return <>
-            {frontMatter &&
-              <QueryClientProvider client={queryClient} >
-                <Nav frontmatter={frontMatter} />
-                <Main>
-                  <Article frontmatter={frontMatter}>
-                    {element}
-                  </Article>
-                  <NextArticle frontMatter={frontMatter}/>
-                </Main>
-                <Portals />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            }
-      
-            {!frontMatter &&
-              <Main>{element}</Main>
-            }
-          </>;
         }}
       />
 
@@ -85,5 +85,5 @@ export function wrapPageElement({
 }
 
 export interface FrontMatterProps {
-  frontmatter: FrontMatter;
+  frontmatter?: FrontMatter;
 }

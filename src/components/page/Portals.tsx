@@ -1,29 +1,22 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import * as portals from "react-reverse-portal";
-import { useBeforeunload } from 'react-beforeunload';
 
-import { getCode, getComponent } from 'model/tabs/lookup';
-import useSiteStore from "store/site.store";
-// import useSession from "store/session.store";
-import { CodeEditor, Terminal } from 'components/dynamic';
+import { getComponent } from 'model/tabs/lookup';
+import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
+import { Terminal } from 'components/dynamic';
 import { profileLookup } from 'projects/sh/scripts';
 
 export default function Portals() {
-  const lookup = useSiteStore(site => site.portal);
-  const items = React.useMemo(() => Object.values(lookup), [lookup]);
-
-  useBeforeunload(() => {
-    // const sessionKeys = Object.keys(useSession.getState().session);
-    // sessionKeys.forEach(sessionKey => useSession.api.persist(sessionKey));
-  });
+  const lookup = useSiteStore(site => site.component);
+  const items = Object.values(lookup).filter((x): x is KeyedPortal => !!x.portal);
 
   const [, setCount] = React.useState(0);
-  React.useLayoutEffect(() => {
+
+  React.useEffect(() => {
     items.forEach(async item => {
       if (item.meta.type === 'component' && !item.component) {
-        const func = await getComponent(item.meta.filepath);
-        item.component = func;
+        item.component = await getComponent(item.meta.filepath) as KeyedComponent['component'];
         setCount(x => ++x);
       }
     });
@@ -33,24 +26,10 @@ export default function Portals() {
     {items.map((state) => {
       const { key, meta, portal } = state;
       switch (meta.type) {
-        case 'code':
-          return (
-            <portals.InPortal key={key} node={portal}>
-              <div style={{ height: '100%', background: '#444' }}>
-                <CodeEditor
-                  height="100%"
-                  lineNumbers
-                  readOnly
-                  code={getCode(meta.filepath)}
-                  folds={meta.folds}
-                />
-              </div>
-            </portals.InPortal>
-          );
         case 'component': {
           return (
             <portals.InPortal key={key} node={portal}>
-              {state.component && React.createElement(state.component)}
+              {state.component && <state.component />}
             </portals.InPortal>
           );
         }
@@ -60,7 +39,7 @@ export default function Portals() {
 
           return (
             <portals.InPortal key={key} node={portal}>
-              <Terminal sessionKey={meta.filepath} env={env} />
+              <Terminal disabled sessionKey={meta.filepath} env={env} />
             </portals.InPortal>
           );
         }
@@ -68,7 +47,7 @@ export default function Portals() {
           return (
             <portals.InPortal key={key} node={portal}>
               <ErrorMessage>
-                ⚠️ Unknown Tab with key "{key}".
+                ⚠️ Unknown Tab with meta "{JSON.stringify(meta)}".
               </ErrorMessage>
             </portals.InPortal>
           );

@@ -1,4 +1,4 @@
-import { parseSVG, makeAbsolute, MoveToCommand } from 'svg-path-parser';
+import { parseSVG, makeAbsolute } from 'svg-path-parser';
 import { Vect } from '../geom/vect';
 import { Poly } from '../geom/poly';
 import { warn } from './log';
@@ -47,14 +47,6 @@ export function getSvgPos(ptr, targetEl) {
 }
 
 /**
- * Assuming we only translate and scale.
- * @param {SVGSVGElement} svg
- */
-export function getSvgScale(svg) {
-	return svg.getScreenCTM()?.inverse().a || 1;
-}
-
-/**
  * The pointer `ptrs[0]` must exist.
  * @param {SvgPtr[]} ptrs
  */
@@ -94,7 +86,7 @@ export function svgPathToPolygon(svgPathString) {
 			case 'H':
 			case 'V':
 			case 'Z':
-				add(/** @type {MoveToCommand} */ (cmd).x || 0, /** @type {MoveToCommand} */ (cmd).y || 0);
+				add(/** @type {import('svg-path-parser').MoveToCommand} */ (cmd).x || 0, /** @type {import('svg-path-parser').MoveToCommand} */ (cmd).y || 0);
 			break;
 			default:
 				throw Error(`svg command ${cmd.command} is not supported`);
@@ -226,4 +218,13 @@ export function canTouchDevice() {
  */
 export function getNumericCssVar(el, varName) {
 	return parseFloat(assertNonNull(el.style.getPropertyValue(varName)));
+}
+
+/**
+ * @param {string | number} [value] 
+ */
+export function parseCssDim(value) {
+	return typeof value === 'number' || value === undefined
+		? `${value??0}px`
+		: value;
 }

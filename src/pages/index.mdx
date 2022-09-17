@@ -1,18 +1,70 @@
 ---
 key: index
-path: /
+date: 2022-10-01
 info: Home page
+# ⛔️ GraphQL error avoiding if ≥ 1 instance of field
+giscusTerm: /home
 label: home
-date: 2022-05-22
 navGroup: null
+next: intro/
+path: /
 prev: null
-next: null
 tags:
   - video game
   - web dev
   - game ai
 ---
 
-## Homepage
+import Carousel from "components/page/Carousel";
 
-Please see [objective](/objective).
+## Home page
+
+### About
+
+This website is a blog about Game AI.
+By this we mean _controlling Non-Player Characters_ (NPCs).
+Please [read the introduction](/intro/).
+We're going to build a game step-by-step directly on this blog, using everyday web technologies.
+Various screenshots are shown below.
+
+<Carousel
+  baseSrc="/assets/pics/home-carousel/"
+  height={550}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    700: {
+      slidesPerView: 2,
+    },
+  }}
+  items={[
+    { src: 'pic-1.png', label: 'A World and a Terminal' },
+    { src: 'pic-2.png', label: 'Movement and commands' },
+    { src: 'pic-3.png', label: 'Another Terminal awaits another World' },
+    { src: 'pic-4.png', label: 'Disabling Tabs pauses sessions' },
+    { src: 'pic-5.png', label: 'Multiple Worlds and Terminals' },
+    { src: 'pic-6.png', label: 'Can resize Tab and Tabset' },
+    { src: 'pic-7.png', label: 'Widescreen view' },
+    { src: 'pic-8.png', label: 'Pausing a process' },
+    { src: 'pic-9.png', label: 'Reading some variables' },
+    { src: 'pic-10.png', label: 'Mobile has Terminal UI' },
+    { src: 'pic-11.png', label: 'Piping output into devtool' },
+  ]}
+/>
+
+### Changelog
+
+| date | change |
+| --- | ----------- |
+| 2022-10-01 | created [Home page](/) |
+|  | created [Introduction](/intro/intro) |
+|  | created [About](/about) |
+|  | created stub [Setup](/intro/setup) |
+|  | created stub [JavaScript CLI](/intro/js-cli) |
+|  | created stub [Game AI CLI](/intro/ai-cli) |
+
+<Comments
+  id="comments"
+  term="/"
+/>

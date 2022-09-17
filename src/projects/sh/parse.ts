@@ -1,9 +1,24 @@
 import type Sh from 'mvdan-sh';
-import { syntax } from 'mvdan-sh';
 import cloneWithRefs from 'lodash.clonedeep';
 import getopts from 'getopts';
-
 import { testNever, last } from "../service/generic";
+
+/**
+ * We lazyload the shell parser `mvdan-sh`.
+ */
+let syntax = {
+  NewParser: class NewParser {
+    Interactive() {
+      throw Error('mvdan-sh not ready');
+    }
+    Parse() {
+      throw Error('mvdan-sh not ready');
+    }
+  } as any,
+
+} as typeof MvdanSh.syntax;
+
+import('mvdan-sh').then(x => syntax = x.syntax)
 
 //#region model
 
@@ -119,6 +134,7 @@ export type Command =
 | CoprocClause
 export type CoprocClause = Sh.CoprocClauseGeneric<BaseNode, Pos, string>
 export type DblQuoted = Sh.DblQuotedGeneric<BaseNode, Pos, string>
+/** syntax.LangBash only */
 export type DeclClause = Sh.DeclClauseGeneric<BaseNode, Pos, string>
 export type ExtGlob = Sh.ExtGlobGeneric<BaseNode, Pos, string>
 export type File = Sh.FileGeneric<BaseNode, Pos, string> & BaseNode
@@ -735,8 +751,8 @@ class ParseShService {
     }
     const parser = syntax.NewParser(
       syntax.KeepComments(true),
-      syntax.Variant(syntax.LangBash),
-      // syntax.Variant(syntax.LangPOSIX),
+      // syntax.Variant(syntax.LangBash),
+      syntax.Variant(syntax.LangPOSIX),
       // syntax.Variant(syntax.LangMirBSDKorn),
     );
     const parsed = parser.Parse(src, 'src.sh');

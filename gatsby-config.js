@@ -24,7 +24,19 @@ const config = {
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
     // "gatsby-plugin-preact",
+    "gatsby-plugin-loadable-components-ssr",
   ],
+  flags: {
+    /**
+     * Turning off because seeing spurious SSR errors:
+     * - mvdan-sh
+     * - svg-path-parser
+     * 
+     * https://stackoverflow.com/questions/63066974/how-to-use-react-lazy-in-gatsby#comment125726318_63066975
+     * https://github.com/gatsbyjs/gatsby/discussions/28138
+     */
+    DEV_SSR: true,
+  },
 };
 
 module.exports = config;

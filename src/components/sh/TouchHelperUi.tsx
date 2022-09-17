@@ -1,24 +1,25 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
+import { zIndex } from 'projects/service/const';
 import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
 import useSessionStore from 'projects/sh/session.store';
 
-export function TouchHelperUI(props: {
-  offset: number;
-  session: Session;
-}) {
+export function TouchHelperUI(props: { session: Session }) {
 
   const state = useStateRef(() => {
     return {
-      onClick(e: React.MouseEvent) {
+      async onClick(e: React.MouseEvent) {
         const target = e.target as HTMLElement;
         const { xterm } = props.session.ttyShell;
         xterm.xterm.scrollToBottom();
-        if (target.classList.contains('lowercase')) {
+        if (target.classList.contains('paste')) {
+          const textToPaste = await navigator.clipboard.readText();
+          xterm.spliceInput(textToPaste);
+        } else if (target.classList.contains('lowercase')) {
           const forced = (xterm.forceLowerCase = !xterm.forceLowerCase);
-          const message = `⚠️ input ${forced ? 'forced as' : 'not forced as'} lowercase`;
+          const message = `⚠️  input ${forced ? 'forced as' : 'not forced as'} lowercase`;
           useSessionStore.api.writeMsgCleanly(props.session.key, message);
           target.classList.toggle('enabled');
           tryLocalStorageSet(localStorageKey, `${forced}`);
@@ -50,10 +51,10 @@ export function TouchHelperUI(props: {
     <div
       className={rootCss}
       onClick={state.onClick}
-      style={{
-        top: `${props.offset}px`,
-      }}
     >
+      <div className="icon paste">
+        paste
+      </div>
       <div className={cx(
         'icon lowercase',
         { enabled: props.session.ttyShell.xterm.forceLowerCase },
@@ -80,11 +81,9 @@ const localStorageKey = 'touch-tty-force-lowercase';
 
 const rootCss = css`
   position: absolute;
-  z-index: 100000;
+  z-index: ${zIndex.ttyTouchHelper};
   top: 0;
-  right: 16px;
-  width: 32px;
-  height: 128px;
+  right: 0;
 
   line-height: 1; /** Needed for mobile viewing 'Desktop site' */
   background-color: rgba(0, 0, 0, 0.7);
@@ -95,23 +94,19 @@ const rootCss = css`
 
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transition: top 500ms ease;
+
+  .icon {
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    transform: scale(1.2);
+  }
 
   .lowercase {
     color: #999;
     &.enabled {
       color: white;
     }
-  }
-
-  .icon {
-    cursor: pointer;
-    width: 100%;
-    text-align: center;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
   }
 `;

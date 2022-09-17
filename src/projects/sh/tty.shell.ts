@@ -3,8 +3,8 @@ import { testNever } from '../service/generic';
 import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
-import { ProcessError } from './util';
-import { ParseService, srcService, wrapInFile } from './parse';
+import { ansiColor, ProcessError, ShError } from './util';
+import { parseService, srcService } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
 import { ttyXtermClass } from './tty.xterm';
@@ -20,6 +20,7 @@ export class ttyShellClass implements Device {
   private buffer = [] as string[];
   private readonly maxLines = 500;
   private process!: ProcessMeta;
+  private cleanups = [] as (() => void)[];
 
   private oneTimeReaders = [] as {
     resolve: (msg: any) => void;
@@ -34,10 +35,16 @@ export class ttyShellClass implements Device {
   ) {
     this.key = `/dev/tty-${sessionKey}`;
   }
+
+  dispose() {
+    this.xterm.dispose();
+    this.cleanups.forEach(cleanup => cleanup());
+    this.cleanups.length = 0;
+  }
   
   async initialise(xterm: ttyXtermClass) {
     this.xterm = xterm;
-    this.io.read(this.onMessage.bind(this));
+    this.cleanups.push(this.io.read(this.onMessage.bind(this)));
 
     // session corresponds to leading process where pid = ppid = pgid = 0
     useSession.api.createProcess({
@@ -48,13 +55,9 @@ export class ttyShellClass implements Device {
     });
     this.process = useSession.api.getSession(this.sessionKey).process[0];
 
-    if (!parseService.parse) {// Wait for parse.service
-      await new Promise<void>(resolve => initializers.push(resolve));
-    }
+    useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.sessionKey}${ansiColor.Reset}`, 'info');
 
     await this.runProfile();
-
-    this.prompt('$');
   }
 
   private onMessage(msg: MessageFromXterm) {
@@ -112,21 +115,6 @@ export class ttyShellClass implements Device {
     return this.history.slice();
   }
 
-  /** Input is a lookup `{ foo: '{ echo foo; }' }` */
-  loadShellFuncs(funcDefs: { [funcName: string]: string }) {
-    for (const [funcName, funcBody] of Object.entries(funcDefs)) {
-      try {
-        const parsed = parseService.parse(`${funcName} () ${funcBody.trim()}`);
-        const parsedBody = (parsed.Stmts[0].Cmd as Sh.FuncDecl).Body;
-        const wrappedBody = wrapInFile(parsedBody);
-        useSession.api.addFunc(this.sessionKey, funcName, wrappedBody);
-      } catch (e) {
-        console.error(`loadShellFuncs: failed to load function "${funcName}"`);
-        console.error(e);
-      }
-    }
-  }
-
   /** `prompt` must not contain non-readable characters e.g. ansi color codes */
   private prompt(prompt: string) {
     this.io.write({
@@ -147,17 +135,31 @@ export class ttyShellClass implements Device {
     });
   }
 
+  /**
+   * We run the profile by pasting it into the terminal.
+   * This explicit approach can be avoided via `source`.
+   */
   private async runProfile() {
-    const profile = useSession.api.getVar(this.sessionKey, 'PROFILE') || '';
-    const parsed = parseService.parse(profile);
-    this.provideContextToParsed(parsed);
-    await this.spawn(parsed, { leading: true });
+    const profile = useSession.api.getVar(
+      { pid: 0, sessionKey: this.sessionKey } as Sh.BaseMeta,
+      'PROFILE',
+    ) || '';
+    const { ttyShell } = useSession.api.getSession(this.sessionKey);
+
+    try {
+      ttyShell.xterm.historyEnabled = false;
+      useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Running ${ansiColor.Blue}/home/PROFILE${ansiColor.Reset}`, 'info');
+      await ttyShell.xterm.pasteLines(profile.split('\n'), true);
+      this.prompt('$');
+    } catch {} finally {
+      ttyShell.xterm.historyEnabled = true;
+    }
   }
 
   /** Spawn a process, assigning pid to non-leading ones */
   async spawn(
     parsed: Sh.FileWithMeta,
-    opts: { leading?: boolean, posPositionals?: string[] } = {},
+    opts: { leading?: boolean; posPositionals?: string[]; localVar?: boolean } = {},
   ) {
     const { meta } = parsed;
 
@@ -174,22 +176,40 @@ export class ttyShellClass implements Device {
         posPositionals: opts.posPositionals || positionals.slice(1),
       });
       meta.pid = process.key;
+
+      const session = useSession.api.getSession(meta.sessionKey);
+      const parent = session.process[meta.ppid]; // Exists
+      // Shallow clone avoids mutation by descendants
+      process.inheritVar = { ...parent.inheritVar };
+      if (opts.localVar) {
+        // Sometimes processes (e.g. background, subshell) need their own PWD
+        process.localVar.PWD = (parent.inheritVar.PWD)??session.var.PWD;
+        process.localVar.OLDPWD = (parent.inheritVar.OLDPWD)??session.var.OLDPWD;
+      }
       // console.warn(ppid, 'launched', meta.pid, process, JSON.stringify(meta.fd));
     }
 
     try {
-      for await (const _ of semanticsService.File(parsed));
+      for await (const _ of semanticsService.File(parsed)) { /** NOOP */ }
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
-        console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`)
+        console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`);
+        // Ctrl-C code is 130 unless overriden
+        parsed.exitCode = e.exitCode??130;
+      } else if (e instanceof ShError) {
+        parsed.exitCode = e.exitCode;
       }
       throw e;
     } finally {
-      // const process = useSession.api.getProcess(meta);
+      if (typeof parsed.exitCode === 'number') {
+        useSession.api.getSession(this.sessionKey).lastExitCode = parsed.exitCode;
+      } else {
+        console.warn(`process ${meta.pid} had no exitCode`);
+      }
       // process.cleanups.forEach(cleanup => cleanup());
       
-      // TODO why is opts.leading false and meta.pid 0
+      // NOTE can have `!opts.leading && meta.pid === 0` because ...
       !opts.leading && meta.pid && useSession.api.removeProcess(meta.pid, this.sessionKey);
     }
   }
@@ -224,9 +244,10 @@ export class ttyShellClass implements Device {
         }
         case 'complete': {
           this.buffer.length = 0;
-          // Store command in history
           const singleLineSrc = srcService.src(result.parsed);
-          singleLineSrc && this.storeSrcLine(singleLineSrc);
+          if (singleLineSrc && this.xterm.historyEnabled) {
+            this.storeSrcLine(singleLineSrc); // Store command in history
+          }
 
           // Run command
           this.process.src = singleLineSrc;
@@ -281,13 +302,3 @@ export class ttyShellClass implements Device {
   }
   //#endregion
 }
-
-// Lazyload saves ~220kb initially
-let parseService = { tryParseBuffer:
-  (_) => ({ key: 'failed', error: 'not ready' })} as ParseService;
-const initializers = [] as (() => void)[]; 
-import('./parse').then(x => {
-  parseService = x.parseService;
-  initializers.forEach(initialize => initialize());
-  initializers.length = 0;
-});

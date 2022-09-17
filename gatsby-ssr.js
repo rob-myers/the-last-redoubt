@@ -6,6 +6,7 @@ import createEmotionServer from '@emotion/server/create-instance';
 import { renderToString } from 'react-dom/server';
 
 export { wrapPageElement } from "./src/components/page/Root";
+import { localStorageKey } from "./src/projects/service/const";
 
 export const replaceRenderer = ({ bodyComponent, setHeadComponents }) => {
   const { extractCritical } = createEmotionServer(cache);
@@ -19,3 +20,28 @@ export const replaceRenderer = ({ bodyComponent, setHeadComponents }) => {
     />,
   ]);
 };
+
+/**
+ * @param {import('gatsby').RenderBodyArgs} arg
+ */
+export function onRenderBody({ setPreBodyComponents }) {
+  setPreBodyComponents([
+    /**
+     * Cannot append to <head> because
+     * `document.body` was null on Android Chrome.
+     */
+    <script key="set-dark-mode"
+      dangerouslySetInnerHTML={{
+        __html: `
+  try {
+    const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
+    if (darkModeEnabled === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  } catch (e) {
+    console.error(e)
+  }
+`,
+    }}/>
+  ]);
+}

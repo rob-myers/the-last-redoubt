@@ -5,13 +5,13 @@ import { error } from "../service/log";
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
  */
-export class RoomGraph extends BaseGraph {
+export class roomGraphClass extends BaseGraph {
 
   /**
    * @param {Graph.RoomGraphJson} json 
    */  
   static from(json) {
-    return (new RoomGraph).plainFrom(json);
+    return (new roomGraphClass).plainFrom(json);
   }
 
   /**
@@ -33,8 +33,8 @@ export class RoomGraph extends BaseGraph {
   getAdjacentHullDoorIds(gm, ...roomIds) {
     return this.getAdjacentDoors(...roomIds)
       .map(node => /** @type {const} */ ([node, gm.doors[node.doorId]]))
-      .flatMap(([{ doorId: doorIndex }, door]) => door.roomIds.some(x => x === null)
-        ? { doorIndex, hullDoorIndex: gm.hullDoors.indexOf(door) } : []
+      .flatMap(([{ doorId }, door]) => door.roomIds.some(x => x === null)
+        ? { doorId, hullDoorId: gm.hullDoors.indexOf(door) } : []
       );
   }
 
@@ -51,13 +51,13 @@ export class RoomGraph extends BaseGraph {
   }
 
   /**
-   * Given nodes, find all adjacent rooms.
-   * @param {...Graph.RoomGraphNode} nodes
+   * Given door/window nodes find all adjacent rooms.
+   * @param {...Graph.RoomGraphNodeConnector} nodes
    */
   getAdjacentRooms(...nodes) {
     const rooms = /** @type {Set<Graph.RoomGraphNodeRoom>} */ (new Set);
-    nodes.forEach(node => this.getSuccs(node).forEach(other =>
-      other.type === 'room' && rooms.add(other))
+    nodes.forEach(node => this.getSuccs(node)
+      .forEach(other => other.type === 'room' && rooms.add(other))
     );
     return Array.from(rooms);
   }
@@ -65,6 +65,37 @@ export class RoomGraph extends BaseGraph {
   /** @param {number} doorId */
   getDoorNode(doorId) {
     return /** @type {Graph.RoomGraphNodeDoor} */ (this.getNodeById(`door-${doorId}`));
+  }
+
+  /**
+   * Given room id, find all rooms reachable via a single window or open door.
+   * @param {number} roomId
+   * @param {number[]} openDoorIds
+   */
+   getOpenRoomIds(roomId, openDoorIds) {
+    return this.getSuccs(this.nodesArray[roomId]).flatMap((adjNode) => {
+      if (
+        adjNode.type === 'door' && openDoorIds.includes(adjNode.doorId)
+        || adjNode.type === 'window'
+      ) {
+        return (this.getOtherRoom(adjNode, roomId)?.roomId)??[];
+      } else {
+        return [];
+      }
+    });
+  }
+
+  /**
+   * 
+   * @param {Graph.RoomGraphNodeConnector} doorOrWindowNode 
+   * @param {number} roomId 
+   */
+  getOtherRoom(doorOrWindowNode, roomId) {
+    return /** @type {null | Graph.RoomGraphNodeRoom} x */ (
+      this.getSuccs(doorOrWindowNode).find(
+        x => x.type === 'room' && x.roomId !== roomId
+      )??null
+    );
   }
 
   /** @param {number} roomId */
@@ -94,17 +125,19 @@ export class RoomGraph extends BaseGraph {
 
     /** @type {Graph.RoomGraphNode[]} */
     const roomGraphNodes = [
+      // Observe that `roomId` is the respective node id,
+      // because we start the nodes with the room nodes
       ...rooms.map((_, roomId) => ({
         id: `room-${roomId}`, type: /** @type {const} */ ('room'), roomId,
       })),
-      ...doors.map((_, doorIndex) => {
+      ...doors.map((_, doorId) => {
         /** @type {Graph.RoomGraphNodeDoor} */
-        const doorNode = { id: `door-${doorIndex}`, type: /** @type {const} */ ('door'), doorId: doorIndex };
+        const doorNode = { id: `door-${doorId}`, type: /** @type {const} */ ('door'), doorId };
         return doorNode;
       }),
-      ...windows.map((_, windowIndex) => {
+      ...windows.map((_, windowId) => {
         /** @type {Graph.RoomGraphNodeWindow} */
-        const windowNode = { id: `window-${windowIndex}`, type: /** @type {const} */ ('window'), windowIndex: windowIndex };
+        const windowNode = { id: `window-${windowId}`, type: /** @type {const} */ ('window'), windowId };
         return windowNode;
       }),
     ];
@@ -119,7 +152,7 @@ export class RoomGraph extends BaseGraph {
             { dst: `room-${roomId}`, src: `door-${doorIndex}` },
           ]);
         } else {
-          error(`door ${doorIndex}: unexpected adjacent rooms: ${roomIds}`)
+          error(`door ${doorIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),
@@ -131,7 +164,7 @@ export class RoomGraph extends BaseGraph {
             { dst: `room-${roomId}`, src: `window-${windowIndex}` },
           ]);
         } else {
-          error(`window ${windowIndex}: unexpected adjacent rooms: ${roomIds}`)
+          error(`window ${windowIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),

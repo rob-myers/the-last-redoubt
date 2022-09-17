@@ -1,0 +1,28 @@
+body.dark-mode {
+  /* --page-background-color: #000; */
+  --nav-background: #222;
+  --page-background: #000;
+  --page-font-color: #ccc;
+  --page-header-color: #aaa;
+  --page-title-color: #aaa;
+  --page-blockquote-border-color: #444;
+  --page-link-color: #dd0;
+  --page-border-color: #444;
+  --aside-background-color: #333333aa;
+  
+  --swiper-pagination-color: #ddc;
+  --swiper-pagination-bullet-inactive-color: #777;
+  --swiper-pagination-bullet-inactive-opacity: 1;
+}
+
+body.dark-mode figure.carousel span.icon,
+body.dark-mode aside :not(a) span.icon,
+body.dark-mode section.comments span.icon,
+body.dark-mode article > p span.icon
+{
+  filter: invert(100%) brightness(1);
+}
+
+body.dark-mode div.swiper-lazy-preloader {
+  --swiper-preloader-color: #fff;
+}

@@ -4,11 +4,12 @@ import { css, cx } from "@emotion/css";
 import * as defaults from "./defaults";
 import { Rect, Vect } from "../geom";
 import { geomorphPngPath } from "../service/geomorph";
+import { svgStringPull } from "./jsx-dom";
 
 import useGeomorphData from "../geomorph/use-geomorph-data";
 import usePathfinding from "../geomorph/use-pathfinding";
 import useStateRef from "../hooks/use-state-ref";
-import PanZoom from "../panzoom/PanZoom";
+import SvgPanZoom from "../panzoom/SvgPanZoom";
 import DraggableNode from "./DraggableNode";
 
 /** @param {{ disabled?: boolean }} props */
@@ -38,8 +39,20 @@ export default function SvgStringPull(props) {
     },
   }), { deps: [pf] });
 
+  React.useEffect(() => {
+    const g = /** @type {SVGGElement} */ (state.rootEl.querySelector('g.navtris'));
+    if (!props.disabled && pf && g) {
+      /**
+       * We do direct DOM manipulation,
+       * because React can be incredibly slow in older browsers.
+       */
+       svgStringPull(g, pf.graph);
+      return () => Array.from(g.children).forEach(x => x.remove());
+    }
+  }, [props.disabled, pf]);
+
   return (
-    <PanZoom
+    <SvgPanZoom
       dark
       gridBounds={defaults.gridBounds}
       initViewBox={defaults.initViewBox}
@@ -56,13 +69,15 @@ export default function SvgStringPull(props) {
       >
         {gm && <image {...gm.pngRect} className="geomorph" href={geomorphPngPath(layoutKey)} />}
 
-        {!props.disabled && pf?.graph.nodesArray.map(({ vertexIds }, nodeId) =>
+        {/* {!props.disabled && pf?.graph.nodesArray.map(({ vertexIds }, nodeId) =>
           <polygon
             key={nodeId}
             className="navtri"
             points={`${vertexIds.map(id => pf.graph.vectors[id])}`}
           />
-        )}
+        )} */}
+
+        <g className="navtris" />
 
         {gm && <>
           <DraggableNode
@@ -89,7 +104,7 @@ export default function SvgStringPull(props) {
         </>}
       </g>
 
-    </PanZoom>
+    </SvgPanZoom>
   );
 }
 

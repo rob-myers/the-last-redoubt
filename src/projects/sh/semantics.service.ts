@@ -5,7 +5,7 @@ import type * as Sh from './parse';
 import { last } from '../service/generic';
 import useSession, { ProcessStatus } from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes } from './util';
-import { cmdService } from './cmd.service';
+import { cmdService, parseJsArg } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
@@ -35,7 +35,7 @@ class semanticsServiceClass {
       return useSession.api.getPositional(meta.pid, meta.sessionKey, Number(varName));
     }
     // Otherwise we're retrieving a variable
-    const varValue = useSession.api.getVar(meta.sessionKey, varName);
+    const varValue = useSession.api.getVar(meta, varName);
     if (varValue === undefined || typeof varValue === 'string') {
       return varValue || '';
     }
@@ -112,10 +112,14 @@ class semanticsServiceClass {
   }
 
   private async *Assign({ meta, Name, Value, Naked }: Sh.Assign) {
-    useSession.api.setVar(meta.sessionKey, Name.Value,
-      !Naked && Value
-        ? (await this.lastExpanded(sem.Expand(Value))).value
-        : ''
+    const textValue = !Naked && Value
+      ? (await this.lastExpanded(sem.Expand(Value))).value
+      : '';
+    useSession.api.setVar(
+      meta,
+      Name.Value,
+      // Attempt to interpret as number, dictionary etc.
+      parseJsArg(textValue),
     );
   }
 
@@ -152,8 +156,11 @@ class semanticsServiceClass {
         try {
           const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
           for (const [i, file] of clones.slice(0, -1).entries()) {
-            // At most one pipeline can be running in any process
-            const fifoKey = `/dev/fifo-${file.meta.pid}-${i}`;
+            /**
+             * At most one pipeline can be running in any process in a given session.
+             * Must prefix with `sessionKey` to avoid device collision.
+             */
+            const fifoKey = `/dev/fifo-${file.meta.sessionKey}-${file.meta.pid}-${i}`;
             fifos.push(useSession.api.createFifo(fifoKey));
             clones[i + 1].meta.fd[0] = file.meta.fd[1] = fifoKey;
           }
@@ -164,7 +171,7 @@ class semanticsServiceClass {
             new Promise<void>(async (resolve, reject) => {
               try {
                 process.cleanups.push(() => reject()); // Handle Ctrl-C
-                await ttyShell.spawn(file);
+                await ttyShell.spawn(file, { localVar: true });
                 stdOuts[i].finishedWriting();
                 stdOuts[i - 1]?.finishedReading();
                 if (node.exitCode = file.exitCode) {
@@ -248,6 +255,7 @@ class semanticsServiceClass {
         switch (node.type) {
           case 'Block': generator = this.Block(node); break;
           case 'BinaryCmd': generator = this.BinaryCmd(node); break;
+          // syntax.LangBash only
           case 'DeclClause': generator = this.DeclClause(node); break;
           case 'FuncDecl': generator = this.FuncDecl(node); break;
           case 'IfClause': generator = this.IfClause(node); break;
@@ -278,6 +286,7 @@ class semanticsServiceClass {
     }
   }
 
+  /** Bash language variant only? */
   private async *DeclClause(node: Sh.DeclClause) {
     if (node.Variant.Value === 'declare') {
       if (node.Args.length) {
@@ -287,8 +296,18 @@ class semanticsServiceClass {
         node.exitCode = 0;
         yield* cmdService.runCmd(node, 'declare', []);
       }
+    } else if (node.Variant.Value === 'local') {
+      for (const arg of node.Args) {
+        const process = useSession.api.getProcess(node.meta);
+        if (process.key > 0) {
+          // Can only set local variable outside session leader,
+          // where variables are e.g. /home/foo
+          process.localVar[arg.Name.Value] = undefined;
+        }
+        yield* this.Assign(arg);
+      }
     } else {
-      throw new ShError(`Commmand: DeclClause: ${node.Variant.Value} unsupported`, 2);
+      throw new ShError(`Command: DeclClause: ${node.Variant.Value} unsupported`, 2);
     }
   }
 
@@ -391,7 +410,7 @@ class semanticsServiceClass {
         cloned.meta.fd[1] = device.key;
 
         const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
-        await ttyShell.spawn(cloned);
+        await ttyShell.spawn(cloned, { localVar: true });
 
         try {
           yield expand(device.readAll()
@@ -423,6 +442,7 @@ class semanticsServiceClass {
     const clonedBody = cloneParsed(node.Body);
     const wrappedFile = wrapInFile(clonedBody);
     useSession.api.addFunc(node.meta.sessionKey, node.Name.Value, wrappedFile);
+    node.exitCode = 0;
   }
 
   private async *IfClause(node: Sh.IfClause) {
@@ -444,17 +464,19 @@ class semanticsServiceClass {
   }
 
   /**
-   * 1. Positionals $0, $1, ...
-   * 2. All positionals "${@}"
-   * 3. Vanilla $x, ${foo}
-   * 4. Default when empty ${foo:-bar}
-   * 5. ${_/foo/bar/baz} into last interactive non-string
+   * 1. $0, $1, ... Positionals 
+   * 2. "${@}" All positionals 
+   * 3. $x, ${foo} Vanilla expansions
+   * 4. ${foo:-bar} Default when empty
+   * 5. ${_/foo/bar/baz} Path into last interactive non-string
+   * 6. $$ PID of current process (Not quite the same as bash)
+   * 7. $? Exit code of last completed process
    */
   private async *ParamExp(node: Sh.ParamExp): AsyncGenerator<Expanded, void, unknown> {
     const { meta, Param, Slice, Repl, Length, Excl, Exp } = node;
-    if (Repl) {
+    if (Repl) {// ${_/foo/bar/baz}
       const origParam = reconstructReplParamExp(Repl)
-      yield expand(safeJsonStringify(cmdService.get(node, [origParam])));
+      yield expand(safeJsonStringify(cmdService.get(node, [origParam])[0]));
     } else if (Excl || Length || Slice) {
       throw new ShError(`ParamExp: ${Param.Value}: unsupported operation`, 2);
     } else if (Exp) {
@@ -471,6 +493,10 @@ class semanticsServiceClass {
       }
     } else if (Param.Value === '@') {
       yield expand(useSession.api.getProcess(meta).positionals.slice(1));
+    } else if (Param.Value === '$') {
+      yield expand(`${meta.pid}`);
+    } else if (Param.Value === '?') {
+      yield expand(`${useSession.api.getSession(meta.sessionKey).lastExitCode}`);
     } else {
       yield expand(this.expandParameter(meta, Param.Value));
     }
@@ -483,7 +509,7 @@ class semanticsServiceClass {
         return redirectNode(node.parent!, { 1: '/dev/null' });
       } else {
         const varDevice = useSession.api.createVarDevice(
-          node.meta.sessionKey,
+          node.meta,
           value,
           node.Op === '>' ? 'last' : 'array',
         );
@@ -504,7 +530,7 @@ class semanticsServiceClass {
       const file = wrapInFile(cloneParsed(stmt));
       file.meta.ppid = stmt.meta.pid;
       file.meta.pgid = useSession.api.getSession(stmt.meta.sessionKey).nextPid;
-      ttyShell.spawn(file).catch((e) => {
+      ttyShell.spawn(file, { localVar: true }).catch((e) => {
           if (e instanceof ProcessError) {
             this.handleTopLevelProcessError(e);
           } else {
@@ -525,9 +551,10 @@ class semanticsServiceClass {
   private async *Subshell(node: Sh.Subshell) {
     const cloned = wrapInFile(cloneParsed(node));
     const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
-    await ttyShell.spawn(cloned);
+    await ttyShell.spawn(cloned, { localVar: true });
   }
 
+  /** Bash language variant only? */
   private async *TimeClause(node: Sh.TimeClause) {
     const before = Date.now(); // Milliseconds since epoch
     if (node.Stmt) {

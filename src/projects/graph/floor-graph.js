@@ -18,7 +18,7 @@ export class floorGraphClass extends BaseGraph {
    * Inverse of `doorNodeIds` and `roomToNodeIds`.
    * - We assume no nav node touches > 1 door.
    * - We assume no triangle resides in > 1 room.
-   * @type {Record<number, NPC.NavNodeMeta>}
+   * @type {Record<number, Graph.NavNodeMeta>}
    */
   nodeToMeta;
 
@@ -80,7 +80,7 @@ export class floorGraphClass extends BaseGraph {
    * Find a path through a geomorph's navmesh
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
-   * @returns {null | NPC.BaseLocalNavPath}
+   * @returns {null | Graph.FloorGraphNavPath}
    */
   findPath(src, dst) {
     const srcNode = this.getClosestNode(src);
@@ -113,10 +113,10 @@ export class floorGraphClass extends BaseGraph {
         }
       }
       return agg;
-    }, /** @type {NPC.NavPartition} */ ([]));
+    }, /** @type {Graph.NavPartition} */ ([]));
 
     const fullPath = [src.clone()];
-    const navMetas = /** @type {NPC.BaseLocalNavPath['navMetas']} */ ([
+    const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
       { key: 'start-seg', index: 0, },
     ]);
     let startDoorId = -1, endDoorId = -1;

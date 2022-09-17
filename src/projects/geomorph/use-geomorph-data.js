@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
-import { geomorphJsonPath } from "../service/geomorph";
 import { Poly, Rect, Vect } from "../geom";
+import { geomorphJsonPath } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
@@ -11,13 +11,13 @@ import { geom } from "../service/geom";
  * 
  * @param {Geomorph.LayoutKey} layoutKey
  */
-export default function useGeomorphData(layoutKey) {
+export default function useGeomorphData(layoutKey, disabled = false) {
   
   return useQuery(geomorphJsonPath(layoutKey), async () => {
     
     const layout = parseLayout(await fetch(geomorphJsonPath(layoutKey)).then(x => x.json()));
 
-    const roomGraph = layout.roomGraph;
+    const { roomGraph } = layout;
 
     const roomsWithDoors = roomGraph.nodesArray
       .filter(node => node.type === 'room') // Aligned to `rooms`
@@ -30,20 +30,20 @@ export default function useGeomorphData(layoutKey) {
       });
 
     /**
-     * TODO move to json?
-     * `light`s override light position
-     * Convex polygon `poly` (e.g. rotated rect) should cover door and have center inside room.
+     * - `light`s override light position
+     * - convex polygon `poly` (e.g. rotated rect) should cover door and have center inside room.
+     * - TODO move to json?
      */
     const lightMetas = layout.groups.singles
       .filter(x => x.tags.includes('light'))
       .map(({ poly, tags }) => /** @type {const} */ (
-        { center: poly.center, poly, reverse: tags.includes('reverse') }
+        { center: poly.center, poly, reverse: tags.includes('reverse'), tags }
       ));
 
     /**
-     * TODO move to json?
-     * `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
-     * We'll use it to extend the light polygon i.e. improve the look of lighting under certain circumstances.
+     * - `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
+     * - we'll use it to extend the light polygon i.e. improve the look of lighting under certain circumstances.
+     * - TODO move to json?
      */
     const relDoorId = layout.groups.singles
       .filter(x => x.tags.includes('relate-connectors'))
@@ -63,30 +63,35 @@ export default function useGeomorphData(layoutKey) {
       },
       /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
     );
-    
+
     //#region points by room
     /** @type {Geomorph.GeomorphData['point']} */
     const pointsByRoom = layout.rooms.map(x => ({
       default: x.center,
       labels: [],
-      light: {},
+      doorLight: {},
+      windowLight: {},
       spawn: [],
     }));
 
-    lightMetas.forEach(({ center: p, poly, reverse }, i) => {
+    lightMetas.forEach(({ center: p, poly, reverse, tags }, i) => {
       let roomId = layout.rooms.findIndex(poly => poly.contains(p));
       const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
+      const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
 
-      if (roomId === -1 || doorId === -1) {
-        console.warn(`useGeomorphData: light ${i} has room/doorId ${roomId}/${doorId}`);
+      if (roomId === -1 || (doorId === -1 && windowId === -1)) {
+        console.warn(`useGeomorphData: light ${i} has room/door/windowId ${roomId}/${doorId}/${windowId}`);
       } else if (reverse) {// Reversed light comes from otherRoomId
-        const otherRoomId = layout.doors[doorId].roomIds.find(x => x !== roomId);
+        const otherRoomId = doorId >= 0
+          ? layout.doors[doorId].roomIds.find(x => x !== roomId)
+          : layout.windows[windowId].roomIds.find(x => x !== roomId);
         if (typeof otherRoomId !== 'number') {
           console.warn(`useGeomorphData: reverse light ${i} lacks other roomId (room/doorId ${roomId}/${doorId})`);
         } else roomId = otherRoomId;
       }// NOTE roomId could be -1
 
-      pointsByRoom[roomId].light[doorId] = p;
+      doorId >= 0 && (pointsByRoom[roomId].doorLight[doorId] = { point: p, tags });
+      windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
     });
 
     layout.groups.singles.filter(x => x.tags.includes('spawn'))
@@ -119,7 +124,7 @@ export default function useGeomorphData(layoutKey) {
 
       getHullDoorId(doorOrId) {
         const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId
-        return this.hullDoors.findIndex(x => x === door);
+        return this.hullDoors.indexOf(door);
       },
       getOtherRoomId(doorOrId, roomId) {
         return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
@@ -139,6 +144,7 @@ export default function useGeomorphData(layoutKey) {
     cacheTime: Infinity,
     keepPreviousData: true,
     staleTime: Infinity,
+    enabled: !disabled,
   });
 }
 

@@ -1,8 +1,8 @@
+import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 
 import type { FrontMatterProps } from "./Root";
-import Link from './Link'
 import useSiteStore from "store/site.store";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
@@ -13,7 +13,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
     <section className={rootCss}>
 
       <h3>
-        <Link href="/">
+        <Link to="/">
           The Last Redoubt
         </Link>
       </h3>
@@ -21,14 +21,25 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
       {groupedMetas.map((navItems, i) =>
         <ul key={i}>
           {navItems.map((meta) =>
-            <li key={meta.key} className={meta.key === frontmatter.key ? 'current' : undefined} >
+            <li
+              key={meta.key}
+              className={meta.key === frontmatter?.key ? 'current' : undefined}
+            >
               <Link
-                href={meta.path}
+                to={meta.path}
                 title={meta.info}
-                // backward={!!part && meta.part < part}
               >
                 {meta.label}
               </Link>
+              
+              <span>
+                <Link
+                  to={meta.path}
+                  title={meta.info}
+                >
+                  {meta?.icon}
+              </Link>
+              </span>
             </li>
           )}
         </ul>
@@ -41,31 +52,34 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
 const rootCss = css`
   padding: 0;
   color: #aaa;
+  font-family: sans-serif;
   
   h3 {
     padding: 20px 12px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: 300;
     margin: 0;
     a {
       color: #ddd;
     }
-    border: 0 solid #aaa;
-    border-width: 0 0 2px;
+    border: 0 solid #444;
+    border-width: 0 0 4px;
   }
   
   ul {
     font-size: 1.1rem;
     padding: 6px 0;
     margin: 0;
-    border: 0 solid #aaa;
-    border-width: 0 0 2px;
+    border: 0 solid #777;
+    border-width: 0 0 1px;
 
     li {
       list-style: none;
       list-style-position: inside;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
     }
     li.current {
       a {
@@ -73,7 +87,7 @@ const rootCss = css`
       }
     }
     a {
-      padding: 10px 12px;
+      padding: 10px 0;
       width: 100%;
       color: #ccc;
       &:hover {

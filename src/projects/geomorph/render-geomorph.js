@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-expressions */
 import { Poly, Vect } from "../geom";
+import { geom } from '../service/geom';
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { error } from "../service/log";
 import { drawLine, fillPolygon, fillRing, setStyle, strokePolygon } from '../service/dom';
@@ -83,6 +85,9 @@ export async function renderGeomorph(
       fillPolygon(ctxt, [poly]);
     }
   });
+
+  ctxt.fillStyle = obsColor;
+  obsBounds && fillPolygon(ctxt, obstacles);
   //#endregion
 
   //#region symbol PNGs
@@ -98,8 +103,6 @@ export async function renderGeomorph(
   //#endregion
 
   //#region overlay
-  ctxt.fillStyle = obsColor;
-  obsBounds && fillPolygon(ctxt, obstacles);
 
   /**
    * Fill walls
@@ -117,7 +120,7 @@ export async function renderGeomorph(
   if (doors) {
     const doors = singlesToPolys(singles, 'door');
     ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-    fillPolygon(ctxt, doors.flatMap(x => x.createOutset(1)));
+    fillPolygon(ctxt, doors.flatMap(x => geom.createOutset(x, 1)));
     ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
     fillPolygon(ctxt, doors);
   }

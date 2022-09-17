@@ -4,8 +4,8 @@ import safeStableStringify from 'safe-stable-stringify';
 /**
  * @template {{ key: string }} LookupItem
  * @param {LookupItem} newItem 
- * @param {TypeUtil.KeyedLookup<LookupItem>} lookup 
- * @returns {TypeUtil.KeyedLookup<LookupItem>}
+ * @param {KeyedLookup<LookupItem>} lookup 
+ * @returns {KeyedLookup<LookupItem>}
  */
 export function addToLookup(newItem, lookup) {
   return { ...lookup, [newItem.key]: newItem };
@@ -112,6 +112,14 @@ export function equals(x, y, depth = 0) {
   } else {
     return x === y;
   }
+}
+
+/**
+ * https://stackoverflow.com/a/15710692/2917822
+ * @param {string} s
+ */
+export function hashText(s){
+  return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
 }
 
 /**
@@ -228,8 +236,8 @@ export function removeDups(items) {
 /**
  * @template {{ key: string }} LookupItem
  * @param {string} itemKey 
- * @param {TypeUtil.KeyedLookup<LookupItem>} lookup 
- * @returns {TypeUtil.KeyedLookup<LookupItem>}
+ * @param {KeyedLookup<LookupItem>} lookup 
+ * @returns {KeyedLookup<LookupItem>}
  */
 export function removeFromLookup(itemKey, lookup) {
   const { [itemKey]: _, ...rest } = lookup;
@@ -308,3 +316,32 @@ export function tryLocalStorageSet(key, value, logErr = true) {
 function zealousTrim(input) {
   return input.trim().replace(/\s\s+/g, ' ').trim();
 }
+
+/**
+ * Source:
+ * - https://stackoverflow.com/a/51396686/2917822
+ * - https://blog.jonnew.com/posts/poo-dot-length-equals-two
+ * 
+ * Apparently won't work for all unicode characters,
+ * but perhaps we can restrict them.
+ * @param {string} input
+ */
+ export function visibleUnicodeLength(input){
+  const split = input.split("\u{200D}");
+  return split.reduce((sum, item) =>
+    sum + Array.from(item.split(/[\ufe00-\ufe0f]/).join("")).length
+  , 0) / split.length;
+}
+
+/**
+ * @typedef KeyedLookup
+ * @type {{ [key: string]: Value }}
+ * @template {{ key: K}} Value
+ * @template {string | number} [K=string|number]
+ */
+
+/**
+ * @typedef KeyedTrue
+ * @type {{ [Key in keyof T]?: true }}
+ * @template {Record<string, any>} T
+ */

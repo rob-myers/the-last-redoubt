@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-expressions */
-import cheerio, { CheerioAPI, Element } from 'cheerio';
+import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
-import { RoomGraph } from '../graph/room-graph';
+import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { hullOutset, obstacleOutset, precision, wallOutset } from './const';
 import { error, warn } from './log';
@@ -53,7 +53,7 @@ export async function createLayout(def, lookup, triangleService) {
      * We avoid outwards outset for cleanliness.
      */
     const transformedHull = hull.map(x => x.applyMatrix(m));
-    const inwardsOutsetHull = Poly.intersect(transformedHull.map(x => x.clone().removeHoles()), transformedHull.flatMap(x => x.createOutset(hullOutset)));
+    const inwardsOutsetHull = Poly.intersect(transformedHull.map(x => x.clone().removeHoles()), transformedHull.flatMap(x => geom.createOutset(x, hullOutset)));
     groups.walls.push(...Poly.union([
       ...walls.map(x => x.clone().applyMatrix(m)),
       // singles can also have walls e.g. to support optional doors
@@ -155,10 +155,10 @@ export async function createLayout(def, lookup, triangleService) {
   const navPolyWithDoors = Poly.cutOut([
     // Non-unioned walls avoids outset issue (self-intersection)
     ...unjoinedWalls.flatMap(x =>
-      x.createOutset(wallOutset)
+      geom.createOutset(x, wallOutset)
     ),
     ...groups.obstacles.flatMap(x =>
-      x.createOutset(obstacleOutset)
+      geom.createOutset(x, obstacleOutset)
     ),
   ], hullOutline).map(
     x => x.cleanFinalReps().fixOrientation().precision(precision)
@@ -234,8 +234,15 @@ export async function createLayout(def, lookup, triangleService) {
     i > 0 && tris.length <= 12 && warn(`createLayout: unexpected small navZone group ${i} with ${tris.length} tris`)
   );
 
-  const roomGraphJson = RoomGraph.json(rooms, doors, windows);
-  const roomGraph = RoomGraph.from(roomGraphJson);
+  const roomGraphJson = roomGraphClass.json(rooms, doors, windows);
+  const roomGraph = roomGraphClass.from(roomGraphJson);
+
+  const lightSrcs = groups.singles.filter(x => x.tags.includes('light-source')).map(({ poly, tags }) => ({
+    position: poly.center,
+    direction: tags.reduce((agg, tag) =>
+      agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg,
+    /** @type {undefined | Vect} */ (undefined)),
+  }));
 
   return {
     key: def.key,
@@ -251,6 +258,7 @@ export async function createLayout(def, lookup, triangleService) {
     navPoly: navPolyWithDoors,
     navZone,
     roomGraph,
+    lightSrcs,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -258,7 +266,8 @@ export async function createLayout(def, lookup, triangleService) {
 
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
-      pngHref: i ? `/symbol/${sym.key}.png` : `/debug/${def.key}.png`,
+      // `/assets/...` is a live URL, and also a dev env path if inside `/static`
+      pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${def.key}.png`,
       pngRect: sym.pngRect,
       transformArray: def.items[i].transform,
       transform: def.items[i].transform ? `matrix(${def.items[i].transform})` : undefined,
@@ -339,7 +348,7 @@ function parseConnectRect(x) {
 /** @param {Geomorph.ParsedLayout} layout */
 export function serializeLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -362,6 +371,7 @@ export function serializeLayout({
     navPoly: navPoly.map(x => x.geoJson),
     navZone,
     roomGraph: roomGraph.plainJson(),
+    lightSrcs,
 
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -375,7 +385,7 @@ export function serializeLayout({
 /** @param {Geomorph.LayoutJson} layout */
 export function parseLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -397,7 +407,8 @@ export function parseLayout({
     labels,
     navPoly: navPoly.map(Poly.from),
     navZone,
-    roomGraph: RoomGraph.from(roomGraph),
+    roomGraph: roomGraphClass.from(roomGraph),
+    lightSrcs: lightSrcs.map(x => ({ position: Vect.from(x.position), direction: x.direction ? Vect.from(x.direction) : undefined })),
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,
@@ -479,7 +490,7 @@ export function deserializeSvgJson(svgJson) {
  * Each symbol has a copy of the original PNG in group `background`.
  * It may have been offset e.g. so doors are aligned along border.
  * Then we need to extract the respective rectangle.
- * @param {CheerioAPI} api
+ * @param {import('cheerio').CheerioAPI} api
  * @param {Element[]} topNodes
  * @returns {Geom.RectJson}
  */
@@ -653,14 +664,20 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
   };
 }
 
-/** @param {Geomorph.LayoutKey} layoutKey */
+/**
+ * @param {Geomorph.LayoutKey} layoutKey
+ * @returns Live path to asset
+ */
 export function geomorphJsonPath(layoutKey) {
-  return `/geomorph/${layoutKey}.json`
+  return `/assets/geomorph/${layoutKey}.json`
 }
 
-/** @param {Geomorph.LayoutKey} layoutKey */
+/**
+ * @param {Geomorph.LayoutKey} layoutKey
+ * @returns Live path to asset
+ */
 export function geomorphPngPath(layoutKey, suffix = '') {
-  return `/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
+  return `/assets/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
 }
 
 export const labelMeta = {

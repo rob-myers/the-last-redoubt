@@ -1,11 +1,13 @@
 ---
 key: test
-path: /test
+date: 2022-05-22
+icon: 🧪
+giscusTerm: /test
 info: Test page
 label: test
-date: 2022-05-22
-navGroup: null
+path: /test
 prev: null
+navGroup: null
 next: null
 tags:
   - test
@@ -16,28 +18,70 @@ import { profileLookup } from "projects/sh/scripts";
 
 ## Test page
 
+```jsx
+export default function FooBar() {
+  const mine = {
+    foo: 'bar',
+    baz: 'qux',
+  };
+  return (
+    <MyComponent foo={42} bar="hi">
+      <div />
+    </MyComponent>
+  );
+}
+
+const rootCss = css`
+  display: none;
+  transform: translate(2px, 2px);
+  transition: 2s ease-in;
+  /* ... */
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+`;
+```
+
+
 <Tabs
-  id="test"
-  initEnabled
+  id="test-tabs"
+  initEnabled={false}
   height={600}
+  persistLayout
   tabs={[
     [
-      // { type: 'component', filepath: 'example/GeomorphEdit' },
-      // { type: 'component', filepath: 'example/NavDemo1' },
-      // { type: 'terminal', filepath: 'test', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: 'profile-1-a' } },
-      { type: 'terminal', filepath: 'test', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: profileLookup['profile-1'] } },
-      { type: 'component', filepath: 'example/SvgStringPull' },
+      { type: 'component', filepath: 'world-demo-1' },
+      { type: 'component', filepath: 'world-demo-2' },
+      { type: 'component', filepath: 'example/SvgNavGraph#301' },
+      // { type: 'component', filepath: 'geomorph/GeomorphEdit' },
     ],
     [
-    // { type: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
-    // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
-    // { type: 'component', filepath: 'example/Pyramid3dDemo' },
-    // { type: 'component', filepath: 'example/TriangleDev#301' },
-    // { type: 'terminal', filepath: 'other', env: { NPCS_KEY: 'npcs-demo-1', PROFILE: 'profile-1' } },
-    // { type: 'component', filepath: 'example/SvgDoorsDemo#101' },
-    // { type: 'component', filepath: 'example/SvgNavGraph#301' },
-    // { type: 'component', filepath: 'example/SvgPanZoomDemo' },
-    // { type: 'component', filepath: 'example/SvgVisibilityDemo#301' },
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
+      // { type: 'component', filepath: 'example/SvgStringPull' },
+      // { type: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
+      // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
+      // { type: 'component', filepath: 'example/Pyramid3dDemo' },
+      // { type: 'component', filepath: 'example/TriangleDev#301' },
+      // { type: 'component', filepath: 'example/SvgDoorsDemo#101' },
+      // { type: 'component', filepath: 'example/SvgNavGraph#101' },
+      // { type: 'component', filepath: 'example/SvgPanZoomDemo' },
+      // { type: 'component', filepath: 'example/SvgVisibilityDemo#301' },
     ],
+  ]}
+/>
+
+<Tabs
+  id="geomorph-edit-tabs"
+  initEnabled={false}
+  height={600}
+  persistLayout
+  tabs={[
+    [
+      { type: 'component', filepath: 'example/SvgStringPull' },
+      { type: 'component', filepath: 'geomorph/GeomorphEdit' },
+    ],
+    [],
   ]}
 />

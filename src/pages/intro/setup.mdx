@@ -1,0 +1,116 @@
+---
+
+key: intro/setup
+path: /intro/setup
+info: Our setup
+label: 'intro: setup'
+icon: 🚧
+date: 2022-10-01
+navGroup: 0
+prev: intro/
+next: intro/js-cli
+tags:
+  - assets
+  - boxy svg
+  - node.js
+  - react
+  - css
+  - js cli
+  - services
+  - graphs
+---
+
+import InlineCode from "components/page/InlineCode";
+
+## Our Setup 🚧
+
+<aside title="upcoming-article">
+
+#### Upcoming topics
+
+##### Assets
+
+We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
+
+- [Starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/).
+- [Starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
+  - e.g. [1](/assets/symbol/office--020--2x3.png "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
+- Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)
+  - e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+  - collectively organised as [JSON](/assets/symbol/svg.json "@new-tab").
+- Generated geomorphs PNG + JSON
+  - e.g. [1](/assets/geomorph/g-301--bridge.png "@new-tab"), [2](/assets/geomorph/g-101--multipurpose.png "@new-tab"), [3](/assets/geomorph/g-303--passenger-deck.png "@new-tab").
+- NPC animation via Boxy SVG e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
+- Generated NPC spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
+
+
+##### ReactJS and CSS
+
+Our components are built using [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css) e.g.
+
+- [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
+- [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
+- [CssPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/CssPanZoom.jsx "@new-tab"): pan and zoom using [CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
+- [World](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/World.jsx "@new-tab") has subcomponents like _Doors_ and _NPCs_.
+
+React custom hooks (shared component functionality) include:
+
+- [useUpdate](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-update.js "@new-tab"): a callback to trigger a component update.
+- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef and React.useState with HMR persistence.
+- [useGeomorphData](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorph-data.js "@new-tab"): geomorph JSON plus derived data.
+- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitches geomorphs into a global geomorph graph.
+- [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
+
+
+##### JavaScript CLI
+
+We'll direct the game using our own [CLI](https://en.wikipedia.org/wiki/Command-line_interface).
+Amongst interpreted commands are [simple commmands](https://www.gnu.org/software/bash/manual/html_node/Simple-Commands.html), and amongst simple commands are builtins e.g.
+
+- <InlineCode>cd</InlineCode> mutates the string-valued variables <code>PWD</code> and <code>OLDPWD</code>.
+- <InlineCode>declare</InlineCode> lists variables and functions.
+- <InlineCode>echo</InlineCode> outputs its arguments as a single string.
+- <InlineCode>get</InlineCode> wraps recursive <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors">property accessors</a> using delimiter <code>/</code>.
+- <InlineCode>history</InlineCode> list previously executed commands.
+- <InlineCode>ls</InlineCode> wraps the JavaScript function <code>Object.keys</code>.
+- <InlineCode>ps</InlineCode> list running processes.
+- <InlineCode>pwd</InlineCode> outputs the variable <code>PWD</code>.
+- <InlineCode>rm</InlineCode> wraps the JavaScript keyword <code>delete</code>.
+- <InlineCode>run</InlineCode> runs an async generator.
+- <InlineCode>source</InlineCode> interprets a string at a specified location.
+
+We also support e.g. parameter-expansion, brace-expansion, command substitution, function declaration, process output redirection, background processes, subshells, and pipelines.
+
+##### Game AI CLI
+
+We apply the JavaScript CLI to Game AI by defining various functions:
+
+- <InlineCode>awaitWorld</InlineCode> awaits a <i>World</i> component with specified key.
+- <InlineCode>click</InlineCode> converts clicks/touches into world coordinates.
+- <InlineCode>look</InlineCode> makes an NPC look.
+- <InlineCode>nav</InlineCode> computes a navpath for an NPC.
+- <InlineCode>npc</InlineCode> permits NPC configuration.
+- <InlineCode>spawn</InlineCode> spawns an NPC.
+- <InlineCode>track</InlineCode> follows an NPC using panning and zooming.
+- <InlineCode>view</InlineCode> pans and zooms.
+- <InlineCode>walk</InlineCode> makes an NPC walk.
+
+##### Services
+
+We organise various functionality as _services_:
+
+- [cheerio.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/cheerio.js "@new-tab") e.g. extract polygons from SVG metadata.
+- [dom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/dom.js "@new-tab") e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
+- [geom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geom.js "@new-tab") e.g. triangulation and intersection of 2d geometry.
+- [geomorph.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geomorph.js "@new-tab") e.g. create a geomorph JSON given transformed symbols.
+- [npc.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/npc.js "@new-tab") e.g. render spritesheet; npc collision prediction.
+- [triangle.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/triangle.js "@new-tab") wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
+
+##### Graphs
+
+- [floor graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/floor-graph.js "@new-tab") for a single geomorph is its navmesh.
+- [room graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/room-graph.js "@new-tab") for a single geomorph has rooms as nodes and doors as edges.
+- [geomorph graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/gm-graph.js "@new-tab") has geomorphs as nodes and hull doors as edges.
+
+</aside>
+

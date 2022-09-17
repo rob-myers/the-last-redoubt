@@ -1,11 +1,10 @@
+import { Link } from "gatsby";
 import React from "react";
-import { cx, css } from "@emotion/css";
-import { tryLocalStorageSet } from "projects/service/generic";
+import { css } from "@emotion/css";
 import useSiteStore from "store/site.store";
-import { cssName } from "../css-names";
-import Link from "./Link";
+import { cssName, zIndex } from 'projects/service/const';
 import { barHeight } from "./Nav";
-import { iconCss } from "./Icons";
+import Icon from "./Icon";
 
 export default function NavMini() {
 
@@ -18,94 +17,96 @@ export default function NavMini() {
 
   return (
     <div className={rootCss}>
-
-      {meta && (meta.navGroup !== null) && (
-        <nav className={cssName.navMini}>
-          <ul>
+      <nav className={cssName.navMini}>
+        <ul>
+          {meta && (meta.navGroup !== null) && <>
             <li>
-              <Link href={prev?.path || meta.path} backward>
+              <Link to={prev?.path || meta.path}>
                 <span className="prev">prev</span>
               </Link>
             </li>
             <li>
-              <Link href={meta.path}>
+              <Link to={meta.path}>
                 <span className="primary">id</span>
               </Link>
             </li>
             <li>
-              <Link href={next?.path || meta.path}>
+              <Link to={next?.path || meta.path}>
                 <span className="next">next</span>
               </Link>
             </li>
-          </ul>
-        </nav>
-      )}
-
-      <div
-        className={cx(
-          'toggle-dark-mode',
-          iconCss({ basename: 'light-bulb' }),
-        )}
-        onClick={(e) => {
-          const enabled = document.body.classList.toggle('dark-mode');
-          tryLocalStorageSet('dark-mode-enabled', `${enabled}`);
-        }}
-      />
+          </>}
+        </ul>
+        <Icon
+          icon="light-bulb"
+          className="toggle-dark-mode"
+          invert
+          small
+          onClick={useSiteStore.api.toggleDarkMode}
+        />
+      </nav>
     </div>
-  )
-  
+  );
   
 }
 
-const width = 140;
+const controlsWidthPx = 150;
+const darkToggleWidthPx = 36;
 
 const rootCss = css`
   position: absolute;
-  z-index: 10;
-  right: ${width}px;
+  right: ${controlsWidthPx + darkToggleWidthPx}px;
   top: -32px;
-  @media(max-width: 600px) { top: 0; }
-
-  display: flex;
-  font-size: 1rem;
-
-  ul {
+  @media(max-width: 600px) {
+    top: 0;
+  }
+  z-index: ${zIndex.navMini};
+  
+  nav {
     position: fixed;
-    width: ${width}px;
+    display: flex;
+  }
+
+  nav ul {
+    width: ${controlsWidthPx}px;
     height: ${barHeight}px;
-    right: 30px;
 
     display: flex;
-    justify-content: center;
     align-items: stretch;
     padding: 0;
     margin: 0;
 
     li {
+      flex: 1;
+      display: flex;
       list-style: none;
       list-style-position: inside;
-      padding: 0 5px;
     }
     a {
+      flex: 1;
       color: #ccc;
       height: 100%;
       display: flex;
       align-items: center;
+      justify-content: center;
+      border: 0 solid #555;
+      border-left-width: 1px;
+      font-size: 1rem;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     }
     a.primary {
       color: #fff;
     }
   }
 
-  .toggle-dark-mode {
-    position: fixed;
-    width: ${30}px;
+  nav .toggle-dark-mode {
+    background-color: #444;
+    width: ${darkToggleWidthPx}px;
     right: ${5}px;
     height: ${barHeight}px;
     display: flex;
     justify-content: center;
-    color: white;
+    align-items: center;
     cursor: pointer;
-    filter: invert(100%);
   }
 `;

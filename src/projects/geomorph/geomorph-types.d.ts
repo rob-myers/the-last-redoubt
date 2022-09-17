@@ -54,8 +54,9 @@ declare namespace Geomorph {
   }
 
   /**
-   * The layout of a single geomorph, 
-   * constructed from a `LayoutDef` and the `SymbolLookup`.
+   * The layout of a single geomorph constructed from a
+   * @see LayoutDef and the 
+   * @see SymbolLookup.
    */
   export interface Layout<P, G, V, R> {
     key: LayoutKey;
@@ -76,6 +77,8 @@ declare namespace Geomorph {
     navZone: Nav.ZoneWithMeta;
     /** Connectivity graph involving rooms and doors */
     roomGraph: G;
+    /** Sources of lights rendered inside PNG  */
+    lightSrcs: { position: Vect; direction?: Vect }[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];
@@ -110,22 +113,28 @@ declare namespace Geomorph {
    * This is the type of useGeomorphData's data.
    */
    export interface GeomorphData extends Geomorph.ParsedLayout {
+
     roomsWithDoors: Poly[];
     hullDoors: ConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
     hullOutline: Poly;
     pngRect: Geom.Rect;
-    relDoorId: Record<number, { doorIds: number[]; windowIds: number[] }>;
+
+    relDoorId: Record<number, {
+      doorIds: number[];
+      windowIds: number[];
+    }>;
     
-    /** Points grouped by room */
+    /** Points indexed by roomId */
     point: {
+      default: Vect;
       /** Can specify light position from room through door */
-      light: { [doorId?: number]: Vect };
+      doorLight: { [doorId?: number]: { point: Vect; tags: string[]; } };
       /** `labels` inside room. */
       labels: LayoutLabel[];
       /** Spawn points inside room. */
       spawn: Vect[];
-
-      default: Vect;
+      /** Can specify light position from room through window */
+      windowLight: { [windowId?: number]: Vect };
     }[];
 
     /** Proxy for lazy cached data */
@@ -206,8 +215,8 @@ declare namespace Geomorph {
 
   export interface LayoutDef {
     /**
-     * Corresponds to basename of original PNG,  e.g.
-     * `g-301--bridge` where public/debug/g-301--bridge.png exists.
+     * Corresponds to basename of original PNG, e.g.
+     * `g-301--bridge` where /assets/debug/g-301--bridge.png exists.
      */
     key: LayoutKey;
     id: number;

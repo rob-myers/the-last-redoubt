@@ -1,54 +1,30 @@
-<p align="center">
-  <a href="https://www.gatsbyjs.com/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts">
-    <img alt="Gatsby" src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" width="60" />
-  </a>
-</p>
-<h1 align="center">
-  Gatsby minimal TypeScript starter
-</h1>
+# The Last Redoubt
 
-## 🚀 Quick start
+```sh
+# Local development
+yarn dev
 
-1.  **Create a Gatsby site.**
+# Local build
+yarn build
+cd public
+npx http-server
+```
+## Links
 
-    Use the Gatsby CLI to create a new site, specifying the minimal TypeScript starter.
+- [TODOs](/docs/TODO.md).
+- [General dev info](/docs/DEV-INFO.md).
 
-    ```shell
-    # create a new Gatsby site using the minimal TypeScript starter
-    npm init gatsby
-    ```
+## Gotchas
 
-2.  **Start developing.**
+- MDX Frontmatter consistency
+  > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
 
-    Navigate into your new site’s directory and start it up.
+- Clearing persisted Tabs
+  > Try changing its config (in MDX) and refreshing.
+  > Otherwise a React hook will write it on page close.
 
-    ```shell
-    cd my-gatsby-site/
-    npm run develop
-    ```
+- Changing the geomorph JSON data structure and not migrating all geomorphs can produce hard-to-debug errors.
+  > Some of the `useGeomorph`s go into idle state, and don't throw an error (why?).
 
-3.  **Open the code and start customizing!**
-
-    Your site is now running at http://localhost:8000!
-
-    Edit `src/pages/index.tsx` to see your site update in real-time!
-
-4.  **Learn more**
-
-    - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-    - [Tutorials](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-    - [Guides](https://www.gatsbyjs.com/tutorial/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-    - [API Reference](https://www.gatsbyjs.com/docs/api-reference/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-    - [Plugin Library](https://www.gatsbyjs.com/plugins?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-    - [Cheat Sheet](https://www.gatsbyjs.com/docs/cheat-sheet/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter-ts)
-
-## 🚀 Quick start (Gatsby Cloud)
-
-Deploy this starter with one click on [Gatsby Cloud](https://www.gatsbyjs.com/cloud/):
-
-[<img src="https://www.gatsbyjs.com/deploynow.svg" alt="Deploy to Gatsby Cloud">](https://www.gatsbyjs.com/dashboard/deploynow?url=https://github.com/gatsbyjs/gatsby-starter-minimal-ts)
+- shortcuts inside `useStateRef` initializer can break HMR,
+  > e.g. `anim` instead of `this.anim` inside create-npc

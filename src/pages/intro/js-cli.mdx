@@ -1,0 +1,145 @@
+---
+
+key: intro/js-cli
+path: /intro/js-cli
+info: JavaScript CLI
+label: 'intro: js cli'
+icon: 🚧
+date: 2022-10-01
+navGroup: 0
+prev: intro/setup
+next: intro/ai-cli
+tags:
+  - js cli
+  - mvdan-sh
+  - posix
+---
+
+import InlineCode from "components/page/InlineCode";
+
+## JavaScript CLI 🚧
+
+<!-- TODO Windows Ctrl-C etc? -->
+
+<aside title="upcoming-article">
+
+#### Upcoming topics
+
+Our CLI permits us to write and manage JavaScript inside the browser.
+Shells usually manipulate and output strings, whereas our CLI outputs arbitrary JavaScript values.
+
+##### Builtins
+
+- <InlineCode>cd</InlineCode> mutates the string-valued variables <code>PWD</code> and <code>OLDPWD</code>.
+- <InlineCode>declare</InlineCode> lists variables and functions.
+- <InlineCode>echo</InlineCode> outputs its arguments as a single string.
+- <InlineCode>false</InlineCode> has exit code 1.
+- <InlineCode>get</InlineCode> wraps recursive <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors">property accessors</a> via delimiter <code>/</code>.
+- <InlineCode>help</InlineCode> lists builtins
+- <InlineCode>history</InlineCode> list previously executed commands.
+- <InlineCode>kill</InlineCode> kill/pause/resume processes.
+- <InlineCode>ls</InlineCode> wraps the JavaScript function <code>Object.keys</code>.
+- <InlineCode>ps</InlineCode> list running processes.
+- <InlineCode>pwd</InlineCode> outputs the variable <code>PWD</code>.
+- <InlineCode>return</InlineCode> exit from a function.
+- <InlineCode>rm</InlineCode> wraps the JavaScript keyword <code>delete</code>.
+- <InlineCode>run</InlineCode> runs an async generator.
+- <InlineCode>set</InlineCode> wraps JavaScript property assignment.
+- <InlineCode>sleep</InlineCode> wait a number of seconds.
+- <InlineCode>source</InlineCode> interprets a string at a specified location.
+- <InlineCode>true</InlineCode> has exit code 0.
+- <InlineCode>unset</InlineCode> unset variables and functions.
+
+##### Operators and Expansion
+
+- <InlineCode>foo; bar</InlineCode> run "foo" then run "bar"
+- <InlineCode>foo &amp;&amp; bar</InlineCode> run "foo" and if exit code 0 run "bar"
+- <InlineCode>foo || bar</InlineCode> run "foo" and if exit code 1 run "bar"
+- <InlineCode>foo | bar</InlineCode> run "foo" and "bar", with former's output as latter's input
+- <InlineCode>( foo )</InlineCode> run "foo" in a subshell
+- <InlineCode>foo &amp;</InlineCode> run "foo" in the background
+- <InlineCode>foo () {'{'} ... {'}'}</InlineCode> declare function "foo" with body ...
+- <InlineCode>$foo</InlineCode> output the shell variable "foo" as a string
+- <InlineCode>${'{'}foo:-bar{'}'}</InlineCode> like $foo but if empty output literal "bar"
+- <InlineCode>$@</InlineCode> output positive positionals
+- <InlineCode>$$</InlineCode> output process id
+- <InlineCode>$?</InlineCode> output last exit code
+- <InlineCode>$( foo )</InlineCode> run "foo" and output a single string of all its outputs
+- <InlineCode>a{'{'}b,c{'}'}d{'{'}e..h{'}'}</InlineCode> brace expansion
+
+##### Shell Functions
+
+Useful shell functions are provided e.g.
+
+```bash
+# `call '() => 42'` outputs the number `42`
+call () {
+  run '(ctxt) {
+    const func = Function(`return ${ctxt.args[0]}`)()
+    ctxt.args = ctxt.args.slice(1)
+    yield await func(ctxt)
+  }' "${@}"
+}
+
+# `range 5` outputs the array `[0, 1, 2, 3, 4]`
+range () {
+  call '({args}) =>
+    [...Array(Number(args[0]))].map((_, i) => i)
+  ' "$1" 
+}
+
+# `range 5 | map '() => x ** 2'` outputs `[0, 1, 4, 9, 16]`
+map () {
+  run '(ctxt) {
+    let { api, args, datum } = ctxt
+    const func = Function(`return ${args[0]}`)()
+    while ((datum = await api.read(true)) !== null) {
+      if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
+      else yield func(datum, ctxt)
+    }
+  }' "${@}"
+}
+
+# `range 5 | keys` outputs `['0', '1', '2', '3', '4']`
+keys () {
+  map Object.keys
+}
+
+# `range 5 | split` outputs 5 numbers
+# `echo a,b,c,d | split ,` outputs 4 strings
+split () {
+  run '({ api, args, datum }) {
+    const arg = args[0] || ""
+    while ((datum = await api.read()) !== null) {
+      if (datum instanceof Array) {
+        yield { __chunk__: true, items: datum };
+      } else if (typeof datum === "string") {
+        yield { __chunk__: true, items: datum.split(arg) };
+      }
+    }
+  }' "${@}"
+}
+
+# `seq 5` outputs 5 numbers i.e. `0`, `1`, `2`, `3`, `4`
+seq () {
+  range "${1}" | split
+}
+```
+
+##### Interface
+
+- Ctrl-C kills ongoing process (_mobile_ 💀)
+- Up and Down for history (_mobile_ ⬆️ ⬇️)
+- Ctrl-L to clear (_mobile_ ∅)
+- Cmd-C to copy selected text
+- Cmd-V to paste (_mobile_ "paste")
+- Option-Right moves cursor to next word boundary
+- Option-Left moves cursor to previous word boundary
+- Ctrl-A moves cursor to start of input
+- Ctrl-E moves cursor to end of input
+- Ctrl-W clear from cursor to previous word boundary
+- Ctrl-U clear from cursor to start of input
+- Ctrl-K clear from cursor to end of input
+
+
+</aside>

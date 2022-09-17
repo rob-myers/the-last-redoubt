@@ -1,94 +1,142 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
+import debounce from 'debounce';
 
-import { getTabName, TabMeta } from 'model/tabs/tabs.model';
+import { TabMeta } from 'model/tabs/tabs.model';
 import useSiteStore from 'store/site.store';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
+import { cssName, zIndex } from 'projects/service/const';
 import useUpdate from 'projects/hooks/use-update';
 import useStateRef from 'projects/hooks/use-state-ref';
+import { useIntersection } from 'projects/hooks/use-intersection';
 import { Layout } from 'components/dynamic';
-import { cssName } from 'components/css-names';
-import { TabsOverlay, LoadingOverlay } from './TabsOverlay';
+import { TabsControls, FaderOverlay } from './TabsControls';
+import { createKeyedComponent } from './Tab';
 
+/**
+ * Possibly only imported from MDX (which lacks intellisense).
+ */
 export default function Tabs(props: Props) {
-
   const update = useUpdate();
   const expandedStorageKey = `expanded@tab-${props.id}`;
 
-  const state = useStateRef(() => ({
+  const state = useStateRef((): State => ({
+    colour: 'black',
     enabled: !!props.initEnabled,
-    /**
-     * Initially `'black'`, and afterwards always in `['faded', 'clear']`
-     */
-    colour: 'black' as 'black' | 'faded' | 'clear',
     expanded: false,
-    contentDiv: undefined as undefined | HTMLDivElement,
-    resets: 0,
 
-    // TODO doesn't fire if click on Tabs
-    onKeyUp(e: React.KeyboardEvent) {
+    resets: 0,
+    justResetWhileDisabled: false,
+    resetDisabled: false,
+
+    el: {
+      root: null,
+      content: {} as HTMLDivElement,
+      backdrop: {} as HTMLDivElement,
+    },
+
+    onChangeIntersect: debounce(async (intersects: boolean) =>
+      (!intersects && state.enabled && !state.expanded) && await state.toggleEnabled()
+    , 1000),
+
+    async onKeyUp(e: React.KeyboardEvent) {
       if (state.expanded && e.key === 'Escape') {
-        state.toggleExpand();
+        await state.toggleExpand();
       }
     },
-    onModalBgPress() {
-      if (state.expanded) {
-        state.toggleExpand();
-      }
-    },
-    preventTouch(e: React.TouchEvent) {
+    /** Prevent any underlying element from being clicked on click outside modal */
+    async onModalBgPress(e: TouchEvent | MouseEvent) {
       e.preventDefault();
+      await state.toggleExpand();
+    },
+    /** Prevent background moving when tab dragged */
+    preventTabTouch(e: TouchEvent) {
+      if ((e.target as HTMLElement).classList.contains('flexlayout__tab_button_content')) {
+        e.preventDefault();
+      }
     },
 
     reset() {
-      const portalKeys = props.tabs.flatMap(x => x.map(y => getTabName(y)));
-      useSiteStore.api.removePortals(...portalKeys);
-      state.resets++;
-      update();
-    },
-    toggleEnabled() {
-      state.enabled = !state.enabled;
-      state.colour = state.colour === 'clear' ? 'faded' : 'clear';
-
+      state.resetDisabled = true;
       const tabs = useSiteStore.getState().tabs[props.id];
-      if (tabs) {
-        // Set disabled (converse) for all visible tabs
-        const disabled = !state.enabled;
-        const portalLookup = useSiteStore.getState().portal;
-        const tabKeys = tabs.getTabNodes()
-          .filter(x => x.isVisible())
-          .map(x => x.getId())
-          .filter(x => x in portalLookup);
-        tabKeys.forEach(key => portalLookup[key].portal.setPortalProps({ disabled }));
-        // Other tab portals may not exist yet, so record in `tabs` too
-        tabs.disabled = disabled;
-      } else {
-        console.warn(
-          `Tabs not found for id "${props.id}". ` +
-          `Expected Markdown syntax <div class="tabs" name="my-identifier" ...>`
+      const componentKeys = tabs.getTabNodes().map(node => node.getId());
+      useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
+      state.justResetWhileDisabled = !state.enabled;
+      state.resets++; // Remount
+      update();
+      setTimeout(() => { state.resetDisabled = false; update(); }, 500);
+    },
+
+    async toggleEnabled() {
+      state.colour = state.colour === 'clear' ? 'faded' : 'clear';
+      state.enabled = !state.enabled;
+      const tabs = useSiteStore.getState().tabs[props.id];
+
+      if (!tabs) {
+        return console.warn(`Tabs not found with id "${props.id}".`);
+      }
+
+      const disabled = !state.enabled;
+      // Other tab portals may not exist yet, so record in `tabs` too
+      tabs.disabled = disabled;
+      useSiteStore.setState({}, undefined, disabled ? 'disable-tabs' : 'enable-tabs');
+
+      if (state.justResetWhileDisabled === false) {
+        /**
+         * Standard case
+         * > Set `disabled` for each mounted `Portal` within this `Tabs`.
+         */
+        const lookup = useSiteStore.getState().component;
+        const componentKeys = tabs.getTabNodes().map(node => node.getId());
+        componentKeys.forEach(componentKey => componentKey in lookup &&
+          useSiteStore.api.setTabDisabled(tabs.key, componentKey, disabled)
         );
+      } else {
+        /**
+         * Special case
+         * > Having previously reset Tabs while disabled, we now enable.
+         */
+        state.justResetWhileDisabled = false;
+
+        await Promise.all(tabs.getVisibleTabNodes().map(async (tabNode) => {
+          if (!useSiteStore.getState().component[tabNode.getId()]) {
+            await createKeyedComponent(tabs.key, tabNode.getConfig(), false);
+          }
+          setTimeout(() => // Needed to awaken portal
+            useSiteStore.api.setTabDisabled(tabs.key, tabNode.getId(), false),
+            300,
+          );
+        }))
       }
 
       update();
     },
-    toggleExpand() {
+
+    async toggleExpand() {
       state.expanded = !state.expanded;
       if (state.expanded) {
         tryLocalStorageSet(expandedStorageKey, 'true');
         if (!state.enabled) {// Auto-enable on expand
-          state.toggleEnabled();
+          await state.toggleEnabled();
         }
       } else {
         localStorage.removeItem(expandedStorageKey);
       }
       update();
     },
-
   }));
 
-  React.useEffect(() => {// Initially trigger CSS animation
+  useIntersection({
+    elRef: () => state.el.root,
+    cb: state.onChangeIntersect,
+  });
+
+  React.useEffect(() => {
+    // Initially trigger CSS animation
     state.colour = state.enabled ? 'clear' : 'faded';
+
+    state.el.root?.addEventListener('touchstart', state.preventTabTouch, { passive: false });
 
     if (tryLocalStorageGet(expandedStorageKey) === 'true') {
       if (!useSiteStore.getState().navOpen) {
@@ -99,15 +147,31 @@ export default function Tabs(props: Props) {
       }
     }
     update();
+
+    return () => {
+      state.el.root?.removeEventListener('touchstart', state.preventTabTouch);
+    };
   }, []);
 
-  React.useEffect(() => void (state.contentDiv &&
-    (state.expanded ? disableBodyScroll : enableBodyScroll)(state.contentDiv)
-  ), [state.expanded]);
+  React.useEffect(() => {
+    if (state.expanded) {
+      setTimeout(() => disableBodyScroll(state.el.content));
+      // To prevent touch event default, it seems we cannot use React events
+      ((['touchstart', 'mousedown']) as const).forEach(evt =>
+        state.el.backdrop.addEventListener?.(evt, state.onModalBgPress)
+      );
+      return () => ((['touchstart', 'mousedown']) as const).forEach(evt =>
+        state.el.backdrop.removeEventListener?.(evt, state.onModalBgPress)
+      );
+    } else {
+      enableBodyScroll(state.el.content);
+    }
+  }, [state.expanded, state.el.backdrop]);
 
   return (
     <figure
       key={`${props.id}-${state.resets}`}
+      ref={el => state.el.root = el}
       className={cx(cssName.tabs, "scrollable", rootCss)}
       onKeyUp={state.onKeyUp}
       tabIndex={0}
@@ -116,35 +180,42 @@ export default function Tabs(props: Props) {
 
       {state.expanded && <>
         <div
+          ref={el => el && (state.el.backdrop = el)}
           className="modal-backdrop"
-          onPointerDown={state.onModalBgPress}
-          onTouchStart={state.preventTouch}
         />
-        <div
-          className={fillInlineSpaceCss(props.height)}
-        />
+        <div className={fillInlineSpaceCss(props.height)} />
       </>}
 
       <div
-        ref={(el) => el && (state.contentDiv = el)}
-        className={state.expanded ? expandedCss : unexpandedCss(props.height)}
+        ref={el => el && (state.el.content = el)}
+        className={cx(
+          cssName.expanded,
+          state.expanded ? expandedCss : unexpandedCss(props.height),
+        )}
       >
         {state.colour !== 'black' && (
           <Layout
             id={props.id}
+            /**
+             * On reset with state.enabled,
+             * we should not initially disable layout.
+             */
+            initEnabled={state.enabled}
+            persistLayout={props.persistLayout}
+            /**
+             * Horizontal splitter corresponds to
+             * rootOrientationVertical being `true`.
+             */
+            rootOrientationVertical={!!props.initHorizontal}
             tabs={props.tabs}
-            initEnabled={!!props.initEnabled}
+            update={update}
           />
         )}
-        <TabsOverlay
-          enabled={state.enabled}
-          expanded={state.expanded}
-          parentTabsId={props.id}
-          reset={state.reset}
-          toggleExpand={state.toggleExpand}
-          toggleEnabled={state.toggleEnabled}
+        <TabsControls
+          api={state}
+          tabsId={props.id}
         />
-        <LoadingOverlay
+        <FaderOverlay
           colour={state.colour}
         />
       </div>
@@ -153,19 +224,55 @@ export default function Tabs(props: Props) {
 }
 
 export interface Props {
-  /** Required */
+  /** Required e.g. as identifier */
   id: string;
-  /** First tabs are shown initially, rest are background */
-  tabs: [TabMeta[], TabMeta[]];
-  initEnabled?: boolean;
+  /** List of rows each with a single tabset */
+  tabs: TabMeta[][];
   height: number | number[];
+
+  /** Initially enabled? */
+  initEnabled?: boolean;
+  /** Does the _initial Tabs layout_ have a horizontal splitter? */
+  initHorizontal?: boolean;
+  persistLayout?: boolean;
 }
 
+export interface State {
+  /** Initially `'black'`, afterwards always in `['faded', 'clear']` */
+  colour: 'black' | 'faded' | 'clear';
+  enabled: boolean;
+  expanded: boolean;
+
+  /** Number of times we have reset */
+  resets: number;
+  /**
+   * Did we just reset whilst Tabs disabled?
+   * If so, we'll need to reawaken all visible tabs.
+   */
+  justResetWhileDisabled: boolean;
+  /** Is the reset button disabled? */
+  resetDisabled: boolean;
+
+  el: {
+    /** Align to `useIntersection` hook; avoid HTMLElement in SSR  */
+    root: HTMLElement | null;
+    content: HTMLDivElement;
+    backdrop: HTMLDivElement;
+  };
+
+  onChangeIntersect(intersects: boolean): void;
+  onKeyUp(e: React.KeyboardEvent): void;
+  onModalBgPress(e: TouchEvent | MouseEvent): void;
+  preventTabTouch(e: TouchEvent): void;
+
+  reset(): void;
+  toggleEnabled(): Promise<void>;
+  toggleExpand(): Promise<void>;
+}
+
+
 const rootCss = css`
-  margin: 64px 0;
-  @media(max-width: 600px) {
-    margin: 40px 0 32px 0;
-  }
+  margin: 32px 0 0 0;
 
   position: relative;
   > span.anchor {
@@ -175,7 +282,7 @@ const rootCss = css`
 
   .modal-backdrop {
     position: fixed;
-    z-index: 19;
+    z-index: ${zIndex.tabsExpandedBackdrop};
     left: 0;
     top: 0;
     width: 100vw;
@@ -183,23 +290,15 @@ const rootCss = css`
     background: rgba(0, 0, 0, 0.6);
   }
 
-  .flexlayout__tabset, .flexlayout__tab {
-    background: white;
-  }
-
-  .flexlayout__layout {
-    background: #444;
-  }
   .flexlayout__tab {
-    /** Pixel 5: white lines when 4px */
+    background-color: black;
     border-top: 3px solid #444;
-    position: relative;
     overflow: hidden;
 
     /** react-reverse-portal wraps things in a div  */
     > div.portal {
       width: 100%;
-      height: 100%;
+      height: inherit;
     }
   }
   .flexlayout__tabset_tabbar_outer {
@@ -225,6 +324,20 @@ const rootCss = css`
   .flexlayout__splitter_vert, .flexlayout__splitter_horz {
     background: #827575;
   }
+  .flexlayout__tab_toolbar_button {
+    cursor: pointer;
+  }
+  .flexlayout__tab_toolbar_button-max svg {
+    outline: 1px solid white;
+    path:nth-child(2) {
+      fill: white;
+    }
+  }
+  .flexlayout__tab_toolbar_button-max:hover {
+    path:nth-child(2) {
+      fill: black;
+    }
+  }
 `;
 
 const unexpandedCss = (height: number | number[]) => css`
@@ -248,14 +361,16 @@ const fillInlineSpaceCss = (height: number | number[]) => css`
 `;
 
 const expandedCss = css`
+  ${cssName.tabsExpandedMaxWidth}: 2400px;
   position: fixed;
-  z-index: 20;
+  z-index: ${zIndex.tabsExpanded};
   top: 80px;
-  left: calc(max(5%, (100% - 1000px) / 2));
-  width: calc(min(90%, 1000px));
+  left: 256px;
+  width: calc(100% - 256px);
   height: calc(100% - 80px);
   border: var(--tabs-border-width) solid #444;
-  @media(max-width: 600px) {
+
+  @media(max-width: 1240px) {
     left: 0;
     top: 80px;
     width: 100%;

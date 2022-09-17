@@ -106,14 +106,20 @@ export class ProcessError extends Error {
     public code: SigEnum,
     public pid: number,
     public sessionKey: string,
+    public exitCode?: number,
   ) {
     super(code);
     Object.setPrototypeOf(this, ProcessError.prototype);
   }
 }
 
-export function killError(meta: Sh.BaseMeta | ProcessMeta) {
-  return new ProcessError(SigEnum.SIGKILL, 'pid' in meta ? meta.pid : meta.key, meta.sessionKey);
+export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number) {
+  return new ProcessError(
+    SigEnum.SIGKILL,
+    'pid' in meta ? meta.pid : meta.key,
+    meta.sessionKey,
+    exitCode,
+  );
 }
 
 export function resolvePath(path: string, root: any, pwd: string) {
@@ -123,7 +129,7 @@ export function resolvePath(path: string, root: any, pwd: string) {
   return resolveAbsParts(absParts, root);
 }
 
-export function computeNormalizedParts(varPath: string, root: any, pwd: string): string[] {
+export function computeNormalizedParts(varPath: string, pwd: string): string[] {
   const absParts = varPath.startsWith('/')
     ? varPath.split('/')
     : pwd.split('/').concat(varPath.split('/'));

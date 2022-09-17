@@ -1,17 +1,18 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet } from '../service/generic';
+import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
 import { ansiColor, computeNormalizedParts, resolveNormalized, ShError } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
 import { srcService } from './parse';
 import { ttyShellClass } from './tty.shell';
+import { scriptLookup } from './scripts';
 
 export type State = {
-  session: TypeUtil.KeyedLookup<Session>;
-  device: TypeUtil.KeyedLookup<Device>;
+  session: KeyedLookup<Session>;
+  device: KeyedLookup<Device>;
   
   readonly api: {
     addFunc: (sessionKey: string, funcName: string, wrappedFile: FileWithMeta) => void;
@@ -24,16 +25,15 @@ export type State = {
       posPositionals?: string[];
     }) => ProcessMeta;
     createFifo: (fifoKey: string, size?: number) => FifoDevice;
-    createVarDevice: (sessionKey: string, varPath: string, mode: VarDeviceMode) => VarDevice;
-    ensureSession: (sessionKey: string, env: Record<string, any>) => Session;
+    createVarDevice: (meta: BaseMeta, varPath: string, mode: VarDeviceMode) => VarDevice;
     getFunc: (sessionKey: string, funcName: string) => NamedFunction | undefined;
     getFuncs: (sessionKey: string) => NamedFunction[];
     getNextPid: (sessionKey: string) => number;
     getProcess: (meta: BaseMeta) => ProcessMeta;
     getProcesses: (sessionKey: string, pgid?: number) => ProcessMeta[];
     getPositional: (pid: number, sessionKey: string, varName: number) => string;
-    getVar: <T = any>(sessionKey: string, varName: string) => T;
-    getVarDeep: (sessionKey: string, varPath: string) => any | undefined;
+    getVar: <T = any>(meta: BaseMeta, varName: string) => T;
+    getVarDeep: (meta: BaseMeta, varPath: string) => any | undefined;
     getSession: (sessionKey: string) => Session;
     persist: (sessionKey: string) => void;
     rehydrate: (sessionKey: string) => Rehydrated;
@@ -41,8 +41,8 @@ export type State = {
     removeProcess: (pid: number, sessionKey: string) => void;
     removeSession: (sessionKey: string) => void;
     resolve: (fd: number, meta: BaseMeta) => Device;
-    setVar: (sessionKey: string, varName: string, varValue: any) => void;
-    setVarDeep: (sessionKey: string, varPath: string, varValue: any) => void;
+    setVar: (meta: BaseMeta, varName: string, varValue: any) => void;
+    setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
     writeMsg: (sessionKey: string, msg: string, level: 'info' | 'error') => void;
     /**
      * Returns global line number of written message,
@@ -54,7 +54,7 @@ export type State = {
 
 export interface Session {
   key: string;
-  func: TypeUtil.KeyedLookup<NamedFunction>;
+  func: KeyedLookup<NamedFunction>;
   /**
    * Currently only support one tty per session,
    * i.e. cannot have two terminals in same session.
@@ -64,7 +64,8 @@ export interface Session {
   ttyShell: ttyShellClass,
   var: Record<string, any>;
   nextPid: number;
-  process: TypeUtil.KeyedLookup<ProcessMeta>;
+  process: KeyedLookup<ProcessMeta>;
+  lastExitCode: number;
 }
 
 interface Rehydrated {
@@ -102,9 +103,19 @@ export interface ProcessMeta {
    */
   onResumes: (() => void | boolean)[];
   positionals: string[];
+  /**
+   * Variables specified locally in this process.
+   * Particularly helpful for background processes and subshells,
+   * which have their own PWD and OLDPWD.
+   */
+  localVar: Record<string, any>;
+  /**
+   * Inherited local variables.
+   */
+  inheritVar: Record<string, any>;
 }
 
-const useStore = create<State>(devtools((set, get) => ({
+const useStore = create<State>()(devtools((set, get) => ({
   device: {},
   session: {},
   persist: {},
@@ -137,6 +148,8 @@ const useStore = create<State>(devtools((set, get) => ({
         cleanups: [],
         onSuspends: [],
         onResumes: [],
+        localVar: {},
+        inheritVar: {},
       };
       return processes[pid];
     },
@@ -152,30 +165,25 @@ const useStore = create<State>(devtools((set, get) => ({
         session: addToLookup({
           key: sessionKey,
           func: {},
-          nextPid: 0,
-          process: {},
           ttyIo,
           ttyShell,
           var: {
-            PWD: '',
+            PWD: 'home',
             OLDPWD: '',
             ...persisted.var,
             ...deepClone(env),
           },
+          nextPid: 0,
+          process: {},
+          lastExitCode: 0,
         }, session),
       }));
       return get().session[sessionKey];
     },
 
-    createVarDevice(sessionKey, varPath, mode) {
-      const device = new VarDevice(sessionKey, varPath, mode);
+    createVarDevice(meta, varPath, mode) {
+      const device = new VarDevice(meta, varPath, mode);
       return get().device[device.key] = device;
-    },
-
-    ensureSession(sessionKey, env) {
-      const { session } = get();
-      return session[sessionKey] = session[sessionKey]
-        || get().api.createSession(sessionKey, env);
     },
 
     getFunc(sessionKey, funcName) {
@@ -203,13 +211,29 @@ const useStore = create<State>(devtools((set, get) => ({
       return pgid === undefined ? processes : processes.filter(x => x.pgid === pgid);
     },
 
-    getVar(sessionKey, varName) {
-      return get().session[sessionKey].var[varName];
+    getVar(meta, varName): any {
+      const process = api.getProcess(meta);
+      if (varName in process?.localVar) {
+        // Got locally specified variable
+        return process.localVar[varName];
+      } else if (varName in process?.inheritVar) {
+        // Got variable locally specified in ancestral process 
+        return process.inheritVar[varName];
+      } else {
+        // Got top-level variable in "file-system" e.g. /home/foo
+        return get().session[meta.sessionKey].var[varName];
+      }
     },
 
-    getVarDeep(sessionKey, varPath) {
-      const root = get().session[sessionKey].var;
-      return Function('__', `return __.${varPath}`)(root);
+    getVarDeep(meta, varPath) {
+      const session = get().session[meta.sessionKey];
+      /**
+       * Can deep get /home/* and /etc/*
+       * TODO support deep get of local vars?
+       */
+      const root = { home: session.var, etc: scriptLookup };
+      const parts = computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
+      return Function('__', `return ${JSON.stringify(parts)}.reduce((agg, x) => agg[x], __)`)(root);
     },
 
     getSession(sessionKey) {
@@ -256,6 +280,7 @@ const useStore = create<State>(devtools((set, get) => ({
       const session = get().session[sessionKey];
       if (session) {
         const { process, ttyShell } = get().session[sessionKey];
+        ttyShell.dispose();
         for (const { cleanups } of Object.values(process)) {
           cleanups.forEach(cleanup => cleanup());
           cleanups.length = 0;
@@ -271,27 +296,60 @@ const useStore = create<State>(devtools((set, get) => ({
       return get().device[meta.fd[fd]];
     },
 
-    setVar(sessionKey, varName, varValue) {
-      api.getSession(sessionKey).var[varName] = varValue;
+    setVar(meta, varName, varValue) {
+      const session = api.getSession(meta.sessionKey);
+      const process = session.process[meta.pid];
+      if (
+        varName in process?.localVar
+        || varName in process?.inheritVar
+      ) {
+        /**
+         * One can set a local variable from an ancestral process,
+         * but it will only change the value in current process.
+         */
+        process.localVar[varName] = varValue;
+      } else {
+        session.var[varName] = varValue;
+      }
     },
 
-    setVarDeep(sessionKey, varPath, varValue) {
-      /** Like root of process context, but only has `home` */
-      const root = { home : api.getSession(sessionKey).var };
-      const pwd = api.getVar(sessionKey, 'PWD') as string;
-      const parts = computeNormalizedParts(varPath, root, pwd);
+    setVarDeep(meta, varPath, varValue) {
 
-      if (parts[0] === 'home' && parts.length > 1) {
-        const childKey = parts.pop() as string;
-        try {
-          const parent = resolveNormalized(parts, root);
-          parent[childKey] = varValue;
-        } catch (e) {
-          throw new ShError(`cannot resolve /${parts.join('/')}`, 1);
-        }
+      const session = api.getSession(meta.sessionKey);
+      const process = session.process[meta.pid];
+      const parts = varPath.split('/');
+
+      let root: Record<string, any>, normalParts: string[];
+
+      /**
+       * We support writing to local process variables,
+       * e.g. `( cd && echo 'pwn3d!'>PWD && pwd )`
+       */
+      const localCtxt = parts[0] in process.localVar
+        ? process.localVar
+        : parts[0] in process.inheritVar ? process.inheritVar : null
+      ;
+        
+      if (localCtxt) {
+        root = localCtxt;
+        normalParts = parts;
       } else {
-        throw new ShError('only the home directory is writable', 1);
+        root = { home : session.var };
+        normalParts = computeNormalizedParts(varPath, api.getVar(meta, 'PWD') as string);
+
+        if (!(normalParts[0] === 'home' && normalParts.length > 1)) {
+          throw new ShError('only the home directory is writable', 1);
+        }
       }
+
+      try {
+        const leafKey = normalParts.pop() as string;
+        const parent = resolveNormalized(normalParts, root);
+        parent[leafKey] = varValue;
+      } catch (e) {
+        throw new ShError(`cannot resolve /${normalParts.join('/')}`, 1);
+      }
+
     },
 
     writeMsg(sessionKey, msg, level) {
@@ -315,7 +373,7 @@ const useStore = create<State>(devtools((set, get) => ({
     },
   },
 
-}), 'session'));
+}), { name: "session.store" }));
 
 const api = useStore.getState().api;
 const useSessionStore = Object.assign(useStore, { api });

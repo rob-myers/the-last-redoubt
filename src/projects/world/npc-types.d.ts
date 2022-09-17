@@ -1,0 +1,320 @@
+
+declare namespace NPC {
+
+  type NpcJsonKey = (
+    | 'first-npc'
+  );
+
+  interface NpcJson {
+    parsed: NPC.ParsedNpc;
+    /**
+     * Scale factor we'll apply to sprites.
+     * Beware that sprites are probably themselves scaled up relative to original SVG.
+     * See zoom factor in json.
+     */
+    scale: number;
+    /** Radius inside SVG */
+    radiusInSvg: number;
+    /** Ensure NPC faces along positive x-axis */
+    offsetRadians: number;
+    radius: number;
+    defaultInteractRadius: number;
+    speed: number;
+    /**
+     * @emotion/css
+     */
+    css: string;
+  }
+
+  /** API for a single NPC */
+  export interface NPC {
+    /** User specified e.g. `andros` */
+    key: string;
+    /** Refers to `/assets/npc/${jsonKey}.json` */
+    jsonKey: NPC.NpcJsonKey;
+    /** Epoch ms when spawned */
+    epochMs: number;
+    /** Definition of NPC */
+    def: NPCDef;
+    el: {
+      root: HTMLDivElement;
+      body: HTMLDivElement;
+    };
+    mounted: boolean;
+    anim: NPCAnimData;
+    cancel(): Promise<void>;
+    clearWayMetas(): void;
+    /**
+     * We can use native commitStyles here because hidden tab is
+     * `visibility: hidden` i.e. this will still work when tab hidden.
+     */
+    commitWalkStyles(): void;
+    /** Has respective el ever been animated? On remount this resets. */
+    everAnimated(): boolean;
+    followNavPath(
+      path: Geom.VectJson[],
+      opts?: { globalNavMetas?: NPC.GlobalNavMeta[]; },
+    ): Promise<void>;
+    /** Radians */
+    getAngle(): number;
+    getAnimDef(): NpcAnimDef;
+    /** Used to scale up how long it takes to move along navpath */
+    getAnimScaleFactor(): number;
+    getBounds(): Geom.Rect;
+    getLineSeg(): null | NpcLineSeg;
+    getPosition(): Geom.Vect;
+    getRadius(): number;
+    getSpeed(): number;
+    /**
+     * Given duration of upcoming motion,
+     * and also `npcWalkAnimDurationMs`,
+     * adjust the latter sprite cycle duration
+     * to end on a nice frame (avoids flicker).
+     */
+    getSpriteDuration(nextMotionMs: number): number;
+    getTarget(): null | Geom.Vect;
+    getTargets(): { point: Geom.Vect; arriveMs: number }[];
+    getWalkBounds(): Geom.Rect;
+    /**
+     * Given npc is walking and anim.transform.currentTime,
+     * infer position and angle.
+     * We originally needed this because hidden tabs had `display: none`,
+     * but no longer need it because `visibility: hidden`.
+     * Nevertheless we'll keep this computation handy.
+     */
+    inferWalkTransform(): { position: Geom.Vect; angle: number; }
+    isWalking(): boolean;
+    /** Returns destination angle in radians */
+    lookAt(point: Geom.VectJson): number;
+    pause(): void;
+    play(): void;
+    nextWayTimeout(): void;
+    npcRef(el: HTMLDivElement | null): void;
+    startAnimation(): void;
+    setLookTarget(radians: number): void;
+    setSpritesheet(spriteSheet: SpriteSheetKey): void;
+    updateAnimAux(): void;
+    wayTimeout(): void;
+  }
+
+  interface NPCAnimData {
+    /** Stylesheet-related CSS */
+    css: string;
+    /** The path we'll walk along */
+    path: Geom.Vect[];
+    /** Data derived entirely from `anim.path` */
+    aux: {
+      angs: number[];
+      bounds: Geom.Rect;
+      edges: ({ p: Geom.Vect; q: Geom.Vect })[];
+      elens: number[];
+      /** Outset version of `origPath` to detect progress on pause */
+      navPathPolys: Geom.Poly[];
+      sofars: number[];
+      total: number;
+    };
+
+    spriteSheet: SpriteSheetKey;
+    translate: Animation;
+    rotate: Animation;
+    sprites: Animation;
+    durationMs: number;
+
+    wayMetas: NpcWayMeta[];
+    wayTimeoutId: number;
+  }
+
+  interface NpcLineSeg {
+    src: Geom.Vect;
+    dst: Geom.Vect;
+    tangent: Geom.Vect;
+  }
+
+  interface NpcAnimDef {
+    translateKeyframes: Keyframe[];
+    rotateKeyframes: Keyframe[];
+    opts: KeyframeAnimationOptions & { duration: number };
+  }
+
+  type SpriteSheetKey = (
+    | 'idle'
+    | 'walk'
+  );
+
+  interface NPCDef {
+    key: string;
+    angle: number;
+    /** Initially paused? */
+    paused: boolean;
+    position: Geom.VectJson;
+  }
+  
+  /**
+   * A path through the `FloorGraph` of some geomorph instance.
+   * Global nav paths are obtained by stitching these together.
+   */
+  export interface LocalNavPath extends Graph.FloorGraphNavPath {
+    key: 'local-nav';
+    gmId: number;
+  }
+
+  /**
+   * A path through the world i.e. all geomorph instances.
+   */
+  export interface GlobalNavPath {
+    key: 'global-nav';
+    fullPath: Geom.Vect[];
+    navMetas: GlobalNavMeta[];
+  }
+
+  /**
+   * A `FloorGraph` nav meta enriched with id of geomorph instance it resides in.
+   * May be used e.g. to trigger light change on enter-room via a hull door.
+   */
+  export type GlobalNavMeta = Graph.FloorGraphNavMeta & {
+    gmId: number;
+  }
+
+  /**
+   * An npc way meta is a global nav meta, with `length` along the navpath it'll trigger.
+   * - `length` is naturally computed using existing npc anim computations.
+   * - `length` may be earlier than distance along path to respective node,
+   *    and may also depend on npc's radius.
+   */
+  export type NpcWayMeta = GlobalNavMeta & {
+    /** Computed via `anim.sofars` */
+    length: number;
+  }
+
+  export interface NpcCollision {
+    /**
+     * Time when they'll collide,
+     * - `iA + (seconds * speed) . tangentA`
+     * - `iB + (seconds * speed) . tangentB`
+     * 
+     * where:
+     * - `i{A,B}` are current positions
+     * - `speed` in world-units per second
+     */
+    seconds: number;
+    /** Distance from iA at which they will collide */
+    distA: number;
+    /** Distance from iB at which they will collide */
+    distB: number;
+  }
+  export interface NpcSegCollision {
+    /**
+     * Time when npc will collide,
+     * - `i0 + (seconds * speed) . tangent0`
+     * 
+     * where:
+     * - `i0` is current position
+     * - `speed` in world-units per second
+     */
+    seconds: number;
+    /** Distance from i0 at which npc will collide */
+    dist: number;
+  }
+
+  export interface SessionCtxt {
+    /** Session key */
+    key: string;
+    receiveMsgs: boolean;
+    tty: { [lineNumber: number]: SessionTtyCtxt[] }
+  }
+
+  export type SessionTtyCtxt = {
+    lineNumber: number;
+    lineText: string;
+    /** For example `[foo]` has link text `foo` */
+    linkText: string;
+    /** Where `linkText` occurs in `lineText` */
+    linkStartIndex: number;
+  } & (
+    | { key: 'room'; gmId: number; roomId: number; }
+    // ...
+  );
+
+  export type OnTtyLink = (
+    /** The computations are specific to tty i.e. its parent session */
+    sessionKey: string,
+    /** The "global" 1-based index of "actual" lines ever output by tty */
+    outputLineNumber: number,
+    lineText: string,
+    linkText: string,
+    linkStartIndex: number,
+  ) => void;
+
+  export type DecorDef = { key: string } & (
+    | { type: 'path'; path: Geom.VectJson[]; }
+    | { type: 'circle'; center: Geom.VectJson; radius: number; }
+  );
+
+  /** Using `action` instead of `key` to avoid name-collision */
+  export type NpcAction = (
+    | { action: 'add-decor'; } & DecorDef
+    | { action: 'cancel'; npcKey: string }
+    | { action: 'config'; debug?: boolean; interactRadius?: number }
+    | { action: 'get'; npcKey: string }
+    | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
+    | { action: 'pause'; npcKey: string }
+    | { action: 'play'; npcKey: string }
+    | { action: 'remove-decor'; decorKey: string; }
+    | { action: 'rm-decor'; decorKey: string; }
+    | { action: 'set-player'; npcKey?: string }
+  );
+
+  export type NPCsEvent = (
+    | { key: 'decor'; meta: DecorDef; }
+    | { key: 'set-player'; npcKey: string | null; }
+    | { key: 'spawned-npc'; npcKey: string; }
+    | { key: 'started-walking'; npcKey: string; }
+    | { key: 'stopped-walking'; npcKey: string; }
+    | { key: 'unmounted-npc'; npcKey: string; }
+    | NPCsWayEvent
+  );
+
+  export interface NPCsWayEvent {
+    key: 'way-point';
+    npcKey: string;
+    meta: NpcWayMeta;
+  }
+
+  //#region parse
+  interface ParsedNpc {
+    npcName: string;
+    animLookup: { [animName: string]: NpcAnimMeta };
+    /** How much the rendered PNGs have been scaled up. */
+    zoom: number;
+  }
+
+  interface ParsedNpcCheerio {
+    npcName: string;
+    animLookup: { [animName: string]: NPC.NpcAnimCheerio };
+    /** How much animLookup and rendered PNGs have been scaled up. */
+    zoom: number;
+  }
+
+  interface NpcAnimCheerio extends NpcAnimMeta {
+    defsNode: import('cheerio').Element | null;
+    frameNodes: import('cheerio').Element[];
+  }
+
+  interface NpcAnimMeta {
+    animName: string;
+    aabb: Geom.RectJson;
+    frameCount: number;
+    /** Aligned to frames i.e. positions of feet contacts (if any) */
+    contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];
+    /**
+     * One more than number of frames i.e. how far we move to the right.
+     * Final number is distance from last to first.
+     */
+    deltas: number[];
+    /** The sum of `deltas` */
+    totalDist: number;
+  }
+
+  //#endregion
+
+}

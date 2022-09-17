@@ -1,11 +1,11 @@
-import { CheerioAPI, Element } from 'cheerio';
+import { Element } from 'cheerio';
 import { svgPathToPolygon } from './dom';
 import { Poly, Rect, Mat } from '../geom';
 
 /**
  * - Test if node has child <title>{title}</title>,
  * - Additionally add class {title} if so.
- * @param {CheerioAPI} api 
+ * @param {import('cheerio').CheerioAPI} api 
  * @param {Element} node 
  * @param {string} title 
  */
@@ -15,7 +15,7 @@ export function hasTitle(api, node, title) {
 
 /**
  * Test if node has child <title>{nodeTitle}</title> matching regex
- * @param {CheerioAPI} api 
+ * @param {import('cheerio').CheerioAPI} api 
  * @param {Element} node 
  * @param {RegExp} regex 
  */
@@ -24,7 +24,7 @@ export function matchesTitle(api, node, regex) {
 }
 
 /**
- * @param {CheerioAPI} api
+ * @param {import('cheerio').CheerioAPI} api
  * @param {Element[]} topNodes
  * @param {string} title
  * @param {number} [precisionDp]
@@ -35,7 +35,7 @@ export function extractGeomsAt(api, topNodes, title, precisionDp) {
 }
 
 /**
- * @param {CheerioAPI} api
+ * @param {import('cheerio').CheerioAPI} api
  * @param {Element} parent
  * @param {number} [precisionDp]
  */
@@ -45,7 +45,7 @@ export function extractGeoms(api, parent, precisionDp = 4) {
 }
 
 /**
- * @param {CheerioAPI} api
+ * @param {import('cheerio').CheerioAPI} api
  * @param {Element} el
  */
 export function extractGeom(api, el) {
