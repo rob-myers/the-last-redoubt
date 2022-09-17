@@ -15,7 +15,7 @@ body.dark-mode {
   --swiper-pagination-bullet-inactive-opacity: 1;
 }
 
-body.dark-mode figure.carousel span.icon, body.dark-mode aside span.icon {
+body.dark-mode figure.carousel span.icon, body.dark-mode aside span.icon, body.dark-mode div.comments span.icon {
   filter: invert(100%) brightness(1);
 }
 

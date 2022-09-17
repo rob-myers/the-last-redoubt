@@ -155,14 +155,15 @@ const useStore = create<State>()(devtools((set, get) => ({
 
 export interface FrontMatter {
   key: string;
-  path: string;
+  date: string;
+  icon: string;
+  giscusTerm?: string;
   info: string;
   label: string;
-  icon: string;
-  date: string;
   navGroup: null | number;
-  prev: null | string;
   next: null | string;
+  path: string;
+  prev: null | string;
   tags: string[];
 }
 

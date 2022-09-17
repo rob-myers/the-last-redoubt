@@ -12,6 +12,7 @@ import Main from "./Main";
 import Portals from "./Portals";
 import Article from "./Article";
 import NextArticle from "./NextArticle";
+import Comments from "./Comments";
 
 export function wrapPageElement({
   element,
@@ -33,14 +34,15 @@ export function wrapPageElement({
           query { allMdx {
             edges { node { frontmatter {
               key
-              path
+              date
+              icon
+              giscusTerm
               info
               label
-              icon
-              date
               navGroup
-              prev
               next
+              path
+              prev
               tags
             } } } }
           }
@@ -66,6 +68,10 @@ export function wrapPageElement({
                   <NextArticle frontMatter={frontMatter}/>
                 </>}
                 {!frontMatter && element}
+                <Comments
+                  id="comments"
+                  term={frontMatter?.giscusTerm || frontMatter?.path || 'fallback-discussion'}
+                />
               </Main>
               <Portals />
               <ReactQueryDevtools initialIsOpen={false} />

@@ -2,6 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import Giscus from "@giscus/react";
 import useSiteStore from "store/site.store";
+import Icon from "./Icon";
 
 export default function Comments(props: Props) {
   const { articleKey, darkMode, commentMeta } = useSiteStore(x => ({
@@ -17,8 +18,12 @@ export default function Comments(props: Props) {
   return (
     <div className={cx("comments", rootCss)}>
 
-      <a href={commentMeta?.url} target="_blank">
+      <a
+        href={commentMeta?.url}
+        target="_blank"
+      >
         View discussion on GitHub
+        &nbsp;<Icon icon="ext-link" inline small />
       </a>
 
       {articleKey && <Giscus
@@ -52,5 +57,9 @@ const rootCss = css`
   padding-top: 16px;
   @media(max-width: 600px) {
     padding-top: 8px;
+  }
+
+  > a {
+    cursor: pointer;
   }
 `;
