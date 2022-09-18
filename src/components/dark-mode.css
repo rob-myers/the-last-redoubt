@@ -1,6 +1,7 @@
 body.dark-mode {
   /* --page-background-color: #000; */
   --nav-background: #222;
+  --nav-selected-background: #333;
   --page-background: #000;
   --page-font-color: #ccc;
   --page-header-color: #aaa;

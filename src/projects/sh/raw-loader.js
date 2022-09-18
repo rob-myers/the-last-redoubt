@@ -141,48 +141,49 @@
      * Output world position clicks from panZoomApi.events, e.g.
      * - `click` forwards all clicks
      * - `click 1` forwards exactly one click, suppressing other `click`s
-     * 
-     * Our approach via `otag` is relatively efficient.
-     * Otherwise we'd have to keep creating short-term subscriptions.
      */
     click: async function* ({ api, args, home }) {
-      const numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
-      const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
+      let numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
       if (!Number.isFinite(numClicks)) {
         api.throwError("format: \`click [{numberOfClicks}] [!]\`")
       }
 
-      const { lib, npcs, panZoom } = api.getCached(home.WORLD_KEY)
-      const process = api.getProcess()
+      const { npcs, panZoom } = api.getCached(home.WORLD_KEY)
+      const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
       extra && panZoom.pointerUpExtras.push(extra);
       
-      yield* lib.otag(
-        panZoom.events.pipe(
-          lib.filter(
-            /**
-             * @type {function(*): x is PanZoom.CssPointerUpEvent}
-             * @param {PanZoom.CssInternalEvent} x 
-             */
-            x => x.key === "pointerup" && x.distance < 5 && process.status === 1 && (
-              x.extra.clickEpoch ? !!extra && (extra.clickEpoch === x.extra.clickEpoch) : true
-          )),
-          lib.take(numClicks),
-          lib.map((e) => ({
-            x: Number(e.point.x.toFixed(2)),
-            y: Number(e.point.y.toFixed(2)),
-            tags: [...e.tags, ...npcs.getPointTags(e.point)],
-          })),
-        ),
-        (deferred, subscription) => {
-          process.cleanups.push(
-            () => deferred.promise.reject(api.getKillError()),
-            () => subscription.unsubscribe(),
-          ); // This teardown amounts to a `finally { ... }`
-          subscription.add(() => panZoom.pointerUpExtras = panZoom.pointerUpExtras.filter(x => x !== extra));
-        },
-      )
+      const process = api.getProcess()
+      /** @type {import('rxjs').Subscription} */ let sub;
+      process.cleanups.push(() => sub?.unsubscribe());
+
+      while (numClicks > 0) {
+        const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
+          sub = panZoom.events.subscribe({ next(e) {
+            if (
+              e.key === "pointerup" && e.distance < 5 && process.status === 1 && (
+                e.extra.clickEpoch ? !!extra && (extra.clickEpoch === e.extra.clickEpoch) : true
+              )
+            ) {
+              resolve(e); // Must resolve before tear-down induced by unsubscribe 
+              sub.unsubscribe();
+            }
+          }});
+          sub.add(() => {
+            panZoom.pointerUpExtras = panZoom.pointerUpExtras.filter(x => x !== extra); 
+            reject(api.getKillError());
+          });
+        }));
+
+        yield {
+          x: Number(e.point.x.toFixed(2)),
+          y: Number(e.point.y.toFixed(2)),
+          tags: [...e.tags, ...npcs.getPointTags(e.point)],
+        };
+
+        numClicks--;
+      }
     },
-  
+
     look: async function* ({ api, args, datum, home }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]

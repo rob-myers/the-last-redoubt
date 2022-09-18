@@ -359,14 +359,14 @@ export default function NPCs(props) {
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
+      const { panZoom } = props.api
       if (!state.npc[npcKey]) {
         throw Error(`npc "${npcKey}" does not exist`);
       }
 
       let status = /** @type {'no-track' | 'follow-walk' | 'panzoom-to'} */ ('no-track');
-      const { panZoom } = props.api
 
-      const subscription = merge(
+      return merge(
         of({ key: /** @type {const} */ ('init-track') }),
         state.events,
         panZoom.events,
@@ -404,7 +404,7 @@ export default function NPCs(props) {
             // Ignore Error('cancelled')
             try {
               await panZoom.panZoomTo(2, npcPosition, 2000);
-            } catch { /** NOOP */ }
+            } catch {}
             status = 'no-track';
           }
 
@@ -421,8 +421,6 @@ export default function NPCs(props) {
           }
         },
       });
-      
-      return subscription;
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);

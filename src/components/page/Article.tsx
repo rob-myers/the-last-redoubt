@@ -531,12 +531,7 @@ const articleComponents = (
   },
 
   h3({ children }: any) {
-    const id = React.useMemo(() => `${articleKey}--${
-      React.Children.toArray(children)[0]
-        .toString().toLowerCase().replace(/\s/g, '-')
-    }`
-  , []);
-
+    const id = React.useMemo(() => getArticleH3Id(children), []);
     return (
       <h3>
         <span id={id} className="anchor" />
@@ -551,7 +546,7 @@ const articleComponents = (
 
 function childrenToKebabText(children: React.ReactNode | React.ReactNode[]) {
   return React.Children.toArray(children)[0]
-    .toString().toLowerCase().replace(/\s/g, '-');
+    .toString().toLowerCase().replace(/[\s.]/g, '-');
 }
 
 const months = [
@@ -574,6 +569,12 @@ function dayth(x: number) {
 /**
  * Hacky e.g. does not support markdown `[_foo_](bar)`.
  */
+function getArticleH3Id(
+  children: React.ReactNode | React.ReactNode[],
+) {
+  return childrenToKebabText(children);
+}
+
 function getArticleLinkId(
   children: React.ReactNode | React.ReactNode[],
 ) {

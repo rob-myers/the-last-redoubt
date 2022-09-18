@@ -2,7 +2,6 @@ import React from "react";
 import { filter, first, map, take } from "rxjs/operators";
 
 import { removeCached, setCached } from "../service/query-client";
-import { otag } from "../service/rxjs";
 import { Vect } from "../geom";
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -31,7 +30,7 @@ export default function World(props) {
 
     lib: {
       Vect,
-      filter, first, map, take, otag,
+      filter, first, map, take,
     },
 
     isReady() {
@@ -133,9 +132,8 @@ export default function World(props) {
 /**
  * @typedef StateUtil Utility classes and `rxjs` functions
  * @property {typeof import('../geom').Vect} Vect
- * @property {import('../service/rxjs').filter} filter
- * @property {import('../service/rxjs').first} first
- * @property {import('../service/rxjs').map} map
- * @property {import('../service/rxjs').otag} otag
- * @property {import('../service/rxjs').take} take
+ * @property {typeof filter} filter
+ * @property {typeof first} first
+ * @property {typeof map} map
+ * @property {typeof take} take
  */
