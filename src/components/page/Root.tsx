@@ -49,12 +49,12 @@ export function wrapPageElement({
       `}
         render={(allFrontMatter: AllFrontMatter) => {
 
-          React.useEffect(() => {
+          React.useMemo(() => {
             useSiteStore.api.setArticleKey(frontMatter?.key);
+            useSiteStore.api.initiate(allFrontMatter);
           }, [frontMatter]);
           
           React.useEffect(() => {
-            useSiteStore.api.initiate(allFrontMatter);
             useSiteStore.api.initiateBrowser();
           }, []);
 
