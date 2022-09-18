@@ -1,13 +1,14 @@
 :root {
   --nav-background: #000;
+  --nav-selected-background: #222;
   --page-background: linear-gradient(to left, #fff 20%, #00000077 100%);
   --page-font-color: #000;
   --page-link-color: #00f;
   --page-header-color: #000;
   --page-title-color: #444;
   --page-blockquote-border-color: #bbb;
-  --aside-background-color: #ffffff55;
   --page-border-color: #ccc;
+  --aside-background-color: #ffffff55;
 
   /** Saw white lines at 8px and zoomed */
   --tabs-border-width: 6px;

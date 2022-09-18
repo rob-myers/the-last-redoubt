@@ -85,6 +85,7 @@ const rootCss = css`
       a {
         color: white;
       }
+      background: var(--nav-selected-background);
     }
     a {
       padding: 10px 0;
