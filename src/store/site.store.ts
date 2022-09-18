@@ -89,10 +89,10 @@ const useStore = create<State>()(devtools((set, get) => ({
     },
 
     initiateBrowser() {
-      setTimeout(() => {
-        document.body.style.scrollBehavior = 'smooth';
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 1000);
+      // setTimeout(() => {
+      //   document.body.style.scrollBehavior = 'smooth';
+      //   document.documentElement.style.scrollBehavior = 'smooth';
+      // }, 1000);
 
       window.addEventListener('message', (message) => {
         if (message.origin === 'https://giscus.app' && message.data.giscus?.discussion) {
