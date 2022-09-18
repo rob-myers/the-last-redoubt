@@ -49,13 +49,14 @@ export function wrapPageElement({
       `}
         render={(allFrontMatter: AllFrontMatter) => {
 
-          React.useMemo(() => {
-            useSiteStore.api.initiate(allFrontMatter, frontMatter);
+          React.useEffect(() => {
+            useSiteStore.api.setArticleKey(frontMatter?.key);
           }, [frontMatter]);
           
-          React.useEffect(() =>
-            useSiteStore.api.initiateBrowser()
-          , []);
+          React.useEffect(() => {
+            useSiteStore.api.initiate(allFrontMatter);
+            useSiteStore.api.initiateBrowser();
+          }, []);
 
           return (
             <QueryClientProvider client={queryClient} >

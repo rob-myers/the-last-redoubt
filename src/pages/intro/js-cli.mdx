@@ -87,7 +87,9 @@ range () {
     [...Array(Number(args[0]))].map((_, i) => i)
   ' "$1" 
 }
+```
 
+```bash
 # `range 5 | map '() => x ** 2'` outputs `[0, 1, 4, 9, 16]`
 map () {
   run '(ctxt) {
@@ -104,7 +106,9 @@ map () {
 keys () {
   map Object.keys
 }
+```
 
+```bash
 # `range 5 | split` outputs 5 numbers
 # `echo a,b,c,d | split ,` outputs 4 strings
 split () {

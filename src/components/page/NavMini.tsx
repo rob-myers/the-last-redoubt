@@ -8,12 +8,15 @@ import Icon from "./Icon";
 
 export default function NavMini() {
 
-  const { meta, prev, next } = useSiteStore(x => {
-    const meta = x.articleKey ? x.articlesMeta[x.articleKey] : null;
-    const prev = meta?.prev ? x.articlesMeta[meta.prev] : null;
-    const next = meta?.next ? x.articlesMeta[meta.next] : null;
-    return { meta, prev, next };
-  }, (a, b) => a.meta?.key === b.meta?.key);
+  const { meta, prev, next } = useSiteStore(
+    x => {
+      const meta = x.articleKey ? x.articlesMeta[x.articleKey] : null;
+      const prev = meta?.prev ? x.articlesMeta[meta.prev] : null;
+      const next = meta?.next ? x.articlesMeta[meta.next] : null;
+      return { meta, prev, next };
+    },
+    (a, b) => a.meta?.key === b.meta?.key,
+  );
 
   return (
     <div className={rootCss}>

@@ -40,6 +40,9 @@ const titleCss = css`
     text-transform: uppercase;
     text-shadow: 0 0 2px #888888bb;
     
+    @media(max-width: 1200px) {
+      font-size: 4.6rem;
+    }
     @media(max-width: 800px) {
       font-size: 3.5rem;
     }

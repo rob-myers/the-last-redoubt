@@ -3,10 +3,10 @@ import { css, cx } from '@emotion/css';
 import useSiteStore from 'store/site.store';
 import { cssTimeMs } from 'projects/service/const';
 
-export default function InlineCode({ children, ...props }: Props) {
+export default function InlineCode({ children, copy, ...props }: Props) {
   return (
     <code
-      {...props.copy && {
+      {...copy && {
         title: "click to copy text",
         onClick: useSiteStore.api.clickToClipboard,
         style: { cursor: 'pointer' },

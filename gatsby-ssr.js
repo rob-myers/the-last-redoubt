@@ -37,6 +37,10 @@ export function onRenderBody({ setPreBodyComponents }) {
     const darkModeEnabled = localStorage.getItem('${localStorageKey.darkModeEnabled}');
     if (darkModeEnabled === 'true') {
       document.body.classList.add('dark-mode');
+    } else if (darkModeEnabled === null) {
+      // Default to dark mode initially
+      localStorage.setItem('${localStorageKey.darkModeEnabled}', 'true');
+      document.body.classList.add('dark-mode');
     }
   } catch (e) {
     console.error(e)

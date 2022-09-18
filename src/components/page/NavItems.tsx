@@ -63,7 +63,7 @@ const rootCss = css`
       color: #ddd;
     }
     border: 0 solid #444;
-    border-width: 0 0 4px;
+    border-width: 0 0 2px;
   }
   
   ul {

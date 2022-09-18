@@ -28,9 +28,10 @@ export type State = {
 
   api: {
     clickToClipboard(e: React.MouseEvent): Promise<void>;
-    initiate(allFm: AllFrontMatter, fm: FrontMatter | undefined): void;
+    initiate(allFm: AllFrontMatter): void;
     initiateBrowser(): void;
     removeComponents(tabsKey: string, ...componentKeys: string[]): void;
+    setArticleKey(articleKey?: string): void
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
     toggleDarkMode(): void;
   };
@@ -65,11 +66,7 @@ const useStore = create<State>()(devtools((set, get) => ({
       }
     },
 
-    initiate({ allMdx: { edges } }, fm) {
-      if (get().groupedMetas.length) {
-        return set({ articleKey: fm ? fm.key : null });
-      }
-
+    initiate({ allMdx: { edges } }) {
       const articlesMeta = {} as State['articlesMeta'];
       for (const { node: { frontmatter: fm } } of edges) {
         if (fm && fm.key) {
@@ -85,7 +82,6 @@ const useStore = create<State>()(devtools((set, get) => ({
       ));
 
       set({
-        articleKey: fm ? fm.key : null,
         articlesMeta,
         groupedMetas,
         darkMode: typeof window !== 'undefined' && document.body.classList.contains('dark-mode'),
@@ -93,10 +89,10 @@ const useStore = create<State>()(devtools((set, get) => ({
     },
 
     initiateBrowser() {
-      setTimeout(() => {
-        document.body.style.scrollBehavior = 'smooth';
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 1000);
+      // setTimeout(() => {
+      //   document.body.style.scrollBehavior = 'smooth';
+      //   document.documentElement.style.scrollBehavior = 'smooth';
+      // }, 1000);
 
       window.addEventListener('message', (message) => {
         if (message.origin === 'https://giscus.app' && message.data.giscus?.discussion) {
@@ -133,6 +129,10 @@ const useStore = create<State>()(devtools((set, get) => ({
         }
       });
       set({ component: { ...lookup } }, undefined, 'remove-components');
+    },
+
+    setArticleKey(articleKey) {
+      set({ articleKey: articleKey??null }, undefined, 'set-article-key');
     },
 
     setTabDisabled(tabsKey, componentKey, disabled) {

@@ -330,9 +330,7 @@ const articleCss = css`
 
   pre {
     border: 1px solid var(--page-border-color);
-    @media(max-width: 600px) {
-      border: 0 solid var(--page-border-color);
-    }
+    margin-bottom: 24px;
   }
 
   span.cmd {
@@ -432,7 +430,7 @@ const articleComponents = (
           rel="noopener"
         >
           {children}
-          &nbsp;<Icon icon="ext-link" inline small />
+          {' '}<Icon icon="ext-link" inline small />
         </a>
       );
     }

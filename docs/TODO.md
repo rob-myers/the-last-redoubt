@@ -2,11 +2,8 @@
 
 ## In progress
 
-- ✅ Rewrite `click` without `otag` and remove latter
-
-- ✅ Handle lack of extant Giscus discussion
-
-- ✅ Fix abrupt NPC turn on finish walk
+- Start working on /intro/setup maybe at /wip/intro-setup
+- Rename page stub as page preview
 
 - Page stubs
   - ✅ Add preview to /intro/setup
@@ -23,18 +20,6 @@
 - 🚧 YouTube: lazy load
   - https://web.dev/iframe-lazy-loading/
   - Seems scripts are still being loaded
-
-- pages for initial release
-  - /
-    - Tidy
-    - ✅ Replace extended example with slides
-  - /intro/setup
-    - Assets Pipeline
-    - React + CSS
-    - JavaScript CLI
-    - Data Structures
-  - /about/terminal
-  - /about/me
 
 - ✅ BUG cannot get{Position,Angle} when tab hidden
   - Tabs now uses `visibility: hidden` instead of `display: none`
@@ -156,6 +141,9 @@ How to embed video?
 
 ## Done
 
+- ✅ Rewrite `click` without `otag` and remove latter
+- ✅ Handle lack of extant Giscus discussion
+- ✅ Fix abrupt NPC turn on finish walk
 - ✅ Move NPC collision code into service/npc
 - ✅ Consider not using invert(1) for dark-mode
 - ✅ Move assets from public/* to /static/assets/*
