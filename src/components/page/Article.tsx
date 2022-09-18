@@ -432,7 +432,7 @@ const articleComponents = (
           rel="noopener"
         >
           {children}
-          &nbsp;<Icon icon="ext-link" inline small />
+          {' '}<Icon icon="ext-link" inline small />
         </a>
       );
     }
