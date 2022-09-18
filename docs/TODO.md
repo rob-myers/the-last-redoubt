@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ Rewrite `click` without `otag` and remove latter
+
 - ✅ Handle lack of extant Giscus discussion
 
 - ✅ Fix abrupt NPC turn on finish walk
@@ -120,6 +122,7 @@ How to embed video?
 
 ## Future
 
+- Explain what is happening in NPCS trackNpc
 - Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
 - BUG CssPanZoom zoom out with pointer down and drag around
   - Also issues when click on `HTMLImageElement`s in devtools

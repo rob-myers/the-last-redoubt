@@ -70,7 +70,7 @@ export default function useStateRef(
             // We could support arbitrary depth, but choose not to
             const innerNewInit = newInit[key];
             const innerState = /** @type {Record<string, any>} */ state[key];
-            for (const [innerK, innerV] of Object.entries(/** @type {Record<string, State>} */ (innerNewInit))) {
+            for (const [innerK, innerV] of Object.entries(/** @type {Record<string, any>} */ (innerNewInit))) {
               const innerKey = /** @type {keyof typeof innerState} */ (innerK);
               if (typeof innerV === 'function') {
                 innerState[innerKey] = innerV;
