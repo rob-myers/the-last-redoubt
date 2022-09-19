@@ -30,6 +30,10 @@ export default function Carousel(props: Props) {
         spaceBetween={props.spaceBetween??20}
         style={{ height: props.height }}
         zoom
+        onZoomChange={(_swiper, scale, _imgEl, slideEl) => {
+          // https://github.com/nolimits4web/swiper/issues/3287
+          if (scale === 1) slideEl.classList.remove('swiper-slide-zoomed');
+        }}
       >
         {isImages
           ? items.map((item, i) =>
