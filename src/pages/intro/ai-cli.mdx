@@ -41,7 +41,7 @@ import InlineCode from "components/page/InlineCode";
 ```bash
 goLoop () {
   click |
-    filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
+    filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |
     map 'x => ({ npcKey: "'$1'", point: x })' |
     nav |
     walk $1
