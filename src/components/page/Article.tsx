@@ -61,12 +61,12 @@ const articleCss = css`
   overflow-wrap: break-word;
   position: relative; /** For anchors */
   
-  padding: 24px 128px 12px 0;
+  padding: 24px var(--article-right-padding) 12px 0;
   @media(max-width: 1024px) {
-    padding: 16px 48px 0 0;
+    padding: 16px var(--article-right-padding) 0 0;
   }
   @media(max-width: 600px) {
-    padding: 0px 12px;
+    padding: 0px var(--article-right-padding);
     font-size: 1.2rem;
     border: none;
     line-height: 2;
