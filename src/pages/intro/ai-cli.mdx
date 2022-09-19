@@ -39,19 +39,23 @@ import InlineCode from "components/page/InlineCode";
 <InlineCode>goLoop andros</InlineCode> makes Andros walk where you click.
 
 ```bash
-click |
-  filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
-  map 'x => ({ npcKey: "'$1'", point: x })' |
-  nav |
-  walk $1
+goLoop () {
+  click |
+    filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
+    map 'x => ({ npcKey: "'$1'", point: x })' |
+    nav |
+    walk $1
+}
 ```
 
 <InlineCode>lookLoop andros</InlineCode> makes Andros look where you click.
 
 ```bash
-click |
-  filter 'x => !x.tags.includes("nav")' |
-  look $1
+lookLoop () {
+  click |
+    filter 'x => !x.tags.includes("nav")' |
+    look $1
+}
 ```
 
 
