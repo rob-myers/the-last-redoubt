@@ -4,6 +4,8 @@
 
 - Start working on /intro/setup maybe at /wip/intro-setup
 - Rename page stub as page preview
+- Fix Tabs outline + Escape pauses?
+  - In Desktop can press Esc whilst running a World
 
 - Page stubs
   - ✅ Add preview to /intro/setup

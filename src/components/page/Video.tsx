@@ -16,7 +16,7 @@ export default function Video({ videoKey }: Props) {
       />
 
       {{
-        'intro-first-videos': (
+        'video--intro-first': (
           <iframe
             width="100%"
             height="464"
@@ -28,7 +28,7 @@ export default function Video({ videoKey }: Props) {
             loading="lazy"
           />
         ),
-        'intro-world-tty-videos': (
+        'video--intro-world-tty': (
           <iframe
             width="100%"
             height="464"
@@ -48,8 +48,8 @@ export default function Video({ videoKey }: Props) {
 
 interface Props {
   videoKey: (
-    | 'intro-first-videos'
-    | 'intro-world-tty-videos'
+    | 'video--intro-first'
+    | 'video--intro-world-tty'
   );
 }
 

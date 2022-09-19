@@ -22,8 +22,8 @@ export const rootCss = css`
 
   color: var(--page-font-color);
 
-  padding: 32px 0 32px 40px;
   margin: 0;
+  padding: 32px 0 32px 40px;
   @media(max-width: 600px) {
     padding: 0;
   }

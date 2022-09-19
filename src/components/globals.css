@@ -8,10 +8,11 @@
   --page-title-color: #444;
   --page-blockquote-border-color: #bbb;
   --page-border-color: #ccc;
+  --article-right-padding: 12px;
   --aside-background-color: #ffffff55;
 
-  /** Saw white lines at 8px and zoomed */
-  --tabs-border-width: 6px;
+  /** thick ~ 5px (saw white lines for 6px at 90% zoom) */
+  --tabs-border-width: 5px;
 
   --swiper-navigation-size: 28px;
   --swiper-theme-color: #777;

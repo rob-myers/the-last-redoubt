@@ -40,7 +40,7 @@ export const gameFunctions = [
 
 goLoop: `{
   click |
-    filter 'x => ["no-ui", "nav"].every(tag => x.tags.includes(tag))' |
+    filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |
     map 'x => ({ npcKey: "'$1'", point: x })' |
     nav |
     walk $1
@@ -66,11 +66,15 @@ lookLoop: `{
  */
 export const profileLookup = {
 'profile-1': () => `
+
 source /etc/util-1
 source /etc/game-1
+
 `.trim(),
 
-'profile-1-a': (npcKey = 'andros') => `${
+'profile-1-a': (npcKey = 'andros') => `
+
+${
   profileLookup["profile-1"]()
 }
 awaitWorld
@@ -83,7 +87,8 @@ track ${npcKey} &
 goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
-`.trimEnd(),
+
+`.trim(),
 };
 
 import rawLoaderJs from '!!raw-loader!./raw-loader';
