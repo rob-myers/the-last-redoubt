@@ -20,6 +20,7 @@ import Comments from "components/page/Comments";
 import Icon from "components/page/Icon";
 import InlineCode from "components/page/InlineCode";
 import InnerTable from "components/page/InnerTable";
+import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import Video from "components/page/Video";
 import { profileLookup } from "projects/sh/scripts";
@@ -144,21 +145,27 @@ How should we build The Last Redoubt?
 
 </aside>
 
-It is worth taking the time to make some observations about the above videos.
+It is worth make some observations about the above videos.
 
 > **The game has a birdseye viewpoint**.
-> Avoiding game-centric tech rules out 3D graphics (except perhaps isometric).
+>
+> Avoiding game-centric tech rules out 3D graphics.<SideNote title="ignoring e.g. isometric" />
+
+> **The Player interacts via clicks or touches**.
+>
+> Websites rarely use keyboard controls (except for accessibility).
 
 > **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
-> Mouse clicks are converted into world coordinates.
-> Doors are styled clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
-
-> **The Player interacts via mouse clicks or touches**.
-> Websites rarely use keyboard controls.
+>
+> Clicks are converted into world coordinates, so a navpath can be computed.
+> The Player is animated using the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) (essentially CSS). 
+> Doors are clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
 
 > **The Player is _situated_ with limited visual range**.
+>
+> How do we restrict the players view?
 > We use two copies of the [same PNG](/assets/geomorph/g-301--bridge.png "@new-tab") (one atop the other).
-> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
+> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and also masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
 
 The camera ([CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)) further restricts what can be seen, although we can peek by panning and zooming.
 These points are illustrated below.
