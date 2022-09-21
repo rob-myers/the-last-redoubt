@@ -504,7 +504,7 @@ const articleComponents = (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
         <Link to={`#${id}`}>
-          <Icon icon="info-icon" invert />
+          <Icon icon="info-icon" invert className={cssName.ignoreDark} />
         </Link>
         {children}
       </aside>

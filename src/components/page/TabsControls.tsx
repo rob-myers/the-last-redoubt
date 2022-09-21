@@ -16,7 +16,10 @@ export function TabsControls({ api, tabsId }: Props) {
           invert
           onClick={api.reset}
           title="reset"
-          className={api.resetDisabled ? cssName.disabled : undefined}
+          className={cx(
+            api.resetDisabled ? cssName.disabled : undefined,
+            cssName.ignoreDark,
+          )}
         />
         <Link to={`#${tabsId}`}>
           <Icon
@@ -24,6 +27,7 @@ export function TabsControls({ api, tabsId }: Props) {
             small
             invert
             title="anchor"
+            className={cssName.ignoreDark}
           /> 
         </Link>
         <Icon
@@ -32,13 +36,17 @@ export function TabsControls({ api, tabsId }: Props) {
           invert
           onClick={api.toggleExpand}
           title={api.expanded ? 'minimise' : 'maximise'}
+          className={cssName.ignoreDark}
         />
         <Icon
           icon="cross-circle"
           small
           invert
           onClick={api.toggleEnabled}
-          className={!api.enabled ? cssName.disabled : undefined}
+          className={cx(
+            !api.enabled ? cssName.disabled : undefined,
+            cssName.ignoreDark,
+          )}
         />
       </div>
 
