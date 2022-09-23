@@ -75,7 +75,7 @@ We're writing about Game AI and creating a game.
 Then it's natural to use web technologies, building the game right here on this site.
 But which ones?
 
-> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
+> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)), [Node.js](https://en.wikipedia.org/wiki/Node.js).
 >
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
 > and JavaScript-driven rendering or physics simulation.
@@ -149,7 +149,7 @@ It is worth making a few observations about the videos shown above.
 
 > **The game has a birdseye viewpoint**.
 >
-> Avoiding game-centric tech rules out 3D graphics.<SideNote title="ignoring e.g. isometric" />
+> Avoiding game-centric tech rules out 3D graphics.<SideNote>ignoring e.g. isometric</SideNote>
 
 > **The Player interacts via clicks or touches**.
 >
@@ -157,7 +157,7 @@ It is worth making a few observations about the videos shown above.
 
 > **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
 >
-> Clicks are converted into world coordinates, so a navpath can be computed.
+> Clicks are converted into world coordinates and a navpath is computed.
 > The Player is animated using the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) (essentially CSS). 
 > Doors are clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
 
