@@ -1,15 +1,12 @@
 import React from 'react';
 import { css } from '@emotion/css';
 
-/**
- * TODO 🚧 support mobile e.g. via custom tooltip
- */
 export default function SideNote(props: Props) {
   const width = props.width??200;
   return (
-    <div className={rootCss}>
-      <div className="arrow"/>
-      <div
+    <span className={rootCss}>
+      <span className="arrow"/>
+      <span
         className="info"
         style={{
           width,
@@ -18,8 +15,8 @@ export default function SideNote(props: Props) {
         }}
       >
         {props.children}
-      </div>
-    </div>
+      </span>
+    </span>
   );
 }
 
