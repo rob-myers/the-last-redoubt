@@ -2,10 +2,11 @@
 
 ## In progress
 
-- Start working on /intro/setup maybe at /wip/intro-setup
+- 🚧 Start working on /intro/setup
 - Rename page stub as page preview
 - Fix Tabs outline + Escape pauses?
   - In Desktop can press Esc whilst running a World
+- Home page has World + Terminal demo
 
 - Page stubs
   - ✅ Add preview to /intro/setup
@@ -14,7 +15,7 @@
   - ✅ Add page /intro/js-cli
   - ✅ Add page /intro/ai-cli
   - ✅ Add some content to /intro/js-cli
-  - 🚧 Add some content to /intro/ai-cli
+  - ✅ Add some content to /intro/ai-cli
 
 - 🚧 Finish 2-variable quadratic i.e. NPC intersects line seg
   - Write down solutions carefully

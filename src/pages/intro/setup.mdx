@@ -24,11 +24,89 @@ import InlineCode from "components/page/InlineCode";
 
 ## Our Setup 🚧
 
-<aside title="upcoming-article">
+To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting/storyline/influences.
+We'll now provide detailed information concerning our development process, expanding on the previous page.
 
-#### Upcoming topics
+### 1. Assets
 
-##### Assets
+The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
+Excluding the [Underground Fields](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=in%20the%20lowest%20tier%20of%20the%20Underground%20Fields%2C "@new-tab") it has [1,320 floors](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=thousand%20three%20hundred%20and%20twenty%20floors "@new-tab"), each corresponding to a single city.
+We only show one floor at a time - although multiple floors are possible via [CSS perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective).
+Then:
+
+1. We need graphical assets (to represent the Last Redoubt).
+2. We need lots of assets (for 1,320 large cities).
+3. We need ways of reusing assets (for feasible dev & debug time).
+
+These problems are solved by Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
+
+> 1. We'll use the _Starship Symbols_ to represent the Last Redoubt.
+
+> 2. There are over 2000 of them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. an [office](/assets/symbol/office--020--2x3.png "@new-tab"), a [bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), a [couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
+
+> 3. They can be used to reconstruct the approx 600 _Starship Geomorphs_, themselves combinable in countless ways like [this](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
+
+In particular, we can create the cities of the Last Redoubt by combining geomorphs.
+But cities have e.g. doors, walls and walkable areas.
+To infer these from our "atoms" we use [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics)s.
+That is, for each `{symbol}.png` we create a respective `{symbol}.svg`  e.g. an [office](/assets/symbol/office--020--2x3.svg "@new-tab"), a [bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), a [couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+
+<aside title="symbol-svg-progress">
+
+So far we've created 66 symbol SVGs.
+They're a side-effect of remaking 5 geomorphs:
+- `101` [Multi purpose](/assets/geomorph/g-101--multipurpose.png "@new-tab")
+- `102` [Research Deck](/assets/geomorph/g-102--research-deck.png "@new-tab")
+- `301` [Bridge](/assets/geomorph/g-301--bridge.png "@new-tab")
+- `302` [Xboat Repair Bay](/assets/geomorph/g-302--xboat-repair-bay.png "@new-tab")
+- `303` [Passenger Deck](/assets/geomorph/g-303--passenger-deck.png "@new-tab")
+
+Please check out the [originals here](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html).
+
+</aside>
+
+These SVGs include the original PNG as an `<image>` with a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs).
+Try opening [the couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab") and add `view-source:` as a prefix to the URL.
+You'll see something like this (we've redacted the data URL):
+
+```svg
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 120 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="">
+    <title>background</title>
+    <image width="137" height="575" x="-8.097" y="14.064" style="" xlink:href="data:image/png;base64,[REDACTED-DATA-URL]"/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect width="124" height="574.627" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="15.03" x="-2"/>
+  </g>
+</svg>
+```
+
+Then the additional data amounts to a single rectangular obstacle.
+One can see e.g. walls, doors, labels by `view-source:`ing the other SVGs above.
+But how to construct such SVGs?
+Technically we could use a text editor but there's a much better way:
+
+> [Boxy SVG](https://boxy-svg.com/).
+
+<!-- are standalone files which can be viewed in an editor -->
+
+
+<!--
+   - Eric Smith provides them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/).
+   - Each Geomorph can be remade using them (more or less).
+-->
+
+<!--
+  Number of Starship Geomorphs aggregated by section
+   echo $(( 226 + 160 + 120 + 60 + 44 ))
+-->
+   
+🚧 __IN PROGRESS__ 🚧
 
 We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
 
@@ -43,6 +121,10 @@ We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)
 - NPC animation via Boxy SVG e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
 - Generated NPC spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
 
+
+<aside title="upcoming-article">
+
+#### Upcoming topics
 
 ##### ReactJS and CSS
 

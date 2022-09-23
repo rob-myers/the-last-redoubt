@@ -322,7 +322,7 @@ const articleCss = css`
   } */
 
   > pre {
-    margin: 48px 0 48px 0;
+    margin: 32px 0 48px 0;
     @media(max-width: 600px) {
       margin: 24px 0;
     }
