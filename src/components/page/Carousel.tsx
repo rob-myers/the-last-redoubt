@@ -34,6 +34,9 @@ export default function Carousel(props: Props) {
           // https://github.com/nolimits4web/swiper/issues/3287
           if (scale === 1) slideEl.classList.remove('swiper-slide-zoomed');
         }}
+        // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
+        //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
+        // }}
       >
         {isImages
           ? items.map((item, i) =>
