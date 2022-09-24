@@ -544,7 +544,7 @@ const articleComponents = (
 
 function childrenToKebabText(children: React.ReactNode | React.ReactNode[]) {
   return React.Children.toArray(children)[0]
-    .toString().toLowerCase().replace(/[\s.]/g, '-');
+    .toString().trimEnd().toLowerCase().replace(/[\s.]/g, '-');
 }
 
 const months = [
