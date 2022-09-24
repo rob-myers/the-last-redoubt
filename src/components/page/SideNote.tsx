@@ -1,13 +1,15 @@
 import React from 'react';
-import { css } from '@emotion/css';
+import { css, cx } from '@emotion/css';
 
 export default function SideNote(props: Props) {
   const width = props.width??200;
+  const direction = props.direction??'down';
+
   return (
-    <span className={rootCss}>
-      <span className="arrow"/>
+    <span className={cx("tooltip", rootCss)}>
+      <span className={cx("arrow", direction)}/>
       <span
-        className="info"
+        className={cx("info", direction)}
         style={{
           width,
           height: props.height,
@@ -23,8 +25,10 @@ export default function SideNote(props: Props) {
 interface Props extends React.PropsWithChildren<{}> {
   width?: number;
   height?: number;
+  direction?: 'down' | 'left';
 }
 
+// 🚧 remove?
 const vertOffsetPx = 20;
 
 const rootCss = css`
@@ -46,33 +50,49 @@ const rootCss = css`
     animation-play-state: paused;
     -webkit-animation-play-state: paused;
     .arrow, .info {
-      visibility:visible;
+      visibility: visible;
     }
   }
 
   .info {
-    position:absolute;
-    top: ${vertOffsetPx}px;
+    position: absolute;
     width: 200px;
-    padding: 2px;
-    background: black;
-    color: #ccc;
+    padding: 8px 2px;
+    background: white;
+    color: #000;
     border-radius: 3px;
-    border: thick var(--page-border-color) solid;
+    line-height: 1.8;
     visibility: hidden;
+
+    &.down {
+      top: ${vertOffsetPx}px;
+    }
+    &.left {
+      top: -16px;
+      left: ${-(100 + 8)}px;
+    }
   }
 
   .arrow {
     position: absolute;
     z-index: 1;
-    top: calc(-10px + ${vertOffsetPx}px);
-    left: 0;
-    /* margin: -10px 0 0 -5px; */
     width: 0; 
-    height: 0; 
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid var(--page-border-color);
+    height: 0;
     visibility: hidden;
+    
+    &.down {
+      top: calc(-10px + ${vertOffsetPx}px);
+      left: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 10px solid white;
+    }
+    &.left {
+      top: -4px;
+      left: -8px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 10px solid white;
+    }
   }
 `;
