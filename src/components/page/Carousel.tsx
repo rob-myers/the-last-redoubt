@@ -125,21 +125,27 @@ const rootCss = css`
     z-index: 1;
   }
 
-  img {
-    border: thin solid var(--page-border-color);
-    border-radius: 8px;
-    background-color: #111;
-  }
   .slide-label {
     padding: 8px;
     height: ${labelHeightPx}px;
-
+    z-index: 1;
+  
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.2;
     color: var(--page-font-color);
     text-align: center;
+  }
+  .swiper-slide.swiper-slide-zoomed .slide-label {
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+  }
+  img {
+    border: thin solid var(--page-border-color);
+    border-radius: 8px;
+    background-color: #111;
   }
 
   img.swiper-lazy + .slide-label {
