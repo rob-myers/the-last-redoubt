@@ -2,7 +2,7 @@
 key: index
 date: 2022-10-01
 info: Home page
-# ⛔️ GraphQL error avoiding if ≥ 1 instance of field
+# ⛔️ GraphQL error avoided if ≥ 1 instance of field
 giscusTerm: /home
 label: home
 navGroup: null
@@ -16,6 +16,10 @@ tags:
 ---
 
 import Carousel from "components/page/Carousel";
+import Icon from "components/page/Icon";
+import InlineCode from "components/page/InlineCode";
+import Tabs from "components/page/Tabs";
+import { profileLookup } from "projects/sh/scripts";
 
 ## Home page
 
@@ -50,6 +54,29 @@ Various screenshots are shown below.
     { src: 'pic-9.png', label: 'Reading some variables' },
     { src: 'pic-10.png', label: 'Mobile has Terminal UI' },
     { src: 'pic-11.png', label: 'Piping output into devtool' },
+  ]}
+/>
+
+### Demo <span style="filter: grayscale(1) contrast(0.75)">⭐️</span>
+
+Actions speak louder than words:
+- click to navigate/interact (e.g. open doors).
+- reset (<Icon icon="refresh" small inline />), maximise tab/tabs (<Icon icon="expand" small inline />), disable (<Icon icon="cross-circle" small inline />)
+- debug circles (<InlineCode copy>DEBUG=1; npc config</InlineCode>)
+
+<Tabs
+  id="demo-tabs"
+  initEnabled={false}
+  height={600}
+  persistLayout
+  initHorizontal
+  tabs={[
+    [
+      { type: 'component', filepath: 'world-demo-1' },
+    ],
+    [
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
+    ],
   ]}
 />
 
