@@ -20,36 +20,37 @@ tags:
   - graphs
 ---
 
+import Carousel from "components/page/Carousel";
 import InlineCode from "components/page/InlineCode";
 
 ## Our Setup 🚧
 
 To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting/storyline/influences.
-We'll now provide detailed information concerning our development process, expanding on the previous page.
+We'll now provide detailed information concerning our development setup.
 
 ### 1. Assets
 
 The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
 Excluding the [Underground Fields](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=in%20the%20lowest%20tier%20of%20the%20Underground%20Fields%2C "@new-tab") it has [1,320 floors](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=thousand%20three%20hundred%20and%20twenty%20floors "@new-tab"), each corresponding to a single city.
-We only show one floor at a time - although multiple floors are possible via [CSS perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective).
+We only show one floor at a time - although multiple are possible via [CSS perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective).
 Then:
 
-1. We need graphical assets (to represent the Last Redoubt).
+1. We need graphical assets (to represent the cities).
 2. We need lots of assets (for 1,320 large cities).
-3. We need ways of reusing assets (for feasible dev & debug time).
+3. We need ways of reusing assets (for feasibility).
 
 These problems are solved by Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
 
-> 1. We'll use the _Starship Symbols_ to represent the Last Redoubt.
+> 1. We'll use the _Starship Symbols_ to build the cities.
 
-> 2. There are over 2000 of them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. an [office](/assets/symbol/office--020--2x3.png "@new-tab"), a [bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), a [couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
+> 2. There are more than 2000 of them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. [an office](/assets/symbol/office--020--2x3.png "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
 
-> 3. They can be used to reconstruct the approx 600 _Starship Geomorphs_, themselves combinable in countless ways like [this](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
+> 3. They can be used to reconstruct the approx 600 _Starship Geomorphs_, themselves combinable in [countless ways](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
 
 In particular, we can create the cities of the Last Redoubt by combining geomorphs.
 But cities have e.g. doors, walls and walkable areas.
-To infer these from our "atoms" we use [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics)s.
-That is, for each `{symbol}.png` we create a respective `{symbol}.svg`  e.g. an [office](/assets/symbol/office--020--2x3.svg "@new-tab"), a [bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), a [couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+To infer these from our "atoms" we'll use [SVGs](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/assets/symbol/office--020--2x3.svg "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
 
 <aside title="symbol-svg-progress">
 
@@ -65,9 +66,8 @@ Please check out the [originals here](http://travellerrpgblog.blogspot.com/2020/
 
 </aside>
 
-These SVGs include the original PNG as an `<image>` with a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs).
-Try opening [the couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab") and add _view-source:_ as a prefix to the URL.
-You'll see something like this (we've redacted the data URL):
+These SVGs include the original PNG as an image via a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs).
+If you open [the couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab") and add the prefix _view-source:_ to the URL, you'll see something like this:
 
 ```svg
 <?xml version="1.0" encoding="utf-8"?>
@@ -89,17 +89,27 @@ You'll see something like this (we've redacted the data URL):
 Then the additional data amounts to a single rectangular obstacle.
 One can see examples of walls, doors and labels by applying _view-source:_ to the other SVGs above.
 But how to construct such SVGs?
-Technically we could use a text editor but there's a much better way:
+Technically a text editor would do, but there's a much better way: [Boxy SVG](https://boxy-svg.com/).
 
-> [Boxy SVG](https://boxy-svg.com/).
+<Carousel
+  height={500}
+  items={[
+    { src: '/assets/pics/boxy-svg-example-1.png', label: 'Boxy SVG in action' },
+  ]}
+/>
 
-<!-- are standalone files which can be viewed in an editor -->
+This wonderful software naturally encodes "folders" as [SVG groups](https://developer.mozilla.org/en-US/docs/Web/API/SVGGElement) with a [title](https://developer.mozilla.org/en-US/docs/Web/API/SVGTitleElement).
+We use certain top-level folders e.g. _obstacles_, _singles_ and _walls_.
+Groups are locked or hidden by applying styles i.e. _pointer-events:none_ or _visibility: hidden_ respectively.
+Descendants can be unlocked/hidden by applying a converse style. 
+The underlying SVG document is visible and can be directly edited.
 
+Using SVGs permits us to specify rectangles, polygons and points.
+We can tag them with space-separated strings by naming them, which corresponds to adding an SVGTitleElement in the underlying SVG.
+Boxy SVG allows us to edit/extend this geometric data with ease.
+But how do we actually use these SVGs?
 
-<!--
-   - Eric Smith provides them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/).
-   - Each Geomorph can be remade using them (more or less).
--->
+<!-- NEXT parse svg + aggregate as "svg.json" -->
 
 <!--
   Number of Starship Geomorphs aggregated by section
@@ -108,13 +118,12 @@ Technically we could use a text editor but there's a much better way:
    
 🚧 __IN PROGRESS__ 🚧
 
+<br/>
+
 We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
 
-- [Starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/).
-- [Starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
-  - e.g. [1](/assets/symbol/office--020--2x3.png "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
-- Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)
-  - e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+- ~~Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)~~
+  - ~~e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab")~~.
   - collectively organised as [JSON](/assets/symbol/svg.json "@new-tab").
 - Generated geomorphs PNG + JSON
   - e.g. [1](/assets/geomorph/g-301--bridge.png "@new-tab"), [2](/assets/geomorph/g-101--multipurpose.png "@new-tab"), [3](/assets/geomorph/g-303--passenger-deck.png "@new-tab").
