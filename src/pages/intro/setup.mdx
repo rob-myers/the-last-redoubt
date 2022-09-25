@@ -89,7 +89,7 @@ If you open [the couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-ta
 Then the additional data amounts to a single rectangular obstacle.
 One can see examples of walls, doors and labels by applying _view-source:_ to the other SVGs above.
 But how to construct such SVGs?
-Technically a text editor would do, but there's a much better way: [Boxy SVG](https://boxy-svg.com/).
+Technically a text editor would do, but there's a much better way i.e. [Boxy SVG](https://boxy-svg.com/).
 
 <Carousel
   height={500}
@@ -98,16 +98,47 @@ Technically a text editor would do, but there's a much better way: [Boxy SVG](ht
   ]}
 />
 
-This wonderful software naturally encodes "folders" as [SVG groups](https://developer.mozilla.org/en-US/docs/Web/API/SVGGElement) with a [title](https://developer.mozilla.org/en-US/docs/Web/API/SVGTitleElement).
-We use certain top-level folders e.g. _obstacles_, _singles_ and _walls_.
-Groups are locked or hidden by applying styles i.e. _pointer-events:none_ or _visibility: hidden_ respectively.
-Descendants can be unlocked/hidden by applying a converse style. 
-The underlying SVG document is visible and can be directly edited.
+This wonderful software naturally encodes "folders" as [SVG groups](https://developer.mozilla.org/en-US/docs/Web/API/SVGGElement) with a [title](https://developer.mozilla.org/en-US/docs/Web/API/SVGTitleElement),
+e.g. _obstacles_, _singles_ and _walls_.
+Groups can be locked or hidden by applying CSS styles i.e. _pointer-events: none_ or _visibility: hidden_ respectively.
+Descendants can be unlocked/shown by applying a converse style. 
+In Boxy SVG one can see the underlying SVG document and even directly edit it.
 
 Using SVGs permits us to specify rectangles, polygons and points.
-We can tag them with space-separated strings by naming them, which corresponds to adding an SVGTitleElement in the underlying SVG.
-Boxy SVG allows us to edit/extend this geometric data with ease.
-But how do we actually use these SVGs?
+We can tag them with space-separated strings by naming them (again encoded as an SVGTitleElement).
+Boxy SVG allows us to create/edit/extend this geometric data with ease.
+But it remains to explain how we'll actually use these SVG files.
+
+### 2. Asset Pipelines
+
+If you [try running the video game](/#demo) and look in the Network tab (also possible [on a Mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)) you'll see geomorph PNGs and geomorph [JSONs](https://en.wikipedia.org/wiki/JSON). 
+These are the geomorph assets seen by the end-user i.e. `{geomorph}.png` and `{geomorph}.json`.
+
+<Carousel
+  height={500}
+  items={[
+    { src: '/assets/pics/demo-network-devtools.png', label: 'Demo Network requests' },
+  ]}
+/>
+
+But given our 66 `{symbol}.png` and 66 `{symbol}.svg`,
+how do we create the particular files `g-301-bridge.png` and `g-301-bridge.json`?
+
+<Carousel
+  height={500}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    700: {
+      slidesPerView: 2,
+    },
+  }}
+  items={[
+    { src: '/assets/pics/demo-network-bridge-png.png', label: 'Bridge Geomorph PNG' },
+    { src: '/assets/pics/demo-network-bridge-json.png', label: 'Bridge Geomorph JSON' },
+  ]}
+/>
 
 <!-- NEXT parse svg + aggregate as "svg.json" -->
 
