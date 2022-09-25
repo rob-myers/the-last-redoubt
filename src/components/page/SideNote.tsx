@@ -1,21 +1,15 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 
+/**
+ * 🚧 check if there's space for direction 'right' on hover
+ */
 export default function SideNote(props: Props) {
-  const width = props.width??200;
   const direction = props.direction??'left';
-
   return (
     <div className={cx("side-note", rootCss)}>
       <span className={cx("arrow", direction)}/>
-      <span
-        className={cx("info", direction)}
-        style={{
-          width,
-          height: props.height,
-          marginLeft: -width/ 2,
-        }}
-      >
+      <span className={cx("info", direction)}>
         {props.children}
       </span>
     </div>
@@ -23,18 +17,14 @@ export default function SideNote(props: Props) {
 }
 
 interface Props extends React.PropsWithChildren<{}> {
-  width?: number;
-  height?: number;
-  direction?: 'down' | 'left';
+  direction?: 'down' | 'left' | 'right';
 }
 
 const rootCss = css`
   display: inline-block;
-  @media (max-width: 800px) {
-    position: absolute;
-    right: 8px;
-    /* margin-top: 6px; */
-  }
+  position: absolute;
+  right: 8px;
+  /* margin-top: 6px; */
 
   font-style: normal;
   text-align: center;
@@ -44,8 +34,9 @@ const rootCss = css`
   height: 16px;
   border-radius: 10px;
   border: 2px solid #777;
+  background-color: rgba(0, 0, 0, 0);
 
-  :hover {
+  &:hover, &:active {
     animation-play-state: paused;
     -webkit-animation-play-state: paused;
     .arrow, .info {
@@ -56,11 +47,12 @@ const rootCss = css`
   .info {
     position: absolute;
     width: 200px;
-    padding: 8px 2px;
-    background: black;
+    margin-left: -100px;
+    padding: 16px 2px;
+    background-color: black;
     color: white;
-    border-radius: 3px;
-    line-height: 1.8;
+    border-radius: 6px;
+    line-height: 1.6;
     visibility: hidden;
 
     &.down {
@@ -68,7 +60,11 @@ const rootCss = css`
     }
     &.left {
       top: -16px;
-      left: ${-(100 + 8)}px;
+      left: ${-(100 + 6)}px;
+    }
+    &.right {
+      top: -16px;
+      left: ${100 + 18}px;
     }
   }
 
@@ -92,6 +88,13 @@ const rootCss = css`
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
       border-left: 10px solid black;
+    }
+    &.right {
+      top: -4px;
+      left: 8px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid black;
     }
   }
 `;
