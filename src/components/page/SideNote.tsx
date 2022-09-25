@@ -3,10 +3,10 @@ import { css, cx } from '@emotion/css';
 
 export default function SideNote(props: Props) {
   const width = props.width??200;
-  const direction = props.direction??'down';
+  const direction = props.direction??'left';
 
   return (
-    <span className={cx("tooltip", rootCss)}>
+    <div className={cx("side-note", rootCss)}>
       <span className={cx("arrow", direction)}/>
       <span
         className={cx("info", direction)}
@@ -18,7 +18,7 @@ export default function SideNote(props: Props) {
       >
         {props.children}
       </span>
-    </span>
+    </div>
   );
 }
 
@@ -28,23 +28,22 @@ interface Props extends React.PropsWithChildren<{}> {
   direction?: 'down' | 'left';
 }
 
-// 🚧 remove?
-const vertOffsetPx = 20;
-
 const rootCss = css`
   display: inline-block;
-  cursor: pointer;
-  position: relative;
-  font-size: 0.96rem;
+  @media (max-width: 800px) {
+    position: absolute;
+    right: 8px;
+    /* margin-top: 6px; */
+  }
+
   font-style: normal;
   text-align: center;
+  cursor: pointer;
 
-  width: 24px;
+  width: 16px;
   height: 16px;
-  margin-left: 4px;
   border-radius: 10px;
   border: 2px solid #777;
-  background: black;
 
   :hover {
     animation-play-state: paused;
@@ -58,14 +57,14 @@ const rootCss = css`
     position: absolute;
     width: 200px;
     padding: 8px 2px;
-    background: white;
-    color: #000;
+    background: black;
+    color: white;
     border-radius: 3px;
     line-height: 1.8;
     visibility: hidden;
 
     &.down {
-      top: ${vertOffsetPx}px;
+      top: 20px;
     }
     &.left {
       top: -16px;
@@ -81,18 +80,18 @@ const rootCss = css`
     visibility: hidden;
     
     &.down {
-      top: calc(-10px + ${vertOffsetPx}px);
+      top: calc(-10px + 20px);
       left: 0;
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
-      border-bottom: 10px solid white;
+      border-bottom: 10px solid black;
     }
     &.left {
       top: -4px;
       left: -8px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
-      border-left: 10px solid white;
+      border-left: 10px solid black;
     }
   }
 `;

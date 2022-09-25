@@ -18,10 +18,10 @@ body.dark-mode {
 
 /** @see cssName.ignoreDark */
 body.dark-mode span.icon:not(.ignore-dark) {
-  filter: invert(100%);
+  filter: invert(1);
 }
 
-body:not(.dark-mode) article span.tooltip {
+body.dark-mode article div.side-note {
   filter: invert(1);
 }
 
