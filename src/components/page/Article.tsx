@@ -196,7 +196,7 @@ const articleCss = css`
   p + figure.tabs {
     margin: 40px 0 40px 0;
     @media(max-width: 600px) {
-      margin: 20px 0 20px 0;
+      margin: calc(24px + 20px) 0 20px 0;
     }
   }
   blockquote + figure.video, p + figure.video {
