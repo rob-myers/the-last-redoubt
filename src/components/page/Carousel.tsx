@@ -131,7 +131,10 @@ const rootCss = css`
     font-weight: 300;
     line-height: 1.2;
     color: var(--page-font-color);
+
     text-align: center;
+    display: flex;
+    align-items: center;
   }
   .swiper-slide.swiper-slide-zoomed .slide-label {
     color: white;
