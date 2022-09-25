@@ -98,17 +98,6 @@ const rootCss = css`
     user-select: none;
     display: flex;
     flex-direction: column;
-
-    line-height: 2;
-    p {
-      margin-bottom: 16px;
-    }
-    @media (max-width: 600px) {
-      line-height: 1.6;
-      p {
-        margin-bottom: 8px;
-      }
-    }
   }
   .slide-plain {
     border: 1px solid var(--page-border-color);
@@ -120,8 +109,12 @@ const rootCss = css`
     text-align: center;
     height: 100%;
     width: 100%;
-
     padding: 0 48px;
+
+    line-height: 1.8;
+    p {
+      margin-bottom: 8px;
+    }
   }
 
   .swiper-slide.swiper-slide-zoomed {
