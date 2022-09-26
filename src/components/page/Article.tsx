@@ -196,7 +196,7 @@ const articleCss = css`
   p + figure.tabs {
     margin: 40px 0 40px 0;
     @media(max-width: 600px) {
-      margin: 20px 0 20px 0;
+      margin: calc(24px + 20px) 0 20px 0;
     }
   }
   blockquote + figure.video, p + figure.video {
@@ -322,7 +322,7 @@ const articleCss = css`
   } */
 
   > pre {
-    margin: 48px 0 48px 0;
+    margin: 32px 0 48px 0;
     @media(max-width: 600px) {
       margin: 24px 0;
     }
@@ -504,7 +504,7 @@ const articleComponents = (
       <aside {...props}>
         <span {...title && { id }} className="anchor" />
         <Link to={`#${id}`}>
-          <Icon icon="info-icon" invert />
+          <Icon icon="info-icon" invert className={cssName.ignoreDark} />
         </Link>
         {children}
       </aside>
@@ -544,7 +544,7 @@ const articleComponents = (
 
 function childrenToKebabText(children: React.ReactNode | React.ReactNode[]) {
   return React.Children.toArray(children)[0]
-    .toString().toLowerCase().replace(/[\s.]/g, '-');
+    .toString().trimEnd().toLowerCase().replace(/[\s.]/g, '-');
 }
 
 const months = [

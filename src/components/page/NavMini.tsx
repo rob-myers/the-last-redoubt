@@ -1,6 +1,6 @@
 import { Link } from "gatsby";
 import React from "react";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import useSiteStore from "store/site.store";
 import { cssName, zIndex } from 'projects/service/const';
 import { barHeight } from "./Nav";
@@ -42,7 +42,7 @@ export default function NavMini() {
         </ul>
         <Icon
           icon="light-bulb"
-          className="toggle-dark-mode"
+          className={cx("toggle-dark-mode", cssName.ignoreDark)}
           invert
           small
           onClick={useSiteStore.api.toggleDarkMode}

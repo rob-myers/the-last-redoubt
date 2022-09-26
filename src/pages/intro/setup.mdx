@@ -20,29 +20,146 @@ tags:
   - graphs
 ---
 
+import Carousel from "components/page/Carousel";
 import InlineCode from "components/page/InlineCode";
+import SideNote from "components/page/SideNote";
 
 ## Our Setup 🚧
 
-<aside title="upcoming-article">
+To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting/storyline/influences.
+We'll now provide detailed information concerning our development setup.
 
-#### Upcoming topics
+### 1. Assets
 
-##### Assets
+The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
+Excluding the [Underground Fields](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=in%20the%20lowest%20tier%20of%20the%20Underground%20Fields%2C "@new-tab") it has [1,320 floors](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=thousand%20three%20hundred%20and%20twenty%20floors "@new-tab"), each corresponding to a single city.
+We only show one floor at a time - although multiple are possible via [CSS perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective).
+Then:
+
+1. We need graphical assets (to represent the cities).
+2. We need lots of assets (for 1,320 large cities).
+3. We need ways of reusing assets (for feasibility).
+
+These problems are solved by Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
+
+> 1. We'll use the _Starship Symbols_ to build the cities.
+
+> 2. There are more than 2000 of them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. [an office](/assets/symbol/office--020--2x3.png "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
+
+> 3. They can be used to reconstruct the approx 600 _Starship Geomorphs_, themselves combinable in [countless ways](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
+
+In particular, we can create the cities of the Last Redoubt by combining geomorphs.
+But cities have e.g. doors, walls and walkable areas.
+To infer these from our "atoms" we'll use [SVGs](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/assets/symbol/office--020--2x3.svg "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+
+<aside title="symbol-svg-progress">
+
+So far we've created 66 symbol SVGs.
+They're a side-effect of remaking 5 geomorphs:
+- `101` [Multi purpose](/assets/geomorph/g-101--multipurpose.png "@new-tab")
+- `102` [Research Deck](/assets/geomorph/g-102--research-deck.png "@new-tab")
+- `301` [Bridge](/assets/geomorph/g-301--bridge.png "@new-tab")
+- `302` [Xboat Repair Bay](/assets/geomorph/g-302--xboat-repair-bay.png "@new-tab")
+- `303` [Passenger Deck](/assets/geomorph/g-303--passenger-deck.png "@new-tab")
+
+Please check out the [originals here](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html).
+
+</aside>
+
+These SVGs include the original PNG as an image via a [data URL](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URLs).
+If you open [the couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab") and add the prefix _view-source:_ to the URL, you'll see something like this:
+
+```svg
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 120 600" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="">
+    <title>background</title>
+    <image width="137" height="575" x="-8.097" y="14.064" style="" xlink:href="data:image/png;base64,[REDACTED-DATA-URL]"/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect width="124" height="574.627" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="15.03" x="-2"/>
+  </g>
+</svg>
+```
+
+Then the additional data amounts to a single rectangular obstacle.
+One can see examples of walls, doors and labels by applying _view-source:_ to the other SVGs above.
+But how to construct such SVGs?
+Technically a text editor would do, but there's a much better way i.e. [Boxy SVG](https://boxy-svg.com/).
+
+<Carousel
+  height={500}
+  items={[
+    { src: '/assets/pics/boxy-svg-example-1.png', label: 'Boxy SVG in action' },
+  ]}
+/>
+
+This wonderful software naturally encodes "folders" as [SVG groups](https://developer.mozilla.org/en-US/docs/Web/API/SVGGElement) with a [title](https://developer.mozilla.org/en-US/docs/Web/API/SVGTitleElement),
+e.g. _obstacles_, _singles_ and _walls_.
+Groups can be locked or hidden by applying CSS styles i.e. _pointer-events: none_ or _visibility: hidden_ respectively.
+Descendants can be unlocked/shown by applying a converse style. 
+In Boxy SVG one can see the underlying SVG document and even directly edit it.
+
+Using SVGs we can specify rectangles, polygons and points.
+We may tag them with space-separated strings by naming them (encoded via an SVGTitleElement).
+Boxy SVG allows us to create/edit/extend this geometric data with ease.
+In the next section we're going to explain how we actually use these SVG files.
+
+### 2. Asset Pipelines
+
+If you [try running the video game](/#demo) with the Network tab open,
+you'll see a PNG and JSON for each geomorph.<SideNote>A Network tab can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
+Geomorph 301 (_Bridge_) has two associated assets `g-301--bridge.png` and `g-301--bridge.json`, illustrated below.
+But given our 66 `{symbol}.png` and 66 `{symbol}.svg`,
+how do we actually create these two particular files?
+
+<Carousel
+  height={400}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    700: {
+      slidesPerView: 2,
+    },
+  }}
+  items={[
+    { src: '/assets/pics/demo-network-devtools.png', label: 'Network requests' },
+    { src: '/assets/pics/demo-network-bridge-png.png', label: 'g-301--bridge.png' },
+    { src: '/assets/pics/demo-network-bridge-json.png', label: 'g-301--bridge.json' },
+  ]}
+/>
+
+<!-- NEXT parse svg + aggregate as "svg.json" -->
+
+<!--
+  Number of Starship Geomorphs aggregated by section
+   echo $(( 226 + 160 + 120 + 60 + 44 ))
+-->
+   
+🚧 __IN PROGRESS__ 🚧
+
+<br/>
 
 We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)) and various pipelines.
 
-- [Starship geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/).
-- [Starship symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) as [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab")
-  - e.g. [1](/assets/symbol/office--020--2x3.png "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
-- Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)
-  - e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+- ~~Symbols as SVGs via [Boxy SVG](https://boxy-svg.com/)~~
+  - ~~e.g. [1](/assets/symbol/office--020--2x3.svg "@new-tab"), [2](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [3](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab")~~.
   - collectively organised as [JSON](/assets/symbol/svg.json "@new-tab").
 - Generated geomorphs PNG + JSON
   - e.g. [1](/assets/geomorph/g-301--bridge.png "@new-tab"), [2](/assets/geomorph/g-101--multipurpose.png "@new-tab"), [3](/assets/geomorph/g-303--passenger-deck.png "@new-tab").
 - NPC animation via Boxy SVG e.g. [first-npc](/assets/npc/first-npc.svg "@new-tab").
 - Generated NPC spritesheets e.g. [first-npc](/assets/npc/first-npc--walk.png "@new-tab").
 
+
+<aside title="upcoming-article">
+
+#### Upcoming topics
 
 ##### ReactJS and CSS
 

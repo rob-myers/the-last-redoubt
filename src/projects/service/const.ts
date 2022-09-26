@@ -19,6 +19,7 @@ export const cssName = {
   enabled: 'enabled',
   faded: 'faded',
   hull: 'hull',
+  ignoreDark: 'ignore-dark',
   infoIcon: 'info-icon',
   iris: 'iris',
   justCopied: 'just-copied',

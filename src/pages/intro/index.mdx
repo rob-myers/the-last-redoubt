@@ -20,6 +20,7 @@ import Comments from "components/page/Comments";
 import Icon from "components/page/Icon";
 import InlineCode from "components/page/InlineCode";
 import InnerTable from "components/page/InnerTable";
+import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import Video from "components/page/Video";
 import { profileLookup } from "projects/sh/scripts";
@@ -74,7 +75,7 @@ We're writing about Game AI and creating a game.
 Then it's natural to use web technologies, building the game right here on this site.
 But which ones?
 
-> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)#Functional_components), [Node.js](https://en.wikipedia.org/wiki/Node.js).
+> We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)), [Node.js](https://en.wikipedia.org/wiki/Node.js).
 >
 > We'll avoid game-centric tech like Flash, HTMLCanvas frameworks, CSS 3D transforms, WebGL,
 > and JavaScript-driven rendering or physics simulation.
@@ -144,21 +145,27 @@ How should we build The Last Redoubt?
 
 </aside>
 
-It is worth taking the time to make some observations about the above videos.
+It is worth making a few observations about the videos shown above.
 
 > **The game has a birdseye viewpoint**.
-> Avoiding game-centric tech rules out 3D graphics (except perhaps isometric).
+>
+> Avoiding game-centric tech rules out 3D graphics.<SideNote>Although 3D isometric<br/>projection is possible</SideNote>
+
+> **The Player interacts via clicks or touches**.
+>
+> Websites rarely use keyboard controls (except for accessibility).
 
 > **The Player moves by navigating the [navmesh](https://en.wikipedia.org/wiki/Navigation_mesh#:~:text=A%20navigation%20mesh%2C%20or%20navmesh,video%20game%20AI%20in%202000.), opening nearby doors**.
-> Mouse clicks are converted into world coordinates.
-> Doors are styled clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
-
-> **The Player interacts via mouse clicks or touches**.
-> Websites rarely use keyboard controls.
+>
+> Clicks are converted into world coordinates and a navpath is computed.
+> The Player is animated using the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) (essentially CSS). 
+> Doors are clickable [divs](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDivElement).
 
 > **The Player is _situated_ with limited visual range**.
+>
+> How do we restrict the Player's view?
 > We use two copies of the [same PNG](/assets/geomorph/g-301--bridge.png "@new-tab") (one atop the other).
-> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
+> The top one is inverted ([CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)) and also masked ([CSS clip-path](https://developer.mozilla.org/en-US/docs/Web/CSS/clip-path)).
 
 The camera ([CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)) further restricts what can be seen, although we can peek by panning and zooming.
 These points are illustrated below.
@@ -225,6 +232,7 @@ Then:
 
 <!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
 > **we can direct by running commands in one or more terminals**.
+>
 > These commands may include scripts and long-running processes.
 
 
@@ -246,14 +254,15 @@ An extended example:
       </p>
     </>
     ,
-    <p>
-      Press <i>interact</i> again, and this time click on the 2nd tab.
-      You'll see the world from the videos, we suggest you have a play around.
-    </p>
+    <>
+      <p>Press <i>interact</i> again, and this time click on the 2nd tab.</p>
+      <p>You'll see the world from the videos, we suggest you have a play around.</p>
+    </>
     ,
-    <p>
-      Finally return to the 1st tab and scroll to the top.
-    </p>
+    <>
+      <p>Finally return to the 1st tab and scroll to the top.</p>
+      <p>Some of these commands are described in the table below.</p>
+    </>
   ]}
 />
 
