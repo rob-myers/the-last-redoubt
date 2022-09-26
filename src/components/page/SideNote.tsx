@@ -2,8 +2,8 @@ import React from 'react';
 import { css, cx } from '@emotion/css';
 
 /**
- * - Direction is `left` unless < 200 pixels to the left of
- *   root element, in which case direction is `right`
+ * - Direction is `right` unless < 200 pixels to the right of
+ *   root element, in which case direction is `left`
  * - Currently .dark-mode applies `filter: invert(1)`
  */
 export default function SideNote(props: React.PropsWithChildren<{}>) {
@@ -26,8 +26,9 @@ export default function SideNote(props: React.PropsWithChildren<{}>) {
 function open(e: React.MouseEvent) {
   const root = e.currentTarget;
   root.classList.add('open');
-  const { x } = root.getBoundingClientRect();
-  root.classList.add(x < infoWidthPx ? 'right' : 'left');
+  const rect = root.getBoundingClientRect();
+  const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width);
+  root.classList.add(pixelsOnRight < infoWidthPx ? 'left' : 'right');
 }
 function close(e: React.MouseEvent) {
   e.currentTarget.classList.remove('open', 'left', 'right', 'down');
