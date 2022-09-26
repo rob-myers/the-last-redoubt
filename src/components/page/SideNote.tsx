@@ -59,6 +59,7 @@ const rootCss = css`
   }
   
   position: relative;
+  z-index: 1; /** Over InlineCode */
   .info {
     position: absolute;
     width: ${infoWidthPx}px;
