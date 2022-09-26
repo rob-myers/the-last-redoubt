@@ -22,6 +22,7 @@ tags:
 
 import Carousel from "components/page/Carousel";
 import InlineCode from "components/page/InlineCode";
+import SideNote from "components/page/SideNote";
 
 ## Our Setup 🚧
 
@@ -104,28 +105,21 @@ Groups can be locked or hidden by applying CSS styles i.e. _pointer-events: none
 Descendants can be unlocked/shown by applying a converse style. 
 In Boxy SVG one can see the underlying SVG document and even directly edit it.
 
-Using SVGs permits us to specify rectangles, polygons and points.
-We can tag them with space-separated strings by naming them (again encoded as an SVGTitleElement).
+Using SVGs we can specify rectangles, polygons and points.
+We may tag them with space-separated strings by naming them (encoded via an SVGTitleElement).
 Boxy SVG allows us to create/edit/extend this geometric data with ease.
-But it remains to explain how we'll actually use these SVG files.
+In the next section we're going to explain how we actually use these SVG files.
 
 ### 2. Asset Pipelines
 
-If you [try running the video game](/#demo) and look in the Network tab (also possible [on a Mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)) you'll see geomorph PNGs (`{geomorph}.png`) and geomorph [JSONs](https://en.wikipedia.org/wiki/JSON) (`{geomorph}.json`). 
-These are the geomorph assets seen by the end-user.
-
-<Carousel
-  height={500}
-  items={[
-    { src: '/assets/pics/demo-network-devtools.png', label: 'Demo Network requests' },
-  ]}
-/>
-
+If you [try running the video game](/#demo) with the Network tab open,
+you'll see a PNG and JSON for each geomorph.<SideNote>A Network tab can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
+Geomorph 301 (_Bridge_) has two associated assets `g-301--bridge.png` and `g-301--bridge.json`, illustrated below.
 But given our 66 `{symbol}.png` and 66 `{symbol}.svg`,
-how do we create the particular files `g-301-bridge.png` and `g-301-bridge.json`?
+how do we actually create these two particular files?
 
 <Carousel
-  height={500}
+  height={400}
   breakpoints={{
     300: {
       slidesPerView: 1,
@@ -135,8 +129,9 @@ how do we create the particular files `g-301-bridge.png` and `g-301-bridge.json`
     },
   }}
   items={[
-    { src: '/assets/pics/demo-network-bridge-png.png', label: 'Bridge Geomorph PNG' },
-    { src: '/assets/pics/demo-network-bridge-json.png', label: 'Bridge Geomorph JSON' },
+    { src: '/assets/pics/demo-network-devtools.png', label: 'Network requests' },
+    { src: '/assets/pics/demo-network-bridge-png.png', label: 'g-301--bridge.png' },
+    { src: '/assets/pics/demo-network-bridge-json.png', label: 'g-301--bridge.json' },
   ]}
 />
 
