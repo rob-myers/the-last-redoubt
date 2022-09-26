@@ -6,43 +6,50 @@ import { css, cx } from '@emotion/css';
  *   root element, in which case direction is `right`
  * - Currently .dark-mode applies `filter: invert(1)`
  */
-export default function SideNote(props: Props) {
+export default function SideNote(props: React.PropsWithChildren<{}>) {
   return (
-    <div
+    <span
       className={cx("side-note", rootCss)}
-      onMouseEnter={e => {
-        const root = e.currentTarget;
-        root.classList.add('open');
-        const { x } = root.getBoundingClientRect();
-        root.classList.add(x < 200 ? 'right' : 'left');
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.classList.remove('open', 'left', 'right', 'down');
-      }}
+      onClick={open}
+      onMouseEnter={open}
+      onMouseLeave={close} // Triggered on mobile click outside
     >
+      ?
       <span className={cx("arrow")}/>
       <span className={cx("info")}>
         {props.children}
       </span>
-    </div>
+    </span>
   );
 }
 
-interface Props extends React.PropsWithChildren<{}> {
-  direction?: 'down' | 'left' | 'right';
+function open(e: React.MouseEvent) {
+  const root = e.currentTarget;
+  root.classList.add('open');
+  const { x } = root.getBoundingClientRect();
+  root.classList.add(x < infoWidthPx ? 'right' : 'left');
+}
+function close(e: React.MouseEvent) {
+  e.currentTarget.classList.remove('open', 'left', 'right', 'down');
 }
 
+const infoWidthPx = 200;
+const rootWidthPx = 16;
+const arrowDeltaX = 4;
+
 const rootCss = css`
-  display: inline-block;
   font-style: normal;
   text-align: center;
   cursor: pointer;
   
-  width: 16px;
+  width: ${rootWidthPx}px;
   height: 16px;
+  padding: 0 4px;
+  margin: 0 3px 0 2px;
   border-radius: 10px;
-  border: 2px solid #777;
-  background-color: rgba(0, 0, 0, 0);
+  border: 1px solid #444;
+  background-color: #ddd;
+  color: black;
   
   &.open .arrow,
   &.open .info
@@ -53,12 +60,12 @@ const rootCss = css`
   position: relative;
   .info {
     position: absolute;
-    width: 200px;
-    margin-left: -100px;
+    width: ${infoWidthPx}px;
+    margin-left: -${infoWidthPx / 2}px;
     padding: 16px;
     background-color: black;
     color: white;
-    border-radius: 6px;
+    border-radius: 4px;
     line-height: 1.6;
     visibility: hidden;
     a {
@@ -76,11 +83,11 @@ const rootCss = css`
   &.left {
     .info {
       top: -16px;
-      left: ${-(100 + 6)}px;
+      left: ${-(infoWidthPx/2 + arrowDeltaX)}px;
     }
     .arrow {
-      top: -4px;
-      left: -8px;
+      top: 0;
+      left: -${arrowDeltaX}px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
       border-left: 10px solid black;
@@ -89,11 +96,11 @@ const rootCss = css`
   &.right {
     .info {
       top: -16px;
-      left: ${100 + 18}px;
+      left: ${rootWidthPx + infoWidthPx/2 + arrowDeltaX}px;
     }
     .arrow {
-      top: -4px;
-      left: 8px;
+      top: 0;
+      left: ${rootWidthPx/2 + arrowDeltaX}px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
       border-right: 10px solid black;

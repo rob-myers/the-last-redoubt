@@ -21,7 +21,7 @@ body.dark-mode span.icon:not(.ignore-dark) {
   filter: invert(1);
 }
 
-body.dark-mode article div.side-note {
+body.dark-mode article span.side-note {
   filter: invert(1);
 }
 
