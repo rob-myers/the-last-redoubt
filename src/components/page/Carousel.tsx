@@ -17,6 +17,7 @@ export default function Carousel(props: Props) {
   return (
     <figure
       className={cx("carousel", rootCss)}
+      style={props.style}
     >
       <Swiper
         breakpoints={props.breakpoints}
@@ -82,6 +83,7 @@ interface Props {
   lazy?: SwiperOptions['lazy'];
   pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
+  style?: React.CSSProperties;
 }
 
 type CarouselItems = (
@@ -144,7 +146,7 @@ const rootCss = css`
   img {
     border: thin solid var(--page-border-color);
     border-radius: 8px;
-    background-color: #111;
+    background-color: #444;
   }
 
   img.swiper-lazy + .slide-label {
