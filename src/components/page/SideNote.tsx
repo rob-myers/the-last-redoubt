@@ -42,9 +42,9 @@ const rootCss = css`
   font-style: normal;
   text-align: center;
   cursor: pointer;
+  white-space: nowrap;
   
   width: ${rootWidthPx}px;
-  height: 16px;
   padding: 0 4px;
   margin: 0 3px 0 2px;
   border-radius: 10px;
@@ -60,7 +60,9 @@ const rootCss = css`
   
   position: relative;
   z-index: 1; /** Over InlineCode */
+
   .info {
+    white-space: normal;
     position: absolute;
     width: ${infoWidthPx}px;
     margin-left: -${infoWidthPx / 2}px;
