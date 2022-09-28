@@ -37,6 +37,7 @@ const rootCss = css`
   &.inline-code {
     font-family: "Ubuntu Mono", "Courier New", monospace;
     font-size: 1rem;
+    font-style: normal;
     color: #0f0;
     letter-spacing: 1px;
     padding: 0 4px;
