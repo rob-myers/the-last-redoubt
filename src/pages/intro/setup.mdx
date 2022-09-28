@@ -113,9 +113,9 @@ In the next section we're going to explain how we actually use these SVG files.
 ### 2. Asset Pipelines
 
 If you [try running the video game](/#demo) with the Network tab open,
-you'll see a PNG and JSON for each geomorph.<SideNote>A Network tab can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
-Geomorph 301 (_Bridge_) has two associated assets <InlineCode>g-301--bridge.{png,json}</InlineCode> shown below.
-But given our 66 `{symbol}.png` and 66 `{symbol}.svg`,
+you'll see a PNG and JSON for each geomorph.<SideNote>A _Network tab_ can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
+Geomorph 301 (_Bridge_) has two associated assets <InlineCode>g-301--bridge.{png,json}</InlineCode> illustrated below.
+But given our 66 symbol PNGs and 66 symbol SVGs,
 how do we actually create these two particular files?
 
 <Carousel
@@ -134,6 +134,45 @@ how do we actually create these two particular files?
     { src: '/assets/pics/demo-network-bridge-json.png', label: 'g-301--bridge.json' },
   ]}
 />
+
+Here's an overview of our 1st pipeline (with a running example).
+
+<Carousel
+  height={300}
+  /** style={{ marginTop: 0 }} **/
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    700: {
+      slidesPerView: 2,
+    },
+  }}
+  items={[
+    { src: '/assets/pics/choose-starship-symbol.png', label: 'From page 37 bottom left' },
+    { src: '/assets/pics/find-starship-symbol-png-folder.png', label: 'Staterooms folder in SymbolsHighRes.zip' },
+    { src: '/assets/pics/pre-process-stateroom--036--2x4.png', label: 'Unprocessed stateroom--036--2x4.png' },
+    { src: '/assets/pics/post-process-stateroom--036--2x4.png', label: 'Processed stateroom--036--2x4.png' },
+  ]}
+/>
+
+1. Choose a symbol from [the Starship Symbols PDF](https://drive.google.com/file/d/1xcn1ngYTi1RIdms_p159VPt8jh507zPH/view?usp=sharing "@new-tab").
+1. Find the respective PNG in a folder of Eric Smith's [SymbolsHighRes.zip](http://ericbsmith.no-ip.org/geomorphs/#:~:text=Symbols%20%26%20Small%20Craft%20HighRes "@new-tab").
+1. From the root of our [code repo](https://github.com/rob-myers/the-last-redoubt/), run the command:
+  > <InlineCode>yarn rename-pngs symbol media/Symbols/Staterooms media/symbol-staterooms</InlineCode>
+  
+  which renames and trims the PNGs and stores a [manifest.json](https://github.com/rob-myers/the-last-redoubt/blob/staging/media/symbol-staterooms/manifest.json "@new-tab"). <SideNote>[rename-pngs.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/scripts/rename-pngs.js "@new-tab") also runs `convert -fuzz 1% -trim -colors 32` (ImageMagick)</SideNote>
+  We can skip this step if we've encountered a stateroom (bedroom) symbol before.
+1. Copy the desired PNG to `media/symbols-png-staging` and manually cut out doors & letters.
+1. Run the command:
+  > <InlineCode>yarn simplify-pngs media/symbols-png-staging</InlineCode>
+
+  which runs both `convert -fuzz 1% -trim -colors 32` (ImageMagick) and [`optipng`](https://optipng.sourceforge.net/ "@new-tab").
+1. Finally start creating the symbol in Boxy SVG:
+   - Copy the resulting file to `static/assets/symbol/stateroom--036--2x4.png`.
+   - Create `static/assets/symbol/stateroom--036--2x4.svg` in Boxy SVG.
+   - Import `static/assets/symbol/stateroom--036--2x4.png` as image in folder named _background_.
+   - Build the SVG e.g. obstacles, walls, singles.
 
 <!-- NEXT parse svg + aggregate as "svg.json" -->
 
