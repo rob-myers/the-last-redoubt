@@ -39,6 +39,7 @@ const rootWidthPx = 16;
 const arrowDeltaX = 4;
 
 const rootCss = css`
+  font-size: 0.95rem;
   font-style: normal;
   text-align: center;
   cursor: pointer;
