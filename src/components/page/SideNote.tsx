@@ -76,6 +76,9 @@ const rootCss = css`
     a {
       color: #dd0;
     }
+    code {
+      font-size: inherit;
+    }
   }
   .arrow {
     position: absolute;
