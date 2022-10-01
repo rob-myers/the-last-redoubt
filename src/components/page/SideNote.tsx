@@ -50,7 +50,7 @@ const rootCss = css`
   margin: 0 3px 0 2px;
   border-radius: 10px;
   border: 1px solid #444;
-  background-color: #ddd;
+  background-color: #eee;
   color: black;
   
   &.open .arrow,
@@ -61,6 +61,7 @@ const rootCss = css`
   
   position: relative;
   z-index: 1; /** Over InlineCode */
+  top: -2px;
 
   .info {
     white-space: normal;
