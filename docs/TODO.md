@@ -2,10 +2,13 @@
 
 ## In progress
 
-- Add grid back via lighting?
+- ✅ Create page /sketch
+- Document collision quadratics in page /sketch with math markdown?
 - Cleanup npc vs npc collision predict
 - Implement npc vs line seg collision predict
-- Rename page stub as page preview
+
+- Add grid back via lighting?
+- ✅ Rename page stub as page preview
 - Fix Tabs outline + Escape pauses?
   - In Desktop can press Esc whilst running a World
 
