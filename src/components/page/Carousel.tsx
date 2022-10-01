@@ -119,6 +119,7 @@ const rootCss = css`
     figure.video {
       margin: 0;
       height: inherit;
+      width: 75%;
       iframe {
         height: inherit;
       }
