@@ -11,7 +11,7 @@ export const npcJson = {
     const offsetRadians = 0;
     const radiusInSvg = 40;
     const scale = 0.19;
-    const radius = radiusInSvg * scale * parsed.zoom;
+    const radius = radiusInSvg * scale * parsed.zoom; // ~15
 
     /** @type {NPC.NpcJson} */
     const output = {
