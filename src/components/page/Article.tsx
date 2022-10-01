@@ -184,8 +184,8 @@ const articleCss = css`
   }
 
   figure.tabs, figure.video {
-    margin: calc(40px + 16px) 0 40px 0;
-    padding: 64px;
+    margin: calc(40px + 32px) 0 40px 0;
+    /* padding: 64px; */
     border: 1px solid var(--page-border-color);
     @media(max-width: 600px) {
       border: none;
@@ -194,7 +194,7 @@ const articleCss = css`
     }
   }
   p + figure.tabs {
-    margin: 40px 0 40px 0;
+    /* margin: calc(40px + 16px) 0 40px 0; */
     @media(max-width: 600px) {
       margin: calc(24px + 20px) 0 20px 0;
     }

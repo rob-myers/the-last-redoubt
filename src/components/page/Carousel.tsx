@@ -3,6 +3,8 @@ import { css, cx } from "@emotion/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperOptions } from "swiper";
 import { Navigation, Zoom, Lazy, Pagination } from "swiper";
+import type { VideoKey } from "./Video";
+import Video from "./Video";
 
 /**
  * props.items should be one of:
@@ -17,6 +19,7 @@ export default function Carousel(props: Props) {
   return (
     <figure
       className={cx("carousel", rootCss)}
+      style={props.style}
     >
       <Swiper
         breakpoints={props.breakpoints}
@@ -40,22 +43,29 @@ export default function Carousel(props: Props) {
       >
         {isImages
           ? items.map((item, i) =>
-              <SwiperSlide key={item.src}>
-                <div className="slide-container swiper-zoom-container">
-                  {item.label && (
-                    <div className="slide-label">
-                      {item.label}
+              'src' in item
+                ? <SwiperSlide key={item.src}>
+                    <div className="slide-container swiper-zoom-container">
+                      {item.label && (
+                        <div className="slide-label">
+                          {item.label}
+                        </div>
+                      )}
+                      <img
+                        className="swiper-lazy"
+                        data-src={`${props.baseSrc??''}${item.src}`}
+                        height={props.height - (item.label ? labelHeightPx : 0)}
+                        title={item.label}
+                      />
+                      <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
                     </div>
-                  )}
-                  <img
-                    className="swiper-lazy"
-                    data-src={`${props.baseSrc??''}${item.src}`}
-                    height={props.height - (item.label ? labelHeightPx : 0)}
-                    title={item.label}
-                  />
-                  <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
-                </div>
-              </SwiperSlide>
+                  </SwiperSlide>
+                : <SwiperSlide key={i}>
+                    <div className="slide-container slide-video-container">
+                      {item.label && <div className="slide-label">{item.label}</div>}
+                      <Video videoKey={item.video} />
+                    </div>
+                  </SwiperSlide>
             )
           : items.map((item, i) =>
               <SwiperSlide key={i}>
@@ -82,6 +92,7 @@ interface Props {
   lazy?: SwiperOptions['lazy'];
   pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
+  style?: React.CSSProperties;
 }
 
 type CarouselItems = (
@@ -89,7 +100,10 @@ type CarouselItems = (
   | PlainCarouselItem[]
 );
 
-type ImageCarouselItem = { src: string; label: string; };
+type ImageCarouselItem = (
+  | { src: string; label: string; }
+  | { video: VideoKey; label: string; }
+);
 type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
@@ -98,6 +112,18 @@ const rootCss = css`
     user-select: none;
     display: flex;
     flex-direction: column;
+  }
+  .slide-video-container {
+    align-items: center;
+    height: 100%;
+    figure.video {
+      margin: 0;
+      height: inherit;
+      width: 75%;
+      iframe {
+        height: inherit;
+      }
+    }
   }
   .slide-plain {
     border: 1px solid var(--page-border-color);
@@ -144,7 +170,7 @@ const rootCss = css`
   img {
     border: thin solid var(--page-border-color);
     border-radius: 8px;
-    background-color: #111;
+    background-color: #444;
   }
 
   img.swiper-lazy + .slide-label {

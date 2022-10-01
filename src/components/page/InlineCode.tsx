@@ -31,21 +31,16 @@ const rootCss = css`
   /** ISSUE with changing width via ::after when display: inline */
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1.2;
+  /* line-height: 1.2; */
   
   /** Add specificity to override Article code */
   &.inline-code {
     font-family: "Ubuntu Mono", "Courier New", monospace;
-    font-size: 1rem;
+    font-style: normal;
     color: #0f0;
     letter-spacing: 1px;
     padding: 0 4px;
     background-color: #000;
-    
-    @media (max-width: 600px) {
-      font-size: 1rem;
-      padding: 2px 4px;
-    }
   }
 
   /* cursor: pointer; */

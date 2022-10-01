@@ -53,9 +53,11 @@ const rootCss = css`
   padding: 0;
   color: #aaa;
   font-family: sans-serif;
+  border-bottom: 1px solid #777;
   
   h3 {
-    padding: 20px 12px;
+    letter-spacing: 2px;
+    padding: 16px 12px;
     font-size: 1.4rem;
     font-weight: 300;
     margin: 0;
@@ -63,15 +65,15 @@ const rootCss = css`
       color: #ddd;
     }
     border: 0 solid #444;
-    border-width: 0 0 2px;
+    border-width: 0 0 1px;
   }
   
   ul {
     font-size: 1.1rem;
-    padding: 6px 0;
+    padding: 0;
     margin: 0;
     border: 0 solid #777;
-    border-width: 0 0 1px;
+    border-width: 1px 0 0 0;
 
     li {
       list-style: none;
@@ -79,7 +81,7 @@ const rootCss = css`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 2px 16px;
     }
     li.current {
       a {

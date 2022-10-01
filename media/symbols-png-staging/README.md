@@ -1,9 +1,10 @@
-Given a Starship Symbol PNG we wish to use:
+Fix a particular [Starship Symbol](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) PNG we wish to use in our video game.
 
-1. Put `foo.png` in this directory
+1. Put `foo.png` in this directory.
 
-1. Manually remove any letters from labels e.g. use OSX preview editor.
-   Possibly remove doors if e.g. desire more symmetric symbol with multiple optional doors.
+1. Manually remove any letters from labels e.g. use OSX Preview.
+   Remove doors.
+   Possibly remove part of walls if e.g. desire more symmetric symbol with multiple optional doors.
 
 1. Run `yarn simplify-pngs media/symbols-png-staging`.
 

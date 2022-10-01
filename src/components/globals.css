@@ -21,6 +21,7 @@
 @media(max-width: 600px) {
   :root {
     --page-background: #fff;
+    --aside-background-color: #eee;
   }
 }
 
