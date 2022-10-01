@@ -72,6 +72,11 @@ const layoutDefs = {
       { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },
       { symbol: 'lab--018--4x4', transform: [1, 0, 0, -1, 360, 240] },
       { symbol: 'lab--018--4x4', transform: [1, 0, 0, -1, 600, 240] },
+      { symbol: 'ships-locker--020--2x2', transform: [1, 0, 0, 1, 840, 120] },
+      { symbol: 'ships-locker--007--1x2', transform: [1, 0, 0, -1, 960, 60] },
+      { symbol: 'ships-locker--003--1x1', transform: [0, 1, -1, 0, 1020, 120] },
+      { symbol: 'ships-locker--003--1x1', transform: [0, 1, -1, 0, 1020, 180] },
+      { symbol: 'empty-room--019--2x4', transform: [-1, 0, 0, 1, 1200, 0] },
 
       { symbol: 'iris-valves--005--1x1', transform: [1, 0, 0, 1, 840, 0] },
       
@@ -83,6 +88,7 @@ const layoutDefs = {
       { symbol: 'fresher--036--2x4', transform: [1, 0, 0, -1, 960, 600] },
 
       { symbol: 'misc-stellar-cartography--020--10x10', transform: [-1, 0, 0, 1, 600, 600] },
+      { symbol: 'engineering--045--4x6', transform: [0, -1, 1, 0, 600, 1200] },
       { symbol: 'iris-valves--005--1x1', transform: [0, 1, 1, 0, 1140, 840] },
     ],
   },

@@ -3059,6 +3059,58 @@
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1657725457982.1968
   },
+  "empty-room--019--2x4": {
+    "key": "empty-room--019--2x4",
+    "hull": [],
+    "obstacles": [],
+    "walls": [],
+    "singles": [
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[580, 640], [580, 1160], [620, 1160], [620, 640]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, 1190], [-10, 1210], [610, 1210], [610, 1190]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[590, -10], [590, 1190], [610, 1190], [610, -10]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 1210], [10, 1210], [10, -10]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 10], [610, 10], [610, -10]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, 1190], [-10, 1210], [610, 1210], [610, 1190]]]
+        }
+      }
+    ],
+    "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
+    "lastModified": 1664636015742.0122
+  },
   "empty-room--020--2x4": {
     "key": "empty-room--020--2x4",
     "hull": [],
@@ -3218,6 +3270,103 @@
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1657725457986.068
+  },
+  "engineering--045--4x6": {
+    "key": "engineering--045--4x6",
+    "hull": [],
+    "obstacles": [
+      {
+        "type": "Polygon",
+        "coordinates": [[[0, 0], [600, 0], [600, 1200], [0, 1200], [0, 0]]]
+      },
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [950.045, 100],
+            [1750.045, 100],
+            [1750.045, 540],
+            [950.045, 540],
+            [950.045, 100]
+          ]
+        ]
+      },
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1200, 1050],
+            [1505.273, 1050],
+            [1649.289, 900],
+            [1652.242, 600],
+            [1800, 600],
+            [1800, 1200],
+            [1200, 1200],
+            [1200, 1050]
+          ]
+        ]
+      }
+    ],
+    "walls": [],
+    "singles": [
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 1210], [10, 1210], [10, -10]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1160, 1176], [940, 1176], [940, 1224], [1160, 1224]]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1790, -10], [1790, 1210], [1810, 1210], [1810, -10]]
+          ]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[590, -10], [590, 1210], [610, 1210], [610, -10]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 10], [1810, 10], [1810, -10]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, 1190], [-10, 1210], [900, 1210], [900, 1190]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1200, 1190], [1200, 1210], [1800, 1210], [1800, 1190]]
+          ]
+        }
+      }
+    ],
+    "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
+    "lastModified": 1664632784459.0994
   },
   "engineering--047--4x7": {
     "key": "engineering--047--4x7",
@@ -6164,6 +6313,104 @@
     "pngRect": {"x": 88.5, "y": -10, "width": 423, "height": 319},
     "lastModified": 1657725458029.9888
   },
+  "ships-locker--003--1x1": {
+    "key": "ships-locker--003--1x1",
+    "hull": [],
+    "obstacles": [],
+    "walls": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [[-10, -10], [10, -10], [10, 300], [-10, 300], [-10, -10]]
+        ]
+      },
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [[290, -10], [310, -10], [310, 300], [290, 300], [290, -10]]
+        ]
+      }
+    ],
+    "singles": [
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 10], [310, 10], [310, -10]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[50, -21], [50, 19], [250, 19], [250, -21]]]
+        }
+      },
+      {
+        "tags": ["label", "locker", "|", "room"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[125, 125], [125, 175], [175, 175], [175, 125]]]
+        }
+      }
+    ],
+    "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
+    "lastModified": 1664634681467.688
+  },
+  "ships-locker--007--1x2": {
+    "key": "ships-locker--007--1x2",
+    "hull": [],
+    "obstacles": [],
+    "walls": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-10, -10],
+            [10, -10],
+            [10, 290],
+            [590, 290],
+            [590, 10],
+            [300, 10],
+            [300, -10],
+            [610, -10],
+            [610, 300],
+            [590, 300],
+            [590, 310],
+            [0, 310],
+            [0, 300],
+            [-10, 300],
+            [-10, -10]
+          ]
+        ]
+      }
+    ],
+    "singles": [
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 10], [610, 10], [610, -10]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[50, -21], [50, 19], [250, 19], [250, -21]]]
+        }
+      },
+      {
+        "tags": ["label", "locker", "|", "room"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[275, 120], [275, 170], [325, 170], [325, 120]]]
+        }
+      }
+    ],
+    "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
+    "lastModified": 1664635061026.3086
+  },
   "ships-locker--011--1x2": {
     "key": "ships-locker--011--1x2",
     "hull": [],
@@ -6218,6 +6465,60 @@
     ],
     "pngRect": {"x": -10, "y": -20, "width": 620, "height": 334},
     "lastModified": 1657725458030.977
+  },
+  "ships-locker--020--2x2": {
+    "key": "ships-locker--020--2x2",
+    "hull": [],
+    "obstacles": [],
+    "walls": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-10, -10],
+            [290, -10],
+            [290, 10],
+            [10, 10],
+            [10, 590],
+            [590, 590],
+            [590, -10],
+            [610, -10],
+            [610, 600],
+            [590, 600],
+            [590, 610],
+            [0, 610],
+            [0, 600],
+            [-10, 600],
+            [-10, -10]
+          ]
+        ]
+      }
+    ],
+    "singles": [
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 10], [610, 10], [610, -10]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[350, -21], [350, 19], [550, 19], [550, -21]]]
+        }
+      },
+      {
+        "tags": ["label", "locker", "|", "room"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[275, 275], [275, 325], [325, 325], [325, 275]]]
+        }
+      }
+    ],
+    "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
+    "lastModified": 1664635401508.1855
   },
   "shop--027--0.4x1.6": {
     "key": "shop--027--0.4x1.6",
