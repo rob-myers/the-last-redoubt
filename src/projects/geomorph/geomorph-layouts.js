@@ -75,11 +75,12 @@ const layoutDefs = {
 
       { symbol: 'iris-valves--005--1x1', transform: [1, 0, 0, 1, 840, 0] },
       
-      { symbol: 'machinery--156--1.8x3.6', transform: [1, 0, 0, 1, +5, 360] },
+      { symbol: 'engineering--047--4x7', transform: [0, 1, -1, 0, 420, 360] },
       { symbol: 'office--004--2x2', transform: [0, 1, 1, 0, 420, 360], doors: ['w'] },
       { symbol: 'office--004--2x2', transform: [0, 1, 1, 0, 540, 360], doors: ['w'] },
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 540, 600] },
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 660, 600] },
+      { symbol: 'fresher--036--2x4', transform: [1, 0, 0, -1, 960, 600] },
 
       { symbol: 'misc-stellar-cartography--020--10x10', transform: [-1, 0, 0, 1, 600, 600] },
       { symbol: 'iris-valves--005--1x1', transform: [0, 1, 1, 0, 1140, 840] },
