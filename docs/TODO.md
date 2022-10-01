@@ -2,11 +2,12 @@
 
 ## In progress
 
-- 🚧 Start working on /intro/setup
+- Add grid back via lighting?
+- Cleanup npc vs npc collision predict
+- Implement npc vs line seg collision predict
 - Rename page stub as page preview
 - Fix Tabs outline + Escape pauses?
   - In Desktop can press Esc whilst running a World
-- Home page has World + Terminal demo
 
 - Page stubs
   - ✅ Add preview to /intro/setup
@@ -144,6 +145,8 @@ How to embed video?
 
 ## Done
 
+- ✅ Start working on /intro/setup
+- ✅ Home page has World + Terminal demo
 - ✅ Rewrite `click` without `otag` and remove latter
 - ✅ Handle lack of extant Giscus discussion
 - ✅ Fix abrupt NPC turn on finish walk
