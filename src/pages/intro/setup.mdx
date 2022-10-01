@@ -28,9 +28,31 @@ import Video from "components/page/Video";
 ## Our Setup 🚧
 
 To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting/storyline/influences.
-We'll now provide detailed information concerning our development setup.
+We'll now explain how everything fits together.
 
-### 1. Assets
+If you [try running the video game](/#demo) with the Network tab open,
+you'll see a PNG and JSON for each geomorph.<SideNote>A _Network tab_ can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
+Geomorph 301 (_Bridge_) has two associated assets <InlineCode>g-301--bridge.{png,json}</InlineCode> illustrated below.
+They are themselves created from many individual assets, which we call _symbols_.  
+
+<Carousel
+  height={400}
+  breakpoints={{
+    300: {
+      slidesPerView: 1,
+    },
+    700: {
+      slidesPerView: 2,
+    },
+  }}
+  items={[
+    { src: '/assets/pics/demo-network-devtools.png', label: 'Network requests' },
+    { src: '/assets/pics/demo-network-bridge-png.png', label: 'g-301--bridge.png' },
+    { src: '/assets/pics/demo-network-bridge-json.png', label: 'g-301--bridge.json' },
+  ]}
+/>
+
+### 1. Symbols
 
 The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
 Excluding the [Underground Fields](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=in%20the%20lowest%20tier%20of%20the%20Underground%20Fields%2C "@new-tab") it has [1,320 floors](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=thousand%20three%20hundred%20and%20twenty%20floors "@new-tab"), each corresponding to a single city.
@@ -43,20 +65,18 @@ Then:
 
 These problems are solved by Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
 
-> 1. We'll use the _Starship Symbols_ to build the cities.
+> 1. Our symbols will be the _Starship Symbols_.
+> 2. There are more than 2000 in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. [an office](/assets/symbol/office--020--2x3.png "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
+> 3. They can be used to reconstruct the 600+ _Starship Geomorphs_, themselves combinable in [countless ways](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
 
-> 2. There are more than 2000 of them in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. [an office](/assets/symbol/office--020--2x3.png "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
-
-> 3. They can be used to reconstruct the approx 600 _Starship Geomorphs_, themselves combinable in [countless ways](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
-
-In particular, we can create the cities of the Last Redoubt by combining geomorphs.
-But cities have e.g. doors, walls and walkable areas.
-To infer these from our "atoms" we'll use [SVGs](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
+In particular, we can create the Last Redoubt's cities by combining geomorphs.
+Now, cities have e.g. doors, walls and walkable areas.
+To infer these from our "atomic symbols" we'll use [SVGs](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
 That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/assets/symbol/office--020--2x3.svg "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
 
 <aside title="symbol-svg-progress">
 
-So far we've created 66 symbol SVGs.
+So far we've created 70 symbol SVGs.
 They're a side-effect of remaking 5 geomorphs:
 - `101` [Multi purpose](/assets/geomorph/g-101--multipurpose.png "@new-tab")
 - `102` [Research Deck](/assets/geomorph/g-102--research-deck.png "@new-tab")
@@ -107,37 +127,15 @@ Descendants can be unlocked/shown by applying a converse style.
 Importantly, one can see the underlying SVG document and even directly edit it.
 
 Using SVGs we can specify rectangles, polygons and points.
-We may tag them with space-separated strings by naming them (a SVGTitleElement in the underlying SVG).
+We may tag them with space-separated strings by naming them.
 Boxy SVG allows us to create/edit/extend this geometric data with ease.
-In the next section we're going to explain how we actually use these SVG files.
+In the next section we'll explain how we actually _use_ these SVG files.
 
-### 2. Asset Pipeline: Creation
+### 2. Asset Pipeline: Symbols
 
-If you [try running the video game](/#demo) with the Network tab open,
-you'll see a PNG and JSON for each geomorph.<SideNote>A _Network tab_ can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
-Geomorph 301 (_Bridge_) has two associated assets <InlineCode>g-301--bridge.{png,json}</InlineCode> illustrated below.
-But given 66 symbol PNGs and 66 symbol SVGs,
-how to actually create these two particular files?
-
-<Carousel
-  height={400}
-  breakpoints={{
-    300: {
-      slidesPerView: 1,
-    },
-    700: {
-      slidesPerView: 2,
-    },
-  }}
-  items={[
-    { src: '/assets/pics/demo-network-devtools.png', label: 'Network requests' },
-    { src: '/assets/pics/demo-network-bridge-png.png', label: 'g-301--bridge.png' },
-    { src: '/assets/pics/demo-network-bridge-json.png', label: 'g-301--bridge.json' },
-  ]}
-/>
-
-Our first pipeline _creates assets_ - it outputs a single `{symbol}.PNG` and a single `{symbol}.SVG`.
-We pick a symbol, find the respective PNG, clean it up a bit, and finally create a respective SVG using Boxy SVG.
+Our first pipeline _creates symbols_.
+It outputs a single `{symbol}.png` and a single `{symbol}.svg`.
+We pick a Starship Symbol, find the respective PNG, clean it up a bit, and finally create a respective SVG using Boxy SVG.
 This is a mostly manual process, unlike the other pipelines.
 Here's an overview with a running example.
 
@@ -169,7 +167,7 @@ Here's an overview with a running example.
   
   which renames and trims <SideNote>[rename-pngs.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/scripts/rename-pngs.js "@new-tab") also runs `convert -fuzz 1% -trim -colors 32` (ImageMagick)</SideNote> the PNGs and stores a [manifest.json](https://github.com/rob-myers/the-last-redoubt/blob/master/media/symbol-staterooms/manifest.json "@new-tab").
   We can skip this step if we've encountered a stateroom (bedroom) symbol before.
-1. Copy the desired PNG to `media/symbols-png-staging` and manually cut out doors & letters (see 3rd slide above).
+1. Copy the desired PNG to `media/symbols-png-staging` and manually cut out doors & letters (see slides above).
 1. Run the command:
   > <InlineCode>yarn simplify-pngs media/symbols-png-staging</InlineCode>
 
@@ -181,13 +179,15 @@ Here's an overview with a running example.
    - Build the SVG e.g. obstacles, walls, singles.
 
 
+### 2. Asset Pipeline: Geomorphs
+
 <!-- TODO parse svg + aggregate as "svg.json" -->
 
 <!--
   Number of Starship Geomorphs aggregated by section
    echo $(( 226 + 160 + 120 + 60 + 44 ))
 -->
-   
+
 🚧 __IN PROGRESS__ 🚧
 
 <br/>
