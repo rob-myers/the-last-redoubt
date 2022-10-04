@@ -186,6 +186,7 @@ function extractNpcFrameNodes(api, topNodes, title) {
 }
 
 /**
+ * 🚧 clean
  * @param {NPC.NPC} npcA
  * @param {NPC.NPC} npcB
  * @returns {NPC.NpcCollision | null}
