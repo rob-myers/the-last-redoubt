@@ -1,6 +1,7 @@
 :root {
   --icon-size-base: 13px;
   --icon-size-small: 11px;
+  --icon-size-large: 18px;
 }
 
 .icon.hash-icon::after {
@@ -33,4 +34,12 @@
 
 .icon.cross-circle::after {
   background-image: url('/assets/icon/cross-circle.svg');
+}
+
+.icon.checked::after {
+  background-image: url('/assets/icon/checked.svg');
+}
+
+.icon.road-works::after {
+  background-image: url('/assets/icon/road-works.svg');
 }
