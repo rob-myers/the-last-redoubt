@@ -70,4 +70,4 @@ const baseIconCss = css`
   }
 `;
 
-export const RoadWorksIcon = () => <Icon icon="road-works" inline large className="ignore-dark" />;
+export const RoadWorksIcon = () => <Icon icon="road-works" inline large />;

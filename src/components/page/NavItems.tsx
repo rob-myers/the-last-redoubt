@@ -106,7 +106,7 @@ function NavIcon({ icon }: { icon?: string }) {
     case 'checked':
       return <Icon icon="checked" large className="ignore-dark" />;
     case 'road-works':
-      return <Icon icon="road-works" large className="ignore-dark" />;
+      return <Icon icon="road-works" large />;
     case 'info-icon':
       return <Icon icon="info-icon" large />;
     default:
