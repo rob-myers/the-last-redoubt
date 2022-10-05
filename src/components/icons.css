@@ -42,4 +42,5 @@
 
 .icon.road-works::after {
   background-image: url('/assets/icon/road-works.svg');
+  --icon-size-large: 20px;
 }
