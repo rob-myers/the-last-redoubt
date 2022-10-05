@@ -21,12 +21,13 @@ export default function useHandleEvents(api) {
         }
         case 'start-seg': {
           /**
-           * TODO only check when `npc` or `other` is player.
+           * 🚧 only check when `npc` or `other` is player.
            */
           const npc = api.npcs.getNpc(e.npcKey);
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
+            // We know `npc` is walking
             const collision = predictNpcNpcCollision(npc, other);
 
             if (collision) {// Add wayMeta cancelling motion

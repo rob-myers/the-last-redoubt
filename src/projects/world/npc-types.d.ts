@@ -60,6 +60,11 @@ declare namespace NPC {
     getAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
     getAnimScaleFactor(): number;
+    /**
+     * Get current bounds e.g. whilst walking.
+     * If not walking i.e. static, use
+     * @see NPC['anim']['staticBounds']
+     */
     getBounds(): Geom.Rect;
     getLineSeg(): null | NpcLineSeg;
     getPosition(): Geom.Vect;
@@ -113,6 +118,8 @@ declare namespace NPC {
       sofars: number[];
       total: number;
     };
+    /** Bounds when stationary */
+    staticBounds: Geom.Rect;
 
     spriteSheet: SpriteSheetKey;
     translate: Animation;

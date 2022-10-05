@@ -4,8 +4,8 @@
 
 - ✅ Create page /sketch
 - ✅ Write some math markdown in /sketches
+- ✅ Cleanup npc vs npc collision predict
 - 🚧 Document collision quadratics in page /sketches
-- Cleanup npc vs npc collision predict
 - Implement npc vs line seg collision predict
 
 - Add grid back via lighting?
