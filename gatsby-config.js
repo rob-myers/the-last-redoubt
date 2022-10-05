@@ -11,7 +11,13 @@ const config = {
   },
   plugins: [
     "gatsby-plugin-emotion",
-    "gatsby-plugin-mdx",
+    {
+      resolve: 'gatsby-plugin-mdx',
+      options: {
+        remarkPlugins: [require("remark-math")],
+        rehypePlugins: [require("rehype-katex")],
+      },
+    },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -35,7 +41,8 @@ const config = {
      * https://stackoverflow.com/questions/63066974/how-to-use-react-lazy-in-gatsby#comment125726318_63066975
      * https://github.com/gatsbyjs/gatsby/discussions/28138
      */
-    DEV_SSR: true,
+    // DEV_SSR: true,
+    FAST_DEV: true,
   },
 };
 

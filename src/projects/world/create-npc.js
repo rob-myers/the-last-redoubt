@@ -27,7 +27,8 @@ export default function createNpc(
       path: [],
       aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0 },
       spriteSheet: 'idle',
-  
+      staticBounds: new Rect,
+
       translate: /** @type {Animation} */ ({}),
       rotate: /** @type {Animation} */ ({}),
       sprites: /** @type {Animation} */ ({}),
@@ -145,12 +146,7 @@ export default function createNpc(
     getBounds() {
       const center = this.getPosition();
       const radius = this.getRadius();
-      return new Rect(
-        center.x - radius,
-        center.y - radius,
-        2 * radius,
-        2 * radius,
-      );
+      return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
     },
     getLineSeg() {
       const dst = this.getTarget();
@@ -210,7 +206,7 @@ export default function createNpc(
       }
     },
     getWalkBounds() {
-      return this.isWalking() ? this.anim.aux.bounds : this.getBounds();
+      return this.anim.aux.bounds;
     },
     inferWalkTransform() {
       const position = new Vect;
@@ -271,8 +267,11 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
         this.setLookTarget(def.angle); // Set CSS variable
-        const { radius: npcRadius } = npcJson[this.jsonKey];
-        this.el.root.style.setProperty(cssName.npcBoundsRadius, `${npcRadius}px`);
+        const { radius } = npcJson[this.jsonKey];
+        this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
+        this.anim.staticBounds = new Rect(
+          this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius
+        );
         this.mounted = true;
       }
     },
@@ -321,10 +320,9 @@ export default function createNpc(
       }
     },
     startAnimation() {
-      if (this.everAnimated()) {
+      if (this.everAnimated()) {// Cleanup
         if (this.anim.spriteSheet === 'idle') {
-          // Assume we were previously walking
-          this.commitWalkStyles();
+          this.commitWalkStyles(); // Assume we were just walking
         }
         this.anim.translate.cancel();
         this.setLookTarget(this.getAngle());
@@ -366,6 +364,10 @@ export default function createNpc(
         this.clearWayMetas();
         // Post walk, set target as current angle 
         this.setLookTarget(this.getAngle());
+        // Update staticBounds
+        const { x, y } = this.getPosition();
+        const radius = this.getRadius();
+        this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
 
         // Replace with dummy animations?
         // - Maybe fixes "this.anim.translate.addEventListener is not a function"

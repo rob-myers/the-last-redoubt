@@ -4,6 +4,7 @@ import { css } from "@emotion/css";
 
 import type { FrontMatterProps } from "./Root";
 import useSiteStore from "store/site.store";
+import Icon from "./Icon";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
 
@@ -37,7 +38,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
                   to={meta.path}
                   title={meta.info}
                 >
-                  {meta?.icon}
+                  <NavIcon icon={meta?.icon} />
               </Link>
               </span>
             </li>
@@ -99,3 +100,16 @@ const rootCss = css`
     }
   }
 `;
+
+function NavIcon({ icon }: { icon?: string }) {
+  switch (icon) {
+    case 'checked':
+      return <Icon icon="checked" large className="ignore-dark" />;
+    case 'road-works':
+      return <Icon icon="road-works" large />;
+    case 'info-icon':
+      return <Icon icon="info-icon" large />;
+    default:
+      return <>{icon}</>; // Fallback assumes unicode
+  }
+}

@@ -2,6 +2,7 @@ import cheerio, { Element } from 'cheerio';
 import { Image, createCanvas, Canvas } from 'canvas';
 import path from 'path';
 
+import { assertNonNull } from './generic';
 import { Rect, Vect } from '../geom';
 import { extractGeom, extractGeomsAt, hasTitle, matchesTitle } from './cheerio';
 import { saveCanvasAsFile } from './file';
@@ -186,34 +187,15 @@ function extractNpcFrameNodes(api, topNodes, title) {
 }
 
 /**
- * @param {NPC.NPC} npcA
- * @param {NPC.NPC} npcB
+ * @param {NPC.NPC} npcA Assumed to be moving
+ * @param {NPC.NPC} npcB May not be moving
  * @returns {NPC.NpcCollision | null}
  */
 export function predictNpcNpcCollision(npcA, npcB) {
-  if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
-    return null;
-  }
-
-  const [segA, segB] = [npcA.getLineSeg(), npcB.getLineSeg()];
-  const [iA, iB] = [segA?.src || npcA.getPosition(), segB?.src || npcB.getPosition()];
-  /** i_AB := iA - iB is actually vector from B to A */
-  const iAB = iA.clone().sub(iB), distABSq = iAB.lengthSquared;
-  /** Minimum non-colliding distance between npcs */
-  const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
-
-  const dpA = segA ? segA.tangent.dot(iAB) : NaN;
-  const dpB = segB ? segB.tangent.dot(iAB) : NaN;
-  if (dpA >= 0 || dpB <= 0) {// Npcs not moving towards each other
-    return null;
-  }
-  if (distABSq <= minDist ** 2) {
-    return { seconds: 0, distA: 0, distB: 0 };
-  }
-
-  if (segA && segB) {
-    const dirDp = segA.tangent.dot(segB.tangent);
-    const [speedA, speedB] = [npcA.getSpeed(), npcB.getSpeed()];
+  if (npcB.isWalking()) {
+    if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
+      return null;
+    }
     /**
      * seg vs seg
      * 
@@ -228,56 +210,86 @@ export function predictNpcNpcCollision(npcA, npcB) {
      * (-b ± √inSqrt) / 2a
      * ```
      */
+    const segA = assertNonNull(npcA.getLineSeg());
+    const segB = assertNonNull(npcB.getLineSeg());
+    const dirDp = segA.tangent.dot(segB.tangent);
+    /** Vector from npc B to A */
+    const iAB = segA.src.clone().sub(segB.src);
+    const distABSq = iAB.lengthSquared;
+    const dpA = segA.tangent.dot(iAB);
+    const dpB = segB.tangent.dot(iAB);
+    const speedA = npcA.getSpeed();
+    const speedB = npcB.getSpeed();
+    const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
+
+    if (dpA >= 0 || dpB <= 0) {// NPCs not moving towards each other
+      return null;
+    }
+
     const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
     const b = 2 * (speedA * dpA - speedB * dpB);
     const c = distABSq - (minDist ** 2);
     const inSqrt = (b ** 2) - (4 * a * c);
 
+    /** Potential solution to quadratic */
     let seconds = 0;
     if (
-      inSqrt > 0 && (
-        seconds = (-b - Math.sqrt(inSqrt)) / (2 * a)
-      ) <= segA.src.distanceTo(segA.dst) / speedA
-    ) {
+      inSqrt > 0 &&
+      (seconds = (-b - Math.sqrt(inSqrt)) / (2 * a)) <=
+      (segA.src.distanceTo(segA.dst) / speedA)
+    ) {// 0 <= seconds <= time to reach segA.dst
       return { seconds, distA: seconds * speedA, distB: seconds * speedB };
+    } else {
+      return null;
     }
 
-  } else if (segA || segB) {
-    const dp = /** @type {number} */ (segA ? dpA : -dpB);
-    const speed = segA ? npcA.getSpeed() : npcB.getSpeed();
-    const seg = /** @type {NPC.NpcLineSeg} */ (segA || segB);
+  } else {// npcB is standing still
+    if (!npcA.anim.aux.bounds.intersects(npcB.anim.staticBounds)) {
+      return null;
+    }
     /**
      * seg vs static
      * 
      * Solving `a.t^2 + b.t + c ≤ 0`,
-     * - `a := speed^2`
-     * - `b := 2.speed.dp`
+     * - `a := speedA^2`
+     * - `b := 2.speedA.dpA`
      * - `c := distABSq - minDist^2`
      * 
      * Solutions are
      * ```js
      * (-b ± √(b^2 - 4ac)) / 2a // i.e.
-     * (-b ± 2.speed.√inSqrt) / 2a
+     * (-b ± 2.speedA.√inSqrt) / 2a
      * ```
      */
-    const inSqrt = (dp ** 2) - distABSq + (minDist ** 2);
-    let seconds = 0;
-    if (// Real-valued solution(s) exist and occur during line seg
-      inSqrt > 0 && (
-        seconds = (-dp - Math.sqrt(inSqrt)) * (1 / speed)
-      ) <= seg.src.distanceTo(seg.dst) / speed
-    ) {
-      const distA = seconds * speed;
-      return { seconds, distA, distB: distA };
+    const segA = assertNonNull(npcA.getLineSeg());
+    const iAB = segA.src.clone().sub(npcB.getPosition());
+    const distABSq = iAB.lengthSquared;
+    const dpA = segA.tangent.dot(iAB);
+    const speedA = npcA.getSpeed();
+    const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
+
+    if (dpA >= 0) {// NPC A not moving towards B
+      return null;
     }
-  } else {
-    // Either static non-intersecting, or moving away from each other
+
+    const inSqrt = (dpA ** 2) - distABSq + (minDist ** 2);
+
+    /** Potential solution to quadratic */
+    let seconds = 0;
+    if (
+      inSqrt > 0 &&
+      (seconds = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
+      (segA.src.distanceTo(segA.dst) / speedA)
+    ) {
+      return { seconds, distA: seconds * speedA, distB: 0 };
+    } else {
+      return null;
+    }
   }
-  return null;
 }
 
 /**
- * @param {NPC.NPC} npc
+ * @param {NPC.NPC} npc Assumed to be walking
  * @param {Geom.Seg} seg
  * @returns {NPC.NpcSegCollision | null}
  */
