@@ -18,32 +18,6 @@ import { profileLookup } from "projects/sh/scripts";
 
 ## Test page
 
-```jsx
-export default function FooBar() {
-  const mine = {
-    foo: 'bar',
-    baz: 'qux',
-  };
-  return (
-    <MyComponent foo={42} bar="hi">
-      <div />
-    </MyComponent>
-  );
-}
-
-const rootCss = css`
-  display: none;
-  transform: translate(2px, 2px);
-  transition: 2s ease-in;
-  /* ... */
-
-  @media (max-width: 600px) {
-    display: none;
-  }
-`;
-```
-
-
 <Tabs
   id="test-tabs"
   initEnabled={false}
@@ -85,3 +59,29 @@ const rootCss = css`
     [],
   ]}
 />
+
+
+```jsx
+export default function FooBar() {
+  const mine = {
+    foo: 'bar',
+    baz: 'qux',
+  };
+  return (
+    <MyComponent foo={42} bar="hi">
+      <div />
+    </MyComponent>
+  );
+}
+
+const rootCss = css`
+  display: none;
+  transform: translate(2px, 2px);
+  transition: 2s ease-in;
+  /* ... */
+
+  @media (max-width: 600px) {
+    display: none;
+  }
+`;
+```
