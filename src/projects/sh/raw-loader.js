@@ -198,10 +198,15 @@
     },
   
     /**
-     * Request navpath(s) to position(s) for character(s),
-     * - e.g. `nav andros "$( click 1 )"'
-     * - e.g. `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav`
-     * - e.g. `click | map 'x => ({ npcKey: "andros", point: x })' | nav`
+     * Request navpath(s) to position(s) for character(s), e.g.
+     * ```sh
+     * nav andros "$( click 1 )"
+     * # or:
+     * expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav
+     * # or:
+     * expr '{"x":300,"y":300}' | nav andros
+     * click | nav andros
+     * ```
      */
     nav: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
@@ -209,14 +214,14 @@
         const npcKey = args[0]
         const point = api.safeJsonParse(args[1])
         yield npcs.getNpcGlobalNav({ npcKey, point })
+      } else if (args[0]) {
+        const npcKey = args[0]
+        while ((datum = await api.read()) !== null) {
+          yield npcs.getNpcGlobalNav({ npcKey, point: datum })
+        }
       } else {
         while ((datum = await api.read()) !== null) {
-          try {
-            yield npcs.getNpcGlobalNav({ debug: home.DEBUG === "true", ...datum })
-          } catch (e) {
-            api.info(`${e}`)
-            console.error(e)
-          }
+          yield npcs.getNpcGlobalNav({ ...datum })
         }
       }
     },

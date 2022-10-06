@@ -41,8 +41,7 @@ export const gameFunctions = [
 goLoop: `{
   click |
     filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |
-    map 'x => ({ npcKey: "'$1'", point: x })' |
-    nav |
+    nav $1 |
     walk $1
 }`,
 
