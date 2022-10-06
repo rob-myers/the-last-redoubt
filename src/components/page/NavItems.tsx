@@ -82,7 +82,7 @@ const rootCss = css`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2px 16px;
+      padding: 8px 16px;
     }
     li.current {
       a {
