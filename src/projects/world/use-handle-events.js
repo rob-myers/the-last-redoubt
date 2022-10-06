@@ -29,6 +29,7 @@ export default function useHandleEvents(api) {
           for (const other of others) {
             // We know `npc` is walking
             const collision = predictNpcNpcCollision(npc, other);
+            // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
 
             if (collision) {// Add wayMeta cancelling motion
               console.warn(`${npc.key} will collide with ${other.key}`, collision);

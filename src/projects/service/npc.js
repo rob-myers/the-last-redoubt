@@ -243,7 +243,8 @@ export function predictNpcNpcCollision(npcA, npcB) {
       return null;
     }
 
-  } else {// npcB is standing still
+  } else {
+    // npcB is standing still
     if (!npcA.anim.aux.bounds.intersects(npcB.anim.staticBounds)) {
       return null;
     }
