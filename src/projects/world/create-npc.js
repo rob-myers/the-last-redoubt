@@ -148,6 +148,17 @@ export default function createNpc(
       const radius = this.getRadius();
       return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
     },
+    getLastWayLength() {
+      if (this.isWalking()) {
+        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
+        const nextIndex = this.anim.aux.sofars.findIndex(sofar => (sofar * this.getAnimScaleFactor()) > soFarMs);
+        return nextIndex === -1
+          ? this.anim.aux.sofars[this.anim.aux.sofars.length - 2]
+          : this.anim.aux.sofars[nextIndex - 1];
+      } else {
+        return 0;
+      }
+    },
     getLineSeg() {
       const dst = this.getTarget();
       if (dst) {
@@ -253,8 +264,7 @@ export default function createNpc(
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
         return console.warn('nextWayTimeout: this.anim.root.currentTime is null')
-      }
-      if (this.anim.wayMetas[0]) {
+      } else if (this.anim.wayMetas[0]) {
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
           (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - this.anim.translate.currentTime,
@@ -397,10 +407,10 @@ export default function createNpc(
       aux.total = reduced.total;
     },
     /**
-     * TODO 🚧 cleanup
+     * 🚧 cleanup
+     * 🚧 avoid many short timeouts
      */
     wayTimeout() {
-      // TODO avoid many short timeouts
       // console.log('this.anim.wayMetas[0]', this.anim.wayMetas[0]);
       if (
         this.anim.wayMetas.length === 0

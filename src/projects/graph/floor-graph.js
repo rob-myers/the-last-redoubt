@@ -197,7 +197,7 @@ export class floorGraphClass extends BaseGraph {
           const stringPull = /** @type {Geom.VectJson[]} */ (
             this.computeStringPull(pathSrc, pathDst, item.nodes).path
           ).map(Vect.from);
-          // We remove adjacent repetitions which can occur
+          // We remove adjacent repetitions (which can occur)
           geom.removePathReps(stringPull.slice(1)).forEach(p => {
             fullPath.push(p);
             navMetas.push({ key: 'start-seg', index: fullPath.length - 1 });

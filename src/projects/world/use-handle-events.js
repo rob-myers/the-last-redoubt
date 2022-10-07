@@ -8,8 +8,8 @@ import useStateRef from "../hooks/use-state-ref";
  * @param {import('../world/World').State} api
  */
 export default function useHandleEvents(api) {
-  const state = useStateRef(/** @type {() => State} */ () => ({
 
+  const state = useStateRef(/** @type {() => State} */ () => ({
     async handleCollisions(e) {
       switch (e.meta.key) {
         case 'pre-collide': {
@@ -21,17 +21,17 @@ export default function useHandleEvents(api) {
         }
         case 'start-seg': {
           /**
-           * 🚧 only check when `npc` or `other` is player.
+           * 1. We know `npc` is walking.
+           * 2. 🚧 Either `npc` or `other` should be the Player.
            */
           const npc = api.npcs.getNpc(e.npcKey);
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
-            // We know `npc` is walking
             const collision = predictNpcNpcCollision(npc, other);
             // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
-
-            if (collision) {// Add wayMeta cancelling motion
+            if (collision) {
+              // Add wayMeta cancelling motion
               console.warn(`${npc.key} will collide with ${other.key}`, collision);
               const length = e.meta.length + collision.distA;
               const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
@@ -115,12 +115,31 @@ export default function useHandleEvents(api) {
               api.npcs.setRoomByNpc(e.npcKey);
             }
             /**
-             * TODO collision test against player,
-             * in case e.g. they've already started final segment
+             * TODO collision test against player, e.g.
+             * in case they've already started final segment
              */
             break;
           case 'started-walking':
+            break;
           case 'stopped-walking':
+            const playerNpc = api.npcs.getPlayer();
+            if (playerNpc && e.npcKey === playerNpc.key) {
+              // Trigger walking non-players to check collision
+              Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
+                const collision = predictNpcNpcCollision(npc, playerNpc);
+                // console.log('PLAYER STOPPED, CHECKING', npc.key, !!collision);
+                if (collision) {
+                  // const wayMeta = npc.anim.wayMetas[0]; // Possibly undefined
+                  npc.anim.wayMetas.unshift({
+                    key: 'pre-collide',
+                    index: -1, gmId: -1, // TODO ?
+                    length: npc.getLastWayLength() + collision.distA,
+                    otherNpcKey: playerNpc.key,
+                  });
+                  npc.nextWayTimeout();
+                }
+              });
+            }
             break;
           case 'unmounted-npc':
             // This event also happens on hot-reload NPC.jsx

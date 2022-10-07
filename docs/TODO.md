@@ -8,10 +8,11 @@
 - 🚧 Document collision quadratics in page /sketches
 - Implement npc vs line seg collision predict
 - ✅ Can `click | nav andros | walk andros`
-- 🚧 Problematic case:
+- ✅ Problematic case:
   - 2 NPCs head for same point in straight line
   - A arrives before B _without colliding_
-  - Then, need to trigger another check for B
+  - Then: need to trigger another check for B
+  - May be another issue when initially start very close
 
 - Add grid back via lighting?
 - ✅ Rename page stub as page preview
