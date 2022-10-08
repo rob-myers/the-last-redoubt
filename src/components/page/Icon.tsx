@@ -88,4 +88,5 @@ const baseIconCss = css`
   }
 `;
 
-export const RoadWorksIcon = () => <Icon icon="road-works" inline large bottom />;
+export const RoadWorksIcon = (props: Partial<Props>) =>
+  <Icon icon="road-works" inline large {...props} />;
