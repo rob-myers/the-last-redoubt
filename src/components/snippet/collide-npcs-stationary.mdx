@@ -1,0 +1,23 @@
+import Icon from 'components/page/Icon'
+import SideNote from "components/page/SideNote";
+
+#### Case: B is stationary.
+
+If the over-approximating rectangles `npcA.getWalkBounds()` and `npcB.anim.staticBounds` don't intersect,
+the NPCs won't intersect either. <Icon icon="qed-icon" inline large bottom />
+
+Otherwise $A$ has position:
+- $p_A(t) := {\tt seg_A.src} + t . s_A . {\tt seg_A.tangent}$, where:
+- $seg_A := {\tt \{ src: npcA.getPosition(), dst: npc.getTarget(), tangent: \widehat{dst - src} \} }$
+  <SideNote>The hat ^ means <i>take the unit vector</i>.</SideNote>
+
+We seek a bounded time $t$ such that $|p_A(t) - p_B|^2 \leq dist_{\rm min}^2$
+where $p_B := {\tt npcB.getPosition()}$ is fixed.
+
+$i_{AB} := {\tt seg_A.src} - {\tt npc_B.getPosition()}$
+
+
+Solving $a.t^2 + b.t + c ≤ 0$,
+- $a := s_A^2$
+- $b := 2.s_A . dp_A$
+- $c := dist_{AB}^2 - dist_{\rm min}^2$

@@ -5,14 +5,14 @@
 - ✅ Create page /sketch
 - ✅ Write some math markdown in /sketches
 - ✅ Cleanup npc vs npc collision predict
-- 🚧 Document collision quadratics in page /sketches
-- Implement npc vs line seg collision predict
 - ✅ Can `click | nav andros | walk andros`
 - ✅ Problematic case:
   - 2 NPCs head for same point in straight line
   - A arrives before B _without colliding_
   - Then: need to trigger another check for B
-  - May be another issue when initially start very close
+- 🚧 Document collision quadratics in page /sketches
+- 🤔 Collision issue when initially start very close
+- Implement npc vs line seg collision predict
 
 - Add grid back via lighting?
 - ✅ Rename page stub as page preview

@@ -1,0 +1,20 @@
+import CaseBStationary from "./collide-npcs-stationary.mdx";
+import CaseBMoving from "./collide-npcs-moving.mdx";
+
+import SideNote from "components/page/SideNote";
+
+### Collision Prediction: NPC vs NPC
+
+Take two distinct NPCs $A$ and $B$.
+Model them as circles moving at constant speed towards particular points.
+We permit an NPC to be stationary.
+> _Do the NPC's intersect before they reach their target?_
+> - Assume A is moving. <SideNote>If $A$ and $B$ are both static, test the distance between the circle centers.</SideNote>
+> - Let $s_A$ (resp. $s_B$) be the speed of $A$ (resp. of $B$).
+> - Let $r_A$ (resp. $r_B$) be the radius of the NPCs.
+> - Let $dist_{\rm min}$ be the minimum distance allowed between NPC $A$ and $B$,
+    e.g. $r_A + r_B - 0.1$.
+
+<CaseBStationary />
+
+<CaseBMoving />
