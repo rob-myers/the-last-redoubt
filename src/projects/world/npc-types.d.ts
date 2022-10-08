@@ -66,7 +66,6 @@ declare namespace NPC {
      * @see NPC['anim']['staticBounds']
      */
     getBounds(): Geom.Rect;
-    getLastWayLength(): number;
     getLineSeg(): null | NpcLineSeg;
     getPosition(): Geom.Vect;
     getRadius(): number;

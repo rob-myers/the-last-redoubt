@@ -9,16 +9,23 @@ import useStateRef from "../hooks/use-state-ref";
  */
 export default function useHandleEvents(api) {
 
+  /**
+   * @param {string} npcKey
+   * @param {string} otherNpcKey
+   */
+  function handleNpcCollision(npcKey, otherNpcKey) {
+    const npc = api.npcs.getNpc(npcKey);
+    const other = api.npcs.getNpc(otherNpcKey);
+    npc.cancel();
+    other.cancel();
+  }
+
   const state = useStateRef(/** @type {() => State} */ () => ({
     async handleCollisions(e) {
       switch (e.meta.key) {
-        case 'pre-collide': {
-          const npc = api.npcs.getNpc(e.npcKey);
-          const other = api.npcs.getNpc(e.meta.otherNpcKey);
-          npc.cancel();
-          other.cancel();
+        case 'pre-collide':
+          handleNpcCollision(e.npcKey, e.meta.otherNpcKey);
           break;
-        }
         case 'start-seg': {
           /**
            * 1. We know `npc` is walking.
@@ -124,19 +131,12 @@ export default function useHandleEvents(api) {
           case 'stopped-walking':
             const playerNpc = api.npcs.getPlayer();
             if (playerNpc && e.npcKey === playerNpc.key) {
-              // Trigger walking non-players to check collision
+              // Walking non-players may be about to collide with Player,
+              // before they start a new line segment, so we must test collision now
               Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
                 const collision = predictNpcNpcCollision(npc, playerNpc);
-                // console.log('PLAYER STOPPED, CHECKING', npc.key, !!collision);
                 if (collision) {
-                  // const wayMeta = npc.anim.wayMetas[0]; // Possibly undefined
-                  npc.anim.wayMetas.unshift({
-                    key: 'pre-collide',
-                    index: -1, gmId: -1, // TODO ?
-                    length: npc.getLastWayLength() + collision.distA,
-                    otherNpcKey: playerNpc.key,
-                  });
-                  npc.nextWayTimeout();
+                  setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
                 }
               });
             }

@@ -148,17 +148,6 @@ export default function createNpc(
       const radius = this.getRadius();
       return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
     },
-    getLastWayLength() {
-      if (this.isWalking()) {
-        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
-        const nextIndex = this.anim.aux.sofars.findIndex(sofar => (sofar * this.getAnimScaleFactor()) > soFarMs);
-        return nextIndex === -1
-          ? this.anim.aux.sofars[this.anim.aux.sofars.length - 2]
-          : this.anim.aux.sofars[nextIndex - 1];
-      } else {
-        return 0;
-      }
-    },
     getLineSeg() {
       const dst = this.getTarget();
       if (dst) {
