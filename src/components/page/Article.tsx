@@ -275,6 +275,7 @@ const articleCss = css`
     font-size: 1.4rem;
     margin: 20px 0 12px 0;
     @media(max-width: 600px) {
+      font-size: 1.3rem;
       margin: 12px 0 6px 0;
     }
   }
@@ -538,13 +539,25 @@ const articleComponents = (
         </Link>
       </h3>
     );
+  },
+
+  h4({ children }: any) {
+    const id = React.useMemo(() => getArticleH3Id(children), []);
+    return (
+      <h4>
+        <span id={id} className="anchor" />
+        <Link to={`#${id}`}>
+          {children}
+        </Link>
+      </h4>
+    );
   }
 
 });
 
 function childrenToKebabText(children: React.ReactNode | React.ReactNode[]) {
   return React.Children.toArray(children)[0]
-    .toString().trimEnd().toLowerCase().replace(/[\s.]/g, '-');
+    .toString().trimEnd().toLowerCase().replace(/[\s.:]/g, '-');
 }
 
 const months = [
