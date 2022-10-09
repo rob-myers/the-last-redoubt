@@ -21,17 +21,17 @@ export default function useHandleEvents(api) {
   }
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    async handleCollisions(e) {
+    async handleWayEvents(e) {
+      const npc = api.npcs.getNpc(e.npcKey);
+
       switch (e.meta.key) {
         case 'pre-collide':
           handleNpcCollision(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'start-seg': {
-          /**
-           * 1. We know `npc` is walking.
-           * 2. 🚧 Either `npc` or `other` should be the Player.
-           */
-          const npc = api.npcs.getNpc(e.npcKey);
+          // We know `npc` is walking
+          npc.updateWalkSegBounds(e.meta.index);
+          // 🚧 Either `npc` or `other` should be the Player
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
@@ -57,7 +57,6 @@ export default function useHandleEvents(api) {
         case 'pre-near-door': {
           // If upcoming door is closed, stop npc
           if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
-            const npc = api.npcs.getNpc(e.npcKey);
             await npc.cancel();
           }
           break;
@@ -149,7 +148,7 @@ export default function useHandleEvents(api) {
             if (e.npcKey === api.npcs.playerKey) {
               state.handlePlayerWayEvent(e);
             }
-            state.handleCollisions(e);
+            state.handleWayEvents(e);
             break;
           default:
             throw testNever(e);
@@ -167,6 +166,6 @@ export default function useHandleEvents(api) {
 
 /**
  * @typedef State @type {object}
- * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleCollisions
+ * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */

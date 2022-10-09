@@ -193,7 +193,7 @@ function extractNpcFrameNodes(api, topNodes, title) {
  */
 export function predictNpcNpcCollision(npcA, npcB) {
   if (npcB.isWalking()) {
-    if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
+    if (!npcA.getWalkSegBounds().intersects(npcB.getWalkSegBounds())) {
       return null;
     }
     /**
@@ -245,7 +245,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
 
   } else {
     // npcB is standing still
-    if (!npcA.anim.aux.bounds.intersects(npcB.anim.staticBounds)) {
+    if (!npcA.getWalkSegBounds().intersects(npcB.anim.staticBounds)) {
       return null;
     }
     /**
@@ -296,7 +296,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
  */
 export function predictNpcSegCollision(npc, seg) {
   const rect = Rect.fromPoints(seg.src, seg.dst);
-  if (!npc.getWalkBounds().intersects(rect)) {
+  if (!npc.getWalkSegBounds().intersects(rect)) {
     return null;
   }
   /**

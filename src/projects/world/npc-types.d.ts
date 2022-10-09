@@ -80,6 +80,7 @@ declare namespace NPC {
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;
+    getWalkSegBounds(): Geom.Rect;
     /**
      * Given npc is walking and anim.transform.currentTime,
      * infer position and angle.
@@ -99,6 +100,8 @@ declare namespace NPC {
     setLookTarget(radians: number): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
     updateAnimAux(): void;
+    /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
+    updateWalkSegBounds(index: number): void;
     wayTimeout(): void;
   }
 
@@ -117,6 +120,9 @@ declare namespace NPC {
       navPathPolys: Geom.Poly[];
       sofars: number[];
       total: number;
+      /** Last index seen of path */
+      index: number;
+      segBounds: Geom.Rect;
     };
     /** Bounds when stationary */
     staticBounds: Geom.Rect;

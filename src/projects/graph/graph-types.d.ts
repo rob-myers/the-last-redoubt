@@ -271,7 +271,7 @@ declare namespace Graph {
    * Metadata concerning some point along a path through a `FloorGraph`.
    */
   export type FloorGraphNavMeta = {
-    /** Pointer into `fullPath` */
+    /** Pointer into `path` which induces animation */
     index: number;
   } & (
     | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
