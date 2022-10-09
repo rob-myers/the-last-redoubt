@@ -85,6 +85,7 @@ const layoutDefs = {
       { symbol: 'office--004--2x2', transform: [0, 1, 1, 0, 540, 360], doors: ['w'] },
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 540, 600] },
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 660, 600] },
+      { symbol: 'lab--012--3x4', transform: [0, -1, 1, 0, 660, 600] },
       { symbol: 'fresher--036--2x4', transform: [1, 0, 0, -1, 960, 600] },
 
       { symbol: 'misc-stellar-cartography--020--10x10', transform: [-1, 0, 0, 1, 600, 600] },
