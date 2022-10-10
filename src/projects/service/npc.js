@@ -220,18 +220,18 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const dpB = segB.tangent.dot(iAB);
     const speedA = npcA.getSpeed();
     const speedB = npcB.getSpeed();
-    const minDistSqr = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
+    const minDistSq = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
 
     if (dpA >= 0 || dpB <= 0) {// NPCs not moving towards each other
       return null;
     }
-    if (distABSq <= minDistSqr) {// Already colliding
+    if (distABSq <= minDistSq) {// Already colliding
       return { seconds: 0, distA: 0, distB: 0 };
     }
 
     const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
     const b = 2 * (speedA * dpA - speedB * dpB);
-    const c = distABSq - minDistSqr;
+    const c = distABSq - minDistSq;
     const inSqrt = (b ** 2) - (4 * a * c);
 
     /** Potential solution to quadratic */
@@ -270,16 +270,16 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const distABSq = iAB.lengthSquared;
     const dpA = segA.tangent.dot(iAB);
     const speedA = npcA.getSpeed();
-    const minDistSqr = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
+    const minDistSq = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
 
     if (dpA >= 0) {// NPC A not moving towards B
       return null;
     }
-    if (distABSq <= minDistSqr) {// Already colliding
+    if (distABSq <= minDistSq) {// Already colliding
       return { seconds: 0, distA: 0, distB: 0 };
     }
 
-    const inSqrt = (dpA ** 2) - distABSq + minDistSqr;
+    const inSqrt = (dpA ** 2) - distABSq + minDistSq;
 
     /** Potential solution to quadratic */
     let seconds = 0;
