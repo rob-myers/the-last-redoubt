@@ -1,22 +1,38 @@
-import Icon from 'components/page/Icon'
+import Icon, { QedIcon } from 'components/page/Icon'
 import SideNote from "components/page/SideNote";
 
 #### Case: B is stationary
 
-If the over-approximating rectangles `npcA.getWalkBounds()` and `npcB.anim.staticBounds` don't intersect,
-the NPCs won't intersect either. <Icon icon="qed-icon" inline large bottom />
+We first intersect over-approximating axis-aligned rectangles:
+- $\tt npcA.getWalkSegBounds()$
+- $\tt npcB.anim.staticBounds$
 
-Otherwise $A$ has position:
-- $p_A(t) := {\tt seg_A.src} + t . s_A . {\tt seg_A.tangent}$, where:
-- ${\tt seg_A.src} := {\tt npcA.getPosition()}$
-- ${\tt seg_A.dst} := {\tt npcA.getTarget()}$
-- ${\tt seg_A.tangent} := \widehat{dst - src}$ <SideNote>The hat ^ means <i>take the unit vector</i>.</SideNote>
+If they don't intersect then the NPCs won't collide.<QedIcon/>
 
-We seek a bounded time $t$ such that $|p_A(t) - p_B|^2 \leq dist_{\rm min}^2$
-where $p_B := {\tt npcB.getPosition()}$ is fixed.
-This can be arranged into a quadratic inequality $a.t^2 + b.t + c ≤ 0$,
+Otherwise $A$ and $B$ have positions:
+- $p_A(t) := src_A + t . s_A . tangent_A$
+  - $src_A := {\tt npcA.getPosition()}$
+  - $dst_A := {\tt npcA.getTarget()}$
+  - $tangent_A := \widehat{dst_A - src_A}$ <SideNote>Hat ^ means <i>take the unit vector</i>.</SideNote>
+- $p_B := {\tt npcB.getPosition()}$
+
+We restrict $0 \leq t \leq t_\Omega := \frac{|dst_A - src_A|}{s_A}$ so that $p(0) = src_A$ and $p(t_\Omega) = dst_A$.
+Then to predict a collision:
+> we seek the minimal time $t$ such that $|p_A(t) - p_B|^2 \leq dist_{\rm min}^2$.
+
+This can be rearranged into a quadratic inequality: <SideNote>$|p_A(t) - p_B|^2$ is the sum of $(p_A(t) - p_B)_x^2$ and $(p_A(t) - p_B)_y^2$</SideNote>
+- $a.t^2 + b.t + c ≤ 0$
 - $a := s_A^2$
 - $b := 2.s_A . dp_A$
 - $c := dist_{AB}^2 - dist_{\rm min}^2$
 
-where $i_{AB} := {\tt seg_A.src} - p_B$ and $dp_A := ({\tt seg_A . tangent}) \cdot i_{AB}$.
+using the dot product $dp_A := tangent_A \cdot (src_A - p_B)$ and $dist_{AB} := |src_A - p_B|^2$.
+
+If $c \leq 0$ then the NPCs collide at $t = 0$.<QedIcon/>
+Otherwise we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
+It is well-known that there are at most 2 real-valued solutions i.e.
+$$
+\frac{-b \pm \sqrt{b^2 - 4.a.c}}{2a}
+$$
+
+<!-- Finish this off -->

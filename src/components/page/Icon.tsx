@@ -90,3 +90,6 @@ const baseIconCss = css`
 
 export const RoadWorksIcon = (props: Partial<Props>) =>
   <Icon icon="road-works" inline large {...props} />;
+
+export const QedIcon = () =>
+  <Icon icon="qed-icon" inline large bottom />;
