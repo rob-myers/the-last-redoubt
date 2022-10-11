@@ -25,7 +25,7 @@ export default function createNpc(
     anim: {
       css: npcJson['first-npc'].css,
       path: [],
-      aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0 },
+      aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0, index: 0, segBounds: new Rect },
       spriteSheet: 'idle',
       staticBounds: new Rect,
 
@@ -208,6 +208,9 @@ export default function createNpc(
     getWalkBounds() {
       return this.anim.aux.bounds;
     },
+    getWalkSegBounds() {
+      return this.anim.aux.segBounds;
+    },
     inferWalkTransform() {
       const position = new Vect;
       const ratio = (this.anim.translate.currentTime || 0) / this.anim.durationMs;
@@ -253,8 +256,7 @@ export default function createNpc(
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
         return console.warn('nextWayTimeout: this.anim.root.currentTime is null')
-      }
-      if (this.anim.wayMetas[0]) {
+      } else if (this.anim.wayMetas[0]) {
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
           (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - this.anim.translate.currentTime,
@@ -346,14 +348,18 @@ export default function createNpc(
         const { animLookup } = npcJson[this.jsonKey].parsed;
         const spriteMs = this.getSpriteDuration(opts.duration);
         const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
-        this.anim.sprites = this.el.body.animate(firstFootLeads
-          ? [
-            { offset: 0, backgroundPosition: '0px' },
-            { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
-          ] : [// We assume an even number of frames
-            { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
-            { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
-          ], {
+        this.anim.sprites = this.el.body.animate(
+            firstFootLeads ?
+              [
+                { offset: 0, backgroundPosition: '0px' },
+                { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
+              ] :
+              [// We assume an even number of frames
+                { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
+                { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
+              ] 
+          ,
+          {
             easing: `steps(${animLookup.walk.frameCount})`,
             duration: spriteMs, // ~ npcWalkAnimDurationMs
             iterations: Infinity,
@@ -395,12 +401,22 @@ export default function createNpc(
       }, { sofars: [0], total: 0 });
       aux.sofars = reduced.sofars
       aux.total = reduced.total;
+      aux.index = 0;
+    },
+    updateWalkSegBounds(index) {
+      this.anim.aux.index = index;
+      this.anim.aux.segBounds.copy(
+        Rect.fromPoints(
+          this.anim.path[index],
+          this.anim.path[index + 1],
+        ).outset(this.getRadius())
+      );
     },
     /**
-     * TODO 🚧 cleanup
+     * 🚧 cleanup
+     * 🚧 avoid many short timeouts
      */
     wayTimeout() {
-      // TODO avoid many short timeouts
       // console.log('this.anim.wayMetas[0]', this.anim.wayMetas[0]);
       if (
         this.anim.wayMetas.length === 0

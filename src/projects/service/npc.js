@@ -193,7 +193,7 @@ function extractNpcFrameNodes(api, topNodes, title) {
  */
 export function predictNpcNpcCollision(npcA, npcB) {
   if (npcB.isWalking()) {
-    if (!npcA.getWalkBounds().intersects(npcB.getWalkBounds())) {
+    if (!npcA.getWalkSegBounds().intersects(npcB.getWalkSegBounds())) {
       return null;
     }
     /**
@@ -220,31 +220,42 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const dpB = segB.tangent.dot(iAB);
     const speedA = npcA.getSpeed();
     const speedB = npcB.getSpeed();
-    const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
+    const minDistSq = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
 
     if (dpA >= 0 || dpB <= 0) {// NPCs not moving towards each other
       return null;
     }
+    if (distABSq <= minDistSq) {// Already colliding
+      return { seconds: 0, distA: 0, distB: 0 };
+    }
 
     const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
     const b = 2 * (speedA * dpA - speedB * dpB);
-    const c = distABSq - (minDist ** 2);
-    const inSqrt = (b ** 2) - (4 * a * c);
+    const c = distABSq - minDistSq;
 
-    /** Potential solution to quadratic */
-    let seconds = 0;
+    const inSqrt = (b ** 2) - (4 * a * c);
+    const timeA = segA.src.distanceTo(segA.dst) / speedA;
+    const timeB = segB.src.distanceTo(segB.dst) / speedB;
+    /**
+     * Linear motion only valid until 1st target reached
+     * Subsequent collisions handled via 'start-seg' or 'stopped-walking'.
+     */
+    const maxTime = Math.min(timeA, timeB);
+
+    /** Potential solution to quadratic (seconds) */
+    let t = 0;
     if (
       inSqrt > 0 &&
-      (seconds = (-b - Math.sqrt(inSqrt)) / (2 * a)) <=
-      (segA.src.distanceTo(segA.dst) / speedA)
+      (t = (-b - Math.sqrt(inSqrt)) / (2 * a)) <= maxTime
     ) {// 0 <= seconds <= time to reach segA.dst
-      return { seconds, distA: seconds * speedA, distB: seconds * speedB };
+      return { seconds: t, distA: t * speedA, distB: t * speedB };
     } else {
       return null;
     }
 
-  } else {// npcB is standing still
-    if (!npcA.anim.aux.bounds.intersects(npcB.anim.staticBounds)) {
+  } else {
+    // npcB is standing still
+    if (!npcA.getWalkSegBounds().intersects(npcB.anim.staticBounds)) {
       return null;
     }
     /**
@@ -266,22 +277,25 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const distABSq = iAB.lengthSquared;
     const dpA = segA.tangent.dot(iAB);
     const speedA = npcA.getSpeed();
-    const minDist = (npcA.getRadius() + npcB.getRadius()) * 0.9;
+    const minDistSq = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
 
     if (dpA >= 0) {// NPC A not moving towards B
       return null;
     }
+    if (distABSq <= minDistSq) {// Already colliding
+      return { seconds: 0, distA: 0, distB: 0 };
+    }
 
-    const inSqrt = (dpA ** 2) - distABSq + (minDist ** 2);
+    const inSqrt = (dpA ** 2) - distABSq + minDistSq;
 
-    /** Potential solution to quadratic */
-    let seconds = 0;
+    /** Potential solution to quadratic (seconds) */
+    let t = 0;
     if (
       inSqrt > 0 &&
-      (seconds = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
+      (t = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
       (segA.src.distanceTo(segA.dst) / speedA)
     ) {
-      return { seconds, distA: seconds * speedA, distB: 0 };
+      return { seconds: t, distA: t * speedA, distB: 0 };
     } else {
       return null;
     }
@@ -295,7 +309,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
  */
 export function predictNpcSegCollision(npc, seg) {
   const rect = Rect.fromPoints(seg.src, seg.dst);
-  if (!npc.getWalkBounds().intersects(rect)) {
+  if (!npc.getWalkSegBounds().intersects(rect)) {
     return null;
   }
   /**

@@ -161,6 +161,7 @@ const rootCss = css`
     text-align: center;
     display: flex;
     align-items: center;
+    user-select: all;
   }
   .swiper-slide.swiper-slide-zoomed .slide-label {
     color: white;

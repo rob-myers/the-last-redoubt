@@ -10,7 +10,7 @@ export default function Geomorphs(props) {
   const { gmGraph } = props.api;
   return (
     <div className={cx("geomorphs", rootCss)}>
-      {gmGraph.gms.map((gm, gmId) => <>
+      {gmGraph.gms.flatMap((gm, gmId) => [
         <img
           key={gmId}
           className="geomorph"
@@ -24,7 +24,7 @@ export default function Geomorphs(props) {
             transform: gm.transformStyle,
             transformOrigin: gm.transformOrigin,
           }}
-        />
+        />,
         <img
           key={`${gmId}-shade`}
           className="geomorph-shade"
@@ -39,8 +39,7 @@ export default function Geomorphs(props) {
             transformOrigin: gm.transformOrigin,
           }}
         />
-        </>
-      )}
+      ])}
     </div>
   );
 }

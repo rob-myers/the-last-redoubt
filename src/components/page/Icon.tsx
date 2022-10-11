@@ -7,6 +7,7 @@ export default function Icon({
   large,
   inline,
   invert,
+  bottom,
   className,
   ...props
 }: Props) {
@@ -20,6 +21,7 @@ export default function Icon({
         large ? 'large-icon' : undefined,
         inline ? 'inline-icon' : undefined,
         invert ? 'invert-icon' : undefined,
+        bottom ? 'bottom-icon' : undefined,
         className,
       )}
       {...props}
@@ -29,11 +31,24 @@ export default function Icon({
 
 interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   /** Icon identifier */
-  icon: string;
+  icon: (
+    | 'hash-icon'
+    | 'ext-link'
+    | 'info-icon'
+    | 'light-bulb'
+    | 'refresh'
+    | 'compress'
+    | 'expand'
+    | 'cross-circle'
+    | 'checked'
+    | 'road-works'
+    | 'qed-icon'
+  );
   small?: boolean;
   large?: boolean;
   inline?: boolean;
   invert?: boolean;
+  bottom?: boolean;
 }
 
 const baseIconCss = css`
@@ -68,6 +83,13 @@ const baseIconCss = css`
     height: var(--icon-size-large);
     width: var(--icon-size-large);
   }
+  &.bottom-icon {
+    vertical-align: text-bottom;
+  }
 `;
 
-export const RoadWorksIcon = () => <Icon icon="road-works" inline large />;
+export const RoadWorksIcon = (props: Partial<Props>) =>
+  <Icon icon="road-works" inline large {...props} />;
+
+export const QedIcon = () =>
+  <Icon icon="qed-icon" inline large bottom />;

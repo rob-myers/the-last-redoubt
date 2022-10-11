@@ -10,7 +10,7 @@
  * - yarn simplify-pngs static/assets/symbol
  *   > ⛔️ Above should not be run (causes many diffs)
  *   > Instead, trim earlier in directory media/unsorted
- * - yarn simplify-pngs media/unsorted
+ * - yarn simplify-pngs media/symbols-png-staging
  */
 
 import fs from 'fs';

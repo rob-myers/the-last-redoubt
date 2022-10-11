@@ -187,15 +187,17 @@ class semanticsServiceClass {
 
           if (results.some(x => x.status === 'rejected')) {
             // Terminate children and this process on pipeline error
-            // TODO descendants too (??)
+            // 🚧 descendants too?
             clones.map(({ meta }) => useSession.api.getProcess(meta))
-              .forEach(x => x && (x.status = ProcessStatus.Killed) && x.cleanups.forEach(cleanup => cleanup()));
+              .forEach(x =>
+                x && (x.status = ProcessStatus.Killed) && x.cleanups.forEach(cleanup => cleanup())
+              );
             throw killError(node.meta);
           }
 
         } finally {
           fifos.forEach(fifo => {
-            fifo.finishedWriting(); // TODO clarify
+            fifo.finishedWriting(); // 🚧 clarify
             useSession.api.removeDevice(fifo.key);
           });
         }

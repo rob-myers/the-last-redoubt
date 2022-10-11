@@ -44,3 +44,7 @@
   background-image: url('/assets/icon/road-works.svg');
   --icon-size-large: 20px;
 }
+
+.icon.qed-icon::after {
+  background-image: url('/assets/icon/qed-icon.svg');
+}

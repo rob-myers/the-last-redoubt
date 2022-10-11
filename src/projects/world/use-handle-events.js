@@ -8,29 +8,37 @@ import useStateRef from "../hooks/use-state-ref";
  * @param {import('../world/World').State} api
  */
 export default function useHandleEvents(api) {
-  const state = useStateRef(/** @type {() => State} */ () => ({
 
-    async handleCollisions(e) {
+  /**
+   * @param {string} npcKey
+   * @param {string} otherNpcKey
+   */
+  function handleNpcCollision(npcKey, otherNpcKey) {
+    const npc = api.npcs.getNpc(npcKey);
+    const other = api.npcs.getNpc(otherNpcKey);
+    npc.cancel();
+    other.cancel();
+  }
+
+  const state = useStateRef(/** @type {() => State} */ () => ({
+    async handleWayEvents(e) {
+      const npc = api.npcs.getNpc(e.npcKey);
+
       switch (e.meta.key) {
-        case 'pre-collide': {
-          const npc = api.npcs.getNpc(e.npcKey);
-          const other = api.npcs.getNpc(e.meta.otherNpcKey);
-          npc.cancel();
-          other.cancel();
+        case 'pre-collide':
+          handleNpcCollision(e.npcKey, e.meta.otherNpcKey);
           break;
-        }
         case 'start-seg': {
-          /**
-           * 🚧 only check when `npc` or `other` is player.
-           */
-          const npc = api.npcs.getNpc(e.npcKey);
+          // We know `npc` is walking
+          npc.updateWalkSegBounds(e.meta.index);
+          // 🚧 Either `npc` or `other` should be the Player
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
-            // We know `npc` is walking
             const collision = predictNpcNpcCollision(npc, other);
-
-            if (collision) {// Add wayMeta cancelling motion
+            // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
+            if (collision) {
+              // Add wayMeta cancelling motion
               console.warn(`${npc.key} will collide with ${other.key}`, collision);
               const length = e.meta.length + collision.distA;
               const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
@@ -49,7 +57,6 @@ export default function useHandleEvents(api) {
         case 'pre-near-door': {
           // If upcoming door is closed, stop npc
           if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
-            const npc = api.npcs.getNpc(e.npcKey);
             await npc.cancel();
           }
           break;
@@ -114,13 +121,41 @@ export default function useHandleEvents(api) {
               api.npcs.setRoomByNpc(e.npcKey);
             }
             /**
-             * TODO collision test against player,
-             * in case e.g. they've already started final segment
+             * TODO collision test against player, e.g.
+             * in case they've already started final segment
              */
             break;
           case 'started-walking':
-          case 'stopped-walking':
             break;
+          case 'stopped-walking': {
+            const playerNpc = api.npcs.getPlayer();
+            if (!playerNpc) {
+              /**
+               * Only handle stopped NPC when a Player exists.
+               * NPC vs NPC motion should be handled separately.
+               */
+              break;
+            }
+
+            if (e.npcKey === playerNpc.key) {
+              // Walking NPCs may be about to collide with Player,
+              // e.g. before they start a new line segment
+              Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
+                const collision = predictNpcNpcCollision(npc, playerNpc);
+                if (collision) {
+                  setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
+                }
+              });
+            } else if (playerNpc.isWalking()) {
+              // Player may be about to collide with NPC
+              const npc = api.npcs.getNpc(e.npcKey);
+              const collision = predictNpcNpcCollision(playerNpc, npc);
+              if (collision) {
+                setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
+              }
+            }
+            break;
+          }
           case 'unmounted-npc':
             // This event also happens on hot-reload NPC.jsx
             delete api.npcs.npc[e.npcKey];
@@ -129,7 +164,7 @@ export default function useHandleEvents(api) {
             if (e.npcKey === api.npcs.playerKey) {
               state.handlePlayerWayEvent(e);
             }
-            state.handleCollisions(e);
+            state.handleWayEvents(e);
             break;
           default:
             throw testNever(e);
@@ -147,6 +182,6 @@ export default function useHandleEvents(api) {
 
 /**
  * @typedef State @type {object}
- * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleCollisions
+ * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */

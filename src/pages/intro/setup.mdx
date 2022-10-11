@@ -156,7 +156,7 @@ Here's an overview with a running example.
     { src: '/assets/pics/find-starship-symbol-png-folder.png', label: 'Staterooms folder in SymbolsHighRes.zip' },
     { src: '/assets/pics/pre-process-stateroom--036--2x4.png', label: 'Unprocessed stateroom--036--2x4.png' },
     { src: '/assets/pics/post-process-stateroom--036--2x4.png', label: 'Processed stateroom--036--2x4.png' },
-    { video: 'make-boxy-svg-symbol', label: 'Making the SVG' },
+    { video: 'make-boxy-svg-symbol', label: 'An SVG symbol' },
   ]}
 />
 
@@ -174,10 +174,10 @@ Here's an overview with a running example.
 
   which runs both `convert -fuzz 1% -trim -colors 32` (from [ImageMagick](https://legacy.imagemagick.org/script/convert.php "@new-tab")) and [`optipng`](https://optipng.sourceforge.net/ "@new-tab").
 1. Finally, copy the PNG to `static/assets/symbol/` and:
-   - navigate to https://boxy-svg.com/app.
-   - create stateroom--036--2x4.svg in Boxy SVG UI.
-   - _Import From Disk_ stateroom--036--2x4.png and store in folder "background".
-   - Build the SVG e.g. obstacles, walls, singles.
+   - Navigate to https://boxy-svg.com/app.
+   - Create `stateroom--036--2x4.svg` in Boxy SVG UI.
+     _File > Import From Disk_ the PNG `stateroom--036--2x4.png` and store in folder "background".
+     Build the actual SVG e.g. obstacles, walls, singles.
 
 
 ### 2. Asset Pipeline: Geomorphs
