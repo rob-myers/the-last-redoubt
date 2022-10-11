@@ -1,7 +1,7 @@
 import Icon, { QedIcon } from 'components/page/Icon'
 import SideNote from "components/page/SideNote";
 
-#### Case: B is stationary
+#### Case: A moves but B is stationary
 
 We first intersect over-approximating axis-aligned rectangles:
 - $\tt npcA.getWalkSegBounds()$
@@ -45,4 +45,5 @@ or equivalently $(-dp_A \pm \sqrt{x}) . \frac{1}{s_A}$ where $x := dp_A^2 - dist
   By the assumptions above, $dp_A < 0$ and $c > 0$ and hence $0 < x \leq dp_A^2$.
   It follows that $-dp_A - \sqrt{x} > 0$.
   Then _both_ real-valued solutions are positive and $t_0 := (-dp_A - \sqrt{x}) . \frac{1}{s_A}$ is the smaller one.
-  Finally, if $0 < t_0 \leq t_\Omega$ then the NPCs collide.<QedIcon/>
+  If $0 < t_0 \leq t_\Omega$ then the NPCs collide.
+  Otherwise, they don't.<QedIcon/>
