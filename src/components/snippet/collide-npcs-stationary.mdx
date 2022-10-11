@@ -18,7 +18,7 @@ Otherwise $A$ and $B$ have positions:
 
 We restrict $0 \leq t \leq t_\Omega := \frac{|dst_A - src_A|}{s_A}$ so that $p(0) = src_A$ and $p(t_\Omega) = dst_A$.
 > Then to predict a collision,
-> we seek the minimal time $t$ such that $|p_A(t) - p_B|^2 \leq dist_{\rm min}^2$.
+> we seek the minimal $t \in [0, t_\Omega]$ such that $|p_A(t) - p_B|^2 \leq dist_{\rm min}^2$.
 
 This can be rearranged into a quadratic inequality: <SideNote>$|p_A(t) - p_B|^2$ is the sum of $(p_A(t) - p_B)_x^2$ and $(p_A(t) - p_B)_y^2$</SideNote>
 - $a.t^2 + b.t + c ≤ 0$
@@ -45,5 +45,4 @@ or equivalently $(-dp_A \pm \sqrt{x}) . \frac{1}{s_A}$ where $x := dp_A^2 - dist
   By the assumptions above, $dp_A < 0$ and $c > 0$ and hence $0 < x \leq dp_A^2$.
   It follows that $-dp_A - \sqrt{x} > 0$.
   Then _both_ real-valued solutions are positive and $t_0 := (-dp_A - \sqrt{x}) . \frac{1}{s_A}$ is the smaller one.
-  If $0 < t_0 \leq t_\Omega$ then the NPCs collide.
-  Otherwise, they don't.<QedIcon/>
+  If $0 < t_0 \leq t_\Omega$ then the NPCs collide, otherwise they don't.<QedIcon/>
