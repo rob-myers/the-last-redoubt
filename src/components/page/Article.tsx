@@ -216,6 +216,12 @@ const articleCss = css`
     @media(max-width: 600px) {
       font-weight: 400;
     }
+
+    position: relative;
+    > span.anchor {
+      position: absolute;
+      top: -48px;
+    }
   }
   h2 {
     font-size: 2.4rem;
@@ -263,12 +269,6 @@ const articleCss = css`
     @media(max-width: 600px) {
       font-size: 1.4rem;
       margin: 20px 0 12px 0;
-    }
-
-    position: relative;
-    > span.anchor {
-      position: absolute;
-      top: -48px;
     }
   }
   h4 {
