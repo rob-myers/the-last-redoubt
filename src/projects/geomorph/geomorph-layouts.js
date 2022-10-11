@@ -86,11 +86,16 @@ const layoutDefs = {
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 540, 600] },
       { symbol: 'stateroom--012--2x2', transform: [0, -1, -1, 0, 660, 600] },
       { symbol: 'lab--012--3x4', transform: [0, -1, 1, 0, 660, 600] },
-      { symbol: 'fresher--036--2x4', transform: [1, 0, 0, -1, 960, 600] },
+      { symbol: 'lounge--017--2x4', transform: [1, 0, 0, 1, 960, 360] },
+      { symbol: 'fresher--036--2x4', transform: [1, 0, 0, -1, 960, 600], doors: ['w'] },
 
       { symbol: 'misc-stellar-cartography--020--10x10', transform: [-1, 0, 0, 1, 600, 600] },
+      { symbol: 'lab--023--4x4', transform: [0, 1, -1, 0, 840, 600] },
+      { symbol: 'lab--023--4x4', transform: [0, 1, 1, 0, 960, 600] },
+      { symbol: 'lab--030--1x3', transform: [1, 0, 0, 1, 960, 780] },
       { symbol: 'engineering--045--4x6', transform: [0, -1, 1, 0, 600, 1200] },
       { symbol: 'iris-valves--005--1x1', transform: [0, 1, 1, 0, 1140, 840] },
+      { symbol: 'office--074--4x4', transform: [-1, 0, 0, 1, 1200, 960] },
     ],
   },
 

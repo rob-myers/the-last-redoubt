@@ -17,32 +17,35 @@
   </g>
   <g style="pointer-events: none;">
     <title>singles</title>
-    <rect x="-10" y="-10" width="20" height="620" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; pointer-events: auto;">
+    <rect x="-10" y="-10" width="20" height="620" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
     </rect>
     <rect x="-10" y="-10" width="1220" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
     </rect>
-    <rect x="49.658" y="2649.167" width="48" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 2909.166992, 526.34198)">
-      <title>door</title>
-    </rect>
     <rect x="1190" y="-10" width="20" height="620" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
     </rect>
-    <rect x="300" width="910" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="590">
+    <rect x="-10" width="1220" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="590">
       <title>wall</title>
     </rect>
-    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; pointer-events: auto;" x="390">
+    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="390">
       <title>wall</title>
     </rect>
-    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; pointer-events: auto;" x="590">
+    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="590">
       <title>wall</title>
     </rect>
-    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; pointer-events: auto;" x="790">
+    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="790">
       <title>wall</title>
     </rect>
-    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; pointer-events: auto;" x="990">
+    <rect y="-10" width="20" height="310" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="990">
       <title>wall</title>
+    </rect>
+    <rect x="49.658" y="2649.167" width="48" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 2909.166992, 526.34198)">
+      <title>door s</title>
+    </rect>
+    <rect x="-24" y="340" width="48" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
+      <title>door w</title>
     </rect>
   </g>
 </svg>
