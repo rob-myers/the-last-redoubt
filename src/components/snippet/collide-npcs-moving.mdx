@@ -1,4 +1,5 @@
 import { QedIcon } from 'components/page/Icon'
+import SideNote from "components/page/SideNote";
 
 #### Case: Both A and B are moving
 
@@ -32,9 +33,24 @@ This can be rearranged into a quadratic inequality:
 where $dp_\nu := tangent_\nu \cdot (src_A - src_B)$ for $\nu \in \{ A, B \}$.
 Then:
 - If $dp_A >= 0$ then $A$ is not moving towards $B$, so the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
-- If $dpB <= 0$ then $B$ is not moving towards $A$, so the NPC's don't collide.<QedIcon/>
+- If $dp_B <= 0$ then $B$ is not moving towards $A$, so the NPC's don't collide.<QedIcon/>
 - If $c \leq 0$ the NPCs collide at $t = 0$.<QedIcon/>
 
-Otherwise, we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
+Otherwise we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
+Any solutions take the form:
+$$
+\frac{-b \pm \sqrt{x}}{2a}
+\qquad
+\text{where $x := b^2 - 4.a.c$}.
+$$
+- If $x < 0$ there are no solutions, and the NPCs don't collide.<QedIcon/>
+- If $x = 0$ there is exactly one solution. It is a "glancing collision",
+  so we may assume they do not collide.<QedIcon/>
+- If $x > 0$ there are two solutions.
+  By the above assumptions, $dp_A < 0$ and $dp_B > 0$ and $c > 0$.
+  Hence $0 < x \leq b^2$, so that $-b - \sqrt{x} > 0$.
+  Then _both_ real-valued solutions are positive and $t_0 := (-b - \sqrt{x}) . \frac{1}{a}$ is the smaller one.
+  If $0 < t_0 \leq t_\Omega$ then the NPCs collide, otherwise they don't.<QedIcon/> <SideNote>Technically they do not collide whilst both NPCs are moving.</SideNote>
+
 
 <!-- Finish off -->
