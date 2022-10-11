@@ -15,9 +15,9 @@ Otherwise for $\nu \in \{ A, B \}$ we have time-varying positions:
 - $tangent_\nu := \widehat{dst_\nu - src_\nu}$
 
 We restrict to times $0 \leq t \leq t_\Omega := min(\frac{dst_A - src_A}{s_A}, \frac{dst_B - src_B}{s_B})$.
-That is, we only check for collisions whilst both NPCs are moving.
-The remaining time could be handled via [the previous case](#case--a-moves-but-b-is-stationary),
-but we prefer to handle it elsewhere.
+That is, we only check for collisions whilst both NPCs are moving towards their target.
+After reaching their target, an NPC may continue towards another target or they may stop.
+Although we could handle these situations recursively, we prefer to handle them elsewhere.
 
 > Then to predict a collision,
 > we seek the minimal $t \in [0, t_\Omega]$ such that $|p_A(t) - p_B(t)|^2 \leq dist_{\rm min}^2$.
@@ -32,8 +32,8 @@ This can be rearranged into a quadratic inequality:
 
 where $dp_\nu := tangent_\nu \cdot (src_A - src_B)$ for $\nu \in \{ A, B \}$.
 Then:
-- If $dp_A >= 0$ then $A$ is not moving towards $B$, so the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
-- If $dp_B <= 0$ then $B$ is not moving towards $A$, so the NPC's don't collide.<QedIcon/>
+- If $dp_A \geq 0$ then $A$ is not moving towards $B$, so the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
+- If $dp_B \leq 0$ then $B$ is not moving towards $A$, so the NPC's don't collide.<QedIcon/>
 - If $c \leq 0$ the NPCs collide at $t = 0$.<QedIcon/>
 
 Otherwise we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
