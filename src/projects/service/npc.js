@@ -234,15 +234,19 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const c = distABSq - minDistSq;
     const inSqrt = (b ** 2) - (4 * a * c);
 
-    /** Potential solution to quadratic */
-    let seconds = 0;
+    /** Potential solution to quadratic (seconds) */
+    let t = 0;
     if (
       inSqrt > 0 &&
-      (seconds = (-b - Math.sqrt(inSqrt)) / (2 * a)) <=
+      (t = (-b - Math.sqrt(inSqrt)) / (2 * a)) <=
       (segA.src.distanceTo(segA.dst) / speedA)
     ) {// 0 <= seconds <= time to reach segA.dst
-      return { seconds, distA: seconds * speedA, distB: seconds * speedB };
+      return { seconds: t, distA: t * speedA, distB: t * speedB };
     } else {
+      /**
+       * TODO if B still moving after A has stopped,
+       * check respective static case
+       */
       return null;
     }
 
@@ -281,14 +285,14 @@ export function predictNpcNpcCollision(npcA, npcB) {
 
     const inSqrt = (dpA ** 2) - distABSq + minDistSq;
 
-    /** Potential solution to quadratic */
-    let seconds = 0;
+    /** Potential solution to quadratic (seconds) */
+    let t = 0;
     if (
       inSqrt > 0 &&
-      (seconds = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
+      (t = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
       (segA.src.distanceTo(segA.dst) / speedA)
     ) {
-      return { seconds, distA: seconds * speedA, distB: 0 };
+      return { seconds: t, distA: t * speedA, distB: 0 };
     } else {
       return null;
     }
