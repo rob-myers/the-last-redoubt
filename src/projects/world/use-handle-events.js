@@ -127,19 +127,35 @@ export default function useHandleEvents(api) {
             break;
           case 'started-walking':
             break;
-          case 'stopped-walking':
+          case 'stopped-walking': {
             const playerNpc = api.npcs.getPlayer();
-            if (playerNpc && e.npcKey === playerNpc.key) {
-              // Walking non-players may be about to collide with Player,
-              // before they start a new line segment, so we must test collision now
+            if (!playerNpc) {
+              /**
+               * Only handle stopped NPC when a Player exists.
+               * NPC vs NPC motion should be handled separately.
+               */
+              break;
+            }
+
+            if (e.npcKey === playerNpc.key) {
+              // Walking NPCs may be about to collide with Player,
+              // e.g. before they start a new line segment
               Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
                 const collision = predictNpcNpcCollision(npc, playerNpc);
                 if (collision) {
                   setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
                 }
               });
+            } else if (playerNpc.isWalking()) {
+              // Player may be about to collide with NPC
+              const npc = api.npcs.getNpc(e.npcKey);
+              const collision = predictNpcNpcCollision(playerNpc, npc);
+              if (collision) {
+                setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
+              }
             }
             break;
+          }
           case 'unmounted-npc':
             // This event also happens on hot-reload NPC.jsx
             delete api.npcs.npc[e.npcKey];

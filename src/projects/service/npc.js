@@ -232,21 +232,24 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const a = (speedA ** 2) + (speedB ** 2) - 2 * speedA * speedB * dirDp;
     const b = 2 * (speedA * dpA - speedB * dpB);
     const c = distABSq - minDistSq;
+
     const inSqrt = (b ** 2) - (4 * a * c);
+    const timeA = segA.src.distanceTo(segA.dst) / speedA;
+    const timeB = segB.src.distanceTo(segB.dst) / speedB;
+    /**
+     * Linear motion only valid until 1st target reached
+     * Subsequent collisions handled via 'start-seg' or 'stopped-walking'.
+     */
+    const maxTime = Math.min(timeA, timeB);
 
     /** Potential solution to quadratic (seconds) */
     let t = 0;
     if (
       inSqrt > 0 &&
-      (t = (-b - Math.sqrt(inSqrt)) / (2 * a)) <=
-      (segA.src.distanceTo(segA.dst) / speedA)
+      (t = (-b - Math.sqrt(inSqrt)) / (2 * a)) <= maxTime
     ) {// 0 <= seconds <= time to reach segA.dst
       return { seconds: t, distA: t * speedA, distB: t * speedB };
     } else {
-      /**
-       * TODO if B still moving after A has stopped,
-       * check respective static case
-       */
       return null;
     }
 
