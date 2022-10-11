@@ -27,8 +27,9 @@ This can be rearranged into a quadratic inequality: <SideNote>$|p_A(t) - p_B|^2$
 - $c := dist_{AB}^2 - dist_{\rm min}^2$
 
 using the dot product $dp_A := tangent_A \cdot (src_A - p_B)$ and $dist_{AB} := |src_A - p_B|^2$.
+Then:
 
-- If $dp_A > 0$ then $A$ is moving away from $B$, in which the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
+- If $dp_A > 0$ then $A$ is moving away from $B$, so the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
 - If $c \leq 0$ the NPCs collide at $t = 0$.<QedIcon/>
 
 Otherwise, we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
