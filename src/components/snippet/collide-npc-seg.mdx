@@ -1,0 +1,46 @@
+import CaseBStationary from "./collide-npcs-stationary.mdx";
+import CaseBMoving from "./collide-npcs-moving.mdx";
+
+import SideNote from "components/page/SideNote";
+
+### Collision Prediction: NPC vs Line Seg
+
+Given an NPC $A$ moving at constant speed towards a target
+and a fixed line segment,
+> does the NPC collide with the line segment?
+
+The NPC has position $p_0(t) := a_0 + t . s . \tau_0$ where:
+- $u$ is the NPC's speed.
+- $a_0$, $b_0$ is the line segment the NPC traverses.
+- $\tau_0 := \widehat{b_0 - a_0}$ is the direction of the NPC.
+- $0 \leq t \leq |b_0 - a_0| / u$.
+
+The line segment may be represented as $p_1(\lambda) := a_1 + \lambda . \tau_1$ where:
+- $a_1$, $b_1$ are the endpoints.
+- $τ_1 := \widehat{b_1 - a_1}$ is a unit vector.
+- $0 \leq \lambda \leq |b_1 - a_1|$.
+
+We seek $(t, λ)$ satisfying the above bounds such that:
+- $|p_0(t) - p_1(λ)|^2 \leq r^2$ where $r$ is the NPC's radius.
+- $t$ is minimal.
+
+We can rewrite the inequality as a quadratic in two variables:
+- $k_0.t^2 + k_1.λ^2 + k_2.λt + k_3.t + k_4.λ + k_5 ≤ 0$ where:
+- $k_0 := u^2$
+- $k_1 := 1$
+- $k_2 := -2 .u.(τ_0 · τ_1)$
+- $k_3 := -u.(τ_0 · (a_1 - a_0))$
+- $k_4 := τ_1 · (a_1 - a_0)$
+- $k_5 := |a_1 - a_0|^2 - r^2$
+
+<!--
+   * 
+   * ```js
+   * (-b ± √(b^2 - 4ac)) / 2a // i.e.
+   * (-(k2.λ + k3) ± √inSqrt) / 2·u^2 // i.e.
+   * [ (2u. τ0·τ1).λ + u. τ0·(a1 - a0) ± √inSqrt ] / 2·u^2
+   * ```
+   * 
+   * where inSqrt
+   * - := (k2.λ + k3)^2 - 4.u^2.(λ^2 + k5)
+-->
