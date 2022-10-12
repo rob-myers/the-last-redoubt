@@ -156,7 +156,7 @@ Here's an overview with a running example.
     { src: '/assets/pics/find-starship-symbol-png-folder.png', label: 'Staterooms folder in SymbolsHighRes.zip' },
     { src: '/assets/pics/pre-process-stateroom--036--2x4.png', label: 'Unprocessed stateroom--036--2x4.png' },
     { src: '/assets/pics/post-process-stateroom--036--2x4.png', label: 'Processed stateroom--036--2x4.png' },
-    { video: 'make-boxy-svg-symbol', label: 'An SVG symbol' },
+    { video: 'make-boxy-svg-symbol', label: 'The SVG symbol stateroom--036--2x4.svg' },
   ]}
 />
 
@@ -187,8 +187,12 @@ Using these symbols we can reconstruct the Starship Geomorphs - we've completed 
 Graphically speaking, this amounts to _translating and rotating instances of the symbols_.<SideNote>Some symbols have optional doors, avoiding needless duplication.</SideNote>
 The associated geometric data must be respectively translated and rotated.
 
-First we need a way to look up the symbols.
-Whenever an SVG file in `/static/assets/symbols` is created/changed/deleted we update [svg.json](https://github.com/rob-myers/the-last-redoubt/blob/master/static/assets/symbol/svg.json "@new-tab").
+In order to instantiate the symbols we need a way to look them up.
+Whenever an SVG file in `/static/assets/symbols/` is created/changed/deleted we update [svg.json](https://github.com/rob-myers/the-last-redoubt/blob/master/static/assets/symbol/svg.json "@new-tab").
+The latter is a dictionary relating symbol keys (e.g. `stateroom--036--2x4`) to symbol geometric data (e.g. extracted from `stateroom--036--2x4.svg`).
+Take a look at [svg-meta.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/scripts/svg-meta.js "@new-tab").
+
+This is achieved via <InlineCode>yarn watch-svg-meta</InlineCode> spawned via <InlineCode>yarn dev</InlineCode>.
 
 <RoadWorksIcon/>
 
