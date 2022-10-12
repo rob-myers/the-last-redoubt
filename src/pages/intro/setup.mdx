@@ -77,7 +77,7 @@ That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/a
 
 <aside title="symbol-svg-progress">
 
-So far we've created 70 symbol SVGs.
+So far we've created more than 70 symbol SVGs.
 They're a side-effect of remaking 5 geomorphs:
 - `101` [Multi purpose](/assets/geomorph/g-101--multipurpose.png "@new-tab")
 - `102` [Research Deck](/assets/geomorph/g-102--research-deck.png "@new-tab")
@@ -182,6 +182,14 @@ Here's an overview with a running example.
 
 ### 2. Asset Pipeline: Geomorphs
 
+We've explained how we create symbols i.e. a PNG (the graphical realisation) and an SVG (editable geometric data).
+Using these symbols we can reconstruct the Starship Geomorphs - we've completed [five so far](#aside--symbol-svg-progress).
+Graphically speaking, this amounts to _translating and rotating instances of the symbols_.<SideNote>Some symbols have optional doors, avoiding needless duplication.</SideNote>
+The associated geometric data must be respectively translated and rotated.
+
+First we need a way to look up the symbols.
+Whenever an SVG file in `/static/assets/symbols` is created/changed/deleted we update [svg.json](https://github.com/rob-myers/the-last-redoubt/blob/master/static/assets/symbol/svg.json "@new-tab").
+
 <RoadWorksIcon/>
 
 <!-- TODO parse svg + aggregate as "svg.json" -->
@@ -210,18 +218,18 @@ We'll describe our sources, external software ([Boxy SVG](https://boxy-svg.com/)
 
 Our components are built using [ReactJS](https://npmjs.com/package/react) and [@emotion/css](https://www.npmjs.com/package/@emotion/css) e.g.
 
-- [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
-- [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
-- [CssPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/panzoom/CssPanZoom.jsx "@new-tab"): pan and zoom using [CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
-- [World](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/World.jsx "@new-tab") has subcomponents like _Doors_ and _NPCs_.
+- [GeomorphEdit](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/geomorph/GeomorphEdit.jsx "@new-tab"): build/preview [geomorph layouts](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/geomorph/geomorph-layouts.js "@new-tab") using SVG symbols.
+- [SvgPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/panzoom/SvgPanZoom.jsx "@new-tab"): pan and zoom using [SVG viewBox attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
+- [CssPanZoom](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/panzoom/CssPanZoom.jsx "@new-tab"): pan and zoom using [CSS transforms](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
+- [World](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx "@new-tab") has subcomponents like _Doors_ and _NPCs_.
 
 React custom hooks (shared component functionality) include:
 
-- [useUpdate](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-update.js "@new-tab"): a callback to trigger a component update.
-- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef and React.useState with HMR persistence.
-- [useGeomorphData](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorph-data.js "@new-tab"): geomorph JSON plus derived data.
-- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitches geomorphs into a global geomorph graph.
-- [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
+- [useUpdate](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/hooks/use-update.js "@new-tab"): a callback to trigger a component update.
+- [useStateRef](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/hooks/use-state-ref.js "@new-tab"): like React.useRef and React.useState with HMR persistence.
+- [useGeomorphData](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/geomorph/use-geomorph-data.js "@new-tab"): geomorph JSON plus derived data.
+- [useGeomorphs](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/geomorph/use-geomorphs.js "@new-tab"): stitches geomorphs into a global geomorph graph.
+- [useHandleEvents](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/use-handle-events.js "@new-tab"): handle world events from NPCs or a Terminal.
 
 
 ##### JavaScript CLI
@@ -261,18 +269,18 @@ We apply the JavaScript CLI to Game AI by defining various functions:
 
 We organise various functionality as _services_:
 
-- [cheerio.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/cheerio.js "@new-tab") e.g. extract polygons from SVG metadata.
-- [dom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/dom.js "@new-tab") e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
-- [geom.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geom.js "@new-tab") e.g. triangulation and intersection of 2d geometry.
-- [geomorph.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/geomorph.js "@new-tab") e.g. create a geomorph JSON given transformed symbols.
-- [npc.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/npc.js "@new-tab") e.g. render spritesheet; npc collision prediction.
-- [triangle.js](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/service/triangle.js "@new-tab") wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
+- [cheerio.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/cheerio.js "@new-tab") e.g. extract polygons from SVG metadata.
+- [dom.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/dom.js "@new-tab") e.g. [SVG path](https://www.w3.org/TR/SVG11/paths.html#DAttribute) to polygon; HTMLCanvasElement utilities.
+- [geom.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/geom.js "@new-tab") e.g. triangulation and intersection of 2d geometry.
+- [geomorph.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/geomorph.js "@new-tab") e.g. create a geomorph JSON given transformed symbols.
+- [npc.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/npc.js "@new-tab") e.g. render spritesheet; npc collision prediction.
+- [triangle.js](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/triangle.js "@new-tab") wraps [triangle-wasm](https://www.npmjs.com/package/triangle-wasm), itself a wrapper around [Triangle](https://www.cs.cmu.edu/~quake/triangle.html).
 
 ##### Graphs
 
-- [floor graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/floor-graph.js "@new-tab") for a single geomorph is its navmesh.
-- [room graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/room-graph.js "@new-tab") for a single geomorph has rooms as nodes and doors as edges.
-- [geomorph graph](https://github.com/rob-myers/the-last-redoubt/blob/migrate-from-nextjs/src/projects/graph/gm-graph.js "@new-tab") has geomorphs as nodes and hull doors as edges.
+- [floor graph](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/graph/floor-graph.js "@new-tab") for a single geomorph is its navmesh.
+- [room graph](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/graph/room-graph.js "@new-tab") for a single geomorph has rooms as nodes and doors as edges.
+- [geomorph graph](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/graph/gm-graph.js "@new-tab") has geomorphs as nodes and hull doors as edges.
 
 </aside>
 
