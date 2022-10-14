@@ -8,7 +8,7 @@
     "gatsby"
   ],
   "scripts": {
-    "develop": "gatsby develop -p 8001 -H 0.0.0.0",
+    "develop": "gatsby develop -p 8010 -H 0.0.0.0",
     "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta'",
     "start": "gatsby develop",
     "build": "gatsby build",
