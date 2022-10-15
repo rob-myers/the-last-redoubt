@@ -2,6 +2,22 @@
 
 ## In progress
 
+- Pipeline child dies without pipeline ending e.g. `click` still running here:
+  ```sh
+  click | nav cartesius | walk cartesius
+  nav: run: Error: npcKey "cartesius" does not exist
+  ```
+
+- 🚧 Document npc vs line-seg collision
+- 🚧 Implement npc vs line seg collision predict
+- Recall how NPC vs Door intersection is currently computed
+  - getNpcsIntersecting > circleIntersectsConvexPolygon
+  - playerNearDoor > circleIntersectsConvexPolygon
+  - ...
+- ...
+- Collision issue when initially start very close
+  > e.g. just after collided
+
 - ✅ Create page /sketch
 - ✅ Write some math markdown in /sketches
 - ✅ Cleanup npc vs npc collision predict
@@ -10,9 +26,7 @@
   - 2 NPCs head for same point in straight line
   - A arrives before B _without colliding_
   - Then: need to trigger another check for B
-- 🚧 Document collision quadratics in page /sketches
-- 🤔 Collision issue when initially start very close
-- Implement npc vs line seg collision predict
+- ✅ Document npc vs npc collision quadratics in page /sketches
 
 - Add grid back via lighting?
 - ✅ Rename page stub as page preview
