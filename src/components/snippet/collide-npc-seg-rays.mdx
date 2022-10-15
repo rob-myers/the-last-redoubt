@@ -24,7 +24,7 @@ Then we may assume $K_- . \lambda_1, K_+ . \lambda_1 \geq 0$.
 Next, consider the intervals $[0, |b_1 - a_1|]$ and $[ K_-.\lambda_2, K_+.\lambda_2 ]$ along the infinite line extending the line segment.
 If they don't overlap the NPC won't collide.<QedIcon/>
 Otherwise:
-> $[{\tt max}(0, K_-.\lambda_2), {\tt min}(|b_1 - a_1|, K_+.\lambda_2)]$ is a well-defined interval, so let $(\alpha_0, \alpha_1)$ denote the corresponding points.
+> $[{\tt max}(0, K_-.\lambda_2), {\tt min}(|b_1 - a_1|, K_+.\lambda_2)]$ is a well-defined interval, so let $(\alpha_0, \alpha_1)$ be the corresponding points.
 
 <aside>
 
@@ -36,4 +36,11 @@ Otherwise:
 
 **IDEA**: For each $\alpha_i$ can test if they intersect NPC at some minimal time $0 \leq t_i \leq t_\Omega$. If neither do no collision. If exactly one does then collide there. If both do then choose one with smaller $t_i$.
 
-<!-- TODO verify and flesh out -->
+<!--
+TODO verify and flesh out
+- view NPC motion as λz.(a0 + z.𝛕0)
+- compute (⍺_i - a_0) · 𝛕0 (1)
+- compute (⍺_i - a_0) · η0 (2)
+- z := (1) + func((2)) (translate between circular segs)
+- translate back to time: z ↦ z/u
+-->
