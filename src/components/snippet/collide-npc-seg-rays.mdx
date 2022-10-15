@@ -1,0 +1,25 @@
+import SideNote from "components/page/SideNote";
+import { QedIcon } from 'components/page/Icon'
+
+To this end,
+let $\eta_0$ be a unit vector perpendicular to $\tau_0$
+such that $\eta_0 \cdot \tau_1 \geq 0$.<SideNote>We may choose $(-\tau_{0y}, \tau_{0x})$ or its negation.</SideNote>
+We project two rays:
+> $\rho_\bullet(z) := a_0^\bullet + z . \tau_0$ where $a_0^\bullet := a_0 \bullet r.\eta_0$
+
+for $\bullet \in \{ -, + \}$,
+sandwiching the NPC in the direction it travels.
+Consider their intersection with the infinite line $\{ p_1(\lambda) : \lambda \in \mathbb{R} \}$.
+If all three lines are parallel we assume they don't intersect,
+and the NPC will not collide with the line segment.<QedIcon/> <SideNote>If a ray contains the line segment it is a "glancing collision", and ignored.</SideNote>
+Otherwise for $\bullet \in \{ -, + \}$ [we have intersection data](https://github.com/rob-myers/the-last-redoubt/blob/master/src/project/service/geom.js "@new-tab"):
+> $K_\bullet := {\tt geom.getLinesIntersectInfo(a_0^\bullet, \tau_0, p_1, \tau_1)}$
+with properties $\tt param1, param2$ (numbers) and $\tt point$ (a vector).
+
+Consider the intervals $[0, |b_1 - a_1|]$ and $[ K_-.{\tt param2}, K_+.{\tt param2} ]$ along the infinite line extending the line segment.
+If they don't overlap the NPC won't collide.<QedIcon/>
+Otherwise...
+
+<!--
+...
+-->
