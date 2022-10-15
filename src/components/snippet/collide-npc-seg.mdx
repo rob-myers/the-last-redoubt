@@ -4,20 +4,18 @@ import IntersectRays from "./collide-npc-seg-rays.mdx";
 
 ### Collision Prediction: NPC vs Line Seg
 
-> _Does an NPC $A$ moving uniformly towards a target
-> collide with a line segment?_
+> _Does an NPC $A$ moving uniformly towards a target collide with a line segment?_
+>
+> _If so, where?_ <SideNote>If the NPC already collides the intersection may be degenerate and we don't provide it.</SideNote>
 
-Model the NPC as a circle with radius $r$ moving at constant speed $u$.
-Let $p_0(t) := a_0 + t . u . \tau_0$ be the position of the NPC at time $t$, where:
+Model the NPC as a circle with radius $r$ moving at constant speed $u$ towards $b_0$.
+Let $p_0(t) := a_0 + t . u . \tau_0$ be the position of the NPC at time $t$, where
+$\tau_0 := \widehat{b_0 - a_0}$ is the direction and $0 \leq t \leq t_\Omega := |b_0 - a_0| / u$.
 
-- $\tau_0 := \widehat{b_0 - a_0}$ is the direction of the NPC.
-- $0 \leq t \leq |b_0 - a_0| / u$.
-
-We may represent the line segment as $p_1(\lambda) := a_1 + \lambda . \tau_1$ where
+We may represent the line segment $(a_1, b_1)$ parametrically as $p_1(\lambda) := a_1 + \lambda . \tau_1$ where
 $τ_1 := \widehat{b_1 - a_1}$ and $0 \leq \lambda \leq |b_1 - a_1|$.
 
 > _We seek $(t, λ)$ satisfying the above constraints with minimal $t$ such that:_
->
 > $|p_0(t) - p_1(λ)|^2 \leq r^2$.
 
 <IntersectRays />

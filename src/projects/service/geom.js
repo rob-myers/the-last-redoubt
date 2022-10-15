@@ -307,15 +307,15 @@ class geomServiceClass {
    * @param {Geom.VectJson} d0 Unit direction of first line
    * @param {Geom.VectJson} p1 Point on second line
    * @param {Geom.VectJson} d1 Unit direction of second line
-   * @returns {{ param1: number; param2: number; point: Geom.VectJson } | null}
+   * @returns {{ lambda1: number; lambda2: number; point: Geom.VectJson } | null}
    */
   getLinesIntersectInfo(p0, d0, p1, d1) {
-    const param1 = this.getLinesIntersect(p0, d0, p1, d1);
-    if (param1 !== null) {
-      const point = Vect.from(p0).addScaledVector(d0, param1);
+    const lambda1 = this.getLinesIntersect(p0, d0, p1, d1);
+    if (lambda1 !== null) {
+      const point = Vect.from(p0).addScaledVector(d0, lambda1);
       const offset = point.clone().sub(p1)
-      const param2 = offset.dot(d1) >= 0 ? offset.length : -offset.length;
-      return { param1, point, param2 };
+      const lambda2 = offset.dot(d1) >= 0 ? offset.length : -offset.length;
+      return { lambda1, point, lambda2 };
     } else {
       return null;
     }
