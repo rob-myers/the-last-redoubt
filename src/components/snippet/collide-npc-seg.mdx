@@ -1,6 +1,6 @@
 import SideNote from "components/page/SideNote";
-// import ProblemAsQuadratic from "./collide-npc-seg-quadratic.mdx";
-import IntersectRays from "./collide-npc-seg-rays.mdx";
+import ProblemAsQuadratic from "./collide-npc-seg-quadratic.mdx";
+// import IntersectRays from "./collide-npc-seg-rays.mdx";
 
 ### Collision Prediction: NPC vs Line Seg
 
@@ -16,6 +16,17 @@ We may represent the line segment $(a_1, b_1)$ parametrically as $p_1(\lambda) :
 $τ_1 := \widehat{b_1 - a_1}$ and $0 \leq \lambda \leq |b_1 - a_1|$.
 
 > _We seek $(t, λ)$ satisfying the above inequalities such that:_
-> $|p_0(t) - p_1(λ)|^2 \leq r^2$ and $t$ is minimal.
+> $|p_1(t) - p_0(λ)|^2 \leq r^2$ and $t$ is minimal.
 
-<IntersectRays />
+We can rewrite the inequality as a quadratic in two variables:
+- $k_0.t^2 + k_1.λ^2 + k_2.λt + k_3.t + k_4.λ + k_5 ≤ 0$
+- $k_0 := u^2$
+- $k_1 := 1$
+- $k_2 := -2 . u .(\tau_0 · \tau_1)$
+- $k_3 := -2 . u .(\tau_0 · (a_1 - a_0))$
+- $k_4 := 2 . (a_1 - a_0) · \tau_1$
+- $k_5 := |a_1 - a_0|^2 - r^2$
+
+<!-- verify by hand again ✅ -->
+
+<ProblemAsQuadratic />

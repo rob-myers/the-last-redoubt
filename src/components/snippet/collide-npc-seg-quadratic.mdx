@@ -1,0 +1,31 @@
+import { QedIcon } from 'components/page/Icon'
+
+<!--
+We note that if $\tau_0 · (a_1 - a_0) \leq 0$ the NPC moves away from the line segment, so no collision.<QedIcon/>
+-->
+
+Fixing $\lambda$ we have a quadratic in $t$ whose solutions take the form $(-b ± \sqrt{inSqrt}) / 2a$ where:
+- $a := u^2$
+- $b := k_2 . \lambda + k_3$
+- $c := k_1 . \lambda^2 + k_4 . \lambda + k_5$
+- $inSqrt := b^2 - 4ac$
+
+Given $inSqrt < 0$  then there are no solutions and the NPC does not collide.<QedIcon/>
+If $inSqrt = 0$ there is exactly one solution
+－ a "glancing collision" －
+and we may assume the NPC does not collide.<QedIcon/>
+Otherwise there are exactly two solutions.
+
+__STRATEGY__
+1. Consider both cases $-b \pm \sqrt{inSqrt}$.
+1. $inSqrt \geq 0$ provides a quadratic inequality in $\lambda$
+   - if $inSqrt(0) \geq 0$ then positive for all $\lambda \in [0, |b_1 - a_1]]$.
+   - else can compute zeros and seek one in interval (needn't seek minimal).
+1. If find a solution we collide at given time (one of two times), else we don't.
+
+$$
+(k_2^2 - 4u^2 k_1) .\lambda^2 +
+(2 k_2 k_3  - 4u^2 k_4) . \lambda +
+(k_3^2 - 4u^2 k_5)
+\geq 0
+$$
