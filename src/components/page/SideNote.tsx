@@ -34,7 +34,7 @@ function close(e: React.MouseEvent) {
   e.currentTarget.classList.remove('open', 'left', 'right', 'down');
 }
 
-const infoWidthPx = 200;
+const infoWidthPx = 240;
 const rootWidthPx = 16;
 const arrowDeltaX = 4;
 
