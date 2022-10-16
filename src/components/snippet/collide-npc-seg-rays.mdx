@@ -15,16 +15,20 @@ Otherwise for $\bullet \in \{ -, + \}$ [we have intersection data](https://githu
 >
 > with properties $\lambda_1, \lambda_2$ (numbers) and $\tt point$ (a vector).
 
+<!--
 - If $K_- . \lambda_1$ and $K_+ . \lambda_1$ have different sign, the NPC initially collides.<QedIcon/>
 - Suppose $K_- . \lambda_1$ and $K_+ . \lambda_1$ are both negative.
   If both have upper-bound $-r$ there's no collision.<QedIcon/>
   Otherwise [we can check](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/geom.js "@new-tab") ${\tt geom.lineSegIntersectsCircle(a_1, b_1, a_0, r)}$.<QedIcon/>
 
 Then we may assume $K_- . \lambda_1, K_+ . \lambda_1 \geq 0$.
+-->
+
 Next, consider the intervals $[0, |b_1 - a_1|]$ and $[ K_-.\lambda_2, K_+.\lambda_2 ]$ along the infinite line extending the line segment.
 If they don't overlap the NPC won't collide.<QedIcon/>
 Otherwise:
-> $[{\tt max}(0, K_-.\lambda_2), {\tt min}(|b_1 - a_1|, K_+.\lambda_2)]$ is a well-defined interval, so let $(\alpha_0, \alpha_1)$ be the corresponding points.
+> $[{\tt max}(0, K_-.\lambda_2), {\tt min}(|b_1 - a_1|, K_+.\lambda_2)]$ is a well-defined interval,
+with corresponding points $(\alpha_0, \alpha_1)$.
 
 <aside>
 
@@ -33,6 +37,17 @@ Otherwise:
   In fact, they may be the original line segment $(a_1, b_1)$.
 
 </aside>
+
+> Fixing a point $q$ between the rays, we seek $z_0$ such that $q = a_0 + z_0 \tau_0$.
+
+> Let $\delta_y := (q - a_0) \cdot \eta_0$ be the perpendicular distance between $q$ and the center-line of the rays. If the circle intersects $q$ at time $t_0$, then polar coordinates provides $\theta$ such that $q - p_0(t_0) = (r . cos(\theta), r . sin(\theta))$.
+Observing that $\delta_y = r . sin(\theta)$,
+we may define $\delta_x := r . cos( asin ( \frac{\delta_y}{r} )) = \sqrt{r^2 - \delta_y^2 }$.<SideNote>$cos(asin(x)) = \sqrt{1 - x^2}$, recalling<br/> $cos^2(x) + sin^2(x) = 1$.</SideNote>
+
+
+<!--
+If the NPC eventually collides with $q$ at time $t_0$, then $q$ will lie on the border of the circle. At time $t$ we know the circle's center resides at $p_0(t_0)$.
+-->
 
 **IDEA**: For each $\alpha_i$ can test if they intersect NPC at some minimal time $0 \leq t_i \leq t_\Omega$. If neither do no collision. If exactly one does then collide there. If both do then choose one with smaller $t_i$.
 
