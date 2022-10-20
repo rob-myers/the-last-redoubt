@@ -1,0 +1,18 @@
+> _Given an NPC $A$ moving uniformly towards a target, does it collide with a fixed line segment?_
+>
+> _If so, where?_
+<!-- <SideNote>If the NPC is already colliding, the intersection may be degenerate and we don't provide it.</SideNote> -->
+
+Model the NPC as a circle with center $a_0$ and radius $r$, moving at constant speed $u$ towards $b_0$.
+We attach rigid line segments $(\alpha_i, \beta_i)_{i \in I}$ to the NPC.
+Then:
+> the NPC _collides_ with the fixed line segment $(\alpha, \beta)$ if at time $0 \leq t \leq t_\Omega := |b_0 - a_0| / u$ some $(\alpha_i(t),\beta_i(t))$ intersects $(\alpha, \beta)$.
+
+We seek the least such time $t$, if it exists.
+To this end we introduce relevant notation.
+
+- Let $\delta := \widehat{b_0 - a_0}$ be the NPC's direction.
+- For $i \in I$, let $0 \leq \lambda_i \leq |\beta_i - \alpha_i|$ and $\tau_i := \widehat{\beta_i - \alpha_i}$.
+- $p_i(t, \lambda_i) := \alpha_i + \lambda_i . \tau_i + t . u . \delta$ is line segment $i$ at time $0 \leq t \leq t_\Omega$.
+- Let $0 \leq \lambda \leq |\beta - \alpha|$ and $\tau := \widehat{\beta - \alpha}$.
+- $p(\lambda) := \alpha + \lambda . \tau$ is the fixed line segment.

@@ -1,32 +1,9 @@
 import SideNote from "components/page/SideNote";
-import ProblemAsQuadratic from "./collide-npc-seg-quadratic.mdx";
-// import IntersectRays from "./collide-npc-seg-rays.mdx";
+import NpcSegSetup from "./collide-npc-seg-setup.mdx";
+import NpcSegSolve from "./collide-npc-seg-solve.mdx";
 
 ### Collision Prediction: NPC vs Line Seg
 
-> _Given an NPC $A$ moving uniformly towards a target, does it collide with a fixed line segment?_
->
-> _If so, where?_ <SideNote>If the NPC is already colliding, the intersection may be degenerate and we don't provide it.</SideNote>
+<NpcSegSetup/>
 
-Model the NPC as a circle with radius $r$ moving at constant speed $u$ towards $b_0$.
-Let $p_0(t) := a_0 + t . u . \tau_0$ be the position of the NPC at time $t$, where
-$\tau_0 := \widehat{b_0 - a_0}$ is the direction and $0 \leq t \leq t_\Omega := |b_0 - a_0| / u$.
-
-We may represent the line segment $(a_1, b_1)$ parametrically as $p_1(\lambda) := a_1 + \lambda . \tau_1$ where
-$τ_1 := \widehat{b_1 - a_1}$ and $0 \leq \lambda \leq |b_1 - a_1|$.
-
-> _We seek $(t, λ)$ satisfying the above inequalities such that:_
-> $|p_1(t) - p_0(λ)|^2 \leq r^2$ and $t$ is minimal.
-
-We can rewrite the inequality as a quadratic in two variables:
-- $k_0.t^2 + k_1.λ^2 + k_2.λt + k_3.t + k_4.λ + k_5 ≤ 0$
-- $k_0 := u^2$
-- $k_1 := 1$
-- $k_2 := -2 . u .(\tau_0 · \tau_1)$
-- $k_3 := -2 . u .(\tau_0 · (a_1 - a_0))$
-- $k_4 := 2 . (a_1 - a_0) · \tau_1$
-- $k_5 := |a_1 - a_0|^2 - r^2$
-
-<!-- verify by hand again ✅ -->
-
-<ProblemAsQuadratic />
+<NpcSegSolve/>

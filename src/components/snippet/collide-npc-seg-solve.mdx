@@ -1,0 +1,42 @@
+import { QedIcon } from 'components/page/Icon'
+
+Then fixing $i \in I$ consider the equation:
+> $p_i(t, \lambda_i) = p(\lambda)$.
+
+Projecting yields two equations:
+1. $\alpha_{ix} + \lambda_i \tau_{ix} + tu \delta_x = \alpha_x + \lambda \tau_x$
+1. $\alpha_{iy} + \lambda_i \tau_{iy} + tu \delta_y = \alpha_y + \lambda \tau_y$
+
+
+
+- Suppose $\tau_{ix} = 0$. Then (1) provides a linear relationship $u \delta_x t - \tau_x \lambda + (\alpha_{ix} - \alpha_{x}) = 0$.
+If $\delta_x = \tau_x = 0$ then the NPC and both line segments have direction $(0, \pm 1)$, in which case they do not collide (ignoring coincidence).<QedIcon/>
+Otherwise $\delta_x$ or $\tau_x$ are non-zero.
+Then they both are non-zero, for otherwise $t$ or $\lambda$ would be constant (these parameters vary over the reals).
+Dividing we obtain an equation:
+> $t = \frac{\tau_x}{u \delta_x} \lambda + \frac{\alpha_x - \alpha_{ix}}{u \delta_x}$
+where $\tau_x \neq 0$.
+
+- Otherwise $\tau_{ix} \neq 0$ in (1); dividing by it and substituting $\lambda_i = ...$ into (2) yields:
+  - $a t + b \lambda + c = 0$.
+  - $a := u \delta_y - u \delta_x / \tau_{ix}$
+  - $b := \tau_x / \tau_{ix} -\tau_y$
+  - $c := (\alpha_x - \alpha_{ix}) / \tau_{ix} + (\alpha_{iy} - \alpha_y)$
+
+  __TODO__
+  - If $a = b = 0$ can assume no collision (?)
+  - Otherwise $t = -\frac{b}{a} \lambda - \frac{c}{a}$.
+
+Finally... consider values of $t$ given $0 \leq \lambda \leq |\beta - \alpha|$.
+
+---
+
+
+
+
+TODO
+- fix $i \in I$
+- eliminate $\lambda_i$ from the 2 simultaneous equations
+- have line $f(t, \lambda) = 0$ (?)
+- restrict to $\lambda \in [0, |\beta - \alpha|]$
+- find minimal $t$
