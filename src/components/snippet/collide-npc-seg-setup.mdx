@@ -1,14 +1,17 @@
+import SideNote from 'components/page/SideNote';
+
 > _Given an NPC $A$ moving uniformly towards a target, does it collide with a fixed line segment?_
 >
 > _If so, where?_
 <!-- <SideNote>If the NPC is already colliding, the intersection may be degenerate and we don't provide it.</SideNote> -->
 
-Model the NPC as a circle with center $a_0$ and radius $r$, moving at constant speed $u$ towards $b_0$.
-We attach rigid line segments $(\alpha_i, \beta_i)_{i \in I}$ to the NPC.
+Model as a point $a_0$ moving at constant speed $u$ towards $b_0$.
+We attach rigid line segments $(\alpha_i, \beta_i)_{i \in I}$ to the NPC.<SideNote>These line segments will respect the NPC's circular bounds somehow.</SideNote>
 Then:
 > the NPC _collides_ with the fixed line segment $(\alpha, \beta)$ if at time $0 \leq t \leq t_\Omega := |b_0 - a_0| / u$ some $(\alpha_i(t),\beta_i(t))$ intersects $(\alpha, \beta)$.
 
-We seek the least such time $t$, if it exists.
+We seek the least such time $t$ (if it exists)
+where we may assume the speed $u \neq 0$.<SideNote>Otherwise we can use [getLineSegsIntersection](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/service/geom.js#:~:text=*/-,getLineSegsIntersection(,-p0%2C%20p1 "@new-tab"). </SideNote>
 To this end we introduce relevant notation.
 
 - Let $\delta := \widehat{b_0 - a_0}$ be the NPC's direction.
