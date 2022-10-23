@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, killError as killError, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { ansiColor, computeNormalizedParts, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -207,10 +207,7 @@ class cmdServiceClass {
             } else {
               p.status = ProcessStatus.Killed;
               // Avoid immediate clean because it stops `sleep` (??)
-              window.setTimeout(() => { 
-                p.cleanups.forEach(cleanup => cleanup());
-                p.cleanups.length = 0;
-              });
+              window.setTimeout(() => killProcess(p));
             }
           });
         }

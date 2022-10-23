@@ -2,7 +2,7 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { ansiColor, computeNormalizedParts, resolveNormalized, ShError } from './util';
+import { ansiColor, computeNormalizedParts, killProcess, resolveNormalized, ShError } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
@@ -281,10 +281,7 @@ const useStore = create<State>()(devtools((set, get) => ({
       if (session) {
         const { process, ttyShell } = get().session[sessionKey];
         ttyShell.dispose();
-        for (const { cleanups } of Object.values(process)) {
-          cleanups.forEach(cleanup => cleanup());
-          cleanups.length = 0;
-        }
+        Object.values(process).forEach(killProcess);
         delete get().device[ttyShell.key];
         set(({ session }) => ({ session: removeFromLookup(sessionKey, session) }));
       } else {
