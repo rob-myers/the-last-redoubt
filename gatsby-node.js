@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @param {import('gatsby').CreateWebpackConfigArgs} opts */
 exports.onCreateWebpackConfig = (opts) => {
 

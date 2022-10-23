@@ -1,3 +1,4 @@
+/* eslint-disable react/react-in-jsx-scope */
 /**
  * Based on https://ntsim.uk/posts/how-to-add-vanilla-emotion-ssr-to-gatsby
  */

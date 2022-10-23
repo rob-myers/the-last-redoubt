@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, no-useless-escape, require-yield, @typescript-eslint/ban-ts-comment */
 /**
  * This file is loaded via webpack `raw-loader` to avoid function transpilation.
  * 
@@ -120,7 +120,7 @@
   {
   
     /** Ping per second until query WORLD_KEY found */
-    'awaitWorld': async function* ({ api, home: { WORLD_KEY } }) {
+    awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
       const ansiColor = api.getColors();
       const { sessionKey } = api.getProcess();
   
@@ -300,7 +300,7 @@
       const npcKey = args[0]
   
       const process = api.getProcess()
-      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => {}))
+      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
       process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
       process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "play" }); return true; })
   
@@ -362,12 +362,12 @@
    */
   function fnToSuffix(fn) {
     switch (fn.constructor.name) {
-      case 'GeneratorFunction':
-        return `${fn}`.slice('function* '.length)
-      case 'AsyncGeneratorFunction':
-        return `${fn}`.slice('async function* '.length)
+      case "GeneratorFunction":
+        return `${fn}`.slice("function* ".length)
+      case "AsyncGeneratorFunction":
+        return `${fn}`.slice("async function* ".length)
       default:
-        return `${fn}`.slice('function '.length);
+        return `${fn}`.slice("function ".length);
     }
   }
   

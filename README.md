@@ -4,6 +4,11 @@
 # Local development
 yarn dev
 
+# Check types
+yarn types
+# Lint
+yarn lint
+
 # Local build
 yarn build
 cd public
