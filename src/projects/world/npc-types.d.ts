@@ -20,9 +20,8 @@ declare namespace NPC {
     radius: number;
     defaultInteractRadius: number;
     speed: number;
-    /**
-     * @emotion/css
-     */
+    segs: Geom.Seg[];
+    /** @emotion/css */
     css: string;
   }
 
@@ -98,6 +97,7 @@ declare namespace NPC {
     npcRef(el: HTMLDivElement | null): void;
     startAnimation(): void;
     setLookTarget(radians: number): void;
+    setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */

@@ -14,10 +14,15 @@
   get angle() {
     return Math.atan2(this.y, this.x);
   }
-
+  
   /** @returns {Geom.Coord} */
   get coord() {
     return [this.x, this.y];
+  }
+
+  /** 2 decimal places */
+  get degrees() {
+    return Math.round(100 * (this.angle * (180 / Math.PI))) / 100;
   }
 
   /** @returns {Geom.VectJson} */

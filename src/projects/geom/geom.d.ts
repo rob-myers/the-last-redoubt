@@ -7,7 +7,7 @@ declare namespace Geom {
   export type Mat = import('.').Mat;
   
   export type Coord = [number, number];
-  export type Seg = { src: Vect; dst: Vect };
+  export type Seg = { src: VectJson; dst: VectJson };
 
   export interface GeoJsonPolygon {
     /** Identifier amongst GeoJSON formats. */

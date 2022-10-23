@@ -8,8 +8,17 @@
   nav: run: Error: npcKey "cartesius" does not exist
   ```
 
-- 🚧 Document npc vs line-seg collision
+- Performance: hide `shade.PNG`s whilst zooming
+
+- ✅ Document npc vs line-seg collision
 - 🚧 Implement npc vs line seg collision predict
+  - 🚧 define NPC segs and show them via debug
+    - ✅ defined via CSS
+    - ✅ configuration induces CSS
+  - 🚧 can add DEBUG visible segs
+  - translate textual algorithm into `predictNpcSegCollision`
+  - test against manually placed segs
+  - integrate into NPC vs Door collision prevention
 - Recall how NPC vs Door intersection is currently computed
   - getNpcsIntersecting > circleIntersectsConvexPolygon
   - playerNearDoor > circleIntersectsConvexPolygon

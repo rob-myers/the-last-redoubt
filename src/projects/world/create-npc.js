@@ -1,6 +1,6 @@
 import { Poly, Rect, Vect } from '../geom';
 import { cssName } from '../service/const';
-import { getNumericCssVar } from '../service/dom';
+import { getNumericCssVar, lineSegToCssTransform } from '../service/dom';
 import { npcJson } from '../service/npc-json';
 
 /**
@@ -267,10 +267,16 @@ export default function createNpc(
       if (rootEl && !this.mounted) {
         this.el.root = rootEl;
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
+
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-        this.setLookTarget(def.angle); // Set CSS variable
         const { radius } = npcJson[this.jsonKey];
+
+        //#region set css vars
+        this.setLookTarget(def.angle);
+        this.setSegs(def.segs);
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
+        //#endregion
+
         this.anim.staticBounds = new Rect(
           this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius
         );
@@ -313,6 +319,15 @@ export default function createNpc(
     },
     setLookTarget(radians) {
       this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${radians}rad`);
+    },
+    setSegs(segs) {
+      /** @type {const} */ ([
+        [cssName.npcSeg1Transform, segs[0]],
+        [cssName.npcSeg2Transform, segs[1]],
+        [cssName.npcSeg3Transform, segs[2]],
+      ]).filter(([, x]) => x).forEach(([cssVarName, seg]) =>
+        this.el.body.style.setProperty(cssVarName, `${lineSegToCssTransform(seg)}`)
+      );
     },
     setSpritesheet(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
@@ -452,7 +467,7 @@ const navMetaOffsets = {
   'pre-collide': -0.02, // To ensure triggered
 
   /**
-   * TODO compute analytically
+   * TODO compute collision time using `predictNpcSegCollision`
    */
   "pre-exit-room": -(npcJson['first-npc'].radius + 10), // TODO better way
   "pre-near-door": -(npcJson['first-npc'].radius + 10), // TODO better way
