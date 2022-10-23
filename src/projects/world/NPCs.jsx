@@ -223,6 +223,7 @@ export default function NPCs(props) {
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor':
+        case 'decor':
           state.setDecor(e.key, e);
           break;
         case 'cancel':// Cancel current animation

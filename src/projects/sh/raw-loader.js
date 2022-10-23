@@ -233,7 +233,7 @@
       let opts = api.parseJsArg(args[1]);
 
       if (typeof opts === "string") {
-        ["add-decor", "remove-decor", "rm-decor"].includes(action) && (opts = { decorKey: opts });
+        ["add-decor", "decor", "remove-decor", "rm-decor"].includes(action) && (opts = { decorKey: opts });
         ["cancel", "get", "pause", "play", "set-player"].includes(action) && (opts = { npcKey: opts });
       }
       if (action === "config") {

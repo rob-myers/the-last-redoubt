@@ -266,6 +266,7 @@ declare namespace NPC {
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (
     | { action: 'add-decor'; } & DecorDef
+    | { action: 'decor'; } & DecorDef
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; debug?: boolean; interactRadius?: number }
     | { action: 'get'; npcKey: string }
