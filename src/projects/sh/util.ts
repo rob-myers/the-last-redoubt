@@ -123,7 +123,7 @@ export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number) {
 }
 
 export function killProcess(p: ProcessMeta) {
-  console.log('KILLING', p.key, p.src);
+  // console.log('KILLING', p.key, p.src);
   p.status = ProcessStatus.Killed;
   p.cleanups.forEach(cleanup => cleanup());
   p.cleanups.length = 0;

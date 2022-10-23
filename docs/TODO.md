@@ -2,11 +2,9 @@
 
 ## In progress
 
-- Pipeline child dies without pipeline ending e.g. `click` still running here:
-  ```sh
-  click | nav cartesius | walk cartesius
-  nav: run: Error: npcKey "cartesius" does not exist
-  ```
+- ✅ Pipeline child dies without pipeline ending
+  - e.g. `click` still running here `click | nav cartesius | walk cartesius`
+  - e.g. `click | ∫`
 
 - Performance: hide `shade.PNG`s whilst zooming
 
