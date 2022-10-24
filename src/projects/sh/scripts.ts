@@ -64,6 +64,7 @@ lookLoop: `{
  * Remember to invoke function (MDX lacks intellisense).
  */
 export const profileLookup = {
+
 'profile-1': () => `
 
 source /etc/util-1
@@ -73,9 +74,7 @@ source /etc/game-1
 
 'profile-1-a': (npcKey = 'andros') => `
 
-${
-  profileLookup["profile-1"]()
-}
+${profileLookup["profile-1"]()}
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
@@ -88,6 +87,13 @@ goLoop ${npcKey} &
 lookLoop ${npcKey} &
 
 `.trim(),
+
+'profile-1-b': () => `
+${profileLookup["profile-1-a"]()}
+DEBUG=1
+npc config
+`
+
 };
 
 import rawLoaderJs from '!!raw-loader!./raw-loader';
