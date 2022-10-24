@@ -316,52 +316,6 @@ export function predictNpcSegCollision(npc, seg) {
    * TODO 🚧
    */
 
-  /**
-   * Let
-   * - npc position be `p0(t) := a0 + t﹒u﹒τ0`
-   *   - u is npc speed
-   *   - a0, b0 is line seg npc traverses
-   *   - τ0 is unit vector for b0 - a0
-   *   - t ∊ [0, |b0 - a0| ╱ u]
-   *
-   * - line segment be `p1(λ) := a1 + λ﹒τ1`
-   *   - a1, b1 are endpoints
-   *   - τ1 is unit vector for b1 - a1
-   *   - λ ∊ [0, |b1 - a1|]
-   *
-   * - `r` be the npc's radius
-   * 
-   * We seek any (t, λ) within bounds s.t.
-   * - |p0(t) - p1(λ)|^2 ≤ r^2
-   * 
-   * The latter can be rewritten as follows:
-   * 
-   * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
-   * - `k0 := u^2`
-   * - `k1 := 1`
-   * - `k2 := -2u.(τ0 · τ1)`
-   * - `k3 := -u.(τ0 · (a1 - a0))`
-   * - `k4 := τ1 · (a1 - a0)`
-   * - `k5 := |a1 - a0|^2 - r^2`
-   * 
-   * Fixing λ, solutions are ...
-   * 
-   * TODO verify and clarify below on paper 🚧
-   * 
-   * ```js
-   * (-b ± √(b^2 - 4ac)) / 2a // i.e.
-   * (-(k2.λ + k3) ± √inSqrt) / 2·u^2 // i.e.
-   * [ (2u. τ0·τ1).λ + u. τ0·(a1 - a0) ± √inSqrt ] / 2·u^2
-   * ```
-   * 
-   * where inSqrt
-   * - := (k2.λ + k3)^2 - 4.u^2.(λ^2 + k5)
-   * - := ((2u. τ0·τ1).λ + u.(τ0 · (a1 - a0)))^2 - 4.u^2.(λ^2 + |a1 - a0|^2 - r^2)
-   * - := u^2.[ (2λ. τ0·τ1 + τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
-   * - := u^2.[  4λ^2 (τ0·τ1)^2 + 4λ.(τ0·τ1)(τ0·(a1 - a0)) + (τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
-   * - := (4.(τ0·τ1)^2 - 4). λ^2 + (4.(τ0·τ1)(τ0·(a1 - a0))). λ + ( (τ0·(a1 - a0))^2 - 4.(|a1 - a0|^2 - r^2) )
-  */
- const foo = 0;
 
   return {
     dist: 0,
