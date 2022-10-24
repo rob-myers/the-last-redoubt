@@ -37,6 +37,7 @@ export default function createNpc(
       wayMetas: [],
       wayTimeoutId: 0,
     },
+    segs: def.segs.map(seg => ({ ...seg, transformStyle: lineSegToCssTransform(seg) })),
 
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
@@ -269,13 +270,9 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
 
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-        const { radius } = npcJson[this.jsonKey];
-
-        //#region set css vars
         this.setLookTarget(def.angle);
-        this.setSegs(def.segs);
+        const { radius } = npcJson[this.jsonKey];
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
-        //#endregion
 
         this.anim.staticBounds = new Rect(
           this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius
@@ -319,15 +316,6 @@ export default function createNpc(
     },
     setLookTarget(radians) {
       this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${radians}rad`);
-    },
-    setSegs(segs) {
-      /** @type {const} */ ([
-        [cssName.npcSeg1Transform, segs[0]],
-        [cssName.npcSeg2Transform, segs[1]],
-        [cssName.npcSeg3Transform, segs[2]],
-      ]).filter(([, x]) => x).forEach(([cssVarName, seg]) =>
-        this.el.body.style.setProperty(cssVarName, `${lineSegToCssTransform(seg)}`)
-      );
     },
     setSpritesheet(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {

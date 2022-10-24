@@ -7,13 +7,20 @@
   - e.g. `click | ∫`
 
 - Performance: hide `shade.PNG`s whilst zooming
+- Migrate docs/commands.md from robmyers.github.io repo into EXAMPLES.md
 
 - ✅ Document npc vs line-seg collision
 - 🚧 Implement npc vs line seg collision predict
   - 🚧 define NPC segs and show them via debug
     - ✅ defined via CSS
     - ✅ configuration induces CSS
-  - 🚧 can add DEBUG visible segs
+    - ✅ fixed transform styles applied to individual divs?
+  - 🚧 can add segs (visible in DEBUG)
+    - ✅ `npc decor {...}`
+    - 🚧 --npc-circle-{radius,center} applied to individual divs
+    - --npc-seg-transform e.g. `translate(...) rotate(...) scaleX(...)`
+    - path via iterated segs (?)
+
   - translate textual algorithm into `predictNpcSegCollision`
   - test against manually placed segs
   - integrate into NPC vs Door collision prevention

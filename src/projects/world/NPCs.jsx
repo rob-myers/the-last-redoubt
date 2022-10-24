@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 import { Vect, Rect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { scrollback } from "../sh/io";
-import { testNever } from "../service/generic";
+import { deepClone, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
 import { cssName } from "../service/const";
@@ -350,7 +350,7 @@ export default function NPCs(props) {
             position: e.point,
             angle: e.angle,
             speed: npcJson["first-npc"].speed,
-            segs: npcJson["first-npc"].segs,
+            segs: npcJson["first-npc"].segs.map(deepClone),
           },
         });
       update();

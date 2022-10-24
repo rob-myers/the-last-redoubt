@@ -41,6 +41,8 @@ declare namespace NPC {
     };
     mounted: boolean;
     anim: NPCAnimData;
+    segs: (Geom.Seg & { transformStyle: string; })[];
+
     cancel(): Promise<void>;
     clearWayMetas(): void;
     /**
@@ -97,7 +99,7 @@ declare namespace NPC {
     npcRef(el: HTMLDivElement | null): void;
     startAnimation(): void;
     setLookTarget(radians: number): void;
-    setSegs(segs: Geom.Seg[]): void;
+    // setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */

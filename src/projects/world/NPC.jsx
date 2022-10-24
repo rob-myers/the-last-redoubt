@@ -41,9 +41,9 @@ export default function NPC({ api, def, disabled }) {
         className={cx(cssName.npcBody, npc.key, 'no-select')}
         data-npc-key={npc.key}
       >
-        <div className="line-segment" />
-        <div className="line-segment" />
-        <div className="line-segment" />
+        {npc.segs.map((seg, i) =>
+          <div key={i} className="line-segment" style={{ transform: seg.transformStyle }} />
+        )}
       </div>
       <div className="interact-circle" />
       <div className="bounds-circle" />
@@ -114,15 +114,5 @@ const rootCss = css`
     width: 1px;
     border-top: 4px solid white;
     transform-origin: left top;
-  }
-  
-  .line-segment:nth-child(1) {
-    transform: var(${cssName.npcSeg1Transform});
-  }
-  .line-segment:nth-child(2) {
-    transform: var(${cssName.npcSeg2Transform});
-  }
-  .line-segment:nth-child(3) {
-    transform: var(${cssName.npcSeg3Transform});
   }
 `;
