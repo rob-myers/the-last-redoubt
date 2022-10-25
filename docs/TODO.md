@@ -17,9 +17,10 @@
     - ✅ fixed transform styles applied to individual divs?
   - 🚧 can add segs (visible in DEBUG)
     - ✅ `npc decor {...}`
-    - 🚧 --npc-circle-{radius,center} applied to individual divs
-    - --npc-seg-transform e.g. `translate(...) rotate(...) scaleX(...)`
-    - path via iterated segs (?)
+    - 🚧 circle via styled div (not SVG)
+    - 🚧 segment via styled div (NEW)
+    - 🚧 path is many segments (not SVG)
+    - maybe listen for style changes to decors and update js representation?
 
   - translate textual algorithm into `predictNpcSegCollision`
   - test against manually placed segs
