@@ -21,6 +21,11 @@ npx http-server
 
 ## Gotchas
 
+- `yarn` fails for node-canvas on Apple M1
+  ```sh
+  brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
+  ```
+
 - MDX Frontmatter consistency
   > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
 
