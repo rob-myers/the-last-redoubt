@@ -342,11 +342,18 @@ export async function renderNpcSpriteSheets(parsed, outputDir, opts) {
   }
 }
 
-/** @param {NPC.DecorDef} input */
+/** @param {NPC.DecorDef} [input] */
 export function verifyDecor(input) {
-  if (input && input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
+  if (!input) {
+    return false;
+  }
+  if (input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
     return true;
-  } else if (input && input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
+  }
+  if (input.type === 'seg' && Vect.isVectJson(input.src) && Vect.isVectJson(input.dst)) {
+    return true;
+  }
+  if (input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
     return true;
   }
   return false;

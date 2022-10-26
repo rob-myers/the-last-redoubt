@@ -151,10 +151,26 @@ export function cssTransformToLineSeg(el) {
 	};
 }
 
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.VectJson}
+ */
+export function cssTransformToPoint(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in pointCache) {
+		return pointCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return pointCache[cacheKey] = { x: matrix.e, y: matrix.f };
+}
+
 let tmpVec = new Vect;
 
 /** @type {{ [cssTransformValue: string]: Geom.Seg }} */
 const lineSegCache = {};
+
+/** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
+const pointCache = {};
 
 //#endregion
 

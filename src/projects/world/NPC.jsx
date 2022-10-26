@@ -112,7 +112,7 @@ const rootCss = css`
     left: 50%;
     top: 50%;
     width: 1px;
-    border-top: 4px solid white;
-    transform-origin: left top;
+    border-top: 1px solid black;
+    transform-origin: top left;
   }
 `;

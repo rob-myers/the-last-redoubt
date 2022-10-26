@@ -1,48 +1,53 @@
 import React from "react";
-import { Rect } from "../geom";
+import { css, cx } from "@emotion/css";
+import { lineSegToCssTransform } from "../service/dom";
+import DecorPath from "./DecorPath";
 
 /** @param {{ item: NPC.DecorDef }} props  */
 export default function Decor({ item }) {
-  /** @type {Geom.Rect} */ let aabb;
-  /** @type {React.ReactNode} */ let child;
-
   switch (item.type) {
     case 'path':
-      aabb = Rect.fromPoints(...item.path).outset(10);
-      child = (
-        <g className="debug-path">
-          <polyline
-            fill="none" stroke="#88f" strokeDasharray="2 2" strokeWidth={1}
-            points={item.path.map(p => `${p.x},${p.y}`).join(' ')}
-          />
-          {item.path.map((p, i) => (
-            <circle key={i} fill="none" stroke="#ff444488" r={2} cx={p.x} cy={p.y} />
-          ))}
-        </g>
-      );
-      break;
+      return <DecorPath decor={item} />
     case 'circle':
-      aabb = new Rect(item.center.x - item.radius, item.center.y - item.radius, item.radius * 2, item.radius * 2);
-      child = (
-        <circle
-          className="debug-circle"
-          cx={item.center.x}
-          cy={item.center.y}
-          r={item.radius}
+      return (
+        <div
+          data-key={item.key}
+          className={cx('debug-circle', cssCircle)}
+          style={{
+            transform: `translate(${item.center.x}px, ${item.center.y}px) scale(${2 * item.radius})`
+          }}
         />
       );
-      break;
+    case 'seg':
+      return (
+        <div
+          data-key={item.key}
+          className={cx('debug-seg', cssSeg)}
+          style={{
+            transform: lineSegToCssTransform(item),
+          }}
+        />
+      );
     default:
       console.error(`unexpected decor`, item);
       // throw testNever(item);
       return null;
   }
-
-  return (
-    <svg width={aabb.width} height={aabb.height} style={{ left: aabb.x, top: aabb.y }}>
-      <g style={{ transform: `translate(${-aabb.x}px, ${-aabb.y}px)` }}>
-        {child}
-      </g>
-    </svg>
-  );
 }
+
+const cssCircle = css`
+  position: absolute;
+  background-color: #ff444488;
+  width: 1px;
+  height: 1px;
+  transform-origin: center;
+  border-radius: 50%;
+`;
+
+const cssSeg = css`
+  position: absolute;
+  /* z-index: 1; */
+  width: 1px;
+  border-top: 1px solid green;
+  transform-origin: left top;
+`;

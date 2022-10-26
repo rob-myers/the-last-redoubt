@@ -2,10 +2,6 @@
 
 ## In progress
 
-- ✅ Pipeline child dies without pipeline ending
-  - e.g. `click` still running here `click | nav cartesius | walk cartesius`
-  - e.g. `click | ∫`
-
 - Performance: hide `shade.PNG`s whilst zooming
 - Migrate docs/commands.md from robmyers.github.io repo into EXAMPLES.md
 
@@ -17,9 +13,10 @@
     - ✅ fixed transform styles applied to individual divs?
   - 🚧 can add segs (visible in DEBUG)
     - ✅ `npc decor {...}`
-    - 🚧 circle via styled div (not SVG)
-    - 🚧 segment via styled div (NEW)
-    - 🚧 path is many segments (not SVG)
+    - ✅ circle via styled div (not SVG)
+    - ✅ segment via styled div (NEW)
+    - ✅ path ~ div nodes with auto-redrawn path? 
+    - circle/seg also mutate decor onchange via devtool
     - maybe listen for style changes to decors and update js representation?
 
   - translate textual algorithm into `predictNpcSegCollision`
@@ -184,6 +181,9 @@ How to embed video?
 
 ## Done
 
+- ✅ Pipeline child dies without pipeline ending
+  - e.g. `click` still running here `click | nav cartesius | walk cartesius`
+  - e.g. `click | ∫`
 - ✅ Start working on /intro/setup
 - ✅ Home page has World + Terminal demo
 - ✅ Rewrite `click` without `otag` and remove latter

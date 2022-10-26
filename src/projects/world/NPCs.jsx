@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
-import { Vect, Rect } from "../geom";
+import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { scrollback } from "../sh/io";
 import { deepClone, testNever } from "../service/generic";
@@ -306,10 +306,10 @@ export default function NPCs(props) {
       }
     },
     setDecor(decorKey, decor) {
+      if (decor && !verifyDecor(decor)) {
+        throw Error('invalid decor');
+      }
       if (decor) {
-        if (!verifyDecor(decor)) {
-          throw Error('invalid decor');
-        }
         state.decor[decorKey] = decor;
       } else {
         delete state.decor[decorKey];
