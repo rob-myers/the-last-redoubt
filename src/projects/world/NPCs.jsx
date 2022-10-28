@@ -2,15 +2,16 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
+import { debounce } from "debounce";
 
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { scrollback } from "../sh/io";
-import { deepClone, testNever } from "../service/generic";
+import { assertNonNull, deepClone, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
 import { cssName } from "../service/const";
-import { getNumericCssVar } from "../service/dom";
+import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -36,6 +37,7 @@ export default function NPCs(props) {
 
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
+    decorEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
 
@@ -180,7 +182,8 @@ export default function NPCs(props) {
       }
       const result = state.getGlobalNavPath(npc.getPosition(), e.point);
       // Always show path
-      state.setDecor(e.npcKey, { key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
+      const decorKey = `${e.npcKey}-navpath`;
+      state.setDecor(decorKey, { key: decorKey, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -223,8 +226,15 @@ export default function NPCs(props) {
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor':
-        case 'decor':
           state.setDecor(e.key, e);
+          break;
+        case 'decor':
+          if ('decorKey' in e) {
+            // `npc decor foo` gets foo
+            return state.decor[e.decorKey];
+          } else {// otherwise alias for add-decor
+            state.setDecor(e.key, e);
+          }
           break;
         case 'cancel':// Cancel current animation
           await state.getNpc(e.npcKey).cancel();
@@ -303,6 +313,7 @@ export default function NPCs(props) {
         state.rootEl = el;
         el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
+        state.decorEl = assertNonNull(el.querySelector('div.decor-root'));
       }
     },
     setDecor(decorKey, decor) {
@@ -448,6 +459,48 @@ export default function NPCs(props) {
   
   React.useEffect(() => {
     props.onLoad(state);
+
+    const observer = new MutationObserver(debounce((records) => {
+      // console.log({records});
+      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
+
+      for (const el of els) {
+        if (el.classList.contains(cssName.decorCircle)) {
+          console.log('circle changed');
+          const decorKey = el.getAttribute('data-key');
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
+            const { center, radius } = cssTransformToCircle(el);
+            [decor.radius, decor.center] = [radius, center];
+            update();
+          }
+        }
+        if (el.classList.contains(cssName.decorSeg)) {
+          console.log('seg changed');
+          const decorKey = el.getAttribute('data-key');
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'seg' }} */ (state.decor[decorKey]);
+            const { src, dst } = cssTransformToLineSeg(el);
+            [decor.src, decor.dst] = [src, dst];
+            update();
+          }
+        }
+        if (el.classList.contains(cssName.decorPoint)) {
+          const rootDiv = /** @type {HTMLDivElement} */ (el.parentElement);
+          const decorKey = rootDiv.getAttribute('data-key');
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'path' }} */ (state.decor[decorKey]);
+            const decorPoints = /** @type {[]} */ (Array.from(rootDiv.querySelectorAll(`div.${cssName.decorPoint}`)));
+            const points = decorPoints.map(x => cssTransformToPoint(x));
+            decor.path.splice(0, decor.path.length, ...points);
+            update();
+          }
+        }
+      }
+    }, 300));
+    observer.observe(state.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -456,9 +509,11 @@ export default function NPCs(props) {
       ref={state.rootRef}
     >
 
-      {Object.entries(state.decor).map(([key, item]) =>
-        <Decor key={key} item={item} />
-      )}
+      <div className="decor-root">
+        {Object.entries(state.decor).map(([key, item]) =>
+          <Decor key={key} item={item} />
+        )}
+      </div>
 
       {/** Prioritise walk animations, to avoid load on start walk */}
       {Object.keys(npcJson).map((key) => (
@@ -499,10 +554,6 @@ const rootCss = css`
   svg {
     position: absolute;
     pointer-events: none;
-
-    .debug-circle {
-      fill: #ff000035;
-    }
   }
 `;
 
@@ -525,6 +576,7 @@ const rootCss = css`
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {HTMLElement} rootEl
+ * @property {HTMLElement} decorEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  *
  * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
@@ -538,7 +590,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC>} npcAct
+ * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(el: null | HTMLDivElement) => void} rootRef

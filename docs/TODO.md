@@ -4,22 +4,25 @@
 
 - Performance: hide `shade.PNG`s whilst zooming
 - Migrate docs/commands.md from robmyers.github.io repo into EXAMPLES.md
+- Clickable tty msgs getting out of sync: seek repro
 
 - ✅ Document npc vs line-seg collision
 - 🚧 Implement npc vs line seg collision predict
-  - 🚧 define NPC segs and show them via debug
+  - ✅ define NPC segs and show them via debug
     - ✅ defined via CSS
     - ✅ configuration induces CSS
     - ✅ fixed transform styles applied to individual divs?
-  - 🚧 can add segs (visible in DEBUG)
+  - ✅ can add segs/circles/paths (visible in DEBUG)
     - ✅ `npc decor {...}`
     - ✅ circle via styled div (not SVG)
     - ✅ segment via styled div (NEW)
     - ✅ path ~ div nodes with auto-redrawn path? 
-    - circle/seg also mutate decor onchange via devtool
-    - maybe listen for style changes to decors and update js representation?
-
-  - translate textual algorithm into `predictNpcSegCollision`
+    - ✅ circle/seg also mutate decor onchange via devtool
+    - ✅ `npc decor foo` gets decor foo
+    - ✅ support e.g.
+      - `{ echo foo; echo bar; } | npc rm-decor`
+      - `{ echo foo; echo bar; } | npc decor`
+  - 🚧 translate textual algorithm into `predictNpcSegCollision`
   - test against manually placed segs
   - integrate into NPC vs Door collision prevention
 - Recall how NPC vs Door intersection is currently computed

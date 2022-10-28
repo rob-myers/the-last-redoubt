@@ -40,3 +40,11 @@ npx http-server
   > e.g. `anim` instead of `this.anim` inside create-npc
 
 - Shell functions should avoid single-quotes `'` inside JavaScript function bodies.
+
+- DOMMatrix `{ a b c d e f }` corresponds to affine matrix:
+  > $$
+\begin{bmatrix}
+a & c & e \\
+b & d & f
+\end{bmatrix}
+$$

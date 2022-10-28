@@ -261,15 +261,15 @@ declare namespace NPC {
   ) => void;
 
   export type DecorDef = { key: string } & (
-    | { type: 'circle'; center: Geom.VectJson; radius: number; }
-    | { type: 'seg'; src: Geom.VectJson; dst: Geom.VectJson; }
+    | { type: 'circle' } & Geom.Circle
+    | { type: 'seg' } & Geom.Seg
     | { type: 'path'; path: Geom.VectJson[]; }
   );
 
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (
     | { action: 'add-decor'; } & DecorDef
-    | { action: 'decor'; } & DecorDef
+    | { action: 'decor'; } & (DecorDef | { decorKey: string })
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; debug?: boolean; interactRadius?: number }
     | { action: 'get'; npcKey: string }

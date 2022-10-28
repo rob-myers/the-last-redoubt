@@ -1,6 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { lineSegToCssTransform } from "../service/dom";
+import { cssName } from "../service/const";
+import { circleToCssTransform, lineSegToCssTransform } from "../service/dom";
 import DecorPath from "./DecorPath";
 
 /** @param {{ item: NPC.DecorDef }} props  */
@@ -12,9 +13,9 @@ export default function Decor({ item }) {
       return (
         <div
           data-key={item.key}
-          className={cx('debug-circle', cssCircle)}
+          className={cx(cssName.decorCircle, cssCircle)}
           style={{
-            transform: `translate(${item.center.x}px, ${item.center.y}px) scale(${2 * item.radius})`
+            transform: circleToCssTransform(item),
           }}
         />
       );
@@ -22,7 +23,7 @@ export default function Decor({ item }) {
       return (
         <div
           data-key={item.key}
-          className={cx('debug-seg', cssSeg)}
+          className={cx(cssName.decorSeg, cssSeg)}
           style={{
             transform: lineSegToCssTransform(item),
           }}

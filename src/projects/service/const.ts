@@ -29,6 +29,11 @@ export const cssName = {
   navMini: 'nav-mini',
   nextArticle: 'next-article',
 
+  decorCircle: 'decor-circle',
+  decorPath: 'decor-path',
+  decorPoint: 'decor-point',
+  decorSeg: 'decor-seg',
+  
   npc: 'npc',
   npcBody: 'body',
   npcsDebugDisplay: '--npcs-debug-display',

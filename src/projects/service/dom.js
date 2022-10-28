@@ -125,11 +125,35 @@ export function svgPathToPolygon(svgPathString) {
 }
 
 /**
+ * 
+ * @param {Geom.Circle} circle 
+ */
+export function circleToCssTransform(circle) {
+	return `translate(${circle.center.x}px, ${circle.center.y}px) scale(${2 * circle.radius})`;
+}
+
+/**
  * @param {Geom.Seg} seg 
  */
 export function lineSegToCssTransform(seg) {
 	tmpVec.copy(seg.dst).sub(seg.src);
 	return `translate(${seg.src.x}px, ${seg.src.y}px) rotate(${tmpVec.degrees}deg) scaleX(${tmpVec.length})`;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.Circle}
+ */
+export function cssTransformToCircle(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in circleCache) {
+		return circleCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return circleCache[cacheKey] = {
+		radius: matrix.a / 2, // expect 2*2 matrix cols (2 * radius, 0) (0, 2 * radius)
+		center: { x: matrix.e, y: matrix.f },
+	};
 }
 
 /**
@@ -146,8 +170,8 @@ export function cssTransformToLineSeg(el) {
 	return lineSegCache[cacheKey] = {
 		// Zero vector offset by (e, f)
 		src: { x: matrix.e, y: matrix.f },
-		// 1st column of 2x2 matrix, offset by (e, f)
-		dst: { x: matrix.a + matrix.e, y: matrix.c + matrix.f },
+		// 1st column of 2x2 matrix (a b), offset by (e, f)
+		dst: { x: matrix.a + matrix.e, y: matrix.b + matrix.f },
 	};
 }
 
@@ -166,11 +190,15 @@ export function cssTransformToPoint(el) {
 
 let tmpVec = new Vect;
 
+/** @type {{ [cssTransformValue: string]: Geom.Circle }} */
+const circleCache = {};
+
 /** @type {{ [cssTransformValue: string]: Geom.Seg }} */
 const lineSegCache = {};
 
 /** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
 const pointCache = {};
+
 
 //#endregion
 

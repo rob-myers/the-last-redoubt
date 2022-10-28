@@ -8,6 +8,7 @@ declare namespace Geom {
   
   export type Coord = [number, number];
   export type Seg = { src: VectJson; dst: VectJson };
+  export type Circle = { radius: number; center: VectJson; };
 
   export interface GeoJsonPolygon {
     /** Identifier amongst GeoJSON formats. */

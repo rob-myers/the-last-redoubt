@@ -227,20 +227,33 @@
     },
   
     /** npc {action} [{opts}] */
-    npc: async function* ({ api, args, home }) {
+    npc: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const action = args[0]
-      let opts = api.parseJsArg(args[1]);
 
-      if (typeof opts === "string") {
-        ["add-decor", "decor", "remove-decor", "rm-decor"].includes(action) && (opts = { decorKey: opts });
-        ["cancel", "get", "pause", "play", "set-player"].includes(action) && (opts = { npcKey: opts });
-      }
-      if (action === "config") {
-        opts = { ...{ debug: !!home.DEBUG }, ...opts };
+      /** @param {undefined | string | Record<string, any>} opts */
+      function normalizeOpts(opts = {}) {
+        if (typeof opts === "string") {
+          if (["decor", "remove-decor", "rm-decor"].includes(action)) opts = { decorKey: opts };
+          else if (["cancel", "get", "pause", "play", "set-player"].includes(action)) opts = { npcKey: opts };
+          else if (action === "config") opts = { debug: !!home.DEBUG }; // we ignore key
+          else opts = {}; // we ignore key
+        } else if (action === "config") {
+          opts.debug === undefined && (opts.debug = !!home.DEBUG);
+        }
+        return opts;
       }
 
-      yield await npcs.npcAct({ action, ...opts })
+      if (api.isTtyAt(0)) {
+        const opts = normalizeOpts(api.parseJsArg(args[1]));
+        yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+      } else {
+        while ((datum = await api.read()) !== null) {
+          const opts = normalizeOpts(datum);
+          yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+        }
+      }
+
     },
   
     /**
