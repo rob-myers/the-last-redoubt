@@ -2,8 +2,11 @@
 
 ## In progress
 
-- Performance: hide `shade.PNG`s whilst zooming
-- Migrate docs/commands.md from robmyers.github.io repo into EXAMPLES.md
+- Retarget:
+  - `The Last Redoubt` -> `NPC CLI`
+  - Web development focus
+  - Programming NPCs
+
 - Clickable tty msgs getting out of sync: seek repro
 
 - ✅ Document npc vs line-seg collision
@@ -32,6 +35,9 @@
 - ...
 - Collision issue when initially start very close
   > e.g. just after collided
+
+- Performance: hide `shade.PNG`s whilst zooming
+- Migrate docs/commands.md from robmyers.github.io repo into EXAMPLES.md
 
 - ✅ Create page /sketch
 - ✅ Write some math markdown in /sketches

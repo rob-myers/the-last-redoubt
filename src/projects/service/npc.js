@@ -304,7 +304,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
 
 /**
  * @param {NPC.NPC} npc Assumed to be walking
- * @param {Geom.Seg} seg
+ * @param {Geom.Seg} seg Fixed seg
  * @returns {NPC.NpcSegCollision | null}
  */
 export function predictNpcSegCollision(npc, seg) {
@@ -312,15 +312,58 @@ export function predictNpcSegCollision(npc, seg) {
   if (!npc.getWalkSegBounds().intersects(rect)) {
     return null;
   }
+
+  const walkSeg = assertNonNull(npc.getLineSeg());
+  const walkDelta = walkSeg.dst.clone().sub(walkSeg.src);
+  const walkDir = walkDelta.clone().normalize(); // \delta
+  const walkMax = walkDelta.length;
+  
+  const npcSpeed = npc.getSpeed(); // u > 0
+  const timeMax = walkMax / npcSpeed; // t_\Omega
+  
   /**
-   * TODO 🚧
+   * Fixed segment:
+   * > `p(λ) := {seg.src} + λ.segDir`
+   * > where `0 ≤ λ ≤ segMax`
    */
+  // 🖊 seg.src ~ \alpha, seg.dst ~ \beta
+  const segDelta = Vect.from(seg.dst).sub(seg.src);
+  const segDir = segDelta.clone().normalize(); // \tau_i
+  const segMax = segDelta.length;
+  
+  for (const npcSeg of npc.segs) {
+    /**
+     * A line segment attached to npc:
+     * > `p_i(t, λ_i) := {npcSeg.src} + u.t.walkDir + λ_i.npcSegDir ` where:
+     * > - 0 ≤ t ≤ tMax
+     * > - 0 ≤ λ_i ≤ segMax
+     */
+    // npcSec.src ~ \alpha_i, npcSec.dst ~ \beta_i
+    const npcSegDelta = Vect.from(npcSeg.dst).sub(npcSeg.src);
+    const npcSegDir = segDelta.clone().normalize(); // \tau
 
+    // Solving p(λ) = p_i(t, λ_i):
 
-  return {
-    dist: 0,
-    seconds: 0,
-  };
+    if (segDir.x === 0) {
+      // Let 0 ≤ t ≤ timeMax, 0 ≤ λ ≤ segMax,
+      // (npcSpeed . walkDir_x .​ t) - (npcSegDir_x .​ λ) + (npcSeg.src.x ​- seg.src.x) = 0
+      if (walkDir.x === 0 && npcSegDir.x === 0) {
+        // Walk direction and segments are parallel
+        return null; // We ignore glancing collisions
+      } else if (npcSegDir.x === 0) {
+        // Segments are parallel
+        // If they collide the time is unique
+        const t = (seg.src.x - npcSeg.src.x) / (npcSpeed * walkDir.x);
+        return (0 <= t && t <= timeMax) 
+          ? { seconds: t, dist: t * npcSpeed }
+          : null;
+      }
+    } else {
+  
+    }
+  }
+
+  return null;
 }
 
 /**
