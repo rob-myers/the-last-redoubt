@@ -1,18 +1,23 @@
 import { QedIcon } from 'components/page/Icon'
 
-Dividing by it and substituting $\lambda_i = ...$ into (2) yields:
+Dividing (1) by it and substituting $\lambda_i = ...$ into (2) yields:
 - $a t + b \lambda + c = 0$.
-- $a := u \delta_y - u \delta_x / \tau_{ix}$
-- $b := \tau_x / \tau_{ix} -\tau_y$
-- $c := (\alpha_x - \alpha_{ix}) / \tau_{ix} + (\alpha_{iy} - \alpha_y)$
+- $a := u \delta_y - u \delta_x (\tau_{iy} / \tau_{ix})$
+- $b := \tau_x (\tau_{iy} / \tau_{ix}) - \tau_y$
+- $c := (\alpha_x - \alpha_{ix}) (\tau_{iy} / \tau_{ix}) + (\alpha_{iy} - \alpha_y)$
+
+<!-- ISSUES? Careful about division by potentially zero param -->
 
 We split into cases:
 - If $a \neq 0$ and $b = 0$ we may test $-c / a \in [0, t_\Omega]$.<QedIcon/>
 - If $a = 0$ and $b \neq 0$ then we know $\lambda =  -c / b$.
-  Moreover $a = 0$ implies $\delta_x = \tau_{ix} \delta_y$, so that both $\delta_x$ and $\delta_y$ are non-zero (because they cannot both be). Then (1) yields:
+  Moreover $a = 0$ implies $\delta_x = (\tau_{ix} / \tau_{iy}) \delta_y$, so that both $\delta_x$ and $\delta_y$ are non-zero (because they cannot both be).
+  <!-- 🚧 extra case here (?) if tau_{iy} = 0 know delta_y = 0 but ...  -->
+  Then (1) yields:
   > $t = -\frac{\tau_{ix}}{u \delta_x} \lambda_i + \frac{1}{u\delta_x} (\alpha_x - \alpha_{ix} - \tau_x c/b)$.
 - If $a = b = 0$ then observe:
-  > $\frac{1}{\tau_{ix}} = \delta_y / \delta_x = \tau_y / \tau_x = (\alpha_{iy} - \alpha_y) / (\alpha_{ix} - \alpha_x)$
+  > $\frac{\tau_{iy}}{\tau_{ix}} = \delta_y / \delta_x = \tau_y / \tau_x = (\alpha_{iy} - \alpha_y) / (\alpha_{ix} - \alpha_x)$
+  <!-- 🚧 extra reasoning to explain why can divide by these params i.e. non-zero else contradiction -->
 
   because $a = 0$, $b = 0$ and necessarily $c = 0$ (respectively).
   Then the NPC's direction is aligned to the fixed line segment.
