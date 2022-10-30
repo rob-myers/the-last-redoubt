@@ -323,43 +323,57 @@ export function predictNpcSegCollision(npc, seg) {
   
   /**
    * Fixed segment:
-   * > `p(λ) := {seg.src} + λ.segDir`
+   * > `p(λ) := seg.src + λ . segDir`
    * > where `0 ≤ λ ≤ segMax`
    */
   // 🖊 seg.src ~ \alpha, seg.dst ~ \beta
   const segDelta = Vect.from(seg.dst).sub(seg.src);
-  const segDir = segDelta.clone().normalize(); // \tau_i
+  const segDir = segDelta.clone().normalize(); // \tau
   const segMax = segDelta.length;
   
   for (const npcSeg of npc.segs) {
     /**
      * A line segment attached to npc:
-     * > `p_i(t, λ_i) := {npcSeg.src} + u.t.walkDir + λ_i.npcSegDir ` where:
+     * > `p_i(t, λ_i) := npcSeg.src + ut . walkDir + λ_i . npcSegDir` where:
      * > - 0 ≤ t ≤ tMax
      * > - 0 ≤ λ_i ≤ segMax
      */
     // npcSec.src ~ \alpha_i, npcSec.dst ~ \beta_i
     const npcSegDelta = Vect.from(npcSeg.dst).sub(npcSeg.src);
-    const npcSegDir = segDelta.clone().normalize(); // \tau
+    const npcSegDir = segDelta.clone().normalize(); // \tau_i
 
-    // Solving p(λ) = p_i(t, λ_i):
+    /**
+     * Solving `p_i(t, λ_i) = p(λ)` i.e.
+     * 1. npcSeg.src.x + u.t.walkDir.x + λ_i . npcSegDir.x = seg.src.x + λ . segDir.x
+     * 2. npcSeg.src.y + u.t.walkDir.y + λ_i . npcSegDir.y = seg.src.y + λ . segDir.y
+     */
 
-    if (segDir.x === 0) {
+    if (npcSegDir.x === 0) {
       // Let 0 ≤ t ≤ timeMax, 0 ≤ λ ≤ segMax,
-      // (npcSpeed . walkDir_x .​ t) - (npcSegDir_x .​ λ) + (npcSeg.src.x ​- seg.src.x) = 0
-      if (walkDir.x === 0 && npcSegDir.x === 0) {
+      // (npcSpeed . walkDir_x .​ t) - (npcSegDir.x .​ λ) + (npcSeg.src.x ​- seg.src.x) = 0
+      if (walkDir.x === 0 && segDir.x === 0) {
         // Walk direction and segments are parallel
         return null; // We ignore glancing collisions
-      } else if (npcSegDir.x === 0) {
+      } else if (segDir.x === 0) {
         // Segments are parallel
         // If they collide the time is unique
         const t = (seg.src.x - npcSeg.src.x) / (npcSpeed * walkDir.x);
         return (0 <= t && t <= timeMax) 
           ? { seconds: t, dist: t * npcSpeed }
           : null;
+      } else if (walkDir.x === 0) {
+        // via (1) λ = (npcSeg.src.x - seg.src.x) / segDir.x
+        // via (2) λ_i + (npcSpeed . t) - (λ . segDir.y) + (npcSeg.src.y - seg.src.y) = 0
+        // thus:
+        // ut = -λ_i + (seg.src.x - npcSeg.src.x).(segDir.x/segDir.x) + (seg.src.y - npcSeg.src.y)
+        // 🚧 intersect interval and minimize
+      } else {
+        // Since segDir.x and walkDir.x are non-zero, (1) becomes:
+        // ut = (segDir.x / walkDir.x) λ + (seg.src.x - npcSeg.src.x) / walkDir.x
+        // 🚧 intersect interval and minimize
       }
-    } else {
-  
+    } else {// npcSegDir.x !== 0
+      // 🚧
     }
   }
 
