@@ -392,6 +392,9 @@ export function predictNpcSegCollision(npc, seg) {
         continue;
       } else if (a === 0) {
         // 🚧 + adjust /sketches
+        // Possibly missing case where npcSegDir.y === walkDir.y === 0
+        // IDEA Know λ; Know npcSegDir.x === delta.x === 1; Subst into (1) and get f(t, λ_i) = 0
+        // Hopefully this can be unified with argument when npcSegDir.y !== 0
       } else {
         // t = -b/a . λ - c
         // 🚧 intersect interval and minimize

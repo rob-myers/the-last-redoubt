@@ -17,11 +17,17 @@ We split into cases:
   > $t = -\frac{\tau_{ix}}{u \delta_x} \lambda_i + \frac{1}{u\delta_x} (\alpha_x - \alpha_{ix} - \tau_x c/b)$.
 - If $a = b = 0$ then observe:
   > $\frac{\tau_{iy}}{\tau_{ix}} = \delta_y / \delta_x = \tau_y / \tau_x = (\alpha_{iy} - \alpha_y) / (\alpha_{ix} - \alpha_x)$
-  <!-- 🚧 extra reasoning to explain why can divide by these params i.e. non-zero else contradiction -->
 
-  because $a = 0$, $b = 0$ and necessarily $c = 0$ (respectively).
-  Then the NPC's direction is aligned to the fixed line segment.
-  The vector difference of the start of the two line segments is also so aligned.
-  Then they may only collide via a glancing collision (coincidence) so we may assume they do not collide.<QedIcon/>
+  because $a = 0$, $b = 0$ and thus $c = 0$ too.
+  Division by $\tau_{ix}$ is well-defined by assumption.
+  Division by $\delta_x$ is well-defined else $\delta_x = \delta_y = 0$ (a contradiction).
+  Division by $\tau_x$ is well-defined else $\tau_x = \tau_y = 0$ (a contradiction).
+  However, the final division may not be defined i.e. $\alpha_{ix} - \alpha_x = 0$, in which case $\alpha_{iy} - \alpha_y = 0$.
+
+  Then the NPC's direction is aligned to the fixed line segment,
+  and the vector difference of the start of the line segments:
+  (i) has the same direction, or
+  (ii) is zero.
+  Then they may only collide via a glancing collision (coincidence or at a point) so we may assume they do not collide.<QedIcon/>
 - Finally if they are both non-zero we obtain:
   > $t = -\frac{b}{a} \lambda - \frac{c}{a}$.
