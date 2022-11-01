@@ -5,6 +5,8 @@
 - Retarget:
   - `The Last Redoubt` -> `NPC CLI`
   - Web development focus
+    - Edit via our Terminal
+    - Edit via Chrome Devtools
   - Programming NPCs
 
 - Clickable tty msgs getting out of sync: seek repro
