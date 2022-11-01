@@ -1,3 +1,5 @@
+export const siteTitle = 'NPC CLI';
+
 export const discussionsUrl = "https://github.com/rob-myers/the-last-redoubt/discussions";
 
 export const localStorageKey = {

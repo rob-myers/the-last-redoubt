@@ -2,6 +2,7 @@ import { navigate } from "gatsby";
 import React from "react";
 import { cx, css } from "@emotion/css";
 
+import { siteTitle } from "projects/service/const";
 import NavMini from "./NavMini";
 
 export default function Title() {
@@ -9,10 +10,10 @@ export default function Title() {
     <header className={cx('title', titleCss)}>
       <NavMini/>
       <h1 onClick={() => navigate('/')}>
-        The Last Redoubt
+        {siteTitle}
       </h1>
       <p>
-        $( video game | web dev | game ai )
+        Coding NPCs via Web Dev and a Web CLI
       </p>
     </header>
   );
@@ -31,10 +32,11 @@ const titleCss = css`
     margin: 0;
     margin-top: 40px;
 
+    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+    font-family: 'Courier New', Courier, monospace;
     font-size: 4.8rem;
     font-weight: 300;
     letter-spacing: 4px;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     cursor: pointer;
     color: var(--page-title-color);
     text-transform: uppercase;
@@ -48,19 +50,21 @@ const titleCss = css`
     }
     @media(max-width: 600px) {
       margin-top: 72px;
-      font-size: 2.3rem;
+      font-size: 2.5rem;
     }
   }
   
   /** Site subtitle */
   p {
-    color: var(--page-title-color);
-    font-size: 1rem;
-    font-family: 'Courier New', Courier, monospace;
     margin: 0;
     padding: 40px 0 48px;
+    margin-right: 4px;
+    
+    color: var(--page-title-color);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1rem;
     font-weight: 300;
-    text-transform: lowercase;
+    letter-spacing: 2px;
     
     @media(max-width: 600px) {
       padding: 24px 0 28px 4px;

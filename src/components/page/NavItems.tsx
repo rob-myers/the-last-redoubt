@@ -2,8 +2,9 @@ import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 
-import type { FrontMatterProps } from "./Root";
+import { siteTitle } from "projects/service/const";
 import useSiteStore from "store/site.store";
+import type { FrontMatterProps } from "./Root";
 import Icon from "./Icon";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
@@ -15,7 +16,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
 
       <h3>
         <Link to="/">
-          The Last Redoubt
+          {siteTitle}
         </Link>
       </h3>
 
@@ -59,9 +60,12 @@ const rootCss = css`
   h3 {
     letter-spacing: 2px;
     padding: 16px 12px;
+    margin: 0;
+
+    font-family: 'Courier New', Courier, monospace;
     font-size: 1.4rem;
     font-weight: 300;
-    margin: 0;
+
     a {
       color: #ddd;
     }

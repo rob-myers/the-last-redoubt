@@ -1,4 +1,4 @@
-# The Last Redoubt
+# NPC CLI
 
 ```sh
 # Local development
