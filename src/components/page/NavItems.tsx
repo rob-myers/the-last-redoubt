@@ -61,6 +61,7 @@ const rootCss = css`
     letter-spacing: 2px;
     padding: 16px 12px;
     margin: 0;
+    margin-left: 4px;
 
     font-family: 'Courier New', Courier, monospace;
     font-size: 1.4rem;
