@@ -5,11 +5,12 @@
   --page-font-color: #000;
   --page-link-color: #00f;
   --page-header-color: #000;
-  --page-title-color: #444;
+  --page-title-color: #333;
   --page-blockquote-border-color: #bbb;
   --page-border-color: #88888877;
   --article-right-padding: 12px;
   --aside-background-color: #77777744;
+  --title-text-shadow-color: #333333bb;
 
   /** thick ~ 5px (saw white lines for 6px at 90% zoom) */
   --tabs-border-width: 5px;

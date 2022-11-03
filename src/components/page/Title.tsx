@@ -13,7 +13,7 @@ export default function Title() {
         {siteTitle}
       </h1>
       <p>
-        Coding NPCs via Web Dev and a Web CLI
+        Coding NPCs via CSS and a Web CLI 
       </p>
     </header>
   );
@@ -31,24 +31,27 @@ const titleCss = css`
     display: inline-block;
     margin: 0;
     margin-top: 40px;
+    margin-left: 4px;
 
     /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
     font-family: 'Courier New', Courier, monospace;
     font-size: 4.8rem;
-    font-weight: 300;
+    font-weight: 500;
     letter-spacing: 4px;
     cursor: pointer;
     color: var(--page-title-color);
     text-transform: uppercase;
-    text-shadow: 0 0 2px #888888bb;
+    text-shadow: 0 0 8px var(--title-text-shadow-color);
     
     @media(max-width: 1200px) {
       font-size: 4.6rem;
     }
     @media(max-width: 800px) {
+      text-shadow: 0 0 4px var(--title-text-shadow-color);
       font-size: 3.5rem;
     }
     @media(max-width: 600px) {
+      text-shadow: 0 0 2px var(--title-text-shadow-color);
       margin-top: 72px;
       font-size: 2.5rem;
     }
