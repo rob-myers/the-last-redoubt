@@ -6,7 +6,6 @@ import "swiper/css"
 import "swiper/css/lazy"
 import "swiper/css/navigation"
 import "swiper/css/pagination"
-import "swiper/css/zoom"
 import "src/components/globals.css"
 
 import ResizeObserver from 'resize-observer-polyfill';

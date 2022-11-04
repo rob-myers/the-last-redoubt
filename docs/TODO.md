@@ -3,10 +3,11 @@
 ## In progress
 
 - 🚧 Retarget:
-  - `The Last Redoubt` -> `NPC CLI`
+  - ✅ `The Last Redoubt` -> `NPC CLI`
   - Adjust Home Page
   - Adjust Intro
 
+- ✅ Clicking on Carousel maximises image
 - Clickable tty msgs getting out of sync: seek repro
 
 - ✅ Document npc vs line-seg collision

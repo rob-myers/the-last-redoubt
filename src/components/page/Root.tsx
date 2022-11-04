@@ -4,6 +4,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { clearAllBodyScrollLocks } from "body-scroll-lock";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
@@ -53,6 +54,7 @@ export function wrapPageElement({
         render={(allFrontMatter: AllFrontMatter) => {
 
           React.useMemo(() => {
+            clearAllBodyScrollLocks();
             useSiteStore.api.setArticleKey(frontMatter?.key);
             useSiteStore.api.initiate(allFrontMatter);
           }, [frontMatter]);
