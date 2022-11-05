@@ -10,12 +10,16 @@ import Icon from "./Icon";
 export default function NavItems({ frontmatter }: FrontMatterProps) {
 
   const groupedMetas = useSiteStore(x => x.groupedMetas);
+  const tabIndex = useSiteStore(x => x.navOpen ? undefined : -1);
 
   return (
     <section className={rootCss}>
 
       <h3>
-        <Link to="/">
+        <Link
+          to="/"
+          tabIndex={tabIndex}
+        >
           {siteTitle}
         </Link>
       </h3>
@@ -30,6 +34,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
               <Link
                 to={meta.path}
                 title={meta.info}
+                tabIndex={tabIndex}
               >
                 {meta.label}
               </Link>
@@ -38,6 +43,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
                 <Link
                   to={meta.path}
                   title={meta.info}
+                  tabIndex={tabIndex}
                 >
                   <NavIcon icon={meta?.icon} />
               </Link>
