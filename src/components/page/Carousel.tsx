@@ -30,6 +30,10 @@ export default function Carousel(props: Props) {
     disableBodyScroll(rootRef.current!);
     rootRef.current?.focus();
   }
+  function hideFullScreen() {
+    setFullScreen(false);
+    enableBodyScroll(rootRef.current!);
+  }
 
   return (
     <figure
@@ -42,7 +46,7 @@ export default function Carousel(props: Props) {
 
       tabIndex={0}
       onKeyUp={e => {
-        e.key === 'Escape' && setFullScreen(false)
+        e.key === 'Escape' && hideFullScreen();
         e.key === 'Enter' && showFullScreen(e);
         e.key === 'ArrowLeft'; // 🚧
         e.key === 'ArrowRight'; // 🚧
@@ -51,10 +55,7 @@ export default function Carousel(props: Props) {
       {!!fullScreen && <>
         <div
           className="fullscreen-overlay"
-          onClick={() => {
-            setFullScreen(false);
-            enableBodyScroll(rootRef.current!);
-          }}
+          onClick={hideFullScreen}
         />
         <Slides
           fullScreen
