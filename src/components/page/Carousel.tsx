@@ -6,12 +6,9 @@ import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
-import { useDoubleTap } from 'projects/hooks/use-double-tap';
 import type { VideoKey } from "./Video";
 import Video from "./Video";
 import useSiteStore from "store/site.store";
-
-// 🚧 mobile zoom, not max
 
 /**
  * props.items should be one of:
@@ -27,21 +24,28 @@ export default function Carousel(props: Props) {
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: true });
   useSiteStore(x => x.navOpen);
 
-  function onDoubleClickSlide(e: React.MouseEvent) {
+  function showFullScreen(e: React.MouseEvent | React.KeyboardEvent) {
     e.stopPropagation();
     setFullScreen(true);
     disableBodyScroll(rootRef.current!);
-    // Could provide slideId from data-slide-id on ancestral .slide-container
-    // console.log('clicked el', e.target);
+    rootRef.current?.focus();
   }
 
   return (
     <figure
-      className={cx("carousel", rootCss)}
-      style={props.style}
       ref={x => {
         x && (rootRef.current = x);
         measureRef(x);
+      }}
+      className={cx("carousel", rootCss)}
+      style={props.style}
+
+      tabIndex={0}
+      onKeyUp={e => {
+        e.key === 'Escape' && setFullScreen(false)
+        e.key === 'Enter' && showFullScreen(e);
+        e.key === 'ArrowLeft'; // 🚧
+        e.key === 'ArrowRight'; // 🚧
       }}
     >
       {!!fullScreen && <>
@@ -63,7 +67,7 @@ export default function Carousel(props: Props) {
       <Slides
         {...props}
         smallViewport={bounds.width <= 600}
-        onDoubleClickSlide={onDoubleClickSlide}
+        showFullScreen={showFullScreen}
       />
     </figure>
   );
@@ -73,7 +77,7 @@ function Slides(props: Props & {
   fullScreen?: boolean;
   fullScreenOffset?: number;
   smallViewport?: boolean;
-  onDoubleClickSlide?: (e: React.MouseEvent) => void;
+  showFullScreen?: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }) {
   const items = props.items; // For type inference
   const isImages = isImageItems(items);
@@ -96,11 +100,12 @@ function Slides(props: Props & {
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
       // }}
+
     >
       {isImages && items.map((item, i) =>
         <SwiperSlide
           key={i}
-          {...!props.smallViewport && { onDoubleClick: props.onDoubleClickSlide }}
+          {...!props.smallViewport && { onDoubleClick: props.showFullScreen }}
         >
           {'src' in item
             ? <div className="slide-container" data-slide-id={i}>
