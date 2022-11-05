@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperOptions } from "swiper";
-import { Navigation, Lazy, Pagination } from "swiper";
+import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
@@ -10,6 +10,8 @@ import { useDoubleTap } from 'projects/hooks/use-double-tap';
 import type { VideoKey } from "./Video";
 import Video from "./Video";
 import useSiteStore from "store/site.store";
+
+// 🚧 mobile zoom, not max
 
 /**
  * props.items should be one of:
@@ -22,10 +24,10 @@ export default function Carousel(props: Props) {
   const [fullScreen, setFullScreen] = React.useState(false);
 
   // Render on resize window, or open/close nav
-  const [measureRef] = useMeasure({ debounce: 30, scroll: true });
+  const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: true });
   useSiteStore(x => x.navOpen);
 
-  function onDoubleTapSlide(e: React.MouseEvent) {
+  function onDoubleClickSlide(e: React.MouseEvent) {
     e.stopPropagation();
     setFullScreen(true);
     disableBodyScroll(rootRef.current!);
@@ -60,7 +62,8 @@ export default function Carousel(props: Props) {
       </>}
       <Slides
         {...props}
-        onDoubleTapSlide={onDoubleTapSlide}
+        smallViewport={bounds.width <= 600}
+        onDoubleClickSlide={onDoubleClickSlide}
       />
     </figure>
   );
@@ -69,19 +72,19 @@ export default function Carousel(props: Props) {
 function Slides(props: Props & {
   fullScreen?: boolean;
   fullScreenOffset?: number;
-  onDoubleTapSlide?: (e: React.MouseEvent) => void;
+  smallViewport?: boolean;
+  onDoubleClickSlide?: (e: React.MouseEvent) => void;
 }) {
   const items = props.items; // For type inference
   const isImages = isImageItems(items);
-
-  const bindDoubleTap = useDoubleTap((e) => props.onDoubleTapSlide?.(e));
+  const canZoom = props.smallViewport;
 
   return (
     <Swiper
       className={cx({ 'full-screen': props.fullScreen })}
       breakpoints={props.breakpoints}
       lazy={props.lazy??{ checkInView: true, enabled: true }}
-      modules={[Lazy, Navigation, Pagination]}
+      modules={[Lazy, Navigation, Pagination, Zoom]}
       navigation
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??20}
@@ -89,6 +92,7 @@ function Slides(props: Props & {
         height: props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
+      zoom={canZoom}
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
       // }}
@@ -96,7 +100,7 @@ function Slides(props: Props & {
       {isImages && items.map((item, i) =>
         <SwiperSlide
           key={i}
-          {...bindDoubleTap}
+          {...!props.smallViewport && { onDoubleClick: props.onDoubleClickSlide }}
         >
           {'src' in item
             ? <div className="slide-container" data-slide-id={i}>
@@ -105,16 +109,18 @@ function Slides(props: Props & {
                     {item.label}
                   </div>
                 )}
-                <img
-                  className="swiper-lazy"
-                  data-src={`${props.baseSrc??''}${item.src}`}
-                  height={
-                    props.fullScreen || !props.height
-                      ? undefined
-                      : props.height - (item.label ? labelHeightPx : 0
-                  )}
-                  title={item.label}
-                />
+                <div className={cx({ 'swiper-zoom-container': canZoom })}>
+                  <img
+                    className="swiper-lazy"
+                    data-src={`${props.baseSrc??''}${item.src}`}
+                    height={
+                      props.fullScreen || !props.height
+                        ? undefined
+                        : props.height - (item.label ? labelHeightPx : 0
+                    )}
+                    title={item.label}
+                  />
+                </div>
                 <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
               </div>
             : <div className="slide-container slide-video-container" data-slide-id={i}>
@@ -164,7 +170,7 @@ const rootCss = css`
   position: relative;
   
   .swiper {
-    transition: margin-top 300ms ease-in;
+    transition: margin-top 300ms ease-in 300ms;
   }
 
   .slide-container {
@@ -172,23 +178,24 @@ const rootCss = css`
     user-select: none;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    
+    .swiper-lazy-preloader {
+      margin-top: 32px;
+    }
   }
   
   .swiper.full-screen {
     position: absolute;
     z-index: 2;
     width: 100%;
-    
-    .slide-container {
-      align-items: center;
-      .swiper-lazy-preloader {
-        margin-top: 32px;
-      }
-    }
-
     background-color: #222;
     border: 4px solid #fff;
     border-radius: 8px;
+
+    .slide-container {
+      align-items: center;
+    }
     img {
       border: none;
       max-height: calc(100vh - 2 * 128px);
@@ -204,7 +211,6 @@ const rootCss = css`
     height: 100vh;
     z-index: 2;
   }
-
 
   .slide-video-container {
     align-items: center;
@@ -237,7 +243,7 @@ const rootCss = css`
   }
 
   .slide-label {
-    padding: 8px;
+    padding: 16px;
     height: ${labelHeightPx}px;
     z-index: 1;
   
@@ -247,10 +253,16 @@ const rootCss = css`
     line-height: 1.2;
     color: var(--page-font-color);
 
-    text-align: center;
     display: flex;
     align-items: center;
     user-select: all;
+  }
+  .swiper-slide-zoomed .slide-label {
+    background-color: #00000077;
+    color: #ccc;
+  }
+  .full-screen .slide-label {
+    color: #ccc;
   }
   img {
     border: thin solid var(--page-border-color);
@@ -259,17 +271,11 @@ const rootCss = css`
     max-width: 100%;
   }
 
-  img.swiper-lazy + .slide-label {
-    display: none;
-  }
   img.swiper-lazy {
     visibility: hidden;
-  }
-  img.swiper-lazy.swiper-lazy-loaded + .slide-label {
-    display: block;
-  }
-  img.swiper-lazy.swiper-lazy-loaded {
-    visibility: visible;
+    &.swiper-lazy-loaded {
+      visibility: visible;
+    }
   }
 `;
 

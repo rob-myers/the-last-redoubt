@@ -9,9 +9,9 @@ body.dark-mode {
   --page-blockquote-border-color: #444;
   --page-link-color: #dd0;
   --page-border-color: #444;
-  --aside-background-color: #333333aa;
   --title-text-shadow-color: #ffffff99;
-  
+  --aside-background-color: #333333aa;
+
   --swiper-pagination-color: #ddc;
   --swiper-pagination-bullet-inactive-color: #777;
   --swiper-pagination-bullet-inactive-opacity: 1;

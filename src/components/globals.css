@@ -8,9 +8,9 @@
   --page-title-color: #333;
   --page-blockquote-border-color: #bbb;
   --page-border-color: #88888877;
+  --title-text-shadow-color: #333333bb;
   --article-right-padding: 12px;
   --aside-background-color: #77777744;
-  --title-text-shadow-color: #333333bb;
 
   /** thick ~ 5px (saw white lines for 6px at 90% zoom) */
   --tabs-border-width: 5px;
