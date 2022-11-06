@@ -116,7 +116,7 @@ function Slides(props: Props & {
       onSwiper={props.onSwiper}
       onDestroy={props.onDestroy}
       pagination={props.pagination}
-      spaceBetween={props.spaceBetween??20}
+      spaceBetween={props.spaceBetween??40}
       style={{
         height: props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
