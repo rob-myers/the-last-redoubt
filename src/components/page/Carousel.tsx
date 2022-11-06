@@ -1,7 +1,8 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { SwiperOptions } from "swiper";
+import type { SwiperOptions, Swiper as SwiperClass } from "swiper";
+import type { SwiperEvents } from "swiper/types";
 import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
@@ -9,6 +10,8 @@ import useMeasure from "react-use-measure";
 import type { VideoKey } from "./Video";
 import Video from "./Video";
 import useSiteStore from "store/site.store";
+import useStateRef from "projects/hooks/use-state-ref";
+import useUpdate from "projects/hooks/use-update";
 
 /**
  * props.items should be one of:
@@ -17,42 +20,55 @@ import useSiteStore from "store/site.store";
  */
 export default function Carousel(props: Props) {
 
-  const rootRef = React.useRef(null as null | HTMLElement);
-  const [fullScreen, setFullScreen] = React.useState(false);
+  const update = useUpdate();
+  const state = useStateRef(() => ({
+    rootEl: {} as HTMLElement,
+    swiper: {} as SwiperClass,
+    largeSwiper: null as null | SwiperClass,
+    /** Number is initial slide when full screen */
+    fullScreen: null as null | number,
+  }));
 
   // Render on resize window, or open/close nav
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: true });
   useSiteStore(x => x.navOpen);
 
-  function showFullScreen(e: React.MouseEvent | React.KeyboardEvent) {
-    e.stopPropagation();
-    setFullScreen(true);
-    disableBodyScroll(rootRef.current!);
-    rootRef.current?.focus();
+  function showFullScreen(slideId?: number) {
+    state.fullScreen = slideId??state.swiper.activeIndex;
+    disableBodyScroll(state.rootEl);
+    state.rootEl.focus();
+    update();
   }
   function hideFullScreen() {
-    setFullScreen(false);
-    enableBodyScroll(rootRef.current!);
+    state.fullScreen = null;
+    enableBodyScroll(state.rootEl);
+    update();
   }
 
   return (
     <figure
-      ref={x => {
-        x && (rootRef.current = x);
-        measureRef(x);
+      ref={el => {
+        el && (state.rootEl = el);
+        measureRef(el);
       }}
       className={cx("carousel", rootCss)}
       style={props.style}
 
       tabIndex={0}
       onKeyUp={e => {
-        e.key === 'Escape' && hideFullScreen();
-        e.key === 'Enter' && showFullScreen(e);
-        e.key === 'ArrowLeft'; // 🚧
-        e.key === 'ArrowRight'; // 🚧
+        switch (e.key) {
+          case 'Escape': hideFullScreen(); break;
+          case 'Enter': showFullScreen(); break;
+          case 'ArrowLeft':
+          case 'ArrowRight': {
+            const swiper = state.largeSwiper || state.swiper;
+            swiper.slideTo(swiper.activeIndex + (e.key === 'ArrowLeft' ? -1 : 1));
+            break;
+          }
+        }
       }}
     >
-      {!!fullScreen && <>
+      {typeof state.fullScreen === 'number' && <>
         <div
           className="fullscreen-overlay"
           onClick={hideFullScreen}
@@ -60,15 +76,20 @@ export default function Carousel(props: Props) {
         <Slides
           fullScreen
           // 🚧 responsive offset
-          fullScreenOffset={64 - rootRef.current!.getBoundingClientRect().y}
+          fullScreenOffset={64 - state.rootEl.getBoundingClientRect().y}
+          initialSlide={state.fullScreen}
           items={props.items}
           baseSrc={props.baseSrc}
+          onDestroy={swiper => state.largeSwiper = null}
+          onSwiper={swiper => state.largeSwiper = swiper}
         />
       </>}
       <Slides
         {...props}
+        initialSlide={props.initialSlide}
         smallViewport={bounds.width <= 600}
         showFullScreen={showFullScreen}
+        onSwiper={swiper => state.swiper = swiper}
       />
     </figure>
   );
@@ -78,7 +99,7 @@ function Slides(props: Props & {
   fullScreen?: boolean;
   fullScreenOffset?: number;
   smallViewport?: boolean;
-  showFullScreen?: (e: React.MouseEvent | React.KeyboardEvent) => void;
+  showFullScreen?: (slideId?: number) => void;
 }) {
   const items = props.items; // For type inference
   const isImages = isImageItems(items);
@@ -89,8 +110,11 @@ function Slides(props: Props & {
       className={cx({ 'full-screen': props.fullScreen })}
       breakpoints={props.breakpoints}
       lazy={props.lazy??{ checkInView: true, enabled: true }}
+      initialSlide={props.initialSlide}
       modules={[Lazy, Navigation, Pagination, Zoom]}
       navigation
+      onSwiper={props.onSwiper}
+      onDestroy={props.onDestroy}
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??20}
       style={{
@@ -98,6 +122,7 @@ function Slides(props: Props & {
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       zoom={canZoom}
+      // onSwiper={swiper => swiper.}
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
       // }}
@@ -106,7 +131,13 @@ function Slides(props: Props & {
       {isImages && items.map((item, i) =>
         <SwiperSlide
           key={i}
-          {...!props.smallViewport && { onDoubleClick: props.showFullScreen }}
+          {...!props.smallViewport && {
+            onDoubleClick(el) {
+              const dataSlideId = (el.target as HTMLElement).closest('.slide-container')?.getAttribute('data-slide-id');
+              const slideId = typeof dataSlideId === 'string' ? Number(dataSlideId) : 0;
+              props.showFullScreen?.(slideId);
+            }
+          }}
         >
           {'src' in item
             ? <div className="slide-container" data-slide-id={i}>
@@ -155,10 +186,15 @@ interface Props {
   breakpoints?: SwiperOptions['breakpoints'];
   height?: number;
   items: CarouselItems;
+  //#region swiper
+  initialSlide?: number;
   lazy?: SwiperOptions['lazy'];
+  onDestroy?: SwiperEvents['destroy'];
+  onSwiper?: SwiperEvents['_swiper'];
   pagination?: SwiperOptions['pagination'];
   spaceBetween?: number;
   style?: React.CSSProperties;
+  //#endregion
 }
 
 type CarouselItems = (

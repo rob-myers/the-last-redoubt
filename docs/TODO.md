@@ -10,8 +10,8 @@
 - ✅ Clicking on Carousel maximises image
 - Carousel
   - ✅ Can Enter/Escape to Max/Min
-  - Maximised stays in sync
-  - Support arrow keys
+  - ✅ Maximised initially in sync
+  - ✅ Support arrow keys
 - Clickable tty msgs getting out of sync: seek repro
 
 - ✅ Document npc vs line-seg collision
