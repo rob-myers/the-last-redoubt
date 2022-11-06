@@ -332,7 +332,7 @@ const rootCss = css`
     cursor: pointer;
   }
   .flexlayout__tab_toolbar_button-max svg {
-    outline: 1px solid white;
+    border: 1px solid white;
     path:nth-child(2) {
       fill: white;
     }
