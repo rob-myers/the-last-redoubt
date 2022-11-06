@@ -33,6 +33,7 @@ import { profileLookup } from "projects/sh/scripts";
     [
       { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-b']() } },
       { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-3@test', env: { PROFILE: profileLookup['profile-1']() } },
       // { type: 'component', filepath: 'example/SvgStringPull' },
       // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
       // { type: 'component', filepath: 'example/Pyramid3dDemo' },

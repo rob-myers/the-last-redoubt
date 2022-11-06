@@ -5,13 +5,10 @@
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
   - 🚧 Adjust Home Page
+    - 🚧 GIF demo of CLI
+    - GIF demo of `World` CSS/DOM
   - Adjust Intro
 
-- ✅ Clicking on Carousel maximises image
-- Carousel
-  - ✅ Can Enter/Escape to Max/Min
-  - ✅ Maximised initially in sync
-  - ✅ Support arrow keys
 - Clickable tty msgs getting out of sync: seek repro
 
 - ✅ Document npc vs line-seg collision
@@ -195,6 +192,11 @@ How to embed video?
 
 ## Done
 
+- ✅ Clicking on Carousel maximises image
+- Carousel
+  - ✅ Can Enter/Escape to Max/Min
+  - ✅ Maximised initially in sync
+  - ✅ Support arrow keys
 - ✅ Pipeline child dies without pipeline ending
   - e.g. `click` still running here `click | nav cartesius | walk cartesius`
   - e.g. `click | ∫`
