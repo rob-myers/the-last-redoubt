@@ -104,9 +104,10 @@ class cmdServiceClass {
           'x', // list variables (everything is exported)
         ], });
 
-        const showVars = opts.x === true || !opts.f;
-        const showFuncNames = opts.F === true || !opts.x;
-        const showFuncs = !showVars && !showFuncNames || opts.f === true;
+        const noOpts = opts.x !== true && opts.f !== true && opts.F !== true;
+        const showVars = opts.x === true || noOpts;
+        const showFuncs = opts.f === true || noOpts;
+        const showFuncNames = opts.F === true;
         const prefixes = operands.length ? operands : null;
 
         const {
