@@ -377,6 +377,6 @@ const useSessionStore = Object.assign(useStore, { api });
 
 export default useSessionStore;
 
-if (module.hot) {// Avoid breaking preact-prefresh
-  module.hot.accept();
-}
+// if (module.hot) {// Avoid breaking preact-prefresh
+//   module.hot.accept();
+// }
