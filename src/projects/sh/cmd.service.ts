@@ -100,11 +100,13 @@ class cmdServiceClass {
       case 'declare': {
         const { opts, operands } = getOpts(args, { boolean: [
           'f', // list functions
+          'F', // list functions (names only)
           'x', // list variables (everything is exported)
         ], });
 
         const showVars = opts.x === true || !opts.f;
-        const showFunc = opts.f === true || !opts.x;
+        const showFuncNames = opts.F === true || !opts.x;
+        const showFuncs = !showVars && !showFuncNames || opts.f === true;
         const prefixes = operands.length ? operands : null;
 
         const {
@@ -124,14 +126,20 @@ class cmdServiceClass {
               typeof value === 'string' ? ansiColor.White : ansiColor.Yellow
             }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
           }
+          
         }
-
-        if (showFunc) {
+        if (showFuncs) {
           for (const { key, src } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
             const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
             for (const line of lines) yield line;
             yield '';
+          }
+        }
+        if (showFuncNames) {
+          for (const { key } of funcs) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            yield `${key}${ansiColor.White} ()`;
           }
         }
         break;
