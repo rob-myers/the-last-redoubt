@@ -88,7 +88,7 @@ const articleCss = css`
   }
 
   aside {
-    margin: 48px 0 32px 0;
+    margin: 64px 0 48px 0;
     padding: 32px 64px;
     font-size: 0.9rem;
     /* font-style: italic; */
@@ -102,9 +102,6 @@ const articleCss = css`
     }
     p + blockquote, blockquote + p {
       margin-top: 0px;
-    }
-    code {
-      font-size: inherit;
     }
 
     position: relative;
@@ -123,7 +120,7 @@ const articleCss = css`
     }
 
     @media(max-width: 600px) {
-      margin: 24px 0 16px 0;
+      margin: 32px 0 24px 0;
       padding: 16px 24px;
       line-height: 1.8;
       border: thin solid var(--page-border-color);
