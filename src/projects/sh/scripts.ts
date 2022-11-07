@@ -65,6 +65,9 @@ lookLoop: `{
  */
 export const profileLookup = {
 
+'profile-0': () => `source /etc/util-1
+`,
+
 'profile-1': () => `
 
 source /etc/util-1

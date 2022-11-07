@@ -261,9 +261,11 @@ const rootCss = css`
     figure.video {
       margin: 0;
       height: inherit;
-      width: 75%;
       iframe {
         height: inherit;
+      }
+      @media(max-width: 600px) {
+        width: calc(100% - 12px);
       }
     }
   }
@@ -321,6 +323,6 @@ const rootCss = css`
 function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
   return (
     items.length === 0
-    || (!!items[0] && typeof items[0] === 'object' && 'src' in items[0])
+    || (!!items[0] && typeof items[0] === 'object' && ('src' in items[0] || 'video' in items[0]))
   );
 }

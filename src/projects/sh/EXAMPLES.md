@@ -2,7 +2,7 @@
 
 __TODO__
 
-## Misc
+## GIF Demo
 
 ```sh
 declare -F
@@ -12,21 +12,14 @@ range 10
 declare split
 range 10
 range 10 | split
-range 10 | split |
+range 10 | split | map 'x => x + 1'
+range 10 | split | map 'x => x + 1' |
   run '({ api, datum }) {
     while ((datum = await api.read()) !== null) {
       yield* api.sleep(1);
       yield datum;
     } }'
 # Ctrl-C
-range 10 | split | map 'x => x + 1'
-# Every value is truthy, so can do
-range 10 | split | map 'x => x + 1' |
-  run '({ api, datum }) {
-    while (datum = await api.read()) {
-      yield* api.sleep(1);
-      yield datum;
-    } }'
 ```
 
 ```sh
@@ -53,4 +46,21 @@ range 5 |
 npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'
 npc decor foo
 echo foo | npc decor
+```
+
+## Migrating
+
+> https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md
+
+```sh
+call '() => ({ x: 2, y: -9 })'
+{ x: 2, y: -9 }
+# gold because not a string
+
+call '() => ({ x: 2, y: -9 })' >bar
+bar
+{ x: 2, y: -9 }
+
+bar/x
+2
 ```

@@ -5,11 +5,14 @@
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
   - 🚧 Adjust Home Page
-    - 🚧 GIF demo of CLI
-    - GIF demo of `World` CSS/DOM
+    - ❌ GIF demo of CLI
+    - ✅ Video demo of CLI
+      > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
+    - Video demo of `World` CSS/DOM
   - Adjust Intro
 
-- Clickable tty msgs getting out of sync: seek repro
+- Clickable tty msgs getting out of sync
+  - Simplify i.e. textual identity
 
 - ✅ Document npc vs line-seg collision
 - 🚧 Implement npc vs line seg collision predict
