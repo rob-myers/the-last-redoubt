@@ -72,7 +72,6 @@ Before things get a bit abstract, here are some screenshots:
   ]}
 />
 
-<!-- CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool -->
 <!-- Component ~ React Component -->
 
 <aside title="screenshots">
@@ -87,7 +86,7 @@ Before things get a bit abstract, here are some screenshots:
 
 </aside>
 
-> Browser-based CLI for doing so.
+> Browser-based CLI?
 
 By _browser-based CLI_ we mean an interactive Command Line Interface running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
@@ -100,23 +99,27 @@ Let's see it in action:
   items={[{ video: 'cli-demo-1' }]}
 />
 
-<aside>
+Every shell session starts by running the script at `/home/PROFILE`.
+In the above session it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
+The builtin [source](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source) runs the script at `/etc/util-1`,
+which defines a bunch of shell functions e.g. `range`.
+In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
 
-  Every shell session starts by running the script at `/home/PROFILE`.
-  In the above session it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
-  The builtin [source](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source) runs the script at `/etc/util-1`,
-  which defines a bunch of shell functions e.g. `range`.
-  In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
-  
-  But how is shell syntax interpreted as JavaScript?
-  The shell function `call` provides a relatively simple example.
-  Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes it.
-  Less obviously, the shell builtin `run` iterates a supplied JavaScript AsyncGenerator.
-  The shell functions `call`, `range`, `split` and `map` are all defined in terms of `run`.
+<aside title="interpret-js">
+
+But how is shell syntax interpreted as JavaScript?
+The shell function `call` provides a relatively simple example.
+Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes it.
+Less obviously, the shell builtin `run` iterates a supplied JavaScript AsyncGenerator.
+The shell functions `call`, `range`, `split` and `map` are all defined in terms of `run`.
 
 </aside>
 
-🚧 Illustrate CSS via GIF?
+> CSS-based rendering?
+
+<!-- CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool -->
+
+🚧 Illustrate CSS via video
 
 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
