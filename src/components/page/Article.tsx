@@ -175,7 +175,7 @@ const articleCss = css`
      * swiper carousel breakpoints
      */
     @media(max-width: 800px) {
-      margin: 28px 0 24px 0;
+      margin: 0 0 24px 0;
       padding: 0;
     }
   }

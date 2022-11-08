@@ -264,7 +264,7 @@ const rootCss = css`
         height: inherit;
       }
       @media(max-width: 600px) {
-        width: calc(100% - 12px);
+        width: 100%;
       }
     }
   }
