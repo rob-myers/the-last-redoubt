@@ -159,7 +159,7 @@ const articleCss = css`
 
   code {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1rem;
+    font-size: 0.95rem;
     padding: 2px 0;
     margin-right: 2px;
     @media(max-width: 600px) {
