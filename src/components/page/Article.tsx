@@ -168,7 +168,7 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 64px 0;
+    margin: 48px 0 64px 0;
     padding: 0;
     /**
      * max-width 600px causes difficulty with
