@@ -92,7 +92,7 @@ Before things get a bit abstract, here are some screenshots:
 By _browser-based CLI_ we mean an interactive Command Line Interface running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
 Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
-Supported syntax includes pipelines, shell functions and background processes.
+Supported syntax includes shell pipelines, shell functions and background processes.
 Let's see it in action:
 
 <Carousel
@@ -106,13 +106,13 @@ Let's see it in action:
   In the above session it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
   The builtin [source](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source) runs the script at `/etc/util-1`,
   which defines a bunch of shell functions e.g. `range`.
-  In the above video we (a) list available shell functions, (b) inspect some implementations, (c) chain them together using pipelines.
+  In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
   
-  > But how is the shell syntax interpreted as JavaScript?
-
-  Well, `call` invokes a supplied JavaScript function
-  and `run` iterates a supplied JavaScript async iterable function.
-  In fact `call`, `range`, `split` and `map` are all defined via the builtin `run`.
+  But how is shell syntax interpreted as JavaScript?
+  The shell function `call` provides a relatively simple example.
+  Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes it.
+  Less obviously, the shell builtin `run` iterates a supplied JavaScript AsyncGenerator.
+  The shell functions `call`, `range`, `split` and `map` are all defined in terms of `run`.
 
 </aside>
 
