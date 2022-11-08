@@ -210,10 +210,10 @@ type PlainCarouselItem = React.ReactNode;
 
 const rootCss = css`
   position: relative;
-  background-color: #222;
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
+    background-color: var(--carousel-background-color);
   }
 
   .slide-container {
@@ -232,7 +232,6 @@ const rootCss = css`
     position: absolute;
     z-index: 2;
     width: 100%;
-    background-color: #222;
     border: 4px solid #fff;
     border-radius: 8px;
 
@@ -296,14 +295,13 @@ const rootCss = css`
     font-size: 1rem;
     font-weight: 300;
     line-height: 1.2;
-    color: #ccc;
 
     display: flex;
     align-items: center;
     user-select: all;
   }
   .swiper-slide-zoomed .slide-label {
-    background-color: #00000077;
+    background-color: var(--carousel-background-color);
   }
   img {
     border: thin solid var(--page-border-color);

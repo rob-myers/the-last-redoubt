@@ -11,6 +11,7 @@
   --title-text-shadow-color: #333333bb;
   --article-right-padding: 12px;
   --aside-background-color: #77777744;
+  --carousel-background-color: #cccccc;
 
   /** thick ~ 5px (saw white lines for 6px at 90% zoom) */
   --tabs-border-width: 5px;
