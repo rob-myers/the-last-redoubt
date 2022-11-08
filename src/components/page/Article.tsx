@@ -88,7 +88,7 @@ const articleCss = css`
   }
 
   aside {
-    margin: 64px 0 48px 0;
+    margin: calc(64px + 8px) 0;
     padding: 32px 64px;
     font-size: 0.9rem;
     /* font-style: italic; */
@@ -168,7 +168,7 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 48px 0 40px 0;
+    margin: 64px 0;
     padding: 0;
     /**
      * max-width 600px causes difficulty with
