@@ -213,7 +213,6 @@ const rootCss = css`
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
-    background-color: var(--carousel-background-color);
   }
 
   .slide-container {
@@ -234,6 +233,7 @@ const rootCss = css`
     width: 100%;
     border: 4px solid #fff;
     border-radius: 8px;
+    background-color: var(--carousel-background-color);
 
     .slide-container {
       align-items: center;
