@@ -41,6 +41,7 @@ But what distinguishes our approach?
 1. Dedicated to programming NPCs.
 1. Browser-based CLI for doing so.
 1. CSS-based rendering and interactivity. <SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
+1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
 
 Before things get a bit abstract, here are some screenshots:
 
@@ -76,24 +77,44 @@ Before things get a bit abstract, here are some screenshots:
 
 <aside title="screenshots">
 
-  _A World and a Terminal_ (above) depicts a [`Tabs` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
+  _A World and a Terminal_ (1st slide above) depicts a [`Tabs` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
   Two of the tabs are visible.
   The left tab is an instance of a [`World` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
   the right tab instantiates a [`Terminal` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
   The `World` shows an NPC from a birdseye perspective.
-  The commands in the `Terminal` indicate this is "andros" and he is actually the Player.
+  The commands in the `Terminal` indicate this is Andros and he is actually the Player.
   The other images show the `Tabs`, `World` and `Terminal` in other states.
 
 </aside>
 
-🚧 Illustrate CLI via Video and explain
+> Browser-based CLI for doing so.
+
+By _browser-based CLI_ we mean an interactive Command Line Interface running in the browser.
+Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
+Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
+Supported syntax includes pipelines, shell functions and background processes.
+Let's see it in action:
 
 <Carousel
-  height={500}
-  items={[
-    { video: 'cli-demo-1' },
-  ]}
+  height={440}
+  items={[{ video: 'cli-demo-1' }]}
 />
+
+<aside>
+
+  Every shell session starts by running the script at `/home/PROFILE`.
+  In the above session it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
+  The builtin [source](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source) runs the script at `/etc/util-1`,
+  which defines a bunch of shell functions e.g. `range`.
+  In the above video we (a) list available shell functions, (b) inspect some implementations, (c) chain them together using pipelines.
+  
+  > But how is the shell syntax interpreted as JavaScript?
+
+  Well, `call` invokes a supplied JavaScript function
+  and `run` iterates a supplied JavaScript async iterable function.
+  In fact `call`, `range`, `split` and `map` are all defined via the builtin `run`.
+
+</aside>
 
 🚧 Illustrate CSS via GIF?
 
