@@ -9,81 +9,116 @@ import { css, cx } from '@emotion/css';
 export default function SideNote(props: React.PropsWithChildren<{
   width?: number;
 }>) {
-  return (
+  return <>
     <span
-      className={cx("side-note", rootCss)}
+      className={cx("side-note", iconTriggerCss)}
       onClick={e => open(e, props.width)}
-      onMouseEnter={e => open(e, props.width)}
-      onMouseLeave={close} // Triggered on mobile click outside
+      onMouseEnter={e => {
+        (e.currentTarget as HTMLElement).setAttribute('mouse-is-over', '');
+        open(e, props.width);
+      }}
+      onMouseLeave={e => close(e, 'icon')}
     >
       ?
+    </span>
+    <span
+      className={cx("side-note-bubble", speechBubbleCss)}
+      onMouseEnter={e => (e.currentTarget as HTMLElement).setAttribute('mouse-is-over', '')}
+      onMouseLeave={e => close(e, 'bubble')} // Triggered on mobile click outside
+    >
       <span className="arrow"/>
       <span className="info">
         {props.children}
       </span>
     </span>
-  );
+  </>;
 }
 
 function open(e: React.MouseEvent, width?: number) {
-  const root = e.currentTarget as HTMLElement;
-  root.classList.add('open');
-  const rect = root.getBoundingClientRect();
-  const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width);
-  root.classList.add(pixelsOnRight < infoWidthPx ? 'left' : 'right');
-  width && root.style.setProperty('--info-width', `${width}px`);
-}
-function close(e: React.MouseEvent) {
-  const root = e.currentTarget as HTMLElement;
-  root.classList.remove('open', 'left', 'right', 'down');
-  root.style.removeProperty('--info-width');
+  const bubble = e.currentTarget.nextSibling as HTMLElement;
+  bubble.classList.add('open');
+  
+  // 🚧 consider favouring bubble on right
+  const rect = bubble.getBoundingClientRect();
+  const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width) - 40;
+  const pixelsOnLeft = rect.x;
+  const maxWidthAvailable = Math.max(pixelsOnLeft, pixelsOnRight);
+  bubble.classList.remove('left', 'right', 'down');
+  bubble.classList.add(pixelsOnRight < pixelsOnLeft ? 'left' : 'right');
+  
+  if (maxWidthAvailable < (width??defaultInfoWidthPx)) {
+    width = maxWidthAvailable;
+  }
+  width && bubble.style.setProperty('--info-width', `${width}px`);
 }
 
-const infoWidthPx = 240;
+function close(e: React.MouseEvent, source: 'icon' | 'bubble') {
+  const icon = (source === 'icon' ? e.currentTarget : e.currentTarget.previousSibling) as HTMLElement;
+  const bubble = (source === 'icon' ? e.currentTarget.nextSibling : e.currentTarget) as HTMLElement;
+  setTimeout(() => {
+    if (source === 'icon') {
+      icon.removeAttribute('mouse-is-over');
+      if (bubble.hasAttribute('mouse-is-over')) return;
+    }
+    if (source === 'bubble') {
+      bubble.removeAttribute('mouse-is-over');
+      if (icon.hasAttribute('mouse-is-over')) return;
+    }
+    bubble.classList.remove('open', 'left', 'right', 'down');
+    bubble.style.removeProperty('--info-width');
+  }, 100);
+}
+
+const defaultInfoWidthPx = 240;
 const rootWidthPx = 16;
 const arrowDeltaX = 4;
 
-const rootCss = css`
-  --info-width: 240px;
+const iconTriggerCss = css`
+  position: relative;
+  top: -2px;
+
+  width: ${rootWidthPx}px;
+  padding: 0 4px;
+  margin: 0 3px 0 2px;
+  
+  border-radius: 10px;
+  border: 1px solid #444;
+  background-color: #eee;
+  color: black;
+  font-size: 0.95rem;
+  font-style: normal;
+  cursor: pointer;
+  white-space: nowrap;
+`;
+
+const speechBubbleCss = css`
+  --info-width: ${defaultInfoWidthPx}px;
+  position: relative;
+  z-index: 2;
+  top: -4px;
 
   font-size: 0.95rem;
   font-style: normal;
   text-align: center;
   cursor: pointer;
   white-space: nowrap;
-  
-  width: ${rootWidthPx}px;
-  padding: 0 4px;
-  margin: 0 3px 0 2px;
-  border-radius: 10px;
-  border: 1px solid #444;
-  background-color: #eee;
-  color: black;
-  
+
   &.open .arrow,
   &.open .info
   {
     visibility: visible;
   }
-  
-  position: relative;
-  /** Over InlineCode */
-  z-index: 1;
-  top: -2px;
-
   .info {
+    visibility: hidden;
     white-space: normal;
     position: absolute;
-    /* width: ${infoWidthPx}px; */
     width: var(--info-width);
-    /* margin-left: -${infoWidthPx / 2}px; */
     margin-left: calc(-0.5 * var(--info-width));
     padding: 16px;
     background-color: black;
     color: white;
     border-radius: 4px;
     line-height: 1.6;
-    visibility: hidden;
     a {
       color: #dd0;
     }
@@ -92,17 +127,17 @@ const rootCss = css`
     }
   }
   .arrow {
+    visibility: hidden;
     position: absolute;
     z-index: 1;
     width: 0; 
     height: 0;
-    visibility: hidden;
   }
 
   &.left {
+    left: ${-1.5 * rootWidthPx}px;
     .info {
       top: -16px;
-      /* left: ${-(infoWidthPx/2 + arrowDeltaX)}px; */
       left: calc(-1 * (0.5 * var(--info-width) + ${arrowDeltaX}px ));
     }
     .arrow {
@@ -114,9 +149,9 @@ const rootCss = css`
     }
   }
   &.right {
+    left: ${-rootWidthPx}px;
     .info {
       top: -16px;
-      /* left: ${rootWidthPx + infoWidthPx/2 + arrowDeltaX}px; */
       left: calc(${rootWidthPx}px + 0.5 * var(--info-width) + ${arrowDeltaX}px);
     }
     .arrow {
@@ -139,5 +174,4 @@ const rootCss = css`
       border-bottom: 10px solid black;
     }
   }
-  
 `;
