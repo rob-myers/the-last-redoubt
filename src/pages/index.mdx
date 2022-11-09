@@ -88,7 +88,7 @@ Before things get a bit abstract, here are some screenshots:
 
 > Browser-based CLI?
 
-By _browser-based CLI_ we mean an interactive Command Line Interface running in the browser.
+By this we mean an interactive Command Line Interface running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
 Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
 Supported syntax includes shell pipelines, shell functions and background processes.
@@ -108,18 +108,35 @@ In the above video we (a) list available shell functions, (b) inspect their defi
 <aside title="interpret-js">
 
 But how is shell syntax interpreted as JavaScript?
+
 The shell function `call` provides a relatively simple example.
-Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes it.
-Less obviously, the shell builtin `run` iterates a supplied JavaScript AsyncGenerator.
-The shell functions `call`, `range`, `split` and `map` are all defined in terms of `run`.
+Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes the function with the arguments.
+Less obviously, the shell builtin `run` creates and iterates a JavaScript [AsyncGenerator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*).
+The shell functions `call`, `map`, `range` and `split` are all defined in terms of `run`.
 
 </aside>
 
 > CSS-based rendering?
 
-<!-- CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool -->
+There are two basic ways to create browser-based video games:
+[HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) and
+[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS).
+The `<canvas>` amounts to an image one can manipulate using JavaScript.
+We can fill shapes, put pixels, or even [render 3D worlds](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) at 60 fps.
+When someone says _HTML5 game_, the underlying tech is almost always the `<canvas>` element.
+On the other hand, non-gaming websites rarely use it.
 
-🚧 Illustrate CSS via video
+The cornerstones of the World Wide Web are HTML, CSS and JavaScript.
+A typical website consists of a deeply nested DOM-tree<SideNote>Initially induced by HTML.</SideNote>, brought to life via CSS (visuals)<SideNote width={200}>CSS supports some interactivity e.g. [:hover](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)</SideNote> and JavaScript (interactivity)<SideNote>Technically JavaScript permits arbitrary DOM mutation.</SideNote>.
+By _declaring_ the visual style via CSS, the browser can make many _performance optimisations_ (dependent on the device and viewport).
+_Debugging_ is also far richer because one may directly mutate the DOM-tree in a browser devtool.
+On the other hand, debugging `<canvas>` amounts to setting breakpoints inside JavaScript code (or writing a special-purpose debugger).
+
+<!-- CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool -->
+<!-- Asymmetry of HTML and JavaScript DOM mutation -->
+<!-- Analogy with Web vs App -->
+
+🚧 Illustrate CSS via devtool video
 
 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
