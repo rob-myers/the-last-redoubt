@@ -163,7 +163,7 @@ const articleCss = css`
     padding: 2px 0;
     margin-right: 2px;
     @media(max-width: 600px) {
-      font-size: 1.1rem;
+      font-size: inherit;
     }
   }
 
