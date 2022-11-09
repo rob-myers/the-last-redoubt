@@ -6,32 +6,37 @@ import { css, cx } from '@emotion/css';
  *   root element, in which case direction is `left`
  * - Currently .dark-mode applies `filter: invert(1)`
  */
-export default function SideNote(props: React.PropsWithChildren<{}>) {
+export default function SideNote(props: React.PropsWithChildren<{
+  width?: number;
+}>) {
   return (
     <span
       className={cx("side-note", rootCss)}
-      onClick={open}
-      onMouseEnter={open}
+      onClick={e => open(e, props.width)}
+      onMouseEnter={e => open(e, props.width)}
       onMouseLeave={close} // Triggered on mobile click outside
     >
       ?
-      <span className={cx("arrow")}/>
-      <span className={cx("info")}>
+      <span className="arrow"/>
+      <span className="info">
         {props.children}
       </span>
     </span>
   );
 }
 
-function open(e: React.MouseEvent) {
-  const root = e.currentTarget;
+function open(e: React.MouseEvent, width?: number) {
+  const root = e.currentTarget as HTMLElement;
   root.classList.add('open');
   const rect = root.getBoundingClientRect();
   const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width);
   root.classList.add(pixelsOnRight < infoWidthPx ? 'left' : 'right');
+  width && root.style.setProperty('--info-width', `${width}px`);
 }
 function close(e: React.MouseEvent) {
-  e.currentTarget.classList.remove('open', 'left', 'right', 'down');
+  const root = e.currentTarget as HTMLElement;
+  root.classList.remove('open', 'left', 'right', 'down');
+  root.style.removeProperty('--info-width');
 }
 
 const infoWidthPx = 240;
@@ -39,6 +44,8 @@ const rootWidthPx = 16;
 const arrowDeltaX = 4;
 
 const rootCss = css`
+  --info-width: 240px;
+
   font-size: 0.95rem;
   font-style: normal;
   text-align: center;
@@ -60,14 +67,17 @@ const rootCss = css`
   }
   
   position: relative;
-  z-index: 1; /** Over InlineCode */
+  /** Over InlineCode */
+  z-index: 1;
   top: -2px;
 
   .info {
     white-space: normal;
     position: absolute;
-    width: ${infoWidthPx}px;
-    margin-left: -${infoWidthPx / 2}px;
+    /* width: ${infoWidthPx}px; */
+    width: var(--info-width);
+    /* margin-left: -${infoWidthPx / 2}px; */
+    margin-left: calc(-0.5 * var(--info-width));
     padding: 16px;
     background-color: black;
     color: white;
@@ -92,7 +102,8 @@ const rootCss = css`
   &.left {
     .info {
       top: -16px;
-      left: ${-(infoWidthPx/2 + arrowDeltaX)}px;
+      /* left: ${-(infoWidthPx/2 + arrowDeltaX)}px; */
+      left: calc(-1 * (0.5 * var(--info-width) + ${arrowDeltaX}px ));
     }
     .arrow {
       top: 0;
@@ -105,7 +116,8 @@ const rootCss = css`
   &.right {
     .info {
       top: -16px;
-      left: ${rootWidthPx + infoWidthPx/2 + arrowDeltaX}px;
+      /* left: ${rootWidthPx + infoWidthPx/2 + arrowDeltaX}px; */
+      left: calc(${rootWidthPx}px + 0.5 * var(--info-width) + ${arrowDeltaX}px);
     }
     .arrow {
       top: 0;
