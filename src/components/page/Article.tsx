@@ -90,8 +90,6 @@ const articleCss = css`
   aside {
     margin: calc(64px + 8px) 0;
     padding: 32px 64px;
-    font-size: 0.9rem;
-    /* font-style: italic; */
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
@@ -159,12 +157,6 @@ const articleCss = css`
 
   code {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 0.95rem;
-    padding: 2px 0;
-    margin-right: 2px;
-    @media(max-width: 600px) {
-      font-size: inherit;
-    }
   }
 
   figure.carousel {

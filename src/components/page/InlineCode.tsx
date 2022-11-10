@@ -40,7 +40,12 @@ const rootCss = css`
     color: #0f0;
     letter-spacing: 1px;
     padding: 0 4px;
+    margin-right: 2px;
     background-color: #000;
+
+    @media(max-width: 600px) {
+      font-size: inherit;
+    }
   }
 
   /* cursor: pointer; */
