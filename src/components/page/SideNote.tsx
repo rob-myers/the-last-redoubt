@@ -9,22 +9,21 @@ import { css, cx } from '@emotion/css';
 export default function SideNote(props: React.PropsWithChildren<{
   width?: number;
 }>) {
+  const timeoutId = React.useRef(0);
+
   return <>
     <span
       className={cx("side-note", iconTriggerCss)}
-      onClick={e => open(e, props.width)}
-      onMouseEnter={e => {
-        (e.currentTarget as HTMLElement).setAttribute('mouse-is-over', '');
-        open(e, props.width);
-      }}
-      onMouseLeave={e => close(e, 'icon')}
+      onClick={e => open(e, props.width, timeoutId.current)}
+      onMouseEnter={e => open(e, props.width, timeoutId.current)}
+      onMouseLeave={e => (timeoutId.current = close(e, 'icon'))}
     >
       ?
     </span>
     <span
       className={cx("side-note-bubble", speechBubbleCss)}
-      onMouseEnter={e => (e.currentTarget as HTMLElement).setAttribute('mouse-is-over', '')}
-      onMouseLeave={e => close(e, 'bubble')} // Triggered on mobile click outside
+      onMouseEnter={_ => window.clearTimeout(timeoutId.current)}
+      onMouseLeave={e => (timeoutId.current = close(e, 'bubble'))} // Triggered on mobile click outside
     >
       <span className="arrow"/>
       <span className="info">
@@ -34,7 +33,9 @@ export default function SideNote(props: React.PropsWithChildren<{
   </>;
 }
 
-function open(e: React.MouseEvent, width?: number) {
+function open(e: React.MouseEvent, width: number | undefined, timeoutId: number) {
+  window.clearTimeout(timeoutId);
+
   const bubble = e.currentTarget.nextSibling as HTMLElement;
   bubble.classList.add('open');
   
@@ -53,17 +54,8 @@ function open(e: React.MouseEvent, width?: number) {
 }
 
 function close(e: React.MouseEvent, source: 'icon' | 'bubble') {
-  const icon = (source === 'icon' ? e.currentTarget : e.currentTarget.previousSibling) as HTMLElement;
   const bubble = (source === 'icon' ? e.currentTarget.nextSibling : e.currentTarget) as HTMLElement;
-  setTimeout(() => {
-    if (source === 'icon') {
-      icon.removeAttribute('mouse-is-over');
-      if (bubble.hasAttribute('mouse-is-over')) return;
-    }
-    if (source === 'bubble') {
-      bubble.removeAttribute('mouse-is-over');
-      if (icon.hasAttribute('mouse-is-over')) return;
-    }
+  return window.setTimeout(() => {
     bubble.classList.remove('open', 'left', 'right', 'down');
     bubble.style.removeProperty('--info-width');
   }, 100);
@@ -79,7 +71,7 @@ const iconTriggerCss = css`
 
   width: ${rootWidthPx}px;
   padding: 0 4px;
-  margin: 0 3px 0 2px;
+  margin: 0 3px 0 5px;
   
   border-radius: 10px;
   border: 1px solid #444;
