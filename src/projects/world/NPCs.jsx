@@ -246,6 +246,16 @@ export default function NPCs(props) {
           if (e.debug !== undefined) {
             state.rootEl.style.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
           }
+          if (e.canClickArrows !== undefined) {
+            api.debug.rootEl.style.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
+          }
+          if (e.__noKeySpecified) {// Provide current config
+            return {
+              interactRadius: parseInt(state.rootEl.style.getPropertyValue(cssName.npcsInteractRadius)),
+              debug: state.rootEl.style.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
+              canClickArrows: api.debug.rootEl.style.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
+            };
+          }
           break;
         case 'get':
           return state.getNpc(e.npcKey);
@@ -311,6 +321,11 @@ export default function NPCs(props) {
     rootRef(el) {
       if (el) {
         state.rootEl = el;
+        /**
+         * We set CSS variables here, not in css`...` below.
+         * - ts-styled-plugin error for ${cssName.foo}: ${bar};
+         * - setting style avoids `getComputedStyle`
+         */
         el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
         state.decorEl = assertNonNull(el.querySelector('div.decor-root'));
@@ -538,6 +553,8 @@ export default function NPCs(props) {
 }
 
 const rootCss = css`
+  /** For CSS variables, see state.rootRef */
+
   position: absolute;
   canvas {
     position: absolute;
@@ -590,7 +607,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef>} npcAct
+* @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef | NPC.NpcConfigOpts>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(el: null | HTMLDivElement) => void} rootRef

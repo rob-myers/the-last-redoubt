@@ -23,6 +23,7 @@ export default function World(props) {
     everEnabled: false,
     gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
+    debug: /** @type {State['debug']} */ ({ ready: false }),
     doors: /** @type {State['doors']} */  ({ ready: false }),
     fov: /** @type {State['fov']} */  ({ ready: false }),
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
@@ -85,6 +86,7 @@ export default function World(props) {
         showLabels
         // windows
         api={state}
+        onLoad={api => (state.debug = api) && update()}
       />
 
       <NPCs
@@ -120,6 +122,7 @@ export default function World(props) {
  * @typedef State
  * @property {boolean} everEnabled
  * @property {Graph.GmGraph} gmGraph
+ * @property {import("./DebugWorld").State} debug
  * @property {import("./Doors").State} doors
  * @property {import("./FOV").State} fov
  * @property {import("./NPCs").State} npcs

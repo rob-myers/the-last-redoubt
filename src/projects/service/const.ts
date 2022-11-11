@@ -31,6 +31,9 @@ export const cssName = {
   navMini: 'nav-mini',
   nextArticle: 'next-article',
 
+  debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
+  // ...
+
   decorCircle: 'decor-circle',
   decorPath: 'decor-path',
   decorPoint: 'decor-point',

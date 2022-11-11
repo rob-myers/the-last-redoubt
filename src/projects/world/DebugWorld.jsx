@@ -4,6 +4,8 @@ import { visibleUnicodeLength } from "../service/generic";
 import { Vect } from "../geom";
 import { ansiColor } from "../sh/util";
 import useSessionStore from "../sh/session.store";
+import { cssName } from "../service/const";
+import useStateRef from "../hooks/use-state-ref";
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
@@ -22,6 +24,21 @@ export default function DebugWorld(props) {
   const roomPoly = gm.rooms[roomId];
   const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
 
+  const state = useStateRef(/** @type {() => State} */ () => {
+    return {
+      ready: true,
+      rootEl: /** @type {HTMLDivElement} */ ({}),
+      rootRef(el) {
+        if (el) {
+          state.rootEl = el;
+          el.style.setProperty(cssName.debugDoorArrowPtrEvts, 'none');
+          // ...
+        }
+      },
+    };
+  });
+
+  // 🚧 merge this into state?
   /* eslint-disable react-hooks/rules-of-hooks */
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
@@ -65,10 +82,15 @@ export default function DebugWorld(props) {
 
   }, [gm, props, gmId, roomId]);
 
+  React.useEffect(() => {
+    props.onLoad(state);
+  }, []);
+
   return (
     <div
       className={cx("debug-parent", rootCss)}
       onClick={onClick}
+      ref={state.rootRef}
     >
       {props.outlines && gmGraph.gms.map((gm, gmId) =>
         <div
@@ -143,7 +165,7 @@ export default function DebugWorld(props) {
               key={doorId}
               data-debug-door-id={doorId}
               data-tags="debug door-arrow"
-              className={cx("debug-door-arrow", { interactive: !!props.canClickArrows })}
+              className="debug-door-arrow"
               style={{
                 left: arrowPos.x - debugRadius,
                 top: arrowPos.y - debugRadius,
@@ -151,6 +173,7 @@ export default function DebugWorld(props) {
                 height: debugRadius * 2,
                 transform: `rotate(${angle}rad)`,
                 // filter: 'invert(100%)',
+                ...props.canClickArrows === true && { pointerEvents: 'all' },// Prop overrides CSS variable
               }}
             />
             ,
@@ -223,6 +246,14 @@ export default function DebugWorld(props) {
  * @property {boolean} [showLabels]
  * @property {boolean} [windows]
  * @property {import('../world/World').State} api
+ * @property {(debugApi: State) => void} onLoad
+ */
+
+/**
+ * @typedef State @type {object}
+ * @property {boolean} ready
+ * @property {HTMLDivElement} rootEl
+ * @property {React.RefCallback<HTMLDivElement>} rootRef
  */
 
 const debugRadius = 5;
@@ -238,10 +269,8 @@ const rootCss = css`
     div.debug-door-arrow {
       background-image: url('/assets/icon/circle-right.svg');
       pointer-events: none;
-      &.interactive {
-        pointer-events: all;
-        cursor: pointer;
-      }
+      cursor: pointer;
+      pointer-events: var(${cssName.debugDoorArrowPtrEvts});
     }
     div.debug-label-info {
       background-image: url('/assets/icon/info-icon.svg');

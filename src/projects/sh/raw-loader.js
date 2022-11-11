@@ -231,7 +231,7 @@
       const { npcs } = api.getCached(home.WORLD_KEY)
       const action = args[0]
 
-      /** @param {undefined | string | Record<string, any>} opts */
+      /** @param {undefined | string | NPC.NpcConfigOpts} opts */
       function normalizeOpts(opts = {}) {
         if (typeof opts === "string") {
           if (["decor", "remove-decor", "rm-decor"].includes(action)) opts = { decorKey: opts };
@@ -239,6 +239,7 @@
           else if (action === "config") opts = { debug: !!home.DEBUG }; // we ignore key
           else opts = {}; // we ignore key
         } else if (action === "config") {
+          Object.keys(opts).length === 0 && (opts.__noKeySpecified = true);
           opts.debug === undefined && (opts.debug = !!home.DEBUG);
         }
         return opts;

@@ -139,6 +139,19 @@ declare namespace NPC {
     wayTimeoutId: number;
   }
 
+  interface NpcConfigOpts {
+    debug?: boolean;
+    interactRadius?: number;
+    canClickArrows?: boolea
+
+    /** Added when no options missing or an empty object */
+    __noKeySpecified?: true;
+    /** Induced by e.g. `npc rm-decor foo` */
+    decorKey?: string;
+    /** Induced by e.g. `npc get foo` */
+    npcKey?: string;
+  }
+
   interface NpcLineSeg {
     src: Geom.Vect;
     dst: Geom.Vect;
@@ -271,7 +284,7 @@ declare namespace NPC {
     | { action: 'add-decor'; } & DecorDef
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
     | { action: 'cancel'; npcKey: string }
-    | { action: 'config'; debug?: boolean; interactRadius?: number }
+    | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'pause'; npcKey: string }
