@@ -4,7 +4,7 @@ import { visibleUnicodeLength } from "../service/generic";
 import { Vect } from "../geom";
 import { ansiColor } from "../sh/util";
 import useSessionStore from "../sh/session.store";
-import { cssName } from "../service/const";
+import { cssName, wallOutset } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -25,7 +25,7 @@ export default function DebugWorld(props) {
   const gm = gmGraph.gms[gmId];
   const visDoorIds = props.api.doors.getVisible(gmId);
   const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-  const roomNavAabb = roomNavPoly.rect;
+  const roomNavAabb = roomNavPoly.rect.outset(wallOutset); // Outset for door lines
   const roomAabb = gm.rooms[roomId].rect;
   const roomPoly = gm.rooms[roomId];
   const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
@@ -159,9 +159,7 @@ export default function DebugWorld(props) {
           </g>
         </svg>
 
-        {
-          // Arrows and room/door ids
-        }
+        {/* Arrows and room/door ids */}
         {visDoorIds.map(doorId => {
           const { poly, normal, roomIds } = gm.doors[doorId];
           const sign = roomIds[0] === roomId ? 1 : -1;
@@ -206,9 +204,7 @@ export default function DebugWorld(props) {
           {roomId}
         </div>
 
-        {
-          // More generic approach?
-        }
+        {/* More generic approach? */}
         {roomLabel && (
           <div
             key={roomLabel.index}
