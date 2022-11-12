@@ -12,10 +12,8 @@ import useStateRef from "../hooks/use-state-ref";
 /** @param {React.PropsWithChildren<Props>} props */
 export default function CssPanZoom(props) {
 
-  const state = useStateRef(() => {
-
-    /** @type {PanZoom.CssApi} */
-    const output = {
+  const state = useStateRef(/** @type {() => PanZoom.CssApi} */ () => {
+    return {
       ready: true,
       parent: /** @type {HTMLDivElement} */ ({}),
       translateRoot: /** @type {HTMLDivElement} */ ({}),
@@ -198,6 +196,7 @@ export default function CssPanZoom(props) {
           translateAnim.addEventListener('finish', () => {
             resolve('completed');
             // state.events.next({ key: 'completed-panzoom-to' })
+            state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
           });
           translateAnim.addEventListener('cancel', () => {
             reject('cancelled');
@@ -278,7 +277,9 @@ export default function CssPanZoom(props) {
           const translateAnim = /** @type {Animation} */ (state.anims[0]);
           translateAnim.addEventListener('finish', () => {
             resolve('completed');
-            state.events.next({ key: 'completed-panzoom-to' })
+            state.events.next({ key: 'completed-panzoom-to' });
+            // Release animation e.g. so can manually alter styles
+            state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
           });
           translateAnim.addEventListener('cancel', () => {
             reject('cancelled');
@@ -337,7 +338,6 @@ export default function CssPanZoom(props) {
         state.zoomToClient(toScale, event);
       }
     };
-    return output;
   }, { deeper: ['evt'] });
 
   React.useEffect(() => {

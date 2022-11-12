@@ -2,12 +2,14 @@
 
 ## In progress
 
+- ✅ Cannot initially edit panzoom-translate
+
 - 🚧 hookup `DebugWorld` to `npc config` via CSS variables
   - ✅ canClickArrows
   - ✅ localRoomNav
 - ✅ Tabs: Keyboard Enter Interacts
 - Clickable tty msgs getting out of sync
-  - Simplify: textual identity
+  - Simplify to textual identity
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
@@ -15,7 +17,7 @@
     - ❌ GIF demo of CLI
     - ✅ Video demo of CLI
       > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
-    - Video demo of `World` CSS/DOM
+    - 🚧 Video demo of `World` CSS/DOM
   - Adjust Intro
 
 - ✅ Document npc vs line-seg collision

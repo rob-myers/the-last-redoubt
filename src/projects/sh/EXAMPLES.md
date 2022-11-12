@@ -48,6 +48,10 @@ npc decor foo
 echo foo | npc decor
 ```
 
+```sh
+view '{ point:'$( click 1 )'}'
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md
