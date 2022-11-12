@@ -5,7 +5,7 @@
 - 🚧 hookup `DebugWorld` to `npc config` via CSS variables
   - ✅ canClickArrows
   - ✅ localRoomNav
-- Tabs: Keyboard Enter Interacts
+- ✅ Tabs: Keyboard Enter Interacts
 - Clickable tty msgs getting out of sync
   - Simplify: textual identity
 

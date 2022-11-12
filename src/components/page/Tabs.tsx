@@ -41,12 +41,19 @@ export default function Tabs(props: Props) {
     , 1000),
 
     async onKeyUp(e: React.KeyboardEvent) {
-      if (e.key === 'Escape') {
-        if (state.expanded) {
-          await state.toggleExpand();
-        } else if (state.enabled) {
-          await state.toggleEnabled();
-        }
+      switch (e.key) {
+        case 'Escape':
+          if (state.expanded) {
+            await state.toggleExpand();
+          } else if (state.enabled) {
+            await state.toggleEnabled();
+          }
+          break;
+        case 'Enter':
+          if (!state.enabled) {
+            await state.toggleEnabled();
+          }
+          break;
       }
     },
     /** Prevent any underlying element from being clicked on click outside modal */
