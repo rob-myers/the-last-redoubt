@@ -141,12 +141,11 @@ function Slides(props: Props & {
         >
           {'src' in item
             ? <div className="slide-container" data-slide-id={i}>
-                {item.label && (
-                  <div className="slide-label">
-                    {item.label}
-                  </div>
-                )}
-                <div className={cx({ 'swiper-zoom-container': canZoom })}>
+                {item.label && <div className="slide-label">{item.label}</div>}
+                <div
+                  className={cx({ 'swiper-zoom-container': canZoom })}
+                  {...item.background && { style: { background: item.background } }}
+                >
                   <img
                     className="swiper-lazy"
                     data-src={`${props.baseSrc??''}${item.src}`}
@@ -155,7 +154,8 @@ function Slides(props: Props & {
                         ? undefined
                         : props.height - (item.label ? labelHeightPx : 0
                     )}
-                    title={item.label}
+                    // 🚧 avoid initial height when slide has background
+                    // title={item.label}
                   />
                 </div>
                 <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
@@ -203,8 +203,8 @@ type CarouselItems = (
 );
 
 type ImageCarouselItem = (
-  | { src: string; label: string; }
-  | { video: VideoKey; label: string; }
+  | { src: string; label?: string; background?: string; }
+  | { video: VideoKey; label?: string; }
 );
 type PlainCarouselItem = React.ReactNode;
 
