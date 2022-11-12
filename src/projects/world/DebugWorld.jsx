@@ -32,7 +32,9 @@ export default function DebugWorld(props) {
         if (el) {
           state.rootEl = el;
           el.style.setProperty(cssName.debugDoorArrowPtrEvts, 'none');
-          el.style.setProperty(cssName.debugLocalNavDisplay, 'none');
+          el.style.setProperty(cssName.debugGeomorphOutlineDisplay, 'none');
+          el.style.setProperty(cssName.debugRoomNavDisplay, 'none');
+          el.style.setProperty(cssName.debugRoomOutlineDisplay, 'none');
           // ...
         }
       },
@@ -93,16 +95,17 @@ export default function DebugWorld(props) {
       onClick={onClick}
       ref={state.rootRef}
     >
-      {props.outlines && gmGraph.gms.map((gm, gmId) =>
+
+      {gmGraph.gms.map((gm, gmId) =>
         <div
           key={gmId}
+          className="geomorph-outline"
           style={{
-            position: 'absolute',
             left: gm.gridRect.x,
             top: gm.gridRect.y,
             width: gm.gridRect.width,
             height: gm.gridRect.height,
-            border: '2px red solid',
+            ...props.geomorphOutlines && { display: 'initial' },// Prop overrides CSS var
           }}
         />  
       )}
@@ -114,14 +117,13 @@ export default function DebugWorld(props) {
         style={{ transform: gm.transformStyle }}
       >
 
-        <svg
-          className="debug-room-nav"
+        <svg className="debug-room-nav"
           width={roomNavAabb.width}
           height={roomNavAabb.height}
           style={{
             left: roomNavAabb.x,
             top: roomNavAabb.y,
-            ...props.localRoomNav === true && { display: 'initial' },// Prop overrides CSS variable
+            ...props.localRoomNav === true && { display: 'initial' },// Prop overrides CSS var
           }}
         >
           <g style={{ transform: `translate(${-roomNavAabb.x}px, ${-roomNavAabb.y}px)` }}>
@@ -133,21 +135,19 @@ export default function DebugWorld(props) {
           </g>
         </svg>
 
-        {props.roomOutlines && (
-          <svg
-            className="debug-room-outline"
-            width={roomAabb.width}
-            height={roomAabb.height}
-            style={{
-              left: roomAabb.x,
-              top: roomAabb.y,
-            }}
-          >
-            <g style={{ transform: `translate(${-roomAabb.x}px, ${-roomAabb.y}px)` }}>
-              <path className="room-outline" d={roomPoly.svgPath} />
-            </g>
-          </svg>
-        )}
+        <svg className="debug-room-outline"
+          width={roomAabb.width}
+          height={roomAabb.height}
+          style={{
+            left: roomAabb.x,
+            top: roomAabb.y,
+            ...props.localRoomOutline && { display: 'initial'},
+          }}
+        >
+          <g style={{ transform: `translate(${-roomAabb.x}px, ${-roomAabb.y}px)` }}>
+            <path className="room-outline" d={roomPoly.svgPath} />
+          </g>
+        </svg>
 
         {
           // Arrows and room/door ids
@@ -173,7 +173,7 @@ export default function DebugWorld(props) {
                 height: debugRadius * 2,
                 transform: `rotate(${angle}rad)`,
                 // filter: 'invert(100%)',
-                ...props.canClickArrows === true && { pointerEvents: 'all' },// Prop overrides CSS variable
+                ...props.canClickArrows === true && { pointerEvents: 'all' },// Prop overrides CSS var
               }}
             />
             ,
@@ -240,8 +240,8 @@ export default function DebugWorld(props) {
  * @typedef Props @type {object}
  * @property {boolean} [canClickArrows]
  * @property {boolean} [localRoomNav]
- * @property {boolean} [outlines]
- * @property {boolean} [roomOutlines]
+ * @property {boolean} [geomorphOutlines]
+ * @property {boolean} [localRoomOutline]
  * @property {boolean} [showIds]
  * @property {boolean} [showLabels]
  * @property {boolean} [windows]
@@ -260,6 +260,14 @@ const debugRadius = 5;
 const debugDoorOffset = 10;
 
 const rootCss = css`
+
+  div.geomorph-outline {
+    display: var(${cssName.debugGeomorphOutlineDisplay});
+    position: absolute;
+    border: 2px red solid;
+    pointer-events: none;
+  }
+
   div.debug {
     position: absolute;
 
@@ -295,8 +303,12 @@ const rootCss = css`
       pointer-events: none;
       transform-origin: top left;
     }
+
     svg.debug-room-nav {
-      display: var(${cssName.debugLocalNavDisplay});
+      display: var(${cssName.debugRoomNavDisplay});
+    }
+    svg.debug-room-outline {
+      display: var(${cssName.debugRoomOutlineDisplay});
     }
 
     svg.debug-room-nav, svg.debug-room-outline {

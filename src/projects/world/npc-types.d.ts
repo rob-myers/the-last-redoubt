@@ -140,17 +140,25 @@ declare namespace NPC {
   }
 
   interface NpcConfigOpts {
-    debug?: boolean;
-    interactRadius?: number;
     canClickArrows?: boolean;
+    debug?: boolean;
+    geomorphOutlines?: boolean;
+    interactRadius?: number;
     localRoomNav?: boolean;
+    localRoomOutline?: boolean;
 
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
     /** Induced by e.g. `npc config debug` */
-    configKey?: 'debug' | 'canClickArrows' | 'localRoomNav';
+    configKey?: (
+      | 'canClickArrows'
+      | 'debug'
+      | 'geomorphOutlines'
+      | 'localRoomNav'
+      | 'localRoomOutline'
+    );
   }
 
   interface NpcLineSeg {

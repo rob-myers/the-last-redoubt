@@ -32,7 +32,9 @@ export const cssName = {
   nextArticle: 'next-article',
 
   debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
-  debugLocalNavDisplay: '--debug-local-nav-display',
+  debugGeomorphOutlineDisplay: '--debug-gm-outline-display',
+  debugRoomNavDisplay: '--debug-room-nav-display',
+  debugRoomOutlineDisplay: '--debug-room-outline-display',
   // ...
 
   decorCircle: 'decor-circle',

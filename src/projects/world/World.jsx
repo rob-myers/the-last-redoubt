@@ -80,8 +80,8 @@ export default function World(props) {
       <DebugWorld
         // canClickArrows
         // localRoomNav
-        // outlines
-        // roomOutlines
+        // geomorphOutlines
+        // localRoomOutline
         showIds
         showLabels
         // windows

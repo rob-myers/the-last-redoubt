@@ -243,44 +243,59 @@ export default function NPCs(props) {
           const rootStyle = state.rootEl.style;
           const debugStyle = api.debug.rootEl.style;
 
-          if (typeof e.interactRadius === 'number') {
-            rootStyle.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
-          }
-          if (e.debug !== undefined) {
-            rootStyle.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
-          }
           if (e.canClickArrows !== undefined) {
             debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
           }
-          if (e.localRoomNav !== undefined) {
-            debugStyle.setProperty(cssName.debugLocalNavDisplay, e.localRoomNav ? 'initial' : 'none');
+          if (typeof e.interactRadius === 'number') {
+            rootStyle.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
           }
+          //#region display
+          e.debug !== undefined && rootStyle.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
+          e.geomorphOutlines !== undefined && rootStyle.setProperty(cssName.debugGeomorphOutlineDisplay, e.geomorphOutlines ? 'initial' : 'none');
+          e.localRoomNav !== undefined && debugStyle.setProperty(cssName.debugRoomNavDisplay, e.localRoomNav ? 'initial' : 'none')
+          e.localRoomOutline !== undefined && debugStyle.setProperty(cssName.debugRoomOutlineDisplay, e.localRoomOutline ? 'initial' : 'none');
+          //#endregion
           
           switch (e.configKey) {// Toggle
             case 'canClickArrows':
-               debugStyle.setProperty(cssName.debugDoorArrowPtrEvts,
+              debugStyle.setProperty(
+                cssName.debugDoorArrowPtrEvts,
                 debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'all' ? 'none' : 'all'
               );
               break;
+            //#region display
             case 'debug':
-              rootStyle.setProperty(cssName.npcsDebugDisplay,
-                rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'initial' ? 'none' : 'initial'
-              );
-              break;
+            case 'geomorphOutlines':
             case 'localRoomNav':
-              debugStyle.setProperty(cssName.debugLocalNavDisplay,
-                debugStyle.getPropertyValue(cssName.debugLocalNavDisplay) === 'initial' ? 'none' : 'initial'
+            case 'localRoomOutline': {
+              const [style, cssVarName] = /** @type {const} */ ({
+                'debug': [rootStyle, cssName.npcsDebugDisplay],
+                'geomorphOutlines': [debugStyle, cssName.debugGeomorphOutlineDisplay],
+                'localRoomNav': [debugStyle, cssName.debugRoomNavDisplay],
+                'localRoomOutline': [debugStyle, cssName.debugRoomOutlineDisplay],
+              })[e.configKey];
+
+              style.setProperty(
+                cssVarName,
+                style.getPropertyValue(cssVarName) === 'initial' ? 'none' : 'initial'
               );
               break;
+            }
+            //#endregion
           }
 
           if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
             /** @type {NPC.NpcConfigOpts} */
             const output = {
+              // 🤔 We reflect CSS variables, rather than e.g. `getComputedStyle(...).display` ?
               canClickArrows: debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
-              debug: rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
               interactRadius: parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius)),
-              localRoomNav: debugStyle.getPropertyValue(cssName.debugLocalNavDisplay) === 'none' ? false : true,
+              //#region display
+              debug: rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
+              geomorphOutlines: debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true,
+              localRoomNav: debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true,
+              localRoomOutline: debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true,
+              //#endregion
             };
             return output;
           }
