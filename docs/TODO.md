@@ -2,11 +2,11 @@
 
 ## In progress
 
+- state.anims cancel may have broken "responsive track"?
 - ✅ Cannot initially edit panzoom-translate
+- 🤔 Persist npc config?
 
-- 🚧 hookup `DebugWorld` to `npc config` via CSS variables
-  - ✅ canClickArrows
-  - ✅ localRoomNav
+- ✅ hookup `DebugWorld` to `npc config` via CSS variables
 - ✅ Tabs: Keyboard Enter Interacts
 - Clickable tty msgs getting out of sync
   - Simplify to textual identity
@@ -444,10 +444,18 @@ How to embed video?
 
 ## Homepage CSS video
 
-- Camera via CSS transforms:
-  > .panzoom-parent .panzoom-translate .panzoom-scale
-- Static World via PNGs
-  > .panzoom-parent .geomorphs
+Camera via CSS transforms:
+> `.panzoom-parent` <br>
+> Can edit transforms (translate/scale)
+
+Static World via PNGs
+> `.panzoom-parent .geomorphs`
+
+Debug (Global)
+> foo <br>
+> bar <br>
+> baz
+
 - debug
 	- door icons
 	- info icons

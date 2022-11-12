@@ -7,6 +7,12 @@ import useSessionStore from "../sh/session.store";
 import { cssName } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
 
+/**
+ * 🚧 merge onClick into state?
+ * 🚧 undo inherited transform of labels?
+ * 🚧 useMemo to avoid recomputing VDOM?
+ */
+
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
@@ -31,17 +37,21 @@ export default function DebugWorld(props) {
       rootRef(el) {
         if (el) {
           state.rootEl = el;
-          el.style.setProperty(cssName.debugDoorArrowPtrEvts, 'none');
-          el.style.setProperty(cssName.debugGeomorphOutlineDisplay, 'none');
-          el.style.setProperty(cssName.debugRoomNavDisplay, 'none');
-          el.style.setProperty(cssName.debugRoomOutlineDisplay, 'none');
-          // ...
+          [
+            cssName.debugDoorArrowPtrEvts,
+            cssName.debugGeomorphOutlineDisplay,
+            cssName.debugHighlightWindows,
+            cssName.debugRoomNavDisplay,
+            cssName.debugRoomOutlineDisplay,
+            cssName.debugShowIds,
+            cssName.debugShowLabels,
+          ].forEach(cssVarName => el.style.setProperty(cssVarName, 'none'));
         }
       },
     };
   });
 
-  // 🚧 merge this into state?
+  // 
   /* eslint-disable react-hooks/rules-of-hooks */
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
@@ -151,7 +161,6 @@ export default function DebugWorld(props) {
 
         {
           // Arrows and room/door ids
-          // 🚧 issue with transformed geomorphs
         }
         {visDoorIds.map(doorId => {
           const { poly, normal, roomIds } = gm.doors[doorId];
@@ -176,33 +185,36 @@ export default function DebugWorld(props) {
               }}
             />
             ,
-            props.showIds && (
-              <div
-                key={"icon" + doorId}
-                className="debug-door-id-icon"
-                style={{ left: idIconPos.x, top: idIconPos.y - 4 }}
-              >
-                {doorId}
-              </div>
-            )
+            <div
+              key={"icon" + doorId}
+              className="debug-door-id-icon"
+              style={{ left: idIconPos.x, top: idIconPos.y - 4 }}
+            >
+              {doorId}
+            </div>
           ];
         })}
 
-        {props.showIds && (
-          <div
-            className="debug-room-id-icon"
-            style={{ left: roomNavAabb.x + roomNavAabb.width - 35, top: roomNavAabb.y + 25 }}
-          >
-            {roomId}
-          </div>
-        )}
+        <div
+          className="debug-room-id-icon"
+          style={{
+            left: roomNavAabb.x + roomNavAabb.width - 35,
+            top: roomNavAabb.y + 25,
+            ...props.showIds === true && { display: 'initial' },
+          }}
+        >
+          {roomId}
+        </div>
 
-        {props.showLabels && roomLabel && (
+        {
+          // More generic approach?
+        }
+        {roomLabel && (
           <div
             key={roomLabel.index}
+            className="debug-label-info"
             data-debug-label-id={roomLabel.index}
             data-tags="debug label-icon"
-            className="debug-label-info"
             title={roomLabel.text}
             style={{
               left: roomLabel.center.x - debugRadius,
@@ -210,11 +222,12 @@ export default function DebugWorld(props) {
               width: debugRadius * 2,
               height: debugRadius * 2,
               filter: 'invert(100%)',
+              ...props.showLabels && { display: 'initial' },
             }}
           />
         )}
 
-        {props.windows && gm.windows.map(({ baseRect, angle }, i) => {
+        {gm.windows.map(({ baseRect, angle }, i) => {
           return (
             <div
               key={`window-${i}`}
@@ -225,6 +238,7 @@ export default function DebugWorld(props) {
                 width: baseRect.width,
                 height: baseRect.height,
                 transform: `rotate(${angle}rad)`,
+                ...props.windows && { display: 'initial' },
               }}
             />
           );
@@ -280,28 +294,26 @@ const rootCss = css`
       background-image: url('/assets/icon/circle-right.svg');
     }
     div.debug-label-info {
+      display: var(${cssName.debugShowLabels});
       background-image: url('/assets/icon/info-icon.svg');
       cursor: pointer;
     }
 
+    div.debug-door-id-icon {
+      display: var(${cssName.debugShowIds});
+      color: white;
+    }
+    div.debug-room-id-icon {
+      display: var(${cssName.debugShowIds});
+      color: #4f4;
+    }
     div.debug-door-id-icon, div.debug-room-id-icon {
       position: absolute;
       background: black;
-      color: white;
       font-size: 8px;
       line-height: 1;
       border: 1px solid black;
       pointer-events: none;
-    }
-    div.debug-room-id-icon {
-      color: #4f4;
-    }
-    div.debug-window {
-      position: absolute;
-      background: #0000ff40;
-      border: 1px solid white;
-      pointer-events: none;
-      transform-origin: top left;
     }
 
     svg.debug-room-nav {
@@ -324,6 +336,15 @@ const rootCss = css`
         fill: rgba(0, 0, 255, 0.1);
         stroke: red;
       }
+    }
+
+    div.debug-window {
+      display: var(${cssName.debugHighlightWindows});
+      position: absolute;
+      background: #0000ff40;
+      border: 1px solid white;
+      pointer-events: none;
+      transform-origin: top left;
     }
   }  
 `;

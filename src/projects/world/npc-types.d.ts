@@ -143,9 +143,12 @@ declare namespace NPC {
     canClickArrows?: boolean;
     debug?: boolean;
     geomorphOutlines?: boolean;
+    highlightWindows?: boolean;
     interactRadius?: number;
     localRoomNav?: boolean;
     localRoomOutline?: boolean;
+    showIds?: boolean;
+    showLabels?: boolean;
 
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
@@ -156,8 +159,11 @@ declare namespace NPC {
       | 'canClickArrows'
       | 'debug'
       | 'geomorphOutlines'
+      | 'highlightWindows'
       | 'localRoomNav'
       | 'localRoomOutline'
+      | 'showIds'
+      | 'showLabels'
     );
   }
 
