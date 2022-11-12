@@ -236,11 +236,8 @@
         if (typeof opts === "string") {
           if (["decor", "remove-decor", "rm-decor"].includes(action)) opts = { decorKey: opts };
           else if (["cancel", "get", "pause", "play", "set-player"].includes(action)) opts = { npcKey: opts };
-          else if (action === "config") opts = { debug: !!home.DEBUG }; // we ignore key
+          else if (action === "config") opts = { configKey: opts };
           else opts = {}; // we ignore key
-        } else if (action === "config") {
-          Object.keys(opts).length === 0 && (opts.__noKeySpecified = true);
-          opts.debug === undefined && (opts.debug = !!home.DEBUG);
         }
         return opts;
       }

@@ -239,24 +239,41 @@ export default function NPCs(props) {
         case 'cancel':// Cancel current animation
           await state.getNpc(e.npcKey).cancel();
           break;
-        case 'config':
+        case 'config': {
+          const rootStyle = state.rootEl.style;
+
           if (typeof e.interactRadius === 'number') {
-            state.rootEl.style.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
+            rootStyle.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
           }
           if (e.debug !== undefined) {
-            state.rootEl.style.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
+            rootStyle.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
           }
           if (e.canClickArrows !== undefined) {
-            api.debug.rootEl.style.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
+            rootStyle.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
           }
-          if (e.__noKeySpecified) {// Provide current config
+          
+          switch (e.configKey) {
+            case 'debug':
+              rootStyle.setProperty(cssName.npcsDebugDisplay,
+                rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'initial' ? 'none' : 'initial'
+              );
+              break;
+            case 'canClickArrows':
+              rootStyle.setProperty(cssName.debugDoorArrowPtrEvts,
+                rootStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'all' ? 'none' : 'all'
+              );
+              break;
+          }
+
+          if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
             return {
-              interactRadius: parseInt(state.rootEl.style.getPropertyValue(cssName.npcsInteractRadius)),
-              debug: state.rootEl.style.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
+              interactRadius: parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius)),
+              debug: rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
               canClickArrows: api.debug.rootEl.style.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
             };
           }
           break;
+        }
         case 'get':
           return state.getNpc(e.npcKey);
         case 'look-at': {

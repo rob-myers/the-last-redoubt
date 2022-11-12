@@ -93,8 +93,7 @@ lookLoop ${npcKey} &
 
 'profile-1-b': () => `
 ${profileLookup["profile-1-a"]()}
-DEBUG=1
-npc config
+npc config debug
 `
 
 };

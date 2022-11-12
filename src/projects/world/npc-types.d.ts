@@ -144,12 +144,12 @@ declare namespace NPC {
     interactRadius?: number;
     canClickArrows?: boolea
 
-    /** Added when no options missing or an empty object */
-    __noKeySpecified?: true;
-    /** Induced by e.g. `npc rm-decor foo` */
+    /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
-    /** Induced by e.g. `npc get foo` */
+    /** Induced by e.g. `npc get andros` */
     npcKey?: string;
+    /** Induced by e.g. `npc config debug` */
+    configKey?: 'debug' | 'canClickArrows' | string;
   }
 
   interface NpcLineSeg {
