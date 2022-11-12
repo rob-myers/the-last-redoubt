@@ -2,11 +2,15 @@
 
 ## In progress
 
+- Performance: smaller main bundle?
+
+- Improve Carousel hard-coded height
+- 🐛 state.anims cancel may have broken "responsive track"
+
 - Alt PNG filters?
   - .geomorph `brightness(51%) sepia(0.1)`
   - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
 
-- 🐛 state.anims cancel may have broken "responsive track"
 
 - ✅ 🐛 moving via devtool element select can break panzoom
   - div.panzoom-parent.scrollTop is being changed by devtool

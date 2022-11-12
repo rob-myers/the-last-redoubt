@@ -7,8 +7,10 @@ import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
-import type { VideoKey } from "./Video";
-import Video from "./Video";
+import type { VideoKey } from "./Video"; // For intellisense
+const Video = React.lazy<typeof VideoType>(() => import('./Video'));
+import type VideoType from "./Video";
+
 import useSiteStore from "store/site.store";
 import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
@@ -143,12 +145,12 @@ function Slides(props: Props & {
             ? <div className="slide-container" data-slide-id={i}>
                 {item.label && <div className="slide-label">{item.label}</div>}
                 <div
-                  className={cx({ 'swiper-zoom-container': canZoom })}
-                  {...item.background && { style: { background: item.background } }}
-                >
+                  className={cx('slide-img-container', { 'swiper-zoom-container': canZoom })}
+                  >
                   <img
                     className="swiper-lazy"
                     data-src={`${props.baseSrc??''}${item.src}`}
+                    {...item.background && { style: { background: item.background } }}
                     height={
                       props.fullScreen || !props.height
                         ? undefined
@@ -162,7 +164,9 @@ function Slides(props: Props & {
               </div>
             : <div className="slide-container slide-video-container" data-slide-id={i}>
                 {item.label && <div className="slide-label">{item.label}</div>}
-                <Video videoKey={item.video} />
+                <React.Suspense>
+                  <Video videoKey={item.video} />
+                </React.Suspense>
               </div>
           }
         </SwiperSlide>
@@ -208,6 +212,9 @@ type ImageCarouselItem = (
 );
 type PlainCarouselItem = React.ReactNode;
 
+/**
+ * 🚧 needs simplification
+ */
 const rootCss = css`
   position: relative;
   
@@ -221,16 +228,22 @@ const rootCss = css`
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: inherit;
     
     .swiper-lazy-preloader {
       margin-top: 32px;
     }
+  }
+  .slide-img-container {
+    height: calc(100% - ${labelHeightPx}px);
   }
   
   .swiper.full-screen {
     position: absolute;
     z-index: 2;
     width: 100%;
+    /** 🚧 */
+    height: 800px;
     border: 4px solid #fff;
     border-radius: 8px;
     background-color: var(--carousel-background-color);
@@ -240,7 +253,11 @@ const rootCss = css`
     }
     img {
       border: none;
+      height: inherit;
       max-height: calc(100vh - 2 * 128px);
+    }
+    .slide-video-container {
+      height: calc(100% - ${labelHeightPx}px);
     }
   }
 
@@ -261,7 +278,7 @@ const rootCss = css`
       margin: 0;
       height: inherit;
       iframe {
-        height: inherit;
+        height: 100%;
       }
       @media(max-width: 600px) {
         width: 100%;
