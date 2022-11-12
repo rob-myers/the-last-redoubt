@@ -241,6 +241,7 @@ export default function NPCs(props) {
           break;
         case 'config': {
           const rootStyle = state.rootEl.style;
+          const debugStyle = api.debug.rootEl.style;
 
           if (typeof e.interactRadius === 'number') {
             rootStyle.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
@@ -249,28 +250,39 @@ export default function NPCs(props) {
             rootStyle.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
           }
           if (e.canClickArrows !== undefined) {
-            rootStyle.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
+            debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
+          }
+          if (e.localRoomNav !== undefined) {
+            debugStyle.setProperty(cssName.debugLocalNavDisplay, e.localRoomNav ? 'initial' : 'none');
           }
           
-          switch (e.configKey) {
+          switch (e.configKey) {// Toggle
+            case 'canClickArrows':
+               debugStyle.setProperty(cssName.debugDoorArrowPtrEvts,
+                debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'all' ? 'none' : 'all'
+              );
+              break;
             case 'debug':
               rootStyle.setProperty(cssName.npcsDebugDisplay,
                 rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'initial' ? 'none' : 'initial'
               );
               break;
-            case 'canClickArrows':
-              rootStyle.setProperty(cssName.debugDoorArrowPtrEvts,
-                rootStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'all' ? 'none' : 'all'
+            case 'localRoomNav':
+              debugStyle.setProperty(cssName.debugLocalNavDisplay,
+                debugStyle.getPropertyValue(cssName.debugLocalNavDisplay) === 'initial' ? 'none' : 'initial'
               );
               break;
           }
 
           if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
-            return {
-              interactRadius: parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius)),
+            /** @type {NPC.NpcConfigOpts} */
+            const output = {
+              canClickArrows: debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
               debug: rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
-              canClickArrows: api.debug.rootEl.style.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
+              interactRadius: parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius)),
+              localRoomNav: debugStyle.getPropertyValue(cssName.debugLocalNavDisplay) === 'none' ? false : true,
             };
+            return output;
           }
           break;
         }

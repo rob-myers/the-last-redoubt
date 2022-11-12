@@ -236,7 +236,7 @@
         if (typeof opts === "string") {
           if (["decor", "remove-decor", "rm-decor"].includes(action)) opts = { decorKey: opts };
           else if (["cancel", "get", "pause", "play", "set-player"].includes(action)) opts = { npcKey: opts };
-          else if (action === "config") opts = { configKey: opts };
+          else if (action === "config") opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
           else opts = {}; // we ignore key
         }
         return opts;

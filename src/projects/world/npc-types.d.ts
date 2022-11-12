@@ -142,14 +142,15 @@ declare namespace NPC {
   interface NpcConfigOpts {
     debug?: boolean;
     interactRadius?: number;
-    canClickArrows?: boolea
+    canClickArrows?: boolean;
+    localRoomNav?: boolean;
 
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
     /** Induced by e.g. `npc config debug` */
-    configKey?: 'debug' | 'canClickArrows' | string;
+    configKey?: 'debug' | 'canClickArrows' | 'localRoomNav';
   }
 
   interface NpcLineSeg {

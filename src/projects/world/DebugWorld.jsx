@@ -32,6 +32,7 @@ export default function DebugWorld(props) {
         if (el) {
           state.rootEl = el;
           el.style.setProperty(cssName.debugDoorArrowPtrEvts, 'none');
+          el.style.setProperty(cssName.debugLocalNavDisplay, 'none');
           // ...
         }
       },
@@ -113,25 +114,24 @@ export default function DebugWorld(props) {
         style={{ transform: gm.transformStyle }}
       >
 
-        {props.localNav && (
-          <svg
-            className="debug-room-nav"
-            width={roomNavAabb.width}
-            height={roomNavAabb.height}
-            style={{
-              left: roomNavAabb.x,
-              top: roomNavAabb.y,
-            }}
-          >
-            <g style={{ transform: `translate(${-roomNavAabb.x}px, ${-roomNavAabb.y}px)` }}>
-              <path className="nav-poly" d={roomNavPoly.svgPath} />
-              {visDoorIds.map(doorId => {
-                const { seg: [src, dst] } = gm.doors[doorId];
-                return <line key={doorId} stroke="red" x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} />
-              })}
-            </g>
-          </svg>
-        )}
+        <svg
+          className="debug-room-nav"
+          width={roomNavAabb.width}
+          height={roomNavAabb.height}
+          style={{
+            left: roomNavAabb.x,
+            top: roomNavAabb.y,
+            ...props.localRoomNav === true && { display: 'initial' },// Prop overrides CSS variable
+          }}
+        >
+          <g style={{ transform: `translate(${-roomNavAabb.x}px, ${-roomNavAabb.y}px)` }}>
+            <path className="nav-poly" d={roomNavPoly.svgPath} />
+            {visDoorIds.map(doorId => {
+              const { seg: [src, dst] } = gm.doors[doorId];
+              return <line key={doorId} stroke="red" x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} />
+            })}
+          </g>
+        </svg>
 
         {props.roomOutlines && (
           <svg
@@ -239,7 +239,7 @@ export default function DebugWorld(props) {
 /**
  * @typedef Props @type {object}
  * @property {boolean} [canClickArrows]
- * @property {boolean} [localNav]
+ * @property {boolean} [localRoomNav]
  * @property {boolean} [outlines]
  * @property {boolean} [roomOutlines]
  * @property {boolean} [showIds]
@@ -267,10 +267,9 @@ const rootCss = css`
       position: absolute;
     }
     div.debug-door-arrow {
-      background-image: url('/assets/icon/circle-right.svg');
-      pointer-events: none;
-      cursor: pointer;
       pointer-events: var(${cssName.debugDoorArrowPtrEvts});
+      cursor: pointer;
+      background-image: url('/assets/icon/circle-right.svg');
     }
     div.debug-label-info {
       background-image: url('/assets/icon/info-icon.svg');
@@ -296,6 +295,10 @@ const rootCss = css`
       pointer-events: none;
       transform-origin: top left;
     }
+    svg.debug-room-nav {
+      display: var(${cssName.debugLocalNavDisplay});
+    }
+
     svg.debug-room-nav, svg.debug-room-outline {
       position: absolute;
       pointer-events: none;
