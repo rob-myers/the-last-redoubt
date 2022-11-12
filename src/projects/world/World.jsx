@@ -82,9 +82,9 @@ export default function World(props) {
         // localRoomNav
         // geomorphOutlines
         // localRoomOutline
-        showIds
-        showLabels
-        // windows
+        showIds // 🚧
+        showLabels // 🚧
+        // windows // 🚧
         api={state}
         onLoad={api => (state.debug = api) && update()}
       />

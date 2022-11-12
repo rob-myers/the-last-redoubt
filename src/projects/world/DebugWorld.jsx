@@ -91,7 +91,7 @@ export default function DebugWorld(props) {
 
   return (
     <div
-      className={cx("debug-parent", rootCss)}
+      className={cx("debug", rootCss)}
       onClick={onClick}
       ref={state.rootRef}
     >
@@ -112,7 +112,7 @@ export default function DebugWorld(props) {
 
       <div
         key={gm.itemKey}
-        className="debug"
+        className="debug-room"
         /** Must transform local ordinates */
         style={{ transform: gm.transformStyle }}
       >
@@ -151,8 +151,7 @@ export default function DebugWorld(props) {
 
         {
           // Arrows and room/door ids
-          
-          // TODO issue with transformed geomorphs 🚧
+          // 🚧 issue with transformed geomorphs
         }
         {visDoorIds.map(doorId => {
           const { poly, normal, roomIds } = gm.doors[doorId];
@@ -264,11 +263,12 @@ const rootCss = css`
   div.geomorph-outline {
     display: var(${cssName.debugGeomorphOutlineDisplay});
     position: absolute;
-    border: 2px red solid;
+    z-index: 1;
     pointer-events: none;
+    border: 2px red solid;
   }
 
-  div.debug {
+  div.debug-room {
     position: absolute;
 
     div.debug-door-arrow, div.debug-label-info {
