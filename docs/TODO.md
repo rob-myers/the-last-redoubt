@@ -2,16 +2,17 @@
 
 ## In progress
 
-- 🐛 state.anims cancel may have broken "responsive track"
-- ✅ 🐛 moving via devtool element select can break panzoom
-  - div.panzoom-parent.scrollTop is being changed by devtool
-  - CssPanZoom can detect via 'scroll' event
-
-- ✅ Cannot initially edit panzoom-translate
-- 🤔 Persist npc config?
 - Alt PNG filters?
   - .geomorph `brightness(51%) sepia(0.1)`
   - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
+
+- 🐛 state.anims cancel may have broken "responsive track"
+
+- ✅ 🐛 moving via devtool element select can break panzoom
+  - div.panzoom-parent.scrollTop is being changed by devtool
+  - CssPanZoom can detect via 'scroll' event
+- ✅ Cannot initially edit panzoom-translate
+- 🤔 Persist npc config?
 
 - ✅ hookup `DebugWorld` to `npc config` via CSS variables
 - ✅ Tabs: Keyboard Enter Interacts
@@ -43,6 +44,8 @@
     - ✅ support e.g.
       - `{ echo foo; echo bar; } | npc rm-decor`
       - `{ echo foo; echo bar; } | npc decor`
+  - can add test seg e.g.
+    > `npc decor '{ key: "bar", type: "seg", src: {"x":207.83,"y":384.43}, dst: {"x":227.83,"y":384.43} }'`
   - 🚧 translate textual algorithm into `predictNpcSegCollision`
   - test against manually placed segs
   - integrate into NPC vs Door collision prevention

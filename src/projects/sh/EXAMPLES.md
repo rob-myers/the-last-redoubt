@@ -46,6 +46,8 @@ range 5 |
 npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'
 npc decor foo
 echo foo | npc decor
+
+npc decor '{ key: "bar", type: "seg", src: {"x":207.83,"y":384.43}, dst: {"x":227.83,"y":384.43} }'
 ```
 
 ```sh
