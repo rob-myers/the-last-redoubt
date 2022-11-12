@@ -2,9 +2,16 @@
 
 ## In progress
 
-- state.anims cancel may have broken "responsive track"?
+- ✅ 🐛 moving via devtool element select can break panzoom
+  - div.panzoom-parent.scrollTop is being changed by devtool
+  - CssPanZoom can detect via 'scroll' event
+- 🐛 state.anims cancel may have broken "responsive track"
+
 - ✅ Cannot initially edit panzoom-translate
 - 🤔 Persist npc config?
+- Alt PNG filters?
+  - .geomorph `brightness(51%) sepia(0.1)`
+  - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
 
 - ✅ hookup `DebugWorld` to `npc config` via CSS variables
 - ✅ Tabs: Keyboard Enter Interacts

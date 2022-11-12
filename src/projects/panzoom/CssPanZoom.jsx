@@ -298,6 +298,8 @@ export default function CssPanZoom(props) {
           state.parent.addEventListener('pointerup', e => state.evt.pointerup(e));
           state.parent.addEventListener('pointerleave', e => state.evt.pointerup(e));
           state.parent.addEventListener('pointercancel', e => state.evt.pointerup(e));
+          // Handle devtool scroll
+          state.parent.addEventListener('scroll', e => state.animationAction('cancel'));
         }
       },
       syncStyles() {
