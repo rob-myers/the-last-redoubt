@@ -2,10 +2,10 @@
 
 ## In progress
 
+- 🐛 state.anims cancel may have broken "responsive track"
 - ✅ 🐛 moving via devtool element select can break panzoom
   - div.panzoom-parent.scrollTop is being changed by devtool
   - CssPanZoom can detect via 'scroll' event
-- 🐛 state.anims cancel may have broken "responsive track"
 
 - ✅ Cannot initially edit panzoom-translate
 - 🤔 Persist npc config?
@@ -449,27 +449,28 @@ How to embed video?
 
 # Video Notes
 
-## Homepage CSS video
+## 🚧 Homepage CSS video
 
 Camera via CSS transforms:
 > `.panzoom-parent` <br>
 > Can edit transforms (translate/scale)
 
 Static World via PNGs
-> `.panzoom-parent .geomorphs`
+> `.panzoom-parent .geomorphs` <br>
+> change filter
 
 Debug (Global)
-> foo <br>
-> bar <br>
-> baz
+> --debug-room-nav-display <br>
+> --debug-room-outline-display <br>
+> --debug-show-ids <br>
+> ...
 
-- debug
-	- door icons
-	- info icons
-- npcs
-	- decorations
-		- path
-		- circle
-		- segment
-- ...
+Npcs
+> decor <br>
+> ...
 
+FOV
+> change filter
+
+Doors
+> toggle class `open` on `div.door`

@@ -81,7 +81,7 @@ export default function FOV(props) {
   }, []);
 
   return (
-    <div className={cx("FOV", rootCss)}>
+    <div className={cx("fov", rootCss)}>
       {gms.map((gm, gmId) =>
         <img
           key={gmId}

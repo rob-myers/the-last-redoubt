@@ -106,19 +106,21 @@ export default function DebugWorld(props) {
       ref={state.rootRef}
     >
 
-      {gmGraph.gms.map((gm, gmId) =>
-        <div
-          key={gmId}
-          className="geomorph-outline"
-          style={{
-            left: gm.gridRect.x,
-            top: gm.gridRect.y,
-            width: gm.gridRect.width,
-            height: gm.gridRect.height,
-            ...props.geomorphOutlines && { display: 'initial' },// Prop overrides CSS var
-          }}
-        />  
-      )}
+      <div className="debug-global">
+        {gmGraph.gms.map((gm, gmId) =>
+          <div
+            key={gmId}
+            className="geomorph-outline"
+            style={{
+              left: gm.gridRect.x,
+              top: gm.gridRect.y,
+              width: gm.gridRect.width,
+              height: gm.gridRect.height,
+              ...props.geomorphOutlines && { display: 'initial' },// Prop overrides CSS var
+            }}
+          />  
+        )}
+      </div>
 
       <div
         key={gm.itemKey}
