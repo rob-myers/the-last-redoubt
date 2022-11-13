@@ -5,7 +5,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
-import { testNever } from "../service/generic";
+import { keys, testNever } from "../service/generic";
 import { Vect } from "../geom";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -56,7 +56,7 @@ export default function CssPanZoom(props) {
           state.panning = true;
           state.origin = new Vect(state.x, state.y);
           // This works whether there are multiple pointers or not
-          const point = getMiddle(state.pointers)
+          const point = getMiddle(state.pointers);
           state.start = {
             clientX: point.clientX,
             clientY: point.clientY,
@@ -151,7 +151,9 @@ export default function CssPanZoom(props) {
             throw testNever(type);
         }
       },
-      // TODO support changing scale
+      /**
+       * 🚧 support changing scale
+       */
       computePathKeyframes(path) {
         const worldPoint = state.getWorldAtCenter();
         const elens = path.map((p, i) => Number(p.distanceTo(i === 0 ? worldPoint : path[i - 1]).toFixed(2)));
@@ -166,7 +168,12 @@ export default function CssPanZoom(props) {
           { offset: 0, transform: `translate(${current.x}px, ${current.y}px)` },
           ...elens.map((elen, i) => ({
             offset: (sofar += elen) / total,
-            transform: `translate(${screenWidth/2 - (current.scale * path[i].x)}px, ${screenHeight/2 - (current.scale * path[i].y)}px)`,
+            // For center need to take account of scroll{Left,Top}
+            transform: `translate(${
+              screenWidth/2 + state.parent.scrollLeft - (current.scale * path[i].x)
+            }px, ${
+              screenHeight/2 + state.parent.scrollTop - (current.scale * path[i].y)
+            }px)`,
           })),
         ];
 
@@ -206,30 +213,37 @@ export default function CssPanZoom(props) {
       },
       getCurrentTransform() {
         const bounds = state.parent.getBoundingClientRect();
+        /**
+         * `trBounds` is offset negatively by state.parent.scroll{Left,Top}.
+         * We undo this offset below, so that
+         * @see {state.syncStyles} makes sense.
+         */
         const trBounds = state.translateRoot.getBoundingClientRect();
         return {
-          x: trBounds.x - bounds.x,
-          y: trBounds.y - bounds.y,
+          x: (trBounds.x + state.parent.scrollLeft) - bounds.x,
+          y: (trBounds.y + state.parent.scrollTop) - bounds.y,
           // Works because state.scaleRoot.style.width = '1px'
           scale: state.scaleRoot.getBoundingClientRect().width,
         }
       },
+      // Handles `state.parent.scroll{Left,Top}`
       getWorld(e) {
         const parentBounds = state.parent.getBoundingClientRect();
         const screenX = e.clientX - parentBounds.left;
         const screenY = e.clientY - parentBounds.top;
-        // state.{x,y,scale} needn't be current transform when transitioning
         const current = state.getCurrentTransform();
-        const worldX = (screenX - current.x) / current.scale;
-        const worldY = (screenY - current.y) / current.scale;
+        // Need scroll offset to get actual current translation
+        const worldX = (screenX - (current.x - state.parent.scrollLeft)) / current.scale;
+        const worldY = (screenY - (current.y - state.parent.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
+      // Handles `state.parent.scroll{Left,Top}`
       getWorldAtCenter() {
         const parentBounds = state.parent.getBoundingClientRect();
-        // state.{x,y,scale} needn't be current transform when transitioning
         const current = state.getCurrentTransform();
-        const worldX = (parentBounds.width/2 - current.x) / current.scale;
-        const worldY = (parentBounds.height/2 - current.y) / current.scale;
+        // Need scroll offset to get actual current translation
+        const worldX = (parentBounds.width/2 - (current.x - state.parent.scrollLeft)) / current.scale;
+        const worldY = (parentBounds.height/2 - (current.y - state.parent.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
       idleTimeout() {
@@ -256,8 +270,9 @@ export default function CssPanZoom(props) {
          * i.e. x := screenWidth/2 - (scale * worldPoint.x)
          */
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        const dstX = screenWidth/2 - (scale * worldPoint.x);
-        const dstY = screenHeight/2 - (scale * worldPoint.y);
+        // For center need to take account of scroll{Left,Top}
+        const dstX = screenWidth/2 + state.parent.scrollLeft - (scale * worldPoint.x);
+        const dstY = screenHeight/2 + state.parent.scrollTop - (scale * worldPoint.y);
 
         const current = state.getCurrentTransform();
 
@@ -292,14 +307,6 @@ export default function CssPanZoom(props) {
           state.parent = /** @type {*} */ (el.parentElement);
           state.translateRoot = el;
           state.scaleRoot = /** @type {*} */ (el.children[0]);
-          state.parent.addEventListener('wheel', e => state.evt.wheel(e));
-          state.parent.addEventListener('pointerdown', e => state.evt.pointerdown(e));
-          state.parent.addEventListener('pointermove', e => state.evt.pointermove(e));
-          state.parent.addEventListener('pointerup', e => state.evt.pointerup(e));
-          state.parent.addEventListener('pointerleave', e => state.evt.pointerup(e));
-          state.parent.addEventListener('pointercancel', e => state.evt.pointerup(e));
-          // Handle devtool scroll
-          state.parent.addEventListener('scroll', e => state.animationAction('cancel'));
         }
       },
       syncStyles() {
@@ -310,20 +317,21 @@ export default function CssPanZoom(props) {
         state.translateRoot.style.transform = `translate(${state.x}px, ${state.y}px)`;
         state.scaleRoot.style.transform = `scale(${state.scale})`;
       },
-      zoomToClient(toScale, e) {
+      zoomToClient(dstScale, e) {
         const parentBounds = state.parent.getBoundingClientRect();
         const screenX = e.clientX - parentBounds.left;
         const screenY = e.clientY - parentBounds.top;
-        // Compute world position given `translate(x, y) scale(scale)`
+        // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
         // - world to screen is: state.x + (state.scale * worldX)
         // - screen to world is: (screenX - state.x) / state.scale
-        const worldX = (screenX - state.x) / state.scale;
-        const worldY = (screenY - state.y) / state.scale;
-        // To maintain position, need state.x' s.t.
-        // worldX' := (screenX - state.x') / toScale = worldPoint.x
-        state.x = screenX - (worldX * toScale);
-        state.y = screenY - (worldY * toScale);
-        state.scale = toScale;
+        const worldX = (screenX - (state.x - state.parent.scrollLeft)) / state.scale;
+        const worldY = (screenY - (state.y - state.parent.scrollTop)) / state.scale;
+        // To maintain position,
+        // - need state.x' s.t. worldX' := (screenX - state.x') / toScale = worldPoint.x
+        // - we undo scroll so that syncStyles makes sense
+        state.x = screenX - (worldX * dstScale) + state.parent.scrollLeft;
+        state.y = screenY - (worldY * dstScale) + state.parent.scrollTop;
+        state.scale = dstScale;
         state.setStyles();
       },
       zoomWithWheel(event) {
@@ -333,20 +341,37 @@ export default function CssPanZoom(props) {
         const delta = event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY;
         const wheel = delta < 0 ? 1 : -1;
         // Wheel has extra 0.5 scale factor (unlike pinch)
-        const toScale = Math.min(
+        const dstScale = Math.min(
           Math.max(state.scale * Math.exp((wheel * state.opts.step * 0.5) / 3), state.opts.minScale),
           state.opts.maxScale,
         );
-        state.zoomToClient(toScale, event);
+        state.zoomToClient(dstScale, event);
       }
     };
   }, { deeper: ['evt'] });
 
   React.useEffect(() => {
+    const pointerup = /** @param {PointerEvent} e */ e => state.evt.pointerup(e);
+    const cb = {
+      wheel: /** @param {WheelEvent} e */ e => state.evt.wheel(e),
+      pointerdown: /** @param {PointerEvent} e */ e => state.evt.pointerdown(e),
+      pointermove: /** @param {PointerEvent} e */ e => state.evt.pointermove(e),
+      pointerup,
+      pointerleave: pointerup,
+      pointercancel: pointerup,
+      // scroll: () => { console.log('devtool scroll!'); },
+    };
+    keys(cb).forEach(key => state.parent.addEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
+
     props.onLoad?.(state);
+
     // Apply initial zoom and centering
     state.setStyles();
     state.panZoomTo(props.initZoom || 1, props.initCenter || { x: 0, y: 0 }, 1000)?.catch(_x => {});
+
+    return () => {
+      keys(cb).forEach(key => state.parent.removeEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
+    };
   }, []);
 
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: false });
@@ -382,11 +407,12 @@ export default function CssPanZoom(props) {
 
 /** Must divide 60 */
 const gridExtent = 60 * 60;
-const gridColour = 'rgba(200, 0, 0, 0.15)';
+const gridColour = 'rgba(100, 100, 100, 0.1)';
 
 const rootCss = css`
   width: 100%;
   height: 100%;
+  /** Needed so .panzoom-parent will scroll */
   overflow: hidden;
   user-select: none;
   /** This is important for mobile to prevent scrolling while panning */

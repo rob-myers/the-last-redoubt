@@ -2,7 +2,16 @@
 
 ## In progress
 
-- Performance: smaller main bundle?
+- ✅ BUG: devtool element select/scrollIntoView can break panzoom
+  - `div.panzoom-parent` `scrollTop` `scrollLeft` being changed by devtool
+  - Can manually fix by setting both as 0
+  - Fixed by carefully adjusting functions
+
+- Performance
+  - Smaller main bundle
+  - Try upgrade Gatsby
+  - Prevent YouTube from being bundled
+  - remark/rehypePlugins ?
 
 - Improve Carousel hard-coded height
 - 🐛 state.anims cancel may have broken "responsive track"
@@ -12,9 +21,6 @@
   - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
 
 
-- ✅ 🐛 moving via devtool element select can break panzoom
-  - div.panzoom-parent.scrollTop is being changed by devtool
-  - CssPanZoom can detect via 'scroll' event
 - ✅ Cannot initially edit panzoom-translate
 - 🤔 Persist npc config?
 
@@ -464,7 +470,9 @@ Camera via CSS transforms:
 
 Static World via PNGs
 > `.panzoom-parent .geomorphs` <br>
+> position `absolute` is relative to `.flexlayout__tab`
 > change filter
+> briefly mention shade
 
 Debug (Global)
 > --debug-room-nav-display <br>
