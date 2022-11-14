@@ -165,7 +165,7 @@ function Slides(props: Props & {
             : <div className="slide-container slide-video-container" data-slide-id={i}>
                 {item.label && <div className="slide-label">{item.label}</div>}
                 <React.Suspense>
-                  <Video videoKey={item.video} />
+                  {typeof window !== 'undefined' && <Video videoKey={item.video} />}
                 </React.Suspense>
               </div>
           }
