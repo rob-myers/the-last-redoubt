@@ -41,9 +41,9 @@ export default function NPC({ api, def, disabled }) {
         className={cx(cssName.npcBody, npc.key, 'no-select')}
         data-npc-key={npc.key}
       >
-        {npc.segs.map((seg, i) =>
+        {/* {npc.segs.map((seg, i) =>
           <div key={i} className="line-segment" style={{ transform: seg.transformStyle }} />
-        )}
+        )} */}
       </div>
       <div className="interact-circle" />
       <div className="bounds-circle" />

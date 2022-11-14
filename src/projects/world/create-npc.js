@@ -37,6 +37,7 @@ export default function createNpc(
       wayMetas: [],
       wayTimeoutId: 0,
     },
+    // 🚧 remove
     segs: def.segs.map(seg => ({ ...seg, transformStyle: lineSegToCssTransform(seg) })),
 
     async cancel() {

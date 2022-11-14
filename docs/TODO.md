@@ -2,9 +2,9 @@
 
 ## In progress
 
-- make homepage CSS video 
+- Make homepage CSS video 
 
-- Performance
+- 🚧 Performance
   - Smaller main bundle
   - Try upgrade Gatsby
   - Prevent YouTube from being bundled
@@ -15,8 +15,10 @@
   - Simplify to textual identity
 
 - Abandon _moving seg_ vs _static seg_ collision prediction
+  - ✅ Hide in debug mode
+  - Remove related code
 - Prefer _moving circle_ vs _static angled rect_
-- follow cam should trigger on "resize" tab
+- Follow cam should trigger on "resize" tab
 
 - Alt PNG filters?
   - .geomorph `brightness(51%) sepia(0.1)`
@@ -487,14 +489,17 @@ Debug (Global)
 
 Npcs
 - `.decor-root`
-- `.npc .andros`
-- manually translate
+  - move navpath
+- `.npc.andros`
+  - manually translate
+  - `<img>` included to load walk animation early
 - --npc-target-look-angle
   - not configurable via `npc config`
   - `npc get andros | map Object.keys | split`
-  - 
+  - `npc get andros | map 'x => x.setLookRadians(0)'`
 - --npc-bounds-radius
-  - ditto
+  - not configurable via `npc config`
+  - `spawn foo $( click 1 )` + use adjusted bounds
 
 FOV
 - change filter
