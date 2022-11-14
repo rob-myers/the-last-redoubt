@@ -62,7 +62,7 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
-    onMutate([{ target }]) {
+    async onMutate([{ target }]) {
       if (Date.now() - state.lastToggled < 100) {
         // Modified in standard way (onToggleDoor)
         return;
@@ -73,7 +73,9 @@ export default function Doors(props) {
         const gmId = Number(uiEl?.getAttribute('data-gm-id')??-1);
         const doorId = Number(uiEl?.getAttribute('data-door-id'??-1));
         if (uiEl && doorId >= 0 && doorEl.classList.contains('open') !== state.open[gmId][doorId]) {
-          state.onToggleDoor(uiEl); // Sync component with class
+          // Sync component with class, unless cannot toggle
+          const success = await state.onToggleDoor(uiEl);
+          !success && doorEl.classList.toggle('open');
         }
       }
     },
@@ -88,15 +90,15 @@ export default function Doors(props) {
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
 
       if (gmIdAttr === null || !state.vis[gmId][doorId] || sealed) {
-        return; // Not a door, or not visible, or sealed permanently
+        return false;; // Not a door, or not visible, or sealed permanently
       }
 
       if (!state.playerNearDoor(gmId, doorId)) {
-        return;
+        return false;
       }
 
       if (state.open[gmId][doorId] && !state.safeToCloseDoor(gmId, doorId)) {
-        return;
+        return false;
       }
 
       if (state.open[gmId][doorId]) {// Animate close slightly early
@@ -116,6 +118,8 @@ export default function Doors(props) {
         state.open[adjHull.adjGmId][adjHull.adjDoorId] = state.open[gmId][doorId];
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
       }
+
+      return true;
     },
     playerNearDoor(gmId, doorId) {
       const { npcs } = props.api;
@@ -304,7 +308,7 @@ const rootCss = css`
  * @property {number} lastToggled
  * @property {MutationObserver} mo
  * @property {(records: MutationRecord[]) => void} onMutate
- * @property {(uiEl: HTMLElement) => void} onToggleDoor
+ * @property {(uiEl: HTMLElement) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open open[gmId][doorId]
  * @property {boolean} ready
