@@ -69,10 +69,10 @@ export default function Doors(props) {
       } else {
         // Modified via devtool
         const doorEl = /** @type {HTMLElement} */ (target);
-        const uiEl = /** @type {HTMLElement} */ (doorEl.children[0]);
-        const gmId = Number(uiEl.getAttribute('data-gm-id')??-1);
-        const doorId = Number(uiEl.getAttribute('data-door-id'??-1));
-        if (doorId >= 0 && doorEl.classList.contains('open') !== state.open[gmId][doorId]) {
+        const uiEl = /** @type {HTMLElement | undefined} */ (doorEl.children[0]);
+        const gmId = Number(uiEl?.getAttribute('data-gm-id')??-1);
+        const doorId = Number(uiEl?.getAttribute('data-door-id'??-1));
+        if (uiEl && doorId >= 0 && doorEl.classList.contains('open') !== state.open[gmId][doorId]) {
           state.onToggleDoor(uiEl); // Sync component with class
         }
       }

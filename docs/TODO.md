@@ -507,4 +507,5 @@ FOV
 - change filter
 
 Doors
-- toggle class `open` on `div.door`
+- toggle door via click
+- toggle door via class `open` on `div.door`
