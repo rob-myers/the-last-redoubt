@@ -47,11 +47,16 @@ npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius
 npc decor foo
 echo foo | npc decor
 
+# 🚧 seg -> rect
 npc decor '{ key: "bar", type: "seg", src: {"x":207.83,"y":384.43}, dst: {"x":227.83,"y":384.43} }'
 ```
 
 ```sh
 view '{ point:'$( click 1 )'}'
+```
+
+```sh
+npc get andros | map 'x => x.setLookRadians(0)'
 ```
 
 ## Migrating

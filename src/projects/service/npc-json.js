@@ -48,7 +48,7 @@ function computeSpritesheetCss(parsed, offsetRadians, scale) {
   return css`
 
   .body {
-    transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcTargetLookAngle}))) scale(${scale});
+    transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
   }
   
 ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `

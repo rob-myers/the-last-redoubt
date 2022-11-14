@@ -54,7 +54,7 @@ export const cssName = {
    * Angle of body when last idle e.g. `0rad`. Carries additional info,
    * i.e. modulus of `2 * Math.PI`, ensuring we turn the smaller angle.
    */
-  npcTargetLookAngle: '--npc-target-look-angle',
+  npcLookRadians: '--npc-look-radians',
 
   open: 'open',
   resetIcon: 'reset-icon',

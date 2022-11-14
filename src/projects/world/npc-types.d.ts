@@ -98,7 +98,7 @@ declare namespace NPC {
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
     startAnimation(): void;
-    setLookTarget(radians: number): void;
+    setLookRadians(radians: number): void;
     // setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
     updateAnimAux(): void;

@@ -48,7 +48,7 @@ export default function createNpc(
         this.clearWayMetas();
         this.commitWalkStyles();
         if (this.el.body instanceof HTMLDivElement) {
-          this.setLookTarget(this.getAngle());
+          this.setLookRadians(this.getAngle());
         }
         await/** @type {Promise<void>} */ (new Promise(resolve => {
           this.anim.translate.addEventListener('cancel', () => resolve());
@@ -62,7 +62,7 @@ export default function createNpc(
     },
     commitWalkStyles() {
       this.anim.translate.commitStyles();
-      this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${this.getAngle()}rad`);
+      this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
     },
     everAnimated() {
       return this.el.root?.getAnimations().includes(this.anim.translate);
@@ -247,11 +247,11 @@ export default function createNpc(
         return this.getAngle();
       }
       // Ensure we don't turn more than 180 deg
-      const targetLookRadians = getNumericCssVar(this.el.root, cssName.npcTargetLookAngle);
+      const targetLookRadians = getNumericCssVar(this.el.root, cssName.npcLookRadians);
       let radians = Math.atan2(direction.y, direction.x);
       while (radians - targetLookRadians > Math.PI) radians -= 2 * Math.PI;
       while (targetLookRadians - radians > Math.PI) radians += 2 * Math.PI;
-      this.setLookTarget(radians); // Only works when idle, otherwise overridden
+      this.setLookRadians(radians); // Only works when idle, otherwise overridden
       return radians;
     },
     nextWayTimeout() {
@@ -270,7 +270,7 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
 
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-        this.setLookTarget(def.angle);
+        this.setLookRadians(def.angle);
         const { radius } = npcJson[this.jsonKey];
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
 
@@ -288,7 +288,7 @@ export default function createNpc(
           this.anim.rotate.pause();
           this.anim.sprites.pause();
           this.commitWalkStyles();
-          this.setLookTarget(this.getAngle());
+          this.setLookRadians(this.getAngle());
         }
         /**
          * Pending wayMeta is at this.anim.wayMetas[0].
@@ -314,8 +314,8 @@ export default function createNpc(
         }
       }
     },
-    setLookTarget(radians) {
-      this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${radians}rad`);
+    setLookRadians(radians) {
+      this.el.root.style.setProperty(cssName.npcLookRadians, `${radians}rad`);
     },
     setSpritesheet(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
@@ -330,7 +330,7 @@ export default function createNpc(
           this.commitWalkStyles(); // Assume we were just walking
         }
         this.anim.translate.cancel();
-        this.setLookTarget(this.getAngle());
+        this.setLookRadians(this.getAngle());
         this.anim.rotate.cancel();
       }
 
@@ -372,7 +372,7 @@ export default function createNpc(
       } else if (this.anim.spriteSheet === 'idle') {
         this.clearWayMetas();
         // Post walk, set target as current angle 
-        this.setLookTarget(this.getAngle());
+        this.setLookRadians(this.getAngle());
         // Update staticBounds
         const { x, y } = this.getPosition();
         const radius = this.getRadius();
