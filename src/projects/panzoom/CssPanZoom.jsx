@@ -142,7 +142,8 @@ export default function CssPanZoom(props) {
             state.anims = [null, null];
             break;
           case 'pause':
-            state.anims.forEach(anim => anim?.pause());
+            // Avoid pausing finished animation
+            state.anims.forEach(anim => anim?.playState === 'running' && anim.pause());
             break;
           case 'play':
             state.anims.forEach(anim => anim?.play());
@@ -199,13 +200,13 @@ export default function CssPanZoom(props) {
           easing: 'linear',
         });
         await new Promise((resolve, reject) => {
-          const translateAnim = /** @type {Animation} */ (state.anims[0]);
-          translateAnim.addEventListener('finish', () => {
+          const trAnim = /** @type {Animation} */ (state.anims[0]);
+          trAnim.addEventListener('finish', () => {
             resolve('completed');
             // state.events.next({ key: 'completed-panzoom-to' })
-            state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
+            state.releaseAnim(trAnim);
           });
-          translateAnim.addEventListener('cancel', () => {
+          trAnim.addEventListener('cancel', () => {
             reject('cancelled');
             // state.events.next({ key: 'cancelled-panzoom-to' })
           });
@@ -281,7 +282,8 @@ export default function CssPanZoom(props) {
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px)` },
         ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing });
 
-        if (scale !== current.scale) {
+        const shouldScale = scale !== current.scale;
+        if (shouldScale) {
           state.anims[1] = state.scaleRoot.animate([
             { offset: 0, transform: `scale(${current.scale})` },
             { offset: 1, transform: `scale(${scale})` },
@@ -289,18 +291,25 @@ export default function CssPanZoom(props) {
         }
 
         await new Promise((resolve, reject) => {
-          const translateAnim = /** @type {Animation} */ (state.anims[0]);
-          translateAnim.addEventListener('finish', () => {
+          const trAnim = /** @type {Animation} */ (state.anims[0]);
+          const scAnim = shouldScale ? state.anims[1] : null;
+          trAnim.addEventListener('finish', () => {
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
-            state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
+            state.releaseAnim(trAnim);
+            scAnim && state.releaseAnim(scAnim);
+            // state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
           });
-          translateAnim.addEventListener('cancel', () => {
+          trAnim.addEventListener('cancel', () => {
             reject('cancelled');
             state.events.next({ key: 'cancelled-panzoom-to' })
           });
         });
+      },
+      releaseAnim(anim) {
+        anim.commitStyles();
+        anim.cancel();
       },
       rootRef(el) {
         if (el) {

@@ -2,10 +2,7 @@
 
 ## In progress
 
-- ✅ BUG: devtool element select/scrollIntoView can break panzoom
-  - `div.panzoom-parent` `scrollTop` `scrollLeft` being changed by devtool
-  - Can manually fix by setting both as 0
-  - Fixed by carefully adjusting functions
+- make homepage CSS video 
 
 - Performance
   - Smaller main bundle
@@ -14,20 +11,18 @@
   - remark/rehypePlugins ?
 
 - Improve Carousel hard-coded height
-- 🐛 state.anims cancel may have broken "responsive track"
+- Clickable tty msgs getting out of sync
+  - Simplify to textual identity
+
+- Abandon moving seg vs static seg collision prediction
+- Prefer moving circle vs static angled rect
+- follow cam should trigger on "resize" tab
 
 - Alt PNG filters?
   - .geomorph `brightness(51%) sepia(0.1)`
   - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
 
-
-- ✅ Cannot initially edit panzoom-translate
 - 🤔 Persist npc config?
-
-- ✅ hookup `DebugWorld` to `npc config` via CSS variables
-- ✅ Tabs: Keyboard Enter Interacts
-- Clickable tty msgs getting out of sync
-  - Simplify to textual identity
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
@@ -39,7 +34,7 @@
   - Adjust Intro
 
 - ✅ Document npc vs line-seg collision
-- 🚧 Implement npc vs line seg collision predict
+- ❌ Implement npc vs line seg collision predict
   - ✅ define NPC segs and show them via debug
     - ✅ defined via CSS
     - ✅ configuration induces CSS
@@ -59,6 +54,7 @@
   - 🚧 translate textual algorithm into `predictNpcSegCollision`
   - test against manually placed segs
   - integrate into NPC vs Door collision prevention
+
 - Recall how NPC vs Door intersection is currently computed
   - getNpcsIntersecting > circleIntersectsConvexPolygon
   - playerNearDoor > circleIntersectsConvexPolygon
@@ -221,6 +217,15 @@ How to embed video?
 
 ## Done
 
+- ✅ disabling Tabs makes World transform jump
+- ✅ state.anims cancel approach broke "responsive track"
+- ✅ Cannot initially edit panzoom-translate
+- ✅ hookup `DebugWorld` to `npc config` via CSS variables
+- ✅ Tabs: Keyboard Enter Interacts
+- ✅ BUG: devtool element select/scrollIntoView can break panzoom
+  - `div.panzoom-parent` `scrollTop` `scrollLeft` being changed by devtool
+  - Can manually fix by setting both as 0
+  - Fixed by carefully adjusting functions
 - ✅ Clicking on Carousel maximises image
 - Carousel
   - ✅ Can Enter/Escape to Max/Min
