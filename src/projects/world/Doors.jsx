@@ -20,6 +20,8 @@ export default function Doors(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
     events: new Subject,
+    lastToggled: 0,
+    mo: new MutationObserver(records => state.onMutate(records)),
     open: gms.map((gm, gmId) =>
       gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) || false)
     ),
@@ -60,11 +62,27 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
-    async onToggleDoor(e) {
-      const gmIdAttr = /** @type {HTMLDivElement} */ (e.target).getAttribute('data-gm-id');
+    onMutate([{ target }]) {
+      if (Date.now() - state.lastToggled < 100) {
+        // Modified in standard way (onToggleDoor)
+        return;
+      } else {
+        // Modified via devtool
+        const doorEl = /** @type {HTMLElement} */ (target);
+        const uiEl = /** @type {HTMLElement} */ (doorEl.children[0]);
+        const gmId = Number(uiEl.getAttribute('data-gm-id')??-1);
+        const doorId = Number(uiEl.getAttribute('data-door-id'??-1));
+        if (doorId >= 0 && doorEl.classList.contains('open') !== state.open[gmId][doorId]) {
+          state.onToggleDoor(uiEl); // Sync component with class
+        }
+      }
+    },
+    async onToggleDoor(uiEl) {
+      state.lastToggled = Date.now();
+      const gmIdAttr = uiEl.getAttribute('data-gm-id');
       const gmId = Number(gmIdAttr);
-      const doorId = Number(/** @type {HTMLDivElement} */ (e.target).getAttribute('data-door-id'));
-      const hullDoorId = Number(/** @type {HTMLDivElement} */ (e.target).getAttribute('data-hull-door-id'));
+      const doorId = Number(uiEl.getAttribute('data-door-id'));
+      const hullDoorId = Number(uiEl.getAttribute('data-hull-door-id'));
 
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeByIds(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
@@ -145,10 +163,15 @@ export default function Doors(props) {
 
   React.useEffect(() => {
     gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
-    /** @param {PointerEvent} e */
-    const cb = (e) => state.onToggleDoor(e);
+    // Listen for .door.open mutation
+    state.mo.observe(state.rootEl, { attributes: true, attributeFilter: ['class'], subtree: true });
+    // Handle door click
+    const cb = /** @param {PointerEvent} e */ e => state.onToggleDoor(/** @type {HTMLElement} */ (e.target));
     state.rootEl.addEventListener('pointerup', cb);
-    return () => void state.rootEl.removeEventListener('pointerup', cb);
+    return () => {
+      state.mo.disconnect();
+      state.rootEl.removeEventListener('pointerup', cb);
+    };
   }, [gms]);
   
   return (
@@ -216,7 +239,7 @@ const rootCss = css`
     position: absolute;
     pointer-events: none;
     
-    .door-touch-ui {
+    .${cssName.doorTouchUi} {
       cursor: pointer;
       pointer-events: all;
       position: absolute;
@@ -231,32 +254,32 @@ const rootCss = css`
       border-radius: var(--npc-door-touch-radius);
     }
 
-    &:not(.iris) {
+    &:not(.${cssName.iris}) {
       /* background: #444; */
       background: #fff;
       border: 1px solid #999;
 
       transition: width 300ms ease-in;
-      &.open {
+      &.${cssName.open} {
         width: 4px !important;
       }
     }
 
-    &.hull {
+    &.${cssName.hull} {
       transition: width 600ms ease-in;
-      .door-touch-ui {
+      .${cssName.doorTouchUi} {
         top: calc(-1 * var(--npc-door-touch-radius) + ${ hullDoorWidth / 2 }px );
       }
     }
 
-    &.iris {
+    &.${cssName.iris} {
       background-image: linear-gradient(45deg, #000 33.33%, #888 33.33%, #888 50%, #000 50%, #000 83.33%, #888 83.33%, #aaa 100%);
       background-size: 4.24px 4.24px;
       border: 1px solid #aaa;
       
       opacity: 1;
       transition: opacity 300ms ease;
-      &.open {
+      &.${cssName.open} {
         opacity: 0.2;
       }
     }
@@ -278,7 +301,10 @@ const rootCss = css`
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
- * @property {(e: PointerEvent) => void} onToggleDoor
+ * @property {number} lastToggled
+ * @property {MutationObserver} mo
+ * @property {(records: MutationRecord[]) => void} onMutate
+ * @property {(uiEl: HTMLElement) => void} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open open[gmId][doorId]
  * @property {boolean} ready

@@ -502,6 +502,8 @@ Npcs
   - `spawn foo $( click 1 )` + use adjusted bounds
 
 FOV
+- observe clip-path changing
+- remove and undo
 - change filter
 
 Doors
