@@ -50,6 +50,9 @@ export default function Tabs(props: Props) {
           }
           break;
         case 'Enter':
+          if (!state.expanded) {
+            await state.toggleExpand();
+          }
           if (!state.enabled) {
             await state.toggleEnabled();
           }

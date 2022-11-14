@@ -14,8 +14,8 @@
 - Clickable tty msgs getting out of sync
   - Simplify to textual identity
 
-- Abandon moving seg vs static seg collision prediction
-- Prefer moving circle vs static angled rect
+- Abandon _moving seg_ vs _static seg_ collision prediction
+- Prefer _moving circle_ vs _static angled rect_
 - follow cam should trigger on "resize" tab
 
 - Alt PNG filters?
@@ -470,27 +470,34 @@ How to embed video?
 ## 🚧 Homepage CSS video
 
 Camera via CSS transforms:
-> `.panzoom-parent` <br>
-> Can edit transforms (translate/scale)
+- `.panzoom-parent`
+- Can edit transforms (translate/scale)
 
 Static World via PNGs
-> `.panzoom-parent .geomorphs` <br>
-> position `absolute` is relative to `.flexlayout__tab`
-> change filter
-> briefly mention shade
+- `.panzoom-parent .geomorphs`
+- position `absolute` is relative to `.flexlayout__tab`
+- can remove image and then undo
+- can remove shade and then undo
+- change filter
 
 Debug (Global)
-> --debug-room-nav-display <br>
-> --debug-room-outline-display <br>
-> --debug-show-ids <br>
-> ...
+- --debug-room-nav-display
+- --debug-room-outline-display
+- --debug-show-ids
 
 Npcs
-> decor <br>
-> ...
+- `.decor-root`
+- `.npc .andros`
+- manually translate
+- --npc-target-look-angle
+  - not configurable via `npc config`
+  - `npc get andros | map Object.keys | split`
+  - 
+- --npc-bounds-radius
+  - ditto
 
 FOV
-> change filter
+- change filter
 
 Doors
-> toggle class `open` on `div.door`
+- toggle class `open` on `div.door`
