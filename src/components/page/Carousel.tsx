@@ -212,6 +212,8 @@ type ImageCarouselItem = (
 );
 type PlainCarouselItem = React.ReactNode;
 
+const maxHeightPx = 800;
+
 /**
  * 🚧 needs simplification
  */
@@ -243,7 +245,7 @@ const rootCss = css`
     z-index: 2;
     width: 100%;
     /** 🚧 */
-    height: 800px;
+    height: calc(min(${maxHeightPx}px, 100vh - 128px));
     border: 4px solid #fff;
     border-radius: 8px;
     background-color: var(--carousel-background-color);
