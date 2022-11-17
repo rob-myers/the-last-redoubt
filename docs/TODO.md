@@ -2,15 +2,19 @@
 
 ## In progress
 
+- ✅ Do not support devtool `.door.open` toggle
+- ✅ Can `npc config omnipresent`
+- ✅ NPCS api has Proxy `config` 
 - Make homepage CSS video 
 
 - 🚧 Performance
+  - 🚧 Remove YouTube from SSR via facade
   - Smaller main bundle
   - Try upgrade Gatsby
   - Prevent YouTube from being bundled
   - remark/rehypePlugins ?
 
-- Improve Carousel hard-coded height
+- ✅ Improve Carousel hard-coded height
 - Clickable tty msgs getting out of sync
   - Simplify to textual identity
 

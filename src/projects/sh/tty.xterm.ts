@@ -1,6 +1,6 @@
 import type { Terminal } from 'xterm';
 import { ansiColor } from './util';
-import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk } from './io';
+import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
 
 /**
@@ -458,6 +458,11 @@ export class ttyXtermClass {
       return this.queueCommands([{ key: 'line', line: `${ansiColor.Yellow}null${ansiColor.Reset}` }]);
     } else if (msg === undefined) {
       return;
+    } else if (isProxy(msg)) {
+      return this.queueCommands([{
+        key: 'line',
+        line: `${ansiColor.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansiColor.Reset}`,
+      }]);
     }
 
     switch (msg.key) {
@@ -518,7 +523,7 @@ export class ttyXtermClass {
            * The buffer length consists of the screen rows (on resize)
            * plus the scrollback.
            */
-          const {items} = (msg as DataChunk);
+          const {items} = msg as DataChunk;
           // Pretend we outputted them all
           this.trackTotalOutput(+Math.max(0, items.length - 2 * scrollback));
           items.slice(-2 * scrollback).forEach(x => this.onMessage(x));
@@ -654,7 +659,7 @@ export class ttyXtermClass {
           this.promptReady = true;
           break;
         }
-        default: throw testNever(command);
+        default: throw testNever(command, { suffix: 'runCommands' });
       }
     }
 

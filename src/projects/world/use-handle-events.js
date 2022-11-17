@@ -88,7 +88,7 @@ export default function useHandleEvents(api) {
         case 'pre-collide':
           break;
         default:
-          throw testNever(e.meta);
+          throw testNever(e.meta, { suffix: 'handlePlayerWayEvent' });
       }
     },
   }), {
@@ -167,7 +167,7 @@ export default function useHandleEvents(api) {
             state.handleWayEvents(e);
             break;
           default:
-            throw testNever(e);
+            throw testNever(e, { suffix: 'npcsSub' });
         }
       });
 

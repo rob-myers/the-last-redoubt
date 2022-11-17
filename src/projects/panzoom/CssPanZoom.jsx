@@ -149,7 +149,7 @@ export default function CssPanZoom(props) {
             state.anims.forEach(anim => anim?.play());
             break;
           default:
-            throw testNever(type);
+            throw testNever(type, { suffix: 'animationAction' });
         }
       },
       /**

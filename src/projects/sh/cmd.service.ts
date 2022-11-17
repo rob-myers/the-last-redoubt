@@ -391,7 +391,8 @@ class cmdServiceClass {
         }
         break;
       }
-      default: throw testNever(command);
+      default:
+        throw testNever(command, { suffix: 'runCmd' });
     }
   }
 

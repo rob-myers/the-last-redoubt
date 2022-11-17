@@ -15,13 +15,11 @@ export default function Doors(props) {
 
   const update = useUpdate();
 
-  const { gmGraph, gmGraph: { gms } } = props.api;
+  const { gmGraph, gmGraph: { gms }, npcs: { config } } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
     events: new Subject,
-    lastToggled: 0,
-    mo: new MutationObserver(records => state.onMutate(records)),
     open: gms.map((gm, gmId) =>
       gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) || false)
     ),
@@ -62,25 +60,7 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
-    async onMutate([{ target }]) {
-      if (Date.now() - state.lastToggled < 100) {
-        // Modified in standard way (onToggleDoor)
-        return;
-      } else {
-        // Modified via devtool
-        const doorEl = /** @type {HTMLElement} */ (target);
-        const uiEl = /** @type {HTMLElement | undefined} */ (doorEl.children[0]);
-        const gmId = Number(uiEl?.getAttribute('data-gm-id')??-1);
-        const doorId = Number(uiEl?.getAttribute('data-door-id'??-1));
-        if (uiEl && doorId >= 0 && doorEl.classList.contains('open') !== state.open[gmId][doorId]) {
-          // Sync component with class, unless cannot toggle
-          const success = await state.onToggleDoor(uiEl);
-          !success && doorEl.classList.toggle('open');
-        }
-      }
-    },
     async onToggleDoor(uiEl) {
-      state.lastToggled = Date.now();
       const gmIdAttr = uiEl.getAttribute('data-gm-id');
       const gmId = Number(gmIdAttr);
       const doorId = Number(uiEl.getAttribute('data-door-id'));
@@ -93,7 +73,7 @@ export default function Doors(props) {
         return false;; // Not a door, or not visible, or sealed permanently
       }
 
-      if (!state.playerNearDoor(gmId, doorId)) {
+      if (!config.omnipresent && !state.playerNearDoor(gmId, doorId)) {
         return false;
       }
 
@@ -158,7 +138,7 @@ export default function Doors(props) {
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
     },
   }), {
-    deps: [props.api, gmGraph],
+    deps: [props.api, props.api.npcs, gmGraph],
   });
 
   React.useEffect(() => {
@@ -167,15 +147,10 @@ export default function Doors(props) {
 
   React.useEffect(() => {
     gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
-    // Listen for .door.open mutation
-    state.mo.observe(state.rootEl, { attributes: true, attributeFilter: ['class'], subtree: true });
     // Handle door click
     const cb = /** @param {PointerEvent} e */ e => state.onToggleDoor(/** @type {HTMLElement} */ (e.target));
     state.rootEl.addEventListener('pointerup', cb);
-    return () => {
-      state.mo.disconnect();
-      state.rootEl.removeEventListener('pointerup', cb);
-    };
+    return () => state.rootEl.removeEventListener('pointerup', cb);
   }, [gms]);
   
   return (
@@ -305,9 +280,6 @@ const rootCss = css`
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
- * @property {number} lastToggled
- * @property {MutationObserver} mo
- * @property {(records: MutationRecord[]) => void} onMutate
  * @property {(uiEl: HTMLElement) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open open[gmId][doorId]

@@ -6,8 +6,8 @@ import { debounce } from "debounce";
 
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
-import { scrollback } from "../sh/io";
-import { assertNonNull, deepClone, testNever } from "../service/generic";
+import { dataChunk, scrollback, proxyKey } from "../sh/io";
+import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
 import { cssName } from "../service/const";
@@ -40,6 +40,75 @@ export default function NPCs(props) {
     decorEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
+
+    config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
+      omnipresent: /** @type {boolean} */ (false),
+    }), {
+      /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey} key */
+      get(ctxt, key) {
+        const rootStyle = state.rootEl.style;
+        const debugStyle = api.debug.rootEl.style;
+        switch (key) {
+          case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
+          case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
+          case 'geomorphOutlines': return debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true;
+          case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
+          case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
+          case 'localRoomNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
+          case 'localRoomOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
+          case 'omnipresent': return !!ctxt.omnipresent;
+          case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
+          case 'showLabels': return debugStyle.getPropertyValue(cssName.debugShowLabels) === 'none' ? false : true;
+          case 'configKey':
+          case 'decorKey':
+          case 'npcKey':
+            return undefined;
+          case proxyKey: return true;
+          default: throw testNever(key, { suffix: 'config.get' });
+        }
+      },
+      /** @param {keyof NPC.NpcConfigOpts} key */
+      set(ctxt, key, value) {
+        const rootStyle = state.rootEl.style;
+        const debugStyle = api.debug.rootEl.style;
+        switch (key) {
+          case 'canClickArrows': debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none'); break;
+          case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
+          case 'geomorphOutlines': rootStyle.setProperty(cssName.debugGeomorphOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'highlightWindows': rootStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
+          case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
+          case 'localRoomNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
+          case 'localRoomOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'omnipresent': ctxt.omnipresent = !!value; break;
+          case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
+          case 'showLabels': debugStyle.setProperty(cssName.debugShowLabels, value ? 'initial' : 'none'); break;
+          case 'configKey':
+          case 'decorKey':
+          case 'npcKey':
+            break;
+          default:
+            testNever(key, { suffix: 'config.set' });
+        }
+        return true;
+      },
+      ownKeys() {
+        return [
+          'canClickArrows',
+          'debug',
+          'geomorphOutlines',
+          'highlightWindows',
+          'interactRadius',
+          'localRoomNav',
+          'localRoomOutline',
+          'omnipresent',
+          'showIds',
+          'showLabels',
+        ];
+      },
+      getOwnPropertyDescriptor() {
+        return { enumerable: true, configurable: true };
+      }
+    })),
 
     addTtyLineCtxts(sessionKey, lineNumber, ctxts) {
       // We strip ANSI colour codes for string comparison
@@ -239,84 +308,22 @@ export default function NPCs(props) {
         case 'cancel':// Cancel current animation
           await state.getNpc(e.npcKey).cancel();
           break;
-        case 'config': {
-          const rootStyle = state.rootEl.style;
-          const debugStyle = api.debug.rootEl.style;
-
-          if (e.canClickArrows !== undefined) {
-            debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, e.canClickArrows ? 'all' : 'none');
+        case 'config':
+          keys(e).forEach(key => // Set
+            // 🚧 ensure correct type
+            e[key] !== undefined && (/** @type {*} */ (state.config)[key] = e[key])
+          );
+          if (e.configKey) {// Toggle
+            state.config[e.configKey] = !state.config[e.configKey];
           }
-          if (typeof e.interactRadius === 'number') {
-            rootStyle.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
-          }
-          //#region display
-          e.debug !== undefined && rootStyle.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
-          e.geomorphOutlines !== undefined && rootStyle.setProperty(cssName.debugGeomorphOutlineDisplay, e.geomorphOutlines ? 'initial' : 'none');
-          e.highlightWindows !== undefined && rootStyle.setProperty(cssName.debugHighlightWindows, e.highlightWindows ? 'initial' : 'none');
-          e.localRoomNav !== undefined && debugStyle.setProperty(cssName.debugRoomNavDisplay, e.localRoomNav ? 'initial' : 'none')
-          e.localRoomOutline !== undefined && debugStyle.setProperty(cssName.debugRoomOutlineDisplay, e.localRoomOutline ? 'initial' : 'none');
-          e.showIds !== undefined && debugStyle.setProperty(cssName.debugShowIds, e.showIds ? 'initial' : 'none');
-          e.showLabels !== undefined && debugStyle.setProperty(cssName.debugShowLabels, e.showLabels ? 'initial' : 'none');
-          //#endregion
-          
-          if (e.configKey) {
-            switch (e.configKey) {// Toggle
-              case 'canClickArrows':
-                debugStyle.setProperty(
-                  cssName.debugDoorArrowPtrEvts,
-                  debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'all' ? 'none' : 'all'
-                );
-                break;
-              //#region display
-              case 'debug':
-              case 'geomorphOutlines':
-              case 'highlightWindows':
-              case 'localRoomNav':
-              case 'localRoomOutline':
-              case 'showIds':
-              case 'showLabels':
-              {
-                const [style, cssVarName] = /** @type {const} */ ({
-                  'debug': [rootStyle, cssName.npcsDebugDisplay],
-                  'geomorphOutlines': [debugStyle, cssName.debugGeomorphOutlineDisplay],
-                  'highlightWindows': [debugStyle, cssName.debugHighlightWindows],
-                  'localRoomNav': [debugStyle, cssName.debugRoomNavDisplay],
-                  'localRoomOutline': [debugStyle, cssName.debugRoomOutlineDisplay],
-                  'showIds': [debugStyle, cssName.debugShowIds],
-                  'showLabels': [debugStyle, cssName.debugShowLabels],
-                })[e.configKey];
-  
-                style.setProperty(
-                  cssVarName,
-                  style.getPropertyValue(cssVarName) === 'initial' ? 'none' : 'initial'
-                );
-                break;
-              }
-              //#endregion
-              default: throw testNever(e.configKey);
-            }
-          }
-
           if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
-            /** @type {NPC.NpcConfigOpts} */
-            const output = {
-              // 🤔 We reflect CSS variables, rather than e.g. `getComputedStyle(...).display` ?
-              canClickArrows: debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true,
-              interactRadius: parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius)),
-              //#region display
-              debug: rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true,
-              geomorphOutlines: debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true,
-              highlightWindows: debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true,
-              localRoomNav: debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true,
-              localRoomOutline: debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true,
-              showIds: debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true,
-              showLabels: debugStyle.getPropertyValue(cssName.debugShowLabels) === 'none' ? false : true,
-              //#endregion
-            };
-            return output;
+            /**
+             * We wrap the proxy in a chunk to avoid errors arising
+             * from various `await`s ("then" is not defined).
+             */
+            return dataChunk([state.config]);
           }
           break;
-        }
         case 'get':
           return state.getNpc(e.npcKey);
         case 'look-at': {
@@ -341,7 +348,7 @@ export default function NPCs(props) {
           state.events.next({ key: 'set-player', npcKey: e.npcKey??null });
           break;
         default:
-          throw Error(testNever(e, `unrecognised action: "${JSON.stringify(e)}"`));
+          throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
       }
     },
     onTtyLink(sessionKey, lineNumber, lineText, linkText, linkStartIndex) {
@@ -655,6 +662,7 @@ const rootCss = css`
  * @property {HTMLElement} rootEl
  * @property {HTMLElement} decorEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
+ * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
@@ -667,7 +675,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
-* @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef | NPC.NpcConfigOpts>} npcAct
+ * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(el: null | HTMLDivElement) => void} rootRef

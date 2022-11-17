@@ -97,10 +97,10 @@ declare namespace NPC {
     play(): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
-    startAnimation(): void;
     setLookRadians(radians: number): void;
     // setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
+    startAnimation(): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
@@ -139,33 +139,27 @@ declare namespace NPC {
     wayTimeoutId: number;
   }
 
-  interface NpcConfigOpts {
-    canClickArrows?: boolean;
-    debug?: boolean;
-    geomorphOutlines?: boolean;
-    highlightWindows?: boolean;
+  interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
     interactRadius?: number;
-    localRoomNav?: boolean;
-    localRoomOutline?: boolean;
-    showIds?: boolean;
-    showLabels?: boolean;
-
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
     /** Induced by e.g. `npc config debug` */
-    configKey?: (
-      | 'canClickArrows'
-      | 'debug'
-      | 'geomorphOutlines'
-      | 'highlightWindows'
-      | 'localRoomNav'
-      | 'localRoomOutline'
-      | 'showIds'
-      | 'showLabels'
-    );
+    configKey?: ConfigBooleanKey;
   }
+
+  type ConfigBooleanKey = (
+    | 'canClickArrows'
+    | 'debug'
+    | 'geomorphOutlines'
+    | 'highlightWindows'
+    | 'localRoomNav'
+    | 'localRoomOutline'
+    | 'omnipresent'
+    | 'showIds'
+    | 'showLabels'
+  );
 
   interface NpcLineSeg {
     src: Geom.Vect;

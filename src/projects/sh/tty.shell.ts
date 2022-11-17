@@ -99,7 +99,7 @@ export class ttyShellClass implements Device {
         break;
       }
       default:
-        throw testNever(msg);
+        throw testNever(msg, { suffix: 'onMessage' });
     }
   }
 
