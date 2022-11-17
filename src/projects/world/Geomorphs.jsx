@@ -56,7 +56,8 @@ const rootCss = css`
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: brightness(80%) sepia(0.1);
+    /* filter: brightness(80%) sepia(0.1); */
+    filter: brightness(70%) sepia(0.4);
   }
   
   img.geomorph-shade {
