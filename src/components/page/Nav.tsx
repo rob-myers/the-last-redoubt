@@ -151,7 +151,7 @@ const topBarCss = css`
 `;
 
 const horizFillCss = css`
-  transition: min-width 800ms ease;
+  transition: min-width 0ms ease;
 
   min-width: 0;
   &.open {
