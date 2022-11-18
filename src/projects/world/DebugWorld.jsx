@@ -188,7 +188,11 @@ export default function DebugWorld(props) {
             <div
               key={"icon" + doorId}
               className="debug-door-id-icon"
-              style={{ left: idIconPos.x, top: idIconPos.y - 4 }}
+              style={{
+                left: idIconPos.x,
+                top: idIconPos.y - 4,
+                ...props.showIds === true && { display: 'initial' },
+              }}
             >
               {doorId}
             </div>

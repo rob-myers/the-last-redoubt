@@ -89,6 +89,9 @@ goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
 
+npc config showIds
+npc config showLabels
+
 `.trim(),
 
 'profile-1-b': () => `

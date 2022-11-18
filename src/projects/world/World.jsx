@@ -78,12 +78,13 @@ export default function World(props) {
       />
 
       <DebugWorld
+        // ℹ️ use `npc config showIds` instead
         // canClickArrows
         // localRoomNav
         // geomorphOutlines
         // localRoomOutline
-        showIds
-        showLabels
+        // showIds
+        // showLabels
         // windows
         api={state}
         onLoad={api => (state.debug = api) && update()}
