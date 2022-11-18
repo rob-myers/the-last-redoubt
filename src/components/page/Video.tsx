@@ -1,82 +1,63 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
-import useSiteStore from 'store/site.store';
+import LiteYouTubeEmbed from 'react-lite-youtube-embed';
+import 'react-lite-youtube-embed/dist/LiteYouTubeEmbed.css'
 
-export default function Video({ videoKey }: Props) {
-
-  const loadVideo = useSiteStore(x => x.browserLoad);
-  const lookup = React.useMemo(() => lookupFactory(loadVideo), [loadVideo]);
-
+export default function Video({ videoKey, height }: Props) {
   return (
-    <figure className={cx("video", rootCss)}>
+    <figure className={cx("video", rootCss)} style={{ height }}>
       <span id={videoKey} className="anchor"/>
-      {lookup[videoKey]}
+      {videoKey === 'cli-demo-1' && <EmbeddedVideo id="AwpMAId-RKM" title="cli demo 1" />}
+      {videoKey === 'make-boxy-svg-symbol' && <EmbeddedVideo id="o0F7gPSwVgM" title="make boxy svg symbol mov" />}
+      {videoKey === 'video--intro-world-tty' && <EmbeddedVideo playlist id="PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo" title="intro world tty" />}
+      {videoKey === 'video--intro-first' && <EmbeddedVideo playlist id="PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="intro first" />}
     </figure>
   );
 }
 
 interface Props {
   videoKey: VideoKey;
+  height?: number;
 }
 
 const rootCss = css`
   position: relative;
   display: flex;
   justify-content: center;
+  margin: 0;
 
   > span.anchor {
     position: absolute;
     top: -48px;
   }
+
+  article {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
-export type VideoKey = keyof ReturnType<typeof lookupFactory>;
+export type VideoKey = (
+  | 'cli-demo-1'
+  | 'make-boxy-svg-symbol'
+  | 'video--intro-world-tty'
+  | 'video--intro-first'
+);
 
-const lookupFactory = (loadVideo: boolean) => ({
-  'video--intro-first': (
-    <iframe
-      width="100%"
-      height="464"
-      {...loadVideo && {src: "https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim"}}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      loading="lazy"
-    />
-  ),
-  'video--intro-world-tty': (
-    <iframe
-      width="100%"
-      height="464"
-      {...loadVideo && {src: "https://www.youtube.com/embed/videoseries?list=PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo"}}
-      title="YouTube video player"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-      loading="lazy"
-    />
-  ),
-  'make-boxy-svg-symbol': (
-    <iframe
-      width={473}
-      height={840}
-      src="https://www.youtube.com/embed/o0F7gPSwVgM"
-      title="make boxy svg symbol mov"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
-  ),
-  'cli-demo-1': (
-    <iframe
-      width={560}
-      height={315}
-      src="https://www.youtube.com/embed/AwpMAId-RKM"
-      title="cli demo 1"
-      frameBorder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-      allowFullScreen
-    />
-  ),
-});
+function EmbeddedVideo(props: {
+  id: string;
+  title: string;
+  muted?: boolean;
+  playlist?: boolean;
+  playlistCoverId?: string;
+}) {
+  return (
+      <LiteYouTubeEmbed
+        id={props.id}
+        muted={props.muted}
+        playlist={props.playlist}
+        playlistCoverId={props.playlistCoverId}
+        title={props.title}
+      />
+  );
+}

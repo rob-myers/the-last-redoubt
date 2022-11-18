@@ -7,13 +7,13 @@ import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
-import type { VideoKey } from "./Video"; // For intellisense
-const Video = React.lazy<typeof VideoType>(() => import('./Video'));
-import type VideoType from "./Video";
-
 import useSiteStore from "store/site.store";
 import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
+import Video, { VideoKey } from "./Video";
+
+// 🚧 remove class swiper-slide-zoomed onchange slide whilst zoomed
+// 🚧 slide-img-container, figure.video height conditional on label existing
 
 /**
  * props.items should be one of:
@@ -141,34 +141,34 @@ function Slides(props: Props & {
             }
           }}
         >
-          {'src' in item
-            ? <div className="slide-container" data-slide-id={i}>
-                {item.label && <div className="slide-label">{item.label}</div>}
-                <div
-                  className={cx('slide-img-container', { 'swiper-zoom-container': canZoom })}
-                  >
-                  <img
-                    className="swiper-lazy"
-                    data-src={`${props.baseSrc??''}${item.src}`}
-                    {...item.background && { style: { background: item.background } }}
-                    height={
-                      props.fullScreen || !props.height
-                        ? undefined
-                        : props.height - (item.label ? labelHeightPx : 0
-                    )}
-                    // 🚧 avoid initial height when slide has background
-                    // title={item.label}
-                  />
-                </div>
-                <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
+          <div
+            className={cx("slide-container", { "slide-video-container": 'video' in item })}
+            data-slide-id={i}
+          >
+            {'src' in item && <>
+              {item.label && <div className="slide-label">{item.label}</div>}
+              <div className={cx('slide-img-container', { 'swiper-zoom-container': canZoom })}>
+                <img
+                  className="swiper-lazy"
+                  data-src={`${props.baseSrc??''}${item.src}`}
+                  {...item.background && { style: { background: item.background } }}
+                  // 🚧 avoid initial height when slide has background
+                  height={
+                    props.height && !props.fullScreen
+                      ? props.height - (item.label ? labelHeightPx : 0)
+                      : undefined
+                  }
+                />
               </div>
-            : <div className="slide-container slide-video-container" data-slide-id={i}>
-                {item.label && <div className="slide-label">{item.label}</div>}
-                <React.Suspense>
-                  {typeof window !== 'undefined' && <Video videoKey={item.video} />}
-                </React.Suspense>
-              </div>
-          }
+              <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
+            </>}
+
+            {'video' in item && <>
+              {item.label && <div className="slide-label">{item.label}</div>}
+              <Video videoKey={item.video} />
+            </>}
+            
+          </div>
         </SwiperSlide>
       )}
 
@@ -183,7 +183,122 @@ function Slides(props: Props & {
   );
 }
 
-const labelHeightPx = 64; // 🚧 responsive
+const labelHeightPx = 52; // 🚧 responsive
+const maxHeightPx = 800;
+
+
+const rootCss = css`
+  position: relative;
+  
+  .swiper {
+    transition: margin-top 300ms ease-in 300ms;
+  }
+
+  .slide-container {
+    height: inherit;
+  }
+
+  .slide-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 1.2;
+    min-height: ${labelHeightPx}px;
+  }
+
+  .slide-img-container {
+    display: flex;
+    justify-content: center;
+    /* 🚧 Conditional on label */
+    height: calc(100% - ${labelHeightPx}px - 16px);
+    img {
+      /* border: thin solid var(--page-border-color); */
+      /* border-radius: 8px; */
+      object-fit: contain;
+      max-width: 100%;
+    }
+  }
+
+  figure.video {
+    margin: 0;
+    /* 🚧 Conditional on label */
+    height: calc(100% - ${labelHeightPx}px  - 16px);
+  }
+  
+  .swiper.full-screen {
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: calc(min(${maxHeightPx}px, 100vh - 128px));
+    border: 2px solid #fff;
+    border-radius: 8px;
+    background-color: var(--carousel-background-color);
+  
+    img {
+      border: none;
+      height: inherit;
+      max-height: calc(100vh - 2 * 128px);
+    }
+    .slide-video-container {
+      display: block;
+      height: calc(100% - ${labelHeightPx}px);
+    }
+  }
+
+  div.fullscreen-overlay {
+    position: fixed;
+    background-color: #00000088;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+  }
+
+  .swiper-slide-zoomed .slide-label {
+    background-color: var(--carousel-background-color);
+    opacity: 0.9;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+
+  img.swiper-lazy {
+    visibility: hidden;
+    &.swiper-lazy-loaded {
+      visibility: visible;
+    }
+  }
+
+  .slide-plain {
+    border: 1px solid var(--page-border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    padding: 0 48px;
+
+    line-height: 1.8;
+    p {
+      margin-bottom: 8px;
+    }
+  }
+`;
+
+function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
+  return (
+    items.length === 0
+    || (!!items[0] && typeof items[0] === 'object' && ('src' in items[0] || 'video' in items[0]))
+  );
+}
 
 interface Props {
   baseSrc?: string;
@@ -211,135 +326,3 @@ type ImageCarouselItem = (
   | { video: VideoKey; label?: string; }
 );
 type PlainCarouselItem = React.ReactNode;
-
-const maxHeightPx = 800;
-
-/**
- * 🚧 needs simplification
- */
-const rootCss = css`
-  position: relative;
-  
-  .swiper {
-    transition: margin-top 300ms ease-in 300ms;
-  }
-
-  .slide-container {
-    position: relative;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: inherit;
-    
-    .swiper-lazy-preloader {
-      margin-top: 32px;
-    }
-  }
-  .slide-img-container {
-    height: calc(100% - ${labelHeightPx}px);
-  }
-  
-  .swiper.full-screen {
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    /** 🚧 */
-    height: calc(min(${maxHeightPx}px, 100vh - 128px));
-    border: 4px solid #fff;
-    border-radius: 8px;
-    background-color: var(--carousel-background-color);
-
-    .slide-container {
-      align-items: center;
-    }
-    img {
-      border: none;
-      height: inherit;
-      max-height: calc(100vh - 2 * 128px);
-    }
-    .slide-video-container {
-      height: calc(100% - ${labelHeightPx}px);
-    }
-  }
-
-  div.fullscreen-overlay {
-    position: fixed;
-    background-color: #00000088;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 2;
-  }
-
-  .slide-video-container {
-    align-items: center;
-    height: 100%;
-    figure.video {
-      margin: 0;
-      height: inherit;
-      iframe {
-        height: 100%;
-      }
-      @media(max-width: 600px) {
-        width: 100%;
-      }
-    }
-  }
-  .slide-plain {
-    border: 1px solid var(--page-border-color);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-    height: 100%;
-    width: 100%;
-    padding: 0 48px;
-
-    line-height: 1.8;
-    p {
-      margin-bottom: 8px;
-    }
-  }
-
-  .slide-label {
-    padding: 16px;
-    height: ${labelHeightPx}px;
-    z-index: 1;
-  
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1rem;
-    font-weight: 300;
-    line-height: 1.2;
-
-    display: flex;
-    align-items: center;
-    user-select: all;
-  }
-  .swiper-slide-zoomed .slide-label {
-    background-color: var(--carousel-background-color);
-  }
-  img {
-    border: thin solid var(--page-border-color);
-    border-radius: 8px;
-    object-fit: contain;
-    max-width: 100%;
-  }
-
-  img.swiper-lazy {
-    visibility: hidden;
-    &.swiper-lazy-loaded {
-      visibility: visible;
-    }
-  }
-`;
-
-function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
-  return (
-    items.length === 0
-    || (!!items[0] && typeof items[0] === 'object' && ('src' in items[0] || 'video' in items[0]))
-  );
-}

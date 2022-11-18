@@ -172,10 +172,10 @@ const articleCss = css`
     }
   }
 
-  figure.tabs, figure.video {
+  figure.tabs {
     margin: calc(40px + 32px) 0 40px 0;
     /* padding: 64px; */
-    border: 1px solid var(--page-border-color);
+    /* border: 1px solid var(--page-border-color); */
     @media(max-width: 600px) {
       border: none;
       margin: calc(32px + 16px) 0 24px 0;
@@ -186,12 +186,6 @@ const articleCss = css`
     /* margin: calc(40px + 16px) 0 40px 0; */
     @media(max-width: 600px) {
       margin: calc(24px + 20px) 0 20px 0;
-    }
-  }
-  blockquote + figure.video, p + figure.video {
-    margin: 32px 0 40px 0;
-    @media(max-width: 600px) {
-      margin: 20px 0 20px 0;
     }
   }
 
