@@ -33,7 +33,7 @@ export default function Carousel(props: Props) {
 
   // Render on resize window, or open/close nav
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: true });
-  useSiteStore(x => x.navOpen);
+  const navOpen = useSiteStore(x => x.navOpen);
 
   function showFullScreen(slideId?: number) {
     state.fullScreen = slideId??state.swiper.activeIndex;
@@ -46,6 +46,10 @@ export default function Carousel(props: Props) {
     enableBodyScroll(state.rootEl);
     update();
   }
+
+  React.useEffect(() => {
+    (!navOpen && state.fullScreen !== null) && setTimeout(() => state.rootEl.focus(), 50);
+  }, [navOpen]);
 
   return (
     <figure
@@ -78,7 +82,7 @@ export default function Carousel(props: Props) {
         <Slides
           fullScreen
           // 🚧 responsive offset
-          fullScreenOffset={64 - state.rootEl.getBoundingClientRect().y}
+          fullScreenOffset={128 - state.rootEl.getBoundingClientRect().y}
           initialSlide={state.fullScreen}
           items={props.items}
           baseSrc={props.baseSrc}
@@ -133,6 +137,7 @@ function Slides(props: Props & {
       {isImages && items.map((item, i) =>
         <SwiperSlide
           key={i}
+          // onClick={e => e.currentTarget.closest('.carousel')?.focus()}
           {...!props.smallViewport && {
             onDoubleClick(el) {
               const dataSlideId = (el.target as HTMLElement).closest('.slide-container')?.getAttribute('data-slide-id');
@@ -234,7 +239,6 @@ const rootCss = css`
     z-index: 2;
     width: 100%;
     height: calc(min(${maxHeightPx}px, 100vh - 128px));
-    border: 2px solid #fff;
     border-radius: 8px;
     background-color: var(--carousel-background-color);
   
