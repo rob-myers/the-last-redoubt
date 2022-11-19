@@ -547,6 +547,10 @@ export class ttyXtermClass {
   }
 
   async pasteLines(lines: string[], fromProfile = false) {
+    // Clear pending input which should now prefix `lines[0]`
+    this.clearInput();
+    this.xterm.write(this.prompt);
+
     for (const line of lines) {
       await new Promise<void>((resolve, reject) => {
         this.queueCommands([

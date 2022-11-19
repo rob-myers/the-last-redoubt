@@ -2,6 +2,7 @@
 
 ## In progress
 
+- Remake homepage CLI video with sound
 - Make homepage CSS video 
 
 - 🚧 Performance
@@ -220,6 +221,11 @@ How to embed video?
 
 ## Done
 
+- ✅ BUG typing `foo '` and then pasting multiple lines duplicates `foo '`
+  ```
+  bar
+  baz
+  ```
 - ✅ Do not support devtool `.door.open` toggle
 - ✅ Can `npc config omnipresent`
 - ✅ NPCS api has Proxy `config` 
@@ -472,6 +478,35 @@ How to embed video?
   ```
 
 # Video Notes
+
+## Homepage CLI video
+
+```sh
+# view shell function names
+declare -F
+# view definition of `range`
+declare range
+
+range
+# []
+range 10
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# view definition of `declare`
+declare split
+range 10 | split
+range 10 | split | map 'x => x + 1'
+
+range 10 | split | map 'x => x + 1' |
+  run '({ api, datum }) {
+    while ((datum = await api.read()) !== null) {
+      yield datum
+      yield* api.sleep(1)
+    }
+  }'
+
+# we could also run it in the background
+```
 
 ## 🚧 Homepage CSS video
 
