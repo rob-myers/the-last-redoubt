@@ -24,10 +24,24 @@ export const utilFunctions = [
   
   // cat: `get "$@" | split`,
     
-  /** NOTE `map console.log` would log the 2nd arg too */
+  /**
+   * - `map console.log` would log 2nd arg too
+   * - log non-degenerate chunks, so e.g. `seq 1000000 | log` works
+   */
   log: `{
-    map 'x => console.log(x)'
+    run '({ api, args, datum }) {
+      while ((datum = await api.read(true)) !== null) {
+        if (datum.__chunk__ && datum.items?.length < 2) {
+          datum.items.forEach(x => console.log(x))
+        } else {
+          console.log(datum)
+        }
+      }
+    }'
   }`,
+  // log: `{
+  //   map 'x => console.log(x)'
+  // }`,
 },
 ];
 
