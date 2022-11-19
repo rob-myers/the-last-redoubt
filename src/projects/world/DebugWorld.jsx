@@ -116,7 +116,7 @@ export default function DebugWorld(props) {
               top: gm.gridRect.y,
               width: gm.gridRect.width,
               height: gm.gridRect.height,
-              ...props.geomorphOutlines && { display: 'initial' },// Prop overrides CSS var
+              ...props.gmOutlines && { display: 'initial' },// Prop overrides CSS var
             }}
           />  
         )}
@@ -135,7 +135,7 @@ export default function DebugWorld(props) {
           style={{
             left: roomNavAabb.x,
             top: roomNavAabb.y,
-            ...props.localRoomNav === true && { display: 'initial' },// Prop overrides CSS var
+            ...props.localNav === true && { display: 'initial' },// Prop overrides CSS var
           }}
         >
           <g style={{ transform: `translate(${-roomNavAabb.x}px, ${-roomNavAabb.y}px)` }}>
@@ -153,7 +153,7 @@ export default function DebugWorld(props) {
           style={{
             left: roomAabb.x,
             top: roomAabb.y,
-            ...props.localRoomOutline && { display: 'initial'},
+            ...props.localOutline && { display: 'initial'},
           }}
         >
           <g style={{ transform: `translate(${-roomAabb.x}px, ${-roomAabb.y}px)` }}>
@@ -254,9 +254,9 @@ export default function DebugWorld(props) {
 /**
  * @typedef Props @type {object}
  * @property {boolean} [canClickArrows]
- * @property {boolean} [localRoomNav]
- * @property {boolean} [geomorphOutlines]
- * @property {boolean} [localRoomOutline]
+ * @property {boolean} [localNav]
+ * @property {boolean} [gmOutlines]
+ * @property {boolean} [localOutline]
  * @property {boolean} [showIds]
  * @property {boolean} [showLabels]
  * @property {boolean} [windows]

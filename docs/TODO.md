@@ -2,13 +2,10 @@
 
 ## In progress
 
-- ✅ Do not support devtool `.door.open` toggle
-- ✅ Can `npc config omnipresent`
-- ✅ NPCS api has Proxy `config` 
 - Make homepage CSS video 
 
 - 🚧 Performance
-  - 🚧 Remove YouTube from SSR via facade
+  - ✅ Remove YouTube from SSR via facade
   - Smaller main bundle
   - Try upgrade Gatsby
   - Prevent YouTube from being bundled
@@ -223,6 +220,9 @@ How to embed video?
 
 ## Done
 
+- ✅ Do not support devtool `.door.open` toggle
+- ✅ Can `npc config omnipresent`
+- ✅ NPCS api has Proxy `config` 
 - ✅ disabling Tabs makes World transform jump
 - ✅ state.anims cancel approach broke "responsive track"
 - ✅ Cannot initially edit panzoom-translate
@@ -479,22 +479,24 @@ Camera via CSS transforms:
 - `.panzoom-parent`
 - Can edit transforms (translate/scale)
 
-Static World via PNGs
+geomorphs
 - `.panzoom-parent .geomorphs`
 - position `absolute` is relative to `.flexlayout__tab`
-- can remove image and then undo
-- can remove shade and then undo
-- change filter
+- can remove image and undo
+- can remove shade and undo
+- can change filter: brightness, sepia, invert(1)
 
-Debug (Global)
-- --debug-room-nav-display
-- --debug-room-outline-display
-- --debug-show-ids
+debug
+- --debug-gm-outline-display `npc config gmOutlines`
+- --debug-room-nav-display `npc config localNav`
+- --debug-room-outline-display `npc config localOutline`
+- --debug-show-ids `npc config showIds`
 
-Npcs
+npcs
 - `.decor-root`
-  - move navpath
-- `.npc.andros`
+  - move navpath nodes
+  - witness mutation `npc decor andros-navpath | map 'x => x.path'`
+- `.npc.andros` 🚧
   - manually translate
   - `<img>` included to load walk animation early
 - --npc-target-look-angle
@@ -505,11 +507,11 @@ Npcs
   - not configurable via `npc config`
   - `spawn foo $( click 1 )` + use adjusted bounds
 
-FOV
+fov
 - observe clip-path changing
 - remove and undo
 - change filter
 
-Doors
+doors
 - toggle door via click
 - toggle door via class `open` on `div.door`

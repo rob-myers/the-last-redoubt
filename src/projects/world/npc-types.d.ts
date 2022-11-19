@@ -152,10 +152,10 @@ declare namespace NPC {
   type ConfigBooleanKey = (
     | 'canClickArrows'
     | 'debug'
-    | 'geomorphOutlines'
+    | 'gmOutlines'
     | 'highlightWindows'
-    | 'localRoomNav'
-    | 'localRoomOutline'
+    | 'localNav'
+    | 'localOutline'
     | 'omnipresent'
     | 'showIds'
     | 'showLabels'

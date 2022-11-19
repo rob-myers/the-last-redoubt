@@ -78,11 +78,11 @@ export default function World(props) {
       />
 
       <DebugWorld
-        // ℹ️ use `npc config showIds` instead
+        // 👋 use e.g. `npc config showIds` instead
         // canClickArrows
-        // localRoomNav
-        // geomorphOutlines
-        // localRoomOutline
+        // localNav
+        // gmOutlines
+        // localOutline
         // showIds
         // showLabels
         // windows
