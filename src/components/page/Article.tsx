@@ -17,22 +17,12 @@ export default function Article(props: React.PropsWithChildren<{
 }>) {
 
   const { frontmatter } = props;
+  const { dateTime, tags } = computeDateAndExtendTags(frontmatter);
 
-  const dateText = React.useMemo(() => {
-    const d = frontmatter ? new Date(frontmatter.date) : new Date;
-    return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  }, []);
-
-  const components = React.useMemo(() =>
-    Object.assign(
-      articleComponents(frontmatter.key as any, {
-        dateTime: frontmatter.date,
-        tags: [dateText].concat(frontmatter.tags),
-      }),
+  const components = React.useMemo(() => Object.assign(
+      articleComponents(frontmatter.key, { dateTime, tags }),
       { pre },
-    ),
-    [frontmatter.tags],
-  );
+  ), [frontmatter.tags]);
 
   return (
     <article className={cx(
@@ -392,7 +382,7 @@ const articleCss = css`
 const articleComponents = (
   articleKey: string,
   meta: {
-    dateTime: string;
+    dateTime?: string;
     tags: string[];
   },
 ) => ({
@@ -580,4 +570,15 @@ function getAsideId(
   asideName: string,
 ) {
   return `aside--${asideName}`;
+}
+
+function computeDateAndExtendTags(fm: FrontMatter) {
+  const d = new Date(fm?.date);
+  const dateText = `${d}` !== 'Invalid Date'
+    ? `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`
+    : undefined;
+  return {
+    dateTime: dateText ? fm.date: undefined,
+    tags: dateText ? [dateText].concat(fm.tags) : fm.tags,
+  };
 }
