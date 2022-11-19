@@ -26,12 +26,12 @@ export const utilFunctions = [
     
   /**
    * - `map console.log` would log 2nd arg too
-   * - log non-degenerate chunks, so e.g. `seq 1000000 | log` works
+   * - log chunks larger than 1000, so e.g. `seq 1000000 | log` works
    */
   log: `{
     run '({ api, args, datum }) {
       while ((datum = await api.read(true)) !== null) {
-        if (datum.__chunk__ && datum.items?.length < 2) {
+        if (datum.__chunk__ && datum.items?.length <= 1000) {
           datum.items.forEach(x => console.log(x))
         } else {
           console.log(datum)
