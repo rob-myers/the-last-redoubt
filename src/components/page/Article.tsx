@@ -229,8 +229,7 @@ const articleCss = css`
       background-color: #000;
     }
 
-    /** 1st tag should be date */
-    > span:first-child {
+    > span:first-child.date {
       border-color: #aaa;
       padding: 2px 16px;
       text-align: center;
@@ -497,7 +496,14 @@ const articleComponents = (
         dateTime={meta.dateTime}
       />
       <div className="tags" title="tags">
-        {meta.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}
+        {meta.tags.map((tag, i) =>
+          <span
+            key={tag}
+            className={i === 0 && meta.dateTime ? "tag date" : "tag"}
+          >
+            {tag}
+          </span>)
+        }
       </div>
     </>;
   },
