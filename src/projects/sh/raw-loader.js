@@ -134,7 +134,7 @@
       if (!npcs.session[sessionKey]) {
         npcs.session[sessionKey] = { key: sessionKey, receiveMsgs: true, tty: {} };
       }
-      api.info(`found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
+      api.info(`${ansiColor.White}found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
     },
     
     /**
