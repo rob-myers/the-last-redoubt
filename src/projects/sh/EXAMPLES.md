@@ -6,10 +6,10 @@ __TODO__
 
 ```sh
 declare -F
-declare range
+declare -f range
 range
 range 10
-declare split
+declare -f split
 range 10
 range 10 | split
 range 10 | split | map 'x => x + 1'

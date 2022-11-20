@@ -3,6 +3,11 @@
 ## In progress
 
 - Remake homepage CLI video with sound
+  - 1st test
+    > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
+    > 329Mb -> 20Mb
+    > https://youtu.be/iohh0Glruis
+  - 2nd
 - Make homepage CSS video 
 
 - 🚧 Performance
@@ -485,7 +490,7 @@ How to embed video?
 # view shell function names
 declare -F
 # view definition of `range`
-declare range
+declare -f range
 
 range
 # []
@@ -493,7 +498,7 @@ range 10
 # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 # view definition of `declare`
-declare split
+declare -f split
 range 10 | split
 range 10 | split | map 'x => x + 1'
 

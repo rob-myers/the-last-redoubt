@@ -99,16 +99,18 @@ class cmdServiceClass {
       }
       case 'declare': {
         const { opts, operands } = getOpts(args, { boolean: [
-          'f', // list functions
-          'F', // list functions (names only)
-          'x', // list variables (everything is exported)
+          'f', // list functions [matching prefixes]
+          'F', // list function names [matching prefixes]
+          'x', // list variables [matching prefixes]
+          'p', // list variables [matching prefixes]
         ], });
 
-        const noOpts = opts.x !== true && opts.f !== true && opts.F !== true;
-        const showVars = opts.x === true || noOpts;
+        const noOpts = [opts.x, opts.p, opts.f, opts.F].every(opt => opt !== true);
+        const showVars = opts.x === true || opts.p === true || noOpts;
         const showFuncs = opts.f === true || noOpts;
         const showFuncNames = opts.F === true;
-        const prefixes = operands.length ? operands : null;
+        // Only match prefixes when some option specified
+        const prefixes = operands.length && !noOpts ? operands : null;
 
         const {
           var: home,
@@ -127,7 +129,6 @@ class cmdServiceClass {
               typeof value === 'string' ? ansiColor.White : ansiColor.Yellow
             }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
           }
-          
         }
         if (showFuncs) {
           for (const { key, src } of funcs) {
