@@ -127,8 +127,8 @@ When someone says _HTML5 game_, the underlying tech is almost always the `<canva
 On the other hand, non-gaming websites rarely use it.
 
 The cornerstones of the World Wide Web are HTML, CSS and JavaScript.
-A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.org/wiki/Document_Object_Model)<SideNote width={220}>Initially induced by HTML.</SideNote>, brought to life visually via CSS<SideNote width={220}>CSS supports some core interactivity e.g. [:hover](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)</SideNote> and interactively using JavaScript<SideNote>Technically, JavaScript permits arbitrary DOM mutation.</SideNote>.
-By using CSS we allow the browser to behave optimally, rather than re-inventing the wheel through heavy-duty JavaScript.
+A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.org/wiki/Document_Object_Model) initially induced by HTML, brought to life visually via CSS<SideNote width={220}>CSS supports some core interactivity e.g. [:hover](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)</SideNote> and interactively using JavaScript<SideNote>Technically, JavaScript permits arbitrary DOM mutation.</SideNote>.
+Importantly, CSS allows the browser to behave optimally, and avoids re-inventing the wheel through heavy-duty JavaScript.<SideNote>Although HTMLCanvas is performant via WebGL, the latter is a low-level API.</SideNote>
 _Debugging_ is also far richer because one may directly mutate the DOM-tree in a browser devtool.
 In contrast, native debugging of `<canvas>` amounts to setting breakpoints inside JavaScript code.
 
