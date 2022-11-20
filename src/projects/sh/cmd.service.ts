@@ -141,7 +141,7 @@ class cmdServiceClass {
         if (showFuncNames) {
           for (const { key } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
-            yield `${key}${ansiColor.White} ()`;
+            yield `declare -f ${key}${ansiColor.White}`;
           }
         }
         break;
