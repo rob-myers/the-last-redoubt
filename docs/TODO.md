@@ -7,7 +7,15 @@
     > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
     > 329Mb -> 20Mb
     > https://youtu.be/iohh0Glruis
-  - 2nd
+  - 2nd 🚧
+    > Our shell wraps JS
+      - it textually expands commands before running them
+      - commands output JS values
+      - commands can manipulate JS state
+    > System shells wrap OS Calls and Binaries
+      - it textually expands commands before running them
+      - commands output file content, often text
+      - commands can manipulate the system or files
 - Make homepage CSS video 
 
 - 🚧 Performance
