@@ -8,19 +8,19 @@ export const utilFunctions = [
     call '({args}) =>
       [...Array(Number(args[0]))].map((_, i) => i)
     ' "$1"
-  }`,
+}`,
     
   seq: `{
     range "$1" | split
-  }`,
+}`,
     
   pretty: `{
     map '(x, { api }) => api.pretty(x)'
-  }`,
+}`,
     
   keys: `{
     map Object.keys
-  }`,
+}`,
   
   // cat: `get "$@" | split`,
     
@@ -38,10 +38,10 @@ export const utilFunctions = [
         }
       }
     }'
-  }`,
-  // log: `{
-  //   map 'x => console.log(x)'
-  // }`,
+}`,
+//   log: `{
+//     map 'x => console.log(x)'
+// }`,
 },
 ];
 

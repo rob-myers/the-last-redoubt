@@ -364,7 +364,7 @@
   function wrap(fn) {
     return `{
       run '${fnToSuffix(fn)}' "$@"
-    }`
+}`
   }
   
   /**
