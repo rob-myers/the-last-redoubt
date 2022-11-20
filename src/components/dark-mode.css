@@ -21,7 +21,6 @@ body.dark-mode {
 /** @see cssName.ignoreDark */
 body.dark-mode span.icon:not(.ignore-dark),
 body:not(.dark-mode) span.side-note span.icon,
-body.dark-mode article span.side-note,
 body.dark-mode article span.side-note-bubble
 {
   filter: invert(1);
