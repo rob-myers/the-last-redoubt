@@ -51,7 +51,6 @@ export default function DebugWorld(props) {
     };
   });
 
-  // 
   /* eslint-disable react-hooks/rules-of-hooks */
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
@@ -77,14 +76,12 @@ export default function DebugWorld(props) {
       const label = gm.labels[Number(target.getAttribute('data-debug-label-id'))];
 
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
-      const line = `ℹ️  [${ansiColor.Blue}${label.text}${ansiColor.Reset
-        }] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-        
+      const line = `ℹ️  [${ansiColor.Blue}${label.text}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
       const sessionCtxts = Object.values(props.api.npcs.session).filter(x => x.receiveMsgs);
       for (const { key: sessionKey } of sessionCtxts) {
-        const globalLineNumber = await useSessionStore.api.writeMsgCleanly(sessionKey, line);
-        props.api.npcs.addTtyLineCtxts(sessionKey, globalLineNumber, [{
-          lineNumber: globalLineNumber,
+        await useSessionStore.api.writeMsgCleanly(sessionKey, line);
+
+        props.api.npcs.addTtyLineCtxts(sessionKey, line, [{
           lineText: line, 
           linkText: label.text,
           linkStartIndex: visibleUnicodeLength('ℹ️  ['),

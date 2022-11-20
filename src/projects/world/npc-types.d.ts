@@ -257,11 +257,10 @@ declare namespace NPC {
     /** Session key */
     key: string;
     receiveMsgs: boolean;
-    tty: { [lineNumber: number]: SessionTtyCtxt[] }
+    tty: { [lineText: string]: SessionTtyCtxt[] }
   }
 
   export type SessionTtyCtxt = {
-    lineNumber: number;
     lineText: string;
     /** For example `[foo]` has link text `foo` */
     linkText: string;
@@ -275,8 +274,6 @@ declare namespace NPC {
   export type OnTtyLink = (
     /** The computations are specific to tty i.e. its parent session */
     sessionKey: string,
-    /** The "global" 1-based index of "actual" lines ever output by tty */
-    outputLineNumber: number,
     lineText: string,
     linkText: string,
     linkStartIndex: number,

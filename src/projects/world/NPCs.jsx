@@ -110,26 +110,24 @@ export default function NPCs(props) {
       }
     })),
 
-    addTtyLineCtxts(sessionKey, lineNumber, ctxts) {
+    addTtyLineCtxts(sessionKey, lineText, ctxts) {
       // We strip ANSI colour codes for string comparison
-      state.session[sessionKey].tty[lineNumber] = ctxts.map(x =>
-        ({ ...x, lineText: stripAnsi(x.lineText), linkText: stripAnsi(x.linkText) })
+      state.session[sessionKey].tty[stripAnsi(lineText)] = ctxts.map(x =>
+        ({ ...x, lineText: stripAnsi(lineText), linkText: stripAnsi(x.linkText) })
       );
     },
+    // 🚧 This should only run sporadically
     cleanSessionCtxts() {
-      for (const sessionKey of Object.keys(state.session)) {
-        const session = useSessionStore.api.getSession(sessionKey);
-        if (session) {
-          const { tty } = state.session[sessionKey];
-          /**
-           * Assuming xterm buffer no larger than 2 * scrollback,
-           * this lineNumber (ignoring wraps) is no longer visible.
-           */
-          const lowerBound = Math.max(0, session.ttyShell.xterm.totalLinesOutput - 2 * scrollback);
-          Object.values(tty).forEach(([{ lineNumber }]) =>
-            lineNumber <= lowerBound && delete tty[lineNumber]
-          );
-        } else delete state.session[sessionKey];
+      const sessions = Object.keys(state.session).map(
+        sessionKey => useSessionStore.api.getSession(sessionKey)
+      ).filter(Boolean);
+
+      for (const session of sessions) {
+        const lineLookup = session.ttyShell.xterm.getLines();
+        const { tty } = state.session[session.key];
+        Object.keys(tty).forEach(lineText =>
+          !lineLookup[lineText] && delete tty[lineText]
+        );
       }
     },
     getGlobalNavPath(src, dst) {
@@ -351,27 +349,24 @@ export default function NPCs(props) {
           throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
       }
     },
-    onTtyLink(sessionKey, lineNumber, lineText, linkText, linkStartIndex) {
+    onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
       // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
       state.cleanSessionCtxts();
-      const found = state.session[sessionKey]?.tty[lineNumber]?.find(x =>
-        x.lineText === lineText
-        && x.linkStartIndex === linkStartIndex
+      const found = state.session[sessionKey]?.tty[lineText]?.find(x =>
+        x.linkStartIndex === linkStartIndex
         && x.linkText === linkText
       );
       if (!found) {
         return;
       }
-      console.info('onTtyLink found', found); // DEBUG 🚧
+      console.info('onTtyLink found', found); // 🚧
       switch (found.key) {
         case 'room':
           const gm = api.gmGraph.gms[found.gmId];
           const point = gm.matrix.transformPoint(gm.point[found.roomId].default.clone());
           state.panZoomTo({ zoom: 2, ms: 2000, point });
           break;
-        /**
-         * ...
-         */
+        // 🚧 ...
       }
     },
     async panZoomTo(e) {
@@ -664,7 +659,7 @@ const rootCss = css`
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
- * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
+ * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath

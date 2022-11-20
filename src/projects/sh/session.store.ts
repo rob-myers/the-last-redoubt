@@ -48,7 +48,7 @@ export type State = {
      * Returns global line number of written message,
      * i.e. the 1-based index over all lines ever output in session's tty.
      */
-    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean }) => Promise<number>;
+    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean }) => Promise<void>;
   }
 }
 
@@ -356,17 +356,16 @@ const useStore = create<State>()(devtools((set, get) => ({
     async writeMsgCleanly(sessionKey, msg, opts) {
       const { xterm } = api.getSession(sessionKey).ttyShell;
       xterm.prepareForCleanMsg();
-      const lineNumber = await new Promise<number>(resolve => {
+      await new Promise<void>(resolve => {
         xterm.queueCommands([
           { key: 'line', line: `${msg}${ansiColor.Reset}` },
-          { key: 'resolve', resolve: () => resolve(xterm.totalLinesOutput) }
+          { key: 'resolve', resolve },
         ])
       });
       setTimeout(() => {
         (opts?.prompt??true) && xterm.showPendingInput();
         xterm.xterm.scrollToBottom();
       });
-      return lineNumber;
     },
   },
 

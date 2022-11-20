@@ -46,11 +46,6 @@ export class ttyXtermClass {
   /** Useful for mobile keyboard inputs */
   forceLowerCase = false;
   /**
-   * Total number of lines output, excluding current possibly multi-line input.
-   * This makes sense because we monotonically output lines.
-   */
-  totalLinesOutput = 0;
-  /**
    * History will be disabled during initial profile,
    * which is actually pasted into the terminal.
    */
@@ -144,7 +139,6 @@ export class ttyXtermClass {
     this.cursorRow = 1;
 
     this.showPendingInput();
-    this.trackTotalOutput(+1);
   }
 
   /**
@@ -186,6 +180,22 @@ export class ttyXtermClass {
   forceResize() {
     this.xterm.resize(this.xterm.cols + 1, this.xterm.rows);
     this.xterm.resize(this.xterm.cols - 1, this.xterm.rows);
+  }
+
+  /**
+   * Get non-empty lines as lookup `{ [lineText]: true }`.
+   * ANSI codes are stripped (important for equality testing).
+   */
+  getLines() {
+    const activeBuffer = this.xterm.buffer.active;
+    return [...Array(activeBuffer.length)].reduce<Record<string, true>>(
+      (agg, _, i) => {
+        const line = activeBuffer.getLine(i)?.translateToString(true);
+        line && (agg[line] = true);
+        return agg;
+      },
+      {},
+    );
   }
 
   /**
@@ -525,7 +535,6 @@ export class ttyXtermClass {
            */
           const {items} = msg as DataChunk;
           // Pretend we outputted them all
-          this.trackTotalOutput(+Math.max(0, items.length - 2 * scrollback));
           items.slice(-2 * scrollback).forEach(x => this.onMessage(x));
         } else {
           const stringified = safeStringify(msg);
@@ -630,7 +639,6 @@ export class ttyXtermClass {
         case 'line': {
           this.xterm.writeln(command.line);
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           numLines++;
           break;
         }
@@ -642,14 +650,12 @@ export class ttyXtermClass {
 
           this.xterm.write('\r\n');
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           this.sendLine();
           return;
         }
         case 'paste-line': {
           this.xterm.writeln(command.line);
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           this.input = command.line;
           this.sendLine();
           return;
@@ -805,11 +811,6 @@ export class ttyXtermClass {
     } else if (this.cursorRow > this.xterm.rows) {
       this.cursorRow = this.xterm.rows;
     }
-  }
-
-  private trackTotalOutput(delta: number) {
-    this.totalLinesOutput += delta;
-    // console.log(this.totalLinesOutput); // DEBUG
   }
 
   /**

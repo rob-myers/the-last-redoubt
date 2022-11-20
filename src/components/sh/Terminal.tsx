@@ -97,19 +97,12 @@ export default function Terminal(props: Props) {
           linkProviderDef={{
             // regex: /(🔎 [^;]+);/g,
             regex: /(\[[a-z][^\]]+\])/gi,
-            async callback(event, linkText, { outputLineNumber, lineText, linkStartIndex, bufferOutputLines }) {
-              // console.log('clicked link', event, linkText, { outputLineNumber, lineText, linkStartIndex, bufferOutputLines });
+            async callback(_event, linkText, { lineText, linkStartIndex }) {
+              // console.log('clicked link', event, linkText, { lineText, linkStartIndex });
               const session = assertNonNull(state.session);
-              const {npcs} = getCached(session.var.WORLD_KEY) as WorldApi;
-              /**
-               * Number of "actual" lines output, no longer entirely within tty's buffer.
-               * Why do we need the +1?
-               */
-              const priorOutputLines = Math.max(0, session.ttyShell.xterm.totalLinesOutput - bufferOutputLines + 1);
+              const { npcs } = getCached(session.var.WORLD_KEY) as WorldApi;
               npcs.onTtyLink(
                 props.sessionKey,
-                // The "global" 1-based index of lines ever output by tty
-                priorOutputLines + outputLineNumber,
                 stripAnsi(lineText),
                 stripAnsi(linkText).slice(1, -1), // Omit square brackets
                 linkStartIndex,
