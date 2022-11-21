@@ -30,6 +30,15 @@ const config = {
     "gatsby-plugin-react-helmet",
     // "gatsby-plugin-preact",
     "gatsby-plugin-loadable-components-ssr",
+    {
+      resolve: "gatsby-plugin-gatsby-cloud",
+      options: {
+        headers: {
+          '/*': ['Cache-Control: public, max-age=31536000, immutable'],
+          'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
+        },
+      },
+    }
   ],
   flags: {
     /**
