@@ -105,4 +105,10 @@ export const lightDoorOffset = 40;
 
 export const lightWindowOffset = 20;
 
+/**
+ * Safari seems to play animation even if cancelled very quickly.
+ * For example, try moving through an adjacent closed door.
+ */
+export const cancellableAnimDelayMs = 50;
+
 //#endregion

@@ -1,6 +1,6 @@
 import { Poly, Rect, Vect } from '../geom';
 import { testNever } from '../service/generic';
-import { cssName } from '../service/const';
+import { cancellableAnimDelayMs, cssName } from '../service/const';
 import { getNumericCssVar, lineSegToCssTransform } from '../service/dom';
 import { npcJson } from '../service/npc-json';
 
@@ -65,7 +65,7 @@ export default function createNpc(
 
       if (this.def.key === api.npcs.playerKey) {
         // Cancel camera tracking
-        api.panZoom.animationAction('cancel');
+        api.panZoom.animationAction('smooth-cancel');
       }
     },
     clearWayMetas() {
@@ -368,6 +368,7 @@ export default function createNpc(
     
           // Animate position and rotation
           const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
+          opts.delay ||= cancellableAnimDelayMs;
           this.anim.translate = this.el.root.animate(translateKeyframes, opts);
           this.anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           this.anim.durationMs = opts.duration;

@@ -18,6 +18,13 @@
   - 🚧 Smaller main bundle
   - remark/rehypePlugins ?
 
+- Safari: Door collision bug
+  - ✅ Should not start animation before initial cancel
+  - ✅ Cancel track on collide door should not be jerky
+- Safari: Jerky zoom issues
+  - incorrect screen clipping?
+  - e.g. zoom out then click walk
+
 - 🚧 NPC idle can be sitting or standing
   - ✅ `npc.anim.spriteSheet` can be `sit`
   - when `idle` can change to `sit`

@@ -5,8 +5,9 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
-import { keys, testNever } from "../service/generic";
 import { Vect } from "../geom";
+import { keys, testNever } from "../service/generic";
+import { cancellableAnimDelayMs } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
 
 /** @param {React.PropsWithChildren<Props>} props */
@@ -131,7 +132,7 @@ export default function CssPanZoom(props) {
         },
       },
 
-      animationAction(type) {
+      async animationAction(type) {
         if (!state.anims[0]) {
           return; // We are (or were) animating iff state.anims[0] non-null
         }
@@ -141,6 +142,22 @@ export default function CssPanZoom(props) {
             state.anims.forEach(anim => anim?.cancel());
             state.anims = [null, null];
             break;
+          case 'smooth-cancel': {
+            // 'cancel' was Jerky in Safari on collide with door
+            const trAnim = this.anims[0];
+            if (trAnim) {
+              if (trAnim.playState === 'running') {
+                await /** @type {Promise<void>} */ (new Promise(resolve => {
+                  trAnim.addEventListener('pause', () => resolve());
+                  trAnim.pause();
+                }));
+              }
+              state.syncStyles();
+              trAnim.cancel();
+              state.anims[0] = null;
+            }
+            break;
+          }
           case 'pause':
             // Avoid pausing finished animation
             state.anims.forEach(anim => anim?.playState === 'running' && anim.pause());
@@ -198,6 +215,7 @@ export default function CssPanZoom(props) {
           direction: 'normal',
           fill: 'forwards',
           easing: 'linear',
+          delay: cancellableAnimDelayMs,
         });
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
