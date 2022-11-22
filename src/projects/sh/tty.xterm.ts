@@ -469,6 +469,7 @@ export class ttyXtermClass {
     } else if (msg === undefined) {
       return;
     } else if (isProxy(msg)) {
+      this.session.rememberLastValue(msg);
       return this.queueCommands([{
         key: 'line',
         line: `${ansiColor.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansiColor.Reset}`,

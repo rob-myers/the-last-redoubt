@@ -3,7 +3,7 @@ import cliColumns from 'cli-columns';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
 import { ansiColor, computeNormalizedParts, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
-import { getProcessStatusIcon, ReadResult, preProcessRead } from './io';
+import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
 import useSession, { ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
@@ -528,7 +528,8 @@ class cmdServiceClass {
         } else if (key === 'args') {
           return posPositionals;
         } else if (key === '_') {// Can _ from anywhere e.g. inside root
-          return session.var._;
+          const lastValue = session.var._;
+          return isProxy(lastValue) ? dataChunk([lastValue]) : lastValue;
         }
         return (_ as any)[key];
       },
