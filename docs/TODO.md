@@ -14,22 +14,21 @@
 
 - 🚧 Performance
   - ✅ Remove YouTube from SSR via facade
+  - ✅ Try upgrading Gatsby
   - 🚧 Smaller main bundle
-  - Try upgrade Gatsby
   - remark/rehypePlugins ?
 
-- ✅ Simplify tty msg lookup to textual identity (sans ANSI)
-  - ✅ Clickable tty msgs getting out of sync
+- 🚧 NPC idle can be sitting or standing
+  - ✅ `npc.anim.spriteSheet` can be `sit`
+  - when `idle` can change to `sit`
 
-- Abandon _moving seg_ vs _static seg_ collision prediction
-  - ✅ Hide in debug mode
-  - Remove related code
 - Prefer _moving circle_ vs _static angled rect_
-- Follow cam should trigger on "resize" tab
+  - Abandon _moving seg_ vs _static seg_ collision prediction
+    - ✅ Hide in debug mode
+    - Remove related code
+  - Start mdx description of algorithm
 
-- Alt PNG filters?
-  - .geomorph `brightness(51%) sepia(0.1)`
-  - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
+- Follow cam should trigger on "resize" tab
 
 - 🤔 Persist npc config?
 
@@ -226,6 +225,12 @@ How to embed video?
 
 ## Done
 
+- ✅ tracking camera should cancel when npc walk cancels
+- ✅ Simplify tty msg lookup to textual identity (sans ANSI)
+  - ✅ Clickable tty msgs getting out of sync
+- ✅ Alt PNG filters?
+  - .geomorph `brightness(51%) sepia(0.1)`
+  - .geomorph-dark `contrast(200%) invert(100%) brightness(50%)`
 - ✅ BUG typing `foo '` and then pasting multiple lines duplicates `foo '`
   ```
   bar

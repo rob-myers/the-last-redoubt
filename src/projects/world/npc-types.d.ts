@@ -175,6 +175,7 @@ declare namespace NPC {
 
   type SpriteSheetKey = (
     | 'idle'
+    | 'sit'
     | 'walk'
   );
 

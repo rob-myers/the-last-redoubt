@@ -426,7 +426,6 @@ export default function NPCs(props) {
       } else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
         throw Error(`cannot spawn whilst walking`)
       }
-
       state.npcKeys = state.npcKeys
         .filter(({ key }) => key !== e.npcKey)
         .concat({
@@ -434,7 +433,7 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
-            npcJsonKey: 'first-npc', // TODO remove hard-coding
+            npcJsonKey: 'first-npc', // 🚧 remove hard-coding
             position: e.point,
             angle: e.angle,
             speed: npcJson["first-npc"].speed,
@@ -484,17 +483,17 @@ export default function NPCs(props) {
           const npc = state.npc[npcKey];
           const npcPosition = npc.getPosition();
           
-          if (// Only when: npc idle, camera not animating, camera not close
-            npc.anim.spriteSheet === 'idle'
+          if (// npc not moving
+            (npc.anim.spriteSheet === 'idle' || npc.anim.spriteSheet === 'sit')
+            // camera not animating
             && (panZoom.anims[0] === null || panZoom.anims[0].playState === 'finished')
+            // camera not close
             && panZoom.distanceTo(npcPosition) > 10
           ) {
             status = 'panzoom-to';
             console.warn('@', status);
             // Ignore Error('cancelled')
-            try {
-              await panZoom.panZoomTo(2, npcPosition, 2000);
-            } catch {}
+            try { await panZoom.panZoomTo(2, npcPosition, 2000); } catch {};
             status = 'no-track';
           }
 

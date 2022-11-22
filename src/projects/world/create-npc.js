@@ -1,4 +1,5 @@
 import { Poly, Rect, Vect } from '../geom';
+import { testNever } from '../service/generic';
 import { cssName } from '../service/const';
 import { getNumericCssVar, lineSegToCssTransform } from '../service/dom';
 import { npcJson } from '../service/npc-json';
@@ -42,20 +43,29 @@ export default function createNpc(
 
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
-      if (this.anim.spriteSheet === 'idle') {
-        return;
+      switch (this.anim.spriteSheet) {
+        case 'idle':
+        case 'sit':
+          break;
+        case 'walk':
+          this.clearWayMetas();
+          this.commitWalkStyles();
+          if (this.el.body instanceof HTMLDivElement) {
+            this.setLookRadians(this.getAngle());
+          }
+          await /** @type {Promise<void>} */ (new Promise(resolve => {
+            this.anim.translate.addEventListener('cancel', () => resolve());
+            this.anim.translate.cancel();
+            this.anim.rotate.cancel();
+          }));
+          break;
+        default:
+          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.cancel' });
       }
-      if (this.anim.spriteSheet === 'walk') {
-        this.clearWayMetas();
-        this.commitWalkStyles();
-        if (this.el.body instanceof HTMLDivElement) {
-          this.setLookRadians(this.getAngle());
-        }
-        await/** @type {Promise<void>} */ (new Promise(resolve => {
-          this.anim.translate.addEventListener('cancel', () => resolve());
-          this.anim.translate.cancel();
-          this.anim.rotate.cancel();
-        }));
+
+      if (this.def.key === api.npcs.playerKey) {
+        // Cancel camera tracking
+        api.panZoom.animationAction('cancel');
       }
     },
     clearWayMetas() {
@@ -105,6 +115,7 @@ export default function createNpc(
         }));
       } finally {
         this.setSpritesheet('idle');
+        this.commitWalkStyles();
         this.startAnimation();
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
@@ -283,20 +294,28 @@ export default function createNpc(
     },
     pause() {
       console.log(`pause: pausing ${this.def.key}`);
-      if (this.anim.spriteSheet === 'walk') {
-        if (this.everAnimated()) {
-          this.anim.translate.pause();
-          this.anim.rotate.pause();
-          this.anim.sprites.pause();
-          this.commitWalkStyles();
-          this.setLookRadians(this.getAngle());
-        }
-        /**
-         * Pending wayMeta is at this.anim.wayMetas[0].
-         * No need to adjust its `length` because we use animation currentTime.
-         */
-        window.clearTimeout(this.anim.wayTimeoutId);
+      switch (this.anim.spriteSheet) {
+        case 'idle':
+        case 'sit':
+          break;
+        case 'walk':
+          if (this.everAnimated()) {
+            this.anim.translate.pause();
+            this.anim.rotate.pause();
+            this.anim.sprites.pause();
+            this.commitWalkStyles();
+            this.setLookRadians(this.getAngle());
+          }
+          /**
+           * Pending wayMeta is at this.anim.wayMetas[0].
+           * No need to adjust its `length` because we use animation currentTime.
+           */
+          window.clearTimeout(this.anim.wayTimeoutId);
+          break;
+        default:
+          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.pause' });
       }
+
       if (this.def.key === api.npcs.playerKey) {
         // Pause camera tracking
         api.panZoom.animationAction('pause');
@@ -304,15 +323,22 @@ export default function createNpc(
     },
     play() {
       console.log(`play: resuming ${this.def.key}`);
-      if (this.anim.spriteSheet === 'walk') {
-        this.anim.translate.play();
-        this.anim.rotate.play();
-        this.anim.sprites.play();
-        this.nextWayTimeout();
-        if (this.def.key === api.npcs.playerKey) {
-          // Resume camera tracking
-          api.panZoom.animationAction('play');
-        }
+      switch (this.anim.spriteSheet) {
+        case 'idle':
+        case 'sit':
+          break;
+        case 'walk':
+          this.anim.translate.play();
+          this.anim.rotate.play();
+          this.anim.sprites.play();
+          this.nextWayTimeout();
+          if (this.def.key === api.npcs.playerKey) {
+            // Resume camera tracking
+            api.panZoom.animationAction('play');
+          }
+          break;
+        default:
+          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.play' });
       }
     },
     setLookRadians(radians) {
@@ -326,65 +352,68 @@ export default function createNpc(
       }
     },
     startAnimation() {
-      if (this.everAnimated()) {// Cleanup
-        if (this.anim.spriteSheet === 'idle') {
-          this.commitWalkStyles(); // Assume we were just walking
-        }
+      if (this.everAnimated()) {
         this.anim.translate.cancel();
         this.setLookRadians(this.getAngle());
         this.anim.rotate.cancel();
       }
 
-      if (this.anim.spriteSheet === 'walk') {
-        // Remove pre-existing, else
-        // - strange behaviour on pause
-        // - final body rotation can be wrong
-        this.el.root.getAnimations().forEach(x => x.cancel());
-        this.el.body.getAnimations().forEach(x => x.cancel());
-
-        // Animate position and rotation
-        const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
-        this.anim.translate = this.el.root.animate(translateKeyframes, opts);
-        this.anim.rotate = this.el.body.animate(rotateKeyframes, opts);
-        this.anim.durationMs = opts.duration;
-
-        // Animate spritesheet
-        const { animLookup } = npcJson[this.jsonKey].parsed;
-        const spriteMs = this.getSpriteDuration(opts.duration);
-        const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
-        this.anim.sprites = this.el.body.animate(
-            firstFootLeads ?
-              [
-                { offset: 0, backgroundPosition: '0px' },
-                { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
-              ] :
-              [// We assume an even number of frames
-                { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
-                { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
-              ] 
-          ,
-          {
-            easing: `steps(${animLookup.walk.frameCount})`,
-            duration: spriteMs, // ~ npcWalkAnimDurationMs
-            iterations: Infinity,
-          },
-        );
-
-      } else if (this.anim.spriteSheet === 'idle') {
-        this.clearWayMetas();
-        // Post walk, set target as current angle 
-        this.setLookRadians(this.getAngle());
-        // Update staticBounds
-        const { x, y } = this.getPosition();
-        const radius = this.getRadius();
-        this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
-
-        // Replace with dummy animations?
-        // - Maybe fixes "this.anim.translate.addEventListener is not a function"
-        // - Fixes "this.anim.rotate.cancel is not a function" on HMR
-        this.anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
-        this.anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
-        // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+      switch (this.anim.spriteSheet) {
+        case 'walk': {
+          // Remove pre-existing, else:
+          // - strange behaviour on pause
+          // - final body rotation can be wrong
+          this.el.root.getAnimations().forEach(x => x.cancel());
+          this.el.body.getAnimations().forEach(x => x.cancel());
+    
+          // Animate position and rotation
+          const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
+          this.anim.translate = this.el.root.animate(translateKeyframes, opts);
+          this.anim.rotate = this.el.body.animate(rotateKeyframes, opts);
+          this.anim.durationMs = opts.duration;
+    
+          // Animate spritesheet
+          const { animLookup } = npcJson[this.jsonKey].parsed;
+          const spriteMs = this.getSpriteDuration(opts.duration);
+          const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
+          this.anim.sprites = this.el.body.animate(
+              firstFootLeads ?
+                [
+                  { offset: 0, backgroundPosition: '0px' },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
+                ] :
+                [// We assume an even number of frames
+                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
+                ] 
+            ,
+            {
+              easing: `steps(${animLookup.walk.frameCount})`,
+              duration: spriteMs, // ~ npcWalkAnimDurationMs
+              iterations: Infinity,
+            },
+          );
+          break;
+        }
+        case 'idle':
+        case 'sit': {
+          this.clearWayMetas();
+          this.setLookRadians(this.getAngle());
+          // Update staticBounds
+          const { x, y } = this.getPosition();
+          const radius = this.getRadius();
+          this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
+    
+          // Replace with dummy animations?
+          // - Maybe fixes "this.anim.translate.addEventListener is not a function"
+          // - Fixes "this.anim.rotate.cancel is not a function" on HMR
+          this.anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
+          this.anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+          // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+          break;
+        }
+        default:
+          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
       }
     },
     updateAnimAux() {
@@ -424,13 +453,13 @@ export default function createNpc(
       // console.log('this.anim.wayMetas[0]', this.anim.wayMetas[0]);
       if (
         this.anim.wayMetas.length === 0
-        || this.anim.spriteSheet === 'idle'
+        || this.anim.spriteSheet !== 'walk'
         || this.anim.translate.currentTime === null
         || this.anim.translate.playState === 'paused'
       ) {
         if (this.anim.wayMetas.length === 0) console.warn('wayTimeout: empty this.anim.wayMetas');
         if (this.anim.translate.currentTime === null) console.warn('wayTimeout: this.anim.root.currentTime is null');
-        if (this.anim.spriteSheet === 'idle') console.warn('wayTimeout: this.anim.spriteSheet is "idle"');
+        if (this.anim.spriteSheet !== 'walk') console.warn(`wayTimeout: this.anim.spriteSheet (${this.anim.spriteSheet}) is not "walk"`);
         return;
       } else if (
         this.anim.translate.currentTime >=

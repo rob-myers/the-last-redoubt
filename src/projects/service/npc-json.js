@@ -57,7 +57,7 @@ ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
     height: ${animMeta.aabb.height}px;
     left: ${-animMeta.aabb.width * 0.5}px;
     top: ${-animMeta.aabb.height * 0.5}px;
-    background: url('/assets/npc/first-npc--${animName}.png'); 
+    background: url('/assets/npc/${parsed.npcName}--${animName}.png'); 
   }
 `).join('\n\n')}
 
