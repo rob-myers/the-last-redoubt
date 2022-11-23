@@ -1,7 +1,7 @@
 import React from "react";
 import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
-import { predictNpcNpcCollision } from "../service/npc";
+import * as npcService from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -35,7 +35,7 @@ export default function useHandleEvents(api) {
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
-            const collision = predictNpcNpcCollision(npc, other);
+            const collision = npcService.predictNpcNpcCollision(npc, other);
             // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
             if (collision) {
               // Add wayMeta cancelling motion
@@ -141,7 +141,7 @@ export default function useHandleEvents(api) {
               // Walking NPCs may be about to collide with Player,
               // e.g. before they start a new line segment
               Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
-                const collision = predictNpcNpcCollision(npc, playerNpc);
+                const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
                 if (collision) {
                   setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
                 }
@@ -149,7 +149,7 @@ export default function useHandleEvents(api) {
             } else if (playerNpc.isWalking()) {
               // Player may be about to collide with NPC
               const npc = api.npcs.getNpc(e.npcKey);
-              const collision = predictNpcNpcCollision(playerNpc, npc);
+              const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
               if (collision) {
                 setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
               }

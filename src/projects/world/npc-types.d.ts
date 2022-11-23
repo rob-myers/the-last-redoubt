@@ -296,6 +296,8 @@ declare namespace NPC {
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'pause'; npcKey: string }
     | { action: 'play'; npcKey: string }
+    | { action: 'rm'; npcKey: string; }
+    | { action: 'remove'; npcKey: string; }
     | { action: 'remove-decor'; decorKey: string; }
     | { action: 'rm-decor'; decorKey: string; }
     | { action: 'set-player'; npcKey?: string }

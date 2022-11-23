@@ -211,6 +211,8 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
       case "get":
       case "pause":
       case "play":
+      case "rm":
+      case "remove":
       case "set-player":
         opts = { npcKey: opts };
         break;
@@ -230,7 +232,7 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
 }
 
 /** @type {Record<NPC.NpcActionKey, true>} */
-const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, "remove-decor": true, "rm-decor": true, "set-player": true };
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /**
  * @param {NPC.NPC} npcA Assumed to be moving

@@ -233,12 +233,12 @@
 
       if (typeof action !== "string" || action === "") {
         throw api.throwError("first arg {action} must be a non-empty string")
-      } else if (!npcs.isNpcActionKey(action)) {
+      } else if (!npcs.service.isNpcActionKey(action)) {
         throw api.throwError("first arg {action} must be a valid key")
       }
 
       if (api.isTtyAt(0)) {
-        const opts = npcs.normalizeNpcCommandOpts(
+        const opts = npcs.service.normalizeNpcCommandOpts(
           action,
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
@@ -246,7 +246,7 @@
         yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
       } else {
         while ((datum = await api.read()) !== null) {
-          const opts = npcs.normalizeNpcCommandOpts(action, datum, []);
+          const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
           yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
         }
       }

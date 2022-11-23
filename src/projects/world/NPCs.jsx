@@ -9,7 +9,7 @@ import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
-import { verifyGlobalNavPath, verifyDecor, isNpcActionKey, normalizeNpcCommandOpts } from "../service/npc";
+import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
 import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
@@ -290,8 +290,6 @@ export default function NPCs(props) {
       const localPoint = inverseMatrix.transformPoint(Vect.from(p));
       return navPoly.some(poly => poly.contains(localPoint));
     },
-    isNpcActionKey,
-    normalizeNpcCommandOpts,
     // 🚧 `npc remove foo` `npc rm foo`
     async npcAct(e) {
       switch (e.action) {
@@ -332,6 +330,9 @@ export default function NPCs(props) {
         case 'play':// Resume current animation
           await state.getNpc(e.npcKey).play();
           break;
+        case 'rm':
+        case 'remove':
+          return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
           state.setDecor(e.decorKey, null);
@@ -374,6 +375,14 @@ export default function NPCs(props) {
         return 'cancelled';
       }
     },
+    removeNpc(npcKey) {
+      delete state.npc[npcKey];
+      state.npcKeys = state.npcKeys.filter(x => x.key in state.npc);
+      update();
+      state.npcAct({ action: 'set-player', npcKey: undefined });
+      // 🚧 inform relevant processes?
+      
+    },
     rootRef(el) {
       if (el) {
         state.rootEl = el;
@@ -387,8 +396,9 @@ export default function NPCs(props) {
         state.decorEl = assertNonNull(el.querySelector('div.decor-root'));
       }
     },
+    service: npcService,
     setDecor(decorKey, decor) {
-      if (decor && !verifyDecor(decor)) {
+      if (decor && !npcService.verifyDecor(decor)) {
         throw Error('invalid decor');
       }
       if (decor) {
@@ -507,7 +517,7 @@ export default function NPCs(props) {
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
-      if (!verifyGlobalNavPath(e)) {
+      if (!npcService.verifyGlobalNavPath(e)) {
         throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
       }
 
@@ -663,15 +673,15 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {typeof isNpcActionKey} isNpcActionKey
- * @property {typeof normalizeNpcCommandOpts} normalizeNpcCommandOpts
  * @property {(e: NPC.NpcAction) => Promise<void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
+ * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(decorKey: string, decor: null | NPC.DecorDef) => void} setDecor
  * @property {(npcKey: string) => void} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
+ * @property {import('../service/npc')} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  */
