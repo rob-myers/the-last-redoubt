@@ -187,6 +187,17 @@ function extractNpcFrameNodes(api, topNodes, title) {
 }
 
 /**
+ * @param {string} input 
+ * @returns {input is NPC.NpcActionKey}
+ */
+export function isNpcActionKey(input) {
+  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
+}
+
+/** @type {Record<NPC.NpcActionKey, true>} */
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, "remove-decor": true, "rm-decor": true, "set-player": true };
+
+/**
  * @param {NPC.NPC} npcA Assumed to be moving
  * @param {NPC.NPC} npcB May not be moving
  * @returns {NPC.NpcCollision | null}

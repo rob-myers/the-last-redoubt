@@ -646,7 +646,10 @@ async function *sleep(meta: Sh.BaseMeta, seconds = 1) {
   // If process continually re-sleeps, avoid many cleanups
   removeFirst(process.cleanups, cleanup);
 }
-
+/**
+ * Can prefix with `throw` for static analysis.
+ * The outer throw will never be thrown.
+ */
 function throwError(message: string, exitCode?: number) {
   throw new ShError(message, exitCode || 1);
 }

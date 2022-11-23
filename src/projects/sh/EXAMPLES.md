@@ -59,6 +59,10 @@ view '{ point:'$( click 1 )'}'
 npc get andros | map 'x => x.setLookRadians(0)'
 ```
 
+```sh
+npc look-at andros $( click 1 )
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md

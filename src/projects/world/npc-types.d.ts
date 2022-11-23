@@ -301,6 +301,8 @@ declare namespace NPC {
     | { action: 'set-player'; npcKey?: string }
   );
 
+  export type NpcActionKey = NpcAction['action'];
+
   export type NPCsEvent = (
     | { key: 'decor'; meta: DecorDef; }
     | { key: 'set-player'; npcKey: string | null; }

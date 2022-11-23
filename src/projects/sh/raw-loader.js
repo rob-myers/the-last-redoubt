@@ -145,7 +145,7 @@
     click: async function* ({ api, args, home }) {
       let numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
       if (!Number.isFinite(numClicks)) {
-        api.throwError("format: \`click [{numberOfClicks}] [!]\`")
+        throw api.throwError("format: \`click [{numberOfClicks}] [!]\`")
       }
 
       const { npcs, panZoom } = api.getCached(home.WORLD_KEY)
@@ -226,28 +226,62 @@
       }
     },
   
-    /** npc {action} [{opts}] */
+    /** npc {action} [{opts}] [{args}] */
     npc: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const action = args[0]
 
-      /** @param {undefined | string | NPC.NpcConfigOpts} opts */
-      function normalizeOpts(opts = {}) {
+      if (typeof action !== "string" || action === "") {
+        throw api.throwError("first arg {action} must be a non-empty string")
+      } else if (!npcs.isNpcActionKey(action)) {
+        throw api.throwError("first arg {action} must be a valid key")
+      }
+
+      /**
+       * @param {NPC.NpcActionKey} action
+       * @param {undefined | string | NPC.NpcConfigOpts} opts
+       * @param {any[]} extras 
+       */
+      function normalizeOpts(action, opts = {}, extras) {
         if (typeof opts === "string") {
-          if (["decor", "remove-decor", "rm-decor"].includes(action)) opts = { decorKey: opts };
-          else if (["cancel", "get", "pause", "play", "set-player"].includes(action)) opts = { npcKey: opts };
-          else if (action === "config") opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
-          else opts = {}; // we ignore key
+          switch (action) {
+            case "decor":
+            case "remove-decor":
+            case "rm-decor":
+              opts = { decorKey: opts };
+              break;
+            case "cancel":
+            case "get":
+            case "pause":
+            case "play":
+            case "set-player":
+              opts = { npcKey: opts };
+              break;
+            case "config":
+              opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
+              break;
+            case "look-at":
+              // npc look-at andros $( click 1 )
+              opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+              break;
+            default:
+              opts = {}; // we ignore key
+              break;
+          }
         }
         return opts;
       }
 
       if (api.isTtyAt(0)) {
-        const opts = normalizeOpts(api.parseJsArg(args[1]));
+        const opts = normalizeOpts(
+          action,
+          api.parseJsArg(args[1]),
+          args.slice(2).map(arg => api.parseJsArg(arg)),
+        );
         yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
       } else {
         while ((datum = await api.read()) !== null) {
-          const opts = normalizeOpts(datum);
+          const opts = normalizeOpts(action, datum, []);
           yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
         }
       }

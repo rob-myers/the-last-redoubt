@@ -18,6 +18,7 @@
   - 🚧 Smaller main bundle
   - remark/rehypePlugins ?
 
+- ✅ anim.sprites also has initial delay to preserve sprite duration modification
 - Safari: Door collision bug
   - ✅ Should not start animation before initial cancel
   - ✅ Cancel track on collide door should not be jerky

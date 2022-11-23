@@ -6,10 +6,10 @@ import { debounce } from "debounce";
 
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
-import { dataChunk, scrollback, proxyKey } from "../sh/io";
+import { dataChunk, proxyKey } from "../sh/io";
 import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
-import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
+import { verifyGlobalNavPath, verifyDecor, isNpcActionKey } from "../service/npc";
 import { cssName } from "../service/const";
 import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
@@ -283,6 +283,7 @@ export default function NPCs(props) {
        */
       return tags;
     },
+    /** @returns {p is Geom.VectJson} */
     isPointLegal(p) {
       const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
       if (gmId === -1) return false;
@@ -290,25 +291,18 @@ export default function NPCs(props) {
       const localPoint = inverseMatrix.transformPoint(Vect.from(p));
       return navPoly.some(poly => poly.contains(localPoint));
     },
+    isNpcActionKey,
+    // 🚧 `npc remove foo` `npc rm foo`
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor':
-          state.setDecor(e.key, e);
-          break;
-        case 'decor':
-          if ('decorKey' in e) {
-            // `npc decor foo` gets foo
-            return state.decor[e.decorKey];
-          } else {// otherwise alias for add-decor
-            state.setDecor(e.key, e);
-          }
-          break;
-        case 'cancel':// Cancel current animation
-          await state.getNpc(e.npcKey).cancel();
-          break;
-        case 'config':
-          keys(e).forEach(key => // Set
-            // 🚧 ensure correct type
+          return state.setDecor(e.key, e);
+        case 'decor': // get or add decor
+          return 'decorKey' in e ? state.decor[e.decorKey] : state.setDecor(e.key, e);
+        case 'cancel':
+          return await state.getNpc(e.npcKey).cancel();
+        case 'config': // set multiple, toggle single, get all
+          keys(e).forEach(key => // Set 🚧 ensure correct type
             e[key] !== undefined && (/** @type {*} */ (state.config)[key] = e[key])
           );
           if (e.configKey) {// Toggle
@@ -316,7 +310,7 @@ export default function NPCs(props) {
           }
           if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
             /**
-             * We wrap the proxy in a chunk to avoid errors arising
+             * We must wrap the proxy in a chunk to avoid errors arising
              * from various `await`s ("then" is not defined).
              */
             return dataChunk([state.config]);
@@ -324,13 +318,13 @@ export default function NPCs(props) {
           break;
         case 'get':
           return state.getNpc(e.npcKey);
+        // 🚧 promise via animationend event?
         case 'look-at': {
-          const npc = state.getNpc(e.npcKey);
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
-          await npc.lookAt(e.point);
-          break;
+          const npc = state.getNpc(e.npcKey);
+          return npc.lookAt(e.point);
         }
         case 'pause':// Pause current animation
           await state.getNpc(e.npcKey).pause();
@@ -668,8 +662,9 @@ const rootCss = css`
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
- * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
+ * @property {(p: Geom.VectJson) => p is Geom.VectJson} isPointLegal
+ * @property {typeof isNpcActionKey} isNpcActionKey
+ * @property {(e: NPC.NpcAction) => Promise<void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(el: null | HTMLDivElement) => void} rootRef
