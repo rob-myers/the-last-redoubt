@@ -237,43 +237,8 @@
         throw api.throwError("first arg {action} must be a valid key")
       }
 
-      /**
-       * @param {NPC.NpcActionKey} action
-       * @param {undefined | string | NPC.NpcConfigOpts} opts
-       * @param {any[]} extras 
-       */
-      function normalizeOpts(action, opts = {}, extras) {
-        if (typeof opts === "string") {
-          switch (action) {
-            case "decor":
-            case "remove-decor":
-            case "rm-decor":
-              opts = { decorKey: opts };
-              break;
-            case "cancel":
-            case "get":
-            case "pause":
-            case "play":
-            case "set-player":
-              opts = { npcKey: opts };
-              break;
-            case "config":
-              opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
-              break;
-            case "look-at":
-              // npc look-at andros $( click 1 )
-              opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
-              break;
-            default:
-              opts = {}; // we ignore key
-              break;
-          }
-        }
-        return opts;
-      }
-
       if (api.isTtyAt(0)) {
-        const opts = normalizeOpts(
+        const opts = npcs.normalizeNpcCommandOpts(
           action,
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
@@ -281,7 +246,7 @@
         yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
       } else {
         while ((datum = await api.read()) !== null) {
-          const opts = normalizeOpts(action, datum, []);
+          const opts = npcs.normalizeNpcCommandOpts(action, datum, []);
           yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
         }
       }

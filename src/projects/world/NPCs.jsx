@@ -9,7 +9,7 @@ import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
-import { verifyGlobalNavPath, verifyDecor, isNpcActionKey } from "../service/npc";
+import { verifyGlobalNavPath, verifyDecor, isNpcActionKey, normalizeNpcCommandOpts } from "../service/npc";
 import { cssName } from "../service/const";
 import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
@@ -283,7 +283,6 @@ export default function NPCs(props) {
        */
       return tags;
     },
-    /** @returns {p is Geom.VectJson} */
     isPointLegal(p) {
       const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
       if (gmId === -1) return false;
@@ -292,6 +291,7 @@ export default function NPCs(props) {
       return navPoly.some(poly => poly.contains(localPoint));
     },
     isNpcActionKey,
+    normalizeNpcCommandOpts,
     // 🚧 `npc remove foo` `npc rm foo`
     async npcAct(e) {
       switch (e.action) {
@@ -662,8 +662,9 @@ const rootCss = css`
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
- * @property {(p: Geom.VectJson) => p is Geom.VectJson} isPointLegal
+ * @property {(p: Geom.VectJson) => boolean} isPointLegal
  * @property {typeof isNpcActionKey} isNpcActionKey
+ * @property {typeof normalizeNpcCommandOpts} normalizeNpcCommandOpts
  * @property {(e: NPC.NpcAction) => Promise<void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo

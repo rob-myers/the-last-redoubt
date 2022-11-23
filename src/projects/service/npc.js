@@ -194,6 +194,41 @@ export function isNpcActionKey(input) {
   return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
 }
 
+/**
+ * @param {NPC.NpcActionKey} action
+ * @param {undefined | string | NPC.NpcConfigOpts} opts
+ * @param {any[]} extras 
+ */
+export function normalizeNpcCommandOpts(action, opts = {}, extras) {
+  if (typeof opts === "string") {
+    switch (action) {
+      case "decor":
+      case "remove-decor":
+      case "rm-decor":
+        opts = { decorKey: opts };
+        break;
+      case "cancel":
+      case "get":
+      case "pause":
+      case "play":
+      case "set-player":
+        opts = { npcKey: opts };
+        break;
+      case "config":
+        opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
+        break;
+      case "look-at":
+        // npc look-at andros $( click 1 )
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+        break;
+      default:
+        opts = {}; // we ignore key
+        break;
+    }
+  }
+  return opts;
+}
+
 /** @type {Record<NPC.NpcActionKey, true>} */
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
