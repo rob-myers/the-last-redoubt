@@ -392,6 +392,7 @@ export default function createNpc(
               easing: `steps(${animLookup.walk.frameCount})`,
               duration: spriteMs, // ~ npcWalkAnimDurationMs
               iterations: Infinity,
+              delay: opts.delay || cancellableAnimDelayMs,
             },
           );
           break;
