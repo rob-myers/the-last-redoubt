@@ -15,7 +15,9 @@ export default function useGeomorphData(layoutKey, disabled = false) {
   
   return useQuery(geomorphJsonPath(layoutKey), async () => {
     
-    const layout = parseLayout(await fetch(geomorphJsonPath(layoutKey)).then(x => x.json()));
+    const layout = parseLayout(
+      await fetch(geomorphJsonPath(layoutKey)).then(x => x.json())
+    );
 
     const { roomGraph } = layout;
 
@@ -27,12 +29,14 @@ export default function useGeomorphData(layoutKey, disabled = false) {
             dst.type === 'door' ? layout.doors[dst.doorId].poly : []
           ); // Assume room nodes aligned with rooms
         return Poly.union([layout.rooms[roomNodeId], ...doors])[0];
-      });
+      })
+    ;
 
     /**
-     * - `light`s override light position
-     * - convex polygon `poly` (e.g. rotated rect) should cover door and have center inside room.
-     * - TODO move to json?
+     * Polys/rects tagged with `light` override default light position (i.e. offset from entry).
+     * - `poly` must be convex (e.g. rotated rect).
+     * - `poly` must cover door and have center inside room.
+     * - 🚧 move to precomputed json?
      */
     const lightMetas = layout.groups.singles
       .filter(x => x.tags.includes('light'))
@@ -41,9 +45,10 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       ));
 
     /**
-     * - `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
-     * - we'll use it to extend the light polygon i.e. improve the look of lighting under certain circumstances.
-     * - TODO move to json?
+     * `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
+     * We'll use them to extend the light polygon i.e.
+     * improve look of lighting under certain circumstances.
+     * - 🚧 move to precomputed json?
      */
     const relDoorId = layout.groups.singles
       .filter(x => x.tags.includes('relate-connectors'))
@@ -65,13 +70,13 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     );
 
     //#region points by room
-    /** @type {Geomorph.GeomorphData['point']} */
-    const pointsByRoom = layout.rooms.map(x => ({
-      default: x.center,
-      labels: [],
+    const pointsByRoom = layout.rooms.map(/** @returns {Geomorph.GeomorphData['point'][*]} */  x => ({
+      default: x.center, // Default is room's center (may not lie in room)
       doorLight: {},
-      windowLight: {},
+      labels: [],
       spawn: [],
+      ui: [],
+      windowLight: {},
     }));
 
     lightMetas.forEach(({ center: p, poly, reverse, tags }, i) => {
@@ -94,12 +99,18 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
     });
 
-    layout.groups.singles.filter(x => x.tags.includes('spawn'))
-      .map(x => x.poly.center).forEach((p, i) => {
+    layout.groups.singles.forEach((single, i) => {
+      const matched = /** @type {const} */ (['spawn', 'ui']).filter(tag => single.tags.includes(tag));
+      if (matched.length) {
+        const p = single.poly.center;
         const roomId = layout.rooms.findIndex(x => x.contains(p));
-        if (roomId >= 0) pointsByRoom[roomId].spawn.push(p);
-        else console.warn(`spawn point ${i} should be inside some room`);
-      });
+        matched.forEach(tag => 
+          roomId >= 0
+            ? pointsByRoom[roomId][tag].push({ point: p, tags: single.tags.slice() })  
+            : console.warn(`${tag} point ${i} should be inside some room`)  
+        );
+      }
+    });
 
     layout.labels.forEach((label) => {
       const roomId = layout.rooms.findIndex(x => x.contains(label.center));

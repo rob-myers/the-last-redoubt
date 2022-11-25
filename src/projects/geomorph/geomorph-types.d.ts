@@ -129,10 +129,12 @@ declare namespace Geomorph {
       default: Vect;
       /** Can specify light position from room through door */
       doorLight: { [doorId?: number]: { point: Vect; tags: string[]; } };
-      /** `labels` inside room. */
+      /** `labels` inside room */
       labels: LayoutLabel[];
-      /** Spawn points inside room. */
-      spawn: Vect[];
+      /** Spawn points inside room */
+      spawn: { point: Vect; tags: string[] }[];
+      /** User Interactive points inside room */
+      ui: { point: Vect; tags: string[] }[];
       /** Can specify light position from room through window */
       windowLight: { [windowId?: number]: Vect };
     }[];
