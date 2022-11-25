@@ -17,6 +17,7 @@ const config = {
         extensions: [`.mdx`, `.md`],
         mdxOptions: {
           remarkPlugins: [
+            require(`remark-gfm`),
             require("remark-math"),
             // wrapESMPlugin("remark-math"),
           ],
