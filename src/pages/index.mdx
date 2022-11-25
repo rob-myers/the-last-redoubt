@@ -71,9 +71,7 @@ Before things get a bit abstract, here are some screenshots:
     { src: 'pic-11.png', label: 'Piping output into devtool' },
   ]}
 />
-
-<!-- Component ~ React Component -->
-
+{/* Component ~ React Component */}
 <aside title="screenshots">
 
   _A World and a Terminal_ (1st slide above) depicts a [`Tabs` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
@@ -131,11 +129,11 @@ A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.
 Importantly, CSS allows the browser to behave optimally, and avoids re-inventing the wheel through heavy-duty JavaScript.<SideNote>Although HTMLCanvas is performant via WebGL, the latter is a low-level API.</SideNote>
 _Debugging_ is also far richer because one may directly mutate the DOM-tree in a browser devtool.
 In contrast, native debugging of `<canvas>` amounts to setting breakpoints inside JavaScript code.
+{/* CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool
+Asymmetry of HTML and JavaScript DOM mutation
+Analogy with Web vs App
+Want to use Browser Devtool: canonical interface, like CLI */}
 
-<!-- CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool -->
-<!-- Asymmetry of HTML and JavaScript DOM mutation -->
-<!-- Analogy with Web vs App -->
-<!-- Want to use Browser Devtool: canonical interface, like CLI -->
 
 🚧 Illustrate CSS via devtool video
 
@@ -172,7 +170,7 @@ Show debug circles by typing <InlineCode copy>DEBUG=1; npc config</InlineCode>.
 
 | date | change |
 | --- | ----------- |
-| 2022-??-?? | created [Home page](/) | <!-- |  | created [Introduction](/intro/intro) | -->
+| 2022-??-?? | created [Home page](/) |
 |  | created [About](/about) |
 |  | created preview [Setup](/intro/setup) |
 |  | created preview [JavaScript CLI](/intro/js-cli) |

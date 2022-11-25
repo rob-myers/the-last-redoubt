@@ -104,12 +104,12 @@ export default function World(props) {
   }, []);
 
   return state.gmGraph.ready ? (
-    <CssPanZoom onLoad={/** ... */}>
+    <CssPanZoom onLoad>
       <Geomorphs api={state} />
-      <DebugWorld api={state} />
-      <NPCs api={state} onLoad={/** ... */} />
-      <FOV api={state} onLoad={/** ... */} />
-      <Doors api={state} onLoad={/** ... */} />
+      <DebugWorld api={state} onLoad />
+      <NPCs api={state} onLoad />
+      <FOV api={state} onLoad />
+      <Doors api={state} onLoad />
     </CssPanZoom>
   ) : null;
 }
@@ -230,7 +230,7 @@ and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 Then:
 
-<!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
+{/* > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, */}
 > **we can direct by running commands in one or more terminals**.
 >
 > These commands may include scripts and long-running processes.
@@ -281,7 +281,6 @@ An extended example:
     ],
   ]}
   initHorizontal
-  // persistLayout
 />
 
 Let's try to understand some of the lines above.

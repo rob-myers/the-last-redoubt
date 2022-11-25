@@ -2,6 +2,8 @@
 
 ## In progress
 
+- Fix latex rendering in `/sketches`
+
 - 🚧 Remake homepage CLI video with sound
   - ✅ 1st test
     > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
@@ -28,6 +30,8 @@
 
 - 🚧 NPC idle can be sitting or standing
   - ✅ `npc.anim.spriteSheet` can be `sit`
+  - ✅ gm 301 has points tagged `point ui {sit,stand,lie}`
+  - can click "ui points"
   - when `idle` can change to `sit`
 
 - Prefer _moving circle_ vs _static angled rect_
@@ -37,7 +41,6 @@
   - Start mdx description of algorithm
 
 - Follow cam should trigger on "resize" tab
-
 - 🤔 Persist npc config?
 
 - 🚧 Retarget:

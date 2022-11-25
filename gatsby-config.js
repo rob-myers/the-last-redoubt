@@ -14,17 +14,35 @@ const config = {
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
-        remarkPlugins: [require("remark-math")],
-        rehypePlugins: [require("rehype-katex")],
+        extensions: [`.mdx`, `.md`],
+        mdxOptions: {
+          remarkPlugins: [
+            require("remark-math"),
+            // wrapESMPlugin("remark-math"),
+          ],
+          rehypePlugins: [
+            // require("rehype-katex"), { strict: 'ignore' }
+            wrapESMPlugin("rehype-katex"),
+          ],
+        },
       },
     },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
         "name": "pages",
-        "path": "./src/pages/"
+        // "path": "./src/pages/",
+        "path": `${__dirname}/src/pages`,
       },
-      __key: "pages"
+      // __key: "pages"
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        "name": "snippets",
+        "path": `${__dirname}/src/components/snippet`,
+      },
+      // __key: "snippets"
     },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
@@ -53,5 +71,16 @@ const config = {
     FAST_DEV: true,
   },
 };
+
+/** https://www.npmjs.com/package/gatsby-plugin-mdx#mdxOptions */
+function wrapESMPlugin (name) {
+  return function wrapESM(opts) {
+    return async (...args) => {
+      const mod = await import(name)
+      const plugin = mod.default(opts)
+      return plugin(...args)
+    }
+  }
+}
 
 module.exports = config;
