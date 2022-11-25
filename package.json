@@ -25,7 +25,7 @@
     "render-npc": "yarn ts-script src/scripts/render-npc",
     "simplify-pngs": "yarn ts-script src/scripts/simplify-pngs",
     "svg-meta": "yarn ts-script src/scripts/svg-meta",
-    "ts-script": "ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",
+    "ts-script": "NODE_OPTIONS=\"--no-experimental-fetch\" ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",
     "watch-svg-meta": "nodemon --delay 2s --config src/scripts/svg-meta.nodemon.json --exec 'yarn svg-meta'"
   },
   "dependencies": {
