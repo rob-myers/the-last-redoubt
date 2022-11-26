@@ -1,6 +1,7 @@
 import { Link } from 'gatsby';
 import React from 'react';
 import { css, cx } from '@emotion/css'
+import type { MDXComponents } from 'mdx/types';
 import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId } from 'model/tabs/tabs.model';
@@ -384,14 +385,14 @@ const articleComponents = (
     dateTime?: string;
     tags: string[];
   },
-) => ({
+): MDXComponents => ({
 
-  a({ node, href, title, children, ...props}: {
-    href: string;
-    title: string;
-    children: any;
-    node: any;
-  }) {
+  a({ href, title, children, ...props}) {
+
+    if (!href) {
+      console.error(`a (${JSON.stringify({ title, ...props })}) lacks href and won't be rendered`);
+      return null;
+    }
 
     if (title === '@new-tab') {
       // New tab link
@@ -417,7 +418,7 @@ const articleComponents = (
           title={title}
           onClick={async (e) => {
             e.preventDefault();
-            const [cmd, ...args] = title.split(' ');
+            const [cmd, ...args] = title?.split(' ')??[];
 
             switch (cmd) {
               case 'open-tab': {
