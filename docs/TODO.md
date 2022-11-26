@@ -31,7 +31,9 @@
 - 🚧 NPC idle can be sitting or standing
   - ✅ `npc.anim.spriteSheet` can be `sit`
   - ✅ gm 301 has points tagged `point ui {sit,stand,lie}`
-  - can click "ui points"
+  - ✅ support decor point
+  - ✅ decor point can be clickable with callback
+  - decor point mutates with devtool interaction (NPCs)
   - when `idle` can change to `sit`
 
 - Prefer _moving circle_ vs _static angled rect_

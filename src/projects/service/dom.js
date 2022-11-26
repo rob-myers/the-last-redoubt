@@ -133,6 +133,14 @@ export function circleToCssTransform(circle) {
 }
 
 /**
+ * 
+ * @param {Geom.VectJson} point 
+ */
+export function pointToCssTransform(point) {
+	return `translate(${point.x}px, ${point.y}px)`;
+}
+
+/**
  * @param {Geom.Seg} seg 
  */
 export function lineSegToCssTransform(seg) {

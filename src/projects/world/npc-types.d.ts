@@ -280,10 +280,17 @@ declare namespace NPC {
     linkStartIndex: number,
   ) => void;
 
+  interface DecorPoint extends Geom.VectJson {
+    type: 'point';
+    tags?: string[];
+    onClick?(point: DecorPoint): void;
+  }
+
   export type DecorDef = { key: string } & (
     | { type: 'circle' } & Geom.Circle
-    | { type: 'seg' } & Geom.Seg
     | { type: 'path'; path: Geom.VectJson[]; }
+    | DecorPoint
+    | { type: 'seg' } & Geom.Seg
   );
 
   /** Using `action` instead of `key` to avoid name-collision */

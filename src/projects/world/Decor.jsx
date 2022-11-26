@@ -1,14 +1,13 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
+import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
-import { circleToCssTransform, lineSegToCssTransform } from "../service/dom";
+import { circleToCssTransform, lineSegToCssTransform, pointToCssTransform } from "../service/dom";
 import DecorPath from "./DecorPath";
 
 /** @param {{ item: NPC.DecorDef }} props  */
 export default function Decor({ item }) {
   switch (item.type) {
-    case 'path':
-      return <DecorPath decor={item} />
     case 'circle':
       return (
         <div
@@ -16,6 +15,22 @@ export default function Decor({ item }) {
           className={cx(cssName.decorCircle, cssCircle)}
           style={{
             transform: circleToCssTransform(item),
+          }}
+        />
+      );
+    case 'path':
+      return (
+        <DecorPath decor={item} />
+      );
+    case 'point':
+      return (
+        <div
+          data-key={item.key}
+          className={cx(cssName.decorPoint, cssPoint)}
+          onClick={item.onClick ? () => item.onClick?.(item) : undefined}
+          style={{
+            transform: pointToCssTransform(item),
+            cursor: item.onClick ? 'pointer' : 'initial',
           }}
         />
       );
@@ -30,7 +45,7 @@ export default function Decor({ item }) {
         />
       );
     default:
-      console.error(`unexpected decor`, item);
+      console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
       // throw testNever(item);
       return null;
   }
@@ -41,6 +56,15 @@ const cssCircle = css`
   background-color: #ff444488;
   width: 1px;
   height: 1px;
+  transform-origin: center;
+  border-radius: 50%;
+`;
+
+const cssPoint = css`
+  position: absolute;
+  background-color: #0f0;
+  width: 5px;
+  height: 5px;
   transform-origin: center;
   border-radius: 50%;
 `;

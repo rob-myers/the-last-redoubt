@@ -2,7 +2,7 @@ import cheerio, { Element } from 'cheerio';
 import { Image, createCanvas, Canvas } from 'canvas';
 import path from 'path';
 
-import { assertNonNull } from './generic';
+import { assertNonNull, testNever } from './generic';
 import { Rect, Vect } from '../geom';
 import { extractGeom, extractGeomsAt, hasTitle, matchesTitle } from './cheerio';
 import { saveCanvasAsFile } from './file';
@@ -477,16 +477,18 @@ export function verifyDecor(input) {
   if (!input) {
     return false;
   }
-  if (input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
-    return true;
+  switch (input.type) {
+    case 'circle':
+      return Vect.isVectJson(input.center) && typeof input.radius === 'number';
+    case 'path':
+      return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
+    case 'point':
+      return Vect.isVectJson(input) && ['function', 'undefined'].includes(typeof input.onClick);
+    case 'seg':
+      return Vect.isVectJson(input.src) && Vect.isVectJson(input.dst);
+    default:
+      throw testNever(input, { override: `decor has unrecognised type: ${JSON.stringify(input)}` });
   }
-  if (input.type === 'seg' && Vect.isVectJson(input.src) && Vect.isVectJson(input.dst)) {
-    return true;
-  }
-  if (input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
-    return true;
-  }
-  return false;
 }
 
 /** @param {NPC.GlobalNavPath} input */
