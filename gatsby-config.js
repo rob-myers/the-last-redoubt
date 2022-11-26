@@ -14,16 +14,19 @@ const config = {
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
-        extensions: [`.mdx`, `.md`],
+        extensions: [".mdx", ".md"],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: 'gatsby-remark-katex',
+            options: {
+              // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
+              strict: `ignore`
+            }
+          },
+        ],
         mdxOptions: {
           remarkPlugins: [
-            require(`remark-gfm`),
-            require("remark-math"),
-            // wrapESMPlugin("remark-math"),
-          ],
-          rehypePlugins: [
-            // require("rehype-katex"), { strict: 'ignore' }
-            wrapESMPlugin("rehype-katex"),
+            require("remark-gfm"),
           ],
         },
       },

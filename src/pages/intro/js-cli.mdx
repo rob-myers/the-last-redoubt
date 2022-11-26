@@ -61,7 +61,7 @@ Shells usually manipulate and output strings, whereas our CLI outputs arbitrary 
 - <InlineCode>foo &amp;</InlineCode> run "foo" in the background
 - <InlineCode>foo () {'{'} ... {'}'}</InlineCode> declare function "foo" with body ...
 - <InlineCode>$foo</InlineCode> output the shell variable "foo" as a string
-- <InlineCode>${'{'}foo:-bar{'}'}</InlineCode> like $foo but if empty output literal "bar"
+- <InlineCode> {'${'}foo:-bar{'}'} </InlineCode> like $foo but if empty output literal "bar"
 - <InlineCode>$@</InlineCode> output positive positionals
 - <InlineCode>$$</InlineCode> output process id
 - <InlineCode>$?</InlineCode> output last exit code

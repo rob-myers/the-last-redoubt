@@ -2,7 +2,7 @@
 
 ## In progress
 
-- Fix latex rendering in `/sketches`
+- ✅ Fix latex rendering in `/sketches`
 
 - 🚧 Remake homepage CLI video with sound
   - ✅ 1st test

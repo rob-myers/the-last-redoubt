@@ -2,27 +2,27 @@ import { QedIcon } from 'components/page/Icon'
 
 Dividing (1) by it and substituting $\lambda_i = ...$ into (2) yields:
 - $a t + b \lambda + c = 0$.
-- $a := u \delta_y - u \delta_x (\tau_\{iy\} / \tau_\{ix\})$
-- $b := \tau_x (\tau_\{iy\} / \tau_\{ix\}) - \tau_y$
-- $c := (\alpha_x - \alpha_\{ix\}) (\tau_\{iy\} / \tau_\{ix\}) + (\alpha_\{iy\} - \alpha_y)$
+- $a := u \delta_y - u \delta_x (\tau_{iy} / \tau_{ix})$
+- $b := \tau_x (\tau_{iy} / \tau_{ix}) - \tau_y$
+- $c := (\alpha_x - \alpha_{ix}) (\tau_{iy} / \tau_{ix}) + (\alpha_{iy} - \alpha_y)$
 
 {/* ISSUES? Careful about division by potentially zero param */}
 
 We split into cases:
 - If $a \neq 0$ and $b = 0$ we may test $-c / a \in [0, t_\Omega]$.<QedIcon/>
 - If $a = 0$ and $b \neq 0$ then we know $\lambda =  -c / b$.
-  Moreover $a = 0$ implies $\delta_x = (\tau_\{ix\} / \tau_\{iy\}) \delta_y$, so that both $\delta_x$ and $\delta_y$ are non-zero (because they cannot both be).
-  {/* 🚧 extra case here (?) if tau_\{iy\} = 0 know delta_y = 0 but ... */}
+  Moreover $a = 0$ implies $\delta_x = (\tau_{ix} / \tau_{iy}) \delta_y$, so that both $\delta_x$ and $\delta_y$ are non-zero (because they cannot both be).
+  {/* 🚧 extra case here (?) if tau_{iy} = 0 know delta_y = 0 but ... */}
   Then (1) yields:
-  > $t = -\frac\{\tau_\{ix\}\}\{u \delta_x\} \lambda_i + \frac\{1\}\{u\delta_x\} (\alpha_x - \alpha_\{ix\} - \tau_x c/b)$.
+  > $t = -\frac{\tau_{ix}}{u \delta_x} \lambda_i + \frac{1}{u\delta_x} (\alpha_x - \alpha_{ix} - \tau_x c/b)$.
 - If $a = b = 0$ then observe:
-  > $\frac\{\tau_\{iy\}\}\{\tau_\{ix\}} = \delta_y / \delta_x = \tau_y / \tau_x = (\alpha_\{iy\} - \alpha_y) / (\alpha_\{ix\} - \alpha_x)$
+  > $\frac{\tau_{iy}}{\tau_{ix}} = \delta_y / \delta_x = \tau_y / \tau_x = (\alpha_{iy} - \alpha_y) / (\alpha_{ix} - \alpha_x)$
 
   because $a = 0$, $b = 0$ and thus $c = 0$ too.
-  Division by $\tau_\{ix\}$ is well-defined by assumption.
+  Division by $\tau_{ix}$ is well-defined by assumption.
   Division by $\delta_x$ is well-defined else $\delta_x = \delta_y = 0$ (a contradiction).
   Division by $\tau_x$ is well-defined else $\tau_x = \tau_y = 0$ (a contradiction).
-  However, the final division may not be defined i.e. $\alpha_\{ix\} - \alpha_x = 0$, in which case $\alpha_\{iy\} - \alpha_y = 0$.
+  However, the final division may not be defined i.e. $\alpha_{ix} - \alpha_x = 0$, in which case $\alpha_{iy} - \alpha_y = 0$.
 
   Then the NPC's direction is aligned to the fixed line segment,
   and the vector difference of the start of the line segments:
@@ -30,4 +30,4 @@ We split into cases:
   (ii) is zero.
   Then they may only collide via a glancing collision (coincidence or at a point) so we may assume they do not collide.<QedIcon/>
 - Finally if they are both non-zero we obtain:
-  > $t = -\frac\{b\}\{a\} \lambda - \frac\{c\}\{a\}$.
+  > $t = -\frac{b}{a} \lambda - \frac{c}{a}$.

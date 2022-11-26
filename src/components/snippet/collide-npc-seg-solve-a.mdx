@@ -1,13 +1,13 @@
 import { QedIcon } from 'components/page/Icon'
 
-Then (1) provides a linear relationship $u \delta_x t - \tau_x \lambda + (\alpha_\{ix\} - \alpha_\{x\}) = 0$, recalling $u \neq 0$.
+Then (1) provides a linear relationship $u \delta_x t - \tau_x \lambda + (\alpha_{ix} - \alpha_{x}) = 0$, recalling $u \neq 0$.
 If $\delta_x = \tau_x = 0$ then the NPC and both line segments have direction $(0, \pm 1)$, in which case they do not collide (ignoring coincidence).<QedIcon/>
 Otherwise $\delta_x$ or $\tau_x$ are non-zero.
-- If $\tau_x = 0$ check whether $t_0 := (\alpha_x - \alpha_\{ix\}) / u \delta_x$ lies in $[0,  t_\Omega]$.<QedIcon/>
-- If $\delta_x = 0$ then (2) is $\lambda_i + ut - \lambda\tau_y + (\alpha_\{iy\} - \alpha_y) = 0$ where $\lambda = (\alpha_\{ix\} - \alpha_x) / \tau_x$ via (1).
+- If $\tau_x = 0$ check whether $t_0 := (\alpha_x - \alpha_{ix}) / u \delta_x$ lies in $[0,  t_\Omega]$.<QedIcon/>
+- If $\delta_x = 0$ then (2) is $\lambda_i + ut - \lambda\tau_y + (\alpha_{iy} - \alpha_y) = 0$ where $\lambda = (\alpha_{ix} - \alpha_x) / \tau_x$ via (1).
   Equivalently:
-  > $t = -\frac\{1\}\{u\} \lambda_i +  (\alpha_x - \alpha_\{ix\}) \frac\{\tau_y\}\{u \tau_x\} + (\alpha_y - \alpha_\{iy\}) \frac\{1\}\{u\}$
+  > $t = -\frac{1}{u} \lambda_i +  (\alpha_x - \alpha_{ix}) \frac{\tau_y}{u \tau_x} + (\alpha_y - \alpha_{iy}) \frac{1}{u}$
 
 - If they are both non-zero dividing (1) we obtain:
-> $t = \frac\{\tau_x\}\{u \delta_x\} \lambda + \frac\{\alpha_x - \alpha_\{ix\}\}\{u \delta_x\}$
+> $t = \frac{\tau_x}{u \delta_x} \lambda + \frac{\alpha_x - \alpha_{ix}}{u \delta_x}$
 where $\tau_x \neq 0$.

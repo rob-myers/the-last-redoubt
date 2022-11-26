@@ -8,29 +8,29 @@ $\tt npcA.getWalkSegBounds()$ and $\tt npcB.getWalkSegBounds()$
 don't intersect, the NPCs won't collide.<QedIcon/>
 
 
-Otherwise for $\nu \in \\\{ A, B \\\}$ we have time-varying positions:
+Otherwise for $\nu \in \{ A, B \}$ we have time-varying positions:
 - $p_\nu(t) := src_\nu + t . s_\nu . tangent_\nu$
-- $src_\nu := \{\tt npc\nu.getPosition()\}$
-- $dst_\nu := \{\tt npc\nu.getTarget()\}$
-- $tangent_\nu := \widehat\{dst_\nu - src_\nu\}$
+- $src_\nu := {\tt npc\nu.getPosition()}$
+- $dst_\nu := {\tt npc\nu.getTarget()}$
+- $tangent_\nu := \widehat{dst_\nu - src_\nu}$
 
-We restrict to times $0 \leq t \leq t_\Omega := min(\frac\{dst_A - src_A\}\{s_A\}, \frac\{dst_B - src_B\}\{s_B\})$.
+We restrict to times $0 \leq t \leq t_\Omega := min(\frac{dst_A - src_A}{s_A}, \frac{dst_B - src_B}{s_B})$.
 That is, we only check for collisions whilst both NPCs are moving towards their target.
 After reaching their target, an NPC may continue towards another target or they may stop.
 Although we could handle these situations recursively, we prefer to handle them elsewhere.
 
 > Then to predict a collision,
-> we seek the minimal $t \in [0, t_\Omega]$ such that $|p_A(t) - p_B(t)|^2 \leq dist_\{\rm min\}^2$.
+> we seek the minimal $t \in [0, t_\Omega]$ such that $|p_A(t) - p_B(t)|^2 \leq dist_{\rm min}^2$.
 
-recalling $dist_\{\rm min\}$ from the previous section.
+recalling $dist_{\rm min}$ from the previous section.
 This can be rearranged into a quadratic inequality:
 
 - $a.t^2 + b.t + c ≤ 0$
 - $a := s_A^2 + s_B^2 - 2 . s_A . s_B . (tangent_A \cdot tangent_B)$
 - $b := 2. (s_A . dp_A - s_B . dp_B)$
-- $c := |p_B(0) - p_A(0)|^2 - dist_\{\rm min\}^2$
+- $c := |p_B(0) - p_A(0)|^2 - dist_{\rm min}^2$
 
-where $dp_\nu := tangent_\nu \cdot (src_A - src_B)$ for $\nu \in \{ A, B \}$.
+where $dp_\nu := tangent_\nu \cdot (src_A - src_B)$ for $\nu \in { A, B }$.
 Then:
 - If $dp_A \geq 0$ then $A$ is not moving towards $B$, so the NPC's don't collide.<QedIcon/> <SideNote>Technically they may be colliding, but we allow them to separate.</SideNote>
 - If $dp_B \leq 0$ then $B$ is not moving towards $A$, so the NPC's don't collide.<QedIcon/>
@@ -39,9 +39,9 @@ Then:
 Otherwise we seek minimal $0 < t \leq t_\Omega$ such that $a.t^2 + b.t + c = 0$.
 Any solutions take the form:
 $$
-\frac\{-b \pm \sqrt\{x\}\}\{2a\}
+\frac{-b \pm \sqrt{x}}{2a}
 \qquad
-\text\{where $x := b^2 - 4.a.c$\}.
+\text{where $x := b^2 - 4.a.c$}.
 $$
 - If $x < 0$ there are no solutions, and the NPCs don't collide.<QedIcon/>
 - If $x = 0$ there is exactly one solution. It is a "glancing collision",
@@ -49,6 +49,6 @@ $$
 - If $x > 0$ there are two solutions.
   Now $a \geq 0$ always holds <SideNote>The lower bound $s_A^2 + s_B^2 - 2. s_A . s_B = (s_A - s_B)^2$ is non-negative.</SideNote> and by assumption $c > 0$, hence $0 < x \leq b^2$.
   By assumption $dp_A < 0$ and $dp_B > 0$ hence $-b > 0$.
-  Then $-b - \sqrt\{x\} > 0$, 
-  so _both_ real-valued solutions are positive and $t_0 := (-b - \sqrt\{x\}) . \frac\{1\}\{a\}$ is the smaller one.
+  Then $-b - \sqrt{x} > 0$, 
+  so _both_ real-valued solutions are positive and $t_0 := (-b - \sqrt{x}) . \frac{1}{a}$ is the smaller one.
   If $0 < t_0 \leq t_\Omega$ then the NPCs collide, otherwise they don't.<QedIcon/> <SideNote>Technically they don't collide whilst the NPCs are known to be moving (see $t_\Omega$ above).</SideNote>
