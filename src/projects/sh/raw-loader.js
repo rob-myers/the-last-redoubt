@@ -252,6 +252,49 @@
       }
 
     },
+
+    roomUi: async function* ({ api, home }) {
+      const { npcs, gmGraph } = api.getCached(home.WORLD_KEY)
+      const process = api.getProcess()
+
+      /** @type {(...ids: number[]) => string} */
+      const uiDecorKey = (gmId, roomId, uiId) =>
+        `ui-${uiId}-g${gmId}r${roomId}`;
+
+      const subscription = npcs.events.subscribe(e => {
+        if (
+          e.key === "way-point"
+          && e.npcKey === npcs.playerKey
+          && process.status === 1
+        ) {
+          if (e.meta.key === "enter-room") {// add ui points
+            const [gmId, roomId] = [e.meta.gmId, e.meta.enteredRoomId];
+            const { ui: uiPoints} = gmGraph.gms[gmId].point[roomId];
+            npcs.npcAct({
+              action: "add-decor",
+              items: Array.from(uiPoints.entries()).map(([uiId, { point, tags }]) => ({
+                key: uiDecorKey(gmId, roomId, uiId), type: "point", ...point.json, tags: tags.slice(),
+              })),
+            });
+          } else if (e.meta.key === "exit-room") {// remove ui points
+            const [gmId, roomId] = [e.meta.gmId, e.meta.exitedRoomId];
+            const { ui: uiPoints} = gmGraph.gms[gmId].point[roomId];
+            npcs.npcAct({
+              action: "rm-decor",
+              items: Object.keys(uiPoints).map(
+                (_, uiId) => uiDecorKey(gmId, roomId, uiId)
+              ),
+            });
+          }
+        }
+      })
+      await /** @type {Promise<void>} */ (new Promise(resolve =>
+        process.cleanups.push(
+          () => subscription.unsubscribe(),
+          resolve,
+        )
+      ))
+    },
   
     /**
      * Spawn character(s) at a position(s) and angle,

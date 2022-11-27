@@ -250,7 +250,7 @@ export default function NPCs(props) {
       const result = state.getGlobalNavPath(npc.getPosition(), e.point);
       // Always show path
       const decorKey = `${e.npcKey}-navpath`;
-      state.setDecor(decorKey, { key: decorKey, type: 'path', path: result.fullPath });
+      state.setDecor({ key: decorKey, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -293,10 +293,12 @@ export default function NPCs(props) {
     // 🚧 `npc remove foo` `npc rm foo`
     async npcAct(e) {
       switch (e.action) {
-        case 'add-decor':
-          return state.setDecor(e.key, e);
+        case 'add-decor': // add decor(s)
+          return state.setDecor(...e.items);
         case 'decor': // get or add decor
-          return 'decorKey' in e ? state.decor[e.decorKey] : state.setDecor(e.key, e);
+          return 'decorKey' in e
+            ? state.decor[e.decorKey]
+            : state.setDecor(e);
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
         case 'config': // set multiple, toggle single, get all
@@ -335,7 +337,8 @@ export default function NPCs(props) {
           return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
-          state.setDecor(e.decorKey, null);
+          e.items.forEach(decorKey => delete state.decor[decorKey])
+          update();
           break;
         case 'set-player':
           state.events.next({ key: 'set-player', npcKey: e.npcKey??null });
@@ -397,14 +400,12 @@ export default function NPCs(props) {
       }
     },
     service: npcService,
-    setDecor(decorKey, decor) {
-      if (decor && !npcService.verifyDecor(decor)) {
-        throw Error('invalid decor');
-      }
-      if (decor) {
-        state.decor[decorKey] = decor;
-      } else {
-        delete state.decor[decorKey];
+    setDecor(...decor) {
+      for (const d of decor) {
+        if (!d || !npcService.verifyDecor(d)) {
+          throw Error(`invalid decor: ${JSON.stringify(d)}`);
+        }
+        state.decor[d.key] = d;
       }
       update();
     },
@@ -599,7 +600,10 @@ export default function NPCs(props) {
       ref={state.rootRef}
     >
 
-      <Decor decor={state.decor} api={api} />
+      <Decor
+        decor={state.decor}
+        api={api}
+      />
 
       {/** Prioritise walk animations, to avoid load on start walk */}
       {Object.keys(npcJson).map((key) => (
@@ -684,7 +688,7 @@ const rootCss = css`
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
- * @property {(decorKey: string, decor: null | NPC.DecorDef) => void} setDecor
+ * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => void} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
  * @property {import('../service/npc')} service

@@ -46,9 +46,11 @@
   - ✅ decor point can be clickable with callback
   - ✅ decor point mutates with devtool interaction
   - ✅ decor point callback can log to terminal
+  - ✅ shell func `roomUi` add/removes ui points in player's current room
   - when `idle` can change to `sit`
 
 - Prefer _moving circle_ vs _static angled rect_
+  - decor seg -> rect
   - Abandon _moving seg_ vs _static seg_ collision prediction
     - ✅ Hide in debug mode
     - Remove related code

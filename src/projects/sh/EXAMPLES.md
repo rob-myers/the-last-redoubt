@@ -49,6 +49,8 @@ echo foo | npc decor
 
 # 🚧 seg -> rect
 npc decor '{ key: "bar", type: "seg", src: {"x":207.83,"y":384.43}, dst: {"x":227.83,"y":384.43} }'
+
+npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96,"tags":["no-ui"], onClick: (x, y) => { console.log("foobar", x, y); y.npcs.writeToTtys("wahoo!"); } }'
 ```
 
 ```sh

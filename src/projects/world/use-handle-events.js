@@ -67,8 +67,7 @@ export default function useHandleEvents(api) {
     handlePlayerWayEvent(e) {
       // console.log('player way event', e);
       switch (e.meta.key) {
-        case 'exit-room':
-          // Player left a room
+        case 'exit-room': {
           if (e.meta.otherRoomId !== null) {
             api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
@@ -77,11 +76,13 @@ export default function useHandleEvents(api) {
           }
           api.updateAll();
           break;
-        case 'enter-room':
+        }
+        case 'enter-room': {
           if (api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId)) {
             api.updateAll();
           }
           break;
+        }
         case 'pre-exit-room':
         case 'pre-near-door':
         case 'start-seg':
@@ -108,7 +109,7 @@ export default function useHandleEvents(api) {
       const npcsSub = api.npcs.events.subscribe((e) => {
         switch (e.key) {
           case 'decor':
-            api.npcs.setDecor(e.meta.key, e.meta);
+            api.npcs.setDecor(e.meta);
             break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
