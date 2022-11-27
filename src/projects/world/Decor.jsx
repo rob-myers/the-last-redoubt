@@ -5,50 +5,63 @@ import { cssName } from "../service/const";
 import { circleToCssTransform, lineSegToCssTransform, pointToCssTransform } from "../service/dom";
 import DecorPath from "./DecorPath";
 
-/** @param {{ item: NPC.DecorDef }} props  */
-export default function Decor({ item }) {
-  switch (item.type) {
-    case 'circle':
-      return (
-        <div
-          data-key={item.key}
-          className={cx(cssName.decorCircle, cssCircle)}
-          style={{
-            transform: circleToCssTransform(item),
-          }}
-        />
-      );
-    case 'path':
-      return (
-        <DecorPath decor={item} />
-      );
-    case 'point':
-      return (
-        <div
-          data-key={item.key}
-          className={cx(cssName.decorPoint, cssPoint)}
-          onClick={item.onClick ? () => item.onClick?.(item) : undefined}
-          style={{
-            transform: pointToCssTransform(item),
-            cursor: item.onClick ? 'pointer' : 'initial',
-          }}
-        />
-      );
-    case 'seg':
-      return (
-        <div
-          data-key={item.key}
-          className={cx(cssName.decorSeg, cssSeg)}
-          style={{
-            transform: lineSegToCssTransform(item),
-          }}
-        />
-      );
-    default:
-      console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
-      // throw testNever(item);
-      return null;
-  }
+/**
+ * @param {{ decor: import('./NPCs').State['decor']; api: import('./World').State; }} props
+ */
+export default function Decor({ decor, api }) {
+  return (
+    <div className="decor-root">
+      {Object.entries(decor).map(([key, item]) => {
+        switch (item.type) {
+          case 'circle':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                className={cx(cssName.decorCircle, cssCircle)}
+                style={{
+                  transform: circleToCssTransform(item),
+                }}
+              />
+            );
+          case 'path':
+            return (
+              <DecorPath
+                key={key}
+                decor={item}
+              />
+            );
+          case 'point':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                className={cx(cssName.decorPoint, cssPoint)}
+                onClick={item.onClick ? () => item.onClick?.(item, api) : undefined}
+                style={{
+                  transform: pointToCssTransform(item),
+                  cursor: item.onClick ? 'pointer' : 'initial',
+                }}
+              />
+            );
+          case 'seg':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                className={cx(cssName.decorSeg, cssSeg)}
+                style={{
+                  transform: lineSegToCssTransform(item),
+                }}
+              />
+            );
+          default:
+            console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
+            return null;
+        }
+      })}
+    </div>
+  );
 }
 
 const cssCircle = css`

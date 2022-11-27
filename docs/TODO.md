@@ -2,7 +2,18 @@
 
 ## In progress
 
-- ✅ Fix latex rendering in `/sketches`
+- 🚧 Retarget:
+  - ✅ `The Last Redoubt` -> `NPC CLI`
+  - 🚧 Adjust Home Page
+    - ❌ GIF demo of CLI
+    - ✅ Video demo of CLI
+      > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
+    - Redo video demo of CLI with sound
+    - Copy: emphasise canonical UIs:
+      - POSIX CLI
+      - Browser devtool  
+    - 🚧 Video demo of `World` CSS/DOM
+  - Adjust Intro
 
 - 🚧 Remake homepage CLI video with sound
   - ✅ 1st test
@@ -34,6 +45,7 @@
   - ✅ support decor point
   - ✅ decor point can be clickable with callback
   - ✅ decor point mutates with devtool interaction
+  - ✅ decor point callback can log to terminal
   - when `idle` can change to `sit`
 
 - Prefer _moving circle_ vs _static angled rect_
@@ -44,15 +56,6 @@
 
 - Follow cam should trigger on "resize" tab
 - 🤔 Persist npc config?
-
-- 🚧 Retarget:
-  - ✅ `The Last Redoubt` -> `NPC CLI`
-  - 🚧 Adjust Home Page
-    - ❌ GIF demo of CLI
-    - ✅ Video demo of CLI
-      > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
-    - 🚧 Video demo of `World` CSS/DOM
-  - Adjust Intro
 
 - ✅ Document npc vs line-seg collision
 - ❌ Implement npc vs line seg collision predict
@@ -238,6 +241,7 @@ How to embed video?
 
 ## Done
 
+- ✅ Fix latex rendering in `/sketches`
 - ✅ tracking camera should cancel when npc walk cancels
 - ✅ Simplify tty msg lookup to textual identity (sans ANSI)
   - ✅ Clickable tty msgs getting out of sync

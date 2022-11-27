@@ -72,22 +72,18 @@ export default function DebugWorld(props) {
       }
     }
 
-    if (target.className === 'debug-label-info') {// Send our first rich message
+    if (target.className === 'debug-label-info') {
+      // Send a rich message
       const label = gm.labels[Number(target.getAttribute('data-debug-label-id'))];
-
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
       const line = `ℹ️  [${ansiColor.Blue}${label.text}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-      const sessionCtxts = Object.values(props.api.npcs.session).filter(x => x.receiveMsgs);
-      for (const { key: sessionKey } of sessionCtxts) {
-        await useSessionStore.api.writeMsgCleanly(sessionKey, line);
-
-        props.api.npcs.addTtyLineCtxts(sessionKey, line, [{
+      props.api.npcs.writeToTtys(line, [{
           lineText: line, 
           linkText: label.text,
           linkStartIndex: visibleUnicodeLength('ℹ️  ['),
           key: 'room', gmId, roomId,
-        }]);
-      }
+        }]
+      );
     }
 
   }, [gm, props, gmId, roomId]);

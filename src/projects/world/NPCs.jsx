@@ -535,6 +535,14 @@ export default function NPCs(props) {
         }
       }
     },
+    async writeToTtys(line, ttyCtxts) {
+      const sessionCtxts = Object.values(props.api.npcs.session).filter(x => x.receiveMsgs);
+
+      await Promise.all(sessionCtxts.map(async ({ key: sessionKey }) => {
+        await useSessionStore.api.writeMsgCleanly(sessionKey, line);
+        ttyCtxts && props.api.npcs.addTtyLineCtxts(sessionKey, line, ttyCtxts);
+      }));
+    },
   }), { deps: [nav, api] });
   
   React.useEffect(() => {
@@ -591,11 +599,7 @@ export default function NPCs(props) {
       ref={state.rootRef}
     >
 
-      <div className="decor-root">
-        {Object.entries(state.decor).map(([key, item]) =>
-          <Decor key={key} item={item} />
-        )}
-      </div>
+      <Decor decor={state.decor} api={api} />
 
       {/** Prioritise walk animations, to avoid load on start walk */}
       {Object.keys(npcJson).map((key) => (
@@ -686,4 +690,5 @@ const rootCss = css`
  * @property {import('../service/npc')} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
+ * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */
