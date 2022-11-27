@@ -62,11 +62,12 @@ const cssCircle = css`
 
 const cssPoint = css`
   position: absolute;
-  background-color: #0f0;
+  background-color: #fff;
   width: 5px;
   height: 5px;
   transform-origin: center;
   border-radius: 50%;
+  outline: 1px solid rgba(0, 100, 0, 0.5);
 `;
 
 const cssSeg = css`

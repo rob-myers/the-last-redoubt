@@ -545,9 +545,8 @@ export default function NPCs(props) {
       const els = records.map(x => /** @type {HTMLElement} */ (x.target));
 
       for (const el of els) {
+        const decorKey = el.dataset.key;
         if (el.classList.contains(cssName.decorCircle)) {
-          console.log('circle changed');
-          const decorKey = el.getAttribute('data-key');
           if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
             const { center, radius } = cssTransformToCircle(el);
@@ -556,8 +555,6 @@ export default function NPCs(props) {
           }
         }
         if (el.classList.contains(cssName.decorSeg)) {
-          console.log('seg changed');
-          const decorKey = el.getAttribute('data-key');
           if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'seg' }} */ (state.decor[decorKey]);
             const { src, dst } = cssTransformToLineSeg(el);
@@ -566,13 +563,18 @@ export default function NPCs(props) {
           }
         }
         if (el.classList.contains(cssName.decorPoint)) {
-          const rootDiv = /** @type {HTMLDivElement} */ (el.parentElement);
-          const decorKey = rootDiv.getAttribute('data-key');
-          if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'path' }} */ (state.decor[decorKey]);
-            const decorPoints = /** @type {[]} */ (Array.from(rootDiv.querySelectorAll(`div.${cssName.decorPoint}`)));
+          const parentEl = /** @type {HTMLElement} */ (el.parentElement);
+          const pathDecorKey = parentEl.dataset.key;
+          if (pathDecorKey && pathDecorKey in state.decor) {// Path
+            const decor = /** @type {NPC.DecorDef & { type: 'path' }} */ (state.decor[pathDecorKey]);
+            const decorPoints = /** @type {[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
             const points = decorPoints.map(x => cssTransformToPoint(x));
             decor.path.splice(0, decor.path.length, ...points);
+            update();
+          } else if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
+            const { x, y } = cssTransformToPoint(el);
+            [decor.x, decor.y] = [x, y];
             update();
           }
         }
