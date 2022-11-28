@@ -2,7 +2,10 @@
 
 ## In progress
 
-- Doors auto-close after 3 seconds
+- Doors auto-close after N seconds
+  - ✅ handle visible doors
+  - handle invisible doors (refactor sans HTMLElement)
+  - handle hull doors (two doors)
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
