@@ -34,6 +34,10 @@ export default function World(props) {
       filter, first, map, take,
     },
 
+    isDisabled() {
+      return !!props.disabled;
+    },
+
     isReady() {
       return [state.doors, state.fov, state.npcs, state.panZoom].every(x => x.ready);
     },
@@ -48,7 +52,10 @@ export default function World(props) {
       update();
     },
 
-  }));
+
+  }), {
+    deps: [props.disabled],
+  });
 
   // NOTE state.gmGraph.ready can be true without ever enabling,
   // by viewing another World with same `props.gms`
@@ -128,6 +135,7 @@ export default function World(props) {
  * @property {import("./FOV").State} fov
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
+ * @property {() => boolean} isDisabled
  * @property {() => boolean} isReady
  * @property {() => void} updateAll
  * @property {StateUtil} lib
