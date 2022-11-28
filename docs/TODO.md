@@ -6,8 +6,9 @@
   - ✅ handle visible doors
   - ✅ handle invisible doors (refactor sans HTMLElement)
   - ✅ handle hull doors (two doors)
-  - debounce?
   - pause when world paused
+  - clear interval if player manually closes door
+  - debounce?
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`

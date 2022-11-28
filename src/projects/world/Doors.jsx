@@ -99,10 +99,15 @@ export default function Doors(props) {
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
       }
 
+      // 🚧 clear interval if player closes door
       // try to close opened door repeatedly at intervals
       if (key === 'opened-door') {
         const intervalId = window.setInterval(async () => {
-          if (!state.open[gmId][doorId] || await state.onToggleDoor(gmId, doorId, hullDoorId, false)) {
+          if (
+            !state.open[gmId][doorId]
+            ||
+            (!props.api.isDisabled() && await state.onToggleDoor(gmId, doorId, hullDoorId, false))
+          ) {
             window.clearInterval(intervalId);
           }
         }, defaultDoorCloseMs);
@@ -260,7 +265,7 @@ const rootCss = css`
     }
 
     &.${cssName.hull} {
-      transition: width 600ms ease-in;
+      transition: width 300ms ease-in;
       .${cssName.doorTouchUi} {
         top: calc(-1 * var(--npc-door-touch-radius) + ${ hullDoorWidth / 2 }px );
       }
