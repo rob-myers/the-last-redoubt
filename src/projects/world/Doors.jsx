@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import { assertNonNull, pause } from "../service/generic";
 import { fillPolygon } from "../service/dom";
-import { cssName, doorWidth, hullDoorWidth } from "../service/const";
+import { cssName, defaultDoorCloseMs, doorWidth, hullDoorWidth } from "../service/const";
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -60,17 +60,14 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
-    async onToggleDoor(uiEl, triggeredByPlayer) {
-      const gmIdAttr = uiEl.dataset.gm_id;
-      const gmId = Number(gmIdAttr);
-      const doorId = Number(uiEl.dataset.door_id);
-      const hullDoorId = Number(uiEl.dataset.hull_door_id);
+    async onToggleDoor(gmId, doorId, hullDoorId, triggeredByPlayer) {
 
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeByIds(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
 
-      if (gmIdAttr === null || !state.vis[gmId][doorId] || sealed) {
-        return false;; // Not a door, or not visible, or sealed permanently
+      // NOTE door can be invisible e.g. if closing
+      if (sealed) {// Sealed permanently
+        return false;
       }
 
       if (triggeredByPlayer && !config.omnipresent && !state.playerNearDoor(gmId, doorId)) {
@@ -82,9 +79,11 @@ export default function Doors(props) {
       }
 
       if (state.open[gmId][doorId]) {// Animate close slightly early
-        const visDoorId = [...Array(doorId)].reduce((agg, _, preId) => state.vis[gmId][preId] ? agg + 1 : agg, 0);
-        state.rootEl.children[gmId].children[visDoorId].classList.remove('open');
-        await pause(hullDoorId === -1 ? 300/2 : 600/2);
+        const uiEl = state.rootEl.querySelector(`div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`);
+        if (uiEl?.parentElement instanceof HTMLElement) {
+          uiEl.parentElement.classList.remove('open');
+          await pause(hullDoorId === -1 ? 300/2 : 600/2);
+        }
       }
 
       // Toggle the door
@@ -100,23 +99,12 @@ export default function Doors(props) {
       }
 
       // try to close opened door repeatedly at intervals
-      // 🚧 additional hull door
       if (key === 'opened-door') {
         const intervalId = window.setInterval(async () => {
-          console.log('trying to close', gmId, doorId);
-          if (state.open[gmId][doorId]) {
-            const doorSelector = `div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`;
-            const uiEl = state.rootEl.querySelector(doorSelector);
-            if (uiEl instanceof HTMLElement) {
-              (await state.onToggleDoor(uiEl, false)) && window.clearInterval(intervalId);
-            } else {
-              // 🚧 door invisible but not closed
-              console.error(`Failed to find door: ${doorSelector}`);
-            }
-          } else {
+          if (!state.open[gmId][doorId] || await state.onToggleDoor(gmId, doorId, hullDoorId, false)) {
             window.clearInterval(intervalId);
           }
-        }, 5000);
+        }, defaultDoorCloseMs);
       }
 
       return true;
@@ -167,10 +155,16 @@ export default function Doors(props) {
 
   React.useEffect(() => {
     gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
-    // Handle door click
-    const cb = /** @param {PointerEvent} e */ e => state.onToggleDoor(/** @type {HTMLElement} */ (e.target), true);
-    state.rootEl.addEventListener('pointerup', cb);
-    return () => state.rootEl.removeEventListener('pointerup', cb);
+    const onClickDoor = /** @param {PointerEvent} e */ e => {
+      const uiEl = /** @type {HTMLElement} */ (e.target);
+      if (uiEl.dataset.gm_id === null) return;
+      const gmId = Number(uiEl.dataset.gm_id);
+      const doorId = Number(uiEl.dataset.door_id);
+      const hullDoorId = Number(uiEl.dataset.hull_door_id);
+      state.onToggleDoor(gmId, doorId, hullDoorId, true);
+    };
+    state.rootEl.addEventListener('pointerup', onClickDoor);
+    return () => state.rootEl.removeEventListener('pointerup', onClickDoor);
   }, [gms]);
   
   return (
@@ -300,7 +294,7 @@ const rootCss = css`
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
- * @property {(uiEl: HTMLElement, triggeredByPlayer: boolean) => Promise<boolean>} onToggleDoor
+ * @property {(gmId: number, doorId: number, hullDoorId: number, triggeredByPlayer: boolean) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open open[gmId][doorId]
  * @property {boolean} ready

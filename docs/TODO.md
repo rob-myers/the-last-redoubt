@@ -4,8 +4,10 @@
 
 - Doors auto-close after N seconds
   - ✅ handle visible doors
-  - handle invisible doors (refactor sans HTMLElement)
-  - handle hull doors (two doors)
+  - ✅ handle invisible doors (refactor sans HTMLElement)
+  - ✅ handle hull doors (two doors)
+  - debounce?
+  - pause when world paused
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`

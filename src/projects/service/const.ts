@@ -111,4 +111,6 @@ export const lightWindowOffset = 20;
  */
 export const cancellableAnimDelayMs = 50;
 
+export const defaultDoorCloseMs = 7000;
+
 //#endregion
