@@ -82,7 +82,8 @@ export default function Doors(props) {
         const uiEl = state.rootEl.querySelector(`div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`);
         if (uiEl?.parentElement instanceof HTMLElement) {
           uiEl.parentElement.classList.remove('open');
-          await pause(hullDoorId === -1 ? 300/2 : 600/2);
+          // await pause(hullDoorId === -1 ? 300/2 : 600/2);
+          await pause(100/2);
         }
       }
 
