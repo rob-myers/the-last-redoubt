@@ -451,6 +451,24 @@ export default function NPCs(props) {
         filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
       ));
     },
+    toggleLocalDecor(opts) {
+      const { ui: points } = api.gmGraph.gms[opts.gmId].point[opts.roomId];
+      const decorKeys = points.map((_, decorId) => `local-${decorId}-g${opts.gmId}r${opts.roomId}`)
+
+      if (opts.act === 'add') {
+        opts.tracked && decorKeys.forEach(key => /** @type {*} */ (opts.tracked)[key] = true)
+        state.npcAct({ action: "add-decor",
+          items: Object.values(points).map(({ point, tags }, uiId) => ({
+            key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
+            onClick: opts.cbFactory?.(tags),
+          })),
+        });
+      }
+      if (opts.act === 'remove') {
+        state.npcAct({ action: "rm-decor", items: decorKeys });
+        opts.tracked && decorKeys.forEach(key => delete /** @type {*} */ (opts.tracked)[key]);
+      }
+    },
     trackNpc(opts) {
       const { npcKey, process } = opts;
       const { panZoom } = props.api
@@ -692,7 +710,17 @@ const rootCss = css`
  * @property {(npcKey: string) => void} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
+ * @property {(opts: ToggleLocalDecorOpts) => void} toggleLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
+ */
+
+/**
+ * @typedef ToggleLocalDecorOpts
+ * @property {'add' | 'remove'} act
+ * @property {number} gmId
+ * @property {number} roomId
+ * @property {(tags?: string[]) => NPC.DecorPoint['onClick']} [cbFactory]
+ * @property {{ [decorKey: string]: true }} [tracked]
  */

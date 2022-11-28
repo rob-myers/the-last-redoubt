@@ -280,7 +280,7 @@ declare namespace NPC {
     linkStartIndex: number,
   ) => void;
 
-  interface DecorPoint extends Geom.VectJson {
+  export interface DecorPoint extends Geom.VectJson {
     type: 'point';
     tags?: string[];
     onClick?(point: DecorPoint, api: import('../world/World').State): void;

@@ -253,44 +253,34 @@
 
     },
 
-    roomUi: async function* ({ api, home }) {
+    localDecor: async function* ({ api, home }) {
       const { npcs, gmGraph } = api.getCached(home.WORLD_KEY)
       const process = api.getProcess()
+      const tracked = /** @type {{ [decorKey: string]: true }} */ ({});
+      const cbFactory = /** @type {import('../world/NPCs').ToggleLocalDecorOpts['cbFactory']} */
+        (tags) => (_decor, { npcs }) => // Currently just log out tags
+          npcs.writeToTtys(`ℹ️  ${api.getColors().White}tags: ${JSON.stringify(tags??[])}${api.getColors().Reset}`)
+      ;
 
-      /** @type {(...ids: number[]) => string} */
-      const uiDecorKey = (gmId, roomId, uiId) =>
-        `ui-${uiId}-g${gmId}r${roomId}`;
+      const player = npcs.getPlayer() // initialisation
+      const init = player ? gmGraph.findRoomContaining(player.getPosition()) : null
+      init && npcs.toggleLocalDecor({ act: "add", gmId: init.gmId, roomId: init.roomId, tracked, cbFactory })
 
       const subscription = npcs.events.subscribe(e => {
-        if (
-          e.key === "way-point"
-          && e.npcKey === npcs.playerKey
-          && process.status === 1
-        ) {
+        if (e.key === "way-point" && e.npcKey === npcs.playerKey && process.status === 1) {
           if (e.meta.key === "enter-room") {// add ui points
-            const [gmId, roomId] = [e.meta.gmId, e.meta.enteredRoomId];
-            const { ui: uiPoints} = gmGraph.gms[gmId].point[roomId];
-            npcs.npcAct({
-              action: "add-decor",
-              items: Array.from(uiPoints.entries()).map(([uiId, { point, tags }]) => ({
-                key: uiDecorKey(gmId, roomId, uiId), type: "point", ...point.json, tags: tags.slice(),
-              })),
-            });
+            npcs.toggleLocalDecor({ act: "add", gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, tracked, cbFactory })
           } else if (e.meta.key === "exit-room") {// remove ui points
-            const [gmId, roomId] = [e.meta.gmId, e.meta.exitedRoomId];
-            const { ui: uiPoints} = gmGraph.gms[gmId].point[roomId];
-            npcs.npcAct({
-              action: "rm-decor",
-              items: Object.keys(uiPoints).map(
-                (_, uiId) => uiDecorKey(gmId, roomId, uiId)
-              ),
-            });
+            npcs.toggleLocalDecor({ act: "remove", gmId: e.meta.gmId, roomId: e.meta.exitedRoomId, tracked })
           }
         }
       })
       await /** @type {Promise<void>} */ (new Promise(resolve =>
         process.cleanups.push(
-          () => subscription.unsubscribe(),
+          () => {
+            npcs.npcAct({ action: "rm-decor", items: Object.keys(tracked) })
+            subscription.unsubscribe()
+          },
           resolve,
         )
       ))
