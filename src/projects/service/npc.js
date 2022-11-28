@@ -67,12 +67,108 @@ async function drawFrame(anim, frameId, canvas, zoom) {
 }
 
 /**
+ * @param {import('cheerio').CheerioAPI} api
+ * @param {Element[]} topNodes
+ */
+function extractDefSymbols(api, topNodes) {
+  const svgDefs = topNodes.find(x => x.type === 'tag' && x.name === 'defs');
+  const svgSymbols = api(svgDefs).children('symbol').toArray();
+  
+  const lookup = svgSymbols.reduce((agg, el) => {
+    const id = el.attribs.id;
+    const title = api(el).children('title').text() || null;
+    if (id !== title) {
+      warn(`saw symbol with id "${id}" and distinct title "${title}"`);
+    }
+    // NOTE symbol must have top-level group(s)
+    agg[id] = api(el).children('g').toArray();
+    return agg;
+  }, /** @type {Record<string, Element[]>} */ ({}));
+
+  return lookup;
+}
+
+/**
+ * @param {import('cheerio').CheerioAPI} api Cheerio
+ * @param {Element[]} topNodes Topmost children of <svg>
+ * @param {string} title Title of <g> to extract
+ */
+function extractNpcFrameNodes(api, topNodes, title) {
+  /**
+   * The group named `title` (e.g. `"walk"`), itself containing
+   * groups of frames named e.g. `"npc-1"`, `"npc-2"`, etc.
+   */
+  const animGroup = topNodes.find(x => hasTitle(api, x, title));
+  /**
+   * The groups inside the group named `animGroup`.
+   * The 1st one might be named `"npc-1"`.
+   */
+  const groups = /** @type {Element[]} */ (animGroup?.children??[])
+    .filter(x => x.name === 'g')
+  
+  // Override visibility: hidden
+  groups.forEach(group => {
+    group.attribs.style = (group.attribs.style || '')
+      + 'visibility: visible;'
+  });
+  return groups;
+}
+
+/** @type {Record<NPC.NpcActionKey, true>} */
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcActionKey}
+ */
+export function isNpcActionKey(input) {
+  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
+}
+
+/**
+ * @param {NPC.NpcActionKey} action
+ * @param {undefined | string | NPC.NpcConfigOpts} opts
+ * @param {any[]} extras 
+ */
+export function normalizeNpcCommandOpts(action, opts = {}, extras) {
+  if (typeof opts === "string") {
+    switch (action) {
+      case "decor":
+      case "remove-decor":
+      case "rm-decor":
+        opts = { decorKey: opts };
+        break;
+      case "cancel":
+      case "get":
+      case "pause":
+      case "play":
+      case "rm":
+      case "remove":
+      case "set-player":
+        opts = { npcKey: opts };
+        break;
+      case "config":
+        opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
+        break;
+      case "look-at":
+        // npc look-at andros $( click 1 )
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+        break;
+      default:
+        opts = {}; // we ignore key
+        break;
+    }
+  }
+  return opts;
+}
+
+/**
  * @param {string} npcName 
  * @param {string} svgContents
  * @param {number} [zoom] 
  * @returns {NPC.ParsedNpcCheerio}
  */
-export function parseNpc(npcName, svgContents, zoom = 1) {
+ export function parseNpc(npcName, svgContents, zoom = 1) {
   const $ = cheerio.load(svgContents);
   const topNodes = Array.from($('svg > *'));
 
@@ -137,102 +233,6 @@ export function parseNpc(npcName, svgContents, zoom = 1) {
     zoom,
   };
 }
-
-/**
- * @param {import('cheerio').CheerioAPI} api
- * @param {Element[]} topNodes
- */
-function extractDefSymbols(api, topNodes) {
-  const svgDefs = topNodes.find(x => x.type === 'tag' && x.name === 'defs');
-  const svgSymbols = api(svgDefs).children('symbol').toArray();
-  
-  const lookup = svgSymbols.reduce((agg, el) => {
-    const id = el.attribs.id;
-    const title = api(el).children('title').text() || null;
-    if (id !== title) {
-      warn(`saw symbol with id "${id}" and distinct title "${title}"`);
-    }
-    // NOTE symbol must have top-level group(s)
-    agg[id] = api(el).children('g').toArray();
-    return agg;
-  }, /** @type {Record<string, Element[]>} */ ({}));
-
-  return lookup;
-}
-
-/**
- * @param {import('cheerio').CheerioAPI} api Cheerio
- * @param {Element[]} topNodes Topmost children of <svg>
- * @param {string} title Title of <g> to extract
- */
-function extractNpcFrameNodes(api, topNodes, title) {
-  /**
-   * The group named `title` (e.g. `"walk"`), itself containing
-   * groups of frames named e.g. `"npc-1"`, `"npc-2"`, etc.
-   */
-  const animGroup = topNodes.find(x => hasTitle(api, x, title));
-  /**
-   * The groups inside the group named `animGroup`.
-   * The 1st one might be named `"npc-1"`.
-   */
-  const groups = /** @type {Element[]} */ (animGroup?.children??[])
-    .filter(x => x.name === 'g')
-  
-  // Override visibility: hidden
-  groups.forEach(group => {
-    group.attribs.style = (group.attribs.style || '')
-      + 'visibility: visible;'
-  });
-  return groups;
-}
-
-/**
- * @param {string} input 
- * @returns {input is NPC.NpcActionKey}
- */
-export function isNpcActionKey(input) {
-  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
-}
-
-/**
- * @param {NPC.NpcActionKey} action
- * @param {undefined | string | NPC.NpcConfigOpts} opts
- * @param {any[]} extras 
- */
-export function normalizeNpcCommandOpts(action, opts = {}, extras) {
-  if (typeof opts === "string") {
-    switch (action) {
-      case "decor":
-      case "remove-decor":
-      case "rm-decor":
-        opts = { decorKey: opts };
-        break;
-      case "cancel":
-      case "get":
-      case "pause":
-      case "play":
-      case "rm":
-      case "remove":
-      case "set-player":
-        opts = { npcKey: opts };
-        break;
-      case "config":
-        opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
-        break;
-      case "look-at":
-        // npc look-at andros $( click 1 )
-        opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
-        break;
-      default:
-        opts = {}; // we ignore key
-        break;
-    }
-  }
-  return opts;
-}
-
-/** @type {Record<NPC.NpcActionKey, true>} */
-const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /**
  * @param {NPC.NPC} npcA Assumed to be moving
