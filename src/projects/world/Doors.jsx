@@ -144,9 +144,14 @@ export default function Doors(props) {
       const { fov } = props.api;
       const gm = gms[fov.gmId]
 
-      /** Visible doors in current geomorph and possibly hull doors from other geomorphs */
+      /**
+       * Visible doors:
+       * - in current geomorph including related doors
+       * - possibly from other geomorphs (hull doors)
+       */
       const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
-      nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).map(x => x.doorId);
+      nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).flatMap(({ doorId }) => [doorId, ...(gm.relDoorId[doorId]?.doorIds)??[]]);
+
       gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
         gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
       ).forEach(({ adjGmId, adjDoorId }) => (nextVis[adjGmId] = nextVis[adjGmId] || []).push(adjDoorId));

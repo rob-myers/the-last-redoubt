@@ -1,6 +1,7 @@
 import { Poly } from "../geom";
 import { BaseGraph } from "./graph";
 import { error } from "../service/log";
+import { geom } from "../service/geom";
 
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
@@ -144,15 +145,15 @@ export class roomGraphClass extends BaseGraph {
 
     /** @type {Graph.RoomGraphEdgeOpts[]} */
     const roomGraphEdges = [
-      ...doors.flatMap((_door, doorIndex) => {
-        const roomIds = doorsRoomIds[doorIndex];
+      ...doors.flatMap((_door, doorId) => {
+        const roomIds = doorsRoomIds[doorId];
         if ([1, 2].includes(roomIds.length)) {// Hull door has 1, standard has 2
           return roomIds.flatMap(roomId => [// undirected, so 2 directed edges
-            { src: `room-${roomId}`, dst: `door-${doorIndex}` },
-            { dst: `room-${roomId}`, src: `door-${doorIndex}` },
+            { src: `room-${roomId}`, dst: `door-${doorId}` },
+            { dst: `room-${roomId}`, src: `door-${doorId}` },
           ]);
         } else {
-          error(`door ${doorIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
+          error(`door ${doorId}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),
