@@ -15,10 +15,11 @@ export default function Doors(props) {
 
   const update = useUpdate();
 
-  const { gmGraph, gmGraph: { gms }, npcs: { config } } = props.api;
+  const { gmGraph, gmGraph: { gms }, npcs } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
+    closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
     open: gms.map((gm, gmId) =>
       gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) || false)
@@ -60,8 +61,9 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
-    async onToggleDoor(gmId, doorId, hullDoorId, triggeredByPlayer) {
+    async onToggleDoor(gmId, doorId, byPlayer) {
 
+      const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeByIds(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
 
@@ -70,7 +72,7 @@ export default function Doors(props) {
         return false;
       }
 
-      if (triggeredByPlayer && !config.omnipresent && !state.playerNearDoor(gmId, doorId)) {
+      if (byPlayer && !npcs.config.omnipresent && !state.playerNearDoor(gmId, doorId)) {
         return false;
       }
 
@@ -99,18 +101,8 @@ export default function Doors(props) {
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
       }
 
-      // 🚧 clear interval if player closes door
-      // try to close opened door repeatedly at intervals
       if (key === 'opened-door') {
-        const intervalId = window.setInterval(async () => {
-          if (
-            !state.open[gmId][doorId]
-            ||
-            (!props.api.isDisabled() && await state.onToggleDoor(gmId, doorId, hullDoorId, false))
-          ) {
-            window.clearInterval(intervalId);
-          }
-        }, defaultDoorCloseMs);
+        state.tryCloseDoor(gmId, doorId);
       }
 
       return true;
@@ -138,6 +130,16 @@ export default function Doors(props) {
       state.drawInvisibleInCanvas(gmId);
       update();
     },
+    tryCloseDoor(gmId, doorId) {
+      const timeoutId = window.setTimeout(async () => {
+        if (state.open[gmId][doorId] && !await state.onToggleDoor(gmId, doorId, false)) {
+          state.tryCloseDoor(gmId, doorId); // try again
+        } else {
+          state.closing[gmId][doorId] = null;
+        }
+      }, defaultDoorCloseMs);// 🚧 change ms?
+      state.closing[gmId][doorId] = { timeoutId };
+    },
     updateVisibleDoors() {
       const { fov } = props.api;
       const gm = gms[fov.gmId]
@@ -159,19 +161,33 @@ export default function Doors(props) {
     props.onLoad(state);
   }, []);
 
-  React.useEffect(() => {
-    gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
-    const onClickDoor = /** @param {PointerEvent} e */ e => {
-      const uiEl = /** @type {HTMLElement} */ (e.target);
-      if (uiEl.dataset.gm_id === null) return;
-      const gmId = Number(uiEl.dataset.gm_id);
-      const doorId = Number(uiEl.dataset.door_id);
-      const hullDoorId = Number(uiEl.dataset.hull_door_id);
-      state.onToggleDoor(gmId, doorId, hullDoorId, true);
-    };
-    state.rootEl.addEventListener('pointerup', onClickDoor);
-    return () => state.rootEl.removeEventListener('pointerup', onClickDoor);
-  }, [gms]);
+  React.useEffect(() => {// Initial setup
+    if (gms && npcs.ready) {
+      gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
+
+      const handlePause = npcs.events.subscribe(e => {
+        e.key === 'disabled' && // Cancel future door closings
+          state.closing.forEach(doors => doors.forEach(meta => window.clearTimeout(meta?.timeoutId)));
+        e.key === 'enabled' && // Schedule pending door closures
+          state.closing.forEach((doors, gmId) => doors.forEach((meta, doorId) => {
+            meta && (meta.timeoutId = window.setTimeout(() => state.tryCloseDoor(gmId, doorId)))
+          }));
+      });
+
+      const onClickDoor = /** @param {PointerEvent} e */ e => {
+        const uiEl = /** @type {HTMLElement} */ (e.target);
+        if (uiEl.dataset.gm_id === null) return;
+        const gmId = Number(uiEl.dataset.gm_id);
+        const doorId = Number(uiEl.dataset.door_id);
+        state.onToggleDoor(gmId, doorId, true);
+      };
+      state.rootEl.addEventListener('pointerup', onClickDoor);
+      return () => {
+        handlePause.unsubscribe();
+        state.rootEl.removeEventListener('pointerup', onClickDoor);
+      };
+    }
+  }, [gms, npcs.ready]);
   
   return (
     <div
@@ -207,7 +223,6 @@ export default function Doors(props) {
                   className={cssName.doorTouchUi}
                   data-gm_id={gmId}
                   data-door_id={i}
-                  data-hull_door_id={gm.hullDoors.indexOf(door)}
                 />
               </div>
             )
@@ -295,18 +310,21 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
+ * @property {(null | { timeoutId: number; })[][]} closing Provides closing[gmId][doorId]?.timeoutId
  * @property {(gmId: number) => void} drawInvisibleInCanvas
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
- * @property {(gmId: number, doorId: number, hullDoorId: number, triggeredByPlayer: boolean) => Promise<boolean>} onToggleDoor
+ * @property {(gmId: number, doorId: number, byPlayer: boolean) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open open[gmId][doorId]
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
+ * @property {(gmId: number, doorId: number) => void} tryCloseDoor
+ * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} updateVisibleDoors
  * @property {{ [doorId: number]: true }[]} vis
  */

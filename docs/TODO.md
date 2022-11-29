@@ -2,13 +2,14 @@
 
 ## In progress
 
-- Doors auto-close after N seconds
+- ✅ Doors auto-close after N seconds
   - ✅ handle visible doors
   - ✅ handle invisible doors (refactor sans HTMLElement)
   - ✅ handle hull doors (two doors)
-  - pause when world paused
-  - clear interval if player manually closes door
-  - debounce?
+  - ✅ pause when world paused
+  - ✅ handle case where player manually closes door
+
+- Show doors in extended fringe for closing anim?
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
