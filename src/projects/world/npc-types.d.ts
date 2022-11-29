@@ -312,6 +312,8 @@ declare namespace NPC {
 
   export type NPCsEvent = (
     | { key: 'decor'; meta: DecorDef; }
+    | { key: 'disabled' }
+    | { key: 'enabled' }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }

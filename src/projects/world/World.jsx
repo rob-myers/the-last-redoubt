@@ -20,6 +20,7 @@ export default function World(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    disabled: !!props.disabled,
     everEnabled: false,
     gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
@@ -32,10 +33,6 @@ export default function World(props) {
     lib: {
       Vect,
       filter, first, map, take,
-    },
-
-    isDisabled() {
-      return !!props.disabled;
     },
 
     isReady() {
@@ -51,14 +48,10 @@ export default function World(props) {
       }
       update();
     },
+  }));
 
-
-  }), {
-    deps: [props.disabled],
-  });
-
-  // NOTE state.gmGraph.ready can be true without ever enabling,
-  // by viewing another World with same `props.gms`
+  // ℹ️ `state.gmGraph.ready` can be true without ever enabling,
+  // i.e. by viewing another World with same `props.gms`
   state.gmGraph = useGeomorphs(
     props.gms,
     !(state.everEnabled ||= !props.disabled),
@@ -66,6 +59,11 @@ export default function World(props) {
   state.gmGraph.api = state;
 
   useHandleEvents(state);
+
+  React.useEffect(() => {
+    state.disabled = !!props.disabled;
+    state.npcs.events?.next({ key: props.disabled ? 'disabled' : 'enabled' });
+  }, [props.disabled, state.npcs.ready]);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);
@@ -128,6 +126,7 @@ export default function World(props) {
 
 /**
  * @typedef State
+ * @property {boolean} disabled
  * @property {boolean} everEnabled
  * @property {Graph.GmGraph} gmGraph
  * @property {import("./DebugWorld").State} debug
@@ -135,7 +134,6 @@ export default function World(props) {
  * @property {import("./FOV").State} fov
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
- * @property {() => boolean} isDisabled
  * @property {() => boolean} isReady
  * @property {() => void} updateAll
  * @property {StateUtil} lib

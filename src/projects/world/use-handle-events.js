@@ -111,6 +111,9 @@ export default function useHandleEvents(api) {
           case 'decor':
             api.npcs.setDecor(e.meta);
             break;
+          case 'disabled':
+          case 'enabled':
+            break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
             e.npcKey && api.npcs.setRoomByNpc(e.npcKey);
