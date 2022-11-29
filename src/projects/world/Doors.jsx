@@ -145,12 +145,15 @@ export default function Doors(props) {
       const gm = gms[fov.gmId]
 
       /**
-       * Visible doors:
-       * - in current geomorph including related doors
-       * - possibly from other geomorphs (hull doors)
+       * Visible doors in current geomorph including related doors.
+       * Also possibly hull doors from other geomorphs.
        */
       const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
-      nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).flatMap(({ doorId }) => [doorId, ...(gm.relDoorId[doorId]?.doorIds)??[]]);
+      nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).flatMap(({ doorId }) =>
+        gm.relDoorId[doorId] && state.open[fov.gmId][doorId]
+          ? [doorId, ...gm.relDoorId[doorId].doorIds]
+          : doorId
+      );
 
       gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
         gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
@@ -276,7 +279,7 @@ const rootCss = css`
     &:not(.${cssName.iris}) {
       /* background: #444; */
       background: #fff;
-      border: 1px solid #999;
+      border: 1px solid #000055aa;
 
       transition: width 300ms ease-in;
       &.${cssName.open} {
