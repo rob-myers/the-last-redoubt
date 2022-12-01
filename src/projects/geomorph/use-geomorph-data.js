@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
-import { geomorphJsonPath } from "../service/geomorph";
+import { geomorphJsonPath, getNormalizedDoorPolys } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
@@ -21,13 +21,13 @@ export default function useGeomorphData(layoutKey, disabled = false) {
 
     const { roomGraph } = layout;
 
+    const doorPolys = getNormalizedDoorPolys(layout.doors);
     const roomsWithDoors = roomGraph.nodesArray
       .filter(node => node.type === 'room') // Aligned to `rooms`
       .map((node, roomNodeId) => {
         const doors = roomGraph.getEdgesFrom(node)
-          .flatMap(({ dst }) =>
-            dst.type === 'door' ? layout.doors[dst.doorId].poly : []
-          ); // Assume room nodes aligned with rooms
+          .flatMap(({ dst }) => dst.type === 'door' ? doorPolys[dst.doorId] : []);
+        // Assume room nodes aligned with rooms
         return Poly.union([layout.rooms[roomNodeId], ...doors])[0];
       })
     ;

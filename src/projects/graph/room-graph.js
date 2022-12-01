@@ -1,7 +1,7 @@
 import { Poly } from "../geom";
 import { BaseGraph } from "./graph";
 import { error } from "../service/log";
-import { geom } from "../service/geom";
+import { getNormalizedDoorPolys } from "../service/geomorph";
 
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
@@ -117,11 +117,12 @@ export class roomGraphClass extends BaseGraph {
   */
   static json(rooms, doors, windows) {
 
+    const doorPolys = getNormalizedDoorPolys(doors);
     /**
      * For each door, the respective adjacent room ids.
      * Each array will be aligned with the respective door node's successors.
      */
-    const doorsRoomIds = doors.map(door => rooms.flatMap((room, i) => Poly.union([room, door.poly]).length === 1 ? i : []));
+    const doorsRoomIds = doors.map((_, doorId) => rooms.flatMap((room, i) => Poly.union([room, doorPolys[doorId]]).length === 1 ? i : []));
     const windowsRoomIds = windows.map(window => rooms.flatMap((room, i) => Poly.union([room, window.poly]).length === 1 ? i : []));
 
     /** @type {Graph.RoomGraphNode[]} */

@@ -89,7 +89,10 @@ export const precision = 4;
 /** `24 / 5` because we scale down SVG symbols */
 export const doorWidth = 4.8;
 
-export const hullDoorWidth = 12;
+/** Keep hull doors thin */
+export const hullDoorWidth = 8;
+/** Hull doors need to intersect exactly one room */
+export const hullDoorOutset = 2;
 
 /**
  * Removing this outset breaks navigation,

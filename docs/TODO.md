@@ -2,8 +2,18 @@
 
 ## In progress
 
-- Thinner doors
-  - hull doors break things!
+- Thinner hull doors (gm-301)
+  - ℹ️ hull doors can break door-room relation + global navgraph
+  - ✅ ensure navmesh has hull doors (`createLayout`)
+  - ✅ fix dark rect under hull doors:
+    - .geomorph-dark too big (lights too small)
+    - roomsWithDoors
+  - ✅ global navmesh issue `gmGraph`
+    - ✅ the expected 4 global edges exist (two gm301s)
+    - gmGraph.findPath was wrong: doorNote.direction `null`
+  - ✅ only outset hull door along entry (else extra light on the side)
+  - ✅ use `hullDoorOutset` instead of hard-coded `2`
+
 - ✅ show doors in extended fringe (better closing anim)
 
 - ✅ Doors auto-close after N seconds

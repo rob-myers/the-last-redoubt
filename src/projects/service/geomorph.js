@@ -6,7 +6,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { hullOutset, obstacleOutset, precision, wallOutset } from './const';
+import { hullDoorOutset, hullOutset, obstacleOutset, precision, wallOutset } from './const';
 import { error, warn } from './log';
 import { fillRing } from "../service/dom";
 
@@ -53,7 +53,10 @@ export async function createLayout(def, lookup, triangleService) {
      * We avoid outwards outset for cleanliness.
      */
     const transformedHull = hull.map(x => x.applyMatrix(m));
-    const inwardsOutsetHull = Poly.intersect(transformedHull.map(x => x.clone().removeHoles()), transformedHull.flatMap(x => geom.createOutset(x, hullOutset)));
+    const inwardsOutsetHull = Poly.intersect(
+      transformedHull.map(x => x.clone().removeHoles()),
+      transformedHull.flatMap(x => geom.createOutset(x, hullOutset)),
+    );
     groups.walls.push(...Poly.union([
       ...walls.map(x => x.clone().applyMatrix(m)),
       // singles can also have walls e.g. to support optional doors
@@ -68,19 +71,41 @@ export async function createLayout(def, lookup, triangleService) {
   groups.obstacles.forEach(poly => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
+  const symbols = def.items.map(x => lookup[x.symbol]);
+  const hullSym = symbols[0];
+  const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
+  const windowPolys = singlesToPolys(groups.singles, 'window');
+  /** We keep a reference to uncut walls (group.walls overwritten below) */
+  const uncutWalls = groups.walls;
+
+  // Rooms (induced by all walls)
+  const allWalls = Poly.union(hullSym.hull.concat(uncutWalls, windowPolys)).map(x => x.precision(precision));
+  allWalls.sort((a, b) => a.rect.area > b.rect.area ? -1 : 1); // Descending by area
+  const rooms = allWalls[0].holes.map(ring => new Poly(ring));
+  // Finally, internal pillars are converted into holes inside room
+  allWalls.slice(1).forEach(pillar => {
+    const witness = pillar.outline[0];
+    const room = rooms.find(x => x.contains(witness));
+    if (room) {// We ignore any holes in pillar
+      room.holes.push(pillar.outline);
+    } else {
+      warn(`${def.key}: pillar ${JSON.stringify(pillar.rect.json)} does not reside in any room`);
+    }
+  });
+
+  const doors = filterSingles(groups.singles, 'door').map(x => singleToConnectorRect(x, rooms));
+
   /**
    * Cut doors from walls, changing `groups.walls` and `groups.singles`.
    * We do not cut out windows because conceptually easier to have one notion.
    * But when rendering we'll need to avoid drawing wall over window.
    */
-  const doorPolys = singlesToPolys(groups.singles, 'door');
+  const doorPolys = getNormalizedDoorPolys(doors);
   /**
    * We cut doors from walls, without first unioning the walls.
    * We do this because our polygon outset doesn't support self-intersecting outer ring.
    */
   const unjoinedWalls = groups.walls.flatMap(x => Poly.cutOut(doorPolys, [x]));
-  /** We keep a reference to uncut walls */
-  const uncutWalls = groups.walls;
   groups.walls = Poly.union(unjoinedWalls);
   groups.singles = groups.singles.reduce((agg, single) =>
     agg.concat(single.tags.includes('wall')
@@ -89,10 +114,6 @@ export async function createLayout(def, lookup, triangleService) {
     )
   , /** @type {typeof groups['singles']} */ ([]));
 
-  const symbols = def.items.map(x => lookup[x.symbol]);
-  const hullSym = symbols[0];
-  const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
-  const windowPolys = singlesToPolys(groups.singles, 'window');
 
   // Labels
   // TODO remove measurements
@@ -115,25 +136,7 @@ export async function createLayout(def, lookup, triangleService) {
       return { text, center, index, tags: metaTags, rect, padded };
     });
 
-  // Rooms (induced by all walls)
-  const allWalls = Poly.union(hullSym.hull.concat(uncutWalls, windowPolys)).map(x => x.precision(precision));
-  allWalls.sort((a, b) => a.rect.area > b.rect.area ? -1 : 1); // Descending by area
-  const rooms = allWalls[0].holes.map(ring => new Poly(ring));
-  // Finally, internal pillars are converted into holes inside room
-  allWalls.slice(1).forEach(pillar => {
-    const witness = pillar.outline[0];
-    const room = rooms.find(x => x.contains(witness));
-    if (room) {// We ignore any holes in pillar
-      room.holes.push(pillar.outline);
-    } else {
-      warn(`${def.key}: pillar ${JSON.stringify(pillar.rect.json)} does not reside in any room`);
-    }
-  });
-
-  const doors = groups.singles.filter(x => x.tags.includes('door')).map(
-    x => singleToConnectorRect(x, rooms)
-  );
-  const windows = groups.singles.filter(x => x.tags.includes('window')).map(
+  const windows = filterSingles(groups.singles, 'window').map(
     x => singleToConnectorRect(x, rooms)
   );
 
@@ -144,7 +147,8 @@ export async function createLayout(def, lookup, triangleService) {
 
   /** Sometimes large disjoint nav areas must be discarded  */
   const ignoreNavPoints = groups.singles
-    .filter(x => x.tags.includes('ignore-nav')).map(x => x.poly.center);
+    .filter(x => x.tags.includes('ignore-nav')).map(x => x.poly.center)
+  ;
 
   /**
    * Navigation polygon obtained by cutting outset walls and outset obstacles
@@ -152,15 +156,13 @@ export async function createLayout(def, lookup, triangleService) {
    * We also discard polygons intersecting ignoreNavPoints,
    * or if they are deemed too small.
    */
-  const navPolyWithDoors = Poly.cutOut([
-    // Non-unioned walls avoids outset issue (self-intersection)
-    ...unjoinedWalls.flatMap(x =>
-      geom.createOutset(x, wallOutset)
-    ),
-    ...groups.obstacles.flatMap(x =>
-      geom.createOutset(x, obstacleOutset)
-    ),
-  ], hullOutline).map(
+  const navPolyWithDoors = Poly.cutOut(
+    [ // Non-unioned walls avoids outset issue (self-intersection)
+      ...unjoinedWalls.flatMap(x => geom.createOutset(x, wallOutset)),
+      ...groups.obstacles.flatMap(x => geom.createOutset(x, obstacleOutset)),
+    ],
+    hullOutline,
+  ).map(
     x => x.cleanFinalReps().fixOrientation().precision(precision)
   ).filter(poly => 
     !ignoreNavPoints.some(p => poly.contains(p))
@@ -170,7 +172,8 @@ export async function createLayout(def, lookup, triangleService) {
   /** Intersection of each door (angled rect) with navPoly */
   const navDoorPolys = doorPolys
     .flatMap(doorPoly => Poly.intersect([doorPoly], navPolyWithDoors))
-    .map(x => x.cleanFinalReps());
+    .map(x => x.cleanFinalReps())
+  ;
   /** Navigation polygon without doors */
   const navPolySansDoors = Poly.cutOut(doorPolys, navPolyWithDoors);
 
@@ -237,7 +240,7 @@ export async function createLayout(def, lookup, triangleService) {
   const roomGraphJson = roomGraphClass.json(rooms, doors, windows);
   const roomGraph = roomGraphClass.from(roomGraphJson);
 
-  const lightSrcs = groups.singles.filter(x => x.tags.includes('light-source')).map(({ poly, tags }) => ({
+  const lightSrcs = filterSingles(groups.singles, 'light-source').map(({ poly, tags }) => ({
     position: poly.center,
     direction: tags.reduce((agg, tag) =>
       agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg,
@@ -279,57 +282,47 @@ export async function createLayout(def, lookup, triangleService) {
  * @param {Geomorph.ParsedConnectorRect} door 
  * @param {Geom.Rect} hullRect 
  */
- function extendHullDoorTags(door, hullRect) {
-  const bounds = door.poly.rect;
-  if (bounds.y === hullRect.y) door.tags.push('hull-n');
-  else if (bounds.right === hullRect.right) door.tags.push('hull-e');
-  else if (bounds.bottom === hullRect.bottom) door.tags.push('hull-s');
-  else if (bounds.x === hullRect.x) door.tags.push('hull-w');
+function extendHullDoorTags(door, hullRect) {
+  const bounds = door.poly.rect.clone().outset(4); // 🚧
+  if (bounds.y <= hullRect.y) door.tags.push('hull-n');
+  else if (bounds.right >= hullRect.right) door.tags.push('hull-e');
+  else if (bounds.bottom >= hullRect.bottom) door.tags.push('hull-s');
+  else if (bounds.x <= hullRect.x) door.tags.push('hull-w');
 }
 
 /**
- * @param {Geomorph.SvgGroupsSingle<Geom.Poly>} single 
- * @param {Geom.Poly[]} rooms 
- * @returns {Geomorph.ParsedConnectorRect}
+ * Hull door polys are outset along entry to e.g. ensure they intersect room.
+ * @param {Geomorph.ParsedConnectorRect[]} doors
+ * @returns {Geom.Poly[]}
  */
-function singleToConnectorRect(single, rooms) {
-  const { poly, tags } = single;
-  const { angle, baseRect } = poly.outline.length === 4
-    ? geom.polyToAngledRect(poly)
-    // For curved windows we simply use aabb
-    : { baseRect: poly.rect, angle: 0 };
-  const [u, v] = geom.getAngledRectSeg({ angle, baseRect });
-  const normal = v.clone().sub(u).rotate(Math.PI / 2).normalize();
+export function getNormalizedDoorPolys(doors) {
+  return doors.map(door =>
+    door.tags.includes('hull') ? outsetConnectorEntry(door, hullDoorOutset) : door.poly
+  );
+}
 
-  const doorEntryDelta = (Math.min(baseRect.width, baseRect.height)/2) + 0.05
-  const infront = poly.center.addScaledVector(normal, doorEntryDelta).precision(precision);
-  const behind = poly.center.addScaledVector(normal, -doorEntryDelta).precision(precision);
-
-  /** @type {[null | number, null | number]} */
-  const roomIds = rooms.reduce((agg, room, roomId) => {
-    if (agg[0] === null && room.contains(infront)) return [roomId, agg[1]];
-    if (agg[1] === null && room.contains(behind)) return [agg[0], roomId];
-    return agg;
-  }, /** @type {[null | number, null | number]} */ ([null, null]));
-
-  return {
-    angle,
-    baseRect: baseRect.precision(precision),
-    poly,
-    rect: poly.rect.precision(precision),
-    tags,
-    seg: [u.precision(precision), v.precision(precision)],
-    normal: normal.precision(precision),
-    roomIds: roomIds,
-    entries: [infront, behind],
-  };
+/**
+ * Outset connector rect along entry normal.
+ * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {number} amount
+ * @returns {Geom.Poly}
+ */
+function outsetConnectorEntry(connector, amount) {
+  const { seg: [u, v], normal, baseRect: { height } } = connector;
+  const halfHeight = amount + (height/2);
+  return new Poly([
+    u.clone().addScaledVector(normal, -halfHeight),
+    v.clone().addScaledVector(normal, -halfHeight),
+    v.clone().addScaledVector(normal, halfHeight),
+    u.clone().addScaledVector(normal, halfHeight),
+  ]);
 }
 
 /**
  * @param {Geomorph.ConnectorRectJson} x
  * @returns {Geomorph.ParsedConnectorRect}
  */
-function parseConnectRect(x) {
+function parseConnectorRect(x) {
   const poly = Poly.from(x.poly);
   return {
     ...x,
@@ -343,6 +336,46 @@ function parseConnectRect(x) {
       Vect.from(x.entries[1]),
     ],
   }
+}
+
+/**
+ * @param {Geomorph.SvgGroupsSingle<Geom.Poly>} single 
+ * @param {Geom.Poly[]} rooms 
+ * @returns {Geomorph.ParsedConnectorRect}
+ */
+ function singleToConnectorRect(single, rooms) {
+  const { poly, tags } = single;
+  const { angle, baseRect } = poly.outline.length === 4
+    ? geom.polyToAngledRect(poly)
+    // For curved windows we simply use aabb
+    : { baseRect: poly.rect, angle: 0 };
+  const [u, v] = geom.getAngledRectSeg({ angle, baseRect });
+  const normal = v.clone().sub(u).rotate(Math.PI / 2).normalize();
+
+  const doorEntryDelta = (Math.min(baseRect.width, baseRect.height)/2) + 0.05;
+  const infront = poly.center.addScaledVector(normal, doorEntryDelta).precision(precision);
+  const behind = poly.center.addScaledVector(normal, -doorEntryDelta).precision(precision);
+  const moreInfront = infront.clone().addScaledVector(normal, hullDoorOutset);
+  const moreBehind = behind.clone().addScaledVector(normal, -hullDoorOutset);
+
+  /** @type {[null | number, null | number]} */
+  const roomIds = rooms.reduce((agg, room, roomId) => {
+    if (agg[0] === null && room.contains(moreInfront)) return [roomId, agg[1]];
+    if (agg[1] === null && room.contains(moreBehind)) return [agg[0], roomId];
+    return agg;
+  }, /** @type {[null | number, null | number]} */ ([null, null]));
+
+  return {
+    angle,
+    baseRect: baseRect.precision(precision),
+    poly,
+    rect: poly.rect.precision(precision),
+    tags,
+    seg: [u.precision(precision), v.precision(precision)],
+    normal: normal.precision(precision),
+    roomIds,
+    entries: [infront, behind],
+  };
 }
 
 /** @param {Geomorph.ParsedLayout} layout */
@@ -402,8 +435,8 @@ export function parseLayout({
     },
 
     rooms: rooms.map(Poly.from),
-    doors: doors.map(parseConnectRect),
-    windows: windows.map(parseConnectRect),
+    doors: doors.map(parseConnectorRect),
+    windows: windows.map(parseConnectorRect),
     labels,
     navPoly: navPoly.map(Poly.from),
     navZone,

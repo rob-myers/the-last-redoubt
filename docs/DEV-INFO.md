@@ -130,3 +130,9 @@ ffmpeg -i filename.mov -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4
 ```
 
 My Pixel 5 dimensions: `464 * 851`
+
+---
+
+Boxy SVG Shortcuts
+- Zoom to selected object: `3`
+
