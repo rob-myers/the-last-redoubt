@@ -136,3 +136,8 @@ My Pixel 5 dimensions: `464 * 851`
 Boxy SVG Shortcuts
 - Zoom to selected object: `3`
 
+---
+
+Jabra recording: keep Sound open so can see Mic Level.
+
+<img src="Jabra-Microphone-Sound-Open.png" height="300" />
