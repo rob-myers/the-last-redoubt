@@ -92,7 +92,6 @@ const speechBubbleCss = css`
   font-size: 0.95rem;
   font-style: normal;
   text-align: center;
-  cursor: pointer;
   white-space: nowrap;
 
   &.open .arrow,
