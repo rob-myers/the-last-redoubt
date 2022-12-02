@@ -9,6 +9,7 @@ body.dark-mode {
   --page-blockquote-border-color: #444;
   --page-link-color: #dd0;
   --page-border-color: #444;
+  --contrast-border-color: #fff;
   --title-text-shadow-color: #ffffff99;
   --aside-background-color: #333333aa;
   --carousel-background-color: #222222;

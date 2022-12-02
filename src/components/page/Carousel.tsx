@@ -38,12 +38,12 @@ export default function Carousel(props: Props) {
   function showFullScreen(slideId?: number) {
     state.fullScreen = slideId??state.swiper.activeIndex;
     disableBodyScroll(state.rootEl);
-    state.rootEl.focus();
     update();
   }
   function hideFullScreen() {
     state.fullScreen = null;
     enableBodyScroll(state.rootEl);
+    state.rootEl.focus();
     update();
   }
 
@@ -86,8 +86,11 @@ export default function Carousel(props: Props) {
           initialSlide={state.fullScreen}
           items={props.items}
           baseSrc={props.baseSrc}
-          onDestroy={swiper => state.largeSwiper = null}
-          onSwiper={swiper => state.largeSwiper = swiper}
+          onDestroy={_swiper => state.largeSwiper = null}
+          onSwiper={swiper => {
+            state.largeSwiper = swiper;
+            swiper.el.focus();
+          }}
         />
       </>}
       <Slides
@@ -128,6 +131,7 @@ function Slides(props: Props & {
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       zoom={canZoom}
+      tabIndex={props.fullScreen ? 0 : undefined}
       // onSwiper={swiper => swiper.}
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
@@ -237,10 +241,10 @@ const rootCss = css`
   .swiper.full-screen {
     position: absolute;
     z-index: 2;
-    width: 100%;
+    width: calc(100%);
     height: calc(min(${maxHeightPx}px, 100vh - 128px));
-    border-radius: 8px;
     background-color: var(--carousel-background-color);
+    border: 4px solid var(--contrast-border-color);
   
     img {
       border: none;
@@ -250,6 +254,9 @@ const rootCss = css`
     .slide-video-container {
       display: block;
       height: calc(100% - ${labelHeightPx}px);
+    }
+    @media(max-width: 600px) {
+      border-width: 1px;
     }
   }
 
