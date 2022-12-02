@@ -28,6 +28,13 @@ const component = {
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} layoutKey='g-301--bridge' />,
   },
+  'example/SvgNavGraph#303': {
+    persist: false,
+    loadable: loadable.lib(() => import('projects/example/SvgNavGraph')),
+    get: (module: typeof import('projects/example/SvgNavGraph')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} layoutKey='g-303--passenger-deck' />,
+  },
   'geomorph/GeomorphEdit': {
     persist: false,
     loadable: loadable.lib(() => import('projects/geomorph/GeomorphEdit')),

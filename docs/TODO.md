@@ -2,7 +2,17 @@
 
 ## In progress
 
-- Thinner hull doors (gm-301)
+- Thinner symbol doors
+
+- Thinner hull doors
+  - ✅ gm-101 (fix precision errors by removing rotation)
+  - ✅ gm-102 (removed rotation)
+  - ✅ gm-{301,302,303}
+
+- ✅ BUG: 303: small room by toilet
+  - Needed manual `light` positioning
+
+- ✅ Thinner hull doors (gm-301)
   - ℹ️ hull doors can break door-room relation + global navgraph
   - ✅ ensure navmesh has hull doors (`createLayout`)
   - ✅ fix dark rect under hull doors:
