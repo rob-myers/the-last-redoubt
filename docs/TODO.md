@@ -2,36 +2,8 @@
 
 ## In progress
 
-- Thinner symbol doors
-
-- Thinner hull doors
-  - ✅ gm-101 (fix precision errors by removing rotation)
-  - ✅ gm-102 (removed rotation)
-  - ✅ gm-{301,302,303}
-
-- ✅ BUG: 303: small room by toilet
-  - Needed manual `light` positioning
-
-- ✅ Thinner hull doors (gm-301)
-  - ℹ️ hull doors can break door-room relation + global navgraph
-  - ✅ ensure navmesh has hull doors (`createLayout`)
-  - ✅ fix dark rect under hull doors:
-    - .geomorph-dark too big (lights too small)
-    - roomsWithDoors
-  - ✅ global navmesh issue `gmGraph`
-    - ✅ the expected 4 global edges exist (two gm301s)
-    - gmGraph.findPath was wrong: doorNote.direction `null`
-  - ✅ only outset hull door along entry (else extra light on the side)
-  - ✅ use `hullDoorOutset` instead of hard-coded `2`
-
-- ✅ show doors in extended fringe (better closing anim)
-
-- ✅ Doors auto-close after N seconds
-  - ✅ handle visible doors
-  - ✅ handle invisible doors (refactor sans HTMLElement)
-  - ✅ handle hull doors (two doors)
-  - ✅ pause when world paused
-  - ✅ handle case where player manually closes door
+- ✅ Follow cam should trigger on "resize" tab
+- Connect Dev Env to Chrome (breakpoints)
 
 - 🚧 Retarget:
   - ✅ `The Last Redoubt` -> `NPC CLI`
@@ -54,6 +26,7 @@
   - ✅ 2nd test
   - 3rd do at home (need silence)
 
+- Thinner symbol doors
 - Make homepage CSS video 
 
 - 🚧 Performance
@@ -89,7 +62,6 @@
     - Remove related code
   - Start mdx description of algorithm
 
-- Follow cam should trigger on "resize" tab
 - 🤔 Persist npc config?
 
 - ✅ Document npc vs line-seg collision
@@ -275,6 +247,35 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Thinner hull doors
+  - ✅ gm-101 (fix precision errors by removing rotation)
+  - ✅ gm-102 (removed rotation)
+  - ✅ gm-{301,302,303}
+
+- ✅ BUG: 303: small room by toilet
+  - Needed manual `light` positioning
+
+- ✅ Thinner hull doors (gm-301)
+  - ℹ️ hull doors can break door-room relation + global navgraph
+  - ✅ ensure navmesh has hull doors (`createLayout`)
+  - ✅ fix dark rect under hull doors:
+    - .geomorph-dark too big (lights too small)
+    - roomsWithDoors
+  - ✅ global navmesh issue `gmGraph`
+    - ✅ the expected 4 global edges exist (two gm301s)
+    - gmGraph.findPath was wrong: doorNote.direction `null`
+  - ✅ only outset hull door along entry (else extra light on the side)
+  - ✅ use `hullDoorOutset` instead of hard-coded `2`
+
+- ✅ show doors in extended fringe (better closing anim)
+
+- ✅ Doors auto-close after N seconds
+  - ✅ handle visible doors
+  - ✅ handle invisible doors (refactor sans HTMLElement)
+  - ✅ handle hull doors (two doors)
+  - ✅ pause when world paused
+  - ✅ handle case where player manually closes door
 
 - ✅ Fix latex rendering in `/sketches`
 - ✅ tracking camera should cancel when npc walk cancels

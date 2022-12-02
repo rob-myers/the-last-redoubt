@@ -496,7 +496,7 @@ export default function NPCs(props) {
         )),
       ).subscribe({
         async next(msg) {
-          // console.log(msg); // DEBUG
+          // console.log('msg', msg); // DEBUG
           if (!panZoom.isIdle() && msg.key !== 'started-walking') {
             status = 'no-track';
             console.warn('@', status);
@@ -509,7 +509,7 @@ export default function NPCs(props) {
           if (// npc not moving
             (npc.anim.spriteSheet === 'idle' || npc.anim.spriteSheet === 'sit')
             // camera not animating
-            && (panZoom.anims[0] === null || panZoom.anims[0].playState === 'finished')
+            && (panZoom.anims[0] === null || ['finished', 'idle'].includes(panZoom.anims[0].playState))
             // camera not close
             && panZoom.distanceTo(npcPosition) > 10
           ) {
