@@ -128,7 +128,7 @@ When someone says _HTML5 game_, the underlying tech is almost always the `<canva
 On the other hand, non-gaming websites rarely use it.
 
 The cornerstones of the World Wide Web are HTML, CSS and JavaScript.
-A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.org/wiki/Document_Object_Model) initially induced by HTML, brought to life visually via CSS<SideNote width={220}>CSS supports some core interactivity e.g. [:hover](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)</SideNote> and interactively using JavaScript<SideNote>Technically, JavaScript permits arbitrary DOM mutation.</SideNote>.
+A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.org/wiki/Document_Object_Model) initially induced by HTML, brought to life _visually_ via CSS<SideNote width={220}>CSS supports some core interactivity e.g. [:hover](https://developer.mozilla.org/en-US/docs/Web/CSS/:hover)</SideNote> and _interactively_ using JavaScript<SideNote>Technically, JavaScript permits arbitrary DOM mutation.</SideNote>.
 Importantly, CSS allows the browser to behave optimally, and avoids re-inventing the wheel through heavy-duty JavaScript.<SideNote>Although HTMLCanvas is performant via WebGL, the latter is a low-level API.</SideNote>
 _Debugging_ is also far richer because one may directly mutate the DOM-tree in a browser devtool.
 In contrast, native debugging of `<canvas>` amounts to setting breakpoints inside JavaScript code.
@@ -140,9 +140,11 @@ Want to use Browser Devtool: canonical interface, like CLI */}
 
 🚧 Illustrate CSS via devtool video
 
-🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
+🚧 Two canonical UIs: POSIX-like CLI + Browser DevTool
+
+{/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
-Partial exposition is indicated by <RoadWorksIcon bottom />.
+Partial exposition is indicated by <RoadWorksIcon bottom />. */}
 
 
 ### Demo
@@ -151,7 +153,7 @@ Partial exposition is indicated by <RoadWorksIcon bottom />.
 Click to navigate or interact (e.g. open doors).
 You can drag/scroll/pinch to pan and zoom.
 Try resetting (<Icon icon="refresh" small inline />), maximising a tab or all tabs (<Icon icon="expand" small inline />), and disabling (<Icon icon="cross-circle" small inline />).
-Show debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
+Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
 
 <Tabs
   id="demo-tabs"
