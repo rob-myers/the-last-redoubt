@@ -19,6 +19,9 @@ exports.onCreateWebpackConfig = (opts) => {
       ],
     },
     resolve: {
+      alias: {
+        'cheerio': false, // null-loader
+      },
       fallback: {
         'fs': false,
         'path': false,

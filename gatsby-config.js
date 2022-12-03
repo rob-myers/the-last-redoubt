@@ -60,7 +60,8 @@ const config = {
           'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
         },
       },
-    }
+    },
+    "gatsby-plugin-webpack-bundle-analyser-v2",
   ],
   flags: {
     /**
