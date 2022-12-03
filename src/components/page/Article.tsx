@@ -148,6 +148,8 @@ const articleCss = css`
 
   code {
     font-family: 'Courier New', Courier, monospace;
+    color: var(${cssName.codeTicksColor});
+    vertical-align: middle;
   }
 
   figure.carousel {

@@ -35,16 +35,15 @@ const rootCss = css`
   
   /** Add specificity to override Article code */
   &.inline-code {
+    padding: 0 4px;
+    vertical-align: middle;
+
     font-family: "Ubuntu Mono", "Courier New", monospace;
     font-style: normal;
+    font-size: smaller;
     color: #0f0;
     letter-spacing: 1px;
-    padding: 0 4px;
-    background-color: #000;
-
-    @media(max-width: 600px) {
-      font-size: inherit;
-    }
+    background-color: #222;
   }
 
   /* cursor: pointer; */
