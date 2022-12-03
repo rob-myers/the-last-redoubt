@@ -95,22 +95,23 @@ Supported syntax includes shell pipelines, shell functions and background proces
 Let's see it in action:
 
 <Carousel
-  height={440}
+  height={600}
   items={[{ video: 'cli-demo-1', label: 'First CLI Demo' }]}
 />
 
-Every shell session starts by running the script at `/home/PROFILE`.
-In the above session it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
-The builtin [source](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source) runs the script at `/etc/util-1`,
+Every shell session begins by running the script at `/home/PROFILE`.
+In the session above it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
+Our shell builtin `source`<SideNote>Like the [bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> runs the script at `/etc/util-1`,
 which defines a bunch of shell functions e.g. `range`.
 In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
 
 <aside title="interpret-js">
 
 But how is shell syntax interpreted as JavaScript?
+Consider our shell function `call`:
 
-Take the shell function `call` for example.
-Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes the function with the arguments.
+> Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes the function with the arguments.
+
 Less obviously, the shell builtin `run` creates and iterates a JavaScript [AsyncGenerator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*).
 The shell functions `call`, `map`, `range` and `split` (above) are all defined in terms of `run`.
 
