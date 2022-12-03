@@ -13,6 +13,7 @@ import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
 import Video, { VideoKey } from "./Video";
 
+// 🚧 clean --carousel-padding-bottom (video vs img)
 // 🚧 remove class swiper-slide-zoomed onchange slide whilst zoomed
 // 🚧 slide-img-container, figure.video height should be conditional on label existing
 
@@ -191,11 +192,20 @@ const maxHeightPx = 800;
 
 const rootCss = css`
   ${cssName.carouselLabelHeight}: 96px;
+  --carousel-padding-bottom: 48px;
+
+  @media(max-width: 600px) {
+    ${cssName.carouselLabelHeight}: 64px;
+    --carousel-padding-bottom: 0px;
+  }
 
   position: relative;
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
+    &:not(.full-screen) {
+      padding-bottom: var(--carousel-padding-bottom);
+    }
   }
 
   .slide-container {
@@ -245,9 +255,6 @@ const rootCss = css`
       max-height: calc(100vh - 2 * 128px);
       padding-bottom: 96px;
     }
-    figure {
-      padding-bottom: 96px;
-    }
     .slide-video-container {
       display: block;
       height: calc(100% - var(${cssName.carouselLabelHeight}));
@@ -256,8 +263,14 @@ const rootCss = css`
       top: unset;
       margin-top: unset;
     }
+    figure.video {
+      padding-bottom: 96px;
+    }
     @media(max-width: 600px) {
       border-width: 1px;
+      figure.video {
+        padding-bottom: 64px;
+      }
     }
   }
 

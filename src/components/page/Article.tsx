@@ -151,15 +151,21 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 48px 0 64px 0;
+    margin: 0 0 24px 0;
     padding: 0;
     /**
      * max-width 600px causes difficulty with
      * swiper carousel breakpoints
      */
     @media(max-width: 800px) {
-      margin: 0 0 24px 0;
+      margin: 0px 0 16px 0;
       padding: 0;
+    }
+  }
+  @media(max-width: 800px) {
+    /* 🚧 restrict elements? */
+    * + figure.carousel {
+      margin-top: -20px;
     }
   }
 
