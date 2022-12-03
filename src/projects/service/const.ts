@@ -9,6 +9,7 @@ export const localStorageKey = {
 
 export const cssName = {
   anchor: 'anchor',
+  carouselLabelHeight: '--carousel-label-height',
   central: 'central',
   clear: 'clear',
   copyJustFailed: 'copy-just-failed',

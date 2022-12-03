@@ -7,13 +7,14 @@ import { Navigation, Lazy, Pagination, Zoom } from "swiper";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
+import { cssName } from "projects/service/const";
 import useSiteStore from "store/site.store";
 import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
 import Video, { VideoKey } from "./Video";
 
 // 🚧 remove class swiper-slide-zoomed onchange slide whilst zoomed
-// 🚧 slide-img-container, figure.video height conditional on label existing
+// 🚧 slide-img-container, figure.video height should be conditional on label existing
 
 /**
  * props.items should be one of:
@@ -91,7 +92,7 @@ export default function Carousel(props: Props) {
             state.largeSwiper = swiper;
             swiper.el.focus();
           }}
-        />
+          />
       </>}
       <Slides
         {...props}
@@ -122,6 +123,7 @@ function Slides(props: Props & {
       initialSlide={props.initialSlide}
       modules={[Lazy, Navigation, Pagination, Zoom]}
       navigation
+      onClick={swiper => props.fullScreen && swiper.el.focus()}
       onSwiper={props.onSwiper}
       onDestroy={props.onDestroy}
       pagination={props.pagination}
@@ -132,7 +134,6 @@ function Slides(props: Props & {
       }}
       zoom={canZoom}
       tabIndex={props.fullScreen ? 0 : undefined}
-      // onSwiper={swiper => swiper.}
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
       // }}
@@ -161,12 +162,6 @@ function Slides(props: Props & {
                   className="swiper-lazy"
                   data-src={`${props.baseSrc??''}${item.src}`}
                   {...item.background && { style: { background: item.background } }}
-                  // 🚧 avoid initial height when slide has background
-                  height={
-                    props.height && !props.fullScreen
-                      ? props.height - (item.label ? labelHeightPx : 0)
-                      : undefined
-                  }
                 />
               </div>
               <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
@@ -192,11 +187,11 @@ function Slides(props: Props & {
   );
 }
 
-const labelHeightPx = 52; // 🚧 responsive
 const maxHeightPx = 800;
 
-
 const rootCss = css`
+  ${cssName.carouselLabelHeight}: 96px;
+
   position: relative;
   
   .swiper {
@@ -213,20 +208,18 @@ const rootCss = css`
     align-items: center;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 300;
     line-height: 1.2;
-    min-height: ${labelHeightPx}px;
+    min-height: var(${cssName.carouselLabelHeight});
   }
 
   .slide-img-container {
     display: flex;
     justify-content: center;
-    /* 🚧 Conditional on label */
-    height: calc(100% - ${labelHeightPx}px - 16px);
+    /* 🚧 Handle case where label does not exist */
+    height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
     img {
-      /* border: thin solid var(--page-border-color); */
-      /* border-radius: 8px; */
       object-fit: contain;
       max-width: 100%;
     }
@@ -234,15 +227,15 @@ const rootCss = css`
 
   figure.video {
     margin: 0;
-    /* 🚧 Conditional on label */
-    height: calc(100% - ${labelHeightPx}px  - 16px);
+    /* 🚧 Handle case where label does not exist */
+    height: calc(100% - var(${cssName.carouselLabelHeight})  - 16px);
   }
   
   .swiper.full-screen {
     position: absolute;
     z-index: 2;
     width: calc(100%);
-    height: calc(min(${maxHeightPx}px, 100vh - 128px));
+    /* height: calc(min(${maxHeightPx}px, 100vh - 128px)); */
     background-color: var(--carousel-background-color);
     border: 4px solid var(--contrast-border-color);
   
@@ -250,10 +243,18 @@ const rootCss = css`
       border: none;
       height: inherit;
       max-height: calc(100vh - 2 * 128px);
+      padding-bottom: 96px;
+    }
+    figure {
+      padding-bottom: 96px;
     }
     .slide-video-container {
       display: block;
-      height: calc(100% - ${labelHeightPx}px);
+      height: calc(100% - var(${cssName.carouselLabelHeight}));
+    }
+    .swiper-lazy-preloader {
+      top: unset;
+      margin-top: unset;
     }
     @media(max-width: 600px) {
       border-width: 1px;
@@ -313,10 +314,10 @@ function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
 
 interface Props {
   baseSrc?: string;
-  breakpoints?: SwiperOptions['breakpoints'];
   height?: number;
   items: CarouselItems;
   //#region swiper
+  breakpoints?: SwiperOptions['breakpoints'];
   initialSlide?: number;
   lazy?: SwiperOptions['lazy'];
   onDestroy?: SwiperEvents['destroy'];
