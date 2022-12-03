@@ -2,38 +2,33 @@
 
 ## In progress
 
-- ✅ Follow cam should trigger on "resize" tab
-- Connect Dev Env to Chrome (breakpoints)
-
-- 🚧 Retarget:
-  - ✅ `The Last Redoubt` -> `NPC CLI`
-  - 🚧 Adjust Home Page
-    - ❌ GIF demo of CLI
-    - ✅ Video demo of CLI
-      > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
-    - Redo video demo of CLI with sound
-    - Adjust textual copy, emphasising _canonical_ UIs:
-      - POSIX CLI
-      - Browser devtool  
-    - 🚧 Video demo of `World` CSS/DOM
-  - Adjust Intro
-
-- 🚧 Remake homepage CLI video with sound
-  - ✅ 1st test
-    > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
-    > 329Mb -> 20Mb
-    > https://youtu.be/iohh0Glruis
-  - ✅ 2nd test
-  - 3rd do at home (need silence)
-
-- Thinner symbol doors
-- Make homepage CSS video 
-
 - 🚧 Performance
   - ✅ Remove YouTube from SSR via facade
   - ✅ Try upgrading Gatsby
   - 🚧 Smaller main bundle
   - remark/rehypePlugins ?
+
+- 🚧 Retarget `The Last Redoubt` -> `NPC CLI`
+  - 🚧 Adjust Home Page
+    - ❌ GIF demo of CLI
+    - ✅ Video demo of CLI
+      > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
+    - 🚧 Redo video demo of CLI with sound
+      - ✅ 1st test
+        > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
+        > 329Mb -> 20Mb
+        > https://youtu.be/iohh0Glruis
+      - ✅ 2nd test
+      - 3rd do at home (need silence)
+    - 🚧 Adjust textual copy, emphasising _canonical_ UIs:
+      - POSIX CLI
+      - Browser devtool  
+    - 🚧 Video demo of `World` CSS/DOM
+  - Adjust Intro
+
+- Connect Dev Env to Chrome (breakpoints)
+- Thinner symbol doors
+- Make homepage CSS video 
 
 - ✅ anim.sprites also has initial delay to preserve sprite duration modification
 - Safari: Door collision bug
@@ -247,6 +242,11 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Send email to spritesheet creator
+  - https://www.fiverr.com/inbox/njoygames
+  
+- ✅ Follow cam should trigger on "resize" tab
 
 - ✅ Thinner hull doors
   - ✅ gm-101 (fix precision errors by removing rotation)
