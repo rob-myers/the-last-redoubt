@@ -45,12 +45,14 @@ export default function Carousel(props: Props) {
   function hideFullScreen() {
     state.fullScreen = null;
     enableBodyScroll(state.rootEl);
-    state.rootEl.focus();
+    state.swiper?.el.focus();
     update();
   }
 
   React.useEffect(() => {
-    (!navOpen && state.fullScreen !== null) && setTimeout(() => state.rootEl.focus(), 50);
+    if (!navOpen && state.fullScreen !== null) {
+      setTimeout(() => state.largeSwiper?.el.focus(), 50);
+    }
   }, [navOpen]);
 
   return (
@@ -61,8 +63,8 @@ export default function Carousel(props: Props) {
       }}
       className={cx("carousel", rootCss)}
       style={props.style}
+      onClick={_ => (state.largeSwiper || state.swiper)?.el.focus()}
 
-      tabIndex={0}
       onKeyUp={e => {
         switch (e.key) {
           case 'Escape': hideFullScreen(); break;
@@ -124,17 +126,19 @@ function Slides(props: Props & {
       initialSlide={props.initialSlide}
       modules={[Lazy, Navigation, Pagination, Zoom]}
       navigation
-      onClick={swiper => props.fullScreen && swiper.el.focus()}
       onSwiper={props.onSwiper}
       onDestroy={props.onDestroy}
+      onZoomChange={(_swiper, scale, _imgEl, slideEl) => {
+        if (scale === 1) slideEl.classList.remove('swiper-slide-zoomed');
+      }}
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??40}
       style={{
         height: props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
+      tabIndex={0}
       zoom={canZoom}
-      tabIndex={props.fullScreen ? 0 : undefined}
       // onLazyImageReady={(_swiper, _slideEl, imgEl) => {// Didn't fix Lighthouse
       //   imgEl.setAttribute('width', `${imgEl.getBoundingClientRect().width}px`);
       // }}
@@ -282,6 +286,11 @@ const rootCss = css`
     width: 100vw;
     height: 100vh;
     z-index: 2;
+  }
+
+  .swiper-slide.swiper-slide-zoomed {
+    /** Zoomed slide should be above any other  */
+    z-index: 1;
   }
 
   .swiper-slide-zoomed .slide-label {
