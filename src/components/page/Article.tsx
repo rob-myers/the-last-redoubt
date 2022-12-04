@@ -10,6 +10,7 @@ import { cssName } from 'projects/service/const';
 
 import { pre, vscDarkPlusCss } from './CodeBlock';
 import Icon from './Icon';
+import InlineCode from './InlineCode';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -148,8 +149,6 @@ const articleCss = css`
 
   code {
     font-family: 'Courier New', Courier, monospace;
-    color: var(${cssName.codeTicksColor});
-    vertical-align: middle;
   }
 
   figure.carousel {
@@ -493,6 +492,10 @@ const articleComponents = (
     );
   },
 
+  code({ children }) {
+    return <InlineCode>{children}</InlineCode>;
+  },
+
   /** Occurs once in each article */
   h2({ children }: any) {
     return <>
@@ -539,7 +542,7 @@ const articleComponents = (
         </Link>
       </h4>
     );
-  }
+  },
 
 });
 

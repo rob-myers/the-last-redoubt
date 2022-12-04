@@ -17,8 +17,6 @@ body.dark-mode {
   --swiper-pagination-color: #ddc;
   --swiper-pagination-bullet-inactive-color: #777;
   --swiper-pagination-bullet-inactive-opacity: 1;
-
-  --code-ticks-color: #00ffff;
 }
 
 /** @see cssName.ignoreDark */

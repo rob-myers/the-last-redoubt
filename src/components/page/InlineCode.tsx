@@ -40,10 +40,10 @@ const rootCss = css`
 
     font-family: "Ubuntu Mono", "Courier New", monospace;
     font-style: normal;
-    font-size: smaller;
+    /* font-size: smaller; */
     color: #0f0;
     letter-spacing: 1px;
-    background-color: #222;
+    background-color: #222222;
   }
 
   /* cursor: pointer; */

@@ -28,9 +28,9 @@ import { profileLookup } from "projects/sh/scripts";
 
 This blog is about programming Non-Player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)).
 An NPC is a character in a video game e.g. a human, alien, robot or animal.
-Crucially, they are not controlled by the Player.
-In one approach the Player interacts with an ongoing simulation.
-In another, the Game fabricates reality in response to the Player.
+They are not controlled by the Player.
+In one approach the Game defines an ongoing simulation involving individual NPCs.
+In another, it fabricates the Player's experience in response to the Player's actions.
 My personal interest began with the ZX Spectrum in the late 1980s.
 In those days anything seemed possible.
 Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)).
@@ -78,8 +78,8 @@ Before things get a bit abstract, here are some screenshots:
 
   _A World and a Terminal_ (1st slide above) depicts a [`Tabs` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
   Two of the tabs are visible.
-  The left tab is an instance of a [`World` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
-  the right tab instantiates a [`Terminal` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
+  The left tab is an instance of a [World component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
+  the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
   The `World` shows an NPC from a birdseye perspective.
   The commands in the `Terminal` indicate this is Andros and he is actually the Player.
   The other images show the `Tabs`, `World` and `Terminal` in other states.

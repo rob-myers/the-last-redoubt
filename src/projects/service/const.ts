@@ -12,7 +12,6 @@ export const cssName = {
   carouselLabelHeight: '--carousel-label-height',
   central: 'central',
   clear: 'clear',
-  codeTicksColor: '--code-ticks-color',
   copyJustFailed: 'copy-just-failed',
   disableIcon: 'disable-icon',
   disabled: 'disabled',

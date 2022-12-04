@@ -19,8 +19,6 @@
 
   --swiper-navigation-size: 28px;
   --swiper-theme-color: #777;
-
-  --code-ticks-color: #222222;
 }
 @media(max-width: 600px) {
   :root {
