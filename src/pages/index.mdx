@@ -82,7 +82,7 @@ Before things get a bit abstract, here are some screenshots:
   the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
   The `World` shows an NPC from a birdseye perspective.
   The commands in the `Terminal` indicate this is Andros and he is actually the Player.
-  The other images show the `Tabs`, `World` and `Terminal` in other states.
+  The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some of the commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, whereas the images use `DEBUG=1; npc config`</SideNote>
 
 </aside>
 
@@ -108,9 +108,9 @@ In the above video we (a) list available shell functions, (b) inspect their defi
 <aside title="interpret-js">
 
 But how is shell syntax interpreted as JavaScript?
-Consider our shell function `call`:
+Consider our shell function `call`.
 
-> Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes the function with the arguments.
+> Given a textual description of a JavaScript function and its arguments, `call` creates the JavaScript function and its arguments, and finally invokes this function with these arguments.
 
 Less obviously, the shell builtin `run` creates and iterates a JavaScript [AsyncGenerator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*).
 The shell functions `call`, `map`, `range` and `split` (above) are all defined in terms of `run`.
