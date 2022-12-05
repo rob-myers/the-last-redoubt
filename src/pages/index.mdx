@@ -101,7 +101,7 @@ Let's see it in action:
 
 Every shell session begins by running the script at `/home/PROFILE`.
 In the session above it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
-Our shell builtin `source`<SideNote>Like the [bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> runs the script at `/etc/util-1`,
+Our shell builtin `source`<SideNote width={300}>See the [bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), itself a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> runs the script at `/etc/util-1`,
 which defines a bunch of shell functions e.g. `range`.
 In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
 
