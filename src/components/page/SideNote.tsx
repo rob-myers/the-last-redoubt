@@ -17,6 +17,7 @@ export default function SideNote(props: React.PropsWithChildren<{
       onClick={e => open(e, props.width, timeoutId.current)}
       onMouseEnter={e => open(e, props.width, timeoutId.current)}
       onMouseLeave={e => (timeoutId.current = close(e, 'icon'))}
+      title="" // Prevent <aside title>
     >
       ?
     </span>
@@ -24,6 +25,7 @@ export default function SideNote(props: React.PropsWithChildren<{
       className={cx("side-note-bubble", speechBubbleCss)}
       onMouseEnter={_ => window.clearTimeout(timeoutId.current)}
       onMouseLeave={e => (timeoutId.current = close(e, 'bubble'))} // Triggered on mobile click outside
+      title="" // Prevent <aside title>
     >
       <span className="arrow"/>
       <span className="info">
@@ -43,7 +45,7 @@ function open(e: React.MouseEvent, width: number | undefined, timeoutId: number)
   const rect = bubble.getBoundingClientRect();
   const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width) - 40;
   const pixelsOnLeft = rect.x;
-  const maxWidthAvailable = Math.max(pixelsOnLeft, pixelsOnRight);
+  const maxWidthAvailable = Math.max(pixelsOnLeft, pixelsOnRight) - 32;
   bubble.classList.remove('left', 'right', 'down');
   bubble.classList.add(pixelsOnRight < pixelsOnLeft ? 'left' : 'right');
   
@@ -106,10 +108,13 @@ const speechBubbleCss = css`
     width: var(--info-width);
     margin-left: calc(-0.5 * var(--info-width));
     padding: 16px;
+    line-height: 1.6;
+
     background-color: black;
     color: white;
     border-radius: 4px;
-    line-height: 1.6;
+    border: 2px solid #444;
+
     a {
       color: #dd0;
     }
@@ -136,7 +141,7 @@ const speechBubbleCss = css`
       left: -${arrowDeltaX}px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
-      border-left: 10px solid black;
+      border-left: 10px solid #444;
     }
   }
   &.right {
@@ -150,7 +155,7 @@ const speechBubbleCss = css`
       left: ${rootWidthPx/2 + arrowDeltaX}px;
       border-top: 10px solid transparent;
       border-bottom: 10px solid transparent;
-      border-right: 10px solid black;
+      border-right: 10px solid #444;
     }
   }
   &.down {
@@ -162,7 +167,7 @@ const speechBubbleCss = css`
       left: 0;
       border-left: 10px solid transparent;
       border-right: 10px solid transparent;
-      border-bottom: 10px solid black;
+      border-bottom: 10px solid #444;
     }
   }
 `;
