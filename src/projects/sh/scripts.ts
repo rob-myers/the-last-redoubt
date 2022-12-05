@@ -23,6 +23,7 @@ export const utilFunctions = [
 }`,
   
   // cat: `get "$@" | split`,
+  cat: `get "$@"`,
     
   /**
    * - `map console.log` would log 2nd arg too
@@ -39,9 +40,6 @@ export const utilFunctions = [
       }
     }'
 }`,
-//   log: `{
-//     map 'x => console.log(x)'
-// }`,
 },
 ];
 
