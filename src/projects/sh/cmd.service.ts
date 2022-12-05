@@ -362,8 +362,9 @@ class cmdServiceClass {
         } else {
           // We cache scripts
           const parsed = parseService.parse(script, true);
-          // We clone meta; pid will be overwritten in `ttyShell.spawn`
-          parsed.meta = { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() };
+          // We mutate `meta` because it may occur many times deeply in tree
+          // Also, pid will be overwritten in `ttyShell.spawn`
+          Object.assign(parsed.meta, { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() });
           const { ttyShell } = useSession.api.getSession(meta.sessionKey);
           // We spawn a new process (unlike bash `source`), but we don't localize PWD
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });

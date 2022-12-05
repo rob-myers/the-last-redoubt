@@ -2,9 +2,13 @@
 
 ## In progress
 
+- ✅ BUG `source foo bar`: positive positional `bar` not propagated
+
 - 🚧 Performance
   - ✅ Remove YouTube from SSR via facade
   - ✅ Try upgrading Gatsby
+  - ✅ Remove parse5/cheerio from main bundle
+  - ✅ Remove unused mdx from main bundle
   - 🚧 Smaller main bundle
   - remark/rehypePlugins ?
 
