@@ -80,7 +80,10 @@ export default function Doors(props) {
         return false;
       }
 
-      if (state.open[gmId][doorId]) {// Animate close slightly early
+      if (state.open[gmId][doorId]) {
+        // Cancel any pending close
+        window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
+        // Animate close slightly early
         const uiEl = state.rootEl.querySelector(`div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`);
         if (uiEl?.parentElement instanceof HTMLElement) {
           uiEl.parentElement.classList.remove('open');
