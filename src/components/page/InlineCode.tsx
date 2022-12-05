@@ -73,4 +73,9 @@ const rootCss = css`
     content: 'Copy failed';
     display: initial;
   }
+
+  &::selection {
+    background-color: rgb(85, 112, 149);
+    color: white;
+  }
 `;
