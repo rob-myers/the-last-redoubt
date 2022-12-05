@@ -150,6 +150,9 @@ const articleCss = css`
   code {
     font-family: 'Courier New', Courier, monospace;
   }
+  code + span.side-note {
+    top: 0;
+  }
 
   figure.carousel {
     margin: 0 0 24px 0;

@@ -29,21 +29,18 @@ type Props = React.HTMLAttributes<HTMLElement> & {
 
 const rootCss = css`
   /** ISSUE with changing width via ::after when display: inline */
-  display: inline-block;
   -webkit-tap-highlight-color: transparent;
-  /* line-height: 1.2; */
   
   /** Add specificity to override Article code */
   &.inline-code {
-    padding: 0 4px;
-    vertical-align: middle;
-
     font-family: "Ubuntu Mono", "Courier New", monospace;
     font-style: normal;
     font-size: 1rem;
     color: #0f0;
     letter-spacing: 1px;
     background-color: #222222;
+    border: 0 solid #222222;
+    border-width: 2px 4px;
   }
 
   /* cursor: pointer; */
