@@ -2,28 +2,6 @@
 
 ## In progress
 
-- ✅ BUG `source foo bar`: positive positional `bar` not propagated
-- ✅ `localDecor` runs in background automatically
-- symbols have thinner doors
-- symbols have ui points
-
-- Abandon _moving seg_ vs _static seg_ collision prediction
-  - ✅ Hide in debug mode
-  - ✅ decor seg -> rect
-  - Remove related code
-
-- Collision prediction: _moving circle_ vs _static angled rect_
-  - Start mdx description of simplified algorithm
-    > axis aligned square vs 4-gon
-
-- 🚧 Performance
-  - ✅ Remove YouTube from SSR via facade
-  - ✅ Try upgrading Gatsby
-  - ✅ Remove parse5/cheerio from main bundle
-  - ✅ Remove unused mdx from main bundle
-  - 🚧 Smaller main bundle
-  - remark/rehypePlugins ?
-
 - 🚧 Retarget `The Last Redoubt` -> `NPC CLI`
   - 🚧 Adjust Home Page
     - ❌ GIF demo of CLI
@@ -42,16 +20,29 @@
     - 🚧 Video demo of `World` CSS/DOM
   - Adjust Intro
 
+- ✅ BUG `source foo bar`: positive positional `bar` not propagated
+- ✅ `localDecor` runs in background automatically
+- symbols have thinner doors
+- symbols have ui points
+
+- Abandon _moving seg_ vs _static seg_ collision prediction
+  - ✅ Hide in debug mode
+  - ✅ decor seg -> rect
+  - Remove related code
+- Collision prediction: _moving circle_ vs _static angled rect_
+  - Start mdx description of simplified algorithm
+    > axis aligned square vs 4-gon
+
+- 🚧 Performance
+  - ✅ Remove YouTube from SSR via facade
+  - ✅ Try upgrading Gatsby
+  - ✅ Remove parse5/cheerio from main bundle
+  - ✅ Remove unused mdx from main bundle
+  - 🚧 Smaller main bundle
+  - remark/rehypePlugins ?
+
 - Connect Dev Env to Chrome (breakpoints)
 - Make homepage CSS video 
-
-- ✅ anim.sprites also has initial delay to preserve sprite duration modification
-- Safari: Door collision bug
-  - ✅ Should not start animation before initial cancel
-  - ✅ Cancel track on collide door should not be jerky
-- Safari: Jerky zoom issues
-  - incorrect screen clipping?
-  - e.g. zoom out then click walk
 
 - 🚧 NPC idle can be sitting or standing
   - ✅ `npc.anim.spriteSheet` can be `sit`
@@ -64,6 +55,15 @@
   - ✅ `roomUi` -> `localDecor` wraps NPCs toggleLocalDecor
   - ✅ `localDecor` shows initially and hides on termination
   - when `idle` can change to `sit`
+
+- ✅ anim.sprites also has initial delay to preserve sprite duration modification
+- Safari: Door collision bug
+  - ✅ Should not start animation before initial cancel
+  - ✅ Cancel track on collide door should not be jerky
+- Safari: Jerky zoom issues
+  - incorrect screen clipping?
+  - e.g. zoom out then click walk
+
 
 - 🤔 Persist npc config?
 
