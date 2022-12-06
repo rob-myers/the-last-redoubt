@@ -482,7 +482,7 @@ const articleComponents = (
 
   },
 
-  aside({ node, children, title, ...props }: any) {
+  Aside({ node, children, title, ...props }: any) {
     const id = getAsideId(title);
     return (
       <aside {...props}>

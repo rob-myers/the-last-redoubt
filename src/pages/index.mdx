@@ -10,8 +10,9 @@ next: intro/
 path: /
 prev: null
 tags:
+  - npcs
+  - cli
   - web dev
-  - game ai
   - traveller rpg
 ---
 
@@ -35,8 +36,8 @@ My personal interest began with the ZX Spectrum in the late 1980s.
 In those days anything seemed possible.
 Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)).
 
-We'll try to remain silent concerning the current state of affairs.
-Video games have their own metrics of success.
+Concerning video games, we'll try to remain silent concerning the current state of affairs.
+They have their own metrics of success.
 We're going to study NPCs for their own sake.
 But what distinguishes our approach?
 
@@ -74,9 +75,10 @@ Before things get a bit abstract, here are some screenshots:
   ]}
 />
 {/* Component ~ React Component */}
-<aside title="screenshots">
 
-  _A World and a Terminal_ (1st slide above) depicts a [`Tabs` component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
+<Aside title="screenshots">
+
+  _A World and a Terminal_ (1st slide above) depicts a [Tabs component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
   Two of the tabs are visible.
   The left tab is an instance of a [World component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
   the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
@@ -84,7 +86,7 @@ Before things get a bit abstract, here are some screenshots:
   The commands in the `Terminal` indicate this is Andros and he is actually the Player.
   The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some of the commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, whereas the images use `DEBUG=1; npc config`</SideNote>
 
-</aside>
+</Aside>
 
 > Browser-based CLI?
 
@@ -105,7 +107,7 @@ Our shell builtin `source`<SideNote width={300}>See the [bash builtin](https://w
 which defines a bunch of shell functions e.g. `range`.
 In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
 
-<aside title="interpret-js">
+<Aside title="interpret-js">
 
 But how is shell syntax interpreted as JavaScript?
 Consider our shell function `call`.
@@ -115,7 +117,7 @@ Consider our shell function `call`.
 Less obviously, the shell builtin `run` creates and iterates a JavaScript [AsyncGenerator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*).
 The shell functions `call`, `map`, `range` and `split` (above) are all defined in terms of `run`.
 
-</aside>
+</Aside>
 
 > CSS-based rendering?
 

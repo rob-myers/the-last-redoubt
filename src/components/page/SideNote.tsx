@@ -17,7 +17,6 @@ export default function SideNote(props: React.PropsWithChildren<{
       onClick={e => open(e, props.width, timeoutId.current)}
       onMouseEnter={e => open(e, props.width, timeoutId.current)}
       onMouseLeave={e => (timeoutId.current = close(e, 'icon'))}
-      title="" // Prevent <aside title>
     >
       ?
     </span>
@@ -25,7 +24,6 @@ export default function SideNote(props: React.PropsWithChildren<{
       className={cx("side-note-bubble", speechBubbleCss)}
       onMouseEnter={_ => window.clearTimeout(timeoutId.current)}
       onMouseLeave={e => (timeoutId.current = close(e, 'bubble'))} // Triggered on mobile click outside
-      title="" // Prevent <aside title>
     >
       <span className="arrow"/>
       <span className="info">
