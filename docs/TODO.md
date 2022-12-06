@@ -3,6 +3,18 @@
 ## In progress
 
 - ✅ BUG `source foo bar`: positive positional `bar` not propagated
+- ✅ `localDecor` runs in background automatically
+- symbols have thinner doors
+- symbols have ui points
+
+- Abandon _moving seg_ vs _static seg_ collision prediction
+  - ✅ Hide in debug mode
+  - ✅ decor seg -> rect
+  - Remove related code
+
+- Collision prediction: _moving circle_ vs _static angled rect_
+  - Start mdx description of simplified algorithm
+    > axis aligned square vs 4-gon
 
 - 🚧 Performance
   - ✅ Remove YouTube from SSR via facade
@@ -31,7 +43,6 @@
   - Adjust Intro
 
 - Connect Dev Env to Chrome (breakpoints)
-- Thinner symbol doors
 - Make homepage CSS video 
 
 - ✅ anim.sprites also has initial delay to preserve sprite duration modification
@@ -53,13 +64,6 @@
   - ✅ `roomUi` -> `localDecor` wraps NPCs toggleLocalDecor
   - ✅ `localDecor` shows initially and hides on termination
   - when `idle` can change to `sit`
-
-- Prefer _moving circle_ vs _static angled rect_
-  - decor seg -> rect
-  - Abandon _moving seg_ vs _static seg_ collision prediction
-    - ✅ Hide in debug mode
-    - Remove related code
-  - Start mdx description of algorithm
 
 - 🤔 Persist npc config?
 

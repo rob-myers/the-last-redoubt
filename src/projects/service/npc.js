@@ -484,8 +484,8 @@ export function verifyDecor(input) {
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':
       return Vect.isVectJson(input) && ['function', 'undefined'].includes(typeof input.onClick);
-    case 'seg':
-      return Vect.isVectJson(input.src) && Vect.isVectJson(input.dst);
+    case 'rect':
+      return [input.x, input.y, input.width, input.height].every(x => Number.isFinite(x));
     default:
       throw testNever(input, { override: `decor has unrecognised type: ${JSON.stringify(input)}` });
   }

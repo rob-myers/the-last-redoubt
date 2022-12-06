@@ -290,7 +290,7 @@ declare namespace NPC {
     | { type: 'circle' } & Geom.Circle
     | { type: 'path'; path: Geom.VectJson[]; }
     | DecorPoint
-    | { type: 'seg' } & Geom.Seg
+    | { type: 'rect' } & Geom.RectJson
   );
   
   /** Using `action` instead of `key` to avoid name-collision */

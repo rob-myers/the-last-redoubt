@@ -44,7 +44,7 @@ export const cssName = {
   decorCircle: 'decor-circle',
   decorPath: 'decor-path',
   decorPoint: 'decor-point',
-  decorSeg: 'decor-seg',
+  decorRect: 'decor-rect',
   
   npc: 'npc',
   npcBody: 'body',

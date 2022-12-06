@@ -23,8 +23,7 @@ npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius
 npc decor foo
 echo foo | npc decor
 
-# 🚧 seg -> rect
-npc decor '{ key: "bar", type: "seg", src: {"x":207.83,"y":384.43}, dst: {"x":227.83,"y":384.43} }'
+npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'
 
 npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96,"tags":["no-ui"], onClick: (x, y) => { console.log("foobar", x, y); y.npcs.writeToTtys("wahoo!"); } }'
 ```

@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
-import { circleToCssTransform, lineSegToCssTransform, pointToCssTransform } from "../service/dom";
+import { circleToCssTransform, pointToCssTransform, rectToCssTransform } from "../service/dom";
 import DecorPath from "./DecorPath";
 
 /**
@@ -44,14 +44,14 @@ export default function Decor({ decor, api }) {
                 }}
               />
             );
-          case 'seg':
+          case 'rect':
             return (
               <div
                 key={key}
                 data-key={item.key}
-                className={cx(cssName.decorSeg, cssSeg)}
+                className={cx(cssName.decorRect, cssRect)}
                 style={{
-                  transform: lineSegToCssTransform(item),
+                  transform: rectToCssTransform(item),
                 }}
               />
             );
@@ -66,27 +66,27 @@ export default function Decor({ decor, api }) {
 
 const cssCircle = css`
   position: absolute;
-  background-color: #ff444488;
   width: 1px;
   height: 1px;
   transform-origin: center;
   border-radius: 50%;
+  background-color: #ff444488;
 `;
 
 const cssPoint = css`
   position: absolute;
-  background-color: #fff;
   width: 5px;
   height: 5px;
   transform-origin: center;
   border-radius: 50%;
+  background-color: #fff;
   outline: 1px solid rgba(0, 100, 0, 0.5);
 `;
 
-const cssSeg = css`
+const cssRect = css`
   position: absolute;
-  /* z-index: 1; */
   width: 1px;
-  border-top: 1px solid green;
+  height: 1px;
   transform-origin: left top;
+  background-color: #6666ff88;
 `;

@@ -11,7 +11,7 @@ import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, getNumericCssVar } from "../service/dom";
+import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, cssTransformToRect, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -290,7 +290,6 @@ export default function NPCs(props) {
       const localPoint = inverseMatrix.transformPoint(Vect.from(p));
       return navPoly.some(poly => poly.contains(localPoint));
     },
-    // 🚧 `npc remove foo` `npc rm foo`
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
@@ -337,7 +336,7 @@ export default function NPCs(props) {
           return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
-          e.items.forEach(decorKey => delete state.decor[decorKey])
+          e.items?.forEach(decorKey => delete state.decor[decorKey])
           update();
           break;
         case 'set-player':
@@ -581,11 +580,11 @@ export default function NPCs(props) {
             update();
           }
         }
-        if (el.classList.contains(cssName.decorSeg)) {
+        if (el.classList.contains(cssName.decorRect)) {
           if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'seg' }} */ (state.decor[decorKey]);
-            const { src, dst } = cssTransformToLineSeg(el);
-            [decor.src, decor.dst] = [src, dst];
+            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
+            const rectJson = cssTransformToRect(el);
+            Object.assign(decor, rectJson);
             update();
           }
         }

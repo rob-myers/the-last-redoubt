@@ -149,6 +149,13 @@ export function lineSegToCssTransform(seg) {
 }
 
 /**
+ * @param {Geom.RectJson} rect 
+ */
+export function rectToCssTransform(rect) {
+	return `translate(${rect.x}px, ${rect.y}px) scale(${rect.width}, ${rect.height})`;
+}
+
+/**
  * @param {HTMLElement} el
  * @returns {Geom.Circle}
  */
@@ -196,17 +203,29 @@ export function cssTransformToPoint(el) {
 	return pointCache[cacheKey] = { x: matrix.e, y: matrix.f };
 }
 
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.RectJson}
+ */
+export function cssTransformToRect(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in rectCache) {
+		return rectCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return rectCache[cacheKey] = { x: matrix.e, y: matrix.f, width: matrix.a, height: matrix.d };
+}
+
 let tmpVec = new Vect;
 
 /** @type {{ [cssTransformValue: string]: Geom.Circle }} */
 const circleCache = {};
-
 /** @type {{ [cssTransformValue: string]: Geom.Seg }} */
 const lineSegCache = {};
-
 /** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
 const pointCache = {};
-
+/** @type {{ [cssTransformValue: string]: Geom.RectJson }} */
+const rectCache = {};
 
 //#endregion
 
