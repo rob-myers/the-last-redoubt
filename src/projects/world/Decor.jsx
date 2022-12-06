@@ -49,6 +49,7 @@ export default function Decor({ decor, api }) {
               <div
                 key={key}
                 data-key={item.key}
+                data-tags="no-ui"
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
                   transform: rectToCssTransform(item),
@@ -88,5 +89,5 @@ const cssRect = css`
   width: 1px;
   height: 1px;
   transform-origin: left top;
-  background-color: #6666ff88;
+  background-color: #7700ff22;
 `;

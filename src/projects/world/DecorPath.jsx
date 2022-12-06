@@ -33,7 +33,7 @@ import { cssName } from "../service/const";
         >
           <g style={{ transform: `translate(${-aabb.x}px, ${-aabb.y}px)` }}>
             <polyline
-              fill="none" stroke="#88f" strokeDasharray="2 2" strokeWidth={1}
+              fill="none" stroke="#5555ff" strokeDasharray="2 2" strokeWidth={1}
               points={props.decor.path.map(p => `${p.x},${p.y}`).join(' ')}
             />
           </g>
