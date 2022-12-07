@@ -26,10 +26,14 @@ import { RoadWorksIcon } from "components/page/Icon";
 import SideNote from "components/page/SideNote";
 import Video from "components/page/Video";
 
+<Aside title="rewrite">
+  <RoadWorksIcon bottom /> This page is being completely rewritten. <RoadWorksIcon bottom />
+</Aside>
+
 ## Our Setup <RoadWorksIcon/>
 
-To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting, storyline and influences.
-We'll now explain how everything fits together.
+{/* To [kick things off](/intro) we described our motivation (Game AI), outlined our approach to building/directing the video game, and specified our setting, storyline and influences.
+We'll now explain how everything fits together. */}
 
 If you [try running the video game](/#demo) with the Network tab open,
 you'll see a PNG and JSON for each geomorph.<SideNote>A _Network tab_ can be viewed [on a mobile](/assets/pics/demo-network-devtools-mobile.png "@new-tab") via [Eruda](https://github.com/liriliri/eruda)</SideNote>
@@ -55,14 +59,14 @@ They are themselves created from many individual assets, which we call _symbols_
 
 ### 1. Symbols
 
-The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
+{/* The Last Redoubt is a gigantic pyramid housing the remainder of humanity.
 Excluding the [Underground Fields](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=in%20the%20lowest%20tier%20of%20the%20Underground%20Fields%2C "@new-tab") it has [1,320 floors](https://www.gutenberg.org/cache/epub/10662/pg10662.html#:~:text=thousand%20three%20hundred%20and%20twenty%20floors "@new-tab"), each corresponding to a single city.
 We only show one floor at a time - although multiple are possible via [CSS perspective](https://developer.mozilla.org/en-US/docs/Web/CSS/perspective).
 Then:
 
 1. We need graphical assets (to represent the cities).
 2. We need lots of assets (for 1,320 large cities).
-3. We need ways of reusing assets (for feasibility).
+3. We need ways of reusing assets (for feasibility). */}
 
 These problems are solved by Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html).
 
@@ -70,10 +74,10 @@ These problems are solved by Robert Pearce's [Starship Geomorphs](http://travell
 > 2. There are more than 2000 in [PNG format](http://ericbsmith.no-ip.org/geomorphs/), e.g. [an office](/assets/symbol/office--020--2x3.png "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.png "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.png "@new-tab").
 > 3. They can be used to reconstruct the 600+ _Starship Geomorphs_, themselves combinable in [countless ways](http://ericbsmith.no-ip.org/images/Geomorphs/LuxuryLiner/Luxury_Liner_Square_Deck_1_Dance_And_Dining.png "@new-tab").
 
-In particular, we can create the Last Redoubt's cities by combining geomorphs.
+{/* In particular, we can create the Last Redoubt's cities by combining geomorphs.
 Now, cities have e.g. doors, walls and walkable areas.
 To infer these from our "atomic symbols" we'll use [SVGs](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics).
-That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/assets/symbol/office--020--2x3.svg "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab").
+That is, for each `{symbol}.png` we create a `{symbol}.svg`  e.g. [an office](/assets/symbol/office--020--2x3.svg "@new-tab"), [a bedroom](/assets/symbol/stateroom--020--2x3.svg "@new-tab"), [a couch](/assets/symbol/couch-and-chairs--006--0.4x2.svg "@new-tab"). */}
 
 <aside title="symbol-svg-progress">
 
