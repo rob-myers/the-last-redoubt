@@ -2,20 +2,25 @@ import { Link } from "gatsby";
 import React from "react";
 import { css } from "@emotion/css";
 
-import type { FrontMatterProps } from "./Root";
+import { siteTitle } from "projects/service/const";
 import useSiteStore from "store/site.store";
+import type { FrontMatterProps } from "./Root";
 import Icon from "./Icon";
 
 export default function NavItems({ frontmatter }: FrontMatterProps) {
 
   const groupedMetas = useSiteStore(x => x.groupedMetas);
+  const tabIndex = useSiteStore(x => x.navOpen ? undefined : -1);
 
   return (
     <section className={rootCss}>
 
       <h3>
-        <Link to="/">
-          The Last Redoubt
+        <Link
+          to="/"
+          tabIndex={tabIndex}
+        >
+          {siteTitle}
         </Link>
       </h3>
 
@@ -29,6 +34,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
               <Link
                 to={meta.path}
                 title={meta.info}
+                tabIndex={tabIndex}
               >
                 {meta.label}
               </Link>
@@ -37,6 +43,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
                 <Link
                   to={meta.path}
                   title={meta.info}
+                  tabIndex={tabIndex}
                 >
                   <NavIcon icon={meta?.icon} />
               </Link>
@@ -59,9 +66,13 @@ const rootCss = css`
   h3 {
     letter-spacing: 2px;
     padding: 16px 12px;
+    margin: 0;
+    margin-left: 4px;
+
+    font-family: 'Courier New', Courier, monospace;
     font-size: 1.4rem;
     font-weight: 300;
-    margin: 0;
+
     a {
       color: #ddd;
     }

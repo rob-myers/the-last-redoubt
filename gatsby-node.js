@@ -1,3 +1,6 @@
+const { createFilePath } = require(`gatsby-source-filesystem`)
+
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @param {import('gatsby').CreateWebpackConfigArgs} opts */
 exports.onCreateWebpackConfig = (opts) => {
 
@@ -16,6 +19,9 @@ exports.onCreateWebpackConfig = (opts) => {
       ],
     },
     resolve: {
+      alias: {
+        'cheerio': false, // null-loader
+      },
       fallback: {
         'fs': false,
         'path': false,
@@ -43,4 +49,21 @@ exports.createPages = async function ({ actions: { createPage }, reporter }) {
     component: NotFoundPageTemplate,
   });
 
+}
+
+/**
+ * @type {import('gatsby').GatsbyNode['onCreateNode']}
+ */
+ exports.onCreateNode = ({ node, actions, getNode }) => {
+  const { createNodeField } = actions
+
+  if (node.internal.type === `Mdx`) {
+    const value = createFilePath({ node, getNode })
+
+    createNodeField({
+      name: `slug`,
+      node,
+      value,
+    })
+  }
 }

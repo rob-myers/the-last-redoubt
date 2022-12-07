@@ -1,9 +1,9 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, killError as killError, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { ansiColor, computeNormalizedParts, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
-import { getProcessStatusIcon, ReadResult, preProcessRead } from './io';
+import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
 import useSession, { ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
@@ -99,13 +99,18 @@ class cmdServiceClass {
       }
       case 'declare': {
         const { opts, operands } = getOpts(args, { boolean: [
-          'f', // list functions
-          'x', // list variables (everything is exported)
+          'f', // list functions [matching prefixes]
+          'F', // list function names [matching prefixes]
+          'x', // list variables [matching prefixes]
+          'p', // list variables [matching prefixes]
         ], });
 
-        const showVars = opts.x === true || !opts.f;
-        const showFunc = opts.f === true || !opts.x;
-        const prefixes = operands.length ? operands : null;
+        const noOpts = [opts.x, opts.p, opts.f, opts.F].every(opt => opt !== true);
+        const showVars = opts.x === true || opts.p === true || noOpts;
+        const showFuncs = opts.f === true || noOpts;
+        const showFuncNames = opts.F === true;
+        // Only match prefixes when some option specified
+        const prefixes = operands.length && !noOpts ? operands : null;
 
         const {
           var: home,
@@ -125,13 +130,18 @@ class cmdServiceClass {
             }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
           }
         }
-
-        if (showFunc) {
+        if (showFuncs) {
           for (const { key, src } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
             const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
             for (const line of lines) yield line;
             yield '';
+          }
+        }
+        if (showFuncNames) {
+          for (const { key } of funcs) {
+            if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            yield `declare -f ${key}${ansiColor.White}`;
           }
         }
         break;
@@ -207,10 +217,7 @@ class cmdServiceClass {
             } else {
               p.status = ProcessStatus.Killed;
               // Avoid immediate clean because it stops `sleep` (??)
-              window.setTimeout(() => { 
-                p.cleanups.forEach(cleanup => cleanup());
-                p.cleanups.length = 0;
-              });
+              window.setTimeout(() => killProcess(p));
             }
           });
         }
@@ -355,8 +362,9 @@ class cmdServiceClass {
         } else {
           // We cache scripts
           const parsed = parseService.parse(script, true);
-          // We clone meta; pid will be overwritten in `ttyShell.spawn`
-          parsed.meta = { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() };
+          // We mutate `meta` because it may occur many times deeply in tree
+          // Also, pid will be overwritten in `ttyShell.spawn`
+          Object.assign(parsed.meta, { ...meta, fd: { ...meta.fd }, stack: meta.stack.slice() });
           const { ttyShell } = useSession.api.getSession(meta.sessionKey);
           // We spawn a new process (unlike bash `source`), but we don't localize PWD
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });
@@ -385,7 +393,8 @@ class cmdServiceClass {
         }
         break;
       }
-      default: throw testNever(command);
+      default:
+        throw testNever(command, { suffix: 'runCmd' });
     }
   }
 
@@ -520,7 +529,8 @@ class cmdServiceClass {
         } else if (key === 'args') {
           return posPositionals;
         } else if (key === '_') {// Can _ from anywhere e.g. inside root
-          return session.var._;
+          const lastValue = session.var._;
+          return isProxy(lastValue) ? dataChunk([lastValue]) : lastValue;
         }
         return (_ as any)[key];
       },
@@ -637,7 +647,10 @@ async function *sleep(meta: Sh.BaseMeta, seconds = 1) {
   // If process continually re-sleeps, avoid many cleanups
   removeFirst(process.cleanups, cleanup);
 }
-
+/**
+ * Can prefix with `throw` for static analysis.
+ * The outer throw will never be thrown.
+ */
 function throwError(message: string, exitCode?: number) {
   throw new ShError(message, exitCode || 1);
 }

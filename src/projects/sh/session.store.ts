@@ -2,7 +2,7 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { ansiColor, computeNormalizedParts, resolveNormalized, ShError } from './util';
+import { ansiColor, computeNormalizedParts, killProcess, resolveNormalized, ShError } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
@@ -48,7 +48,7 @@ export type State = {
      * Returns global line number of written message,
      * i.e. the 1-based index over all lines ever output in session's tty.
      */
-    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean }) => Promise<number>;
+    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean }) => Promise<void>;
   }
 }
 
@@ -281,10 +281,7 @@ const useStore = create<State>()(devtools((set, get) => ({
       if (session) {
         const { process, ttyShell } = get().session[sessionKey];
         ttyShell.dispose();
-        for (const { cleanups } of Object.values(process)) {
-          cleanups.forEach(cleanup => cleanup());
-          cleanups.length = 0;
-        }
+        Object.values(process).forEach(killProcess);
         delete get().device[ttyShell.key];
         set(({ session }) => ({ session: removeFromLookup(sessionKey, session) }));
       } else {
@@ -359,17 +356,16 @@ const useStore = create<State>()(devtools((set, get) => ({
     async writeMsgCleanly(sessionKey, msg, opts) {
       const { xterm } = api.getSession(sessionKey).ttyShell;
       xterm.prepareForCleanMsg();
-      const lineNumber = await new Promise<number>(resolve => {
+      await new Promise<void>(resolve => {
         xterm.queueCommands([
           { key: 'line', line: `${msg}${ansiColor.Reset}` },
-          { key: 'resolve', resolve: () => resolve(xterm.totalLinesOutput) }
+          { key: 'resolve', resolve },
         ])
       });
       setTimeout(() => {
         (opts?.prompt??true) && xterm.showPendingInput();
         xterm.xterm.scrollToBottom();
       });
-      return lineNumber;
     },
   },
 
@@ -380,6 +376,6 @@ const useSessionStore = Object.assign(useStore, { api });
 
 export default useSessionStore;
 
-if (module.hot) {// Avoid breaking preact-prefresh
-  module.hot.accept();
-}
+// if (module.hot) {// Avoid breaking preact-prefresh
+//   module.hot.accept();
+// }

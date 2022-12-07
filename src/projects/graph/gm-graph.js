@@ -507,7 +507,8 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * The only way a gmGraph is constructed.
+   * The only way a
+   * @see {gmGraphClass} is constructed.
    * @param {Geomorph.GeomorphDataInstance[]} gms 
    */
   static fromGms(gms) {

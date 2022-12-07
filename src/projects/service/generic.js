@@ -258,11 +258,12 @@ export function safeStringify(input) {
 
 /**
  * Usage `default: throw testNever(x)`.
- * @param {never} x 
+ * @param {never} x
+ * @param {{ override?: string; suffix?: string }} [opts]
  * @returns {string}
  */
-export function testNever(x, message = `testNever: ${pretty(x)} not implemented.`) {
-  return message;
+export function testNever(x, opts) {
+  return (opts?.override)??`testNever: ${pretty(x)} not implemented${opts?.suffix ? ` (${opts.suffix})` : ''}`;
 }
 
 /**

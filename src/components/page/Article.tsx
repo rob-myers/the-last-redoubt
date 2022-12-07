@@ -1,6 +1,7 @@
 import { Link } from 'gatsby';
 import React from 'react';
 import { css, cx } from '@emotion/css'
+import type { MDXComponents } from 'mdx/types';
 import { MDXProvider } from '@mdx-js/react';
 
 import { getTabsId } from 'model/tabs/tabs.model';
@@ -9,6 +10,7 @@ import { cssName } from 'projects/service/const';
 
 import { pre, vscDarkPlusCss } from './CodeBlock';
 import Icon from './Icon';
+import InlineCode from './InlineCode';
 
 export default function Article(props: React.PropsWithChildren<{
   className?: string;
@@ -17,22 +19,12 @@ export default function Article(props: React.PropsWithChildren<{
 }>) {
 
   const { frontmatter } = props;
+  const { dateTime, tags } = computeDateAndExtendTags(frontmatter);
 
-  const dateText = React.useMemo(() => {
-    const d = frontmatter ? new Date(frontmatter.date) : new Date;
-    return `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
-  }, []);
-
-  const components = React.useMemo(() =>
-    Object.assign(
-      articleComponents(frontmatter.key as any, {
-        dateTime: frontmatter.date,
-        tags: [dateText].concat(frontmatter.tags),
-      }),
+  const components = React.useMemo(() => Object.assign(
+      articleComponents(frontmatter.key, { dateTime, tags }),
       { pre },
-    ),
-    [frontmatter.tags],
-  );
+  ), [frontmatter.tags]);
 
   return (
     <article className={cx(
@@ -88,10 +80,8 @@ const articleCss = css`
   }
 
   aside {
-    margin: 48px 0 32px 0;
+    margin: calc(64px + 8px) 0;
     padding: 32px 64px;
-    font-size: 0.9rem;
-    /* font-style: italic; */
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
@@ -102,9 +92,6 @@ const articleCss = css`
     }
     p + blockquote, blockquote + p {
       margin-top: 0px;
-    }
-    code {
-      font-size: inherit;
     }
 
     position: relative;
@@ -123,7 +110,7 @@ const articleCss = css`
     }
 
     @media(max-width: 600px) {
-      margin: 24px 0 16px 0;
+      margin: 32px 0 24px 0;
       padding: 16px 24px;
       line-height: 1.8;
       border: thin solid var(--page-border-color);
@@ -162,31 +149,34 @@ const articleCss = css`
 
   code {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1rem;
-    padding: 2px 0;
-    margin-right: 2px;
-    @media(max-width: 600px) {
-      font-size: 1.1rem;
-    }
+  }
+  code + span.side-note {
+    top: 0;
   }
 
   figure.carousel {
-    margin: 40px 0 40px 0;
+    margin: 0 0 24px 0;
     padding: 0;
     /**
      * max-width 600px causes difficulty with
      * swiper carousel breakpoints
      */
     @media(max-width: 800px) {
-      margin: 28px 0 24px 0;
+      margin: 0px 0 16px 0;
       padding: 0;
     }
   }
+  @media(max-width: 800px) {
+    /* 🚧 restrict elements? */
+    * + figure.carousel {
+      margin-top: -20px;
+    }
+  }
 
-  figure.tabs, figure.video {
+  figure.tabs {
     margin: calc(40px + 32px) 0 40px 0;
     /* padding: 64px; */
-    border: 1px solid var(--page-border-color);
+    /* border: 1px solid var(--page-border-color); */
     @media(max-width: 600px) {
       border: none;
       margin: calc(32px + 16px) 0 24px 0;
@@ -197,12 +187,6 @@ const articleCss = css`
     /* margin: calc(40px + 16px) 0 40px 0; */
     @media(max-width: 600px) {
       margin: calc(24px + 20px) 0 20px 0;
-    }
-  }
-  blockquote + figure.video, p + figure.video {
-    margin: 32px 0 40px 0;
-    @media(max-width: 600px) {
-      margin: 20px 0 20px 0;
     }
   }
 
@@ -256,8 +240,7 @@ const articleCss = css`
       background-color: #000;
     }
 
-    /** 1st tag should be date */
-    > span:first-child {
+    > span:first-child.date {
       border-color: #aaa;
       padding: 2px 16px;
       text-align: center;
@@ -409,17 +392,17 @@ const articleCss = css`
 const articleComponents = (
   articleKey: string,
   meta: {
-    dateTime: string;
+    dateTime?: string;
     tags: string[];
   },
-) => ({
+): MDXComponents => ({
 
-  a({ node, href, title, children, ...props}: {
-    href: string;
-    title: string;
-    children: any;
-    node: any;
-  }) {
+  a({ href, title, children, ...props}) {
+
+    if (!href) {
+      console.error(`a (${JSON.stringify({ title, ...props })}) lacks href and won't be rendered`);
+      return null;
+    }
 
     if (title === '@new-tab') {
       // New tab link
@@ -445,7 +428,7 @@ const articleComponents = (
           title={title}
           onClick={async (e) => {
             e.preventDefault();
-            const [cmd, ...args] = title.split(' ');
+            const [cmd, ...args] = title?.split(' ')??[];
 
             switch (cmd) {
               case 'open-tab': {
@@ -499,7 +482,7 @@ const articleComponents = (
 
   },
 
-  aside({ node, children, title, ...props }: any) {
+  Aside({ node, children, title, ...props }: any) {
     const id = getAsideId(title);
     return (
       <aside {...props}>
@@ -510,6 +493,10 @@ const articleComponents = (
         {children}
       </aside>
     );
+  },
+
+  code({ children }) {
+    return <InlineCode>{children}</InlineCode>;
   },
 
   /** Occurs once in each article */
@@ -524,7 +511,14 @@ const articleComponents = (
         dateTime={meta.dateTime}
       />
       <div className="tags" title="tags">
-        {meta.tags.map(tag => <span className="tag" key={tag}>{tag}</span>)}
+        {meta.tags.map((tag, i) =>
+          <span
+            key={tag}
+            className={i === 0 && meta.dateTime ? "tag date" : "tag"}
+          >
+            {tag}
+          </span>)
+        }
       </div>
     </>;
   },
@@ -551,7 +545,7 @@ const articleComponents = (
         </Link>
       </h4>
     );
-  }
+  },
 
 });
 
@@ -597,4 +591,15 @@ function getAsideId(
   asideName: string,
 ) {
   return `aside--${asideName}`;
+}
+
+function computeDateAndExtendTags(fm: FrontMatter) {
+  const d = new Date(fm?.date);
+  const dateText = `${d}` !== 'Invalid Date'
+    ? `${d.getDate()}${dayth(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`
+    : undefined;
+  return {
+    dateTime: dateText ? fm.date: undefined,
+    tags: dateText ? [dateText].concat(fm.tags) : fm.tags,
+  };
 }

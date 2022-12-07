@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, no-useless-escape, require-yield, @typescript-eslint/ban-ts-comment */
 /**
  * This file is loaded via webpack `raw-loader` to avoid function transpilation.
  * 
@@ -119,8 +119,8 @@
   const gameFunctionsRunDefs = [
   {
   
-    /** Ping per second until query WORLD_KEY found */
-    'awaitWorld': async function* ({ api, home: { WORLD_KEY } }) {
+    /** Ping per second until query {WORLD_KEY} found */
+    awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
       const ansiColor = api.getColors();
       const { sessionKey } = api.getProcess();
   
@@ -134,7 +134,7 @@
       if (!npcs.session[sessionKey]) {
         npcs.session[sessionKey] = { key: sessionKey, receiveMsgs: true, tty: {} };
       }
-      api.info(`found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
+      api.info(`${ansiColor.White}found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
     },
     
     /**
@@ -145,7 +145,7 @@
     click: async function* ({ api, args, home }) {
       let numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
       if (!Number.isFinite(numClicks)) {
-        api.throwError("format: \`click [{numberOfClicks}] [!]\`")
+        throw api.throwError("format: \`click [{numberOfClicks}] [!]\`")
       }
 
       const { npcs, panZoom } = api.getCached(home.WORLD_KEY)
@@ -226,21 +226,64 @@
       }
     },
   
-    /** npc {action} [{opts}] */
-    npc: async function* ({ api, args, home }) {
+    /** npc {action} [{opts}] [{args}] */
+    npc: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const action = args[0]
-      let opts = api.parseJsArg(args[1]);
 
-      if (typeof opts === "string") {
-        ["add-decor", "remove-decor", "rm-decor"].includes(action) && (opts = { decorKey: opts });
-        ["cancel", "get", "pause", "play", "set-player"].includes(action) && (opts = { npcKey: opts });
-      }
-      if (action === "config") {
-        opts = { ...{ debug: !!home.DEBUG }, ...opts };
+      if (typeof action !== "string" || action === "") {
+        throw api.throwError("first arg {action} must be a non-empty string")
+      } else if (!npcs.service.isNpcActionKey(action)) {
+        throw api.throwError("first arg {action} must be a valid key")
       }
 
-      yield await npcs.npcAct({ action, ...opts })
+      if (api.isTtyAt(0)) {
+        const opts = npcs.service.normalizeNpcCommandOpts(
+          action,
+          api.parseJsArg(args[1]),
+          args.slice(2).map(arg => api.parseJsArg(arg)),
+        );
+        yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+      } else {
+        while ((datum = await api.read()) !== null) {
+          const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
+          yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+        }
+      }
+
+    },
+
+    localDecor: async function* ({ api, home }) {
+      const { npcs, gmGraph } = api.getCached(home.WORLD_KEY)
+      const process = api.getProcess()
+      const tracked = /** @type {{ [decorKey: string]: true }} */ ({});
+      const cbFactory = /** @type {import('../world/NPCs').ToggleLocalDecorOpts['cbFactory']} */
+        (tags) => (_decor, { npcs }) => // Currently just log out tags
+          npcs.writeToTtys(`ℹ️  ${api.getColors().White}tags: ${JSON.stringify(tags??[])}${api.getColors().Reset}`)
+      ;
+
+      const player = npcs.getPlayer() // initialisation
+      const init = player ? gmGraph.findRoomContaining(player.getPosition()) : null
+      init && npcs.toggleLocalDecor({ act: "add", gmId: init.gmId, roomId: init.roomId, tracked, cbFactory })
+
+      const subscription = npcs.events.subscribe(e => {
+        if (e.key === "way-point" && e.npcKey === npcs.playerKey && process.status === 1) {
+          if (e.meta.key === "enter-room") {// add ui points
+            npcs.toggleLocalDecor({ act: "add", gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, tracked, cbFactory })
+          } else if (e.meta.key === "exit-room") {// remove ui points
+            npcs.toggleLocalDecor({ act: "remove", gmId: e.meta.gmId, roomId: e.meta.exitedRoomId, tracked })
+          }
+        }
+      })
+      await /** @type {Promise<void>} */ (new Promise(resolve =>
+        process.cleanups.push(
+          () => {
+            npcs.npcAct({ action: "rm-decor", items: Object.keys(tracked) })
+            subscription.unsubscribe()
+          },
+          resolve,
+        )
+      ))
     },
   
     /**
@@ -300,7 +343,7 @@
       const npcKey = args[0]
   
       const process = api.getProcess()
-      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => {}))
+      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
       process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
       process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "play" }); return true; })
   
@@ -353,7 +396,7 @@
   function wrap(fn) {
     return `{
       run '${fnToSuffix(fn)}' "$@"
-    }`
+}`
   }
   
   /**
@@ -362,12 +405,12 @@
    */
   function fnToSuffix(fn) {
     switch (fn.constructor.name) {
-      case 'GeneratorFunction':
-        return `${fn}`.slice('function* '.length)
-      case 'AsyncGeneratorFunction':
-        return `${fn}`.slice('async function* '.length)
+      case "GeneratorFunction":
+        return `${fn}`.slice("function* ".length)
+      case "AsyncGeneratorFunction":
+        return `${fn}`.slice("async function* ".length)
       default:
-        return `${fn}`.slice('function '.length);
+        return `${fn}`.slice("function ".length);
     }
   }
   

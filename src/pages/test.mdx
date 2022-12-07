@@ -1,6 +1,6 @@
 ---
 key: test
-date: 2022-05-22
+date: 2022-??-??
 icon: 🧪
 giscusTerm: /test
 info: Test page
@@ -28,13 +28,14 @@ import { profileLookup } from "projects/sh/scripts";
       { type: 'component', filepath: 'world-demo-1' },
       { type: 'component', filepath: 'world-demo-2' },
       { type: 'component', filepath: 'example/SvgNavGraph#301' },
+      // 🚧 do not use jsx comments here
       // { type: 'component', filepath: 'geomorph/GeomorphEdit' },
     ],
     [
-      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-b']() } },
       { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
+      { type: 'terminal', filepath: 'demo-3@test', env: { PROFILE: profileLookup['profile-0']() } },
       // { type: 'component', filepath: 'example/SvgStringPull' },
-      // { type: 'component', filepath: 'example/LightsTest' }, // ISSUE 🚧
       // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
       // { type: 'component', filepath: 'example/Pyramid3dDemo' },
       // { type: 'component', filepath: 'example/TriangleDev#301' },
@@ -46,7 +47,8 @@ import { profileLookup } from "projects/sh/scripts";
   ]}
 />
 
-<Tabs
+
+{/* <Tabs
   id="geomorph-edit-tabs"
   initEnabled={false}
   height={600}
@@ -58,7 +60,7 @@ import { profileLookup } from "projects/sh/scripts";
     ],
     [],
   ]}
-/>
+/> */}
 
 
 ```jsx

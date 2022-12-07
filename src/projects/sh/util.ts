@@ -1,6 +1,6 @@
 import braces from 'braces';
 import { last } from '../service/generic';
-import type { ProcessMeta } from './session.store';
+import { ProcessMeta, ProcessStatus } from './session.store';
 import { SigEnum } from './io';
 import type * as Sh from './parse';
 
@@ -120,6 +120,13 @@ export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number) {
     meta.sessionKey,
     exitCode,
   );
+}
+
+export function killProcess(p: ProcessMeta) {
+  // console.log('KILLING', p.key, p.src);
+  p.status = ProcessStatus.Killed;
+  p.cleanups.forEach(cleanup => cleanup());
+  p.cleanups.length = 0;
 }
 
 export function resolvePath(path: string, root: any, pwd: string) {

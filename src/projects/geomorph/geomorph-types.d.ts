@@ -129,10 +129,12 @@ declare namespace Geomorph {
       default: Vect;
       /** Can specify light position from room through door */
       doorLight: { [doorId?: number]: { point: Vect; tags: string[]; } };
-      /** `labels` inside room. */
+      /** `labels` inside room */
       labels: LayoutLabel[];
-      /** Spawn points inside room. */
-      spawn: Vect[];
+      /** Spawn points inside room */
+      spawn: { point: Vect; tags: string[] }[];
+      /** User Interactive points inside room */
+      ui: { point: Vect; tags: string[] }[];
       /** Can specify light position from room through window */
       windowLight: { [windowId?: number]: Vect };
     }[];
@@ -271,8 +273,11 @@ declare namespace Geomorph {
     | 'lifeboat--small-craft'
     | 'lab--012--3x4'
     | 'lab--018--4x4'
+    | 'lab--023--4x4'
+    | 'lab--030--1x3'
     | 'lounge--009--2x3'
     | 'lounge--015--2x4'
+    | 'lounge--017--2x4'
     | 'low-berth--003--1x1'
     | 'machinery--001--0.4x1'
     | 'machinery--020--1x1.6'
@@ -296,6 +301,7 @@ declare namespace Geomorph {
     | 'office--025--2x3'
     | 'office--026--2x3'
     | 'office--061--3x4'
+    | 'office--074--4x4'
     | 'office--089--4x4'
     | 'sensors--003--1x1.4'
     | 'ships-locker--003--1x1'

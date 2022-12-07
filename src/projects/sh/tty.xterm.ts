@@ -1,6 +1,6 @@
 import type { Terminal } from 'xterm';
 import { ansiColor } from './util';
-import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk } from './io';
+import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
 
 /**
@@ -45,11 +45,6 @@ export class ttyXtermClass {
 
   /** Useful for mobile keyboard inputs */
   forceLowerCase = false;
-  /**
-   * Total number of lines output, excluding current possibly multi-line input.
-   * This makes sense because we monotonically output lines.
-   */
-  totalLinesOutput = 0;
   /**
    * History will be disabled during initial profile,
    * which is actually pasted into the terminal.
@@ -144,7 +139,6 @@ export class ttyXtermClass {
     this.cursorRow = 1;
 
     this.showPendingInput();
-    this.trackTotalOutput(+1);
   }
 
   /**
@@ -186,6 +180,22 @@ export class ttyXtermClass {
   forceResize() {
     this.xterm.resize(this.xterm.cols + 1, this.xterm.rows);
     this.xterm.resize(this.xterm.cols - 1, this.xterm.rows);
+  }
+
+  /**
+   * Get non-empty lines as lookup `{ [lineText]: true }`.
+   * ANSI codes are stripped (important for equality testing).
+   */
+  getLines() {
+    const activeBuffer = this.xterm.buffer.active;
+    return [...Array(activeBuffer.length)].reduce<Record<string, true>>(
+      (agg, _, i) => {
+        const line = activeBuffer.getLine(i)?.translateToString(true);
+        line && (agg[line] = true);
+        return agg;
+      },
+      {},
+    );
   }
 
   /**
@@ -458,6 +468,12 @@ export class ttyXtermClass {
       return this.queueCommands([{ key: 'line', line: `${ansiColor.Yellow}null${ansiColor.Reset}` }]);
     } else if (msg === undefined) {
       return;
+    } else if (isProxy(msg)) {
+      this.session.rememberLastValue(msg);
+      return this.queueCommands([{
+        key: 'line',
+        line: `${ansiColor.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansiColor.Reset}`,
+      }]);
     }
 
     switch (msg.key) {
@@ -518,9 +534,8 @@ export class ttyXtermClass {
            * The buffer length consists of the screen rows (on resize)
            * plus the scrollback.
            */
-          const {items} = (msg as DataChunk);
+          const {items} = msg as DataChunk;
           // Pretend we outputted them all
-          this.trackTotalOutput(+Math.max(0, items.length - 2 * scrollback));
           items.slice(-2 * scrollback).forEach(x => this.onMessage(x));
         } else {
           const stringified = safeStringify(msg);
@@ -542,6 +557,10 @@ export class ttyXtermClass {
   }
 
   async pasteLines(lines: string[], fromProfile = false) {
+    // Clear pending input which should now prefix `lines[0]`
+    this.clearInput();
+    this.xterm.write(this.prompt);
+
     for (const line of lines) {
       await new Promise<void>((resolve, reject) => {
         this.queueCommands([
@@ -621,7 +640,6 @@ export class ttyXtermClass {
         case 'line': {
           this.xterm.writeln(command.line);
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           numLines++;
           break;
         }
@@ -633,14 +651,12 @@ export class ttyXtermClass {
 
           this.xterm.write('\r\n');
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           this.sendLine();
           return;
         }
         case 'paste-line': {
           this.xterm.writeln(command.line);
           this.trackCursorRow(+1);
-          this.trackTotalOutput(+1);
           this.input = command.line;
           this.sendLine();
           return;
@@ -654,7 +670,7 @@ export class ttyXtermClass {
           this.promptReady = true;
           break;
         }
-        default: throw testNever(command);
+        default: throw testNever(command, { suffix: 'runCommands' });
       }
     }
 
@@ -796,11 +812,6 @@ export class ttyXtermClass {
     } else if (this.cursorRow > this.xterm.rows) {
       this.cursorRow = this.xterm.rows;
     }
-  }
-
-  private trackTotalOutput(delta: number) {
-    this.totalLinesOutput += delta;
-    // console.log(this.totalLinesOutput); // DEBUG
   }
 
   /**

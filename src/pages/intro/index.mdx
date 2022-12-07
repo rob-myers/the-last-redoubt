@@ -4,7 +4,7 @@ key: intro/
 path: /intro/
 info: Introduction
 label: intro
-icon: checked
+icon: road-works
 date: 2022-10-01
 navGroup: 0
 prev: null
@@ -27,13 +27,17 @@ import { profileLookup } from "projects/sh/scripts";
 
 ## Introduction
 
+<Aside title="rewrite">
+  <RoadWorksIcon bottom /> This page is being completely rewritten. <RoadWorksIcon bottom />
+</Aside>
+
 ### 1. Motivation
 
 What's this website about?
 
 > **Making Game AI** i.e. controlling [NPCs](https://en.wikipedia.org/wiki/Non-player_character) in video games.
 
-NPC stands for _Non-Player Character_ - 
+{/* NPC stands for _Non-Player Character_ - 
 every friendly or unfriendly character except for the Player.
 Their behaviour shapes the game, steadily drawing the Player into the fabrication.
 Then our motivation is **lacklustre NPC behaviour in modern video games**.
@@ -50,7 +54,7 @@ Call everything besides the Player the _environment_.
 It is controlled by the _Director_ (a fancy name we've given ourselves and the software agent we're creating).
 The Director controls the environment e.g. the NPCs, while the Player has certain freedoms within it.
 But the Director needs something to direct,
-so we must **create a game** to make meaningful Game AI.
+so we must **create a game** to make meaningful Game AI. */}
 
 <aside title="parallel-vs-player-xp">
 
@@ -71,8 +75,7 @@ so we must **create a game** to make meaningful Game AI.
 
 ### 2. Underlying Tech
 
-We're writing about Game AI and creating a game.
-Then it's natural to use web technologies, building the game right here on this site.
+It's natural to use web technologies, building the game right here on this site.
 But which ones?
 
 > We'll use **everyday web technology** e.g. [CSS](https://en.wikipedia.org/wiki/CSS), [React](https://en.wikipedia.org/wiki/React_(JavaScript_library)), [Node.js](https://en.wikipedia.org/wiki/Node.js).
@@ -104,12 +107,12 @@ export default function World(props) {
   }, []);
 
   return state.gmGraph.ready ? (
-    <CssPanZoom onLoad={/** ... */}>
+    <CssPanZoom onLoad>
       <Geomorphs api={state} />
-      <DebugWorld api={state} />
-      <NPCs api={state} onLoad={/** ... */} />
-      <FOV api={state} onLoad={/** ... */} />
-      <Doors api={state} onLoad={/** ... */} />
+      <DebugWorld api={state} onLoad />
+      <NPCs api={state} onLoad />
+      <FOV api={state} onLoad />
+      <Doors api={state} onLoad />
     </CssPanZoom>
   ) : null;
 }
@@ -120,9 +123,9 @@ export default function World(props) {
 ```
 
 
-### 3. Building the world
+### 3. Building worlds
 
-To create a game we must _create a world_.
+{/* To create a game we must _create a world_.
 A setting and characters are needed as guiding principles,
 although not necessarily as driving forces.
 
@@ -132,7 +135,7 @@ these names come from [The Night Land, A Story Retold](https://en.wikipedia.org/
 But how to fabricate this pyramid?
 How should we build The Last Redoubt?
 
-> Thankfully we've done the groundwork, as shown in the videos below.
+> Thankfully we've done the groundwork, as shown in the videos below. */}
 
 <Video videoKey="video--intro-first" />
 
@@ -200,7 +203,7 @@ We'll interact with the real McCoy in the next section.
 For those itching to see how it is built, check out [this CodeSandbox](https://codesandbox.io/s/tty-world-1-0s9wfl?file=/src/index.js "@new-tab").
 
 
-### 4. Directing the world
+{/* ### 4. Directing the world
 
 We've made progress towards _building_ a world.
 But what about _directing it_?
@@ -221,7 +224,7 @@ we'll modify the Player's experience e.g.
 
 This ongoing fabrication of the player's experience is _directing_.
 
-</aside>
+</aside> */}
 
 The [videos above](#video--intro-first) show a [_terminal_](https://xtermjs.org/ "@new-tab") (black window with mostly green text).
 We can type commands and press enter to run them.
@@ -230,7 +233,7 @@ and then interpreted by our own specially written interpreter.
 Collectively they convert POSIX-like commands into JavaScript and execute it.
 Then:
 
-<!-- > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, -->
+{/* > If Game AI (NPC behaviour) is the interaction between the Director (human-software amalgam) and the Player, */}
 > **we can direct by running commands in one or more terminals**.
 >
 > These commands may include scripts and long-running processes.
@@ -281,7 +284,6 @@ An extended example:
     ],
   ]}
   initHorizontal
-  // persistLayout
 />
 
 Let's try to understand some of the lines above.
@@ -316,7 +318,7 @@ We've recorded the above example on desktop and mobile.
 <Video videoKey="video--intro-world-tty" />
 
 
-### 5. Finished product
+{/* ### 5. Finished product
 
 Game developers are prone to a particular disease.
 They try to make a game but create a _game engine_ instead.
@@ -367,7 +369,7 @@ Then a level or scenario (part of a level) should be kept in mind.
 > Andros has just travelled through the first 1000 cities.
 > Cartesius encourages him to ordain into the 320 temples of the _Upper Pyramid_.
 > Andros and the other Novices begin by learning certain
-> hidden knowledge concerning the _Watchers_.
+> hidden knowledge concerning the _Watchers_. */}
 
 <aside title="articles-up-next">
 

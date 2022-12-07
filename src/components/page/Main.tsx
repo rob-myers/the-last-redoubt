@@ -31,6 +31,6 @@ export const rootCss = css`
   > main, > header {
     margin: 0 auto;
     width: 100%;
-    max-width: 1024px;
+    max-width: 900px;
   }
 `;

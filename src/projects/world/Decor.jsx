@@ -1,48 +1,93 @@
 import React from "react";
-import { Rect } from "../geom";
+import { css, cx } from "@emotion/css";
+import { testNever } from "../service/generic";
+import { cssName } from "../service/const";
+import { circleToCssTransform, pointToCssTransform, rectToCssTransform } from "../service/dom";
+import DecorPath from "./DecorPath";
 
-/** @param {{ item: NPC.DecorDef }} props  */
-export default function Decor({ item }) {
-  /** @type {Geom.Rect} */ let aabb;
-  /** @type {React.ReactNode} */ let child;
-
-  switch (item.type) {
-    case 'path':
-      aabb = Rect.fromPoints(...item.path).outset(10);
-      child = (
-        <g className="debug-path">
-          <polyline
-            fill="none" stroke="#88f" strokeDasharray="2 2" strokeWidth={1}
-            points={item.path.map(p => `${p.x},${p.y}`).join(' ')}
-          />
-          {item.path.map((p, i) => (
-            <circle key={i} fill="none" stroke="#ff444488" r={2} cx={p.x} cy={p.y} />
-          ))}
-        </g>
-      );
-      break;
-    case 'circle':
-      aabb = new Rect(item.center.x - item.radius, item.center.y - item.radius, item.radius * 2, item.radius * 2);
-      child = (
-        <circle
-          className="debug-circle"
-          cx={item.center.x}
-          cy={item.center.y}
-          r={item.radius}
-        />
-      );
-      break;
-    default:
-      console.error(`unexpected decor`, item);
-      // throw testNever(item);
-      return null;
-  }
-
+/**
+ * @param {{ decor: import('./NPCs').State['decor']; api: import('./World').State; }} props
+ */
+export default function Decor({ decor, api }) {
   return (
-    <svg width={aabb.width} height={aabb.height} style={{ left: aabb.x, top: aabb.y }}>
-      <g style={{ transform: `translate(${-aabb.x}px, ${-aabb.y}px)` }}>
-        {child}
-      </g>
-    </svg>
+    <div className="decor-root">
+      {Object.entries(decor).map(([key, item]) => {
+        switch (item.type) {
+          case 'circle':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                className={cx(cssName.decorCircle, cssCircle)}
+                style={{
+                  transform: circleToCssTransform(item),
+                }}
+              />
+            );
+          case 'path':
+            return (
+              <DecorPath
+                key={key}
+                decor={item}
+              />
+            );
+          case 'point':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                className={cx(cssName.decorPoint, cssPoint)}
+                onClick={item.onClick ? () => item.onClick?.(item, api) : undefined}
+                style={{
+                  transform: pointToCssTransform(item),
+                  cursor: item.onClick ? 'pointer' : 'initial',
+                }}
+              />
+            );
+          case 'rect':
+            return (
+              <div
+                key={key}
+                data-key={item.key}
+                data-tags="no-ui"
+                className={cx(cssName.decorRect, cssRect)}
+                style={{
+                  transform: rectToCssTransform(item),
+                }}
+              />
+            );
+          default:
+            console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
+            return null;
+        }
+      })}
+    </div>
   );
 }
+
+const cssCircle = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  transform-origin: center;
+  border-radius: 50%;
+  background-color: #ff444488;
+`;
+
+const cssPoint = css`
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  transform-origin: center;
+  border-radius: 50%;
+  background-color: #fff;
+  outline: 1px solid rgba(0, 100, 0, 0.5);
+`;
+
+const cssRect = css`
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  transform-origin: left top;
+  background-color: #7700ff22;
+`;

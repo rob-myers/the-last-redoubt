@@ -170,9 +170,9 @@ export function dataChunk(items: any[]): DataChunk {
   return { __chunk__: true, items };
 }
 
-export interface DataChunk {
+export interface DataChunk<T = any> {
   [dataChunkKey]: true;
-  items: any[];
+  items: T[];
 }
 //#endregion
 
@@ -245,6 +245,13 @@ interface SendHistoryLine {
   nextIndex: number;
 }
 
+
+/** `Proxy`s sent as messages should implement `msg[proxyKey] = true` */
+export const proxyKey = '__proxy__';
+/** `Proxy`s sent as messages should implement `msg[proxyKey] = true` */
+export function isProxy(msg: any): boolean {
+  return !!(msg && msg[proxyKey]);
+}
 
 //#endregion
 

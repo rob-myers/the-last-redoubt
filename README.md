@@ -1,8 +1,13 @@
-# The Last Redoubt
+# NPC CLI
 
 ```sh
 # Local development
 yarn dev
+
+# Check types
+yarn types
+# Lint
+yarn lint
 
 # Local build
 yarn build
@@ -15,6 +20,11 @@ npx http-server
 - [General dev info](/docs/DEV-INFO.md).
 
 ## Gotchas
+
+- `yarn` fails for node-canvas on Apple M1
+  ```sh
+  brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman
+  ```
 
 - MDX Frontmatter consistency
   > Given _Foo.mdx_ with `- next: bar`, _Bar.mdx_ needs `- pre: foo`.
@@ -30,3 +40,11 @@ npx http-server
   > e.g. `anim` instead of `this.anim` inside create-npc
 
 - Shell functions should avoid single-quotes `'` inside JavaScript function bodies.
+
+- DOMMatrix `{ a b c d e f }` corresponds to affine matrix:
+  > $$
+\begin{bmatrix}
+a & c & e \\
+b & d & f
+\end{bmatrix}
+$$

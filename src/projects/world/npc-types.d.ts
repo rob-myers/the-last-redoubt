@@ -20,9 +20,8 @@ declare namespace NPC {
     radius: number;
     defaultInteractRadius: number;
     speed: number;
-    /**
-     * @emotion/css
-     */
+    segs: Geom.Seg[];
+    /** @emotion/css */
     css: string;
   }
 
@@ -42,6 +41,8 @@ declare namespace NPC {
     };
     mounted: boolean;
     anim: NPCAnimData;
+    segs: (Geom.Seg & { transformStyle: string; })[];
+
     cancel(): Promise<void>;
     clearWayMetas(): void;
     /**
@@ -96,9 +97,10 @@ declare namespace NPC {
     play(): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
-    startAnimation(): void;
-    setLookTarget(radians: number): void;
+    setLookRadians(radians: number): void;
+    // setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
+    startAnimation(): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
@@ -137,6 +139,28 @@ declare namespace NPC {
     wayTimeoutId: number;
   }
 
+  interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
+    interactRadius?: number;
+    /** Induced by e.g. `npc rm-decor myCircle` */
+    decorKey?: string;
+    /** Induced by e.g. `npc get andros` */
+    npcKey?: string;
+    /** Induced by e.g. `npc config debug` */
+    configKey?: ConfigBooleanKey;
+  }
+
+  type ConfigBooleanKey = (
+    | 'canClickArrows'
+    | 'debug'
+    | 'gmOutlines'
+    | 'highlightWindows'
+    | 'localNav'
+    | 'localOutline'
+    | 'omnipresent'
+    | 'showIds'
+    | 'showLabels'
+  );
+
   interface NpcLineSeg {
     src: Geom.Vect;
     dst: Geom.Vect;
@@ -151,6 +175,7 @@ declare namespace NPC {
 
   type SpriteSheetKey = (
     | 'idle'
+    | 'sit'
     | 'walk'
   );
 
@@ -233,11 +258,10 @@ declare namespace NPC {
     /** Session key */
     key: string;
     receiveMsgs: boolean;
-    tty: { [lineNumber: number]: SessionTtyCtxt[] }
+    tty: { [lineText: string]: SessionTtyCtxt[] }
   }
 
   export type SessionTtyCtxt = {
-    lineNumber: number;
     lineText: string;
     /** For example `[foo]` has link text `foo` */
     linkText: string;
@@ -251,34 +275,45 @@ declare namespace NPC {
   export type OnTtyLink = (
     /** The computations are specific to tty i.e. its parent session */
     sessionKey: string,
-    /** The "global" 1-based index of "actual" lines ever output by tty */
-    outputLineNumber: number,
     lineText: string,
     linkText: string,
     linkStartIndex: number,
   ) => void;
 
-  export type DecorDef = { key: string } & (
-    | { type: 'path'; path: Geom.VectJson[]; }
-    | { type: 'circle'; center: Geom.VectJson; radius: number; }
-  );
+  export interface DecorPoint extends Geom.VectJson {
+    type: 'point';
+    tags?: string[];
+    onClick?(point: DecorPoint, api: import('../world/World').State): void;
+  }
 
+  export type DecorDef = { key: string } & (
+    | { type: 'circle' } & Geom.Circle
+    | { type: 'path'; path: Geom.VectJson[]; }
+    | DecorPoint
+    | { type: 'rect' } & Geom.RectJson
+  );
+  
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (
-    | { action: 'add-decor'; } & DecorDef
+    | { action: 'add-decor'; items: DecorDef[]; }
+    | ({ action: 'decor'; } & (DecorDef | { decorKey: string }))
     | { action: 'cancel'; npcKey: string }
-    | { action: 'config'; debug?: boolean; interactRadius?: number }
+    | ({ action: 'config'; } & NPC.NpcConfigOpts)
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'pause'; npcKey: string }
     | { action: 'play'; npcKey: string }
-    | { action: 'remove-decor'; decorKey: string; }
-    | { action: 'rm-decor'; decorKey: string; }
+    | { action: 'rm' | 'remove'; npcKey: string; }
+    | { action: 'remove-decor' | 'rm-decor'; items: string[]; }
     | { action: 'set-player'; npcKey?: string }
   );
 
+  export type NpcActionKey = NpcAction['action'];
+
   export type NPCsEvent = (
     | { key: 'decor'; meta: DecorDef; }
+    | { key: 'disabled' }
+    | { key: 'enabled' }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }

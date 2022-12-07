@@ -4,9 +4,11 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { clearAllBodyScrollLocks } from "body-scroll-lock";
 
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
+import { siteTitle } from "projects/service/const";
 import Nav from "./Nav";
 import Main from "./Main";
 import Portals from "./Portals";
@@ -26,7 +28,9 @@ export function wrapPageElement({
   return (
     <>
       <Helmet>
-        <title>The Last Redoubt</title>
+        <title>
+          {siteTitle}
+        </title>
       </Helmet>
 
       <StaticQuery
@@ -50,6 +54,7 @@ export function wrapPageElement({
         render={(allFrontMatter: AllFrontMatter) => {
 
           React.useMemo(() => {
+            clearAllBodyScrollLocks();
             useSiteStore.api.setArticleKey(frontMatter?.key);
             useSiteStore.api.initiate(allFrontMatter);
           }, [frontMatter]);
@@ -75,7 +80,9 @@ export function wrapPageElement({
                 />
               </Main>
               <Portals />
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools // Performance issue after HMRs?
+                initialIsOpen={false}
+              /> */}
             </QueryClientProvider>
           );
         }}

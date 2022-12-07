@@ -1,7 +1,7 @@
 import React from "react";
 import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
-import { predictNpcNpcCollision } from "../service/npc";
+import * as npcService from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -35,7 +35,7 @@ export default function useHandleEvents(api) {
           const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
           for (const other of others) {
-            const collision = predictNpcNpcCollision(npc, other);
+            const collision = npcService.predictNpcNpcCollision(npc, other);
             // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
             if (collision) {
               // Add wayMeta cancelling motion
@@ -67,8 +67,7 @@ export default function useHandleEvents(api) {
     handlePlayerWayEvent(e) {
       // console.log('player way event', e);
       switch (e.meta.key) {
-        case 'exit-room':
-          // Player left a room
+        case 'exit-room': {
           if (e.meta.otherRoomId !== null) {
             api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
@@ -77,18 +76,20 @@ export default function useHandleEvents(api) {
           }
           api.updateAll();
           break;
-        case 'enter-room':
+        }
+        case 'enter-room': {
           if (api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId)) {
             api.updateAll();
           }
           break;
+        }
         case 'pre-exit-room':
         case 'pre-near-door':
         case 'start-seg':
         case 'pre-collide':
           break;
         default:
-          throw testNever(e.meta);
+          throw testNever(e.meta, { suffix: 'handlePlayerWayEvent' });
       }
     },
   }), {
@@ -108,7 +109,10 @@ export default function useHandleEvents(api) {
       const npcsSub = api.npcs.events.subscribe((e) => {
         switch (e.key) {
           case 'decor':
-            api.npcs.setDecor(e.meta.key, e.meta);
+            api.npcs.setDecor(e.meta);
+            break;
+          case 'disabled':
+          case 'enabled':
             break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
@@ -141,7 +145,7 @@ export default function useHandleEvents(api) {
               // Walking NPCs may be about to collide with Player,
               // e.g. before they start a new line segment
               Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
-                const collision = predictNpcNpcCollision(npc, playerNpc);
+                const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
                 if (collision) {
                   setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
                 }
@@ -149,7 +153,7 @@ export default function useHandleEvents(api) {
             } else if (playerNpc.isWalking()) {
               // Player may be about to collide with NPC
               const npc = api.npcs.getNpc(e.npcKey);
-              const collision = predictNpcNpcCollision(playerNpc, npc);
+              const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
               if (collision) {
                 setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
               }
@@ -167,7 +171,7 @@ export default function useHandleEvents(api) {
             state.handleWayEvents(e);
             break;
           default:
-            throw testNever(e);
+            throw testNever(e, { suffix: 'npcsSub' });
         }
       });
 

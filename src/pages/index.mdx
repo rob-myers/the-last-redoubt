@@ -1,6 +1,6 @@
 ---
 key: index
-date: 2022-10-01
+date: 2022-12-25
 info: Home page
 # ⛔️ GraphQL error avoided if ≥ 1 instance of field
 giscusTerm: /home
@@ -10,14 +10,16 @@ next: intro/
 path: /
 prev: null
 tags:
-  - video game
+  - npcs
+  - cli
   - web dev
-  - game ai
+  - traveller rpg
 ---
 
 import Carousel from "components/page/Carousel";
 import Icon, { RoadWorksIcon } from "components/page/Icon";
 import InlineCode from "components/page/InlineCode";
+import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import { profileLookup } from "projects/sh/scripts";
 
@@ -25,20 +27,26 @@ import { profileLookup } from "projects/sh/scripts";
 
 ### About
 
-This website is a blog about Game AI i.e. _controlling Non-Player Characters_ (NPCs).
-Please [read the introduction](/intro/).
-We're going to build a game step-by-step directly on this blog,
-using everyday web technologies.
-See the screenshots and demo below.
+This blog is about programming Non-Player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)).
+An NPC is a character in a video game e.g. a human, alien, robot or animal.
+They are not controlled by the Player.
+In one approach the Game defines an ongoing simulation involving individual NPCs.
+In another, it fabricates the Player's experience in response to the Player's actions.
+My personal interest began with the ZX Spectrum in the late 1980s.
+In those days anything seemed possible.
+Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)).
 
-This site is a mixture of:
-- _Engine_: our underlying scriptable Game Engine.
-- _Exposition_: writing about Game Dev/AI.
-- _Execution_: the Video Game itself.
+Concerning video games, we'll try to remain silent concerning the current state of affairs.
+They have their own metrics of success.
+We're going to study NPCs for their own sake.
+But what distinguishes our approach?
 
-Initially we need a fair amount of exposition.
-This reflects our initial work on the Game Engine before we started creating this site.
-Partial exposition is indicated by <RoadWorksIcon bottom />.
+1. Dedicated to programming NPCs.
+1. Browser-based CLI for doing so.
+1. CSS-based rendering and interactivity.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
+1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
+
+Before things get a bit abstract, here are some screenshots:
 
 <Carousel
   baseSrc="/assets/pics/home-carousel/"
@@ -65,14 +73,93 @@ Partial exposition is indicated by <RoadWorksIcon bottom />.
     { src: 'pic-11.png', label: 'Piping output into devtool' },
   ]}
 />
+{/* Component ~ React Component */}
+
+<Aside title="screenshots">
+
+  _A World and a Terminal_ (1st slide above) depicts a [Tabs component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
+  Two of the tabs are visible.
+  The left tab is an instance of a [World component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
+  the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
+  The `World` shows an NPC from a birdseye perspective.
+  The commands in the `Terminal` indicate this is Andros and he is actually the Player.
+  The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some of the commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, whereas the images use `DEBUG=1; npc config`</SideNote>
+
+</Aside>
+
+Let's clarify the distinguishing points above.
+
+> Browser-based CLI?
+
+By this we mean an interactive [Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface) running in the browser.
+Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
+Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
+Supported syntax includes shell pipelines, shell functions and background processes.
+Let's see it in action:
+
+<Carousel
+  height={600}
+  items={[{ video: 'cli-demo-1', label: 'First CLI Demo' }]}
+/>
+
+{/* redo video? */}
+
+Every shell session begins by running the script at `/home/PROFILE`.
+In the session above it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
+Our shell builtin `source`<SideNote width={300}>It behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> runs the script at `/etc/util-1`,
+which defines a bunch of shell functions e.g. `range`.
+In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
+
+<Aside title="interpret-js">
+
+But how is shell syntax interpreted as JavaScript?
+
+> Consider our shell function `call`.<br/>
+> Given a textual description of a JavaScript function and its arguments, it creates the JavaScript function and its arguments, and finally invokes this function with these arguments.
+
+Less obviously, the shell builtin `run` creates and iterates a JavaScript [AsyncGenerator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function*).
+The shell functions `call`, `map`, `range` and `split` (above) are all defined in terms of `run`.
+
+</Aside>
+
+> CSS-based rendering?
+
+There are two fundamental ways to create browser-based video games:
+[HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) and
+[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS).
+The `<canvas>` amounts to an image one can manipulate using JavaScript.
+We can fill shapes, put pixels, or even [render 3D worlds](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API) at 60 frames per second.
+When someone says _HTML5 game_, the underlying tech is almost always the `<canvas>` element.
+On the other hand, non-gaming websites rarely use it.
+
+The cornerstones of the World Wide Web are HTML, CSS and JavaScript.
+A typical website amounts to a deep oft-mutated [DOM-tree](https://en.wikipedia.org/wiki/Document_Object_Model) initially induced by HTML, brought to life _visually_ via referenced CSS and _interactively_ via referenced JavaScript<SideNote>Technically, JavaScript permits arbitrary DOM mutation.</SideNote>.
+The browser interprets CSS very efficiently.
+In particular, it avoids re-inventing the wheel through heavy-duty JavaScript.<SideNote>Although HTMLCanvas is performant via [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API), the latter is a low-level API.</SideNote>
+_Debugging_ is also far richer because one may directly mutate the DOM-tree in a browser devtool.
+In contrast, native debugging of `<canvas>` amounts to setting breakpoints inside JavaScript code.
+{/* CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool
+Asymmetry of HTML and JavaScript DOM mutation
+Analogy with Web vs App
+Want to use Browser Devtool: canonical interface, like CLI */}
+
+
+🚧 Illustrate CSS via devtool video
+
+🚧 Two canonical UIs: POSIX-like CLI + Browser DevTool
+
+{/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
+This reflects our initial work on the "game engine" before we started creating this site.
+Partial exposition is indicated by <RoadWorksIcon bottom />. */}
+
 
 ### Demo
 
-Actions speak louder than words.
+🚧 Actions speak louder than words.
 Click to navigate or interact (e.g. open doors).
 You can drag/scroll/pinch to pan and zoom.
 Try resetting (<Icon icon="refresh" small inline />), maximising a tab or all tabs (<Icon icon="expand" small inline />), and disabling (<Icon icon="cross-circle" small inline />).
-Show debug circles by typing <InlineCode copy>DEBUG=1; npc config</InlineCode>.
+Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
 
 <Tabs
   id="demo-tabs"
@@ -94,14 +181,8 @@ Show debug circles by typing <InlineCode copy>DEBUG=1; npc config</InlineCode>.
 
 | date | change |
 | --- | ----------- |
-| 2022-10-01 | created [Home page](/) |
-|  | created [Introduction](/intro/intro) |
+| 2022-??-?? | created [Home page](/) |
 |  | created [About](/about) |
 |  | created preview [Setup](/intro/setup) |
 |  | created preview [JavaScript CLI](/intro/js-cli) |
 |  | created preview [Game AI CLI](/intro/ai-cli) |
-
-<Comments
-  id="comments"
-  term="/"
-/>

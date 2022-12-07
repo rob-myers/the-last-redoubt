@@ -40,7 +40,11 @@ export default function NPC({ api, def, disabled }) {
       <div
         className={cx(cssName.npcBody, npc.key, 'no-select')}
         data-npc-key={npc.key}
-      />
+      >
+        {/* {npc.segs.map((seg, i) =>
+          <div key={i} className="line-segment" style={{ transform: seg.transformStyle }} />
+        )} */}
+      </div>
       <div className="interact-circle" />
       <div className="bounds-circle" />
     </div>
@@ -48,10 +52,20 @@ export default function NPC({ api, def, disabled }) {
 }
 
 /**
- * @typedef Props @type {object}
+ * @typedef Props
  * @property {import('./World').State} api
  * @property {PropsDef} def
  * @property {boolean} [disabled]
+ */
+
+/**
+ * @typedef PropsDef
+ * @property {string} npcKey
+ * @property {NPC.NpcJsonKey} npcJsonKey
+ * @property {Geom.VectJson} position
+ * @property {number} speed
+ * @property {number} angle
+ * @property {Geom.Seg[]} segs
  */
 
 const rootCss = css`
@@ -65,14 +79,12 @@ const rootCss = css`
     transition: transform 1s ease;
   }
   
-  // TODO replace below with service/npc-json 🚧
-
   &.disabled .body {
     animation-play-state: paused;
   }
 
   .interact-circle {
-    display: var(--npcs-debug-display);
+    display: var(${cssName.npcsDebugDisplay});
     position: absolute;
     width: calc(2 * var(${cssName.npcsInteractRadius}));
     height: calc(2 * var(${cssName.npcsInteractRadius}));
@@ -92,13 +104,15 @@ const rootCss = css`
     border-radius: calc(2 * var(${cssName.npcBoundsRadius}));
     border: 1px solid rgba(255, 0, 0, 0.25);
   }
-`;
 
-/**
- * @typedef PropsDef @type {object}
- * @property {string} npcKey
- * @property {NPC.NpcJsonKey} npcJsonKey
- * @property {Geom.VectJson} position
- * @property {number} speed
- * @property {number} angle
- */
+  .line-segment {
+    display: var(${cssName.npcsDebugDisplay});
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    top: 50%;
+    width: 1px;
+    border-top: 1px solid black;
+    transform-origin: top left;
+  }
+`;

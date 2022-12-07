@@ -1,3 +1,5 @@
+export const siteTitle = 'NPC CLI';
+
 export const discussionsUrl = "https://github.com/rob-myers/the-last-redoubt/discussions";
 
 export const localStorageKey = {
@@ -7,6 +9,7 @@ export const localStorageKey = {
 
 export const cssName = {
   anchor: 'anchor',
+  carouselLabelHeight: '--carousel-label-height',
   central: 'central',
   clear: 'clear',
   copyJustFailed: 'copy-just-failed',
@@ -29,6 +32,20 @@ export const cssName = {
   navMini: 'nav-mini',
   nextArticle: 'next-article',
 
+  debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
+  debugGeomorphOutlineDisplay: '--debug-gm-outline-display',
+  debugHighlightWindows: '--debug-highlight-windows',
+  debugRoomNavDisplay: '--debug-room-nav-display',
+  debugRoomOutlineDisplay: '--debug-room-outline-display',
+  debugShowIds: '--debug-show-ids',
+  debugShowLabels: '--debug-show-labels',
+  // ...
+
+  decorCircle: 'decor-circle',
+  decorPath: 'decor-path',
+  decorPoint: 'decor-point',
+  decorRect: 'decor-rect',
+  
   npc: 'npc',
   npcBody: 'body',
   npcsDebugDisplay: '--npcs-debug-display',
@@ -38,7 +55,7 @@ export const cssName = {
    * Angle of body when last idle e.g. `0rad`. Carries additional info,
    * i.e. modulus of `2 * Math.PI`, ensuring we turn the smaller angle.
    */
-  npcTargetLookAngle: '--npc-target-look-angle',
+  npcLookRadians: '--npc-look-radians',
 
   open: 'open',
   resetIcon: 'reset-icon',
@@ -73,7 +90,10 @@ export const precision = 4;
 /** `24 / 5` because we scale down SVG symbols */
 export const doorWidth = 4.8;
 
-export const hullDoorWidth = 12;
+/** Keep hull doors thin */
+export const hullDoorWidth = 8;
+/** Hull doors need to intersect exactly one room */
+export const hullDoorOutset = 2;
 
 /**
  * Removing this outset breaks navigation,
@@ -88,5 +108,13 @@ export const obstacleOutset = 10;
 export const lightDoorOffset = 40;
 
 export const lightWindowOffset = 20;
+
+/**
+ * Safari seems to play animation even if cancelled very quickly.
+ * For example, try moving through an adjacent closed door.
+ */
+export const cancellableAnimDelayMs = 50;
+
+export const defaultDoorCloseMs = 7000;
 
 //#endregion

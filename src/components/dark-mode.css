@@ -9,8 +9,11 @@ body.dark-mode {
   --page-blockquote-border-color: #444;
   --page-link-color: #dd0;
   --page-border-color: #444;
+  --contrast-border-color: #fff;
+  --title-text-shadow-color: #ffffff99;
   --aside-background-color: #333333aa;
-  
+  --carousel-background-color: #222222;
+
   --swiper-pagination-color: #ddc;
   --swiper-pagination-bullet-inactive-color: #777;
   --swiper-pagination-bullet-inactive-opacity: 1;
@@ -18,8 +21,7 @@ body.dark-mode {
 
 /** @see cssName.ignoreDark */
 body.dark-mode span.icon:not(.ignore-dark),
-body:not(.dark-mode) span.side-note span.icon,
-body.dark-mode article span.side-note
+body:not(.dark-mode) span.side-note span.icon
 {
   filter: invert(1);
 }

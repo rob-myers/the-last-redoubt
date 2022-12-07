@@ -5,7 +5,7 @@ declare namespace PanZoom {
     parent: HTMLDivElement;
     translateRoot: HTMLDivElement;
     scaleRoot: HTMLDivElement;
-
+    
     panning: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
     pointers: PointerEvent[];
@@ -22,14 +22,14 @@ declare namespace PanZoom {
     x: number;
     /** Target translateY in `translateRoot` */
     y: number;
-
+    
     evt: {
       wheel(e: WheelEvent): void;
       pointerdown(e: PointerEvent): void;
       pointermove(e: PointerEvent): void;
       pointerup(e: PointerEvent): void;
     };
-
+    
     events: import('rxjs').Subject<PanZoom.CssInternalEvent>;
     /** UI is considered idle iff this is 0 */
     idleTimeoutId: number;
@@ -38,8 +38,8 @@ declare namespace PanZoom {
     anims: [null | Animation, null | Animation];
     worldPointerDown: Geom.Vect;
     pointerUpExtras: Record<string, any>[];
-
-    animationAction(type: 'cancel' | 'pause' | 'play'): void;
+    
+    animationAction(type: 'cancel' | 'pause' | 'play' | 'smooth-cancel'): void;
     private computePathKeyframes(path: Geom.Vect[]): { keyframes: Keyframe[]; distance: number; };
     private delayIdle(): void;
     distanceTo(worldPosition: Geom.Vect): number;
@@ -51,6 +51,7 @@ declare namespace PanZoom {
     isIdle(): boolean;
     async panZoomTo(scale?: number, worldPoint?: Geom.VectJson, durationMs: number, easing?: string): Promise<void>;
     async followPath(path: Geom.Vect[], { animScaleFactor: number });
+    releaseAnim(anim: Animation): void;
     rootRef(el: null | HTMLDivElement): void;
     /** Use `(x, y, scale)` to set `style.transform`s */
     setStyles(): void;

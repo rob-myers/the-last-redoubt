@@ -304,7 +304,7 @@ function getChildren(node: ParsedSh): ParsedSh[] {
     case 'WhileClause': return node.Cond.concat(node.Do);
     case 'Word': return node.Parts;
     case 'WordIter': return node.Items;
-    default: throw testNever(node);
+    default: throw testNever(node, { suffix: 'getChildren' });
   }
 }
 
@@ -681,7 +681,7 @@ class srcServiceClass {
         return '';
 
       default:
-        throw testNever(node);
+        throw testNever(node, { suffix: 'src' });
     }
   }
 

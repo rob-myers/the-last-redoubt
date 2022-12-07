@@ -1,0 +1,22 @@
+import { QedIcon } from 'components/page/Icon'
+import SolveA from "./collide-npc-seg-solve-a.mdx";
+import SolveB from "./collide-npc-seg-solve-b.mdx";
+
+Then fixing $i \in I$ consider the equation:
+> $p_i(t, \lambda_i) = p(\lambda)$.
+
+Projecting yields two equations:
+1. $\alpha_{ix} + \lambda_i \tau_{ix} + tu \delta_x = \alpha_x + \lambda \tau_x$
+1. $\alpha_{iy} + \lambda_i \tau_{iy} + tu \delta_y = \alpha_y + \lambda \tau_y$
+
+
+- Suppose $\tau_{ix} = 0$.
+
+  <SolveA/>
+
+- Suppose $\tau_{ix} \neq 0$.
+
+  <SolveB/>
+
+At this point we have an equation $t = RHS$ where RHS mentions exactly one variable i.e. $0 \leq \lambda \in |\beta| - |\alpha|$ or $0 \leq \lambda_i \in |\beta_i| - |\alpha_i|$.
+In either case, (a) evaluate $t$ at the two extreme points, (b) check if the respective time interval intersects $[0, t_\Omega]$. If so, use the earliest possible time.<QedIcon/>

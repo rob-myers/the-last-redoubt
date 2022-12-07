@@ -2,7 +2,7 @@ import cheerio, { Element } from 'cheerio';
 import { Image, createCanvas, Canvas } from 'canvas';
 import path from 'path';
 
-import { assertNonNull } from './generic';
+import { assertNonNull, testNever } from './generic';
 import { Rect, Vect } from '../geom';
 import { extractGeom, extractGeomsAt, hasTitle, matchesTitle } from './cheerio';
 import { saveCanvasAsFile } from './file';
@@ -67,12 +67,108 @@ async function drawFrame(anim, frameId, canvas, zoom) {
 }
 
 /**
+ * @param {import('cheerio').CheerioAPI} api
+ * @param {Element[]} topNodes
+ */
+function extractDefSymbols(api, topNodes) {
+  const svgDefs = topNodes.find(x => x.type === 'tag' && x.name === 'defs');
+  const svgSymbols = api(svgDefs).children('symbol').toArray();
+  
+  const lookup = svgSymbols.reduce((agg, el) => {
+    const id = el.attribs.id;
+    const title = api(el).children('title').text() || null;
+    if (id !== title) {
+      warn(`saw symbol with id "${id}" and distinct title "${title}"`);
+    }
+    // NOTE symbol must have top-level group(s)
+    agg[id] = api(el).children('g').toArray();
+    return agg;
+  }, /** @type {Record<string, Element[]>} */ ({}));
+
+  return lookup;
+}
+
+/**
+ * @param {import('cheerio').CheerioAPI} api Cheerio
+ * @param {Element[]} topNodes Topmost children of <svg>
+ * @param {string} title Title of <g> to extract
+ */
+function extractNpcFrameNodes(api, topNodes, title) {
+  /**
+   * The group named `title` (e.g. `"walk"`), itself containing
+   * groups of frames named e.g. `"npc-1"`, `"npc-2"`, etc.
+   */
+  const animGroup = topNodes.find(x => hasTitle(api, x, title));
+  /**
+   * The groups inside the group named `animGroup`.
+   * The 1st one might be named `"npc-1"`.
+   */
+  const groups = /** @type {Element[]} */ (animGroup?.children??[])
+    .filter(x => x.name === 'g')
+  
+  // Override visibility: hidden
+  groups.forEach(group => {
+    group.attribs.style = (group.attribs.style || '')
+      + 'visibility: visible;'
+  });
+  return groups;
+}
+
+/** @type {Record<NPC.NpcActionKey, true>} */
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcActionKey}
+ */
+export function isNpcActionKey(input) {
+  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
+}
+
+/**
+ * @param {NPC.NpcActionKey} action
+ * @param {undefined | string | NPC.NpcConfigOpts} opts
+ * @param {any[]} extras 
+ */
+export function normalizeNpcCommandOpts(action, opts = {}, extras) {
+  if (typeof opts === "string") {
+    switch (action) {
+      case "decor":
+      case "remove-decor":
+      case "rm-decor":
+        opts = { decorKey: opts };
+        break;
+      case "cancel":
+      case "get":
+      case "pause":
+      case "play":
+      case "rm":
+      case "remove":
+      case "set-player":
+        opts = { npcKey: opts };
+        break;
+      case "config":
+        opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
+        break;
+      case "look-at":
+        // npc look-at andros $( click 1 )
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+        break;
+      default:
+        opts = {}; // we ignore key
+        break;
+    }
+  }
+  return opts;
+}
+
+/**
  * @param {string} npcName 
  * @param {string} svgContents
  * @param {number} [zoom] 
  * @returns {NPC.ParsedNpcCheerio}
  */
-export function parseNpc(npcName, svgContents, zoom = 1) {
+ export function parseNpc(npcName, svgContents, zoom = 1) {
   const $ = cheerio.load(svgContents);
   const topNodes = Array.from($('svg > *'));
 
@@ -136,54 +232,6 @@ export function parseNpc(npcName, svgContents, zoom = 1) {
       }, /** @type {NPC.ParsedNpcCheerio['animLookup']} */ ({})),
     zoom,
   };
-}
-
-/**
- * @param {import('cheerio').CheerioAPI} api
- * @param {Element[]} topNodes
- */
-function extractDefSymbols(api, topNodes) {
-  const svgDefs = topNodes.find(x => x.type === 'tag' && x.name === 'defs');
-  const svgSymbols = api(svgDefs).children('symbol').toArray();
-  
-  const lookup = svgSymbols.reduce((agg, el) => {
-    const id = el.attribs.id;
-    const title = api(el).children('title').text() || null;
-    if (id !== title) {
-      warn(`saw symbol with id "${id}" and distinct title "${title}"`);
-    }
-    // NOTE symbol must have top-level group(s)
-    agg[id] = api(el).children('g').toArray();
-    return agg;
-  }, /** @type {Record<string, Element[]>} */ ({}));
-
-  return lookup;
-}
-
-/**
- * @param {import('cheerio').CheerioAPI} api Cheerio
- * @param {Element[]} topNodes Topmost children of <svg>
- * @param {string} title Title of <g> to extract
- */
-function extractNpcFrameNodes(api, topNodes, title) {
-  /**
-   * The group named `title` (e.g. `"walk"`), itself containing
-   * groups of frames named e.g. `"npc-1"`, `"npc-2"`, etc.
-   */
-  const animGroup = topNodes.find(x => hasTitle(api, x, title));
-  /**
-   * The groups inside the group named `animGroup`.
-   * The 1st one might be named `"npc-1"`.
-   */
-  const groups = /** @type {Element[]} */ (animGroup?.children??[])
-    .filter(x => x.name === 'g')
-  
-  // Override visibility: hidden
-  groups.forEach(group => {
-    group.attribs.style = (group.attribs.style || '')
-      + 'visibility: visible;'
-  });
-  return groups;
 }
 
 /**
@@ -304,7 +352,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
 
 /**
  * @param {NPC.NPC} npc Assumed to be walking
- * @param {Geom.Seg} seg
+ * @param {Geom.Seg} seg Fixed seg
  * @returns {NPC.NpcSegCollision | null}
  */
 export function predictNpcSegCollision(npc, seg) {
@@ -312,61 +360,97 @@ export function predictNpcSegCollision(npc, seg) {
   if (!npc.getWalkSegBounds().intersects(rect)) {
     return null;
   }
+
+  const walkSeg = assertNonNull(npc.getLineSeg());
+  const walkDelta = walkSeg.dst.clone().sub(walkSeg.src);
+  const walkDir = walkDelta.clone().normalize(); // \delta
+  const walkMax = walkDelta.length;
+  
+  const npcSpeed = npc.getSpeed(); // u > 0
+  const timeMax = walkMax / npcSpeed; // t_\Omega
+  
   /**
-   * TODO 🚧
+   * Fixed segment:
+   * > `p(λ) := seg.src + λ . segDir`
+   * > where `0 ≤ λ ≤ segMax`
    */
+  // 🖊 seg.src ~ \alpha, seg.dst ~ \beta
+  const segDelta = Vect.from(seg.dst).sub(seg.src);
+  const segDir = segDelta.clone().normalize(); // \tau
+  const segMax = segDelta.length;
+  
+  for (const npcSeg of npc.segs) {
+    /**
+     * A line segment attached to npc:
+     * > `p_i(t, λ_i) := npcSeg.src + ut . walkDir + λ_i . npcSegDir` where:
+     * > - 0 ≤ t ≤ tMax
+     * > - 0 ≤ λ_i ≤ npcSegMax
+     */
+    // npcSec.src ~ \alpha_i, npcSec.dst ~ \beta_i
+    const npcSegDelta = Vect.from(npcSeg.dst).sub(npcSeg.src);
+    const npcSegDir = npcSegDelta.clone().normalize(); // \tau_i
+    const npcSegMax = npcSegDelta.length;
 
-  /**
-   * Let
-   * - npc position be `p0(t) := a0 + t﹒u﹒τ0`
-   *   - u is npc speed
-   *   - a0, b0 is line seg npc traverses
-   *   - τ0 is unit vector for b0 - a0
-   *   - t ∊ [0, |b0 - a0| ╱ u]
-   *
-   * - line segment be `p1(λ) := a1 + λ﹒τ1`
-   *   - a1, b1 are endpoints
-   *   - τ1 is unit vector for b1 - a1
-   *   - λ ∊ [0, |b1 - a1|]
-   *
-   * - `r` be the npc's radius
-   * 
-   * We seek any (t, λ) within bounds s.t.
-   * - |p0(t) - p1(λ)|^2 ≤ r^2
-   * 
-   * The latter can be rewritten as follows:
-   * 
-   * Solving `k0.t^2 + k1.λ^2 + k2.λt + k3.t + k4.λ + k5 ≤ 0`,
-   * - `k0 := u^2`
-   * - `k1 := 1`
-   * - `k2 := -2u.(τ0 · τ1)`
-   * - `k3 := -u.(τ0 · (a1 - a0))`
-   * - `k4 := τ1 · (a1 - a0)`
-   * - `k5 := |a1 - a0|^2 - r^2`
-   * 
-   * Fixing λ, solutions are ...
-   * 
-   * TODO verify and clarify below on paper 🚧
-   * 
-   * ```js
-   * (-b ± √(b^2 - 4ac)) / 2a // i.e.
-   * (-(k2.λ + k3) ± √inSqrt) / 2·u^2 // i.e.
-   * [ (2u. τ0·τ1).λ + u. τ0·(a1 - a0) ± √inSqrt ] / 2·u^2
-   * ```
-   * 
-   * where inSqrt
-   * - := (k2.λ + k3)^2 - 4.u^2.(λ^2 + k5)
-   * - := ((2u. τ0·τ1).λ + u.(τ0 · (a1 - a0)))^2 - 4.u^2.(λ^2 + |a1 - a0|^2 - r^2)
-   * - := u^2.[ (2λ. τ0·τ1 + τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
-   * - := u^2.[  4λ^2 (τ0·τ1)^2 + 4λ.(τ0·τ1)(τ0·(a1 - a0)) + (τ0·(a1 - a0))^2 - 4.(λ^2 + |a1 - a0|^2 - r^2) ]
-   * - := (4.(τ0·τ1)^2 - 4). λ^2 + (4.(τ0·τ1)(τ0·(a1 - a0))). λ + ( (τ0·(a1 - a0))^2 - 4.(|a1 - a0|^2 - r^2) )
-  */
- const foo = 0;
+    /**
+     * Solving `p_i(t, λ_i) = p(λ)` i.e.
+     * 1. npcSeg.src.x + u.t.walkDir.x + λ_i . npcSegDir.x = seg.src.x + λ . segDir.x
+     * 2. npcSeg.src.y + u.t.walkDir.y + λ_i . npcSegDir.y = seg.src.y + λ . segDir.y
+     */
 
-  return {
-    dist: 0,
-    seconds: 0,
-  };
+    if (npcSegDir.x === 0) {
+      // Let 0 ≤ t ≤ timeMax, 0 ≤ λ ≤ segMax,
+      // (npcSpeed . walkDir_x .​ t) - (npcSegDir.x .​ λ) + (npcSeg.src.x ​- seg.src.x) = 0
+      if (walkDir.x === 0 && segDir.x === 0) {
+        // Walk direction and segments are parallel
+        continue; // We ignore glancing collisions
+      } else if (segDir.x === 0) {// Segments are parallel
+        // If they collide the time is unique
+        const t = (seg.src.x - npcSeg.src.x) / (npcSpeed * walkDir.x);
+        if (0 <= t && t <= timeMax) return { seconds: t, dist: t * npcSpeed };
+        continue;
+      } else if (walkDir.x === 0) {
+        // via (1) λ = (npcSeg.src.x - seg.src.x) / segDir.x
+        // via (2) λ_i + (npcSpeed . t) - (λ . segDir.y) + (npcSeg.src.y - seg.src.y) = 0
+        // thus:
+        // ut = -λ_i + (seg.src.x - npcSeg.src.x).(segDir.x/segDir.x) + (seg.src.y - npcSeg.src.y)
+        // 🚧 intersect interval and minimize
+      } else {
+        // Since segDir.x and walkDir.x are non-zero, (1) becomes:
+        // ut = (segDir.x / walkDir.x) λ + (seg.src.x - npcSeg.src.x) / walkDir.x
+        // 🚧 intersect interval and minimize
+      }
+    } else {// npcSegDir.x non-zero,
+      // via (1) λ_i = -ut . (walkDir.x/npcSegDir.x) + λ . (segDir.x/npcSegDir.x) + (seg.src.x - npcSeg.src.x)/npcSegDir.x
+      // via (2) a.t + b.λ + c = 0, where:
+      const a = npcSpeed * walkDir.y - npcSpeed * walkDir.x * (npcSegDir.y / npcSegDir.x);
+      const b = -segDir.y + segDir.x * (npcSegDir.y / npcSegDir.x);
+      const c = (seg.src.x - npcSeg.src.x) * (npcSegDir.y / npcSegDir.x) + npcSeg.src.y - seg.src.y;
+      if (a === 0 && b === 0) {// Then c = 0 too, so
+        // npcSegDir.y/npcSegDir.x
+        // = walkDir.y / walkDir.x 👈 (walkDir.x non-zero else walkDir 0)
+        // = segDir.y / segDir.x 👈 (segDir.x non-zero else sigDir 0)
+        // = (seg.src.y - npcSeg.src.y) / (seg.src.x - npcSeg.src.x) 👈 (assume seg.src !== npcSeg.src)
+        // Thus walk dir, fixed seg and vector difference of seg starts are parallel
+        // 🚧 /sketches should include "👈" reasoning
+        continue; // We ignore glancing collisions
+      } else if (b === 0) {// Segments are parallel
+        // If they collide the time is unique
+        const t = -c / a;
+        if (0 <= t && t <= timeMax) return { seconds: t, dist: t * npcSpeed };
+        continue;
+      } else if (a === 0) {
+        // 🚧 + adjust /sketches
+        // Possibly missing case where npcSegDir.y === walkDir.y === 0
+        // IDEA Know λ; Know npcSegDir.x === delta.x === 1; Subst into (1) and get f(t, λ_i) = 0
+        // Hopefully this can be unified with argument when npcSegDir.y !== 0
+      } else {
+        // t = -b/a . λ - c
+        // 🚧 intersect interval and minimize
+      }
+    }
+  }
+
+  return null;
 }
 
 /**
@@ -388,14 +472,23 @@ export async function renderNpcSpriteSheets(parsed, outputDir, opts) {
   }
 }
 
-/** @param {NPC.DecorDef} input */
+/** @param {NPC.DecorDef} [input] */
 export function verifyDecor(input) {
-  if (input && input.type === 'path' && input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x))) {
-    return true;
-  } else if (input && input.type === 'circle' && Vect.isVectJson(input.center) && typeof input.radius === 'number') {
-    return true;
+  if (!input) {
+    return false;
   }
-  return false;
+  switch (input.type) {
+    case 'circle':
+      return Vect.isVectJson(input.center) && typeof input.radius === 'number';
+    case 'path':
+      return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
+    case 'point':
+      return Vect.isVectJson(input) && ['function', 'undefined'].includes(typeof input.onClick);
+    case 'rect':
+      return [input.x, input.y, input.width, input.height].every(x => Number.isFinite(x));
+    default:
+      throw testNever(input, { override: `decor has unrecognised type: ${JSON.stringify(input)}` });
+  }
 }
 
 /** @param {NPC.GlobalNavPath} input */

@@ -8,26 +8,38 @@ export const utilFunctions = [
     call '({args}) =>
       [...Array(Number(args[0]))].map((_, i) => i)
     ' "$1"
-  }`,
+}`,
     
   seq: `{
     range "$1" | split
-  }`,
+}`,
     
   pretty: `{
     map '(x, { api }) => api.pretty(x)'
-  }`,
+}`,
     
   keys: `{
     map Object.keys
-  }`,
+}`,
   
   // cat: `get "$@" | split`,
+  cat: `get "$@"`,
     
-  /** NOTE `map console.log` would log the 2nd arg too */
+  /**
+   * - `map console.log` would log 2nd arg too
+   * - log chunks larger than 1000, so e.g. `seq 1000000 | log` works
+   */
   log: `{
-    map 'x => console.log(x)'
-  }`,
+    run '({ api, args, datum }) {
+      while ((datum = await api.read(true)) !== null) {
+        if (datum.__chunk__ && datum.items?.length <= 1000) {
+          datum.items.forEach(x => console.log(x))
+        } else {
+          console.log(datum)
+        }
+      }
+    }'
+}`,
 },
 ];
 
@@ -64,6 +76,10 @@ lookLoop: `{
  * Remember to invoke function (MDX lacks intellisense).
  */
 export const profileLookup = {
+
+'profile-0': () => `source /etc/util-1
+`,
+
 'profile-1': () => `
 
 source /etc/util-1
@@ -73,9 +89,7 @@ source /etc/game-1
 
 'profile-1-a': (npcKey = 'andros') => `
 
-${
-  profileLookup["profile-1"]()
-}
+${profileLookup["profile-1"]()}
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
@@ -86,8 +100,19 @@ track ${npcKey} &
 goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
+# room decor in player current room(s)
+localDecor &
+
+npc config showIds
+npc config showLabels
 
 `.trim(),
+
+'profile-1-b': () => `
+${profileLookup["profile-1-a"]()}
+npc config debug
+`
+
 };
 
 import rawLoaderJs from '!!raw-loader!./raw-loader';

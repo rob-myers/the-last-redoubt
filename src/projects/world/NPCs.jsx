@@ -2,15 +2,16 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
+import { debounce } from "debounce";
 
-import { Vect, Rect } from "../geom";
+import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
-import { scrollback } from "../sh/io";
-import { testNever } from "../service/generic";
+import { dataChunk, proxyKey } from "../sh/io";
+import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
-import { verifyGlobalNavPath, verifyDecor } from "../service/npc";
+import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { getNumericCssVar } from "../service/dom";
+import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, cssTransformToRect, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -36,29 +37,97 @@ export default function NPCs(props) {
 
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
+    decorEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
 
-    addTtyLineCtxts(sessionKey, lineNumber, ctxts) {
+    config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
+      omnipresent: /** @type {boolean} */ (false),
+    }), {
+      /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey} key */
+      get(ctxt, key) {
+        const rootStyle = state.rootEl.style;
+        const debugStyle = api.debug.rootEl.style;
+        switch (key) {
+          case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
+          case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
+          case 'gmOutlines': return debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true;
+          case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
+          case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
+          case 'localNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
+          case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
+          case 'omnipresent': return !!ctxt.omnipresent;
+          case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
+          case 'showLabels': return debugStyle.getPropertyValue(cssName.debugShowLabels) === 'none' ? false : true;
+          case 'configKey':
+          case 'decorKey':
+          case 'npcKey':
+            return undefined;
+          case proxyKey: return true;
+          default: throw testNever(key, { suffix: 'config.get' });
+        }
+      },
+      /** @param {keyof NPC.NpcConfigOpts} key */
+      set(ctxt, key, value) {
+        const rootStyle = state.rootEl.style;
+        const debugStyle = api.debug.rootEl.style;
+        switch (key) {
+          case 'canClickArrows': debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none'); break;
+          case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
+          case 'gmOutlines': debugStyle.setProperty(cssName.debugGeomorphOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
+          case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
+          case 'localNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
+          case 'localOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'omnipresent': ctxt.omnipresent = !!value; break;
+          case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
+          case 'showLabels': debugStyle.setProperty(cssName.debugShowLabels, value ? 'initial' : 'none'); break;
+          case 'configKey':
+          case 'decorKey':
+          case 'npcKey':
+            break;
+          default:
+            testNever(key, { suffix: 'config.set' });
+        }
+        return true;
+      },
+      ownKeys() {
+        return [
+          'canClickArrows',
+          'debug',
+          'gmOutlines',
+          'highlightWindows',
+          'interactRadius',
+          'localNav',
+          'localOutline',
+          'omnipresent',
+          'showIds',
+          'showLabels',
+        ];
+      },
+      getOwnPropertyDescriptor() {
+        return { enumerable: true, configurable: true };
+      }
+    })),
+
+    addTtyLineCtxts(sessionKey, lineText, ctxts) {
       // We strip ANSI colour codes for string comparison
-      state.session[sessionKey].tty[lineNumber] = ctxts.map(x =>
-        ({ ...x, lineText: stripAnsi(x.lineText), linkText: stripAnsi(x.linkText) })
+      state.session[sessionKey].tty[stripAnsi(lineText)] = ctxts.map(x =>
+        ({ ...x, lineText: stripAnsi(lineText), linkText: stripAnsi(x.linkText) })
       );
     },
+    // 🚧 This should only run sporadically
     cleanSessionCtxts() {
-      for (const sessionKey of Object.keys(state.session)) {
-        const session = useSessionStore.api.getSession(sessionKey);
-        if (session) {
-          const { tty } = state.session[sessionKey];
-          /**
-           * Assuming xterm buffer no larger than 2 * scrollback,
-           * this lineNumber (ignoring wraps) is no longer visible.
-           */
-          const lowerBound = Math.max(0, session.ttyShell.xterm.totalLinesOutput - 2 * scrollback);
-          Object.values(tty).forEach(([{ lineNumber }]) =>
-            lineNumber <= lowerBound && delete tty[lineNumber]
-          );
-        } else delete state.session[sessionKey];
+      const sessions = Object.keys(state.session).map(
+        sessionKey => useSessionStore.api.getSession(sessionKey)
+      ).filter(Boolean);
+
+      for (const session of sessions) {
+        const lineLookup = session.ttyShell.xterm.getLines();
+        const { tty } = state.session[session.key];
+        Object.keys(tty).forEach(lineText =>
+          !lineLookup[lineText] && delete tty[lineText]
+        );
       }
     },
     getGlobalNavPath(src, dst) {
@@ -180,7 +249,8 @@ export default function NPCs(props) {
       }
       const result = state.getGlobalNavPath(npc.getPosition(), e.point);
       // Always show path
-      state.setDecor(e.npcKey, { key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
+      const decorKey = `${e.npcKey}-navpath`;
+      state.setDecor({ key: decorKey, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -222,29 +292,38 @@ export default function NPCs(props) {
     },
     async npcAct(e) {
       switch (e.action) {
-        case 'add-decor':
-          state.setDecor(e.key, e);
-          break;
-        case 'cancel':// Cancel current animation
-          await state.getNpc(e.npcKey).cancel();
-          break;
-        case 'config':
-          if (typeof e.interactRadius === 'number') {
-            state.rootEl.style.setProperty(cssName.npcsInteractRadius, `${e.interactRadius}px`);
+        case 'add-decor': // add decor(s)
+          return state.setDecor(...e.items);
+        case 'decor': // get or add decor
+          return 'decorKey' in e
+            ? state.decor[e.decorKey]
+            : state.setDecor(e);
+        case 'cancel':
+          return await state.getNpc(e.npcKey).cancel();
+        case 'config': // set multiple, toggle single, get all
+          keys(e).forEach(key => // Set 🚧 ensure correct type
+            e[key] !== undefined && (/** @type {*} */ (state.config)[key] = e[key])
+          );
+          if (e.configKey) {// Toggle
+            state.config[e.configKey] = !state.config[e.configKey];
           }
-          if (e.debug !== undefined) {
-            state.rootEl.style.setProperty(cssName.npcsDebugDisplay, e.debug ? 'initial' : 'none');
+          if (Object.keys(e).length === 1) {// `npc config` or `npc config {}`
+            /**
+             * We must wrap the proxy in a chunk to avoid errors arising
+             * from various `await`s ("then" is not defined).
+             */
+            return dataChunk([state.config]);
           }
           break;
         case 'get':
           return state.getNpc(e.npcKey);
+        // 🚧 promise via animationend event?
         case 'look-at': {
-          const npc = state.getNpc(e.npcKey);
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
-          await npc.lookAt(e.point);
-          break;
+          const npc = state.getNpc(e.npcKey);
+          return npc.lookAt(e.point);
         }
         case 'pause':// Pause current animation
           await state.getNpc(e.npcKey).pause();
@@ -252,38 +331,39 @@ export default function NPCs(props) {
         case 'play':// Resume current animation
           await state.getNpc(e.npcKey).play();
           break;
+        case 'rm':
+        case 'remove':
+          return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
-          state.setDecor(e.decorKey, null);
+          e.items?.forEach(decorKey => delete state.decor[decorKey])
+          update();
           break;
         case 'set-player':
           state.events.next({ key: 'set-player', npcKey: e.npcKey??null });
           break;
         default:
-          throw Error(testNever(e, `unrecognised action: "${JSON.stringify(e)}"`));
+          throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
       }
     },
-    onTtyLink(sessionKey, lineNumber, lineText, linkText, linkStartIndex) {
+    onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
       // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
       state.cleanSessionCtxts();
-      const found = state.session[sessionKey]?.tty[lineNumber]?.find(x =>
-        x.lineText === lineText
-        && x.linkStartIndex === linkStartIndex
+      const found = state.session[sessionKey]?.tty[lineText]?.find(x =>
+        x.linkStartIndex === linkStartIndex
         && x.linkText === linkText
       );
       if (!found) {
         return;
       }
-      console.info('onTtyLink found', found); // DEBUG 🚧
+      console.info('onTtyLink found', found); // 🚧
       switch (found.key) {
         case 'room':
           const gm = api.gmGraph.gms[found.gmId];
           const point = gm.matrix.transformPoint(gm.point[found.roomId].default.clone());
           state.panZoomTo({ zoom: 2, ms: 2000, point });
           break;
-        /**
-         * ...
-         */
+        // 🚧 ...
       }
     },
     async panZoomTo(e) {
@@ -297,21 +377,34 @@ export default function NPCs(props) {
         return 'cancelled';
       }
     },
+    removeNpc(npcKey) {
+      delete state.npc[npcKey];
+      state.npcKeys = state.npcKeys.filter(x => x.key in state.npc);
+      update();
+      state.npcAct({ action: 'set-player', npcKey: undefined });
+      // 🚧 inform relevant processes?
+      
+    },
     rootRef(el) {
       if (el) {
         state.rootEl = el;
+        /**
+         * We set CSS variables here, not in css`...` below.
+         * - ts-styled-plugin error for ${cssName.foo}: ${bar};
+         * - setting style avoids `getComputedStyle`
+         */
         el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
+        state.decorEl = assertNonNull(el.querySelector('div.decor-root'));
       }
     },
-    setDecor(decorKey, decor) {
-      if (decor) {
-        if (!verifyDecor(decor)) {
-          throw Error('invalid decor');
+    service: npcService,
+    setDecor(...decor) {
+      for (const d of decor) {
+        if (!d || !npcService.verifyDecor(d)) {
+          throw Error(`invalid decor: ${JSON.stringify(d)}`);
         }
-        state.decor[decorKey] = decor;
-      } else {
-        delete state.decor[decorKey];
+        state.decor[d.key] = d;
       }
       update();
     },
@@ -337,7 +430,6 @@ export default function NPCs(props) {
       } else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
         throw Error(`cannot spawn whilst walking`)
       }
-
       state.npcKeys = state.npcKeys
         .filter(({ key }) => key !== e.npcKey)
         .concat({
@@ -345,10 +437,11 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
-            npcJsonKey: 'first-npc', // TODO remove hard-coding
+            npcJsonKey: 'first-npc', // 🚧 remove hard-coding
             position: e.point,
             angle: e.angle,
             speed: npcJson["first-npc"].speed,
+            segs: npcJson["first-npc"].segs.map(deepClone),
           },
         });
       update();
@@ -356,6 +449,24 @@ export default function NPCs(props) {
       await firstValueFrom(state.events.pipe(
         filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
       ));
+    },
+    toggleLocalDecor(opts) {
+      const { ui: points } = api.gmGraph.gms[opts.gmId].point[opts.roomId];
+      const decorKeys = points.map((_, decorId) => `local-${decorId}-g${opts.gmId}r${opts.roomId}`)
+
+      if (opts.act === 'add') {
+        opts.tracked && decorKeys.forEach(key => /** @type {*} */ (opts.tracked)[key] = true)
+        state.npcAct({ action: "add-decor",
+          items: Object.values(points).map(({ point, tags }, uiId) => ({
+            key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
+            onClick: opts.cbFactory?.(tags),
+          })),
+        });
+      }
+      if (opts.act === 'remove') {
+        state.npcAct({ action: "rm-decor", items: decorKeys });
+        opts.tracked && decorKeys.forEach(key => delete /** @type {*} */ (opts.tracked)[key]);
+      }
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
@@ -384,7 +495,7 @@ export default function NPCs(props) {
         )),
       ).subscribe({
         async next(msg) {
-          // console.log(msg); // DEBUG
+          // console.log('msg', msg); // DEBUG
           if (!panZoom.isIdle() && msg.key !== 'started-walking') {
             status = 'no-track';
             console.warn('@', status);
@@ -394,17 +505,17 @@ export default function NPCs(props) {
           const npc = state.npc[npcKey];
           const npcPosition = npc.getPosition();
           
-          if (// Only when: npc idle, camera not animating, camera not close
-            npc.anim.spriteSheet === 'idle'
-            && (panZoom.anims[0] === null || panZoom.anims[0].playState === 'finished')
+          if (// npc not moving
+            (npc.anim.spriteSheet === 'idle' || npc.anim.spriteSheet === 'sit')
+            // camera not animating
+            && (panZoom.anims[0] === null || ['finished', 'idle'].includes(panZoom.anims[0].playState))
+            // camera not close
             && panZoom.distanceTo(npcPosition) > 10
           ) {
             status = 'panzoom-to';
             console.warn('@', status);
             // Ignore Error('cancelled')
-            try {
-              await panZoom.panZoomTo(2, npcPosition, 2000);
-            } catch {}
+            try { await panZoom.panZoomTo(2, npcPosition, 2000); } catch {};
             status = 'no-track';
           }
 
@@ -424,7 +535,7 @@ export default function NPCs(props) {
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
-      if (!verifyGlobalNavPath(e)) {
+      if (!npcService.verifyGlobalNavPath(e)) {
         throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
       }
 
@@ -442,10 +553,62 @@ export default function NPCs(props) {
         }
       }
     },
+    async writeToTtys(line, ttyCtxts) {
+      const sessionCtxts = Object.values(props.api.npcs.session).filter(x => x.receiveMsgs);
+
+      await Promise.all(sessionCtxts.map(async ({ key: sessionKey }) => {
+        await useSessionStore.api.writeMsgCleanly(sessionKey, line);
+        ttyCtxts && props.api.npcs.addTtyLineCtxts(sessionKey, line, ttyCtxts);
+      }));
+    },
   }), { deps: [nav, api] });
   
   React.useEffect(() => {
     props.onLoad(state);
+
+    const observer = new MutationObserver(debounce((records) => {
+      // console.log({records});
+      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
+
+      for (const el of els) {
+        const decorKey = el.dataset.key;
+        if (el.classList.contains(cssName.decorCircle)) {
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
+            const { center, radius } = cssTransformToCircle(el);
+            [decor.radius, decor.center] = [radius, center];
+            update();
+          }
+        }
+        if (el.classList.contains(cssName.decorRect)) {
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
+            const rectJson = cssTransformToRect(el);
+            Object.assign(decor, rectJson);
+            update();
+          }
+        }
+        if (el.classList.contains(cssName.decorPoint)) {
+          const parentEl = /** @type {HTMLElement} */ (el.parentElement);
+          const pathDecorKey = parentEl.dataset.key;
+          if (pathDecorKey && pathDecorKey in state.decor) {// Path
+            const decor = /** @type {NPC.DecorDef & { type: 'path' }} */ (state.decor[pathDecorKey]);
+            const decorPoints = /** @type {[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
+            const points = decorPoints.map(x => cssTransformToPoint(x));
+            decor.path.splice(0, decor.path.length, ...points);
+            update();
+          } else if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
+            const { x, y } = cssTransformToPoint(el);
+            [decor.x, decor.y] = [x, y];
+            update();
+          }
+        }
+      }
+    }, 300));
+    observer.observe(state.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -454,9 +617,10 @@ export default function NPCs(props) {
       ref={state.rootRef}
     >
 
-      {Object.entries(state.decor).map(([key, item]) =>
-        <Decor key={key} item={item} />
-      )}
+      <Decor
+        decor={state.decor}
+        api={api}
+      />
 
       {/** Prioritise walk animations, to avoid load on start walk */}
       {Object.keys(npcJson).map((key) => (
@@ -481,6 +645,8 @@ export default function NPCs(props) {
 }
 
 const rootCss = css`
+  /** For CSS variables, see state.rootRef */
+
   position: absolute;
   canvas {
     position: absolute;
@@ -497,10 +663,6 @@ const rootCss = css`
   svg {
     position: absolute;
     pointer-events: none;
-
-    .debug-circle {
-      fill: #ff000035;
-    }
   }
 `;
 
@@ -523,9 +685,11 @@ const rootCss = css`
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {HTMLElement} rootEl
+ * @property {HTMLElement} decorEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
+ * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
- * @property {(sessionKey: string, lineNumber: number, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
+ * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
@@ -536,13 +700,26 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {(e: NPC.NpcAction) => Promise<undefined | NPC.NPC>} npcAct
+ * @property {(e: NPC.NpcAction) => Promise<void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
+ * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
- * @property {(decorKey: string, decor: null | NPC.DecorDef) => void} setDecor
+ * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => void} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
+ * @property {import('../service/npc')} service
+ * @property {(opts: ToggleLocalDecorOpts) => void} toggleLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
+ * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
+ */
+
+/**
+ * @typedef ToggleLocalDecorOpts
+ * @property {'add' | 'remove'} act
+ * @property {number} gmId
+ * @property {number} roomId
+ * @property {(tags?: string[]) => NPC.DecorPoint['onClick']} [cbFactory]
+ * @property {{ [decorKey: string]: true }} [tracked]
  */

@@ -10,7 +10,6 @@ import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
 import type { Props as TabsProps } from './Tabs';
 import Tab, { createKeyedComponent } from './Tab';
-import useSessionStore from "projects/sh/session.store";
 
 export default function Layout(props: Props) {
 
@@ -22,7 +21,7 @@ export default function Layout(props: Props) {
       if (node.getType() === 'tab') {
         
         // Enable and disable tabs relative to conditions
-        node.setEventListener('visibility', ({ visible }) => {
+        node.setEventListener('visibility', async ({ visible }) => {
           if (model.getMaximizedTabset()) {
             return; // If some tab maximised don't enable "visible" tabs covered by it
           }
@@ -37,6 +36,7 @@ export default function Layout(props: Props) {
           } else {// tab now visible
             if (tabMeta.type === 'terminal') {
               // Ensure scrollbar appears if exceeded scroll area when hidden
+              const { default: useSessionStore } = await import("projects/sh/session.store");
               const session = useSessionStore.api.getSession(getTabIdentifier(tabMeta));
               session?.ttyShell.xterm.forceResize();
             }

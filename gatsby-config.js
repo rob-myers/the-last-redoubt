@@ -14,23 +14,54 @@ const config = {
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
-        remarkPlugins: [require("remark-math")],
-        rehypePlugins: [require("rehype-katex")],
+        extensions: [".mdx", ".md"],
+        gatsbyRemarkPlugins: [
+          {
+            resolve: 'gatsby-remark-katex',
+            options: {
+              // Add any KaTeX options from https://github.com/KaTeX/KaTeX/blob/master/docs/options.md here
+              strict: `ignore`
+            }
+          },
+        ],
+        mdxOptions: {
+          remarkPlugins: [
+            require("remark-gfm"),
+          ],
+        },
       },
     },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
         "name": "pages",
-        "path": "./src/pages/"
+        // "path": "./src/pages/",
+        "path": `${__dirname}/src/pages`,
       },
-      //@ts-ignore
-      __key: "pages"
+      // __key: "pages"
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        "name": "snippets",
+        "path": `${__dirname}/src/components/snippet`,
+      },
+      // __key: "snippets"
     },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",
     // "gatsby-plugin-preact",
     "gatsby-plugin-loadable-components-ssr",
+    {
+      resolve: "gatsby-plugin-gatsby-cloud",
+      options: {
+        headers: {
+          '/*': ['Cache-Control: public, max-age=31536000, immutable'],
+          'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
+        },
+      },
+    },
+    "gatsby-plugin-webpack-bundle-analyser-v2",
   ],
   flags: {
     /**
@@ -45,5 +76,16 @@ const config = {
     FAST_DEV: true,
   },
 };
+
+/** https://www.npmjs.com/package/gatsby-plugin-mdx#mdxOptions */
+function wrapESMPlugin (name) {
+  return function wrapESM(opts) {
+    return async (...args) => {
+      const mod = await import(name)
+      const plugin = mod.default(opts)
+      return plugin(...args)
+    }
+  }
+}
 
 module.exports = config;

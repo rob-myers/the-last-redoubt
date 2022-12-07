@@ -3,8 +3,8 @@ import safeJsonStringify from 'safe-json-stringify';
 
 import type * as Sh from './parse';
 import { last } from '../service/generic';
-import useSession, { ProcessStatus } from './session.store';
-import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes } from './util';
+import useSession from './session.store';
+import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess } from './util';
 import { cmdService, parseJsArg } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
@@ -66,11 +66,7 @@ class semanticsServiceClass {
       );
       if (process) {// Kill all processes in process group
         const processes = useSession.api.getProcesses(e.sessionKey, process.pgid);
-        processes.forEach((process) => {
-          process.status = ProcessStatus.Killed;
-          process.cleanups.forEach(cleanup => cleanup());
-          process.cleanups.length = 0;
-        });
+        processes.forEach(killProcess);
       }
     }
   }
@@ -166,7 +162,11 @@ class semanticsServiceClass {
           }
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
 
-          const process = useSession.api.getProcess(node.meta)
+          const process = useSession.api.getProcess(node.meta);
+
+          /**
+           * `Promise.allSettled` permits awaiting all killed.
+           */
           const results = await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
@@ -178,20 +178,16 @@ class semanticsServiceClass {
                   throw new ShError(`pipe ${i}`, node.exitCode);
                 }
                 resolve();
-              } catch (e) {// Promise.allSettled won't throw on reject.
-                // Instead, we're informing it that this promise has settled
+              } catch (e) {
                 reject(e);
+                // Promise.allSettled won't throw on reject, so kill others
+                const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
+                processes.filter(Boolean).forEach(killProcess);
               }
             }),
           ));
 
           if (results.some(x => x.status === 'rejected')) {
-            // Terminate children and this process on pipeline error
-            // 🚧 descendants too?
-            clones.map(({ meta }) => useSession.api.getProcess(meta))
-              .forEach(x =>
-                x && (x.status = ProcessStatus.Killed) && x.cleanups.forEach(cleanup => cleanup())
-              );
             throw killError(node.meta);
           }
 

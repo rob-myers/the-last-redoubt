@@ -1,6 +1,7 @@
 import { Poly } from "../geom";
 import { BaseGraph } from "./graph";
 import { error } from "../service/log";
+import { getNormalizedDoorPolys } from "../service/geomorph";
 
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
@@ -116,11 +117,12 @@ export class roomGraphClass extends BaseGraph {
   */
   static json(rooms, doors, windows) {
 
+    const doorPolys = getNormalizedDoorPolys(doors);
     /**
      * For each door, the respective adjacent room ids.
      * Each array will be aligned with the respective door node's successors.
      */
-    const doorsRoomIds = doors.map(door => rooms.flatMap((room, i) => Poly.union([room, door.poly]).length === 1 ? i : []));
+    const doorsRoomIds = doors.map((_, doorId) => rooms.flatMap((room, i) => Poly.union([room, doorPolys[doorId]]).length === 1 ? i : []));
     const windowsRoomIds = windows.map(window => rooms.flatMap((room, i) => Poly.union([room, window.poly]).length === 1 ? i : []));
 
     /** @type {Graph.RoomGraphNode[]} */
@@ -144,15 +146,15 @@ export class roomGraphClass extends BaseGraph {
 
     /** @type {Graph.RoomGraphEdgeOpts[]} */
     const roomGraphEdges = [
-      ...doors.flatMap((_door, doorIndex) => {
-        const roomIds = doorsRoomIds[doorIndex];
+      ...doors.flatMap((_door, doorId) => {
+        const roomIds = doorsRoomIds[doorId];
         if ([1, 2].includes(roomIds.length)) {// Hull door has 1, standard has 2
           return roomIds.flatMap(roomId => [// undirected, so 2 directed edges
-            { src: `room-${roomId}`, dst: `door-${doorIndex}` },
-            { dst: `room-${roomId}`, src: `door-${doorIndex}` },
+            { src: `room-${roomId}`, dst: `door-${doorId}` },
+            { dst: `room-${roomId}`, src: `door-${doorId}` },
           ]);
         } else {
-          error(`door ${doorIndex}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
+          error(`door ${doorId}: unexpected adjacent rooms: ${JSON.stringify(roomIds)}`)
           return [];
         }
       }),

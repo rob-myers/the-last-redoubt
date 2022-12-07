@@ -12,7 +12,7 @@ import fs from 'fs';
 import { writeAsJson } from '../projects/service/file';
 import { error } from '../projects/service/log';
 import { mapValues } from '../projects/service/generic';
-import { parseNpc, renderNpcSpriteSheets } from '../projects/service/npc';
+import * as npcService from '../projects/service/npc';
 
 const [,, npcName, ...animNames] = process.argv;
 const npcInputDir = 'static/assets/npc'
@@ -29,8 +29,8 @@ const npcOutputDir = path.resolve(staticAssetsDir, 'npc');
 const svgContents = fs.readFileSync(npcSvgFilepath).toString();
 
 const zoom = 2;
-const parsed = parseNpc(npcName, svgContents, zoom);
-renderNpcSpriteSheets(parsed, npcOutputDir, { zoom, animNames });
+const parsed = npcService.parseNpc(npcName, svgContents, zoom);
+npcService.renderNpcSpriteSheets(parsed, npcOutputDir, { zoom, animNames });
 
 /** @type {NPC.ParsedNpc} */
 const serializable = {

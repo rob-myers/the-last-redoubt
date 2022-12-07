@@ -282,11 +282,13 @@ class geomServiceClass {
    * 1. `lambda x. p0 + x * d0`.
    * 2. `lambda x. p1 + x * d1`.
    *
-   * If they intersect non-degenerately return solution of (1), else `null`.
-   * @param {Geom.VectJson} p0
-   * @param {Geom.VectJson} d0
-   * @param {Geom.VectJson} p1
-   * @param {Geom.VectJson} d1
+   * If they intersect non-degenerately,
+   * return parameter solving (1) else `null`.
+   *
+   * @param {Geom.VectJson} p0 Point on first line
+   * @param {Geom.VectJson} d0 Unit direction of first line
+   * @param {Geom.VectJson} p1 Point on second line
+   * @param {Geom.VectJson} d1 Unit direction of second line
    * @returns {number | null}
    */
   getLinesIntersect(p0, d0, p1, d1) {
@@ -298,6 +300,25 @@ class geomServiceClass {
       return null;
     }
     return (d1.x * (p1.y - p0.y) - d1.y * (p1.x - p0.x)) / (d0.y * d1.x - d1.y * d0.x);
+  }
+  /**
+   * Returns parameters solving each line and actual point (if solution exists).
+   * @param {Geom.VectJson} p0 Point on first line
+   * @param {Geom.VectJson} d0 Unit direction of first line
+   * @param {Geom.VectJson} p1 Point on second line
+   * @param {Geom.VectJson} d1 Unit direction of second line
+   * @returns {{ lambda1: number; lambda2: number; point: Geom.VectJson } | null}
+   */
+  getLinesIntersectInfo(p0, d0, p1, d1) {
+    const lambda1 = this.getLinesIntersect(p0, d0, p1, d1);
+    if (lambda1 !== null) {
+      const point = Vect.from(p0).addScaledVector(d0, lambda1);
+      const offset = point.clone().sub(p1)
+      const lambda2 = offset.dot(d1) >= 0 ? offset.length : -offset.length;
+      return { lambda1, point, lambda2 };
+    } else {
+      return null;
+    }
   }
 
   /**

@@ -4,13 +4,12 @@ import { Poly } from '../geom/poly';
 import { warn } from './log';
 import { assertNonNull } from './generic';
 
+//#region svg event
+
 /** @param {WheelEvent | PointerEvent | React.WheelEvent} e */
 export function isSvgEvent(e) {
 	return e.target && 'ownerSVGElement' in e.target;
 }
-
-/** @type {DOMPoint} */
-let svgPoint;
 
 /**
  * @typedef SvgPtr @type {object}
@@ -21,25 +20,11 @@ let svgPoint;
  */
 
 /**
- * Assumes `e.currentTarget` is an SVGElement or SVGSVGElement.
- * @param {MouseEvent | import('react').MouseEvent} e
- * @returns {SvgPtr}
- */
-export function projectSvgEvt(e) {
-	return {
-		pointerId: e instanceof PointerEvent ? e.pointerId : null,
-		clientX: e.clientX,
-		clientY: e.clientY,
-		ownerSvg: /** @type {*} */ (e.currentTarget)?.ownerSVGElement || e.currentTarget,
-	};
-}
-
-/**
  * Get SVG world position i.e. userspace.
  * @param {SvgPtr} ptr 
  * @param {SVGGraphicsElement} [targetEl] 
  */
-export function getSvgPos(ptr, targetEl) {
+ export function getSvgPos(ptr, targetEl) {
   svgPoint = svgPoint || ptr.ownerSvg.createSVGPoint();
   svgPoint.x = ptr.clientX;
   svgPoint.y = ptr.clientY;
@@ -56,6 +41,36 @@ export function getSvgMid(ptrs) {
 	ptrs.forEach(e => { svgPoint.x += e.clientX; svgPoint.y += e.clientY; });
 	svgPoint.x /= ptrs.length || 1; svgPoint.y /= ptrs.length || 1;
   return svgPoint.matrixTransform(ptrs[0].ownerSvg.getScreenCTM()?.inverse());
+}
+
+/**
+ * Assumes `e.currentTarget` is an SVGElement or SVGSVGElement.
+ * @param {MouseEvent | import('react').MouseEvent} e
+ * @returns {SvgPtr}
+ */
+export function projectSvgEvt(e) {
+	return {
+		pointerId: e instanceof PointerEvent ? e.pointerId : null,
+		clientX: e.clientX,
+		clientY: e.clientY,
+		ownerSvg: /** @type {*} */ (e.currentTarget)?.ownerSVGElement || e.currentTarget,
+	};
+}
+
+/** @type {DOMPoint} */
+let svgPoint;
+
+//#endregion
+
+//#region parse
+
+/**
+ * Extract numeric part of a css variable
+ * @param {HTMLElement} el 
+ * @param {string} varName e.g. `--my-css-var`
+ */
+export function getNumericCssVar(el, varName) {
+	return parseFloat(assertNonNull(el.style.getPropertyValue(varName)));
 }
 
 /**
@@ -108,6 +123,113 @@ export function svgPathToPolygon(svgPathString) {
 		polys.slice(1).map(poly => poly.outline),
 	);
 }
+
+/**
+ * 
+ * @param {Geom.Circle} circle 
+ */
+export function circleToCssTransform(circle) {
+	return `translate(${circle.center.x}px, ${circle.center.y}px) scale(${2 * circle.radius})`;
+}
+
+/**
+ * 
+ * @param {Geom.VectJson} point 
+ */
+export function pointToCssTransform(point) {
+	return `translate(${point.x}px, ${point.y}px)`;
+}
+
+/**
+ * @param {Geom.Seg} seg 
+ */
+export function lineSegToCssTransform(seg) {
+	tmpVec.copy(seg.dst).sub(seg.src);
+	return `translate(${seg.src.x}px, ${seg.src.y}px) rotate(${tmpVec.degrees}deg) scaleX(${tmpVec.length})`;
+}
+
+/**
+ * @param {Geom.RectJson} rect 
+ */
+export function rectToCssTransform(rect) {
+	return `translate(${rect.x}px, ${rect.y}px) scale(${rect.width}, ${rect.height})`;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.Circle}
+ */
+export function cssTransformToCircle(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in circleCache) {
+		return circleCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return circleCache[cacheKey] = {
+		radius: matrix.a / 2, // expect 2*2 matrix cols (2 * radius, 0) (0, 2 * radius)
+		center: { x: matrix.e, y: matrix.f },
+	};
+}
+
+/**
+ * Assume affine transform acts on `(0,0) --> (1, 0)` to produce line segment
+ * @param {HTMLElement} el
+ * @returns {Geom.Seg}
+ */
+export function cssTransformToLineSeg(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in lineSegCache) {
+		return lineSegCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return lineSegCache[cacheKey] = {
+		// Zero vector offset by (e, f)
+		src: { x: matrix.e, y: matrix.f },
+		// 1st column of 2x2 matrix (a b), offset by (e, f)
+		dst: { x: matrix.a + matrix.e, y: matrix.b + matrix.f },
+	};
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.VectJson}
+ */
+export function cssTransformToPoint(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in pointCache) {
+		return pointCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return pointCache[cacheKey] = { x: matrix.e, y: matrix.f };
+}
+
+/**
+ * @param {HTMLElement} el
+ * @returns {Geom.RectJson}
+ */
+export function cssTransformToRect(el) {
+	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey in rectCache) {
+		return rectCache[cacheKey];
+	}
+	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
+	return rectCache[cacheKey] = { x: matrix.e, y: matrix.f, width: matrix.a, height: matrix.d };
+}
+
+let tmpVec = new Vect;
+
+/** @type {{ [cssTransformValue: string]: Geom.Circle }} */
+const circleCache = {};
+/** @type {{ [cssTransformValue: string]: Geom.Seg }} */
+const lineSegCache = {};
+/** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
+const pointCache = {};
+/** @type {{ [cssTransformValue: string]: Geom.RectJson }} */
+const rectCache = {};
+
+//#endregion
+
+//#region canvas
 
 /**
  * @param {CanvasRenderingContext2D} ctxt 
@@ -176,6 +298,10 @@ export function setStyle(ctxt, fillStyle, strokeStyle, lineWidth) {
 	lineWidth !== undefined && (ctxt.lineWidth = lineWidth);
 }
 
+//#endregion
+
+//#region unsorted
+
 /**
  * @param {string} src
  * @returns {Promise<HTMLImageElement>}
@@ -211,20 +337,4 @@ export function canTouchDevice() {
   ));
 }
 
-/**
- * Extract numeric part of a css variable
- * @param {HTMLElement} el 
- * @param {string} varName e.g. `--my-css-var`
- */
-export function getNumericCssVar(el, varName) {
-	return parseFloat(assertNonNull(el.style.getPropertyValue(varName)));
-}
-
-/**
- * @param {string | number} [value] 
- */
-export function parseCssDim(value) {
-	return typeof value === 'number' || value === undefined
-		? `${value??0}px`
-		: value;
-}
+//#endregion
