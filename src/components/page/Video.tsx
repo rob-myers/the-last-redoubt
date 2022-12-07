@@ -7,7 +7,7 @@ export default function Video({ videoKey, height }: Props) {
   return (
     <figure className={cx("video", rootCss)} style={{ height }}>
       <span id={videoKey} className="anchor"/>
-      {videoKey === 'cli-demo-1' && <EmbeddedVideo id="AwpMAId-RKM" title="cli demo 1" />}
+      {videoKey === 'cli-demo-1' && <EmbeddedVideo id="oE3tLx5fIAA" title="cli demo 1" />}
       {videoKey === 'make-boxy-svg-symbol' && <EmbeddedVideo id="o0F7gPSwVgM" title="make boxy svg symbol mov" />}
       {videoKey === 'video--intro-world-tty' && <EmbeddedVideo playlist id="PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo" title="intro world tty" />}
       {videoKey === 'video--intro-first' && <EmbeddedVideo playlist id="PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="intro first" />}

@@ -7,13 +7,14 @@
     - ❌ GIF demo of CLI
     - ✅ Video demo of CLI
       > `ffmpeg -i 'Screen Recording 2022-11-06 at 17.00.40.mov' -an -filter_complex "[0:v] fps=20,scale=600:-1" -b:v 0 -crf 25 output.mp4`
-    - 🚧 Redo video demo of CLI with sound
+    - ✅ Redo video demo of CLI with sound
       - ✅ 1st test
         > `ffmpeg -i 'Screen Recording 2022-11-19 at 14.16.37.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 cli-frontpage-test.mp4`
         > 329Mb -> 20Mb
         > https://youtu.be/iohh0Glruis
       - ✅ 2nd test
-      - 3rd do at home (need silence)
+        - `ffmpeg -i 'first-cli-draft.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 first-cli-draft.mov.mp4`
+        - 13:09s `44M  7 Dec 10:48 first-cli-draft.mov.mp4`
     - 🚧 Adjust textual copy, emphasising _canonical_ UIs:
       - POSIX CLI
       - Browser devtool  
