@@ -40,7 +40,7 @@ function open(e: React.MouseEvent, width: number | undefined, timeoutId: number)
   bubble.classList.add('open');
   
   // 🚧 consider favouring bubble on right
-  const rect = bubble.getBoundingClientRect();
+  const rect = e.currentTarget.getBoundingClientRect();
   const pixelsOnRight = document.documentElement.clientWidth - (rect.x + rect.width) - 40;
   const pixelsOnLeft = rect.x;
   const maxWidthAvailable = Math.max(pixelsOnLeft, pixelsOnRight) - 32;
@@ -87,7 +87,9 @@ const speechBubbleCss = css`
   --info-width: ${defaultInfoWidthPx}px;
   position: relative;
   z-index: 2;
-  top: -4px;
+  top: ${-rootWidthPx}px;
+  /** Prevents bubble span from wrapping to next line? */
+  display: inline-block;
 
   font-size: 0.95rem;
   font-style: normal;
