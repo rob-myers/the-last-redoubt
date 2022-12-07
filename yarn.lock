@@ -6539,10 +6539,10 @@ gatsby-parcel-config@1.0.0:
     "@parcel/transformer-js" "2.6.2"
     "@parcel/transformer-json" "2.6.2"
 
-gatsby-plugin-emotion@^7.13.0:
-  version "7.13.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-emotion/-/gatsby-plugin-emotion-7.13.0.tgz#d20a9d05ab7f5b8cccb89d149df40e5c5814c8a0"
-  integrity sha512-CsulpyUurhdDpeHdoHgZeDHQGk8+V2lvm/nVr9I6y13CMIYLwabq0RYjQiQ0WFmZhaZ9F3QaFWw0owyBj4K9CA==
+gatsby-plugin-emotion@^8.2.0:
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-emotion/-/gatsby-plugin-emotion-8.2.0.tgz#c3933d4bf290f7e8d66b32fbcc3c3d1cf7b3a05f"
+  integrity sha512-ZJAfWYGsSRTWVyjPCZGp8jGYvpytHbmjPekvRWrMW3PialNqFn7JbqSL3Z6tOXqnaJ7efWKeI2efB5BOj538dA==
   dependencies:
     "@babel/runtime" "^7.15.4"
     "@emotion/babel-preset-css-prop" "^11.2.0"
@@ -6560,10 +6560,10 @@ gatsby-plugin-gatsby-cloud@^5.0.0:
     lodash "^4.17.21"
     webpack-assets-manifest "^5.1.0"
 
-gatsby-plugin-loadable-components-ssr@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-loadable-components-ssr/-/gatsby-plugin-loadable-components-ssr-4.2.0.tgz#2020f8dfa622d8b21fb36a83c9abac2947a4abdd"
-  integrity sha512-ifTJ4QhbSI3rA1wmtye9/tch6jz+7fUbQk52A2wl0hho397EmvISoXHb/V5iOg/eN2dDcGvwwr2/NuLuQx7AUQ==
+gatsby-plugin-loadable-components-ssr@^4.3.2:
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-loadable-components-ssr/-/gatsby-plugin-loadable-components-ssr-4.3.2.tgz#1e9f1e0ee1ace1348f9fb282fd9adb1992bb62b4"
+  integrity sha512-+Lc4ddrTvtMRtuouAWNqdu/RqDHYerKbkdsj3yRvK0Nk7bFGjehdK+iCUwnnQTCzQfkQMMslTeVIddBso51MGw==
   dependencies:
     "@babel/runtime" "^7.9.6"
     "@loadable/babel-plugin" "^5.13.2"
@@ -6613,10 +6613,10 @@ gatsby-plugin-page-creator@^5.0.0:
     globby "^11.1.0"
     lodash "^4.17.21"
 
-gatsby-plugin-react-helmet@^5.14.0:
-  version "5.14.0"
-  resolved "https://registry.yarnpkg.com/gatsby-plugin-react-helmet/-/gatsby-plugin-react-helmet-5.14.0.tgz#35d5c9855a4ff0fcde4b78f44d8d9a4d2a255f94"
-  integrity sha512-Loy0fUtVDhEuvv1nCpsyyUpAosGRUB3g5GzHvV3oqxcGgrpTgeXTPH64drXuRKcHyJbH1vgUOuPdlIEzXDbQMQ==
+gatsby-plugin-react-helmet@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/gatsby-plugin-react-helmet/-/gatsby-plugin-react-helmet-6.2.0.tgz#e4cf1d19417adf450042742a276db8efceefeb1e"
+  integrity sha512-DKC8PtsZA6hVNkp/rt3EyKT6iwt7xP0/8JjxgHK+2TFaltAqfdeU3fOm5Ayt4VDzKYs5eRbrPFVlh8hGra3cOw==
   dependencies:
     "@babel/runtime" "^7.15.4"
 
