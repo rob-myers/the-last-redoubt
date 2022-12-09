@@ -220,6 +220,8 @@ class semanticsServiceClass {
         yield* cmdService.runCmd(node, command, cmdArgs);
       } else if (func = useSession.api.getFunc(node.meta.sessionKey, command)) {
         await cmdService.launchFunc(node, func, cmdArgs);
+        // Propagate function exitCode to callee
+        node.exitCode = func.node.exitCode;
       } else {
         try {// Try to `get` things instead
           for (const arg of args) {
@@ -537,9 +539,7 @@ class semanticsServiceClass {
         });
       stmt.exitCode = stmt.Negated ? 1 : 0;
     } else {
-      /**
-       * Run a simple or compound command.
-       */
+      // Run a simple or compound command
       yield* sem.Command(stmt.Cmd, stmt.Redirs);
       stmt.exitCode = stmt.Cmd.exitCode;
       stmt.Negated && (stmt.exitCode = 1 - Number(!!stmt.Cmd.exitCode));

@@ -5,7 +5,8 @@
 - ✅ BUG `return` should only kill current process (not leading)
 - ✅ implement shell function `empty` with exit 0 iff all args empty
 - ✅ implement shell function `clone`
-- BUG `lastExitCode` overwitten with `0`
+- ✅ BUG `lastExitCode` overwritten with `0`
+  - Function exitCode was not propagated to callee
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
