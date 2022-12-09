@@ -587,7 +587,8 @@ export default function NPCs(props) {
           const pathDecorKey = el.dataset.key;
           if (pathDecorKey && pathDecorKey in state.decor) {
             const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            if (!decor.origPath) decor.origPath = decor.path.map(Vect.from);
+            if (decor.origPath && !el.style.transform) delete decor.origPath;
+            if (!decor.origPath) decor.origPath = decor.path.map(p => ({ x: p.x, y: p.y }));
             
             // devtool provides validation (Invalid property value)
             const matrix = new DOMMatrix(el.style.transform);

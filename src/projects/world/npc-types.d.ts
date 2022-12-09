@@ -296,7 +296,7 @@ declare namespace NPC {
     type: 'path';
     path: Geom.VectJson[];
     /** Added whenever `el.style.transform` has been applied */
-    origPath?: Geom.Vect[];
+    origPath?: Geom.VectJson[];
   }
 
   export type DecorDef = (
