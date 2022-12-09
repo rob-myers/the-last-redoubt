@@ -4,7 +4,7 @@ import safeJsonStringify from 'safe-json-stringify';
 import type * as Sh from './parse';
 import { last } from '../service/generic';
 import useSession from './session.store';
-import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess } from './util';
+import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
 import { cmdService, parseJsArg } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
@@ -44,7 +44,7 @@ class semanticsServiceClass {
 
   private handleShError(node: Sh.ParsedSh, e: any, prefix?: string) {
     if (e instanceof ProcessError) {
-      throw e; // Propagate signal (KILL)
+      handleProcessError(node, e);
     } else if (e instanceof ShError) {
       const message = [prefix, e.message].filter(Boolean).join(': ');
       useSession.api.writeMsg(node.meta.sessionKey, message, 'error');
@@ -80,7 +80,7 @@ class semanticsServiceClass {
   private async *stmts(parent: Sh.ParsedSh, nodes: Sh.Stmt[]) {
     for (const node of nodes) {
       yield* sem.Stmt(node);
-      parent.exitCode = node.exitCode;
+      parent.exitCode ||= node.exitCode;
     }
   }
 

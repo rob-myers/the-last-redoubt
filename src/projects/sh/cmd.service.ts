@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -299,9 +299,12 @@ class cmdServiceClass {
         // Loop constructs like WhileClause are unsupported,
         // so we just kill the current process
         const exitCode = parseInt(args[0]);
-        throw killError(meta, Number.isInteger(exitCode)
-          ? exitCode
-          : useSession.api.getSession(meta.sessionKey).lastExitCode
+        throw killError(
+          meta,
+          Number.isInteger(exitCode)
+            ? exitCode
+            : useSession.api.getSession(meta.sessionKey).lastExitCode,
+          0, // Only terminate current process (a shell function)
         );
       }
       case 'rm': {
@@ -324,7 +327,9 @@ class cmdServiceClass {
           const func = Function('_', `return async function *generator ${args[0]}`);
           yield* func()(this.provideProcessCtxt(meta, args.slice(1)));
         } catch (e) {
-          if (e instanceof ProcessError || e instanceof ShError) {
+          if (e instanceof ProcessError) {
+            handleProcessError(node, e);
+          } else if (e instanceof ShError) {
             throw e;
           } else {
             console.error(e); // Provide JS stack
@@ -501,7 +506,7 @@ class cmdServiceClass {
   
     /** JSON.parse which returns `undefined` on parse error */
     safeJsonParse,
-  
+
     throwError,
 
     info(message: string) {
@@ -651,8 +656,8 @@ async function *sleep(meta: Sh.BaseMeta, seconds = 1) {
  * Can prefix with `throw` for static analysis.
  * The outer throw will never be thrown.
  */
-function throwError(message: string, exitCode?: number) {
-  throw new ShError(message, exitCode || 1);
+function throwError(message: string, exitCode = 1) {
+  throw new ShError(message, exitCode);
 }
 
 //#endregion

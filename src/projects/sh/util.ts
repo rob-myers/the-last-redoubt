@@ -48,6 +48,13 @@ export function expand(values: string | any[]): Expanded {
   };
 }
 
+export function handleProcessError(node: Sh.ParsedSh, e: ProcessError) {
+  if (e.depth === undefined || e.depth--) {
+    throw e; // Propagate signal (KILL)
+  }
+  node.exitCode = e.exitCode;
+}
+
 export function interpretEscapeSequences(input: string): string {
   return JSON.parse(JSON.stringify(input)
     // '\\e' -> '\\u001b'.
@@ -107,18 +114,21 @@ export class ProcessError extends Error {
     public pid: number,
     public sessionKey: string,
     public exitCode?: number,
+    /** If defined, the number of ancestral processes to terminate */
+    public depth?: number,
   ) {
     super(code);
     Object.setPrototypeOf(this, ProcessError.prototype);
   }
 }
 
-export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number) {
+export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number, depth?: number) {
   return new ProcessError(
     SigEnum.SIGKILL,
     'pid' in meta ? meta.pid : meta.key,
     meta.sessionKey,
     exitCode,
+    depth,
   );
 }
 

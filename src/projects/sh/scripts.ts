@@ -40,6 +40,17 @@ export const utilFunctions = [
       }
     }'
 }`,
+
+  empty: `{
+    return $(
+      call '({ args }) => args.some(Boolean) ? 1 : 0' "$@"
+    )
+}`,
+
+  clone: `{
+    map 'x => JSON.parse(JSON.stringify(x))'
+}`,
+
 },
 ];
 

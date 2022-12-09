@@ -2,11 +2,10 @@
 
 ## In progress
 
-- ✅ Support global transform of navpath
-- ✅ BUG resuming session resumed paused `track`
-- Absorb `localDecor` program into `<Decor>`
-
-- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
+- ✅ BUG `return` should only kill current process (not leading)
+- ✅ implement shell function `empty` with exit 0 iff all args empty
+- ✅ implement shell function `clone`
+- BUG `lastExitCode` overwitten with `0`
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -27,6 +26,13 @@
     - ✅ Far too complex: need a simplified overview
     - ✅ Clearer second attempt but still too complex
 - 🚧 Adjust Intro
+
+- ✅ Support global transform of navpath
+- ✅ BUG resuming session resumed paused `track`
+- Blur unplayed videos via CSS
+- Absorb `localDecor` program into `<Decor>`
+
+- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
 
 - ✅ BUG `source foo bar`: positive positional `bar` not propagated
 - ✅ `localDecor` runs in background automatically
