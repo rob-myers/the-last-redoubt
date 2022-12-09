@@ -2,8 +2,11 @@
 
 ## In progress
 
-- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
+- ✅ Support global transform of navpath
 - BUG resume session resumed paused `track`
+- Absorb `localDecor` program into `<Decor>`
+
+- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -21,7 +24,8 @@
     - POSIX CLI
     - Browser devtool  
   - 🚧 Video demo of `World` CSS/DOM
-    - Far too complex: need a simplified overview
+    - ✅ Far too complex: need a simplified overview
+    - ✅ Clearer second attempt but still too complex
 - 🚧 Adjust Intro
 
 - ✅ BUG `source foo bar`: positive positional `bar` not propagated

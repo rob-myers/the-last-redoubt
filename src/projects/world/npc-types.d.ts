@@ -280,17 +280,30 @@ declare namespace NPC {
     linkStartIndex: number,
   ) => void;
 
-  export interface DecorPoint extends Geom.VectJson {
+  interface BaseDecor {
+    key: string;
+    /** Epoch ms when last updated (overwritten) */
+    updatedAt?: number;
+  }
+
+  export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
     tags?: string[];
     onClick?(point: DecorPoint, api: import('../world/World').State): void;
   }
 
-  export type DecorDef = { key: string } & (
-    | { type: 'circle' } & Geom.Circle
-    | { type: 'path'; path: Geom.VectJson[]; }
+  export interface DecorPath extends BaseDecor {
+    type: 'path';
+    path: Geom.VectJson[];
+    /** Added whenever `el.style.transform` has been applied */
+    origPath?: Geom.Vect[];
+  }
+
+  export type DecorDef = (
+    | BaseDecor & { type: 'circle' } & Geom.Circle
+    | DecorPath
     | DecorPoint
-    | { type: 'rect' } & Geom.RectJson
+    | BaseDecor & { type: 'rect' } & Geom.RectJson
   );
   
   /** Using `action` instead of `key` to avoid name-collision */

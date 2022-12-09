@@ -11,7 +11,7 @@ import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { cssTransformToCircle, cssTransformToLineSeg, cssTransformToPoint, cssTransformToRect, getNumericCssVar } from "../service/dom";
+import { cssTransformToCircle, cssTransformToPoint, cssTransformToRect, getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -404,6 +404,9 @@ export default function NPCs(props) {
         if (!d || !npcService.verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
         }
+        if (state.decor[d.key]) {
+          d.updatedAt = Date.now();
+        }
         state.decor[d.key] = d;
       }
       update();
@@ -580,11 +583,20 @@ export default function NPCs(props) {
             update();
           }
         }
-        if (el.classList.contains(cssName.decorRect)) {
-          if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
-            const rectJson = cssTransformToRect(el);
-            Object.assign(decor, rectJson);
+        if (el.classList.contains(cssName.decorPath)) {
+          const pathDecorKey = el.dataset.key;
+          if (pathDecorKey && pathDecorKey in state.decor) {
+            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
+            if (!decor.origPath) decor.origPath = decor.path.map(Vect.from);
+            
+            // devtool provides validation (Invalid property value)
+            const matrix = new DOMMatrix(el.style.transform);
+            decor.origPath.forEach((p, i) => {
+              const { x, y } = matrix.transformPoint(p);
+              [decor.path[i].x, decor.path[i].y] = [x, y];
+            });
+
+            if (matrix.isIdentity) delete decor.origPath;
             update();
           }
         }
@@ -592,8 +604,8 @@ export default function NPCs(props) {
           const parentEl = /** @type {HTMLElement} */ (el.parentElement);
           const pathDecorKey = parentEl.dataset.key;
           if (pathDecorKey && pathDecorKey in state.decor) {// Path
-            const decor = /** @type {NPC.DecorDef & { type: 'path' }} */ (state.decor[pathDecorKey]);
-            const decorPoints = /** @type {[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
+            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
+            const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
             const points = decorPoints.map(x => cssTransformToPoint(x));
             decor.path.splice(0, decor.path.length, ...points);
             update();
@@ -601,6 +613,14 @@ export default function NPCs(props) {
             const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
             const { x, y } = cssTransformToPoint(el);
             [decor.x, decor.y] = [x, y];
+            update();
+          }
+        }
+        if (el.classList.contains(cssName.decorRect)) {
+          if (decorKey && decorKey in state.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
+            const rectJson = cssTransformToRect(el);
+            Object.assign(decor, rectJson);
             update();
           }
         }

@@ -6,7 +6,7 @@ import { circleToCssTransform, pointToCssTransform, rectToCssTransform } from ".
 import DecorPath from "./DecorPath";
 
 /**
- * @param {{ decor: import('./NPCs').State['decor']; api: import('./World').State; }} props
+ * @param {Props} props
  */
 export default function Decor({ decor, api }) {
   return (
@@ -91,3 +91,9 @@ const cssRect = css`
   transform-origin: left top;
   background-color: #7700ff22;
 `;
+
+/**
+ * @typedef Props
+ * @property {import('./NPCs').State['decor']} decor
+ * @property {import('./World').State} api
+ */
