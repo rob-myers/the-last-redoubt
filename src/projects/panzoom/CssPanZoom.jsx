@@ -410,7 +410,7 @@ export default function CssPanZoom(props) {
 
   return (
     <div
-      className={cx("panzoom-parent", rootCss)}
+      className={cx("panzoom-root", rootCss)}
       data-tags="no-ui"
       ref={measureRef}
       style={{
@@ -439,7 +439,7 @@ const gridColour = 'rgba(100, 100, 100, 0.1)';
 const rootCss = css`
   width: 100%;
   height: 100%;
-  /** Needed so .panzoom-parent will scroll */
+  /** Needed so .panzoom-root will scroll */
   overflow: hidden;
   user-select: none;
   /** This is important for mobile to prevent scrolling while panning */
