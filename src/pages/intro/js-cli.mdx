@@ -36,7 +36,7 @@ Shells usually manipulate and output strings, whereas our CLI outputs arbitrary 
 - <InlineCode>echo</InlineCode> outputs its arguments as a single string.
 - <InlineCode>false</InlineCode> has exit code 1.
 - <InlineCode>get</InlineCode> wraps recursive <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Property_accessors">property accessors</a> via delimiter <code>/</code>.
-- <InlineCode>help</InlineCode> lists builtins
+- <InlineCode>help</InlineCode> lists builtins.
 - <InlineCode>history</InlineCode> list previously executed commands.
 - <InlineCode>kill</InlineCode> kill/pause/resume processes.
 - <InlineCode>ls</InlineCode> wraps the JavaScript function <code>Object.keys</code>.
@@ -49,24 +49,24 @@ Shells usually manipulate and output strings, whereas our CLI outputs arbitrary 
 - <InlineCode>sleep</InlineCode> wait a number of seconds.
 - <InlineCode>source</InlineCode> interprets a string at a specified location.
 - <InlineCode>true</InlineCode> has exit code 0.
-- <InlineCode>unset</InlineCode> unset variables and functions.
+- <InlineCode>unset</InlineCode> unsets variables and functions.
 
 ##### Operators and Expansion
 
-- <InlineCode>foo; bar</InlineCode> run "foo" then run "bar"
-- <InlineCode>foo &amp;&amp; bar</InlineCode> run "foo" and if exit code 0 run "bar"
-- <InlineCode>foo || bar</InlineCode> run "foo" and if exit code 1 run "bar"
-- <InlineCode>foo | bar</InlineCode> run "foo" and "bar", with former's output as latter's input
-- <InlineCode>( foo )</InlineCode> run "foo" in a subshell
-- <InlineCode>foo &amp;</InlineCode> run "foo" in the background
-- <InlineCode>foo () {'{'} ... {'}'}</InlineCode> declare function "foo" with body ...
-- <InlineCode>$foo</InlineCode> output the shell variable "foo" as a string
-- <InlineCode> {'${'}foo:-bar{'}'} </InlineCode> like $foo but if empty output literal "bar"
-- <InlineCode>$@</InlineCode> output positive positionals
-- <InlineCode>$$</InlineCode> output process id
-- <InlineCode>$?</InlineCode> output last exit code
-- <InlineCode>$( foo )</InlineCode> run "foo" and output a single string of all its outputs
-- <InlineCode>a{'{'}b,c{'}'}d{'{'}e..h{'}'}</InlineCode> brace expansion
+- <InlineCode>foo; bar</InlineCode> run "foo" then run "bar".
+- <InlineCode>foo &amp;&amp; bar</InlineCode> run "foo"; if exit code 0 run "bar".
+- <InlineCode>foo || bar</InlineCode> run "foo"; if non-zero exit code run "bar".
+- <InlineCode>foo | bar</InlineCode> run "foo" and "bar", with former's output as latter's input.
+- <InlineCode>( foo )</InlineCode> run "foo" in a subshell.
+- <InlineCode>foo &amp;</InlineCode> run "foo" in the background.
+- <InlineCode>foo () {'{'} ... {'}'}</InlineCode> declare function "foo" with body.
+- <InlineCode>$foo</InlineCode> output the shell variable "foo" as a string.
+- <InlineCode> {'${'}foo:-bar{'}'} </InlineCode> $foo, but if empty output literal "bar"
+- <InlineCode>$@</InlineCode> output positive positionals.
+- <InlineCode>$$</InlineCode> output process id.
+- <InlineCode>$?</InlineCode> output last exit code.
+- <InlineCode>$( foo )</InlineCode> run "foo" and output a single string of all its outputs.
+- <InlineCode>a{'{'}b,c{'}'}d{'{'}e..h{'}'}</InlineCode> brace expansion.
 
 ##### Shell Functions
 
