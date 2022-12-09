@@ -221,7 +221,7 @@ class semanticsServiceClass {
       } else if (func = useSession.api.getFunc(node.meta.sessionKey, command)) {
         await cmdService.launchFunc(node, func, cmdArgs);
         // Propagate function exitCode to callee
-        node.exitCode = func.node.exitCode;
+        node.exitCode = func.node.exitCode || 0;
       } else {
         try {// Try to `get` things instead
           for (const arg of args) {
@@ -449,6 +449,8 @@ class semanticsServiceClass {
     for (const { Cond, Then } of collectIfClauses(node)) {
       if (Cond.length) {// if | elif i.e. have a test
         yield* sem.stmts(node, Cond);
+
+        console.log(last(Cond))
 
         if (last(Cond)!.exitCode === 0) {// Test succeeded
           yield* sem.stmts(node, Then);
