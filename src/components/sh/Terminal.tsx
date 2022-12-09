@@ -24,8 +24,9 @@ export default function Terminal(props: Props) {
 
   const state = useStateRef(() => ({
     isTouchDevice: canTouchDevice(),
+    hasEverDisabled: false,
+    pausedPids: {} as Record<number, true>,
     session: null as null | Session,
-    hasUserDisabled: false,
     xtermReady: false,
   }));
 
@@ -42,26 +43,32 @@ export default function Terminal(props: Props) {
     }
 
     if (props.disabled && state.xtermReady) {
-      state.hasUserDisabled = true;
+      state.hasEverDisabled = true;
       useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansiColor.White}paused session${ansiColor.Reset}`, { prompt: false });
 
       // Pause running processes
-      const processes = Object.values((state.session?.process)??{});
-      processes.filter(p => p.status === ProcessStatus.Running).forEach(p => {
+      Object.values((state.session?.process)??{}).filter(
+        p => p.status === ProcessStatus.Running,
+      ).forEach(p => {
         p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
         p.status = ProcessStatus.Suspended;
+        state.pausedPids[p.key] = true;
       });
     }
 
-    if (!props.disabled && state.hasUserDisabled && state.xtermReady) {
+    if (!props.disabled && state.hasEverDisabled && state.xtermReady) {
       useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansiColor.White}resumed session${ansiColor.Reset}`);
 
-      // Resume suspended processes
-      // TODO what if previously suspended?
+      // Resume processes we suspended
       const processes = Object.values((state.session?.process)??{});
-      processes.filter(p => p.status === ProcessStatus.Suspended).forEach(p => {
-        p.onResumes = p.onResumes.filter(onResume => onResume());
-        p.status = ProcessStatus.Running;
+      processes.filter(
+        p => state.pausedPids[p.key]
+      ).forEach(p => {
+        if (p.status === ProcessStatus.Suspended) {
+          p.onResumes = p.onResumes.filter(onResume => onResume());
+          p.status = ProcessStatus.Running;
+        }
+        delete state.pausedPids[p.key];
       });
     }
 

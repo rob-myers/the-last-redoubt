@@ -3,7 +3,7 @@
 ## In progress
 
 - ✅ Support global transform of navpath
-- BUG resume session resumed paused `track`
+- ✅ BUG resuming session resumed paused `track`
 - Absorb `localDecor` program into `<Decor>`
 
 - ✅ Merge master `The Last Redoubt` -> `NPC CLI`
