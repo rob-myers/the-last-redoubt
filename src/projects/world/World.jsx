@@ -103,7 +103,8 @@ export default function World(props) {
 
       <FOV
         api={state}
-        onLoad={api => Object.assign(state.fov, api) && update()}
+        // onLoad={api => Object.assign(state.fov, api) && update()}
+        onLoad={api => (state.fov = api) && update()}
       />
 
       <Doors
