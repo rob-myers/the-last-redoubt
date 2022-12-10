@@ -309,15 +309,15 @@ declare namespace NPC {
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
-    | ({ action: 'decor'; } & (DecorDef | { decorKey: string }))
+    | { action: 'decor'; } & (DecorDef | { decorKey: string })
     | { action: 'cancel'; npcKey: string }
-    | ({ action: 'config'; } & NPC.NpcConfigOpts)
+    | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'pause'; npcKey: string }
     | { action: 'play'; npcKey: string }
     | { action: 'rm' | 'remove'; npcKey: string; }
-    | { action: 'remove-decor' | 'rm-decor'; items: string[]; }
+    | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string }
     | { action: 'set-player'; npcKey?: string }
   );
 

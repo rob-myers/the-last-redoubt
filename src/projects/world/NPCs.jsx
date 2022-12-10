@@ -335,7 +335,13 @@ export default function NPCs(props) {
           return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
-          e.items?.forEach(decorKey => delete state.decor[decorKey])
+          e.items?.forEach(decorKey => delete state.decor[decorKey]);
+          if (e.regexStr) {
+            const keyRegex = new RegExp(e.regexStr);
+            Object.keys(state.decor).forEach(decorKey =>
+              keyRegex.test(decorKey) && delete state.decor[decorKey]
+            ); 
+          }
           update();
           break;
         case 'set-player':
@@ -420,8 +426,10 @@ export default function NPCs(props) {
         const doorId = api.gmGraph.gms[found.gmId].doors.findIndex(x => x.roomIds.includes(found.roomId));
         props.api.fov.setRoom(found.gmId, found.roomId, doorId);
         props.api.updateAll();
+        return found
       } else {// TODO error in terminal?
         console.error(`set-player ${npcKey}: no room contains ${JSON.stringify(position)}`)
+        return null;
       }
     },
     async spawn(e) {
@@ -459,7 +467,6 @@ export default function NPCs(props) {
       const decorKeys = points.map((_, decorId) => `local-${decorId}-g${opts.gmId}r${opts.roomId}`)
 
       if (opts.act === 'add') {
-        opts.tracked && decorKeys.forEach(key => /** @type {*} */ (opts.tracked)[key] = true)
         state.npcAct({ action: "add-decor",
           items: Object.values(points).map(({ point, tags }, uiId) => ({
             key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
@@ -469,7 +476,6 @@ export default function NPCs(props) {
       }
       if (opts.act === 'remove') {
         state.npcAct({ action: "rm-decor", items: decorKeys });
-        opts.tracked && decorKeys.forEach(key => delete /** @type {*} */ (opts.tracked)[key]);
       }
     },
     trackNpc(opts) {
@@ -537,8 +543,6 @@ export default function NPCs(props) {
         },
       });
     },
-    // 🚧 stale on HMR?
-    update,
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
       if (!npcService.verifyGlobalNavPath(e)) {
@@ -668,12 +672,11 @@ const rootCss = css`
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
- * @property {(npcKey: string) => void} setRoomByNpc
+ * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} toggleLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {() => void} update
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */
@@ -684,5 +687,4 @@ const rootCss = css`
  * @property {number} gmId
  * @property {number} roomId
  * @property {(tags?: string[]) => NPC.DecorPoint['onClick']} [cbFactory]
- * @property {{ [decorKey: string]: true }} [tracked]
  */

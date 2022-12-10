@@ -5,16 +5,17 @@ import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { circleToCssTransform, pointToCssTransform, rectToCssTransform, cssTransformToCircle, cssTransformToPoint, cssTransformToRect } from "../service/dom";
 
+import useUpdate from "../hooks/use-update";
 import DecorPath from "./DecorPath";
 
 /**
  * @param {Props} props
  */
 export default function Decor({ decor, api }) {
+  const update = useUpdate();
 
   React.useEffect(() => {
     const { npcs } = api;
-
     const observer = new MutationObserver(debounce((records) => {
       // console.log({records});
       const els = records.map(x => /** @type {HTMLElement} */ (x.target));
@@ -26,7 +27,7 @@ export default function Decor({ decor, api }) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (npcs.decor[decorKey]);
             const { center, radius } = cssTransformToCircle(el);
             [decor.radius, decor.center] = [radius, center];
-            npcs.update();
+            update();
           }
         }
         if (el.classList.contains(cssName.decorPath)) {
@@ -43,7 +44,7 @@ export default function Decor({ decor, api }) {
             });
 
             if (matrix.isIdentity) delete decor.origPath;
-            npcs.update();
+            update();
           }
         }
         if (el.classList.contains(cssName.decorPoint)) {
@@ -54,12 +55,12 @@ export default function Decor({ decor, api }) {
             const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
             const points = decorPoints.map(x => cssTransformToPoint(x));
             decor.path.splice(0, decor.path.length, ...points);
-            npcs.update();
+            update();
           } else if (decorKey && decorKey in npcs.decor) {
             const decor = /** @type {NPC.DecorPoint} */ (npcs.decor[decorKey]);
             const { x, y } = cssTransformToPoint(el);
             [decor.x, decor.y] = [x, y];
-            npcs.update();
+            update();
           }
         }
         if (el.classList.contains(cssName.decorRect)) {
@@ -67,14 +68,13 @@ export default function Decor({ decor, api }) {
             const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (npcs.decor[decorKey]);
             const rectJson = cssTransformToRect(el);
             Object.assign(decor, rectJson);
-            npcs.update();
+            update();
           }
         }
       }
     }, 300));
 
     observer.observe(npcs.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
-
     return () => observer.disconnect();
   }, []);
 

@@ -4,7 +4,8 @@
 
 - Absorb `localDecor` program into `<Decor>`
   - ✅ Move MutationObserver into Decor
-  - Move `localDecor` code into Decor
+  - ✅ Move `localDecor` code into Decor
+  - 🚧 Fix Doors update bug due to `World` changes
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI

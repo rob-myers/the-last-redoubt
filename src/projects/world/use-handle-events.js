@@ -2,6 +2,7 @@ import React from "react";
 import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
 import * as npcService from "../service/npc";
+import { ansiColor } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -21,6 +22,7 @@ export default function useHandleEvents(api) {
   }
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+
     async handleWayEvents(e) {
       const npc = api.npcs.getNpc(e.npcKey);
 
@@ -68,19 +70,26 @@ export default function useHandleEvents(api) {
       // console.log('player way event', e);
       switch (e.meta.key) {
         case 'exit-room': {
+          // FOV
           if (e.meta.otherRoomId !== null) {
             api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
             const adjCtxt = api.gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
             adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
+          // Decor
+          api.npcs.toggleLocalDecor({ act: "remove", gmId: e.meta.gmId, roomId: e.meta.exitedRoomId });
+
           api.updateAll();
           break;
         }
         case 'enter-room': {
-          if (api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId)) {
-            api.updateAll();
-          }
+          // FOV
+          api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
+          // Decor
+          api.npcs.toggleLocalDecor({ act: "add", gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, cbFactory: state.localDecorCbFactory });
+
+          api.updateAll();
           break;
         }
         case 'pre-exit-room':
@@ -92,6 +101,12 @@ export default function useHandleEvents(api) {
           throw testNever(e.meta, { suffix: 'handlePlayerWayEvent' });
       }
     },
+
+    // 🚧 Currently we just log out the tags
+    localDecorCbFactory(tags) {
+      return (_decor, { npcs }) =>
+        npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(tags??[])}${ansiColor.Reset}`);
+    },
   }), {
     deps: [api.gmGraph],
   });
@@ -101,6 +116,7 @@ export default function useHandleEvents(api) {
       api.updateAll();
 
       // Update doors and lights on change
+      // 🚧 perhaps doors.update() fov.update()
       const doorsSub = api.doors.events
         .pipe(filter(x => x.key === 'closed-door' || x.key === 'opened-door'))
         .subscribe(() => api.updateAll());
@@ -116,7 +132,13 @@ export default function useHandleEvents(api) {
             break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
-            e.npcKey && api.npcs.setRoomByNpc(e.npcKey);
+            if (e.npcKey) {
+              const found = api.npcs.setRoomByNpc(e.npcKey);
+              found && api.npcs.toggleLocalDecor({ act: "add", gmId: found.gmId, roomId: found.roomId, cbFactory: state.localDecorCbFactory });
+            } else {
+              /** @see {api.npcs.toggleLocalDecor} */
+              api.npcs.npcAct({ action: "rm-decor", regexStr: '^local-\\d+-g\\d+r\\d+' });
+            }
             break;
           case 'spawned-npc':
             // This event also happens on hot-reload NPC.jsx
@@ -125,7 +147,7 @@ export default function useHandleEvents(api) {
               api.npcs.setRoomByNpc(e.npcKey);
             }
             /**
-             * TODO collision test against player, e.g.
+             * 🚧 collision test against player, e.g.
              * in case they've already started final segment
              */
             break;
@@ -188,4 +210,5 @@ export default function useHandleEvents(api) {
  * @typedef State @type {object}
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
+ * @property {import('../world/NPCs').ToggleLocalDecorOpts['cbFactory']} localDecorCbFactory
  */

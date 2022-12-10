@@ -252,40 +252,6 @@
       }
 
     },
-
-    // 🚧 move to <Decor>
-    localDecor: async function* ({ api, home }) {
-      const { npcs, gmGraph } = api.getCached(home.WORLD_KEY)
-      const process = api.getProcess()
-      const tracked = /** @type {{ [decorKey: string]: true }} */ ({});
-      const cbFactory = /** @type {import('../world/NPCs').ToggleLocalDecorOpts['cbFactory']} */
-        (tags) => (_decor, { npcs }) => // Currently just log out tags
-          npcs.writeToTtys(`ℹ️  ${api.getColors().White}tags: ${JSON.stringify(tags??[])}${api.getColors().Reset}`)
-      ;
-
-      const player = npcs.getPlayer() // initialisation
-      const init = player ? gmGraph.findRoomContaining(player.getPosition()) : null
-      init && npcs.toggleLocalDecor({ act: "add", gmId: init.gmId, roomId: init.roomId, tracked, cbFactory })
-
-      const subscription = npcs.events.subscribe(e => {
-        if (e.key === "way-point" && e.npcKey === npcs.playerKey && process.status === 1) {
-          if (e.meta.key === "enter-room") {// add ui points
-            npcs.toggleLocalDecor({ act: "add", gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, tracked, cbFactory })
-          } else if (e.meta.key === "exit-room") {// remove ui points
-            npcs.toggleLocalDecor({ act: "remove", gmId: e.meta.gmId, roomId: e.meta.exitedRoomId, tracked })
-          }
-        }
-      })
-      await /** @type {Promise<void>} */ (new Promise(resolve =>
-        process.cleanups.push(
-          () => {
-            npcs.npcAct({ action: "rm-decor", items: Object.keys(tracked) })
-            subscription.unsubscribe()
-          },
-          resolve,
-        )
-      ))
-    },
   
     /**
      * Spawn character(s) at a position(s) and angle,
