@@ -111,8 +111,6 @@ track ${npcKey} &
 goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
-# room decor in player current room(s)
-localDecor &
 
 npc config showIds
 npc config showLabels

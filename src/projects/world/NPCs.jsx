@@ -2,16 +2,15 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
-import { debounce } from "debounce";
 
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
-import { assertNonNull, deepClone, keys, testNever } from "../service/generic";
+import { deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { cssTransformToCircle, cssTransformToPoint, cssTransformToRect, getNumericCssVar } from "../service/dom";
+import { getNumericCssVar } from "../service/dom";
 import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -395,7 +394,6 @@ export default function NPCs(props) {
          */
         el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
-        state.decorEl = assertNonNull(el.querySelector('div.decor-root'));
       }
     },
     service: npcService,
@@ -408,6 +406,9 @@ export default function NPCs(props) {
           d.updatedAt = Date.now();
         }
         state.decor[d.key] = d;
+        if (d.type === 'path') {// Handle clones
+          delete d.origPath;
+        }
       }
       update();
     },
@@ -536,6 +537,8 @@ export default function NPCs(props) {
         },
       });
     },
+    // 🚧 stale on HMR?
+    update,
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
       if (!npcService.verifyGlobalNavPath(e)) {
@@ -568,68 +571,6 @@ export default function NPCs(props) {
   
   React.useEffect(() => {
     props.onLoad(state);
-
-    const observer = new MutationObserver(debounce((records) => {
-      // console.log({records});
-      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
-
-      for (const el of els) {
-        const decorKey = el.dataset.key;
-        if (el.classList.contains(cssName.decorCircle)) {
-          if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
-            const { center, radius } = cssTransformToCircle(el);
-            [decor.radius, decor.center] = [radius, center];
-            update();
-          }
-        }
-        if (el.classList.contains(cssName.decorPath)) {
-          const pathDecorKey = el.dataset.key;
-          if (pathDecorKey && pathDecorKey in state.decor) {
-            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            if (decor.origPath && !el.style.transform) delete decor.origPath;
-            if (!decor.origPath) decor.origPath = decor.path.map(p => ({ x: p.x, y: p.y }));
-            
-            // devtool provides validation (Invalid property value)
-            const matrix = new DOMMatrix(el.style.transform);
-            decor.origPath.forEach((p, i) => {
-              const { x, y } = matrix.transformPoint(p);
-              [decor.path[i].x, decor.path[i].y] = [x, y];
-            });
-
-            if (matrix.isIdentity) delete decor.origPath;
-            update();
-          }
-        }
-        if (el.classList.contains(cssName.decorPoint)) {
-          const parentEl = /** @type {HTMLElement} */ (el.parentElement);
-          const pathDecorKey = parentEl.dataset.key;
-          if (pathDecorKey && pathDecorKey in state.decor) {// Path
-            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
-            const points = decorPoints.map(x => cssTransformToPoint(x));
-            decor.path.splice(0, decor.path.length, ...points);
-            update();
-          } else if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
-            const { x, y } = cssTransformToPoint(el);
-            [decor.x, decor.y] = [x, y];
-            update();
-          }
-        }
-        if (el.classList.contains(cssName.decorRect)) {
-          if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
-            const rectJson = cssTransformToRect(el);
-            Object.assign(decor, rectJson);
-            update();
-          }
-        }
-      }
-    }, 300));
-    observer.observe(state.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
-
-    return () => observer.disconnect();
   }, []);
 
   return (
@@ -732,6 +673,7 @@ const rootCss = css`
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} toggleLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
+ * @property {() => void} update
  * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */

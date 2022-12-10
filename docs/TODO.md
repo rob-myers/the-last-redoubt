@@ -2,11 +2,9 @@
 
 ## In progress
 
-- ✅ BUG `return` should only kill current process (not leading)
-- ✅ implement shell function `empty` with exit 0 iff all args empty
-- ✅ implement shell function `clone`
-- ✅ BUG `lastExitCode` overwritten with `0`
-  - Function exitCode was not propagated to callee
+- Absorb `localDecor` program into `<Decor>`
+  - ✅ Move MutationObserver into Decor
+  - Move `localDecor` code into Decor
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -27,20 +25,14 @@
     - ✅ Far too complex: need a simplified overview
     - ✅ Clearer second attempt but still too complex
 - 🚧 Adjust Intro
-
-- ✅ Support global transform of navpath
-- ✅ BUG resuming session resumed paused `track`
-- Blur unplayed videos via CSS
-- Absorb `localDecor` program into `<Decor>`
-
-- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
-
-- ✅ BUG `source foo bar`: positive positional `bar` not propagated
-- ✅ `localDecor` runs in background automatically
 - 🚧 symbols have thinner doors
   - ✅ work through 301
   - 🚧 work through 101
 - symbols have ui points
+
+- Blur unplayed videos via CSS
+- Can sit/stand toggle
+- Decor rect collision prediction
 
 - Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode
@@ -268,6 +260,17 @@ How to embed video?
 
 ## Done
 
+- ✅ BUG `source foo bar`: positive positional `bar` not propagated
+- ✅ `localDecor` runs in background automatically
+- ✅ Merge master `The Last Redoubt` -> `NPC CLI`
+- ✅ Support global transform of navpath
+- ✅ BUG resuming session resumed paused `track`
+
+- ✅ BUG `return` should only kill current process (not leading)
+- ✅ implement shell function `empty` with exit 0 iff all args empty
+- ✅ implement shell function `clone`
+- ✅ BUG `lastExitCode` overwritten with `0`
+  - Function exitCode was not propagated to callee
 - ✅ Send email to spritesheet creator
   - https://www.fiverr.com/inbox/njoygames
   

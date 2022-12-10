@@ -76,7 +76,7 @@ export default function World(props) {
       initCenter={{ x: 300, y: 300 }}
       background="#000"
       grid
-      onLoad={api => (state.panZoom = api) && update()}
+      onLoad={api => Object.assign(state.panZoom, api) && update()}
     >
       <Geomorphs
         api={state}
@@ -92,24 +92,24 @@ export default function World(props) {
         // showLabels
         // windows
         api={state}
-        onLoad={api => (state.debug = api) && update()}
+        onLoad={api => Object.assign(state.debug, api) && update()}
       />
 
       <NPCs
         api={state}
         disabled={props.disabled}
-        onLoad={api => (state.npcs = api) && update()}
+        onLoad={api => Object.assign(state.npcs, api) && update()}
       />
 
       <FOV
         api={state}
-        onLoad={api => (state.fov = api) && update()}
+        onLoad={api => Object.assign(state.fov, api) && update()}
       />
 
       <Doors
         api={state}
         init={props.init.open}
-        onLoad={api => (state.doors = api) && update()}
+        onLoad={api => Object.assign(state.doors, api) && update()}
       />
 
     </CssPanZoom>

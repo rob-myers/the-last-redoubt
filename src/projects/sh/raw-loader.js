@@ -253,6 +253,7 @@
 
     },
 
+    // 🚧 move to <Decor>
     localDecor: async function* ({ api, home }) {
       const { npcs, gmGraph } = api.getCached(home.WORLD_KEY)
       const process = api.getProcess()

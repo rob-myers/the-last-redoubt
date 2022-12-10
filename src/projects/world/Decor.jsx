@@ -1,16 +1,88 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
+import { debounce } from "debounce";
 import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
-import { circleToCssTransform, pointToCssTransform, rectToCssTransform } from "../service/dom";
+import { circleToCssTransform, pointToCssTransform, rectToCssTransform, cssTransformToCircle, cssTransformToPoint, cssTransformToRect } from "../service/dom";
+
 import DecorPath from "./DecorPath";
 
 /**
  * @param {Props} props
  */
 export default function Decor({ decor, api }) {
+
+  React.useEffect(() => {
+    const { npcs } = api;
+
+    const observer = new MutationObserver(debounce((records) => {
+      // console.log({records});
+      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
+
+      for (const el of els) {
+        const decorKey = el.dataset.key;
+        if (el.classList.contains(cssName.decorCircle)) {
+          if (decorKey && decorKey in npcs.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (npcs.decor[decorKey]);
+            const { center, radius } = cssTransformToCircle(el);
+            [decor.radius, decor.center] = [radius, center];
+            npcs.update();
+          }
+        }
+        if (el.classList.contains(cssName.decorPath)) {
+          const pathDecorKey = el.dataset.key;
+          if (pathDecorKey && pathDecorKey in npcs.decor) {
+            const decor = /** @type {NPC.DecorPath} */ (npcs.decor[pathDecorKey]);
+            if (!decor.origPath) decor.origPath = decor.path.map(p => ({ x: p.x, y: p.y }));
+            
+            // devtool provides validation (Invalid property value)
+            const matrix = new DOMMatrix(el.style.transform);
+            decor.origPath.forEach((p, i) => {
+              const { x, y } = matrix.transformPoint(p);
+              [decor.path[i].x, decor.path[i].y] = [x, y];
+            });
+
+            if (matrix.isIdentity) delete decor.origPath;
+            npcs.update();
+          }
+        }
+        if (el.classList.contains(cssName.decorPoint)) {
+          const parentEl = /** @type {HTMLElement} */ (el.parentElement);
+          const pathDecorKey = parentEl.dataset.key;
+          if (pathDecorKey && pathDecorKey in npcs.decor) {// Path
+            const decor = /** @type {NPC.DecorPath} */ (npcs.decor[pathDecorKey]);
+            const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
+            const points = decorPoints.map(x => cssTransformToPoint(x));
+            decor.path.splice(0, decor.path.length, ...points);
+            npcs.update();
+          } else if (decorKey && decorKey in npcs.decor) {
+            const decor = /** @type {NPC.DecorPoint} */ (npcs.decor[decorKey]);
+            const { x, y } = cssTransformToPoint(el);
+            [decor.x, decor.y] = [x, y];
+            npcs.update();
+          }
+        }
+        if (el.classList.contains(cssName.decorRect)) {
+          if (decorKey && decorKey in npcs.decor) {
+            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (npcs.decor[decorKey]);
+            const rectJson = cssTransformToRect(el);
+            Object.assign(decor, rectJson);
+            npcs.update();
+          }
+        }
+      }
+    }, 300));
+
+    observer.observe(npcs.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div className="decor-root">
+    <div
+      className="decor-root"
+      ref={el => el && (api.npcs.decorEl = el)}
+    >
       {Object.entries(decor).map(([key, item]) => {
         switch (item.type) {
           case 'circle':
