@@ -2,6 +2,8 @@
 
 ## In progress
 
+- BUG unseen windows should be totally dark
+
 - Absorb `localDecor` program into `<Decor>`
   - ✅ Move MutationObserver into Decor
   - ✅ Move `localDecor` code into Decor
@@ -10,7 +12,7 @@
 
 - More local decor
   - ✅ Event 'fov-changed' {gmRoomIds,added,removed}
-    > those rooms with non-empty light
+    - those rooms with non-empty light
   - React to event via npcs.updateLocalDecor
   - Improve local decor key
   - DebugWorld room labels -> local Decor
@@ -36,7 +38,10 @@
 - 🚧 Adjust Intro
 - 🚧 symbols have thinner doors
   - ✅ work through 301
-  - 🚧 work through 101
+  - ✅ work through 101
+  - ✅ work through 302
+  - ✅ work through 303
+  - work through 102
 - symbols have ui points
 
 - Blur unplayed videos via CSS

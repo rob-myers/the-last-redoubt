@@ -26,17 +26,14 @@
     </rect>
     <path d="M 64 -4 L 124 56 L 124 122 L 116 122 L 116 60 L 60 4 L 3 4 L 3 -4 L 64 -4 Z" style=""/>
   </g>
+  <g style="pointer-events: none;">
+    <title>walls</title>
+    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5;">
+      <title>machine</title>
+    </path>
+  </g>
   <g style="">
     <title>singles</title>
-    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 4px;">
-      <title>poly #fff-#000-4</title>
-    </path>
-    <path d="M 126 525 L 75 474 L 75.6 255 L 112.5 255 L 225 424.5 L 225 525 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(170, 170, 170);">
-      <title>fuel</title>
-    </path>
-    <rect x="240" y="409.9" width="180" height="14.1" style="fill-opacity: 0.4;">
-      <title>window</title>
-    </rect>
     <rect x="897.5" y="346.3" width="5" height="195.7" style="">
       <title>wall</title>
     </rect>
@@ -58,6 +55,15 @@
     <rect x="1167.458" width="5.5" height="240" style="">
       <title>wall</title>
     </rect>
+    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 4px;">
+      <title>poly #fff-#000-4</title>
+    </path>
+    <path d="M 126 525 L 75 474 L 75.6 255 L 112.5 255 L 225 424.5 L 225 525 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(170, 170, 170);">
+      <title>fuel</title>
+    </path>
+    <rect x="240" y="409.9" width="180" height="14.1" style="fill-opacity: 0.4;">
+      <title>window</title>
+    </rect>
     <rect x="-4" y="250" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>door hull</title>
     </rect>
@@ -70,11 +76,11 @@
     <rect x="850" y="596" width="100" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>door hull</title>
     </rect>
-    <rect x="485" y="414" width="50" height="12" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door iris sealed</title>
+    <rect x="485" y="416" width="50" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door iris sealed hull</title>
     </rect>
-    <rect x="1074" y="10" width="12" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door sealed</title>
+    <rect x="1076" y="10" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door sealed hull</title>
     </rect>
     <rect x="728" y="537" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>door</title>
@@ -148,11 +154,5 @@
     <rect y="427.41" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="970" transform="matrix(0, 1, -1, 0, 1507.410034, -554.985474)">
       <title>light reverse</title>
     </rect>
-  </g>
-  <g style="pointer-events: none;">
-    <title>walls</title>
-    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5;">
-      <title>machine</title>
-    </path>
   </g>
 </svg>

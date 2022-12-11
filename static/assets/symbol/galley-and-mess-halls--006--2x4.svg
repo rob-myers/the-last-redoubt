@@ -22,7 +22,7 @@
     <rect x="290" y="-10" width="20" height="171.635" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;"/>
     <rect width="290" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="590" x="900"/>
   </g>
-  <g style="">
+  <g style="pointer-events: none;">
     <title>singles</title>
     <rect x="600" y="244.1" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
       <title>label galley | room</title>
@@ -33,10 +33,10 @@
     <rect y="23.675" width="20" height="307.176" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="137.213" transform="matrix(0, 1, -1, 0, 330.851288, 453.169403)">
       <title>wall</title>
     </rect>
-    <rect x="44.08" y="130.382" width="220" height="40" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
+    <rect x="44.08" y="135" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door</title>
     </rect>
-    <rect x="44.08" y="580.382" width="220" height="40" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
+    <rect x="44" y="585" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door</title>
     </rect>
   </g>

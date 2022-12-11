@@ -57,6 +57,7 @@ export async function renderGeomorph(
   }
 
   const { singles, obstacles, walls } = layout.groups;
+  const doorPolys = singlesToPolys(singles, 'door');
 
   ctxt.lineJoin = 'round';
   hullSym.singles.forEach(({ poly, tags }) => {
@@ -81,8 +82,8 @@ export async function renderGeomorph(
       poly.outline.forEach(p => drawLine(ctxt, center, p));
     }
     if (tags.includes('wall')) {// Hull wall singles
-      setStyle(ctxt, 'rgba(50, 50, 50, 0.2)');
-      fillPolygon(ctxt, [poly]);
+      setStyle(ctxt, '#000');
+      fillPolygon(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
   });
 
@@ -110,7 +111,10 @@ export async function renderGeomorph(
    * - do not fill windows
    * - do not fill walls tagged with no-fill
    */
-  const wallsToFill = Poly.cutOut(singlesToPolys(singles, 'window', ['wall', 'no-fill']), walls);
+  const wallsToFill = Poly.cutOut(
+    singlesToPolys(singles, 'window', ['wall', 'no-fill']),
+    walls,
+  );
   ctxt.fillStyle = wallColor;
   wallBounds && fillPolygon(ctxt, wallsToFill);
 
@@ -118,11 +122,10 @@ export async function renderGeomorph(
   fillPolygon(ctxt, layout.hullTop);
 
   if (doors) {
-    const doors = singlesToPolys(singles, 'door');
     ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-    fillPolygon(ctxt, doors.flatMap(x => geom.createOutset(x, 1)));
+    fillPolygon(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
     ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
-    fillPolygon(ctxt, doors);
+    fillPolygon(ctxt, doorPolys);
   }
 
   if (labels) {

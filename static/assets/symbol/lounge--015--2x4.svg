@@ -17,7 +17,7 @@
     <rect width="125" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="200"/>
     <rect width="125" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="395"/>
   </g>
-  <g style="">
+  <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect y="51.4" width="103.3" height="138.6" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="9.2"/>
     <rect x="9.2" y="251.8" width="143.6" height="111.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
@@ -28,16 +28,16 @@
   </g>
   <g style="pointer-events: none;">
     <title>singles</title>
-    <rect x="275" width="48" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" y="35">
+    <rect x="285" width="30" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" y="35">
       <title>door</title>
     </rect>
     <rect width="20" height="610" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="290">
       <title>wall</title>
     </rect>
-    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5; pointer-events: auto;" x="875" y="275">
+    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="875" y="275">
       <title>label lounge | room</title>
     </rect>
-    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5; pointer-events: auto;" x="136.8" y="60.4">
+    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="136.8" y="60.4">
       <title>label toilet | room</title>
     </rect>
   </g>
