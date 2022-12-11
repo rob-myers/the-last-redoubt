@@ -91,7 +91,7 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @returns {{ polys: Poly[][]; gmRoomIds: { gmId: number; roomId: number }[] }}
+   * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
    */
   computeDoorLights(gmId, rootRoomId) {
     const gm = this.gms[gmId];
@@ -183,7 +183,7 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room, open doors, and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @returns {{ polys: Poly[][]; gmRoomIds: { gmId: number; roomId: number }[] }}
+   * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
    */
   computeLightPolygons(gmId, rootRoomId) {
     const { polys: doorLights, gmRoomIds } = this.computeDoorLights(gmId, rootRoomId);
@@ -340,7 +340,7 @@ export class gmGraphClass extends BaseGraph {
    * - We handle dup roomIds e.g. via double doors.
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
-   * @param {{ gmId: number; roomId: number; }[]} roomIds
+   * @param {Graph.GmRoomId[]} roomIds
    * @param {boolean} [doorsMustBeOpen]
    * @returns {Graph.GmRoomsAdjData}
    */
@@ -376,12 +376,11 @@ export class gmGraphClass extends BaseGraph {
    * Compute every global room id connected to some door in a single geomorph.
    * @param {number} gmId 
    * @param {number[]} doorIds Doors in geomorph `gmId`
-   * @returns {{ gmId: number; roomId: number }[]}
    */
   getRoomsFromGmDoorIds(gmId, doorIds) {
     const gm = this.gms[gmId];
     const seen = /** @type {Record<number, true>} */ ({});
-    const output = /** @type {{ gmId: number; roomId: number }[]} */ ([]);
+    const output = /** @type {Graph.GmRoomId[]} */ ([]);
 
     for (const doorId of doorIds) {
       const door = gm.doors[doorId];

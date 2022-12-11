@@ -24,6 +24,7 @@ export default function FOV(props) {
     // gmId: 3, roomId: 26,
 
     clipPath: gms.map(_ => 'none'),
+    gmRoomIds: [],
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     ready: true,
 
@@ -46,16 +47,16 @@ export default function FOV(props) {
       /** @type {CoreState} */
       const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
       const cmp = compareCoreState(prev, curr);
-      if (!cmp.changed) {
-        return; // Avoid useless updates
+      if (!cmp.changed) {// Avoid useless updates
+        return;
       }
 
       // ✅ provide every { gmId, roomId } intersecting current fov
       // 🚧 track change in above
 
       /**
-       * Light polygons for current geomorph and possibly adjacent ones
-       * We also add the current room.
+       * @see {lightPolys} light polygons for current/adjacent geomorphs; we include the current room.
+       * @see {gmRoomIds} global room ids of every room intersecting fov
        */
       const { polys: lightPolys, gmRoomIds } = gmGraph.computeLightPolygons(state.gmId, state.roomId);
       lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
@@ -65,9 +66,11 @@ export default function FOV(props) {
       const maskPolys = lightPolys.map((polys, altGmId) =>
         Poly.cutOutSafely(polys, [gms[altGmId].hullOutline])
       );
-      // Try to eliminate "small black no-light intersections" from current geomorph,
-      // which often look triangular. As part of mask they have no holes.
-      // However, polygons sans holes also arise e.g. when light borders a hull door.
+      /**
+       * Try to eliminate "small black no-light intersections" from current geomorph.
+       * They often look triangular, and as part of mask they have no holes.
+       * However, polygons sans holes also arise e.g. when light borders a hull door.
+       */
       maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
         x.holes.length > 0 || x.outline.length > 8
       );
@@ -75,9 +78,12 @@ export default function FOV(props) {
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;
 
-      setTimeout(() => {// 🚧 initial event without setTimeout
-        props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds }); // 🚧
-      });
+      // Track visible rooms
+      const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: `g${x.gmId}r${x.roomId}` }));
+      const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
+      const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
+      props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
+      state.gmRoomIds = nextGmRoomIds;
     },
   }), {
     overwrite: { gmId: true, roomId: true },
@@ -124,6 +130,7 @@ export default function FOV(props) {
  * @typedef AuxState @type {object}
  * @property {boolean} ready
  * @property {string[]} clipPath
+ * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath

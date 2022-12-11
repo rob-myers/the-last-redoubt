@@ -113,7 +113,6 @@ export default function useHandleEvents(api) {
 
   React.useEffect(() => {
     if (api.gmGraph.gms.length && api.doors.ready && api.npcs.ready) {
-      api.updateAll();
 
       // Update doors and lights on change
       // 🚧 perhaps doors.update() fov.update()
@@ -196,6 +195,8 @@ export default function useHandleEvents(api) {
             throw testNever(e, { suffix: 'npcsSub' });
         }
       });
+
+      api.updateAll();
 
       return () => {
         doorsSub.unsubscribe();

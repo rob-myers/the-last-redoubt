@@ -193,6 +193,11 @@ declare namespace Graph {
     };
   };
 
+  export interface GmRoomId {
+    gmId: number;
+    roomId: number;
+  }
+
 //#endregion
   
 //#region FloorGraph
