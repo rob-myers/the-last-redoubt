@@ -1238,6 +1238,15 @@
         }
       },
       {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[719.9999, 875], [479.9999, 875], [479.9999, 865], [719.9999, 865]]
+          ]
+        }
+      },
+      {
         "tags": ["light-source"],
         "poly": {
           "type": "Polygon",
@@ -1284,6 +1293,20 @@
               [134.312, 675.935]
             ]
           ]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[515, 770], [515, 970], [505, 970], [505, 770]]]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[695, 770], [695, 970], [685, 970], [685, 770]]]
         }
       },
       {
