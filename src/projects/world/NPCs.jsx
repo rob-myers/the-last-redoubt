@@ -525,7 +525,7 @@ export default function NPCs(props) {
             status = 'panzoom-to';
             console.warn('@', status);
             // Ignore Error('cancelled')
-            try { await panZoom.panZoomTo(2, npcPosition, 2000); } catch {};
+            try { await panZoom.panZoomTo(1.75, npcPosition, 2000); } catch {};
             status = 'no-track';
           }
 
