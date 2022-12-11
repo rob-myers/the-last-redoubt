@@ -148,12 +148,13 @@ const cssCircle = css`
 
 const cssPoint = css`
   position: absolute;
+  top: -2.5px;
+  left: -2.5px;
   width: 5px;
   height: 5px;
   transform-origin: center;
   border-radius: 50%;
-  background-color: #fff;
-  outline: 1px solid rgba(0, 100, 0, 0.5);
+  background-color: #00000099;
 `;
 
 const cssRect = css`
