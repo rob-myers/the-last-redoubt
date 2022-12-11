@@ -282,7 +282,7 @@ const rootCss = css`
     &:not(.${cssName.iris}) {
       /* background: #444; */
       background: #fff;
-      border: 1px solid #000055aa;
+      border: 1px solid #000000aa;
 
       transition: width 300ms ease-in;
       &.${cssName.open} {
