@@ -91,13 +91,14 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @returns {Poly[][]}
+   * @returns {{ polys: Poly[][]; gmRoomIds: { gmId: number; roomId: number }[] }}
    */
   computeDoorLights(gmId, rootRoomId) {
+    const gm = this.gms[gmId];
     const openDoorsIds = this.api.doors.getOpen(gmId);
 
     /** Ids of open doors connected to rootRoom */
-    const doorIds = this.gms[gmId].roomGraph.getAdjacentDoors(rootRoomId).flatMap(
+    const doorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
       ({ doorId }) => openDoorsIds.includes(doorId) ? doorId : []
     );
     /**
@@ -131,9 +132,15 @@ export class gmGraphClass extends BaseGraph {
       };
     });
 
-    return this.gms.map((_, gmId) =>
-      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(precision))
-    );
+    /** Door ids connected to root room, including related ones */
+    const allDoorIds = doorIds.concat(doorLightAreas.flatMap(x => x.relDoorIds));
+
+    return {
+      polys: this.gms.map((_, gmId) =>
+        unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(precision))
+      ),
+      gmRoomIds: this.getRoomsFromGmDoorIds(gmId, allDoorIds),
+    };
   }
 
   /**
@@ -176,12 +183,16 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area, determined by current room, open doors, and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @returns {Poly[][]}
+   * @returns {{ polys: Poly[][]; gmRoomIds: { gmId: number; roomId: number }[] }}
    */
   computeLightPolygons(gmId, rootRoomId) {
-    const doorLights = this.computeDoorLights(gmId, rootRoomId);
+    const { polys: doorLights, gmRoomIds } = this.computeDoorLights(gmId, rootRoomId);
+    // 🚧 windows should provide {gmId,roomId}s too
     const windowLights = this.computeWindowLights(gmId, rootRoomId);
-    return doorLights.map((lights, i) => lights.concat(windowLights[i])); // Zipped
+    return {
+      polys: doorLights.map((lights, i) => lights.concat(windowLights[i])), // Zipped
+      gmRoomIds,
+    };
   }
 
   /**
@@ -358,6 +369,31 @@ export class gmGraphClass extends BaseGraph {
     }
 
     Object.values(output).forEach(x => x.roomIds = removeDups(x.roomIds));
+    return output;
+  }
+
+  /**
+   * Compute every global room id connected to some door in a single geomorph.
+   * @param {number} gmId 
+   * @param {number[]} doorIds Doors in geomorph `gmId`
+   * @returns {{ gmId: number; roomId: number }[]}
+   */
+  getRoomsFromGmDoorIds(gmId, doorIds) {
+    const gm = this.gms[gmId];
+    const seen = /** @type {Record<number, true>} */ ({});
+    const output = /** @type {{ gmId: number; roomId: number }[]} */ ([]);
+
+    for (const doorId of doorIds) {
+      const door = gm.doors[doorId];
+      door.roomIds.forEach(roomId => {
+        if (roomId === null) {// Hull door
+          const ctxt = this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(door));
+          ctxt && output.push({ gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId });
+        } else {// Non-hull door (avoid dups)
+          !seen[roomId] && (seen[roomId] = true) && output.push({ gmId, roomId });
+        }
+      })
+    }
     return output;
   }
 

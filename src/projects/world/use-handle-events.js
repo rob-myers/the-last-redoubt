@@ -130,6 +130,9 @@ export default function useHandleEvents(api) {
           case 'disabled':
           case 'enabled':
             break;
+          case 'fov-changed':
+            console.log(e);
+            break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
             if (e.npcKey) {

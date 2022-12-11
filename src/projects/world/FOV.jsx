@@ -50,12 +50,16 @@ export default function FOV(props) {
         return; // Avoid useless updates
       }
 
+      // ✅ provide every { gmId, roomId } intersecting current fov
+      // 🚧 track change in above
+
       /**
        * Light polygons for current geomorph and possibly adjacent ones
        * We also add the current room.
        */
-      const lightPolys = gmGraph.computeLightPolygons(state.gmId, state.roomId);
+      const { polys: lightPolys, gmRoomIds } = gmGraph.computeLightPolygons(state.gmId, state.roomId);
       lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
+      gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });
 
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = lightPolys.map((polys, altGmId) =>
@@ -70,10 +74,14 @@ export default function FOV(props) {
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;
+
+      setTimeout(() => {// 🚧 initial event without setTimeout
+        props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds }); // 🚧
+      });
     },
   }), {
     overwrite: { gmId: true, roomId: true },
-    deps: [gms, gmGraph, props.api],
+    deps: [gms, gmGraph],
   });
 
   React.useEffect(() => {

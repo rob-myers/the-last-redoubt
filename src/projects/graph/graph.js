@@ -227,11 +227,6 @@ export class BaseGraph {
     return succ && succ.has(dst) || false;
   }
 
-  /** @param {string} nodeid */
-  getNodeByid(nodeid) {
-    return this.idToNode.get(nodeid) || null;
-  }
-
   /** @param {Edge | null} edge */
   removeEdge(edge) {
     if (edge) {

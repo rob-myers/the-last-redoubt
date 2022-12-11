@@ -9,7 +9,8 @@
   - ✅ Show local decor in neighbouring rooms too?
 
 - More local decor
-  - Event 'fov-changed' {curr,added,removed} gmRoomIds
+  - 🚧 Event 'fov-changed' {curr,added,removed} gmRoomIds
+    > those rooms with non-empty light
   - React to event via npcs.updateLocalDecor
   - Improve local decor key
   - DebugWorld room labels -> local Decor

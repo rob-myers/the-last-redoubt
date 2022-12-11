@@ -327,6 +327,7 @@ declare namespace NPC {
     | { key: 'decor'; meta: DecorDef; }
     | { key: 'disabled' }
     | { key: 'enabled' }
+    | { key: 'fov-changed'; gmRoomIds: { gmId: number; roomId: number }[] } // 🚧
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }
