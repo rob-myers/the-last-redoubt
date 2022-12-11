@@ -80,9 +80,9 @@ export function wrapPageElement({
                 />
               </Main>
               <Portals />
-              {/* <ReactQueryDevtools // Performance issue after HMRs?
+              <ReactQueryDevtools // Performance issue after HMRs?
                 initialIsOpen={false}
-              /> */}
+              />
             </QueryClientProvider>
           );
         }}
