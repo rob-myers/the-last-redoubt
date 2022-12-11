@@ -165,7 +165,7 @@ export default function Doors(props) {
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
     },
   }), {
-    deps: [props.api, props.api.npcs, gmGraph],
+    deps: [gmGraph, props.api.npcs],
   });
 
   React.useEffect(() => {

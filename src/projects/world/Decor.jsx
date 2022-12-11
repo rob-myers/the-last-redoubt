@@ -76,7 +76,7 @@ export default function Decor({ decor, api }) {
 
     observer.observe(npcs.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
     return () => observer.disconnect();
-  }, []);
+  }, [api.npcs]);
 
   return (
     <div
