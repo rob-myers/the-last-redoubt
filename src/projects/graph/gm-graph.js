@@ -320,7 +320,7 @@ export class gmGraphClass extends BaseGraph {
    */
   getAdjacentDoor(node) {
     const doorNode = this.getSuccs(node).find(x => x.type === 'door');
-    return doorNode ? /** @type {Graph.GmGraphNodeDoor} */ (doorNode) : null
+    return doorNode ? /** @type {Graph.GmGraphNodeDoor} */ (doorNode) : null;
   }
 
   /**
@@ -330,27 +330,29 @@ export class gmGraphClass extends BaseGraph {
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
    * @param {{ gmId: number; roomId: number; }[]} roomIds
+   * @param {boolean} [doorsMustBeOpen]
    * @returns {Graph.GmRoomsAdjData}
    */
-  getRoomIdsAdjData(roomIds) {
+  getRoomIdsAdjData(roomIds, doorsMustBeOpen = false) {
     const output = /** @type {Graph.GmRoomsAdjData} */ ({});
 
     for (const { gmId, roomId } of roomIds) {
       const gm = this.gms[gmId];
       const openDoorIds = this.api.doors.getOpen(gmId);
       // Non-hull doors or windows induce an adjacent room
-      output[gmId] = output[gmId] || { roomIds: [], windowIds: [], closedDoorIds: [] };
-      output[gmId].roomIds.push(...gm.roomGraph.getOpenRoomIds(roomId, openDoorIds));
+      !output[gmId] && (output[gmId] = { gmId, roomIds: [], windowIds: [], closedDoorIds: [] });
+      output[gmId].roomIds.push(...gm.roomGraph.getAdjRoomIds(roomId, doorsMustBeOpen ? openDoorIds : undefined));
       output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).flatMap(x => gm.windows[x.windowId].tags.includes('frosted') ? [] : x.windowId));
       output[gmId].closedDoorIds.push(...gm.roomGraph.getAdjacentDoors(roomId).flatMap(x => openDoorIds.includes(x.doorId) ? [] : x.doorId));
       // Connected hull doors induce room in another geomorph
-      // NOTE we currently ignore hull windows 
+      // 🚧 check if hull doors are open?
+      // 🚧 currently ignore hull windows 
       const hullDoorIds = gm.roomGraph.getAdjacentHullDoorIds(gm, roomId);
       hullDoorIds
         .filter(({ hullDoorId }) => !this.isHullDoorSealed(gmId, hullDoorId))
         .forEach(({ hullDoorId }) => {
           const ctxt = assertNonNull(this.getAdjacentRoomCtxt(gmId, hullDoorId));
-          output[ctxt.adjGmId] = output[ctxt.adjGmId] || { roomIds: [], windowIds: [], closedDoorIds: [] };
+          !output[ctxt.adjGmId] && (output[ctxt.adjGmId] = { gmId: ctxt.adjGmId, roomIds: [], windowIds: [], closedDoorIds: [] });
           output[ctxt.adjGmId].roomIds.push(ctxt.adjRoomId);
         });
     }

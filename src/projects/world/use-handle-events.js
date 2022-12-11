@@ -77,8 +77,6 @@ export default function useHandleEvents(api) {
             const adjCtxt = api.gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
             adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
-          // Decor
-          api.npcs.toggleLocalDecor({ act: "remove", gmId: e.meta.gmId, roomId: e.meta.exitedRoomId });
 
           api.updateAll();
           break;
@@ -86,8 +84,10 @@ export default function useHandleEvents(api) {
         case 'enter-room': {
           // FOV
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
+
           // Decor
-          api.npcs.toggleLocalDecor({ act: "add", gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, cbFactory: state.localDecorCbFactory });
+          api.npcs.npcAct({ action: "rm-decor", regexStr: '^local-' });
+          api.npcs.updateLocalDecor({ gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, cbFactory: state.localDecorCbFactory });
 
           api.updateAll();
           break;
@@ -134,10 +134,7 @@ export default function useHandleEvents(api) {
             api.npcs.playerKey = e.npcKey || null;
             if (e.npcKey) {
               const found = api.npcs.setRoomByNpc(e.npcKey);
-              found && api.npcs.toggleLocalDecor({ act: "add", gmId: found.gmId, roomId: found.roomId, cbFactory: state.localDecorCbFactory });
-            } else {
-              /** @see {api.npcs.toggleLocalDecor} */
-              api.npcs.npcAct({ action: "rm-decor", regexStr: '^local-\\d+-g\\d+r\\d+' });
+              found && api.npcs.updateLocalDecor({ gmId: found.gmId, roomId: found.roomId, cbFactory: state.localDecorCbFactory });
             }
             break;
           case 'spawned-npc':

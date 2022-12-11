@@ -3,7 +3,6 @@ import { css, cx } from "@emotion/css";
 import { visibleUnicodeLength } from "../service/generic";
 import { Vect } from "../geom";
 import { ansiColor } from "../sh/util";
-import useSessionStore from "../sh/session.store";
 import { cssName, wallOutset } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -45,7 +44,9 @@ export default function DebugWorld(props) {
             cssName.debugRoomOutlineDisplay,
             cssName.debugShowIds,
             cssName.debugShowLabels,
-          ].forEach(cssVarName => el.style.setProperty(cssVarName, 'none'));
+          ].forEach(cssVarName => // 🚧 avoid reset on HMR
+            el.style.setProperty(cssVarName, 'none')
+          );
         }
       },
     };
@@ -212,10 +213,10 @@ export default function DebugWorld(props) {
             data-tags="debug label-icon"
             title={roomLabel.text}
             style={{
-              left: roomLabel.center.x - debugRadius,
-              top: roomLabel.center.y - debugRadius,
-              width: debugRadius * 2,
-              height: debugRadius * 2,
+              left: roomLabel.center.x - debugLabel,
+              top: roomLabel.center.y - debugLabel,
+              width: debugLabel * 2,
+              height: debugLabel * 2,
               filter: 'invert(100%)',
               ...props.showLabels && { display: 'initial' },
             }}
@@ -265,6 +266,7 @@ export default function DebugWorld(props) {
  */
 
 const debugRadius = 5;
+const debugLabel = 4;
 const debugDoorOffset = 10;
 
 const rootCss = css`
@@ -305,7 +307,7 @@ const rootCss = css`
     div.debug-door-id-icon, div.debug-room-id-icon {
       position: absolute;
       background: black;
-      font-size: 8px;
+      font-size: 6px;
       line-height: 1;
       border: 1px solid black;
       pointer-events: none;

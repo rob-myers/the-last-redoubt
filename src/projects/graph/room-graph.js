@@ -69,14 +69,14 @@ export class roomGraphClass extends BaseGraph {
   }
 
   /**
-   * Given room id, find all rooms reachable via a single window or open door.
+   * Given room id, find all rooms reachable via a single window or (open) door.
    * @param {number} roomId
-   * @param {number[]} openDoorIds
+   * @param {number[]} [openDoorIds]
    */
-   getOpenRoomIds(roomId, openDoorIds) {
+   getAdjRoomIds(roomId, openDoorIds) {
     return this.getSuccs(this.nodesArray[roomId]).flatMap((adjNode) => {
       if (
-        adjNode.type === 'door' && openDoorIds.includes(adjNode.doorId)
+        adjNode.type === 'door' && (!openDoorIds || openDoorIds.includes(adjNode.doorId))
         || adjNode.type === 'window'
       ) {
         return (this.getOtherRoom(adjNode, roomId)?.roomId)??[];

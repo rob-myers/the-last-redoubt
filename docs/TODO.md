@@ -5,7 +5,14 @@
 - Absorb `localDecor` program into `<Decor>`
   - ✅ Move MutationObserver into Decor
   - ✅ Move `localDecor` code into Decor
-  - 🚧 Fix Doors update bug due to `World` changes
+  - ✅ Fix Doors update bug due to `World` changes
+  - ✅ Show local decor in neighbouring rooms too?
+
+- More local decor
+  - Event 'fov-changed' {curr,added,removed} gmRoomIds
+  - React to event via npcs.updateLocalDecor
+  - Improve local decor key
+  - DebugWorld room labels -> local Decor
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI

@@ -184,14 +184,14 @@ declare namespace Graph {
   }
 
   /** Indexed by `gmId` */
-  export type GmRoomsAdjData = Record<
-    number,
-    {
+  export type GmRoomsAdjData = {
+    [gmId: number]: {
+      gmId: number;
       roomIds: number[];
       windowIds: number[];
       closedDoorIds: number[];
-    }
-  >;
+    };
+  };
 
 //#endregion
   
