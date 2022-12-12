@@ -3,6 +3,7 @@
 ## In progress
 
 - BUG unseen windows should be totally dark
+- 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
 
 - Absorb `localDecor` program into `<Decor>`
   - ✅ Move MutationObserver into Decor
@@ -14,8 +15,9 @@
   - ✅ Event 'fov-changed' {gmRoomIds,added,removed}
     - those rooms with non-empty light
   - ✅ React to event via npcs.updateLocalDecor
-  - Improve local decor key
-  - DebugWorld room labels -> local Decor
+  - ✅ Local decor points have `data-tags`
+  - ✅ DebugWorld room labels -> local Decor
+
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI

@@ -31,7 +31,7 @@
     <path d="M 316 315 L 343 343 L 311 376 L 186 531 L 84 721 L 25.4 892 L 1212 892 L 1212 913 L -16 910.4 L -16 902 L 49 710 L 116 576 L 183 468 L 282 350 L 316 315 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);"/>
     <path d="M 2393 902 L 2420 874 L 2388 841 L 2284 714 L 2193 565 L 2131 415 L 2101 315 L 2061 315 L 2125 506 L 2193 641 L 2260 749 L 2359 867 L 2393 902 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" transform="matrix(-1, 0, 0, -1, 4481, 1217)"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <path d="M 323 290.2 L 478 160.2 L 668 50.2 L 873 -24.8 L 1093 -59.8 L 1308 -64.8 L 1523 -24.8 L 1733 50.2 L 1923 160.2 L 2078 290.2 L 2098 315.2 L 2063 350.2 L 2038 330.2 L 1888 205.2 L 1708 105.2 L 1508 30.2 L 1303 -9.8 L 1093 -9.8 L 888 30.2 L 693 105.2 L 513 210.2 L 368 330.2 L 343 355.2 L 298 315.2 L 323 290.2 Z" style="stroke: rgb(0, 0, 0); fill-opacity: 0.31;">
       <title>window</title>
@@ -118,34 +118,34 @@
       <title>door iris</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="549">
-      <title>label bridge | room</title>
+      <title>ui label room bridge</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="703" y="775">
-      <title>label locker | room</title>
+      <title>ui label room locker</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1603" y="775">
-      <title>label locker | room</title>
+      <title>ui label room locker</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="253" y="1299">
-      <title>label locker | room</title>
+      <title>ui label room locker</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2053" y="1229">
-      <title>label toilet | room</title>
+      <title>ui label room toilet</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="1811">
-      <title>label briefing | room</title>
+      <title>ui label room briefing</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="402" y="2499" bx:origin="0.5 0.5">
-      <title>label fuel | room</title>
+    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="402" y="2040" bx:origin="0.5 0.5">
+      <title>ui label fuel</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1893" y="2499">
-      <title>label fuel | room</title>
+    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2000" y="2040">
+      <title>ui label fuel</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1932" y="1899">
-      <title>label bedroom | room</title>
+      <title>ui label room bedroom</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="403" y="1899">
-      <title>label office | room</title>
+      <title>ui label room office</title>
     </rect>
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="300" y="650">
       <title>label cpu</title>
@@ -159,8 +159,8 @@
     <rect y="900" width="20" height="300" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="2390">
       <title>wall</title>
     </rect>
-    <rect x="1022.856" y="913.5" width="50" height="50" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
-      <title>label corridor | room</title>
+    <rect x="1022.856" y="913.5" width="20" height="20" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
+      <title>ui label room corridor</title>
     </rect>
     <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
       <title>light</title>

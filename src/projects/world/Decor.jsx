@@ -108,6 +108,7 @@ export default function Decor({ decor, api }) {
               <div
                 key={key}
                 data-key={item.key}
+                data-tags={item.tags?.join(' ')}
                 className={cx(cssName.decorPoint, cssPoint)}
                 onClick={item.onClick ? () => item.onClick?.(item, api) : undefined}
                 style={{

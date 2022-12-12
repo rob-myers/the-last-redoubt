@@ -1408,7 +1408,7 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1488,7 +1488,7 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1568,7 +1568,7 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1648,7 +1648,7 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1793,14 +1793,14 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[840, 120], [820, 120], [820, 100], [840, 100]]]
         }
       },
       {
-        "tags": ["label", "bathroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bathroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1828,7 +1828,7 @@
         }
       },
       {
-        "tags": ["label", "galley", "|", "room"],
+        "tags": ["ui", "label", "room", "galley"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1969,22 +1969,86 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[428, 420], [428, 400], [448, 400], [448, 420]]]
+          "coordinates": [[[428, 420], [428, 416], [432, 416], [432, 420]]]
         }
       },
       {
-        "tags": ["label", "bathroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bathroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
               [388.56, 577.04],
-              [388.56, 557.04],
-              [408.56, 557.04],
-              [408.56, 577.04]
+              [388.56, 573.04],
+              [392.56, 573.04],
+              [392.56, 577.04]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "lie", "bed"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[387.763, 490], [387.763, 488], [389.763, 488], [389.763, 490]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[376.963, 591], [376.963, 589], [378.963, 589], [378.963, 591]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "toilet"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[418.763, 578], [418.763, 576], [420.763, 576], [420.763, 578]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "sink"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[454.763, 586], [454.763, 584], [456.763, 584], [456.763, 586]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [386.4026, 421.209],
+              [386.4026, 419.209],
+              [388.4026, 419.209],
+              [388.4026, 421.209]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [386.4026, 381.209],
+              [386.4026, 379.209],
+              [388.4026, 379.209],
+              [388.4026, 381.209]
             ]
           ]
         }
@@ -2053,22 +2117,86 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[548, 420], [548, 400], [568, 400], [568, 420]]]
+          "coordinates": [[[548, 420], [548, 416], [552, 416], [552, 420]]]
         }
       },
       {
-        "tags": ["label", "bathroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bathroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
               [508.56, 577.04],
-              [508.56, 557.04],
-              [528.56, 557.04],
-              [528.56, 577.04]
+              [508.56, 573.04],
+              [512.56, 573.04],
+              [512.56, 577.04]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "lie", "bed"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[507.763, 490], [507.763, 488], [509.763, 488], [509.763, 490]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[496.963, 591], [496.963, 589], [498.963, 589], [498.963, 591]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "toilet"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[538.763, 578], [538.763, 576], [540.763, 576], [540.763, 578]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "sink"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[574.763, 586], [574.763, 584], [576.763, 584], [576.763, 586]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [506.4026, 421.209],
+              [506.4026, 419.209],
+              [508.4026, 419.209],
+              [508.4026, 421.209]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [506.4026, 381.209],
+              [506.4026, 379.209],
+              [508.4026, 379.209],
+              [508.4026, 381.209]
             ]
           ]
         }
@@ -2137,22 +2265,86 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[632, 420], [632, 400], [652, 400], [652, 420]]]
+          "coordinates": [[[648, 420], [648, 416], [652, 416], [652, 420]]]
         }
       },
       {
-        "tags": ["label", "bathroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bathroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [671.44, 577.04],
-              [671.44, 557.04],
-              [691.44, 557.04],
+              [687.44, 577.04],
+              [687.44, 573.04],
+              [691.44, 573.04],
               [691.44, 577.04]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "lie", "bed"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[690.237, 490], [690.237, 488], [692.237, 488], [692.237, 490]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[701.037, 591], [701.037, 589], [703.037, 589], [703.037, 591]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "toilet"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[659.237, 578], [659.237, 576], [661.237, 576], [661.237, 578]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "sink"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[623.237, 586], [623.237, 584], [625.237, 584], [625.237, 586]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [691.5974, 421.209],
+              [691.5974, 419.209],
+              [693.5974, 419.209],
+              [693.5974, 421.209]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [691.5974, 381.209],
+              [691.5974, 379.209],
+              [693.5974, 379.209],
+              [693.5974, 381.209]
             ]
           ]
         }
@@ -2221,22 +2413,86 @@
         }
       },
       {
-        "tags": ["label", "bedroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[752, 420], [752, 400], [772, 400], [772, 420]]]
+          "coordinates": [[[768, 420], [768, 416], [772, 416], [772, 420]]]
         }
       },
       {
-        "tags": ["label", "bathroom", "|", "room"],
+        "tags": ["ui", "label", "room", "bathroom"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [791.44, 577.04],
-              [791.44, 557.04],
-              [811.44, 557.04],
+              [807.44, 577.04],
+              [807.44, 573.04],
+              [811.44, 573.04],
               [811.44, 577.04]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "lie", "bed"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[810.237, 490], [810.237, 488], [812.237, 488], [812.237, 490]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[821.037, 591], [821.037, 589], [823.037, 589], [823.037, 591]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "toilet"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[779.237, 578], [779.237, 576], [781.237, 576], [781.237, 578]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "stand", "sink"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[743.237, 586], [743.237, 584], [745.237, 584], [745.237, 586]]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [811.5974, 421.209],
+              [811.5974, 419.209],
+              [813.5974, 419.209],
+              [813.5974, 421.209]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ui", "sit", "chair"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [811.5974, 381.209],
+              [811.5974, 379.209],
+              [813.5974, 379.209],
+              [813.5974, 381.209]
             ]
           ]
         }
@@ -2288,7 +2544,7 @@
         }
       },
       {
-        "tags": ["label", "office", "|", "room"],
+        "tags": ["ui", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3953,136 +4209,7 @@
       ]
     }
   ],
-  "labels": [
-    {
-      "text": "bedroom",
-      "center": {"x": 314.6, "y": 86.56},
-      "index": 0,
-      "tags": ["room"],
-      "rect": {"x": 293.1, "y": 81.56, "width": 43, "height": 10},
-      "padded": {"x": 289.1, "y": 79.56, "width": 51, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 434.6, "y": 86.56},
-      "index": 1,
-      "tags": ["room"],
-      "rect": {"x": 413.1, "y": 81.56, "width": 43, "height": 10},
-      "padded": {"x": 409.1, "y": 79.56, "width": 51, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 554.6, "y": 86.56},
-      "index": 2,
-      "tags": ["room"],
-      "rect": {"x": 533.1, "y": 81.56, "width": 43, "height": 10},
-      "padded": {"x": 529.1, "y": 79.56, "width": 51, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 645.4, "y": 86.56},
-      "index": 3,
-      "tags": ["room"],
-      "rect": {"x": 623.9, "y": 81.56, "width": 43, "height": 10},
-      "padded": {"x": 619.9, "y": 79.56, "width": 51, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 830, "y": 110},
-      "index": 4,
-      "tags": ["room"],
-      "rect": {"x": 808.5, "y": 105, "width": 43, "height": 10},
-      "padded": {"x": 804.5, "y": 103, "width": 51, "height": 14}
-    },
-    {
-      "text": "bathroom",
-      "center": {"x": 761.2436, "y": 95.1554},
-      "index": 5,
-      "tags": ["room"],
-      "rect": {"x": 738.2436, "y": 90.1554, "width": 46, "height": 10},
-      "padded": {"x": 734.2436, "y": 88.1554, "width": 54, "height": 14}
-    },
-    {
-      "text": "galley",
-      "center": {"x": 1070.91, "y": 57.91},
-      "index": 6,
-      "tags": ["room"],
-      "rect": {"x": 1056.91, "y": 52.41, "width": 28, "height": 11},
-      "padded": {"x": 1052.91, "y": 50.41, "width": 36, "height": 15}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 438, "y": 410},
-      "index": 7,
-      "tags": ["room"],
-      "rect": {"x": 416.5, "y": 405, "width": 43, "height": 10},
-      "padded": {"x": 412.5, "y": 403, "width": 51, "height": 14}
-    },
-    {
-      "text": "bathroom",
-      "center": {"x": 398.56, "y": 567.04},
-      "index": 8,
-      "tags": ["room"],
-      "rect": {"x": 375.56, "y": 562.04, "width": 46, "height": 10},
-      "padded": {"x": 371.56, "y": 560.04, "width": 54, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 558, "y": 410},
-      "index": 9,
-      "tags": ["room"],
-      "rect": {"x": 536.5, "y": 405, "width": 43, "height": 10},
-      "padded": {"x": 532.5, "y": 403, "width": 51, "height": 14}
-    },
-    {
-      "text": "bathroom",
-      "center": {"x": 518.56, "y": 567.04},
-      "index": 10,
-      "tags": ["room"],
-      "rect": {"x": 495.56, "y": 562.04, "width": 46, "height": 10},
-      "padded": {"x": 491.56, "y": 560.04, "width": 54, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 642, "y": 410},
-      "index": 11,
-      "tags": ["room"],
-      "rect": {"x": 620.5, "y": 405, "width": 43, "height": 10},
-      "padded": {"x": 616.5, "y": 403, "width": 51, "height": 14}
-    },
-    {
-      "text": "bathroom",
-      "center": {"x": 681.44, "y": 567.04},
-      "index": 12,
-      "tags": ["room"],
-      "rect": {"x": 658.44, "y": 562.04, "width": 46, "height": 10},
-      "padded": {"x": 654.44, "y": 560.04, "width": 54, "height": 14}
-    },
-    {
-      "text": "bedroom",
-      "center": {"x": 762, "y": 410},
-      "index": 13,
-      "tags": ["room"],
-      "rect": {"x": 740.5, "y": 405, "width": 43, "height": 10},
-      "padded": {"x": 736.5, "y": 403, "width": 51, "height": 14}
-    },
-    {
-      "text": "bathroom",
-      "center": {"x": 801.44, "y": 567.04},
-      "index": 14,
-      "tags": ["room"],
-      "rect": {"x": 778.44, "y": 562.04, "width": 46, "height": 10},
-      "padded": {"x": 774.44, "y": 560.04, "width": 54, "height": 14}
-    },
-    {
-      "text": "office",
-      "center": {"x": 1070, "y": 543.16},
-      "index": 15,
-      "tags": ["room"],
-      "rect": {"x": 1056.5, "y": 538.16, "width": 27, "height": 10},
-      "padded": {"x": 1052.5, "y": 536.16, "width": 35, "height": 14}
-    }
-  ],
+  "labels": [],
   "navPoly": [
     {
       "type": "Polygon",

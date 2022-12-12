@@ -107,7 +107,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         matched.forEach(tag => 
           roomId >= 0
             ? pointsByRoom[roomId][tag].push({ point: p, tags: single.tags.slice() })  
-            : console.warn(`${tag} point ${i} should be inside some room`)  
+            : console.warn(`${tag} point ${i} (${single.tags}) should be inside some room (${layoutKey})`)  
         );
       }
     });
