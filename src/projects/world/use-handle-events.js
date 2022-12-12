@@ -2,7 +2,6 @@ import React from "react";
 import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
 import * as npcService from "../service/npc";
-import { ansiColor } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -85,9 +84,6 @@ export default function useHandleEvents(api) {
           // FOV
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
 
-          // Decor
-          api.npcs.npcAct({ action: "rm-decor", regexStr: '^local-' });
-          api.npcs.updateLocalDecor({ gmId: e.meta.gmId, roomId: e.meta.enteredRoomId, cbFactory: state.localDecorCbFactory });
 
           api.updateAll();
           break;
@@ -102,11 +98,6 @@ export default function useHandleEvents(api) {
       }
     },
 
-    // 🚧 Currently we just log out the tags
-    localDecorCbFactory(tags) {
-      return (_decor, { npcs }) =>
-        npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(tags??[])}${ansiColor.Reset}`);
-    },
   }), {
     deps: [api.gmGraph],
   });
@@ -130,14 +121,15 @@ export default function useHandleEvents(api) {
           case 'enabled':
             break;
           case 'fov-changed':
-            console.log(e);
+            // console.log(e);
+            api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
             break;
           case 'set-player':
             api.npcs.playerKey = e.npcKey || null;
             if (e.npcKey) {
-              const found = api.npcs.setRoomByNpc(e.npcKey);
-              found && api.npcs.updateLocalDecor({ gmId: found.gmId, roomId: found.roomId, cbFactory: state.localDecorCbFactory });
+              api.npcs.setRoomByNpc(e.npcKey);
             }
+            
             break;
           case 'spawned-npc':
             // This event also happens on hot-reload NPC.jsx
@@ -211,5 +203,4 @@ export default function useHandleEvents(api) {
  * @typedef State @type {object}
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
- * @property {import('../world/NPCs').ToggleLocalDecorOpts['cbFactory']} localDecorCbFactory
  */

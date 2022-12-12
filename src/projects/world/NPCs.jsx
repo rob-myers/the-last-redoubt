@@ -4,7 +4,7 @@ import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Vect } from "../geom";
-import { stripAnsi } from "../sh/util";
+import { ansiColor, stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { deepClone, keys, testNever } from "../service/generic";
 import { geom } from "../service/geom";
@@ -463,24 +463,30 @@ export default function NPCs(props) {
       ));
     },
     updateLocalDecor(opts) {
-      
-      // 🚧 FOV should provide event 'fov-changed' with curr, removed, added gmRoomIds
-      // 🚧 then we can add/remove local decor here
+      // 🚧 Currently we just log out the tags
+      /** @type {(tags?: string[]) => NPC.DecorPoint['onClick']} */
+      function cbFactory(tags) {
+        return (_decor, { npcs }) =>
+          npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(tags??[])}${ansiColor.Reset}`);
+      }
 
-      const adjData = api.gmGraph.getRoomIdsAdjData([{ gmId: opts.gmId, roomId: opts.roomId }]);
-      adjData[opts.gmId].roomIds.push(opts.roomId);
-          
-      for (const { gmId, roomIds } of Object.values(adjData)) {
-        for (const roomId of roomIds) {
-          const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
-          const decorKeys = points.map((_, decorId) => `local-${decorId}-g${gmId}r${roomId}`)
-          state.npcAct({ action: "add-decor",
-            items: Object.values(points).map(({ point, tags }, uiId) => ({
-              key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
-              onClick: opts.cbFactory?.(tags),
-            })),
-          });
-        }
+      /** @type {(gmId: number, roomId: number, decorId: number) => string} */
+      const getDecorKey = (gmId, roomId, decorId) => `local-${decorId}-g${gmId}r${roomId}`;
+
+      for (const { gmId, roomId } of opts.added??[]) {
+        const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
+        const decorKeys = points.map((_, decorId) => getDecorKey(gmId, roomId, decorId))
+        state.npcAct({ action: "add-decor",
+          items: Object.values(points).map(({ point, tags }, uiId) => ({
+            key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
+            onClick: cbFactory(tags),
+          })),
+        });
+      }
+      for (const { gmId, roomId } of opts.removed??[]) {
+        const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
+        const decorKeys = points.map((_, decorId) => getDecorKey(gmId, roomId, decorId))
+        state.npcAct({ action: "rm-decor", items: decorKeys });
       }
     },
     trackNpc(opts) {
@@ -688,7 +694,6 @@ const rootCss = css`
 
 /**
  * @typedef ToggleLocalDecorOpts
- * @property {number} gmId
- * @property {number} roomId
- * @property {(tags?: string[]) => NPC.DecorPoint['onClick']} [cbFactory]
+ * @property {Graph.GmRoomId[]} [added]
+ * @property {Graph.GmRoomId[]} [removed]
  */
