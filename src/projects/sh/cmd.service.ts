@@ -488,7 +488,9 @@ class cmdServiceClass {
       }
     },
   
-    pretty: (x: any) => prettySafe(isProxy(x) ? {...x} : x),
+    pretty(x: any) {
+      return prettySafe(isProxy(x) ? {...x} : x);
+    },
 
     /**
      * Read once from stdin. We convert `{ eof: true }` to `null` for
