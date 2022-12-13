@@ -58,6 +58,7 @@ function EmbeddedVideo(props: {
         playlist={props.playlist}
         playlistCoverId={props.playlistCoverId}
         title={props.title}
+        poster="maxresdefault"
       />
   );
 }

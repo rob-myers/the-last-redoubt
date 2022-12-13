@@ -4,20 +4,7 @@
 
 - BUG unseen windows should be totally dark
 - 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
-
-- Absorb `localDecor` program into `<Decor>`
-  - ✅ Move MutationObserver into Decor
-  - ✅ Move `localDecor` code into Decor
-  - ✅ Fix Doors update bug due to `World` changes
-  - ✅ Show local decor in neighbouring rooms too?
-
-- More local decor
-  - ✅ Event 'fov-changed' {gmRoomIds,added,removed}
-    - those rooms with non-empty light
-  - ✅ React to event via npcs.updateLocalDecor
-  - ✅ Local decor points have `data-tags`
-  - ✅ DebugWorld room labels -> local Decor
-
+- ✅ High res video facade
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -44,9 +31,8 @@
   - ✅ work through 302
   - ✅ work through 303
   - work through 102
-- symbols have ui points
+- 🚧 symbols have ui points
 
-- Blur unplayed videos via CSS
 - Can sit/stand toggle
 - Decor rect collision prediction
 
@@ -275,6 +261,19 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- Absorb `localDecor` program into `<Decor>`
+  - ✅ Move MutationObserver into Decor
+  - ✅ Move `localDecor` code into Decor
+  - ✅ Fix Doors update bug due to `World` changes
+  - ✅ Show local decor in neighbouring rooms too?
+
+- More local decor
+  - ✅ Event 'fov-changed' {gmRoomIds,added,removed}
+    - those rooms with non-empty light
+  - ✅ React to event via npcs.updateLocalDecor
+  - ✅ Local decor points have `data-tags`
+  - ✅ DebugWorld room labels -> local Decor
 
 - ✅ BUG `source foo bar`: positive positional `bar` not propagated
 - ✅ `localDecor` runs in background automatically
