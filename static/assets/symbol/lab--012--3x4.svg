@@ -15,9 +15,9 @@
   </g>
   <g style="" transform="">
     <title>singles</title>
-    <rect y="-7.5" width="890" height="307.5" style="stroke: rgb(0, 0, 0); fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="300">
+    <path d="M 300 -7.5 L 1190 -7.5 L 1190 300 L 436.748 301.686 L 365.829 274.678 L 326.625 219.66 L 315.855 160.466 L 300 -7.5 Z" style="stroke: rgb(0, 0, 0); fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall machine</title>
-    </rect>
+    </path>
     <rect y="890" width="1210" height="20" style="stroke: rgb(0, 0, 0); fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="-10">
       <title>wall</title>
     </rect>
