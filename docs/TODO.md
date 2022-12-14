@@ -2,9 +2,9 @@
 
 ## In progress
 
-- BUG unseen windows should be totally dark
-- 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
-- ✅ High res video facade
+- ✅ 102: fix non-hull door (black)
+  - moved door to engineering 47 (removing wall from PNG)
+- 102: strange lights
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -18,6 +18,7 @@
     - ✅ 2nd test
       - `ffmpeg -i 'first-cli-draft.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 first-cli-draft.mov.mp4`
       - 13:09s `44M  7 Dec 10:48 first-cli-draft.mov.mp4`
+  - 🚧 Redo video demo again (more focus)
   - 🚧 Adjust textual copy, emphasising _canonical_ UIs:
     - POSIX CLI
     - Browser devtool  
@@ -25,14 +26,16 @@
     - ✅ Far too complex: need a simplified overview
     - ✅ Clearer second attempt but still too complex
 - 🚧 Adjust Intro
-- 🚧 symbols have thinner doors
+- ✅ symbols have thinner doors
   - ✅ work through 301
   - ✅ work through 101
   - ✅ work through 302
   - ✅ work through 303
-  - work through 102
+  - ✅ work through 102
 - 🚧 symbols have ui points
 
+- BUG unseen windows should be totally dark
+- 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
 - Can sit/stand toggle
 - Decor rect collision prediction
 
@@ -261,6 +264,8 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ High res video facade
 
 - Absorb `localDecor` program into `<Decor>`
   - ✅ Move MutationObserver into Decor
