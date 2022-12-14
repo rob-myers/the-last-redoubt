@@ -7,6 +7,10 @@
   "keywords": [
     "gatsby"
   ],
+  "browserslist": [
+    ">0.25%",
+    "not dead and supports es6-module"
+  ],
   "scripts": {
     "develop": "gatsby develop -p 8010 -H 0.0.0.0",
     "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta'",
@@ -59,7 +63,6 @@
     "katex": "^0.16.3",
     "lodash.clonedeep": "^4.5.0",
     "mvdan-sh": "^0.5.0",
-    "pepjs": "^0.5.3",
     "poly2tri": "^1.5.0",
     "polygon-clipping": "^0.15.3",
     "prism-react-renderer": "^1.3.5",
@@ -76,7 +79,6 @@
     "rehype-katex": "^4",
     "remark-gfm": "^1",
     "remark-math": "^3",
-    "resize-observer-polyfill": "^1.5.1",
     "rxjs": "7.0.0-beta.10",
     "safe-json-stringify": "^1.2.0",
     "safe-stable-stringify": "^2.3.1",
@@ -85,7 +87,6 @@
     "tiny-async-pool": "^1.2.0",
     "triangle-wasm": "^1.0.0",
     "uid": "^2.0.0",
-    "web-animations-js": "^2.3.2",
     "xterm": "^4.18.0",
     "xterm-addon-fit": "^0.5.0",
     "zustand": "^4.1.1"

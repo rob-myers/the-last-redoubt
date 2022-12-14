@@ -9,26 +9,24 @@ import "swiper/css/pagination"
 import "swiper/css/zoom"
 import "src/components/globals.css"
 
-import ResizeObserver from 'resize-observer-polyfill';
+// //#region polyfill
+// import ResizeObserver from 'resize-observer-polyfill';
 
-//#region polyfill
+// if (!window.ResizeObserver) {
+//   window.ResizeObserver = ResizeObserver;
+// }
 
-if (!window.ResizeObserver) {
-  window.ResizeObserver = ResizeObserver;
-}
+// if (!document.documentElement.onpointerdown) {
+//   import('pepjs');
+// }
 
-if (!document.documentElement.onpointerdown) {
-  import('pepjs');
-}
-
-if (!window.Animation) {
-  // Doesn't actually provide window.Animation
-  // Does provide element.animate()
-  // Does provide element.getAnimations()
-  import('web-animations-js/web-animations-next.min.js');
-}
-
-//#endregion
+// if (!window.Animation) {
+//   // Doesn't actually provide window.Animation
+//   // Does provide element.animate()
+//   // Does provide element.getAnimations()
+//   import('web-animations-js/web-animations-next.min.js');
+// }
+// //#endregion
 
 //#region root wrapper
 

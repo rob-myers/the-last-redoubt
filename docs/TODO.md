@@ -2,10 +2,6 @@
 
 ## In progress
 
-- ✅ 102: fix non-hull door (black)
-  - moved door to engineering 47 (removing wall from PNG)
-- 102: strange lights
-
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
   - ✅ Video demo of CLI
@@ -36,6 +32,7 @@
 
 - BUG unseen windows should be totally dark
 - 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
+- browserslist: try adding old safari version
 - Can sit/stand toggle
 - Decor rect collision prediction
 
@@ -265,6 +262,10 @@ How to embed video?
 
 ## Done
 
+- ✅ 102: fix non-hull door (black)
+  - moved door to engineering 47 (removing wall from PNG)
+- ✅ 102: strange lights
+  - chrome clip-path issue: used `will-change: transform`
 - ✅ High res video facade
 
 - Absorb `localDecor` program into `<Decor>`
@@ -590,7 +591,15 @@ How to embed video?
 
 # Video Notes
 
-## Homepage CLI video
+## 🚧 Homepage CLI video
+
+- Original approach to video was a bit dry
+- We should demo CLI in tandem with World
+- CLI helps us to write about NPCs
+- To write about NPC behaviour we need Demos
+- To create Demos we need to write Software
+- We do not want to hide away the Software internals 
+- Indeed, this blog is about _programming NPCS_
 
 ```sh
 # view shell function names
