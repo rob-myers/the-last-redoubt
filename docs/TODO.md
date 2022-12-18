@@ -2,6 +2,11 @@
 
 ## In progress
 
+- Synfig https://www.synfig.org/
+  - ✅ Download and Install
+  - Watch a tutorial
+  - Start remaking walk cycle
+
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
   - ✅ Video demo of CLI
@@ -591,56 +596,29 @@ How to embed video?
 
 # Video Notes
 
-## 🚧 Homepage CLI video
+## First CLI video
 
-- Original approach to video was a bit dry
-- We should demo CLI in tandem with World
-- CLI helps us to write about NPCs
-- To write about NPC behaviour we need Demos
-- To create Demos we need to write Software
-- We do not want to hide away the Software internals 
-- Indeed, this blog is about _programming NPCS_
+Backdrop:
 
-```sh
-# view shell function names
-declare -F
-# view definition of `range`
-declare -f range
+- Writing about NPC behaviour requires many flexible Demos
+- Creating Demos means we need to write Software
+- Our CLI permits:
+  - writing Software explicitly
+  - running Software explicitly
+  - managing Software explicitly
 
-range
-# []
-range 10
-# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+Versus Operating System CLI:
 
-# Our shell wraps JS
-# - it textually expands commands before running them
-# - commands output JS values
-# - commands can manipulate JS state
-
-# A system shell wrap OS Calls and Binaries
-# - it textually expands commands before running them
-# - commands output file content, often text
-# - commands can manipulate the system or files
-
-# view definition of `declare`
-declare -f split
-range 10 | split
-range 10 | split | map 'x => x + 1'
-
-range 10 | split | map 'x => x + 1' |
-  run '({ api, datum }) {
-    while ((datum = await api.read()) !== null) {
-      yield datum
-      yield* api.sleep(1)
-    }
-  }'
-# we could also run it in the background
-
-# so we can:
-# - combine builtins/functions via pipelines
-# - manage their execution as processes
-```
-
+- An OS CLI wraps system calls and binaries
+  - textually expands commands before running them
+  - commands output file content, often text
+  - manipulates files and system state
+  - permits process management
+- Our CLI wraps JS
+  - textually expands commands before running them
+  - commands output JS values
+  - manipulates JS values and DOM state
+  - permits process management
 
 ## 🚧 Homepage CSS video
 
@@ -685,3 +663,26 @@ fov
 doors
 - toggle door via click
 - toggle door via class `open` on `div.door`
+
+## 🚧 Another CLI video
+
+```sh
+# view shell function names
+declare -F
+# view definition of `range`
+declare -f range
+range
+# []
+range 10
+# [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+range 10 | split
+range 10 | split | map 'x => x + 1'
+range 10 | split | map 'x => x + 1' |
+  run '({ api, datum }) {
+    while ((datum = await api.read()) !== null) {
+      yield datum
+      yield* api.sleep(1)
+    }
+  }'
+```
