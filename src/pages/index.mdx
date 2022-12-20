@@ -83,7 +83,7 @@ Before things get a bit abstract, here are some screenshots:
   the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
   The `World` shows an NPC from a birdseye perspective.
   The commands in the `Terminal` indicate this is Andros and he is actually the Player.
-  The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some of the commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, whereas the images use `DEBUG=1; npc config`</SideNote>
+  The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, rather than `DEBUG=1; npc config`</SideNote>
 
 </Aside>
 
@@ -102,13 +102,36 @@ Let's see it in action:
   items={[{ video: 'cli-demo-1', label: 'First CLI Demo' }]}
 />
 
-🚧 simplify above video
+🚧 redo video at home!
 
-Every shell session begins by running the script at `/home/PROFILE`.
-In the session above it is the string <InlineCode>source /etc/util-1</InlineCode> plus a trailing newline.
+Concerning the above video, every shell session begins by running the script at `/home/PROFILE`.
+In this particular session,
+the latter resolves to the following [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String):
+
+```bash
+source /etc/util-1
+source /etc/game-1
+awaitWorld
+spawn andros '{"x":185,"y":390}'
+npc set-player andros
+
+# camera follows andros
+track andros &
+# click navmesh to move
+goLoop andros &
+# click outside navmesh to look
+lookLoop andros &
+
+npc config showIds
+npc config showLabels
+npc config debug
+```
+
 Our shell builtin `source`<SideNote width={300}>It behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> runs the script at `/etc/util-1`,
-which defines a bunch of shell functions e.g. `range`.
-In the above video we (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines.
+a string defining a bunch of shell functions e.g. `range`.
+In the above video we go through this profile, explaining the various commands and their connection to the `World`.
+
+{/* (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines. */}
 
 <Aside title="interpret-js">
 
@@ -122,7 +145,7 @@ The shell functions `call`, `map`, `range` and `split` (above) are all defined i
 
 </Aside>
 
-Let's clarify our third distinguishing point above.
+Let's clarify our third distinguishing point.
 
 > CSS-based rendering?
 
@@ -146,9 +169,19 @@ Asymmetry of HTML and JavaScript DOM mutation
 Analogy with Web vs App
 Want to use Browser Devtool: canonical interface, like CLI */}
 
-🚧 browser devtool and CLI video
+🚧 browser devtool video
 
-🚧 Two canonical UIs: POSIX-like CLI + Browser DevTool
+To write about NPC behaviour we'll need to create many flexible interactive demos.
+This means we need to write software.
+
+- An in-browser CLI permits writing, running and managing this software _explicitly_.
+
+- CSS-based rendering permits performant rendering with rich debugging (browser devtool).
+
+Both technologies are used heavily in a vast number of disparate domains,
+e.g. development environments, infrastructure as a service, personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like Visual Studio Code.
+Aligning ourselves to these technologies will help us to avoid creating yet another interface island.
+
 
 {/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
