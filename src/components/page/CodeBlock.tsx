@@ -321,6 +321,16 @@ export const vscDarkPlusCss = css`
     color: #d4d4d4;
   }
 
+  pre[class*="language-bash"] {
+    color: #00ff00;
+    .token.class-name {
+      color: #4eb0c9;
+    }
+    .token.operator {
+      color: #ffff00;
+    }
+  }
+
   .language-regex .token.anchor {
     color: #dcdcaa;
   }
@@ -361,5 +371,6 @@ export const vscDarkPlusCss = css`
   .token.comment.language-javascript {
     color: #6a9955;
   }
+
 
 `;
