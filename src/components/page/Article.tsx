@@ -8,7 +8,7 @@ import { getTabsId } from 'model/tabs/tabs.model';
 import useSiteStore, { FrontMatter } from 'store/site.store';
 import { cssName } from 'projects/service/const';
 
-import { pre, vscDarkPlusCss } from './CodeBlock';
+import { Pre, vscDarkPlusCss } from './CodeBlock';
 import Icon from './Icon';
 import InlineCode from './InlineCode';
 
@@ -23,7 +23,7 @@ export default function Article(props: React.PropsWithChildren<{
 
   const components = React.useMemo(() => Object.assign(
       articleComponents(frontmatter.key, { dateTime, tags }),
-      { pre },
+      { pre: Pre },
   ), [frontmatter.tags]);
 
   return (

@@ -6,7 +6,7 @@ import { css } from "@emotion/css";
  * https://levelup.gitconnected.com/syntax-highlighting-in-gatsby-mdx-f0187ce51f4f
  * https://github.com/FormidableLabs/prism-react-renderer
  */
-export function pre(props: any) {
+export function Pre(props: any) {
 
   const className = props.children.props.className || '';
   const matches = className.match(/language-(?<lang>.+)/);
