@@ -124,12 +124,12 @@ export class ttyXtermClass {
   }
 
   /**
-   * Clear the screen.
-   * A new prompt is shown with any pending input.
+   * Clear the screen without creating a new line.
+   * Any pending input is preserved.
    */
   clearScreen() {
     // Writing a line for each row moves visible lines just offscreen
-    for (let i = 0; i < this.xterm.rows; i++) {
+    for (let i = 0; i < this.xterm.rows - 1; i++) {
       this.xterm.writeln(''); 
     }
     // Return to start of viewport
