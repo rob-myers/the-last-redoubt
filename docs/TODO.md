@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ Support multiple toggles `npc config foo bar`
+
 - Synfig https://www.synfig.org/
   - ✅ Download and Install
   - Watch a tutorial
@@ -20,7 +22,9 @@
       - `ffmpeg -i 'first-cli-draft.mov' -ac 2 -filter_complex "[0:v] fps=20:-1" -b:v 0 -crf 25 first-cli-draft.mov.mp4`
       - 13:09s `44M  7 Dec 10:48 first-cli-draft.mov.mp4`
   - 🚧 Redo video demo again (more focus)
-  - 🚧 Adjust textual copy, emphasising _canonical_ UIs:
+    - ✅ first-cli-video-try-1
+    - use Ctrl+L next time
+  - ✅ Adjust textual copy, emphasising "canonical UIs":
     - POSIX CLI
     - Browser devtool  
   - 🚧 Video demo of `World` CSS/DOM

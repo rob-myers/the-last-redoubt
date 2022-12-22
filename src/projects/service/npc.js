@@ -122,7 +122,18 @@ const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: tr
  * @returns {input is NPC.NpcActionKey}
  */
 export function isNpcActionKey(input) {
-  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)]??false;
+  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
+}
+
+/** @type {Record<NPC.ConfigBooleanKey, true>} */
+const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true, "showLabels": true };
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.ConfigBooleanKey}
+ */
+export function isConfigBooleanKey(input) {
+  return fromConfigBooleanKey[/** @type {NPC.ConfigBooleanKey} */ (input)] ?? false;
 }
 
 /**
@@ -148,7 +159,7 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
         opts = { npcKey: opts };
         break;
       case "config":
-        opts = { configKey: /** @type {NPC.NpcConfigOpts['configKey']} */ (opts) };
+        opts = { configKey: [opts].concat(extras).join(' ') };
         break;
       case "look-at":
         // npc look-at andros $( click 1 )

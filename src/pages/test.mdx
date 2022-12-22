@@ -32,9 +32,9 @@ import { profileLookup } from "projects/sh/scripts";
       // { type: 'component', filepath: 'geomorph/GeomorphEdit' },
     ],
     [
-      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup['profile-1-b']() } },
-      { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup['profile-1-a']() } },
-      { type: 'terminal', filepath: 'demo-3@test', env: { PROFILE: profileLookup['profile-0']() } },
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup.game_2() } },
+      { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup.game_1() } },
+      { type: 'terminal', filepath: 'demo-3@test', env: { PROFILE: profileLookup.util_0() } },
       // { type: 'component', filepath: 'example/SvgStringPull' },
       // { type: 'component', filepath: 'example/Css3dForeignObject#301' },
       // { type: 'component', filepath: 'example/Pyramid3dDemo' },

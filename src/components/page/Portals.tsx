@@ -35,7 +35,7 @@ export default function Portals() {
         }
         case 'terminal': {
           const env = meta.env || {};
-          env.PROFILE = env.PROFILE || profileLookup['profile-1']();
+          env.PROFILE = env.PROFILE || profileLookup.game_0();
 
           return (
             <portals.InPortal key={key} node={portal}>

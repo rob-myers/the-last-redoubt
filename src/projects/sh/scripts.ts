@@ -88,19 +88,24 @@ lookLoop: `{
  */
 export const profileLookup = {
 
-'profile-0': () => `source /etc/util-1
-`,
+util_0: () => `
 
-'profile-1': () => `
+source /etc/util-1
+
+`.trim(),
+
+game_0: () => `
 
 source /etc/util-1
 source /etc/game-1
 
 `.trim(),
 
-'profile-1-a': (npcKey = 'andros') => `
+game_1: (npcKey = 'andros') => `
 
-${profileLookup["profile-1"]()}
+source /etc/util-1
+source /etc/game-1
+
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
@@ -112,14 +117,12 @@ goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
 
-npc config showIds
-npc config showLabels
-
 `.trim(),
 
-'profile-1-b': () => `
-${profileLookup["profile-1-a"]()}
-npc config debug
+game_2: () => `
+${profileLookup.game_1()}
+
+npc config showIds showLabels debug
 `
 
 };

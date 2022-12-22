@@ -145,8 +145,8 @@ declare namespace NPC {
     decorKey?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
-    /** Induced by e.g. `npc config debug` */
-    configKey?: ConfigBooleanKey;
+    /** Induced by e.g. `npc config debug` or `npc config debug showLabels` */
+    configKey?: string;
   }
 
   type ConfigBooleanKey = (
