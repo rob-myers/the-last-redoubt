@@ -30,14 +30,14 @@ import { profileLookup } from "projects/sh/scripts";
 This blog is about programming Non-Player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)).
 An NPC is a character in a video game e.g. a human, alien, robot or animal.
 They are not controlled by the Player.
-In one approach the Game defines an ongoing simulation involving individual NPCs.
+In one approach the Game runs a simulation involving individual NPCs.
 In another, it fabricates the Player's experience in response to the Player's actions.
 My personal interest began with the ZX Spectrum in the late 1980s.
 In those days anything seemed possible.
 Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)).
 
-Concerning video games, we'll try not to comment on the current state of affairs.
-Video games have their own metrics of success.
+We'll try not to comment on the current state of affairs of video games.
+They have their own metrics of success.
 We're going to study NPCs for their own sake.
 But what distinguishes our approach?
 
@@ -105,7 +105,7 @@ Let's see it in action:
 🚧 redo video
 
 As mentioned in the video, every shell session begins by running the script at `/home/PROFILE`.
-In this particular session this absolute path resolves to a [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String):
+In this particular session the absolute path resolves to a string:
 
 ```bash
 source /etc/util-1
@@ -126,8 +126,8 @@ npc config showLabels
 npc config debug
 ```
 
-Consider the first line of the string above.
-Our shell builtin `source`<SideNote width={300}>It behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> will run the script at `/etc/util-1`<SideNote>Itself a string defining various shell functions e.g. [`range`](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/sh/scripts.ts#:~:text=%7B-,range%3A%20%60%7B "@new-tab")</SideNote>.
+Consider the first line of the newline-delimited string above.
+Our shell builtin `source`<SideNote width={340}>`source` behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> will run the script at `/etc/util-1`<SideNote width={360}>`/etc/util-1` resolves to a newline-delimted string defining various shell functions e.g. [`range`](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/sh/scripts.ts#:~:text=%7B-,range%3A%20%60%7B "@new-tab")</SideNote>.
 The video goes through the rest of this profile, explaining the various commands and their connection to the `World`.
 
 {/* (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines. */}
@@ -182,9 +182,12 @@ Importantly:
 - CSS-based rendering permits:
   > performant rendering with particularly rich debugging via a browser devtool.
 
-POSIX-based CLIs and CSS are two technologies used heavily in a vast number of disparate domains.
-For example, development environments, infrastructure as a service, personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like VSCode.
-Aligning ourselves to them will help us to avoid creating yet another "interface desert island".
+
+CLIs and CSS are used heavily in a vast number of disparate domains.
+For example: development environments, infrastructure as a service, personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like VSCode.
+Aligning ourselves to these technologies will help us to ... 🚧
+
+🚧 Starship geomorphs
 
 
 {/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
