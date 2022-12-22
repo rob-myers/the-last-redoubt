@@ -82,7 +82,6 @@ export class ttyXtermClass {
   }
 
   initialise() {
-    // this.xterm.onData((data) => document.body.append('DATA: ' + data));
     const xtermDisposable = this.xterm.onData(this.handleXtermInput.bind(this));
     const unregisterWriters = this.session.io.handleWriters(this.onMessage.bind(this));
     this.cleanups.push(() => xtermDisposable.dispose(), unregisterWriters);
@@ -305,99 +304,87 @@ export class ttyXtermClass {
       return;
     }
 
-    if (ord == 0x1b) { // ansiColor. escape sequences
+    if (ord == 0x1b) { // ansi escape sequences
       switch (data.slice(1)) {
-        case '[A': {// Up arrow
+        case '[A': // Up arrow
           if (this.promptReady) {
             this.reqHistoryLine(+1);
           }
           break;  
-        }
-        case '[B': {// Down arrow
+        case '[B': // Down arrow
           if (this.promptReady) {
             this.reqHistoryLine(-1);
           }
           break;
-        }
-        case '[D': {// Left Arrow
+        case '[D': // Left Arrow
           this.handleCursorMove(-1);
           break;
-        }
-        case '[C': {// Right Arrow
+        case '[C': // Right Arrow
           this.handleCursorMove(1);
           break;
-        }
-        case '[3~': {// Delete
+        case '[3~': // Delete
           this.handleCursorErase(false);
           break;
-        }
-        case '[F': {// End
+        case '[F': // End
           this.setCursor(this.input.length);
           break;
-        }
-        case '[H': {// Home (?)
+        case '[H': // Home (?)
           this.setCursor(0);
           break;
-        }
-        case 'b': {// Alt + Left
+        case 'b': // Alt + Left
           cursor = this.closestLeftBoundary(this.input, this.cursor);
           if (cursor != null) {
             this.setCursor(cursor);
           }
           break;
-        }
-        case 'f': {// Alt + Right
+        case 'f': // Alt + Right
           cursor = this.closestRightBoundary(this.input, this.cursor);
           if (cursor != null) {
             this.setCursor(cursor);
           }
           break;
-        }
-        case '\x7F': {// Ctrl + Backspace
+        case '\x7F': // Ctrl + Backspace
           this.deletePreviousWord();
           break;
-        }
+        case '[1;3A': // Alt + Up
+          this.xterm.scrollToTop();
+          break;
+          case '[1;3B': // Alt + Down
+          this.xterm.scrollToBottom();
+          break;
       }
     } else if (ord < 32 || ord === 0x7f) {
       // Handle special characters
       switch (data) {
-        case '\r': {// Enter
+        case '\r': // Enter
           this.queueCommands([{ key: 'newline' }]);
           break;
-        }
-        case '\x7F': {// Backspace
+        case '\x7F': // Backspace
           this.handleCursorErase(true);
           break;
-        }
-        case '\t': {// Tab
-          // TODO autocompletion
+        case '\t': // Tab
+          // We don't support autocompletion
           this.handleCursorInsert('  ');
           break;
-        }
-        case '\x03': {// Ctrl + C
+        case '\x03': // Ctrl + C
           this.sendSigKill();
           break;
-        }
-        case '\x17': {// Ctrl + W
+        case '\x17': // Ctrl + W
           // Delete previous word
           this.deletePreviousWord();
           break;
-        }
-        case '\x01': {// Ctrl + A
+        case '\x01': // Ctrl + A
           // Goto line start
           this.setCursor(0);
           break;
-        }
-        case '\x05': {// Ctrl + E
+        case '\x05': // Ctrl + E
           // Goto EOL; do not collect £200
           this.setCursor(this.input.length);
           break;
-        }
-        case '\x0C': {// Ctrl + L
+        case '\x0C': // Ctrl + L
           // Clear screen
           this.clearScreen();
           break;
-        }
         case '\x0b': {// Ctrl + K
           // Erase from cursor to EOL.
           const nextInput = this.input.slice(0, this.cursor);

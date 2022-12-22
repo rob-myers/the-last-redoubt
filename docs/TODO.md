@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ Alt-up/down scrolls to start/end of terminal buffer
+  > Useful for video after Ctrl+L
 - ✅ Support multiple toggles `npc config foo bar`
 
 - Synfig https://www.synfig.org/
