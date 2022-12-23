@@ -24,6 +24,7 @@ export default function Tabs(props: Props) {
   const state = useStateRef((): State => ({
     colour: 'black',
     enabled: !!props.initEnabled,
+    everEnabled: !!props.initEnabled,
     expanded: false,
 
     resets: 0,
@@ -85,6 +86,30 @@ export default function Tabs(props: Props) {
     async toggleEnabled() {
       state.colour = state.colour === 'clear' ? 'faded' : 'clear';
       state.enabled = !state.enabled;
+      update();
+
+      if (state.enabled && !state.everEnabled) {
+        state.everEnabled = true;
+        setTimeout(state.toggleIndividualTabs, 300);
+      } else {
+        await state.toggleIndividualTabs();
+      }
+    },
+
+    async toggleExpand() {
+      state.expanded = !state.expanded;
+      if (state.expanded) {
+        tryLocalStorageSet(expandedStorageKey, 'true');
+        if (!state.enabled) {// Auto-enable on expand
+          await state.toggleEnabled();
+        }
+      } else {
+        localStorage.removeItem(expandedStorageKey);
+      }
+      update();
+    },
+
+    async toggleIndividualTabs() {
       const tabs = useSiteStore.getState().tabs[props.id];
 
       if (!tabs) {
@@ -124,19 +149,6 @@ export default function Tabs(props: Props) {
         }))
       }
 
-      update();
-    },
-
-    async toggleExpand() {
-      state.expanded = !state.expanded;
-      if (state.expanded) {
-        tryLocalStorageSet(expandedStorageKey, 'true');
-        if (!state.enabled) {// Auto-enable on expand
-          await state.toggleEnabled();
-        }
-      } else {
-        localStorage.removeItem(expandedStorageKey);
-      }
       update();
     },
   }));
@@ -207,7 +219,7 @@ export default function Tabs(props: Props) {
           state.expanded ? expandedCss : unexpandedCss(props.height),
         )}
       >
-        {state.colour !== 'black' && (
+        {state.everEnabled && state.colour !== 'black' && (
           <Layout
             id={props.id}
             /**
@@ -255,6 +267,7 @@ export interface State {
   /** Initially `'black'`, afterwards always in `['faded', 'clear']` */
   colour: 'black' | 'faded' | 'clear';
   enabled: boolean;
+  everEnabled: boolean;
   expanded: boolean;
 
   /** Number of times we have reset */
@@ -282,6 +295,7 @@ export interface State {
   reset(): void;
   toggleEnabled(): Promise<void>;
   toggleExpand(): Promise<void>;
+  toggleIndividualTabs(): Promise<void>;
 }
 
 

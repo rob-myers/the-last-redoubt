@@ -6,7 +6,7 @@ import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
 import useSessionStore from 'projects/sh/session.store';
 
-export function TouchHelperUI(props: { session: Session }) {
+export default function TouchHelperUI(props: { session: Session }) {
 
   const state = useStateRef(() => {
     return {

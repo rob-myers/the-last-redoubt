@@ -1,6 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/css';
 import type { ITerminalOptions } from 'xterm';
+import loadable from '@loadable/component';
 
 import { ttyXtermClass } from 'projects/sh/tty.xterm';
 import { canTouchDevice } from 'projects/service/dom';
@@ -14,9 +15,14 @@ import { scrollback } from 'projects/sh/io';
 import useOnResize from 'projects/hooks/use-on-resize';
 import useStateRef from 'projects/hooks/use-state-ref';
 import XTerm from './XTerm';
-import { TouchHelperUI } from './TouchHelperUi';
+import type ActualTouchHelperUi from './TouchHelperUi';
 import useUpdate from 'projects/hooks/use-update';
 import type { State as WorldApi } from 'projects/world/World';
+
+const TouchHelperUi = loadable(
+  () => import('./TouchHelperUi'),
+  { ssr: false },
+) as typeof ActualTouchHelperUi;
 
 export default function Terminal(props: Props) {
 
@@ -120,7 +126,7 @@ export default function Terminal(props: Props) {
       )}
 
       {state.isTouchDevice && state.session && state.xtermReady &&
-        <TouchHelperUI
+        <TouchHelperUi
           session={state.session}
         />
       }
