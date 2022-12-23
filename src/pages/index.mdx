@@ -43,7 +43,7 @@ But what distinguishes our approach?
 
 1. Dedicated to programming NPCs.
 1. Browser-based CLI for doing so.
-1. CSS-based rendering and interactivity.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
+1. CSS-based rendering.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
 1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
 
 Before things get a bit abstract, here are some screenshots:
@@ -145,7 +145,7 @@ The shell functions `call`, `map`, `range` and `split` (above) are all defined i
 
 Recall our third distinguishing point:
 
-> CSS-based rendering and interactivity.
+> CSS-based rendering.
 
 There are two fundamental ways to create browser-based video games:
 [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) and
@@ -170,7 +170,7 @@ Want to use Browser Devtool: canonical interface, like CLI */}
 
 🚧 browser devtool video
 
-Now, writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
+Writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
 So, we're going to have to write a lot of software,
 and we're going to have to do it in a particularly clear manner.
 Importantly:
@@ -178,13 +178,13 @@ Importantly:
 - An in-browser CLI permits:
   > writing, running and managing this software _explicitly_.
 
-- CSS-based rendering permits:
-  > performant rendering with particularly rich debugging via a browser devtool.
+- CSS-based rendering provides:
+  > performant rendering and particularly rich debugging via a browser devtool.
 
 
-CLIs and CSS are used heavily in a vast number of disparate domains.
-Examples include development environments, infrastructure as a service, personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like VSCode.
-Aligning ourselves to these technologies will help us to ... 🚧
+POSIX-based CLIs are heavily used in e.g. home computing, development environments and cloud computing.
+CSS plays a crucial role in personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like [VSCode](https://en.wikipedia.org/wiki/Visual_Studio_Code).
+Composing these two technologies avoids all sorts of UI decisions, for which there is no right answer.
 
 🚧 Starship geomorphs
 
