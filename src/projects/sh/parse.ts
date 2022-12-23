@@ -15,7 +15,6 @@ let syntax = {
       throw Error('mvdan-sh not ready');
     }
   } as any,
-
 } as typeof MvdanSh.syntax;
 
 import('mvdan-sh').then(x => syntax = x.syntax)

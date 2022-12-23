@@ -28,8 +28,4 @@ import "src/components/globals.css"
 // }
 // //#endregion
 
-//#region root wrapper
-
 export { wrapPageElement } from "./src/components/page/Root";
-
-//#endregion
