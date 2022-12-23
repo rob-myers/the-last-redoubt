@@ -1,6 +1,6 @@
 import { Element } from 'cheerio';
-import { svgPathToPolygon } from './dom';
 import { Poly, Rect, Mat } from '../geom';
+import { geom } from './geom';
 
 /**
  * - Test if node has child <title>{title}</title>,
@@ -59,7 +59,7 @@ export function extractGeom(api, el) {
     output.push(Object.assign(poly, { _ownTags }));
   } else if (tagName === 'path') {
     // Must be a single connected polygon with ≥ 0 holes
-    const poly = svgPathToPolygon(a.d);
+    const poly = geom.svgPathToPolygon(a.d);
     poly && output.push(Object.assign(poly, { _ownTags }));
   } else if (tagName === 'ellipse') {
     // Reinterpret ellipse as bounding rectangle (technically preserves info)

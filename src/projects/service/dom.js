@@ -1,7 +1,4 @@
-import { parseSVG, makeAbsolute } from 'svg-path-parser';
 import { Vect } from '../geom/vect';
-import { Poly } from '../geom/poly';
-import { warn } from './log';
 import { assertNonNull } from './generic';
 
 //#region svg event
@@ -71,57 +68,6 @@ let svgPoint;
  */
 export function getNumericCssVar(el, varName) {
 	return parseFloat(assertNonNull(el.style.getPropertyValue(varName)));
-}
-
-/**
- * Based on https://github.com/Phrogz/svg-path-to-polygons/blob/master/svg-path-to-polygons.js.
- * - Only supports straight lines i.e. M, L, H, V, Z.
- * - Expects a __single polygon__ with ≥ 0 holes.
- * @param {string} svgPathString
- * @returns {null | Geom.Poly}
- */
-export function svgPathToPolygon(svgPathString) {
-	const rings = /** @type {Vect[][]} */ ([]);
-	let ring = /** @type {Vect[]} */ ([]);
-
-	/**
-	 * @param {number} x 
-	 * @param {number} y 
-	 */
-  function add(x, y){
-    ring.push(new Vect(x, y));
-  }
-
-	makeAbsolute(parseSVG(svgPathString)).forEach(cmd => {
-		switch(cmd.code) {
-			case 'M':
-				rings.push(ring = []);
-			// eslint-disable-next-line no-fallthrough
-			case 'L':
-			case 'H':
-			case 'V':
-			case 'Z':
-				add(/** @type {import('svg-path-parser').MoveToCommand} */ (cmd).x || 0, /** @type {import('svg-path-parser').MoveToCommand} */ (cmd).y || 0);
-			break;
-			default:
-				throw Error(`svg command ${cmd.command} is not supported`);
-		}
-	});
-
-	const polys = rings.map(ps => new Poly(ps));
-	
-	if (polys.length === 0) {
-		return null;
-	} else if (polys.length === 1) {
-		return polys[0];
-	}
-
-	// Largest polygon 1st
-	polys.sort((a, b) => a.rect.area < b.rect.area ? 1 : -1);
-	return new Poly(
-		polys[0].outline,
-		polys.slice(1).map(poly => poly.outline),
-	);
 }
 
 /**
@@ -246,7 +192,7 @@ export function fillRing(ctxt, ring, fill = true) {
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Poly[]} polys
+ * @param {Geom.Poly[]} polys
  */
 export function fillPolygon(ctxt, polys) {
 	for (const poly of polys) {
@@ -261,7 +207,7 @@ export function fillPolygon(ctxt, polys) {
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Poly[]} polys
+ * @param {Geom.Poly[]} polys
  */
 export function strokePolygon(ctxt, polys) {
 	for (const poly of polys) {
@@ -276,8 +222,8 @@ export function strokePolygon(ctxt, polys) {
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Vect} from
- * @param {Vect} to
+ * @param {Geom.Vect} from
+ * @param {Geom.Vect} to
  */
 export function drawLine(ctxt, from, to) {
 	ctxt.beginPath();
