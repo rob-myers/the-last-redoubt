@@ -86,52 +86,52 @@ export default function Terminal(props: Props) {
     state.xtermReady = false;
   }, []);
 
-  return (
+  return state.session ? (
     <div className={rootCss}>
 
-      {state.session && (
-        <XTerm
-          // `xterm` is an xterm.js instance
-          onMount={(xterm) => {
+      <XTerm
+        // `xterm` is an xterm.js instance
+        onMount={(xterm) => {
+          const session = assertNonNull(state.session);
+          const ttyXterm = new ttyXtermClass(xterm, {
+            key: session.key,
+            io: session.ttyIo,
+            rememberLastValue: (msg) => session.var._ = msg,
+          });
+
+          ttyXterm.initialise();
+          session.ttyShell.initialise(ttyXterm);
+          state.xtermReady = true;
+
+          update();
+        }}
+        options={options}
+        linkProviderDef={{
+          // regex: /(🔎 [^;]+);/g,
+          regex: /(\[[a-z][^\]]+\])/gi,
+          async callback(_event, linkText, { lineText, linkStartIndex }) {
+            // console.log('clicked link', event, linkText, { lineText, linkStartIndex });
             const session = assertNonNull(state.session);
-            const ttyXterm = new ttyXtermClass(xterm, {
-              key: session.key,
-              io: session.ttyIo,
-              rememberLastValue: (msg) => session.var._ = msg,
-            });
+            const { npcs } = getCached(session.var.WORLD_KEY) as WorldApi;
+            npcs.onTtyLink(
+              props.sessionKey,
+              stripAnsi(lineText),
+              stripAnsi(linkText).slice(1, -1), // Omit square brackets
+              linkStartIndex,
+            );
+          },
+        }}
+      />
 
-            ttyXterm.initialise();
-            session.ttyShell.initialise(ttyXterm);
-            state.xtermReady = true;
-
-            update();
-          }}
-          options={options}
-          linkProviderDef={{
-            // regex: /(🔎 [^;]+);/g,
-            regex: /(\[[a-z][^\]]+\])/gi,
-            async callback(_event, linkText, { lineText, linkStartIndex }) {
-              // console.log('clicked link', event, linkText, { lineText, linkStartIndex });
-              const session = assertNonNull(state.session);
-              const { npcs } = getCached(session.var.WORLD_KEY) as WorldApi;
-              npcs.onTtyLink(
-                props.sessionKey,
-                stripAnsi(lineText),
-                stripAnsi(linkText).slice(1, -1), // Omit square brackets
-                linkStartIndex,
-              );
-            },
-          }}
-        />
-      )}
-
-      {state.isTouchDevice && state.session && state.xtermReady &&
+      {state.isTouchDevice && state.xtermReady &&
         <TouchHelperUi
           session={state.session}
+          disabled={props.disabled}
         />
       }
+
     </div>
-  )
+  ) : null;
 };
 
 interface Props {

@@ -6,7 +6,10 @@ import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
 import useSessionStore from 'projects/sh/session.store';
 
-export default function TouchHelperUI(props: { session: Session }) {
+export default function TouchHelperUI(props: {
+  session: Session;
+  disabled?: boolean;
+}) {
 
   const state = useStateRef(() => {
     return {
@@ -15,8 +18,10 @@ export default function TouchHelperUI(props: { session: Session }) {
         const { xterm } = props.session.ttyShell;
         xterm.xterm.scrollToBottom();
         if (target.classList.contains('paste')) {
-          const textToPaste = await navigator.clipboard.readText();
-          xterm.spliceInput(textToPaste);
+          try {
+            const textToPaste = await navigator.clipboard.readText();
+            xterm.spliceInput(textToPaste);
+          } catch {}
         } else if (target.classList.contains('lowercase')) {
           const forced = (xterm.forceLowerCase = !xterm.forceLowerCase);
           const message = `⚠️  input ${forced ? 'forced as' : 'not forced as'} lowercase`;
@@ -32,7 +37,7 @@ export default function TouchHelperUI(props: { session: Session }) {
         } else if (target.classList.contains('down')) {
           xterm.reqHistoryLine(-1);
         } 
-        xterm.xterm.focus();
+        // xterm.xterm.focus();
       },
     };
   });
@@ -49,7 +54,7 @@ export default function TouchHelperUI(props: { session: Session }) {
 
   return (
     <div
-      className={rootCss}
+      className={cx(rootCss, { disabled: props.disabled })}
       onClick={state.onClick}
     >
       <div className="icon paste">
@@ -84,6 +89,11 @@ const rootCss = css`
   z-index: ${zIndex.ttyTouchHelper};
   top: 0;
   right: 0;
+
+  &.disabled {
+    filter: brightness(0.5);
+    pointer-events: none;
+  }
 
   line-height: 1; /** Needed for mobile viewing 'Desktop site' */
   background-color: rgba(0, 0, 0, 0.7);
