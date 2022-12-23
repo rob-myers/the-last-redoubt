@@ -110,6 +110,7 @@ In this particular session the absolute path resolves to a string:
 ```bash
 source /etc/util-1
 source /etc/game-1
+
 awaitWorld
 spawn andros '{"x":185,"y":390}'
 npc set-player andros
@@ -121,9 +122,7 @@ goLoop andros &
 # click outside navmesh to look
 lookLoop andros &
 
-npc config showIds
-npc config showLabels
-npc config debug
+npc config 'showIds showLabels debug'
 ```
 
 Consider the first line of the newline-delimited string above.

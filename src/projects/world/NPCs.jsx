@@ -300,15 +300,15 @@ export default function NPCs(props) {
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
         case 'config': // set multiple, toggle single, get all
-          keys(e).forEach(key => // Set 🚧 ensure correct type
+          keys(e).forEach(key => // Set
+            // 🚧 ensure correct type
             e[key] !== undefined && (/** @type {*} */ (state.config)[key] = e[key])
           );
-          if (e.configKey) {// Toggle (many) booleans
+          if (e.configKey) {// Toggle (possibly many) booleans
             const configKeys = e.configKey.split(' ').filter(npcService.isConfigBooleanKey);
             configKeys.forEach(configKey => state.config[configKey] = !state.config[configKey]);
           }
-          if (Object.keys(e).length === 1) {
-            // `npc config` or `npc config {}` (only key is `action`)
+          if (Object.keys(e).length === 1) {// `npc config` (only key is `action`)
             /**
              * We must wrap the proxy in a chunk to avoid errors arising
              * from various `await`s ("then" is not defined).
