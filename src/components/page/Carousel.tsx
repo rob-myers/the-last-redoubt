@@ -3,7 +3,9 @@ import { css, cx } from "@emotion/css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { SwiperOptions, Swiper as SwiperClass } from "swiper";
 import type { SwiperEvents } from "swiper/types";
-import { Navigation, Lazy, Pagination, Zoom } from "swiper";
+import Navigation from "node_modules/swiper/modules/navigation/navigation.js";
+import Lazy from "node_modules/swiper/modules/lazy/lazy.js";
+import Zoom from "node_modules/swiper/modules/zoom/zoom.js";
 import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
@@ -124,7 +126,7 @@ function Slides(props: Props & {
       breakpoints={props.breakpoints}
       lazy={props.lazy??{ checkInView: true, enabled: true }}
       initialSlide={props.initialSlide}
-      modules={[Lazy, Navigation, Pagination, Zoom]}
+      modules={[Lazy, Navigation, Zoom]}
       navigation
       onSwiper={props.onSwiper}
       onDestroy={props.onDestroy}
