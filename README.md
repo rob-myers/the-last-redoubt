@@ -43,8 +43,12 @@ npx http-server
 
 - DOMMatrix `{ a b c d e f }` corresponds to affine matrix:
   > $$
-\begin{bmatrix}
-a & c & e \\
-b & d & f
-\end{bmatrix}
-$$
+  \begin{bmatrix}
+  a & c & e \\
+  b & d & f
+  \end{bmatrix}
+  $$
+
+- Gatsby failure `(0 , _genMapping.maybeAddMapping) is not a function`
+  - https://stackoverflow.com/questions/72308375/im-getting-the-error-genmapping-maybeaddmapping-is-not-a-function-when-i-try
+  - Solved by `rm -rf node_modules && yarn`
