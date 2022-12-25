@@ -89,11 +89,10 @@ const controlsCss = css`
     display: flex;
     line-height: initial;
     align-items: center;
-    > * {
+    span, a span {
       padding: 0 8px;
       @media(max-width: 600px) {
         padding: 2px 12px;
-        transform: scale(1.1);
       }
       height: 100%;
       display: flex;
