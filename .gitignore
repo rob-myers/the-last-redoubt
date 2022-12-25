@@ -18,4 +18,4 @@ media/**/*.png
 !media/used-symbols/*.png
 !media/used-geomorphs/*.png
 !media/hull-sides/*.png
-!media/npc/*.png
+!media/npc/**/*.png
