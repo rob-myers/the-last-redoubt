@@ -42,7 +42,7 @@ We're going to study NPCs for their own sake.
 But what distinguishes our approach?
 
 1. Dedicated to programming NPCs.
-1. Browser-based CLI for doing so.
+1. Browser-based CLI.
 1. CSS-based rendering.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
 1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
 
@@ -82,14 +82,14 @@ Before things get a bit abstract, here are some screenshots:
   The left tab is an instance of a [World component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
   the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
   The `World` shows an NPC from a birdseye perspective.
-  The commands in the `Terminal` indicate this is Andros and he is actually the Player.
+  {/* The commands in the `Terminal` indicate this is Andros and he is actually the Player. */}
   The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some commands shown in the terminals are out-of-date. In particular we now `npc config debug` to toggle debug mode, rather than `DEBUG=1; npc config`</SideNote>
 
 </Aside>
 
-Recall the second distinguishing point above:
+Recall our second distinguishing point above:
 
-> Browser-based CLI for doing so.
+> Browser-based CLI.
 
 By this we mean an interactive [Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface) running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
@@ -126,7 +126,7 @@ npc config 'showIds showLabels debug'
 ```
 
 Consider the first line of the newline-delimited string above.
-Our shell builtin `source`<SideNote width={340}>`source` behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> will run the script at `/etc/util-1`<SideNote width={360}>`/etc/util-1` resolves to a newline-delimted string defining various shell functions e.g. [`range`](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/sh/scripts.ts#:~:text=%7B-,range%3A%20%60%7B "@new-tab")</SideNote>.
+Our shell builtin `source`<SideNote width={340}>`source` behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> will run the script at `/etc/util-1`<SideNote width={360}>`/etc/util-1` resolves to a string defining various shell functions e.g. [`range`](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/sh/scripts.ts#:~:text=%7B-,range%3A%20%60%7B "@new-tab")</SideNote>.
 The video goes through the rest of this profile, explaining the various commands and their connection to the `World`.
 
 {/* (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines. */}
@@ -184,17 +184,25 @@ Importantly:
 
 POSIX-based CLIs are heavily used in e.g. home computing, development environments and cloud computing (infrastructure as a service).
 CSS plays a crucial role in personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like [VSCode](https://en.wikipedia.org/wiki/Visual_Studio_Code).
-Composing these two technologies avoids all sorts of UI decisions, for which there is no correct answer.
-One final distinguishing point remains:
+Composing these two technologies avoids many UI decisions, for which there is no correct answer.
+Then only one distinguishing point remains to be explained:
 
 > Rich graphics via Starship Geomorphs.
 
-🚧 ...
+We want to program NPCs. In more detail, we'd like produce a catalogue of interesting behaviours, and study how they can be composed in response to the Player's actions.
+However, these behaviours need to be studied at the right level of abstraction.
+We are not trying to create middleware.
+We do not want to create a generic Game AI system, upon which "real games" can be scaffolded.
+_Why?_
+Because NPC behaviour is highly contextual.
+It is usually brought to life via assets representing a specific situation e.g. animations of denizens and suitable scenery.
+
+🚧 Although we definitely need this "spice", we'll try to keep things generic.
+Traditional role-playing games provide a natural source of inspiration...
 
 {/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
 Partial exposition is indicated by <RoadWorksIcon bottom />. */}
-
 
 ### Demo
 
