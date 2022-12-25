@@ -8,8 +8,12 @@
 
 - Synfig https://www.synfig.org/
   - ✅ Download and Install
-  - Watch a tutorial
-  - Start remaking walk cycle
+  - ✅ Watch a tutorial
+    > https://www.youtube.com/watch?v=5B_Aok26LKc&ab_channel=TurtleArmyJess
+  - 🚧 Start remaking walk cycle (first-npc.svg)
+    - ✅ cut guard1_walk using https://ezgif.com/sprite-cutter
+    - ✅ make first two frames
+    - make a few more frames
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
