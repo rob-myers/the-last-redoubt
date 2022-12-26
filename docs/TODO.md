@@ -2,9 +2,11 @@
 
 ## In progress
 
+- BUG tracking camera stops when click outside navmesh during walk
+
 - ✅ Alt-up/down scrolls to start/end of terminal buffer
   > Useful for video after Ctrl+L
-- ✅ Support multiple toggles `npc config foo bar`
+- ✅ Support multiple toggles `npc config 'foo bar'`
 
 - Synfig https://www.synfig.org/
   - ✅ Download and Install

@@ -189,16 +189,21 @@ Then only one distinguishing point remains to be explained:
 
 > Rich graphics via Starship Geomorphs.
 
-We want to program NPCs -- in fact, we'd like to produce a catalogue of interesting behaviours, and study how they can be composed in response to the Player's actions.
-However, these behaviours need to be studied at the right level of abstraction.
+We want to program NPCs, producing a catalogue of interesting behaviours.
+We are particularly interested in studying how they can be composed in response to the Player's actions.
+However, NPC behaviours need to be studied at the right level of abstraction.
 We are not trying to create _middleware_.
 We do not want to create a generic Game AI system, upon which "real games" can be scaffolded.
 _Why?_
 Because NPC behaviour is highly contextual.
-It is usually brought to life via assets representing a specific situation: animations of denizens and suitable scenery.
+It is usually brought to life via assets representing a specific situation: suitable background scenery and animations of particular denizens.
 
-🚧 Although we definitely need this "spice", we can still try to keep things generic.
-Traditional role-playing games provide a natural source of inspiration...
+🚧 We definitely need this _spice_ i.e. assets and animations bringing our NPCs to life.
+Thankfully we came upon [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab"), a large number of aerial-view assets representing Starships, Space-stations, Space-colonies etc.
+
+
+🚧 We use [Synfig](https://www.synfig.org/ "@new-tab") for character animation.
+
 
 {/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
 This reflects our initial work on the "game engine" before we started creating this site.
