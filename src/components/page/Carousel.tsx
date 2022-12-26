@@ -253,7 +253,7 @@ const rootCss = css`
     width: calc(100%);
     /* height: calc(min(${maxHeightPx}px, 100vh - 128px)); */
     background-color: var(--carousel-background-color);
-    border: 4px solid var(--contrast-border-color);
+    border: 2px solid var(--contrast-border-color);
   
     img {
       border: none;
