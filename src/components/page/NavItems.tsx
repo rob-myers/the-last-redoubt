@@ -1,6 +1,6 @@
 import { Link } from "gatsby";
 import React from "react";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 
 import { siteTitle } from "projects/service/const";
 import useSiteStore from "store/site.store";
@@ -15,7 +15,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
   return (
     <section className={rootCss}>
 
-      <h3>
+      <h3 className={cx({ current: frontmatter?.key === 'index' })}>
         <Link
           to="/"
           tabIndex={tabIndex}
@@ -29,7 +29,7 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
           {navItems.map((meta) =>
             <li
               key={meta.key}
-              className={meta.key === frontmatter?.key ? 'current' : undefined}
+              className={cx({ current: meta.key === frontmatter?.key })}
             >
               <Link
                 to={meta.path}
@@ -37,17 +37,8 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
                 tabIndex={tabIndex}
               >
                 {meta.label}
+                <NavIcon icon={meta?.icon} />
               </Link>
-              
-              <span>
-                <Link
-                  to={meta.path}
-                  title={meta.info}
-                  tabIndex={tabIndex}
-                >
-                  <NavIcon icon={meta?.icon} />
-              </Link>
-              </span>
             </li>
           )}
         </ul>
@@ -64,8 +55,8 @@ const rootCss = css`
   border-bottom: 1px solid #777;
   
   h3 {
+    display: flex;
     letter-spacing: 2px;
-    padding: 16px 12px;
     margin: 0;
     margin-left: 4px;
 
@@ -75,9 +66,12 @@ const rootCss = css`
 
     a {
       color: #ddd;
+      width: 100%;
+      padding: 16px 12px;
     }
     border: 0 solid #444;
     border-width: 0 0 1px;
+
   }
   
   ul {
@@ -90,25 +84,26 @@ const rootCss = css`
     li {
       list-style: none;
       list-style-position: inside;
+    }
+    a {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 16px;
-    }
-    li.current {
-      a {
-        color: white;
-      }
-      background: var(--nav-selected-background);
-    }
-    a {
-      padding: 10px 0;
+
+      padding: 18px 16px;
       width: 100%;
       color: #ccc;
       &:hover {
         color: #fff;
       }
     }
+  }
+
+  h3.current, ul li.current {
+    a {
+      color: white;
+    }
+    background: var(--nav-selected-background);
   }
 `;
 

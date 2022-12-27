@@ -9,7 +9,8 @@ import NavItems from './NavItems';
 export default function Nav({ frontmatter }: FrontMatterProps) {
 
   const navOpen = useSiteStore(x => x.navOpen);
-  const onClick = (e: React.MouseEvent) => {
+
+  function onClick(e: React.MouseEvent) {
     e.stopPropagation();
     if (
       !(e.target instanceof HTMLAnchorElement)
@@ -17,7 +18,13 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
     ) {
       useSiteStore.setState({ navOpen: !navOpen }, undefined, navOpen ? 'open-nav' : 'close-nav');
     }
-  };
+  }
+
+  function onKeyUp(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      useSiteStore.setState({ navOpen: !navOpen }, undefined, navOpen ? 'open-nav' : 'close-nav');
+    }
+  }
 
   return (
     <>
@@ -32,7 +39,11 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
         <div
           className="article-overlay"
         />
-        <div className={cssName.topBarHandle}>
+        <div
+          className={cssName.topBarHandle}
+          onKeyUp={onKeyUp}
+          tabIndex={0}
+        >
           <div className="nav-arrow">
             {navOpen ? '<' : '>'}
           </div>
