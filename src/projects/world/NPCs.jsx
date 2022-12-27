@@ -546,7 +546,7 @@ export default function NPCs(props) {
             status = 'follow-walk';
             console.warn('@', status);
             /**
-             * TODO could skip this on Firefox Android -- it is very jerky
+             * Skip this on Firefox Android (it is very jerky)?
              */
             try {
               const path = npc.getTargets().map(x => x.point);
