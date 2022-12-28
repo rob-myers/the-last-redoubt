@@ -100,6 +100,9 @@ async function addPageDataVersion(filepath) {
     const result = content.replace(
       /page-data.json(\?v=[a-f0-9]{32})?/g,
       `page-data.json?v=${hash}`,
+    ).replace(
+      '/page-data/app-data.json',
+      `/page-data/app-data.json?v=${hash}`,
     )
     await util.promisify(fs.writeFile)(filepath, result, 'utf8')
   }
