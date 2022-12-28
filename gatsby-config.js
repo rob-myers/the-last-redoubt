@@ -56,8 +56,8 @@ const config = {
       resolve: "gatsby-plugin-gatsby-cloud",
       options: {
         headers: {
-          '/*': ['Cache-Control: public, max-age=31536000, immutable'],
-          'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
+          // '/*': ['Cache-Control: public, max-age=31536000, immutable'],
+          // 'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
         },
       },
     },
