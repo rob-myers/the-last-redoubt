@@ -68,7 +68,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   }
 }
 
-//#region cache buster https://stackoverflow.com/a/58238793/2917822
+//#region page-data.json cache buster https://stackoverflow.com/a/58238793/2917822
 
 const crypto = require('crypto')
 const fs = require('fs')
