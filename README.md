@@ -50,5 +50,10 @@ npx http-server
   $$
 
 - Gatsby failure `(0 , _genMapping.maybeAddMapping) is not a function`
+  - Related to postinstall scripts
   - https://stackoverflow.com/questions/72308375/im-getting-the-error-genmapping-maybeaddmapping-is-not-a-function-when-i-try
   - Solved by `rm -rf node_modules && yarn`
+
+- Careful not to misconfigure `gatsby-plugin-gatsby-cloud`
+  - Do not cache app-data.json and page-data.json for a long time!
+  - We introduced cache-busting code from https://stackoverflow.com/a/58238793/2917822
