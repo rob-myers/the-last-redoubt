@@ -610,27 +610,14 @@ How to embed video?
 
 ## First CLI video
 
-Backdrop:
-
-- Writing about NPC behaviour requires many flexible Demos
-- Creating Demos means we need to write Software
-- Our CLI permits:
-  - writing Software explicitly
-  - running Software explicitly
-  - managing Software explicitly
-
-Versus Operating System CLI:
-
-- An OS CLI wraps system calls and binaries
-  - textually expands commands before running them
-  - commands output file content, often text
-  - manipulates files and system state
-  - permits process management
-- Our CLI wraps JS
-  - textually expands commands before running them
-  - commands output JS values
-  - manipulates JS values and DOM state
-  - permits process management
+- Web browser right, devtools left, mainly zoom right
+- Tabs component: Left tab `World`, Right tab `Terminal`.
+- `World` quick summary:
+  - open door, see more, move through door, view from above
+  - Starship Geomorphs by Robert Pearce 
+  - zoom out to see "big world" built from Geomorphs
+- Now `Terminal`, which "runs the NPCs"
+- ... <!-- cli-frontpage-test-3.mov @1 min -->
 
 ## 🚧 Homepage CSS video
 
