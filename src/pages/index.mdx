@@ -73,7 +73,6 @@ Before things get a bit abstract, here are some screenshots:
     { src: 'pic-11.png', label: 'Piping output into devtool' },
   ]}
 />
-{/* Component ~ React Component */}
 
 <Aside title="screenshots">
 
@@ -195,10 +194,28 @@ Because NPC behaviour is highly contextual.
 It is usually brought to life via assets representing a specific situation: suitable background scenery and animations of particular denizens.
 
 We definitely need this _spice_ i.e. assets and animations which bring our NPCs to life.
-Thankfully we can use [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab"), a large number of aerial-view non-commercial-use assets representing Starships, Space-stations, Space-colonies etc.
-A _geomorph_ is a rectangular section of a starship (or space-station etc.) connectable to others much like Lego.
+> Thankfully we can use [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab"), a large number of aerial-view non-commercial-use assets representing Starships, Space-stations, Space-colonies etc.
+
+<Aside title="geomorph">
+
+A _geomorph_ is a rectangular section of a Starship (or Space-station etc.) connectable to others much like Lego.
 Each geomorph amounts to a layout of many different rooms of particular types e.g. staterooms (bedrooms), offices, freshers (bathrooms and toilets), labs, infirmaries, lounges etc.
 
+<Carousel
+  baseSrc="/assets/geomorph/"
+  height={450}
+  fullScreenHeight={800}
+  cssFilter="invert(1) sepia(0.5) hue-rotate(90deg)"
+  items={[
+    { src: 'g-301--bridge.png', label: 'Geomorph 301 (Bridge)' },
+    { src: 'g-302--xboat-repair-bay.png', label: 'Geomorph 302 (Xboat Repair Bay)' },
+    { src: 'g-303--passenger-deck.png', label: 'Geomorph 303 (Passenger Deck)' },
+    { src: 'g-101--multipurpose.png', label: 'Geomorph 101 (Multipurpose)' },
+    { src: 'g-102--research-deck.png', label: 'Geomorph 102 (Research Deck)' },
+  ]}
+/>
+
+</Aside>
 
 🚧 We use [Synfig](https://www.synfig.org/ "@new-tab") for character animation.
 
