@@ -15,9 +15,10 @@ import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
 import Video, { VideoKey } from "./Video";
 
+// 🚧 fullscreen should have specified height + fix inherited heights?
+// 🚧 slide-img-container, figure.video height should be conditional on label existing
 // 🚧 clean --carousel-padding-bottom (video vs img)
 // 🚧 remove class swiper-slide-zoomed onchange slide whilst zoomed
-// 🚧 slide-img-container, figure.video height should be conditional on label existing
 
 /**
  * props.items should be one of:
@@ -139,7 +140,7 @@ function Slides(props: Props & {
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??40}
       style={{
-        height: props.fullScreen ? undefined : props.height,
+        height: props.fullScreen ? props.fullScreenHeight : props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       tabIndex={0}
@@ -265,7 +266,11 @@ const rootCss = css`
       border: none;
       height: inherit;
       max-height: calc(100vh - 2 * 128px);
-      padding-bottom: 96px;
+
+      padding: 0 32px 32px 32px;
+      @media(max-width: 600px) {
+        padding: 0 8px 32px 8px;
+      }
     }
     .slide-video-container {
       display: block;
@@ -284,6 +289,17 @@ const rootCss = css`
         padding-bottom: 64px;
       }
     }
+
+    /* 🚧 */
+    .swiper-wrapper, .swiper-slide {
+      height: inherit;
+    }
+    .slide-container {
+      height: 100%;
+    }
+    /* .slide-img-container {
+      height: inherit;
+    } */
   }
 
   div.fullscreen-overlay {
@@ -345,6 +361,7 @@ function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
 interface Props {
   baseSrc?: string;
   height?: number;
+  fullScreenHeight?: number;
   items: CarouselItems;
   cssFilter?: string;
 
