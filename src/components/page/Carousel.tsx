@@ -89,9 +89,12 @@ export default function Carousel(props: Props) {
           fullScreen
           // 🚧 responsive offset
           fullScreenOffset={128 - state.rootEl.getBoundingClientRect().y}
+
           initialSlide={state.fullScreen}
           items={props.items}
           baseSrc={props.baseSrc}
+          cssFilter={props.cssFilter}
+
           onDestroy={_swiper => state.largeSwiper = null}
           onSwiper={swiper => {
             state.largeSwiper = swiper;
@@ -136,7 +139,7 @@ function Slides(props: Props & {
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??40}
       style={{
-        height: props.height,
+        height: props.fullScreen ? undefined : props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       tabIndex={0}
@@ -168,7 +171,10 @@ function Slides(props: Props & {
                 <img
                   className="swiper-lazy"
                   data-src={`${props.baseSrc??''}${item.src}`}
-                  {...item.background && { style: { background: item.background } }}
+                  style={{
+                    ...item.background && { background: item.background },
+                    ...props.cssFilter && { filter: props.cssFilter },
+                  }}
                 />
               </div>
               <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
@@ -340,6 +346,8 @@ interface Props {
   baseSrc?: string;
   height?: number;
   items: CarouselItems;
+  cssFilter?: string;
+
   //#region swiper
   breakpoints?: SwiperOptions['breakpoints'];
   initialSlide?: number;
