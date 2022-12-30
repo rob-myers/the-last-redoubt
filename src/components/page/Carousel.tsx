@@ -15,15 +15,13 @@ import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
 import Video, { VideoKey } from "./Video";
 
-// 🚧 fullscreen should have specified height + fix inherited heights?
 // 🚧 slide-img-container, figure.video height should be conditional on label existing
 // 🚧 clean --carousel-padding-bottom (video vs img)
-// 🚧 remove class swiper-slide-zoomed onchange slide whilst zoomed
 
 /**
  * props.items should be one of:
  * - a list of image/video definitions (with optional short labels)
- * - a list arbitrary `ReactNode`s
+ * - a list of `ReactNode`s
  */
 export default function Carousel(props: Props) {
 
@@ -88,6 +86,7 @@ export default function Carousel(props: Props) {
         />
         <Slides
           fullScreen
+          fullHeight={props.fullHeight}
           // 🚧 responsive offset
           fullScreenOffset={128 - state.rootEl.getBoundingClientRect().y}
 
@@ -269,7 +268,8 @@ const rootCss = css`
       height: inherit;
       max-height: calc(100vh - 2 * 128px);
 
-      padding: 0 32px 32px 32px;
+      padding: 0 32px;
+      /** ℹ️ full-screen mobile is edge case (should zoom instead) */
       @media(max-width: 600px) {
         padding: 0 8px 32px 8px;
       }
@@ -287,21 +287,15 @@ const rootCss = css`
     }
     @media(max-width: 600px) {
       border-width: 1px;
+      max-height: 70vh;
       figure.video {
         padding-bottom: 64px;
       }
     }
 
-    /* 🚧 */
-    .swiper-wrapper, .swiper-slide {
-      height: inherit;
+    .slide-img-container {
+      flex-direction: column;
     }
-    .slide-container {
-      height: 100%;
-    }
-    /* .slide-img-container {
-      height: inherit;
-    } */
   }
 
   .swiper.invert img {

@@ -2,6 +2,7 @@
 
 ## In progress
 
+- ✅ Carousel fullscreen specified height
 - BUG tracking camera stops when click outside navmesh during walk
 
 - ✅ Alt-up/down scrolls to start/end of terminal buffer
