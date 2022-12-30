@@ -166,12 +166,6 @@ const articleCss = css`
       padding: 0;
     }
   }
-  @media(max-width: 800px) {
-    /* 🚧 restrict elements? */
-    * + figure.carousel {
-      margin-top: -20px;
-    }
-  }
 
   figure.tabs {
     margin: calc(40px + 32px) 0 40px 0;
