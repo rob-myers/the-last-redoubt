@@ -94,7 +94,7 @@ export default function Carousel(props: Props) {
           initialSlide={state.fullScreen}
           items={props.items}
           baseSrc={props.baseSrc}
-          cssFilter={props.cssFilter}
+          invert={props.invert}
 
           onDestroy={_swiper => state.largeSwiper = null}
           onSwiper={swiper => {
@@ -126,7 +126,10 @@ function Slides(props: Props & {
 
   return (
     <Swiper
-      className={cx({ 'full-screen': props.fullScreen })}
+      className={cx({
+        'full-screen': props.fullScreen,
+        'invert': props.invert,
+      })}
       breakpoints={props.breakpoints}
       lazy={props.lazy??{ checkInView: true, enabled: true }}
       initialSlide={props.initialSlide}
@@ -174,10 +177,7 @@ function Slides(props: Props & {
                 <img
                   className="swiper-lazy"
                   data-src={`${props.baseSrc??''}${item.src}`}
-                  style={{
-                    ...item.background && { background: item.background },
-                    ...props.cssFilter && { filter: props.cssFilter },
-                  }}
+                  {...item.background && { style: { background: item.background } }}
                 />
               </div>
               <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
@@ -304,6 +304,10 @@ const rootCss = css`
     } */
   }
 
+  .swiper.invert img {
+    filter: invert(1);
+  }
+
   div.fullscreen-overlay {
     position: fixed;
     background-color: #00000088;
@@ -366,7 +370,7 @@ interface Props {
   mobileHeight?: number;
   fullHeight?: number;
   items: CarouselItems;
-  cssFilter?: string; // 🚧 invertWhenDark instead
+  invert?: boolean;
 
   //#region swiper
   breakpoints?: SwiperOptions['breakpoints'];
