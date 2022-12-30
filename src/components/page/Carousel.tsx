@@ -140,7 +140,9 @@ function Slides(props: Props & {
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??40}
       style={{
-        height: props.fullScreen ? props.fullScreenHeight : props.height,
+        height: props.fullScreen
+          ? props.fullHeight
+          : props.smallViewport && props.mobileHeight || props.height,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       tabIndex={0}
@@ -361,9 +363,10 @@ function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
 interface Props {
   baseSrc?: string;
   height?: number;
-  fullScreenHeight?: number;
+  mobileHeight?: number;
+  fullHeight?: number;
   items: CarouselItems;
-  cssFilter?: string;
+  cssFilter?: string; // 🚧 invertWhenDark instead
 
   //#region swiper
   breakpoints?: SwiperOptions['breakpoints'];
