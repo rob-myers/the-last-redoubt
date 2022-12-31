@@ -14,13 +14,16 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
     e.stopPropagation();
     if (
       !(e.target instanceof HTMLAnchorElement)
-      && window.matchMedia('(max-width: 1400px)').matches
+      && canToggleNav()
     ) {
       useSiteStore.setState({ navOpen: !navOpen }, undefined, navOpen ? 'open-nav' : 'close-nav');
     }
   }
 
   function onKeyUp(e: React.KeyboardEvent) {
+    if (!canToggleNav()){
+      return;
+    }
     if (e.key === 'Enter') {
       useSiteStore.setState({ navOpen: !navOpen }, undefined, navOpen ? 'open-nav' : 'close-nav');
     }
@@ -75,6 +78,7 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
 const sidebarWidth = 256;
 const handleWidth = 40;
 export const barHeight = 40;
+const maxWidthCanToggleNav = 1450;
 
 const navCss = css`
   position: fixed;
@@ -96,8 +100,7 @@ const navCss = css`
   &.open {
     transform: translateX(0px);
   }
-  /** Cannot close nav when width > 1400px */
-  @media(max-width: 1450px) {
+  @media(max-width: ${maxWidthCanToggleNav}px) {
     &.closed {
       transform: translateX(-${sidebarWidth}px);
     }
@@ -178,3 +181,7 @@ const horizFillCss = css`
     min-width: ${sidebarWidth}px;
   }
 `;
+
+function canToggleNav() {
+  return window.matchMedia(`(max-width: ${maxWidthCanToggleNav}px)`).matches;
+}
