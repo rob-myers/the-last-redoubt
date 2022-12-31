@@ -16,6 +16,7 @@
   - 🚧 Start remaking walk cycle (first-npc.svg)
     - ✅ cut guard1_walk using https://ezgif.com/sprite-cutter
     - ✅ make first two frames
+    - 🚧 review and refine 1st 3 frames
     - make a few more frames
 
 - 🚧 Adjust Home Page
