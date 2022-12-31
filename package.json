@@ -9,7 +9,8 @@
   ],
   "browserslist": [
     ">0.25%",
-    "not dead and supports es6-module"
+    "not dead and supports es6-module",
+    "Safari >= 12.1"
   ],
   "scripts": {
     "develop": "gatsby develop -p 8010 -H 0.0.0.0",
