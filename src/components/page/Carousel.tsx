@@ -79,31 +79,35 @@ export default function Carousel(props: Props) {
         }
       }}
     >
-      {typeof state.fullScreen === 'number' && <>
-        <div
-          className="fullscreen-overlay"
-          onClick={hideFullScreen}
-        />
-        <Slides
-          fullScreen
-          fullHeight={props.fullHeight}
-          // 🚧 responsive offset
-          fullScreenOffset={128 - state.rootEl.getBoundingClientRect().y}
-
-          initialSlide={state.fullScreen}
-          items={props.items}
-          baseSrc={props.baseSrc}
-          invert={props.invert}
-
-          onDestroy={_swiper => state.largeSwiper = null}
-          onSwiper={swiper => {
-            state.largeSwiper = swiper;
-            swiper.el.focus();
-          }}
+      {
+        typeof state.fullScreen === 'number' && <>
+          <div
+            className="fullscreen-overlay"
+            onClick={hideFullScreen}
           />
-      </>}
+          <Slides
+            fullScreen
+            fullHeight={props.fullHeight || 800}
+            // 🚧 responsive offset
+            fullScreenOffset={128 - state.rootEl.getBoundingClientRect().y}
+
+            initialSlide={state.fullScreen}
+            items={props.items}
+            baseSrc={props.baseSrc}
+            invert={props.invert}
+
+            onDestroy={_swiper => state.largeSwiper = null}
+            onSwiper={swiper => {
+              state.largeSwiper = swiper;
+              swiper.el.focus();
+            }}
+            />
+        </>
+      }
+
       <Slides
         {...props}
+        mobileHeight={props.mobileHeight || props.height}
         initialSlide={props.initialSlide}
         smallViewport={bounds.width <= 600}
         showFullScreen={showFullScreen}
@@ -144,7 +148,8 @@ function Slides(props: Props & {
       style={{
         height: props.fullScreen
           ? props.fullHeight
-          : props.smallViewport && props.mobileHeight || props.height,
+          : props.smallViewport ? props.mobileHeight : props.height,
+        maxHeight: props.fullScreen ? 'calc(100vh - 256px)' : undefined,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
       tabIndex={0}
@@ -203,7 +208,7 @@ function Slides(props: Props & {
 }
 
 const rootCss = css`
-  ${cssName.carouselLabelHeight}: 96px;
+  ${cssName.carouselLabelHeight}: 80px;
   --carousel-padding-bottom: 48px;
 
   @media(max-width: 600px) {
@@ -250,7 +255,7 @@ const rootCss = css`
   figure.video {
     margin: 0;
     /* 🚧 Handle case where label does not exist */
-    height: calc(100% - var(${cssName.carouselLabelHeight})  - 16px);
+    height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
   }
   
   .swiper.full-screen {
@@ -271,7 +276,7 @@ const rootCss = css`
       height: inherit;
       max-height: calc(100vh - 2 * 128px);
 
-      padding: 0 32px;
+      padding: 0 32px 32px 32px;
       /** ℹ️ full-screen mobile is edge case (should zoom instead) */
       @media(max-width: 600px) {
         padding: 0 8px 32px 8px;
