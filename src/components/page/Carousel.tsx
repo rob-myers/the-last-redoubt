@@ -279,7 +279,6 @@ const rootCss = css`
       height: calc(100% - var(${cssName.carouselLabelHeight}));
     }
     .swiper-lazy-preloader {
-      top: unset;
       margin-top: unset;
     }
     figure.video {
