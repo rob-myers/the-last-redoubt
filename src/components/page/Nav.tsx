@@ -24,6 +24,9 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
     if (e.key === 'Enter') {
       useSiteStore.setState({ navOpen: !navOpen }, undefined, navOpen ? 'open-nav' : 'close-nav');
     }
+    if (navOpen && e.key === 'Escape') {
+      useSiteStore.setState({ navOpen: false }, undefined, 'close-nav');
+    }
   }
 
   return (

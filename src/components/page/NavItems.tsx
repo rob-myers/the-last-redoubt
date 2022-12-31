@@ -13,7 +13,10 @@ export default function NavItems({ frontmatter }: FrontMatterProps) {
   const tabIndex = useSiteStore(x => x.navOpen ? undefined : -1);
 
   return (
-    <section className={rootCss}>
+    <section
+      className={rootCss}
+      onKeyUp={onKeyUp}
+    >
 
       <h3 className={cx({ current: frontmatter?.key === 'index' })}>
         <Link
@@ -117,5 +120,12 @@ function NavIcon({ icon }: { icon?: string }) {
       return <Icon icon="info-icon" large />;
     default:
       return <>{icon}</>; // Fallback assumes unicode
+  }
+}
+
+function onKeyUp(e: React.KeyboardEvent) {
+  if (e.key === 'Escape') {
+    useSiteStore.setState({ navOpen: false }, undefined, 'close-nav');
+    (e.target as HTMLElement).blur();
   }
 }
