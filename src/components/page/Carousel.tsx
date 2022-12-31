@@ -202,8 +202,6 @@ function Slides(props: Props & {
   );
 }
 
-const maxHeightPx = 800;
-
 const rootCss = css`
   ${cssName.carouselLabelHeight}: 96px;
   --carousel-padding-bottom: 48px;
@@ -213,7 +211,7 @@ const rootCss = css`
     --carousel-padding-bottom: 0px;
   }
 
-  position: relative;
+  /* position: relative; // ℹ️ makes full-screen width smaller */
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
@@ -258,11 +256,16 @@ const rootCss = css`
   .swiper.full-screen {
     position: absolute;
     z-index: 2;
-    width: calc(100%);
-    /* height: calc(min(${maxHeightPx}px, 100vh - 128px)); */
+    width: 100%;
+    left: 0;
+
     background-color: var(--carousel-background-color);
     border: 2px solid var(--contrast-border-color);
   
+    .slide-label {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
     img {
       border: none;
       height: inherit;
@@ -284,6 +287,7 @@ const rootCss = css`
     figure.video {
       padding-bottom: 96px;
     }
+    /** ℹ️ full-screen mobile is edge case (should zoom instead) */
     @media(max-width: 600px) {
       border-width: 1px;
       max-height: 70vh;
