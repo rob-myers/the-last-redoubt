@@ -80,8 +80,8 @@ const articleCss = css`
   }
 
   aside {
-    margin: calc(64px + 8px) 0;
-    padding: 32px 64px;
+    margin: calc(48px + 8px) 0;
+    padding: 48px 64px;
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
@@ -241,8 +241,8 @@ const articleCss = css`
     }
   }
   h3 {
-    font-size: 1.8rem;
-    margin: 0 0 20px 0;
+    font-size: 1.6rem;
+    margin: 40px 0 16px 0;
     @media(max-width: 600px) {
       font-size: 1.4rem;
       margin: 20px 0 12px 0;
@@ -304,7 +304,7 @@ const articleCss = css`
     margin-bottom: 24px;
   }
   > pre {
-    margin: 48px 0 48px 0;
+    margin: 48px 0 72px 0;
     @media(max-width: 600px) {
       margin: 24px 0;
     }
