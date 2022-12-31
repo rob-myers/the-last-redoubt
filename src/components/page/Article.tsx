@@ -299,17 +299,17 @@ const articleCss = css`
     }
   } */
 
+  pre {
+    border: 1px solid var(--page-border-color);
+    margin-bottom: 24px;
+  }
   > pre {
-    margin: 32px 0 48px 0;
+    margin: 48px 0 48px 0;
     @media(max-width: 600px) {
       margin: 24px 0;
     }
   }
 
-  pre {
-    border: 1px solid var(--page-border-color);
-    margin-bottom: 24px;
-  }
 
   span.cmd {
     color: #555;
