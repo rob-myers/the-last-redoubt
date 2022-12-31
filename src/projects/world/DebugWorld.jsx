@@ -1,8 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { visibleUnicodeLength } from "../service/generic";
 import { Vect } from "../geom";
-import { ansiColor } from "../sh/util";
 import { cssName, wallOutset } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -71,20 +69,6 @@ export default function DebugWorld(props) {
       } else {
         console.info('hull door is isolated', gmId, hullDoorId);
       }
-    }
-
-    if (target.className === 'debug-label-info') {
-      // Send a rich message
-      const label = gm.labels[Number(target.getAttribute('data-debug-label-id'))];
-      const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
-      const line = `ℹ️  [${ansiColor.Blue}${label.text}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-      props.api.npcs.writeToTtys(line, [{
-          lineText: line, 
-          linkText: label.text,
-          linkStartIndex: visibleUnicodeLength('ℹ️  ['),
-          key: 'room', gmId, roomId,
-        }]
-      );
     }
 
   }, [gm, props, gmId, roomId]);
@@ -204,25 +188,6 @@ export default function DebugWorld(props) {
           {roomId}
         </div>
 
-        {/* More generic approach? */}
-        {roomLabel && (
-          <div
-            key={roomLabel.index}
-            className="debug-label-info"
-            data-debug-label-id={roomLabel.index}
-            data-tags="debug label-icon"
-            title={roomLabel.text}
-            style={{
-              left: roomLabel.center.x - debugLabel,
-              top: roomLabel.center.y - debugLabel,
-              width: debugLabel * 2,
-              height: debugLabel * 2,
-              filter: 'invert(100%)',
-              ...props.showLabels && { display: 'initial' },
-            }}
-          />
-        )}
-
         {gm.windows.map(({ baseRect, angle }, i) => {
           return (
             <div
@@ -266,7 +231,6 @@ export default function DebugWorld(props) {
  */
 
 const debugRadius = 5;
-const debugLabel = 4;
 const debugDoorOffset = 10;
 
 const rootCss = css`
@@ -282,18 +246,13 @@ const rootCss = css`
   div.debug-room {
     position: absolute;
 
-    div.debug-door-arrow, div.debug-label-info {
+    div.debug-door-arrow {
       position: absolute;
     }
     div.debug-door-arrow {
       pointer-events: var(${cssName.debugDoorArrowPtrEvts});
       cursor: pointer;
       background-image: url('/assets/icon/circle-right.svg');
-    }
-    div.debug-label-info {
-      display: var(${cssName.debugShowLabels});
-      background-image: url('/assets/icon/info-icon.svg');
-      cursor: pointer;
     }
 
     div.debug-door-id-icon {

@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 import { Vect } from "../geom";
 import { ansiColor, stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
-import { deepClone, keys, testNever } from "../service/generic";
+import { deepClone, keys, testNever, visibleUnicodeLength } from "../service/generic";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
@@ -464,20 +464,42 @@ export default function NPCs(props) {
         filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
       ));
     },
-    updateLocalDecor(opts) {
-      // 🚧 Currently we just log out the tags
-      /** @type {(tags?: string[]) => NPC.DecorPoint['onClick']} */
-      function cbFactory(tags) {
-        return (_decor, { npcs }) =>
-          npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(tags??[])}${ansiColor.Reset}`);
-      }
+    updateLocalDecor(opts) {// 🚧 generic approach?
 
       /** @type {(gmId: number, roomId: number, decorId: number) => string} */
-      const getDecorKey = (gmId, roomId, decorId) => `local-${decorId}-g${gmId}r${roomId}`;
+      const getUiPointDecorKey = (gmId, roomId, decorId) => `local-${decorId}-g${gmId}r${roomId}`;
+      /** @param {string} decorKey */
+      const decodeUiPointDecorKey = (decorKey) => {
+        const [, decorId, gmId, roomId] = /** @type {string[]} */ (decorKey.match(/^local-(\d+)-g(\d+)r(\d+)$/));
+        return { decorId: Number(decorId), gmId: Number(gmId), roomId: Number(roomId) };
+      }
+
+      /** @type {(tags?: string[]) => NPC.DecorPoint['onClick']} */
+      function cbFactory(tags) {
+        return (decor, { npcs }) => {
+          if (decor.tags?.includes('label')) {
+            /** Assume `[...tags, label, ...labelWords]` */
+            const label = decor.tags.slice(decor.tags.findIndex(tag => tag === 'label') + 1).join(' ');
+            const { decorId: _, gmId, roomId } = decodeUiPointDecorKey(decor.key);
+            const gm = api.gmGraph.gms[gmId];
+            const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
+            const line = `ℹ️  [${ansiColor.Blue}${label}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
+            npcs.writeToTtys(line, [{
+              lineText: line, 
+              linkText: label,
+              linkStartIndex: visibleUnicodeLength('ℹ️  ['),
+              key: 'room', gmId, roomId,
+            }]
+          );
+          } else {
+            npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(tags??[])}${ansiColor.Reset}`);
+          }
+        }
+      }
 
       for (const { gmId, roomId } of opts.added??[]) {
         const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
-        const decorKeys = points.map((_, decorId) => getDecorKey(gmId, roomId, decorId))
+        const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
         state.npcAct({ action: "add-decor",
           items: Object.values(points).map(({ point, tags }, uiId) => ({
             key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
@@ -487,7 +509,7 @@ export default function NPCs(props) {
       }
       for (const { gmId, roomId } of opts.removed??[]) {
         const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
-        const decorKeys = points.map((_, decorId) => getDecorKey(gmId, roomId, decorId))
+        const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
         state.npcAct({ action: "rm-decor", items: decorKeys });
       }
     },

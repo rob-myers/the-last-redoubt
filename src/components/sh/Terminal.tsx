@@ -96,7 +96,7 @@ export default function Terminal(props: Props) {
           const ttyXterm = new ttyXtermClass(xterm, {
             key: session.key,
             io: session.ttyIo,
-            rememberLastValue: (msg) => session.var._ = msg,
+            rememberLastValue(msg) { session.var._ = msg },
           });
 
           ttyXterm.initialise();
