@@ -20,6 +20,9 @@ export interface ExtraHandlerContext {
 }
 
 export class LinkProvider implements ILinkProvider {
+
+  private terminalHadFocus = false;
+
   /**
    * Create a Link Provider for xterm.js
    * @param _terminal The terminal instance
@@ -42,7 +45,13 @@ export class LinkProvider implements ILinkProvider {
       (_link): ILink => ({
         range: _link.range,
         text: _link.text,
+        hover: () => {
+          this.terminalHadFocus = !!this._terminal.element?.contains(document.activeElement);
+        },
         activate: (e, text) => {
+          if (!this.terminalHadFocus) {
+            this._terminal.blur(); // Avoid showing keyboard on mobile
+          }
           const [lineText] = translateBufferLineToStringWithWrap(y - 1, this._terminal);
           // Importantly, this is counting unicode characters as 1 char.
           const linkStartIndex = _link.range.start.x;
