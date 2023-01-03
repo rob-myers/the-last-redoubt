@@ -458,6 +458,8 @@ const rootCss = css`
       width: 1px;
       height: 1px;
       transform-origin: 0 0;
+      /** Fixes Chrome clip-path flicker on fast zoom from far */
+      will-change: contents;
     }
 
     .small-grid, .large-grid {

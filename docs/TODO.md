@@ -2,8 +2,10 @@
 
 ## In progress
 
+- ✅ chrome clip-path flicker on fast zoom?
+
 - ✅ Carousel fullscreen specified height
-- BUG tracking camera stops when click outside navmesh during walk
+- should tracking camera stop when click outside navmesh during walk?
 
 - ✅ Alt-up/down scrolls to start/end of terminal buffer
   > Useful for video after Ctrl+L
