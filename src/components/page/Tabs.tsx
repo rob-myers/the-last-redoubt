@@ -368,9 +368,11 @@ const rootCss = css`
     }
   }
 
-  .initial-background {
-    background-color: #000;
-   }
+  .${cssName.expanded} {
+    &.initial-background {
+      background-color: #000;
+    }
+  }
 `;
 
 const unexpandedCss = (height: number | number[]) => css`
