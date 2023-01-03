@@ -306,6 +306,7 @@ export default function CssPanZoom(props) {
             { offset: 0, transform: `scale(${current.scale})` },
             { offset: 1, transform: `scale(${scale})` },
           ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing })
+          state.scaleRoot.classList.add('hide-grid');
         }
 
         await new Promise((resolve, reject) => {
@@ -322,6 +323,7 @@ export default function CssPanZoom(props) {
           trAnim.addEventListener('cancel', () => {
             reject('cancelled');
             state.events.next({ key: 'cancelled-panzoom-to' })
+            state.scaleRoot.classList.remove('hide-grid');
           });
         });
       },
@@ -458,8 +460,14 @@ const rootCss = css`
       width: 1px;
       height: 1px;
       transform-origin: 0 0;
-      /** Fixes Chrome clip-path flicker on fast zoom from far */
-      will-change: contents;
+      /** Fixes Chrome clip-path flicker (fast zoom), but too slow on mobile */
+      /* will-change: contents; */
+    }
+
+    .hide-grid {
+      .small-grid, .large-grid {
+        display: none;
+      }
     }
 
     .small-grid, .large-grid {

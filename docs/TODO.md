@@ -2,7 +2,8 @@
 
 ## In progress
 
-- ✅ chrome clip-path flicker on fast zoom?
+- chrome clip-path flicker on fast zoom?
+  - @desktop removing CssPanZoom grid seems to fix it
 
 - ✅ Carousel fullscreen specified height
 - should tracking camera stop when click outside navmesh during walk?

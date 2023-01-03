@@ -151,12 +151,9 @@ export default function FOV(props) {
     pointer-events: none;
     /* filter: invert(100%) brightness(34%); */
     filter: invert(100%) brightness(30%) contrast(150%);
-    /**
-     * FIX Chrome zealous clip-path clipping,
-     * e.g. for geomorph west of origin.
-     * Maybe toggle on/off https://css-tricks.com/almanac/properties/w/will-change/
-     */
-    will-change: transform;
+    /** Chrome zealous clip-path clipping, */
+    /* will-change: transform; */
+    /* will-change: contents; */
   }
 `;
 
