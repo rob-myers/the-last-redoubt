@@ -217,6 +217,7 @@ export default function Tabs(props: Props) {
         className={cx(
           cssName.expanded,
           state.expanded ? expandedCss : unexpandedCss(props.height),
+          !state.everEnabled && 'initial-background',
         )}
       >
         {state.everEnabled && state.colour !== 'black' && (
@@ -366,6 +367,10 @@ const rootCss = css`
       fill: black;
     }
   }
+
+  .initial-background {
+    background-color: #000;
+   }
 `;
 
 const unexpandedCss = (height: number | number[]) => css`
