@@ -8,21 +8,34 @@
     - not clip-path specific
     - zoom smooth improved by removing .shade
 
-- lighting extras
-  - ensure continuity along hull doors
-  - option for smaller PNGs i.e. without `lit`?
-
-- should tracking camera stop when click outside navmesh during walk?
-
-- Synfig https://www.synfig.org/
+- 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install
   - ✅ Watch a tutorial
     > https://www.youtube.com/watch?v=5B_Aok26LKc&ab_channel=TurtleArmyJess
   - 🚧 Start remaking walk cycle (first-npc.svg)
     - ✅ cut guard1_walk using https://ezgif.com/sprite-cutter
     - ✅ make first two frames
-    - 🚧 review and refine 1st 3 frames
-    - make a few more frames
+    - ✅ review and refine 1st 3 frames
+    - 4th ✅ 5th 6th
+    - refine
+    - 7th 8th 9th 10th
+    - refine
+
+- ✅ Abandon _moving seg_ vs _static seg_ collision prediction
+  - ✅ Hide in debug mode
+  - ✅ decor seg -> rect
+  - ✅ Remove related code `predictNpcSegCollision`
+  - ✅ Remove related mdx
+
+- 🚧 Collision prediction: _moving circle_ vs _static angled rect_
+  - mdx description of simplified algorithm
+    > angled-rect vs axis-aligned square (induced by npc circle)
+
+- lighting extras
+  - ensure continuity along hull doors
+  - option for smaller PNGs i.e. without `lit`?
+
+- should tracking camera stop when click outside navmesh during walk?
 
 - 🚧 Adjust Home Page
   - ❌ GIF demo of CLI
@@ -56,17 +69,10 @@
 
 - BUG unseen windows should be totally dark
 - 303: WARN doorIds lacking exactly 2 nav nodes: 5 (resp. counts 0)
-- browserslist: try adding old safari version
+- ✅ browserslist: try adding old safari version
+  - https://demo.lastredoubt.co/
 - Can sit/stand toggle
 - Decor rect collision prediction
-
-- Abandon _moving seg_ vs _static seg_ collision prediction
-  - ✅ Hide in debug mode
-  - ✅ decor seg -> rect
-  - Remove related code
-- Collision prediction: _moving circle_ vs _static angled rect_
-  - Start mdx description of simplified algorithm
-    > axis aligned square vs 4-gon
 
 - 🚧 Performance
   - ✅ Remove YouTube from SSR via facade

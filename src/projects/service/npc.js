@@ -362,105 +362,11 @@ export function predictNpcNpcCollision(npcA, npcB) {
 }
 
 /**
- * @param {NPC.NPC} npc Assumed to be walking
- * @param {Geom.Seg} seg Fixed seg
- * @returns {NPC.NpcSegCollision | null}
+ * @param {NPC.NPC} npc
+ * @param {Geom.AngledRect<Geom.Rect>} angledRect
+ * @returns {{ seconds: number; } | null}
  */
-export function predictNpcSegCollision(npc, seg) {
-  const rect = Rect.fromPoints(seg.src, seg.dst);
-  if (!npc.getWalkSegBounds().intersects(rect)) {
-    return null;
-  }
-
-  const walkSeg = assertNonNull(npc.getLineSeg());
-  const walkDelta = walkSeg.dst.clone().sub(walkSeg.src);
-  const walkDir = walkDelta.clone().normalize(); // \delta
-  const walkMax = walkDelta.length;
-  
-  const npcSpeed = npc.getSpeed(); // u > 0
-  const timeMax = walkMax / npcSpeed; // t_\Omega
-  
-  /**
-   * Fixed segment:
-   * > `p(λ) := seg.src + λ . segDir`
-   * > where `0 ≤ λ ≤ segMax`
-   */
-  // 🖊 seg.src ~ \alpha, seg.dst ~ \beta
-  const segDelta = Vect.from(seg.dst).sub(seg.src);
-  const segDir = segDelta.clone().normalize(); // \tau
-  const segMax = segDelta.length;
-  
-  for (const npcSeg of npc.segs) {
-    /**
-     * A line segment attached to npc:
-     * > `p_i(t, λ_i) := npcSeg.src + ut . walkDir + λ_i . npcSegDir` where:
-     * > - 0 ≤ t ≤ tMax
-     * > - 0 ≤ λ_i ≤ npcSegMax
-     */
-    // npcSec.src ~ \alpha_i, npcSec.dst ~ \beta_i
-    const npcSegDelta = Vect.from(npcSeg.dst).sub(npcSeg.src);
-    const npcSegDir = npcSegDelta.clone().normalize(); // \tau_i
-    const npcSegMax = npcSegDelta.length;
-
-    /**
-     * Solving `p_i(t, λ_i) = p(λ)` i.e.
-     * 1. npcSeg.src.x + u.t.walkDir.x + λ_i . npcSegDir.x = seg.src.x + λ . segDir.x
-     * 2. npcSeg.src.y + u.t.walkDir.y + λ_i . npcSegDir.y = seg.src.y + λ . segDir.y
-     */
-
-    if (npcSegDir.x === 0) {
-      // Let 0 ≤ t ≤ timeMax, 0 ≤ λ ≤ segMax,
-      // (npcSpeed . walkDir_x .​ t) - (npcSegDir.x .​ λ) + (npcSeg.src.x ​- seg.src.x) = 0
-      if (walkDir.x === 0 && segDir.x === 0) {
-        // Walk direction and segments are parallel
-        continue; // We ignore glancing collisions
-      } else if (segDir.x === 0) {// Segments are parallel
-        // If they collide the time is unique
-        const t = (seg.src.x - npcSeg.src.x) / (npcSpeed * walkDir.x);
-        if (0 <= t && t <= timeMax) return { seconds: t, dist: t * npcSpeed };
-        continue;
-      } else if (walkDir.x === 0) {
-        // via (1) λ = (npcSeg.src.x - seg.src.x) / segDir.x
-        // via (2) λ_i + (npcSpeed . t) - (λ . segDir.y) + (npcSeg.src.y - seg.src.y) = 0
-        // thus:
-        // ut = -λ_i + (seg.src.x - npcSeg.src.x).(segDir.x/segDir.x) + (seg.src.y - npcSeg.src.y)
-        // 🚧 intersect interval and minimize
-      } else {
-        // Since segDir.x and walkDir.x are non-zero, (1) becomes:
-        // ut = (segDir.x / walkDir.x) λ + (seg.src.x - npcSeg.src.x) / walkDir.x
-        // 🚧 intersect interval and minimize
-      }
-    } else {// npcSegDir.x non-zero,
-      // via (1) λ_i = -ut . (walkDir.x/npcSegDir.x) + λ . (segDir.x/npcSegDir.x) + (seg.src.x - npcSeg.src.x)/npcSegDir.x
-      // via (2) a.t + b.λ + c = 0, where:
-      const a = npcSpeed * walkDir.y - npcSpeed * walkDir.x * (npcSegDir.y / npcSegDir.x);
-      const b = -segDir.y + segDir.x * (npcSegDir.y / npcSegDir.x);
-      const c = (seg.src.x - npcSeg.src.x) * (npcSegDir.y / npcSegDir.x) + npcSeg.src.y - seg.src.y;
-      if (a === 0 && b === 0) {// Then c = 0 too, so
-        // npcSegDir.y/npcSegDir.x
-        // = walkDir.y / walkDir.x 👈 (walkDir.x non-zero else walkDir 0)
-        // = segDir.y / segDir.x 👈 (segDir.x non-zero else sigDir 0)
-        // = (seg.src.y - npcSeg.src.y) / (seg.src.x - npcSeg.src.x) 👈 (assume seg.src !== npcSeg.src)
-        // Thus walk dir, fixed seg and vector difference of seg starts are parallel
-        // 🚧 /sketches should include "👈" reasoning
-        continue; // We ignore glancing collisions
-      } else if (b === 0) {// Segments are parallel
-        // If they collide the time is unique
-        const t = -c / a;
-        if (0 <= t && t <= timeMax) return { seconds: t, dist: t * npcSpeed };
-        continue;
-      } else if (a === 0) {
-        // 🚧 + adjust /sketches
-        // Possibly missing case where npcSegDir.y === walkDir.y === 0
-        // IDEA Know λ; Know npcSegDir.x === delta.x === 1; Subst into (1) and get f(t, λ_i) = 0
-        // Hopefully this can be unified with argument when npcSegDir.y !== 0
-      } else {
-        // t = -b/a . λ - c
-        // 🚧 intersect interval and minimize
-      }
-    }
-  }
-
+export function predictNpcAngledRectCollision(npc, angledRect) {// 🚧
   return null;
 }
 
