@@ -97,7 +97,7 @@
     <rect x="205" y="390" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="600" y="325" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 715, -295)">
+    <rect x="600" y="325" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 730, -297)">
       <title>light-source</title>
     </rect>
     <rect x="445" y="425" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
@@ -118,8 +118,8 @@
     <rect x="745" y="415" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="25" y="195" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source direction_0_-1</title>
+    <rect x="85" y="115" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
     </rect>
   </g>
 </svg>

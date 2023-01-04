@@ -48,5 +48,26 @@
     <rect x="1018" y="238" width="63.9" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); visibility: visible;">
       <title>wall</title>
     </rect>
+    <rect x="606.493" y="458.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="486.493" y="458.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="796.493" y="618.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="956.493" y="328.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="876.493" y="1058.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="206.493" y="958.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="206.493" y="208.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
   </g>
 </svg>

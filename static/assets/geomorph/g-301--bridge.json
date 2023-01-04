@@ -872,7 +872,7 @@
         "tags": ["light-source"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[390, 315], [380, 315], [380, 305], [390, 305]]]
+          "coordinates": [[[405, 313], [395, 313], [395, 303], [405, 303]]]
         }
       },
       {
@@ -918,10 +918,10 @@
         }
       },
       {
-        "tags": ["light-source", "direction_0_-1"],
+        "tags": ["light-source"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[35, 195], [35, 205], [25, 205], [25, 195]]]
+          "coordinates": [[[95, 115], [95, 125], [85, 125], [85, 115]]]
         }
       },
       {
@@ -9729,14 +9729,14 @@
   },
   "lightSrcs": [
     {"position": {"x": 210, "y": 395}},
-    {"position": {"x": 385, "y": 310}},
+    {"position": {"x": 400, "y": 308}},
     {"position": {"x": 450, "y": 430}},
     {"position": {"x": 690, "y": 230}},
     {"position": {"x": 1015, "y": 415}},
     {"position": {"x": 1110, "y": 100}},
     {"position": {"x": 150, "y": 510}},
     {"position": {"x": 750, "y": 420}},
-    {"position": {"x": 30, "y": 200}, "direction": {"x": 0, "y": -1}}
+    {"position": {"x": 90, "y": 120}}
   ],
   "hullPoly": [
     {

@@ -2,11 +2,16 @@
 
 ## In progress
 
-- chrome clip-path flicker on fast zoom?
-  - @desktop removing CssPanZoom grid seems to fix it
+- ✅ bake lighting into PNGs with extension .lit.png
+  - ✅ 301 ✅ 302 ✅ 303 ✅ 101 ✅ 102
+  - ✅ remove .shade.png approach
+
+- 🚧 chrome (clip-path) flicker on fast zoom?
+  - ✅ @desktop removing CssPanZoom grid fixed it?
+  - @mobile problem persists, but not clip-path specific
+- should tracking camera stop when click outside navmesh during walk?
 
 - ✅ Carousel fullscreen specified height
-- should tracking camera stop when click outside navmesh during walk?
 
 - ✅ Alt-up/down scrolls to start/end of terminal buffer
   > Useful for video after Ctrl+L

@@ -376,10 +376,10 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [984.312, 765.935],
-              [984.312, 775.935],
-              [994.312, 775.935],
-              [994.312, 765.935]
+              [894.312, 965.935],
+              [894.312, 975.935],
+              [904.312, 975.935],
+              [904.312, 965.935]
             ]
           ]
         }
@@ -432,10 +432,94 @@
           "type": "Polygon",
           "coordinates": [[[685, 770], [685, 970], [695, 970], [695, 770]]]
         }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [324.312, 925.935],
+              [324.312, 935.935],
+              [334.312, 935.935],
+              [334.312, 925.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [374.312, 925.935],
+              [374.312, 935.935],
+              [384.312, 935.935],
+              [384.312, 925.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [374.312, 135.935],
+              [374.312, 145.935],
+              [384.312, 145.935],
+              [384.312, 135.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [324.312, 135.935],
+              [324.312, 145.935],
+              [334.312, 145.935],
+              [334.312, 135.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [934.312, 635.935],
+              [934.312, 645.935],
+              [944.312, 645.935],
+              [944.312, 635.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [924.312, 275.935],
+              [924.312, 285.935],
+              [934.312, 285.935],
+              [934.312, 275.935]
+            ]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1672504985205.6038
+    "lastModified": 1672830143664.2544
   },
   "102--hull": {
     "key": "102--hull",
@@ -524,10 +608,108 @@
             [[1018, 238], [1018, 241.5], [1081.9, 241.5], [1081.9, 238]]
           ]
         }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [606.493, 458.825],
+              [606.493, 468.825],
+              [616.493, 468.825],
+              [616.493, 458.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [486.493, 458.825],
+              [486.493, 468.825],
+              [496.493, 468.825],
+              [496.493, 458.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [796.493, 618.825],
+              [796.493, 628.825],
+              [806.493, 628.825],
+              [806.493, 618.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [956.493, 328.825],
+              [956.493, 338.825],
+              [966.493, 338.825],
+              [966.493, 328.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [876.493, 1058.825],
+              [876.493, 1068.825],
+              [886.493, 1068.825],
+              [886.493, 1058.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [206.493, 958.825],
+              [206.493, 968.825],
+              [216.493, 968.825],
+              [216.493, 958.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [206.493, 208.825],
+              [206.493, 218.825],
+              [216.493, 218.825],
+              [216.493, 208.825]
+            ]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1672504985206.6382
+    "lastModified": 1672830325420.4895
   },
   "301--hull": {
     "key": "301--hull",
@@ -928,7 +1110,7 @@
         "tags": ["light-source"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[390, 305], [380, 305], [380, 315], [390, 315]]]
+          "coordinates": [[[405, 303], [395, 303], [395, 313], [405, 313]]]
         }
       },
       {
@@ -974,15 +1156,15 @@
         }
       },
       {
-        "tags": ["light-source", "direction_0_-1"],
+        "tags": ["light-source"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[25, 195], [25, 205], [35, 205], [35, 195]]]
+          "coordinates": [[[85, 115], [85, 125], [95, 125], [95, 115]]]
         }
       }
     ],
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1672504985207.6553
+    "lastModified": 1672827887766.0469
   },
   "302--hull": {
     "key": "302--hull",
@@ -1433,10 +1615,108 @@
             ]
           ]
         }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [502.368, 480.789],
+              [502.368, 490.789],
+              [512.368, 490.789],
+              [512.368, 480.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [332.368, 480.789],
+              [332.368, 490.789],
+              [342.368, 490.789],
+              [342.368, 480.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [32.368, 480.789],
+              [32.368, 490.789],
+              [42.368, 490.789],
+              [42.368, 480.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [82.368, 170.789],
+              [82.368, 180.789],
+              [92.368, 180.789],
+              [92.368, 170.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [662.368, 480.789],
+              [662.368, 490.789],
+              [672.368, 490.789],
+              [672.368, 480.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [912.368, 480.789],
+              [912.368, 490.789],
+              [922.368, 490.789],
+              [922.368, 480.789]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1142.368, 190.789],
+              [1142.368, 200.789],
+              [1152.368, 200.789],
+              [1152.368, 190.789]
+            ]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1672504985208.2363
+    "lastModified": 1672828267506.4138
   },
   "303--hull": {
     "key": "303--hull",
@@ -2090,10 +2370,145 @@
             ]
           ]
         }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[565, 479.211], [565, 489.211], [575, 489.211], [575, 479.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[625, 479.211], [625, 489.211], [635, 489.211], [635, 479.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[705, 79.211], [705, 89.211], [715, 89.211], [715, 79.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[485, 96.211], [485, 106.211], [495, 106.211], [495, 96.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[815, 9.211], [815, 19.211], [825, 19.211], [825, 9.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[995, 59.211], [995, 69.211], [1005, 69.211], [1005, 59.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1095, 489.211], [1095, 499.211], [1105, 499.211], [1105, 489.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[739, 584.211], [739, 594.211], [749, 594.211], [749, 584.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[451, 584.211], [451, 594.211], [461, 594.211], [461, 584.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[241, 534.211], [241, 544.211], [251, 544.211], [251, 534.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[324, 75.211], [324, 85.211], [334, 85.211], [334, 75.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[384, 145.211], [384, 155.211], [394, 155.211], [394, 145.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[144, 255.211], [144, 265.211], [154, 265.211], [154, 255.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[231, 334.211], [231, 344.211], [241, 344.211], [241, 334.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[745, 196.211], [745, 206.211], [755, 206.211], [755, 196.211]]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
-    "lastModified": 1672504985208.8987
+    "lastModified": 1672829767782.3196
   },
   "bridge--042--8x9": {
     "key": "bridge--042--8x9",
@@ -2830,7 +3245,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
-    "lastModified": 1672504985209.573
+    "lastModified": 1670865451235.3132
   },
   "console--018--1x1": {
     "key": "console--018--1x1",
@@ -2859,7 +3274,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 307},
-    "lastModified": 1657725457964.5547
+    "lastModified": 1666690702006.3818
   },
   "console--022--1x2": {
     "key": "console--022--1x2",
@@ -2885,7 +3300,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 607},
-    "lastModified": 1657725457966.4248
+    "lastModified": 1666690702007.0583
   },
   "console--031--1x1.2": {
     "key": "console--031--1x1.2",
@@ -2911,7 +3326,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -4, "y": -4, "width": 377, "height": 307},
-    "lastModified": 1657725457972.599
+    "lastModified": 1666690702007.6118
   },
   "couch-and-chairs--006--0.4x2": {
     "key": "couch-and-chairs--006--0.4x2",
@@ -2933,7 +3348,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -8.097, "y": 14.064, "width": 137, "height": 575},
-    "lastModified": 1663845674693.12
+    "lastModified": 1666690702008.0774
   },
   "empty-room--006--2x2": {
     "key": "empty-room--006--2x2",
@@ -2979,7 +3394,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985209.95
+    "lastModified": 1670790900913.831
   },
   "empty-room--013--2x3": {
     "key": "empty-room--013--2x3",
@@ -3027,7 +3442,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985210.4038
+    "lastModified": 1670434408226.2039
   },
   "empty-room--019--2x4": {
     "key": "empty-room--019--2x4",
@@ -3079,7 +3494,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1672504985211.9202
+    "lastModified": 1666690702009.559
   },
   "empty-room--020--2x4": {
     "key": "empty-room--020--2x4",
@@ -3125,7 +3540,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1657725457983.5256
+    "lastModified": 1666690702009.8525
   },
   "empty-room--039--3x4": {
     "key": "empty-room--039--3x4",
@@ -3178,7 +3593,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1672504985212.2615
+    "lastModified": 1670434519257.3955
   },
   "empty-room--060--4x4": {
     "key": "empty-room--060--4x4",
@@ -3239,7 +3654,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
-    "lastModified": 1672504985212.6177
+    "lastModified": 1670952491244.2512
   },
   "engineering--045--4x6": {
     "key": "engineering--045--4x6",
@@ -3329,7 +3744,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
-    "lastModified": 1672504985213.6548
+    "lastModified": 1670951544791.2646
   },
   "engineering--047--4x7": {
     "key": "engineering--047--4x7",
@@ -3429,7 +3844,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
-    "lastModified": 1672504985214.4314
+    "lastModified": 1671015590705.824
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
@@ -3451,7 +3866,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 0, "y": 0, "width": 106, "height": 180},
-    "lastModified": 1657725457987.2024
+    "lastModified": 1666690702012.061
   },
   "fresher--020--2x2": {
     "key": "fresher--020--2x2",
@@ -3522,7 +3937,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985215.1475
+    "lastModified": 1670863798077.8787
   },
   "fresher--025--2x3": {
     "key": "fresher--025--2x3",
@@ -3609,7 +4024,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1672504985215.7715
+    "lastModified": 1670863798077.9553
   },
   "fresher--036--2x4": {
     "key": "fresher--036--2x4",
@@ -3742,7 +4157,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1672504985216.4966
+    "lastModified": 1670951616809.7388
   },
   "fuel--010--2x4": {
     "key": "fuel--010--2x4",
@@ -3768,7 +4183,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
-    "lastModified": 1672504985216.8376
+    "lastModified": 1670863798078.0237
   },
   "galley-and-mess-halls--006--2x4": {
     "key": "galley-and-mess-halls--006--2x4",
@@ -3877,7 +4292,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 643},
-    "lastModified": 1672504985217.221
+    "lastModified": 1670863798077.9822
   },
   "galley-and-mess-halls--025--2x3": {
     "key": "galley-and-mess-halls--025--2x3",
@@ -3952,7 +4367,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985217.7327
+    "lastModified": 1670863798078.0034
   },
   "gaming-tables--001--1x2": {
     "key": "gaming-tables--001--1x2",
@@ -3968,7 +4383,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 0, "y": 0, "width": 592, "height": 322},
-    "lastModified": 1657725457995.457
+    "lastModified": 1666690702014.945
   },
   "iris-valves--005--1x1": {
     "key": "iris-valves--005--1x1",
@@ -3977,7 +4392,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
-    "lastModified": 1657725457996.6099
+    "lastModified": 1666690702015.2463
   },
   "lab--012--3x4": {
     "key": "lab--012--3x4",
@@ -4096,7 +4511,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 920},
-    "lastModified": 1672504985218.721
+    "lastModified": 1671018080586.0146
   },
   "lab--018--4x4": {
     "key": "lab--018--4x4",
@@ -4268,7 +4683,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -32.5, "width": 1220, "height": 1243},
-    "lastModified": 1672504985219.422
+    "lastModified": 1670951699355.1008
   },
   "lab--023--4x4": {
     "key": "lab--023--4x4",
@@ -4404,7 +4819,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
-    "lastModified": 1672504985220.426
+    "lastModified": 1670951387833.1814
   },
   "lab--030--1x3": {
     "key": "lab--030--1x3",
@@ -4418,7 +4833,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 0, "y": 0, "width": 907, "height": 307},
-    "lastModified": 1672504985221.8716
+    "lastModified": 1666690702016.7502
   },
   "lifeboat--small-craft": {
     "key": "lifeboat--small-craft",
@@ -4562,7 +4977,7 @@
       }
     ],
     "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
-    "lastModified": 1672504985222.3984
+    "lastModified": 1670863798000.9824
   },
   "lounge--009--2x3": {
     "key": "lounge--009--2x3",
@@ -4617,7 +5032,7 @@
     ],
     "singles": [],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1657725458000.2742
+    "lastModified": 1666690702017.5417
   },
   "lounge--015--2x4": {
     "key": "lounge--015--2x4",
@@ -4756,7 +5171,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1672504985222.933
+    "lastModified": 1670863798078.6309
   },
   "lounge--017--2x4": {
     "key": "lounge--017--2x4",
@@ -4845,7 +5260,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1672504985224.2627
+    "lastModified": 1670863798000.958
   },
   "low-berth--003--1x1": {
     "key": "low-berth--003--1x1",
@@ -4867,7 +5282,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -3.5, "y": -3, "width": 307, "height": 356},
-    "lastModified": 1657725458002.9124
+    "lastModified": 1666690702018.7026
   },
   "machinery--001--0.4x1": {
     "key": "machinery--001--0.4x1",
@@ -4891,7 +5306,7 @@
     ],
     "singles": [],
     "pngRect": {"x": -10, "y": -9.5, "width": 320, "height": 139},
-    "lastModified": 1657725458003.9893
+    "lastModified": 1666690702019.274
   },
   "machinery--020--1x1.6": {
     "key": "machinery--020--1x1.6",
@@ -4905,7 +5320,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -1.5, "y": 0, "width": 503, "height": 290},
-    "lastModified": 1657725458004.9797
+    "lastModified": 1666690702019.9397
   },
   "machinery--065--1.8x1.8": {
     "key": "machinery--065--1.8x1.8",
@@ -4926,7 +5341,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 20, "y": 20, "width": 560, "height": 560},
-    "lastModified": 1657725458006.009
+    "lastModified": 1666690702020.3247
   },
   "machinery--077--1.6x1.8": {
     "key": "machinery--077--1.6x1.8",
@@ -4949,7 +5364,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -0.5, "y": -5.5, "width": 501, "height": 511},
-    "lastModified": 1657725458006.98
+    "lastModified": 1666690702020.6985
   },
   "machinery--091--1.6x1.8": {
     "key": "machinery--091--1.6x1.8",
@@ -4977,7 +5392,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -10, "y": -10, "width": 500, "height": 559},
-    "lastModified": 1657725458008.1252
+    "lastModified": 1666690702021.0564
   },
   "machinery--155--1.8x3.6": {
     "key": "machinery--155--1.8x3.6",
@@ -4991,7 +5406,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 10, "y": -10, "width": 520, "height": 1100},
-    "lastModified": 1657725458009.4092
+    "lastModified": 1666690702021.4531
   },
   "machinery--156--1.8x3.6": {
     "key": "machinery--156--1.8x3.6",
@@ -5013,7 +5428,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
-    "lastModified": 1657725458010.871
+    "lastModified": 1666690702021.783
   },
   "machinery--158--1.8x3.6": {
     "key": "machinery--158--1.8x3.6",
@@ -5044,7 +5459,7 @@
       }
     ],
     "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
-    "lastModified": 1657725458012.1187
+    "lastModified": 1666690702022.1306
   },
   "machinery--357--2.2x4": {
     "key": "machinery--357--2.2x4",
@@ -5060,7 +5475,7 @@
     ],
     "singles": [],
     "pngRect": {"x": -10, "y": -72.5, "width": 1220, "height": 683},
-    "lastModified": 1657725458013.1514
+    "lastModified": 1666690702022.4395
   },
   "medical--007--2x3": {
     "key": "medical--007--2x3",
@@ -5156,7 +5571,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1672504985224.6553
+    "lastModified": 1670863798078.3074
   },
   "medical--008--2x3": {
     "key": "medical--008--2x3",
@@ -5242,7 +5657,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1672504985224.9639
+    "lastModified": 1670863797897.7954
   },
   "medical-bed--005--0.6x1.2": {
     "key": "medical-bed--005--0.6x1.2",
@@ -5256,7 +5671,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -1, "y": -1, "width": 382, "height": 202},
-    "lastModified": 1657725458016.1423
+    "lastModified": 1666690702023.483
   },
   "medical-bed--006--1.6x3.6": {
     "key": "medical-bed--006--1.6x3.6",
@@ -5296,7 +5711,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 0, "y": -1, "width": 450, "height": 1094},
-    "lastModified": 1657725458017.2837
+    "lastModified": 1666690702023.9072
   },
   "misc-stellar-cartography--020--10x10": {
     "key": "misc-stellar-cartography--020--10x10",
@@ -5522,7 +5937,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 3020, "height": 3020},
-    "lastModified": 1672504985225.876
+    "lastModified": 1671016565072.522
   },
   "misc-stellar-cartography--023--4x4": {
     "key": "misc-stellar-cartography--023--4x4",
@@ -5628,7 +6043,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
-    "lastModified": 1672504985226.674
+    "lastModified": 1670863797981.5796
   },
   "office--001--2x2": {
     "key": "office--001--2x2",
@@ -5709,7 +6124,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985227.0698
+    "lastModified": 1670863797919.0437
   },
   "office--004--2x2": {
     "key": "office--004--2x2",
@@ -5795,7 +6210,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985227.5352
+    "lastModified": 1670951766838.9814
   },
   "office--006--2x2": {
     "key": "office--006--2x2",
@@ -5910,7 +6325,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985227.9907
+    "lastModified": 1670863798078.4346
   },
   "office--020--2x3": {
     "key": "office--020--2x3",
@@ -5985,7 +6400,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985228.6187
+    "lastModified": 1670863798059.7336
   },
   "office--023--2x3": {
     "key": "office--023--2x3",
@@ -6087,7 +6502,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985229.1755
+    "lastModified": 1670863798078.3892
   },
   "office--025--2x3": {
     "key": "office--025--2x3",
@@ -6160,7 +6575,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985231.2688
+    "lastModified": 1670863798078.4814
   },
   "office--026--2x3": {
     "key": "office--026--2x3",
@@ -6270,7 +6685,7 @@
       }
     ],
     "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
-    "lastModified": 1672504985231.6807
+    "lastModified": 1670863798078.284
   },
   "office--061--3x4": {
     "key": "office--061--3x4",
@@ -6366,7 +6781,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1672504985232.3137
+    "lastModified": 1670863798001.0322
   },
   "office--074--4x4": {
     "key": "office--074--4x4",
@@ -6472,7 +6887,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
-    "lastModified": 1672504985233.6294
+    "lastModified": 1670951268118.9368
   },
   "office--089--4x4": {
     "key": "office--089--4x4",
@@ -6713,7 +7128,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": 10, "width": 1181, "height": 1182},
-    "lastModified": 1672504985234.3914
+    "lastModified": 1670863798059.6753
   },
   "sensors--003--1x1.4": {
     "key": "sensors--003--1x1.4",
@@ -6722,7 +7137,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 88.5, "y": -10, "width": 423, "height": 319},
-    "lastModified": 1657725458029.9888
+    "lastModified": 1666690702029.522
   },
   "ships-locker--003--1x1": {
     "key": "ships-locker--003--1x1",
@@ -6766,7 +7181,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
-    "lastModified": 1672504985235.5874
+    "lastModified": 1670863798001.0017
   },
   "ships-locker--007--1x2": {
     "key": "ships-locker--007--1x2",
@@ -6820,7 +7235,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
-    "lastModified": 1672504985236.9102
+    "lastModified": 1670863798077.9238
   },
   "ships-locker--011--1x2": {
     "key": "ships-locker--011--1x2",
@@ -6875,7 +7290,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -20, "width": 620, "height": 334},
-    "lastModified": 1672504985237.3552
+    "lastModified": 1670863798078.0476
   },
   "ships-locker--020--2x2": {
     "key": "ships-locker--020--2x2",
@@ -6929,7 +7344,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985238.496
+    "lastModified": 1670863798000.9216
   },
   "shop--027--0.4x1.6": {
     "key": "shop--027--0.4x1.6",
@@ -6945,7 +7360,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 56.5, "y": 110, "width": 487, "height": 128},
-    "lastModified": 1657725458032.0916
+    "lastModified": 1666690702031.655
   },
   "shop--028--0.8x1.6": {
     "key": "shop--028--0.8x1.6",
@@ -6961,7 +7376,7 @@
     ],
     "singles": [],
     "pngRect": {"x": 57.5, "y": 33, "width": 485, "height": 234},
-    "lastModified": 1657725458033.1362
+    "lastModified": 1666690702032.002
   },
   "stateroom--012--2x2": {
     "key": "stateroom--012--2x2",
@@ -7040,7 +7455,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985239.3804
+    "lastModified": 1670951852678.3093
   },
   "stateroom--014--2x2": {
     "key": "stateroom--014--2x2",
@@ -7169,7 +7584,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1672504985239.846
+    "lastModified": 1670863798059.7617
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
@@ -7252,7 +7667,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985240.1965
+    "lastModified": 1670863797897.9995
   },
   "stateroom--019--2x3": {
     "key": "stateroom--019--2x3",
@@ -7347,7 +7762,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 633, "height": 920},
-    "lastModified": 1672504985240.6616
+    "lastModified": 1670863797918.8262
   },
   "stateroom--020--2x3": {
     "key": "stateroom--020--2x3",
@@ -7480,7 +7895,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985241.159
+    "lastModified": 1670864868350.494
   },
   "stateroom--035--2x3": {
     "key": "stateroom--035--2x3",
@@ -7581,7 +7996,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1672504985241.677
+    "lastModified": 1670863798078.5652
   },
   "stateroom--036--2x4": {
     "key": "stateroom--036--2x4",
@@ -7776,7 +8191,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1672504985242.3313
+    "lastModified": 1670865852787.9788
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",
@@ -7957,7 +8372,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -20, "width": 944, "height": 1239},
-    "lastModified": 1672504985242.8599
+    "lastModified": 1670863798000.853
   },
   "table--009--0.8x0.8": {
     "key": "table--009--0.8x0.8",
@@ -7995,7 +8410,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 23.131, "y": 21.383, "width": 255, "height": 254},
-    "lastModified": 1657725458043.2373
+    "lastModified": 1666690702036.2363
   },
   "weaponry--013--1x2": {
     "key": "weaponry--013--1x2",
@@ -8004,7 +8419,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
-    "lastModified": 1657725458044.6023
+    "lastModified": 1666690702037.1028
   },
   "window--001--0x1": {
     "key": "window--001--0x1",
@@ -8026,7 +8441,7 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
-    "lastModified": 1657725458045.5188
+    "lastModified": 1666690702037.4478
   },
   "window--007--0x2.4": {
     "key": "window--007--0x2.4",
@@ -8040,6 +8455,6 @@
     "walls": [],
     "singles": [],
     "pngRect": {"x": -4, "y": -4, "width": 907, "height": 67},
-    "lastModified": 1657725458046.3606
+    "lastModified": 1666690702037.8333
   }
 }

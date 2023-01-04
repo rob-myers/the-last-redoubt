@@ -1399,6 +1399,141 @@
         }
       },
       {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[575, 479.211], [575, 489.211], [565, 489.211], [565, 479.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[635, 479.211], [635, 489.211], [625, 489.211], [625, 479.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[715, 79.211], [715, 89.211], [705, 89.211], [705, 79.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[495, 96.211], [495, 106.211], [485, 106.211], [485, 96.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[825, 9.211], [825, 19.211], [815, 19.211], [815, 9.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1005, 59.211], [1005, 69.211], [995, 69.211], [995, 59.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1105, 489.211], [1105, 499.211], [1095, 499.211], [1095, 489.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[749, 584.211], [749, 594.211], [739, 594.211], [739, 584.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[461, 584.211], [461, 594.211], [451, 594.211], [451, 584.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[251, 534.211], [251, 544.211], [241, 544.211], [241, 534.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[334, 75.211], [334, 85.211], [324, 85.211], [324, 75.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[394, 145.211], [394, 155.211], [384, 155.211], [384, 145.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[154, 255.211], [154, 265.211], [144, 265.211], [144, 255.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[241, 334.211], [241, 344.211], [231, 344.211], [231, 334.211]]
+          ]
+        }
+      },
+      {
+        "tags": ["light-source"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[755, 196.211], [755, 206.211], [745, 206.211], [745, 196.211]]
+          ]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -12518,7 +12653,23 @@
       {"dst": "room-26", "src": "window-6", "id": "window-6->room-26"}
     ]
   },
-  "lightSrcs": [],
+  "lightSrcs": [
+    {"position": {"x": 570, "y": 484.211}},
+    {"position": {"x": 630, "y": 484.211}},
+    {"position": {"x": 710, "y": 84.211}},
+    {"position": {"x": 490, "y": 101.211}},
+    {"position": {"x": 820, "y": 14.210999999999999}},
+    {"position": {"x": 1000, "y": 64.211}},
+    {"position": {"x": 1100, "y": 494.211}},
+    {"position": {"x": 744, "y": 589.211}},
+    {"position": {"x": 456, "y": 589.211}},
+    {"position": {"x": 246, "y": 539.211}},
+    {"position": {"x": 329, "y": 80.211}},
+    {"position": {"x": 389, "y": 150.211}},
+    {"position": {"x": 149, "y": 260.211}},
+    {"position": {"x": 236, "y": 339.211}},
+    {"position": {"x": 750, "y": 201.211}}
+  ],
   "hullPoly": [
     {
       "type": "Polygon",

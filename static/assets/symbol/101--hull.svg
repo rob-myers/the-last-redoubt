@@ -113,44 +113,62 @@
     <rect y="659.992" width="10" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="565.024">
       <title>light reverse</title>
     </rect>
-    <rect x="139.992" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 191.793045, 421.60791)">
+    <rect x="139.992" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0, 1, -1, 0, 191.793045, 421.60791)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="327.566" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+    <rect x="327.566" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="540">
       <title>relate-connectors</title>
     </rect>
-    <rect x="564.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+    <rect x="564.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="540">
       <title>relate-connectors</title>
     </rect>
-    <rect x="622.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="540">
+    <rect x="622.024" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="540">
       <title>relate-connectors</title>
     </rect>
-    <rect x="507.566" width="10" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="240">
+    <rect x="507.566" width="10" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="240">
       <title>relate-connectors</title>
     </rect>
-    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, -182.758469)">
+    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, -182.758469)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, 357.43399)">
+    <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, 357.43399)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="984.312" y="765.935" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="894.312" y="965.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="494.312" y="445.935" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="494.312" y="445.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="685" y="720" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="685" y="720" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="134.312" y="675.935" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="134.312" y="675.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>
     </rect>
-    <rect x="505" width="10" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="770">
+    <rect x="505" width="10" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="770">
       <title>relate-connectors</title>
     </rect>
-    <rect x="685" width="10" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" y="770">
+    <rect x="685" width="10" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="770">
       <title>relate-connectors</title>
+    </rect>
+    <rect x="324.312" y="925.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="374.312" y="925.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="374.312" y="135.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="324.312" y="135.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="934.312" y="635.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
+    </rect>
+    <rect x="924.312" y="275.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light-source</title>
     </rect>
   </g>
 </svg>
