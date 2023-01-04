@@ -43,6 +43,7 @@ export default function CssPanZoom(props) {
 
       evt: {
         wheel(e) {
+          state.isIdle() && state.events.next({ key: 'started-wheel' });
           state.delayIdle();
           state.animationAction('cancel');
           state.zoomWithWheel(e);
@@ -306,13 +307,16 @@ export default function CssPanZoom(props) {
             { offset: 0, transform: `scale(${current.scale})` },
             { offset: 1, transform: `scale(${scale})` },
           ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing })
-          state.scaleRoot.classList.add('hide-grid');
+          state.events.next({ key: 'started-panzoom-to' });
+          state.scaleRoot.classList.add('hide-grid'); // Avoid Chrome flicker
         }
 
+        let finished = false;
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
           const scAnim = shouldScale ? state.anims[1] : null;
           trAnim.addEventListener('finish', () => {
+            finished = true;
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
@@ -320,9 +324,9 @@ export default function CssPanZoom(props) {
             scAnim && state.releaseAnim(scAnim);
             // state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
           });
-          trAnim.addEventListener('cancel', () => {
+          trAnim.addEventListener('cancel', async () => {
             reject('cancelled');
-            state.events.next({ key: 'cancelled-panzoom-to' })
+            !finished && state.events.next({ key: 'cancelled-panzoom-to' });
             state.scaleRoot.classList.remove('hide-grid');
           });
         });
@@ -462,6 +466,7 @@ const rootCss = css`
       transform-origin: 0 0;
       /** Fixes Chrome clip-path flicker (fast zoom), but too slow on mobile */
       /* will-change: contents; */
+      /* will-change: transform; */
     }
 
     .hide-grid {

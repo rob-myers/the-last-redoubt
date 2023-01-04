@@ -66,6 +66,7 @@ declare namespace PanZoom {
 
   type CssInternalEvent = (
     | CssTransitionEvent
+    | { key: 'started-wheel' }
     | CssPointerUpEvent
     | { key: "ui-idle" }
     | { key: "resized-bounds"; bounds: Geom.RectJson }
@@ -74,6 +75,7 @@ declare namespace PanZoom {
   type CssTransitionEvent = (
     | { key: "cancelled-panzoom-to" }
     | { key: "completed-panzoom-to" }
+    | { key: "started-panzoom-to" }
   )
 
   interface CssPointerUpEvent {
