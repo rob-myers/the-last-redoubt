@@ -284,6 +284,8 @@ declare namespace NPC {
     key: string;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
+    /** last valid `el.style.transform` directly set by user via devtool */
+    devtoolTransform?: string;
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
@@ -303,7 +305,7 @@ declare namespace NPC {
     | BaseDecor & { type: 'circle' } & Geom.Circle
     | DecorPath
     | DecorPoint
-    | BaseDecor & { type: 'rect' } & Geom.RectJson
+    | BaseDecor & { type: 'rect' } & Geom.RectJson & { angle?: number }
   );
   
   /** Using `action` instead of `key` to avoid name-collision */
@@ -317,7 +319,7 @@ declare namespace NPC {
     | { action: 'pause'; npcKey: string }
     | { action: 'play'; npcKey: string }
     | { action: 'rm' | 'remove'; npcKey: string; }
-    | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string }
+    | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
     | { action: 'set-player'; npcKey?: string }
   );
 

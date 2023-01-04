@@ -337,7 +337,12 @@ export default function NPCs(props) {
           return state.removeNpc(e.npcKey);
         case 'remove-decor':
         case 'rm-decor':
-          e.items?.forEach(decorKey => delete state.decor[decorKey]);
+          if (e.decorKey) {
+            e.decorKey.split(' ').forEach(decorKey => delete state.decor[decorKey]);
+          }
+          if (e.items) {
+            e.items.forEach(decorKey => delete state.decor[decorKey]);
+          }
           if (e.regexStr) {
             const keyRegex = new RegExp(e.regexStr);
             Object.keys(state.decor).forEach(decorKey =>

@@ -96,17 +96,21 @@ export function lineSegToCssTransform(seg) {
 
 /**
  * @param {Geom.RectJson} rect 
+ * @param {number} [angle] Radians
  */
-export function rectToCssTransform(rect) {
-	return `translate(${rect.x}px, ${rect.y}px) scale(${rect.width}, ${rect.height})`;
+export function rectToCssTransform(rect, angle = 0) {
+	return `translate(${rect.x}px, ${rect.y}px) rotate(${angle.toFixed(2)}rad) scale(${rect.width}, ${rect.height})`;
 }
 
 /**
  * @param {HTMLElement} el
- * @returns {Geom.Circle}
+ * @returns {Geom.Circle | null}
  */
 export function cssTransformToCircle(el) {
 	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey === '') {
+		return null;
+	}
 	if (cacheKey in circleCache) {
 		return circleCache[cacheKey];
 	}
@@ -118,12 +122,16 @@ export function cssTransformToCircle(el) {
 }
 
 /**
+ * 🚧 Won't predict moving npc vs seg, but other uses?
  * Assume affine transform acts on `(0,0) --> (1, 0)` to produce line segment
  * @param {HTMLElement} el
- * @returns {Geom.Seg}
+ * @returns {Geom.Seg | null}
  */
 export function cssTransformToLineSeg(el) {
 	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey === '') {
+		return null;
+	}
 	if (cacheKey in lineSegCache) {
 		return lineSegCache[cacheKey];
 	}
@@ -138,10 +146,13 @@ export function cssTransformToLineSeg(el) {
 
 /**
  * @param {HTMLElement} el
- * @returns {Geom.VectJson}
+ * @returns {Geom.VectJson | null}
  */
 export function cssTransformToPoint(el) {
 	const cacheKey = el.style.getPropertyValue('transform');
+	if (cacheKey === '') {
+		return null;
+	}
 	if (cacheKey in pointCache) {
 		return pointCache[cacheKey];
 	}
@@ -151,15 +162,26 @@ export function cssTransformToPoint(el) {
 
 /**
  * @param {HTMLElement} el
- * @returns {Geom.RectJson}
+ * @returns {Geom.AngledRect<Geom.RectJson> | null}
  */
 export function cssTransformToRect(el) {
 	const cacheKey = el.style.getPropertyValue('transform');
-	if (cacheKey in rectCache) {
-		return rectCache[cacheKey];
+	if (cacheKey === '') {// e.g. partially entered invalid value
+		return null;
+	}
+	if (cacheKey in angleRectCache) {
+		return angleRectCache[cacheKey];
 	}
 	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
-	return rectCache[cacheKey] = { x: matrix.e, y: matrix.f, width: matrix.a, height: matrix.d };
+	return angleRectCache[cacheKey] = {
+		angle: Math.atan2(matrix.b, matrix.a),
+		baseRect: {
+			x: matrix.e,
+			y: matrix.f,
+			width: (new Vect(matrix.a, matrix.b)).length,
+			height: (new Vect(matrix.c, matrix.d)).length,
+		},
+	};
 }
 
 let tmpVec = new Vect;
@@ -170,8 +192,8 @@ const circleCache = {};
 const lineSegCache = {};
 /** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
 const pointCache = {};
-/** @type {{ [cssTransformValue: string]: Geom.RectJson }} */
-const rectCache = {};
+/** @type {{ [cssTransformValue: string]: Geom.AngledRect<Geom.RectJson> }} */
+const angleRectCache = {};
 
 //#endregion
 

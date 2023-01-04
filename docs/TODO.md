@@ -30,6 +30,10 @@
 - 🚧 Collision prediction: _moving circle_ vs _static angled rect_
   - mdx description of simplified algorithm
     > angled-rect vs axis-aligned square (induced by npc circle)
+  - hook up to decor `rect` somehow
+    - ✅ BUG decor `rect` transform gets stuck 
+    - ✅ decor `rect` supports angle?
+    - can mark decor rect for collision-prediction
 
 - lighting extras
   - ensure continuity along hull doors

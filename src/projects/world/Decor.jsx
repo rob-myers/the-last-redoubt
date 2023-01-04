@@ -25,9 +25,11 @@ export default function Decor({ decor, api }) {
         if (el.classList.contains(cssName.decorCircle)) {
           if (decorKey && decorKey in npcs.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (npcs.decor[decorKey]);
-            const { center, radius } = cssTransformToCircle(el);
-            [decor.radius, decor.center] = [radius, center];
-            update();
+            const output = cssTransformToCircle(el);
+            if (output) {
+              [decor.radius, decor.center] = [output.radius, output.center]
+              update();
+            }
           }
         }
         if (el.classList.contains(cssName.decorPath)) {
@@ -54,21 +56,31 @@ export default function Decor({ decor, api }) {
             const decor = /** @type {NPC.DecorPath} */ (npcs.decor[pathDecorKey]);
             const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
             const points = decorPoints.map(x => cssTransformToPoint(x));
-            decor.path.splice(0, decor.path.length, ...points);
-            update();
+            if (points.every(x => x)) {
+              decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
+              decor.devtoolTransform = el.style.transform;
+              update();
+            }
           } else if (decorKey && decorKey in npcs.decor) {
             const decor = /** @type {NPC.DecorPoint} */ (npcs.decor[decorKey]);
-            const { x, y } = cssTransformToPoint(el);
-            [decor.x, decor.y] = [x, y];
-            update();
+            const output = cssTransformToPoint(el);
+            if (output) {
+              [decor.x, decor.y] = [output.x, output.y];
+              decor.devtoolTransform = el.style.transform;
+              update();
+            }
           }
         }
         if (el.classList.contains(cssName.decorRect)) {
           if (decorKey && decorKey in npcs.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (npcs.decor[decorKey]);
-            const rectJson = cssTransformToRect(el);
-            Object.assign(decor, rectJson);
-            update();
+            const output = cssTransformToRect(el);
+            if (output) {
+              Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
+              decor.angle = output.angle;
+              decor.devtoolTransform = el.style.transform;
+              update();
+            }
           }
         }
       }
@@ -125,7 +137,7 @@ export default function Decor({ decor, api }) {
                 data-tags="no-ui"
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
-                  transform: rectToCssTransform(item),
+                  transform: item.devtoolTransform || rectToCssTransform(item, item.angle),
                 }}
               />
             );
