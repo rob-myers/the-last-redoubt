@@ -2,20 +2,17 @@
 
 ## In progress
 
-- ✅ bake lighting into PNGs with extension .lit.png
-  - ✅ 301 ✅ 302 ✅ 303 ✅ 101 ✅ 102
-  - ✅ remove .shade.png approach
-
 - 🚧 chrome (clip-path) flicker on fast zoom?
   - ✅ @desktop removing CssPanZoom grid fixed it?
-  - @mobile problem persists, but not clip-path specific
+  - 🚧 @mobile problem persists
+    - not clip-path specific
+    - zoom smooth improved by removing .shade
+
+- lighting extras
+  - ensure continuity along hull doors
+  - option for smaller PNGs i.e. without `lit`?
+
 - should tracking camera stop when click outside navmesh during walk?
-
-- ✅ Carousel fullscreen specified height
-
-- ✅ Alt-up/down scrolls to start/end of terminal buffer
-  > Useful for video after Ctrl+L
-- ✅ Support multiple toggles `npc config 'foo bar'`
 
 - Synfig https://www.synfig.org/
   - ✅ Download and Install
@@ -289,6 +286,15 @@ How to embed video?
 
 ## Done
 
+- ✅ bake lighting into PNGs with extension .lit.png
+  - ✅ 301 ✅ 302 ✅ 303 ✅ 101 ✅ 102
+  - ✅ remove .shade.png approach
+
+- ✅ Carousel fullscreen specified height
+
+- ✅ Alt-up/down scrolls to start/end of terminal buffer
+  > Useful for video after Ctrl+L
+- ✅ Support multiple toggles `npc config 'foo bar'`
 - ✅ 102: fix non-hull door (black)
   - moved door to engineering 47 (removing wall from PNG)
 - ✅ 102: strange lights
