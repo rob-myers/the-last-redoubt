@@ -24,7 +24,7 @@
     "postinstall": "patch-package",
     "minify-pngs": "yarn ts-script src/scripts/minify-pngs",
     "rename-pngs": "yarn ts-script src/scripts/rename-pngs",
-    "render-gm-shade": "yarn ts-script src/scripts/render-gm-shade",
+    "bake-lighting": "yarn ts-script src/scripts/bake-lighting",
     "render-layout": "yarn ts-script src/scripts/render-layout",
     "render-npc": "yarn ts-script src/scripts/render-npc",
     "simplify-pngs": "yarn ts-script src/scripts/simplify-pngs",

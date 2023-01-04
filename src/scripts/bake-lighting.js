@@ -1,7 +1,7 @@
 /**
- * - Usage
- *   - `yarn render-gm-shade 301`
- *     where /geomorph/{gmKey}.json expected to exist 
+ * Usage
+ * > `yarn bake-lighting 301`
+ * > where respective `/geomorph/{gmKey}.json` exists
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -11,7 +11,7 @@ import { createCanvas, loadImage } from 'canvas';
 
 import { Poly } from '../projects/geom';
 import { saveCanvasAsFile } from '../projects/service/file';
-import { parseLayout } from '../projects/service/geomorph';
+import { getNormalizedDoorPolys, parseLayout } from '../projects/service/geomorph';
 import { geom } from '../projects/service/geom';
 import { fillPolygon } from '../projects/service/dom';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
@@ -25,7 +25,7 @@ if (!layoutDef) {
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
-const outputPath =  path.resolve(outputDir, `${layoutDef.key}.shade.png`);
+const outputPath =  path.resolve(outputDir, `${layoutDef.key}.lit.png`);
 
 const geomorphJsonPath = path.resolve(outputDir, `${layoutDef.key}.json`);
 if (!fs.existsSync(geomorphJsonPath)) {
@@ -47,31 +47,47 @@ const scale = 2;
   canvas.height = pngRect.height * scale;
   const ctxt = canvas.getContext('2d');
   
-  // DEBUG ONLY ⛔️ draw geomorph PNG
-  // const geomorphPngPath = path.resolve(outputDir, `${layoutDef.key}.png`);
-  // const loadedPng = await loadImage(geomorphPngPath);
-  // ctxt.drawImage(loadedPng, 0, 0);
+  // Draw underlying geomorph PNG
+  const geomorphPngPath = path.resolve(outputDir, `${layoutDef.key}.png`);
+  const loadedPng = await loadImage(geomorphPngPath);
+  ctxt.drawImage(loadedPng, 0, 0);
 
   // Draw the lights
   ctxt.scale(scale, scale);
   ctxt.translate(-pngRect.x, -pngRect.y);
   const lightSources = layout.lightSrcs;
-  const allRoomsAndDoors = Poly.union([...layout.rooms, ...layout.doors.map(x => x.poly)])[0];
+  /** More than one polygon can happen e.g. Geomorph 102 */
+  const allRoomsAndDoors = Poly.union([
+    ...layout.rooms,
+    ...getNormalizedDoorPolys(layout.doors), // must extrude hull doors
+    ...layout.windows.map(x => x.poly),
+  ]);
   const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
-  const lights = lightSources.flatMap(({position, direction }) => geom.lightPolygon({
-    position,
-    range: 2000,
-    exterior: allRoomsAndDoors,
-    direction,
-  }));
+  const lights = lightSources.map(({ position, direction }, i) => {
+    const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
+    if (exterior) {
+      return geom.lightPolygon({ position, range: 2000, exterior, direction });
+    } else {
+      console.error(`ignored light ${i} (${JSON.stringify(position)}): no exterior found`);
+      return new Poly;
+    }
+  });
 
-  ctxt.fillStyle = 'rgba(0, 0, 0, 0.2)';
+  // Darken the geomorph
+  ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
   fillPolygon(ctxt, hullPolySansHoles);
 
   ctxt.globalCompositeOperation = 'lighter';
-  // 1/2 of above alpha permits 2 lights to intersect (?)
-  ctxt.fillStyle = 'rgba(255, 255, 255, 0.1)';
-  lights.forEach(light => fillPolygon(ctxt, [light]));
+  // Draw lights as radial fill with drop off
+  lights.forEach((light, i) => {
+    const { position, direction } = lightSources[i];
+    const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, 300)
+    gradient.addColorStop(0, '#ffffaa55');
+    gradient.addColorStop(0.9, "#00000000");
+    gradient.addColorStop(1, "#00000000");
+    ctxt.fillStyle = gradient;
+    fillPolygon(ctxt, [light]);
+  });
   await saveCanvasAsFile(canvas, outputPath);
 
 })();
