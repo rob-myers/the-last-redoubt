@@ -2,6 +2,16 @@ import SideNote from "components/page/SideNote";
 // import NpcSegSetup from "./collide-npc-seg-setup.mdx";
 // import NpcSegSolve from "./collide-npc-seg-solve.mdx";
 
-### Collision Prediction: NPC vs Rect
+### Collision Prediction: NPC vs Angled Rect
 
-Rectangle needn't be axis-aligned.
+{/* Rectangle needn't be axis-aligned. */}
+
+View an NPC as a circle moving at constant speed between two points.
+Suppose there is a static rectangle which needn't be axis-aligned (it may be rotated).
+
+> Does the NPC intersect the rectangle before it reaches its target?
+
+We actually answer an easier question.
+That is, we view the circle as a square with axes aligned to the rectangle's.
+
+{/* Sketch algorithm */}
