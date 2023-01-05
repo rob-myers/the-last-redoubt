@@ -16,7 +16,7 @@
     - ✅ cut guard1_walk using https://ezgif.com/sprite-cutter
     - ✅ make first two frames
     - ✅ review and refine 1st 3 frames
-    - 4th ✅ 5th 6th
+    - 4th ✅ 5th ✅ 6th
     - refine
     - 7th 8th 9th 10th
     - refine
@@ -33,7 +33,8 @@
   - hook up to decor `rect` somehow
     - ✅ BUG decor `rect` transform gets stuck 
     - ✅ decor `rect` supports angle?
-    - can mark decor rect for collision-prediction
+    - can mark decor `circle` for collision-prediction
+    - can mark decor `rect` for collision-prediction
 
 - lighting extras
   - ensure continuity along hull doors
