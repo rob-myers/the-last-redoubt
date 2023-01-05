@@ -40,7 +40,7 @@ const rootCss = css`
     letter-spacing: 1px;
     background-color: #222222;
     border: 0 solid #222222;
-    border-width: 2px 4px;
+    border-width: 4px;
   }
 
   /* cursor: pointer; */
