@@ -37,8 +37,6 @@ export default function Geomorphs(props) {
  */
 
 const rootCss = css`
-  isolation: isolate;
-
   img.geomorph {
     position: absolute;
     transform-origin: top left;
@@ -46,13 +44,4 @@ const rootCss = css`
     /* filter: brightness(80%) sepia(0.1); */
     filter: brightness(70%) sepia(0.4);
   }
-  
-  img.geomorph-shade {
-    position: absolute;
-    transform-origin: top left;
-    pointer-events: none;
-    filter: brightness(120%);
-    mix-blend-mode: hard-light;
-  }
-
 `;
