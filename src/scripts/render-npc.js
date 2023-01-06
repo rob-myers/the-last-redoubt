@@ -18,7 +18,7 @@ const [,, npcName, ...animNames] = process.argv;
 const npcInputDir = 'static/assets/npc'
 const npcSvgFilepath = path.resolve(npcInputDir, npcName + '.svg');
 if (!npcName || !fs.existsSync(npcSvgFilepath)) {
-  error(`error: usage: yarn render-npc {npc-name} {...anim-name-0} ... where
+  error(`usage: yarn render-npc {npc-name} {...anim-name-0} ... where
     - static/assets/npc/{npc-name}.svg exists
   `);
   process.exit(1);

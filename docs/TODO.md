@@ -2,6 +2,17 @@
 
 ## In progress
 
+- 🚧 synfig file -> `NPC.ParsedNpc`
+  - will replace `render-npc` script (first-npc.json)
+  - ✅ export for web lottie
+    - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
+  - ✅ script gunzips file.sifz and converts xml to json
+  - 🚧 provide/extract
+    - animation names and lengths
+    - contact points
+
+- initial flicker in World due to .lit.png loaded before darkened png?
+
 - 🚧 chrome (clip-path) flicker on fast zoom?
   - ✅ @desktop removing CssPanZoom grid fixed it?
   - 🚧 @mobile problem persists
@@ -20,6 +31,13 @@
     - refine ✅
     - 7th ✅ 8th ✅ 9th ✅ 10th ✅
     - refine
+    - render frames using CLI
+      - ❌ try adding {...}/Resources/bin to PATH
+      - ✅ try `brew install synfig`
+        - `synfig --help` worked
+      - 🚧 try rendering via CLI
+        > https://wiki.synfig.org/Doc:Synfig_CLI_Syntax
+    - add a sitting frame
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode
