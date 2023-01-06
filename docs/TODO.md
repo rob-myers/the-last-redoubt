@@ -6,7 +6,7 @@
   - will replace `render-npc` script (first-npc.json)
   - ✅ export for web lottie
     - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
-  - ✅ script gunzips file.sifz and converts xml to json
+  - ✅ script `npc-json` gunzips file.sifz and converts xml to json
   - 🚧 provide/extract
     - animation names and lengths
     - contact points
@@ -35,8 +35,11 @@
       - ❌ try adding {...}/Resources/bin to PATH
       - ✅ try `brew install synfig`
         - `synfig --help` worked
-      - 🚧 try rendering via CLI
-        > https://wiki.synfig.org/Doc:Synfig_CLI_Syntax
+      - ✅ try rendering via CLI
+        - https://wiki.synfig.org/Doc:Synfig_CLI_Syntax
+        - `synfig first-anim.sifz -t png-spritesheet -o my-test.png`
+      - render a frame range (first 3 frames)
+        - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --fps 1 --begin-time 0 --end-time 2 -o my-test.png`
     - add a sitting frame
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
