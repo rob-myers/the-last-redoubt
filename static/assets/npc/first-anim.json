@@ -4,7 +4,7 @@
     "walk": {
       "animName": "walk",
       "frameCount": 10,
-      "aabb": {"x": 0, "y": 0, "width": 0, "height": 0},
+      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
       "contacts": [],
       "deltas": [],
       "totalDist": 0
@@ -12,7 +12,7 @@
     "idle": {
       "animName": "idle",
       "frameCount": 1,
-      "aabb": {"x": 0, "y": 0, "width": 0, "height": 0},
+      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
       "contacts": [],
       "deltas": [],
       "totalDist": 0
