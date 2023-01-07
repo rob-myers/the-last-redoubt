@@ -1,0 +1,22 @@
+{
+  "npcName": "first-anim",
+  "animLookup": {
+    "walk": {
+      "animName": "walk",
+      "frameCount": 10,
+      "aabb": {"x": 0, "y": 0, "width": 0, "height": 0},
+      "contacts": [],
+      "deltas": [],
+      "totalDist": 0
+    },
+    "idle": {
+      "animName": "idle",
+      "frameCount": 1,
+      "aabb": {"x": 0, "y": 0, "width": 0, "height": 0},
+      "contacts": [],
+      "deltas": [],
+      "totalDist": 0
+    }
+  },
+  "zoom": 2
+}

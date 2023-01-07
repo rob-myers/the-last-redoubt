@@ -6,10 +6,11 @@
   - will replace `render-npc` script (first-npc.json)
   - ✅ export for web lottie
     - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
-  - ✅ script `npc-json` gunzips file.sifz and converts xml to json
-  - 🚧 provide/extract
-    - animation names and lengths
-    - contact points
+  - ✅ script `npc-json` gunzips file.sifz and converts xml to json 
+  - ✅ provide/extract animation names and lengths
+  - 🚧 provide/extract aabbs (?)
+  - provide/extract contact points
+  - output npc/first-anim.json
 
 - initial flicker in World due to .lit.png loaded before darkened png?
 
