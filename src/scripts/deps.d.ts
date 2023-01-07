@@ -6,5 +6,3 @@
 /// <reference path="../projects/world/npc-types.d.ts"/>
 
 /// <reference path="../types/triangle-wasm/index.d.ts"/>
-
-/// <reference path="./server-types.d.ts"/>
