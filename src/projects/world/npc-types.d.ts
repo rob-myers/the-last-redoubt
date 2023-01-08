@@ -20,7 +20,6 @@ declare namespace NPC {
     radius: number;
     defaultInteractRadius: number;
     speed: number;
-    segs: Geom.Seg[];
     /** @emotion/css */
     css: string;
   }
@@ -41,7 +40,6 @@ declare namespace NPC {
     };
     mounted: boolean;
     anim: NPCAnimData;
-    segs: (Geom.Seg & { transformStyle: string; })[];
 
     cancel(): Promise<void>;
     clearWayMetas(): void;

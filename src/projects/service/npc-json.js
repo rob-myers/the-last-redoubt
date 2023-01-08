@@ -23,11 +23,6 @@ export const npcJson = {
       defaultInteractRadius: radius * 3,
       speed: 70,
       /** npc scale is 0.19, npc radius ~ 15, and (1/0.19) * 15 ~ 75 */
-      segs: [
-        { src: { x: 75 - 10, y: -0.5 * 75 }, dst: { x: 75 - 10, y: 0.5 * 75 } },
-        { src: { x: 0, y: 75 }, dst: { x: 75 * Math.cos(30 * Math.PI/180), y: 75 - 75 * Math.sin(30 * Math.PI/180) } },
-        { src: { x: 0, y: -75 }, dst: { x: 75 * Math.cos(30 * Math.PI/180), y: -75 + 75 * Math.sin(30 * Math.PI/180) } },
-      ],
       css: computeSpritesheetCss(parsed, offsetRadians, scale),
     };
 

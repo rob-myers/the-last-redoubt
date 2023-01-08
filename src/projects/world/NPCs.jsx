@@ -460,7 +460,6 @@ export default function NPCs(props) {
             position: e.point,
             angle: e.angle,
             speed: npcJson["first-npc"].speed,
-            segs: npcJson["first-npc"].segs.map(deepClone),
           },
         });
       update();

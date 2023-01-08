@@ -65,7 +65,6 @@ export default function NPC({ api, def, disabled }) {
  * @property {Geom.VectJson} position
  * @property {number} speed
  * @property {number} angle
- * @property {Geom.Seg[]} segs
  */
 
 const rootCss = css`
