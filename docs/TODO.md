@@ -8,8 +8,12 @@
     - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
   - ✅ script `npc-json` gunzips file.sifz and converts xml to json 
   - ✅ provide/extract animation names and lengths
-  - 🚧 provide/extract aabbs (?)
-  - provide/extract contact points
+  - ✅ provide/extract aabbs (?)
+    - ❌ try manually specifying rectangles (no need)
+    - can specify manually
+  - ✅ provide/extract contact points
+    - need `Canvas > Properties > Image Area` i.e. view-box
+      > original magnitude was `3.245189`
   - output npc/first-anim.json
 
 - initial flicker in World due to .lit.png loaded before darkened png?
