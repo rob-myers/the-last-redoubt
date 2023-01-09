@@ -115,6 +115,7 @@ async function main() {
         : totalFrameCount - parseInt(time)
       ;
       const startFrame = parseInt(time) + 1;
+      /** 1-based frames */
       const frames = [...Array(frameCount)].map((_, i) => startFrame + i);
 
       const contacts = /** @type {{ left: Vect | undefined; right: Vect | undefined; }[]} */ ([]);
@@ -160,7 +161,7 @@ async function main() {
           deltas,
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
       };
-  });
+    });
 
     /** @type {NPC.ParsedNpc} */
     const npcJson = {
@@ -179,24 +180,37 @@ async function main() {
      */
     // synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o first-anim--walk.png
 
-    // 🚧 per animation
-    const proc = childProcess.spawn('synfig', [
-      sifzFilepath,
-      '-t', 'png-spritesheet',
-      '-w', '256', // 🚧 hard-coded?
-      '-h', '256',
-      '-q', '1',
-      '-a', '3',
-      '--begin-time', '0f', // 🚧
-      '--end-time', '3f', // 🚧
-      '-o', path.resolve(outputFilesDir, `${sifzFolder}--${'anim-name-here'}.png`),
-    ], { cwd: repoRootDir });
-    // const proc = childProcess.spawn('synfig', ['--help']);
-    proc.stdout.on('data', (data) => console.log(data.toString()));
+    for (const [i, { _: animName, $: { time } }] of keyframe.entries()) {
+      
+      const frameCount = keyframe[i + 1]
+        ? parseInt(keyframe[i + 1].$.time) - parseInt(time)
+        : totalFrameCount - parseInt(time)
+      ;
+      /** 0-based frame */
+      const startFrame = parseInt(time);
+      const endFrame = startFrame + (frameCount - 1);
+      
+      console.log('Rendering', animName, '...');
+      const proc = childProcess.spawn('synfig', [
+        sifzFilepath,
+        '-t', 'png-spritesheet',
+        '-w', '256', // 🚧 hard-coded?
+        '-h', '256',
+        '-q', '1',
+        '-a', '3',
+        '--begin-time', `${startFrame}f`, // 🚧
+        '--end-time', `${endFrame}f`, // 🚧
+        '-o', path.resolve(outputFilesDir, `${sifzFolder}--${animName}.png`),
+      ], { cwd: repoRootDir });
+      // const proc = childProcess.spawn('synfig', ['--help']);
+      proc.stdout.on('data', (data) => console.log(data.toString()));
 
-    await /** @type {Promise<void>} */ (
-      new Promise(resolve => proc.on('exit', () => resolve()))
-    );
+      // 🚧 remove?
+      await /** @type {Promise<void>} */ (
+        new Promise(resolve => proc.on('exit', () => resolve()))
+      );
+
+    }
 }
 
 main();
