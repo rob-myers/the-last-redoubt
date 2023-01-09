@@ -42,19 +42,19 @@ export const defaultNpcInteractRadius = 50;
 function computeSpritesheetCss(parsed, offsetRadians, scale) {
   return css`
 
-  .body {
-    transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
-  }
-  
-${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
-  &.${animName} .body {
-    width: ${animMeta.aabb.width}px;
-    height: ${animMeta.aabb.height}px;
-    left: ${-animMeta.aabb.width * 0.5}px;
-    top: ${-animMeta.aabb.height * 0.5}px;
-    background: url('/assets/npc/${parsed.npcName}--${animName}.png');
-  }
-`).join('\n\n')}
+    .body {
+      transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
+    }
+    
+    ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
+      &.${animName} .body {
+        width: ${animMeta.aabb.width}px;
+        height: ${animMeta.aabb.height}px;
+        left: ${-animMeta.aabb.width * 0.5}px;
+        top: ${-animMeta.aabb.height * 0.5}px;
+        background: url('/assets/npc/${parsed.npcName}--${animName}.png');
+      }
+    `).join('\n\n')}
 
 `;
 }

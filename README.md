@@ -19,6 +19,13 @@ npx http-server
 - [TODOs](/docs/TODO.md).
 - [General dev info](/docs/DEV-INFO.md).
 
+## Optional Dependencies
+
+```sh
+# Synfig CLI https://www.synfig.org/
+brew install synfig
+```
+
 ## Gotchas
 
 - `yarn` fails for node-canvas on Apple M1

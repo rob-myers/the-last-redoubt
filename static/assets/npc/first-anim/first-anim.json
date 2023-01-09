@@ -39,6 +39,14 @@
       "contacts": [{}],
       "deltas": [0, 0],
       "totalDist": 0
+    },
+    "sit": {
+      "animName": "sit",
+      "frameCount": 1,
+      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+      "contacts": [{}],
+      "deltas": [0, 0],
+      "totalDist": 0
     }
   },
   "zoom": 2

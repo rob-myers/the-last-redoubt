@@ -14,7 +14,11 @@
   - ✅ provide/extract contact points
     - need `Canvas > Properties > Image Area` i.e. view-box
       > original magnitude was `3.245189`
-  - output npc/first-anim.json
+  - ✅ output npc/first-anim.json
+  - 🚧 `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
+  - 🚧 add `first-anim` to service/npc-json (incremental)
+    - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o first-anim--walk.png`
+  - replace old anim approach
 
 - initial flicker in World due to .lit.png loaded before darkened png?
 
@@ -44,7 +48,7 @@
         - https://wiki.synfig.org/Doc:Synfig_CLI_Syntax
         - `synfig first-anim.sifz -t png-spritesheet -o my-test.png`
       - render a frame range (first 3 frames)
-        - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --fps 1 --begin-time 0 --end-time 2 -o my-test.png`
+        - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o my-test.png`
     - add a sitting frame
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
