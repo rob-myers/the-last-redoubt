@@ -15,12 +15,13 @@
     - need `Canvas > Properties > Image Area` i.e. view-box
       > original magnitude was `3.245189`
   - ✅ output npc/first-anim.json
-  - 🚧 `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
+  - ✅ `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
   - 🚧 add `first-anim` to service/npc-json (incremental)
     - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o first-anim--walk.png`
   - replace old anim approach
 
 - initial flicker in World due to .lit.png loaded before darkened png?
+- watch synfig files and re-render?
 
 - 🚧 chrome (clip-path) flicker on fast zoom?
   - ✅ @desktop removing CssPanZoom grid fixed it?
@@ -37,18 +38,23 @@
     - ✅ make first two frames
     - ✅ review and refine 1st 3 frames
     - 4th ✅ 5th ✅ 6th ✅
-    - refine ✅
+    - ✅ refine
     - 7th ✅ 8th ✅ 9th ✅ 10th ✅
-    - refine
-    - render frames using CLI
+    - ✅ render frames using CLI
       - ❌ try adding {...}/Resources/bin to PATH
       - ✅ try `brew install synfig`
         - `synfig --help` worked
       - ✅ try rendering via CLI
         - https://wiki.synfig.org/Doc:Synfig_CLI_Syntax
         - `synfig first-anim.sifz -t png-spritesheet -o my-test.png`
-      - render a frame range (first 3 frames)
+      - ✅ render a frame range (first 3 frames)
         - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o my-test.png`
+    - refine
+      - ✅ bevel layer
+      - ears ✅ face
+      - thumbs
+      - foot shine
+    - ✅ drop shadow
     - add a sitting frame
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
