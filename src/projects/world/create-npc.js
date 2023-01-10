@@ -1,7 +1,7 @@
 import { Poly, Rect, Vect } from '../geom';
 import { testNever } from '../service/generic';
 import { cancellableAnimDelayMs, cssName } from '../service/const';
-import { getNumericCssVar, lineSegToCssTransform } from '../service/dom';
+import { getNumericCssVar, isAnimAttached, lineSegToCssTransform } from '../service/dom';
 import { npcJson } from '../service/npc-json';
 
 /**
@@ -74,7 +74,7 @@ export default function createNpc(
       this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
     },
     everAnimated() {
-      return this.el.root?.getAnimations().includes(this.anim.translate);
+      return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
     async followNavPath(path, opts) {
       this.anim.path = path.map(Vect.from);

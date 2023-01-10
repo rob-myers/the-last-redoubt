@@ -1,5 +1,6 @@
 /**
  * Based on @panzoom/panzoom with substantial changes
+ * https://www.npmjs.com/package/@panzoom/panzoom
  */
 import React from "react";
 import { css, cx } from "@emotion/css";
@@ -8,6 +9,7 @@ import useMeasure from "react-use-measure";
 import { Vect } from "../geom";
 import { keys, testNever } from "../service/generic";
 import { cancellableAnimDelayMs } from "../service/const";
+import { isAnimAttached } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 
 /** @param {React.PropsWithChildren<Props>} props */
@@ -138,21 +140,30 @@ export default function CssPanZoom(props) {
           return; // We are (or were) animating iff state.anims[0] non-null
         }
         switch (type) {
-          case 'cancel':
-            state.syncStyles(); // Remember current translate/scale
-            state.anims.forEach(anim => anim?.cancel());
-            state.anims = [null, null];
+          case 'cancel': {
+            const [trAnim, scAnim] = state.anims;
+            const trNeedsCancel = trAnim && isAnimAttached(trAnim, state.translateRoot);
+            const scNeedsCancel = scAnim && isAnimAttached(scAnim, state.scaleRoot);
+            if (trNeedsCancel || scNeedsCancel) {
+              state.syncStyles(); // Remember current translate/scale
+              trNeedsCancel && trAnim.cancel();
+              scNeedsCancel && scAnim.cancel();
+              state.anims = [null, null];
+            }
             break;
+          }
           case 'smooth-cancel': {
-            // 'cancel' was Jerky in Safari on collide with door
             const trAnim = this.anims[0];
-            if (trAnim) {
+            if (trAnim && isAnimAttached(trAnim, state.translateRoot)) {
+              // 'cancel' was Jerky in Safari on collide with door,
+              // so we wait for pause before cancelling
               if (trAnim.playState === 'running') {
                 await /** @type {Promise<void>} */ (new Promise(resolve => {
                   trAnim.addEventListener('pause', () => resolve());
                   trAnim.pause();
                 }));
               }
+
               state.syncStyles();
               trAnim.cancel();
               state.anims[0] = null;

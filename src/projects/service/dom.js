@@ -271,27 +271,6 @@ export function setStyle(ctxt, fillStyle, strokeStyle, lineWidth) {
 //#region unsorted
 
 /**
- * @param {string} src
- * @returns {Promise<HTMLImageElement>}
- */
-export function loadImage(src) {
-	return new Promise((resolve, _reject)=> {
-		const img = new Image;
-		img.onload = () => resolve(img);
-		img.src = src;
-	});
-}
-
-/**
- * _TODO_ properly.
- * @param {MouseEvent | WheelEvent} e
- */
-export function getRelativePos(e) {
-	const { left, top } = (/** @type {HTMLElement} */ (e.currentTarget)).getBoundingClientRect();
-	return new Vect(e.clientX - left, e.clientY - top);
-}
-
-/**
  * https://stackoverflow.com/a/4819886/2917822
  * If Chrome devtool initially open as mobile device,
  * `'ontouchstart' in window` continues to be true if switch to desktop.
@@ -303,6 +282,35 @@ export function canTouchDevice() {
     || navigator.maxTouchPoints > 0
     || /** @type {*} */ (navigator).msMaxTouchPoints > 0
   ));
+}
+
+/**
+ * TODO properly?
+ * @param {MouseEvent | WheelEvent} e
+ */
+export function getRelativePos(e) {
+	const { left, top } = (/** @type {HTMLElement} */ (e.currentTarget)).getBoundingClientRect();
+	return new Vect(e.clientX - left, e.clientY - top);
+}
+
+/**
+ * @param {Animation} anim 
+ * @param {HTMLElement} el 
+ */
+export function isAnimAttached(anim, el) {
+	return el.getAnimations().includes(anim);
+}
+
+/**
+ * @param {string} src
+ * @returns {Promise<HTMLImageElement>}
+ */
+export function loadImage(src) {
+	return new Promise((resolve, _reject)=> {
+		const img = new Image;
+		img.onload = () => resolve(img);
+		img.src = src;
+	});
 }
 
 //#endregion
