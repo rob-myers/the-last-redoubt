@@ -141,11 +141,12 @@ export default function CssPanZoom(props) {
         }
         switch (type) {
           case 'cancel': {
+            state.syncStyles(); // Remember current translate/scale
             const [trAnim, scAnim] = state.anims;
             const trNeedsCancel = trAnim && isAnimAttached(trAnim, state.translateRoot);
             const scNeedsCancel = scAnim && isAnimAttached(scAnim, state.scaleRoot);
+
             if (trNeedsCancel || scNeedsCancel) {
-              state.syncStyles(); // Remember current translate/scale
               trNeedsCancel && trAnim.cancel();
               scNeedsCancel && scAnim.cancel();
               state.anims = [null, null];
@@ -153,19 +154,18 @@ export default function CssPanZoom(props) {
             break;
           }
           case 'smooth-cancel': {
-            const trAnim = this.anims[0];
-            if (trAnim && isAnimAttached(trAnim, state.translateRoot)) {
-              // 'cancel' was Jerky in Safari on collide with door,
-              // so we wait for pause before cancelling
+            const [trAnim] = this.anims;
+            if (trAnim) {
               if (trAnim.playState === 'running') {
+                // 'cancel' was Jerky in Safari on collide with door,
+                // so we wait for pause before cancelling
                 await /** @type {Promise<void>} */ (new Promise(resolve => {
                   trAnim.addEventListener('pause', () => resolve());
                   trAnim.pause();
                 }));
               }
-
               state.syncStyles();
-              trAnim.cancel();
+              isAnimAttached(trAnim, state.translateRoot) && trAnim.cancel();
               state.anims[0] = null;
             }
             break;
