@@ -73,7 +73,8 @@ const rootCss = css`
   
   .body {
     position: absolute;
-    filter: grayscale(100%) brightness(140%);
+    /* filter: grayscale(100%) brightness(140%); */
+    /* filter: grayscale(100%); */
     /** Animate turning */
     transition: transform 1s ease;
   }

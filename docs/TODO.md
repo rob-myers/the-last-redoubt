@@ -16,8 +16,9 @@
       > original magnitude was `3.245189`
   - ✅ output npc/first-anim.json
   - ✅ `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
-  - 🚧 add `first-anim` to service/npc-json (incremental)
-    - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o first-anim--walk.png`
+  - ✅ add `first-anim` to service/npc-json (incremental)
+  - ✅ attach `first-anim` to World
+  - refine
   - replace old anim approach
 
 - initial flicker in World due to .lit.png loaded before darkened png?
@@ -33,7 +34,7 @@
   - ✅ Download and Install
   - ✅ Watch a tutorial
     > https://www.youtube.com/watch?v=5B_Aok26LKc&ab_channel=TurtleArmyJess
-  - 🚧 Start remaking walk cycle (first-npc.svg)
+  - ✅ Remake walk cycle (first-npc.svg)
     - ✅ cut guard1_walk using https://ezgif.com/sprite-cutter
     - ✅ make first two frames
     - ✅ review and refine 1st 3 frames
@@ -55,7 +56,7 @@
       - ❌ thumbs
       - ❌ foot shine
     - ✅ drop shadow
-    - add a sitting frame
+  - 🚧 add a sitting frame
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode

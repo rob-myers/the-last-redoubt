@@ -24,7 +24,7 @@ export default function createNpc(
     },
     mounted: false,
     anim: {
-      css: npcJson['first-npc'].css,
+      css: npcJson['first-anim'].css,
       path: [],
       aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0, index: 0, segBounds: new Rect },
       spriteSheet: 'idle',
@@ -485,10 +485,10 @@ const navMetaOffsets = {
   'pre-collide': -0.02, // To ensure triggered
 
   /**
-   * TODO compute collision time using `predictNpcSegCollision`
+   * 🚧 should compute collision time using `predictNpcSegCollision`
    */
-  "pre-exit-room": -(npcJson['first-npc'].radius + 10), // TODO better way
-  "pre-near-door": -(npcJson['first-npc'].radius + 10), // TODO better way
+  "pre-exit-room": -(npcJson['first-anim'].radius + 10), // TODO better way
+  "pre-near-door": -(npcJson['first-anim'].radius + 10), // TODO better way
 
   "start-seg": 0,
 };

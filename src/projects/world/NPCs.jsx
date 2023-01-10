@@ -456,10 +456,10 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
-            npcJsonKey: 'first-npc', // 🚧 remove hard-coding
+            npcJsonKey: 'first-anim', // 🚧 remove hard-coding
             position: e.point,
             angle: e.angle,
-            speed: npcJson["first-npc"].speed,
+            speed: npcJson["first-anim"].speed, // 🚧
           },
         });
       update();
@@ -627,7 +627,7 @@ export default function NPCs(props) {
         api={api}
       />
 
-      {/** Prioritise walk animations, to avoid load on start walk */}
+      {/** Prioritise walk animations, to avoid load on start walk 🚧 */}
       {Object.keys(npcJson).map((key) => (
         <img
           key={key}
