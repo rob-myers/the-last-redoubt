@@ -37,9 +37,8 @@ if (!sifzFolder || !fs.existsSync(sifzFilepath)) {
 }
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
-const outputFilesDir = path.resolve(staticAssetsDir, 'npc', sifzFolder);
-const repoRootDir = path.resolve(__dirname, '../..');
-fs.mkdirSync(outputFilesDir, { recursive: true }); // Ensure output dir
+const outputDir = path.resolve(staticAssetsDir, 'npc', sifzFolder);
+fs.mkdirSync(outputDir, { recursive: true }); // Ensure output dir
 
 const baseAabb = new Rect(0, 0, 128, 128);
 const zoom = 2;
@@ -170,16 +169,17 @@ async function main() {
         zoom,
     };
 
-    writeAsJson(npcJson, path.resolve(outputFilesDir, `${sifzFolder}.json`));
-
+    writeAsJson(npcJson, path.resolve(outputDir, `${sifzFolder}.json`));
     // ⛔️ debug only
     // writeAsJson(synfigJson, path.resolve(npcJsonOutputDir, `${sifzFolder}.orig.json`));
 
     /**
-     * Render spritesheet(s) using Synfig CLI (`brew install synfig`)
+     * Render spritesheet(s) using Synfig CLI
+     * - install `brew install synfig`
+     * - example `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 3 -a 1 --begin-time 0f --end-time 2f -o first-anim--walk.png`
      */
-    // synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o first-anim--walk.png
-
+    /** @type {{ key: string; proc: childProcess.ChildProcessWithoutNullStreams}[]} */
+    const procs = [];
     for (const [i, { _: animName, $: { time } }] of keyframe.entries()) {
       
       const frameCount = keyframe[i + 1]
@@ -190,27 +190,30 @@ async function main() {
       const startFrame = parseInt(time);
       const endFrame = startFrame + (frameCount - 1);
       
-      console.log('Rendering', animName, '...');
-      const proc = childProcess.spawn('synfig', [
-        sifzFilepath,
-        '-t', 'png-spritesheet',
-        '-w', '256', // 🚧 hard-coded?
-        '-h', '256',
-        '-q', '1',
-        '-a', '3',
-        '--begin-time', `${startFrame}f`, // 🚧
-        '--end-time', `${endFrame}f`, // 🚧
-        '-o', path.resolve(outputFilesDir, `${sifzFolder}--${animName}.png`),
-      ], { cwd: repoRootDir });
-      // const proc = childProcess.spawn('synfig', ['--help']);
-      proc.stdout.on('data', (data) => console.log(data.toString()));
+      console.info(`Rendering ${animName}...`);
+      procs.push({
+        key: animName,
+        proc: childProcess.spawn('synfig', [
+          sifzFilepath,
+          '-t', 'png-spritesheet',
+          '-w', '256', // 🚧 hard-coded?
+          '-h', '256',
+          '-q', '3',
+          '-a', '1',
+          '--begin-time', `${startFrame}f`,
+          '--end-time', `${endFrame}f`,
+          '-o', path.resolve(outputDir, `${sifzFolder}--${animName}.png`),
+        ]),
+      });
+    }
 
-      // 🚧 remove?
-      await /** @type {Promise<void>} */ (
+    // Render animations in parallel
+    await Promise.all(procs.map(({ key, proc }) => {
+      proc.stdout.on('data', (data) => console.log(`${key}: ${data.toString().replace(/\n/g, '; ')}`));
+      return /** @type {Promise<void>} */ (
         new Promise(resolve => proc.on('exit', () => resolve()))
       );
-
-    }
+    }));
 }
 
 main();
