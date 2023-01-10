@@ -51,9 +51,9 @@
         - `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 1 -a 3 --begin-time 0f --end-time 2f -o my-test.png`
     - refine
       - ✅ bevel layer
-      - ears ✅ face
-      - thumbs
-      - foot shine
+      - ears ✅ face ❌ (use bevel)
+      - ❌ thumbs
+      - ❌ foot shine
     - ✅ drop shadow
     - add a sitting frame
 
