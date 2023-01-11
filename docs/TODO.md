@@ -57,6 +57,10 @@
       - ❌ foot shine
     - ✅ drop shadow
   - 🚧 add a sitting frame
+  - 🚧 animate idle via bones
+    - can move keyframes https://forums.synfig.org/t/moving-keyframes/2184
+    - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
+    - breathe in/out
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode
@@ -333,6 +337,20 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Mobile jerky camera
+  - ℹ️ https://developer.mozilla.org/en-US/docs/Web/API/Animation/cancel#exceptions
+  - ✅ compare to `DOMMatrix(getComputedStyle(el).transform)`
+    - translate seems 3 dp (-256.814, -288.672)
+    - scale seems 5 dp
+    - ⛔️ scale slightly wrong:
+      - ours `1.708540439605713`
+      - dommatrix `1.71543`
+    - don't understand so currently use dommatrix
+
+  - ✅ on turn player (resolves + onpointerdown)
+  - ✅ on click door
+  - ✅ on zoom in to player
 
 - ✅ bake lighting into PNGs with extension .lit.png
   - ✅ 301 ✅ 302 ✅ 303 ✅ 101 ✅ 102

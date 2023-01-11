@@ -136,16 +136,15 @@ export default function CssPanZoom(props) {
       },
 
       async animationAction(type) {
-        if (!state.anims[0]) {
-          return; // We are (or were) animating iff state.anims[0] non-null
+        const [trAnim, scAnim] = state.anims;
+        if (!trAnim && !scAnim) {
+          return;
         }
         switch (type) {
           case 'cancel': {
             state.syncStyles(); // Remember current translate/scale
-            const [trAnim, scAnim] = state.anims;
             const trNeedsCancel = trAnim && isAnimAttached(trAnim, state.translateRoot);
             const scNeedsCancel = scAnim && isAnimAttached(scAnim, state.scaleRoot);
-
             if (trNeedsCancel || scNeedsCancel) {
               trNeedsCancel && trAnim.cancel();
               scNeedsCancel && scAnim.cancel();
@@ -154,7 +153,6 @@ export default function CssPanZoom(props) {
             break;
           }
           case 'smooth-cancel': {
-            const [trAnim] = this.anims;
             if (trAnim) {
               if (trAnim.playState === 'running') {
                 // 'cancel' was Jerky in Safari on collide with door,
@@ -253,8 +251,12 @@ export default function CssPanZoom(props) {
         return {
           x: (trBounds.x + state.parent.scrollLeft) - bounds.x,
           y: (trBounds.y + state.parent.scrollTop) - bounds.y,
-          // Works because state.scaleRoot.style.width = '1px'
-          scale: state.scaleRoot.getBoundingClientRect().width,
+          /**
+           * This should work because state.scaleRoot.style.width is '1px'.
+           * But it is slightly wrong on mobile (Android Chrome) i.e. ~0.0068.
+           */
+          // scale: state.scaleRoot.getBoundingClientRect().width, // 🚧
+          scale: new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a,
         }
       },
       // Handles `state.parent.scroll{Left,Top}`
