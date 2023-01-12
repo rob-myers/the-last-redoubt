@@ -371,7 +371,7 @@ export default function createNpc(
           this.anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           this.anim.durationMs = opts.duration;
     
-          // Animate spritesheet
+          // Animate spritesheet, assuming `walk` anim exists
           const { animLookup } = npcJson[this.jsonKey].parsed;
           const spriteMs = this.getSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?

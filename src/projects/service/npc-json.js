@@ -3,6 +3,10 @@ import { cssName } from './const';
 
 import firstAnimJson from '../../../static/assets/npc/first-anim/first-anim.json';
 
+/**
+ * 🚧 automatically construct this lookup as JSON via script `npc-meta`
+ */
+
 /** @type {Record<NPC.NpcJsonKey, NPC.NpcJson>} */
 export const npcJson = {
 
