@@ -2,7 +2,6 @@
 declare namespace NPC {
 
   type NpcJsonKey = (
-    | 'first-npc' // 🚧 remove
     | 'first-anim'
   );
 

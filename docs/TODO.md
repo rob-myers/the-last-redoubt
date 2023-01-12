@@ -18,8 +18,8 @@
   - ✅ `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
   - ✅ add `first-anim` to service/npc-json (incremental)
   - ✅ attach `first-anim` to World
-  - refine
-  - replace old anim approach
+  - ✅ remove first-npc
+  - 🚧 remove npc-json?
 
 - initial flicker in World due to .lit.png loaded before darkened png?
 - watch synfig files and re-render?
