@@ -111,6 +111,8 @@ export default function FOV(props) {
             top: gm.pngRect.y,
             transform: gm.transformStyle,
             transformOrigin: gm.transformOrigin,
+            // Avoid initial flicker on <Geomorphs> load first
+            background: 'white',
           }}
         />
       )}
