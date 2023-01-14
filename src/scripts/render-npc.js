@@ -42,6 +42,8 @@ fs.mkdirSync(outputDir, { recursive: true }); // Ensure output dir
 
 const zoom = 2;
 
+main();
+
 async function main() {
     // Obtain XML by decompressing Synfig .sifz file
     const synfigXml = zlib.unzipSync(fs.readFileSync(sifzFilepath)).toString();
@@ -72,12 +74,17 @@ async function main() {
     const aabbLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'Aabb');
     if (!aabbLayer) { error(`Expected layer: Meta > Aaab`); process.exit(1); }
     const { topLeft, bottomRight } = extractRectLayer(aabbLayer, viewAabb, renderAabb, fps)[0];
-    const aabbRect = Rect.fromPoints(topLeft.point, bottomRight.point);
+    const aabbRectZoomed = Rect.fromPoints(topLeft.point, bottomRight.point);
+    
+    // Meta > BoundsCircle
+    const circleLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'BoundsCircle');
+    if (!circleLayer) { error(`Expected layer: Meta > BoundsCircle`); process.exit(1); }
+    const { real: npcRadiusZoomed } = assertDefined(extractCircleLayer(circleLayer, viewAabb, renderAabb, fps)[0].radius);
 
     // Meta > ContactPoints
     const contactsLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'ContactPoints');
     if (!contactsLayer) {
-      warn(`${sifzInputDir}: ContactPoints layer not found )`);
+      warn(`${sifzInputDir}: ContactPoints layer not found`);
     }
     //#endregion
 
@@ -151,7 +158,8 @@ async function main() {
       const npcJson = {
         npcName,
         animLookup,
-        aabb: aabbRect.json, // Already zoomed
+        aabb: aabbRectZoomed.json, // Already zoomed
+        radius: npcRadiusZoomed,
         zoom,
     };
 
@@ -202,8 +210,6 @@ async function main() {
     }));
 }
 
-main();
-
 /**
  * @typedef ParsedInnerSynfig
  * @property {SynfigTopDollar} $
@@ -249,29 +255,46 @@ main();
  * 🚧 huge number of params?
  * @typedef SynfigParam
  * @property {{ name: string; }} $
- * @property {{ $: { value: string; } }[]} [real]
+ * @property {SynfigReal[]} [real]
  * @property {{ $: { value: string; static?: string; } }[]} [integer]
  * @property {Pick<ParsedInnerSynfig, 'layer'>[]} [canvas]
- * @property {SynfigAnimParam[]} [animated]
+ * @property {SynfigAnimParamVector[] | SynfigAnimParamReal[]} [animated]
  * @property {SynfigVector[]} [vector]
  */
 
 /**
- * @typedef SynfigAnimParam
+ * @typedef SynfigAnimParamVector
  * @property {{ type: 'vector' }} $
- * @property {SynfigWayPoint[]} waypoint
+ * @property {SynfigWayPointVector[]} waypoint
  */
 
 /**
- * @typedef SynfigWayPoint
+ * @typedef SynfigAnimParamReal
+ * @property {{ type: 'real' }} $
+ * @property {SynfigWayPointReal[]} waypoint
+ */
+
+/**
+ * @typedef SynfigWayPointVector
  * @property {{ time: string; before: string; after: string }} $
  * @property {({ $: { guid: string; }; } & SynfigVector)[]} vector
+ */
+
+/**
+ * @typedef SynfigWayPointReal
+ * @property {{ time: string; before: string; after: string }} $
+ * @property {({ $: { guid: string; }; } & SynfigReal)[]} real
  */
 
 /**
  * @typedef SynfigVector
  * @property {string[]} x
  * @property {string[]} y
+ */
+
+/**
+ * @typedef SynfigReal
+ * @property {{ value: string; }} $
  */
 
 
@@ -287,8 +310,8 @@ main();
 function extractRectLayer(rectLayer, viewAabb, renderAabb, fps) {
   const animated = rectLayer.param.find(x => x.$.name === 'point1')?.animated;
   if (animated) {
-    const topLefts = rectLayer.param.find(x => x.$.name === 'point1')?.animated?.[0].waypoint?.map(x => wayPointMap(x, viewAabb, renderAabb, fps))??[];
-    const bottomRights = rectLayer.param.find(x => x.$.name === 'point2')?.animated?.[0].waypoint?.map(x => wayPointMap(x, viewAabb, renderAabb, fps))??[];
+    const topLefts = rectLayer.param.find(x => x.$.name === 'point1')?.animated?.[0].waypoint?.map(x => wayPointVectorMap(/** @type {SynfigWayPointVector} */ (x), viewAabb, renderAabb, fps))??[];
+    const bottomRights = rectLayer.param.find(x => x.$.name === 'point2')?.animated?.[0].waypoint?.map(x => wayPointVectorMap(/** @type {SynfigWayPointVector} */ (x), viewAabb, renderAabb, fps))??[];
     return topLefts.map((topLeft, i) => ({ topLeft, bottomRight: bottomRights[i] }));
   } else {
     const tl = vectorMap(assertDefined(rectLayer.param.find(x => x.$.name === 'point1')?.vector?.[0]), viewAabb, renderAabb);
@@ -301,13 +324,59 @@ function extractRectLayer(rectLayer, viewAabb, renderAabb, fps) {
 }
 
 /**
- * 
- * @param {SynfigWayPoint} wp 
+ * We also handle the case where it is not animated, returning a singleton.
+ * @param {SynfigLayer} circleLayer
+ * @param {Geom.Rect} viewAabb
+ * @param {Geom.Rect} renderAabb
+ * @param {number} fps
+*/
+function extractCircleLayer(circleLayer, viewAabb, renderAabb, fps) {
+  // Only one of radius/origin might be animated
+  const animatedOrigin = circleLayer.param.find(x => x.$.name === 'origin')?.animated;
+  const origins = animatedOrigin
+    ? circleLayer.param.find(x => x.$.name === 'origin')?.animated?.[0].waypoint?.map(x => wayPointVectorMap(/** @type {SynfigWayPointVector} */ (x), viewAabb, renderAabb, fps))??[]
+    : [{
+        frame: 1,
+        ...vectorMap(assertDefined(circleLayer.param.find(x => x.$.name === 'origin')?.vector?.[0]), viewAabb, renderAabb),
+      }];
+  
+  const animatedRadius = circleLayer.param.find(x => x.$.name === 'radius')?.animated;
+  const radii = animatedRadius
+    ? circleLayer.param.find(x => x.$.name === 'radius')?.animated?.[0].waypoint?.map(x => wayPointRealMap(/** @type {SynfigWayPointReal} */ (x), viewAabb, renderAabb, fps))??[]
+    : [{
+        frame: 1,
+        ...realMap(assertDefined(circleLayer.param.find(x => x.$.name === 'radius')?.real?.[0]), viewAabb, renderAabb),
+      }];
+
+  // Origin and radius may be animated independently i.e. not aligned
+  /**
+   * @typedef OutputItem
+   * @property {number} frame
+   * @property {typeof origins[*]} [origin]
+   * @property {typeof radii[*]} [radius]
+   */
+  const byFrame = /** @type {(typeof origins[0] | typeof radii[0])[]} */ ([]).concat(
+    origins, radii,
+  ).reduce(
+    (agg, item) => {
+      agg[item.frame] = {
+        ...agg[item.frame],
+        ...'point' in item ? { origin: item } : { radius: item },
+      };
+      return agg;
+    },
+    /** @type {Record<number, OutputItem>} */ ({})
+  );
+  return Object.keys(byFrame).map(Number).sort().map(x => byFrame[x]);
+}
+
+/**
+ * @param {SynfigWayPointVector} wp 
  * @param {Geom.Rect} viewAabb 
  * @param {Geom.Rect} renderAabb 
  * @param {number} fps 
  */
-function wayPointMap(wp, viewAabb, renderAabb, fps) {
+function wayPointVectorMap(wp, viewAabb, renderAabb, fps) {
   const { $: { time }, vector: [vector] } = wp;
   const { origPoint, point } = vectorMap(vector, viewAabb, renderAabb);
   return {
@@ -315,6 +384,23 @@ function wayPointMap(wp, viewAabb, renderAabb, fps) {
     frame: Math.round(parseFloat(time) * fps) + 1,
     origPoint,
     point,
+  };
+}
+
+/**
+ * @param {SynfigWayPointReal} wp 
+ * @param {Geom.Rect} viewAabb 
+ * @param {Geom.Rect} renderAabb 
+ * @param {number} fps 
+ */
+function wayPointRealMap(wp, viewAabb, renderAabb, fps) {
+  const { $: { time }, real: reals } = wp;
+  const { origReal, real } = realMap(reals[0], viewAabb, renderAabb);
+  return {
+    /** 1-based */
+    frame: Math.round(parseFloat(time) * fps) + 1,
+    origReal,
+    real,
   };
 }
 
@@ -329,6 +415,20 @@ function vectorMap(p, viewAabb, renderAabb) {
   return {
     origPoint,
     point: synfigCoordToRenderCoord(origPoint, viewAabb, renderAabb),
+  };
+}
+
+/**
+ * @param {SynfigReal} p 
+ * @param {Geom.Rect} viewAabb 
+ * @param {Geom.Rect} renderAabb 
+ */
+function realMap(p, viewAabb, renderAabb) {
+  const origReal = Number(p.$.value);
+  return {
+    origReal,
+    // Assume uniform scale i.e. could have using height
+    real: origReal * (renderAabb.width / viewAabb.width),
   };
 }
 

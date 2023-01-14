@@ -24,8 +24,9 @@
     - ✅ first-anim has Meta group
     - ✅ Meta has Aabb
     - ✅ aabb should be global, not per anim
-    - Meta has BoundsCircle
+    - ✅ Meta has BoundsCircle
     - script `npc-meta` creates `npcs.json` using only `static/assets/npc/*`
+  - rename `first-anim` -> `first-human-npc`
 
 
 - ✅ initial flicker in World due to .lit.png loaded before darkened png?

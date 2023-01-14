@@ -348,6 +348,7 @@ declare namespace NPC {
     animLookup: { [animName: string]: NpcAnimMeta };
     /** Axis aligned bounded box, already scaled by `zoom` */
     aabb: Geom.RectJson;
+    radius: number;
     /** How much the rendered PNGs have been scaled up. */
     zoom: number;
   }
