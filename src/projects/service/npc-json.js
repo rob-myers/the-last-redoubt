@@ -46,12 +46,12 @@ function computeSpritesheetCss(parsed, offsetRadians, scale) {
       transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
     }
     
-    ${Object.entries(parsed.animLookup).map(([animName, animMeta]) => `
+    ${Object.keys(parsed.animLookup).map((animName) => `
       &.${animName} .body {
-        width: ${animMeta.aabb.width}px;
-        height: ${animMeta.aabb.height}px;
-        left: ${-animMeta.aabb.width * 0.5}px;
-        top: ${-animMeta.aabb.height * 0.5}px;
+        width: ${parsed.aabb.width}px;
+        height: ${parsed.aabb.height}px;
+        left: ${-parsed.aabb.width * 0.5}px;
+        top: ${-parsed.aabb.height * 0.5}px;
         background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.png');
       }
     `).join('\n\n')}

@@ -19,7 +19,7 @@ import fs from 'fs';
 import zlib from 'zlib';
 import childProcess from 'child_process';
 import xml2js from 'xml2js';
-// import util from 'util';
+import util from 'util';
 
 import { writeAsJson } from '../projects/service/file';
 import { error, warn } from '../projects/service/log';
@@ -40,7 +40,6 @@ const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'npc', sifzFolder);
 fs.mkdirSync(outputDir, { recursive: true }); // Ensure output dir
 
-const baseAabb = new Rect(0, 0, 128, 128);
 const zoom = 2;
 
 async function main() {
@@ -60,45 +59,34 @@ async function main() {
     const viewTL = new Vect(viewBoxCoords[0], viewBoxCoords[1]); // top left
     const viewBR = new Vect(viewBoxCoords[2], viewBoxCoords[3]); // bottom right
     const viewAabb = new Rect(viewTL.x, viewTL.y, viewBR.x - viewTL.x, Math.abs(viewBR.y - viewTL.y));
-    const renderAabb = baseAabb.clone().scale(zoom);
+    const renderAabb = (
+      new Rect(0, 0, Number(topDollar.width), Number(topDollar.height))
+    ).scale(zoom);
 
-    const contactsLayer = layer.find(x => x.$.desc === 'ContactPoints');
+    //#region Meta group contains global data
+    const metaLayer = layer.find(x => x.$.desc === 'Meta');
+    if (!metaLayer) { error(`Expected top-level group: Meta`); process.exit(1); }
+    const metaLayerCanvas = assertDefined(metaLayer.param.find(x => x.$.name === 'canvas')?.canvas?.[0]);
+
+    // Meta > Aaab
+    const aabbLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'Aabb');
+    if (!aabbLayer) { error(`Expected layer: Meta > Aaab`); process.exit(1); }
+    const { topLeft, bottomRight } = extractRectLayer(aabbLayer, viewAabb, renderAabb, fps)[0];
+    const aabbRect = Rect.fromPoints(topLeft.point, bottomRight.point);
+
+    // Meta > ContactPoints
+    const contactsLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'ContactPoints');
     if (!contactsLayer) {
       warn(`${sifzInputDir}: ContactPoints layer not found )`);
     }
-
-    /** @param {Geom.VectJson} input */
-    function synfigCoordToRenderCoord(input) {
-      return {
-        x: ((input.x - viewAabb.x) / viewAabb.width) * renderAabb.width,
-        // Synfig y+ points upwards
-        y: ((viewAabb.y - input.y) / viewAabb.height) * renderAabb.height,
-      };
-    }
-    /** @param {SynfigWayPoint} wp */
-    function wayPointMap(wp) {
-      const { $: { time }, vector: [vector] } = wp;
-      const origPoint = new Vect(Number(vector.x[0]), Number(vector.y[0])); 
-      return {
-        /** 1-based */
-        frame: Math.round(parseFloat(time) * fps) + 1,
-        origPoint,
-        point: synfigCoordToRenderCoord(origPoint),
-      };
-    }
+    //#endregion
 
     /** @param {{ $: SynfigLayerType; param: SynfigParam[] }} contactsLayer */
     function computeLayerWays(contactsLayer) {
-
       const canvas = assertDefined(contactsLayer.param.find(x => x.$.name === 'canvas')?.canvas?.[0]);
-      const leftLayer = canvas.layer.find(x => x.$.desc === 'LeftContact');
-      const rightLayer = canvas.layer.find(x => x.$.desc === 'RightContact');
-  
-      // Synfig stores Rect layers as a seq of topLefts and a seq of botRights
-      return [leftLayer, rightLayer].map(layer => ({
-        topLeft: layer?.param.find(x => x.$.name === 'point1')?.animated?.[0].waypoint?.map(wayPointMap),
-        bottomRight: layer?.param.find(x => x.$.name === 'point2')?.animated?.[0].waypoint?.map(wayPointMap),
-      }));
+      const leftLayer = assertDefined(canvas.layer.find(x => x.$.desc === 'LeftContact'));
+      const rightLayer = assertDefined(canvas.layer.find(x => x.$.desc === 'RightContact'));
+      return [leftLayer, rightLayer].map(layer => extractRectLayer(layer, viewAabb, renderAabb, fps));
     }
     const layerWays = contactsLayer ? computeLayerWays(contactsLayer) : undefined;
 
@@ -123,15 +111,14 @@ async function main() {
       if (layerWays) {// Contact points
 
         const [lContacts, rContacts] = layerWays.map(layerWay => frames.map(frame => {
-          // 🚧 are we restricting to subframe range?
-          // Find meta with largest meta.frame ≤ frame 
-          const tl = layerWay.topLeft?.find((x, i, xs) => x.frame <= frame && (!xs[i + 1] || (xs[i + 1].frame > frame)));
-          const br = layerWay.bottomRight?.find((x, i, xs) => x.frame <= frame && (!xs[i + 1] || (xs[i + 1].frame > frame)));
-
-          // Empty rectangle understand as absence of point
-          return (tl && br && !Vect.from(tl.point).equals(br.point))
-            // Non-empty rectangle provides point via its center
-            ? Rect.fromPoints(tl.point, br.point).center
+          // Find meta with largest meta.frame s.t. meta.frame ≤ frame 
+          const found = layerWay.find((x, i, xs) =>
+            x.topLeft.frame <= frame && (!xs[i + 1] || (xs[i + 1].topLeft.frame > frame))
+          );
+          // ℹ️ Empty rectangle understood as absence of point
+          // ℹ️ Non-empty rectangle provides point via its center
+          return (found && !Vect.from(found.topLeft.point).equals(found.bottomRight.point))
+            ? Rect.fromPoints(found.topLeft.point, found.bottomRight.point).center
             : undefined;
         }));
 
@@ -154,24 +141,23 @@ async function main() {
       animLookup[animName] = {
           animName,
           frameCount,
-          aabb: renderAabb.json,
-
           contacts,
           deltas,
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
-      };
-    });
-
-    /** @type {NPC.ParsedNpc} */
-    const npcJson = {
+        };
+      });
+      
+      /** @type {NPC.ParsedNpc} */
+      const npcJson = {
         npcName,
         animLookup,
+        aabb: aabbRect.json, // Already zoomed
         zoom,
     };
 
     writeAsJson(npcJson, path.resolve(outputDir, `${sifzFolder}.json`));
     // ⛔️ debug only
-    // writeAsJson(synfigJson, path.resolve(npcJsonOutputDir, `${sifzFolder}.orig.json`));
+    writeAsJson(synfigJson, path.resolve(outputDir, `${sifzFolder}.orig.json`));
 
     /**
      * Render spritesheet(s) using Synfig CLI
@@ -224,7 +210,7 @@ main();
  * @property {string[]} name
  * @property {{ $: { name: string; content: string; } }[]} meta
  * @property {{ _: string; $: { time: string; active: string } }[]} keyframe
- * @property {{ $: SynfigLayerType; param: SynfigParam[] }[]} layer
+ * @property {SynfigLayer[]} layer
  */
 
 /**
@@ -253,6 +239,11 @@ main();
  * @property {string} version
  * @property {string} desc
  */
+/**
+ * @typedef SynfigLayer
+ * @property {SynfigLayerType} $ 
+ * @property {SynfigParam[]} param
+ */
 
 /**
  * 🚧 huge number of params?
@@ -262,6 +253,7 @@ main();
  * @property {{ $: { value: string; static?: string; } }[]} [integer]
  * @property {Pick<ParsedInnerSynfig, 'layer'>[]} [canvas]
  * @property {SynfigAnimParam[]} [animated]
+ * @property {SynfigVector[]} [vector]
  */
 
 /**
@@ -273,5 +265,82 @@ main();
 /**
  * @typedef SynfigWayPoint
  * @property {{ time: string; before: string; after: string }} $
- * @property {{ $: { guid: string; }; x: string[]; y: string[] }[]} vector
+ * @property {({ $: { guid: string; }; } & SynfigVector)[]} vector
  */
+
+/**
+ * @typedef SynfigVector
+ * @property {string[]} x
+ * @property {string[]} y
+ */
+
+
+
+/**
+ * Synfig stores Rect layers as a seq of topLefts and a seq of botRights.
+ * We also handle the case where it is not animated, returning a singleton.
+ * @param {SynfigLayer} rectLayer
+ * @param {Geom.Rect} viewAabb
+ * @param {Geom.Rect} renderAabb
+ * @param {number} fps
+ */
+function extractRectLayer(rectLayer, viewAabb, renderAabb, fps) {
+  const animated = rectLayer.param.find(x => x.$.name === 'point1')?.animated;
+  if (animated) {
+    const topLefts = rectLayer.param.find(x => x.$.name === 'point1')?.animated?.[0].waypoint?.map(x => wayPointMap(x, viewAabb, renderAabb, fps))??[];
+    const bottomRights = rectLayer.param.find(x => x.$.name === 'point2')?.animated?.[0].waypoint?.map(x => wayPointMap(x, viewAabb, renderAabb, fps))??[];
+    return topLefts.map((topLeft, i) => ({ topLeft, bottomRight: bottomRights[i] }));
+  } else {
+    const tl = vectorMap(assertDefined(rectLayer.param.find(x => x.$.name === 'point1')?.vector?.[0]), viewAabb, renderAabb);
+    const br = vectorMap(assertDefined(rectLayer.param.find(x => x.$.name === 'point2')?.vector?.[0]), viewAabb, renderAabb);
+    return [{
+      topLeft: { frame: 1, origPoint: tl.origPoint, point: tl.point },
+      bottomRight: { frame: 1, origPoint: br.origPoint, point: br.point },
+    }];
+  }
+}
+
+/**
+ * 
+ * @param {SynfigWayPoint} wp 
+ * @param {Geom.Rect} viewAabb 
+ * @param {Geom.Rect} renderAabb 
+ * @param {number} fps 
+ */
+function wayPointMap(wp, viewAabb, renderAabb, fps) {
+  const { $: { time }, vector: [vector] } = wp;
+  const { origPoint, point } = vectorMap(vector, viewAabb, renderAabb);
+  return {
+    /** 1-based */
+    frame: Math.round(parseFloat(time) * fps) + 1,
+    origPoint,
+    point,
+  };
+}
+
+/**
+ * 
+ * @param {SynfigVector} p 
+ * @param {Geom.Rect} viewAabb 
+ * @param {Geom.Rect} renderAabb 
+ */
+function vectorMap(p, viewAabb, renderAabb) {
+  const origPoint = new Vect(Number(p.x[0]), Number(p.y[0])); 
+  return {
+    origPoint,
+    point: synfigCoordToRenderCoord(origPoint, viewAabb, renderAabb),
+  };
+}
+
+/**
+ * @param {Geom.VectJson} input 
+ * @param {Geom.Rect} viewAabb 
+ * @param {Geom.Rect} renderAabb 
+ */
+function synfigCoordToRenderCoord(input, viewAabb, renderAabb) {
+  return {
+    x: ((input.x - viewAabb.x) / viewAabb.width) * renderAabb.width,
+    // Synfig y+ points upwards
+    y: ((viewAabb.y - input.y) / viewAabb.height) * renderAabb.height,
+  };
+}

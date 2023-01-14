@@ -4,7 +4,6 @@
     "walk": {
       "animName": "walk",
       "frameCount": 10,
-      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
       "contacts": [
         {"right": {"x": 106.26000037415385, "y": 155.95999849944616}},
         {"right": {"x": 72.52299851618463, "y": 152.57983515766153}},
@@ -35,7 +34,6 @@
     "idle": {
       "animName": "idle",
       "frameCount": 1,
-      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
       "contacts": [{}],
       "deltas": [0, 0],
       "totalDist": 0
@@ -43,11 +41,11 @@
     "sit": {
       "animName": "sit",
       "frameCount": 1,
-      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
       "contacts": [{}],
       "deltas": [0, 0],
       "totalDist": 0
     }
   },
+  "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
   "zoom": 2
 }

@@ -6,6 +6,7 @@
   - will replace `render-npc` script (first-npc.json)
   - ✅ export for web lottie
     - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
+    - but decided to use file directly
   - ✅ script `npc-json` gunzips file.sifz and converts xml to json 
   - ✅ provide/extract animation names and lengths
   - ✅ provide/extract aabbs (?)
@@ -19,9 +20,15 @@
   - ✅ add `first-anim` to service/npc-json (incremental)
   - ✅ attach `first-anim` to World
   - ✅ remove first-npc
-  - 🚧 remove npc-json?
+  - 🚧 remove npc-json
+    - ✅ first-anim has Meta group
+    - ✅ Meta has Aabb
+    - ✅ aabb should be global, not per anim
+    - Meta has BoundsCircle
+    - script `npc-meta` creates `npcs.json` using only `static/assets/npc/*`
 
-- initial flicker in World due to .lit.png loaded before darkened png?
+
+- ✅ initial flicker in World due to .lit.png loaded before darkened png?
 - watch synfig files and re-render?
 
 - 🚧 chrome (clip-path) flicker on fast zoom?

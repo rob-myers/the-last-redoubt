@@ -372,18 +372,18 @@ export default function createNpc(
           this.anim.durationMs = opts.duration;
     
           // Animate spritesheet, assuming `walk` anim exists
-          const { animLookup } = npcJson[this.jsonKey].parsed;
+          const { animLookup, aabb } = npcJson[this.jsonKey].parsed;
           const spriteMs = this.getSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           this.anim.sprites = this.el.body.animate(
               firstFootLeads ?
                 [
                   { offset: 0, backgroundPosition: '0px' },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * aabb.width}px` },
                 ] :
                 [// We assume an even number of frames
-                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
+                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * aabb.width}px` },
                 ] 
             ,
             {

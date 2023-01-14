@@ -346,6 +346,8 @@ declare namespace NPC {
   interface ParsedNpc {
     npcName: string;
     animLookup: { [animName: string]: NpcAnimMeta };
+    /** Axis aligned bounded box, already scaled by `zoom` */
+    aabb: Geom.RectJson;
     /** How much the rendered PNGs have been scaled up. */
     zoom: number;
   }
@@ -364,7 +366,6 @@ declare namespace NPC {
 
   interface NpcAnimMeta {
     animName: string;
-    aabb: Geom.RectJson;
     frameCount: number;
     /** Aligned to frames i.e. positions of feet contacts (if any) */
     contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];
