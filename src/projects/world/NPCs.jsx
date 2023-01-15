@@ -627,11 +627,11 @@ export default function NPCs(props) {
         api={api}
       />
 
-      {/** Prioritise walk animations, to avoid load on start walk 🚧 */}
-      {Object.keys(npcsMeta).map((key) => (
+      {/** Prioritise walk animations, to avoid load on start walk */}
+      {keys(npcsMeta).map((key) => (
         <img
           key={key}
-          src={`/assets/npc/${key}--${'walk'}.png`}
+          src={`/assets/npc/${key}/${key}--${'walk'}.png`}
           style={{ display: 'none' }}
         />
       ))}
