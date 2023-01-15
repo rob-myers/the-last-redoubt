@@ -4,6 +4,8 @@
 
 - watch synfig files and re-render?
 
+- ✅ saw light polygon error in bridge (two lockers open) Unable to complete output ring...
+
 - 🚧 chrome (clip-path) flicker on fast zoom?
   - ✅ @desktop removing CssPanZoom grid fixed it?
   - 🚧 @mobile problem persists

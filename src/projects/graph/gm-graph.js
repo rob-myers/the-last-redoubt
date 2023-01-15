@@ -137,7 +137,11 @@ export class gmGraphClass extends BaseGraph {
 
     return {
       polys: this.gms.map((_, gmId) =>
-        unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(precision))
+        /**
+         * Use high precision to avoid occasional "Unable to complete output ring"
+         * > https://github.com/Turfjs/turf/issues/2048
+         */
+        unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
       ),
       gmRoomIds: this.getRoomsFromGmDoorIds(gmId, allDoorIds),
     };
@@ -227,7 +231,8 @@ export class gmGraphClass extends BaseGraph {
     }));
 
     return this.gms.map((_, gmId) =>
-      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(2))
+      // https://github.com/Turfjs/turf/issues/2048
+      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
     );
   }
 
