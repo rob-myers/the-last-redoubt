@@ -7,24 +7,22 @@ import firstAnimJson from '../../../static/assets/npc/first-anim/first-anim.json
  * 🚧 automatically construct this lookup as JSON via script `npc-meta`
  */
 
-/** @type {Record<NPC.NpcJsonKey, NPC.NpcJson>} */
+/** @type {Record<NPC.NpcJsonKey, NPC.NpcMetaJson>} */
 export const npcJson = {
 
   'first-anim': (() => {
 
     const parsed = firstAnimJson;
     const offsetRadians = 0;
-    const radiusInSvg = 40; // 🚧
-    const scale = 0.18; // 🚧
+    const radiusInSvg = 40;
+    const scale = 0.18; // 🚧 reverse engineer so scaled radius is 15
     const radius = radiusInSvg * scale * parsed.zoom; // ~15 🚧
 
     return {
       parsed,
       scale,
-      radiusInSvg,
       offsetRadians,
       radius,
-      defaultInteractRadius: radius * 3,
       speed: 70,
       css: computeSpritesheetCss(parsed, offsetRadians, scale),
     };

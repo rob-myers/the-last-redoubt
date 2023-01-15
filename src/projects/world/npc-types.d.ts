@@ -1,11 +1,16 @@
 
 declare namespace NPC {
 
+  /**
+   * Corresponds to static/assets/npc/{key}/{key.json}.
+   * Instantiated npcs are identified by their npcKey,
+   * whereas npcAnimKey corresponds to their "character class".
+   */
   type NpcJsonKey = (
     | 'first-anim'
   );
 
-  interface NpcJson {
+  interface NpcMetaJson {
     parsed: NPC.ParsedNpc;
     /**
      * Scale factor we'll apply to sprites.
@@ -13,12 +18,9 @@ declare namespace NPC {
      * See zoom factor in json.
      */
     scale: number;
-    /** Radius inside SVG */
-    radiusInSvg: number;
     /** Ensure NPC faces along positive x-axis */
     offsetRadians: number;
     radius: number;
-    defaultInteractRadius: number;
     speed: number;
     /** @emotion/css */
     css: string;
@@ -28,7 +30,7 @@ declare namespace NPC {
   export interface NPC {
     /** User specified e.g. `andros` */
     key: string;
-    /** Refers to `/assets/npc/${jsonKey}.json` */
+    /** Refers to `static/assets/npc/{jsonKey}/{jsonKey}.json` */
     jsonKey: NPC.NpcJsonKey;
     /** Epoch ms when spawned */
     epochMs: number;
@@ -348,6 +350,7 @@ declare namespace NPC {
     animLookup: { [animName: string]: NpcAnimMeta };
     /** Axis aligned bounded box, already scaled by `zoom` */
     aabb: Geom.RectJson;
+    /** Zoomed radius */
     radius: number;
     /** How much the rendered PNGs have been scaled up. */
     zoom: number;

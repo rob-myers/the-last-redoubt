@@ -1,17 +1,16 @@
 /// <reference path="./deps.d.ts"/>
 /**
- * - Extra metadata as JSON
+ * - Extract an NPC's JSON metadata and render its spritesheets,
+ *   using only media/NPC/{folder}/{folder}.sifz
+ * - We output files:
  *   > static/assets/npc/{folder}/{folder}.json
- * - Renders NPC spritesheets
  *   > static/assets/npc/{folder}/{folder}--{animName}.png
  * 
  * yarn render-npc {folder}
- * yarn render-npc {folder} {anim-name-0} ... 🚧
  * 
  * - {folder} relative to media/NPC should contain {folder}.sifz
  * - Examples:
  *  - yarn render-npc first-anim
- *  - yarn render-npc first-anim walk
  */
 
 import path from 'path';
@@ -39,6 +38,8 @@ if (!sifzFolder || !fs.existsSync(sifzFilepath)) {
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'npc', sifzFolder);
 fs.mkdirSync(outputDir, { recursive: true }); // Ensure output dir
+const outputJsonPath = path.resolve(outputDir, `${sifzFolder}.json`);
+const outputDebugJsonPath = path.resolve(outputDir, `${sifzFolder}.orig.json`);
 
 const zoom = 2;
 
@@ -163,12 +164,16 @@ async function main() {
         zoom,
     };
 
-    writeAsJson(npcJson, path.resolve(outputDir, `${sifzFolder}.json`));
+    writeAsJson(npcJson, outputJsonPath);
     // ⛔️ debug only
-    writeAsJson(synfigJson, path.resolve(outputDir, `${sifzFolder}.orig.json`));
+    // writeAsJson(synfigJson, outputDebugJsonPath);
 
     /**
-     * Render spritesheet(s) using Synfig CLI
+     * ========================
+     * 🖋 Render spritesheet(s) 
+     * ========================
+     * 
+     * Requires Synfig CLI:
      * - install `brew install synfig`
      * - example `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 3 -a 1 --begin-time 0f --end-time 2f -o first-anim--walk.png`
      */

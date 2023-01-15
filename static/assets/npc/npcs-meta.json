@@ -1,0 +1,61 @@
+{
+  "first-anim": {
+    "parsed": {
+      "npcName": "first-anim",
+      "animLookup": {
+        "walk": {
+          "animName": "walk",
+          "frameCount": 10,
+          "contacts": [
+            {"right": {"x": 106.26000037415385, "y": 155.95999849944616}},
+            {"right": {"x": 72.52299851618463, "y": 152.57983515766153}},
+            {"right": {"x": 53.08270498461539, "y": 153.23171527483078}},
+            {"right": {"x": 44.12037071950769, "y": 152.8419799808}},
+            {"left": {"x": 182.34405987249232, "y": 115.46833801452308}},
+            {"left": {"x": 127.33337460972308, "y": 107.2803767296}},
+            {"left": {"x": 58.31034498756923, "y": 109.36387047581539}},
+            {"left": {"x": 45.20022348406154, "y": 108.35033299495385}},
+            {"right": {"x": 193.63254488615382, "y": 147.9212887118769}},
+            {"right": {"x": 170.19973050683078, "y": 148.52946296123076}}
+          ],
+          "deltas": [
+            0,
+            33.73700185796922,
+            19.44029353156924,
+            8.9623342651077,
+            0,
+            55.01068526276924,
+            69.02302962215384,
+            13.110121503507692,
+            0,
+            23.432814379323048,
+            63.93973013267693
+          ],
+          "totalDist": 286.65601055507693
+        },
+        "idle": {
+          "animName": "idle",
+          "frameCount": 1,
+          "contacts": [{}],
+          "deltas": [0, 0],
+          "totalDist": 0
+        },
+        "sit": {
+          "animName": "sit",
+          "frameCount": 1,
+          "contacts": [{}],
+          "deltas": [0, 0],
+          "totalDist": 0
+        }
+      },
+      "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+      "radius": 96,
+      "zoom": 2
+    },
+    "scale": 0.15625,
+    "offsetRadians": 0,
+    "radius": 96,
+    "speed": 70,
+    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.15625);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--sit.png');\n  }"
+  }
+}

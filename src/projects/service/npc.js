@@ -1,5 +1,39 @@
 import { assertNonNull, testNever } from './generic';
 import { Vect } from '../geom';
+import { cssName } from './const';
+
+/**
+ * Choose scale factor s.t. npc radius becomes 15.
+ * - Starship Geomorphs grid is 60 * 60.
+ * - Approx 1.5m * 1.5m hence npc radius ~37.5cm
+ * @param {NPC.ParsedNpc} parsed 
+ */
+export function computeNpcScale(parsed) {
+  return 15 / parsed.radius;
+}
+
+/**
+ * @param {NPC.ParsedNpc} parsed 
+ * @param {number} offsetRadians 
+ * @param {number} scale 
+ */
+export function computeSpritesheetCss(parsed, offsetRadians, scale) {
+  return `
+.body {
+  transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
+}
+
+${Object.keys(parsed.animLookup).map((animName) => `
+  &.${animName} .body {
+    width: ${parsed.aabb.width}px;
+    height: ${parsed.aabb.height}px;
+    left: ${-parsed.aabb.width * 0.5}px;
+    top: ${-parsed.aabb.height * 0.5}px;
+    background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.png');
+  }
+`).join('\n\n')}
+`.trim();
+}
 
 
 /** @type {Record<NPC.NpcActionKey, true>} */
