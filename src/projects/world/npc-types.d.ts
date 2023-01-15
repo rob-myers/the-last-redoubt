@@ -1,10 +1,10 @@
 
 declare namespace NPC {
-
+  
   /**
-   * Corresponds to static/assets/npc/{key}/{key.json}.
-   * Instantiated npcs are identified by their npcKey,
-   * whereas npcAnimKey corresponds to their "character class".
+   * - Corresponds to static/assets/npc/{key}/{key.json}.
+   * - Instantiated npcs are identified by their npcKey,
+   *   whereas npcJsonKey corresponds to their "character class".
    */
   type NpcJsonKey = (
     | 'first-anim'

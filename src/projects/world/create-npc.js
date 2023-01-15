@@ -1,8 +1,9 @@
+import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { testNever } from '../service/generic';
 import { cancellableAnimDelayMs, cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, lineSegToCssTransform } from '../service/dom';
-import { npcJson } from '../service/npc-json';
+import npcsMeta from './npcs-meta.json';
 
 /**
  * @param {import('./NPC').PropsDef} def 
@@ -24,7 +25,8 @@ export default function createNpc(
     },
     mounted: false,
     anim: {
-      css: npcJson['first-anim'].css,
+      // 🚧 can specify character class
+      css: css`${npcsMeta['first-anim'].css}`,
       path: [],
       aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0, index: 0, segBounds: new Rect },
       spriteSheet: 'idle',
@@ -125,7 +127,7 @@ export default function createNpc(
     },
     getAnimDef() {
       const { aux } = this.anim;
-      const { scale: npcScale } = npcJson[this.jsonKey];
+      const { scale: npcScale } = npcsMeta[this.jsonKey];
       return {
         translateKeyframes: this.anim.path.flatMap((p, i) => [
           {
@@ -186,7 +188,7 @@ export default function createNpc(
      * - we use an offset `motionMs` to end mid-frame
      */
     getSpriteDuration(nextMotionMs) {
-      const { parsed: { animLookup }, scale: npcScale } = npcJson[this.jsonKey];
+      const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.jsonKey];
       const npcWalkAnimDurationMs = 1000 * ( 1 / this.getSpeed() ) * (animLookup.walk.totalDist * npcScale);
       const baseSpriteMs = npcWalkAnimDurationMs;
       const motionMs = nextMotionMs - (0.5 * (npcWalkAnimDurationMs / animLookup.walk.frameCount));
@@ -281,7 +283,7 @@ export default function createNpc(
 
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
         this.setLookRadians(def.angle);
-        const { radius } = npcJson[this.jsonKey];
+        const { radius } = npcsMeta[this.jsonKey];
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
 
         this.anim.staticBounds = new Rect(
@@ -372,7 +374,7 @@ export default function createNpc(
           this.anim.durationMs = opts.duration;
     
           // Animate spritesheet, assuming `walk` anim exists
-          const { animLookup, aabb } = npcJson[this.jsonKey].parsed;
+          const { animLookup, aabb } = npcsMeta[this.jsonKey].parsed;
           const spriteMs = this.getSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           this.anim.sprites = this.el.body.animate(
@@ -485,10 +487,11 @@ const navMetaOffsets = {
   'pre-collide': -0.02, // To ensure triggered
 
   /**
-   * 🚧 should compute collision time using `predictNpcSegCollision`
+   * 🚧 compute collision time using `predictNpcRectCollision`
+   * 🚧 can specify character class
    */
-  "pre-exit-room": -(npcJson['first-anim'].radius + 10), // TODO better way
-  "pre-near-door": -(npcJson['first-anim'].radius + 10), // TODO better way
+  "pre-exit-room": -(npcsMeta['first-anim'].radius + 10), // TODO better way
+  "pre-near-door": -(npcsMeta['first-anim'].radius + 10), // TODO better way
 
   "start-seg": 0,
 };

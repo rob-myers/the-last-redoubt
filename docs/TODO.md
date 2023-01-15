@@ -28,7 +28,7 @@
     - ✅ Move scale factor computation into service/npc
     - ✅ script `npc-meta` creates `npcs.json` using only `static/assets/npc/*`
       > now need to apply css`{css}`
-    - 🚧 replace npc-json.js with npc-meta.json
+    - ✅ replace npc-json.js with npc-meta.json
   - rename `first-anim` -> `first-human-npc`
 
 

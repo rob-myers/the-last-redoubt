@@ -11,13 +11,13 @@ import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
 import { getNumericCssVar } from "../service/dom";
-import { npcJson, defaultNpcInteractRadius } from "../service/npc-json";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
 import useSessionStore from "../sh/session.store";
 import NPC from "./NPC";
 import Decor from "./Decor";
+import npcsMeta from './npcs-meta.json';
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -405,7 +405,7 @@ export default function NPCs(props) {
          * - ts-styled-plugin error for ${cssName.foo}: ${bar};
          * - setting style avoids `getComputedStyle`
          */
-        el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
+        el.style.setProperty(cssName.npcsInteractRadius, `${npcService.defaultNpcInteractRadius}px`);
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
       }
     },
@@ -456,10 +456,10 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
-            npcJsonKey: 'first-anim', // 🚧 remove hard-coding
+            npcJsonKey: 'first-anim', // 🚧 can specify character class
             position: e.point,
             angle: e.angle,
-            speed: npcJson["first-anim"].speed, // 🚧
+            speed: npcsMeta["first-anim"].speed,
           },
         });
       update();
@@ -628,7 +628,7 @@ export default function NPCs(props) {
       />
 
       {/** Prioritise walk animations, to avoid load on start walk 🚧 */}
-      {Object.keys(npcJson).map((key) => (
+      {Object.keys(npcsMeta).map((key) => (
         <img
           key={key}
           src={`/assets/npc/${key}--${'walk'}.png`}

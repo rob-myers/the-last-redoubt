@@ -47,6 +47,6 @@
     }
   },
   "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
-  "radius": 96,
+  "radius": 80,
   "zoom": 2
 }

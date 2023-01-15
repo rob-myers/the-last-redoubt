@@ -49,13 +49,13 @@
         }
       },
       "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
-      "radius": 96,
+      "radius": 80,
       "zoom": 2
     },
-    "scale": 0.15625,
+    "scale": 0.18,
     "offsetRadians": 0,
-    "radius": 96,
+    "radius": 14.399999999999999,
     "speed": 70,
-    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.15625);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--sit.png');\n  }"
+    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--sit.png');\n  }"
   }
 }

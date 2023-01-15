@@ -5,11 +5,11 @@ import { cssName } from './const';
 /**
  * Choose scale factor s.t. npc radius becomes 15.
  * - Starship Geomorphs grid is 60 * 60.
- * - Approx 1.5m * 1.5m hence npc radius ~37.5cm
+ * - Approx 1.5m * 1.5m hence npc radius ~ 36cm
  * @param {NPC.ParsedNpc} parsed 
  */
 export function computeNpcScale(parsed) {
-  return 15 / parsed.radius;
+  return 14.4 / parsed.radius;
 }
 
 /**
@@ -35,6 +35,7 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 `.trim();
 }
 
+export const defaultNpcInteractRadius = 50;
 
 /** @type {Record<NPC.NpcActionKey, true>} */
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };

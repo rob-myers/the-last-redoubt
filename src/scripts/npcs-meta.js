@@ -1,10 +1,13 @@
 /// <reference path="./deps.d.ts"/>
 /**
- * - Combine all NPC JSON metadata from static/assets/npc/*
- *   into a single JSON static/assets/npc/npcs-meta.json.
- * - This data was previously extracted per-npc via `render-npc` 
+ * - Combine all NPC JSON metadata from `static/assets/npc/*`
+ *   into a single JSON `src/projects/world/npcs-meta.json`.
+ * - The JSONs were previously extracted via `render-npc` (once per npc)
  * 
+ * Examples:
+ * ```sh
  * yarn npcs-meta
+ * ```
  */
 
 import path from 'path';
@@ -14,7 +17,8 @@ import { computeNpcScale, computeSpritesheetCss } from '../projects/service/npc'
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const inputDir = path.resolve(staticAssetsDir, 'npc');
-const outputJsonFilepath = path.resolve(inputDir, 'npcs-meta.json');
+const outputDir = path.resolve(__dirname, '../../src/projects/world');
+const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta.json');
 
 /** Those directories "foo" containing a file "foo.json" */
 const animDirs = fs
@@ -38,7 +42,7 @@ const outputJson = animDirs.reduce(
                 parsed,
                 scale,
                 offsetRadians,
-                radius: parsed.radius,
+                radius: parsed.radius * scale,
                 speed: 70, // 🚧 justify
                 css: computeSpritesheetCss(parsed, offsetRadians, scale),
             },
