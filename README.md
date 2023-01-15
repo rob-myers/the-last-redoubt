@@ -73,3 +73,12 @@ brew install imagemagick
 - Careful not to misconfigure `gatsby-plugin-gatsby-cloud`
   - Do not cache app-data.json and page-data.json for a long time!
   - We introduced cache-busting code from https://stackoverflow.com/a/58238793/2917822
+
+- When rendering a geomorph, we must also render it with lighting:
+  ```sh
+  # render geomorph 101, which is actually inverted to provide darkness
+  yarn render-layout 101
+  # render geomorph 101 with baked-in lighting, which is actually the floor
+  yarn bake-lighting 101
+  ```
+  Moreover the output is large, so we use https://tinypng.com/ before committing.
