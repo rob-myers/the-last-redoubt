@@ -37,10 +37,13 @@
       - ❌ foot shine
     - ✅ drop shadow
   - 🚧 add a sitting frame
-  - 🚧 animate idle via bones
+  - add `idle-breathe` via bones
     - can move keyframes https://forums.synfig.org/t/moving-keyframes/2184
     - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
     - breathe in/out
+
+- can specify npc filter e.g. `sepia(1)`
+- auto-min spritesheet PNGs?
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode

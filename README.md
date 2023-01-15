@@ -23,7 +23,16 @@ npx http-server
 
 ```sh
 # Synfig CLI https://www.synfig.org/
+# Used by `yarn render-npc`
 brew install synfig
+
+# Minify PNGs, although tinypng is better
+# Used by `yarn minify-pngs`
+brew install optipng
+
+# Image manipulation
+# Used by ...
+brew install imagemagick
 ```
 
 ## Gotchas

@@ -9,6 +9,9 @@
  * - yarn minify-pngs static/assets/geomorph
  * - yarn minify-pngs static/assets/symbol
  *   > maybe better to do `yarn simplify-pngs static/assets/symbol`
+ * - yarn minify-pngs static/assets/npc/first-human-npc
+ * 
+ * But https://tinypng.com/ is often much better.
  */
 import fs from 'fs';
 import path from 'path';
