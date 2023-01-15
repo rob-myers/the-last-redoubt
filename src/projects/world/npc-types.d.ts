@@ -7,7 +7,7 @@ declare namespace NPC {
    *   whereas npcJsonKey corresponds to their "character class".
    */
   type NpcJsonKey = (
-    | 'first-anim'
+    | 'first-human-npc'
   );
 
   interface NpcMetaJson {

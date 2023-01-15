@@ -10,7 +10,7 @@
  * 
  * - {folder} relative to media/NPC should contain {folder}.sifz
  * - Examples:
- *  - yarn render-npc first-anim
+ *  - yarn render-npc first-human-npc
  */
 
 import path from 'path';
@@ -52,7 +52,7 @@ async function main() {
     const parser = new xml2js.Parser();
     /** @type {{ canvas: ParsedInnerSynfig }} */
     const synfigJson = await parser.parseStringPromise(synfigXml);
-    const { $: topDollar, name: [npcName], keyframe, layer } = synfigJson.canvas;
+    const { $: topDollar, name: [_unusedName], keyframe, layer } = synfigJson.canvas;
 
     const totalFrameCount = parseInt(topDollar['end-time']) + 1;
     const fps = parseInt(topDollar.fps);
@@ -157,7 +157,7 @@ async function main() {
       
       /** @type {NPC.ParsedNpc} */
       const npcJson = {
-        npcName,
+        npcName: sifzFolder,
         animLookup,
         aabb: aabbRectZoomed.json, // Already zoomed
         radius: npcRadiusZoomed,
@@ -175,7 +175,7 @@ async function main() {
      * 
      * Requires Synfig CLI:
      * - install `brew install synfig`
-     * - example `synfig first-anim.sifz -t png-spritesheet -w 256 -h 256 -q 3 -a 1 --begin-time 0f --end-time 2f -o first-anim--walk.png`
+     * - example `synfig first-human-npc.sifz -t png-spritesheet -w 256 -h 256 -q 3 -a 1 --begin-time 0f --end-time 2f -o first-human-npc--walk.png`
      */
     /** @type {{ key: string; proc: childProcess.ChildProcessWithoutNullStreams}[]} */
     const procs = [];

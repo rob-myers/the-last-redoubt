@@ -26,7 +26,7 @@ export default function createNpc(
     mounted: false,
     anim: {
       // 🚧 can specify character class
-      css: css`${npcsMeta['first-anim'].css}`,
+      css: css`${npcsMeta['first-human-npc'].css}`,
       path: [],
       aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0, index: 0, segBounds: new Rect },
       spriteSheet: 'idle',
@@ -490,8 +490,8 @@ const navMetaOffsets = {
    * 🚧 compute collision time using `predictNpcRectCollision`
    * 🚧 can specify character class
    */
-  "pre-exit-room": -(npcsMeta['first-anim'].radius + 10), // TODO better way
-  "pre-near-door": -(npcsMeta['first-anim'].radius + 10), // TODO better way
+  "pre-exit-room": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
+  "pre-near-door": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
 
   "start-seg": 0,
 };

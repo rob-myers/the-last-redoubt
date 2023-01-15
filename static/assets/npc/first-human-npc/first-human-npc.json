@@ -1,5 +1,5 @@
 {
-  "npcName": "first-anim",
+  "npcName": "first-human-npc",
   "animLookup": {
     "walk": {
       "animName": "walk",

@@ -1,7 +1,7 @@
 {
-  "first-anim": {
+  "first-human-npc": {
     "parsed": {
-      "npcName": "first-anim",
+      "npcName": "first-human-npc",
       "animLookup": {
         "walk": {
           "animName": "walk",
@@ -56,6 +56,6 @@
     "offsetRadians": 0,
     "radius": 14.399999999999999,
     "speed": 70,
-    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-anim/first-anim--sit.png');\n  }"
+    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }"
   }
 }

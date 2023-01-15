@@ -456,10 +456,10 @@ export default function NPCs(props) {
           epochMs: Date.now(),
           def: {
             npcKey: e.npcKey,
-            npcJsonKey: 'first-anim', // 🚧 can specify character class
+            npcJsonKey: 'first-human-npc', // 🚧 can specify character class
             position: e.point,
             angle: e.angle,
-            speed: npcsMeta["first-anim"].speed,
+            speed: npcsMeta["first-human-npc"].speed,
           },
         });
       update();

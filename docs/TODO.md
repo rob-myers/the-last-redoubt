@@ -2,37 +2,6 @@
 
 ## In progress
 
-- 🚧 synfig file -> `NPC.ParsedNpc`
-  - will replace `render-npc` script (first-npc.json)
-  - ✅ export for web lottie
-    - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
-    - but decided to use file directly
-  - ✅ script `npc-json` gunzips file.sifz and converts xml to json 
-  - ✅ provide/extract animation names and lengths
-  - ✅ provide/extract aabbs (?)
-    - ❌ try manually specifying rectangles (no need)
-    - can specify manually
-  - ✅ provide/extract contact points
-    - need `Canvas > Properties > Image Area` i.e. view-box
-      > original magnitude was `3.245189`
-  - ✅ output npc/first-anim.json
-  - ✅ `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
-  - ✅ add `first-anim` to service/npc-json (incremental)
-  - ✅ attach `first-anim` to World
-  - ✅ remove first-npc
-  - 🚧 remove npc-json
-    - ✅ first-anim has Meta group
-    - ✅ Meta has Aabb
-    - ✅ aabb should be global, not per anim
-    - ✅ Meta has BoundsCircle
-    - ✅ Move scale factor computation into service/npc
-    - ✅ script `npc-meta` creates `npcs.json` using only `static/assets/npc/*`
-      > now need to apply css`{css}`
-    - ✅ replace npc-json.js with npc-meta.json
-  - rename `first-anim` -> `first-human-npc`
-
-
-- ✅ initial flicker in World due to .lit.png loaded before darkened png?
 - watch synfig files and re-render?
 
 - 🚧 chrome (clip-path) flicker on fast zoom?
@@ -348,6 +317,37 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ initial flicker in World due to .lit.png loaded before darkened png?
+
+- ✅ synfig file -> `NPC.ParsedNpc`
+  - will replace `render-npc` script (first-npc.json)
+  - ✅ export for web lottie
+    - https://synfig.readthedocs.io/en/latest/export/export_for_web_lottie.html 
+    - but decided to use file directly
+  - ✅ script `npc-json` gunzips file.sifz and converts xml to json 
+  - ✅ provide/extract animation names and lengths
+  - ✅ provide/extract aabbs (?)
+    - ❌ try manually specifying rectangles (no need)
+    - can specify manually
+  - ✅ provide/extract contact points
+    - need `Canvas > Properties > Image Area` i.e. view-box
+      > original magnitude was `3.245189`
+  - ✅ output npc/first-anim.json
+  - ✅ `npc-json` -> `render-npc` and renders PNGs using `synfig` CLI
+  - ✅ add `first-anim` to service/npc-json (incremental)
+  - ✅ attach `first-anim` to World
+  - ✅ remove first-npc
+  - ✅ remove npc-json
+    - ✅ first-anim has Meta group
+    - ✅ Meta has Aabb
+    - ✅ aabb should be global, not per anim
+    - ✅ Meta has BoundsCircle
+    - ✅ Move scale factor computation into service/npc
+    - ✅ script `npc-meta` creates `npcs.json` using only `static/assets/npc/*`
+      > now need to apply css`{css}`
+    - ✅ replace npc-json.js with npc-meta.json
+  - ✅ rename `first-anim` -> `first-human-npc`
 
 - ✅ Mobile jerky camera
   - ℹ️ https://developer.mozilla.org/en-US/docs/Web/API/Animation/cancel#exceptions
