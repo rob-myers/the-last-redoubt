@@ -38,8 +38,8 @@
       - ❌ thumbs
       - ❌ foot shine
     - ✅ drop shadow
-  - 🚧 add a sitting frame
-  - add `idle-breathe` via bones
+  - ✅ add a sitting frame
+  - 🚧 add `idle-breathe` via bones
     - can move keyframes https://forums.synfig.org/t/moving-keyframes/2184
     - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
     - breathe in/out

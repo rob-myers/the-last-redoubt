@@ -1,6 +1,6 @@
 /// <reference path="./deps.d.ts"/>
 /**
- * - Extract an NPC's JSON metadata and render its spritesheets,
+ * - Extract an NPC's JSON metadata and render its sprite-sheets,
  *   using only media/NPC/{folder}/{folder}.sifz
  * - We output files:
  *   > static/assets/npc/{folder}/{folder}.json
@@ -189,7 +189,16 @@ async function main() {
       const startFrame = parseInt(time);
       const endFrame = startFrame + (frameCount - 1);
       
-      console.info(`Rendering ${animName}...`);
+      console.info(`Rendering ${animName}...`, {startFrame, endFrame});
+
+      /**
+       * Remove existing file, because png-spritesheet won't overwrite
+       * due to 'add into an existing file' param (not available in CLI?)
+       * Files should be versioned, so won't matter if delete.
+       */
+      const outputPngPath = path.resolve(outputDir, `${sifzFolder}--${animName}.png`);
+      fs.rmSync(outputPngPath);
+
       procs.push({
         key: animName,
         proc: childProcess.spawn('synfig', [
@@ -201,7 +210,7 @@ async function main() {
           '-a', '1',
           '--begin-time', `${startFrame}f`,
           '--end-time', `${endFrame}f`,
-          '-o', path.resolve(outputDir, `${sifzFolder}--${animName}.png`),
+          '-o', outputPngPath,
         ]),
       });
     }
