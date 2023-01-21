@@ -34,15 +34,22 @@
     "idle": {
       "animName": "idle",
       "frameCount": 1,
-      "contacts": [{}],
-      "deltas": [0, 0],
+      "contacts": [],
+      "deltas": [],
       "totalDist": 0
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
-      "contacts": [{}],
-      "deltas": [0, 0],
+      "contacts": [],
+      "deltas": [],
+      "totalDist": 0
+    },
+    "idle-breathe": {
+      "animName": "idle-breathe",
+      "frameCount": 10,
+      "contacts": [],
+      "deltas": [],
       "totalDist": 0
     }
   },

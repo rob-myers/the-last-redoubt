@@ -53,10 +53,9 @@
   - ✅ minify-pngs uses pngquant
   - ✅ pngs-to-webp script
   - ✅ minify-pngs has options to add webp
-  - ℹ️ geomorphs: tinypng better on .lit.png but not plain geomorphs
+  - ✅ spritesheets auto-minified
+  - on render geomorph generate webp
   - start using webp with png fallback
-  - spritesheets auto-minified
-  - geomorphs auto-minified
 - can specify npc filter e.g. `sepia(1)`
 - strategy for unfetched spritesheets?
 
