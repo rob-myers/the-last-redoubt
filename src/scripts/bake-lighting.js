@@ -7,6 +7,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import childProcess from 'child_process';
 import { createCanvas, loadImage } from 'canvas';
 
 import { Poly } from '../projects/geom';
@@ -22,10 +23,11 @@ if (!layoutDef) {
   console.error(`No geomorph found with id "${geomorphId}"`);
   process.exit(1);
 }
+const foundLayoutDef = layoutDef; // else ts error in main
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
-const outputPath =  path.resolve(outputDir, `${layoutDef.key}.lit.png`);
+const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}.lit.png`);
 
 const geomorphJsonPath = path.resolve(outputDir, `${layoutDef.key}.json`);
 if (!fs.existsSync(geomorphJsonPath)) {
@@ -35,7 +37,9 @@ if (!fs.existsSync(geomorphJsonPath)) {
 
 const scale = 2;
 
-(async function main() {
+main();
+
+async function main() {
 
   /** @type {Geomorph.LayoutJson} */
   const layoutJson = JSON.parse(fs.readFileSync(geomorphJsonPath).toString());
@@ -48,7 +52,7 @@ const scale = 2;
   const ctxt = canvas.getContext('2d');
   
   // Draw underlying geomorph PNG
-  const geomorphPngPath = path.resolve(outputDir, `${layoutDef.key}.png`);
+  const geomorphPngPath = path.resolve(outputDir, `${foundLayoutDef.key}.png`);
   const loadedPng = await loadImage(geomorphPngPath);
   ctxt.drawImage(loadedPng, 0, 0);
 
@@ -88,6 +92,14 @@ const scale = 2;
     ctxt.fillStyle = gradient;
     fillPolygon(ctxt, [light]);
   });
-  await saveCanvasAsFile(canvas, outputPath);
 
-})();
+  // Save PNG
+  await saveCanvasAsFile(canvas, outputPngPath);
+  // Generate WEBP
+  childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
+  // Minify PNG
+  // ⛔️ can be worse than tinypng (467kb vs 534kb)
+  childProcess.execSync(`pngquant -f ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
+
+}
+

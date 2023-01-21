@@ -10,6 +10,7 @@
 /// <reference path="./deps.d.ts"/>
 import fs from 'fs';
 import path from 'path';
+import childProcess from 'child_process';
 import { createCanvas, loadImage } from 'canvas';
 import getOpts from 'getopts';
 
@@ -27,26 +28,36 @@ if (!layoutDef) {
   console.error(`No geomorph found with id "${geomorphId}"`);
   process.exit(1);
 }
+const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
 const [debug, scale, suffix, defaultScale] = [opts.debug, opts.scale, opts.suffix, 2];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
-const outputPath =  path.resolve(outputDir, `${layoutDef.key}${
+const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
   debug ? '.debug' : suffix ? `.${suffix}` : ''
 }.png`);
 
-(async function run() {
+main();
+
+async function main() {
   try {
-    const { layout, canvas } = await renderLayout(layoutDef);
-    // Also done in svg-meta.js
-    const geomorphJsonPath = path.resolve(outputDir, `${layoutDef.key}.json`);
+    // Do the rendering
+    const { layout, canvas } = await renderLayout(foundLayoutDef);
+    // Write JSON (also done in svg-meta)
+    const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
-    await saveCanvasAsFile(canvas, outputPath);
+
+    // Save PNG
+    await saveCanvasAsFile(canvas, outputPngPath);
+    // Generate WEBP
+    childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
+    // Minify PNG
+    childProcess.execSync(`pngquant -f --quality=80 ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
   } catch (e) {
     error(e);
   }
-})();
+};
 
 /**
  * Compute and render layout, given layout definition.

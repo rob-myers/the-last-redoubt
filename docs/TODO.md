@@ -54,7 +54,8 @@
   - ✅ pngs-to-webp script
   - ✅ minify-pngs has options to add webp
   - ✅ spritesheets auto-minified
-  - on render geomorph generate webp
+  - ✅ on render geomorph auto-minify png and generate webp
+  - ✅ on bake-lighting geomorph auto-minify png and generate webp
   - start using webp with png fallback
 - can specify npc filter e.g. `sepia(1)`
 - strategy for unfetched spritesheets?
