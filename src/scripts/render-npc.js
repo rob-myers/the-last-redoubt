@@ -1,4 +1,3 @@
-/// <reference path="./deps.d.ts"/>
 /**
  * - Extract an NPC's JSON metadata and render its sprite-sheets,
  *   using only media/NPC/{folder}/{folder}.sifz
@@ -12,6 +11,7 @@
  * - Examples:
  *  - yarn render-npc first-human-npc
  */
+/// <reference path="./deps.d.ts"/>
 
 import path from 'path';
 import fs from 'fs';
@@ -23,7 +23,7 @@ import util from 'util';
 import { writeAsJson } from '../projects/service/file';
 import { error, warn } from '../projects/service/log';
 import { Rect, Vect } from '../projects/geom';
-import { assertDefined } from '../projects/service/generic';
+import { assertDefined, pause } from '../projects/service/generic';
 
 const [,, sifzFolder, ...animNames] = process.argv;
 const sifzInputDir = path.join('media/NPC/', sifzFolder);
@@ -52,10 +52,18 @@ async function main() {
     const parser = new xml2js.Parser();
     /** @type {{ canvas: ParsedInnerSynfig }} */
     const synfigJson = await parser.parseStringPromise(synfigXml);
+    // ⛔️ debug only
+    // writeAsJson(synfigJson, outputDebugJsonPath);
+
     const { $: topDollar, name: [_unusedName], keyframe, layer } = synfigJson.canvas;
 
-    const totalFrameCount = parseInt(topDollar['end-time']) + 1;
     const fps = parseInt(topDollar.fps);
+    /**
+     * end-time can be e.g. `5f` or `1s 7f`
+     */
+    const totalFrameCount = topDollar['end-time'].split(' ').map(x =>
+      x.endsWith('s') ? fps * parseInt(x) : parseInt(x)
+    ).reduce((agg, item) => agg + item, 0) + 1;
 
     // Synfig coords are relative to its "view box"
     const viewBoxCoords = topDollar['view-box'].split(' ').map(Number);
@@ -113,7 +121,7 @@ async function main() {
       /** 1-based frames */
       const frames = [...Array(frameCount)].map((_, i) => startFrame + i);
 
-      const contacts = /** @type {{ left: Vect | undefined; right: Vect | undefined; }[]} */ ([]);
+      let contacts = /** @type {{ left: Vect | undefined; right: Vect | undefined; }[]} */ ([]);
       let deltas = /** @type {number[]} */ ([]);
 
       if (layerWays) {// Contact points
@@ -133,17 +141,22 @@ async function main() {
         // console.log(util.inspect(lContacts, undefined, 8));
         // console.log(util.inspect(rContacts, undefined, 8));
 
-        // No contacts produces [{}] i.e. empty singleton
-        frames.forEach((_, i) => contacts[i] = { left: lContacts[i], right: rContacts[i] });
+        // Expect either all {}'s or all non-empty
+        const frameContacts = frames.map((_, i) => ({ left: lContacts[i], right: rContacts[i] }));
 
-        /** One more than frame count i.e. distances travelled from last -> first */
-        deltas = contacts.concat(contacts[0]).map(({ left: leftFoot, right: rightFoot }, i) => {
-          const [prevLeft, prevRight] = [contacts[i - 1]?.left, contacts[i - 1]?.right];
-          return (// For walk, exactly one of 1st two summands should be non-zero
-            (!leftFoot || !prevLeft ? 0 : Math.abs(leftFoot.x - prevLeft.x)) ||
-            (!rightFoot || !prevRight ? 0 : Math.abs(rightFoot.x - prevRight.x)) || 0
-          );
-        });
+        const numContacts = frameContacts.reduce((sum, x) => sum + ((x.left || x.right) ? 1 : 0), 0);
+        if (numContacts >= 2) {
+          contacts = frameContacts;
+          // One more than frame count i.e. distances travelled from last -> first
+          deltas = contacts.concat(contacts[0]).map(({ left: leftFoot, right: rightFoot }, i) => {
+            const [prevLeft, prevRight] = [contacts[i - 1]?.left, contacts[i - 1]?.right];
+            return (// For walk, exactly one of 1st two summands should be non-zero
+              (!leftFoot || !prevLeft ? 0 : Math.abs(leftFoot.x - prevLeft.x)) ||
+              (!rightFoot || !prevRight ? 0 : Math.abs(rightFoot.x - prevRight.x)) || 0
+            );
+          });
+        }
+
       }
 
       animLookup[animName] = {
@@ -162,11 +175,9 @@ async function main() {
         aabb: aabbRectZoomed.json, // Already zoomed
         radius: npcRadiusZoomed,
         zoom,
-    };
+      };
 
     writeAsJson(npcJson, outputJsonPath);
-    // ⛔️ debug only
-    // writeAsJson(synfigJson, outputDebugJsonPath);
 
     /**
      * ========================
@@ -197,7 +208,7 @@ async function main() {
        * Files should be versioned, so won't matter if delete.
        */
       const outputPngPath = path.resolve(outputDir, `${sifzFolder}--${animName}.png`);
-      fs.rmSync(outputPngPath);
+      fs.rmSync(outputPngPath, { force: true });
 
       procs.push({
         key: animName,
@@ -222,6 +233,16 @@ async function main() {
         new Promise(resolve => proc.on('exit', () => resolve()))
       );
     }));
+
+    await pause(1000); // Needed?
+
+    // Optimize PNGs + provide WEBP
+    await /** @type {Promise<void>} */ (new Promise(resolve => {
+      const proc = childProcess.spawn(`yarn`, ['minify-pngs', outputDir, 'webp']);
+      proc.stdout.on('data', (data) => console.log({ key: 'minify-pngs' }, data.toString()));
+      proc.stdout.on('exit', () => resolve());
+    }));
+
 }
 
 /**

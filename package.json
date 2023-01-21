@@ -28,6 +28,7 @@
     "render-layout": "yarn ts-script src/scripts/render-layout",
     "render-npc": "yarn ts-script src/scripts/render-npc",
     "npcs-meta": "yarn ts-script src/scripts/npcs-meta",
+    "pngs-to-webp": "yarn ts-script src/scripts/pngs-to-webp",
     "simplify-pngs": "yarn ts-script src/scripts/simplify-pngs",
     "svg-meta": "yarn ts-script src/scripts/svg-meta",
     "ts-script": "NODE_OPTIONS=\"--no-experimental-fetch\" ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",

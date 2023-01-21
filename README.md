@@ -26,13 +26,22 @@ npx http-server
 # Used by `yarn render-npc`
 brew install synfig
 
-# Minify PNGs, although tinypng is better
-# Used by `yarn minify-pngs`
-brew install optipng
+# Convert PNGs to WEBP
+# Provides cwebp
+brew install webp
+
+# Minify PNGs (lossy)
+# https://pngquant.org/
+# Seems much better than optipng
+brew install pngquant
 
 # Image manipulation
 # Used by ...
 brew install imagemagick
+
+# Minify PNGs, although tinypng much better
+# Used by `yarn minify-pngs`
+brew install optipng
 ```
 
 ## Gotchas

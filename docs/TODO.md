@@ -39,13 +39,26 @@
       - ❌ foot shine
     - ✅ drop shadow
   - ✅ add a sitting frame
-  - 🚧 add `idle-breathe` via bones
-    - can move keyframes https://forums.synfig.org/t/moving-keyframes/2184
-    - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
-    - breathe in/out
+  - ✅ can move keyframes https://forums.synfig.org/t/moving-keyframes/2184
+  - ✅ try `idle-breathe` via bones
+    - ✅ rig: head -> neck -> {l,r}shoulder (neck for head motion)
+      - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
+      - breathe in/out
+  - 🚧 idle-breathe sans skeleton deformation
+    - head tilt back + chest expand + shoulders lift/back
+    - could only breath out + `animation-direction: alternate;`
 
+- 🚧 auto-min spritesheet/geomorph/etc PNGs
+  - e.g. `pngquant --quality=80 -f first-human-npc--walk.png` 186k -> 44k
+  - ✅ minify-pngs uses pngquant
+  - ✅ pngs-to-webp script
+  - ✅ minify-pngs has options to add webp
+  - ℹ️ geomorphs: tinypng better on .lit.png but not plain geomorphs
+  - start using webp with png fallback
+  - spritesheets auto-minified
+  - geomorphs auto-minified
 - can specify npc filter e.g. `sepia(1)`
-- auto-min spritesheet PNGs?
+- strategy for unfetched spritesheets?
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode
