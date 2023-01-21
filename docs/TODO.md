@@ -2,8 +2,6 @@
 
 ## In progress
 
-- watch synfig files and re-render?
-
 - ✅ saw light polygon error in bridge (two lockers open) Unable to complete output ring...
 
 - 🚧 chrome (clip-path) flicker on fast zoom?
@@ -56,9 +54,14 @@
   - ✅ spritesheets auto-minified
   - ✅ on render geomorph auto-minify png and generate webp
   - ✅ on bake-lighting geomorph auto-minify png and generate webp
-  - start using webp with png fallback
+  - 🚧 start using webp with png fallback
+    - `<NPC>` has `webp` or `no-webp` class
+    - modify {npc}.json CSS
+
 - can specify npc filter e.g. `sepia(1)`
 - strategy for unfetched spritesheets?
+
+- watch synfig files and re-render?
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode

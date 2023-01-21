@@ -2,6 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 
 import { cssName } from '../service/const';
+import { supportsWebp } from '../service/dom';
 import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -34,6 +35,7 @@ export default function NPC({ api, def, disabled }) {
         npc.anim.spriteSheet,
         rootCss,
         npc.anim.css,
+        supportsWebp ? 'webp' : 'no-webp',
       )}
       data-npc-key={npc.key}
     >

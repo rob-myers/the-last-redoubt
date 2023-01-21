@@ -313,4 +313,17 @@ export function loadImage(src) {
 	});
 }
 
+/**
+ * https://davidwalsh.name/detect-webp
+ */
+export let supportsWebp = false;
+if (typeof window !== 'undefined' && 'createImageBitmap' in self) {
+	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+	fetch(webpData).then(r => r.blob()).then(blob => createImageBitmap(blob)).then(
+		() => supportsWebp = true,
+		() => console.warn('webp not supported'),
+	);
+}
+ 
+
 //#endregion
