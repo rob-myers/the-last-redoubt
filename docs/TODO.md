@@ -39,8 +39,10 @@
       - https://www.youtube.com/watch?v=LTlI7C0VyRc&t=38s&ab_channel=MedEdAnimation
       - breathe in/out
   - 🚧 idle-breathe sans skeleton deformation
-    - head tilt back + chest expand + shoulders lift/back
-    - could only breath out + `animation-direction: alternate;`
+    - ✅ head tilt back + chest expand + shoulders lift/back
+    - play it somehow
+    - `animation-direction: alternate;`
+    - better integration
 
 - 🚧 auto-min spritesheet/geomorph/etc PNGs
   - e.g. `pngquant --quality=80 -f first-human-npc--walk.png` 186k -> 44k
@@ -50,9 +52,10 @@
   - ✅ spritesheets auto-minified
   - ✅ on render geomorph auto-minify png and generate webp
   - ✅ on bake-lighting geomorph auto-minify png and generate webp
-  - 🚧 start using webp with png fallback
+  - ✅ spritesheet use webp with png fallback
     - ✅ `<NPC>` has `webp` or `no-webp` class
-    - 🚧 modify {npc}.json CSS
+    - ✅ modify npcs-meta.json CSS
+  - geomorphs use webp with png fallback
 
 - can specify npc filter e.g. `sepia(1)`
 - strategy for unfetched spritesheets?

@@ -13,9 +13,9 @@ export function computeNpcScale(parsed) {
 }
 
 /**
- * @param {NPC.ParsedNpc} parsed 
- * @param {number} offsetRadians 
- * @param {number} scale 
+ * @param {NPC.ParsedNpc} parsed
+ * @param {number} offsetRadians
+ * @param {number} scale
  */
 export function computeSpritesheetCss(parsed, offsetRadians, scale) {
   return `
@@ -30,6 +30,9 @@ ${Object.keys(parsed.animLookup).map((animName) => `
     left: ${-parsed.aabb.width * 0.5}px;
     top: ${-parsed.aabb.height * 0.5}px;
     background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.png');
+  }
+  &.${animName}.webp .body {
+    background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.webp');
   }
 `).join('\n\n')}
 `.trim();

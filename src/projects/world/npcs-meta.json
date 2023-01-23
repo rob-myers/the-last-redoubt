@@ -36,15 +36,22 @@
         "idle": {
           "animName": "idle",
           "frameCount": 1,
-          "contacts": [{}],
-          "deltas": [0, 0],
+          "contacts": [],
+          "deltas": [],
           "totalDist": 0
         },
         "sit": {
           "animName": "sit",
           "frameCount": 1,
-          "contacts": [{}],
-          "deltas": [0, 0],
+          "contacts": [],
+          "deltas": [],
+          "totalDist": 0
+        },
+        "idle-breathe": {
+          "animName": "idle-breathe",
+          "frameCount": 10,
+          "contacts": [],
+          "deltas": [],
           "totalDist": 0
         }
       },
@@ -56,6 +63,6 @@
     "offsetRadians": 0,
     "radius": 14.399999999999999,
     "speed": 70,
-    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }"
+    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n  &.walk.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.webp');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n  &.idle.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.webp');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }\n  &.sit.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.webp');\n  }\n\n\n\n  &.idle-breathe .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.png');\n  }\n  &.idle-breathe.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp');\n  }"
   }
 }

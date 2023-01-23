@@ -31,11 +31,10 @@ export default function NPC({ api, def, disabled }) {
       ref={npc.npcRef.bind(npc)}
       className={cx(
         cssName.npc,
-        npc.key,
-        npc.anim.spriteSheet,
+        supportsWebp ? 'webp' : undefined,
         rootCss,
         npc.anim.css,
-        supportsWebp ? 'webp' : 'no-webp',
+        npc.anim.spriteSheet,
       )}
       data-npc-key={npc.key}
     >
@@ -72,7 +71,7 @@ export default function NPC({ api, def, disabled }) {
 const rootCss = css`
   position: absolute;
   pointer-events: none;
-  
+
   .body {
     position: absolute;
     /* filter: grayscale(100%) brightness(140%); */

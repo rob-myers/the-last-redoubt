@@ -314,16 +314,47 @@ export function loadImage(src) {
 }
 
 /**
- * https://davidwalsh.name/detect-webp
+ * https://github.com/ihordiachenko/supports-webp-sync/blob/master/index.ts
+ * @returns {boolean}
  */
-export let supportsWebp = false;
-if (typeof window !== 'undefined' && 'createImageBitmap' in self) {
-	const webpData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
-	fetch(webpData).then(r => r.blob()).then(blob => createImageBitmap(blob)).then(
-		() => supportsWebp = true,
-		() => console.warn('webp not supported'),
-	);
+function checkWebPSupport()  {
+	if (typeof window === "undefined") { // SSE sanity check
+			return false
+	}
+
+	// Use canvas hack for webkit-based browsers
+	// Kudos to Rui Marques: https://stackoverflow.com/a/27232658/7897049
+	const e = document.createElement('canvas')
+	e.width = 1
+	e.height = 1
+	if (e.toDataURL && e.toDataURL('image/webp').indexOf('data:image/webp') == 0) {
+			return true
+	}
+
+	// 
+	/**
+	 * Check other common browsers by version
+	 */
+	let m = navigator.userAgent.match(/(Edg|Firefox)\/(\d+)\./)
+	if (m) {
+			return (m[1] === 'Firefox' && Number(m[2]) >= 65) || (m[1] === 'Edge' && Number(m[2]) >= 18)
+	}
+
+	m = navigator.userAgent.match(/OS X\s?(?<os>\d+)?.+ Version\/(?<v>\d+\.\d+)/)
+	if (m) {
+			// Intl.ListFormat only works on Safari 14.1+ & MacOS 11+ - nearly the same specifications as WebP support.
+			// See https://caniuse.com/webp & https://caniuse.com/?search=Intl.ListFormat
+			const intl = window.Intl || {}
+			const groups = /** @type {Record<string, string>} */ (m.groups);
+			return Number(groups.v) >= 14 && ((Number(groups.os) || 99) >= 11 || intl.ListFormat != null)
+	}
+
+	return false
 }
- 
+
+/**
+ * https://github.com/ihordiachenko/supports-webp-sync/blob/master/index.ts
+ */
+export const supportsWebp = checkWebPSupport();
 
 //#endregion
