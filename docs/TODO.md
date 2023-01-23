@@ -2,13 +2,9 @@
 
 ## In progress
 
-- ✅ saw light polygon error in bridge (two lockers open) Unable to complete output ring...
-
-- 🚧 chrome (clip-path) flicker on fast zoom?
-  - ✅ @desktop removing CssPanZoom grid fixed it?
-  - 🚧 @mobile problem persists
-    - not clip-path specific
-    - zoom smooth improved by removing .shade
+- dynamic lighting
+  - consider removing unseen door canvas
+  - ...
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install
@@ -55,19 +51,13 @@
   - ✅ on render geomorph auto-minify png and generate webp
   - ✅ on bake-lighting geomorph auto-minify png and generate webp
   - 🚧 start using webp with png fallback
-    - `<NPC>` has `webp` or `no-webp` class
-    - modify {npc}.json CSS
+    - ✅ `<NPC>` has `webp` or `no-webp` class
+    - 🚧 modify {npc}.json CSS
 
 - can specify npc filter e.g. `sepia(1)`
 - strategy for unfetched spritesheets?
 
 - watch synfig files and re-render?
-
-- ✅ Abandon _moving seg_ vs _static seg_ collision prediction
-  - ✅ Hide in debug mode
-  - ✅ decor seg -> rect
-  - ✅ Remove related code `predictNpcSegCollision`
-  - ✅ Remove related mdx
 
 - 🚧 Collision prediction: _moving circle_ vs _static angled rect_
   - mdx description of simplified algorithm
@@ -78,9 +68,11 @@
     - can mark decor `circle` for collision-prediction
     - can mark decor `rect` for collision-prediction
 
-- lighting extras
-  - ensure continuity along hull doors
-  - option for smaller PNGs i.e. without `lit`?
+- 🚧 chrome (clip-path) flicker on fast zoom?
+  - ✅ @desktop removing CssPanZoom grid fixed it?
+  - 🚧 @mobile problem persists
+    - not clip-path specific
+    - zoom smooth improved by removing .shade
 
 - should tracking camera stop when click outside navmesh during walk?
 
@@ -338,6 +330,14 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Abandon _moving seg_ vs _static seg_ collision prediction
+  - ✅ Hide in debug mode
+  - ✅ decor seg -> rect
+  - ✅ Remove related code `predictNpcSegCollision`
+  - ✅ Remove related mdx
+
+- ✅ saw light polygon error in bridge (two lockers open) Unable to complete output ring...
 
 - ✅ initial flicker in World due to .lit.png loaded before darkened png?
 
