@@ -346,7 +346,7 @@ function checkWebPSupport()  {
 			// See https://caniuse.com/webp & https://caniuse.com/?search=Intl.ListFormat
 			const intl = window.Intl || {}
 			const groups = /** @type {Record<string, string>} */ (m.groups);
-			return Number(groups.v) >= 14 && ((Number(groups.os) || 99) >= 11 || intl.ListFormat != null)
+			return Number(groups.v) >= 14 && ((Number(groups.os) || 99) >= 11 || /** @type {*} */ (intl).ListFormat != null)
 	}
 
 	return false
