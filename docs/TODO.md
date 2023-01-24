@@ -2,9 +2,11 @@
 
 ## In progress
 
-- dynamic lighting
+- 🚧 dynamic lighting
   - consider removing unseen door canvas
-  - ...
+    - ✅ avoid partially dark walls
+    - try including doors in geomorph.png
+    - maybe ok to drawRect "unlit rects including door"
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install

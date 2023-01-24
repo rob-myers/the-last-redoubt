@@ -48,16 +48,13 @@
     </rect>
   </g>
   <g style="pointer-events: none;">
-    <title>walls</title>
-    <path d="M 360 359 L 360 569.106 L 353.969 546.734 L 336.817 479 L 304.116 411.902 L 266 361 L 266 360 L 360 360 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
-      <title>wall</title>
-    </path>
-    <path d="M 934 569.106 L 934 359 L 927.969 381.372 L 910.817 449.106 L 878.116 516.204 L 840 567.106 L 840 568.106 L 934 568.106 L 934 569.106 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" transform="matrix(-1, 0, 0, -1, 1774, 928.106018)">
-      <title>wall</title>
-    </path>
-  </g>
-  <g style="pointer-events: none;">
     <title>singles</title>
+    <path d="M 360 359 L 360 569.106 L 353.969 546.734 L 336.817 479 L 304.116 411.902 L 266 361 L 266 360 L 360 360 L 360 359 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
+      <title>wall no-fill</title>
+    </path>
+    <path d="M 934 569.106 L 934 359 L 927.969 381.372 L 910.817 449.106 L 878.116 516.204 L 840 567.106 L 840 568.106 L 934 568.106 L 934 569.106 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" transform="matrix(-1, 0, 0, -1, 1774.000009, 928.105978)">
+      <title>wall no-fill</title>
+    </path>
     <rect x="88.5" y="-6" width="62.2" height="14.1" style="fill-opacity: 0.4; fill: rgb(0, 255, 255);">
       <title>window</title>
     </rect>

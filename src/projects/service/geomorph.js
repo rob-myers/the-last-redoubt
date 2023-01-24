@@ -121,14 +121,13 @@ export async function createLayout(def, lookup, triangleService) {
   measurer.font = labelMeta.font;
   /**
    * @type {Geomorph.LayoutLabel[]}
-   * - 1st tag must be `'label'`
    * - Subsequent tags make up label, up to optional `|`.
    */
-  const labels = groups.singles.filter(x => x.tags[0] === 'label')
+  const labels = groups.singles.filter(x => x.tags[0] === 'ui' && x.tags[1] === 'label')
     .map(({ poly, tags }, index) => {
       const center = poly.rect.center.precision(precision).json;
-      const text = tags.slice(1, tags.includes('|') ? tags.indexOf('|') : undefined).join(' ');
-      const metaTags = tags.includes('|') ? tags.slice(tags.indexOf('|') + 1) : [];
+      const text = tags.slice(2).join(' ');
+      const metaTags = tags.slice(0, 2); // 🚧
       const noTail = !text.match(/[gjpqy]/);
       const dim = { x: measurer.measureText(text).width, y: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
       const rect = Rect.fromJson({ x: center.x - 0.5 * dim.x, y: center.y - 0.5 * dim.y, width: dim.x, height: dim.y }).precision(precision).json;

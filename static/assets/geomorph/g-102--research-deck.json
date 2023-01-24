@@ -1284,7 +1284,7 @@
         }
       },
       {
-        "tags": ["wall", "machine"],
+        "tags": ["wall", "machine", "no-fill"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1547,7 +1547,7 @@
         }
       },
       {
-        "tags": ["wall", "machine"],
+        "tags": ["wall", "machine", "no-fill"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3783,7 +3783,136 @@
       "entries": [{"x": 660.6621, "y": 245.25}, {"x": 660.6621, "y": 233.5441}]
     }
   ],
-  "labels": [],
+  "labels": [
+    {
+      "text": "room lab",
+      "center": {"x": 430, "y": 189.9419},
+      "index": 0,
+      "tags": ["ui", "label"],
+      "rect": {"x": 409, "y": 184.9419, "width": 42, "height": 10},
+      "padded": {"x": 405, "y": 182.9419, "width": 50, "height": 14}
+    },
+    {
+      "text": "room lab",
+      "center": {"x": 670, "y": 189.9419},
+      "index": 1,
+      "tags": ["ui", "label"],
+      "rect": {"x": 649, "y": 184.9419, "width": 42, "height": 10},
+      "padded": {"x": 645, "y": 182.9419, "width": 50, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 900, "y": 180},
+      "index": 2,
+      "tags": ["ui", "label"],
+      "rect": {"x": 871, "y": 175, "width": 58, "height": 10},
+      "padded": {"x": 867, "y": 173, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 1020, "y": 31},
+      "index": 3,
+      "tags": ["ui", "label"],
+      "rect": {"x": 991, "y": 26, "width": 58, "height": 10},
+      "padded": {"x": 987, "y": 24, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 990, "y": 150},
+      "index": 4,
+      "tags": ["ui", "label"],
+      "rect": {"x": 961, "y": 145, "width": 58, "height": 10},
+      "padded": {"x": 957, "y": 143, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 990, "y": 210},
+      "index": 5,
+      "tags": ["ui", "label"],
+      "rect": {"x": 961, "y": 205, "width": 58, "height": 10},
+      "padded": {"x": 957, "y": 203, "width": 66, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 446.5316, "y": 419.5648},
+      "index": 6,
+      "tags": ["ui", "label"],
+      "rect": {"x": 419.0316, "y": 414.5648, "width": 55, "height": 10},
+      "padded": {"x": 415.0316, "y": 412.5648, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 566.5316, "y": 419.5648},
+      "index": 7,
+      "tags": ["ui", "label"],
+      "rect": {"x": 539.0316, "y": 414.5648, "width": 55, "height": 10},
+      "padded": {"x": 535.0316, "y": 412.5648, "width": 63, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 450.2424, "y": 530},
+      "index": 8,
+      "tags": ["ui", "label"],
+      "rect": {"x": 414.7424, "y": 525, "width": 71, "height": 10},
+      "padded": {"x": 410.7424, "y": 523, "width": 79, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 570.2424, "y": 530},
+      "index": 9,
+      "tags": ["ui", "label"],
+      "rect": {"x": 534.7424, "y": 525, "width": 71, "height": 10},
+      "padded": {"x": 530.7424, "y": 523, "width": 79, "height": 14}
+    },
+    {
+      "text": "room lab",
+      "center": {"x": 770, "y": 530},
+      "index": 10,
+      "tags": ["ui", "label"],
+      "rect": {"x": 749, "y": 525, "width": 42, "height": 10},
+      "padded": {"x": 745, "y": 523, "width": 50, "height": 14}
+    },
+    {
+      "text": "room lounge",
+      "center": {"x": 1085, "y": 405},
+      "index": 11,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1055, "y": 399.5, "width": 60, "height": 11},
+      "padded": {"x": 1051, "y": 397.5, "width": 68, "height": 15}
+    },
+    {
+      "text": "room stellar cartography",
+      "center": {"x": 370, "y": 830},
+      "index": 12,
+      "tags": ["ui", "label"],
+      "rect": {"x": 310.5, "y": 824.5, "width": 119, "height": 11},
+      "padded": {"x": 306.5, "y": 822.5, "width": 127, "height": 15}
+    },
+    {
+      "text": "room lab",
+      "center": {"x": 730, "y": 710},
+      "index": 13,
+      "tags": ["ui", "label"],
+      "rect": {"x": 709, "y": 705, "width": 42, "height": 10},
+      "padded": {"x": 705, "y": 703, "width": 50, "height": 14}
+    },
+    {
+      "text": "room lab",
+      "center": {"x": 1070, "y": 710},
+      "index": 14,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1049, "y": 705, "width": 42, "height": 10},
+      "padded": {"x": 1045, "y": 703, "width": 50, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 1105, "y": 1090},
+      "index": 15,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1077.5, "y": 1085, "width": 55, "height": 10},
+      "padded": {"x": 1073.5, "y": 1083, "width": 63, "height": 14}
+    }
+  ],
   "navPoly": [
     {
       "type": "Polygon",

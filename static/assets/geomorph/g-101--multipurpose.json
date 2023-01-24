@@ -2624,6 +2624,21 @@
         }
       },
       {
+        "tags": ["wall", "no-fill"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [958.2, 958],
+              [1202.2, 958],
+              [1202.2, 1082],
+              [958.2, 1082],
+              [958.2, 958]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["ui", "label", "room", "fuel"],
         "poly": {
           "type": "Polygon",
@@ -4332,36 +4347,236 @@
   ],
   "labels": [
     {
-      "text": "cpu",
-      "center": {"x": 1170.91, "y": 420.91},
+      "text": "room corridor",
+      "center": {"x": 305, "y": 205},
       "index": 0,
-      "tags": [],
-      "rect": {"x": 1161.91, "y": 415.41, "width": 18, "height": 11},
-      "padded": {"x": 1157.91, "y": 413.41, "width": 26, "height": 15}
+      "tags": ["ui", "label"],
+      "rect": {"x": 272, "y": 200, "width": 66, "height": 10},
+      "padded": {"x": 268, "y": 198, "width": 74, "height": 14}
     },
     {
-      "text": "cpu",
-      "center": {"x": 390.93, "y": 729.09},
+      "text": "room fuel",
+      "center": {"x": 120, "y": 28},
       "index": 1,
-      "tags": [],
-      "rect": {"x": 381.93, "y": 723.59, "width": 18, "height": 11},
-      "padded": {"x": 377.93, "y": 721.59, "width": 26, "height": 15}
+      "tags": ["ui", "label"],
+      "rect": {"x": 97.5, "y": 23, "width": 45, "height": 10},
+      "padded": {"x": 93.5, "y": 21, "width": 53, "height": 14}
     },
     {
-      "text": "cpu",
-      "center": {"x": 809.07, "y": 729.09},
+      "text": "room fuel",
+      "center": {"x": 480, "y": 28},
       "index": 2,
-      "tags": [],
-      "rect": {"x": 800.07, "y": 723.59, "width": 18, "height": 11},
-      "padded": {"x": 796.07, "y": 721.59, "width": 26, "height": 15}
+      "tags": ["ui", "label"],
+      "rect": {"x": 457.5, "y": 23, "width": 45, "height": 10},
+      "padded": {"x": 453.5, "y": 21, "width": 53, "height": 14}
     },
     {
-      "text": "cpu",
-      "center": {"x": 1170.91, "y": 779.09},
+      "text": "room fuel",
+      "center": {"x": 720, "y": 28},
       "index": 3,
-      "tags": [],
-      "rect": {"x": 1161.91, "y": 773.59, "width": 18, "height": 11},
-      "padded": {"x": 1157.91, "y": 771.59, "width": 26, "height": 15}
+      "tags": ["ui", "label"],
+      "rect": {"x": 697.5, "y": 23, "width": 45, "height": 10},
+      "padded": {"x": 693.5, "y": 21, "width": 53, "height": 14}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 1080, "y": 28},
+      "index": 4,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1057.5, "y": 23, "width": 45, "height": 10},
+      "padded": {"x": 1053.5, "y": 21, "width": 53, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 496.46, "y": 202.14},
+      "index": 5,
+      "tags": ["ui", "label"],
+      "rect": {"x": 460.96, "y": 197.14, "width": 71, "height": 10},
+      "padded": {"x": 456.96, "y": 195.14, "width": 79, "height": 14}
+    },
+    {
+      "text": "room bathroom",
+      "center": {"x": 627.64, "y": 180.38},
+      "index": 6,
+      "tags": ["ui", "label"],
+      "rect": {"x": 590.64, "y": 175.38, "width": 74, "height": 10},
+      "padded": {"x": 586.64, "y": 173.38, "width": 82, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 442, "y": 330},
+      "index": 7,
+      "tags": ["ui", "label"],
+      "rect": {"x": 406.5, "y": 325, "width": 71, "height": 10},
+      "padded": {"x": 402.5, "y": 323, "width": 79, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 780, "y": 330},
+      "index": 8,
+      "tags": ["ui", "label"],
+      "rect": {"x": 744.5, "y": 325, "width": 71, "height": 10},
+      "padded": {"x": 740.5, "y": 323, "width": 79, "height": 14}
+    },
+    {
+      "text": "room medical",
+      "center": {"x": 309.09, "y": 470.91},
+      "index": 9,
+      "tags": ["ui", "label"],
+      "rect": {"x": 276.59, "y": 465.91, "width": 65, "height": 10},
+      "padded": {"x": 272.59, "y": 463.91, "width": 73, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 496.46, "y": 457.86},
+      "index": 10,
+      "tags": ["ui", "label"],
+      "rect": {"x": 460.96, "y": 452.86, "width": 71, "height": 10},
+      "padded": {"x": 456.96, "y": 450.86, "width": 79, "height": 14}
+    },
+    {
+      "text": "room bedroom",
+      "center": {"x": 703.54, "y": 457.86},
+      "index": 11,
+      "tags": ["ui", "label"],
+      "rect": {"x": 668.04, "y": 452.86, "width": 71, "height": 10},
+      "padded": {"x": 664.04, "y": 450.86, "width": 79, "height": 14}
+    },
+    {
+      "text": "room toilet",
+      "center": {"x": 927.64, "y": 479.62},
+      "index": 12,
+      "tags": ["ui", "label"],
+      "rect": {"x": 902.64, "y": 474.62, "width": 50, "height": 10},
+      "padded": {"x": 898.64, "y": 472.62, "width": 58, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 1080.91, "y": 438.07},
+      "index": 13,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1053.41, "y": 433.07, "width": 55, "height": 10},
+      "padded": {"x": 1049.41, "y": 431.07, "width": 63, "height": 14}
+    },
+    {
+      "text": "room escape pod",
+      "center": {"x": 60.23, "y": 700.31},
+      "index": 14,
+      "tags": ["ui", "label"],
+      "rect": {"x": 17.73, "y": 694.81, "width": 85, "height": 11},
+      "padded": {"x": 13.73, "y": 692.81, "width": 93, "height": 15}
+    },
+    {
+      "text": "room medical",
+      "center": {"x": 309.09, "y": 710.91},
+      "index": 15,
+      "tags": ["ui", "label"],
+      "rect": {"x": 276.59, "y": 705.91, "width": 65, "height": 10},
+      "padded": {"x": 272.59, "y": 703.91, "width": 73, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 522.73, "y": 747.27},
+      "index": 16,
+      "tags": ["ui", "label"],
+      "rect": {"x": 495.23, "y": 742.27, "width": 55, "height": 10},
+      "padded": {"x": 491.23, "y": 740.27, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 677.27, "y": 747.27},
+      "index": 17,
+      "tags": ["ui", "label"],
+      "rect": {"x": 649.77, "y": 742.27, "width": 55, "height": 10},
+      "padded": {"x": 645.77, "y": 740.27, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 429.09, "y": 869.07},
+      "index": 18,
+      "tags": ["ui", "label"],
+      "rect": {"x": 401.59, "y": 864.07, "width": 55, "height": 10},
+      "padded": {"x": 397.59, "y": 862.07, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 770.91, "y": 869.07},
+      "index": 19,
+      "tags": ["ui", "label"],
+      "rect": {"x": 743.41, "y": 864.07, "width": 55, "height": 10},
+      "padded": {"x": 739.41, "y": 862.07, "width": 63, "height": 14}
+    },
+    {
+      "text": "room toilet",
+      "center": {"x": 927.64, "y": 720.38},
+      "index": 20,
+      "tags": ["ui", "label"],
+      "rect": {"x": 902.64, "y": 715.38, "width": 50, "height": 10},
+      "padded": {"x": 898.64, "y": 713.38, "width": 58, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 1099.09, "y": 599.09},
+      "index": 21,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1071.59, "y": 594.09, "width": 55, "height": 10},
+      "padded": {"x": 1067.59, "y": 592.09, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 1080.91, "y": 761.93},
+      "index": 22,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1053.41, "y": 756.93, "width": 55, "height": 10},
+      "padded": {"x": 1049.41, "y": 754.93, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 440.39, "y": 1006.45},
+      "index": 23,
+      "tags": ["ui", "label"],
+      "rect": {"x": 412.89, "y": 1001.45, "width": 55, "height": 10},
+      "padded": {"x": 408.89, "y": 999.45, "width": 63, "height": 14}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 759.61, "y": 1006.45},
+      "index": 24,
+      "tags": ["ui", "label"],
+      "rect": {"x": 732.11, "y": 1001.45, "width": 55, "height": 10},
+      "padded": {"x": 728.11, "y": 999.45, "width": 63, "height": 14}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 120, "y": 1108},
+      "index": 25,
+      "tags": ["ui", "label"],
+      "rect": {"x": 97.5, "y": 1103, "width": 45, "height": 10},
+      "padded": {"x": 93.5, "y": 1101, "width": 53, "height": 14}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 480, "y": 1108},
+      "index": 26,
+      "tags": ["ui", "label"],
+      "rect": {"x": 457.5, "y": 1103, "width": 45, "height": 10},
+      "padded": {"x": 453.5, "y": 1101, "width": 53, "height": 14}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 720, "y": 1108},
+      "index": 27,
+      "tags": ["ui", "label"],
+      "rect": {"x": 697.5, "y": 1103, "width": 45, "height": 10},
+      "padded": {"x": 693.5, "y": 1101, "width": 53, "height": 14}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 1080, "y": 1108},
+      "index": 28,
+      "tags": ["ui", "label"],
+      "rect": {"x": 1057.5, "y": 1103, "width": 45, "height": 10},
+      "padded": {"x": 1053.5, "y": 1101, "width": 53, "height": 14}
     }
   ],
   "navPoly": [

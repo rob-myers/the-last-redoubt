@@ -28,7 +28,8 @@ export async function renderGeomorph(
     navColor = 'rgba(255, 255, 255, 0.8)',
     navStroke = 'rgba(0, 0, 0, 0.15)',
     obsColor = 'rgba(100, 100, 100, 0.45)',
-    wallColor = 'rgba(50, 40, 40, 0.5)',
+    // wallColor = 'rgba(50, 40, 40, 0.5)',
+    wallColor = 'rgba(50, 40, 40, 1)',
   },
 ) {
   const hullSym = lookup[layout.items[0].key];
@@ -69,7 +70,8 @@ export async function renderGeomorph(
       if (matched) {
         const [, fill, stroke, strokeWidth] = matched;
         setStyle(ctxt, fill || 'transparent', stroke || 'transparent', Number(strokeWidth) || 0);
-        fillPolygon(ctxt, [poly]), ctxt.stroke();
+        fillPolygon(ctxt, [poly]);
+        ctxt.stroke();
       } else {
         console.warn('render: saw tag "poly" where other tag had unexpected format');
       }

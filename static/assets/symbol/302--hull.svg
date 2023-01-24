@@ -26,14 +26,11 @@
     </rect>
     <path d="M 64 -4 L 124 56 L 124 122 L 116 122 L 116 60 L 60 4 L 3 4 L 3 -4 L 64 -4 Z" style=""/>
   </g>
-  <g style="pointer-events: none;">
-    <title>walls</title>
-    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5;">
-      <title>machine</title>
-    </path>
-  </g>
   <g style="">
     <title>singles</title>
+    <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5;">
+      <title>wall machine no-fill</title>
+    </path>
     <rect x="897.5" y="346.3" width="5" height="195.7" style="">
       <title>wall</title>
     </rect>

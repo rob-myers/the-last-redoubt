@@ -1,6 +1,7 @@
 /**
  * - Usage:
  *   - `yarn render-layout 301`
+ *   - `yarn render-layout 301 --doors`
  *   - `yarn render-layout 301 --debug`
  *   - `yarn render-layout 101 --debug --scale=4`
  *   - `yarn render-layout 301 --scale=1 --suffix=x1`
@@ -31,7 +32,13 @@ if (!layoutDef) {
 const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
-const [debug, scale, suffix, defaultScale] = [opts.debug, opts.scale, opts.suffix, 2];
+const [
+  doors,
+  debug,
+  scale,
+  suffix,
+  defaultScale,
+] = [opts.doors, opts.debug, opts.scale, opts.suffix, 2];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
 const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
@@ -78,7 +85,13 @@ async function renderLayout(def) {
     {
       scale: scale || defaultScale,
       obsBounds: true, wallBounds: true, navTris: true,
-      ...debug && { doors: true, labels: true }
+      ...doors && {
+        doors: true,
+      },
+      ...debug && {
+        doors: true,
+        labels: true,
+      },
     },
   );
   return {
