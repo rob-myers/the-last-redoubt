@@ -147,15 +147,18 @@ export default function FOV(props) {
  */
 
  const rootCss = css`
+  /**
+    * Fix Chrome over-clipping,
+    * 👁 Desktop: unmax Tabs: keep walking
+    */
+  will-change: transform;
+
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
     /* filter: invert(100%) brightness(34%); */
     filter: invert(100%) brightness(30%) contrast(150%);
-    /** Chrome zealous clip-path clipping, */
-    /* will-change: transform; */
-    /* will-change: contents; */
   }
 `;
 
