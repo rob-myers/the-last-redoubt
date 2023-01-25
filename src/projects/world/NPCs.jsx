@@ -10,7 +10,7 @@ import { deepClone, keys, testNever, visibleUnicodeLength } from "../service/gen
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { getNumericCssVar } from "../service/dom";
+import { getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
@@ -627,15 +627,6 @@ export default function NPCs(props) {
         api={api}
       />
 
-      {/** Prioritise walk animations, to avoid load on start walk */}
-      {keys(npcsMeta).map((key) => (
-        <img
-          key={key}
-          src={`/assets/npc/${key}/${key}--${'walk'}.png`}
-          style={{ display: 'none' }}
-        />
-      ))}
-
       {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
         <NPC // Respawn remounts
           key={`${key}@${epochMs}`}
@@ -644,6 +635,8 @@ export default function NPCs(props) {
           disabled={props.disabled}
         />
       ))}
+
+      <PrefetchSpritesheets/>
 
     </div>
   );
@@ -725,3 +718,26 @@ const rootCss = css`
  * @property {Graph.GmRoomId[]} [added]
  * @property {Graph.GmRoomId[]} [removed]
  */
+
+/**
+ * e.g. load walk spritesheet before walking
+ */
+const PrefetchSpritesheets = React.memo(() => {
+  return (
+    <div
+      className="prefetch-spritesheets"
+      style={{ display: 'none' }}
+    >
+      {Object.values(npcsMeta).map((meta) =>
+        Object.values(meta.parsed.animLookup)
+          .filter(({ frameCount }) => frameCount > 1)
+          .map(({ animName, pathPng, pathWebp }) =>
+            <img
+              key={`${animName}@${meta.jsonKey}`}
+              src={supportsWebp ? pathWebp : pathPng}
+            />
+          )
+      )}
+    </div>
+  );
+});

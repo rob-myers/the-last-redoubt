@@ -1,5 +1,5 @@
 {
-  "npcName": "first-human-npc",
+  "npcJsonKey": "first-human-npc",
   "animLookup": {
     "walk": {
       "animName": "walk",
@@ -29,28 +29,36 @@
         23.432814379323048,
         63.93973013267693
       ],
-      "totalDist": 286.65601055507693
+      "totalDist": 286.65601055507693,
+      "pathPng": "/assets/npc/first-human-npc/first-human-npc--walk.png",
+      "pathWebp": "/assets/npc/first-human-npc/first-human-npc--walk.webp"
     },
     "idle": {
       "animName": "idle",
       "frameCount": 1,
       "contacts": [],
       "deltas": [],
-      "totalDist": 0
+      "totalDist": 0,
+      "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle.png",
+      "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle.webp"
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
       "contacts": [],
       "deltas": [],
-      "totalDist": 0
+      "totalDist": 0,
+      "pathPng": "/assets/npc/first-human-npc/first-human-npc--sit.png",
+      "pathWebp": "/assets/npc/first-human-npc/first-human-npc--sit.webp"
     },
     "idle-breathe": {
       "animName": "idle-breathe",
       "frameCount": 10,
       "contacts": [],
       "deltas": [],
-      "totalDist": 0
+      "totalDist": 0,
+      "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.png",
+      "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp"
     }
   },
   "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},

@@ -5,11 +5,13 @@
  *   > static/assets/npc/{folder}/{folder}.json
  *   > static/assets/npc/{folder}/{folder}--{animName}.png
  * 
- * yarn render-npc {folder}
+ * yarn render-npc {folder} [--json]
  * 
  * - {folder} relative to media/NPC should contain {folder}.sifz
+ * - option --json only writes json
  * - Examples:
  *  - yarn render-npc first-human-npc
+ *  - yarn render-npc first-human-npc --json
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -19,9 +21,10 @@ import zlib from 'zlib';
 import childProcess from 'child_process';
 import xml2js from 'xml2js';
 import util from 'util';
+import getOpts from 'getopts';
 
 import { writeAsJson } from '../projects/service/file';
-import { error, warn } from '../projects/service/log';
+import { error, warn, info } from '../projects/service/log';
 import { Rect, Vect } from '../projects/geom';
 import { assertDefined, pause } from '../projects/service/generic';
 
@@ -34,6 +37,11 @@ if (!sifzFolder || !fs.existsSync(sifzFilepath)) {
     `);
     process.exit(1);
 }
+
+const opts = getOpts(process.argv);
+const [
+  onlyWriteJson,
+] = [opts.json];
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'npc', sifzFolder);
@@ -165,12 +173,14 @@ async function main() {
           contacts,
           deltas,
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
+          pathPng: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.png`,
+          pathWebp: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.webp`,
         };
       });
       
       /** @type {NPC.ParsedNpc} */
       const npcJson = {
-        npcName: sifzFolder,
+        npcJsonKey: /** @type {NPC.NpcJsonKey} */ (sifzFolder),
         animLookup,
         aabb: aabbRectZoomed.json, // Already zoomed
         radius: npcRadiusZoomed,
@@ -178,6 +188,12 @@ async function main() {
       };
 
     writeAsJson(npcJson, outputJsonPath);
+    info(`Wrote ${outputJsonPath}`);
+
+    if (onlyWriteJson) {
+      info('Skipped rendering');
+      process.exit(0);
+    }
 
     /**
      * ========================
@@ -200,7 +216,7 @@ async function main() {
       const startFrame = parseInt(time);
       const endFrame = startFrame + (frameCount - 1);
       
-      console.info(`Rendering ${animName}...`, {startFrame, endFrame});
+      info(`Rendering ${animName}...`, {startFrame, endFrame});
 
       /**
        * Remove existing file, because png-spritesheet won't overwrite

@@ -11,15 +11,10 @@ declare namespace NPC {
   );
 
   interface NpcMetaJson {
+    jsonKey: NpcJsonKey;
     parsed: NPC.ParsedNpc;
-    /**
-     * Scale factor we'll apply to sprites.
-     * Beware that sprites are probably themselves scaled up relative to original SVG.
-     * See zoom factor in json.
-     */
+    /** Scale factor we'll apply to sprites. (?) */
     scale: number;
-    /** Ensure NPC faces along positive x-axis */
-    offsetRadians: number;
     radius: number;
     speed: number;
     /** @emotion/css */
@@ -240,19 +235,6 @@ declare namespace NPC {
     /** Distance from iB at which they will collide */
     distB: number;
   }
-  export interface NpcSegCollision {
-    /**
-     * Time when npc will collide,
-     * - `i0 + (seconds * speed) . tangent0`
-     * 
-     * where:
-     * - `i0` is current position
-     * - `speed` in world-units per second
-     */
-    seconds: number;
-    /** Distance from i0 at which npc will collide */
-    dist: number;
-  }
 
   export interface SessionCtxt {
     /** Session key */
@@ -346,7 +328,7 @@ declare namespace NPC {
 
   //#region parse
   interface ParsedNpc {
-    npcName: string;
+    npcJsonKey: NpcJsonKey;
     animLookup: { [animName: string]: NpcAnimMeta };
     /** Axis aligned bounded box, already scaled by `zoom` */
     aabb: Geom.RectJson;
@@ -356,17 +338,6 @@ declare namespace NPC {
     zoom: number;
   }
 
-  interface ParsedNpcCheerio {
-    npcName: string;
-    animLookup: { [animName: string]: NPC.NpcAnimCheerio };
-    /** How much animLookup and rendered PNGs have been scaled up. */
-    zoom: number;
-  }
-
-  interface NpcAnimCheerio extends NpcAnimMeta {
-    defsNode: import('cheerio').Element | null;
-    frameNodes: import('cheerio').Element[];
-  }
 
   interface NpcAnimMeta {
     animName: string;
@@ -380,6 +351,9 @@ declare namespace NPC {
     deltas: number[];
     /** The sum of `deltas` */
     totalDist: number;
+
+    pathPng: string;
+    pathWebp: string;
   }
 
   //#endregion

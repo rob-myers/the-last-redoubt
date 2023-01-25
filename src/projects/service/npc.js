@@ -29,10 +29,10 @@ ${Object.keys(parsed.animLookup).map((animName) => `
     height: ${parsed.aabb.height}px;
     left: ${-parsed.aabb.width * 0.5}px;
     top: ${-parsed.aabb.height * 0.5}px;
-    background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.png');
+    background: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
   }
   &.${animName}.webp .body {
-    background: url('/assets/npc/${parsed.npcName}/${parsed.npcName}--${animName}.webp');
+    background: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
   }
 `).join('\n\n')}
 `.trim();

@@ -39,9 +39,9 @@ const outputJson = animDirs.reduce(
         return {
             ...agg,
             [folderName]: {
+                jsonKey: /** @type {NPC.NpcJsonKey} */ (folderName),
                 parsed,
                 scale,
-                offsetRadians,
                 radius: parsed.radius * scale,
                 speed: 70, // 🚧 justify
                 css: computeSpritesheetCss(parsed, offsetRadians, scale),
