@@ -75,7 +75,7 @@ export default function World(props) {
       initZoom={1.5}
       initCenter={{ x: 300, y: 300 }}
       background="#000"
-      grid
+      // grid // 🚧 slow zoom
       onLoad={api => (state.panZoom = api) && update()}
     >
       <Geomorphs
