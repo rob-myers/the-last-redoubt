@@ -39,15 +39,13 @@ export default function World(props) {
       return [state.doors, state.fov, state.npcs, state.panZoom].every(x => x.ready);
     },
 
+    // 🚧 remove?
     updateAll() {
-      try {
-        state.fov.updateClipPath();
-        state.doors.updateVisibleDoors();
-      } catch (e) {
-        console.error('updateAll failed', e);
-      }
+      state.fov.updateClipPath();
       update();
     },
+
+    update,
   }));
 
   // ℹ️ `state.gmGraph.ready` can be true without ever enabling,
@@ -94,16 +92,17 @@ export default function World(props) {
         onLoad={api => (state.npcs = api) && update()}
       />
 
-      <FOV
-        api={state}
-        onLoad={api => (state.fov = api) && update()}
-      />
-
       <Doors
         api={state}
         init={props.init.open}
         onLoad={api => (state.doors = api) && update()}
       />
+
+      <FOV
+        api={state}
+        onLoad={api => (state.fov = api) && update()}
+      />
+
 
     </CssPanZoom>
   ) : null;
@@ -129,6 +128,7 @@ export default function World(props) {
  * @property {PanZoom.CssApi} panZoom
  * @property {() => boolean} isReady
  * @property {() => void} updateAll
+ * @property {() => void} update
  * @property {StateUtil} lib
  */
 

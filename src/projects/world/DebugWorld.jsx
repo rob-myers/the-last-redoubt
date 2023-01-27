@@ -15,7 +15,10 @@ export default function DebugWorld(props) {
 
   const { fov, gmGraph } = props.api;
   const { gmId, roomId } = fov;
-  if (typeof gmId !== 'number') {
+  if (
+    typeof gmId !== 'number' // FOV unloaded
+    || gmId === -1 // FOV in initial state
+  ) {
     return null;
   }
 

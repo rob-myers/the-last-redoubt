@@ -16,7 +16,7 @@ export class roomGraphClass extends BaseGraph {
   }
 
   /**
-   * Given nodes, find all adjacent doors.
+   * Given roomIds (particular nodes), find all adjacent doors.
    * @param {...number} roomIds
    */
   getAdjacentDoors(...roomIds) {
@@ -70,6 +70,8 @@ export class roomGraphClass extends BaseGraph {
 
   /**
    * Given room id, find all rooms reachable via a single window or (open) door.
+   * - Whenever non-empty it includes `roomId`.
+   * - It is empty iff `openDoorIds` truthy and has no door in `roomId`
    * @param {number} roomId
    * @param {number[]} [openDoorIds]
    */

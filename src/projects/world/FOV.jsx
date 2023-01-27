@@ -13,8 +13,11 @@ export default function FOV(props) {
   const { gmGraph, gmGraph: { gms } } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    gmId: 0,
-    roomId: 9,
+    /**
+     * @see {state.setRoom} must be invoked before any room is visible (e.g. spawn npc)
+     */
+    gmId: -1,
+    roomId: -1,
     doorId: -1,
     // gmId: 0, roomId: 2,
     // gmId: 0, roomId: 15, // ISSUE
@@ -29,17 +32,23 @@ export default function FOV(props) {
     ready: true,
 
     setRoom(gmId, roomId, doorId) {
-      if (state.gmId !== gmId || state.roomId !== roomId) {
+      if (state.gmId !== gmId || state.roomId !== roomId || state.doorId === -1) {
         state.gmId = gmId;
         state.roomId = roomId;
         state.doorId = doorId;
-        props.api.updateAll();
+        props.api.doors.updateVisibleDoors();
+        state.updateClipPath();
+        props.api.update();
         return true;
       } else {
         return false;
       }
     },
     updateClipPath() {
+      if (state.gmId === -1) {
+        return;
+      }
+      
       const { prev } = state;
       const gm = gms[state.gmId];
       const openDoorsIds = props.api.doors.getOpen(state.gmId);
@@ -61,6 +70,12 @@ export default function FOV(props) {
       const { polys: lightPolys, gmRoomIds } = gmGraph.computeLightPolygons(state.gmId, state.roomId);
       lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
       gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });
+
+      // Must prevent adjacent geomorphs from covering hull doors
+      const adjGmToPolys = computeAdjHullDoorPolys(state.gmId, gmGraph);
+      Object.entries(adjGmToPolys).forEach(([gmStr, polys]) =>
+        lightPolys[Number(gmStr)] = Poly.union(lightPolys[Number(gmStr)].concat(polys))
+      );
 
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = lightPolys.map((polys, altGmId) =>
@@ -148,8 +163,9 @@ export default function FOV(props) {
 
  const rootCss = css`
   /**
-    * Fix Chrome over-clipping,
+    * Fix Chrome over-clipping
     * 👁 Desktop: unmax Tabs: keep walking
+    * ℹ️ happened on put <FOV> after <Doors>
     */
   will-change: transform;
 
@@ -197,4 +213,21 @@ function compareCoreState(prev, next) {
     closedIds: closedDoorIds.length ? closedDoorIds : null,
     changed: justSpawned || changedRoom || openedDoorIds.length || closedDoorIds.length,
   };
+}
+
+/**
+ * adj geomorph id to hullDoor polys we should remove
+ * @param {number} gmId 
+ * @param {Graph.GmGraph} gmGraph 
+ */
+function computeAdjHullDoorPolys(gmId, gmGraph) {
+  const adjGmToPolys = /** @type {Record<number, Poly[]>} */ ({});
+  for (const localNode of gmGraph.getSuccs(gmGraph.nodesArray[gmId])) {
+    const adjNode = gmGraph.getAdjacentDoor(localNode);
+    if (adjNode) {
+      const otherHullDoor = gmGraph.gms[adjNode.gmId].hullDoors[adjNode.hullDoorId];
+      (adjGmToPolys[adjNode.gmId] ||= []).push(otherHullDoor.poly);
+    }
+  }
+  return adjGmToPolys;
 }

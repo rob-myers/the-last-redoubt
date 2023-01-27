@@ -328,6 +328,7 @@ declare namespace Geomorph {
     poly: P;
     /** `poly.rect` i.e. rotated rectangle */
     rect: R;
+    /** Segment through middle of door */
     seg: [V, V];
     /**
      * Points towards `entries[0]`.

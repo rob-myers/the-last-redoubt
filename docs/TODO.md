@@ -5,8 +5,14 @@
 - 🚧 dynamic lighting
   - consider removing unseen door canvas
     - ✅ avoid partially dark walls
-    - try including doors in geomorph.png
-    - maybe ok to drawRect "unlit rects including door"
+    - 🚧 try including doors in geomorph 301 png
+      - ✅ show all doors in curr/adj room
+      - ❌ show all doors in related room
+      - ✅ fix half-closed-door-issue
+      - ✅ hull doors should be cut out of adjacent geomorphs
+      - try drawRect "unlit rects including door"
+    - redo lit geomorph 301 where lights only intersect in same room
+    - ...
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install
@@ -78,6 +84,8 @@
   - 🚧 @mobile problem persists
     - not clip-path specific
     - zoom smooth improved by removing .shade
+  - @desktop again
+    - shitty fix is `will-change: contents` in .panzoom-scale
 
 - should tracking camera stop when click outside navmesh during walk?
 

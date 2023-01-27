@@ -18,6 +18,7 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    // 🚧 remove
     canvas: [],
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
@@ -28,6 +29,7 @@ export default function Doors(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     vis: gms.map(_ => ({})),
 
+    // 🚧 remove
     /** @param {number} gmId */
     drawInvisibleInCanvas(gmId) {
       const canvas = state.canvas[gmId];
@@ -64,7 +66,7 @@ export default function Doors(props) {
     async onToggleDoor(gmId, doorId, byPlayer) {
 
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
-      const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeByIds(gmId, hullDoorId);
+      const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
 
       // NOTE door can be invisible e.g. if closing
@@ -130,7 +132,8 @@ export default function Doors(props) {
     },
     setVisible(gmId, doorIds) {
       state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
-      state.drawInvisibleInCanvas(gmId);
+      // 🚧 moving canvas from Doors to Geomorphs
+      // state.drawInvisibleInCanvas(gmId);
       update();
     },
     tryCloseDoor(gmId, doorId) {
@@ -144,23 +147,37 @@ export default function Doors(props) {
       state.closing[gmId][doorId] = { timeoutId };
     },
     updateVisibleDoors() {
-      const { fov } = props.api;
-      const gm = gms[fov.gmId]
-
       /**
        * Visible doors in current geomorph including related doors.
-       * Also possibly hull doors from other geomorphs.
+       * - includes all doors in current/adj rooms
+       * - extended by relDoorId (relate-connector)
+       * - possibly includes hull doors from other geomorphs
+       * - over-approx but only computed on change current room
        */
       const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
-      nextVis[fov.gmId] = gm.roomGraph.getAdjacentDoors(fov.roomId).flatMap(({ doorId }) =>
-        gm.relDoorId[doorId] && state.open[fov.gmId][doorId]
-          ? [doorId, ...gm.relDoorId[doorId].doorIds]
-          : doorId
-      );
 
+      const { fov } = props.api;
+      const gm = gms[fov.gmId];
+
+      const adjRoomIds = gm.roomGraph.getAdjRoomIds(fov.roomId);
+      /** All doors in curr/adj rooms, extended 1-step by relDoorId */
+      const extAdjDoors = gm.roomGraph.getAdjacentDoors(
+        // Cover degenerate case of isolated room (no doors)
+        ...adjRoomIds.length ? adjRoomIds : [fov.roomId]
+      ).flatMap(x =>
+        gm.relDoorId[x.doorId] && state.open[fov.gmId][x.doorId]
+          ? [x.doorId, ...gm.relDoorId[x.doorId].doorIds]
+          : x.doorId
+      );
+      nextVis[fov.gmId] = extAdjDoors;
+
+      // Include hull doors from neighbouring geomorphs
+      // We don't include adjs or ext by relDoorId
       gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
         gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
-      ).forEach(({ adjGmId, adjDoorId }) => (nextVis[adjGmId] = nextVis[adjGmId] || []).push(adjDoorId));
+      ).forEach(({ adjGmId, adjDoorId }) =>
+        (nextVis[adjGmId] ||= []).push(adjDoorId)
+      );
 
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
     },
@@ -174,7 +191,8 @@ export default function Doors(props) {
 
   React.useEffect(() => {// Initial setup
     if (gms && npcs.ready) {
-      gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
+      // 🚧 moving canvas from Doors to Geomorphs
+      // gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
 
       const handlePause = npcs.events.subscribe(e => {
         e.key === 'disabled' && // Cancel future door closings

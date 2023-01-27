@@ -115,10 +115,12 @@ export class gmGraphClass extends BaseGraph {
       /**
        * These additional line segments are needed when 2 doors
        * adjoin a single room e.g. double doors.
-       * _TODO_ use fewer segments
        */
-      const closedDoorSegs = this.gms[area.gmId].doors.filter((_, id) =>
-        id !== area.doorId && !relDoorIds.includes(id)
+      const closedDoorSegs = this.gms[area.gmId].doors.filter((x, id) =>
+        // Seems to solve half-closed-door issue,
+        // 🤔 But why are doors adj to current room fully vis?
+        x.roomIds.includes(rootRoomId)
+        && id !== area.doorId && !relDoorIds.includes(id)
       ).map(x => x.seg);
 
       return {
@@ -161,10 +163,12 @@ export class gmGraphClass extends BaseGraph {
     }
 
     /**
-     * - Originally, `relate-connectors` tag induced a relation between doorIds.
-     *   We _extend_ light area when exactly one of them is in @see adjOpenDoorIds.
-     * - Light is extended through a door in an adjacent room, non-adjacent to current room.
-     * - _TODO_ test relations R(doorId, windowId)
+     * - In SVG `relate-connectors` tag induced a relation between doorIds.
+     *   We extend_light area when exactly one of them is in
+     *   @see {adjOpenDoorIds}.
+     * - Light is extended through a door in an adjacent room,
+     *   non-adjacent to current room.
+     * - 🚧 test relations R(doorId, windowId)
      */
     const relDoorIds = (gm.relDoorId[doorId]?.doorIds || []).filter(relDoorId =>
       openDoorIds.includes(relDoorId)
@@ -474,7 +478,7 @@ export class gmGraphClass extends BaseGraph {
    * @param {number} gmId 
    * @param {number} hullDoorId 
    */
-  getDoorNodeByIds(gmId, hullDoorId) {
+  getDoorNodeById(gmId, hullDoorId) {
     const gm = this.gms[gmId];
     const nodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
     return /** @type {Graph.GmGraphNodeDoor} */ (this.getNodeById(nodeId));
@@ -495,7 +499,7 @@ export class gmGraphClass extends BaseGraph {
   getOpenDoorArea(gmId, doorId) {
     const gm = this.gms[gmId];
     const door = gm.doors[doorId];
-    const hullDoorId = gm.hullDoors.indexOf(door);
+    const hullDoorId = gm.getHullDoorId(door);
 
     if (hullDoorId === -1) {
       const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getDoorNode(doorId));
@@ -540,12 +544,12 @@ export class gmGraphClass extends BaseGraph {
    * @param {number} hullDoorId 
    */
   isHullDoorSealed(gmId, hullDoorId) {
-    const doorNode = this.getDoorNodeByIds(gmId, hullDoorId);
+    const doorNode = this.getDoorNodeById(gmId, hullDoorId);
     if (doorNode === null) {
       console.warn(`hull door not found`, gmId, hullDoorId);
       return true;
     }
-    return this.getDoorNodeByIds(gmId, hullDoorId).sealed;
+    return this.getDoorNodeById(gmId, hullDoorId).sealed;
   }
 
   /**
