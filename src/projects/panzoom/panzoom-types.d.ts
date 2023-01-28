@@ -51,7 +51,7 @@ declare namespace PanZoom {
     isIdle(): boolean;
     async panZoomTo(scale?: number, worldPoint?: Geom.VectJson, durationMs: number, easing?: string): Promise<void>;
     async followPath(path: Geom.Vect[], { animScaleFactor: number });
-    releaseAnim(anim: Animation): void;
+    releaseAnim(anim: Animation, parentEl: HTMLElement): void;
     rootRef(el: null | HTMLDivElement): void;
     /** Use `(x, y, scale)` to set `style.transform`s */
     setStyles(): void;

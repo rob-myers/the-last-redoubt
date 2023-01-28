@@ -232,7 +232,7 @@ export default function CssPanZoom(props) {
           trAnim.addEventListener('finish', () => {
             resolve('completed');
             // state.events.next({ key: 'completed-panzoom-to' })
-            state.releaseAnim(trAnim);
+            state.releaseAnim(trAnim, state.translateRoot);
           });
           trAnim.addEventListener('cancel', () => {
             reject('cancelled');
@@ -333,8 +333,8 @@ export default function CssPanZoom(props) {
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
-            state.releaseAnim(trAnim);
-            scAnim && state.releaseAnim(scAnim);
+            state.releaseAnim(trAnim, state.translateRoot);
+            scAnim && state.releaseAnim(scAnim, state.scaleRoot);
             // state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
           });
           trAnim.addEventListener('cancel', async () => {
@@ -344,8 +344,10 @@ export default function CssPanZoom(props) {
           });
         });
       },
-      releaseAnim(anim) {
-        anim.commitStyles();
+      releaseAnim(anim, parentEl) {
+        if (isAnimAttached(anim, parentEl)) {
+          anim.commitStyles();
+        }
         anim.cancel();
       },
       rootRef(el) {
