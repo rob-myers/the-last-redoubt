@@ -52,7 +52,7 @@ export function isNpcActionKey(input) {
 }
 
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true, "showLabels": true };
+const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true };
 
 /**
  * @param {string} input 

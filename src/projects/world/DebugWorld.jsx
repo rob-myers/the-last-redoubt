@@ -220,7 +220,6 @@ export default function DebugWorld(props) {
  * @property {boolean} [gmOutlines]
  * @property {boolean} [localOutline]
  * @property {boolean} [showIds]
- * @property {boolean} [showLabels]
  * @property {boolean} [windows]
  * @property {import('../world/World').State} api
  * @property {(debugApi: State) => void} onLoad

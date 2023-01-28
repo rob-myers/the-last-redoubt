@@ -140,7 +140,7 @@ declare namespace NPC {
     decorKey?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
-    /** Induced by e.g. `npc config debug` or `npc config debug showLabels` */
+    /** Induced by e.g. `npc config debug` or `npc config debug showIds` */
     configKey?: string;
   }
 
@@ -153,7 +153,6 @@ declare namespace NPC {
     | 'localOutline'
     | 'omnipresent'
     | 'showIds'
-    | 'showLabels'
   );
 
   interface NpcLineSeg {

@@ -57,7 +57,6 @@ export default function NPCs(props) {
           case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
           case 'omnipresent': return !!ctxt.omnipresent;
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
-          case 'showLabels': return debugStyle.getPropertyValue(cssName.debugShowLabels) === 'none' ? false : true;
           case 'configKey':
           case 'decorKey':
           case 'npcKey':
@@ -80,7 +79,6 @@ export default function NPCs(props) {
           case 'localOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
-          case 'showLabels': debugStyle.setProperty(cssName.debugShowLabels, value ? 'initial' : 'none'); break;
           case 'configKey':
           case 'decorKey':
           case 'npcKey':
@@ -101,7 +99,6 @@ export default function NPCs(props) {
           'localOutline',
           'omnipresent',
           'showIds',
-          'showLabels',
         ];
       },
       getOwnPropertyDescriptor() {
