@@ -318,6 +318,21 @@ function outsetConnectorEntry(connector, amount) {
 }
 
 /**
+ * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {Geom.VectJson} viewPos local position inside geomorph
+ * @returns {[Geom.Vect, Geom.Vect]}
+ */
+export function getConnectorOtherSide(connector, viewPos) {
+  const { baseRect, normal, seg } = connector;
+  const dim = Math.min(baseRect.width, baseRect.height);
+  const sign = Vect.from(seg[0]).sub(viewPos).dot(normal) >= 0 ? 1 : -1
+  // 🚧 0.5 ensures we "close the outline",
+  // but should actually add more line segments
+  const delta = (sign * dim/2) * 0.5;
+  return [seg[0].clone().addScaledVector(normal, delta), seg[1].clone().addScaledVector(normal, delta)];
+}
+
+/**
  * @param {Geomorph.ConnectorRectJson} x
  * @returns {Geomorph.ParsedConnectorRect}
  */

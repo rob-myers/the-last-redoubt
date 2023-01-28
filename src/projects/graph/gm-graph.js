@@ -2,7 +2,7 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars } from "../service/geom";
-import { computeLightPosition } from "../service/geomorph";
+import { computeLightPosition, getConnectorOtherSide } from "../service/geomorph";
 import { error } from "../service/log";
 import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
 
@@ -112,16 +112,29 @@ export class gmGraphClass extends BaseGraph {
      * For each area we raycast a light from specific position.
      */
     const unjoinedLights = doorLightAreas.flatMap(({ area, relDoorIds }) => {
+      const isOpen = this.api.doors.open[area.gmId];
+
+      // Need local position of player in geomorph to compute connector other side
+      const playerPos = assertNonNull(this.api.npcs.getPlayer()).getPosition();
+      this.gms[area.gmId].inverseMatrix.transformPoint(playerPos);
+
       /**
        * These additional line segments are needed when 2 doors
        * adjoin a single room e.g. double doors.
        */
-      const closedDoorSegs = this.gms[area.gmId].doors.filter((x, id) =>
-        // Seems to solve half-closed-door issue,
-        // 🤔 But why are doors adj to current room fully vis?
-        x.roomIds.includes(rootRoomId)
-        && id !== area.doorId && !relDoorIds.includes(id)
-      ).map(x => x.seg);
+      const closedDoorSegs = this.gms[area.gmId].doors.filter((x, otherDoorId) =>
+        !isOpen[otherDoorId]
+        && !relDoorIds.includes(otherDoorId) && otherDoorId !== area.doorId
+        && (
+          // Solve half-closed-door issue
+          x.roomIds.includes(rootRoomId)
+          // Handle exactly 1 double door closed in adjacent room
+          || x.tags.includes('double')
+        )
+      // ).map(x => x.seg);
+      // 🚧 segment currently cuts off a bit of double doors
+      // 🚧 instead, provide more lines...
+      ).map(x => getConnectorOtherSide(x, playerPos));
 
       return {
         gmId: area.gmId,

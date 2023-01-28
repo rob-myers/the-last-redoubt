@@ -2,6 +2,16 @@
 
 ## In progress
 
+- double doors issue: light going through closed one
+  - ✅ fix light overflow
+  - 🚧 doors slightly cut off
+
+- `<Doors>` are slightly offset from underlying door in PNG
+- split hull doors into two
+- can specify door as `split`
+- review how `relate-connector` extends visible rooms
+- should see more visible doors through hull door
+
 - 🚧 dynamic lighting
   - ✅ consider removing unseen door canvas
   - ✅ avoid partially dark walls
