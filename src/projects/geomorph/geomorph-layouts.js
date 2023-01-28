@@ -71,7 +71,7 @@ const layoutDefs = {
       { symbol: 'console--018--1x1', transform: [-1, 0, 0, 1, 240, 0] },
       { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },
       { symbol: 'lab--018--4x4', transform: [1, 0, 0, -1, 360, 240] },
-      { symbol: 'lab--018--4x4', transform: [1, 0, 0, -1, 600, 240] },
+      { symbol: 'lab--018--4x4', transform: [-1, 0, 0, -1, 600 + 240, 240] },
       { symbol: 'ships-locker--020--2x2', transform: [1, 0, 0, 1, 840, 120] },
       { symbol: 'ships-locker--007--1x2', transform: [1, 0, 0, -1, 960, 60] },
       { symbol: 'ships-locker--003--1x1', transform: [0, 1, -1, 0, 1020, 120] },
