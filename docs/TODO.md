@@ -2,14 +2,19 @@
 
 ## In progress
 
-- double doors issue: light going through closed one
-  - ✅ fix light overflow
-  - 🚧 doors slightly cut off
+- ✅ review how `relate-connector` extends visible rooms
+  - rather explicit but probably right
+
+- spawn initially no doors issue?
+
+- ✅ double doors issue: light going through closed one
+  - ✅ fix light overflow using tag `double`
+  - ⛔️ doors slightly cut off
+  - can also happen via related door seeing both doors
 
 - `<Doors>` are slightly offset from underlying door in PNG
 - split hull doors into two
 - can specify door as `split`
-- review how `relate-connector` extends visible rooms
 - should see more visible doors through hull door
 
 - 🚧 dynamic lighting
@@ -83,7 +88,7 @@
   - geomorphs use webp with png fallback
 
 - can specify npc filter e.g. `sepia(1)`
-- strategy for unfetched spritesheets?
+- ✅ strategy for prefetching spritesheets
 
 - watch synfig files and re-render?
 

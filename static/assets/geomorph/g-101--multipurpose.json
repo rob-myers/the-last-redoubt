@@ -1202,6 +1202,20 @@
         }
       },
       {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [184.684, 573.054],
+              [184.684, 743.121],
+              [174.684, 743.121],
+              [174.684, 573.054]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
@@ -2040,6 +2054,15 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[183, 604], [183, 648], [177, 648], [177, 604]]]
+        }
+      },
+      {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[181, 586.2068], [181, 610.2068], [179, 610.2068], [179, 586.2068]]
+          ]
         }
       },
       {

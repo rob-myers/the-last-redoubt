@@ -326,6 +326,20 @@
         }
       },
       {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [174.684, 573.054],
+              [174.684, 743.121],
+              [184.684, 743.121],
+              [184.684, 573.054]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
@@ -533,7 +547,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1674917136939.5808
+    "lastModified": 1674933097846.709
   },
   "102--hull": {
     "key": "102--hull",
@@ -723,7 +737,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1674570733529.1038
+    "lastModified": 1674938245161.5747
   },
   "301--hull": {
     "key": "301--hull",
@@ -3530,7 +3544,7 @@
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[580, 640], [580, 1160], [620, 1160], [620, 640]]]
+          "coordinates": [[[585, 640], [585, 1160], [615, 1160], [615, 640]]]
         }
       },
       {
@@ -3570,7 +3584,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1666690702009.559
+    "lastModified": 1674936318757.504
   },
   "empty-room--020--2x4": {
     "key": "empty-room--020--2x4",
@@ -3666,10 +3680,19 @@
           "type": "Polygon",
           "coordinates": [[[-15, 620], [-15, 840], [15, 840], [15, 620]]]
         }
+      },
+      {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[-5, 531.034], [-5, 651.034], [5, 651.034], [5, 531.034]]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1674918318276.2224
+    "lastModified": 1674931692894.681
   },
   "empty-room--060--4x4": {
     "key": "empty-room--060--4x4",
@@ -3917,10 +3940,19 @@
           "type": "Polygon",
           "coordinates": [[[-15, 1250], [-15, 1475], [15, 1475], [15, 1250]]]
         }
+      },
+      {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[-5, 192.037], [-5, 1296.43], [5, 1296.43], [5, 192.037]]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
-    "lastModified": 1674570851098.7646
+    "lastModified": 1674937788977.118
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
@@ -4584,10 +4616,24 @@
           "type": "Polygon",
           "coordinates": [[[1185, 640], [1185, 860], [1215, 860], [1215, 640]]]
         }
+      },
+      {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1196.003, 504.629],
+              [1196.003, 674.696],
+              [1206.003, 674.696],
+              [1206.003, 504.629]
+            ]
+          ]
+        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 920},
-    "lastModified": 1674570941146.756
+    "lastModified": 1674936513119.4521
   },
   "lab--018--4x4": {
     "key": "lab--018--4x4",
@@ -4726,7 +4772,7 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "frosted"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -4759,7 +4805,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -32.5, "width": 1220, "height": 1243},
-    "lastModified": 1670951699355.1008
+    "lastModified": 1674938614660.4167
   },
   "lab--023--4x4": {
     "key": "lab--023--4x4",
@@ -7246,7 +7292,7 @@
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[50, -21], [50, 19], [250, 19], [250, -21]]]
+          "coordinates": [[[50, -15], [50, 15], [250, 15], [250, -15]]]
         }
       },
       {
@@ -7258,7 +7304,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
-    "lastModified": 1670863798001.0017
+    "lastModified": 1674936045663.5354
   },
   "ships-locker--007--1x2": {
     "key": "ships-locker--007--1x2",
@@ -7300,7 +7346,7 @@
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[50, -21], [50, 19], [250, 19], [250, -21]]]
+          "coordinates": [[[50, -15], [50, 15], [250, 15], [250, -15]]]
         }
       },
       {
@@ -7312,7 +7358,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
-    "lastModified": 1670863798077.9238
+    "lastModified": 1674936079638.8289
   },
   "ships-locker--011--1x2": {
     "key": "ships-locker--011--1x2",
@@ -7409,7 +7455,7 @@
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[350, -21], [350, 19], [550, 19], [550, -21]]]
+          "coordinates": [[[350, -15], [350, 15], [550, 15], [550, -15]]]
         }
       },
       {
@@ -7421,7 +7467,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1670863798000.9216
+    "lastModified": 1674936208308.443
   },
   "shop--027--0.4x1.6": {
     "key": "shop--027--0.4x1.6",
