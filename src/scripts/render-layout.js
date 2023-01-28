@@ -1,7 +1,7 @@
 /**
  * - Usage:
  *   - `yarn render-layout 301`
- *   - `yarn render-layout 301 --doors`
+ *   - `yarn render-layout 301 --open`
  *   - `yarn render-layout 301 --debug`
  *   - `yarn render-layout 101 --debug --scale=4`
  *   - `yarn render-layout 301 --scale=1 --suffix=x1`
@@ -33,12 +33,12 @@ const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
 const [
-  doors,
+  open,
   debug,
   scale,
   suffix,
   defaultScale,
-] = [opts.doors, opts.debug, opts.scale, opts.suffix, 2];
+] = [opts.open, opts.debug, opts.scale, opts.suffix, 2];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
 const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
@@ -50,7 +50,7 @@ main();
 async function main() {
   try {
     // Do the rendering
-    const { layout, canvas } = await renderLayout(foundLayoutDef);
+    const { layout, canvas } = await renderLayout(foundLayoutDef, {open: !!open, debug: !!debug, scale});
     // Write JSON (also done in svg-meta)
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
@@ -69,8 +69,9 @@ async function main() {
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
+ * @param {{ open: boolean; debug: boolean; scale?: number}} opts
  */
-async function renderLayout(def) {
+export async function renderLayout(def, { open, debug, scale }) {
 
   const canvas = createCanvas(0, 0);
   const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
@@ -85,11 +86,11 @@ async function renderLayout(def) {
     {
       scale: scale || defaultScale,
       obsBounds: true, wallBounds: true, navTris: true,
-      ...doors && {
-        doors: true,
+      doors: true,
+      ...open && {
+        doors: false,
       },
       ...debug && {
-        doors: true,
         labels: true,
       },
     },

@@ -1,21 +1,20 @@
 /**
  * Usage
  * > `yarn bake-lighting 301`
- * > where respective `/geomorph/{gmKey}.json` exists
  */
 /// <reference path="./deps.d.ts"/>
 
 import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
-import { createCanvas, loadImage } from 'canvas';
 
 import { Poly } from '../projects/geom';
 import { saveCanvasAsFile } from '../projects/service/file';
-import { getNormalizedDoorPolys, parseLayout } from '../projects/service/geomorph';
+import { getNormalizedDoorPolys } from '../projects/service/geomorph';
 import { geom } from '../projects/service/geom';
 import { fillPolygon } from '../projects/service/dom';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
+import { renderLayout } from './render-layout';
 
 const geomorphId = Number(process.argv[2]);
 const layoutDef = Object.values(layoutDefs).find(x => x.id === geomorphId);
@@ -35,30 +34,22 @@ if (!fs.existsSync(geomorphJsonPath)) {
   process.exit(1);
 }
 
-const scale = 2;
-
 main();
 
 async function main() {
 
-  /** @type {Geomorph.LayoutJson} */
-  const layoutJson = JSON.parse(fs.readFileSync(geomorphJsonPath).toString());
-  const layout = parseLayout(layoutJson);
-
-  const canvas = createCanvas(0, 0);
-  const pngRect = layout.items[0].pngRect;
-  canvas.width = pngRect.width * scale;
-  canvas.height = pngRect.height * scale;
+  // Doors are open
+  const { canvas, layout } = await renderLayout(foundLayoutDef, { open: true, debug: false });
+  // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
   
-  // Draw underlying geomorph PNG
-  const geomorphPngPath = path.resolve(outputDir, `${foundLayoutDef.key}.png`);
-  const loadedPng = await loadImage(geomorphPngPath);
-  ctxt.drawImage(loadedPng, 0, 0);
+  // Darken the geomorph
+  // 🚧 thus need to darken unlit drawRects
+  const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
+  ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  fillPolygon(ctxt, hullPolySansHoles);
 
-  // Draw the lights
-  ctxt.scale(scale, scale);
-  ctxt.translate(-pngRect.x, -pngRect.y);
+  //#region draw lights
   const lightSources = layout.lightSrcs;
   /** More than one polygon can happen e.g. Geomorph 102 */
   const allRoomsAndDoors = Poly.union([
@@ -66,7 +57,6 @@ async function main() {
     ...getNormalizedDoorPolys(layout.doors), // must extrude hull doors
     ...layout.windows.map(x => x.poly),
   ]);
-  const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
   const lights = lightSources.map(({ position, direction }, i) => {
     const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
     if (exterior) {
@@ -77,12 +67,8 @@ async function main() {
     }
   });
 
-  // Darken the geomorph
-  ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  fillPolygon(ctxt, hullPolySansHoles);
-
   ctxt.globalCompositeOperation = 'lighter';
-  // Draw lights as radial fill with drop off
+  // Radial fill with drop off
   lights.forEach((light, i) => {
     const { position, direction } = lightSources[i];
     const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, 300)
@@ -92,14 +78,14 @@ async function main() {
     ctxt.fillStyle = gradient;
     fillPolygon(ctxt, [light]);
   });
+  //#endregion
 
   // Save PNG
   await saveCanvasAsFile(canvas, outputPngPath);
   // Generate WEBP
   childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
   // Minify PNG
-  // ⛔️ can be worse than tinypng (467kb vs 534kb)
+  // ⛔️ seen worse than tinypng (467kb vs 534kb)
   childProcess.execSync(`pngquant -f ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
 
 }
-

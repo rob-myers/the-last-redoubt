@@ -3,16 +3,23 @@
 ## In progress
 
 - 🚧 dynamic lighting
-  - consider removing unseen door canvas
-    - ✅ avoid partially dark walls
-    - 🚧 try including doors in geomorph 301 png
-      - ✅ show all doors in curr/adj room
-      - ❌ show all doors in related room
-      - ✅ fix half-closed-door-issue
-      - ✅ hull doors should be cut out of adjacent geomorphs
-      - try drawRect "unlit rects including door"
-    - redo lit geomorph 301 where lights only intersect in same room
+  - ✅ consider removing unseen door canvas
+  - ✅ avoid partially dark walls
+  - ✅ try including doors in geomorph 301 png
+    - ✅ show all doors in curr/adj room
+    - ❌ show all doors in related room
+      > instead show all doors in curr/adj + 1-step relDoorId
+      > which only changes when curr room changes
+    - ✅ fix half-closed-door-issue
+    - ✅ hull doors should be cut out of adjacent geomorphs
+      > otherwise they cover up the hull doors
+  - 🚧 try drawRect "unlit rects including door"
+    - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
+    - ✅ bake-lighting does renderLayout with doors open before shade/lights
+    - move canvas into Geomorphs
     - ...
+  - redo lit geomorph 301 where lights only intersect in same room
+  - ...
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install
