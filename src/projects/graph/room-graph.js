@@ -70,8 +70,8 @@ export class roomGraphClass extends BaseGraph {
 
   /**
    * Given room id, find all rooms reachable via a single window or (open) door.
-   * - Whenever non-empty it includes `roomId`.
-   * - It is empty iff `openDoorIds` truthy and has no door in `roomId`
+   * - Does not include `roomId`.
+   * - Empty iff `openDoorIds` truthy and has no door in `roomId`
    * @param {number} roomId
    * @param {number[]} [openDoorIds]
    */

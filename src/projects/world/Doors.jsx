@@ -162,8 +162,7 @@ export default function Doors(props) {
       const adjRoomIds = gm.roomGraph.getAdjRoomIds(fov.roomId);
       /** All doors in curr/adj rooms, extended 1-step by relDoorId */
       const extAdjDoors = gm.roomGraph.getAdjacentDoors(
-        // Cover degenerate case of isolated room (no doors)
-        ...adjRoomIds.length ? adjRoomIds : [fov.roomId]
+        ...adjRoomIds.concat(fov.roomId)
       ).flatMap(x =>
         gm.relDoorId[x.doorId] && state.open[fov.gmId][x.doorId]
           ? [x.doorId, ...gm.relDoorId[x.doorId].doorIds]
