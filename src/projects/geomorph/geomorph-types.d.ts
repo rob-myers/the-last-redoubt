@@ -123,6 +123,9 @@ declare namespace Geomorph {
       doorIds: number[];
       windowIds: number[];
     }>;
+    parallelDoorId: Record<number, {
+      doorIds: number[];
+    }>;
     
     /** Points indexed by roomId */
     point: {

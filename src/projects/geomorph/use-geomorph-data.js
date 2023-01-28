@@ -45,10 +45,10 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       ));
 
     /**
-     * `relate-connectors`s relates a doorId to other doorId(s) or windowId(s).
+     * Each `relate-connectors` relates a doorId to other doorId(s) or windowId(s).
      * We'll use them to extend the light polygon i.e.
      * improve look of lighting under certain circumstances.
-     * - 🚧 move to precomputed json?
+     * - 🚧 move to precomputed json
      */
     const relDoorId = layout.groups.singles
       .filter(x => x.tags.includes('relate-connectors'))
@@ -67,6 +67,23 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         return agg;
       },
       /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
+    );
+
+    // 🚧 move to precomputed json
+    const parallelDoorId = layout.groups.singles
+      .filter(x => x.tags.includes('parallel-connectors'))
+      .reduce((agg, { poly }) => {
+        const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
+        doorIds.forEach(doorId => {
+          agg[doorId] ||= { doorIds: [] };
+          const alreadySeen = agg[doorId].doorIds;
+          agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
+        });
+        if (doorIds.length <= 1)
+          console.warn(`poly tagged 'parallel-connectors' should intersect ≥ 2 doors: (doorIds ${doorIds})`);
+        return agg;
+      },
+      /** @type {Geomorph.GeomorphData['parallelDoorId']} */ ({}),
     );
 
     //#region points by room
@@ -130,6 +147,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
       pngRect: Rect.fromJson(layout.items[0].pngRect),
       roomsWithDoors,
       relDoorId,
+      parallelDoorId,
       point: pointsByRoom,
       lazy: /** @type {*} */ (null), // Overwritten below
 
