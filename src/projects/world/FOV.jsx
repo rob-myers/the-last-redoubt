@@ -36,9 +36,10 @@ export default function FOV(props) {
         state.gmId = gmId;
         state.roomId = roomId;
         state.doorId = doorId;
-        props.api.doors.updateVisibleDoors();
         state.updateClipPath();
+        props.api.doors.updateVisibleDoors();
         props.api.update();
+        // setTimeout(() => props.api.doors.updateVisibleDoors(), 30); // 🚧 shows more?
         return true;
       } else {
         return false;

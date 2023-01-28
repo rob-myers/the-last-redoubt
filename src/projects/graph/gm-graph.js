@@ -111,30 +111,26 @@ export class gmGraphClass extends BaseGraph {
     /**
      * For each area we raycast a light from specific position.
      */
-    const unjoinedLights = doorLightAreas.flatMap(({ area, relDoorIds }) => {
+    const unjoinedLights = doorLightAreas.flatMap(({ area }) => {
+      /**
+       * We need additional line segments:
+       * - for doors parallel to area.door
+       * - for closed doors related to area.door
+       *
+       * They prevent light going through closed doors,
+       * and unsightly light patterns through open parallel doors.
+       */
+      const areaGm = this.gms[area.gmId];
       const isOpen = this.api.doors.open[area.gmId];
-
+      const blockedDoorIds = [
+        ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
+        ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !isOpen[doorId]),
+      ];
       // Need local position of player in geomorph to compute connector other side
       const playerPos = assertNonNull(this.api.npcs.getPlayer()).getPosition();
-      this.gms[area.gmId].inverseMatrix.transformPoint(playerPos);
-
-      /**
-       * These additional line segments are needed when 2 doors
-       * adjoin a single room e.g. double doors.
-       */
-      const closedDoorSegs = this.gms[area.gmId].doors.filter((x, otherDoorId) =>
-        !isOpen[otherDoorId]
-        && !relDoorIds.includes(otherDoorId) && otherDoorId !== area.doorId
-        && (
-          // Solve half-closed-door issue
-          x.roomIds.includes(rootRoomId)
-          // Handle exactly 1 double door closed in adjacent room
-          || x.tags.includes('double')
-        )
-      // ).map(x => x.seg);
-      // 🚧 segment currently cuts off a bit of double doors
-      // 🚧 instead, provide more lines...
-      ).map(x => getConnectorOtherSide(x, playerPos));
+      areaGm.inverseMatrix.transformPoint(playerPos);
+      // 🚧 These segs are not perfect i.e. part of door will be covered
+      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], playerPos));
 
       return {
         gmId: area.gmId,
@@ -142,7 +138,7 @@ export class gmGraphClass extends BaseGraph {
           position: this.getDoorLightPosition(area.gmId, rootRoomId, area.doorId),
           range: 2000,
           exterior: area.poly,
-          extraSegs: closedDoorSegs,
+          extraSegs,
         }),
       };
     });

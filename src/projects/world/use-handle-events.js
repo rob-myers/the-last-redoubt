@@ -81,10 +81,7 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'enter-room': {
-          // FOV
-          api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
-
-
+          // api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
           api.updateAll();
           break;
         }
