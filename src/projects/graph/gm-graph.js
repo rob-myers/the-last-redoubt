@@ -88,12 +88,12 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Compute lit area, determined by current room and open doors.
+   * Compute viewable area, determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
    */
-  computeDoorLights(gmId, rootRoomId) {
+  computeDoorViews(gmId, rootRoomId) {
     const gm = this.gms[gmId];
     const openDoorsIds = this.api.doors.getOpen(gmId);
 
@@ -105,13 +105,13 @@ export class gmGraphClass extends BaseGraph {
      * Each area is constructed by joining 2 roomWithDoors,
      * i.e. either side of the door corresponding to `doorId`.
      */
-    const doorLightAreas = doorIds.flatMap((doorId) =>
-      this.computeDoorLightArea(gmId, doorId, openDoorsIds, doorIds)??[]
+    const doorViewAreas = doorIds.flatMap((doorId) =>
+      this.computeDoorViewArea(gmId, doorId, openDoorsIds, doorIds)??[]
     );
     /**
      * For each area we raycast a light from specific position.
      */
-    const unjoinedLights = doorLightAreas.flatMap(({ area }) => {
+    const unjoinedLights = doorViewAreas.flatMap(({ area }) => {
       /**
        * We need additional line segments for:
        * - doors parallel to area.door
@@ -137,7 +137,7 @@ export class gmGraphClass extends BaseGraph {
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: this.getDoorLightPosition(area.gmId, rootRoomId, area.doorId),
+          position: this.getDoorViewPosition(area.gmId, rootRoomId, area.doorId),
           range: 2000,
           exterior: area.poly,
           extraSegs,
@@ -146,7 +146,7 @@ export class gmGraphClass extends BaseGraph {
     });
 
     /** Door ids connected to root room, including related ones */
-    const allDoorIds = doorIds.concat(doorLightAreas.flatMap(x => x.relDoorIds));
+    const allDoorIds = doorIds.concat(doorViewAreas.flatMap(x => x.relDoorIds));
 
     return {
       polys: this.gms.map((_, gmId) =>
@@ -166,7 +166,7 @@ export class gmGraphClass extends BaseGraph {
    * @param {number[]} openDoorIds 
    * @param {number[]} adjOpenDoorIds 
    */
-  computeDoorLightArea(gmId, doorId, openDoorIds, adjOpenDoorIds) {
+  computeDoorViewArea(gmId, doorId, openDoorIds, adjOpenDoorIds) {
     const gm = this.gms[gmId];
     const area = this.getOpenDoorArea(gmId, doorId);
     if (!area) {
@@ -205,11 +205,11 @@ export class gmGraphClass extends BaseGraph {
    * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
    */
   computeLightPolygons(gmId, rootRoomId) {
-    const { polys: doorLights, gmRoomIds } = this.computeDoorLights(gmId, rootRoomId);
+    const { polys: doorViews, gmRoomIds } = this.computeDoorViews(gmId, rootRoomId);
     // 🚧 windows should provide {gmId,roomId}s too
     const windowLights = this.computeWindowLights(gmId, rootRoomId);
     return {
-      polys: doorLights.map((lights, i) => lights.concat(windowLights[i])), // Zipped
+      polys: doorViews.map((lights, i) => lights.concat(windowLights[i])), // Zipped
       gmRoomIds,
     };
   }
@@ -462,15 +462,15 @@ export class gmGraphClass extends BaseGraph {
   /**
    * By default we move light inside current room by constant amount.
    * Sometimes this breaks (lies outside current room) or looks bad when combined,
-   * so can override via 'light' tagged rects.
+   * so can override via 'view' tagged rects.
    * @param {number} gmId
    * @param {number} rootRoomId
    * @param {number} doorId
    */
-  getDoorLightPosition(gmId, rootRoomId, doorId, permitReversed = true) {
+  getDoorViewPosition(gmId, rootRoomId, doorId, permitReversed = true) {
     const gm = this.gms[gmId];
     // Seems some geomorphs lack gm.point[x]
-    const custom = gm.point[rootRoomId]?.doorLight[doorId];
+    const custom = gm.point[rootRoomId]?.doorView[doorId];
     return (
       custom && (permitReversed || !custom.tags.includes('reverse'))
         ? custom.point.clone()

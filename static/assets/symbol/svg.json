@@ -203,7 +203,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -212,7 +212,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -226,7 +226,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -240,7 +240,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -254,14 +254,14 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[565, 620], [565, 660], [575, 660], [575, 620]]]
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -270,7 +270,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -284,7 +284,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -298,7 +298,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -312,7 +312,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -575,7 +575,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1674986281862.4146
+    "lastModified": 1675004963267.8442
   },
   "102--hull": {
     "key": "102--hull",
@@ -1626,7 +1626,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1640,7 +1640,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1654,7 +1654,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1668,7 +1668,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1703,7 +1703,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1712,7 +1712,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1825,7 +1825,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1674569851468.136
+    "lastModified": 1675004963265.564
   },
   "303--hull": {
     "key": "303--hull",
@@ -2476,7 +2476,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2626,7 +2626,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
-    "lastModified": 1674570055354.9185
+    "lastModified": 1675004963290.059
   },
   "bridge--042--8x9": {
     "key": "bridge--042--8x9",
@@ -3320,7 +3320,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3334,7 +3334,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3348,7 +3348,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3363,7 +3363,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
-    "lastModified": 1670865451235.3132
+    "lastModified": 1675004963265.2925
   },
   "console--018--1x1": {
     "key": "console--018--1x1",
@@ -7208,7 +7208,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -7222,14 +7222,14 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[128, 20], [128, 120], [168, 120], [168, 20]]]
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -7243,14 +7243,14 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[128, -80], [128, 20], [168, 20], [168, -80]]]
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -7264,7 +7264,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -7293,7 +7293,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": 10, "width": 1181, "height": 1182},
-    "lastModified": 1674993362310.0647
+    "lastModified": 1675004963265.497
   },
   "sensors--003--1x1.4": {
     "key": "sensors--003--1x1.4",

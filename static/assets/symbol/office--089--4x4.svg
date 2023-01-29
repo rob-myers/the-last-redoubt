@@ -39,22 +39,22 @@
       <title>ui label room office</title>
     </rect>
     <rect y="1018.647" width="100" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1064.445">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect x="128" width="40" height="100" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" y="20">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect y="1018.647" width="100" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1164.445">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect x="128" y="-80" width="40" height="100" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect x="2083.093" width="30" height="1506.286" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="4871.787" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -4835.656738, -1946.936279)">
       <title>parallel-connectors</title>

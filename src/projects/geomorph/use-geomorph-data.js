@@ -1,5 +1,6 @@
 import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
+import { svgSymbolTag } from "../service/const";
 import { geomorphJsonPath, getNormalizedDoorPolys } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
@@ -33,13 +34,13 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     ;
 
     /**
-     * Polys/rects tagged with `light` override default light position (i.e. offset from entry).
+     * Polys/rects tagged with `view` override default fov position (i.e. offset from entry).
      * - `poly` must be convex (e.g. rotated rect).
      * - `poly` must cover door and have center inside room.
      * - 🚧 move to precomputed json?
      */
     const lightMetas = layout.groups.singles
-      .filter(x => x.tags.includes('light'))
+      .filter(x => x.tags.includes(svgSymbolTag.view))
       .map(({ poly, tags }) => /** @type {const} */ (
         { center: poly.center, poly, reverse: tags.includes('reverse'), tags }
       ));
@@ -89,7 +90,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     //#region points by room
     const pointsByRoom = layout.rooms.map(/** @returns {Geomorph.GeomorphData['point'][*]} */  x => ({
       default: x.center, // Default is room's center (may not lie in room)
-      doorLight: {},
+      doorView: {},
       labels: [],
       spawn: [],
       ui: [],
@@ -112,7 +113,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
         } else roomId = otherRoomId;
       }// NOTE roomId could be -1
 
-      doorId >= 0 && (pointsByRoom[roomId].doorLight[doorId] = { point: p, tags });
+      doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = { point: p, tags });
       windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
     });
 

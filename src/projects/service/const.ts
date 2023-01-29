@@ -118,3 +118,8 @@ export const cancellableAnimDelayMs = 50;
 export const defaultDoorCloseMs = 7000;
 
 //#endregion
+
+export const svgSymbolTag = {
+  /** View positions associated to a single door */
+  view: 'view',
+} as const;

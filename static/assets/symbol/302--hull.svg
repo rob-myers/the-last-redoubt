@@ -128,16 +128,16 @@
       <title>ui label room repair bay</title>
     </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1003.927979)">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1063.927979)">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1123.927979)">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect x="69.996" width="5" height="168.981" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0.5, 0.866025, -0.866025, 0.5, 865.368225, 392.449188)">
       <title>relate-connectors</title>
@@ -146,10 +146,10 @@
       <title>relate-connectors</title>
     </rect>
     <rect y="500" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="746.496">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect y="427.41" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="970" transform="matrix(0, 1, -1, 0, 1507.410034, -554.985474)">
-      <title>light reverse</title>
+      <title>view reverse</title>
     </rect>
     <rect x="502.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light-source</title>

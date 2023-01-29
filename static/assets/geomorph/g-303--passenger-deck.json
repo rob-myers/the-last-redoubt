@@ -1421,7 +1421,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2724,7 +2724,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2738,7 +2738,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2747,7 +2747,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2761,7 +2761,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2770,7 +2770,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2784,7 +2784,7 @@
         }
       },
       {
-        "tags": ["light", "reverse"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [

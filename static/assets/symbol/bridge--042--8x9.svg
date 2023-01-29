@@ -163,13 +163,13 @@
       <title>ui label room corridor</title>
     </rect>
     <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect x="647.944" y="714.635" width="20" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>light</title>
+      <title>view</title>
     </rect>
     <rect x="1731.948" y="1142.035" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 3175.512207, -399.684174)">
-      <title>light</title>
+      <title>view</title>
     </rect>
   </g>
 </svg>
