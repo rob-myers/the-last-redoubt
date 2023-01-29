@@ -672,28 +672,28 @@
         }
       },
       {
-        "tags": ["door", "hull", "hull-w"],
+        "tags": ["door", "hull", "hull-w", "hull-w"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-e"],
+        "tags": ["door", "hull", "hull-e", "hull-e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-s"],
+        "tags": ["door", "hull", "hull-s", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[350, 596], [350, 604], [250, 604], [250, 596]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-s"],
+        "tags": ["door", "hull", "hull-s", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[950, 596], [950, 604], [850, 604], [850, 596]]]
@@ -940,63 +940,63 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[215, 390], [215, 400], [205, 400], [205, 390]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[405, 313], [395, 313], [395, 303], [405, 303]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[455, 425], [455, 435], [445, 435], [445, 425]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[695, 225], [695, 235], [685, 235], [685, 225]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1020, 420], [1010, 420], [1010, 410], [1020, 410]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1115, 95], [1115, 105], [1105, 105], [1105, 95]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[155, 505], [155, 515], [145, 515], [145, 505]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[755, 415], [755, 425], [745, 425], [745, 415]]]
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[95, 115], [95, 125], [85, 125], [85, 115]]]
@@ -3176,7 +3176,7 @@
         "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
       },
       "rect": {"x": -4, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-w"],
+      "tags": ["door", "hull", "hull-w", "hull-w"],
       "seg": [{"x": 0, "y": 250}, {"x": 0, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [null, 2],
@@ -3190,7 +3190,7 @@
         "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
       },
       "rect": {"x": 1196, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-e"],
+      "tags": ["door", "hull", "hull-e", "hull-e"],
       "seg": [{"x": 1200, "y": 250}, {"x": 1200, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [21, null],
@@ -3204,7 +3204,7 @@
         "coordinates": [[[350, 596], [350, 604], [250, 604], [250, 596]]]
       },
       "rect": {"x": 250, "y": 596, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-s"],
+      "tags": ["door", "hull", "hull-s", "hull-s"],
       "seg": [{"x": 350, "y": 600}, {"x": 250, "y": 600}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [2, null],
@@ -3218,7 +3218,7 @@
         "coordinates": [[[950, 596], [950, 604], [850, 604], [850, 596]]]
       },
       "rect": {"x": 850, "y": 596, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-s"],
+      "tags": ["door", "hull", "hull-s", "hull-s"],
       "seg": [{"x": 950, "y": 600}, {"x": 850, "y": 600}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [21, null],

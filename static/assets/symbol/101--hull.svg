@@ -147,16 +147,16 @@
       <title>relate-connectors</title>
     </rect>
     <rect x="894.312" y="965.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="494.312" y="445.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="685" y="720" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="134.312" y="675.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="505" width="10" height="200" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="770">
       <title>relate-connectors</title>
@@ -165,22 +165,22 @@
       <title>relate-connectors</title>
     </rect>
     <rect x="324.312" y="925.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="374.312" y="925.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="374.312" y="135.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="324.312" y="135.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="934.312" y="635.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="924.312" y="275.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
   </g>
 </svg>

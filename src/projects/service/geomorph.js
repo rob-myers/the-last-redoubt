@@ -6,7 +6,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { hullDoorOutset, hullOutset, obstacleOutset, precision, wallOutset } from './const';
+import { hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { error, warn } from './log';
 import { fillRing } from "../service/dom";
 
@@ -239,7 +239,7 @@ export async function createLayout(def, lookup, triangleService) {
   const roomGraphJson = roomGraphClass.json(rooms, doors, windows);
   const roomGraph = roomGraphClass.from(roomGraphJson);
 
-  const lightSrcs = filterSingles(groups.singles, 'light-source').map(({ poly, tags }) => ({
+  const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light).map(({ poly, tags }) => ({
     position: poly.center,
     direction: tags.reduce((agg, tag) =>
       agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg,

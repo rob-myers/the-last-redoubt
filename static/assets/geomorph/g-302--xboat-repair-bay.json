@@ -666,7 +666,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -680,7 +680,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -694,7 +694,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -708,7 +708,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -722,7 +722,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -736,7 +736,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -750,7 +750,7 @@
         }
       },
       {
-        "tags": ["light-source"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5070,15 +5070,7 @@
       {"dst": "room-5", "src": "door-19", "id": "door-19->room-5"}
     ]
   },
-  "lightSrcs": [
-    {"position": {"x": 507.368, "y": 485.789}},
-    {"position": {"x": 337.368, "y": 485.789}},
-    {"position": {"x": 37.368, "y": 485.789}},
-    {"position": {"x": 87.368, "y": 175.789}},
-    {"position": {"x": 667.368, "y": 485.789}},
-    {"position": {"x": 917.368, "y": 485.789}},
-    {"position": {"x": 1147.368, "y": 195.789}}
-  ],
+  "lightSrcs": [],
   "hullPoly": [
     {
       "type": "Polygon",

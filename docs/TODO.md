@@ -4,8 +4,8 @@
 
 - 🚧 review light strategy
   - ✅ rename tag `light` -> `view`
-  - 🚧 rename tag `light-source` -> `light`
-  - GeomorphEdit shows fov polys
+  - ✅ rename tag `light-source` -> `light`
+  - 🚧 GeomorphEdit shows fov polys
   - GeomorphEdit shows `view` positions
   - GeomorphEdit shows light polys
   - GeomorphEdit shows `light` positions

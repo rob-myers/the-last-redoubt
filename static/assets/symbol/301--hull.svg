@@ -105,31 +105,31 @@
       <title>relate-connectors</title>
     </rect>
     <rect x="205" y="390" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="600" y="325" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 730, -297)">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="445" y="425" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="685" y="225" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="1020" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 1320, -610)">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="1105" y="95" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="145" y="505" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="745" y="415" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="85" y="115" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
   </g>
 </svg>

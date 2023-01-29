@@ -122,4 +122,6 @@ export const defaultDoorCloseMs = 7000;
 export const svgSymbolTag = {
   /** View positions associated to a single door */
   view: 'view',
+  /** Light positions inside geomorph */
+  light: 'light',
 } as const;

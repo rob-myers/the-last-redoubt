@@ -152,25 +152,25 @@
       <title>view reverse</title>
     </rect>
     <rect x="502.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="332.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="32.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="82.368" y="170.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="662.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="912.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
     <rect x="1142.368" y="190.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light-source</title>
+      <title>light</title>
     </rect>
   </g>
 </svg>
