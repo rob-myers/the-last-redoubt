@@ -27,6 +27,7 @@ export default function World(props) {
     debug: /** @type {State['debug']} */ ({ ready: false }),
     doors: /** @type {State['doors']} */  ({ ready: false }),
     fov: /** @type {State['fov']} */  ({ ready: false }),
+    geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
     panZoom: /** @type {PanZoom.CssApi} */ ({ ready: false }),
 
@@ -36,7 +37,7 @@ export default function World(props) {
     },
 
     isReady() {
-      return [state.doors, state.fov, state.npcs, state.panZoom].every(x => x.ready);
+      return [state.doors, state.fov, state.geomorphs, state.npcs, state.panZoom].every(x => x.ready);
     },
 
     // 🚧 remove?
@@ -78,6 +79,7 @@ export default function World(props) {
     >
       <Geomorphs
         api={state}
+        onLoad={api => (state.geomorphs = api) && update()}
       />
 
       <DebugWorld
@@ -124,6 +126,7 @@ export default function World(props) {
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Doors").State} doors
  * @property {import("./FOV").State} fov
+ * @property {import("./Geomorphs").State} geomorphs
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
  * @property {() => boolean} isReady

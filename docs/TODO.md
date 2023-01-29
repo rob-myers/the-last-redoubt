@@ -2,18 +2,10 @@
 
 ## In progress
 
-- review how `relate-connector` extends visible rooms
+- review how `relate-connectors` extends visible rooms
   - ✅ rather explicit but probably right
-  - write out what is going on
-  - show lights/connectors in GeomorphEdit
-
-- ✅ spawn initially no doors issue?
-  > needed to run updateVisibleDoors before update
-
-- ✅ double doors issue: light going through closed one
-  - ✅ fix light overflow using tag `double`
-  - ⛔️ doors slightly cut off
-  - can also happen via related door seeing both doors
+  - document what is going on
+  - can show lights/connectors in GeomorphEdit
 
 - `<Doors>` are slightly offset from underlying door in PNG
 - split hull doors into two
@@ -34,7 +26,9 @@
   - 🚧 try drawRect "unlit rects including door"
     - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
     - ✅ bake-lighting does renderLayout with doors open before shade/lights
-    - move canvas into Geomorphs
+    - ✅ move canvas into Geomorphs
+    - 🚧 test draw a rect from underlying geomorph and darken it
+    - 🚧 start reviewing light strategy
     - ...
   - redo lit geomorph 301 where lights only intersect in same room
   - ...
@@ -368,6 +362,14 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ double doors issue: light going through closed one
+  - ✅ fix light overflow using tag `double`
+  - ⛔️ doors slightly cut off
+  - ℹ️ can also happen via related door seeing both doors
+
+- ✅ spawn initially no doors issue?
+  > needed to run updateVisibleDoors before update
 
 - ✅ Abandon _moving seg_ vs _static seg_ collision prediction
   - ✅ Hide in debug mode

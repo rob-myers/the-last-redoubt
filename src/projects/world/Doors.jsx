@@ -18,8 +18,6 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    // 🚧 remove
-    canvas: [],
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
     open: gms.map((gm, gmId) =>
@@ -29,31 +27,6 @@ export default function Doors(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     vis: gms.map(_ => ({})),
 
-    // 🚧 remove
-    /** @param {number} gmId */
-    drawInvisibleInCanvas(gmId) {
-      const canvas = state.canvas[gmId];
-      const ctxt = assertNonNull(canvas.getContext('2d'));
-      const gm = gms[gmId];
-
-      ctxt.setTransform(1, 0, 0, 1, 0, 0);
-      ctxt.clearRect(0, 0, canvas.width, canvas.height);
-      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
-      ctxt.fillStyle = '#555';
-      ctxt.strokeStyle = '#000';
-
-      // Handle extension of open visible doors (orig via `relate-connectors` tag)
-      const relDoorIds = gm.doors.flatMap((_, i) =>
-        state.vis[gmId][i] && state.open[gmId][i] && gm.relDoorId[i]?.doorIds || []
-      ).filter(doorId => state.open[gmId][doorId]);
-      
-      gm.doors.forEach(({ poly }, doorId) => {
-        if (!state.vis[gmId][doorId] && !relDoorIds.includes(doorId)) {
-          fillPolygon(ctxt, [poly]);
-          ctxt.stroke();
-        }
-      });
-    },
     getClosed(gmId) {
       return state.open[gmId].flatMap((open, doorId) => open ? [] : doorId);
     },
@@ -132,8 +105,6 @@ export default function Doors(props) {
     },
     setVisible(gmId, doorIds) {
       state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
-      // 🚧 moving canvas from Doors to Geomorphs
-      // state.drawInvisibleInCanvas(gmId);
       update();
     },
     tryCloseDoor(gmId, doorId) {
@@ -190,8 +161,6 @@ export default function Doors(props) {
 
   React.useEffect(() => {// Initial setup
     if (gms && npcs.ready) {
-      // 🚧 moving canvas from Doors to Geomorphs
-      // gms.forEach((_, gmId) => state.drawInvisibleInCanvas(gmId));
 
       const handlePause = npcs.events.subscribe(e => {
         e.key === 'disabled' && // Cancel future door closings
@@ -255,12 +224,6 @@ export default function Doors(props) {
               </div>
             )
           }
-          <canvas
-            ref={(el) => el && (state.canvas[gmId] = el)}
-            width={gm.pngRect.width}
-            height={gm.pngRect.height}
-            style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
-          />
         </div>
       ))}
     </div>
@@ -337,16 +300,14 @@ const rootCss = css`
 
 /**
  * @typedef State @type {object}
- * @property {HTMLCanvasElement[]} canvas
- * @property {(null | { timeoutId: number; })[][]} closing Provides closing[gmId][doorId]?.timeoutId
- * @property {(gmId: number) => void} drawInvisibleInCanvas
+ * @property {(null | { timeoutId: number; })[][]} closing Provides `closing[gmId][doorId]?.timeoutId`
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
  * @property {(gmId: number, doorId: number, byPlayer: boolean) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
- * @property {boolean[][]} open open[gmId][doorId]
+ * @property {boolean[][]} open `open[gmId][doorId]`
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
