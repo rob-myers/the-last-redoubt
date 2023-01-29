@@ -27,7 +27,7 @@
     - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
     - ✅ bake-lighting does renderLayout with doors open before shade/lights
     - ✅ move canvas into Geomorphs
-    - 🚧 test draw a rect from underlying geomorph and darken it
+    - ✅ test draw a rect from underlying geomorph and darken it
     - 🚧 start reviewing light strategy
     - ...
   - redo lit geomorph 301 where lights only intersect in same room

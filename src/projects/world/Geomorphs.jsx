@@ -1,5 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
+import { assertNonNull } from "../service/generic";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 /**
@@ -7,7 +8,7 @@ import useStateRef from "../hooks/use-state-ref";
  * @param {Props} props 
  */
 export default function Geomorphs(props) {
-  const { gmGraph } = props.api;
+  const { api } = props;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
@@ -38,16 +39,35 @@ export default function Geomorphs(props) {
     //     }
     //   });
     // },
-
+    
   }));
-
+  
   React.useEffect(() => {
     props.onLoad(state);
   }, []);
+  
+  //#region test-draw-rect
+  // React.useEffect(() => {
+  //   if (api.isReady()) {
+  //     const gmId = 0;
+  //     const canvas = state.canvas[gmId];
+  //     const ctxt = assertNonNull(canvas.getContext('2d'));
+  //     const gm = api.gmGraph.gms[gmId];
+  //     ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
+    
+  //     // 🚧 better reference to image
+  //     const imgEl = /** @type {HTMLImageElement} */ (api.panZoom.translateRoot.querySelector(`.fov img[data-gm-key="${gm.key}"]`));
+  //     // target canvas is 1/2 size of source image
+  //     ctxt.drawImage(imgEl, -gm.pngRect.x * 2, (240 - gm.pngRect.y) * 2, 240 * 2, 120 * 2, 0, 240, 240, 120);
+  //     ctxt.fillStyle = '#00000088';
+  //     ctxt.fillRect(0, 240, 240, 120);
+  //   }
+  // }, [api.isReady()]);
+  //#endregion
 
   return (
     <div className={cx("geomorphs", rootCss)}>
-      {gmGraph.gms.map((gm, gmId) =>
+      {api.gmGraph.gms.map((gm, gmId) =>
         <div
           key={gmId}
           style={{
@@ -62,10 +82,7 @@ export default function Geomorphs(props) {
             draggable={false}
             width={gm.pngRect.width}
             height={gm.pngRect.height}
-            style={{
-              left: gm.pngRect.x,
-              top: gm.pngRect.y,
-            }}
+            style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
           />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
@@ -87,6 +104,12 @@ const rootCss = css`
     transform-origin: top left;
     pointer-events: none;
     /* filter: brightness(80%) sepia(0.1); */
+    filter: brightness(70%) sepia(0.4);
+  }
+  canvas {
+    position: absolute;
+    pointer-events: none;
+    // must dup filter from geomorph
     filter: brightness(70%) sepia(0.4);
   }
 `;

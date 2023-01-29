@@ -117,6 +117,7 @@ export default function FOV(props) {
           key={gmId}
           className="geomorph-dark"
           src={geomorphPngPath(gm.key)}
+          data-gm-key={gm.key}
           draggable={false}
           width={gm.pngRect.width}
           height={gm.pngRect.height}
