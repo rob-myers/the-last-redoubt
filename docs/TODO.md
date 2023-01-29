@@ -2,15 +2,15 @@
 
 ## In progress
 
-- review how `relate-connectors` extends visible rooms
-  - ✅ rather explicit but probably right
-  - document what is going on
-  - can show lights/connectors in GeomorphEdit
-
-- `<Doors>` are slightly offset from underlying door in PNG
-- split hull doors into two
-- can specify door as `split`
-- should see more visible doors through hull door
+- 🚧 review light strategy
+  - rename tag `light` -> `view`
+  - rename tag `light-source` -> `light`
+  - GeomorphEdit shows fov polys
+  - GeomorphEdit shows `view` positions
+  - GeomorphEdit shows light polys
+  - GeomorphEdit shows `light` positions
+  - GeomorphEdit shows light decompositions
+  - ...
 
 - 🚧 dynamic lighting
   - ✅ consider removing unseen door canvas
@@ -32,6 +32,16 @@
     - ...
   - redo lit geomorph 301 where lights only intersect in same room
   - ...
+
+- review how `relate-connectors` extends visible rooms
+  - ✅ rather explicit but probably right
+  - document what is going on
+  - can show lights/connectors in GeomorphEdit
+
+- `<Doors>` are slightly offset from underlying door in PNG
+- split hull doors into two
+- can specify door as `split`
+- should see more visible doors through hull door
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install
