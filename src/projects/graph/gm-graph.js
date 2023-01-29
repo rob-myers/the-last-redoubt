@@ -113,12 +113,14 @@ export class gmGraphClass extends BaseGraph {
      */
     const unjoinedLights = doorLightAreas.flatMap(({ area }) => {
       /**
-       * We need additional line segments:
-       * - for doors parallel to area.door
-       * - for closed doors related to area.door
+       * We need additional line segments for:
+       * - doors parallel to area.door
+       * - closed doors related to area.door
        *
-       * They prevent light going through closed doors,
-       * and unsightly light patterns through open parallel doors.
+       * They prevent light going through closed parallel doors, and
+       * unsightly light patterns through open doors.
+       * Parallel doors can be over-approx via roomGraph.getAdjacentDoors,
+       * but we prefer an explicit approach.
        */
       const areaGm = this.gms[area.gmId];
       const isOpen = this.api.doors.open[area.gmId];

@@ -2,10 +2,13 @@
 
 ## In progress
 
-- ✅ review how `relate-connector` extends visible rooms
-  - rather explicit but probably right
+- review how `relate-connector` extends visible rooms
+  - ✅ rather explicit but probably right
+  - write out what is going on
+  - show lights/connectors in GeomorphEdit
 
-- spawn initially no doors issue?
+- ✅ spawn initially no doors issue?
+  > needed to run updateVisibleDoors before update
 
 - ✅ double doors issue: light going through closed one
   - ✅ fix light overflow using tag `double`
