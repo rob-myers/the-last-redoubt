@@ -187,17 +187,6 @@ declare namespace Geomorph {
   }
 
   /**
-   * TODO replace by `GeomorphData` if possible.
-   */
-  export interface BrowserLayout {
-    dataUrl: string;
-    pngRect: Geom.RectJson;
-    doors: Geom.TaggedRect[];
-    labels: LayoutLabel[];
-    pngHref: string;
-  }
-
-  /**
    * Includes measurements for canvas-based
    * debug geomorph rendering. In practice,
    * labels would be should via CSS if at all.
