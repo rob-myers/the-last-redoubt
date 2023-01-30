@@ -59,7 +59,9 @@ declare namespace Geomorph {
    * @see SymbolLookup.
    */
   export interface Layout<P, G, V, R> {
+    /** e.g. `"g-301--bridge"` */
     key: LayoutKey;
+    /** e.g. `301` */
     id: number;
 
     def: LayoutDef;
@@ -127,7 +129,7 @@ declare namespace Geomorph {
       doorIds: number[];
     }>;
     
-    /** Points indexed by roomId */
+    /** Points indexed by `roomId` */
     point: {
       default: Vect;
       /** Can specify light position from room through door */
@@ -213,6 +215,9 @@ declare namespace Geomorph {
      * `g-301--bridge` where /assets/debug/g-301--bridge.png exists.
      */
     key: LayoutKey;
+    /**
+     * e.g. `301`
+     */
     id: number;
     items: LayoutDefItem[];
   }

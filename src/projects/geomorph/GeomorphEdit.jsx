@@ -16,17 +16,17 @@ import * as defaults from "../example/defaults";
 import svgJson from '../../../static/assets/symbol/svg.json'; // CodeSandbox?
 import SvgPanZoom from '../panzoom/SvgPanZoom';
 import { createGeomorphData } from "./use-geomorph-data";
+import useGeomorphs from "./use-geomorphs";
+
+/** @type {Geomorph.LayoutKey} */
+const layoutKey = 'g-301--bridge';
 
 /** @param {{ disabled?: boolean }} props */
 export default function GeomorphEdit({ disabled }) {
   return (
     <div className={rootCss}>
       <SvgPanZoom initViewBox={defaults.initViewBox} gridBounds={defaults.gridBounds} maxZoom={6}>
-        {/* <Geomorph def={layoutDefs["g-101--multipurpose"]} /> */}
-        {/* <Geomorph def={layoutDefs["g-102--research-deck"]} /> */}
-        <Geomorph def={layoutDefs["g-301--bridge"]} />
-        {/* <Geomorph def={layoutDefs["g-302--xboat-repair-bay"]} /> */}
-        {/* <Geomorph def={layoutDefs["g-303--passenger-deck"]} disabled={disabled} /> */}
+        <Geomorph def={layoutDefs[layoutKey]} />
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} transform="matrix(1,0,0,1,-1200,0)" /> */}
       </SvgPanZoom>
     </div>
@@ -35,39 +35,27 @@ export default function GeomorphEdit({ disabled }) {
 
 /** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
 function Geomorph({ def, transform, disabled }) {
-
+  
+  /** @type {React.Ref<HTMLCanvasElement>} */
+  const canvasRef = React.useRef(null);
   const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
 
   const { data: gm, error } = useQuery(
     `GeomorphEdit--${def.key}--${hash}`,
     () => createGeomorphData(def.key),
-      {
-      keepPreviousData: true,
-      enabled: !disabled,
-    },
+    { keepPreviousData: true, enabled: !disabled },
   );
 
-  return gm ? (
-    <g className={cx("geomorph", def.key)} transform={transform}>
-      <ForeignObject gm={gm} />
-      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
-    </g>
-  ) : null;
-}
-
-/** @param {{ gm: Geomorph.GeomorphData }} props */
-function ForeignObject({ gm }) {
-
-  /** @type {React.Ref<HTMLCanvasElement>} */
-  const canvasRef = React.useRef(null);
+  const gmGraph = useGeomorphs([{ layoutKey }]);
 
   React.useEffect(() => {
-    const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-    renderGeomorph(
-      gm, symbolLookup, assertNonNull(canvasRef.current), (pngHref) => loadImage(pngHref),
-      { scale: 1, navTris: false },
-    );
-  }, [gm]); // Redraw on HMR/def
+    if (gm) {
+      renderGeomorph(
+        gm, symbolLookup, assertNonNull(canvasRef.current), (pngHref) => loadImage(pngHref),
+        { scale: 1, navTris: false },
+      );
+    }
+  }, [gm]);
 
   /** @param {React.MouseEvent<HTMLElement>} e */
   const onClick = (e) => {
@@ -75,47 +63,65 @@ function ForeignObject({ gm }) {
     console.log('you clicked', div);
   };
 
-  return (
-    <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
-      <canvas
-        ref={canvasRef}
-        className="geomorph"
-        width={gm.pngRect.width}
-        height={gm.pngRect.height}
-      />
-      <div onClick={onClick}>
-        {gm.doors.map(({ baseRect, angle }, doorId) =>
-          <div
-            key={doorId}
-            className="door"
-            style={{
-              left: baseRect.x - gm.pngRect.x,
-              top: baseRect.y - gm.pngRect.y,
-              width: baseRect.width,
-              height: baseRect.height,
-              transformOrigin: 'top left',
-              transform: `rotate(${angle}rad)`,
-            }} />
-        )}
-        {gm.labels.map(({ text, padded }, labelId) => (
-          <div
-            key={labelId}
-            className="label"
-            style={{
-              left: padded.x - gm.pngRect.x,
-              top: padded.y - gm.pngRect.y,
-            }}
-          >
-            {text}
-          </div>
-        ))}
-        {
-          // 🚧 show view positions
-          // 🚧 show view polys
-        }
-      </div>
-    </foreignObject>
-  );
+  return gm ? (
+    <g className={cx("geomorph", def.key)} transform={transform}>
+      <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
+        <canvas
+          ref={canvasRef}
+          className="geomorph"
+          width={gm.pngRect.width}
+          height={gm.pngRect.height}
+        />
+        <div onClick={onClick}>
+          {gm.doors.map(({ baseRect, angle }, doorId) =>
+            <div
+              key={doorId}
+              className="door"
+              style={{
+                left: baseRect.x - gm.pngRect.x,
+                top: baseRect.y - gm.pngRect.y,
+                width: baseRect.width,
+                height: baseRect.height,
+                transformOrigin: 'top left',
+                transform: `rotate(${angle}rad)`,
+              }} />
+          )}
+          {gm.labels.map(({ text, padded }, labelId) => (
+            <div
+              key={labelId}
+              className="label"
+              style={{
+                left: padded.x - gm.pngRect.x,
+                top: padded.y - gm.pngRect.y,
+              }}
+            >
+              {text}
+            </div>
+          ))}
+          {
+            // 🚧 show default/overridden view positions
+            gmGraph.ready && gm.rooms.map((_, roomId) =>
+              gm.doors.map((_, doorId) => {
+                const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
+                return <div
+                  key={`${doorId}@${roomId}`}
+                  className="view-point"
+                  style={{
+                    left: point.x,
+                    top: point.y,
+                  }}
+                />;
+              })
+            )
+          }
+          {
+            // 🚧 show view polys
+          }
+        </div>
+      </foreignObject>
+      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
+    </g>
+  ) : null;
 }
 
 const scale = 2;
@@ -159,8 +165,18 @@ const rootCss = css`
       background: green;
       border: 1px solid black;
     }
-    circle {
-      fill: red;
+    div.view-point {
+      position: absolute;
+      /* cursor: pointer; */
+      background: red;
+      width: 5px;
+      height: 5px;
+      /* border: 1px solid black; */
     }
+    /* circle {
+      fill: red;
+    } */
   }
 `;
+
+const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));

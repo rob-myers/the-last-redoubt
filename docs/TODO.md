@@ -6,8 +6,8 @@
   - ✅ rename tag `light` -> `view`
   - ✅ rename tag `light-source` -> `light`
   - ✅ cleanup GeomorphEdit
+  - ✅ GeomorphEdit shows `view` positions
   - 🚧 GeomorphEdit shows fov polys
-  - 🚧 GeomorphEdit shows `view` positions
   - GeomorphEdit shows light polys
   - GeomorphEdit shows `light` positions
   - GeomorphEdit shows light decompositions
