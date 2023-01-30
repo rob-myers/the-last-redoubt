@@ -72,7 +72,6 @@ export default function Geomorphs(props) {
           key={gmId}
           style={{
             transform: gm.transformStyle,
-            transformOrigin: gm.transformOrigin, // Needed?
           }}
         >
           <img
