@@ -72,7 +72,6 @@ function Geomorph({ def, transform, disabled }) {
   /** @param {React.MouseEvent<HTMLElement>} e */
   function onClick(e) {
     const el = /** @type {HTMLElement} */ (e.target);
-    // console.log('you clicked', div);
     const meta = el.dataset;
     if (meta.key === 'door') {
       const doorId = Number(meta.doorId);
@@ -80,10 +79,8 @@ function Geomorph({ def, transform, disabled }) {
         openDoors.includes(doorId) ? openDoors.filter(x => x !== doorId) : openDoors.concat(doorId)
       );
     } else if (meta.key === 'view') {
-      // 🚧
       const roomId = Number(meta.roomId);
-      const { polys: viewPolys } = gmGraph.computeLightPolygons(0, roomId);
-      console.log({ viewPolys });
+      const { polys: viewPolys } = gmGraph.computeViewPolygons(0, roomId);
       setViewPoly(viewPolys[0][0]);
     }
   }
@@ -128,9 +125,9 @@ function Geomorph({ def, transform, disabled }) {
             </div>
           ))}
           {
-            // 🚧 some pointing to wrong room?
             gmGraph.ready && gm.rooms.map((_, roomId) =>
-              gm.doors.map((_, doorId) => {
+              gm.doors.map(({ roomIds }, doorId) => {
+                if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
                 const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
                 return <div
                   key={`${doorId}@${roomId}`}
@@ -142,8 +139,8 @@ function Geomorph({ def, transform, disabled }) {
                     top: point.y,
                   }}
                 />;
-              })
-            )
+              }
+            ))
           }
         </div>
       </foreignObject>
