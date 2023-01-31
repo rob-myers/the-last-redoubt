@@ -128,11 +128,11 @@ export class gmGraphClass extends BaseGraph {
         ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
         ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !isOpen[doorId]),
       ];
-      // Need local position of player in geomorph to compute connector other side
-      const playerPos = assertNonNull(this.api.npcs.getPlayer()).getPosition();
-      areaGm.inverseMatrix.transformPoint(playerPos);
+
+      /** We imagine we are viewing from the center of the door */
+      const viewPos = areaGm.doors[area.doorId].poly.center;
       // 🚧 These segs are not perfect i.e. part of door will be covered
-      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], playerPos));
+      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
       return {
         gmId: area.gmId,
