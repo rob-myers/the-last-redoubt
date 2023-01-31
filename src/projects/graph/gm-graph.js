@@ -200,16 +200,21 @@ export class gmGraphClass extends BaseGraph {
 
   /**
    * Compute lit area, determined by current room, open doors, and windows.
+   * Always include current room.
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
    */
   computeLightPolygons(gmId, rootRoomId) {
     const { polys: doorViews, gmRoomIds } = this.computeDoorViews(gmId, rootRoomId);
-    // 🚧 windows should provide {gmId,roomId}s too
-    const windowLights = this.computeWindowLights(gmId, rootRoomId);
+    const windowLights = this.computeWindowLights(gmId, rootRoomId); // 🚧 provide {gmId,roomId}?
+    // Combine doors and windows
+    const lightPolys = doorViews.map((lights, i) => lights.concat(windowLights[i]));
+    // Always include current room
+    lightPolys[gmId].push(this.gms[gmId].roomsWithDoors[rootRoomId]);
+    gmRoomIds.length === 0 && gmRoomIds.push({ gmId, roomId: rootRoomId });
     return {
-      polys: doorViews.map((lights, i) => lights.concat(windowLights[i])), // Zipped
+      polys: lightPolys,
       gmRoomIds,
     };
   }

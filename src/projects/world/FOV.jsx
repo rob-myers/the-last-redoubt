@@ -61,16 +61,11 @@ export default function FOV(props) {
         return;
       }
 
-      // ✅ provide every { gmId, roomId } intersecting current fov
-      // 🚧 track change in above
-
       /**
        * @see {lightPolys} light polygons for current/adjacent geomorphs; we include the current room.
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
       const { polys: lightPolys, gmRoomIds } = gmGraph.computeLightPolygons(state.gmId, state.roomId);
-      lightPolys[state.gmId].push(gm.roomsWithDoors[state.roomId]);
-      gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });
 
       // Must prevent adjacent geomorphs from covering hull doors
       const adjGmToPolys = computeAdjHullDoorPolys(state.gmId, gmGraph);
