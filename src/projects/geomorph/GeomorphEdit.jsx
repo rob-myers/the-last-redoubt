@@ -6,6 +6,7 @@ import * as React from "react";
 import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 
+import { Poly } from "../geom/poly";
 import { assertNonNull, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { labelMeta } from "../service/geomorph";
@@ -40,9 +41,11 @@ export default function GeomorphEdit({ disabled }) {
 /** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
 function Geomorph({ def, transform, disabled }) {
   
+  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
   /** @type {React.Ref<HTMLCanvasElement>} */
   const canvasRef = React.useRef(null);
-  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
+  const [openDoors, setOpenDoors] = React.useState(/** @type {number[]} */ ([]));
+  const [viewPoly, setViewPoly] = React.useState(new Poly);
 
   const { data: gm, error } = useQuery(
     `GeomorphEdit--${def.key}--${hash}`,
@@ -51,6 +54,11 @@ function Geomorph({ def, transform, disabled }) {
   );
 
   const gmGraph = useGeomorphs([{ layoutKey }]);
+  // Provide state needed by gmGraph
+  gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
+    getOpen(_) { return openDoors; },
+    get open() { return [gm?.doors.map((_, doorId) => openDoors.includes(doorId))??[]]; },
+  });
 
   React.useEffect(() => {
     if (gm) {
@@ -62,10 +70,23 @@ function Geomorph({ def, transform, disabled }) {
   }, [gm]);
 
   /** @param {React.MouseEvent<HTMLElement>} e */
-  const onClick = (e) => {
-    const div = /** @type {HTMLDivElement} */ (e.target);
-    console.log('you clicked', div);
-  };
+  function onClick(e) {
+    const el = /** @type {HTMLElement} */ (e.target);
+    // console.log('you clicked', div);
+    const meta = el.dataset;
+    if (meta.key === 'door') {
+      const doorId = Number(meta.doorId);
+      setOpenDoors(
+        openDoors.includes(doorId) ? openDoors.filter(x => x !== doorId) : openDoors.concat(doorId)
+      );
+    } else if (meta.key === 'view') {
+      // 🚧
+      const roomId = Number(meta.roomId);
+      const { polys: viewPolys } = gmGraph.computeLightPolygons(0, roomId);
+      console.log({ viewPolys });
+      setViewPoly(viewPolys[0][0]);
+    }
+  }
 
   return gm ? (
     <g className={cx("geomorph", def.key)} transform={transform}>
@@ -81,7 +102,9 @@ function Geomorph({ def, transform, disabled }) {
           {gm.doors.map(({ baseRect, angle }, doorId) =>
             <div
               key={doorId}
-              className="door"
+              className={cx("door", openDoors.includes(doorId) ? 'open' : 'closed')}
+              data-key="door"
+              data-door-id={doorId}
               style={{
                 left: baseRect.x - gm.pngRect.x,
                 top: baseRect.y - gm.pngRect.y,
@@ -95,6 +118,7 @@ function Geomorph({ def, transform, disabled }) {
             <div
               key={labelId}
               className="label"
+              data-key="label"
               style={{
                 left: padded.x - gm.pngRect.x,
                 top: padded.y - gm.pngRect.y,
@@ -104,13 +128,15 @@ function Geomorph({ def, transform, disabled }) {
             </div>
           ))}
           {
-            // 🚧 show default/overridden view positions
+            // 🚧 some pointing to wrong room?
             gmGraph.ready && gm.rooms.map((_, roomId) =>
               gm.doors.map((_, doorId) => {
                 const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
                 return <div
                   key={`${doorId}@${roomId}`}
                   className="view-point"
+                  data-key="view"
+                  data-room-id={roomId}
                   style={{
                     left: point.x,
                     top: point.y,
@@ -119,16 +145,17 @@ function Geomorph({ def, transform, disabled }) {
               })
             )
           }
-          {
-            // 🚧 show view polys
-          }
         </div>
       </foreignObject>
+
+      <path
+        fill="#ff000055"
+        stroke="red"
+        d={viewPoly.svgPath}
+      />
     </g>
   ) : null;
 }
-
-const scale = 2;
 
 const rootCss = css`
   background-color: #444;
@@ -139,6 +166,9 @@ const rootCss = css`
   g > .doors rect {
     fill: white;
     stroke: black;
+  }
+  g path {
+    pointer-events: none;
   }
 
   g > foreignObject {
@@ -163,8 +193,13 @@ const rootCss = css`
     div.door {
       position: absolute;
       cursor: pointer;
-      background: green;
       border: 1px solid black;
+      &.open {
+        background: none;
+      }
+      &.closed {
+        background: red;
+      }
     }
     div.view-point {
       position: absolute;
