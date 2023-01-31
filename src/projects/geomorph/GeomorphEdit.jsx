@@ -19,7 +19,11 @@ import { createGeomorphData } from "./use-geomorph-data";
 import useGeomorphs from "./use-geomorphs";
 
 /** @type {Geomorph.LayoutKey} */
+// const layoutKey = 'g-101--multipurpose';
+// const layoutKey = 'g-102--research-deck';
 const layoutKey = 'g-301--bridge';
+// const layoutKey = 'g-302--xboat-repair-bay';
+// const layoutKey = 'g-303--passenger-deck';
 
 /** @param {{ disabled?: boolean }} props */
 export default function GeomorphEdit({ disabled }) {
@@ -65,6 +69,7 @@ function Geomorph({ def, transform, disabled }) {
 
   return gm ? (
     <g className={cx("geomorph", def.key)} transform={transform}>
+      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
       <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
         <canvas
           ref={canvasRef}
@@ -119,7 +124,6 @@ function Geomorph({ def, transform, disabled }) {
           }
         </div>
       </foreignObject>
-      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
     </g>
   ) : null;
 }
@@ -132,10 +136,6 @@ const rootCss = css`
   g > image.debug {
     opacity: 0.2;
   }
-  g > image.geomorph {
-    transform: scale(${1 / scale});
-    pointer-events: none;
-  }
   g > .doors rect {
     fill: white;
     stroke: black;
@@ -144,8 +144,9 @@ const rootCss = css`
   g > foreignObject {
     font: ${labelMeta.font};
 
-    .geomorph {
+    canvas.geomorph {
       position: absolute;
+      pointer-events: none;
     }
 
     div.label {
@@ -167,11 +168,12 @@ const rootCss = css`
     }
     div.view-point {
       position: absolute;
-      /* cursor: pointer; */
+      /* pointer-events: auto; */
+      cursor: pointer;
       background: red;
       width: 5px;
       height: 5px;
-      /* border: 1px solid black; */
+      border-radius: 50%;
     }
     /* circle {
       fill: red;
