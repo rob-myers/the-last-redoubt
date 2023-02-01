@@ -9,7 +9,7 @@ import { useQuery } from "react-query";
 import { Poly } from "../geom/poly";
 import { assertNonNull, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
-import { labelMeta } from "../service/geomorph";
+import { computeLightPolygons, labelMeta } from "../service/geomorph";
 import { deserializeSvgJson } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
@@ -41,11 +41,14 @@ export default function GeomorphEdit({ disabled }) {
 /** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
 function Geomorph({ def, transform, disabled }) {
   
-  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
   /** @type {React.Ref<HTMLCanvasElement>} */
   const canvasRef = React.useRef(null);
+  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
+  const allLightPolys = React.useRef(/** @type {Geom.Poly[]} */ ([]));
+
   const [openDoors, setOpenDoors] = React.useState(/** @type {number[]} */ ([]));
   const [viewPoly, setViewPoly] = React.useState(new Poly);
+  const [lightPoly, setLightPoly] = React.useState(new Poly);
 
   const { data: gm, error } = useQuery(
     `GeomorphEdit--${def.key}--${hash}`,
@@ -66,6 +69,7 @@ function Geomorph({ def, transform, disabled }) {
         gm, symbolLookup, assertNonNull(canvasRef.current), (pngHref) => loadImage(pngHref),
         { scale: 1, navTris: false },
       );
+      allLightPolys.current = computeLightPolygons(gm);
     }
   }, [gm]);
 
@@ -81,7 +85,13 @@ function Geomorph({ def, transform, disabled }) {
     } else if (meta.key === 'view') {
       const roomId = Number(meta.roomId);
       const { polys: viewPolys } = gmGraph.computeViewPolygons(0, roomId);
-      setViewPoly(viewPolys[0][0]);
+      // Union needed to include current room
+      setViewPoly(Poly.union(viewPolys[0])[0]);
+    } else if (meta.key === 'light') {
+      const lightId = Number(meta.lightId);
+      const roomId = Number(meta.roomId); // 🚧
+      const lightPoly = allLightPolys.current[lightId]
+      setLightPoly(curr => curr === lightPoly ? new Poly: lightPoly);
     }
   }
 
@@ -124,31 +134,42 @@ function Geomorph({ def, transform, disabled }) {
               {text}
             </div>
           ))}
-          {
-            gmGraph.ready && gm.rooms.map((_, roomId) =>
-              gm.doors.map(({ roomIds }, doorId) => {
-                if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
-                const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
-                return <div
-                  key={`${doorId}@${roomId}`}
-                  className="view-point"
-                  data-key="view"
-                  data-room-id={roomId}
-                  style={{
-                    left: point.x,
-                    top: point.y,
-                  }}
-                />;
-              }
-            ))
+          {gmGraph.ready && gm.rooms.map((_, roomId) =>
+            gm.doors.map(({ roomIds }, doorId) => {
+              if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
+              const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
+              return <div
+                key={`${doorId}@${roomId}`}
+                className="view-point"
+                data-key="view"
+                data-room-id={roomId}
+                style={{ left: point.x, top: point.y }}
+              />;
+            }))
           }
+          {gm.lightSrcs.map(({ position, roomId }, i) =>
+            <div
+              key={i}
+              className="light-point"
+              data-key="light"
+              data-light-id={i}
+              data-room-id={roomId}
+              style={{ left: position.x, top: position.y }}
+            />
+          )}
         </div>
       </foreignObject>
 
       <path
+        d={viewPoly.svgPath}
         fill="#ff000055"
         stroke="red"
-        d={viewPoly.svgPath}
+      />
+
+      <path
+        d={lightPoly.svgPath}
+        fill="#0000ff99"
+        stroke="blue"
       />
     </g>
   ) : null;
@@ -200,9 +221,16 @@ const rootCss = css`
     }
     div.view-point {
       position: absolute;
-      /* pointer-events: auto; */
       cursor: pointer;
       background: red;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    div.light-point {
+      position: absolute;
+      cursor: pointer;
+      background: blue;
       width: 5px;
       height: 5px;
       border-radius: 50%;

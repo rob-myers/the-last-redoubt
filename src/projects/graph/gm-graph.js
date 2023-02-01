@@ -2,7 +2,7 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars } from "../service/geom";
-import { computeLightPosition, getConnectorOtherSide } from "../service/geomorph";
+import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
 import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
 
@@ -207,7 +207,7 @@ export class gmGraphClass extends BaseGraph {
    */
   computeViewPolygons(gmId, rootRoomId) {
     const { polys: doorViews, gmRoomIds } = this.computeDoorViews(gmId, rootRoomId);
-    const windowLights = this.computeWindowLights(gmId, rootRoomId); // 🚧 provide {gmId,roomId}?
+    const windowLights = this.computeWindowViews(gmId, rootRoomId); // 🚧 provide {gmId,roomId}?
     // Combine doors and windows
     const viewPolys = doorViews.map((lights, i) => lights.concat(windowLights[i]));
     // Always include current room
@@ -220,12 +220,12 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Compute lit area, determined by current room and open windows.
+   * Compute viewable area, determined by current room and open windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @returns {Poly[][]}
    */
-  computeWindowLights(gmId, rootRoomId) {
+  computeWindowViews(gmId, rootRoomId) {
     const gm = this.gms[gmId];
 
     const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(x => {
@@ -237,13 +237,13 @@ export class gmGraphClass extends BaseGraph {
         return true;
     }).map(x => x.windowId);
 
-    const unjoinedLights = windowIds.map(windowId => ({
+    const unjoinedViews = windowIds.map(windowId => ({
       gmId,
       poly: geom.lightPolygon({
         position: (
           gm.point[rootRoomId]?.windowLight[windowId]
           // We move light inside current room
-          || computeLightPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
+          || computeViewPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
         ),
         range: 1000,
         exterior: this.getOpenWindowPolygon(gmId, windowId),
@@ -252,7 +252,7 @@ export class gmGraphClass extends BaseGraph {
 
     return this.gms.map((_, gmId) =>
       // https://github.com/Turfjs/turf/issues/2048
-      unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
+      unjoinedViews.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
     );
   }
 
@@ -333,15 +333,14 @@ export class gmGraphClass extends BaseGraph {
   /** @param {Geom.VectJson} point */
   findRoomContaining(point) {
     const gmId = this.gms.findIndex(gm => gm.gridRect.contains(point));
-    if (gmId === -1) {
-      return null;
+    if (gmId >= 0) {
+      const gm = this.gms[gmId];
+      const roomId = findLocalRoomContaining(gm.rooms, gm.inverseMatrix.transformPoint(Vect.from(point)));
+      if (roomId >= 0) {
+        return { gmId, roomId };
+      }
     }
-    const gm = this.gms[gmId];
-    const localPoint = new Vect;
-    const roomId = gm.rooms.findIndex(room => room.contains(
-      gm.inverseMatrix.transformPoint(localPoint.copy(point))
-    ));
-    return roomId === -1 ? null : { gmId, roomId };
+    return null;
   }
 
   /**
@@ -479,7 +478,7 @@ export class gmGraphClass extends BaseGraph {
     return (
       custom && (permitReversed || !custom.tags.includes('reverse'))
         ? custom.point.clone()
-        : computeLightPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
+        : computeViewPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );
   }
   

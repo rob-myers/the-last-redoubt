@@ -8,10 +8,8 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 
-import { Poly } from '../projects/geom';
 import { saveCanvasAsFile } from '../projects/service/file';
-import { getNormalizedDoorPolys } from '../projects/service/geomorph';
-import { geom } from '../projects/service/geom';
+import { computeLightPolygons } from '../projects/service/geomorph';
 import { fillPolygon } from '../projects/service/dom';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { renderLayout } from './render-layout';
@@ -44,32 +42,18 @@ async function main() {
   const ctxt = canvas.getContext('2d');
   
   // Darken the geomorph
-  // 🚧 thus need to darken unlit drawRects
+  // ℹ️ thus need to darken unlit drawRects
   const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
   ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
   fillPolygon(ctxt, hullPolySansHoles);
 
   //#region draw lights
   const lightSources = layout.lightSrcs;
-  /** More than one polygon can happen e.g. Geomorph 102 */
-  const allRoomsAndDoors = Poly.union([
-    ...layout.rooms,
-    ...getNormalizedDoorPolys(layout.doors), // must extrude hull doors
-    ...layout.windows.map(x => x.poly),
-  ]);
-  const lights = lightSources.map(({ position, direction }, i) => {
-    const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
-    if (exterior) {
-      return geom.lightPolygon({ position, range: 2000, exterior, direction });
-    } else {
-      console.error(`ignored light ${i} (${JSON.stringify(position)}): no exterior found`);
-      return new Poly;
-    }
-  });
+  const lightPolys = computeLightPolygons(layout);
 
   ctxt.globalCompositeOperation = 'lighter';
   // Radial fill with drop off
-  lights.forEach((light, i) => {
+  lightPolys.forEach((light, i) => {
     const { position, direction } = lightSources[i];
     const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, 300)
     gradient.addColorStop(0, '#ffffaa55');

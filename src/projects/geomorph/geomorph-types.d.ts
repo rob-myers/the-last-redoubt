@@ -80,7 +80,11 @@ declare namespace Geomorph {
     /** Connectivity graph involving rooms and doors */
     roomGraph: G;
     /** Sources of lights rendered inside PNG  */
-    lightSrcs: { position: Vect; direction?: Vect }[];
+    lightSrcs: {
+      position: V;
+      direction?: V; // 🚧 remove?
+      roomId: number;
+    }[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];

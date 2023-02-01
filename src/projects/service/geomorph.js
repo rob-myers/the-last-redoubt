@@ -239,11 +239,15 @@ export async function createLayout(def, lookup, triangleService) {
   const roomGraphJson = roomGraphClass.json(rooms, doors, windows);
   const roomGraph = roomGraphClass.from(roomGraphJson);
 
+  /** @type {Geomorph.ParsedLayout['lightSrcs']} */
   const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light).map(({ poly, tags }) => ({
     position: poly.center,
+    // 🚧 remove?
     direction: tags.reduce((agg, tag) =>
-      agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg,
+      agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg
+    ,
     /** @type {undefined | Vect} */ (undefined)),
+    roomId: findRoomIdContaining(rooms, poly.center),
   }));
 
   return {
@@ -287,6 +291,14 @@ function extendHullDoorTags(door, hullRect) {
   else if (bounds.right >= hullRect.right) door.tags.push('hull-e');
   else if (bounds.bottom >= hullRect.bottom) door.tags.push('hull-s');
   else if (bounds.x <= hullRect.x) door.tags.push('hull-w');
+}
+
+/**
+ * @param {Geomorph.ParsedLayout['rooms']} rooms 
+ * @param {Geom.VectJson} localPoint
+ */
+export function findRoomIdContaining(rooms, localPoint) {
+  return rooms.findIndex(room => room.contains(localPoint)); 
 }
 
 /**
@@ -420,8 +432,11 @@ export function serializeLayout({
     navPoly: navPoly.map(x => x.geoJson),
     navZone,
     roomGraph: roomGraph.plainJson(),
-    lightSrcs,
-
+    lightSrcs: lightSrcs.map(({ position, roomId, direction }) => ({
+      position: position.json,
+      roomId,
+      direction: direction?.json,
+    })),
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
     hullTop: hullTop.map(x => x.geoJson),
@@ -457,7 +472,11 @@ export function parseLayout({
     navPoly: navPoly.map(Poly.from),
     navZone,
     roomGraph: roomGraphClass.from(roomGraph),
-    lightSrcs: lightSrcs.map(x => ({ position: Vect.from(x.position), direction: x.direction ? Vect.from(x.direction) : undefined })),
+    lightSrcs: lightSrcs.map(x => ({
+      position: Vect.from(x.position),
+      direction: x.direction ? Vect.from(x.direction) : undefined,
+      roomId: x.roomId,
+    })),
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,
@@ -585,11 +604,35 @@ export function geomorphDataToInstance(gm, transform) {
 }
 
 /**
+ * Aligned to geomorph lightSrcs.
+ * @param {Geomorph.ParsedLayout} gm 
+ */
+export function computeLightPolygons(gm) {
+  const lightSources = gm.lightSrcs;
+  /** More than one polygon can happen e.g. Geomorph 102 */
+  const allRoomsAndDoors = Poly.union([
+    ...gm.rooms,
+    ...getNormalizedDoorPolys(gm.doors), // must extrude hull doors
+    ...gm.windows.map(x => x.poly),
+  ]);
+
+  return lightSources.map(({ position, direction }, i) => {
+    const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
+    if (exterior) {
+      return geom.lightPolygon({ position, range: 2000, exterior, direction });
+    } else {
+      console.error(`ignored light ${i} (${JSON.stringify(position)}): no exterior found`);
+      return new Poly;
+    }
+  });
+}
+
+/**
  * @param {Geomorph.ParsedConnectorRect} connector 
  * @param {number} srcRoomId Must lie in @see connector roomIds
  * @param {number} lightOffset In direction from @see srcRoomId through @see connector 
  */
-export function computeLightPosition(connector, srcRoomId, lightOffset) {
+export function computeViewPosition(connector, srcRoomId, lightOffset) {
   const roomSign = connector.roomIds[0] === srcRoomId ? 1 : -1;
   return connector.poly.center.addScaledVector(connector.normal, lightOffset * roomSign);
 }

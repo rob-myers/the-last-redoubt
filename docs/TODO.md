@@ -7,9 +7,13 @@
   - ✅ rename tag `light-source` -> `light`
   - ✅ cleanup GeomorphEdit
   - ✅ GeomorphEdit shows `view` positions
+    > too many?
   - ✅ GeomorphEdit can show fov polys
-  - GeomorphEdit shows light polys
-  - GeomorphEdit shows `light` positions
+  - ✅  GeomorphEdit shows `light` positions
+  - ✅ lightSrc has roomId
+  - ✅ GeomorphEdit can show light polys
+  - store light `{ doorId, rect }`s
+    - permit multiple subsequent doorways?
   - GeomorphEdit shows light decompositions
   - ...
 
