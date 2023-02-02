@@ -298,10 +298,15 @@ export class ttyXtermClass {
     const ord = data.charCodeAt(0);
     let cursor: number;
 
-    // Decided to ignore input-replacement deletes,
-    // because cannot handle them properly (ambiguous).
     if (data.length > 1 && this.input.startsWith(data)) {
+      // Ignore input-replacement deletes,
+      // because cannot handle them properly (ambiguous)
       return;
+    }
+
+    if (this.forceLowerCase && data.length > 1 && !data.includes(' ')) {
+      // Force lowercase applies to "words swiped into mobile keyboard"
+      data = data.toLowerCase();
     }
 
     if (ord == 0x1b) { // ansi escape sequences
@@ -781,6 +786,9 @@ export class ttyXtermClass {
       const prevInput = this.input;
       const prevCursor = this.cursor;
       this.clearInput();
+      if (this.forceLowerCase && !input.includes(' ')) {
+        input = input.toLowerCase();
+      }
       this.setInput(prevInput.slice(0, prevCursor) + input + prevInput.slice(prevCursor));
     } else {
       this.queueCommands([
