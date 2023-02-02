@@ -96,8 +96,10 @@ function Geomorph({ def, transform, disabled }) {
   }
 
   return gm ? (
-    <g className={cx("geomorph", def.key)} transform={transform}>
-      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
+    <g
+      className={cx("geomorph", def.key)}
+      transform={transform}
+    >
       <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
         <canvas
           ref={canvasRef}
@@ -105,7 +107,11 @@ function Geomorph({ def, transform, disabled }) {
           width={gm.pngRect.width}
           height={gm.pngRect.height}
         />
-        <div onClick={onClick}>
+        <div
+          onClick={onClick}
+          className="main-container"
+          style={{ left: -gm.pngRect.x, top: -gm.pngRect.y }}
+        >
           {gm.doors.map(({ baseRect, angle }, doorId) =>
             <div
               key={doorId}
@@ -113,8 +119,8 @@ function Geomorph({ def, transform, disabled }) {
               data-key="door"
               data-door-id={doorId}
               style={{
-                left: baseRect.x - gm.pngRect.x,
-                top: baseRect.y - gm.pngRect.y,
+                left: baseRect.x,
+                top: baseRect.y,
                 width: baseRect.width,
                 height: baseRect.height,
                 transformOrigin: 'top left',
@@ -127,8 +133,8 @@ function Geomorph({ def, transform, disabled }) {
               className="label"
               data-key="label"
               style={{
-                left: padded.x - gm.pngRect.x,
-                top: padded.y - gm.pngRect.y,
+                left: padded.x,
+                top: padded.y,
               }}
             >
               {text}
@@ -171,6 +177,9 @@ function Geomorph({ def, transform, disabled }) {
         fill="#0000ff99"
         stroke="blue"
       />
+
+      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
+
     </g>
   ) : null;
 }
@@ -178,10 +187,11 @@ function Geomorph({ def, transform, disabled }) {
 const rootCss = css`
   background-color: #444;
   height: 100%;
-  g > image.debug {
+  g image.debug {
     opacity: 0.2;
+    pointer-events: none;
   }
-  g > .doors rect {
+  g .doors rect {
     fill: white;
     stroke: black;
   }
@@ -189,12 +199,16 @@ const rootCss = css`
     pointer-events: none;
   }
 
-  g > foreignObject {
+  g foreignObject {
     font: ${labelMeta.font};
 
     canvas.geomorph {
       position: absolute;
       pointer-events: none;
+    }
+    
+    div.main-container {
+      position: absolute;
     }
 
     div.label {
