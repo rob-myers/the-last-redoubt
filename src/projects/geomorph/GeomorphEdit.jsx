@@ -77,6 +77,7 @@ function Geomorph({ def, transform, disabled }) {
       viewPoly: new Poly,
       /** `{doorId}@{roomId}` */
       lastViewId: '',
+      lastRoomId: -1,
       lightPoly: new Poly,
 
       /** @param {React.MouseEvent<HTMLElement>} e */
@@ -91,14 +92,24 @@ function Geomorph({ def, transform, disabled }) {
           } else {
             state.openDoors.push(doorId);
           }
+          if (state.lastViewId && state.lastRoomId >= -1) {// Update view
+            const { polys: viewPolys } = assertDefined(data).gmGraph.computeViewPolygons(0, state.lastRoomId);
+            state.viewPoly = Poly.union(viewPolys[0])[0];
+          }
           update();
         } else if (meta.key === 'view') {
           const viewId = assertDefined(meta.viewId);
           const roomId = Number(meta.roomId);
           const { polys: viewPolys } = assertDefined(data).gmGraph.computeViewPolygons(0, roomId);
-          // Union needed to include current room
-          state.viewPoly = viewId === state.lastViewId ? new Poly : Poly.union(viewPolys[0])[0];
-          state.lastViewId = viewId;
+          if (viewId === state.lastViewId) {
+            state.viewPoly = new Poly;
+            state.lastViewId = '';
+            state.lastRoomId = -1;
+          } else {// Union needed to include current room
+            state.viewPoly = Poly.union(viewPolys[0])[0];
+            state.lastViewId = viewId;
+            state.lastRoomId = roomId;
+          }
           update();
         } else if (meta.key === 'light') {
           const lightId = Number(meta.lightId);
