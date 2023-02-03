@@ -7,9 +7,9 @@ import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 
 import { Poly } from "../geom/poly";
-import { assertNonNull, hashText } from "../service/generic";
+import { assertDefined, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
-import { computeLightPolygons, labelMeta } from "../service/geomorph";
+import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta } from "../service/geomorph";
 import { deserializeSvgJson } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
@@ -17,7 +17,9 @@ import * as defaults from "../example/defaults";
 import svgJson from '../../../static/assets/symbol/svg.json'; // CodeSandbox?
 import SvgPanZoom from '../panzoom/SvgPanZoom';
 import { createGeomorphData } from "./use-geomorph-data";
-import useGeomorphs from "./use-geomorphs";
+import useStateRef from "projects/hooks/use-state-ref";
+import useUpdate from "projects/hooks/use-update";
+import { gmGraphClass } from "projects/graph/gm-graph";
 
 /** @type {Geomorph.LayoutKey} */
 // const layoutKey = 'g-101--multipurpose';
@@ -40,82 +42,107 @@ export default function GeomorphEdit({ disabled }) {
 
 /** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
 function Geomorph({ def, transform, disabled }) {
-  
-  /** @type {React.Ref<HTMLCanvasElement>} */
-  const canvasRef = React.useRef(null);
-  const hash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
-  const allLightPolys = React.useRef(/** @type {Geom.Poly[]} */ ([]));
 
-  const [openDoors, setOpenDoors] = React.useState(/** @type {number[]} */ ([]));
-  const [viewPoly, setViewPoly] = React.useState(new Poly);
-  const [lightPoly, setLightPoly] = React.useState(new Poly);
+  /** Must recompute layout when definition changes (even with HMR) */
+  const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
+  const { data, error } = useQuery(
+    `GeomorphEdit--${def.key}--${gmHash}`,
+    async () => {
+      const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
+      // compute layout from def
+      const layout = await createLayout(def, symbolLookup)
+      const gm = await createGeomorphData(layout);
+      const gmInstance = geomorphDataToInstance(gm, [1, 0, 0, 1, 0, 0]);
+      const gmGraph = gmGraphClass.fromGms([gmInstance]);
+      // ℹ️ Provide state needed by gmGraph
+      gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
+        getOpen(_) { return state.openDoors; },
+        get open() { return [gm?.doors.map((_, doorId) => state.openDoors.includes(doorId))??[]]; },
+      });
+      return { gm, gmGraph };
 
-  const { data: gm, error } = useQuery(
-    `GeomorphEdit--${def.key}--${hash}`,
-    () => createGeomorphData(def.key),
+    },
     { keepPreviousData: true, enabled: !disabled },
   );
 
-  const gmGraph = useGeomorphs([{ layoutKey }]);
-  // Provide state needed by gmGraph
-  gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
-    getOpen(_) { return openDoors; },
-    get open() { return [gm?.doors.map((_, doorId) => openDoors.includes(doorId))??[]]; },
+  const update = useUpdate();
+
+  const state = useStateRef(() => {
+    return {
+      canvas: /** @type {HTMLCanvasElement} */ ({}),
+      allLightPolys: /** @type {Geom.Poly[]} */ ([]),
+      openDoors: /** @type {number[]} */ ([]),
+      viewPoly: new Poly,
+      /** `{doorId}@{roomId}` */
+      lastViewId: '',
+      lightPoly: new Poly,
+
+      /** @param {React.MouseEvent<HTMLElement>} e */
+      onClick(e) {
+        const el = /** @type {HTMLElement} */ (e.target);
+        const meta = el.dataset;
+        if (meta.key === 'door') {
+          const doorId = Number(meta.doorId);
+          const foundIndex = state.openDoors.findIndex(id => id === doorId);
+          if (foundIndex >= 0) {
+            state.openDoors.splice(foundIndex, 1);
+          } else {
+            state.openDoors.push(doorId);
+          }
+          update();
+        } else if (meta.key === 'view') {
+          const viewId = assertDefined(meta.viewId);
+          const roomId = Number(meta.roomId);
+          const { polys: viewPolys } = assertDefined(data).gmGraph.computeViewPolygons(0, roomId);
+          // Union needed to include current room
+          state.viewPoly = viewId === state.lastViewId ? new Poly : Poly.union(viewPolys[0])[0];
+          state.lastViewId = viewId;
+          update();
+        } else if (meta.key === 'light') {
+          const lightId = Number(meta.lightId);
+          const roomId = Number(meta.roomId); // 🚧
+          const lightPoly = state.allLightPolys[lightId]
+          state.lightPoly = state.lightPoly === lightPoly ? new Poly : lightPoly;
+          update();
+        }
+      },
+    };
+  }, {
+    deps: [data, layoutKey],
   });
 
   React.useEffect(() => {
-    if (gm) {
+    if (data) {
+      state.canvas.getContext('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
       renderGeomorph(
-        gm, symbolLookup, assertNonNull(canvasRef.current), (pngHref) => loadImage(pngHref),
+        data.gm, symbolLookup, state.canvas, (pngHref) => loadImage(pngHref),
         { scale: 1, navTris: false },
       );
-      allLightPolys.current = computeLightPolygons(gm);
+      state.allLightPolys = computeLightPolygons(data.gm);
     }
-  }, [gm]);
+  }, [data]);
 
-  /** @param {React.MouseEvent<HTMLElement>} e */
-  function onClick(e) {
-    const el = /** @type {HTMLElement} */ (e.target);
-    const meta = el.dataset;
-    if (meta.key === 'door') {
-      const doorId = Number(meta.doorId);
-      setOpenDoors(
-        openDoors.includes(doorId) ? openDoors.filter(x => x !== doorId) : openDoors.concat(doorId)
-      );
-    } else if (meta.key === 'view') {
-      const roomId = Number(meta.roomId);
-      const { polys: viewPolys } = gmGraph.computeViewPolygons(0, roomId);
-      // Union needed to include current room
-      setViewPoly(Poly.union(viewPolys[0])[0]);
-    } else if (meta.key === 'light') {
-      const lightId = Number(meta.lightId);
-      const roomId = Number(meta.roomId); // 🚧
-      const lightPoly = allLightPolys.current[lightId]
-      setLightPoly(curr => curr === lightPoly ? new Poly: lightPoly);
-    }
-  }
-
-  return gm ? (
+  return data ? (
     <g
       className={cx("geomorph", def.key)}
       transform={transform}
     >
-      <foreignObject {...gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
+      <foreignObject {...data.gm.pngRect} xmlns="http://www.w3.org/1999/xhtml">
         <canvas
-          ref={canvasRef}
+          ref={el => el && (state.canvas = el)}
           className="geomorph"
-          width={gm.pngRect.width}
-          height={gm.pngRect.height}
+          width={data.gm.pngRect.width}
+          height={data.gm.pngRect.height}
         />
         <div
-          onClick={onClick}
+          onClick={state.onClick}
           className="main-container"
-          style={{ left: -gm.pngRect.x, top: -gm.pngRect.y }}
+          style={{ left: -data.gm.pngRect.x, top: -data.gm.pngRect.y }}
         >
-          {gm.doors.map(({ baseRect, angle }, doorId) =>
+          {data.gm.doors.map(({ baseRect, angle }, doorId) =>
             <div
               key={doorId}
-              className={cx("door", openDoors.includes(doorId) ? 'open' : 'closed')}
+              className={cx("door", state.openDoors.includes(doorId) ? 'open' : 'closed')}
               data-key="door"
               data-door-id={doorId}
               style={{
@@ -127,7 +154,7 @@ function Geomorph({ def, transform, disabled }) {
                 transform: `rotate(${angle}rad)`,
               }} />
           )}
-          {gm.labels.map(({ text, padded }, labelId) => (
+          {data.gm.labels.map(({ text, padded }, labelId) => (
             <div
               key={labelId}
               className="label"
@@ -140,20 +167,22 @@ function Geomorph({ def, transform, disabled }) {
               {text}
             </div>
           ))}
-          {gmGraph.ready && gm.rooms.map((_, roomId) =>
-            gm.doors.map(({ roomIds }, doorId) => {
+          {data.gmGraph.ready && data.gm.rooms.map((_, roomId) =>
+            data.gm.doors.map(({ roomIds }, doorId) => {
               if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
-              const point = gmGraph.getDoorViewPosition(0, roomId, doorId);
+              const point = data.gmGraph.getDoorViewPosition(0, roomId, doorId);
+              const viewId = `${doorId}@${roomId}`;
               return <div
-                key={`${doorId}@${roomId}`}
+                key={viewId}
                 className="view-point"
                 data-key="view"
+                data-view-id={viewId}
                 data-room-id={roomId}
                 style={{ left: point.x, top: point.y }}
               />;
             }))
           }
-          {gm.lightSrcs.map(({ position, roomId }, i) =>
+          {data.gm.lightSrcs.map(({ position, roomId }, i) =>
             <div
               key={i}
               className="light-point"
@@ -167,18 +196,18 @@ function Geomorph({ def, transform, disabled }) {
       </foreignObject>
 
       <path
-        d={viewPoly.svgPath}
+        d={state.viewPoly.svgPath}
         fill="#ff000055"
         stroke="red"
       />
 
       <path
-        d={lightPoly.svgPath}
+        d={state.lightPoly.svgPath}
         fill="#0000ff99"
         stroke="blue"
       />
 
-      <image className="debug" href={gm.items[0].pngHref} x={gm.pngRect.x} y={gm.pngRect.y}/>
+      <image className="debug" href={data.gm.items[0].pngHref} x={data.gm.pngRect.x} y={data.gm.pngRect.y}/>
 
     </g>
   ) : null;
@@ -244,14 +273,11 @@ const rootCss = css`
     div.light-point {
       position: absolute;
       cursor: pointer;
-      background: blue;
+      background: #9999ff;
       width: 5px;
       height: 5px;
       border-radius: 50%;
     }
-    /* circle {
-      fill: red;
-    } */
   }
 `;
 

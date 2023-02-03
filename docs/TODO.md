@@ -12,6 +12,8 @@
   - ✅  GeomorphEdit shows `light` positions
   - ✅ lightSrc has roomId
   - ✅ GeomorphEdit can show light polys
+  - ✅ refactor GeomorphEdit state
+  - GeomorphEdit restricts light by radius
   - store light `{ doorId, rect }`s
     - permit multiple subsequent doorways?
   - GeomorphEdit shows light decompositions

@@ -22,13 +22,15 @@ export default function useGeomorphData(layoutKey, disabled = false) {
 }
 
 /**
- * Convert `GeomorphLayoutJson` to `GeomorphData`
- * @param {Geomorph.LayoutKey} layoutKey 
+ * Convert
+ * @see {Geomorph.ParsedLayout} to @see {Geomorph.GeomorphData}
+ * @param {Geomorph.LayoutKey | Geomorph.ParsedLayout} input 
  */
-export async function createGeomorphData(layoutKey) {
-  const layout = parseLayout(
-    await fetch(geomorphJsonPath(layoutKey)).then(x => x.json())
-  );
+export async function createGeomorphData(input) {
+
+  const layout = typeof input === 'string'
+    ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
+    : input;
 
   const { roomGraph } = layout;
 
@@ -135,7 +137,7 @@ export async function createGeomorphData(layoutKey) {
       matched.forEach(tag => 
         roomId >= 0
           ? pointsByRoom[roomId][tag].push({ point: p, tags: single.tags.slice() })  
-          : console.warn(`${tag} point ${i} (${single.tags}) should be inside some room (${layoutKey})`)  
+          : console.warn(`${tag} point ${i} (${single.tags}) should be inside some room (${layout.key})`)  
       );
     }
   });

@@ -111,7 +111,7 @@ export class gmGraphClass extends BaseGraph {
     /**
      * For each area we raycast a light from specific position.
      */
-    const unjoinedLights = doorViewAreas.flatMap(({ area }) => {
+    const unjoinedViews = doorViewAreas.flatMap(({ area }) => {
       /**
        * We need additional line segments for:
        * - doors parallel to area.door
@@ -154,7 +154,7 @@ export class gmGraphClass extends BaseGraph {
          * Use high precision to avoid occasional "Unable to complete output ring"
          * > https://github.com/Turfjs/turf/issues/2048
          */
-        unjoinedLights.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
+        unjoinedViews.filter(x => x.gmId === gmId).map(x => x.poly.precision(8))
       ),
       gmRoomIds: this.getRoomsFromGmDoorIds(gmId, allDoorIds),
     };
