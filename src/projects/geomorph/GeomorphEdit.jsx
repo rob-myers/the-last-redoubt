@@ -7,6 +7,9 @@ import { css, cx } from "@emotion/css";
 import { useQuery } from "react-query";
 
 import { Poly } from "../geom/poly";
+import { gmGraphClass } from "../graph/gm-graph";
+import { createGeomorphData } from "./use-geomorph-data";
+import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta } from "../service/geomorph";
@@ -16,10 +19,8 @@ import { renderGeomorph } from "../geomorph/render-geomorph";
 import * as defaults from "../example/defaults";
 import svgJson from '../../../static/assets/symbol/svg.json'; // CodeSandbox?
 import SvgPanZoom from '../panzoom/SvgPanZoom';
-import { createGeomorphData } from "./use-geomorph-data";
-import useStateRef from "projects/hooks/use-state-ref";
-import useUpdate from "projects/hooks/use-update";
-import { gmGraphClass } from "projects/graph/gm-graph";
+import useStateRef from "../hooks/use-state-ref";
+import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.LayoutKey} */
 // const layoutKey = 'g-101--multipurpose';
@@ -48,10 +49,11 @@ function Geomorph({ def, transform, disabled }) {
   const { data, error } = useQuery(
     `GeomorphEdit--${def.key}--${gmHash}`,
     async () => {
+      // compute layout and GeomorphData from def
       const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-      // compute layout from def
       const layout = await createLayout(def, symbolLookup)
       const gm = await createGeomorphData(layout);
+      // create geomorph graph
       const gmInstance = geomorphDataToInstance(gm, [1, 0, 0, 1, 0, 0]);
       const gmGraph = gmGraphClass.fromGms([gmInstance]);
       // ℹ️ Provide state needed by gmGraph
@@ -118,7 +120,12 @@ function Geomorph({ def, transform, disabled }) {
         data.gm, symbolLookup, state.canvas, (pngHref) => loadImage(pngHref),
         { scale: 1, navTris: false },
       );
-      state.allLightPolys = computeLightPolygons(data.gm);
+      // intersect with circles (corresponds to bake-lighting radial fill)
+      state.allLightPolys = computeLightPolygons(data.gm).map((lightPoly, lightId) => {
+        const { distance = defaultLightDistance, position } = data.gm.lightSrcs[lightId];
+        const circlePoly = Poly.circle(position, distance, 30);
+        return Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly;
+      });
     }
   }, [data]);
 
@@ -213,72 +220,73 @@ function Geomorph({ def, transform, disabled }) {
   ) : null;
 }
 
+const pointDim = 8;
+
 const rootCss = css`
   background-color: #444;
   height: 100%;
-  g image.debug {
-    opacity: 0.2;
-    pointer-events: none;
-  }
-  g .doors rect {
-    fill: white;
-    stroke: black;
-  }
-  g path {
-    pointer-events: none;
-  }
-
-  g foreignObject {
-    font: ${labelMeta.font};
-
-    canvas.geomorph {
-      position: absolute;
+  g {
+    image.debug {
+      opacity: 0.2;
       pointer-events: none;
     }
-    
-    div.main-container {
-      position: absolute;
+    path {
+      pointer-events: none;
     }
-
-    div.label {
-      position: absolute;
-      padding: ${labelMeta.padY}px ${labelMeta.padX}px;
+    foreignObject {
+      font: ${labelMeta.font};
+  
+      canvas.geomorph {
+        position: absolute;
+        pointer-events: none;
+      }
       
-      cursor: pointer;
-      pointer-events: auto;
-      user-select: none; /** TODO better way? */
-
-      background: black;
-      color: white;
-    }
-    div.door {
-      position: absolute;
-      cursor: pointer;
-      border: 1px solid black;
-      &.open {
-        background: none;
+      div.main-container {
+        position: absolute;
       }
-      &.closed {
-        background: red;
+  
+      div.label {
+        position: absolute;
+        padding: ${labelMeta.padY}px ${labelMeta.padX}px;
+        
+        cursor: pointer;
+        pointer-events: auto;
+        user-select: none; /** TODO better way? */
+  
+        background: black;
+        color: white;
       }
-    }
-    div.view-point {
-      position: absolute;
-      cursor: pointer;
-      background: red;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-    }
-    div.light-point {
-      position: absolute;
-      cursor: pointer;
-      background: #9999ff;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
+      div.door {
+        position: absolute;
+        cursor: pointer;
+        border: 1px solid black;
+        &.open {
+          background: none;
+        }
+        &.closed {
+          background: red;
+        }
+      }
+      div.view-point {
+        position: absolute;
+        cursor: pointer;
+        background: green;
+        width: ${pointDim}px;
+        height: ${pointDim}px;
+        border-radius: 50%;
+      }
+      div.light-point {
+        position: absolute;
+        cursor: pointer;
+        background: #ffff99;
+        width: ${pointDim}px;
+        height: ${pointDim}px;
+        border-radius: 50%;
+        border: 1px solid black;
+      }
     }
   }
+
 `;
 
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));

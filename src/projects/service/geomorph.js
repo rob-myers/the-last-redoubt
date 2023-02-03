@@ -6,7 +6,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { error, warn } from './log';
 import { fillRing } from "../service/dom";
 
@@ -242,12 +242,8 @@ export async function createLayout(def, lookup, triangleService) {
   /** @type {Geomorph.ParsedLayout['lightSrcs']} */
   const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light).map(({ poly, tags }) => ({
     position: poly.center,
-    // 🚧 remove?
-    direction: tags.reduce((agg, tag) =>
-      agg ? agg : tag.match(/^direction_-?[\d]+_-?[\d]+$/) ? new Vect(...tag.split('_').slice(1).map(Number)) : agg
-    ,
-    /** @type {undefined | Vect} */ (undefined)),
     roomId: findRoomIdContaining(rooms, poly.center),
+    distance: matchedMap(tags, distanceTagRegex, ([, distStr]) => Number(distStr)),
   }));
 
   return {
@@ -432,10 +428,10 @@ export function serializeLayout({
     navPoly: navPoly.map(x => x.geoJson),
     navZone,
     roomGraph: roomGraph.plainJson(),
-    lightSrcs: lightSrcs.map(({ position, roomId, direction }) => ({
+    lightSrcs: lightSrcs.map(({ position, roomId, distance }) => ({
       position: position.json,
       roomId,
-      direction: direction?.json,
+      distance,
     })),
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -444,6 +440,23 @@ export function serializeLayout({
     items,
   };
   return json;
+}
+
+/**
+ * @template T
+ * @param {string[]} tags 
+ * @param {RegExp} regex
+ * @param {(matching: RegExpMatchArray) => T} [transform]
+ * @returns {T | undefined}
+ */
+export function matchedMap(tags, regex, transform) {
+  let matching = /** @type {RegExpMatchArray | null} */ (null);
+  tags.find(tag => matching = tag.match(regex));
+  if (transform) {
+    return matching ? transform(matching) : undefined;
+  } else {// Default to full matching, assuming T is string
+    return /** @type {*} */ (matching?.[0]);
+  }
 }
 
 /** @param {Geomorph.LayoutJson} layout */
@@ -474,7 +487,7 @@ export function parseLayout({
     roomGraph: roomGraphClass.from(roomGraph),
     lightSrcs: lightSrcs.map(x => ({
       position: Vect.from(x.position),
-      direction: x.direction ? Vect.from(x.direction) : undefined,
+      distance: x.distance,
       roomId: x.roomId,
     })),
 
@@ -616,10 +629,15 @@ export function computeLightPolygons(gm) {
     ...gm.windows.map(x => x.poly),
   ]);
 
-  return lightSources.map(({ position, direction }, i) => {
+  return lightSources.map(({ position, distance: _ }, i) => {
     const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
     if (exterior) {
-      return geom.lightPolygon({ position, range: 2000, exterior, direction });
+      // 🚧 compute associated door rects and warn if needed
+      return geom.lightPolygon({
+        position,
+        range: 2000, // Must use large range (exceeding geomorph bounds) for good polygon
+        exterior,
+      });
     } else {
       console.error(`ignored light ${i} (${JSON.stringify(position)}): no exterior found`);
       return new Poly;

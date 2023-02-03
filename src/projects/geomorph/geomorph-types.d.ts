@@ -82,8 +82,8 @@ declare namespace Geomorph {
     /** Sources of lights rendered inside PNG  */
     lightSrcs: {
       position: V;
-      direction?: V; // 🚧 remove?
       roomId: number;
+      distance?: number;
     }[];
 
     /** Should probably have exactly one polygon */

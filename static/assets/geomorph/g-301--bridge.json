@@ -947,14 +947,14 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[405, 313], [395, 313], [395, 303], [405, 303]]]
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[455, 425], [455, 435], [445, 435], [445, 425]]]
@@ -992,7 +992,7 @@
         "tags": ["light"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[755, 415], [755, 425], [745, 425], [745, 415]]]
+          "coordinates": [[[735, 405], [735, 415], [725, 415], [725, 405]]]
         }
       },
       {
@@ -10003,15 +10003,15 @@
     ]
   },
   "lightSrcs": [
-    {"position": {"x": 210, "y": 395}},
-    {"position": {"x": 400, "y": 308}},
-    {"position": {"x": 450, "y": 430}},
-    {"position": {"x": 690, "y": 230}},
-    {"position": {"x": 1015, "y": 415}},
-    {"position": {"x": 1110, "y": 100}},
-    {"position": {"x": 150, "y": 510}},
-    {"position": {"x": 750, "y": 420}},
-    {"position": {"x": 90, "y": 120}}
+    {"position": {"x": 210, "y": 395}, "roomId": 9},
+    {"position": {"x": 400, "y": 308}, "roomId": 12, "distance": 200},
+    {"position": {"x": 450, "y": 430}, "roomId": 14, "distance": 180},
+    {"position": {"x": 690, "y": 230}, "roomId": 17},
+    {"position": {"x": 1015, "y": 415}, "roomId": 23},
+    {"position": {"x": 1110, "y": 100}, "roomId": 25},
+    {"position": {"x": 150, "y": 510}, "roomId": 6},
+    {"position": {"x": 730, "y": 410}, "roomId": 19},
+    {"position": {"x": 90, "y": 120}, "roomId": 1}
   ],
   "hullPoly": [
     {

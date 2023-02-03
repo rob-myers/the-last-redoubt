@@ -151,6 +151,21 @@ export class Poly {
     this._triangulationIds = indexTriples;
     this._triangulation = this.triangleIdsToPolys(this._triangulationIds);
   }
+
+  /**
+   * 
+   * @param {Geom.VectJson} center 
+   * @param {number} radius 
+   * @param {number} segments 
+   */
+  static circle(center, radius, segments) {
+    return new Poly(
+      [...Array(segments)].map((_, i) => new Vect(
+        center.x + radius * Math.cos( i * ((2 * Math.PI) / segments) ),
+        center.y + radius * Math.sin( i * ((2 * Math.PI) / segments) ),
+      ))
+    );
+  }
   
   /**
    * @private

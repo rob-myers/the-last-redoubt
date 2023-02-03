@@ -13,7 +13,9 @@
   - ✅ lightSrc has roomId
   - ✅ GeomorphEdit can show light polys
   - ✅ refactor GeomorphEdit state
-  - GeomorphEdit restricts light by radius
+  - ✅ GeomorphEdit restricts light by distance
+    - ✅ review bake-lighting
+    - ✅ support tags `light distance-180`
   - store light `{ doorId, rect }`s
     - permit multiple subsequent doorways?
   - GeomorphEdit shows light decompositions

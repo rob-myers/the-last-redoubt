@@ -125,3 +125,7 @@ export const svgSymbolTag = {
   /** Light positions inside geomorph */
   light: 'light',
 } as const;
+
+export const defaultLightDistance = 300;
+
+export const distanceTagRegex = /^distance-(\d+)$/;

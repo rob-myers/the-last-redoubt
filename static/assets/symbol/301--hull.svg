@@ -21,7 +21,7 @@
     <path d="M 358.4 63.3 L 180 63.3 L 177.1 62.1 L 119.1 4 L -4 4 L -4 -4 L 122.4 -4 L 181.7 55.3 L 360.5 55.3 L 363.1 56.7 L 424.7 119 L 419 124.7 L 358.4 63.3 Z" style=""/>
     <path d="M 841 63 L 1020 63 L 1023 62 L 1081 4 L 1204 4 L 1204 -4 L 1077 -4 L 1018 55 L 839 55 L 837 56 L 773 119 L 779 125 L 841 63 Z" style=""/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0);">
       <title>wall no-fill</title>
@@ -108,10 +108,10 @@
       <title>light</title>
     </rect>
     <rect x="600" y="325" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 730, -297)">
-      <title>light</title>
+      <title>light distance-200</title>
     </rect>
     <rect x="445" y="425" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
+      <title>light distance-180</title>
     </rect>
     <rect x="685" y="225" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
@@ -125,7 +125,7 @@
     <rect x="145" y="505" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
-    <rect x="745" y="415" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="725" y="405" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
     <rect x="85" y="115" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">

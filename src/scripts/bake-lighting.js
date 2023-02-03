@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 
+import { defaultLightDistance } from '../projects/service/const';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
 import { fillPolygon } from '../projects/service/dom';
@@ -53,14 +54,14 @@ async function main() {
 
   ctxt.globalCompositeOperation = 'lighter';
   // Radial fill with drop off
-  lightPolys.forEach((light, i) => {
-    const { position, direction } = lightSources[i];
-    const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, 300)
+  lightPolys.forEach((lightPoly, i) => {
+    const { position, distance = defaultLightDistance } = lightSources[i];
+    const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance)
     gradient.addColorStop(0, '#ffffaa55');
     gradient.addColorStop(0.9, "#00000000");
     gradient.addColorStop(1, "#00000000");
     ctxt.fillStyle = gradient;
-    fillPolygon(ctxt, [light]);
+    fillPolygon(ctxt, [lightPoly]);
   });
   //#endregion
 
