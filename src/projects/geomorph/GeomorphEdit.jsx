@@ -23,9 +23,9 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.LayoutKey} */
-// const layoutKey = 'g-101--multipurpose';
+const layoutKey = 'g-101--multipurpose';
 // const layoutKey = 'g-102--research-deck';
-const layoutKey = 'g-301--bridge';
+// const layoutKey = 'g-301--bridge';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
 
@@ -119,10 +119,19 @@ function Geomorph({ def, transform, disabled }) {
           update();
         }
       },
+
+      reset() {
+        state.viewPoly = new Poly;
+        state.lightPoly = new Poly;
+        state.lastViewId = '';
+        state.lastRoomId = -1;
+      },
     };
   }, {
     deps: [data, layoutKey],
   });
+
+  React.useEffect(() => void state.reset(), [layoutKey]);
 
   React.useEffect(() => {
     if (data) {
