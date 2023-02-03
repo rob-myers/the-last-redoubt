@@ -58,8 +58,8 @@ async function main() {
     const { position, distance = defaultLightDistance } = lightSources[i];
     const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance)
     gradient.addColorStop(0, '#ffffaa55');
-    gradient.addColorStop(0.9, "#00000000");
     gradient.addColorStop(1, "#00000000");
+    // gradient.addColorStop(1, "#00000000");
     ctxt.fillStyle = gradient;
     fillPolygon(ctxt, [lightPoly]);
   });
