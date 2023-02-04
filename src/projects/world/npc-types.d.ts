@@ -316,6 +316,7 @@ declare namespace NPC {
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
     | { key: 'unmounted-npc'; npcKey: string; }
+    | { key: 'world-ready'; }
     | NPCsWayEvent
   );
 

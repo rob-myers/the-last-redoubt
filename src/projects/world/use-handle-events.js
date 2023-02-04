@@ -1,5 +1,4 @@
 import React from "react";
-import { filter } from "rxjs/operators";
 import { testNever } from "../service/generic";
 import * as npcService from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
@@ -99,100 +98,123 @@ export default function useHandleEvents(api) {
     deps: [api.gmGraph],
   });
 
+  //#region handle door/npc events
   React.useEffect(() => {
-    if (api.gmGraph.gms.length && api.doors.ready && api.npcs.ready) {
 
-      // Update doors and lights on change
-      // 🚧 perhaps doors.update() fov.update()
-      const doorsSub = api.doors.events
-        .pipe(filter(x => x.key === 'closed-door' || x.key === 'opened-door'))
-        .subscribe(() => api.updateAll());
+    if (!(api.gmGraph.gms.length && api.doors.ready && api.npcs.ready)) {
+      return;
+    }
 
-      // React to NPC events
-      const npcsSub = api.npcs.events.subscribe((e) => {
-        switch (e.key) {
-          case 'decor':
-            api.npcs.setDecor(e.meta);
-            break;
-          case 'disabled':
-          case 'enabled':
-            break;
-          case 'fov-changed':
-            // console.log(e);
-            api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
-            break;
-          case 'set-player':
-            api.npcs.playerKey = e.npcKey || null;
-            if (e.npcKey) {
-              api.npcs.setRoomByNpc(e.npcKey);
-            }
-            
-            break;
-          case 'spawned-npc':
-            // This event also happens on hot-reload NPC.jsx
-            if (api.npcs.playerKey === e.npcKey) {
-              api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
-              api.npcs.setRoomByNpc(e.npcKey);
-            }
+    // Update doors and lights on change
+    // 🚧 perhaps doors.update() fov.update()
+    const doorsSub = api.doors.events.subscribe((e) => {
+      switch (e.key) {
+        case 'closed-door': {
+          // 🚧 drawRects in baked-lighting canvas
+          api.updateAll();
+          break;
+        }
+        case 'opened-door': {
+          // 🚧 clearRects of baked-lighting canvas
+          api.updateAll();
+          break;
+        }
+      }
+
+    });
+
+    // React to NPC events
+    const npcsSub = api.npcs.events.subscribe((e) => {
+      switch (e.key) {
+        case 'decor':
+          api.npcs.setDecor(e.meta);
+          break;
+        case 'disabled':
+        case 'enabled':
+          break;
+        case 'fov-changed':
+          // console.log(e);
+          api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
+          break;
+        case 'set-player':
+          api.npcs.playerKey = e.npcKey || null;
+          if (e.npcKey) {
+            api.npcs.setRoomByNpc(e.npcKey);
+          }
+          
+          break;
+        case 'spawned-npc':
+          // This event also happens on hot-reload NPC.jsx
+          if (api.npcs.playerKey === e.npcKey) {
+            api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
+            api.npcs.setRoomByNpc(e.npcKey);
+          }
+          /**
+           * 🚧 collision test against player, e.g.
+           * in case they've already started final segment
+           */
+          break;
+        case 'started-walking':
+          break;
+        case 'stopped-walking': {
+          const playerNpc = api.npcs.getPlayer();
+          if (!playerNpc) {
             /**
-             * 🚧 collision test against player, e.g.
-             * in case they've already started final segment
+             * Only handle stopped NPC when a Player exists.
+             * NPC vs NPC motion should be handled separately.
              */
             break;
-          case 'started-walking':
-            break;
-          case 'stopped-walking': {
-            const playerNpc = api.npcs.getPlayer();
-            if (!playerNpc) {
-              /**
-               * Only handle stopped NPC when a Player exists.
-               * NPC vs NPC motion should be handled separately.
-               */
-              break;
-            }
-
-            if (e.npcKey === playerNpc.key) {
-              // Walking NPCs may be about to collide with Player,
-              // e.g. before they start a new line segment
-              Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
-                const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
-                if (collision) {
-                  setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
-                }
-              });
-            } else if (playerNpc.isWalking()) {
-              // Player may be about to collide with NPC
-              const npc = api.npcs.getNpc(e.npcKey);
-              const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
-              if (collision) {
-                setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
-              }
-            }
-            break;
           }
-          case 'unmounted-npc':
-            // This event also happens on hot-reload NPC.jsx
-            delete api.npcs.npc[e.npcKey];
-            break;
-          case 'way-point':
-            if (e.npcKey === api.npcs.playerKey) {
-              state.handlePlayerWayEvent(e);
+
+          if (e.npcKey === playerNpc.key) {
+            // Walking NPCs may be about to collide with Player,
+            // e.g. before they start a new line segment
+            Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
+              const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
+              if (collision) {
+                setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
+              }
+            });
+          } else if (playerNpc.isWalking()) {
+            // Player may be about to collide with NPC
+            const npc = api.npcs.getNpc(e.npcKey);
+            const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
+            if (collision) {
+              setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
             }
-            state.handleWayEvents(e);
-            break;
-          default:
-            throw testNever(e, { suffix: 'npcsSub' });
+          }
+          break;
         }
-      });
+        case 'unmounted-npc':
+          // This event also happens on hot-reload NPC.jsx
+          delete api.npcs.npc[e.npcKey];
+          break;
+        case 'way-point':
+          if (e.npcKey === api.npcs.playerKey) {
+            state.handlePlayerWayEvent(e);
+          }
+          state.handleWayEvents(e);
+          break;
+        case 'world-ready':
+          // 🚧 await image load instead
+          setTimeout(() => {
+            api.geomorphs.initDrawLightRects();
+          }, 1000);
+          break;
+        default:
+          throw testNever(e, { suffix: 'npcsSub' });
+      }
+    });
 
-      api.updateAll();
+    api.updateAll();
 
-      return () => {
-        doorsSub.unsubscribe();
-        npcsSub.unsubscribe();
-      };
-    }
+    return () => {
+      doorsSub.unsubscribe();
+      npcsSub.unsubscribe();
+    };
+
   }, [api.gmGraph.gms, api.doors.ready, api.npcs.ready]);
+  //#endregion
 
 }
 

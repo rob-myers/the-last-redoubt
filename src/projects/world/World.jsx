@@ -22,6 +22,7 @@ export default function World(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     disabled: !!props.disabled,
     everEnabled: false,
+    everReady: false,
     gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
     debug: /** @type {State['debug']} */ ({ ready: false }),
@@ -59,10 +60,17 @@ export default function World(props) {
 
   useHandleEvents(state);
 
+  const ready = state.isReady();
   React.useEffect(() => {
     state.disabled = !!props.disabled;
-    state.npcs.events?.next({ key: props.disabled ? 'disabled' : 'enabled' });
-  }, [props.disabled, state.npcs.ready]);
+    if (state.npcs.ready) {
+      state.npcs.events.next({ key: state.disabled ? 'disabled' : 'enabled' });
+    }
+    if (!state.everReady && (state.everReady ||= ready)) {
+      state.npcs.events.next({ key: 'world-ready' });
+    }
+  }, [props.disabled, ready]);
+  // }, [props.disabled, state.npcs.ready]);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);
@@ -122,6 +130,7 @@ export default function World(props) {
  * @typedef State
  * @property {boolean} disabled
  * @property {boolean} everEnabled
+ * @property {boolean} everReady
  * @property {Graph.GmGraph} gmGraph
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Doors").State} doors

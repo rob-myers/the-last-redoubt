@@ -647,18 +647,19 @@ export function computeLightDoorRects(gm) {
   const lightPolys = computeLightPolygons(gm, true);
   /** Computed items are stored here */
   const lightRects = /** @type {Geomorph.LightDoorRect[]} */ ([]);
-  const seenRoomIds = /** @type {number[]} */ ([]);
+  // const seenRoomIds = /** @type {number[]} */ ([]);
 
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {number[]} doorIdsStack 
+   * @param {number[]} doorIds doors we've moved through
+   * @param {number[]} roomIds rooms we've moved through
    * @param {number} depth 
    */
-  function depthFirstLightRects(light, roomId, doorIdsStack, depth) {
-    seenRoomIds.push(roomId); // Avoid revisit
+  function depthFirstLightRects(light, roomId, doorIds, roomIds, depth) {
+    const nextRoomIds = roomIds.concat(roomId); // Avoid revisit
     for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
-      const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], seenRoomIds);
+      const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], nextRoomIds);
       if (otherRoomId === -1) {
         continue;
       }
@@ -671,12 +672,12 @@ export function computeLightDoorRects(gm) {
         key: `door${doorId}@light${light.id}`,
         doorId,
         lightId: light.id,
-        rect: intersection[0].rect.precision(precision),
-        otherDoorIds: doorIdsStack.slice(),
+        rect: intersection[0].rect.precision(0).outset(1), // Extended and integer-valued
+        otherDoorIds: doorIds.slice(),
         otherKeys: [], // 🚧 compute later
       });
       if (--depth > 0) {
-        depthFirstLightRects(light, otherRoomId, doorIdsStack.concat(doorId), depth)
+        depthFirstLightRects(light, otherRoomId, doorIds.concat(doorId), nextRoomIds, depth)
       }
     }
   }
@@ -684,7 +685,7 @@ export function computeLightDoorRects(gm) {
   lightPolys.forEach((lightPoly, lightId) => {
     const { roomId } = gm.lightSrcs[lightId];
     const light = { id: lightId, roomId, poly: lightPoly };
-    depthFirstLightRects(light, roomId, [], 3);
+    depthFirstLightRects(light, roomId, [], [], 3);
   });
 
   // lightRect.otherKeys are those light rects dependent on lightRect

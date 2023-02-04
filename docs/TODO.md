@@ -22,7 +22,11 @@
   - 🚧 precompute light door rects
     - ✅ part of geomorph.json
     - ✅ support multiple subsequent doorways
+    - ✅ initial drawRects
+    - 🚧 initially await fov images ready
+    - 🚧 drawRects on door open/close
     - support diagonal doors?
+      > should work i.e. overflow won't be visible
   - GeomorphEdit shows light decompositions
   - ...
 
