@@ -23,8 +23,11 @@
     - ✅ part of geomorph.json
     - ✅ support multiple subsequent doorways
     - ✅ initial drawRects
-    - 🚧 initially await fov images ready
-    - 🚧 drawRects on door open/close
+    - ✅ init drawRects: fix transformed
+      - forgot that rects shouldn't show in light's originating room
+      - still need to fix overlapping rects in e.g. geomorph 101 
+    - 🚧 init drawRects: await fov images ready
+    - drawRects on door open/close
     - support diagonal doors?
       > should work i.e. overflow won't be visible
   - GeomorphEdit shows light decompositions

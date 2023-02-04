@@ -18,7 +18,6 @@ export default function Geomorphs(props) {
       api.gmGraph.gms.forEach((gm, gmId) => {
         const canvas = state.canvas[gmId];
         const ctxt = assertNonNull(canvas.getContext('2d'));
-        // 🚧 fix transformed geomorphs
         ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
 
         // 🚧 better reference to image
