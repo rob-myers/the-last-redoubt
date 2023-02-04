@@ -10021,6 +10021,157 @@
     {"position": {"x": 730, "y": 410}, "roomId": 19},
     {"position": {"x": 110, "y": 120}, "roomId": 1, "distance": 200}
   ],
+  "lightRects": [
+    {
+      "key": "24@0",
+      "doorId": 24,
+      "lightId": 0,
+      "rect": {
+        "x": 115.1038814416589,
+        "y": 240.5419906195507,
+        "width": 190.69654712339,
+        "height": 117.45800938044931
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "4@0",
+      "doorId": 4,
+      "lightId": 0,
+      "rect": {
+        "x": 247.60506241529166,
+        "y": 104.85203503872233,
+        "width": 56.1922789148168,
+        "height": 133.64796496127767
+      },
+      "otherDoorIds": [24],
+      "otherKeys": []
+    },
+    {
+      "key": "8@0",
+      "doorId": 8,
+      "lightId": 0,
+      "rect": {"x": 122, "y": 122, "width": 51.214875098706756, "height": 116},
+      "otherDoorIds": [24],
+      "otherKeys": []
+    },
+    {
+      "key": "25@0",
+      "doorId": 25,
+      "lightId": 0,
+      "rect": {"x": 182, "y": 422, "width": 56, "height": 56},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "23@1",
+      "doorId": 23,
+      "lightId": 1,
+      "rect": {
+        "x": 71.3202155935295,
+        "y": 422,
+        "width": 46.6797844064705,
+        "height": 43.219865671874345
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "12@2",
+      "doorId": 12,
+      "lightId": 2,
+      "rect": {
+        "x": 482,
+        "y": 305.61826000066935,
+        "width": 118,
+        "height": 54.781739999330625
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "15@2",
+      "doorId": 15,
+      "lightId": 2,
+      "rect": {
+        "x": 499.5493697776358,
+        "y": 362.6,
+        "width": 84.95060214637317,
+        "height": 40.99189521195365
+      },
+      "otherDoorIds": [12],
+      "otherKeys": []
+    },
+    {
+      "key": "14@4",
+      "doorId": 14,
+      "lightId": 4,
+      "rect": {
+        "x": 526.8463303507237,
+        "y": 63.000000000000114,
+        "width": 256.69901475085203,
+        "height": 145.21999999999989
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "28@5",
+      "doorId": 28,
+      "lightId": 5,
+      "rect": {
+        "x": 842,
+        "y": 240.03880000000026,
+        "width": 166.85836306380247,
+        "height": 169.08514292274862
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "5@5",
+      "doorId": 5,
+      "lightId": 5,
+      "rect": {
+        "x": 899.9999,
+        "y": 132.96797929642455,
+        "width": 52.51059485373173,
+        "height": 105.53202070357545
+      },
+      "otherDoorIds": [28],
+      "otherKeys": []
+    },
+    {
+      "key": "20@6",
+      "doorId": 20,
+      "lightId": 6,
+      "rect": {"x": 1082, "y": 6, "width": 77.11836653000319, "height": 52},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "26@7",
+      "doorId": 26,
+      "lightId": 7,
+      "rect": {"x": 6, "y": 482, "width": 52, "height": 62.43478260869563},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "6@9",
+      "doorId": 6,
+      "lightId": 9,
+      "rect": {
+        "x": 32.94039527150697,
+        "y": 6,
+        "width": 80.6229090999911,
+        "height": 52
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    }
+  ],
   "hullPoly": [
     {
       "type": "Polygon",

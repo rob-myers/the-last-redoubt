@@ -19,6 +19,15 @@ npx http-server
 - [TODOs](/docs/TODO.md).
 - [General dev info](/docs/DEV-INFO.md).
 
+## Scripts
+
+```sh
+# Generate all geomorph jsons in static/assets/geomorph
+yarn svg-meta --all
+
+# ...
+```
+
 ## Optional Dependencies
 
 ```sh

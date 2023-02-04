@@ -6,7 +6,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { error, warn } from './log';
 import { fillRing } from "../service/dom";
 
@@ -246,26 +246,28 @@ export async function createLayout(def, lookup, triangleService) {
     distance: matchedMap(tags, distanceTagRegex, ([, distStr]) => Number(distStr)),
   }));
 
-  return {
+  /** @type {Geomorph.ParsedLayout} */
+  const output = {
     key: def.key,
     id: def.id,
     def,
     groups,
-
+  
     rooms,
     doors,
     windows,
     labels,
-
+  
     navPoly: navPolyWithDoors,
     navZone,
     roomGraph,
     lightSrcs,
+    lightRects: [],
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
     hullRect,
-
+  
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
@@ -275,6 +277,13 @@ export async function createLayout(def, lookup, triangleService) {
       transform: def.items[i].transform ? `matrix(${def.items[i].transform})` : undefined,
     })),
   };
+
+  /**
+   * 🚧 compute lightRects
+   */
+  output.lightRects = computeLightDoorRects(output);
+
+  return output;
 }
 
 /**
@@ -343,6 +352,15 @@ export function getConnectorOtherSide(connector, viewPos) {
 }
 
 /**
+ * Returns -1 if no unseen room id found.
+ * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {number[]} seenRoomIds could be frontier array of bfs
+ */
+export function getUnseenConnectorRoomId(connector, seenRoomIds) {
+  return connector.roomIds.find(id => id !== null && !seenRoomIds.includes(id)) ?? -1;
+}
+
+/**
  * @param {Geomorph.ConnectorRectJson} x
  * @returns {Geomorph.ParsedConnectorRect}
  */
@@ -405,7 +423,8 @@ function parseConnectorRect(x) {
 /** @param {Geomorph.ParsedLayout} layout */
 export function serializeLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  lightSrcs, lightRects,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -432,6 +451,10 @@ export function serializeLayout({
       position: position.json,
       roomId,
       distance,
+    })),
+    lightRects: lightRects.map(x => ({
+      ...x,
+      rect: x.rect.json,
     })),
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -462,7 +485,8 @@ export function matchedMap(tags, regex, transform) {
 /** @param {Geomorph.LayoutJson} layout */
 export function parseLayout({
   def, groups,
-  rooms, doors, windows, labels, navPoly, navZone, roomGraph, lightSrcs,
+  rooms, doors, windows, labels, navPoly, navZone, roomGraph,
+  lightSrcs, lightRects,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -490,7 +514,10 @@ export function parseLayout({
       distance: x.distance,
       roomId: x.roomId,
     })),
-
+    lightRects: lightRects.map(x => ({
+      ...x,
+      rect: Rect.fromJson(x.rect),
+    })),
     hullPoly: hullPoly.map(Poly.from),
     hullRect,
     hullTop: hullTop.map(Poly.from),
@@ -617,10 +644,60 @@ export function geomorphDataToInstance(gm, transform) {
 }
 
 /**
- * Aligned to geomorph lightSrcs.
  * @param {Geomorph.ParsedLayout} gm 
  */
-export function computeLightPolygons(gm) {
+export function computeLightDoorRects(gm) {
+  const lightPolys = computeLightPolygons(gm, true);
+  const output = /** @type {Geomorph.LightDoorRect[]} */ ([]);
+  const seenRoomIds = /** @type {number[]} */ ([]);
+
+  lightPolys.forEach((lightPoly, lightId) => {
+    const { roomId: lightRoomId } = gm.lightSrcs[lightId];
+
+    /**
+     * @param {number} roomId 
+     * @param {number[]} doorIdsStack 
+     * @param {number} depth 
+     */
+    function depthFirstLightRects(roomId, doorIdsStack, depth) {
+      for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
+        seenRoomIds.push(roomId); // Avoid revisit
+        const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], seenRoomIds);
+        if (otherRoomId === -1) {
+          continue;
+        }
+        const otherRoomPoly = gm.rooms[otherRoomId];
+        const intersection = Poly.intersect([otherRoomPoly], [lightPoly]);
+        if (!intersection.length) {
+          continue;
+        }
+        output.push({
+          key: `${doorId}@${lightId}`,
+          doorId,
+          lightId,
+          rect: intersection[0].rect,
+          otherDoorIds: doorIdsStack.slice(),
+          otherKeys: [], // 🚧 compute later
+        });
+        if (--depth > 0) {
+          depthFirstLightRects(otherRoomId, doorIdsStack.concat(doorId), depth)
+        }
+      }
+    }
+
+    depthFirstLightRects(lightRoomId, [], 3);
+  });
+
+  // 🚧 attach otherKeys
+
+  return output;
+}
+
+/**
+ * Aligned to geomorph `lightSrcs`.
+ * @param {Geomorph.ParsedLayout} gm
+ */
+export function computeLightPolygons(gm, intersectWithCircle = false) {
   const lightSources = gm.lightSrcs;
   /** More than one polygon can happen e.g. Geomorph 102 */
   const allRoomsAndDoors = Poly.union([
@@ -629,7 +706,7 @@ export function computeLightPolygons(gm) {
     ...gm.windows.map(x => x.poly),
   ]);
 
-  return lightSources.map(({ position, distance: _ }, i) => {
+  const lightPolys = lightSources.map(({ position, distance: _ }, i) => {
     const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
     if (exterior) {
       // 🚧 compute associated door rects and warn if needed
@@ -639,10 +716,20 @@ export function computeLightPolygons(gm) {
         exterior,
       });
     } else {
-      console.error(`ignored light ${i} (${JSON.stringify(position)}): no exterior found`);
+      console.error(`empty light ${i} (${JSON.stringify(position)}): no exterior found`);
       return new Poly;
     }
   });
+
+  if (intersectWithCircle) {
+    return lightPolys.map((lightPoly, lightId) => {
+      const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
+      const circlePoly = Poly.circle(position, distance, 30);
+      return Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly;
+    })
+  } else {
+    return lightPolys;
+  }
 }
 
 /**

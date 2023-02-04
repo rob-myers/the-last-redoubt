@@ -2,6 +2,9 @@
 
 ## In progress
 
+- ✅ silent fail on geomorph json parse error e.g. via missing field
+  - We now log useQuery error field
+
 - 🚧 review light strategy
   - ✅ rename tag `light` -> `view`
   - ✅ rename tag `light-source` -> `light`
@@ -16,8 +19,9 @@
   - ✅ GeomorphEdit restricts light by distance
     - ✅ review bake-lighting
     - ✅ support tags `light distance-180`
-  - store light `{ doorId, rect }`s
-    - permit multiple subsequent doorways?
+  - 🚧 precompute items `{ key, rect, otherDoorIds, otherKeys }`
+    - part of geomorph.json
+    - support multiple subsequent doorways
   - GeomorphEdit shows light decompositions
   - ...
 

@@ -85,6 +85,8 @@ declare namespace Geomorph {
       roomId: number;
       distance?: number;
     }[];
+    /** Rects which need to overwritten when light source not reachable */
+    lightRects: BaseLightDoorRect<R>[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];
@@ -351,5 +353,18 @@ declare namespace Geomorph {
 
   type ParsedConnectorRect = ConnectorRect<Geom.Poly, Geom.Vect, Geom.Rect>;
   type ConnectorRectJson = ConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
+
+  export interface BaseLightDoorRect<R extends Geom.RectJson> {
+    /** `{doorId}@{lightId}` */
+    key: string;
+    doorId: number;
+    lightId: number;
+    rect: R;
+    /** Ids of other doors which must also be open for this light to be shown  */
+    otherDoorIds: number[];
+    otherKeys: string[];
+  }
+
+  export type LightDoorRect = BaseLightDoorRect<Geom.Rect>;
 
 }

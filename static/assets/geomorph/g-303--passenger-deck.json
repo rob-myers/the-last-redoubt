@@ -12832,7 +12832,161 @@
       {"dst": "room-26", "src": "window-6", "id": "window-6->room-26"}
     ]
   },
-  "lightSrcs": [],
+  "lightSrcs": [
+    {"position": {"x": 570, "y": 484.211}, "roomId": 14},
+    {"position": {"x": 630, "y": 484.211}, "roomId": 17},
+    {"position": {"x": 710, "y": 84.211}, "roomId": 16},
+    {"position": {"x": 490, "y": 101.211}, "roomId": 12},
+    {"position": {"x": 820, "y": 14.210999999999999}, "roomId": 21},
+    {"position": {"x": 1000, "y": 64.211}, "roomId": 25},
+    {"position": {"x": 1100, "y": 494.211}, "roomId": 26},
+    {"position": {"x": 744, "y": 589.211}, "roomId": 23},
+    {"position": {"x": 456, "y": 589.211}, "roomId": 11},
+    {"position": {"x": 246, "y": 539.211}, "roomId": 1},
+    {"position": {"x": 329, "y": 80.211}, "roomId": 5},
+    {"position": {"x": 389, "y": 150.211}, "roomId": 9},
+    {"position": {"x": 149, "y": 260.211}, "roomId": 3},
+    {"position": {"x": 236, "y": 339.211}, "roomId": 1},
+    {"position": {"x": 750, "y": 201.211}, "roomId": 7}
+  ],
+  "lightRects": [
+    {
+      "key": "26@0",
+      "doorId": 26,
+      "lightId": 0,
+      "rect": {
+        "x": 528.3294978281201,
+        "y": 542,
+        "width": 69.67050217187989,
+        "height": 52
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "27@0",
+      "doorId": 27,
+      "lightId": 0,
+      "rect": {
+        "x": 514.536595714589,
+        "y": 185.85443138951797,
+        "width": 106.50790151027525,
+        "height": 172.14556861048203
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "28@1",
+      "doorId": 28,
+      "lightId": 1,
+      "rect": {"x": 602, "y": 542, "width": 69.67050217187989, "height": 52},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "21@4",
+      "doorId": 21,
+      "lightId": 4,
+      "rect": {
+        "x": 746.7779480966557,
+        "y": 73.92594434838486,
+        "width": 31.022051903344277,
+        "height": 44.07405565161514
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "22@5",
+      "doorId": 22,
+      "lightId": 5,
+      "rect": {
+        "x": 1165.8766112854478,
+        "y": 22.058424026538468,
+        "width": 28.12338871455222,
+        "height": 6.0180759734615314
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "32@6",
+      "doorId": 32,
+      "lightId": 6,
+      "rect": {
+        "x": 849.2720655347724,
+        "y": 547.4242355349271,
+        "width": 116.70076937146519,
+        "height": 46.57576446507289
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "30@7",
+      "doorId": 30,
+      "lightId": 7,
+      "rect": {"x": 722, "y": 362, "width": 116, "height": 176},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "24@8",
+      "doorId": 24,
+      "lightId": 8,
+      "rect": {"x": 362, "y": 362, "width": 116, "height": 176},
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "5@9",
+      "doorId": 5,
+      "lightId": 9,
+      "rect": {
+        "x": 169.88244247700405,
+        "y": 550.3799005361618,
+        "width": 61.01755752299596,
+        "height": 43.62009946383819
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "13@10",
+      "doorId": 13,
+      "lightId": 10,
+      "rect": {
+        "x": 271.21084712733165,
+        "y": 132.65199892767035,
+        "width": 26.789152872668353,
+        "height": 45.34800107232965
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "15@11",
+      "doorId": 15,
+      "lightId": 11,
+      "rect": {
+        "x": 422,
+        "y": 84.73073463377071,
+        "width": 56,
+        "height": 93.26926536622929
+      },
+      "otherDoorIds": [],
+      "otherKeys": []
+    },
+    {
+      "key": "4@12",
+      "doorId": 4,
+      "lightId": 12,
+      "rect": {"x": 6, "y": 6, "width": 232, "height": 233},
+      "otherDoorIds": [],
+      "otherKeys": []
+    }
+  ],
   "hullPoly": [
     {
       "type": "Polygon",

@@ -141,11 +141,7 @@ function Geomorph({ def, transform, disabled }) {
         { scale: 1, navTris: false },
       );
       // intersect with circles (corresponds to bake-lighting radial fill)
-      state.allLightPolys = computeLightPolygons(data.gm).map((lightPoly, lightId) => {
-        const { distance = defaultLightDistance, position } = data.gm.lightSrcs[lightId];
-        const circlePoly = Poly.circle(position, distance, 30);
-        return Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly;
-      });
+      state.allLightPolys = computeLightPolygons(data.gm, true);
     }
   }, [data]);
 

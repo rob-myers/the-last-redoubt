@@ -64,7 +64,7 @@ console.log({ changedSymbols, changedLayoutDefs });
   const symbolLookup = deserializeSvgJson(svgJsonLookup);
   const layoutDefsToUpdate = updateAllGeomorphJsons ? Object.values(layoutDefs) : changedLayoutDefs;
   
-  await asyncPool(
+  asyncPool(
     1, // One at a time aids debugging
     layoutDefsToUpdate.map(def => {
       return async () => {
