@@ -26,6 +26,12 @@ export default function useGeomorphs(defs, disabled = false) {
     && queries.every(x => x.data)
   );
 
+  if (!ready) {
+    // Log errors to console (maybe dups)
+    // Otherwise they're swallowed
+    queries.forEach((query, i) => query.error && console.error(gmKeys[i], query.error));
+  }
+
   return React.useMemo(() => {
     if (ready) {
       const items = defs.map(def => {
