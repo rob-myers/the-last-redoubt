@@ -1,5 +1,5 @@
 declare namespace Geomorph {
-  
+
   type Poly = Geom.Poly;
   type PolyJson = Geom.GeoJsonPolygon;
   type Vect = Geom.Vect;
@@ -85,7 +85,10 @@ declare namespace Geomorph {
       roomId: number;
       distance?: number;
     }[];
-    /** Rects which need to overwritten when light source not reachable */
+    /**
+     * Rects which need to overwritten when light source not visible.
+     * We'll reorganise these by door id.
+     */
     lightRects: BaseLightDoorRect<R>[];
 
     /** Should probably have exactly one polygon */
@@ -355,7 +358,7 @@ declare namespace Geomorph {
   type ConnectorRectJson = ConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
 
   export interface BaseLightDoorRect<R extends Geom.RectJson> {
-    /** `{doorId}@{lightId}` */
+    /** `door{doorId}@light{lightId}` */
     key: string;
     doorId: number;
     lightId: number;

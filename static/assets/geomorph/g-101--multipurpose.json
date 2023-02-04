@@ -13800,176 +13800,131 @@
   ],
   "lightRects": [
     {
-      "key": "10@0",
+      "key": "door10@light0",
       "doorId": 10,
       "lightId": 0,
       "rect": {
-        "x": 968.1632869623674,
-        "y": 742.9389261255096,
-        "width": 49.83671303763265,
-        "height": 95.46107387449035
+        "x": 968.1633,
+        "y": 742.9389,
+        "width": 49.8367,
+        "height": 95.4611
       },
       "otherDoorIds": [],
-      "otherKeys": []
+      "otherKeys": ["door38@light0"]
     },
     {
-      "key": "38@0",
+      "key": "door38@light0",
       "doorId": 38,
       "lightId": 0,
-      "rect": {
-        "x": 1022,
-        "y": 722,
-        "width": 25.79342808931392,
-        "height": 43.28711018415049
-      },
+      "rect": {"x": 1022, "y": 722, "width": 25.7934, "height": 43.2871},
       "otherDoorIds": [10],
       "otherKeys": []
     },
     {
-      "key": "22@1",
+      "key": "door22@light1",
       "doorId": 22,
       "lightId": 1,
-      "rect": {
-        "x": 482,
-        "y": 214.63222106636675,
-        "width": 227.62968747169862,
-        "height": 203.36777893363325
-      },
+      "rect": {"x": 482, "y": 214.6322, "width": 227.6297, "height": 203.3678},
       "otherDoorIds": [],
-      "otherKeys": []
+      "otherKeys": ["door16@light1", "door17@light1", "door18@light1"]
     },
     {
-      "key": "16@1",
+      "key": "door16@light1",
       "doorId": 16,
       "lightId": 1,
       "rect": {
-        "x": 483.70756261189564,
-        "y": 152.57843138951796,
-        "width": 54.29243738810436,
-        "height": 85.42156861048204
+        "x": 483.7076,
+        "y": 152.5784,
+        "width": 54.2924,
+        "height": 85.4216
       },
       "otherDoorIds": [22],
       "otherKeys": []
     },
     {
-      "key": "17@1",
+      "key": "door17@light1",
       "doorId": 17,
       "lightId": 1,
-      "rect": {
-        "x": 610.0970252618015,
-        "y": 185.84212325667798,
-        "width": 47.90297473819851,
-        "height": 52.15787674332202
-      },
+      "rect": {"x": 610.097, "y": 185.8421, "width": 47.903, "height": 52.1579},
       "otherDoorIds": [22],
       "otherKeys": []
     },
     {
-      "key": "18@1",
+      "key": "door18@light1",
       "doorId": 18,
       "lightId": 1,
-      "rect": {
-        "x": 462.21304356861674,
-        "y": 242,
-        "width": 15.78695643138326,
-        "height": 89.35882213348151
-      },
+      "rect": {"x": 462.213, "y": 242, "width": 15.787, "height": 89.3588},
       "otherDoorIds": [22],
       "otherKeys": []
     },
     {
-      "key": "31@2",
+      "key": "door31@light2",
       "doorId": 31,
       "lightId": 2,
-      "rect": {
-        "x": 582.6913204704113,
-        "y": 782,
-        "width": 135.30867952958874,
-        "height": 239.33067298465335
-      },
+      "rect": {"x": 582.6913, "y": 782, "width": 135.3087, "height": 239.3307},
       "otherDoorIds": [],
-      "otherKeys": []
+      "otherKeys": ["door33@light2", "door40@light2"]
     },
     {
-      "key": "33@2",
+      "key": "door33@light2",
       "doorId": 33,
       "lightId": 2,
-      "rect": {
-        "x": 722,
-        "y": 865.745061042381,
-        "width": 20.795631807021437,
-        "height": 92.25493895761895
-      },
+      "rect": {"x": 722, "y": 865.7451, "width": 20.7956, "height": 92.2549},
       "otherDoorIds": [31],
       "otherKeys": []
     },
     {
-      "key": "40@2",
+      "key": "door40@light2",
       "doorId": 40,
       "lightId": 2,
-      "rect": {
-        "x": 662.493109532396,
-        "y": 962,
-        "width": 55.01202580362508,
-        "height": 61.356568610481986
-      },
+      "rect": {"x": 662.4931, "y": 962, "width": 55.012, "height": 61.3566},
       "otherDoorIds": [31],
       "otherKeys": []
     },
     {
-      "key": "28@3",
+      "key": "door28@light3",
       "doorId": 28,
       "lightId": 3,
       "rect": {
-        "x": 104.00305517501465,
-        "y": 515.0520019066146,
-        "width": 13.996944824985349,
-        "height": 66.06746055337999
+        "x": 104.0031,
+        "y": 515.052,
+        "width": 13.9969,
+        "height": 66.0675
       },
       "otherDoorIds": [],
       "otherKeys": []
     },
     {
-      "key": "11@8",
+      "key": "door11@light8",
       "doorId": 11,
       "lightId": 8,
       "rect": {
-        "x": 1003.0568492992832,
-        "y": 349.87216467007045,
-        "width": 11.13007420931001,
-        "height": 8.52783532992953
+        "x": 1003.0568,
+        "y": 349.8722,
+        "width": 11.1301,
+        "height": 8.5278
       },
       "otherDoorIds": [],
       "otherKeys": []
     },
     {
-      "key": "24@8",
+      "key": "door24@light8",
       "doorId": 24,
       "lightId": 8,
-      "rect": {
-        "x": 891.1388388614437,
-        "y": 362,
-        "width": 66.86116113855633,
-        "height": 176
-      },
+      "rect": {"x": 891.1388, "y": 362, "width": 66.8612, "height": 176},
       "otherDoorIds": [],
       "otherKeys": []
     },
     {
-      "key": "25@8",
+      "key": "door25@light8",
       "doorId": 25,
       "lightId": 8,
-      "rect": {
-        "x": 1022,
-        "y": 362.60600065957016,
-        "width": 43.04612791515592,
-        "height": 100.74916602748237
-      },
+      "rect": {"x": 1022, "y": 362.606, "width": 43.0461, "height": 100.7492},
       "otherDoorIds": [],
       "otherKeys": []
     },
     {
-      "key": "35@8",
+      "key": "door35@light8",
       "doorId": 35,
       "lightId": 8,
       "rect": {"x": 842, "y": 662, "width": 116, "height": 176},
@@ -13977,28 +13932,18 @@
       "otherKeys": []
     },
     {
-      "key": "36@8",
+      "key": "door36@light8",
       "doorId": 36,
       "lightId": 8,
-      "rect": {
-        "x": 1022,
-        "y": 482,
-        "width": 170.9053141625211,
-        "height": 107.69358880884135
-      },
+      "rect": {"x": 1022, "y": 482, "width": 170.9053, "height": 107.6936},
       "otherDoorIds": [],
       "otherKeys": []
     },
     {
-      "key": "37@8",
+      "key": "door37@light8",
       "doorId": 37,
       "lightId": 8,
-      "rect": {
-        "x": 1022,
-        "y": 482,
-        "width": 170.9053141625211,
-        "height": 107.69358880884135
-      },
+      "rect": {"x": 1022, "y": 482, "width": 170.9053, "height": 107.6936},
       "otherDoorIds": [],
       "otherKeys": []
     }
