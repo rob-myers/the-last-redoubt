@@ -30,7 +30,8 @@ export async function createGeomorphData(input) {
 
   const layout = typeof input === 'string'
     ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
-    : input;
+    : input
+  ;
 
   const { roomGraph } = layout;
 
@@ -49,7 +50,7 @@ export async function createGeomorphData(input) {
    * Polys/rects tagged with `view` override default fov position (i.e. offset from entry).
    * - `poly` must be convex (e.g. rotated rect).
    * - `poly` must cover door and have center inside room.
-   * - 🚧 move to precomputed json?
+   * - 🚧 precompute in geomorph json?
    */
   const lightMetas = layout.groups.singles
     .filter(x => x.tags.includes(svgSymbolTag.view))
@@ -82,7 +83,7 @@ export async function createGeomorphData(input) {
     /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
   );
 
-  // 🚧 move to precomputed json
+  // 🚧 precompute in geomorph json?
   const parallelDoorId = layout.groups.singles
     .filter(x => x.tags.includes('parallel-connectors'))
     .reduce((agg, { poly }) => {
@@ -159,8 +160,11 @@ export async function createGeomorphData(input) {
     hullOutline: layout.hullPoly[0].removeHoles(),
     pngRect: Rect.fromJson(layout.items[0].pngRect),
     roomsWithDoors,
+
     relDoorId,
     parallelDoorId,
+    doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
+
     point: pointsByRoom,
     lazy: /** @type {*} */ (null), // Overwritten below
 

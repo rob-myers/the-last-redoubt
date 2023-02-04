@@ -130,6 +130,7 @@ declare namespace Geomorph {
     hullOutline: Poly;
     pngRect: Geom.Rect;
 
+    //#region aligned to doors
     relDoorId: Record<number, {
       doorIds: number[];
       windowIds: number[];
@@ -137,7 +138,10 @@ declare namespace Geomorph {
     parallelDoorId: Record<number, {
       doorIds: number[];
     }>;
-    
+    /** At most one light rect, viewing light as going outwards through door. */
+    doorToLightRect: (Geomorph.LightDoorRect | undefined)[];
+    //#endregion
+
     /** Points indexed by `roomId` */
     point: {
       default: Vect;

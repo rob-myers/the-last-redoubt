@@ -19,9 +19,10 @@
   - ✅ GeomorphEdit restricts light by distance
     - ✅ review bake-lighting
     - ✅ support tags `light distance-180`
-  - 🚧 precompute items `{ key, rect, otherDoorIds, otherKeys }`
-    - part of geomorph.json
-    - support multiple subsequent doorways
+  - 🚧 precompute light door rects
+    - ✅ part of geomorph.json
+    - ✅ support multiple subsequent doorways
+    - support diagonal doors?
   - GeomorphEdit shows light decompositions
   - ...
 

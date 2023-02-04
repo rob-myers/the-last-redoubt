@@ -278,9 +278,6 @@ export async function createLayout(def, lookup, triangleService) {
     })),
   };
 
-  /**
-   * 🚧 compute lightRects
-   */
   output.lightRects = computeLightDoorRects(output);
 
   return output;

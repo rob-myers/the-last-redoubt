@@ -9,7 +9,6 @@ import { useQuery } from "react-query";
 import { Poly } from "../geom/poly";
 import { gmGraphClass } from "../graph/gm-graph";
 import { createGeomorphData } from "./use-geomorph-data";
-import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta } from "../service/geomorph";
@@ -71,6 +70,7 @@ function Geomorph({ def, transform, disabled }) {
 
   const state = useStateRef(() => {
     return {
+      layoutKey,
       canvas: /** @type {HTMLCanvasElement} */ ({}),
       allLightPolys: /** @type {Geom.Poly[]} */ ([]),
       openDoors: /** @type {number[]} */ ([]),
@@ -131,7 +131,7 @@ function Geomorph({ def, transform, disabled }) {
     deps: [data, layoutKey],
   });
 
-  React.useEffect(() => void state.reset(), [layoutKey]);
+  React.useEffect(() => void (layoutKey !== state.layoutKey ) && state.reset(), [layoutKey]);
 
   React.useEffect(() => {
     if (data) {
