@@ -367,9 +367,10 @@ declare namespace Geomorph {
     doorId: number;
     lightId: number;
     rect: R;
-    /** Ids of other doors which must also be open for this light to be shown  */
-    otherDoorIds: number[];
-    otherKeys: string[];
+    /** Ids of prior doors i.e. closer to light source (earlier index closer)  */
+    preDoorIds: number[];
+    /** Ids of later doors i.e. further to light source (earlier index closer)  */
+    postDoorIds: number[];
   }
 
   export type LightDoorRect = BaseLightDoorRect<Geom.Rect>;

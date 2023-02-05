@@ -110,12 +110,14 @@ export default function useHandleEvents(api) {
     const doorsSub = api.doors.events.subscribe((e) => {
       switch (e.key) {
         case 'closed-door': {
-          // 🚧 drawRects in baked-lighting canvas
+          const { gmId, doorId } = e;
+          api.geomorphs.onCloseDoor(gmId, doorId);
           api.updateAll();
           break;
         }
         case 'opened-door': {
-          // 🚧 clearRects of baked-lighting canvas
+          const { gmId, doorId } = e;
+          api.geomorphs.onOpenDoor(gmId, doorId);
           api.updateAll();
           break;
         }

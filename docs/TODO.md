@@ -43,10 +43,12 @@
       - forgot that rects shouldn't show in light's originating room
       - still need to fix overlapping rects in e.g. geomorph 101 
     - ✅ init drawRects: await fov images ready
-    - 🚧 drawRects on door open/close
+    - ✅ drawRects on door open/close
+    - avoid overlapping rects in other geomorphs
     - support diagonal doors?
-      > should work i.e. overflow won't be visible
-    - initially darker draw sometimes?
+      - can avoid drawImage when other side not visible?
+    - should not be dark under doors
+    - handle hull doors
   - GeomorphEdit shows light decompositions
 
 - review how `relate-connectors` extends visible rooms

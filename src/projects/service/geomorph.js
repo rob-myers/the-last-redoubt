@@ -652,12 +652,14 @@ export function computeLightDoorRects(gm) {
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {number[]} doorIds doors we've moved through
-   * @param {number[]} roomIds rooms we've moved through
+   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: typeof lightRects  }} pre previous
    * @param {number} depth 
    */
-  function depthFirstLightRects(light, roomId, doorIds, roomIds, depth) {
-    const nextRoomIds = roomIds.concat(roomId); // Avoid revisit
+  function depthFirstLightRects(light, roomId, pre, depth) {
+    if (depth <= 0) {
+      return;
+    }
+    const nextRoomIds = pre.roomIds.concat(roomId); // Avoid revisit
     for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
       const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], nextRoomIds);
       if (otherRoomId === -1) {
@@ -673,25 +675,20 @@ export function computeLightDoorRects(gm) {
         doorId,
         lightId: light.id,
         rect: intersection[0].rect.precision(0).outset(1), // Extended and integer-valued
-        otherDoorIds: doorIds.slice(),
-        otherKeys: [], // 🚧 compute later
+        preDoorIds: pre.doorIds.slice(),
+        postDoorIds: [], // computed directly below
       });
-      if (--depth > 0) {
-        depthFirstLightRects(light, otherRoomId, doorIds.concat(doorId), nextRoomIds, depth)
-      }
+      pre.lightRects.forEach(preLightRect => preLightRect.postDoorIds.push(doorId));
+      const nextPre = { doorIds: pre.doorIds.concat(doorId), roomIds: nextRoomIds, lightRects: pre.lightRects.concat(lightRects.slice(-1)) }
+      depthFirstLightRects(light, otherRoomId, nextPre, --depth);
     }
   }
 
   lightPolys.forEach((lightPoly, lightId) => {
     const { roomId } = gm.lightSrcs[lightId];
     const light = { id: lightId, roomId, poly: lightPoly };
-    depthFirstLightRects(light, roomId, [], [], 3);
+    depthFirstLightRects(light, roomId, { doorIds: [], roomIds: [], lightRects: [] }, 3);
   });
-
-  // lightRect.otherKeys are those light rects dependent on lightRect
-  lightRects.forEach(lightRect =>
-    lightRect.otherKeys = lightRects.flatMap(other => other !== lightRect && other.otherDoorIds.includes(lightRect.doorId) ? [other.key] : [])
-  );
 
   return lightRects;
 }
