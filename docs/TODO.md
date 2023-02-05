@@ -5,7 +5,23 @@
 - ✅ silent fail on geomorph json parse error e.g. via missing field
   - We now log useQuery error field
 
-- 🚧 review light strategy
+- 🚧 dynamic lighting
+  - ✅ consider removing unseen door canvas
+  - ✅ avoid partially dark walls
+  - ✅ try including doors in geomorph 301 png
+    - ✅ show all doors in curr/adj room
+    - ❌ show all doors in related room
+      > instead show all doors in curr/adj + 1-step relDoorId
+      > which only changes when curr room changes
+    - ✅ fix half-closed-door-issue
+    - ✅ hull doors should be cut out of adjacent geomorphs
+      > otherwise they cover up the hull doors
+  - ✅ try drawRect "unlit rects including door"
+    - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
+    - ✅ bake-lighting does renderLayout with doors open before shade/lights
+    - ✅ move canvas into Geomorphs
+    - ✅ test draw a rect from underlying geomorph and darken it
+    - ✅ start reviewing light strategy
   - ✅ rename tag `light` -> `view`
   - ✅ rename tag `light-source` -> `light`
   - ✅ cleanup GeomorphEdit
@@ -26,33 +42,12 @@
     - ✅ init drawRects: fix transformed
       - forgot that rects shouldn't show in light's originating room
       - still need to fix overlapping rects in e.g. geomorph 101 
-    - 🚧 init drawRects: await fov images ready
-    - drawRects on door open/close
+    - ✅ init drawRects: await fov images ready
+    - 🚧 drawRects on door open/close
     - support diagonal doors?
       > should work i.e. overflow won't be visible
+    - initially darker draw sometimes?
   - GeomorphEdit shows light decompositions
-  - ...
-
-- 🚧 dynamic lighting
-  - ✅ consider removing unseen door canvas
-  - ✅ avoid partially dark walls
-  - ✅ try including doors in geomorph 301 png
-    - ✅ show all doors in curr/adj room
-    - ❌ show all doors in related room
-      > instead show all doors in curr/adj + 1-step relDoorId
-      > which only changes when curr room changes
-    - ✅ fix half-closed-door-issue
-    - ✅ hull doors should be cut out of adjacent geomorphs
-      > otherwise they cover up the hull doors
-  - 🚧 try drawRect "unlit rects including door"
-    - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
-    - ✅ bake-lighting does renderLayout with doors open before shade/lights
-    - ✅ move canvas into Geomorphs
-    - ✅ test draw a rect from underlying geomorph and darken it
-    - 🚧 start reviewing light strategy
-    - ...
-  - redo lit geomorph 301 where lights only intersect in same room
-  - ...
 
 - review how `relate-connectors` extends visible rooms
   - ✅ rather explicit but probably right

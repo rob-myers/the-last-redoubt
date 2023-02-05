@@ -185,6 +185,9 @@ export default function useHandleEvents(api) {
           }
           break;
         }
+        case 'unlit-geomorph-loaded':
+          api.geomorphs.initGmLightRects(e.gmId);
+          break;
         case 'unmounted-npc':
           // This event also happens on hot-reload NPC.jsx
           delete api.npcs.npc[e.npcKey];
@@ -196,10 +199,7 @@ export default function useHandleEvents(api) {
           state.handleWayEvents(e);
           break;
         case 'world-ready':
-          // 🚧 await image load instead
-          setTimeout(() => {
-            api.geomorphs.initDrawLightRects();
-          }, 1000);
+          // 🚧 useful?
           break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });

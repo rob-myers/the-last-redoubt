@@ -315,6 +315,7 @@ declare namespace NPC {
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
+    | { key: 'unlit-geomorph-loaded'; gmKey: Geomorph.LayoutKey; gmId: number; }
     | { key: 'unmounted-npc'; npcKey: string; }
     | { key: 'world-ready'; }
     | NPCsWayEvent

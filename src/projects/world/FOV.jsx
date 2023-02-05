@@ -14,13 +14,15 @@ export default function FOV(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     /**
-     * @see {state.setRoom} must be invoked before any room is visible (e.g. spawn npc)
+     * Initially all rooms are dark.
+     * @see {state.setRoom} must be invoked to make some room visible,
+     * e.g. via `spawn npc`.
      */
     gmId: -1,
     roomId: -1,
     doorId: -1,
     // gmId: 0, roomId: 2,
-    // gmId: 0, roomId: 15, // ISSUE
+    // gmId: 0, roomId: 15,
     // gmId: 1, roomId: 5,
     // gmId: 1, roomId: 22,
     // gmId: 2, roomId: 2,
@@ -30,7 +32,19 @@ export default function FOV(props) {
     gmRoomIds: [],
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     ready: true,
+    rootEl: /** @type {HTMLDivElement} */ ({}),
 
+    getImgEl(gmId) {
+      return /** @type {HTMLImageElement} */ (state.rootEl.children[gmId]);
+    },
+    onLoadGmImage(e) {
+      const imgEl = /** @type {HTMLImageElement} */ (e.target);
+      props.api.npcs.events.next({
+        key: 'unlit-geomorph-loaded',
+        gmKey: /** @type {Geomorph.LayoutKey} */ (imgEl.dataset.gmKey),
+        gmId: Number(imgEl.dataset.gmId),
+      });
+    },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.doorId === -1) {
         state.gmId = gmId;
@@ -106,13 +120,18 @@ export default function FOV(props) {
   }, []);
 
   return (
-    <div className={cx("fov", rootCss)}>
+    <div
+      className={cx("fov", rootCss)}
+      onLoad={state.onLoadGmImage}
+      ref={el => el && (state.rootEl = el)}
+    >
       {gms.map((gm, gmId) =>
         <img
           key={gmId}
           className="geomorph-dark"
           src={geomorphPngPath(gm.key)}
           data-gm-key={gm.key}
+          data-gm-id={gmId}
           draggable={false}
           width={gm.pngRect.width}
           height={gm.pngRect.height}
@@ -142,10 +161,13 @@ export default function FOV(props) {
 
 /**
  * @typedef AuxState @type {object}
- * @property {boolean} ready
  * @property {string[]} clipPath
  * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {CoreState} prev Previous state, last time we updated clip path
+ * @property {(gmId: number) => HTMLImageElement} getImgEl
+ * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadGmImage
+ * @property {boolean} ready
+ * @property {HTMLDivElement} rootEl
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
  */

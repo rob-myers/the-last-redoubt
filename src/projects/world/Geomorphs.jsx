@@ -14,27 +14,24 @@ export default function Geomorphs(props) {
     canvas: [],
     ready: true,
 
-    initDrawLightRects() {
-      api.gmGraph.gms.forEach((gm, gmId) => {
-        const canvas = state.canvas[gmId];
-        const ctxt = assertNonNull(canvas.getContext('2d'));
-        ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
+    initGmLightRects(gmId) {
+      const gm = api.gmGraph.gms[gmId];
+      const canvas = state.canvas[gmId];
+      const ctxt = assertNonNull(canvas.getContext('2d'));
+      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
 
-        // 🚧 better reference to image
-        const imgEl = /** @type {HTMLImageElement} */ (api.panZoom.translateRoot.querySelector(`.fov img[data-gm-key="${gm.key}"]`));
-        // target canvas is 1/2 size of source image
-        gm.doorToLightRect.forEach((item, doorId) => {
-          if (item) {
-            const { x, y, width, height } = item.rect;
-            ctxt.strokeStyle = '#ff0000';
-            ctxt.lineWidth = 1;
-            ctxt.strokeRect(x, y, width, height);
-            ctxt.drawImage(imgEl, (x - gm.pngRect.x) * 2, (y - gm.pngRect.y) * 2, width * 2, height * 2, x, y, width, height);
-            ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
-            ctxt.fillRect(x, y, width, height);
-          }
-        });
-
+      const imgEl = api.fov.getImgEl(gmId);
+      gm.doorToLightRect.forEach((item, doorId) => {
+        if (item) {
+          const { x, y, width, height } = item.rect;
+          ctxt.strokeStyle = '#ff0000';
+          ctxt.lineWidth = 1;
+          ctxt.strokeRect(x, y, width, height);
+          // ℹ️ target canvas is 1/2 size of source image
+          ctxt.drawImage(imgEl, (x - gm.pngRect.x) * 2, (y - gm.pngRect.y) * 2, width * 2, height * 2, x, y, width, height);
+          ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
+          ctxt.fillRect(x, y, width, height);
+        }
       });
     },
     
@@ -103,6 +100,6 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
- * @property {() => void} initDrawLightRects
+ * @property {(gmId: number) => void} initGmLightRects
  * @property {boolean} ready
  */
