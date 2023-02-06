@@ -121,6 +121,7 @@ function Geomorph({ def, transform, disabled }) {
       },
 
       reset() {
+        state.canvas.getContext('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
         state.viewPoly = new Poly;
         state.lightPoly = new Poly;
         state.lastViewId = '';
