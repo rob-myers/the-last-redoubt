@@ -674,7 +674,7 @@ export function computeLightDoorRects(gm) {
         key: `door${doorId}@light${light.id}`,
         doorId,
         lightId: light.id,
-        rect: intersection[0].rect.precision(0).outset(1), // Extended and integer-valued
+        rect: intersection[0].rect.precision(0),
         preDoorIds: pre.doorIds.slice(),
         postDoorIds: [], // computed directly below
       });

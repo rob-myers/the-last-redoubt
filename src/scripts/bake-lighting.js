@@ -38,7 +38,7 @@ main();
 async function main() {
 
   // Doors are open
-  const { canvas, layout } = await renderLayout(foundLayoutDef, { open: true, debug: false });
+  const { canvas, layout } = await renderLayout(foundLayoutDef, { doors: false, debug: false });
   // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
   

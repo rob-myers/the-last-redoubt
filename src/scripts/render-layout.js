@@ -1,7 +1,7 @@
 /**
  * - Usage:
  *   - `yarn render-layout 301`
- *   - `yarn render-layout 301 --open`
+ *   - `yarn render-layout 301 --doors`
  *   - `yarn render-layout 301 --debug`
  *   - `yarn render-layout 101 --debug --scale=4`
  *   - `yarn render-layout 301 --scale=1 --suffix=x1`
@@ -33,12 +33,12 @@ const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
 const [
-  open,
+  doors,
   debug,
   scale,
   suffix,
   defaultScale,
-] = [opts.open, opts.debug, opts.scale, opts.suffix, 2];
+] = [opts.doors, opts.debug, opts.scale, opts.suffix, 2];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
 const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
@@ -50,7 +50,7 @@ main();
 async function main() {
   try {
     // Do the rendering
-    const { layout, canvas } = await renderLayout(foundLayoutDef, {open: !!open, debug: !!debug, scale});
+    const { layout, canvas } = await renderLayout(foundLayoutDef, { doors, debug: !!debug, scale});
     // Write JSON (also done in svg-meta)
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
@@ -69,9 +69,9 @@ async function main() {
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
- * @param {{ open: boolean; debug: boolean; scale?: number}} opts
+ * @param {{ doors: boolean; debug: boolean; scale?: number}} opts
  */
-export async function renderLayout(def, { open, debug, scale }) {
+export async function renderLayout(def, { doors, debug, scale = defaultScale }) {
 
   const canvas = createCanvas(0, 0);
   const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
@@ -84,13 +84,11 @@ export async function renderLayout(def, { open, debug, scale }) {
     canvas,
     (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
     {
-      scale: scale || defaultScale,
+      scale,
       obsBounds: true, wallBounds: true, navTris: true,
-      doors: true,
-      ...open && {
-        doors: false,
-      },
+      doors,
       ...debug && {
+        doors: true,
         labels: true,
       },
     },

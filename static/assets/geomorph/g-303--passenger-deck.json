@@ -12854,7 +12854,7 @@
       "key": "door26@light0",
       "doorId": 26,
       "lightId": 0,
-      "rect": {"x": 527, "y": 541, "width": 72, "height": 54},
+      "rect": {"x": 528, "y": 542, "width": 70, "height": 52},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12862,7 +12862,7 @@
       "key": "door27@light0",
       "doorId": 27,
       "lightId": 0,
-      "rect": {"x": 514, "y": 185, "width": 109, "height": 174},
+      "rect": {"x": 515, "y": 186, "width": 107, "height": 172},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12870,7 +12870,7 @@
       "key": "door28@light1",
       "doorId": 28,
       "lightId": 1,
-      "rect": {"x": 601, "y": 541, "width": 72, "height": 54},
+      "rect": {"x": 602, "y": 542, "width": 70, "height": 52},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12878,7 +12878,7 @@
       "key": "door29@light1",
       "doorId": 29,
       "lightId": 1,
-      "rect": {"x": 578, "y": 185, "width": 109, "height": 174},
+      "rect": {"x": 579, "y": 186, "width": 107, "height": 172},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12886,7 +12886,7 @@
       "key": "door20@light4",
       "doorId": 20,
       "lightId": 4,
-      "rect": {"x": 766, "y": 181, "width": 79, "height": 133},
+      "rect": {"x": 767, "y": 182, "width": 77, "height": 131},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12894,7 +12894,7 @@
       "key": "door21@light4",
       "doorId": 21,
       "lightId": 4,
-      "rect": {"x": 746, "y": 73, "width": 33, "height": 46},
+      "rect": {"x": 747, "y": 74, "width": 31, "height": 44},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12902,7 +12902,7 @@
       "key": "door22@light5",
       "doorId": 22,
       "lightId": 5,
-      "rect": {"x": 1165, "y": 21, "width": 30, "height": 8},
+      "rect": {"x": 1166, "y": 22, "width": 28, "height": 6},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12910,7 +12910,7 @@
       "key": "door32@light6",
       "doorId": 32,
       "lightId": 6,
-      "rect": {"x": 848, "y": 546, "width": 119, "height": 49},
+      "rect": {"x": 849, "y": 547, "width": 117, "height": 47},
       "preDoorIds": [],
       "postDoorIds": [11]
     },
@@ -12918,7 +12918,7 @@
       "key": "door11@light6",
       "doorId": 11,
       "lightId": 6,
-      "rect": {"x": 867, "y": 292, "width": 32, "height": 40},
+      "rect": {"x": 868, "y": 293, "width": 30, "height": 38},
       "preDoorIds": [32],
       "postDoorIds": []
     },
@@ -12926,7 +12926,7 @@
       "key": "door33@light6",
       "doorId": 33,
       "lightId": 6,
-      "rect": {"x": 848, "y": 546, "width": 119, "height": 49},
+      "rect": {"x": 849, "y": 547, "width": 117, "height": 47},
       "preDoorIds": [],
       "postDoorIds": [11]
     },
@@ -12934,7 +12934,7 @@
       "key": "door11@light6",
       "doorId": 11,
       "lightId": 6,
-      "rect": {"x": 867, "y": 292, "width": 32, "height": 40},
+      "rect": {"x": 868, "y": 293, "width": 30, "height": 38},
       "preDoorIds": [33],
       "postDoorIds": []
     },
@@ -12942,7 +12942,7 @@
       "key": "door30@light7",
       "doorId": 30,
       "lightId": 7,
-      "rect": {"x": 721, "y": 361, "width": 118, "height": 178},
+      "rect": {"x": 722, "y": 362, "width": 116, "height": 176},
       "preDoorIds": [],
       "postDoorIds": [31]
     },
@@ -12950,7 +12950,7 @@
       "key": "door31@light7",
       "doorId": 31,
       "lightId": 7,
-      "rect": {"x": 723, "y": 290, "width": 61, "height": 69},
+      "rect": {"x": 724, "y": 291, "width": 59, "height": 67},
       "preDoorIds": [30],
       "postDoorIds": []
     },
@@ -12958,7 +12958,7 @@
       "key": "door24@light8",
       "doorId": 24,
       "lightId": 8,
-      "rect": {"x": 361, "y": 361, "width": 118, "height": 178},
+      "rect": {"x": 362, "y": 362, "width": 116, "height": 176},
       "preDoorIds": [],
       "postDoorIds": [25]
     },
@@ -12966,7 +12966,7 @@
       "key": "door25@light8",
       "doorId": 25,
       "lightId": 8,
-      "rect": {"x": 417, "y": 290, "width": 61, "height": 69},
+      "rect": {"x": 418, "y": 291, "width": 59, "height": 67},
       "preDoorIds": [24],
       "postDoorIds": []
     },
@@ -12974,7 +12974,7 @@
       "key": "door5@light9",
       "doorId": 5,
       "lightId": 9,
-      "rect": {"x": 169, "y": 549, "width": 63, "height": 46},
+      "rect": {"x": 170, "y": 550, "width": 61, "height": 44},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12982,7 +12982,7 @@
       "key": "door6@light9",
       "doorId": 6,
       "lightId": 9,
-      "rect": {"x": 169, "y": 549, "width": 63, "height": 46},
+      "rect": {"x": 170, "y": 550, "width": 61, "height": 44},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -12990,7 +12990,7 @@
       "key": "door12@light10",
       "doorId": 12,
       "lightId": 10,
-      "rect": {"x": 279, "y": 181, "width": 114, "height": 180},
+      "rect": {"x": 280, "y": 182, "width": 112, "height": 178},
       "preDoorIds": [],
       "postDoorIds": [9]
     },
@@ -12998,7 +12998,7 @@
       "key": "door9@light10",
       "doorId": 9,
       "lightId": 10,
-      "rect": {"x": 295, "y": 340, "width": 4, "height": 21},
+      "rect": {"x": 296, "y": 341, "width": 2, "height": 19},
       "preDoorIds": [12],
       "postDoorIds": []
     },
@@ -13006,7 +13006,7 @@
       "key": "door13@light10",
       "doorId": 13,
       "lightId": 10,
-      "rect": {"x": 270, "y": 132, "width": 29, "height": 47},
+      "rect": {"x": 271, "y": 133, "width": 27, "height": 45},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13014,7 +13014,7 @@
       "key": "door15@light11",
       "doorId": 15,
       "lightId": 11,
-      "rect": {"x": 421, "y": 84, "width": 58, "height": 95},
+      "rect": {"x": 422, "y": 85, "width": 56, "height": 93},
       "preDoorIds": [],
       "postDoorIds": [14]
     },
@@ -13022,7 +13022,7 @@
       "key": "door14@light11",
       "doorId": 14,
       "lightId": 11,
-      "rect": {"x": 436, "y": 181, "width": 232, "height": 134},
+      "rect": {"x": 437, "y": 182, "width": 230, "height": 132},
       "preDoorIds": [15],
       "postDoorIds": []
     },
@@ -13030,7 +13030,7 @@
       "key": "door4@light12",
       "doorId": 4,
       "lightId": 12,
-      "rect": {"x": 5, "y": 5, "width": 234, "height": 235},
+      "rect": {"x": 6, "y": 6, "width": 232, "height": 233},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13038,7 +13038,7 @@
       "key": "door5@light13",
       "doorId": 5,
       "lightId": 13,
-      "rect": {"x": 5, "y": 369, "width": 21, "height": 5},
+      "rect": {"x": 6, "y": 370, "width": 19, "height": 3},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13046,7 +13046,7 @@
       "key": "door6@light13",
       "doorId": 6,
       "lightId": 13,
-      "rect": {"x": 5, "y": 369, "width": 21, "height": 5},
+      "rect": {"x": 6, "y": 370, "width": 19, "height": 3},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13054,7 +13054,7 @@
       "key": "door9@light13",
       "doorId": 9,
       "lightId": 13,
-      "rect": {"x": 301, "y": 212, "width": 236, "height": 149},
+      "rect": {"x": 302, "y": 213, "width": 234, "height": 147},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13062,7 +13062,7 @@
       "key": "door10@light14",
       "doorId": 10,
       "lightId": 14,
-      "rect": {"x": 961, "y": 182, "width": 90, "height": 63},
+      "rect": {"x": 962, "y": 183, "width": 88, "height": 61},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13070,7 +13070,7 @@
       "key": "door11@light14",
       "doorId": 11,
       "lightId": 14,
-      "rect": {"x": 901, "y": 311, "width": 92, "height": 86},
+      "rect": {"x": 902, "y": 312, "width": 90, "height": 84},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13078,7 +13078,7 @@
       "key": "door16@light14",
       "doorId": 16,
       "lightId": 14,
-      "rect": {"x": 541, "y": 175, "width": 18, "height": 4},
+      "rect": {"x": 542, "y": 176, "width": 16, "height": 2},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13086,7 +13086,7 @@
       "key": "door18@light14",
       "doorId": 18,
       "lightId": 14,
-      "rect": {"x": 601, "y": 171, "width": 34, "height": 8},
+      "rect": {"x": 602, "y": 172, "width": 32, "height": 6},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13094,7 +13094,7 @@
       "key": "door20@light14",
       "doorId": 20,
       "lightId": 14,
-      "rect": {"x": 797, "y": 99, "width": 162, "height": 80},
+      "rect": {"x": 798, "y": 100, "width": 160, "height": 78},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13102,7 +13102,7 @@
       "key": "door27@light14",
       "doorId": 27,
       "lightId": 14,
-      "rect": {"x": 514, "y": 361, "width": 75, "height": 51},
+      "rect": {"x": 515, "y": 362, "width": 73, "height": 49},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13110,7 +13110,7 @@
       "key": "door29@light14",
       "doorId": 29,
       "lightId": 14,
-      "rect": {"x": 601, "y": 361, "width": 52, "height": 82},
+      "rect": {"x": 602, "y": 362, "width": 50, "height": 80},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13118,7 +13118,7 @@
       "key": "door31@light14",
       "doorId": 31,
       "lightId": 14,
-      "rect": {"x": 721, "y": 361, "width": 74, "height": 140},
+      "rect": {"x": 722, "y": 362, "width": 72, "height": 138},
       "preDoorIds": [],
       "postDoorIds": []
     }
