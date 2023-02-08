@@ -358,6 +358,14 @@ export function getUnseenConnectorRoomId(connector, seenRoomIds) {
 }
 
 /**
+ * Is the connector aligned with horizontal or vertical axis?
+ * @param {Geomorph.ParsedConnectorRect} connector 
+ */
+export function isConnectorOrthonormal(connector) {
+  return connector.normal.x === 0 || connector.normal.y === 0;
+}
+
+/**
  * @param {Geomorph.ConnectorRectJson} x
  * @returns {Geomorph.ParsedConnectorRect}
  */
@@ -647,7 +655,6 @@ export function computeLightDoorRects(gm) {
   const lightPolys = computeLightPolygons(gm, true);
   /** Computed items are stored here */
   const lightRects = /** @type {Geomorph.LightDoorRect[]} */ ([]);
-  // const seenRoomIds = /** @type {number[]} */ ([]);
 
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 

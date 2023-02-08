@@ -10,6 +10,7 @@ declare namespace Geomorph {
     wallBounds?: boolean;
     navTris?: boolean;
     doors?: boolean;
+    thinDoors?: boolean;
     labels?: boolean;
 
     floorColor?: string;

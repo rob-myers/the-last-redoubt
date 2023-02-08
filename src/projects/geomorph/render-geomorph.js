@@ -16,13 +16,17 @@ import { drawLine, fillPolygon, fillRing, setStyle, strokePolygon } from '../ser
  * @param {Geomorph.RenderOpts} opts
  */
 export async function renderGeomorph(
-  layout, lookup, canvas, getPng,
+  layout,
+  lookup,
+  canvas,
+  getPng,
   {
     scale,
     obsBounds = true,
     wallBounds = true,
     navTris = false,
     doors = false,
+    thinDoors = false,
     labels = false,
     floorColor = 'rgba(220, 220, 220, 1)',
     navColor = 'rgba(255, 255, 255, 0.8)',
@@ -34,7 +38,8 @@ export async function renderGeomorph(
 ) {
   const hullSym = lookup[layout.items[0].key];
   const pngRect = hullSym.pngRect;
-  [canvas.width, canvas.height] = [pngRect.width * scale, pngRect.height * scale];
+  canvas.width = pngRect.width * scale;
+  canvas.height = pngRect.height * scale;
 
   const ctxt = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
   ctxt.scale(scale, scale);
@@ -124,10 +129,10 @@ export async function renderGeomorph(
   fillPolygon(ctxt, layout.hullTop);
 
   if (doors) {
-    ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-    fillPolygon(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
-    ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
-    fillPolygon(ctxt, doorPolys);
+    drawDoors(ctxt, doorPolys);
+  }
+  if (thinDoors) {
+    drawThinDoors(ctxt, layout);
   }
 
   if (labels) {
@@ -145,3 +150,29 @@ export async function renderGeomorph(
 
 /** @typedef {HTMLCanvasElement | import('canvas').Canvas} Canvas */
 /** @typedef {HTMLImageElement | import('canvas').Image} Image */
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {Geom.Poly[]} doorPolys
+*/
+function drawDoors(ctxt, doorPolys) {
+  ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
+  fillPolygon(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
+  ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
+  fillPolygon(ctxt, doorPolys);
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {Geomorph.ParsedLayout} layout
+*/
+export function drawThinDoors(ctxt, layout) {
+  // Thin doors avoids overlap (for lighting drawRect)
+  ctxt.strokeStyle = 'rgba(0, 0, 0, 1)';
+  ctxt.lineWidth = 2;
+  layout.doors.forEach(({ seg: [src, dst] }) => {
+    ctxt.moveTo(src.x, src.y);
+    ctxt.lineTo(dst.x, dst.y);
+    ctxt.stroke();
+  });
+}

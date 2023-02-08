@@ -46,8 +46,22 @@
     - ✅ drawRects on door open/close
     - ✅ should not be dark under doors
       - ✅ exclude doors in unlit geomorph
-      - ❌ try x2 res?
-    - avoid overlapping light rects
+    - 🚧 realised we needed doors for fov
+      - ✅ tried thin lines in {geomorph}.json
+      - ✅ try x2 res
+        > but no need: issue was non-integral drawImage of doorRect
+      - ✅ but other bug: still light in doorway,
+        and cannot drawImage without drawing thin line...
+      - ✅ NEW APPROACH
+        - ✅ geomorph.png has thin doors
+        - ✅ create *.unlit.doorways.png
+        - ✅ test 301: thin doors + drawImage from unlit.doorways
+        - ✅ diag doorways by requiring adjacent light source?
+        - ✅ cleanup e.g. webp, optimize
+      - ❌ FOV should use canvas instead of img
+      - ✅ diag doors ok if light src adjacent?
+      - ✅ other bug: drawRects not going far enough
+    - 🚧 avoid overlapping light rects
       - 🚧 302 🚧 303 🚧 101 🚧 102
     - support diagonal doors?
       - can avoid drawImage when other side not visible?

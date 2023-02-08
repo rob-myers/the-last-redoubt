@@ -1,7 +1,8 @@
 /**
+ * - We output geomorph with thin doors png/webp, and also unlit.doorways,
+ *   the latter being used for lighting.
  * - Usage:
  *   - `yarn render-layout 301`
- *   - `yarn render-layout 301 --doors`
  *   - `yarn render-layout 301 --debug`
  *   - `yarn render-layout 101 --debug --scale=4`
  *   - `yarn render-layout 301 --scale=1 --suffix=x1`
@@ -19,7 +20,7 @@ import svgJson from '../../static/assets/symbol/svg.json';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { error } from '../projects/service/log';
 import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/service/geomorph';
-import { renderGeomorph } from '../projects/geomorph/render-geomorph';
+import { drawThinDoors, renderGeomorph } from '../projects/geomorph/render-geomorph';
 import { triangle } from '../projects/service/triangle';
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 
@@ -32,13 +33,12 @@ if (!layoutDef) {
 const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
+const defaultScale = 2;
 const [
-  doors,
   debug,
   scale,
   suffix,
-  defaultScale,
-] = [opts.doors, opts.debug, opts.scale, opts.suffix, 2];
+] = [!!opts.debug, opts.scale = defaultScale, !!opts.suffix];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
 const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
@@ -49,18 +49,30 @@ main();
 
 async function main() {
   try {
-    // Do the rendering
-    const { layout, canvas } = await renderLayout(foundLayoutDef, { doors, debug: !!debug, scale});
-    // Write JSON (also done in svg-meta)
+    // Draw geomorph with thin doors, and also unlit.doorways
+    const { layout, canvas, pngRect } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale});
+    const unlitDoorwaysCanvas = createCanvas(canvas.width, canvas.height);
+    layout.doors.forEach(({ rect }) => {
+      // Outset and integral-valued for precision canvas drawImage later
+      rect = rect.clone().precision(0).outset(1);
+      unlitDoorwaysCanvas.getContext('2d').drawImage(canvas, scale * (rect.x - pngRect.x), scale * (rect.y - pngRect.y), scale * rect.width, scale * rect.height, scale * (rect.x - pngRect.x), scale * (rect.y - pngRect.y), scale * rect.width, scale * rect.height)
+    });
+    drawThinDoors(canvas.getContext('2d'), layout);
+
+    // Write JSON (see also svg-meta)
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
 
-    // Save PNG
-    await saveCanvasAsFile(canvas, outputPngPath);
-    // Generate WEBP
-    childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
-    // Minify PNG
-    childProcess.execSync(`pngquant -f --quality=80 ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
+    // For both geomorph and unlit.doorways,
+    // save PNG, WEBP, and finally Optimize PNG
+    for (const { srcCanvas, dstPngPath } of [
+      { srcCanvas: canvas, dstPngPath: outputPngPath },
+      { srcCanvas: unlitDoorwaysCanvas, dstPngPath: outputPngPath.replace(/^(.*)\.png$/, '$1.unlit.doorways.png') },
+    ]) {
+      await saveCanvasAsFile(srcCanvas, dstPngPath);
+      childProcess.execSync(`cwebp ${dstPngPath} -o ${dstPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
+      childProcess.execSync(`pngquant -f --quality=80 ${dstPngPath} && mv ${dstPngPath.replace(/\.png$/, '-fs8.png')} ${dstPngPath}`);
+    }
   } catch (e) {
     error(e);
   }
@@ -69,9 +81,9 @@ async function main() {
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
- * @param {{ doors: boolean; debug: boolean; scale?: number}} opts
+ * @param {{ thinDoors: boolean; debug: boolean; scale?: number}} opts
  */
-export async function renderLayout(def, { doors, debug, scale = defaultScale }) {
+export async function renderLayout(def, { thinDoors, debug, scale = defaultScale }) {
 
   const canvas = createCanvas(0, 0);
   const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
@@ -85,8 +97,14 @@ export async function renderLayout(def, { doors, debug, scale = defaultScale }) 
     (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
     {
       scale,
-      obsBounds: true, wallBounds: true, navTris: true,
-      doors,
+      obsBounds: true,
+      wallBounds: true,
+      navTris: true,
+
+      doors: false,
+      ...thinDoors && {
+        doors: true,
+      },
       ...debug && {
         doors: true,
         labels: true,
@@ -96,5 +114,6 @@ export async function renderLayout(def, { doors, debug, scale = defaultScale }) 
   return {
     layout,
     canvas,
+    pngRect: symbolLookup[layout.items[0].key].pngRect,
   };
 }

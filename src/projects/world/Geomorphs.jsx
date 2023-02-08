@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { assertDefined, assertNonNull } from "../service/generic";
-import { geomorphPngPath } from "../service/geomorph";
+import { geomorphPngPath, isConnectorOrthonormal } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 /**
  * The images of each geomorph
@@ -12,6 +12,7 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
+    doorwaysImg: [], 
     ready: true,
 
     drawRectImage(imgEl, srcOffset, ctxt, rect) {
@@ -32,6 +33,7 @@ export default function Geomorphs(props) {
       const canvas = state.canvas[gmId];
       const ctxt = assertNonNull(canvas.getContext('2d'));
       ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
+      // ctxt.setTransform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
       ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
 
       const imgEl = api.fov.getImgEl(gmId);
@@ -47,35 +49,43 @@ export default function Geomorphs(props) {
     onCloseDoor(gmId, doorId) {
       const gm = api.gmGraph.gms[gmId];
       const meta = gm.doorToLightRect[doorId];
-      if (meta) {// Hide light by drawing partial image
-        const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-        const imgEl = api.fov.getImgEl(gmId);
-        state.drawRectImage(imgEl, gm.pngRect, ctxt, meta.rect);
-        const open = api.doors.open[gmId];
-        meta.postDoorIds.every(postDoorId => {// Hide light up to 1st closed door
-          if (open[postDoorId]) {
-            const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
-            state.drawRectImage(imgEl, gm.pngRect, ctxt, rect);
-            return true; // i.e. continue
-          }
-        });
+      if (!meta || gm.lightSrcs[meta.lightId].roomId === api.fov.roomId) {
+        // Don't hide lights if current room has light source,
+        return; // which fixes non-orthonormal doors
       }
+      // Hide light by drawing partial image
+      const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
+      const imgEl = api.fov.getImgEl(gmId);
+      state.drawRectImage(imgEl, gm.pngRect, ctxt, meta.rect);
+      
+      meta.postDoorIds.forEach(postDoorId => {// Hide light through doors
+        const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
+        state.drawRectImage(imgEl, gm.pngRect, ctxt, rect);
+        // draw from unlit.doorways
+        // - precision(0) avoids drawRect artifacts
+        // - door must be orthonormal by assumption, i.e.
+        //   light only reaches diagonal door if source adjacent
+        const doorwaysImg = state.doorwaysImg[gmId];
+        const doorRect = gm.doors[postDoorId].rect.clone().precision(0);
+        state.drawRectImage(doorwaysImg, gm.pngRect, ctxt, doorRect);
+      });
     },
     onOpenDoor(gmId, doorId) {
       const gm = api.gmGraph.gms[gmId];
       const open = api.doors.open[gmId];
       const meta = gm.doorToLightRect[doorId];
-      if (meta?.preDoorIds.every(preId => open[preId])) {// Show light by clearing rect
-        const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-        ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
-        meta.postDoorIds.every(postDoorId => {// Show light up to 1st closed door
-          if (open[postDoorId]) {
-            const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
-            ctxt.clearRect(rect.x, rect.y, rect.width, rect.height);
-            return true;
-          }
-        });
+      if (!meta || meta.preDoorIds.some(preId => !open[preId])) {
+        return; // Don't show light unless all requisite doors are open
       }
+      // Show light by clearing rect
+      const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
+      ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
+      meta.postDoorIds.forEach(postDoorId => {// Show light through doors
+        const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
+        ctxt.clearRect(rect.x, rect.y, rect.width, rect.height);
+        const doorRect = gm.doors[postDoorId].rect.clone().precision(0);
+        ctxt.clearRect(doorRect.x, doorRect.y, doorRect.width, doorRect.height);
+      });
     },
     
   }), {
@@ -97,18 +107,28 @@ export default function Geomorphs(props) {
         >
           <img
             className="geomorph"
-            // src={geomorphPngPath(gm.key)}
             src={geomorphPngPath(gm.key, 'lit')}
             draggable={false}
             width={gm.pngRect.width}
             height={gm.pngRect.height}
             style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
           />
+          <img
+            className="unlit-doorways"
+            src={geomorphPngPath(gm.key, 'unlit.doorways')}
+            onLoad={x => state.doorwaysImg[gmId] = /** @type {HTMLImageElement} */(x.target)}
+          />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
             width={gm.pngRect.width}
             height={gm.pngRect.height}
-            style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
+            // width={gm.pngRect.width * 2}
+            // height={gm.pngRect.height * 2}
+            style={{
+              left: gm.pngRect.x,
+              top: gm.pngRect.y,
+              // transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
+            }}
           />
         </div>
       )}
@@ -125,6 +145,10 @@ const rootCss = css`
     pointer-events: none;
     /* filter: brightness(80%) sepia(0.1); */
     filter: brightness(70%) sepia(0.4);
+  }
+  img.unlit-doorways {
+    /** Used only as canvas drawImage source */
+    display: none;
   }
   canvas {
     position: absolute;
@@ -143,6 +167,7 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
+ * @property {HTMLImageElement[]} doorwaysImg
  * @property {(imgEl: HTMLImageElement, srcOffset: Geom.VectJson, ctxt: CanvasRenderingContext2D, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
