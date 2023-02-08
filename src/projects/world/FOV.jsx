@@ -193,7 +193,7 @@ export default function FOV(props) {
     transform-origin: top left;
     pointer-events: none;
     /* filter: invert(100%) brightness(34%); */
-    filter: invert(100%) brightness(30%) contrast(150%);
+    filter: invert(100%) brightness(32%) contrast(150%);
   }
 `;
 
