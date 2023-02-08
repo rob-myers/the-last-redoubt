@@ -26,7 +26,18 @@ export default function Geomorphs(props) {
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
-    // 🚧 restrict light operations to visible rooms?
+    /**
+     * draw from unlit.doorways
+     * - precision(0) avoids drawRect artifacts
+     * - door orthonormal by assumption, i.e. light only
+     *   reaches diagonal door if source adjacent.
+     */
+    drawUnlitDoorway(ctxt, gmId, doorId) {
+      const gm = api.gmGraph.gms[gmId];
+      const doorwaysImg = state.doorwaysImg[gmId];
+      const doorRect = gm.doors[doorId].rect.clone().precision(0);
+      state.drawRectImage(doorwaysImg, gm.pngRect, ctxt, doorRect);
+    },
 
     initGmLightRects(gmId) {
       const gm = api.gmGraph.gms[gmId];
@@ -43,9 +54,12 @@ export default function Geomorphs(props) {
           // ctxt.lineWidth = 1;
           // ctxt.strokeRect(item.rect.x, item.rect.y, item.rect.width, item.rect.height);
           state.drawRectImage(imgEl, gm.pngRect, ctxt, item.rect);
+        } else {
+          state.drawUnlitDoorway(ctxt, gmId, doorId);
         }
       });
     },
+
     onCloseDoor(gmId, doorId) {
       const gm = api.gmGraph.gms[gmId];
       const meta = gm.doorToLightRect[doorId];
@@ -61,24 +75,23 @@ export default function Geomorphs(props) {
       meta.postDoorIds.forEach(postDoorId => {// Hide light through doors
         const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
         state.drawRectImage(imgEl, gm.pngRect, ctxt, rect);
-        // draw from unlit.doorways
-        // - precision(0) avoids drawRect artifacts
-        // - door must be orthonormal by assumption, i.e.
-        //   light only reaches diagonal door if source adjacent
-        const doorwaysImg = state.doorwaysImg[gmId];
-        const doorRect = gm.doors[postDoorId].rect.clone().precision(0);
-        state.drawRectImage(doorwaysImg, gm.pngRect, ctxt, doorRect);
+        state.drawUnlitDoorway(ctxt, gmId, postDoorId);
       });
     },
     onOpenDoor(gmId, doorId) {
       const gm = api.gmGraph.gms[gmId];
       const open = api.doors.open[gmId];
       const meta = gm.doorToLightRect[doorId];
-      if (!meta || meta.preDoorIds.some(preId => !open[preId])) {
+      const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
+      if (!meta) {
+        // Could do this once at beginning, but require unlit.doorways loaded
+        state.drawUnlitDoorway(ctxt, gmId, doorId);
+        return;
+      }
+      if (meta.preDoorIds.some(preId => !open[preId])) {
         return; // Don't show light unless all requisite doors are open
       }
       // Show light by clearing rect
-      const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
       ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
       meta.postDoorIds.forEach(postDoorId => {// Show light through doors
         const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
@@ -169,6 +182,7 @@ const rootCss = css`
  * @property {HTMLCanvasElement[]} canvas
  * @property {HTMLImageElement[]} doorwaysImg
  * @property {(imgEl: HTMLImageElement, srcOffset: Geom.VectJson, ctxt: CanvasRenderingContext2D, rect: Geom.RectJson) => void} drawRectImage
+ * @property {(ctxt: CanvasRenderingContext2D, gmId: number, doorId: number) => void} drawUnlitDoorway
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number) => void} onCloseDoor
