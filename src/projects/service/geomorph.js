@@ -902,7 +902,8 @@ export function singlesToPolys(singles, ...tagOrTags) {
 }
 
 /**
- * @param {{ tags: string[]; poly: Geom.Poly }[]} singles 
+ * @template {Geom.Poly | Geom.GeoJsonPolygon} T
+ * @param {{ tags: string[]; poly: T }[]} singles 
  * @param {...(string | string[])} tagOrTags Restrict to singles with any/all of these tags
  */
 export function filterSingles(singles, ...tagOrTags) {

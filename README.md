@@ -99,4 +99,4 @@ brew install optipng
   # render geomorph 101 with baked-in lighting, which is actually the floor
   yarn bake-lighting 101
   ```
-  Moreover the output is large, so we use https://tinypng.com/ before committing.
+  Likewise if we update the light positions we should re-bake.

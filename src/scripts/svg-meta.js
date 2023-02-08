@@ -16,7 +16,7 @@ import asyncPool from 'tiny-async-pool';
 import chalk from 'chalk';
 
 import { keys } from '../projects/service/generic';
-import { createLayout, deserializeSvgJson, parseStarshipSymbol, serializeLayout, serializeSymbol } from '../projects/service/geomorph';
+import { createLayout, deserializeSvgJson, filterSingles, parseStarshipSymbol, serializeLayout, serializeSymbol } from '../projects/service/geomorph';
 import { triangle } from '../projects/service/triangle';
 import { writeAsJson } from '../projects/service/file';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
@@ -54,11 +54,26 @@ const changedSymbols = keys(svgJsonLookup).filter((symbolName) =>
   !(symbolName in prevSvgJsonLookup) ||
   prevSvgJsonLookup[symbolName].lastModified !== svgJsonLookup[symbolName].lastModified
 );
+const changedLightsSymbols = keys(svgJsonLookup).filter((symbolName) => {
+  const lights = filterSingles(svgJsonLookup[symbolName].singles, 'light');
+  const prevLights = prevSvgJsonLookup?.[symbolName] ? filterSingles(prevSvgJsonLookup[symbolName].singles, 'light') : [];
+  return lights.length && (
+    !prevSvgJsonLookup?.[symbolName] || (
+      prevSvgJsonLookup[symbolName].lastModified !== svgJsonLookup[symbolName].lastModified &&
+      JSON.stringify(prevLights) !== JSON.stringify(lights)
+    )
+  );
+});
 const changedLayoutDefs = Object.values(layoutDefs).filter(def => {
   const usedSymbols = def.items.map(x => x.symbol);
   return changedSymbols.some(symbolName => usedSymbols.includes(symbolName));
 });
-console.log({ changedSymbols, changedLayoutDefs });
+
+console.log({
+  changedSymbols,
+  changedLayoutDefs,
+  changedLightsSymbols, // 🚧 trigger bake-lighting?
+});
 
 (async function writeChangedGeomorphJsons () {
   const symbolLookup = deserializeSvgJson(svgJsonLookup);

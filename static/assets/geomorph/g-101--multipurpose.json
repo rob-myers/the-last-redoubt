@@ -1303,15 +1303,15 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [904.312, 965.935],
-              [904.312, 975.935],
-              [894.312, 975.935],
-              [894.312, 965.935]
+              [874.312, 855.935],
+              [874.312, 865.935],
+              [864.312, 865.935],
+              [864.312, 855.935]
             ]
           ]
         }
@@ -1322,19 +1322,19 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [504.312, 445.935],
-              [504.312, 455.935],
-              [494.312, 455.935],
-              [494.312, 445.935]
+              [484.312, 455.935],
+              [484.312, 465.935],
+              [474.312, 465.935],
+              [474.312, 455.935]
             ]
           ]
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[695, 720], [695, 730], [685, 730], [685, 720]]]
+          "coordinates": [[[695, 870], [695, 880], [685, 880], [685, 870]]]
         }
       },
       {
@@ -1343,10 +1343,10 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [144.312, 675.935],
-              [144.312, 685.935],
-              [134.312, 685.935],
-              [134.312, 675.935]
+              [44.312, 755.935],
+              [44.312, 765.935],
+              [34.312, 765.935],
+              [34.312, 755.935]
             ]
           ]
         }
@@ -1366,21 +1366,21 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [334.312, 925.935],
-              [334.312, 935.935],
-              [324.312, 935.935],
-              [324.312, 925.935]
+              [324.312, 875.935],
+              [324.312, 885.935],
+              [314.312, 885.935],
+              [314.312, 875.935]
             ]
           ]
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1394,29 +1394,29 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-120"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [384.312, 135.935],
-              [384.312, 145.935],
-              [374.312, 145.935],
-              [374.312, 135.935]
+              [375.312, 219.935],
+              [375.312, 229.935],
+              [365.312, 229.935],
+              [365.312, 219.935]
             ]
           ]
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [334.312, 135.935],
-              [334.312, 145.935],
-              [324.312, 145.935],
-              [324.312, 135.935]
+              [324.312, 315.935],
+              [324.312, 325.935],
+              [314.312, 325.935],
+              [314.312, 315.935]
             ]
           ]
         }
@@ -1436,7 +1436,7 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1445,6 +1445,48 @@
               [934.312, 285.935],
               [924.312, 285.935],
               [924.312, 275.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [24.312, 371.935],
+              [24.312, 381.935],
+              [14.312, 381.935],
+              [14.312, 371.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "distance-180"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [24.312, 651.935],
+              [24.312, 661.935],
+              [14.312, 661.935],
+              [14.312, 651.935]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "distance-200"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [834.312, 515.935],
+              [834.312, 525.935],
+              [824.312, 525.935],
+              [824.312, 515.935]
             ]
           ]
         }
@@ -13787,47 +13829,42 @@
     ]
   },
   "lightSrcs": [
-    {"position": {"x": 899.312, "y": 970.935}, "roomId": 25},
-    {"position": {"x": 499.312, "y": 450.935}, "roomId": 10},
-    {"position": {"x": 690, "y": 725}, "roomId": 18},
-    {"position": {"x": 139.312, "y": 680.935}, "roomId": 2},
-    {"position": {"x": 329.312, "y": 930.935}, "roomId": 4},
-    {"position": {"x": 379.312, "y": 930.935}, "roomId": 12},
-    {"position": {"x": 379.312, "y": 140.935}, "roomId": 8},
-    {"position": {"x": 329.312, "y": 140.935}, "roomId": 0},
+    {"position": {"x": 869.312, "y": 860.935}, "roomId": 25, "distance": 200},
+    {"position": {"x": 479.312, "y": 460.935}, "roomId": 10},
+    {"position": {"x": 690, "y": 875}, "roomId": 15, "distance": 200},
+    {"position": {"x": 39.312, "y": 760.935}, "roomId": 2},
+    {"position": {"x": 319.312, "y": 880.935}, "roomId": 4, "distance": 200},
+    {"position": {"x": 379.312, "y": 930.935}, "roomId": 12, "distance": 180},
+    {"position": {"x": 370.312, "y": 224.935}, "roomId": 8, "distance": 120},
+    {"position": {"x": 319.312, "y": 320.935}, "roomId": 0, "distance": 200},
     {"position": {"x": 939.312, "y": 640.935}, "roomId": 5},
-    {"position": {"x": 929.312, "y": 280.935}, "roomId": 22}
+    {"position": {"x": 929.312, "y": 280.935}, "roomId": 22, "distance": 200},
+    {"position": {"x": 19.312, "y": 376.935}, "roomId": 1},
+    {"position": {"x": 19.312, "y": 656.935}, "roomId": 3, "distance": 180},
+    {"position": {"x": 829.312, "y": 520.935}, "roomId": 17, "distance": 200}
   ],
   "lightRects": [
     {
       "key": "door10@light0",
       "doorId": 10,
       "lightId": 0,
-      "rect": {"x": 968, "y": 743, "width": 50, "height": 95},
+      "rect": {"x": 985, "y": 832, "width": 33, "height": 6},
       "preDoorIds": [],
-      "postDoorIds": [38]
-    },
-    {
-      "key": "door38@light0",
-      "doorId": 38,
-      "lightId": 0,
-      "rect": {"x": 1022, "y": 722, "width": 26, "height": 43},
-      "preDoorIds": [10],
       "postDoorIds": []
     },
     {
       "key": "door22@light1",
       "doorId": 22,
       "lightId": 1,
-      "rect": {"x": 482, "y": 215, "width": 228, "height": 203},
+      "rect": {"x": 489, "y": 230, "width": 222, "height": 188},
       "preDoorIds": [],
-      "postDoorIds": [16, 17, 18]
+      "postDoorIds": [16, 17]
     },
     {
       "key": "door16@light1",
       "doorId": 16,
       "lightId": 1,
-      "rect": {"x": 484, "y": 153, "width": 54, "height": 85},
+      "rect": {"x": 529, "y": 199, "width": 9, "height": 39},
       "preDoorIds": [22],
       "postDoorIds": []
     },
@@ -13835,95 +13872,63 @@
       "key": "door17@light1",
       "doorId": 17,
       "lightId": 1,
-      "rect": {"x": 610, "y": 186, "width": 48, "height": 52},
+      "rect": {"x": 610, "y": 202, "width": 48, "height": 36},
       "preDoorIds": [22],
       "postDoorIds": []
     },
     {
-      "key": "door18@light1",
-      "doorId": 18,
-      "lightId": 1,
-      "rect": {"x": 462, "y": 242, "width": 16, "height": 89},
-      "preDoorIds": [22],
+      "key": "door30@light2",
+      "doorId": 30,
+      "lightId": 2,
+      "rect": {"x": 516, "y": 774, "width": 9, "height": 4},
+      "preDoorIds": [],
       "postDoorIds": []
     },
     {
       "key": "door31@light2",
       "doorId": 31,
       "lightId": 2,
-      "rect": {"x": 583, "y": 782, "width": 135, "height": 239},
+      "rect": {"x": 662, "y": 676, "width": 72, "height": 102},
       "preDoorIds": [],
-      "postDoorIds": [14, 15, 33, 40]
-    },
-    {
-      "key": "door14@light2",
-      "doorId": 14,
-      "lightId": 2,
-      "rect": {"x": 688, "y": 542, "width": 167, "height": 116},
-      "preDoorIds": [31],
-      "postDoorIds": []
-    },
-    {
-      "key": "door15@light2",
-      "doorId": 15,
-      "lightId": 2,
-      "rect": {"x": 688, "y": 542, "width": 167, "height": 116},
-      "preDoorIds": [31],
       "postDoorIds": []
     },
     {
       "key": "door33@light2",
       "doorId": 33,
       "lightId": 2,
-      "rect": {"x": 722, "y": 866, "width": 21, "height": 92},
-      "preDoorIds": [31],
+      "rect": {"x": 722, "y": 782, "width": 116, "height": 171},
+      "preDoorIds": [],
+      "postDoorIds": []
+    },
+    {
+      "key": "door39@light2",
+      "doorId": 39,
+      "lightId": 2,
+      "rect": {"x": 511, "y": 962, "width": 14, "height": 6},
+      "preDoorIds": [],
       "postDoorIds": []
     },
     {
       "key": "door40@light2",
       "doorId": 40,
       "lightId": 2,
-      "rect": {"x": 662, "y": 962, "width": 55, "height": 61},
-      "preDoorIds": [31],
+      "rect": {"x": 662, "y": 962, "width": 77, "height": 112},
+      "preDoorIds": [],
       "postDoorIds": []
     },
     {
       "key": "door26@light3",
       "doorId": 26,
       "lightId": 3,
-      "rect": {"x": 182, "y": 395, "width": 56, "height": 187},
+      "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
       "preDoorIds": [],
-      "postDoorIds": [9]
-    },
-    {
-      "key": "door9@light3",
-      "doorId": 9,
-      "lightId": 3,
-      "rect": {"x": 215, "y": 842, "width": 75, "height": 109},
-      "preDoorIds": [26],
       "postDoorIds": []
     },
     {
       "key": "door27@light3",
       "doorId": 27,
       "lightId": 3,
-      "rect": {"x": 182, "y": 395, "width": 56, "height": 187},
-      "preDoorIds": [],
-      "postDoorIds": [9]
-    },
-    {
-      "key": "door9@light3",
-      "doorId": 9,
-      "lightId": 3,
-      "rect": {"x": 215, "y": 842, "width": 75, "height": 109},
-      "preDoorIds": [27],
-      "postDoorIds": []
-    },
-    {
-      "key": "door28@light3",
-      "doorId": 28,
-      "lightId": 3,
-      "rect": {"x": 104, "y": 515, "width": 14, "height": 66},
+      "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13931,7 +13936,7 @@
       "key": "door34@light3",
       "doorId": 34,
       "lightId": 3,
-      "rect": {"x": 182, "y": 395, "width": 56, "height": 187},
+      "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13939,7 +13944,7 @@
       "key": "door9@light4",
       "doorId": 9,
       "lightId": 4,
-      "rect": {"x": 182, "y": 796, "width": 47, "height": 43},
+      "rect": {"x": 182, "y": 819, "width": 43, "height": 19},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13947,15 +13952,7 @@
       "key": "door32@light5",
       "doorId": 32,
       "lightId": 5,
-      "rect": {"x": 482, "y": 743, "width": 175, "height": 147},
-      "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
-      "key": "door16@light6",
-      "doorId": 16,
-      "lightId": 6,
-      "rect": {"x": 492, "y": 242, "width": 136, "height": 98},
+      "rect": {"x": 482, "y": 818, "width": 64, "height": 72},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -13963,7 +13960,7 @@
       "key": "door8@light7",
       "doorId": 8,
       "lightId": 7,
-      "rect": {"x": 182, "y": 362, "width": 49, "height": 52},
+      "rect": {"x": 182, "y": 362, "width": 42, "height": 18},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -14019,7 +14016,7 @@
       "key": "door11@light9",
       "doorId": 11,
       "lightId": 9,
-      "rect": {"x": 968, "y": 362, "width": 50, "height": 103},
+      "rect": {"x": 968, "y": 362, "width": 50, "height": 98},
       "preDoorIds": [],
       "postDoorIds": [25]
     },
@@ -14027,8 +14024,32 @@
       "key": "door25@light9",
       "doorId": 25,
       "lightId": 9,
-      "rect": {"x": 1022, "y": 435, "width": 26, "height": 43},
+      "rect": {"x": 1022, "y": 435, "width": 10, "height": 23},
       "preDoorIds": [11],
+      "postDoorIds": []
+    },
+    {
+      "key": "door20@light10",
+      "doorId": 20,
+      "lightId": 10,
+      "rect": {"x": 182, "y": 429, "width": 56, "height": 75},
+      "preDoorIds": [],
+      "postDoorIds": []
+    },
+    {
+      "key": "door28@light11",
+      "doorId": 28,
+      "lightId": 11,
+      "rect": {"x": 122, "y": 531, "width": 52, "height": 66},
+      "preDoorIds": [],
+      "postDoorIds": []
+    },
+    {
+      "key": "door23@light12",
+      "doorId": 23,
+      "lightId": 12,
+      "rect": {"x": 661, "y": 393, "width": 46, "height": 25},
+      "preDoorIds": [],
       "postDoorIds": []
     }
   ],
