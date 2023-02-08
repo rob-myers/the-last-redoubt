@@ -11889,14 +11889,6 @@
       "lightId": 1,
       "rect": {"x": 363, "y": 242, "width": 106, "height": 116},
       "preDoorIds": [],
-      "postDoorIds": [10]
-    },
-    {
-      "key": "door10@light1",
-      "doorId": 10,
-      "lightId": 1,
-      "rect": {"x": 370, "y": 172, "width": 73, "height": 66},
-      "preDoorIds": [19],
       "postDoorIds": []
     },
     {

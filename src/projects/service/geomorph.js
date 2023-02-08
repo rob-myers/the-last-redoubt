@@ -668,20 +668,27 @@ export function computeLightDoorRects(gm) {
     }
     const nextRoomIds = pre.roomIds.concat(roomId); // Avoid revisit
     for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
+
+      if (!Poly.intersect([gm.doors[doorId].poly], [light.poly]).length) {
+        continue; // can have parallel doors where light only goes thru some
+      }
+
       const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], nextRoomIds);
       if (otherRoomId === -1) {
         continue;
       }
+
       const otherRoomPoly = gm.rooms[otherRoomId];
-      const intersection = Poly.intersect([otherRoomPoly], [light.poly]);
-      if (!intersection.length) {
+      const otherRoomIntersection = Poly.intersect([otherRoomPoly], [light.poly]);
+      if (!otherRoomIntersection.length) {
         continue;
       }
+
       lightRects.push({
         key: `door${doorId}@light${light.id}`,
         doorId,
         lightId: light.id,
-        rect: intersection[0].rect.precision(0),
+        rect: otherRoomIntersection[0].rect.precision(0),
         preDoorIds: pre.doorIds.slice(),
         postDoorIds: [], // computed directly below
       });

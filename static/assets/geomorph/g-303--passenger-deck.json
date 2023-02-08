@@ -12971,14 +12971,6 @@
       "postDoorIds": []
     },
     {
-      "key": "door5@light9",
-      "doorId": 5,
-      "lightId": 9,
-      "rect": {"x": 170, "y": 550, "width": 61, "height": 44},
-      "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
       "key": "door6@light9",
       "doorId": 6,
       "lightId": 9,

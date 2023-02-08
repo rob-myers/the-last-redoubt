@@ -5142,14 +5142,6 @@
       "lightId": 4,
       "rect": {"x": 734, "y": 542, "width": 135, "height": 52},
       "preDoorIds": [],
-      "postDoorIds": [8]
-    },
-    {
-      "key": "door8@light4",
-      "doorId": 8,
-      "lightId": 4,
-      "rect": {"x": 903, "y": 414, "width": 63, "height": 57},
-      "preDoorIds": [6],
       "postDoorIds": []
     },
     {
@@ -5158,14 +5150,6 @@
       "lightId": 4,
       "rect": {"x": 903, "y": 414, "width": 63, "height": 57},
       "preDoorIds": [],
-      "postDoorIds": [8]
-    },
-    {
-      "key": "door8@light4",
-      "doorId": 8,
-      "lightId": 4,
-      "rect": {"x": 734, "y": 542, "width": 135, "height": 52},
-      "preDoorIds": [7],
       "postDoorIds": []
     },
     {
@@ -5174,14 +5158,6 @@
       "lightId": 5,
       "rect": {"x": 800, "y": 358, "width": 98, "height": 109},
       "preDoorIds": [],
-      "postDoorIds": [6]
-    },
-    {
-      "key": "door6@light5",
-      "doorId": 6,
-      "lightId": 5,
-      "rect": {"x": 1083, "y": 311, "width": 112, "height": 161},
-      "preDoorIds": [7],
       "postDoorIds": []
     },
     {
@@ -5190,14 +5166,6 @@
       "lightId": 5,
       "rect": {"x": 1083, "y": 311, "width": 112, "height": 161},
       "preDoorIds": [],
-      "postDoorIds": [6]
-    },
-    {
-      "key": "door6@light5",
-      "doorId": 6,
-      "lightId": 5,
-      "rect": {"x": 800, "y": 358, "width": 98, "height": 109},
-      "preDoorIds": [8],
       "postDoorIds": []
     },
     {

@@ -13917,22 +13917,6 @@
       "postDoorIds": []
     },
     {
-      "key": "door26@light3",
-      "doorId": 26,
-      "lightId": 3,
-      "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
-      "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
-      "key": "door27@light3",
-      "doorId": 27,
-      "lightId": 3,
-      "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
-      "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
       "key": "door34@light3",
       "doorId": 34,
       "lightId": 3,
