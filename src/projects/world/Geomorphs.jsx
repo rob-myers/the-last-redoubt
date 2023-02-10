@@ -54,8 +54,6 @@ export default function Geomorphs(props) {
           // ctxt.lineWidth = 1;
           // ctxt.strokeRect(item.rect.x, item.rect.y, item.rect.width, item.rect.height);
           state.drawRectImage(imgEl, gm.pngRect, ctxt, item.rect);
-        } else {
-          state.drawUnlitDoorway(ctxt, gmId, doorId);
         }
       });
     },
@@ -83,12 +81,9 @@ export default function Geomorphs(props) {
       const open = api.doors.open[gmId];
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-      if (!meta) {
+      if (!meta || meta.preDoorIds.some(preId => !open[preId])) {
         // Could do this once at beginning, but require unlit.doorways loaded
         state.drawUnlitDoorway(ctxt, gmId, doorId);
-        return;
-      }
-      if (meta.preDoorIds.some(preId => !open[preId])) {
         return; // Don't show light unless all requisite doors are open
       }
       // Show light by clearing rect
