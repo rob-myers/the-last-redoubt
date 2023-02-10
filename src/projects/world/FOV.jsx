@@ -65,7 +65,6 @@ export default function FOV(props) {
       }
       
       const { prev } = state;
-      const gm = gms[state.gmId];
       const openDoorsIds = props.api.doors.getOpen(state.gmId);
 
       /** @type {CoreState} */

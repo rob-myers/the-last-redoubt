@@ -2,11 +2,9 @@
 
 ## In progress
 
-- BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
-  - in dev on-change file e.g. edit symbol
-  - try upgrade gatsby
-
-- HMR npc config reset issues e.g. roomIds from DebugWorld become invis 
+- ✅ BUG can stop in doorway then turn back, and view does not change
+  - `exit-room` followed by `enter-room` for _same room_ (✅)
+  - needed extra setRoom in use-handle-events
 
 - ✅ silent fail on geomorph json parse error e.g. via missing field
   - We now log useQuery error field
@@ -142,6 +140,11 @@
 - ✅ strategy for prefetching spritesheets
 
 - watch synfig files and re-render?
+- BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
+  - in dev on-change file e.g. edit symbol
+  - try upgrade gatsby
+- HMR npc config reset issues
+  > roomIds from DebugWorld become invis 
 
 - 🚧 Collision prediction: _moving circle_ vs _static angled rect_
   - mdx description of simplified algorithm

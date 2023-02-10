@@ -80,7 +80,8 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'enter-room': {
-          // api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
+          // Needed in case we exit-room via doorway then immediately re-enter
+          api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
           api.updateAll();
           break;
         }
