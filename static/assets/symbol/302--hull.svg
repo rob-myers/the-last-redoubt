@@ -139,10 +139,10 @@
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1123.927979)">
       <title>view</title>
     </rect>
-    <rect x="69.996" width="5" height="168.981" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0.5, 0.866025, -0.866025, 0.5, 865.368225, 392.449188)">
+    <rect x="69.996" width="5" height="168.981" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.5, 0.866025, -0.866025, 0.5, 865.368225, 392.449188)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 1080, 375.003998)">
+    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0, 1, -1, 0, 1080, 375.003998)">
       <title>relate-connectors</title>
     </rect>
     <rect y="500" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="746.496">
@@ -151,26 +151,29 @@
     <rect y="427.41" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="970" transform="matrix(0, 1, -1, 0, 1507.410034, -554.985474)">
       <title>view reverse</title>
     </rect>
-    <rect x="502.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="502.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
-    <rect x="332.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="252.368" y="430.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-200</title>
+    </rect>
+    <rect x="72.368" y="520.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-160</title>
+    </rect>
+    <rect x="62.368" y="80.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
-    <rect x="32.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+    <rect x="662.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-120</title>
+    </rect>
+    <rect x="912.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
-    <rect x="82.368" y="170.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
+    <rect x="1102.368" y="210.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-80</title>
     </rect>
-    <rect x="662.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
-    </rect>
-    <rect x="912.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
-    </rect>
-    <rect x="1142.368" y="190.789" width="10" height="10" style="fill-opacity: 0.9; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
+    <rect x="1182.368" y="20.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-80</title>
     </rect>
   </g>
 </svg>
