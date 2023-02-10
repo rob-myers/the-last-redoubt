@@ -6,7 +6,6 @@ import useStateRef from "../hooks/use-state-ref";
 
 /**
  * 🚧 merge onClick into state?
- * 🚧 undo inherited transform of labels?
  * 🚧 useMemo to avoid recomputing VDOM?
  */
 
@@ -29,6 +28,7 @@ export default function DebugWorld(props) {
   const roomAabb = gm.rooms[roomId].rect;
   const roomPoly = gm.rooms[roomId];
   const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
+  const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
@@ -172,6 +172,7 @@ export default function DebugWorld(props) {
               style={{
                 left: idIconPos.x,
                 top: idIconPos.y - 4,
+                transform: undoNonAffineStyle,
                 ...props.showIds === true && { display: 'initial' },
               }}
             >
@@ -186,6 +187,7 @@ export default function DebugWorld(props) {
             left: roomNavAabb.x + roomNavAabb.width - 35,
             top: roomNavAabb.y + 25,
             ...props.showIds === true && { display: 'initial' },
+            transform: undoNonAffineStyle,
           }}
         >
           {roomId}

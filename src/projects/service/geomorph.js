@@ -632,6 +632,7 @@ function toJsons(polys) {
 export function geomorphDataToInstance(gm, transform) {
   const matrix = new Mat(transform);
   const gridRect = (new Rect(0, 0, 1200, gm.pngRect.height > 1000 ? 1200 : 600)).applyMatrix(matrix);
+  const inverseMatrix = matrix.getInverseMatrix();
 
   /** @type {Geomorph.GeomorphDataInstance} */
   const output = {
@@ -641,7 +642,7 @@ export function geomorphDataToInstance(gm, transform) {
     transformOrigin: `${-gm.pngRect.x}px ${-gm.pngRect.y}px`,
     transformStyle: `matrix(${transform})`,
     matrix,
-    inverseMatrix: matrix.getInverseMatrix(),
+    inverseMatrix,
     gridRect,
   };
 
