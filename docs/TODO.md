@@ -2,6 +2,10 @@
 
 ## In progress
 
+- BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
+  - in dev on-change file e.g. edit symbol
+  - try upgrade gatsby
+
 - ✅ silent fail on geomorph json parse error e.g. via missing field
   - We now log useQuery error field
 
@@ -62,12 +66,13 @@
       - ✅ diag doors ok if light src adjacent?
       - ✅ other bug: drawRects not going far enough
     - 🚧 avoid overlapping light rects
-      - 🚧 302 🚧 303 ✅ 101 ✅ 102
-    - support diagonal doors?
+      - ✅ 302 🚧 303 ✅ 101 ✅ 102
+      - don't forget lights can intersect if in same room
+    - ✅ support diagonal doors?
       - can avoid drawImage when other side not visible?
-    - handle hull doors
+    - ✅ handle hull doors by not allowing light thru them
   - GeomorphEdit shows light decompositions
-  - light through windows?
+  - ✅ light through windows? not an issue
   - ❌ canvas-based component draws unlit geomorph with doors?
 
 - review how `relate-connectors` extends visible rooms
