@@ -3,7 +3,7 @@ import { Vect } from '../geom';
 import { cssName } from './const';
 
 /**
- * Choose scale factor s.t. npc radius becomes 15.
+ * Choose scale factor s.t. npc radius becomes `14.4`.
  * - Starship Geomorphs grid is 60 * 60.
  * - Approx 1.5m * 1.5m hence npc radius ~ 36cm
  * @param {NPC.ParsedNpc} parsed 

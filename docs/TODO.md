@@ -62,12 +62,13 @@
       - ✅ diag doors ok if light src adjacent?
       - ✅ other bug: drawRects not going far enough
     - 🚧 avoid overlapping light rects
-      - 🚧 302 🚧 303 🚧 101 🚧 102
+      - 🚧 302 🚧 303 ✅ 101 ✅ 102
     - support diagonal doors?
       - can avoid drawImage when other side not visible?
     - handle hull doors
   - GeomorphEdit shows light decompositions
-  - canvas-based component draws unlit geomorph with doors?
+  - light through windows?
+  - ❌ canvas-based component draws unlit geomorph with doors?
 
 - review how `relate-connectors` extends visible rooms
   - ✅ rather explicit but probably right
