@@ -42,8 +42,7 @@ export async function renderGeomorph(
   canvas.height = pngRect.height * scale;
 
   const ctxt = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
-  ctxt.scale(scale, scale);
-  ctxt.translate(-pngRect.x, -pngRect.y);
+  ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
 
   //#region underlay
   ctxt.fillStyle = floorColor;
@@ -98,15 +97,18 @@ export async function renderGeomorph(
   obsBounds && fillPolygon(ctxt, obstacles);
   //#endregion
 
+  const initTransform = ctxt.getTransform();
+
   //#region symbol PNGs
   const innerItems = layout.items.slice(1);
   for (const { pngHref, pngRect, transformArray } of innerItems) {
-    ctxt.save();
+    // ctxt.save();
     const image = await getPng(pngHref);
     transformArray && ctxt.transform(...transformArray);
     ctxt.scale(0.2, 0.2);
-    ctxt.drawImage(/** @type {*} */ (image), pngRect.x, pngRect.y);
-    ctxt.restore();
+    ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
+    // ctxt.restore();
+    ctxt.setTransform(initTransform);
   }
   //#endregion
 
