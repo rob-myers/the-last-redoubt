@@ -669,8 +669,9 @@ export function computeLightDoorRects(gm) {
     }
     const nextRoomIds = pre.roomIds.concat(roomId); // Avoid revisit
     for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
+      const doorPoly = gm.doors[doorId].poly;
 
-      if (!Poly.intersect([gm.doors[doorId].poly], [light.poly]).length) {
+      if (!Poly.intersect([doorPoly], [light.poly]).length) {
         continue; // can have parallel doors where light only goes thru some
       }
 
@@ -680,7 +681,11 @@ export function computeLightDoorRects(gm) {
       }
 
       const otherRoomPoly = gm.rooms[otherRoomId];
-      const otherRoomIntersection = Poly.intersect([otherRoomPoly], [light.poly]);
+      const outsetDoorPoly = geom.createOutset(doorPoly, 1)[0];
+      const otherRoomIntersection = Poly.intersect([otherRoomPoly], [light.poly]).filter(
+        // otherRoomIntersection can have disjoint pieces: choose right one
+        poly => Poly.intersect([outsetDoorPoly], [poly]).length
+      );
       if (!otherRoomIntersection.length) {
         continue;
       }
