@@ -5153,7 +5153,7 @@
       "key": "door19@light0",
       "doorId": 19,
       "lightId": 0,
-      "rect": {"x": 542, "y": 426, "width": 56, "height": 42},
+      "rect": {"x": 542, "y": 491, "width": 56, "height": 47},
       "preDoorIds": [],
       "postDoorIds": []
     },

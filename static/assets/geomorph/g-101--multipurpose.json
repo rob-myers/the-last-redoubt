@@ -13984,7 +13984,7 @@
       "key": "door36@light8",
       "doorId": 36,
       "lightId": 8,
-      "rect": {"x": 1022, "y": 482, "width": 171, "height": 108},
+      "rect": {"x": 1022, "y": 540, "width": 172, "height": 135},
       "preDoorIds": [],
       "postDoorIds": []
     },

@@ -6,10 +6,12 @@
   - in dev on-change file e.g. edit symbol
   - try upgrade gatsby
 
+- HMR npc config reset issues e.g. roomIds from DebugWorld become invis 
+
 - ✅ silent fail on geomorph json parse error e.g. via missing field
   - We now log useQuery error field
 
-- 🚧 dynamic lighting
+- ✅ dynamic lighting
   - ✅ consider removing unseen door canvas
   - ✅ avoid partially dark walls
   - ✅ try including doors in geomorph 301 png
@@ -39,7 +41,7 @@
   - ✅ GeomorphEdit restricts light by distance
     - ✅ review bake-lighting
     - ✅ support tags `light distance-180`
-  - 🚧 precompute light door rects
+  - ✅ precompute light door rects
     - ✅ part of geomorph.json
     - ✅ support multiple subsequent doorways
     - ✅ initial drawRects
@@ -50,7 +52,7 @@
     - ✅ drawRects on door open/close
     - ✅ should not be dark under doors
       - ✅ exclude doors in unlit geomorph
-    - 🚧 realised we needed doors for fov
+    - ✅ realised we needed doors for fov
       - ✅ tried thin lines in {geomorph}.json
       - ✅ try x2 res
         > but no need: issue was non-integral drawImage of doorRect
@@ -66,12 +68,12 @@
       - ✅ diag doors ok if light src adjacent?
       - ✅ other bug: drawRects not going far enough
     - 🚧 avoid overlapping light rects
-      - ✅ 302 🚧 303 ✅ 101 ✅ 102
+      - ✅ 302 ✅ 303 ✅ 101 ✅ 102
       - don't forget lights can intersect if in same room
     - ✅ support diagonal doors?
       - can avoid drawImage when other side not visible?
     - ✅ handle hull doors by not allowing light thru them
-  - GeomorphEdit shows light decompositions
+  - ✅ GeomorphEdit shows light decompositions
   - ✅ light through windows? not an issue
   - ❌ canvas-based component draws unlit geomorph with doors?
 
