@@ -264,7 +264,7 @@
       if (api.isTtyAt(0)) {
         const npcKey = args[0]
         const point = api.safeJsonParse(args[1])
-        const angle = Number(args[2]) || 0
+        const angle = args[2] ? Number(args[2]) || 0 : undefined;
         await npcs.spawn({ npcKey, point, angle })
       } else {
         while ((datum = await api.read()) !== null)

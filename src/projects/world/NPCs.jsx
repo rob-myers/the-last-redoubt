@@ -443,9 +443,13 @@ export default function NPCs(props) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (!state.isPointLegal(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
-      } else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
-        throw Error(`cannot spawn whilst walking`)
       }
+      //  else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
+      //   throw Error(`cannot spawn whilst walking`)
+      // }
+      const extant = state.npc[e.npcKey];
+      extant?.cancel(); // Must clear wayMetas
+
       state.npcKeys = state.npcKeys
         .filter(({ key }) => key !== e.npcKey)
         .concat({
@@ -455,7 +459,8 @@ export default function NPCs(props) {
             npcKey: e.npcKey,
             npcJsonKey: 'first-human-npc', // 🚧 can specify character class
             position: e.point,
-            angle: e.angle,
+            // Remember previous angle
+            angle: e.angle ?? extant?.getAngle() ?? 0,
             speed: npcsMeta["first-human-npc"].speed,
           },
         });
@@ -702,7 +707,7 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
- * @property {(e: { npcKey: string; point: Geom.VectJson; angle: number }) => Promise<void>} spawn
+ * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc

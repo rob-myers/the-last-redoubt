@@ -2,6 +2,14 @@
 
 ## In progress
 
+- finish Synfig todo i.e. `idle-breathe` somehow
+  - ✅ can spawn whilst walking and remember angle
+  - try moving create-npc so it isn't invoked per spawn
+  - `npc events`
+  - idle-breathe specifies tag `idle` and animation-direction `alternate` 
+- use webp for lit/unlit geomorphs
+- proceed to _form_ i.e. collision prediction
+
 - ✅ BUG can stop in doorway then turn back, and view does not change
   - `exit-room` followed by `enter-room` for _same room_ (✅)
   - needed extra setRoom in use-handle-events

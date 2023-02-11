@@ -65,7 +65,7 @@ export default function useHandleEvents(api) {
     },
 
     handlePlayerWayEvent(e) {
-      // console.log('player way event', e);
+      // console.log('player way event', e.meta);
       switch (e.meta.key) {
         case 'exit-room': {
           // FOV

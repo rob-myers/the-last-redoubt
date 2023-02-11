@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { testNever } from '../service/generic';
 import { cancellableAnimDelayMs, cssName } from '../service/const';
-import { getNumericCssVar, isAnimAttached, lineSegToCssTransform } from '../service/dom';
+import { getNumericCssVar, isAnimAttached } from '../service/dom';
 import npcsMeta from './npcs-meta.json';
 
 /**
@@ -72,7 +72,9 @@ export default function createNpc(
       this.anim.wayMetas.length = 0;
     },
     commitWalkStyles() {
-      this.anim.translate.commitStyles();
+      if (isAnimAttached(this.anim.translate, this.el.root)) {
+        this.anim.translate.commitStyles();
+      }
       this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
     },
     everAnimated() {
