@@ -9,22 +9,24 @@ import useStateRef from "../hooks/use-state-ref";
 /** @param {Props} props  */
 export default function NPC({ api, def, disabled }) {
 
-  const npc = useStateRef(() =>
-    createNpc(def, { disabled, api }),
-  );
-
-  React.useEffect(() => {
-    api.npcs.npc[def.npcKey] = npc;
-    api.npcs.events.next({ key: 'spawned-npc', npcKey: def.npcKey });
-    // if (npc.anim.spriteSheet === 'idle') {
-    //   npc.startAnimation(); // Start idle animation
-    // }
-    return () => {
-      // window.clearTimeout(npc.anim.wayTimeoutId);
-      delete api.npcs.npc[def.npcKey];
-      api.npcs.events.next({ key: 'unmounted-npc', npcKey: def.npcKey });
-    };
-  }, []);
+  const npc = useStateRef(() => {
+    const lookup = api.npcs.npc;
+    if (lookup[def.key]) {
+      const extant = lookup[def.key];
+      extant.epochMs = Date.now();
+      extant.def = def;
+      // 🚧 on HMR could update extant using use-state-ref approach
+      return extant;
+    } else {
+      return lookup[def.key] = createNpc(def, { disabled, api });
+    }
+  }, {
+    deps: [def],
+  });
+  
+  React.useEffect(() =>
+    api.npcs.events.next({ key: 'spawned-npc', npcKey: def.key })
+  , [npc.epochMs]);
 
   return (
     <div
@@ -41,11 +43,7 @@ export default function NPC({ api, def, disabled }) {
       <div
         className={cx(cssName.npcBody, npc.key, 'no-select')}
         data-npc-key={npc.key}
-      >
-        {/* {npc.segs.map((seg, i) =>
-          <div key={i} className="line-segment" style={{ transform: seg.transformStyle }} />
-        )} */}
-      </div>
+      />
       <div className="interact-circle" />
       <div className="bounds-circle" />
     </div>
@@ -55,22 +53,24 @@ export default function NPC({ api, def, disabled }) {
 /**
  * @typedef Props
  * @property {import('./World').State} api
- * @property {PropsDef} def
+ * @property {NPC.NPCDef} def
  * @property {boolean} [disabled]
  */
 
-/**
- * @typedef PropsDef
- * @property {string} npcKey
- * @property {NPC.NpcJsonKey} npcJsonKey
- * @property {Geom.VectJson} position
- * @property {number} speed
- * @property {number} angle
- */
+// /**
+//  * @typedef PropsDef
+//  * @property {string} npcKey
+//  * @property {NPC.NpcJsonKey} npcJsonKey
+//  * @property {Geom.VectJson} position
+//  * @property {number} speed
+//  * @property {number} angle
+//  */
 
 const rootCss = css`
   position: absolute;
   pointer-events: none;
+  // 🚧 should reinit on spawn
+  /* ${cssName.npcLookRadians}: 0rad; */
 
   .body {
     position: absolute;

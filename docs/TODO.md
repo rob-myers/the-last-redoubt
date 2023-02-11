@@ -3,9 +3,11 @@
 ## In progress
 
 - finish Synfig todo i.e. `idle-breathe` somehow
-  - ✅ can spawn whilst walking and remember angle
-  - try moving create-npc so it isn't invoked per spawn
-  - `npc events`
+  - ✅ can spawn whilst walking remembering angle
+  - ✅ avoid reinvoking create-npc per spawn
+  - ✅ consider create-npc HMR
+    - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
+  - 🚧 `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction

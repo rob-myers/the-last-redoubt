@@ -29,7 +29,10 @@ declare namespace NPC {
     jsonKey: NPC.NpcJsonKey;
     /** Epoch ms when spawned */
     epochMs: number;
-    /** Definition of NPC */
+    /**
+     * Definition of NPC.
+     * This can be mutated, so methods should refer to `this.def`
+     */
     def: NPCDef;
     el: {
       root: HTMLDivElement;
@@ -96,6 +99,7 @@ declare namespace NPC {
     // setSegs(segs: Geom.Seg[]): void;
     setSpritesheet(spriteSheet: SpriteSheetKey): void;
     startAnimation(): void;
+    syncLookAngle(): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
@@ -174,11 +178,14 @@ declare namespace NPC {
   );
 
   interface NPCDef {
+    /** npcKey e.g. `andros` */
     key: string;
+    /** npc class key e.g. `first-human-npc` */
+    npcJsonKey: NpcJsonKey;
     angle: number;
-    /** Initially paused? */
-    paused: boolean;
+    // paused: boolean;
     position: Geom.VectJson;
+    speed: number;
   }
   
   /**

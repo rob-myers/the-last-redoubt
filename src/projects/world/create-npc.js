@@ -6,7 +6,7 @@ import { getNumericCssVar, isAnimAttached } from '../service/dom';
 import npcsMeta from './npcs-meta.json';
 
 /**
- * @param {import('./NPC').PropsDef} def 
+ * @param {NPC.NPCDef} def 
  * @param {{ disabled?: boolean; api: import('./World').State; }} deps
  * @returns {NPC.NPC}
  */
@@ -15,10 +15,10 @@ export default function createNpc(
   { disabled, api },
 ) {
   return {
-    key: def.npcKey,
+    key: def.key,
     jsonKey: def.npcJsonKey,
     epochMs: Date.now(),
-    def: { key: def.npcKey, position: def.position, angle: def.angle, paused: !!disabled },
+    def,
     el: {
       root: /** @type {HTMLDivElement} */ ({}),
       body: /** @type {HTMLDivElement} */ ({}),
@@ -75,7 +75,7 @@ export default function createNpc(
       if (isAnimAttached(this.anim.translate, this.el.root)) {
         this.anim.translate.commitStyles();
       }
-      this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
+      this.syncLookAngle();
     },
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
@@ -181,7 +181,7 @@ export default function createNpc(
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
     },
     getSpeed() {
-      return def.speed;
+      return this.def.speed;
     },
     /**
      * Shorten duration of this.anim.sprites slightly,
@@ -284,7 +284,7 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
 
         this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-        this.setLookRadians(def.angle);
+        this.setLookRadians(this.def.angle);
         const { radius } = npcsMeta[this.jsonKey];
         this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
 
@@ -419,6 +419,9 @@ export default function createNpc(
         default:
           throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
       }
+    },
+    syncLookAngle() {
+      this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
     },
     updateAnimAux() {
       const { aux } = this.anim;

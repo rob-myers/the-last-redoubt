@@ -448,27 +448,34 @@ export default function NPCs(props) {
       //   throw Error(`cannot spawn whilst walking`)
       // }
       const extant = state.npc[e.npcKey];
-      extant?.cancel(); // Must clear wayMetas
+      if (extant) {
+        extant.cancel(); // Must clear wayMetas
+        extant.mounted = false; // Must not skip npc.npcRef
+      }
 
       state.npcKeys = state.npcKeys
         .filter(({ key }) => key !== e.npcKey)
         .concat({
           key: e.npcKey,
           epochMs: Date.now(),
+          // 🚧 Remember more?
           def: {
-            npcKey: e.npcKey,
-            npcJsonKey: 'first-human-npc', // 🚧 can specify character class
+            key: e.npcKey,
+            angle: e.angle ?? extant?.getAngle() ?? 0, // Previous angle fallback
+            npcJsonKey: 'first-human-npc', // 🚧
             position: e.point,
-            // Remember previous angle
-            angle: e.angle ?? extant?.getAngle() ?? 0,
             speed: npcsMeta["first-human-npc"].speed,
           },
-        });
-      update();
+        })
+      ;
 
-      await firstValueFrom(state.events.pipe(
+      // Await event triggered by <NPC> render
+      const promise = firstValueFrom(state.events.pipe(
         filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
       ));
+      update(); // Trigger <NPC> render
+      await promise;
+
     },
     updateLocalDecor(opts) {// 🚧 generic approach?
 
@@ -677,7 +684,7 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
- * @property {{ key: string; epochMs: number; def: import('./NPC').PropsDef }[]} npcKeys
+ * @property {{ key: string; epochMs: number; def: NPC.NPCDef }[]} npcKeys
  * These items cause `<NPC>`s to mount
  * @property {Record<string, NPC.NPC>} npc
  * These items are created as a result of an `<NPC>` mounting
