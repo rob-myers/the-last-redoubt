@@ -294,6 +294,15 @@ export function getRelativePos(e) {
 }
 
 /**
+ * Fixes proxies displayed in React DevTool
+ * @param {string} key
+ * @returns {key is '$$typeof' | 'constructor'}
+ */
+export function detectReactDevToolQuery(key) {
+	return key === '$$typeof' || key === 'constructor' || typeof key === 'symbol';
+}
+
+/**
  * @param {Animation} anim 
  * @param {HTMLElement} el 
  */

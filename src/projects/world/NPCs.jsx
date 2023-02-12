@@ -10,7 +10,7 @@ import { deepClone, keys, testNever, visibleUnicodeLength } from "../service/gen
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
-import { getNumericCssVar, supportsWebp } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
@@ -45,6 +45,9 @@ export default function NPCs(props) {
     }), {
       /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey} key */
       get(ctxt, key) {
+        if (detectReactDevToolQuery(key)) {
+          return ctxt[key];
+        }
         const rootStyle = state.rootEl.style;
         const debugStyle = api.debug.rootEl.style;
         switch (key) {
