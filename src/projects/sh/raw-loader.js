@@ -228,13 +228,29 @@
   
     /** npc {action} [{opts}] [{args}] */
     npc: async function* ({ api, args, home, datum }) {
-      const { npcs } = api.getCached(home.WORLD_KEY)
-      const action = args[0]
+      const { doors, npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
+      const action = args[0];
 
       if (typeof action !== "string" || action === "") {
-        throw api.throwError("first arg {action} must be a non-empty string")
+        throw api.throwError("first arg {action} must be a non-empty string");
       } else if (!npcs.service.isNpcActionKey(action)) {
-        throw api.throwError("first arg {action} must be a valid key")
+        throw api.throwError("first arg {action} must be a valid key");
+      }
+
+      const process = api.getProcess();
+      if (action === "events") {// `npc events`
+        // This never ends and must be killed (maybe implicitly)
+        const asyncIterable = lib.observableToAsyncIterable(lib.merge(
+          doors.events,
+          npcs.events,
+          panZoom.events,
+        ));
+        process.cleanups.push(() => asyncIterable.return?.());
+        for await (const event of asyncIterable) {
+          if (process.status === 1) {
+            yield event;
+          }
+        }
       }
 
       if (api.isTtyAt(0)) {

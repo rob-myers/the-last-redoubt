@@ -1,7 +1,9 @@
 import React from "react";
 import { filter, first, map, take } from "rxjs/operators";
+import { merge } from "rxjs";
 
 import { removeCached, setCached } from "../service/query-client";
+import { observableToAsyncIterable } from "../service/observable-to-async-iterable";
 import { Vect } from "../geom";
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -34,13 +36,13 @@ export default function World(props) {
 
     lib: {
       Vect,
-      filter, first, map, take,
+      filter, first, map, merge, take,
+      observableToAsyncIterable,
     },
 
     isReady() {
       return [state.debug, state.doors, state.fov, state.geomorphs, state.npcs, state.panZoom].every(x => x.ready);
     },
-
 
     update,
   }));
@@ -144,5 +146,7 @@ export default function World(props) {
  * @property {typeof filter} filter
  * @property {typeof first} first
  * @property {typeof map} map
+ * @property {typeof merge} merge
  * @property {typeof take} take
+ * @property {typeof observableToAsyncIterable} observableToAsyncIterable
  */

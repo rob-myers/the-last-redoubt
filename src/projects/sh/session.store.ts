@@ -85,6 +85,7 @@ export interface ProcessMeta {
   ppid: number;
   pgid: number;
   sessionKey: string;
+  /** `0` is suspended, `1` is running, `2` is killed */
   status: ProcessStatus;
   src: string;
   /**

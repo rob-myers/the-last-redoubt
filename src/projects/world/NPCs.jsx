@@ -316,10 +316,11 @@ export default function NPCs(props) {
             return dataChunk([state.config]);
           }
           break;
+        case 'events': // handled earlier
+          break;
         case 'get':
           return state.getNpc(e.npcKey);
-        // 🚧 promise via animationend event?
-        case 'look-at': {
+        case 'look-at': {// 🚧 promise via animationend event?
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
