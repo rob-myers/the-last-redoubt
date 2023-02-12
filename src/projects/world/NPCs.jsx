@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 import { Vect } from "../geom";
 import { ansiColor, stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
-import { deepClone, keys, testNever, visibleUnicodeLength } from "../service/generic";
+import { keys, testNever, visibleUnicodeLength } from "../service/generic";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { cssName } from "../service/const";
@@ -15,7 +15,7 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
 import useSessionStore from "../sh/session.store";
-import NPC from "./NPC";
+import { MemoizedNPC } from "./NPC";
 import Decor from "./Decor";
 import npcsMeta from './npcs-meta.json';
 
@@ -637,7 +637,7 @@ export default function NPCs(props) {
       />
 
       {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
-        <NPC
+        <MemoizedNPC
           key={key}
           api={props.api}
           def={def}
@@ -652,7 +652,7 @@ export default function NPCs(props) {
 }
 
 const rootCss = css`
-  /** For CSS variables, see state.rootRef */
+  /** For CSS variables see state.rootRef */
 
   position: absolute;
   canvas {

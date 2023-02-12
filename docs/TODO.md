@@ -10,11 +10,12 @@
   - ✅ do not re-mount on spawn
   - ✅ `<World>` now awaits `<Debug>`
   - ✅ remove updateAll
-  - 🚧 update individual npcs directly
-    - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
-    - 🚧 can avoid `<NPC>` render via React.memo?
-    - 🚧 can avoid `<Decor>` render via React.memo?
-  - `npc events`
+  - ❌ update individual npcs directly
+    - no use case as yet
+  - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
+  - ✅ can avoid `<NPC>` render via React.memo
+  - ❌ can avoid `<Decor>` render via React.memo
+  - 🚧 `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 
   - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`
 - use webp for lit/unlit geomorphs

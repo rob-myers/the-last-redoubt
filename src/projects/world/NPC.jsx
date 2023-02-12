@@ -101,3 +101,5 @@ const rootCss = css`
     border: 1px solid rgba(255, 0, 0, 0.25);
   }
 `;
+
+export const MemoizedNPC = React.memo(NPC);
