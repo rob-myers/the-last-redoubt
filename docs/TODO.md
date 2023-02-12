@@ -8,7 +8,12 @@
   - ✅ consider create-npc HMR
     - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
   - ✅ do not re-mount on spawn
+  - ✅ `<World>` now awaits `<Debug>`
+  - ✅ remove updateAll
   - 🚧 update individual npcs directly
+    - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
+    - 🚧 can avoid `<NPC>` render via React.memo?
+    - can avoid `<Decor>` render via React.memo?
   - `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 
 - use webp for lit/unlit geomorphs

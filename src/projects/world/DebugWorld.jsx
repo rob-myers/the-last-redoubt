@@ -3,6 +3,7 @@ import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
 import { cssName, wallOutset } from "../service/const";
 import useStateRef from "../hooks/use-state-ref";
+import useUpdate from "../hooks/use-update";
 
 /**
  * 🚧 merge onClick into state?
@@ -14,21 +15,31 @@ export default function DebugWorld(props) {
 
   const { fov, gmGraph } = props.api;
   const { gmId, roomId } = fov;
-  if (
-    typeof gmId !== 'number' // FOV unloaded
-    || gmId === -1 // FOV in initial state
-  ) {
-    return null;
-  }
 
-  const gm = gmGraph.gms[gmId];
-  const visDoorIds = props.api.doors.getVisible(gmId);
-  const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-  const roomNavAabb = roomNavPoly.rect.outset(wallOutset); // Outset for door lines
-  const roomAabb = gm.rooms[roomId].rect;
-  const roomPoly = gm.rooms[roomId];
-  const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
-  const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
+  const update = useUpdate();
+
+  const ctxt = React.useMemo(() => {
+    if (gmId >= 0) {
+      const gm = gmGraph.gms[gmId];
+      const visDoorIds = props.api.doors.getVisible(gmId);
+      const roomNavPoly = gm.lazy.roomNavPoly[roomId];
+      const roomNavAabb = roomNavPoly.rect.outset(wallOutset); // Outset for door lines
+      const roomAabb = gm.rooms[roomId].rect;
+      const roomPoly = gm.rooms[roomId];
+      const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
+      const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
+      return {
+        gm,
+        visDoorIds,
+        roomNavPoly,
+        roomNavAabb,
+        roomAabb,
+        roomPoly,
+        roomLabel,
+        undoNonAffineStyle,
+      };
+    }
+  }, [gmId]);
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
@@ -50,6 +61,7 @@ export default function DebugWorld(props) {
           );
         }
       },
+      update,
     };
   });
 
@@ -57,24 +69,24 @@ export default function DebugWorld(props) {
   const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
     const target = (/** @type {HTMLElement} */ (e.target));
 
-    if (target.classList.contains('debug-door-arrow')) {// Manual light control
+    if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
       const doorId = Number(target.getAttribute('data-debug-door-id'));
-      const door = gm.doors[doorId];
+      const door = ctxt.gm.doors[doorId];
 
-      const hullDoorId = gm.getHullDoorId(door);
+      const hullDoorId = ctxt.gm.getHullDoorId(door);
       if (hullDoorId === -1) {
-        fov.setRoom(gmId, gm.getOtherRoomId(door, roomId), doorId);
+        fov.setRoom(gmId, ctxt.gm.getOtherRoomId(door, roomId), doorId);
       }
 
-      const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
-      if (ctxt) {
-        fov.setRoom(ctxt.adjGmId, ctxt.adjRoomId, ctxt.adjDoorId);
+      const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
+      if (roomCtxt) {
+        fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
       } else {
         console.info('hull door is isolated', gmId, hullDoorId);
       }
     }
 
-  }, [gm, props, gmId, roomId]);
+  }, [ctxt, props, gmId, roomId]);
 
   React.useEffect(() => {
     props.onLoad(state);
@@ -103,114 +115,116 @@ export default function DebugWorld(props) {
         )}
       </div>
 
-      <div
-        key={gm.itemKey}
-        className="debug-room"
-        /** Must transform local ordinates */
-        style={{ transform: gm.transformStyle }}
-      >
-
-        <svg className="debug-room-nav"
-          width={roomNavAabb.width}
-          height={roomNavAabb.height}
-          style={{
-            left: roomNavAabb.x,
-            top: roomNavAabb.y,
-            ...props.localNav === true && { display: 'initial' },// Prop overrides CSS var
-          }}
-        >
-          <g style={{ transform: `translate(${-roomNavAabb.x}px, ${-roomNavAabb.y}px)` }}>
-            <path className="nav-poly" d={roomNavPoly.svgPath} />
-            {visDoorIds.map(doorId => {
-              const { seg: [src, dst] } = gm.doors[doorId];
-              return <line key={doorId} stroke="red" x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} />
-            })}
-          </g>
-        </svg>
-
-        <svg className="debug-room-outline"
-          width={roomAabb.width}
-          height={roomAabb.height}
-          style={{
-            left: roomAabb.x,
-            top: roomAabb.y,
-            ...props.localOutline && { display: 'initial'},
-          }}
-        >
-          <g style={{ transform: `translate(${-roomAabb.x}px, ${-roomAabb.y}px)` }}>
-            <path className="room-outline" d={roomPoly.svgPath} />
-          </g>
-        </svg>
-
-        {/* Arrows and room/door ids */}
-        {visDoorIds.map(doorId => {
-          const { poly, normal, roomIds } = gm.doors[doorId];
-          const sign = roomIds[0] === roomId ? 1 : -1;
-          const angle = Vect.from(normal).scale(-sign).angle;
-          const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
-          const idIconPos = poly.center.addScaledVector(normal, -sign * debugDoorOffset);
-          return [
-            <div
-              key={doorId}
-              data-debug-door-id={doorId}
-              data-tags="debug door-arrow"
-              className="debug-door-arrow"
-              style={{
-                left: arrowPos.x - debugRadius,
-                top: arrowPos.y - debugRadius,
-                width: debugRadius * 2,
-                height: debugRadius * 2,
-                transform: `rotate(${angle}rad)`,
-                // filter: 'invert(100%)',
-                ...props.canClickArrows === true && { pointerEvents: 'all' },// Prop overrides CSS var
-              }}
-            />
-            ,
-            <div
-              key={"icon" + doorId}
-              className="debug-door-id-icon"
-              style={{
-                left: idIconPos.x,
-                top: idIconPos.y - 4,
-                transform: undoNonAffineStyle,
-                ...props.showIds === true && { display: 'initial' },
-              }}
-            >
-              {doorId}
-            </div>
-          ];
-        })}
-
+      {ctxt && (
         <div
-          className="debug-room-id-icon"
-          style={{
-            left: roomNavAabb.x + roomNavAabb.width - 35,
-            top: roomNavAabb.y + 25,
-            ...props.showIds === true && { display: 'initial' },
-            transform: undoNonAffineStyle,
-          }}
+          key={ctxt.gm.itemKey}
+          className="debug-room"
+          /** Must transform local ordinates */
+          style={{ transform: ctxt.gm.transformStyle }}
         >
-          {roomId}
+
+          <svg className="debug-room-nav"
+            width={ctxt.roomNavAabb.width}
+            height={ctxt.roomNavAabb.height}
+            style={{
+              left: ctxt.roomNavAabb.x,
+              top: ctxt.roomNavAabb.y,
+              ...props.localNav === true && { display: 'initial' },// Prop overrides CSS var
+            }}
+          >
+            <g style={{ transform: `translate(${-ctxt.roomNavAabb.x}px, ${-ctxt.roomNavAabb.y}px)` }}>
+              <path className="nav-poly" d={ctxt.roomNavPoly.svgPath} />
+              {ctxt.visDoorIds.map(doorId => {
+                const { seg: [src, dst] } = ctxt.gm.doors[doorId];
+                return <line key={doorId} stroke="red" x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} />
+              })}
+            </g>
+          </svg>
+
+          <svg className="debug-room-outline"
+            width={ctxt.roomAabb.width}
+            height={ctxt.roomAabb.height}
+            style={{
+              left: ctxt.roomAabb.x,
+              top: ctxt.roomAabb.y,
+              ...props.localOutline && { display: 'initial'},
+            }}
+          >
+            <g style={{ transform: `translate(${-ctxt.roomAabb.x}px, ${-ctxt.roomAabb.y}px)` }}>
+              <path className="room-outline" d={ctxt.roomPoly.svgPath} />
+            </g>
+          </svg>
+
+          {/* Arrows and room/door ids */}
+          {ctxt.visDoorIds.map(doorId => {
+            const { poly, normal, roomIds } = ctxt.gm.doors[doorId];
+            const sign = roomIds[0] === roomId ? 1 : -1;
+            const angle = Vect.from(normal).scale(-sign).angle;
+            const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
+            const idIconPos = poly.center.addScaledVector(normal, -sign * debugDoorOffset);
+            return [
+              <div
+                key={doorId}
+                data-debug-door-id={doorId}
+                data-tags="debug door-arrow"
+                className="debug-door-arrow"
+                style={{
+                  left: arrowPos.x - debugRadius,
+                  top: arrowPos.y - debugRadius,
+                  width: debugRadius * 2,
+                  height: debugRadius * 2,
+                  transform: `rotate(${angle}rad)`,
+                  // filter: 'invert(100%)',
+                  ...props.canClickArrows === true && { pointerEvents: 'all' },// Prop overrides CSS var
+                }}
+              />
+              ,
+              <div
+                key={"icon" + doorId}
+                className="debug-door-id-icon"
+                style={{
+                  left: idIconPos.x,
+                  top: idIconPos.y - 4,
+                  transform: ctxt.undoNonAffineStyle,
+                  ...props.showIds === true && { display: 'initial' },
+                }}
+              >
+                {doorId}
+              </div>
+            ];
+          })}
+
+          <div
+            className="debug-room-id-icon"
+            style={{
+              left: ctxt.roomNavAabb.x + ctxt.roomNavAabb.width - 35,
+              top: ctxt.roomNavAabb.y + 25,
+              ...props.showIds === true && { display: 'initial' },
+              transform: ctxt.undoNonAffineStyle,
+            }}
+          >
+            {roomId}
+          </div>
+
+          {ctxt.gm.windows.map(({ baseRect, angle }, i) => {
+            return (
+              <div
+                key={`window-${i}`}
+                className="debug-window"
+                style={{
+                  left: baseRect.x,
+                  top: baseRect.y,
+                  width: baseRect.width,
+                  height: baseRect.height,
+                  transform: `rotate(${angle}rad)`,
+                  ...props.windows && { display: 'initial' },
+                }}
+              />
+            );
+          })}
+
         </div>
-
-        {gm.windows.map(({ baseRect, angle }, i) => {
-          return (
-            <div
-              key={`window-${i}`}
-              className="debug-window"
-              style={{
-                left: baseRect.x,
-                top: baseRect.y,
-                width: baseRect.width,
-                height: baseRect.height,
-                transform: `rotate(${angle}rad)`,
-                ...props.windows && { display: 'initial' },
-              }}
-            />
-          );
-        })}
-
-      </div>
+      )}
     </div>
   );
 }
@@ -232,6 +246,7 @@ export default function DebugWorld(props) {
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
+ * @property {() => void} update
  */
 
 const debugRadius = 5;

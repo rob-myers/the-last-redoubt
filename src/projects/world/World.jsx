@@ -38,14 +38,9 @@ export default function World(props) {
     },
 
     isReady() {
-      return [state.doors, state.fov, state.geomorphs, state.npcs, state.panZoom].every(x => x.ready);
+      return [state.debug, state.doors, state.fov, state.geomorphs, state.npcs, state.panZoom].every(x => x.ready);
     },
 
-    // 🚧 remove?
-    updateAll() {
-      state.fov.updateClipPath();
-      update();
-    },
 
     update,
   }));
@@ -139,7 +134,6 @@ export default function World(props) {
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
  * @property {() => boolean} isReady
- * @property {() => void} updateAll
  * @property {() => void} update
  * @property {StateUtil} lib
  */

@@ -3,6 +3,7 @@ import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
+import useUpdate from "../hooks/use-update";
 
 /**
  * Field Of View, implemented via dark parts of geomorphs
@@ -11,6 +12,8 @@ import useStateRef from "../hooks/use-state-ref";
 export default function FOV(props) {
 
   const { gmGraph, gmGraph: { gms } } = props.api;
+
+  const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     /**
@@ -52,8 +55,7 @@ export default function FOV(props) {
         state.doorId = doorId;
         state.updateClipPath();
         props.api.doors.updateVisibleDoors();
-        props.api.update();
-        // setTimeout(() => props.api.doors.updateVisibleDoors(), 30); // 🚧 shows more?
+        props.api.debug.update();
         return true;
       } else {
         return false;
@@ -108,6 +110,8 @@ export default function FOV(props) {
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
       props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
       state.gmRoomIds = nextGmRoomIds;
+
+      update();
     },
   }), {
     overwrite: { gmId: true, roomId: true },

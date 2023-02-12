@@ -432,7 +432,7 @@ export default function NPCs(props) {
       if (found) {
         const doorId = api.gmGraph.gms[found.gmId].doors.findIndex(x => x.roomIds.includes(found.roomId));
         props.api.fov.setRoom(found.gmId, found.roomId, doorId);
-        props.api.updateAll();
+        // props.api.updateAll();
         return found
       } else {// TODO error in terminal?
         console.error(`set-player ${npcKey}: no room contains ${JSON.stringify(position)}`)

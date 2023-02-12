@@ -76,13 +76,13 @@ export default function useHandleEvents(api) {
             adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
 
-          api.updateAll();
+          // api.updateAll();
           break;
         }
         case 'enter-room': {
           // Needed in case we exit-room via doorway then immediately re-enter
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
-          api.updateAll();
+          // api.updateAll();
           break;
         }
         case 'pre-exit-room':
@@ -113,17 +113,18 @@ export default function useHandleEvents(api) {
         case 'closed-door': {
           const { gmId, doorId } = e;
           api.geomorphs.onCloseDoor(gmId, doorId);
-          api.updateAll();
+          api.fov.updateClipPath();
+          // api.updateAll();
           break;
         }
         case 'opened-door': {
           const { gmId, doorId } = e;
           api.geomorphs.onOpenDoor(gmId, doorId);
-          api.updateAll();
+          api.fov.updateClipPath();
+          // api.updateAll();
           break;
         }
       }
-
     });
 
     // React to NPC events
@@ -209,7 +210,8 @@ export default function useHandleEvents(api) {
       }
     });
 
-    api.updateAll();
+    api.fov.updateClipPath();
+    api.update();
 
     return () => {
       doorsSub.unsubscribe();
