@@ -134,5 +134,11 @@
     <rect x="105" y="115" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-200</title>
     </rect>
+    <rect x="350" y="410" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-40</title>
+    </rect>
+    <rect x="350" y="350" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-40</title>
+    </rect>
   </g>
 </svg>

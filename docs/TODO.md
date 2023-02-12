@@ -7,7 +7,9 @@
   - ✅ avoid reinvoking create-npc per spawn
   - ✅ consider create-npc HMR
     - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
-  - 🚧 `npc events`
+  - 🚧 do not re-mount on spawn
+  - 🚧 update individual npcs directly
+  - `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
