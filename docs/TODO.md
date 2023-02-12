@@ -2,7 +2,7 @@
 
 ## In progress
 
-- show `idle-breathe` somehow
+- 🚧 show `idle-breathe` somehow
   - ✅ can spawn whilst walking remembering angle
   - ✅ avoid reinvoking create-npc per spawn
   - ✅ consider create-npc HMR
@@ -13,18 +13,12 @@
   - 🚧 update individual npcs directly
     - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
     - 🚧 can avoid `<NPC>` render via React.memo?
-    - can avoid `<Decor>` render via React.memo?
+    - 🚧 can avoid `<Decor>` render via React.memo?
   - `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 
+  - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
-
-- ✅ BUG can stop in doorway then turn back, and view does not change
-  - `exit-room` followed by `enter-room` for _same room_ (✅)
-  - needed extra setRoom in use-handle-events
-
-- ✅ silent fail on geomorph json parse error e.g. via missing field
-  - We now log useQuery error field
 
 - ✅ dynamic lighting
   - ✅ consider removing unseen door canvas
@@ -436,6 +430,13 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ BUG can stop in doorway then turn back, and view does not change
+  - `exit-room` followed by `enter-room` for _same room_ (✅)
+  - needed extra setRoom in use-handle-events
+
+- ✅ silent fail on geomorph json parse error e.g. via missing field
+  - We now log useQuery error field
 
 - ✅ double doors issue: light going through closed one
   - ✅ fix light overflow using tag `double`

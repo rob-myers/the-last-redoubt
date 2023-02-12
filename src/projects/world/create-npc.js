@@ -251,6 +251,14 @@ export default function createNpc(
       // this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${angle}rad`);
       return { position, angle };
     },
+    initialize() {
+      this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
+      this.setLookRadians(this.def.angle);
+      const { radius } = npcsMeta[this.jsonKey];
+      this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
+      this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
+      this.unspawned = false;
+    },
     isWalking() {
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
     },

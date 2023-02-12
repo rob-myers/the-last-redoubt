@@ -1,12 +1,10 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 
-import { Rect } from '../geom';
 import { cssName } from '../service/const';
 import { supportsWebp } from '../service/dom';
 import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
-import npcsMeta from './npcs-meta.json';
 
 /** @param {Props} props  */
 export default function NPC({ api, def, disabled }) {
@@ -26,16 +24,10 @@ export default function NPC({ api, def, disabled }) {
     deps: [def],
   });
   
-  // useLayoutEffect needed for initial css
-  React.useLayoutEffect(() => {
-    if (npc.unspawned) {// initialise using npc.def
-      npc.el.root.style.transform = `translate(${npc.def.position.x}px, ${npc.def.position.y}px)`;
-      npc.setLookRadians(npc.def.angle);
-      const { radius } = npcsMeta[npc.jsonKey];
-      npc.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
-      npc.anim.staticBounds = new Rect(npc.def.position.x - radius, npc.def.position.y - radius, 2 * radius, 2 * radius);
-
-      npc.unspawned = false;
+  
+  React.useLayoutEffect(() => {// useLayoutEffect for initial css
+    if (npc.unspawned) {
+      npc.initialize();
       api.npcs.events.next({ key: 'spawned-npc', npcKey: def.key });
     }
   }, [npc.epochMs]);

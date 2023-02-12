@@ -88,6 +88,8 @@ declare namespace NPC {
      * Nevertheless we'll keep this computation handy.
      */
     inferWalkTransform(): { position: Geom.Vect; angle: number; }
+    /** Initialise using `def` */
+    initialize(): void;
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): number;
