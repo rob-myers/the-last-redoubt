@@ -81,10 +81,13 @@ export class gmGraphClass extends BaseGraph {
           return geom.getFlippedDirection(geom.getDeltaDirection(direction, 3), 'y');
       }
       error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
+      return null;
     } else {
-      error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
+      if (!hullDoor.tags.includes('sealed')) {
+        error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
+      }
+      return null;
     }
-    return null;
   }
 
   /**
@@ -555,16 +558,18 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * A hull door can be sealed either by definition,
+   * or by virtue of its position (leaf node in gmGraph)
    * @param {number} gmId 
    * @param {number} hullDoorId 
    */
   isHullDoorSealed(gmId, hullDoorId) {
     const doorNode = this.getDoorNodeById(gmId, hullDoorId);
     if (doorNode === null) {
-      console.warn(`hull door not found`, gmId, hullDoorId);
+      console.warn(`hull door node not found: ${JSON.stringify({ gmId, hullDoorId })}`);
       return true;
     }
-    return this.getDoorNodeById(gmId, hullDoorId).sealed;
+    return doorNode.sealed;
   }
 
   /**
