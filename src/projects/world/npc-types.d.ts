@@ -38,7 +38,7 @@ declare namespace NPC {
       root: HTMLDivElement;
       body: HTMLDivElement;
     };
-    mounted: boolean;
+    unspawned: boolean;
     anim: NPCAnimData;
 
     cancel(): Promise<void>;
@@ -107,7 +107,7 @@ declare namespace NPC {
   }
 
   interface NPCAnimData {
-    /** Stylesheet-related CSS */
+    /** Sprite sheet related CSS */
     css: string;
     /** The path we'll walk along */
     path: Geom.Vect[];

@@ -444,13 +444,11 @@ export default function NPCs(props) {
       } else if (!state.isPointLegal(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
-      //  else if (state.npc[e.npcKey]?.anim.spriteSheet === 'walk') {
-      //   throw Error(`cannot spawn whilst walking`)
-      // }
-      const extant = state.npc[e.npcKey];
-      if (extant) {
-        extant.cancel(); // Must clear wayMetas
-        extant.mounted = false; // Must not skip npc.npcRef
+
+      const spawned = state.npc[e.npcKey];
+      if (spawned) {
+        spawned.cancel(); // Clear wayMetas
+        spawned.unspawned = true; // Crucial for <NPC>
       }
 
       state.npcKeys = state.npcKeys
@@ -458,10 +456,9 @@ export default function NPCs(props) {
         .concat({
           key: e.npcKey,
           epochMs: Date.now(),
-          // 🚧 Remember more?
           def: {
             key: e.npcKey,
-            angle: e.angle ?? extant?.getAngle() ?? 0, // Previous angle fallback
+            angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
             npcJsonKey: 'first-human-npc', // 🚧
             position: e.point,
             speed: npcsMeta["first-human-npc"].speed,
@@ -637,8 +634,8 @@ export default function NPCs(props) {
       />
 
       {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
-        <NPC // Respawn remounts
-          key={`${key}@${epochMs}`}
+        <NPC
+          key={key}
           api={props.api}
           def={def}
           disabled={props.disabled}

@@ -2,12 +2,12 @@
 
 ## In progress
 
-- finish Synfig todo i.e. `idle-breathe` somehow
+- show `idle-breathe` somehow
   - ✅ can spawn whilst walking remembering angle
   - ✅ avoid reinvoking create-npc per spawn
   - ✅ consider create-npc HMR
     - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
-  - 🚧 do not re-mount on spawn
+  - ✅ do not re-mount on spawn
   - 🚧 update individual npcs directly
   - `npc events`
   - idle-breathe specifies tag `idle` and animation-direction `alternate` 

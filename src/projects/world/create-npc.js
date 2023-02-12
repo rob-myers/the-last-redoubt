@@ -23,7 +23,7 @@ export default function createNpc(
       root: /** @type {HTMLDivElement} */ ({}),
       body: /** @type {HTMLDivElement} */ ({}),
     },
-    mounted: false,
+    unspawned: true,
     anim: {
       // 🚧 can specify character class
       css: css`${npcsMeta['first-human-npc'].css}`,
@@ -279,19 +279,10 @@ export default function createNpc(
       }
     },
     npcRef(rootEl) {
-      if (rootEl && !this.mounted) {
+      if (rootEl) {
         this.el.root = rootEl;
-        this.el.body = /** @type {HTMLDivElement} */ (rootEl.childNodes[0]);
+        this.el.body = /** @type {HTMLDivElement} */ (rootEl.children[0]);
 
-        this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-        this.setLookRadians(this.def.angle);
-        const { radius } = npcsMeta[this.jsonKey];
-        this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
-
-        this.anim.staticBounds = new Rect(
-          this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius
-        );
-        this.mounted = true;
       }
     },
     pause() {
