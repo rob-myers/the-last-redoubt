@@ -36,6 +36,14 @@ export default function Doors(props) {
     getVisible(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
     },
+    onClickDoor(e) {
+      const uiEl = /** @type {HTMLElement} */ (e.target);
+      if (uiEl.dataset.gm_id !== null) {
+        const gmId = Number(uiEl.dataset.gm_id);
+        const doorId = Number(uiEl.dataset.door_id);
+        state.onToggleDoor(gmId, doorId, true);
+      }
+    },
     async onToggleDoor(gmId, doorId, byPlayer) {
 
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
@@ -83,6 +91,8 @@ export default function Doors(props) {
         state.tryCloseDoor(gmId, doorId);
       }
 
+      update();
+
       return true;
     },
     playerNearDoor(gmId, doorId) {
@@ -105,7 +115,7 @@ export default function Doors(props) {
     },
     setVisible(gmId, doorIds) {
       state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
-      update();
+      update(); // For external use?
     },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
@@ -160,8 +170,7 @@ export default function Doors(props) {
   }, []);
 
   React.useEffect(() => {// Initial setup
-    if (gms && npcs.ready) {
-
+    if (npcs.ready) {
       const handlePause = npcs.events.subscribe(e => {
         e.key === 'disabled' && // Cancel future door closings
           state.closing.forEach(doors => doors.forEach(meta => window.clearTimeout(meta?.timeoutId)));
@@ -171,20 +180,13 @@ export default function Doors(props) {
           }));
       });
 
-      const onClickDoor = /** @param {PointerEvent} e */ e => {
-        const uiEl = /** @type {HTMLElement} */ (e.target);
-        if (uiEl.dataset.gm_id === null) return;
-        const gmId = Number(uiEl.dataset.gm_id);
-        const doorId = Number(uiEl.dataset.door_id);
-        state.onToggleDoor(gmId, doorId, true);
-      };
-      state.rootEl.addEventListener('pointerup', onClickDoor);
+      state.rootEl.addEventListener('pointerup', state.onClickDoor);
       return () => {
         handlePause.unsubscribe();
-        state.rootEl.removeEventListener('pointerup', onClickDoor);
+        state.rootEl.removeEventListener('pointerup', state.onClickDoor);
       };
     }
-  }, [gms, npcs.ready]);
+  }, [npcs.ready]);
   
   return (
     <div
@@ -231,7 +233,7 @@ export default function Doors(props) {
 }
 
 const rootCss = css`
-  --npc-door-touch-radius: 10px;
+  ${cssName.npcDoorTouchRadius}: 10px;
 
   position: absolute;
 
@@ -249,14 +251,14 @@ const rootCss = css`
       pointer-events: all;
       position: absolute;
 
-      width: calc(100% + 2 * var(--npc-door-touch-radius));
-      min-width: calc( 2 * var(--npc-door-touch-radius) );
-      top: calc(-1 * var(--npc-door-touch-radius) + ${ doorWidth / 2 }px ); /** 5px for hull */
-      left: calc(-1 * var(--npc-door-touch-radius));
-      height: calc(2 * var(--npc-door-touch-radius));
+      width: calc(100% + 2 * var(${cssName.npcDoorTouchRadius}));
+      min-width: calc( 2 * var(${cssName.npcDoorTouchRadius}) );
+      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ doorWidth / 2 }px ); /** 5px for hull */
+      left: calc(-1 * var(${cssName.npcDoorTouchRadius}));
+      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
 
       background: rgba(100, 0, 0, 0.1);
-      border-radius: var(--npc-door-touch-radius);
+      border-radius: var(${cssName.npcDoorTouchRadius});
     }
 
     &:not(.${cssName.iris}) {
@@ -273,7 +275,7 @@ const rootCss = css`
     &.${cssName.hull} {
       transition: width 300ms ease-in;
       .${cssName.doorTouchUi} {
-        top: calc(-1 * var(--npc-door-touch-radius) + ${ hullDoorWidth / 2 }px );
+        top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ hullDoorWidth / 2 }px );
       }
     }
 
@@ -305,6 +307,7 @@ const rootCss = css`
  * @property {(gmId: number) => number[]} getClosed
  * @property {(gmId: number) => number[]} getOpen Get ids of open doors
  * @property {(gmId: number) => number[]} getVisible
+ * @property {(e: PointerEvent) => void} onClickDoor
  * @property {(gmId: number, doorId: number, byPlayer: boolean) => Promise<boolean>} onToggleDoor
  * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
  * @property {boolean[][]} open `open[gmId][doorId]`

@@ -49,6 +49,7 @@ export const cssName = {
   npc: 'npc',
   npcBody: 'body',
   npcsDebugDisplay: '--npcs-debug-display',
+  npcDoorTouchRadius: '--npc-door-touch-radius',
   npcsInteractRadius: '--npcs-interact-radius',
   npcBoundsRadius: '--npc-bounds-radius',
   /**
