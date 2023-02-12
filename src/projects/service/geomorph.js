@@ -284,6 +284,9 @@ export async function createLayout(def, lookup, triangleService) {
 }
 
 /**
+ * Some hull doors shouldn't be tagged,
+ * e.g. the central and right one in geomorph 301.
+ * They are not connectable to other geomorphs.
  * @param {Geomorph.ParsedConnectorRect} door 
  * @param {Geom.Rect} hullRect 
  */

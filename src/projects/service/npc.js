@@ -105,6 +105,9 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
  * @returns {NPC.NpcCollision | null}
  */
 export function predictNpcNpcCollision(npcA, npcB) {
+  if (!npcA.isWalking()) {
+    return null; // Saw segA assertNonNull fail 🤔
+  }
   if (npcB.isWalking()) {
     if (!npcA.getWalkSegBounds().intersects(npcB.getWalkSegBounds())) {
       return null;
