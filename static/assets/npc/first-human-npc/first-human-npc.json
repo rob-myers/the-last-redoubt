@@ -62,6 +62,14 @@
     }
   },
   "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+  "synfigMeta": {
+    "keyframeToMeta": {
+      "idle": {"tags": ["idle"]},
+      "idle-breathe": {"tags": ["idle"], "animation-direction": "alternate"},
+      "sit": {"tags": ["sit"]},
+      "walk": {"tags": ["walk"]}
+    }
+  },
   "radius": 80,
   "zoom": 2
 }

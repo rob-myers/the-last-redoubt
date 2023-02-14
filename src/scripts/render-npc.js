@@ -63,9 +63,11 @@ async function main() {
     // ⛔️ debug only
     // writeAsJson(synfigJson, outputDebugJsonPath);
 
-    const { $: topDollar, name: [_unusedName], keyframe, layer } = synfigJson.canvas;
+    const { $: topDollar, name: [_unusedName], desc: [metaJsonString], keyframe, layer } = synfigJson.canvas;
 
     const fps = parseInt(topDollar.fps);
+    /** @type {NPC.NpcSynfigMetaJson} */
+    const synfigMeta = metaJsonString ? JSON.parse(metaJsonString) : { keyframeToMeta: {} };
     /**
      * end-time can be e.g. `5f` or `1s 7f`
      */
@@ -183,6 +185,7 @@ async function main() {
         npcJsonKey: /** @type {NPC.NpcJsonKey} */ (sifzFolder),
         animLookup,
         aabb: aabbRectZoomed.json, // Already zoomed
+        synfigMeta,
         radius: npcRadiusZoomed,
         zoom,
       };
@@ -265,6 +268,7 @@ async function main() {
  * @typedef ParsedInnerSynfig
  * @property {SynfigTopDollar} $
  * @property {string[]} name
+ * @property {string[]} desc
  * @property {{ $: { name: string; content: string; } }[]} meta
  * @property {{ _: string; $: { time: string; active: string } }[]} keyframe
  * @property {SynfigLayer[]} layer
@@ -347,8 +351,6 @@ async function main() {
  * @typedef SynfigReal
  * @property {{ value: string; }} $
  */
-
-
 
 /**
  * Synfig stores Rect layers as a seq of topLefts and a seq of botRights.

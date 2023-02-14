@@ -343,6 +343,7 @@ declare namespace NPC {
     animLookup: { [animName: string]: NpcAnimMeta };
     /** Axis aligned bounded box, already scaled by `zoom` */
     aabb: Geom.RectJson;
+    synfigMeta: NpcSynfigMetaJson;
     /** Zoomed radius */
     radius: number;
     /** How much the rendered PNGs have been scaled up. */
@@ -365,6 +366,15 @@ declare namespace NPC {
 
     pathPng: string;
     pathWebp: string;
+  }
+
+  interface NpcSynfigMetaJson {
+    keyframeToMeta: {
+      [keyframe: string]: {
+        tags?: string[];
+        'animation-direction'?: string;
+      }
+    }    
   }
 
   //#endregion
