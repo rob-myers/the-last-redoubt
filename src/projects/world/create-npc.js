@@ -47,16 +47,23 @@ export default function createNpc(
         case 'idle':
         case 'sit':
           break;
+        case 'idle-breathe':
+          await /** @type {Promise<void>} */ (new Promise(resolve => {
+            this.anim.sprites.addEventListener('cancel', () => resolve());
+            this.anim.sprites.cancel();
+          }));
+          break;
         case 'walk':
           this.clearWayMetas();
           this.commitWalkStyles();
           if (this.el.body instanceof HTMLDivElement) {
-            this.setLookRadians(this.getAngle());
+            this.syncLookAngle();
           }
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.translate.addEventListener('cancel', () => resolve());
             this.anim.translate.cancel();
             this.anim.rotate.cancel();
+            this.anim.sprites.cancel(); // ?
           }));
           break;
         default:
@@ -189,7 +196,7 @@ export default function createNpc(
      * - we ensure half returned value divides `motionMs`
      * - we use an offset `motionMs` to end mid-frame
      */
-    getSpriteDuration(nextMotionMs) {
+    getWalkSpriteDuration(nextMotionMs) {
       const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.jsonKey];
       const npcWalkAnimDurationMs = 1000 * ( 1 / this.getSpeed() ) * (animLookup.walk.totalDist * npcScale);
       const baseSpriteMs = npcWalkAnimDurationMs;
@@ -299,13 +306,18 @@ export default function createNpc(
         case 'idle':
         case 'sit':
           break;
+        case 'idle-breathe':
+          if (this.everAnimated()) {
+            this.anim.sprites.pause();
+          }
+          break;
         case 'walk':
           if (this.everAnimated()) {
             this.anim.translate.pause();
             this.anim.rotate.pause();
             this.anim.sprites.pause();
             this.commitWalkStyles();
-            this.setLookRadians(this.getAngle());
+            this.syncLookAngle();
           }
           /**
            * Pending wayMeta is at this.anim.wayMetas[0].
@@ -327,6 +339,9 @@ export default function createNpc(
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
+          break;
+        case 'idle-breathe':
+          this.anim.sprites.play();
           break;
         case 'walk':
           this.anim.translate.play();
@@ -352,11 +367,12 @@ export default function createNpc(
         this.anim.spriteSheet = spriteSheet;
       }
     },
-    startAnimation() {
+    startAnimation() {// Called after setSpriteSheet
       if (this.everAnimated()) {
         this.anim.translate.cancel();
-        this.setLookRadians(this.getAngle());
+        this.syncLookAngle();
         this.anim.rotate.cancel();
+        this.anim.sprites.cancel();
       }
 
       switch (this.anim.spriteSheet) {
@@ -376,7 +392,7 @@ export default function createNpc(
     
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup, aabb } = npcsMeta[this.jsonKey].parsed;
-          const spriteMs = this.getSpriteDuration(opts.duration);
+          const spriteMs = this.getWalkSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           this.anim.sprites = this.el.body.animate(
               firstFootLeads ?
@@ -399,9 +415,10 @@ export default function createNpc(
           break;
         }
         case 'idle':
+        case 'idle-breathe':
         case 'sit': {
           this.clearWayMetas();
-          this.setLookRadians(this.getAngle());
+          this.syncLookAngle();
           // Update staticBounds
           const { x, y } = this.getPosition();
           const radius = this.getRadius();
@@ -412,6 +429,21 @@ export default function createNpc(
           // - Fixes "this.anim.rotate.cancel is not a function" on HMR
           this.anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
           this.anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+          
+          if (this.anim.spriteSheet === 'idle-breathe') {
+            const { animLookup, aabb, synfigMeta } = npcsMeta[this.jsonKey].parsed;
+            this.anim.sprites = this.el.body.animate(
+              [
+                { offset: 0, backgroundPosition: '0px' },
+                { offset: 1, backgroundPosition: `${-animLookup['idle-breathe'].frameCount * aabb.width}px` },
+              ], {
+                easing: `steps(${animLookup['idle-breathe'].frameCount})`,
+                duration: 600, // 🚧
+                iterations: Infinity,
+                direction: /** @type {PlaybackDirection   | undefined} */ (synfigMeta.keyframeToMeta[this.anim.spriteSheet]?.['animation-direction']),
+              },
+            );
+          }
           // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
           break;
         }
@@ -420,7 +452,7 @@ export default function createNpc(
       }
     },
     syncLookAngle() {
-      this.el.root.style.setProperty(cssName.npcLookRadians, `${this.getAngle()}rad`);
+      this.setLookRadians(this.getAngle());
     },
     updateAnimAux() {
       const { aux } = this.anim;

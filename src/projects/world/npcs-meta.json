@@ -65,12 +65,23 @@
         }
       },
       "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+      "synfigMeta": {
+        "keyframeToMeta": {
+          "idle": {"tags": ["idle"]},
+          "idle-breathe": {
+            "tags": ["idle"],
+            "animation-direction": "alternate"
+          },
+          "sit": {"tags": ["sit"]},
+          "walk": {"tags": ["walk"]}
+        }
+      },
       "radius": 80,
       "zoom": 2
     },
     "scale": 0.18,
     "radius": 14.399999999999999,
     "speed": 70,
-    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n  &.walk.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--walk.webp');\n  }\n\n\n\n  &.idle .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n  &.idle.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle.webp');\n  }\n\n\n\n  &.sit .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }\n  &.sit.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--sit.webp');\n  }\n\n\n\n  &.idle-breathe .body {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.png');\n  }\n  &.idle-breathe.webp .body {\n    background: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp');\n  }"
+    "css": ".body {\n  transform: rotate(calc(0rad + var(--npc-look-radians))) scale(0.18);\n}\n\n\n  &.walk .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n  &.walk .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.webp');\n  }\n\n\n\n  &.idle .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n  &.idle .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }\n  &.sit .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp');\n  }"
   }
 }

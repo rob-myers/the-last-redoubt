@@ -2,6 +2,10 @@
 
 ## In progress
 
+- 🚧 BUG: chrome: cursor over e.g. decor circle
+  - works in firefox
+  - try width=height=scale instead of `... scale(x)`
+
 - 🚧 show `idle-breathe` somehow
   - ✅ can spawn whilst walking remembering angle
   - ✅ avoid reinvoking create-npc per spawn
@@ -21,14 +25,18 @@
   - ✅ event on add/remove decors
   - ✅ event on click TTY link
   - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
+  - ✅ can play npc anim via js
+    ```js
+    npc.setSpritesheet('idle-breathe')
+    npc.startAnimation()
+    ```
+  - ✅ idle-breathe uses animation-direction
   - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
 
 - move `<Decor>` to top level?
-- BUG: chrome: cursor over e.g. decor circle
-  - works in firefox
-  - try width=height=scale instead of `... scale(x)`
+- `<NPC>` supports HMR i.e. manually within useStateRef
 
 - ✅ dynamic lighting
   - ✅ consider removing unseen door canvas

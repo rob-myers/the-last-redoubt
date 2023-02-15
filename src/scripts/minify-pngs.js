@@ -39,6 +39,11 @@ if (!srcDir || !fs.existsSync(srcDir) || (extra && (extra !== 'webp'))) {
 // `);
 //#endregion
 
+// Create webp files first
+if (extra === 'webp') {
+  childProcess.execSync('yarn pngs-to-webp')
+}
+
 //#region pngquant
 if (childProcess.execSync(`pngquant --help | grep pngquant  >/dev/null && echo $?`).toString().trim() !== '0') {
   error("error: please install pngquant e.g. `brew install pngquant`");
@@ -57,6 +62,3 @@ for (const fileName of fs.readdirSync(srcDir).filter(x => x.endsWith('-fs8.png')
 }
 //#endregion
 
-if (extra === 'webp') {
-  childProcess.execSync('yarn pngs-to-webp')
-}

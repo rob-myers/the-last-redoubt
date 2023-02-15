@@ -75,7 +75,7 @@ declare namespace NPC {
      * adjust the latter sprite cycle duration
      * to end on a nice frame (avoids flicker).
      */
-    getSpriteDuration(nextMotionMs: number): number;
+    getWalkSpriteDuration(nextMotionMs: number): number;
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;
@@ -175,6 +175,7 @@ declare namespace NPC {
 
   type SpriteSheetKey = (
     | 'idle'
+    | 'idle-breathe'
     | 'sit'
     | 'walk'
   );
@@ -374,7 +375,7 @@ declare namespace NPC {
     keyframeToMeta: {
       [keyframe: string]: {
         tags?: string[];
-        'animation-direction'?: string;
+        'animation-direction'?: PlaybackDirection;
       }
     }    
   }

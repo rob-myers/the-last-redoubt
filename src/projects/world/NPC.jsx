@@ -37,7 +37,6 @@ export default function NPC({ api, def, disabled }) {
       ref={npc.npcRef.bind(npc)}
       className={cx(
         cssName.npc,
-        supportsWebp ? 'webp' : undefined,
         rootCss,
         npc.anim.css,
         npc.anim.spriteSheet,
@@ -45,7 +44,13 @@ export default function NPC({ api, def, disabled }) {
       data-npc-key={npc.key}
     >
       <div
-        className={cx(cssName.npcBody, npc.key, 'no-select')}
+        className={cx(
+          cssName.npcBody,
+          npc.key,
+          'no-select',
+          // ℹ️ saw webp break background-position animation
+          supportsWebp ? 'webp' : undefined,
+        )}
         data-npc-key={npc.key}
       />
       <div className="interact-circle" />

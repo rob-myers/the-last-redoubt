@@ -55,6 +55,11 @@ brew install optipng
 
 ## Gotchas
 
+- Saw CSS animation of `background-position` fail for a webp file
+  - possibly due to initial processing with `pngquant`
+  - possibly due to asm operations (we now `-noasm`)
+  - can try removing `webp` CSS class from `.npc .body`
+
 - `yarn` fails for node-canvas on Apple M1
   ```sh
   brew install pkg-config cairo pango libpng jpeg giflib librsvg pixman

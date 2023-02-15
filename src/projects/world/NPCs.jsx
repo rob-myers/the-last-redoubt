@@ -528,8 +528,9 @@ export default function NPCs(props) {
           const npc = state.npc[npcKey];
           const npcPosition = npc.getPosition();
           
+          // 🚧 assume only one moving spritesheet i.e. `walk`
           if (// npc not moving
-            (npc.anim.spriteSheet === 'idle' || npc.anim.spriteSheet === 'sit')
+            (npc.anim.spriteSheet !== 'walk')
             // camera not animating
             && (panZoom.anims[0] === null || ['finished', 'idle'].includes(panZoom.anims[0].playState))
             // camera not close

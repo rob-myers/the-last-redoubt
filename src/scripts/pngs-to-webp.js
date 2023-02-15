@@ -30,7 +30,7 @@ info(`applying parallel \`cwebp\` to directory ${srcDir}`);
 // cwebp first-human-npc--walk.png -o first-human-npc--walk.webp
 childProcess.execSync(`
   time find ${path.join(`'${srcDir}'`, '*.png')} -print0 |
-    xargs -0 -I{} -n 1 -P 3 cwebp "{}" -o "{}".webp
+    xargs -0 -I{} -n 1 -P 3 cwebp -noasm "{}" -o "{}".webp
 `);
 
 // .png.webp -> .webp

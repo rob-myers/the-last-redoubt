@@ -24,15 +24,19 @@ export function computeSpritesheetCss(parsed, offsetRadians, scale) {
 }
 
 ${Object.keys(parsed.animLookup).map((animName) => `
-  &.${animName} .body {
+  &.${animName} .body:not(.webp) {
     width: ${parsed.aabb.width}px;
     height: ${parsed.aabb.height}px;
     left: ${-parsed.aabb.width * 0.5}px;
     top: ${-parsed.aabb.height * 0.5}px;
-    background: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
+    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
   }
-  &.${animName}.webp .body {
-    background: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
+  &.${animName} .body.webp {
+    width: ${parsed.aabb.width}px;
+    height: ${parsed.aabb.height}px;
+    left: ${-parsed.aabb.width * 0.5}px;
+    top: ${-parsed.aabb.height * 0.5}px;
+    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
   }
 `).join('\n\n')}
 `.trim();
