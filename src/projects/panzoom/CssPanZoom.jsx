@@ -125,7 +125,7 @@ export default function CssPanZoom(props) {
             key: 'pointerup',
             point: worldPointerUp,
             distance: state.worldPointerDown.distanceTo(worldPointerUp),
-            tags: (/** @type {HTMLElement} */ (e.target).getAttribute('data-tags') || '').split(' '),
+            tags: (/** @type {HTMLElement} */ (e.target).dataset.tags || '').split(' '),
             extra: Object.assign({}, ...state.pointerUpExtras),
           });
 

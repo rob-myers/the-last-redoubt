@@ -109,21 +109,18 @@ export default function useHandleEvents(api) {
     }
 
     // Update doors and lights on change
-    // 🚧 perhaps doors.update() fov.update()
     const doorsSub = api.doors.events.subscribe((e) => {
       switch (e.key) {
         case 'closed-door': {
           const { gmId, doorId } = e;
           api.geomorphs.onCloseDoor(gmId, doorId);
           api.fov.updateClipPath();
-          // api.updateAll();
           break;
         }
         case 'opened-door': {
           const { gmId, doorId } = e;
           api.geomorphs.onOpenDoor(gmId, doorId);
           api.fov.updateClipPath();
-          // api.updateAll();
           break;
         }
       }
@@ -132,6 +129,7 @@ export default function useHandleEvents(api) {
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
       switch (e.key) {
+        case 'click-npc':
         case 'decors-added':
         case 'decors-removed':
           break;
@@ -215,6 +213,13 @@ export default function useHandleEvents(api) {
           break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });
+      }
+    });
+
+    // React to CssPanZoom events
+    const panZoomSub = api.panZoom.events.subscribe((e) => {
+      if (e.key === 'pointerup' && e.tags[0] === 'npc') {
+        api.npcs.events.next({ key: 'click-npc', npcKey: e.tags[1], position: e.point })
       }
     });
 

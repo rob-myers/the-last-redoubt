@@ -317,6 +317,7 @@ declare namespace NPC {
   export type NpcActionKey = NpcAction['action'];
 
   export type NPCsEvent = (
+    | { key: 'click-npc'; npcKey: string; position: Geom.VectJson; }
     | { key: 'decors-added'; decors: DecorDef[]; }
     | { key: 'decor-click'; decor: DecorDef; }
     | { key: 'decors-removed'; decors: DecorDef[]; }

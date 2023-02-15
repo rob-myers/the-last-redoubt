@@ -54,7 +54,10 @@ export default function NPC({ api, def, disabled }) {
         data-npc-key={npc.key}
       />
       <div className="interact-circle" />
-      <div className="bounds-circle" />
+      <div
+        className="bounds-circle"
+        data-tags={['npc', npc.key].join(' ')}
+      />
     </div>
   );
 }
@@ -96,6 +99,7 @@ const rootCss = css`
   }
 
   .bounds-circle {
+    pointer-events: all;
     display: var(${cssName.npcsDebugDisplay});
     position: absolute;
     width: calc(2 * var(${cssName.npcBoundsRadius}));
