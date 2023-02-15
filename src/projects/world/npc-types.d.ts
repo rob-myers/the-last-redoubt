@@ -322,6 +322,7 @@ declare namespace NPC {
     | { key: 'disabled' }
     | { key: 'enabled' }
     | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
+    | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; }
     | { key: 'started-walking'; npcKey: string; }

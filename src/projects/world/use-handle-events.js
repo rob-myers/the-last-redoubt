@@ -136,7 +136,7 @@ export default function useHandleEvents(api) {
         case 'decors-removed':
           break;
         case 'decor-click':
-          handleDecorClick(e.decor, api);
+          demoHandleDecorClick(e, api);
           break;
         case 'disabled':
         case 'enabled':
@@ -144,6 +144,9 @@ export default function useHandleEvents(api) {
         case 'fov-changed':
           // console.log(e);
           api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
+          break;
+        case 'on-tty-link':
+          demoOnTtyLink(e, api);
           break;
         case 'set-player':
           api.npcs.playerKey = e.npcKey || null;
@@ -237,10 +240,11 @@ export default function useHandleEvents(api) {
 
 /**
  * ℹ️ Demo: should probably be replaced by shell function(s)
- * @param  {NPC.DecorDef} decor
+ * @param  {NPC.NPCsEvent & { key: 'decor-click' }} event
  * @param  {import('./World').State} api
  */
-function handleDecorClick(decor, api) {
+function demoHandleDecorClick(event, api) {
+  const decor = event.decor;
   if (decor.type === 'point') {
     if (decor.tags?.includes('label')) {
       /** Assume `[...tags, label, ...labelWords]` */
@@ -248,8 +252,9 @@ function handleDecorClick(decor, api) {
       const { decorId: _, gmId, roomId } = decodeUiPointDecorKey(decor.key);
       const gm = api.gmGraph.gms[gmId];
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
+      // Square brackets induces a link via `linkProviderDef`
       const line = `ℹ️  [${ansiColor.Blue}${label}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-      api.npcs.writeToTtys(line, [{
+      api.npcs.writeToTtys(line, [{// Manually record where the link was
         lineText: line, 
         linkText: label,
         linkStartIndex: visibleUnicodeLength('ℹ️  ['),
@@ -261,4 +266,17 @@ function handleDecorClick(decor, api) {
     }
   }
 
+}
+
+/**
+ * @param {NPC.NPCsEvent & { key: 'on-tty-link' }} event
+ * @param  {import('./World').State} api
+ */
+function demoOnTtyLink(event, api) {
+  const ttyCtxt = event.ttyCtxt;
+  if (ttyCtxt.key === 'room') {
+    const gm = api.gmGraph.gms[ttyCtxt.gmId];
+    const point = gm.matrix.transformPoint(gm.point[ttyCtxt.roomId].default.clone());
+    api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
+  }
 }

@@ -112,8 +112,9 @@ export default function NPCs(props) {
 
     addTtyLineCtxts(sessionKey, lineText, ctxts) {
       // We strip ANSI colour codes for string comparison
-      state.session[sessionKey].tty[stripAnsi(lineText)] = ctxts.map(x =>
-        ({ ...x, lineText: stripAnsi(lineText), linkText: stripAnsi(x.linkText) })
+      const strippedLine = stripAnsi(lineText);
+      state.session[sessionKey].tty[strippedLine] = ctxts.map(x =>
+        ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
       );
     },
     // 🚧 This should only run sporadically
@@ -365,17 +366,8 @@ export default function NPCs(props) {
         x.linkStartIndex === linkStartIndex
         && x.linkText === linkText
       );
-      if (!found) {
-        return;
-      }
-      console.info('onTtyLink found', found); // 🚧
-      switch (found.key) {
-        case 'room':
-          const gm = api.gmGraph.gms[found.gmId];
-          const point = gm.matrix.transformPoint(gm.point[found.roomId].default.clone());
-          state.panZoomTo({ zoom: 2, ms: 2000, point });
-          break;
-        // 🚧 ...
+      if (found) {
+        state.events.next({ key: 'on-tty-link', linkText, linkStartIndex, ttyCtxt: found });
       }
     },
     async panZoomTo(e) {
