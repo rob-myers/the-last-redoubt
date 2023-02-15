@@ -948,3 +948,18 @@ export function filterSingles(singles, ...tagOrTags) {
 		}
 	}
 }
+
+//#region decor
+
+/** @type {(gmId: number, roomId: number, decorId: number) => string} */
+export function getUiPointDecorKey(gmId, roomId, decorId) {
+  return `local-${decorId}-g${gmId}r${roomId}`
+}
+
+/** @param {string} decorKey */
+export function decodeUiPointDecorKey(decorKey) {
+  const [, decorId, gmId, roomId] = /** @type {string[]} */ (decorKey.match(/^local-(\d+)-g(\d+)r(\d+)$/));
+  return { decorId: Number(decorId), gmId: Number(gmId), roomId: Number(roomId) };
+}
+
+//#endregion

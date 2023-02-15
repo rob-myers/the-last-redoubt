@@ -1,6 +1,8 @@
 import React from "react";
-import { testNever } from "../service/generic";
+import { testNever, visibleUnicodeLength } from "../service/generic";
+import { decodeUiPointDecorKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
+import { ansiColor } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -133,6 +135,9 @@ export default function useHandleEvents(api) {
         case 'decor':
           api.npcs.setDecor(e.meta);
           break;
+        case 'decor-click':
+          handleDecorClick(e.decor, api);
+          break;
         case 'disabled':
         case 'enabled':
           break;
@@ -228,3 +233,32 @@ export default function useHandleEvents(api) {
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */
+
+
+/**
+ * ℹ️ Demo: should probably be replaced by shell function(s)
+ * @param  {NPC.DecorDef} decor
+ * @param  {import('./World').State} api
+ */
+function handleDecorClick(decor, api) {
+  if (decor.type === 'point') {
+    if (decor.tags?.includes('label')) {
+      /** Assume `[...tags, label, ...labelWords]` */
+      const label = decor.tags.slice(decor.tags.findIndex(tag => tag === 'label') + 1).join(' ');
+      const { decorId: _, gmId, roomId } = decodeUiPointDecorKey(decor.key);
+      const gm = api.gmGraph.gms[gmId];
+      const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
+      const line = `ℹ️  [${ansiColor.Blue}${label}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
+      api.npcs.writeToTtys(line, [{
+        lineText: line, 
+        linkText: label,
+        linkStartIndex: visibleUnicodeLength('ℹ️  ['),
+        key: 'room', gmId, roomId,
+      }]
+    );
+    } else {
+      api.npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`);
+    }
+  }
+
+}

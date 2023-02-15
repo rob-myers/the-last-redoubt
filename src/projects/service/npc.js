@@ -238,7 +238,7 @@ export function verifyDecor(input) {
     case 'path':
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':
-      return Vect.isVectJson(input) && ['function', 'undefined'].includes(typeof input.onClick);
+      return Vect.isVectJson(input);
     case 'rect':
       return [input.x, input.y, input.width, input.height].every(x => Number.isFinite(x));
     default:

@@ -94,6 +94,14 @@ export default function Decor({ decor, api }) {
     <div
       className="decor-root"
       ref={el => el && (api.npcs.decorEl = el)}
+      style={{ pointerEvents: 'none' }}
+      onClick={e => {
+        const el = e.target;
+        if (el instanceof HTMLDivElement && el.dataset.key) {
+          const item = decor[el.dataset.key];
+          api.npcs.events.next({ key: 'decor-click', decor: item });
+        }
+      }}
     >
       {Object.entries(decor).map(([key, item]) => {
         switch (item.type) {
@@ -122,10 +130,8 @@ export default function Decor({ decor, api }) {
                 data-key={item.key}
                 data-tags={item.tags?.join(' ')}
                 className={cx(cssName.decorPoint, cssPoint)}
-                onClick={item.onClick ? () => item.onClick?.(item, api) : undefined}
                 style={{
                   transform: pointToCssTransform(item),
-                  cursor: item.onClick ? 'pointer' : 'initial',
                 }}
               />
             );
@@ -157,6 +163,9 @@ const cssCircle = css`
   transform-origin: center;
   border-radius: 50%;
   background-color: #ff444488;
+  // 🚧 optional somehow?
+  /* pointer-events: all;
+  cursor: pointer; */
 `;
 
 const cssPoint = css`
@@ -168,6 +177,8 @@ const cssPoint = css`
   transform-origin: center;
   border-radius: 50%;
   background-color: #00000099;
+  pointer-events: all;
+  cursor: pointer;
 `;
 
 const cssRect = css`
@@ -176,6 +187,8 @@ const cssRect = css`
   height: 1px;
   transform-origin: left top;
   background-color: #7700ff22;
+  /* pointer-events: all;
+  cursor: pointer; */
 `;
 
 /**

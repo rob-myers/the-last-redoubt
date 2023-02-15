@@ -16,10 +16,19 @@
   - ✅ can avoid `<NPC>` render via React.memo
   - ❌ can avoid `<Decor>` render via React.memo
   - ✅ `npc events`
-  - ✅ idle-breathe specifies tag `idle` and animation-direction `alternate` 
+  - ✅ event on click ui point
+  - ✅ remove decor custom onClick
+  - 🚧 event on add/remove decor
+  - 🚧 event on click TTY link
+  - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
   - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
+
+- move `<Decor>` to top level?
+- BUG: chrome: cursor over e.g. decor circle
+  - works in firefox
+  - try width=height=scale instead of `... scale(x)`
 
 - ✅ dynamic lighting
   - ✅ consider removing unseen door canvas

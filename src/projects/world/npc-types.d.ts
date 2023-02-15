@@ -281,7 +281,6 @@ declare namespace NPC {
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
     tags?: string[];
-    onClick?(point: DecorPoint, api: import('../world/World').State): void;
   }
 
   export interface DecorPath extends BaseDecor {
@@ -318,6 +317,7 @@ declare namespace NPC {
 
   export type NPCsEvent = (
     | { key: 'decor'; meta: DecorDef; }
+    | { key: 'decor-click'; decor: DecorDef; }
     | { key: 'disabled' }
     | { key: 'enabled' }
     | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
