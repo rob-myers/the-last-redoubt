@@ -132,8 +132,8 @@ export default function useHandleEvents(api) {
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
       switch (e.key) {
-        case 'decor':
-          api.npcs.setDecor(e.meta);
+        case 'decors-added':
+        case 'decors-removed':
           break;
         case 'decor-click':
           handleDecorClick(e.decor, api);

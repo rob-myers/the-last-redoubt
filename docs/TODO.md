@@ -18,7 +18,7 @@
   - ✅ `npc events`
   - ✅ event on click ui point
   - ✅ remove decor custom onClick
-  - 🚧 event on add/remove decor
+  - ✅ event on add/remove decors
   - 🚧 event on click TTY link
   - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
   - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`

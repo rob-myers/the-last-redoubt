@@ -340,16 +340,14 @@ export default function NPCs(props) {
         case 'remove-decor':
         case 'rm-decor':
           if (e.decorKey) {
-            e.decorKey.split(' ').forEach(decorKey => delete state.decor[decorKey]);
+            state.removeDecor(...e.decorKey.split(' '));
           }
           if (e.items) {
-            e.items.forEach(decorKey => delete state.decor[decorKey]);
+            state.removeDecor(...e.items);
           }
           if (e.regexStr) {
             const keyRegex = new RegExp(e.regexStr);
-            Object.keys(state.decor).forEach(decorKey =>
-              keyRegex.test(decorKey) && delete state.decor[decorKey]
-            ); 
+            state.removeDecor(...Object.keys(state.decor).filter(decorKey => keyRegex.test(decorKey)));
           }
           update();
           break;
@@ -411,6 +409,11 @@ export default function NPCs(props) {
         el.style.setProperty(cssName.npcsDebugDisplay, 'none');
       }
     },
+    removeDecor(...decorKeys) {
+      const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
+      decors.forEach(decor => delete state.decor[decor.key]);
+      state.events.next({ key: 'decors-removed', decors });
+    },
     service: npcService,
     setDecor(...decor) {
       for (const d of decor) {
@@ -425,6 +428,7 @@ export default function NPCs(props) {
           delete d.origPath;
         }
       }
+      state.events.next({ key: 'decors-added', decors: decor });
       update();
     },
     setRoomByNpc(npcKey) {
@@ -479,8 +483,7 @@ export default function NPCs(props) {
       await promise;
 
     },
-    updateLocalDecor(opts) {// 🚧 generic approach?
-
+    updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
         const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
         const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
@@ -682,6 +685,7 @@ const rootCss = css`
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
+ * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number }) => Promise<void>} spawn
