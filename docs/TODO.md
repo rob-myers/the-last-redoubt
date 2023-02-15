@@ -24,6 +24,7 @@
   - ✅ remove decor custom onClick
   - ✅ event on add/remove decors
   - ✅ event on click TTY link
+  - ✅ event npc-clicked
   - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
   - ✅ can play npc anim via js
     ```js
@@ -31,7 +32,9 @@
     npc.startAnimation()
     ```
   - ✅ idle-breathe uses animation-direction
-  - `npc events | filter ... | run '() { ... }' ` spawns and plays `idle-breathe`
+  - on click stand point, spawn and change to idle-breathe
+    > `npc events | filter ... | run '() { ... }' `
+  - on click npc at stand point, spawn close on navmesh
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
 

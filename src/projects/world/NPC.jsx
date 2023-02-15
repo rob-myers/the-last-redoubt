@@ -15,7 +15,8 @@ export default function NPC({ api, def, disabled }) {
       const spawned = lookup[def.key];
       spawned.epochMs = Date.now();
       spawned.def = def;
-      // 🚧 on HMR could update using use-state-ref approach
+      // 🚧 use-state-ref provides exported function
+      // 🚧 on HMR update using use-state-ref approach
       return spawned;
     } else {
       return lookup[def.key] = createNpc(def, { disabled, api });

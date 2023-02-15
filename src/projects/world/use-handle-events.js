@@ -129,7 +129,7 @@ export default function useHandleEvents(api) {
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
       switch (e.key) {
-        case 'click-npc':
+        case 'npc-clicked':
         case 'decors-added':
         case 'decors-removed':
           break;
@@ -219,7 +219,8 @@ export default function useHandleEvents(api) {
     // React to CssPanZoom events
     const panZoomSub = api.panZoom.events.subscribe((e) => {
       if (e.key === 'pointerup' && e.tags[0] === 'npc') {
-        api.npcs.events.next({ key: 'click-npc', npcKey: e.tags[1], position: e.point })
+        const npcKey = e.tags[1];
+        api.npcs.events.next({ key: 'npc-clicked', npcKey, position: e.point, isPlayer: api.npcs.playerKey === npcKey })
       }
     });
 
@@ -229,6 +230,7 @@ export default function useHandleEvents(api) {
     return () => {
       doorsSub.unsubscribe();
       npcsSub.unsubscribe();
+      panZoomSub.unsubscribe();
     };
 
   }, [api.gmGraph.gms, api.doors.ready, api.npcs.ready]);
