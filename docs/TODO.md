@@ -2,7 +2,8 @@
 
 ## In progress
 
-- 🚧 BUG: chrome: cursor over e.g. decor circle
+- move `<Decor>` to top level
+- BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
 
@@ -10,7 +11,7 @@
   - ✅ npc debug circles became invisible 
   - ✅ roomIds from DebugWorld become invis 
 
-- 🚧 show `idle-breathe` somehow
+- ✅ show `idle-breathe` somehow
   - ✅ can spawn whilst walking remembering angle
   - ✅ avoid reinvoking create-npc per spawn
   - ✅ consider create-npc HMR
@@ -35,14 +36,29 @@
     - `npc get andros | map 'x => x.startAnimation("idle-breathe")'`
   - ✅ idle-breathe uses animation-direction
   - ❌ idle-breathe animation more accentuated
-  - 🚧 on click stand point, spawn and change to idle-breathe
-    > `npc events | filter ... | run '() { ... }' `
-  - 🚧 when off navmesh, spawn on close click navmesh
+  - ✅ on click stand point, spawn and change to idle-breathe
+    ```sh
+    npc events |
+      filter 'e => e.key === "decor-click" && e.decor.tags?.includes("stand")' |
+      filter '(e, { api, home }) => {
+        const { npcs } = api.getCached(home.WORLD_KEY);
+        const distance = npcs.getPlayer()?.getPosition().distanceTo(e.decor);
+        return distance <= npcs.getNpcInteractRadius();
+      }' |
+      run '({ api, datum, home }) {
+        const { npcs } = api.getCached(home.WORLD_KEY);
+        const player = npcs.getPlayer(); 
+        while ((datum = await api.read()) !== null) {
+          await npcs.spawn({ npcKey: player.key, point: datum.decor });
+          player.startAnimation("idle-breathe")
+        }
+      }'
+    ```
+  - ✅ when off navmesh, can get back on
 
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
 
-- move `<Decor>` to top level?
 - ✅ `<NPC>` supports HMR i.e. manually within useStateRef
 
 - ✅ dynamic lighting

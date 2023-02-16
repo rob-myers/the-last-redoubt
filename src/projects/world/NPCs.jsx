@@ -443,7 +443,7 @@ export default function NPCs(props) {
         throw Error(`invalid npc key: ${JSON.stringify(e.npcKey)}`);
       } else if (!(e.point && typeof e.point.x === 'number' && typeof e.point.y === 'number')) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
-      } else if (!state.isPointLegal(e.point)) {
+      } else if (e.requireNav && !state.isPointLegal(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
@@ -686,7 +686,7 @@ const rootCss = css`
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
- * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number }) => Promise<void>} spawn
+ * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
