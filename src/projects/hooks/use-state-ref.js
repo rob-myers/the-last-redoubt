@@ -1,42 +1,48 @@
+
 import React from 'react';
 import { equals, isPlainObject } from '../service/generic';
 
 /**
- * This hook is a mixture between React.useState and React.useRef.
- * - It outputs an object `state` which is always the same object, but may be mutated.
- * - Its `initializer` is typically properties and an API for mutating it.
+ * This hook is a mixture between @see {React.useState} and @see {React.useRef}.
+ * - It outputs an object @see {State} which is always the same object, and is designed to be mutated.
+ * - Its @see {initializer} returns an object. Typically some of its entries define an API for mutating it.
  * - On HMR it will update these properties "suitably", relative to options.
+ * - If the initializer doesn't construct a fresh object, try using
+ *   @see {Options.updateFrom}.
  * 
  * @template {object} State 
  * @param {() => State} initializer Should be side-effect free...
- * @param {{ overwrite?: import('../service/generic').KeyedTrue<State>; deps?: any[]; deeper?: (keyof State)[] }} [opts]
+ * @param {Options<State>} [opts]
  */
 export default function useStateRef(
   initializer,
   opts = {},
 ) {
-    const [state] = /**
-      @type {[State & { _prevFn?: string; _prevInit?: State; }, any]}
-    */ (
+    const [state] = /** @type {[State & { _prevFn?: string; _prevInit?: State; }, any]} */ (
       React.useState(initializer)
     );
 
     React.useMemo(() => {
       const changed = initializer.toString() !== state._prevFn;
 
-      if (!state._prevFn) {// Initial mount
-        // TODO 🚧 avoid in production
+      if (!state._prevFn) {
+        /**
+         * Initial mount
+         */
+        // 🚧 avoid this invocation in production
         state._prevFn = initializer.toString();
         // state._prevInit = initializer();
         state._prevInit = { ...state };
-      } else if (changed) {// HMR and `initializer` has changed
+      } else {
         /**
+         * HMR or `opts.deps` has changed.
+         * 
          * Attempt to update state using new initializer:
          * - update all functions
          * - add new properties
          * - remove stale keys
          */
-        const newInit = initializer();
+        const newInit = opts.updateFrom ?  opts.updateFrom() : initializer();
 
         for (const [k, v] of Object.entries(newInit)) {
           // console.log({ key: k })
@@ -94,24 +100,9 @@ export default function useStateRef(
           }
         }
 
-        state._prevFn = initializer.toString();
-        state._prevInit = newInit;
-      } else {// HMR and `initializer` has not changed
-        // e.g. HMR triggered from elsewhere
-        // e.g. `opts.deps` have changed
-        const newInit = initializer();
-        for (const [k, v] of Object.entries(newInit)) {
-          if (typeof v === 'function') {
-            (state)[/** @type {keyof State} */ (k)] = v;
-          } else if (// Also update setters and getters
-            Object.getOwnPropertyDescriptor(state, k)?.get
-            || Object.getOwnPropertyDescriptor(state, k)?.set
-          ) {
-            Object.defineProperty(state, k, {
-              get: Object.getOwnPropertyDescriptor(newInit, k)?.get,
-              set: Object.getOwnPropertyDescriptor(newInit, k)?.set,
-            });
-          }
+        if (changed) {
+          state._prevFn = initializer.toString();
+          state._prevInit = newInit;
         }
       }
     }, opts.deps || []);
@@ -120,3 +111,12 @@ export default function useStateRef(
 }
 
 module.hot?.decline();
+
+/**
+ * @template State
+ * @typedef Options
+ * @property {import('../service/generic').KeyedTrue<State>} [overwrite]
+ * @property {any[]} [deps]
+ * @property {(keyof State)[]} [deeper]
+ * @property {(current?: State) => State} [updateFrom]
+ */
