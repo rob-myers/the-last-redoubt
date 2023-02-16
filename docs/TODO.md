@@ -26,20 +26,20 @@
   - ✅ event on click TTY link
   - ✅ event npc-clicked
   - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
-  - ✅ can play npc anim via js
-    ```js
-    npc.setSpritesheet('idle-breathe')
-    npc.startAnimation()
-    ```
+  - ✅ can play npc anim
+    - `npc.startAnimation('idle-breathe')`
+    - `npc get andros | map 'x => x.startAnimation("idle-breathe")'`
   - ✅ idle-breathe uses animation-direction
-  - on click stand point, spawn and change to idle-breathe
+  - ❌ idle-breathe animation more accentuated
+  - 🚧 on click stand point, spawn and change to idle-breathe
     > `npc events | filter ... | run '() { ... }' `
-  - on click npc at stand point, spawn close on navmesh
+  - 🚧 when off navmesh, spawn on close click navmesh
+
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
 
 - move `<Decor>` to top level?
-- `<NPC>` supports HMR i.e. manually within useStateRef
+- ✅ `<NPC>` supports HMR i.e. manually within useStateRef
 
 - ✅ dynamic lighting
   - ✅ consider removing unseen door canvas

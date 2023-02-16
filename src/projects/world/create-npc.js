@@ -103,8 +103,7 @@ export default function createNpc(
         }));
       }
 
-      this.setSpritesheet('walk');
-      this.startAnimation();
+      this.startAnimation('walk');
       api.npcs.events.next({ key: 'started-walking', npcKey: this.def.key });
       console.log(`followNavPath: ${this.def.key} started walk`);
       this.nextWayTimeout();
@@ -123,9 +122,8 @@ export default function createNpc(
           });
         }));
       } finally {
-        this.setSpritesheet('idle');
         this.commitWalkStyles();
-        this.startAnimation();
+        this.startAnimation('idle');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
 
@@ -360,14 +358,12 @@ export default function createNpc(
     setLookRadians(radians) {
       this.el.root.style.setProperty(cssName.npcLookRadians, `${radians}rad`);
     },
-    setSpritesheet(spriteSheet) {
+    startAnimation(spriteSheet) {// Called after setSpriteSheet
       if (spriteSheet !== this.anim.spriteSheet) {
         this.el.root.classList.remove(this.anim.spriteSheet);
         this.el.root.classList.add(spriteSheet);
         this.anim.spriteSheet = spriteSheet;
       }
-    },
-    startAnimation() {// Called after setSpriteSheet
       if (this.everAnimated()) {
         this.anim.translate.cancel();
         this.syncLookAngle();
