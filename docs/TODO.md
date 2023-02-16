@@ -6,6 +6,10 @@
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
 
+- ✅ HMR npc config css var reset issues
+  - ✅ npc debug circles became invisible 
+  - ✅ roomIds from DebugWorld become invis 
+
 - 🚧 show `idle-breathe` somehow
   - ✅ can spawn whilst walking remembering angle
   - ✅ avoid reinvoking create-npc per spawn
@@ -175,8 +179,6 @@
 - BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
   - in dev on-change file e.g. edit symbol
   - try upgrade gatsby
-- HMR npc config reset issues
-  > roomIds from DebugWorld become invis 
 
 - 🚧 Collision prediction: _moving circle_ vs _static angled rect_
   - mdx description of simplified algorithm

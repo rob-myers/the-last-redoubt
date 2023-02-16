@@ -48,7 +48,7 @@ export default function DebugWorld(props) {
       rootRef(el) {
         if (el) {
           state.rootEl = el;
-          [
+          !props.api.debug.ready && [
             cssName.debugDoorArrowPtrEvts,
             cssName.debugGeomorphOutlineDisplay,
             cssName.debugHighlightWindows,
@@ -56,7 +56,7 @@ export default function DebugWorld(props) {
             cssName.debugRoomOutlineDisplay,
             cssName.debugShowIds,
             cssName.debugShowLabels,
-          ].forEach(cssVarName => // 🚧 avoid reset on HMR
+          ].forEach(cssVarName =>
             el.style.setProperty(cssVarName, 'none')
           );
         }

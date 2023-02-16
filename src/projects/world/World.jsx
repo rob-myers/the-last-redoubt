@@ -67,7 +67,6 @@ export default function World(props) {
       state.npcs.events.next({ key: 'world-ready' });
     }
   }, [props.disabled, ready]);
-  // }, [props.disabled, state.npcs.ready]);
 
   React.useEffect(() => {
     setCached(props.worldKey, state);

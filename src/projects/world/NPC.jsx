@@ -7,28 +7,17 @@ import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
 
 /** @param {Props} props  */
-export default function NPC({ api, def, disabled }) {
+export default function NPC({ api, npcKey, disabled }) {
 
-  const npc = useStateRef(() => {
-    const lookup = api.npcs.npc;
-    if (lookup[def.key]) {
-      const spawned = lookup[def.key];
-      spawned.epochMs = Date.now();
-      spawned.def = def;
-      return spawned;
-    } else {
-      return lookup[def.key] = createNpc(def, { disabled, api });
-    }
-  }, {
-    deps: [def],
-    updateFrom: () => createNpc(def, { disabled, api }),
+  const npc = useStateRef(() => api.npcs.npc[npcKey], {
+    deps: [npcKey],
+    updateFrom: (current) => createNpc(current.def, { disabled, api }),
   });
-  
   
   React.useLayoutEffect(() => {// useLayoutEffect for initial css
     if (npc.unspawned) {
       npc.initialize();
-      api.npcs.events.next({ key: 'spawned-npc', npcKey: def.key });
+      api.npcs.events.next({ key: 'spawned-npc', npcKey });
     }
   }, [npc.epochMs]);
 
@@ -65,7 +54,7 @@ export default function NPC({ api, def, disabled }) {
 /**
  * @typedef Props
  * @property {import('./World').State} api
- * @property {NPC.NPCDef} def
+ * @property {string} npcKey
  * @property {boolean} [disabled]
  */
 
@@ -111,4 +100,5 @@ const rootCss = css`
   }
 `;
 
+/** @type {React.MemoExoticComponent<(props: Props & { epochMs: number }) => JSX.Element>} */
 export const MemoizedNPC = React.memo(NPC);

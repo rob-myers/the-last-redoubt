@@ -19,6 +19,7 @@ import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
 import Decor from "./Decor";
 import npcsMeta from './npcs-meta.json';
+import createNpc from "./create-npc";
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -32,7 +33,6 @@ export default function NPCs(props) {
     decor: {},
     events: new Subject,
 
-    npcKeys: [],
     npc: {},
 
     playerKey: /** @type {null | string} */ (null),
@@ -383,7 +383,6 @@ export default function NPCs(props) {
     },
     removeNpc(npcKey) {
       delete state.npc[npcKey];
-      state.npcKeys = state.npcKeys.filter(x => x.key in state.npc);
       update();
       state.npcAct({ action: 'set-player', npcKey: undefined });
       // 🚧 inform relevant processes?
@@ -392,13 +391,15 @@ export default function NPCs(props) {
     rootRef(el) {
       if (el) {
         state.rootEl = el;
-        /**
-         * We set CSS variables here, not in css`...` below.
-         * - ts-styled-plugin error for ${cssName.foo}: ${bar};
-         * - setting style avoids `getComputedStyle`
-         */
-        el.style.setProperty(cssName.npcsInteractRadius, `${npcService.defaultNpcInteractRadius}px`);
-        el.style.setProperty(cssName.npcsDebugDisplay, 'none');
+        if (!api.npcs.ready) {
+          /**
+           * Why set CSS variables here, not in css`...` below?
+           * 1. ts-styled-plugin error for ${cssName.foo}: ${bar};
+           * 2. setting style avoids `getComputedStyle`
+           */
+          el.style.setProperty(cssName.npcsInteractRadius, `${npcService.defaultNpcInteractRadius}px`);
+          el.style.setProperty(cssName.npcsDebugDisplay, 'none');
+        }
       }
     },
     removeDecor(...decorKeys) {
@@ -446,26 +447,30 @@ export default function NPCs(props) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
-      const spawned = state.npc[e.npcKey];
-      if (spawned) {
+      if (state.npc[e.npcKey]) {
+        const spawned = state.npc[e.npcKey];
         spawned.cancel(); // Clear wayMetas
         spawned.unspawned = true; // Crucial for <NPC>
-      }
-
-      state.npcKeys = state.npcKeys
-        .filter(({ key }) => key !== e.npcKey)
-        .concat({
+        spawned.epochMs = Date.now();
+        spawned.def = {
           key: e.npcKey,
-          epochMs: Date.now(),
-          def: {
-            key: e.npcKey,
-            angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-            npcJsonKey: 'first-human-npc', // 🚧
-            position: e.point,
-            speed: npcsMeta["first-human-npc"].speed,
-          },
-        })
-      ;
+          angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
+          npcJsonKey: 'first-human-npc', // 🚧
+          position: e.point,
+          speed: npcsMeta["first-human-npc"].speed,
+        };
+        // Reorder keys
+        delete state.npc[e.npcKey];
+        state.npc[e.npcKey] = spawned;
+      } else {
+        state.npc[e.npcKey] = createNpc({
+          key: e.npcKey,
+          angle: e.angle ?? 0,
+          npcJsonKey: 'first-human-npc', // 🚧
+          position: e.point,
+          speed: npcsMeta["first-human-npc"].speed,
+        }, { api });
+      }
 
       // Await event triggered by <NPC> render
       const promise = firstValueFrom(state.events.pipe(
@@ -602,12 +607,13 @@ export default function NPCs(props) {
         api={api}
       />
 
-      {Object.values(state.npcKeys).map(({ key, epochMs, def }) => (
+      {Object.values(state.npc).map(({ key, epochMs }) => (
         <MemoizedNPC
           key={key}
           api={props.api}
-          def={def}
           disabled={props.disabled}
+          epochMs={epochMs} // To override memoization
+          npcKey={key}
         />
       ))}
 
@@ -650,7 +656,6 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
- * @property {{ key: string; epochMs: number; def: NPC.NPCDef }[]} npcKeys
  * These items cause `<NPC>`s to mount
  * @property {Record<string, NPC.NPC>} npc
  * These items are created as a result of an `<NPC>` mounting

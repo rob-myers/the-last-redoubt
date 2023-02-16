@@ -295,7 +295,6 @@ export default function createNpc(
       if (rootEl) {
         this.el.root = rootEl;
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.children[0]);
-
       }
     },
     pause() {
