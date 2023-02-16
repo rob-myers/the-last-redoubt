@@ -36,6 +36,10 @@ export default function useStateRef(
       } else {
         /**
          * HMR or `opts.deps` has changed.
+         * If HMR and `initializer` changed, we may need to update state with new functions, and add/remove keys.
+         * If HMR and `initializer` has not changed, the original constructor of the state may have changed elsewhere in codebase.
+         * In the case where `initializer` returns a constant value (e.g. spawn npc and look it up subsequently), one can use
+         * @see {Options.updateFrom}.
          * 
          * Attempt to update state using new initializer:
          * - update all functions
