@@ -102,8 +102,17 @@ export default function Terminal(props: Props) {
           ttyXterm.initialise();
           session.ttyShell.initialise(ttyXterm);
           state.xtermReady = true;
+          const disposable = xterm.onKey(e => {
+            if (e.domEvent.key === 'Escape') {
+              /**
+               * 🚧 trigger Tabs toggleEnabled?
+               */
+            }
+          });
 
           update();
+
+          return [() => disposable.dispose()];
         }}
         options={options}
         linkProviderDef={{

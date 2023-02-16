@@ -34,11 +34,12 @@ export default withSize({ monitorHeight: true, monitorWidth: true })(
       
       xterm.open(state.container);
       state.resize();
-      props.onMount(xterm);
+      const cleanups = props.onMount(xterm);
       // xterm.focus();
 
       return () => {
         window.removeEventListener('resize', state.resize);
+        cleanups.forEach(cleanup => cleanup());
         xterm.dispose();
       };
     }, []);
@@ -64,7 +65,8 @@ interface Props {
     callback(event: MouseEvent, text: string, extraCtxt: ExtraHandlerContext): void;
   };
   options?: ITerminalOptions;
-  onMount: (xterm: Terminal) => void;
+  /** Returns cleanups */
+  onMount: (xterm: Terminal) => (() => void)[];
   /** @see withSize */
   size: {
     width?: number;
