@@ -64,7 +64,7 @@ export const gameFunctions = [
 doLoop: `{
   npc events |
     flatMap '({ key, decor }) =>
-      key === "decor-click" && decor.tags.includes("action")
+      key === "decor-click" && decor.tags?.includes("action")
       && { point: { x: decor.x, y: decor.y }, tags: decor.tags } || []
     ' |
     npc do

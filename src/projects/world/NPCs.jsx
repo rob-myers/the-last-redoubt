@@ -241,17 +241,21 @@ export default function NPCs(props) {
      */
     getNpcGlobalNav(e) {
       const npc = state.npc[e.npcKey];
+      const position = npc?.getPosition();
       if (!npc) {
         throw Error(`npcKey "${e.npcKey}" does not exist`);
       } else if (!(Vect.isVectJson(e.point))) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (!state.isPointLegal(e.point)) {
-        throw Error(`outside navPoly: ${JSON.stringify(e.point)}`);
+        console.warn(`destination is outside navmesh: ${JSON.stringify(e.point)}`);
+        return { key: 'global-nav', fullPath: [], navMetas: [] };
+      } else if (!state.isPointLegal(position)) {
+        console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
+        return { key: 'global-nav', fullPath: [], navMetas: [] };
       }
-      const result = state.getGlobalNavPath(npc.getPosition(), e.point);
+      const result = state.getGlobalNavPath(position, e.point);
       // Always show path
-      const decorKey = `${e.npcKey}-navpath`;
-      state.setDecor({ key: decorKey, type: 'path', path: result.fullPath });
+      state.setDecor({ key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
