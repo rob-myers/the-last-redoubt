@@ -40,19 +40,19 @@
       <title>relate-connectors</title>
     </rect>
     <rect x="140" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui lie bed</title>
+      <title>ui action lie bed</title>
     </rect>
     <rect x="445" y="120" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui sit toilet</title>
+      <title>ui action sit toilet</title>
     </rect>
     <rect x="545" y="145" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui shower</title>
+      <title>ui action shower</title>
     </rect>
     <rect x="445" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui stand</title>
+      <title>ui action stand</title>
     </rect>
     <rect x="345" y="400" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui stand</title>
+      <title>ui action stand</title>
     </rect>
   </g>
 </svg>

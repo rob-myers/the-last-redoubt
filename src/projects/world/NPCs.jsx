@@ -299,6 +299,9 @@ export default function NPCs(props) {
           return 'decorKey' in e
             ? state.decor[e.decorKey]
             : state.setDecor(e);
+        case 'do':
+          // 🚧
+          return { saw: e };
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
         case 'config': // set multiple, toggle single, get all
@@ -678,7 +681,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(p: Geom.VectJson) => boolean} isPointLegal
- * @property {(e: NPC.NpcAction) => Promise<void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>>} npcAct
+ * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
@@ -698,6 +701,11 @@ const rootCss = css`
  * @typedef ToggleLocalDecorOpts
  * @property {Graph.GmRoomId[]} [added]
  * @property {Graph.GmRoomId[]} [removed]
+ */
+
+/**
+ * @typedef NpcActResult
+ * @type {void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts> | { saw: any }}
  */
 
 /**

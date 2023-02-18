@@ -8024,35 +8024,35 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[140, 300], [140, 310], [150, 310], [150, 300]]]
         }
       },
       {
-        "tags": ["ui", "sit", "toilet"],
+        "tags": ["ui", "action", "sit", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[445, 120], [445, 130], [455, 130], [455, 120]]]
         }
       },
       {
-        "tags": ["ui", "shower"],
+        "tags": ["ui", "action", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[545, 145], [545, 155], [555, 155], [555, 145]]]
         }
       },
       {
-        "tags": ["ui", "stand"],
+        "tags": ["ui", "action", "stand"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[445, 230], [445, 240], [455, 240], [455, 230]]]
         }
       },
       {
-        "tags": ["ui", "stand"],
+        "tags": ["ui", "action", "stand"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[345, 400], [345, 410], [355, 410], [355, 400]]]
@@ -8060,7 +8060,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1670863798059.7617
+    "lastModified": 1676731410647.1975
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
@@ -8342,28 +8342,28 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[150, 345], [150, 355], [160, 355], [160, 345]]]
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[205, 745], [205, 755], [215, 755], [215, 745]]]
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[480, 155], [480, 165], [490, 165], [490, 155]]]
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[480, 375], [480, 385], [490, 385], [490, 375]]]
@@ -8371,7 +8371,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1670864868350.494
+    "lastModified": 1676732841415.8967
   },
   "stateroom--035--2x3": {
     "key": "stateroom--035--2x3",
@@ -8593,7 +8593,7 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8602,7 +8602,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "shower"],
+        "tags": ["ui", "action", "stand", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8611,7 +8611,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "toilet"],
+        "tags": ["ui", "action", "stand", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8620,7 +8620,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "sink"],
+        "tags": ["ui", "action", "stand", "sink"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8629,7 +8629,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8643,7 +8643,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8667,7 +8667,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1670865852787.9788
+    "lastModified": 1676732871584.919
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",

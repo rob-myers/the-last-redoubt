@@ -42,22 +42,22 @@
       <title>ui label room bathroom</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="138.815" y="550">
-      <title>ui lie bed</title>
+      <title>ui action lie bed</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="45">
-      <title>ui stand shower</title>
+      <title>ui action stand shower</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="110">
-      <title>ui stand toilet</title>
+      <title>ui action stand toilet</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="473.815" y="70">
-      <title>ui stand sink</title>
+      <title>ui action stand sink</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="893.955">
-      <title>ui sit chair</title>
+      <title>ui action sit chair</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="1093.955">
-      <title>ui sit chair</title>
+      <title>ui action sit chair</title>
     </rect>
     <rect x="438.584" width="20" height="900" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="300">
       <title>relate-connectors</title>

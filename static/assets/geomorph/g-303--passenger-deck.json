@@ -2188,7 +2188,7 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2197,7 +2197,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "shower"],
+        "tags": ["ui", "action", "stand", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2206,7 +2206,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "toilet"],
+        "tags": ["ui", "action", "stand", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2215,7 +2215,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "sink"],
+        "tags": ["ui", "action", "stand", "sink"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2224,7 +2224,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2238,7 +2238,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2336,7 +2336,7 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2345,7 +2345,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "shower"],
+        "tags": ["ui", "action", "stand", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2354,7 +2354,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "toilet"],
+        "tags": ["ui", "action", "stand", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2363,7 +2363,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "sink"],
+        "tags": ["ui", "action", "stand", "sink"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2372,7 +2372,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2386,7 +2386,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2484,7 +2484,7 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2493,7 +2493,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "shower"],
+        "tags": ["ui", "action", "stand", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2502,7 +2502,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "toilet"],
+        "tags": ["ui", "action", "stand", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2511,7 +2511,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "sink"],
+        "tags": ["ui", "action", "stand", "sink"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2520,7 +2520,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2534,7 +2534,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2632,7 +2632,7 @@
         }
       },
       {
-        "tags": ["ui", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2641,7 +2641,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "shower"],
+        "tags": ["ui", "action", "stand", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2650,7 +2650,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "toilet"],
+        "tags": ["ui", "action", "stand", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2659,7 +2659,7 @@
         }
       },
       {
-        "tags": ["ui", "stand", "sink"],
+        "tags": ["ui", "action", "stand", "sink"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2668,7 +2668,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2682,7 +2682,7 @@
         }
       },
       {
-        "tags": ["ui", "sit", "chair"],
+        "tags": ["ui", "action", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [

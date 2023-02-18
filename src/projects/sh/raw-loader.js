@@ -49,6 +49,19 @@
       while ((datum = await api.read()) !== null)
         if (func(datum, ctxt)) yield datum
     },
+
+    /** Combine filter and map */
+    flatMap: async function* (ctxt) {
+      let { api, args, datum } = ctxt, result
+      const func = Function(`return ${args[0]}`)()
+      while ((datum = await api.read(true)) !== null) { 
+        if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).flatMap(x => func(x, ctxt)) }
+        else {
+          if (Array.isArray(result = func(datum, ctxt))) for (const item of result) yield item;
+          else yield result;
+        }
+      }
+    },
   
     /** Execute a javascript function */
     call: async function* (ctxt) {
@@ -112,7 +125,10 @@
   ];
   
   /**
-   * Definitions of game shell function based on builtin `run`.
+   * Game shell functions which invoke a single builtin i.e. `run`.
+   *
+   * In particular, `foo: async function* (...) {...}` becomes
+   * `foo() { run '(...) {...}'; }`
    *
    * @type {Record<string, (arg: RunArg) => void>[]}
    */

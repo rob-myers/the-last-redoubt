@@ -61,6 +61,15 @@ export const utilFunctions = [
 export const gameFunctions = [
 {
 
+doLoop: `{
+  npc events |
+    flatMap '({ key, decor }) =>
+      key === "decor-click" && decor.tags.includes("action")
+      && { point: { x: decor.x, y: decor.y }, tags: decor.tags } || []
+    ' |
+    npc do
+}`,
+
 goLoop: `{
   click |
     filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |

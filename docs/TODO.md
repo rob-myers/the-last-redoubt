@@ -2,10 +2,25 @@
 
 ## In progress
 
+- 🚧 reorg sit/stand code
+  - ℹ️ clarity: goto point and play animation, where goto means:
+    - `walk-to`
+    - `walk-near-then-fade`
+    - `fade-to-near-nav`
+  - 🚧 start shell function `doLoop`
+    - ✅ shell function `flatMap`
+    - ✅ sit/stand/lie ui points have tag `action`
+    - 🚧 implement `npc do`
+  - sit has angle
+  - sit has mask
+  - support lie too
+
 - move `<Decor>` to top level
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
+
+- BUG `<NPCs>` api is not updating on HMR
 
 - ✅ HMR npc config css var reset issues
   - ✅ npc debug circles became invisible 
@@ -37,24 +52,9 @@
   - ✅ idle-breathe uses animation-direction
   - ❌ idle-breathe animation more accentuated
   - ✅ on click stand point, spawn and change to idle-breathe
-    ```sh
-    npc events |
-      filter 'e => e.key === "decor-click" && e.decor.tags?.includes("stand")' |
-      filter '(e, { api, home }) => {
-        const { npcs } = api.getCached(home.WORLD_KEY);
-        const distance = npcs.getPlayer()?.getPosition().distanceTo(e.decor);
-        return distance <= npcs.getNpcInteractRadius();
-      }' |
-      run '({ api, datum, home }) {
-        const { npcs } = api.getCached(home.WORLD_KEY);
-        const player = npcs.getPlayer(); 
-        while ((datum = await api.read()) !== null) {
-          await npcs.spawn({ npcKey: player.key, point: datum.decor });
-          player.startAnimation("idle-breathe")
-        }
-      }'
-    ```
+    > see [example](/src/projects/sh/EXAMPLES.md)
   - ✅ when off navmesh, can get back on
+
 
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction

@@ -43,6 +43,28 @@ npc get andros | map 'x => x.setLookRadians(0)'
 npc look-at andros $( click 1 )
 ```
 
+```sh
+# basic implementation of stand/sit points
+npc events |
+  filter 'e => e.key === "decor-click" && (
+    e.decor.tags?.includes("stand") || e.decor.tags?.includes("sit")
+  )' |
+  filter '(e, { api, home }) => {
+    const { npcs } = api.getCached(home.WORLD_KEY);
+    const distance = npcs.getPlayer()?.getPosition().distanceTo(e.decor);
+    return distance <= npcs.getNpcInteractRadius();
+  }' |
+  run '({ api, datum, home }) {
+    const { npcs } = api.getCached(home.WORLD_KEY);
+    const player = npcs.getPlayer(); 
+    while ((datum = await api.read()) !== null) {
+      await npcs.spawn({ npcKey: player.key, point: datum.decor });
+      datum.decor.tags.includes("stand") && player.startAnimation("idle-breathe");
+      datum.decor.tags.includes("sit") && player.startAnimation("sit");
+    }
+  }'
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md
@@ -89,4 +111,8 @@ range 5 |
       yield datum;
     } }' |
   map 'x => `Hello ${x}`'
+```
+
+```sh
+seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
 ```

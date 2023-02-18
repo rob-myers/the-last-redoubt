@@ -33,16 +33,16 @@
       <title>ui label room bedroom</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="150" y="345">
-      <title>ui lie bed</title>
+      <title>ui action lie bed</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="205" y="745">
-      <title>ui sit chair</title>
+      <title>ui action sit chair</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="480" y="155">
-      <title>ui sit chair</title>
+      <title>ui action sit chair</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="480" y="375">
-      <title>ui sit chair</title>
+      <title>ui action sit chair</title>
     </rect>
   </g>
 </svg>
