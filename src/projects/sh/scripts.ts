@@ -61,15 +61,17 @@ export const utilFunctions = [
 export const gameFunctions = [
 {
 
+/** Usage: doLoop {npcKey} */
 doLoop: `{
   npc events |
     flatMap '({ key, decor }) =>
       key === "decor-click" && decor.tags?.includes("action")
-      && { point: { x: decor.x, y: decor.y }, tags: decor.tags } || []
+      && { npcKey: "'$1'", point: { x: decor.x, y: decor.y }, tags: decor.tags } || []
     ' |
     npc do
 }`,
 
+/** Usage: goLoop {npcKey} */
 goLoop: `{
   click |
     filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |
@@ -77,10 +79,12 @@ goLoop: `{
     walk $1
 }`,
 
+/** Usage: goOnce {npcKey} */
 goOnce: `{
   nav $1 $(click 1) | walk $1
 }`,
 
+/** Usage: lookLoop {npcKey} */
 lookLoop: `{
   click |
     filter 'x => !x.tags.includes("nav")' |

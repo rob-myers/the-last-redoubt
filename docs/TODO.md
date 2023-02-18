@@ -3,17 +3,21 @@
 ## In progress
 
 - 🚧 reorg sit/stand code
-  - ℹ️ clarity: goto point and play animation, where goto means:
-    - `walk-to`
-    - `walk-near-then-fade`
-    - `fade-to-near-nav`
-  - 🚧 start shell function `doLoop`
-    - ✅ shell function `flatMap`
-    - ✅ sit/stand/lie ui points have tag `action`
-    - 🚧 implement `npc do`
-  - sit has angle
-  - sit has mask
-  - support lie too
+- ℹ️ clarity: goto point and play animation, where goto means:
+  - `walk-to`
+  - `walk-near-then-fade`
+  - `fade-near-then-nav`
+- 🚧 start shell function `doLoop`
+  - ✅ shell function `flatMap`
+  - ✅ sit/stand/lie ui points have tag `action`
+  - 🚧 implement `npc do` i.e. handle { point, tags }
+    - ✅ getNpcGlobalNav empty if src or dst outside navmesh
+    - ✅ on navmesh + point navigable => walk
+    - 🚧 off navmesh + point navigable => fade near then walk
+    - ...
+- sit has angle
+- sit has mask
+- support lie too
 
 - move `<Decor>` to top level
 - BUG: chrome: cursor over e.g. decor circle

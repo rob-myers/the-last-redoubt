@@ -246,10 +246,10 @@ export default function NPCs(props) {
         throw Error(`npcKey "${e.npcKey}" does not exist`);
       } else if (!(Vect.isVectJson(e.point))) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
-      } else if (!state.isPointLegal(e.point)) {
+      } else if (!state.isPointInNavmesh(e.point)) {
         console.warn(`destination is outside navmesh: ${JSON.stringify(e.point)}`);
         return { key: 'global-nav', fullPath: [], navMetas: [] };
-      } else if (!state.isPointLegal(position)) {
+      } else if (!state.isPointInNavmesh(position)) {
         console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
         return { key: 'global-nav', fullPath: [], navMetas: [] };
       }
@@ -282,13 +282,13 @@ export default function NPCs(props) {
     },
     getPointTags(point) {
       const tags = /** @type {string[]} */ ([]);
-      if (state.isPointLegal(point)) tags.push('nav');
+      if (state.isPointInNavmesh(point)) tags.push('nav');
       /**
        * TODO e.g. table, chair, door, npc etc.
        */
       return tags;
     },
-    isPointLegal(p) {
+    isPointInNavmesh(p) {
       const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
       if (gmId === -1) return false;
       const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
@@ -303,9 +303,23 @@ export default function NPCs(props) {
           return 'decorKey' in e
             ? state.decor[e.decorKey]
             : state.setDecor(e);
-        case 'do':
-          // 🚧
+        case 'do': {
+          const npc = state.getNpc(e.npcKey);
+          const position = npc.getPosition();
+          if (state.isPointInNavmesh(position)) {
+            if (state.isPointInNavmesh(e.point)) {
+              const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
+              // 🚧 handle cancel
+              await state.walkNpc({ npcKey: e.npcKey, ...navPath });
+              // 🚧 play animation based on `e.tags`
+            } else {
+              // 🚧
+            }
+          } else {
+            // 🚧
+          }
           return { saw: e };
+        }
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
         case 'config': // set multiple, toggle single, get all
@@ -450,7 +464,7 @@ export default function NPCs(props) {
         throw Error(`invalid npc key: ${JSON.stringify(e.npcKey)}`);
       } else if (!(e.point && typeof e.point.x === 'number' && typeof e.point.y === 'number')) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
-      } else if (e.requireNav && !state.isPointLegal(e.point)) {
+      } else if (e.requireNav && !state.isPointInNavmesh(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
@@ -684,7 +698,7 @@ const rootCss = css`
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
- * @property {(p: Geom.VectJson) => boolean} isPointLegal
+ * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
