@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { Poly } from "../geom/poly";
 import { gmGraphClass } from "../graph/gm-graph";
 import { createGeomorphData } from "./use-geomorph-data";
+import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta } from "../service/geomorph";
@@ -32,7 +33,12 @@ const layoutKey = 'g-101--multipurpose';
 export default function GeomorphEdit({ disabled }) {
   return (
     <div className={rootCss}>
-      <SvgPanZoom initViewBox={defaults.initViewBox} gridBounds={defaults.gridBounds} maxZoom={6}>
+      <SvgPanZoom
+        initViewBox={defaults.initViewBox}
+        gridBounds={defaults.gridBounds}
+        minZoom={0.2}
+        maxZoom={6}
+      >
         <Geomorph def={layoutDefs[layoutKey]} />
         {/* <Geomorph def={layoutDefs["g-301--bridge"]} transform="matrix(1,0,0,1,-1200,0)" /> */}
       </SvgPanZoom>
@@ -206,7 +212,7 @@ function Geomorph({ def, transform, disabled }) {
               />;
             }))
           }
-          {data.gm.lightSrcs.map(({ position, roomId }, i) =>
+          {data.gm.lightSrcs.map(({ position, roomId, distance = defaultLightDistance }, i) => [
             <div
               key={i}
               className="light-point"
@@ -214,6 +220,25 @@ function Geomorph({ def, transform, disabled }) {
               data-light-id={i}
               data-room-id={roomId}
               style={{ left: position.x, top: position.y }}
+            />,
+            // 🚧 too many lights to witness intersections with other light's lightRect
+            // <div
+            //   key={`${i}-circ`}
+            //   className="light-circ"
+            //   data-key="light-circ"
+            //   data-light-id={i}
+            //   data-room-id={roomId}
+            //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
+            // />,
+          ])}
+          {data.gm.lightRects.map(({ key, lightId, doorId, rect }) =>
+            <div
+              key={key}
+              className="light-rect"
+              data-key="light-rect"
+              data-light-id={lightId}
+              data-door-id={doorId}
+              style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
             />
           )}
         </div>
@@ -290,6 +315,7 @@ const rootCss = css`
         background: green;
         width: ${pointDim}px;
         height: ${pointDim}px;
+        transform: translate(-${pointDim/2}px, -${pointDim/2}px);
         border-radius: 50%;
       }
       div.light-point {
@@ -298,8 +324,20 @@ const rootCss = css`
         background: #ffff99;
         width: ${pointDim}px;
         height: ${pointDim}px;
+        transform: translate(-${pointDim/2}px, -${pointDim/2}px);
         border-radius: 50%;
         border: 1px solid black;
+      }
+      div.light-circ {
+        position: absolute;
+        background: #0000ff11;
+        border-radius: 50%;
+        pointer-events: none;
+      }
+      div.light-rect {
+        position: absolute;
+        border: 1px dashed #0000ff;
+        pointer-events: none;
       }
     }
   }
