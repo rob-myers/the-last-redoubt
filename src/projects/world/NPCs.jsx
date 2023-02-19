@@ -284,9 +284,34 @@ export default function NPCs(props) {
       const tags = /** @type {string[]} */ ([]);
       if (state.isPointInNavmesh(point)) tags.push('nav');
       /**
-       * TODO e.g. table, chair, door, npc etc.
+       * 🚧 table, chair, door, npc?
        */
       return tags;
+    },
+    handleLongRunningNpcProcess(process, npcKey) {
+      state.getNpc(npcKey); // Throws if non-existent
+      const cb = {
+        cleanup() {
+          state.npcAct({ npcKey, action: "cancel" }).catch(_e => void {});
+        },
+        suspend() {
+          state.npcAct({ npcKey, action: "pause" });
+          return true;
+        },
+        resume() {
+          state.npcAct({ npcKey, action: "play" });
+          return true;
+        },
+      };
+      process.cleanups.push(cb.cleanup);
+      process.onSuspends.push(cb.suspend);
+      process.onResumes.push(cb.resume);
+      return () => {
+        // suspend/resume typically need to persist across Tabs pause/resume.
+        // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
+        process.onSuspends.splice(process.onSuspends.findIndex(cb.suspend), 1);
+        process.onResumes.splice(process.onResumes.findIndex(cb.resume), 1);
+      };
     },
     isPointInNavmesh(p) {
       const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
@@ -303,22 +328,44 @@ export default function NPCs(props) {
           return 'decorKey' in e
             ? state.decor[e.decorKey]
             : state.setDecor(e);
+        // 🚧 handle pause/resume/cancel
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const position = npc.getPosition();
-          if (state.isPointInNavmesh(position)) {
-            if (state.isPointInNavmesh(e.point)) {
-              const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
-              // 🚧 handle cancel
-              await state.walkNpc({ npcKey: e.npcKey, ...navPath });
-              // 🚧 play animation based on `e.tags`
+
+          try {
+            if (state.isPointInNavmesh(position)) {
+              if (state.isPointInNavmesh(e.point)) {
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
+                // handles pause/resume/cancel
+                await state.walkNpc({ npcKey: e.npcKey, suppressThrow: false, ...navPath });
+                npc.startAnimationByTags(e.tags);
+              } else {
+                // 🚧 find close navpoint and try to walk there
+                // - floorGraph.getClosestNode
+                // - find closest point on triangle
+                // 🚧 fade to point, if possible
+                // - fade out animation + pause/resume on npc pause/resume + throw on cancel
+                // - spawn
+                // - fade in animation + pause/resume on npc pause/resume + throw on cancel
+              }
             } else {
-              // 🚧
+              // 🚧 fade to close navpoint, if possible
+              if (state.isPointInNavmesh(e.point)) {
+                // 🚧 walk
+              } else {
+                // 🚧 walk to close navpoint, if possible
+                // 🚧 fade to point, if possible
+              }
             }
-          } else {
-            // 🚧
+          } catch (e) {
+            if (e instanceof Error && e.message === 'cancelled') {// 🚧 better test?
+              // Swallow walk error on Ctrl-C
+            } else {
+              throw e;
+            }
           }
-          return { saw: e };
+          // return { saw: e };
         }
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
@@ -596,7 +643,7 @@ export default function NPCs(props) {
         await npc.followNavPath(allPoints, { globalNavMetas: globalNavPath.navMetas });
 
       } catch (err) {
-        if (err instanceof Error && err.message === 'cancelled') {
+        if (e.suppressThrow && err instanceof Error && err.message === 'cancelled') {
           console.info(`${e.npcKey}: walkNpc cancelled`);
         } else {
           throw err;
@@ -698,6 +745,7 @@ const rootCss = css`
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(point: Geom.VectJson) => string[]} getPointTags
+ * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {NPC.OnTtyLink} onTtyLink
@@ -711,7 +759,7 @@ const rootCss = css`
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(e: { npcKey: string } & NPC.GlobalNavPath) => Promise<void>} walkNpc
+ * @property {(e: { npcKey: string; suppressThrow?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */
 

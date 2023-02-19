@@ -446,6 +446,22 @@ export default function createNpc(
           throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
       }
     },
+    startAnimationByTags(tags) {
+      switch (true) {
+        case tags.includes('sit'): {
+          this.startAnimation('sit');
+          break;
+        }
+        case tags.includes('stand'): {
+          this.startAnimation('idle-breathe');
+          break;
+        }
+        case tags.includes('lie'): {
+          // 🚧
+          break;
+        }
+      }
+    },
     syncLookAngle() {
       this.setLookRadians(this.getAngle());
     },

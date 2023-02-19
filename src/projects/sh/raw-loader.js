@@ -254,8 +254,10 @@
       }
 
       const process = api.getProcess();
-      if (action === "events") {// `npc events`
-        // This never ends and must be killed (maybe implicitly)
+
+      // `npc events` yields > 1 output (potentially unbounded)
+      // It never ends and must be killed (maybe implicitly)
+      if (action === "events") {
         const asyncIterable = lib.observableToAsyncIterable(lib.merge(
           doors.events,
           npcs.events,
@@ -267,6 +269,7 @@
             yield event;
           }
         }
+        return;
       }
 
       if (api.isTtyAt(0)) {
@@ -275,11 +278,20 @@
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
         );
+        if (action === "do") {// `npc do` needs to handle pause/resume/cancel
+          npcs.handleLongRunningNpcProcess(process, args[1]);
+        }
         yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
       } else {
+        let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
         while ((datum = await api.read()) !== null) {
           const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
+          if (action === "do") {
+            const { npcKey } = /** @type {NPC.NpcAction & { action: 'do' }} */ (datum);
+            cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcKey);
+          }
           yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+          cleanLongRunning?.();
         }
       }
 

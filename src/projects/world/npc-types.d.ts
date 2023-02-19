@@ -100,6 +100,7 @@ declare namespace NPC {
     setLookRadians(radians: number): void;
     // setSegs(segs: Geom.Seg[]): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
+    startAnimationByTags(tags: string[]): void;
     syncLookAngle(): void;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
