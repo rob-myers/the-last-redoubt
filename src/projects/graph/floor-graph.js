@@ -278,7 +278,7 @@ export class floorGraphClass extends BaseGraph {
 
   /**
    * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L78
-   * Returns the closest node to the target position.
+   * Returns node whose centroid is closest to the target position.
    * @param  {Geom.VectJson} position
    */
   getClosestNode(position) {

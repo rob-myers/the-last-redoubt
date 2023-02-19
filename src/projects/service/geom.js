@@ -462,16 +462,6 @@ class geomServiceClass {
   }
 
   /**
-   * @typedef LightPolyDef @type {object}
-   * @property {Geom.Vect} position Position of light.
-   * @property {Geom.Vect} [direction] Direction of light.
-   * @property {number} range 
-   * @property {Geom.Poly[]} [tris] Triangles defining obstructions
-   * @property {Geom.Poly} [exterior] Simple polygon (i.e. ring) we are inside
-   * @property {[Geom.Vect, Geom.Vect][]} [extraSegs] Line segs
-   */
-
-  /**
    * Compute light polygon.
    * @param {LightPolyDef} def
    */
@@ -726,3 +716,12 @@ export const geom = new geomServiceClass;
  */
 export const directionChars = /** @type {const} */ (['n', 'e', 's', 'w']);
  
+/**
+ * @typedef LightPolyDef @type {object}
+ * @property {Geom.Vect} position Position of light.
+ * @property {Geom.Vect} [direction] Direction of light.
+ * @property {number} range 
+ * @property {Geom.Poly[]} [tris] Triangles defining obstructions
+ * @property {Geom.Poly} [exterior] Simple polygon (i.e. ring) we are inside
+ * @property {[Geom.Vect, Geom.Vect][]} [extraSegs] Line segs
+ */

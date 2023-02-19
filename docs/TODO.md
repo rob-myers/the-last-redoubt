@@ -24,7 +24,8 @@
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
 
-- BUG `<NPCs>` api is not updating on HMR
+- BUG raw-loader edit resets --npcs-debug-display
+  > is `api.npcs.ready` really false?
 
 - ✅ HMR npc config css var reset issues
   - ✅ npc debug circles became invisible 
