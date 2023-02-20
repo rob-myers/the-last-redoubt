@@ -279,6 +279,105 @@ class geomServiceClass {
   }
 
   /**
+   * Find point closest to @see {p} on line segment @see {a} -> @see {b}
+   * Source: https://github.com/martywallace/polyk/blob/90757dbd3d358f68c3a1a54e50710548a435ee7a/index.js#L450
+   * @param {Geom.VectJson} p 
+   * @param {Geom.VectJson} a 
+   * @param {Geom.VectJson} b 
+   * @returns {Geom.VectJson & { dst: number }}
+   */
+  getClosestOnLineSeg(p, a, b) {
+    const x = p.x
+    const y = p.y
+    const x1 = a.x
+    const y1 = a.y
+    const x2 = b.x
+    const y2 = b.y
+  
+    const A = x - x1
+    const B = y - y1
+    const C = x2 - x1
+    const D = y2 - y1
+  
+    const dot = A * C + B * D
+    const lenSq = C * C + D * D
+    const param = dot / lenSq
+
+    /** @type {number} */
+    let xx;
+    /** @type {number} */
+    let yy;
+  
+    if (param < 0 || (x1 === x2 && y1 === y2)) {
+      xx = x1
+      yy = y1
+    } else if (param > 1) {
+      xx = x2
+      yy = y2
+    } else {
+      xx = x1 + param * C
+      yy = y1 + param * D
+    }
+  
+    const dx = x - xx
+    const dy = y - yy
+    const dst = Math.sqrt(dx * dx + dy * dy)
+
+    return { dst, x: xx, y: yy };
+  }
+
+  /**
+   * Source: https://github.com/martywallace/polyk/blob/90757dbd3d358f68c3a1a54e50710548a435ee7a/index.js#L390
+   * @param {Geom.VectJson} point
+   * @param {Geom.VectJson[]} outline
+   * @returns {{ point: Geom.VectJson; norm: Geom.VectJson; dist: number; edgeId: number; }}
+   */
+  getClosestOnOutline(point, outline) {
+    const p = outline;
+    const { x, y } = point;
+    let l = p.length - 1;
+    const a1 = tempVect;
+    const b1 = tempVect2;
+    const b2 = tempVect3;
+    // var c = tp[4] // is assigned a value but never used.
+    
+    a1.x = x;
+    a1.y = y;
+    let isc = {dist: 0, edgeId: 0, point: {x: 0, y: 0}, norm: {x: 0, y: 0}};
+    isc.dist = Infinity;
+
+    for (var i = 0; i < l; i ++) {
+      b1.x = p[i].x;
+      b1.y = p[i].y;
+      b2.x = p[i + 1].x;
+      b2.y = p[i + 1].y;
+      const result = this.getClosestOnLineSeg(a1, b1, b2);
+      if (result.dst < isc.dist) {
+        isc.dist = result.dst;
+        isc.edgeId = i;
+        isc.point.x = result.x;
+        isc.point.y = result.y;
+      }
+    }
+    b1.x = b2.x;
+    b1.y = b2.y;
+    b2.x = p[0].x;
+    b2.y = p[0].y;
+    const result = this.getClosestOnLineSeg(a1, b1, b2);
+    if (result.dst < isc.dist) {
+      isc.dist = result.dst;
+      isc.edgeId = l;
+      isc.point.x = result.x;
+      isc.point.y = result.y;
+    }
+
+    const idst = 1 / isc.dist;
+    isc.norm.x = (x - isc.point.x) * idst;
+    isc.norm.y = (y - isc.point.y) * idst;
+    return isc;
+  }
+
+  /**
    * Compute intersection of two infinite lines i.e.
    * 1. `lambda x. p0 + x * d0`.
    * 2. `lambda x. p1 + x * d1`.
@@ -708,6 +807,7 @@ class geomServiceClass {
 
 const tempVect = new Vect;
 const tempVect2 = new Vect;
+const tempVect3 = new Vect;
 
 export const geom = new geomServiceClass;
 

@@ -277,8 +277,8 @@ export class floorGraphClass extends BaseGraph {
   }
 
   /**
+   * Find node whose centroid is closest to the target position.
    * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L78
-   * Returns node whose centroid is closest to the target position.
    * @param  {Geom.VectJson} position
    */
   getClosestNode(position) {
@@ -306,6 +306,16 @@ export class floorGraphClass extends BaseGraph {
     }
 
     return /** @type {Graph.FloorGraphNode} */ (closestNode);
+  }
+
+  /**
+   * Find node with closest centroid and then closest point on triangle.
+   * @param {Geom.VectJson} point 
+   */
+  getClosePoint(point) {
+    const node = this.getClosestNode(point);
+    const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
+    return geom.getClosestOnOutline(point, triangle);
   }
 
   /**
