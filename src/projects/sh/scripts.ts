@@ -135,7 +135,7 @@ lookLoop ${npcKey} &
 game_2: () => `
 ${profileLookup.game_1()}
 
-npc config 'showIds debug'
+npc config '{ showIds: true, debug: true }'
 `
 
 };
