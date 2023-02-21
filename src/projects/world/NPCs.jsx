@@ -338,7 +338,7 @@ export default function NPCs(props) {
               if (state.isPointInNavmesh(e.point)) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
                 // handles pause/resume/cancel
-                await state.walkNpc({ npcKey: e.npcKey, suppressThrow: false, ...navPath });
+                await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
                 // 🚧 find close navpoint and try to walk there
@@ -643,7 +643,7 @@ export default function NPCs(props) {
         await npc.followNavPath(allPoints, { globalNavMetas: globalNavPath.navMetas });
 
       } catch (err) {
-        if (e.suppressThrow && err instanceof Error && err.message === 'cancelled') {
+        if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           console.info(`${e.npcKey}: walkNpc cancelled`);
         } else {
           throw err;
@@ -759,7 +759,7 @@ const rootCss = css`
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(e: { npcKey: string; suppressThrow?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
+ * @property {(e: { npcKey: string; throwOnCancel?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
  * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */
 
