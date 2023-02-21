@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
-import { keys, testNever } from "../service/generic";
+import { assertNonNull, keys, testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { geom } from "../service/geom";
 import { getUiPointDecorKey } from "../service/geomorph";
@@ -27,13 +27,11 @@ export default function NPCs(props) {
   const {api} = props;
   const update = useUpdate();
 
-  const nav = useGeomorphsNav(api.gmGraph, props.disabled);
-
   const state = useStateRef(/** @type {() => State} */ () => ({
     decor: {},
     events: new Subject,
-
     npc: {},
+    floorGraphs: /** @type {Graph.FloorGraph[]} */ ([]),
 
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
@@ -220,8 +218,8 @@ export default function NPCs(props) {
       const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
-      const pf = nav.pfs[gmId];
-      const result = pf.graph.findPath(localSrc, localDst);
+      const floorGraph = state.floorGraphs[gmId];
+      const result = floorGraph.findPath(localSrc, localDst);
 
       if (result) {
         return {
@@ -341,9 +339,10 @@ export default function NPCs(props) {
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
-                // 🚧 find close navpoint and try to walk there
-                // - floorGraph.getClosestNode
-                // - find closest point on triangle
+                // find close navpoint and try to walk there
+                const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
+                await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 // 🚧 fade to point, if possible
                 // - fade out animation + pause/resume on npc pause/resume + throw on cancel
                 // - spawn
@@ -454,7 +453,6 @@ export default function NPCs(props) {
       update();
       state.npcAct({ action: 'set-player', npcKey: undefined });
       // 🚧 inform relevant processes?
-      
     },
     rootRef(el) {
       if (el) {
@@ -658,8 +656,10 @@ export default function NPCs(props) {
         ttyCtxts && props.api.npcs.addTtyLineCtxts(sessionKey, line, ttyCtxts);
       }));
     },
-  }), { deps: [nav, api] });
+  }), { deps: [api] });
   
+  state.floorGraphs = useGeomorphsNav(api.gmGraph, props.disabled);
+
   React.useEffect(() => {
     props.onLoad(state);
   }, []);
@@ -724,9 +724,8 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
- * These items cause `<NPC>`s to mount
  * @property {Record<string, NPC.NPC>} npc
- * These items are created as a result of an `<NPC>` mounting
+ * @property {Graph.FloorGraph[]} floorGraphs
  *
  * @property {null | string} playerKey
  * @property {boolean} ready

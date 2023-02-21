@@ -309,13 +309,13 @@ export class floorGraphClass extends BaseGraph {
   }
 
   /**
-   * Find node with closest centroid and then closest point on triangle.
-   * @param {Geom.VectJson} point 
+   * Given node with closest centroid, find closest point on triangle.
+   * @param {Geom.VectJson} position 
    */
-  getClosePoint(point) {
-    const node = this.getClosestNode(point);
+  getClosePoint(position) {
+    const node = this.getClosestNode(position);
     const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
-    return geom.getClosestOnOutline(point, triangle);
+    return geom.getClosestOnOutline(position, triangle);
   }
 
   /**

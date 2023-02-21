@@ -2,6 +2,8 @@
 
 ## In progress
 
+- absorb floorGraph into GeomorphData?
+
 - 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
   - `walk-to`
@@ -24,8 +26,9 @@
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
 
-- BUG raw-loader edit resets --npcs-debug-display
-  > is `api.npcs.ready` really false?
+- ✅ BUG raw-loader edit resets --npcs-debug-display
+  - profile was being re-run, so `npc config debug` toggled
+  - used `npc config '{ showIds: true, debug: true }'` isntead
 
 - ✅ HMR npc config css var reset issues
   - ✅ npc debug circles became invisible 

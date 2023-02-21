@@ -2,14 +2,10 @@ import React from "react";
 import { assertDefined } from "../service/generic";
 import usePathfinding from "./use-pathfinding";
 
-// TODO
-// - ✅ provide local pathfindings
-// - provide api for global pathfinding
-
 /**
  * @param {Graph.GmGraph} g
  * @param {boolean} [disabled]
- * @returns {{ pfs: Graph.PfData[] }}
+ * @returns {Graph.FloorGraph[]}
  */
 export default function useGeomorphsNav(g, disabled) {
 
@@ -35,18 +31,14 @@ export default function useGeomorphsNav(g, disabled) {
 
   return React.useMemo(() => {
     if (ready) {
-      const pfs = g.gms.map(gm => {
+      const floorGraphs = g.gms.map(gm => {
         const queryIndex = gmKeys.findIndex(y => y === gm.key);
-        const data = assertDefined(queries[queryIndex].data)
-        return data;
+        const { graph } = assertDefined(queries[queryIndex].data)
+        return graph;
       });
-      return {
-        pfs,
-      };
+      return floorGraphs;
     } else {
-      return {
-        pfs: [],
-      };
+      return [];
     }
   }, [ready]);
 

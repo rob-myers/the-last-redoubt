@@ -342,8 +342,9 @@ export class gmGraphClass extends BaseGraph {
       if (roomId >= 0) {
         return { gmId, roomId };
       }
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**
@@ -379,6 +380,21 @@ export class gmGraphClass extends BaseGraph {
     const { roomIds } = this.gms[adjGmId].hullDoors[dstHullDoorId];
     const adjRoomId = /** @type {number} */ (roomIds.find(x => typeof x === 'number'));
     return { adjGmId, adjRoomId, adjHullId: dstHullDoorId, adjDoorId };
+  }
+
+  /**
+   * @param {Geom.VectJson} position 
+   */
+  getClosePoint(position) {
+    const gmId = this.gms.findIndex(gm => gm.gridRect.contains(position));
+    if (gmId >= 0) {
+      const [gm, floorGraph] = [this.gms[gmId], this.api.npcs.floorGraphs[gmId]];
+      position = { x: position.x, y: position.y };
+      gm.matrix.transformPoint(position);
+      return floorGraph.getClosePoint(position);
+    } else {
+      return null;
+    }
   }
 
   /**
