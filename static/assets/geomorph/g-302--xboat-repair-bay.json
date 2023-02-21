@@ -1057,6 +1057,20 @@
         }
       },
       {
+        "tags": ["parallel-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [538.1078, 461.0312],
+              [542.1078, 461.0312],
+              [542.1078, 501.0312],
+              [538.1078, 501.0312]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["wall", "no-fill"],
         "poly": {
           "type": "Polygon",
