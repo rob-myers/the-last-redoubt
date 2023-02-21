@@ -43,54 +43,6 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * TODO 🚧 verify
-   * Assume `transform` is non-singular and [±1, ±1, ±1, ±1, x, y]
-   * @param {Geomorph.ConnectorRect<Poly, Vect, Rect>} hullDoor
-   * @param {number} hullDoorId
-   * @param {[number, number, number, number, number, number]} transform
-   * @param {Geomorph.LayoutKey} gmKey
-   * @returns {null | Geom.Direction}
-   */
-  static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
-    const found = hullDoor.tags.find(x => /^hull\-[nesw]$/.test(x));
-    if (found) {
-      const dirChar = /** @type {typeof directionChars[*]} */ (found.slice(-1));
-      const direction = /** @type {Geom.Direction} */ (directionChars.indexOf(dirChar));
-      const ime1 = { x: transform[0], y: transform[1] };
-      const ime2 = { x: transform[2], y: transform[3] };
-      
-      if (ime1.x === 1) {// (1, 0)
-        if (ime2.y === 1) // (1, 0, 0, 1)
-          return direction;
-        if (ime2.y === -1) // (1, 0, 0, -1)
-          return geom.getFlippedDirection(direction, 'x');
-      } else if (ime1.y === 1) {// (0, 1)
-        if (ime2.x === 1) // (0, 1, 1, 0)
-          return geom.getFlippedDirection(geom.getDeltaDirection(direction, 2), 'y'); 
-        if (ime1.x === -1) // (0, 1, -1, 0)
-          return geom.getDeltaDirection(direction, 1);
-      } else if (ime1.x === -1) {// (-1, 0)
-        if (ime2.y === 1) // (-1, 0, 0, 1)
-          return geom.getFlippedDirection(direction, 'y');
-        if (ime2.y === -1) // (-1, 0, 0, -1)
-          return geom.getDeltaDirection(direction, 2);
-      } else if (ime1.y === -1) {// (0, -1)
-        if (ime2.x === 1) // (0, -1, 1, 0)
-          return geom.getDeltaDirection(direction, 3);
-        if (ime2.x === -1) // (0, -1, -1, 0)
-          return geom.getFlippedDirection(geom.getDeltaDirection(direction, 3), 'y');
-      }
-      error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
-      return null;
-    } else {
-      if (!hullDoor.tags.includes('sealed')) {
-        error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
-      }
-      return null;
-    }
-  }
-
-  /**
    * Compute viewable area, determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
@@ -199,6 +151,54 @@ export class gmGraphClass extends BaseGraph {
     }
 
     return { area, relDoorIds };
+  }
+
+  /**
+   * TODO 🚧 verify
+   * Assume `transform` is non-singular and [±1, ±1, ±1, ±1, x, y]
+   * @param {Geomorph.ConnectorRect<Poly, Vect, Rect>} hullDoor
+   * @param {number} hullDoorId
+   * @param {[number, number, number, number, number, number]} transform
+   * @param {Geomorph.LayoutKey} gmKey
+   * @returns {null | Geom.Direction}
+   */
+  static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
+    const found = hullDoor.tags.find(x => /^hull\-[nesw]$/.test(x));
+    if (found) {
+      const dirChar = /** @type {typeof directionChars[*]} */ (found.slice(-1));
+      const direction = /** @type {Geom.Direction} */ (directionChars.indexOf(dirChar));
+      const ime1 = { x: transform[0], y: transform[1] };
+      const ime2 = { x: transform[2], y: transform[3] };
+      
+      if (ime1.x === 1) {// (1, 0)
+        if (ime2.y === 1) // (1, 0, 0, 1)
+          return direction;
+        if (ime2.y === -1) // (1, 0, 0, -1)
+          return geom.getFlippedDirection(direction, 'x');
+      } else if (ime1.y === 1) {// (0, 1)
+        if (ime2.x === 1) // (0, 1, 1, 0)
+          return geom.getFlippedDirection(geom.getDeltaDirection(direction, 2), 'y'); 
+        if (ime1.x === -1) // (0, 1, -1, 0)
+          return geom.getDeltaDirection(direction, 1);
+      } else if (ime1.x === -1) {// (-1, 0)
+        if (ime2.y === 1) // (-1, 0, 0, 1)
+          return geom.getFlippedDirection(direction, 'y');
+        if (ime2.y === -1) // (-1, 0, 0, -1)
+          return geom.getDeltaDirection(direction, 2);
+      } else if (ime1.y === -1) {// (0, -1)
+        if (ime2.x === 1) // (0, -1, 1, 0)
+          return geom.getDeltaDirection(direction, 3);
+        if (ime2.x === -1) // (0, -1, -1, 0)
+          return geom.getFlippedDirection(geom.getDeltaDirection(direction, 3), 'y');
+      }
+      error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
+      return null;
+    } else {
+      if (!hullDoor.tags.includes('sealed')) {
+        error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
+      }
+      return null;
+    }
   }
 
   /**
@@ -347,18 +347,73 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Works because we'll use a dummy instance where `this.gms` empty.
-   */
-  get ready() {
-    return this.gms.length > 0;
-  }
-
-  /**
    * @param {Graph.GmGraphNode} node 
    */
   getAdjacentDoor(node) {
     const doorNode = this.getSuccs(node).find(x => x.type === 'door');
     return doorNode ? /** @type {Graph.GmGraphNodeDoor} */ (doorNode) : null;
+  }
+
+  /**
+   * @param {number} gmId 
+   * @param {number} hullDoorId 
+   * @returns {Graph.GmAdjRoomCtxt | null}
+   */
+  getAdjacentRoomCtxt(gmId, hullDoorId) {
+    const gm = this.gms[gmId];
+    const gmNode = this.nodesArray[gmId];
+    const doorNodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
+    const doorNode = this.getNodeById(doorNodeId);
+    if (!doorNode) {
+      console.error(`${gmGraphClass.name}: failed to find hull door node: ${doorNodeId}`);
+      return null;
+    }
+    const otherDoorNode = /** @type {undefined | Graph.GmGraphNodeDoor} */ (this.getSuccs(doorNode).find(x => x !== gmNode));
+    if (!otherDoorNode) {
+      console.info(`${gmGraphClass.name}: hull door ${doorNodeId} on boundary`);
+      return null;
+    }
+    // `door` is a hull door and connected to another
+    // console.log({otherDoorNode});
+    const { gmId: adjGmId, hullDoorId: dstHullDoorId, doorId: adjDoorId } = otherDoorNode;
+    const { roomIds } = this.gms[adjGmId].hullDoors[dstHullDoorId];
+    const adjRoomId = /** @type {number} */ (roomIds.find(x => typeof x === 'number'));
+    return { adjGmId, adjRoomId, adjHullId: dstHullDoorId, adjDoorId };
+  }
+
+  /**
+   * Get door nodes connecting `gms[gmId]` on side `sideDir`.
+   * @param {number} gmId 
+   * @param {Geom.Direction} sideDir 
+   */
+  getConnectedDoorsBySide(gmId, sideDir) {
+    const gmNode = /** @type {Graph.GmGraphNodeGm} */ (this.nodesArray[gmId]);
+    const doorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (this.getSuccs(gmNode));
+    return doorNodes.filter(x => !x.sealed && x.direction === sideDir);
+  }
+
+  /**
+   * Compute every global room id connected to some door in a single geomorph.
+   * @param {number} gmId 
+   * @param {number[]} doorIds Doors in geomorph `gmId`
+   */
+  getRoomsFromGmDoorIds(gmId, doorIds) {
+    const gm = this.gms[gmId];
+    const seen = /** @type {Record<number, true>} */ ({});
+    const output = /** @type {Graph.GmRoomId[]} */ ([]);
+
+    for (const doorId of doorIds) {
+      const door = gm.doors[doorId];
+      door.roomIds.forEach(roomId => {
+        if (roomId === null) {// Hull door
+          const ctxt = this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(door));
+          ctxt && output.push({ gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId });
+        } else {// Non-hull door (avoid dups)
+          !seen[roomId] && (seen[roomId] = true) && output.push({ gmId, roomId });
+        }
+      })
+    }
+    return output;
   }
 
   /**
@@ -399,71 +454,26 @@ export class gmGraphClass extends BaseGraph {
     return output;
   }
 
-  /**
-   * Compute every global room id connected to some door in a single geomorph.
-   * @param {number} gmId 
-   * @param {number[]} doorIds Doors in geomorph `gmId`
-   */
-  getRoomsFromGmDoorIds(gmId, doorIds) {
-    const gm = this.gms[gmId];
-    const seen = /** @type {Record<number, true>} */ ({});
-    const output = /** @type {Graph.GmRoomId[]} */ ([]);
-
-    for (const doorId of doorIds) {
-      const door = gm.doors[doorId];
-      door.roomIds.forEach(roomId => {
-        if (roomId === null) {// Hull door
-          const ctxt = this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(door));
-          ctxt && output.push({ gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId });
-        } else {// Non-hull door (avoid dups)
-          !seen[roomId] && (seen[roomId] = true) && output.push({ gmId, roomId });
-        }
-      })
-    }
-    return output;
+  /** @param {Graph.GmGraphNodeDoor} doorNode */
+  getDoorEntry(doorNode) {
+    return /** @type {Geom.Vect} */ (this.entry.get(doorNode));
   }
 
   /**
-   * Get door nodes connecting `gms[gmId]` on side `sideDir`.
-   * @param {number} gmId 
-   * @param {Geom.Direction} sideDir 
+   * @param {string} nodeId 
    */
-  getConnectedDoorsBySide(gmId, sideDir) {
-    const gmNode = /** @type {Graph.GmGraphNodeGm} */ (this.nodesArray[gmId]);
-    const doorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (this.getSuccs(gmNode));
-    return doorNodes.filter(x => !x.sealed && x.direction === sideDir);
+  getDoorNode(nodeId) {
+    return /** @type {Graph.GmGraphNodeDoor} */ (this.getNodeById(nodeId));
   }
 
   /**
    * @param {number} gmId 
    * @param {number} hullDoorId 
-   * @returns {Graph.GmAdjRoomCtxt | null}
    */
-  getAdjacentRoomCtxt(gmId, hullDoorId) {
+  getDoorNodeById(gmId, hullDoorId) {
     const gm = this.gms[gmId];
-    const gmNode = this.nodesArray[gmId];
-    const doorNodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
-    const doorNode = this.getNodeById(doorNodeId);
-    if (!doorNode) {
-      console.error(`${gmGraphClass.name}: failed to find hull door node: ${doorNodeId}`);
-      return null;
-    }
-    const otherDoorNode = /** @type {undefined | Graph.GmGraphNodeDoor} */ (this.getSuccs(doorNode).find(x => x !== gmNode));
-    if (!otherDoorNode) {
-      console.info(`${gmGraphClass.name}: hull door ${doorNodeId} on boundary`);
-      return null;
-    }
-    // `door` is a hull door and connected to another
-    // console.log({otherDoorNode});
-    const { gmId: adjGmId, hullDoorId: dstHullDoorId, doorId: adjDoorId } = otherDoorNode;
-    const { roomIds } = this.gms[adjGmId].hullDoors[dstHullDoorId];
-    const adjRoomId = /** @type {number} */ (roomIds.find(x => typeof x === 'number'));
-    return { adjGmId, adjRoomId, adjHullId: dstHullDoorId, adjDoorId };
-  }
-
-  /** @param {Graph.GmGraphNodeDoor} doorNode */
-  getDoorEntry(doorNode) {
-    return /** @type {Geom.Vect} */ (this.entry.get(doorNode));
+    const nodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
+    return /** @type {Graph.GmGraphNodeDoor} */ (this.getNodeById(nodeId));
   }
 
   /**
@@ -483,23 +493,6 @@ export class gmGraphClass extends BaseGraph {
         ? custom.point.clone()
         : computeViewPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );
-  }
-  
-  /**
-   * @param {string} nodeId 
-   */
-  getDoorNode(nodeId) {
-    return /** @type {Graph.GmGraphNodeDoor} */ (this.getNodeById(nodeId));
-  }
-  
-  /**
-   * @param {number} gmId 
-   * @param {number} hullDoorId 
-   */
-  getDoorNodeById(gmId, hullDoorId) {
-    const gm = this.gms[gmId];
-    const nodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
-    return /** @type {Graph.GmGraphNodeDoor} */ (this.getNodeById(nodeId));
   }
 
   /**
@@ -688,6 +681,13 @@ export class gmGraphClass extends BaseGraph {
     });
 
     return graph;
+  }
+
+  /**
+   * Works because we'll use a dummy instance where `this.gms` empty.
+   */
+  get ready() {
+    return this.gms.length > 0;
   }
 }
 
