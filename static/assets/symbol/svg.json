@@ -1415,10 +1415,10 @@
         }
       },
       {
-        "tags": ["light", "distance-120"],
+        "tags": ["light", "distance-160"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[205, 403], [205, 413], [215, 413], [215, 403]]]
+          "coordinates": [[[165, 390], [165, 400], [175, 400], [175, 390]]]
         }
       },
       {
@@ -1542,7 +1542,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1677061891986.3853
+    "lastModified": 1677062577893.8862
   },
   "302--hull": {
     "key": "302--hull",

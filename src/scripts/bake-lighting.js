@@ -71,6 +71,6 @@ async function main() {
   childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
   // Minify PNG
   // ⛔️ seen worse than tinypng (467kb vs 534kb)
-  childProcess.execSync(`pngquant -f ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
+  childProcess.execSync(`pngquant -f --quality=80 ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
 
 }
