@@ -32,9 +32,10 @@ export default function createNpc(
       spriteSheet: 'idle',
       staticBounds: new Rect,
 
-      translate: /** @type {Animation} */ ({}),
-      rotate: /** @type {Animation} */ ({}),
-      sprites: /** @type {Animation} */ ({}),
+      opacity: new Animation(),
+      translate: new Animation(),
+      rotate: new Animation(),
+      sprites: new Animation(),
       durationMs: 0,
   
       wayMetas: [],
@@ -357,7 +358,7 @@ export default function createNpc(
     setLookRadians(radians) {
       this.el.root.style.setProperty(cssName.npcLookRadians, `${radians}rad`);
     },
-    startAnimation(spriteSheet) {// Called after setSpriteSheet
+    startAnimation(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
         this.el.root.classList.remove(this.anim.spriteSheet);
         this.el.root.classList.add(spriteSheet);
@@ -375,6 +376,9 @@ export default function createNpc(
           // Remove pre-existing, else:
           // - strange behaviour on pause
           // - final body rotation can be wrong
+          if (isAnimAttached(this.anim.opacity, this.el.root)) {
+            this.anim.opacity.commitStyles();
+          }
           this.el.root.getAnimations().forEach(x => x.cancel());
           this.el.body.getAnimations().forEach(x => x.cancel());
     
@@ -419,11 +423,10 @@ export default function createNpc(
           const radius = this.getRadius();
           this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
     
-          // Replace with dummy animations?
           // - Maybe fixes "this.anim.translate.addEventListener is not a function"
-          // - Fixes "this.anim.rotate.cancel is not a function" on HMR
-          this.anim.translate = this.el.root.animate([], { duration: 2 * 1000, iterations: Infinity });
-          this.anim.rotate = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
+          // - Maybe fixes "this.anim.rotate.cancel is not a function" on HMR
+          this.anim.translate = new Animation();
+          this.anim.rotate = new Animation();
           
           if (this.anim.spriteSheet === 'idle-breathe') {
             const { animLookup, aabb, synfigMeta } = npcsMeta[this.jsonKey].parsed;
@@ -464,6 +467,16 @@ export default function createNpc(
     },
     syncLookAngle() {
       this.setLookRadians(this.getAngle());
+    },
+    transitionOpacity(targetOpacity, durationMs) {
+      if (isAnimAttached(this.anim.opacity, this.el.root)) {
+        this.anim.opacity.commitStyles();
+        this.anim.opacity.cancel();
+      }
+      this.anim.opacity = this.el.root.animate([
+        { offset: 0 },
+        { offset: 1, opacity: targetOpacity },
+      ], { duration: durationMs, fill: 'forwards' });
     },
     updateAnimAux() {
       const { aux } = this.anim;

@@ -2,7 +2,10 @@
 
 ## In progress
 
+- cleanup
 - absorb floorGraph into GeomorphData?
+- move `<Decor>` to top level
+- rethink `view reverse` - maybe hide specific black polys instead?
 
 - 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
@@ -15,13 +18,13 @@
   - 🚧 implement `npc do` i.e. handle { point, tags }
     - ✅ getNpcGlobalNav empty if src or dst outside navmesh
     - ✅ on navmesh + point navigable => walk
+    - ✅ can `npc.transitionOpacity(0, 1000)`
     - 🚧 off navmesh + point navigable => fade near then walk
     - ...
 - sit has angle
 - sit has mask
 - support lie too
 
-- move `<Decor>` to top level
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
@@ -200,7 +203,8 @@
 - ✅ strategy for prefetching spritesheets
 
 - watch synfig files and re-render?
-- BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
+
+- 🚧 BUG: Error: ENOENT: no such file or directory, lstat '.../static/assets/geomorph/g-302--xboat-repair-bay-fs8.png.tmp'
   - in dev on-change file e.g. edit symbol
   - try upgrade gatsby
 
