@@ -702,56 +702,56 @@
     ],
     "singles": [
       {
-        "tags": ["door", "hull", "hull-w"],
+        "tags": ["door", "hull", "hull-w", "hull-w"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-w"],
+        "tags": ["door", "hull", "hull-w", "hull-w"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[4, 850], [4, 950], [-4, 950], [-4, 850]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-e"],
+        "tags": ["door", "hull", "hull-e", "hull-e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-e"],
+        "tags": ["door", "hull", "hull-e", "hull-e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1204, 850], [1204, 950], [1196, 950], [1196, 850]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-n"],
+        "tags": ["door", "hull", "hull-n", "hull-n"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[950, -4], [950, 4], [850, 4], [850, -4]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-n"],
+        "tags": ["door", "hull", "hull-n", "hull-n"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[350, -4], [350, 4], [250, 4], [250, -4]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-s"],
+        "tags": ["door", "hull", "hull-s", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[950, 1196], [950, 1204], [850, 1204], [850, 1196]]]
         }
       },
       {
-        "tags": ["door", "hull", "hull-s"],
+        "tags": ["door", "hull", "hull-s", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[350, 1196], [350, 1204], [250, 1204], [250, 1196]]]
@@ -825,15 +825,15 @@
         }
       },
       {
-        "tags": ["light"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [686.493, 678.825],
-              [686.493, 688.825],
-              [676.493, 688.825],
-              [676.493, 678.825]
+              [636.493, 748.825],
+              [636.493, 758.825],
+              [626.493, 758.825],
+              [626.493, 748.825]
             ]
           ]
         }
@@ -1044,6 +1044,20 @@
               [296.493, 518.825],
               [286.493, 518.825],
               [286.493, 508.825]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["light", "distance-260"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1116.493, 738.825],
+              [1116.493, 748.825],
+              [1106.493, 748.825],
+              [1106.493, 738.825]
             ]
           ]
         }
@@ -3402,7 +3416,7 @@
         "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
       },
       "rect": {"x": -4, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-w"],
+      "tags": ["door", "hull", "hull-w", "hull-w"],
       "seg": [{"x": 0, "y": 250}, {"x": 0, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [null, 1],
@@ -3416,7 +3430,7 @@
         "coordinates": [[[4, 850], [4, 950], [-4, 950], [-4, 850]]]
       },
       "rect": {"x": -4, "y": 850, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-w"],
+      "tags": ["door", "hull", "hull-w", "hull-w"],
       "seg": [{"x": 0, "y": 850}, {"x": 0, "y": 950}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [null, 4],
@@ -3430,7 +3444,7 @@
         "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
       },
       "rect": {"x": 1196, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-e"],
+      "tags": ["door", "hull", "hull-e", "hull-e"],
       "seg": [{"x": 1200, "y": 250}, {"x": 1200, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [1, null],
@@ -3444,7 +3458,7 @@
         "coordinates": [[[1204, 850], [1204, 950], [1196, 950], [1196, 850]]]
       },
       "rect": {"x": 1196, "y": 850, "width": 8, "height": 100},
-      "tags": ["door", "hull", "hull-e"],
+      "tags": ["door", "hull", "hull-e", "hull-e"],
       "seg": [{"x": 1200, "y": 850}, {"x": 1200, "y": 950}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [1, null],
@@ -3458,7 +3472,7 @@
         "coordinates": [[[950, -4], [950, 4], [850, 4], [850, -4]]]
       },
       "rect": {"x": 850, "y": -4, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-n"],
+      "tags": ["door", "hull", "hull-n", "hull-n"],
       "seg": [{"x": 950, "y": 0}, {"x": 850, "y": 0}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [null, 16],
@@ -3472,7 +3486,7 @@
         "coordinates": [[[350, -4], [350, 4], [250, 4], [250, -4]]]
       },
       "rect": {"x": 250, "y": -4, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-n"],
+      "tags": ["door", "hull", "hull-n", "hull-n"],
       "seg": [{"x": 350, "y": 0}, {"x": 250, "y": 0}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [null, 1],
@@ -3486,7 +3500,7 @@
         "coordinates": [[[950, 1196], [950, 1204], [850, 1204], [850, 1196]]]
       },
       "rect": {"x": 850, "y": 1196, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-s"],
+      "tags": ["door", "hull", "hull-s", "hull-s"],
       "seg": [{"x": 950, "y": 1200}, {"x": 850, "y": 1200}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [1, null],
@@ -3500,7 +3514,7 @@
         "coordinates": [[[350, 1196], [350, 1204], [250, 1204], [250, 1196]]]
       },
       "rect": {"x": 250, "y": 1196, "width": 100, "height": 8},
-      "tags": ["door", "hull", "hull-s"],
+      "tags": ["door", "hull", "hull-s", "hull-s"],
       "seg": [{"x": 350, "y": 1200}, {"x": 250, "y": 1200}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [4, null],
@@ -12006,7 +12020,7 @@
   "lightSrcs": [
     {"position": {"x": 611.493, "y": 463.825}, "roomId": 9},
     {"position": {"x": 491.493, "y": 463.825}, "roomId": 7},
-    {"position": {"x": 681.493, "y": 683.825}, "roomId": 12},
+    {"position": {"x": 631.493, "y": 753.825}, "roomId": 12, "distance": 200},
     {"position": {"x": 1151.493, "y": 453.825}, "roomId": 1},
     {"position": {"x": 1051.493, "y": 903.825}, "roomId": 1, "distance": 180},
     {"position": {"x": 211.493, "y": 963.825}, "roomId": 5},
@@ -12019,7 +12033,8 @@
     {"position": {"x": 1181.493, "y": 1043.825}, "roomId": 22, "distance": 180},
     {"position": {"x": 1161.493, "y": 523.825}, "roomId": 21},
     {"position": {"x": 771.493, "y": 903.825}, "roomId": 13, "distance": 180},
-    {"position": {"x": 291.493, "y": 513.825}, "roomId": 2, "distance": 120}
+    {"position": {"x": 291.493, "y": 513.825}, "roomId": 2, "distance": 120},
+    {"position": {"x": 1111.493, "y": 743.825}, "roomId": 23, "distance": 260}
   ],
   "lightRects": [
     {
@@ -12060,22 +12075,6 @@
       "lightId": 1,
       "rect": {"x": 422, "y": 482, "width": 46, "height": 35},
       "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
-      "key": "door27@light2",
-      "doorId": 27,
-      "lightId": 2,
-      "rect": {"x": 842, "y": 656, "width": 116, "height": 75},
-      "preDoorIds": [],
-      "postDoorIds": [28]
-    },
-    {
-      "key": "door28@light2",
-      "doorId": 28,
-      "lightId": 2,
-      "rect": {"x": 962, "y": 667, "width": 19, "height": 47},
-      "preDoorIds": [27],
       "postDoorIds": []
     },
     {
@@ -12155,6 +12154,14 @@
       "doorId": 29,
       "lightId": 14,
       "rect": {"x": 842, "y": 972, "width": 58, "height": 82},
+      "preDoorIds": [],
+      "postDoorIds": []
+    },
+    {
+      "key": "door28@light16",
+      "doorId": 28,
+      "lightId": 16,
+      "rect": {"x": 857, "y": 629, "width": 101, "height": 82},
       "preDoorIds": [],
       "postDoorIds": []
     }
