@@ -1,8 +1,7 @@
 import { uid } from 'uid';
-import safeJsonStringify from 'safe-json-stringify';
 
 import type * as Sh from './parse';
-import { last } from '../service/generic';
+import { last, safeStringify } from '../service/generic';
 import useSession from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
 import { cmdService, parseJsArg } from './cmd.service';
@@ -39,7 +38,7 @@ class semanticsServiceClass {
     if (varValue === undefined || typeof varValue === 'string') {
       return varValue || '';
     }
-    return safeJsonStringify(varValue);
+    return safeStringify(varValue);
   }
 
   private handleShError(node: Sh.ParsedSh, e: any, prefix?: string) {
@@ -414,7 +413,7 @@ class semanticsServiceClass {
 
         try {
           yield expand(device.readAll()
-            .map((x: any) => typeof x === 'string' ? x : safeJsonStringify(x))
+            .map((x: any) => typeof x === 'string' ? x : safeStringify(x))
             .join('\n').replace(/\n*$/, ''),
           );
         } finally {
@@ -478,7 +477,7 @@ class semanticsServiceClass {
     const { meta, Param, Slice, Repl, Length, Excl, Exp } = node;
     if (Repl) {// ${_/foo/bar/baz}
       const origParam = reconstructReplParamExp(Repl)
-      yield expand(safeJsonStringify(cmdService.get(node, [origParam])[0]));
+      yield expand(safeStringify(cmdService.get(node, [origParam])[0]));
     } else if (Excl || Length || Slice) {
       throw new ShError(`ParamExp: ${Param.Value}: unsupported operation`, 2);
     } else if (Exp) {

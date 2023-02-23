@@ -7,6 +7,8 @@
 - move `<Decor>` to top level
 - rethink `view reverse` - maybe hide specific black polys instead?
 
+- ✅ prevent crash on `$( npc get andros )`
+
 - 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
   - `walk-to`
