@@ -311,6 +311,20 @@ export function isAnimAttached(anim, el) {
 }
 
 /**
+ * @param {Animation} anim 
+ */
+export function isPaused(anim) {
+	return anim.playState === 'paused';
+}
+
+/**
+ * @param {Animation} anim 
+ */
+export function isRunning(anim) {
+	return anim.playState === 'running';
+}
+
+/**
  * @param {string} src
  * @returns {Promise<HTMLImageElement>}
  */

@@ -45,7 +45,7 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 export const defaultNpcInteractRadius = 50;
 
 /** @type {Record<NPC.NpcActionKey, true>} */
-const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, play: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /**
  * @param {string} input 
@@ -82,7 +82,7 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
       case "cancel":
       case "get":
       case "pause":
-      case "play":
+      case "resume":
       case "rm":
       case "remove":
       case "set-player":

@@ -356,7 +356,7 @@
       const process = api.getProcess()
       process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
       process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
-      process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "play" }); return true; })
+      process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "resume" }); return true; })
   
       if (api.isTtyAt(0)) {
         const points = api.safeJsonParse(args[1])

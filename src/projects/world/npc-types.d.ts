@@ -43,6 +43,7 @@ declare namespace NPC {
 
     cancel(): Promise<void>;
     clearWayMetas(): void;
+    commitOpacity(): void;
     /**
      * We can use native commitStyles here because hidden tab is
      * `visibility: hidden` i.e. this will still work when tab hidden.
@@ -94,7 +95,7 @@ declare namespace NPC {
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): number;
     pause(): void;
-    play(): void;
+    resume(): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
     setLookRadians(radians: number): void;
@@ -311,7 +312,7 @@ declare namespace NPC {
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'pause'; npcKey: string }
-    | { action: 'play'; npcKey: string }
+    | { action: 'resume'; npcKey: string }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
     | { action: 'rm' | 'remove'; npcKey: string; }
     | { action: 'set-player'; npcKey?: string }

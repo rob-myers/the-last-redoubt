@@ -19,6 +19,8 @@
     - ✅ getNpcGlobalNav empty if src or dst outside navmesh
     - ✅ on navmesh + point navigable => walk
     - ✅ can `npc.transitionOpacity(0, 1000)`
+    - ✅ implement pause/play/cancel
+    - 🚧 move opacity animation to `anim.body`
     - 🚧 off navmesh + point navigable => fade near then walk
     - ...
 - sit has angle

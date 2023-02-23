@@ -2,7 +2,7 @@ import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { testNever } from '../service/generic';
 import { cancellableAnimDelayMs, cssName } from '../service/const';
-import { getNumericCssVar, isAnimAttached } from '../service/dom';
+import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 import npcsMeta from './npcs-meta.json';
 
 /**
@@ -44,6 +44,8 @@ export default function createNpc(
 
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
+      this.commitOpacity();
+      this.anim.opacity.cancel();
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
@@ -78,6 +80,11 @@ export default function createNpc(
     },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
+    },
+    commitOpacity() {
+      if (isAnimAttached(this.anim.opacity, this.el.root)) {
+        this.anim.opacity.commitStyles();
+      }
     },
     commitWalkStyles() {
       if (isAnimAttached(this.anim.translate, this.el.root)) {
@@ -300,23 +307,20 @@ export default function createNpc(
     },
     pause() {
       console.log(`pause: pausing ${this.def.key}`);
+      const { opacity, rotate, sprites, translate } = this.anim;
+      isRunning(opacity) && opacity.pause();
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
-          break;
         case 'idle-breathe':
-          if (this.everAnimated()) {
-            this.anim.sprites.pause();
-          }
+          isRunning(sprites) && sprites.pause();
           break;
         case 'walk':
-          if (this.everAnimated()) {
-            this.anim.translate.pause();
-            this.anim.rotate.pause();
-            this.anim.sprites.pause();
-            this.commitWalkStyles();
-            this.syncLookAngle();
-          }
+          isRunning(translate) && translate.pause();
+          isRunning(rotate) && rotate.pause();
+          isRunning(sprites) && sprites.pause();
+          this.commitWalkStyles();
+          this.syncLookAngle();
           /**
            * Pending wayMeta is at this.anim.wayMetas[0].
            * No need to adjust its `length` because we use animation currentTime.
@@ -332,19 +336,21 @@ export default function createNpc(
         api.panZoom.animationAction('pause');
       }
     },
-    play() {
-      console.log(`play: resuming ${this.def.key}`);
+    resume() {
+      console.log(`resuming ${this.def.key}`);
+      const { opacity, rotate, sprites, translate } = this.anim;
+      isPaused(opacity) && opacity.play();
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
           break;
         case 'idle-breathe':
-          this.anim.sprites.play();
+          isPaused(sprites) && sprites.play();
           break;
         case 'walk':
-          this.anim.translate.play();
-          this.anim.rotate.play();
-          this.anim.sprites.play();
+          isPaused(translate) && translate.play();
+          isPaused(rotate) && rotate.play();
+          isPaused(sprites) && sprites.play();
           this.nextWayTimeout();
           if (this.def.key === api.npcs.playerKey) {
             // Resume camera tracking
@@ -376,9 +382,7 @@ export default function createNpc(
           // Remove pre-existing, else:
           // - strange behaviour on pause
           // - final body rotation can be wrong
-          if (isAnimAttached(this.anim.opacity, this.el.root)) {
-            this.anim.opacity.commitStyles();
-          }
+          this.commitOpacity();
           this.el.root.getAnimations().forEach(x => x.cancel());
           this.el.body.getAnimations().forEach(x => x.cancel());
     
@@ -469,10 +473,8 @@ export default function createNpc(
       this.setLookRadians(this.getAngle());
     },
     transitionOpacity(targetOpacity, durationMs) {
-      if (isAnimAttached(this.anim.opacity, this.el.root)) {
-        this.anim.opacity.commitStyles();
-        this.anim.opacity.cancel();
-      }
+      this.commitOpacity();
+      this.anim.opacity.cancel();
       this.anim.opacity = this.el.root.animate([
         { offset: 0 },
         { offset: 1, opacity: targetOpacity },

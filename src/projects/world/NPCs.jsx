@@ -297,7 +297,7 @@ export default function NPCs(props) {
           return true;
         },
         resume() {
-          state.npcAct({ npcKey, action: "play" });
+          state.npcAct({ npcKey, action: "resume" });
           return true;
         },
       };
@@ -397,10 +397,10 @@ export default function NPCs(props) {
           return npc.lookAt(e.point);
         }
         case 'pause':// Pause current animation
-          await state.getNpc(e.npcKey).pause();
+          state.getNpc(e.npcKey).pause();
           break;
-        case 'play':// Resume current animation
-          await state.getNpc(e.npcKey).play();
+        case 'resume':// Resume current animation
+          state.getNpc(e.npcKey).resume();
           break;
         case 'rm':
         case 'remove':
