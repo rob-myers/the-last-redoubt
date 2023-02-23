@@ -250,8 +250,9 @@ export function safeStringify(input) {
     return zealousTrim(`${input}`);
   }
   return tryJsonStringify(input) || safeStableStringify(input, (_k, v) => {
-    if (v instanceof HTMLElement)
-      return `HTMLElement[${v.nodeName}]`;
+    if (v instanceof HTMLElement) return `[${v.constructor.name}]`;
+    if (v instanceof Animation) return '[Animation]';
+    if (typeof v === 'function') return zealousTrim(`${v}`);
     return v;
   });
 }
