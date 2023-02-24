@@ -22,7 +22,7 @@
     - ✅ on navmesh + point navigable => walk
     - ✅ can `npc.transitionOpacity(0, 1000)`
     - ✅ implement pause/play/cancel
-    - 🚧 move opacity animation to `anim.body`
+    - ✅ move opacity animation to `anim.body`
     - 🚧 off navmesh + point navigable => fade near then walk
     - ...
 - sit has angle
@@ -32,6 +32,7 @@
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
+- BUG? saw pause/resume walk issue towards end
 
 - ✅ BUG raw-loader edit resets --npcs-debug-display
   - profile was being re-run, so `npc config debug` toggled

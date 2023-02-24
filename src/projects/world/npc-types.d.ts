@@ -30,8 +30,8 @@ declare namespace NPC {
     /** Epoch ms when spawned */
     epochMs: number;
     /**
-     * Definition of NPC.
-     * This can be mutated, so methods should refer to `this.def`
+     * Definition of NPC. This is mutated on spawn,
+     * so methods should refer to `this.def`
      */
     def: NPCDef;
     el: {
@@ -43,12 +43,6 @@ declare namespace NPC {
 
     cancel(): Promise<void>;
     clearWayMetas(): void;
-    commitOpacity(): void;
-    /**
-     * We can use native commitStyles here because hidden tab is
-     * `visibility: hidden` i.e. this will still work when tab hidden.
-     */
-    commitWalkStyles(): void;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
     followNavPath(

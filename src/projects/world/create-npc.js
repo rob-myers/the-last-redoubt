@@ -44,7 +44,7 @@ export default function createNpc(
 
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
-      this.commitOpacity();
+      isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
       this.anim.opacity.cancel();
       switch (this.anim.spriteSheet) {
         case 'idle':
@@ -58,10 +58,14 @@ export default function createNpc(
           break;
         case 'walk':
           this.clearWayMetas();
-          this.commitWalkStyles();
-          if (this.el.body instanceof HTMLDivElement) {
-            this.syncLookAngle();
-          }
+          /**
+           * - Must `commitStyles` otherwise it jumps.
+           * - Cannot commitStyles earlier, as MDN documentation suggests.
+           * - We can use native `commitStyles` because hidden tab is
+           *   `visibility: hidden` i.e. still works when tab hidden.
+           */
+          isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
+          this.syncLookAngle();
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.translate.addEventListener('cancel', () => resolve());
             this.anim.translate.cancel();
@@ -80,17 +84,6 @@ export default function createNpc(
     },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
-    },
-    commitOpacity() {
-      if (isAnimAttached(this.anim.opacity, this.el.root)) {
-        this.anim.opacity.commitStyles();
-      }
-    },
-    commitWalkStyles() {
-      if (isAnimAttached(this.anim.translate, this.el.root)) {
-        this.anim.translate.commitStyles();
-      }
-      this.syncLookAngle();
     },
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
@@ -130,7 +123,9 @@ export default function createNpc(
           });
         }));
       } finally {
-        this.commitWalkStyles();
+        // otherwise it jumps, even though commitStyles earlier
+        isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
+        this.syncLookAngle();
         this.startAnimation('idle');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
@@ -319,7 +314,6 @@ export default function createNpc(
           isRunning(translate) && translate.pause();
           isRunning(rotate) && rotate.pause();
           isRunning(sprites) && sprites.pause();
-          this.commitWalkStyles();
           this.syncLookAngle();
           /**
            * Pending wayMeta is at this.anim.wayMetas[0].
@@ -379,25 +373,27 @@ export default function createNpc(
 
       switch (this.anim.spriteSheet) {
         case 'walk': {
-          // Remove pre-existing, else:
-          // - strange behaviour on pause
-          // - final body rotation can be wrong
-          this.commitOpacity();
+          const { anim } = this;
+          // 🚧 avoid multi-attached opacity,rotate,sprites,translate
+          // Have seen strange behaviour on pause, wrong final body rotation
           this.el.root.getAnimations().forEach(x => x.cancel());
-          this.el.body.getAnimations().forEach(x => x.cancel());
+          // isAnimAttached(anim.translate, this.el.root) && anim.translate.cancel();
+          // this.el.body.getAnimations().forEach(x => x !== anim.opacity && x.cancel());
+          isAnimAttached(anim.rotate, this.el.body) && anim.rotate.cancel();
+          isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
           // Animate position and rotation
           const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
           opts.delay ||= cancellableAnimDelayMs;
-          this.anim.translate = this.el.root.animate(translateKeyframes, opts);
-          this.anim.rotate = this.el.body.animate(rotateKeyframes, opts);
-          this.anim.durationMs = opts.duration;
+          anim.translate = this.el.root.animate(translateKeyframes, opts);
+          anim.rotate = this.el.body.animate(rotateKeyframes, opts);
+          anim.durationMs = opts.duration;
     
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup, aabb } = npcsMeta[this.jsonKey].parsed;
           const spriteMs = this.getWalkSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
-          this.anim.sprites = this.el.body.animate(
+          anim.sprites = this.el.body.animate(
               firstFootLeads ?
                 [
                   { offset: 0, backgroundPosition: '0px' },
@@ -473,9 +469,9 @@ export default function createNpc(
       this.setLookRadians(this.getAngle());
     },
     transitionOpacity(targetOpacity, durationMs) {
-      this.commitOpacity();
+      isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
       this.anim.opacity.cancel();
-      this.anim.opacity = this.el.root.animate([
+      this.anim.opacity = this.el.body.animate([
         { offset: 0 },
         { offset: 1, opacity: targetOpacity },
       ], { duration: durationMs, fill: 'forwards' });
