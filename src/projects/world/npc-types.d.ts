@@ -97,7 +97,7 @@ declare namespace NPC {
     startAnimation(spriteSheet: SpriteSheetKey): void;
     startAnimationByTags(tags: string[]): void;
     syncLookAngle(): void;
-    transitionOpacity(targetOpacity: number, durationMs: number): void;
+    transitionOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;

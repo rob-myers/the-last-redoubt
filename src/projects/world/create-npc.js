@@ -117,13 +117,14 @@ export default function createNpc(
           });
           this.anim.translate.addEventListener('cancel', () => {
             if (!this.anim.translate.finished) {
+              // We'll also cancel when finished to release control to styles
               console.log(`followNavPath: ${this.def.key} cancelled walk`);
-            } // We also cancel when finished to release control to styles
+            }
             reject(new Error('cancelled'));
           });
         }));
       } finally {
-        // otherwise it jumps, even though commitStyles earlier
+        // must commitStyles, otherwise it jumps
         isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
         this.syncLookAngle();
         this.startAnimation('idle');
@@ -468,13 +469,23 @@ export default function createNpc(
     syncLookAngle() {
       this.setLookRadians(this.getAngle());
     },
-    transitionOpacity(targetOpacity, durationMs) {
-      isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
-      this.anim.opacity.cancel();
-      this.anim.opacity = this.el.body.animate([
+    async transitionOpacity(targetOpacity, durationMs) {
+      this.anim.opacity.cancel(); // Ensure previous animation removed?
+      const animation = this.el.body.animate([
         { offset: 0 },
         { offset: 1, opacity: targetOpacity },
       ], { duration: durationMs, fill: 'forwards' });
+      this.anim.opacity = animation;
+
+      try {
+        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          animation.addEventListener('finish', () => resolve());
+          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
+        }));
+      } finally {
+        isAnimAttached(animation, this.el.body) && animation.commitStyles();
+      }
+
     },
     updateAnimAux() {
       const { aux } = this.anim;
