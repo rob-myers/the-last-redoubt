@@ -343,10 +343,11 @@ export default function NPCs(props) {
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                // 🚧 fade to point, if possible
-                // - fade out animation + pause/resume on npc pause/resume + throw on cancel
-                // - spawn
-                // - fade in animation + pause/resume on npc pause/resume + throw on cancel
+                // fade/spawn to point, if possible
+                await npc.transitionOpacity(0, 1000);
+                await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false });
+                await npc.transitionOpacity(1, 1000);
+                // 🚧 apply angle based on tags?
               }
             } else {
               // 🚧 fade to close navpoint, if possible

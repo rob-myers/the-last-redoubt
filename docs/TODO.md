@@ -21,12 +21,14 @@
   - ✅ sit/stand/lie ui points have tag `action`
   - 🚧 implement `npc do` i.e. handle { point, tags }
     - ✅ getNpcGlobalNav empty if src or dst outside navmesh
-    - ✅ on navmesh + point navigable => walk
-    - ✅ can `npc.transitionOpacity(0, 1000)`
-    - ✅ implement pause/play/cancel
-    - ✅ move opacity animation to `anim.body`
-    - 🚧 off navmesh + point navigable => fade near then walk
-    - ...
+    - start on navmesh
+      - ✅ on navmesh + point navigable => walk
+      - ✅ can `npc.transitionOpacity(0, 1000)`
+      - ✅ implement pause/play/cancel
+      - ✅ move opacity animation to `anim.body`
+      - ✅ off navmesh + point navigable => fade near then walk
+      - 🚧 support spawn angle tag e.g. `angle-90`
+    - 🚧 start off navmesh
 - sit has angle
 - sit has mask
 - support lie too
