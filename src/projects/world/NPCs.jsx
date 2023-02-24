@@ -394,7 +394,7 @@ export default function NPCs(props) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
           const npc = state.getNpc(e.npcKey);
-          return npc.lookAt(e.point);
+          return await npc.lookAt(e.point);
         }
         case 'pause':// Pause current animation
           state.getNpc(e.npcKey).pause();

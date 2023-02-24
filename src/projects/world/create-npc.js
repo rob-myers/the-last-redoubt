@@ -271,7 +271,7 @@ export default function createNpc(
     isWalking() {
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
     },
-    lookAt(point) {
+    async lookAt(point) {// 🚧 use this.anim.rotate instead
       const position = this.getPosition();
       const direction = Vect.from(point).sub(position);
       if (direction.length === 0) {
@@ -282,7 +282,8 @@ export default function createNpc(
       let radians = Math.atan2(direction.y, direction.x);
       while (radians - targetLookRadians > Math.PI) radians -= 2 * Math.PI;
       while (targetLookRadians - radians > Math.PI) radians += 2 * Math.PI;
-      this.setLookRadians(radians); // Only works when idle, otherwise overridden
+      // Only works when idle, otherwise overridden
+      this.setLookRadians(radians);
       return radians;
     },
     nextWayTimeout() {

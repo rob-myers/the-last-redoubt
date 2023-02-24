@@ -87,7 +87,7 @@ declare namespace NPC {
     initialize(): void;
     isWalking(): boolean;
     /** Returns destination angle in radians */
-    lookAt(point: Geom.VectJson): number;
+    lookAt(point: Geom.VectJson): Promise<number>;
     pause(): void;
     resume(): void;
     nextWayTimeout(): void;
