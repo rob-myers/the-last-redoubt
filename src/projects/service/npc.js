@@ -42,10 +42,43 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 `.trim();
 }
 
+/**
+ * @param {string[]} tags
+ * @returns {NPC.TagsMeta}
+ */
+export function computeTagsMeta(tags) {
+  const doable = hasTag(tags, ['ui', 'action']);
+  // const angleDegrees = tags.reduce((_, tag) =>
+  //   tag.startsWith('angle-') ? Number(tag.slice('angle-'.length)) : undefined ,
+  //   /** @type {undefined | number} */ (undefined),
+  // );
+  return {
+    // 🚧 compute orientation using `relate-points facing`
+    // angleRadians: typeof angleDegrees === 'number'
+    //   ? angleDegrees * (Math.PI / 180)
+    //   : undefined,
+    doable,
+    spawnable: doable && hasTag(tags, 'stand', 'sit', 'lie'),
+  };
+}
+
 export const defaultNpcInteractRadius = 50;
 
 /** @type {Record<NPC.NpcActionKey, true>} */
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+
+/**
+ * @param {string[]} tags 
+ * @param {(string | string[])[]} specs 
+ * @returns {boolean}
+ */
+function hasTag(tags, ...specs) {
+  return specs.some(spec =>
+    Array.isArray(spec)
+      ? spec.every(tag => tags.includes(tag))
+      : tags.includes(spec)
+  );
+}
 
 /**
  * @param {string} input 

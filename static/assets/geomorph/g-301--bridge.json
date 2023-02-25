@@ -2232,6 +2232,15 @@
         }
       },
       {
+        "tags": ["relate-points", "facing"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[88, 457.6574], [88, 429.7574], [92, 429.7574], [92, 457.6574]]
+          ]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -2334,6 +2343,15 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[189, 400], [189, 398], [191, 398], [191, 400]]]
+        }
+      },
+      {
+        "tags": ["relate-points", "facing"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[208, 457.6574], [208, 429.7574], [212, 429.7574], [212, 457.6574]]
+          ]
         }
       },
       {

@@ -85,6 +85,7 @@ declare namespace NPC {
     inferWalkTransform(): { position: Geom.Vect; angle: number; }
     /** Initialise using `def` */
     initialize(): void;
+    isIdle(): boolean;
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;
@@ -336,6 +337,12 @@ declare namespace NPC {
     key: 'way-point';
     npcKey: string;
     meta: NpcWayMeta;
+  }
+
+  export interface TagsMeta {
+    orientationRadians?: number;
+    doable: boolean;
+    spawnable: boolean;
   }
 
   //#region parse

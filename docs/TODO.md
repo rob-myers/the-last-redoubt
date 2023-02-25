@@ -25,8 +25,9 @@
       - ✅ implement pause/play/cancel
       - ✅ move opacity animation to `anim.body`
       - ✅ off navmesh + point navigable => fade near then walk
-      - 🚧 support spawn angle tag e.g. `angle-90`
-    - 🚧 start off navmesh
+      - 🚧 support point orientation via `relate-points facing`
+        - ℹ️ hard-coded angles would require computing room + geomorph transform
+    - ✅ start off navmesh
 - sit has angle
 - sit has mask
 - support lie too

@@ -326,16 +326,16 @@ export default function NPCs(props) {
           return 'decorKey' in e
             ? state.decor[e.decorKey]
             : state.setDecor(e);
-        // 🚧 handle pause/resume/cancel
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const position = npc.getPosition();
+          const doMeta = npcService.computeTagsMeta(e.tags);
 
+          // 🚧 move into function
           try {
             if (state.isPointInNavmesh(position)) {
               if (state.isPointInNavmesh(e.point)) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
-                // handles pause/resume/cancel
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
@@ -343,29 +343,44 @@ export default function NPCs(props) {
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                // fade/spawn to point, if possible
-                await npc.animateOpacity(0, 1000);
-                await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false });
-                await npc.animateOpacity(1, 1000);
-                // 🚧 apply angle based on tags?
+                if (doMeta.spawnable) {// fade and spawn to point
+                  await npc.animateOpacity(0, 1000);
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientationRadians });
+                  npc.startAnimationByTags(e.tags);
+                  await npc.animateOpacity(1, 1000);
+                }
               }
             } else {
-              // 🚧 fade to close navpoint, if possible
+              // fade to close navpoint
+              const closeMeta = assertNonNull(api.gmGraph.getClosePoint(position));
+              await npc.animateOpacity(0, 1000); // we don't set angle when rejoining navmesh
+              await state.spawn({ npcKey: e.npcKey, point: closeMeta.point, angle: undefined });
+              npc.startAnimationByTags(e.tags);
+              await npc.animateOpacity(1, 1000);
+              
               if (state.isPointInNavmesh(e.point)) {
-                // 🚧 walk
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
+                await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
+                npc.startAnimationByTags(e.tags);
               } else {
-                // 🚧 walk to close navpoint, if possible
-                // 🚧 fade to point, if possible
+                // walk to close navpoint
+                const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
+                await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
+                if (doMeta.spawnable) {// fade and spawn to point
+                  await npc.animateOpacity(0, 1000);
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientationRadians });
+                  await npc.animateOpacity(1, 1000);
+                }
               }
             }
           } catch (e) {
-            if (e instanceof Error && e.message === 'cancelled') {// 🚧 better test?
+            if (e instanceof Error && e.message === 'cancelled') {
               // Swallow walk error on Ctrl-C
             } else {
               throw e;
             }
           }
-          // return { saw: e };
         }
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
@@ -395,7 +410,7 @@ export default function NPCs(props) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
           const npc = state.getNpc(e.npcKey);
-          if (!npc.isWalking()) {// Cannot look whilst walking
+          if (npc.isIdle()) {// Cannot look whilst walking or sitting
             await npc.lookAt(e.point);
           }
           return npc.getAngle();
@@ -542,11 +557,12 @@ export default function NPCs(props) {
         }, { api });
       }
 
-      // Await event triggered by <NPC> render
+      // Must subscribe before triggering <NPC> render
       const promise = firstValueFrom(state.events.pipe(
         filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
       ));
-      update(); // Trigger <NPC> render
+      // Trigger <NPC> render and await reply
+      update();
       await promise;
 
     },
