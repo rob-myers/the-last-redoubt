@@ -329,6 +329,8 @@ export default function NPCs(props) {
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const position = npc.getPosition();
+          // 🚧 verify that point is global and tags come from ui point
+          // 🚧 provide gmTransform
           const doMeta = npcService.computeTagsMeta(e.tags);
 
           // 🚧 move into function

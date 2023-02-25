@@ -35,8 +35,10 @@ export async function createLayout(def, lookup, triangleService) {
       m.a *= 0.2, m.b *= 0.2, m.c *= 0.2, m.d *= 0.2;
     }
     // Transform singles (restricting doors/walls by tags)
+    // Room orientation tags permit decoding angle-{deg} tags later
+    const transformTag = `transform-[${(item.transform || [1, 0, 0, 1, 0, 0]).slice(0, 4)}]`
     const restricted = singles
-      .map(({ tags, poly }) => ({ tags, poly: poly.clone().applyMatrix(m).precision(precision) }))
+      .map(({ tags, poly }) => ({ tags: tags.concat(transformTag), poly: poly.clone().applyMatrix(m).precision(precision) }))
       .filter(({ tags }) => {
         return item.doors && tags.includes('door')
           ? tags.some(tag => /** @type {string[]} */ (item.doors).includes(tag))

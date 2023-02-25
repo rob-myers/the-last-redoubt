@@ -48,12 +48,12 @@ ${Object.keys(parsed.animLookup).map((animName) => `
  */
 export function computeTagsMeta(tags) {
   const doable = hasTag(tags, ['ui', 'action']);
+  // 🚧 compute orientation using `angle-{deg}` `transform-[a,b,c,d]` and gmTransform
   // const angleDegrees = tags.reduce((_, tag) =>
   //   tag.startsWith('angle-') ? Number(tag.slice('angle-'.length)) : undefined ,
   //   /** @type {undefined | number} */ (undefined),
   // );
   return {
-    // 🚧 compute orientation using `relate-points facing`
     // angleRadians: typeof angleDegrees === 'number'
     //   ? angleDegrees * (Math.PI / 180)
     //   : undefined,

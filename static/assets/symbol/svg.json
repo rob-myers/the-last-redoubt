@@ -8101,7 +8101,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "toilet"],
+        "tags": ["ui", "action", "sit", "toilet", "angle-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[445, 120], [445, 130], [455, 130], [455, 120]]]
@@ -8115,7 +8115,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "stand"],
+        "tags": ["ui", "action", "stand", "angle-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[445, 230], [445, 240], [455, 240], [455, 230]]]
@@ -8127,19 +8127,10 @@
           "type": "Polygon",
           "coordinates": [[[345, 400], [345, 410], [355, 410], [355, 400]]]
         }
-      },
-      {
-        "tags": ["relate-points", "facing"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[440, 111.713], [440, 251.213], [460, 251.213], [460, 111.713]]
-          ]
-        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1677340604866.151
+    "lastModified": 1677342530454.355
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
