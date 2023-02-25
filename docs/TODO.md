@@ -2,12 +2,13 @@
 
 ## In progress
 
+- npc.transitionOpacity -> animateOpacity
+- npc.lookAt should use anim.rotate and be async
 - cleanup
 - absorb floorGraph into GeomorphData?
 - move `<Decor>` to top level
 - rethink `view reverse` - maybe hide specific black polys instead?
 
-- npc.lookAt should use anim.rotate and be async
 - how to handle js transitionOpacity() or startAnimation() while paused?
 - ✅ prevent crash on `$( npc get andros )`
 

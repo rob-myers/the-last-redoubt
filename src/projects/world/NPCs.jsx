@@ -771,7 +771,7 @@ const rootCss = css`
 
 /**
  * @typedef NpcActResult
- * @type {void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts> | { saw: any }}
+ * @type {void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
  */
 
 /**
