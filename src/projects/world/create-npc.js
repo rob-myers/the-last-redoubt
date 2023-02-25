@@ -42,6 +42,23 @@ export default function createNpc(
       wayTimeoutId: 0,
     },
 
+    async animateOpacity(targetOpacity, durationMs) {
+      this.anim.opacity.cancel(); // Ensure previous animation removed?
+      const animation = this.el.body.animate([
+        { offset: 0 },
+        { offset: 1, opacity: targetOpacity },
+      ], { duration: durationMs, fill: 'forwards' });
+      this.anim.opacity = animation;
+
+      try {
+        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          animation.addEventListener('finish', () => resolve());
+          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
+        }));
+      } finally {
+        isAnimAttached(animation, this.el.body) && animation.commitStyles();
+      }
+    },
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
       isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
@@ -469,24 +486,6 @@ export default function createNpc(
     },
     syncLookAngle() {
       this.setLookRadians(this.getAngle());
-    },
-    async transitionOpacity(targetOpacity, durationMs) {
-      this.anim.opacity.cancel(); // Ensure previous animation removed?
-      const animation = this.el.body.animate([
-        { offset: 0 },
-        { offset: 1, opacity: targetOpacity },
-      ], { duration: durationMs, fill: 'forwards' });
-      this.anim.opacity = animation;
-
-      try {
-        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          animation.addEventListener('finish', () => resolve());
-          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
-        }));
-      } finally {
-        isAnimAttached(animation, this.el.body) && animation.commitStyles();
-      }
-
     },
     updateAnimAux() {
       const { aux } = this.anim;

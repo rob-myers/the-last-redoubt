@@ -67,7 +67,7 @@ npc events |
 
 ```sh
 npc get andros >me
-me/transitionOpacity'(0.5, 0)'
+me/animateOpacity'(0.5, 0)'
 ```
 
 ## Migrating

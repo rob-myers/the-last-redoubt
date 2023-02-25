@@ -2,7 +2,7 @@
 
 ## In progress
 
-- npc.transitionOpacity -> animateOpacity
+- ✅ npc.transitionOpacity -> animateOpacity
 - npc.lookAt should use anim.rotate and be async
 - cleanup
 - absorb floorGraph into GeomorphData?

@@ -344,9 +344,9 @@ export default function NPCs(props) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 // fade/spawn to point, if possible
-                await npc.transitionOpacity(0, 1000);
+                await npc.animateOpacity(0, 1000);
                 await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false });
-                await npc.transitionOpacity(1, 1000);
+                await npc.animateOpacity(1, 1000);
                 // 🚧 apply angle based on tags?
               }
             } else {
