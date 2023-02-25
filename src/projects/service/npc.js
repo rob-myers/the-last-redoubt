@@ -20,7 +20,7 @@ export function computeNpcScale(parsed) {
 export function computeSpritesheetCss(parsed, offsetRadians, scale) {
   return `
 .body {
-  transform: rotate(calc(${offsetRadians}rad + var(${cssName.npcLookRadians}))) scale(${scale});
+  transform: rotate(${offsetRadians}rad) scale(${scale});
 }
 
 ${Object.keys(parsed.animLookup).map((animName) => `

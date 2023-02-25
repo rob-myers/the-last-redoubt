@@ -61,15 +61,11 @@ export default function NPC({ api, npcKey, disabled }) {
 const rootCss = css`
   position: absolute;
   pointer-events: none;
-  // 🚧 should reinit on spawn
-  /* ${cssName.npcLookRadians}: 0rad; */
 
   .body {
     position: absolute;
     /* filter: grayscale(100%) brightness(140%); */
     /* filter: grayscale(100%); */
-    /** Animate turning */
-    transition: transform 1s ease;
   }
   
   &.disabled .body {

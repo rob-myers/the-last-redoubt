@@ -87,17 +87,16 @@ declare namespace NPC {
     initialize(): void;
     isWalking(): boolean;
     /** Returns destination angle in radians */
-    lookAt(point: Geom.VectJson): Promise<number>;
+    lookAt(point: Geom.VectJson): Promise<void>;
     pause(): void;
     resume(): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
-    setLookRadians(radians: number): void;
     // setSegs(segs: Geom.Seg[]): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     startAnimationByTags(tags: string[]): void;
-    syncLookAngle(): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
+    animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateAnimAux(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;

@@ -43,7 +43,8 @@ export default function createNpc(
     },
 
     async animateOpacity(targetOpacity, durationMs) {
-      this.anim.opacity.cancel(); // Ensure previous animation removed?
+      this.anim.opacity.cancel(); // Ensure prev anim removed?
+
       const animation = this.el.body.animate([
         { offset: 0 },
         { offset: 1, opacity: targetOpacity },
@@ -59,15 +60,48 @@ export default function createNpc(
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
       }
     },
+    async animateRotate(targetRadians, durationMs, throwOnCancel) {
+      this.anim.rotate.cancel(); // Ensure prev anim removed?
+
+      // ℹ️ assume source/targetRadians ∊ [-π, π]
+      const sourceRadians = this.getAngle();
+      if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
+      if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
+
+      const { scale: npcScale } = npcsMeta[this.jsonKey];
+      const animation = this.el.body.animate([
+        { offset: 0, transform: `rotate(${sourceRadians}rad) scale(${npcScale})` },
+        { offset: 1, transform: `rotate(${targetRadians}rad) scale(${npcScale})` },
+      ], { duration: durationMs, fill: 'forwards', easing: 'ease' });
+      this.anim.rotate = animation;
+  
+      try {
+        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          animation.addEventListener('finish', () => resolve());
+          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
+        }));
+      } catch (e) {
+        if (!throwOnCancel && e instanceof Error && e.message === 'cancelled') { /** NOOP */ }
+        else throw e;
+      } finally {
+        isAnimAttached(animation, this.el.body) && animation.commitStyles();
+      }
+    },
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
+
       isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
       this.anim.opacity.cancel();
+      
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
+          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
+          this.anim.rotate.cancel();
           break;
         case 'idle-breathe':
+          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
+          this.anim.rotate.cancel();
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.sprites.addEventListener('cancel', () => resolve());
             this.anim.sprites.cancel();
@@ -76,13 +110,11 @@ export default function createNpc(
         case 'walk':
           this.clearWayMetas();
           /**
-           * - Must `commitStyles` otherwise it jumps.
-           * - Cannot commitStyles earlier, as MDN documentation suggests.
-           * - We can use native `commitStyles` because hidden tab is
-           *   `visibility: hidden` i.e. still works when tab hidden.
+           * Must `commitStyles` else jumps. Cannot earlier, as MDN documentation suggests.
+           * We can use native `commitStyles` because hidden tab is `visibility: hidden`.
            */
           isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
-          this.syncLookAngle();
+          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.translate.addEventListener('cancel', () => resolve());
             this.anim.translate.cancel();
@@ -143,7 +175,7 @@ export default function createNpc(
       } finally {
         // must commitStyles, otherwise it jumps
         isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
-        this.syncLookAngle();
+        isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
         this.startAnimation('idle');
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
@@ -279,29 +311,23 @@ export default function createNpc(
     },
     initialize() {
       this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
-      this.setLookRadians(this.def.angle);
-      const { radius } = npcsMeta[this.jsonKey];
+      const { radius, scale: npcScale } = npcsMeta[this.jsonKey];
       this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
+      this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
       this.unspawned = false;
     },
     isWalking() {
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
     },
-    async lookAt(point) {// 🚧 use this.anim.rotate instead
+    async lookAt(point) {
       const position = this.getPosition();
       const direction = Vect.from(point).sub(position);
       if (direction.length === 0) {
-        return this.getAngle();
+        return; // Don't animate
       }
-      // Ensure we don't turn more than 180 deg
-      const targetLookRadians = getNumericCssVar(this.el.root, cssName.npcLookRadians);
-      let radians = Math.atan2(direction.y, direction.x);
-      while (radians - targetLookRadians > Math.PI) radians -= 2 * Math.PI;
-      while (targetLookRadians - radians > Math.PI) radians += 2 * Math.PI;
-      // Only works when idle, otherwise overridden
-      this.setLookRadians(radians);
-      return radians;
+      const targetRadians = Math.atan2(direction.y, direction.x);
+      await this.animateRotate(targetRadians, 1 * 1000);
     },
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
@@ -327,13 +353,13 @@ export default function createNpc(
         case 'idle':
         case 'sit':
         case 'idle-breathe':
+          isRunning(rotate) && rotate.pause();
           isRunning(sprites) && sprites.pause();
           break;
         case 'walk':
           isRunning(translate) && translate.pause();
           isRunning(rotate) && rotate.pause();
           isRunning(sprites) && sprites.pause();
-          this.syncLookAngle();
           /**
            * Pending wayMeta is at this.anim.wayMetas[0].
            * No need to adjust its `length` because we use animation currentTime.
@@ -356,8 +382,8 @@ export default function createNpc(
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
-          break;
         case 'idle-breathe':
+          isPaused(rotate) && rotate.play();
           isPaused(sprites) && sprites.play();
           break;
         case 'walk':
@@ -374,9 +400,6 @@ export default function createNpc(
           throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.play' });
       }
     },
-    setLookRadians(radians) {
-      this.el.root.style.setProperty(cssName.npcLookRadians, `${radians}rad`);
-    },
     startAnimation(spriteSheet) {
       if (spriteSheet !== this.anim.spriteSheet) {
         this.el.root.classList.remove(this.anim.spriteSheet);
@@ -385,7 +408,6 @@ export default function createNpc(
       }
       if (this.everAnimated()) {
         this.anim.translate.cancel();
-        this.syncLookAngle();
         this.anim.rotate.cancel();
         this.anim.sprites.cancel();
       }
@@ -393,12 +415,9 @@ export default function createNpc(
       switch (this.anim.spriteSheet) {
         case 'walk': {
           const { anim } = this;
-          // 🚧 avoid multi-attached opacity,rotate,sprites,translate
-          // Have seen strange behaviour on pause, wrong final body rotation
           this.el.root.getAnimations().forEach(x => x.cancel());
-          // isAnimAttached(anim.translate, this.el.root) && anim.translate.cancel();
-          // this.el.body.getAnimations().forEach(x => x !== anim.opacity && x.cancel());
-          isAnimAttached(anim.rotate, this.el.body) && anim.rotate.cancel();
+          // ℹ️ cancelling rotate caused jerkiness
+          // isAnimAttached(anim.rotate, this.el.body) && anim.rotate.cancel();
           isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
           // Animate position and rotation
@@ -436,7 +455,6 @@ export default function createNpc(
         case 'idle-breathe':
         case 'sit': {
           this.clearWayMetas();
-          this.syncLookAngle();
           // Update staticBounds
           const { x, y } = this.getPosition();
           const radius = this.getRadius();
@@ -483,9 +501,6 @@ export default function createNpc(
           break;
         }
       }
-    },
-    syncLookAngle() {
-      this.setLookRadians(this.getAngle());
     },
     updateAnimAux() {
       const { aux } = this.anim;

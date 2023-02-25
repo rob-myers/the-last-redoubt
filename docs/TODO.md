@@ -3,14 +3,11 @@
 ## In progress
 
 - ✅ npc.transitionOpacity -> animateOpacity
-- npc.lookAt should use anim.rotate and be async
-- cleanup
+- ✅ npc.lookAt should use anim.rotate and be async
+
 - absorb floorGraph into GeomorphData?
 - move `<Decor>` to top level
 - rethink `view reverse` - maybe hide specific black polys instead?
-
-- how to handle js transitionOpacity() or startAnimation() while paused?
-- ✅ prevent crash on `$( npc get andros )`
 
 - 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
@@ -34,6 +31,9 @@
 - sit has mask
 - support lie too
 
+- handle js transitionOpacity() or startAnimation() while paused?
+- ✅ BUG lookAt can over-turn (now using Web Animations API)
+- ✅ prevent crash on `$( npc get andros )`
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`

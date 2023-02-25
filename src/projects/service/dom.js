@@ -62,7 +62,7 @@ let svgPoint;
 //#region parse
 
 /**
- * Extract numeric part of a css variable
+ * Extract numeric part of a CSS variable applied as a style
  * @param {HTMLElement} el 
  * @param {string} varName e.g. `--my-css-var`
  */
