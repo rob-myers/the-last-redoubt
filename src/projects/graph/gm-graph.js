@@ -383,15 +383,17 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * @param {Geom.VectJson} position 
+   * @param {Geom.VectJson} position in world coords
+   * @returns {Geom.ClosestOnOutlineResult | null}
    */
   getClosePoint(position) {
     const gmId = this.gms.findIndex(gm => gm.gridRect.contains(position));
     if (gmId >= 0) {
       const [gm, floorGraph] = [this.gms[gmId], this.api.npcs.floorGraphs[gmId]];
-      position = { x: position.x, y: position.y };
-      gm.matrix.transformPoint(position);
-      return floorGraph.getClosePoint(position);
+      gm.inverseMatrix.transformPoint(position = { x: position.x, y: position.y });
+      const result = floorGraph.getClosePoint(position);
+      gm.matrix.transformPoint(result.point);
+      return result;
     } else {
       return null;
     }

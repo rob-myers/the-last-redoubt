@@ -310,7 +310,8 @@ export class floorGraphClass extends BaseGraph {
 
   /**
    * Given node with closest centroid, find closest point on triangle.
-   * @param {Geom.VectJson} position 
+   * @param {Geom.VectJson} position
+   * @returns {Geom.ClosestOnOutlineResult}
    */
   getClosePoint(position) {
     const node = this.getClosestNode(position);

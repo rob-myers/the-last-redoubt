@@ -143,7 +143,10 @@ declare namespace Geomorph {
     doorToLightRect: (Geomorph.LightDoorRect | undefined)[];
     //#endregion
 
-    /** Points indexed by `roomId` */
+    /**
+     * Points indexed by `roomId`.
+     * Their coords are local wrt their parent geomorph.
+     */
     point: {
       default: Vect;
       /** Can specify light position from room through door */

@@ -330,7 +330,7 @@ class geomServiceClass {
    * Source: https://github.com/martywallace/polyk/blob/90757dbd3d358f68c3a1a54e50710548a435ee7a/index.js#L390
    * @param {Geom.VectJson} point
    * @param {Geom.VectJson[]} outline
-   * @returns {{ point: Geom.VectJson; norm: Geom.VectJson; dist: number; edgeId: number; }}
+   * @returns {Geom.ClosestOnOutlineResult}
    */
   getClosestOnOutline(point, outline) {
     const p = outline;

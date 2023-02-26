@@ -52,4 +52,11 @@ declare namespace Geom {
 
   /** 'n' | 'e' | 's' | 'w' */
   export type Direction = 0 | 1 | 2 | 3;
+
+  export interface ClosestOnOutlineResult {
+    point: Geom.VectJson;
+    norm: Geom.VectJson;
+    dist: number;
+    edgeId: number;
+  }
 }

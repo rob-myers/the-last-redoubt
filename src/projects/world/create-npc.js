@@ -420,6 +420,7 @@ export default function createNpc(
           const { anim } = this;
           this.el.root.getAnimations().forEach(x => x.cancel());
           // ℹ️ cancelling rotate caused jerkiness
+          // 🚧 but seeing HMR issue i.e. turn back at end of walk
           // isAnimAttached(anim.rotate, this.el.body) && anim.rotate.cancel();
           isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
@@ -429,7 +430,7 @@ export default function createNpc(
           anim.translate = this.el.root.animate(translateKeyframes, opts);
           anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           anim.durationMs = opts.duration;
-    
+
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup, aabb } = npcsMeta[this.jsonKey].parsed;
           const spriteMs = this.getWalkSpriteDuration(opts.duration);

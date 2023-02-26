@@ -4,6 +4,8 @@
 
 - ✅ npc.transitionOpacity -> animateOpacity
 - ✅ npc.lookAt should use anim.rotate and be async
+- ✅ BUG ui/action points should be transformed with geomorph
+- 🚧 BUG close nav point can sometimes be outside navmesh
 
 - absorb floorGraph into GeomorphData?
 - move `<Decor>` to top level

@@ -115,8 +115,7 @@ export default function NPCs(props) {
         ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
       );
     },
-    // 🚧 This should only run sporadically
-    cleanSessionCtxts() {
+    cleanSessionCtxts() {// 🚧 should only run sporadically
       const sessions = Object.keys(state.session).map(
         sessionKey => useSessionStore.api.getSession(sessionKey)
       ).filter(Boolean);
@@ -245,8 +244,12 @@ export default function NPCs(props) {
       } else if (!(Vect.isVectJson(e.point))) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (!state.isPointInNavmesh(e.point)) {
-        console.warn(`destination is outside navmesh: ${JSON.stringify(e.point)}`);
-        return { key: 'global-nav', fullPath: [], navMetas: [] };
+        if (e.throwOnNotNav) {
+          throw Error(`dst outside navmesh: ${JSON.stringify(e.point)}`);
+        } else {
+          console.warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
+          return { key: 'global-nav', fullPath: [], navMetas: [] };
+        }
       } else if (!state.isPointInNavmesh(position)) {
         console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
         return { key: 'global-nav', fullPath: [], navMetas: [] };
@@ -329,21 +332,20 @@ export default function NPCs(props) {
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const position = npc.getPosition();
-          // 🚧 verify that point is global and tags come from ui point
           // 🚧 provide gmTransform
           const doMeta = npcService.computeTagsMeta(e.tags);
-
           // 🚧 move into function
           try {
             if (state.isPointInNavmesh(position)) {
               if (state.isPointInNavmesh(e.point)) {
-                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
                 // find close navpoint and try to walk there
+                // 🚧 closeMeta.point should always be in navmesh
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
-                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 if (doMeta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
@@ -361,13 +363,13 @@ export default function NPCs(props) {
               await npc.animateOpacity(1, 1000);
               
               if (state.isPointInNavmesh(e.point)) {
-                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point });
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
                 // walk to close navpoint
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
-                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point });
+                const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 if (doMeta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
@@ -570,11 +572,15 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { ui: points } = api.gmGraph.gms[gmId].point[roomId];
+        const { point: { [roomId]: { ui : points } }, matrix } = api.gmGraph.gms[gmId];
         const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
-        state.npcAct({ action: "add-decor",
+        state.npcAct({
+          action: "add-decor",
           items: Object.values(points).map(({ point, tags }, uiId) => ({
-            key: decorKeys[uiId], type: "point", x: point.x, y: point.y, tags: tags?.slice(),
+            key: decorKeys[uiId],
+            type: "point", // transform from local geomorph coords:
+            ...matrix.transformPoint({ x: point.x, y: point.y }),
+            tags: tags.slice(),
           })),
         });
       }
@@ -653,7 +659,7 @@ export default function NPCs(props) {
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
       if (!npcService.verifyGlobalNavPath(e)) {
-        throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
+        throw Error(`invalid global navpath format: ${JSON.stringify(e)}`);
       }
 
       try {// Walk along a global navpath
@@ -760,7 +766,7 @@ const rootCss = css`
  * @property {() => void} cleanSessionCtxts
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
- * @property {(e: { npcKey: string; point: Geom.VectJson }) => NPC.GlobalNavPath} getNpcGlobalNav
+ * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string) => NPC.NPC} getNpc
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
