@@ -190,7 +190,9 @@ export class ttyShellClass implements Device {
     }
 
     try {
-      for await (const _ of semanticsService.File(parsed)) { /** NOOP */ }
+      for await (const _ of semanticsService.File(parsed)) {
+        /** NOOP */
+      }
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {

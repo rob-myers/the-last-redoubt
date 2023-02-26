@@ -79,6 +79,7 @@ brew install optipng
   > e.g. `anim` instead of `this.anim` inside create-npc
 
 - Shell functions should avoid single-quotes `'` inside JavaScript function bodies.
+- No single-quotes are allowed in `raw-loader.js`, even in a comment
 
 - DOMMatrix `{ a b c d e f }` corresponds to affine matrix:
   > $$

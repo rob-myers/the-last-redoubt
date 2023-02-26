@@ -330,9 +330,11 @@ class cmdServiceClass {
           if (e instanceof ProcessError) {
             handleProcessError(node, e);
           } else if (e instanceof ShError) {
+            node.exitCode = e.exitCode;
             throw e;
           } else {
             console.error(e); // Provide JS stack
+            node.exitCode = 1;
             throw new ShError(`${e}`, 1);
           }
         }
@@ -437,8 +439,15 @@ class cmdServiceClass {
       ppid: node.meta.pid,
       stack: node.meta.stack.concat(namedFunc.key), // TODO elsewhere?
     } as Sh.BaseMeta);
-    // Run function in own process, yet without localized PWD
-    await ttyShell.spawn(cloned, { posPositionals: args.slice() });
+    try {
+      // Run function in own process, yet without localized PWD
+      await ttyShell.spawn(cloned, { posPositionals: args.slice() });
+    } finally {
+      // Propagate function exitCode to callee
+      // ℹ️ Errors are usually caught earlier via `handleShError`,
+      //    but may arise via `kill` or failed pipe-sibling
+      node.exitCode = cloned.exitCode;
+    }
   }
 
   /**

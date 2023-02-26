@@ -5,7 +5,12 @@
 - ✅ npc.transitionOpacity -> animateOpacity
 - ✅ npc.lookAt should use anim.rotate and be async
 - ✅ BUG ui/action points should be transformed with geomorph
+- ✅ BUG doLoop should terminate when `npc do` does
+  - if pipe-children throw we kill pipe-siblings
+  - seems `doLoop` throws without non-zero exitCode
 - 🚧 BUG close nav point can sometimes be outside navmesh
+- 🚧 BUG multiple prompts `$ $`
+- consider behaviour when manually kill a pipe-child
 
 - absorb floorGraph into GeomorphData?
 - move `<Decor>` to top level
@@ -29,6 +34,7 @@
       - ✅ off navmesh + point navigable => fade near then walk
       - 🚧 support ui point orientation via `angle-{deg}` `transform-{a,b,c,d}` and current geomorph
     - ✅ start off navmesh
+    - handle `goLoop` walk attempted during walk in `doLoop`
 - sit has angle
 - sit has mask
 - support lie too

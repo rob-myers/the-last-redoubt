@@ -256,20 +256,19 @@
       const process = api.getProcess();
 
       // `npc events` yields > 1 output (potentially unbounded)
-      // It never ends and must be killed (maybe implicitly)
-      if (action === "events") {
+      if (action === "events") {// Never ends and must be killed (maybe implicitly)
         const asyncIterable = lib.observableToAsyncIterable(lib.merge(
           doors.events,
           npcs.events,
           panZoom.events,
         ));
+        // ℹ️ could not catch asyncIterable.throw?.(api.getKillError())
         process.cleanups.push(() => asyncIterable.return?.());
         for await (const event of asyncIterable) {
-          if (process.status === 1) {
-            yield event;
-          }
+          if (process.status === 1) yield event;
         }
-        return;
+        // ℹ️ we only get here via `kill` or e.g. failed pipe-sibling
+        throw api.getKillError();
       }
 
       if (api.isTtyAt(0)) {

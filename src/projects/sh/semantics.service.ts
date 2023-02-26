@@ -43,13 +43,16 @@ class semanticsServiceClass {
 
   private handleShError(node: Sh.ParsedSh, e: any, prefix?: string) {
     if (e instanceof ProcessError) {
+      // We rethrow (unless returning from a shell function)
       handleProcessError(node, e);
     } else if (e instanceof ShError) {
+      // We do not rethrow
       const message = [prefix, e.message].filter(Boolean).join(': ');
       useSession.api.writeMsg(node.meta.sessionKey, message, 'error');
-      console.error(`ShError: ${node.meta.sessionKey}: ${message}`);
+      console.error(`ShError: ${node.meta.sessionKey}: ${message} (${e.exitCode})`);
       node.exitCode = e.exitCode;
     } else {
+      // We do not rethrow
       const message = [prefix, e?.message].filter(Boolean).join(': ');
       useSession.api.writeMsg(node.meta.sessionKey, message, 'error');
       console.error(`Internal ShError: ${node.meta.sessionKey}: ${message}`);
@@ -78,8 +81,11 @@ class semanticsServiceClass {
 
   private async *stmts(parent: Sh.ParsedSh, nodes: Sh.Stmt[]) {
     for (const node of nodes) {
-      yield* sem.Stmt(node);
-      parent.exitCode ||= node.exitCode;
+      try {
+        yield* sem.Stmt(node);
+      } finally {
+        parent.exitCode ||= node.exitCode;
+      }
     }
   }
 
@@ -181,7 +187,9 @@ class semanticsServiceClass {
                 reject(e);
                 // Promise.allSettled won't throw on reject, so kill others
                 const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
-                processes.filter(Boolean).forEach(killProcess);
+                for (const proc of processes) {
+                  proc && killProcess(proc);
+                }
               }
             }),
           ));
@@ -219,8 +227,6 @@ class semanticsServiceClass {
         yield* cmdService.runCmd(node, command, cmdArgs);
       } else if (func = useSession.api.getFunc(node.meta.sessionKey, command)) {
         await cmdService.launchFunc(node, func, cmdArgs);
-        // Propagate function exitCode to callee
-        node.exitCode = func.node.exitCode || 0;
       } else {
         try {// Try to `get` things instead
           for (const arg of args) {
@@ -540,10 +546,13 @@ class semanticsServiceClass {
         });
       stmt.exitCode = stmt.Negated ? 1 : 0;
     } else {
-      // Run a simple or compound command
-      yield* sem.Command(stmt.Cmd, stmt.Redirs);
-      stmt.exitCode = stmt.Cmd.exitCode;
-      stmt.Negated && (stmt.exitCode = 1 - Number(!!stmt.Cmd.exitCode));
+      try {
+        // Run a simple or compound command
+        yield* sem.Command(stmt.Cmd, stmt.Redirs);
+      } finally {
+        stmt.exitCode = stmt.Cmd.exitCode;
+        stmt.Negated && (stmt.exitCode = 1 - Number(!!stmt.Cmd.exitCode));
+      }
     }
   }
 
