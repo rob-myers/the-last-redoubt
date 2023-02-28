@@ -208,8 +208,14 @@ const useStore = create<State>()(devtools((set, get) => ({
     },
 
     getProcesses(sessionKey, pgid) {
-      const processes = Object.values(get().session[sessionKey].process);
-      return pgid === undefined ? processes : processes.filter(x => x.pgid === pgid);
+      const session = get().session[sessionKey];
+      if (session) {
+        const processes = Object.values(session.process);
+        return pgid === undefined ? processes : processes.filter(x => x.pgid === pgid);
+      } else {
+        console.warn(`getProcesses: session ${sessionKey} does not exist`)
+        return [];
+      }
     },
 
     getVar(meta, varName): any {

@@ -335,22 +335,18 @@ class geomServiceClass {
   getClosestOnOutline(point, outline) {
     const p = outline;
     const { x, y } = point;
-    let l = p.length - 1;
     const a1 = tempVect;
     const b1 = tempVect2;
     const b2 = tempVect3;
     // var c = tp[4] // is assigned a value but never used.
     
-    a1.x = x;
-    a1.y = y;
+    a1.set(x, y);
     let isc = {dist: 0, edgeId: 0, point: {x: 0, y: 0}, norm: {x: 0, y: 0}};
     isc.dist = Infinity;
 
-    for (var i = 0; i < l; i ++) {
-      b1.x = p[i].x;
-      b1.y = p[i].y;
-      b2.x = p[i + 1].x;
-      b2.y = p[i + 1].y;
+    for (var i = 0; i < p.length; i++) {
+      b1.copy(p[i]);
+      b2.copy(p[(i + 1) % p.length]);
       const result = this.getClosestOnLineSeg(a1, b1, b2);
       if (result.dst < isc.dist) {
         isc.dist = result.dst;
@@ -358,17 +354,6 @@ class geomServiceClass {
         isc.point.x = result.x;
         isc.point.y = result.y;
       }
-    }
-    b1.x = b2.x;
-    b1.y = b2.y;
-    b2.x = p[0].x;
-    b2.y = p[0].y;
-    const result = this.getClosestOnLineSeg(a1, b1, b2);
-    if (result.dst < isc.dist) {
-      isc.dist = result.dst;
-      isc.edgeId = l;
-      isc.point.x = result.x;
-      isc.point.y = result.y;
     }
 
     const idst = 1 / isc.dist;

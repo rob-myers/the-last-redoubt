@@ -35,6 +35,8 @@
       - 🚧 support ui point orientation via `angle-{deg}` `transform-{a,b,c,d}` and current geomorph
     - ✅ start off navmesh
     - handle `goLoop` walk attempted during walk in `doLoop`
+    - ℹ️ close navigable node can look wrong e.g. stateroom chair
+    - can click anywhere on navmesh to return to it
 - sit has angle
 - sit has mask
 - support lie too

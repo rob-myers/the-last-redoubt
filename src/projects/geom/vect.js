@@ -128,11 +128,13 @@
   }
 
   normalize(newLength = 1) {
-    if (this.length) {
-      return this.scale(newLength / this.length);
+    const length = this.length;
+    if (length) {
+      return this.scale(newLength / length);
+    } else {
+      console.error(`Cannot normalize Vect '${this}' to length '${newLength}'`);
+      return this;
     }
-    console.error(`Cannot normalize Vect '${this}' to length '${newLength}'`);
-    return this;
   }
 
   /**

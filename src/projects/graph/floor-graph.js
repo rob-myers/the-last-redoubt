@@ -316,7 +316,13 @@ export class floorGraphClass extends BaseGraph {
   getClosePoint(position) {
     const node = this.getClosestNode(position);
     const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
-    return geom.getClosestOnOutline(position, triangle);
+    const result = geom.getClosestOnOutline(position, triangle);
+    // move close point towards centroid, to ensure navigable
+    const delta = Vect.from(result.point).sub(node.centroid);
+    delta.normalize(Math.max(0, delta.length - 0.1));
+    result.point.x = node.centroid.x + delta.x;
+    result.point.y = node.centroid.y + delta.y;
+    return result;
   }
 
   /**
