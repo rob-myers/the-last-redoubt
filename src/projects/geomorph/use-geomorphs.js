@@ -23,20 +23,14 @@ export default function useGeomorphs(defs, disabled = false) {
   const queries = gmKeys.map(layoutKey => useGeomorphData(layoutKey, disabled));
   const ready = (
     defs.every(x => gmKeys.includes(x.layoutKey)) 
-    && queries.every(x => x.data)
+    && queries.every(x => x)
   );
-
-  if (!ready) {
-    // Log errors to console (maybe dups)
-    // Otherwise they're swallowed
-    queries.forEach((query, i) => query.error && console.error(gmKeys[i], query.error));
-  }
 
   return React.useMemo(() => {
     if (ready) {
       const items = defs.map(def => {
         const queryIndex = gmKeys.findIndex(y => y === def.layoutKey);
-        const data = assertDefined(queries[queryIndex].data)
+        const data = assertDefined(queries[queryIndex])
         const transform = def.transform || [1, 0, 0, 1, 0, 0];
         return geomorphDataToInstance(data, transform);
       });
@@ -47,5 +41,5 @@ export default function useGeomorphs(defs, disabled = false) {
     } else {
       return new gmGraphClass([]);
     }
-  }, [ready, ...queries.map(x => x.data)]);
+  }, [ready, ...queries.map(x => x)]);
 }

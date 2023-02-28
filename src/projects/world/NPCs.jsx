@@ -14,7 +14,6 @@ import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-import useGeomorphsNav from "../geomorph/use-geomorphs-nav";
 import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
 import Decor from "./Decor";
@@ -31,7 +30,6 @@ export default function NPCs(props) {
     decor: {},
     events: new Subject,
     npc: {},
-    floorGraphs: /** @type {Graph.FloorGraph[]} */ ([]),
 
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
@@ -217,8 +215,7 @@ export default function NPCs(props) {
       const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
-      const floorGraph = state.floorGraphs[gmId];
-      const result = floorGraph.findPath(localSrc, localDst);
+      const result = gm.floorGraph.findPath(localSrc, localDst);
 
       if (result) {
         return {
@@ -687,8 +684,6 @@ export default function NPCs(props) {
     },
   }), { deps: [api] });
   
-  state.floorGraphs = useGeomorphsNav(api.gmGraph, props.disabled);
-
   React.useEffect(() => {
     props.onLoad(state);
   }, []);
@@ -754,7 +749,6 @@ const rootCss = css`
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc
- * @property {Graph.FloorGraph[]} floorGraphs
  *
  * @property {null | string} playerKey
  * @property {boolean} ready

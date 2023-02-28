@@ -169,6 +169,8 @@ declare namespace Geomorph {
       };
     };
 
+    floorGraph: Graph.FloorGraph;
+
     /** Returns -1 if not a hull door */
     getHullDoorId(doorOrId: Geomorph.ParsedConnectorRect | number): number;
     /**

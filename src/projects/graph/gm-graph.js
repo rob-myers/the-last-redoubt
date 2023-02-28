@@ -389,7 +389,8 @@ export class gmGraphClass extends BaseGraph {
   getClosePoint(position) {
     const gmId = this.gms.findIndex(gm => gm.gridRect.contains(position));
     if (gmId >= 0) {
-      const [gm, floorGraph] = [this.gms[gmId], this.api.npcs.floorGraphs[gmId]];
+      const gm = this.gms[gmId];
+      const floorGraph = gm.floorGraph;
       gm.inverseMatrix.transformPoint(position = { x: position.x, y: position.y });
       const result = floorGraph.getClosePoint(position);
       gm.matrix.transformPoint(result.point);

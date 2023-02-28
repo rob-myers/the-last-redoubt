@@ -1,10 +1,12 @@
 import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
+import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
 import { geomorphJsonPath, getNormalizedDoorPolys } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
+import usePathfinding from "./use-pathfinding";
 
 /**
  * NOTE saw issue when `geomorphJsonPath(layoutKey)`
@@ -13,18 +15,42 @@ import { geom } from "../service/geom";
  * @param {Geomorph.LayoutKey} layoutKey
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
-  return useQuery(geomorphJsonPath(layoutKey), () => createGeomorphData(layoutKey), {
+
+  const gmDataResult = useQuery(geomorphJsonPath(layoutKey), () => {
+    return createGeomorphData(layoutKey)
+  }, {
+    // 🚧
     cacheTime: Infinity,
     keepPreviousData: true,
     staleTime: Infinity,
     enabled: !disabled,
   });
+  
+  const pathfindingResult = usePathfinding(
+    layoutKey,
+    gmDataResult.data,
+    disabled,
+  );
+
+  if (gmDataResult.data && pathfindingResult.data) {
+    gmDataResult.data.floorGraph = pathfindingResult.data.graph;
+    return gmDataResult.data;
+  }
+  if (gmDataResult.error) {
+    console.error(`gmDataResult: ${layoutKey}`, gmDataResult.error);
+  }
+  if (pathfindingResult.error) {
+    console.error('pathfindingResult', pathfindingResult.error);
+  }
+
+  return undefined;
 }
 
 /**
  * Convert
  * @see {Geomorph.ParsedLayout} to @see {Geomorph.GeomorphData}
- * @param {Geomorph.LayoutKey | Geomorph.ParsedLayout} input 
+ * @param {Geomorph.LayoutKey | Geomorph.ParsedLayout} input
+ * @returns {Promise<Geomorph.GeomorphData>}
  */
 export async function createGeomorphData(input) {
 
@@ -167,6 +193,9 @@ export async function createGeomorphData(input) {
 
     point: pointsByRoom,
     lazy: /** @type {*} */ (null), // Overwritten below
+
+    // We'll overwrite this 
+    floorGraph: floorGraphClass.createMock(),
 
     getHullDoorId(doorOrId) {
       const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId

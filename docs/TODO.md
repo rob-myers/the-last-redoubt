@@ -2,17 +2,13 @@
 
 ## In progress
 
-- ✅ npc.transitionOpacity -> animateOpacity
-- ✅ npc.lookAt should use anim.rotate and be async
-- ✅ BUG ui/action points should be transformed with geomorph
-- ✅ BUG doLoop should terminate when `npc do` does
-  - if pipe-children throw we kill pipe-siblings
-  - seems `doLoop` throws without non-zero exitCode
-- 🚧 BUG close nav point can sometimes be outside navmesh
 - 🚧 BUG multiple prompts `$ $`
 - consider behaviour when manually kill a pipe-child
 
-- absorb floorGraph into GeomorphData?
+- ✅ absorb floorGraph into GeomorphData?
+  - ✅ avoid expensive floorGraph fromZone
+    e.g. ensure multiple usePathfinding are not re-computing
+  - ✅ use `usePathfinding` in `useGeomorphData`?
 - move `<Decor>` to top level
 - rethink `view reverse` - maybe hide specific black polys instead?
 
@@ -501,6 +497,14 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ npc.transitionOpacity -> animateOpacity
+- ✅ npc.lookAt should use anim.rotate and be async
+- ✅ BUG ui/action points should be transformed with geomorph
+- ✅ BUG doLoop should terminate when `npc do` does
+  - if pipe-children throw we kill pipe-siblings
+  - seems `doLoop` throws without non-zero exitCode
+- ✅ BUG close nav point can sometimes be outside navmesh
 
 - ✅ BUG can stop in doorway then turn back, and view does not change
   - `exit-room` followed by `enter-room` for _same room_ (✅)

@@ -12,7 +12,7 @@ import { svgNavGraph } from "./jsx-dom";
 /** @param {{ layoutKey: Geomorph.LayoutKey; disabled?: boolean; }} props */
 export default function SvgNavGraph(props) {
 
-  const { data: gm } = useGeomorphData(props.layoutKey);
+  const gm = useGeomorphData(props.layoutKey);
   const { data: pf } = usePathfinding(props.layoutKey, gm, props.disabled);
 
   /** @type {React.RefObject<SVGGElement>} */

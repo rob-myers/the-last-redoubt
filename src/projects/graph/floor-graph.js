@@ -22,6 +22,12 @@ export class floorGraphClass extends BaseGraph {
    */
   nodeToMeta;
 
+  static createMock() {
+    return new floorGraphClass(/** @type {Geomorph.GeomorphData} */ ({
+      navZone: /** @type {Geomorph.GeomorphData['navZone']} */ ({ vertices: [], groups: [], doorNodeIds: [], roomNodeIds: [] }),
+    }));
+  }
+
   /**
    * @param {Geomorph.GeomorphData} gm 
    */
