@@ -374,6 +374,7 @@ export default function NPCs(props) {
                 if (doMeta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
                   await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientationRadians });
+                  npc.startAnimationByTags(e.tags);
                   await npc.animateOpacity(1, 1000);
                 }
               }
