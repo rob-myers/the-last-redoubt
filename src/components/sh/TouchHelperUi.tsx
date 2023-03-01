@@ -42,7 +42,7 @@ export default function TouchHelperUI(props: {
     };
   });
   
-  React.useEffect(() => {
+  React.useMemo(() => {
     const { xterm } = props.session.ttyShell;
     if (!tryLocalStorageGet(localStorageKey)) {
       // force lowercase by default on touch device
