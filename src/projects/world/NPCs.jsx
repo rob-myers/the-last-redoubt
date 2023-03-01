@@ -328,19 +328,18 @@ export default function NPCs(props) {
             : state.setDecor(e);
         case 'do': {
           const npc = state.getNpc(e.npcKey);
-          const position = npc.getPosition();
+          const npcPosition = npc.getPosition();
           // 🚧 provide gmTransform
           const doMeta = npcService.computeTagsMeta(e.tags);
           // 🚧 move into function
           try {
-            if (state.isPointInNavmesh(position)) {
+            if (state.isPointInNavmesh(npcPosition)) {
               if (state.isPointInNavmesh(e.point)) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 npc.startAnimationByTags(e.tags);
               } else {
                 // find close navpoint and try to walk there
-                // 🚧 closeMeta.point should always be in navmesh
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
@@ -353,7 +352,7 @@ export default function NPCs(props) {
               }
             } else {
               // fade to close navpoint
-              const closeMeta = assertNonNull(api.gmGraph.getClosePoint(position));
+              const closeMeta = assertNonNull(api.gmGraph.getClosePoint(npcPosition));
               await npc.animateOpacity(0, 1000); // we don't set angle when rejoining navmesh
               await state.spawn({ npcKey: e.npcKey, point: closeMeta.point, angle: undefined });
               npc.startAnimationByTags(e.tags);

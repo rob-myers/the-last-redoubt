@@ -419,9 +419,10 @@ export default function createNpc(
         case 'walk': {
           const { anim } = this;
           this.el.root.getAnimations().forEach(x => x.cancel());
-          // ℹ️ cancelling rotate caused jerkiness
-          // 🚧 but seeing HMR issue i.e. turn back at end of walk
-          // isAnimAttached(anim.rotate, this.el.body) && anim.rotate.cancel();
+          if (isAnimAttached(anim.rotate, this.el.body)) {
+            anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
+            anim.rotate.cancel(); // else `npc do` orientation doesn't work
+          }
           isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
           // Animate position and rotation

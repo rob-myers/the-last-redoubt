@@ -156,6 +156,20 @@ export class Mat {
     v.y = y;
     return v;
   }
+  
+  /**
+   * Transform point, mutating it and ignoring translation.
+   * @template {Geom.VectJson} T
+   * @param {T} v
+   * @returns {T}
+   */
+  transformSansTranslate(v) {
+    let x = this.a * v.x + this.c * v.y;
+    let y = this.b * v.x + this.d * v.y;
+    v.x = x;
+    v.y = y;
+    return v;
+  }
 
   /** @param {SixTuple} _ */
   feedFromArray([a, b, c, d, e, f]) {

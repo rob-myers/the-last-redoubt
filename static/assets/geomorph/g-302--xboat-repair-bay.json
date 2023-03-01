@@ -124,7 +124,7 @@
     ],
     "singles": [
       {
-        "tags": ["wall", "machine", "no-fill", "transform-[1,0,0,1]"],
+        "tags": ["wall", "machine", "no-fill"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -141,7 +141,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -156,7 +156,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -171,7 +171,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -186,7 +186,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -201,7 +201,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -216,7 +216,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -231,7 +231,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -246,7 +246,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -261,7 +261,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -276,7 +276,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -291,7 +291,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -306,7 +306,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -321,7 +321,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -336,7 +336,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -351,7 +351,7 @@
         }
       },
       {
-        "tags": ["poly", "#fff-#000-4", "transform-[1,0,0,1]"],
+        "tags": ["poly", "#fff-#000-4"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -370,7 +370,7 @@
         }
       },
       {
-        "tags": ["fuel", "transform-[1,0,0,1]"],
+        "tags": ["fuel"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -387,28 +387,28 @@
         }
       },
       {
-        "tags": ["window", "transform-[1,0,0,1]"],
+        "tags": ["window"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[420, 409.9], [420, 424], [240, 424], [240, 409.9]]]
         }
       },
       {
-        "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-w"],
+        "tags": ["door", "hull", "hull-w"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-e"],
+        "tags": ["door", "hull", "hull-e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
         }
       },
       {
-        "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-s"],
+        "tags": ["door", "hull", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -417,35 +417,35 @@
         }
       },
       {
-        "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-s"],
+        "tags": ["door", "hull", "hull-s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[950, 596], [950, 604], [850, 604], [850, 596]]]
         }
       },
       {
-        "tags": ["door", "iris", "sealed", "hull", "transform-[1,0,0,1]"],
+        "tags": ["door", "iris", "sealed", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[535, 416], [535, 424], [485, 424], [485, 416]]]
         }
       },
       {
-        "tags": ["door", "sealed", "hull", "transform-[1,0,0,1]"],
+        "tags": ["door", "sealed", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1084, 10], [1084, 110], [1076, 110], [1076, 10]]]
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[772, 537], [772, 542], [728, 542], [728, 537]]]
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -454,7 +454,7 @@
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -463,35 +463,35 @@
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1173, 231], [1167, 231], [1167, 187], [1173, 187]]]
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1173, 171], [1167, 171], [1167, 127], [1173, 127]]]
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1173, 111], [1167, 111], [1167, 67], [1173, 67]]]
         }
       },
       {
-        "tags": ["door", "transform-[1,0,0,1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1173, 52], [1167, 52], [1167, 8], [1173, 8]]]
         }
       },
       {
-        "tags": ["ui", "label", "room", "locker", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -500,7 +500,7 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "locker", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -509,7 +509,7 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "locker", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -518,7 +518,7 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "locker", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -527,7 +527,7 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "eva", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "eva"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -536,15 +536,7 @@
         }
       },
       {
-        "tags": [
-          "ui",
-          "label",
-          "room",
-          "parts",
-          "or",
-          "cargo",
-          "transform-[1,0,0,1]"
-        ],
+        "tags": ["ui", "label", "room", "parts", "or", "cargo"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -553,28 +545,28 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "fuel", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "fuel"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[180, 458], [180, 480], [158, 480], [158, 458]]]
         }
       },
       {
-        "tags": ["ui", "label", "room", "airlock", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "airlock"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[522, 470], [522, 492], [500, 492], [500, 470]]]
         }
       },
       {
-        "tags": ["ui", "label", "room", "repair", "bay", "transform-[1,0,0,1]"],
+        "tags": ["ui", "label", "room", "repair", "bay"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[750, 472], [750, 494], [728, 494], [728, 472]]]
         }
       },
       {
-        "tags": ["view", "transform-[1,0,0,1]"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -588,7 +580,7 @@
         }
       },
       {
-        "tags": ["view", "transform-[1,0,0,1]"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -602,7 +594,7 @@
         }
       },
       {
-        "tags": ["view", "transform-[1,0,0,1]"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -616,7 +608,7 @@
         }
       },
       {
-        "tags": ["view", "transform-[1,0,0,1]"],
+        "tags": ["view"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -630,7 +622,7 @@
         }
       },
       {
-        "tags": ["relate-connectors", "transform-[1,0,0,1]"],
+        "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -644,14 +636,14 @@
         }
       },
       {
-        "tags": ["relate-connectors", "transform-[1,0,0,1]"],
+        "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1080, 450], [900, 450], [900, 445], [1080, 445]]]
         }
       },
       {
-        "tags": ["view", "reverse", "transform-[1,0,0,1]"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -660,7 +652,7 @@
         }
       },
       {
-        "tags": ["view", "reverse", "transform-[1,0,0,1]"],
+        "tags": ["view", "reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -674,7 +666,7 @@
         }
       },
       {
-        "tags": ["light", "transform-[1,0,0,1]"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -688,7 +680,7 @@
         }
       },
       {
-        "tags": ["light", "distance-200", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -702,7 +694,7 @@
         }
       },
       {
-        "tags": ["light", "distance-160", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-160"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -716,7 +708,7 @@
         }
       },
       {
-        "tags": ["light", "transform-[1,0,0,1]"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -730,7 +722,7 @@
         }
       },
       {
-        "tags": ["light", "distance-120", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-120"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -744,7 +736,7 @@
         }
       },
       {
-        "tags": ["light", "transform-[1,0,0,1]"],
+        "tags": ["light"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -758,7 +750,7 @@
         }
       },
       {
-        "tags": ["light", "distance-80", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-80"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -772,7 +764,7 @@
         }
       },
       {
-        "tags": ["light", "distance-80", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-80"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -786,7 +778,7 @@
         }
       },
       {
-        "tags": ["light", "distance-80", "transform-[1,0,0,1]"],
+        "tags": ["light", "distance-80"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -800,7 +792,7 @@
         }
       },
       {
-        "tags": ["relate-connectors", "transform-[1,0,0,1]"],
+        "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -814,35 +806,35 @@
         }
       },
       {
-        "tags": ["window", "transform-[0,1,-1,0]"],
+        "tags": ["window"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[120, 238], [107.7, 238], [107.7, 122], [120, 122]]]
         }
       },
       {
-        "tags": ["door", "e", "transform-[0,1,-1,0]"],
+        "tags": ["door", "e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[44, 243], [12, 243], [12, 237], [44, 237]]]
         }
       },
       {
-        "tags": ["door", "w", "transform-[0,1,-1,0]"],
+        "tags": ["door", "w"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[44, 123], [12, 123], [12, 117], [44, 117]]]
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[-2, 120], [2, 120], [2, 242], [-2, 242], [-2, 120]]]
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -851,7 +843,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -860,7 +852,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -869,7 +861,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -878,14 +870,14 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "office", "transform-[0,1,-1,0]"],
+        "tags": ["ui", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[40, 185], [30, 185], [30, 175], [40, 175]]]
         }
       },
       {
-        "tags": ["relate-connectors", "transform-[0,1,-1,0]"],
+        "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -894,14 +886,14 @@
         }
       },
       {
-        "tags": ["door", "s", "transform-[-1,0,0,1]"],
+        "tags": ["door", "s"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1134, 236], [1134, 244], [1088, 244], [1088, 236]]]
         }
       },
       {
-        "tags": ["wall", "transform-[-1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -910,7 +902,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[-1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -919,7 +911,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[-1,0,0,1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -928,14 +920,14 @@
         }
       },
       {
-        "tags": ["door", "transform-[-1,0,0,-1]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[417, 533], [417, 487], [423, 487], [423, 533]]]
         }
       },
       {
-        "tags": ["wall", "transform-[-1,0,0,-1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -944,7 +936,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[-1,0,0,-1]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -953,14 +945,14 @@
         }
       },
       {
-        "tags": ["ui", "label", "room", "lounge", "transform-[-1,0,0,-1]"],
+        "tags": ["ui", "label", "room", "lounge"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[295, 485], [295, 475], [305, 475], [305, 485]]]
         }
       },
       {
-        "tags": ["ui", "label", "room", "toilet", "transform-[-1,0,0,-1]"],
+        "tags": ["ui", "label", "room", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -974,14 +966,14 @@
         }
       },
       {
-        "tags": ["door", "e", "transform-[0,1,-1,0]"],
+        "tags": ["door", "e"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[534, 543], [488, 543], [488, 537], [534, 537]]]
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -990,7 +982,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -999,7 +991,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1008,7 +1000,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,-1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1017,7 +1009,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1026,7 +1018,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1035,7 +1027,7 @@
         }
       },
       {
-        "tags": ["wall", "transform-[0,1,1,0]"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1044,28 +1036,28 @@
         }
       },
       {
-        "tags": ["door", "transform-[0,1,1,0]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[537, 430], [543, 430], [543, 470], [537, 470]]]
         }
       },
       {
-        "tags": ["door", "transform-[0,1,1,0]"],
+        "tags": ["door"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[537, 490], [543, 490], [543, 530], [537, 530]]]
         }
       },
       {
-        "tags": ["ui", "label", "room", "locker", "transform-[0,1,1,0]"],
+        "tags": ["ui", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[564, 475], [574, 475], [574, 485], [564, 485]]]
         }
       },
       {
-        "tags": ["parallel-connectors", "transform-[0,1,1,0]"],
+        "tags": ["parallel-connectors"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1079,7 +1071,7 @@
         }
       },
       {
-        "tags": ["wall", "no-fill", "transform-[0,1,-1,0]"],
+        "tags": ["wall", "no-fill"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1509,7 +1501,7 @@
         "coordinates": [[[4, 250], [4, 350], [-4, 350], [-4, 250]]]
       },
       "rect": {"x": -4, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-w"],
+      "tags": ["door", "hull", "hull-w"],
       "seg": [{"x": 0, "y": 250}, {"x": 0, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [null, 2],
@@ -1523,7 +1515,7 @@
         "coordinates": [[[1204, 250], [1204, 350], [1196, 350], [1196, 250]]]
       },
       "rect": {"x": 1196, "y": 250, "width": 8, "height": 100},
-      "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-e"],
+      "tags": ["door", "hull", "hull-e"],
       "seg": [{"x": 1200, "y": 250}, {"x": 1200, "y": 350}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [2, null],
@@ -1539,7 +1531,7 @@
         ]
       },
       "rect": {"x": 249.996, "y": 596, "width": 100, "height": 8},
-      "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-s"],
+      "tags": ["door", "hull", "hull-s"],
       "seg": [{"x": 349.996, "y": 600}, {"x": 249.996, "y": 600}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [2, null],
@@ -1553,7 +1545,7 @@
         "coordinates": [[[950, 596], [950, 604], [850, 604], [850, 596]]]
       },
       "rect": {"x": 850, "y": 596, "width": 100, "height": 8},
-      "tags": ["door", "hull", "transform-[1,0,0,1]", "hull-s"],
+      "tags": ["door", "hull", "hull-s"],
       "seg": [{"x": 950, "y": 600}, {"x": 850, "y": 600}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [2, null],
@@ -1567,7 +1559,7 @@
         "coordinates": [[[535, 416], [535, 424], [485, 424], [485, 416]]]
       },
       "rect": {"x": 485, "y": 416, "width": 50, "height": 8},
-      "tags": ["door", "iris", "sealed", "hull", "transform-[1,0,0,1]"],
+      "tags": ["door", "iris", "sealed", "hull"],
       "seg": [{"x": 535, "y": 420}, {"x": 485, "y": 420}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [null, 4],
@@ -1581,7 +1573,7 @@
         "coordinates": [[[1084, 10], [1084, 110], [1076, 110], [1076, 10]]]
       },
       "rect": {"x": 1076, "y": 10, "width": 8, "height": 100},
-      "tags": ["door", "sealed", "hull", "transform-[1,0,0,1]"],
+      "tags": ["door", "sealed", "hull"],
       "seg": [{"x": 1080, "y": 10}, {"x": 1080, "y": 110}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [null, 8],
@@ -1595,7 +1587,7 @@
         "coordinates": [[[772, 537], [772, 542], [728, 542], [728, 537]]]
       },
       "rect": {"x": 728, "y": 537, "width": 44, "height": 5},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 772, "y": 539.5}, {"x": 728, "y": 539.5}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [6, 2],
@@ -1611,7 +1603,7 @@
         ]
       },
       "rect": {"x": 897.5, "y": 428, "width": 5, "height": 44},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 900, "y": 472}, {"x": 900, "y": 428}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [7, 6],
@@ -1627,7 +1619,7 @@
         ]
       },
       "rect": {"x": 1077.5, "y": 367, "width": 5, "height": 105},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 1080, "y": 472}, {"x": 1080, "y": 367}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [2, 7],
@@ -1641,7 +1633,7 @@
         "coordinates": [[[1173, 231], [1167, 231], [1167, 187], [1173, 187]]]
       },
       "rect": {"x": 1167, "y": 187, "width": 6, "height": 44},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 1170, "y": 231}, {"x": 1170, "y": 187}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [12, 8],
@@ -1655,7 +1647,7 @@
         "coordinates": [[[1173, 171], [1167, 171], [1167, 127], [1173, 127]]]
       },
       "rect": {"x": 1167, "y": 127, "width": 6, "height": 44},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 1170, "y": 171}, {"x": 1170, "y": 127}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [11, 8],
@@ -1669,7 +1661,7 @@
         "coordinates": [[[1173, 111], [1167, 111], [1167, 67], [1173, 67]]]
       },
       "rect": {"x": 1167, "y": 67, "width": 6, "height": 44},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 1170, "y": 111}, {"x": 1170, "y": 67}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [10, 8],
@@ -1683,7 +1675,7 @@
         "coordinates": [[[1173, 52], [1167, 52], [1167, 8], [1173, 8]]]
       },
       "rect": {"x": 1167, "y": 8, "width": 6, "height": 44},
-      "tags": ["door", "transform-[1,0,0,1]"],
+      "tags": ["door"],
       "seg": [{"x": 1170, "y": 52}, {"x": 1170, "y": 8}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [9, 8],
@@ -1697,7 +1689,7 @@
         "coordinates": [[[44, 243], [12, 243], [12, 237], [44, 237]]]
       },
       "rect": {"x": 12, "y": 237, "width": 32, "height": 6},
-      "tags": ["door", "e", "transform-[0,1,-1,0]"],
+      "tags": ["door", "e"],
       "seg": [{"x": 44, "y": 240}, {"x": 12, "y": 240}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [1, 2],
@@ -1711,7 +1703,7 @@
         "coordinates": [[[44, 123], [12, 123], [12, 117], [44, 117]]]
       },
       "rect": {"x": 12, "y": 117, "width": 32, "height": 6},
-      "tags": ["door", "w", "transform-[0,1,-1,0]"],
+      "tags": ["door", "w"],
       "seg": [{"x": 44, "y": 120}, {"x": 12, "y": 120}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [0, 1],
@@ -1725,7 +1717,7 @@
         "coordinates": [[[1134, 236], [1134, 244], [1088, 244], [1088, 236]]]
       },
       "rect": {"x": 1088, "y": 236, "width": 46, "height": 8},
-      "tags": ["door", "s", "transform-[-1,0,0,1]"],
+      "tags": ["door", "s"],
       "seg": [{"x": 1134, "y": 240}, {"x": 1088, "y": 240}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [8, 2],
@@ -1739,7 +1731,7 @@
         "coordinates": [[[417, 533], [417, 487], [423, 487], [423, 533]]]
       },
       "rect": {"x": 417, "y": 487, "width": 6, "height": 46},
-      "tags": ["door", "transform-[-1,0,0,-1]"],
+      "tags": ["door"],
       "seg": [{"x": 420, "y": 533}, {"x": 420, "y": 487}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [3, 2],
@@ -1753,7 +1745,7 @@
         "coordinates": [[[534, 543], [488, 543], [488, 537], [534, 537]]]
       },
       "rect": {"x": 488, "y": 537, "width": 46, "height": 6},
-      "tags": ["door", "e", "transform-[0,1,-1,0]"],
+      "tags": ["door", "e"],
       "seg": [{"x": 534, "y": 540}, {"x": 488, "y": 540}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [4, 2],
@@ -1767,7 +1759,7 @@
         "coordinates": [[[537, 430], [543, 430], [543, 470], [537, 470]]]
       },
       "rect": {"x": 537, "y": 430, "width": 6, "height": 40},
-      "tags": ["door", "transform-[0,1,1,0]"],
+      "tags": ["door"],
       "seg": [{"x": 540, "y": 430}, {"x": 540, "y": 470}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [4, 5],
@@ -1781,7 +1773,7 @@
         "coordinates": [[[537, 490], [543, 490], [543, 530], [537, 530]]]
       },
       "rect": {"x": 537, "y": 490, "width": 6, "height": 40},
-      "tags": ["door", "transform-[0,1,1,0]"],
+      "tags": ["door"],
       "seg": [{"x": 540, "y": 490}, {"x": 540, "y": 530}],
       "normal": {"x": -1, "y": 0},
       "roomIds": [4, 5],
@@ -1797,7 +1789,7 @@
         "coordinates": [[[420, 409.9], [420, 424], [240, 424], [240, 409.9]]]
       },
       "rect": {"x": 240, "y": 409.9, "width": 180, "height": 14.1},
-      "tags": ["window", "transform-[1,0,0,1]"],
+      "tags": ["window"],
       "seg": [{"x": 420, "y": 416.95}, {"x": 240, "y": 416.95}],
       "normal": {"x": 0, "y": -1},
       "roomIds": [null, 2],
@@ -1811,7 +1803,7 @@
         "coordinates": [[[120, 238], [107.7, 238], [107.7, 122], [120, 122]]]
       },
       "rect": {"x": 107.7, "y": 122, "width": 12.3, "height": 116},
-      "tags": ["window", "transform-[0,1,-1,0]"],
+      "tags": ["window"],
       "seg": [{"x": 113.85, "y": 238}, {"x": 113.85, "y": 122}],
       "normal": {"x": 1, "y": 0},
       "roomIds": [null, null],
@@ -1820,108 +1812,108 @@
   ],
   "labels": [
     {
-      "text": "room locker transform-[1,0,0,1]",
+      "text": "room locker",
       "center": {"x": 1170.1, "y": 29.6},
       "index": 0,
       "tags": ["ui", "label"],
-      "rect": {"x": 1094.6, "y": 24.6, "width": 151, "height": 10},
-      "padded": {"x": 1090.6, "y": 22.6, "width": 159, "height": 14}
+      "rect": {"x": 1141.1, "y": 24.6, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 22.6, "width": 66, "height": 14}
     },
     {
-      "text": "room locker transform-[1,0,0,1]",
+      "text": "room locker",
       "center": {"x": 1170.1, "y": 90.3},
       "index": 1,
       "tags": ["ui", "label"],
-      "rect": {"x": 1094.6, "y": 85.3, "width": 151, "height": 10},
-      "padded": {"x": 1090.6, "y": 83.3, "width": 159, "height": 14}
+      "rect": {"x": 1141.1, "y": 85.3, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 83.3, "width": 66, "height": 14}
     },
     {
-      "text": "room locker transform-[1,0,0,1]",
+      "text": "room locker",
       "center": {"x": 1170.1, "y": 148.4},
       "index": 2,
       "tags": ["ui", "label"],
-      "rect": {"x": 1094.6, "y": 143.4, "width": 151, "height": 10},
-      "padded": {"x": 1090.6, "y": 141.4, "width": 159, "height": 14}
+      "rect": {"x": 1141.1, "y": 143.4, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 141.4, "width": 66, "height": 14}
     },
     {
-      "text": "room locker transform-[1,0,0,1]",
+      "text": "room locker",
       "center": {"x": 1170.1, "y": 210.2},
       "index": 3,
       "tags": ["ui", "label"],
-      "rect": {"x": 1094.6, "y": 205.2, "width": 151, "height": 10},
-      "padded": {"x": 1090.6, "y": 203.2, "width": 159, "height": 14}
+      "rect": {"x": 1141.1, "y": 205.2, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 203.2, "width": 66, "height": 14}
     },
     {
-      "text": "room eva transform-[1,0,0,1]",
+      "text": "room eva",
       "center": {"x": 1129, "y": 120.1},
       "index": 4,
       "tags": ["ui", "label"],
-      "rect": {"x": 1059.5, "y": 115.1, "width": 139, "height": 10},
-      "padded": {"x": 1055.5, "y": 113.1, "width": 147, "height": 14}
+      "rect": {"x": 1106, "y": 115.1, "width": 46, "height": 10},
+      "padded": {"x": 1102, "y": 113.1, "width": 54, "height": 14}
     },
     {
-      "text": "room parts or cargo transform-[1,0,0,1]",
+      "text": "room parts or cargo",
       "center": {"x": 988.5, "y": 483},
       "index": 5,
       "tags": ["ui", "label"],
-      "rect": {"x": 893.5, "y": 477.5, "width": 190, "height": 11},
-      "padded": {"x": 889.5, "y": 475.5, "width": 198, "height": 15}
+      "rect": {"x": 940, "y": 477.5, "width": 97, "height": 11},
+      "padded": {"x": 936, "y": 475.5, "width": 105, "height": 15}
     },
     {
-      "text": "room fuel transform-[1,0,0,1]",
+      "text": "room fuel",
       "center": {"x": 169, "y": 469},
       "index": 6,
       "tags": ["ui", "label"],
-      "rect": {"x": 100, "y": 464, "width": 138, "height": 10},
-      "padded": {"x": 96, "y": 462, "width": 146, "height": 14}
+      "rect": {"x": 146.5, "y": 464, "width": 45, "height": 10},
+      "padded": {"x": 142.5, "y": 462, "width": 53, "height": 14}
     },
     {
-      "text": "room airlock transform-[1,0,0,1]",
+      "text": "room airlock",
       "center": {"x": 511, "y": 481},
       "index": 7,
       "tags": ["ui", "label"],
-      "rect": {"x": 434.5, "y": 476, "width": 153, "height": 10},
-      "padded": {"x": 430.5, "y": 474, "width": 161, "height": 14}
+      "rect": {"x": 481, "y": 476, "width": 60, "height": 10},
+      "padded": {"x": 477, "y": 474, "width": 68, "height": 14}
     },
     {
-      "text": "room repair bay transform-[1,0,0,1]",
+      "text": "room repair bay",
       "center": {"x": 739, "y": 483},
       "index": 8,
       "tags": ["ui", "label"],
-      "rect": {"x": 654, "y": 477.5, "width": 170, "height": 11},
-      "padded": {"x": 650, "y": 475.5, "width": 178, "height": 15}
+      "rect": {"x": 700.5, "y": 477.5, "width": 77, "height": 11},
+      "padded": {"x": 696.5, "y": 475.5, "width": 85, "height": 15}
     },
     {
-      "text": "room office transform-[0,1,-1,0]",
+      "text": "room office",
       "center": {"x": 35, "y": 180},
       "index": 9,
       "tags": ["ui", "label"],
-      "rect": {"x": -41, "y": 175, "width": 152, "height": 10},
-      "padded": {"x": -45, "y": 173, "width": 160, "height": 14}
+      "rect": {"x": 7.5, "y": 175, "width": 55, "height": 10},
+      "padded": {"x": 3.5, "y": 173, "width": 63, "height": 14}
     },
     {
-      "text": "room lounge transform-[-1,0,0,-1]",
+      "text": "room lounge",
       "center": {"x": 300, "y": 480},
       "index": 10,
       "tags": ["ui", "label"],
-      "rect": {"x": 219.5, "y": 474.5, "width": 161, "height": 11},
-      "padded": {"x": 215.5, "y": 472.5, "width": 169, "height": 15}
+      "rect": {"x": 270, "y": 474.5, "width": 60, "height": 11},
+      "padded": {"x": 266, "y": 472.5, "width": 68, "height": 15}
     },
     {
-      "text": "room toilet transform-[-1,0,0,-1]",
+      "text": "room toilet",
       "center": {"x": 447.64, "y": 522.92},
       "index": 11,
       "tags": ["ui", "label"],
-      "rect": {"x": 372.14, "y": 517.92, "width": 151, "height": 10},
-      "padded": {"x": 368.14, "y": 515.92, "width": 159, "height": 14}
+      "rect": {"x": 422.64, "y": 517.92, "width": 50, "height": 10},
+      "padded": {"x": 418.64, "y": 515.92, "width": 58, "height": 14}
     },
     {
-      "text": "room locker transform-[0,1,1,0]",
+      "text": "room locker",
       "center": {"x": 569, "y": 480},
       "index": 12,
       "tags": ["ui", "label"],
-      "rect": {"x": 493.5, "y": 475, "width": 151, "height": 10},
-      "padded": {"x": 489.5, "y": 473, "width": 159, "height": 14}
+      "rect": {"x": 540, "y": 475, "width": 58, "height": 10},
+      "padded": {"x": 536, "y": 473, "width": 66, "height": 14}
     }
   ],
   "navPoly": [

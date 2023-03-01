@@ -48,17 +48,15 @@ ${Object.keys(parsed.animLookup).map((animName) => `
  */
 export function computeTagsMeta(tags) {
   const doable = hasTag(tags, ['ui', 'action']);
-  // 🚧 compute orientation using `angle-{deg}` `transform-[a,b,c,d]` and gmTransform
-  // const angleDegrees = tags.reduce((_, tag) =>
-  //   tag.startsWith('angle-') ? Number(tag.slice('angle-'.length)) : undefined ,
-  //   /** @type {undefined | number} */ (undefined),
-  // );
+  // compute orientation using final `orient-{deg}` and 🚧 gmTransform
+  const angleDegrees = tags.reduce((_, tag) =>
+    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : undefined ,
+    /** @type {undefined | number} */ (undefined),
+  );
   return {
-    // angleRadians: typeof angleDegrees === 'number'
-    //   ? angleDegrees * (Math.PI / 180)
-    //   : undefined,
     doable,
     spawnable: doable && hasTag(tags, 'stand', 'sit', 'lie'),
+    orientationRadians: angleDegrees ? angleDegrees * (Math.PI/180) : undefined,
   };
 }
 

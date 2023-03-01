@@ -43,13 +43,13 @@
       <title>ui action lie bed</title>
     </rect>
     <rect x="445" y="120" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action sit toilet angle-90</title>
+      <title>ui action sit toilet orient-90</title>
     </rect>
     <rect x="545" y="145" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>ui action shower</title>
     </rect>
     <rect x="445" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action stand angle-270</title>
+      <title>ui action stand orient-270</title>
     </rect>
     <rect x="345" y="400" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>ui action stand</title>

@@ -32,13 +32,18 @@ export async function createLayout(def, lookup, triangleService) {
        * Starship symbol PNGs are 5 times larger than Geomorph PNGs.
        * We skip 1st item i.e. hull, which corresponds to a geomorph PNG.
        */
-      m.a *= 0.2, m.b *= 0.2, m.c *= 0.2, m.d *= 0.2;
+      m.a *= 0.2,
+      m.b *= 0.2,
+      m.c *= 0.2,
+      m.d *= 0.2;
     }
     // Transform singles (restricting doors/walls by tags)
     // Room orientation tags permit decoding angle-{deg} tags later
-    const transformTag = `transform-[${(item.transform || [1, 0, 0, 1, 0, 0]).slice(0, 4)}]`
     const restricted = singles
-      .map(({ tags, poly }) => ({ tags: tags.concat(transformTag), poly: poly.clone().applyMatrix(m).precision(precision) }))
+      .map(({ tags, poly }) => ({
+        tags: modifySinglesTags(tags.slice(), m),
+        poly: poly.clone().applyMatrix(m).precision(precision),
+      }))
       .filter(({ tags }) => {
         return item.doors && tags.includes('door')
           ? tags.some(tag => /** @type {string[]} */ (item.doors).includes(tag))
@@ -317,6 +322,22 @@ export function getNormalizedDoorPolys(doors) {
   return doors.map(door =>
     door.tags.includes('hull') ? outsetConnectorEntry(door, hullDoorOutset) : door.poly
   );
+}
+
+
+/**
+ * @param {string[]} tags 
+ * @param {Mat} roomTransformMatrix 
+ */
+function modifySinglesTags(tags, roomTransformMatrix) {
+  const orientTag = tags.find(tag => tag.startsWith('orient-'));
+  if (orientTag) {
+    const radians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
+    const unit = new Vect(Math.cos(radians), Math.sin(radians));
+    roomTransformMatrix.transformSansTranslate(unit);
+    tags.push(`orient-${(Math.atan2(unit.y, unit.x) * (180/Math.PI)).toFixed(0)}`);
+  }
+  return tags;
 }
 
 /**
