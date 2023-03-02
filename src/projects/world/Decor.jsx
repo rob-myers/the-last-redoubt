@@ -176,7 +176,7 @@ const cssPoint = css`
   height: 5px;
   transform-origin: center;
   border-radius: 50%;
-  background-color: #00000099;
+  border: 1px solid #00000066;
   pointer-events: all;
   cursor: pointer;
 `;
