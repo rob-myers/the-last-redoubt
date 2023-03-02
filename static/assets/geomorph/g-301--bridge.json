@@ -2561,7 +2561,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient-360"],
+        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2579,7 +2579,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient-360"],
+        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
