@@ -37,14 +37,14 @@ export default function NPC({ api, npcKey, disabled }) {
           cssName.npcBody,
           npc.key,
           'no-select',
-          // ℹ️ saw webp break background-position animation
           supportsWebp ? 'webp' : undefined,
         )}
         data-npc-key={npc.key}
       />
       <div className="interact-circle" />
+      <div className="bounds-circle" />
       <div
-        className="bounds-circle"
+        className="head-circle"
         data-tags={['npc', npc.key].join(' ')}
       />
     </div>
@@ -84,7 +84,6 @@ const rootCss = css`
   }
 
   .bounds-circle {
-    pointer-events: all;
     display: var(${cssName.npcsDebugDisplay});
     position: absolute;
     width: calc(2 * var(${cssName.npcBoundsRadius}));
@@ -93,6 +92,19 @@ const rootCss = css`
     top: calc(-1 * var(${cssName.npcBoundsRadius}));
     border-radius: calc(2 * var(${cssName.npcBoundsRadius}));
     border: 1px solid rgba(255, 0, 0, 0.25);
+  }
+
+  .head-circle {
+    pointer-events: all;
+    cursor: pointer;
+    display: var(${cssName.npcsDebugDisplay});
+    position: absolute;
+    width: calc(2 * var(${cssName.npcHeadRadius}));
+    height: calc(2 * var(${cssName.npcHeadRadius}));
+    left: calc(-1 * var(${cssName.npcHeadRadius}));
+    top: calc(-1 * var(${cssName.npcHeadRadius}));
+    border-radius: calc(2 * var(${cssName.npcHeadRadius}));
+    border: 1px solid rgba(0, 0, 0, 0.25);
   }
 `;
 

@@ -313,6 +313,7 @@ export default function createNpc(
       this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
       const { radius, scale: npcScale } = npcsMeta[this.jsonKey];
       this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
+      this.el.root.style.setProperty(cssName.npcHeadRadius, `${5}px`); // 🚧 remove hard-coding
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
       this.unspawned = false;

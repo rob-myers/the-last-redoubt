@@ -52,6 +52,7 @@ export const cssName = {
   npcDoorTouchRadius: '--npc-door-touch-radius',
   npcsInteractRadius: '--npcs-interact-radius',
   npcBoundsRadius: '--npc-bounds-radius',
+  npcHeadRadius: '--npc-head-radius',
 
   open: 'open',
   resetIcon: 'reset-icon',
