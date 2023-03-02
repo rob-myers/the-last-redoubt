@@ -1157,7 +1157,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "stand", "toilet", "orient-270", "orient--90"],
+        "tags": ["ui", "action", "stand", "toilet", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1166,7 +1166,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "stand", "sink", "orient-270", "orient--90"],
+        "tags": ["ui", "action", "stand", "sink", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1189,7 +1189,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient--45"],
+        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient-315"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2156,7 +2156,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "stand", "toilet", "orient-270", "orient--90"],
+        "tags": ["ui", "action", "stand", "toilet", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2165,7 +2165,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "stand", "sink", "orient-270", "orient--90"],
+        "tags": ["ui", "action", "stand", "sink", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2188,7 +2188,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient--135"],
+        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient-225"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2360,7 +2360,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient--90"],
+        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[89, 456], [89, 454], [91, 454], [91, 456]]]
@@ -2465,7 +2465,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient--90"],
+        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[209, 456], [209, 454], [211, 454], [211, 456]]]
@@ -2561,7 +2561,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient--0"],
+        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient-360"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2579,7 +2579,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient--0"],
+        "tags": ["ui", "action", "sit", "toilet", "orient-90", "orient-360"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2606,7 +2606,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair", "orient-45", "orient--45"],
+        "tags": ["ui", "action", "sit", "chair", "orient-45", "orient-315"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2620,7 +2620,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient--135"],
+        "tags": ["ui", "action", "sit", "chair", "orient-315", "orient-225"],
         "poly": {
           "type": "Polygon",
           "coordinates": [

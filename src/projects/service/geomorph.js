@@ -332,10 +332,11 @@ export function getNormalizedDoorPolys(doors) {
 function modifySinglesTags(tags, roomTransformMatrix) {
   const orientTag = tags.find(tag => tag.startsWith('orient-'));
   if (orientTag) {
-    const radians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
-    const unit = new Vect(Math.cos(radians), Math.sin(radians));
+    const oldRadians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
+    const unit = new Vect(Math.cos(oldRadians), Math.sin(oldRadians));
     roomTransformMatrix.transformSansTranslate(unit);
-    tags.push(`orient-${(Math.atan2(unit.y, unit.x) * (180/Math.PI)).toFixed(0)}`);
+    const newDegrees = Math.round(Math.atan2(unit.y, unit.x) * (180/Math.PI));
+    tags.push(`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`);
   }
   return tags;
 }
