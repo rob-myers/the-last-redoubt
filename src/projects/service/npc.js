@@ -44,19 +44,26 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 
 /**
  * @param {string[]} tags
+ * @param {Geom.Mat} gmMatrix
  * @returns {NPC.TagsMeta}
  */
-export function computeTagsMeta(tags) {
+export function computeTagsMeta(tags, gmMatrix) {
   const doable = hasTag(tags, ['ui', 'action']);
-  // compute orientation using final `orient-{deg}` and 🚧 gmTransform
-  const angleDegrees = tags.reduce((_, tag) =>
-    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : undefined ,
+  
+  /** This final `orient-{deg}` should be orientation relative to transformed room */
+  const roomOrientDegrees = tags.reduce((_, tag) =>
+    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : undefined,
     /** @type {undefined | number} */ (undefined),
   );
+  /** Compute orientation relative to world coords */
+  const worldOrientRadians = roomOrientDegrees === undefined
+    ? undefined
+    : gmMatrix.transformAngle(roomOrientDegrees * (Math.PI/180));
+
   return {
     doable,
     spawnable: doable && hasTag(tags, 'stand', 'sit', 'lie'),
-    orientationRadians: angleDegrees ? angleDegrees * (Math.PI/180) : undefined,
+    orientRadians: worldOrientRadians,
   };
 }
 

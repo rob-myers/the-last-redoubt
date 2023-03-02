@@ -340,7 +340,7 @@ declare namespace NPC {
   }
 
   export interface TagsMeta {
-    orientationRadians?: number;
+    orientRadians?: number;
     doable: boolean;
     spawnable: boolean;
   }

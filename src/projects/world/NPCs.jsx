@@ -6,7 +6,7 @@ import { filter } from "rxjs/operators";
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
-import { assertNonNull, keys, testNever } from "../service/generic";
+import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { geom } from "../service/geom";
 import { getUiPointDecorKey } from "../service/geomorph";
@@ -329,8 +329,8 @@ export default function NPCs(props) {
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const npcPosition = npc.getPosition();
-          // 🚧 provide gmTransform
-          const doMeta = npcService.computeTagsMeta(e.tags);
+          const gmMatrix = assertDefined(api.gmGraph.gms.find(x => x.gridRect.contains(e.point))).matrix;
+          const doMeta = npcService.computeTagsMeta(e.tags, gmMatrix);
           // 🚧 move into function
           try {
             if (state.isPointInNavmesh(npcPosition)) {
@@ -345,7 +345,7 @@ export default function NPCs(props) {
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 if (doMeta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
-                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientationRadians });
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientRadians });
                   npc.startAnimationByTags(e.tags);
                   await npc.animateOpacity(1, 1000);
                 }
@@ -369,7 +369,7 @@ export default function NPCs(props) {
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
                 if (doMeta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
-                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientationRadians });
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientRadians });
                   npc.startAnimationByTags(e.tags);
                   await npc.animateOpacity(1, 1000);
                 }

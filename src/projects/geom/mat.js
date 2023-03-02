@@ -144,6 +144,17 @@ export class Mat {
   }
 
   /**
+   * Compute action of `this` on unit direction vector with angle
+   * @see {radians} converting the latter back into an angle.
+   * @param {number} radians
+   */
+  transformAngle(radians) {
+    const unit = { x: Math.cos(radians), y: Math.sin(radians) };
+    this.transformSansTranslate(unit);
+    return Math.atan2(unit.y, unit.x);
+  }
+
+  /**
    * Transform point, mutating it.
    * @template {Geom.VectJson} T
    * @param {T} v

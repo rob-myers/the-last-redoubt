@@ -333,9 +333,7 @@ function modifySinglesTags(tags, roomTransformMatrix) {
   const orientTag = tags.find(tag => tag.startsWith('orient-'));
   if (orientTag) {
     const oldRadians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
-    const unit = new Vect(Math.cos(oldRadians), Math.sin(oldRadians));
-    roomTransformMatrix.transformSansTranslate(unit);
-    const newDegrees = Math.round(Math.atan2(unit.y, unit.x) * (180/Math.PI));
+    const newDegrees = Math.round(roomTransformMatrix.transformAngle(oldRadians) * (180/Math.PI));
     tags.push(`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`);
   }
   return tags;
