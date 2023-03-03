@@ -8,7 +8,7 @@
 - ℹ️ clarity: goto point and play animation, where goto means:
   - `walk-to`
   - `walk-near-then-fade`
-  - `fade-near-then-nav`
+  - `fade-near`
 - 🚧 start shell function `doLoop`
   - ✅ shell function `flatMap`
   - ✅ sit/stand/lie ui points have tag `action`
@@ -28,9 +28,9 @@
       - ℹ️ we always need a nav-node to return to
       - ✅ on-mesh -> off-mesh
       - ✅ off-mesh -> on/off-mesh
-    - turns towards navNode before fade-spawn
-    - can only leave off-mesh by clicking nearby action points
+    - ✅ can only leave off-mesh by clicking nearby action points
       - thus always need at least one nearby on-mesh action point
+    - 🚧 turns towards navNode before fade-spawn
     - handle `goLoop` walk attempted during walk in `doLoop`
     - ❌ can click anywhere on navmesh to return to it
 - ✅ sit has angle

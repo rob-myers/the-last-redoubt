@@ -316,22 +316,22 @@ export function findRoomIdContaining(rooms, localPoint) {
 
 /**
  * Find a stand point close to `target` in same room.
- * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target 
- * @param {Geomorph.GeomorphData} gm 
+ * Assume the target `point` world coords, whereas stand points local to geomorph.
+ * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target
+ * @param {Geomorph.GeomorphDataInstance} gm 
  * @param {number} [maxDistSqr]
  */
 export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITIVE_INFINITY) {
   if (typeof meta.roomId !== 'number') {
     throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
-  const standPoints = gm.point[meta.roomId].ui.filter(
-    p => p.meta.stand && !(point.x === p.x && point.y === p.y)
-  );
-  const closestStandPoint = geom.findClosestPoint(standPoints, point, maxDistSqr);
+  const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
+  const standPoints = gm.point[meta.roomId].ui.filter(p => p.meta.stand && !localPoint.equals(p));
+  const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
   if (closestStandPoint === null) {
-    throw Error(`nearby stand point not found (${JSON.stringify({ point, meta })})`);
+    throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);
   }
-  return closestStandPoint;
+  return gm.matrix.transformPoint(closestStandPoint);
 }
 
 /**
