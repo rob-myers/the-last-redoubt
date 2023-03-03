@@ -87,7 +87,7 @@ goOnce: `{
 /** Usage: lookLoop {npcKey} */
 lookLoop: `{
   click |
-    filter 'x => !x.tags.includes("nav")' |
+    filter 'x => !x.tags.includes("nav") && !x.tags.includes("do")' |
     look $1
 }`,
 
