@@ -2353,7 +2353,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[28, 420], [28, 418], [30, 418], [30, 420]]]
@@ -2458,7 +2458,7 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed"],
+        "tags": ["ui", "action", "lie", "bed", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[148, 420], [148, 418], [150, 418], [150, 420]]]
