@@ -1653,28 +1653,28 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed"],
+        "tags": ["ui", "do", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[429, 150], [431, 150], [431, 152], [429, 152]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[509, 161], [511, 161], [511, 163], [509, 163]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[391, 216], [393, 216], [393, 218], [391, 218]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[435, 216], [437, 216], [437, 218], [435, 218]]]
@@ -1900,28 +1900,28 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed"],
+        "tags": ["ui", "do", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[429, 508], [431, 508], [431, 510], [429, 510]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[509, 497], [511, 497], [511, 499], [509, 499]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[391, 442], [393, 442], [393, 444], [391, 444]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[435, 442], [437, 442], [437, 444], [435, 444]]]
@@ -1967,28 +1967,28 @@
         }
       },
       {
-        "tags": ["ui", "action", "lie", "bed"],
+        "tags": ["ui", "do", "lie", "bed"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[771, 510], [769, 510], [769, 508], [771, 508]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[691, 499], [689, 499], [689, 497], [691, 497]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[809, 444], [807, 444], [807, 442], [809, 442]]]
         }
       },
       {
-        "tags": ["ui", "action", "sit", "chair"],
+        "tags": ["ui", "do", "sit", "chair"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[765, 444], [763, 444], [763, 442], [765, 442]]]

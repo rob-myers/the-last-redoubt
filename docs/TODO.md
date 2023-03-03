@@ -10,7 +10,7 @@
 - ✅ points have lookup `meta` extending tags
   - ✅ localDecor points have `{ roomId }`
   - ✅ computeTagsMeta -> extendDecorMeta
-- rename tag `action` -> `do`
+- ✅ rename tag `action` -> `do`
 - `idle-breathe` is not playing?
 - rethink `view reverse` - maybe hide specific black polys instead?
 - move `<Decor>` to top level

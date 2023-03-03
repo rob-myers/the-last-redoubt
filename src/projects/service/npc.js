@@ -50,7 +50,7 @@ ${Object.keys(parsed.animLookup).map((animName) => `
  * @returns {T & NPC.ExtendDecorPointMeta}
  */
 export function extendDecorMeta(meta, gmMatrix) {
-  const doable = hasTag(meta, ['ui', 'action']);
+  const doable = hasTag(meta, ['ui', 'do']);
   
   /** This final `orient-{deg}` should be orientation relative to transformed room */
   const roomOrientDegrees = Object.keys(meta).reduce((_, tag) =>

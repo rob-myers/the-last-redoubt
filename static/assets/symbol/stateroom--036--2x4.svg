@@ -42,46 +42,46 @@
       <title>ui label room bathroom</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="138.815" y="550">
-      <title>ui action lie bed orient-90</title>
+      <title>ui do lie bed orient-90</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="45">
       <title>ui button shower</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="110">
-      <title>ui action sit toilet orient-90</title>
+      <title>ui do sit toilet orient-90</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="200">
-      <title>ui action stand toilet orient-270</title>
+      <title>ui do stand toilet orient-270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="473.815" y="130">
-      <title>ui action stand sink orient-270</title>
+      <title>ui do stand sink orient-270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="893.955">
-      <title>ui action sit chair orient-45</title>
+      <title>ui do sit chair orient-45</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="1093.955">
-      <title>ui action sit chair orient-315</title>
+      <title>ui do sit chair orient-315</title>
     </rect>
     <rect x="438.584" width="20" height="900" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="300">
       <title>relate-connectors</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="250.013" y="964">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="250.013" y="1024">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="350.013" y="664">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="473.815" y="200">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="145">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="134.815" y="145">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
   </g>
 </svg>

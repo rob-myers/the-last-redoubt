@@ -40,19 +40,19 @@
       <title>relate-connectors</title>
     </rect>
     <rect x="140" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action lie bed orient-90</title>
+      <title>ui do lie bed orient-90</title>
     </rect>
     <rect x="445" y="120" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action sit toilet orient-90</title>
+      <title>ui do sit toilet orient-90</title>
     </rect>
     <rect x="545" y="145" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action shower</title>
+      <title>ui do shower</title>
     </rect>
     <rect x="445" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action stand orient-270</title>
+      <title>ui do stand orient-270</title>
     </rect>
     <rect x="345" y="400" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui action stand</title>
+      <title>ui do stand</title>
     </rect>
   </g>
 </svg>
