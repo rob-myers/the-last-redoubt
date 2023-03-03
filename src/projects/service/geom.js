@@ -150,22 +150,23 @@ class geomServiceClass {
   /**
    * @param {Geom.VectJson[]} candidates 
    * @param {Geom.VectJson} target 
+   * @param {number} [maxDistSqr] maximum distance permitted
    */
-  findClosestPoint(candidates, target) {
-    if (candidates.length === 0) {
-      return null;
-    }
-    let minDistSqr = Number.POSITIVE_INFINITY;
+  findClosestPoint(candidates, target, maxDistSqr = Number.POSITIVE_INFINITY) {
+    let minSeenDistSqr = Number.POSITIVE_INFINITY;
     let currDistSqr = 0;
     tempVect.copy(target);
     return candidates.reduce((closest, candidate) => {
-      if ((currDistSqr = tempVect.distanceToSquared(candidate)) < minDistSqr) {
-        minDistSqr = currDistSqr;
+      if (
+        (currDistSqr = tempVect.distanceToSquared(candidate)) < minSeenDistSqr
+        && (currDistSqr <= maxDistSqr)
+      ) {
+        minSeenDistSqr = currDistSqr;
         return candidate;
       } else {
         return closest;
       }
-    });
+    }, /** @type {null | Geom.VectJson} */ (null));
   }
 
   /**

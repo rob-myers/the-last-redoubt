@@ -23,11 +23,11 @@
       - ✅ support ui point orientation via `orient-{deg}` modified via room transform
       - ✅ stale anim.rotate via do?
     - ✅ start off navmesh
-    - 🚧 do not use close nav-nodes anymore
+    - ✅ do not use close nav-nodes anymore
       - ℹ️ close-nav-node can look wrong e.g. stateroom chair
       - ℹ️ we always need a nav-node to return to
       - ✅ on-mesh -> off-mesh
-      - 🚧 off-mesh -> on-mesh
+      - ✅ off-mesh -> on/off-mesh
     - turns towards navNode before fade-spawn
     - can only leave off-mesh by clicking nearby action points
       - thus always need at least one nearby on-mesh action point

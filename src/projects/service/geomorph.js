@@ -316,21 +316,22 @@ export function findRoomIdContaining(rooms, localPoint) {
 
 /**
  * Find a stand point close to `target` in same room.
- * @param {Geom.VectJson} target 
- * @param {Geomorph.PointMeta} meta 
+ * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target 
  * @param {Geomorph.GeomorphData} gm 
+ * @param {number} [maxDistSqr]
  */
-export function getCloseStandPoint(target, meta, gm) {
+export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITIVE_INFINITY) {
   if (typeof meta.roomId !== 'number') {
-    throw Error(`meta.roomId must be a number (${JSON.stringify({ target, meta })})`);
+    throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
   const standPoints = gm.point[meta.roomId].ui.filter(
-    p => p.meta.stand && !(target.x === p.x && target.y === p.y)
+    p => p.meta.stand && !(point.x === p.x && point.y === p.y)
   );
-  if (standPoints.length === 0) {
-    throw Error(`nearby stand point not found (${JSON.stringify({ target, meta })})`);
+  const closestStandPoint = geom.findClosestPoint(standPoints, point, maxDistSqr);
+  if (closestStandPoint === null) {
+    throw Error(`nearby stand point not found (${JSON.stringify({ point, meta })})`);
   }
-  return assertNonNull(geom.findClosestPoint(standPoints, target));
+  return closestStandPoint;
 }
 
 /**

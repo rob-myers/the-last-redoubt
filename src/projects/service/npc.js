@@ -72,8 +72,6 @@ export function extendDecorMeta(meta, gmMatrix) {
   return Object.assign(meta, extension);
 }
 
-export const defaultNpcInteractRadius = 50;
-
 /** @type {Record<NPC.NpcActionKey, true>} */
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 

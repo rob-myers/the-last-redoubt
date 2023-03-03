@@ -114,6 +114,8 @@ export const cancellableAnimDelayMs = 50;
 
 export const defaultDoorCloseMs = 7000;
 
+export const defaultNpcInteractRadius = 50;
+
 //#endregion
 
 export const svgSymbolTag = {
