@@ -92,16 +92,13 @@ export default function createNpc(
 
       isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
       this.anim.opacity.cancel();
+      isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
+      this.anim.rotate.cancel();
       
       switch (this.anim.spriteSheet) {
         case 'idle':
         case 'sit':
-          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-          this.anim.rotate.cancel();
-          break;
         case 'idle-breathe':
-          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-          this.anim.rotate.cancel();
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.sprites.addEventListener('cancel', () => resolve());
             this.anim.sprites.cancel();
@@ -114,7 +111,7 @@ export default function createNpc(
            * We can use native `commitStyles` because hidden tab is `visibility: hidden`.
            */
           isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
-          isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
+          // isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
           await /** @type {Promise<void>} */ (new Promise(resolve => {
             this.anim.translate.addEventListener('cancel', () => resolve());
             this.anim.translate.cancel();

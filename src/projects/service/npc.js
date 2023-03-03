@@ -52,8 +52,8 @@ export function extendDecorMeta(meta, gmMatrix) {
   const doable = hasTag(meta, ['ui', 'do']);
   
   /** This final `orient-{deg}` should be orientation relative to transformed room */
-  const roomOrientDegrees = Object.keys(meta).reduce((_, tag) =>
-    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : undefined,
+  const roomOrientDegrees = Object.keys(meta).reduce((agg, tag) =>
+    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : agg,
     /** @type {undefined | number} */ (undefined),
   );
 

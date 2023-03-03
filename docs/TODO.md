@@ -30,7 +30,10 @@
       - ✅ off-mesh -> on/off-mesh
     - ✅ can only leave off-mesh by clicking nearby action points
       - thus always need at least one nearby on-mesh action point
-    - 🚧 turns towards navNode before fade-spawn
+    - ✅ orient can be broken if turn whilst off-mesh
+      - BUG fix i.e. `orient-{deg}` -> `deg` was broken
+      - Independently, `lookLoop` won't turn towards `do` tagged point
+    - turns towards navNode before fade-spawn
     - handle `goLoop` walk attempted during walk in `doLoop`
     - ❌ can click anywhere on navmesh to return to it
 - ✅ sit has angle
