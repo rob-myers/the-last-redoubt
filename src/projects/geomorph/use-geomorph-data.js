@@ -11,7 +11,6 @@ import usePathfinding from "./use-pathfinding";
 /**
  * NOTE saw issue when `geomorphJsonPath(layoutKey)`
  * re-requested, causing doors vs hullDoors mismatch.
- * 
  * @param {Geomorph.LayoutKey} layoutKey
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
@@ -47,8 +46,11 @@ export default function useGeomorphData(layoutKey, disabled = false) {
 }
 
 /**
- * Convert
- * @see {Geomorph.ParsedLayout} to @see {Geomorph.GeomorphData}
+ * Converts
+ * @see {Geomorph.ParsedLayout}
+ * to
+ * @see {Geomorph.GeomorphData}
+ *
  * @param {Geomorph.LayoutKey | Geomorph.ParsedLayout} input
  * @returns {Promise<Geomorph.GeomorphData>}
  */
@@ -128,7 +130,8 @@ export async function createGeomorphData(input) {
 
   //#region points by room
   const pointsByRoom = layout.rooms.map(/** @returns {Geomorph.GeomorphData['point'][*]} */  x => ({
-    default: x.center, // Default is room's center (may not lie in room)
+    // Default is room's center, which may not lie inside room
+    default: x.center,
     doorView: {},
     labels: [],
     spawn: [],
@@ -152,7 +155,10 @@ export async function createGeomorphData(input) {
       } else roomId = otherRoomId;
     }// NOTE roomId could be -1
 
-    doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = { point: p, tags });
+    doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = {
+      point: p,
+      meta: tags.reduce((agg, tag) => ((agg[tag] = true) && agg), /** @type {Geomorph.PointMeta} */ ({})),
+    });
     windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
   });
 
@@ -161,10 +167,15 @@ export async function createGeomorphData(input) {
     if (matched.length) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
-      matched.forEach(tag => 
-        roomId >= 0
-          ? pointsByRoom[roomId][tag].push({ point: p, tags: single.tags.slice() })  
-          : console.warn(`${tag} point ${i} (${single.tags}) should be inside some room (${layout.key})`)  
+      matched.forEach(tag => roomId >= 0
+        ? pointsByRoom[roomId][tag].push({
+            point: p,
+            meta: single.tags.reduce(
+              (agg, tag) => (agg[tag] = true) && agg,
+              /** @type {Geomorph.PointMeta} */ ({ roomId })
+            ),
+          })
+        : console.warn(`${tag} point (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
       );
     }
   });

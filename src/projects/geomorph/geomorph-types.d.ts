@@ -150,13 +150,13 @@ declare namespace Geomorph {
     point: {
       default: Vect;
       /** Can specify light position from room through door */
-      doorView: { [doorId?: number]: { point: Vect; tags: string[]; } };
+      doorView: { [doorId?: number]: { point: Vect; meta: PointMeta; } };
       /** `labels` inside room */
       labels: LayoutLabel[];
       /** Spawn points inside room */
-      spawn: { point: Vect; tags: string[] }[];
+      spawn: { point: Vect; meta: PointMeta }[];
       /** User Interactive points inside room */
-      ui: { point: Vect; tags: string[] }[];
+      ui: { point: Vect; meta: PointMeta }[];
       /** Can specify light position from room through window */
       windowLight: { [windowId?: number]: Vect };
     }[];
@@ -180,6 +180,8 @@ declare namespace Geomorph {
     getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
     isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
   }
+
+  export type PointMeta = Record<string, string | boolean | number>;
 
   export interface UseGeomorphsDefItem {
     layoutKey: LayoutKey;

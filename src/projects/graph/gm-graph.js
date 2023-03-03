@@ -508,7 +508,7 @@ export class gmGraphClass extends BaseGraph {
     // Seems some geomorphs lack gm.point[x]
     const custom = gm.point[rootRoomId]?.doorView[doorId];
     return (
-      custom && (permitReversed || !custom.tags.includes('reverse'))
+      custom && (permitReversed || !custom.meta.reverse)
         ? custom.point.clone()
         : computeViewPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
     );

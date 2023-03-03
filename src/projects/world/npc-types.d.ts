@@ -95,7 +95,7 @@ declare namespace NPC {
     npcRef(el: HTMLDivElement | null): void;
     // setSegs(segs: Geom.Seg[]): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
-    startAnimationByTags(tags: string[]): void;
+    startAnimationByMeta(meta: Geomorph.PointMeta): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateAnimAux(): void;
@@ -278,7 +278,9 @@ declare namespace NPC {
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
-    tags?: string[];
+    meta: Geomorph.PointMeta;
+    /** Derived from @see {meta} i.e. `key` s.t. `meta[key] === true` */
+    tags: string[];
   }
 
   export interface DecorPath extends BaseDecor {
@@ -301,7 +303,7 @@ declare namespace NPC {
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geom.VectJson; tags: string[] }
+    | { action: 'do'; npcKey: string; point: Geom.VectJson; meta: Geomorph.PointMeta }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
@@ -339,7 +341,7 @@ declare namespace NPC {
     meta: NpcWayMeta;
   }
 
-  export interface TagsMeta {
+  export interface ExtendDecorPointMeta {
     orientRadians?: number;
     doable: boolean;
     spawnable: boolean;

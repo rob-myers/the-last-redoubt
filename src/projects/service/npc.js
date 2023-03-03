@@ -43,28 +43,34 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 }
 
 /**
- * @param {string[]} tags
+ * Mutates, but also returns mutated for type propagation.
+ * @template {Geomorph.PointMeta} T
+ * @param {T} meta
  * @param {Geom.Mat} gmMatrix
- * @returns {NPC.TagsMeta}
+ * @returns {T & NPC.ExtendDecorPointMeta}
  */
-export function computeTagsMeta(tags, gmMatrix) {
-  const doable = hasTag(tags, ['ui', 'action']);
+export function extendDecorMeta(meta, gmMatrix) {
+  const doable = hasTag(meta, ['ui', 'action']);
   
   /** This final `orient-{deg}` should be orientation relative to transformed room */
-  const roomOrientDegrees = tags.reduce((_, tag) =>
+  const roomOrientDegrees = Object.keys(meta).reduce((_, tag) =>
     tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : undefined,
     /** @type {undefined | number} */ (undefined),
   );
+
   /** Compute orientation relative to world coords */
   const worldOrientRadians = roomOrientDegrees === undefined
     ? undefined
     : gmMatrix.transformAngle(roomOrientDegrees * (Math.PI/180));
 
-  return {
+  /** @type {NPC.ExtendDecorPointMeta} */
+  const extension = {
     doable,
-    spawnable: doable && hasTag(tags, 'stand', 'sit', 'lie'),
+    spawnable: doable && hasTag(meta, 'stand', 'sit', 'lie'),
     orientRadians: worldOrientRadians,
   };
+  
+  return Object.assign(meta, extension);
 }
 
 export const defaultNpcInteractRadius = 50;
@@ -73,15 +79,15 @@ export const defaultNpcInteractRadius = 50;
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /**
- * @param {string[]} tags 
+ * @param {Geomorph.PointMeta} meta
  * @param {(string | string[])[]} specs 
  * @returns {boolean}
  */
-function hasTag(tags, ...specs) {
+function hasTag(meta, ...specs) {
   return specs.some(spec =>
     Array.isArray(spec)
-      ? spec.every(tag => tags.includes(tag))
-      : tags.includes(spec)
+      ? spec.every(tag => meta[tag] === true)
+      : meta[spec] === true
   );
 }
 
@@ -280,6 +286,7 @@ export function verifyDecor(input) {
     case 'path':
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':
+      // We permit `input.tags` and `input.meta` to be undefined
       return Vect.isVectJson(input);
     case 'rect':
       return [input.x, input.y, input.width, input.height].every(x => Number.isFinite(x));

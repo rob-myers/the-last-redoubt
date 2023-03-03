@@ -322,31 +322,41 @@ export default function NPCs(props) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
           return state.setDecor(...e.items);
-        case 'decor': // get or add decor
+        case 'decor':
           return 'decorKey' in e
-            ? state.decor[e.decorKey]
-            : state.setDecor(e);
+            ? state.decor[e.decorKey] // get decor
+            : Object.keys(e).length === 1
+              ? Object.values(state.decor) // list all decors
+              : state.setDecor(e); // add decor
         case 'do': {
           const npc = state.getNpc(e.npcKey);
           const npcPosition = npc.getPosition();
-          const gmMatrix = assertDefined(api.gmGraph.gms.find(x => x.gridRect.contains(e.point))).matrix;
-          const doMeta = npcService.computeTagsMeta(e.tags, gmMatrix);
+          const gm = assertDefined(api.gmGraph.gms.find(x => x.gridRect.contains(e.point)));
+          const gmMatrix = gm.matrix;
+          const meta = npcService.extendDecorMeta(e.meta, gmMatrix);
+
           // 🚧 move into function
           try {
             if (state.isPointInNavmesh(npcPosition)) {
               if (state.isPointInNavmesh(e.point)) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                npc.startAnimationByTags(e.tags);
+                npc.startAnimationByMeta(e.meta);
               } else {
-                // find close navpoint and try to walk there
+                // 🚧 find close stand point in gm.point[e.meta.roomId]
+                if (typeof e.meta.roomId !== 'number') {
+                  throw Error('meta.roomId must be a number');
+                }
+                const standPoints = gm.point[e.meta.roomId].ui.filter(x => x.meta.stand);
+
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                if (doMeta.spawnable) {// fade and spawn to point
+                if (meta.spawnable) {
+                  // fade and spawn to point
                   await npc.animateOpacity(0, 1000);
-                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientRadians });
-                  npc.startAnimationByTags(e.tags);
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: meta.orientRadians });
+                  npc.startAnimationByMeta(e.meta);
                   await npc.animateOpacity(1, 1000);
                 }
               }
@@ -355,22 +365,22 @@ export default function NPCs(props) {
               const closeMeta = assertNonNull(api.gmGraph.getClosePoint(npcPosition));
               await npc.animateOpacity(0, 1000); // we don't set angle when rejoining navmesh
               await state.spawn({ npcKey: e.npcKey, point: closeMeta.point, angle: undefined });
-              npc.startAnimationByTags(e.tags);
+              npc.startAnimationByMeta(e.meta);
               await npc.animateOpacity(1, 1000);
               
               if (state.isPointInNavmesh(e.point)) {
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                npc.startAnimationByTags(e.tags);
+                npc.startAnimationByMeta(e.meta);
               } else {
                 // walk to close navpoint
                 const closeMeta = assertNonNull(api.gmGraph.getClosePoint(e.point));
                 const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closeMeta.point, throwOnNotNav: true });
                 await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-                if (doMeta.spawnable) {// fade and spawn to point
+                if (meta.spawnable) {// fade and spawn to point
                   await npc.animateOpacity(0, 1000);
-                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: doMeta.orientRadians });
-                  npc.startAnimationByTags(e.tags);
+                  await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: meta.orientRadians });
+                  npc.startAnimationByMeta(e.meta);
                   await npc.animateOpacity(1, 1000);
                 }
               }
@@ -502,10 +512,16 @@ export default function NPCs(props) {
         if (state.decor[d.key]) {
           d.updatedAt = Date.now();
         }
-        state.decor[d.key] = d;
-        if (d.type === 'path') {// Handle clones
-          delete d.origPath;
+        switch (d.type) {
+          case 'path': // Handle clones
+            delete d.origPath;
+            break;
+          case 'point':
+            // Ensure tags and meta extending tags
+            (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
+            break;
         }
+        state.decor[d.key] = d;
       }
       state.events.next({ key: 'decors-added', decors: decor });
       update();
@@ -573,11 +589,12 @@ export default function NPCs(props) {
         const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
         state.npcAct({
           action: "add-decor",
-          items: Object.values(points).map(({ point, tags }, uiId) => ({
+          items: Object.values(points).map(({ point, meta }, uiId) => ({
             key: decorKeys[uiId],
             type: "point", // transform from local geomorph coords:
             ...matrix.transformPoint({ x: point.x, y: point.y }),
-            tags: tags.slice(),
+            meta,
+            tags: Object.keys(meta).filter(key => meta[key] === true),
           })),
         });
       }
@@ -792,7 +809,7 @@ const rootCss = css`
 
 /**
  * @typedef NpcActResult
- * @type {void | number | NPC.NPC | NPC.DecorDef | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
+ * @type {void | number | NPC.NPC | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
  */
 
 /**

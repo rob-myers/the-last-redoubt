@@ -2,15 +2,18 @@
 
 ## In progress
 
-- 🚧 BUG multiple prompts `$ $`
-- consider behaviour when manually kill a pipe-child
 
 - ✅ absorb floorGraph into GeomorphData?
   - ✅ avoid expensive floorGraph fromZone
     e.g. ensure multiple usePathfinding are not re-computing
   - ✅ use `usePathfinding` in `useGeomorphData`?
-- move `<Decor>` to top level
+- ✅ points have lookup `meta` extending tags
+  - ✅ localDecor points have `{ roomId }`
+  - ✅ computeTagsMeta -> extendDecorMeta
+- rename tag `action` -> `do`
+- `idle-breathe` is not playing?
 - rethink `view reverse` - maybe hide specific black polys instead?
+- move `<Decor>` to top level
 
 - 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
@@ -28,11 +31,17 @@
       - ✅ implement pause/play/cancel
       - ✅ move opacity animation to `anim.body`
       - ✅ off navmesh + point navigable => fade near then walk
-      - 🚧 support ui point orientation via `angle-{deg}` `transform-{a,b,c,d}` and current geomorph
+      - ✅ support ui point orientation via `orient-{deg}` modified via room transform
+      - ✅ stale anim.rotate via do?
     - ✅ start off navmesh
+    - 🚧 do not use close nav-nodes anymore
+      - ℹ️ close navigable node can look wrong e.g. stateroom chair
+      - we always need a nav-node to return to
+    - turns towards navNode before fade-spawn
+    - can only leave off-mesh by clicking nearby action points
+      - thus always need at least one nearby on-mesh action point
     - handle `goLoop` walk attempted during walk in `doLoop`
-    - ℹ️ close navigable node can look wrong e.g. stateroom chair
-    - can click anywhere on navmesh to return to it
+    - ❌ can click anywhere on navmesh to return to it
 - sit has angle
 - sit has mask
 - support lie too
@@ -44,6 +53,8 @@
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
 - BUG? saw pause/resume walk issue towards end
+- BUG multiple prompts `$ $`
+- consider behaviour when manually kill a pipe-child
 
 - ✅ BUG raw-loader edit resets --npcs-debug-display
   - profile was being re-run, so `npc config debug` toggled

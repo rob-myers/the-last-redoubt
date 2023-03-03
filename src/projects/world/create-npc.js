@@ -492,17 +492,17 @@ export default function createNpc(
           throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
       }
     },
-    startAnimationByTags(tags) {
+    startAnimationByMeta(meta) {
       switch (true) {
-        case tags.includes('sit'): {
+        case meta.sit: {
           this.startAnimation('sit');
           break;
         }
-        case tags.includes('stand'): {
+        case meta.stand: {
           this.startAnimation('idle-breathe');
           break;
         }
-        case tags.includes('lie'): {
+        case meta.lie: {
           // 🚧
           break;
         }
