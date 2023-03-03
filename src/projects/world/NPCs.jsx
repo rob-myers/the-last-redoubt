@@ -392,6 +392,7 @@ export default function NPCs(props) {
               throw e;
             }
           }
+          break;
         }
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();

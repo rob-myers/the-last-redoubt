@@ -11,7 +11,8 @@
   - ✅ localDecor points have `{ roomId }`
   - ✅ computeTagsMeta -> extendDecorMeta
 - ✅ rename tag `action` -> `do`
-- `idle-breathe` is not playing?
+- ✅ `idle-breathe` should play in stand point
+  > case 'cancel' was falling through
 - rethink `view reverse` - maybe hide specific black polys instead?
 - move `<Decor>` to top level
 

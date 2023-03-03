@@ -176,7 +176,7 @@ export default function createNpc(
         // must commitStyles, otherwise it jumps
         isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-        this.startAnimation('idle');
+        this.startAnimation('idle'); // 🚧 remove hard-coding?
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
 
