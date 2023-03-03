@@ -154,9 +154,9 @@ declare namespace Geomorph {
       /** `labels` inside room */
       labels: LayoutLabel[];
       /** Spawn points inside room */
-      spawn: { point: Vect; meta: PointMeta }[];
+      spawn: (Geom.VectJson & { meta: PointMeta })[];
       /** User Interactive points inside room */
-      ui: { point: Vect; meta: PointMeta }[];
+      ui: (Geom.VectJson & { meta: PointMeta })[];
       /** Can specify light position from room through window */
       windowLight: { [windowId?: number]: Vect };
     }[];

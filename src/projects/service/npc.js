@@ -1,6 +1,5 @@
 import { assertNonNull, testNever } from './generic';
 import { Vect } from '../geom';
-import { cssName } from './const';
 
 /**
  * Choose scale factor s.t. npc radius becomes `14.4`.

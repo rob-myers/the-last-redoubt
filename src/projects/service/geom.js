@@ -148,6 +148,27 @@ class geomServiceClass {
   }
 
   /**
+   * @param {Geom.VectJson[]} candidates 
+   * @param {Geom.VectJson} target 
+   */
+  findClosestPoint(candidates, target) {
+    if (candidates.length === 0) {
+      return null;
+    }
+    let minDistSqr = Number.POSITIVE_INFINITY;
+    let currDistSqr = 0;
+    tempVect.copy(target);
+    return candidates.reduce((closest, candidate) => {
+      if ((currDistSqr = tempVect.distanceToSquared(candidate)) < minDistSqr) {
+        minDistSqr = currDistSqr;
+        return candidate;
+      } else {
+        return closest;
+      }
+    });
+  }
+
+  /**
    * Inset/outset a ring by amount.
    * @private
    * @param {Vect[]} ring 

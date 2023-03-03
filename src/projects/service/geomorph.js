@@ -1,13 +1,14 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
+import { assertNonNull } from './generic';
+import { error, warn } from './log';
+import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
-import { error, warn } from './log';
 import { fillRing } from "../service/dom";
 
 /**
@@ -311,6 +312,25 @@ function extendHullDoorTags(door, hullRect) {
  */
 export function findRoomIdContaining(rooms, localPoint) {
   return rooms.findIndex(room => room.contains(localPoint)); 
+}
+
+/**
+ * Find a stand point close to `target` in same room.
+ * @param {Geom.VectJson} target 
+ * @param {Geomorph.PointMeta} meta 
+ * @param {Geomorph.GeomorphData} gm 
+ */
+export function getCloseStandPoint(target, meta, gm) {
+  if (typeof meta.roomId !== 'number') {
+    throw Error(`meta.roomId must be a number (${JSON.stringify({ target, meta })})`);
+  }
+  const standPoints = gm.point[meta.roomId].ui.filter(
+    p => p.meta.stand && !(target.x === p.x && target.y === p.y)
+  );
+  if (standPoints.length === 0) {
+    throw Error(`nearby stand point not found (${JSON.stringify({ target, meta })})`);
+  }
+  return assertNonNull(geom.findClosestPoint(standPoints, target));
 }
 
 /**

@@ -169,7 +169,8 @@ export async function createGeomorphData(input) {
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       matched.forEach(tag => roomId >= 0
         ? pointsByRoom[roomId][tag].push({
-            point: p,
+            x: p.x,
+            y: p.y,
             meta: single.tags.reduce(
               (agg, tag) => (agg[tag] = true) && agg,
               /** @type {Geomorph.PointMeta} */ ({ roomId })

@@ -2,21 +2,9 @@
 
 ## In progress
 
-
-- ✅ absorb floorGraph into GeomorphData?
-  - ✅ avoid expensive floorGraph fromZone
-    e.g. ensure multiple usePathfinding are not re-computing
-  - ✅ use `usePathfinding` in `useGeomorphData`?
-- ✅ points have lookup `meta` extending tags
-  - ✅ localDecor points have `{ roomId }`
-  - ✅ computeTagsMeta -> extendDecorMeta
-- ✅ rename tag `action` -> `do`
-- ✅ `idle-breathe` should play in stand point
-  > case 'cancel' was falling through
 - rethink `view reverse` - maybe hide specific black polys instead?
 - move `<Decor>` to top level
 
-- 🚧 reorg sit/stand code
 - ℹ️ clarity: goto point and play animation, where goto means:
   - `walk-to`
   - `walk-near-then-fade`
@@ -36,14 +24,16 @@
       - ✅ stale anim.rotate via do?
     - ✅ start off navmesh
     - 🚧 do not use close nav-nodes anymore
-      - ℹ️ close navigable node can look wrong e.g. stateroom chair
-      - we always need a nav-node to return to
+      - ℹ️ close-nav-node can look wrong e.g. stateroom chair
+      - ℹ️ we always need a nav-node to return to
+      - ✅ on-mesh -> off-mesh
+      - 🚧 off-mesh -> on-mesh
     - turns towards navNode before fade-spawn
     - can only leave off-mesh by clicking nearby action points
       - thus always need at least one nearby on-mesh action point
     - handle `goLoop` walk attempted during walk in `doLoop`
     - ❌ can click anywhere on navmesh to return to it
-- sit has angle
+- ✅ sit has angle
 - sit has mask
 - support lie too
 
@@ -509,6 +499,17 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ absorb floorGraph into GeomorphData?
+  - ✅ avoid expensive floorGraph fromZone
+    e.g. ensure multiple usePathfinding are not re-computing
+  - ✅ use `usePathfinding` in `useGeomorphData`?
+- ✅ points have lookup `meta` extending tags
+  - ✅ localDecor points have `{ roomId }`
+  - ✅ computeTagsMeta -> extendDecorMeta
+- ✅ rename tag `action` -> `do`
+- ✅ `idle-breathe` should play in stand point
+  > case 'cancel' was falling through
 
 - ✅ npc.transitionOpacity -> animateOpacity
 - ✅ npc.lookAt should use anim.rotate and be async
