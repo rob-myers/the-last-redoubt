@@ -69,11 +69,10 @@ export default function createNpc(
       if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
 
       const { scale: npcScale } = npcsMeta[this.jsonKey];
-      const animation = this.el.body.animate([
+      const animation = this.anim.rotate = this.el.body.animate([
         { offset: 0, transform: `rotate(${sourceRadians}rad) scale(${npcScale})` },
         { offset: 1, transform: `rotate(${targetRadians}rad) scale(${npcScale})` },
       ], { duration: durationMs, fill: 'forwards', easing: 'ease' });
-      this.anim.rotate = animation;
   
       try {
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
@@ -85,6 +84,7 @@ export default function createNpc(
         else throw e;
       } finally {
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
+        animation.playState === 'finished' && animation.cancel();
       }
     },
     async cancel() {
