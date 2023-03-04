@@ -129,6 +129,8 @@ track ${npcKey} &
 goLoop ${npcKey} &
 # click outside navmesh to look
 lookLoop ${npcKey} &
+# click do points to do things
+doLoop ${npcKey} &
 
 `.trim(),
 
