@@ -2,14 +2,15 @@
 
 ## In progress
 
+- ✅ should see more visible doors through hull door
 - rethink `view reverse` - maybe hide specific black polys instead?
 - move `<Decor>` to top level
 
-- ℹ️ clarity: goto point and play animation, where goto means:
-  - `walk-to`
-  - `walk-near-then-fade`
-  - `fade-near`
-- 🚧 start shell function `doLoop`
+- ✅ start shell function `doLoop`
+  - ℹ️ clarity: goto point and play animation, where goto means:
+    - `walk-to`
+    - `walk-near-then-fade`
+    - `fade-near`
   - ✅ shell function `flatMap`
   - ✅ sit/stand/lie ui points have tag `action`
   - ✅ implement `npc do` i.e. handle { point, tags/meta }
@@ -155,7 +156,7 @@
       - ❌ FOV should use canvas instead of img
       - ✅ diag doors ok if light src adjacent?
       - ✅ other bug: drawRects not going far enough
-    - 🚧 avoid overlapping light rects
+    - ✅ avoid overlapping light rects
       - ✅ 302 ✅ 303 ✅ 101 ✅ 102
       - don't forget lights can intersect if in same room
     - ✅ support diagonal doors?
@@ -173,7 +174,6 @@
 - `<Doors>` are slightly offset from underlying door in PNG
 - split hull doors into two
 - can specify door as `split`
-- should see more visible doors through hull door
 
 - 🚧 Synfig https://www.synfig.org/
   - ✅ Download and Install

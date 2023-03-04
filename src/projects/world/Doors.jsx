@@ -85,6 +85,7 @@ export default function Doors(props) {
       if (adjHull) {
         state.open[adjHull.adjGmId][adjHull.adjDoorId] = state.open[gmId][doorId];
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
+        state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
 
       if (key === 'opened-door') {
@@ -115,7 +116,7 @@ export default function Doors(props) {
     },
     setVisible(gmId, doorIds) {
       state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
-      update(); // For external use?
+      // update(); // External API can state.update() 
     },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
@@ -127,6 +128,7 @@ export default function Doors(props) {
       }, defaultDoorCloseMs);// 🚧 change ms?
       state.closing[gmId][doorId] = { timeoutId };
     },
+    update,
     updateVisibleDoors() {
       /**
        * Visible doors in current geomorph including related doors.
@@ -151,15 +153,27 @@ export default function Doors(props) {
       );
       nextVis[fov.gmId] = extAdjDoors;
 
-      // Include hull doors from neighbouring geomorphs
-      // We don't include adjs or ext by relDoorId
+      // 
+      /**
+       * - Include hull doors from neighbouring geomorphs
+       * - If hull door open, include doors from room in adjacent geomorph
+       */
+      const nextVisSet = /** @type {Set<number>[]} */ ([]);
       gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
         gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
-      ).forEach(({ adjGmId, adjDoorId }) =>
-        (nextVis[adjGmId] ||= []).push(adjDoorId)
-      );
+      ).forEach(({ adjGmId, adjDoorId, adjRoomId }) => {
+        (nextVisSet[adjGmId] ||= new Set).add(adjDoorId);
+        if (state.open[adjGmId][adjDoorId]) {
+          // Include adj doors, possibly seen thru hull door
+          gms[adjGmId].roomGraph.getAdjacentDoors(adjRoomId).forEach(
+            x => nextVisSet[adjGmId].add(x.doorId)
+          );
+        }
+      });
+      nextVisSet.forEach((set, altGmId) => (nextVis[altGmId] ||= []).push(...set.values()));
 
       gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
+      update();
     },
   }), {
     deps: [gmGraph, props.api.npcs],
@@ -180,10 +194,11 @@ export default function Doors(props) {
           }));
       });
 
-      state.rootEl.addEventListener('pointerup', state.onClickDoor);
+      const callback = state.onClickDoor; // ℹ️ state.onClickDoor can be mutated on HMR
+      state.rootEl.addEventListener('pointerup', callback);
       return () => {
         handlePause.unsubscribe();
-        state.rootEl.removeEventListener('pointerup', state.onClickDoor);
+        state.rootEl.removeEventListener('pointerup', callback);
       };
     }
   }, [npcs.ready]);
@@ -317,6 +332,7 @@ const rootCss = css`
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
  * @property {(gmId: number, doorId: number) => void} tryCloseDoor
  * Try close door every `N` seconds, starting in `N` seconds.
+ * @property {() => void} update
  * @property {() => void} updateVisibleDoors
  * @property {{ [doorId: number]: true }[]} vis
  */
