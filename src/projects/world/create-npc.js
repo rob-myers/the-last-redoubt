@@ -90,41 +90,27 @@ export default function createNpc(
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
 
-      isAnimAttached(this.anim.opacity, this.el.body) && this.anim.opacity.commitStyles();
-      this.anim.opacity.cancel();
-      isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-      this.anim.rotate.cancel();
-      
-      switch (this.anim.spriteSheet) {
-        case 'idle':
-        case 'sit':
-        case 'idle-breathe':
-          await /** @type {Promise<void>} */ (new Promise(resolve => {
-            this.anim.sprites.addEventListener('cancel', () => resolve());
-            this.anim.sprites.cancel();
-          }));
-          break;
-        case 'walk':
-          this.clearWayMetas();
-          /**
-           * Must `commitStyles` else jumps. Cannot earlier, as MDN documentation suggests.
-           * We can use native `commitStyles` because hidden tab is `visibility: hidden`.
-           */
-          isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
-          // isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-          await /** @type {Promise<void>} */ (new Promise(resolve => {
-            this.anim.translate.addEventListener('cancel', () => resolve());
-            this.anim.translate.cancel();
-            this.anim.rotate.cancel();
-            this.anim.sprites.cancel(); // ?
-          }));
-          break;
-        default:
-          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.cancel' });
-      }
+      /** @type {Animation['playState'][]} */
+      const playStates = ['running', 'paused'];
+      const rootAnims = [this.anim.translate].filter(
+        anim => isAnimAttached(anim, this.el.root, playStates)
+      );
+      const bodyAnims = [this.anim.opacity, this.anim.rotate, this.anim.sprites].filter(
+        anim => isAnimAttached(anim, this.el.body, playStates)
+      );
 
-      if (this.def.key === api.npcs.playerKey) {
-        // Cancel camera tracking
+      await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
+        anim.commitStyles();
+        return /** @type {Promise<void>} */ (new Promise(resolve => {
+          anim.addEventListener('cancel', () => resolve());
+          anim.cancel();
+        }))
+      }));
+
+      if (this.anim.spriteSheet === 'walk') {// Cancel pending actions
+        this.clearWayMetas();
+      }
+      if (this.def.key === api.npcs.playerKey) {// Cancel camera tracking
         api.panZoom.animationAction('smooth-cancel');
       }
     },
@@ -155,14 +141,15 @@ export default function createNpc(
       console.log(`followNavPath: ${this.def.key} started walk`);
       this.nextWayTimeout();
 
+      const trAnim = this.anim.translate;
       try {
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          this.anim.translate.addEventListener('finish', () => {
+          trAnim.addEventListener('finish', () => {
             console.log(`followNavPath: ${this.def.key} finished walk`);
             resolve();
           });
-          this.anim.translate.addEventListener('cancel', () => {
-            if (!this.anim.translate.finished) {
+          trAnim.addEventListener('cancel', () => {
+            if (trAnim.playState !== 'finished') {
               // We'll also cancel when finished to release control to styles
               console.log(`followNavPath: ${this.def.key} cancelled walk`);
             }
@@ -171,7 +158,7 @@ export default function createNpc(
         }));
       } finally {
         // must commitStyles, otherwise it jumps
-        isAnimAttached(this.anim.translate, this.el.root) && this.anim.translate.commitStyles();
+        isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
         this.startAnimation('idle'); // 🚧 remove hard-coding?
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
@@ -416,12 +403,10 @@ export default function createNpc(
       switch (this.anim.spriteSheet) {
         case 'walk': {
           const { anim } = this;
-          this.el.root.getAnimations().forEach(x => x.cancel());
-          if (isAnimAttached(anim.rotate, this.el.body)) {
-            anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
-            anim.rotate.cancel(); // else `npc do` orientation doesn't work
-          }
-          isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
+          // this.el.root.getAnimations().forEach(x => x.cancel());
+          isAnimAttached(anim.rotate, this.el.body) && anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
+          anim.rotate.cancel(); // else `npc do` orientation doesn't work
+          // isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
           // Animate position and rotation
           const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();

@@ -12,7 +12,7 @@
 - 🚧 start shell function `doLoop`
   - ✅ shell function `flatMap`
   - ✅ sit/stand/lie ui points have tag `action`
-  - 🚧 implement `npc do` i.e. handle { point, tags }
+  - ✅ implement `npc do` i.e. handle { point, tags/meta }
     - ✅ getNpcGlobalNav empty if src or dst outside navmesh
     - start on navmesh
       - ✅ on navmesh + point navigable => walk
@@ -33,12 +33,18 @@
     - ✅ orient can be broken if turn whilst off-mesh
       - BUG fix i.e. `orient-{deg}` -> `deg` was broken
       - Independently, `lookLoop` won't turn towards `do` tagged point
-    - turns towards navNode before fade-spawn
-    - handle `goLoop` walk attempted during walk in `doLoop`
     - ❌ can click anywhere on navmesh to return to it
+    - 🤔 turns towards navNode before fade-spawn
+    - ✅ handle `goLoop` walk attempted during walk in `doLoop`
+      - ℹ️ cancel not invoked e.g. not seeing console.log(`cancel: cancelling ${this.def.key}`);
+      - ✅ IDEA `goLoop` should always cancel before doing a walk
 - ✅ sit has angle
+
+- lie has 1 frame animation
+- profile has `doLoop andros &`
+- more `ui do` points
+- more `orient-{deg}` tags
 - sit has mask
-- support lie too
 
 - handle js transitionOpacity() or startAnimation() while paused?
 - ✅ BUG lookAt can over-turn (now using Web Animations API)

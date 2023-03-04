@@ -363,6 +363,8 @@
       } else {
         datum = await api.read()
         while (datum !== null) {
+          // Cancel before walking e.g. for other instance of `walk`
+          await npcs.npcAct({ npcKey, action: "cancel" })
           // Subsequent reads can interrupt walk
           const resolved = await Promise.race([
             promises[0] = npcs.walkNpc({ npcKey, ...datum }),
