@@ -3,53 +3,22 @@
 ## In progress
 
 - ✅ should see more visible doors through hull door
-- 🚧 rewrite use-geomorphs?
-  - would like to refetch geomorph json without restarting
-- 🚧 rethink `view reverse` - maybe hide specific black polys instead?
-  - ✅ gm 101: managed to eliminate some
-  - gm 101: continued
-- move `<Decor>` to top level
+- 🚧 eliminate `view reverse` (although still support for now)
+  - ✅ gm 101: eliminated via parallel-connectors
+  - ✅ gm 302: eliminated via new wall/door
+  - 🚧 office 89
 
-- ✅ start shell function `doLoop`
-  - ℹ️ clarity: goto point and play animation, where goto means:
-    - `walk-to`
-    - `walk-near-then-fade`
-    - `fade-near`
-  - ✅ shell function `flatMap`
-  - ✅ sit/stand/lie ui points have tag `action`
-  - ✅ implement `npc do` i.e. handle { point, tags/meta }
-    - ✅ getNpcGlobalNav empty if src or dst outside navmesh
-    - start on navmesh
-      - ✅ on navmesh + point navigable => walk
-      - ✅ can `npc.transitionOpacity(0, 1000)`
-      - ✅ implement pause/play/cancel
-      - ✅ move opacity animation to `anim.body`
-      - ✅ off navmesh + point navigable => fade near then walk
-      - ✅ support ui point orientation via `orient-{deg}` modified via room transform
-      - ✅ stale anim.rotate via do?
-    - ✅ start off navmesh
-    - ✅ do not use close nav-nodes anymore
-      - ℹ️ close-nav-node can look wrong e.g. stateroom chair
-      - ℹ️ we always need a nav-node to return to
-      - ✅ on-mesh -> off-mesh
-      - ✅ off-mesh -> on/off-mesh
-    - ✅ can only leave off-mesh by clicking nearby action points
-      - thus always need at least one nearby on-mesh action point
-    - ✅ orient can be broken if turn whilst off-mesh
-      - BUG fix i.e. `orient-{deg}` -> `deg` was broken
-      - Independently, `lookLoop` won't turn towards `do` tagged point
-    - ❌ can click anywhere on navmesh to return to it
-    - 🤔 turns towards navNode before fade-spawn
-    - ✅ handle `goLoop` walk attempted during walk in `doLoop`
-      - ℹ️ cancel not invoked e.g. not seeing console.log(`cancel: cancelling ${this.def.key}`);
-      - ✅ IDEA `goLoop` should always cancel before doing a walk
-- ✅ sit has angle
+- move `<Decor>` to top level
+- 🚧 rewrite use-geomorphs?
+  > would like to refetch geomorph json without restarting
 
 - lie has 1 frame animation
 - profile has `doLoop andros &`
 - more `ui do` points
 - more `orient-{deg}` tags
 - sit has mask
+- navmesh accounts for closed doors
+  > should fix double-door issue
 
 - handle js transitionOpacity() or startAnimation() while paused?
 - ✅ BUG lookAt can over-turn (now using Web Animations API)
@@ -512,6 +481,41 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ start shell function `doLoop`
+  - ℹ️ clarity: goto point and play animation, where goto means:
+    - `walk-to`
+    - `walk-near-then-fade`
+    - `fade-near`
+  - ✅ shell function `flatMap`
+  - ✅ sit/stand/lie ui points have tag `action`
+  - ✅ implement `npc do` i.e. handle { point, tags/meta }
+    - ✅ getNpcGlobalNav empty if src or dst outside navmesh
+    - start on navmesh
+      - ✅ on navmesh + point navigable => walk
+      - ✅ can `npc.transitionOpacity(0, 1000)`
+      - ✅ implement pause/play/cancel
+      - ✅ move opacity animation to `anim.body`
+      - ✅ off navmesh + point navigable => fade near then walk
+      - ✅ support ui point orientation via `orient-{deg}` modified via room transform
+      - ✅ stale anim.rotate via do?
+    - ✅ start off navmesh
+    - ✅ do not use close nav-nodes anymore
+      - ℹ️ close-nav-node can look wrong e.g. stateroom chair
+      - ℹ️ we always need a nav-node to return to
+      - ✅ on-mesh -> off-mesh
+      - ✅ off-mesh -> on/off-mesh
+    - ✅ can only leave off-mesh by clicking nearby action points
+      - thus always need at least one nearby on-mesh action point
+    - ✅ orient can be broken if turn whilst off-mesh
+      - BUG fix i.e. `orient-{deg}` -> `deg` was broken
+      - Independently, `lookLoop` won't turn towards `do` tagged point
+    - ❌ can click anywhere on navmesh to return to it
+    - 🤔 turns towards navNode before fade-spawn
+    - ✅ handle `goLoop` walk attempted during walk in `doLoop`
+      - ℹ️ cancel not invoked e.g. not seeing console.log(`cancel: cancelling ${this.def.key}`);
+      - ✅ IDEA `goLoop` should always cancel before doing a walk
+- ✅ sit has angle
 
 - ✅ absorb floorGraph into GeomorphData?
   - ✅ avoid expensive floorGraph fromZone

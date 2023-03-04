@@ -85,7 +85,7 @@
     <rect x="878" y="335" width="44" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1237.5, -450)">
       <title>door</title>
     </rect>
-    <rect x="2093.7" y="335" width="105" height="5" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1417.5, -1726.699951)">
+    <rect x="1077.5" y="366" width="5" height="45" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>door</title>
     </rect>
     <rect x="878" y="402" width="44" height="6" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 1575, -691)">
@@ -142,14 +142,20 @@
     <rect x="69.996" width="5" height="168.981" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.5, 0.866025, -0.866025, 0.5, 865.368225, 392.449188)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0, 1, -1, 0, 1080, 375.003998)">
+    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0, 1, -1, 0, 1080, 395.003998)">
       <title>relate-connectors</title>
     </rect>
-    <rect y="500" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="746.496">
-      <title>view reverse</title>
+    <rect x="73.406" width="5.244" height="194.747" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.258819, 0.965926, -0.965926, 0.258819, 1064.23584, 319.02533)">
+      <title>relate-connectors</title>
     </rect>
-    <rect y="427.41" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="970" transform="matrix(0, 1, -1, 0, 1507.410034, -554.985474)">
-      <title>view reverse</title>
+    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377319, 222.598053)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377197, 282.598022)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="1077.5" width="5" height="90" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="370">
+      <title>parallel-connectors</title>
     </rect>
     <rect x="502.368" y="480.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
@@ -178,8 +184,14 @@
     <rect x="1182.368" y="40.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-80</title>
     </rect>
-    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377197, 232.597961)">
-      <title>relate-connectors</title>
+    <rect x="1077.5" y="542" width="5" height="54" style="">
+      <title>wall</title>
+    </rect>
+    <rect x="1077.5" y="426" width="5" height="45" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door</title>
+    </rect>
+    <rect x="1077.5" y="546" width="5" height="45" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door</title>
     </rect>
   </g>
 </svg>
