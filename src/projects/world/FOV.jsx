@@ -96,10 +96,11 @@ export default function FOV(props) {
        * Try to eliminate "small black no-light intersections" from current geomorph.
        * They often look triangular, and as part of mask they have no holes.
        * However, polygons sans holes also arise e.g. when light borders a hull door.
+       * @see {gmGraph.computeViewPolygons} for new approach
        */
-      maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
-        x.holes.length > 0 || x.outline.length > 8
-      );
+      // maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
+      //   x.holes.length > 0 || (x.outline.length > 8)
+      // );
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;

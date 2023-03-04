@@ -23,19 +23,22 @@
     <rect width="900" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="-10"/>
     <rect width="900" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="1190"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <rect y="-10" width="20" height="1210" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
       <title>wall</title>
     </rect>
-    <rect x="40" y="660" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 675, 600.900024)">
+    <rect x="40" y="660" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 675, 600.900024)">
       <title>door</title>
     </rect>
     <rect x="40" y="660" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 675, 300.900024)">
       <title>door</title>
     </rect>
-    <rect x="350" y="550" width="90.9" height="90.9" style="fill: rgb(216, 216, 216); pointer-events: auto;">
+    <rect x="350" y="550" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
       <title>ui label room office</title>
+    </rect>
+    <rect x="-5" width="10" height="145.785" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="530">
+      <title>parallel-connectors</title>
     </rect>
   </g>
 </svg>

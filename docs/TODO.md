@@ -7,13 +7,17 @@
   - ✅ gm 101: eliminated via parallel-connectors
   - ✅ gm 302: eliminated via new wall/door
   - ❌ office 89: exactly one `view reverse` for curved window
+- ✅ alternate method for eliminating "small black triangular view-intersection polys" 
 
-- move `<Decor>` to top level
-- 🚧 rewrite use-geomorphs?
-  > would like to refetch geomorph json without restarting
+- 🚧 move `<Decor>` to top level
 
+- ✅ profile has `doLoop andros &`
+- 🚧 fix orient again
+  - needed `animation.playState === 'finished' && animation.cancel();`
+- can prevent turning while standing e.g. because no space
+- can directly fade to off-mesh point if already close?
+- clarify exit from off-mesh do point
 - lie has 1 frame animation
-- profile has `doLoop andros &`
 - more `ui do` points
 - more `orient-{deg}` tags
 - sit has mask
@@ -28,7 +32,10 @@
   - try width=height=scale instead of `... scale(x)`
 - BUG? saw pause/resume walk issue towards end
 - BUG multiple prompts `$ $`
+- rewrite use-geomorphs?
+  > would like to refetch geomorph json without restarting
 - consider behaviour when manually kill a pipe-child
+- high-res unlit drawRects (currently canvas is half size)
 
 - ✅ BUG raw-loader edit resets --npcs-debug-display
   - profile was being re-run, so `npc config debug` toggled
@@ -38,106 +45,10 @@
   - ✅ npc debug circles became invisible 
   - ✅ roomIds from DebugWorld become invis 
 
-- ✅ show `idle-breathe` somehow
-  - ✅ can spawn whilst walking remembering angle
-  - ✅ avoid reinvoking create-npc per spawn
-  - ✅ consider create-npc HMR
-    - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
-  - ✅ do not re-mount on spawn
-  - ✅ `<World>` now awaits `<Debug>`
-  - ✅ remove updateAll
-  - ❌ update individual npcs directly
-    - no use case as yet
-  - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
-  - ✅ can avoid `<NPC>` render via React.memo
-  - ❌ can avoid `<Decor>` render via React.memo
-  - ✅ `npc events`
-  - ✅ event on click ui point
-  - ✅ remove decor custom onClick
-  - ✅ event on add/remove decors
-  - ✅ event on click TTY link
-  - ✅ event npc-clicked
-  - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
-  - ✅ can play npc anim
-    - `npc.startAnimation('idle-breathe')`
-    - `npc get andros | map 'x => x.startAnimation("idle-breathe")'`
-  - ✅ idle-breathe uses animation-direction
-  - ❌ idle-breathe animation more accentuated
-  - ✅ on click stand point, spawn and change to idle-breathe
-    > see [example](/src/projects/sh/EXAMPLES.md)
-  - ✅ when off navmesh, can get back on
-
-
 - use webp for lit/unlit geomorphs
 - proceed to _form_ i.e. collision prediction
 
 - ✅ `<NPC>` supports HMR i.e. manually within useStateRef
-
-- ✅ dynamic lighting
-  - ✅ consider removing unseen door canvas
-  - ✅ avoid partially dark walls
-  - ✅ try including doors in geomorph 301 png
-    - ✅ show all doors in curr/adj room
-    - ❌ show all doors in related room
-      > instead show all doors in curr/adj + 1-step relDoorId
-      > which only changes when curr room changes
-    - ✅ fix half-closed-door-issue
-    - ✅ hull doors should be cut out of adjacent geomorphs
-      > otherwise they cover up the hull doors
-  - ✅ try drawRect "unlit rects including door"
-    - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
-    - ✅ bake-lighting does renderLayout with doors open before shade/lights
-    - ✅ move canvas into Geomorphs
-    - ✅ test draw a rect from underlying geomorph and darken it
-    - ✅ start reviewing light strategy
-  - ✅ rename tag `light` -> `view`
-  - ✅ rename tag `light-source` -> `light`
-  - ✅ cleanup GeomorphEdit
-  - ✅ GeomorphEdit shows `view` positions
-    > too many?
-  - ✅ GeomorphEdit can show fov polys
-  - ✅  GeomorphEdit shows `light` positions
-  - ✅ lightSrc has roomId
-  - ✅ GeomorphEdit can show light polys
-  - ✅ refactor GeomorphEdit state
-  - ✅ GeomorphEdit restricts light by distance
-    - ✅ review bake-lighting
-    - ✅ support tags `light distance-180`
-  - ✅ precompute light door rects
-    - ✅ part of geomorph.json
-    - ✅ support multiple subsequent doorways
-    - ✅ initial drawRects
-    - ✅ init drawRects: fix transformed
-      - forgot that rects shouldn't show in light's originating room
-      - still need to fix overlapping rects in e.g. geomorph 101 
-    - ✅ init drawRects: await fov images ready
-    - ✅ drawRects on door open/close
-    - ✅ should not be dark under doors
-      - ✅ exclude doors in unlit geomorph
-    - ✅ realised we needed doors for fov
-      - ✅ tried thin lines in {geomorph}.json
-      - ✅ try x2 res
-        > but no need: issue was non-integral drawImage of doorRect
-      - ✅ but other bug: still light in doorway,
-        and cannot drawImage without drawing thin line...
-      - ✅ NEW APPROACH
-        - ✅ geomorph.png has thin doors
-        - ✅ create *.unlit.doorways.png
-        - ✅ test 301: thin doors + drawImage from unlit.doorways
-        - ✅ diag doorways by requiring adjacent light source?
-        - ✅ cleanup e.g. webp, optimize
-      - ❌ FOV should use canvas instead of img
-      - ✅ diag doors ok if light src adjacent?
-      - ✅ other bug: drawRects not going far enough
-    - ✅ avoid overlapping light rects
-      - ✅ 302 ✅ 303 ✅ 101 ✅ 102
-      - don't forget lights can intersect if in same room
-    - ✅ support diagonal doors?
-      - can avoid drawImage when other side not visible?
-    - ✅ handle hull doors by not allowing light thru them
-  - ✅ GeomorphEdit shows light decompositions
-  - ✅ light through windows? not an issue
-  - ❌ canvas-based component draws unlit geomorph with doors?
 
 - review how `relate-connectors` extends visible rooms
   - ✅ rather explicit but probably right
@@ -481,6 +392,101 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ dynamic lighting
+  - ✅ consider removing unseen door canvas
+  - ✅ avoid partially dark walls
+  - ✅ try including doors in geomorph 301 png
+    - ✅ show all doors in curr/adj room
+    - ❌ show all doors in related room
+      > instead show all doors in curr/adj + 1-step relDoorId
+      > which only changes when curr room changes
+    - ✅ fix half-closed-door-issue
+    - ✅ hull doors should be cut out of adjacent geomorphs
+      > otherwise they cover up the hull doors
+  - ✅ try drawRect "unlit rects including door"
+    - ✅ bake-lighting shades `rgba(0, 0, 0, 0.5)` so unlit rects will need thi
+    - ✅ bake-lighting does renderLayout with doors open before shade/lights
+    - ✅ move canvas into Geomorphs
+    - ✅ test draw a rect from underlying geomorph and darken it
+    - ✅ start reviewing light strategy
+  - ✅ rename tag `light` -> `view`
+  - ✅ rename tag `light-source` -> `light`
+  - ✅ cleanup GeomorphEdit
+  - ✅ GeomorphEdit shows `view` positions
+    > too many?
+  - ✅ GeomorphEdit can show fov polys
+  - ✅  GeomorphEdit shows `light` positions
+  - ✅ lightSrc has roomId
+  - ✅ GeomorphEdit can show light polys
+  - ✅ refactor GeomorphEdit state
+  - ✅ GeomorphEdit restricts light by distance
+    - ✅ review bake-lighting
+    - ✅ support tags `light distance-180`
+  - ✅ precompute light door rects
+    - ✅ part of geomorph.json
+    - ✅ support multiple subsequent doorways
+    - ✅ initial drawRects
+    - ✅ init drawRects: fix transformed
+      - forgot that rects shouldn't show in light's originating room
+      - still need to fix overlapping rects in e.g. geomorph 101 
+    - ✅ init drawRects: await fov images ready
+    - ✅ drawRects on door open/close
+    - ✅ should not be dark under doors
+      - ✅ exclude doors in unlit geomorph
+    - ✅ realised we needed doors for fov
+      - ✅ tried thin lines in {geomorph}.json
+      - ✅ try x2 res
+        > but no need: issue was non-integral drawImage of doorRect
+      - ✅ but other bug: still light in doorway,
+        and cannot drawImage without drawing thin line...
+      - ✅ NEW APPROACH
+        - ✅ geomorph.png has thin doors
+        - ✅ create *.unlit.doorways.png
+        - ✅ test 301: thin doors + drawImage from unlit.doorways
+        - ✅ diag doorways by requiring adjacent light source?
+        - ✅ cleanup e.g. webp, optimize
+      - ❌ FOV should use canvas instead of img
+      - ✅ diag doors ok if light src adjacent?
+      - ✅ other bug: drawRects not going far enough
+    - ✅ avoid overlapping light rects
+      - ✅ 302 ✅ 303 ✅ 101 ✅ 102
+      - don't forget lights can intersect if in same room
+    - ✅ support diagonal doors?
+      - can avoid drawImage when other side not visible?
+    - ✅ handle hull doors by not allowing light thru them
+  - ✅ GeomorphEdit shows light decompositions
+  - ✅ light through windows? not an issue
+  - ❌ canvas-based component draws unlit geomorph with doors?
+
+- ✅ show `idle-breathe` somehow
+  - ✅ can spawn whilst walking remembering angle
+  - ✅ avoid reinvoking create-npc per spawn
+  - ✅ consider create-npc HMR
+    - ℹ️ possible i.e. could mutate npc lookup in `<NPC>`
+  - ✅ do not re-mount on spawn
+  - ✅ `<World>` now awaits `<Debug>`
+  - ✅ remove updateAll
+  - ❌ update individual npcs directly
+    - no use case as yet
+  - ℹ️ open door renders all npcs because local decor changes, rendering `<NPCs>`
+  - ✅ can avoid `<NPC>` render via React.memo
+  - ❌ can avoid `<Decor>` render via React.memo
+  - ✅ `npc events`
+  - ✅ event on click ui point
+  - ✅ remove decor custom onClick
+  - ✅ event on add/remove decors
+  - ✅ event on click TTY link
+  - ✅ event npc-clicked
+  - ✅ synfig specifies tag `idle` and animation-direction `alternate` for keyframe idle-breathe
+  - ✅ can play npc anim
+    - `npc.startAnimation('idle-breathe')`
+    - `npc get andros | map 'x => x.startAnimation("idle-breathe")'`
+  - ✅ idle-breathe uses animation-direction
+  - ❌ idle-breathe animation more accentuated
+  - ✅ on click stand point, spawn and change to idle-breathe
+    > see [example](/src/projects/sh/EXAMPLES.md)
+  - ✅ when off navmesh, can get back on
 
 - ✅ start shell function `doLoop`
   - ℹ️ clarity: goto point and play animation, where goto means:

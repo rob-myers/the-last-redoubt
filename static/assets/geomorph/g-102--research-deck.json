@@ -1161,7 +1161,7 @@
         }
       },
       {
-        "tags": ["window", "frosted"],
+        "tags": ["window", "one-way-reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1223,7 +1223,7 @@
         }
       },
       {
-        "tags": ["window", "frosted"],
+        "tags": ["window", "one-way-reverse"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3922,7 +3922,7 @@
         "width": 59.9224,
         "height": 11.6059
       },
-      "tags": ["window", "frosted"],
+      "tags": ["window", "one-way-reverse"],
       "seg": [{"x": 390.7009, "y": 239.3971}, {"x": 450.6087, "y": 239.397}],
       "normal": {"x": 0, "y": 1},
       "roomIds": [1, 6],
@@ -3953,7 +3953,7 @@
         "width": 59.9224,
         "height": 11.6059
       },
-      "tags": ["window", "frosted"],
+      "tags": ["window", "one-way-reverse"],
       "seg": [{"x": 749.3913, "y": 239.397}, {"x": 809.2991, "y": 239.3971}],
       "normal": {"x": 0, "y": 1},
       "roomIds": [1, 11],

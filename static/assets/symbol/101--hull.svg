@@ -164,8 +164,8 @@
     <rect x="314.312" y="315.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-200</title>
     </rect>
-    <rect x="934.312" y="635.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
+    <rect x="904.312" y="375.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-140</title>
     </rect>
     <rect x="924.312" y="275.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-200</title>
@@ -180,6 +180,12 @@
       <title>light distance-200</title>
     </rect>
     <rect x="824.312" y="325.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-180</title>
+    </rect>
+    <rect x="904.312" y="815.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>light distance-140</title>
+    </rect>
+    <rect x="1104.312" y="585.935" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-180</title>
     </rect>
   </g>

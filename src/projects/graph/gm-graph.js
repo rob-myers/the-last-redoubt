@@ -217,7 +217,9 @@ export class gmGraphClass extends BaseGraph {
     viewPolys[gmId].push(this.gms[gmId].roomsWithDoors[rootRoomId]);
     gmRoomIds.length === 0 && gmRoomIds.push({ gmId, roomId: rootRoomId });
     return {
-      polys: viewPolys,
+      // ℹ️ try eliminate "small black triangular polys" (arise from intersecting view polys)
+      polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
+      // polys: viewPolys,
       gmRoomIds,
     };
   }
