@@ -307,8 +307,8 @@ export default function NPCs(props) {
       return () => {
         // suspend/resume typically need to persist across Tabs pause/resume.
         // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
-        process.onSuspends.splice(process.onSuspends.findIndex(cb.suspend), 1);
-        process.onResumes.splice(process.onResumes.findIndex(cb.resume), 1);
+        process.onSuspends.splice(process.onSuspends.indexOf(cb.suspend), 1);
+        process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
     },
     isPointInNavmesh(p) {
@@ -354,7 +354,7 @@ export default function NPCs(props) {
           break;
         case 'get':
           return state.getNpc(e.npcKey);
-        case 'look-at': {// 🚧 promise via animationend event?
+        case 'look-at': {
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
@@ -695,6 +695,7 @@ export default function NPCs(props) {
       ref={state.rootRef}
     >
 
+      {/* 🚧 move to World */}
       <Decor
         decor={state.decor}
         api={api}
