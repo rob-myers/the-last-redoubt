@@ -58,6 +58,7 @@ export default function createNpc(
         }));
       } finally {
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
+        animation.playState === 'finished' && animation.cancel();
       }
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
