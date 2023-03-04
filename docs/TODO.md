@@ -3,7 +3,11 @@
 ## In progress
 
 - ✅ should see more visible doors through hull door
-- rethink `view reverse` - maybe hide specific black polys instead?
+- 🚧 rewrite use-geomorphs?
+  - would like to refetch geomorph json without restarting
+- 🚧 rethink `view reverse` - maybe hide specific black polys instead?
+  - ✅ gm 101: managed to eliminate some
+  - gm 101: continued
 - move `<Decor>` to top level
 
 - ✅ start shell function `doLoop`
