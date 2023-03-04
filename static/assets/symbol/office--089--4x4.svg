@@ -27,7 +27,7 @@
   <g style="">
     <title>singles</title>
     <path d="M 543.806 78.697 L 615.787 117.899 L 692.381 165.749 L 803.9 248.5 L 942.1 386.4 L 1027.836 508.649 L 1106 637.5 L 1054.3 667.2 L 880.9 416.8 L 715.8 256.6 L 517.7 139.6 L 543.806 78.697 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); fill-opacity: 0.5;">
-      <title>window</title>
+      <title>window one-way</title>
     </path>
     <rect x="1145" y="930" width="30" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>
@@ -38,26 +38,17 @@
     <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="600" y="865.8">
       <title>ui label room office</title>
     </rect>
-    <rect y="1018.647" width="100" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1064.445">
-      <title>view reverse</title>
-    </rect>
-    <rect x="128" width="40" height="100" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" y="20">
-      <title>view reverse</title>
-    </rect>
-    <rect y="1018.647" width="100" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1164.445">
-      <title>view reverse</title>
-    </rect>
-    <rect x="128" y="-80" width="40" height="100" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>view reverse</title>
-    </rect>
-    <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
-      <title>view</title>
-    </rect>
-    <rect y="300" width="1098.232" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="7966.436" transform="matrix(0.707106, -0.707107, 0.707107, 0.707106, -5785.603516, 6517.232422)">
+    <rect y="300" width="200" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1450.773" transform="matrix(-0.707106, 0.707107, 0.707107, 0.707106, 1798.153565, -1066.534819)">
       <title>view reverse</title>
     </rect>
     <rect x="2083.093" width="30" height="1506.286" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="4871.787" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -4835.656738, -1946.936279)">
       <title>parallel-connectors</title>
+    </rect>
+    <rect x="300" width="18" height="320" style="" y="20">
+      <title>wall</title>
+    </rect>
+    <rect x="860" width="300" height="18" style="" y="889.986">
+      <title>wall</title>
     </rect>
   </g>
 </svg>

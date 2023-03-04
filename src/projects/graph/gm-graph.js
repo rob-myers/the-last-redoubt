@@ -231,12 +231,18 @@ export class gmGraphClass extends BaseGraph {
   computeWindowViews(gmId, rootRoomId) {
     const gm = this.gms[gmId];
 
-    const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(x => {
-      const connector = gm.windows[x.windowId];
-        // Frosted windows opaque
-        if (connector.tags.includes('frosted')) return false;
-        // One-way mirror
-        if (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId) return false;
+    const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(({ windowId }) => {
+      const connector = gm.windows[windowId];
+        if (connector.tags.includes('frosted')) {
+          return false; // Frosted windows are opaque
+        }
+        if (// One-way mirror
+          (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId)
+          ||
+          (connector.tags.includes('one-way-reverse') && connector.roomIds[0] === rootRoomId)
+        ) {
+          return false;
+        }
         return true;
     }).map(x => x.windowId);
 

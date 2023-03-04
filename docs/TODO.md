@@ -3,10 +3,10 @@
 ## In progress
 
 - ✅ should see more visible doors through hull door
-- 🚧 eliminate `view reverse` (although still support for now)
+- ✅ try eliminate `view reverse`
   - ✅ gm 101: eliminated via parallel-connectors
   - ✅ gm 302: eliminated via new wall/door
-  - 🚧 office 89
+  - ❌ office 89: exactly one `view reverse` for curved window
 
 - move `<Decor>` to top level
 - 🚧 rewrite use-geomorphs?
