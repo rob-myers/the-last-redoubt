@@ -200,15 +200,36 @@
       }
     },
 
-    look: async function* ({ api, args, datum, home }) {
+    look: async function* ({ api, args, home, datum, promises = [] }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]
+      
+      const process = api.getProcess()
+      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
+      process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
+      process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "resume" }); return true; })
+
       if (api.isTtyAt(0)) {
         const point = api.safeJsonParse(args[1])
         await npcs.npcAct({ action: "look-at", npcKey, point })
-      } else {
-        while ((datum = await api.read()) !== null) {
-          await npcs.npcAct({ action: "look-at", npcKey, point: datum })
+      } else {// ℹ️ same approach as `walk`
+        datum = await api.read()
+        while (datum !== null) {
+          await npcs.npcAct({ npcKey, action: "cancel" })
+          // Subsequent reads can interrupt look
+          const resolved = await Promise.race([
+            promises[0] = npcs.npcAct({ action: "look-at", npcKey, point: datum }),
+            promises[1] = api.read(),
+          ])
+          if (typeof resolved === "number") {// Finished look
+            datum = await promises[1];
+          } else if (resolved === null) {// EOF so finish look
+            await promises[0]
+            datum = resolved
+          } else {// We read something before look finished
+            await npcs.npcAct({ npcKey, action: "cancel" })
+            datum = resolved
+          }
         }
       }
     },
