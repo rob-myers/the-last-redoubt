@@ -6643,12 +6643,33 @@
         "tags": ["ui", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[70, 40], [70, 140], [170, 140], [170, 40]]]
+          "coordinates": [[[140, 130], [140, 150], [160, 150], [160, 130]]]
+        }
+      },
+      {
+        "tags": ["ui", "do", "sit", "orient-225"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[295, 295], [295, 305], [305, 305], [305, 295]]]
+        }
+      },
+      {
+        "tags": ["ui", "do", "stand"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[215, 445], [215, 455], [225, 455], [225, 445]]]
+        }
+      },
+      {
+        "tags": ["ui", "do", "stand"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[445, 215], [445, 225], [455, 225], [455, 215]]]
         }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1670863797919.0437
+    "lastModified": 1678025209566.6428
   },
   "office--004--2x2": {
     "key": "office--004--2x2",
@@ -8091,7 +8112,7 @@
         }
       },
       {
-        "tags": ["ui", "do", "shower"],
+        "tags": ["ui", "button", "shower"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[545, 145], [545, 155], [555, 155], [555, 145]]]
@@ -8113,7 +8134,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1677846480250.325
+    "lastModified": 1678024529242.2363
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
