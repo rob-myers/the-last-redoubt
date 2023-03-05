@@ -22,7 +22,7 @@ import createNpc from "./create-npc";
 /** @param {Props} props */
 export default function NPCs(props) {
 
-  const {api} = props;
+  const { api } = props;
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
@@ -384,7 +384,6 @@ export default function NPCs(props) {
               ...Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
             );
           }
-          update();
           break;
         case 'set-player':
           state.events.next({ key: 'set-player', npcKey: e.npcKey??null });

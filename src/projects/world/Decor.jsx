@@ -91,6 +91,7 @@ export default function Decor(props) {
       const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
       decors.forEach(decor => delete api.decor.decor[decor.key]);
       api.npcs.events.next({ key: 'decors-removed', decors });
+      update();
     },
     setDecor(...decor) {
       for (const d of decor) {
