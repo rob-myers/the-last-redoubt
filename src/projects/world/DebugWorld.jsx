@@ -39,7 +39,7 @@ export default function DebugWorld(props) {
         undoNonAffineStyle,
       };
     }
-  }, [gmId]);
+  }, [gmId, roomId]);
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
