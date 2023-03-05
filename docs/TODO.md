@@ -9,14 +9,15 @@
   - ❌ office 89: exactly one `view reverse` for curved window
 - ✅ alternate method for eliminating "small black triangular view-intersection polys" 
 
-- 🚧 move `<Decor>` to top level
+- ✅ move `<Decor>` to top level
 
 - ✅ profile has `doLoop andros &`
-- 🚧 fix orient again
+- ✅ fix orient again
   - needed `animation.playState === 'finished' && animation.cancel();`
 - can prevent turning while standing e.g. because no space
-- can directly fade to off-mesh point if already close?
-- clarify exit from off-mesh do point
+- can directly fade to off-mesh point if already close
+- "do points" have icons
+- icons get bigger when player idle/sit/stand/lie nearby
 - lie has 1 frame animation
 - more `ui do` points
 - more `orient-{deg}` tags
@@ -24,9 +25,9 @@
 - navmesh accounts for closed doors
   > should fix double-door issue
 
-- handle js transitionOpacity() or startAnimation() while paused?
 - ✅ BUG lookAt can over-turn (now using Web Animations API)
 - ✅ prevent crash on `$( npc get andros )`
+- 🚧 BUG (possibly HMR) gm 101 saw light initially coming thru door
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
@@ -36,6 +37,7 @@
   > would like to refetch geomorph json without restarting
 - consider behaviour when manually kill a pipe-child
 - high-res unlit drawRects (currently canvas is half size)
+- handle js transitionOpacity() or startAnimation() while paused?
 
 - ✅ BUG raw-loader edit resets --npcs-debug-display
   - profile was being re-run, so `npc config debug` toggled

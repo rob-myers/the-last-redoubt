@@ -16,7 +16,6 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
-import Decor from "./Decor";
 import npcsMeta from './npcs-meta.json';
 import createNpc from "./create-npc";
 
@@ -27,13 +26,11 @@ export default function NPCs(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    decor: {},
     events: new Subject,
     npc: {},
 
     playerKey: /** @type {null | string} */ (null),
     rootEl: /** @type {HTMLDivElement} */ ({}),
-    decorEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
 
@@ -253,7 +250,7 @@ export default function NPCs(props) {
       }
       const result = state.getGlobalNavPath(position, e.point);
       // Always show path
-      state.setDecor({ key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
+      api.decor.setDecor({ key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -321,13 +318,13 @@ export default function NPCs(props) {
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
-          return state.setDecor(...e.items);
+          return api.decor.setDecor(...e.items);
         case 'decor':
           return 'decorKey' in e
-            ? state.decor[e.decorKey] // get decor
+            ? api.decor.decor[e.decorKey] // get decor
             : Object.keys(e).length === 1
-              ? Object.values(state.decor) // list all decors
-              : state.setDecor(e); // add decor
+              ? Object.values(api.decor.decor) // list all decors
+              : api.decor.setDecor(e); // add decor
         case 'do':
           await state.npcDo(e);
           break;
@@ -376,14 +373,16 @@ export default function NPCs(props) {
         case 'remove-decor':
         case 'rm-decor':
           if (e.decorKey) {
-            state.removeDecor(...e.decorKey.split(' '));
+            api.decor.removeDecor(...e.decorKey.split(' '));
           }
           if (e.items) {
-            state.removeDecor(...e.items);
+            api.decor.removeDecor(...e.items);
           }
           if (e.regexStr) {
             const keyRegex = new RegExp(e.regexStr);
-            state.removeDecor(...Object.keys(state.decor).filter(decorKey => keyRegex.test(decorKey)));
+            api.decor.removeDecor(
+              ...Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
+            );
           }
           update();
           break;
@@ -483,34 +482,7 @@ export default function NPCs(props) {
         }
       }
     },
-    removeDecor(...decorKeys) {
-      const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
-      decors.forEach(decor => delete state.decor[decor.key]);
-      state.events.next({ key: 'decors-removed', decors });
-    },
     service: npcService,
-    setDecor(...decor) {
-      for (const d of decor) {
-        if (!d || !npcService.verifyDecor(d)) {
-          throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        }
-        if (state.decor[d.key]) {
-          d.updatedAt = Date.now();
-        }
-        switch (d.type) {
-          case 'path': // Handle clones
-            delete d.origPath;
-            break;
-          case 'point':
-            // Ensure tags and meta extending tags
-            (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
-            break;
-        }
-        state.decor[d.key] = d;
-      }
-      state.events.next({ key: 'decors-added', decors: decor });
-      update();
-    },
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);
       const position = npc.getPosition();
@@ -536,7 +508,7 @@ export default function NPCs(props) {
 
       if (state.npc[e.npcKey]) {
         const spawned = state.npc[e.npcKey];
-        spawned.cancel(); // Clear wayMetas
+        spawned.cancel();
         spawned.unspawned = true; // Crucial for <NPC>
         spawned.epochMs = Date.now();
         spawned.def = {
@@ -566,7 +538,6 @@ export default function NPCs(props) {
       // Trigger <NPC> render and await reply
       update();
       await promise;
-
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
@@ -694,13 +665,6 @@ export default function NPCs(props) {
       className={cx('npcs', rootCss)}
       ref={state.rootRef}
     >
-
-      {/* 🚧 move to World */}
-      <Decor
-        decor={state.decor}
-        api={api}
-      />
-
       {Object.values(state.npc).map(({ key, epochMs }) => (
         <MemoizedNPC
           key={key}
@@ -712,7 +676,6 @@ export default function NPCs(props) {
       ))}
 
       <PrefetchSpritesheets/>
-
     </div>
   );
 }
@@ -748,14 +711,12 @@ const rootCss = css`
 
 /**
  * @typedef State @type {object}
- * @property {Record<string, NPC.DecorDef>} decor
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc
  *
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {HTMLElement} rootEl
- * @property {HTMLElement} decorEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
@@ -777,8 +738,6 @@ const rootCss = css`
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
- * @property {(...decorKeys: string[]) => void} removeDecor
- * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
