@@ -131,8 +131,12 @@ class cmdServiceClass {
           }
         }
         if (showFuncs) {
+          // If 1 prefix and exact match, we'll only show exact match,
+          // so that `declare -f foo` works as expected
+          const exactMatch = prefixes?.length == 1 ? prefixes.find(prefix => func[prefix]) : undefined;
           for (const { key, src } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
+            if (exactMatch && key !== exactMatch) continue;
             const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
             for (const line of lines) yield line;
             yield '';
