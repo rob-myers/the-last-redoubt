@@ -14,7 +14,8 @@
 - ✅ profile has `doLoop andros &`
 - ✅ fix orient again
   - needed `animation.playState === 'finished' && animation.cancel();`
-- can prevent turning while standing e.g. because no space
+- ✅ reset opacity to 1 on cancel anim.opacity
+- 🚧 can prevent turning whilst standing e.g. because no space
 - can directly fade to off-mesh point if already close
 - "do points" have icons
 - icons get bigger when player idle/sit/stand/lie nearby
@@ -22,8 +23,9 @@
 - more `ui do` points
 - more `orient-{deg}` tags
 - sit has mask
+
 - navmesh accounts for closed doors
-  > should fix double-door issue
+  - should fix double-door issue
 
 - ✅ BUG lookAt can over-turn (now using Web Animations API)
 - ✅ prevent crash on `$( npc get andros )`

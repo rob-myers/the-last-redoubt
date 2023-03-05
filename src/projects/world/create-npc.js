@@ -58,7 +58,11 @@ export default function createNpc(
         }));
       } finally {
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
-        animation.playState === 'finished' && animation.cancel();
+        if (animation.playState === 'finished') {
+          animation.cancel();
+        } else {// Reset opacity if cancelled
+          this.el.body.style.opacity = '1';
+        }
       }
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
@@ -91,13 +95,11 @@ export default function createNpc(
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
 
-      /** @type {Animation['playState'][]} */
-      const playStates = ['running', 'paused'];
       const rootAnims = [this.anim.translate].filter(
-        anim => isAnimAttached(anim, this.el.root, playStates)
+        anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.root)
       );
       const bodyAnims = [this.anim.opacity, this.anim.rotate, this.anim.sprites].filter(
-        anim => isAnimAttached(anim, this.el.body, playStates)
+        anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.body)
       );
 
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {

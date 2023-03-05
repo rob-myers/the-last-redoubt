@@ -305,13 +305,9 @@ export function detectReactDevToolQuery(key) {
 /**
  * @param {Animation} anim 
  * @param {HTMLElement} el 
- * @param {Animation['playState'][]} [playStates] optionally require playState ∊ playStates
  */
-export function isAnimAttached(anim, el, playStates) {
-	return (
-		el.getAnimations().includes(anim)
-		&& (!playStates || playStates.includes(anim.playState))
-	);
+export function isAnimAttached(anim, el) {
+	return el.getAnimations().includes(anim);
 }
 
 /**
