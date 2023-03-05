@@ -20,46 +20,7 @@ export default function Decor(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     decor: {},
     decorEl: /** @type {HTMLDivElement} */ ({}),
-    ready: true,
-    removeDecor(...decorKeys) {
-      const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
-      decors.forEach(decor => delete api.decor.decor[decor.key]);
-      api.npcs.events.next({ key: 'decors-removed', decors });
-    },
-    setDecor(...decor) {
-      for (const d of decor) {
-        if (!d || !npcService.verifyDecor(d)) {
-          throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        }
-        if (api.decor.decor[d.key]) {
-          d.updatedAt = Date.now();
-        }
-        switch (d.type) {
-          case 'path': // Handle clones
-            delete d.origPath;
-            break;
-          case 'point':
-            // Ensure tags and meta extending tags
-            (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
-            break;
-        }
-        api.decor.decor[d.key] = d;
-      }
-      api.npcs.events.next({ key: 'decors-added', decors: decor });
-      update();
-    },
-    update,
-  }));
-
-  React.useEffect(() => {
-    props.onLoad(state);
-  }, []);
-
-  React.useEffect(() => {
-    const observer = new MutationObserver(debounce((records) => {
-      // console.log({records});
-      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
-
+    handleDevToolEdit(els) {
       for (const el of els) {
         const decorKey = el.dataset.key;
         if (el.classList.contains(cssName.decorCircle)) {
@@ -124,11 +85,56 @@ export default function Decor(props) {
           }
         }
       }
+    },
+    ready: true,
+    removeDecor(...decorKeys) {
+      const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
+      decors.forEach(decor => delete api.decor.decor[decor.key]);
+      api.npcs.events.next({ key: 'decors-removed', decors });
+    },
+    setDecor(...decor) {
+      for (const d of decor) {
+        if (!d || !npcService.verifyDecor(d)) {
+          throw Error(`invalid decor: ${JSON.stringify(d)}`);
+        }
+        if (api.decor.decor[d.key]) {
+          d.updatedAt = Date.now();
+        }
+        switch (d.type) {
+          case 'path': // Handle clones
+            delete d.origPath;
+            break;
+          case 'point':
+            // Ensure tags and meta extending tags
+            (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
+            break;
+        }
+        api.decor.decor[d.key] = d;
+      }
+      api.npcs.events.next({ key: 'decors-added', decors: decor });
+      update();
+    },
+    update,
+  }));
+
+  React.useEffect(() => {
+    props.onLoad(state);
+  }, []);
+
+  React.useEffect(() => {
+    const observer = new MutationObserver(debounce((records) => {
+      // console.log({records});
+      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
+      state.handleDevToolEdit(els);
     }, 300));
 
-    observer.observe(state.decorEl, { attributes: true, attributeFilter: ['style'], subtree: true });
+    observer.observe(state.decorEl, {
+      attributes: true,
+      attributeFilter: ['style'],
+      subtree: true,
+    });
     return () => observer.disconnect();
-  }, [api.npcs]);
+  }, [api.npcs.ready]);
 
   return (
     <div
@@ -253,6 +259,7 @@ const cssRect = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {HTMLElement} decorEl
+ * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
