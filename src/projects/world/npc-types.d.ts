@@ -40,8 +40,11 @@ declare namespace NPC {
     };
     unspawned: boolean;
     anim: NPCAnimData;
+    /** From current do point */
+    doMeta: null | Geomorph.PointMeta;
 
     cancel(): Promise<void>;
+    canLook(): boolean;
     clearWayMetas(): void;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;

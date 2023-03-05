@@ -41,6 +41,7 @@ export default function createNpc(
       wayMetas: [],
       wayTimeoutId: 0,
     },
+    doMeta: null,
 
     async animateOpacity(targetOpacity, durationMs) {
       this.anim.opacity.cancel(); // Ensure prev anim removed?
@@ -116,6 +117,12 @@ export default function createNpc(
       if (this.def.key === api.npcs.playerKey) {// Cancel camera tracking
         api.panZoom.animationAction('smooth-cancel');
       }
+    },
+    canLook() {
+      return (
+        (this.anim.spriteSheet === 'idle' || this.anim.spriteSheet === 'idle-breathe')
+        && (!this.doMeta || this.doMeta['no-turn'] !== true)
+      );
     },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
@@ -402,6 +409,7 @@ export default function createNpc(
         this.anim.rotate.cancel();
         this.anim.sprites.cancel();
       }
+      this.doMeta = null;
 
       switch (this.anim.spriteSheet) {
         case 'walk': {
@@ -492,6 +500,7 @@ export default function createNpc(
           break;
         }
       }
+      this.doMeta = meta;
     },
     updateAnimAux() {
       const { aux } = this.anim;

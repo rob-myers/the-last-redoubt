@@ -2416,7 +2416,7 @@
         }
       },
       {
-        "tags": ["ui", "do", "stand", "orient-270", "orient-90"],
+        "tags": ["ui", "do", "stand", "orient-270", "no-turn", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[89, 434], [89, 432], [91, 432], [91, 434]]]
@@ -2521,7 +2521,7 @@
         }
       },
       {
-        "tags": ["ui", "do", "stand", "orient-270", "orient-90"],
+        "tags": ["ui", "do", "stand", "orient-270", "no-turn", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[209, 434], [209, 432], [211, 432], [211, 434]]]

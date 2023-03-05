@@ -356,8 +356,9 @@ export default function NPCs(props) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
           const npc = state.getNpc(e.npcKey);
-          if (npc.isIdle()) {// Cannot look whilst walking or sitting
+          if (npc.canLook()) {
             await npc.lookAt(e.point);
+            // 🚧 throw error?
           }
           return npc.getAngle();
         }

@@ -87,6 +87,7 @@ goOnce: `{
 /** Usage: lookLoop {npcKey} */
 lookLoop: `{
   click |
+    # do not look towards navigable or doable points
     filter 'x => !x.tags.includes("nav") && !x.tags.includes("do")' |
     look $1
 }`,
