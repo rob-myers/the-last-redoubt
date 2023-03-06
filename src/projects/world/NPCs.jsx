@@ -326,7 +326,7 @@ export default function NPCs(props) {
               ? Object.values(api.decor.decor) // list all decors
               : api.decor.setDecor(e); // add decor
         case 'do':
-          await state.npcDo(e);
+          await state.npcActDo(e);
           break;
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
@@ -393,23 +393,26 @@ export default function NPCs(props) {
           throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
       }
     },
-    async npcDo(e) {
+    async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
       const npcPosition = npc.getPosition();
       const gm = assertDefined(api.gmGraph.gms.find(x => x.gridRect.contains(e.point)));
       const meta = npcService.extendDecorMeta(e.meta, gm.matrix);
 
       try {
-        if (state.isPointInNavmesh(npcPosition)) {
+        if (state.isPointInNavmesh(npcPosition)) {// We started on-mesh
           if (state.isPointInNavmesh(e.point)) {
             const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
             await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
             npc.startAnimationByMeta(e.meta);
           } else {
-            // find close stand point in gm.point[e.meta.roomId]
-            const closestStandPoint = getCloseStandPoint({ point: e.point, meta }, gm, defaultNpcInteractRadius ** 2);
-            const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closestStandPoint, throwOnNotNav: true });
-            await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
+
+            if (npcPosition.distanceTo(e.point) > defaultNpcInteractRadius) {
+              // find close stand point in gm.point[e.meta.roomId]
+              const closestStandPoint = getCloseStandPoint({ point: e.point, meta }, gm, defaultNpcInteractRadius ** 2);
+              const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closestStandPoint, throwOnNotNav: true });
+              await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
+            } // Otherwise we'll directly spawn
 
             if (meta.spawnable) {// fade and spawn to original point
               await npc.animateOpacity(0, 1000);
@@ -733,7 +736,7 @@ const rootCss = css`
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
- * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcDo
+ * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
