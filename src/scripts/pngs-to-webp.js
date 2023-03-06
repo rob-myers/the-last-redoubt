@@ -6,6 +6,7 @@
  * Examples:
  * - yarn pngs-to-webp static/assets/geomorph
  * - yarn pngs-to-webp static/assets/npc/first-human-npc
+ * - yarn pngs-to-webp static/assets/icon
  */
 import fs from 'fs';
 import path from 'path';

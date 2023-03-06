@@ -5,46 +5,91 @@
 }
 
 .icon.hash-icon::after {
-  background-image: url('/assets/icon/hash-icon.svg');
+  background-image: url('/assets/icon/hash-icon.png');
 }
+.icon.hash-icon.webp::after {
+  background-image: url('/assets/icon/hash-icon.webp');
+}
+
 
 .icon.ext-link::after {
-  background-image: url('/assets/icon/ext-link.svg');
+  background-image: url('/assets/icon/ext-link.png');
 }
+.icon.ext-link.webp::after {
+  background-image: url('/assets/icon/ext-link.webp');
+}
+
 
 .icon.info-icon::after {
-  background-image: url('/assets/icon/info-icon.svg');
+  background-image: url('/assets/icon/info-icon.png');
 }
+.icon.info-icon.webp::after {
+  background-image: url('/assets/icon/info-icon.webp');
+}
+
 
 .icon.light-bulb::after {
-  background-image: url('/assets/icon/light-bulb.svg');
+  background-image: url('/assets/icon/light-bulb.png');
 }
+.icon.light-bulb.webp::after {
+  background-image: url('/assets/icon/light-bulb.webp');
+}
+
 
 .icon.refresh::after {
-  background-image: url('/assets/icon/refresh.svg');
+  background-image: url('/assets/icon/refresh.png');
 }
+.icon.refresh.webp::after {
+  background-image: url('/assets/icon/refresh.webp');
+}
+
 
 .icon.compress::after {
-  background-image: url('/assets/icon/compress.svg');
+  background-image: url('/assets/icon/compress.png');
 }
+.icon.compress.webp::after {
+  background-image: url('/assets/icon/compress.webp');
+}
+
 
 .icon.expand::after {
-  background-image: url('/assets/icon/expand.svg');
+  background-image: url('/assets/icon/expand.png');
 }
+.icon.expand.webp::after {
+  background-image: url('/assets/icon/expand.webp');
+}
+
 
 .icon.cross-circle::after {
-  background-image: url('/assets/icon/cross-circle.svg');
+  background-image: url('/assets/icon/cross-circle.png');
 }
+.icon.cross-circle.webp::after {
+  background-image: url('/assets/icon/cross-circle.webp');
+}
+
 
 .icon.checked::after {
-  background-image: url('/assets/icon/checked.svg');
+  background-image: url('/assets/icon/checked.png');
+}
+.icon.checked.webp::after {
+  background-image: url('/assets/icon/checked.webp');
 }
 
+
 .icon.road-works::after {
-  background-image: url('/assets/icon/road-works.svg');
+  background-image: url('/assets/icon/road-works.png');
+ 
+  --icon-size-large: 20px;
+}
+.icon.road-works.webp::after {
+  background-image: url('/assets/icon/road-works.webp');
+ 
   --icon-size-large: 20px;
 }
 
 .icon.qed-icon::after {
-  background-image: url('/assets/icon/qed-icon.svg');
+  background-image: url('/assets/icon/qed-icon.png');
+}
+.icon.qed-icon.webp::after {
+  background-image: url('/assets/icon/qed-icon.webp');
 }

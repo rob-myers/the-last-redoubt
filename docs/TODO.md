@@ -15,9 +15,11 @@
 - ✅ fix orient again
   - needed `animation.playState === 'finished' && animation.cancel();`
 - ✅ reset opacity to 1 on cancel anim.opacity
-- 🚧 can prevent turning whilst standing e.g. because no space
-- can directly fade to off-mesh point if already close
-- "do points" have icons
+
+- ✅ can prevent turning whilst standing e.g. because no space
+- ✅ directly fade to off-mesh point if already close
+- ✅ convert site-wide icons to png/webp 24px
+- 🚧 "do points" have icons
 - icons get bigger when player idle/sit/stand/lie nearby
 - lie has 1 frame animation
 - more `ui do` points

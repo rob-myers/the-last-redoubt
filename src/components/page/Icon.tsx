@@ -1,5 +1,6 @@
 import React from 'react';
 import { cx, css } from '@emotion/css';
+import { supportsWebp } from 'projects/service/dom';
 
 export default function Icon({
   icon,
@@ -16,6 +17,7 @@ export default function Icon({
       className={cx(
         baseIconCss,
         'icon', // Needed to match icons.css
+        supportsWebp ? 'webp' : undefined,
         icon,
         small ? 'small-icon' : undefined,
         large ? 'large-icon' : undefined,
