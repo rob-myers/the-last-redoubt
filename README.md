@@ -53,6 +53,16 @@ brew install imagemagick
 brew install optipng
 ```
 
+Symbol PNGs should be unzipped in /media
+- [SymbolsHighRes.zip](http://ericbsmith.no-ip.org/zip/Geomorphs/SymbolsHighRes.zip)
+
+Geomorph PNGs (background in hull symbols) should be unzipped in /media
+- [Geomorphs.zip](http://ericbsmith.no-ip.org/zip/Geomorphs/Geomorphs.zip)
+
+Related resources (less/more resolution)
+- [Symbols.zip](http://ericbsmith.no-ip.org/zip/Geomorphs/Symbols.zip)
+- [GeomorphsHighRes.zip](http://ericbsmith.no-ip.org/zip/Geomorphs/GeomorphsHighRes.zip)
+
 ## Gotchas
 
 - Saw CSS animation of `background-position` fail for a webp file

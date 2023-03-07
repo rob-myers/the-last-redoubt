@@ -52,12 +52,16 @@ export function metaFromSymbolFilename(matched) {
   const gridDim = /** @type {[number, number]} */ (matched[5].split('x').map(x => Number(x) / 5));
   // ids are local unlike geomorphs
   const is = /** @type {string[]} */ ([]);
+  const has = /** @type {string[]} */ ([]);
   if (matched[3]) is.push(`part-${matched[3]}`);
-  if (matched[6]) is.push(normalizeChars(matched[6]));
+  if (matched[6]) {
+    is.push(normalizeChars(matched[6]));
+    has.push(...matched[6].split(',').map(normalizeChars));
+  }
   return {
     srcName: matched[0],
     dstName: `${category}--${matched[2]}--${gridDim[0]}x${gridDim[1]}.png`,
-    id, gridDim, is, has: [], ids,
+    id, gridDim, is, has, ids,
   };
 }
 

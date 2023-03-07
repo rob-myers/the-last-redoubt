@@ -33,6 +33,9 @@
  * yarn rename-pngs symbol 'media/Symbols/Galley & Mess' media/symbol-galley-mess
  * yarn rename-pngs symbol 'media/Symbols/Engineering' media/symbol-engineering
  * yarn rename-pngs symbol 'media/Symbols/Lab' media/symbol-lab
+ * 
+ * ℹ️ new folder structure
+ * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Staterooms media/symbol-staterooms
  * ```
  */
 import fs from 'fs';
@@ -80,7 +83,7 @@ if (
 if (childProcess.execSync(
   'convert --version | grep ImageMagick >/dev/null && echo $?'
 ).toString().trim() !== '0') {
-  error("error: please install ImageMagick e.g. `brew install imagemagick`");
+  error("please install ImageMagick e.g. `brew install imagemagick`");
   process.exit(1);
 }
 
@@ -155,14 +158,16 @@ console.log(childProcess.execSync(fileMetas.map(({ srcName, dstName }) => `
 `).join('')).toString());
 
 info(`applying ImageMagick command \`convert\` in parallel`);
+
 const tempDir = `temp_${uid()}`;
+const maxConcurrentConverts = 10;
 
 childProcess.execSync(`
   mkdir ${path.join(dstDir, tempDir)}
   cd '${dstDir}'
 
   time find *.png -print0 |
-    xargs -0 -I £ -P 40 ${
+    xargs -0 -I £ -P ${maxConcurrentConverts} ${
       'convert -fuzz 1%'
     } ${
       '-trim -colors 32'

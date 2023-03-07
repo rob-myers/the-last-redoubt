@@ -2,6 +2,10 @@
 
 ## In progress
 
+- ✅ run `render-pngs` against staterooms
+  - ✅ improved manifest
+  - ✅ README instructions for files
+
 - ✅ should see more visible doors through hull door
 - ✅ try eliminate `view reverse`
   - ✅ gm 101: eliminated via parallel-connectors

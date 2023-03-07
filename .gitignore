@@ -7,8 +7,10 @@ tsconfig.tsbuildinfo
 .DS_Store
 
 media/Geomorphs
+media/GeomorphsHighRes
 media/CustomTiles
 media/Symbols
+media/SymbolsHighRes
 media/*.zip
 media/*.pdf
 media/*.dwg
