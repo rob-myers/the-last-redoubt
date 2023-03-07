@@ -1,6 +1,7 @@
 :root {
-  --icon-size-base: 13px;
+  --icon-size-tiny: 6px;
   --icon-size-small: 11px;
+  --icon-size-base: 13px;
   --icon-size-large: 18px;
 }
 
@@ -92,4 +93,19 @@
 }
 .icon.qed-icon.webp::after {
   background-image: url('/assets/icon/qed-icon.webp');
+}
+
+.icon.lying-man-posture-silhouette::after {
+  /** https://www.flaticon.com/free-icons/lying */
+  background-image: url('/assets/icon/lying-man-posture-silhouette.png');
+}
+
+.icon.sitting-silhouette::after {
+  /** https://www.flaticon.com/free-icons/sit */
+  background-image: url('/assets/icon/sitting-silhouette.png');
+}
+
+.icon.standing-person::after {
+  /** https://www.flaticon.com/free-icons/person */
+  background-image: url('/assets/icon/standing-person.png');
 }

@@ -9,6 +9,7 @@ tsconfig.tsbuildinfo
 media/Geomorphs
 media/GeomorphsHighRes
 media/CustomTiles
+media/CustomTilesHighRes
 media/Symbols
 media/SymbolsHighRes
 media/*.zip

@@ -23,8 +23,14 @@
 - ✅ can prevent turning whilst standing e.g. because no space
 - ✅ directly fade to off-mesh point if already close
 - ✅ convert site-wide icons to png/webp 24px
+
 - 🚧 "do points" have icons
-- icons get bigger when player idle/sit/stand/lie nearby
+  - ✅ consider locker icons `Ship's Locker/Iconographic`
+  - ✅ stand icon
+  - ✅ sit icon
+  - ✅ lie icon
+  - ✅ show icons
+- 🚧 icons get bigger when player idle/sit/stand/lie nearby
 - lie has 1 frame animation
 - more `ui do` points
 - more `orient-{deg}` tags

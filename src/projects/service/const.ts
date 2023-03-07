@@ -22,6 +22,14 @@ export const cssName = {
   enabled: 'enabled',
   faded: 'faded',
   hull: 'hull',
+  /** see icons.css */
+  iconSizeBase: '--icon-size-base',
+  /** see icons.css */
+  iconSizeLarge: '--icon-size-large',
+  /** see icons.css */
+  iconSizeSmall: '--icon-size-small',
+  /** see icons.css */
+  iconSizeTiny: '--icon-size-tiny',
   ignoreDark: 'ignore-dark',
   infoIcon: 'info-icon',
   iris: 'iris',
@@ -45,6 +53,7 @@ export const cssName = {
   decorPath: 'decor-path',
   decorPoint: 'decor-point',
   decorRect: 'decor-rect',
+  decorIconWidth: '--decor-icon-width',
   
   npc: 'npc',
   npcBody: 'body',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { cx, css } from '@emotion/css';
 import { supportsWebp } from 'projects/service/dom';
+import { cssName } from 'projects/service/const';
 
 export default function Icon({
   icon,
@@ -34,17 +35,20 @@ export default function Icon({
 interface Props extends React.HTMLAttributes<HTMLSpanElement> {
   /** Icon identifier */
   icon: (
-    | 'hash-icon'
+    | 'checked'
+    | 'compress'
+    | 'cross-circle'
+    | 'expand'
     | 'ext-link'
+    | 'hash-icon'
     | 'info-icon'
     | 'light-bulb'
-    | 'refresh'
-    | 'compress'
-    | 'expand'
-    | 'cross-circle'
-    | 'checked'
-    | 'road-works'
+      | 'lying-man-posture-silhouette'
     | 'qed-icon'
+    | 'refresh'
+    | 'road-works'
+    | 'sitting-silhouette'
+    | 'standing-person'
   );
   small?: boolean;
   large?: boolean;
@@ -59,9 +63,9 @@ const baseIconCss = css`
     align-items: center;
     content: '';
 
-    background-size: var(--icon-size-base) var(--icon-size-base);
-    height: var(--icon-size-base);
-    width: var(--icon-size-base);
+    background-size: var(${cssName.iconSizeBase}) var(${cssName.iconSizeBase});
+    height: var(${cssName.iconSizeBase});
+    width: var(${cssName.iconSizeBase});
   }
 
   &.invert-icon::after {
@@ -76,14 +80,14 @@ const baseIconCss = css`
   }
 
   &.small-icon::after {
-    background-size: var(--icon-size-small) var(--icon-size-small);
-    height: var(--icon-size-small);
-    width: var(--icon-size-small);
+    background-size: var(${cssName.iconSizeSmall}) var(${cssName.iconSizeSmall});
+    height: var(${cssName.iconSizeSmall});
+    width: var(${cssName.iconSizeSmall});
   }
   &.large-icon::after {
-    background-size: var(--icon-size-large) var(--icon-size-large);
-    height: var(--icon-size-large);
-    width: var(--icon-size-large);
+    background-size: var(${cssName.iconSizeLarge}) var(${cssName.iconSizeLarge});
+    height: var(${cssName.iconSizeLarge});
+    width: var(${cssName.iconSizeLarge});
   }
   &.bottom-icon {
     vertical-align: text-bottom;

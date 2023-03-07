@@ -172,10 +172,14 @@ export default function Decor(props) {
           case 'point':
             return (
               <div
-                key={key}
+                key={item.key}
                 data-key={item.key}
                 data-tags={item.tags.join(' ')}
-                className={cx(cssName.decorPoint, cssPoint)}
+                className={cx(
+                  cssName.decorPoint,
+                  cssPoint,
+                  metaToIconClasses(item.meta),
+                )}
                 style={{
                   transform: pointToCssTransform(item),
                 }}
@@ -228,17 +232,50 @@ const cssCircle = css`
 `;
 
 const cssPoint = css`
+  ${cssName.decorIconWidth}: 5px;
+
   position: absolute;
-  top: -2.5px;
-  left: -2.5px;
-  width: 5px;
-  height: 5px;
+  top: calc(-0.5 * var(${cssName.decorIconWidth}));
+  left: calc(-0.5 * var(${cssName.decorIconWidth}));
+  width: var(${cssName.decorIconWidth});
+  height: var(${cssName.decorIconWidth});
   transform-origin: center;
   border-radius: 50%;
   border: 1px solid #00000066;
   pointer-events: all;
   cursor: pointer;
+
+  //#region icon
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.icon::after {
+    content: '';
+    display: block;
+    position: absolute;
+    
+    background-size: var(${cssName.iconSizeTiny}) var(${cssName.iconSizeTiny});
+    height: var(${cssName.iconSizeTiny});
+    width: var(${cssName.iconSizeTiny});
+    
+    background-color: #ff000066;
+    border-radius: 50%;
+  }
+
+  &.icon {
+    border: none;
+  }
+  //#endregion icon
+  
 `;
+
+/** @param {Geomorph.PointMeta} meta */
+function metaToIconClasses(meta) {
+  if (meta.stand) return 'icon standing-person';
+  if (meta.sit) return 'icon sitting-silhouette';
+  if (meta.lie) return 'icon lying-man-posture-silhouette';
+  return undefined;
+}
 
 const cssRect = css`
   position: absolute;
