@@ -9,7 +9,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { fillRing } from "../service/dom";
+import { fillRing, supportsWebp } from "../service/dom";
 
 /**
  * Create a layout, given a definition and all symbols.
@@ -937,10 +937,12 @@ export function geomorphJsonPath(layoutKey) {
 
 /**
  * @param {Geomorph.LayoutKey} layoutKey
- * @returns Live path to asset
+ * @returns Live path to asset (webp or png)
  */
 export function geomorphPngPath(layoutKey, suffix = '') {
-  return `/assets/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.png`
+  return `/assets/geomorph/${layoutKey}${suffix ? `.${suffix}` : ''}.${
+    supportsWebp ? 'webp' : 'png'
+  }`
 }
 
 export const labelMeta = {

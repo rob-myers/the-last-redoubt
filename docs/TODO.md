@@ -31,13 +31,22 @@
   - ✅ lie icon
   - ✅ show icons
 - 🚧 icons get bigger when player idle/sit/stand/lie nearby
+  - better lie icon?
 - lie has 1 frame animation
+  - trace `r_s_r_m_njoy_lie.png`
 - more `ui do` points
 - more `orient-{deg}` tags
 - sit has mask
 
+- ✅ use webp for lit/unlit geomorphs
 - navmesh accounts for closed doors
   - should fix double-door issue
+
+- redo collision prediction
+  - decor circle
+  - decor rect
+  - npc vs npc
+  - npc vs door
 
 - ✅ BUG lookAt can over-turn (now using Web Animations API)
 - ✅ prevent crash on `$( npc get andros )`
@@ -45,7 +54,7 @@
 - BUG: chrome: cursor over e.g. decor circle
   - works in firefox
   - try width=height=scale instead of `... scale(x)`
-- BUG? saw pause/resume walk issue towards end
+- ❌ BUG? saw pause/resume walk issue towards end
 - BUG multiple prompts `$ $`
 - rewrite use-geomorphs?
   > would like to refetch geomorph json without restarting
@@ -60,9 +69,6 @@
 - ✅ HMR npc config css var reset issues
   - ✅ npc debug circles became invisible 
   - ✅ roomIds from DebugWorld become invis 
-
-- use webp for lit/unlit geomorphs
-- proceed to _form_ i.e. collision prediction
 
 - ✅ `<NPC>` supports HMR i.e. manually within useStateRef
 
