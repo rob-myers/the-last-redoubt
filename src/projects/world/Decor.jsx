@@ -240,7 +240,7 @@ const cssPoint = css`
   width: var(${cssName.decorIconWidth});
   height: var(${cssName.decorIconWidth});
   pointer-events: all;
-  /* cursor: none; */
+  cursor: pointer;
 
   border-radius: 50%;
   border: 0.5px solid #00000066;
@@ -263,17 +263,19 @@ const cssPoint = css`
     width: var(${cssName.iconSizeTiny});
     
     filter: invert(1);
-    /** white becomes black after invert */
     background-color: #fff;
-    border: 1px solid #fff;
+    border: 1.5px solid #fff;
     border-radius: 50%;
+    outline: 0.5px solid black;
+    opacity: 0.25;
 
     transform: scale(1);
-    transition: transform 500ms ease-in-out;
+    transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
   }
 
   &.icon:hover::after {
-    transform: scale(2);
+    transform: scale(1.75);
+    opacity: 1;
   }
   //#endregion icon
   
