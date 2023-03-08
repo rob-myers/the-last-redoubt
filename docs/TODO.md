@@ -39,6 +39,10 @@
 - sit has mask
 
 - ✅ use webp for lit/unlit geomorphs
+- ✅ 301 shouldn't have guns
+- ✅ 303 fov should cover windows
+- useGeomorphs supports HMR?
+- hide isolated hull doors touching edge geomorph
 - navmesh accounts for closed doors
   - should fix double-door issue
 

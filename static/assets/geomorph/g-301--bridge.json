@@ -6,8 +6,6 @@
     "id": 301,
     "items": [
       {"symbol": "301--hull"},
-      {"symbol": "weaponry--013--1x2", "transform": [-1, 0, 0, 1, 360, -60]},
-      {"symbol": "weaponry--013--1x2", "transform": [1, 0, 0, 1, 840, -60]},
       {"symbol": "stateroom--036--2x4"},
       {
         "symbol": "office--001--2x2",
@@ -10729,20 +10727,6 @@
       "key": "301--hull",
       "pngHref": "/assets/debug/g-301--bridge.png",
       "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628}
-    },
-    {
-      "key": "weaponry--013--1x2",
-      "pngHref": "/assets/symbol/weaponry--013--1x2.png",
-      "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
-      "transformArray": [-1, 0, 0, 1, 360, -60],
-      "transform": "matrix(-1,0,0,1,360,-60)"
-    },
-    {
-      "key": "weaponry--013--1x2",
-      "pngHref": "/assets/symbol/weaponry--013--1x2.png",
-      "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
-      "transformArray": [1, 0, 0, 1, 840, -60],
-      "transform": "matrix(1,0,0,1,840,-60)"
     },
     {
       "key": "stateroom--036--2x4",

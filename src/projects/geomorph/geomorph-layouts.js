@@ -104,8 +104,8 @@ const layoutDefs = {
     id: 301,
     items: [
       { symbol: '301--hull' }, // Hull must be first
-      { symbol: 'weaponry--013--1x2', transform: [-1, 0, 0, 1, 360, -60] },
-      { symbol: 'weaponry--013--1x2', transform: [1, 0, 0, 1, 840, -60] },
+      // { symbol: 'weaponry--013--1x2', transform: [-1, 0, 0, 1, 360, -60] },
+      // { symbol: 'weaponry--013--1x2', transform: [1, 0, 0, 1, 840, -60] },
 
       { symbol: 'stateroom--036--2x4' },
       { symbol: 'office--001--2x2', transform: [-1, 0, 0, 1, 240, 120], doors: ['s'] },
