@@ -2,36 +2,16 @@
 
 ## In progress
 
-- ✅ run `render-pngs` against staterooms
-  - ✅ improved manifest
-  - ✅ README instructions for files
-
-- ✅ should see more visible doors through hull door
-- ✅ try eliminate `view reverse`
-  - ✅ gm 101: eliminated via parallel-connectors
-  - ✅ gm 302: eliminated via new wall/door
-  - ❌ office 89: exactly one `view reverse` for curved window
-- ✅ alternate method for eliminating "small black triangular view-intersection polys" 
-
-- ✅ move `<Decor>` to top level
-
-- ✅ profile has `doLoop andros &`
-- ✅ fix orient again
-  - needed `animation.playState === 'finished' && animation.cancel();`
-- ✅ reset opacity to 1 on cancel anim.opacity
-
-- ✅ can prevent turning whilst standing e.g. because no space
-- ✅ directly fade to off-mesh point if already close
-- ✅ convert site-wide icons to png/webp 24px
-
 - 🚧 "do points" have icons
   - ✅ consider locker icons `Ship's Locker/Iconographic`
   - ✅ stand icon
   - ✅ sit icon
   - ✅ lie icon
   - ✅ show icons
-- 🚧 icons get bigger when player idle/sit/stand/lie nearby
-  - better lie icon?
+  - ✅ improve icons
+  - icons get bigger when player idle/sit/stand/lie nearby
+- can only directly spawn off-mesh when closer than closest stand point
+
 - lie has 1 frame animation
   - trace `r_s_r_m_njoy_lie.png`
 - more `ui do` points
@@ -41,8 +21,8 @@
 - ✅ use webp for lit/unlit geomorphs
 - ✅ 301 shouldn't have guns
 - ✅ 303 fov should cover windows
-- useGeomorphs supports HMR?
 - hide isolated hull doors touching edge geomorph
+- useGeomorphs supports HMR?
 - navmesh accounts for closed doors
   - should fix double-door issue
 
@@ -418,6 +398,28 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ run `render-pngs` against staterooms
+  - ✅ improved manifest
+  - ✅ README instructions for files
+
+- ✅ should see more visible doors through hull door
+- ✅ try eliminate `view reverse`
+  - ✅ gm 101: eliminated via parallel-connectors
+  - ✅ gm 302: eliminated via new wall/door
+  - ❌ office 89: exactly one `view reverse` for curved window
+- ✅ alternate method for eliminating "small black triangular view-intersection polys" 
+
+- ✅ move `<Decor>` to top level
+
+- ✅ profile has `doLoop andros &`
+- ✅ fix orient again
+  - needed `animation.playState === 'finished' && animation.cancel();`
+- ✅ reset opacity to 1 on cancel anim.opacity
+
+- ✅ can prevent turning whilst standing e.g. because no space
+- ✅ directly fade to off-mesh point if already close
+- ✅ convert site-wide icons to png/webp 24px
 
 - ✅ dynamic lighting
   - ✅ consider removing unseen door canvas

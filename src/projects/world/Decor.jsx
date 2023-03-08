@@ -239,16 +239,20 @@ const cssPoint = css`
   left: calc(-0.5 * var(${cssName.decorIconWidth}));
   width: var(${cssName.decorIconWidth});
   height: var(${cssName.decorIconWidth});
-  transform-origin: center;
-  border-radius: 50%;
-  border: 1px solid #00000066;
   pointer-events: all;
-  cursor: pointer;
+  /* cursor: none; */
+
+  border-radius: 50%;
+  border: 0.5px solid #00000066;
+  &.icon {
+    border: none;
+  }
 
   //#region icon
   display: flex;
   justify-content: center;
   align-items: center;
+
   &.icon::after {
     content: '';
     display: block;
@@ -258,12 +262,18 @@ const cssPoint = css`
     height: var(${cssName.iconSizeTiny});
     width: var(${cssName.iconSizeTiny});
     
-    background-color: #ff000066;
+    filter: invert(1);
+    /** white becomes black after invert */
+    background-color: #fff;
+    border: 1px solid #fff;
     border-radius: 50%;
+
+    transform: scale(1);
+    transition: transform 500ms ease-in-out;
   }
 
-  &.icon {
-    border: none;
+  &.icon:hover::after {
+    transform: scale(2);
   }
   //#endregion icon
   
