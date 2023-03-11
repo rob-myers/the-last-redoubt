@@ -14,9 +14,11 @@ export default function NPC({ api, npcKey, disabled }) {
     updateFrom: (current) => createNpc(current.def, { disabled, api }),
   });
   
-  React.useLayoutEffect(() => {// useLayoutEffect for initial css
+  React.useLayoutEffect(() => {
     if (npc.unspawned) {
-      npc.initialize();
+      npc.initialize(); // useLayoutEffect because we modify styles here
+      npc.unspawned = false;
+      npc.startAnimation('idle');
       api.npcs.events.next({ key: 'spawned-npc', npcKey });
     }
   }, [npc.epochMs]);

@@ -14,11 +14,10 @@ export default function useHandleEvents(api) {
    * @param {string} npcKey
    * @param {string} otherNpcKey
    */
-  function handleNpcCollision(npcKey, otherNpcKey) {
+  async function handleNpcCollision(npcKey, otherNpcKey) {
     const npc = api.npcs.getNpc(npcKey);
     const other = api.npcs.getNpc(otherNpcKey);
-    npc.cancel();
-    other.cancel();
+    await Promise.all([npc.cancel(), other.cancel()]);
   }
 
   const state = useStateRef(/** @type {() => State} */ () => ({

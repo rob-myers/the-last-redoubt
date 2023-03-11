@@ -200,6 +200,7 @@
       }
     },
 
+    // ℹ️ very similar to `walk`
     look: async function* ({ api, args, home, datum, promises = [] }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]
@@ -212,7 +213,7 @@
       if (api.isTtyAt(0)) {
         const point = api.safeJsonParse(args[1])
         await npcs.npcAct({ action: "look-at", npcKey, point })
-      } else {// ℹ️ same approach as `walk`
+      } else {
         datum = await api.read()
         while (datum !== null) {
           await npcs.npcAct({ npcKey, action: "cancel" })

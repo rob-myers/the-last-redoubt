@@ -10,7 +10,14 @@
   - ✅ show icons
   - ✅ improve icons
   - icons get bigger when player idle/sit/stand/lie nearby
-- can only directly spawn off-mesh when closer than closest stand point
+  - improve lie icon
+- 🚧 npc do: to off-mesh only when close enough
+- npc do: from off-mesh only when close enough
+- remove unnecessary `ui do` stand points
+
+- combine `lookLoop` and `goLoop` into `moveLoop`
+- ❌ try pause/resume npc on click head
+- ❌ can only directly spawn off-mesh when closer than closest stand point
 
 - lie has 1 frame animation
   - trace `r_s_r_m_njoy_lie.png`

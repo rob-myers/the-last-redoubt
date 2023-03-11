@@ -509,9 +509,9 @@ export default function NPCs(props) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
-      if (state.npc[e.npcKey]) {
+      if (state.npc[e.npcKey]) {// Respawn
         const spawned = state.npc[e.npcKey];
-        spawned.cancel();
+        await spawned.cancel();
         spawned.unspawned = true; // Crucial for <NPC>
         spawned.epochMs = Date.now();
         spawned.def = {
@@ -524,7 +524,7 @@ export default function NPCs(props) {
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
-      } else {
+      } else {// Create
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,

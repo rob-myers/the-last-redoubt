@@ -310,10 +310,12 @@ export default function createNpc(
       this.el.root.style.setProperty(cssName.npcHeadRadius, `${5}px`); // 🚧 remove hard-coding
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
-      this.unspawned = false;
     },
     isIdle() {
       return ['idle', 'idle-breathe'].includes(this.anim.spriteSheet);
+    },
+    isPaused() {
+      return this.anim.sprites.playState === 'paused';
     },
     isWalking() {
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
@@ -347,55 +349,34 @@ export default function createNpc(
       console.log(`pause: pausing ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
       isRunning(opacity) && opacity.pause();
-      switch (this.anim.spriteSheet) {
-        case 'idle':
-        case 'sit':
-        case 'idle-breathe':
-          isRunning(rotate) && rotate.pause();
-          isRunning(sprites) && sprites.pause();
-          break;
-        case 'walk':
-          isRunning(translate) && translate.pause();
-          isRunning(rotate) && rotate.pause();
-          isRunning(sprites) && sprites.pause();
-          /**
-           * Pending wayMeta is at this.anim.wayMetas[0].
-           * No need to adjust its `length` because we use animation currentTime.
-           */
-          window.clearTimeout(this.anim.wayTimeoutId);
-          break;
-        default:
-          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.pause' });
+      isRunning(translate) && translate.pause();
+      isRunning(rotate) && rotate.pause();
+      isRunning(sprites) && sprites.pause();
+      if (this.anim.spriteSheet === 'walk') {
+        /**
+         * Pending wayMeta is at this.anim.wayMetas[0].
+         * No need to adjust its `length` because we use animation currentTime.
+         */
+        window.clearTimeout(this.anim.wayTimeoutId);
       }
-
       if (this.def.key === api.npcs.playerKey) {
         // Pause camera tracking
         api.panZoom.animationAction('pause');
       }
     },
     resume() {
-      console.log(`resuming ${this.def.key}`);
+      console.log(`resume: resuming ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
       isPaused(opacity) && opacity.play();
-      switch (this.anim.spriteSheet) {
-        case 'idle':
-        case 'sit':
-        case 'idle-breathe':
-          isPaused(rotate) && rotate.play();
-          isPaused(sprites) && sprites.play();
-          break;
-        case 'walk':
-          isPaused(translate) && translate.play();
-          isPaused(rotate) && rotate.play();
-          isPaused(sprites) && sprites.play();
-          this.nextWayTimeout();
-          if (this.def.key === api.npcs.playerKey) {
-            // Resume camera tracking
-            api.panZoom.animationAction('play');
-          }
-          break;
-        default:
-          throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.play' });
+      isPaused(translate) && translate.play();
+      isPaused(rotate) && rotate.play();
+      isPaused(sprites) && sprites.play();
+      if (this.anim.spriteSheet === 'walk') {
+        this.nextWayTimeout();
+      }
+      if (this.def.key === api.npcs.playerKey) {
+        // Resume camera tracking
+        api.panZoom.animationAction('play');
       }
     },
     startAnimation(spriteSheet) {
@@ -464,20 +445,24 @@ export default function createNpc(
           this.anim.translate = new Animation();
           this.anim.rotate = new Animation();
           
-          if (this.anim.spriteSheet === 'idle-breathe') {
-            const { animLookup, aabb, synfigMeta } = npcsMeta[this.jsonKey].parsed;
-            this.anim.sprites = this.el.body.animate(
-              [
-                { offset: 0, backgroundPosition: '0px' },
-                { offset: 1, backgroundPosition: `${-animLookup['idle-breathe'].frameCount * aabb.width}px` },
-              ], {
-                easing: `steps(${animLookup['idle-breathe'].frameCount})`,
-                duration: 600, // 🚧
-                iterations: Infinity,
-                direction: /** @type {PlaybackDirection   | undefined} */ (synfigMeta.keyframeToMeta[this.anim.spriteSheet]?.['animation-direction']),
-              },
-            );
-          }
+          const { animLookup, aabb, synfigMeta } = npcsMeta[this.jsonKey].parsed;
+          const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
+
+          // Always play an animation so can detect if paused
+          this.anim.sprites = this.el.body.animate(
+            [
+              { offset: 0, backgroundPosition: '0px' },
+              // Works even if frameCount is 1 because easing is `steps(1)`
+              { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * aabb.width}px` },
+            ], {
+              easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
+              duration: 600, // 🚧
+              iterations: Infinity,
+              direction: /** @type {PlaybackDirection | undefined} */ (
+                'animation-direction' in keyframeMeta ? keyframeMeta['animation-direction'] : undefined
+              ),
+            },
+          );
           // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
           break;
         }

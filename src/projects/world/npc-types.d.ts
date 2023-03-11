@@ -38,6 +38,10 @@ declare namespace NPC {
       root: HTMLDivElement;
       body: HTMLDivElement;
     };
+    /**
+     * Initially `false` until <NPC> sets it true.
+     * May also set false for cached un-rendered.
+     */
     unspawned: boolean;
     anim: NPCAnimData;
     /** From current do point */
@@ -89,6 +93,7 @@ declare namespace NPC {
     /** Initialise using `def` */
     initialize(): void;
     isIdle(): boolean;
+    isPaused(): boolean;
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;
