@@ -353,6 +353,7 @@ declare namespace NPC {
     orientRadians?: number;
     doable: boolean;
     spawnable: boolean;
+    targetPos: Geom.VectJson;
   }
 
   //#region parse

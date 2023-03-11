@@ -350,9 +350,8 @@ export class gmGraphClass extends BaseGraph {
       if (roomId >= 0) {
         return { gmId, roomId };
       }
-    } else {
-      return null;
     }
+    return null;
   }
 
   /**

@@ -121,12 +121,18 @@ export default function CssPanZoom(props) {
           }
 
           const worldPointerUp = state.getWorld(e);
+          const el = /** @type {HTMLElement} */ (e.target);
+          const tags = (el.dataset.tags || '').split(' ');
+          // Provide world position of target element centre
+          const { x, y, width, height } = el.getBoundingClientRect();
+          const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) })
+
           state.events.next({
             key: 'pointerup',
             point: worldPointerUp,
             distance: state.worldPointerDown.distanceTo(worldPointerUp),
-            tags: (/** @type {HTMLElement} */ (e.target).dataset.tags || '').split(' '),
-            extra: Object.assign({}, ...state.pointerUpExtras),
+            tags,
+            extra: Object.assign({ targetPos }, ...state.pointerUpExtras),
           });
 
           state.panning = false;

@@ -400,41 +400,61 @@ export default function NPCs(props) {
       const meta = npcService.extendDecorMeta(e.meta, gm.matrix);
 
       try {
-        if (state.isPointInNavmesh(npcPosition)) {// We started on-mesh
-          if (state.isPointInNavmesh(e.point)) {
-            const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: e.point, throwOnNotNav: true });
+        const onMesh = state.isPointInNavmesh(npcPosition);
+
+        // console.log({
+        //   onMesh,
+        //   toOnMesh: state.isPointInNavmesh(e.point),
+        //   meta,
+        //   close: npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius,
+        // });
+
+        if (onMesh && meta.doable) {
+          // Started on-mesh and clicked do point icon
+          /** The actual do point (e.point is somewhere on icon) */
+          const decorPoint = meta.targetPos;
+
+          if (state.isPointInNavmesh(decorPoint)) {
+            const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: decorPoint, throwOnNotNav: true });
             await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
             npc.startAnimationByMeta(e.meta);
-          } else {
-
-            if (npcPosition.distanceTo(e.point) > defaultNpcInteractRadius) {
-              // find close stand point in gm.point[e.meta.roomId]
-              const closestStandPoint = getCloseStandPoint({ point: e.point, meta }, gm, defaultNpcInteractRadius ** 2);
-              const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: closestStandPoint, throwOnNotNav: true });
-              await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-            } // Otherwise we'll directly spawn
-
-            if (meta.spawnable) {// fade and spawn to original point
-              await npc.animateOpacity(0, 1000);
-              await state.spawn({ npcKey: e.npcKey, point: e.point, requireNav: false, angle: meta.orientRadians });
-              npc.startAnimationByMeta(meta);
-              await npc.animateOpacity(1, 1000);
-            }
-          }
-        } else {// We started off-mesh
-          // fade-spawn to nearby off/on-mesh point
-          if (npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius) {
+          } else if (meta.spawnable && (npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius)) {
+            /**
+             * 🚧 get interact radius per npc
+             */
+            // fade and spawn to original point
             await npc.animateOpacity(0, 1000);
-            await state.spawn({
-              npcKey: e.npcKey,
-              point: e.point,
-              // Orient if staying off-mesh
-              angle: state.isPointInNavmesh(e.point) ? undefined : meta.orientRadians,
-            });
+            await state.spawn({ npcKey: e.npcKey, point: decorPoint, requireNav: false, angle: meta.orientRadians });
             npc.startAnimationByMeta(meta);
             await npc.animateOpacity(1, 1000);
           }
+          return;
         }
+        
+        if (
+          !onMesh
+          && (meta.nav || meta.doable)
+          && npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius
+        ) {
+          /**
+           * ✅ `walk` shouldn't cancel on empty-path
+           * 🚧 prevent spawn into different room e.g. findRoomContaining
+           * 🚧 get interact radius per npc
+           */
+          // Started off-mesh and clicked nearby {nav,do} point
+          await npc.animateOpacity(0, 1000);
+          await state.spawn({
+            npcKey: e.npcKey,
+            // If not navigable use decorPoint
+            point: meta.nav ? e.point : meta.targetPos,
+            // Orient if staying off-mesh
+            angle: meta.nav ? undefined : meta.orientRadians,
+          });
+          npc.startAnimationByMeta(meta);
+          await npc.animateOpacity(1, 1000);
+          return;
+        }
+
       } catch (e) {
         if (e instanceof Error && e.message === 'cancelled') {
           // Swallow walk error on Ctrl-C

@@ -11,8 +11,9 @@
   - ✅ improve icons
   - icons get bigger when player idle/sit/stand/lie nearby
   - improve lie icon
-- 🚧 npc do: to off-mesh only when close enough
-- npc do: from off-mesh only when close enough
+- ✅ npc do: from off-mesh only when close enough
+- ✅ npc do: to off-mesh only when close enough
+- NPCS.getNpcInteractRadius -> npc.getInteractRadius
 - remove unnecessary `ui do` stand points
 
 - combine `lookLoop` and `goLoop` into `moveLoop`
@@ -32,6 +33,7 @@
 - useGeomorphs supports HMR?
 - navmesh accounts for closed doors
   - should fix double-door issue
+- source map issue with jsx?
 
 - redo collision prediction
   - decor circle

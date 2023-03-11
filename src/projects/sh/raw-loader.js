@@ -190,10 +190,15 @@
           });
         }));
 
+        const extTags = [...e.tags, ...npcs.getPointTags(e.point)];
         yield {
           x: Number(e.point.x.toFixed(2)),
           y: Number(e.point.y.toFixed(2)),
-          tags: [...e.tags, ...npcs.getPointTags(e.point)],
+          tags: extTags,
+          meta: extTags.reduce(
+            (agg, tag) => (agg[tag] = true) && agg,
+            /** @type {Geomorph.PointMeta} */ ({ ...e.extra }) // e.g. targetPos
+          ),
         };
 
         numClicks--;
@@ -354,7 +359,7 @@
     },
   
     /**
-     * TODO handle multiple reads?
+     * 🚧 handle multiple reads?
      */
     view: function* ({ api, args, home }) {
       const opts = Function(`return ${args[0]} `)()
@@ -385,15 +390,17 @@
       } else {
         datum = await api.read()
         while (datum !== null) {
-          // Cancel before walking e.g. for other instance of `walk`
-          await npcs.npcAct({ npcKey, action: "cancel" })
+          const navPath = /** @type {NPC.GlobalNavPath} */ (datum);
+          // Cancel before walking (interrupt other processes)
+          // But avoid cancel on empty-paths (do not interrupt other processes)
+          navPath.fullPath.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
           // Subsequent reads can interrupt walk
           const resolved = await Promise.race([
-            promises[0] = npcs.walkNpc({ npcKey, ...datum }),
+            promises[0] = npcs.walkNpc({ npcKey, ...navPath }),
             promises[1] = api.read(),
           ])
           if (resolved === undefined) {// Finished walk
-            datum = await promises[1];
+            datum = await promises[1]
           } else if (resolved === null) {// EOF so finish walk
             await promises[0]
             datum = resolved
