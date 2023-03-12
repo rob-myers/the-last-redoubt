@@ -237,6 +237,7 @@ export default function Doors(props) {
                   className={cssName.doorTouchUi}
                   data-gm_id={gmId}
                   data-door_id={i}
+                  data-meta={doorTouchUiMeta}
                 />
               </div>
             )
@@ -246,6 +247,8 @@ export default function Doors(props) {
     </div>
   );
 }
+
+const doorTouchUiMeta = JSON.stringify({ ui: true });
 
 const rootCss = css`
   ${cssName.npcDoorTouchRadius}: 10px;

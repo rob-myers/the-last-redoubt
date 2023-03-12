@@ -13,10 +13,14 @@
   - improve lie icon
 - ✅ npc do: from off-mesh only when close enough
 - ✅ npc do: to off-mesh only when close enough
+- ✅ cannot spawn into different room
+- ✅ data-tags -> data-meta
+- 🚧 remove unnecessary `ui do` stand points
 - NPCS.getNpcInteractRadius -> npc.getInteractRadius
-- remove unnecessary `ui do` stand points
+- eliminate NPCS getPointTags
+- svg tags foo=bar become meta { foo: JSON.parse('bar') }
 
-- combine `lookLoop` and `goLoop` into `moveLoop`
+- `goLoop` -> `walkLoop`
 - ❌ try pause/resume npc on click head
 - ❌ can only directly spawn off-mesh when closer than closest stand point
 
@@ -34,6 +38,7 @@
 - navmesh accounts for closed doors
   - should fix double-door issue
 - source map issue with jsx?
+- tabs tabindex outline does not include controls
 
 - redo collision prediction
   - decor circle

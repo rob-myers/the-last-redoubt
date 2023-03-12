@@ -25,9 +25,9 @@ npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius
 npc decor foo
 echo foo | npc decor
 
-npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'
+z
 
-npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96,"tags":["no-ui"], onClick: (x, y) => { console.log("foobar", x, y); y.npcs.writeToTtys("wahoo!"); } }'
+npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96,"tags":["ui"] }'
 
 npc rm-decor bar
 npc rm-decor 'foo bar'
@@ -49,7 +49,7 @@ npc look-at andros $( click 1 )
 # basic implementation of stand/sit points
 npc events |
   filter 'e => e.key === "decor-click" && (
-    e.decor.tags?.includes("stand") || e.decor.tags?.includes("sit")
+    e.decor.meta.stand || e.decor.meta.sit
   )' |
   filter '(e, { api, home }) => {
     const { npcs } = api.getCached(home.WORLD_KEY);
@@ -61,8 +61,8 @@ npc events |
     const player = npcs.getPlayer(); 
     while ((datum = await api.read()) !== null) {
       await npcs.spawn({ npcKey: player.key, point: datum.decor });
-      datum.decor.tags.includes("stand") && player.startAnimation("idle-breathe");
-      datum.decor.tags.includes("sit") && player.startAnimation("sit");
+      datum.decor.meta.stand && player.startAnimation("idle-breathe");
+      datum.decor.meta.sit && player.startAnimation("sit");
     }
   }'
 ```

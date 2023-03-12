@@ -174,7 +174,7 @@ export default function Decor(props) {
               <div
                 key={item.key}
                 data-key={item.key}
-                data-tags={item.tags.join(' ')}
+                data-meta={JSON.stringify(item.meta)}
                 className={cx(
                   cssName.decorPoint,
                   cssPoint,
@@ -190,7 +190,7 @@ export default function Decor(props) {
               <div
                 key={key}
                 data-key={item.key}
-                data-tags="no-ui"
+                data-meta={JSON.stringify({ 'decor-rect': true })}
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
                   transform: item.devtoolTransform || rectToCssTransform(item, item.angle),

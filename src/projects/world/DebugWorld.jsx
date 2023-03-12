@@ -166,7 +166,7 @@ export default function DebugWorld(props) {
               <div
                 key={doorId}
                 data-debug-door-id={doorId}
-                data-tags="debug door-arrow"
+                data-meta={debugDoorArrowMeta}
                 className="debug-door-arrow"
                 style={{
                   left: arrowPos.x - debugRadius,
@@ -249,8 +249,11 @@ export default function DebugWorld(props) {
  * @property {() => void} update
  */
 
+// 🚧 move to const
 const debugRadius = 5;
 const debugDoorOffset = 10;
+
+const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
 const rootCss = css`
 

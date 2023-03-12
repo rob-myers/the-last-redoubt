@@ -83,7 +83,7 @@ declare namespace PanZoom {
     point: Geom.VectJson;
     /** Distance from pointerdown in world coords */
     distance: number;
-    tags: string[];
+    meta: Record<string, string | number | boolean | Geom.VectJson>;
     extra: Record<string, any>;
   }
 

@@ -190,15 +190,13 @@
           });
         }));
 
-        const extTags = [...e.tags, ...npcs.getPointTags(e.point)];
+        const meta = {...e.meta};
+        npcs.getPointTags(e.point).forEach(tag => meta[tag] = true);
+
         yield {
           x: Number(e.point.x.toFixed(2)),
           y: Number(e.point.y.toFixed(2)),
-          tags: extTags,
-          meta: extTags.reduce(
-            (agg, tag) => (agg[tag] = true) && agg,
-            /** @type {Geomorph.PointMeta} */ ({ ...e.extra }) // e.g. targetPos
-          ),
+          meta,
         };
 
         numClicks--;

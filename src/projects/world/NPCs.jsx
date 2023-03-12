@@ -277,10 +277,10 @@ export default function NPCs(props) {
     },
     getPointTags(point) {
       const tags = /** @type {string[]} */ ([]);
-      if (state.isPointInNavmesh(point)) tags.push('nav');
-      /**
-       * 🚧 table, chair, door, npc?
-       */
+      if (state.isPointInNavmesh(point)) {
+        tags.push('nav'); // 🚧 precompute?
+      }
+      // 🚧 others?
       return tags;
     },
     handleLongRunningNpcProcess(process, npcKey) {
@@ -402,26 +402,20 @@ export default function NPCs(props) {
       try {
         const onMesh = state.isPointInNavmesh(npcPosition);
 
-        // console.log({
-        //   onMesh,
-        //   toOnMesh: state.isPointInNavmesh(e.point),
-        //   meta,
-        //   close: npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius,
-        // });
-
         if (onMesh && meta.doable) {
           // Started on-mesh and clicked do point icon
-          /** The actual do point (e.point is somewhere on icon) */
+          /** The actual "do point" (e.point is somewhere on icon) */
           const decorPoint = meta.targetPos;
 
           if (state.isPointInNavmesh(decorPoint)) {
             const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: decorPoint, throwOnNotNav: true });
             await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
             npc.startAnimationByMeta(e.meta);
-          } else if (meta.spawnable && (npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius)) {
-            /**
-             * 🚧 get interact radius per npc
-             */
+          } else if (
+            meta.spawnable
+            // 🚧 get interact radius per npc
+            && (npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius)
+          ) {
             // fade and spawn to original point
             await npc.animateOpacity(0, 1000);
             await state.spawn({ npcKey: e.npcKey, point: decorPoint, requireNav: false, angle: meta.orientRadians });
@@ -434,14 +428,14 @@ export default function NPCs(props) {
         if (
           !onMesh
           && (meta.nav || meta.doable)
+          // 🚧 get interact radius per npc
           && npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius
-        ) {
-          /**
-           * ✅ `walk` shouldn't cancel on empty-path
-           * 🚧 prevent spawn into different room e.g. findRoomContaining
-           * 🚧 get interact radius per npc
-           */
-          // Started off-mesh and clicked nearby {nav,do} point
+        ) {// Started off-mesh and clicked nearby {nav,do} point
+
+          // prevent spawn from do point into different room
+          if (!api.gmGraph.inSameRoom(npcPosition, e.point))  {
+            return;
+          }
           await npc.animateOpacity(0, 1000);
           await state.spawn({
             npcKey: e.npcKey,
@@ -573,7 +567,7 @@ export default function NPCs(props) {
             type: "point", // transform from local geomorph coords:
             ...matrix.transformPoint({ x, y }),
             meta,
-            tags: Object.keys(meta).filter(key => meta[key] === true),
+            tags: Object.keys(meta).filter(key => meta[key] === true), // 🚧 remove
           })),
         });
       }

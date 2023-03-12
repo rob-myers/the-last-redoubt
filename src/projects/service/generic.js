@@ -244,6 +244,16 @@ export function removeFromLookup(itemKey, lookup) {
   return rest;
 }
 
+/** @param {string} input */
+export function safeJsonParse(input) {
+  try {
+    return JSON.parse(input);
+  } catch {
+    console.warn(`failed to JSON.parse: "${input}"`);
+    return undefined;
+  }
+}
+
 /** @param {any} input */
 export function safeStringify(input) {
   if (typeof input === 'function') {

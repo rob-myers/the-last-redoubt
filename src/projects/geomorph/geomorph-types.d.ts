@@ -181,6 +181,11 @@ declare namespace Geomorph {
     isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
   }
 
+  export interface GmRoomId {
+    gmId: number;
+    roomId: number;
+  }
+
   export type PointMeta = Record<string, string | boolean | number | Geom.VectJson>;
 
   export interface UseGeomorphsDefItem {

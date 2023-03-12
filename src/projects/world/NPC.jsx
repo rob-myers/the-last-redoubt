@@ -47,7 +47,7 @@ export default function NPC({ api, npcKey, disabled }) {
       <div className="bounds-circle" />
       <div
         className="head-circle"
-        data-tags={['npc', npc.key].join(' ')}
+        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: npc.key })}
       />
     </div>
   );

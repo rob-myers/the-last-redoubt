@@ -64,9 +64,8 @@ export const gameFunctions = [
 /** Usage: doLoop {npcKey} */
 doLoop: `{
   click |
-    flatMap '({ x, y, tags, meta }) =>
-      (tags.includes("do") || tags.includes("nav"))
-        ? { npcKey: "'$1'", point: { x, y }, meta } : []
+    flatMap '({ x, y, meta }) =>
+      (meta.do || meta.nav) ? { npcKey: "'$1'", point: { x, y }, meta } : []
     ' |
     npc do
 }`,
@@ -74,7 +73,7 @@ doLoop: `{
 /** Usage: goLoop {npcKey} */
 goLoop: `{
   click |
-    filter 'x => x.tags.includes("no-ui") && x.tags.includes("nav")' |
+    filter 'x => x.meta.nav && !x.meta.ui' |
     nav $1 |
     walk $1
 }`,
@@ -88,7 +87,7 @@ goOnce: `{
 lookLoop: `{
   click |
     # do not look towards navigable or doable points
-    filter 'x => !x.tags.includes("nav") && !x.tags.includes("do")' |
+    filter 'x => !x.meta.nav && !x.meta.do' |
     look $1
 }`,
 

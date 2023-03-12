@@ -7,7 +7,7 @@ import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
 import { Vect } from "../geom";
-import { keys, testNever } from "../service/generic";
+import { keys, safeJsonParse, testNever } from "../service/generic";
 import { cancellableAnimDelayMs } from "../service/const";
 import { isAnimAttached } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -122,17 +122,18 @@ export default function CssPanZoom(props) {
 
           const worldPointerUp = state.getWorld(e);
           const el = /** @type {HTMLElement} */ (e.target);
-          const tags = (el.dataset.tags || '').split(' ');
+          const meta = el.dataset.meta && safeJsonParse(el.dataset.meta) || {};
           // Provide world position of target element centre
           const { x, y, width, height } = el.getBoundingClientRect();
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) })
+          meta.targetPos = targetPos;
 
           state.events.next({
             key: 'pointerup',
             point: worldPointerUp,
             distance: state.worldPointerDown.distanceTo(worldPointerUp),
-            tags,
-            extra: Object.assign({ targetPos }, ...state.pointerUpExtras),
+            meta,
+            extra: Object.assign({}, ...state.pointerUpExtras),
           });
 
           state.panning = false;
@@ -438,7 +439,7 @@ export default function CssPanZoom(props) {
   return (
     <div
       className={cx("panzoom-root", rootCss)}
-      data-tags="no-ui"
+      data-meta={JSON.stringify({ 'world-root': true })}
       ref={measureRef}
       style={{
         backgroundColor: props.background || '#fff',

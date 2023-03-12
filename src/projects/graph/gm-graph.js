@@ -341,7 +341,10 @@ export class gmGraphClass extends BaseGraph {
     return gmEdges;
   }
 
-  /** @param {Geom.VectJson} point */
+  /**
+   * @param {Geom.VectJson} point
+   * @returns {null | Geomorph.GmRoomId}
+   */
   findRoomContaining(point) {
     const gmId = this.gms.findIndex(gm => gm.gridRect.contains(point));
     if (gmId >= 0) {
@@ -574,6 +577,22 @@ export class gmGraphClass extends BaseGraph {
     const window = gm.windows[windowId];
     const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getWindowNode(windowId));
     return Poly.union(adjRoomNodes.map(x => gm.rooms[x.roomId]).concat(window.poly))[0];
+  }
+
+  /** @param {Geom.VectJson[]} points */
+  inSameRoom(...points) {
+    /** @type {null | Geomorph.GmRoomId} */ let gmRoomId;
+    return points.every((point, i) => {
+      const next = this.findRoomContaining(point);
+      if (!next) return false;
+      if (i > 0 && (
+        /** @type {Geomorph.GmRoomId} */ (gmRoomId).gmId !== next.gmId ||
+        /** @type {Geomorph.GmRoomId} */ (gmRoomId).roomId !== next.roomId
+      )) {
+        return false;
+      }
+      return gmRoomId = next;
+    });
   }
 
   /**
