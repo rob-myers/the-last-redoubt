@@ -67,6 +67,7 @@ declare namespace NPC {
      * @see NPC['anim']['staticBounds']
      */
     getBounds(): Geom.Rect;
+    getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
     getPosition(): Geom.Vect;
     getRadius(): number;
@@ -101,7 +102,8 @@ declare namespace NPC {
     resume(): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
-    // setSegs(segs: Geom.Seg[]): void;
+    /** Setting null effectively reverts to default */
+    setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;

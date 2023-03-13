@@ -103,7 +103,7 @@ export default function Doors(props) {
         return true;
       }
       const center = player.getPosition();
-      const radius = npcs.getNpcInteractRadius();
+      const radius = player.getInteractRadius();
       const door = gms[gmId].doors[doorId];
       const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
       return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);

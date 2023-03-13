@@ -215,6 +215,10 @@ export default function createNpc(
       const radius = this.getRadius();
       return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
     },
+    getInteractRadius() {
+      // can inherit from <NPCs> root
+      return parseFloat(getComputedStyle(this.el.root).getPropertyValue(cssName.npcsInteractRadius));
+    },
     getLineSeg() {
       const dst = this.getTarget();
       if (dst) {
@@ -304,10 +308,11 @@ export default function createNpc(
       return { position, angle };
     },
     initialize() {
-      this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
       const { radius, scale: npcScale } = npcsMeta[this.jsonKey];
+      this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
       this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
       this.el.root.style.setProperty(cssName.npcHeadRadius, `${5}px`); // 🚧 remove hard-coding
+      // Inherit cssName.npcsInteractRadius from <NPCS> unless specified
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
     },
@@ -377,6 +382,13 @@ export default function createNpc(
       if (this.def.key === api.npcs.playerKey) {
         // Resume camera tracking
         api.panZoom.animationAction('play');
+      }
+    },
+    setInteractRadius(radius) {
+      if (typeof radius === 'number') {
+        this.el.root.style.setProperty(cssName.npcsInteractRadius, `${radius}px`);
+      } else {
+        this.el.root.style.removeProperty(cssName.npcsInteractRadius);
       }
     },
     startAnimation(spriteSheet) {

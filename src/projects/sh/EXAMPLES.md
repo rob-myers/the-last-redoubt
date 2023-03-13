@@ -46,23 +46,15 @@ npc look-at andros $( click 1 )
 ```
 
 ```sh
-# basic implementation of stand/sit points
 npc events |
   filter 'e => e.key === "decor-click" && (
     e.decor.meta.stand || e.decor.meta.sit
   )' |
   filter '(e, { api, home }) => {
     const { npcs } = api.getCached(home.WORLD_KEY);
-    const distance = npcs.getPlayer()?.getPosition().distanceTo(e.decor);
-    return distance <= npcs.getNpcInteractRadius();
-  }' |
-  run '({ api, datum, home }) {
-    const { npcs } = api.getCached(home.WORLD_KEY);
-    const player = npcs.getPlayer(); 
-    while ((datum = await api.read()) !== null) {
-      await npcs.spawn({ npcKey: player.key, point: datum.decor });
-      datum.decor.meta.stand && player.startAnimation("idle-breathe");
-      datum.decor.meta.sit && player.startAnimation("sit");
+    const player = npcs.getPlayer();
+    if (player) {
+      return player.getPosition().distanceTo(e.decor) <= player.getInteractRadius()
     }
   }'
 ```

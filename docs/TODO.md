@@ -16,8 +16,8 @@
 - ✅ cannot spawn into different room
 - ✅ data-tags -> data-meta
 - ✅ remove unnecessary `ui do` stand points
-- 🚧 NPCS.getNpcInteractRadius -> npc.getInteractRadius
-- eliminate NPCS getPointTags
+- ✅ NPCS defaultNpcInteractRadius -> npc.getInteractRadius
+- 🚧 eliminate NPCS getPointTags
 
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }

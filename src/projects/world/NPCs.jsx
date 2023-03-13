@@ -9,7 +9,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcInteractRadius } from "../service/const";
 import { geom } from "../service/geom";
-import { getCloseStandPoint, getUiPointDecorKey } from "../service/geomorph";
+import { getUiPointDecorKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -413,8 +413,7 @@ export default function NPCs(props) {
             npc.startAnimationByMeta(e.meta);
           } else if (
             meta.spawnable
-            // 🚧 get interact radius per npc
-            && (npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius)
+            && (npcPosition.distanceTo(e.point) <= npc.getInteractRadius())
           ) {
             // fade and spawn to original point
             await npc.animateOpacity(0, 1000);
@@ -428,8 +427,7 @@ export default function NPCs(props) {
         if (
           !onMesh
           && (meta.nav || meta.doable)
-          // 🚧 get interact radius per npc
-          && npcPosition.distanceTo(e.point) <= defaultNpcInteractRadius
+          && npcPosition.distanceTo(e.point) <= npc.getInteractRadius()
         ) {// Started off-mesh and clicked nearby {nav,do} point
 
           // prevent spawn from do point into different room
