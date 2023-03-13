@@ -15,12 +15,12 @@
 - ✅ npc do: to off-mesh only when close enough
 - ✅ cannot spawn into different room
 - ✅ data-tags -> data-meta
-- 🚧 remove unnecessary `ui do` stand points
-- NPCS.getNpcInteractRadius -> npc.getInteractRadius
+- ✅ remove unnecessary `ui do` stand points
+- 🚧 NPCS.getNpcInteractRadius -> npc.getInteractRadius
 - eliminate NPCS getPointTags
-- svg tags foo=bar become meta { foo: JSON.parse('bar') }
 
 - `goLoop` -> `walkLoop`
+- svg tags foo=bar become meta { foo: JSON.parse('bar') }
 - ❌ try pause/resume npc on click head
 - ❌ can only directly spawn off-mesh when closer than closest stand point
 

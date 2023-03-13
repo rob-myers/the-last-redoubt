@@ -39,11 +39,5 @@
     <rect width="10" height="10" style="fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="295" y="295">
       <title>ui do sit orient-225</title>
     </rect>
-    <rect width="10" height="10" style="fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="215" y="445">
-      <title>ui do stand</title>
-    </rect>
-    <rect width="10" height="10" style="fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="445" y="215">
-      <title>ui do stand</title>
-    </rect>
   </g>
 </svg>
