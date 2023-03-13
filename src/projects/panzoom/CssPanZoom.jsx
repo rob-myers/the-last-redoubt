@@ -125,8 +125,8 @@ export default function CssPanZoom(props) {
           const meta = el.dataset.meta && safeJsonParse(el.dataset.meta) || {};
           // Provide world position of target element centre
           const { x, y, width, height } = el.getBoundingClientRect();
-          const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) })
-          meta.targetPos = targetPos;
+          const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
+          meta.targetPos = { x: Number(targetPos.x.toFixed(2)), y: Number(targetPos.y.toFixed(2)) };
 
           state.events.next({
             key: 'pointerup',
@@ -155,7 +155,7 @@ export default function CssPanZoom(props) {
             if (trNeedsCancel || scNeedsCancel) {
               trNeedsCancel && trAnim.cancel();
               scNeedsCancel && scAnim.cancel();
-              state.anims = [null, null];
+              state.anims = /** @type {[null, null]} */ ([null, null]);
             }
             break;
           }

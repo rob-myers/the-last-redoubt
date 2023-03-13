@@ -275,14 +275,6 @@ export default function NPCs(props) {
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
     },
-    getPointTags(point) {
-      const tags = /** @type {string[]} */ ([]);
-      if (state.isPointInNavmesh(point)) {
-        tags.push('nav'); // 🚧 precompute?
-      }
-      // 🚧 others?
-      return tags;
-    },
     handleLongRunningNpcProcess(process, npcKey) {
       state.getNpc(npcKey); // Throws if non-existent
       const cb = {
@@ -745,7 +737,6 @@ const rootCss = css`
  * @property {(npcKey: string) => NPC.NPC} getNpc
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
- * @property {(point: Geom.VectJson) => string[]} getPointTags
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct

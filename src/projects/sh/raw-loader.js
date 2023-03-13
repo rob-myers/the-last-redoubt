@@ -191,7 +191,9 @@
         }));
 
         const meta = {...e.meta};
-        npcs.getPointTags(e.point).forEach(tag => meta[tag] = true);
+        if (npcs.isPointInNavmesh(e.point)) {
+          meta.nav = true; // add "nav" tag
+        }
 
         yield {
           x: Number(e.point.x.toFixed(2)),
