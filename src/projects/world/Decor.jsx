@@ -157,6 +157,7 @@ export default function Decor(props) {
                 key={key}
                 data-key={item.key}
                 className={cx(cssName.decorCircle, cssCircle)}
+                // 🚧 try nested div to avoid chrome bug
                 style={{
                   transform: circleToCssTransform(item),
                 }}
@@ -221,14 +222,10 @@ const rootCss = css`
 
 const cssCircle = css`
   position: absolute;
-  width: 1px;
-  height: 1px;
-  transform-origin: center;
   border-radius: 50%;
   background-color: #ff444488;
-  // 🚧 optional somehow?
-  /* pointer-events: all;
-  cursor: pointer; */
+  width: 1px;
+  height: 1px;
 `;
 
 const cssPoint = css`

@@ -1,5 +1,5 @@
+import { assertNonNull, precision } from './generic';
 import { Vect } from '../geom/vect';
-import { assertNonNull } from './generic';
 
 //#region svg event
 
@@ -71,7 +71,10 @@ export function getNumericCssVar(el, varName) {
 }
 
 /**
- * 
+ * 🚧 nested div whenever scale/rotate?
+ */
+
+/**
  * @param {Geom.Circle} circle 
  */
 export function circleToCssTransform(circle) {
@@ -117,7 +120,7 @@ export function cssTransformToCircle(el) {
 	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
 	return circleCache[cacheKey] = {
 		radius: matrix.a / 2, // expect 2*2 matrix cols (2 * radius, 0) (0, 2 * radius)
-		center: { x: matrix.e, y: matrix.f },
+		center: { x: precision(matrix.e), y: precision(matrix.f) },
 	};
 }
 
@@ -138,9 +141,9 @@ export function cssTransformToLineSeg(el) {
 	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
 	return lineSegCache[cacheKey] = {
 		// Zero vector offset by (e, f)
-		src: { x: matrix.e, y: matrix.f },
+		src: { x: precision(matrix.e), y: precision(matrix.f) },
 		// 1st column of 2x2 matrix (a b), offset by (e, f)
-		dst: { x: matrix.a + matrix.e, y: matrix.b + matrix.f },
+		dst: { x: precision(matrix.a) + precision(matrix.e), y: precision(matrix.b) + precision(matrix.f) },
 	};
 }
 
@@ -157,7 +160,7 @@ export function cssTransformToPoint(el) {
 		return pointCache[cacheKey];
 	}
 	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
-	return pointCache[cacheKey] = { x: matrix.e, y: matrix.f };
+	return pointCache[cacheKey] = { x: precision(matrix.e), y: precision(matrix.f) };
 }
 
 /**
@@ -176,10 +179,10 @@ export function cssTransformToRect(el) {
 	return angleRectCache[cacheKey] = {
 		angle: Math.atan2(matrix.b, matrix.a),
 		baseRect: {
-			x: matrix.e,
-			y: matrix.f,
-			width: (new Vect(matrix.a, matrix.b)).length,
-			height: (new Vect(matrix.c, matrix.d)).length,
+			x: precision(matrix.e),
+			y: precision(matrix.f),
+			width: precision((new Vect(matrix.a, matrix.b)).length),
+			height: precision((new Vect(matrix.c, matrix.d)).length),
 		},
 	};
 }

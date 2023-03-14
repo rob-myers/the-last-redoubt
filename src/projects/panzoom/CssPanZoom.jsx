@@ -7,7 +7,7 @@ import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
 import { Vect } from "../geom";
-import { keys, safeJsonParse, testNever } from "../service/generic";
+import { keys, precision, safeJsonParse, testNever } from "../service/generic";
 import { cancellableAnimDelayMs } from "../service/const";
 import { isAnimAttached } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -126,7 +126,7 @@ export default function CssPanZoom(props) {
           // Provide world position of target element centre
           const { x, y, width, height } = el.getBoundingClientRect();
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
-          meta.targetPos = { x: Number(targetPos.x.toFixed(2)), y: Number(targetPos.y.toFixed(2)) };
+          meta.targetPos = { x: precision(targetPos.x), y: precision(targetPos.y) };
 
           state.events.next({
             key: 'pointerup',
@@ -191,7 +191,7 @@ export default function CssPanZoom(props) {
        */
       computePathKeyframes(path) {
         const worldPoint = state.getWorldAtCenter();
-        const elens = path.map((p, i) => Number(p.distanceTo(i === 0 ? worldPoint : path[i - 1]).toFixed(2)));
+        const elens = path.map((p, i) => precision(p.distanceTo(i === 0 ? worldPoint : path[i - 1])));
         
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
         const current = state.getCurrentTransform();

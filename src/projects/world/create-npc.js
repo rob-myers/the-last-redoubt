@@ -1,6 +1,6 @@
 import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
-import { testNever } from '../service/generic';
+import { precision, testNever } from '../service/generic';
 import { cancellableAnimDelayMs, cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 import npcsMeta from './npcs-meta.json';
@@ -504,8 +504,8 @@ export default function createNpc(
       const radius = this.getRadius();
       aux.bounds = Rect.fromPoints(...this.anim.path).outset(radius);
       aux.edges = this.anim.path.map((p, i) => ({ p, q: this.anim.path[i + 1] })).slice(0, -1);
-      aux.angs = aux.edges.map(e => Number(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x).toFixed(2)));
-      aux.elens = aux.edges.map(({ p, q }) => Number(p.distanceTo(q).toFixed(2)));
+      aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
+      aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
       aux.navPathPolys = aux.edges.map(e => {
         const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
         return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);

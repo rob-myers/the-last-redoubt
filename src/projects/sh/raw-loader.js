@@ -164,7 +164,7 @@
         throw api.throwError("format: \`click [{numberOfClicks}] [!]\`")
       }
 
-      const { npcs, panZoom } = api.getCached(home.WORLD_KEY)
+      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
       const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
       extra && panZoom.pointerUpExtras.push(extra);
       
@@ -196,8 +196,8 @@
         }
 
         yield {
-          x: Number(e.point.x.toFixed(2)),
-          y: Number(e.point.y.toFixed(2)),
+          x: lib.precision(e.point.x),
+          y: lib.precision(e.point.y),
           meta,
         };
 

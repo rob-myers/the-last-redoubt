@@ -216,6 +216,14 @@ export function pause(ms = 0) {
 }
 
 /**
+ * @param {number} number
+ * @param {number} [decimalPlaces] default 2
+ */
+export function precision(number, decimalPlaces = 2) {
+  return Number(number.toFixed(decimalPlaces));
+}
+
+/**
  * Pretty-print JSON.
  * @param {any} input 
  * @returns {string}

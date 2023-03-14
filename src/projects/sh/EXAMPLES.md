@@ -25,7 +25,7 @@ npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius
 npc decor foo
 echo foo | npc decor
 
-z
+npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'
 
 npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96,"tags":["ui"] }'
 

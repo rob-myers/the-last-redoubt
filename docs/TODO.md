@@ -2,56 +2,38 @@
 
 ## In progress
 
-- 🚧 "do points" have icons
-  - ✅ consider locker icons `Ship's Locker/Iconographic`
-  - ✅ stand icon
-  - ✅ sit icon
-  - ✅ lie icon
-  - ✅ show icons
-  - ✅ improve icons
-  - icons get bigger when player idle/sit/stand/lie nearby
-  - improve lie icon
-- ✅ npc do: from off-mesh only when close enough
-- ✅ npc do: to off-mesh only when close enough
-- ✅ cannot spawn into different room
-- ✅ data-tags -> data-meta
-- ✅ remove unnecessary `ui do` stand points
-- ✅ NPCS defaultNpcInteractRadius -> npc.getInteractRadius
-- ✅ eliminate NPCS getPointTags
+- 🚧 redo collision prediction
+  - 🚧 summarise work we need to do
+  - 🚧 BUG: chrome: cursor over decor circle or rect
+    - works in firefox
+    - try width=height=scale instead of `... scale(x)`
+    - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
+    - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
+  - nested div whenever scale/rotate?
+  - decor circle collisions
+  - decor rect
+  - npc vs npc
+  - npc vs door
 
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }
-- ❌ try pause/resume npc on click head
-- ❌ can only directly spawn off-mesh when closer than closest stand point
-
 - lie has 1 frame animation
   - trace `r_s_r_m_njoy_lie.png`
 - more `ui do` points
 - more `orient-{deg}` tags
 - sit has mask
-
-- ✅ use webp for lit/unlit geomorphs
-- ✅ 301 shouldn't have guns
-- ✅ 303 fov should cover windows
 - hide isolated hull doors touching edge geomorph
 - useGeomorphs supports HMR?
 - navmesh accounts for closed doors
   - should fix double-door issue
 - source map issue with jsx?
 - tabs tabindex outline does not include controls
-
-- redo collision prediction
-  - decor circle
-  - decor rect
-  - npc vs npc
-  - npc vs door
+- ❌ try pause/resume npc on click head
+- ❌ can only directly spawn off-mesh when closer than closest stand point
 
 - ✅ BUG lookAt can over-turn (now using Web Animations API)
 - ✅ prevent crash on `$( npc get andros )`
 - 🚧 BUG (possibly HMR) gm 101 saw light initially coming thru door
-- BUG: chrome: cursor over e.g. decor circle
-  - works in firefox
-  - try width=height=scale instead of `... scale(x)`
 - ❌ BUG? saw pause/resume walk issue towards end
 - BUG multiple prompts `$ $`
 - rewrite use-geomorphs?
@@ -412,6 +394,27 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ use webp for lit/unlit geomorphs
+- ✅ 301 shouldn't have guns
+- ✅ 303 fov should cover windows
+
+- ✅ "do points" have icons
+  - ✅ consider locker icons `Ship's Locker/Iconographic`
+  - ✅ stand icon
+  - ✅ sit icon
+  - ✅ lie icon
+  - ✅ show icons
+  - ✅ improve icons
+  - icons get bigger when player idle/sit/stand/lie nearby
+  - improve lie icon
+- ✅ npc do: from off-mesh only when close enough
+- ✅ npc do: to off-mesh only when close enough
+- ✅ cannot spawn into different room
+- ✅ data-tags -> data-meta
+- ✅ remove unnecessary `ui do` stand points
+- ✅ NPCS defaultNpcInteractRadius -> npc.getInteractRadius
+- ✅ eliminate NPCS getPointTags
 
 - ✅ run `render-pngs` against staterooms
   - ✅ improved manifest
