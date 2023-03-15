@@ -77,8 +77,12 @@ export function getNumericCssVar(el, varName) {
 /**
  * @param {Geom.Circle} circle 
  */
-export function circleToCssTransform(circle) {
-	return `translate(${circle.center.x}px, ${circle.center.y}px) scale(${2 * circle.radius})`;
+export function circleToCssStyles(circle) {
+	return {
+		left: precision(circle.center.x - circle.radius),
+		top: precision(circle.center.y - circle.radius),
+		width: precision(2 * circle.radius),
+	};
 }
 
 /**
@@ -100,27 +104,35 @@ export function lineSegToCssTransform(seg) {
 /**
  * @param {Geom.RectJson} rect 
  * @param {number} [angle] Radians
+ * @returns {import('react').CSSProperties}
  */
-export function rectToCssTransform(rect, angle = 0) {
-	return `translate(${rect.x}px, ${rect.y}px) rotate(${angle.toFixed(2)}rad) scale(${rect.width}, ${rect.height})`;
+export function rectToCssStyles(rect, angle = 0) {
+	return {
+		left: precision(rect.x),
+		top: precision(rect.y),
+		width: precision(rect.width),
+		height: precision(rect.height),
+		transform: `rotate(${precision(angle * (180 / Math.PI))}deg)`,
+	};
 }
 
 /**
  * @param {HTMLElement} el
  * @returns {Geom.Circle | null}
  */
-export function cssTransformToCircle(el) {
-	const cacheKey = el.style.getPropertyValue('transform');
-	if (cacheKey === '') {
-		return null;
-	}
-	if (cacheKey in circleCache) {
-		return circleCache[cacheKey];
-	}
-	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
-	return circleCache[cacheKey] = {
-		radius: matrix.a / 2, // expect 2*2 matrix cols (2 * radius, 0) (0, 2 * radius)
-		center: { x: precision(matrix.e), y: precision(matrix.f) },
+export function cssStylesToCircle(el) {
+	const top = parseFloat(el.style.getPropertyValue('top'));
+	const left = parseFloat(el.style.getPropertyValue('left'));
+	/** By taking average, changing either width/height causes React to render DOM */
+	const radius = precision((
+		parseFloat(el.style.getPropertyValue('width')) +
+		parseFloat(el.style.getPropertyValue('height'))
+	) / 4);
+	const [cx, cy] = [precision(left + radius), precision(top + radius)];
+	if (![cx, cy, radius].every(x => Number.isFinite(x))) {
+		return null; // Reachable?
+	} else {
+		return { radius, center: { x: cx, y: cy } };
 	};
 }
 
@@ -167,36 +179,34 @@ export function cssTransformToPoint(el) {
  * @param {HTMLElement} el
  * @returns {Geom.AngledRect<Geom.RectJson> | null}
  */
-export function cssTransformToRect(el) {
-	const cacheKey = el.style.getPropertyValue('transform');
-	if (cacheKey === '') {// e.g. partially entered invalid value
+export function cssStylesToRect(el) {
+	const left = parseFloat(el.style.getPropertyValue('left'));
+	const top = parseFloat(el.style.getPropertyValue('top'));
+	const width = parseFloat(el.style.getPropertyValue('width'));
+	const height = parseFloat(el.style.getPropertyValue('height'));
+	const rotMatrix = new DOMMatrix((el.style.getPropertyValue('transform')));
+	const angleRadians = Math.atan2(rotMatrix.b, rotMatrix.a);
+	if (![left, top, width, height, angleRadians].every(x => Number.isFinite(x))) {// e.g. partially entered invalid value
 		return null;
+	} else {
+		return {
+			angle: angleRadians,
+			baseRect: {
+				x: precision(left),
+				y: precision(top),
+				width: precision(width),
+				height: precision(height),
+			},
+		};
 	}
-	if (cacheKey in angleRectCache) {
-		return angleRectCache[cacheKey];
-	}
-	const matrix = new DOMMatrixReadOnly(window.getComputedStyle(el).transform);
-	return angleRectCache[cacheKey] = {
-		angle: Math.atan2(matrix.b, matrix.a),
-		baseRect: {
-			x: precision(matrix.e),
-			y: precision(matrix.f),
-			width: precision((new Vect(matrix.a, matrix.b)).length),
-			height: precision((new Vect(matrix.c, matrix.d)).length),
-		},
-	};
 }
 
 let tmpVec = new Vect;
 
-/** @type {{ [cssTransformValue: string]: Geom.Circle }} */
-const circleCache = {};
 /** @type {{ [cssTransformValue: string]: Geom.Seg }} */
 const lineSegCache = {};
 /** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
 const pointCache = {};
-/** @type {{ [cssTransformValue: string]: Geom.AngledRect<Geom.RectJson> }} */
-const angleRectCache = {};
 
 //#endregion
 

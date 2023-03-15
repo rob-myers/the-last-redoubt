@@ -2,14 +2,16 @@
 
 ## In progress
 
+- `label` points should not have tag `ui`
+
 - 🚧 redo collision prediction
-  - 🚧 summarise work we need to do
-  - 🚧 BUG: chrome: cursor over decor circle or rect
-    - works in firefox
-    - try width=height=scale instead of `... scale(x)`
+  - ✅ BUG: chrome: cursor over decor _circle_ or _rect_
     - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
     - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
-  - nested div whenever scale/rotate?
+    - ℹ️ works in firefox
+    - ❌ try nested div
+    - ❌ try width=height=scale instead of `... scale(x)`
+    - ✅ use left, top, width, height
   - decor circle collisions
   - decor rect
   - npc vs npc

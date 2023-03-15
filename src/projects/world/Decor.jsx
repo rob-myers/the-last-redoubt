@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
 import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
-import { circleToCssTransform, pointToCssTransform, rectToCssTransform, cssTransformToCircle, cssTransformToPoint, cssTransformToRect } from "../service/dom";
+import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import * as npcService from "../service/npc";
 
 import useUpdate from "../hooks/use-update";
@@ -26,7 +26,7 @@ export default function Decor(props) {
         if (el.classList.contains(cssName.decorCircle)) {
           if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
-            const output = cssTransformToCircle(el);
+            const output = cssStylesToCircle(el);
             if (output) {
               [decor.radius, decor.center] = [output.radius, output.center]
               update();
@@ -75,11 +75,10 @@ export default function Decor(props) {
         if (el.classList.contains(cssName.decorRect)) {
           if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
-            const output = cssTransformToRect(el);
+            const output = cssStylesToRect(el);
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
-              decor.devtoolTransform = el.style.transform;
               update();
             }
           }
@@ -151,18 +150,22 @@ export default function Decor(props) {
     >
       {Object.entries(state.decor).map(([key, item]) => {
         switch (item.type) {
-          case 'circle':
+          case 'circle': {
+            const { top, left, width } = circleToCssStyles(item);
             return (
               <div
                 key={key}
                 data-key={item.key}
                 className={cx(cssName.decorCircle, cssCircle)}
-                // 🚧 try nested div to avoid chrome bug
                 style={{
-                  transform: circleToCssTransform(item),
+                  left,
+                  top,
+                  width,
+                  height: width,
                 }}
               />
             );
+          }
           case 'path':
             return (
               <DecorPath
@@ -186,7 +189,8 @@ export default function Decor(props) {
                 }}
               />
             );
-          case 'rect':
+          case 'rect': {
+            const { top, left, width, height, transform } = rectToCssStyles(item);
             return (
               <div
                 key={key}
@@ -194,10 +198,15 @@ export default function Decor(props) {
                 data-meta={JSON.stringify({ 'decor-rect': true })}
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
-                  transform: item.devtoolTransform || rectToCssTransform(item, item.angle),
+                  left,
+                  top,
+                  width,
+                  height,
+                  transform,
                 }}
               />
             );
+        }
           default:
             console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
             return null;
@@ -224,8 +233,6 @@ const cssCircle = css`
   position: absolute;
   border-radius: 50%;
   background-color: #ff444488;
-  width: 1px;
-  height: 1px;
 `;
 
 const cssPoint = css`
@@ -288,12 +295,9 @@ function metaToIconClasses(meta) {
 
 const cssRect = css`
   position: absolute;
-  width: 1px;
-  height: 1px;
   transform-origin: left top;
+  /* transform-origin: center; */
   background-color: #7700ff22;
-  /* pointer-events: all;
-  cursor: pointer; */
 `;
 
 /**
