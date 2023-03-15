@@ -34,7 +34,7 @@
       <title>wall</title>
     </rect>
     <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(255, 0, 255);" x="140" y="130">
-      <title>ui label room office</title>
+      <title>ui go label room office</title>
     </rect>
     <rect width="10" height="10" style="fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="295" y="295">
       <title>ui do sit orient-225</title>

@@ -73,7 +73,7 @@ doLoop: `{
 /** Usage: goLoop {npcKey} */
 goLoop: `{
   click |
-    filter 'x => x.meta.nav && !x.meta.ui' |
+    filter 'x => x.meta.nav && (!x.meta.ui || x.meta.go)' |
     nav $1 |
     walk $1
 }`,

@@ -315,6 +315,8 @@ export function findRoomIdContaining(rooms, localPoint) {
 }
 
 /**
+ * 🚧 currently unused, probably needs adaptation
+ *
  * Find a stand point close to `target` in same room.
  * Assume the target `point` world coords, whereas stand points local to geomorph.
  * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target

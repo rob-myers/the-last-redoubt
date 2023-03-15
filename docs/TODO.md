@@ -2,7 +2,9 @@
 
 ## In progress
 
-- `label` points should not have tag `ui`
+- ✅ can click `label` points and walk to them
+  - fixed via new tag `go` (ui points can be `do` or `go`)
+- 🚧 `[room bedroom]` link not working
 
 - 🚧 redo collision prediction
   - ✅ BUG: chrome: cursor over decor _circle_ or _rect_
