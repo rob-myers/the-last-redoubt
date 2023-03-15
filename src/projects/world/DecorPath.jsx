@@ -38,7 +38,9 @@ export default function DecorPath({ decor }) {
       >
         <g style={{ transform: `translate(${-aabb.x}px, ${-aabb.y}px)` }}>
           <polyline
-            fill="none" stroke="#5555ff" strokeDasharray="2 2" strokeWidth={1}
+            fill="none"
+            strokeDasharray="2 2"
+            strokeWidth={1}
             points={decorPath.map(p => `${p.x},${p.y}`).join(' ')}
           />
         </g>
@@ -53,6 +55,8 @@ export default function DecorPath({ decor }) {
    */
   
    const cssPath = css`
+    ${cssName.decorPathColour}: #ffa50099;
+
     .${cssName.decorPoint} {
       position: absolute;
       left: -2px;
@@ -62,5 +66,9 @@ export default function DecorPath({ decor }) {
       border-radius: 50%;
       border: 1px solid #ff000088;
     }
-   `;
+
+    svg polyline {
+      stroke: var(${cssName.decorPathColour});
+    }
+  `;
   

@@ -54,6 +54,7 @@ export const cssName = {
   decorPoint: 'decor-point',
   decorRect: 'decor-rect',
   decorIconWidth: '--decor-icon-width',
+  decorPathColour: '--decor-path-colour',
   
   npc: 'npc',
   npcBody: 'body',
