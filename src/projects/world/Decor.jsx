@@ -218,6 +218,8 @@ export default function Decor(props) {
 
 const rootCss = css`
   position: absolute;
+  /** Prevent descendent 'z-index: 1' ascension */
+  z-index: 0;
   pointer-events: all;
   canvas {
     position: absolute;
@@ -239,6 +241,8 @@ const cssPoint = css`
   ${cssName.decorIconWidth}: 5px;
 
   position: absolute;
+  /** Above DecorPath */
+  z-index: 1;
   top: calc(-0.5 * var(${cssName.decorIconWidth}));
   left: calc(-0.5 * var(${cssName.decorIconWidth}));
   width: var(${cssName.decorIconWidth});
