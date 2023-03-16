@@ -146,6 +146,70 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
 }
 
 /**
+ * Npc vs static circle, where collisions correspond to hitting edges.
+ * @param {NPC.NPC} npcA 
+ * @param {NPC.DecorCircle} decorB
+ * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
+*/
+export function predictNpcCircleCollision(npcA, decorB) {
+  const minDistSq = (npcA.getRadius() + decorB.radius) ** 2;
+  if (!npcA.isWalking()) {
+    return { collisions: [], startInside: npcA.getPosition().distanceToSquared(decorB.center) < minDistSq };
+  }
+  if (!npcA.getWalkSegBounds().intersectsSquare(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
+    return { collisions: [], startInside: false };
+  }
+  /**
+   * Solving `a.t^2 + b.t + c ≤ 0`,
+   * - `a := speedA^2`
+   * - `b := 2.speedA.dpA`
+   * - `c := distABSq - minDist^2`
+   * 
+   * Solutions are
+   * ```js
+   * (-b ± √(b^2 - 4ac)) / 2a // i.e.
+   * (-b ± 2.speedA.√inSqrt) / 2a
+   * ```
+   */
+  const segA = assertNonNull(npcA.getLineSeg());
+  const iAB = segA.src.clone().sub(decorB.center);
+  const distABSq = iAB.lengthSquared;
+  const dpA = segA.tangent.dot(iAB);
+
+  const startInside = distABSq < minDistSq; // strict avoids degenerate?
+  const inSqrt = (dpA ** 2) - distABSq + minDistSq;
+  
+  if (inSqrt <= 0) {// No solution, or glancing collision
+    return { collisions: [], startInside };
+  }
+  
+  const collisions = /** @type {NPC.NpcCollision[]} */ ([]);
+  const speedA = npcA.getSpeed();
+  /**
+   * Time at which npc is at
+   * @see {segA.dst}
+   */
+  const tMax = segA.src.distanceTo(segA.dst) / speedA;
+
+  /** Earlier of the two solutions */
+  const t1 = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA);
+  if (t1 > tMax) {// Early exit
+    return { collisions: [], startInside };
+  }
+
+  /** Later of the two solutions */
+  let t2 = (-dpA + Math.sqrt(inSqrt)) * (1 / speedA);
+  if (t1 >= 0) {
+    collisions.push({ seconds: t1, distA: t1 * speedA, distB: 0 });
+  }
+  if (t2 >= 0 && t2 <= tMax) {
+    collisions.push({ seconds: t2, distA: t2 * speedA, distB: 0 });
+  }
+
+  return { collisions, startInside };
+}
+
+/**
  * @param {NPC.NPC} npcA Assumed to be moving
  * @param {NPC.NPC} npcB May not be moving
  * @returns {NPC.NpcCollision | null}
@@ -215,8 +279,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
       return null;
     }
 
-  } else {
-    // npcB is standing still
+  } else {// npcB is standing still
     if (!npcA.getWalkSegBounds().intersects(npcB.anim.staticBounds)) {
       return null;
     }

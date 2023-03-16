@@ -4,21 +4,25 @@
 
 - ✅ can click `label` points and walk to them
   - fixed via new tag `go` (ui points can be `do` or `go`)
-- 🚧 `[room bedroom]` link not working
+- ✅ `[room bedroom]` link not working
+  - no repro?
 
-- 🚧 redo collision prediction
-  - ✅ BUG: chrome: cursor over decor _circle_ or _rect_
-    - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
-    - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
-    - ℹ️ works in firefox
-    - ❌ try nested div
-    - ❌ try width=height=scale instead of `... scale(x)`
-    - ✅ use left, top, width, height
-  - decor circle collisions
-  - decor rect
-  - npc vs npc
-  - npc vs door
+- ✅ BUG: chrome: cursor over decor _circle_ or _rect_
+  - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
+  - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
+  - ℹ️ works in firefox
+  - ❌ try nested div
+  - ❌ try width=height=scale instead of `... scale(x)`
+  - ✅ use left, top, width, height
+- 🚧 decor circle collisions
+  - ✅ triggered by npc walk (without optimize)
+  - 🚧 restrict by roomId
+  - 🚧 adds wayMeta
+- decor rect collisions
+- redo npc vs npc collisions
+- redo npc vs door collisions
 
+- clean initial `console.warn`s
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }
 - lie has 1 frame animation

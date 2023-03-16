@@ -282,8 +282,6 @@ declare namespace NPC {
     key: string;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
-    /** last valid `el.style.transform` directly set by user via devtool */
-    devtoolTransform?: string;
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
@@ -300,8 +298,10 @@ declare namespace NPC {
     origPath?: Geom.VectJson[];
   }
 
+  export type DecorCircle = BaseDecor & { type: 'circle' } & Geom.Circle;
+
   export type DecorDef = (
-    | BaseDecor & { type: 'circle' } & Geom.Circle
+    | DecorCircle
     | DecorPath
     | DecorPoint
     | BaseDecor & { type: 'rect' } & Geom.RectJson & { angle?: number }

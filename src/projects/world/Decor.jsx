@@ -59,7 +59,6 @@ export default function Decor(props) {
             const points = decorPoints.map(x => cssTransformToPoint(x));
             if (points.every(x => x)) {
               decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
-              decor.devtoolTransform = el.style.transform;
               update();
             }
           } else if (decorKey && decorKey in state.decor) {
@@ -67,7 +66,6 @@ export default function Decor(props) {
             const output = cssTransformToPoint(el);
             if (output) {
               [decor.x, decor.y] = [output.x, output.y];
-              decor.devtoolTransform = el.style.transform;
               update();
             }
           }

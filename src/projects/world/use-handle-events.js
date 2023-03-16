@@ -32,14 +32,13 @@ export default function useHandleEvents(api) {
         case 'start-seg': {
           // We know `npc` is walking
           npc.updateWalkSegBounds(e.meta.index);
-          // 🚧 Either `npc` or `other` should be the Player
-          const others = Object.values(api.npcs.npc).filter(x => x !== npc);
 
-          for (const other of others) {
+          // ℹ️ Handle npc vs npc collisions
+          // 🚧 possibly restrict to case where one npc is the player
+          const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
+          for (const other of otherNpcs) {
             const collision = npcService.predictNpcNpcCollision(npc, other);
-            // console.log('CHECK COLLIDED', npc.key, other.key, !!collision);
-            if (collision) {
-              // Add wayMeta cancelling motion
+            if (collision) {// Add wayMeta cancelling motion
               console.warn(`${npc.key} will collide with ${other.key}`, collision);
               const length = e.meta.length + collision.distA;
               const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
@@ -50,6 +49,19 @@ export default function useHandleEvents(api) {
                 gmId: e.meta.gmId,
                 length,
               });
+            }
+          }
+
+          // 🚧 Handle npc vs decor collisions 🚧 circle 🚧 rect
+          // 🚧 will add wayMeta which sends event?
+          const decors = Object.values(api.decor.decor).filter(
+            /** @returns {x is NPC.DecorCircle} */ (x) => x.type === 'circle'
+          );
+          for (const decor of decors) {
+            const {collisions, startInside} = npcService.predictNpcCircleCollision(npc, decor);
+            if (collisions.length || startInside) {
+              console.warn(`${npc.key} collide decor circle ${decor.key}`, startInside, collisions);
+              // 🚧
             }
           }
           break;

@@ -55,7 +55,7 @@ export default function DecorPath({ decor }) {
    */
   
    const cssPath = css`
-    ${cssName.decorPathColour}: #ffa50099;
+    ${cssName.decorPathColour}: #ffa500dd;
 
     .${cssName.decorPoint} {
       position: absolute;

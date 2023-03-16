@@ -223,6 +223,19 @@ export class Rect {
       Math.abs(this.cy - other.cy) * 2 <= this.height + other.height
     );
   }
+  
+  /**
+   * 
+   * @param {number} cx 
+   * @param {number} cy 
+   * @param {number} width 
+   */
+  intersectsSquare(cx, cy, width) {
+    return (
+      Math.abs(this.cx - cx) * 2 <= this.width + width &&
+      Math.abs(this.cy - cy) * 2 <= this.height + width
+    );
+  }
 
   /** @param {any} input */
   static isRectJson(input) {
