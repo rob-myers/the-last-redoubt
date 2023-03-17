@@ -1,5 +1,5 @@
 import React from "react";
-import { testNever, visibleUnicodeLength } from "../service/generic";
+import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
 import { decodeUiPointDecorKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { ansiColor } from "../sh/util";
@@ -54,14 +54,20 @@ export default function useHandleEvents(api) {
 
           // 🚧 Handle npc vs decor collisions 🚧 circle 🚧 rect
           // 🚧 will add wayMeta which sends event?
-          const decors = Object.values(api.decor.decor).filter(
-            /** @returns {x is NPC.DecorCircle} */ (x) => x.type === 'circle'
-          );
+          const decors = Object.values(api.decor.decor);
           for (const decor of decors) {
-            const {collisions, startInside} = npcService.predictNpcCircleCollision(npc, decor);
-            if (collisions.length || startInside) {
-              console.warn(`${npc.key} collide decor circle ${decor.key}`, startInside, collisions);
-              // 🚧
+            if (decor.type === 'circle') {
+              const {collisions, startInside} = npcService.predictNpcCircleCollision(npc, decor);
+              if (collisions.length || startInside) {
+                console.warn(`${npc.key} collide decor circle ${decor.key}`, startInside, collisions);
+                // 🚧
+              }
+            } else if (decor.type === 'rect') {
+              const {collisions, startInside} = npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
+              if (collisions.length || startInside) {
+                console.warn(`${npc.key} collide decor rect ${decor.key}`, startInside, collisions);
+                // 🚧
+              }
             }
           }
           break;

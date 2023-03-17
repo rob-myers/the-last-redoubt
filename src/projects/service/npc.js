@@ -326,24 +326,44 @@ export function predictNpcNpcCollision(npcA, npcB) {
 }
 
 /**
- * 🚧 For decor rect (angled rect), we'll provide derived poly/rect
- * 
- * @param {NPC.NPC} npc viewed as single point
+ * Npc center vs static polygon.
+ * @param {NPC.NPC} npcA viewed as single point
  * @param {Geom.Poly} polygon static polygon
  * @param {Geom.Rect} [rect] default `polygon.rect`
  * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
  */
-export function predictNpcPolygonCollision(npc, polygon, rect = polygon.rect) {// 🚧
-  if (!npc.isWalking()) {
-    return { collisions: [], startInside: geom.outlineContains(polygon.outline, npc.getPosition(), null) };
-  }
-  if (!npc.getWalkSegBounds().intersects(rect)) {
+export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
+  const vs = polygon.outline;
+  if (vs.length < 3) {
     return { collisions: [], startInside: false };
   }
-  /**
-   * 🚧 intersect every line segment (for the moment)
-   */
-  return { collisions: [], startInside: false };
+  if (!npcA.isWalking()) {
+    return { collisions: [], startInside: geom.outlineContains(vs, npcA.getPosition(), null) };
+  }
+  if (!npcA.getWalkSegBounds().intersects(rect)) {
+    return { collisions: [], startInside: false };
+  }
+  
+  const segA = assertNonNull(npcA.getLineSeg());
+  const speedA = npcA.getSpeed();
+  const startInside = geom.outlineContains(vs, segA.src, null);
+
+  vs.push(vs[0]);
+  // 🚧 avoid checking every segment e.g. only need to check two for angled rects
+  const times = vs.reduce((agg, p, i) => {
+    if (vs[i + 1]) {
+      const time = geom.getLineSegsIntersection(segA.src, segA.dst, p, vs[i + 1]);
+      (time !== null) && agg.push(time);
+    }
+    return agg;
+  }, /** @type {number[]} */ ([]));
+  vs.pop();
+  times.sort((a, b) => a < b ? -1 : 1);
+
+  return {
+    collisions: times.map(t => ({ seconds: t, distA: t * speedA, distB: 0 })),
+    startInside,
+  };
 }
 
 /** @param {NPC.DecorDef} [input] */
