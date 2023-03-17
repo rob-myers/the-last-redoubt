@@ -21,7 +21,7 @@ class geomServiceClass {
    * @param {Geom.Poly} convexPoly 
    */
   circleIntersectsConvexPolygon(center, radius, convexPoly) {
-    if (this.outlineContains(convexPoly, center)) {
+    if (this.outlineContains(convexPoly.outline, center)) {
       return true;
     }
     const vs = convexPoly.outline;
@@ -212,7 +212,7 @@ class geomServiceClass {
     const length = points.length
   
     // check if first point is inside the shape (this covers if the line is completely enclosed by the shape)
-    if (this.outlineContains(polygon, u, tolerance)) {
+    if (this.outlineContains(polygon.outline, u, tolerance)) {
       return true
     }
 
@@ -487,7 +487,9 @@ class geomServiceClass {
         dpy = p1.y - p0.y,
         dqx = q1.x - q0.x,
         dqy = q1.y - q0.y,
-        s, t,
+        /** @type {number} */ s,
+        /** @type {number} */ t,
+        /** The z component of cross product `dp x dq` */
         z = -dqx * dpy + dpx * dqy;
   
     if (z === 0){
@@ -648,20 +650,21 @@ class geomServiceClass {
    * https://github.com/davidfig/intersects/blob/master/polygon-point.js
    * polygon-point collision
    * based on https://stackoverflow.com/a/17490923/1955997
-   * @param {Geom.Poly} polygon
+   * @param {Geom.VectJson[]} outline
    * @param {Geom.VectJson} p point
-   * @param {number} [tolerance] maximum distance of point to polygon's edges that triggers collision (see pointLine)
+   * @param {number | null} [tolerance]
+   * - Maximum distance of point to polygon's edges that triggers collision (see pointLine).
+   * - We can ignore edges by setting `tolerance` as `null`.
    */
-  outlineContains(polygon, p, tolerance = 0.1) {
-    const points = polygon.outline;
-    const length = points.length
+  outlineContains(outline, p, tolerance = 0.1) {
+    const length = outline.length
     let c = false
     let i, j
     for (i = 0, j = length - 1; i < length; i++) {
       if (
-        (points[i].y > p.y) !== (points[j].y > p.y)
+        (outline[i].y > p.y) !== (outline[j].y > p.y)
         &&
-        (p.x < (points[j].x - points[i].x) * (p.y - points[i].y) / (points[j].y - points[i].y) + points[i].x)
+        (p.x < (outline[j].x - outline[i].x) * (p.y - outline[i].y) / (outline[j].y - outline[i].y) + outline[i].x)
       ) {
         c = !c
       }
@@ -670,10 +673,12 @@ class geomServiceClass {
     if (c) {
       return true
     }
-    for (i = 0; i < length; i++) {
-      tempVect.copy(i === length - 1 ? points[0] : points[i + 1])
-      if (geom.lineSegIntersectsPoint(points[i], tempVect, tempVect2.copy(p), tolerance)) {
-        return true
+    if (typeof tolerance === 'number') {// Check edges too
+      for (i = 0; i < length; i++) {
+        tempVect.copy(i === length - 1 ? outline[0] : outline[i + 1])
+        if (geom.lineSegIntersectsPoint(tempVect3.copy(outline[i]), tempVect, tempVect2.copy(p), tolerance)) {
+          return true
+        }
       }
     }
     return false

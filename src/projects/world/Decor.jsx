@@ -1,6 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
+import { Poly } from "../geom/poly";
 import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
@@ -20,6 +21,7 @@ export default function Decor(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     decor: {},
     decorEl: /** @type {HTMLDivElement} */ ({}),
+
     handleDevToolEdit(els) {
       for (const el of els) {
         const decorKey = el.dataset.key;
@@ -72,18 +74,23 @@ export default function Decor(props) {
         }
         if (el.classList.contains(cssName.decorRect)) {
           if (decorKey && decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'rect' }} */ (state.decor[decorKey]);
+            const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
             const output = cssStylesToRect(el);
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
+              const poly = Poly.fromAngledRect(output);
+              decor.derivedPoly = poly;
+              decor.derivedRect = poly.rect;
               update();
             }
           }
         }
       }
     },
+
     ready: true,
+
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
       decors.forEach(decor => delete api.decor.decor[decor.key]);
@@ -106,6 +113,12 @@ export default function Decor(props) {
             // Ensure tags and meta extending tags
             (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
             break;
+          case 'rect': {
+            const poly = Poly.fromAngledRect({ angle: d.angle ?? 0, baseRect: d });
+            d.derivedPoly = poly;
+            d.derivedRect = poly.rect;
+            break;
+          }
         }
         api.decor.decor[d.key] = d;
       }
@@ -201,6 +214,7 @@ export default function Decor(props) {
                   width,
                   height,
                   transform,
+                  // transformOrigin: 'top left', // Others unsupported
                 }}
               />
             );

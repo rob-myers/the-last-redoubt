@@ -299,12 +299,27 @@ declare namespace NPC {
   }
 
   export type DecorCircle = BaseDecor & { type: 'circle' } & Geom.Circle;
+  
+  export interface DecorRect extends BaseDecor, Geom.RectJson {
+    type: 'rect';
+    angle?: number;
+    /**
+     * Induced by `{ x, y, width, height, angle }`.
+     * Avoids recomputation for collisions.
+     */
+    derivedPoly?: Geom.Poly;
+    /**
+     * Induced by `{ x, y, width, height, angle }`.
+     * Avoids recomputation for collisions.
+     */
+    derivedRect?: Geom.Rect;
+  }
 
   export type DecorDef = (
     | DecorCircle
     | DecorPath
     | DecorPoint
-    | BaseDecor & { type: 'rect' } & Geom.RectJson & { angle?: number }
+    | DecorRect
   );
   
   /** Using `action` instead of `key` to avoid name-collision */

@@ -1,5 +1,6 @@
 import { assertNonNull, testNever } from './generic';
 import { Vect } from '../geom';
+import { geom } from './geom';
 
 /**
  * Choose scale factor s.t. npc radius becomes `14.4`.
@@ -175,7 +176,8 @@ export function predictNpcCircleCollision(npcA, decorB) {
   const distABSq = iAB.lengthSquared;
   const dpA = segA.tangent.dot(iAB);
 
-  const startInside = distABSq < decorB.radius ** 2; // strict avoids degenerate?
+  // strict inequality avoids degenerate case?
+  const startInside = distABSq < decorB.radius ** 2;
   const inSqrt = (dpA ** 2) - distABSq + (decorB.radius ** 2);
   
   if (inSqrt <= 0) {// No solution, or glancing collision
@@ -324,12 +326,24 @@ export function predictNpcNpcCollision(npcA, npcB) {
 }
 
 /**
- * @param {NPC.NPC} npc
- * @param {Geom.AngledRect<Geom.Rect>} angledRect
- * @returns {{ seconds: number; } | null}
+ * 🚧 For decor rect (angled rect), we'll provide derived poly/rect
+ * 
+ * @param {NPC.NPC} npc viewed as single point
+ * @param {Geom.Poly} polygon static polygon
+ * @param {Geom.Rect} [rect] default `polygon.rect`
+ * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
  */
-export function predictNpcAngledRectCollision(npc, angledRect) {// 🚧
-  return null;
+export function predictNpcPolygonCollision(npc, polygon, rect = polygon.rect) {// 🚧
+  if (!npc.isWalking()) {
+    return { collisions: [], startInside: geom.outlineContains(polygon.outline, npc.getPosition(), null) };
+  }
+  if (!npc.getWalkSegBounds().intersects(rect)) {
+    return { collisions: [], startInside: false };
+  }
+  /**
+   * 🚧 intersect every line segment (for the moment)
+   */
+  return { collisions: [], startInside: false };
 }
 
 /** @param {NPC.DecorDef} [input] */

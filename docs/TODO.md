@@ -19,8 +19,9 @@
   - ✅ restrict npc circle to center
   - 🚧 restrict by roomId
   - 🚧 adds wayMeta
-- decor rect collisions
-  - 🚧 restrict npc to center
+- decor ~~rect~~ poly collisions
+  - ℹ️ restrict npc to center
+  - 🚧 simplified approach (test all segs)
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
