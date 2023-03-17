@@ -228,12 +228,13 @@ export class Rect {
    * 
    * @param {number} cx 
    * @param {number} cy 
-   * @param {number} width 
+   * @param {number} width
+   * @param {number} [height]
    */
-  intersectsSquare(cx, cy, width) {
+  intersectsCentered(cx, cy, width, height = width) {
     return (
       Math.abs(this.cx - cx) * 2 <= this.width + width &&
-      Math.abs(this.cy - cy) * 2 <= this.height + width
+      Math.abs(this.cy - cy) * 2 <= this.height + height
     );
   }
 

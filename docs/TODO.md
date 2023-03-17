@@ -16,9 +16,11 @@
   - ✅ use left, top, width, height
 - 🚧 decor circle collisions
   - ✅ triggered by npc walk (without optimize)
+  - ✅ restrict npc circle to center
   - 🚧 restrict by roomId
   - 🚧 adds wayMeta
 - decor rect collisions
+  - 🚧 restrict npc to center
 - redo npc vs npc collisions
 - redo npc vs door collisions
 

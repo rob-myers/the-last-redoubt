@@ -146,17 +146,16 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
 }
 
 /**
- * Npc vs static circle, where collisions correspond to hitting edges.
+ * Npc center vs static circle.
  * @param {NPC.NPC} npcA 
  * @param {NPC.DecorCircle} decorB
  * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
 */
 export function predictNpcCircleCollision(npcA, decorB) {
-  const minDistSq = (npcA.getRadius() + decorB.radius) ** 2;
   if (!npcA.isWalking()) {
-    return { collisions: [], startInside: npcA.getPosition().distanceToSquared(decorB.center) < minDistSq };
+    return { collisions: [], startInside: npcA.getPosition().distanceToSquared(decorB.center) < decorB.radius ** 2 };
   }
-  if (!npcA.getWalkSegBounds().intersectsSquare(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
+  if (!npcA.getWalkSegBounds().intersectsCentered(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
     return { collisions: [], startInside: false };
   }
   /**
@@ -176,8 +175,8 @@ export function predictNpcCircleCollision(npcA, decorB) {
   const distABSq = iAB.lengthSquared;
   const dpA = segA.tangent.dot(iAB);
 
-  const startInside = distABSq < minDistSq; // strict avoids degenerate?
-  const inSqrt = (dpA ** 2) - distABSq + minDistSq;
+  const startInside = distABSq < decorB.radius ** 2; // strict avoids degenerate?
+  const inSqrt = (dpA ** 2) - distABSq + (decorB.radius ** 2);
   
   if (inSqrt <= 0) {// No solution, or glancing collision
     return { collisions: [], startInside };
@@ -185,10 +184,7 @@ export function predictNpcCircleCollision(npcA, decorB) {
   
   const collisions = /** @type {NPC.NpcCollision[]} */ ([]);
   const speedA = npcA.getSpeed();
-  /**
-   * Time at which npc is at
-   * @see {segA.dst}
-   */
+  /** Time at which npc is at @see {segA.dst} */
   const tMax = segA.src.distanceTo(segA.dst) / speedA;
 
   /** Earlier of the two solutions */
