@@ -214,6 +214,11 @@ declare namespace NPC {
     key: 'global-nav';
     fullPath: Geom.Vect[];
     navMetas: GlobalNavMeta[];
+    /**
+     * Aligned to @see {fullPath}.
+     * Used to restrict decors before collision prediction.
+     */
+    gmRoomIds?: [number, number][];
   }
 
   /**

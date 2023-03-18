@@ -268,7 +268,7 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Find path using simplistic global nav strategy.
+   * Find geomorph edge path using simplistic global nav strategy.
    * @param {Geom.VectJson} src
    * @param {Geom.VectJson} dst 
    */
@@ -296,9 +296,8 @@ export class gmGraphClass extends BaseGraph {
       );
       /**
        * Choose node in `doorNodes` with exit closest to final destination.
-       * This is a rather simplistic strategy, and depends on the
-       * respective topology being "nice". However, we would expect
-       * the Last Redoubt to use up as much space as possible.
+       * This is a rather simplistic strategy, and depends on the respective
+       * topology being "nice" e.g. uses up as much space as possible.
        */
       const closest = doorNodes.reduce((agg, doorNode) => {
         const v = this.getDoorEntry(doorNode);

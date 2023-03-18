@@ -132,24 +132,24 @@ export default function NPCs(props) {
         throw Error(`getGlobalNavPath: src/dst must be inside some geomorph's aabb`)
       } else if (srcGmId === dstGmId) {
         const localNavPath = state.getLocalNavPath(srcGmId, src, dst);
-        console.log('localNavPath (single)', localNavPath);
+        console.info('localNavPath (single)', localNavPath);
         return {
           key: 'global-nav',
           fullPath: localNavPath.fullPath.slice(),
           navMetas: localNavPath.navMetas.map(x => ({ ...x, gmId: localNavPath.gmId })),
+          gmRoomIds: localNavPath.roomIds.map(roomId => [srcGmId, roomId]),
         };
       } else {
-
         // Compute global strategy i.e. edges in gmGraph
         const gmEdges = api.gmGraph.findPath(src, dst);
         if (!gmEdges) {
           throw Error(`getGlobalNavPath: gmGraph.findPath not found: ${JSON.stringify(src)} -> ${JSON.stringify(dst)}`);
         }
-
         // console.log('gmEdges', gmEdges); // DEBUG
 
         const fullPath = /** @type {Geom.Vect[]} */ ([]);
         const navMetas = /** @type {NPC.GlobalNavMeta[]} */ ([]);
+        const gmRoomIds = /** @type {[number, number][]} */ ([]);
 
         for (let k = 0; k < gmEdges.length + 1; k++) {
           const localNavPath = k === 0
@@ -168,12 +168,15 @@ export default function NPCs(props) {
           if (k === 0 && localNavPath.doorIds[0] >= 0) {
             // Started in hull door, so ignore `localNavPath`
             fullPath.push(Vect.from(src));
+            gmRoomIds.push([srcGmId, localNavPath.roomIds[0]]);
           } else if (k === gmEdges.length && localNavPath.doorIds[1] >= 0) {
             // Ended in hull door, so ignore `localNavPath`
             fullPath.push(Vect.from(dst));
+            gmRoomIds.push([dstGmId, assertDefined(localNavPath.roomIds.at(-1))]);
           } else {
             const indexOffset = fullPath.length;
             fullPath.push(...localNavPath.fullPath);
+            gmRoomIds.push(...localNavPath.roomIds.map(roomId => /** @type {[number, number]} */ ([localNavPath.gmId, roomId])));
             // Globalise local navMetas
             navMetas.push(
               ...localNavPath.navMetas.map(x => ({
@@ -202,6 +205,7 @@ export default function NPCs(props) {
           key: 'global-nav',
           fullPath,
           navMetas,
+          gmRoomIds,
         };
       }
     },

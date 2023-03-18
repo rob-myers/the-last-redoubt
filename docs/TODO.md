@@ -13,7 +13,7 @@
   - ✅ triggered by npc walk (without optimize)
   - ✅ restrict npc circle to center
   - ✅ local navPath provides roomIds aligned to fullPath
-  - 🚧 global navPath provides roomIds aligned to fullPath
+  - ✅ global navPath provides gmRoomIds aligned to fullPath
   - 🚧 restrict by roomId
   - adds wayMeta/event
 - 🚧 decor ~~rect~~ poly collisions
