@@ -35,7 +35,7 @@
       <title>door</title>
     </rect>
     <rect x="350" y="550" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
-      <title>ui go label room office</title>
+      <title>decor go label room office</title>
     </rect>
     <rect x="-5" width="10" height="145.785" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="530">
       <title>parallel-connectors</title>

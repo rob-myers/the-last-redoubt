@@ -506,7 +506,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "locker"],
+        "tags": ["decor", "go", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -515,7 +515,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "locker"],
+        "tags": ["decor", "go", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -524,7 +524,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "locker"],
+        "tags": ["decor", "go", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -533,7 +533,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "locker"],
+        "tags": ["decor", "go", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -542,7 +542,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "eva"],
+        "tags": ["decor", "go", "label", "room", "eva"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -551,7 +551,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "parts", "or", "cargo"],
+        "tags": ["decor", "go", "label", "room", "parts", "or", "cargo"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -560,21 +560,21 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "fuel"],
+        "tags": ["decor", "go", "label", "room", "fuel"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[180, 458], [180, 480], [158, 480], [158, 458]]]
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "airlock"],
+        "tags": ["decor", "go", "label", "room", "airlock"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[522, 470], [522, 492], [500, 492], [500, 470]]]
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "repair", "bay"],
+        "tags": ["decor", "go", "label", "room", "repair", "bay"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[750, 472], [750, 494], [728, 494], [728, 472]]]
@@ -947,7 +947,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "office"],
+        "tags": ["decor", "go", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[40, 185], [30, 185], [30, 175], [40, 175]]]
@@ -1022,14 +1022,14 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "lounge"],
+        "tags": ["decor", "go", "label", "room", "lounge"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[295, 485], [295, 475], [305, 475], [305, 485]]]
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "toilet"],
+        "tags": ["decor", "go", "label", "room", "toilet"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1127,7 +1127,7 @@
         }
       },
       {
-        "tags": ["ui", "go", "label", "room", "locker"],
+        "tags": ["decor", "go", "label", "room", "locker"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[564, 475], [574, 475], [574, 485], [564, 485]]]
@@ -1947,7 +1947,112 @@
       "entries": [{"x": 120.05, "y": 180}, {"x": 107.65, "y": 180}]
     }
   ],
-  "labels": [],
+  "labels": [
+    {
+      "text": "room locker",
+      "center": {"x": 1170.1, "y": 29.6},
+      "index": 0,
+      "tags": ["decor", "go"],
+      "rect": {"x": 1141.1, "y": 24.6, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 22.6, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 1170.1, "y": 90.3},
+      "index": 1,
+      "tags": ["decor", "go"],
+      "rect": {"x": 1141.1, "y": 85.3, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 83.3, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 1170.1, "y": 148.4},
+      "index": 2,
+      "tags": ["decor", "go"],
+      "rect": {"x": 1141.1, "y": 143.4, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 141.4, "width": 66, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 1170.1, "y": 210.2},
+      "index": 3,
+      "tags": ["decor", "go"],
+      "rect": {"x": 1141.1, "y": 205.2, "width": 58, "height": 10},
+      "padded": {"x": 1137.1, "y": 203.2, "width": 66, "height": 14}
+    },
+    {
+      "text": "room eva",
+      "center": {"x": 1129, "y": 120.1},
+      "index": 4,
+      "tags": ["decor", "go"],
+      "rect": {"x": 1106, "y": 115.1, "width": 46, "height": 10},
+      "padded": {"x": 1102, "y": 113.1, "width": 54, "height": 14}
+    },
+    {
+      "text": "room parts or cargo",
+      "center": {"x": 988.5, "y": 483},
+      "index": 5,
+      "tags": ["decor", "go"],
+      "rect": {"x": 940, "y": 477.5, "width": 97, "height": 11},
+      "padded": {"x": 936, "y": 475.5, "width": 105, "height": 15}
+    },
+    {
+      "text": "room fuel",
+      "center": {"x": 169, "y": 469},
+      "index": 6,
+      "tags": ["decor", "go"],
+      "rect": {"x": 146.5, "y": 464, "width": 45, "height": 10},
+      "padded": {"x": 142.5, "y": 462, "width": 53, "height": 14}
+    },
+    {
+      "text": "room airlock",
+      "center": {"x": 511, "y": 481},
+      "index": 7,
+      "tags": ["decor", "go"],
+      "rect": {"x": 481, "y": 476, "width": 60, "height": 10},
+      "padded": {"x": 477, "y": 474, "width": 68, "height": 14}
+    },
+    {
+      "text": "room repair bay",
+      "center": {"x": 739, "y": 483},
+      "index": 8,
+      "tags": ["decor", "go"],
+      "rect": {"x": 700.5, "y": 477.5, "width": 77, "height": 11},
+      "padded": {"x": 696.5, "y": 475.5, "width": 85, "height": 15}
+    },
+    {
+      "text": "room office",
+      "center": {"x": 35, "y": 180},
+      "index": 9,
+      "tags": ["decor", "go"],
+      "rect": {"x": 7.5, "y": 175, "width": 55, "height": 10},
+      "padded": {"x": 3.5, "y": 173, "width": 63, "height": 14}
+    },
+    {
+      "text": "room lounge",
+      "center": {"x": 300, "y": 480},
+      "index": 10,
+      "tags": ["decor", "go"],
+      "rect": {"x": 270, "y": 474.5, "width": 60, "height": 11},
+      "padded": {"x": 266, "y": 472.5, "width": 68, "height": 15}
+    },
+    {
+      "text": "room toilet",
+      "center": {"x": 447.64, "y": 522.92},
+      "index": 11,
+      "tags": ["decor", "go"],
+      "rect": {"x": 422.64, "y": 517.92, "width": 50, "height": 10},
+      "padded": {"x": 418.64, "y": 515.92, "width": 58, "height": 14}
+    },
+    {
+      "text": "room locker",
+      "center": {"x": 569, "y": 480},
+      "index": 12,
+      "tags": ["decor", "go"],
+      "rect": {"x": 540, "y": 475, "width": 58, "height": 10},
+      "padded": {"x": 536, "y": 473, "width": 66, "height": 14}
+    }
+  ],
   "navPoly": [
     {
       "type": "Polygon",

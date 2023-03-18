@@ -36,17 +36,17 @@
     <rect x="440" y="263.709" width="20" height="380" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;">
       <title>relate-connectors</title>
     </rect>
-    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5; stroke: rgb(0, 0, 0);" x="440" y="430">
-      <title>ui go label room bedroom</title>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5; stroke: rgb(0, 0, 0);" x="140" y="50">
+      <title>decor go label room bedroom</title>
     </rect>
     <rect x="140" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui do lie bed orient-90</title>
+      <title>decor do lie bed orient-90</title>
     </rect>
     <rect x="445" y="120" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui do sit toilet orient-90</title>
+      <title>decor do sit toilet orient-90</title>
     </rect>
     <rect x="545" y="145" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>ui button shower</title>
+      <title>decor button shower</title>
     </rect>
   </g>
 </svg>

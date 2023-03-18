@@ -10,6 +10,9 @@
   - ❌ try width=height=scale instead of `... scale(x)`
   - ✅ use left, top, width, height
 - 🚧 can represent decor circle/rect in svg symbols
+  - ✅ points identified via tag decor
+  - 🚧 rects identified via tags decor, rect
+  - circles identified via tags decor, circle
 - 🚧 svg decor have meta, including roomId
 - 🚧 instantiated decor meta has gmRoomIds
 - 🚧 decor circle collisions
@@ -27,6 +30,7 @@
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
+- BUG should not be able to spawn under door (from offmesh)
 - clean initial `console.warn`s
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }

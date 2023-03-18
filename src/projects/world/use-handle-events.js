@@ -52,7 +52,8 @@ export default function useHandleEvents(api) {
             }
           }
 
-          // 🚧 Handle npc vs decor collisions 🚧 circle 🚧 rect
+          // 🚧 Handle npc vs decor collisions
+          // 🚧 Restrict by roomId
           // 🚧 will add wayMeta which sends event?
           const decors = Object.values(api.decor.decor);
           for (const decor of decors) {

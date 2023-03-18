@@ -30,19 +30,19 @@
       <title>wall</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="405.7" y="677.3">
-      <title>ui go label room bedroom</title>
+      <title>decor go label room bedroom</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="150" y="345">
-      <title>ui do lie bed</title>
+      <title>decor do lie bed</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="205" y="745">
-      <title>ui do sit chair</title>
+      <title>decor do sit chair</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="480" y="155">
-      <title>ui do sit chair</title>
+      <title>decor do sit chair</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="480" y="375">
-      <title>ui do sit chair</title>
+      <title>decor do sit chair</title>
     </rect>
   </g>
 </svg>

@@ -135,7 +135,7 @@ export async function createGeomorphData(input) {
     doorView: {},
     labels: [],
     spawn: [],
-    ui: [],
+    decor: [],
     windowLight: {},
   }));
 
@@ -163,7 +163,7 @@ export async function createGeomorphData(input) {
   });
 
   layout.groups.singles.forEach((single, i) => {
-    const matched = /** @type {const} */ (['spawn', 'ui']).filter(tag => single.tags.includes(tag));
+    const matched = /** @type {const} */ (['spawn', 'decor']).filter(tag => single.tags.includes(tag));
     if (matched.length) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));

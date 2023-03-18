@@ -50,7 +50,7 @@ ${Object.keys(parsed.animLookup).map((animName) => `
  * @returns {T & NPC.ExtendDecorPointMeta}
  */
 export function extendDecorMeta(meta, gmMatrix) {
-  const doable = hasTag(meta, ['ui', 'do']);
+  const doable = hasTag(meta, ['decor', 'do']);
   
   /** This final `orient-{deg}` should be orientation relative to transformed room */
   const roomOrientDegrees = Object.keys(meta).reduce((agg, tag) =>
@@ -66,9 +66,10 @@ export function extendDecorMeta(meta, gmMatrix) {
   /** @type {NPC.ExtendDecorPointMeta} */
   const extension = {
     doable,
-    spawnable: doable && hasTag(meta, 'stand', 'sit', 'lie'),
     orientRadians: worldOrientRadians,
+    spawnable: doable && hasTag(meta, 'stand', 'sit', 'lie'),
     targetPos: /** @type {*} */ (meta.targetPos), // For type propagation
+    ui: true,
   };
   
   return Object.assign(meta, extension);

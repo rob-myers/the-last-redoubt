@@ -376,10 +376,16 @@ declare namespace NPC {
   }
 
   export interface ExtendDecorPointMeta {
-    orientRadians?: number;
+    /** Doable means an animation will be player on arrival */
     doable: boolean;
+    /** Can force NPC orientation (angle) */
+    orientRadians?: number;
+    /** Can spawn to this point e.g. if outside navmesh */
     spawnable: boolean;
+    /** Center of underlying element the click came from */
     targetPos: Geom.VectJson;
+    /** Decor always user-interactable */
+    ui: true;
   }
 
   //#region parse

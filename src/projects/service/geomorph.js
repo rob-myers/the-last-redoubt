@@ -124,17 +124,17 @@ export async function createLayout(def, lookup, triangleService) {
 
 
   // Labels
-  // TODO remove measurements
+  // 🚧 remove measurements
   const measurer = createCanvas(0, 0).getContext('2d');
   measurer.font = labelMeta.font;
   /**
    * @type {Geomorph.LayoutLabel[]}
    * - Subsequent tags make up label, up to optional `|`.
    */
-  const labels = groups.singles.filter(x => x.tags[0] === 'ui' && x.tags[1] === 'label')
+  const labels = groups.singles.filter(x => x.tags.includes('label'))
     .map(({ poly, tags }, index) => {
       const center = poly.rect.center.precision(precision).json;
-      const text = tags.slice(2).join(' ');
+      const text = tags.slice(tags.indexOf('label') + 1).join(' ');
       const metaTags = tags.slice(0, 2); // 🚧
       const noTail = !text.match(/[gjpqy]/);
       const dim = { x: measurer.measureText(text).width, y: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
@@ -328,7 +328,7 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
     throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
   const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
-  const standPoints = gm.point[meta.roomId].ui.filter(p => p.meta.stand && !localPoint.equals(p));
+  const standPoints = gm.point[meta.roomId].decor.filter(p => p.meta.stand && !localPoint.equals(p));
   const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
   if (closestStandPoint === null) {
     throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);
