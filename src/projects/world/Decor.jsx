@@ -19,8 +19,10 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    byGmRoomId: [],
     decor: {},
     decorEl: /** @type {HTMLDivElement} */ ({}),
+    ready: true,
 
     handleDevToolEdit(els) {
       for (const el of els) {
@@ -89,11 +91,12 @@ export default function Decor(props) {
       }
     },
 
-    ready: true,
-
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
-      decors.forEach(decor => delete api.decor.decor[decor.key]);
+      decors.forEach(decor => {
+        delete api.decor.decor[decor.key];
+        decor.gmRoomIds?.forEach(([gmId, roomId]) => delete state.byGmRoomId[gmId]?.[roomId]);
+      });
       api.npcs.events.next({ key: 'decors-removed', decors });
       update();
     },
@@ -105,8 +108,13 @@ export default function Decor(props) {
         if (api.decor.decor[d.key]) {
           d.updatedAt = Date.now();
         }
+        /**
+         * 🚧 build byGmRoomId using precomputed meta.gmRoomIds.
+         */
+
         switch (d.type) {
-          case 'path': // Handle clones
+          case 'path':
+            // Handle clones
             delete d.origPath;
             break;
           case 'point':
@@ -114,6 +122,7 @@ export default function Decor(props) {
             (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
             break;
           case 'rect': {
+            // Add derived data
             const poly = Poly.fromAngledRect({ angle: d.angle ?? 0, baseRect: d });
             d.derivedPoly = poly;
             d.derivedRect = poly.rect;
@@ -147,6 +156,10 @@ export default function Decor(props) {
     return () => observer.disconnect();
   }, [api.npcs.ready]);
 
+  /**
+   * 🚧 Avoid recomputing unchanged decor markup
+   */
+
   return (
     <div
       className={cx("decor-root", rootCss)}
@@ -167,6 +180,8 @@ export default function Decor(props) {
               <div
                 key={key}
                 data-key={item.key}
+                // 🚧 item.meta
+                data-meta={JSON.stringify({ 'decor-circle': true })}
                 className={cx(cssName.decorCircle, cssCircle)}
                 style={{
                   left,
@@ -206,6 +221,7 @@ export default function Decor(props) {
               <div
                 key={key}
                 data-key={item.key}
+                // 🚧 item.meta
                 data-meta={JSON.stringify({ 'decor-rect': true })}
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
@@ -303,7 +319,7 @@ const cssPoint = css`
 
 /** @param {Geomorph.PointMeta} meta */
 function metaToIconClasses(meta) {
-  if (meta.stand) return 'icon standing-person';
+  if (meta.stand) return 'icon standing-person'; // 🚧 use const
   if (meta.sit) return 'icon sitting-silhouette';
   if (meta.lie) return 'icon lying-man-posture-silhouette';
   return undefined;
@@ -326,6 +342,9 @@ const cssRect = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {HTMLElement} decorEl
+ * @property {Record<number, string[]>[]} byGmRoomId
+ * - `lookup[gmId][roomId]` provides decor keys.
+ * - the inverse relation is available via BaseDecor gmRoomIds.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
  * @property {(...decorKeys: string[]) => void} removeDecor

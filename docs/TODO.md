@@ -9,12 +9,16 @@
   - ❌ try nested div
   - ❌ try width=height=scale instead of `... scale(x)`
   - ✅ use left, top, width, height
+- 🚧 can represent decor circle/rect in svg symbols
+- 🚧 svg decor have meta, including roomId
+- 🚧 instantiated decor meta has gmRoomIds
 - 🚧 decor circle collisions
   - ✅ triggered by npc walk (without optimize)
   - ✅ restrict npc circle to center
   - ✅ local navPath provides roomIds aligned to fullPath
   - ✅ global navPath provides gmRoomIds aligned to fullPath
-  - 🚧 restrict by roomId
+  - 🚧 decor organised by gmRoomId
+  - restrict collisions by roomId
   - adds wayMeta/event
 - 🚧 decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center

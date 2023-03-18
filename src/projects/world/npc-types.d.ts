@@ -287,6 +287,8 @@ declare namespace NPC {
     key: string;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
+    /** Those [gmId, roomId] this decor intersects */
+    gmRoomIds?: [number, number][];
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
@@ -299,11 +301,13 @@ declare namespace NPC {
   export interface DecorPath extends BaseDecor {
     type: 'path';
     path: Geom.VectJson[];
-    /** Added whenever `el.style.transform` has been applied */
+    /** Added whenever `el.style.transform` has been applied (?) */
     origPath?: Geom.VectJson[];
   }
 
-  export type DecorCircle = BaseDecor & { type: 'circle' } & Geom.Circle;
+  export interface DecorCircle extends BaseDecor, Geom.Circle {
+    type: 'circle';
+  }
   
   export interface DecorRect extends BaseDecor, Geom.RectJson {
     type: 'rect';
