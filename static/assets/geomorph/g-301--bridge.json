@@ -938,10 +938,10 @@
         }
       },
       {
-        "tags": ["light", "distance-160"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[175, 390], [175, 400], [165, 400], [165, 390]]]
+          "coordinates": [[[175, 420], [175, 430], [165, 430], [165, 420]]]
         }
       },
       {
@@ -1061,6 +1061,13 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[815, 313], [805, 313], [805, 303], [815, 303]]]
+        }
+      },
+      {
+        "tags": ["light", "distance-60"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[235, 470], [235, 480], [225, 480], [225, 470]]]
         }
       },
       {
@@ -10141,7 +10148,7 @@
     ]
   },
   "lightSrcs": [
-    {"position": {"x": 170, "y": 395}, "roomId": 9, "distance": 160},
+    {"position": {"x": 170, "y": 425}, "roomId": 9, "distance": 200},
     {"position": {"x": 10, "y": 469}, "roomId": 3, "distance": 140},
     {"position": {"x": 400, "y": 308}, "roomId": 12, "distance": 200},
     {"position": {"x": 450, "y": 430}, "roomId": 14, "distance": 180},
@@ -10158,22 +10165,15 @@
     {"position": {"x": 307, "y": 105}, "roomId": 7, "distance": 120},
     {"position": {"x": 375, "y": 271}, "roomId": 11, "distance": 60},
     {"position": {"x": 485, "y": 195}, "roomId": 13, "distance": 180},
-    {"position": {"x": 810, "y": 308}, "roomId": 18, "distance": 200}
+    {"position": {"x": 810, "y": 308}, "roomId": 18, "distance": 200},
+    {"position": {"x": 230, "y": 475}, "roomId": 10, "distance": 60}
   ],
   "lightRects": [
     {
       "key": "door24@light0",
       "doorId": 24,
       "lightId": 0,
-      "rect": {"x": 189, "y": 253, "width": 118, "height": 105},
-      "preDoorIds": [],
-      "postDoorIds": []
-    },
-    {
-      "key": "door25@light0",
-      "doorId": 25,
-      "lightId": 0,
-      "rect": {"x": 190, "y": 422, "width": 48, "height": 56},
+      "rect": {"x": 188, "y": 242, "width": 119, "height": 116},
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -10326,6 +10326,14 @@
       "doorId": 11,
       "lightId": 17,
       "rect": {"x": 610, "y": 306, "width": 108, "height": 54},
+      "preDoorIds": [],
+      "postDoorIds": []
+    },
+    {
+      "key": "door25@light18",
+      "doorId": 25,
+      "lightId": 18,
+      "rect": {"x": 211, "y": 415, "width": 22, "height": 3},
       "preDoorIds": [],
       "postDoorIds": []
     }

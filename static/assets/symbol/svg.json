@@ -1404,10 +1404,10 @@
         }
       },
       {
-        "tags": ["light", "distance-160"],
+        "tags": ["light", "distance-200"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[165, 390], [165, 400], [175, 400], [175, 390]]]
+          "coordinates": [[[165, 420], [165, 430], [175, 430], [175, 420]]]
         }
       },
       {
@@ -1528,10 +1528,17 @@
           "type": "Polygon",
           "coordinates": [[[815, 303], [805, 303], [805, 313], [815, 313]]]
         }
+      },
+      {
+        "tags": ["light", "distance-60"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[225, 470], [225, 480], [235, 480], [235, 470]]]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1679155284261.6462
+    "lastModified": 1679159857470.3872
   },
   "302--hull": {
     "key": "302--hull",
