@@ -999,7 +999,7 @@ export function filterSingles(singles, ...tagOrTags) {
 //#region decor
 
 /** @type {(gmId: number, roomId: number, decorId: number) => string} */
-export function getUiPointDecorKey(gmId, roomId, decorId) {
+export function getDecorInstanceKey(gmId, roomId, decorId) {
   return `local-${decorId}-g${gmId}r${roomId}`
 }
 

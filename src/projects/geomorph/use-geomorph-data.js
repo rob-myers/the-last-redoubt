@@ -171,6 +171,7 @@ export async function createGeomorphData(input) {
         ? pointsByRoom[roomId][tag].push({
             x: p.x,
             y: p.y,
+            origPoly: single.poly.clone(),
             meta: single.tags.reduce(
               (agg, tag) => (agg[tag] = true) && agg,
               /** @type {Geomorph.PointMeta} */ ({ roomId })

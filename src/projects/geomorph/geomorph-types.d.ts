@@ -156,7 +156,7 @@ declare namespace Geomorph {
       /** Spawn points inside room */
       spawn: (Geom.VectJson & { meta: PointMeta })[];
       /** Decor point/circle/rects inside room */
-      decor: (Geom.VectJson & { meta: PointMeta })[];
+      decor: (Geom.VectJson & { origPoly: Geom.Poly; meta: PointMeta; })[];
       /** Can specify light position from room through window */
       windowLight: { [windowId?: number]: Vect };
     }[];

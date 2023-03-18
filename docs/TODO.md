@@ -11,8 +11,10 @@
   - ✅ use left, top, width, height
 - 🚧 can represent decor circle/rect in svg symbols
   - ✅ points identified via tag decor
-  - 🚧 rects identified via tags decor, rect
-  - circles identified via tags decor, circle
+  - ✅ gm.point.decor retains origPoly (to infer rect/circle)
+  - ✅ rects identified via tags decor, rect
+  - ✅ circles identified via tags decor, circle
+  - 🚧 gm.point.decor -> gm.decor?
 - 🚧 svg decor have meta, including roomId
 - 🚧 instantiated decor meta has gmRoomIds
 - 🚧 decor circle collisions

@@ -103,10 +103,10 @@ export function lineSegToCssTransform(seg) {
 
 /**
  * @param {Geom.RectJson} rect 
- * @param {number} [angle] Radians
+ * @param {number} angle Radians
  * @returns {import('react').CSSProperties}
  */
-export function rectToCssStyles(rect, angle = 0) {
+export function rectToCssStyles(rect, angle) {
 	return {
 		left: precision(rect.x),
 		top: precision(rect.y),

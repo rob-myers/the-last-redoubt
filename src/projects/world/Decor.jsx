@@ -81,9 +81,7 @@ export default function Decor(props) {
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
-              const poly = Poly.fromAngledRect(output);
-              decor.derivedPoly = poly;
-              decor.derivedRect = poly.rect;
+              npcService.extendDecorRect(decor);
               update();
             }
           }
@@ -123,9 +121,7 @@ export default function Decor(props) {
             break;
           case 'rect': {
             // Add derived data
-            const poly = Poly.fromAngledRect({ angle: d.angle ?? 0, baseRect: d });
-            d.derivedPoly = poly;
-            d.derivedRect = poly.rect;
+            npcService.extendDecorRect(d);
             break;
           }
         }
@@ -157,7 +153,8 @@ export default function Decor(props) {
   }, [api.npcs.ready]);
 
   /**
-   * 🚧 Avoid recomputing unchanged decor markup
+   * 🚧 Avoid recomputing unchanged decor markup via
+   * React.memo with props { decor, decor.updatedAt }
    */
 
   return (
@@ -216,7 +213,7 @@ export default function Decor(props) {
               />
             );
           case 'rect': {
-            const { top, left, width, height, transform } = rectToCssStyles(item);
+            const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
             return (
               <div
                 key={key}

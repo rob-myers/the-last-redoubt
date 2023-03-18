@@ -9,7 +9,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcInteractRadius } from "../service/const";
 import { geom } from "../service/geom";
-import { getUiPointDecorKey } from "../service/geomorph";
+import { getDecorInstanceKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -551,26 +551,46 @@ export default function NPCs(props) {
       await promise;
     },
     updateLocalDecor(opts) {
-      /**
-       * 🚧 distinguish decor rect/circle from decor point
-       */
       for (const { gmId, roomId } of opts.added??[]) {
-        const { point: { [roomId]: { decor : points } }, matrix } = api.gmGraph.gms[gmId];
-        const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
+        const { point: { [roomId]: { decor: points } }, matrix } = api.gmGraph.gms[gmId];
+        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
         state.npcAct({
           action: "add-decor",
-          items: Object.values(points).map(({ x, y, meta }, uiId) => ({
-            key: decorKeys[uiId],
-            type: "point", // transform from local geomorph coords:
-            ...matrix.transformPoint({ x, y }),
-            meta,
-            tags: Object.keys(meta).filter(key => meta[key] === true), // 🚧 remove
-          })),
+          items: Object.values(points).map(/** @returns {NPC.DecorDef} */ ({ x, y, meta, origPoly }, decorId) => {
+            if (meta.rect) {
+              const { baseRect, angle } = geom.polyToAngledRect(origPoly);
+              return npcService.extendDecorRect({
+                key: decorKeys[decorId],
+                type: 'rect',
+                x: baseRect.x,
+                y: baseRect.y,
+                width: baseRect.width,
+                height: baseRect.height,
+                angle,
+              });
+            } else if (meta.circle) {
+              const { center, width } = origPoly.rect;
+              return {
+                key: decorKeys[decorId],
+                type: 'circle',
+                center,
+                radius: width / 2,
+              };
+            } else {
+              return {
+                key: decorKeys[decorId],
+                type: "point", // transform from local geomorph coords:
+                ...matrix.transformPoint({ x, y }),
+                meta,
+                tags: Object.keys(meta).filter(key => meta[key] === true), // 🚧 remove
+              };
+            }
+          }),
         });
       }
       for (const { gmId, roomId } of opts.removed??[]) {
         const { decor: points } = api.gmGraph.gms[gmId].point[roomId];
-        const decorKeys = points.map((_, decorId) => getUiPointDecorKey(gmId, roomId, decorId))
+        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId))
         state.npcAct({ action: "rm-decor", items: decorKeys });
       }
     },

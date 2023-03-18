@@ -1,5 +1,5 @@
 import { assertNonNull, testNever } from './generic';
-import { Vect } from '../geom';
+import { Poly, Vect } from '../geom';
 import { geom } from './geom';
 
 /**
@@ -73,6 +73,17 @@ export function extendDecorMeta(meta, gmMatrix) {
   };
   
   return Object.assign(meta, extension);
+}
+
+/**
+ * @param {NPC.DecorRect} decor
+ * @returns {NPC.DecorRect}
+ */
+export function extendDecorRect(decor) {
+  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
+  decor.derivedPoly = poly;
+  decor.derivedRect = poly.rect;
+  return decor;
 }
 
 /** @type {Record<NPC.NpcActionKey, true>} */
