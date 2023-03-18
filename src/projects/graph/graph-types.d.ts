@@ -270,6 +270,8 @@ declare namespace Graph {
     navMetas: FloorGraphNavMeta[];
     /** `[startDoorId, endDoorId]` respectively, both possibly -1 */
     doorIds: [number, number];
+      /** Aligned to `fullPath` */
+    roomIds: number[];
   }
 
   /**

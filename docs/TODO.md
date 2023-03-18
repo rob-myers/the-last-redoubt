@@ -2,11 +2,6 @@
 
 ## In progress
 
-- ✅ can click `label` points and walk to them
-  - fixed via new tag `go` (ui points can be `do` or `go`)
-- ✅ `[room bedroom]` link not working
-  - no repro?
-
 - ✅ BUG: chrome: cursor over decor _circle_ or _rect_
   - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
   - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
@@ -17,11 +12,14 @@
 - 🚧 decor circle collisions
   - ✅ triggered by npc walk (without optimize)
   - ✅ restrict npc circle to center
+  - ✅ local navPath provides roomIds aligned to fullPath
+  - 🚧 global navPath provides roomIds aligned to fullPath
   - 🚧 restrict by roomId
-  - 🚧 adds wayMeta
+  - adds wayMeta/event
 - 🚧 decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center
   - ✅ simplified approach (test all segs)
+  - 🚧 restrict by roomId
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
@@ -39,6 +37,8 @@
   - should fix double-door issue
 - source map issue with jsx?
 - tabs tabindex outline does not include controls
+- Better approach to debug logging?
+- HMR floor graph findPath propagates to ongoing processes?
 - ❌ try pause/resume npc on click head
 - ❌ can only directly spawn off-mesh when closer than closest stand point
 
@@ -405,6 +405,11 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ can click `label` points and walk to them
+  - fixed via new tag `go` (ui points can be `do` or `go`)
+- ✅ `[room bedroom]` link not working
+  - no repro?
 
 - ✅ use webp for lit/unlit geomorphs
 - ✅ 301 shouldn't have guns

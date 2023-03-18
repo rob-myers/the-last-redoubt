@@ -122,13 +122,14 @@ export class floorGraphClass extends BaseGraph {
     }, /** @type {Graph.NavPartition} */ ([]));
 
     const fullPath = [src.clone()];
+    const roomIds = [this.nodeToMeta[srcNode.index].roomId];
     const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
       { key: 'start-seg', index: 0, },
     ]);
     let startDoorId = -1, endDoorId = -1;
 
     for (const [i, item] of partition.entries()) {
-      if (item.key === 'door') {
+      if (item.key === 'door') {// door partition
 
         const door = this.gm.doors[item.doorId];
 
@@ -150,6 +151,7 @@ export class floorGraphClass extends BaseGraph {
 
         if (!partition[i + 1]) {// Finish in door
           fullPath.push(dst.clone());
+          roomIds.push(this.nodeToMeta[dstNode.index].roomId);
           endDoorId = item.doorId;
           break;
         } 
@@ -160,10 +162,11 @@ export class floorGraphClass extends BaseGraph {
         // Avoid case where just entered geomorph and doorExit ~ src
         if (!(i === 0 && src.distanceTo(doorExit) < 0.1)) {
           fullPath.push(doorExit.clone());
+          roomIds.push(nextRoomId);
           navMetas.push({ key: 'start-seg', index: fullPath.length - 1 });
         }
 
-      } else {
+      } else {// room partition
         const roomId = item.roomId;
 
         // Compute endpoints of path through room
@@ -196,6 +199,7 @@ export class floorGraphClass extends BaseGraph {
            * We can simply walk straight through the room
            */
           fullPath.push(pathDst.clone());
+          roomIds.push(roomId);
         } else {
           /**
            * Otherwise, use "simple stupid funnel algorithm"
@@ -206,6 +210,7 @@ export class floorGraphClass extends BaseGraph {
           // We remove adjacent repetitions (which can occur)
           geom.removePathReps(stringPull.slice(1)).forEach(p => {
             fullPath.push(p);
+            roomIds.push(roomId);
             navMetas.push({ key: 'start-seg', index: fullPath.length - 1 });
           });
           navMetas.pop();
@@ -230,12 +235,20 @@ export class floorGraphClass extends BaseGraph {
     }
 
     // DEBUG 🚧
-    console.log('findPath', {nodePath, nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]) , partition, fullPath, navMetas});
+    console.info('findPath', {
+      nodePath,
+      nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
+      partition,
+      fullPath,
+      navMetas,
+      roomIds,
+    });
 
     return {
       fullPath, // May contain adjacent dups
       navMetas,
       doorIds: [startDoorId, endDoorId],
+      roomIds,
     };
   }
 

@@ -206,7 +206,7 @@ export default function NPCs(props) {
       }
     },
     /**
-     * Wraps floorGraphClass.findPath
+     * Wraps @see {floorGraphClass.findPath}
      */
     getLocalNavPath(gmId, src, dst) {
       const gm = api.gmGraph.gms[gmId];
@@ -223,12 +223,12 @@ export default function NPCs(props) {
           fullPath: result.fullPath.map(p => gm.matrix.transformPoint(Vect.from(p)).precision(3)),
         };
       } else {
-        return { key: 'local-nav', gmId, fullPath: [], navMetas: [], doorIds: [-1, -1] };
+        throw Error(`getLocalNavPath: no path found: ${JSON.stringify(src)} --> ${JSON.stringify(dst)}`);
       }
     },
     /**
-     * Used by shell function `nav`.
-     * Wraps `state.getGlobalNavPath`.
+     * Used by shell function `nav`. Wraps
+     * @see {state.getGlobalNavPath}
      */
     getNpcGlobalNav(e) {
       const npc = state.npc[e.npcKey];
