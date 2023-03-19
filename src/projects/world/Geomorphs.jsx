@@ -1,7 +1,8 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
+import { cssName } from "../service/const";
 import { assertDefined, assertNonNull } from "../service/generic";
-import { geomorphPngPath, isConnectorOrthonormal } from "../service/geomorph";
+import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 /**
  * The images of each geomorph
@@ -146,13 +147,17 @@ export default function Geomorphs(props) {
 
 const rootCss = css`
   position: absolute;
+  /**
+   * - brightness(70%) sepia(0.4);
+   * - brightness(80%) sepia(0.1);
+   */
+  ${cssName.geomorphFilter}: brightness(70%) sepia(0.4) contrast(1);
 
   img.geomorph {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    /* filter: brightness(80%) sepia(0.1); */
-    filter: brightness(70%) sepia(0.4);
+    filter: var(${cssName.geomorphFilter});
   }
   img.unlit-doorways {
     /** Used only as canvas drawImage source */
@@ -162,7 +167,7 @@ const rootCss = css`
     position: absolute;
     pointer-events: none;
     // must dup filter from geomorph
-    filter: brightness(70%) sepia(0.4);
+    filter: var(${cssName.geomorphFilter});
   }
 `;
 

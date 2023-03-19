@@ -8,6 +8,7 @@ export const localStorageKey = {
 };
 
 export const cssName = {
+  //#region site
   anchor: 'anchor',
   carouselLabelHeight: '--carousel-label-height',
   central: 'central',
@@ -16,12 +17,8 @@ export const cssName = {
   disableIcon: 'disable-icon',
   disabled: 'disabled',
   expanded: 'expanded',
-  door: 'door',
-  doors: 'doors',
-  doorTouchUi: 'door-touch-ui',
   enabled: 'enabled',
   faded: 'faded',
-  hull: 'hull',
   /** see icons.css */
   iconSizeBase: '--icon-size-base',
   /** see icons.css */
@@ -32,13 +29,27 @@ export const cssName = {
   iconSizeTiny: '--icon-size-tiny',
   ignoreDark: 'ignore-dark',
   infoIcon: 'info-icon',
-  iris: 'iris',
   justCopied: 'just-copied',
   navMain: 'nav-main',
   navMainOpen: 'open',
   navMainClosed: 'closed',
   navMini: 'nav-mini',
   nextArticle: 'next-article',
+  resetIcon: 'reset-icon',
+  tabs: 'tabs',
+  tabsExpandedMaxWidth: '--tabs-expanded-max-width',
+  topBar: 'top-bar',
+  topBarHandle: 'handle',
+  topRight: 'top-right',
+  //#endregion
+
+  //#region world
+  door: 'door',
+  doors: 'doors',
+  doorTouchUi: 'door-touch-ui',
+  iris: 'iris',
+  hull: 'hull',
+  open: 'open',
 
   debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
   debugGeomorphOutlineDisplay: '--debug-gm-outline-display',
@@ -56,6 +67,8 @@ export const cssName = {
   decorIconWidth: '--decor-icon-width',
   decorPathColour: '--decor-path-colour',
   
+  geomorphFilter: '--geomorph-filter',
+
   npc: 'npc',
   npcBody: 'body',
   npcsDebugDisplay: '--npcs-debug-display',
@@ -63,14 +76,7 @@ export const cssName = {
   npcsInteractRadius: '--npcs-interact-radius',
   npcBoundsRadius: '--npc-bounds-radius',
   npcHeadRadius: '--npc-head-radius',
-
-  open: 'open',
-  resetIcon: 'reset-icon',
-  tabs: 'tabs',
-  tabsExpandedMaxWidth: '--tabs-expanded-max-width',
-  topBar: 'top-bar',
-  topBarHandle: 'handle',
-  topRight: 'top-right',
+  //#endregion
 } as const;
 
 export const zIndex = {
