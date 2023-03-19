@@ -14,8 +14,11 @@
   - ✅ gm.point.decor retains origPoly (to infer rect/circle)
   - ✅ rects identified via tags decor, rect
   - ✅ circles identified via tags decor, circle
-  - 🚧 gm.point.decor -> gm.decor?
+  - ✅ gm.point.decor -> gm.decor?
+  - ✅ retype gm.point.decor as `DecorDef`s
+  - 🚧 gm.decor.meta.roomIds
 - 🚧 svg decor have meta, including roomId
+- 🚧 more examples
 - 🚧 instantiated decor meta has gmRoomIds
 - 🚧 decor circle collisions
   - ✅ triggered by npc walk (without optimize)

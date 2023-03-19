@@ -161,8 +161,9 @@ declare namespace Geomorph {
 
     /**
      * Decor point/circle/rects indexed by `roomId`.
+     * ℹ️ a decor may occur in multiple rooms
      */
-    decor: (Geom.VectJson & { origPoly: Geom.Poly; meta: PointMeta; })[][];
+    decor: Exclude<NPC.DecorDef, NPC.DecorPath>[][];
 
     /** Proxy for lazy cached data */
     lazy: {

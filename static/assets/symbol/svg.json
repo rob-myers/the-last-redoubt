@@ -4934,9 +4934,17 @@
     "hull": [],
     "obstacles": [],
     "walls": [],
-    "singles": [],
+    "singles": [
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[20, 60], [20, 240], [200, 240], [200, 60]]]
+        }
+      }
+    ],
     "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
-    "lastModified": 1666690702015.2463
+    "lastModified": 1679243007285.0083
   },
   "lab--012--3x4": {
     "key": "lab--012--3x4",
@@ -8075,6 +8083,13 @@
     ],
     "singles": [
       {
+        "tags": ["decor", "rect", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[300, 0], [300, 200], [600, 200], [600, 0]]]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -8141,7 +8156,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1679155284261.2014
+    "lastModified": 1679231143574.2595
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",

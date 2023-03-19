@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
-import { geomorphJsonPath, getNormalizedDoorPolys } from "../service/geomorph";
+import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor, tagsToMeta } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
@@ -157,7 +157,7 @@ export async function createGeomorphData(input) {
 
     doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = {
       point: p,
-      meta: tags.reduce((agg, tag) => ((agg[tag] = true) && agg), /** @type {Geomorph.PointMeta} */ ({})),
+      meta: tagsToMeta(tags, {}),
     });
     windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
   });
@@ -167,31 +167,17 @@ export async function createGeomorphData(input) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
-        pointsByRoom[roomId].spawn.push({
-            x: p.x,
-            y: p.y,
-            meta: single.tags.reduce(
-              (agg, tag) => (agg[tag] = true) && agg,
-              /** @type {Geomorph.PointMeta} */ ({ roomId })
-            ),
-          })
+        pointsByRoom[roomId].spawn.push({ x: p.x, y: p.y, meta: tagsToMeta(single.tags, { roomId }) })
       } else {
         console.warn(`spawn point (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
       }
     }
     if (single.tags.includes('decor')) {
       const p = single.poly.center;
+      // 🚧 permit multiple rooms
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
-        decor[roomId].push({
-            x: p.x,
-            y: p.y,
-            origPoly: single.poly.clone(),
-            meta: single.tags.reduce(
-              (agg, tag) => (agg[tag] = true) && agg,
-              /** @type {Geomorph.PointMeta} */ ({ roomId })
-            ),
-          })
+        decor[roomId].push(singleToDecor(single, i));
       } else {
         console.warn(`decor (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
       }
@@ -299,3 +285,4 @@ function extendRoomNodeIds(gm) {
     }
   });
 }
+

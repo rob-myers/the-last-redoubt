@@ -1148,6 +1148,13 @@
         }
       },
       {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1188, 280], [1152, 280], [1152, 244], [1188, 244]]]
+        }
+      },
+      {
         "tags": ["wall", "no-fill"],
         "poly": {
           "type": "Polygon",

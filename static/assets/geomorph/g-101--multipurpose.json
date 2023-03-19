@@ -1547,6 +1547,13 @@
         }
       },
       {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[880, 12], [880, 48], [844, 48], [844, 12]]]
+        }
+      },
+      {
         "tags": ["decor", "go", "label", "room", "fuel"],
         "poly": {
           "type": "Polygon",
@@ -1692,6 +1699,13 @@
               [617.64, 190.38]
             ]
           ]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[12, 320], [48, 320], [48, 356], [12, 356]]]
         }
       },
       {
@@ -2651,6 +2665,13 @@
         }
       },
       {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1152, 844], [1188, 844], [1188, 880], [1152, 880]]]
+        }
+      },
+      {
         "tags": ["door", "w"],
         "poly": {
           "type": "Polygon",
@@ -2763,6 +2784,13 @@
               [-3.8, 1076.1]
             ]
           ]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[356, 1152], [356, 1188], [320, 1188], [320, 1152]]]
         }
       },
       {

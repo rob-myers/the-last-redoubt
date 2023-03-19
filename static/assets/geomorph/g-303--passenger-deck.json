@@ -2113,6 +2113,20 @@
         }
       },
       {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1152, 246], [1188, 246], [1188, 282], [1152, 282]]]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[356, 552], [356, 588], [320, 588], [320, 552]]]
+        }
+      },
+      {
         "tags": ["decor", "rect", "shower"],
         "poly": {
           "type": "Polygon",

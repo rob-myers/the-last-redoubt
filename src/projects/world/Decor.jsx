@@ -259,7 +259,7 @@ const rootCss = css`
 const cssCircle = css`
   position: absolute;
   border-radius: 50%;
-  background-color: #ff444488;
+  background-color: #ff444455;
 `;
 
 const cssPoint = css`

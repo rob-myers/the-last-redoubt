@@ -552,39 +552,23 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { decor: { [roomId]: points }, matrix } = api.gmGraph.gms[gmId];
-        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
+        const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
+        const decorKeys = decor.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
         state.npcAct({
           action: "add-decor",
-          items: Object.values(points).map(/** @returns {NPC.DecorDef} */ ({ x, y, meta, origPoly }, decorId) => {
-            if (meta.rect) {
-              const { baseRect, angle } = geom.polyToAngledRect(origPoly);
-              return npcService.extendDecorRect({
-                key: decorKeys[decorId],
-                type: 'rect',
-                x: baseRect.x,
-                y: baseRect.y,
-                width: baseRect.width,
-                height: baseRect.height,
-                angle,
-              });
-            } else if (meta.circle) {
-              const { center, width } = origPoly.rect;
-              return {
-                key: decorKeys[decorId],
-                type: 'circle',
-                center,
-                radius: width / 2,
-              };
-            } else {
-              return {
-                key: decorKeys[decorId],
-                type: "point", // transform from local geomorph coords:
-                ...matrix.transformPoint({ x, y }),
-                meta,
-                tags: Object.keys(meta).filter(key => meta[key] === true), // 🚧 remove
-              };
+          items: Object.values(decor).map(/** @returns {(typeof decor)[*]} */ (d, decorId) => {
+            if (d.type === 'rect') {
+              // 🚧 better way of computing transformed angledRect?
+              const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+              const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+              // Must override key, now we know gmId
+              return { ...d, ...baseRect, key: decorKeys[decorId], angle, };
             }
+            if (d.type === 'circle') {
+              return { ...d, key: decorKeys[decorId], center: matrix.transformPoint({ ...d.center }) }
+            }
+            // NPC.DecorPoint
+            return { ...d, key: decorKeys[decorId], ...matrix.transformPoint({ x: d.x, y: d.y }) };
           }),
         });
       }

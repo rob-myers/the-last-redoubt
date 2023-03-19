@@ -1,6 +1,6 @@
 import React from "react";
 import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
-import { decodeUiPointDecorKey, } from "../service/geomorph";
+import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { ansiColor } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
@@ -274,7 +274,7 @@ function demoHandleDecorClick(event, api) {
     if (decor.tags?.includes('label')) {
       /** Assume `[...tags, label, ...labelWords]` */
       const label = decor.tags.slice(decor.tags.findIndex(tag => tag === 'label') + 1).join(' ');
-      const { decorId: _, gmId, roomId } = decodeUiPointDecorKey(decor.key);
+      const { decorId: _, gmId, roomId } = decodeDecorInstanceKey(decor.key);
       const gm = api.gmGraph.gms[gmId];
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
       // Square brackets induces a link via `linkProviderDef`

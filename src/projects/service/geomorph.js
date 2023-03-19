@@ -328,7 +328,7 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
     throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
   const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
-  const standPoints = gm.decor[meta.roomId].filter(p => p.meta.stand && !localPoint.equals(p));
+  const standPoints = gm.decor[meta.roomId].flatMap(p => p.type === 'point' && p.meta.stand && !localPoint.equals(p) && p || []);
   const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
   if (closestStandPoint === null) {
     throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);
@@ -996,6 +996,14 @@ export function filterSingles(singles, ...tagOrTags) {
 	}
 }
 
+/**
+ * @param {string[]} tags
+ * @param {Geomorph.PointMeta} baseMeta 
+ */
+export function tagsToMeta(tags, baseMeta) {
+  return tags.reduce((agg, tag) => (agg[tag] = true) && agg, baseMeta);
+}
+
 //#region decor
 
 /** @type {(gmId: number, roomId: number, decorId: number) => string} */
@@ -1004,9 +1012,55 @@ export function getDecorInstanceKey(gmId, roomId, decorId) {
 }
 
 /** @param {string} decorKey */
-export function decodeUiPointDecorKey(decorKey) {
+export function decodeDecorInstanceKey(decorKey) {
   const [, decorId, gmId, roomId] = /** @type {string[]} */ (decorKey.match(/^local-(\d+)-g(\d+)r(\d+)$/));
   return { decorId: Number(decorId), gmId: Number(gmId), roomId: Number(roomId) };
+}
+
+/**
+ * @param {Geomorph.SvgGroupsSingle<Poly>} svgSingle
+ * @param {number} singleIndex
+ * @returns {Exclude<NPC.DecorDef, NPC.DecorPath>}
+ */
+export function singleToDecor(svgSingle, singleIndex) {
+  const p = svgSingle.poly.center;
+  const origPoly = svgSingle.poly;
+  // 🚧 meta.roomIds
+  const meta = tagsToMeta(svgSingle.tags, {});
+
+  if (meta.rect) {
+    const { baseRect, angle } = geom.polyToAngledRect(origPoly);
+    return {
+      // ℹ️ key will be overridden upon instantiation
+      key: getDecorInstanceKey(-1, -1, singleIndex),
+      type: 'rect',
+      x: baseRect.x,
+      y: baseRect.y,
+      width: baseRect.width,
+      height: baseRect.height,
+      angle,
+      // ℹ️ Needed by api.npcs.updateLocalDecor
+      // ℹ️ Don't know how to transform angledRect
+      derivedPoly: origPoly.clone(),
+    };
+  } else if (meta.circle) {
+    const { center, width } = origPoly.rect;
+    return {
+      key: getDecorInstanceKey(-1, -1, singleIndex),
+      type: 'circle',
+      center,
+      radius: width / 2,
+    };
+  } else {// Assume point (we do not support DecorPath)
+    return {
+      key: getDecorInstanceKey(-1, -1, singleIndex),
+      type: 'point',
+      x: p.x,
+      y: p.y,
+      meta,
+      tags: svgSingle.tags.slice(),
+    };
+  }
 }
 
 //#endregion

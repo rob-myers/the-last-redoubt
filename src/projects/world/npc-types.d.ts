@@ -294,7 +294,10 @@ declare namespace NPC {
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
     meta: Geomorph.PointMeta;
-    /** Derived from @see {meta} i.e. `key` s.t. `meta[key] === true` */
+    /**
+     * 🚧 remove
+     * Derived from @see {meta} i.e. `key` s.t. `meta[key] === true`
+     */
     tags: string[];
   }
 

@@ -2198,6 +2198,13 @@
         }
       },
       {
+        "tags": ["decor", "rect", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[60, 480], [60, 440], [120, 440], [120, 480]]]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -2284,6 +2291,13 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[109, 451], [109, 449], [111, 449], [111, 451]]]
+        }
+      },
+      {
+        "tags": ["decor", "rect", "shower"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[180, 480], [180, 440], [240, 440], [240, 480]]]
         }
       },
       {
@@ -2541,6 +2555,34 @@
           "coordinates": [
             [[29, 581.037], [31, 581.037], [31, 583.037], [29, 583.037]]
           ]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[12, 320], [48, 320], [48, 356], [12, 356]]]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1152, 244], [1188, 244], [1188, 280], [1152, 280]]]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[356, 552], [356, 588], [320, 588], [320, 552]]]
+        }
+      },
+      {
+        "tags": ["decor", "circle", "hatch"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[956, 552], [956, 588], [920, 588], [920, 552]]]
         }
       },
       {
