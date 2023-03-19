@@ -328,7 +328,7 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
     throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
   const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
-  const standPoints = gm.point[meta.roomId].decor.filter(p => p.meta.stand && !localPoint.equals(p));
+  const standPoints = gm.decor[meta.roomId].filter(p => p.meta.stand && !localPoint.equals(p));
   const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
   if (closestStandPoint === null) {
     throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);

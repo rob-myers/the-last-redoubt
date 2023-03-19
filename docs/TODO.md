@@ -32,6 +32,7 @@
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
+- BUG should not be able to open door through wall (e.g. toilet stateroom 12)
 - BUG should not be able to spawn under door (from offmesh)
 - clean initial `console.warn`s
 - `goLoop` -> `walkLoop`

@@ -552,7 +552,7 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { point: { [roomId]: { decor: points } }, matrix } = api.gmGraph.gms[gmId];
+        const { decor: { [roomId]: points }, matrix } = api.gmGraph.gms[gmId];
         const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
         state.npcAct({
           action: "add-decor",
@@ -589,7 +589,7 @@ export default function NPCs(props) {
         });
       }
       for (const { gmId, roomId } of opts.removed??[]) {
-        const { decor: points } = api.gmGraph.gms[gmId].point[roomId];
+        const points = api.gmGraph.gms[gmId].decor[roomId];
         const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId))
         state.npcAct({ action: "rm-decor", items: decorKeys });
       }

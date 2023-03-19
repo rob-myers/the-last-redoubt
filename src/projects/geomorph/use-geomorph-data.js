@@ -135,9 +135,9 @@ export async function createGeomorphData(input) {
     doorView: {},
     labels: [],
     spawn: [],
-    decor: [],
     windowLight: {},
   }));
+  const decor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['decor'][*]} */ () => []);
 
   lightMetas.forEach(({ center: p, poly, reverse, tags }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));
@@ -163,12 +163,27 @@ export async function createGeomorphData(input) {
   });
 
   layout.groups.singles.forEach((single, i) => {
-    const matched = /** @type {const} */ (['spawn', 'decor']).filter(tag => single.tags.includes(tag));
-    if (matched.length) {
+    if (single.tags.includes('spawn')) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
-      matched.forEach(tag => roomId >= 0
-        ? pointsByRoom[roomId][tag].push({
+      if (roomId >= 0) {
+        pointsByRoom[roomId].spawn.push({
+            x: p.x,
+            y: p.y,
+            meta: single.tags.reduce(
+              (agg, tag) => (agg[tag] = true) && agg,
+              /** @type {Geomorph.PointMeta} */ ({ roomId })
+            ),
+          })
+      } else {
+        console.warn(`spawn point (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
+      }
+    }
+    if (single.tags.includes('decor')) {
+      const p = single.poly.center;
+      const roomId = layout.rooms.findIndex(x => x.contains(p));
+      if (roomId >= 0) {
+        decor[roomId].push({
             x: p.x,
             y: p.y,
             origPoly: single.poly.clone(),
@@ -177,8 +192,9 @@ export async function createGeomorphData(input) {
               /** @type {Geomorph.PointMeta} */ ({ roomId })
             ),
           })
-        : console.warn(`${tag} point (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
-      );
+      } else {
+        console.warn(`decor (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
+      }
     }
   });
 
@@ -205,6 +221,7 @@ export async function createGeomorphData(input) {
     doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
 
     point: pointsByRoom,
+    decor,
     lazy: /** @type {*} */ (null), // Overwritten below
 
     // We'll overwrite this 
