@@ -173,11 +173,17 @@ export async function createGeomorphData(input) {
       }
     }
     if (single.tags.includes('decor')) {
+      /**
+       * - `point`: itself
+       * - `circle`: center
+       * - angled `rect`: center
+       *   > not the point we'll rotate about.
+       * - `path`: unsupported
+       */
       const p = single.poly.center;
-      // 🚧 permit multiple rooms
       const roomId = layout.rooms.findIndex(x => x.contains(p));
-      if (roomId >= 0) {
-        decor[roomId].push(singleToDecor(single, i));
+      if (roomId >= 0) {// ℹ️ we restrict each decor to a single room
+        decor[roomId].push(singleToDecor(single, i, { roomId }));
       } else {
         console.warn(`decor (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
       }

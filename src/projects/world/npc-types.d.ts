@@ -285,6 +285,7 @@ declare namespace NPC {
 
   interface BaseDecor {
     key: string;
+    meta: Geomorph.PointMeta;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
     /** Those [gmId, roomId] this decor intersects */
@@ -293,7 +294,6 @@ declare namespace NPC {
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
-    meta: Geomorph.PointMeta;
     /**
      * 🚧 remove
      * Derived from @see {meta} i.e. `key` s.t. `meta[key] === true`
@@ -333,6 +333,8 @@ declare namespace NPC {
     | DecorPoint
     | DecorRect
   );
+
+  export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;
   
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (

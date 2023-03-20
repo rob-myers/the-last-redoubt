@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
-import { assertNonNull } from './generic';
+import { assertDefined, assertNonNull, testNever } from './generic';
 import { error, warn } from './log';
 import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
@@ -1018,22 +1018,67 @@ export function decodeDecorInstanceKey(decorKey) {
 }
 
 /**
+ * Ensure decor.meta.{gmId,roomId} (possibly null)
+ * @param {NPC.DecorSansPath} decor
+ * @param {import('../world/World').State} api
+ * @returns {NPC.DecorSansPath}
+ */
+export function ensureDecorMetaGmRoomId(decor, api) {
+  if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
+    const decorCenter = getDecorCenter(decor);
+    const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
+    decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter);
+    decor.meta.roomId = (gmRoomId?.roomId) ?? null;
+  }
+  return decor;
+}
+
+/**
+ * @param {NPC.DecorRect} decor
+ * @returns {NPC.DecorRect}
+ */
+export function extendDecorRect(decor) {
+  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
+  decor.derivedPoly = poly;
+  decor.derivedRect = poly.rect;
+  return decor;
+}
+
+/**
+ * 
+ * @param {NPC.DecorSansPath} decor 
+ * @returns {Geom.VectJson}
+ */
+export function getDecorCenter(decor) {
+  switch (decor.type) {
+    case 'circle': return decor.center;
+    case 'point': return decor;
+    case 'rect': {
+      if (!decor.derivedPoly) extendDecorRect(decor);
+      return assertDefined(decor.derivedPoly).center;
+    }
+    default: throw testNever(decor);
+  }
+}
+
+/**
  * @param {Geomorph.SvgGroupsSingle<Poly>} svgSingle
  * @param {number} singleIndex
- * @returns {Exclude<NPC.DecorDef, NPC.DecorPath>}
+ * @param {Geomorph.PointMeta} baseMeta
+ * @returns {NPC.DecorSansPath}
  */
-export function singleToDecor(svgSingle, singleIndex) {
+export function singleToDecor(svgSingle, singleIndex, baseMeta) {
   const p = svgSingle.poly.center;
   const origPoly = svgSingle.poly;
-  // 🚧 meta.roomIds
-  const meta = tagsToMeta(svgSingle.tags, {});
+  const meta = tagsToMeta(svgSingle.tags, baseMeta);
 
   if (meta.rect) {
     const { baseRect, angle } = geom.polyToAngledRect(origPoly);
     return {
+      type: 'rect',
       // ℹ️ key will be overridden upon instantiation
       key: getDecorInstanceKey(-1, -1, singleIndex),
-      type: 'rect',
+      meta,
       x: baseRect.x,
       y: baseRect.y,
       width: baseRect.width,
@@ -1046,18 +1091,19 @@ export function singleToDecor(svgSingle, singleIndex) {
   } else if (meta.circle) {
     const { center, width } = origPoly.rect;
     return {
-      key: getDecorInstanceKey(-1, -1, singleIndex),
       type: 'circle',
+      key: getDecorInstanceKey(-1, -1, singleIndex),
+      meta,
       center,
       radius: width / 2,
     };
   } else {// Assume point (we do not support DecorPath)
     return {
-      key: getDecorInstanceKey(-1, -1, singleIndex),
       type: 'point',
+      key: getDecorInstanceKey(-1, -1, singleIndex),
+      meta,
       x: p.x,
       y: p.y,
-      meta,
       tags: svgSingle.tags.slice(),
     };
   }

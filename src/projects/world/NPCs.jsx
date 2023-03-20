@@ -124,11 +124,10 @@ export default function NPCs(props) {
       }
     },
     getGlobalNavPath(src, dst) {
-      const {gms} = api.gmGraph
-      const srcGmId = gms.findIndex(x => x.gridRect.contains(src));
-      const dstGmId = gms.findIndex(x => x.gridRect.contains(dst));
+      const srcGmId = api.gmGraph.findGeomorphIdContaining(src);
+      const dstGmId = api.gmGraph.findGeomorphIdContaining(dst);
 
-      if (srcGmId === -1 || dstGmId === -1) {
+      if (srcGmId === null || dstGmId === null) {
         throw Error(`getGlobalNavPath: src/dst must be inside some geomorph's aabb`)
       } else if (srcGmId === dstGmId) {
         const localNavPath = state.getLocalNavPath(srcGmId, src, dst);
@@ -254,7 +253,7 @@ export default function NPCs(props) {
       }
       const result = state.getGlobalNavPath(position, e.point);
       // Always show path
-      api.decor.setDecor({ key: `${e.npcKey}-navpath`, type: 'path', path: result.fullPath });
+      api.decor.setDecor({ type: 'path', key: `${e.npcKey}-navpath`, meta: { /** 🚧 */ }, path: result.fullPath });
       return result;
     },
     getNpcInteractRadius() {
@@ -305,11 +304,14 @@ export default function NPCs(props) {
       };
     },
     isPointInNavmesh(p) {
-      const gmId = api.gmGraph.gms.findIndex(x => x.gridRect.contains(p));
-      if (gmId === -1) return false;
-      const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
-      const localPoint = inverseMatrix.transformPoint(Vect.from(p));
-      return navPoly.some(poly => poly.contains(localPoint));
+      const gmId = api.gmGraph.findGeomorphIdContaining(p);
+      if (gmId !== null) {
+        const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
+        const localPoint = inverseMatrix.transformPoint(Vect.from(p));
+        return navPoly.some(poly => poly.contains(localPoint));
+      } else {
+        return false;
+      }
     },
     async npcAct(e) {
       switch (e.action) {
@@ -392,7 +394,7 @@ export default function NPCs(props) {
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
       const npcPosition = npc.getPosition();
-      const gm = assertDefined(api.gmGraph.gms.find(x => x.gridRect.contains(e.point)));
+      const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
       const meta = npcService.extendDecorMeta(e.meta, gm.matrix);
 
       try {
@@ -561,14 +563,29 @@ export default function NPCs(props) {
               // 🚧 better way of computing transformed angledRect?
               const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
               const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
-              // Must override key, now we know gmId
-              return { ...d, ...baseRect, key: decorKeys[decorId], angle, };
+              return {
+                ...d,
+                ...baseRect,
+                key: decorKeys[decorId], // Must override key, now we know gmId
+                angle,
+                meta: {...d.meta}, // Shallow clone
+              };
             }
             if (d.type === 'circle') {
-              return { ...d, key: decorKeys[decorId], center: matrix.transformPoint({ ...d.center }) }
+              return {
+                ...d,
+                key: decorKeys[decorId],
+                center: matrix.transformPoint({ ...d.center }),
+                meta: {...d.meta},
+              };
             }
             // NPC.DecorPoint
-            return { ...d, key: decorKeys[decorId], ...matrix.transformPoint({ x: d.x, y: d.y }) };
+            return {
+              ...d,
+              key: decorKeys[decorId],
+              ...matrix.transformPoint({ x: d.x, y: d.y }),
+              meta: {...d.meta},
+            };
           }),
         });
       }

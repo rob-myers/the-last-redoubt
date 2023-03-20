@@ -161,9 +161,10 @@ declare namespace Geomorph {
 
     /**
      * Decor point/circle/rects indexed by `roomId`.
-     * ℹ️ a decor may occur in multiple rooms
+     * - a decor occurs in exactly one room
+     * - these decors will be instantiated in api.npcs.updateLocalDecor
      */
-    decor: Exclude<NPC.DecorDef, NPC.DecorPath>[][];
+    decor: NPC.DecorSansPath[][];
 
     /** Proxy for lazy cached data */
     lazy: {
@@ -190,7 +191,13 @@ declare namespace Geomorph {
     roomId: number;
   }
 
-  export type PointMeta = Record<string, string | boolean | number | Geom.VectJson>;
+  export type PointMeta = Record<string, (
+    | string
+    | boolean
+    | number
+    | Geom.VectJson
+    | null
+  )>;
 
   export interface UseGeomorphsDefItem {
     layoutKey: LayoutKey;

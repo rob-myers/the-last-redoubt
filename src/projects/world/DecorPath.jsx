@@ -21,6 +21,7 @@ export default function DecorPath({ decor }) {
       // Remount clears user-specified `el.style.transform`
       key={decor.updatedAt}
       data-key={decor.key}
+      data-meta={JSON.stringify(decor.meta)}
       className={cx(cssName.decorPath, cssPath)}
     >
       {decorPath.map((p, i) =>

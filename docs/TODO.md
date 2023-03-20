@@ -2,31 +2,19 @@
 
 ## In progress
 
-- ✅ BUG: chrome: cursor over decor _circle_ or _rect_
-  - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
-  - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
-  - ℹ️ works in firefox
-  - ❌ try nested div
-  - ❌ try width=height=scale instead of `... scale(x)`
-  - ✅ use left, top, width, height
-- 🚧 can represent decor circle/rect in svg symbols
-  - ✅ points identified via tag decor
-  - ✅ gm.point.decor retains origPoly (to infer rect/circle)
-  - ✅ rects identified via tags decor, rect
-  - ✅ circles identified via tags decor, circle
-  - ✅ gm.point.decor -> gm.decor?
-  - ✅ retype gm.point.decor as `DecorDef`s
-  - 🚧 gm.decor.meta.roomIds
-- 🚧 svg decor have meta, including roomId
-- 🚧 more examples
-- 🚧 instantiated decor meta has gmRoomIds
+- ✅ svg decor have meta
+- ❌ gm.decor.meta.roomIds
+- ✅ restrict decor to a single room
+  - gets too complex otherwise
+  - can use multiple for e.g. "nearby door"
+- ✅ instantiated decor organised by decor.byGmRoomId
 - 🚧 decor circle collisions
   - ✅ triggered by npc walk (without optimize)
   - ✅ restrict npc circle to center
   - ✅ local navPath provides roomIds aligned to fullPath
   - ✅ global navPath provides gmRoomIds aligned to fullPath
-  - 🚧 decor organised by gmRoomId
-  - restrict collisions by roomId
+  - ✅ decor organised by gmRoomId
+  - 🚧 restrict collisions by gmRoomId
   - adds wayMeta/event
 - 🚧 decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center
@@ -35,6 +23,7 @@
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
+- BUG move/resize circle decor all at once?
 - BUG should not be able to open door through wall (e.g. toilet stateroom 12)
 - BUG should not be able to spawn under door (from offmesh)
 - clean initial `console.warn`s
@@ -419,6 +408,21 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ BUG: chrome: cursor over decor _circle_ or _rect_
+  - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
+  - `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
+  - ℹ️ works in firefox
+  - ❌ try nested div
+  - ❌ try width=height=scale instead of `... scale(x)`
+  - ✅ use left, top, width, height
+- ✅ can represent decor circle/rect in svg symbols
+  - ✅ points identified via tag decor
+  - ✅ gm.point.decor retains origPoly (to infer rect/circle)
+  - ✅ rects identified via tags decor, rect
+  - ✅ circles identified via tags decor, circle
+  - ✅ gm.point.decor -> gm.decor?
+  - ✅ retype gm.point.decor as `DecorDef`s
 
 - ✅ can click `label` points and walk to them
   - fixed via new tag `go` (ui points can be `do` or `go`)

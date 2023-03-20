@@ -75,17 +75,6 @@ export function extendDecorMeta(meta, gmMatrix) {
   return Object.assign(meta, extension);
 }
 
-/**
- * @param {NPC.DecorRect} decor
- * @returns {NPC.DecorRect}
- */
-export function extendDecorRect(decor) {
-  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
-  decor.derivedPoly = poly;
-  decor.derivedRect = poly.rect;
-  return decor;
-}
-
 /** @type {Record<NPC.NpcActionKey, true>} */
 const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 

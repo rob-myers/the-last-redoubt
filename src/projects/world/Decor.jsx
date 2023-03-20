@@ -1,11 +1,11 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
-import { Poly } from "../geom/poly";
 import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import * as npcService from "../service/npc";
+import { ensureDecorMetaGmRoomId, extendDecorRect } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -81,7 +81,7 @@ export default function Decor(props) {
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
-              npcService.extendDecorRect(decor);
+              extendDecorRect(decor);
               update();
             }
           }
@@ -90,10 +90,10 @@ export default function Decor(props) {
     },
 
     removeDecor(...decorKeys) {
-      const decors = decorKeys.map(decorKey => api.decor.decor[decorKey]).filter(Boolean);
+      const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
       decors.forEach(decor => {
-        delete api.decor.decor[decor.key];
-        decor.gmRoomIds?.forEach(([gmId, roomId]) => delete state.byGmRoomId[gmId]?.[roomId]);
+        delete state.decor[decor.key];
+        delete state.byGmRoomId[/** @type {number} */ (decor.meta.gmId)]?.[/** @type {number} */ (decor.meta.roomId)]?.[decor.key];
       });
       api.npcs.events.next({ key: 'decors-removed', decors });
       update();
@@ -103,14 +103,14 @@ export default function Decor(props) {
         if (!d || !npcService.verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
         }
-        if (api.decor.decor[d.key]) {
+        if (state.decor[d.key]) {
           d.updatedAt = Date.now();
         }
-        /**
-         * 🚧 build byGmRoomId using precomputed meta.gmRoomIds.
-         */
 
         switch (d.type) {
+          case 'circle':
+            ensureDecorMetaGmRoomId(d, api);
+            break;
           case 'path':
             // Handle clones
             delete d.origPath;
@@ -118,14 +118,20 @@ export default function Decor(props) {
           case 'point':
             // Ensure tags and meta extending tags
             (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
+            ensureDecorMetaGmRoomId(d, api);
             break;
-          case 'rect': {
-            // Add derived data
-            npcService.extendDecorRect(d);
+          case 'rect':
+            extendDecorRect(d); // Add derived data
+            ensureDecorMetaGmRoomId(d, api);
             break;
-          }
         }
-        api.decor.decor[d.key] = d;
+
+        if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') {
+          // build byGmRoomId using precomputed meta.{gmId,roomId}
+          ((state.byGmRoomId[d.meta.gmId] ||= {})[d.meta.roomId] ||= {})[d.key] = true;
+        }
+
+        state.decor[d.key] = d;
       }
       api.npcs.events.next({ key: 'decors-added', decors: decor });
       update();
@@ -177,8 +183,7 @@ export default function Decor(props) {
               <div
                 key={key}
                 data-key={item.key}
-                // 🚧 item.meta
-                data-meta={JSON.stringify({ 'decor-circle': true })}
+                data-meta={JSON.stringify(item.meta)}
                 className={cx(cssName.decorCircle, cssCircle)}
                 style={{
                   left,
@@ -218,8 +223,7 @@ export default function Decor(props) {
               <div
                 key={key}
                 data-key={item.key}
-                // 🚧 item.meta
-                data-meta={JSON.stringify({ 'decor-rect': true })}
+                data-meta={JSON.stringify(item.meta)}
                 className={cx(cssName.decorRect, cssRect)}
                 style={{
                   left,
@@ -339,7 +343,7 @@ const cssRect = css`
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {HTMLElement} decorEl
- * @property {Record<number, string[]>[]} byGmRoomId
+ * @property {Record<number, { [decorKey: string]: true }>[]} byGmRoomId
  * - `lookup[gmId][roomId]` provides decor keys.
  * - the inverse relation is available via BaseDecor gmRoomIds.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit

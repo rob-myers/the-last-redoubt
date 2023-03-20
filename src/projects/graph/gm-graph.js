@@ -268,14 +268,32 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * @param {Geom.VectJson} point
+   * @returns {null | Geomorph.GeomorphDataInstance} gmId
+   */
+  findGeomorphContaining(point) {
+      return this.gms.find(x => x.gridRect.contains(point)) ?? null;
+  }
+
+  /**
+   * @param {Geom.VectJson} point
+   * @returns {null | number} gmId
+   */
+  findGeomorphIdContaining(point) {
+      const gmId = this.gms.findIndex(x => x.gridRect.contains(point));
+      return gmId === -1 ? null : gmId;
+  }
+
+  /**
    * Find geomorph edge path using simplistic global nav strategy.
    * @param {Geom.VectJson} src
    * @param {Geom.VectJson} dst 
    */
   findPath(src, dst) {
-    const srcGmId = this.gms.findIndex(x => x.gridRect.contains(src));
-    const dstGmId = this.gms.findIndex(x => x.gridRect.contains(dst));
-    if (srcGmId === -1 || dstGmId === -1) {
+    ;
+    const srcGmId = this.findGeomorphIdContaining(src);
+    const dstGmId = this.findGeomorphIdContaining(dst);
+    if (srcGmId === null || dstGmId === null) {
       return null;
     }
     
@@ -345,8 +363,8 @@ export class gmGraphClass extends BaseGraph {
    * @returns {null | Geomorph.GmRoomId}
    */
   findRoomContaining(point) {
-    const gmId = this.gms.findIndex(gm => gm.gridRect.contains(point));
-    if (gmId >= 0) {
+    const gmId = this.findGeomorphIdContaining(point);
+    if (gmId !== null) {
       const gm = this.gms[gmId];
       const roomId = findLocalRoomContaining(gm.rooms, gm.inverseMatrix.transformPoint(Vect.from(point)));
       if (roomId >= 0) {
@@ -396,8 +414,8 @@ export class gmGraphClass extends BaseGraph {
    * @returns {Geom.ClosestOnOutlineResult | null}
    */
   getClosePoint(position) {
-    const gmId = this.gms.findIndex(gm => gm.gridRect.contains(position));
-    if (gmId >= 0) {
+    const gmId = this.findGeomorphIdContaining(position);
+    if (gmId !== null) {
       const gm = this.gms[gmId];
       const floorGraph = gm.floorGraph;
       gm.inverseMatrix.transformPoint(position = { x: position.x, y: position.y });
