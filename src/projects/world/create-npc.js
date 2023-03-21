@@ -28,7 +28,17 @@ export default function createNpc(
       // 🚧 can specify character class
       css: css`${npcsMeta['first-human-npc'].css}`,
       path: [],
-      aux: { angs: [], bounds: new Rect, edges: [], elens: [], navPathPolys: [], sofars: [], total: 0, index: 0, segBounds: new Rect },
+      aux: {
+        angs: [],
+        bounds: new Rect,
+        edges: [],
+        elens: [],
+        index: 0,
+        navPathPolys: [],
+        segBounds: new Rect,
+        sofars: [],
+        total: 0,
+      },
       spriteSheet: 'idle',
       staticBounds: new Rect,
 
@@ -38,6 +48,7 @@ export default function createNpc(
       sprites: new Animation(),
       durationMs: 0,
   
+      gmRoomIds: [],
       wayMetas: [],
       wayTimeoutId: 0,
     },
@@ -132,6 +143,8 @@ export default function createNpc(
     },
     async followNavPath(path, opts) {
       this.anim.path = path.map(Vect.from);
+      // `nav` provides gmRoomIds (needed for npc to collide with decor)
+      this.anim.gmRoomIds = opts?.gmRoomIds ?? [];
       this.clearWayMetas();
       this.updateAnimAux();
       if (this.anim.path.length <= 1 || this.anim.aux.total === 0) {

@@ -290,7 +290,6 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geom.VectJson} dst 
    */
   findPath(src, dst) {
-    ;
     const srcGmId = this.findGeomorphIdContaining(src);
     const dstGmId = this.findGeomorphIdContaining(dst);
     if (srcGmId === null || dstGmId === null) {

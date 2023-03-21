@@ -672,7 +672,10 @@ export default function NPCs(props) {
         const globalNavPath = e;
         const allPoints = globalNavPath.fullPath;
         // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
-        await npc.followNavPath(allPoints, { globalNavMetas: globalNavPath.navMetas });
+        await npc.followNavPath(allPoints, {
+          globalNavMetas: globalNavPath.navMetas,
+          gmRoomIds: globalNavPath.gmRoomIds,
+        });
 
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {

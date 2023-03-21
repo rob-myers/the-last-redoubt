@@ -14,7 +14,10 @@
   - ✅ local navPath provides roomIds aligned to fullPath
   - ✅ global navPath provides gmRoomIds aligned to fullPath
   - ✅ decor organised by gmRoomId
-  - 🚧 restrict collisions by gmRoomId
+  - ✅ restrict collisions by gmRoomId
+    - store globalNavPath.gmRoomIds in npc.anim.aux
+    - using navPath.gmRoomIds and api.decor.byGmRoomId
+  - 🚧 shallow api.decor.byGmRoomId?
   - adds wayMeta/event
 - 🚧 decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center

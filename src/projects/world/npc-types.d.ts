@@ -54,7 +54,10 @@ declare namespace NPC {
     everAnimated(): boolean;
     followNavPath(
       path: Geom.VectJson[],
-      opts?: { globalNavMetas?: NPC.GlobalNavMeta[]; },
+      opts: {
+        globalNavMetas?: NPC.GlobalNavMeta[];
+        gmRoomIds?: [number, number][];
+      },
     ): Promise<void>;
     /** Radians */
     getAngle(): number;
@@ -125,12 +128,12 @@ declare namespace NPC {
       bounds: Geom.Rect;
       edges: ({ p: Geom.Vect; q: Geom.Vect })[];
       elens: number[];
+      /** Last index seen of path */
+      index: number;
       /** Outset version of `origPath` to detect progress on pause */
       navPathPolys: Geom.Poly[];
       sofars: number[];
       total: number;
-      /** Last index seen of path */
-      index: number;
       segBounds: Geom.Rect;
     };
     /** Bounds when stationary */
@@ -143,6 +146,8 @@ declare namespace NPC {
     sprites: Animation;
     durationMs: number;
 
+    /** Aligned to `path` */
+    gmRoomIds: [number, number][];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
