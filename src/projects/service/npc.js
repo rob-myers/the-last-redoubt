@@ -338,7 +338,7 @@ export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
   if (vs.length < 3) {
     return { collisions: [], startInside: false };
   }
-  if (!npcA.isWalking()) {
+  if (!npcA.getTarget()) {// Not walking or at final point
     return { collisions: [], startInside: geom.outlineContains(vs, npcA.getPosition(), null) };
   }
   if (!npcA.getWalkSegBounds().intersects(rect)) {
@@ -350,19 +350,21 @@ export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
   const startInside = geom.outlineContains(vs, segA.src, null);
 
   vs.push(vs[0]);
-  // 🚧 avoid checking every segment e.g. only need to check two for angled rects
-  const times = vs.reduce((agg, p, i) => {
+  // 🚧 avoid checking every segment
+  const distances = vs.reduce((agg, p, i) => {
     if (vs[i + 1]) {
-      const time = geom.getLineSegsIntersection(segA.src, segA.dst, p, vs[i + 1]);
-      (time !== null) && agg.push(time);
+      /** λ ∊ [0, 1] of `segA.dst - segA.src` */
+      const scaleFactor = geom.getLineSegsIntersection(segA.src, segA.dst, p, vs[i + 1]);
+      (scaleFactor !== null) && agg.push(scaleFactor * segA.src.distanceTo(segA.dst));
     }
     return agg;
   }, /** @type {number[]} */ ([]));
   vs.pop();
-  times.sort((a, b) => a < b ? -1 : 1);
+
+  distances.sort((a, b) => a < b ? -1 : 1);
 
   return {
-    collisions: times.map(t => ({ seconds: t, distA: t * speedA, distB: 0 })),
+    collisions: distances.map(distance => ({ seconds: distance / speedA, distA: distance, distB: 0 })),
     startInside,
   };
 }
