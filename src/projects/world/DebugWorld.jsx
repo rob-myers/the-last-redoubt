@@ -23,7 +23,8 @@ export default function DebugWorld(props) {
       const gm = gmGraph.gms[gmId];
       const visDoorIds = props.api.doors.getVisible(gmId);
       const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-      const roomNavAabb = roomNavPoly.rect.outset(wallOutset); // Outset for door lines
+      /** Outset for door lines (? it fixed something) */
+      const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset); // 
       const roomAabb = gm.rooms[roomId].rect;
       const roomPoly = gm.rooms[roomId];
       const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
@@ -32,7 +33,7 @@ export default function DebugWorld(props) {
         gm,
         visDoorIds,
         roomNavPoly,
-        roomNavAabb,
+        outsetRoomNavAabb,
         roomAabb,
         roomPoly,
         roomLabel,
@@ -124,15 +125,15 @@ export default function DebugWorld(props) {
         >
 
           <svg className="debug-room-nav"
-            width={ctxt.roomNavAabb.width}
-            height={ctxt.roomNavAabb.height}
+            width={ctxt.outsetRoomNavAabb.width}
+            height={ctxt.outsetRoomNavAabb.height}
             style={{
-              left: ctxt.roomNavAabb.x,
-              top: ctxt.roomNavAabb.y,
+              left: ctxt.outsetRoomNavAabb.x,
+              top: ctxt.outsetRoomNavAabb.y,
               ...props.localNav === true && { display: 'initial' },// Prop overrides CSS var
             }}
           >
-            <g style={{ transform: `translate(${-ctxt.roomNavAabb.x}px, ${-ctxt.roomNavAabb.y}px)` }}>
+            <g style={{ transform: `translate(${-ctxt.outsetRoomNavAabb.x}px, ${-ctxt.outsetRoomNavAabb.y}px)` }}>
               <path className="nav-poly" d={ctxt.roomNavPoly.svgPath} />
               {ctxt.visDoorIds.map(doorId => {
                 const { seg: [src, dst] } = ctxt.gm.doors[doorId];
@@ -155,7 +156,7 @@ export default function DebugWorld(props) {
             </g>
           </svg>
 
-          {/* Arrows and room/door ids */}
+          {/* Arrows, room ids, door ids */}
           {ctxt.visDoorIds.map(doorId => {
             const { poly, normal, roomIds } = ctxt.gm.doors[doorId];
             const sign = roomIds[0] === roomId ? 1 : -1;
@@ -197,8 +198,8 @@ export default function DebugWorld(props) {
           <div
             className="debug-room-id-icon"
             style={{
-              left: ctxt.roomNavAabb.x + ctxt.roomNavAabb.width - 35,
-              top: ctxt.roomNavAabb.y + 25,
+              left: ctxt.roomAabb.x + ctxt.roomAabb.width - 8,
+              top: ctxt.roomAabb.y + 4,
               ...props.showIds === true && { display: 'initial' },
               transform: ctxt.undoNonAffineStyle,
             }}
@@ -250,7 +251,7 @@ export default function DebugWorld(props) {
  */
 
 // 🚧 move to const
-const debugRadius = 5;
+const debugRadius = 4;
 const debugDoorOffset = 10;
 
 const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
