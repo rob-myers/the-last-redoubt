@@ -579,6 +579,7 @@ const navMetaOffsets = {
   'enter-room': -0.02, // To ensure triggered
   'exit-room': -0.02, // To ensure triggered
   'pre-collide': -0.02, // To ensure triggered
+  'decor-collide': 0,
 
   /**
    * 🚧 compute collision time using `predictNpcRectCollision`

@@ -1,5 +1,5 @@
 import React from "react";
-import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
+import { assertDefined, removeDups, testNever, visibleUnicodeLength } from "../service/generic";
 import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { ansiColor } from "../sh/util";
@@ -10,72 +10,86 @@ import useStateRef from "../hooks/use-state-ref";
  */
 export default function useHandleEvents(api) {
 
-  /**
-   * @param {string} npcKey
-   * @param {string} otherNpcKey
-   */
-  async function handleNpcCollision(npcKey, otherNpcKey) {
-    const npc = api.npcs.getNpc(npcKey);
-    const other = api.npcs.getNpc(otherNpcKey);
-    await Promise.all([npc.cancel(), other.cancel()]);
-  }
-
   const state = useStateRef(/** @type {() => State} */ () => ({
+
+    handleNpcDecorCollision(npc, e) {
+      // Restrict to decor in line segment's rooms (1 or 2 rooms)
+      const gmRoomKeys = removeDups(npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1));
+      const decors = gmRoomKeys.reduce((agg, gmRoomKey) => agg.concat(
+        Object.keys(api.decor.byGmRoomKey[gmRoomKey] || {})
+          .map(decorKey => api.decor.decor[decorKey])
+          .filter(/** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
+            decor => decor.type === 'circle' || decor.type === 'rect'
+          )
+      ), /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ ([]));
+
+      for (const decor of decors) {
+        const {collisions, startInside} = decor.type === 'circle'
+          ? npcService.predictNpcCircleCollision(npc, decor)
+          : npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
+
+        if (collisions.length || startInside) {// 🚧 debug
+          console.warn(`${npc.key} collide decor ${decor.type} ${decor.key}`, startInside, collisions);
+        }
+        
+        collisions.forEach((collision, collisionIndex) => {
+          const length = e.meta.length + collision.distA;
+          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
+          npc.anim.wayMetas.splice(insertIndex, 0, {
+            key: 'decor-collide',
+            index: e.meta.index,
+            decorKey: decor.key,
+            type: startInside
+              ? collisionIndex === 0 ? 'exit' : 'enter'
+              : collisionIndex === 0 ? 'enter' : 'exit',
+            gmId: e.meta.gmId,
+            length,
+          });
+        });
+        startInside && npc.anim.wayMetas.unshift({
+          key: 'decor-collide',
+          index: e.meta.index,
+          decorKey: decor.key,
+          type: 'start-inside',
+          gmId: e.meta.gmId,
+          length: e.meta.length,
+        });
+        console.log('wayMetas', npc.anim.wayMetas.slice())
+      }
+    },
+
+    handleNpcNpcsCollision(npc, e) {
+      // 🚧 one npc should be the player (?)
+      const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
+      for (const other of otherNpcs) {
+        const collision = npcService.predictNpcNpcCollision(npc, other);
+        if (collision) {// Add wayMeta cancelling motion
+          console.warn(`${npc.key} will collide with ${other.key}`, collision);
+          const length = e.meta.length + collision.distA;
+          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
+          npc.anim.wayMetas.splice(insertIndex, 0, {
+            key: 'pre-collide',
+            index: e.meta.index,
+            otherNpcKey: other.key,
+            gmId: e.meta.gmId,
+            length,
+          });
+        }
+      }
+    },
 
     async handleWayEvents(e) {
       const npc = api.npcs.getNpc(e.npcKey);
 
       switch (e.meta.key) {
         case 'pre-collide':
-          handleNpcCollision(e.npcKey, e.meta.otherNpcKey);
+          cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'start-seg': {
           // We know `npc` is walking
           npc.updateWalkSegBounds(e.meta.index);
-
-          // ℹ️ Handle npc vs npc collisions
-          // 🚧 possibly restrict to case where one npc is the player
-          const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
-          for (const other of otherNpcs) {
-            const collision = npcService.predictNpcNpcCollision(npc, other);
-            if (collision) {// Add wayMeta cancelling motion
-              console.warn(`${npc.key} will collide with ${other.key}`, collision);
-              const length = e.meta.length + collision.distA;
-              const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
-              npc.anim.wayMetas.splice(insertIndex, 0, {
-                key: 'pre-collide',
-                index: e.meta.index,
-                otherNpcKey: other.key,
-                gmId: e.meta.gmId,
-                length,
-              });
-            }
-          }
-
-          // 🚧 Handle npc vs decor collisions
-          // 🚧 will add wayMeta which sends event?
-          
-          // Restrict decor using npc.anim.gmRoomKeys
-          const gmRoomKeys = npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1);
-          const decors = gmRoomKeys.reduce((agg, gmRoomKey) => agg.concat(
-            Object.keys(api.decor.byGmRoomKey[gmRoomKey] || {}).map(decorKey => api.decor.decor[decorKey])
-          ), /** @type {NPC.DecorDef[]} */ ([]));
-
-          for (const decor of decors) {
-            if (decor.type === 'circle') {
-              const {collisions, startInside} = npcService.predictNpcCircleCollision(npc, decor);
-              if (collisions.length || startInside) {
-                console.warn(`${npc.key} collide decor circle ${decor.key}`, startInside, collisions);
-                // 🚧
-              }
-            } else if (decor.type === 'rect') {
-              const {collisions, startInside} = npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
-              if (collisions.length || startInside) {
-                console.warn(`${npc.key} collide decor rect ${decor.key}`, startInside, collisions);
-                // 🚧
-              }
-            }
-          }
+          state.handleNpcNpcsCollision(npc, e);
+          state.handleNpcDecorCollision(npc, e);
           break;
         }
         case 'pre-exit-room':
@@ -110,6 +124,7 @@ export default function useHandleEvents(api) {
           // api.updateAll();
           break;
         }
+        case 'decor-collide':
         case 'pre-exit-room':
         case 'pre-near-door':
         case 'start-seg':
@@ -127,7 +142,7 @@ export default function useHandleEvents(api) {
   //#region handle door/npc events
   React.useEffect(() => {
 
-    if (!(api.gmGraph.gms.length && api.doors.ready && api.npcs.ready)) {
+    if (!(api.gmGraph.ready && api.doors.ready && api.npcs.ready)) {
       return;
     }
 
@@ -157,7 +172,7 @@ export default function useHandleEvents(api) {
         case 'decors-removed':
           break;
         case 'decor-click':
-          demoHandleDecorClick(e, api);
+          mockHandleDecorClick(e, api);
           break;
         case 'disabled':
         case 'enabled':
@@ -167,7 +182,7 @@ export default function useHandleEvents(api) {
           api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
           break;
         case 'on-tty-link':
-          demoOnTtyLink(e, api);
+          mockOnTtyLink(e, api);
           break;
         case 'set-player':
           api.npcs.playerKey = e.npcKey || null;
@@ -205,7 +220,7 @@ export default function useHandleEvents(api) {
             Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
               const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
               if (collision) {
-                setTimeout(() => handleNpcCollision(npc.key, playerNpc.key), collision.seconds * 1000);
+                setTimeout(() => cancelNpcs(npc.key, playerNpc.key), collision.seconds * 1000);
               }
             });
           } else if (playerNpc.isWalking()) {
@@ -213,7 +228,7 @@ export default function useHandleEvents(api) {
             const npc = api.npcs.getNpc(e.npcKey);
             const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
             if (collision) {
-              setTimeout(() => handleNpcCollision(playerNpc.key, npc.key), collision.seconds * 1000);
+              setTimeout(() => cancelNpcs(playerNpc.key, npc.key), collision.seconds * 1000);
             }
           }
           break;
@@ -247,33 +262,37 @@ export default function useHandleEvents(api) {
       }
     });
 
-    api.fov.updateClipPath();
-    api.update();
-
     return () => {
       doorsSub.unsubscribe();
       npcsSub.unsubscribe();
       panZoomSub.unsubscribe();
     };
 
-  }, [api.gmGraph.gms, api.doors.ready, api.npcs.ready]);
+  }, [api.gmGraph.ready, api.doors.ready, api.npcs.ready]);
   //#endregion
+
+  /** @param {...string} npcKeys */
+  async function cancelNpcs(...npcKeys) {
+    await Promise.all(npcKeys.map(key => api.npcs.getNpc(key).cancel()));
+  }
 
 }
 
 /**
  * @typedef State @type {object}
+ * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} handleNpcDecorCollision
+ * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} handleNpcNpcsCollision
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */
 
 
 /**
- * ℹ️ Demo: should probably be replaced by shell function(s)
+ * 🚧 mock
  * @param  {NPC.NPCsEvent & { key: 'decor-click' }} event
  * @param  {import('./World').State} api
  */
-function demoHandleDecorClick(event, api) {
+function mockHandleDecorClick(event, api) {
   const decor = event.decor;
   if (decor.type === 'point') {
     if (decor.tags?.includes('label')) {
@@ -299,10 +318,11 @@ function demoHandleDecorClick(event, api) {
 }
 
 /**
+ * 🚧 mock
  * @param {NPC.NPCsEvent & { key: 'on-tty-link' }} event
  * @param  {import('./World').State} api
  */
-function demoOnTtyLink(event, api) {
+function mockOnTtyLink(event, api) {
   const ttyCtxt = event.ttyCtxt;
   if (ttyCtxt.key === 'room') {
     const gm = api.gmGraph.gms[ttyCtxt.gmId];

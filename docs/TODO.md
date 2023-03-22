@@ -18,11 +18,12 @@
     - store globalNavPath.gmRoomIds in npc.anim.aux
     - using navPath.gmRoomIds and api.decor.byGmRoomId
   - ✅ shallow api.decor.byGmRoomKey
-  - 🚧 add wayMeta/event
+  - ✅ decor circle/rect collision induces wayMeta/event
+- restyle decor circle/rect
 - 🚧 decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center
   - ✅ simplified approach (test all segs)
-  - 🚧 restrict by roomId
+  - improved approach?
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
