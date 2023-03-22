@@ -337,6 +337,31 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
 }
 
 /**
+ * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {Geom.VectJson} viewPos local position inside geomorph
+ * @returns {[Geom.Vect, Geom.Vect]}
+ */
+export function getConnectorOtherSide(connector, viewPos) {
+  const { baseRect, normal, seg } = connector;
+  const dim = Math.min(baseRect.width, baseRect.height);
+  const sign = Vect.from(seg[0]).sub(viewPos).dot(normal) >= 0 ? 1 : -1
+  // 🚧 0.5 ensures we at least "close the outline"
+  const delta = (sign * dim/2) * 0.5;
+  return [
+    seg[0].clone().addScaledVector(normal, delta),
+    seg[1].clone().addScaledVector(normal, delta)
+  ];
+}
+
+/**
+ * @param {number} gmId 
+ * @param {number} roomId 
+ */
+export function getGmRoomKey(gmId, roomId) {
+  return `g${gmId}-r${roomId}`;
+}
+
+/**
  * Hull door polys are outset along entry to e.g. ensure they intersect room.
  * @param {Geomorph.ParsedConnectorRect[]} doors
  * @returns {Geom.Poly[]}
@@ -347,6 +372,14 @@ export function getNormalizedDoorPolys(doors) {
   );
 }
 
+/**
+ * Returns -1 if no unseen room id found.
+ * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {number[]} seenRoomIds could be frontier array of bfs
+ */
+export function getUnseenConnectorRoomId(connector, seenRoomIds) {
+  return connector.roomIds.find(id => id !== null && !seenRoomIds.includes(id)) ?? -1;
+}
 
 /**
  * @param {string[]} tags 
@@ -377,32 +410,6 @@ function outsetConnectorEntry(connector, amount) {
     v.clone().addScaledVector(normal, halfHeight),
     u.clone().addScaledVector(normal, halfHeight),
   ]);
-}
-
-/**
- * @param {Geomorph.ParsedConnectorRect} connector
- * @param {Geom.VectJson} viewPos local position inside geomorph
- * @returns {[Geom.Vect, Geom.Vect]}
- */
-export function getConnectorOtherSide(connector, viewPos) {
-  const { baseRect, normal, seg } = connector;
-  const dim = Math.min(baseRect.width, baseRect.height);
-  const sign = Vect.from(seg[0]).sub(viewPos).dot(normal) >= 0 ? 1 : -1
-  // 🚧 0.5 ensures we at least "close the outline"
-  const delta = (sign * dim/2) * 0.5;
-  return [
-    seg[0].clone().addScaledVector(normal, delta),
-    seg[1].clone().addScaledVector(normal, delta)
-  ];
-}
-
-/**
- * Returns -1 if no unseen room id found.
- * @param {Geomorph.ParsedConnectorRect} connector
- * @param {number[]} seenRoomIds could be frontier array of bfs
- */
-export function getUnseenConnectorRoomId(connector, seenRoomIds) {
-  return connector.roomIds.find(id => id !== null && !seenRoomIds.includes(id)) ?? -1;
 }
 
 /**
