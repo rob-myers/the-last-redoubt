@@ -48,7 +48,7 @@ export default function createNpc(
       sprites: new Animation(),
       durationMs: 0,
   
-      gmRoomIds: [],
+      gmRoomKeys: [],
       wayMetas: [],
       wayTimeoutId: 0,
     },
@@ -143,8 +143,8 @@ export default function createNpc(
     },
     async followNavPath(path, opts) {
       this.anim.path = path.map(Vect.from);
-      // `nav` provides gmRoomIds (needed for npc to collide with decor)
-      this.anim.gmRoomIds = opts?.gmRoomIds ?? [];
+      // `nav` provides gmRoomKeys (needed for npc to collide with decor)
+      this.anim.gmRoomKeys = opts?.gmRoomKeys ?? [];
       this.clearWayMetas();
       this.updateAnimAux();
       if (this.anim.path.length <= 1 || this.anim.aux.total === 0) {

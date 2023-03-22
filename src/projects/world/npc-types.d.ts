@@ -56,7 +56,7 @@ declare namespace NPC {
       path: Geom.VectJson[],
       opts: {
         globalNavMetas?: NPC.GlobalNavMeta[];
-        gmRoomIds?: [number, number][];
+        gmRoomKeys?: string[];
       },
     ): Promise<void>;
     /** Radians */
@@ -146,8 +146,8 @@ declare namespace NPC {
     sprites: Animation;
     durationMs: number;
 
-    /** Aligned to `path` */
-    gmRoomIds: [number, number][];
+    /** Aligned to `path` with format `g${gmId}-r${roomId} */
+    gmRoomKeys: string[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
@@ -293,8 +293,6 @@ declare namespace NPC {
     meta: Geomorph.PointMeta;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
-    /** Those [gmId, roomId] this decor intersects */
-    gmRoomIds?: [number, number][];
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {

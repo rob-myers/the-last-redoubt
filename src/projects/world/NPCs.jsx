@@ -9,7 +9,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcInteractRadius } from "../service/const";
 import { geom } from "../service/geom";
-import { getDecorInstanceKey } from "../service/geomorph";
+import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -674,7 +674,7 @@ export default function NPCs(props) {
         // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
         await npc.followNavPath(allPoints, {
           globalNavMetas: globalNavPath.navMetas,
-          gmRoomIds: globalNavPath.gmRoomIds,
+          gmRoomKeys: globalNavPath.gmRoomIds?.map(([gmId, roomId]) => getGmRoomKey(gmId, roomId)),
         });
 
       } catch (err) {

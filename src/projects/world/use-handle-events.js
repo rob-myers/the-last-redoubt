@@ -55,14 +55,11 @@ export default function useHandleEvents(api) {
           // 🚧 Handle npc vs decor collisions
           // 🚧 will add wayMeta which sends event?
           
-          // ✅ Restrict by roomId using npc.anim.gmRoomIds
-          // 🚧 clean
-          // const decors = Object.values(api.decor.decor);
-          const gmRoomIds = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1);
-          const decors = gmRoomIds.reduce((agg, [gmId, roomId]) => {
-            Object.keys(api.decor.byGmRoomId[gmId]?.[roomId] || {}).forEach(decorKey => agg.push(api.decor.decor[decorKey]))
-            return agg;
-          }, /** @type {NPC.DecorDef[]} */ ([]));
+          // Restrict decor using npc.anim.gmRoomKeys
+          const gmRoomKeys = npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1);
+          const decors = gmRoomKeys.reduce((agg, gmRoomKey) => agg.concat(
+            Object.keys(api.decor.byGmRoomKey[gmRoomKey] || {}).map(decorKey => api.decor.decor[decorKey])
+          ), /** @type {NPC.DecorDef[]} */ ([]));
 
           for (const decor of decors) {
             if (decor.type === 'circle') {
