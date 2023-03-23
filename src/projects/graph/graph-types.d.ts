@@ -284,7 +284,7 @@ declare namespace Graph {
     | { key: 'decor-collide'; decorKey: string; type: 'enter' | 'exit' | 'start-inside' }
     | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'exit-room'; exitedRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
-    | { key: 'pre-collide'; otherNpcKey: string; }
+    | { key: 'pre-npcs-collide'; otherNpcKey: string; }
     | { key: 'pre-exit-room'; willExitRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'pre-near-door'; currentRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'start-seg'; }

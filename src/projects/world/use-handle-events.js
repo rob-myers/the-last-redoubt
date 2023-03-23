@@ -16,7 +16,7 @@ export default function useHandleEvents(api) {
       const npc = api.npcs.getNpc(e.npcKey);
 
       switch (e.meta.key) {
-        case 'pre-collide':
+        case 'pre-npcs-collide':
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'start-seg': {
@@ -60,7 +60,7 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'decor-collide':
-        case 'pre-collide':
+        case 'pre-npcs-collide':
         case 'pre-exit-room':
         case 'pre-near-door':
         case 'start-seg':
@@ -126,7 +126,7 @@ export default function useHandleEvents(api) {
           const length = e.meta.length + collision.distA;
           const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
           npc.anim.wayMetas.splice(insertIndex, 0, {
-            key: 'pre-collide',
+            key: 'pre-npcs-collide',
             index: e.meta.index,
             otherNpcKey: other.key,
             gmId: e.meta.gmId,
