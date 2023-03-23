@@ -46,15 +46,14 @@ export default function useHandleEvents(api) {
             length,
           });
         });
-        startInside && npc.anim.wayMetas.unshift({
+        startInside && (e.meta.index === 0) && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
           index: e.meta.index,
           decorKey: decor.key,
-          type: 'start-inside',
+          type: 'start-inside', // start walk inside
           gmId: e.meta.gmId,
           length: e.meta.length,
         });
-        console.log('wayMetas', npc.anim.wayMetas.slice())
       }
     },
 
