@@ -85,7 +85,7 @@ declare namespace NPC {
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;
-    getWalkSegBounds(): Geom.Rect;
+    getWalkSegBounds(withNpcRadius: boolean): Geom.Rect;
     /**
      * Given npc is walking and anim.transform.currentTime,
      * infer position and angle.
@@ -122,19 +122,26 @@ declare namespace NPC {
     css: string;
     /** The path we'll walk along */
     path: Geom.Vect[];
-    /** Data derived entirely from `anim.path` */
+    /**
+     * Data derived entirely from `anim.path`, although
+     * `outsetBounds` and `outsetSegBounds` depend on npc radius.
+     */
     aux: {
       angs: number[];
-      bounds: Geom.Rect;
       edges: ({ p: Geom.Vect; q: Geom.Vect })[];
       elens: number[];
       /** Last index seen of path */
       index: number;
       /** Outset version of `origPath` to detect progress on pause */
       navPathPolys: Geom.Poly[];
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetBounds: Geom.Rect;
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetSegBounds: Geom.Rect;
+      /** For npc vs decor collisions */
+      segBounds: Geom.Rect;
       sofars: number[];
       total: number;
-      segBounds: Geom.Rect;
     };
     /** Bounds when stationary */
     staticBounds: Geom.Rect;

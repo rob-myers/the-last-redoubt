@@ -157,7 +157,7 @@ export function predictNpcCircleCollision(npcA, decorB) {
   if (!npcA.isWalking()) {
     return { collisions: [], startInside: npcA.getPosition().distanceToSquared(decorB.center) < decorB.radius ** 2 };
   }
-  if (!npcA.getWalkSegBounds().intersectsCentered(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
+  if (!npcA.getWalkSegBounds(false).intersectsCentered(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
     return { collisions: [], startInside: false };
   }
   /**
@@ -218,7 +218,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
     return null; // Saw segA assertNonNull fail 🤔
   }
   if (npcB.isWalking()) {
-    if (!npcA.getWalkSegBounds().intersects(npcB.getWalkSegBounds())) {
+    if (!npcA.getWalkSegBounds(true).intersects(npcB.getWalkSegBounds(true))) {
       return null;
     }
     /**
@@ -279,7 +279,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
     }
 
   } else {// npcB is standing still
-    if (!npcA.getWalkSegBounds().intersects(npcB.anim.staticBounds)) {
+    if (!npcA.getWalkSegBounds(true).intersects(npcB.anim.staticBounds)) {
       return null;
     }
     /**
@@ -341,7 +341,7 @@ export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
   if (!npcA.getTarget()) {// Not walking or at final point
     return { collisions: [], startInside: geom.outlineContains(vs, npcA.getPosition(), null) };
   }
-  if (!npcA.getWalkSegBounds().intersects(rect)) {
+  if (!npcA.getWalkSegBounds(false).intersects(rect)) {
     return { collisions: [], startInside: false };
   }
   
@@ -351,6 +351,8 @@ export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
 
   vs.push(vs[0]);
   // 🚧 avoid checking every segment
+  // - restrict to +ve dot product inside
+  // - restrict to -ve dot product outside
   const distances = vs.reduce((agg, p, i) => {
     if (vs[i + 1]) {
       /** λ ∊ [0, 1] of `segA.dst - segA.src` */
