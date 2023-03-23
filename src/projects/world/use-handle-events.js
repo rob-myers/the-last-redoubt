@@ -1,5 +1,5 @@
 import React from "react";
-import { assertDefined, removeDups, testNever, visibleUnicodeLength } from "../service/generic";
+import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
 import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { ansiColor } from "../sh/util";
@@ -12,71 +12,6 @@ export default function useHandleEvents(api) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
-    handleNpcDecorCollision(npc, e) {
-      // Restrict to decor in line segment's rooms (1 or 2 rooms)
-      const gmRoomKeys = removeDups(npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1));
-      const decors = gmRoomKeys.reduce((agg, gmRoomKey) => agg.concat(
-        Object.keys(api.decor.byGmRoomKey[gmRoomKey] || {})
-          .map(decorKey => api.decor.decor[decorKey])
-          .filter(/** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
-            decor => decor.type === 'circle' || decor.type === 'rect'
-          )
-      ), /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ ([]));
-
-      for (const decor of decors) {
-        const {collisions, startInside} = decor.type === 'circle'
-          ? npcService.predictNpcCircleCollision(npc, decor)
-          : npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
-
-        if (collisions.length || startInside) {// 🚧 debug
-          console.warn(`${npc.key} collide decor ${decor.type} ${decor.key}`, startInside, collisions);
-        }
-        
-        collisions.forEach((collision, collisionIndex) => {
-          const length = e.meta.length + collision.distA;
-          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
-          npc.anim.wayMetas.splice(insertIndex, 0, {
-            key: 'decor-collide',
-            index: e.meta.index,
-            decorKey: decor.key,
-            type: startInside
-              ? collisionIndex === 0 ? 'exit' : 'enter'
-              : collisionIndex === 0 ? 'enter' : 'exit',
-            gmId: e.meta.gmId,
-            length,
-          });
-        });
-        startInside && (e.meta.index === 0) && npc.anim.wayMetas.unshift({
-          key: 'decor-collide',
-          index: e.meta.index,
-          decorKey: decor.key,
-          type: 'start-inside', // start walk inside
-          gmId: e.meta.gmId,
-          length: e.meta.length,
-        });
-      }
-    },
-
-    handleNpcNpcsCollision(npc, e) {
-      // 🚧 one npc should be the player (?)
-      const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
-      for (const other of otherNpcs) {
-        const collision = npcService.predictNpcNpcCollision(npc, other);
-        if (collision) {// Add wayMeta cancelling motion
-          console.warn(`${npc.key} will collide with ${other.key}`, collision);
-          const length = e.meta.length + collision.distA;
-          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
-          npc.anim.wayMetas.splice(insertIndex, 0, {
-            key: 'pre-collide',
-            index: e.meta.index,
-            otherNpcKey: other.key,
-            gmId: e.meta.gmId,
-            length,
-          });
-        }
-      }
-    },
-
     async handleWayEvents(e) {
       const npc = api.npcs.getNpc(e.npcKey);
 
@@ -87,8 +22,9 @@ export default function useHandleEvents(api) {
         case 'start-seg': {
           // We know `npc` is walking
           npc.updateWalkSegBounds(e.meta.index);
-          state.handleNpcNpcsCollision(npc, e);
-          state.handleNpcDecorCollision(npc, e);
+
+          state.predictNpcNpcsCollision(npc, e);
+          state.predictNpcDecorCollision(npc, e);
           break;
         }
         case 'pre-exit-room':
@@ -124,13 +60,79 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'decor-collide':
+        case 'pre-collide':
         case 'pre-exit-room':
         case 'pre-near-door':
         case 'start-seg':
-        case 'pre-collide':
           break;
         default:
           throw testNever(e.meta, { suffix: 'handlePlayerWayEvent' });
+      }
+    },
+
+    predictNpcDecorCollision(npc, e) {
+      // Restrict to decor in line segment's rooms (1 or 2 rooms)
+      const gmRoomKeys = npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1);
+      gmRoomKeys.length === 2 && gmRoomKeys[0] === gmRoomKeys[1] && gmRoomKeys.pop();
+      const closeDecor = gmRoomKeys.reduce((agg, gmRoomKey) => agg.concat(
+        Object.keys(api.decor.byGmRoomKey[gmRoomKey] || {})
+          .map(decorKey => api.decor.decor[decorKey])
+          .filter(/** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
+            decor => decor.type === 'circle' || decor.type === 'rect'
+          )
+      ), /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ ([]));
+
+      for (const decor of closeDecor) {
+        const {collisions, startInside} = decor.type === 'circle'
+          ? npcService.predictNpcCircleCollision(npc, decor)
+          : npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
+
+        if (collisions.length || startInside) {// 🚧 debug
+          console.warn(`${npc.key} collide decor ${decor.type} ${decor.key}`, startInside, collisions);
+        }
+        
+        collisions.forEach((collision, collisionIndex) => {
+          const length = e.meta.length + collision.distA;
+          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
+          npc.anim.wayMetas.splice(insertIndex, 0, {
+            key: 'decor-collide',
+            index: e.meta.index,
+            decorKey: decor.key,
+            type: startInside
+              ? collisionIndex === 0 ? 'exit' : 'enter'
+              : collisionIndex === 0 ? 'enter' : 'exit',
+            gmId: e.meta.gmId,
+            length,
+          });
+        });
+        startInside && (e.meta.index === 0) && npc.anim.wayMetas.unshift({
+          key: 'decor-collide',
+          index: e.meta.index,
+          decorKey: decor.key,
+          type: 'start-inside', // start walk inside
+          gmId: e.meta.gmId,
+          length: e.meta.length,
+        });
+      }
+    },
+
+    predictNpcNpcsCollision(npc, e) {
+      // 🚧 one npc should be the player (?)
+      const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
+      for (const other of otherNpcs) {
+        const collision = npcService.predictNpcNpcCollision(npc, other);
+        if (collision) {// Add wayMeta cancelling motion
+          console.warn(`${npc.key} will collide with ${other.key}`, collision);
+          const length = e.meta.length + collision.distA;
+          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
+          npc.anim.wayMetas.splice(insertIndex, 0, {
+            key: 'pre-collide',
+            index: e.meta.index,
+            otherNpcKey: other.key,
+            gmId: e.meta.gmId,
+            length,
+          });
+        }
       }
     },
 
@@ -279,8 +281,8 @@ export default function useHandleEvents(api) {
 
 /**
  * @typedef State @type {object}
- * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} handleNpcDecorCollision
- * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} handleNpcNpcsCollision
+ * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcDecorCollision
+ * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcNpcsCollision
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */
