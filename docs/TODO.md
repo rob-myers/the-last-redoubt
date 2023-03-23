@@ -8,7 +8,7 @@
   - gets too complex otherwise
   - can use multiple for e.g. "nearby door"
 - ✅ instantiated decor organised by decor.byGmRoomId
-- 🚧 decor circle collisions
+- ✅ decor circle collisions
   - ✅ triggered by npc walk (without optimize)
   - ✅ restrict npc circle to center
   - ✅ local navPath provides roomIds aligned to fullPath
@@ -19,14 +19,18 @@
     - using navPath.gmRoomIds and api.decor.byGmRoomId
   - ✅ shallow api.decor.byGmRoomKey
   - ✅ decor circle/rect collision induces wayMeta/event
-- restyle decor circle/rect
-- 🚧 decor ~~rect~~ poly collisions
+- ✅ decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center
   - ✅ simplified approach (test all segs)
-  - improved approach?
+- 🚧 `spawned-npc` references newly colliding decor
+- restyle decor circle/rect
+
+- understand and improve wayMeta triggering
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
+- BUG? saw npcs.playerKey set null on multi spawn?
+  - Possibly HMR issue
 - BUG move/resize circle decor all at once?
 - BUG should not be able to open door through wall (e.g. toilet stateroom 12)
 - BUG should not be able to spawn under door (from offmesh)

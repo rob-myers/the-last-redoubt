@@ -5,7 +5,7 @@ import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import * as npcService from "../service/npc";
-import { ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -23,6 +23,23 @@ export default function Decor(props) {
     decor: {},
     decorEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
+
+    getDecorAtKey(gmRoomKey) {
+      return /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ (Object.keys(state.byGmRoomKey[gmRoomKey] || {})
+        .map(decorKey => state.decor[decorKey])
+      );
+    },
+
+    getDecorAtPoint(point) {
+      const result = api.gmGraph.findRoomContaining(point);
+      if (result) {
+        const gmRoomKey = getGmRoomKey(result.gmId, result.roomId);
+        const closeDecor = state.getDecorAtKey(gmRoomKey);
+        return closeDecor.filter(decor => decorContainsPoint(decor, point));
+      } else {
+        return [];
+      }
+    },
 
     handleDevToolEdit(els) {
       for (const el of els) {
@@ -347,6 +364,10 @@ const cssRect = css`
  * @property {HTMLElement} decorEl
  * @property {Record<string, { [decorKey: string]: true }>} byGmRoomKey
  * Decor keys organised by gmRoomKey `g{gmId}-r{roomId}`.
+ * @property {(gmRoomKey: string) => (NPC.DecorCircle | NPC.DecorRect)[]} getDecorAtKey
+ * Currently this is only collidable decor i.e. circles and rectangles.
+ * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
+ * Currently this is only collidable decor i.e. circles and rectangles.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
  * @property {(...decorKeys: string[]) => void} removeDecor

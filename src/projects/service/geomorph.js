@@ -1013,9 +1013,23 @@ export function tagsToMeta(tags, baseMeta) {
 
 //#region decor
 
-/** @type {(gmId: number, roomId: number, decorId: number) => string} */
-export function getDecorInstanceKey(gmId, roomId, decorId) {
-  return `local-${decorId}-g${gmId}r${roomId}`
+/**
+ * @param {NPC.DecorDef} decor 
+ * @param {Geom.VectJson} point 
+ */
+export function decorContainsPoint(decor, point) {
+  switch (decor.type) {
+    case 'circle':
+      return tempVect1.copy(point).distanceTo(decor.center) <= decor.radius;
+    case 'path':
+      return false;
+    case 'point':
+      return tempVect1.copy(point).equals(decor);
+    case 'rect':
+      return geom.outlineContains(decor.derivedPoly?.outline ?? [], point);
+    default:
+      throw testNever(decor);
+  }
 }
 
 /** @param {string} decorKey */
@@ -1068,6 +1082,11 @@ export function getDecorCenter(decor) {
   }
 }
 
+/** @type {(gmId: number, roomId: number, decorId: number) => string} */
+export function getDecorInstanceKey(gmId, roomId, decorId) {
+  return `local-${decorId}-g${gmId}r${roomId}`
+}
+
 /**
  * @param {Geomorph.SvgGroupsSingle<Poly>} svgSingle
  * @param {number} singleIndex
@@ -1117,3 +1136,5 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
 }
 
 //#endregion
+
+const tempVect1 = new Vect;
