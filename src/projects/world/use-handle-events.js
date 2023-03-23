@@ -71,17 +71,19 @@ export default function useHandleEvents(api) {
     },
 
     predictNpcDecorCollision(npc, e) {
-      /**
-       * Restrict to decor in line segment's rooms (1 or 2 rooms).
-       * Currently, getDecorAtKey only provides 'circle' or 'rect'.
-       */
+      // Restrict to decor in line segment's rooms (1 or 2 rooms)
       const gmRoomKeys = npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1);
       gmRoomKeys.length === 2 && gmRoomKeys[0] === gmRoomKeys[1] && gmRoomKeys.pop();
-      const closeDecor = gmRoomKeys.flatMap((gmRoomKey) => api.decor.getDecorAtKey(gmRoomKey));
+      const closeDecor = gmRoomKeys.flatMap((gmRoomKey) => 
+        api.decor.getDecorAtKey(gmRoomKey).filter(
+          /** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
+          decor => decor.type === 'circle' || decor.type === 'rect'
+        )
+      ,);
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'
-          ? npcService.predictNpcCircleCollision(npc, decor) // or 'rect':
+          ? npcService.predictNpcCircleCollision(npc, decor)
           : npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
 
         if (collisions.length || startInside) {// 🚧 debug

@@ -365,9 +365,9 @@ const cssRect = css`
  * @property {Record<string, { [decorKey: string]: true }>} byGmRoomKey
  * Decor keys organised by gmRoomKey `g{gmId}-r{roomId}`.
  * @property {(gmRoomKey: string) => (NPC.DecorCircle | NPC.DecorRect)[]} getDecorAtKey
- * Currently this is only collidable decor i.e. circles and rectangles.
+ * Get all decor in specified room `g{gmId}-r{roomId}`.
  * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
- * Currently this is only collidable decor i.e. circles and rectangles.
+ * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
  * @property {(...decorKeys: string[]) => void} removeDecor

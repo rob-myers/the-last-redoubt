@@ -22,8 +22,8 @@
 - ✅ decor ~~rect~~ poly collisions
   - ℹ️ restrict npc to center
   - ✅ simplified approach (test all segs)
-- 🚧 `spawned-npc` references newly colliding decor
-- restyle decor circle/rect
+- ✅ `spawned-npc` references newly colliding decor
+- 🚧 restyle decor circle/rect
 
 - understand and improve wayMeta triggering
 - redo npc vs npc collisions
