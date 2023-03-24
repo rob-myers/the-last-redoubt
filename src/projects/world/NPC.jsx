@@ -19,7 +19,12 @@ export default function NPC({ api, npcKey, disabled }) {
       npc.initialize(); // useLayoutEffect because we modify styles here
       npc.unspawned = false;
       npc.startAnimation('idle');
-      const intoDecor = api.decor.getDecorAtPoint(npc.getPosition());
+      /** @type {NPC.DecorRef[]} */
+      const intoDecor = api.decor.getDecorAtPoint(npc.getPosition()).map(d => ({
+        decorKey: d.key,
+        type: d.type,
+        meta: d.meta,
+      }));
       api.npcs.events.next({ key: 'spawned-npc', npcKey, intoDecor });
     }
   }, [npc.epochMs]);
