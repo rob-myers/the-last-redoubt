@@ -72,28 +72,24 @@ const controlsCss = css`
   font-family: Roboto, Arial, sans-serif;
 
   > .${cssName.topRight} {
-    position: absolute;
-    right: calc(-1 * var(--tabs-border-width));
+    position: relative;
+    height: 38px;
+    width: 140px;
+    left: calc(100% - 140px + var(--tabs-border-width));
     top: -38px;
     z-index: ${zIndex.tabsTopRightButtons};
-    height: 38px;
 
     background: #444;
     border-bottom-width: 0;
 
     padding: 0px 8px;
-    @media(max-width: 600px) {
-      padding: 0 8px 2px 8px;
-    }
     
     display: flex;
     line-height: initial;
     align-items: center;
+    justify-content: space-around;
     span, a span {
       padding: 0 8px;
-      @media(max-width: 600px) {
-        padding: 2px 12px;
-      }
       height: 100%;
       display: flex;
       align-items: center;
