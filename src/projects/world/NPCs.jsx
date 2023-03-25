@@ -327,7 +327,7 @@ export default function NPCs(props) {
       // Other npcs cannot be close
       for (const otherNpcKey in state.npc) {
         if (otherNpcKey !== npcKey && state.npc[otherNpcKey].intersectsCircle(
-          point, // 🚧 other npc class
+          point, // 🚧 parametric in npc class
           npcsMeta["first-human-npc"].radius
         )) {
           return false;
@@ -339,7 +339,7 @@ export default function NPCs(props) {
         return false;
       }
       // Door rects cannot be close
-      const npcRadius = state.npc[npcKey].getRadius();
+      const npcRadius = npcsMeta["first-human-npc"].radius;
       if (state.isPointNearClosedDoor(point, npcRadius, result)) {
         return false;
       }
