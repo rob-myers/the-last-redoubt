@@ -75,7 +75,7 @@ export class roomGraphClass extends BaseGraph {
    * @param {number} roomId
    * @param {number[]} [openDoorIds]
    */
-   getAdjRoomIds(roomId, openDoorIds) {
+  getAdjRoomIds(roomId, openDoorIds) {
     return this.getSuccs(this.nodesArray[roomId]).flatMap((adjNode) => {
       if (
         adjNode.type === 'door' && (!openDoorIds || openDoorIds.includes(adjNode.doorId))
