@@ -6,6 +6,7 @@
       "animLookup": {
         "walk": {
           "animName": "walk",
+          "aabb": {"x": 35, "y": 48, "width": 176, "height": 155},
           "frameCount": 10,
           "contacts": [
             {"right": {"x": 106.26000037415385, "y": 155.95999849944616}},
@@ -38,6 +39,7 @@
         },
         "idle": {
           "animName": "idle",
+          "aabb": {"x": 84, "y": 48, "width": 71, "height": 155},
           "frameCount": 1,
           "contacts": [],
           "deltas": [],
@@ -47,6 +49,7 @@
         },
         "sit": {
           "animName": "sit",
+          "aabb": {"x": 86, "y": 50, "width": 123, "height": 154},
           "frameCount": 1,
           "contacts": [],
           "deltas": [],
@@ -56,6 +59,7 @@
         },
         "idle-breathe": {
           "animName": "idle-breathe",
+          "aabb": {"x": 81, "y": 49, "width": 80, "height": 155},
           "frameCount": 10,
           "contacts": [],
           "deltas": [],

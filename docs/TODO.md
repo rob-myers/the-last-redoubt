@@ -3,7 +3,9 @@
 ## In progress
 
 - ✅ npc json has animLookup[animKey].aabb
-- sit should have larger staticBounds
+- ❌ sit should have larger staticBounds
+  > computed animLookup aabb needs scale/rotate,
+  > might be better to test bounds-circle
 
 - ✅ svg decor have meta
 - ❌ gm.decor.meta.roomIds

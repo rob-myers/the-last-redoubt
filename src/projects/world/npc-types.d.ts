@@ -410,6 +410,10 @@ declare namespace NPC {
   }
 
   //#region parse
+  /**
+   * ℹ️ Original {npc}.json is a bit different than its entry in npcs-meta.json.
+   * In particular, the original radius e.g. `80` becomes a normalized one e.g. `14.4`.
+   */
   interface ParsedNpc {
     npcJsonKey: NpcJsonKey;
     animLookup: {
