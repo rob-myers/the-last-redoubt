@@ -2,6 +2,9 @@
 
 ## In progress
 
+- ✅ npc json has animLookup[animKey].aabb
+- sit should have larger staticBounds
+
 - ✅ svg decor have meta
 - ❌ gm.decor.meta.roomIds
 - ✅ restrict decor to a single room

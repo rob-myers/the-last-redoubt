@@ -166,7 +166,7 @@ export class Rect {
   /** 
    * @param {Geom.VectJson[]} items
    */
-   static fromPoints(...items) {
+  static fromPoints(...items) {
     if (!items.length) {
       return Rect.zero;
     } else {
@@ -182,7 +182,7 @@ export class Rect {
   /** 
    * @param {Geom.RectJson[]} items
    */
-   static fromRects(...items) {
+  static fromRects(...items) {
     if (!items.length) {
       return Rect.zero;
     } else {
@@ -210,6 +210,14 @@ export class Rect {
       this.y = cy;
       this.height = 0;
     }
+    return this;
+  }
+ 
+  integerOrds() {
+    this.x = Math.floor(this.x);
+    this.y = Math.floor(this.y);
+    this.width = Math.ceil(this.width);
+    this.height = Math.ceil(this.height);
     return this;
   }
 

@@ -1,14 +1,17 @@
 /**
  * - Extract an NPC's JSON metadata and render its sprite-sheets,
- *   using only media/NPC/{folder}/{folder}.sifz
+ *   using the single input file:
+ *   > media/NPC/{folder}/{folder}.sifz
+ *
  * - We output files:
- *   > static/assets/npc/{folder}/{folder}.json
- *   > static/assets/npc/{folder}/{folder}--{animName}.png
+ *   - static/assets/npc/{folder}/{folder}.json
+ *   - static/assets/npc/{folder}/{folder}--{animName}.png
  * 
  * yarn render-npc {folder} [--json]
  * 
  * - {folder} relative to media/NPC should contain {folder}.sifz
  * - option --json only writes json
+ *
  * - Examples:
  *  - yarn render-npc first-human-npc
  *  - yarn render-npc first-human-npc --json
@@ -60,8 +63,11 @@ async function main() {
     const parser = new xml2js.Parser();
     /** @type {{ canvas: ParsedInnerSynfig }} */
     const synfigJson = await parser.parseStringPromise(synfigXml);
-    // ⛔️ debug only
+
+    //#region DEBUG ONLY ⛔️
     // writeAsJson(synfigJson, outputDebugJsonPath);
+    //#endregion
+
 
     const { $: topDollar, name: [_unusedName], desc: [metaJsonString], keyframe, layer } = synfigJson.canvas;
 
@@ -71,9 +77,7 @@ async function main() {
     /**
      * end-time can be e.g. `5f` or `1s 7f`
      */
-    const totalFrameCount = topDollar['end-time'].split(' ').map(x =>
-      x.endsWith('s') ? fps * parseInt(x) : parseInt(x)
-    ).reduce((agg, item) => agg + item, 0) + 1;
+    const totalFrameCount = synfigTimeToFrame(topDollar['end-time'], fps);
 
     // Synfig coords are relative to its "view box"
     const viewBoxCoords = topDollar['view-box'].split(' ').map(Number);
@@ -89,11 +93,17 @@ async function main() {
     if (!metaLayer) { error(`Expected top-level group: Meta`); process.exit(1); }
     const metaLayerCanvas = assertDefined(metaLayer.param.find(x => x.$.name === 'canvas')?.canvas?.[0]);
 
+    /**
+     * 🚧 support animLookup[*].aabb
+     * - ✅ get top-level aabb from render bounds
+     * - ✅ animate aabb per keyframe
+     * - 🚧 store as animLookup[*].aabb
+     * - integrate into npc.staticBounds
+     */
     // Meta > Aaab
     const aabbLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'Aabb');
     if (!aabbLayer) { error(`Expected layer: Meta > Aaab`); process.exit(1); }
-    const { topLeft, bottomRight } = extractRectLayer(aabbLayer, viewAabb, renderAabb, fps)[0];
-    const aabbRectZoomed = Rect.fromPoints(topLeft.point, bottomRight.point);
+    const extractedAaabLayer = extractRectLayer(aabbLayer, viewAabb, renderAabb, fps);
     
     // Meta > BoundsCircle
     const circleLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'BoundsCircle');
@@ -131,7 +141,17 @@ async function main() {
       /** 1-based frames */
       const frames = [...Array(frameCount)].map((_, i) => startFrame + i);
 
-      let contacts = /** @type {{ left: Vect | undefined; right: Vect | undefined; }[]} */ ([]);
+      const aabbDef = extractedAaabLayer.find(x => x.frame === startFrame);
+      if (!aabbDef) {
+        warn(`${sifzInputDir}: ${animName}: Aabb keyframe not found (using 1st)`);
+      }
+      const aabb = aabbDef
+        ? Rect.fromPoints(aabbDef.topLeft.point, aabbDef.bottomRight.point)
+        : Rect.fromPoints(extractedAaabLayer[0].topLeft.point, extractedAaabLayer[0].bottomRight.point)
+      ;
+      aabb.integerOrds();
+
+      let contacts = /** @type {{ left: Geom.Vect | undefined; right: Geom.Vect | undefined; }[]} */ ([]);
       let deltas = /** @type {number[]} */ ([]);
 
       if (layerWays) {// Contact points
@@ -171,6 +191,7 @@ async function main() {
 
       animLookup[animName] = {
           animName,
+          aabb,
           frameCount,
           contacts,
           deltas,
@@ -184,7 +205,8 @@ async function main() {
       const npcJson = {
         npcJsonKey: /** @type {NPC.NpcJsonKey} */ (sifzFolder),
         animLookup,
-        aabb: aabbRectZoomed.json, // Already zoomed
+        // Root aabb is render bounds (already zoomed)
+        aabb: renderAabb.json,
         synfigMeta,
         radius: npcRadiusZoomed,
         zoom,
@@ -365,11 +387,16 @@ function extractRectLayer(rectLayer, viewAabb, renderAabb, fps) {
   if (animated) {
     const topLefts = rectLayer.param.find(x => x.$.name === 'point1')?.animated?.[0].waypoint?.map(x => wayPointVectorMap(/** @type {SynfigWayPointVector} */ (x), viewAabb, renderAabb, fps))??[];
     const bottomRights = rectLayer.param.find(x => x.$.name === 'point2')?.animated?.[0].waypoint?.map(x => wayPointVectorMap(/** @type {SynfigWayPointVector} */ (x), viewAabb, renderAabb, fps))??[];
-    return topLefts.map((topLeft, i) => ({ topLeft, bottomRight: bottomRights[i] }));
+    return topLefts.map((topLeft, i) => ({
+      frame: topLeft.frame, // Assume topLeft[i].frame === bottomRight[i].frame
+      topLeft,
+      bottomRight: bottomRights[i],
+    }));
   } else {
     const tl = vectorMap(assertDefined(rectLayer.param.find(x => x.$.name === 'point1')?.vector?.[0]), viewAabb, renderAabb);
     const br = vectorMap(assertDefined(rectLayer.param.find(x => x.$.name === 'point2')?.vector?.[0]), viewAabb, renderAabb);
     return [{
+      frame: 1,
       topLeft: { frame: 1, origPoint: tl.origPoint, point: tl.point },
       bottomRight: { frame: 1, origPoint: br.origPoint, point: br.point },
     }];
@@ -433,8 +460,9 @@ function wayPointVectorMap(wp, viewAabb, renderAabb, fps) {
   const { $: { time }, vector: [vector] } = wp;
   const { origPoint, point } = vectorMap(vector, viewAabb, renderAabb);
   return {
+    // frame: Math.round(parseFloat(time) * fps) + 1,
     /** 1-based */
-    frame: Math.round(parseFloat(time) * fps) + 1,
+    frame: synfigTimeToFrame(time, fps),
     origPoint,
     point,
   };
@@ -496,4 +524,17 @@ function synfigCoordToRenderCoord(input, viewAabb, renderAabb) {
     // Synfig y+ points upwards
     y: ((viewAabb.y - input.y) / viewAabb.height) * renderAabb.height,
   };
+}
+
+/**
+ * Outputs 1-based frame (unlike synfig which has 0-based frames).
+ * @param {string} timeRep e.g. `5f` or `1s 7f`
+ * @param {number} fps frames per second
+ */
+function synfigTimeToFrame(timeRep, fps) {
+  return timeRep.split(' ').map(x =>
+    x.endsWith('s')
+      ? Math.round(fps * parseFloat(x))
+      : parseInt(x)
+  ).reduce((agg, item) => agg + item, 0) + 1
 }
