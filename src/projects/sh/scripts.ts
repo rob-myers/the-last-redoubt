@@ -65,7 +65,9 @@ export const gameFunctions = [
 doLoop: `{
   click |
     flatMap '({ x, y, meta }) =>
-      (meta.do || meta.nav) ? { npcKey: "'$1'", point: { x, y }, meta } : []
+      (meta.do || meta.nav)
+        ? { npcKey: "'$1'", point: { x, y }, meta }
+        : []
     ' |
     npc do
 }`,
