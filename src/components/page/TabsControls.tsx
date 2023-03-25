@@ -70,6 +70,7 @@ interface Props {
 
 const controlsCss = css`
   font-family: Roboto, Arial, sans-serif;
+  height: 0;
 
   > .${cssName.topRight} {
     position: relative;
