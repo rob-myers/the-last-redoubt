@@ -2,17 +2,25 @@
 
 ## In progress
 
+- ✅ cannot spawn onto closed door
+  - e.g. player may need to open door in order to spawn onto mesh
 - ✅ restyle decor circle/rect
-- 🚧 understand and improve wayMeta triggering
+
+- 🚧 clean initial `console.warn`s
+- understand and improve wayMeta triggering
+  - wayTimeout
+  - nextWayTimeout
 - redo npc vs npc collisions
 - redo npc vs door collisions
+
+- restyle geomorphs pngs: navmesh more visible + sharper
+- handle already paused npc on disable/enable Tabs
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
 - BUG move/resize circle decor all at once?
 - BUG should not be able to open door through wall (e.g. toilet stateroom 12)
 - BUG should not be able to spawn under door (from offmesh)
-- clean initial `console.warn`s
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }
 - lie has 1 frame animation

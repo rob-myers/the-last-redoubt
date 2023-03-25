@@ -4,7 +4,7 @@ import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Vect } from "../geom";
-import { ShError, stripAnsi } from "../sh/util";
+import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcInteractRadius } from "../service/const";
@@ -303,6 +303,16 @@ export default function NPCs(props) {
         process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
     },
+    isPointNearClosedDoor(point, radius, gmRoomId) {
+      const gm = api.gmGraph.gms[gmRoomId.gmId];
+      const localPoint = gm.inverseMatrix.transformPoint({...point});
+      const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
+        !api.doors.open[gmRoomId.gmId][doorId] &&
+        // 🚧 check distance from line segment instead?
+        geom.createOutset(gm.doors[doorId].poly, radius)[0].contains(localPoint)
+      );
+      return !!closeDoor;
+    },
     isPointInNavmesh(p) {
       const gmId = api.gmGraph.findGeomorphIdContaining(p);
       if (gmId !== null) {
@@ -312,6 +322,28 @@ export default function NPCs(props) {
       } else {
         return false;
       }
+    },
+    isPointSpawnable(npcKey, point) {
+      // Other npcs cannot be close
+      for (const otherNpcKey in state.npc) {
+        if (otherNpcKey !== npcKey && state.npc[otherNpcKey].intersectsCircle(
+          point, // 🚧 other npc class
+          npcsMeta["first-human-npc"].radius
+        )) {
+          return false;
+        }
+      }
+      // Must be inside some room
+      const result = api.gmGraph.findRoomContaining(point);
+      if (!result) {
+        return false;
+      }
+      // Door rects cannot be close
+      const npcRadius = state.npc[npcKey].getRadius();
+      if (state.isPointNearClosedDoor(point, npcRadius, result)) {
+        return false;
+      }
+      return true;
     },
     async npcAct(e) {
       switch (e.action) {
@@ -400,8 +432,7 @@ export default function NPCs(props) {
       try {
         const onMesh = state.isPointInNavmesh(npcPosition);
 
-        if (onMesh && meta.doable) {
-          // Started on-mesh and clicked do point icon
+        if (onMesh && meta.doable) {// Started on-mesh and clicked do point icon
           /** The actual "do point" (e.point is somewhere on icon) */
           const decorPoint = meta.targetPos;
 
@@ -413,11 +444,12 @@ export default function NPCs(props) {
             meta.spawnable
             && (npcPosition.distanceTo(e.point) <= npc.getInteractRadius())
           ) {
-            // fade and spawn to original point
-            await npc.animateOpacity(0, 1000);
-            await state.spawn({ npcKey: e.npcKey, point: decorPoint, requireNav: false, angle: meta.orientRadians });
-            npc.startAnimationByMeta(meta);
-            await npc.animateOpacity(1, 1000);
+            await state.spawnFade(npc, {
+              npcKey: e.npcKey,
+              point: decorPoint,
+              angle: meta.orientRadians,
+              requireNav: false,
+            }, meta);
           }
           return;
         }
@@ -432,22 +464,21 @@ export default function NPCs(props) {
           if (!api.gmGraph.inSameRoom(npcPosition, e.point))  {
             return;
           }
-          await npc.animateOpacity(0, 1000);
-          await state.spawn({
+          await state.spawnFade(npc, {
             npcKey: e.npcKey,
             // If not navigable use decorPoint
             point: meta.nav ? e.point : meta.targetPos,
             // Orient if staying off-mesh
             angle: meta.nav ? undefined : meta.orientRadians,
-          });
-          npc.startAnimationByMeta(meta);
-          await npc.animateOpacity(1, 1000);
+          }, meta);
           return;
         }
 
       } catch (e) {
         if (e instanceof Error && e.message === 'cancelled') {
-          // Swallow walk error on Ctrl-C
+          // ℹ️ Swallow 'cancelled' errors, e.g.
+          // - cancel current walk to start a new one
+          // - cancel spawn due to obstruction
         } else {
           throw e;
         }
@@ -518,13 +549,8 @@ export default function NPCs(props) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
-      for (const otherNpcKey in state.npc) {// Others cannot be close
-        if (
-          otherNpcKey !== e.npcKey // 🚧 support other npc class
-          && state.npc[otherNpcKey].intersectsCircle(e.point, npcsMeta["first-human-npc"].radius)
-        ) {
-          throw new ShError(`"${otherNpcKey}" is too close`, 1);
-        }
+      if (!state.isPointSpawnable(e.npcKey, e.point)) {
+        throw new Error('cancelled');
       }
 
       if (state.npc[e.npcKey]) {// Respawn
@@ -535,7 +561,7 @@ export default function NPCs(props) {
         spawned.def = {
           key: e.npcKey,
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-          npcJsonKey: 'first-human-npc', // 🚧 support other npc class
+          npcJsonKey: 'first-human-npc', // 🚧 other npc class
           position: e.point,
           speed: npcsMeta["first-human-npc"].speed,
         };
@@ -546,9 +572,9 @@ export default function NPCs(props) {
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcJsonKey: 'first-human-npc', // 🚧 support other npc class
+          npcJsonKey: 'first-human-npc', // 🚧 other npc class
           position: e.point,
-          speed: npcsMeta["first-human-npc"].speed, // 🚧 support other npc class
+          speed: npcsMeta["first-human-npc"].speed, // 🚧 other npc class
         }, { api });
       }
 
@@ -559,6 +585,15 @@ export default function NPCs(props) {
       // Trigger <NPC> render and await reply
       update();
       await promise;
+    },
+    async spawnFade(npc, e, meta) {
+      try {
+        await npc.animateOpacity(0, 1000);
+        await state.spawn(e);
+        npc.startAnimationByMeta(meta);
+      } finally {
+        await npc.animateOpacity(1, 1000);
+      }
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
@@ -777,7 +812,10 @@ const rootCss = css`
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
+ * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
+ * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
+ * @property {(npcKey: string, p: Geom.VectJson) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
  * @property {NPC.OnTtyLink} onTtyLink
@@ -786,6 +824,7 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
+ * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'], meta: Geomorph.PointMeta) => Promise<void>} spawnFade
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
