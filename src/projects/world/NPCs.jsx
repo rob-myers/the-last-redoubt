@@ -519,7 +519,10 @@ export default function NPCs(props) {
       }
 
       for (const otherNpcKey in state.npc) {// Others cannot be close
-        if (otherNpcKey !== e.npcKey && state.npc[otherNpcKey].getBounds().contains(e.point)) {
+        if (
+          otherNpcKey !== e.npcKey // 🚧 support other npc class
+          && state.npc[otherNpcKey].intersectsCircle(e.point, npcsMeta["first-human-npc"].radius)
+        ) {
           throw new ShError(`"${otherNpcKey}" is too close`, 1);
         }
       }
@@ -532,7 +535,7 @@ export default function NPCs(props) {
         spawned.def = {
           key: e.npcKey,
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-          npcJsonKey: 'first-human-npc', // 🚧
+          npcJsonKey: 'first-human-npc', // 🚧 support other npc class
           position: e.point,
           speed: npcsMeta["first-human-npc"].speed,
         };
@@ -543,9 +546,9 @@ export default function NPCs(props) {
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcJsonKey: 'first-human-npc', // 🚧
+          npcJsonKey: 'first-human-npc', // 🚧 support other npc class
           position: e.point,
-          speed: npcsMeta["first-human-npc"].speed,
+          speed: npcsMeta["first-human-npc"].speed, // 🚧 support other npc class
         }, { api });
       }
 

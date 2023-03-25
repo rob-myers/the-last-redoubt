@@ -224,15 +224,6 @@ export default function createNpc(
       // We convert from seconds/world-unit to milliseconds/world-unit
       return 1000 * (1 / this.getSpeed());
     },
-    getBounds() {
-      if (this.isWalking()) {// Compute dynamic bounds
-        const center = this.getPosition();
-        const radius = this.getRadius();
-        return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
-      } else {
-        return this.anim.staticBounds;
-      }
-    },
     getInteractRadius() {
       // can inherit from <NPCs> root
       return parseFloat(getComputedStyle(this.el.root).getPropertyValue(cssName.npcsInteractRadius));
@@ -333,6 +324,12 @@ export default function createNpc(
       // Inherit cssName.npcsInteractRadius from <NPCS> unless specified
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
+    },
+    intersectsCircle(position, radius) {
+      return this.getPosition()
+        .distanceTo(position) <=
+        this.getRadius() + radius
+      ;
     },
     isIdle() {
       return ['idle', 'idle-breathe'].includes(this.anim.spriteSheet);
