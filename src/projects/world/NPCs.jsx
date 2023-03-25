@@ -4,7 +4,7 @@ import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter } from "rxjs/operators";
 
 import { Vect } from "../geom";
-import { stripAnsi } from "../sh/util";
+import { ShError, stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcInteractRadius } from "../service/const";
@@ -516,6 +516,12 @@ export default function NPCs(props) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (e.requireNav && !state.isPointInNavmesh(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
+      }
+
+      for (const otherNpcKey in state.npc) {// Others cannot be close
+        if (otherNpcKey !== e.npcKey && state.npc[otherNpcKey].getBounds().contains(e.point)) {
+          throw new ShError(`"${otherNpcKey}" is too close`, 1);
+        }
       }
 
       if (state.npc[e.npcKey]) {// Respawn

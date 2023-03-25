@@ -135,7 +135,7 @@ declare namespace NPC {
       /** Outset version of `origPath` to detect progress on pause */
       navPathPolys: Geom.Poly[];
       /** Outset by npc radius, for npc vs npc collisions */
-      outsetBounds: Geom.Rect;
+      outsetWalkBounds: Geom.Rect;
       /** Outset by npc radius, for npc vs npc collisions */
       outsetSegBounds: Geom.Rect;
       /** For npc vs decor collisions */

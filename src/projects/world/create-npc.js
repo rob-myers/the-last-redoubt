@@ -30,13 +30,13 @@ export default function createNpc(
       path: [],
       aux: {
         angs: [],
-        outsetBounds: new Rect,
         edges: [],
         elens: [],
         index: 0,
         navPathPolys: [],
-        segBounds: new Rect,
         outsetSegBounds: new Rect,
+        outsetWalkBounds: new Rect,
+        segBounds: new Rect,
         sofars: [],
         total: 0,
       },
@@ -225,9 +225,13 @@ export default function createNpc(
       return 1000 * (1 / this.getSpeed());
     },
     getBounds() {
-      const center = this.getPosition();
-      const radius = this.getRadius();
-      return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
+      if (this.isWalking()) {// Compute dynamic bounds
+        const center = this.getPosition();
+        const radius = this.getRadius();
+        return new Rect(center.x - radius,center.y - radius, 2 * radius, 2 * radius);
+      } else {
+        return this.anim.staticBounds;
+      }
     },
     getInteractRadius() {
       // can inherit from <NPCs> root
@@ -291,7 +295,7 @@ export default function createNpc(
       }
     },
     getWalkBounds() {
-      return this.anim.aux.outsetBounds;
+      return this.anim.aux.outsetWalkBounds;
     },
     getWalkSegBounds(withNpcRadius) {
       return withNpcRadius ? this.anim.aux.outsetSegBounds : this.anim.aux.segBounds;
@@ -516,7 +520,7 @@ export default function createNpc(
     updateAnimAux() {
       const { aux } = this.anim;
       const radius = this.getRadius();
-      aux.outsetBounds = Rect.fromPoints(...this.anim.path).outset(radius);
+      aux.outsetWalkBounds = Rect.fromPoints(...this.anim.path).outset(radius);
       aux.edges = this.anim.path.map((p, i) => ({ p, q: this.anim.path[i + 1] })).slice(0, -1);
       aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
       aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
