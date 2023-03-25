@@ -282,7 +282,7 @@ const rootCss = css`
 const cssCircle = css`
   position: absolute;
   border-radius: 50%;
-  background-color: #ff444455;
+  border: 1px solid #ff444455;
 `;
 
 const cssPoint = css`
@@ -349,7 +349,7 @@ const cssRect = css`
   position: absolute;
   transform-origin: left top;
   /* transform-origin: center; */
-  background-color: #7700ff22;
+  border: 1px solid #ff444455;
 `;
 
 /**

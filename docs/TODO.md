@@ -2,35 +2,8 @@
 
 ## In progress
 
-- ✅ npc json has animLookup[animKey].aabb
-- ❌ sit should have larger staticBounds
-  > computed animLookup aabb needs scale/rotate,
-  > might be better to test bounds-circle
-
-- ✅ svg decor have meta
-- ❌ gm.decor.meta.roomIds
-- ✅ restrict decor to a single room
-  - gets too complex otherwise
-  - can use multiple for e.g. "nearby door"
-- ✅ instantiated decor organised by decor.byGmRoomId
-- ✅ decor circle collisions
-  - ✅ triggered by npc walk (without optimize)
-  - ✅ restrict npc circle to center
-  - ✅ local navPath provides roomIds aligned to fullPath
-  - ✅ global navPath provides gmRoomIds aligned to fullPath
-  - ✅ decor organised by gmRoomId
-  - ✅ restrict collisions by gmRoomId
-    - store globalNavPath.gmRoomIds in npc.anim.aux
-    - using navPath.gmRoomIds and api.decor.byGmRoomId
-  - ✅ shallow api.decor.byGmRoomKey
-  - ✅ decor circle/rect collision induces wayMeta/event
-- ✅ decor ~~rect~~ poly collisions
-  - ℹ️ restrict npc to center
-  - ✅ simplified approach (test all segs)
-- ✅ `spawned-npc` references newly colliding decor
-- 🚧 restyle decor circle/rect
-
-- understand and improve wayMeta triggering
+- ✅ restyle decor circle/rect
+- 🚧 understand and improve wayMeta triggering
 - redo npc vs npc collisions
 - redo npc vs door collisions
 
@@ -421,6 +394,34 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ npc json has animLookup[animKey].aabb
+- ❌ sit should have larger staticBounds
+  > computed animLookup aabb needs scale/rotate,
+  > might be better to test bounds-circle
+- ✅ cannot spawn within bounds radius of npc
+
+- ✅ svg decor have meta
+- ❌ gm.decor.meta.roomIds
+- ✅ restrict decor to a single room
+  - gets too complex otherwise
+  - can use multiple for e.g. "nearby door"
+- ✅ instantiated decor organised by decor.byGmRoomId
+- ✅ decor circle collisions
+  - ✅ triggered by npc walk (without optimize)
+  - ✅ restrict npc circle to center
+  - ✅ local navPath provides roomIds aligned to fullPath
+  - ✅ global navPath provides gmRoomIds aligned to fullPath
+  - ✅ decor organised by gmRoomId
+  - ✅ restrict collisions by gmRoomId
+    - store globalNavPath.gmRoomIds in npc.anim.aux
+    - using navPath.gmRoomIds and api.decor.byGmRoomId
+  - ✅ shallow api.decor.byGmRoomKey
+  - ✅ decor circle/rect collision induces wayMeta/event
+- ✅ decor ~~rect~~ poly collisions
+  - ℹ️ restrict npc to center
+  - ✅ simplified approach (test all segs)
+- ✅ `spawned-npc` references newly colliding decor
 
 - ✅ BUG: chrome: cursor over decor _circle_ or _rect_
   - `npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'`
