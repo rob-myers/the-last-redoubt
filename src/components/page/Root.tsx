@@ -25,30 +25,9 @@ export function wrapPageElement({
     props.pageContext?.frontmatter
   ) as FrontMatter | undefined;
 
-  const allFrontMatter = useStaticQuery(graphql`
-    query { allMdx {
-      edges { node { frontmatter {
-        key
-        date
-        icon
-        giscusTerm
-        info
-        label
-        navGroup
-        next
-        path
-        prev
-        tags
-      } } } }
-    }
-  `) as AllFrontMatter;
-
   return (
     <>
-      <RootHooks
-        allFrontMatter={allFrontMatter}
-        frontMatter={frontMatter}
-      />
+      <RootHooks frontMatter={frontMatter} />
       <Helmet>
         <title>
           {siteTitle}
@@ -85,13 +64,31 @@ export interface FrontMatterProps {
 }
 
 function RootHooks(props: {
-  allFrontMatter: AllFrontMatter;
   frontMatter?: FrontMatter;
 }) {
+
+  const allFrontMatter = useStaticQuery(graphql`
+    query { allMdx {
+      edges { node { frontmatter {
+        key
+        date
+        icon
+        giscusTerm
+        info
+        label
+        navGroup
+        next
+        path
+        prev
+        tags
+      } } } }
+    }
+  `) as AllFrontMatter;
+
   React.useMemo(() => {
     clearAllBodyScrollLocks();
     useSiteStore.api.setArticleKey(props.frontMatter?.key);
-    useSiteStore.api.initiate(props.allFrontMatter);
+    useSiteStore.api.initiate(allFrontMatter);
   }, [props.frontMatter]);
   
   React.useEffect(() => {
