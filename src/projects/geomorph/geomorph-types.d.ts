@@ -151,8 +151,6 @@ declare namespace Geomorph {
       default: Vect;
       /** Can specify light position from room through door */
       doorView: { [doorId?: number]: { point: Vect; meta: PointMeta; } };
-      /** `labels` inside room */
-      labels: LayoutLabel[];
       /** Spawn points inside room */
       spawn: (Geom.VectJson & { meta: PointMeta })[];
       /** Can specify light position from room through window */

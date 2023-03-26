@@ -141,3 +141,14 @@ Boxy SVG Shortcuts
 Jabra recording: keep Sound open so can see Mic Level.
 
 <img src="Jabra-Microphone-Sound-Open.png" height="300" />
+
+---
+
+Filter Chrome DevTools console
+
+1. Hide Chrome extension errors
+2. Ignore Gatsby-related preload warnings
+
+```
+-chrome-extension: -/data.json\swas\spreloaded/
+```

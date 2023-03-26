@@ -133,7 +133,6 @@ export async function createGeomorphData(input) {
     // Default is room's center, which may not lie inside room
     default: x.center,
     doorView: {},
-    labels: [],
     spawn: [],
     windowLight: {},
   }));
@@ -173,29 +172,18 @@ export async function createGeomorphData(input) {
       }
     }
     if (single.tags.includes('decor')) {
-      /**
-       * - `point`: itself
-       * - `circle`: center
-       * - angled `rect`: center
-       *   > not the point we'll rotate about.
-       * - `path`: unsupported
-       */
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
-      if (roomId >= 0) {// ℹ️ we restrict each decor to a single room
+      if (roomId >= 0) {
+        // ℹ️ decor is restricted to a single room
         decor[roomId].push(singleToDecor(single, i, { roomId }));
+      } else if (single.tags.includes('label')) {
+        // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
+        // ℹ️ label could instead be placed nearby respective hull symbols
       } else {
-        console.warn(`decor (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
+        console.warn(`decor (single "${single.tags.join(" ")}") should be inside some room (${layout.key})`)  
       }
     }
-  });
-
-  layout.labels.forEach((label) => {
-    const roomId = layout.rooms.findIndex(x => x.contains(label.center));
-    if (roomId >= 0) {
-      pointsByRoom[roomId].labels.push(label);
-      pointsByRoom[roomId].default = Vect.from(pointsByRoom[roomId].labels[0].center);
-    } else console.warn(`label ${label.text} should be inside some room`);
   });
   //#endregion
 

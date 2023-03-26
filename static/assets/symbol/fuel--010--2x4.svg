@@ -9,11 +9,11 @@
   </g>
   <g>
     <title>singles</title>
-    <rect x="550" y="90" width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;">
-      <title>decor go label room fuel</title>
-    </rect>
-    <rect x="-19" y="-19.5" width="1238" height="639" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);">
+    <rect x="-19.5" y="-19.5" width="1238" height="639" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);">
       <title>wall no-fill</title>
+    </rect>
+    <rect x="590" y="130" width="20" height="20" style="fill: rgb(255, 255, 255);">
+      <title>decor label fuel</title>
     </rect>
   </g>
 </svg>

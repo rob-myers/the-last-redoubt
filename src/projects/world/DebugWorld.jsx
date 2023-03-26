@@ -27,7 +27,6 @@ export default function DebugWorld(props) {
       const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset); // 
       const roomAabb = gm.rooms[roomId].rect;
       const roomPoly = gm.rooms[roomId];
-      const roomLabel = gm.point[roomId].labels.find(x => x.tags.includes('room'));
       const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
       return {
         gm,
@@ -36,7 +35,6 @@ export default function DebugWorld(props) {
         outsetRoomNavAabb,
         roomAabb,
         roomPoly,
-        roomLabel,
         undoNonAffineStyle,
       };
     }

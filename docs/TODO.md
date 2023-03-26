@@ -6,15 +6,18 @@
   - e.g. player may need to open door in order to spawn onto mesh
 - ✅ restyle decor circle/rect
 
-- 🚧 clean initial `console.warn`s
+- ✅ clean initial `console.warn`s
+  - ✅ https://www.gatsbyjs.com/docs/reference/release-notes/migrating-from-v4-to-v5/#staticquery--is-deprecated
+- restyle geomorphs pngs: navmesh more visible + sharper
+- handle already paused npc on disable/enable Tabs
+
 - understand and improve wayMeta triggering
   - wayTimeout
   - nextWayTimeout
 - redo npc vs npc collisions
+  - perhaps just needs clarity
 - redo npc vs door collisions
-
-- restyle geomorphs pngs: navmesh more visible + sharper
-- handle already paused npc on disable/enable Tabs
+  - reuse angled rect collision
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue

@@ -1874,10 +1874,10 @@
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "fuel"],
+        "tags": ["decor", "label", "fuel"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[158, 458], [158, 480], [180, 480], [180, 458]]]
+          "coordinates": [[[158, 458], [158, 478], [178, 478], [178, 458]]]
         }
       },
       {
@@ -2177,7 +2177,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1679155284085.6257
+    "lastModified": 1679824757057.1975
   },
   "303--hull": {
     "key": "303--hull",
@@ -4710,24 +4710,24 @@
     "walls": [],
     "singles": [
       {
-        "tags": ["decor", "go", "label", "room", "fuel"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[550, 90], [550, 190], [650, 190], [650, 90]]]
-        }
-      },
-      {
         "tags": ["wall", "no-fill"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[-19, -19.5], [-19, 619.5], [1219, 619.5], [1219, -19.5]]
+            [[-19.5, -19.5], [-19.5, 619.5], [1218.5, 619.5], [1218.5, -19.5]]
           ]
+        }
+      },
+      {
+        "tags": ["decor", "label", "fuel"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[590, 130], [590, 150], [610, 150], [610, 130]]]
         }
       }
     ],
     "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
-    "lastModified": 1679155284261.4133
+    "lastModified": 1679829870702.9734
   },
   "galley-and-mess-halls--006--2x4": {
     "key": "galley-and-mess-halls--006--2x4",
