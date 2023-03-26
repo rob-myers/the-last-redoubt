@@ -3,7 +3,7 @@ import { Poly, Vect } from "../geom";
 import { geom } from '../service/geom';
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { error } from "../service/log";
-import { drawLine, fillPolygon, fillRing, setStyle, strokePolygon } from '../service/dom';
+import { drawLine, fillPolygon, fillRing, setStyle } from '../service/dom';
 
 /**
  * Render a single geomorph PNG,
@@ -29,8 +29,8 @@ export async function renderGeomorph(
     thinDoors = false,
     labels = false,
     floorColor = 'rgba(220, 220, 220, 1)',
-    navColor = 'rgba(255, 255, 255, 0.8)',
-    navStroke = 'rgba(0, 0, 0, 0.15)',
+    navColor = 'rgba(255, 255, 255, 1)',
+    navStroke = 'rgba(0, 0, 0, 0.25)',
     obsColor = 'rgba(100, 100, 100, 0.45)',
     // wallColor = 'rgba(50, 40, 40, 0.5)',
     wallColor = 'rgba(50, 40, 40, 1)',
@@ -44,6 +44,10 @@ export async function renderGeomorph(
   const ctxt = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
   ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
 
+  ctxt.imageSmoothingEnabled = true;
+  ctxt.imageSmoothingQuality = 'high';
+  ctxt.lineJoin = 'round';
+
   //#region underlay
   ctxt.fillStyle = floorColor;
   if (hullSym.hull.length === 1 && hullSym.hull[0].holes.length) {
@@ -54,10 +58,12 @@ export async function renderGeomorph(
   }
 
   ctxt.fillStyle = navColor;
-  fillPolygon(ctxt, layout.navPoly);
+  ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+  fillPolygon(ctxt, layout.navPoly, true);
+
   if (navTris) {
     ctxt.strokeStyle = navStroke;
-    ctxt.lineWidth = 0.5;
+    ctxt.lineWidth = 0.2;
     drawTriangulation(ctxt, layout.navZone)
   }
 
