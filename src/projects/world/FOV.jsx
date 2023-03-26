@@ -1,6 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
+import { cssName } from "../service/const";
 import { geomorphPngPath, getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -192,12 +193,17 @@ export default function FOV(props) {
     */
   will-change: transform;
 
+  /**
+   * - invert(100%) brightness(34%)
+   * - invert(100%) brightness(32%) contrast(150%)
+   */
+  ${cssName.geomorphDarkFilter}: invert(100%) brightness(45%) contrast(150%);
+
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    /* filter: invert(100%) brightness(34%); */
-    filter: invert(100%) brightness(32%) contrast(150%);
+    filter: var(${cssName.geomorphDarkFilter});
   }
 `;
 

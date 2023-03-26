@@ -68,6 +68,7 @@ export const cssName = {
   decorPathColour: '--decor-path-colour',
   
   geomorphFilter: '--geomorph-filter',
+  geomorphDarkFilter: '--geomorph-dark-filter',
 
   npc: 'npc',
   npcBody: 'body',
