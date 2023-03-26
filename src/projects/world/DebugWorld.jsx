@@ -249,7 +249,7 @@ export default function DebugWorld(props) {
  */
 
 // 🚧 move to const
-const debugRadius = 4;
+const debugRadius = 3;
 const debugDoorOffset = 10;
 
 const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
@@ -274,6 +274,7 @@ const rootCss = css`
       pointer-events: var(${cssName.debugDoorArrowPtrEvts});
       cursor: pointer;
       background-image: url('/assets/icon/circle-right.svg');
+      opacity: 0.5;
     }
 
     div.debug-door-id-icon {
