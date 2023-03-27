@@ -10,14 +10,15 @@
   - ✅ https://www.gatsbyjs.com/docs/reference/release-notes/migrating-from-v4-to-v5/#staticquery--is-deprecated
 - ✅ restyle geomorphs pngs: navmesh more visible + sharper
 
-- handle already paused npc on disable/enable Tabs
+- ✅ handle manually paused npc on disable/enable Tabs
+
 - understand and improve wayMeta triggering
   - wayTimeout
   - nextWayTimeout
 - redo npc vs npc collisions
   - 🚧 saw bug (repeatedly move other along fixed navpath)
   - more permissive when other is static off-mesh?
-  - perhaps just needs clarity
+  - needs clarity
 - redo npc vs door collisions
   - reuse angled rect collision
 

@@ -285,11 +285,11 @@ export default function NPCs(props) {
           state.npcAct({ npcKey, action: "cancel" }).catch(_e => void {});
         },
         suspend() {
-          state.npcAct({ npcKey, action: "pause" });
+          state.npcAct({ npcKey, action: "pause", cause: 'process-suspend' });
           return true;
         },
         resume() {
-          state.npcAct({ npcKey, action: "resume" });
+          state.npcAct({ npcKey, action: "resume", cause: 'process-resume' });
           return true;
         },
       };
@@ -393,10 +393,10 @@ export default function NPCs(props) {
           return npc.getAngle();
         }
         case 'pause':// Pause current animation
-          state.getNpc(e.npcKey).pause();
+          state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');
           break;
         case 'resume':// Resume current animation
-          state.getNpc(e.npcKey).resume();
+          state.getNpc(e.npcKey).resume(e.cause === 'process-resume');
           break;
         case 'rm':
         case 'remove':

@@ -23,7 +23,6 @@ export default function createNpc(
       root: /** @type {HTMLDivElement} */ ({}),
       body: /** @type {HTMLDivElement} */ ({}),
     },
-    unspawned: true,
     anim: {
       // 🚧 can specify character class
       css: css`${npcsMeta['first-human-npc'].css}`,
@@ -53,7 +52,10 @@ export default function createNpc(
       wayMetas: [],
       wayTimeoutId: 0,
     },
+    
     doMeta: null,
+    manuallyPaused: false,
+    unspawned: true,
 
     async animateOpacity(targetOpacity, durationMs) {
       this.anim.opacity.cancel(); // Ensure prev anim removed?
@@ -107,6 +109,7 @@ export default function createNpc(
     },
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
+      this.manuallyPaused = false;
 
       const rootAnims = [this.anim.translate].filter(
         anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.root)
@@ -365,7 +368,11 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.children[0]);
       }
     },
-    pause() {
+    pause(dueToProcessSuspend = false) {
+      if (!dueToProcessSuspend) {
+        this.manuallyPaused = true;
+      } // We permit re-pause when manuallyPaused      
+
       console.log(`pause: pausing ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
       isRunning(opacity) && opacity.pause();
@@ -384,7 +391,12 @@ export default function createNpc(
         api.panZoom.animationAction('pause');
       }
     },
-    resume() {
+    resume(dueToProcessResume = false) {
+      if (this.manuallyPaused && dueToProcessResume) {
+        return;
+      }
+      this.manuallyPaused = false;
+
       console.log(`resume: resuming ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
       isPaused(opacity) && opacity.play();

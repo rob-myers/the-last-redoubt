@@ -38,14 +38,21 @@ declare namespace NPC {
       root: HTMLDivElement;
       body: HTMLDivElement;
     };
+    anim: NPCAnimData;
+
+    /** From current do point */
+    doMeta: null | Geomorph.PointMeta;
+    /**
+     * Process suspend/resume for e.g. `walk` will pause/resume npc,
+     * often as a side-effect of disable/enable <Tabs>.
+     * But if we manually invoked npc.pause() we must avoid auto-resuming it.
+     */
+    manuallyPaused: boolean;
     /**
      * Initially `false` until <NPC> sets it true.
      * May also set false for cached un-rendered.
      */
     unspawned: boolean;
-    anim: NPCAnimData;
-    /** From current do point */
-    doMeta: null | Geomorph.PointMeta;
 
     cancel(): Promise<void>;
     canLook(): boolean;
@@ -96,8 +103,8 @@ declare namespace NPC {
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;
-    pause(): void;
-    resume(): void;
+    pause(dueToProcessSuspend?: boolean): void;
+    resume(dueToProcessResume?: boolean): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
     /** Setting null effectively reverts to default */
@@ -361,8 +368,8 @@ declare namespace NPC {
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
-    | { action: 'pause'; npcKey: string }
-    | { action: 'resume'; npcKey: string }
+    | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
+    | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
     | { action: 'rm' | 'remove'; npcKey: string; }
     | { action: 'set-player'; npcKey?: string }

@@ -210,10 +210,7 @@
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]
       
-      const process = api.getProcess()
-      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
-      process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
-      process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "resume" }); return true; })
+      npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
 
       if (api.isTtyAt(0)) {
         const point = api.safeJsonParse(args[1])
@@ -379,10 +376,7 @@
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]
   
-      const process = api.getProcess()
-      process.cleanups.push(() => npcs.npcAct({ npcKey, action: "cancel" }).catch(_e => void {}))
-      process.onSuspends.push(() => { npcs.npcAct({ npcKey, action: "pause" }); return true; })
-      process.onResumes.push(() => { npcs.npcAct({ npcKey, action: "resume" }); return true; })
+      npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
   
       if (api.isTtyAt(0)) {
         const points = api.safeJsonParse(args[1])
