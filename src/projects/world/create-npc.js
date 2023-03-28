@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
-import { cancellableAnimDelayMs, cssName } from '../service/const';
+import { cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 import npcsMeta from './npcs-meta.json';
 
@@ -141,20 +141,24 @@ export default function createNpc(
     },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
+      window.clearTimeout(this.anim.wayTimeoutId);
     },
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
     async followNavPath(path, opts) {
+      // This might be a jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
-      // `nav` provides gmRoomKeys (needed for npc to collide with decor)
+      // `nav` provides gmRoomKeys, needed for decor collisions
       this.anim.gmRoomKeys = opts?.gmRoomKeys ?? [];
+
       this.clearWayMetas();
       this.updateAnimAux();
+      
       if (this.anim.path.length <= 1 || this.anim.aux.total === 0) {
         return;
       }
-            
+      
       if (opts?.globalNavMetas) {
         this.anim.wayMetas = opts.globalNavMetas.map((navMeta) => ({
           ...navMeta,
@@ -162,7 +166,7 @@ export default function createNpc(
           length: Math.max(0, this.anim.aux.sofars[navMeta.index] + navMetaOffsets[navMeta.key]),
         }));
       }
-
+      
       this.startAnimation('walk');
       api.npcs.events.next({ key: 'started-walking', npcKey: this.def.key });
       console.log(`followNavPath: ${this.def.key} started walk`);
@@ -441,7 +445,6 @@ export default function createNpc(
     
           // Animate position and rotation
           const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
-          opts.delay ||= cancellableAnimDelayMs;
           anim.translate = this.el.root.animate(translateKeyframes, opts);
           anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           anim.durationMs = opts.duration;
@@ -465,7 +468,7 @@ export default function createNpc(
               easing: `steps(${animLookup.walk.frameCount})`,
               duration: spriteMs, // ~ npcWalkAnimDurationMs
               iterations: Infinity,
-              delay: opts.delay || cancellableAnimDelayMs,
+              delay: opts.delay,
             },
           );
           break;

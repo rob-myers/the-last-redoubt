@@ -13,20 +13,20 @@ export default function useHandleEvents(api) {
   const state = useStateRef(/** @type {() => State} */ () => ({
 
     async handleWayEvents(e) {
+      // console.log('handleWayEvents', e)
       const npc = api.npcs.getNpc(e.npcKey);
 
       switch (e.meta.key) {
         case 'pre-npcs-collide':
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
-        case 'start-seg': {
+        case 'start-seg':
           // We know `npc` is walking
           npc.updateWalkSegBounds(e.meta.index);
 
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
           break;
-        }
         case 'pre-exit-room':
         case 'pre-near-door': {
           // If upcoming door is closed, stop npc
@@ -39,7 +39,7 @@ export default function useHandleEvents(api) {
     },
 
     handlePlayerWayEvent(e) {
-      // console.log('player way event', e.meta);
+      // console.log('handlePlayerWayEvent', e.meta);
       switch (e.meta.key) {
         case 'exit-room': {
           // FOV
@@ -118,6 +118,7 @@ export default function useHandleEvents(api) {
     predictNpcNpcsCollision(npc, e) {
       // 🚧 one npc should be the player (?)
       const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
+
       for (const other of otherNpcs) {
         const collision = npcService.predictNpcNpcCollision(npc, other);
         if (collision) {// Add wayMeta cancelling motion

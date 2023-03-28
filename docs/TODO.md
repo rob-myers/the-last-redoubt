@@ -2,23 +2,12 @@
 
 ## In progress
 
-- ✅ cannot spawn onto closed door
-  - e.g. player may need to open door in order to spawn onto mesh
-- ✅ restyle decor circle/rect
-
-- ✅ clean initial `console.warn`s
-  - ✅ https://www.gatsbyjs.com/docs/reference/release-notes/migrating-from-v4-to-v5/#staticquery--is-deprecated
-- ✅ restyle geomorphs pngs: navmesh more visible + sharper
-
-- ✅ handle manually paused npc on disable/enable Tabs
-
-- understand and improve wayMeta triggering
-  - wayTimeout
-  - nextWayTimeout
-- redo npc vs npc collisions
-  - 🚧 saw bug (repeatedly move other along fixed navpath)
+- review npc vs npc collisions
   - more permissive when other is static off-mesh?
   - needs clarity
+  - seen missed collisions?
+- understand and improve wayMeta triggering
+  - wayTimeout + nextWayTimeout
 - redo npc vs door collisions
   - reuse angled rect collision
 
@@ -408,6 +397,20 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ cannot spawn onto closed door
+  - e.g. player may need to open door in order to spawn onto mesh
+- ✅ restyle decor circle/rect
+
+- ✅ clean initial `console.warn`s
+  - ✅ https://www.gatsbyjs.com/docs/reference/release-notes/migrating-from-v4-to-v5/#staticquery--is-deprecated
+- ✅ restyle geomorphs pngs: navmesh more visible + sharper
+
+- ✅ handle manually paused npc on disable/enable Tabs
+
+- ✅ if colliding and if `walk $navPath` jumps, collision cancels after/before jump
+  - issue was `opts.delay ||= cancellableAnimDelayMs` introduced to smooth safari
+  - Safari has jerky CssPanZoom followPath (Firefox mobile too)
 
 - ✅ npc json has animLookup[animKey].aabb
 - ❌ sit should have larger staticBounds

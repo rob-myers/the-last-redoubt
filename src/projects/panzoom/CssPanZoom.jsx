@@ -8,7 +8,6 @@ import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
 import { Vect } from "../geom";
 import { keys, precision, safeJsonParse, testNever } from "../service/generic";
-import { cancellableAnimDelayMs } from "../service/const";
 import { isAnimAttached } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -227,12 +226,15 @@ export default function CssPanZoom(props) {
         const { keyframes, distance } = state.computePathKeyframes(path);
         const duration = distance * animScaleFactor;
 
+        /**
+         * ℹ️ This is jerky on Safari Desktop and Firefox Mobile
+         */
         state.anims[0] = state.translateRoot.animate(keyframes, {
           duration,
           direction: 'normal',
           fill: 'forwards',
           easing: 'linear',
-          delay: cancellableAnimDelayMs,
+          // delay: cancellableAnimDelayMs,
         });
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
