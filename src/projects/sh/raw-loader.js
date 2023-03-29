@@ -271,6 +271,10 @@
       const { doors, npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
       const action = args[0];
 
+      /**
+       * 🚧 needs refactor into smaller parts
+       */
+
       if (typeof action !== "string" || action === "") {
         throw api.throwError("first arg {action} must be a non-empty string");
       } else if (!npcs.service.isNpcActionKey(action)) {
@@ -295,26 +299,41 @@
         throw api.getKillError();
       }
 
+      let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
+
       if (api.isTtyAt(0)) {
         const opts = npcs.service.normalizeNpcCommandOpts(
           action,
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
         );
-        if (action === "do") {// `npc do` needs to handle pause/resume/cancel
-          npcs.handleLongRunningNpcProcess(process, args[1]);
+        if (action === "do") {
+          cleanLongRunning = npcs.handleLongRunningNpcProcess(process, /** @type {*} */ (opts.npcKey));
         }
-        yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+        try {
+          yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+        } catch (e) {
+          if (!opts.suppressThrow) throw e;
+        } finally {
+          cleanLongRunning?.();
+        }
       } else {
-        let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
+        /** e.g. `foo | npc do "{ suppressThrow: true }"`*/
+        const baseOpts = api.parseJsArg(args[1]) || {};
+
         while ((datum = await api.read()) !== null) {
-          const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
           if (action === "do") {
             const { npcKey } = /** @type {NPC.NpcAction & { action: 'do' }} */ (datum);
             cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcKey);
           }
-          yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
-          cleanLongRunning?.();
+          try {
+            const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
+            yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+          } catch (e) {
+            if (!baseOpts.suppressThrow) throw e;
+          } finally {
+            cleanLongRunning?.();
+          }
         }
       }
 

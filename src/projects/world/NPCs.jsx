@@ -57,6 +57,7 @@ export default function NPCs(props) {
           case 'configKey':
           case 'decorKey':
           case 'npcKey':
+          case 'suppressThrow':
             return undefined;
           case proxyKey: return true;
           default: throw testNever(key, { suffix: 'config.get' });
@@ -79,6 +80,7 @@ export default function NPCs(props) {
           case 'configKey':
           case 'decorKey':
           case 'npcKey':
+          case 'suppressThrow':
             break;
           default:
             testNever(key, { suffix: 'config.set' });
@@ -121,6 +123,15 @@ export default function NPCs(props) {
         Object.keys(tty).forEach(lineText =>
           !lineLookup[lineText] && delete tty[lineText]
         );
+      }
+    },
+    async fadeSpawnDo(npc, e, meta) {
+      try {
+        await npc.animateOpacity(0, 1000);
+        await state.spawn(e);
+        npc.startAnimationByMeta(meta);
+      } finally {
+        await npc.animateOpacity(1, 1000);
       }
     },
     getGlobalNavPath(src, dst) {
@@ -427,51 +438,56 @@ export default function NPCs(props) {
       const npc = state.getNpc(e.npcKey);
       const npcPosition = npc.getPosition();
       const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
-      const meta = npcService.extendDecorMeta(e.meta, gm.matrix);
+      const meta = npcService.extendDecorMeta(e.point.meta, gm.matrix);
 
       try {
-        const onMesh = state.isPointInNavmesh(npcPosition);
+        const npcOnNavMesh = state.isPointInNavmesh(npcPosition);
 
-        if (onMesh && meta.doable) {// Started on-mesh and clicked do point icon
-          /** The actual "do point" (e.point is somewhere on icon) */
+        if (npcOnNavMesh) {// Started on-mesh and clicked point
+          if (!meta.doable) {
+            throw Error('not doable');
+          }
+          /** The actual "do point" -- e.point is somewhere on icon */
           const decorPoint = meta.targetPos;
 
-          if (state.isPointInNavmesh(decorPoint)) {
+          if (state.isPointInNavmesh(decorPoint)) {// Walk then Do
             const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: decorPoint, throwOnNotNav: true });
             await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-            npc.startAnimationByMeta(e.meta);
-          } else if (
-            meta.spawnable
-            && (npcPosition.distanceTo(e.point) <= npc.getInteractRadius())
-          ) {
-            await state.spawnFade(npc, {
-              npcKey: e.npcKey,
-              point: decorPoint,
-              angle: meta.orientRadians,
-              requireNav: false,
-            }, meta);
-          }
-          return;
-        }
-        
-        if (
-          !onMesh
-          && (meta.nav || meta.doable)
-          && npcPosition.distanceTo(e.point) <= npc.getInteractRadius()
-        ) {// Started off-mesh and clicked nearby {nav,do} point
-
-          // prevent spawn from do point into different room
-          if (!api.gmGraph.inSameRoom(npcPosition, e.point))  {
+            npc.startAnimationByMeta(e.point.meta);
             return;
           }
-          await state.spawnFade(npc, {
+          
+          if (!(npcPosition.distanceTo(e.point) <= npc.getInteractRadius())) {
+            throw Error('too far away');
+          }
+
+          await state.fadeSpawnDo(npc, {
+            npcKey: e.npcKey,
+            point: decorPoint,
+            angle: meta.orientRadians,
+            requireNav: false,
+          }, meta);
+
+        } else {// Started off-mesh and clicked point
+          
+          if (!(meta.doable || meta.nav)) {
+            throw Error('not doable nor navigable');
+          }
+
+          if (
+            !(npcPosition.distanceTo(e.point) <= npc.getInteractRadius())
+            || !api.gmGraph.inSameRoom(npcPosition, e.point)
+          ) {
+            throw Error('too far away');
+          }
+
+          await state.fadeSpawnDo(npc, {
             npcKey: e.npcKey,
             // If not navigable use decorPoint
             point: meta.nav ? e.point : meta.targetPos,
             // Orient if staying off-mesh
             angle: meta.nav ? undefined : meta.orientRadians,
           }, meta);
-          return;
         }
 
       } catch (e) {
@@ -585,15 +601,6 @@ export default function NPCs(props) {
       // Trigger <NPC> render and await reply
       update();
       await promise;
-    },
-    async spawnFade(npc, e, meta) {
-      try {
-        await npc.animateOpacity(0, 1000);
-        await state.spawn(e);
-        npc.startAnimationByMeta(meta);
-      } finally {
-        await npc.animateOpacity(1, 1000);
-      }
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
@@ -804,6 +811,7 @@ const rootCss = css`
  *
  * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
+ * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'], meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
@@ -824,7 +832,6 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
- * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'], meta: Geomorph.PointMeta) => Promise<void>} spawnFade
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc

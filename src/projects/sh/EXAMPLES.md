@@ -64,6 +64,12 @@ npc get andros >me
 me/animateOpacity'(0.5, 0)'
 ```
 
+```sh
+expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do '{ suppressError: 1 }'
+
+npc do '{ npcKey: "foo", point:'$( click 1 )'}'
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md

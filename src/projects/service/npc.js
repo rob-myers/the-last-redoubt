@@ -67,7 +67,6 @@ export function extendDecorMeta(meta, gmMatrix) {
   const extension = {
     doable,
     orientRadians: worldOrientRadians,
-    spawnable: doable && hasTag(meta, 'stand', 'sit', 'lie'),
     targetPos: /** @type {*} */ (meta.targetPos), // For type propagation
     ui: true,
   };

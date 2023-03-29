@@ -66,10 +66,10 @@ doLoop: `{
   click |
     flatMap '({ x, y, meta }) =>
       (meta.do || meta.nav)
-        ? { npcKey: "'$1'", point: { x, y }, meta }
+        ? { npcKey: "'$1'", point: { x, y, meta } }
         : []
     ' |
-    npc do
+    npc do '{ suppressThrow: true }'
 }`,
 
 /** Usage: goLoop {npcKey} */

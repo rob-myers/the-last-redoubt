@@ -2,14 +2,24 @@
 
 ## In progress
 
-- review npc vs npc collisions
-  - more permissive when other is static off-mesh?
+- ✅ `npc do` examples and errors
+  - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`
+  - ✅ can `npc {cmd} '{ suppressThrow: true }'`
+  - ✅ error if not a do point
+  - ✅ error if too far
+  - ✅ exit code should be `1` not `130`?
+  - ✅ example `npc do '{ npcKey: "foo", point:'$( click 1 )'}'` 
+
+- 🚧 review npc vs npc collisions
+  - ❌ more permissive when other static off-mesh
   - needs clarity
   - seen missed collisions?
 - understand and improve wayMeta triggering
   - wayTimeout + nextWayTimeout
 - redo npc vs door collisions
   - reuse angled rect collision
+
+- geomorph PNGs have darker ground, white PNG symbols
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
