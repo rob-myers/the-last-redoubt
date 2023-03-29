@@ -195,7 +195,8 @@ class semanticsServiceClass {
           ));
 
           if (results.some(x => x.status === 'rejected')) {
-            throw killError(node.meta);
+            const { exitCode } = clones[results.findIndex(x => x.status === 'rejected')];
+            throw killError(node.meta, exitCode);
           }
 
         } finally {
