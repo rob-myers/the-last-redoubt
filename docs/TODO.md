@@ -10,6 +10,8 @@
   - ✅ exit code should be `1` not `130`?
   - ✅ example `npc do '{ npcKey: "foo", point:'$( click 1 )'}'` 
 
+- ✅ geomorph PNGs have darker ground, white PNG symbols
+
 - 🚧 review npc vs npc collisions
   - ❌ more permissive when other static off-mesh
   - needs clarity
@@ -19,7 +21,6 @@
 - redo npc vs door collisions
   - reuse angled rect collision
 
-- geomorph PNGs have darker ground, white PNG symbols
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue

@@ -151,7 +151,7 @@ const rootCss = css`
    * - brightness(70%) sepia(0.4);
    * - brightness(80%) sepia(0.1);
    */
-  ${cssName.geomorphFilter}: brightness(70%) sepia(0.4) contrast(1);
+  ${cssName.geomorphFilter}: brightness(70%) sepia(0.1) contrast(1);
 
   img.geomorph {
     position: absolute;
