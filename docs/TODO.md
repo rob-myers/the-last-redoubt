@@ -12,14 +12,16 @@
 
 - ✅ geomorph PNGs have darker ground, white PNG symbols
 
-- 🚧 review npc vs npc collisions
+- ✅ review npc vs npc collisions
   - ❌ more permissive when other static off-mesh
-  - needs clarity
-  - seen missed collisions?
-- understand and improve wayMeta triggering
+  - ❌ seen missed collisions?
+  - ℹ️ clarity: makes sense + see collide-npcs.mdx
+
+- 🚧 understand and improve wayMeta triggering
   - wayTimeout + nextWayTimeout
 - redo npc vs door collisions
-  - reuse angled rect collision
+  - reuse decor rect collision
+  - maybe still fire `pre-near-door` but via decor collision
 
 
 - BUG? saw npcs.playerKey set null on multi spawn?

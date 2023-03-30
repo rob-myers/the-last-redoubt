@@ -214,7 +214,7 @@ export function predictNpcCircleCollision(npcA, decorB) {
  */
 export function predictNpcNpcCollision(npcA, npcB) {
   if (!npcA.isWalking()) {
-    return null; // Saw segA assertNonNull fail 🤔
+    return null; // Maybe stopped in time for event to fire?
   }
   if (npcB.isWalking()) {
     if (!npcA.getWalkSegBounds(true).intersects(npcB.getWalkSegBounds(true))) {

@@ -28,37 +28,32 @@ export default function useHandleEvents(api) {
           state.predictNpcDecorCollision(npc, e);
           break;
         case 'pre-exit-room':
-        case 'pre-near-door': {
+        // 🚧 fire `pre-near-door` based on collision prediction
+        case 'pre-near-door':
           // If upcoming door is closed, stop npc
           if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
             await npc.cancel();
           }
           break;
-        }
       }
     },
 
     handlePlayerWayEvent(e) {
       // console.log('handlePlayerWayEvent', e.meta);
       switch (e.meta.key) {
-        case 'exit-room': {
-          // FOV
+        case 'exit-room':
           if (e.meta.otherRoomId !== null) {
             api.fov.setRoom(e.meta.gmId, e.meta.otherRoomId, e.meta.doorId);
           } else {// Handle hull doors
             const adjCtxt = api.gmGraph.getAdjacentRoomCtxt(e.meta.gmId, e.meta.hullDoorId);
             adjCtxt && api.fov.setRoom(adjCtxt.adjGmId, adjCtxt.adjRoomId, adjCtxt.adjDoorId);
           }
-
-          // api.updateAll();
           break;
-        }
-        case 'enter-room': {
+        case 'enter-room':
           // Needed in case we exit-room via doorway then immediately re-enter
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
           // api.updateAll();
           break;
-        }
         case 'decor-collide':
         case 'pre-npcs-collide':
         case 'pre-exit-room':
@@ -116,7 +111,6 @@ export default function useHandleEvents(api) {
     },
 
     predictNpcNpcsCollision(npc, e) {
-      // 🚧 one npc should be the player (?)
       const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
 
       for (const other of otherNpcs) {
