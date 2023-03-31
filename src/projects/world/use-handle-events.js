@@ -27,8 +27,6 @@ export default function useHandleEvents(api) {
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
           break;
-        case 'pre-exit-room':
-        // 🚧 fire `pre-near-door` based on collision prediction
         case 'pre-near-door':
           // If upcoming door is closed, stop npc
           if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
@@ -56,7 +54,6 @@ export default function useHandleEvents(api) {
           break;
         case 'decor-collide':
         case 'pre-npcs-collide':
-        case 'pre-exit-room':
         case 'pre-near-door':
         case 'vertex':
           break;

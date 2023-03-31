@@ -2,6 +2,12 @@
 
 ## In progress
 
+- 🚧 wayMeta: redo npc vs door collisions
+  - ℹ️ pre-exit-room used when leave room (hull door or not)
+  - ℹ️ pre-near-door used when walk ends near a door
+  - ✅ remove `pre-exit-room`
+  - trigger `pre-exit-room` based on decor rect collision...
+
 - ✅ `npc do` examples and errors
   - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`
   - ✅ can `npc {cmd} '{ suppressThrow: true }'`
@@ -23,10 +29,6 @@
     - on anim finish, invoked startAnimation('idle') which invoked `clearWayMetas` before setTimeout could resolve
   - ✅ can use extant `stopped-walking`
   - ✅ on complete walk should see `way-point` with meta `{ key: 'vertex', final: true }`
-
-- 🚧 wayMeta: redo npc vs door collisions
-  - reuse decor rect collision
-  - maybe still fire `pre-near-door` but via decor collision
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue

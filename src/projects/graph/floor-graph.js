@@ -135,16 +135,14 @@ export class floorGraphClass extends BaseGraph {
 
         if (i > 0) {// We exited previous room
           const roomId = /** @type {{ roomId: number }} */ (partition[i - 1]).roomId;
-
-          const baseMeta = {
+          navMetas.push({
+            key: 'exit-room',
+            exitedRoomId: roomId,
             index: fullPath.length - 1,
             doorId: item.doorId,
             hullDoorId: this.gm.hullDoors.indexOf(door),
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
-          };
-          navMetas.splice(-1, 0, { key: 'pre-exit-room', ...baseMeta, willExitRoomId: roomId });
-          navMetas.push({ key: 'exit-room', ...baseMeta, exitedRoomId: roomId });
-
+          });
         } else {
           startDoorId = item.doorId;
         }
@@ -213,22 +211,23 @@ export class floorGraphClass extends BaseGraph {
         }
 
         if (!partition[i + 1]) {// Finish in room
-          /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final = true;
+          /** @type {Graph.FloorGraphVertexNavMeta} */ (
+            navMetas[navMetas.length - 1]
+          ).final = true;
+        }
 
-          // 🚧 pre-near-door based on navnode meta is a hack
-          // > instead, test "door decor rect" collision 
-          const finalMeta = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
-          if (finalMeta.nearDoorId !== undefined && finalMeta.nearDoorId >= 0) {
-            const door = this.gm.doors[finalMeta.nearDoorId];
-            navMetas.splice(-1, 0, {// The last meta should be a 'vertex'
-              key: 'pre-near-door',
-              index: fullPath.length - 1,
-              doorId: finalMeta.nearDoorId,
-              hullDoorId: this.gm.hullDoors.indexOf(door),
-              currentRoomId: roomId,
-              otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
-            });
-          }
+        // 🚧 predict "door decor rect" collision 
+        const finalMeta = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
+        if (finalMeta.nearDoorId !== undefined && finalMeta.nearDoorId >= 0) {
+          const door = this.gm.doors[finalMeta.nearDoorId];
+          navMetas.splice(-1, 0, {// The last meta should be { key: 'vertex', final: true }
+            key: 'pre-near-door',
+            index: fullPath.length - 1,
+            doorId: finalMeta.nearDoorId,
+            hullDoorId: this.gm.hullDoors.indexOf(door),
+            currentRoomId: roomId,
+            otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
+          });
         }
 
       }

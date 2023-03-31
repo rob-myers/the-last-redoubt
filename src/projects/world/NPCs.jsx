@@ -200,16 +200,15 @@ export default function NPCs(props) {
           if (gmEdge) {
             // Future nodes exist, so final 'vertex' no longer final
             delete /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final;
-            const baseMeta = {
+            navMetas.push({
+              key: 'exit-room',
+              index: fullPath.length - 1,
               gmId: gmEdge.srcGmId,
+              exitedRoomId: gmEdge.srcRoomId,
               doorId: gmEdge.srcDoorId,
               hullDoorId: gmEdge.srcHullDoorId,
-              index: fullPath.length - 1,
               otherRoomId: null,
-            };
-            // Before final vertex meta because will be triggered earlier
-            navMetas.splice(-1, 0, { key: 'pre-exit-room', willExitRoomId: gmEdge.srcRoomId, ...baseMeta });
-            navMetas.push({ key: 'exit-room', exitedRoomId: gmEdge.srcRoomId, ...baseMeta });
+            });
           }
         }
 

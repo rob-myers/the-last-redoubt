@@ -608,20 +608,16 @@ export default function createNpc(
   };
 }
 
+// 🚧 remove this
 /** @type {Record<Graph.NavMetaKey, number>} */
 const navMetaOffsets = {
-  // 'enter-room': -0.02, // To ensure triggered
-  // 'exit-room': -0.02, // To ensure triggered
-  'enter-room': 0, // To ensure triggered
-  'exit-room': 0, // To ensure triggered
-  'pre-npcs-collide': -0.02, // To ensure triggered
+  'enter-room': 0,
+  'exit-room': 0,
+  'pre-npcs-collide': 0,
   'decor-collide': 0,
 
-  /**
-   * 🚧 compute collision time using `predictNpcRectCollision`
-   */
-  "pre-exit-room": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
-  "pre-near-door": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
+  // 🚧 compute collision time using `predictNpcRectCollision`
+  "pre-near-door": -(npcsMeta['first-human-npc'].radius + 10),
 
   "vertex": 0,
 };
