@@ -8358,7 +8358,7 @@
       },
       {
         "type": "Polygon",
-        "coordinates": [[[0, 625], [150, 625], [150, 900], [0, 900], [0, 625]]]
+        "coordinates": [[[0, 600], [150, 600], [150, 895], [0, 895], [0, 600]]]
       },
       {
         "type": "Polygon",
@@ -8438,36 +8438,36 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed"],
+        "tags": ["decor", "do", "lie", "bed", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[150, 345], [150, 355], [160, 355], [160, 345]]]
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair"],
+        "tags": ["decor", "do", "sit", "chair", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[205, 745], [205, 755], [215, 755], [215, 745]]]
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair"],
+        "tags": ["decor", "do", "sit", "chair", "orient-150"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[480, 155], [480, 165], [490, 165], [490, 155]]]
+          "coordinates": [[[470, 145], [470, 155], [480, 155], [480, 145]]]
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair"],
+        "tags": ["decor", "do", "sit", "chair", "orient-210"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[480, 375], [480, 385], [490, 385], [490, 375]]]
+          "coordinates": [[[470, 370], [470, 380], [480, 380], [480, 370]]]
         }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1679155284261.336
+    "lastModified": 1680279679286.3179
   },
   "stateroom--035--2x3": {
     "key": "stateroom--035--2x3",

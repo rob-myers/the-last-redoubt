@@ -6,7 +6,7 @@
   - ℹ️ pre-exit-room used when leave room (hull door or not)
   - ℹ️ pre-near-door used when walk ends near a door
   - ✅ remove `pre-exit-room`
-  - trigger `pre-exit-room` based on decor rect collision...
+  - 🚧 trigger `pre-exit-room` based on decor rect collision...
 
 - ✅ `npc do` examples and errors
   - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`
