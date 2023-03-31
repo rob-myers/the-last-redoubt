@@ -199,7 +199,9 @@ export default function FOV(props) {
    */
   ${cssName.geomorphDarkFilter}: invert(100%) brightness(40%) contrast(150%);
 
+  
   img.geomorph-dark {
+    transition: clip-path 1s;
     position: absolute;
     transform-origin: top left;
     pointer-events: none;

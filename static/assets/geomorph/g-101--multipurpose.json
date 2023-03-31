@@ -1481,6 +1481,34 @@
         }
       },
       {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[485, 539], [485, 659], [475, 659], [475, 539]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[725, 539], [725, 659], [715, 659], [715, 539]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[725, 659], [725, 779], [715, 779], [715, 659]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[485, 659], [485, 779], [475, 779], [475, 659]]]
+        }
+      },
+      {
         "tags": ["wall", "no-fill"],
         "poly": {
           "type": "Polygon",

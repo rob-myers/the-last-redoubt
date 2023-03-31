@@ -603,10 +603,38 @@
             ]
           ]
         }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[475, 539], [475, 659], [485, 659], [485, 539]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[715, 539], [715, 659], [725, 659], [725, 539]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[715, 659], [715, 779], [725, 779], [725, 659]]]
+        }
+      },
+      {
+        "tags": ["view"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[475, 659], [475, 779], [485, 779], [485, 659]]]
+        }
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1679155284064.85
+    "lastModified": 1680281104375.5159
   },
   "102--hull": {
     "key": "102--hull",
