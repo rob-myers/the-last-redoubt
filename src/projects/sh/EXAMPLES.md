@@ -70,6 +70,12 @@ expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do '{ suppressError: 1 }'
 npc do '{ npcKey: "foo", point:'$( click 1 )'}'
 ```
 
+```sh
+npc events | filter 'x => x.key === "stopped-walking"'
+# versus
+npc events | filter 'x => x.key === "way-point" && x.meta.final'
+```
+
 ## Migrating
 
 > https://github.com/rob-myers/rob-myers.github.io/blob/codev/docs/commands.md

@@ -171,7 +171,7 @@ export default function NPCs(props) {
               // Final
               : state.getLocalNavPath(dstGmId, gmEdges[k - 1].dstDoorEntry, dst);
 
-          console.log('localNavPath', k, localNavPath);
+          console.warn('localNavPath', k, localNavPath);
 
           const gmEdge = gmEdges[k];
           
@@ -179,25 +179,27 @@ export default function NPCs(props) {
             // Started in hull door, so ignore `localNavPath`
             fullPath.push(Vect.from(src));
             gmRoomIds.push([srcGmId, localNavPath.roomIds[0]]);
+            navMetas.push({ key: 'vertex', index: 0, gmId: srcGmId });
           } else if (k === gmEdges.length && localNavPath.doorIds[1] >= 0) {
             // Ended in hull door, so ignore `localNavPath`
             fullPath.push(Vect.from(dst));
             gmRoomIds.push([dstGmId, assertDefined(localNavPath.roomIds.at(-1))]);
+            navMetas.push({ key: 'vertex', index: fullPath.length - 1, gmId: dstGmId });
           } else {
             const indexOffset = fullPath.length;
             fullPath.push(...localNavPath.fullPath);
             gmRoomIds.push(...localNavPath.roomIds.map(roomId => /** @type {[number, number]} */ ([localNavPath.gmId, roomId])));
             // Globalise local navMetas
-            navMetas.push(
-              ...localNavPath.navMetas.map(x => ({
-                ...x,
-                index: indexOffset + x.index,
-                gmId: localNavPath.gmId,
-              })),
-            );
+            navMetas.push(...localNavPath.navMetas.map(meta => ({
+              ...meta,
+              index: indexOffset + meta.index,
+              gmId: localNavPath.gmId,
+            })));
           }
 
           if (gmEdge) {
+            // Future nodes exist, so final 'vertex' no longer final
+            delete /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final;
             const baseMeta = {
               gmId: gmEdge.srcGmId,
               doorId: gmEdge.srcDoorId,
@@ -205,11 +207,15 @@ export default function NPCs(props) {
               index: fullPath.length - 1,
               otherRoomId: null,
             };
-            navMetas.push({ key: 'start-seg', index: fullPath.length - 1, gmId: gmEdge.srcGmId });
-            navMetas.push({ key: 'pre-exit-room', willExitRoomId: gmEdge.srcRoomId, ...baseMeta });
+            // Before final vertex meta because will be triggered earlier
+            navMetas.splice(-1, 0, { key: 'pre-exit-room', willExitRoomId: gmEdge.srcRoomId, ...baseMeta });
             navMetas.push({ key: 'exit-room', exitedRoomId: gmEdge.srcRoomId, ...baseMeta });
           }
         }
+
+        /** @type {Graph.FloorGraphVertexNavMeta} */ (
+          navMetas[navMetas.length - 1]
+        ).final = true;
         
         return {
           key: 'global-nav',
@@ -602,49 +608,6 @@ export default function NPCs(props) {
       update();
       await promise;
     },
-    updateLocalDecor(opts) {
-      for (const { gmId, roomId } of opts.added??[]) {
-        const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
-        const decorKeys = decor.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
-        state.npcAct({
-          action: "add-decor",
-          items: Object.values(decor).map(/** @returns {(typeof decor)[*]} */ (d, decorId) => {
-            if (d.type === 'rect') {
-              // 🚧 better way of computing transformed angledRect?
-              const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
-              const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
-              return {
-                ...d,
-                ...baseRect,
-                key: decorKeys[decorId], // Must override key, now we know gmId
-                angle,
-                meta: {...d.meta}, // Shallow clone
-              };
-            }
-            if (d.type === 'circle') {
-              return {
-                ...d,
-                key: decorKeys[decorId],
-                center: matrix.transformPoint({ ...d.center }),
-                meta: {...d.meta},
-              };
-            }
-            // NPC.DecorPoint
-            return {
-              ...d,
-              key: decorKeys[decorId],
-              ...matrix.transformPoint({ x: d.x, y: d.y }),
-              meta: {...d.meta},
-            };
-          }),
-        });
-      }
-      for (const { gmId, roomId } of opts.removed??[]) {
-        const points = api.gmGraph.gms[gmId].decor[roomId];
-        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId))
-        state.npcAct({ action: "rm-decor", items: decorKeys });
-      }
-    },
     trackNpc(opts) {
       const { npcKey, process } = opts;
       const { panZoom } = props.api
@@ -711,6 +674,49 @@ export default function NPCs(props) {
           }
         },
       });
+    },
+    updateLocalDecor(opts) {
+      for (const { gmId, roomId } of opts.added??[]) {
+        const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
+        const decorKeys = decor.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
+        state.npcAct({
+          action: "add-decor",
+          items: Object.values(decor).map(/** @returns {(typeof decor)[*]} */ (d, decorId) => {
+            if (d.type === 'rect') {
+              // 🚧 better way of computing transformed angledRect?
+              const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+              const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+              return {
+                ...d,
+                ...baseRect,
+                key: decorKeys[decorId], // Must override key, now we know gmId
+                angle,
+                meta: {...d.meta}, // Shallow clone
+              };
+            }
+            if (d.type === 'circle') {
+              return {
+                ...d,
+                key: decorKeys[decorId],
+                center: matrix.transformPoint({ ...d.center }),
+                meta: {...d.meta},
+              };
+            }
+            // NPC.DecorPoint
+            return {
+              ...d,
+              key: decorKeys[decorId],
+              ...matrix.transformPoint({ x: d.x, y: d.y }),
+              meta: {...d.meta},
+            };
+          }),
+        });
+      }
+      for (const { gmId, roomId } of opts.removed??[]) {
+        const points = api.gmGraph.gms[gmId].decor[roomId];
+        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId))
+        state.npcAct({ action: "rm-decor", items: decorKeys });
+      }
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);

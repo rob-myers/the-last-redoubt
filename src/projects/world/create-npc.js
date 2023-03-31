@@ -160,6 +160,8 @@ export default function createNpc(
       }
       
       if (opts?.globalNavMetas) {
+        // Convert navMetas to wayMetas
+        // We aren't reordering by length (navMetaOffsets could change)
         this.anim.wayMetas = opts.globalNavMetas.map((navMeta) => ({
           ...navMeta,
           // We take advantage of precomputed this.anim.aux.sofars
@@ -177,11 +179,13 @@ export default function createNpc(
         await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           trAnim.addEventListener('finish', () => {
             console.log(`followNavPath: ${this.def.key} finished walk`);
+            this.wayTimeout(); // immediate else startAnimation('idle') will clear
             resolve();
           });
           trAnim.addEventListener('cancel', () => {
-            if (trAnim.playState !== 'finished') {
-              // We'll also cancel when finished to release control to styles
+            // We also cancel when finished via e.g. startAnimation('idle'),
+            // to release control to styles
+            if (trAnim.playState === 'paused' || trAnim.playState === 'running') {
               console.log(`followNavPath: ${this.def.key} cancelled walk`);
             }
             reject(new Error('cancelled'));
@@ -191,6 +195,7 @@ export default function createNpc(
         // must commitStyles, otherwise it jumps
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
+        // triggers above cancel and clears wayMetas 
         this.startAnimation('idle'); // 🚧 remove hard-coding?
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
@@ -228,7 +233,7 @@ export default function createNpc(
       };
     },
     getAnimScaleFactor() {
-      // We convert from seconds/world-unit to milliseconds/world-unit
+      // We convert from "seconds per world-unit" to "milliseconds per world-unit"
       return 1000 * (1 / this.getSpeed());
     },
     getInteractRadius() {
@@ -358,7 +363,7 @@ export default function createNpc(
     },
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
-        return console.warn('nextWayTimeout: this.anim.root.currentTime is null')
+        return console.warn('nextWayTimeout: anim.root.currentTime is null')
       } else if (this.anim.wayMetas[0]) {
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
@@ -535,7 +540,9 @@ export default function createNpc(
       aux.outsetWalkBounds = Rect.fromPoints(...this.anim.path).outset(radius);
       aux.edges = this.anim.path.map((p, i) => ({ p, q: this.anim.path[i + 1] })).slice(0, -1);
       aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
-      aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
+      // accurac needed for wayMeta length computation
+      aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
+      // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
       aux.navPathPolys = aux.edges.map(e => {
         const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
         return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
@@ -560,32 +567,41 @@ export default function createNpc(
       ;
     },
     /**
-     * 🚧 cleanup
-     * 🚧 avoid many short timeouts
+     * 🚧 avoid many short timeouts?
      */
     wayTimeout() {
-      // console.log('this.anim.wayMetas[0]', this.anim.wayMetas[0]);
+      // console.warn('wayTimeout next:', this.anim.wayMetas[0]);
       if (
         this.anim.wayMetas.length === 0
         || this.anim.spriteSheet !== 'walk'
         || this.anim.translate.currentTime === null
         || this.anim.translate.playState === 'paused'
       ) {
-        if (this.anim.wayMetas.length === 0) console.warn('wayTimeout: empty this.anim.wayMetas');
-        if (this.anim.translate.currentTime === null) console.warn('wayTimeout: this.anim.root.currentTime is null');
-        if (this.anim.spriteSheet !== 'walk') console.warn(`wayTimeout: this.anim.spriteSheet (${this.anim.spriteSheet}) is not "walk"`);
+        if (this.anim.wayMetas.length === 0) console.warn('wayTimeout: empty anim.wayMetas');
+        if (this.anim.translate.currentTime === null) console.warn('wayTimeout: anim.root.currentTime is null');
+        if (this.anim.spriteSheet !== 'walk') console.warn(`wayTimeout: anim.spriteSheet: ${this.anim.spriteSheet} is not "walk"`);
         return;
       } else if (
         this.anim.translate.currentTime >=
         (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - 1
-      ) {
-        /**
-         * We've reached the wayMeta's `length`,
-         * so remove it and trigger respective event.
-         */
-        const wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift());
-        // console.info('wayMeta', this.key, wayMeta); // DEBUG 🚧
-        api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
+        ) {
+          // We've reached the wayMeta's `length`,
+          // so remove it and trigger respective event
+          const wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift());
+          api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
+          // Also remove/trigger any adjacent meta with ≤ length
+          while (this.anim.wayMetas[0]?.length <= wayMeta.length) {
+            api.npcs.events.next({ key: 'way-point', npcKey: this.def.key,
+            meta: /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()),
+          });
+        }
+      } else {
+        // console.warn(
+        //   'wayTimeout not ready',
+        //   this.anim.translate.currentTime,
+        //   this.anim.translate.effect?.getTiming().duration,
+        //   this.anim.wayMetas[0].length * this.getAnimScaleFactor(),
+        // );
       }
       this.nextWayTimeout();
     },
@@ -594,17 +610,18 @@ export default function createNpc(
 
 /** @type {Record<Graph.NavMetaKey, number>} */
 const navMetaOffsets = {
-  'enter-room': -0.02, // To ensure triggered
-  'exit-room': -0.02, // To ensure triggered
+  // 'enter-room': -0.02, // To ensure triggered
+  // 'exit-room': -0.02, // To ensure triggered
+  'enter-room': 0, // To ensure triggered
+  'exit-room': 0, // To ensure triggered
   'pre-npcs-collide': -0.02, // To ensure triggered
   'decor-collide': 0,
 
   /**
    * 🚧 compute collision time using `predictNpcRectCollision`
-   * 🚧 can specify character class
    */
   "pre-exit-room": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
   "pre-near-door": -(npcsMeta['first-human-npc'].radius + 10), // TODO better way
 
-  "start-seg": 0,
+  "vertex": 0,
 };

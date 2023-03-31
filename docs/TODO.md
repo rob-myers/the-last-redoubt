@@ -17,12 +17,16 @@
   - ❌ seen missed collisions?
   - ℹ️ clarity: makes sense + see collide-npcs.mdx
 
-- 🚧 understand and improve wayMeta triggering
-  - wayTimeout + nextWayTimeout
-- redo npc vs door collisions
+- ✅ understand and improve wayMeta triggering
+  - ℹ️ wayTimeout + nextWayTimeout
+  - ✅ wayTimeout wasn't being triggered after anim.translate completes
+    - on anim finish, invoked startAnimation('idle') which invoked `clearWayMetas` before setTimeout could resolve
+  - ✅ can use extant `stopped-walking`
+  - ✅ on complete walk should see `way-point` with meta `{ key: 'vertex', final: true }`
+
+- 🚧 wayMeta: redo npc vs door collisions
   - reuse decor rect collision
   - maybe still fire `pre-near-door` but via decor collision
-
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
@@ -37,7 +41,12 @@
 - more `orient-{deg}` tags
 - sit has mask
 - hide isolated hull doors touching edge geomorph
+
 - useGeomorphs supports HMR?
+- HMR issue ongoing processes with stale code
+  - e.g. floor-graph.js
+- update gatsby plugins to get source maps working?
+  - maybe need more transpilation?
 - navmesh accounts for closed doors
   - should fix double-door issue
 - source map issue with jsx?

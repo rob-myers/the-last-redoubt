@@ -13,17 +13,17 @@ export default function useHandleEvents(api) {
   const state = useStateRef(/** @type {() => State} */ () => ({
 
     async handleWayEvents(e) {
-      // console.log('handleWayEvents', e)
+      // console.warn('handleWayEvents', e.npcKey, e.meta);
       const npc = api.npcs.getNpc(e.npcKey);
 
       switch (e.meta.key) {
         case 'pre-npcs-collide':
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
-        case 'start-seg':
+        case 'vertex':
+          if (e.meta.final) break;
           // We know `npc` is walking
           npc.updateWalkSegBounds(e.meta.index);
-
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
           break;
@@ -58,7 +58,7 @@ export default function useHandleEvents(api) {
         case 'pre-npcs-collide':
         case 'pre-exit-room':
         case 'pre-near-door':
-        case 'start-seg':
+        case 'vertex':
           break;
         default:
           throw testNever(e.meta, { suffix: 'handlePlayerWayEvent' });

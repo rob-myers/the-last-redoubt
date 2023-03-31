@@ -115,7 +115,7 @@ export class floorGraphClass extends BaseGraph {
           : { key, nodes: [node], roomId: meta.roomId }
         );
         if (key === 'room' && meta.roomId === -1) {
-          console.warn(`findPathNew: expected roomId for node`, node, meta);
+          console.warn(`findPath: expected roomId for node`, node, meta);
         }
       }
       return agg;
@@ -124,7 +124,7 @@ export class floorGraphClass extends BaseGraph {
     const fullPath = [src.clone()];
     const roomIds = [this.nodeToMeta[srcNode.index].roomId];
     const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
-      { key: 'start-seg', index: 0, },
+      { key: 'vertex', index: 0 }, // Cannot be final
     ]);
     let startDoorId = -1, endDoorId = -1;
 
@@ -142,7 +142,7 @@ export class floorGraphClass extends BaseGraph {
             hullDoorId: this.gm.hullDoors.indexOf(door),
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
           };
-          navMetas.push({ key: 'pre-exit-room', ...baseMeta, willExitRoomId: roomId });
+          navMetas.splice(-1, 0, { key: 'pre-exit-room', ...baseMeta, willExitRoomId: roomId });
           navMetas.push({ key: 'exit-room', ...baseMeta, exitedRoomId: roomId });
 
         } else {
@@ -150,8 +150,8 @@ export class floorGraphClass extends BaseGraph {
         }
 
         if (!partition[i + 1]) {// Finish in door
-          fullPath.push(dst.clone());
-          roomIds.push(this.nodeToMeta[dstNode.index].roomId);
+          // fullPath.push(dst.clone());
+          // roomIds.push(this.nodeToMeta[dstNode.index].roomId);
           endDoorId = item.doorId;
           break;
         } 
@@ -163,7 +163,7 @@ export class floorGraphClass extends BaseGraph {
         if (!(i === 0 && src.distanceTo(doorExit) < 0.1)) {
           fullPath.push(doorExit.clone());
           roomIds.push(nextRoomId);
-          navMetas.push({ key: 'start-seg', index: fullPath.length - 1 });
+          navMetas.push({ key: 'vertex', index: fullPath.length - 1 }); // Cannot be final
         }
 
       } else {// room partition
@@ -195,15 +195,12 @@ export class floorGraphClass extends BaseGraph {
         const roomNavPoly = this.gm.lazy.roomNavPoly[roomId];
         const directPath = !geom.lineSegCrossesPolygon(pathSrc, pathDst, roomNavPoly);
         if (directPath) {
-          /**
-           * We can simply walk straight through the room
-           */
+          // We can simply walk straight through the room
           fullPath.push(pathDst.clone());
           roomIds.push(roomId);
+          navMetas.push({ key: 'vertex', index: fullPath.length - 1 });
         } else {
-          /**
-           * Otherwise, use "simple stupid funnel algorithm"
-           */
+          // Otherwise, use "simple stupid funnel algorithm"
           const stringPull = /** @type {Geom.VectJson[]} */ (
             this.computeStringPull(pathSrc, pathDst, item.nodes).path
           ).map(Vect.from);
@@ -211,16 +208,19 @@ export class floorGraphClass extends BaseGraph {
           geom.removePathReps(stringPull.slice(1)).forEach(p => {
             fullPath.push(p);
             roomIds.push(roomId);
-            navMetas.push({ key: 'start-seg', index: fullPath.length - 1 });
+            navMetas.push({ key: 'vertex', index: fullPath.length - 1 });
           });
-          navMetas.pop();
         }
 
         if (!partition[i + 1]) {// Finish in room
+          /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final = true;
+
+          // 🚧 pre-near-door based on navnode meta is a hack
+          // > instead, test "door decor rect" collision 
           const finalMeta = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
           if (finalMeta.nearDoorId !== undefined && finalMeta.nearDoorId >= 0) {
             const door = this.gm.doors[finalMeta.nearDoorId];
-            navMetas.push({
+            navMetas.splice(-1, 0, {// The last meta should be a 'vertex'
               key: 'pre-near-door',
               index: fullPath.length - 1,
               doorId: finalMeta.nearDoorId,
@@ -235,7 +235,7 @@ export class floorGraphClass extends BaseGraph {
     }
 
     // DEBUG 🚧
-    console.info('findPath', {
+    console.warn('findPath', {
       nodePath,
       nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
       partition,

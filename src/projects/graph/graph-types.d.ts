@@ -287,10 +287,12 @@ declare namespace Graph {
     | { key: 'pre-npcs-collide'; otherNpcKey: string; }
     | { key: 'pre-exit-room'; willExitRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'pre-near-door'; currentRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
-    | { key: 'start-seg'; }
+    | { key: 'vertex'; final?: boolean }
   );
 
   export type NavMetaKey = FloorGraphNavMeta['key'];
+
+  export type FloorGraphVertexNavMeta = Extract<Graph.FloorGraphNavMeta, { key: 'vertex' }>;
 
 //#endregion
 

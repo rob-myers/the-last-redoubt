@@ -262,7 +262,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const timeB = segB.src.distanceTo(segB.dst) / speedB;
     /**
      * Linear motion only valid until 1st target reached
-     * Subsequent collisions handled via 'start-seg' or 'stopped-walking'.
+     * Subsequent collisions handled via 'vertex' or 'stopped-walking'.
      */
     const maxTime = Math.min(timeA, timeB);
 
