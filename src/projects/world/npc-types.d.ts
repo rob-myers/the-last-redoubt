@@ -57,6 +57,7 @@ declare namespace NPC {
     cancel(): Promise<void>;
     canLook(): boolean;
     clearWayMetas(): void;
+    computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
     followNavPath(

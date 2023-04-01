@@ -2,11 +2,13 @@
 
 ## In progress
 
-- 🚧 wayMeta: redo npc vs door collisions
+- ✅ wayMeta: redo npc vs door collisions
   - ℹ️ pre-exit-room used when leave room (hull door or not)
   - ℹ️ pre-near-door used when walk ends near a door
   - ✅ remove `pre-exit-room`
-  - 🚧 trigger `pre-exit-room` based on decor rect collision...
+  - ❌ trigger `pre-exit-room` based on decor rect collision
+    - actually we only support "point vs angled rect" and prefer not to extend
+  - ✅ improve `pre-exit-room` length i.e. only when npc close
 
 - ✅ `npc do` examples and errors
   - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`

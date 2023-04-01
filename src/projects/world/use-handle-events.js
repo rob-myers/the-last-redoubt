@@ -76,7 +76,12 @@ export default function useHandleEvents(api) {
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'
           ? npcService.predictNpcCircleCollision(npc, decor)
-          : npcService.predictNpcPolygonCollision(npc, assertDefined(decor.derivedPoly), assertDefined(decor.derivedRect));
+          : npcService.predictNpcPolygonCollision(
+              npc,
+              assertDefined(decor.derivedPoly?.outline),
+              assertDefined(decor.derivedRect),
+            )
+        ;
 
         if (collisions.length || startInside) {// 🚧 debug
           console.warn(`${npc.key} collide decor ${decor.type} ${decor.key}`, startInside, collisions);

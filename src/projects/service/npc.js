@@ -1,5 +1,5 @@
 import { assertNonNull, testNever } from './generic';
-import { Poly, Vect } from '../geom';
+import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 
 /**
@@ -328,39 +328,38 @@ export function predictNpcNpcCollision(npcA, npcB) {
 /**
  * Npc center vs static polygon.
  * @param {NPC.NPC} npcA viewed as single point
- * @param {Geom.Poly} polygon static polygon
- * @param {Geom.Rect} [rect] default `polygon.rect`
+ * @param {Geom.VectJson[]} outline static polygon outline
+ * @param {Geom.Rect} [rect] defaults to `Rect.fromPoints(...outline)`
  * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
  */
-export function predictNpcPolygonCollision(npcA, polygon, rect = polygon.rect) {
-  const vs = polygon.outline;
-  if (vs.length < 3) {
+export function predictNpcPolygonCollision(npcA, outline, rect) {
+  if (outline.length < 3) {
     return { collisions: [], startInside: false };
   }
   if (!npcA.getTarget()) {// Not walking or at final point
-    return { collisions: [], startInside: geom.outlineContains(vs, npcA.getPosition(), null) };
+    return { collisions: [], startInside: geom.outlineContains(outline, npcA.getPosition(), null) };
   }
-  if (!npcA.getWalkSegBounds(false).intersects(rect)) {
+  if (!npcA.getWalkSegBounds(false).intersects(rect || Rect.fromPoints(...outline))) {
     return { collisions: [], startInside: false };
   }
   
   const segA = assertNonNull(npcA.getLineSeg());
   const speedA = npcA.getSpeed();
-  const startInside = geom.outlineContains(vs, segA.src, null);
+  const startInside = geom.outlineContains(outline, segA.src, null);
 
-  vs.push(vs[0]);
+  outline.push(outline[0]);
   // 🚧 avoid checking every segment
   // - restrict to +ve dot product inside
   // - restrict to -ve dot product outside
-  const distances = vs.reduce((agg, p, i) => {
-    if (vs[i + 1]) {
+  const distances = outline.reduce((agg, p, i) => {
+    if (outline[i + 1]) {
       /** λ ∊ [0, 1] of `segA.dst - segA.src` */
-      const scaleFactor = geom.getLineSegsIntersection(segA.src, segA.dst, p, vs[i + 1]);
+      const scaleFactor = geom.getLineSegsIntersection(segA.src, segA.dst, p, outline[i + 1]);
       (scaleFactor !== null) && agg.push(scaleFactor * segA.src.distanceTo(segA.dst));
     }
     return agg;
   }, /** @type {number[]} */ ([]));
-  vs.pop();
+  outline.pop();
 
   distances.sort((a, b) => a < b ? -1 : 1);
 

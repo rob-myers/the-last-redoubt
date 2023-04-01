@@ -216,14 +216,15 @@ export class floorGraphClass extends BaseGraph {
           ).final = true;
         }
 
-        // 🚧 predict "door decor rect" collision 
-        const finalMeta = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
-        if (finalMeta.nearDoorId !== undefined && finalMeta.nearDoorId >= 0) {
-          const door = this.gm.doors[finalMeta.nearDoorId];
-          navMetas.splice(-1, 0, {// The last meta should be { key: 'vertex', final: true }
+        const { nearDoorId } = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
+        if (nearDoorId !== undefined && nearDoorId >= 0) {
+          const door = this.gm.doors[nearDoorId];
+          navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
             key: 'pre-near-door',
             index: fullPath.length - 1,
-            doorId: finalMeta.nearDoorId,
+            doorId: nearDoorId,
+            final: !partition[i + 1],
+            // Below needed?
             hullDoorId: this.gm.hullDoors.indexOf(door),
             currentRoomId: roomId,
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
