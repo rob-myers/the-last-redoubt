@@ -217,7 +217,11 @@ export class gmGraphClass extends BaseGraph {
     viewPolys[gmId].push(this.gms[gmId].roomsWithDoors[rootRoomId]);
     gmRoomIds.length === 0 && gmRoomIds.push({ gmId, roomId: rootRoomId });
     return {
-      // ℹ️ try eliminate "small black triangular polys" (arise from intersecting view polys)
+      /**
+       * Try eliminate "small black triangular polys",
+       * arising from intersecting view polys.
+       * Side effect: intermediate walls can become black (from geomorph PNG).
+       */
       polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
       // polys: viewPolys,
       gmRoomIds,
