@@ -360,8 +360,9 @@ const articleCss = css`
   }
 
   ul, ol {
-    margin-top: 0;
+    margin-bottom: 32px;
     @media(max-width: 600px) {
+      margin-bottom: 16px;
       padding-left: 20px;
     }
     + p {

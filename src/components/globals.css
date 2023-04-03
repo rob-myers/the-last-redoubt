@@ -86,3 +86,7 @@ a {
 .no-select:focus {
   outline: none !important;
 }
+
+ul, ol {
+  margin: 0;
+}
