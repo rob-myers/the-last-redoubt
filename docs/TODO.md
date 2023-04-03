@@ -2,35 +2,7 @@
 
 ## In progress
 
-- ✅ wayMeta: redo npc vs door collisions
-  - ℹ️ pre-exit-room used when leave room (hull door or not)
-  - ℹ️ pre-near-door used when walk ends near a door
-  - ✅ remove `pre-exit-room`
-  - ❌ trigger `pre-exit-room` based on decor rect collision
-    - actually we only support "point vs angled rect" and prefer not to extend
-  - ✅ improve `pre-exit-room` length i.e. only when npc close
-
-- ✅ `npc do` examples and errors
-  - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`
-  - ✅ can `npc {cmd} '{ suppressThrow: true }'`
-  - ✅ error if not a do point
-  - ✅ error if too far
-  - ✅ exit code should be `1` not `130`?
-  - ✅ example `npc do '{ npcKey: "foo", point:'$( click 1 )'}'` 
-
-- ✅ geomorph PNGs have darker ground, white PNG symbols
-
-- ✅ review npc vs npc collisions
-  - ❌ more permissive when other static off-mesh
-  - ❌ seen missed collisions?
-  - ℹ️ clarity: makes sense + see collide-npcs.mdx
-
-- ✅ understand and improve wayMeta triggering
-  - ℹ️ wayTimeout + nextWayTimeout
-  - ✅ wayTimeout wasn't being triggered after anim.translate completes
-    - on anim finish, invoked startAnimation('idle') which invoked `clearWayMetas` before setTimeout could resolve
-  - ✅ can use extant `stopped-walking`
-  - ✅ on complete walk should see `way-point` with meta `{ key: 'vertex', final: true }`
+🚧 Start presentation redo
 
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
@@ -423,6 +395,36 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ wayMeta: redo npc vs door collisions
+  - ℹ️ pre-exit-room used when leave room (hull door or not)
+  - ℹ️ pre-near-door used when walk ends near a door
+  - ✅ remove `pre-exit-room`
+  - ❌ trigger `pre-exit-room` based on decor rect collision
+    - actually we only support "point vs angled rect" and prefer not to extend
+  - ✅ improve `pre-exit-room` length i.e. only when npc close
+
+- ✅ `npc do` examples and errors
+  - ✅ example `expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do`
+  - ✅ can `npc {cmd} '{ suppressThrow: true }'`
+  - ✅ error if not a do point
+  - ✅ error if too far
+  - ✅ exit code should be `1` not `130`?
+  - ✅ example `npc do '{ npcKey: "foo", point:'$( click 1 )'}'` 
+
+- ✅ geomorph PNGs have darker ground, white PNG symbols
+
+- ✅ review npc vs npc collisions
+  - ❌ more permissive when other static off-mesh
+  - ❌ seen missed collisions?
+  - ℹ️ clarity: makes sense + see collide-npcs.mdx
+
+- ✅ understand and improve wayMeta triggering
+  - ℹ️ wayTimeout + nextWayTimeout
+  - ✅ wayTimeout wasn't being triggered after anim.translate completes
+    - on anim finish, invoked startAnimation('idle') which invoked `clearWayMetas` before setTimeout could resolve
+  - ✅ can use extant `stopped-walking`
+  - ✅ on complete walk should see `way-point` with meta `{ key: 'vertex', final: true }`
 
 - ✅ cannot spawn onto closed door
   - e.g. player may need to open door in order to spawn onto mesh

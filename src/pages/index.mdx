@@ -23,9 +23,48 @@ import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import { profileLookup } from "projects/sh/scripts";
 
-## Home page
+## @home
 
 ### Introduction
+
+What do we want?
+
+1. To create an interactive system for specifying and executing the behaviour of video game characters.
+1. For this interactive system and its implementation to be of interest to a wide audience.
+
+We'll **specify behaviour** using the syntax of an interactive programming language.
+We'll **execute behaviour** by running (possibly many) programs in parallel.
+But what about **(2)** above?
+Why should the _implementation details_ of our system be of general interest?
+First some definitions.
+
+<Aside title="game-ai-definition">
+_Game AI_ constructs systems for controlling Non-Player Characters (NPCs) in video games. NPC behaviour may be _simulated_ i.e. task-driven imitations of human behaviour. NPC behaviour may be _fabricated_ i.e. specifically constructed in response to the Player's actions.
+
+For example, if the Player enters a particular room we could spawn enemies (fabrication) which are instructed to chase after the Player (simulation).
+</Aside>
+
+Concerning Game AI, scratching beneath the surface reveals a highly fragmented subject.
+It is unclear whether it can meaningfully exist outside a video game.
+One can certainly find [navmesh demos](https://www.babylonjs-playground.com/#0DQBXD#42 "@new-tab") and [steering demos](https://davenewt.github.io/steering-behaviours/ "@new-tab") online, but these are ingredients,
+whereas we seek rich Game AI beyond most [triple-A](https://en.wikipedia.org/wiki/AAA_(video_game_industry)) video games.
+
+🚧 But it remains to clarify (2).
+Game AI specific to setting: particular assets/animations.
+We're not trying to create "middleware".
+How to avoid making an overly specific system?
+Our answer: use web technology the way it is supposed to be used.
+
+
+{/* So what do we mean when we say _Game AI lacks canonicity?_ */}
+
+{/* One might hope for some kind of "Game AI engine". */}
+
+{/* Video games almost always need Game AI e.g. control systems for entities not under control of the Player. */}
+
+---
+**OLD BELOW**
+
 
 This blog is about programming Non-Player Characters (aka [NPCs](https://en.wikipedia.org/wiki/Non-player_character "@new-tab")).
 An NPC is a character in a video game e.g. a human, alien, robot or animal.
