@@ -191,9 +191,6 @@ const articleCss = css`
     a {
       color: var(--page-header-color);
     }
-    @media(max-width: 600px) {
-      font-weight: 400;
-    }
 
     position: relative;
     > span.anchor {
@@ -206,7 +203,7 @@ const articleCss = css`
     @media(max-width: 1024px) {
       font-size: 2.4rem;
     }
-    margin: 24px 0 16px 0;
+    margin: 0px 0 16px 0;
     @media(max-width: 600px) {
       margin: 16px 0;
       font-size: 1.7rem;
@@ -496,7 +493,7 @@ const articleComponents = (
   /** Occurs once in each article */
   h2({ children }: any) {
     return <>
-      <h2>
+      <h2 id={articleKey}>
         <Link to={`#${articleKey}`}>
           <span>{children}</span>
         </Link>
