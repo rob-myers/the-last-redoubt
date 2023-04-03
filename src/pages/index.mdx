@@ -35,30 +35,26 @@ What do we want?
 We'll **specify behaviour** using the syntax of an interactive programming language.
 We'll **execute behaviour** by running (possibly many) programs in parallel.
 But what about **(2)** above?
-Why should the _implementation details_ of our system be of general interest?
-First some definitions.
+Why should the **implementation details** of our system be of general interest?
+Answering this requires some background.
+{/* First a central definition. */}
 
-<Aside title="game-ai-definition">
-_Game AI_ constructs systems for controlling Non-Player Characters (NPCs) in video games. NPC behaviour may be _simulated_ i.e. task-driven imitations of human behaviour. NPC behaviour may be _fabricated_ i.e. specifically constructed in response to the Player's actions.
+_Game AI_ builds control systems for Non-Player Characters (NPCs) in video games.
+Scratching beneath the surface reveals a highly fragmented subject.
+[Navmesh demos](https://www.babylonjs-playground.com/#0DQBXD#42 "@new-tab") and [steering demos](https://davenewt.github.io/steering-behaviours/ "@new-tab") exist, but these are ingredients, rather than the rich experiences we seek.
+Why does Game AI only seem to exist within the context of a video game?
 
-For example, if the Player enters a particular room we could spawn enemies (fabrication) which are instructed to chase after the Player (simulation).
-</Aside>
+> Assets and animations relative to a particular setting are needed to make Game AI meaningful.
+In making these choices and constructing the respective assets, one moves away from a general AI system and towards making a video game.
 
-Concerning Game AI, scratching beneath the surface reveals a highly fragmented subject.
-It is unclear whether it can meaningfully exist outside a video game.
-One can certainly find [navmesh demos](https://www.babylonjs-playground.com/#0DQBXD#42 "@new-tab") and [steering demos](https://davenewt.github.io/steering-behaviours/ "@new-tab") online, but these are ingredients,
-whereas we seek rich Game AI beyond most [triple-A](https://en.wikipedia.org/wiki/AAA_(video_game_industry)) video games.
+How can we make these choices whilst keeping some level of generality?
+This brings us back to **(2)**.
+We can _implement_ the choices in a _canonical way_ by adopting the stance of a Modern Web Developer.
 
-🚧 But it remains to clarify (2).
-Game AI specific to setting: particular assets/animations.
-We're not trying to create "middleware".
-How to avoid making an overly specific system?
-Our answer: use web technology the way it is supposed to be used.
+🚧 Use web technology the way it is supposed to be used.
 
-
-{/* So what do we mean when we say _Game AI lacks canonicity?_ */}
-
-{/* One might hope for some kind of "Game AI engine". */}
+{/* NPC behaviour may be _simulated_ i.e. task-driven imitations of human behaviour. NPC behaviour may be _fabricated_ i.e. specifically constructed in response to the Player's actions. */}
+{/* For example, if the Player enters a particular room we could spawn enemies (fabrication) which are instructed to chase after the Player (simulation). */}
 
 {/* Video games almost always need Game AI e.g. control systems for entities not under control of the Player. */}
 
