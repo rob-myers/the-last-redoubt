@@ -13,7 +13,7 @@ export default function Title() {
         {siteTitle}
       </h1>
       <p>
-        Programming NPCs using CSS and a Web CLI 
+        Online NPC behaviour via CSS and a CLI 
       </p>
     </header>
   );
