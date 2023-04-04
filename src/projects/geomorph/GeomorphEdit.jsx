@@ -231,9 +231,11 @@ function Geomorph({ def, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
-          {data.gm.lightRects.map(({ key, lightId, doorId, rect }) =>
+          {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
             <div
-              key={key}
+              // Saw two light rects with same key -- shouldn't happen?
+              // key={key}
+              key={i}
               className="light-rect"
               data-key="light-rect"
               data-light-id={lightId}
