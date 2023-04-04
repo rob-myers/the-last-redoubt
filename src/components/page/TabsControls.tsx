@@ -22,6 +22,13 @@ export function TabsControls({ api, tabsId }: Props) {
           onPointerUp={_ => {
             api.resetHeldMs = Date.now() - api.resetHeldMs;
           }}
+          onTouchStart={e => {
+            e.preventDefault();
+            api.resetHeldMs = Date.now();
+          }}
+          onTouchEnd={_ => {
+            api.resetHeldMs = Date.now() - api.resetHeldMs;
+          }}
           title="reset"
           className={cx(
             api.resetDisabled ? cssName.disabled : undefined,
@@ -103,6 +110,12 @@ const controlsCss = css`
       justify-content: center;
       align-items: center;
       cursor: pointer;
+
+      border: 1px solid black;
+      &:first-child {
+        border-width: 0 1px 0 1px;
+      }
+      border-width: 0 1px 0 0;
     }
     
     /** Move to Icon */
