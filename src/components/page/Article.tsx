@@ -502,16 +502,17 @@ const articleComponents = (
       <time
         dateTime={meta.dateTime}
       />
-      <div className="tags" title="tags">
+      {meta.tags && <div className="tags">
         {meta.tags.map((tag, i) =>
-          <span
+        <span
             key={tag}
             className={i === 0 && meta.dateTime ? "tag date" : "tag"}
+            title={tag}
           >
             {tag}
           </span>)
         }
-      </div>
+      </div>}
     </>;
   },
 
