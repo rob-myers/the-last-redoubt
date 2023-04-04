@@ -58,6 +58,8 @@ interface Props extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const baseIconCss = css`
+  touch-action: none;
+
   &::after {
     display: flex;
     align-items: center;
