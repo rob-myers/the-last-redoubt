@@ -4,7 +4,7 @@ import { Actions, IJsonModel, Layout as FlexLayout, Model, TabNode } from 'flexl
 import { useBeforeunload } from 'react-beforeunload';
 import debounce from "debounce";
 
-import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
+import { tryLocalStorageGet, tryLocalStorageRemove, tryLocalStorageSet } from 'projects/service/generic';
 import { TabMeta, computeJsonModel, getTabIdentifier } from 'model/tabs/tabs.model';
 import { scrollFinished } from 'model/dom.model';
 import useSiteStore, { State } from 'store/site.store';
@@ -228,4 +228,8 @@ function restoreJsonModel(props: Props) {
 function storeModelAsJson(id: string, model: Model) {
   const serializable = model.toJson();
   tryLocalStorageSet(`model@${id}`, JSON.stringify(serializable));
+}
+
+export function clearModelFromStorage(id: string) {
+  tryLocalStorageRemove(`model@${id}`);
 }

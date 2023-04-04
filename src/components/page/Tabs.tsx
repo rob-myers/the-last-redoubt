@@ -13,6 +13,7 @@ import { useIntersection } from 'projects/hooks/use-intersection';
 import { Layout } from 'components/dynamic';
 import { TabsControls, FaderOverlay } from './TabsControls';
 import { createKeyedComponent } from './Tab';
+import { clearModelFromStorage } from './Layout';
 
 /**
  * Possibly only imported from MDX (which lacks intellisense).
@@ -30,6 +31,7 @@ export default function Tabs(props: Props) {
     resets: 0,
     justResetWhileDisabled: false,
     resetDisabled: false,
+    resetHeldMs: -1,
 
     el: {
       root: null,
@@ -74,6 +76,10 @@ export default function Tabs(props: Props) {
 
     reset() {
       state.resetDisabled = true;
+      if (state.resetHeldMs >= 1000) {
+        clearModelFromStorage(props.id);
+      }
+      
       const tabs = useSiteStore.getState().tabs[props.id];
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
       useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
@@ -280,6 +286,7 @@ export interface State {
   justResetWhileDisabled: boolean;
   /** Is the reset button disabled? */
   resetDisabled: boolean;
+  resetHeldMs: number;
 
   el: {
     /** Align to `useIntersection` hook; avoid HTMLElement in SSR  */

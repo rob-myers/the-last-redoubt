@@ -2,8 +2,11 @@
 
 ## In progress
 
-🚧 Start presentation redo
+- ✅ Start presentation redo
+- ✅ On hold Tab reset we reset Tabs layout
+- 🚧 Play with Chrome devtool recorder
 
+- BUG should not be able to tab into Terminal whilst disabled
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
 - BUG move/resize circle decor all at once?

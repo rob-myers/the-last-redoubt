@@ -322,6 +322,17 @@ export function tryLocalStorageGet(key, logErr = false) {
 
 /**
  * @param {string} key 
+ */
+export function tryLocalStorageRemove(key, logErr = true) {
+  try {
+    localStorage.removeItem(key);
+  } catch (e) {
+    logErr && console.error(e);
+  };
+}
+
+/**
+ * @param {string} key 
  * @param {string} value 
  */
 export function tryLocalStorageSet(key, value, logErr = true) {

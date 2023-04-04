@@ -15,6 +15,13 @@ export function TabsControls({ api, tabsId }: Props) {
           small
           invert
           onClick={api.reset}
+          onPointerDown={e => {
+            e.preventDefault();
+            api.resetHeldMs = Date.now();
+          }}
+          onPointerUp={_ => {
+            api.resetHeldMs = Date.now() - api.resetHeldMs;
+          }}
           title="reset"
           className={cx(
             api.resetDisabled ? cssName.disabled : undefined,
