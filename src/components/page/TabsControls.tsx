@@ -82,11 +82,11 @@ const controlsCss = css`
   > .${cssName.topRight} {
     position: relative;
     height: 38px;
-    width: 140px;
-    left: calc(100% - 140px + var(--tabs-border-width));
+    width: 180px;
+    left: calc(100% - 180px + var(--tabs-border-width));
     top: -38px;
     z-index: ${zIndex.tabsTopRightButtons};
-
+    
     background: #444;
     border-bottom-width: 0;
 
@@ -96,14 +96,14 @@ const controlsCss = css`
     line-height: initial;
     align-items: center;
     justify-content: space-around;
-    span, a span {
-      padding: 0 8px;
+    > span, > a {
       height: 100%;
+      flex-basis: 25%;
       display: flex;
+      justify-content: center;
       align-items: center;
       cursor: pointer;
     }
-
     
     /** Move to Icon */
     > .disabled {
