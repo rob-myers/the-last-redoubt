@@ -31,7 +31,6 @@ export default function Tabs(props: Props) {
     resets: 0,
     justResetWhileDisabled: false,
     resetDisabled: false,
-    resetHeldMs: -1,
 
     el: {
       root: null,
@@ -67,6 +66,10 @@ export default function Tabs(props: Props) {
       e.preventDefault();
       await state.toggleExpand();
     },
+
+    onLongPressReset() {
+      clearModelFromStorage(props.id);
+    },
     /** Prevent background moving when tab dragged */
     preventTabTouch(e: TouchEvent) {
       if ((e.target as HTMLElement).classList.contains('flexlayout__tab_button_content')) {
@@ -75,11 +78,7 @@ export default function Tabs(props: Props) {
     },
 
     reset() {
-      state.resetDisabled = true;
-      if (state.resetHeldMs >= 1000) {
-        clearModelFromStorage(props.id);
-      }
-      
+      state.resetDisabled = true;      
       const tabs = useSiteStore.getState().tabs[props.id];
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
       useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
@@ -286,7 +285,6 @@ export interface State {
   justResetWhileDisabled: boolean;
   /** Is the reset button disabled? */
   resetDisabled: boolean;
-  resetHeldMs: number;
 
   el: {
     /** Align to `useIntersection` hook; avoid HTMLElement in SSR  */
@@ -298,6 +296,7 @@ export interface State {
   onChangeIntersect(intersects: boolean): void;
   onKeyUp(e: React.KeyboardEvent): void;
   onModalBgPress(e: TouchEvent | MouseEvent): void;
+  onLongPressReset(): void;
   preventTabTouch(e: TouchEvent): void;
 
   reset(): void;

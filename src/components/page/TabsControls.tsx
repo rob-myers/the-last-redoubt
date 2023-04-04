@@ -2,10 +2,13 @@ import { Link } from "gatsby";
 import React from "react";
 import { css, cx } from '@emotion/css';
 import { cssName, zIndex } from "projects/service/const";
+import useLongPress from "projects/hooks/use-long-press";
 import type { State } from "./Tabs";
 import Icon from "./Icon";
 
 export function TabsControls({ api, tabsId }: Props) {
+  const resetLongPress = useLongPress(api.onLongPressReset, 1000);
+
   return (
     <div className={controlsCss}>
 
@@ -15,20 +18,7 @@ export function TabsControls({ api, tabsId }: Props) {
           small
           invert
           onClick={api.reset}
-          onPointerDown={e => {
-            e.preventDefault();
-            api.resetHeldMs = Date.now();
-          }}
-          onPointerUp={_ => {
-            api.resetHeldMs = Date.now() - api.resetHeldMs;
-          }}
-          onTouchStart={e => {
-            e.preventDefault();
-            api.resetHeldMs = Date.now();
-          }}
-          onTouchEnd={_ => {
-            api.resetHeldMs = Date.now() - api.resetHeldMs;
-          }}
+          {...resetLongPress}
           title="reset"
           className={cx(
             api.resetDisabled ? cssName.disabled : undefined,
@@ -97,7 +87,7 @@ const controlsCss = css`
     background: #444;
     border-bottom-width: 0;
 
-    padding: 0px 8px;
+    padding: 0px 6px;
     
     display: flex;
     line-height: initial;
