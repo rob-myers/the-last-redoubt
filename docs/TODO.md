@@ -19,6 +19,9 @@
 - ✅ BUG: if end in doorway final navMeta should be final vertex
   - `nav andros '{ "x": 210, "y": 417.55 }'`
   - `nav andros '{ "x": 210, "y": 418 }'` 👈 just inside
+- ✅ BUG: if end in doorway and turn around, FOV doesn't change
+  - because `enter-room` not fired on way back
+  - because on way into room we dropped the final point in doorway
 
 - BUG should not be able to tab into Terminal whilst disabled
 - BUG? saw npcs.playerKey set null on multi spawn?

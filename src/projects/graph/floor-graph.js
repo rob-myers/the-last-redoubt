@@ -130,7 +130,6 @@ export class floorGraphClass extends BaseGraph {
 
     for (const [i, item] of partition.entries()) {
       if (item.key === 'door') {// door partition
-
         const door = this.gm.doors[item.doorId];
 
         if (i > 0) {// We exited previous room
@@ -148,11 +147,10 @@ export class floorGraphClass extends BaseGraph {
         }
 
         if (!partition[i + 1]) {// Finish in door
-          /** @type {Graph.FloorGraphVertexNavMeta} */ (
-            navMetas[navMetas.length - 1]
-          ).final = true;
-          // fullPath.push(dst.clone());
-          // roomIds.push(this.nodeToMeta[dstNode.index].roomId);
+          // Needed otherwise if turn & re-enter, `enter-room` not triggered
+          fullPath.push(dst.clone());
+          roomIds.push(this.nodeToMeta[dstNode.index].roomId);
+          navMetas.push({ key: 'vertex', index: fullPath.length - 1, final: true });
           endDoorId = item.doorId;
           break;
         } 

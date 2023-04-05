@@ -50,7 +50,6 @@ export default function useHandleEvents(api) {
         case 'enter-room':
           // Needed in case we exit-room via doorway then immediately re-enter
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
-          // api.updateAll();
           break;
         case 'decor-collide':
         case 'pre-npcs-collide':

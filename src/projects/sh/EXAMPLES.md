@@ -74,6 +74,8 @@ npc do '{ npcKey: "foo", point:'$( click 1 )'}'
 npc events | filter 'x => x.key === "stopped-walking"'
 # versus
 npc events | filter 'x => x.key === "way-point" && x.meta.final'
+
+npc events | filter 'x => x.key === "way-point" && x.meta.key === "exit-room"'
 ```
 
 ## Migrating

@@ -618,17 +618,3 @@ export default function createNpc(
     },
   };
 }
-
-// 🚧 remove this
-/** @type {Record<Graph.NavMetaKey, number>} */
-const navMetaOffsets = {
-  'enter-room': 0,
-  'exit-room': 0,
-  'pre-npcs-collide': 0,
-  'decor-collide': 0,
-
-  // 🚧 compute collision time using `predictNpcRectCollision`
-  "pre-near-door": -(npcsMeta['first-human-npc'].radius + 10),
-
-  "vertex": 0,
-};
