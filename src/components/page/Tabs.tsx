@@ -69,6 +69,7 @@ export default function Tabs(props: Props) {
 
     onLongPressReset() {
       clearModelFromStorage(props.id);
+      state.reset();
     },
     /** Prevent background moving when tab dragged */
     preventTabTouch(e: TouchEvent) {

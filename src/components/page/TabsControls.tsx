@@ -7,7 +7,8 @@ import type { State } from "./Tabs";
 import Icon from "./Icon";
 
 export function TabsControls({ api, tabsId }: Props) {
-  const resetLongPress = useLongPress(api.onLongPressReset, 1000);
+
+  const resetPress = useLongPress(api.onLongPressReset, api.reset, 1000);
 
   return (
     <div className={controlsCss}>
@@ -17,8 +18,7 @@ export function TabsControls({ api, tabsId }: Props) {
           icon="refresh"
           small
           invert
-          onClick={api.reset}
-          {...resetLongPress}
+          {...resetPress}
           title="reset"
           className={cx(
             api.resetDisabled ? cssName.disabled : undefined,
