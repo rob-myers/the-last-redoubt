@@ -282,7 +282,7 @@ const rootCss = css`
 const cssCircle = css`
   position: absolute;
   border-radius: 50%;
-  border: 2px solid #ff444455;
+  border: 2px dotted #ffffff55;
 `;
 
 const cssPoint = css`
@@ -349,7 +349,7 @@ const cssRect = css`
   position: absolute;
   transform-origin: left top;
   /* transform-origin: center; */
-  border: 2px solid #ff444455;
+  border: 2px dotted #ffffff55;
 `;
 
 /**
