@@ -241,7 +241,7 @@ async function main() {
       const startFrame = parseInt(time);
       const endFrame = startFrame + (frameCount - 1);
       
-      info(`Rendering ${animName}...`, {startFrame, endFrame});
+      info(`Rendering ${animName}...`, JSON.stringify({startFrame, endFrame}));
 
       /**
        * Remove existing file, because png-spritesheet won't overwrite
