@@ -9,11 +9,16 @@
 - ❌ lie: trace `r_s_r_m_njoy_lie.png` (1 frame animation)
   - ✅ try put shadow behind
   - ❌ really slow... maybe blender
-- try parallels + spriter + top down assets
+- 🚧 try parallels + spriter + top down assets
   - https://brashmonkey.com/
   - https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n
+  - https://gamedeveloperstudio.itch.io/
 - more `ui do` points
 - more `orient-{deg}` tags
+
+- ✅ BUG: if end in doorway final navMeta should be final vertex
+  - `nav andros '{ "x": 210, "y": 417.55 }'`
+  - `nav andros '{ "x": 210, "y": 418 }'` 👈 just inside
 
 - BUG should not be able to tab into Terminal whilst disabled
 - BUG? saw npcs.playerKey set null on multi spawn?
