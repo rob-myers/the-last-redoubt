@@ -6,6 +6,15 @@
 - ✅ On hold Tab reset we reset Tabs layout
 - 🚧 Play with Chrome devtool recorder
 
+- ❌ lie: trace `r_s_r_m_njoy_lie.png` (1 frame animation)
+  - ✅ try put shadow behind
+  - ❌ really slow... maybe blender
+- try parallels + spriter + top down assets
+  - https://brashmonkey.com/
+  - https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n
+- more `ui do` points
+- more `orient-{deg}` tags
+
 - BUG should not be able to tab into Terminal whilst disabled
 - BUG? saw npcs.playerKey set null on multi spawn?
   - Possibly HMR issue
@@ -14,10 +23,6 @@
 - BUG should not be able to spawn under door (from offmesh)
 - `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }
-- lie has 1 frame animation
-  - trace `r_s_r_m_njoy_lie.png`
-- more `ui do` points
-- more `orient-{deg}` tags
 - sit has mask
 - hide isolated hull doors touching edge geomorph
 
