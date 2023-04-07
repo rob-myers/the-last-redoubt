@@ -12,6 +12,8 @@ media/CustomTiles
 media/CustomTilesHighRes
 media/Symbols
 media/SymbolsHighRes
+media/NPC/spriter/*
+!media/NPC/spriter/README.md
 media/*.zip
 media/*.pdf
 media/*.dwg

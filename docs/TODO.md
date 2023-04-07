@@ -9,10 +9,40 @@
 - ❌ lie: trace `r_s_r_m_njoy_lie.png` (1 frame animation)
   - ✅ try put shadow behind
   - ❌ really slow... maybe blender
-- 🚧 try parallels + spriter + top down assets
-  - https://brashmonkey.com/
-  - https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n
-  - https://gamedeveloperstudio.itch.io/
+- ✅ try parallels + spriter + top down assets
+  - ✅ install parallels + windows 11
+  - ✅ install Spriter https://brashmonkey.com/ and get it working
+  - ✅ https://gamedeveloperstudio.itch.io/top-down-men-game-asset-character-pack
+  - load assets into Spriter
+    - ✅ top_down_man_base.scml
+
+- ℹ️ Spriter shortcuts
+  - Parallels: Cmd; Backspace --> Delete
+  - Parallels: Backspace; Cmd --> Shift + Delete
+  - Undo: `Cmd+Z`, Redo: `Ctrl+Y`
+  -  Prev keyframe `1`; Next keyframe: `2`; Goto frame 0: `3`; Play/pause: `4` 
+  - Copy selected object to all keyframes: `Ctrl D`
+  - Copy entire frame `Ctrl + Shift + C`
+  - Paste entire frame: `Ctrl + V`
+  - Delete keyframe: click keyframe then `Cmd + Backspace` (Delete)
+    - ℹ️ Saw issue where 0 wasn't a proper keyframe (can copy to it first)
+  - Rotate bone: drag tip
+  - Multi-select bone: Ctrl click bone
+
+- 🚧 migrate npcs to Spriter
+  - ✅ share repo folder "media" with windows
+  - ✅ can change sprite assets
+  - ✅ can output spritesheet
+  - ✅ can output spritesheets
+    - ✅ need Spriter pro
+  - ℹ️ walk starts from idle via manual config
+  - ✅ can hide hat: opacity 0 then Ctrl+D
+  - ✅ create single-frame lie animation
+  - ✅ create single-frame sit animation
+  - 🚧 clarify additionals of {npc}.json and npcs-meta.json
+  - get walk/sit/idle working
+  - ...
+
 - more `ui do` points
 - more `orient-{deg}` tags
 
