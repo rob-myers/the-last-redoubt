@@ -13,7 +13,7 @@ export default function Title() {
         {siteTitle}
       </h1>
       <p>
-        Online NPC behaviour via CSS and a CLI 
+        Interactive video game character behaviour
       </p>
     </header>
   );
@@ -21,7 +21,7 @@ export default function Title() {
 
 const titleCss = css`
   position: relative;
-  
+
   @media(max-width: 600px) {
     padding-left: 8px;
     border-bottom: 1px solid #777;
