@@ -1,4 +1,6 @@
 // 🚧 remove -new suffix post-migration
+// 🚧 need frame offset for walk (should start from idle)
+
 /// <reference path="./deps.d.ts"/>
 /**
  * Using `static/assets/npc/*` create a single JSON:
@@ -15,7 +17,7 @@ import childProcess from 'child_process';
 
 import { keys } from '../projects/service/generic';
 import { writeAsJson } from '../projects/service/file';
-import { computeNpcScale, computeSpritesheetCss, computeSpritesheetCssNew } from '../projects/service/npc';
+import { computeNpcScale, computeSpritesheetCssNew } from '../projects/service/npc';
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const inputDir = path.resolve(staticAssetsDir, 'npc');
@@ -35,11 +37,14 @@ const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta-new.json');
 const npcClassConfig = {
     'man-base-variant': {
         anim: {
-            // 🚧 generate spritesheets
-            // idle: { frameCount: 15, speed: 0, totalDist: 0 },
-            // lie: { frameCount: 1, speed: 0, totalDist: 0 },
-            // sit: { frameCount: 1, speed: 0, totalDist: 0 },
-            walk: { frameCount: 15, speed: 70 /** 🚧 */, totalDist: 300 },
+            idle: { frameCount: 14, speed: 0, totalDist: 0 },
+            lie: { frameCount: 1, speed: 0, totalDist: 0 },
+            sit: { frameCount: 1, speed: 0, totalDist: 0 },
+            walk: {
+                frameCount: 14,
+                speed: 70 ,// 🚧 justify
+                totalDist: 300, // 🚧 justify
+            },
         },
         radius: 650 * 0.2, // Export scale is 20%
         offsetDegrees: 270, // -90
@@ -54,11 +59,11 @@ const outputJson = keys(npcClassConfig).reduce(
         
         const animLookup = Object.keys(config.anim).reduce((agg, animKey) => {
             const animConfig = config.anim[animKey];
-            // 🚧 We removed leading / (which was web-asset-specific)
-            const pathPng = `assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.png`;
-            const pathWebp = `assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.webp`;
-            // 🚧 read png and infer frame width/height
-            const [widthStr, heightStr] = childProcess.execSync(`identify -ping -format '%w %h' ./static/${pathPng}`).toString().split(' ');
+            // ℹ️ initial / useful for web-asset
+            const pathPng = `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.png`;
+            const pathWebp = `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.webp`;
+            // ℹ️ read png and infer frame width/height
+            const [widthStr, heightStr] = childProcess.execSync(`identify -ping -format '%w %h' ./static${pathPng}`).toString().split(' ');
             agg[animKey] = {
                 aabb: {
                     x: 0,

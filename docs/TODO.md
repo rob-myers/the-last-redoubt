@@ -51,9 +51,12 @@
       - made mistake whilst translating bones for each keyframe (laborious)
   - ℹ️ continue from `top_down_man_base.edit.2.scml`
   - ✅ script npcs-meta-new.js
-  - 🚧 generate spritesheets for idle/lie/sit/walk
-  - get walk/sit/idle working
-  - ...
+  - ✅ generate spritesheets for ✅ idle ✅ lie ✅ sit ✅ walk
+    - use symmetric `set to animation preset` source rect and check inferred
+      > e.g. idle -830,-480 -> +829,+479
+    - `yarn minify-pngs static/assets/npc/man-base-variant webp`
+  - 🚧 get walk/sit/idle working
+    - need background-position offset for walk so starts from idle
 
 - more `ui do` points
 - more `orient-{deg}` tags
