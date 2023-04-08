@@ -27,7 +27,9 @@
   - Delete keyframe: click keyframe then `Cmd + Backspace` (Delete)
     - ℹ️ Saw issue where 0 wasn't a proper keyframe (can copy to it first)
   - Rotate bone: drag tip
-  - Multi-select bone: Ctrl click bone
+  - Multi-select bone: Ctrl click bone, or drag select in hierarchy
+  - Pan: Hold space and drag mouse
+  - BUG in bone hierarchy but if goto next keyframe and back, refreshes
 
 - 🚧 migrate npcs to Spriter
   - ✅ share repo folder "media" with windows
@@ -39,7 +41,17 @@
   - ✅ can hide hat: opacity 0 then Ctrl+D
   - ✅ create single-frame lie animation
   - ✅ create single-frame sit animation
-  - 🚧 clarify additionals of {npc}.json and npcs-meta.json
+  - ✅ prefer frame aabb to be const over all animations
+    - ℹ️ source rectangle: set to animation preset
+  - ❌ enforce "look towards right"
+    - ctrl-click root bones and adjust {x,y,angle}
+    - change each keyframe, issue if root hip bone in keyframe has angle
+    - try add true root bone (x,y,angle 0)
+      - issues with hierarchy editor (can prev/next keyframe though)
+      - made mistake whilst translating bones for each keyframe (laborious)
+  - ℹ️ continue from `top_down_man_base.edit.2.scml`
+  - ✅ script npcs-meta-new.js
+  - 🚧 generate spritesheets for idle/lie/sit/walk
   - get walk/sit/idle working
   - ...
 

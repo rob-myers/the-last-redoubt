@@ -9,11 +9,24 @@ declare namespace NPC {
   type NpcJsonKey = (
     | 'first-human-npc'
   );
+  /** 🚧 this replaces `NpcJsonKey` */
+  type NpcClassKey = (
+    | 'man-base-variant'
+  );
 
   interface NpcMetaJson {
     jsonKey: NpcJsonKey;
     parsed: NPC.ParsedNpc;
     /** Scale factor we'll apply to sprites. (?) */
+    scale: number;
+    radius: number;
+    speed: number;
+    /** @emotion/css */
+    css: string;
+  }
+  interface NpcMetaJsonNew {
+    jsonKey: NpcClassKey;
+    parsed: NPC.ParsedNpcNew;
     scale: number;
     radius: number;
     speed: number;
@@ -433,6 +446,19 @@ declare namespace NPC {
     radius: number;
     /** How much the rendered PNGs have been scaled up. */
     zoom: number;
+  }
+
+  interface ParsedNpcNew {
+    npcJsonKey: NpcClassKey;
+    animLookup: {
+      [animName: string]: NpcAnimMeta;
+    };
+    // aabb: Geom.RectJson; // ℹ️ No global aabb
+    // synfigMeta: NpcSynfigMetaJson;
+    // /** Zoomed radius */
+    radius: number;
+    // /** How much the rendered PNGs have been scaled up. */
+    // zoom: number;
   }
 
 

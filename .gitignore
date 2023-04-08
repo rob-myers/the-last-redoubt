@@ -5,6 +5,7 @@ public/*
 !public/*.css.map
 tsconfig.tsbuildinfo
 .DS_Store
+Thumbs.db
 
 media/Geomorphs
 media/GeomorphsHighRes

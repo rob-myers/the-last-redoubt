@@ -1,0 +1,25 @@
+{
+  "man-base-variant": {
+    "jsonKey": "man-base-variant",
+    "parsed": {
+      "animLookup": {
+        "walk": {
+          "aabb": {"x": 0, "y": 0, "width": 326, "height": 369},
+          "animName": "walk",
+          "contacts": [],
+          "deltas": [],
+          "totalDist": 300,
+          "frameCount": 15,
+          "pathPng": "assets/npc/man-base-variant/man-base-variant--walk.png",
+          "pathWebp": "assets/npc/man-base-variant/man-base-variant--walk.webp"
+        }
+      },
+      "npcJsonKey": "man-base-variant",
+      "radius": 130
+    },
+    "scale": 0.11076923076923077,
+    "radius": 14.4,
+    "speed": 70,
+    "css": ".body {\n  transform: rotate(270rad) scale(0.11076923076923077);\n}\n\n\n  &.walk .body:not(.webp) {\n    width: 326px;\n    height: 369px;\n    left: -163px;\n    top: -184.5px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 326px;\n    height: 369px;\n    left: -163px;\n    top: -184.5px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.webp');\n  }"
+  }
+}

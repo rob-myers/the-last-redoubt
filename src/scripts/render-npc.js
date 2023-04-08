@@ -93,13 +93,6 @@ async function main() {
     if (!metaLayer) { error(`Expected top-level group: Meta`); process.exit(1); }
     const metaLayerCanvas = assertDefined(metaLayer.param.find(x => x.$.name === 'canvas')?.canvas?.[0]);
 
-    /**
-     * 🚧 support animLookup[*].aabb
-     * - ✅ get top-level aabb from render bounds
-     * - ✅ animate aabb per keyframe
-     * - 🚧 store as animLookup[*].aabb
-     * - integrate into npc.staticBounds
-     */
     // Meta > Aaab
     const aabbLayer = metaLayerCanvas.layer.find(x => x.$.desc === 'Aabb');
     if (!aabbLayer) { error(`Expected layer: Meta > Aaab`); process.exit(1); }

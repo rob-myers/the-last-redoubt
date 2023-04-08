@@ -6,7 +6,7 @@ import { geom } from './geom';
  * Choose scale factor s.t. npc radius becomes `14.4`.
  * - Starship Geomorphs grid is 60 * 60.
  * - Approx 1.5m * 1.5m hence npc radius ~ 36cm
- * @param {NPC.ParsedNpc} parsed 
+ * @param {{ radius: number }} parsed 
  */
 export function computeNpcScale(parsed) {
   return 14.4 / parsed.radius;
@@ -36,6 +36,36 @@ ${Object.keys(parsed.animLookup).map((animName) => `
     height: ${parsed.aabb.height}px;
     left: ${-parsed.aabb.width * 0.5}px;
     top: ${-parsed.aabb.height * 0.5}px;
+    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
+  }
+`).join('\n\n')}
+`.trim();
+}
+
+/**
+ * @param {NPC.ParsedNpcNew} parsed
+ * @param {number} offsetRadians
+ * @param {number} scale
+ */
+export function computeSpritesheetCssNew(parsed, offsetRadians, scale) {
+  return `
+.body {
+  transform: rotate(${offsetRadians}rad) scale(${scale});
+}
+
+${Object.values(parsed.animLookup).map(({ animName, aabb }) => `
+  &.${animName} .body:not(.webp) {
+    width: ${aabb.width}px;
+    height: ${aabb.height}px;
+    left: ${-aabb.width * 0.5}px;
+    top: ${-aabb.height * 0.5}px;
+    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
+  }
+  &.${animName} .body.webp {
+    width: ${aabb.width}px;
+    height: ${aabb.height}px;
+    left: ${-aabb.width * 0.5}px;
+    top: ${-aabb.height * 0.5}px;
     background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
   }
 `).join('\n\n')}

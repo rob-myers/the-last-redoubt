@@ -11,6 +11,7 @@
  * - yarn minify-pngs static/assets/symbol
  *   > maybe better to do `yarn simplify-pngs static/assets/symbol`
  * - yarn minify-pngs static/assets/npc/first-human-npc
+ * - yarn minify-pngs media/NPC/man-base-variant webp
  */
 import fs from 'fs';
 import path from 'path';
