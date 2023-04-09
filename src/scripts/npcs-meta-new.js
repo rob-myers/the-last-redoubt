@@ -33,6 +33,8 @@ const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta-new.json');
  * Hard-coded data may be necessary.
  * e.g. unclear how to extract "number of frames" from Spriter *.scml file.
  * e.g. guess "totalDist", unless we track bones somehow...
+ * e.g. non-trivial to rotate Spriter animation when lack root bone
+ * 
  */
 const npcClassConfig = {
     'first-human-npc': {// Made using Synfig
@@ -104,8 +106,6 @@ const outputJson = keys(npcClassConfig).reduce(
         };
 
         const scale = computeNpcScale(parsed);
-        /** Non-trivial to rotate Spriter e.g. lack root bone */
-        const offsetRadians = config.offsetDegrees;
 
         return {
             ...agg,
@@ -115,7 +115,7 @@ const outputJson = keys(npcClassConfig).reduce(
                 scale,
                 radius: parsed.radius * scale,
                 speed: 70, // 🚧 justify + per-animation
-                css: computeSpritesheetCssNew(parsed, offsetRadians, scale),
+                css: computeSpritesheetCssNew(parsed, config.offsetDegrees, scale),
             },
         };
     },

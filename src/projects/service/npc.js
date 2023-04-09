@@ -44,13 +44,13 @@ ${Object.keys(parsed.animLookup).map((animName) => `
 
 /**
  * @param {NPC.ParsedNpcNew} parsed
- * @param {number} offsetRadians
+ * @param {number} offsetDegrees
  * @param {number} scale
  */
-export function computeSpritesheetCssNew(parsed, offsetRadians, scale) {
+export function computeSpritesheetCssNew(parsed, offsetDegrees, scale) {
   return `
 .body {
-  transform: rotate(${offsetRadians}rad) scale(${scale});
+  transform: rotate(${offsetDegrees}deg) scale(${scale});
 }
 
 ${Object.values(parsed.animLookup).map(({ animName, aabb }) => `
