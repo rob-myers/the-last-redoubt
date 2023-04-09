@@ -25,22 +25,22 @@ const outputDir = path.resolve(__dirname, '../../src/projects/world');
 const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta-new.json');
 
 /**
- * @type {Record<NPC.NpcClassKey, {
- *  anim: Record<string, { frameCount: number; speed: number; totalDist: number; }>;
- *  radius: number;
- *  offsetDegrees: number;
- * }>}
  * Hard-coded data may be necessary.
  * e.g. unclear how to extract "number of frames" from Spriter *.scml file.
  * e.g. guess "totalDist", unless we track bones somehow...
  * e.g. non-trivial to rotate Spriter animation when lack root bone
+ * @type {Record<NPC.NpcClassKey, {
+ *   anim: Record<string, { frameCount: number; speed: number; totalDist: number; direction?: PlaybackDirection }>;
+ *   radius: number;
+ *   offsetDegrees: number;
+ * }>}
  * 
  */
 const npcClassConfig = {
     'first-human-npc': {// Made using Synfig
         anim: {
             idle: { frameCount: 1, speed: 0, totalDist: 0 },
-            'idle-breathe': { frameCount: 10, speed: 0, totalDist: 0 },
+            'idle-breathe': { frameCount: 10, speed: 0, totalDist: 0, direction: 'alternate' },
             sit: { frameCount: 1, speed: 0, totalDist: 0 },
             walk: {
                 frameCount: 10,
@@ -94,6 +94,7 @@ const outputJson = keys(npcClassConfig).reduce(
                 frameCount: animConfig.frameCount,
                 pathPng,
                 pathWebp,
+                direction: animConfig.direction || 'normal',
             };
             return agg;
         }, /** @type {NPC.ParsedNpcNew['animLookup']} */ ({}));

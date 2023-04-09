@@ -11,7 +11,8 @@
           "totalDist": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle.png",
-          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle.webp"
+          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle.webp",
+          "direction": "normal"
         },
         "idle-breathe": {
           "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
@@ -21,7 +22,8 @@
           "totalDist": 0,
           "frameCount": 10,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.png",
-          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp"
+          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp",
+          "direction": "alternate"
         },
         "sit": {
           "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
@@ -31,7 +33,8 @@
           "totalDist": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--sit.png",
-          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--sit.webp"
+          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--sit.webp",
+          "direction": "normal"
         },
         "walk": {
           "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
@@ -41,7 +44,8 @@
           "totalDist": 286.65601055507693,
           "frameCount": 10,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--walk.png",
-          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--walk.webp"
+          "pathWebp": "/assets/npc/first-human-npc/first-human-npc--walk.webp",
+          "direction": "normal"
         }
       },
       "npcJsonKey": "first-human-npc",
@@ -64,7 +68,8 @@
           "totalDist": 0,
           "frameCount": 14,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--idle.png",
-          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--idle.webp"
+          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--idle.webp",
+          "direction": "normal"
         },
         "lie": {
           "aabb": {"x": 0, "y": 0, "width": 360, "height": 578},
@@ -74,7 +79,8 @@
           "totalDist": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--lie.png",
-          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--lie.webp"
+          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--lie.webp",
+          "direction": "normal"
         },
         "sit": {
           "aabb": {"x": 0, "y": 0, "width": 292, "height": 308},
@@ -84,7 +90,8 @@
           "totalDist": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--sit.png",
-          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--sit.webp"
+          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--sit.webp",
+          "direction": "normal"
         },
         "walk": {
           "aabb": {"x": 0, "y": 0, "width": 300, "height": 356},
@@ -94,7 +101,8 @@
           "totalDist": 300,
           "frameCount": 14,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--walk.png",
-          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--walk.webp"
+          "pathWebp": "/assets/npc/man-base-variant/man-base-variant--walk.webp",
+          "direction": "normal"
         }
       },
       "npcJsonKey": "man-base-variant",

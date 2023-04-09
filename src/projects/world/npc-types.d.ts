@@ -477,6 +477,7 @@ declare namespace NPC {
     deltas: number[];
     /** The sum of `deltas` */
     totalDist: number;
+    direction: PlaybackDirection; 
 
     pathPng: string;
     pathWebp: string;

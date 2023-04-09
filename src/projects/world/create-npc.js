@@ -3,7 +3,9 @@ import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
-import npcsMeta from './npcs-meta.json';
+
+// import npcsMeta from './npcs-meta.json';
+import npcsMeta from './npcs-meta-new.json';
 
 /**
  * @param {NPC.NPCDef} def 
@@ -466,18 +468,18 @@ export default function createNpc(
           anim.durationMs = opts.duration;
 
           // Animate spritesheet, assuming `walk` anim exists
-          const { animLookup, aabb } = npcsMeta[this.jsonKey].parsed;
+          const { animLookup } = npcsMeta[this.jsonKey].parsed;
           const spriteMs = this.getWalkSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           anim.sprites = this.el.body.animate(
               firstFootLeads ?
                 [
                   { offset: 0, backgroundPosition: '0px' },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
                 ] :
                 [// We assume an even number of frames
-                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * aabb.width}px` },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * aabb.width}px` },
+                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
                 ] 
             ,
             {
@@ -503,22 +505,20 @@ export default function createNpc(
           this.anim.translate = new Animation();
           this.anim.rotate = new Animation();
           
-          const { animLookup, aabb, synfigMeta } = npcsMeta[this.jsonKey].parsed;
-          const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
+          const { animLookup } = npcsMeta[this.jsonKey].parsed;
+          // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused
           this.anim.sprites = this.el.body.animate(
             [
               { offset: 0, backgroundPosition: '0px' },
               // Works even if frameCount is 1 because easing is `steps(1)`
-              { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * aabb.width}px` },
+              { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * animLookup[this.anim.spriteSheet].aabb.width}px` },
             ], {
               easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
               duration: 600, // 🚧
               iterations: Infinity,
-              direction: /** @type {PlaybackDirection | undefined} */ (
-                'animation-direction' in keyframeMeta ? keyframeMeta['animation-direction'] : undefined
-              ),
+              direction: /** @type {PlaybackDirection} */ (animLookup[this.anim.spriteSheet].direction),
             },
           );
           // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });

@@ -16,8 +16,10 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
-import npcsMeta from './npcs-meta.json';
 import createNpc from "./create-npc";
+
+// import npcsMeta from './npcs-meta.json';
+import npcsMeta from './npcs-meta-new.json';
 
 /** @param {Props} props */
 export default function NPCs(props) {
