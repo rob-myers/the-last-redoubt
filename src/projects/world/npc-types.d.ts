@@ -9,8 +9,9 @@ declare namespace NPC {
   type NpcJsonKey = (
     | 'first-human-npc'
   );
-  /** 🚧 this replaces `NpcJsonKey` */
+    /** 🚧 this replaces `NpcJsonKey` */
   type NpcClassKey = (
+    | 'first-human-npc'
     | 'man-base-variant'
   );
 

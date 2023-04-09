@@ -35,7 +35,21 @@ const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta-new.json');
  * e.g. guess "totalDist", unless we track bones somehow...
  */
 const npcClassConfig = {
-    'man-base-variant': {
+    'first-human-npc': {// Made using Synfig
+        anim: {
+            idle: { frameCount: 1, speed: 0, totalDist: 0 },
+            'idle-breathe': { frameCount: 10, speed: 0, totalDist: 0 },
+            sit: { frameCount: 1, speed: 0, totalDist: 0 },
+            walk: {
+                frameCount: 10,
+                speed: 70, // 🚧 justify
+                totalDist: 286.65601055507693,
+            },
+        },
+        radius: 80,
+        offsetDegrees: 0,
+    },
+    'man-base-variant': {// Made using Spriter Pro
         anim: {
             idle: { frameCount: 14, speed: 0, totalDist: 0 },
             lie: { frameCount: 1, speed: 0, totalDist: 0 },
