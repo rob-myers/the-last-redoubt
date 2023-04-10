@@ -7,7 +7,7 @@ import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
-import { cssName, defaultNpcInteractRadius } from "../service/const";
+import { cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "../service/const";
 import { geom } from "../service/geom";
 import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
@@ -341,12 +341,12 @@ export default function NPCs(props) {
         return false;
       }
     },
-    isPointSpawnable(npcKey, point) {
+    isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
       // Other npcs cannot be close
       for (const otherNpcKey in state.npc) {
         if (otherNpcKey !== npcKey && state.npc[otherNpcKey].intersectsCircle(
-          point, // 🚧 parametric in npc class
-          npcsMeta["first-human-npc"].radius
+          point,
+          npcsMeta[npcClassKey].radius
         )) {
           return false;
         }
@@ -357,7 +357,7 @@ export default function NPCs(props) {
         return false;
       }
       // Door rects cannot be close
-      const npcRadius = npcsMeta["first-human-npc"].radius;
+      const npcRadius = npcsMeta[npcClassKey].radius;
       if (state.isPointNearClosedDoor(point, npcRadius, result)) {
         return false;
       }
@@ -572,7 +572,7 @@ export default function NPCs(props) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
       }
 
-      if (!state.isPointSpawnable(e.npcKey, e.point)) {
+      if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
         throw new Error('cancelled');
       }
 
@@ -584,20 +584,21 @@ export default function NPCs(props) {
         spawned.def = {
           key: e.npcKey,
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-          npcJsonKey: 'first-human-npc', // 🚧 other npc class
+          npcJsonKey: spawned.jsonKey,
           position: e.point,
-          speed: npcsMeta["first-human-npc"].speed,
+          speed: npcsMeta[spawned.jsonKey].speed,
         };
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
       } else {// Create
+        const npcClassKey = e.npcClassKey || defaultNpcClassKey;
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcJsonKey: 'first-human-npc', // 🚧 other npc class
+          npcJsonKey: npcClassKey,
           position: e.point,
-          speed: npcsMeta["first-human-npc"].speed, // 🚧 other npc class
+          speed: npcsMeta[npcClassKey].speed,
         }, { api });
       }
 
@@ -830,7 +831,7 @@ const rootCss = css`
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
- * @property {(npcKey: string, p: Geom.VectJson) => boolean} isPointSpawnable
+ * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geom.VectJson) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
  * @property {NPC.OnTtyLink} onTtyLink
@@ -838,7 +839,7 @@ const rootCss = css`
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
- * @property {(e: { npcKey: string; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
+ * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc

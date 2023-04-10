@@ -26,8 +26,7 @@ export default function createNpc(
       body: /** @type {HTMLDivElement} */ ({}),
     },
     anim: {
-      // 🚧 can specify character class
-      css: css`${npcsMeta['first-human-npc'].css}`,
+      css: css`${npcsMeta[def.npcJsonKey].css}`,
       path: [],
       aux: {
         angs: [],
@@ -492,7 +491,8 @@ export default function createNpc(
           break;
         }
         case 'idle':
-        case 'idle-breathe':
+        case 'idle-breathe': // 🚧 remove/swap in favour of `idle-static`
+        case 'lie':
         case 'sit': {
           this.clearWayMetas();
           // Update staticBounds
@@ -505,7 +505,9 @@ export default function createNpc(
           this.anim.translate = new Animation();
           this.anim.rotate = new Animation();
           
-          const { animLookup } = npcsMeta[this.jsonKey].parsed;
+          // ℹ️ relax type of keys
+          // 🚧 npc classes should have same Object.keys(animLookup)
+          const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.jsonKey].parsed.animLookup);
           // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused

@@ -191,6 +191,9 @@ async function main() {
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
           pathPng: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.png`,
           pathWebp: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.webp`,
+          // 🚧 actually, we'll probably remove the json creation part of render-npc
+          // 🚧 and stop supporting animation-direction
+          direction: 'normal',
         };
       });
       

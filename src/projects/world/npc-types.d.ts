@@ -40,7 +40,7 @@ declare namespace NPC {
     /** User specified e.g. `andros` */
     key: string;
     /** Refers to `static/assets/npc/{jsonKey}/{jsonKey}.json` */
-    jsonKey: NPC.NpcJsonKey;
+    jsonKey: NPC.NpcClassKey;
     /** Epoch ms when spawned */
     epochMs: number;
     /**
@@ -217,7 +217,8 @@ declare namespace NPC {
 
   type SpriteSheetKey = (
     | 'idle'
-    | 'idle-breathe'
+    | 'idle-breathe' // 🚧 -> 'idle-static'
+    | 'lie'
     | 'sit'
     | 'walk'
   );
@@ -226,7 +227,7 @@ declare namespace NPC {
     /** npcKey e.g. `andros` */
     key: string;
     /** npc class key e.g. `first-human-npc` */
-    npcJsonKey: NpcJsonKey;
+    npcJsonKey: NpcClassKey;
     angle: number;
     // paused: boolean;
     position: Geom.VectJson;
