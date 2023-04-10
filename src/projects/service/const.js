@@ -7,7 +7,7 @@ export const localStorageKey = {
   windowScrollY: 'window-scroll-y',
 };
 
-export const cssName = {
+export const cssName = /** @type {const} */ ({
   //#region site
   anchor: 'anchor',
   carouselLabelHeight: '--carousel-label-height',
@@ -78,9 +78,9 @@ export const cssName = {
   npcBoundsRadius: '--npc-bounds-radius',
   npcHeadRadius: '--npc-head-radius',
   //#endregion
-} as const;
+});
 
-export const zIndex = {
+export const zIndex = /** @type {const} */ ({
   nav: 11,
   navMini: 10,
   navTopBar: 7,
@@ -90,11 +90,11 @@ export const zIndex = {
   tabsCentralButton: 6,
   tabsFaderOverlay: 4,
   ttyTouchHelper: 5,
-} as const;
+});
 
-export const cssTimeMs = {
+export const cssTimeMs = /** @type {const} */ ({
   justCopied: 1000,
-} as const;
+});
 
 /** Decimal place precision */
 export const precision = 4;
@@ -127,14 +127,17 @@ export const defaultDoorCloseMs = 7000;
 
 export const defaultNpcInteractRadius = 50;
 
+/** @type {NPC.NpcClassKey} */
+export const defaultNpcClassKey = 'first-human-npc';
+
 //#endregion
 
-export const svgSymbolTag = {
+export const svgSymbolTag = /** @type {const} */ ({
   /** View positions associated to a single door */
   view: 'view',
   /** Light positions inside geomorph */
   light: 'light',
-} as const;
+});
 
 export const defaultLightDistance = 300;
 
