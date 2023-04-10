@@ -57,9 +57,12 @@
     - `yarn minify-pngs static/assets/npc/man-base-variant webp`
   - 🚧 get walk/sit/idle working
     - need background-position offset for walk so starts from idle
+    - need to unify animation names
 
 - more `ui do` points
 - more `orient-{deg}` tags
+- ✅ BUG sporadic startAnimationByMeta on click different part of do point
+  - goLoop was triggered and was cancelling before startAnimationByMeta
 
 - ✅ BUG: if end in doorway final navMeta should be final vertex
   - `nav andros '{ "x": 210, "y": 417.55 }'`

@@ -449,14 +449,12 @@ export default function NPCs(props) {
 
       try {
         const npcOnNavMesh = state.isPointInNavmesh(npcPosition);
-
         if (npcOnNavMesh) {// Started on-mesh and clicked point
           if (!meta.doable) {
             throw Error('not doable');
           }
           /** The actual "do point" -- e.point is somewhere on icon */
           const decorPoint = meta.targetPos;
-
           if (state.isPointInNavmesh(decorPoint)) {// Walk then Do
             const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: decorPoint, throwOnNotNav: true });
             await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });

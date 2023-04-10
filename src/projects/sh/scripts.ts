@@ -72,10 +72,15 @@ doLoop: `{
     npc do '{ suppressThrow: true }'
 }`,
 
-/** Usage: goLoop {npcKey} */
+/**
+ * Usage: goLoop {npcKey}
+ * - meta.nav means the point must be on navmesh
+ * - !meta.ui prevents immediate movement on open door
+ * - !meta.do isolates from `doLoop`
+ */
 goLoop: `{
   click |
-    filter 'x => x.meta.nav && (!x.meta.ui || x.meta.go)' |
+    filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
     nav $1 |
     walk $1
 }`,
