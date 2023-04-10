@@ -520,7 +520,6 @@ export default function createNpc(
               easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
               duration: 600, // 🚧
               iterations: Infinity,
-              direction: /** @type {PlaybackDirection} */ (animLookup[this.anim.spriteSheet].direction),
             },
           );
           // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });

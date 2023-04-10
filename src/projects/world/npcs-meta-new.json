@@ -20,7 +20,7 @@
           "contacts": [],
           "deltas": [],
           "totalDist": 0,
-          "frameCount": 10,
+          "frameCount": 20,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.png",
           "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp",
           "direction": "alternate"

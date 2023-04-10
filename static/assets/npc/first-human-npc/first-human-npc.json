@@ -60,7 +60,7 @@
     "idle-breathe": {
       "animName": "idle-breathe",
       "aabb": {"x": 81, "y": 49, "width": 80, "height": 155},
-      "frameCount": 10,
+      "frameCount": 20,
       "contacts": [],
       "deltas": [],
       "totalDist": 0,
@@ -73,7 +73,7 @@
   "synfigMeta": {
     "keyframeToMeta": {
       "idle": {"tags": ["idle"]},
-      "idle-breathe": {"tags": ["idle"], "animation-direction": "alternate"},
+      "idle-breathe": {"tags": ["idle"]},
       "sit": {"tags": ["sit"]},
       "walk": {"tags": ["walk"]}
     }
