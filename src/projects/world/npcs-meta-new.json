@@ -65,7 +65,7 @@
     "speed": 70
   },
   "man-base-variant": {
-    "css": ".body {\n  transform: scale(0.096);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.webp');\n  }",
+    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.webp');\n  }",
     "jsonKey": "man-base-variant",
     "parsed": {
       "animLookup": {
@@ -120,14 +120,14 @@
           "pathWebp": "/assets/npc/man-base-variant/man-base-variant--walk.webp",
           "rotateDeg": 90,
           "shiftFramesBy": -4,
-          "totalDist": 300
+          "totalDist": 600
         }
       },
       "npcJsonKey": "man-base-variant",
-      "radius": 150
+      "radius": 170
     },
-    "radius": 14.4,
-    "scale": 0.096,
+    "radius": 14.399999999999999,
+    "scale": 0.08470588235294117,
     "speed": 70
   }
 }

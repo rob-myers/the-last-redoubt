@@ -50,10 +50,10 @@ export const npcClassConfig = {
                 shiftFramesBy: -4,
                 rotateDeg: 90,
                 speed: 70 ,// 🚧 justify
-                totalDist: 300, // 🚧 justify
+                totalDist: 600, // 🚧 justify
             },
         },
-        radius: 750 * 0.2, // Export scale is 20%
+        radius: 850 * 0.2, // Export scale is 20%
     },
 };
 
