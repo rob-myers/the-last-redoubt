@@ -53,19 +53,19 @@ export function computeSpritesheetCssNew(parsed, offsetDegrees, scale) {
   transform: rotate(${offsetDegrees}deg) scale(${scale});
 }
 
-${Object.values(parsed.animLookup).map(({ animName, aabb }) => `
+${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
   &.${animName} .body:not(.webp) {
-    width: ${aabb.width}px;
-    height: ${aabb.height}px;
-    left: ${-aabb.width * 0.5}px;
-    top: ${-aabb.height * 0.5}px;
+    width: ${frameAabb.width}px;
+    height: ${frameAabb.height}px;
+    left: ${-frameAabb.width * 0.5}px;
+    top: ${-frameAabb.height * 0.5}px;
     background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
   }
   &.${animName} .body.webp {
-    width: ${aabb.width}px;
-    height: ${aabb.height}px;
-    left: ${-aabb.width * 0.5}px;
-    top: ${-aabb.height * 0.5}px;
+    width: ${frameAabb.width}px;
+    height: ${frameAabb.height}px;
+    left: ${-frameAabb.width * 0.5}px;
+    top: ${-frameAabb.height * 0.5}px;
     background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
   }
 `).join('\n\n')}

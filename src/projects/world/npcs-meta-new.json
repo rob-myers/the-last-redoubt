@@ -1,116 +1,121 @@
 {
   "first-human-npc": {
+    "css": ".body {\n  transform: rotate(0deg) scale(0.18);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n  &.idle .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }\n  &.sit .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n  &.walk .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.webp');\n  }",
     "jsonKey": "first-human-npc",
     "parsed": {
       "animLookup": {
         "idle": {
-          "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+          "frameAabb": {"x": 0, "y": 0, "width": 256, "height": 256},
           "animName": "idle",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle.png",
           "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle.webp",
-          "direction": "normal"
+          "totalDist": 0
         },
         "idle-breathe": {
-          "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+          "frameAabb": {"x": 0, "y": 0, "width": 256, "height": 256},
           "animName": "idle-breathe",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 1000,
           "frameCount": 20,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.png",
           "pathWebp": "/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp",
-          "direction": "alternate"
+          "totalDist": 0
         },
         "sit": {
-          "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+          "frameAabb": {"x": 0, "y": 0, "width": 256, "height": 256},
           "animName": "sit",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--sit.png",
           "pathWebp": "/assets/npc/first-human-npc/first-human-npc--sit.webp",
-          "direction": "normal"
+          "totalDist": 0
         },
         "walk": {
-          "aabb": {"x": 0, "y": 0, "width": 256, "height": 256},
+          "frameAabb": {"x": 0, "y": 0, "width": 256, "height": 256},
           "animName": "walk",
           "contacts": [],
           "deltas": [],
-          "totalDist": 286.65601055507693,
+          "durationMs": -1,
           "frameCount": 10,
           "pathPng": "/assets/npc/first-human-npc/first-human-npc--walk.png",
           "pathWebp": "/assets/npc/first-human-npc/first-human-npc--walk.webp",
-          "direction": "normal"
+          "totalDist": 286.65601055507693
         }
       },
       "npcJsonKey": "first-human-npc",
       "radius": 80
     },
-    "scale": 0.18,
     "radius": 14.399999999999999,
-    "speed": 70,
-    "css": ".body {\n  transform: rotate(0deg) scale(0.18);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.png');\n  }\n  &.idle .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--idle-breathe.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.png');\n  }\n  &.sit .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.png');\n  }\n  &.walk .body.webp {\n    width: 256px;\n    height: 256px;\n    left: -128px;\n    top: -128px;\n    background-image: url('/assets/npc/first-human-npc/first-human-npc--walk.webp');\n  }"
+    "scale": 0.18,
+    "speed": 70
   },
   "man-base-variant": {
+    "css": ".body {\n  transform: rotate(0deg) scale(0.096);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 332px;\n    height: 192px;\n    left: -166px;\n    top: -96px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.png');\n  }\n  &.idle .body.webp {\n    width: 332px;\n    height: 192px;\n    left: -166px;\n    top: -96px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 360px;\n    height: 578px;\n    left: -180px;\n    top: -289px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.png');\n  }\n  &.lie .body.webp {\n    width: 360px;\n    height: 578px;\n    left: -180px;\n    top: -289px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 292px;\n    height: 308px;\n    left: -146px;\n    top: -154px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.png');\n  }\n  &.sit .body.webp {\n    width: 292px;\n    height: 308px;\n    left: -146px;\n    top: -154px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 300px;\n    height: 356px;\n    left: -150px;\n    top: -178px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 300px;\n    height: 356px;\n    left: -150px;\n    top: -178px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.webp');\n  }",
     "jsonKey": "man-base-variant",
     "parsed": {
       "animLookup": {
         "idle": {
-          "aabb": {"x": 0, "y": 0, "width": 332, "height": 192},
+          "frameAabb": {"x": 0, "y": 0, "width": 332, "height": 192},
           "animName": "idle",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 4000,
           "frameCount": 14,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--idle.png",
           "pathWebp": "/assets/npc/man-base-variant/man-base-variant--idle.webp",
-          "direction": "normal"
+          "rotateDeg": 90,
+          "totalDist": 0
         },
         "lie": {
-          "aabb": {"x": 0, "y": 0, "width": 360, "height": 578},
+          "frameAabb": {"x": 0, "y": 0, "width": 360, "height": 578},
           "animName": "lie",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--lie.png",
           "pathWebp": "/assets/npc/man-base-variant/man-base-variant--lie.webp",
-          "direction": "normal"
+          "rotateDeg": 90,
+          "totalDist": 0
         },
         "sit": {
-          "aabb": {"x": 0, "y": 0, "width": 292, "height": 308},
+          "frameAabb": {"x": 0, "y": 0, "width": 292, "height": 308},
           "animName": "sit",
           "contacts": [],
           "deltas": [],
-          "totalDist": 0,
+          "durationMs": 0,
           "frameCount": 1,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--sit.png",
           "pathWebp": "/assets/npc/man-base-variant/man-base-variant--sit.webp",
-          "direction": "normal"
+          "rotateDeg": 90,
+          "totalDist": 0
         },
         "walk": {
-          "aabb": {"x": 0, "y": 0, "width": 300, "height": 356},
+          "frameAabb": {"x": 0, "y": 0, "width": 300, "height": 356},
           "animName": "walk",
           "contacts": [],
           "deltas": [],
-          "totalDist": 300,
+          "durationMs": -1,
           "frameCount": 14,
           "pathPng": "/assets/npc/man-base-variant/man-base-variant--walk.png",
           "pathWebp": "/assets/npc/man-base-variant/man-base-variant--walk.webp",
-          "direction": "normal"
+          "rotateDeg": 90,
+          "shiftFramesBy": -4,
+          "totalDist": 300
         }
       },
       "npcJsonKey": "man-base-variant",
-      "radius": 130
+      "radius": 150
     },
-    "scale": 0.11076923076923077,
     "radius": 14.4,
-    "speed": 70,
-    "css": ".body {\n  transform: rotate(270deg) scale(0.11076923076923077);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 332px;\n    height: 192px;\n    left: -166px;\n    top: -96px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.png');\n  }\n  &.idle .body.webp {\n    width: 332px;\n    height: 192px;\n    left: -166px;\n    top: -96px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--idle.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 360px;\n    height: 578px;\n    left: -180px;\n    top: -289px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.png');\n  }\n  &.lie .body.webp {\n    width: 360px;\n    height: 578px;\n    left: -180px;\n    top: -289px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 292px;\n    height: 308px;\n    left: -146px;\n    top: -154px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.png');\n  }\n  &.sit .body.webp {\n    width: 292px;\n    height: 308px;\n    left: -146px;\n    top: -154px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 300px;\n    height: 356px;\n    left: -150px;\n    top: -178px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 300px;\n    height: 356px;\n    left: -150px;\n    top: -178px;\n    background-image: url('/assets/npc/man-base-variant/man-base-variant--walk.webp');\n  }"
+    "scale": 0.096,
+    "speed": 70
   }
 }

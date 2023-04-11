@@ -189,10 +189,11 @@ async function main() {
 
       animLookup[animName] = {
           animName,
-          aabb,
+          frameAabb: aabb,
           frameCount,
           contacts,
           deltas,
+          durationMs: 600, // 🚧 for types (this json is defunct)
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
           pathPng: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.png`,
           pathWebp: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.webp`,
@@ -269,7 +270,7 @@ async function main() {
     await Promise.all(procs.map(({ key, proc }) => {
       proc.stdout.on('data', (data) => console.log(`${key}: ${data.toString().replace(/\n/g, '; ')}`));
       return /** @type {Promise<void>} */ (
-        new Promise(resolve => proc.on('exit', () => resolve()))
+        new Promise(resolve => proc.on('close', () => resolve()))
       );
     }));
 
@@ -279,7 +280,7 @@ async function main() {
     await /** @type {Promise<void>} */ (new Promise(resolve => {
       const proc = childProcess.spawn(`yarn`, ['minify-pngs', outputDir, 'webp']);
       proc.stdout.on('data', (data) => console.log({ key: 'minify-pngs' }, data.toString()));
-      proc.stdout.on('exit', () => resolve());
+      proc.stdout.on('close', () => resolve());
     }));
 
 }

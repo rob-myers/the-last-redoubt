@@ -474,16 +474,16 @@ export default function createNpc(
               firstFootLeads ?
                 [
                   { offset: 0, backgroundPosition: '0px' },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.aabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.frameAabb.width}px` },
                 ] :
                 [// We assume an even number of frames
-                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.aabb.width}px` },
-                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.aabb.width}px` },
+                  { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.frameAabb.width}px` },
+                  { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.frameAabb.width}px` },
                 ] 
             ,
             {
               easing: `steps(${animLookup.walk.frameCount})`,
-              duration: spriteMs, // ~ npcWalkAnimDurationMs
+              duration: spriteMs, // 🚧 ~ npcWalkAnimDurationMs
               iterations: Infinity,
               delay: opts.delay,
             },
@@ -515,10 +515,10 @@ export default function createNpc(
             [
               { offset: 0, backgroundPosition: '0px' },
               // Works even if frameCount is 1 because easing is `steps(1)`
-              { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * animLookup[this.anim.spriteSheet].aabb.width}px` },
+              { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * animLookup[this.anim.spriteSheet].frameAabb.width}px` },
             ], {
               easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
-              duration: 600, // 🚧
+              duration: animLookup[this.anim.spriteSheet].durationMs,
               iterations: Infinity,
             },
           );

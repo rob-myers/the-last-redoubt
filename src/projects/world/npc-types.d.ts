@@ -450,6 +450,20 @@ declare namespace NPC {
     zoom: number;
   }
 
+  interface NpcClassConfig {
+    anim: Record<string, {
+      durationMs: number;
+      frameCount: number;
+      speed: number;
+      /** Rotate each frame by 0, 90, 180 or 270 degrees */
+      rotateDeg?: 0 | 90 | 180 | 270;
+      /** Shift frame index e.g. so start from idle position when walking */
+      shiftFramesBy?: number;
+      totalDist: number;
+    }>;
+    radius: number;
+  }
+
   interface ParsedNpcNew {
     npcJsonKey: NpcClassKey;
     animLookup: {
@@ -466,9 +480,10 @@ declare namespace NPC {
 
   interface NpcAnimMeta {
     animName: string;
-    /** AABB over all frames of animation, excluding shadow. */
-    aabb: Geom.RectJson;
+    /** aabb of a single frame */
+    frameAabb: Geom.RectJson;
     frameCount: number;
+
     /** Aligned to frames i.e. positions of feet contacts (if any) */
     contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];
     /**
@@ -478,9 +493,15 @@ declare namespace NPC {
     deltas: number[];
     /** The sum of `deltas` */
     totalDist: number;
-
+    
+    durationMs: number;
     pathPng: string;
     pathWebp: string;
+
+    /** Rotate each frame by 0, 90, 180 or 270 degrees */
+    rotateDeg?: 0 | 90 | 180 | 270;
+    /** Shift frame index e.g. so start from idle position when walking */
+    shiftFramesBy?: number;
   }
 
   interface NpcSynfigMetaJson {

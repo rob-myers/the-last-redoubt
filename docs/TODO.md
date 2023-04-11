@@ -55,7 +55,14 @@
     - use symmetric `set to animation preset` source rect and check inferred
       > e.g. idle -830,-480 -> +829,+479
     - `yarn minify-pngs static/assets/npc/man-base-variant webp`
+
+  - ✅ script `process-sheets` media/NPC/{foo}/* -> static/assets/npc/{foo}/*
+    - ℹ️ frames needn't be square so may have to change output image dimensions
+    - ✅ fix look by ensuring look-right
+    - ✅ fix walk start-from-idle
+    - ✅ constructs webp too
   - 🚧 get walk/sit/idle working
+    - more frames for idle animation if ~4000ms long...
     - need background-position offset for walk so starts from idle
     - need to unify animation names
 
