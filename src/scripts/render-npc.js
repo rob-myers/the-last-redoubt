@@ -189,6 +189,7 @@ async function main() {
 
       animLookup[animName] = {
           animName,
+          frameAabbOrig: aabb,
           frameAabb: aabb,
           frameCount,
           contacts,

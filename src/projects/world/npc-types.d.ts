@@ -480,7 +480,9 @@ declare namespace NPC {
 
   interface NpcAnimMeta {
     animName: string;
-    /** aabb of a single frame */
+    /** aabb of a single frame prior to applying rotateDeg */
+    frameAabbOrig: Geom.RectJson;
+    /** aabb of a single frame with `rotateDeg` applied */
     frameAabb: Geom.RectJson;
     frameCount: number;
 

@@ -69,26 +69,35 @@ const outputJson = keys(npcClassConfig).reduce(
         
         const animLookup = Object.keys(config.anim).reduce((agg, animKey) => {
             const animConfig = config.anim[animKey];
-            // ℹ️ initial forward-slash is useful for web-asset
-            const pathPng = `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.png`;
-            const pathWebp = `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.webp`;
-            // ℹ️ read png and infer frame width/height
-            const [widthStr, heightStr] = childProcess.execSync(`identify -ping -format '%w %h' ./static${pathPng}`).toString().split(' ');
+            const origSheetPng = `./media/NPC/class/${npcClassKey}/${npcClassKey}--${animKey}.png`;
+            // ℹ️ read png from media and infer frame width/height
+            const [widthStr, heightStr] = childProcess.execSync(`identify -ping -format '%w %h' ${origSheetPng}`).toString().split(' ');
+            /** Frame AABB prior to applying `rotateDeg` */
+            const frameAabbOrig = {
+                x: 0,
+                y: 0,
+                width: Number(widthStr) / animConfig.frameCount,
+                height: Number(heightStr),
+            };
+            const frameAabb = {...frameAabbOrig};
+            const rotateDeg = animConfig.rotateDeg || 0;
+            if ([90, 270].includes(rotateDeg)) {// Flip width and height
+                frameAabb.width = frameAabbOrig.height;
+                frameAabb.height = frameAabbOrig.width;
+            }
+
             agg[animKey] = {
-                frameAabb: {
-                    x: 0,
-                    y: 0,
-                    width: Number(widthStr) / animConfig.frameCount,
-                    height: Number(heightStr),
-                },
                 animName: animKey,
                 contacts: [], // 🚧 remove
                 deltas: [], // 🚧 remove
                 durationMs: animConfig.durationMs,
+                frameAabbOrig,
+                frameAabb,
                 frameCount: animConfig.frameCount,
-                pathPng,
-                pathWebp,
-                rotateDeg: animConfig.rotateDeg,
+                // ℹ️ initial forward-slash is useful for web-asset
+                pathPng: `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.png`,
+                pathWebp: `/assets/npc/${npcClassKey}/${npcClassKey}--${animKey}.webp`,
+                rotateDeg,
                 shiftFramesBy: animConfig.shiftFramesBy,
                 totalDist: animConfig.totalDist,
             };
@@ -107,7 +116,7 @@ const outputJson = keys(npcClassConfig).reduce(
         return {
             ...agg,
             [npcClassKey]: {
-                css: computeSpritesheetCssNew(parsed, 0, scale),
+                css: computeSpritesheetCssNew(parsed),
                 jsonKey: /** @type {NPC.NpcClassKey} */ (npcClassKey),
                 parsed,
                 radius: parsed.radius * scale,

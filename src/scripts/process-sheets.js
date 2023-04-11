@@ -8,7 +8,6 @@
  */
 /// <reference path="./deps.d.ts"/>
 
-import childProcess from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import { createCanvas, loadImage } from 'canvas';
@@ -16,7 +15,6 @@ import { createCanvas, loadImage } from 'canvas';
 import { runYarnScript } from './service';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { Mat, Poly, Rect } from '../projects/geom';
-import { pause } from '../projects/service/generic';
 
 const mediaDir = path.resolve(__dirname, '../../media');
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
@@ -29,8 +27,8 @@ async function main() {
     await runYarnScript('npcs-meta-new');
 
     // Get generated json
-    // const npcsMeta = (await import('../projects/world/npcs-meta-new.json')).default;
-    const npcsMeta = require('../projects/world/npcs-meta-new.json');
+    // Dynamic import (or require) provides inferred types (unlike readFile)
+    const npcsMeta = (await import('../projects/world/npcs-meta-new.json')).default;
 
     // Apply two isomorphisms
     // - rotate each frame by 0, 90, 180 or 270
@@ -50,7 +48,8 @@ async function main() {
 
         for (const { filename, animKey } of sheets) {
             const {
-                frameAabb,
+                frameAabbOrig,
+                frameAabb, // rotateDeg is already applied to frameAabb
                 frameCount,
                 rotateDeg = 0,
                 shiftFramesBy = 0,
@@ -58,10 +57,7 @@ async function main() {
             // media/NPC/class/${npcClassKey}/${npcClassKey}--${animKey}.png
             const image = await loadImage(`${srcDir}/${filename}`);
 
-            const rotFrameAabb = [0, 180].includes(rotateDeg)
-                ? new Rect(0, 0, frameAabb.width, frameAabb.height)
-                : new Rect(0, 0, frameAabb.height, frameAabb.width);
-            const rotImageAabb = new Rect(0, 0, rotFrameAabb.width * frameCount, rotFrameAabb.height);
+            const rotImageAabb = new Rect(0, 0, frameAabb.width * frameCount, frameAabb.height);
 
             const canvas = createCanvas(rotImageAabb.width, rotImageAabb.height);
             const ctxt = canvas.getContext('2d');
@@ -83,15 +79,15 @@ async function main() {
                 // framewise rotation
                 // ℹ️ Choose dstRect such that, if we apply matrix rot(angle) to dstRect,
                 // we will produce a rectangle where:
-                // - top-left is at (frameId * rotFrameAabb.width, 0)
-                // - bottom-left is at ((frameId + 1) * rotFrameAabb.width, rotFrameAabb.height)
+                // - top-left is at (frameId * frameAabb.width, 0)
+                // - bottom-left is at ((frameId + 1) * frameAabb.width, frameAabb.height)
                 const dstRect = Poly.fromRect(
-                    new Rect(frameId * rotFrameAabb.width, 0, rotFrameAabb.width, rotFrameAabb.height)
+                    new Rect(frameId * frameAabb.width, 0, frameAabb.width, frameAabb.height)
                 ).applyMatrix(inverseMatrix).rect;
 
                 ctxt.drawImage(
                     image,
-                    srcFrameId * frameAabb.width, 0, frameAabb.width, frameAabb.height,
+                    srcFrameId * frameAabbOrig.width, 0, frameAabbOrig.width, frameAabbOrig.height,
                     dstRect.x, dstRect.y, dstRect.width, dstRect.height,
                 );
             }
@@ -100,13 +96,12 @@ async function main() {
         }
     }
 
-
-    // Finally optimize pngs + generate webp
-    // 🚧 write to static/asset can break gatsby
-    // await Promise.all(Object.keys(npcsMeta).map(
-    //     npcClassKey => runYarnScript('minify-pngs', `${staticAssetsDir}/npc/${npcClassKey}`, 'webp')
-    // ));
+    // Finally, optimize pngs + generate webp
     await Promise.all(Object.keys(npcsMeta).map(
-        npcClassKey => runYarnScript('minify-pngs', `${staticAssetsDir}/npc/${npcClassKey}`)
+        npcClassKey => runYarnScript(
+            'minify-pngs',
+            `${staticAssetsDir}/npc/${npcClassKey}`,
+            'webp',
+        )
     ));
 }
