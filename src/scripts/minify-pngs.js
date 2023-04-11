@@ -17,6 +17,7 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import { error, info } from '../projects/service/log';
+import { runYarnScript } from './service';
 
 const [,, srcDir, extra] = process.argv;
 if (!srcDir || !fs.existsSync(srcDir) || (extra && (extra !== 'webp'))) {
@@ -46,29 +47,34 @@ async function main() {
 
   // Create webp files first
   if (extra === 'webp') {
-    await /** @type {Promise<void>} */ (new Promise(resolve => {
-      const proc = childProcess.spawn(`yarn`, ['pngs-to-webp', srcDir]);
-      proc.stdout.on('data', (data) => console.log({ key: 'pngs-to-webp' }, data.toString()));
-      proc.stdout.on('exit', () => resolve());
-    }));
+    await runYarnScript('pngs-to-webp', srcDir);
   }
 
   //#region pngquant
+
   if (childProcess.execSync(`pngquant --help | grep pngquant  >/dev/null && echo $?`).toString().trim() !== '0') {
     error("error: please install pngquant e.g. `brew install pngquant`");
     process.exit(1);
   }
 
   info(`applying parallel \`pngquant\` to directory ${srcDir}`);
+  // Use temp dir because gatsby watches static/assets/**/* and
+  // sometimes breaks when we rename files there
+  const tempDir = fs.mkdtempSync('pngquant-');
+
+  childProcess.execSync(`cp ${path.join(`'${srcDir}'`, '*.png')} ${tempDir}`);
   childProcess.execSync(`
-    time find ${path.join(`'${srcDir}'`, '*.png')} -print0 |
+    time find ${path.join(`'${tempDir}'`, '*.png')} -print0 |
       xargs -0 -n 1 -P 20 pngquant -f --quality=80
   `);
 
-  for (const fileName of fs.readdirSync(srcDir).filter(x => x.endsWith('-fs8.png'))) {
-    const filePath = path.resolve(srcDir, fileName);
+  for (const fileName of fs.readdirSync(tempDir).filter(x => x.endsWith('-fs8.png'))) {
+    const filePath = path.resolve(tempDir, fileName);
     fs.renameSync(filePath, filePath.replace( /^(.*)(-fs8)\.png$/, '$1.png'));
   }
+  childProcess.execSync(`cp ${path.join(`'${tempDir}'`, '*.png')} ${srcDir}`);
+  fs.rmSync(tempDir, { force: true, recursive: true });
+
   //#endregion
 
 }

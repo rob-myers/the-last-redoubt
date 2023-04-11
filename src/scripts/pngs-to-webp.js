@@ -28,14 +28,21 @@ if (childProcess.execSync(`cwebp -version >/dev/null && echo $?`).toString().tri
 }
 
 info(`applying parallel \`cwebp\` to directory ${srcDir}`);
+// Use temp dir because gatsby watches static/assets/**/* and
+// sometimes breaks when we rename files there
+const tempDir = fs.mkdtempSync('cwebp-');
+
+childProcess.execSync(`cp ${path.join(`'${srcDir}'`, '*.png')} ${tempDir}`);
 // cwebp first-human-npc--walk.png -o first-human-npc--walk.webp
 childProcess.execSync(`
-  time find ${path.join(`'${srcDir}'`, '*.png')} -print0 |
+  time find ${path.join(`'${tempDir}'`, '*.png')} -print0 |
     xargs -0 -I{} -n 1 -P 3 cwebp -noasm "{}" -o "{}".webp
 `);
 
 // .png.webp -> .webp
-for (const fileName of fs.readdirSync(srcDir).filter(x => x.endsWith('.png.webp'))) {
-  const filePath = path.resolve(srcDir, fileName);
+for (const fileName of fs.readdirSync(tempDir).filter(x => x.endsWith('.png.webp'))) {
+  const filePath = path.resolve(tempDir, fileName);
   fs.renameSync(filePath, filePath.replace( /^(.*)(\.png)\.webp$/, '$1.webp'));
 }
+childProcess.execSync(`cp ${path.join(`'${tempDir}'`, '*.png')} ${srcDir}`);
+fs.rmSync(tempDir, { force: true, recursive: true });
