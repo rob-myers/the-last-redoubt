@@ -7,6 +7,7 @@
  * - yarn pngs-to-webp static/assets/geomorph
  * - yarn pngs-to-webp static/assets/npc/first-human-npc
  * - yarn pngs-to-webp static/assets/icon
+ * - yarn pngs-to-webp static/assets/npc/man-base-variant
  */
 import fs from 'fs';
 import path from 'path';
@@ -44,5 +45,5 @@ for (const fileName of fs.readdirSync(tempDir).filter(x => x.endsWith('.png.webp
   const filePath = path.resolve(tempDir, fileName);
   fs.renameSync(filePath, filePath.replace( /^(.*)(\.png)\.webp$/, '$1.webp'));
 }
-childProcess.execSync(`cp ${path.join(`'${tempDir}'`, '*.png')} ${srcDir}`);
+childProcess.execSync(`cp ${path.join(`'${tempDir}'`, '*.webp')} ${srcDir}`);
 fs.rmSync(tempDir, { force: true, recursive: true });

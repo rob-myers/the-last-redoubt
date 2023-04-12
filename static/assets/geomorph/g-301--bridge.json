@@ -1142,7 +1142,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90", "orient-90"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2102,7 +2102,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90", "orient-90"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2273,7 +2273,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90", "orient-270"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[28, 420], [28, 418], [30, 418], [30, 420]]]
@@ -2371,7 +2371,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90", "orient-270"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[148, 420], [148, 418], [150, 418], [150, 420]]]
@@ -2467,7 +2467,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90", "orient-0"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [

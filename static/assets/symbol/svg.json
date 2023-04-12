@@ -8162,7 +8162,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[140, 300], [140, 310], [150, 310], [150, 300]]]
@@ -8184,7 +8184,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1679755041015.89
+    "lastModified": 1681291113684.7737
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
@@ -8724,7 +8724,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -8816,7 +8816,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1679156103013.3433
+    "lastModified": 1681292633976.2146
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",

@@ -61,13 +61,19 @@
     - ✅ fix look by ensuring look-right
     - ✅ fix walk start-from-idle
     - ✅ constructs webp too
-  - 🚧 get walk/sit/idle working
-    - more frames for idle animation if ~4000ms long...
-    - need background-position offset for walk so starts from idle
-    - need to unify animation names
+  - ✅ get walk/sit/lie/idle working
+    - ✅ idle -> idle-breathe
+    - ✅ idle 1 frame of idle-breathe
+    - ✅ more frames for idle animation if ~4000ms long...
+    - ❌ need background-position offset for walk so starts from idle
+      - we use `yarn process-sheets` to ensure facing right
+    - ✅ unify animation names
+  - ✅ BUG with anim.sprites.commitStyles() for `idle-breathe`
+    - saw `background-position: -2145px 50%`
 
 - more `ui do` points
 - more `orient-{deg}` tags
+- BUG spawned into toilet without triggering FOV
 - ✅ BUG sporadic startAnimationByMeta on click different part of do point
   - goLoop was triggered and was cancelling before startAnimationByMeta
 

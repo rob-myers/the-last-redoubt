@@ -128,7 +128,8 @@ export const defaultDoorCloseMs = 7000;
 export const defaultNpcInteractRadius = 50;
 
 /** @type {NPC.NpcClassKey} */
-export const defaultNpcClassKey = 'first-human-npc';
+// export const defaultNpcClassKey = 'first-human-npc';
+export const defaultNpcClassKey = 'man-base-variant';
 
 //#endregion
 

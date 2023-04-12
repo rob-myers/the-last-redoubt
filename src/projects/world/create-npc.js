@@ -120,7 +120,9 @@ export default function createNpc(
       );
 
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
-        anim.commitStyles();
+        if (anim !== this.anim.sprites) {
+          anim.commitStyles();
+        }
         return /** @type {Promise<void>} */ (new Promise(resolve => {
           anim.addEventListener('cancel', () => resolve());
           anim.cancel();
@@ -511,6 +513,9 @@ export default function createNpc(
           // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused
+          // 🚧 `idle` being played (before `sit`) and now has 14 frames
+          // 🚧 we should probably create a 1-frame variant
+          console.log(this.anim.spriteSheet, `steps(${animLookup[this.anim.spriteSheet].frameCount})`)
           this.anim.sprites = this.el.body.animate(
             [
               { offset: 0, backgroundPosition: '0px' },
@@ -540,7 +545,7 @@ export default function createNpc(
           break;
         }
         case meta.lie: {
-          // 🚧
+          this.startAnimation('lie');
           break;
         }
       }
