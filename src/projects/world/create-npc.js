@@ -4,7 +4,6 @@ import { precision, testNever } from '../service/generic';
 import { cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 
-// import npcsMeta from './npcs-meta.json';
 import npcsMeta from './npcs-meta-new.json';
 
 /**

@@ -18,7 +18,6 @@ import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
 import createNpc from "./create-npc";
 
-// import npcsMeta from './npcs-meta.json';
 import npcsMeta from './npcs-meta-new.json';
 
 /** @param {Props} props */
