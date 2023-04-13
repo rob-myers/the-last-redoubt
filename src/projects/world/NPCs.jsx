@@ -615,7 +615,6 @@ export default function NPCs(props) {
       }
 
       let status = /** @type {'no-track' | 'follow-walk' | 'panzoom-to'} */ ('no-track');
-      const baseZoom = 2;
 
       return merge(
         of({ key: /** @type {const} */ ('init-track') }),
@@ -656,7 +655,11 @@ export default function NPCs(props) {
             status = 'panzoom-to';
             console.warn('@', status);
             // Ignore Error('cancelled')
-            try { await panZoom.panZoomTo(baseZoom, npcPosition, 2000); } catch {};
+            try {
+              // const baseZoom = undefined;
+              const baseZoom = 1.8;
+              await panZoom.panZoomTo(baseZoom, npcPosition, 2000);
+            } catch {};
             status = 'no-track';
           }
 
