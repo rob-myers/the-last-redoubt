@@ -4,7 +4,7 @@ import { precision, testNever } from '../service/generic';
 import { cssName } from '../service/const';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 
-import npcsMeta from './npcs-meta-new.json';
+import npcsMeta from './npcs-meta.json';
 
 /**
  * @param {NPC.NPCDef} def 
@@ -17,7 +17,7 @@ export default function createNpc(
 ) {
   return {
     key: def.key,
-    jsonKey: def.npcJsonKey,
+    classKey: def.npcClassKey,
     epochMs: Date.now(),
     def,
     el: {
@@ -25,7 +25,7 @@ export default function createNpc(
       body: /** @type {HTMLDivElement} */ ({}),
     },
     anim: {
-      css: css`${npcsMeta[def.npcJsonKey].css}`,
+      css: css`${npcsMeta[def.npcClassKey].css}`,
       path: [],
       aux: {
         angs: [],
@@ -88,7 +88,7 @@ export default function createNpc(
       if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
       if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
 
-      const { scale: npcScale } = npcsMeta[this.jsonKey];
+      const { scale: npcScale } = npcsMeta[this.classKey];
       const animation = this.anim.rotate = this.el.body.animate([
         { offset: 0, transform: `rotate(${sourceRadians}rad) scale(${npcScale})` },
         { offset: 1, transform: `rotate(${targetRadians}rad) scale(${npcScale})` },
@@ -220,7 +220,7 @@ export default function createNpc(
     },
     getAnimDef() {
       const { aux } = this.anim;
-      const { scale: npcScale } = npcsMeta[this.jsonKey];
+      const { scale: npcScale } = npcsMeta[this.classKey];
       return {
         translateKeyframes: this.anim.path.flatMap((p, i) => [
           {
@@ -280,7 +280,7 @@ export default function createNpc(
      * - we use an offset `motionMs` to end mid-frame
      */
     getWalkSpriteDuration(nextMotionMs) {
-      const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.jsonKey];
+      const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.classKey];
       const npcWalkAnimDurationMs = 1000 * ( 1 / this.getSpeed() ) * (animLookup.walk.totalDist * npcScale);
       const baseSpriteMs = npcWalkAnimDurationMs;
       const motionMs = nextMotionMs - (0.5 * (npcWalkAnimDurationMs / animLookup.walk.frameCount));
@@ -342,7 +342,7 @@ export default function createNpc(
       return { position, angle };
     },
     initialize() {
-      const { radius, scale: npcScale } = npcsMeta[this.jsonKey];
+      const { radius, scale: npcScale } = npcsMeta[this.classKey];
       this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
       this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
       this.el.root.style.setProperty(cssName.npcHeadRadius, `${5}px`); // 🚧 remove hard-coding
@@ -468,7 +468,7 @@ export default function createNpc(
           anim.durationMs = opts.duration;
 
           // Animate spritesheet, assuming `walk` anim exists
-          const { animLookup } = npcsMeta[this.jsonKey].parsed;
+          const { animLookup } = npcsMeta[this.classKey].parsed;
           const spriteMs = this.getWalkSpriteDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           anim.sprites = this.el.body.animate(
@@ -508,7 +508,7 @@ export default function createNpc(
           
           // ℹ️ relax type of keys
           // 🚧 npc classes should have same Object.keys(animLookup)
-          const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.jsonKey].parsed.animLookup);
+          const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.classKey].parsed.animLookup);
           // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused

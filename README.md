@@ -65,6 +65,12 @@ Related resources (less/more resolution)
 
 ## Gotchas
 
+- If we rename fields used by `npcs-meta.json` we must also run:
+  ```sh
+  yarn npcs-meta
+  ```
+  Otherwise type errors will occur because we cast the inferred JSON types as their original type (see `process-sheets`).
+
 - Saw CSS animation of `background-position` fail for a webp file
   - possibly due to initial processing with `pngquant`
   - possibly due to asm operations (we now `-noasm`)

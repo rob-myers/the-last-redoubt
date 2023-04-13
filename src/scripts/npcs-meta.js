@@ -3,11 +3,11 @@
 /// <reference path="./deps.d.ts"/>
 /**
  * Using `static/assets/npc/*` create a single JSON:
- * > `src/projects/world/npcs-meta-new.json`.
+ * > `src/projects/world/npcs-meta.json`.
  * 
  * Examples:
  * ```sh
- * yarn npcs-meta-new
+ * yarn npcs-meta
  * ```
  */
 import path from 'path';
@@ -15,16 +15,14 @@ import childProcess from 'child_process';
 
 import { keys } from '../projects/service/generic';
 import { writeAsJson } from '../projects/service/file';
-import { computeNpcScale, computeSpritesheetCssNew } from '../projects/service/npc';
+import { computeNpcScale, computeSpritesheetCss } from '../projects/service/npc';
 import { npcClassConfig } from './npcs-config';
 
-const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
-const inputDir = path.resolve(staticAssetsDir, 'npc');
 const outputDir = path.resolve(__dirname, '../../src/projects/world');
-const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta-new.json');
+const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta.json');
 
 const outputJson = keys(npcClassConfig).reduce(
-    /** @returns {Record<string, NPC.NpcMetaJsonNew>} */
+    /** @returns {Record<string, NPC.NpcClassJson>} */
     (agg, npcClassKey) => {
         const config = npcClassConfig[npcClassKey];
         
@@ -49,8 +47,6 @@ const outputJson = keys(npcClassConfig).reduce(
 
             agg[animKey] = {
                 animName: animKey,
-                contacts: [], // 🚧 remove
-                deltas: [], // 🚧 remove
                 durationMs: animConfig.durationMs,
                 frameAabbOrig,
                 frameAabb,
@@ -63,12 +59,12 @@ const outputJson = keys(npcClassConfig).reduce(
                 totalDist: animConfig.totalDist,
             };
             return agg;
-        }, /** @type {NPC.ParsedNpcNew['animLookup']} */ ({}));
+        }, /** @type {NPC.ParsedNpc['animLookup']} */ ({}));
 
-        /** @type {NPC.ParsedNpcNew} */
+        /** @type {NPC.ParsedNpc} */
         const parsed = {
             animLookup,
-            npcJsonKey: npcClassKey,
+            npcClassKey,
             radius: config.radius,
         };
 
@@ -77,8 +73,8 @@ const outputJson = keys(npcClassConfig).reduce(
         return {
             ...agg,
             [npcClassKey]: {
-                css: computeSpritesheetCssNew(parsed),
-                jsonKey: /** @type {NPC.NpcClassKey} */ (npcClassKey),
+                css: computeSpritesheetCss(parsed),
+                classKey: /** @type {NPC.NpcClassKey} */ (npcClassKey),
                 parsed,
                 radius: parsed.radius * scale,
                 scale,
@@ -86,7 +82,7 @@ const outputJson = keys(npcClassConfig).reduce(
             },
         };
     },
-    /** @type {Record<string, NPC.NpcMetaJsonNew>} */ ({})
+    /** @type {Record<string, NPC.NpcClassJson>} */ ({})
 );
 
 writeAsJson(outputJson, outputJsonFilepath);

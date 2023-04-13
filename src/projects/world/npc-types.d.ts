@@ -2,32 +2,19 @@
 declare namespace NPC {
   
   /**
-   * - Corresponds to static/assets/npc/{key}/{key.json}.
+   * - Corresponds to media/NPC/class/{key}/{key}--{animKey}.png
+   * - Corresponds to static/assets/npc/{key}/{key}--{animKey}.png
    * - Instantiated npcs are identified by their npcKey,
-   *   whereas npcJsonKey corresponds to their "character class".
+   *   whereas npcClassKey corresponds to their "character class".
    */
-  type NpcJsonKey = (
-    | 'first-human-npc'
-  );
-    /** 🚧 this replaces `NpcJsonKey` */
   type NpcClassKey = (
     | 'first-human-npc'
     | 'man-base-variant'
   );
 
-  interface NpcMetaJson {
-    jsonKey: NpcJsonKey;
+  interface NpcClassJson {
+    classKey: NpcClassKey;
     parsed: NPC.ParsedNpc;
-    /** Scale factor we'll apply to sprites. (?) */
-    scale: number;
-    radius: number;
-    speed: number;
-    /** @emotion/css */
-    css: string;
-  }
-  interface NpcMetaJsonNew {
-    jsonKey: NpcClassKey;
-    parsed: NPC.ParsedNpcNew;
     scale: number;
     radius: number;
     speed: number;
@@ -39,8 +26,8 @@ declare namespace NPC {
   export interface NPC {
     /** User specified e.g. `andros` */
     key: string;
-    /** Refers to `static/assets/npc/{jsonKey}/{jsonKey}.json` */
-    jsonKey: NPC.NpcClassKey;
+    /** Refers to `static/assets/npc/{classKey}/{classKey}.json` */
+    classKey: NPC.NpcClassKey;
     /** Epoch ms when spawned */
     epochMs: number;
     /**
@@ -217,7 +204,7 @@ declare namespace NPC {
 
   type SpriteSheetKey = (
     | 'idle'
-    | 'idle-breathe' // 🚧 -> 'idle-static'
+    | 'idle-breathe'
     | 'lie'
     | 'sit'
     | 'walk'
@@ -227,7 +214,7 @@ declare namespace NPC {
     /** npcKey e.g. `andros` */
     key: string;
     /** npc class key e.g. `first-human-npc` */
-    npcJsonKey: NpcClassKey;
+    npcClassKey: NpcClassKey;
     angle: number;
     // paused: boolean;
     position: Geom.VectJson;
@@ -432,20 +419,6 @@ declare namespace NPC {
   }
 
   //#region parse
-  interface ParsedNpc {
-    npcJsonKey: NpcJsonKey;
-    animLookup: {
-      [animName: string]: NpcAnimMeta;
-    };
-    /** Axis aligned bounded box, already scaled by `zoom` */
-    aabb: Geom.RectJson;
-    synfigMeta: NpcSynfigMetaJson;
-    /** Zoomed radius */
-    radius: number;
-    /** How much the rendered PNGs have been scaled up. */
-    zoom: number;
-  }
-
   interface NpcClassConfig {
     anim: Record<string, {
       durationMs: number;
@@ -460,36 +433,30 @@ declare namespace NPC {
     radius: number;
   }
 
-  interface ParsedNpcNew {
-    npcJsonKey: NpcClassKey;
+  interface ParsedNpc {
+    npcClassKey: NpcClassKey;
     animLookup: {
       [animName: string]: NpcAnimMeta;
     };
-    // aabb: Geom.RectJson; // ℹ️ No global aabb
-    // synfigMeta: NpcSynfigMetaJson;
-    // /** Zoomed radius */
     radius: number;
-    // /** How much the rendered PNGs have been scaled up. */
-    // zoom: number;
   }
 
 
   interface NpcAnimMeta {
     animName: string;
-    /** aabb of a single frame prior to applying rotateDeg */
+    /** AABB of a single frame prior to applying rotateDeg */
     frameAabbOrig: Geom.RectJson;
-    /** aabb of a single frame with `rotateDeg` applied */
+    /** AABB of a single frame with `rotateDeg` applied */
     frameAabb: Geom.RectJson;
     frameCount: number;
 
-    /** Aligned to frames i.e. positions of feet contacts (if any) */
-    contacts: { left?: Geom.VectJson; right?: Geom.VectJson; }[];
     /**
-     * One more than number of frames i.e. how far we move to the right.
-     * Final number is distance from last to first.
+     * Total distance walked e.g. during walk cycle,
+     * e.g. by tracking non-stationary foot and summing over a walk-cycle.
+     * - Did this for Synfig using specified contact points.
+     * - Could do this for Spriter Pro, but haven't tried doing it yet.
+     *   In the meantime we simply guess it for Spriter Pro.
      */
-    deltas: number[];
-    /** The sum of `deltas` */
     totalDist: number;
     
     durationMs: number;

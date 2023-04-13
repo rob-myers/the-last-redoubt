@@ -23,19 +23,19 @@ main();
 
 async function main() {
 
-    // yarn npcs-meta-new
-    await runYarnScript('npcs-meta-new');
+    // yarn npcs-meta
+    await runYarnScript('npcs-meta');
 
     // Get generated json
     // Dynamic import (or require) provides inferred types (unlike readFile)
-    const npcsMeta = (await import('../projects/world/npcs-meta-new.json')).default;
+    const npcsMeta = (await import('../projects/world/npcs-meta.json')).default;
 
     // Apply two isomorphisms
     // - rotate each frame by 0, 90, 180 or 270
     // - shift frames cyclically e.g. so walk starts from idle position
     for (const entry of Object.entries(npcsMeta)) {
         const npcClassKey = /** @type {NPC.NpcClassKey} */ (entry[0]);
-        const npcClassMeta = /** @type {NPC.NpcMetaJsonNew} */ (entry[1]);
+        const npcClassMeta = /** @type {NPC.NpcClassJson} */ (entry[1]);
         
         const srcDir = `${mediaDir}/NPC/class/${npcClassKey}`;
         const dstDir = `${staticAssetsDir}/npc/${npcClassKey}`;

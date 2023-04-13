@@ -18,7 +18,7 @@ import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
 import createNpc from "./create-npc";
 
-import npcsMeta from './npcs-meta-new.json';
+import npcsMeta from './npcs-meta.json';
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -581,9 +581,9 @@ export default function NPCs(props) {
         spawned.def = {
           key: e.npcKey,
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-          npcJsonKey: spawned.jsonKey,
+          npcClassKey: spawned.classKey,
           position: e.point,
-          speed: npcsMeta[spawned.jsonKey].speed,
+          speed: npcsMeta[spawned.classKey].speed,
         };
         // Reorder keys
         delete state.npc[e.npcKey];
@@ -593,7 +593,7 @@ export default function NPCs(props) {
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcJsonKey: npcClassKey,
+          npcClassKey: npcClassKey,
           position: e.point,
           speed: npcsMeta[npcClassKey].speed,
         }, { api });
@@ -869,7 +869,7 @@ const PrefetchSpritesheets = React.memo(() => {
           .filter(({ frameCount }) => frameCount > 1)
           .map(({ animName, pathPng, pathWebp }) =>
             <img
-              key={`${animName}@${meta.jsonKey}`}
+              key={`${animName}@${meta.classKey}`}
               src={supportsWebp ? pathWebp : pathPng}
             />
           )

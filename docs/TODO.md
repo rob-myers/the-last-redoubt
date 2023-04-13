@@ -71,9 +71,20 @@
   - ✅ BUG with anim.sprites.commitStyles() for `idle-breathe`
     - saw `background-position: -2145px 50%`
 
+  - 🚧 tidy up after Spriter Pro migration
+    - ✅ remove old code
+    - ✅ rename new code e.g. `yarn npcs-meta`
+    - improve look e.g. darker via `filter`?
+
+- create a character map
+  - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
+  - ...
 - more `ui do` points
 - more `orient-{deg}` tags
-- BUG spawned into toilet without triggering FOV
+
+
+- BUG walk tracked npc and wait for finish; pause and unpause causes re-track
+- BUG spawned into toilet without triggering FOV change
 - ✅ BUG sporadic startAnimationByMeta on click different part of do point
   - goLoop was triggered and was cancelling before startAnimationByMeta
 

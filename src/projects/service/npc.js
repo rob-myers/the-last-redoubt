@@ -14,38 +14,8 @@ export function computeNpcScale(parsed) {
 
 /**
  * @param {NPC.ParsedNpc} parsed
- * @param {number} offsetRadians
- * @param {number} scale
  */
-export function computeSpritesheetCss(parsed, offsetRadians, scale) {
-  return `
-.body {
-  transform: rotate(${offsetRadians}rad) scale(${scale});
-}
-
-${Object.keys(parsed.animLookup).map((animName) => `
-  &.${animName} .body:not(.webp) {
-    width: ${parsed.aabb.width}px;
-    height: ${parsed.aabb.height}px;
-    left: ${-parsed.aabb.width * 0.5}px;
-    top: ${-parsed.aabb.height * 0.5}px;
-    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
-  }
-  &.${animName} .body.webp {
-    width: ${parsed.aabb.width}px;
-    height: ${parsed.aabb.height}px;
-    left: ${-parsed.aabb.width * 0.5}px;
-    top: ${-parsed.aabb.height * 0.5}px;
-    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
-  }
-`).join('\n\n')}
-`.trim();
-}
-
-/**
- * @param {NPC.ParsedNpcNew} parsed
- */
-export function computeSpritesheetCssNew(parsed) {
+export function computeSpritesheetCss(parsed) {
   const scale = computeNpcScale(parsed);
   return `
 .body {
@@ -58,14 +28,14 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
     height: ${frameAabb.height}px;
     left: ${-frameAabb.width * 0.5}px;
     top: ${-frameAabb.height * 0.5}px;
-    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.png');
+    background-image: url('/assets/npc/${parsed.npcClassKey}/${parsed.npcClassKey}--${animName}.png');
   }
   &.${animName} .body.webp {
     width: ${frameAabb.width}px;
     height: ${frameAabb.height}px;
     left: ${-frameAabb.width * 0.5}px;
     top: ${-frameAabb.height * 0.5}px;
-    background-image: url('/assets/npc/${parsed.npcJsonKey}/${parsed.npcJsonKey}--${animName}.webp');
+    background-image: url('/assets/npc/${parsed.npcClassKey}/${parsed.npcClassKey}--${animName}.webp');
   }
 `).join('\n\n')}
 `.trim();
