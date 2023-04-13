@@ -441,12 +441,12 @@
             </timeline>
             <timeline id="7" obj="1" name="bone_001" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="356.386946" y="2.885714" scale_y="2.437387"/>
+                    <bone x="205.386946" y="2.885714" angle="0" scale_y="2.437387"/>
                 </key>
             </timeline>
             <timeline id="8" obj="2" name="bone_002" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="200" y="-5.33358" angle="1.808739" scale_y="2.110591"/>
+                    <bone x="268.38967" y="-5.33358" angle="1.808739" scale_y="2.110591"/>
                 </key>
             </timeline>
             <timeline id="9" obj="3" name="bone_003" object_type="bone">
@@ -456,12 +456,12 @@
             </timeline>
             <timeline id="10" obj="4" name="bone_004" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="320.435639" y="-0.50281" angle="2.03209" scale_y="3.328628"/>
+                    <bone x="170.451389" y="0.009612" angle="2.03209" scale_y="3.328628"/>
                 </key>
             </timeline>
             <timeline id="11" obj="5" name="bone_005" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="250.293389" y="-2.175586" angle="357.137595" scale_y="3.636364"/>
+                    <bone x="318.597732" y="-2.417457" angle="357.137595" scale_y="3.636364"/>
                 </key>
             </timeline>
             <timeline id="12" name="black_leg_lower_02">
