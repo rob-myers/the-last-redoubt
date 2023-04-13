@@ -74,13 +74,15 @@
   - 🚧 tidy up after Spriter Pro migration
     - ✅ remove old code
     - ✅ rename new code e.g. `yarn npcs-meta`
-    - improve look e.g. darker via `filter`?
+    - ✅ darker via `filter` + drop-shadow()
+    - ✅ feet less visible in `idle`
+    - 🚧 create/render character class
+      - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
+    - fix lie
 
-- create a character map
-  - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
-  - ...
 - more `ui do` points
 - more `orient-{deg}` tags
+- create more character maps
 
 
 - BUG walk tracked npc and wait for finish; pause and unpause causes re-track

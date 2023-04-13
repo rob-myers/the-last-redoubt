@@ -72,8 +72,7 @@ const rootCss = css`
 
   .body {
     position: absolute;
-    /* filter: grayscale(100%) brightness(140%); */
-    /* filter: grayscale(100%); */
+    filter: brightness(90%) drop-shadow(0 0 22px black);
   }
   
   &.disabled .body {
