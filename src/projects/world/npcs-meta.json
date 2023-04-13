@@ -135,5 +135,74 @@
     "radius": 14.399999999999999,
     "scale": 0.08470588235294117,
     "speed": 70
+  },
+  "man-first-variant": {
+    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 195px;\n    height: 445px;\n    left: -97.5px;\n    top: -222.5px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 195px;\n    height: 445px;\n    left: -97.5px;\n    top: -222.5px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--idle-breathe.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--walk.png');\n  }\n  &.walk .body.webp {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/man-first-variant/man-first-variant--walk.webp');\n  }",
+    "classKey": "man-first-variant",
+    "parsed": {
+      "animLookup": {
+        "idle": {
+          "animName": "idle",
+          "durationMs": 0,
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 332, "height": 192},
+          "frameAabb": {"x": 0, "y": 0, "width": 192, "height": 332},
+          "frameCount": 1,
+          "pathPng": "/assets/npc/man-first-variant/man-first-variant--idle.png",
+          "pathWebp": "/assets/npc/man-first-variant/man-first-variant--idle.webp",
+          "rotateDeg": 90,
+          "totalDist": 0
+        },
+        "idle-breathe": {
+          "animName": "idle-breathe",
+          "durationMs": 3000,
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 445, "height": 195},
+          "frameAabb": {"x": 0, "y": 0, "width": 195, "height": 445},
+          "frameCount": 24,
+          "pathPng": "/assets/npc/man-first-variant/man-first-variant--idle-breathe.png",
+          "pathWebp": "/assets/npc/man-first-variant/man-first-variant--idle-breathe.webp",
+          "rotateDeg": 90,
+          "totalDist": 0
+        },
+        "lie": {
+          "animName": "lie",
+          "durationMs": 0,
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 360, "height": 578},
+          "frameAabb": {"x": 0, "y": 0, "width": 578, "height": 360},
+          "frameCount": 1,
+          "pathPng": "/assets/npc/man-first-variant/man-first-variant--lie.png",
+          "pathWebp": "/assets/npc/man-first-variant/man-first-variant--lie.webp",
+          "rotateDeg": 90,
+          "totalDist": 0
+        },
+        "sit": {
+          "animName": "sit",
+          "durationMs": 0,
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 292, "height": 308},
+          "frameAabb": {"x": 0, "y": 0, "width": 308, "height": 292},
+          "frameCount": 1,
+          "pathPng": "/assets/npc/man-first-variant/man-first-variant--sit.png",
+          "pathWebp": "/assets/npc/man-first-variant/man-first-variant--sit.webp",
+          "rotateDeg": 90,
+          "totalDist": 0
+        },
+        "walk": {
+          "animName": "walk",
+          "durationMs": -1,
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 300, "height": 356},
+          "frameAabb": {"x": 0, "y": 0, "width": 356, "height": 300},
+          "frameCount": 14,
+          "pathPng": "/assets/npc/man-first-variant/man-first-variant--walk.png",
+          "pathWebp": "/assets/npc/man-first-variant/man-first-variant--walk.webp",
+          "rotateDeg": 90,
+          "shiftFramesBy": -4,
+          "totalDist": 600
+        }
+      },
+      "npcClassKey": "man-first-variant",
+      "radius": 170
+    },
+    "radius": 14.399999999999999,
+    "scale": 0.08470588235294117,
+    "speed": 70
   }
 }

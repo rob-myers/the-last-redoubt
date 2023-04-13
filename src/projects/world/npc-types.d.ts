@@ -10,6 +10,7 @@ declare namespace NPC {
   type NpcClassKey = (
     | 'first-human-npc'
     | 'man-base-variant'
+    | 'man-first-variant'
   );
 
   interface NpcClassJson {

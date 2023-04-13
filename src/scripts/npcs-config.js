@@ -1,3 +1,47 @@
+/** @type {NPC.NpcClassConfig} */
+const manBaseVariant = {
+  // Made using Spriter Pro
+  anim: {
+    idle: {
+      frameCount: 1,
+      speed: 0,
+      totalDist: 0,
+      durationMs: 0,
+      rotateDeg: 90,
+    },
+    'idle-breathe': {
+      frameCount: 24,
+      speed: 0,
+      totalDist: 0,
+      durationMs: 3000,
+      rotateDeg: 90,
+    },
+    lie: {
+      frameCount: 1,
+      speed: 0,
+      totalDist: 0,
+      durationMs: 0,
+      rotateDeg: 90,
+    },
+    sit: {
+      frameCount: 1,
+      speed: 0,
+      totalDist: 0,
+      durationMs: 0,
+      rotateDeg: 90,
+    },
+    walk: {
+      durationMs: -1, // 🚧 overwritten
+      frameCount: 14,
+      shiftFramesBy: -4,
+      rotateDeg: 90,
+      speed: 70, // 🚧 justify
+      totalDist: 600, // 🚧 justify
+    },
+  },
+  radius: 850 * 0.2, // Export scale is 20%
+};
+
 /**
  * Hard-coded data may be necessary.
  * - unclear how to extract "number of frames" from Spriter *.scml file.
@@ -34,46 +78,7 @@ export const npcClassConfig = {
   /**
    * See media/NPC/class/man-base-variant.
    */
-  "man-base-variant": {
-    // Made using Spriter Pro
-    anim: {
-      idle: {
-        frameCount: 1,
-        speed: 0,
-        totalDist: 0,
-        durationMs: 0,
-        rotateDeg: 90,
-      },
-      'idle-breathe': {
-        frameCount: 24,
-        speed: 0,
-        totalDist: 0,
-        durationMs: 3000,
-        rotateDeg: 90,
-      },
-      lie: {
-        frameCount: 1,
-        speed: 0,
-        totalDist: 0,
-        durationMs: 0,
-        rotateDeg: 90,
-      },
-      sit: {
-        frameCount: 1,
-        speed: 0,
-        totalDist: 0,
-        durationMs: 0,
-        rotateDeg: 90,
-      },
-      walk: {
-        durationMs: -1, // 🚧 overwritten
-        frameCount: 14,
-        shiftFramesBy: -4,
-        rotateDeg: 90,
-        speed: 70, // 🚧 justify
-        totalDist: 600, // 🚧 justify
-      },
-    },
-    radius: 850 * 0.2, // Export scale is 20%
-  },
+  "man-base-variant": manBaseVariant,
+
+  "man-first-variant": manBaseVariant,
 };

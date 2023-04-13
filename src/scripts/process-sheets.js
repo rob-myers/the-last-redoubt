@@ -2,9 +2,8 @@
  * Process spritesheets from media/NPC and optionally:
  * - rotate each frame by 0, 90, 180 or 270
  * - shift frames cyclically e.g. so walk starts from idle position
+ *
  * Write to static/assets/npc/{npcClassKey}/*
- * 
- * 🚧 optimize + webp
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -39,6 +38,7 @@ async function main() {
         
         const srcDir = `${mediaDir}/NPC/class/${npcClassKey}`;
         const dstDir = `${staticAssetsDir}/npc/${npcClassKey}`;
+        fs.mkdirSync(dstDir, { recursive: true }); // ensure dst directory
 
         const sheets = fs.readdirSync(srcDir).flatMap(filename => {
             const matched = filename.match(`^${npcClassKey}--(\\S+)\\.png$`);
