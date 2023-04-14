@@ -129,7 +129,7 @@ export const defaultNpcInteractRadius = 50;
 
 /** @type {NPC.NpcClassKey} */
 // export const defaultNpcClassKey = 'first-human-npc';
-export const defaultNpcClassKey = 'man-base-variant';
+export const defaultNpcClassKey = 'vilani-a';
 
 //#endregion
 
