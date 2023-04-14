@@ -76,10 +76,36 @@
     - ✅ rename new code e.g. `yarn npcs-meta`
     - ✅ darker via `filter` + drop-shadow()
     - ✅ feet less visible in `idle`
-    - 🚧 create/render character class
+    - ✅ create/render another character class
       - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
+    - ✅ rename npc classes
+      - man-base-variant -> vilani-a
+      - man-first-variant -> zhodani-a
+      ```sh
+      function renameMediaPngs() {
+         [[ $( x=$(pwd); echo ${x: -16} ) != the-last-redoubt ]] && {
+          echo "this function must be run from repo root"
+          return 1
+         }
+        prevName="$1"
+        nextName="$2"
+        cd "media/NPC/class/$prevName" &&
+          for file in $( find . | grep -E "${prevName}.+\.png$" ); do
+            mv $file "${nextName}${file:((${#prevName} + 2))}"
+          done
+      }
+      renameMediaPngs man-base-variant vilani-a
+      renameMediaPngs man-first-variant zhodani-a
+      ```
+    - add npc class solomani-a
+    - spawn has class option e.g.
+      > `spawn {name} --class=z $( click 1 )`
+      > `spawn {name} --class=z-a $( click 1 )`
     - fix lie
 
+- npcs-meta.json has timestamps to avoid process-sheets recomputing everything
+- add npc class hlanssai-a
+  - somehow import njoy games sprites into Spriter Pro
 - more `ui do` points
 - more `orient-{deg}` tags
 - create more character maps

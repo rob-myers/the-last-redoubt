@@ -76,9 +76,8 @@ export const npcClassConfig = {
     radius: 80,
   },
   /**
-   * See media/NPC/class/man-base-variant.
+   * See media/NPC/class/*
    */
-  "man-base-variant": manBaseVariant,
-
-  "man-first-variant": manBaseVariant,
+  "vilani-a": manBaseVariant,
+  "zhodani-a": manBaseVariant,
 };
