@@ -130,6 +130,7 @@ export const defaultNpcInteractRadius = 50;
 /** @type {NPC.NpcClassKey} */
 // export const defaultNpcClassKey = 'first-human-npc';
 export const defaultNpcClassKey = 'vilani-a';
+// export const defaultNpcClassKey = 'zhodani-a';
 
 //#endregion
 
