@@ -106,6 +106,8 @@
         <file id="2" name="torso_overlay/hi_vis_open.png" width="981" height="1513" pivot_x="0" pivot_y="1"/>
         <file id="3" name="torso_overlay/tie_red.png" width="981" height="1513" pivot_x="0" pivot_y="1"/>
         <file id="4" name="torso_overlay/black_jacket.png" width="981" height="1512" pivot_x="0" pivot_y="1"/>
+        <file id="5" name="torso_overlay/black_bomber.png" width="981" height="1512" pivot_x="0" pivot_y="1"/>
+        <file id="6" name="torso_overlay/hi_vis_above_black.png" width="1161" height="725" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="7" name="head_hair">
         <file id="0" name="head_hair/brown_hair_top_03.png" width="1034" height="1187" pivot_x="0" pivot_y="1"/>
@@ -360,7 +362,7 @@
         <character_map id="21" name="no_belt">
             <map folder="8" file="11"/>
         </character_map>
-        <character_map id="22" name="first-attempt">
+        <character_map id="22" name="zhodani-a">
             <map folder="6" file="0"/>
             <map folder="5" file="0" target_folder="5" target_file="11"/>
             <map folder="4" file="0"/>
@@ -370,6 +372,12 @@
             <map folder="8" file="11"/>
             <map folder="6" file="1"/>
             <map folder="6" file="2"/>
+            <map folder="10" file="1"/>
+        </character_map>
+        <character_map id="23" name="vilani-a">
+            <map folder="6" file="0" target_folder="6" target_file="6"/>
+            <map folder="10" file="1"/>
+            <map folder="6" file="2" target_folder="6" target_file="5"/>
         </character_map>
         <animation id="0" name="idle" length="2000" interval="100" l="-830" t="-480" r="829" b="479">
             <mainline>
@@ -1885,7 +1893,7 @@
             </timeline>
             <timeline id="41" name="red_cap_top">
                 <key id="0" spin="0">
-                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
+                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049" a="0"/>
                 </key>
             </timeline>
             <timeline id="42" name="hand_gun">
@@ -4474,7 +4482,7 @@
             </timeline>
             <timeline id="41" name="red_cap_top">
                 <key id="0" spin="0">
-                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
+                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049" a="0"/>
                 </key>
             </timeline>
             <timeline id="42" name="hand_gun">
@@ -5447,7 +5455,7 @@
             </timeline>
             <timeline id="41" name="red_cap_top">
                 <key id="0" spin="0">
-                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
+                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049" a="0"/>
                 </key>
             </timeline>
             <timeline id="42" name="hand_gun">
@@ -7199,7 +7207,7 @@
             </timeline>
             <timeline id="41" name="red_cap_top">
                 <key id="0" spin="0">
-                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
+                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049" a="0"/>
                 </key>
                 <key id="1" time="57" spin="0">
                     <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
@@ -8937,7 +8945,7 @@
             </timeline>
             <timeline id="41" name="red_cap_top">
                 <key id="0" spin="0">
-                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
+                    <object folder="9" file="2" x="782.065198" y="143.07115" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049" a="0"/>
                 </key>
                 <key id="1" time="96" spin="0">
                     <object folder="9" file="2" x="608.526669" y="144.007845" pivot_x="0" pivot_y="1" angle="269.522546" scale_y="0.245049"/>
@@ -9227,7 +9235,7 @@
             </timeline>
             <timeline id="21" obj="6" name="bone_006" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="222.33846" y="-23.505361" angle="250" scale_y="0.888157"/>
+                    <bone x="222.33846" y="-23.505361" angle="242.498288" scale_y="0.888157"/>
                 </key>
             </timeline>
             <timeline id="22" obj="7" name="bone_007" object_type="bone">
@@ -9252,7 +9260,7 @@
             </timeline>
             <timeline id="26" obj="9" name="bone_009" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="217.021349" y="27.609996" angle="290" scale_x="-1" scale_y="0.888157"/>
+                    <bone x="217.021349" y="28.05105" angle="290" scale_x="-1" scale_y="0.888157"/>
                 </key>
             </timeline>
             <timeline id="27" obj="10" name="bone_010" object_type="bone">
@@ -9297,12 +9305,12 @@
             </timeline>
             <timeline id="35" name="hi_vis_above">
                 <key id="0" spin="0">
-                    <object folder="6" file="2" x="-993.655652" y="-110.241858" pivot_x="0" pivot_y="1" angle="90.516164" scale_y="0.242466"/>
+                    <object folder="6" file="2" x="-1095.578729" y="-93.481788" pivot_x="0" pivot_y="1" angle="90.516164" scale_y="0.242466"/>
                 </key>
             </timeline>
             <timeline id="36" obj="12" name="bone_012" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="-66.97627" y="353.921383" angle="90" scale_y="-4.36018"/>
+                    <bone x="-64.159369" y="441.245327" angle="90" scale_y="-4.36018"/>
                 </key>
             </timeline>
             <timeline id="37" name="head_top">
@@ -9361,7 +9369,7 @@
             </timeline>
             <timeline id="46" name="belt_brown">
                 <key id="0" spin="0">
-                    <object folder="8" file="11" x="-344.32573" y="-370" angle="0" scale_x="0.896373" scale_y="-0.747177"/>
+                    <object folder="8" file="11" x="-354.184885" y="-302.394366" angle="0" scale_x="0.896373" scale_y="-0.747177"/>
                 </key>
             </timeline>
         </animation>

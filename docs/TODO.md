@@ -70,13 +70,19 @@
       renameMediaPngs man-base-variant vilani-a
       renameMediaPngs man-first-variant zhodani-a
       ```
-    - 🚧 change vilani-a style
+    - ✅ change vilani-a style
+      - ℹ️ assets can have different sizes,
+        which must be fixed for animations to work
+        > e.g. `hi_vis_above_orange` vs `black_tshirt_top`
+      - ℹ️ an extract original asset from `top_down_humans_svg.svg`
     - 🚧 add npc class solomani-a
-      - clean up e.g. lie
+      - clean up lie
+      - clean up transparent added to walk
     - spawn can specify class e.g.
       > `spawn {name} zhodani-a $( click 1 )`
       > `spawn {name} z-a $( click 1 )`
       > `spawn {name} z $( click 1 )`
+    - try to get batch export working
 
 - ✅ avoid flicker on stop walk fixing `getWalkCycleDuration`
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
