@@ -97,12 +97,14 @@
       renameMediaPngs man-base-variant vilani-a
       renameMediaPngs man-first-variant zhodani-a
       ```
-    - add npc class solomani-a
+    - 🚧 change vilani-a style
+    - 🚧 add npc class solomani-a
+      - clean up e.g. lie
     - spawn has class option e.g.
       > `spawn {name} --class=z $( click 1 )`
       > `spawn {name} --class=z-a $( click 1 )`
-    - fix lie
 
+- ✅ avoid flicker on stop walk fixing `getWalkCycleDuration`
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro

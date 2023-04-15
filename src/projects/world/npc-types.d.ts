@@ -80,12 +80,15 @@ declare namespace NPC {
     getRadius(): number;
     getSpeed(): number;
     /**
-     * Given duration of upcoming motion,
-     * and also `npcWalkAnimDurationMs`,
-     * adjust the latter sprite cycle duration
-     * to end on a nice frame (avoids flicker).
+     * We want to avoid flicker when the NPC stops walking e.g.
+     * the leg should not be extended. Observe that
+     * @see {NPC.NPC.anim.sprites} has infinite iterations,
+     * so we need to augment the duration of a single walk cycle.
+     * Assume:
+     * - walk cycle starts from "idle position".
+     * - half way is another "idle position".
      */
-    getWalkSpriteDuration(nextMotionMs: number): number;
+    getWalkCycleDuration(entireWalkMs: number): number;
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;

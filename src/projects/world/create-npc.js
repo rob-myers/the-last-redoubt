@@ -273,21 +273,34 @@ export default function createNpc(
     getSpeed() {
       return this.def.speed;
     },
-    /**
-     * Shorten duration of this.anim.sprites slightly,
-     * ensuring we finish at nice 0-based frame (0 or 5).
-     * - we ensure half returned value divides `motionMs`
-     * - we use an offset `motionMs` to end mid-frame
-     */
-    getWalkSpriteDuration(nextMotionMs) {
+    getWalkCycleDuration(entireWalkMs) {
       const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.classKey];
-      const npcWalkAnimDurationMs = 1000 * ( 1 / this.getSpeed() ) * (animLookup.walk.totalDist * npcScale);
-      const baseSpriteMs = npcWalkAnimDurationMs;
-      const motionMs = nextMotionMs - (0.5 * (npcWalkAnimDurationMs / animLookup.walk.frameCount));
-      return motionMs < baseSpriteMs / 2
-        ? baseSpriteMs // degenerate case
-        // Alternatively, use Math.floor for longer duration
-        : (2 * motionMs) / Math.ceil(2 * (motionMs / baseSpriteMs));
+      /**
+       * Duration of a single walk cycle. Recalling that:
+       * @see {entireWalkMs} is the duration of the entire walk.
+       */
+      const walkCycleMs = (animLookup.walk.totalDist * npcScale) * this.getAnimScaleFactor();
+
+      /** Duration of final partial walk cycle */
+      const partialMs = entireWalkMs % walkCycleMs;
+      const numWalkCycles = Math.floor(entireWalkMs / walkCycleMs);
+
+      /** Altered number of walk cycles */
+      const altWalkCycles = partialMs <= 0.25 * walkCycleMs
+        ? numWalkCycles
+        : partialMs <= 0.75 * walkCycleMs
+          ? numWalkCycles + 0.5
+          : numWalkCycles + 1
+      ;
+
+      /**
+       * Recalling `entireWalkMs = ((numWalkCycles * walkCycleMs) + partialMs)`
+       * Seek `deltaMs` s.t. `entireWalkMs / (walkCycleMs + deltaMs) = altWalkCycles`
+       * i.e. `walkCycleMs + deltaMs` occurs precisely `altWalkCycles` times.
+       */
+      const deltaMs = (entireWalkMs - walkCycleMs * altWalkCycles) / altWalkCycles;
+      
+      return walkCycleMs + deltaMs;
     },
     getTarget() {
       if (this.isWalking()) {
@@ -469,7 +482,7 @@ export default function createNpc(
 
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup } = npcsMeta[this.classKey].parsed;
-          const spriteMs = this.getWalkSpriteDuration(opts.duration);
+          const spriteMs = this.getWalkCycleDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           anim.sprites = this.el.body.animate(
               firstFootLeads ?
@@ -512,9 +525,6 @@ export default function createNpc(
           // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused
-          // 🚧 `idle` being played (before `sit`) and now has 14 frames
-          // 🚧 we should probably create a 1-frame variant
-          console.log(this.anim.spriteSheet, `steps(${animLookup[this.anim.spriteSheet].frameCount})`)
           this.anim.sprites = this.el.body.animate(
             [
               { offset: 0, backgroundPosition: '0px' },
