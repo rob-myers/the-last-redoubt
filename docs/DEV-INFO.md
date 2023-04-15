@@ -152,3 +152,20 @@ Filter Chrome DevTools console
 ```
 -chrome-extension: -/data.json\swas\spreloaded/
 ```
+
+---
+
+ℹ️ Spriter shortcuts
+- Parallels: Cmd; Backspace --> Delete
+- Parallels: Backspace; Cmd --> Shift + Delete
+- Undo: `Cmd+Z`, Redo: `Ctrl+Y`
+-  Prev keyframe `1`; Next keyframe: `2`; Goto frame 0: `3`; Play/pause: `4` 
+- Copy selected object to all keyframes: `Ctrl D`
+- Copy entire frame `Ctrl + Shift + C`
+- Paste entire frame: `Ctrl + V`
+- Delete keyframe: click keyframe then `Cmd + Backspace` (Delete)
+- ℹ️ Saw issue where 0 wasn't a proper keyframe (can copy to it first)
+- Rotate bone: drag tip
+- Multi-select bone: Ctrl click bone, or drag select in hierarchy
+- Pan: Hold space and drag mouse
+- BUG in bone hierarchy but if goto next keyframe and back, refreshes

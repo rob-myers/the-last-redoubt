@@ -2,34 +2,7 @@
 
 ## In progress
 
-- ✅ Start presentation redo
-- ✅ On hold Tab reset we reset Tabs layout
 - 🚧 Play with Chrome devtool recorder
-
-- ❌ lie: trace `r_s_r_m_njoy_lie.png` (1 frame animation)
-  - ✅ try put shadow behind
-  - ❌ really slow... maybe blender
-- ✅ try parallels + spriter + top down assets
-  - ✅ install parallels + windows 11
-  - ✅ install Spriter https://brashmonkey.com/ and get it working
-  - ✅ https://gamedeveloperstudio.itch.io/top-down-men-game-asset-character-pack
-  - load assets into Spriter
-    - ✅ top_down_man_base.scml
-
-- ℹ️ Spriter shortcuts
-  - Parallels: Cmd; Backspace --> Delete
-  - Parallels: Backspace; Cmd --> Shift + Delete
-  - Undo: `Cmd+Z`, Redo: `Ctrl+Y`
-  -  Prev keyframe `1`; Next keyframe: `2`; Goto frame 0: `3`; Play/pause: `4` 
-  - Copy selected object to all keyframes: `Ctrl D`
-  - Copy entire frame `Ctrl + Shift + C`
-  - Paste entire frame: `Ctrl + V`
-  - Delete keyframe: click keyframe then `Cmd + Backspace` (Delete)
-    - ℹ️ Saw issue where 0 wasn't a proper keyframe (can copy to it first)
-  - Rotate bone: drag tip
-  - Multi-select bone: Ctrl click bone, or drag select in hierarchy
-  - Pan: Hold space and drag mouse
-  - BUG in bone hierarchy but if goto next keyframe and back, refreshes
 
 - 🚧 migrate npcs to Spriter
   - ✅ share repo folder "media" with windows
@@ -100,9 +73,10 @@
     - 🚧 change vilani-a style
     - 🚧 add npc class solomani-a
       - clean up e.g. lie
-    - spawn has class option e.g.
-      > `spawn {name} --class=z $( click 1 )`
-      > `spawn {name} --class=z-a $( click 1 )`
+    - spawn can specify class e.g.
+      > `spawn {name} zhodani-a $( click 1 )`
+      > `spawn {name} z-a $( click 1 )`
+      > `spawn {name} z $( click 1 )`
 
 - ✅ avoid flicker on stop walk fixing `getWalkCycleDuration`
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
@@ -513,6 +487,18 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ Start presentation redo
+- ✅ On hold Tab reset we reset Tabs layout
+- ❌ lie: trace `r_s_r_m_njoy_lie.png` (1 frame animation)
+  - ✅ try put shadow behind
+  - ❌ really slow... maybe blender
+- ✅ try parallels + spriter + top down assets
+  - ✅ install parallels + windows 11
+  - ✅ install Spriter https://brashmonkey.com/ and get it working
+  - ✅ https://gamedeveloperstudio.itch.io/top-down-men-game-asset-character-pack
+  - load assets into Spriter
+    - ✅ top_down_man_base.scml
 
 - ✅ wayMeta: redo npc vs door collisions
   - ℹ️ pre-exit-room used when leave room (hull door or not)
