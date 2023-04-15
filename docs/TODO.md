@@ -75,16 +75,20 @@
         which must be fixed for animations to work
         > e.g. `hi_vis_above_orange` vs `black_tshirt_top`
       - ℹ️ an extract original asset from `top_down_humans_svg.svg`
+    - ✅ spawn can specify class e.g.
+      ```sh
+      expr '{ npcKey: "bar", npcClassKey: "zhodani-a", point: '$( click 1 )' }' | spawn
+      spawn foo zhodani-a $( click 1 )
+      ```
     - 🚧 add npc class solomani-a
+      - has hair
       - clean up lie
       - clean up transparent added to walk
-    - spawn can specify class e.g.
-      > `spawn {name} zhodani-a $( click 1 )`
-      > `spawn {name} z-a $( click 1 )`
-      > `spawn {name} z $( click 1 )`
+    - zhodani-a should not have white shirt?
     - try to get batch export working
 
 - ✅ avoid flicker on stop walk fixing `getWalkCycleDuration`
+- can change character class on respawn?
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro

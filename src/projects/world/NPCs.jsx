@@ -567,6 +567,8 @@ export default function NPCs(props) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (e.requireNav && !state.isPointInNavmesh(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
+      } else if (e.npcClassKey && !npcService.isNpcClassKey(e.npcClassKey)) {
+        throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {

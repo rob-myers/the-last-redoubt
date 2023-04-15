@@ -97,6 +97,17 @@ export function isNpcActionKey(input) {
   return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
 }
 
+/** @type {Record<NPC.NpcClassKey, true>} */
+const fromNpcClassKey = { "first-human-npc": true, "vilani-a": true, "zhodani-a": true };
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcClassKey}
+ */
+export function isNpcClassKey(input) {
+  return input in fromNpcClassKey;
+}
+
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
 const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true };
 
@@ -105,7 +116,7 @@ const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutline
  * @returns {input is NPC.ConfigBooleanKey}
  */
 export function isConfigBooleanKey(input) {
-  return fromConfigBooleanKey[/** @type {NPC.ConfigBooleanKey} */ (input)] ?? false;
+  return input in fromConfigBooleanKey;
 }
 
 /**

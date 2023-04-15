@@ -341,18 +341,20 @@
   
     /**
      * Spawn character(s) at a position(s) and angle,
-     * - e.g. `spawn andros "$( click 1 )"
-     * - e.g. `spawn andros "$( click 1 )" "$( call '() => Math.PI/2' )"`
+     * - e.g. `spawn andros "$( click 1 )"`
+     * - e.g. `spawn andros zhodani-a "$( click 1 )"`
      * - e.g. `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
      */
     spawn: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
       if (api.isTtyAt(0)) {
         const npcKey = args[0]
-        const point = api.safeJsonParse(args[1])
-        const angle = args[2] ? Number(args[2]) || 0 : undefined;
-        await npcs.spawn({ npcKey, point, angle })
+        const threeArgs = args.length === 3;
+        const npcClassKey = threeArgs ? /** @type {NPC.NpcClassKey} */ (args[1]) : undefined;
+        const point = api.parseJsArg(args[threeArgs ? 2 : 1])
+        await npcs.spawn({ npcKey, point, npcClassKey })
       } else {
+        // { npcKey, [npcClassKey], point }
         while ((datum = await api.read()) !== null)
           await npcs.spawn(datum)
       }

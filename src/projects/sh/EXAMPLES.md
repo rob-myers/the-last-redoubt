@@ -76,6 +76,9 @@ npc events | filter 'x => x.key === "stopped-walking"'
 npc events | filter 'x => x.key === "way-point" && x.meta.final'
 
 npc events | filter 'x => x.key === "way-point" && x.meta.key === "exit-room"'
+
+expr '{ npcKey: "foo", point: '$( click 1 )' }' | spawn
+spawn bar zhodani-a "$( click 1 )"
 ```
 
 ## Migrating
