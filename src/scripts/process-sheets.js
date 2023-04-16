@@ -1,8 +1,9 @@
 /**
- * Process spritesheets from media/NPC and optionally:
- * - rotate each frame by 0, 90, 180 or 270
- * - shift frames cyclically e.g. so walk starts from idle position
+ * Process spritesheets from media/NPC:
+ * - can rotate each frame by 0, 90, 180 or 270
+ * - can shift frames cyclically e.g. so walk starts from idle position
  *
+ * 🚧 Read media/NPC/class/{npcClassKey}/spriter_man_01_base_{animKey}
  * Write to static/assets/npc/{npcClassKey}/*
  */
 /// <reference path="./deps.d.ts"/>
@@ -17,6 +18,10 @@ import { Mat, Poly, Rect } from '../projects/geom';
 
 const mediaDir = path.resolve(__dirname, '../../media');
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
+/** The pseudo filename we choose on export from Spriter Pro */
+const batchExportPrefix = 'spriter';
+/** The Spriter Pro entity name */
+const spriterEntityName = 'man_01_base';
 
 main();
 
@@ -41,12 +46,17 @@ async function main() {
         fs.mkdirSync(dstDir, { recursive: true }); // ensure dst directory
 
         const sheets = fs.readdirSync(srcDir).flatMap(filename => {
-            const matched = filename.match(`^${npcClassKey}--(\\S+)\\.png$`);
+            // const matched = filename.match(`^${npcClassKey}--(\\S+)\\.png$`);
+            const matched = filename.match(`^${batchExportPrefix}_${spriterEntityName}_(\\S+)\\.png$`);
             return matched ? { filename, animKey: matched[1] } : [];
         });
-        // console.log(npcClassKey, sheets);
+        console.log(npcClassKey, sheets);
 
         for (const { filename, animKey } of sheets) {
+            if (!(animKey in npcClassMeta.parsed.animLookup)) {
+                continue; // Skip un-configured animations
+            }
+
             const {
                 frameAabbOrig,
                 frameAabb, // rotateDeg is already applied to frameAabb
@@ -54,7 +64,9 @@ async function main() {
                 rotateDeg = 0,
                 shiftFramesBy = 0,
             } = npcClassMeta.parsed.animLookup[animKey];
-            // media/NPC/class/${npcClassKey}/${npcClassKey}--${animKey}.png
+
+            //  media/NPC/class/${npcClassKey}/${npcClassKey}--${animKey}.png
+            //  media/NPC/class/${npcClassKey}/${batchExportPrefix}_${spriterEntityName}_${animKey}.png
             const image = await loadImage(`${srcDir}/${filename}`);
 
             const rotImageAabb = new Rect(0, 0, frameAabb.width * frameCount, frameAabb.height);
@@ -92,7 +104,8 @@ async function main() {
                 );
             }
             
-            await saveCanvasAsFile(canvas, `${dstDir}/${filename}`);
+            const outputFilename = `${npcClassKey}--${animKey}.png`;
+            await saveCanvasAsFile(canvas, `${dstDir}/${outputFilename}`);
         }
     }
 

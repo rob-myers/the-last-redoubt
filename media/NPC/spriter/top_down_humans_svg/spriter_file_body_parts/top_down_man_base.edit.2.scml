@@ -82,9 +82,18 @@
         <file id="21" name="upper_body/black_upper_arm_01.png" width="488" height="863" pivot_x="0" pivot_y="1"/>
         <file id="22" name="upper_body/black_upper_arm_03.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
         <file id="23" name="upper_body/blue_upper_arm_01.png" width="488" height="863" pivot_x="0" pivot_y="1"/>
-        <file id="24" name="upper_body/blue_upper_arm_down_01.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
-        <file id="25" name="upper_body/red_lower_arm_down.png" width="436" height="611" pivot_x="0" pivot_y="1"/>
-        <file id="26" name="upper_body/red_lower_arm_02.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="24" name="upper_body/red_lower_arm_down.png" width="436" height="611" pivot_x="0" pivot_y="1"/>
+        <file id="25" name="upper_body/red_lower_arm_02.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="26" name="upper_body/brown_lower_arm_down.png" width="436" height="611" pivot_x="0" pivot_y="1"/>
+        <file id="27" name="upper_body/brown_upper_arm_02.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
+        <file id="28" name="upper_body/brown_lower_arm_02.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="29" name="upper_body/brown_upper_arm_down_02.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
+        <file id="30" name="upper_body/blue_upper_arm_02.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
+        <file id="31" name="upper_body/blue_lower_arm_02.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="32" name="upper_body/blue_upper_arm_down_02.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
+        <file id="33" name="upper_body/blue_lower_arm_down.png" width="436" height="611" pivot_x="0" pivot_y="1"/>
+        <file id="34" name="upper_body/blue_upper_arm_03.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
+        <file id="35" name="upper_body/blue_lower_arm_01.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="5" name="torso">
         <file id="0" name="torso/lumberjack_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
@@ -98,7 +107,7 @@
         <file id="8" name="torso/black_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
         <file id="9" name="torso/blue_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
         <file id="10" name="torso/blue_shirt_dead.png" width="847" height="1088" pivot_x="0" pivot_y="1"/>
-        <file id="11" name="torso/white_tshirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
+        <file id="11" name="torso/brown_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="6" name="torso_overlay">
         <file id="0" name="torso_overlay/hi_vis_above.png" width="1161" height="725" pivot_x="0" pivot_y="1"/>
@@ -117,6 +126,8 @@
         <file id="4" name="head_hair/black_hair_dead_05.png" width="1073" height="873" pivot_x="0" pivot_y="1"/>
         <file id="5" name="head_hair/brown_hair_dead_01.png" width="1073" height="873" pivot_x="0" pivot_y="1"/>
         <file id="6" name="head_hair/brown_hair_top_01.png" width="1034" height="1187" pivot_x="0" pivot_y="1"/>
+        <file id="7" name="head_hair/blonde_hair_top_01.png" width="1034" height="1187" pivot_x="0" pivot_y="1"/>
+        <file id="8" name="head_hair/blonde_hair_dead_01.png" width="1073" height="873" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="8" name="accesories">
         <file id="0" name="accesories/watch_front.png" width="272" height="161" pivot_x="0" pivot_y="1"/>
@@ -137,10 +148,8 @@
         <file id="1" name="headwear/red_cap_top.png" width="1194" height="1338" pivot_x="0" pivot_y="1"/>
         <file id="2" name="headwear/hard_hat_fireman_top.png" width="1194" height="1338" pivot_x="0" pivot_y="1"/>
         <file id="3" name="headwear/hard_hat_yellow_front.png" width="1224" height="963" pivot_x="0" pivot_y="1"/>
-        <file id="4" name="headwear/black_hat_top.png" width="1194" height="1338" pivot_x="0" pivot_y="1"/>
-        <file id="5" name="headwear/black_hat_front.png" width="1224" height="963" pivot_x="0" pivot_y="1"/>
-        <file id="6" name="headwear/black_cap_front.png" width="1224" height="963" pivot_x="0" pivot_y="1"/>
-        <file id="7" name="headwear/black_cap_top.png" width="1194" height="1338" pivot_x="0" pivot_y="1"/>
+        <file id="4" name="headwear/black_cap_front.png" width="1224" height="963" pivot_x="0" pivot_y="1"/>
+        <file id="5" name="headwear/black_cap_top.png" width="1194" height="1338" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="10" name="facial">
         <file id="0" name="facial/brown_eyebrow.png" width="253" height="143" pivot_x="0" pivot_y="1"/>
@@ -311,9 +320,9 @@
             <map folder="9" file="3" target_folder="9" target_file="0"/>
         </character_map>
         <character_map id="15" name="hat">
-            <map folder="9" file="2" target_folder="9" target_file="7"/>
-            <map folder="9" file="3" target_folder="9" target_file="6"/>
-            <map folder="9" file="0" target_folder="9" target_file="6"/>
+            <map folder="9" file="2" target_folder="9" target_file="5"/>
+            <map folder="9" file="3" target_folder="9" target_file="4"/>
+            <map folder="9" file="0" target_folder="9" target_file="4"/>
         </character_map>
         <character_map id="16" name="black_suit">
             <map folder="2" file="0" target_folder="2" target_file="6"/>
@@ -364,22 +373,38 @@
         </character_map>
         <character_map id="22" name="zhodani-a">
             <map folder="6" file="0"/>
-            <map folder="5" file="0" target_folder="5" target_file="11"/>
-            <map folder="4" file="0"/>
-            <map folder="4" file="3"/>
-            <map folder="4" file="6"/>
-            <map folder="4" file="7" target_folder="4" target_file="13"/>
+            <map folder="5" file="0" target_folder="5" target_file="9"/>
+            <map folder="4" file="0" target_folder="4" target_file="30"/>
+            <map folder="4" file="3" target_folder="4" target_file="31"/>
+            <map folder="4" file="6" target_folder="4" target_file="32"/>
+            <map folder="4" file="7" target_folder="4" target_file="33"/>
             <map folder="8" file="11"/>
             <map folder="6" file="1"/>
             <map folder="6" file="2"/>
             <map folder="10" file="1"/>
+            <map folder="5" file="2" target_folder="5" target_file="10"/>
+            <map folder="4" file="1" target_folder="4" target_file="34"/>
+            <map folder="4" file="2" target_folder="4" target_file="30"/>
+            <map folder="4" file="4" target_folder="4" target_file="23"/>
+            <map folder="4" file="5" target_folder="4" target_file="35"/>
         </character_map>
         <character_map id="23" name="vilani-a">
             <map folder="6" file="0" target_folder="6" target_file="6"/>
             <map folder="10" file="1"/>
             <map folder="6" file="2" target_folder="6" target_file="5"/>
         </character_map>
-        <animation id="0" name="idle" length="2000" interval="100" l="-830" t="-480" r="829" b="479">
+        <character_map id="24" name="solomani-a">
+            <map folder="7" file="0" target_folder="7" target_file="7"/>
+            <map folder="7" file="2" target_folder="7" target_file="8"/>
+            <map folder="5" file="0" target_folder="5" target_file="11"/>
+            <map folder="4" file="0" target_folder="4" target_file="27"/>
+            <map folder="4" file="3" target_folder="4" target_file="28"/>
+            <map folder="4" file="6" target_folder="4" target_file="29"/>
+            <map folder="4" file="7" target_folder="4" target_file="26"/>
+            <map folder="6" file="0"/>
+            <map folder="6" file="1"/>
+        </character_map>
+        <animation id="0" name="idle" length="2000" interval="2000" l="-830" t="-480" r="829" b="479">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
@@ -637,7 +662,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="1" name="idle-breathe" length="2000" interval="100">
+        <animation id="1" name="idle-breathe" length="2000" interval="83">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
@@ -1007,7 +1032,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="2" name="sit" length="2000" interval="100" l="-730" t="-770" r="729" b="769">
+        <animation id="2" name="sit" length="2000" interval="2000" l="-730" t="-770" r="729" b="769">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
@@ -1919,7 +1944,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="4" name="walk" length="800" interval="100" l="-750" t="-890" r="749" b="889">
+        <animation id="4" name="walk" length="800" interval="57" l="-750" t="-990" r="749" b="990">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
@@ -9076,7 +9101,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="10" name="lie" length="500" interval="100" looping="false" l="-900" t="-1450" r="899" b="1439">
+        <animation id="10" name="lie" length="500" interval="500" looping="false" l="-900" t="-1450" r="899" b="1439">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>

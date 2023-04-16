@@ -80,23 +80,30 @@
       expr '{ npcKey: "bar", npcClassKey: "zhodani-a", point: '$( click 1 )' }' | spawn
       spawn foo zhodani-a $( click 1 )
       ```
+    - ✅ zhodani-a has blue shirt
+    - ✅ try to get batch export working
+      - 👉 should probably untick unused
+      - ℹ️ can force all horizontal via vert frames == 1
+      - ℹ️ media png names will be `spriter_man_01_base_{animName}`
+        - entity name `man_01_base`
+        - chose prefix `spriter`
+      - ✅ process-sheets needs to read different files
+    - ✅ regenerate all: walk bounds were slightly too small
     - 🚧 add npc class solomani-a
       - has hair
-      - clean up lie
-      - clean up transparent added to walk
-    - zhodani-a should not have white shirt?
-    - try to get batch export working
 
-- ✅ avoid flicker on stop walk fixing `getWalkCycleDuration`
+- ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
+
 - can change character class on respawn?
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
+- try support hair custom hair
+  - base characters will need to be bald
 - more `ui do` points
 - more `orient-{deg}` tags
-- create more character maps
 
-
+- BUG? HMR sometimes seems to break FOV change on enter room
 - BUG walk tracked npc and wait for finish; pause and unpause causes re-track
 - BUG spawned into toilet without triggering FOV change
 - ✅ BUG sporadic startAnimationByMeta on click different part of do point
