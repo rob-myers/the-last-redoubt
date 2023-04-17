@@ -2,10 +2,10 @@
 
 ## In progress
 
-- ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
-
 - 🚧 Play with Chrome devtool recorder
+- ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
 - ✅ prefetch icons in `<head>`
+- ✅ can change character class on respawn
 
 - lighter geomorph PNGs
   - fix lights and improve bug detect
@@ -13,13 +13,10 @@
   - dark overlay could be less dark?
   - support constant lit rect/circles
 
-- can change character class on respawn?
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - Spriter Pro: put hat opacity back at 100% but hide using character map
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
-- try support hair custom hair
-  - base characters will need to be bald
 - more `ui do` points
 - more `orient-{deg}` tags
 
@@ -42,7 +39,10 @@
 - BUG move/resize circle decor all at once?
 - BUG should not be able to open door through wall (e.g. toilet stateroom 12)
 - BUG should not be able to spawn under door (from offmesh)
-- `goLoop` -> `walkLoop`
+
+- try support hair custom hair
+  - base characters will need to be bald
+- ❌ `goLoop` -> `walkLoop`
 - svg tags foo=bar become meta { foo: JSON.parse('bar') }
 - sit has mask
 - hide isolated hull doors touching edge geomorph

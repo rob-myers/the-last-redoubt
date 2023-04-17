@@ -587,6 +587,10 @@ export default function NPCs(props) {
           position: e.point,
           speed: npcsMeta[spawned.classKey].speed,
         };
+        if (e.npcClassKey) {
+          spawned.classKey = e.npcClassKey;
+          spawned.anim.css = css`${npcsMeta[e.npcClassKey].css}`;
+        }
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
