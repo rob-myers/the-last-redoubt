@@ -38,7 +38,6 @@ const config = {
         // "path": "./src/pages/",
         "path": `${__dirname}/src/pages`,
       },
-      // __key: "pages"
     },
     {
       resolve: 'gatsby-source-filesystem',
@@ -46,7 +45,13 @@ const config = {
         "name": "snippets",
         "path": `${__dirname}/src/components/snippet`,
       },
-      // __key: "snippets"
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        "name": "icons",
+        "path": `${__dirname}/static/assets/icon`,
+      },
     },
     "gatsby-plugin-tsconfig-paths",
     "gatsby-plugin-react-helmet",

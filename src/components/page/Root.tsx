@@ -9,12 +9,15 @@ import { clearAllBodyScrollLocks } from "body-scroll-lock";
 import useSiteStore, { AllFrontMatter, FrontMatter } from "store/site.store";
 import { queryClient } from "projects/service/query-client";
 import { siteTitle } from "projects/service/const";
+import { supportsWebp } from "projects/service/dom";
 import Nav from "./Nav";
 import Main from "./Main";
 import Portals from "./Portals";
 import Article from "./Article";
 import NextArticle from "./NextArticle";
 import Comments from "./Comments";
+
+const iconExt = supportsWebp ? 'webp' : 'png';
 
 export function wrapPageElement({
   element,
@@ -28,11 +31,6 @@ export function wrapPageElement({
   return (
     <>
       <RootHooks frontMatter={frontMatter} />
-      <Helmet>
-        <title>
-          {siteTitle}
-        </title>
-      </Helmet>
 
       <QueryClientProvider client={queryClient} >
         <Nav frontmatter={frontMatter} />
@@ -68,32 +66,55 @@ function RootHooks(props: {
 }) {
 
   const allFrontMatter = useStaticQuery(graphql`
-    query { allMdx {
-      edges { node { frontmatter {
-        key
-        date
-        icon
-        giscusTerm
-        info
-        label
-        navGroup
-        next
-        path
-        prev
-        tags
-      } } } }
+    query {
+      allMdx {
+        edges { node { frontmatter {
+          key
+          date
+          icon
+          giscusTerm
+          info
+          label
+          navGroup
+          next
+          path
+          prev
+          tags
+        } } }
+      }
+      allFile( filter: { sourceInstanceName: { eq: "icons" } }) {
+        iconFilenames: edges { node { relativePath } }
+      }
     }
   `) as AllFrontMatter;
+
+  // console.log({ allFrontMatter })
 
   React.useMemo(() => {
     clearAllBodyScrollLocks();
     useSiteStore.api.setArticleKey(props.frontMatter?.key);
     useSiteStore.api.initiate(allFrontMatter);
   }, [props.frontMatter]);
+
+  const preloadedIconHrefs = React.useMemo(() =>
+    allFrontMatter.allFile.iconFilenames
+      .filter(({ node }) => node.relativePath.endsWith(iconExt))
+      .map(({ node }) => `/assets/icon/${node.relativePath}`)
+  , []);
   
   React.useEffect(() => {
     useSiteStore.api.initiateBrowser();
   }, []);
 
-  return null;
+  return (
+    <Helmet>
+      <title>
+        {siteTitle}
+      </title>
+      {preloadedIconHrefs.map((iconHref) =>
+        // preload icons displayed via CSS background-image
+        <link key={iconHref} rel="preload" as="image" href={iconHref} />
+      )}
+    </Helmet>
+  );
 }

@@ -2,99 +2,16 @@
 
 ## In progress
 
-- 🚧 Play with Chrome devtool recorder
-
-- 🚧 migrate npcs to Spriter
-  - ✅ share repo folder "media" with windows
-  - ✅ can change sprite assets
-  - ✅ can output spritesheet
-  - ✅ can output spritesheets
-    - ✅ need Spriter pro
-  - ℹ️ walk starts from idle via manual config
-  - ✅ can hide hat: opacity 0 then Ctrl+D
-  - ✅ create single-frame lie animation
-  - ✅ create single-frame sit animation
-  - ✅ prefer frame aabb to be const over all animations
-    - ℹ️ source rectangle: set to animation preset
-  - ❌ enforce "look towards right"
-    - ctrl-click root bones and adjust {x,y,angle}
-    - change each keyframe, issue if root hip bone in keyframe has angle
-    - try add true root bone (x,y,angle 0)
-      - issues with hierarchy editor (can prev/next keyframe though)
-      - made mistake whilst translating bones for each keyframe (laborious)
-  - ℹ️ continue from `top_down_man_base.edit.2.scml`
-  - ✅ script npcs-meta-new.js
-  - ✅ generate spritesheets for ✅ idle ✅ lie ✅ sit ✅ walk
-    - use symmetric `set to animation preset` source rect and check inferred
-      > e.g. idle -830,-480 -> +829,+479
-    - `yarn minify-pngs static/assets/npc/man-base-variant webp`
-
-  - ✅ script `process-sheets` media/NPC/{foo}/* -> static/assets/npc/{foo}/*
-    - ℹ️ frames needn't be square so may have to change output image dimensions
-    - ✅ fix look by ensuring look-right
-    - ✅ fix walk start-from-idle
-    - ✅ constructs webp too
-  - ✅ get walk/sit/lie/idle working
-    - ✅ idle -> idle-breathe
-    - ✅ idle 1 frame of idle-breathe
-    - ✅ more frames for idle animation if ~4000ms long...
-    - ❌ need background-position offset for walk so starts from idle
-      - we use `yarn process-sheets` to ensure facing right
-    - ✅ unify animation names
-  - ✅ BUG with anim.sprites.commitStyles() for `idle-breathe`
-    - saw `background-position: -2145px 50%`
-
-  - ✅ tidy up after Spriter Pro migration
-    - ✅ remove old code
-    - ✅ rename new code e.g. `yarn npcs-meta`
-    - ✅ darker via `filter` + drop-shadow()
-    - ✅ feet less visible in `idle`
-    - ✅ create/render another character class
-      - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
-    - ✅ rename npc classes
-      - man-base-variant -> vilani-a
-      - man-first-variant -> zhodani-a
-      ```sh
-      function renameMediaPngs() {
-         [[ $( x=$(pwd); echo ${x: -16} ) != the-last-redoubt ]] && {
-          echo "this function must be run from repo root"
-          return 1
-         }
-        prevName="$1"
-        nextName="$2"
-        cd "media/NPC/class/$prevName" &&
-          for file in $( find . | grep -E "${prevName}.+\.png$" ); do
-            mv $file "${nextName}${file:((${#prevName} + 2))}"
-          done
-      }
-      renameMediaPngs man-base-variant vilani-a
-      renameMediaPngs man-first-variant zhodani-a
-      ```
-    - ✅ change vilani-a style
-      - ℹ️ assets can have different sizes,
-        which must be fixed for animations to work
-        > e.g. `hi_vis_above_orange` vs `black_tshirt_top`
-      - ℹ️ an extract original asset from `top_down_humans_svg.svg`
-    - ✅ spawn can specify class e.g.
-      ```sh
-      expr '{ npcKey: "bar", npcClassKey: "zhodani-a", point: '$( click 1 )' }' | spawn
-      spawn foo zhodani-a $( click 1 )
-      ```
-    - ✅ zhodani-a has blue shirt
-    - ✅ try to get batch export working
-      - 👉 should probably untick unused
-      - ℹ️ can force all horizontal via vert frames == 1
-      - ℹ️ media png names will be `spriter_man_01_base_{animName}`
-        - entity name `man_01_base`
-        - chose prefix `spriter`
-      - ✅ process-sheets needs to read different files
-    - ✅ regenerate all: walk bounds were slightly too small
-    - ✅ add npc class solomani-a
-      - has hair
-
-- gatsby static icons
-  - https://www.gatsbyjs.com/docs/how-to/images-and-media/using-gatsby-plugin-image/
 - ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
+
+- 🚧 Play with Chrome devtool recorder
+- ✅ prefetch icons in `<head>`
+
+- lighter geomorph PNGs
+  - fix lights and improve bug detect
+  - improve lights
+  - dark overlay could be less dark?
+  - support constant lit rect/circles
 
 - can change character class on respawn?
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
@@ -507,6 +424,94 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ migrate npcs to Spriter
+  - ✅ share repo folder "media" with windows
+  - ✅ can change sprite assets
+  - ✅ can output spritesheet
+  - ✅ can output spritesheets
+    - ✅ need Spriter pro
+  - ℹ️ walk starts from idle via manual config
+  - ✅ can hide hat: opacity 0 then Ctrl+D
+  - ✅ create single-frame lie animation
+  - ✅ create single-frame sit animation
+  - ✅ prefer frame aabb to be const over all animations
+    - ℹ️ source rectangle: set to animation preset
+  - ❌ enforce "look towards right"
+    - ctrl-click root bones and adjust {x,y,angle}
+    - change each keyframe, issue if root hip bone in keyframe has angle
+    - try add true root bone (x,y,angle 0)
+      - issues with hierarchy editor (can prev/next keyframe though)
+      - made mistake whilst translating bones for each keyframe (laborious)
+  - ℹ️ continue from `top_down_man_base.edit.2.scml`
+  - ✅ script npcs-meta-new.js
+  - ✅ generate spritesheets for ✅ idle ✅ lie ✅ sit ✅ walk
+    - use symmetric `set to animation preset` source rect and check inferred
+      > e.g. idle -830,-480 -> +829,+479
+    - `yarn minify-pngs static/assets/npc/man-base-variant webp`
+
+  - ✅ script `process-sheets` media/NPC/{foo}/* -> static/assets/npc/{foo}/*
+    - ℹ️ frames needn't be square so may have to change output image dimensions
+    - ✅ fix look by ensuring look-right
+    - ✅ fix walk start-from-idle
+    - ✅ constructs webp too
+  - ✅ get walk/sit/lie/idle working
+    - ✅ idle -> idle-breathe
+    - ✅ idle 1 frame of idle-breathe
+    - ✅ more frames for idle animation if ~4000ms long...
+    - ❌ need background-position offset for walk so starts from idle
+      - we use `yarn process-sheets` to ensure facing right
+    - ✅ unify animation names
+  - ✅ BUG with anim.sprites.commitStyles() for `idle-breathe`
+    - saw `background-position: -2145px 50%`
+
+  - ✅ tidy up after Spriter Pro migration
+    - ✅ remove old code
+    - ✅ rename new code e.g. `yarn npcs-meta`
+    - ✅ darker via `filter` + drop-shadow()
+    - ✅ feet less visible in `idle`
+    - ✅ create/render another character class
+      - ℹ️ partial examples already exist in `top_down_man_base.edit.2.scml`
+    - ✅ rename npc classes
+      - man-base-variant -> vilani-a
+      - man-first-variant -> zhodani-a
+      ```sh
+      function renameMediaPngs() {
+         [[ $( x=$(pwd); echo ${x: -16} ) != the-last-redoubt ]] && {
+          echo "this function must be run from repo root"
+          return 1
+         }
+        prevName="$1"
+        nextName="$2"
+        cd "media/NPC/class/$prevName" &&
+          for file in $( find . | grep -E "${prevName}.+\.png$" ); do
+            mv $file "${nextName}${file:((${#prevName} + 2))}"
+          done
+      }
+      renameMediaPngs man-base-variant vilani-a
+      renameMediaPngs man-first-variant zhodani-a
+      ```
+    - ✅ change vilani-a style
+      - ℹ️ assets can have different sizes,
+        which must be fixed for animations to work
+        > e.g. `hi_vis_above_orange` vs `black_tshirt_top`
+      - ℹ️ an extract original asset from `top_down_humans_svg.svg`
+    - ✅ spawn can specify class e.g.
+      ```sh
+      expr '{ npcKey: "bar", npcClassKey: "zhodani-a", point: '$( click 1 )' }' | spawn
+      spawn foo zhodani-a $( click 1 )
+      ```
+    - ✅ zhodani-a has blue shirt
+    - ✅ try to get batch export working
+      - 👉 should probably untick unused
+      - ℹ️ can force all horizontal via vert frames == 1
+      - ℹ️ media png names will be `spriter_man_01_base_{animName}`
+        - entity name `man_01_base`
+        - chose prefix `spriter`
+      - ✅ process-sheets needs to read different files
+    - ✅ regenerate all: walk bounds were slightly too small
+    - ✅ add npc class solomani-a
+      - has hair
 
 - ✅ Start presentation redo
 - ✅ On hold Tab reset we reset Tabs layout

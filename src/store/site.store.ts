@@ -176,6 +176,9 @@ export interface AllFrontMatter {
       };
     }[];
   };
+  allFile: {
+    iconFilenames: { node: { relativePath: string; } }[];
+  }
 }
 
 /**
