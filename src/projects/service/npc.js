@@ -98,7 +98,7 @@ export function isNpcActionKey(input) {
 }
 
 /** @type {Record<NPC.NpcClassKey, true>} */
-const fromNpcClassKey = { "first-human-npc": true, "vilani-a": true, "zhodani-a": true };
+const fromNpcClassKey = { "first-human-npc": true, "solomani-a": true, "vilani-a": true, "zhodani-a": true };
 
 /**
  * @param {string} input 

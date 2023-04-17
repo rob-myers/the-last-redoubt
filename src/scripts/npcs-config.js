@@ -83,6 +83,7 @@ export const npcClassConfig = {
   /**
    * See media/NPC/class/*
    */
+  "solomani-a": manBaseVariant,
   "vilani-a": manBaseVariant,
   "zhodani-a": manBaseVariant,
 };

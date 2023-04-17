@@ -44,7 +44,7 @@
   - ✅ BUG with anim.sprites.commitStyles() for `idle-breathe`
     - saw `background-position: -2145px 50%`
 
-  - 🚧 tidy up after Spriter Pro migration
+  - ✅ tidy up after Spriter Pro migration
     - ✅ remove old code
     - ✅ rename new code e.g. `yarn npcs-meta`
     - ✅ darker via `filter` + drop-shadow()
@@ -89,7 +89,7 @@
         - chose prefix `spriter`
       - ✅ process-sheets needs to read different files
     - ✅ regenerate all: walk bounds were slightly too small
-    - 🚧 add npc class solomani-a
+    - ✅ add npc class solomani-a
       - has hair
 
 - gatsby static icons
@@ -98,6 +98,7 @@
 
 - can change character class on respawn?
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
+- Spriter Pro: put hat opacity back at 100% but hide using character map
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
 - try support hair custom hair
