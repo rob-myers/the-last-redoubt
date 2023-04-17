@@ -1,3 +1,8 @@
+/** The pseudo filename we choose on batch export from Spriter Pro */
+export const batchExportPrefix = 'spriter';
+/** The Spriter Pro entity name */
+export const spriterEntityName = 'man_01_base';
+
 /** @type {NPC.NpcClassConfig} */
 const manBaseVariant = {
   // Made using Spriter Pro

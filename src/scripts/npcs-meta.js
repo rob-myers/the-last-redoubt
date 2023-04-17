@@ -16,7 +16,7 @@ import childProcess from 'child_process';
 import { keys } from '../projects/service/generic';
 import { writeAsJson } from '../projects/service/file';
 import { computeNpcScale, computeSpritesheetCss } from '../projects/service/npc';
-import { npcClassConfig } from './npcs-config';
+import { npcClassConfig, batchExportPrefix, spriterEntityName } from './npcs-config';
 
 const outputDir = path.resolve(__dirname, '../../src/projects/world');
 const outputJsonFilepath = path.resolve(outputDir, 'npcs-meta.json');
@@ -28,7 +28,7 @@ const outputJson = keys(npcClassConfig).reduce(
         
         const animLookup = Object.keys(config.anim).reduce((agg, animKey) => {
             const animConfig = config.anim[animKey];
-            const origSheetPng = `./media/NPC/class/${npcClassKey}/${npcClassKey}--${animKey}.png`;
+            const origSheetPng = `./media/NPC/class/${npcClassKey}/${batchExportPrefix}_${spriterEntityName}_${animKey}.png`;
             // ℹ️ read png from media and infer frame width/height
             const [widthStr, heightStr] = childProcess.execSync(`identify -ping -format '%w %h' ${origSheetPng}`).toString().split(' ');
             /** Frame AABB prior to applying `rotateDeg` */

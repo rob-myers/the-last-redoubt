@@ -68,7 +68,7 @@
     "speed": 70
   },
   "vilani-a": {
-    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle-breathe.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--walk.png');\n  }\n  &.walk .body.webp {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--walk.webp');\n  }",
+    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--idle-breathe.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 396px;\n    height: 300px;\n    left: -198px;\n    top: -150px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--walk.png');\n  }\n  &.walk .body.webp {\n    width: 396px;\n    height: 300px;\n    left: -198px;\n    top: -150px;\n    background-image: url('/assets/npc/vilani-a/vilani-a--walk.webp');\n  }",
     "classKey": "vilani-a",
     "parsed": {
       "animLookup": {
@@ -119,8 +119,8 @@
         "walk": {
           "animName": "walk",
           "durationMs": -1,
-          "frameAabbOrig": {"x": 0, "y": 0, "width": 300, "height": 356},
-          "frameAabb": {"x": 0, "y": 0, "width": 356, "height": 300},
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 300, "height": 396},
+          "frameAabb": {"x": 0, "y": 0, "width": 396, "height": 300},
           "frameCount": 14,
           "pathPng": "/assets/npc/vilani-a/vilani-a--walk.png",
           "pathWebp": "/assets/npc/vilani-a/vilani-a--walk.webp",
@@ -137,7 +137,7 @@
     "speed": 70
   },
   "zhodani-a": {
-    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 195px;\n    height: 445px;\n    left: -97.5px;\n    top: -222.5px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 195px;\n    height: 445px;\n    left: -97.5px;\n    top: -222.5px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle-breathe.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--walk.png');\n  }\n  &.walk .body.webp {\n    width: 356px;\n    height: 300px;\n    left: -178px;\n    top: -150px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--walk.webp');\n  }",
+    "css": ".body {\n  transform: scale(0.08470588235294117);\n}\n\n\n  &.idle .body:not(.webp) {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle.png');\n  }\n  &.idle .body.webp {\n    width: 192px;\n    height: 332px;\n    left: -96px;\n    top: -166px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle.webp');\n  }\n\n\n\n  &.idle-breathe .body:not(.webp) {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle-breathe.png');\n  }\n  &.idle-breathe .body.webp {\n    width: 195px;\n    height: 348px;\n    left: -97.5px;\n    top: -174px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--idle-breathe.webp');\n  }\n\n\n\n  &.lie .body:not(.webp) {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--lie.png');\n  }\n  &.lie .body.webp {\n    width: 578px;\n    height: 360px;\n    left: -289px;\n    top: -180px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--lie.webp');\n  }\n\n\n\n  &.sit .body:not(.webp) {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--sit.png');\n  }\n  &.sit .body.webp {\n    width: 308px;\n    height: 292px;\n    left: -154px;\n    top: -146px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--sit.webp');\n  }\n\n\n\n  &.walk .body:not(.webp) {\n    width: 396px;\n    height: 300px;\n    left: -198px;\n    top: -150px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--walk.png');\n  }\n  &.walk .body.webp {\n    width: 396px;\n    height: 300px;\n    left: -198px;\n    top: -150px;\n    background-image: url('/assets/npc/zhodani-a/zhodani-a--walk.webp');\n  }",
     "classKey": "zhodani-a",
     "parsed": {
       "animLookup": {
@@ -155,8 +155,8 @@
         "idle-breathe": {
           "animName": "idle-breathe",
           "durationMs": 3000,
-          "frameAabbOrig": {"x": 0, "y": 0, "width": 445, "height": 195},
-          "frameAabb": {"x": 0, "y": 0, "width": 195, "height": 445},
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 348, "height": 195},
+          "frameAabb": {"x": 0, "y": 0, "width": 195, "height": 348},
           "frameCount": 24,
           "pathPng": "/assets/npc/zhodani-a/zhodani-a--idle-breathe.png",
           "pathWebp": "/assets/npc/zhodani-a/zhodani-a--idle-breathe.webp",
@@ -188,8 +188,8 @@
         "walk": {
           "animName": "walk",
           "durationMs": -1,
-          "frameAabbOrig": {"x": 0, "y": 0, "width": 300, "height": 356},
-          "frameAabb": {"x": 0, "y": 0, "width": 356, "height": 300},
+          "frameAabbOrig": {"x": 0, "y": 0, "width": 300, "height": 396},
+          "frameAabb": {"x": 0, "y": 0, "width": 396, "height": 300},
           "frameCount": 14,
           "pathPng": "/assets/npc/zhodani-a/zhodani-a--walk.png",
           "pathWebp": "/assets/npc/zhodani-a/zhodani-a--walk.webp",

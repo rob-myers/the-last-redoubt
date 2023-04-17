@@ -15,13 +15,10 @@ import { createCanvas, loadImage } from 'canvas';
 import { runYarnScript } from './service';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { Mat, Poly, Rect } from '../projects/geom';
+import { batchExportPrefix, spriterEntityName } from './npcs-config';
 
 const mediaDir = path.resolve(__dirname, '../../media');
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
-/** The pseudo filename we choose on export from Spriter Pro */
-const batchExportPrefix = 'spriter';
-/** The Spriter Pro entity name */
-const spriterEntityName = 'man_01_base';
 
 main();
 
@@ -29,6 +26,8 @@ async function main() {
 
     // yarn npcs-meta
     await runYarnScript('npcs-meta');
+
+    console.log('👁')
 
     // Get generated json
     // Dynamic import (or require) provides inferred types (unlike readFile)

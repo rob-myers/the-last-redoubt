@@ -7,7 +7,7 @@
 const config = {
   siteMetadata: {
     title: `the-last-redoubt`,
-    siteUrl: `https://www.yourdomain.tld`
+    siteUrl: `https://lastredoubt.co`
   },
   plugins: [
     "gatsby-plugin-emotion",

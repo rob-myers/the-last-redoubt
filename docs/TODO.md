@@ -92,6 +92,8 @@
     - 🚧 add npc class solomani-a
       - has hair
 
+- gatsby static icons
+  - https://www.gatsbyjs.com/docs/how-to/images-and-media/using-gatsby-plugin-image/
 - ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
 
 - can change character class on respawn?
