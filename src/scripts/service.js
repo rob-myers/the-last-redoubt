@@ -10,8 +10,14 @@ export async function runYarnScript(scriptName, ...args) {
     await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
         const proc = childProcess.spawn('yarn', [scriptName, ...args]);
         proc.stdout.on('data', (data) => console.log([scriptName], data.toString()));
+        proc.stderr.on('data', (data) => console.error([scriptName], 'ERROR:', data.toString()));
         proc.stdout.on('close', () => resolve());
-        proc.stdout.on('error', (e) => reject(e));
+        proc.on('error', (e) => reject(e));
+        proc.on('exit', (errorCode) => {
+          if (typeof errorCode === 'number' && errorCode !== 0) {
+            reject({ errorCode });
+          }
+        });
     }));
 }
 
