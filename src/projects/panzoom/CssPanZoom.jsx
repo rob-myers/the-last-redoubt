@@ -179,7 +179,7 @@ export default function CssPanZoom(props) {
             state.anims.forEach(anim => anim?.playState === 'running' && anim.pause());
             break;
           case 'play':
-            state.anims.forEach(anim => anim?.play());
+            state.anims.forEach(anim => anim?.playState === 'paused' && anim.play());
             break;
           default:
             throw testNever(type, { suffix: 'animationAction' });
