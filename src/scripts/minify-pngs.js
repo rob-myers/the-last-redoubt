@@ -1,8 +1,9 @@
 /**
- * yarn minify-pngs {src_dir} [webp]
+ * yarn minify-pngs {src_dir} [--webp] [--quality={integer}]
  * - {src_dir} is relative to repo root
  * - {src_dir} must exist
- * - option additionally generates webp files
+ * - optionally generates webp files (100% quality)
+ * - optionally specify pngquant quality (does not affect webp)
  *
  * Examples:
  * - yarn minify-pngs static/assets/pics
@@ -16,12 +17,18 @@
 import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
+import getopts from 'getopts';
 import { error, info } from '../projects/service/log';
 import { runYarnScript } from './service';
 
-const [,, srcDir, extra] = process.argv;
-if (!srcDir || !fs.existsSync(srcDir) || (extra && (extra !== 'webp'))) {
-  error(`error: usage: yarn minify-pngs {src_dir} [webp] where
+const [,, srcDir] = process.argv;
+
+const opts = getopts(process.argv, { boolean: ['webp'], string: ['quality'] });
+const webp = /** @type {boolean} */ (opts.webp);
+const quality = opts.quality ? parseInt(opts.quality) : 80;
+
+if (!srcDir || !fs.existsSync(srcDir) || !Number.isInteger(quality)) {
+  error(`error: usage: yarn minify-pngs {src_dir} [--webp] [--quality={integer}] where
     - {src_dir} is relative to repo root
     - {src_dir} exists
   `);
@@ -46,7 +53,7 @@ async function main() {
   //#endregion
 
   // Create webp files first
-  if (extra === 'webp') {
+  if (webp === true) {
     await runYarnScript('pngs-to-webp', srcDir);
   }
 
@@ -65,7 +72,7 @@ async function main() {
   childProcess.execSync(`cp ${path.join(`'${srcDir}'`, '*.png')} ${tempDir}`);
   childProcess.execSync(`
     time find ${path.join(`'${tempDir}'`, '*.png')} -print0 |
-      xargs -0 -n 1 -P 20 pngquant -f --quality=80
+      xargs -0 -n 1 -P 20 pngquant -f --quality=${quality}
   `);
 
   for (const fileName of fs.readdirSync(tempDir).filter(x => x.endsWith('-fs8.png'))) {

@@ -72,7 +72,7 @@ async function main() {
     const tempDir = fs.mkdtempSync('pngquant-');
     await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
     await saveCanvasAsFile(unlitDoorwaysCanvas, `${tempDir}/${outputPngFilename.replace(/^(.*)\.png$/, '$1.unlit.doorways.png')}`);
-    await runYarnScript('minify-pngs', tempDir, 'webp');
+    await runYarnScript('minify-pngs', tempDir, '--webp', '--quality=90');
     childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
     fs.rmSync(tempDir, { force: true, recursive: true });
   } catch (e) {

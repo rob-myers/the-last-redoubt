@@ -70,7 +70,7 @@ async function main() {
   // Temp dir avoids breaking gatsby (watching static/assets)
   const tempDir = fs.mkdtempSync('pngquant-');
   await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
-  await runYarnScript('minify-pngs', tempDir, 'webp');
+  await runYarnScript('minify-pngs', tempDir, '--webp' ,'--quality=90');
   childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
   fs.rmSync(tempDir, { force: true, recursive: true });
 }

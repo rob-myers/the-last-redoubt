@@ -273,7 +273,7 @@ async function main() {
 
     // Optimize PNGs + provide WEBP
     await /** @type {Promise<void>} */ (new Promise(resolve => {
-      const proc = childProcess.spawn(`yarn`, ['minify-pngs', outputDir, 'webp']);
+      const proc = childProcess.spawn(`yarn`, ['minify-pngs', outputDir, '--webp']);
       proc.stdout.on('data', (data) => console.log({ key: 'minify-pngs' }, data.toString()));
       proc.stdout.on('close', () => resolve());
     }));
