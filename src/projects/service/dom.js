@@ -230,7 +230,7 @@ export function fillRing(ctxt, ring, fill = true) {
  * @param {Geom.Poly[]} polys
  * @param {boolean} [stroke]
  */
-export function fillPolygon(ctxt, polys, stroke = false) {
+export function fillPolygons(ctxt, polys, stroke = false) {
 	for (const poly of polys) {
 		ctxt.beginPath();
 		fillRing(ctxt, poly.outline, false);
@@ -246,7 +246,7 @@ export function fillPolygon(ctxt, polys, stroke = false) {
  * @param {CanvasRenderingContext2D} ctxt
  * @param {Geom.Poly[]} polys
  */
-export function strokePolygon(ctxt, polys) {
+export function strokePolygons(ctxt, polys) {
 	for (const poly of polys) {
 		ctxt.beginPath();
     fillRing(ctxt, poly.outline, false);

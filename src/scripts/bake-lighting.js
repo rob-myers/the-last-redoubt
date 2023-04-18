@@ -11,7 +11,7 @@ import childProcess from 'child_process';
 import { defaultLightDistance } from '../projects/service/const';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
-import { fillPolygon } from '../projects/service/dom';
+import { fillPolygons } from '../projects/service/dom';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { renderLayout } from './render-layout';
 
@@ -46,7 +46,7 @@ async function main() {
   // ℹ️ thus need to darken unlit drawRects
   const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
   ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
-  fillPolygon(ctxt, hullPolySansHoles);
+  fillPolygons(ctxt, hullPolySansHoles);
 
   //#region draw lights
   const lightSources = layout.lightSrcs;
@@ -61,7 +61,7 @@ async function main() {
     gradient.addColorStop(1, "#00000000");
     // gradient.addColorStop(1, "#00000000");
     ctxt.fillStyle = gradient;
-    fillPolygon(ctxt, [lightPoly]);
+    fillPolygons(ctxt, [lightPoly]);
   });
   //#endregion
 

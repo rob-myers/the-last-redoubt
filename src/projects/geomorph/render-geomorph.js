@@ -3,7 +3,7 @@ import { Poly, Vect } from "../geom";
 import { geom } from '../service/geom';
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { error } from "../service/log";
-import { drawLine, fillPolygon, fillRing, setStyle } from '../service/dom';
+import { drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
 
 /**
  * Render a single geomorph PNG,
@@ -59,7 +59,7 @@ export async function renderGeomorph(
 
   ctxt.fillStyle = navColor;
   ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-  fillPolygon(ctxt, layout.navPoly, true);
+  fillPolygons(ctxt, layout.navPoly, true);
 
   if (navTris) {
     ctxt.strokeStyle = navStroke;
@@ -80,7 +80,7 @@ export async function renderGeomorph(
       if (matched) {
         const [, fill, stroke, strokeWidth] = matched;
         setStyle(ctxt, fill || 'transparent', stroke || 'transparent', Number(strokeWidth) || 0);
-        fillPolygon(ctxt, [poly]);
+        fillPolygons(ctxt, [poly]);
         ctxt.stroke();
       } else {
         console.warn('render: saw tag "poly" where other tag had unexpected format');
@@ -88,20 +88,27 @@ export async function renderGeomorph(
     }
     if (tags.includes('fuel')) {
       setStyle(ctxt, '#aaa', '#000', 2);
-      fillPolygon(ctxt, [poly]), ctxt.stroke();
+      fillPolygons(ctxt, [poly]), ctxt.stroke();
       setStyle(ctxt, '#aaa', 'rgba(0, 0, 0, 0.5)', 1);
       const center = Vect.average(poly.outline);
       poly.outline.forEach(p => drawLine(ctxt, center, p));
     }
     if (tags.includes('wall')) {// Hull wall singles
       setStyle(ctxt, '#000');
-      fillPolygon(ctxt, Poly.cutOut(doorPolys, [poly]));
+      fillPolygons(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
   });
 
-  ctxt.fillStyle = obsColor;
-  obsBounds && fillPolygon(ctxt, obstacles);
+  if (obsBounds) {
+    ctxt.fillStyle = obsColor;
+    // ctxt.shadowBlur = 15;
+    // ctxt.shadowColor = 'rgba(255, 0, 0, 0.3)';
+    fillPolygons(ctxt, obstacles);
+    ctxt.shadowBlur = 0;
+    ctxt.shadowColor = '';
+  }
   //#endregion
+
 
   const initTransform = ctxt.getTransform();
 
@@ -131,10 +138,10 @@ export async function renderGeomorph(
     walls,
   );
   ctxt.fillStyle = wallColor;
-  wallBounds && fillPolygon(ctxt, wallsToFill);
+  wallBounds && fillPolygons(ctxt, wallsToFill);
 
   ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-  fillPolygon(ctxt, layout.hullTop);
+  fillPolygons(ctxt, layout.hullTop);
 
   if (doors) {
     drawDoors(ctxt, doorPolys);
@@ -165,9 +172,9 @@ export async function renderGeomorph(
 */
 function drawDoors(ctxt, doorPolys) {
   ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-  fillPolygon(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
+  fillPolygons(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
   ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
-  fillPolygon(ctxt, doorPolys);
+  fillPolygons(ctxt, doorPolys);
 }
 
 /**

@@ -23,6 +23,7 @@ import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/s
 import { drawThinDoors, renderGeomorph } from '../projects/geomorph/render-geomorph';
 import { triangle } from '../projects/service/triangle';
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
+import { runYarnScript } from './service';
 
 const geomorphId = Number(process.argv[2]);
 const layoutDef = Object.values(layoutDefs).find(x => x.id === geomorphId);
@@ -41,9 +42,9 @@ const [
 ] = [!!opts.debug, opts.scale = defaultScale, !!opts.suffix];
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
-const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}${
+const outputPngFilename = `${layoutDef.key}${
   debug ? '.debug' : suffix ? `.${suffix}` : ''
-}.png`);
+}.png`;
 
 main();
 
@@ -63,16 +64,17 @@ async function main() {
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
 
-    // For both geomorph and unlit.doorways,
-    // save PNG, WEBP, and finally Optimize PNG
-    for (const { srcCanvas, dstPngPath } of [
-      { srcCanvas: canvas, dstPngPath: outputPngPath },
-      { srcCanvas: unlitDoorwaysCanvas, dstPngPath: outputPngPath.replace(/^(.*)\.png$/, '$1.unlit.doorways.png') },
-    ]) {
-      await saveCanvasAsFile(srcCanvas, dstPngPath);
-      childProcess.execSync(`cwebp ${dstPngPath} -o ${dstPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
-      childProcess.execSync(`pngquant -f --quality=80 ${dstPngPath} && mv ${dstPngPath.replace(/\.png$/, '-fs8.png')} ${dstPngPath}`);
-    }
+    /**
+     * For both geomorph and unlit.doorways,
+     * save PNG, WEBP, and finally Optimize PNG
+     * Use temp dir to avoid breaking gatsby (watching static/assets)
+     */
+    const tempDir = fs.mkdtempSync('pngquant-');
+    await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
+    await saveCanvasAsFile(unlitDoorwaysCanvas, `${tempDir}/${outputPngFilename.replace(/^(.*)\.png$/, '$1.unlit.doorways.png')}`);
+    await runYarnScript('minify-pngs', tempDir, 'webp');
+    childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
+    fs.rmSync(tempDir, { force: true, recursive: true });
   } catch (e) {
     error(e);
   }
