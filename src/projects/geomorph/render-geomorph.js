@@ -101,8 +101,9 @@ export async function renderGeomorph(
 
   if (obsBounds) {
     ctxt.fillStyle = obsColor;
-    // ctxt.shadowBlur = 15;
-    // ctxt.shadowColor = 'rgba(255, 0, 0, 0.3)';
+    // drop-shadow provides basic 3d effect
+    ctxt.shadowBlur = 20;
+    ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
     fillPolygons(ctxt, obstacles);
     ctxt.shadowBlur = 0;
     ctxt.shadowColor = '';

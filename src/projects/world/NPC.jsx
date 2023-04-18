@@ -72,7 +72,8 @@ const rootCss = css`
 
   .body {
     position: absolute;
-    filter: brightness(90%) drop-shadow(0 0 22px black);
+    // Related to geomorph drop-shadow i.e. render-geomorph shadowBlur
+    filter: brightness(90%) drop-shadow(0 0 72px black);
   }
   
   &.disabled .body {
