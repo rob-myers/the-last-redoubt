@@ -8,7 +8,8 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 
-import { defaultLightDistance } from '../projects/service/const';
+import { runYarnScript } from './service';
+import { defaultLightDistance, preDarkenCssRgba } from '../projects/service/const';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
 import { fillPolygons } from '../projects/service/dom';
@@ -25,7 +26,7 @@ const foundLayoutDef = layoutDef; // else ts error in main
 
 const staticAssetsDir = path.resolve(__dirname, '../../static/assets');
 const outputDir = path.resolve(staticAssetsDir, 'geomorph');
-const outputPngPath =  path.resolve(outputDir, `${layoutDef.key}.lit.png`);
+const outputPngFilename =  `${layoutDef.key}.lit.png`;
 
 const geomorphJsonPath = path.resolve(outputDir, `${layoutDef.key}.json`);
 if (!fs.existsSync(geomorphJsonPath)) {
@@ -45,7 +46,7 @@ async function main() {
   // Darken the geomorph
   // ℹ️ thus need to darken unlit drawRects
   const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
-  ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctxt.fillStyle = preDarkenCssRgba;
   fillPolygons(ctxt, hullPolySansHoles);
 
   //#region draw lights
@@ -65,12 +66,11 @@ async function main() {
   });
   //#endregion
 
-  // Save PNG
-  await saveCanvasAsFile(canvas, outputPngPath);
-  // Generate WEBP
-  childProcess.execSync(`cwebp ${outputPngPath} -o ${outputPngPath.replace(/^(.*)\.png$/, '$1.webp')}`);
-  // Minify PNG
-  // ⛔️ seen worse than tinypng (467kb vs 534kb)
-  childProcess.execSync(`pngquant -f --quality=80 ${outputPngPath} && mv ${outputPngPath.replace(/\.png$/, '-fs8.png')} ${outputPngPath}`);
-
+  // Save/optimize png, save webp
+  // Temp dir avoids breaking gatsby (watching static/assets)
+  const tempDir = fs.mkdtempSync('pngquant-');
+  await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
+  await runYarnScript('minify-pngs', tempDir, 'webp');
+  childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
+  fs.rmSync(tempDir, { force: true, recursive: true });
 }

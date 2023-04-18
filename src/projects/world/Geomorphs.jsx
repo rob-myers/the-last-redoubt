@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { cssName } from "../service/const";
+import { cssName, preDarkenCssRgba } from "../service/const";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
@@ -23,7 +23,10 @@ export default function Geomorphs(props) {
         (rect.x - srcOffset.x) * 2, (rect.y - srcOffset.y) * 2, rect.width * 2, rect.height * 2,
         rect.x, rect.y, rect.width, rect.height,
       );
-      // ℹ️ we also shade by rgba(0, 0, 0, 0, 0.5) as per bake-lighting
+      /**
+       * We also shade by
+       * @see {preDarkenCssRgba} as per bake-lighting
+       */
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
@@ -46,7 +49,7 @@ export default function Geomorphs(props) {
       const ctxt = assertNonNull(canvas.getContext('2d'));
       ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
       // ctxt.setTransform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
-      ctxt.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctxt.fillStyle = preDarkenCssRgba;
 
       const imgEl = api.fov.getImgEl(gmId);
       gm.doorToLightRect.forEach((item, doorId) => {
