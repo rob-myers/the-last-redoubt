@@ -403,6 +403,7 @@
             <map folder="4" file="7" target_folder="4" target_file="26"/>
             <map folder="6" file="0"/>
             <map folder="6" file="1"/>
+            <map folder="10" file="1"/>
         </character_map>
         <animation id="0" name="idle" length="2000" interval="2000" l="-830" t="-480" r="829" b="479">
             <mainline>
@@ -9110,7 +9111,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="10" name="lie" length="500" interval="500" looping="false" l="-900" t="-1450" r="899" b="1439">
+        <animation id="10" name="lie" length="500" interval="500" looping="false" l="-900" t="-1800" r="899" b="1800">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
