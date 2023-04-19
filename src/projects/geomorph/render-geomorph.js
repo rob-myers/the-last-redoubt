@@ -71,6 +71,20 @@ export async function renderGeomorph(
   const doorPolys = singlesToPolys(singles, 'door');
 
   ctxt.lineJoin = 'round';
+
+  if (obsBounds) {
+    /**
+     * Draw light grey under obstacles
+     * Draw drop-shadow i.e. basic 3d effect
+     */
+    ctxt.fillStyle = obsColor;
+    ctxt.shadowBlur = 20;
+    ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
+    fillPolygons(ctxt, obstacles);
+    ctxt.shadowBlur = 0;
+    ctxt.shadowColor = '';
+  }
+
   hullSym.singles.forEach(({ poly, tags }) => {
     if (tags.includes('label')) {
       return;
@@ -99,15 +113,6 @@ export async function renderGeomorph(
     }
   });
 
-  if (obsBounds) {
-    ctxt.fillStyle = obsColor;
-    // drop-shadow provides basic 3d effect
-    ctxt.shadowBlur = 20;
-    ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
-    fillPolygons(ctxt, obstacles);
-    ctxt.shadowBlur = 0;
-    ctxt.shadowColor = '';
-  }
   //#endregion
 
 
