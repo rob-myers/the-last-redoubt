@@ -23,8 +23,8 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.LayoutKey} */
-// const layoutKey = 'g-101--multipurpose';
-const layoutKey = 'g-102--research-deck';
+const layoutKey = 'g-101--multipurpose';
+// const layoutKey = 'g-102--research-deck';
 // const layoutKey = 'g-301--bridge';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
@@ -51,6 +51,7 @@ function Geomorph({ def, transform, disabled }) {
 
   /** Must recompute layout when definition changes (even with HMR) */
   const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
+
   const { data, error } = useQuery(
     `GeomorphEdit--${def.key}--${gmHash}`,
     async () => {
@@ -231,7 +232,7 @@ function Geomorph({ def, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
-          {/* {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
+          {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
             <div
               // Saw two light rects with same key -- shouldn't happen?
               // key={key}
@@ -242,7 +243,7 @@ function Geomorph({ def, transform, disabled }) {
               data-door-id={doorId}
               style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
             />
-          )} */}
+          )}
         </div>
       </foreignObject>
 
@@ -272,75 +273,76 @@ const rootCss = css`
   g {
     image.debug {
       opacity: 0.2;
-      /* pointer-events: none; */
+      pointer-events: none;
     }
     path {
       pointer-events: none;
     }
-    foreignObject {
-      font: ${labelMeta.font};
-  
-      canvas.geomorph {
-        position: absolute;
-        pointer-events: none;
-      }
+
+    /* ℹ️ foreignObject { ... } did not match */
+
+    font: ${labelMeta.font};
+
+    canvas.geomorph {
+      position: absolute;
+      pointer-events: none;
+    }
+    
+    .main-container {
+      position: absolute;
+    }
+
+    div.label {
+      position: absolute;
+      padding: ${labelMeta.padY}px ${labelMeta.padX}px;
       
-      div.main-container {
-        position: absolute;
+      cursor: pointer;
+      pointer-events: auto;
+      user-select: none; /** TODO better way? */
+
+      background: black;
+      color: white;
+    }
+    div.door {
+      position: absolute;
+      cursor: pointer;
+      border: 1px solid black;
+      &.open {
+        background: none;
       }
-  
-      div.label {
-        position: absolute;
-        padding: ${labelMeta.padY}px ${labelMeta.padX}px;
-        
-        cursor: pointer;
-        pointer-events: auto;
-        user-select: none; /** TODO better way? */
-  
-        background: black;
-        color: white;
+      &.closed {
+        background: red;
       }
-      div.door {
-        position: absolute;
-        cursor: pointer;
-        border: 1px solid black;
-        &.open {
-          background: none;
-        }
-        &.closed {
-          background: red;
-        }
-      }
-      div.view-point {
-        position: absolute;
-        cursor: pointer;
-        background: green;
-        width: ${pointDim}px;
-        height: ${pointDim}px;
-        transform: translate(-${pointDim/2}px, -${pointDim/2}px);
-        border-radius: 50%;
-      }
-      div.light-point {
-        position: absolute;
-        cursor: pointer;
-        background: #ffff99;
-        width: ${pointDim}px;
-        height: ${pointDim}px;
-        transform: translate(-${pointDim/2}px, -${pointDim/2}px);
-        border-radius: 50%;
-        border: 1px solid black;
-      }
-      div.light-circ {
-        position: absolute;
-        background: #0000ff11;
-        border-radius: 50%;
-        /* pointer-events: none; */
-      }
-      div.light-rect {
-        position: absolute;
-        border: 1px dashed #0000ff;
-        /* pointer-events: none; */
-      }
+    }
+    div.view-point {
+      position: absolute;
+      cursor: pointer;
+      background: green;
+      width: ${pointDim}px;
+      height: ${pointDim}px;
+      transform: translate(-${pointDim/2}px, -${pointDim/2}px);
+      border-radius: 50%;
+    }
+    div.light-point {
+      position: absolute;
+      cursor: pointer;
+      background: #ffff99;
+      width: ${pointDim}px;
+      height: ${pointDim}px;
+      transform: translate(-${pointDim/2}px, -${pointDim/2}px);
+      border-radius: 50%;
+      border: 1px solid black;
+    }
+    div.light-circ {
+      position: absolute;
+      background: #0000ff11;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    div.light-rect {
+      position: absolute;
+      border: 1px dashed #0000ff;
+      pointer-events: none;
     }
   }
 
