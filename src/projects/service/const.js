@@ -132,6 +132,8 @@ export const defaultNpcInteractRadius = 50;
 export const defaultNpcClassKey = 'vilani-a';
 // export const defaultNpcClassKey = 'zhodani-a';
 
+export const spawnFadeMs = 500;
+
 //#endregion
 
 export const svgSymbolTag = /** @type {const} */ ({

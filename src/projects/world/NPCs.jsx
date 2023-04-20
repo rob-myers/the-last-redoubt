@@ -7,7 +7,7 @@ import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
-import { cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "../service/const";
+import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, spawnFadeMs } from "../service/const";
 import { geom } from "../service/geom";
 import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
@@ -128,11 +128,11 @@ export default function NPCs(props) {
     },
     async fadeSpawnDo(npc, e, meta) {
       try {
-        await npc.animateOpacity(0, 1000);
+        await npc.animateOpacity(0, spawnFadeMs);
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
       } finally {
-        await npc.animateOpacity(1, 1000);
+        await npc.animateOpacity(1, spawnFadeMs);
       }
     },
     getGlobalNavPath(src, dst) {
