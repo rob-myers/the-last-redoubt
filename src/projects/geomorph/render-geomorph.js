@@ -2,7 +2,7 @@
 import { Poly, Vect } from "../geom";
 import { geom } from '../service/geom';
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
-import { error } from "../service/log";
+import { error, warn } from "../service/log";
 import { drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
 
 /**
@@ -97,7 +97,7 @@ export async function renderGeomorph(
         fillPolygons(ctxt, [poly]);
         ctxt.stroke();
       } else {
-        console.warn('render: saw tag "poly" where other tag had unexpected format');
+        warn('render: saw tag "poly" where other tag had unexpected format');
       }
     }
     if (tags.includes('fuel')) {

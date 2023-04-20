@@ -8,8 +8,12 @@
     > https://stackoverflow.com/a/71205007/2917822
   - ✅ lighter: dark overlay could be less dark?
   - 🚧 fix lights and improve bug detect
+    - warn when two lights intersect
   - 🚧 support constant lit rect/circles
   - ❌ unlit symbol pngs?
+
+- ✅ prevent warns when nav degenerate (as in GeomorphEdit)
+  - gm 301:  29 `gm.navZone.groups` and 29 doors...
 
 - big doors -> double doors (e.g. hull doors)
 - more `ui do` points

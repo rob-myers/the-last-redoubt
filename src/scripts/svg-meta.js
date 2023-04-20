@@ -84,7 +84,7 @@ console.log({
     layoutDefsToUpdate.map(def => {
       return async () => {
         console.log(chalk.blue('creating layout'), chalk.yellow(def.key), '...');
-        const layout = await createLayout(def, symbolLookup, triangle);
+        const layout = await createLayout({ def, lookup: symbolLookup, triangleService: triangle });
         const filename = path.resolve(geomorphsDir, `${def.key}.json`);
         console.log(chalk.blue('writing'), chalk.yellow(filename), '...');
         writeAsJson(serializeLayout(layout), filename);

@@ -1,6 +1,8 @@
 /**
  * This component is used to build a geomorph step-by-step.
  * We compute the actual layout (as opposed to loading JSON).
+ * 
+ * 🚧 needs a clean
  */
 import * as React from "react";
 import { css, cx } from "@emotion/css";
@@ -23,9 +25,9 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.LayoutKey} */
-const layoutKey = 'g-101--multipurpose';
+// const layoutKey = 'g-101--multipurpose';
 // const layoutKey = 'g-102--research-deck';
-// const layoutKey = 'g-301--bridge';
+const layoutKey = 'g-301--bridge';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
 
@@ -57,7 +59,8 @@ function Geomorph({ def, transform, disabled }) {
     async () => {
       // compute layout and GeomorphData from def
       const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-      const layout = await createLayout(def, symbolLookup)
+      /** ℹ️ no triangle service => degenerate navigation */
+      const layout = await createLayout({ def, lookup: symbolLookup, triangleService: null})
       const gm = await createGeomorphData(layout);
       // create geomorph graph
       const gmInstance = geomorphDataToInstance(gm, [1, 0, 0, 1, 0, 0]);
@@ -139,7 +142,10 @@ function Geomorph({ def, transform, disabled }) {
     deps: [data, layoutKey],
   });
 
-  React.useEffect(() => void (layoutKey !== state.layoutKey ) && state.reset(), [layoutKey]);
+  React.useEffect(() =>
+    void (layoutKey !== state.layoutKey ) && state.reset(),
+    [layoutKey],
+  );
 
   React.useEffect(() => {
     if (data) {

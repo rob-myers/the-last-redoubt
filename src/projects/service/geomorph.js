@@ -14,20 +14,18 @@ import { fillRing, supportsWebp } from "../service/dom";
 /**
  * Create a layout, given a definition and all symbols.
  * Can run in browser or on server.
- * @param {Geomorph.LayoutDef} def
- * @param {Geomorph.SymbolLookup} lookup
- * @param {import('./triangle').TriangleService} [triangleService]
+ * @param {CreateLayoutOpts} opts
  * @returns {Promise<Geomorph.ParsedLayout>}
  */
-export async function createLayout(def, lookup, triangleService) {
+export async function createLayout(opts) {
   const m = new Mat;
 
   /** @type {Geomorph.ParsedLayout['groups']} */
   const groups = { singles: [], obstacles: [], walls: [] };
 
-  def.items.forEach((item, i) => {
+  opts.def.items.forEach((item, i) => {
     m.feedFromArray(item.transform || [1, 0, 0, 1, 0, 0]);
-    const { singles, obstacles, walls, hull } = lookup[item.symbol];
+    const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
     if (i) {
       /**
        * Starship symbol PNGs are 5 times larger than Geomorph PNGs.
@@ -79,7 +77,7 @@ export async function createLayout(def, lookup, triangleService) {
   groups.obstacles.forEach(poly => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
-  const symbols = def.items.map(x => lookup[x.symbol]);
+  const symbols = opts.def.items.map(x => opts.lookup[x.symbol]);
   const hullSym = symbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
@@ -97,7 +95,7 @@ export async function createLayout(def, lookup, triangleService) {
     if (room) {// We ignore any holes in pillar
       room.holes.push(pillar.outline);
     } else {
-      warn(`${def.key}: pillar ${JSON.stringify(pillar.rect.json)} does not reside in any room`);
+      warn(`${opts.def.key}: pillar ${JSON.stringify(pillar.rect.json)} does not reside in any room`);
     }
   });
 
@@ -191,8 +189,8 @@ export async function createLayout(def, lookup, triangleService) {
    * - Errors thrown by other code seems to trigger error at:
    *   > `{REPO_ROOT}/node_modules/triangle-wasm/triangle.out.js:9`
    */
-  const navDecomp = triangleService
-    ? await triangleService.triangulate(
+  const navDecomp = opts.triangleService
+    ? await opts.triangleService.triangulate(
         navPolySansDoors,
         {
           // minAngle: 10,
@@ -240,7 +238,8 @@ export async function createLayout(def, lookup, triangleService) {
    * We expect it to have exactly one group.
    */
   const navZone = buildZoneWithMeta(navDecomp, doors, rooms);
-  navZone.groups.forEach((tris, i) =>
+  // Only warn when navigation non-degenerate
+  opts.triangleService && navZone.groups.forEach((tris, i) =>
     i > 0 && tris.length <= 12 && warn(`createLayout: unexpected small navZone group ${i} with ${tris.length} tris`)
   );
 
@@ -256,9 +255,9 @@ export async function createLayout(def, lookup, triangleService) {
 
   /** @type {Geomorph.ParsedLayout} */
   const output = {
-    key: def.key,
-    id: def.id,
-    def,
+    key: opts.def.key,
+    id: opts.def.id,
+    def: opts.def,
     groups,
   
     rooms,
@@ -279,10 +278,10 @@ export async function createLayout(def, lookup, triangleService) {
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
-      pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${def.key}.png`,
+      pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
-      transformArray: def.items[i].transform,
-      transform: def.items[i].transform ? `matrix(${def.items[i].transform})` : undefined,
+      transformArray: opts.def.items[i].transform,
+      transform: opts.def.items[i].transform ? `matrix(${opts.def.items[i].transform})` : undefined,
     })),
   };
 
@@ -290,6 +289,16 @@ export async function createLayout(def, lookup, triangleService) {
 
   return output;
 }
+
+/**
+ * @typedef CreateLayoutOpts
+ * @type {object}
+ * @property {Geomorph.LayoutDef} def
+ * @property {Geomorph.SymbolLookup} lookup
+ * @property {null | import('./triangle').TriangleService} triangleService
+ * If the triangulation service is not provided, then e.g.
+ * @see {Geomorph.ParsedLayout.navZone} is degenerate.
+ */
 
 /**
  * Some hull doors shouldn't be tagged,

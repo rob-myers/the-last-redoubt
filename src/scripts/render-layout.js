@@ -89,7 +89,7 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
 
   const canvas = createCanvas(0, 0);
   const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-  const layout = await createLayout(def, symbolLookup, triangle);
+  const layout = await createLayout({ def, lookup: symbolLookup, triangleService: triangle });
   const staticDir = path.resolve(__dirname, '../../static');
 
   await renderGeomorph(

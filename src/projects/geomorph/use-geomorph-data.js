@@ -58,7 +58,7 @@ export async function createGeomorphData(input) {
 
   const layout = typeof input === 'string'
     ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
-    : input
+    : input // for GeomorphEdit
   ;
 
   const { roomGraph } = layout;
