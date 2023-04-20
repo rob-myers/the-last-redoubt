@@ -2,27 +2,30 @@
 
 ## In progress
 
-- 🚧 Play with Chrome devtool recorder
-- ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
-- ✅ prefetch icons in `<head>`
-- ✅ can change character class on respawn
 
-- lighter geomorph PNGs
-  - fix lights and improve bug detect
-  - improve lights
-  - dark overlay could be less dark?
-  - support constant lit rect/circles
+- 🚧 geomorph png improvements
+  - ✅ drop shadow e.g. around bed
+    > https://stackoverflow.com/a/71205007/2917822
+  - ✅ lighter: dark overlay could be less dark?
+  - 🚧 fix lights and improve bug detect
+  - 🚧 support constant lit rect/circles
+  - ❌ unlit symbol pngs?
 
-- npcs-meta.json has timestamps to avoid process-sheets recomputing everything
-- Spriter Pro: put hat opacity back at 100% but hide using character map
-- add npc class hlanssai-a
-  - somehow import njoy games sprites into Spriter Pro
+- big doors -> double doors (e.g. hull doors)
 - more `ui do` points
 - more `orient-{deg}` tags
+- Play with Chrome devtool recorder
+  - can replay via https://www.npmjs.com/package/@puppeteer/replay
 
+- npcs-meta.json has timestamps to avoid process-sheets recomputing everything
+- add npc class hlanssai-a
+  - somehow import njoy games sprites into Spriter Pro
+
+- BUG? `click 1>foo`
 - BUG? HMR sometimes seems to break FOV change on enter room
 - BUG walk tracked npc and wait for finish; pause and unpause causes re-track
 - BUG spawned into toilet without triggering FOV change
+- Spriter Pro: put hat opacity back at 100% but hide using character map
 - ✅ BUG sporadic startAnimationByMeta on click different part of do point
   - goLoop was triggered and was cancelling before startAnimationByMeta
 
@@ -424,6 +427,13 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ refine drop-shadow of chairs near tables
+- ✅ fix top of head in `lie`
+
+- ✅ avoid flicker on stop walk by fixing `getWalkCycleDuration`
+- ✅ prefetch icons in `<head>`
+- ✅ can change character class on respawn
 
 - ✅ migrate npcs to Spriter
   - ✅ share repo folder "media" with windows
