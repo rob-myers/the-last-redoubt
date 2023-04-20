@@ -148,4 +148,4 @@ export const defaultLightDistance = 300;
 export const distanceTagRegex = /^distance-(\d+)$/;
 
 /** For lighting we initially darken everything */
-export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.25)';
+export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
