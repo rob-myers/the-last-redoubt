@@ -9,9 +9,12 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect y="94.186" width="203.06" height="412.564" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <rect y="319.96" width="556.093" height="280.04" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="319.679"/>
+    <rect y="86.43" width="138" height="156" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="34.5" transform="matrix(0.939693, 0.34202, -0.343179, 0.939271, 79.581772, -6.980246)"/>
+    <rect y="365" width="170" height="170" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="365"/>
     <rect width="118.648" height="600" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="1081.352"/>
+    <rect y="86.43" width="138" height="156" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="34.5" transform="matrix(0.939693, -0.34202, 0.340861, 0.940114, -31.880028, 298.744385)"/>
+    <rect y="46.539" width="85" height="84" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="21.25" transform="matrix(1, 0, -0.001233, 1, 16.901091, 211.460724)"/>
+    <rect y="365" width="170" height="170" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="665"/>
   </g>
   <g style="pointer-events: none;">
     <title>singles</title>
