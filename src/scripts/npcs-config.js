@@ -1,11 +1,15 @@
+// ℹ️ On update should run `yarn npcs-meta` (json only) or `yarn process-sheets`
+
 /** The pseudo filename we choose on batch export from Spriter Pro */
 export const batchExportPrefix = 'spriter';
 /** The Spriter Pro entity name */
 export const spriterEntityName = 'man_01_base';
 
-/** @type {NPC.NpcClassConfig} */
+/**
+ * Made using Spriter Pro
+ * @type {NPC.NpcClassConfig}
+ */
 const manBaseVariant = {
-  // Made using Spriter Pro
   anim: {
     idle: {
       frameCount: 1,
@@ -44,7 +48,8 @@ const manBaseVariant = {
       totalDist: 600, // 🚧 justify
     },
   },
-  radius: 850 * 0.2, // Export scale is 20%
+  // The larger it is, the smaller the sprites are
+  radius: 800 * 0.2, // Export scale is 20%
 };
 
 /**
