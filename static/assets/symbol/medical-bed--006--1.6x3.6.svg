@@ -9,10 +9,10 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect width="385.6" height="202" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="35.4"/>
-    <rect width="385.6" height="202" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="35.4" y="446"/>
-    <rect width="385.6" height="202" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="35.4" y="892"/>
+    <path d="M 35.4 52.064 L 130.81 0 L 417.677 56.394 L 417.677 142.797 L 130.096 197.979 L 35.4 148.443 L 35.4 52.064 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect width="450" height="54.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="314.8"/>
     <rect width="450" height="54.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="760"/>
+    <path d="M 35.4 500.064 L 130.81 448 L 417.677 504.394 L 417.677 590.797 L 130.096 645.979 L 35.4 596.443 L 35.4 500.064 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 35.4 942.064 L 130.81 890 L 417.677 946.394 L 417.677 1032.797 L 130.096 1087.979 L 35.4 1038.443 L 35.4 942.064 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
 </svg>

@@ -16,11 +16,11 @@
     <rect y="-10" width="20" height="620" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="-10"/>
     <rect y="-10" width="20" height="620" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="590"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>obstacles</title>
     <rect x="370.3" y="226.5" width="157.3" height="138.6" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="70.3" y="226.5" width="157.3" height="138.6" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <rect y="140.6" width="582.2" height="73.4" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="9.2"/>
+    <path d="M 591.4 214 L 532.839 214 L 511.25 191.275 L 470.5 177 L 431.4 177 L 395.728 188.921 L 365.6 214 L 235 214 L 204.872 188.921 L 169.2 177 L 130.1 177 L 89.35 191.275 L 67.761 214 L 9.2 214 L 9.2 140.6 L 591.4 140.6 L 591.4 214 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
   <g style="">
     <title>singles</title>
