@@ -6,6 +6,7 @@
   </g>
   <g>
     <title>obstacles</title>
-    <path d="M 0 0 L 300 0 L 300 69 L 200 100 L 300 192.5 L 300 213.8 L 212.1 300 L 192.1 300 L 100 212.2 L 65.4 300 L 0 300 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 0 0 L 300 0 L 300 69 L 200 100 L 161.995 125.158 L 116.69 171.186 L 93.131 213.058 L 65.4 300 L 0 300 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <rect x="110.455" y="166.109" width="138" height="157" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 252.712128, -90.56057)"/>
   </g>
 </svg>

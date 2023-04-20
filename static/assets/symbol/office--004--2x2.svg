@@ -15,7 +15,7 @@
   <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect x="221.163" y="296.453" width="158.649" height="137.09" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <rect x="9.462" y="448.083" width="579.878" height="142.204" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 600 448.729 L 405.334 448.729 L 372.097 466.09 L 315.601 479.091 L 283.754 480.05 L 244.221 472.602 L 198.732 448.729 L 0 448.729 L 0 600 L 600 600 L 600 448.729 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
   <g style="">
     <title>singles</title>
