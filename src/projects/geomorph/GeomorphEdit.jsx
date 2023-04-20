@@ -23,8 +23,8 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.LayoutKey} */
-const layoutKey = 'g-101--multipurpose';
-// const layoutKey = 'g-102--research-deck';
+// const layoutKey = 'g-101--multipurpose';
+const layoutKey = 'g-102--research-deck';
 // const layoutKey = 'g-301--bridge';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
@@ -231,7 +231,7 @@ function Geomorph({ def, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
-          {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
+          {/* {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
             <div
               // Saw two light rects with same key -- shouldn't happen?
               // key={key}
@@ -242,7 +242,7 @@ function Geomorph({ def, transform, disabled }) {
               data-door-id={doorId}
               style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
             />
-          )}
+          )} */}
         </div>
       </foreignObject>
 
@@ -272,7 +272,7 @@ const rootCss = css`
   g {
     image.debug {
       opacity: 0.2;
-      pointer-events: none;
+      /* pointer-events: none; */
     }
     path {
       pointer-events: none;
@@ -334,12 +334,12 @@ const rootCss = css`
         position: absolute;
         background: #0000ff11;
         border-radius: 50%;
-        pointer-events: none;
+        /* pointer-events: none; */
       }
       div.light-rect {
         position: absolute;
         border: 1px dashed #0000ff;
-        pointer-events: none;
+        /* pointer-events: none; */
       }
     }
   }
