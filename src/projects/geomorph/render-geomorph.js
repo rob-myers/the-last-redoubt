@@ -86,9 +86,12 @@ export async function renderGeomorph(
   }
 
   hullSym.singles.forEach(({ poly, tags }) => {
-    if (tags.includes('label')) {
-      return;
+    if (tags.includes('wall')) {// Hull wall singles
+      setStyle(ctxt, '#000');
+      fillPolygons(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
+  });
+  hullSym.singles.forEach(({ poly, tags }) => {// Always above wall
     if (tags.includes('poly')) {
       const matched = (tags[1] || '').match(/^([^-]*)-([^-]*)-([^-]*)$/);
       if (matched) {
@@ -97,7 +100,7 @@ export async function renderGeomorph(
         fillPolygons(ctxt, [poly]);
         ctxt.stroke();
       } else {
-        warn('render: saw tag "poly" where other tag had unexpected format');
+        warn(`render-geomorph: tags[0] "poly" but tags[1] has unexpected format: ${tags[1]}`);
       }
     }
     if (tags.includes('fuel')) {
@@ -106,10 +109,6 @@ export async function renderGeomorph(
       setStyle(ctxt, '#aaa', 'rgba(0, 0, 0, 0.5)', 1);
       const center = Vect.average(poly.outline);
       poly.outline.forEach(p => drawLine(ctxt, center, p));
-    }
-    if (tags.includes('wall')) {// Hull wall singles
-      setStyle(ctxt, '#000');
-      fillPolygons(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
   });
 

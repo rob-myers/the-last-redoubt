@@ -23,51 +23,6 @@
   </g>
   <g style="">
     <title>singles</title>
-    <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0);">
-      <title>wall no-fill</title>
-    </path>
-    <path d="M 780 180.6 L 840 180.6 L 840 240.6 L 900 176 L 864.4 121.6 L 840 61.6 L 780 61 L 780 180.6 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0);" transform="matrix(-1, 0, 0, -1, 1679.999925, 301.600008)">
-      <title>wall no-fill</title>
-    </path>
-    <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
-      <title>poly #fff-#000-4</title>
-    </path>
-    <path d="M 310.4 133 L 335.4 133 L 335.4 145 L 347.4 145 L 347.4 131 L 370.4 131 L 370.4 90 L 406.7 127.2 L 388.3 152.8 L 363.8 195 L 348.4 229.1 L 310 229 L 310.4 205 L 321.4 205 L 321.4 193 L 310.4 193 L 310.4 168.8 L 323.4 168.5 L 323.4 156 L 310.4 156 L 310.4 133 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204);">
-      <title>poly #ccc-#000-4</title>
-    </path>
-    <path d="M 900 121 L 840 121 L 840 61 L 780 125.6 L 815.6 180 L 840 240 L 900 240.6 L 900 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
-      <title>poly #fff-#000-4</title>
-    </path>
-    <path d="M 793.7 186.1 L 818.7 186.1 L 818.7 174.1 L 830.7 174.1 L 830.7 188.1 L 853.7 188.1 L 853.7 229.1 L 890 191.9 L 871.6 166.3 L 847.1 124.1 L 831.7 90 L 793.3 90.1 L 793.7 114.1 L 804.7 114.1 L 804.7 126.1 L 793.7 126.1 L 793.7 150.3 L 806.7 150.6 L 806.7 163.1 L 793.7 163.1 L 793.7 186.1 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204);" transform="matrix(-1, 0, 0, -1, 1683.299988, 319.100006)">
-      <title>poly #ccc-#000-4</title>
-    </path>
-    <rect x="-4" y="250" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door hull</title>
-    </rect>
-    <rect x="1196" y="250" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door hull</title>
-    </rect>
-    <rect x="250" y="596" width="100" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door hull</title>
-    </rect>
-    <rect x="850" y="596" width="100" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>door hull</title>
-    </rect>
-    <path d="M 424 119 L 455 93 L 493 71 L 534 56 L 578 49 L 621 48 L 664 56 L 706 71 L 744 93 L 775 119 L 779 124 L 772 131 L 767 127 L 737 102 L 701 82 L 661 67 L 620 59 L 578 59 L 537 67 L 498 82 L 462 103 L 433 127 L 428 132 L 419 124 L 424 119 Z" style="stroke: rgb(0, 0, 0); fill-opacity: 0.31;">
-      <title>window</title>
-    </path>
-    <rect x="898.4" y="238.5" width="61.6" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>wall</title>
-    </rect>
-    <rect x="240.2" y="238.5" width="59.8" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>wall</title>
-    </rect>
-    <rect x="173.315" y="254" width="6" height="46" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9;" transform="matrix(0, 1, -1, 0, 546.757263, 64.184998)">
-      <title>door iris</title>
-    </rect>
-    <rect x="173.365" y="-300" width="6" height="46" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9;" transform="matrix(0, 1, -1, 0, 653.757263, 64.135231)">
-      <title>door iris</title>
-    </rect>
     <rect x="270" y="194" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor go label study</title>
     </rect>
@@ -80,29 +35,23 @@
     <rect x="930" y="194" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor go label study</title>
     </rect>
-    <rect x="60" y="290" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(153, 153, 255);">
-      <title>spawn</title>
+    <rect x="-4" y="250" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door hull</title>
     </rect>
-    <rect x="1140" y="290" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(153, 153, 255);">
-      <title>spawn</title>
+    <rect x="1196" y="250" width="8" height="100" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door hull</title>
     </rect>
-    <rect x="85.78" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="240">
-      <title>relate-connectors</title>
+    <rect x="250" y="596" width="100" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door hull</title>
     </rect>
-    <rect x="145.78" width="10" height="134.697" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="269.396" transform="matrix(0.897192, 0.441642, -0.441642, 0.897192, 135.967636, -68.557007)">
-      <title>relate-connectors</title>
+    <rect x="850" y="596" width="100" height="8" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+      <title>door hull</title>
     </rect>
-    <rect x="145.78" width="10" height="134.697" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="269.396" transform="matrix(0.897725, -0.440556, 0.440556, 0.897725, -103.247925, 63.483669)">
-      <title>relate-connectors</title>
+    <rect x="173.315" y="254" width="6" height="46" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9;" transform="matrix(0, 1, -1, 0, 546.757263, 64.184998)">
+      <title>door iris</title>
     </rect>
-    <rect x="145.78" width="10" height="138.992" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="277.986" transform="matrix(0.856434, 0.516256, -0.516256, 0.856434, 290.360748, -75.375557)">
-      <title>relate-connectors</title>
-    </rect>
-    <rect x="503.955" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="697.733" transform="matrix(0, 1, -1, 0, 1417.733032, -59.322041)">
-      <title>relate-connectors</title>
-    </rect>
-    <rect x="503.955" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="697.733" transform="matrix(0, 1, -1, 0, 1417.73291, -181.514175)">
-      <title>relate-connectors</title>
+    <rect x="173.365" y="-300" width="6" height="46" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9;" transform="matrix(0, 1, -1, 0, 653.757263, 64.135231)">
+      <title>door iris</title>
     </rect>
     <rect x="165" y="420" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-200</title>
@@ -161,5 +110,56 @@
     <rect x="225" y="470" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-60</title>
     </rect>
+    <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
+      <title>poly #fff-#000-4</title>
+    </path>
+    <path d="M 310.4 133 L 335.4 133 L 335.4 145 L 347.4 145 L 347.4 131 L 370.4 131 L 370.4 90 L 406.7 127.2 L 388.3 152.8 L 363.8 195 L 348.4 229.1 L 310 229 L 310.4 205 L 321.4 205 L 321.4 193 L 310.4 193 L 310.4 168.8 L 323.4 168.5 L 323.4 156 L 310.4 156 L 310.4 133 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204);">
+      <title>poly #ccc-#000-4</title>
+    </path>
+    <path d="M 900 121 L 840 121 L 840 61 L 780 125.6 L 815.6 180 L 840 240 L 900 240.6 L 900 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
+      <title>poly #fff-#000-4</title>
+    </path>
+    <path d="M 793.7 186.1 L 818.7 186.1 L 818.7 174.1 L 830.7 174.1 L 830.7 188.1 L 853.7 188.1 L 853.7 229.1 L 890 191.9 L 871.6 166.3 L 847.1 124.1 L 831.7 90 L 793.3 90.1 L 793.7 114.1 L 804.7 114.1 L 804.7 126.1 L 793.7 126.1 L 793.7 150.3 L 806.7 150.6 L 806.7 163.1 L 793.7 163.1 L 793.7 186.1 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204);" transform="matrix(-1, 0, 0, -1, 1683.30005, 319.10002)">
+      <title>poly #ccc-#000-4</title>
+    </path>
+    <rect x="85.78" width="10" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="240">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="145.78" width="10" height="134.697" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="269.396" transform="matrix(0.897192, 0.441642, -0.441642, 0.897192, 135.967636, -68.557007)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="145.78" width="10" height="134.697" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="269.396" transform="matrix(0.897725, -0.440556, 0.440556, 0.897725, -103.247925, 63.483669)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="145.78" width="10" height="138.992" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="277.986" transform="matrix(0.856434, 0.516256, -0.516256, 0.856434, 290.360748, -75.375557)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="503.955" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="697.733" transform="matrix(0, 1, -1, 0, 1417.733032, -59.322041)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="503.955" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="697.733" transform="matrix(0, 1, -1, 0, 1417.73291, -181.514175)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="60" y="290" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(153, 153, 255);">
+      <title>spawn</title>
+    </rect>
+    <rect x="1140" y="290" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(153, 153, 255);">
+      <title>spawn</title>
+    </rect>
+    <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0);">
+      <title>wall no-fill</title>
+    </path>
+    <path d="M 780 180.6 L 840 180.6 L 840 240.6 L 900 176 L 864.4 121.6 L 840 61.6 L 780 61 L 780 180.6 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0);" transform="matrix(-1, 0, 0, -1, 1680.000074, 301.600031)">
+      <title>wall no-fill</title>
+    </path>
+    <rect x="898.4" y="238.5" width="61.6" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>wall</title>
+    </rect>
+    <rect x="240.2" y="238.5" width="59.8" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>wall</title>
+    </rect>
+    <path d="M 424 119 L 455 93 L 493 71 L 534 56 L 578 49 L 621 48 L 664 56 L 706 71 L 744 93 L 775 119 L 779 124 L 772 131 L 767 127 L 737 102 L 701 82 L 661 67 L 620 59 L 578 59 L 537 67 L 498 82 L 462 103 L 433 127 L 428 132 L 419 124 L 424 119 Z" style="stroke: rgb(0, 0, 0); fill-opacity: 0.31;">
+      <title>window</title>
+    </path>
   </g>
 </svg>
