@@ -13,6 +13,7 @@
   - ✅ add some test floor lights
   - ✅ restrict floor lights to their parent room
   - ✅ render floor lights in unlit/lit png
+- ✅ floorLights -> floorHighlights
 - 🚧 fix extant lights
 - big doors -> double doors (e.g. hull doors)
 - ensure doors pause and/or initially can start open

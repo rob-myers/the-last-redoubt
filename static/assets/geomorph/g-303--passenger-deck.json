@@ -13010,7 +13010,7 @@
       "postDoorIds": []
     }
   ],
-  "floorLightIds": [],
+  "floorHighlightIds": [],
   "hullPoly": [
     {
       "type": "Polygon",

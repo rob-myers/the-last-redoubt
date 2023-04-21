@@ -256,7 +256,7 @@ export async function createLayout(opts) {
     })
   );
 
-  const floorLightIds = groups.singles.flatMap(({ tags }, index) =>
+  const floorHighlightIds = groups.singles.flatMap(({ tags }, index) =>
     tags.includes(svgSymbolTag.light) && tags.includes(svgSymbolTag.floor) ? [index] : []
   );
 
@@ -277,7 +277,7 @@ export async function createLayout(opts) {
     roomGraph,
     lightSrcs,
     lightRects: [], // Computed below
-    floorLightIds,
+    floorHighlightIds,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -501,7 +501,7 @@ function parseConnectorRect(x) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorLightIds,
+  lightSrcs, lightRects, floorHighlightIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -533,7 +533,7 @@ export function serializeLayout({
       ...x,
       rect: x.rect.json,
     })),
-    floorLightIds,
+    floorHighlightIds,
 
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -565,7 +565,7 @@ export function matchedMap(tags, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorLightIds,
+  lightSrcs, lightRects, floorHighlightIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -597,7 +597,7 @@ export function parseLayout({
       ...x,
       rect: Rect.fromJson(x.rect),
     })),
-    floorLightIds,
+    floorHighlightIds,
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,

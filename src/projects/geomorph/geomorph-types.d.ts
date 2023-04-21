@@ -94,7 +94,7 @@ declare namespace Geomorph {
     /**
      * Pointers into `groups.singles`.
      */
-    floorLightIds: number[];
+    floorHighlightIds: number[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];

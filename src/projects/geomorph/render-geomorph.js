@@ -85,22 +85,18 @@ export async function renderGeomorph(
     ctxt.shadowColor = '';
   }
 
-  const floorLights = layout.floorLightIds.map(index => layout.groups.singles[index]);
+  const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
   ctxt.globalCompositeOperation = 'lighter';
-  floorLights.forEach(({ poly, tags }, i) => {
+  floorHighlights.forEach(({ poly, tags }, i) => {
     const { center: position, rect } = poly;
-    const distance = Math.max(rect.width, rect.height) / 2;
-    const parentRoomPoly = layout.rooms.find(x => x.contains(position));
-    if (!parentRoomPoly) {
-      return warn(`render-geomorph: floorLight ${i} was ignored because no parent room`);
-    }
-
+    const distance = Math.min(rect.width, rect.height) / 2;
     const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance);
-    gradient.addColorStop(0, '#bbbb6677');
-    // gradient.addColorStop(1, "#00000077");
+    gradient.addColorStop(0, '#bbbbbb55');
+    gradient.addColorStop(0.4, '#bbbbbb33');
     gradient.addColorStop(1, "#00000000");
     ctxt.fillStyle = gradient;
-    fillPolygons(ctxt, Poly.intersect([parentRoomPoly], [poly]));
+    // fillPolygons(ctxt, Poly.intersect([parentRoomPoly], [poly]));
+    fillPolygons(ctxt, [poly]);
   });
   ctxt.globalCompositeOperation = 'source-over';
 
