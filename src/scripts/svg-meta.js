@@ -15,6 +15,7 @@ import getOpts from 'getopts';
 import asyncPool from 'tiny-async-pool';
 import chalk from 'chalk';
 
+import { svgSymbolTag } from '../projects/service/const';
 import { keys } from '../projects/service/generic';
 import { createLayout, deserializeSvgJson, filterSingles, parseStarshipSymbol, serializeLayout, serializeSymbol } from '../projects/service/geomorph';
 import { triangle } from '../projects/service/triangle';
@@ -55,8 +56,8 @@ const changedSymbols = keys(svgJsonLookup).filter((symbolName) =>
   prevSvgJsonLookup[symbolName].lastModified !== svgJsonLookup[symbolName].lastModified
 );
 const changedLightsSymbols = keys(svgJsonLookup).filter((symbolName) => {
-  const lights = filterSingles(svgJsonLookup[symbolName].singles, 'light');
-  const prevLights = prevSvgJsonLookup?.[symbolName] ? filterSingles(prevSvgJsonLookup[symbolName].singles, 'light') : [];
+  const lights = filterSingles(svgJsonLookup[symbolName].singles, svgSymbolTag.light);
+  const prevLights = prevSvgJsonLookup?.[symbolName] ? filterSingles(prevSvgJsonLookup[symbolName].singles, svgSymbolTag.light) : [];
   return lights.length && (
     !prevSvgJsonLookup?.[symbolName] || (
       prevSvgJsonLookup[symbolName].lastModified !== svgJsonLookup[symbolName].lastModified &&

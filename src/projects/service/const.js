@@ -139,8 +139,10 @@ export const spawnFadeMs = 500;
 export const svgSymbolTag = /** @type {const} */ ({
   /** View positions associated to a single door */
   view: 'view',
-  /** Light positions inside geomorph */
+  /** Light positions or circular/poly/rect floor-lights */
   light: 'light',
+  /** Distinguish lights as floor-lights */
+  floor: 'floor',
 });
 
 export const defaultLightDistance = 300;

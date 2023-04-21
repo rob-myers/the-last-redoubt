@@ -830,6 +830,38 @@
         }
       },
       {
+        "tags": ["light", "floor"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[330, 450], [270, 450], [270, 390], [330, 390]]]
+        }
+      },
+      {
+        "tags": ["light", "floor", "circle"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[330, 300], [330, 360], [270, 360], [270, 300]]]
+        }
+      },
+      {
+        "tags": ["light", "floor"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [160, 370],
+              [220, 370],
+              [220, 430],
+              [190.938, 430],
+              [190, 400],
+              [160, 400],
+              [160, 370],
+              [160, 370]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["poly", "#fff-#000-4"],
         "poly": {
           "type": "Polygon",
@@ -10841,6 +10873,7 @@
       "postDoorIds": []
     }
   ],
+  "floorLightIds": [29, 30, 31],
   "hullPoly": [
     {
       "type": "Polygon",

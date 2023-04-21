@@ -21,7 +21,7 @@ export async function createLayout(opts) {
   const m = new Mat;
 
   /** @type {Geomorph.ParsedLayout['groups']} */
-  const groups = { singles: [], obstacles: [], walls: [] };
+  const groups = { obstacles: [], singles: [], walls: [] };
 
   opts.def.items.forEach((item, i) => {
     m.feedFromArray(item.transform || [1, 0, 0, 1, 0, 0]);
@@ -247,11 +247,18 @@ export async function createLayout(opts) {
   const roomGraph = roomGraphClass.from(roomGraphJson);
 
   /** @type {Geomorph.ParsedLayout['lightSrcs']} */
-  const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light).map(({ poly, tags }) => ({
-    position: poly.center,
-    roomId: findRoomIdContaining(rooms, poly.center),
-    distance: matchedMap(tags, distanceTagRegex, ([, distStr]) => Number(distStr)),
-  }));
+  const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light)
+    .filter(x => !x.tags.includes(svgSymbolTag.floor))
+    .map(({ poly, tags }) => ({
+      position: poly.center,
+      roomId: findRoomIdContaining(rooms, poly.center),
+      distance: matchedMap(tags, distanceTagRegex, ([, distStr]) => Number(distStr)),
+    })
+  );
+
+  const floorLightIds = groups.singles.flatMap(({ tags }, index) =>
+    tags.includes(svgSymbolTag.light) && tags.includes(svgSymbolTag.floor) ? [index] : []
+  );
 
   /** @type {Geomorph.ParsedLayout} */
   const output = {
@@ -269,7 +276,8 @@ export async function createLayout(opts) {
     navZone,
     roomGraph,
     lightSrcs,
-    lightRects: [],
+    lightRects: [], // Computed below
+    floorLightIds,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -493,7 +501,7 @@ function parseConnectorRect(x) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects,
+  lightSrcs, lightRects, floorLightIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -525,6 +533,8 @@ export function serializeLayout({
       ...x,
       rect: x.rect.json,
     })),
+    floorLightIds,
+
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
     hullTop: hullTop.map(x => x.geoJson),
@@ -555,7 +565,7 @@ export function matchedMap(tags, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects,
+  lightSrcs, lightRects, floorLightIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -587,6 +597,8 @@ export function parseLayout({
       ...x,
       rect: Rect.fromJson(x.rect),
     })),
+    floorLightIds,
+
     hullPoly: hullPoly.map(Poly.from),
     hullRect,
     hullTop: hullTop.map(Poly.from),

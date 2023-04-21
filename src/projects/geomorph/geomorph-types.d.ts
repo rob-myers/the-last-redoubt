@@ -44,8 +44,8 @@ declare namespace Geomorph {
   }
 
   interface SvgGroups<T> {
-    singles: SvgGroupsSingle<T>[];
     obstacles: T[];
+    singles: SvgGroupsSingle<T>[];
     walls: T[];
   }
 
@@ -91,6 +91,10 @@ declare namespace Geomorph {
      * We'll reorganise these by door id.
      */
     lightRects: BaseLightDoorRect<R>[];
+    /**
+     * Pointers into `groups.singles`.
+     */
+    floorLightIds: number[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];

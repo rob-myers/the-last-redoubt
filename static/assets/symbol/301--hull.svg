@@ -110,6 +110,15 @@
     <rect x="225" y="470" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-60</title>
     </rect>
+    <rect x="270" y="390" width="60" height="60" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 720, 120.000008)">
+      <title>light floor</title>
+    </rect>
+    <rect x="270" y="300" width="60" height="60" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;">
+      <title>light floor circle</title>
+    </rect>
+    <path d="M 160 370 L 220 370 L 220 430 L 190.938 430 L 190 400 L 160 400 L 160 370 Z" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;">
+      <title>light floor</title>
+    </path>
     <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
       <title>poly #fff-#000-4</title>
     </path>

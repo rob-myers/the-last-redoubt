@@ -15044,6 +15044,7 @@
       "postDoorIds": []
     }
   ],
+  "floorLightIds": [],
   "hullPoly": [
     {
       "type": "Polygon",
