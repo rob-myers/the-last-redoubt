@@ -805,12 +805,25 @@ export function computeLightPolygons(gm, intersectWithCircle = false) {
     }
   });
 
-  if (intersectWithCircle) {
-    return lightPolys.map((lightPoly, lightId) => {
+  
+  if (intersectWithCircle) {// ℹ️ for GeomorphEdit
+
+    const restrictedLightPolys = lightPolys.map((lightPoly, lightId) => {
       const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
       const circlePoly = Poly.circle(position, distance, 30);
       return Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly;
-    })
+    });
+
+    for (let i = 0; i < restrictedLightPolys.length; i++) {
+      for (let j = i + 1; j < restrictedLightPolys.length; j++) {
+        const [pi, pj] = [i, j].map(k => restrictedLightPolys[k]);
+        if (pi.rect.intersects(pj.rect) && Poly.intersect([pi], [pj]).length) {
+          warn(`computeLightPolygons: light polys ${i}, ${j} should not be intersecting`);
+        }
+      }
+    }
+
+    return restrictedLightPolys;
   } else {
     return lightPolys;
   }

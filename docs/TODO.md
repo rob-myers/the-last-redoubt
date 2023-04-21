@@ -2,23 +2,23 @@
 
 ## In progress
 
-
-- 🚧 geomorph png improvements
-  - ✅ drop shadow e.g. around bed
-    > https://stackoverflow.com/a/71205007/2917822
-  - ✅ lighter: dark overlay could be less dark?
-  - 🚧 fix lights and improve bug detect
-    - warn when two lights intersect
-  - 🚧 support constant lit rect/circles
-  - ❌ unlit symbol pngs?
-
+- ✅ drop shadow e.g. around bed
+  > https://stackoverflow.com/a/71205007/2917822
+- ✅ lighter: dark overlay could be less dark?
+- ✅ warn when two lights intersect (GeomorphEdit)
 - ✅ prevent warns when nav degenerate (as in GeomorphEdit)
   - gm 301:  29 `gm.navZone.groups` and 29 doors...
 
+- 🚧 support `floor-light`s i.e. constant lit circle/poly/rect
+- 🚧 fix extant lights
 - big doors -> double doors (e.g. hull doors)
+- ensure doors pause and/or initially can start open
+- ❌ unlit symbol pngs?
+
 - more `ui do` points
 - more `orient-{deg}` tags
-- Play with Chrome devtool recorder
+
+- 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
 
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
