@@ -85,6 +85,25 @@ export async function renderGeomorph(
     ctxt.shadowColor = '';
   }
 
+  const floorLights = layout.floorLightIds.map(index => layout.groups.singles[index]);
+  ctxt.globalCompositeOperation = 'lighter';
+  floorLights.forEach(({ poly, tags }, i) => {
+    const { center: position, rect } = poly;
+    const distance = Math.max(rect.width, rect.height) / 2;
+    const parentRoomPoly = layout.rooms.find(x => x.contains(position));
+    if (!parentRoomPoly) {
+      return warn(`render-geomorph: floorLight ${i} was ignored because no parent room`);
+    }
+
+    const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance);
+    gradient.addColorStop(0, '#bbbb6677');
+    // gradient.addColorStop(1, "#00000077");
+    gradient.addColorStop(1, "#00000000");
+    ctxt.fillStyle = gradient;
+    fillPolygons(ctxt, Poly.intersect([parentRoomPoly], [poly]));
+  });
+  ctxt.globalCompositeOperation = 'source-over';
+
   hullSym.singles.forEach(({ poly, tags }) => {
     if (tags.includes('wall')) {// Hull wall singles
       setStyle(ctxt, '#000');
@@ -113,7 +132,6 @@ export async function renderGeomorph(
   });
 
   //#endregion
-
 
   const initTransform = ctxt.getTransform();
 
@@ -154,7 +172,6 @@ export async function renderGeomorph(
   if (thinDoors) {
     drawThinDoors(ctxt, layout);
   }
-
   if (labels) {
     ctxt.font = labelMeta.font;
     ctxt.textBaseline = 'top';

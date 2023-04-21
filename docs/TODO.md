@@ -9,10 +9,14 @@
 - ✅ prevent warns when nav degenerate (as in GeomorphEdit)
   - gm 301:  29 `gm.navZone.groups` and 29 doors...
 
-- 🚧 support `floor-light`s i.e. constant lit circle/poly/rect
+- ✅ support `light floor` i.e. constant lit circle
+  - ✅ add some test floor lights
+  - ✅ restrict floor lights to their parent room
+  - ✅ render floor lights in unlit/lit png
 - 🚧 fix extant lights
 - big doors -> double doors (e.g. hull doors)
 - ensure doors pause and/or initially can start open
+  - maybe use web animations api?
 - ❌ unlit symbol pngs?
 
 - more `ui do` points
