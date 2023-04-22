@@ -14,10 +14,8 @@
   - ✅ restrict floor lights to their parent room
   - ✅ render floor lights in unlit/lit png
 - ✅ floorLights -> floorHighlights
-- 🚧 fix/redo extant lights e.g. replacing some with floorHighlights
 - ✅ non-iris doors -> double doors (including hull doors)
-- ensure doors pause and/or initially can start open
-  - maybe use web animations api?
+- 🚧 fix/redo extant lights e.g. replacing some with floorHighlights
 - ❌ unlit symbol pngs?
 
 - more `ui do` points
@@ -29,6 +27,8 @@
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
+- ensure doors pause and/or initially can start open
+  - maybe use web animations api?
 
 - BUG? `click 1>foo`
 - BUG? HMR sometimes seems to break FOV change on enter room
