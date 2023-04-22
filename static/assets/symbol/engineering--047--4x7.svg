@@ -9,12 +9,12 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect y="300" width="210.045" height="900" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="989.955" bx:origin="0.5 0.49851"/>
-    <rect y="375" width="149.955" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
-    <rect y="675" width="149.955" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
-    <rect y="975" width="149.955" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
+    <path d="M 990 300 L 1200.045 300 L 1200.045 1200 L 990 1200 L 990 1133.469 L 1022.46 1090.47 L 1024.951 1052.414 L 1022.46 1019.874 L 990 966.685 L 990 834.687 L 1022.417 776.09 L 1025.851 745.418 L 1022.35 711.73 L 990 666.361 L 990 534.414 L 1024 485.307 L 1027.038 450.413 L 1024 423.274 L 990 366.797 L 990 300 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" bx:origin="0.5 0.49851"/>
+    <rect y="375" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
     <rect y="50" width="500" height="200" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="650" bx:origin="0.5 0.49851"/>
-    <rect y="350" width="250" height="800" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="50" bx:origin="0.5 0.49851"/>
+    <rect y="350" width="230" height="800" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="50" bx:origin="0.5 0.49851"/>
+    <rect y="675" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
+    <rect y="975" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
   </g>
   <g>
     <title>singles</title>

@@ -45,9 +45,6 @@
     <rect x="1027.2" y="236.7" width="46" height="6" style="stroke: rgb(0, 0, 0); fill: rgb(68, 68, 68);">
       <title>door iris</title>
     </rect>
-    <rect x="1018" y="238" width="63.9" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>wall</title>
-    </rect>
     <rect x="606.493" y="458.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
@@ -71,12 +68,6 @@
     </rect>
     <rect x="856.493" y="188.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
-    </rect>
-    <rect x="1003.931" width="90" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="149.12">
-      <title>relate-connectors</title>
-    </rect>
-    <rect x="1003.931" width="90" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="199.12" transform="matrix(0.809017, -0.587785, 0.587785, 0.809017, 80.349274, 635.529663)">
-      <title>relate-connectors</title>
     </rect>
     <rect x="1176.493" y="18.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-120</title>
@@ -104,6 +95,27 @@
     </rect>
     <rect x="1106.493" y="738.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-260</title>
+    </rect>
+    <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 940, 331.664978)">
+      <title>light floor</title>
+    </rect>
+    <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1670, 331.664978)">
+      <title>light floor</title>
+    </rect>
+    <rect x="1003.931" width="90" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="149.12">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="1003.931" width="90" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="199.12" transform="matrix(0.809017, -0.587785, 0.587785, 0.809017, 80.349274, 635.529663)">
+      <title>relate-connectors</title>
+    </rect>
+    <rect x="1018" y="238" width="63.9" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>wall</title>
+    </rect>
+    <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 940, -328.335022)">
+      <title>light floor</title>
+    </rect>
+    <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1660, -368.334991)">
+      <title>light floor</title>
     </rect>
   </g>
 </svg>

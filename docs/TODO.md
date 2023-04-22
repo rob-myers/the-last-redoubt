@@ -15,11 +15,12 @@
   - ✅ render floor lights in unlit/lit png
 - ✅ floorLights -> floorHighlights
 - ✅ non-iris doors -> double doors (including hull doors)
-- 🚧 fix/redo extant lights e.g. replacing some with floorHighlights
-- ❌ unlit symbol pngs?
 
+- ✅ fix/redo extant lights e.g. replacing some with floorHighlights
+- ✅ warn when two lights rects intersect
 - more `ui do` points
 - more `orient-{deg}` tags
+- ❌ unlit symbol pngs?
 
 - 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
