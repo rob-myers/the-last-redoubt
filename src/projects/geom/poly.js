@@ -70,8 +70,9 @@ export class Poly {
   }
 
   get svgPath() {
-    return [this.outline, ...this.holes]
-      .map(ring => `M${ring}Z`).join(' ');
+    return this.outline.length
+      ? [this.outline, ...this.holes].map(ring => `M${ring}Z`).join(' ')
+      : '';
   }
 
   /** Compute tangents of exterior and holes. */
