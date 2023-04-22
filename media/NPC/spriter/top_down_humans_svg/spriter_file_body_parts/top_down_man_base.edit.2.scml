@@ -94,6 +94,9 @@
         <file id="33" name="upper_body/blue_lower_arm_down.png" width="436" height="611" pivot_x="0" pivot_y="1"/>
         <file id="34" name="upper_body/blue_upper_arm_03.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
         <file id="35" name="upper_body/blue_lower_arm_01.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="36" name="upper_body/brown_lower_arm_01.png" width="417" height="584" pivot_x="0" pivot_y="1"/>
+        <file id="37" name="upper_body/brown_upper_arm_01.png" width="488" height="863" pivot_x="0" pivot_y="1"/>
+        <file id="38" name="upper_body/brown_upper_arm_03.png" width="488" height="859" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="5" name="torso">
         <file id="0" name="torso/lumberjack_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
@@ -108,6 +111,7 @@
         <file id="9" name="torso/blue_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
         <file id="10" name="torso/blue_shirt_dead.png" width="847" height="1088" pivot_x="0" pivot_y="1"/>
         <file id="11" name="torso/brown_shirt_top.png" width="1410" height="840" pivot_x="0" pivot_y="1"/>
+        <file id="12" name="torso/brown_shirt_dead.png" width="847" height="1088" pivot_x="0" pivot_y="1"/>
     </folder>
     <folder id="6" name="torso_overlay">
         <file id="0" name="torso_overlay/hi_vis_above.png" width="1161" height="725" pivot_x="0" pivot_y="1"/>
@@ -404,6 +408,12 @@
             <map folder="6" file="0"/>
             <map folder="6" file="1"/>
             <map folder="10" file="1"/>
+            <map folder="4" file="5" target_folder="4" target_file="36"/>
+            <map folder="4" file="4" target_folder="4" target_file="37"/>
+            <map folder="4" file="2" target_folder="4" target_file="27"/>
+            <map folder="4" file="1" target_folder="4" target_file="38"/>
+            <map folder="6" file="2"/>
+            <map folder="5" file="2" target_folder="5" target_file="12"/>
         </character_map>
         <animation id="0" name="idle" length="2000" interval="2000" l="-830" t="-480" r="829" b="479">
             <mainline>
