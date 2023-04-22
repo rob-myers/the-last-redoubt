@@ -1641,7 +1641,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-0", "orient-0"],
+        "tags": ["decor", "do", "lie", "bed", "orient-180", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [

@@ -3861,7 +3861,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-0"],
+        "tags": ["decor", "do", "lie", "bed", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -4286,7 +4286,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
-    "lastModified": 1682177843319.4849
+    "lastModified": 1682178853944.6143
   },
   "console--018--1x1": {
     "key": "console--018--1x1",
