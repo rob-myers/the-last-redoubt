@@ -8964,20 +8964,6 @@
     ],
     "singles": [
       {
-        "tags": ["door"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[585, 640], [585, 860], [615, 860], [615, 640]]]
-        }
-      },
-      {
-        "tags": ["wall"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[590, -10], [590, 900], [610, 900], [610, -10]]]
-        }
-      },
-      {
         "tags": ["decor", "go", "label", "room", "bedroom"],
         "poly": {
           "type": "Polygon",
@@ -8987,7 +8973,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "lie", "bed", "orient-90"],
+        "tags": ["decor", "do", "lie", "bed", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[150, 345], [150, 355], [160, 355], [160, 345]]]
@@ -9013,10 +8999,24 @@
           "type": "Polygon",
           "coordinates": [[[470, 370], [470, 380], [480, 380], [480, 370]]]
         }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[585, 640], [585, 860], [615, 860], [615, 640]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[590, -10], [590, 900], [610, 900], [610, -10]]]
+        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1680279679286.3179
+    "lastModified": 1682167280105.1814
   },
   "stateroom--035--2x3": {
     "key": "stateroom--035--2x3",
