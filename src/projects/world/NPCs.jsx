@@ -128,7 +128,9 @@ export default function NPCs(props) {
     },
     async fadeSpawnDo(npc, e, meta) {
       try {
-        await npc.animateOpacity(0, spawnFadeMs);
+        if (e.fadeInMs !== 0) {
+          await npc.animateOpacity(0, e.fadeInMs ?? spawnFadeMs);
+        }
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
       } finally {
@@ -445,7 +447,7 @@ export default function NPCs(props) {
       const npcPosition = npc.getPosition();
       const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
       const meta = npcService.extendDecorMeta(e.point.meta, gm.matrix);
-
+      
       try {
         const npcOnNavMesh = state.isPointInNavmesh(npcPosition);
         if (npcOnNavMesh) {// Started on-mesh and clicked point
@@ -470,6 +472,7 @@ export default function NPCs(props) {
             point: decorPoint,
             angle: meta.orientRadians,
             requireNav: false,
+            fadeInMs: e.fadeInMs,
           }, meta);
 
         } else {// Started off-mesh and clicked point
@@ -491,6 +494,7 @@ export default function NPCs(props) {
             point: meta.nav ? e.point : meta.targetPos,
             // Orient if staying off-mesh
             angle: meta.nav ? undefined : meta.orientRadians,
+            fadeInMs: e.fadeInMs,
           }, meta);
         }
 
@@ -825,7 +829,7 @@ const rootCss = css`
  *
  * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
- * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'], meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
+ * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeInMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav

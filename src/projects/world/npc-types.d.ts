@@ -374,7 +374,7 @@ declare namespace NPC {
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geom.VectJson & { meta: Geomorph.PointMeta }; }
+    | { action: 'do'; npcKey: string; point: Geom.VectJson & { meta: Geomorph.PointMeta }; fadeInMs?: number; }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }

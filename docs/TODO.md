@@ -18,16 +18,21 @@
 
 - ✅ fix/redo extant lights e.g. replacing some with floorHighlights
 - ✅ warn when two lights rects intersect
-- more `ui do` points
-- more `orient-{deg}` tags
 - ❌ unlit symbol pngs?
+
+- ✅ `spawn` at do point triggers action
+- respawn on do point triggers action
+- remove tag `no-turn`?
+- 🚧 more `do` points
+- 🚧 more `orient-{deg}` tags
 
 - 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
 
-- npcs-meta.json has timestamps to avoid process-sheets recomputing everything
+- sit legs should be under table e.g. via mask
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
+- npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - ensure doors pause and/or initially can start open
   - maybe use web animations api?
 

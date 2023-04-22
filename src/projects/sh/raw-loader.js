@@ -352,7 +352,11 @@
         const threeArgs = args.length === 3;
         const npcClassKey = threeArgs ? /** @type {NPC.NpcClassKey} */ (args[1]) : undefined;
         const point = api.parseJsArg(args[threeArgs ? 2 : 1])
+
         await npcs.spawn({ npcKey, point, npcClassKey })
+        if (point?.meta?.do) {// 🚧 will not work if we respawn on top
+          await npcs.npcActDo({ npcKey, point, action: "do", fadeInMs: 0 })
+        }
       } else {
         // { npcKey, [npcClassKey], point }
         while ((datum = await api.read()) !== null)
