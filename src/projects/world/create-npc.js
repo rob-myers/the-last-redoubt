@@ -138,7 +138,8 @@ export default function createNpc(
     canLook() {
       return (
         (this.anim.spriteSheet === 'idle' || this.anim.spriteSheet === 'idle-breathe')
-        && (!this.doMeta || this.doMeta['no-turn'] !== true)
+        && !this.doMeta
+        // && (!this.doMeta || this.doMeta['no-turn'] !== true)
       );
     },
     clearWayMetas() {
