@@ -786,6 +786,15 @@ export function computeLightDoorRects(gm) {
     depthFirstLightRects(light, roomId, { doorIds: [], roomIds: [], lightRects: [] }, 3);
   });
 
+  for (let i = 0; i < lightRects.length; i++) {
+    for (let j = i + 1; j < lightRects.length; j++) {
+      const [ri, rj] = [i, j].map(k => lightRects[k]);
+      if ((ri.lightId !== rj.lightId) && ri.rect.intersects(rj.rect)) {
+        warn(`computeLightDoorRects: light rects for lights ${ri.lightId}, ${rj.lightId} should not be intersecting`);
+      }
+    }
+  }
+
   return lightRects;
 }
 
