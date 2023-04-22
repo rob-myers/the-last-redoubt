@@ -184,6 +184,7 @@ const layoutDefs = {
       { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 390, -6] },
       { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 510, -6] },
       { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 630, -6] },
+      // { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 870, -6] },
     ],
   },
 };

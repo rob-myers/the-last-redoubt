@@ -130,8 +130,14 @@
     <rect x="1182.368" y="40.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-80</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1040.414429, -176.114044)">
-      <title>light floor circle</title>
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1041.414429, -176.114044)">
+      <title>light floor</title>
+    </rect>
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1500.414429, -176.114044)">
+      <title>light floor</title>
+    </rect>
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1800, -516.666992)">
+      <title>light floor</title>
     </rect>
     <rect x="1077.5" width="5" height="90" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="370">
       <title>parallel-connectors</title>
@@ -195,12 +201,6 @@
     </rect>
     <rect x="240" y="409.9" width="180" height="14.1" style="fill-opacity: 0.4; opacity: 0.8;">
       <title>window</title>
-    </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1500.414429, -176.114044)">
-      <title>light floor circle</title>
-    </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1800, -516.666992)">
-      <title>light floor circle</title>
     </rect>
   </g>
 </svg>
