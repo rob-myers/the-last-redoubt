@@ -3880,16 +3880,16 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [1915, 1381.858],
-              [1915, 1391.858],
-              [1925, 1391.858],
-              [1925, 1381.858]
+              [1915, 1361.858],
+              [1915, 1371.858],
+              [1925, 1371.858],
+              [1925, 1361.858]
             ]
           ]
         }
       },
       {
-        "tags": ["decor", "do", "stand", "sink", "orient-90"],
+        "tags": ["decor", "do", "stand", "sink", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3903,7 +3903,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "sink", "orient-90"],
+        "tags": ["decor", "do", "stand", "sink", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -4286,7 +4286,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
-    "lastModified": 1682175706963.8088
+    "lastModified": 1682177843319.4849
   },
   "console--018--1x1": {
     "key": "console--018--1x1",

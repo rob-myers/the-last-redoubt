@@ -1654,12 +1654,12 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[745, 336.3716], [745, 338.3716], [743, 338.3716], [743, 336.3716]]
+            [[745, 332.3716], [745, 334.3716], [743, 334.3716], [743, 332.3716]]
           ]
         }
       },
       {
-        "tags": ["decor", "do", "stand", "sink", "orient-90", "orient-90"],
+        "tags": ["decor", "do", "stand", "sink", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1668,7 +1668,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "sink", "orient-90", "orient-90"],
+        "tags": ["decor", "do", "stand", "sink", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
