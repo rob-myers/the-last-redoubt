@@ -31,17 +31,155 @@
     <path d="M 316 315 L 343 343 L 311 376 L 186 531 L 84 721 L 25.4 892 L 1212 892 L 1212 913 L -16 910.4 L -16 902 L 49 710 L 116 576 L 183 468 L 282 350 L 316 315 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);"/>
     <path d="M 2393 902 L 2420 874 L 2388 841 L 2284 714 L 2193 565 L 2131 415 L 2101 315 L 2061 315 L 2125 506 L 2193 641 L 2260 749 L 2359 867 L 2393 902 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" transform="matrix(-1, 0, 0, -1, 4481, 1217)"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
-    <path d="M 323 290.2 L 478 160.2 L 668 50.2 L 873 -24.8 L 1093 -59.8 L 1308 -64.8 L 1523 -24.8 L 1733 50.2 L 1923 160.2 L 2078 290.2 L 2098 315.2 L 2063 350.2 L 2038 330.2 L 1888 205.2 L 1708 105.2 L 1508 30.2 L 1303 -9.8 L 1093 -9.8 L 888 30.2 L 693 105.2 L 513 210.2 L 368 330.2 L 343 355.2 L 298 315.2 L 323 290.2 Z" style="stroke: rgb(0, 0, 0); fill-opacity: 0.31;">
-      <title>window</title>
-    </path>
-    <rect x="900" y="1502" width="892" height="62" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0);">
-      <title>window frosted</title>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="745" y="370">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1045" y="370">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1345" y="370">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1645" y="370">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="235" y="1591.858">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="305" y="1851.858">
+      <title>decor do sit chair orient-240</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="549">
+      <title>decor go label room bridge</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="703" y="775">
+      <title>decor go label room locker</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1603" y="775">
+      <title>decor go label room locker</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="253" y="1299">
+      <title>decor go label room locker</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2053" y="1229">
+      <title>decor go label room toilet</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="1811">
+      <title>decor go label room briefing</title>
+    </rect>
+    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="402" y="2040" bx:origin="0.5 0.5">
+      <title>decor go label fuel</title>
+    </rect>
+    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2000" y="2040">
+      <title>decor go label fuel</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1932" y="1899">
+      <title>decor go label room bedroom</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="403" y="1899">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="1022.856" y="913.5" width="20" height="20" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
+      <title>decor go label room corridor</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1721.858">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1721.858">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1255" y="1721.858">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1721.858">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1991.858">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1991.858">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1255" y="1991.858">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1991.858">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="875" y="1855">
+      <title>decor do sit chair orient-0</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1515" y="1855">
+      <title>decor do sit chair orient-180</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2045" y="1631.858">
+      <title>decor do lie bed orient-0</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1915" y="1381.858">
+      <title>decor do stand sink orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2095" y="1381.858">
+      <title>decor do stand sink orient-90</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2275" y="1381.858">
+      <title>decor do stand sink orient-90</title>
+    </rect>
+    <rect x="588.138" y="1830" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px; paint-order: fill;">
+      <title>door</title>
+    </rect>
+    <rect x="1788.5" y="1830" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
+      <title>door</title>
+    </rect>
+    <rect x="1788.5" y="1235" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
+      <title>door</title>
+    </rect>
+    <rect x="588" y="1235" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
+      <title>door</title>
+    </rect>
+    <rect x="426.008" y="870.7" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, -235.700012, 1189.008057)">
+      <title>door</title>
+    </rect>
+    <rect x="425.993" y="870.7" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, 664.299988, 1188.993042)">
+      <title>door</title>
+    </rect>
+    <rect x="425.994" y="869" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, -234, 1940.994019)">
+      <title>door</title>
+    </rect>
+    <rect x="2387.516" y="935" width="25.206" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill-opacity: 0.5; fill: rgb(255, 255, 255);">
+      <title>door iris</title>
+    </rect>
+    <rect y="935" width="24" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 255, 255);" x="-12">
+      <title>door iris</title>
+    </rect>
+    <rect x="1187.525" y="750.8" width="24" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill-opacity: 0.5; fill: rgb(255, 255, 255);" transform="matrix(0, -1, 1, 0, 484.200012, 2101.524902)">
+      <title>door iris</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="300" y="650">
+      <title>label cpu</title>
+    </rect>
+    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2000" y="650">
+      <title>label cpu</title>
+    </rect>
+    <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+      <title>view</title>
+    </rect>
+    <rect x="647.944" y="714.635" width="20" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
+      <title>view</title>
+    </rect>
+    <rect x="1731.948" y="1142.035" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 3175.512207, -399.684174)">
+      <title>view</title>
     </rect>
     <path d="M 2383 1203 L 2420 1203 L 2419 2719 L 1201 2721 L 1200 2721 L -17 2719 L -18 1213 L -18 1192 L 609 1192 L 609 1213 L 20 1213 L 43 1432 L 95 1610 L 179 1795 L 337 2014 L 590 2217 L 907 2351 L 1201 2387 L 1495 2351 L 1812 2217 L 2065 2014 L 2223 1795 L 2307 1610 L 2359 1432 L 2383 1203 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);">
       <title>wall no-fill</title>
     </path>
+    <rect y="741.1" width="300" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="1503">
+      <title>wall</title>
+    </rect>
+    <rect y="900" width="20" height="300" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="2390">
+      <title>wall</title>
+    </rect>
     <rect x="900" y="1502" width="892" height="62" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; stroke: rgb(0, 0, 0);">
       <title>wall</title>
     </rect>
@@ -87,89 +225,11 @@
     <rect y="741.1" width="300" height="19" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="600">
       <title>wall</title>
     </rect>
-    <rect x="588.138" y="1830" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px; paint-order: fill;">
-      <title>door</title>
-    </rect>
-    <rect x="1788.5" y="1830" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
-      <title>door</title>
-    </rect>
-    <rect x="1788.5" y="1235" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
-      <title>door</title>
-    </rect>
-    <rect x="588" y="1235" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
-      <title>door</title>
-    </rect>
-    <rect x="426.008" y="870.7" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, -235.700012, 1189.008057)">
-      <title>door</title>
-    </rect>
-    <rect x="425.993" y="870.7" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, 664.299988, 1188.993042)">
-      <title>door</title>
-    </rect>
-    <rect x="425.994" y="869" width="24" height="230" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" transform="matrix(0, -1, 1, 0, -234, 1940.994019)">
-      <title>door</title>
-    </rect>
-    <rect x="2387.516" y="935" width="25.206" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill-opacity: 0.5; fill: rgb(255, 255, 255);">
-      <title>door iris</title>
-    </rect>
-    <rect y="935" width="24" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 255, 255);" x="-12">
-      <title>door iris</title>
-    </rect>
-    <rect x="1187.525" y="750.8" width="24" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill-opacity: 0.5; fill: rgb(255, 255, 255);" transform="matrix(0, -1, 1, 0, 484.200012, 2101.524902)">
-      <title>door iris</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="549">
-      <title>decor go label room bridge</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="703" y="775">
-      <title>decor go label room locker</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1603" y="775">
-      <title>decor go label room locker</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="253" y="1299">
-      <title>decor go label room locker</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2053" y="1229">
-      <title>decor go label room toilet</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="1811">
-      <title>decor go label room briefing</title>
-    </rect>
-    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="402" y="2040" bx:origin="0.5 0.5">
-      <title>decor go label fuel</title>
-    </rect>
-    <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2000" y="2040">
-      <title>decor go label fuel</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1932" y="1899">
-      <title>decor go label room bedroom</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="403" y="1899">
-      <title>decor go label room office</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="300" y="650">
-      <title>label cpu</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2000" y="650">
-      <title>label cpu</title>
-    </rect>
-    <rect y="741.1" width="300" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="1503">
-      <title>wall</title>
-    </rect>
-    <rect y="900" width="20" height="300" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="2390">
-      <title>wall</title>
-    </rect>
-    <rect x="1022.856" y="913.5" width="20" height="20" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
-      <title>decor go label room corridor</title>
-    </rect>
-    <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>view</title>
-    </rect>
-    <rect x="647.944" y="714.635" width="20" height="233.32" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
-      <title>view</title>
-    </rect>
-    <rect x="1731.948" y="1142.035" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 3175.512207, -399.684174)">
-      <title>view</title>
+    <path d="M 323 290.2 L 478 160.2 L 668 50.2 L 873 -24.8 L 1093 -59.8 L 1308 -64.8 L 1523 -24.8 L 1733 50.2 L 1923 160.2 L 2078 290.2 L 2098 315.2 L 2063 350.2 L 2038 330.2 L 1888 205.2 L 1708 105.2 L 1508 30.2 L 1303 -9.8 L 1093 -9.8 L 888 30.2 L 693 105.2 L 513 210.2 L 368 330.2 L 343 355.2 L 298 315.2 L 323 290.2 Z" style="stroke: rgb(0, 0, 0); fill-opacity: 0.31;">
+      <title>window</title>
+    </path>
+    <rect x="900" y="1502" width="892" height="62" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0);">
+      <title>window frosted</title>
     </rect>
   </g>
 </svg>
