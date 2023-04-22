@@ -238,6 +238,12 @@ export default function Doors(props) {
                   data-door_id={i}
                   data-meta={doorTouchUiMeta}
                 />
+                <div
+                  className="other-door"
+                  style={{
+                    transform: `translate(${door.baseRect.width}px, -1px) scale(-1, 1)`,
+                  }}
+                />
               </div>
             )
           }
@@ -263,29 +269,23 @@ const rootCss = css`
     position: absolute;
     pointer-events: none;
     
-    .${cssName.doorTouchUi} {
-      cursor: pointer;
-      pointer-events: all;
-      position: absolute;
-
-      width: calc(100% + 2 * var(${cssName.npcDoorTouchRadius}));
-      min-width: calc( 2 * var(${cssName.npcDoorTouchRadius}) );
-      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ doorWidth / 2 }px ); /** 5px for hull */
-      left: calc(-1 * var(${cssName.npcDoorTouchRadius}));
-      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
-
-      background: rgba(100, 0, 0, 0.1);
-      border-radius: var(${cssName.npcDoorTouchRadius});
-    }
-
     &:not(.${cssName.iris}) {
       /* background: #444; */
       background: #fff;
       border: 1px solid #000000aa;
-
+      
       transition: width 300ms ease-in;
       &.${cssName.open} {
         width: 4px !important;
+      }
+      .other-door {
+        position: absolute;
+        width: inherit;
+        height: inherit;
+        border: 1px solid #000000aa;
+        background: #fff;
+        transform-origin: top left;
+        transform: scale(-1, 1);
       }
     }
 
@@ -306,6 +306,21 @@ const rootCss = css`
       &.${cssName.open} {
         opacity: 0.2;
       }
+    }
+
+    .${cssName.doorTouchUi} {
+      cursor: pointer;
+      pointer-events: all;
+      position: absolute;
+
+      width: calc(100% + 2 * var(${cssName.npcDoorTouchRadius}));
+      min-width: calc( 2 * var(${cssName.npcDoorTouchRadius}) );
+      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ doorWidth / 2 }px ); /** 5px for hull */
+      left: calc(-1 * var(${cssName.npcDoorTouchRadius}));
+      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
+
+      background: rgba(100, 0, 0, 0.1);
+      border-radius: var(${cssName.npcDoorTouchRadius});
     }
   }
 `;

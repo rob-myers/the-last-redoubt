@@ -14,8 +14,8 @@
   - ✅ restrict floor lights to their parent room
   - ✅ render floor lights in unlit/lit png
 - ✅ floorLights -> floorHighlights
-- 🚧 fix extant lights
-- big doors -> double doors (e.g. hull doors)
+- 🚧 fix/redo extant lights e.g. replacing some with floorHighlights
+- ✅ non-iris doors -> double doors (including hull doors)
 - ensure doors pause and/or initially can start open
   - maybe use web animations api?
 - ❌ unlit symbol pngs?
