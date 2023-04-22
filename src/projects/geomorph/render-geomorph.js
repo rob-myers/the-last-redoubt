@@ -37,6 +37,7 @@ export async function renderGeomorph(
   },
 ) {
   const hullSym = lookup[layout.items[0].key];
+  const hullPoly = hullSym.hull[0];
   const pngRect = hullSym.pngRect;
   canvas.width = pngRect.width * scale;
   canvas.height = pngRect.height * scale;
@@ -50,9 +51,8 @@ export async function renderGeomorph(
 
   //#region underlay
   ctxt.fillStyle = floorColor;
-  if (hullSym.hull.length === 1 && hullSym.hull[0].holes.length) {
-    const hullOutline = hullSym.hull[0].outline;
-    fillRing(ctxt, hullOutline);
+  if (hullSym.hull.length === 1 && hullPoly.holes.length) {
+    fillRing(ctxt, hullPoly.outline);
   } else {
     error('hull walls must exist, be connected, and have a hole');
   }
@@ -86,6 +86,7 @@ export async function renderGeomorph(
   }
 
   const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
+  const hullOutlinePoly = new Poly(hullPoly.outline);
   ctxt.globalCompositeOperation = 'lighter';
   floorHighlights.forEach(({ poly, tags }, i) => {
     const { center: position, rect } = poly;
@@ -95,8 +96,9 @@ export async function renderGeomorph(
     gradient.addColorStop(0.4, '#bbbbbb33');
     gradient.addColorStop(1, "#00000000");
     ctxt.fillStyle = gradient;
-    // fillPolygons(ctxt, Poly.intersect([parentRoomPoly], [poly]));
-    fillPolygons(ctxt, [poly]);
+    // Must restrict to hull poly outline
+    fillPolygons(ctxt, Poly.intersect([hullOutlinePoly], [poly]));
+    // fillPolygons(ctxt, [poly]);
   });
   ctxt.globalCompositeOperation = 'source-over';
 
@@ -118,6 +120,8 @@ export async function renderGeomorph(
         warn(`render-geomorph: tags[0] "poly" but tags[1] has unexpected format: ${tags[1]}`);
       }
     }
+  });
+  hullSym.singles.forEach(({ poly, tags }) => {// Always above poly
     if (tags.includes('fuel')) {
       setStyle(ctxt, '#aaa', '#000', 2);
       fillPolygons(ctxt, [poly]), ctxt.stroke();
