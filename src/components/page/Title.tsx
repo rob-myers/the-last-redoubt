@@ -43,7 +43,7 @@ const titleCss = css`
     text-shadow: 0 0 8px var(--title-text-shadow-color);
     
     @media(max-width: 1200px) {
-      font-size: 4.4rem;
+      font-size: 4rem;
     }
     @media(max-width: 800px) {
       text-shadow: 0 0 4px var(--title-text-shadow-color);
