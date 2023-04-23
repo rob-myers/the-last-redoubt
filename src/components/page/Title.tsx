@@ -13,7 +13,7 @@ export default function Title() {
         {siteTitle}
       </h1>
       <p>
-        Interactive video game character behaviour
+        Making videos games more meaningful
       </p>
     </header>
   );
@@ -33,10 +33,10 @@ const titleCss = css`
     margin-top: 40px;
     margin-left: 4px;
 
-    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    /* font-family: 'Courier New', Courier, monospace; */
     font-size: 4.8rem;
-    font-weight: 500;
+    font-weight: 300;
     letter-spacing: 4px;
     cursor: pointer;
     color: var(--page-title-color);
