@@ -2,29 +2,17 @@
 
 ## In progress
 
-- ✅ drop shadow e.g. around bed
-  > https://stackoverflow.com/a/71205007/2917822
-- ✅ lighter: dark overlay could be less dark?
-- ✅ warn when two lights intersect (GeomorphEdit)
-- ✅ prevent warns when nav degenerate (as in GeomorphEdit)
-  - gm 301:  29 `gm.navZone.groups` and 29 doors...
-
-- ✅ support `light floor` i.e. constant lit circle
-  - ✅ add some test floor lights
-  - ✅ restrict floor lights to their parent room
-  - ✅ render floor lights in unlit/lit png
-- ✅ floorLights -> floorHighlights
-- ✅ non-iris doors -> double doors (including hull doors)
-
-- ✅ fix/redo extant lights e.g. replacing some with floorHighlights
-- ✅ warn when two lights rects intersect
+- ℹ️ looks better without map visible!
+- work out UI to show/hide map?
 - ❌ unlit symbol pngs?
 
 - ✅ `spawn` at do point triggers action
-- respawn on do point triggers action
 - remove tag `no-turn`?
+- clean up bridge window/fuel?
 - 🚧 more `do` points
 - 🚧 more `orient-{deg}` tags
+- respawn on do point should trigger action
+  - seems we're clicking npc, not a do point
 
 - 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
@@ -442,6 +430,23 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ drop shadow e.g. around bed
+  > https://stackoverflow.com/a/71205007/2917822
+- ✅ lighter: dark overlay could be less dark?
+- ✅ warn when two lights intersect (GeomorphEdit)
+- ✅ prevent warns when nav degenerate (as in GeomorphEdit)
+  - gm 301:  29 `gm.navZone.groups` and 29 doors...
+
+- ✅ support `light floor` i.e. constant lit circle
+  - ✅ add some test floor lights
+  - ✅ restrict floor lights to their parent room
+  - ✅ render floor lights in unlit/lit png
+- ✅ floorLights -> floorHighlights
+- ✅ non-iris doors -> double doors (including hull doors)
+
+- ✅ fix/redo extant lights e.g. replacing some with floorHighlights
+- ✅ warn when two lights rects intersect
 
 - ✅ refine drop-shadow of chairs near tables
 - ✅ fix top of head in `lie`
