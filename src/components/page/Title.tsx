@@ -34,8 +34,7 @@ const titleCss = css`
     margin-left: 4px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    /* font-family: 'Courier New', Courier, monospace; */
-    font-size: 4.8rem;
+    font-size: 4.7rem;
     font-weight: 300;
     letter-spacing: 4px;
     cursor: pointer;
@@ -44,23 +43,25 @@ const titleCss = css`
     text-shadow: 0 0 8px var(--title-text-shadow-color);
     
     @media(max-width: 1200px) {
-      font-size: 4.6rem;
+      font-size: 4.4rem;
     }
     @media(max-width: 800px) {
       text-shadow: 0 0 4px var(--title-text-shadow-color);
       font-size: 3.5rem;
     }
     @media(max-width: 600px) {
+      /* font-family: 'Courier New', Courier, monospace; */
       text-shadow: 0 0 2px var(--title-text-shadow-color);
       margin-top: 72px;
-      font-size: 2.5rem;
+      font-size: 2.2rem;
+      font-weight: 400;
     }
   }
   
   /** Site subtitle */
   p {
     margin: 0;
-    padding: 40px 0 48px;
+    padding: 32px 0 48px;
     margin-right: 4px;
     
     color: var(--page-title-color);
@@ -70,7 +71,7 @@ const titleCss = css`
     letter-spacing: 2px;
     
     @media(max-width: 600px) {
-      padding: 24px 0 28px 4px;
+      padding: 20px 0 28px 4px;
     }
   }
 
