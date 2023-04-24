@@ -26,11 +26,14 @@ export const utilFunctions = [
   cat: `get "$@"`,
     
   /**
+   * - initially logs args, afterwards logs stdin
    * - `map console.log` would log 2nd arg too
-   * - log chunks larger than 1000, so e.g. `seq 1000000 | log` works
+   * - logs chunks larger than 1000, so e.g. `seq 1000000 | log` works
    */
   log: `{
     run '({ api, args, datum }) {
+      args.forEach(arg => console.log(arg))
+      if (api.isTtyAt(0)) return
       while ((datum = await api.read(true)) !== null) {
         if (datum.__chunk__ && datum.items?.length <= 1000) {
           datum.items.forEach(x => console.log(x))
@@ -38,7 +41,7 @@ export const utilFunctions = [
           console.log(datum)
         }
       }
-    }'
+    }' $@
 }`,
 
   empty: `{
@@ -98,6 +101,11 @@ lookLoop: `{
     look $1
 }`,
 
+thinkLoop: `{
+  click |
+    filter 'x => x.meta.npc' |
+    log $1
+}`,
 // /** Usage: world 'x => x.fov' */
 // world: `{
 //   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
@@ -135,6 +143,7 @@ source /etc/game-1
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
+npc map hide
 
 # camera follows ${npcKey}
 track ${npcKey} &
@@ -144,6 +153,8 @@ goLoop ${npcKey} &
 lookLoop ${npcKey} &
 # click do points to do things
 doLoop ${npcKey} &
+# on click npc head ...
+thinkLoop ${npcKey} &
 
 `.trim(),
 
