@@ -528,6 +528,8 @@ class cmdServiceClass {
       useSession.api.writeMsg(this.meta.sessionKey, message, 'info');
     },
   };
+  
+  private readonly processApiKeys = Object.keys(this.processApi);
 
   private provideProcessCtxt(meta: Sh.BaseMeta, posPositionals: string[] = []) {
     const session = useSession.api.getSession(meta.sessionKey);
@@ -544,7 +546,13 @@ class cmdServiceClass {
               if (key === 'meta' || key === 'parent') return null
               return this.processApi[key]?.bind({ meta, parent: this }) || null;
             },
-            // TODO ownKeys (requires getOwnPropertyDescriptor)
+            // 🚧 ownKeys (requires getOwnPropertyDescriptor)
+            getOwnPropertyDescriptor() {
+              return { enumerable: true, configurable: true };
+            },
+            ownKeys: (target) => {
+              return this.processApiKeys;
+            }
           });
         } else if (key === 'args') {
           return posPositionals;
