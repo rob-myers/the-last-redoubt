@@ -57,6 +57,7 @@ export default function NPCs(props) {
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
           case 'configKey':
           case 'decorKey':
+          case 'mapAction':
           case 'npcKey':
           case 'suppressThrow':
             return undefined;
@@ -81,6 +82,7 @@ export default function NPCs(props) {
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
           case 'configKey':
           case 'decorKey':
+          case 'mapAction':
           case 'npcKey':
           case 'suppressThrow':
             break;
@@ -412,6 +414,8 @@ export default function NPCs(props) {
           }
           return npc.getAngle();
         }
+        case 'map':
+          return api.fov.map(e.mapAction);
         case 'pause':// Pause current animation
           state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');
           break;

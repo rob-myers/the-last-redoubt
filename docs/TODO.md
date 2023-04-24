@@ -3,7 +3,14 @@
 ## In progress
 
 - ℹ️ looks better without map visible!
-- work out UI to show/hide map?
+- ✅ initially map is visible (so not black before session connects)
+- ✅ can toggle map
+  ```sh
+  npc map show
+  npc map hide
+  npc map # returns boolean
+  ```
+- 🚧 click head shows map then fades
 - ❌ unlit symbol pngs?
 
 - ✅ `spawn` at do point triggers action

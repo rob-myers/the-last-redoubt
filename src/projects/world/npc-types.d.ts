@@ -172,14 +172,18 @@ declare namespace NPC {
     wayTimeoutId: number;
   }
 
+  /**
+   * 🚧 connect these types
+   */
   interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
-    interactRadius?: number;
-    /** Induced by e.g. `npc rm-decor myCircle` */
-    decorKey?: string;
-    /** Induced by e.g. `npc get andros` */
-    npcKey?: string;
     /** Induced by e.g. `npc config debug` or `npc config debug showIds` */
     configKey?: string;
+    /** Induced by e.g. `npc rm-decor myCircle` */
+    decorKey?: string;
+    interactRadius?: number;
+    mapAction?: string;
+    /** Induced by e.g. `npc get andros` */
+    npcKey?: string;
     /** Suppress all errors e.g. for loop like `foo | npc do`  */
     suppressThrow?: boolean;
   }
@@ -378,6 +382,7 @@ declare namespace NPC {
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
+    | { action: 'map'; mapAction?: 'show' | 'hide' }
     | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
     | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }

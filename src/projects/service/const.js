@@ -151,3 +151,6 @@ export const distanceTagRegex = /^distance-(\d+)$/;
 
 /** For lighting we initially darken everything */
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
+
+export const geomorphDarkFilterLight = 'invert(100%) brightness(40%) contrast(150%)';
+export const geomorphDarkFilterDark = 'invert(100%) brightness(0%) contrast(150%)';

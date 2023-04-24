@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
-import { cssName } from "../service/const";
+import { cssName, geomorphDarkFilterDark, geomorphDarkFilterLight } from "../service/const";
 import { geomorphPngPath, getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -40,6 +40,17 @@ export default function FOV(props) {
 
     getImgEl(gmId) {
       return /** @type {HTMLImageElement} */ (state.rootEl.children[gmId]);
+    },
+    map(action) {
+      if (action === 'show') {
+        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterLight);
+      } else if (action === 'hide') {
+        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterDark);
+      } else if (action === undefined) {// getComputedStyle because initially defined via CSS
+        return window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter) === geomorphDarkFilterLight;
+      } else {
+        throw Error('parameter must be "show", "hide" or undefined')
+      }
     },
     onLoadGmImage(e) {
       const imgEl = /** @type {HTMLImageElement} */ (e.target);
@@ -173,6 +184,7 @@ export default function FOV(props) {
  * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadGmImage
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
+ * @property {(action?: 'show' | 'hide') => void} map
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
  */
@@ -193,19 +205,14 @@ export default function FOV(props) {
     */
   will-change: transform;
 
-  /**
-   * - invert(100%) brightness(34%)
-   * - invert(100%) brightness(32%) contrast(150%)
-   * - invert(100%) brightness(36%) contrast(150%)
-   */
-  ${cssName.geomorphDarkFilter}: brightness(0%);
-
+  ${cssName.geomorphDarkFilter}: ${geomorphDarkFilterLight};
   
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
     filter: var(${cssName.geomorphDarkFilter});
+    transition: filter 1s ease-in-out;
   }
 `;
 

@@ -74,7 +74,7 @@ export function extendDecorMeta(meta, gmMatrix) {
 }
 
 /** @type {Record<NPC.NpcActionKey, true>} */
-const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /**
  * @param {Geomorph.PointMeta} meta
@@ -147,6 +147,9 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
       case "look-at":
         // npc look-at andros $( click 1 )
         opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+        break;
+      case "map":
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ mapAction: opts });
         break;
       default:
         opts = {}; // we ignore key
