@@ -38,7 +38,7 @@ export default function NPCs(props) {
     config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
       omnipresent: /** @type {boolean} */ (false),
     }), {
-      /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey} key */
+      /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey | 'toJSON'} key */
       get(ctxt, key) {
         if (detectReactDevToolQuery(key)) {
           return ctxt[key];
@@ -61,6 +61,7 @@ export default function NPCs(props) {
           case 'suppressThrow':
             return undefined;
           case proxyKey: return true;
+          case 'toJSON': return () => '{}'; // 🚧
           default: throw testNever(key, { suffix: 'config.get' });
         }
       },
@@ -103,7 +104,7 @@ export default function NPCs(props) {
       },
       getOwnPropertyDescriptor() {
         return { enumerable: true, configurable: true };
-      }
+      },
     })),
 
     addTtyLineCtxts(sessionKey, lineText, ctxts) {
