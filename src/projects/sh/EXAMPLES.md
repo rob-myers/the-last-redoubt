@@ -132,3 +132,9 @@ range 5 |
 ```sh
 seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
 ```
+
+```sh
+npc map show
+npc map hide
+npc map # returns boolean
+```
