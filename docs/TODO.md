@@ -8,8 +8,9 @@
   ```sh
   npc map show
   npc map hide
-  npc map # returns boolean
+  npc map # returns boolean | null
   ```
+- ✅ map hidden by profile
 - 🚧 click head shows map then fades
 - ❌ unlit symbol pngs?
 

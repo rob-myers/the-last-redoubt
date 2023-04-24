@@ -47,7 +47,8 @@ export default function FOV(props) {
       } else if (action === 'hide') {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterDark);
       } else if (action === undefined) {// getComputedStyle because initially defined via CSS
-        return window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter) === geomorphDarkFilterLight;
+        const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
+        return cssFilter === geomorphDarkFilterLight ? true : cssFilter === geomorphDarkFilterDark ? false : null;
       } else {
         throw Error('parameter must be "show", "hide" or undefined')
       }
