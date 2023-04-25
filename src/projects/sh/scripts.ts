@@ -110,7 +110,7 @@ thinkLoop: `{
       const { fov } = api.getCached(home.WORLD_KEY)
       while ((datum = await api.read(true)) !== null) {
         if (datum.meta.npcKey === npcKey) {
-          fov.map("show-ms", 2000)
+          fov.map("show-ms", 3000)
         }
       }
     }' $1
