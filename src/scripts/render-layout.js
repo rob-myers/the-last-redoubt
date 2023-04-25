@@ -66,8 +66,8 @@ async function main() {
 
     /**
      * For both geomorph and unlit.doorways,
-     * save PNG, WEBP, and finally Optimize PNG
-     * Use temp dir to avoid breaking gatsby (watching static/assets)
+     * save PNG, WEBP, and finally Optimize PNG.
+     * Using temp dir avoids breaking gatsby (watching static/assets)
      */
     const tempDir = fs.mkdtempSync('pngquant-');
     await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
@@ -89,8 +89,13 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
 
   const canvas = createCanvas(0, 0);
   const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-  const layout = await createLayout({ def, lookup: symbolLookup, triangleService: triangle });
   const staticDir = path.resolve(__dirname, '../../static');
+
+  const layout = await createLayout({
+    def,
+    lookup: symbolLookup,
+    triangleService: triangle,
+  });
 
   await renderGeomorph(
     layout,

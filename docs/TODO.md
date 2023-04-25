@@ -2,23 +2,15 @@
 
 ## In progress
 
-- ℹ️ looks better without map visible!
-- ✅ initially map is visible (so not black before session connects)
-- ✅ can toggle map
-  ```sh
-  npc map show
-  npc map hide
-  npc map # returns boolean | null
-  ```
-- ✅ map hidden by profile
-- ✅ click head shows map then fades
-- ❌ unlit symbol pngs?
-
-- ✅ `spawn` at do point triggers action
-- remove tag `no-turn`?
-- clean up bridge window/fuel?
+- ✅ 102 navmesh issue
+  - due to `lounge--017--2x4`
+  - fixed in svg symbol: prevent obstacle polys from intersecting
 - 🚧 more `do` points
 - 🚧 more `orient-{deg}` tags
+- go back to writing
+
+- remove tag `no-turn`?
+- clean up bridge window/fuel?
 - respawn on do point should trigger action
   - seems we're clicking npc, not a do point
 
@@ -440,6 +432,20 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ `spawn` at do point triggers action
+
+- ℹ️ looks better without map visible!
+- ✅ initially map is visible (so not black before session connects)
+- ✅ can toggle map
+  ```sh
+  npc map show
+  npc map hide
+  npc map # returns boolean | null
+  ```
+- ✅ map hidden by profile
+- ✅ click head shows map then fades
+- ❌ unlit symbol pngs?
 
 - ✅ drop shadow e.g. around bed
   > https://stackoverflow.com/a/71205007/2917822
