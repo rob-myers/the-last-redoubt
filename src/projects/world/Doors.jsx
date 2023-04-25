@@ -48,8 +48,8 @@ export default function Doors(props) {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
+      const wasOpen = state.open[gmId][doorId];
 
-      // NOTE door can be invisible e.g. if closing
       if (sealed) {// Sealed permanently
         return false;
       }
@@ -58,11 +58,11 @@ export default function Doors(props) {
         return false;
       }
 
-      if (state.open[gmId][doorId] && !state.safeToCloseDoor(gmId, doorId)) {
+      if (wasOpen && !state.safeToCloseDoor(gmId, doorId)) {
         return false;
       }
 
-      if (state.open[gmId][doorId]) {
+      if (wasOpen) {
         // Cancel any pending close
         window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
         // Animate close slightly early
@@ -75,8 +75,8 @@ export default function Doors(props) {
       }
 
       // Toggle the door
-      state.open[gmId][doorId] = !state.open[gmId][doorId];
-      const key = state.open[gmId][doorId] ? 'opened-door' : 'closed-door';
+      state.open[gmId][doorId] = !wasOpen;
+      const key = wasOpen ? 'closed-door' : 'opened-door';
       state.events.next({ key, gmId, doorId });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
@@ -152,7 +152,6 @@ export default function Doors(props) {
       );
       nextVis[fov.gmId] = extAdjDoors;
 
-      // 
       /**
        * - Include hull doors from neighbouring geomorphs
        * - If hull door open, include doors from room in adjacent geomorph
