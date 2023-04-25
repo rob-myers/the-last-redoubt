@@ -10,10 +10,11 @@
   <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect width="600" height="1200" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" bx:origin="0.5 0.49851"/>
-    <rect width="692" height="410" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="1000" y="110" bx:origin="0.5 0.49851"/>
+    <path d="M 1000 110 L 1105.422 110 L 1150.694 187.994 L 1255.889 187.594 L 1299.782 107.704 L 1390.176 108.233 L 1443.752 186.509 L 1550 186.5 L 1595.493 107.259 L 1687.221 106.845 L 1738.413 190.503 L 1691.301 275.978 L 1741.557 360.711 L 1691.579 441.991 L 1592.106 444.467 L 1546.54 526.975 L 1440.328 525.619 L 1394.985 446.17 L 1300.22 445.881 L 1256.357 527.086 L 1152.141 527.932 L 1104.073 446.097 L 1006.711 444.471 L 957.812 360.595 L 1002.496 274.528 L 960.145 186.479 L 1000 110 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" bx:origin="0.5 0.49851"/>
     <path d="M 1200 1050 L 1505.273 1050 L 1649.289 900 L 1652.242 600 L 1800 600 L 1800 1200 L 1200 1200 L 1200 1050 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" bx:origin="0.5 0.49851"/>
+    <rect x="110.455" y="166.109" width="138" height="157" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1532.369141, 587.439636)"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <rect x="-10" y="-10" width="20" height="1220" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
@@ -32,6 +33,9 @@
     </rect>
     <rect x="-10" y="1190" width="1800" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
+    </rect>
+    <rect x="1495" y="895" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-225</title>
     </rect>
   </g>
 </svg>

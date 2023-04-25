@@ -9,6 +9,12 @@
   </g>
   <g style="pointer-events: none;" transform="matrix(0.916705, 0, 0, 1.010668, -0.042512, 0)">
     <title>obstacles</title>
-    <rect width="115" height="178.1" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(1, 0, 0.006672, 1, -0.510383, 0)"/>
+    <path d="M 0.046 10.843 L 11.855 0 L 102.15 0 L 115.708 11.989 L 111.337 31.375 L 93.134 55.095 L 107.232 73.022 L 108.204 112.56 L 86.508 161.867 L 59.368 175.161 L 33.079 164.326 L 3.631 111.387 L 4.627 69.498 L 21.318 56.319 L 0.042 24.563 L 0.046 10.843 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+  </g>
+  <g>
+    <title>singles</title>
+    <rect x="49.864" y="104.146" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit toilet orient-90</title>
+    </rect>
   </g>
 </svg>

@@ -16,7 +16,7 @@
     <rect y="38.783" width="71" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="17.75" transform="matrix(1, 0, -0.001233, 1, 27.384129, 226.216995)"/>
     <rect y="365" width="170" height="170" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="665"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <rect y="590" width="1209.8" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall</title>
@@ -33,8 +33,38 @@
     <rect width="320" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="-10" x="890">
       <title>wall</title>
     </rect>
-    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="600" y="200">
+    <rect width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="600" y="200">
       <title>decor go label room lounge</title>
+    </rect>
+    <rect x="130" y="410" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-340</title>
+    </rect>
+    <rect x="130" y="185" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-20</title>
+    </rect>
+    <rect x="360" y="360" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-45</title>
+    </rect>
+    <rect x="360" y="530" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-315</title>
+    </rect>
+    <rect x="530" y="530" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-225</title>
+    </rect>
+    <rect x="530" y="360" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-135</title>
+    </rect>
+    <rect x="660" y="360" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-45</title>
+    </rect>
+    <rect x="660" y="530" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-315</title>
+    </rect>
+    <rect x="830" y="530" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-225</title>
+    </rect>
+    <rect x="830" y="360" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-135</title>
     </rect>
   </g>
 </svg>
