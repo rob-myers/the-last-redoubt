@@ -34,6 +34,7 @@ export default function FOV(props) {
 
     clipPath: gms.map(_ => 'none'),
     gmRoomIds: [],
+    mapTimeoutId: 0,
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
@@ -41,11 +42,15 @@ export default function FOV(props) {
     getImgEl(gmId) {
       return /** @type {HTMLImageElement} */ (state.rootEl.children[gmId]);
     },
-    map(action) {
+    map(action, showMs = 1000) {
       if (action === 'show') {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterLight);
       } else if (action === 'hide') {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterDark);
+      } else if (action === 'show-ms') {
+        window.clearTimeout(state.mapTimeoutId);
+        state.map("show");
+        state.mapTimeoutId = window.setTimeout(() => state.map("hide"), showMs);
       } else if (action === undefined) {// getComputedStyle because initially defined via CSS
         const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
         return cssFilter === geomorphDarkFilterLight ? true : cssFilter === geomorphDarkFilterDark ? false : null;
@@ -180,12 +185,13 @@ export default function FOV(props) {
  * @typedef AuxState @type {object}
  * @property {string[]} clipPath
  * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
+ * @property {number} mapTimeoutId
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {(gmId: number) => HTMLImageElement} getImgEl
  * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadGmImage
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {(action?: 'show' | 'hide') => void} map
+ * @property {(action?: NPC.FovMapAction, showMs?: number) => void} map
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
  */

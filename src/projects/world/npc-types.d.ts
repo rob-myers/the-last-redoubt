@@ -382,7 +382,7 @@ declare namespace NPC {
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
-    | { action: 'map'; mapAction?: 'show' | 'hide' }
+    | { action: 'map'; mapAction?: FovMapAction }
     | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
     | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
@@ -391,6 +391,8 @@ declare namespace NPC {
   );
 
   export type NpcActionKey = NpcAction['action'];
+
+  export type FovMapAction = 'show' | 'hide' | 'show-ms';
 
   export type NPCsEvent = (
     | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }

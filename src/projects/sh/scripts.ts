@@ -101,11 +101,21 @@ lookLoop: `{
     look $1
 }`,
 
+/** Usage: thinkLoop {npcKey} */
 thinkLoop: `{
   click |
     filter 'x => x.meta.npc' |
-    log $1
+    run '({ api, args, home, datum }) {
+      const npcKey = args[0]
+      const { fov } = api.getCached(home.WORLD_KEY)
+      while ((datum = await api.read(true)) !== null) {
+        if (datum.meta.npcKey === npcKey) {
+          fov.map("show-ms", 2000)
+        }
+      }
+    }' $1
 }`,
+
 // /** Usage: world 'x => x.fov' */
 // world: `{
 //   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |

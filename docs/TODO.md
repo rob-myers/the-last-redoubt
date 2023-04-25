@@ -11,7 +11,7 @@
   npc map # returns boolean | null
   ```
 - ✅ map hidden by profile
-- 🚧 click head shows map then fades
+- ✅ click head shows map then fades
 - ❌ unlit symbol pngs?
 
 - ✅ `spawn` at do point triggers action
@@ -32,6 +32,8 @@
 - ensure doors pause and/or initially can start open
   - maybe use web animations api?
 
+- BUG .panzoom-scale stale animation...
+  - `$1.getAnimations()[0].cancel()`
 - BUG? `click 1>foo`
 - BUG? HMR sometimes seems to break FOV change on enter room
 - BUG walk tracked npc and wait for finish; pause and unpause causes re-track
