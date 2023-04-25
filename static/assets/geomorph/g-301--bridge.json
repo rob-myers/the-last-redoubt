@@ -2899,14 +2899,14 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair", "orient-225", "orient-315"],
+        "tags": ["decor", "do", "sit", "chair", "orient-180", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[303, 89], [303, 91], [301, 91], [301, 89]]]
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair", "orient-225", "orient-225"],
+        "tags": ["decor", "do", "sit", "chair", "orient-180", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[899, 89], [899, 91], [897, 91], [897, 89]]]

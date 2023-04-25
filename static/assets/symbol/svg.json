@@ -4426,7 +4426,7 @@
     "walls": [],
     "singles": [
       {
-        "tags": ["decor", "do", "sit", "chair", "orient-225"],
+        "tags": ["decor", "do", "sit", "chair", "orient-180"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[285, 145], [285, 155], [295, 155], [295, 145]]]
@@ -4434,7 +4434,7 @@
       }
     ],
     "pngRect": {"x": -4, "y": -4, "width": 377, "height": 307},
-    "lastModified": 1682432138097.383
+    "lastModified": 1682432498406.8303
   },
   "couch-and-chairs--006--0.4x2": {
     "key": "couch-and-chairs--006--0.4x2",
