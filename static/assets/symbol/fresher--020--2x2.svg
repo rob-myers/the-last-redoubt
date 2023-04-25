@@ -10,7 +10,7 @@
   <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect width="197.7" height="119.5" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="402.3"/>
-    <rect width="115" height="153" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="243"/>
+    <path d="M 243 0 L 358 0 L 351.941 47.463 L 327.765 141.236 L 300 151.988 L 271.458 139.502 L 243.315 49.775 L 243 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
   <g style="pointer-events: none;">
     <title>walls</title>
@@ -20,16 +20,22 @@
     <rect y="-10" width="20" height="317.1" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="190"/>
     <rect y="-10" width="20" height="317.1" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="390"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
-    <rect y="-10" width="20" height="610" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="590">
-      <title>wall</title>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="251.9" y="388.2">
+      <title>decor go label room bathroom</title>
+    </rect>
+    <rect x="295" y="108.929" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do stand toilet orient-270</title>
+    </rect>
+    <rect x="495" y="138.929" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do stand sink orient-270</title>
     </rect>
     <rect x="585" y="340" width="30" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="251.9" y="388.2">
-      <title>decor go label room bathroom</title>
+    <rect y="-10" width="20" height="610" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="590">
+      <title>wall</title>
     </rect>
   </g>
 </svg>
