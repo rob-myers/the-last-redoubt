@@ -39,7 +39,7 @@ declare namespace PanZoom {
     worldPointerDown: Geom.Vect;
     pointerUpExtras: Record<string, any>[];
     
-    animationAction(type: 'cancel' | 'pause' | 'play' | 'smooth-cancel'): void;
+    animationAction(type: 'cancel' | 'pause' | 'play'): void;
     private computePathKeyframes(path: Geom.Vect[]): { keyframes: Keyframe[]; distance: number; };
     private delayIdle(): void;
     distanceTo(worldPosition: Geom.Vect): number;

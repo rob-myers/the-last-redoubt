@@ -132,7 +132,7 @@ export default function createNpc(
         this.clearWayMetas();
       }
       if (this.def.key === api.npcs.playerKey) {// Cancel camera tracking
-        api.panZoom.animationAction('smooth-cancel');
+        api.panZoom.animationAction('cancel');
       }
     },
     canLook() {

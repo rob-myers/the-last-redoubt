@@ -158,22 +158,6 @@ export default function CssPanZoom(props) {
             }
             break;
           }
-          case 'smooth-cancel': {
-            if (trAnim) {
-              if (trAnim.playState === 'running') {
-                // 'cancel' was Jerky in Safari on collide with door,
-                // so we wait for pause before cancelling
-                await /** @type {Promise<void>} */ (new Promise(resolve => {
-                  trAnim.addEventListener('pause', () => resolve());
-                  trAnim.pause();
-                }));
-              }
-              state.syncStyles();
-              isAnimAttached(trAnim, state.translateRoot) && trAnim.cancel();
-              state.anims[0] = null;
-            }
-            break;
-          }
           case 'pause':
             // Avoid pausing finished animation
             state.anims.forEach(anim => anim?.playState === 'running' && anim.pause());
