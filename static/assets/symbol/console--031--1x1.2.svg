@@ -10,7 +10,9 @@
   <g>
     <title>obstacles</title>
     <rect x="235.9" y="71.6" width="137.1" height="156.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <path d="M -4 -4 L 231.498 0 L 246.244 14.164 L 231.786 56.459 L 209.598 133.964 L 219.858 213.874 L 247.069 282.15 L 232.259 300 L -4 300 L -4 -4 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M -4 -4 L 231.498 0 L 246.244 14.164 L 231.786 56.459 L 209.598 133.964 L 219.858 213.874 L 247.069 282.15 L 232.259 300 L -4 300 L -4 -4 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
   </g>
   <g>
     <title>singles</title>
