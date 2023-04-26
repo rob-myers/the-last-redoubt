@@ -9,6 +9,6 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect width="380" height="200" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 235.117 286.395 L 148.016 285.174 L 88.016 194.309 L 144.334 -91.226 L 240.016 -91.226 L 286.016 189.174 L 235.117 286.395 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 284.600484, -89.4315)"/>
   </g>
 </svg>

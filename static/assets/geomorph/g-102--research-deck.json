@@ -2009,6 +2009,27 @@
         }
       },
       {
+        "tags": ["decor", "go", "label", "room", "office"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [436.5316, 409.5648],
+              [438.5316, 409.5648],
+              [438.5316, 411.5648],
+              [436.5316, 411.5648]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["door", "w"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[430, 357], [470, 357], [470, 363], [430, 363]]]
+        }
+      },
+      {
         "tags": ["wall"],
         "poly": {
           "type": "Polygon",
@@ -2023,20 +2044,6 @@
           "type": "Polygon",
           "coordinates": [
             [[473, 478], [542, 478], [542, 482], [473, 482], [473, 478]]
-          ]
-        }
-      },
-      {
-        "tags": ["decor", "go", "label", "room", "office"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [436.5316, 409.5648],
-              [456.5316, 409.5648],
-              [456.5316, 429.5648],
-              [436.5316, 429.5648]
-            ]
           ]
         }
       },
@@ -2059,10 +2066,33 @@
         }
       },
       {
+        "tags": ["decor", "do", "sit", "chair", "orient-90", "orient-0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[495.5308, 419], [497.5308, 419], [497.5308, 421], [495.5308, 421]]
+          ]
+        }
+      },
+      {
+        "tags": ["decor", "go", "label", "room", "office"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [556.5316, 409.5648],
+              [558.5316, 409.5648],
+              [558.5316, 411.5648],
+              [556.5316, 411.5648]
+            ]
+          ]
+        }
+      },
+      {
         "tags": ["door", "w"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[430, 357], [470, 357], [470, 363], [430, 363]]]
+          "coordinates": [[[550, 357], [590, 357], [590, 363], [550, 363]]]
         }
       },
       {
@@ -2080,20 +2110,6 @@
           "type": "Polygon",
           "coordinates": [
             [[593, 478], [662, 478], [662, 482], [593, 482], [593, 478]]
-          ]
-        }
-      },
-      {
-        "tags": ["decor", "go", "label", "room", "office"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [556.5316, 409.5648],
-              [576.5316, 409.5648],
-              [576.5316, 429.5648],
-              [556.5316, 429.5648]
-            ]
           ]
         }
       },
@@ -2116,10 +2132,12 @@
         }
       },
       {
-        "tags": ["door", "w"],
+        "tags": ["decor", "do", "sit", "chair", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[550, 357], [590, 357], [590, 363], [550, 363]]]
+          "coordinates": [
+            [[615.5308, 419], [617.5308, 419], [617.5308, 421], [615.5308, 421]]
+          ]
         }
       },
       {
@@ -2624,6 +2642,41 @@
         }
       },
       {
+        "tags": ["decor", "go", "label", "room", "stellar", "cartography"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[380, 820], [380, 822], [378, 822], [378, 820]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [123.412, 1037.8842],
+              [164.4242, 1078.8965],
+              [157.636, 1085.6847],
+              [116.6238, 1044.6725]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["ignore-nav"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[360, 760], [360, 766], [354, 766], [354, 760]]]
+        }
+      },
+      {
+        "tags": ["ignore-nav"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[360, 630], [360, 636], [354, 636], [354, 630]]]
+        }
+      },
+      {
         "tags": ["wall"],
         "poly": {
           "type": "Polygon",
@@ -2709,38 +2762,31 @@
         }
       },
       {
-        "tags": ["door"],
+        "tags": ["decor", "do", "sit", "chair", "orient-180", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [123.412, 1037.8842],
-              [164.4242, 1078.8965],
-              [157.636, 1085.6847],
-              [116.6238, 1044.6725]
+              [306.7006, 960.2484],
+              [306.7006, 962.2484],
+              [304.7006, 962.2484],
+              [304.7006, 960.2484]
             ]
           ]
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "stellar", "cartography"],
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[380, 820], [380, 840], [360, 840], [360, 820]]]
-        }
-      },
-      {
-        "tags": ["ignore-nav"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[360, 760], [360, 780], [340, 780], [340, 760]]]
-        }
-      },
-      {
-        "tags": ["ignore-nav"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[360, 630], [360, 650], [340, 650], [340, 630]]]
+          "coordinates": [
+            [
+              [240.7006, 894.2484],
+              [240.7006, 896.2484],
+              [238.7006, 896.2484],
+              [238.7006, 894.2484]
+            ]
+          ]
         }
       },
       {
@@ -4737,19 +4783,19 @@
     },
     {
       "text": "room office",
-      "center": {"x": 446.5316, "y": 419.5648},
+      "center": {"x": 437.5316, "y": 410.5648},
       "index": 6,
       "tags": ["decor", "go"],
-      "rect": {"x": 419.0316, "y": 414.5648, "width": 55, "height": 10},
-      "padded": {"x": 415.0316, "y": 412.5648, "width": 63, "height": 14}
+      "rect": {"x": 410.0316, "y": 405.5648, "width": 55, "height": 10},
+      "padded": {"x": 406.0316, "y": 403.5648, "width": 63, "height": 14}
     },
     {
       "text": "room office",
-      "center": {"x": 566.5316, "y": 419.5648},
+      "center": {"x": 557.5316, "y": 410.5648},
       "index": 7,
       "tags": ["decor", "go"],
-      "rect": {"x": 539.0316, "y": 414.5648, "width": 55, "height": 10},
-      "padded": {"x": 535.0316, "y": 412.5648, "width": 63, "height": 14}
+      "rect": {"x": 530.0316, "y": 405.5648, "width": 55, "height": 10},
+      "padded": {"x": 526.0316, "y": 403.5648, "width": 63, "height": 14}
     },
     {
       "text": "room bedroom",
@@ -4785,11 +4831,11 @@
     },
     {
       "text": "room stellar cartography",
-      "center": {"x": 370, "y": 830},
+      "center": {"x": 379, "y": 821},
       "index": 12,
       "tags": ["decor", "go"],
-      "rect": {"x": 310.5, "y": 824.5, "width": 119, "height": 11},
-      "padded": {"x": 306.5, "y": 822.5, "width": 127, "height": 15}
+      "rect": {"x": 319.5, "y": 815.5, "width": 119, "height": 11},
+      "padded": {"x": 315.5, "y": 813.5, "width": 127, "height": 15}
     },
     {
       "text": "room lab",

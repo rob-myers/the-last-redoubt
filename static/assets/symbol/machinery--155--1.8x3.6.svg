@@ -9,6 +9,6 @@
   </g>
   <g style="pointer-events: none;">
     <title>obstacles</title>
-    <rect width="520" height="1080" style="fill-opacity: 0.5; fill: rgb(0, 0, 255); pointer-events: auto;" x="10"/>
+    <path d="M 30.346 0 L 148.428 0 L 148.552 28.754 L 323.545 33.277 L 326.88 198.326 L 413.216 199.227 L 415.034 0 L 530 0 L 530 995.098 L 441.642 1080.033 L 30.346 1080 L 30.346 472.165 L 178.995 471.649 L 179.666 362.636 L 90.797 361.457 L 89.841 263.687 L 30.346 262.09 L 30.346 0 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255); pointer-events: auto;"/>
   </g>
 </svg>

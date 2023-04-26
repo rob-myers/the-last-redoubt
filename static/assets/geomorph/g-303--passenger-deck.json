@@ -1707,6 +1707,13 @@
         }
       },
       {
+        "tags": ["decor", "do", "sit", "chair", "orient-180", "orient-0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[197, 119], [197, 121], [195, 121], [195, 119]]]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
