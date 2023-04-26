@@ -44,6 +44,7 @@ export default function FOV(props) {
     },
     map(action, showMs = 1000) {
       if (action === 'show') {
+        window.clearTimeout(state.mapTimeoutId);
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterLight);
       } else if (action === 'hide') {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterDark);
@@ -55,7 +56,7 @@ export default function FOV(props) {
         const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
         return cssFilter === geomorphDarkFilterLight ? true : cssFilter === geomorphDarkFilterDark ? false : null;
       } else {
-        throw Error('parameter must be "show", "hide" or undefined')
+        throw Error('parameter must be "show", "hide", "show-ms" or undefined')
       }
     },
     onLoadGmImage(e) {
@@ -219,7 +220,7 @@ export default function FOV(props) {
     transform-origin: top left;
     pointer-events: none;
     filter: var(${cssName.geomorphDarkFilter});
-    transition: filter 1s ease-in-out;
+    transition: filter 750ms ease-in-out;
   }
 `;
 

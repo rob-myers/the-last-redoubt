@@ -415,7 +415,7 @@ export default function NPCs(props) {
           return npc.getAngle();
         }
         case 'map':
-          return api.fov.map(e.mapAction);
+          return api.fov.map(e.mapAction, e.timeMs);
         case 'pause':// Pause current animation
           state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');
           break;

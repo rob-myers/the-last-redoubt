@@ -153,7 +153,7 @@ source /etc/game-1
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
-npc map hide
+npc map show-ms 2000
 
 # camera follows ${npcKey}
 track ${npcKey} &

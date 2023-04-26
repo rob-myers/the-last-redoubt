@@ -120,6 +120,7 @@ export function isConfigBooleanKey(input) {
 }
 
 /**
+ * 🚧 properly typed approach
  * @param {NPC.NpcActionKey} action
  * @param {undefined | string | NPC.NpcConfigOpts} opts
  * @param {any[]} extras 
@@ -149,7 +150,7 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
         opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
         break;
       case "map":
-        opts = /** @type {NPC.NpcConfigOpts} */ ({ mapAction: opts });
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ mapAction: opts, timeMs: extras[0] });
         break;
       default:
         opts = {}; // we ignore key
