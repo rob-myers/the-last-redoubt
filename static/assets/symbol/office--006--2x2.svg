@@ -24,8 +24,14 @@
   </g>
   <g style="">
     <title>singles</title>
-    <rect width="580" height="61.5" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="10">
-      <title>window</title>
+    <rect width="10" height="10" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="275" y="400">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="145" y="278" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-270</title>
+    </rect>
+    <rect x="446" y="278" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-270</title>
     </rect>
     <rect x="585" y="380" width="30" height="160" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door e</title>
@@ -36,6 +42,9 @@
     <rect y="380" width="30" height="160" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;" x="-15">
       <title>door w</title>
     </rect>
+    <rect width="600" height="20" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="445.426">
+      <title>relate-connectors</title>
+    </rect>
     <rect y="590" width="610" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
       <title>wall</title>
     </rect>
@@ -45,11 +54,8 @@
     <rect width="20" height="610" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
       <title>wall</title>
     </rect>
-    <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="275" y="400">
-      <title>decor go label room office</title>
-    </rect>
-    <rect width="600" height="20" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="445.426">
-      <title>relate-connectors</title>
+    <rect width="580" height="61.5" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="10">
+      <title>window</title>
     </rect>
   </g>
 </svg>

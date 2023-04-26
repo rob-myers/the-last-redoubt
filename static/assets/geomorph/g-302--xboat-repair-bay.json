@@ -1012,10 +1012,26 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["decor", "go", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[120, 238], [107.7, 238], [107.7, 122], [120, 122]]]
+          "coordinates": [[[40, 177], [38, 177], [38, 175], [40, 175]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[64.4, 151], [62.4, 151], [62.4, 149], [64.4, 149]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[64.4, 211.2], [62.4, 211.2], [62.4, 209.2], [64.4, 209.2]]
+          ]
         }
       },
       {
@@ -1030,6 +1046,15 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[44, 123], [12, 123], [12, 117], [44, 117]]]
+        }
+      },
+      {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[30.9148, 240], [26.9148, 240], [26.9148, 120], [30.9148, 120]]
+          ]
         }
       },
       {
@@ -1076,19 +1101,10 @@
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "office"],
+        "tags": ["window"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[40, 185], [30, 185], [30, 175], [40, 175]]]
-        }
-      },
-      {
-        "tags": ["relate-connectors"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[30.9148, 240], [26.9148, 240], [26.9148, 120], [30.9148, 120]]
-          ]
+          "coordinates": [[[120, 238], [107.7, 238], [107.7, 122], [120, 122]]]
         }
       },
       {
@@ -2248,11 +2264,11 @@
     },
     {
       "text": "room office",
-      "center": {"x": 35, "y": 180},
+      "center": {"x": 39, "y": 176},
       "index": 9,
       "tags": ["decor", "go"],
-      "rect": {"x": 7.5, "y": 175, "width": 55, "height": 10},
-      "padded": {"x": 3.5, "y": 173, "width": 63, "height": 14}
+      "rect": {"x": 11.5, "y": 171, "width": 55, "height": 10},
+      "padded": {"x": 7.5, "y": 169, "width": 63, "height": 14}
     },
     {
       "text": "room lounge",

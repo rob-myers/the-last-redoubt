@@ -2941,6 +2941,15 @@
         }
       },
       {
+        "tags": ["decor", "go", "label", "room", "office"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[422, 859.98], [422, 861.98], [420, 861.98], [420, 859.98]]
+          ]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -2966,11 +2975,25 @@
         }
       },
       {
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-270"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[436, 824], [436, 826], [434, 826], [434, 824]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-90", "orient-90"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[436, 916], [436, 918], [434, 918], [434, 916]]]
+        }
+      },
+      {
         "tags": ["decor", "go", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[438.18, 859.98], [438.18, 878.16], [420, 878.16], [420, 859.98]]
+            [[780, 859.98], [780, 861.98], [778, 861.98], [778, 859.98]]
           ]
         }
       },
@@ -3000,12 +3023,17 @@
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "office"],
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-270"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[780, 859.98], [780, 878.16], [761.82, 878.16], [761.82, 859.98]]
-          ]
+          "coordinates": [[[766, 824], [766, 826], [764, 826], [764, 824]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-90", "orient-90"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[766, 916], [766, 918], [764, 918], [764, 916]]]
         }
       },
       {
@@ -5241,19 +5269,19 @@
     },
     {
       "text": "room office",
-      "center": {"x": 429.09, "y": 869.07},
+      "center": {"x": 421, "y": 860.98},
       "index": 21,
       "tags": ["decor", "go"],
-      "rect": {"x": 401.59, "y": 864.07, "width": 55, "height": 10},
-      "padded": {"x": 397.59, "y": 862.07, "width": 63, "height": 14}
+      "rect": {"x": 393.5, "y": 855.98, "width": 55, "height": 10},
+      "padded": {"x": 389.5, "y": 853.98, "width": 63, "height": 14}
     },
     {
       "text": "room office",
-      "center": {"x": 770.91, "y": 869.07},
+      "center": {"x": 779, "y": 860.98},
       "index": 22,
       "tags": ["decor", "go"],
-      "rect": {"x": 743.41, "y": 864.07, "width": 55, "height": 10},
-      "padded": {"x": 739.41, "y": 862.07, "width": 63, "height": 14}
+      "rect": {"x": 751.5, "y": 855.98, "width": 55, "height": 10},
+      "padded": {"x": 747.5, "y": 853.98, "width": 63, "height": 14}
     },
     {
       "text": "room toilet",

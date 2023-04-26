@@ -8484,10 +8484,24 @@
     ],
     "singles": [
       {
-        "tags": ["window"],
+        "tags": ["decor", "go", "label", "room", "office"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[10, 0], [10, 61.5], [590, 61.5], [590, 0]]]
+          "coordinates": [[[275, 400], [275, 410], [285, 410], [285, 400]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-270"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[145, 278], [145, 288], [155, 288], [155, 278]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-270"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[446, 278], [446, 288], [456, 288], [456, 278]]]
         }
       },
       {
@@ -8512,6 +8526,15 @@
         }
       },
       {
+        "tags": ["relate-connectors"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[0, 445.426], [0, 465.426], [600, 465.426], [600, 445.426]]
+          ]
+        }
+      },
+      {
         "tags": ["wall"],
         "poly": {
           "type": "Polygon",
@@ -8533,24 +8556,15 @@
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "office"],
+        "tags": ["window"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[275, 400], [275, 450], [325, 450], [325, 400]]]
-        }
-      },
-      {
-        "tags": ["relate-connectors"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[0, 445.426], [0, 465.426], [600, 465.426], [600, 445.426]]
-          ]
+          "coordinates": [[[10, 0], [10, 61.5], [590, 61.5], [590, 0]]]
         }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1681985020820.624
+    "lastModified": 1682523980339.9595
   },
   "office--020--2x3": {
     "key": "office--020--2x3",
@@ -8605,6 +8619,15 @@
     ],
     "singles": [
       {
+        "tags": ["decor", "go", "label", "room", "office"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[300, 399.9], [300, 409.9], [310, 409.9], [310, 399.9]]
+          ]
+        }
+      },
+      {
         "tags": ["door"],
         "poly": {
           "type": "Polygon",
@@ -8619,17 +8642,22 @@
         }
       },
       {
-        "tags": ["decor", "go", "label", "room", "office"],
+        "tags": ["decor", "do", "sit", "chair", "orient-270"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[300, 399.9], [300, 490.8], [390.9, 490.8], [390.9, 399.9]]
-          ]
+          "coordinates": [[[370, 220], [370, 230], [380, 230], [380, 220]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-90"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[370, 680], [370, 690], [380, 690], [380, 680]]]
         }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1681990123103.71
+    "lastModified": 1682524066034.8928
   },
   "office--023--2x3": {
     "key": "office--023--2x3",
