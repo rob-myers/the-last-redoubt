@@ -1088,6 +1088,7 @@ export function decodeDecorInstanceKey(decorKey) {
  * @returns {NPC.DecorSansPath}
  */
 export function ensureDecorMetaGmRoomId(decor, api) {
+  decor.meta ||= {}; 
   if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
     const decorCenter = getDecorCenter(decor);
     const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
