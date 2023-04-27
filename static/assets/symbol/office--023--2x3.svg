@@ -9,7 +9,9 @@
   </g>
   <g>
     <title>obstacles</title>
-    <rect x="448" y="300" width="152" height="600" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <rect x="448" y="300" width="152" height="600" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </rect>
     <rect x="55.9" y="50.2" width="493.3" height="197" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="335.4" y="400.2" width="97.8" height="100.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="335.4" y="700.2" width="97.8" height="100.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
@@ -20,19 +22,25 @@
     <rect width="600" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="-10"/>
     <rect y="-10" width="20" height="910" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="-10"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
-    <rect y="890" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
-      <title>wall</title>
+    <rect x="290" y="150" width="10" height="10" style="fill: rgb(216, 216, 216); pointer-events: auto;">
+      <title>decor go label cpu</title>
+    </rect>
+    <rect x="164.2" y="550" width="10" height="10" style="fill: rgb(216, 216, 216); pointer-events: auto;">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="394.221" y="447.332" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-0</title>
+    </rect>
+    <rect x="394.221" y="747.332" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-0</title>
     </rect>
     <rect x="40" y="885" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door</title>
     </rect>
-    <rect x="250" y="100" width="90.9" height="90.9" style="fill: rgb(216, 216, 216); pointer-events: auto;">
-      <title>label cpu</title>
-    </rect>
-    <rect x="164.2" y="550" width="90.9" height="90.9" style="fill: rgb(216, 216, 216); pointer-events: auto;">
-      <title>decor go label room office</title>
+    <rect y="890" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
+      <title>wall</title>
     </rect>
   </g>
 </svg>

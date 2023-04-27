@@ -12,8 +12,12 @@
     <rect x="482.7" width="153.8" height="137.2" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="241.4" transform="matrix(0.819152, 0.573577, -0.573577, 0.819152, 265.895325, -171.451889)"/>
     <rect x="482.7" width="153.8" height="137.2" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="241.4" transform="matrix(0.573576, 0.819153, -0.819153, 0.573576, 714.208008, 1.11311)"/>
     <rect x="482.7" width="153.8" height="137.2" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="241.4" transform="matrix(0.707106, 0.707107, -0.707107, 0.707106, 139.355347, 257.497009)"/>
-    <path d="M 0.016 585.004 L 144.616 585.004 L 148.616 885.004 L 300.016 1038.504 L 600.016 1038.804 L 600.016 1185.004 L 0.016 1185.004 L 0.016 585.004 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(1, 0.000001, -0.000001, 1, 0.000885, -0.0003)"/>
-    <path d="M 371.3 185.6 L 422.1 57.1 L 707.8 213.1 L 1013.7 513.9 L 1119.8 765.5 L 983.9 810.7 L 739.9 446.2 L 371.3 185.6 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(1, 0.000001, -0.000001, 1, 0.000434, -0.000746)"/>
+    <path d="M 0.016 585.004 L 144.616 585.004 L 148.616 885.004 L 300 1035.605 L 600 1035.905 L 600.016 1185.004 L 0.016 1185.004 L 0.016 585.004 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(1, 0.000001, -0.000001, 1, 0.000885, -0.0003)">
+      <title>surface</title>
+    </path>
+    <path d="M 404.689 212.495 L 375.396 163.527 L 422.1 57.1 L 707.8 213.1 L 1013.7 513.9 L 1119.8 765.5 L 1010.194 803.738 L 965.633 769.162 L 849.889 567.063 L 739.9 446.2 L 656.798 364.389 L 523.96 277.047 L 404.689 212.495 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(1, 0.000001, -0.000001, 1, 0.000434, -0.000746)">
+      <title>surface</title>
+    </path>
   </g>
   <g style="pointer-events: none;">
     <title>walls</title>
@@ -26,29 +30,38 @@
   </g>
   <g style="">
     <title>singles</title>
-    <path d="M 543.806 78.697 L 615.787 117.899 L 692.381 165.749 L 803.9 248.5 L 942.1 386.4 L 1027.836 508.649 L 1106 637.5 L 1054.3 667.2 L 880.9 416.8 L 715.8 256.6 L 517.7 139.6 L 543.806 78.697 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); fill-opacity: 0.5;">
-      <title>window one-way</title>
-    </path>
+    <rect width="10" height="10" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="600" y="865.8">
+      <title>decor go label room office</title>
+    </rect>
     <rect x="1145" y="930" width="30" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>
     </rect>
     <rect x="40" width="220" height="30" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="600" y="865.8">
-      <title>decor go label room office</title>
-    </rect>
-    <rect y="300" width="200" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1450.773" transform="matrix(-0.707106, 0.707107, 0.707107, 0.707106, 1798.153565, -1066.534819)">
-      <title>view reverse</title>
-    </rect>
     <rect x="2083.093" width="30" height="1506.286" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="4871.787" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -4835.656738, -1946.936279)">
       <title>parallel-connectors</title>
+    </rect>
+    <rect y="-300" width="200" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="-1450.772" transform="matrix(-0.707106, 0.707107, 0.707107, 0.707106, 170.716926, 1409.432315)">
+      <title>view reverse</title>
     </rect>
     <rect x="300" width="18" height="320" style="" y="20">
       <title>wall</title>
     </rect>
     <rect x="860" width="300" height="18" style="" y="889.986">
       <title>wall</title>
+    </rect>
+    <path d="M 543.806 78.697 L 615.787 117.899 L 692.381 165.749 L 803.9 248.5 L 942.1 386.4 L 1027.836 508.649 L 1106 637.5 L 1054.3 667.2 L 880.9 416.8 L 715.8 256.6 L 517.7 139.6 L 543.806 78.697 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); fill-opacity: 0.5;">
+      <title>window one-way</title>
+    </path>
+    <rect x="291.863" y="879.688" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-135</title>
+    </rect>
+    <rect x="550" y="390" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-305</title>
+    </rect>
+    <rect x="790" y="620" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-325</title>
     </rect>
   </g>
 </svg>

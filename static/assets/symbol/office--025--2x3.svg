@@ -9,7 +9,9 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <path d="M 388.3 300 L 600 300 L 600 900 L 388.3 900 L 388.3 684.119 L 422.032 631.834 L 420.895 563.875 L 388.3 516.211 L 388.3 300 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 388.3 300 L 600 300 L 600 900 L 388.3 900 L 388.3 684.119 L 422.032 631.834 L 420.895 563.875 L 388.3 516.211 L 388.3 300 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
     <rect x="237.3" width="131" height="151.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="523.9"/>
     <rect x="49.4" width="500.3" height="200.4" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="50.6"/>
   </g>
@@ -21,11 +23,14 @@
   </g>
   <g style="pointer-events: none;">
     <title>singles</title>
+    <rect x="186.8" y="356.5" width="10" height="10" style="fill: rgb(216, 216, 216);">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="310" y="595" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-0</title>
+    </rect>
     <rect x="-15" y="640" width="30" height="220" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door w</title>
-    </rect>
-    <rect x="186.8" y="356.5" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
-      <title>decor go label room office</title>
     </rect>
     <rect y="-10" width="20" height="920" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
       <title>wall</title>

@@ -9,7 +9,9 @@
   </g>
   <g style="pointer-events: none;">
     <title>obstacles</title>
-    <path d="M 0 0 L 211.7 0 L 211.7 217.383 L 187.636 248.012 L 172.163 300 L 181.494 345.721 L 211.7 384.778 L 211.7 600 L 0 600 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 0 0 L 211.7 0 L 211.7 217.383 L 187.636 248.012 L 172.163 300 L 181.494 345.721 L 211.7 384.778 L 211.7 600 L 0 600 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
     <rect x="232" width="131" height="151.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="222.9"/>
     <rect x="49.4" width="500.3" height="200.4" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="650.6"/>
   </g>
@@ -22,25 +24,28 @@
       <title>window</title>
     </rect>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
+    <rect x="390.9" y="40.9" width="10" height="10" style="fill: rgb(216, 216, 216);">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="300" y="699.9" width="10" height="10" style="fill: rgb(216, 216, 216);">
+      <title>decor label cpu</title>
+    </rect>
+    <rect x="273.045" y="295" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-180</title>
+    </rect>
     <rect x="585" y="40" width="30" height="220" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door</title>
+    </rect>
+    <rect x="280" width="20" height="600" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 600, -100)">
+      <title>relate-connectors</title>
     </rect>
     <rect x="590" y="-10" width="20" height="920" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
       <title>wall</title>
     </rect>
-    <rect x="390.9" y="40.9" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
-      <title>decor go label room office</title>
-    </rect>
-    <rect x="300" y="699.9" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
-      <title>label cpu</title>
-    </rect>
     <rect y="147" width="67" height="307" style="fill-opacity: 0.5;" x="-34">
       <title>window</title>
-    </rect>
-    <rect x="280" width="20" height="600" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; pointer-events: auto;" transform="matrix(0, 1, -1, 0, 600, -100)">
-      <title>relate-connectors</title>
     </rect>
   </g>
 </svg>

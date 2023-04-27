@@ -9,15 +9,19 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <path d="M 748 0 L 900 0 L 900 1200 L 748 1200 L 748 950.772 L 778.099 888.404 L 789.944 818.192 L 781.009 758.036 L 748 701.544 L 748 497.911 L 782.112 436.661 L 789.242 368.438 L 782.112 318.654 L 748 249.023 L 748 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <path d="M 0 0 L 900 0 L 900 154.7 L 363.473 154.7 L 312.591 123.242 L 240.929 112.291 L 169.652 122.598 L 115.137 154.7 L 0 154.7 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 748 0 L 900 0 L 900 1200 L 748 1200 L 748 950.772 L 778.099 888.404 L 789.944 818.192 L 781.009 758.036 L 748 701.544 L 748 497.911 L 782.112 436.661 L 789.242 368.438 L 782.112 318.654 L 748 249.023 L 748 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
+    <path d="M 0 0 L 900 0 L 900 154.7 L 363.473 154.7 L 312.591 123.242 L 240.929 112.291 L 169.652 122.598 L 115.137 154.7 L 0 154.7 L 0 0 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
     <rect x="161.6" y="135" width="156.8" height="139" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="627.6" y="300" width="130" height="152.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="627.6" y="750" width="130" height="152.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="161.6" y="928.7" width="156.8" height="129" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <path d="M 0 1047.5 L 116.895 1047.5 L 171.371 1080.281 L 239.91 1091.622 L 300 1083.042 L 363.145 1047.5 L 900 1047.5 L 900 1202.2 L 0 1202.2 L 0 1047.5 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>walls</title>
     <rect x="890" y="-10" width="20" height="1210" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;"/>
     <rect width="900" height="20" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" y="-10"/>
@@ -25,8 +29,20 @@
   </g>
   <g style="">
     <title>singles</title>
-    <rect y="-10" width="20" height="1210" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
-      <title>wall</title>
+    <rect x="350" y="550" width="10" height="10" style="fill: rgb(216, 216, 216);">
+      <title>decor go label room office</title>
+    </rect>
+    <rect x="710.986" y="370.967" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-0</title>
+    </rect>
+    <rect x="710.986" y="820.967" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-0</title>
+    </rect>
+    <rect x="235" y="1010.967" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-90</title>
+    </rect>
+    <rect x="235" y="180.967" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-270</title>
     </rect>
     <rect x="40" y="660" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 675, 600.900024)">
       <title>door</title>
@@ -34,11 +50,11 @@
     <rect x="40" y="660" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" transform="matrix(0, 1, -1, 0, 675, 300.900024)">
       <title>door</title>
     </rect>
-    <rect x="350" y="550" width="90.9" height="90.9" style="fill: rgb(216, 216, 216);">
-      <title>decor go label room office</title>
-    </rect>
     <rect x="-5" width="10" height="145.785" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="530">
       <title>parallel-connectors</title>
+    </rect>
+    <rect y="-10" width="20" height="1210" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
+      <title>wall</title>
     </rect>
   </g>
 </svg>
