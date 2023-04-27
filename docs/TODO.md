@@ -5,8 +5,13 @@
 - ✅ 102 navmesh issue
   - due to `lounge--017--2x4`
   - fixed in svg symbol: prevent obstacle polys from intersecting
-- 🚧 more `do` points
-- 🚧 more `orient-{deg}` tags
+- 🚧 symbols have `do` points with `orient-{deg}` tags
+  - ✅ up to offices
+  - ✅ offices
+  - the rest
+- 🚧 properly type code relating to `normalizeNpcCommandOpts`
+
+- mask legs when `sit` using "surfaces" (polygons from symbols)
 - go back to writing
 
 - remove tag `no-turn`?
@@ -17,7 +22,6 @@
 - 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
 
-- sit legs should be under table e.g. via mask
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
@@ -31,6 +35,13 @@
 - BUG walk tracked npc and wait for finish; pause and unpause causes re-track
 - BUG spawned into toilet without triggering FOV change
 - Spriter Pro: put hat opacity back at 100% but hide using character map
+- BUG gatsby watch static/assets
+  ```sh
+  [0]   Error: ENOENT: no such file or directory, copyfile '/Users/Robert.Myers/coding
+  [0]   /the-last-redoubt/static/assets/symbol/lifeboat--small-craft.svg.crswap' -> '/
+  [0]   Users/Robert.Myers/coding/the-last-redoubt/public/assets/symbol/lifeboat--smal
+  [0]   l-craft.svg.crswap'
+  ```
 - ✅ BUG sporadic startAnimationByMeta on click different part of do point
   - goLoop was triggered and was cancelling before startAnimationByMeta
 
