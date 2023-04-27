@@ -11,7 +11,11 @@
   - the rest
 - 🚧 properly type code relating to `normalizeNpcCommandOpts`
 
-- mask legs when `sit` using "surfaces" (polygons from symbols)
+- 🚧 mask legs when `sit` using "surfaces" (polygons from symbols)
+  - gm.surfaceIds[roomId] points into gm.groups.singles
+  - clip-path  `<NPC>` root i.e. sit bounds sans surface polys
+    - e.g. `'polygon(0px 0px, 10px 0px, 10px 10px, 0px 10px)'`
+    - given world polygon, offset by npc position, then scale by npc scale
 - go back to writing
 
 - remove tag `no-turn`?
