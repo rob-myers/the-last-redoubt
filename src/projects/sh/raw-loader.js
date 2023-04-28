@@ -266,14 +266,10 @@
       }
     },
   
-    /** npc {action} [{opts}] [{args}] */
+    /** npc {action} [{opts}] [{args}] 🚧 Needs a refactor */
     npc: async function* ({ api, args, home, datum }) {
       const { doors, npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
       const action = args[0];
-
-      /**
-       * 🚧 needs refactor into smaller parts
-       */
 
       if (typeof action !== "string" || action === "") {
         throw api.throwError("first arg {action} must be a non-empty string");
@@ -355,7 +351,7 @@
 
         await npcs.spawn({ npcKey, point, npcClassKey })
         if (point?.meta?.do) {// 🚧 will not work if we respawn on top
-          await npcs.npcActDo({ npcKey, point, action: "do", fadeInMs: 0 })
+          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 })
         }
       } else {
         // { npcKey, [npcClassKey], point }

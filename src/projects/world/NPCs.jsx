@@ -131,8 +131,8 @@ export default function NPCs(props) {
     },
     async fadeSpawnDo(npc, e, meta) {
       try {
-        if (e.fadeInMs !== 0) {
-          await npc.animateOpacity(0, e.fadeInMs ?? spawnFadeMs);
+        if (e.fadeOutMs !== 0) {
+          await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
         }
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
@@ -449,69 +449,75 @@ export default function NPCs(props) {
     },
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
-      const npcPosition = npc.getPosition();
       const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
       const meta = npcService.extendDecorMeta(e.point.meta, gm.matrix);
       
       try {
-        const npcOnNavMesh = state.isPointInNavmesh(npcPosition);
-        if (npcOnNavMesh) {// Started on-mesh and clicked point
-          if (!meta.doable) {
-            throw Error('not doable');
-          }
-          /** The actual "do point" -- e.point is somewhere on icon */
-          const decorPoint = meta.targetPos;
-          if (state.isPointInNavmesh(decorPoint)) {// Walk then Do
-            const navPath = state.getNpcGlobalNav({ npcKey: e.npcKey, point: decorPoint, throwOnNotNav: true });
-            await state.walkNpc({ npcKey: e.npcKey, throwOnCancel: true, ...navPath });
-            npc.startAnimationByMeta(e.point.meta);
-            return;
-          }
-          
-          if (!(npcPosition.distanceTo(e.point) <= npc.getInteractRadius())) {
-            throw Error('too far away');
-          }
-
-          await state.fadeSpawnDo(npc, {
-            npcKey: e.npcKey,
-            point: decorPoint,
-            angle: meta.orientRadians,
-            requireNav: false,
-            fadeInMs: e.fadeInMs,
-          }, meta);
-
-        } else {// Started off-mesh and clicked point
-          
-          if (!(meta.doable || meta.nav)) {
-            throw Error('not doable nor navigable');
-          }
-
-          if (
-            !(npcPosition.distanceTo(e.point) <= npc.getInteractRadius())
-            || !api.gmGraph.inSameRoom(npcPosition, e.point)
-          ) {
-            throw Error('too far away');
-          }
-
-          await state.fadeSpawnDo(npc, {
-            npcKey: e.npcKey,
-            // If not navigable use decorPoint
-            point: meta.nav ? e.point : meta.targetPos,
-            // Orient if staying off-mesh
-            angle: meta.nav ? undefined : meta.orientRadians,
-            fadeInMs: e.fadeInMs,
-          }, meta);
+        if (state.isPointInNavmesh(npc.getPosition())) {
+          await state.onMeshDoMeta(npc, e.point, meta);
+        } else {
+          await state.offMeshDoMeta(npc, e.point, meta, e.fadeOutMs);
         }
-
       } catch (e) {
         if (e instanceof Error && e.message === 'cancelled') {
-          // ℹ️ Swallow 'cancelled' errors, e.g.
-          // - cancel current walk to start a new one
-          // - cancel spawn due to obstruction
+          // ℹ️ Swallow 'cancelled' errors: start new walk or obstruction
+          // ℹ️ All errors can be swallowed via `npc do '{ suppressThrow: true }'`
         } else {
           throw e;
         }
       }
+    },
+    async offMeshDoMeta(npc, point, meta, fadeOutMs) {
+      if (!(meta.doable || meta.nav)) {
+        throw Error('not doable nor navigable');
+      }
+
+      const npcPosition = npc.getPosition();
+      if (
+        !(npcPosition.distanceTo(point) <= npc.getInteractRadius())
+        || !api.gmGraph.inSameRoom(npcPosition, point)
+      ) {
+        throw Error('too far away');
+      }
+
+      await state.fadeSpawnDo(npc, {
+        npcKey: npc.key,
+        // If not navigable use decorPoint
+        point: meta.nav ? point : meta.targetPos,
+        // Orient if staying off-mesh
+        angle: meta.nav ? undefined : meta.orientRadians,
+        fadeOutMs,
+      }, meta);
+    },
+    async onMeshDoMeta(npc, point, meta) {
+      if (!meta.doable) {
+        throw Error('not doable');
+      }
+      /** The actual "do point" -- point is somewhere on icon */
+      const decorPoint = meta.targetPos;
+
+      if (state.isPointInNavmesh(decorPoint)) {
+        // Walk, [Turn] then Do
+        const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
+        await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, ...navPath });
+        if (typeof meta.orientRadians === 'number') {
+          await npc.animateRotate(meta.orientRadians, 100);
+        }
+        npc.startAnimationByMeta(meta);
+        return;
+      }
+      
+      if (!(npc.getPosition().distanceTo(point) <= npc.getInteractRadius())) {
+        throw Error('too far away');
+      }
+
+      await state.fadeSpawnDo(npc, {
+        npcKey: npc.key,
+        point: decorPoint,
+        angle: meta.orientRadians,
+        requireNav: false,
+        fadeOutMs: undefined,
+      }, meta);
     },
     onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
       // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
@@ -834,7 +840,7 @@ const rootCss = css`
  *
  * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
  * @property {() => void} cleanSessionCtxts
- * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeInMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
+ * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
@@ -849,6 +855,10 @@ const rootCss = css`
  * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geom.VectJson) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
+ * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta, fadeOutMs?: number) => Promise<void>} offMeshDoMeta
+ * Started off-mesh and clicked point
+ * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta) => Promise<void>} onMeshDoMeta
+ * Started on-mesh and clicked point
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
