@@ -107,22 +107,22 @@
     <rect x="225" y="470" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance-60</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1004.790588, -176.666977)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 1004.790588, -176.666977)">
       <title>light floor circle</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 800, -296.666992)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 800, -296.666992)">
       <title>light floor circle</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 984.790588, -396.666962)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 984.790588, -396.666962)">
       <title>light floor circle</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1084.790527, -276.666962)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 1084.790527, -276.666962)">
       <title>light floor circle</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1304.790527, -326.666962)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 1304.790527, -326.666962)">
       <title>light floor circle</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1664.790527, -246.666962)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill-opacity: 0.1; fill: none; stroke-dasharray: 5px; stroke: rgb(142, 142, 0);" transform="matrix(0, 1, -1, 0, 1664.790527, -246.666962)">
       <title>light floor circle</title>
     </rect>
     <path d="M 300 121 L 360 121 L 360 61 L 420 125.6 L 384.4 180 L 360 240 L 300 240.6 L 300 121 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; fill: rgb(255, 255, 255); stroke-linecap: round; stroke-linejoin: round;">
