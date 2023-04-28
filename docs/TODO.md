@@ -13,10 +13,8 @@
 
 - 🚧 mask legs when `sit` using "surfaces" (polygons from symbols)
   - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
-  - clip-path  `<NPC>` root i.e. sit bounds sans surface polys
-    - e.g. `'polygon(0px 0px, 10px 0px, 10px 10px, 0px 10px)'`
-      but should actually use `path(...)`
-    - given world polygon, offset by npc position, then scale by npc scale
+  - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
+  - 🚧 cleanup
 - go back to writing
 
 - remove tag `no-turn`?

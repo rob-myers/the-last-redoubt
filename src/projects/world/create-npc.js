@@ -2,6 +2,7 @@ import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { cssName } from '../service/const';
+import { warn } from '../service/log';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 
 import npcsMeta from './npcs-meta.json';
@@ -250,6 +251,13 @@ export default function createNpc(
       // We convert from "seconds per world-unit" to "milliseconds per world-unit"
       return 1000 * (1 / this.getSpeed());
     },
+    getGmRoomId() {
+      if (this.doMeta && typeof this.doMeta.gmId === 'number' && typeof this.doMeta.roomId === 'number') {
+        return { gmId: this.doMeta.gmId, roomId: this.doMeta.roomId };
+      } else {
+        return api.gmGraph.findRoomContaining(this.getPosition());
+      }
+    },
     getInteractRadius() {
       // can inherit from <NPCs> root
       return parseFloat(getComputedStyle(this.el.root).getPropertyValue(cssName.npcsInteractRadius));
@@ -390,7 +398,7 @@ export default function createNpc(
     },
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
-        return console.warn('nextWayTimeout: anim.root.currentTime is null')
+        return warn('nextWayTimeout: anim.root.currentTime is null')
       } else if (this.anim.wayMetas[0]) {
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
@@ -515,6 +523,29 @@ export default function createNpc(
           const radius = this.getRadius();
           this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
     
+          // When sitting ensure feet are below surfaces
+          // 🚧 move elsewhere
+          this.el.root.style.clipPath = 'none';
+          if (this.anim.spriteSheet === 'sit') {
+            const gmRoomId = this.getGmRoomId();
+            if (gmRoomId) {
+              const gm = api.gmGraph.gms[gmRoomId.gmId];
+              const worldSurfaces = gm.roomSurfaceIds[gmRoomId.roomId]
+                .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
+              ;
+              const position = this.getPosition();
+              const npcSurfaces = worldSurfaces.map(x => x.translate(-position.x, -position.y));
+              const { scale, parsed: { animLookup: { sit: { frameAabb } } } } = npcsMeta[this.def.npcClassKey];
+              // Scale by 2 to include CSS drop-shadow
+              const maxDim = Math.max(frameAabb.width, frameAabb.height) * 2;
+              const localBounds = Poly.fromRect(new Rect(-maxDim/2, -maxDim/2, maxDim, maxDim)).scale(scale);
+              const inverted = Poly.cutOut(npcSurfaces, [localBounds]);
+              this.el.root.style.clipPath = `path("${inverted.map(poly => poly.svgPath)}")`;
+            } else {
+              warn('sitting npc does not reside in any room');
+            }
+          }
+
           // - Maybe fixes "this.anim.translate.addEventListener is not a function"
           // - Maybe fixes "this.anim.rotate.cancel is not a function" on HMR
           this.anim.translate = new Animation();
@@ -546,18 +577,15 @@ export default function createNpc(
     },
     startAnimationByMeta(meta) {
       switch (true) {
-        case meta.sit: {
+        case meta.sit:
           this.startAnimation('sit');
           break;
-        }
-        case meta.stand: {
+        case meta.stand:
           this.startAnimation('idle-breathe');
           break;
-        }
-        case meta.lie: {
+        case meta.lie:
           this.startAnimation('lie');
           break;
-        }
       }
       this.doMeta = meta;
     },

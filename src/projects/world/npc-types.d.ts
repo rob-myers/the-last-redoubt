@@ -75,6 +75,7 @@ declare namespace NPC {
     getAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
     getAnimScaleFactor(): number;
+    getGmRoomId(): Geomorph.GmRoomId | null;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
     getPosition(): Geom.Vect;
