@@ -317,7 +317,7 @@
         }
       },
       {
-        "tags": [],
+        "tags": ["surface"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2557,6 +2557,62 @@
         }
       },
       {
+        "tags": ["decor", "go", "label", "room", "bedroom"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[778, 362], [778, 358], [782, 358], [782, 362]]]
+        }
+      },
+      {
+        "tags": ["decor", "do", "lie", "bed", "orient-180", "orient-0"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [778.493, 271.887],
+              [778.493, 269.887],
+              [780.493, 269.887],
+              [780.493, 271.887]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-270", "orient-90"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [808.493, 379.887],
+              [808.493, 377.887],
+              [810.493, 377.887],
+              [810.493, 379.887]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["decor", "do", "sit", "chair", "orient-135", "orient-315"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [744.493, 395.887],
+              [744.493, 393.887],
+              [746.493, 393.887],
+              [746.493, 395.887]
+            ]
+          ]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[717, 354], [717, 306], [723, 306], [723, 354]]]
+        }
+      },
+      {
         "tags": ["wall"],
         "poly": {
           "type": "Polygon",
@@ -2572,20 +2628,6 @@
           "coordinates": [
             [[718, 354], [722, 354], [722, 422], [718, 422], [718, 354]]
           ]
-        }
-      },
-      {
-        "tags": ["door"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[717, 354], [717, 306], [723, 306], [723, 354]]]
-        }
-      },
-      {
-        "tags": ["decor", "go", "label", "room", "bedroom"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[770, 340], [770, 320], [790, 320], [790, 340]]]
         }
       },
       {
@@ -5734,11 +5776,11 @@
     },
     {
       "text": "room bedroom",
-      "center": {"x": 780, "y": 330},
+      "center": {"x": 780, "y": 360},
       "index": 8,
       "tags": ["decor", "go"],
-      "rect": {"x": 744.5, "y": 325, "width": 71, "height": 10},
-      "padded": {"x": 740.5, "y": 323, "width": 79, "height": 14}
+      "rect": {"x": 744.5, "y": 355, "width": 71, "height": 10},
+      "padded": {"x": 740.5, "y": 353, "width": 79, "height": 14}
     },
     {
       "text": "room medical",
@@ -15436,6 +15478,7 @@
     "17": [34, 40],
     "18": [65],
     "19": [98],
+    "20": [19],
     "26": [45],
     "27": [82, 83],
     "28": [89]
