@@ -19,7 +19,9 @@
     <rect x="627.6" y="300" width="130" height="152.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="627.6" y="750" width="130" height="152.9" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <rect x="161.6" y="928.7" width="156.8" height="129" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <path d="M 0 1047.5 L 116.895 1047.5 L 171.371 1080.281 L 239.91 1091.622 L 300 1083.042 L 363.145 1047.5 L 900 1047.5 L 900 1202.2 L 0 1202.2 L 0 1047.5 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 0 1047.5 L 116.895 1047.5 L 171.371 1080.281 L 239.91 1091.622 L 300 1083.042 L 363.145 1047.5 L 900 1047.5 L 900 1202.2 L 0 1202.2 L 0 1047.5 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
   </g>
   <g style="">
     <title>walls</title>

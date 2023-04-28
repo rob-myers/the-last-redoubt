@@ -9,9 +9,15 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect width="149.8" height="751.2" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
-    <rect width="600" height="148.8" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="751.2"/>
-    <rect width="450.2" height="148.8" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="149.8"/>
+    <rect width="149.8" height="751.2" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </rect>
+    <rect width="600" height="148.8" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="751.2">
+      <title>surface</title>
+    </rect>
+    <rect width="450.2" height="148.8" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="149.8" y="1">
+      <title>surface</title>
+    </rect>
     <rect x="300" width="148" height="132" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="169"/>
     <rect x="300" width="148" height="132" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="599"/>
   </g>

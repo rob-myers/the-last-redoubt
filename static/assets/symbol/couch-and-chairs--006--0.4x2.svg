@@ -9,15 +9,26 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect width="124" height="574.627" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="15.03" x="-2"/>
+    <rect width="124" height="65" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="15" x="-2">
+      <title>surface</title>
+    </rect>
+    <rect width="124" height="65" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="525" x="-2">
+      <title>surface</title>
+    </rect>
+    <rect width="124" height="415" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" y="95" x="-2">
+      <title>surface</title>
+    </rect>
+  </g>
+  <g>
+    <title>singles</title>
     <rect x="34.895" y="180.005" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit couch orient-180</title>
+      <title>decor do sit sofa orient-180</title>
     </rect>
     <rect x="34.895" y="295" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit couch orient-180</title>
+      <title>decor do sit sofa orient-180</title>
     </rect>
     <rect x="34.895" y="415" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit couch orient-180</title>
+      <title>decor do sit sofa orient-180</title>
     </rect>
   </g>
 </svg>

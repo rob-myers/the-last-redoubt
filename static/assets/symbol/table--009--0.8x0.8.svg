@@ -6,6 +6,27 @@
   </g>
   <g>
     <title>obstacles</title>
-    <path d="M 170 22.5 L 277.5 22.5 L 277.5 130 L 243.229 130 L 243.229 170 L 277.5 170 L 277.5 277.5 L 170 277.5 L 170 241.592 L 130 241.592 L 130 277.5 L 22.5 277.5 L 22.5 170 L 56.504 170 L 56.504 130 L 22.5 130 L 22.5 22.5 L 130 22.5 L 130 57.444 L 170 57.444 L 170 22.5 Z" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 170 57.444 L 215.452 86.183 L 240.735 129.51 L 240.735 169.51 L 213.466 215.16 L 170 241.592 L 130 241.592 L 81.756 212.649 L 60.399 170.153 L 60.399 130.153 L 85.266 85.587 L 130 57.444 L 170 57.444 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
+    <path d="M 228.981 22.86 L 261.47 36.714 L 274.927 70.159 L 261.47 103.604 L 231.907 111.033 L 185.961 63.734 L 196.492 36.714 L 228.981 22.86 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 228.981 185.86 L 261.47 199.714 L 274.927 233.159 L 261.47 266.604 L 231.907 274.033 L 185.961 226.734 L 196.492 199.714 L 228.981 185.86 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 460.390482, -0.497508)"/>
+    <path d="M 67.981 186.86 L 100.47 200.714 L 113.927 234.159 L 100.47 267.604 L 70.907 275.033 L 24.961 227.734 L 35.492 200.714 L 67.981 186.86 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(-1, 0, 0, -1, 138.887997, 461.892981)"/>
+    <path d="M 66.981 26.86 L 99.47 40.714 L 112.927 74.159 L 99.47 107.604 L 69.907 115.033 L 23.961 67.734 L 34.492 40.714 L 66.981 26.86 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0, -1, 1, 0, -2.50249, 139.390502)"/>
+  </g>
+  <g>
+    <title>singles</title>
+    <rect x="60" y="60" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-45</title>
+    </rect>
+    <rect x="60" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-315</title>
+    </rect>
+    <rect x="230" y="60" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-135</title>
+    </rect>
+    <rect x="230" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient-225</title>
+    </rect>
   </g>
 </svg>
