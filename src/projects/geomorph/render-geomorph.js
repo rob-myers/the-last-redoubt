@@ -80,7 +80,7 @@ export async function renderGeomorph(
     ctxt.fillStyle = obsColor;
     ctxt.shadowBlur = 10;
     ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
-    fillPolygons(ctxt, obstacles);
+    fillPolygons(ctxt, obstacles.map(({ poly }) => poly));
     ctxt.shadowBlur = 0;
     ctxt.shadowColor = '';
   }

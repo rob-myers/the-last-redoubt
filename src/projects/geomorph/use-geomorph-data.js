@@ -213,7 +213,7 @@ export async function createGeomorphData(input) {
     },
     getOtherRoomId(doorOrId, roomId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
-        .roomIds.find(id => id !== roomId) || -1;
+        .roomIds.find(id => id !== roomId) ?? -1;
     },
     isHullDoor(doorOrId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)

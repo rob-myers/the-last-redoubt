@@ -44,12 +44,12 @@ declare namespace Geomorph {
   }
 
   interface SvgGroups<T> {
-    obstacles: T[];
-    singles: SvgGroupsSingle<T>[];
+    obstacles: SvgGroupWithTags<T>[];
+    singles: SvgGroupWithTags<T>[];
     walls: T[];
   }
 
-  interface SvgGroupsSingle<T> {
+  interface SvgGroupWithTags<T> {
     poly: T;
     tags: string[];
   }
@@ -91,10 +91,10 @@ declare namespace Geomorph {
      * We'll reorganise these by door id.
      */
     lightRects: BaseLightDoorRect<R>[];
-    /**
-     * Pointers into `groups.singles`.
-     */
+    /** Pointers into `groups.singles`. */
     floorHighlightIds: number[];
+    /** Pointers into `groups.obstacles` indexed by roomId. */
+    roomSurfaceIds: Record<number, number[]>;
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];

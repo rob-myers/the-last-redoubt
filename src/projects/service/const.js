@@ -143,6 +143,8 @@ export const svgSymbolTag = /** @type {const} */ ({
   light: 'light',
   /** Distinguish lights as floor-lights */
   floor: 'floor',
+  /** Surfaces can obscure NPC legs when sitting */
+  surface: 'surface',
 });
 
 export const defaultLightDistance = 300;

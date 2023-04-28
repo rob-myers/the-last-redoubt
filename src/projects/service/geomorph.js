@@ -2,7 +2,7 @@
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, assertNonNull, testNever } from './generic';
-import { error, warn } from './log';
+import { error, info, warn } from './log';
 import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
@@ -19,16 +19,16 @@ import { fillRing, supportsWebp } from "../service/dom";
  */
 export async function createLayout(opts) {
   const m = new Mat;
-
   /** @type {Geomorph.ParsedLayout['groups']} */
   const groups = { obstacles: [], singles: [], walls: [] };
 
+  // Compute `groups`
   opts.def.items.forEach((item, i) => {
     m.feedFromArray(item.transform || [1, 0, 0, 1, 0, 0]);
     const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
     if (i) {
       /**
-       * Starship symbol PNGs are 5 times larger than Geomorph PNGs.
+       * Starship symbol PNGs are 5 times larger than geomorph PNGs.
        * We skip 1st item i.e. hull, which corresponds to a geomorph PNG.
        */
       m.a *= 0.2,
@@ -36,9 +36,9 @@ export async function createLayout(opts) {
       m.c *= 0.2,
       m.d *= 0.2;
     }
-    // Transform singles (restricting doors/walls by tags)
+    // Transform singles (restricting doors/walls by item.tags)
     // Room orientation tags permit decoding angle-{deg} tags later
-    const restricted = singles
+    const restrictedSingles = singles
       .map(({ tags, poly }) => ({
         tags: modifySinglesTags(tags.slice(), m),
         poly: poly.clone().applyMatrix(m).precision(precision),
@@ -50,8 +50,10 @@ export async function createLayout(opts) {
             ? tags.some(tag => /** @type {string[]} */ (item.walls).includes(tag))
             : true;
       });
-    groups.singles.push(...restricted);
-    groups.obstacles.push(...obstacles.map(x => x.clone().applyMatrix(m)));
+    groups.singles.push(...restrictedSingles);
+    groups.obstacles.push(...obstacles.map(({ poly, tags }) =>
+      ({ tags, poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision) })
+    ));
 
     /**
      * Only the hull symbol (the 1st symbol) has "hull" walls.
@@ -66,7 +68,7 @@ export async function createLayout(opts) {
     groups.walls.push(...Poly.union([
       ...walls.map(x => x.clone().applyMatrix(m)),
       // singles can also have walls e.g. to support optional doors
-      ...singlesToPolys(restricted, 'wall'),
+      ...singlesToPolys(restrictedSingles, 'wall'),
       // ...hull.flatMap(x => x.createOutset(hullOutset)).map(x => x.applyMatrix(m)),
       ...inwardsOutsetHull,
     ]));
@@ -74,7 +76,7 @@ export async function createLayout(opts) {
 
   // Ensure well-signed polygons
   groups.singles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
-  groups.obstacles.forEach(poly => poly.fixOrientation().precision(precision));
+  groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
   const symbols = opts.def.items.map(x => opts.lookup[x.symbol]);
@@ -122,16 +124,13 @@ export async function createLayout(opts) {
 
 
   // Labels
-  // 🚧 remove measurements
   const measurer = createCanvas(0, 0).getContext('2d');
   measurer.font = labelMeta.font;
-  /**
-   * @type {Geomorph.LayoutLabel[]}
-   * - Subsequent tags make up label, up to optional `|`.
-   */
+  /** @type {Geomorph.LayoutLabel[]} */
   const labels = groups.singles.filter(x => x.tags.includes('label'))
     .map(({ poly, tags }, index) => {
       const center = poly.rect.center.precision(precision).json;
+      // Subsequent tags make up label
       const text = tags.slice(tags.indexOf('label') + 1).join(' ');
       const metaTags = tags.slice(0, 2); // 🚧
       const noTail = !text.match(/[gjpqy]/);
@@ -164,7 +163,7 @@ export async function createLayout(opts) {
   const navPolyWithDoors = Poly.cutOut(
     [ // Non-unioned walls avoids outset issue (self-intersection)
       ...unjoinedWalls.flatMap(x => geom.createOutset(x, wallOutset)),
-      ...groups.obstacles.flatMap(x => geom.createOutset(x, obstacleOutset)),
+      ...groups.obstacles.flatMap(x => geom.createOutset(x.poly, obstacleOutset)),
     ],
     hullOutline,
   ).map(
@@ -229,7 +228,7 @@ export async function createLayout(opts) {
     navDecomp.tris.push(triA, triB);
   }
 
-  console.log('nav tris count:', navDecomp.vs.length)
+  info('nav tris count:', navDecomp.vs.length);
 
   /**
    * Compute navZone using method from three-pathfinding,
@@ -259,6 +258,17 @@ export async function createLayout(opts) {
   const floorHighlightIds = groups.singles.flatMap(({ tags }, index) =>
     tags.includes(svgSymbolTag.light) && tags.includes(svgSymbolTag.floor) ? [index] : []
   );
+  const surfaceIds = groups.obstacles.flatMap(({ tags }, index) =>
+    tags.includes(svgSymbolTag.surface) ? [index] : []
+  );
+  const roomSurfaceIds = surfaceIds.reduce((agg, surfaceId) => {
+    const surfaceCenter = groups.obstacles[surfaceId].poly.center;
+    const roomId = rooms.findIndex(roomPoly => roomPoly.contains(surfaceCenter));
+    roomId === -1
+      ? warn(`createLayout ${opts.def.id}: surface ${surfaceId} center not in any room`)
+      : (agg[roomId] ||= []).push(surfaceId);
+    return agg;
+  }, /** @type {Record<number, number[]>} */ ({}));
 
   /** @type {Geomorph.ParsedLayout} */
   const output = {
@@ -278,6 +288,7 @@ export async function createLayout(opts) {
     lightSrcs,
     lightRects: [], // Computed below
     floorHighlightIds,
+    roomSurfaceIds,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -458,7 +469,7 @@ function parseConnectorRect(x) {
 }
 
 /**
- * @param {Geomorph.SvgGroupsSingle<Geom.Poly>} single 
+ * @param {Geomorph.SvgGroupWithTags<Geom.Poly>} single 
  * @param {Geom.Poly[]} rooms 
  * @returns {Geomorph.ParsedConnectorRect}
  */
@@ -501,7 +512,7 @@ function parseConnectorRect(x) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -512,7 +523,7 @@ export function serializeLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(x => x.geoJson),
+      obstacles: groups.obstacles.map(x => ({ tags: x.tags, poly: x.poly.geoJson })),
       singles: groups.singles.map(x => ({ tags: x.tags, poly: x.poly.geoJson })),
       walls: groups.walls.map(x => x.geoJson),
     },
@@ -534,6 +545,7 @@ export function serializeLayout({
       rect: x.rect.json,
     })),
     floorHighlightIds,
+    roomSurfaceIds,
 
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -565,7 +577,7 @@ export function matchedMap(tags, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -576,7 +588,7 @@ export function parseLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(Poly.from),
+      obstacles: groups.obstacles.map(x => ({ tags: x.tags, poly: Poly.from(x.poly) })),
       singles: groups.singles.map(x => ({ tags: x.tags, poly: Poly.from(x.poly) })),
       walls: groups.walls.map(Poly.from),
     },
@@ -598,6 +610,7 @@ export function parseLayout({
       rect: Rect.fromJson(x.rect),
     })),
     floorHighlightIds,
+    roomSurfaceIds,
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,
@@ -628,7 +641,7 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
     key: symbolName,
     pngRect,
     hull: Poly.union(hull).map(x => x.precision(precision)),
-    obstacles: Poly.union(obstacles).map(x => x.precision(precision)),
+    obstacles: obstacles.map((/** @type {*} */ poly) => ({ tags: poly._ownTags, poly })),
     walls: Poly.union(walls).map(x => x.precision(precision)),
     singles: singles.map((/** @type {*} */ poly) => ({ tags: poly._ownTags, poly })),
     lastModified,
@@ -643,7 +656,7 @@ export function serializeSymbol(parsed) {
   return {
     key: parsed.key,
     hull: toJsons(parsed.hull),
-    obstacles: toJsons(parsed.obstacles),
+    obstacles: parsed.obstacles.map(({ tags, poly }) => ({ tags, poly: poly.geoJson })),
     walls: toJsons(parsed.walls),
     singles: parsed.singles.map(({ tags, poly }) => ({ tags, poly: poly.geoJson })),
     pngRect: parsed.pngRect,
@@ -659,7 +672,7 @@ function deserializeSymbol(json) {
   return {
     key: json.key,
     hull: json.hull.map(Poly.from),
-    obstacles: json.obstacles.map(Poly.from),
+    obstacles: json.obstacles.map(({ tags, poly }) => ({ tags, poly: Poly.from(poly) })),
     walls: json.walls.map(Poly.from),
     singles: json.singles.map(({ tags, poly }) => ({ tags, poly: Poly.from(poly) })),
     pngRect: json.pngRect,
@@ -1132,7 +1145,7 @@ export function getDecorInstanceKey(gmId, roomId, decorId) {
 }
 
 /**
- * @param {Geomorph.SvgGroupsSingle<Poly>} svgSingle
+ * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
  * @param {number} singleIndex
  * @param {Geomorph.PointMeta} baseMeta
  * @returns {NPC.DecorSansPath}
