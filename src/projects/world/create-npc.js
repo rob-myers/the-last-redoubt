@@ -535,9 +535,9 @@ export default function createNpc(
               ;
               const position = this.getPosition();
               const npcSurfaces = worldSurfaces.map(x => x.translate(-position.x, -position.y));
-              const { scale, parsed: { animLookup: { sit: { frameAabb } } } } = npcsMeta[this.def.npcClassKey];
-              // Scale by 2 to include CSS drop-shadow
-              const maxDim = Math.max(frameAabb.width, frameAabb.height) * 2;
+              const { scale } = npcsMeta[this.def.npcClassKey];
+              // Interact radius should contain everything, including CSS drop-shadow
+              const maxDim = 2 * (this.getInteractRadius() / scale);
               const localBounds = Poly.fromRect(new Rect(-maxDim/2, -maxDim/2, maxDim, maxDim)).scale(scale);
               const inverted = Poly.cutOut(npcSurfaces, [localBounds]);
               this.el.root.style.clipPath = `path("${inverted.map(poly => poly.svgPath)}")`;
