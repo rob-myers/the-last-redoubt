@@ -17,7 +17,9 @@
     <rect x="479" y="205" width="139" height="156" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0, 1, -1, 0, 1935.955078, -161.497116)"/>
     <path d="M 400.568 180.634 L 443.172 177.066 L 443.172 311.637 L 400.568 311.634 L 400.568 180.634 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0, 1, -1, 0, 2166.333984, 1049.431519)"/>
     <rect x="684" y="499" width="198" height="379" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0, 1, -1, 0, 2716.285156, 856.214661)"/>
-    <rect x="109" y="1652" width="279" height="146" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
+    <rect x="109" y="1652" width="279" height="146" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);">
+      <title>surface</title>
+    </rect>
     <rect x="329" y="134" width="95" height="102" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0, 1, -1, 0, 423.832397, 1210.166138)"/>
     <rect x="349" y="134" width="101" height="102" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0, 1, -1, 0, 492.532104, 1464.54126)"/>
     <path d="M 1499 1844.478 L 1495 1908 L 1461 1948 L 1425 1962 L 1338.943 1967.708 L 1298.943 1967.708 L 1218.943 1967.708 L 1178.943 1967.708 L 1098.943 1967.708 L 1058.943 1967.708 L 977 1964 L 919 1926 L 904.195 1876.629 L 904.067 1841.669 L 924 1798 L 972 1757 L 1059 1756.5 L 1099 1756.5 L 1179 1756.5 L 1219 1756.5 L 1299 1756.5 L 1339 1756.5 L 1425 1759 L 1479 1798 L 1499 1844.478 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);">
@@ -27,7 +29,7 @@
     <path d="M 2113.205 1349.604 L 2136.033 1376.309 L 2146.921 1408.54 L 2153.697 1452.944 L 2153.697 1492.604 L 2044.697 1492.604 L 2044.697 1452.944 L 2051.473 1408.54 L 2062.361 1376.309 L 2085.189 1349.604 L 2113.205 1349.604 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <path d="M 2293.205 1349.604 L 2316.033 1376.309 L 2326.921 1408.54 L 2333.697 1452.944 L 2333.697 1492.604 L 2224.697 1492.604 L 2224.697 1452.944 L 2231.473 1408.54 L 2242.361 1376.309 L 2265.189 1349.604 L 2293.205 1349.604 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <path d="M 397.72 300 L 667.472 300 L 728.032 266.111 L 774.538 266.111 L 830.666 300 L 967.014 300 L 1029.068 267.551 L 1073.57 267.551 L 1130.786 300 L 1267.297 300 L 1321.938 267.783 L 1379.155 267.783 L 1428.079 300 L 1563.569 300 L 1619.663 268.852 L 1675.298 268.852 L 1734.523 300 L 1999.033 300 L 1975.494 278.996 L 1891.985 213.804 L 1803.935 157.532 L 1709.866 108.472 L 1613.391 68.444 L 1511.564 36.793 L 1410.401 13.853 L 1306.757 0 L 1199 -3.293 L 1095.028 0 L 991.204 13.521 L 887.735 36.25 L 788.669 67.787 L 691.086 107.832 L 596.854 157.791 L 509.096 212.689 L 424.581 277.924 L 397.72 300 Z" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); fill-opacity: 0.5;">
-      <title>Path</title>
+      <title>surface</title>
     </path>
     <path d="M 844 1835.949 L 864.938 1817.678 L 899 1816.996 L 909 1823 L 909 1902.475 L 899 1907.331 L 865.333 1906.061 L 844 1886.413 L 836.339 1860.732 L 844 1835.949 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <path d="M 1497 1888.378 L 1517.938 1906.649 L 1552 1907.331 L 1562 1901.327 L 1562 1821.852 L 1552 1816.996 L 1518.333 1818.266 L 1497 1837.914 L 1489.339 1863.595 L 1497 1888.378 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(-1, 0, 0, -1, 3051.338986, 3724.32705)"/>
@@ -65,22 +67,22 @@
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="305" y="1851.858">
       <title>decor do sit chair orient-240</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="549">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1190" y="590">
       <title>decor go label room bridge</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="703" y="775">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="753" y="815">
       <title>decor go label room locker</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1603" y="775">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1603" y="825">
       <title>decor go label room locker</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="253" y="1299">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="293" y="1349">
       <title>decor go label room locker</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2053" y="1229">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2093" y="1239">
       <title>decor go label room toilet</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1153" y="1811">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1190" y="1855">
       <title>decor go label room briefing</title>
     </rect>
     <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="402" y="2040" bx:origin="0.5 0.5">
@@ -89,43 +91,49 @@
     <rect width="20" height="20" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2000" y="2040">
       <title>decor go label fuel</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1932" y="1899">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="300" y="660">
+      <title>decor label cpu</title>
+    </rect>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2070" y="650">
+      <title>decor label cpu</title>
+    </rect>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="1972" y="1919">
       <title>decor go label room bedroom</title>
     </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="403" y="1899">
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="403" y="1899">
       <title>decor go label room office</title>
     </rect>
     <rect x="1022.856" y="913.5" width="20" height="20" style="fill: rgb(2, 255, 2); stroke: rgb(0, 0, 0);">
       <title>decor go label room corridor</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1721.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1720">
       <title>decor do sit chair orient-90</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1721.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1720">
       <title>decor do sit chair orient-90</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1255" y="1721.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1255" y="1720">
       <title>decor do sit chair orient-90</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1721.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1720">
       <title>decor do sit chair orient-90</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1991.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1015" y="1995">
       <title>decor do sit chair orient-270</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1991.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1135" y="1995">
       <title>decor do sit chair orient-270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1255" y="1991.858">
       <title>decor do sit chair orient-270</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1991.858">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1375" y="1995">
       <title>decor do sit chair orient-270</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="875" y="1855">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="865" y="1855">
       <title>decor do sit chair orient-0</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1515" y="1855">
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="1525" y="1855">
       <title>decor do sit chair orient-180</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="2045" y="1631.858">
@@ -169,12 +177,6 @@
     </rect>
     <rect x="1187.525" y="750.8" width="24" height="230" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill-opacity: 0.5; fill: rgb(255, 255, 255);" transform="matrix(0, -1, 1, 0, 484.200012, 2101.524902)">
       <title>door iris</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="300" y="650">
-      <title>label cpu</title>
-    </rect>
-    <rect width="100" height="100" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="2000" y="650">
-      <title>label cpu</title>
     </rect>
     <rect x="1726.06" y="714.635" width="20" height="233.477" style="stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(255, 255, 0); fill-opacity: 0.5;">
       <title>view</title>
