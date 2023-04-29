@@ -12127,7 +12127,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -12140,7 +12140,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[473.815, 130], [473.815, 140], [483.815, 140], [483.815, 130]]
+            [[473.815, 120], [473.815, 130], [483.815, 130], [483.815, 120]]
           ]
         }
       },
@@ -12220,7 +12220,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1682766620831.9756
+    "lastModified": 1682767395537.2068
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",

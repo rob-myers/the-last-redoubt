@@ -3215,7 +3215,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-270", "orient-90"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3228,7 +3228,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[454.763, 574], [454.763, 572], [456.763, 572], [456.763, 574]]
+            [[454.763, 576], [454.763, 574], [456.763, 574], [456.763, 576]]
           ]
         }
       },
@@ -3379,7 +3379,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-270", "orient-90"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3392,7 +3392,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[574.763, 574], [574.763, 572], [576.763, 572], [576.763, 574]]
+            [[574.763, 576], [574.763, 574], [576.763, 574], [576.763, 576]]
           ]
         }
       },
@@ -3543,7 +3543,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-270", "orient-90"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3556,7 +3556,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[623.237, 574], [623.237, 572], [625.237, 572], [625.237, 574]]
+            [[623.237, 576], [623.237, 574], [625.237, 574], [625.237, 576]]
           ]
         }
       },
@@ -3707,7 +3707,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-270", "orient-90"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3720,7 +3720,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[743.237, 574], [743.237, 572], [745.237, 572], [745.237, 574]]
+            [[743.237, 576], [743.237, 574], [745.237, 574], [745.237, 576]]
           ]
         }
       },
