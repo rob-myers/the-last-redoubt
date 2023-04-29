@@ -1,4 +1,5 @@
 import { assertNonNull, testNever } from './generic';
+import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 
@@ -9,7 +10,7 @@ import { geom } from './geom';
  * @param {{ radius: number }} parsed 
  */
 export function computeNpcScale(parsed) {
-  return 14.4 / parsed.radius;
+  return npcWorldRadius / parsed.radius;
 }
 
 /**

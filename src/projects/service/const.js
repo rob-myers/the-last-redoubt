@@ -134,6 +134,20 @@ export const defaultNpcClassKey = 'vilani-a';
 
 export const spawnFadeMs = 500;
 
+/**
+ * One grid square corresponds to 1.5 meters according to Starship Geomorphs 2.0.
+ * In our approach, one grid square is 60 world units square.
+ * Average male shoulder width is 41cms (from above).
+ * Choosing 60cms (to include arms) then:
+ * ```
+ * 2 * radius is (0.6/1.5) * 60 = 24 world units
+ * hence radius is 12
+ * ```
+ */
+// export const npcRadius =  14.4;
+// export const npcWorldRadius =  10;
+export const npcWorldRadius =  12;
+
 //#endregion
 
 export const svgSymbolTag = /** @type {const} */ ({

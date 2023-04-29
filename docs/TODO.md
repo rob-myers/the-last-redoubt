@@ -5,6 +5,8 @@
 - ✅ 102 navmesh issue
   - due to `lounge--017--2x4`
   - fixed in svg symbol: prevent obstacle polys from intersecting
+- ✅ change nav outsets: wallOutset=12, obstacleOutset=8
+- ✅ change npc radius to 12
 - 🚧 symbols have `do` points with `orient-{deg}` tags
   - ✅ up to offices
   - ✅ offices
@@ -14,7 +16,8 @@
 - 🚧 mask legs when `sit` using "surfaces" (polygons from symbols)
   - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
   - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
-  - 🚧 cleanup
+  - 🚧 cleanup code
+  - 🚧 fix metas too close to surface
 - go back to writing
 
 - remove tag `no-turn`?
