@@ -2,23 +2,21 @@
 
 ## In progress
 
-- ✅ 102 navmesh issue
-  - due to `lounge--017--2x4`
-  - fixed in svg symbol: prevent obstacle polys from intersecting
-- ✅ change nav outsets: wallOutset=12, obstacleOutset=8
-- ✅ change npc radius to 12
+- 🚧 go back to writing
+
 - 🚧 symbols have `do` points with `orient-{deg}` tags
   - ✅ up to offices
   - ✅ offices
   - the rest
 - 🚧 properly type code relating to `normalizeNpcCommandOpts`
-
+- view urinals as toilets i.e. always sit
+  - standing at urinal does not look good now npcs are smaller
+  - also, we'd need to remove feet e.g. new anim `stand-no-feet`
 - 🚧 mask legs when `sit` using "surfaces" (polygons from symbols)
   - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
   - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
+  - ✅ fix metas too close to surface
   - 🚧 cleanup code
-  - 🚧 fix metas too close to surface
-- go back to writing
 
 - remove tag `no-turn`?
 - clean up bridge window/fuel?
@@ -449,6 +447,12 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ 102 navmesh issue
+  - due to `lounge--017--2x4`
+  - fixed in svg symbol: prevent obstacle polys from intersecting
+- ✅ change nav outsets: wallOutset=12, obstacleOutset=8
+- ✅ change npc radius to 12
 
 - ✅ `spawn` at do point triggers action
 
