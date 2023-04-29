@@ -12,8 +12,8 @@
     <path d="M 411 10 L 548 10 L 545.437 64.403 L 513.494 104.102 L 479.339 108.87 L 448.129 106.993 L 411 67.938 L 411 10 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <path d="M 241 10 L 359 10 L 343 97 L 324 141.2 L 300 150.625 L 272 141.2 L 255 97 L 241 10 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
     <rect x="37" y="340" width="263" height="419" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
-    <rect x="59" y="1113" width="151" height="136" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.509954, -0.860202, 0.860202, 0.509954, -962.747375, 403.195221)"/>
-    <rect x="59" y="1262" width="151" height="154" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.864947, -0.501863, 0.501863, 0.864947, -660.449951, 8.19891)"/>
+    <rect x="59" y="1113" width="151" height="136" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.500011, -0.866019, 0.866019, 0.500011, -968.280029, 415.719635)"/>
+    <rect x="59" y="1262" width="151" height="154" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);" transform="matrix(0.865996, -0.50005, 0.50005, 0.865996, -658.16394, 6.550229)"/>
   </g>
   <g style="pointer-events: none;">
     <title>walls</title>
@@ -25,18 +25,6 @@
     <title>singles</title>
     <rect width="180" height="300" style="fill-opacity: 0.5; fill: rgb(119, 119, 119);">
       <title>decor rect shower</title>
-    </rect>
-    <rect x="340" y="288" width="220" height="24" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
-      <title>door</title>
-    </rect>
-    <rect x="330" y="1188" width="230" height="24" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
-      <title>door</title>
-    </rect>
-    <rect y="290" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
-      <title>wall</title>
-    </rect>
-    <rect y="1190" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
-      <title>wall</title>
     </rect>
     <rect width="20" height="20" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 0, 255);" x="340" y="900">
       <title>decor go label room bedroom</title>
@@ -51,25 +39,34 @@
       <title>decor button shower</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="110">
-      <title>decor do sit toilet orient-90</title>
-    </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="200">
-      <title>decor do stand toilet orient-270</title>
+      <title>decor do sit toilet orient-270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="473.815" y="130">
       <title>decor do stand sink orient-270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="893.955">
-      <title>decor do sit chair orient-45</title>
+      <title>decor do sit chair orient-30</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="1093.955">
-      <title>decor do sit chair orient-315</title>
+      <title>decor do sit chair orient-330</title>
+    </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="145">
+      <title>decor do stand orient-270</title>
+    </rect>
+    <rect x="340" y="288" width="220" height="24" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
+      <title>door</title>
+    </rect>
+    <rect x="330" y="1188" width="230" height="24" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
+      <title>door</title>
     </rect>
     <rect x="438.584" width="20" height="900" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="300">
       <title>relate-connectors</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="145">
-      <title>decor do stand</title>
+    <rect y="290" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
+      <title>wall</title>
+    </rect>
+    <rect y="1190" width="600" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
+      <title>wall</title>
     </rect>
   </g>
 </svg>

@@ -12043,10 +12043,10 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [24.7447, 920.0221],
-              [141.7322, 989.3758],
-              [218.7353, 859.4853],
-              [101.7478, 790.1316]
+              [25.0998, 921.1368],
+              [142.8784, 989.1383],
+              [218.38, 858.3694],
+              [100.6014, 790.3679]
             ]
           ]
         }
@@ -12057,10 +12057,10 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [23.933, 1070.1521],
-              [101.2199, 1203.3539],
-              [231.8269, 1127.5726],
-              [154.54, 994.3708]
+              [23.9929, 1069.9342],
+              [101.0006, 1203.2976],
+              [231.766, 1127.7901],
+              [154.7583, 994.4267]
             ]
           ]
         }
@@ -12090,34 +12090,6 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[0, 0], [0, 300], [180, 300], [180, 0]]]
-        }
-      },
-      {
-        "tags": ["door"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[340, 288], [340, 312], [560, 312], [560, 288]]]
-        }
-      },
-      {
-        "tags": ["door"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[330, 1188], [330, 1212], [560, 1212], [560, 1188]]]
-        }
-      },
-      {
-        "tags": ["wall"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[0, 290], [0, 310], [600, 310], [600, 290]]]
-        }
-      },
-      {
-        "tags": ["wall"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[0, 1190], [0, 1210], [600, 1210], [600, 1190]]]
         }
       },
       {
@@ -12155,20 +12127,11 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-270"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [[293.815, 110], [293.815, 120], [303.815, 120], [303.815, 110]]
-          ]
-        }
-      },
-      {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[293.815, 200], [293.815, 210], [303.815, 210], [303.815, 200]]
           ]
         }
       },
@@ -12182,7 +12145,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair", "orient-45"],
+        "tags": ["decor", "do", "sit", "chair", "orient-30"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -12196,7 +12159,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "sit", "chair", "orient-315"],
+        "tags": ["decor", "do", "sit", "chair", "orient-330"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -12210,6 +12173,29 @@
         }
       },
       {
+        "tags": ["decor", "do", "stand", "orient-270"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[84.815, 145], [84.815, 155], [94.815, 155], [94.815, 145]]
+          ]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[340, 288], [340, 312], [560, 312], [560, 288]]]
+        }
+      },
+      {
+        "tags": ["door"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[330, 1188], [330, 1212], [560, 1212], [560, 1188]]]
+        }
+      },
+      {
         "tags": ["relate-connectors"],
         "poly": {
           "type": "Polygon",
@@ -12219,17 +12205,22 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand"],
+        "tags": ["wall"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[84.815, 145], [84.815, 155], [94.815, 155], [94.815, 145]]
-          ]
+          "coordinates": [[[0, 290], [0, 310], [600, 310], [600, 290]]]
+        }
+      },
+      {
+        "tags": ["wall"],
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[0, 1190], [0, 1210], [600, 1210], [600, 1190]]]
         }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1682702789373.5952
+    "lastModified": 1682766620831.9756
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",
