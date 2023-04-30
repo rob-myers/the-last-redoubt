@@ -271,7 +271,7 @@ const rootCss = css`
     &:not(.${cssName.iris}) {
       /* background: #444; */
       background: #fff;
-      border: 1px solid #000000aa;
+      border: 1px solid #000000;
       
       transition: width 300ms ease-in;
       &.${cssName.open} {
@@ -281,7 +281,7 @@ const rootCss = css`
         position: absolute;
         width: inherit;
         height: inherit;
-        border: 1px solid #000000aa;
+        border: 1px solid #000000;
         background: #fff;
         transform-origin: top left;
         transform: scale(-1, 1);
