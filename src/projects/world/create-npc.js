@@ -412,6 +412,26 @@ export default function createNpc(
         this.el.body = /** @type {HTMLDivElement} */ (rootEl.children[0]);
       }
     },
+    obscureBySurfaces() {// 🚧 cleaner approach possible?
+      const gmRoomId = this.getGmRoomId();
+      if (gmRoomId) {
+        const gm = api.gmGraph.gms[gmRoomId.gmId];
+        const worldSurfaces = gm.roomSurfaceIds[gmRoomId.roomId]
+          .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
+        ;
+        const position = this.getPosition();
+        const npcSurfaces = worldSurfaces.map(x => x.translate(-position.x, -position.y));
+        const { scale } = npcsMeta[this.def.npcClassKey];
+        // Interact radius should contain everything, including CSS drop-shadow
+        const maxDim = 2 * (this.getInteractRadius() / scale);
+        const localBounds = Poly.fromRect(new Rect(-maxDim/2, -maxDim/2, maxDim, maxDim)).scale(scale);
+        const inverted = Poly.cutOut(npcSurfaces, [localBounds]);
+        this.el.root.style.clipPath = `path("${inverted.map(poly => poly.svgPath)}")`;
+      } else {
+        warn('cannot obscure npc: npc does not reside in any room');
+        this.el.root.style.clipPath = 'none';
+      }
+    },
     pause(dueToProcessSuspend = false) {
       if (!dueToProcessSuspend) {
         this.manuallyPaused = true;
@@ -514,7 +534,7 @@ export default function createNpc(
           break;
         }
         case 'idle':
-        case 'idle-breathe': // 🚧 remove/swap in favour of `idle-static`
+        case 'idle-breathe':
         case 'lie':
         case 'sit': {
           this.clearWayMetas();
@@ -523,27 +543,10 @@ export default function createNpc(
           const radius = this.getRadius();
           this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
     
-          // When sitting ensure feet are below surfaces
-          // 🚧 move elsewhere
-          this.el.root.style.clipPath = 'none';
           if (this.anim.spriteSheet === 'sit') {
-            const gmRoomId = this.getGmRoomId();
-            if (gmRoomId) {
-              const gm = api.gmGraph.gms[gmRoomId.gmId];
-              const worldSurfaces = gm.roomSurfaceIds[gmRoomId.roomId]
-                .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
-              ;
-              const position = this.getPosition();
-              const npcSurfaces = worldSurfaces.map(x => x.translate(-position.x, -position.y));
-              const { scale } = npcsMeta[this.def.npcClassKey];
-              // Interact radius should contain everything, including CSS drop-shadow
-              const maxDim = 2 * (this.getInteractRadius() / scale);
-              const localBounds = Poly.fromRect(new Rect(-maxDim/2, -maxDim/2, maxDim, maxDim)).scale(scale);
-              const inverted = Poly.cutOut(npcSurfaces, [localBounds]);
-              this.el.root.style.clipPath = `path("${inverted.map(poly => poly.svgPath)}")`;
-            } else {
-              warn('sitting npc does not reside in any room');
-            }
+            this.obscureBySurfaces(); // Ensure feet are below surfaces
+          } else {
+            this.el.root.style.clipPath = 'none';
           }
 
           // - Maybe fixes "this.anim.translate.addEventListener is not a function"
@@ -554,7 +557,6 @@ export default function createNpc(
           // ℹ️ relax type of keys
           // 🚧 npc classes should have same Object.keys(animLookup)
           const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.classKey].parsed.animLookup);
-          // const keyframeMeta = synfigMeta.keyframeToMeta[this.anim.spriteSheet];
 
           // Always play an animation so can detect if paused
           this.anim.sprites = this.el.body.animate(
@@ -568,7 +570,6 @@ export default function createNpc(
               iterations: Infinity,
             },
           );
-          // this.anim.sprites = this.el.body.animate([], { duration: 2 * 1000, iterations: Infinity });
           break;
         }
         default:

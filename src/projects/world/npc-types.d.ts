@@ -115,6 +115,7 @@ declare namespace NPC {
     resume(dueToProcessResume?: boolean): void;
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
+    obscureBySurfaces(): void;
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;

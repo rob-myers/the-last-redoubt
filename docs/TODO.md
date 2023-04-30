@@ -2,7 +2,9 @@
 
 ## In progress
 
-- 🚧 go back to writing
+- ✅ go back to writing
+- ✅ carousel on first page
+  - `ffmpeg -i test.mov -filter_complex "[0:v] fps=1" -b:v 0 -crf 30 output.mp4`
 
 - 🚧 symbols have `do` points with `orient-{deg}` tags
   - ✅ up to offices
@@ -12,11 +14,13 @@
 - view urinals as toilets i.e. always sit
   - standing at urinal does not look good now npcs are smaller
   - also, we'd need to remove feet e.g. new anim `stand-no-feet`
-- 🚧 mask legs when `sit` using "surfaces" (polygons from symbols)
+- ✅ mask legs when `sit` using "surfaces" (polygons from symbols)
   - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
   - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
   - ✅ fix metas too close to surface
-  - 🚧 cleanup code
+  - ✅ cleanup code
+
+- create a new CodeSandbox
 
 - remove tag `no-turn`?
 - clean up bridge window/fuel?
@@ -25,6 +29,7 @@
 
 - 🚧 play with Chrome devtool recorder
   - can replay via https://www.npmjs.com/package/@puppeteer/replay
+  - puppeteer could be integrated with CodeSandbox?
 
 - add npc class hlanssai-a
   - somehow import njoy games sprites into Spriter Pro
