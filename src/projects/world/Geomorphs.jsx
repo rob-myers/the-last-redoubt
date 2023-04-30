@@ -150,11 +150,8 @@ export default function Geomorphs(props) {
 
 const rootCss = css`
   position: absolute;
-  /**
-   * - brightness(70%) sepia(0.4);
-   * - brightness(80%) sepia(0.1);
-   */
-  ${cssName.geomorphFilter}: brightness(70%) sepia(0.1) contrast(1);
+
+  ${cssName.geomorphFilter}: brightness(50%) sepia(0.1) contrast(1.3);
 
   img.geomorph {
     position: absolute;
