@@ -289,9 +289,9 @@ const rootCss = css`
     .swiper-lazy-preloader {
       margin-top: unset;
     }
-    figure.video {
+    /* figure.video {
       padding-bottom: 96px;
-    }
+    } */
     /** ℹ️ full-screen mobile is edge case (should zoom instead) */
     @media(max-width: 600px) {
       border-width: 1px;
