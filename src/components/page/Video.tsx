@@ -12,6 +12,7 @@ export default function Video({ videoKey, height }: Props) {
       {videoKey === 'video--intro-world-tty' && <EmbeddedVideo playlist id="PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo" title="intro world tty" />}
       {videoKey === 'video--intro-first' && <EmbeddedVideo playlist id="PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="intro first" />}
       {videoKey === 'first-peek-test-1' && <EmbeddedVideo id="Djc_0e5TQiY" title="first-peek-test-1" />}
+      {videoKey === 'first-peek-test-2' && <EmbeddedVideo id="eAFHK-BXFLs" title="first-peek-test-2" />}
     </figure>
   );
 }
@@ -44,6 +45,7 @@ export type VideoKey = (
   | 'video--intro-world-tty'
   | 'video--intro-first'
   | 'first-peek-test-1'
+  | 'first-peek-test-2'
 );
 
 function EmbeddedVideo(props: {
@@ -62,6 +64,7 @@ function EmbeddedVideo(props: {
         title={props.title}
         poster="maxresdefault"
         webp
+        params='rel=0' // restrict related to current channel (?)
       />
   );
 }
