@@ -11,6 +11,7 @@ export default function Video({ videoKey, height }: Props) {
       {videoKey === 'make-boxy-svg-symbol' && <EmbeddedVideo id="o0F7gPSwVgM" title="make boxy svg symbol mov" />}
       {videoKey === 'video--intro-world-tty' && <EmbeddedVideo playlist id="PLTcU-Qpr40X4N1FH6I6_4oJs0UCy88WKo" title="intro world tty" />}
       {videoKey === 'video--intro-first' && <EmbeddedVideo playlist id="PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="intro first" />}
+      {videoKey === 'first-peek-test-1' && <EmbeddedVideo id="Djc_0e5TQiY" title="first-peek-test-1" />}
     </figure>
   );
 }
@@ -42,6 +43,7 @@ export type VideoKey = (
   | 'make-boxy-svg-symbol'
   | 'video--intro-world-tty'
   | 'video--intro-first'
+  | 'first-peek-test-1'
 );
 
 function EmbeddedVideo(props: {
