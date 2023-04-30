@@ -77,6 +77,14 @@ const articleCss = css`
         top: -96px;
       }
     }
+    code:hover {
+      text-decoration: underline;
+    }
+    @media(max-width: 600px) {
+      code {
+        text-decoration: underline;
+      }
+    }
   }
 
   aside {
