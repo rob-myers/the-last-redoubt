@@ -29,50 +29,56 @@ import { profileLookup } from "projects/sh/scripts";
 
 We want to make video games more meaningful.
 That is the objective of this website.
-We believe video games provide a chance to better understand ourselves.
+We believe video games have great potential e.g. they provide a chance to better understand ourselves.
 Sadly, they have become synonymous with meaningless violence, bad storytelling and simplistic character behaviour.
 Many exceptions exist e.g. [What Remains of Edith Finch](https://en.wikipedia.org/wiki/What_Remains_of_Edith_Finch) and [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>.
-These games overcome simplistic character behaviour by employing a **tight narrative**, combined with mini-games or constrained scenarios.
+These particular games overcome simplistic character behaviour by employing a **tight narrative**, combined with mini-games or constrained scenarios.
 But what about a more direct approach?
 
-Meaningless violence and bad storytelling may be side-effects of simplistic character behaviour. If the behaviour was more sophisticated it could help to tell the story, and the game-mechanic needn't revolve around violence. But how to develop more sophisticated character behaviour?
+Actually, meaningless violence and bad storytelling may be _side-effects_ of simplistic character behaviour. If the behaviour was more sophisticated it could help tell the story, and the game-mechanic needn't revolve around violence alone. But how can we develop more sophisticated character behaviour?
 We have a few core ideas.
 
-1. Focus on creating and combining [NPC](https://en.wikipedia.org/wiki/Non-player_character) behaviours without trying to create a video game.
+{/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
+
+{/* [NPC](https://en.wikipedia.org/wiki/Non-player_character) */}
+
+1. Focus on creating and combining character behaviours without trying to create a video game.
 
 1. Develop differently:
     - Canonical visual representations via HTML and CSS.
-    - Canonical scripting via POSIX syntax interpreted as JavaScript.
+    - Canonical in-browser scripting via POSIX syntax interpreted as JavaScript.
 
 1. Use openly available assets:
-    - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html).
-    - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
+    - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
+    - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-{/* These assets themselves embody [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)). */}
-
-To make video games more meaningful, we'll try to surmount simplistic character behaviour.
-We'll focus on the problem directly by creating many individual behaviours and combining them in many different ways.
-Notice we are creating these behaviours for their own sake, and not inside a video game.
+How will the above help us surmount simplistic character behaviour?
+To begin with, we'll focus on the problem directly by creating and combining many behaviours.
+Importantly, we are creating them for their own sake - and not inside a video game.
 
 > **This is a difficult thing to do**:
 >
 > we risk creating something neither of _general interest_ nor with much _entertainment value_.
 
-We tackle _generality_ in a few ways.
-Firstly, our implementation uses standard web development techniques.
-We use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, as opposed to inner loops based on `requestAnimationFrame`.
-Then we are applying techniques used by legions of web developers on a daily basis.
-Secondly, our approach to scripting is of general interest.
-We provide an interactive shell which interprets POSIX syntax as JavaScript and executes it. This is possible via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js) and [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
-The resulting [CLI](https://en.wikipedia.org/wiki/Command-line_interface) (Command Line Interface) gives our website its name.
-Thirdly, we'll stick to gameplay common to a huge raft of video games e.g.
-lying/sitting/standing/walking and opening/closing doors, presented from a top-down perspective.
+<Aside title="of-general-interest">
+  We tackle _generality_ in a few ways.
+  Firstly, our implementation uses standard web development techniques.
+  We use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, as opposed to inner loops based on [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+  Then we are applying techniques used by legions of web developers on a daily basis.
+  Secondly, our approach to scripting is of general interest.
+  We provide an interactive shell which interprets POSIX syntax as JavaScript and executes it. This is possible via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js) and recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
+  The resulting [CLI](https://en.wikipedia.org/wiki/Command-line_interface) (Command Line Interface) gives our website its name.
+  Finally, we'll stick to gameplay relevant to a huge raft of video games, presented from a top-down perspective.
+</Aside>
 
-{/* As for entertainment value... this is relative to being a programmer, or being interested in how programming actually works */}
 
-{/* Points one and two are about the programmatic implementation.
-The third point sets the non-character assets, the style (_top-down perspective_) and also provides a pool of ideas we can draw from. */}
-We've already built this system, so let's take a look.
+🚧
+What about entertainment value?
+this is relative to being a programmer,
+or being interested in how programming actually works.
+Let's take a look at the system we've already built...
+
+{/* These assets themselves embody [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)). */}
 
 <Carousel
   baseSrc="/assets/pics/first-peek/"
