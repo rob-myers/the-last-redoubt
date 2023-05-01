@@ -25,7 +25,7 @@
       <title>door</title>
     </rect>
     <rect width="50" height="50" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="275" y="120">
-      <title>decor go label room locker</title>
+      <title>decor go label locker</title>
     </rect>
     <rect x="205.156" width="200" height="20" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="-9.461">
       <title>parallel-connectors</title>
