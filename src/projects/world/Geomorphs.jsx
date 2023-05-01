@@ -13,7 +13,7 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
-    doorwaysImg: [], 
+    unlitImgs: [], 
     ready: true,
 
     drawRectImage(imgEl, srcOffset, ctxt, rect) {
@@ -30,18 +30,6 @@ export default function Geomorphs(props) {
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
-    /**
-     * draw from unlit.doorways
-     * - precision(0) avoids drawRect artifacts
-     * - door orthonormal by assumption, i.e. light only
-     *   reaches diagonal door if source adjacent.
-     */
-    drawUnlitDoorway(ctxt, gmId, doorId) {
-      const gm = api.gmGraph.gms[gmId];
-      const doorwaysImg = state.doorwaysImg[gmId];
-      const doorRect = gm.doors[doorId].rect.clone().precision(0);
-      state.drawRectImage(doorwaysImg, gm.pngRect, ctxt, doorRect);
-    },
 
     initGmLightRects(gmId) {
       const gm = api.gmGraph.gms[gmId];
@@ -51,7 +39,7 @@ export default function Geomorphs(props) {
       // ctxt.setTransform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
       ctxt.fillStyle = preDarkenCssRgba;
 
-      const imgEl = api.fov.getImgEl(gmId);
+      const imgEl = state.unlitImgs[gmId];
       gm.doorToLightRect.forEach((item, doorId) => {
         if (item) {
           // ctxt.strokeStyle = '#ff0000'; // ⛔️ Debug
@@ -71,13 +59,12 @@ export default function Geomorphs(props) {
       }
       // Hide light by drawing partial image
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-      const imgEl = api.fov.getImgEl(gmId);
+      const imgEl = state.unlitImgs[gmId];
       state.drawRectImage(imgEl, gm.pngRect, ctxt, meta.rect);
       
       meta.postDoorIds.forEach(postDoorId => {// Hide light through doors
         const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
         state.drawRectImage(imgEl, gm.pngRect, ctxt, rect);
-        state.drawUnlitDoorway(ctxt, gmId, postDoorId);
       });
     },
     onOpenDoor(gmId, doorId) {
@@ -86,8 +73,6 @@ export default function Geomorphs(props) {
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
       if (!meta || meta.preDoorIds.some(preId => !open[preId])) {
-        // Could do this once at beginning, but require unlit.doorways loaded
-        state.drawUnlitDoorway(ctxt, gmId, doorId);
         return; // Don't show light unless all requisite doors are open
       }
       // Show light by clearing rect
@@ -126,9 +111,10 @@ export default function Geomorphs(props) {
             style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
           />
           <img
-            className="unlit-doorways"
-            src={geomorphPngPath(gm.key, 'unlit.doorways')}
-            onLoad={x => state.doorwaysImg[gmId] = /** @type {HTMLImageElement} */(x.target)}
+            className="geomorph-unlit"
+            src={geomorphPngPath(gm.key)}
+            onLoad={x => state.unlitImgs[gmId] = /** @type {HTMLImageElement} */(x.target)}
+            style={{ display: 'none' }}
           />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
@@ -159,10 +145,6 @@ const rootCss = css`
     pointer-events: none;
     filter: var(${cssName.geomorphFilter});
   }
-  img.unlit-doorways {
-    /** Used only as canvas drawImage source */
-    display: none;
-  }
   canvas {
     position: absolute;
     pointer-events: none;
@@ -180,9 +162,8 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
- * @property {HTMLImageElement[]} doorwaysImg
+ * @property {HTMLImageElement[]} unlitImgs
  * @property {(imgEl: HTMLImageElement, srcOffset: Geom.VectJson, ctxt: CanvasRenderingContext2D, rect: Geom.RectJson) => void} drawRectImage
- * @property {(ctxt: CanvasRenderingContext2D, gmId: number, doorId: number) => void} drawUnlitDoorway
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number) => void} onCloseDoor

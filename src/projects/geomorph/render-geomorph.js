@@ -24,6 +24,7 @@ export async function renderGeomorph(
     scale,
     obsBounds = true,
     wallBounds = true,
+    highlights = true,
     navTris = false,
     doors = false,
     thinDoors = false,
@@ -73,34 +74,36 @@ export async function renderGeomorph(
   ctxt.lineJoin = 'round';
 
   if (obsBounds) {
-    /**
-     * Draw light grey under obstacles
-     * Draw drop-shadow i.e. basic 3d effect
-     */
+    /** Draw light grey under obstacles */
     ctxt.fillStyle = obsColor;
-    ctxt.shadowBlur = 10;
-    ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
+    if (highlights) {
+      /** Draw drop-shadow i.e. basic 3d effect */
+      ctxt.shadowBlur = 10;
+      ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
+    }
     fillPolygons(ctxt, obstacles.map(({ poly }) => poly));
     ctxt.shadowBlur = 0;
     ctxt.shadowColor = '';
   }
 
-  const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
-  const hullOutlinePoly = new Poly(hullPoly.outline);
-  ctxt.globalCompositeOperation = 'lighter';
-  floorHighlights.forEach(({ poly, tags }, i) => {
-    const { center: position, rect } = poly;
-    const distance = Math.min(rect.width, rect.height) / 2;
-    const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance);
-    gradient.addColorStop(0, '#bbbbbb55');
-    gradient.addColorStop(0.4, '#bbbbbb33');
-    gradient.addColorStop(1, "#00000000");
-    ctxt.fillStyle = gradient;
-    // Must restrict to hull poly outline
-    fillPolygons(ctxt, Poly.intersect([hullOutlinePoly], [poly]));
-    // fillPolygons(ctxt, [poly]);
-  });
-  ctxt.globalCompositeOperation = 'source-over';
+  if (highlights) {
+    const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
+    const hullOutlinePoly = new Poly(hullPoly.outline);
+    ctxt.globalCompositeOperation = 'lighter';
+    floorHighlights.forEach(({ poly, tags }, i) => {
+      const { center: position, rect } = poly;
+      const distance = Math.min(rect.width, rect.height) / 2;
+      const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance);
+      gradient.addColorStop(0, '#bbbbbb55');
+      gradient.addColorStop(0.4, '#bbbbbb33');
+      gradient.addColorStop(1, "#00000000");
+      ctxt.fillStyle = gradient;
+      // Must restrict to hull poly outline
+      fillPolygons(ctxt, Poly.intersect([hullOutlinePoly], [poly]));
+      // fillPolygons(ctxt, [poly]);
+    });
+    ctxt.globalCompositeOperation = 'source-over';
+  }
 
   hullSym.singles.forEach(({ poly, tags }) => {
     if (tags.includes('wall')) {// Hull wall singles

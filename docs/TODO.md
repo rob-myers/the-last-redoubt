@@ -2,9 +2,12 @@
 
 ## In progress
 
-- ✅ go back to writing
-- ✅ carousel on first page
-  - `ffmpeg -i test.mov -filter_complex "[0:v] fps=1" -b:v 0 -crf 30 output.mp4`
+- ✅ use map geomorph png with doors and labels
+  - create {gmKey}.map.png in render-layout
+- 🚧 create a new CodeSandbox
+- DebugWorld supports local labels
+- improve labels in geomorph map
+- hide inline carousel when maximised?
 
 - 🚧 symbols have `do` points with `orient-{deg}` tags
   - ✅ up to offices
@@ -14,13 +17,7 @@
 - view urinals as toilets i.e. always sit
   - standing at urinal does not look good now npcs are smaller
   - also, we'd need to remove feet e.g. new anim `stand-no-feet`
-- ✅ mask legs when `sit` using "surfaces" (polygons from symbols)
-  - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
-  - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
-  - ✅ fix metas too close to surface
-  - ✅ cleanup code
 
-- create a new CodeSandbox
 
 - remove tag `no-turn`?
 - clean up bridge window/fuel?
@@ -452,6 +449,15 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ mask legs when `sit` using "surfaces" (polygons from symbols)
+  - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
+  - ✅ clip-path  `<NPC>` root i.e. sit bounds sans surface polys
+  - ✅ fix metas too close to surface
+  - ✅ cleanup code
+- ✅ go back to writing
+- ✅ carousel on first page
+  - `ffmpeg -i test.mov -filter_complex "[0:v] fps=1" -b:v 0 -crf 30 output.mp4`
 
 - ✅ 102 navmesh issue
   - due to `lounge--017--2x4`

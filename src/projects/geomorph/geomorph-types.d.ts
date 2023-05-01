@@ -12,6 +12,8 @@ declare namespace Geomorph {
     doors?: boolean;
     thinDoors?: boolean;
     labels?: boolean;
+    /** Floor highlights and obstacle drop-shadow */
+    highlights?: boolean;
 
     floorColor?: string;
     navColor?: string;

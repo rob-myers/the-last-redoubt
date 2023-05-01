@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
-import { cssName, geomorphDarkFilterDark, geomorphDarkFilterLight } from "../service/const";
+import { cssName, geomorphDarkFilterHidden, geomorphDarkFilterShown } from "../service/const";
 import { geomorphPngPath, getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -39,22 +39,19 @@ export default function FOV(props) {
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
-    getImgEl(gmId) {
-      return /** @type {HTMLImageElement} */ (state.rootEl.children[gmId]);
-    },
     map(action, showMs = 1000) {
       if (action === 'show') {
         window.clearTimeout(state.mapTimeoutId);
-        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterLight);
+        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterShown);
       } else if (action === 'hide') {
-        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterDark);
+        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterHidden);
       } else if (action === 'show-ms') {
         window.clearTimeout(state.mapTimeoutId);
         state.map("show");
         state.mapTimeoutId = window.setTimeout(() => state.map("hide"), showMs);
       } else if (action === undefined) {// getComputedStyle because initially defined via CSS
         const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
-        return cssFilter === geomorphDarkFilterLight ? true : cssFilter === geomorphDarkFilterDark ? false : null;
+        return cssFilter === geomorphDarkFilterShown ? true : cssFilter === geomorphDarkFilterHidden ? false : null;
       } else {
         throw Error('parameter must be "show", "hide", "show-ms" or undefined')
       }
@@ -152,7 +149,7 @@ export default function FOV(props) {
         <img
           key={gmId}
           className="geomorph-dark"
-          src={geomorphPngPath(gm.key)}
+          src={geomorphPngPath(gm.key, 'map')}
           data-gm-key={gm.key}
           data-gm-id={gmId}
           draggable={false}
@@ -188,7 +185,6 @@ export default function FOV(props) {
  * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {number} mapTimeoutId
  * @property {CoreState} prev Previous state, last time we updated clip path
- * @property {(gmId: number) => HTMLImageElement} getImgEl
  * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadGmImage
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
@@ -213,7 +209,7 @@ export default function FOV(props) {
     */
   will-change: transform;
 
-  ${cssName.geomorphDarkFilter}: ${geomorphDarkFilterLight};
+  ${cssName.geomorphDarkFilter}: ${geomorphDarkFilterShown};
   
   img.geomorph-dark {
     position: absolute;

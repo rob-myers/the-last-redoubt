@@ -20,7 +20,7 @@ import svgJson from '../../static/assets/symbol/svg.json';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { error } from '../projects/service/log';
 import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/service/geomorph';
-import { drawThinDoors, renderGeomorph } from '../projects/geomorph/render-geomorph';
+import { renderGeomorph } from '../projects/geomorph/render-geomorph';
 import { triangle } from '../projects/service/triangle';
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 import { runYarnScript } from './service';
@@ -46,32 +46,38 @@ const outputPngFilename = `${layoutDef.key}${
   debug ? '.debug' : suffix ? `.${suffix}` : ''
 }.png`;
 
+const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
+const staticDir = path.resolve(__dirname, '../../static');
+
 main();
 
 async function main() {
   try {
-    // Draw geomorph with thin doors, and also unlit.doorways
+    // Draw unlit geomorph
     const { layout, canvas, pngRect } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale});
-    const unlitDoorwaysCanvas = createCanvas(canvas.width, canvas.height);
-    layout.doors.forEach(({ rect }) => {
-      // Outset and integral-valued for precision canvas drawImage later
-      rect = rect.clone().precision(0).outset(1);
-      unlitDoorwaysCanvas.getContext('2d').drawImage(canvas, scale * (rect.x - pngRect.x), scale * (rect.y - pngRect.y), scale * rect.width, scale * rect.height, scale * (rect.x - pngRect.x), scale * (rect.y - pngRect.y), scale * rect.width, scale * rect.height)
-    });
-    drawThinDoors(canvas.getContext('2d'), layout);
+
+    // Draw map geomorph with doors, labels and no highlights
+    const mapCanvas = createCanvas(canvas.width, canvas.height);
+    await renderGeomorph(
+      layout,
+      symbolLookup,
+      mapCanvas,
+      (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
+      { scale, obsBounds: true, wallBounds: true, navTris: true, doors: true, labels: true, highlights: false },
+    );
 
     // Write JSON (see also svg-meta)
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
     writeAsJson(serializeLayout(layout), geomorphJsonPath);
 
     /**
-     * For both geomorph and unlit.doorways,
+     * For both geomorph and map,
      * save PNG, WEBP, and finally Optimize PNG.
      * Using temp dir avoids breaking gatsby (watching static/assets)
      */
     const tempDir = fs.mkdtempSync('pngquant-');
     await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
-    await saveCanvasAsFile(unlitDoorwaysCanvas, `${tempDir}/${outputPngFilename.replace(/^(.*)\.png$/, '$1.unlit.doorways.png')}`);
+    await saveCanvasAsFile(mapCanvas, `${tempDir}/${outputPngFilename.slice(0, -3)}map.png`);
     await runYarnScript('minify-pngs', tempDir, '--webp', '--quality=90');
     childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
     fs.rmSync(tempDir, { force: true, recursive: true });
@@ -86,10 +92,7 @@ async function main() {
  * @param {{ thinDoors: boolean; debug: boolean; scale?: number}} opts
  */
 export async function renderLayout(def, { thinDoors, debug, scale = defaultScale }) {
-
   const canvas = createCanvas(0, 0);
-  const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-  const staticDir = path.resolve(__dirname, '../../static');
 
   const layout = await createLayout({
     def,
