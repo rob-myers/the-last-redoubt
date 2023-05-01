@@ -42,7 +42,7 @@ But what about a more direct approach?
   items={[{ video: 'first-peek-test-2', label: 'First peek' }]}
 />
 
-Both meaningless violence and bad storytelling may actually be _side-effects_ of simplistic character behaviour. If the behaviour was more sophisticated it could help tell the story, and the game-mechanic needn't purely revolve around violence. But how to develop more sophisticated character behaviour?
+Both meaningless violence and bad storytelling may actually be _side-effects_ of simplistic character behaviour. If the behaviour was more sophisticated it could help tell the story, and the game-mechanic needn't revolve around violence. But how to develop more sophisticated character behaviour?
 We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
@@ -59,27 +59,28 @@ We have a few core ideas.
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-Then we'll be focussing on the problem directly by creating and combining many behaviours for their own sake (usually Game AI is beholden to its parent video game).
+Then we'll approach the problem directly by creating and combining many behaviours for their own sake (usually Game AI is beholden to its parent video game).
+This is a **difficult thing to do**:
 
-> **This is a difficult thing to do**:
->
 > we risk creating something neither of _general interest_ nor with much _entertainment value_.
 
 <Aside title="of-general-interest">
   We tackle _general interest_ in a few ways.
 
-  Firstly, our implementation uses standard web development techniques.
-  We use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, as opposed to inner loops based on [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+  - Our implementation uses standard web development techniques.
+  We use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, as opposed to inner loops invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
   Then we are applying techniques used by legions of web developers on a daily basis.
-  Secondly, our approach to scripting is of a general nature.
-  We provide an interactive shell which interprets POSIX syntax as JavaScript and executes it. This is possible by virtue of the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
-  The resulting [CLI](https://en.wikipedia.org/wiki/Command-line_interface) (Command Line Interface) gives our website its name.
-  Finally, we'll stick to gameplay relevant to a huge raft of video games.
+  
+  - Our approach to scripting is of general interest.
+  We provide an in-browser interactive shell which interprets POSIX syntax as JavaScript and executes it. This is possible by virtue of the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).
+  The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) gives our website its name.
+  
+  - We'll stick to gameplay relevant to a huge raft of video games.
 </Aside>
 
-So much for generality... but will it actually be entertaining?
+But will it actually be entertaining?
 We'll program NPCs, and programming requires patience.
-Entertainment should arise by building a little world and interacting with it.
+Entertainment will arise by building a little world and interacting with it.
 As the complexity of these fabrications increases, so will our satisfaction.
 
 {/* These assets themselves embody [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)). */}
