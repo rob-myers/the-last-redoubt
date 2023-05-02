@@ -85,6 +85,17 @@ export default function Geomorphs(props) {
       });
     },
     
+    onLoadUnlitImage(e) {
+      const imgEl = /** @type {HTMLImageElement} */ (e.target);
+      const gmId = Number(imgEl.dataset.gmId);
+      state.unlitImgs[gmId] = imgEl;
+      props.api.npcs.events.next({
+        key: 'unlit-geomorph-loaded',
+        gmKey: /** @type {Geomorph.LayoutKey} */ (imgEl.dataset.gmKey),
+        gmId,
+      });
+    },
+
   }), {
     deps: [api],
   });
@@ -115,6 +126,8 @@ export default function Geomorphs(props) {
             src={geomorphPngPath(gm.key)}
             onLoad={x => state.unlitImgs[gmId] = /** @type {HTMLImageElement} */(x.target)}
             style={{ display: 'none' }}
+            data-gm-key={gm.key}
+            data-gm-id={gmId}
           />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
@@ -167,5 +180,6 @@ const rootCss = css`
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number) => void} onCloseDoor
+ * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadUnlitImage
  * @property {boolean} ready
  */

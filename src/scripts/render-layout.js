@@ -56,14 +56,17 @@ async function main() {
     // Draw unlit geomorph
     const { layout, canvas, pngRect } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale});
 
-    // Draw map geomorph with doors, labels and no highlights
+    /**
+     * Draw map geomorph with doors and no highlights.
+     * We do not include labels, because they'd be transformed with geomorph.
+     */
     const mapCanvas = createCanvas(canvas.width, canvas.height);
     await renderGeomorph(
       layout,
       symbolLookup,
       mapCanvas,
       (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
-      { scale, obsBounds: true, wallBounds: true, navTris: true, doors: true, labels: true, highlights: false },
+      { scale, obsBounds: true, wallBounds: true, navTris: true, doors: true, labels: false, highlights: false },
     );
 
     // Write JSON (see also svg-meta)

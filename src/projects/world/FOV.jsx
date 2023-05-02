@@ -56,14 +56,6 @@ export default function FOV(props) {
         throw Error('parameter must be "show", "hide", "show-ms" or undefined')
       }
     },
-    onLoadGmImage(e) {
-      const imgEl = /** @type {HTMLImageElement} */ (e.target);
-      props.api.npcs.events.next({
-        key: 'unlit-geomorph-loaded',
-        gmKey: /** @type {Geomorph.LayoutKey} */ (imgEl.dataset.gmKey),
-        gmId: Number(imgEl.dataset.gmId),
-      });
-    },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.doorId === -1) {
         state.gmId = gmId;
@@ -142,30 +134,32 @@ export default function FOV(props) {
   return (
     <div
       className={cx("fov", rootCss)}
-      onLoad={state.onLoadGmImage}
       ref={el => el && (state.rootEl = el)}
     >
       {gms.map((gm, gmId) =>
-        <img
+        <div
           key={gmId}
-          className="geomorph-dark"
-          src={geomorphPngPath(gm.key, 'map')}
-          data-gm-key={gm.key}
-          data-gm-id={gmId}
-          draggable={false}
-          width={gm.pngRect.width}
-          height={gm.pngRect.height}
           style={{
-            clipPath: state.clipPath[gmId],
-            WebkitClipPath: state.clipPath[gmId],
-            left: gm.pngRect.x,
-            top: gm.pngRect.y,
             transform: gm.transformStyle,
-            transformOrigin: gm.transformOrigin,
-            // Avoid initial flicker on <Geomorphs> load first
-            background: 'white',
           }}
-        />
+        >
+          <img
+            className="geomorph-dark"
+            src={geomorphPngPath(gm.key, 'map')}
+            draggable={false}
+            width={gm.pngRect.width}
+            height={gm.pngRect.height}
+            style={{
+              clipPath: state.clipPath[gmId],
+              WebkitClipPath: state.clipPath[gmId],
+              left: gm.pngRect.x,
+              top: gm.pngRect.y,
+              // Avoid initial flicker on <Geomorphs> load first
+              background: 'white',
+            }}
+          />
+          {/* 🚧 canvas containing room labels */}
+        </div>
       )}
     </div>
   );
@@ -185,7 +179,6 @@ export default function FOV(props) {
  * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {number} mapTimeoutId
  * @property {CoreState} prev Previous state, last time we updated clip path
- * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadGmImage
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} map
