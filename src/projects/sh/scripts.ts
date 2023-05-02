@@ -110,7 +110,7 @@ thinkLoop: `{
       const { fov } = api.getCached(home.WORLD_KEY)
       while ((datum = await api.read(true)) !== null) {
         if (datum.meta.npcKey === npcKey) {
-          fov.map("show-ms", 3000)
+          fov.map("show-for-ms", 3000)
         }
       }
     }' $1
@@ -153,7 +153,7 @@ source /etc/game-1
 awaitWorld
 spawn ${npcKey} '{"x":185,"y":390}'
 npc set-player ${npcKey}
-npc map show-ms 2000
+npc map show-for-ms 2000
 
 # camera follows ${npcKey}
 track ${npcKey} &

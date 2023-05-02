@@ -38,6 +38,7 @@ export default function FOV(props) {
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
+    canvas: [],
 
     map(action, showMs = 1000) {
       if (action === 'show') {
@@ -45,7 +46,7 @@ export default function FOV(props) {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterShown);
       } else if (action === 'hide') {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterHidden);
-      } else if (action === 'show-ms') {
+      } else if (action === 'show-for-ms') {
         window.clearTimeout(state.mapTimeoutId);
         state.map("show");
         state.mapTimeoutId = window.setTimeout(() => state.map("hide"), showMs);
@@ -53,7 +54,7 @@ export default function FOV(props) {
         const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
         return cssFilter === geomorphDarkFilterShown ? true : cssFilter === geomorphDarkFilterHidden ? false : null;
       } else {
-        throw Error('parameter must be "show", "hide", "show-ms" or undefined')
+        throw Error('parameter must be "show", "hide", "show-for-ms" or undefined')
       }
     },
     setRoom(gmId, roomId, doorId) {
@@ -158,7 +159,15 @@ export default function FOV(props) {
               background: 'white',
             }}
           />
-          {/* 🚧 canvas containing room labels */}
+          <canvas
+            ref={(el) => el && (state.canvas[gmId] = el)}
+            width={gm.pngRect.width}
+            height={gm.pngRect.height}
+            style={{
+              left: gm.pngRect.x,
+              top: gm.pngRect.y,
+            }}
+          />
         </div>
       )}
     </div>
@@ -181,6 +190,7 @@ export default function FOV(props) {
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
+ * @property {HTMLCanvasElement[]} canvas
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} map
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
@@ -210,6 +220,10 @@ export default function FOV(props) {
     pointer-events: none;
     filter: var(${cssName.geomorphDarkFilter});
     transition: filter 750ms ease-in-out;
+  }
+  canvas {
+    position: absolute;
+    pointer-events: none;
   }
 `;
 

@@ -30,7 +30,6 @@ export default function Geomorphs(props) {
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
-
     initGmLightRects(gmId) {
       const gm = api.gmGraph.gms[gmId];
       const canvas = state.canvas[gmId];
@@ -123,9 +122,9 @@ export default function Geomorphs(props) {
           />
           <img
             className="geomorph-unlit"
+            style={{ display: 'none' }}
             src={geomorphPngPath(gm.key)}
             onLoad={x => state.unlitImgs[gmId] = /** @type {HTMLImageElement} */(x.target)}
-            style={{ display: 'none' }}
             data-gm-key={gm.key}
             data-gm-id={gmId}
           />
