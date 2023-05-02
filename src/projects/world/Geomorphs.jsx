@@ -27,6 +27,7 @@ export default function Geomorphs(props) {
        * We also shade by
        * @see {preDarkenCssRgba} as per bake-lighting
        */
+      ctxt.fillStyle = preDarkenCssRgba;
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
 
@@ -34,8 +35,8 @@ export default function Geomorphs(props) {
       const gm = api.gmGraph.gms[gmId];
       const canvas = state.canvas[gmId];
       const ctxt = assertNonNull(canvas.getContext('2d'));
-      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
-      // ctxt.setTransform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+      ctxt.setTransform(1, 0, 0, 1, 0, 0);
+      // ctxt.setTransform(2, 0, 0, 2, 0, 0);
       ctxt.fillStyle = preDarkenCssRgba;
 
       const imgEl = state.unlitImgs[gmId];
@@ -124,7 +125,7 @@ export default function Geomorphs(props) {
             className="geomorph-unlit"
             style={{ display: 'none' }}
             src={geomorphPngPath(gm.key)}
-            onLoad={x => state.unlitImgs[gmId] = /** @type {HTMLImageElement} */(x.target)}
+            onLoad={state.onLoadUnlitImage}
             data-gm-key={gm.key}
             data-gm-id={gmId}
           />
@@ -135,8 +136,8 @@ export default function Geomorphs(props) {
             // width={gm.pngRect.width * 2}
             // height={gm.pngRect.height * 2}
             style={{
-              left: gm.pngRect.x,
-              top: gm.pngRect.y,
+              // left: gm.pngRect.x,
+              // top: gm.pngRect.y,
               // transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
             }}
           />

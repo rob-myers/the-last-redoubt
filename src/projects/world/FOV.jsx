@@ -2,7 +2,8 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
 import { cssName, geomorphDarkFilterHidden, geomorphDarkFilterShown } from "../service/const";
-import { geomorphPngPath, getGmRoomKey } from "../service/geomorph";
+import { assertNonNull } from "../service/generic";
+import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
@@ -31,16 +32,33 @@ export default function FOV(props) {
     // gmId: 1, roomId: 22,
     // gmId: 2, roomId: 2,
     // gmId: 3, roomId: 26,
-
-    clipPath: gms.map(_ => 'none'),
-    gmRoomIds: [],
-    mapTimeoutId: 0,
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
+    gmRoomIds: [],
+
+    canvas: [],
+    clipPath: gms.map(_ => 'none'),
+    mapTimeoutId: 0,
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
-    canvas: [],
 
-    map(action, showMs = 1000) {
+    drawLabels() {
+      // 🚧 account for transform
+      for (const [gmId, canvas] of state.canvas.entries()) {
+        const ctxt = assertNonNull(canvas.getContext('2d'));
+        const gm = gms[gmId];
+        const scale = 1; // 🚧
+        ctxt.setTransform(scale, 0, 0, scale, -scale * gm.pngRect.x, -scale * gm.pngRect.y);
+        ctxt.font = labelMeta.font;
+        ctxt.textBaseline = 'top';
+        for (const { text, rect, padded } of gm.labels) {
+          ctxt.fillStyle = 'black';
+          ctxt.fillRect(padded.x, padded.y, padded.width, padded.height);
+          ctxt.fillStyle = 'white';
+          ctxt.fillText(text, rect.x, rect.y)
+        }
+      }
+    },
+    mapAct(action, showMs = 1000) {
       if (action === 'show') {
         window.clearTimeout(state.mapTimeoutId);
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterShown);
@@ -48,8 +66,8 @@ export default function FOV(props) {
         state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterHidden);
       } else if (action === 'show-for-ms') {
         window.clearTimeout(state.mapTimeoutId);
-        state.map("show");
-        state.mapTimeoutId = window.setTimeout(() => state.map("hide"), showMs);
+        state.mapAct("show");
+        state.mapTimeoutId = window.setTimeout(() => state.mapAct("hide"), showMs);
       } else if (action === undefined) {// getComputedStyle because initially defined via CSS
         const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
         return cssFilter === geomorphDarkFilterShown ? true : cssFilter === geomorphDarkFilterHidden ? false : null;
@@ -130,6 +148,7 @@ export default function FOV(props) {
 
   React.useEffect(() => {
     props.onLoad(state);
+    // state.drawLabels(); // 🚧
   }, []);
 
   return (
@@ -191,7 +210,8 @@ export default function FOV(props) {
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {HTMLCanvasElement[]} canvas
- * @property {(action?: NPC.FovMapAction, showMs?: number) => void} map
+ * @property {() => void} drawLabels
+ * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
  */
