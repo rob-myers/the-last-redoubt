@@ -7,17 +7,17 @@
 - ✅ replace labels from geomorph map png with special canvas
 - ✅ map/labels pauses/resumes
 - 🚧 create a new CodeSandbox
-- DebugWorld supports local labels
+- ❌ DebugWorld supports local labels
 - hide inline carousel when maximised?
 
-- 🚧 symbols have `do` points with `orient-{deg}` tags
+- ✅ symbols have `do` points with `orient-{deg}` tags
   - ✅ up to offices
   - ✅ offices
-  - the rest
-- 🚧 properly type code relating to `normalizeNpcCommandOpts`
-- view urinals as toilets i.e. always sit
+  - ✅ the rest
+- ✅ view urinals as toilets i.e. always sit
   - standing at urinal does not look good now npcs are smaller
   - also, we'd need to remove feet e.g. new anim `stand-no-feet`
+- 🚧 properly type code relating to `normalizeNpcCommandOpts`
 
 
 - remove tag `no-turn`?

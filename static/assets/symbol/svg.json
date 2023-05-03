@@ -5525,7 +5525,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5558,7 +5558,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1682939002768.028
+    "lastModified": 1683119577706.7888
   },
   "fresher--025--2x3": {
     "key": "fresher--025--2x3",
@@ -5681,7 +5681,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5690,7 +5690,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5699,7 +5699,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5751,7 +5751,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1682939002768.0925
+    "lastModified": 1683119559168.1436
   },
   "fresher--036--2x4": {
     "key": "fresher--036--2x4",
@@ -5856,7 +5856,7 @@
     "walls": [],
     "singles": [
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5865,7 +5865,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5874,7 +5874,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5883,7 +5883,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5981,7 +5981,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1682501109262.585
+    "lastModified": 1683119617359.7156
   },
   "fuel--010--2x4": {
     "key": "fuel--010--2x4",
@@ -7718,28 +7718,14 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[103, 500], [103, 510], [113, 510], [113, 500]]]
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-180"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[103, 500], [103, 510], [113, 510], [113, 500]]]
-        }
-      },
-      {
-        "tags": ["decor", "do", "stand", "toilet", "orient-180"],
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[103, 300], [103, 310], [113, 310], [113, 300]]]
-        }
-      },
-      {
-        "tags": ["decor", "do", "stand", "toilet", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[103, 300], [103, 310], [113, 310], [113, 300]]]
@@ -7770,7 +7756,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1682939002768.1733
+    "lastModified": 1683119675685.7156
   },
   "lounge--017--2x4": {
     "key": "lounge--017--2x4",
@@ -10546,7 +10532,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -10635,7 +10621,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
-    "lastModified": 1682939002768.1257
+    "lastModified": 1683119699673.2087
   },
   "office--089--4x4": {
     "key": "office--089--4x4",

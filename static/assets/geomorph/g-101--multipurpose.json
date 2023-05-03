@@ -2564,7 +2564,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3036,7 +3036,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3045,7 +3045,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3054,7 +3054,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3774,7 +3774,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3783,7 +3783,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3792,7 +3792,7 @@
         }
       },
       {
-        "tags": ["decor", "do", "stand", "toilet", "orient-270", "orient-180"],
+        "tags": ["decor", "do", "sit", "toilet", "orient-90", "orient-0"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
