@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
-import { cssName, geomorphDarkFilterHidden, geomorphDarkFilterShown } from "../service/const";
+import { cssName, geomorphMapFilterHidden, geomorphMapFilterShown } from "../service/const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
@@ -42,35 +42,39 @@ export default function FOV(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
     drawLabels() {
-      // 🚧 account for transform
       for (const [gmId, canvas] of state.canvas.entries()) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
         const gm = gms[gmId];
-        const scale = 1; // 🚧
+        const scale = 2;
         ctxt.setTransform(scale, 0, 0, scale, -scale * gm.pngRect.x, -scale * gm.pngRect.y);
+        ctxt.transform(gm.inverseMatrix.a, gm.inverseMatrix.b, gm.inverseMatrix.c, gm.inverseMatrix.d, 0, 0);
         ctxt.font = labelMeta.font;
         ctxt.textBaseline = 'top';
-        for (const { text, rect, padded } of gm.labels) {
-          ctxt.fillStyle = 'black';
-          ctxt.fillRect(padded.x, padded.y, padded.width, padded.height);
-          ctxt.fillStyle = 'white';
-          ctxt.fillText(text, rect.x, rect.y)
+        ctxt.fillStyle = '#fff';
+        for (const { text, rect } of gm.labels) {
+          const p = { x: rect.x, y: rect.y };
+          gm.matrix.transformSansTranslate(p);
+          ctxt.translate(p.x, p.y);
+          ctxt.fillText(text, 0, 0);
+          ctxt.translate(-p.x, -p.y);
         }
       }
     },
     mapAct(action, showMs = 1000) {
       if (action === 'show') {
         window.clearTimeout(state.mapTimeoutId);
-        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterShown);
+        state.rootEl.style.setProperty(cssName.geomorphMapFilter, geomorphMapFilterShown);
+        state.rootEl.style.setProperty(cssName.geomorphLabelsOpacity, '1');
       } else if (action === 'hide') {
-        state.rootEl.style.setProperty(cssName.geomorphDarkFilter, geomorphDarkFilterHidden);
+        state.rootEl.style.setProperty(cssName.geomorphMapFilter, geomorphMapFilterHidden);
+        state.rootEl.style.setProperty(cssName.geomorphLabelsOpacity, '0');
       } else if (action === 'show-for-ms') {
         window.clearTimeout(state.mapTimeoutId);
         state.mapAct("show");
         state.mapTimeoutId = window.setTimeout(() => state.mapAct("hide"), showMs);
       } else if (action === undefined) {// getComputedStyle because initially defined via CSS
-        const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphDarkFilter);
-        return cssFilter === geomorphDarkFilterShown ? true : cssFilter === geomorphDarkFilterHidden ? false : null;
+        const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphMapFilter);
+        return cssFilter === geomorphMapFilterShown ? true : cssFilter === geomorphMapFilterHidden ? false : null;
       } else {
         throw Error('parameter must be "show", "hide", "show-for-ms" or undefined')
       }
@@ -148,7 +152,7 @@ export default function FOV(props) {
 
   React.useEffect(() => {
     props.onLoad(state);
-    // state.drawLabels(); // 🚧
+    state.drawLabels();
   }, []);
 
   return (
@@ -180,11 +184,12 @@ export default function FOV(props) {
           />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
-            width={gm.pngRect.width}
-            height={gm.pngRect.height}
+            width={gm.pngRect.width * 2}
+            height={gm.pngRect.height * 2}
             style={{
               left: gm.pngRect.x,
               top: gm.pngRect.y,
+              transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
             }}
           />
         </div>
@@ -232,18 +237,21 @@ export default function FOV(props) {
     */
   will-change: transform;
 
-  ${cssName.geomorphDarkFilter}: ${geomorphDarkFilterShown};
+  ${cssName.geomorphMapFilter}: ${geomorphMapFilterShown};
+  ${cssName.geomorphLabelsOpacity}: 1;
   
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: var(${cssName.geomorphDarkFilter});
+    filter: var(${cssName.geomorphMapFilter});
     transition: filter 750ms ease-in-out;
   }
   canvas {
     position: absolute;
     pointer-events: none;
+    transition: opacity 1500ms ease-in-out;
+    opacity: var(${cssName.geomorphLabelsOpacity});
   }
 `;
 

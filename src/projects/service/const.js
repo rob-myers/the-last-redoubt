@@ -68,7 +68,8 @@ export const cssName = /** @type {const} */ ({
   decorPathColour: '--decor-path-colour',
   
   geomorphFilter: '--geomorph-filter',
-  geomorphDarkFilter: '--geomorph-dark-filter',
+  geomorphMapFilter: '--geomorph-map-filter',
+  geomorphLabelsOpacity: '--geomorph-labels-opacity',
 
   npc: 'npc',
   npcBody: 'body',
@@ -168,5 +169,5 @@ export const distanceTagRegex = /^distance-(\d+)$/;
 /** For lighting we initially darken everything */
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 
-export const geomorphDarkFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
-export const geomorphDarkFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
+export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
+export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
