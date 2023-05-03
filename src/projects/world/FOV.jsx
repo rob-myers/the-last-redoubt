@@ -38,7 +38,7 @@ export default function FOV(props) {
 
     ready: true,
     el: /** @type {State['el']} */ ({ canvas: /** @type {HTMLCanvasElement[]} */ ([]) }),
-    anim: /** @type {State['anim']} */ ({}),
+    anim: { labels: new Animation, map: new Animation },
     clipPath: gms.map(_ => 'none'),
 
     drawLabels() {
