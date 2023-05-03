@@ -171,7 +171,10 @@ export default function useHandleEvents(api) {
           mockHandleDecorClick(e, api);
           break;
         case 'disabled':
+          api.fov.mapAct('pause');
+          break;
         case 'enabled':
+          api.fov.mapAct('resume');
           break;
         case 'fov-changed':
           // console.log(e);
@@ -277,7 +280,6 @@ export default function useHandleEvents(api) {
  * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
  */
-
 
 /**
  * 🚧 mock

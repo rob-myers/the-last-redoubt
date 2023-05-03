@@ -136,5 +136,5 @@ seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
 ```sh
 npc map show
 npc map hide
-npc map # returns boolean
+npc map # returns real number in [0, 1]
 ```

@@ -4,9 +4,10 @@
 
 - ✅ use map geomorph png with doors and labels
   - create {gmKey}.map.png in render-layout
+- ✅ replace labels from geomorph map png with special canvas
+- ✅ map/labels pauses/resumes
 - 🚧 create a new CodeSandbox
 - DebugWorld supports local labels
-- improve labels in geomorph map
 - hide inline carousel when maximised?
 
 - 🚧 symbols have `do` points with `orient-{deg}` tags

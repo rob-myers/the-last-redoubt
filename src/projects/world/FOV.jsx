@@ -1,9 +1,10 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly } from "../geom";
-import { cssName, geomorphMapFilterHidden, geomorphMapFilterShown } from "../service/const";
+import { geomorphMapFilterHidden, geomorphMapFilterShown } from "../service/const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
+import { fovMapActionKeys } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
@@ -21,7 +22,7 @@ export default function FOV(props) {
     /**
      * Initially all rooms are dark.
      * @see {state.setRoom} must be invoked to make some room visible,
-     * e.g. via `spawn npc`.
+     * e.g. via `spawn {npcName} $( click 1 )`.
      */
     gmId: -1,
     roomId: -1,
@@ -35,14 +36,13 @@ export default function FOV(props) {
     prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
     gmRoomIds: [],
 
-    canvas: [],
-    clipPath: gms.map(_ => 'none'),
-    mapTimeoutId: 0,
     ready: true,
-    rootEl: /** @type {HTMLDivElement} */ ({}),
+    el: /** @type {State['el']} */ ({ canvas: /** @type {HTMLCanvasElement[]} */ ([]) }),
+    anim: /** @type {State['anim']} */ ({}),
+    clipPath: gms.map(_ => 'none'),
 
     drawLabels() {
-      for (const [gmId, canvas] of state.canvas.entries()) {
+      for (const [gmId, canvas] of state.el.canvas.entries()) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
         const gm = gms[gmId];
         const scale = 2;
@@ -61,22 +61,53 @@ export default function FOV(props) {
       }
     },
     mapAct(action, showMs = 1000) {
+      // ℹ️ hopefully, the browser clears up stale animations
       if (action === 'show') {
-        window.clearTimeout(state.mapTimeoutId);
-        state.rootEl.style.setProperty(cssName.geomorphMapFilter, geomorphMapFilterShown);
-        state.rootEl.style.setProperty(cssName.geomorphLabelsOpacity, '1');
+        state.anim.labels = state.el.labels.animate(
+          [{ opacity: 1 }],
+          { fill: 'forwards', duration: 1500 },
+        );
+        state.anim.map = state.el.map.animate(
+          [{ filter: geomorphMapFilterShown }],
+          { fill: 'forwards', duration: 750 },
+        );
       } else if (action === 'hide') {
-        state.rootEl.style.setProperty(cssName.geomorphMapFilter, geomorphMapFilterHidden);
-        state.rootEl.style.setProperty(cssName.geomorphLabelsOpacity, '0');
+        state.anim.labels = state.el.labels.animate(
+          [{ opacity: 0 }],
+          { fill: 'forwards', duration: 1500 },
+        );
+        state.anim.map = state.el.map.animate(
+          [{ filter: geomorphMapFilterHidden }],
+          { fill: 'forwards', duration: 750 },
+        );
       } else if (action === 'show-for-ms') {
-        window.clearTimeout(state.mapTimeoutId);
-        state.mapAct("show");
-        state.mapTimeoutId = window.setTimeout(() => state.mapAct("hide"), showMs);
-      } else if (action === undefined) {// getComputedStyle because initially defined via CSS
-        const cssFilter = window.getComputedStyle(state.rootEl).getPropertyValue(cssName.geomorphMapFilter);
-        return cssFilter === geomorphMapFilterShown ? true : cssFilter === geomorphMapFilterHidden ? false : null;
+        const durationMs = 500 + showMs + 500;
+        state.anim.labels = state.el.labels.animate(
+          [
+            { opacity: 1, offset: 500/durationMs },
+            { opacity: 1, offset: (500 + showMs)/durationMs },
+            { opacity: 0, offset: 1 },
+          ],
+          { fill: 'forwards', duration: durationMs },
+        );
+        state.anim.map = state.el.map.animate(
+          [
+            { filter: geomorphMapFilterShown, offset: 500/durationMs },
+            { filter: geomorphMapFilterShown, offset: (500 + showMs)/durationMs },
+            { filter: geomorphMapFilterHidden, offset: 1 },
+          ],
+          { fill: 'forwards', duration: durationMs },
+        );
+      } else if (action === undefined) {
+        return getComputedStyle(state.el.labels).opacity;
+      } else if (action === 'pause') {
+        state.anim.labels.playState === 'running' && state.anim.labels.pause();
+        state.anim.map.playState === 'running' && state.anim.map.pause();
+      } else if (action === 'resume') {
+        state.anim.labels.playState === 'paused' && state.anim.labels.play();
+        state.anim.map.playState === 'paused' && state.anim.map.play();
       } else {
-        throw Error('parameter must be "show", "hide", "show-for-ms" or undefined')
+        throw Error(`parameter must be in ${JSON.stringify(fovMapActionKeys)} or undefined`);
       }
     },
     setRoom(gmId, roomId, doorId) {
@@ -158,42 +189,55 @@ export default function FOV(props) {
   return (
     <div
       className={cx("fov", rootCss)}
-      ref={el => el && (state.rootEl = el)}
-    >
-      {gms.map((gm, gmId) =>
-        <div
-          key={gmId}
-          style={{
-            transform: gm.transformStyle,
-          }}
-        >
-          <img
-            className="geomorph-dark"
-            src={geomorphPngPath(gm.key, 'map')}
-            draggable={false}
-            width={gm.pngRect.width}
-            height={gm.pngRect.height}
-            style={{
-              clipPath: state.clipPath[gmId],
-              WebkitClipPath: state.clipPath[gmId],
-              left: gm.pngRect.x,
-              top: gm.pngRect.y,
-              // Avoid initial flicker on <Geomorphs> load first
-              background: 'white',
-            }}
-          />
-          <canvas
-            ref={(el) => el && (state.canvas[gmId] = el)}
-            width={gm.pngRect.width * 2}
-            height={gm.pngRect.height * 2}
-            style={{
-              left: gm.pngRect.x,
-              top: gm.pngRect.y,
-              transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
-            }}
-          />
-        </div>
+      ref={el => el && (
+        [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))
       )}
+    >
+      <div className="map">
+        {gms.map((gm, gmId) =>
+          <div
+            key={gmId}
+            style={{ transform: gm.transformStyle }}
+          >
+            <img
+              className="geomorph-dark"
+              src={geomorphPngPath(gm.key, 'map')}
+              draggable={false}
+              width={gm.pngRect.width}
+              height={gm.pngRect.height}
+              style={{
+                clipPath: state.clipPath[gmId],
+                WebkitClipPath: state.clipPath[gmId],
+                left: gm.pngRect.x,
+                top: gm.pngRect.y,
+                // Avoid initial flicker on <Geomorphs> load first
+                background: 'white',
+              }}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="labels">
+        {gms.map((gm, gmId) =>
+          <div
+            key={gmId}
+            style={{ transform: gm.transformStyle }}
+          >
+            <canvas
+              ref={(el) => el && (state.el.canvas[gmId] = el)}
+              width={gm.pngRect.width * 2}
+              height={gm.pngRect.height * 2}
+              style={{
+                left: gm.pngRect.x,
+                top: gm.pngRect.y,
+                transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
+              }}
+            />
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
@@ -210,11 +254,10 @@ export default function FOV(props) {
  * @typedef AuxState @type {object}
  * @property {string[]} clipPath
  * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
- * @property {number} mapTimeoutId
+ * @property {{ map: Animation; labels: Animation; }} anim
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {boolean} ready
- * @property {HTMLDivElement} rootEl
- * @property {HTMLCanvasElement[]} canvas
+ * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el
  * @property {() => void} drawLabels
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
@@ -237,21 +280,21 @@ export default function FOV(props) {
     */
   will-change: transform;
 
-  ${cssName.geomorphMapFilter}: ${geomorphMapFilterShown};
-  ${cssName.geomorphLabelsOpacity}: 1;
+  > .map {
+    filter: ${geomorphMapFilterShown};
+  }
+  > .labels {
+    opacity: 1;
+  }
   
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: var(${cssName.geomorphMapFilter});
-    transition: filter 750ms ease-in-out;
   }
   canvas {
     position: absolute;
     pointer-events: none;
-    transition: opacity 1500ms ease-in-out;
-    opacity: var(${cssName.geomorphLabelsOpacity});
   }
 `;
 
