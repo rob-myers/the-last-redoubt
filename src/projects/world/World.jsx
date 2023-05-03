@@ -106,7 +106,6 @@ export default function World(props) {
 
       <NPCs
         api={state}
-        disabled={props.disabled}
         onLoad={api => (state.npcs = api) && update()}
       />
 

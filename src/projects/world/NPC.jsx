@@ -7,11 +7,11 @@ import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
 
 /** @param {Props} props  */
-export default function NPC({ api, npcKey, disabled }) {
+export default function NPC({ api, npcKey }) {
 
   const npc = useStateRef(() => api.npcs.npc[npcKey], {
     deps: [npcKey],
-    updateFrom: (current) => createNpc(current.def, { disabled, api }),
+    updateFrom: (current) => createNpc(current.def, { api }),
   });
   
   React.useLayoutEffect(() => {
@@ -63,7 +63,6 @@ export default function NPC({ api, npcKey, disabled }) {
  * @typedef Props
  * @property {import('./World').State} api
  * @property {string} npcKey
- * @property {boolean} [disabled]
  */
 
 const rootCss = css`
@@ -76,10 +75,6 @@ const rootCss = css`
     filter: brightness(90%) drop-shadow(0 0 72px black);
   }
   
-  &.disabled .body {
-    animation-play-state: paused;
-  }
-
   .interact-circle {
     display: var(${cssName.npcsDebugDisplay});
     position: absolute;

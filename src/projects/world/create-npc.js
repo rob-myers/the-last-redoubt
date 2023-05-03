@@ -9,12 +9,12 @@ import npcsMeta from './npcs-meta.json';
 
 /**
  * @param {NPC.NPCDef} def 
- * @param {{ disabled?: boolean; api: import('./World').State; }} deps
+ * @param {{ api: import('./World').State; }} deps
  * @returns {NPC.NPC}
  */
 export default function createNpc(
   def,
-  { disabled, api },
+  { api },
 ) {
   return {
     key: def.key,

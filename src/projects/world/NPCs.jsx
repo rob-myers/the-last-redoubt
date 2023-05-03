@@ -787,7 +787,6 @@ export default function NPCs(props) {
         <MemoizedNPC
           key={key}
           api={props.api}
-          disabled={props.disabled}
           epochMs={epochMs} // To override memoization
           npcKey={key}
         />
@@ -823,7 +822,6 @@ const rootCss = css`
 /**
  * @typedef Props @type {object}
  * @property {import('../world/World').State} api
- * @property {boolean} [disabled] 
  * @property {(api: State) => void} onLoad
  */
 
