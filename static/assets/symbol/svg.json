@@ -4698,7 +4698,7 @@
         }
       },
       {
-        "tags": ["surface"],
+        "tags": ["Rect"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[-2, 95], [-2, 510], [122, 510], [122, 95]]]
@@ -4741,7 +4741,7 @@
       }
     ],
     "pngRect": {"x": -8.097, "y": 14.064, "width": 137, "height": 575},
-    "lastModified": 1682704430964.4849
+    "lastModified": 1683135185448.4429
   },
   "empty-room--006--2x2": {
     "key": "empty-room--006--2x2",
