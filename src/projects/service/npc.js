@@ -1,4 +1,4 @@
-import { assertNonNull, testNever } from './generic';
+import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
@@ -74,9 +74,6 @@ export function extendDecorMeta(meta, gmMatrix) {
   return Object.assign(meta, extension);
 }
 
-/** @type {Record<NPC.NpcActionKey, true>} */
-const fromActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
-
 /**
  * @param {Geomorph.PointMeta} meta
  * @param {(string | string[])[]} specs 
@@ -90,27 +87,19 @@ function hasTag(meta, ...specs) {
   );
 }
 
-/**
- * @param {string} input 
- * @returns {input is NPC.NpcActionKey}
- */
-export function isNpcActionKey(input) {
-  return fromActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
-}
+/** @type {Record<NPC.ConfigBooleanKey, true>} */
+const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true };
+
+/** @type {Record<NPC.FovMapAction, true>} */
+const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };
+
+export const fovMapActionKeys = keys(fromFovMapActionKey);
+
+/** @type {Record<NPC.NpcActionKey, true>} */
+const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /** @type {Record<NPC.NpcClassKey, true>} */
 const fromNpcClassKey = { "first-human-npc": true, "solomani-a": true, "vilani-a": true, "zhodani-a": true };
-
-/**
- * @param {string} input 
- * @returns {input is NPC.NpcClassKey}
- */
-export function isNpcClassKey(input) {
-  return input in fromNpcClassKey;
-}
-
-/** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true };
 
 /**
  * @param {string} input 
@@ -118,6 +107,30 @@ const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutline
  */
 export function isConfigBooleanKey(input) {
   return input in fromConfigBooleanKey;
+}
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.FovMapAction}
+ */
+export function isFovMapAction(input) {
+  return input in fromFovMapActionKey;
+}
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcActionKey}
+ */
+export function isNpcActionKey(input) {
+  return fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
+}
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcClassKey}
+ */
+export function isNpcClassKey(input) {
+  return input in fromNpcClassKey;
 }
 
 /**

@@ -394,7 +394,7 @@ declare namespace NPC {
 
   export type NpcActionKey = NpcAction['action'];
 
-  export type FovMapAction = 'show' | 'hide' | 'show-for-ms';
+  export type FovMapAction = 'show' | 'hide' | 'show-for-ms' | 'pause' | 'resume';
 
   export type NPCsEvent = (
     | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
