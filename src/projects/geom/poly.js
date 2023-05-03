@@ -134,14 +134,23 @@ export class Poly {
     return sum > 0;
   }
 
-  /** @param {import('./mat').Mat} m */
-  applyMatrix(m) {
-    if (!m.isIdentity) {
+  /**
+   * @param {import('./mat').Mat} m
+   */
+  applyMatrix(m, sansTranslate = false) {
+    if (m.isIdentity) {
+      return this;
+    } else if (!sansTranslate) {
       this.outline = this.outline.map(p => m.transformPoint(p));
       this.holes.forEach(hole => hole.map(p => m.transformPoint(p)));
       this.clearCache(true);
+      return this;
+    } else {
+      this.outline = this.outline.map(p => m.transformSansTranslate(p));
+      this.holes.forEach(hole => hole.map(p => m.transformSansTranslate(p)));
+      this.clearCache(true);
+      return this;
     }
-    return this;
   }
 
   /**
