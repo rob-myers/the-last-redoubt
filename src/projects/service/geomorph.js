@@ -102,6 +102,9 @@ export async function createLayout(opts) {
   });
 
   const doors = filterSingles(groups.singles, 'door').map(x => singleToConnectorRect(x, rooms));
+  doors.forEach((door, doorId) =>
+    door.roomIds.includes(null) && !door.tags.includes('hull') && warn(`non-hull door ${doorId} has roomIds ${JSON.stringify(door.roomIds)}`)
+  );
 
   /**
    * Cut doors from walls, changing `groups.walls` and `groups.singles`.
@@ -142,6 +145,9 @@ export async function createLayout(opts) {
 
   const windows = filterSingles(groups.singles, 'window').map(
     x => singleToConnectorRect(x, rooms)
+  );
+  windows.forEach((window, windowId) =>
+    window.roomIds.includes(null) && !window.tags.includes('hull') && warn(`non-hull window ${windowId} has roomIds ${JSON.stringify(window.roomIds)}`)
   );
 
   const hullRect = Rect.fromRects(...hullSym.hull.concat(doorPolys).map(x => x.rect));
