@@ -46,6 +46,8 @@ export default function FOV(props) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
         const gm = gms[gmId];
         const scale = 2;
+        ctxt.setTransform(1, 0, 0, 1, 0, 0);
+        ctxt.clearRect(0, 0, canvas.width, canvas.height);
         ctxt.setTransform(scale, 0, 0, scale, -scale * gm.pngRect.x, -scale * gm.pngRect.y);
         ctxt.transform(gm.inverseMatrix.a, gm.inverseMatrix.b, gm.inverseMatrix.c, gm.inverseMatrix.d, 0, 0);
         ctxt.font = labelMeta.font;

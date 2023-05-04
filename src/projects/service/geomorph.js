@@ -1017,10 +1017,10 @@ export function geomorphPngPath(layoutKey, suffix = '') {
 }
 
 export const labelMeta = {
-  sizePx: 11,
+  sizePx: 8,
   /** Text has no tail if it doesn't contain g, j, p, q or y */
   noTailPx: 10,
-  font: `${11}px sans-serif`,
+  font: `${8}px 'Courier new'`,
   padX: 4,
   padY: 2,
 };
