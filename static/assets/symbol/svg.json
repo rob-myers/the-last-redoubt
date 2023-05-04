@@ -2544,7 +2544,7 @@
         "tags": ["door", "hull"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[1196, 250], [1196, 350], [1204, 350], [1204, 250]]]
+          "coordinates": [[[1196, 249], [1196, 349], [1204, 349], [1204, 249]]]
         }
       },
       {
@@ -2943,7 +2943,7 @@
         "tags": ["poly", "#fff-#000-2", "chair"],
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[410, 333], [410, 349], [424.1, 349], [424.1, 333]]]
+          "coordinates": [[[411, 333], [411, 349], [425.1, 349], [425.1, 333]]]
         }
       },
       {
@@ -3070,8 +3070,8 @@
               [1003, 302.9],
               [966, 303.213],
               [902, 303.1],
-              [902, 360],
-              [898, 360],
+              [902, 362.106],
+              [898, 362.106],
               [898, 299.7],
               [957.599, 299.364],
               [957.6, 180],
@@ -3236,14 +3236,14 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [[[88.5, -6], [88.5, 8.1], [150.7, 8.1], [150.7, -6]]]
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3252,7 +3252,7 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3261,7 +3261,7 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3270,7 +3270,7 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3279,7 +3279,7 @@
         }
       },
       {
-        "tags": ["window"],
+        "tags": ["window", "hull"],
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3289,7 +3289,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
-    "lastModified": 1682164389545.3906
+    "lastModified": 1683189617324.3618
   },
   "bridge--042--8x9": {
     "key": "bridge--042--8x9",
