@@ -74,6 +74,7 @@ export const cssName = /** @type {const} */ ({
   npc: 'npc',
   npcBody: 'body',
   npcsDebugDisplay: '--npcs-debug-display',
+  npcsDebugPlayerDisplay: '--npcs-debug-player-display',
   npcDoorTouchRadius: '--npc-door-touch-radius',
   npcsInteractRadius: '--npcs-interact-radius',
   npcBoundsRadius: '--npc-bounds-radius',

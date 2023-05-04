@@ -184,7 +184,7 @@ export default function useHandleEvents(api) {
           mockOnTtyLink(e, api);
           break;
         case 'set-player':
-          api.npcs.playerKey = e.npcKey || null;
+          api.npcs.setPlayerKey(e.npcKey);
           if (e.npcKey) {
             api.npcs.setRoomByNpc(e.npcKey);
           }

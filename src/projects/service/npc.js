@@ -88,7 +88,7 @@ function hasTag(meta, ...specs) {
 }
 
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { "canClickArrows": true, "debug": true, "gmOutlines": true, "highlightWindows": true, "localNav": true, "localOutline": true, "omnipresent": true, "showIds": true };
+const fromConfigBooleanKey = { 'canClickArrows': true, 'debug': true, 'debugPlayer': true, 'gmOutlines': true, 'highlightWindows': true, 'localNav': true, 'localOutline': true, 'omnipresent': true, 'showIds': true };
 
 /** @type {Record<NPC.FovMapAction, true>} */
 const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };

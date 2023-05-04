@@ -193,6 +193,7 @@ declare namespace NPC {
   type ConfigBooleanKey = (
     | 'canClickArrows'
     | 'debug'
+    | 'debugPlayer'
     | 'gmOutlines'
     | 'highlightWindows'
     | 'localNav'

@@ -11,7 +11,7 @@ import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, spawnFadeMs } fr
 import { geom } from "../service/geom";
 import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
-import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar, removeCssClassBySubstring, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useSessionStore from "../sh/session.store";
@@ -48,6 +48,7 @@ export default function NPCs(props) {
         switch (key) {
           case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
           case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
+          case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
           case 'gmOutlines': return debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true;
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
           case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
@@ -73,6 +74,7 @@ export default function NPCs(props) {
         switch (key) {
           case 'canClickArrows': debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none'); break;
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
+          case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
           case 'gmOutlines': debugStyle.setProperty(cssName.debugGeomorphOutlineDisplay, value ? 'initial' : 'none'); break;
           case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
@@ -562,6 +564,20 @@ export default function NPCs(props) {
       }
     },
     service: npcService,
+    setPlayerKey(npcKey) {
+      state.playerKey = npcKey || null; // Forbid empty string
+      
+      const dynamicClassLabel = 'forPlayerNpc';
+      removeCssClassBySubstring(state.rootEl, dynamicClassLabel);
+      npcKey && state.rootEl.classList.add(
+        css({
+          // Support `npc config debugPlayer`
+          [`.${cssName.npc} .${cssName.npcBody}.${npcKey} ~ div`]: {
+            display: `var(${cssName.npcsDebugPlayerDisplay})`
+          }
+        }, { label: dynamicClassLabel }),
+      );
+    },
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);
       const position = npc.getPosition();
@@ -861,6 +877,7 @@ const rootCss = css`
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
+ * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service

@@ -352,6 +352,19 @@ export function loadImage(src) {
 }
 
 /**
+ * @param {Element} el
+ * @param {string} substring
+ */
+export function removeCssClassBySubstring(el, substring) {
+	el.classList.remove(
+		...Array.from(el.classList).filter(className => className.includes(substring))
+	);
+}
+
+//#endregion
+
+//#region webp
+/**
  * https://github.com/ihordiachenko/supports-webp-sync/blob/master/index.ts
  * @returns {boolean}
  */

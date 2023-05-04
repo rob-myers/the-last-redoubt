@@ -98,9 +98,9 @@ const rootCss = css`
   }
 
   .head-circle {
+    display: var(${cssName.npcsDebugDisplay});
     pointer-events: all;
     cursor: pointer;
-    display: var(${cssName.npcsDebugDisplay});
     position: absolute;
     width: calc(2 * var(${cssName.npcHeadRadius}));
     height: calc(2 * var(${cssName.npcHeadRadius}));
