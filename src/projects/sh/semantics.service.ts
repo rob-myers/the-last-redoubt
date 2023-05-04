@@ -187,9 +187,8 @@ class semanticsServiceClass {
                 reject(e);
                 // Promise.allSettled won't throw on reject, so kill others
                 const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
-                for (const proc of processes) {
-                  proc && killProcess(proc);
-                }
+                // Give processes a chance to setup their cleanups, e.g. `click 1`
+                setTimeout(() => processes.forEach(proc => proc && killProcess(proc)), 30);
               }
             }),
           ));

@@ -2,7 +2,19 @@
 
 ## In progress
 
+- ✅ `click 1`s cleanup wasn't running:
+  ```sh
+  nav baz $( click 1 ) | walk baz
+  walk: run: Error: npc "baz" does not exist
+  ```
+
+- 🚧 nice images involving multiple npcs for carousel
+  - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
+
 - 🚧 create a new CodeSandbox
+  - update src/components e.g. Terminal
+  - update World piecewise
+
 - hide inline carousel when maximised?
 - properly type code relating to `normalizeNpcCommandOpts`
 

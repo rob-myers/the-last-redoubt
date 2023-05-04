@@ -166,7 +166,7 @@
 
       const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
       const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
-      extra && panZoom.pointerUpExtras.push(extra);
+      extra && panZoom.pointerUpExtras.push(extra); // This will be merged into next pointerup
       
       const process = api.getProcess()
       /** @type {import('rxjs').Subscription} */ let sub;
