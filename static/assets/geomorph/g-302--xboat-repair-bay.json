@@ -5547,7 +5547,9 @@
       {"src": "room-4", "dst": "door-21", "id": "room-4->door-21"},
       {"dst": "room-4", "src": "door-21", "id": "door-21->room-4"},
       {"src": "room-5", "dst": "door-21", "id": "room-5->door-21"},
-      {"dst": "room-5", "src": "door-21", "id": "door-21->room-5"}
+      {"dst": "room-5", "src": "door-21", "id": "door-21->room-5"},
+      {"src": "room-2", "dst": "window-0", "id": "room-2->window-0"},
+      {"dst": "room-2", "src": "window-0", "id": "window-0->room-2"}
     ]
   },
   "lightSrcs": [

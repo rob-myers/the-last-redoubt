@@ -11341,6 +11341,8 @@
       {"dst": "room-21", "src": "door-28", "id": "door-28->room-21"},
       {"src": "room-23", "dst": "door-28", "id": "room-23->door-28"},
       {"dst": "room-23", "src": "door-28", "id": "door-28->room-23"},
+      {"src": "room-13", "dst": "window-0", "id": "room-13->window-0"},
+      {"dst": "room-13", "src": "window-0", "id": "window-0->room-13"},
       {"src": "room-11", "dst": "window-1", "id": "room-11->window-1"},
       {"dst": "room-11", "src": "window-1", "id": "window-1->room-11"},
       {"src": "room-15", "dst": "window-1", "id": "room-15->window-1"},

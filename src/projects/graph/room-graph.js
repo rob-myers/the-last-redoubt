@@ -1,7 +1,5 @@
-import { Poly } from "../geom";
 import { BaseGraph } from "./graph";
 import { error } from "../service/log";
-import { getNormalizedDoorPolys } from "../service/geomorph";
 
 /**
  * @extends {BaseGraph<Graph.RoomGraphNode, Graph.RoomGraphEdgeOpts>}
@@ -118,14 +116,12 @@ export class roomGraphClass extends BaseGraph {
   * @returns {Graph.RoomGraphJson}
   */
   static json(rooms, doors, windows) {
-
-    const doorPolys = getNormalizedDoorPolys(doors);
     /**
-     * For each door, the respective adjacent room ids.
+     * For each door, respective ascending adjacent room ids.
      * Each array will be aligned with the respective door node's successors.
      */
-    const doorsRoomIds = doors.map((_, doorId) => rooms.flatMap((room, i) => Poly.union([room, doorPolys[doorId]]).length === 1 ? i : []));
-    const windowsRoomIds = windows.map(window => rooms.flatMap((room, i) => Poly.union([room, window.poly]).length === 1 ? i : []));
+    const doorsRoomIds = doors.map(({ roomIds }) => roomIds.filter(/** @return {x is number} */ x => typeof x === 'number').sort((a, b) => a - b));
+    const windowsRoomIds = windows.map(({ roomIds }) => roomIds.filter(/** @return {x is number} */ x => typeof x === 'number').sort((a, b) => a - b));
 
     /** @type {Graph.RoomGraphNode[]} */
     const roomGraphNodes = [
@@ -134,16 +130,12 @@ export class roomGraphClass extends BaseGraph {
       ...rooms.map((_, roomId) => ({
         id: `room-${roomId}`, type: /** @type {const} */ ('room'), roomId,
       })),
-      ...doors.map((_, doorId) => {
-        /** @type {Graph.RoomGraphNodeDoor} */
-        const doorNode = { id: `door-${doorId}`, type: /** @type {const} */ ('door'), doorId };
-        return doorNode;
-      }),
-      ...windows.map((_, windowId) => {
-        /** @type {Graph.RoomGraphNodeWindow} */
-        const windowNode = { id: `window-${windowId}`, type: /** @type {const} */ ('window'), windowId };
-        return windowNode;
-      }),
+      ...doors.map(/** @returns {Graph.RoomGraphNodeDoor} */ (_, doorId) =>
+        ({ id: `door-${doorId}`, type: /** @type {const} */ ('door'), doorId })
+      ),
+      ...windows.map(/** @returns {Graph.RoomGraphNodeWindow} */ (_, windowId) =>
+        ({ id: `window-${windowId}`, type: /** @type {const} */ ('window'), windowId })
+      ),
     ];
 
     /** @type {Graph.RoomGraphEdgeOpts[]} */
