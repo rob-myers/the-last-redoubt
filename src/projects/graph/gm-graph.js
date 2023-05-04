@@ -641,27 +641,21 @@ export class gmGraphClass extends BaseGraph {
     /** @type {Graph.GmGraphNode[]} */
     const nodes = [
 
-      // NOTE geomorph nodes are aligned to `gms` for easy access
-      ...gms.map((x, gmIndex) => {
-        /** @type {Graph.GmGraphNodeGm} */
-        const gmNode = {
-          type: 'gm',
-          gmKey: x.key,
-          gmIndex,
-          id: getGmNodeId(x.key, x.transform),
-          transform: x.transform,
-        };
-        return gmNode;        
-      }),
+      // ℹ️ geomorph nodes are aligned to `gms` for easy access
+      ...gms.map(/** @returns {Graph.GmGraphNodeGm} */ (x, gmIndex) => ({
+        type: 'gm',
+        gmKey: x.key,
+        gmIndex,
+        id: getGmNodeId(x.key, x.transform),
+        transform: x.transform,
+      })),
 
-      ...gms.flatMap(({ key: gmKey, hullDoors, transform, pngRect, doors }, gmId) => {
-        return hullDoors.map((hullDoor, hullDoorId) => {
+      ...gms.flatMap(({ key: gmKey, hullDoors, transform, pngRect, doors }, gmId) =>
+        hullDoors.map(/** @returns {Graph.GmGraphNodeDoor} */ (hullDoor, hullDoorId) => {
           const alongNormal = hullDoor.poly.center.addScaledVector(hullDoor.normal, 20);
           const gmInFront = pngRect.contains(alongNormal);
           const direction = this.computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey);
-
-          /** @type {Graph.GmGraphNodeDoor} */
-          const doorNode = {
+          return {
             type: 'door',
             gmKey,
             gmId,
@@ -671,11 +665,10 @@ export class gmGraphClass extends BaseGraph {
             transform,
             gmInFront,
             direction,
-            sealed: true, // Overwritten further below
+            sealed: true, // Overwritten below
           };
-          return doorNode;
         })
-      }),
+      ),
     ];
 
     graph.registerNodes(nodes);
