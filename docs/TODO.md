@@ -2,23 +2,9 @@
 
 ## In progress
 
-- ✅ use map geomorph png with doors and labels
-  - create {gmKey}.map.png in render-layout
-- ✅ replace labels from geomorph map png with special canvas
-- ✅ map/labels pauses/resumes
 - 🚧 create a new CodeSandbox
-- ❌ DebugWorld supports local labels
 - hide inline carousel when maximised?
-
-- ✅ symbols have `do` points with `orient-{deg}` tags
-  - ✅ up to offices
-  - ✅ offices
-  - ✅ the rest
-- ✅ view urinals as toilets i.e. always sit
-  - standing at urinal does not look good now npcs are smaller
-  - also, we'd need to remove feet e.g. new anim `stand-no-feet`
-- 🚧 properly type code relating to `normalizeNpcCommandOpts`
-
+- properly type code relating to `normalizeNpcCommandOpts`
 
 - remove tag `no-turn`?
 - clean up bridge window/fuel?
@@ -419,7 +405,7 @@ How to embed video?
 
 - Explain what is happening in NPCS trackNpc
 - Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
-- BUG CssPanZoom zoom out with pointer down and drag around
+- ✅ BUG CssPanZoom zoom out with pointer down and drag around
   - Also issues when click on `HTMLImageElement`s in devtools
 - Alt approach to g302 light issue
   - add extra wall/door to "break loop"
@@ -450,6 +436,20 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ use map geomorph png with doors and labels
+  - create {gmKey}.map.png in render-layout
+- ✅ replace labels from geomorph map png with special canvas
+- ✅ map/labels pauses/resumes
+- ❌ DebugWorld supports local labels
+
+- ✅ symbols have `do` points with `orient-{deg}` tags
+  - ✅ up to offices
+  - ✅ offices
+  - ✅ the rest
+- ✅ view urinals as toilets i.e. always sit
+  - standing at urinal does not look good now npcs are smaller
+  - also, we'd need to remove feet e.g. new anim `stand-no-feet`
 
 - ✅ mask legs when `sit` using "surfaces" (polygons from symbols)
   - ✅ gm.roomSurfaceIds[roomId] points into gm.groups.obstacles
