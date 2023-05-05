@@ -178,7 +178,11 @@ function Slides(props: Props & {
           >
             {'src' in item && <>
               {item.label && <div className="slide-label">{item.label}</div>}
-              <div className={cx('slide-img-container', { 'swiper-zoom-container': canZoom })}>
+              <div
+                className={cx(
+                  'slide-img-container',
+                  { 'swiper-zoom-container': canZoom },
+                )}>
                 <img
                   className="swiper-lazy"
                   data-src={`${props.baseSrc??''}${supportsWebp ? item.webp : item.src}`}
@@ -215,6 +219,13 @@ const rootCss = css`
   @media(max-width: 600px) {
     ${cssName.carouselLabelHeight}: 64px;
     --carousel-padding-bottom: 0px;
+
+    .swiper {
+      background: var(--carousel-background);
+    }
+    .slide-label {
+      background: var(--carousel-label-background);
+    }
   }
 
   /* position: relative; // ℹ️ makes full-screen width smaller */
@@ -265,7 +276,7 @@ const rootCss = css`
     width: 100%;
     left: 0;
 
-    background-color: var(--carousel-background-color);
+    background: var(--carousel-background);
     border: 2px solid var(--contrast-border-color);
   
     .slide-label {
@@ -327,7 +338,7 @@ const rootCss = css`
   }
 
   .swiper-slide-zoomed .slide-label {
-    background-color: var(--carousel-background-color);
+    background: var(--carousel-background);
     opacity: 0.9;
     position: relative;
     width: 100%;
