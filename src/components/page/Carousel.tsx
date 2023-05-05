@@ -371,7 +371,7 @@ const rootCss = css`
   }
 
   .swiper-button-next, .swiper-button-prev {
-    color: red;
+    color: #c00;
   }
 `;
 
