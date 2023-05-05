@@ -280,7 +280,7 @@ const rootCss = css`
     border: 2px solid var(--contrast-border-color);
   
     .slide-label {
-      background: rgba(0, 0, 0, 0.1);
+      background: var(--carousel-label-background);
     }
 
     img {
@@ -368,6 +368,10 @@ const rootCss = css`
     p {
       margin-bottom: 8px;
     }
+  }
+
+  .swiper-button-next, .swiper-button-prev {
+    color: red;
   }
 `;
 
