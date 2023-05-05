@@ -50,7 +50,7 @@
         if (func(datum, ctxt)) yield datum
     },
 
-    /** Combine filter and map */
+    /** Combines map (singleton), filter (empty array) and split (of arrays) */
     flatMap: async function* (ctxt) {
       let { api, args, datum } = ctxt, result
       const func = Function(`return ${args[0]}`)()

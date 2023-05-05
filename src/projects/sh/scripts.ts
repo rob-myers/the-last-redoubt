@@ -67,10 +67,10 @@ export const gameFunctions = [
 /** Usage: doLoop {npcKey} */
 doLoop: `{
   click |
-    flatMap '({ x, y, meta }) =>
+    map '({ x, y, meta }) =>
       (meta.do || meta.nav)
         ? { npcKey: "'$1'", point: { x, y, meta } }
-        : []
+        : undefined
     ' |
     npc do '{ suppressThrow: true }'
 }`,
