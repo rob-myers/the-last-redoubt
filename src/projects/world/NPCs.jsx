@@ -11,7 +11,7 @@ import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, spawnFadeMs } fr
 import { geom } from "../service/geom";
 import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
-import { detectReactDevToolQuery, getNumericCssVar, removeCssClassBySubstring, supportsWebp } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useSessionStore from "../sh/session.store";
@@ -565,18 +565,15 @@ export default function NPCs(props) {
     },
     service: npcService,
     setPlayerKey(npcKey) {
-      state.playerKey = npcKey || null; // Forbid empty string
-      
-      const dynamicClassLabel = 'forPlayerNpc';
-      removeCssClassBySubstring(state.rootEl, dynamicClassLabel);
-      npcKey && state.rootEl.classList.add(
-        css({
-          // Support `npc config debugPlayer`
-          [`.${cssName.npc} .${cssName.npcBody}.${npcKey} ~ div`]: {
-            display: `var(${cssName.npcsDebugPlayerDisplay})`
-          }
-        }, { label: dynamicClassLabel }),
-      );
+      if (state.playerKey) {
+        state.getNpc(state.playerKey)?.el.root.classList.remove('player');
+      }
+
+      const nextPlayerKey = npcKey || null; // Forbid empty string
+      if (nextPlayerKey) {// Player must exist
+        state.getNpc(nextPlayerKey).el.root.classList.add('player');
+      }
+      state.playerKey = nextPlayerKey;
     },
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);

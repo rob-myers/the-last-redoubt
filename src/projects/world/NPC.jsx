@@ -69,6 +69,10 @@ const rootCss = css`
   position: absolute;
   pointer-events: none;
 
+  &.player .body ~ div {
+    display: var(${cssName.npcsDebugPlayerDisplay});
+  }
+
   .body {
     position: absolute;
     // Related to geomorph drop-shadow i.e. render-geomorph shadowBlur

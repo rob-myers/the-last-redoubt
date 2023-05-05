@@ -10,6 +10,7 @@
 
 - 🚧 nice images involving multiple npcs for carousel
   - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
+  - ✅ cleaner implementation of `npcs.config.debugPlayer`
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
