@@ -168,6 +168,9 @@ const articleCss = css`
       margin: 0px 0 16px 0;
       padding: 0;
     }
+    @media(max-width: 500px) {
+      margin: 32px 0 16px 0;
+    }
   }
 
   figure.tabs {
