@@ -10,6 +10,7 @@ import { enableBodyScroll, disableBodyScroll } from 'body-scroll-lock';
 import useMeasure from "react-use-measure";
 
 import { cssName } from "projects/service/const";
+import { supportsWebp } from "projects/service/dom";
 import useSiteStore from "store/site.store";
 import useStateRef from "projects/hooks/use-state-ref";
 import useUpdate from "projects/hooks/use-update";
@@ -180,7 +181,7 @@ function Slides(props: Props & {
               <div className={cx('slide-img-container', { 'swiper-zoom-container': canZoom })}>
                 <img
                   className="swiper-lazy"
-                  data-src={`${props.baseSrc??''}${item.src}`}
+                  data-src={`${props.baseSrc??''}${supportsWebp ? item.webp : item.src}`}
                   {...item.background && { style: { background: item.background } }}
                 />
               </div>
@@ -392,7 +393,7 @@ type CarouselItems = (
 );
 
 type ImageCarouselItem = (
-  | { src: string; label?: string; background?: string; }
+  | { src: string; webp?: string; label?: string; background?: string; }
   | { video: VideoKey; label?: string; }
 );
 type PlainCarouselItem = React.ReactNode;
