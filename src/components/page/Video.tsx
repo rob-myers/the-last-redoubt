@@ -13,6 +13,7 @@ export default function Video({ videoKey, height }: Props) {
       {videoKey === 'video--intro-first' && <EmbeddedVideo playlist id="PLTcU-Qpr40X6hq3GSbY8K92DR_DUSgzim" title="intro first" />}
       {videoKey === 'first-peek-test-1' && <EmbeddedVideo id="Djc_0e5TQiY" title="first-peek-test-1" />}
       {videoKey === 'first-peek-test-2' && <EmbeddedVideo id="eAFHK-BXFLs" title="first-peek-test-2" />}
+      {videoKey === 'first-peek' && <EmbeddedVideo id="Xj4S5Dyj-Ms" title="first-peek" />}
     </figure>
   );
 }
@@ -48,6 +49,7 @@ export type VideoKey = (
   | 'video--intro-first'
   | 'first-peek-test-1'
   | 'first-peek-test-2'
+  | 'first-peek'
 );
 
 function EmbeddedVideo(props: {
