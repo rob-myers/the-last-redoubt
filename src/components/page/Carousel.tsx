@@ -176,8 +176,9 @@ function Slides(props: Props & {
             className={cx("slide-container", { "slide-video-container": 'video' in item })}
             data-slide-id={i}
           >
+            {item.label && <div className="slide-label">{item.label}</div>}
+
             {'src' in item && <>
-              {item.label && <div className="slide-label">{item.label}</div>}
               <div
                 className={cx(
                   'slide-img-container',
@@ -192,11 +193,7 @@ function Slides(props: Props & {
               <div className="swiper-lazy-preloader swiper-lazy-preloader-black"/>
             </>}
 
-            {'video' in item && <>
-              {item.label && <div className="slide-label">{item.label}</div>}
-              <Video videoKey={item.video} />
-            </>}
-            
+            {'video' in item && <Video videoKey={item.video} />}
           </div>
         </SwiperSlide>
       )}
@@ -251,6 +248,7 @@ const rootCss = css`
     font-weight: 300;
     line-height: 1.2;
     min-height: var(${cssName.carouselLabelHeight});
+    padding: 0 32px;
   }
 
   .slide-img-container {

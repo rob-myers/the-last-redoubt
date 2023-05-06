@@ -19,7 +19,7 @@ export default function Video({ videoKey, height }: Props) {
 
 interface Props {
   videoKey: VideoKey;
-  height?: number;
+  height?: number | string;
 }
 
 const rootCss = css`
