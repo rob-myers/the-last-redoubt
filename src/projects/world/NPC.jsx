@@ -15,8 +15,8 @@ export default function NPC({ api, npcKey }) {
   });
   
   React.useLayoutEffect(() => {
-    if (npc.unspawned) {
-      npc.initialize(); // useLayoutEffect because we modify styles here
+    if (npc.unspawned) {// (Re)spawn
+      npc.initialize(); // we modify styles here
       npc.unspawned = false;
       npc.startAnimation('idle');
       /** @type {NPC.DecorRef[]} */
@@ -35,6 +35,7 @@ export default function NPC({ api, npcKey }) {
       className={cx(
         cssName.npc,
         rootCss,
+        api.npcs.playerKey === npcKey ? 'player' : undefined,
         npc.anim.css,
         npc.anim.spriteSheet,
       )}
