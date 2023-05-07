@@ -12,7 +12,8 @@
  * - yarn minify-pngs static/assets/symbol
  *   > maybe better to do `yarn simplify-pngs static/assets/symbol`
  * - yarn minify-pngs static/assets/npc/first-human-npc
- * - yarn minify-pngs static/assets/npc/man-base-variant webp
+ * - yarn minify-pngs static/assets/npc/man-base-variant --webp
+ * - yarn minify-pngs static/assets/pics/first-peek --webp
  */
 import fs from 'fs';
 import path from 'path';
@@ -72,7 +73,7 @@ async function main() {
   childProcess.execSync(`cp ${path.join(`'${srcDir}'`, '*.png')} ${tempDir}`);
   childProcess.execSync(`
     time find ${path.join(`'${tempDir}'`, '*.png')} -print0 |
-      xargs -0 -n 1 -P 20 pngquant -f --quality=${quality}
+      xargs -0 -n 1 -P 20 pngquant -f --quality ${quality}
   `);
 
   for (const fileName of fs.readdirSync(tempDir).filter(x => x.endsWith('-fs8.png'))) {
