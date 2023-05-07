@@ -2,15 +2,13 @@
 
 ## In progress
 
-- ✅ `click 1`s cleanup wasn't running:
-  ```sh
-  nav baz $( click 1 ) | walk baz
-  walk: run: Error: npc "baz" does not exist
-  ```
-
 - 🚧 nice images involving multiple npcs for carousel
   - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
   - ✅ cleaner implementation of `npcs.config.debugPlayer`
+  - ✅ first image
+  - ✅ add more images
+
+- 🚧 unfortunately "ℹ️" does not look good on some windows machines
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
@@ -449,6 +447,12 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ `click 1`s cleanup wasn't running:
+  ```sh
+  nav baz $( click 1 ) | walk baz
+  walk: run: Error: npc "baz" does not exist
+  ```
 
 - ✅ use map geomorph png with doors and labels
   - create {gmKey}.map.png in render-layout

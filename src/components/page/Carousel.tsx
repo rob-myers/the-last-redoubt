@@ -214,7 +214,7 @@ const rootCss = css`
   --carousel-padding-bottom: 48px;
 
   @media(max-width: 600px) {
-    ${cssName.carouselLabelHeight}: 64px;
+    ${cssName.carouselLabelHeight}: 48px;
     --carousel-padding-bottom: 0px;
 
     .swiper {
