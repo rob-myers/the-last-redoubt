@@ -191,14 +191,14 @@ function Geomorph({ def, transform, disabled }) {
                 transform: `rotate(${angle}rad)`,
               }} />
           )}
-          {data.gm.labels.map(({ text, padded }, labelId) => (
+          {data.gm.labels.map(({ text, rect }, labelId) => (
             <div
               key={labelId}
               className="label"
               data-key="label"
               style={{
-                left: padded.x,
-                top: padded.y,
+                left: rect.x,
+                top: rect.y,
               }}
             >
               {text}
@@ -300,14 +300,12 @@ const rootCss = css`
 
     div.label {
       position: absolute;
-      padding: ${labelMeta.padY}px ${labelMeta.padX}px;
-      
-      cursor: pointer;
+      /* padding: 2px; */
+      /* cursor: pointer; */
       pointer-events: auto;
-      user-select: none; /** TODO better way? */
-
-      background: black;
-      color: white;
+      user-select: none;
+      color: black;
+      font-weight: bold;
     }
     div.door {
       position: absolute;

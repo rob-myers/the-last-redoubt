@@ -54,6 +54,7 @@ declare namespace Geomorph {
   interface SvgGroupWithTags<T> {
     poly: T;
     tags: string[];
+    meta: Geomorph.PointMeta;
   }
 
   /**
@@ -246,8 +247,6 @@ declare namespace Geomorph {
 
     /** Measured world rect containing text */
     rect: Geom.RectJson;
-    /** Measured padded world rect containing text */
-    padded: Geom.RectJson;
   }
 
   export interface LayoutDef {

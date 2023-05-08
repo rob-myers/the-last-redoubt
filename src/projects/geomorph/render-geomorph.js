@@ -178,10 +178,8 @@ export async function renderGeomorph(
   if (labels) {
     ctxt.font = labelMeta.font;
     ctxt.textBaseline = 'top';
-    for (const { text, rect, padded } of layout.labels) {
-      ctxt.fillStyle = 'black';
-      ctxt.fillRect(padded.x, padded.y, padded.width, padded.height);
-      ctxt.fillStyle = 'white';
+    ctxt.fillStyle = 'black';
+    for (const { text, rect } of layout.labels) {
       ctxt.fillText(text, rect.x, rect.y)
     }
   }

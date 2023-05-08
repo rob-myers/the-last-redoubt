@@ -39,7 +39,8 @@ export async function createLayout(opts) {
     // Transform singles (restricting doors/walls by item.tags)
     // Room orientation tags permit decoding orient-{deg} tags later
     const restrictedSingles = singles
-      .map(({ tags, poly }) => ({
+      .map(({ meta, tags, poly }) => ({
+        meta,
         tags: modifySinglesTags(tags.slice(), m),
         poly: poly.clone().applyMatrix(m).precision(precision),
       }))
@@ -51,8 +52,12 @@ export async function createLayout(opts) {
             : true;
       });
     groups.singles.push(...restrictedSingles);
-    groups.obstacles.push(...obstacles.map(({ poly, tags }) =>
-      ({ tags, poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision) })
+    groups.obstacles.push(...obstacles.map(({ meta, poly, tags }) =>
+      ({
+        meta,
+        tags,
+        poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
+      })
     ));
 
     /**
@@ -139,8 +144,7 @@ export async function createLayout(opts) {
       const noTail = !text.match(/[gjpqy]/);
       const dim = { x: measurer.measureText(text).width, y: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
       const rect = Rect.fromJson({ x: center.x - 0.5 * dim.x, y: center.y - 0.5 * dim.y, width: dim.x, height: dim.y }).precision(precision).json;
-      const padded = (new Rect).copy(rect).outset(labelMeta.padX, labelMeta.padY).json;
-      return { text, center, index, tags: metaTags, rect, padded };
+      return { text, center, index, tags: metaTags, rect };
     });
 
   const windows = filterSingles(groups.singles, 'window').map(
@@ -530,8 +534,8 @@ export function serializeLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(x => ({ tags: x.tags, poly: x.poly.geoJson })),
-      singles: groups.singles.map(x => ({ tags: x.tags, poly: x.poly.geoJson })),
+      obstacles: groups.obstacles.map(x => ({ meta: x.meta, tags: x.tags, poly: x.poly.geoJson })),
+      singles: groups.singles.map(x => ({ meta: x.meta, tags: x.tags, poly: x.poly.geoJson })),
       walls: groups.walls.map(x => x.geoJson),
     },
 
@@ -595,8 +599,8 @@ export function parseLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(x => ({ tags: x.tags, poly: Poly.from(x.poly) })),
-      singles: groups.singles.map(x => ({ tags: x.tags, poly: Poly.from(x.poly) })),
+      obstacles: groups.obstacles.map(x => ({ meta: x.meta, tags: x.tags, poly: Poly.from(x.poly) })),
+      singles: groups.singles.map(x => ({ meta: x.meta, tags: x.tags, poly: Poly.from(x.poly) })),
       walls: groups.walls.map(Poly.from),
     },
 
@@ -639,23 +643,26 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
   const topNodes = Array.from($('svg > *'));
   const pngRect = extractPngOffset($, topNodes);
 
-  const singles = extractGeomsAt($, topNodes, 'singles');
   const hull = extractGeomsAt($, topNodes, 'hull');
   const obstacles = extractGeomsAt($, topNodes, 'obstacles');
+  const singles = extractGeomsAt($, topNodes, 'singles');
   const walls = extractGeomsAt($, topNodes, 'walls');
 
+  // 🚧 remove tags
   return {
     key: symbolName,
-    pngRect,
     hull: Poly.union(hull).map(x => x.precision(precision)),
-    obstacles: obstacles.map((/** @type {*} */ poly) => ({ tags: poly._ownTags, poly })),
-    walls: Poly.union(walls).map(x => x.precision(precision)),
-    singles: singles.map((/** @type {*} */ poly) => ({ tags: poly._ownTags, poly })),
     lastModified,
+    obstacles: obstacles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), tags: poly._ownTags, poly })),
+    pngRect,
+    singles: singles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), tags: poly._ownTags, poly })),
+    walls: Poly.union(walls).map(x => x.precision(precision)),
   };
 }
 
 /**
+ * Create serializable data associated to a static/assets/symbol/{symbol}.
+ * It will be serialized inside svg.json.
  * @param {Geomorph.ParsedSymbol<Poly>} parsed
  * @returns {Geomorph.ParsedSymbol<Geom.GeoJsonPolygon>}
  */
@@ -663,9 +670,9 @@ export function serializeSymbol(parsed) {
   return {
     key: parsed.key,
     hull: toJsons(parsed.hull),
-    obstacles: parsed.obstacles.map(({ tags, poly }) => ({ tags, poly: poly.geoJson })),
+    obstacles: parsed.obstacles.map(({ meta, tags, poly }) => ({ meta, tags, poly: poly.geoJson })),
     walls: toJsons(parsed.walls),
-    singles: parsed.singles.map(({ tags, poly }) => ({ tags, poly: poly.geoJson })),
+    singles: parsed.singles.map(({ meta, tags, poly }) => ({ meta, tags, poly: poly.geoJson })),
     pngRect: parsed.pngRect,
     lastModified: parsed.lastModified,
   };
@@ -679,9 +686,9 @@ function deserializeSymbol(json) {
   return {
     key: json.key,
     hull: json.hull.map(Poly.from),
-    obstacles: json.obstacles.map(({ tags, poly }) => ({ tags, poly: Poly.from(poly) })),
+    obstacles: json.obstacles.map(({ meta, tags, poly }) => ({ meta, tags, poly: Poly.from(poly) })),
     walls: json.walls.map(Poly.from),
-    singles: json.singles.map(({ tags, poly }) => ({ tags, poly: Poly.from(poly) })),
+    singles: json.singles.map(({ meta, tags, poly }) => ({ meta, tags, poly: Poly.from(poly) })),
     pngRect: json.pngRect,
     lastModified: json.lastModified,
   };
@@ -1027,7 +1034,7 @@ export const labelMeta = {
 };
 
 /**
- * @param {{ tags: string[]; poly: Geom.Poly }[]} singles 
+ * @param {{ meta: Geomorph.PointMeta; tags: string[]; poly: Geom.Poly }[]} singles 
  * @param {...(string | string[])} tagOrTags Restrict to singles with any/all of these tags
  */
 export function singlesToPolys(singles, ...tagOrTags) {
@@ -1036,7 +1043,7 @@ export function singlesToPolys(singles, ...tagOrTags) {
 
 /**
  * @template {Geom.Poly | Geom.GeoJsonPolygon} T
- * @param {{ tags: string[]; poly: T }[]} singles 
+ * @param {{ meta: Geomorph.PointMeta; tags: string[]; poly: T }[]} singles 
  * @param {...(string | string[])} tagOrTags Restrict to singles with any/all of these tags
  */
 export function filterSingles(singles, ...tagOrTags) {
@@ -1071,7 +1078,24 @@ export function filterSingles(singles, ...tagOrTags) {
  * @param {Geomorph.PointMeta} baseMeta 
  */
 export function tagsToMeta(tags, baseMeta) {
-  return tags.reduce((agg, tag) => (agg[tag] = true) && agg, baseMeta);
+  return tags.reduce((meta, tag) => {
+    const eqIndex = tag.indexOf('=');
+    if (eqIndex === -1) {
+      meta[tag] = true;
+    } else {
+      meta[tag.slice(0, eqIndex)] = parseJsonArg(tag.slice(eqIndex + 1));
+    }
+    return meta;
+  }, baseMeta);
+}
+
+/** @param {string} input */
+function parseJsonArg(input) {
+  try {
+    return input === undefined ? undefined : JSON.parse(input);
+  } catch {
+    return input;
+  }
 }
 
 //#region decor
