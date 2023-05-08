@@ -327,11 +327,8 @@ declare namespace NPC {
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
-    /**
-     * 🚧 remove
-     * Derived from @see {meta} i.e. `key` s.t. `meta[key] === true`
-     */
-    tags: string[];
+    /** Can be provided in def (shorter than writing meta) */
+    tags?: string[];
   }
 
   export interface DecorPath extends BaseDecor {

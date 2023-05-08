@@ -47,7 +47,7 @@ export default function Doors(props) {
 
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
-      const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].tags.includes('sealed');
+      const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed;
       const wasOpen = state.open[gmId][doorId];
 
       if (sealed) {// Sealed permanently
@@ -218,8 +218,8 @@ export default function Doors(props) {
               <div
                 key={i}
                 className={cx(cssName.door, {
-                  [cssName.hull]: door.tags.includes('hull'),
-                  [cssName.iris]: door.tags.includes('iris'),
+                  [cssName.hull]: door.meta.hull === true,
+                  [cssName.iris]: door.meta.iris === true,
                   [cssName.open]: state.open[gmId][i],
                 })}
                 style={{

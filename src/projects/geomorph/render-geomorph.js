@@ -90,7 +90,7 @@ export async function renderGeomorph(
     const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
     const hullOutlinePoly = new Poly(hullPoly.outline);
     ctxt.globalCompositeOperation = 'lighter';
-    floorHighlights.forEach(({ poly, tags }, i) => {
+    floorHighlights.forEach(({ poly }, i) => {
       const { center: position, rect } = poly;
       const distance = Math.min(rect.width, rect.height) / 2;
       const gradient = ctxt.createRadialGradient(position.x, position.y, 1, position.x, position.y, distance);
@@ -105,27 +105,28 @@ export async function renderGeomorph(
     ctxt.globalCompositeOperation = 'source-over';
   }
 
-  hullSym.singles.forEach(({ poly, tags }) => {
-    if (tags.includes('wall')) {// Hull wall singles
+  hullSym.singles.forEach(({ poly, meta }) => {
+    if (meta.wall) {// Hull wall singles
       setStyle(ctxt, '#000');
       fillPolygons(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
   });
-  hullSym.singles.forEach(({ poly, tags }) => {// Always above wall
-    if (tags.includes('poly')) {
-      const matched = (tags[1] || '').match(/^([^-]*)-([^-]*)-([^-]*)$/);
+  hullSym.singles.forEach(({ poly, meta }) => {// Always above wall
+    if (meta.poly) {
+      const matches = Object.keys(meta).map(key => key.match(/^([^-]*)-([^-]*)-([^-]*)$/));
+      const matched = matches.find(Boolean);
       if (matched) {
         const [, fill, stroke, strokeWidth] = matched;
         setStyle(ctxt, fill || 'transparent', stroke || 'transparent', Number(strokeWidth) || 0);
         fillPolygons(ctxt, [poly]);
         ctxt.stroke();
       } else {
-        warn(`render-geomorph: tags[0] "poly" but tags[1] has unexpected format: ${tags[1]}`);
+        warn(`render-geomorph: tag "poly" lacks style def: ${JSON.stringify(meta)}`);
       }
     }
   });
-  hullSym.singles.forEach(({ poly, tags }) => {// Always above poly
-    if (tags.includes('fuel')) {
+  hullSym.singles.forEach(({ poly, meta }) => {// Always above poly
+    if (meta.fuel) {
       setStyle(ctxt, '#aaa', '#000', 2);
       fillPolygons(ctxt, [poly]), ctxt.stroke();
       setStyle(ctxt, '#aaa', 'rgba(0, 0, 0, 0.5)', 1);

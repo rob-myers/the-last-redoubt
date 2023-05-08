@@ -8,10 +8,11 @@
   - ✅ first image
   - ✅ add more images
 
-- 🚧 support tags foo=bar where JSON.parse(bar) with string fallback
-  -  e.g. orient-45 -> orient=45
-  - 🚧 symbols have meta instead of tags
-- double beds have e.g. opacity=0.2
+- 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
+  - ✅ symbols have meta
+  - ✅ symbols use meta instead of tags
+  - migrate e.g. orient-45 to orient=45
+  - bunk-beds have extra `lie` with opacity=0.2
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
   - update World piecewise

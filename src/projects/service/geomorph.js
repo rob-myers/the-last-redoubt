@@ -39,23 +39,22 @@ export async function createLayout(opts) {
     // Transform singles (restricting doors/walls by item.tags)
     // Room orientation tags permit decoding orient-{deg} tags later
     const restrictedSingles = singles
-      .map(({ meta, tags, poly }) => ({
-        meta,
-        tags: modifySinglesTags(tags.slice(), m),
+      .map(({ meta, poly }) => ({
+        meta: modifySinglesMeta(meta, m),
         poly: poly.clone().applyMatrix(m).precision(precision),
       }))
-      .filter(({ tags }) => {
-        return item.doors && tags.includes('door')
+      .filter(({ meta }) => {
+        const tags = Object.keys(meta);
+        return item.doors && meta.door
           ? tags.some(tag => /** @type {string[]} */ (item.doors).includes(tag))
           : (item.walls && tags.includes('wall'))
             ? tags.some(tag => /** @type {string[]} */ (item.walls).includes(tag))
             : true;
       });
     groups.singles.push(...restrictedSingles);
-    groups.obstacles.push(...obstacles.map(({ meta, poly, tags }) =>
+    groups.obstacles.push(...obstacles.map(({ meta, poly }) =>
       ({
         meta,
-        tags,
         poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
       })
     ));
@@ -108,7 +107,7 @@ export async function createLayout(opts) {
 
   const doors = filterSingles(groups.singles, 'door').map(x => singleToConnectorRect(x, rooms));
   doors.forEach((door, doorId) =>
-    door.roomIds.includes(null) && !door.tags.includes('hull') && warn(`non-hull door ${doorId} has roomIds ${JSON.stringify(door.roomIds)}`)
+    door.roomIds.includes(null) && !door.meta.hull && warn(`non-hull door ${doorId} has roomIds ${JSON.stringify(door.roomIds)}`)
   );
 
   /**
@@ -124,7 +123,7 @@ export async function createLayout(opts) {
   const unjoinedWalls = groups.walls.flatMap(x => Poly.cutOut(doorPolys, [x]));
   groups.walls = Poly.union(unjoinedWalls);
   groups.singles = groups.singles.reduce((agg, single) =>
-    agg.concat(single.tags.includes('wall')
+    agg.concat(single.meta.wall
       ? Poly.cutOut(doorPolys, [single.poly]).map(poly => ({ ...single, poly }))
       : single
     )
@@ -134,34 +133,34 @@ export async function createLayout(opts) {
   // Labels
   const measurer = createCanvas(0, 0).getContext('2d');
   measurer.font = labelMeta.font;
-  /** @type {Geomorph.LayoutLabel[]} */
-  const labels = groups.singles.filter(x => x.tags.includes('label'))
-    .map(({ poly, tags }, index) => {
+  
+  const labels = groups.singles.filter(x => x.meta.label)
+    .map(/** @returns {Geomorph.LayoutLabel} */ ({ poly, meta }, index) => {
+      const tags = Object.keys(meta);
       const center = poly.rect.center.precision(precision).json;
       // Subsequent tags make up label
       const text = tags.slice(tags.indexOf('label') + 1).join(' ');
-      const metaTags = tags.slice(0, 2); // 🚧
       const noTail = !text.match(/[gjpqy]/);
       const dim = { x: measurer.measureText(text).width, y: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
       const rect = Rect.fromJson({ x: center.x - 0.5 * dim.x, y: center.y - 0.5 * dim.y, width: dim.x, height: dim.y }).precision(precision).json;
-      return { text, center, index, tags: metaTags, rect };
+      return { text, center, index, rect };
     });
 
   const windows = filterSingles(groups.singles, 'window').map(
     x => singleToConnectorRect(x, rooms)
   );
   windows.forEach((window, windowId) =>
-    window.roomIds.includes(null) && !window.tags.includes('hull') && warn(`non-hull window ${windowId} has roomIds ${JSON.stringify(window.roomIds)}`)
+    window.roomIds.includes(null) && !window.meta.hull && warn(`non-hull window ${windowId} has roomIds ${JSON.stringify(window.roomIds)}`)
   );
 
   const hullRect = Rect.fromRects(...hullSym.hull.concat(doorPolys).map(x => x.rect));
-  doors.filter(x => x.tags.includes('hull')).forEach(door => {
+  doors.filter(x => x.meta.hull).forEach(door => {
     extendHullDoorTags(door, hullRect);
   });
 
   /** Sometimes large disjoint nav areas must be discarded  */
   const ignoreNavPoints = groups.singles
-    .filter(x => x.tags.includes('ignore-nav')).map(x => x.poly.center)
+    .filter(x => x.meta['ignore-nav']).map(x => x.poly.center)
   ;
 
   /**
@@ -257,19 +256,20 @@ export async function createLayout(opts) {
 
   /** @type {Geomorph.ParsedLayout['lightSrcs']} */
   const lightSrcs = filterSingles(groups.singles, svgSymbolTag.light)
-    .filter(x => !x.tags.includes(svgSymbolTag.floor))
-    .map(({ poly, tags }) => ({
+    .filter(x => !x.meta[svgSymbolTag.floor])
+    .map(({ poly, meta }) => ({
       position: poly.center,
       roomId: findRoomIdContaining(rooms, poly.center),
-      distance: matchedMap(tags, distanceTagRegex, ([, distStr]) => Number(distStr)),
+      // 🚧 tag should probably be distance={numeric}
+      distance: matchedMap(meta, distanceTagRegex, ([, distStr]) => Number(distStr)),
     })
   );
 
-  const floorHighlightIds = groups.singles.flatMap(({ tags }, index) =>
-    tags.includes(svgSymbolTag.light) && tags.includes(svgSymbolTag.floor) ? [index] : []
+  const floorHighlightIds = groups.singles.flatMap(({ meta }, index) =>
+    meta[svgSymbolTag.light] && meta[svgSymbolTag.floor] ? [index] : []
   );
-  const surfaceIds = groups.obstacles.flatMap(({ tags }, index) =>
-    tags.includes(svgSymbolTag.surface) ? [index] : []
+  const surfaceIds = groups.obstacles.flatMap(({ meta }, index) =>
+    meta[svgSymbolTag.surface] ? [index] : []
   );
   const roomSurfaceIds = surfaceIds.reduce((agg, surfaceId) => {
     const surfaceCenter = groups.obstacles[surfaceId].poly.center;
@@ -338,10 +338,10 @@ export async function createLayout(opts) {
  */
 function extendHullDoorTags(door, hullRect) {
   const bounds = door.poly.rect.clone().outset(4); // 🚧
-  if (bounds.y <= hullRect.y) door.tags.push('hull-n');
-  else if (bounds.right >= hullRect.right) door.tags.push('hull-e');
-  else if (bounds.bottom >= hullRect.bottom) door.tags.push('hull-s');
-  else if (bounds.x <= hullRect.x) door.tags.push('hull-w');
+  if (bounds.y <= hullRect.y) door.meta['hull-n'] = true;
+  else if (bounds.right >= hullRect.right) door.meta['hull-e'] = true;
+  else if (bounds.bottom >= hullRect.bottom) door.meta['hull-s'] = true;
+  else if (bounds.x <= hullRect.x) door.meta['hull-w'] = true;
 }
 
 /**
@@ -406,7 +406,7 @@ export function getGmRoomKey(gmId, roomId) {
  */
 export function getNormalizedDoorPolys(doors) {
   return doors.map(door =>
-    door.tags.includes('hull') ? outsetConnectorEntry(door, hullDoorOutset) : door.poly
+    door.meta.hull ? outsetConnectorEntry(door, hullDoorOutset) : door.poly
   );
 }
 
@@ -420,18 +420,19 @@ export function getUnseenConnectorRoomId(connector, seenRoomIds) {
 }
 
 /**
- * @param {string[]} tags 
+ * @param {Geomorph.PointMeta} meta 
  * @param {Mat} roomTransformMatrix 
  */
-function modifySinglesTags(tags, roomTransformMatrix) {
-  const orientTag = tags.find(tag => tag.startsWith('orient-'));
+function modifySinglesMeta(meta, roomTransformMatrix) {
+  // 🚧 orient=45 instead
+  const orientTag = Object.keys(meta).find(tag => tag.startsWith('orient-'));
   if (orientTag) {
     const oldRadians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
     const newDegrees = Math.round(roomTransformMatrix.transformAngle(oldRadians) * (180/Math.PI));
     // 🚧 meta.orientRoom instead
-    tags.push(`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`);
+    meta[`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`] = true;
   }
-  return tags;
+  return meta;
 }
 
 /**
@@ -485,7 +486,7 @@ function parseConnectorRect(x) {
  * @returns {Geomorph.ParsedConnectorRect}
  */
  function singleToConnectorRect(single, rooms) {
-  const { poly, tags } = single;
+  const { poly, meta } = single;
   const { angle, baseRect } = poly.outline.length === 4
     ? geom.polyToAngledRect(poly)
     // For curved windows we simply use aabb
@@ -511,7 +512,7 @@ function parseConnectorRect(x) {
     baseRect: baseRect.precision(precision),
     poly,
     rect: poly.rect.precision(precision),
-    tags,
+    meta,
     seg: [u.precision(precision), v.precision(precision)],
     normal: normal.precision(precision),
     roomIds,
@@ -534,8 +535,8 @@ export function serializeLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(x => ({ meta: x.meta, tags: x.tags, poly: x.poly.geoJson })),
-      singles: groups.singles.map(x => ({ meta: x.meta, tags: x.tags, poly: x.poly.geoJson })),
+      obstacles: groups.obstacles.map(x => ({ meta: x.meta, poly: x.poly.geoJson })),
+      singles: groups.singles.map(x => ({ meta: x.meta, poly: x.poly.geoJson })),
       walls: groups.walls.map(x => x.geoJson),
     },
 
@@ -569,14 +570,14 @@ export function serializeLayout({
 
 /**
  * @template T
- * @param {string[]} tags 
+ * @param {Geomorph.PointMeta} meta 
  * @param {RegExp} regex
  * @param {(matching: RegExpMatchArray) => T} [transform]
  * @returns {T | undefined}
  */
-export function matchedMap(tags, regex, transform) {
+export function matchedMap(meta, regex, transform) {
   let matching = /** @type {RegExpMatchArray | null} */ (null);
-  tags.find(tag => matching = tag.match(regex));
+  Object.keys(meta).find(tag => matching = tag.match(regex));
   if (transform) {
     return matching ? transform(matching) : undefined;
   } else {// Default to full matching, assuming T is string
@@ -599,8 +600,8 @@ export function parseLayout({
 
     def,
     groups: {
-      obstacles: groups.obstacles.map(x => ({ meta: x.meta, tags: x.tags, poly: Poly.from(x.poly) })),
-      singles: groups.singles.map(x => ({ meta: x.meta, tags: x.tags, poly: Poly.from(x.poly) })),
+      obstacles: groups.obstacles.map(x => ({ meta: x.meta, poly: Poly.from(x.poly) })),
+      singles: groups.singles.map(x => ({ meta: x.meta, poly: Poly.from(x.poly) })),
       walls: groups.walls.map(Poly.from),
     },
 
@@ -648,14 +649,13 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
   const singles = extractGeomsAt($, topNodes, 'singles');
   const walls = extractGeomsAt($, topNodes, 'walls');
 
-  // 🚧 remove tags
   return {
     key: symbolName,
     hull: Poly.union(hull).map(x => x.precision(precision)),
     lastModified,
-    obstacles: obstacles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), tags: poly._ownTags, poly })),
+    obstacles: obstacles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),
     pngRect,
-    singles: singles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), tags: poly._ownTags, poly })),
+    singles: singles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),
     walls: Poly.union(walls).map(x => x.precision(precision)),
   };
 }
@@ -670,9 +670,9 @@ export function serializeSymbol(parsed) {
   return {
     key: parsed.key,
     hull: toJsons(parsed.hull),
-    obstacles: parsed.obstacles.map(({ meta, tags, poly }) => ({ meta, tags, poly: poly.geoJson })),
+    obstacles: parsed.obstacles.map(({ meta, poly }) => ({ meta, poly: poly.geoJson })),
     walls: toJsons(parsed.walls),
-    singles: parsed.singles.map(({ meta, tags, poly }) => ({ meta, tags, poly: poly.geoJson })),
+    singles: parsed.singles.map(({ meta, poly }) => ({ meta, poly: poly.geoJson })),
     pngRect: parsed.pngRect,
     lastModified: parsed.lastModified,
   };
@@ -686,9 +686,9 @@ function deserializeSymbol(json) {
   return {
     key: json.key,
     hull: json.hull.map(Poly.from),
-    obstacles: json.obstacles.map(({ meta, tags, poly }) => ({ meta, tags, poly: Poly.from(poly) })),
+    obstacles: json.obstacles.map(({ meta, poly }) => ({ meta, poly: Poly.from(poly) })),
     walls: json.walls.map(Poly.from),
-    singles: json.singles.map(({ meta, tags, poly }) => ({ meta, tags, poly: Poly.from(poly) })),
+    singles: json.singles.map(({ meta, poly }) => ({ meta, poly: Poly.from(poly) })),
     pngRect: json.pngRect,
     lastModified: json.lastModified,
   };
@@ -1034,7 +1034,7 @@ export const labelMeta = {
 };
 
 /**
- * @param {{ meta: Geomorph.PointMeta; tags: string[]; poly: Geom.Poly }[]} singles 
+ * @param {{ meta: Geomorph.PointMeta; poly: Geom.Poly }[]} singles 
  * @param {...(string | string[])} tagOrTags Restrict to singles with any/all of these tags
  */
 export function singlesToPolys(singles, ...tagOrTags) {
@@ -1043,14 +1043,15 @@ export function singlesToPolys(singles, ...tagOrTags) {
 
 /**
  * @template {Geom.Poly | Geom.GeoJsonPolygon} T
- * @param {{ meta: Geomorph.PointMeta; tags: string[]; poly: T }[]} singles 
+ * @param {{ meta: Geomorph.PointMeta; poly: T }[]} singles 
  * @param {...(string | string[])} tagOrTags Restrict to singles with any/all of these tags
  */
 export function filterSingles(singles, ...tagOrTags) {
   return singles.filter(x => tagOrTags.some(spec =>
     Array.isArray(spec)
-      ? spec.every(tag => x.tags.includes(tag))
-      : x.tags.includes(spec))
+      ? spec.every(tag => x.meta[tag] === true)
+      : x.meta[spec] === true
+    )
   );
 }
 
@@ -1079,14 +1080,21 @@ export function filterSingles(singles, ...tagOrTags) {
  */
 export function tagsToMeta(tags, baseMeta) {
   return tags.reduce((meta, tag) => {
+    meta[tag] = true; // Preserve tag even if foo=bar
     const eqIndex = tag.indexOf('=');
-    if (eqIndex === -1) {
-      meta[tag] = true;
-    } else {
+    if (eqIndex > -1) {
       meta[tag.slice(0, eqIndex)] = parseJsonArg(tag.slice(eqIndex + 1));
     }
     return meta;
   }, baseMeta);
+}
+
+/**
+ * @param {Geomorph.PointMeta} meta 
+ * @returns {string[]}
+ */
+export function metaToTags(meta) {
+  return Object.keys(meta).filter(key => meta[key] === true);
 }
 
 /** @param {string} input */
@@ -1178,13 +1186,13 @@ export function getDecorInstanceKey(gmId, roomId, decorId) {
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
  * @param {number} singleIndex
- * @param {Geomorph.PointMeta} baseMeta
+ * @param {Geomorph.PointMeta} baseMeta Assumed fresh
  * @returns {NPC.DecorSansPath}
  */
 export function singleToDecor(svgSingle, singleIndex, baseMeta) {
   const p = svgSingle.poly.center;
   const origPoly = svgSingle.poly;
-  const meta = tagsToMeta(svgSingle.tags, baseMeta);
+  const meta = Object.assign(baseMeta, svgSingle.meta);
 
   if (meta.rect) {
     const { baseRect, angle } = geom.polyToAngledRect(origPoly);
@@ -1218,7 +1226,6 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
       meta,
       x: p.x,
       y: p.y,
-      tags: svgSingle.tags.slice(),
     };
   }
 }

@@ -53,7 +53,6 @@ declare namespace Geomorph {
 
   interface SvgGroupWithTags<T> {
     poly: T;
-    tags: string[];
     meta: Geomorph.PointMeta;
   }
 
@@ -242,9 +241,6 @@ declare namespace Geomorph {
     center: Geom.VectJson;
     /** Index inside `Geomorph['labels']` */
     index: number;
-    /** Original `label foo | bar baz` yields `['bar', 'baz']` */
-    tags: string[];
-
     /** Measured world rect containing text */
     rect: Geom.RectJson;
   }
@@ -371,7 +367,7 @@ declare namespace Geomorph {
      * Points towards `entries[0]`.
      */
     normal: V;
-    tags: string[];
+    meta: Geomorph.PointMeta;
     /**
      * `[id of room infront, id of room behind]`
      * where a room is *infront* if `normal` is pointing towards it.

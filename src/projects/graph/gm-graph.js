@@ -163,7 +163,8 @@ export class gmGraphClass extends BaseGraph {
    * @returns {null | Geom.Direction}
    */
   static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
-    const found = hullDoor.tags.find(x => /^hull\-[nesw]$/.test(x));
+    // 🚧 hullDir={dir}
+    const found = Object.keys(hullDoor.meta).find(x => /^hull\-[nesw]$/.test(x));
     if (found) {
       const dirChar = /** @type {typeof directionChars[*]} */ (found.slice(-1));
       const direction = /** @type {Geom.Direction} */ (directionChars.indexOf(dirChar));
@@ -194,7 +195,7 @@ export class gmGraphClass extends BaseGraph {
       error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
       return null;
     } else {
-      if (!hullDoor.tags.includes('sealed')) {
+      if (!hullDoor.meta.sealed) {
         error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
       }
       return null;
@@ -239,13 +240,13 @@ export class gmGraphClass extends BaseGraph {
 
     const windowIds = gm.roomGraph.getAdjacentWindows(rootRoomId).filter(({ windowId }) => {
       const connector = gm.windows[windowId];
-        if (connector.tags.includes('frosted')) {
+        if (connector.meta.frosted) {
           return false; // Frosted windows are opaque
         }
         if (// One-way mirror
-          (connector.tags.includes('one-way') && connector.roomIds[0] !== rootRoomId)
+          (connector.meta['one-way'] && connector.roomIds[0] !== rootRoomId)
           ||
-          (connector.tags.includes('one-way-reverse') && connector.roomIds[0] === rootRoomId)
+          (connector.meta['one-way-reverse'] && connector.roomIds[0] === rootRoomId)
         ) {
           return false;
         }
@@ -484,7 +485,7 @@ export class gmGraphClass extends BaseGraph {
       // Non-hull doors or windows induce an adjacent room
       !output[gmId] && (output[gmId] = { gmId, roomIds: [], windowIds: [], closedDoorIds: [] });
       output[gmId].roomIds.push(...gm.roomGraph.getAdjRoomIds(roomId, doorsMustBeOpen ? openDoorIds : undefined));
-      output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).flatMap(x => gm.windows[x.windowId].tags.includes('frosted') ? [] : x.windowId));
+      output[gmId].windowIds.push(...gm.roomGraph.getAdjacentWindows(roomId).flatMap(x => gm.windows[x.windowId].meta.frosted ? [] : x.windowId));
       output[gmId].closedDoorIds.push(...gm.roomGraph.getAdjacentDoors(roomId).flatMap(x => openDoorIds.includes(x.doorId) ? [] : x.doorId));
       // Connected hull doors induce room in another geomorph
       // 🚧 check if hull doors are open?

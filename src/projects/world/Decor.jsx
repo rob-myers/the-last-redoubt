@@ -5,7 +5,7 @@ import { testNever } from "../service/generic";
 import { cssName } from "../service/const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import * as npcService from "../service/npc";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey, metaToTags } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -136,8 +136,9 @@ export default function Decor(props) {
             delete d.origPath;
             break;
           case 'point':
-            // Ensure tags and meta extending tags
-            (d.tags ??= []) && (d.meta ??= {}) && d.tags.forEach(tag => d.meta[tag] = true);
+            // Ensure meta and extend with any tags provided in def
+            (d.meta ??= {}) && d.tags?.forEach(tag => d.meta[tag] = true);
+            d.tags = metaToTags(d.meta); // normalize tags
             ensureDecorMetaGmRoomId(d, api);
             break;
           case 'rect':

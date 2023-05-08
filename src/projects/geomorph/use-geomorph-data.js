@@ -81,9 +81,9 @@ export async function createGeomorphData(input) {
    * - 🚧 precompute in geomorph json?
    */
   const lightMetas = layout.groups.singles
-    .filter(x => x.tags.includes(svgSymbolTag.view))
-    .map(({ poly, tags }) => /** @type {const} */ (
-      { center: poly.center, poly, reverse: tags.includes('reverse'), tags }
+    .filter(x => x.meta[svgSymbolTag.view])
+    .map(({ poly, meta }) => /** @type {const} */ (
+      { center: poly.center, poly, reverse: meta.reverse, meta }
     ));
 
   /**
@@ -93,7 +93,7 @@ export async function createGeomorphData(input) {
    * - 🚧 move to precomputed json
    */
   const relDoorId = layout.groups.singles
-    .filter(x => x.tags.includes('relate-connectors'))
+    .filter(x => x.meta['relate-connectors'])
     .reduce((agg, { poly }) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
@@ -113,7 +113,7 @@ export async function createGeomorphData(input) {
 
   // 🚧 precompute in geomorph json?
   const parallelDoorId = layout.groups.singles
-    .filter(x => x.tags.includes('parallel-connectors'))
+    .filter(x => x.meta['parallel-connectors'])
     .reduce((agg, { poly }) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       doorIds.forEach(doorId => {
@@ -138,7 +138,7 @@ export async function createGeomorphData(input) {
   }));
   const decor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['decor'][*]} */ () => []);
 
-  lightMetas.forEach(({ center: p, poly, reverse, tags }, i) => {
+  lightMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));
     const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
     const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
@@ -156,32 +156,32 @@ export async function createGeomorphData(input) {
 
     doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = {
       point: p,
-      meta: tagsToMeta(tags, {}),
+      meta: {...meta},
     });
     windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
   });
 
   layout.groups.singles.forEach((single, i) => {
-    if (single.tags.includes('spawn')) {
+    if (single.meta.spawn) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
-        pointsByRoom[roomId].spawn.push({ x: p.x, y: p.y, meta: tagsToMeta(single.tags, { roomId }) })
+        pointsByRoom[roomId].spawn.push({ x: p.x, y: p.y, meta: { roomId, ...single.meta } })
       } else {
-        console.warn(`spawn point (single #${i} "${single.tags}") should be inside some room (${layout.key})`)  
+        console.warn(`spawn point (single #${i} ${JSON.stringify(single.meta)}) should be inside some room (${layout.key})`)  
       }
     }
-    if (single.tags.includes('decor')) {
+    if (single.meta.decor) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
         decor[roomId].push(singleToDecor(single, i, { roomId }));
-      } else if (single.tags.includes('label')) {
+      } else if (single.meta.label) {
         // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
         // ℹ️ label could instead be placed nearby respective hull symbols
       } else {
-        console.warn(`decor (single "${single.tags.join(" ")}") should be inside some room (${layout.key})`)  
+        console.warn(`decor (single ${JSON.stringify(single.meta)}) should be inside some room (${layout.key})`)  
       }
     }
   });
@@ -191,7 +191,7 @@ export async function createGeomorphData(input) {
   const output = {
     ...layout,
 
-    hullDoors: layout.doors.filter(({ tags }) => tags.includes('hull')),
+    hullDoors: layout.doors.filter(({ meta }) => meta.hull),
     hullOutline: layout.hullPoly[0].removeHoles(),
     pngRect: Rect.fromJson(layout.items[0].pngRect),
     roomsWithDoors,
