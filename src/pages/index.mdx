@@ -51,8 +51,6 @@ We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
 
-{/* [NPC](https://en.wikipedia.org/wiki/Non-player_character) */}
-
 1. Focus on creating and combining character behaviours without trying to create a video game.
    
 1. Develop differently:
@@ -63,7 +61,7 @@ We have a few core ideas.
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and Eric Smith's [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
+1. Avoid an abstract approach by using the [Traveller](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) universe as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
 by creating and combining many behaviours for their own sake.
@@ -103,12 +101,9 @@ The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Comman
 - Finally we'll stick to gameplay relevant to a huge raft of video games, presented from a top-down perspective.
 
 But what about _entertainment value_?
-We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)), and programming requires patience.
-Entertainment will arise by building and interacting with a little world.
-As the complexity of these fabrications increases, so will our satisfaction.
-Finally, by contextualising the behaviour within Traveller RPG we'll avoid abstraction.
-
-{/* These assets themselves embody [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)). */}
+We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience.
+Entertainment will arise by interacting with our little fabricated worlds.
+By contextualising the behaviour within [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) we'll avoid a dry abstract approach.
 
 
 **OLD BELOW**
@@ -143,18 +138,18 @@ We can _implement_ the choices in a _canonical way_ by adopting the stance of a 
 
 {/* Video games almost always need Game AI e.g. control systems for entities not under control of the Player. */}
 
----
+{/* --- */}
 
-This blog is about programming Non-Player Characters (aka [NPCs](https://en.wikipedia.org/wiki/Non-player_character "@new-tab")).
+{/* This blog is about programming Non-Player Characters (aka [NPCs](https://en.wikipedia.org/wiki/Non-player_character "@new-tab")).
 An NPC is a character in a video game e.g. a human, alien, robot or animal.
 They are not controlled by the Player.
 Sometimes video games run a simulation involving individual NPCs.
 Sometimes they fabricate NPC behaviour in response to the Player's actions.
 My personal interest began with the ZX Spectrum in the late 1980s.
 In those days anything seemed possible.
-Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)).
+Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)). */}
 
-There's no need to comment on the current state of affairs of video games.
+{/* There's no need to comment on the current state of affairs of video games.
 They have their own metrics of success.
 We're going to study NPCs for their own sake.
 But what distinguishes our approach?
@@ -164,7 +159,7 @@ But what distinguishes our approach?
 1. CSS-based rendering.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
 1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
 
-Before things get a bit abstract, here are some screenshots:
+Before things get a bit abstract, here are some screenshots: */}
 
 {/* <Carousel
   baseSrc="/assets/pics/home-carousel/"
@@ -204,9 +199,9 @@ Before things get a bit abstract, here are some screenshots:
 
 </Aside> */}
 
-Let's spend some time expanding the above distinguishing points.
+{/* Let's spend some time expanding the above distinguishing points. */}
 
-### Browser-based CLI
+{/* ### Browser-based CLI */}
 
 {/* By this we mean an interactive [Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface) running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
@@ -260,9 +255,9 @@ The shell functions `call`, `map`, `range` and `split` (above) are all defined i
 
 </Aside> */}
 
-### CSS-based rendering
+{/* ### CSS-based rendering */}
 
-There are two basic ways to create browser-based video games:
+{/* There are two basic ways to create browser-based video games:
 [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) and
 [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS).
 The `<canvas>` amounts to an image we can manipulate via JavaScript.
@@ -276,16 +271,16 @@ Concerning CSS, web browsers interpret it very efficiently.
 Its declarative approach avoids re-inventing the wheel via heavy-duty JavaScript.<SideNote>Although HTMLCanvas is performant via [WebGL](https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API), the latter is a low-level API.</SideNote>
 Finally, CSS permits _rich interactive debugging_.
 That is, one may directly mutate the DOM-tree in a browser devtool,
-whereas debugging `<canvas>` amounts to setting breakpoints inside JavaScript code.
+whereas debugging `<canvas>` amounts to setting breakpoints inside JavaScript code. */}
 
 {/* CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool
 Asymmetry of HTML and JavaScript DOM mutation
 Analogy with Web vs App
 Want to use Browser Devtool: canonical interface, like CLI */}
 
-🚧 browser devtool video
+{/* 🚧 browser devtool video */}
 
-Writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
+{/* Writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
 So, we're going to have to write a lot of software,
 and we're going to have to do it in a particularly clear manner.
 Importantly:
@@ -299,10 +294,10 @@ Importantly:
 
 POSIX-based CLIs are heavily used in e.g. home computing, development environments and cloud computing (infrastructure as a service).
 CSS plays a crucial role in personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like [VSCode](https://en.wikipedia.org/wiki/Visual_Studio_Code).
-Composing these two technologies avoids many UI decisions, for which there is no correct answer.
+Composing these two technologies avoids many UI decisions, for which there is no correct answer. */}
 
 
-### Rich graphics via Starship Geomorphs
+{/* ### Rich graphics via Starship Geomorphs */}
 
 {/* We want to program NPCs, producing a catalogue of interesting behaviours.
 We are particularly interested in studying how they can be composed in response to the Player's actions.
@@ -351,15 +346,15 @@ We use [Synfig](https://www.synfig.org/ "@new-tab") for character animation. */}
 This reflects our initial work on the "game engine" before we started creating this site.
 Partial exposition is indicated by <RoadWorksIcon bottom />. */}
 
-### Demo
+{/* ### Demo */}
 
-🚧 Move after cli-video?
+{/* 🚧 Move after cli-video? */}
 
-🚧 Actions speak louder than words.
+{/* 🚧 Actions speak louder than words.
 Click to navigate or interact (e.g. open doors).
 You can drag/scroll/pinch to pan and zoom.
 Try resetting (<Icon icon="refresh" small inline />), maximising a tab or all tabs (<Icon icon="expand" small inline />), and disabling (<Icon icon="cross-circle" small inline />).
-Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
+Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>. */}
 
 {/* <Tabs
   id="demo-tabs"
@@ -377,7 +372,7 @@ Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
   ]}
 /> */}
 
-### Changelog
+{/* ### Changelog
 
 | date | change |
 | --- | ----------- |
@@ -385,4 +380,4 @@ Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>.
 |  | created [About](/about) |
 |  | created preview [Setup](/intro/setup) |
 |  | created preview [JavaScript CLI](/intro/js-cli) |
-|  | created preview [Game AI CLI](/intro/ai-cli) |
+|  | created preview [Game AI CLI](/intro/ai-cli) | */}
