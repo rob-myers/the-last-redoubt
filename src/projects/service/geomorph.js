@@ -40,7 +40,7 @@ export async function createLayout(opts) {
     // Room orientation tags permit decoding orient-{deg} tags later
     const restrictedSingles = singles
       .map(({ meta, poly }) => ({
-        meta: modifySinglesMeta(meta, m),
+        meta: modifySinglesMeta({...meta}, m),
         poly: poly.clone().applyMatrix(m).precision(precision),
       }))
       .filter(({ meta }) => {

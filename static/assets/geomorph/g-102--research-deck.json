@@ -1985,8 +1985,7 @@
           "sit": true,
           "chair": true,
           "orient-45": true,
-          "orient-315": true,
-          "orient-225": true
+          "orient-315": true
         },
         "poly": {
           "type": "Polygon",
@@ -2007,8 +2006,7 @@
           "sit": true,
           "chair": true,
           "orient-135": true,
-          "orient-225": true,
-          "orient-315": true
+          "orient-225": true
         },
         "poly": {
           "type": "Polygon",
@@ -2029,8 +2027,7 @@
           "sit": true,
           "chair": true,
           "orient-225": true,
-          "orient-135": true,
-          "orient-45": true
+          "orient-135": true
         },
         "poly": {
           "type": "Polygon",
@@ -2051,8 +2048,7 @@
           "sit": true,
           "chair": true,
           "orient-315": true,
-          "orient-45": true,
-          "orient-135": true
+          "orient-45": true
         },
         "poly": {
           "type": "Polygon",
@@ -2135,7 +2131,6 @@
           "sit": true,
           "chair": true,
           "orient-45": true,
-          "orient-315": true,
           "orient-225": true
         },
         "poly": {
@@ -2157,7 +2152,6 @@
           "sit": true,
           "chair": true,
           "orient-135": true,
-          "orient-225": true,
           "orient-315": true
         },
         "poly": {
@@ -2179,7 +2173,6 @@
           "sit": true,
           "chair": true,
           "orient-225": true,
-          "orient-135": true,
           "orient-45": true
         },
         "poly": {
@@ -2201,7 +2194,6 @@
           "sit": true,
           "chair": true,
           "orient-315": true,
-          "orient-45": true,
           "orient-135": true
         },
         "poly": {
@@ -3616,8 +3608,7 @@
           "sit": true,
           "chair": true,
           "orient-90": true,
-          "orient-180": true,
-          "orient-0": true
+          "orient-180": true
         },
         "poly": {
           "type": "Polygon",
@@ -3777,7 +3768,6 @@
           "sit": true,
           "chair": true,
           "orient-90": true,
-          "orient-180": true,
           "orient-0": true
         },
         "poly": {
