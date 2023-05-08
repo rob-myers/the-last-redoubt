@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
-import { assertDefined, testNever } from './generic';
+import { assertDefined, testNever, precision as toPrecision } from './generic';
 import { error, info, warn } from './log';
 import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
@@ -424,13 +424,10 @@ export function getUnseenConnectorRoomId(connector, seenRoomIds) {
  * @param {Mat} roomTransformMatrix 
  */
 function modifySinglesMeta(meta, roomTransformMatrix) {
-  // 🚧 orient=45 instead
-  const orientTag = Object.keys(meta).find(tag => tag.startsWith('orient-'));
-  if (orientTag) {
-    const oldRadians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
-    const newDegrees = Math.round(roomTransformMatrix.transformAngle(oldRadians) * (180/Math.PI));
-    // 🚧 meta.orientRoom instead
-    meta[`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`] = true;
+  if (typeof meta.orient === 'number') {
+    // orientation must reflect parent room's transformation
+    const newDegrees = roomTransformMatrix.transformAngle(meta.orient * (Math.PI / 180)) * (180 / Math.PI);
+    meta.orient = Math.round(newDegrees < 0 ? 360 + newDegrees : newDegrees);
   }
   return meta;
 }

@@ -29,13 +29,13 @@
       <title>decor go label stateroom</title>
     </rect>
     <rect x="297.535" y="740.565" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do lie bed orient-180</title>
+      <title>decor do lie bed orient=180</title>
     </rect>
     <rect x="147.535" y="200.565" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-270</title>
+      <title>decor do sit chair orient=270</title>
     </rect>
     <rect x="467.535" y="120.565" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-135</title>
+      <title>decor do sit chair orient=135</title>
     </rect>
     <rect x="585" y="330" width="30" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>

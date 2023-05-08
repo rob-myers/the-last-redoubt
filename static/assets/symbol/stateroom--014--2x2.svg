@@ -47,10 +47,10 @@
       <title>decor go label stateroom</title>
     </rect>
     <rect x="140" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do lie bed orient-270</title>
+      <title>decor do lie bed orient=270</title>
     </rect>
     <rect x="445" y="120" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit toilet orient-90</title>
+      <title>decor do sit toilet orient=90</title>
     </rect>
     <rect x="545" y="145" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor button shower</title>

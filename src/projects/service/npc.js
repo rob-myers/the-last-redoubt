@@ -50,43 +50,17 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
  * @returns {T & NPC.ExtendDecorPointMeta}
  */
 export function extendDecorMeta(meta, gmMatrix) {
-  const doable = hasTag(meta, ['decor', 'do']);
-  
-  // 🚧 meta.orientWorld instead (in degrees)
-
-  /** This final `orient-{deg}` should be orientation relative to transformed room */
-  const roomOrientDegrees = Object.keys(meta).reduce((agg, tag) =>
-    tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : agg,
-    /** @type {undefined | number} */ (undefined),
-  );
-
-  /** Compute orientation relative to world coords */
-  const worldOrientRadians = roomOrientDegrees === undefined
-    ? undefined
-    : gmMatrix.transformAngle(roomOrientDegrees * (Math.PI/180));
-
   /** @type {NPC.ExtendDecorPointMeta} */
   const extension = {
-    doable,
-    orientRadians: worldOrientRadians,
+    doable: meta.decor === true && meta.do === true,
+    // orientation must reflect geomorph's transformation
+    orient: typeof meta.orient === 'number'
+      ? gmMatrix.transformAngle(meta.orient * (Math.PI / 180)) * (180 / Math.PI)
+      : undefined,
     targetPos: /** @type {*} */ (meta.targetPos), // For type propagation
     ui: true,
   };
-  
   return Object.assign(meta, extension);
-}
-
-/**
- * @param {Geomorph.PointMeta} meta
- * @param {(string | string[])[]} specs 
- * @returns {boolean}
- */
-function hasTag(meta, ...specs) {
-  return specs.some(spec =>
-    Array.isArray(spec)
-      ? spec.every(tag => meta[tag] === true)
-      : meta[spec] === true
-  );
 }
 
 /** @type {Record<NPC.ConfigBooleanKey, true>} */

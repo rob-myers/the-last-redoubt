@@ -17,16 +17,16 @@
   <g>
     <title>singles</title>
     <rect x="60" y="60" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-45</title>
+      <title>decor do sit chair orient=45</title>
     </rect>
     <rect x="60" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-315</title>
+      <title>decor do sit chair orient=315</title>
     </rect>
     <rect x="230" y="60" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-135</title>
+      <title>decor do sit chair orient=135</title>
     </rect>
     <rect x="230" y="230" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-225</title>
+      <title>decor do sit chair orient=225</title>
     </rect>
   </g>
 </svg>

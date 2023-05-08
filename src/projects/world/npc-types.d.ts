@@ -423,7 +423,7 @@ declare namespace NPC {
     /** Doable means an animation will be player on arrival */
     doable: boolean;
     /** Can force NPC orientation (angle) */
-    orientRadians?: number;
+    orient?: number;
     /** Center of underlying element the click came from */
     targetPos: Geom.VectJson;
     /** Decor always user-interactable */

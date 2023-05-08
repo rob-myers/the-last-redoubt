@@ -487,7 +487,9 @@ export default function NPCs(props) {
         // If not navigable use decorPoint
         point: meta.nav ? point : meta.targetPos,
         // Orient if staying off-mesh
-        angle: meta.nav ? undefined : meta.orientRadians,
+        angle: meta.nav
+          ? undefined
+          : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         fadeOutMs,
       }, meta);
     },
@@ -502,8 +504,8 @@ export default function NPCs(props) {
         // Walk, [Turn] then Do
         const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
         await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, ...navPath });
-        if (typeof meta.orientRadians === 'number') {
-          await npc.animateRotate(meta.orientRadians, 100);
+        if (typeof meta.orient === 'number') {
+          await npc.animateRotate(meta.orient * (180 / Math.PI), 100);
         }
         npc.startAnimationByMeta(meta);
         return;
@@ -516,7 +518,7 @@ export default function NPCs(props) {
       await state.fadeSpawnDo(npc, {
         npcKey: npc.key,
         point: decorPoint,
-        angle: meta.orientRadians,
+        angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         requireNav: false,
         fadeOutMs: undefined,
       }, meta);

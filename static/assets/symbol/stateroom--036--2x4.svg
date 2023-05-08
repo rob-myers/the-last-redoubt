@@ -33,25 +33,25 @@
       <title>decor go label bathroom</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="138.815" y="550">
-      <title>decor do lie bed orient-270</title>
+      <title>decor do lie bed orient=270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="45">
       <title>decor button shower</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="293.815" y="110">
-      <title>decor do sit toilet orient-90</title>
+      <title>decor do sit toilet orient=90</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="473.815" y="120">
-      <title>decor do stand sink orient-270</title>
+      <title>decor do stand sink orient=270</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="893.955">
-      <title>decor do sit chair orient-30</title>
+      <title>decor do sit chair orient=30</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="132.013" y="1093.955">
-      <title>decor do sit chair orient-330</title>
+      <title>decor do sit chair orient=330</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="84.815" y="145">
-      <title>decor do stand orient-270</title>
+      <title>decor do stand orient=270</title>
     </rect>
     <rect x="340" y="288" width="220" height="24" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;">
       <title>door</title>

@@ -55,13 +55,13 @@
       <title>window one-way</title>
     </path>
     <rect x="291.863" y="879.688" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-135</title>
+      <title>decor do sit chair orient=135</title>
     </rect>
     <rect x="550" y="390" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-305</title>
+      <title>decor do sit chair orient=305</title>
     </rect>
     <rect x="790" y="620" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
-      <title>decor do sit chair orient-325</title>
+      <title>decor do sit chair orient=325</title>
     </rect>
   </g>
 </svg>

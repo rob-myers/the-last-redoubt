@@ -2502,8 +2502,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -2516,8 +2516,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true,
-          "orient-270": true
+          "orient=180": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -2530,8 +2530,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-160": true,
-          "orient-290": true
+          "orient=160": true,
+          "orient": 290
         },
         "poly": {
           "type": "Polygon",
@@ -2544,8 +2544,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-200": true,
-          "orient-250": true
+          "orient=200": true,
+          "orient": 250
         },
         "poly": {
           "type": "Polygon",
@@ -2597,8 +2597,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -2613,8 +2613,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -2654,8 +2654,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-315": true,
-          "orient-135": true
+          "orient=315": true,
+          "orient": 135
         },
         "poly": {
           "type": "Polygon",
@@ -2668,8 +2668,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-45": true,
-          "orient-225": true
+          "orient=45": true,
+          "orient": 225
         },
         "poly": {
           "type": "Polygon",
@@ -2682,8 +2682,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-115": true,
-          "orient-295": true
+          "orient=115": true,
+          "orient": 295
         },
         "poly": {
           "type": "Polygon",
@@ -2696,8 +2696,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-225": true,
-          "orient-45": true
+          "orient=225": true,
+          "orient": 45
         },
         "poly": {
           "type": "Polygon",
@@ -2710,8 +2710,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-315": true,
-          "orient-135": true
+          "orient=315": true,
+          "orient": 135
         },
         "poly": {
           "type": "Polygon",
@@ -2724,8 +2724,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-45": true,
-          "orient-225": true
+          "orient=45": true,
+          "orient": 225
         },
         "poly": {
           "type": "Polygon",
@@ -2738,8 +2738,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-115": true,
-          "orient-295": true
+          "orient=115": true,
+          "orient": 295
         },
         "poly": {
           "type": "Polygon",
@@ -2752,8 +2752,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-225": true,
-          "orient-45": true
+          "orient=225": true,
+          "orient": 45
         },
         "poly": {
           "type": "Polygon",
@@ -2780,7 +2780,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true
+          "orient=180": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -2793,7 +2794,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-180": true
+          "orient=180": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -2806,7 +2808,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-180": true
+          "orient=180": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -2851,8 +2854,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-180": true,
-          "orient-0": true
+          "orient=180": true,
+          "orient": 360
         },
         "poly": {
           "type": "Polygon",
@@ -2872,8 +2875,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true,
-          "orient-90": true
+          "orient=270": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -2893,8 +2896,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-135": true,
-          "orient-315": true
+          "orient=135": true,
+          "orient": 315
         },
         "poly": {
           "type": "Polygon",
@@ -2982,7 +2985,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-135": true
+          "orient=135": true,
+          "orient": 135
         },
         "poly": {
           "type": "Polygon",
@@ -3050,8 +3054,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -3064,8 +3068,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true,
-          "orient-90": true
+          "orient=180": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -3078,8 +3082,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-160": true,
-          "orient-70": true
+          "orient=160": true,
+          "orient": 70
         },
         "poly": {
           "type": "Polygon",
@@ -3092,8 +3096,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-200": true,
-          "orient-110": true
+          "orient=200": true,
+          "orient": 110
         },
         "poly": {
           "type": "Polygon",
@@ -3145,8 +3149,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient-270": true,
-          "orient-0": true
+          "orient=270": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -3159,8 +3163,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true,
-          "orient-90": true
+          "orient=180": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -3173,8 +3177,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-160": true,
-          "orient-110": true
+          "orient=160": true,
+          "orient": 110
         },
         "poly": {
           "type": "Polygon",
@@ -3187,8 +3191,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-200": true,
-          "orient-70": true
+          "orient=200": true,
+          "orient": 70
         },
         "poly": {
           "type": "Polygon",
@@ -3240,8 +3244,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 360
         },
         "poly": {
           "type": "Polygon",
@@ -3256,8 +3260,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 360
         },
         "poly": {
           "type": "Polygon",
@@ -3272,8 +3276,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 360
         },
         "poly": {
           "type": "Polygon",
@@ -3288,8 +3292,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -3309,8 +3313,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -3371,8 +3375,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-270": true
+          "orient=0": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3392,8 +3396,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-270": true
+          "orient=0": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3521,7 +3525,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3541,7 +3546,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3561,7 +3567,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3576,7 +3583,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3591,7 +3599,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3606,7 +3615,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3621,7 +3631,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3636,7 +3647,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3651,7 +3663,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3772,8 +3785,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-90": true,
-          "orient-180": true
+          "orient=90": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -3836,8 +3849,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true,
-          "orient-270": true
+          "orient=180": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -3916,8 +3929,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-180": true,
-          "orient-270": true
+          "orient=180": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -4007,7 +4020,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -4020,7 +4034,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-90": true
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4067,7 +4082,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -4080,7 +4096,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-90": true
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4132,8 +4149,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -4148,8 +4165,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -4164,8 +4181,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient-90": true,
-          "orient-0": true
+          "orient=90": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -4180,8 +4197,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -4201,8 +4218,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient-270": true,
-          "orient-180": true
+          "orient=270": true,
+          "orient": 180
         },
         "poly": {
           "type": "Polygon",
@@ -4254,7 +4271,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -4274,7 +4292,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
@@ -4294,7 +4313,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-90": true
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4314,7 +4334,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-270": true
+          "orient=270": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
@@ -4422,8 +4443,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-90": true
+          "orient=0": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4443,8 +4464,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-90": true
+          "orient=0": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4505,8 +4526,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-90": true
+          "orient=0": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
@@ -4553,8 +4574,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient-0": true,
-          "orient-90": true
+          "orient=0": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
