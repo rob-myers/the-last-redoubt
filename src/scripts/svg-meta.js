@@ -42,7 +42,6 @@ for (const filename of svgFilenames) {
   const filepath = path.resolve(symbolsDir, filename);
   const contents = fs.readFileSync(filepath).toString();
   const lastModified = fs.statSync(filepath).mtimeMs;
-  // 🚧 symbol has meta instead of tags
   const parsed = serializeSymbol(parseStarshipSymbol(
     symbolName,
     contents,

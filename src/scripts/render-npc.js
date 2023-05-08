@@ -192,7 +192,7 @@ async function main() {
           frameAabbOrig: aabb,
           frameAabb: aabb,
           frameCount,
-          durationMs: 600, // 🚧 for types (this json is defunct)
+          durationMs: 600, // ℹ️ to fix types (this json is defunct)
           totalDist: deltas.reduce((sum, x) => sum + x, 0),
           pathPng: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.png`,
           pathWebp: `/assets/npc/${sifzFolder}/${sifzFolder}--${animName}.webp`,
