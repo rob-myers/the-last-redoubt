@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
-import { assertDefined, assertNonNull, testNever } from './generic';
+import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
 import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
@@ -12,7 +12,7 @@ import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp } from "../service/dom";
 
 /**
- * Create a layout, given a definition and all symbols.
+ * Create a layout given a definition and all symbols.
  * Can run in browser or on server.
  * @param {CreateLayoutOpts} opts
  * @returns {Promise<Geomorph.ParsedLayout>}
@@ -37,7 +37,7 @@ export async function createLayout(opts) {
       m.d *= 0.2;
     }
     // Transform singles (restricting doors/walls by item.tags)
-    // Room orientation tags permit decoding angle-{deg} tags later
+    // Room orientation tags permit decoding orient-{deg} tags later
     const restrictedSingles = singles
       .map(({ tags, poly }) => ({
         tags: modifySinglesTags(tags.slice(), m),
@@ -424,6 +424,7 @@ function modifySinglesTags(tags, roomTransformMatrix) {
   if (orientTag) {
     const oldRadians = Number(orientTag.slice('orient-'.length)) * (Math.PI/180);
     const newDegrees = Math.round(roomTransformMatrix.transformAngle(oldRadians) * (180/Math.PI));
+    // 🚧 meta.orientRoom instead
     tags.push(`orient-${newDegrees < 0 ? 360 + newDegrees : newDegrees}`);
   }
   return tags;

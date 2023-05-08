@@ -2,18 +2,21 @@
 
 ## In progress
 
-- 🚧 nice images involving multiple npcs for carousel
+- ✅ nice images involving multiple npcs for carousel
   - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
   - ✅ cleaner implementation of `npcs.config.debugPlayer`
   - ✅ first image
   - ✅ add more images
 
-- 🚧 unfortunately "ℹ️" does not look good on some windows machines
-
+- 🚧 support tags foo=bar where JSON.parse(bar) with string fallback
+  -  e.g. orient-45 -> orient=45
+  - 🚧 symbols have meta instead of tags
+- double beds have e.g. opacity=0.2
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
   - update World piecewise
 
+- unfortunately "ℹ️" does not look good on some windows machines
 - hide inline carousel when maximised?
 - properly type code relating to `normalizeNpcCommandOpts`
 

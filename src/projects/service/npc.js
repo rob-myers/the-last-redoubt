@@ -52,6 +52,8 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
 export function extendDecorMeta(meta, gmMatrix) {
   const doable = hasTag(meta, ['decor', 'do']);
   
+  // 🚧 meta.orientWorld instead (in degrees)
+
   /** This final `orient-{deg}` should be orientation relative to transformed room */
   const roomOrientDegrees = Object.keys(meta).reduce((agg, tag) =>
     tag.startsWith('orient-') ? Number(tag.slice('orient-'.length)) : agg,
