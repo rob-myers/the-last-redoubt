@@ -52,49 +52,49 @@
       <title>light</title>
     </rect>
     <rect x="626.493" y="748.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-200</title>
+      <title>light distance=200</title>
     </rect>
     <rect x="1146.493" y="448.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
     <rect x="1046.493" y="898.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-180</title>
+      <title>light distance=180</title>
     </rect>
     <rect x="206.493" y="958.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
     <rect x="176.493" y="108.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-180</title>
+      <title>light distance=180</title>
     </rect>
     <rect x="856.493" y="188.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
     <rect x="1176.493" y="18.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-120</title>
+      <title>light distance=120</title>
     </rect>
     <rect x="516.493" y="578.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-100</title>
+      <title>light distance=100</title>
     </rect>
     <rect x="636.493" y="578.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-100</title>
+      <title>light distance=100</title>
     </rect>
     <rect x="766.493" y="578.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance</title>
     </rect>
     <rect x="1176.493" y="1038.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-180</title>
+      <title>light distance=180</title>
     </rect>
     <rect x="1156.493" y="518.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
     <rect x="766.493" y="898.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-180</title>
+      <title>light distance=180</title>
     </rect>
     <rect x="286.493" y="508.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-120</title>
+      <title>light distance=120</title>
     </rect>
     <rect x="1106.493" y="738.825" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light distance-260</title>
+      <title>light distance=260</title>
     </rect>
     <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 940, 331.664978)">
       <title>light floor</title>

@@ -260,8 +260,7 @@ export async function createLayout(opts) {
     .map(({ poly, meta }) => ({
       position: poly.center,
       roomId: findRoomIdContaining(rooms, poly.center),
-      // 🚧 tag should probably be distance={numeric}
-      distance: matchedMap(meta, distanceTagRegex, ([, distStr]) => Number(distStr)),
+      distance: typeof meta.distance === 'number' ? meta.distance : undefined,
     })
   );
 

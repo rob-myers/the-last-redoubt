@@ -502,7 +502,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-200": true},
+        "meta": {"light": true, "distance=200": true, "distance": 200},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -516,7 +516,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-160": true},
+        "meta": {"light": true, "distance=160": true, "distance": 160},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -544,7 +544,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-120": true},
+        "meta": {"light": true, "distance=120": true, "distance": 120},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -572,7 +572,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-80": true},
+        "meta": {"light": true, "distance=80": true, "distance": 80},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -586,7 +586,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-80": true},
+        "meta": {"light": true, "distance=80": true, "distance": 80},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -600,7 +600,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-80": true},
+        "meta": {"light": true, "distance=80": true, "distance": 80},
         "poly": {
           "type": "Polygon",
           "coordinates": [

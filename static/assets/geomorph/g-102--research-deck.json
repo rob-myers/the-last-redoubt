@@ -1578,7 +1578,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-200": true},
+        "meta": {"light": true, "distance=200": true, "distance": 200},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1606,7 +1606,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-180": true},
+        "meta": {"light": true, "distance=180": true, "distance": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1634,7 +1634,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-180": true},
+        "meta": {"light": true, "distance=180": true, "distance": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1662,7 +1662,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-120": true},
+        "meta": {"light": true, "distance=120": true, "distance": 120},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1676,7 +1676,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-100": true},
+        "meta": {"light": true, "distance=100": true, "distance": 100},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1690,7 +1690,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-100": true},
+        "meta": {"light": true, "distance=100": true, "distance": 100},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1718,7 +1718,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-180": true},
+        "meta": {"light": true, "distance=180": true, "distance": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1746,7 +1746,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-180": true},
+        "meta": {"light": true, "distance=180": true, "distance": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1760,7 +1760,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-120": true},
+        "meta": {"light": true, "distance=120": true, "distance": 120},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1774,7 +1774,7 @@
         }
       },
       {
-        "meta": {"light": true, "distance-260": true},
+        "meta": {"light": true, "distance=260": true, "distance": 260},
         "poly": {
           "type": "Polygon",
           "coordinates": [

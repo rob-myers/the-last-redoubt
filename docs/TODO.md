@@ -13,7 +13,7 @@
   - ✅ symbols use meta instead of tags
   - 🚧 migrate:
     - ✅ orient-45 to orient=45
-    - distance-100 to distance=100
+    - ✅ distance-100 to distance=100
     - hull-n to hullDir=n
   - bunk-beds have extra `lie` with opacity=0.2
 - 🚧 create a new CodeSandbox
