@@ -203,6 +203,10 @@ declare namespace Geomorph {
     | null
   )>;
 
+  export type PointWithMeta = Geom.VectJson & {
+    meta?: Geomorph.PointMeta;
+  }
+
   export interface UseGeomorphsDefItem {
     layoutKey: LayoutKey;
     transform?: [number, number, number, number, number, number];

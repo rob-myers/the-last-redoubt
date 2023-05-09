@@ -3584,13 +3584,32 @@
           "lie": true,
           "bed": true,
           "orient=270": true,
-          "orient": 90
+          "orient": 90,
+          "height=1": true,
+          "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[387.763, 490], [387.763, 488], [389.763, 488], [389.763, 490]]
+            [[385.763, 496], [385.763, 494], [387.763, 494], [387.763, 496]]
           ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=270": true,
+          "orient": 90,
+          "height=0": true,
+          "height": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[396, 490], [396, 488], [398, 488], [398, 490]]]
         }
       },
       {
@@ -3789,13 +3808,32 @@
           "lie": true,
           "bed": true,
           "orient=270": true,
-          "orient": 90
+          "orient": 90,
+          "height=1": true,
+          "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[507.763, 490], [507.763, 488], [509.763, 488], [509.763, 490]]
+            [[505.763, 496], [505.763, 494], [507.763, 494], [507.763, 496]]
           ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=270": true,
+          "orient": 90,
+          "height=0": true,
+          "height": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[516, 490], [516, 488], [518, 488], [518, 490]]]
         }
       },
       {
@@ -3994,13 +4032,32 @@
           "lie": true,
           "bed": true,
           "orient=270": true,
-          "orient": 90
+          "orient": 90,
+          "height=1": true,
+          "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[690.237, 490], [690.237, 488], [692.237, 488], [692.237, 490]]
+            [[692.237, 496], [692.237, 494], [694.237, 494], [694.237, 496]]
           ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=270": true,
+          "orient": 90,
+          "height=0": true,
+          "height": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[682, 490], [682, 488], [684, 488], [684, 490]]]
         }
       },
       {
@@ -4199,13 +4256,32 @@
           "lie": true,
           "bed": true,
           "orient=270": true,
-          "orient": 90
+          "orient": 90,
+          "height=1": true,
+          "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[810.237, 490], [810.237, 488], [812.237, 488], [812.237, 490]]
+            [[812.237, 496], [812.237, 494], [814.237, 494], [814.237, 496]]
           ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=270": true,
+          "orient": 90,
+          "height=0": true,
+          "height": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[802, 490], [802, 488], [804, 488], [804, 490]]]
         }
       },
       {

@@ -139,7 +139,7 @@ export default function NPCs(props) {
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
       } finally {
-        await npc.animateOpacity(1, spawnFadeMs);
+        await npc.animateOpacity(meta.obscured ? 0.25 : 1, spawnFadeMs);
       }
     },
     getGlobalNavPath(src, dst) {
@@ -348,12 +348,17 @@ export default function NPCs(props) {
       }
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      // Other npcs cannot be close
+      // Other npcs cannot be close, unless at distinct height
+      /** @type {NPC.NPC} */ let otherNpc;
       for (const otherNpcKey in state.npc) {
-        if (otherNpcKey !== npcKey && state.npc[otherNpcKey].intersectsCircle(
-          point,
-          npcsMeta[npcClassKey].radius
-        )) {
+        if (
+          otherNpcKey !== npcKey
+          && (otherNpc = state.npc[otherNpcKey]).intersectsCircle(
+            point,
+            npcsMeta[npcClassKey].radius
+          )
+          && point.meta?.height === otherNpc.doMeta?.height
+        ) {
           return false;
         }
       }
@@ -452,7 +457,9 @@ export default function NPCs(props) {
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
       const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
-      const meta = npcService.extendDecorMeta(e.point.meta, gm.matrix);
+      // ℹ️ e.point.meta can be undefined e.g. if e
+      // manually specified rather than from `click [n]`
+      const meta = npcService.extendDecorMeta(e.point.meta ?? {}, gm.matrix);
       
       try {
         if (state.isPointInNavmesh(npc.getPosition())) {
@@ -865,7 +872,7 @@ const rootCss = css`
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
- * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geom.VectJson) => boolean} isPointSpawnable
+ * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointWithMeta) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
  * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta, fadeOutMs?: number) => Promise<void>} offMeshDoMeta
@@ -878,7 +885,7 @@ const rootCss = css`
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
- * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geom.VectJson; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
+ * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc

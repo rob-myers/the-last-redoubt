@@ -13240,13 +13240,32 @@
           "lie": true,
           "bed": true,
           "orient=270": true,
-          "orient": 270
+          "orient": 270,
+          "height=1": true,
+          "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[138.815, 550], [138.815, 560], [148.815, 560], [148.815, 550]]
+            [[128.815, 520], [128.815, 530], [138.815, 530], [138.815, 520]]
           ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=270": true,
+          "orient": 270,
+          "height=0": true,
+          "height": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[180, 550], [180, 560], [190, 560], [190, 550]]]
         }
       },
       {
@@ -13386,7 +13405,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1683550928463.9565
+    "lastModified": 1683645441205.7012
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",

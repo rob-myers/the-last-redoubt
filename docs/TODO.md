@@ -15,7 +15,11 @@
     - ✅ orient-45 to orient=45
     - ✅ distance-100 to distance=100
     - ✅ hull-n to hullDir=n
-  - bunk-beds have extra `lie` with opacity=0.2
+  - 🚧 bunk-beds have extra `lie` with opacity=0.25
+    - ✅ fade spawn supports `meta.obscured`
+    - ✅ npcs with different meta.height can spawn close
+    - do point should be more visible
+    - cover all instances of bunk beds
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
   - update World piecewise
