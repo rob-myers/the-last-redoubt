@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
-import { assertDefined, testNever, precision as toPrecision } from './generic';
+import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, distanceTagRegex, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { defaultLightDistance, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
