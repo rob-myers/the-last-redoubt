@@ -827,7 +827,15 @@ export const geom = new geomServiceClass;
  * Aligned to `Geom.Direction`.
  */
 export const directionChars = /** @type {const} */ (['n', 'e', 's', 'w']);
- 
+
+/**
+ * @param {*} input
+ * @returns {input is typeof directionChars[*]}
+ */
+export function isDirectionChar(input) {
+  return directionChars.includes(input);
+}
+
 /**
  * @typedef LightPolyDef @type {object}
  * @property {Geom.Vect} position Position of light.

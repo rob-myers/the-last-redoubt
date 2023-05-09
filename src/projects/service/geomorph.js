@@ -337,10 +337,10 @@ export async function createLayout(opts) {
  */
 function extendHullDoorTags(door, hullRect) {
   const bounds = door.poly.rect.clone().outset(4); // 🚧
-  if (bounds.y <= hullRect.y) door.meta['hull-n'] = true;
-  else if (bounds.right >= hullRect.right) door.meta['hull-e'] = true;
-  else if (bounds.bottom >= hullRect.bottom) door.meta['hull-s'] = true;
-  else if (bounds.x <= hullRect.x) door.meta['hull-w'] = true;
+  if (bounds.y <= hullRect.y) door.meta.hullDir = 'n';
+  else if (bounds.right >= hullRect.right) door.meta.hullDir = 'e';
+  else if (bounds.bottom >= hullRect.bottom) door.meta.hullDir = 's';
+  else if (bounds.x <= hullRect.x) door.meta.hullDir = 'w';
 }
 
 /**

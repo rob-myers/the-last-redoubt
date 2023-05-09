@@ -1,7 +1,7 @@
 import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
-import { geom, directionChars } from "../service/geom";
+import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
 import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
@@ -163,11 +163,9 @@ export class gmGraphClass extends BaseGraph {
    * @returns {null | Geom.Direction}
    */
   static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
-    // 🚧 hullDir={dir}
-    const found = Object.keys(hullDoor.meta).find(x => /^hull\-[nesw]$/.test(x));
-    if (found) {
-      const dirChar = /** @type {typeof directionChars[*]} */ (found.slice(-1));
-      const direction = /** @type {Geom.Direction} */ (directionChars.indexOf(dirChar));
+    const { hullDir } = hullDoor.meta;
+    if (isDirectionChar(hullDir)) {
+      const direction = /** @type {Geom.Direction} */ (directionChars.indexOf(hullDir));
       const ime1 = { x: transform[0], y: transform[1] };
       const ime2 = { x: transform[2], y: transform[3] };
       
@@ -192,14 +190,11 @@ export class gmGraphClass extends BaseGraph {
         if (ime2.x === -1) // (0, -1, -1, 0)
           return geom.getFlippedDirection(geom.getDeltaDirection(direction, 3), 'y');
       }
-      error(`hullDoor ${hullDoorId}: ${found}: failed to parse transform "${transform}"`);
-      return null;
-    } else {
-      if (!hullDoor.meta.sealed) {
-        error(`${gmKey}: hullDoor ${hullDoorId}: expected tag "hull-{n,e,s,w}" in hull door`);
-      }
-      return null;
+      error(`${gmKey}: hull door ${hullDoorId}: ${hullDir}: failed to parse transform "${transform}"`);
+    } else if (!hullDoor.meta.sealed) {
+      error(`${gmKey}: unsealed hull door ${hullDoorId}: meta.hullDir "${hullDir}" must be in {n,e,s,w}`);
     }
+    return null;
   }
 
   /**
