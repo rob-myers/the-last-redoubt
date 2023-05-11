@@ -198,8 +198,7 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Compute lit area, determined by current room, open doors, and windows.
-   * Always include current room.
+   * Compute lit area: extend current room by view through open doors and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
    * @returns {{ polys: Poly[][]; gmRoomIds: Graph.GmRoomId[] }}
@@ -214,12 +213,11 @@ export class gmGraphClass extends BaseGraph {
     gmRoomIds.length === 0 && gmRoomIds.push({ gmId, roomId: rootRoomId });
     return {
       /**
-       * Try eliminate "small black triangular polys",
-       * arising from intersecting view polys.
-       * Side effect: intermediate walls can become black (from geomorph PNG).
+       * Try to eliminate "small black triangular polys", arising from
+       * intersecting view polys. Side effect: intermediate walls can become black.
        */
       // polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
-      polys: viewPolys.map(polys => Poly.union(polys.map(x => x.removeHoles().precision(4)))),
+      polys: viewPolys.map(polys => Poly.union(polys.map(x => x.precision(4))).map(x => x.removeHoles()) ),
       gmRoomIds,
     };
   }
