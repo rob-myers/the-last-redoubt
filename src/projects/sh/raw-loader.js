@@ -348,7 +348,7 @@
 
       /**
        * @param {string} npcKey
-       * @param {Geomorph.PointOptionalMeta} point
+       * @param {Geomorph.PointWithMeta} point
        * @param {NPC.NpcClassKey} [npcClassKey]
        */
       async function spawnOrDo(npcKey, point, npcClassKey) {
@@ -358,7 +358,7 @@
           await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
         } else {
           await npcs.spawn({ npcKey, point, npcClassKey });
-          if (point?.meta?.do) {// Going to `do`
+          if (point.meta?.do) {// Going to `do`
             await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
           }
         }
@@ -369,6 +369,7 @@
         const threeArgs = args.length === 3;
         const npcClassKey = threeArgs ? /** @type {NPC.NpcClassKey} */ (args[1]) : undefined;
         const point = api.parseJsArg(args[threeArgs ? 2 : 1]);
+        point.meta ??= {};
         await spawnOrDo(npcKey, point, npcClassKey);
       } else {
         while ((datum = await api.read()) !== null) {// datum: { npcKey, [npcClassKey], point }

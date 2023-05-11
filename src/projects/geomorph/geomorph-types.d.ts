@@ -203,10 +203,6 @@ declare namespace Geomorph {
     | null
   )>;
 
-  export type PointOptionalMeta = Geom.VectJson & {
-    meta?: Geomorph.PointMeta;
-  }
-
   export type PointWithMeta = Geom.VectJson & {
     meta: Geomorph.PointMeta;
   }
