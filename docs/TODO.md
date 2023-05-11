@@ -2,6 +2,8 @@
 
 ## In progress
 
+- BUG open door should not trigger off-mesh do
+
 - 🚧 cleanup and understand spawn vs do
   - ℹ️ we delegate to `do` inside raw-loader `spawn`
   - ✅ we should fade-in
@@ -10,11 +12,8 @@
   - ✅ prevent spawn on top of other npc
     - maybe distinct height issue?
   - 🚧 permit re-spawn on top of same npc at do point
-  - spawn between do points should support changing npcClassKey
-  - spawn should not have restricted distance
-    ```sh
-    $ spawn andros $foo
-    spawn: run: Error: too far away
+  - ✅ spawn between do points should support changing npcClassKey
+  - ✅ spawn should not have restricted distance
     ```
 
 - 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
@@ -28,7 +27,7 @@
     - ✅ fade spawn supports `meta.obscured`
     - ✅ npcs with different meta.height can spawn close
     - do point should be more visible
-    - cover all instances of bunk beds
+    - ✅ cover all instances of bunk beds
 
 - support cleaner `npc do {npcKey} $( click 1 )`
   - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
