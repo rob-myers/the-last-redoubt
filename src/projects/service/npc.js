@@ -42,27 +42,6 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
 `.trim();
 }
 
-/**
- * Mutates, but also returns mutated for type propagation.
- * @template {Geomorph.PointMeta} T
- * @param {T} meta
- * @param {Geom.Mat} gmMatrix
- * @returns {T & NPC.ExtendDecorPointMeta}
- */
-export function extendDecorMeta(meta, gmMatrix) {
-  /** @type {NPC.ExtendDecorPointMeta} */
-  const extension = {
-    doable: meta.decor === true && meta.do === true,
-    // orientation must reflect geomorph's transformation
-    orient: typeof meta.orient === 'number'
-      ? gmMatrix.transformAngle(meta.orient * (Math.PI / 180)) * (180 / Math.PI)
-      : undefined,
-    targetPos: /** @type {*} */ (meta.targetPos), // For type propagation
-    ui: true,
-  };
-  return Object.assign(meta, extension);
-}
-
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
 const fromConfigBooleanKey = { 'canClickArrows': true, 'debug': true, 'debugPlayer': true, 'gmOutlines': true, 'highlightWindows': true, 'localNav': true, 'localOutline': true, 'omnipresent': true, 'showIds': true };
 

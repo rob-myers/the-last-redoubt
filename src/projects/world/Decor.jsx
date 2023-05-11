@@ -29,7 +29,6 @@ export default function Decor(props) {
         .map(decorKey => state.decor[decorKey])
       );
     },
-
     getDecorAtPoint(point) {
       const result = api.gmGraph.findRoomContaining(point);
       if (result) {
@@ -40,7 +39,6 @@ export default function Decor(props) {
         return [];
       }
     },
-
     handleDevToolEdit(els) {
       for (const el of els) {
         const decorKey = el.dataset.key;
@@ -105,7 +103,6 @@ export default function Decor(props) {
         }
       }
     },
-
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
       decors.forEach(decor => {
@@ -138,7 +135,8 @@ export default function Decor(props) {
           case 'point':
             // Ensure meta and extend with any tags provided in def
             (d.meta ??= {}) && d.tags?.forEach(tag => d.meta[tag] = true);
-            d.tags = metaToTags(d.meta); // normalize tags
+            // normalize tags in case used
+            d.tags = metaToTags(d.meta);
             ensureDecorMetaGmRoomId(d, api);
             break;
           case 'rect':

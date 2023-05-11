@@ -379,7 +379,7 @@ declare namespace NPC {
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; }
+    | { action: 'do'; npcKey: string; point: Geomorph.PointOptionalMeta; fadeOutMs?: number; }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
@@ -418,17 +418,6 @@ declare namespace NPC {
     key: 'way-point';
     npcKey: string;
     meta: NpcWayMeta;
-  }
-
-  export interface ExtendDecorPointMeta {
-    /** Doable means an animation will be player on arrival */
-    doable: boolean;
-    /** Can force NPC orientation (angle) */
-    orient?: number;
-    /** Center of underlying element the click came from */
-    targetPos: Geom.VectJson;
-    /** Decor always user-interactable */
-    ui: true;
   }
 
   //#region parse

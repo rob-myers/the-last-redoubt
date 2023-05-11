@@ -348,7 +348,7 @@
 
       /**
        * @param {string} npcKey
-       * @param {Geomorph.PointWithMeta} point
+       * @param {Geomorph.PointOptionalMeta} point
        * @param {NPC.NpcClassKey} [npcClassKey]
        */
       async function spawnOrDo(npcKey, point, npcClassKey) {
