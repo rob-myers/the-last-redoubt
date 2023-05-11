@@ -142,6 +142,10 @@ export default function createNpc(
         && !this.doMeta
       );
     },
+    changeClass(npcClassKey) {// we don't trigger render
+      this.classKey = npcClassKey;
+      this.anim.css = css`${npcsMeta[npcClassKey].css}`;
+    },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
       window.clearTimeout(this.anim.wayTimeoutId);

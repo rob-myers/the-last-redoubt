@@ -307,7 +307,7 @@ export default function NPCs(props) {
       return (
         // Collide if same height (undefined except at bunk-beds)
         (nearbyMeta?.height === dstMeta?.height)
-        // Else height differs; collide if exactly one obscured "do point"
+        // Height differs; collide if exactly one "do point" and obscured
         || (
           (!!nearbyMeta !== !!dstMeta?.do)
           && !assertDefined(nearbyMeta || dstMeta).obscured
@@ -638,8 +638,7 @@ export default function NPCs(props) {
           speed: npcsMeta[spawned.classKey].speed,
         };
         if (e.npcClassKey) {
-          spawned.classKey = e.npcClassKey;
-          spawned.anim.css = css`${npcsMeta[e.npcClassKey].css}`;
+          spawned.changeClass(e.npcClassKey);
         }
         // Reorder keys
         delete state.npc[e.npcKey];

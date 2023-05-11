@@ -59,6 +59,7 @@ declare namespace NPC {
 
     cancel(): Promise<void>;
     canLook(): boolean;
+    changeClass(npcClassKey: NPC.NpcClassKey): void;
     clearWayMetas(): void;
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */

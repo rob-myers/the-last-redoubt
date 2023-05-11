@@ -341,7 +341,7 @@
      * - `spawn andros zhodani-a "$( click 1 )"`
      * - `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
      * 
-     * We also handle "do points" where point.meta.do is truthy.
+     * We also handle "do points": spawn _from_ do; spawn _to_ do.
      */
     spawn: async function* ({ api, args, home, datum }) {
       const { npcs } = api.getCached(home.WORLD_KEY);
@@ -353,11 +353,12 @@
        */
       async function spawnOrDo(npcKey, point, npcClassKey) {
         const spawned = npcs.npc[npcKey];
-        if (spawned?.doMeta) {// At do points, `do` instead of `spawn`
+        if (spawned?.doMeta) {// At do points delegate to `do`
+          npcClassKey && spawned.changeClass(npcClassKey);
           await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
         } else {
           await npcs.spawn({ npcKey, point, npcClassKey });
-          if (point?.meta?.do) {
+          if (point?.meta?.do) {// Going to `do`
             await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
           }
         }
