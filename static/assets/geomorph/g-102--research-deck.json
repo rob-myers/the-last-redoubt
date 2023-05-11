@@ -2796,12 +2796,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 90
+          "orient=0": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[510, 540], [508, 540], [508, 538], [510, 538]]]
+          "coordinates": [[[510, 558], [508, 558], [508, 556], [510, 556]]]
         }
       },
       {
@@ -2858,12 +2858,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 90
+          "orient=0": true,
+          "orient": 270
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[630, 540], [628, 540], [628, 538], [630, 538]]]
+          "coordinates": [[[630, 558], [628, 558], [628, 556], [630, 556]]]
         }
       },
       {

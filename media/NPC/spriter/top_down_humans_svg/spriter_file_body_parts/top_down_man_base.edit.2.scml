@@ -9121,7 +9121,7 @@
                 </key>
             </timeline>
         </animation>
-        <animation id="10" name="lie" length="500" interval="500" looping="false" l="-900" t="-1800" r="899" b="1800">
+        <animation id="10" name="lie" length="500" interval="500" looping="false" l="-900" t="-2600" r="899" b="2600">
             <mainline>
                 <key id="0">
                     <bone_ref id="0" timeline="6" key="0"/>
@@ -9205,7 +9205,7 @@
             </timeline>
             <timeline id="6" obj="0" name="bone_000" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="-178.715322" y="-146.140681" angle="270" scale_y="-3.030303"/>
+                    <bone x="-178.715322" y="-1287.631338" angle="270" scale_y="-3.030303"/>
                 </key>
             </timeline>
             <timeline id="7" obj="1" name="bone_001" object_type="bone">
@@ -9220,7 +9220,7 @@
             </timeline>
             <timeline id="9" obj="3" name="bone_003" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="216.069142" y="-136.992736" angle="270" scale_y="-4.241979"/>
+                    <bone x="216.069142" y="-1278.483393" angle="270" scale_y="-4.241979"/>
                 </key>
             </timeline>
             <timeline id="10" obj="4" name="bone_004" object_type="bone">
@@ -9355,7 +9355,7 @@
             </timeline>
             <timeline id="36" obj="12" name="bone_012" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="-64.159369" y="441.245327" angle="90" scale_y="-4.36018"/>
+                    <bone x="-64.159369" y="-700.24533" angle="90" scale_y="-4.36018"/>
                 </key>
             </timeline>
             <timeline id="37" name="head_top">
@@ -9414,7 +9414,7 @@
             </timeline>
             <timeline id="46" name="belt_brown">
                 <key id="0" spin="0">
-                    <object folder="8" file="11" x="-354.184885" y="-302.394366" angle="0" scale_x="0.896373" scale_y="-0.747177"/>
+                    <object folder="8" file="11" x="-349.63943" y="-1525.121639" angle="0" scale_x="0.896373" scale_y="-0.747177"/>
                 </key>
             </timeline>
         </animation>

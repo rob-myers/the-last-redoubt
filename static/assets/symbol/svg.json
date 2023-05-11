@@ -4348,17 +4348,17 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [2045, 1631.858],
-              [2045, 1641.858],
-              [2055, 1641.858],
-              [2055, 1631.858]
+              [1925, 1631.858],
+              [1925, 1641.858],
+              [1935, 1641.858],
+              [1935, 1631.858]
             ]
           ]
         }
@@ -4796,7 +4796,7 @@
       }
     ],
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
-    "lastModified": 1683550928487.0027
+    "lastModified": 1683817793563.8716
   },
   "console--018--1x1": {
     "key": "console--018--1x1",
@@ -12259,12 +12259,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[300, 150], [300, 160], [310, 160], [310, 150]]]
+          "coordinates": [[[210, 150], [210, 160], [220, 160], [220, 150]]]
         }
       },
       {
@@ -12283,7 +12283,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1683550928463.5205
+    "lastModified": 1683817823118.2031
   },
   "stateroom--014--2x2": {
     "key": "stateroom--014--2x2",
@@ -12349,6 +12349,48 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": true, "stateroom": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[140, 50], [140, 70], [160, 70], [160, 50]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "bed": true,
+          "orient=90": true,
+          "orient": 90
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[145, 210], [145, 220], [155, 220], [155, 210]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "sit": true,
+          "toilet": true,
+          "orient=90": true,
+          "orient": 90
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[445, 120], [445, 130], [455, 130], [455, 120]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "button": true, "shower": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[545, 145], [545, 155], [555, 155], [555, 145]]]
+        }
+      },
+      {
         "meta": {"door": true},
         "poly": {
           "type": "Polygon",
@@ -12384,52 +12426,10 @@
             [[440, 263.709], [440, 643.709], [460, 643.709], [460, 263.709]]
           ]
         }
-      },
-      {
-        "meta": {"decor": true, "go": true, "label": true, "stateroom": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[140, 50], [140, 70], [160, 70], [160, 50]]]
-        }
-      },
-      {
-        "meta": {
-          "decor": true,
-          "do": true,
-          "lie": true,
-          "bed": true,
-          "orient=270": true,
-          "orient": 270
-        },
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[140, 300], [140, 310], [150, 310], [150, 300]]]
-        }
-      },
-      {
-        "meta": {
-          "decor": true,
-          "do": true,
-          "sit": true,
-          "toilet": true,
-          "orient=90": true,
-          "orient": 90
-        },
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[445, 120], [445, 130], [455, 130], [455, 120]]]
-        }
-      },
-      {
-        "meta": {"decor": true, "button": true, "shower": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[545, 145], [545, 155], [555, 155], [555, 145]]]
-        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1683550928464.2673
+    "lastModified": 1683817860290.5552
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
@@ -12532,12 +12532,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[290, 745], [290, 755], [300, 755], [300, 745]]]
+          "coordinates": [[[210, 745], [210, 755], [220, 755], [220, 745]]]
         }
       },
       {
@@ -12546,12 +12546,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[290, 145], [290, 155], [300, 155], [300, 145]]]
+          "coordinates": [[[210, 145], [210, 155], [220, 155], [220, 145]]]
         }
       },
       {
@@ -12570,7 +12570,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1683550928463.4749
+    "lastModified": 1683817895042.055
   },
   "stateroom--019--2x3": {
     "key": "stateroom--019--2x3",
@@ -12657,19 +12657,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [297.535, 740.565],
-              [297.535, 750.565],
-              [307.535, 750.565],
-              [307.535, 740.565]
-            ]
-          ]
+          "coordinates": [[[207, 745], [207, 755], [217, 755], [217, 745]]]
         }
       },
       {
@@ -12730,7 +12723,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 633, "height": 920},
-    "lastModified": 1683550928465.9014
+    "lastModified": 1683817943003.3247
   },
   "stateroom--020--2x3": {
     "key": "stateroom--020--2x3",
@@ -12853,12 +12846,12 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=270": true,
-          "orient": 270
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[150, 345], [150, 355], [160, 355], [160, 345]]]
+          "coordinates": [[[145, 210], [145, 220], [155, 220], [155, 210]]]
         }
       },
       {
@@ -12919,7 +12912,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1683550928487.1392
+    "lastModified": 1683817997297.7407
   },
   "stateroom--035--2x3": {
     "key": "stateroom--035--2x3",
@@ -13022,17 +13015,17 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=180": true,
-          "orient": 180
+          "orient=0": true,
+          "orient": 0
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [289.807, 144.124],
-              [289.807, 154.124],
-              [299.807, 154.124],
-              [299.807, 144.124]
+              [209.807, 144.124],
+              [209.807, 154.124],
+              [219.807, 154.124],
+              [219.807, 144.124]
             ]
           ]
         }
@@ -13111,7 +13104,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
-    "lastModified": 1683550928464.47
+    "lastModified": 1683818031483.4807
   },
   "stateroom--036--2x4": {
     "key": "stateroom--036--2x4",
@@ -13239,15 +13232,15 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=270": true,
-          "orient": 270,
+          "orient=90": true,
+          "orient": 90,
           "height=1": true,
           "height": 1
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[128.815, 520], [128.815, 530], [138.815, 530], [138.815, 520]]
+            [[128.815, 420], [128.815, 430], [138.815, 430], [138.815, 420]]
           ]
         }
       },
@@ -13257,15 +13250,15 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=270": true,
-          "orient": 270,
+          "orient=90": true,
+          "orient": 90,
           "height=0": true,
           "height": 0,
           "obscured": true
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[180, 550], [180, 560], [190, 560], [190, 550]]]
+          "coordinates": [[[180, 450], [180, 460], [190, 460], [190, 450]]]
         }
       },
       {
@@ -13405,7 +13398,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1683645441205.7012
+    "lastModified": 1683817519561.827
   },
   "stateroom--100--3x4": {
     "key": "stateroom--100--3x4",
@@ -13707,17 +13700,17 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=270": true,
-          "orient": 270
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [522.615, 268.258],
-              [522.615, 278.258],
-              [532.615, 278.258],
-              [532.615, 268.258]
+              [522.615, 128.258],
+              [522.615, 138.258],
+              [532.615, 138.258],
+              [532.615, 128.258]
             ]
           ]
         }
@@ -13728,17 +13721,17 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient=270": true,
-          "orient": 270
+          "orient=90": true,
+          "orient": 90
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [682.615, 268.258],
-              [682.615, 278.258],
-              [692.615, 278.258],
-              [692.615, 268.258]
+              [682.615, 128.258],
+              [682.615, 138.258],
+              [692.615, 138.258],
+              [692.615, 128.258]
             ]
           ]
         }
@@ -13789,7 +13782,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -20, "width": 944, "height": 1239},
-    "lastModified": 1683550928464.2024
+    "lastModified": 1683818077000.8218
   },
   "table--009--0.8x0.8": {
     "key": "table--009--0.8x0.8",

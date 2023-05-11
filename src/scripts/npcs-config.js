@@ -30,7 +30,7 @@ const manBaseVariant = {
       speed: 0,
       totalDist: 0,
       durationMs: 0,
-      rotateDeg: 90,
+      rotateDeg: 270,
     },
     sit: {
       frameCount: 1,

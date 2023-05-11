@@ -2,12 +2,6 @@
 
 ## In progress
 
-- ✅ nice images involving multiple npcs for carousel
-  - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
-  - ✅ cleaner implementation of `npcs.config.debugPlayer`
-  - ✅ first image
-  - ✅ add more images
-
 - 🚧 cleanup and understand spawn vs do
   - ℹ️ we delegate to `do` inside raw-loader `spawn`
   - ✅ we should fade-in
@@ -15,7 +9,13 @@
   - ✅ on cancel spawn ensure stays faded
   - ✅ prevent spawn on top of other npc
     - maybe distinct height issue?
-  - 🚧 permit re-spawn on top of same npc
+  - 🚧 permit re-spawn on top of same npc at do point
+  - spawn between do points should support changing npcClassKey
+  - spawn should not have restricted distance
+    ```sh
+    $ spawn andros $foo
+    spawn: run: Error: too far away
+    ```
 
 - 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
   - ✅ symbols have meta
@@ -472,6 +472,12 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ nice images involving multiple npcs for carousel
+  - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
+  - ✅ cleaner implementation of `npcs.config.debugPlayer`
+  - ✅ first image
+  - ✅ add more images
 
 - ✅ `click 1`s cleanup wasn't running:
   ```sh

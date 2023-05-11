@@ -32,8 +32,8 @@
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="405.7" y="677.3">
       <title>decor go label stateroom</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="150" y="345">
-      <title>decor do lie bed orient=270</title>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="145" y="210">
+      <title>decor do lie bed orient=90</title>
     </rect>
     <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="205" y="745">
       <title>decor do sit chair orient=180</title>
