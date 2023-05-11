@@ -412,7 +412,7 @@ export default function createNpc(
       const gmRoomId = this.getGmRoomId();
       if (gmRoomId) {
         const gm = api.gmGraph.gms[gmRoomId.gmId];
-        const worldSurfaces = gm.roomSurfaceIds[gmRoomId.roomId]
+        const worldSurfaces = (gm.roomSurfaceIds[gmRoomId.roomId] ?? [])
           .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
         ;
         const position = this.getPosition();
