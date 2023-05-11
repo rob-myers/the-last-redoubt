@@ -218,8 +218,8 @@ export class gmGraphClass extends BaseGraph {
        * arising from intersecting view polys.
        * Side effect: intermediate walls can become black (from geomorph PNG).
        */
-      polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
-      // polys: viewPolys,
+      // polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
+      polys: viewPolys.map(polys => Poly.union(polys.map(x => x.removeHoles().precision(4)))),
       gmRoomIds,
     };
   }
