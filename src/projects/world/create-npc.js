@@ -140,7 +140,6 @@ export default function createNpc(
       return (
         (this.anim.spriteSheet === 'idle' || this.anim.spriteSheet === 'idle-breathe')
         && !this.doMeta
-        // && (!this.doMeta || this.doMeta['no-turn'] !== true)
       );
     },
     clearWayMetas() {
@@ -493,8 +492,6 @@ export default function createNpc(
         this.anim.rotate.cancel();
         this.anim.sprites.cancel();
       }
-      this.doMeta = null;
-
       switch (this.anim.spriteSheet) {
         case 'walk': {
           const { anim } = this;

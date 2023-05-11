@@ -8,6 +8,14 @@
   - ✅ first image
   - ✅ add more images
 
+- 🚧 cleanup and understand spawn vs do
+  - ℹ️ we delegate to `do` inside raw-loader `spawn`
+  - ✅ we should fade-in
+  - ✅ cleaner npc.doMeta assignment
+  - ✅ on cancel spawn ensure stays faded
+  - prevent spawn on top of other npc
+  - permit spawn on top of same npc
+
 - 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
   - ✅ symbols have meta
   - ✅ symbols use meta instead of tags
@@ -20,6 +28,11 @@
     - ✅ npcs with different meta.height can spawn close
     - do point should be more visible
     - cover all instances of bunk beds
+
+- support cleaner `npc do {npcKey} $( click 1 )`
+  - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
+- `lie` frame should have head at center
+
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
   - update World piecewise

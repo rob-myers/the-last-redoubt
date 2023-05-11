@@ -16,8 +16,8 @@ export default function NPC({ api, npcKey }) {
   
   React.useLayoutEffect(() => {
     if (npc.unspawned) {// (Re)spawn
-      npc.initialize(); // we modify styles here
       npc.unspawned = false;
+      npc.initialize();
       npc.startAnimation('idle');
       /** @type {NPC.DecorRef[]} */
       const intoDecor = api.decor.getDecorAtPoint(npc.getPosition()).map(d => ({

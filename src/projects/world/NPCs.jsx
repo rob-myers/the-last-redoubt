@@ -133,13 +133,13 @@ export default function NPCs(props) {
     },
     async fadeSpawnDo(npc, e, meta) {
       try {
-        if (e.fadeOutMs !== 0) {
-          await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
-        }
+        await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
-      } finally {
         await npc.animateOpacity(meta.obscured ? 0.25 : 1, spawnFadeMs);
+      } catch (e) {
+        await npc.animateOpacity(npc.doMeta?.obscured ? 0.25 : 1, spawnFadeMs);
+        throw e;
       }
     },
     getGlobalNavPath(src, dst) {
@@ -463,10 +463,11 @@ export default function NPCs(props) {
       
       try {
         if (state.isPointInNavmesh(npc.getPosition())) {
-          await state.onMeshDoMeta(npc, e.point, meta);
+          await state.onMeshDoMeta(npc, e.point, meta, e.fadeOutMs);
         } else {
           await state.offMeshDoMeta(npc, e.point, meta, e.fadeOutMs);
         }
+        npc.doMeta = meta.doable ? meta : null;
       } catch (e) {
         if (e instanceof Error && e.message === 'cancelled') {
           // ℹ️ Swallow 'cancelled' errors: start new walk or obstruction
@@ -500,12 +501,12 @@ export default function NPCs(props) {
         fadeOutMs,
       }, meta);
     },
-    async onMeshDoMeta(npc, point, meta) {
+    async onMeshDoMeta(npc, point, meta, fadeOutMs) {
       if (!meta.doable) {
         throw Error('not doable');
       }
-      /** The actual "do point" -- point is somewhere on icon */
-      const decorPoint = meta.targetPos;
+      /** The actual "do point" when we click (point is somewhere on icon) */
+      const decorPoint = meta.targetPos ?? point;
 
       if (state.isPointInNavmesh(decorPoint)) {
         // Walk, [Turn] then Do
@@ -527,7 +528,7 @@ export default function NPCs(props) {
         point: decorPoint,
         angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         requireNav: false,
-        fadeOutMs: undefined,
+        fadeOutMs,
       }, meta);
     },
     onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
@@ -574,13 +575,15 @@ export default function NPCs(props) {
     },
     service: npcService,
     setPlayerKey(npcKey) {
-      if (state.playerKey) {
-        state.getNpc(state.playerKey)?.el.root.classList.remove('player');
-      }
-
       const nextPlayerKey = npcKey || null; // Forbid empty string
-      if (nextPlayerKey) {// Player must exist
-        state.getNpc(nextPlayerKey).el.root.classList.add('player');
+
+      if (state.playerKey) {
+        const prevPlayer = api.npcs.npc[state.playerKey]; // Possibly undefined
+        prevPlayer?.el.root.classList.remove('player'); // render instead?
+      }
+      if (nextPlayerKey) {
+        const nextPlayer = state.getNpc(nextPlayerKey); // Player must exist
+        nextPlayer.el.root.classList.add('player'); // render instead?
       }
       state.playerKey = nextPlayerKey;
     },
@@ -631,6 +634,7 @@ export default function NPCs(props) {
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
+        spawned.doMeta = e.point.meta ?? null;
       } else {// Create
         const npcClassKey = e.npcClassKey || defaultNpcClassKey;
         state.npc[e.npcKey] = createNpc({
@@ -640,6 +644,7 @@ export default function NPCs(props) {
           position: e.point,
           speed: npcsMeta[npcClassKey].speed,
         }, { api });
+        state.npc[e.npcKey].doMeta = e.point.meta ?? null;
       }
 
       // Must subscribe before triggering <NPC> render
@@ -877,7 +882,7 @@ const rootCss = css`
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
  * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta, fadeOutMs?: number) => Promise<void>} offMeshDoMeta
  * Started off-mesh and clicked point
- * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta) => Promise<void>} onMeshDoMeta
+ * @property {(npc: NPC.NPC, point: Geom.VectJson, meta: Geomorph.PointMeta & NPC.ExtendDecorPointMeta, fadeOutMs?: number) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
  * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo

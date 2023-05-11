@@ -336,27 +336,43 @@
     },
   
     /**
-     * Spawn character(s) at a position(s) and angle,
-     * - e.g. `spawn andros "$( click 1 )"`
-     * - e.g. `spawn andros zhodani-a "$( click 1 )"`
-     * - e.g. `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
+     * Spawn character(s) at a position(s) and angle, e.g.
+     * - `spawn andros "$( click 1 )"`
+     * - `spawn andros zhodani-a "$( click 1 )"`
+     * - `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
+     * 
+     * We also handle "do points" where point.meta.do is truthy.
      */
     spawn: async function* ({ api, args, home, datum }) {
-      const { npcs } = api.getCached(home.WORLD_KEY)
+      const { npcs } = api.getCached(home.WORLD_KEY);
+
+      /**
+       * @param {string} npcKey
+       * @param {Geomorph.PointWithMeta} point
+       * @param {NPC.NpcClassKey} [npcClassKey]
+       */
+      async function spawnOrDo(npcKey, point, npcClassKey) {
+        const spawned = npcs.npc[npcKey];
+        if (spawned?.doMeta) {// At do points, `do` instead of `spawn`
+          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
+        } else {
+          await npcs.spawn({ npcKey, point, npcClassKey });
+          if (point?.meta?.do) {
+            await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
+          }
+        }
+      }
+
       if (api.isTtyAt(0)) {
-        const npcKey = args[0]
+        const npcKey = args[0];
         const threeArgs = args.length === 3;
         const npcClassKey = threeArgs ? /** @type {NPC.NpcClassKey} */ (args[1]) : undefined;
-        const point = api.parseJsArg(args[threeArgs ? 2 : 1])
-
-        await npcs.spawn({ npcKey, point, npcClassKey })
-        if (point?.meta?.do) {// 🚧 will not work if we respawn on top
-          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 })
-        }
+        const point = api.parseJsArg(args[threeArgs ? 2 : 1]);
+        await spawnOrDo(npcKey, point, npcClassKey);
       } else {
-        // { npcKey, [npcClassKey], point }
-        while ((datum = await api.read()) !== null)
-          await npcs.spawn(datum)
+        while ((datum = await api.read()) !== null) {// datum: { npcKey, [npcClassKey], point }
+          await spawnOrDo(datum.npcKey, datum.point, datum.npcClassKey);
+        }
       }
     },
   
