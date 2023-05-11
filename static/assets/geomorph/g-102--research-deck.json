@@ -1830,6 +1830,20 @@
         }
       },
       {
+        "meta": {"light": true, "floor": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[280, 460], [60, 460], [60, 240], [280, 240]]]
+        }
+      },
+      {
+        "meta": {"light": true, "floor": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1000, 420], [780, 420], [780, 200], [1000, 200]]]
+        }
+      },
+      {
         "meta": {"wall": true},
         "poly": {
           "type": "Polygon",
@@ -1857,20 +1871,6 @@
               [1073.2, 238]
             ]
           ]
-        }
-      },
-      {
-        "meta": {"light": true, "floor": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[280, 460], [60, 460], [60, 240], [280, 240]]]
-        }
-      },
-      {
-        "meta": {"light": true, "floor": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[1000, 420], [780, 420], [780, 200], [1000, 200]]]
         }
       },
       {
@@ -2102,7 +2102,7 @@
         }
       },
       {
-        "meta": {"window": true, "_one-way-reverse": true},
+        "meta": {"window": true, "frosted": true, "_one-way-reverse": true},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2248,7 +2248,7 @@
         }
       },
       {
-        "meta": {"window": true, "_one-way-reverse": true},
+        "meta": {"window": true, "frosted": true, "_one-way-reverse": true},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -5786,7 +5786,7 @@
         "width": 59.9224,
         "height": 11.6059
       },
-      "meta": {"window": true, "_one-way-reverse": true},
+      "meta": {"window": true, "frosted": true, "_one-way-reverse": true},
       "seg": [{"x": 390.7009, "y": 239.3971}, {"x": 450.6087, "y": 239.397}],
       "normal": {"x": 0, "y": 1},
       "roomIds": [1, 6],
@@ -5817,7 +5817,7 @@
         "width": 59.9224,
         "height": 11.6059
       },
-      "meta": {"window": true, "_one-way-reverse": true},
+      "meta": {"window": true, "frosted": true, "_one-way-reverse": true},
       "seg": [{"x": 749.3913, "y": 239.397}, {"x": 809.2991, "y": 239.3971}],
       "normal": {"x": 0, "y": 1},
       "roomIds": [1, 11],
@@ -15896,7 +15896,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [26, 27, 32, 33],
+  "floorHighlightIds": [26, 27, 30, 31],
   "roomSurfaceIds": {
     "0": [1],
     "1": [35, 36, 37],

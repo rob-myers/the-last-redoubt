@@ -108,14 +108,14 @@
     <rect x="1003.931" width="90" height="10" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="199.12" transform="matrix(0.809017, -0.587785, 0.587785, 0.809017, 80.349274, 635.529663)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="1018" y="238" width="63.9" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>wall</title>
-    </rect>
     <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 940, -328.335022)">
       <title>light floor</title>
     </rect>
     <rect x="568.335" y="660" width="220" height="220" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1660, -368.334991)">
       <title>light floor</title>
+    </rect>
+    <rect x="1018" y="238" width="63.9" height="3.5" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
+      <title>wall</title>
     </rect>
   </g>
 </svg>
