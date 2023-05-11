@@ -13,8 +13,9 @@
   - ✅ we should fade-in
   - ✅ cleaner npc.doMeta assignment
   - ✅ on cancel spawn ensure stays faded
-  - prevent spawn on top of other npc
-  - permit spawn on top of same npc
+  - ✅ prevent spawn on top of other npc
+    - maybe distinct height issue?
+  - 🚧 permit re-spawn on top of same npc
 
 - 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
   - ✅ symbols have meta

@@ -372,10 +372,7 @@ export default function createNpc(
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
     },
     intersectsCircle(position, radius) {
-      return this.getPosition()
-        .distanceTo(position) <=
-        this.getRadius() + radius
-      ;
+      return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
     },
     isIdle() {
       return ['idle', 'idle-breathe'].includes(this.anim.spriteSheet);

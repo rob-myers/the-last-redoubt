@@ -134,6 +134,7 @@ export default function NPCs(props) {
     async fadeSpawnDo(npc, e, meta) {
       try {
         await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
+        e.point.meta ??= meta; // cleaner way?
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
         await npc.animateOpacity(meta.obscured ? 0.25 : 1, spawnFadeMs);
@@ -302,6 +303,17 @@ export default function NPCs(props) {
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
     },
+    handleBunkBedCollide(nearbyMeta, dstMeta) {
+      return (
+        // Collide if same height (undefined except at bunk-beds)
+        (nearbyMeta?.height === dstMeta?.height)
+        // Else height differs; collide if exactly one obscured "do point"
+        || (
+          (!!nearbyMeta !== !!dstMeta?.do)
+          && !assertDefined(nearbyMeta || dstMeta).obscured
+        )
+      );
+    },
     handleLongRunningNpcProcess(process, npcKey) {
       state.getNpc(npcKey); // Throws if non-existent
       const cb = {
@@ -348,7 +360,6 @@ export default function NPCs(props) {
       }
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      // Other npcs cannot be close, unless at distinct height
       /** @type {NPC.NPC} */ let otherNpc;
       for (const otherNpcKey in state.npc) {
         if (
@@ -357,7 +368,7 @@ export default function NPCs(props) {
             point,
             npcsMeta[npcClassKey].radius
           )
-          && point.meta?.height === otherNpc.doMeta?.height
+          && state.handleBunkBedCollide(otherNpc.doMeta ?? undefined, point.meta)
         ) {
           return false;
         }
@@ -457,8 +468,8 @@ export default function NPCs(props) {
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
       const gm = assertNonNull(api.gmGraph.findGeomorphContaining(e.point));
-      // ℹ️ e.point.meta can be undefined e.g. if e
-      // manually specified rather than from `click [n]`
+      // e.point.meta can be undefined e.g. if e manually specified (not `click [n]`)
+      // 🚧 apply this earlier in <Decor>
       const meta = npcService.extendDecorMeta(e.point.meta ?? {}, gm.matrix);
       
       try {
@@ -482,10 +493,9 @@ export default function NPCs(props) {
         throw Error('not doable nor navigable');
       }
 
-      const npcPosition = npc.getPosition();
       if (
-        !(npcPosition.distanceTo(point) <= npc.getInteractRadius())
-        || !api.gmGraph.inSameRoom(npcPosition, point)
+        !(npc.getPosition().distanceTo(point) <= npc.getInteractRadius())
+        || !api.gmGraph.inSameRoom(npc.getPosition(), point)
       ) {
         throw Error('too far away');
       }
@@ -634,7 +644,7 @@ export default function NPCs(props) {
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
-        spawned.doMeta = e.point.meta ?? null;
+        spawned.doMeta = e.point.meta?.do ? e.point.meta : null;
       } else {// Create
         const npcClassKey = e.npcClassKey || defaultNpcClassKey;
         state.npc[e.npcKey] = createNpc({
@@ -644,7 +654,7 @@ export default function NPCs(props) {
           position: e.point,
           speed: npcsMeta[npcClassKey].speed,
         }, { api });
-        state.npc[e.npcKey].doMeta = e.point.meta ?? null;
+        state.npc[e.npcKey].doMeta = e.point.meta?.do ? e.point.meta : null;
       }
 
       // Must subscribe before triggering <NPC> render
@@ -873,6 +883,7 @@ const rootCss = css`
  * @property {(npcKey: string) => NPC.NPC} getNpc
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
+ * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
