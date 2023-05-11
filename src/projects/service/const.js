@@ -127,7 +127,7 @@ export const lightWindowOffset = 20;
 
 export const defaultDoorCloseMs = 7000;
 
-export const defaultNpcInteractRadius = 50;
+export const defaultNpcInteractRadius = 70;
 
 /** @type {NPC.NpcClassKey} */
 // export const defaultNpcClassKey = 'first-human-npc';
