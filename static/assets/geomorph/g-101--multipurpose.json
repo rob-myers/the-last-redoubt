@@ -1922,6 +1922,20 @@
         }
       },
       {
+        "meta": {"light": true, "distance=120": true, "distance": 120},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [514.312, 675.935],
+              [514.312, 685.935],
+              [504.312, 685.935],
+              [504.312, 675.935]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"light": true, "floor": true},
         "poly": {
           "type": "Polygon",
@@ -16145,7 +16159,8 @@
     {"position": {"x": 1109.312, "y": 590.935}, "roomId": 27, "distance": 180},
     {"position": {"x": 419.312, "y": 1030.935}, "roomId": 13, "distance": 160},
     {"position": {"x": 809.312, "y": 980.935}, "roomId": 19, "distance": 160},
-    {"position": {"x": 329.312, "y": 460.935}, "roomId": 6, "distance": 200}
+    {"position": {"x": 329.312, "y": 460.935}, "roomId": 6, "distance": 200},
+    {"position": {"x": 509.312, "y": 680.935}, "roomId": 11, "distance": 120}
   ],
   "lightRects": [
     {
@@ -16307,9 +16322,17 @@
       "rect": {"x": 279, "y": 542, "width": 104, "height": 116},
       "preDoorIds": [],
       "postDoorIds": []
+    },
+    {
+      "key": "door30@light19",
+      "doorId": 30,
+      "lightId": 19,
+      "rect": {"x": 485, "y": 782, "width": 51, "height": 18},
+      "preDoorIds": [],
+      "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [36, 37, 38, 39, 40],
+  "floorHighlightIds": [37, 38, 39, 40, 41],
   "roomSurfaceIds": {
     "6": [34],
     "7": [67],
