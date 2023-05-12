@@ -394,6 +394,20 @@
         }
       },
       {
+        "meta": {"light": true, "distance=200": true, "distance": 200},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [324.312, 455.935],
+              [324.312, 465.935],
+              [334.312, 465.935],
+              [334.312, 455.935]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"light": true, "floor": true},
         "poly": {
           "type": "Polygon",
@@ -699,7 +713,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1683628121235.7402
+    "lastModified": 1683888585720.7644
   },
   "102--hull": {
     "key": "102--hull",
