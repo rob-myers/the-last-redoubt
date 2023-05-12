@@ -375,29 +375,12 @@
         <character_map id="21" name="no_belt">
             <map folder="8" file="11"/>
         </character_map>
-        <character_map id="22" name="zhodani-a">
-            <map folder="6" file="0"/>
-            <map folder="5" file="0" target_folder="5" target_file="9"/>
-            <map folder="4" file="0" target_folder="4" target_file="30"/>
-            <map folder="4" file="3" target_folder="4" target_file="31"/>
-            <map folder="4" file="6" target_folder="4" target_file="32"/>
-            <map folder="4" file="7" target_folder="4" target_file="33"/>
-            <map folder="8" file="11"/>
-            <map folder="6" file="1"/>
-            <map folder="6" file="2"/>
-            <map folder="10" file="1"/>
-            <map folder="5" file="2" target_folder="5" target_file="10"/>
-            <map folder="4" file="1" target_folder="4" target_file="34"/>
-            <map folder="4" file="2" target_folder="4" target_file="30"/>
-            <map folder="4" file="4" target_folder="4" target_file="23"/>
-            <map folder="4" file="5" target_folder="4" target_file="35"/>
-        </character_map>
-        <character_map id="23" name="vilani-a">
+        <character_map id="22" name="vilani-a">
             <map folder="6" file="0" target_folder="6" target_file="6"/>
             <map folder="10" file="1"/>
             <map folder="6" file="2" target_folder="6" target_file="5"/>
         </character_map>
-        <character_map id="24" name="solomani-a">
+        <character_map id="23" name="solomani-a">
             <map folder="7" file="0" target_folder="7" target_file="7"/>
             <map folder="7" file="2" target_folder="7" target_file="8"/>
             <map folder="5" file="0" target_folder="5" target_file="11"/>
@@ -414,6 +397,23 @@
             <map folder="4" file="1" target_folder="4" target_file="38"/>
             <map folder="6" file="2"/>
             <map folder="5" file="2" target_folder="5" target_file="12"/>
+        </character_map>
+        <character_map id="24" name="zhodani-a">
+            <map folder="6" file="0"/>
+            <map folder="5" file="0" target_folder="5" target_file="9"/>
+            <map folder="4" file="0" target_folder="4" target_file="30"/>
+            <map folder="4" file="3" target_folder="4" target_file="31"/>
+            <map folder="4" file="6" target_folder="4" target_file="32"/>
+            <map folder="4" file="7" target_folder="4" target_file="33"/>
+            <map folder="8" file="11"/>
+            <map folder="6" file="1"/>
+            <map folder="6" file="2"/>
+            <map folder="10" file="1"/>
+            <map folder="5" file="2" target_folder="5" target_file="10"/>
+            <map folder="4" file="1" target_folder="4" target_file="34"/>
+            <map folder="4" file="2" target_folder="4" target_file="30"/>
+            <map folder="4" file="4" target_folder="4" target_file="23"/>
+            <map folder="4" file="5" target_folder="4" target_file="35"/>
         </character_map>
         <animation id="0" name="idle" length="2000" interval="2000" l="-830" t="-480" r="829" b="479">
             <mainline>
@@ -519,7 +519,7 @@
             </timeline>
             <timeline id="11" obj="5" name="bone_005" object_type="bone">
                 <key id="0" spin="0">
-                    <bone x="318.597732" y="-2.417457" angle="357.137595" scale_y="3.636364"/>
+                    <bone x="318.407689" y="-2.416784" angle="357.137595" scale_y="3.636364"/>
                 </key>
             </timeline>
             <timeline id="12" name="black_leg_lower_02">
@@ -722,10 +722,10 @@
                 <key id="1" time="552">
                     <bone_ref id="0" timeline="6" key="0"/>
                     <bone_ref id="1" parent="0" timeline="7" key="0"/>
-                    <bone_ref id="2" parent="1" timeline="8" key="0"/>
+                    <bone_ref id="2" parent="1" timeline="8" key="1"/>
                     <bone_ref id="3" timeline="9" key="0"/>
                     <bone_ref id="4" parent="3" timeline="10" key="0"/>
-                    <bone_ref id="5" parent="4" timeline="11" key="0"/>
+                    <bone_ref id="5" parent="4" timeline="11" key="1"/>
                     <bone_ref id="6" timeline="36" key="0"/>
                     <bone_ref id="7" parent="6" timeline="21" key="0"/>
                     <bone_ref id="8" parent="7" timeline="22" key="0"/>
@@ -766,10 +766,10 @@
                 <key id="2" time="995">
                     <bone_ref id="0" timeline="6" key="0"/>
                     <bone_ref id="1" parent="0" timeline="7" key="0"/>
-                    <bone_ref id="2" parent="1" timeline="8" key="0"/>
+                    <bone_ref id="2" parent="1" timeline="8" key="1"/>
                     <bone_ref id="3" timeline="9" key="0"/>
                     <bone_ref id="4" parent="3" timeline="10" key="0"/>
-                    <bone_ref id="5" parent="4" timeline="11" key="0"/>
+                    <bone_ref id="5" parent="4" timeline="11" key="1"/>
                     <bone_ref id="6" timeline="36" key="0"/>
                     <bone_ref id="7" parent="6" timeline="21" key="1"/>
                     <bone_ref id="8" parent="7" timeline="22" key="0"/>
@@ -845,12 +845,15 @@
             </timeline>
             <timeline id="7" obj="1" name="bone_001" object_type="bone">
                 <key id="0" time="552" spin="0">
-                    <bone x="356.386946" y="2.885714" angle="0" scale_y="2.437387"/>
+                    <bone x="356.386946" y="2.885714" scale_y="2.437387"/>
                 </key>
             </timeline>
             <timeline id="8" obj="2" name="bone_002" object_type="bone">
-                <key id="0" time="552" spin="0">
-                    <bone x="200" y="-5.33358" angle="1.808739" scale_y="2.110591"/>
+                <key id="0" spin="0">
+                    <bone x="117.38967" y="-5.33358" angle="1.808739" scale_y="2.110591"/>
+                </key>
+                <key id="1" time="552" spin="0">
+                    <bone x="117.38967" y="-5.33358" angle="1.808739" scale_y="2.110591"/>
                 </key>
             </timeline>
             <timeline id="9" obj="3" name="bone_003" object_type="bone">
@@ -864,8 +867,11 @@
                 </key>
             </timeline>
             <timeline id="11" obj="5" name="bone_005" object_type="bone">
-                <key id="0" time="552" spin="0">
-                    <bone x="250.293389" y="-2.175586" angle="357.137595" scale_y="3.636364"/>
+                <key id="0" spin="0">
+                    <bone x="168.594837" y="-1.886285" angle="357.137595" scale_y="3.636364"/>
+                </key>
+                <key id="1" time="552" spin="0">
+                    <bone x="168.594837" y="-1.886285" angle="357.137595" scale_y="3.636364"/>
                 </key>
             </timeline>
             <timeline id="12" name="black_leg_lower_02">

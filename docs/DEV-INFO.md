@@ -153,13 +153,12 @@ Filter Chrome DevTools console
 -chrome-extension: -/data.json\swas\spreloaded/
 ```
 
----
+## Spriter shortcuts
 
-ℹ️ Spriter shortcuts
 - Parallels: Cmd; Backspace --> Delete
 - Parallels: Backspace; Cmd --> Shift + Delete
 - Undo: `Cmd+Z`, Redo: `Ctrl+Y`
--  Prev keyframe `1`; Next keyframe: `2`; Goto frame 0: `3`; Play/pause: `4` 
+- Prev keyframe `1`; Next keyframe: `2`; Goto frame 0: `3`; Play/pause: `4` 
 - Copy selected object to all keyframes: `Ctrl D`
 - Copy entire frame `Ctrl + Shift + C`
 - Paste entire frame: `Ctrl + V`
