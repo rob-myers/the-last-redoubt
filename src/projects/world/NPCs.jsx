@@ -422,13 +422,12 @@ export default function NPCs(props) {
         case 'get':
           return state.getNpc(e.npcKey);
         case 'look-at': {
+          const npc = state.getNpc(e.npcKey);
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
-          const npc = state.getNpc(e.npcKey);
           if (npc.canLook()) {
             await npc.lookAt(e.point);
-            // 🚧 throw error?
           }
           return npc.getAngle();
         }
@@ -467,18 +466,19 @@ export default function NPCs(props) {
     },
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
-      e.point.meta ??= {}; // possibly manually specified (not via `click [n]`)
+      const point = e.point;
+      point.meta ??= {}; // possibly manually specified (not via `click [n]`)
       
       try {
         if (state.isPointInNavmesh(npc.getPosition())) {
           await state.onMeshDoMeta(npc, e);
         } else {
-          await state.offMeshDoMeta(npc, { ...e, suppressThrow: true });
+          await state.offMeshDoMeta(npc, e);
         }
-        npc.doMeta = e.point.meta.do ? e.point.meta : null;
+        npc.doMeta = point.meta.do ? point.meta : null;
       } catch (e) {
         if (e instanceof Error && e.message === 'cancelled') {
-          // Swallow 'cancelled' errors: start new walk or obstruction
+          // Swallow 'cancelled' errors e.g. start new walk, obstruction
           // All errors can be swallowed via `npc do '{ suppressThrow: true }'`
         } else {
           throw e;
@@ -486,51 +486,45 @@ export default function NPCs(props) {
       }
     },
     async offMeshDoMeta(npc, e) {
-      const meta = e.point.meta;
+      const point = e.point;
 
-      if (!meta.do && !meta.nav) {
-        if (!e.suppressThrow) throw Error('not doable nor navigable');
+      if (!e.suppressThrow && !point.meta.do && !point.meta.nav) {
+        throw Error('not doable nor navigable');
       }
 
-      if (!(
-        npc.getPosition().distanceTo(e.point) <= npc.getInteractRadius()
-        && api.gmGraph.inSameRoom(npc.getPosition(), e.point)
+      if (!e.suppressThrow && (
+        npc.getPosition().distanceTo(point) > npc.getInteractRadius()
+        || !api.gmGraph.inSameRoom(npc.getPosition(), point)
       )) {
-        if (!e.suppressThrow) throw Error('too far away');
+        throw Error('too far away');
       }
 
       await state.fadeSpawnDo(npc, {
-        npcKey: npc.key,
-        // If not navigable try use targetPoint
-        point: meta.nav ? e.point : { ...e.point, .../** @type {Geom.VectJson} */ (meta.targetPos) },
+        npcKey: npc.key, // If not navigable try use targetPoint
+        point: point.meta.nav ? point : { ...point, .../** @type {Geom.VectJson} */ (point.meta.targetPos) },
         // Orient if staying off-mesh
-        angle: meta.nav
-          ? undefined
-          : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+        angle: point.meta.nav ? undefined : typeof point.meta.orient === 'number' ? point.meta.orient * (Math.PI / 180) : undefined,
         fadeOutMs: e.fadeOutMs,
-      }, meta);
+      }, point.meta);
     },
     async onMeshDoMeta(npc, e) {
       const meta = e.point.meta;
-
-      if (!meta.do) {
-        throw Error('not doable');
-      }
-      /** The actual "do point" when we click (point is somewhere on icon) */
+      /** The actual "do point" (point is somewhere on icon) */
       const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? e.point;
 
-      if (state.isPointInNavmesh(decorPoint)) {
-        // Walk, [Turn] then Do
+      if (!e.suppressThrow && !meta.do) {
+        throw Error('not doable');
+      }
+
+      if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
         await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, ...navPath });
-        if (typeof meta.orient === 'number') {
-          await npc.animateRotate(meta.orient * (180 / Math.PI), 100);
-        }
+        typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (180 / Math.PI), 100);
         npc.startAnimationByMeta(meta);
         return;
       }
-      
-      if (!(npc.getPosition().distanceTo(e.point) <= npc.getInteractRadius())) {
+
+      if (!e.suppressThrow && !(npc.getPosition().distanceTo(e.point) <= npc.getInteractRadius())) {
         throw Error('too far away');
       }
 

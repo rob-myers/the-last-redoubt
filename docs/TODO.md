@@ -2,7 +2,10 @@
 
 ## In progress
 
-- BUG open door should not trigger off-mesh do
+- ✅ BUG open door should not trigger off-mesh do
+- ✅ BUG look while fading in from off-mesh breaks
+  - doMeta is not nulled
+- 🚧 medical pods have tags `do lie obscured`
 
 - 🚧 cleanup and understand spawn vs do
   - ℹ️ we delegate to `do` inside raw-loader `spawn`
@@ -14,7 +17,6 @@
   - 🚧 permit re-spawn on top of same npc at do point
   - ✅ spawn between do points should support changing npcClassKey
   - ✅ spawn should not have restricted distance
-    ```
 
 - 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
   - ✅ symbols have meta

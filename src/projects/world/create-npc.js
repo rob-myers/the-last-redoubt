@@ -586,7 +586,7 @@ export default function createNpc(
           this.startAnimation('lie');
           break;
       }
-      this.doMeta = meta;
+      this.doMeta = meta.do ? meta : null;
     },
     updateAnimAux() {
       const { aux } = this.anim;

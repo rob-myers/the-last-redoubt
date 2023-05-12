@@ -355,7 +355,7 @@
         const spawned = npcs.npc[npcKey];
         if (spawned?.doMeta) {// At do points delegate to `do`
           npcClassKey && spawned.changeClass(npcClassKey);
-          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
+          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0, suppressThrow: true });
         } else {
           await npcs.spawn({ npcKey, point, npcClassKey });
           if (point.meta?.do) {// Going to `do`
