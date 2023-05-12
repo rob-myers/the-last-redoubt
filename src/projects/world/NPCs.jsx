@@ -812,7 +812,8 @@ export default function NPCs(props) {
       }
       for (const { gmId, roomId } of opts.removed??[]) {
         const points = api.gmGraph.gms[gmId].decor[roomId];
-        const decorKeys = points.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId))
+        // 🚧 support groups
+        const decorKeys = points.map((d, decorId) => `${`local-${decorId}`}-g${gmId}r${roomId}-${d.key}`)
         state.npcAct({ action: "rm-decor", items: decorKeys });
       }
     },
