@@ -62,13 +62,12 @@
     return Math.atan2(p.y - this.y, p.x - this.x);
   }  
 
-  /** @param {Vect[]} vectors */
+  /** @param {Geom.VectJson[]} vectors */
   static average(vectors) {
-    return vectors.length
-      ? vectors
-        .reduce((agg, v) => agg.add(v), Vect.zero)
-        .scale(1 / vectors.length)
-      : Vect.zero;
+    const sum = Vect.zero;
+    vectors.forEach(v => sum.add(v));
+    vectors.length && sum.scale(1 / vectors.length);
+    return sum;
   }
 
   clone() {

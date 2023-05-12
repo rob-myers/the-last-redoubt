@@ -352,7 +352,10 @@ export function predictNpcPolygonCollision(npcA, outline, rect) {
   };
 }
 
-/** @param {NPC.DecorDef} [input] */
+/**
+ * @param {NPC.DecorDef} [input]
+ * @returns {boolean}
+ */
 export function verifyDecor(input) {
   if (!input) {
     return false;
@@ -360,6 +363,8 @@ export function verifyDecor(input) {
   switch (input.type) {
     case 'circle':
       return Vect.isVectJson(input.center) && typeof input.radius === 'number';
+    case 'group':
+      return Array.isArray(input.items) && input.items.every(item => verifyDecor(item));
     case 'path':
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':

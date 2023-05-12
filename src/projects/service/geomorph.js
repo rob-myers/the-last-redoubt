@@ -1107,11 +1107,14 @@ function parseJsonArg(input) {
 /**
  * @param {NPC.DecorDef} decor 
  * @param {Geom.VectJson} point 
+ * @returns {boolean}
  */
 export function decorContainsPoint(decor, point) {
   switch (decor.type) {
     case 'circle':
       return tempVect1.copy(point).distanceTo(decor.center) <= decor.radius;
+    case 'group':
+      return decor.items.some(item => decorContainsPoint(item, point));
     case 'path':
       return false;
     case 'point':
@@ -1159,12 +1162,14 @@ export function extendDecorRect(decor) {
 
 /**
  * 
- * @param {NPC.DecorSansPath} decor 
+ * @param {NPC.DecorDef} decor 
  * @returns {Geom.VectJson}
  */
 export function getDecorCenter(decor) {
   switch (decor.type) {
     case 'circle': return decor.center;
+    case 'group': return Vect.average(decor.items.map(item => getDecorCenter(item)));
+    case 'path': return Vect.average(decor.path);
     case 'point': return decor;
     case 'rect': {
       if (!decor.derivedPoly) extendDecorRect(decor);
@@ -1195,7 +1200,7 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
     return {
       type: 'rect',
       // ℹ️ key will be overridden upon instantiation
-      key: getDecorInstanceKey(-1, -1, singleIndex),
+      key: `${singleIndex}`,
       meta,
       x: baseRect.x,
       y: baseRect.y,
@@ -1210,7 +1215,7 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
     const { center, width } = origPoly.rect;
     return {
       type: 'circle',
-      key: getDecorInstanceKey(-1, -1, singleIndex),
+      key: `${singleIndex}`,
       meta,
       center,
       radius: width / 2,
@@ -1218,7 +1223,7 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
   } else {// Assume point (we do not support DecorPath)
     return {
       type: 'point',
-      key: getDecorInstanceKey(-1, -1, singleIndex),
+      key: `${singleIndex}`,
       meta,
       x: p.x,
       y: p.y,

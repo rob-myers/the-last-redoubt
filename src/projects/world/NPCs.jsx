@@ -736,46 +736,77 @@ export default function NPCs(props) {
       });
     },
     updateLocalDecor(opts) {
+
+      /**
+       * @param {NPC.DecorDef} d
+       * @param {number} gmId
+       * @param {number} roomId 
+       * @param {Geom.Mat} matrix
+       * @param {string} prefix
+       * @returns {NPC.DecorDef}
+       */
+      function instantiateDecor(d, gmId, roomId, matrix, prefix) {
+        if (d.type === 'rect') {
+          // 🚧 better way of computing transformed angledRect?
+          const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+          const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+          return {
+            ...d,
+            ...baseRect,
+            key: `${prefix}-g${gmId}r${roomId}-${d.key}`, // Must override key, now we know gmId
+            angle,
+            meta: {...d.meta}, // Shallow clone
+          };
+        }
+        if (d.type === 'circle') {
+          return {
+            ...d,
+            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            center: matrix.transformPoint({ ...d.center }),
+            meta: {...d.meta},
+          };
+        }
+        if (d.type === 'group') {
+          return {
+            ...d,
+            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            meta: {...d.meta},
+            items: d.items.map(item => instantiateDecor(item, gmId, roomId, matrix, `${prefix}--${d.key}` )),
+          };
+        }
+        if (d.type === 'path') {
+          return {
+            ...d,
+            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            meta: {...d.meta},
+            path: d.path.map(x => matrix.transformPoint({ ...x })),
+            // 🚧 finished?
+          };     
+        }
+        if (d.type === 'point') {
+          return {
+            ...d,
+            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            ...matrix.transformPoint({ x: d.x, y: d.y }),
+            meta: {
+              ...d.meta,
+              // 🚧 cache?
+              orient: typeof d.meta.orient === 'number'
+                ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+                : null,
+              ui: true,
+            },
+          };
+        }
+        throw testNever(d, { suffix: 'instantiateDecor' });
+      }
+
       for (const { gmId, roomId } of opts.added??[]) {
         const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
-        const decorKeys = decor.map((_, decorId) => getDecorInstanceKey(gmId, roomId, decorId));
         state.npcAct({
           action: "add-decor",
-          items: Object.values(decor).map(/** @returns {(typeof decor)[*]} */ (d, decorId) => {
-            if (d.type === 'rect') {
-              // 🚧 better way of computing transformed angledRect?
-              const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
-              const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
-              return {
-                ...d,
-                ...baseRect,
-                key: decorKeys[decorId], // Must override key, now we know gmId
-                angle,
-                meta: {...d.meta}, // Shallow clone
-              };
-            }
-            if (d.type === 'circle') {
-              return {
-                ...d,
-                key: decorKeys[decorId],
-                center: matrix.transformPoint({ ...d.center }),
-                meta: {...d.meta},
-              };
-            }
-            // NPC.DecorPoint
-            return {
-              ...d,
-              key: decorKeys[decorId],
-              ...matrix.transformPoint({ x: d.x, y: d.y }),
-              meta: {
-                ...d.meta,
-                // 🚧 cache?
-                orient: typeof d.meta.orient === 'number'
-                  ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
-                  : null,
-                ui: true,
-              },
-            };
+          items: Object.values(decor).map((d, decorId) => {
+            return instantiateDecor(d, gmId, roomId, matrix, `local-${decorId}`);
           }),
         });
       }

@@ -6,7 +6,9 @@
   - ✅ on spawn onto mesh, should face relative direction src --> dst
   - ✅ off-mesh decor to on-mesh decor should turn initially
     - ✅ on-mesh decor orientation issue
-  - ...
+  - ✅ support decor groups
+  - 🚧 tidy local decor into a decor group of decor groups
+  - 🚧 memoize decor including groups
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
@@ -18,9 +20,9 @@
 - hide inline carousel when maximised?
 - properly type code relating to `normalizeNpcCommandOpts`
 
-- remove tag `no-turn`?
-- clean up bridge window/fuel?
-- respawn on do point should trigger action
+- ✅ remove tag `no-turn`?
+- ❌ clean up bridge window/fuel?
+- ✅ respawn on do point should trigger action
   - seems we're clicking npc, not a do point
 
 - 🚧 play with Chrome devtool recorder

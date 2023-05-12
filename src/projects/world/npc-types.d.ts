@@ -358,11 +358,17 @@ declare namespace NPC {
     derivedBounds?: Geom.Rect;
   }
 
+  export interface DecorGroup extends BaseDecor {
+    type: 'group';
+    items: DecorDef[];
+  }
+
   export type DecorDef = (
     | DecorCircle
     | DecorPath
     | DecorPoint
     | DecorRect
+    | DecorGroup
   );
 
   export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;

@@ -163,7 +163,6 @@ export default function Decor(props) {
 
   React.useEffect(() => {
     const observer = new MutationObserver(debounce((records) => {
-      // console.log({records});
       const els = records.map(x => /** @type {HTMLElement} */ (x.target));
       state.handleDevToolEdit(els);
     }, 300));
@@ -194,73 +193,133 @@ export default function Decor(props) {
       }}
     >
       {Object.entries(state.decor).map(([key, item]) => {
-        switch (item.type) {
-          case 'circle': {
-            const { top, left, width } = circleToCssStyles(item);
-            return (
-              <div
-                key={key}
-                data-key={item.key}
-                data-meta={JSON.stringify(item.meta)}
-                className={cx(cssName.decorCircle, cssCircle)}
-                style={{
-                  left,
-                  top,
-                  width,
-                  height: width,
-                }}
-              />
-            );
-          }
-          case 'path':
-            return (
-              <DecorPath
-                key={key}
-                decor={item}
-              />
-            );
-          case 'point':
-            return (
-              <div
-                key={item.key}
-                data-key={item.key}
-                data-meta={JSON.stringify(item.meta)}
-                className={cx(
-                  cssName.decorPoint,
-                  cssPoint,
-                  metaToIconClasses(item.meta),
-                )}
-                style={{
-                  transform: pointToCssTransform(item),
-                }}
-              />
-            );
-          case 'rect': {
-            const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
-            return (
-              <div
-                key={key}
-                data-key={item.key}
-                data-meta={JSON.stringify(item.meta)}
-                className={cx(cssName.decorRect, cssRect)}
-                style={{
-                  left,
-                  top,
-                  width,
-                  height,
-                  transform,
-                  // transformOrigin: 'top left', // Others unsupported
-                }}
-              />
-            );
-        }
-          default:
-            console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
-            return null;
+        if (item.type === 'circle') {
+          const { top, left, width } = circleToCssStyles(item);
+          return (
+            <div
+              key={key}
+              data-key={item.key}
+              data-meta={JSON.stringify(item.meta)}
+              className={cx(cssName.decorCircle, cssCircle)}
+              style={{
+                left,
+                top,
+                width,
+                height: width,
+              }}
+            />
+          );
+        } else if (item.type === 'group') {
+          return <DecorItem key={key} item={item} />
+        } else if (item.type === 'path') {
+          return <DecorPath key={key} decor={item} />;
+        } else if (item.type === 'point') {
+          return (
+            <div
+              key={item.key}
+              data-key={item.key}
+              data-meta={JSON.stringify(item.meta)}
+              className={cx(
+                cssName.decorPoint,
+                cssPoint,
+                metaToIconClasses(item.meta),
+              )}
+              style={{
+                transform: pointToCssTransform(item),
+              }}
+            />
+          );
+        } else if (item.type === 'rect') {
+          const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
+          return (
+            <div
+              key={key}
+              data-key={item.key}
+              data-meta={JSON.stringify(item.meta)}
+              className={cx(cssName.decorRect, cssRect)}
+              style={{
+                left,
+                top,
+                width,
+                height,
+                transform,
+                // transformOrigin: 'top left', // Others unsupported
+              }}
+            />
+          );
+        } else {
+          console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
+          return null;
         }
       })}
     </div>
   );
+}
+
+/**
+ * @param {{ key: string; item: NPC.DecorDef }} _
+ */
+function DecorItem({ key, item }) {
+  if (item.type === 'circle') {
+    const { top, left, width } = circleToCssStyles(item);
+    return (
+      <div
+        key={key}
+        data-key={item.key}
+        data-meta={JSON.stringify(item.meta)}
+        className={cx(cssName.decorCircle, cssCircle)}
+        style={{
+          left,
+          top,
+          width,
+          height: width,
+        }}
+      />
+    );
+  } else if (item.type === 'group') {
+    return <>{
+      item.items.map(child => <DecorItem key={`${key}:${child.key}`} item={child} />)
+    }</>;
+  } else if (item.type === 'path') {
+    return <DecorPath key={key} decor={item} />;
+  } else if (item.type === 'point') {
+    return (
+      <div
+        key={item.key}
+        data-key={item.key}
+        data-meta={JSON.stringify(item.meta)}
+        className={cx(
+          cssName.decorPoint,
+          cssPoint,
+          metaToIconClasses(item.meta),
+        )}
+        style={{
+          transform: pointToCssTransform(item),
+        }}
+      />
+    );
+  } else if (item.type === 'rect') {
+    const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
+    return (
+      <div
+        key={key}
+        data-key={item.key}
+        data-meta={JSON.stringify(item.meta)}
+        className={cx(cssName.decorRect, cssRect)}
+        style={{
+          left,
+          top,
+          width,
+          height,
+          transform,
+          // transformOrigin: 'top left', // Others unsupported
+        }}
+      />
+    );
+  } else {
+    console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
+    return null;
+  }
 }
 
 const rootCss = css`
