@@ -9212,20 +9212,6 @@
     ],
     "singles": [
       {
-        "meta": {"door": true, "w": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[-15, 40], [-15, 260], [15, 260], [15, 40]]]
-        }
-      },
-      {
-        "meta": {"door": true, "n": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[40, -15], [40, 15], [260, 15], [260, -15]]]
-        }
-      },
-      {
         "meta": {"decor": true, "go": true, "label": true, "medical": true},
         "poly": {
           "type": "Polygon",
@@ -9249,6 +9235,52 @@
         }
       },
       {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=270": true,
+          "orient": 270,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[445, 460], [445, 470], [455, 470], [455, 460]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=270": true,
+          "orient": 270,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[745, 460], [745, 470], [755, 470], [755, 460]]]
+        }
+      },
+      {
+        "meta": {"door": true, "w": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-15, 40], [-15, 260], [15, 260], [15, 40]]]
+        }
+      },
+      {
+        "meta": {"door": true, "n": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[40, -15], [40, 15], [260, 15], [260, -15]]]
+        }
+      },
+      {
         "meta": {"wall": true},
         "poly": {
           "type": "Polygon",
@@ -9264,7 +9296,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1683550928464.3936
+    "lastModified": 1683883732131.4258
   },
   "medical--008--2x3": {
     "key": "medical--008--2x3",
@@ -9416,9 +9448,26 @@
       }
     ],
     "walls": [],
-    "singles": [],
+    "singles": [
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[75, 90], [75, 100], [85, 100], [85, 90]]]
+        }
+      }
+    ],
     "pngRect": {"x": -1, "y": -1, "width": 382, "height": 202},
-    "lastModified": 1682523269763.2524
+    "lastModified": 1683888243183.4773
   },
   "medical-bed--006--1.6x3.6": {
     "key": "medical-bed--006--1.6x3.6",
@@ -9494,9 +9543,60 @@
       }
     ],
     "walls": [],
-    "singles": [],
+    "singles": [
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[110, 540], [110, 550], [120, 550], [120, 540]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[110, 92.5], [110, 102.5], [120, 102.5], [120, 92.5]]
+          ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[110, 985], [110, 995], [120, 995], [120, 985]]]
+        }
+      }
+    ],
     "pngRect": {"x": 0, "y": -1, "width": 450, "height": 1094},
-    "lastModified": 1681986759692.5693
+    "lastModified": 1683888359899.7756
   },
   "misc-stellar-cartography--020--10x10": {
     "key": "misc-stellar-cartography--020--10x10",

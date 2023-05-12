@@ -11,4 +11,10 @@
     <title>obstacles</title>
     <path d="M 235.117 286.395 L 148.016 285.174 L 88.016 194.309 L 144.334 -91.226 L 240.016 -91.226 L 286.016 189.174 L 235.117 286.395 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" transform="matrix(0, 1, -1, 0, 284.600484, -89.4315)"/>
   </g>
+  <g transform="matrix(1, 0, 0, 1, -1, 0)">
+    <title>singles</title>
+    <rect x="75" y="90" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do lie pod medical orient=0 obscured</title>
+    </rect>
+  </g>
 </svg>

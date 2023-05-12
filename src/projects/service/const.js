@@ -150,6 +150,8 @@ export const spawnFadeMs = 500;
 // export const npcWorldRadius =  10;
 export const npcWorldRadius =  13;
 
+export const obscuredNpcOpacity = 0.25;
+
 //#endregion
 
 export const svgSymbolTag = /** @type {const} */ ({

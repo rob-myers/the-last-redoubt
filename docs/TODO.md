@@ -5,7 +5,7 @@
 - ✅ BUG open door should not trigger off-mesh do
 - ✅ BUG look while fading in from off-mesh breaks
   - doMeta is not nulled
-- 🚧 medical pods have tags `do lie obscured`
+- ✅ medical pods have tags `do lie obscured`
 
 - 🚧 cleanup and understand spawn vs do
   - ℹ️ we delegate to `do` inside raw-loader `spawn`
@@ -14,26 +14,26 @@
   - ✅ on cancel spawn ensure stays faded
   - ✅ prevent spawn on top of other npc
     - maybe distinct height issue?
-  - 🚧 permit re-spawn on top of same npc at do point
   - ✅ spawn between do points should support changing npcClassKey
   - ✅ spawn should not have restricted distance
+  - 🚧 permit re-spawn on top of same npc at do point
 
-- 🚧 support tags foo=bar with value JSON.parse(bar) with string fallback
+- ✅ `lie` frame should have head at center
+- ✅ support tags foo=bar with value JSON.parse(bar) with string fallback
   - ✅ symbols have meta
   - ✅ symbols use meta instead of tags
   - ✅ migrate:
     - ✅ orient-45 to orient=45
     - ✅ distance-100 to distance=100
     - ✅ hull-n to hullDir=n
-  - 🚧 bunk-beds have extra `lie` with opacity=0.25
+  - ✅ bunk-beds have extra `lie` with opacity=0.25
     - ✅ fade spawn supports `meta.obscured`
     - ✅ npcs with different meta.height can spawn close
-    - do point should be more visible
+    - ❌ do point should be more visible
     - ✅ cover all instances of bunk beds
 
 - support cleaner `npc do {npcKey} $( click 1 )`
   - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
-- `lie` frame should have head at center
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal

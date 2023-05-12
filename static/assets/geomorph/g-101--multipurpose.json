@@ -3754,13 +3754,6 @@
         }
       },
       {
-        "meta": {"door": true, "w": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[352, 663], [308, 663], [308, 657], [352, 657]]]
-        }
-      },
-      {
         "meta": {"decor": true, "go": true, "label": true, "medical": true},
         "poly": {
           "type": "Polygon",
@@ -3786,6 +3779,45 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[282, 691], [280, 691], [280, 689], [282, 689]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=270": true,
+          "orient": 360,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[268, 751], [266, 751], [266, 749], [268, 749]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=270": true,
+          "orient": 360,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[268, 811], [266, 811], [266, 809], [268, 809]]]
+        }
+      },
+      {
+        "meta": {"door": true, "w": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[352, 663], [308, 663], [308, 657], [352, 657]]]
         }
       },
       {

@@ -15,4 +15,16 @@
     <path d="M 35.4 500.064 L 130.81 448 L 417.677 504.394 L 417.677 590.797 L 130.096 645.979 L 35.4 596.443 L 35.4 500.064 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
     <path d="M 35.4 942.064 L 130.81 890 L 417.677 946.394 L 417.677 1032.797 L 130.096 1087.979 L 35.4 1038.443 L 35.4 942.064 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
   </g>
+  <g>
+    <title>singles</title>
+    <rect x="110" y="540" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do lie pod medical orient=0 obscured</title>
+    </rect>
+    <rect x="110" y="92.5" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do lie pod medical orient=0 obscured</title>
+    </rect>
+    <rect x="110" y="985" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do lie pod medical orient=0 obscured</title>
+    </rect>
+  </g>
 </svg>

@@ -2359,6 +2359,54 @@
         "meta": {
           "decor": true,
           "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[28, 118], [28, 120], [26, 120], [26, 118]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[28, 28.5], [28, 30.5], [26, 30.5], [26, 28.5]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "lie": true,
+          "pod": true,
+          "medical": true,
+          "orient=0": true,
+          "orient": 0,
+          "obscured": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[28, 207], [28, 209], [26, 209], [26, 207]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
           "sit": true,
           "chair": true,
           "orient=180": true,

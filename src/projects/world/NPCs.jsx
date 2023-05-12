@@ -7,7 +7,7 @@ import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
-import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, spawnFadeMs } from "../service/const";
+import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "../service/const";
 import { geom } from "../service/geom";
 import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
@@ -137,9 +137,9 @@ export default function NPCs(props) {
         e.point.meta ??= meta; // 🚧 can remove?
         await state.spawn(e);
         npc.startAnimationByMeta(meta);
-        await npc.animateOpacity(meta.obscured ? 0.25 : 1, spawnFadeMs);
+        await npc.animateOpacity(meta.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
       } catch (e) {
-        await npc.animateOpacity(npc.doMeta?.obscured ? 0.25 : 1, spawnFadeMs);
+        await npc.animateOpacity(npc.doMeta?.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
         throw e;
       }
     },
