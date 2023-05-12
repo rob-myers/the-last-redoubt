@@ -1153,7 +1153,7 @@ export function ensureDecorMetaGmRoomId(decor, api) {
 export function extendDecorRect(decor) {
   const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
   decor.derivedPoly = poly;
-  decor.derivedRect = poly.rect;
+  decor.derivedBounds = poly.rect;
   return decor;
 }
 

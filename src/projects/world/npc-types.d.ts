@@ -352,10 +352,10 @@ declare namespace NPC {
      */
     derivedPoly?: Geom.Poly;
     /**
-     * Induced by `{ x, y, width, height, angle }`.
+     * Aabb for `derivedPoly`.
      * Avoids recomputation for collisions.
      */
-    derivedRect?: Geom.Rect;
+    derivedBounds?: Geom.Rect;
   }
 
   export type DecorDef = (

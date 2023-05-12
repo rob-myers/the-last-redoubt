@@ -78,7 +78,7 @@ export default function useHandleEvents(api) {
           : npcService.predictNpcPolygonCollision(
               npc,
               assertDefined(decor.derivedPoly?.outline),
-              assertDefined(decor.derivedRect),
+              assertDefined(decor.derivedBounds),
             )
         ;
 
