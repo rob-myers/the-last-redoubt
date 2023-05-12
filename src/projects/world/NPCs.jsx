@@ -486,6 +486,7 @@ export default function NPCs(props) {
       }
     },
     async offMeshDoMeta(npc, e) {
+      const src = npc.getPosition();
       const point = e.point;
 
       if (!e.suppressThrow && !point.meta.do && !point.meta.nav) {
@@ -493,17 +494,22 @@ export default function NPCs(props) {
       }
 
       if (!e.suppressThrow && (
-        npc.getPosition().distanceTo(point) > npc.getInteractRadius()
-        || !api.gmGraph.inSameRoom(npc.getPosition(), point)
+        src.distanceTo(point) > npc.getInteractRadius()
+        || !api.gmGraph.inSameRoom(src, point)
       )) {
         throw Error('too far away');
       }
 
       await state.fadeSpawnDo(npc, {
-        npcKey: npc.key, // If not navigable try use targetPoint
-        point: point.meta.nav ? point : { ...point, .../** @type {Geom.VectJson} */ (point.meta.targetPos) },
-        // Orient if staying off-mesh
-        angle: point.meta.nav ? undefined : typeof point.meta.orient === 'number' ? point.meta.orient * (Math.PI / 180) : undefined,
+        npcKey: npc.key,
+        point: point.meta.nav
+          ? point // if not navigable try use targetPoint:
+          : { ...point, .../** @type {Geom.VectJson} */ (point.meta.targetPos) },
+        angle: point.meta.nav
+          // use direction src --> point if entering navmesh
+          ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
+          // use meta.orient if staying off-mesh
+          : typeof point.meta.orient === 'number' ? point.meta.orient * (Math.PI / 180) : undefined,
         fadeOutMs: e.fadeOutMs,
       }, point.meta);
     },

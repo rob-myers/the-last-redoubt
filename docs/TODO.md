@@ -2,43 +2,16 @@
 
 ## In progress
 
-- ✅ BUG open door should not trigger off-mesh do
-- ✅ BUG look while fading in from off-mesh breaks
-  - doMeta is not nulled
-- ✅ medical pods have tags `do lie obscured`
-
-- 🚧 cleanup and understand spawn vs do
-  - ℹ️ we delegate to `do` inside raw-loader `spawn`
-  - ✅ we should fade-in
-  - ✅ cleaner npc.doMeta assignment
-  - ✅ on cancel spawn ensure stays faded
-  - ✅ prevent spawn on top of other npc
-    - maybe distinct height issue?
-  - ✅ spawn between do points should support changing npcClassKey
-  - ✅ spawn should not have restricted distance
-  - 🚧 permit re-spawn on top of same npc at do point
-
-- ✅ `lie` frame should have head at center
-- ✅ support tags foo=bar with value JSON.parse(bar) with string fallback
-  - ✅ symbols have meta
-  - ✅ symbols use meta instead of tags
-  - ✅ migrate:
-    - ✅ orient-45 to orient=45
-    - ✅ distance-100 to distance=100
-    - ✅ hull-n to hullDir=n
-  - ✅ bunk-beds have extra `lie` with opacity=0.25
-    - ✅ fade spawn supports `meta.obscured`
-    - ✅ npcs with different meta.height can spawn close
-    - ❌ do point should be more visible
-    - ✅ cover all instances of bunk beds
-
-- support cleaner `npc do {npcKey} $( click 1 )`
-  - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
+- 🚧 cleanup pending todos in gmail pre new CodeSandbox
+  - ✅ on spawn onto mesh, should face relative direction src --> dst
+  - ...
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal
   - update World piecewise
 
+- support cleaner `npc do {npcKey} $( click 1 )`
+  - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
 - unfortunately "ℹ️" does not look good on some windows machines
 - hide inline carousel when maximised?
 - properly type code relating to `normalizeNpcCommandOpts`
@@ -473,6 +446,37 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ BUG open door should not trigger off-mesh do
+- ✅ BUG look while fading in from off-mesh breaks
+  - doMeta is not nulled
+- ✅ medical pods have tags `do lie obscured`
+
+- ✅ cleanup and understand spawn vs do
+  - ℹ️ we delegate to `do` inside raw-loader `spawn`
+  - ✅ we should fade-in
+  - ✅ cleaner npc.doMeta assignment
+  - ✅ on cancel spawn ensure stays faded
+  - ✅ prevent spawn on top of other npc
+    - maybe distinct height issue?
+  - ✅ spawn between do points should support changing npcClassKey
+  - ✅ spawn should not have restricted distance
+  - ✅ permit re-spawn on top of same npc at do point
+
+- ✅ `lie` frame should have head at center
+- ✅ support tags foo=bar with value JSON.parse(bar) with string fallback
+  - ✅ symbols have meta
+  - ✅ symbols use meta instead of tags
+  - ✅ migrate:
+    - ✅ orient-45 to orient=45
+    - ✅ distance-100 to distance=100
+    - ✅ hull-n to hullDir=n
+  - ✅ bunk-beds have extra `lie` with opacity=0.25
+    - ✅ fade spawn supports `meta.obscured`
+    - ✅ npcs with different meta.height can spawn close
+    - ❌ do point should be more visible
+    - ✅ cover all instances of bunk beds
+
 
 - ✅ nice images involving multiple npcs for carousel
   - ✅ implement `npcs.config.debugPlayer` (vs `npcs.config.debug`)
