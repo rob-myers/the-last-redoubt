@@ -505,7 +505,7 @@ export default function NPCs(props) {
         point: point.meta.nav
           ? point // if not navigable try use targetPoint:
           : { ...point, .../** @type {Geom.VectJson} */ (point.meta.targetPos) },
-        angle: point.meta.nav
+        angle: point.meta.nav && !point.meta.do
           // use direction src --> point if entering navmesh
           ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
           // use meta.orient if staying off-mesh
@@ -515,7 +515,7 @@ export default function NPCs(props) {
     },
     async onMeshDoMeta(npc, e) {
       const meta = e.point.meta;
-      /** The actual "do point" (point is somewhere on icon) */
+      /** The actual "do point" (e.point is somewhere on icon) */
       const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? e.point;
 
       if (!e.suppressThrow && !meta.do) {
@@ -525,7 +525,7 @@ export default function NPCs(props) {
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
         await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, ...navPath });
-        typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (180 / Math.PI), 100);
+        typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
         npc.startAnimationByMeta(meta);
         return;
       }

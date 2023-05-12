@@ -4,6 +4,8 @@
 
 - 🚧 cleanup pending todos in gmail pre new CodeSandbox
   - ✅ on spawn onto mesh, should face relative direction src --> dst
+  - ✅ off-mesh decor to on-mesh decor should turn initially
+    - ✅ on-mesh decor orientation issue
   - ...
 
 - 🚧 create a new CodeSandbox
