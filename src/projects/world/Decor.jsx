@@ -122,17 +122,19 @@ export default function Decor(props) {
           extendDecorRect(d); // Add derived data
           ensureDecorMetaGmRoomId(d, api);
           break;
-        case 'group':
+        case 'group': {
+          // 🚧 avoid re-running for group descendants?
           ensureDecorMetaGmRoomId(d, api);
-          d.items.forEach((item, index) => {
-            item.parentKey = d.key; // Overwrite child keys:
-            item.key = `${d.key}-${index}`;
-            state.normalizeDecor(item);
+          return d.items.flatMap((item, index) => {
+            item.parentKey = d.key;
+            item.key = `${d.key}-${index}`; // Overwrite child keys
+            return [item, ...state.normalizeDecor(item)];
           });
-          break;
+        }
         default:
           throw testNever(d);
       }
+      return [];
     },
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
@@ -165,13 +167,15 @@ export default function Decor(props) {
           d.updatedAt = Date.now();
         }
 
-        state.normalizeDecor(d);
-
+        const descendants = state.normalizeDecor(d);
         if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') {
-          (state.byGmRoomKey[getGmRoomKey(d.meta.gmId, d.meta.roomId)] ||= {})[d.key] = true;
+          const gmRoomKey = getGmRoomKey(d.meta.gmId, d.meta.roomId);
+          (state.byGmRoomKey[gmRoomKey] ||= {})[d.key] = true;
+          descendants.forEach(other => state.byGmRoomKey[gmRoomKey][other.key] = true);
         }
 
         state.decor[d.key] = d;
+        descendants.forEach(other => state.decor[other.key] = other);
       }
       api.npcs.events.next({ key: 'decors-added', decors: decor });
       update();
@@ -211,7 +215,8 @@ export default function Decor(props) {
     >
       {/* 🚧 memoize decor with props { decor, decor.updatedAt } */}
       {Object.values(state.decor).map((def) =>
-        <DecorInstance key={def.key} def={def} />
+        // descendants will be rendered elsewhere
+        def.parentKey ? null : <DecorInstance key={def.key} def={def} />
       )}
     </div>
   );
@@ -396,7 +401,7 @@ const cssRect = css`
  * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
- * @property {(d: NPC.DecorDef) => void} normalizeDecor
+ * @property {(d: NPC.DecorDef) => NPC.DecorDef[]} normalizeDecor Also returns descendants
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {() => void} update

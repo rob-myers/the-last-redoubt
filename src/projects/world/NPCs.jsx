@@ -9,7 +9,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "../service/const";
 import { geom } from "../service/geom";
-import { getDecorInstanceKey, getGmRoomKey } from "../service/geomorph";
+import { getLocalDecorGroupKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -339,9 +339,12 @@ export default function NPCs(props) {
         process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
     },
-    instantiateDecor(d, gmId, roomId, matrix) {
-      /** We must override d.key, now we know gmId, roomId */
-      const key = `local-g${gmId}r${roomId}-${d.key}`;
+    instantiateLocalDecor(d, gmId, roomId, matrix) {
+      /**
+       * Override d.key now we know { gmId, roomId }.
+       * Actually, descendants will be overwritten again later.
+       */
+      const key = `${getLocalDecorGroupKey(gmId, roomId)}-${d.key}`;
 
       if (d.type === 'rect') {
         // 🚧 better way of computing transformed angledRect?
@@ -352,7 +355,7 @@ export default function NPCs(props) {
           ...baseRect,
           key,
           angle,
-          meta: {...d.meta}, // Shallow clone
+          meta: {...d.meta},
         };
       } else if (d.type === 'circle') {
         return {
@@ -367,7 +370,7 @@ export default function NPCs(props) {
           key,
           meta: {...d.meta},
           // items[*].key will be overwitten in normalizeDecor
-          items: d.items.map(item => state.instantiateDecor(item, gmId, roomId, matrix)),
+          items: d.items.map(item => state.instantiateLocalDecor(item, gmId, roomId, matrix)),
         };
       } else if (d.type === 'path') {
         return {
@@ -795,18 +798,19 @@ export default function NPCs(props) {
         const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
         state.npcAct({
           action: "add-decor",
-          items: Object.values(decor).map(d =>
-            state.instantiateDecor(d, gmId, roomId, matrix)
-          ),
+          items: [{
+            key: getLocalDecorGroupKey(gmId, roomId),
+            type: 'group',
+            meta: { gmId, roomId },
+            items: Object.values(decor).map(d =>
+              state.instantiateLocalDecor(d, gmId, roomId, matrix)
+            ),
+          }],
         });
       }
 
       for (const { gmId, roomId } of opts.removed??[]) {
-        // 🚧 support decor groups in svg symbols
-        const roomDecor = api.gmGraph.gms[gmId].decor[roomId];
-        /** Keys of top-level decor, but not of group descendants */
-        const decorKeys = roomDecor.map((d, decorId) => `local-g${gmId}r${roomId}-${d.key}`)
-        state.npcAct({ action: "rm-decor", items: decorKeys });
+        state.npcAct({ action: "rm-decor", items: [getLocalDecorGroupKey(gmId, roomId)] });
       }
     },
     async walkNpc(e) {
@@ -916,7 +920,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
- * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateDecor
+ * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateLocalDecor
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh

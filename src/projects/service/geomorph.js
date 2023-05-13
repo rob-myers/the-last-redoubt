@@ -1128,8 +1128,8 @@ export function decorContainsPoint(decor, point) {
 
 /** @param {string} decorKey */
 export function decodeDecorInstanceKey(decorKey) {
-  const [, decorId, gmId, roomId] = /** @type {string[]} */ (decorKey.match(/^local-(\d+)-g(\d+)r(\d+)$/));
-  return { decorId: Number(decorId), gmId: Number(gmId), roomId: Number(roomId) };
+  const [, gmId, roomId] = /** @type {string[]} */ (decorKey.match(localDecorSubKeyRegex));
+  return { gmId: Number(gmId), roomId: Number(roomId) };
 }
 
 /**
@@ -1179,10 +1179,11 @@ export function getDecorCenter(decor) {
   }
 }
 
-/** @type {(gmId: number, roomId: number, decorId: number) => string} */
-export function getDecorInstanceKey(gmId, roomId, decorId) {
-  return `local-${decorId}-g${gmId}r${roomId}`
+/** @type {(gmId: number, roomId: number) => string} */
+export function getLocalDecorGroupKey(gmId, roomId) {
+  return `local-g${gmId}r${roomId}`;
 }
+export const localDecorSubKeyRegex = /^local-g(\d+)r(\d+)-/;
 
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle

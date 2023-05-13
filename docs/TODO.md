@@ -7,7 +7,7 @@
   - ✅ off-mesh decor to on-mesh decor should turn initially
     - ✅ on-mesh decor orientation issue
   - ✅ support decor groups
-  - 🚧 tidy local decor into a decor group of decor groups
+  - ✅ tidy local decor into decor groups
     - ℹ️ `decor.decor` should still include all decor (e.g. group items)
     - ✅ on remove decor group, remove its items
     - ✅ on remove decor group item, remove from `items` array too
