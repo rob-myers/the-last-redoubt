@@ -2,23 +2,13 @@
 
 ## In progress
 
-- 🚧 cleanup pending todos in gmail pre new CodeSandbox
-  - ✅ on spawn onto mesh, should face relative direction src --> dst
-  - ✅ off-mesh decor to on-mesh decor should turn initially
-    - ✅ on-mesh decor orientation issue
-  - ✅ support decor groups
-  - ✅ tidy local decor into decor groups
-    - ℹ️ `decor.decor` should still include all decor (e.g. group items)
-    - ✅ on remove decor group, remove its items
-    - ✅ on remove decor group item, remove from `items` array too
-  - ℹ️ local decor resets on re-enter
-  - ✅ memoize decor including groups
-  - can tag symbol decor `global`
-
 - 🚧 create a new CodeSandbox
-  - update src/components e.g. Terminal
-  - update World piecewise
+  - ✅ update src/components e.g. Terminal
+  - 🚧 update World piecewise
 
+- restyle nav menu?
+- can tag symbol decor `global`
+  - ℹ️ local decor resets on re-enter
 - support cleaner `npc do {npcKey} $( click 1 )`
   - currently `npc do '{ npcKey: "foo", point:'$( click 1 )'}'`
 - unfortunately "ℹ️" does not look good on some windows machines
@@ -455,6 +445,17 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ cleanup pending todos in gmail pre new CodeSandbox
+  - ✅ on spawn onto mesh, should face relative direction src --> dst
+  - ✅ off-mesh decor to on-mesh decor should turn initially
+    - ✅ on-mesh decor orientation issue
+  - ✅ support decor groups
+  - ✅ tidy local decor into decor groups
+    - ℹ️ `decor.decor` should still include all decor (e.g. group items)
+    - ✅ on remove decor group, remove its items
+    - ✅ on remove decor group item, remove from `items` array too
+  - ✅ memoize decor including groups
 
 - ✅ BUG open door should not trigger off-mesh do
 - ✅ BUG look while fading in from off-mesh breaks
