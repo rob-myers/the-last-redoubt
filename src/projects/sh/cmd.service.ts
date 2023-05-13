@@ -234,6 +234,9 @@ class cmdServiceClass {
         if (process.key === 0) {
           throw new ShError('session leader doesn\'t support local variables', 1);
         }
+        if (args.join(' ').includes('=')) {
+          throw new ShError('usage: `local x y z` (assign values elsewhere)', 1);
+        }
         for (const name of args) {
           if (name) {
             process.localVar[name] = undefined;
