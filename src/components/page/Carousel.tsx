@@ -186,7 +186,7 @@ function Slides(props: Props & {
                 )}>
                 <img
                   className="swiper-lazy"
-                  data-src={`${props.baseSrc??''}${supportsWebp ? item.webp : item.src}`}
+                  data-src={`${props.baseSrc??''}${supportsWebp && item.webp ? item.webp : item.src}`}
                   {...item.background && { style: { background: item.background } }}
                 />
               </div>
