@@ -58,7 +58,7 @@ We have a few core ideas.
     - Canonical in-browser scripting via POSIX syntax interpreted as JavaScript.
 
 1. Use openly available assets:
-    - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and Eric Smith's [PNGs](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
+    - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
 1. Avoid an abstract approach by using the [Traveller](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) universe as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
@@ -108,9 +108,7 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 ### An example behaviour
 
-
-{/* 1. To create an interactive system for specifying and executing the behaviour of video game characters.
-1. For this interactive system and its implementation to be of interest to a wide audience. */}
+Then let us begin with a behaviour
 
 {/* We'll **specify behaviour** using the syntax of an interactive programming language.
 We'll **execute behaviour** by running (possibly many) programs in parallel.
@@ -128,18 +126,12 @@ Why does Game AI only seem to exist within the context of a video game?
 > Assets and animations relative to a particular setting are needed to make Game AI meaningful.
 In making these choices and constructing the respective assets, one moves away from a general AI system and towards making a video game.
 
-How can we make these choices whilst keeping some level of generality?
-This brings us back to **(2)**.
-We can _implement_ the choices in a _canonical way_ by adopting the stance of a Modern Web Developer.
-
-🚧 Use web technology the way it is supposed to be used. */}
+*/}
 
 {/* NPC behaviour may be _simulated_ i.e. task-driven imitations of human behaviour. NPC behaviour may be _fabricated_ i.e. specifically constructed in response to the Player's actions. */}
 {/* For example, if the Player enters a particular room we could spawn enemies (fabrication) which are instructed to chase after the Player (simulation). */}
 
 {/* Video games almost always need Game AI e.g. control systems for entities not under control of the Player. */}
-
-{/* --- */}
 
 {/* This blog is about programming Non-Player Characters (aka [NPCs](https://en.wikipedia.org/wiki/Non-player_character "@new-tab")).
 An NPC is a character in a video game e.g. a human, alien, robot or animal.
@@ -149,45 +141,6 @@ Sometimes they fabricate NPC behaviour in response to the Player's actions.
 My personal interest began with the ZX Spectrum in the late 1980s.
 In those days anything seemed possible.
 Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)). */}
-
-{/* There's no need to comment on the current state of affairs of video games.
-They have their own metrics of success.
-We're going to study NPCs for their own sake.
-But what distinguishes our approach?
-
-1. Dedicated to programming NPCs.
-1. Browser-based CLI.
-1. CSS-based rendering.<SideNote>We intentionally avoid JavaScript [game loops](https://gamedev.stackexchange.com/a/656).</SideNote>
-1. Rich graphics via [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").
-
-Before things get a bit abstract, here are some screenshots: */}
-
-{/* <Carousel
-  baseSrc="/assets/pics/home-carousel/"
-  height={550}
-  fullHeight={900}
-  breakpoints={{
-    300: {
-      slidesPerView: 1,
-    },
-    700: {
-      slidesPerView: 2,
-    },
-  }}
-  items={[
-    { src: 'pic-1.png', label: 'A World and a Terminal' },
-    { src: 'pic-2.png', label: 'Movement and commands' },
-    { src: 'pic-3.png', label: 'Another Terminal awaits another World' },
-    { src: 'pic-4.png', label: 'Disabling Tabs pauses sessions' },
-    { src: 'pic-5.png', label: 'Multiple Worlds and Terminals' },
-    { src: 'pic-6.png', label: 'Can resize Tab and Tabset' },
-    { src: 'pic-7.png', label: 'Widescreen view' },
-    { src: 'pic-8.png', label: 'Pausing a process' },
-    { src: 'pic-9.png', label: 'Reading some variables' },
-    { src: 'pic-10.png', label: 'Mobile has Terminal UI' },
-    { src: 'pic-11.png', label: 'Piping output into devtool' },
-  ]}
-/> */}
 
 {/* <Aside title="screenshots">
 
@@ -200,22 +153,11 @@ Before things get a bit abstract, here are some screenshots: */}
 
 </Aside> */}
 
-{/* Let's spend some time expanding the above distinguishing points. */}
-
-{/* ### Browser-based CLI */}
-
 {/* By this we mean an interactive [Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface) running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
 Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
 Supported syntax includes shell pipelines, shell functions and background processes.
 Let's see it in action:
-
-<Carousel
-  height={600}
-  items={[{ video: 'cli-demo-1', label: 'First CLI Demo' }]}
-/>
-
-🚧 redo video
 
 As mentioned in the video, every shell session begins by running the script at `/home/PROFILE`.
 In the above session this absolute path resolves to a string:
@@ -256,8 +198,6 @@ The shell functions `call`, `map`, `range` and `split` (above) are all defined i
 
 </Aside> */}
 
-{/* ### CSS-based rendering */}
-
 {/* There are two basic ways to create browser-based video games:
 [HTMLCanvasElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement) and
 [CSS](https://developer.mozilla.org/en-US/docs/Web/CSS).
@@ -274,13 +214,6 @@ Finally, CSS permits _rich interactive debugging_.
 That is, one may directly mutate the DOM-tree in a browser devtool,
 whereas debugging `<canvas>` amounts to setting breakpoints inside JavaScript code. */}
 
-{/* CSS vs HTMLCanvas i.e. in our approach we can use Chrome devtool
-Asymmetry of HTML and JavaScript DOM mutation
-Analogy with Web vs App
-Want to use Browser Devtool: canonical interface, like CLI */}
-
-{/* 🚧 browser devtool video */}
-
 {/* Writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
 So, we're going to have to write a lot of software,
 and we're going to have to do it in a particularly clear manner.
@@ -292,13 +225,10 @@ Importantly:
 - CSS-based rendering provides:
   > performant rendering and particularly rich debugging via a browser devtool.
 
-
 POSIX-based CLIs are heavily used in e.g. home computing, development environments and cloud computing (infrastructure as a service).
 CSS plays a crucial role in personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like [VSCode](https://en.wikipedia.org/wiki/Visual_Studio_Code).
 Composing these two technologies avoids many UI decisions, for which there is no correct answer. */}
 
-
-{/* ### Rich graphics via Starship Geomorphs */}
 
 {/* We want to program NPCs, producing a catalogue of interesting behaviours.
 We are particularly interested in studying how they can be composed in response to the Player's actions.
