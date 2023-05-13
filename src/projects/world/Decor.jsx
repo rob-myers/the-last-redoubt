@@ -180,7 +180,6 @@ export default function Decor(props) {
       api.npcs.events.next({ key: 'decors-added', decors: decor });
       update();
     },
-    update,
   }));
 
   React.useEffect(() => {
@@ -213,17 +212,19 @@ export default function Decor(props) {
         }
       }}
     >
-      {/* 🚧 memoize decor with props { decor, decor.updatedAt } */}
-      {Object.values(state.decor).map((def) =>
-        // descendants will be rendered elsewhere
-        def.parentKey ? null : <DecorInstance key={def.key} def={def} />
+      {Object.values(state.decor).filter(def => !def.parentKey).map((def) =>
+        <MemoizedDecorInstance
+          key={def.key}
+          def={def}
+          updatedAt={def.updatedAt}
+        />
       )}
     </div>
   );
 }
 
 /**
- * @param {{ def: NPC.DecorDef }} _
+ * @param {DecorInstanceProps} _
  */
 function DecorInstance({ def }) {
   if (def.type === 'circle') {
@@ -294,6 +295,9 @@ function DecorInstance({ def }) {
     return null;
   }
 }
+
+/** @type {React.MemoExoticComponent<(props: DecorInstanceProps & { updatedAt?: number }) => JSX.Element | null>} */
+const MemoizedDecorInstance = React.memo(DecorInstance);
 
 const rootCss = css`
   position: absolute;
@@ -390,6 +394,11 @@ const cssRect = css`
  */
 
 /**
+ * @typedef DecorInstanceProps
+ * @property {NPC.DecorDef} def
+ */
+
+/**
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {HTMLElement} rootEl
@@ -404,5 +413,4 @@ const cssRect = css`
  * @property {(d: NPC.DecorDef) => NPC.DecorDef[]} normalizeDecor Also returns descendants
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
- * @property {() => void} update
  */

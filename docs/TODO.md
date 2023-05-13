@@ -11,8 +11,8 @@
     - ℹ️ `decor.decor` should still include all decor (e.g. group items)
     - ✅ on remove decor group, remove its items
     - ✅ on remove decor group item, remove from `items` array too
-  - 🚧 memoize decor including groups
   - ℹ️ local decor resets on re-enter
+  - ✅ memoize decor including groups
   - can tag symbol decor `global`
 
 - 🚧 create a new CodeSandbox
