@@ -27,7 +27,6 @@ export default function Tabs(props: Props) {
     enabled: !!props.initEnabled,
     everEnabled: !!props.initEnabled,
     expanded: false,
-
     resets: 0,
     justResetWhileDisabled: false,
     resetDisabled: false,
@@ -236,10 +235,10 @@ export default function Tabs(props: Props) {
             initEnabled={state.enabled}
             persistLayout={props.persistLayout}
             /**
-             * Horizontal splitter corresponds to
-             * rootOrientationVertical being `true`.
+             * `rootOrientationVertical` true <=> splitter is horizontal
+             * Default (left | right) Desktop, (top | bottom) Smaller viewport.
              */
-            rootOrientationVertical={!!props.initHorizontal}
+            rootOrientationVertical={window.matchMedia('(max-width: 800px)').matches}
             tabs={props.tabs}
             update={update}
           />
@@ -265,8 +264,6 @@ export interface Props {
 
   /** Initially enabled? */
   initEnabled?: boolean;
-  /** Does the _initial Tabs layout_ have a horizontal splitter? */
-  initHorizontal?: boolean;
   persistLayout?: boolean;
 }
 

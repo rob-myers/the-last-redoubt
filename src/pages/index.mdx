@@ -106,9 +106,29 @@ Entertainment will arise by interacting with our little fabricated worlds.
 By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) we'll avoid a dry abstract approach.
 
 
-### An example behaviour
+### Our first behaviour
 
-Then let us begin with a behaviour
+To create our first NPC behaviour we'll need:
+- a **Player** (some chosen character _observing_ the behaviour).
+- an **NPC** (another character _performing_ the behaviour).
+- a **World** they inhabit (geomorphs connected together).
+
+<Tabs
+  id="example-behaviour"
+  initEnabled={false}
+  height={[500, 600]}
+  persistLayout
+  tabs={[
+    [
+      { type: 'component', filepath: 'world-demo-1' },
+    ],
+    [
+      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup.game_2() } },
+    ],
+  ]}
+/>
+
+
 
 {/* We'll **specify behaviour** using the syntax of an interactive programming language.
 We'll **execute behaviour** by running (possibly many) programs in parallel.
