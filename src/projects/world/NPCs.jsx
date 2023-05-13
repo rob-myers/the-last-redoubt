@@ -339,6 +339,61 @@ export default function NPCs(props) {
         process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
     },
+    instantiateDecor(d, gmId, roomId, matrix) {
+      /** We must override d.key, now we know gmId, roomId */
+      const key = `local-g${gmId}r${roomId}-${d.key}`;
+
+      if (d.type === 'rect') {
+        // 🚧 better way of computing transformed angledRect?
+        const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+        const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+        return {
+          ...d,
+          ...baseRect,
+          key,
+          angle,
+          meta: {...d.meta}, // Shallow clone
+        };
+      } else if (d.type === 'circle') {
+        return {
+          ...d,
+          key,
+          center: matrix.transformPoint({ ...d.center }),
+          meta: {...d.meta},
+        };
+      } else if (d.type === 'group') {
+        return {
+          ...d,
+          key,
+          meta: {...d.meta},
+          // items[*].key will be overwitten in normalizeDecor
+          items: d.items.map(item => state.instantiateDecor(item, gmId, roomId, matrix)),
+        };
+      } else if (d.type === 'path') {
+        return {
+          ...d,
+          key,
+          meta: {...d.meta},
+          path: d.path.map(x => matrix.transformPoint({ ...x })),
+        };     
+      } else if (d.type === 'point') {
+        return {
+          ...d,
+          key,
+          ...matrix.transformPoint({ x: d.x, y: d.y }),
+          meta: {
+            ...d.meta,
+            // 🚧 cache?
+            orient: typeof d.meta.orient === 'number'
+              ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+              : null,
+            ui: true,
+          },
+        };
+      } else {
+        throw testNever(d, { suffix: 'instantiateDecor' });
+      }
+    },
     isPointNearClosedDoor(point, radius, gmRoomId) {
       const gm = api.gmGraph.gms[gmRoomId.gmId];
       const localPoint = gm.inverseMatrix.transformPoint({...point});
@@ -736,77 +791,12 @@ export default function NPCs(props) {
       });
     },
     updateLocalDecor(opts) {
-
-      /**
-       * All keys should be unique, even for group descendants.
-       * @param {NPC.DecorDef} d
-       * @param {number} gmId
-       * @param {number} roomId 
-       * @param {Geom.Mat} matrix
-       * @returns {NPC.DecorDef}
-       */
-      function instantiateDecor(d, gmId, roomId, matrix) {
-        /** We must override d.key, now we know gmId, roomId */
-        const key = `local-g${gmId}r${roomId}-${d.key}`;
-
-        if (d.type === 'rect') {
-          // 🚧 better way of computing transformed angledRect?
-          const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
-          const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
-          return {
-            ...d,
-            ...baseRect,
-            key,
-            angle,
-            meta: {...d.meta}, // Shallow clone
-          };
-        } else if (d.type === 'circle') {
-          return {
-            ...d,
-            key,
-            center: matrix.transformPoint({ ...d.center }),
-            meta: {...d.meta},
-          };
-        } else if (d.type === 'group') {
-          return {
-            ...d,
-            key,
-            meta: {...d.meta},
-            // items[*].key will be overwitten in normalizeDecor
-            items: d.items.map(item => instantiateDecor(item, gmId, roomId, matrix)),
-          };
-        } else if (d.type === 'path') {
-          return {
-            ...d,
-            key,
-            meta: {...d.meta},
-            path: d.path.map(x => matrix.transformPoint({ ...x })),
-          };     
-        } else if (d.type === 'point') {
-          return {
-            ...d,
-            key,
-            ...matrix.transformPoint({ x: d.x, y: d.y }),
-            meta: {
-              ...d.meta,
-              // 🚧 cache?
-              orient: typeof d.meta.orient === 'number'
-                ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
-                : null,
-              ui: true,
-            },
-          };
-        } else {
-          throw testNever(d, { suffix: 'instantiateDecor' });
-        }
-      }
-
       for (const { gmId, roomId } of opts.added??[]) {
         const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
         state.npcAct({
           action: "add-decor",
           items: Object.values(decor).map(d =>
-            instantiateDecor(d, gmId, roomId, matrix)
+            state.instantiateDecor(d, gmId, roomId, matrix)
           ),
         });
       }
@@ -926,6 +916,7 @@ const rootCss = css`
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
+ * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateDecor
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
