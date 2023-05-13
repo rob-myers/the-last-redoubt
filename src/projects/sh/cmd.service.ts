@@ -28,6 +28,8 @@ const commandKeys = {
   history: true,
   /** Kill a process */
   kill: true,
+  /** Local variables */
+  local: true,
   /** List variables */
   ls: true,
   /** List running processes */
@@ -224,6 +226,18 @@ class cmdServiceClass {
               window.setTimeout(() => killProcess(p));
             }
           });
+        }
+        break;
+      }
+      case 'local': {
+        const process = useSession.api.getProcess(node.meta);
+        if (process.key === 0) {
+          throw new ShError('session leader doesn\'t support local variables', 1);
+        }
+        for (const name of args) {
+          if (name) {
+            process.localVar[name] = undefined;
+          }
         }
         break;
       }
