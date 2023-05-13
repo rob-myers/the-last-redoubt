@@ -738,14 +738,17 @@ export default function NPCs(props) {
     updateLocalDecor(opts) {
 
       /**
+       * All keys should be unique, even for group descendants.
        * @param {NPC.DecorDef} d
        * @param {number} gmId
        * @param {number} roomId 
        * @param {Geom.Mat} matrix
-       * @param {string} prefix
        * @returns {NPC.DecorDef}
        */
-      function instantiateDecor(d, gmId, roomId, matrix, prefix) {
+      function instantiateDecor(d, gmId, roomId, matrix) {
+        /** We must override d.key, now we know gmId, roomId */
+        const key = `local-g${gmId}r${roomId}-${d.key}`;
+
         if (d.type === 'rect') {
           // 🚧 better way of computing transformed angledRect?
           const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
@@ -753,40 +756,36 @@ export default function NPCs(props) {
           return {
             ...d,
             ...baseRect,
-            key: `${prefix}-g${gmId}r${roomId}-${d.key}`, // Must override key, now we know gmId
+            key,
             angle,
             meta: {...d.meta}, // Shallow clone
           };
-        }
-        if (d.type === 'circle') {
+        } else if (d.type === 'circle') {
           return {
             ...d,
-            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            key,
             center: matrix.transformPoint({ ...d.center }),
             meta: {...d.meta},
           };
-        }
-        if (d.type === 'group') {
+        } else if (d.type === 'group') {
           return {
             ...d,
-            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            key,
             meta: {...d.meta},
-            items: d.items.map(item => instantiateDecor(item, gmId, roomId, matrix, `${prefix}--${d.key}` )),
+            // items[*].key will be overwitten in normalizeDecor
+            items: d.items.map(item => instantiateDecor(item, gmId, roomId, matrix)),
           };
-        }
-        if (d.type === 'path') {
+        } else if (d.type === 'path') {
           return {
             ...d,
-            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            key,
             meta: {...d.meta},
             path: d.path.map(x => matrix.transformPoint({ ...x })),
-            // 🚧 finished?
           };     
-        }
-        if (d.type === 'point') {
+        } else if (d.type === 'point') {
           return {
             ...d,
-            key: `${prefix}-g${gmId}r${roomId}-${d.key}`,
+            key,
             ...matrix.transformPoint({ x: d.x, y: d.y }),
             meta: {
               ...d.meta,
@@ -797,23 +796,26 @@ export default function NPCs(props) {
               ui: true,
             },
           };
+        } else {
+          throw testNever(d, { suffix: 'instantiateDecor' });
         }
-        throw testNever(d, { suffix: 'instantiateDecor' });
       }
 
       for (const { gmId, roomId } of opts.added??[]) {
         const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
         state.npcAct({
           action: "add-decor",
-          items: Object.values(decor).map((d, decorId) => {
-            return instantiateDecor(d, gmId, roomId, matrix, `local-${decorId}`);
-          }),
+          items: Object.values(decor).map(d =>
+            instantiateDecor(d, gmId, roomId, matrix)
+          ),
         });
       }
+
       for (const { gmId, roomId } of opts.removed??[]) {
-        const points = api.gmGraph.gms[gmId].decor[roomId];
-        // 🚧 support groups
-        const decorKeys = points.map((d, decorId) => `${`local-${decorId}`}-g${gmId}r${roomId}-${d.key}`)
+        // 🚧 support decor groups in svg symbols
+        const roomDecor = api.gmGraph.gms[gmId].decor[roomId];
+        /** Keys of top-level decor, but not of group descendants */
+        const decorKeys = roomDecor.map((d, decorId) => `local-g${gmId}r${roomId}-${d.key}`)
         state.npcAct({ action: "rm-decor", items: decorKeys });
       }
     },

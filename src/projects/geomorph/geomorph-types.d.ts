@@ -165,6 +165,7 @@ declare namespace Geomorph {
 
     /**
      * Decor point/circle/rects indexed by `roomId`.
+     * - originally from a symbol's group.singles
      * - a decor occurs in exactly one room
      * - these decors will be instantiated in api.npcs.updateLocalDecor
      */

@@ -21,7 +21,7 @@ export default function Decor(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     byGmRoomKey: {},
     decor: {},
-    decorEl: /** @type {HTMLDivElement} */ ({}),
+    rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
     getDecorAtKey(gmRoomKey) {
@@ -103,8 +103,48 @@ export default function Decor(props) {
         }
       }
     },
+    normalizeDecor(d) {
+      switch (d.type) {
+        case 'circle':
+          ensureDecorMetaGmRoomId(d, api);
+          break;
+        case 'path':
+          // Handle clones
+          delete d.origPath;
+          break;
+        case 'point':
+          ensureDecorMetaGmRoomId(d, api);
+          // Extend meta with any tags provided in def; normalize tags
+          d.tags?.forEach(tag => d.meta[tag] = true);
+          d.tags = metaToTags(d.meta);
+          break;
+        case 'rect':
+          extendDecorRect(d); // Add derived data
+          ensureDecorMetaGmRoomId(d, api);
+          break;
+        case 'group':
+          ensureDecorMetaGmRoomId(d, api);
+          d.items.forEach((item, index) => {
+            item.parentKey = d.key; // Overwrite child keys:
+            item.key = `${d.key}-${index}`;
+            state.normalizeDecor(item);
+          });
+          break;
+        default:
+          throw testNever(d);
+      }
+    },
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
+      decors.forEach(decor => {
+        // removing group removes its items
+        decor.type === 'group' && decors.push(...decor.items);
+        // removing child removes respective item from `items`
+        if (decor.parentKey) {
+          const parent = /** @type {NPC.DecorGroup} */ (state.decor[decor.parentKey]);
+          parent.items.splice(parent.items.findIndex(item => item.key === decor.key), 1);
+        }
+      });
       decors.forEach(decor => {
         delete state.decor[decor.key];
         delete state.byGmRoomKey[getGmRoomKey(
@@ -112,6 +152,7 @@ export default function Decor(props) {
           /** @type {number} */ (decor.meta.roomId),
         )]?.[decor.key];
       });
+      // 🚧 decors can contain dups
       api.npcs.events.next({ key: 'decors-removed', decors });
       update();
     },
@@ -124,26 +165,7 @@ export default function Decor(props) {
           d.updatedAt = Date.now();
         }
 
-        switch (d.type) {
-          case 'circle':
-            ensureDecorMetaGmRoomId(d, api);
-            break;
-          case 'path':
-            // Handle clones
-            delete d.origPath;
-            break;
-          case 'point':
-            // Ensure meta and extend with any tags provided in def
-            (d.meta ??= {}) && d.tags?.forEach(tag => d.meta[tag] = true);
-            // normalize tags in case used
-            d.tags = metaToTags(d.meta);
-            ensureDecorMetaGmRoomId(d, api);
-            break;
-          case 'rect':
-            extendDecorRect(d); // Add derived data
-            ensureDecorMetaGmRoomId(d, api);
-            break;
-        }
+        state.normalizeDecor(d);
 
         if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') {
           (state.byGmRoomKey[getGmRoomKey(d.meta.gmId, d.meta.roomId)] ||= {})[d.key] = true;
@@ -167,7 +189,7 @@ export default function Decor(props) {
       state.handleDevToolEdit(els);
     }, 300));
 
-    observer.observe(state.decorEl, {
+    observer.observe(state.rootEl, {
       attributes: true,
       attributeFilter: ['style'],
       subtree: true,
@@ -175,15 +197,10 @@ export default function Decor(props) {
     return () => observer.disconnect();
   }, [api.npcs.ready]);
 
-  /**
-   * 🚧 Avoid recomputing unchanged decor markup via
-   * React.memo with props { decor, decor.updatedAt }
-   */
-
   return (
     <div
       className={cx("decor-root", rootCss)}
-      ref={el => el && (state.decorEl = el)}
+      ref={el => el && (state.rootEl = el)}
       onClick={e => {
         const el = e.target;
         if (el instanceof HTMLDivElement && el.dataset.key) {
@@ -192,81 +209,25 @@ export default function Decor(props) {
         }
       }}
     >
-      {Object.entries(state.decor).map(([key, item]) => {
-        if (item.type === 'circle') {
-          const { top, left, width } = circleToCssStyles(item);
-          return (
-            <div
-              key={key}
-              data-key={item.key}
-              data-meta={JSON.stringify(item.meta)}
-              className={cx(cssName.decorCircle, cssCircle)}
-              style={{
-                left,
-                top,
-                width,
-                height: width,
-              }}
-            />
-          );
-        } else if (item.type === 'group') {
-          return <DecorItem key={key} item={item} />
-        } else if (item.type === 'path') {
-          return <DecorPath key={key} decor={item} />;
-        } else if (item.type === 'point') {
-          return (
-            <div
-              key={item.key}
-              data-key={item.key}
-              data-meta={JSON.stringify(item.meta)}
-              className={cx(
-                cssName.decorPoint,
-                cssPoint,
-                metaToIconClasses(item.meta),
-              )}
-              style={{
-                transform: pointToCssTransform(item),
-              }}
-            />
-          );
-        } else if (item.type === 'rect') {
-          const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
-          return (
-            <div
-              key={key}
-              data-key={item.key}
-              data-meta={JSON.stringify(item.meta)}
-              className={cx(cssName.decorRect, cssRect)}
-              style={{
-                left,
-                top,
-                width,
-                height,
-                transform,
-                // transformOrigin: 'top left', // Others unsupported
-              }}
-            />
-          );
-        } else {
-          console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
-          return null;
-        }
-      })}
+      {/* 🚧 memoize decor with props { decor, decor.updatedAt } */}
+      {Object.values(state.decor).map((def) =>
+        <DecorInstance key={def.key} def={def} />
+      )}
     </div>
   );
 }
 
 /**
- * @param {{ key: string; item: NPC.DecorDef }} _
+ * @param {{ def: NPC.DecorDef }} _
  */
-function DecorItem({ key, item }) {
-  if (item.type === 'circle') {
-    const { top, left, width } = circleToCssStyles(item);
+function DecorInstance({ def }) {
+  if (def.type === 'circle') {
+    const { top, left, width } = circleToCssStyles(def);
     return (
       <div
-        key={key}
-        data-key={item.key}
-        data-meta={JSON.stringify(item.meta)}
+        key={def.key}
+        data-key={def.key}
+        data-meta={JSON.stringify(def.meta)}
         className={cx(cssName.decorCircle, cssCircle)}
         style={{
           left,
@@ -276,35 +237,42 @@ function DecorItem({ key, item }) {
         }}
       />
     );
-  } else if (item.type === 'group') {
-    return <>{
-      item.items.map(child => <DecorItem key={`${key}:${child.key}`} item={child} />)
-    }</>;
-  } else if (item.type === 'path') {
-    return <DecorPath key={key} decor={item} />;
-  } else if (item.type === 'point') {
+  } else if (def.type === 'group') {
     return (
       <div
-        key={item.key}
-        data-key={item.key}
-        data-meta={JSON.stringify(item.meta)}
+        key={def.key}
+        data-key={def.key}
+        data-meta={JSON.stringify(def.meta)}
+        className={cssName.decorGroup}
+      >
+        {def.items.map(item => <DecorInstance key={item.key} def={item} />)}
+      </div>
+    );
+  } else if (def.type === 'path') {
+    return <DecorPath key={def.key} decor={def} />;
+  } else if (def.type === 'point') {
+    return (
+      <div
+        key={def.key}
+        data-key={def.key}
+        data-meta={JSON.stringify(def.meta)}
         className={cx(
           cssName.decorPoint,
           cssPoint,
-          metaToIconClasses(item.meta),
+          metaToIconClasses(def.meta),
         )}
         style={{
-          transform: pointToCssTransform(item),
+          transform: pointToCssTransform(def),
         }}
       />
     );
-  } else if (item.type === 'rect') {
-    const { top, left, width, height, transform } = rectToCssStyles(item, item.angle ?? 0);
+  } else if (def.type === 'rect') {
+    const { top, left, width, height, transform } = rectToCssStyles(def, def.angle ?? 0);
     return (
       <div
-        key={key}
-        data-key={item.key}
-        data-meta={JSON.stringify(item.meta)}
+        key={def.key}
+        data-key={def.key}
+        data-meta={JSON.stringify(def.meta)}
         className={cx(cssName.decorRect, cssRect)}
         style={{
           left,
@@ -312,12 +280,12 @@ function DecorItem({ key, item }) {
           width,
           height,
           transform,
-          // transformOrigin: 'top left', // Others unsupported
+          // transformOrigin: 'top left', // 👈 must have this value
         }}
       />
     );
   } else {
-    console.error(testNever(item, { override: `unexpected decor: ${JSON.stringify(item)}` }));
+    console.error(testNever(def, { override: `unexpected decor: ${JSON.stringify(def)}` }));
     return null;
   }
 }
@@ -419,7 +387,7 @@ const cssRect = css`
 /**
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
- * @property {HTMLElement} decorEl
+ * @property {HTMLElement} rootEl
  * @property {Record<string, { [decorKey: string]: true }>} byGmRoomKey
  * Decor keys organised by gmRoomKey `g{gmId}-r{roomId}`.
  * @property {(gmRoomKey: string) => (NPC.DecorCircle | NPC.DecorRect)[]} getDecorAtKey
@@ -428,6 +396,7 @@ const cssRect = css`
  * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {boolean} ready
+ * @property {(d: NPC.DecorDef) => void} normalizeDecor
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {() => void} update

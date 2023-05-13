@@ -8,7 +8,12 @@
     - ✅ on-mesh decor orientation issue
   - ✅ support decor groups
   - 🚧 tidy local decor into a decor group of decor groups
+    - ℹ️ `decor.decor` should still include all decor (e.g. group items)
+    - ✅ on remove decor group, remove its items
+    - ✅ on remove decor group item, remove from `items` array too
   - 🚧 memoize decor including groups
+  - ℹ️ local decor resets on re-enter
+  - can tag symbol decor `global`
 
 - 🚧 create a new CodeSandbox
   - update src/components e.g. Terminal

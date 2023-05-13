@@ -324,6 +324,8 @@ declare namespace NPC {
     meta: Geomorph.PointMeta;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
+    /** Decor key of parent, if exists */
+    parentKey?: string;
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {

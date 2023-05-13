@@ -68,7 +68,7 @@ export default function useHandleEvents(api) {
       const closeDecor = gmRoomKeys.flatMap((gmRoomKey) => 
         api.decor.getDecorAtKey(gmRoomKey).filter(
           /** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
-          decor => decor.type === 'circle' || decor.type === 'rect'
+          (decor) => decor.type === 'circle' || decor.type === 'rect'
         )
       ,);
 

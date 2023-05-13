@@ -61,6 +61,7 @@ export const cssName = /** @type {const} */ ({
   // ...
 
   decorCircle: 'decor-circle',
+  decorGroup: 'decor-group',
   decorPath: 'decor-path',
   decorPoint: 'decor-point',
   decorRect: 'decor-rect',
