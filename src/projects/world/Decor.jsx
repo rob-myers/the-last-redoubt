@@ -47,12 +47,11 @@ export default function Decor(props) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
             const output = cssStylesToCircle(el);
             if (output) {
-              [decor.radius, decor.center] = [output.radius, output.center]
-              update();
+              [decor.radius, decor.center] = [output.radius, output.center];
+              updateDecor(decor);
             }
           }
-        }
-        if (el.classList.contains(cssName.decorPath)) {
+        } else if (el.classList.contains(cssName.decorPath)) {
           const pathDecorKey = el.dataset.key;
           if (pathDecorKey && pathDecorKey in state.decor) {
             const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
@@ -66,30 +65,29 @@ export default function Decor(props) {
             });
 
             if (matrix.isIdentity) delete decor.origPath;
-            update();
+            updateDecor(decor);
           }
-        }
-        if (el.classList.contains(cssName.decorPoint)) {
+        } else if (el.classList.contains(cssName.decorPoint)) {
           const parentEl = /** @type {HTMLElement} */ (el.parentElement);
           const pathDecorKey = parentEl.dataset.key;
-          if (pathDecorKey && pathDecorKey in state.decor) {// Path
+          // Point might come from Path
+          if (pathDecorKey && pathDecorKey in state.decor) {
             const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
             const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
             const points = decorPoints.map(x => cssTransformToPoint(x));
             if (points.every(x => x)) {
               decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
-              update();
+              updateDecor(decor);
             }
           } else if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
             const output = cssTransformToPoint(el);
             if (output) {
               [decor.x, decor.y] = [output.x, output.y];
-              update();
+              updateDecor(decor);
             }
           }
-        }
-        if (el.classList.contains(cssName.decorRect)) {
+        } else if (el.classList.contains(cssName.decorRect)) {
           if (decorKey && decorKey in state.decor) {
             const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
             const output = cssStylesToRect(el);
@@ -97,10 +95,20 @@ export default function Decor(props) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
               extendDecorRect(decor);
-              update();
+              updateDecor(decor);
             }
           }
+        } else if (el.classList.contains(cssName.decorGroup)) {
+          // NOOP 
         }
+      }
+
+      /** @param {NPC.DecorDef} decor */
+      function updateDecor(decor) {
+        decor.updatedAt = Date.now();
+        const parent = decor.parentKey ? state.decor[decor.parentKey] ?? null : null;
+        parent && (parent.updatedAt = decor.updatedAt)
+        update();
       }
     },
     normalizeDecor(d) {
