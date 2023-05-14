@@ -40,7 +40,7 @@ const titleCss = css`
     cursor: pointer;
     color: var(--page-title-color);
     text-transform: uppercase;
-    text-shadow: 0 0 8px var(--title-text-shadow-color);
+    text-shadow: 0 0 4px var(--title-text-shadow-color);
     
     @media(max-width: 1200px) {
       font-size: 4rem;
