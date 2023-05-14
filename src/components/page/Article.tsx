@@ -211,7 +211,7 @@ const articleCss = css`
     display: flex;
     flex-wrap: wrap;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     color: var(--page-font-color);
     letter-spacing: 2px;
 
@@ -227,8 +227,6 @@ const articleCss = css`
     }
     
     @media(max-width: 600px) {
-      font-size: 0.9rem;
-      /* font-weight: 600; */
       > span {
         flex-grow: 1;
       }
