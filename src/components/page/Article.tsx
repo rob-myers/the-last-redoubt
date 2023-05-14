@@ -158,7 +158,7 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 0 0 48px 0;
+    margin: 64px 0 48px 0;
     padding: 0;
     @media(max-width: 600px) {
       margin: 48px 0;
@@ -166,7 +166,7 @@ const articleCss = css`
   }
 
   figure.tabs {
-    margin: calc(48px + 32px) 0 48px 0;
+    margin: calc(64px + 32px) 0 64px 0;
     /* padding: 64px; */
     /* border: 1px solid var(--page-border-color); */
     @media(max-width: 600px) {
