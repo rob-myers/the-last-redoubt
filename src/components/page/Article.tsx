@@ -239,7 +239,7 @@ const articleCss = css`
     font-size: 1.6rem;
     margin: 40px 0 20px 0;
     @media(max-width: 600px) {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       margin: 24px 0 16px 0;
     }
   }

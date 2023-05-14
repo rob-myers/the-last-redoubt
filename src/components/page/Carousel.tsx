@@ -251,6 +251,10 @@ const rootCss = css`
     line-height: 1.2;
     min-height: var(${cssName.carouselLabelHeight});
     padding: 0 32px;
+
+    @media (max-width: 600px) {
+      font-size: 1rem;
+    }
   }
 
   .slide-img-container {
