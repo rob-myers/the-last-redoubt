@@ -107,11 +107,15 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 So, we are going to create and combine NPC behaviours.
 But what actually _is_ an NPC behaviour?
-To answer this question we first need some underlying concepts:
+To answer this question we need some underlying concepts:
 Player, NPC, and World.
 
 <aside title="definition-world">
-  **Definition**: A _World_ is an instance of the React component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab"). It has props:
+  #### Definition
+  
+  A _World_ is an instance of the React component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
+  
+  It has props:
   - `disabled`: a boolean used to pause the World.
   - `worldKey`: a string identifying the World.
   - `gms`: a list of objects `{gmKey, transform}` i.e. Starship Geomorphs and where to put them.
@@ -121,7 +125,7 @@ Player, NPC, and World.
   <Carousel
     baseSrc="/assets/geomorph/"
     height={450}
-    mobileHeight={300}
+    mobileHeight={250}
     fullHeight={800}
     items={[
       { src: 'g-301--bridge.map.png', label: 'Geomorph 301 (Bridge)' },
