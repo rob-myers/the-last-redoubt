@@ -39,8 +39,8 @@ const rootCss = css`
     color: #0f0;
     letter-spacing: 1px;
     background-color: #222222;
-    border: 0 solid #222222;
-    border-width: 4px;
+    padding: 3px;
+    border: 1px solid #eeeeee22;
   }
 
   /* cursor: pointer; */
