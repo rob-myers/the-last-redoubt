@@ -114,7 +114,7 @@ const articleCss = css`
 
     @media(max-width: 600px) {
       margin: 32px 0 24px 0;
-      padding: 16px 24px;
+      padding: 24px;
       line-height: 1.8;
       border: thin solid var(--page-border-color);
       .${cssName.infoIcon} {
@@ -163,6 +163,9 @@ const articleCss = css`
     @media(max-width: 600px) {
       margin: 48px 0;
     }
+  }
+  aside figure.carousel {
+    margin: 16px 0;
   }
 
   figure.tabs {
