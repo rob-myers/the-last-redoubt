@@ -110,7 +110,7 @@ export default function Carousel(props: Props) {
         {...props}
         mobileHeight={props.mobileHeight || props.height}
         initialSlide={props.initialSlide}
-        smallViewport={bounds.width <= 600}
+        smallViewport={bounds.width <= 600} // 🚧 SSR issue, maybe chec
         showFullScreen={showFullScreen}
         onSwiper={swiper => state.swiper = swiper}
       />
@@ -149,6 +149,7 @@ function Slides(props: Props & {
       style={{
         height: props.fullScreen
           ? props.fullHeight
+          // initially smallViewport?!
           : props.smallViewport ? props.mobileHeight : props.height,
         maxHeight: props.fullScreen ? 'calc(100vh - 256px)' : undefined,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
