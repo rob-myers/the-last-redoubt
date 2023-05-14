@@ -27,7 +27,7 @@ export default function DecorPath({ decor }) {
       {decorPath.map((p, i) =>
         <div
           key={i}
-          className={cssName.decorPoint}
+          className={cssName.decorPathPoint}
           style={{ transform: `translate(${p.x}px, ${p.y}px)` }}
         />
       )}
@@ -58,7 +58,7 @@ export default function DecorPath({ decor }) {
    const cssPath = css`
     ${cssName.decorPathColour}: #ffffff44;
 
-    .${cssName.decorPoint} {
+    .${cssName.decorPathPoint} {
       position: absolute;
       left: -2px;
       top: -2px;

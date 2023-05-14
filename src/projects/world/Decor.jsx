@@ -41,19 +41,19 @@ export default function Decor(props) {
     },
     handleDevToolEdit(els) {
       for (const el of els) {
-        const decorKey = el.dataset.key;
+        const decorKey = el.dataset.key || '';
         if (el.classList.contains(cssName.decorCircle)) {
-          if (decorKey && decorKey in state.decor) {
+          if (decorKey in state.decor) {
             const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
             const output = cssStylesToCircle(el);
             if (output) {
               [decor.radius, decor.center] = [output.radius, output.center];
-              updateDecor(decor);
+              triggerUpdate(decor);
             }
           }
         } else if (el.classList.contains(cssName.decorPath)) {
-          const pathDecorKey = el.dataset.key;
-          if (pathDecorKey && pathDecorKey in state.decor) {
+          const pathDecorKey = el.dataset.key || '';
+          if (pathDecorKey in state.decor) {
             const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
             if (!decor.origPath) decor.origPath = decor.path.map(p => ({ x: p.x, y: p.y }));
             
@@ -65,37 +65,40 @@ export default function Decor(props) {
             });
 
             if (matrix.isIdentity) delete decor.origPath;
-            updateDecor(decor);
+            triggerUpdate(decor);
           }
-        } else if (el.classList.contains(cssName.decorPoint)) {
+        } else if (el.classList.contains(cssName.decorPathPoint)) {// from DecorPath
           const parentEl = /** @type {HTMLElement} */ (el.parentElement);
-          const pathDecorKey = parentEl.dataset.key;
-          // Point might come from Path
-          if (pathDecorKey && pathDecorKey in state.decor) {
+          const pathDecorKey = parentEl.dataset.key || '';
+          if (pathDecorKey in state.decor) {
             const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            const decorPoints = /** @type {HTMLDivElement[]} */ (Array.from(parentEl.querySelectorAll(`div.${cssName.decorPoint}`)));
+            const decorPoints = /** @type {HTMLDivElement[]} */ (
+              Array.from(parentEl.querySelectorAll(`div.${cssName.decorPathPoint}`))
+            );
             const points = decorPoints.map(x => cssTransformToPoint(x));
             if (points.every(x => x)) {
               decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
-              updateDecor(decor);
+              triggerUpdate(decor);
             }
-          } else if (decorKey && decorKey in state.decor) {
+          }
+        } else if (el.classList.contains(cssName.decorPoint)) {
+          if (decorKey in state.decor) {
             const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
             const output = cssTransformToPoint(el);
             if (output) {
               [decor.x, decor.y] = [output.x, output.y];
-              updateDecor(decor);
+              triggerUpdate(decor);
             }
           }
         } else if (el.classList.contains(cssName.decorRect)) {
-          if (decorKey && decorKey in state.decor) {
+          if (decorKey in state.decor) {
             const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
             const output = cssStylesToRect(el);
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
               extendDecorRect(decor);
-              updateDecor(decor);
+              triggerUpdate(decor);
             }
           }
         } else if (el.classList.contains(cssName.decorGroup)) {
@@ -104,7 +107,7 @@ export default function Decor(props) {
       }
 
       /** @param {NPC.DecorDef} decor */
-      function updateDecor(decor) {
+      function triggerUpdate(decor) {
         decor.updatedAt = Date.now();
         const parent = decor.parentKey ? state.decor[decor.parentKey] ?? null : null;
         parent && (parent.updatedAt = decor.updatedAt)
