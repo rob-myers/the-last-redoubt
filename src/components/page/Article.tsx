@@ -227,6 +227,7 @@ const articleCss = css`
     }
     
     @media(max-width: 600px) {
+      border-bottom: 24px solid var( --aside-background-color);
       font-size: 0.8rem;
       > span {
         flex-grow: 1;
@@ -238,7 +239,7 @@ const articleCss = css`
     margin: 40px 0 16px 0;
     @media(max-width: 600px) {
       font-size: 1.6rem;
-      margin: 32px 0 16px 0;
+      margin: 24px 0 16px 0;
     }
   }
   h4 {
