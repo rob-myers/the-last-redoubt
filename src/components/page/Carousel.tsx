@@ -213,7 +213,7 @@ function Slides(props: Props & {
 }
 
 const rootCss = css`
-  ${cssName.carouselLabelHeight}: 80px;
+  ${cssName.carouselLabelHeight}: 48px;
   --carousel-padding-bottom: 48px;
 
   @media(max-width: 600px) {
@@ -269,7 +269,13 @@ const rootCss = css`
     img {
       object-fit: contain;
       max-width: 100%;
-      padding: 8px 0;
+      padding: 32px 0;
+    }
+  }
+
+  .slide-label {
+    @media (max-width: 600px) {
+      border: 1px solid var(--page-border-color);
     }
   }
 
@@ -277,6 +283,7 @@ const rootCss = css`
     margin: 0;
     /* 🚧 Handle case where label does not exist */
     height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
+    padding: 32px 0;
   }
   
   .swiper.full-screen {
@@ -288,9 +295,9 @@ const rootCss = css`
     background: var(--carousel-background);
     border: 2px solid var(--contrast-border-color);
   
-    .slide-label {
+    /* .slide-label {
       background: var(--carousel-label-background);
-    }
+    } */
 
     img {
       border: none;

@@ -158,14 +158,14 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 64px 0 48px 0;
+    margin: 72px 0 48px 0;
     padding: 0;
     @media(max-width: 600px) {
       margin: 48px 0;
     }
   }
   aside figure.carousel {
-    margin: 16px 0;
+    margin: 32px 0;
   }
 
   figure.tabs {
@@ -218,7 +218,7 @@ const articleCss = css`
     color: var(--page-font-color);
     letter-spacing: 2px;
 
-    margin-bottom: 16px;
+    margin-bottom: 48px;
     padding: 0;
     background-color: unset;
     
@@ -237,7 +237,7 @@ const articleCss = css`
   }
   h3 {
     font-size: 1.6rem;
-    margin: 40px 0 20px 0;
+    margin: 40px 0 24px 0;
     @media(max-width: 600px) {
       font-size: 1.5rem;
       margin: 24px 0 16px 0;
