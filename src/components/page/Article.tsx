@@ -218,7 +218,7 @@ const articleCss = css`
     color: var(--page-font-color);
     letter-spacing: 2px;
 
-    margin-bottom: 48px;
+    /* margin-bottom: 48px; */
     padding: 0;
     background-color: unset;
     
