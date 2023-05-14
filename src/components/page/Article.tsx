@@ -212,7 +212,7 @@ const articleCss = css`
     margin: 0px 0 16px 0;
     @media(max-width: 600px) {
       margin: 16px 0;
-      font-size: 1.7rem;
+      font-size: 2.2rem;
     }
   }
   h2 + time + div.tags {
@@ -223,32 +223,33 @@ const articleCss = css`
     color: #fff;
     letter-spacing: 2px;
 
-    margin-bottom: 32px;
+    margin-bottom: 16px;
+    padding: 0;
+    background-color: unset;
+    
+    > span {
+      background-color: #222;
+      padding: 16px;
+      margin-bottom: 0;
+      border: 1px solid var(--page-border-color);
+      border-width: 1px 1px 0 0;
+    }
+    
     @media(max-width: 600px) {
       font-size: 0.8rem;
-    }
-
-    > span {
-      padding: 2px 8px;
-      margin-right: 4px;
-      margin-bottom: 4px;
-      border-radius: 3px;
-      border: 2px solid rgba(0, 0, 0, 0.1);
-      background-color: #000;
-    }
-
-    > span:first-child.date {
-      border-color: #aaa;
-      padding: 2px 16px;
-      text-align: center;
+      border: 1px solid var(--page-border-color);
+      background-color: #111;
+      > span {
+        flex-grow: 1;
+      }
     }
   }
   h3 {
     font-size: 1.6rem;
     margin: 40px 0 16px 0;
     @media(max-width: 600px) {
-      font-size: 1.4rem;
-      margin: 20px 0 12px 0;
+      font-size: 1.6rem;
+      margin: 24px 0 8px 0;
     }
   }
   h4 {
