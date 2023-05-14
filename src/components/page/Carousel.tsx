@@ -186,7 +186,9 @@ function Slides(props: Props & {
                 )}>
                 <img
                   className="swiper-lazy"
-                  data-src={`${props.baseSrc??''}${supportsWebp && item.webp ? item.webp : item.src}`}
+                  data-src={`${props.baseSrc??''}${
+                    supportsWebp && item.webp ? `${item.src.slice(0, -'.png'.length)}.webp` : item.src
+                  }`}
                   {...item.background && { style: { background: item.background } }}
                 />
               </div>
@@ -414,7 +416,7 @@ type CarouselItems = (
 );
 
 type ImageCarouselItem = (
-  | { src: string; webp?: string; label?: string; background?: string; }
+  | { src: string; webp?: boolean; label?: string; background?: string; }
   | { video: VideoKey; label?: string; }
 );
 type PlainCarouselItem = React.ReactNode;
