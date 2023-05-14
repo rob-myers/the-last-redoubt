@@ -23,7 +23,6 @@ const worldComponents: WorldComponentDef[] = [
   {
     key: 'intro-world-1',
     props: {
-      init: { open: { 0: [24] } },
       worldKey: 'intro-world-1',
       gms: [
         { layoutKey: 'g-301--bridge' },
@@ -34,7 +33,6 @@ const worldComponents: WorldComponentDef[] = [
   {
     key: 'intro-world-2',
     props: {
-      init: {},
       worldKey: 'intro-world-2',
       gms: [
         { layoutKey: 'g-301--bridge' },
@@ -45,7 +43,6 @@ const worldComponents: WorldComponentDef[] = [
   {
     key: 'world-demo-1',
     props: {
-      init: {},
       worldKey: 'world-demo-1',
       gms: [
         { layoutKey: 'g-301--bridge' },
@@ -61,7 +58,6 @@ const worldComponents: WorldComponentDef[] = [
   {
     key: 'world-demo-2',
     props: {
-      init: {},
       worldKey: 'world-demo-2',
       gms: [
         { layoutKey: 'g-301--bridge' },

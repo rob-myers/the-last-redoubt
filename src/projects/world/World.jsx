@@ -111,7 +111,6 @@ export default function World(props) {
 
       <Doors
         api={state}
-        init={props.init.open}
         onLoad={api => (state.doors = api) && update()}
       />
 
@@ -128,7 +127,6 @@ export default function World(props) {
  * @typedef Props
  * @property {boolean} [disabled]
  * @property {Geomorph.UseGeomorphsDefItem[]} gms
- * @property {{ open?: {[gmId: number]: number[]} }} init
  * @property {string} worldKey
  */
 
