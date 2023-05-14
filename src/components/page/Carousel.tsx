@@ -236,6 +236,8 @@ const rootCss = css`
 
   .slide-container {
     height: inherit;
+    display: flex;
+    flex-direction: column;
   }
 
   .slide-label {
@@ -252,6 +254,7 @@ const rootCss = css`
   }
 
   .slide-img-container {
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     /* 🚧 Handle case where label does not exist */
@@ -259,6 +262,7 @@ const rootCss = css`
     img {
       object-fit: contain;
       max-width: 100%;
+      padding: 8px 0;
     }
   }
 
