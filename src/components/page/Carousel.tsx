@@ -283,7 +283,9 @@ const rootCss = css`
     margin: 0;
     /* 🚧 Handle case where label does not exist */
     height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
-    padding: 32px 0;
+    @media (min-width: 600px) {
+      padding: 32px 0;
+    }
   }
   
   .swiper.full-screen {
