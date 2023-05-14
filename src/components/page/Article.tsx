@@ -210,7 +210,7 @@ const articleCss = css`
   h2 + time + div.tags {
     display: flex;
     flex-wrap: wrap;
-    font-family: sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 0.7rem;
     color: var(--page-font-color);
     letter-spacing: 2px;
@@ -227,9 +227,8 @@ const articleCss = css`
     }
     
     @media(max-width: 600px) {
-      border-bottom: 8px solid var(--page-border-color);
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.9rem;
+      /* font-weight: 600; */
       > span {
         flex-grow: 1;
       }
@@ -237,7 +236,7 @@ const articleCss = css`
   }
   h3 {
     font-size: 1.6rem;
-    margin: 40px 0 16px 0;
+    margin: 40px 0 20px 0;
     @media(max-width: 600px) {
       font-size: 1.6rem;
       margin: 24px 0 16px 0;

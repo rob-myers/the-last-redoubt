@@ -24,7 +24,7 @@ const titleCss = css`
 
   @media(max-width: 600px) {
     padding-left: 8px;
-    border-bottom: 1px solid #777;
+    border-bottom: 1px solid var(--page-border-color);
   }
   
   h1 {
