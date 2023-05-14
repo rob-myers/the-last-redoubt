@@ -227,8 +227,9 @@ const articleCss = css`
     }
     
     @media(max-width: 600px) {
-      border-bottom: 24px solid var( --aside-background-color);
+      border-bottom: 8px solid var(--page-border-color);
       font-size: 0.8rem;
+      font-weight: 600;
       > span {
         flex-grow: 1;
       }
