@@ -158,28 +158,20 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 0 0 32px 0;
+    margin: 0 0 48px 0;
     padding: 0;
-    /**
-     * max-width 600px causes difficulty with
-     * swiper carousel breakpoints
-     */
-    @media(max-width: 800px) {
-      margin: 0px 0 16px 0;
-      padding: 0;
-    }
     @media(max-width: 600px) {
-      margin: 32px 0 32px 0;
+      margin: 48px 0;
     }
   }
 
   figure.tabs {
-    margin: calc(40px + 32px) 0 40px 0;
+    margin: calc(48px + 32px) 0 48px 0;
     /* padding: 64px; */
     /* border: 1px solid var(--page-border-color); */
     @media(max-width: 600px) {
       border: none;
-      margin: calc(32px + 16px) 0 24px 0;
+      margin: calc(48px + 16px) 0 48px 0;
       padding: 8px 0;
     }
   }
@@ -246,7 +238,7 @@ const articleCss = css`
     margin: 40px 0 16px 0;
     @media(max-width: 600px) {
       font-size: 1.6rem;
-      margin: 24px 0 8px 0;
+      margin: 32px 0 16px 0;
     }
   }
   h4 {
