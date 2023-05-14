@@ -65,14 +65,11 @@ We have a few core ideas.
 
 Then we intend to approach the problem directly,
 by creating and combining many behaviours for their own sake.
-
-> This is **a difficult thing to do**:
->
-> we risk creating something neither of _general interest_ nor with much _entertainment value_.
+This is **a difficult thing to do**: we risk creating something neither of _general interest_ nor with much _entertainment value_.
 
 <Carousel
   baseSrc="/assets/pics/first-peek/"
-  height={650}
+  height={600}
   mobileHeight={450}
   fullHeight={900}
   breakpoints={{
@@ -108,12 +105,36 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 ### Fabricating a behaviour
 
-🚧
+So, we are going to create and combine NPC behaviours.
+But what actually _is_ an NPC behaviour?
+To answer this question we first need some underlying concepts:
+Player, NPC, and World.
 
-{/* To create our first NPC behaviour we'll need: */}
-- a **Player** i.e. some chosen character)
-- some **NPC**(s) i.e. other character(s).
-- a **World** they inhabit: geomorphs connected together.
+<aside title="definition-world">
+  **Definition**: A _World_ is an instance of the React component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab"). It has props:
+  - `disabled`: a boolean used to pause the World.
+  - `worldKey`: a string identifying the World.
+  - `gms`: a list of objects `{gmKey, transform}` i.e. Starship Geomorphs and where to put them.
+
+  We currently support 5 Starship Geomorphs:<SideNote>Robert Pearce provided hundreds...</SideNote>
+
+  <Carousel
+    baseSrc="/assets/geomorph/"
+    height={450}
+    mobileHeight={300}
+    fullHeight={800}
+    items={[
+      { src: 'g-301--bridge.map.png', label: 'Geomorph 301 (Bridge)' },
+      { src: 'g-302--xboat-repair-bay.map.png', label: 'Geomorph 302 (Xboat Repair Bay)' },
+      { src: 'g-303--passenger-deck.map.png', label: 'Geomorph 303 (Passenger Deck)' },
+      { src: 'g-101--multipurpose.map.png', label: 'Geomorph 101 (Multipurpose)' },
+      { src: 'g-102--research-deck.map.png', label: 'Geomorph 102 (Research Deck)' },
+    ]}
+  />
+</aside>
+
+Then a World amounts to a bunch of Geomorphs connected together.
+For example:
 
 <Tabs
   id="example-behaviour"
