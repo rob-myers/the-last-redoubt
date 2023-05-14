@@ -24,7 +24,7 @@ import SvgPanZoom from '../panzoom/SvgPanZoom';
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
-/** @type {Geomorph.LayoutKey} */
+/** @type {Geomorph.GeomorphKey} */
 const layoutKey = 'g-101--multipurpose';
 // const layoutKey = 'g-102--research-deck';
 // const layoutKey = 'g-301--bridge';

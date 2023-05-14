@@ -9,7 +9,7 @@ import useGeomorphData from "../geomorph/use-geomorph-data";
 import usePathfinding from "../geomorph/use-pathfinding";
 import { svgNavGraph } from "./jsx-dom";
 
-/** @param {{ layoutKey: Geomorph.LayoutKey; disabled?: boolean; }} props */
+/** @param {{ layoutKey: Geomorph.GeomorphKey; disabled?: boolean; }} props */
 export default function SvgNavGraph(props) {
 
   const gm = useGeomorphData(props.layoutKey);

@@ -1003,7 +1003,7 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
 }
 
 /**
- * @param {Geomorph.LayoutKey} layoutKey
+ * @param {Geomorph.GeomorphKey} layoutKey
  * @returns Live path to asset
  */
 export function geomorphJsonPath(layoutKey) {
@@ -1011,7 +1011,7 @@ export function geomorphJsonPath(layoutKey) {
 }
 
 /**
- * @param {Geomorph.LayoutKey} layoutKey
+ * @param {Geomorph.GeomorphKey} layoutKey
  * @returns Live path to asset (webp or png)
  */
 export function geomorphPngPath(layoutKey, suffix = '') {

@@ -2,7 +2,7 @@ import { floorGraphClass } from "../graph/floor-graph";
 import { useQuery } from "react-query";
 
 /**
- * @param {Geomorph.LayoutKey} zoneKey 
+ * @param {Geomorph.GeomorphKey} zoneKey 
  * @param {Geomorph.GeomorphData | undefined} gm
  * @param {boolean} [disabled]
  */
@@ -19,7 +19,7 @@ export default function usePathfinding(zoneKey, gm, disabled) {
   });
 }
 
-/** @param {Geomorph.LayoutKey} zoneKey */
+/** @param {Geomorph.GeomorphKey} zoneKey */
 export function zoneKeyToQueryKey(zoneKey) {
   return `pathfinding-${zoneKey}`;
 }

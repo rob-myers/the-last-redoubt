@@ -1,6 +1,6 @@
 /**
  * Hull symbol must be first.
- * @type {Record<Geomorph.LayoutKey, Geomorph.LayoutDef>}
+ * @type {Record<Geomorph.GeomorphKey, Geomorph.LayoutDef>}
  */
 const layoutDefs = {
   'g-101--multipurpose': {

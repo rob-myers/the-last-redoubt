@@ -91,7 +91,7 @@ export default function Geomorphs(props) {
       state.unlitImgs[gmId] = imgEl;
       props.api.npcs.events.next({
         key: 'unlit-geomorph-loaded',
-        gmKey: /** @type {Geomorph.LayoutKey} */ (imgEl.dataset.gmKey),
+        gmKey: /** @type {Geomorph.GeomorphKey} */ (imgEl.dataset.gmKey),
         gmId,
       });
     },

@@ -22,7 +22,7 @@ export class gmGraphClass extends BaseGraph {
    * Technically, for each `key` we provide the last item of `gms` with this `key`.
    * All such items have the same underlying `Geomorph.GeomorphData`.
    * @readonly
-   * @type {{ [gmKey in Geomorph.LayoutKey]?: Geomorph.GeomorphData }}
+   * @type {{ [gmKey in Geomorph.GeomorphKey]?: Geomorph.GeomorphData }}
    */
   gmData;
 
@@ -159,7 +159,7 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geomorph.ConnectorRect<Poly, Vect, Rect>} hullDoor
    * @param {number} hullDoorId
    * @param {[number, number, number, number, number, number]} transform
-   * @param {Geomorph.LayoutKey} gmKey
+   * @param {Geomorph.GeomorphKey} gmKey
    * @returns {null | Geom.Direction}
    */
   static computeHullDoorDirection(hullDoor, hullDoorId, transform, gmKey) {
@@ -744,7 +744,7 @@ export class gmGraphClass extends BaseGraph {
 }
 
 /**
- * @param {Geomorph.LayoutKey} gmKey 
+ * @param {Geomorph.GeomorphKey} gmKey 
  * @param {[number, number, number, number, number, number]} transform 
  */
 function getGmNodeId(gmKey, transform) {
@@ -752,7 +752,7 @@ function getGmNodeId(gmKey, transform) {
 }
 
 /**
- * @param {Geomorph.LayoutKey} gmKey 
+ * @param {Geomorph.GeomorphKey} gmKey 
  * @param {[number, number, number, number, number, number]} transform 
  * @param {number} hullDoorId 
  */

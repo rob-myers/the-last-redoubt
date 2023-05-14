@@ -9,11 +9,11 @@ import useGeomorphData from "./use-geomorph-data";
  */
 export default function useGeomorphs(defs, disabled = false) {
 
-  const [gmKeys, setLayoutKeys] = React.useState(() => defs.map(x => x.layoutKey));
+  const [gmKeys, setLayoutKeys] = React.useState(() => defs.map(x => x.gmKey));
 
   React.useMemo(() => {
     // Append unseen keys to layoutKeys i.e. monotonically increases
-    const unseenKeys = defs.map(x => x.layoutKey).filter(x => !gmKeys.includes(x));
+    const unseenKeys = defs.map(x => x.gmKey).filter(x => !gmKeys.includes(x));
     if (unseenKeys.length) {
       setLayoutKeys([...gmKeys, ...unseenKeys]);
     }
@@ -22,14 +22,14 @@ export default function useGeomorphs(defs, disabled = false) {
   /* eslint-disable react-hooks/rules-of-hooks */
   const queries = gmKeys.map(layoutKey => useGeomorphData(layoutKey, disabled));
   const ready = (
-    defs.every(x => gmKeys.includes(x.layoutKey)) 
+    defs.every(x => gmKeys.includes(x.gmKey)) 
     && queries.every(x => x)
   );
 
   return React.useMemo(() => {
     if (ready) {
       const items = defs.map(def => {
-        const queryIndex = gmKeys.findIndex(y => y === def.layoutKey);
+        const queryIndex = gmKeys.findIndex(y => y === def.gmKey);
         const data = assertDefined(queries[queryIndex])
         const transform = def.transform || [1, 0, 0, 1, 0, 0];
         return geomorphDataToInstance(data, transform);

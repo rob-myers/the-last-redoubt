@@ -11,7 +11,7 @@ import usePathfinding from "./use-pathfinding";
 /**
  * NOTE saw issue when `geomorphJsonPath(layoutKey)`
  * re-requested, causing doors vs hullDoors mismatch.
- * @param {Geomorph.LayoutKey} layoutKey
+ * @param {Geomorph.GeomorphKey} layoutKey
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
 
@@ -51,7 +51,7 @@ export default function useGeomorphData(layoutKey, disabled = false) {
  * to
  * @see {Geomorph.GeomorphData}
  *
- * @param {Geomorph.LayoutKey | Geomorph.ParsedLayout} input
+ * @param {Geomorph.GeomorphKey | Geomorph.ParsedLayout} input
  * @returns {Promise<Geomorph.GeomorphData>}
  */
 export async function createGeomorphData(input) {

@@ -25,8 +25,8 @@ const worldComponents: WorldComponentDef[] = [
     props: {
       worldKey: 'intro-world-1',
       gms: [
-        { layoutKey: 'g-301--bridge' },
-        { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        { gmKey: 'g-301--bridge' },
+        { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
       ],
     },
   },
@@ -35,8 +35,8 @@ const worldComponents: WorldComponentDef[] = [
     props: {
       worldKey: 'intro-world-2',
       gms: [
-        { layoutKey: 'g-301--bridge' },
-        { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        { gmKey: 'g-301--bridge' },
+        { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
       ],
     },
   },
@@ -45,13 +45,13 @@ const worldComponents: WorldComponentDef[] = [
     props: {
       worldKey: 'world-demo-1',
       gms: [
-        { layoutKey: 'g-301--bridge' },
-        { layoutKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 0, 600] },
-        { layoutKey: 'g-302--xboat-repair-bay', transform: [1, 0, 0, -1, -1200, 600 + 600 + 1200] },
-        { layoutKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, -1200, 1200 + 600] },
-        { layoutKey: 'g-302--xboat-repair-bay', transform: [-1, 0, 0, 1, 1200 + 1200, 600] },
-        { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 1200 + 600], },
-        { layoutKey: 'g-102--research-deck', transform: [1, 0, 0, 1, -1200, 0], },
+        { gmKey: 'g-301--bridge' },
+        { gmKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 0, 600] },
+        { gmKey: 'g-302--xboat-repair-bay', transform: [1, 0, 0, -1, -1200, 600 + 600 + 1200] },
+        { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, -1200, 1200 + 600] },
+        { gmKey: 'g-302--xboat-repair-bay', transform: [-1, 0, 0, 1, 1200 + 1200, 600] },
+        { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 1200 + 600], },
+        { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, -1200, 0], },
       ],
     },
   },
@@ -60,8 +60,8 @@ const worldComponents: WorldComponentDef[] = [
     props: {
       worldKey: 'world-demo-2',
       gms: [
-        { layoutKey: 'g-301--bridge' },
-        { layoutKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        { gmKey: 'g-301--bridge' },
+        { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
       ],
     },
   },

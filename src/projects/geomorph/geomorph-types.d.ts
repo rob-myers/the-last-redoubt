@@ -63,7 +63,7 @@ declare namespace Geomorph {
    */
   export interface Layout<P, G, V, R> {
     /** e.g. `"g-301--bridge"` */
-    key: LayoutKey;
+    key: GeomorphKey;
     /** e.g. `301` */
     id: number;
 
@@ -209,7 +209,7 @@ declare namespace Geomorph {
   }
 
   export interface UseGeomorphsDefItem {
-    layoutKey: LayoutKey;
+    gmKey: GeomorphKey;
     transform?: [number, number, number, number, number, number];
   }
 
@@ -255,7 +255,7 @@ declare namespace Geomorph {
      * Corresponds to basename of original PNG, e.g.
      * `g-301--bridge` where /assets/debug/g-301--bridge.png exists.
      */
-    key: LayoutKey;
+    key: GeomorphKey;
     /**
      * e.g. `301`
      */
@@ -272,7 +272,7 @@ declare namespace Geomorph {
     walls?: string[];
   }
 
-  export type LayoutKey = (
+  export type GeomorphKey = (
     | 'g-101--multipurpose'
     | 'g-102--research-deck'
     | 'g-301--bridge'

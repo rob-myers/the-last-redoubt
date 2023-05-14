@@ -15,7 +15,7 @@ import DraggableNode from "./DraggableNode";
 /** @param {{ disabled?: boolean }} props */
 export default function SvgStringPull(props) {
 
-  /** @type {Geomorph.LayoutKey} */
+  /** @type {Geomorph.GeomorphKey} */
   const layoutKey = 'g-301--bridge';
   const zoneKey = layoutKey;
   const gm = useGeomorphData(layoutKey);

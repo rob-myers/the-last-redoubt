@@ -95,7 +95,7 @@ declare namespace Graph {
   export interface GmGraphNodeGm {
     type: 'gm';
     /** Key of parent geomorph */
-    gmKey: Geomorph.LayoutKey;
+    gmKey: Geomorph.GeomorphKey;
     gmIndex: number;
     /** `gm-${gmKey}-[${transform}]` */
     id: string;
@@ -109,7 +109,7 @@ declare namespace Graph {
     /** `door-${gmKey}-[${transform}]-${hullDoorIndex}` */
     id: string;
     /** Key of parent geomorph */
-    gmKey: Geomorph.LayoutKey;
+    gmKey: Geomorph.GeomorphKey;
     /** Index of parent geomorph instance in its respective array */
     gmId: number;
     /** Transform of parent geomorph */
