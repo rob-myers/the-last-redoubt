@@ -220,7 +220,7 @@ const articleCss = css`
     flex-wrap: wrap;
     font-family: sans-serif;
     font-size: 0.7rem;
-    color: #fff;
+    color: var(--page-font-color);
     letter-spacing: 2px;
 
     margin-bottom: 16px;
@@ -228,7 +228,6 @@ const articleCss = css`
     background-color: unset;
     
     > span {
-      background-color: #222;
       padding: 16px;
       margin-bottom: 0;
       border: 1px solid var(--page-border-color);
@@ -237,8 +236,6 @@ const articleCss = css`
     
     @media(max-width: 600px) {
       font-size: 0.8rem;
-      border: 1px solid var(--page-border-color);
-      background-color: #111;
       > span {
         flex-grow: 1;
       }
