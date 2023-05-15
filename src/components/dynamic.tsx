@@ -56,12 +56,14 @@ const worldComponents: WorldComponentDef[] = [
     },
   },
   {
-    key: 'world-demo-2',
+    key: 'vanilla-world-1',
     props: {
-      worldKey: 'world-demo-2',
+      worldKey: 'vanilla-world-1',
       gms: [
-        { gmKey: 'g-301--bridge' },
+        { gmKey: 'g-301--bridge', },
         { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        { gmKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, -1200, 0] },
+        { gmKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 1200, 0] },
       ],
     },
   },
