@@ -164,7 +164,7 @@ const articleCss = css`
       margin: 48px 0;
     }
   }
-  aside figure.carousel {
+  div.def figure.carousel {
     margin: 32px 0;
   }
 

@@ -22,6 +22,7 @@ import Icon, { RoadWorksIcon } from "components/page/Icon";
 import InlineCode from "components/page/InlineCode";
 import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
+import Def from "components/page/Def";
 import { profileLookup } from "projects/sh/scripts";
 
 ## home
@@ -111,8 +112,9 @@ But what actually _is_ an NPC behaviour?
 To answer this question we need some underlying concepts:
 Player, NPC, and World.
 
-<aside title="definition-world">
-  #### Definition
+<Def title="world">
+
+#### Definition
   
   A _World_ is an instance of the React component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   
@@ -136,7 +138,8 @@ Player, NPC, and World.
       { src: 'g-303--passenger-deck.map.png', webp: true, label: 'Geomorph 303 (Passenger Deck)' },
     ]}
   />
-</aside>
+
+</Def>
 
 Then a World amounts to a bunch of Geomorphs connected together.
 For example:
