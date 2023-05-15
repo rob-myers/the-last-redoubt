@@ -210,6 +210,10 @@ function Slides(props: Props & {
 
 const rootCss = css`
   ${cssName.carouselLabelHeight}: 64px;
+  .swiper.full-screen {
+    ${cssName.carouselLabelHeight}: 80px;
+  }
+
   border: 1px solid var(--page-border-color);
   
   .swiper {
@@ -277,7 +281,6 @@ const rootCss = css`
     border: 2px solid var(--contrast-border-color);
     
     .slide-label {
-      ${cssName.carouselLabelHeight}: 80px;
       background: var(--carousel-label-background);
     }
 
