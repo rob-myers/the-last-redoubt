@@ -77,6 +77,9 @@ const articleCss = css`
         top: -96px;
       }
     }
+    &.new-tab {
+      display: inline-block;
+    }
     code:hover {
       text-decoration: underline;
     }
@@ -161,10 +164,10 @@ const articleCss = css`
     margin: 72px 0 48px 0;
     padding: 0;
     @media(max-width: 600px) {
-      margin: 48px 0;
+      margin: 32px 0;
     }
   }
-  div.def figure.carousel {
+  div.def {
     margin: 32px 0;
   }
 
@@ -402,6 +405,7 @@ const articleComponents = (
           title={title}
           target="_blank"
           rel="noopener"
+          className="new-tab"
         >
           {children}
           {' '}<Icon icon="ext-link" inline small />
