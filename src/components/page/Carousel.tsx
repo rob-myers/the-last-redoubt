@@ -63,7 +63,7 @@ export default function Carousel(props: Props) {
         el && (state.rootEl = el);
         measureRef(el);
       }}
-      className={cx("carousel", rootCss)}
+      className={cx("carousel", rootCss, heightCss(props.height, props.mobileHeight))}
       style={props.style}
       onClick={_ => (state.largeSwiper || state.swiper)?.el.focus()}
 
@@ -147,10 +147,7 @@ function Slides(props: Props & {
       pagination={props.pagination}
       spaceBetween={props.spaceBetween??40}
       style={{
-        height: props.fullScreen
-          ? props.fullHeight
-          // initially smallViewport?!
-          : props.smallViewport ? props.mobileHeight : props.height,
+        height: props.fullScreen ? props.fullHeight : undefined,
         maxHeight: props.fullScreen ? 'calc(100vh - 256px)' : undefined,
         marginTop: props.fullScreen ? props.fullScreenOffset : undefined, // CSS animated
       }}
@@ -390,6 +387,16 @@ const rootCss = css`
 
   .swiper-button-next, .swiper-button-prev {
     color: #c00;
+  }
+`;
+
+/** For SSR */
+const heightCss = (heightPx = 500, mobileHeightPx = 300) => css`
+  .swiper {
+    height: ${heightPx}px;
+    @media (max-width: 600px) {
+      height: ${mobileHeightPx}px;
+    }
   }
 `;
 
