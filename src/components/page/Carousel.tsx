@@ -17,7 +17,6 @@ import useUpdate from "projects/hooks/use-update";
 import Video, { VideoKey } from "./Video";
 
 // 🚧 slide-img-container, figure.video height should be conditional on label existing
-// 🚧 clean --carousel-padding-bottom (video vs img)
 
 /**
  * props.items should be one of:
@@ -63,7 +62,7 @@ export default function Carousel(props: Props) {
         el && (state.rootEl = el);
         measureRef(el);
       }}
-      className={cx("carousel", rootCss, heightCss(props.height, props.mobileHeight))}
+      className={cx("carousel", rootCss, ssrHeightCss(props.height, props.mobileHeight))}
       style={props.style}
       onClick={_ => (state.largeSwiper || state.swiper)?.el.focus()}
 
@@ -210,28 +209,11 @@ function Slides(props: Props & {
 }
 
 const rootCss = css`
-  ${cssName.carouselLabelHeight}: 48px;
-  --carousel-padding-bottom: 48px;
-
-  @media(max-width: 600px) {
-    ${cssName.carouselLabelHeight}: 48px;
-    --carousel-padding-bottom: 0px;
-
-    .swiper {
-      background: var(--carousel-background);
-    }
-    .slide-label {
-      background: var(--carousel-label-background);
-    }
-  }
-
-  /* position: relative; // ℹ️ makes full-screen width smaller */
+  ${cssName.carouselLabelHeight}: 64px;
+  border: 1px solid var(--page-border-color);
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
-    &:not(.full-screen) {
-      padding-bottom: var(--carousel-padding-bottom);
-    }
   }
 
   .slide-container {
@@ -249,11 +231,11 @@ const rootCss = css`
     font-size: 1.1rem;
     font-weight: 300;
     line-height: 1.2;
-    min-height: var(${cssName.carouselLabelHeight});
+    height: var(${cssName.carouselLabelHeight});
     padding: 0 32px;
 
     @media (max-width: 600px) {
-      font-size: 1rem;
+      border: 1px solid var(--page-border-color);
     }
   }
 
@@ -261,6 +243,7 @@ const rootCss = css`
     flex-grow: 1;
     display: flex;
     justify-content: center;
+
     /* 🚧 Handle case where label does not exist */
     height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
     img {
@@ -268,21 +251,20 @@ const rootCss = css`
       max-width: 100%;
       padding: 32px 0;
     }
-  }
 
-  .slide-label {
-    @media (max-width: 600px) {
-      border: 1px solid var(--page-border-color);
+    @media(max-width: 600px) {
+      background: var(--carousel-background);
     }
   }
 
   figure.video {
     margin: 0;
-    /* 🚧 Handle case where label does not exist */
-    height: calc(100% - var(${cssName.carouselLabelHeight}) - 16px);
-    @media (min-width: 600px) {
-      padding: 32px 0;
-    }
+    flex-grow: 1;
+  }
+  .slide-video-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
   
   .swiper.full-screen {
@@ -293,32 +275,27 @@ const rootCss = css`
 
     background: var(--carousel-background);
     border: 2px solid var(--contrast-border-color);
-  
-    /* .slide-label {
+    
+    .slide-label {
+      ${cssName.carouselLabelHeight}: 80px;
       background: var(--carousel-label-background);
-    } */
+    }
 
     img {
       border: none;
       height: inherit;
       max-height: calc(100vh - 2 * 128px);
 
-      padding: 0 32px 32px 32px;
+      padding: 0 64px 32px 64px;
       /** ℹ️ full-screen mobile is edge case (should zoom instead) */
       @media(max-width: 600px) {
         padding: 0 8px 32px 8px;
       }
     }
-    .slide-video-container {
-      display: block;
-      height: calc(100% - var(${cssName.carouselLabelHeight}));
-    }
     .swiper-lazy-preloader {
       margin-top: unset;
     }
-    /* figure.video {
-      padding-bottom: 96px;
-    } */
+
     /** ℹ️ full-screen mobile is edge case (should zoom instead) */
     @media(max-width: 600px) {
       border-width: 1px;
@@ -390,8 +367,7 @@ const rootCss = css`
   }
 `;
 
-/** For SSR */
-const heightCss = (heightPx = 500, mobileHeightPx = 300) => css`
+const ssrHeightCss = (heightPx = 500, mobileHeightPx = 300) => css`
   .swiper {
     height: ${heightPx}px;
     @media (max-width: 600px) {

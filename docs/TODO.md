@@ -6,6 +6,9 @@
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
+- ✅ fix SSR without Carousel height equals mobileHeight?
+- start geomorph 103
+
 - restyle nav menu?
 - can tag symbol decor `global`
   - ℹ️ local decor resets on re-enter

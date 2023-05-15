@@ -12,7 +12,7 @@ body.dark-mode {
   --contrast-border-color: #fff;
   --title-text-shadow-color: #ffffff99;
   --aside-background-color: #333333aa;
-  --carousel-background: #222222;
+  --carousel-background: #000;
   --carousel-label-background: #222;
 
   --swiper-pagination-color: #ddc;

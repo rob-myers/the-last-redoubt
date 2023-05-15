@@ -12,8 +12,8 @@
   --title-text-shadow-color: #333333bb;
   --article-right-padding: 12px;
   --aside-background-color: #77777744;
-  --carousel-background: #cccccc;
-  --carousel-label-background: #ddd;
+  --carousel-background: #ddd;
+  --carousel-label-background: #ccc;
 
   /** thick ~ 5px (saw white lines for 6px at 90% zoom) */
   --tabs-border-width: 5px;
@@ -25,6 +25,7 @@
   :root {
     --page-background: #fff;
     --aside-background-color: #eee;
+    --carousel-label-background: #ffffff;
   }
 }
 
