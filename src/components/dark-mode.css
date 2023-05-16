@@ -34,3 +34,8 @@ body.dark-mode nav + div.top-bar {
 body.dark-mode div.swiper-lazy-preloader {
   --swiper-preloader-color: #fff;
 }
+
+body.dark-mode ::selection {
+  background-color: rgb(85, 112, 149);
+  color: white;
+}
