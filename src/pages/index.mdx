@@ -63,7 +63,7 @@ We have a few core ideas.
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. Avoid an abstract approach by using the [Traveller](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) universe as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
+1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
 by creating and combining many behaviours for their own sake.
@@ -97,6 +97,7 @@ For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animati
 - Our in-browser scripting is of general interest.
 We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote width={300}>Achieved via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).</SideNote>
 The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) gives our website its name.
+
 - Finally we'll stick to gameplay relevant to a huge raft of video games, presented from a top-down perspective.
 
 But what about _entertainment value_?
@@ -107,9 +108,9 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 ### Fabricating a behaviour
 
-So, we are going to create and combine character behaviours.
-But what actually _is_ an character behaviour?
-To answer this question we need some underlying concepts:
+We are going to create and combine character behaviours,
+but what actually _is_ a character behaviour?
+Answering this question requires some underlying concepts:
 Player, NPC, and World.
 
 <Def title="world">
@@ -118,13 +119,13 @@ Player, NPC, and World.
   
   A _World_ is an instance of the React function component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   It has props:
-  - `disabled`: boolean to pause the World.
-  - `worldKey`: string identifying the World.
-  - `gms`: list of objects `{gmKey, transform}` i.e. Starship Geomorphs and where to put them.
+  - `disabled` - a boolean to pause the World.
+  - `worldKey` - a string identifying the World.
+  - `gms` - an array of objects `{gmKey, transform}` i.e. geomorphs and where to put them.
 
 </Def>
 
-At present, we support 5 Starship Geomorphs<SideNote>Robert Pearce provided hundreds of Starship Geomorphs</SideNote> constructed from 75 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>
+At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").</SideNote> constructed from about 80 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>
 
 <Carousel
   baseSrc="/assets/geomorph/"
@@ -140,7 +141,10 @@ At present, we support 5 Starship Geomorphs<SideNote>Robert Pearce provided hund
   ]}
 />
 
-These geomorphs should be transformed so their hull doors either coincide with another hull door (or are disconnected). For example, here are two `301`s and two `101`s.
+The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
+The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with another hull door.
+Intuitively we "glue" geomorphs together at their hull doors.
+For example, here are two different ways of combining `101` and `301`.
 
 <Tabs
   id="example-behaviour"
@@ -149,7 +153,8 @@ These geomorphs should be transformed so their hull doors either coincide with a
   persistLayout
   tabs={[
     [
-      { type: 'component', filepath: 'vanilla-world-1' },
+      { type: 'component', filepath: 'map-only-1' },
+      { type: 'component', filepath: 'map-only-2' },
     ],
   ]}
 />

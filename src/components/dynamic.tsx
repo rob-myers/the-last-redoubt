@@ -56,14 +56,25 @@ const worldComponents: WorldComponentDef[] = [
     },
   },
   {
-    key: 'vanilla-world-1',
+    key: 'map-only-1',
     props: {
-      worldKey: 'vanilla-world-1',
+      worldKey: 'map-only-1',
       gms: [
         { gmKey: 'g-301--bridge', },
         { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
         { gmKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, -1200, 0] },
         { gmKey: 'g-101--multipurpose', transform: [1, 0, 0, 1, 1200, 0] },
+      ],
+    },
+  },
+  {
+    key: 'map-only-2',
+    props: {
+      worldKey: 'map-only-2',
+      gms: [
+        { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
+        { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
+        { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
       ],
     },
   },
