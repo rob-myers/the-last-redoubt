@@ -39,16 +39,14 @@ export default function NPC({ api, npcKey }) {
         npc.anim.css,
         npc.anim.spriteSheet,
       )}
-      data-npc-key={npc.key}
     >
       <div
         className={cx(
           cssName.npcBody,
           npc.key,
-          'no-select',
+          // 'no-select',
           supportsWebp ? 'webp' : undefined,
         )}
-        data-npc-key={npc.key}
       />
       <div className="interact-circle" />
       <div className="bounds-circle" />
