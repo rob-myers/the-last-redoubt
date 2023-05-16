@@ -26,6 +26,7 @@ export async function renderGeomorph(
     wallBounds = true,
     highlights = true,
     navTris = false,
+    navOutline = navTris,
     doors = false,
     thinDoors = false,
     labels = false,
@@ -58,9 +59,11 @@ export async function renderGeomorph(
     error('hull walls must exist, be connected, and have a hole');
   }
 
-  ctxt.fillStyle = navColor;
-  ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
-  fillPolygons(ctxt, layout.navPoly, true);
+  if (navOutline) {
+    ctxt.fillStyle = navColor;
+    ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    fillPolygons(ctxt, layout.navPoly, true);
+  }
 
   if (navTris) {
     ctxt.strokeStyle = navStroke;

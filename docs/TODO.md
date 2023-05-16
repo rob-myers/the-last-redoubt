@@ -7,8 +7,11 @@
   - 🚧 update World piecewise
 
 - ✅ fix SSR without Carousel height equals mobileHeight?
-- start geomorph 103
+- 🚧 simplify map pngs i.e. no navmesh
+- can directly provide world layout to Tabs?
+- remove Portals
 
+- start geomorph 103
 - restyle nav menu?
 - can tag symbol decor `global`
   - ℹ️ local decor resets on re-enter

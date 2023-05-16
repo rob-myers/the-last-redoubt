@@ -9,6 +9,7 @@ declare namespace Geomorph {
     obsBounds?: boolean;
     wallBounds?: boolean;
     navTris?: boolean;
+    navOutline?: boolean;
     doors?: boolean;
     thinDoors?: boolean;
     labels?: boolean;

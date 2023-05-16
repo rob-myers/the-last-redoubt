@@ -66,7 +66,7 @@ async function main() {
       symbolLookup,
       mapCanvas,
       (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
-      { scale, obsBounds: true, wallBounds: true, navTris: true, doors: true, labels: false, highlights: false },
+      { scale, obsBounds: true, wallBounds: true, navTris: false, navOutline: false, doors: true, labels: false, highlights: false },
     );
 
     // Write JSON (see also svg-meta)
