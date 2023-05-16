@@ -273,7 +273,7 @@ const rootCss = css`
   
   .swiper.full-screen {
     position: absolute;
-    z-index: 2;
+    z-index: 10;
     width: 100%;
     left: 0;
 
