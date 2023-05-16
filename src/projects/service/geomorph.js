@@ -133,16 +133,16 @@ export async function createLayout(opts) {
   // Labels
   const measurer = createCanvas(0, 0).getContext('2d');
   measurer.font = labelMeta.font;
-  
   const labels = groups.singles.filter(x => x.meta.label)
     .map(/** @returns {Geomorph.LayoutLabel} */ ({ poly, meta }, index) => {
       const tags = Object.keys(meta);
       const center = poly.rect.center.precision(precision).json;
       // Subsequent tags make up label
+      // 🚧 label=foo
       const text = tags.slice(tags.indexOf('label') + 1).join(' ');
       const noTail = !text.match(/[gjpqy]/);
-      const dim = { x: measurer.measureText(text).width, y: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
-      const rect = Rect.fromJson({ x: center.x - 0.5 * dim.x, y: center.y - 0.5 * dim.y, width: dim.x, height: dim.y }).precision(precision).json;
+      const dim = { width: measurer.measureText(text).width, height: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
+      const rect = Rect.fromJson({ x: center.x - 0.5 * dim.width, y: center.y - 0.5 * dim.height, width: dim.width, height: dim.height }).precision(precision).json;
       return { text, center, index, rect };
     });
 
