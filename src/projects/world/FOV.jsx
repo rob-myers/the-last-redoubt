@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { Poly } from "../geom";
+import { Poly, Vect } from "../geom";
 import { geomorphMapFilterHidden, geomorphMapFilterShown } from "../service/const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
@@ -53,12 +53,15 @@ export default function FOV(props) {
         ctxt.font = labelMeta.font;
         ctxt.textBaseline = 'top';
         ctxt.fillStyle = '#fff';
+        const topLeft = new Vect();
         for (const { text, rect } of gm.labels) {
-          const p = { x: rect.x, y: rect.y };
-          gm.matrix.transformSansTranslate(p);
-          ctxt.translate(p.x, p.y);
+          // Compute transform of rect center then translate to top-left
+          gm.matrix.transformSansTranslate(
+            topLeft.set(rect.x + (rect.width/2), rect.y + (rect.height/2))
+          ).translate(-rect.width/2, -rect.height/2);
+          ctxt.translate(topLeft.x, topLeft.y);
           ctxt.fillText(text, 0, 0);
-          ctxt.translate(-p.x, -p.y);
+          ctxt.translate(-topLeft.x, -topLeft.y);
         }
       }
     },
