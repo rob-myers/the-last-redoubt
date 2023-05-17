@@ -6,10 +6,12 @@
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
-- ✅ fix SSR without Carousel height equals mobileHeight?
-- 🚧 simplify map pngs i.e. no navmesh
+- ✅ CssPanZoom translate should preserve original position under cursor/finger
+
+- can change default world zoom
 - can directly provide world layout to Tabs?
 - remove Portals
+- BUG react_devtools_backend_compact.js:2367 ERROR g-301--bridge: hull door 0: w: failed to parse transform "0,1,-1,0,1800,0" 
 
 - start geomorph 103
 - restyle nav menu?
@@ -35,6 +37,7 @@
 - npcs-meta.json has timestamps to avoid process-sheets recomputing everything
 - ensure doors pause and/or initially can start open
   - maybe use web animations api?
+- redo labels in svg symbols as actual text (8px * 5 = 40px)
 
 - BUG .panzoom-scale stale animation...
   - `$1.getAnimations()[0].cancel()`
@@ -451,6 +454,9 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ fix SSR without Carousel height equals mobileHeight?
+- ✅ simplify map pngs i.e. no navmesh
 
 - ✅ cleanup pending todos in gmail pre new CodeSandbox
   - ✅ on spawn onto mesh, should face relative direction src --> dst

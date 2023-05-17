@@ -98,8 +98,8 @@ export default function CssPanZoom(props) {
             // because the zoom has not always rendered in time
             // for accurate calculations
             // See https://github.com/timmywil/panzoom/issues/512
-            const nextX = state.origin.x + (current.clientX - state.start.clientX) / state.scale;
-            const nextY = state.origin.y + (current.clientY - state.start.clientY) / state.scale;
+            const nextX = state.origin.x + (current.clientX - state.start.clientX);
+            const nextY = state.origin.y + (current.clientY - state.start.clientY);
 
             if (state.x !== nextX || state.y !== nextY) {
               state.x = nextX;
