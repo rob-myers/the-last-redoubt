@@ -82,8 +82,8 @@ export default function World(props) {
 
   return state.everEnabled && state.gmGraph.ready ? (
     <CssPanZoom
-      initZoom={1.5}
-      initCenter={{ x: 300, y: 300 }}
+      initZoom={props.init?.zoom ?? 1.5}
+      initCenter={{ x: props.init?.x ?? 600, y: props.init?.y ?? 300 }}
       background="#000"
       // grid // ℹ️ slow zooming
       onLoad={api => (state.panZoom = api) && update()}
@@ -118,7 +118,6 @@ export default function World(props) {
         api={state}
         onLoad={api => (state.fov = api) && update()}
       />
-
     </CssPanZoom>
   ) : null;
 }
@@ -127,6 +126,7 @@ export default function World(props) {
  * @typedef Props
  * @property {boolean} [disabled]
  * @property {Geomorph.UseGeomorphsDefItem[]} gms
+ * @property {{ x?: number; y?: number; zoom?: number }} [init]
  * @property {string} worldKey
  */
 

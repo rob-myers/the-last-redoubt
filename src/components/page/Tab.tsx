@@ -14,6 +14,7 @@ export default function Tab(props: Props) {
 
   useEnsureComponent(props, component);
 
+  // 🚧 remove portals
   return component
     ? component.portal
       ? <portals.OutPortal node={component.portal} />

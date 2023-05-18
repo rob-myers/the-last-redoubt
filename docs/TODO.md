@@ -2,17 +2,15 @@
 
 ## In progress
 
+- ✅ can change default world zoom/center in Tabs def
+- 🚧 can directly provide world layout to Tabs
+- remove Portals
+
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
-- ✅ CssPanZoom translate should preserve original position under cursor/finger
-
-- can change default world zoom
-- can directly provide world layout to Tabs?
-- remove Portals
 - BUG react_devtools_backend_compact.js:2367 ERROR g-301--bridge: hull door 0: w: failed to parse transform "0,1,-1,0,1800,0" 
-
 - start geomorph 103
 - restyle nav menu?
 - can tag symbol decor `global`
@@ -454,6 +452,8 @@ How to embed video?
   - Even if we got this to sync with cursor, wouldn't be enough
 
 ## Done
+
+- ✅ CssPanZoom translate should preserve original position under cursor/finger
 
 - ✅ fix SSR without Carousel height equals mobileHeight?
 - ✅ simplify map pngs i.e. no navmesh

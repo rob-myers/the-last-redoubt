@@ -14,14 +14,13 @@ import Tab, { createKeyedComponent } from './Tab';
 export default function Layout(props: Props) {
 
   const model = React.useMemo(() => {
-    
-    const output = restoreJsonModel(props);
+    const output = createOrRestoreJsonModel(props);
 
+    // Enable and disable tabs relative to conditions
     output.visitNodes((node) => {
-      if (node.getType() === 'tab') {
-        
-        // Enable and disable tabs relative to conditions
-        node.setEventListener('visibility', async ({ visible }) => {
+      node.getType() === 'tab' && node.setEventListener(
+        'visibility',
+        async ({ visible }) => {
           if (model.getMaximizedTabset()) {
             return; // If some tab maximised don't enable "visible" tabs covered by it
           }
@@ -30,9 +29,9 @@ export default function Layout(props: Props) {
           const tabs = useSiteStore.getState().tabs[props.id];
 
           if (!visible) {// tab now hidden
-            if (tabMeta.type === 'component') {// Don't disable hidden terminals
+            if (tabMeta.type === 'component') {
               useSiteStore.api.setTabDisabled(tabs.key, key, true);
-            }
+            } // we don't disable hidden terminals
           } else {// tab now visible
             if (tabMeta.type === 'terminal') {
               // Ensure scrollbar appears if exceeded scroll area when hidden
@@ -48,8 +47,8 @@ export default function Layout(props: Props) {
               useSiteStore.api.setTabDisabled(tabs.key, key, tabs.disabled);
             }, 300); // Delay needed for component registration?
           }
-        });
-      }
+        },
+      );
     });
 
     return output;
@@ -151,9 +150,6 @@ function useRegisterTabs(props: Props, model: Model) {
 
 /**
  * This function defines the contents of a Tab, triggered whenever it becomes visible.
- * But according to flexlayout-react, a selected tab is "visible" when obscured by a maximised tab.
- * To fix this, if some tab is maximised, we only render siblings of the maximised tab,
- * and also those tabs that have previously been rendered.
  */
 function factory(
   node: TabNode,
@@ -162,41 +158,43 @@ function factory(
     componentLookup: State['component'],
     tabsKey: string,
   },
-) {
+  ) {
+  /**
+   * According to flexlayout-react, a selected tab is "visible" when obscured by a maximised tab.
+   * To fix this, if some tab is maximised, we only render siblings of the maximised tab,
+   * and also those tabs that have previously been rendered.
+   */
   if (
     deps.maxTabNode
     && node.getParent() !== deps.maxTabNode.getParent()
     && !deps.componentLookup[node.getId()]
   ) {
     return null;
+  } else {
+    return (
+      <Tab
+        tabsKey={deps.tabsKey}
+        {...node.getConfig() as TabMeta}
+      />
+    );
   }
-
-  return (
-    <Tab
-      tabsKey={deps.tabsKey}
-      {...node.getConfig() as TabMeta}
-    />
-  );
-
 }
 
-function restoreJsonModel(props: Props) {
+function createOrRestoreJsonModel(props: Props) {
   const jsonModelString = tryLocalStorageGet(`model@${props.id}`);
 
-  if (props.persistLayout && jsonModelString) {
-    try {
+  try {
+    if (props.persistLayout && jsonModelString) {
       const serializable = JSON.parse(jsonModelString) as IJsonModel;
 
       // Larger splitter hit test area
-      serializable.global = serializable.global || {};
+      serializable.global ||= {};
       serializable.global.splitterExtra = 12;
-      // jsonModel.global.splitterSize = 12;
+      // serializable.global.splitterSize = 12;
 
       const model = Model.fromJson(serializable);
 
-      /**
-       * Overwrite persisted `TabMeta`s with their value from `props`.
-       */
+      /** Overwrite persisted `TabMeta`s with their value from `props`. */
       const tabKeyToMeta = props.tabs.flatMap(x => x).reduce(
         (agg, item) => Object.assign(agg, { [getTabIdentifier(item)]: item }), 
         {} as Record<string, TabMeta>,
@@ -214,11 +212,13 @@ function restoreJsonModel(props: Props) {
       }
 
       console.error(`restoreJsonModel: prev/next ids differ ${JSON.stringify(prevTabNodeIds)} versus ${JSON.stringify(nextTabNodeIds)}`);
-    } catch (e) {
-      console.error(e);
     }
+  } catch (e) {
+    console.error(e);
   }
 
+  // Either: no Tabs model found in local storage,
+  // or <Tabs> prop "tabs" has different ids 
   return Model.fromJson(computeJsonModel(
     props.tabs,
     props.rootOrientationVertical,

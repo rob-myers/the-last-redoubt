@@ -93,11 +93,8 @@ export async function ensureWorldComponent({
 
   if (!lookup[key]) {
     lookup[key] = {
-      /**
-       * Worlds are persisted over the entire site.
-       * That is, changing page won't destroy them.
-       */
-      persist: true,
+      // 🚧 do not persist worlds, in fact we'll remove portals
+      persist: false,
       loadable: loadable(() => import('projects/world/World')),
       get: (module: typeof import('projects/world/World')) =>
         // `extraProps` may include { disabled: false }

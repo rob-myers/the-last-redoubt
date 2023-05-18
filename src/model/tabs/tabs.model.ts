@@ -16,7 +16,7 @@ export function getTabsId(articleKey: string, tabsName: string) {
   return `${articleKey}--tabs--${tabsName}`;
 }
 
-export type TabMeta = { weight?: number; } & (
+export type TabMeta = { weight?: number; props?: any; } & (
   | { type: 'component'; filepath: ComponentFilepathKey; }
   | { type: 'terminal'; /** Session identifier */ filepath: string; env?: Record<string, any>; }
 );

@@ -144,17 +144,21 @@ At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided 
 The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
 The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with another hull door.
 Intuitively we "glue" geomorphs together at their hull doors.
-Below we have combined `101` and `301`, and also `101`, `102` and `303`.
+Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
 <Tabs
-  id="example-behaviour"
+  id="world-map-only"
   initEnabled={false}
   height={[500, 600]}
   persistLayout
   tabs={[
     [
-      { type: 'component', filepath: 'map-only-1' },
-      { type: 'component', filepath: 'map-only-2' },
+      { type: 'component', filepath: 'map-only-1', props: {
+          init: { x: 600, y: 600, zoom: 0.25 },
+      }},
+      { type: 'component', filepath: 'map-only-2', props: {
+          init: { x: 600, y: 600, zoom: 0.25 },
+      }},
     ],
   ]}
 />
