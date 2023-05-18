@@ -3,7 +3,9 @@
 ## In progress
 
 - ✅ can change default world zoom/center in Tabs def
-- 🚧 can directly provide world layout to Tabs
+- ✅ can directly provide world layout to Tabs
+- 🚧 HMR on change world layout
+  - do a big clean before?
 - remove Portals
 
 - 🚧 create a new CodeSandbox

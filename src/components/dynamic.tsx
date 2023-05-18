@@ -59,11 +59,12 @@ const worldComponents: WorldComponentDef[] = [
     key: 'map-only-1',
     props: {
       worldKey: 'map-only-1',
-      gms: [
-        { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
-        { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
-        { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
-      ],
+      // gms: [
+      //   { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
+      //   { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
+      //   { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
+      // ],
+      gms: [], // 🚧 overwritten in Tabs prop tabs
     },
   },
   {

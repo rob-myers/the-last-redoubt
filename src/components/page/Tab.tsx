@@ -79,6 +79,8 @@ export async function createKeyedComponent(
       disabled: { [tabsKey]: disabled },
     };
   } else {
+    // 🚧 trigger this on Tabs prop tabs change
+    // console.log('creating', componentKey)
     item = {
       key: componentKey,
       instances: 1,

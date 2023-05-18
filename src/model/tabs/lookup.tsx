@@ -70,6 +70,7 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
 };
 
+// 🚧 what if props change?
 export async function getComponent(key: ComponentFilepathKey) {
   return component[key]
     ? component[key].get(await component[key].loadable.load() as any)
@@ -82,7 +83,7 @@ export function isComponentPersisted(key: string) {
 
 export async function ensureWorldComponent({
   key,
-  props,
+  props, // 🚧 becomes stale, but ok?
 }: WorldComponentDef) {
 
   const lookup = component as Record<string, {
