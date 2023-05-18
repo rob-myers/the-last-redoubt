@@ -234,7 +234,6 @@ const articleCss = css`
     @media(max-width: 600px) {
       > span {
         flex-grow: 1;
-        font-weight: 500;
       }
     }
   }
