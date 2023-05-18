@@ -3,7 +3,7 @@ import loadable, { LoadableComponent } from '@loadable/component';
 
 /**
  * Dynamically loaded component lookup.
- * TODO simplify
+ * 🚧 simplify
  */
 const component = {
 
@@ -70,7 +70,6 @@ const component = {
   //   .then(x => (props: any) => <x.default disabled {...props} layoutKey='g-101--multipurpose' />),
 };
 
-// 🚧 what if props change?
 export async function getComponent(key: ComponentFilepathKey) {
   return component[key]
     ? component[key].get(await component[key].loadable.load() as any)
@@ -87,15 +86,12 @@ export async function ensureWorldComponent({
 }: WorldComponentDef) {
 
   const lookup = component as Record<string, {
-    persist: boolean;
     loadable: LoadableComponent<any>;
     get: (module: { default: (props: any) => JSX.Element }) => (props: any) => JSX.Element;
   }>;
 
   if (!lookup[key]) {
     lookup[key] = {
-      // 🚧 do not persist worlds, in fact we'll remove portals
-      persist: false,
       loadable: loadable(() => import('projects/world/World')),
       get: (module: typeof import('projects/world/World')) =>
         // `extraProps` may include { disabled: false }

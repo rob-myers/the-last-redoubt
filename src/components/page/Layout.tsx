@@ -132,12 +132,10 @@ function useRegisterTabs(props: Props, model: Model) {
     }
 
     return () => {
-      // Remove non-portal components
-      const { tabs: tabsLookup, component } = useSiteStore.getState();
+      // Remove components
+      const { tabs: tabsLookup } = useSiteStore.getState();
       const tabs = tabsLookup[props.id];
-      const nonPortalKeys = tabs.getTabNodes().map(x => x.getId()).filter(
-        key => component[key]?.portal === null
-      );
+      const nonPortalKeys = tabs.getTabNodes().map(x => x.getId());
       useSiteStore.api.removeComponents(tabs.key, ...nonPortalKeys);
       // Remove tabs
       delete tabsLookup[props.id];

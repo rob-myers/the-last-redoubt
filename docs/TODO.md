@@ -4,9 +4,11 @@
 
 - ✅ can change default world zoom/center in Tabs def
 - ✅ can directly provide world layout to Tabs
-- 🚧 HMR on change world layout
-  - do a big clean before?
-- remove Portals
+- ✅ remove Portals
+- 🚧 TabsMeta { type: 'component', class, filepath }
+  - class in {`world`, `geomorph-edit`, ... }
+  - class determines component (clean lookup.tsx)
+- HMR on change world layout
 
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal

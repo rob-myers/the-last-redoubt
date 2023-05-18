@@ -122,7 +122,7 @@ export default function Tabs(props: Props) {
       }
 
       const disabled = !state.enabled;
-      // Other tab portals may not exist yet, so record in `tabs` too
+      // record in `tabs` too
       tabs.disabled = disabled;
       useSiteStore.setState({}, undefined, disabled ? 'disable-tabs' : 'enable-tabs');
 
@@ -147,7 +147,8 @@ export default function Tabs(props: Props) {
           if (!useSiteStore.getState().component[tabNode.getId()]) {
             await createKeyedComponent(tabs.key, tabNode.getConfig(), false);
           }
-          setTimeout(() => // Needed to awaken portal
+
+          setTimeout(() => // 🚧 Needed?
             useSiteStore.api.setTabDisabled(tabs.key, tabNode.getId(), false),
             300,
           );
@@ -327,12 +328,6 @@ const rootCss = css`
     background-color: black;
     border-top: 3px solid #444;
     overflow: hidden;
-
-    /** react-reverse-portal wraps things in a div  */
-    > div.portal {
-      width: 100%;
-      height: inherit;
-    }
   }
   .flexlayout__tabset_tabbar_outer {
     background: #222;

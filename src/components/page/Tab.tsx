@@ -1,8 +1,7 @@
 import React from "react";
-import * as portals from "react-reverse-portal";
-import useSiteStore, { KeyedComponent, KeyedPortal } from "store/site.store";
+import useSiteStore, { KeyedComponent } from "store/site.store";
 import { getTabIdentifier, TabMeta } from "model/tabs/tabs.model";
-import { getComponent, isComponentPersisted } from "model/tabs/lookup";
+import { getComponent } from "model/tabs/lookup";
 import TabContents from "./TabContents";
 
 export default function Tab(props: Props) {
@@ -14,11 +13,8 @@ export default function Tab(props: Props) {
 
   useEnsureComponent(props, component);
 
-  // 🚧 remove portals
   return component
-    ? component.portal
-      ? <portals.OutPortal node={component.portal} />
-      : <TabContents tabsKey={props.tabsKey} component={component} />
+    ? <TabContents tabsKey={props.tabsKey} component={component} />
     : null;
 }
 
@@ -31,10 +27,8 @@ function useEnsureComponent(
       if (JSON.stringify(component.meta) !== JSON.stringify(meta)) {
         console.warn('Saw different TabMeta\'s with same induced name', component.meta, meta);
       }
-      if (component.portal === null) {
-        component.instances++;
-        component.disabled[tabsKey] = true; // ?
-      }
+      component.instances++;
+      component.disabled[tabsKey] = true; // ?
     } else {
       createKeyedComponent(tabsKey, meta).then(
         createdComponent => {
@@ -64,33 +58,16 @@ export async function createKeyedComponent(
   disabled = true,
 ) {
   const componentKey = getTabIdentifier(meta);
-  let item: KeyedComponent;
 
-  if (meta.type === 'terminal' || isComponentPersisted(componentKey)) {
-    const htmlPortalNode = portals.createHtmlPortalNode({
-      attributes: { class: 'portal' },
-    });
-    item = {
-      key: componentKey,
-      instances: 1,
-      meta,
-      portal: htmlPortalNode,
-      // Unused in case of portal, yet kept up-to-date
-      disabled: { [tabsKey]: disabled },
-    };
-  } else {
-    // 🚧 trigger this on Tabs prop tabs change
-    // console.log('creating', componentKey)
-    item = {
-      key: componentKey,
-      instances: 1,
-      meta,
-      portal: null,
-      disabled: { [tabsKey]: disabled },
-      // This is done later in case of portal
-      component: await getComponent(meta.filepath as any) as KeyedComponent['component'],
-    };
-  }
+  // 🚧 trigger this on Tabs prop tabs change
+  // console.log('creating', componentKey)
+  const item: KeyedComponent = {
+    key: componentKey,
+    instances: 1,
+    meta,
+    disabled: { [tabsKey]: disabled },
+    component: await getComponent(meta.filepath as any) as KeyedComponent['component'],
+  };
 
   useSiteStore.setState(({ component }) => ({
     component: { ...component, [componentKey]: item },

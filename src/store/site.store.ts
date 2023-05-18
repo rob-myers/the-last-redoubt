@@ -1,6 +1,5 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { HtmlPortalNode } from 'react-reverse-portal';
 import type { TabNode } from 'flexlayout-react';
 
 import type { TabMeta } from 'model/tabs/tabs.model';
@@ -18,10 +17,7 @@ export type State = {
   darkMode: boolean;
   browserLoad: boolean;
   navOpen: boolean;
-  /**
-   * Components occurring in Tabs.
-   * Some have portals, so they persist when pages change.
-   */
+  /** Components occurring in Tabs. */
   component: KeyedLookup<KeyedComponent>;
   /** <Tabs> on current page */
   tabs: KeyedLookup<TabsState>;
@@ -114,19 +110,14 @@ const useStore = create<State>()(devtools((set, get) => ({
 
     removeComponents(tabsKey, ...componentKeys) {
       const { component: lookup } = get();
-      componentKeys.forEach(portalKey => {
-        const component = lookup[portalKey];
+      componentKeys.forEach(componentKey => {
+        const component = lookup[componentKey];
         if (!component) {
           return; // Hidden tabs may lack item in `lookup`
         }
-        if (component.portal) {
-          component.portal.unmount();
-          delete lookup[portalKey];
-        } else {
-          delete component.disabled[tabsKey];
-          component.instances--;
-          !component.instances && delete lookup[portalKey];
-        }
+        delete component.disabled[tabsKey];
+        component.instances--;
+        !component.instances && delete lookup[componentKey];
       });
       set({ component: { ...lookup } }, undefined, 'remove-components');
     },
@@ -138,7 +129,6 @@ const useStore = create<State>()(devtools((set, get) => ({
     setTabDisabled(tabsKey, componentKey, disabled) {
       const component = useSiteStore.getState().component[componentKey];
       component.disabled[tabsKey] = disabled;
-      component.portal?.setPortalProps({ disabled });
       useSiteStore.setState(({ component: lookup }) => {
         lookup[componentKey] = { ...component }; // ?
         return {};
@@ -181,30 +171,17 @@ export interface AllFrontMatter {
   }
 }
 
-/**
- * TODO support components without portals.
- */
 export interface KeyedComponent {
   key: string;
   /** This is retrieved from lookup.tsx */
   component?: ((props: { disabled?: boolean; }) => JSX.Element);
-  /** If `portal` is truthy this must be `1` */
   instances: number;
   /** Original definition provided to `<Tabs/>` */
   meta: TabMeta;
-  portal: null | HtmlPortalNode;
-  /**
-   * Parametric in parent Tabs.
-   * If `portal` truthy it will have exactly one key-value pair,
-   * although we won't actually use it.
-   */
+  /** Parametric in parent Tabs. */
   disabled: {
     [tabsKey: string]: boolean;
   };
-}
-
-export interface KeyedPortal extends KeyedComponent {
-  portal: HtmlPortalNode;
 }
 
 interface TabsState {

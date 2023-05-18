@@ -12,7 +12,6 @@ import { siteTitle } from "projects/service/const";
 import { supportsWebp } from "projects/service/dom";
 import Nav from "./Nav";
 import Main from "./Main";
-import Portals from "./Portals";
 import Article from "./Article";
 import NextArticle from "./NextArticle";
 import Comments from "./Comments";
@@ -47,7 +46,6 @@ export function wrapPageElement({
             term={frontMatter?.giscusTerm || frontMatter?.path || 'fallback-discussion'}
           />
         </Main>
-        <Portals />
         <ReactQueryDevtools // Performance issue after HMRs?
           initialIsOpen={false}
         />
