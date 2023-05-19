@@ -12,13 +12,11 @@ import useStateRef from "../hooks/use-state-ref";
 import SvgPanZoom from "../panzoom/SvgPanZoom";
 import DraggableNode from "./DraggableNode";
 
-/** @param {{ disabled?: boolean }} props */
+/** @param {Props} props */
 export default function SvgStringPull(props) {
 
-  /** @type {Geomorph.GeomorphKey} */
-  const layoutKey = 'g-301--bridge';
-  const zoneKey = layoutKey;
-  const gm = useGeomorphData(layoutKey);
+  const zoneKey = props.layoutKey;
+  const gm = useGeomorphData(props.layoutKey);
   const { data: pf } = usePathfinding(zoneKey, gm, props.disabled);
 
   const state = useStateRef(() => ({
@@ -67,7 +65,7 @@ export default function SvgStringPull(props) {
           }
         }}
       >
-        {gm && <image {...gm.pngRect} className="geomorph" href={geomorphPngPath(layoutKey)} />}
+        {gm && <image {...gm.pngRect} className="geomorph" href={geomorphPngPath(props.layoutKey)} />}
 
         {/* {!props.disabled && pf?.graph.nodesArray.map(({ vertexIds }, nodeId) =>
           <polygon
@@ -142,3 +140,9 @@ const animateNavpathCss = css`
     animation: 600ms stringPullFlash infinite linear;
   }
 `;
+
+/**
+ * @typedef Props
+ * @property {boolean} [disabled]
+ * @property {Geomorph.GeomorphKey} layoutKey
+ */

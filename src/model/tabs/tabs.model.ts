@@ -16,9 +16,16 @@ export function getTabsId(articleKey: string, tabsName: string) {
   return `${articleKey}--tabs--${tabsName}`;
 }
 
-export type TabMeta = { weight?: number; props?: any; } & (
-  | { type: 'component'; filepath: string; class: ComponentClassKey }
+export type TabMeta = { weight?: number; } & (
+  | ({ type: 'component'; filepath: string; class: ComponentClassKey } & TabMetaComponentProps)
   | { type: 'terminal'; /** Session identifier */ filepath: string; env?: Record<string, any>; }
+);
+
+type TabMetaComponentProps = (
+  | { class: 'GeomorphEdit'; props: import('projects/geomorph/GeomorphEdit').Props; }
+  | { class: 'SvgStringPull'; props: import('projects/example/SvgStringPull').Props; }
+  | { class: 'SvgNavGraph'; props: import('projects/example/SvgNavGraph').Props; }
+  | { class: 'World'; props: import('projects/world/World').Props; }
 );
 
 export function computeJsonModel(

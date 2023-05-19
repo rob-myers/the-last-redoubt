@@ -31,7 +31,7 @@ const layoutKey = 'g-101--multipurpose';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
 
-/** @param {{ disabled?: boolean }} props */
+/** @param {Props} props */
 export default function GeomorphEdit({ disabled }) {
   return (
     <div className={rootCss}>
@@ -353,3 +353,8 @@ const rootCss = css`
 `;
 
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
+
+/**
+ * @typedef Props
+ * @property {boolean} [disabled]
+ */
