@@ -213,8 +213,6 @@ const rootCss = css`
   .swiper.full-screen {
     ${cssName.carouselLabelHeight}: 80px;
   }
-
-  border: 1px solid var(--page-border-color);
   
   .swiper {
     transition: margin-top 300ms ease-in 300ms;
@@ -238,7 +236,10 @@ const rootCss = css`
     height: var(${cssName.carouselLabelHeight});
     padding: 0 32px;
 
-    @media (max-width: 600px) {
+  }
+  @media (max-width: 600px) {
+    border: 1px solid var(--page-border-color);
+    .slide-label {
       border: 1px solid var(--page-border-color);
     }
   }

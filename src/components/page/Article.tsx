@@ -161,7 +161,7 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 72px 0 48px 0;
+    margin: 48px 0 72px 0;
     padding: 0;
     @media(max-width: 600px) {
       margin: 32px 0;
