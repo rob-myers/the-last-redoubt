@@ -109,9 +109,9 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 ### Fabricating a behaviour
 
-We are going to create and combine character behaviours,
-but what actually _is_ a character behaviour?
-Answering this question requires some underlying concepts:
+We are going to create and combine character behaviours.
+But what actually _is_ a character behaviour?
+Answering this question requires some underlying concepts, i.e.
 Player, NPC, and World.
 
 <Def title="world">
@@ -119,10 +119,10 @@ Player, NPC, and World.
   #### Definition
   
   A _World_ is an instance of the React function component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
-  It has props:
-  - `disabled` - a boolean to pause the World.
-  - `worldKey` - a string identifying the World.
-  - `gms` - an array of objects `{gmKey, transform}` i.e. geomorphs and where to put them.
+  
+  It has props `disabled` (optional boolean), `init` (optional camera position/zoom), `worldKey` (a string) and finally
+  `gms` (array of objects `{gmKey, transform}`) i.e. which geomorphs and where to put them.
+  It stores its internal state under `worldKey` in an app-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"), providing an external API.
 
 </Def>
 
@@ -155,7 +155,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   tabs={[
     [
       { type: 'component', class: 'World', filepath: 'map-only-1', props: {
-          init: { x: 600, y: 600, zoom: 0.25 },
+          init: { x: 600, y: 600, zoom: 0.3 },
           worldKey: 'map-only-1',
           gms: [
             { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
@@ -164,7 +164,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
           ],
       }},
       { type: 'component', class: 'World', filepath: 'map-only-2', props: {
-          init: { x: 600, y: 600, zoom: 0.25 },
+          init: { x: 600, y: 600, zoom: 0.3 },
           worldKey: 'map-only-2',
           gms: [
             { gmKey: 'g-101--multipurpose' },
