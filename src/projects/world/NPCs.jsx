@@ -572,12 +572,16 @@ export default function NPCs(props) {
       }, point.meta);
     },
     async onMeshDoMeta(npc, e) {
+      const src = npc.getPosition();
       const meta = e.point.meta;
       /** The actual "do point" (e.point is somewhere on icon) */
       const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? e.point;
 
       if (!e.suppressThrow && !meta.do) {
         throw Error('not doable');
+      }
+      if (!api.gmGraph.inSameRoom(src, decorPoint)) {
+        throw Error('too far away');
       }
 
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
@@ -588,7 +592,7 @@ export default function NPCs(props) {
         return;
       }
 
-      if (!e.suppressThrow && !(npc.getPosition().distanceTo(e.point) <= npc.getInteractRadius())) {
+      if (!e.suppressThrow && !(src.distanceTo(e.point) <= npc.getInteractRadius())) {
         throw Error('too far away');
       }
 
