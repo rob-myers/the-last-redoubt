@@ -215,8 +215,8 @@ const articleCss = css`
   h2 + time + div.tags {
     display: flex;
     flex-wrap: wrap;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 0.9rem;
+    font-family: sans-serif;
+    font-size: 0.8rem;
     color: var(--page-font-color);
     letter-spacing: 2px;
 
