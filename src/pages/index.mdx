@@ -153,7 +153,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   persistLayout
   tabs={[
     [
-      { type: 'component', filepath: 'map-only-1', props: {
+      { type: 'component', class: 'World', filepath: 'map-only-1', props: {
           init: { x: 600, y: 600, zoom: 0.25 },
           gms: [
             { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
@@ -161,8 +161,16 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
             { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
           ],
       }},
-      { type: 'component', filepath: 'map-only-2', props: {
+      { type: 'component', class: 'World', filepath: 'map-only-2', props: {
           init: { x: 600, y: 600, zoom: 0.25 },
+          worldKey: 'map-only-2',
+          gms: [
+            { gmKey: 'g-101--multipurpose' },
+            { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
+            { gmKey: 'g-102--research-deck', transform: [-1, 0, 0, 1, 0, 0] },
+            { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, 1, 0, -600] },
+            { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, 0, 600 + 1200] },
+          ],
       }},
     ],
   ]}
@@ -347,22 +355,6 @@ Click to navigate or interact (e.g. open doors).
 You can drag/scroll/pinch to pan and zoom.
 Try resetting (<Icon icon="refresh" small inline />), maximising a tab or all tabs (<Icon icon="expand" small inline />), and disabling (<Icon icon="cross-circle" small inline />).
 Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>. */}
-
-{/* <Tabs
-  id="demo-tabs"
-  initEnabled={false}
-  height={600}
-  persistLayout
-  initHorizontal
-  tabs={[
-    [
-      { type: 'component', filepath: 'world-demo-1' },
-    ],
-    [
-      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup.game_2() } },
-    ],
-  ]}
-/> */}
 
 {/* ### Changelog
 

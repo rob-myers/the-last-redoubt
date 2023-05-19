@@ -59,14 +59,14 @@ export async function createKeyedComponent(
 ) {
   const componentKey = getTabIdentifier(meta);
 
-  // 🚧 trigger this on Tabs prop tabs change
-  // console.log('creating', componentKey)
   const item: KeyedComponent = {
     key: componentKey,
     instances: 1,
     meta,
     disabled: { [tabsKey]: disabled },
-    component: await getComponent(meta.filepath as any) as KeyedComponent['component'],
+    component: meta.type === 'component'
+      ? await getComponent(meta) as KeyedComponent['component']
+      : undefined,
   };
 
   useSiteStore.setState(({ component }) => ({

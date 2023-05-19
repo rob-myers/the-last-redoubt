@@ -1,9 +1,12 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 
-export default function Def(props: React.PropsWithChildren<{}>) {
+export default function Def(props: React.PropsWithChildren<{ title: string }>) {
   return (
-    <div className={cx("def", rootCss)}>
+    <div
+      className={cx("def", rootCss)}
+      title={props.title}
+    >
       {props.children}
     </div>
   );

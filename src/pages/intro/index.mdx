@@ -280,7 +280,13 @@ An extended example:
           filepath: 'intro-tty-1',
           env: { WORLD_KEY: 'intro-world-1', PROFILE: profileLookup.game_1() },
       },
-      { type: 'component', filepath: 'intro-world-1' },
+      { type: 'component', class: 'World', filepath: 'intro-world-1', props: {
+        worldKey: 'intro-world-1',
+        gms: [
+          { gmKey: 'g-301--bridge' },
+          { gmKey: 'g-301--bridge', transform: [1, 0, 0, -1, 0, 600 + 600], },
+        ],
+      } },
     ],
   ]}
 />

@@ -5,9 +5,10 @@
 - ✅ can change default world zoom/center in Tabs def
 - ✅ can directly provide world layout to Tabs
 - ✅ remove Portals
-- 🚧 TabsMeta { type: 'component', class, filepath }
-  - class in {`world`, `geomorph-edit`, ... }
-  - class determines component (clean lookup.tsx)
+- 🚧 TabMeta { type: 'component', class: 'World', class, filepath }
+  - ✅ class in {`world`, `geomorph-edit`, ... }
+  - ✅ class determines component (clean lookup.tsx)
+  - 🚧 TabMeta prop "props" has type corresponding to component
 - HMR on change world layout
 
 - 🚧 create a new CodeSandbox

@@ -13,8 +13,12 @@ export default function TabContents({
   const disabled = useSiteStore(({ component: lookup }) => lookup[componentKey].disabled[tabsKey]);
 
   return (
-    meta.type === 'component' && (// we propagate props from Tabs def into component
-      component && React.createElement(component, { disabled, ...meta.props })
+    meta.type === 'component' && (
+      component && React.createElement(component, {
+        disabled,
+        // we propagate props from <Tabs> prop tabs into component
+        ...meta.props,
+      })
     ) || meta.type === 'terminal' && (
       <Terminal disabled={disabled} sessionKey={meta.filepath} env={meta.env || {}} />
     ) || (
