@@ -172,5 +172,5 @@ export const defaultLightDistance = 300;
 /** For lighting we initially darken everything */
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 
-export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
+export const geomorphMapFilterShown = 'invert(100%) brightness(50%) contrast(120%)';
 export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
