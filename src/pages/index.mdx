@@ -178,8 +178,26 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-Foo bar baz
+To make the above World's more interesting we need characters.
 
+<Def title="npc-and-player">
+
+  #### Definition
+  
+  An _NPC_ is an instance of the React function component [`NPC`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
+  The Player is the NPC whose key...
+  
+  {/* It has props `disabled` (optional boolean), `init` (optional camera position/zoom), `worldKey` (a string) and finally
+  `gms` (array of objects `{gmKey, transform}`) i.e. which geomorphs and where to put them.
+  It stores its internal state under `worldKey` in an app-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"), providing an external API. */}
+
+</Def>
+
+🚧 shell command (or _command_)
+
+🚧 game command: command using some World API
+
+🚧 npc behaviour (or _behaviour_): game command using some World npcs API
 
 {/* We'll **specify behaviour** using the syntax of an interactive programming language.
 We'll **execute behaviour** by running (possibly many) programs in parallel.
