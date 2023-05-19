@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
-import { cssName, wallOutset } from "../service/const";
+import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 

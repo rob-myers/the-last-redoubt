@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 
-import { cssName } from '../service/const';
+import { cssName } from './const';
 import { supportsWebp } from '../service/dom';
 import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";

@@ -7,7 +7,7 @@ import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
-import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "../service/const";
+import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { getLocalDecorGroupKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
@@ -712,7 +712,7 @@ export default function NPCs(props) {
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcClassKey: npcClassKey,
+          npcClassKey,
           position: e.point,
           speed: npcsMeta[npcClassKey].speed,
         }, { api });

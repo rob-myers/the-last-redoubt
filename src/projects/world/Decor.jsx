@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
 import { testNever } from "../service/generic";
-import { cssName } from "../service/const";
+import { cssName } from "./const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import * as npcService from "../service/npc";
 import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey, metaToTags } from "../service/geomorph";

@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
 import { assertNonNull, pause } from "../service/generic";
-import { cssName, defaultDoorCloseMs, doorWidth, hullDoorWidth } from "../service/const";
+import { cssName, defaultDoorCloseMs, doorWidth, hullDoorWidth } from "./const";
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";

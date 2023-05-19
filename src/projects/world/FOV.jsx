@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly, Vect } from "../geom";
-import { geomorphMapFilterHidden, geomorphMapFilterShown } from "../service/const";
+import { geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import { fovMapActionKeys } from "../service/npc";
@@ -276,6 +276,9 @@ export default function FOV(props) {
  * @property {number} doorId Last traversed door id (relative to geomorph)
  * @property {number[]} openDoorsIds
  */
+
+// const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
+// const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
  const rootCss = css`
   /**

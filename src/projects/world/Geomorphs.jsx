@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { cssName, preDarkenCssRgba } from "../service/const";
+import { cssName, preDarkenCssRgba } from "./const";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";

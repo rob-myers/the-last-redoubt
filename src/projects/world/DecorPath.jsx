@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 
 import { Rect } from "../geom";
-import { cssName } from "../service/const";
+import { cssName } from "./const";
 
 /**
  * Path whose node positions are editable via chrome devtool.

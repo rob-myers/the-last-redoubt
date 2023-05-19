@@ -1,7 +1,7 @@
 import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
-import { cssName } from '../service/const';
+import { cssName } from './const';
 import { warn } from '../service/log';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
 
