@@ -168,7 +168,10 @@ const articleCss = css`
     }
   }
   div.def {
-    margin: 32px 0;
+    margin: 48px 0;
+    @media(max-width: 600px) {
+      margin: 32px 0;
+    }
   }
 
   figure.tabs {

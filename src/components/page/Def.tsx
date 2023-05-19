@@ -13,7 +13,6 @@ export default function Def(props: React.PropsWithChildren<{ title: string }>) {
 }
 
 const rootCss = css`
-  border-top: 1px solid var(--page-border-color);
   border-left: 8px solid var(--page-border-color);
   padding-left: 32px;
   @media (max-width: 600px) {
