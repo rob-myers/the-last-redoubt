@@ -9,12 +9,14 @@
   - ✅ class in {`world`, `geomorph-edit`, ... }
   - ✅ class determines component (clean lookup.tsx)
   - ✅ TabMeta prop "props" has type corresponding to component
-- HMR on change world layout
+- ✅ HMR on change world layout
 
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
+- BUG Escape Tabs not working when click on tabs bar
+  - probably interference from tab dragger
 - BUG react_devtools_backend_compact.js:2367 ERROR g-301--bridge: hull door 0: w: failed to parse transform "0,1,-1,0,1800,0" 
 - start geomorph 103
 - restyle nav menu?

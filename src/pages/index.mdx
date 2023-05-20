@@ -117,7 +117,7 @@ World, NPC, Player and Command.
 
   #### Definition: World
   
-  A _World_ is an instance of the React function component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
+  A _World_ is a React function component [`<World>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   
   Its non-optional props are `worldKey` (a string) and
   `gms` i.e. objects `{gmKey, transform}`
@@ -181,22 +181,33 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-But what about the World's internal `state` i.e. its external `api`?
+But what about the World's internal state _AKA_ external `api`?
+Let us first define NPC and Player.
 
-{/* To make the above World's more interesting we need characters. */}
+<Def title="npc">
+
+  #### Definition: NPC
+  
+  An _NPC_ is a React function component [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab")
+  instantiated inside [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx "@new-tab").
+  
+  Its props are `api` and `npcKey` (a string).
+  Its internal state is stored at `api.npcs.npc[npcKey]` and
+  created using [`create-npc.js`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
+  
+</Def>
+
+{/* 🚧 clarify how api.npcs.playerKey is used */}
 
 <Def title="npc-and-player">
 
-  #### Definition
+  #### Definition: Player
   
-  An _NPC_ is an instance of the React function component [`NPC`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
-  The Player is the NPC whose key...
-  
-  {/* It has props `disabled` (optional boolean), `init` (optional camera position/zoom), `worldKey` (a string) and finally
-  `gms` (array of objects `{gmKey, transform}`) i.e. which geomorphs and where to put them.
-  It stores its internal state under `worldKey` in an app-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"), providing an external API. */}
+  The _Player_ is an _NPC_ such that `api.npcs.playerKey` is the respective `npcKey`.
 
 </Def>
+
+
 
 🚧 shell command (or _command_)
 
