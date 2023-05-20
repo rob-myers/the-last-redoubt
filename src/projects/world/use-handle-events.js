@@ -253,7 +253,12 @@ export default function useHandleEvents(api) {
     const panZoomSub = api.panZoom.events.subscribe((e) => {
       if (e.key === 'pointerup' && e.meta.npc === true && typeof e.meta.npcKey === 'string') {
         const { npcKey } = e.meta;;
-        api.npcs.events.next({ key: 'npc-clicked', npcKey, position: e.point, isPlayer: api.npcs.playerKey === npcKey })
+        api.npcs.events.next({
+          key: 'npc-clicked',
+          npcKey,
+          position: e.point,
+          isPlayer: api.npcs.playerKey === npcKey,
+        });
       }
     });
 
