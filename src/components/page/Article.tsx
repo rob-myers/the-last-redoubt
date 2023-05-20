@@ -184,11 +184,6 @@ const articleCss = css`
       padding: 8px 0;
     }
   }
-  p + figure.tabs {
-    @media(max-width: 600px) {
-      margin: calc(32px + 20px) 0 32px 0;
-    }
-  }
 
   h1, h2, h3, h4, h5 {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
