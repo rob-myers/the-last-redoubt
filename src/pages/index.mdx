@@ -181,15 +181,15 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-But what about the World's internal state _AKA_ external `api`?
-Let us first define NPC and Player.
+Before discussing the World's internal state _a.k.a_ external `api`,
+we first define _NPC_ and _Player_.
 
 <Def title="npc">
 
   #### Definition: NPC
   
   An _NPC_ is a React function component [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab")
-  instantiated inside [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx "@new-tab").
+  instantiated by [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx "@new-tab").
   
   Its props are `api` and `npcKey` (a string).
   Its internal state is stored at `api.npcs.npc[npcKey]` and
