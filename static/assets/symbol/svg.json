@@ -5489,10 +5489,17 @@
     "walls": [],
     "singles": [
       {
-        "meta": {"wall": true},
+        "meta": {
+          "decor": true,
+          "do": true,
+          "sit": true,
+          "chair": true,
+          "orient=45": true,
+          "orient": 45
+        },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[-10, -10], [-10, 1210], [10, 1210], [10, -10]]]
+          "coordinates": [[[1495, 895], [1495, 905], [1505, 905], [1505, 895]]]
         }
       },
       {
@@ -5502,6 +5509,13 @@
           "coordinates": [
             [[1160, 1185], [940, 1185], [940, 1215], [1160, 1215]]
           ]
+        }
+      },
+      {
+        "meta": {"wall": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-10, -10], [-10, 1210], [10, 1210], [10, -10]]]
         }
       },
       {
@@ -5535,24 +5549,10 @@
             [[-10, 1190], [-10, 1210], [1790, 1210], [1790, 1190]]
           ]
         }
-      },
-      {
-        "meta": {
-          "decor": true,
-          "do": true,
-          "sit": true,
-          "chair": true,
-          "orient=225": true,
-          "orient": 225
-        },
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[1495, 895], [1495, 905], [1505, 905], [1505, 895]]]
-        }
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
-    "lastModified": 1683550928464.3203
+    "lastModified": 1684579072298.7095
   },
   "engineering--047--4x7": {
     "key": "engineering--047--4x7",
