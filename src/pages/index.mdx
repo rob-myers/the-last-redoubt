@@ -117,7 +117,7 @@ World, NPC, Player and Command.
 
   #### Definition: World
   
-  A _World_ is a React function component [`<World>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
+  A _World_ is a component instance [`<World>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   
   Its required props are `worldKey` (string) and
   `gms` (objects `{gmKey, transform}`)
@@ -179,13 +179,13 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-Worlds need NPCs and in particular the Player.
+Worlds need NPCs e.g. the Player.
 
 <Def title="npc-and-player">
 
   #### Definitions: NPC, Player
   
-  An _NPC_ is a React function component [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
+  An _NPC_ is a component instance [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
   
   Its props are `api` and `npcKey` (string).
   Its state is stored at `api.npcs.npc[npcKey]` created by
