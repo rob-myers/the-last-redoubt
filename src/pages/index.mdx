@@ -44,7 +44,7 @@ These games avoid simplistic character behaviour by employing a **tight narrativ
   items={[{ video: 'first-peek', label: 'First peek' }]}
 />
 
-Concerning simplistic character behaviour,
+Concerning simplistic behaviour,
 both meaningless violence and bad storytelling may actually be _side-effects_. If the behaviour was more sophisticated it could help tell the story,
 and the game-mechanic needn't revolve around violence.
 Rather than avoiding the problem by tightening the narrative,
@@ -54,7 +54,7 @@ We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
 
-1. Focus on creating and combining character behaviours without trying to create a video game.
+1. Create and combine character behaviours without trying to create a video game.
    
 1. Develop differently:
     - Canonical visual representations via HTML and CSS.
@@ -109,20 +109,21 @@ By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wik
 
 ### Fabricating a behaviour
 
-We are going to create and combine character behaviours.
-But what actually _is_ a character behaviour?
-Answering this question requires some underlying concepts, i.e.
-Player, NPC, and World.
+What actually _is_ a character behaviour?
+Answering this requires a number of concepts, i.e.
+World, NPC, Player and Command.
 
 <Def title="world">
 
-  #### Definition
+  #### Definition: World
   
   A _World_ is an instance of the React function component [`World`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   
-  It has props `disabled` (optional boolean), `init` (optional camera position/zoom), `worldKey` (a string) and finally
-  `gms` (array of objects `{gmKey, transform}`) i.e. which geomorphs and where to put them.
-  It stores its internal state under `worldKey` in an app-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"), providing an external API.
+  Its non-optional props are `worldKey` (a string) and
+  `gms` (objects `{gmKey, transform}`) i.e. 
+  which geomorphs and where to put them.
+  Its internal `state` is stored under `worldKey` in an application-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"),
+  thereby providing an external API.
 
 </Def>
 
