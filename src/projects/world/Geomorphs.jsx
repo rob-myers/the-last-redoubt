@@ -89,11 +89,7 @@ export default function Geomorphs(props) {
       const imgEl = /** @type {HTMLImageElement} */ (e.target);
       const gmId = Number(imgEl.dataset.gmId);
       state.unlitImgs[gmId] = imgEl;
-      props.api.npcs.events.next({
-        key: 'unlit-geomorph-loaded',
-        gmKey: /** @type {Geomorph.GeomorphKey} */ (imgEl.dataset.gmKey),
-        gmId,
-      });
+      state.initGmLightRects(gmId);
     },
 
   }), {
@@ -109,9 +105,7 @@ export default function Geomorphs(props) {
       {api.gmGraph.gms.map((gm, gmId) =>
         <div
           key={gmId}
-          style={{
-            transform: gm.transformStyle,
-          }}
+          style={{ transform: gm.transformStyle }}
         >
           <img
             className="geomorph"

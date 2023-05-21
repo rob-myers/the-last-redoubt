@@ -228,9 +228,6 @@ export default function useHandleEvents(api) {
           }
           break;
         }
-        case 'unlit-geomorph-loaded':
-          api.geomorphs.initGmLightRects(e.gmId);
-          break;
         case 'unmounted-npc':
           // This event also happens on hot-reload NPC.jsx
           delete api.npcs.npc[e.npcKey];
