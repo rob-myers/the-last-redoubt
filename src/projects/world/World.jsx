@@ -24,6 +24,7 @@ export default function World(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    opts: { x: 600, y: 300, zoom: 1.5, ...props.opts },
     disabled: !!props.disabled,
     everEnabled: false,
     everReady: false,
@@ -82,11 +83,11 @@ export default function World(props) {
 
   return state.everEnabled && state.gmGraph.ready ? (
     <CssPanZoom
-      initZoom={props.init?.zoom ?? 1.5}
-      initCenter={{ x: props.init?.x ?? 600, y: props.init?.y ?? 300 }}
+      initZoom={state.opts.zoom}
+      initCenter={state.opts}
       background="#000"
-      // grid // ℹ️ slow zooming
       onLoad={api => (state.panZoom = api) && update()}
+      // grid // ℹ️ slow zooming
     >
       <Geomorphs
         api={state}
@@ -126,12 +127,13 @@ export default function World(props) {
  * @typedef Props
  * @property {boolean} [disabled]
  * @property {Geomorph.UseGeomorphsDefItem[]} gms
- * @property {{ x?: number; y?: number; zoom?: number }} [init]
+ * @property {Partial<State['opts']>} [opts]
  * @property {string} worldKey
  */
 
 /**
  * @typedef State
+ * @property {{ x: number; y: number; zoom: number; }} opts
  * @property {boolean} disabled
  * @property {boolean} everEnabled
  * @property {boolean} everReady

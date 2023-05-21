@@ -156,7 +156,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   tabs={[
     [
       { type: 'component', class: 'World', filepath: 'map-only-1', props: {
-          init: { x: 600, y: 600, zoom: 0.3 },
+          opts: { x: 600, y: 600, zoom: 0.3 },
           worldKey: 'map-only-1',
           gms: [
             { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
@@ -165,7 +165,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
           ],
       }},
       { type: 'component', class: 'World', filepath: 'map-only-2', props: {
-          init: { x: 600, y: 600, zoom: 0.3 },
+          opts: { x: 600, y: 600, zoom: 0.3 },
           worldKey: 'map-only-2',
           gms: [
             { gmKey: 'g-101--multipurpose' },
@@ -190,12 +190,13 @@ Worlds need NPCs e.g. the Player.
   Its props are `api` and `npcKey` (string).
   Its state is stored at `api.npcs.npc[npcKey]` created by
   [`create-npc.js`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
-  
-  The _Player_ is an _NPC_ such that `api.npcs.playerKey` is the respective `npcKey`.
+  The _Player_ is an _NPC_ whose prop `npcKey` equals `api.npcs.playerKey`.
 
 </Def>
 
 {/* 🚧 clarify how api.npcs.playerKey is used */}
+
+In order to spawn NPCs into a World we use a Command Line Interface (CLI).
 
 
 🚧 shell command (or _command_)
