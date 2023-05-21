@@ -81,6 +81,8 @@ export const cssName = {
   //#endregion
 };
 
+export const defaultClipPath = 'none';
+
 export const defaultDoorCloseMs = 7000;
 
 /** @type {NPC.NpcClassKey} */

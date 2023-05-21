@@ -2,6 +2,21 @@
 
 ## In progress
 
+- 🚧 display none World subcomponents when FOV empty
+  - ✅ CSS matching :not(.show-gm-{n}) .gm-{n} { display: none; }
+  - ✅ Decor have className gm-{n}
+  - ✅ FOV mutates CSS classes on World root el
+  - 🚧 can override and show everything
+
+- BUG `Enter` in terminal is maximising Tabs
+
+- 🚧 playerKey cleanup
+  - arrays npc.on{Cancel,Pause,Resume}
+  - track pushes cbs and cleans up
+  - ℹ️ on `npc set-player foo` we change FOV
+  - ℹ️ on respawn player we change FOV
+  - ℹ️ on player waypoint we change FOV via handlePlayerWayEvent
+
 - ✅ can change default world zoom/center in Tabs def
 - ✅ can directly provide world layout to Tabs
 - ✅ remove Portals

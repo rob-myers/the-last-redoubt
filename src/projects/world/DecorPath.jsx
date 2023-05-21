@@ -22,7 +22,7 @@ export default function DecorPath({ decor }) {
       key={decor.updatedAt}
       data-key={decor.key}
       data-meta={JSON.stringify(decor.meta)}
-      className={cx(cssName.decorPath, cssPath)}
+      className={cx(cssName.decorPath, cssPath, `gm-${decor.meta.gmId}`)}
     >
       {decorPath.map((p, i) =>
         <div

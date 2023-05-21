@@ -102,7 +102,7 @@ export default function DebugWorld(props) {
         {gmGraph.gms.map((gm, gmId) =>
           <div
             key={gmId}
-            className="geomorph-outline"
+            className={cx("geomorph-outline", `gm-${gmId}`)}
             style={{
               left: gm.gridRect.x,
               top: gm.gridRect.y,
@@ -117,7 +117,7 @@ export default function DebugWorld(props) {
       {ctxt && (
         <div
           key={ctxt.gm.itemKey}
-          className="debug-room"
+          className={cx("debug-room", `gm-${gmId}`)}
           /** Must transform local ordinates */
           style={{ transform: ctxt.gm.transformStyle }}
         >

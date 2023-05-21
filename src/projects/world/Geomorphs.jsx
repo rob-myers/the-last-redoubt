@@ -106,6 +106,7 @@ export default function Geomorphs(props) {
         <div
           key={gmId}
           style={{ transform: gm.transformStyle }}
+          className={`gm-${gmId}`}
         >
           <img
             className="geomorph"

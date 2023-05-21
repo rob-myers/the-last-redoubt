@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly, Vect } from "../geom";
-import { geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
+import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import { fovMapActionKeys } from "../service/npc";
@@ -64,6 +64,14 @@ export default function FOV(props) {
           ctxt.translate(-topLeft.x, -topLeft.y);
         }
       }
+    },
+    hideUnseen() {
+      const rootEl = props.api.panZoom.parent;
+      const visGmId = state.gmRoomIds.reduce((agg, { gmId }) => { agg[gmId] = true; return agg; }, /** @type {Record<number, true>} */ ({}))
+      gms.forEach((_, gmId) => visGmId[gmId]
+        ? rootEl.classList.add(`show-gm-${gmId}`)
+        : rootEl.classList.remove(`show-gm-${gmId}`)
+      );
     },
     mapAct(action, showMs = 1000) {
       // ℹ️ hopefully, the browser clears up stale animations
@@ -149,15 +157,16 @@ export default function FOV(props) {
        */
       const { polys: viewPolys, gmRoomIds } = gmGraph.computeViewPolygons(state.gmId, state.roomId);
 
-      // Must prevent adjacent geomorphs from covering hull doors
-      const adjGmToPolys = computeAdjHullDoorPolys(state.gmId, gmGraph);
+      // Must prevent adjacent geomorphs from covering hull doors (if adjacent room visible)
+      const visRoomIds = gmRoomIds.flatMap(({ gmId, roomId }) => state.gmId === gmId ? roomId : []);
+      const adjGmToPolys = computeAdjHullDoorPolys(state.gmId, visRoomIds, gmGraph);
       Object.entries(adjGmToPolys).forEach(([gmStr, polys]) =>
         viewPolys[Number(gmStr)] = Poly.union(viewPolys[Number(gmStr)].concat(polys))
       );
 
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = viewPolys.map((polys, altGmId) =>
-        Poly.cutOutSafely(polys, [gms[altGmId].hullOutline])
+        polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : []
       );
       /**
        * Try to eliminate "small black no-light intersections" from current geomorph.
@@ -179,6 +188,7 @@ export default function FOV(props) {
       props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
       state.gmRoomIds = nextGmRoomIds;
 
+      state.hideUnseen();
       update();
     },
   }), {
@@ -262,8 +272,9 @@ export default function FOV(props) {
  * @property {{ map: Animation; labels: Animation; }} anim
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {boolean} ready
- * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el
+ * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el Labels need their own canvas because geomorphs are e.g. reflected
  * @property {() => void} drawLabels
+ * @property {() => void} hideUnseen
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
@@ -311,12 +322,12 @@ export default function FOV(props) {
  * @param {Poly[][]} maskPolys 
  * @param {Geomorph.GeomorphDataInstance[]} gms 
  */
-function gmMaskPolysToClipPaths(maskPolys, gms, defaultClipPath = 'none') {
+function gmMaskPolysToClipPaths(maskPolys, gms) {
   return maskPolys.map((maskPoly, gmId) => {
     // <img> top-left needn't be at world origin
     const polys = maskPoly.map(poly => poly.clone().translate(-gms[gmId].pngRect.x, -gms[gmId].pngRect.y));
     const svgPaths = polys.map(poly => `${poly.svgPath}`).join(' ');
-    return svgPaths.length ? `path('${svgPaths}')` : defaultClipPath;
+    return maskPoly.length && svgPaths.length ? `path('${svgPaths}')` : defaultClipPath;
   });
 }
 
@@ -346,15 +357,22 @@ function compareCoreState(prev, next) {
 /**
  * adj geomorph id to hullDoor polys we should remove
  * @param {number} gmId 
+ * @param {number[]} visRoomIds 
  * @param {Graph.GmGraph} gmGraph 
  */
-function computeAdjHullDoorPolys(gmId, gmGraph) {
+function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
   const adjGmToPolys = /** @type {Record<number, Poly[]>} */ ({});
-  for (const localNode of gmGraph.getSuccs(gmGraph.nodesArray[gmId])) {
-    const adjNode = gmGraph.getAdjacentDoor(localNode);
-    if (adjNode) {
-      const otherHullDoor = gmGraph.gms[adjNode.gmId].hullDoors[adjNode.hullDoorId];
-      (adjGmToPolys[adjNode.gmId] ||= []).push(otherHullDoor.poly);
+  // The successors of a "geomorph node" are precisely the hull door nodes
+  const hullDoorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (gmGraph.getSuccs(gmGraph.nodesArray[gmId]));
+  for (const hullDoorNode of hullDoorNodes) {
+    const adjHullDoorNode = gmGraph.getAdjacentDoor(hullDoorNode);
+    if (adjHullDoorNode) {
+      const hullDoor = gmGraph.gms[gmId].hullDoors[hullDoorNode.hullDoorId];
+      const otherHullDoor = gmGraph.gms[adjHullDoorNode.gmId].hullDoors[adjHullDoorNode.hullDoorId];
+      // only add if adjacent room is visible
+      if (hullDoor.roomIds.some(roomId => roomId !== null && visRoomIds.includes(roomId))) {
+        (adjGmToPolys[adjHullDoorNode.gmId] ||= []).push(otherHullDoor.poly);
+      }
     }
   }
   return adjGmToPolys;

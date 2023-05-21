@@ -245,7 +245,7 @@ function DecorInstance({ def }) {
         key={def.key}
         data-key={def.key}
         data-meta={JSON.stringify(def.meta)}
-        className={cx(cssName.decorCircle, cssCircle)}
+        className={cx(cssName.decorCircle, cssCircle, `gm-${def.meta.gmId}`)}
         style={{
           left,
           top,
@@ -260,7 +260,7 @@ function DecorInstance({ def }) {
         key={def.key}
         data-key={def.key}
         data-meta={JSON.stringify(def.meta)}
-        className={cssName.decorGroup}
+        className={cx(cssName.decorGroup, `gm-${def.meta.gmId}`)}
       >
         {def.items.map(item => <DecorInstance key={item.key} def={item} />)}
       </div>
@@ -277,6 +277,7 @@ function DecorInstance({ def }) {
           cssName.decorPoint,
           cssPoint,
           metaToIconClasses(def.meta),
+          `gm-${def.meta.gmId}`,
         )}
         style={{
           transform: pointToCssTransform(def),
@@ -290,7 +291,7 @@ function DecorInstance({ def }) {
         key={def.key}
         data-key={def.key}
         data-meta={JSON.stringify(def.meta)}
-        className={cx(cssName.decorRect, cssRect)}
+        className={cx(cssName.decorRect, cssRect, `gm-${def.meta.gmId}`)}
         style={{
           left,
           top,

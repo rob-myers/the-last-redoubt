@@ -209,9 +209,8 @@ export default function Doors(props) {
       {gms.map((gm, gmId) => (
         <div
           key={gm.itemKey}
-          style={{
-            transform: gm.transformStyle,
-          }}
+          className={`gm-${gmId}`}
+          style={{ transform: gm.transformStyle }}
         >
           {gm.doors.map((door, i) =>
             state.vis[gmId][i] &&

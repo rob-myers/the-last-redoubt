@@ -1,4 +1,5 @@
 import React from "react";
+import { css } from "@emotion/css";
 import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
 
@@ -38,6 +39,11 @@ export default function World(props) {
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
     panZoom: /** @type {PanZoom.CssApi} */ ({ ready: false }),
 
+    rootCss: css`${
+      props.gms.map((_, gmId) =>
+        `&:not(.show-gm-${gmId}) .gm-${gmId} { display: none; }; `,
+      ).join('\n')
+    }`,
     lib: {
       Vect,
       filter, first, map, merge, take,
@@ -83,6 +89,7 @@ export default function World(props) {
 
   return state.everEnabled && state.gmGraph.ready ? (
     <CssPanZoom
+      className={state.rootCss}
       initZoom={state.opts.zoom}
       initCenter={state.opts}
       background="#000"
@@ -143,11 +150,12 @@ export default function World(props) {
  * @property {import("./Doors").State} doors
  * @property {import("./FOV").State} fov
  * @property {import("./Geomorphs").State} geomorphs
+ * @property {() => boolean} isReady
+ * @property {StateUtil} lib
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
- * @property {() => boolean} isReady
+ * @property {string} rootCss
  * @property {() => void} update
- * @property {StateUtil} lib
  */
 
 /**
