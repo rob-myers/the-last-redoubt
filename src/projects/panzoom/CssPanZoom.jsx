@@ -424,16 +424,14 @@ export default function CssPanZoom(props) {
 
   return (
     <div
-      className={cx("panzoom-root", rootCss)}
+      className={cx("panzoom-root", rootCss, props.className)}
       data-meta={JSON.stringify({ 'world-root': true })}
       ref={measureRef}
-      style={{
-        backgroundColor: props.background || '#fff',
-      }}
+      style={{ backgroundColor: props.background || '#fff' }}
     >
       <div
         ref={state.rootRef}
-        className={cx("panzoom-translate", props.className)}
+        className="panzoom-translate"
       >
         <div className="panzoom-scale">
           <div className="origin" />
