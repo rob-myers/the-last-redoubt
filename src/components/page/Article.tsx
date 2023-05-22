@@ -223,7 +223,7 @@ const articleCss = css`
     background-color: unset;
     
     > span {
-      padding: 16px;
+      padding: 12px;
       margin-bottom: 0;
       border: 1px solid var(--page-border-color);
       /* border-width: 1px 1px 0 0; */
