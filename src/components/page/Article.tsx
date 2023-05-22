@@ -473,19 +473,6 @@ const articleComponents = (
 
   },
 
-  Aside({ node, children, title, ...props }: any) {
-    const id = getAsideId(title);
-    return (
-      <aside {...props}>
-        <span {...title && { id }} className="anchor" />
-        <Link to={`#${id}`}>
-          <Icon icon="info-icon" invert className={cssName.ignoreDark} />
-        </Link>
-        {children}
-      </aside>
-    );
-  },
-
   code({ children }) {
     return <InlineCode>{children}</InlineCode>;
   },
@@ -576,13 +563,6 @@ function getArticleLinkId(
   children: React.ReactNode | React.ReactNode[],
 ) {
   return `link--${childrenToKebabText(children)}`;
-}
-
-/** One article per page */
-function getAsideId(
-  asideName: string,
-) {
-  return `aside--${asideName}`;
 }
 
 function computeDateAndExtendTags(fm: FrontMatter) {

@@ -23,6 +23,7 @@ import InlineCode from "components/page/InlineCode";
 import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import Def from "components/page/Def";
+import Aside from "components/page/Aside";
 import { profileLookup } from "projects/sh/scripts";
 
 ## home
@@ -147,8 +148,8 @@ At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided 
 />
 
 The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
-The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with another hull door.
-Intuitively we "glue" geomorphs together at their hull doors.
+The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with exactly one other hull door.
+Intuitively we "glue" geomorphs together at their hull doors -- exactly their original purpose.
 Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
 <Tabs
@@ -182,7 +183,8 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-Worlds need NPCs e.g. the Player.
+The Worlds above lack NPCs and in particular the Player.
+Without the Player there are no _sensory organs_ and `<World>` reduces to a pan/zoomable map.
 
 <Def title="npc-and-player">
 
@@ -191,16 +193,18 @@ Worlds need NPCs e.g. the Player.
   An _NPC_ is a component instance [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
   
   Its props are `api` and `npcKey` (string).
-  Its state is stored at `api.npcs.npc[npcKey]` created by
-  [`create-npc.js`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
+  Its state is stored at `api.npcs.npc[npcKey]` and created by
+  [create-npc.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
   The _Player_ is an _NPC_ whose prop `npcKey` equals `api.npcs.playerKey`.
 
 </Def>
 
-{/* 🚧 clarify how api.npcs.playerKey is used */}
+{/* Each World instantiates subcomponents including [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx).
+The latter has state `api.npcs` and instantiates each NPC. */}
+
+{/* 🚧 cleanup how api.npcs.playerKey is used */}
 
 In order to spawn NPCs into a World we use a Command Line Interface (CLI).
-
 
 🚧 shell command (or _command_)
 
