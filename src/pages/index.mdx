@@ -114,7 +114,7 @@ we'll lean on [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-play
 ### Fabricating a behaviour
 
 What actually _is_ a character behaviour?
-Roughly speaking it involves the Player observing or interacting with one or more NPCs.
+Roughly speaking, it involves the Player observing or interacting with one or more NPCs.
 We believe this is worth defining formally.
 We need other concepts, i.e. World, NPC, Player and Command.
 
@@ -124,15 +124,13 @@ We need other concepts, i.e. World, NPC, Player and Command.
   
   A _World_ is a component instance [`<World>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
   
-  Its required props are `worldKey` (string) and
-  `gms` (objects `{gmKey, transform}`)
-  specifying geomorphs and where to put them.
-  Its [`state`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx#:~:text=const%20state "@new-tab") is stored under `worldKey` in an application-wide [QueryClient](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab").
-  Then it provides an external API, denoted `api`.
+  Its required props<SideNote>A.k.a. _inputs_, see [the component](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx#:~:text=@typedef%20Props).</SideNote> are `worldKey` (string) and
+  `gms` (objects `{gmKey, transform}`), specifying the geomorphs and where to put them.
+  Its [state](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx#:~:text=const%20state "@new-tab") is stored under `worldKey` in an application-wide [cache](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab")l. This external API is denoted `api`.
 
 </Def>
 
-At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").</SideNote> constructed from about 80 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>
+At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").</SideNote> constructed from about 80 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>.
 
 <Carousel
   baseSrc="/assets/geomorph/"
