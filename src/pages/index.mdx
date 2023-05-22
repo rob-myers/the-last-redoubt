@@ -29,10 +29,10 @@ import { profileLookup } from "projects/sh/scripts";
 
 ### Introduction
 
-We want to make **video games** more meaningful.
+We want to make video games more meaningful.
 That is the objective of this website.
-They have become synonymous with meaningless violence, bad storytelling and **simplistic character behaviour**.
-On the other hand, there are many exceptions out there.
+They have become synonymous with meaningless violence, bad storytelling and **simplistic character behaviour** ([NPC](https://en.wikipedia.org/wiki/Non-player_character "@new-tab") as a [meme](https://en.wikipedia.org/wiki/NPC_(meme)  "@new-tab")).
+On the other hand, there are plenty of exceptions out there.
 Recent examples include [What Remains of Edith Finch](https://en.wikipedia.org/wiki/What_Remains_of_Edith_Finch), [Observation](https://en.wikipedia.org/wiki/Observation_(video_game)) and [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>.
 These games avoid simplistic character behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
 
@@ -67,8 +67,8 @@ We have a few core ideas.
 1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
-by creating and combining many behaviours for their own sake.
-This is a difficult thing to do: we risk creating something neither of **general interest** nor with much **entertainment value**.
+by creating and combining behaviours for their own sake.
+But this is a difficult thing to do: we risk creating something neither of **general interest** nor with much **entertainment value**.
 
 <Carousel
   baseSrc="/assets/pics/first-peek/"
@@ -95,17 +95,21 @@ We tackle _general interest_ in a few ways.
 - Our implementation uses standard web development techniques.
 For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than inner loops invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
-- Our in-browser scripting is of general interest.
+- Our approach to in-browser scripting is of general interest.
 We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote width={300}>Achieved via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).</SideNote>
 The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) gives our website its name.
 
-- Finally we'll stick to gameplay relevant to a huge raft of video games, presented from a top-down perspective.
+- We consider gameplay relevant to a huge number of video games, presented from a top-down perspective.
 
 But what about _entertainment value_?
-We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience.
-Entertainment will arise by interacting with our little fabricated worlds.
-By contextualising behaviour within [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) we'll avoid a dry abstract approach.
+To make video games more meaningful, we must make them more entertaining too.
+This is subtle e.g. deterministic behaviour may be desirable to avoid frustrating players during a combat scenario.
+A Player-centric approach is required, as opposed to building simulations which may never be witnessed by the Player.
+We must also avoid a dry abstract approach:
+we'll lean on [Traveller RPG](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) for context and background.
 
+{/* Entertainment will arise by interacting with our little fabricated worlds. */}
+{/* We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience. */}
 
 ### Fabricating a behaviour
 
