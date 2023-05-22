@@ -5,11 +5,11 @@
 - ✅ BUG `Enter` in terminal is maximising Tabs
 - ✅ BUG viewPoly
 
-- 🚧 display none World subcomponents when FOV empty
+- ✅ display none World subcomponents when FOV empty
   - ✅ CSS matching :not(.show-gm-{n}) .gm-{n} { display: none; }
   - ✅ Decor have className gm-{n}
   - ✅ FOV mutates CSS classes on World root el
-  - 🚧 can override and show everything
+  - ✅ can override and show everything `npc config hideGms`
 
 - 🚧 playerKey cleanup
   - arrays npc.on{Cancel,Pause,Resume}

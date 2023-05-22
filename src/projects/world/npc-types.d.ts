@@ -196,6 +196,7 @@ declare namespace NPC {
     | 'debug'
     | 'debugPlayer'
     | 'gmOutlines'
+    | 'hideGms'
     | 'highlightWindows'
     | 'localNav'
     | 'localOutline'

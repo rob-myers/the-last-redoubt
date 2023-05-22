@@ -66,7 +66,7 @@ export default function FOV(props) {
       }
     },
     hideUnseen() {
-      const rootEl = props.api.panZoom.parent;
+      const rootEl = props.api.getRootEl();
       const visGmId = state.gmRoomIds.reduce((agg, { gmId }) => { agg[gmId] = true; return agg; }, /** @type {Record<number, true>} */ ({}))
       gms.forEach((_, gmId) => visGmId[gmId]
         ? rootEl.classList.add(`show-gm-${gmId}`)

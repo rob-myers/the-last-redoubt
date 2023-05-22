@@ -39,16 +39,8 @@ export default function World(props) {
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
     panZoom: /** @type {PanZoom.CssApi} */ ({ ready: false }),
 
-    rootCss: css`${
-      props.gms.map((_, gmId) =>
-        `&:not(.show-gm-${gmId}) .gm-${gmId} { display: none; }; `,
-      ).join('\n')
-    }`,
-    lib: {
-      Vect,
-      filter, first, map, merge, take,
-      observableToAsyncIterable,
-      precision,
+    getRootEl() {
+      return state.panZoom.parent;
     },
     isReady() {
       return [
@@ -61,6 +53,15 @@ export default function World(props) {
         state.panZoom,
       ].every(x => x.ready);
     },
+    lib: {
+      Vect,
+      filter, first, map, merge, take,
+      observableToAsyncIterable,
+      precision,
+    },
+    rootCss: `hide-gms ${css`${props.gms.map((_, gmId) =>
+      `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
+    ).join('\n')}`}`,
     update,
   }));
 
@@ -150,6 +151,7 @@ export default function World(props) {
  * @property {import("./Doors").State} doors
  * @property {import("./FOV").State} fov
  * @property {import("./Geomorphs").State} geomorphs
+ * @property {() => HTMLDivElement} getRootEl
  * @property {() => boolean} isReady
  * @property {StateUtil} lib
  * @property {import("./NPCs").State} npcs

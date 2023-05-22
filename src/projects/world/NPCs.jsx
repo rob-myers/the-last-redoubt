@@ -51,6 +51,7 @@ export default function NPCs(props) {
           case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
           case 'gmOutlines': return debugStyle.getPropertyValue(cssName.debugGeomorphOutlineDisplay) === 'none' ? false : true;
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
+          case 'hideGms': return api.getRootEl().classList.contains('hide-gms');
           case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
           case 'localNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
           case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
@@ -76,6 +77,7 @@ export default function NPCs(props) {
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
           case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
           case 'gmOutlines': debugStyle.setProperty(cssName.debugGeomorphOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'hideGms': api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms'); break;
           case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
           case 'localNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
@@ -94,17 +96,7 @@ export default function NPCs(props) {
         return true;
       },
       ownKeys() {
-        return [
-          'canClickArrows',
-          'debug',
-          'gmOutlines',
-          'highlightWindows',
-          'interactRadius',
-          'localNav',
-          'localOutline',
-          'omnipresent',
-          'showIds',
-        ];
+        return npcService.fromConfigBooleanKeys;
       },
       getOwnPropertyDescriptor() {
         return { enumerable: true, configurable: true };

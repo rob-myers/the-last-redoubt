@@ -43,7 +43,9 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
 }
 
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { 'canClickArrows': true, 'debug': true, 'debugPlayer': true, 'gmOutlines': true, 'highlightWindows': true, 'localNav': true, 'localOutline': true, 'omnipresent': true, 'showIds': true };
+const fromConfigBooleanKey = { 'canClickArrows': true, 'debug': true, 'debugPlayer': true, 'gmOutlines': true, 'hideGms': true, 'highlightWindows': true, 'localNav': true, 'localOutline': true, 'omnipresent': true, 'showIds': true };
+
+export const fromConfigBooleanKeys = keys(fromConfigBooleanKey);
 
 /** @type {Record<NPC.FovMapAction, true>} */
 const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };
