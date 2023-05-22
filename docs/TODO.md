@@ -2,30 +2,12 @@
 
 ## In progress
 
-- ✅ BUG `Enter` in terminal is maximising Tabs
-- ✅ BUG viewPoly
-
-- ✅ display none World subcomponents when FOV empty
-  - ✅ CSS matching :not(.show-gm-{n}) .gm-{n} { display: none; }
-  - ✅ Decor have className gm-{n}
-  - ✅ FOV mutates CSS classes on World root el
-  - ✅ can override and show everything `npc config hideGms`
-
 - 🚧 playerKey cleanup
-  - arrays npc.on{Cancel,Pause,Resume}
-  - track pushes cbs and cleans up
+  - 🚧 arrays npc.on{Cancel,Pause,Resume}
+  - 🚧 track pushes cbs and cleans up
   - ℹ️ on `npc set-player foo` we change FOV
   - ℹ️ on respawn player we change FOV
   - ℹ️ on player waypoint we change FOV via handlePlayerWayEvent
-
-- ✅ can change default world zoom/center in Tabs def
-- ✅ can directly provide world layout to Tabs
-- ✅ remove Portals
-- ✅ TabMeta { type: 'component', class: 'World', class, filepath }
-  - ✅ class in {`world`, `geomorph-edit`, ... }
-  - ✅ class determines component (clean lookup.tsx)
-  - ✅ TabMeta prop "props" has type corresponding to component
-- ✅ HMR on change world layout
 
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
@@ -390,91 +372,25 @@
   - perhaps quadratic in two variables?
 - Remove rotation transition during walk, to fix web animations API polyfill
 
-## Screen captures
-
-✅ Convert a screen recording to MP4 or GIF
-
-- ```sh
-  # Convert mov to mp4
-  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.mp4
-  # Convert mov to gif
-  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.gif
-  ```
-- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
-
-✅ Smaller + Faster GIF
-
-- https://www.baeldung.com/linux/convert-videos-gifs-ffmpeg#creating-a-custom-palette
-- ```sh
-  # 20 seconds (orig 19s), output 4.3mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=720:-1" output.gif
-  # 1.3Mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.gif
-  # 1.1Mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=300:-1" output.gif
-  ```
-- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
-
-- too large
-
-- ❌ CSS GIF pause-reset/play https://css-tricks.com/pause-gif-details-summary/
-
-✅ Try MP4 and WebM
-
-```sh
-# 210kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.mp4
-# 300kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.webm
-```
-
-Useful info here too
-> https://www.smashingmagazine.com/2018/11/gif-to-video/
-
-```sh
-# 250kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" -b:v 0 -crf 25 output.mp4
-```
-
-How to embed video?
-> https://www.smashingmagazine.com/2018/11/gif-to-video/#replace-animated-gifs-with-video-in-the-browser
-
-
-## Future
-
-- Explain what is happening in NPCS trackNpc
-- Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
-- ✅ BUG CssPanZoom zoom out with pointer down and drag around
-  - Also issues when click on `HTMLImageElement`s in devtools
-- Alt approach to g302 light issue
-  - add extra wall/door to "break loop"
-  - support "always open doors" i.e. not even visible
-- BUG can open hull door late whilst walks so npc underneath
-- GeomorphEdit: windows: fix console errors 
-- More efficient light shade
-  - own component
-  - avoid recompute when irrelevant doors opened/closed
-- Tabs remember scroll (use case?)
-- BUG CssPanZoom zoom via info is a bit jerky at one point
-- ✅ Always show navpath (no need for DEBUG=true)
-- ❌ CodeMirror highlighting for JSDoc types?
-- Fix eslint warns
-- Start using `_` i.e. last value shortcut
-- Nav should weight closed doors
-- Fix HMR of NPC (walks without going anywhere)
-- Spawn should trigger a player collision test
-- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
-- Saw `World` fail silently due to use-geomorph-data bug
-- anchor/action link sends user back to Tabs, displaying text in session
-  - perhaps text added to "queue", and opens respective `Terminal`?
-- BUG firefox mobile jerky
-  - problem with `track andros &`
-  - perhaps a race-condition between two transforms (camera, npc)
-- Terminal Context-Menu Copy/Paste missing
-  - Works at xterm-helper-textarea, at top of terminal
-  - Even if we got this to sync with cursor, wouldn't be enough
-
 ## Done
+
+- ✅ BUG `Enter` in terminal is maximising Tabs
+- ✅ BUG viewPoly
+
+- ✅ display none World subcomponents when FOV empty
+  - ✅ CSS matching :not(.show-gm-{n}) .gm-{n} { display: none; }
+  - ✅ Decor have className gm-{n}
+  - ✅ FOV mutates CSS classes on World root el
+  - ✅ can override and show everything `npc config hideGms`
+
+- ✅ can change default world zoom/center in Tabs def
+- ✅ can directly provide world layout to Tabs
+- ✅ remove Portals
+- ✅ TabMeta { type: 'component', class: 'World', class, filepath }
+  - ✅ class in {`world`, `geomorph-edit`, ... }
+  - ✅ class determines component (clean lookup.tsx)
+  - ✅ TabMeta prop "props" has type corresponding to component
+- ✅ HMR on change world layout
 
 - ✅ CssPanZoom translate should preserve original position under cursor/finger
 
@@ -1469,3 +1385,87 @@ range 10 | split | map 'x => x + 1' |
     }
   }'
 ```
+
+## Screen captures
+
+✅ Convert a screen recording to MP4 or GIF
+
+- ```sh
+  # Convert mov to mp4
+  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.mp4
+  # Convert mov to gif
+  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.gif
+  ```
+- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
+
+✅ Smaller + Faster GIF
+
+- https://www.baeldung.com/linux/convert-videos-gifs-ffmpeg#creating-a-custom-palette
+- ```sh
+  # 20 seconds (orig 19s), output 4.3mb
+  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=720:-1" output.gif
+  # 1.3Mb
+  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.gif
+  # 1.1Mb
+  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=300:-1" output.gif
+  ```
+- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
+
+- too large
+
+- ❌ CSS GIF pause-reset/play https://css-tricks.com/pause-gif-details-summary/
+
+✅ Try MP4 and WebM
+
+```sh
+# 210kb
+ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.mp4
+# 300kb
+ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.webm
+```
+
+Useful info here too
+> https://www.smashingmagazine.com/2018/11/gif-to-video/
+
+```sh
+# 250kb
+ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" -b:v 0 -crf 25 output.mp4
+```
+
+How to embed video?
+> https://www.smashingmagazine.com/2018/11/gif-to-video/#replace-animated-gifs-with-video-in-the-browser
+
+
+## Future
+
+- Explain what is happening in NPCS trackNpc
+- Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
+- ✅ BUG CssPanZoom zoom out with pointer down and drag around
+  - Also issues when click on `HTMLImageElement`s in devtools
+- Alt approach to g302 light issue
+  - add extra wall/door to "break loop"
+  - support "always open doors" i.e. not even visible
+- BUG can open hull door late whilst walks so npc underneath
+- GeomorphEdit: windows: fix console errors 
+- More efficient light shade
+  - own component
+  - avoid recompute when irrelevant doors opened/closed
+- Tabs remember scroll (use case?)
+- BUG CssPanZoom zoom via info is a bit jerky at one point
+- ✅ Always show navpath (no need for DEBUG=true)
+- ❌ CodeMirror highlighting for JSDoc types?
+- Fix eslint warns
+- Start using `_` i.e. last value shortcut
+- Nav should weight closed doors
+- Fix HMR of NPC (walks without going anywhere)
+- Spawn should trigger a player collision test
+- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
+- Saw `World` fail silently due to use-geomorph-data bug
+- anchor/action link sends user back to Tabs, displaying text in session
+  - perhaps text added to "queue", and opens respective `Terminal`?
+- BUG firefox mobile jerky
+  - problem with `track andros &`
+  - perhaps a race-condition between two transforms (camera, npc)
+- Terminal Context-Menu Copy/Paste missing
+  - Works at xterm-helper-textarea, at top of terminal
+  - Even if we got this to sync with cursor, wouldn't be enough
