@@ -135,7 +135,7 @@ We need other concepts, i.e. World, NPC, Player and Command.
 
 </Def>
 
-At present, we support 5 geomorphs<SideNote width={300}>Robert Pearce [provided hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab").</SideNote> constructed from about 80 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>.
+At present, we support 5 geomorphs (Robert Pearce provided [hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab")) constructed from about 80 of Robert Pearce's [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>.
 
 <Carousel
   baseSrc="/assets/geomorph/"
@@ -208,7 +208,11 @@ The latter has state `api.npcs` and instantiates each NPC. */}
 
 {/* 🚧 cleanup how api.npcs.playerKey is used */}
 
-In order to spawn NPCs into a World we use a Command Line Interface (CLI).
+How can we spawn NPCs into a World?
+Although there is a JavaScript function `api.npcs.spawn` we'd rather not invoke it directly.
+JavaScript is not designed to be run interactively.
+
+{/* In order to spawn NPCs into a World we use a Command Line Interface (CLI). */}
 
 🚧 shell command (or _command_)
 
