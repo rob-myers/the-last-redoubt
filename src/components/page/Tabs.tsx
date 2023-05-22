@@ -42,6 +42,9 @@ export default function Tabs(props: Props) {
     , 1000),
 
     async onKeyUp(e: React.KeyboardEvent) {
+      if (e.target instanceof HTMLTextAreaElement && e.target.classList.contains('xterm-helper-textarea')) {
+        return; // Ignore Terminals
+      }
       switch (e.key) {
         case 'Escape':
           if (state.expanded) {
