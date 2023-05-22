@@ -3,7 +3,7 @@
 ## In progress
 
 - ✅ BUG `Enter` in terminal is maximising Tabs
-- BUG viewPoly
+- ✅ BUG viewPoly
 
 - 🚧 display none World subcomponents when FOV empty
   - ✅ CSS matching :not(.show-gm-{n}) .gm-{n} { display: none; }

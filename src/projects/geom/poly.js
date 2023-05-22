@@ -450,5 +450,16 @@ export class Poly {
       // .map(coords => Poly.from(coords).cleanFinalReps());
       .map(coords => Poly.from(coords));
   }
+
+  /**
+   * Construct union of polygons.
+   * @param {Poly[]} polys 
+   */
+  static unionSafe(polys) {
+    return polys.reduce((agg, poly) =>
+      polygonClipping.union(agg, poly.geoJson.coordinates),
+      /** @type {polygonClipping.Polygon[]} */ ([]),
+    ).map(coords => Poly.from(coords));
+  }
   
 }

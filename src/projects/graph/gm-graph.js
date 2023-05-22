@@ -216,8 +216,8 @@ export class gmGraphClass extends BaseGraph {
        * Try to eliminate "small black triangular polys", arising from
        * intersecting view polys. Side effect: intermediate walls can become black.
        */
-      // polys: viewPolys.map(polys => Poly.union(polys).map(x => x.removeHoles())),
-      polys: viewPolys.map(polys => Poly.union(polys.map(x => x.precision(4))).map(x => x.removeHoles()) ),
+      polys: viewPolys.map(polys => Poly.unionSafe(polys).map(x => x.removeHoles())),
+      // polys: viewPolys.map(polys => Poly.union(polys.map(x => x.precision(4))).map(x => x.removeHoles()) ),
       gmRoomIds,
     };
   }
