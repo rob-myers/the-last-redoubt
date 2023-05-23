@@ -226,70 +226,38 @@ Then there is no representation of the Player's _sensory awareness_, and the Wor
 
 </Def>
 
-The World is an instance of a React function component, as is each NPC.
-But how are they related?
-Let's look at the internals of three components: [World.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab"), [NPCs.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx "@new-tab") and [NPC.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
-To avoid confusion we'll simplify them considerably.
-
-
-```jsx
-/** internals and return value simplified */
-export default function World(props) {
-  const state = useStateRef(() => { /** `api` */ });
-
-  return state.gmGraph.ready ? (
-    <CssPanZoom onLoad={api => state.panZoom = api}>
-      <Geomorphs api={state} onLoad={api => state.geomorphs = api} />
-      <DebugWorld api={state} onLoad={api => state.debug = api} />
-      <Decor api={state} onLoad={api => state.decor = api} />
-      <NPCs api={state} onLoad={api => state.npcs = api} />
-      <Doors api={state} onLoad={api => state.doors = api} />
-      <FOV api={state} onLoad={api => state.fov = api} />
-    </CssPanZoom>
-  ) : null;
-}
-```
-
-```jsx
-export default function NPCs(props) {
-  const state = useStateRef(() => { /** `api.npcs` */ });
-
-  return (
-    <div className="npcs" ref={state.rootRef}>
-      {Object.values(state.npc).map(({ key, epochMs }) => (
-        <MemoizedNPC
-          key={key}
-          api={props.api}
-          npcKey={key}
-          epochMs={epochMs} /** To override memoization */
-        />
-      ))}
-    </div>
-  );
-}
-```
+Each World is an instance of a React function component, as is each NPC.
+We postpone the internals of World to a future blog post.
+However, it will help to look at NPC right now.
 
 ```jsx
 /** internals and return value simplified */
 export default function NPC({ api, npcKey }) {
-  const npc = useStateRef(() => /** `api.npcs.npc[npcKey]` */);
+  const state = useStateRef(() => /** `api.npcs.npc[npcKey]` */);
 
   return (
     <div
-      ref={npc.npcRef.bind(npc)}
-      className={`npc ${npc.anim.spriteSheet} ...`}
+      ref={state.npcRef}
+      className={`npc ${state.anim.spriteSheet} ...`}
     >
-      <div className={`body webp ${npc.key}`} />
+      <div className={`body webp ${state.key}`} />
       <div className="interact-circle" />
       <div className="bounds-circle" />
       <div
         className="head-circle"
-        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: npc.key })}
+        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: state.key })}
       />
     </div>
   );
 }
 ```
+
+Each of the above `div`s has an associated purpose:
+- `div.npc`: translation.
+- `div.body`: rotation, opacity, spritesheet.
+- `div.interact-circle`: interact radius.
+- `div.bounds-circle`: collision radius.
+- `div.head-circle`: clickable.
 
 
 
