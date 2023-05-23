@@ -18,4 +18,10 @@ const rootCss = css`
   @media (max-width: 600px) {
     padding-left: 16px;
   }
+  @media (min-width: 600px) {
+    p {
+      line-height: 2.4;
+    }
+  }
+
 `;
