@@ -156,6 +156,9 @@ export const vscDarkPlusCss = css`
   .token.tag.property-access {
     color: #b5cea8;
   }
+  .token.tag.attr-name + .punctuation + .punctuation + .script {
+    color: rgb(72, 179, 255);
+  }
 
   .token.selector,
   .token.attr-name,
@@ -267,13 +270,6 @@ export const vscDarkPlusCss = css`
 
   .token.escape {
     color: #d7ba7d;
-  }
-
-  /* .token.tag {
-    color: #569cd6;
-  } */
-  .token.tag.punctuation {
-    color: #569cd6;
   }
 
   .token.tag .token.punctuation {
