@@ -36,7 +36,6 @@ declare namespace PanZoom {
     transitionTimeoutId: number;
     /** [translate, scale] */
     anims: [null | Animation, null | Animation];
-    worldPointerDown: Geom.Vect;
     pointerUpExtras: Record<string, any>[];
     
     animationAction(type: 'cancel' | 'pause' | 'play'): void;

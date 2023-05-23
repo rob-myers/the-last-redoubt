@@ -39,7 +39,6 @@ export default function CssPanZoom(props) {
       idleTimeoutId: 0,
       transitionTimeoutId: 0,
       anims: [null, null],
-      worldPointerDown: new Vect,
       pointerUpExtras: [],
 
       evt: {
@@ -66,8 +65,6 @@ export default function CssPanZoom(props) {
             scale: state.scale,
             distance: getDistance(state.pointers),
           };
-
-          state.worldPointerDown.copy(state.getWorld(e));
         },
         pointermove(e) {
           if (
@@ -127,10 +124,16 @@ export default function CssPanZoom(props) {
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
           meta.targetPos = { x: precision(targetPos.x), y: precision(targetPos.y) };
 
+          // Approx because state.scale may change
+          const distance = new Vect(
+            e.clientX - /** @type {number} */ (state.start.clientX),
+            e.clientY - /** @type {number} */ (state.start.clientY),
+          ).scale(1 / state.scale).length;
+
           state.events.next({
             key: 'pointerup',
             point: worldPointerUp,
-            distance: state.worldPointerDown.distanceTo(worldPointerUp),
+            distance,
             meta,
             extra: Object.assign({}, ...state.pointerUpExtras),
           });
