@@ -9,41 +9,41 @@ import useStateRef from "../hooks/use-state-ref";
 /** @param {Props} props  */
 export default function NPC({ api, npcKey }) {
 
-  const npc = useStateRef(() => api.npcs.npc[npcKey], {
+  const state = useStateRef(() => api.npcs.npc[npcKey], {
     deps: [npcKey],
     updateFrom: (current) => createNpc(current.def, { api }),
   });
   
   React.useLayoutEffect(() => {
-    if (npc.unspawned) {// (Re)spawn
-      npc.unspawned = false;
-      npc.initialize();
-      npc.startAnimation('idle');
+    if (state.unspawned) {// (Re)spawn
+      state.unspawned = false;
+      state.initialize();
+      state.startAnimation('idle');
       /** @type {NPC.DecorRef[]} */
-      const intoDecor = api.decor.getDecorAtPoint(npc.getPosition()).map(d => ({
+      const intoDecor = api.decor.getDecorAtPoint(state.getPosition()).map(d => ({
         decorKey: d.key,
         type: d.type,
         meta: d.meta,
       }));
       api.npcs.events.next({ key: 'spawned-npc', npcKey, intoDecor });
     }
-  }, [npc.epochMs]);
+  }, [state.epochMs]);
 
   return (
     <div
-      ref={npc.npcRef.bind(npc)}
+      ref={state.npcRef.bind(state)}
       className={cx(
         cssName.npc,
         rootCss,
         api.npcs.playerKey === npcKey ? 'player' : undefined,
-        npc.anim.css,
-        npc.anim.spriteSheet,
+        state.anim.css,
+        state.anim.spriteSheet,
       )}
     >
       <div
         className={cx(
           cssName.npcBody,
-          npc.key,
+          state.key,
           supportsWebp ? 'webp' : undefined,
         )}
       />
@@ -51,7 +51,7 @@ export default function NPC({ api, npcKey }) {
       <div className="bounds-circle" />
       <div
         className="head-circle"
-        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: npc.key })}
+        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: state.key })}
       />
     </div>
   );
