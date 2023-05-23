@@ -148,6 +148,14 @@ export const vscDarkPlusCss = css`
   .token.unit {
     color: #b5cea8;
   }
+  
+  /** Custom */
+  .token.tag {
+    color: rgb(103, 153, 209);
+  }
+  .token.tag.property-access {
+    color: #b5cea8;
+  }
 
   .token.selector,
   .token.attr-name,
