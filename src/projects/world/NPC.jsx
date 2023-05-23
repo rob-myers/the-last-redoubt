@@ -44,7 +44,6 @@ export default function NPC({ api, npcKey }) {
         className={cx(
           cssName.npcBody,
           npc.key,
-          // 'no-select',
           supportsWebp ? 'webp' : undefined,
         )}
       />

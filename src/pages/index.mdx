@@ -157,10 +157,32 @@ The geomorphs should be transformed so each hull door either (a) touches nothing
 Intuitively we "glue" geomorphs together at their hull doors -- exactly their original purpose.
 Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
+```jsx
+<World
+  worldKey="map-only-1"
+  gms={[
+    { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
+    { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
+    { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
+  ]}
+/>
+
+<World
+  worldKey="map-only-2"
+  gms={[
+    { gmKey: 'g-101--multipurpose' },
+    { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
+    { gmKey: 'g-102--research-deck', transform: [-1, 0, 0, 1, 0, 0] },
+    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, 1, 0, -600] },
+    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, 0, 600 + 1200] },
+  ]}
+/>
+```
+
 <Tabs
   id="world-map-only"
   initEnabled={false}
-  height={[500, 600]}
+  height={[400, 500]}
   persistLayout
   tabs={[
     [
@@ -188,8 +210,8 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-The Worlds above lack NPCs and in particular the Player.
-Without the Player there are no _sensory organs_ and the World reduces to a pan/zoomable map.
+The Worlds above lack NPCs e.g. there is no Player.
+Then there is no representation of the Player's _sensory awareness_, and the World amounts to a static pan/zoomable map.
 
 <Def title="npc-and-player">
 
@@ -200,14 +222,79 @@ Without the Player there are no _sensory organs_ and the World reduces to a pan/
   Its props are `api` and `npcKey` (string) i.e. the NPC's _key_.
   Its state is stored at `api.npcs.npc[npcKey]` and created by
   [create-npc.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
-  Finally, the _Player_ is the NPC with key `api.npcs.playerKey`.
+  Finally, an NPC is the _Player_ if it has key `api.npcs.playerKey`.
 
 </Def>
 
+The World is an instance of a React function component, as is each NPC.
+But how are they related?
+Let's look at the internals of three components: [World.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab"), [NPCs.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx "@new-tab") and [NPC.jsx](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
+To avoid confusion we'll simplify them considerably.
+
+
+```jsx
+/** internals and return value simplified */
+export default function World(props) {
+  const state = useStateRef(() => { /** `api` */ });
+
+  return state.gmGraph.ready ? (
+    <CssPanZoom onLoad={api => state.panZoom = api}>
+      <Geomorphs api={state} onLoad={api => state.geomorphs = api} />
+      <DebugWorld api={state} onLoad={api => state.debug = api} />
+      <Decor api={state} onLoad={api => state.decor = api} />
+      <NPCs api={state} onLoad={api => state.npcs = api} />
+      <Doors api={state} onLoad={api => state.doors = api} />
+      <FOV api={state} onLoad={api => state.fov = api} />
+    </CssPanZoom>
+  ) : null;
+}
+```
+
+```jsx
+export default function NPCs(props) {
+  const state = useStateRef(() => { /** `api.npcs` */ });
+
+  return (
+    <div className="npcs" ref={state.rootRef}>
+      {Object.values(state.npc).map(({ key, epochMs }) => (
+        <MemoizedNPC
+          key={key}
+          api={props.api}
+          npcKey={key}
+          epochMs={epochMs} /** To override memoization */
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+```jsx
+/** internals and return value simplified */
+export default function NPC({ api, npcKey }) {
+  const npc = useStateRef(() => /** `api.npcs.npc[npcKey]` */);
+
+  return (
+    <div
+      ref={npc.npcRef.bind(npc)}
+      className={`npc ${npc.anim.spriteSheet} ...`}
+    >
+      <div className={`body webp ${npc.key}`} />
+      <div className="interact-circle" />
+      <div className="bounds-circle" />
+      <div
+        className="head-circle"
+        data-meta={JSON.stringify({ npc: true, ui: true, npcKey: npc.key })}
+      />
+    </div>
+  );
+}
+```
+
+
+
 {/* Each World instantiates subcomponents including [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx).
 The latter has state `api.npcs` and instantiates each NPC. */}
-
-{/* 🚧 cleanup how api.npcs.playerKey is used */}
 
 How can we spawn NPCs into a World?
 Although there is a JavaScript function `api.npcs.spawn` we'd rather not invoke it directly.
