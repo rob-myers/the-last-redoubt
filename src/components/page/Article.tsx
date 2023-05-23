@@ -264,7 +264,7 @@ const articleCss = css`
   }
 
   li {
-    line-height: 2;
+    /* line-height: 2; */
     p {
       margin-bottom: 18px;
     }
