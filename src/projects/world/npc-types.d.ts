@@ -419,7 +419,6 @@ declare namespace NPC {
     | { key: 'spawned-npc'; npcKey: string; intoDecor: NPC.DecorRef[] }
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
-    | { key: 'world-ready'; }
     | NPCsWayEvent
   );
 

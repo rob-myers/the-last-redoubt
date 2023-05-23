@@ -27,8 +27,6 @@ export default function World(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     opts: { x: 600, y: 300, zoom: 1.5, ...props.opts },
     disabled: !!props.disabled,
-    everEnabled: false,
-    everReady: false,
     gmGraph: /** @type {Graph.GmGraph} */ ({}),
 
     debug: /** @type {State['debug']} */ ({ ready: false }),
@@ -65,9 +63,7 @@ export default function World(props) {
     update,
   }));
 
-  // ℹ️ `state.gmGraph.ready` can be true without ever enabling,
-  // by viewing another World with same `props.gms`
-  state.gmGraph = useGeomorphs(props.gms, !(state.everEnabled ||= !props.disabled));
+  state.gmGraph = useGeomorphs(props.gms, props.disabled);
   state.gmGraph.api = state;
   
   useHandleEvents(state);
@@ -77,18 +73,12 @@ export default function World(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-  const ready = state.isReady();
   React.useEffect(() => {
-    if (!state.everReady && (state.everReady ||= ready)) {
-      state.npcs.events.next({ key: 'world-ready' }); // Propagate ready
-    }
     state.disabled = !!props.disabled;
-    if (ready) {// Once ready, propagate enabled/disabled
-      state.npcs.events.next({ key: state.disabled ? 'disabled' : 'enabled' });
-    }
-  }, [props.disabled, ready]);
+    state.npcs.events?.next({ key: state.disabled ? 'disabled' : 'enabled' });
+  }, [props.disabled]);
 
-  return state.everEnabled && state.gmGraph.ready ? (
+  return state.gmGraph.ready ? (
     <CssPanZoom
       className={state.rootCss}
       initZoom={state.opts.zoom}
@@ -143,8 +133,6 @@ export default function World(props) {
  * @typedef State
  * @property {{ x: number; y: number; zoom: number; }} opts
  * @property {boolean} disabled
- * @property {boolean} everEnabled
- * @property {boolean} everReady
  * @property {Graph.GmGraph} gmGraph
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor

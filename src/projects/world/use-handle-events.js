@@ -232,9 +232,6 @@ export default function useHandleEvents(api) {
           }
           state.handleWayEvents(e);
           break;
-        case 'world-ready':
-          // 🚧 useful?
-          break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });
       }
