@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
 import { stripAnsi } from "../sh/util";
@@ -30,7 +30,7 @@ export default function NPCs(props) {
     events: new Subject,
     npc: {},
 
-    playerKey: /** @type {null | string} */ (null),
+    playerKey: null,
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
@@ -619,10 +619,14 @@ export default function NPCs(props) {
       }
     },
     removeNpc(npcKey) {
+      if (state.npc[npcKey]) {
+      }
       delete state.npc[npcKey];
+      if (state.playerKey === npcKey) {
+        state.npcAct({ action: 'set-player', npcKey: undefined });
+      }
+      state.events.next({ key: 'removed-npc', npcKey });
       update();
-      state.npcAct({ action: 'set-player', npcKey: undefined });
-      // 🚧 inform relevant processes?
     },
     rootRef(el) {
       if (el) {
@@ -642,15 +646,19 @@ export default function NPCs(props) {
     setPlayerKey(npcKey) {
       const nextPlayerKey = npcKey || null; // Forbid empty string
 
-      if (state.playerKey) {
+      if (state.playerKey) {// Remove css class (without render)
         const prevPlayer = api.npcs.npc[state.playerKey]; // Possibly undefined
-        prevPlayer?.el.root.classList.remove('player'); // render instead?
+        prevPlayer?.el.root.classList.remove('player');
       }
-      if (nextPlayerKey) {
+      if (nextPlayerKey) {// Ensure css class (without render)
         const nextPlayer = state.getNpc(nextPlayerKey); // Player must exist
-        nextPlayer.el.root.classList.add('player'); // render instead?
+        nextPlayer.el.root.classList.add('player');
       }
       state.playerKey = nextPlayerKey;
+
+      if (state.playerKey) {// Adjust FOV
+        state.setRoomByNpc(state.playerKey);
+      }
     },
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);
@@ -721,18 +729,30 @@ export default function NPCs(props) {
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
-      const { panZoom } = props.api
-      if (!state.npc[npcKey]) {
-        throw Error(`npc "${npcKey}" does not exist`);
-      }
+      const { panZoom } = props.api;
+      
+      /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
+      let status = /** @type {TrackStatus} */ ('no-track');
+      /** @param {TrackStatus} next */
+      function changeStatus(next) { status = next; console.warn('@', status); }
+      
+      const npc = state.getNpc(npcKey); // throws if undefined
 
-      let status = /** @type {'no-track' | 'follow-walk' | 'panzoom-to'} */ ('no-track');
-
-      return merge(
+      const subscription = merge(
         of({ key: /** @type {const} */ ('init-track') }),
         state.events,
         panZoom.events,
       ).pipe(
+        tap(x => {
+          if (x.key === 'npc-internal' && x.npcKey === npcKey) {
+            x.event === 'cancelled' && api.panZoom.animationAction('cancel')
+            || x.event === 'paused' && api.panZoom.animationAction('pause')
+            || x.event === 'resumed' && api.panZoom.animationAction('play');
+          }
+          if (x.key === 'removed-npc' && x.npcKey === npcKey) {
+            subscription.unsubscribe();
+          }
+        }),
         filter(x => (
           process.status === 1 && (
             x.key === 'init-track'
@@ -746,48 +766,39 @@ export default function NPCs(props) {
         )),
       ).subscribe({
         async next(msg) {
-          // console.log('msg', msg); // DEBUG
-          if (!panZoom.isIdle() && msg.key !== 'started-walking') {
-            status = 'no-track';
-            console.warn('@', status);
+          // console.log('msg', msg);
+          if (msg.key === 'started-walking') {
+            changeStatus('follow-walk');
+            try {
+              const path = npc.getTargets().map(x => x.point);
+              await panZoom.followPath(path, { animScaleFactor: npc.getAnimScaleFactor() });
+            } catch {} // Ignore Error('cancelled')
             return;
           }
 
-          const npc = state.npc[npcKey];
-          const npcPosition = npc.getPosition();
+          if (!panZoom.isIdle()) {
+            changeStatus('no-track');
+            return;
+          }
           
-          // 🚧 assume only one moving spritesheet i.e. `walk`
           if (// npc not moving
             (npc.anim.spriteSheet !== 'walk')
             // camera not animating
             && (panZoom.anims[0] === null || ['finished', 'idle'].includes(panZoom.anims[0].playState))
             // camera not close
-            && panZoom.distanceTo(npcPosition) > 10
+            && panZoom.distanceTo(npc.getPosition()) > 10
           ) {
-            status = 'panzoom-to';
-            console.warn('@', status);
-            // Ignore Error('cancelled')
+            changeStatus('panzoom-to');
             try {
-              // const baseZoom = undefined;
               const baseZoom = 1.8;
-              await panZoom.panZoomTo(baseZoom, npcPosition, 2000);
+              await panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000);
             } catch {};
-            status = 'no-track';
-          }
-
-          if (msg.key === 'started-walking') {
-            status = 'follow-walk';
-            console.warn('@', status);
-            /**
-             * Skip this on Firefox Android (it is very jerky)?
-             */
-            try {
-              const path = npc.getTargets().map(x => x.point);
-              await panZoom.followPath(path, { animScaleFactor: npc.getAnimScaleFactor() });
-            } catch {} // Ignore Error('cancelled')
+            changeStatus('no-track');
           }
         },
       });
+
+      return subscription;
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {

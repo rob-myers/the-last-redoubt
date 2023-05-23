@@ -405,19 +405,20 @@ declare namespace NPC {
   export type FovMapAction = 'show' | 'hide' | 'show-for-ms' | 'pause' | 'resume';
 
   export type NPCsEvent = (
-    | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
     | { key: 'decors-added'; decors: DecorDef[]; }
     | { key: 'decor-click'; decor: DecorDef; }
     | { key: 'decors-removed'; decors: DecorDef[]; }
     | { key: 'disabled' }
     | { key: 'enabled' }
     | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
+    | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
+    | { key: 'npc-internal'; npcKey: string; event: 'cancelled' | 'paused' | 'resumed' }
     | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
+    | { key: 'removed-npc'; npcKey: string; }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; intoDecor: NPC.DecorRef[] }
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
-    | { key: 'unmounted-npc'; npcKey: string; }
     | { key: 'world-ready'; }
     | NPCsWayEvent
   );

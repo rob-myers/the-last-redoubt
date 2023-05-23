@@ -163,9 +163,11 @@ export default function useHandleEvents(api) {
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
       switch (e.key) {
-        case 'npc-clicked':
         case 'decors-added':
         case 'decors-removed':
+        case 'npc-clicked':
+        case 'npc-internal':
+        case 'removed-npc':
           break;
         case 'decor-click':
           mockHandleDecorClick(e, api);
@@ -185,10 +187,6 @@ export default function useHandleEvents(api) {
           break;
         case 'set-player':
           api.npcs.setPlayerKey(e.npcKey);
-          if (e.npcKey) {
-            api.npcs.setRoomByNpc(e.npcKey);
-          }
-          
           break;
         case 'spawned-npc':
           // This event also happens on hot-reload NPC.jsx
@@ -228,10 +226,6 @@ export default function useHandleEvents(api) {
           }
           break;
         }
-        case 'unmounted-npc':
-          // This event also happens on hot-reload NPC.jsx
-          delete api.npcs.npc[e.npcKey];
-          break;
         case 'way-point':
           if (e.npcKey === api.npcs.playerKey) {
             state.handlePlayerWayEvent(e);

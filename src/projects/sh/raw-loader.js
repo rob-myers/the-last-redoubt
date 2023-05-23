@@ -386,12 +386,11 @@
       const { npcs } = api.getCached(home.WORLD_KEY)
       const process = api.getProcess()
       const subscription = npcs.trackNpc({ npcKey, process })
-      await /** @type {Promise<void>} */ (new Promise(resolve =>
-        process.cleanups.push(
-          () => subscription.unsubscribe(),
-          resolve,
-        )
-      ))
+      // resolve on unsubscribe or invoke cleanups
+      await /** @type {Promise<void>} */ (new Promise(resolve => {
+        subscription.add(resolve);
+        process.cleanups.push(() => subscription.unsubscribe(), resolve);
+      }))
     },
   
     /**

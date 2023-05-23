@@ -2,13 +2,6 @@
 
 ## In progress
 
-- 🚧 playerKey cleanup
-  - 🚧 arrays npc.on{Cancel,Pause,Resume}
-  - 🚧 track pushes cbs and cleans up
-  - ℹ️ on `npc set-player foo` we change FOV
-  - ℹ️ on respawn player we change FOV
-  - ℹ️ on player waypoint we change FOV via handlePlayerWayEvent
-
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
@@ -373,6 +366,16 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG click-drag pan `pointerup` should have distance
+
+- ✅ playerKey cleanup
+  - ✅ npcs.event: npc-internal for cancel/pause/resume
+  - ✅ track `tap`s event and cancel/pauses/resumes panZoom
+  - ℹ️ on `npc set-player foo` we change FOV
+    - ✅ move FOV change inside npcs.setPlayerKey
+  - ℹ️ on respawn player we change FOV
+  - ℹ️ on player waypoint we change FOV via handlePlayerWayEvent
 
 - ✅ BUG `Enter` in terminal is maximising Tabs
 - ✅ BUG viewPoly

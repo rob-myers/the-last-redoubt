@@ -132,9 +132,8 @@ export default function createNpc(
       if (this.anim.spriteSheet === 'walk') {// Cancel pending actions
         this.clearWayMetas();
       }
-      if (this.def.key === api.npcs.playerKey) {// Cancel camera tracking
-        api.panZoom.animationAction('cancel');
-      }
+
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
     canLook() {
       return (
@@ -450,10 +449,8 @@ export default function createNpc(
          */
         window.clearTimeout(this.anim.wayTimeoutId);
       }
-      if (this.def.key === api.npcs.playerKey) {
-        // Pause camera tracking
-        api.panZoom.animationAction('pause');
-      }
+
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
     },
     resume(dueToProcessResume = false) {
       if (this.manuallyPaused && dueToProcessResume) {
@@ -470,10 +467,8 @@ export default function createNpc(
       if (this.anim.spriteSheet === 'walk') {
         this.nextWayTimeout();
       }
-      if (this.def.key === api.npcs.playerKey) {
-        // Resume camera tracking
-        api.panZoom.animationAction('play');
-      }
+
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
     setInteractRadius(radius) {
       if (typeof radius === 'number') {
