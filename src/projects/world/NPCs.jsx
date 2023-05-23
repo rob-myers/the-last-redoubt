@@ -1,5 +1,4 @@
 import React from "react";
-import { css, cx } from "@emotion/css";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 
@@ -859,15 +858,15 @@ export default function NPCs(props) {
 
   return (
     <div
-      className={cx('npcs', rootCss)}
+      className="npcs"
       ref={state.rootRef}
     >
       {Object.values(state.npc).map(({ key, epochMs }) => (
         <MemoizedNPC
           key={key}
           api={props.api}
-          epochMs={epochMs} // To override memoization
           npcKey={key}
+          epochMs={epochMs} // To override memoization
         />
       ))}
 
@@ -875,28 +874,6 @@ export default function NPCs(props) {
     </div>
   );
 }
-
-const rootCss = css`
-  /** For CSS variables see state.rootRef */
-
-  position: absolute;
-  canvas {
-    position: absolute;
-    pointer-events: none;
-  }
-  div.debug-npc {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
-    border: 1px solid red;
-    transform: translate(-15px, -15px);
-  }
-  svg {
-    position: absolute;
-    pointer-events: none;
-  }
-`;
 
 /**
  * @typedef Props @type {object}
