@@ -480,6 +480,14 @@ export default function NPCs(props) {
           }
           return npc.getAngle();
         }
+        case 'light': {
+          const result = api.gmGraph.findRoomContaining(e.point);
+          if (result) {
+            const next = e.lit ?? !api.geomorphs.gmRoomLit[result.gmId][result.roomId];
+            api.geomorphs.setRoomLit(result.gmId, result.roomId, next);
+          }
+          break;
+        }
         case 'map':
           return api.fov.mapAct(e.mapAction, e.timeMs);
         case 'pause':// Pause current animation

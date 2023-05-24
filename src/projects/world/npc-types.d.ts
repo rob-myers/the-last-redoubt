@@ -391,6 +391,7 @@ declare namespace NPC {
     | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
+    | { action: 'light'; lit?: boolean; point: Geom.VectJson }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }
     | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }

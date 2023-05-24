@@ -53,7 +53,7 @@ const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "
 export const fovMapActionKeys = keys(fromFovMapActionKey);
 
 /** @type {Record<NPC.NpcActionKey, true>} */
-const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /** @type {Record<NPC.NpcClassKey, true>} */
 const fromNpcClassKey = { "first-human-npc": true, "solomani-a": true, "vilani-a": true, "zhodani-a": true };
@@ -126,6 +126,14 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
       default:
         opts = {}; // we ignore key
         break;
+    }
+  } else {
+    switch (action) {
+      case "light":
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ point: opts, lit: extras[0] });
+        break;
+      default:
+        return opts;
     }
   }
   return opts;

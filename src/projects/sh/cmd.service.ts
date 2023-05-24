@@ -645,8 +645,10 @@ function getProcess(meta: Sh.BaseMeta) {
   return useSession.api.getProcess(meta);
 }
 
-/** js parse with string fallback */
-export function parseJsArg(input: string) {
+/**
+ * js parse with string fallback, preserving `undefined`
+ */
+export function parseJsArg(input?: string) {
   try {
     return Function(`return ${input}`)();
   } catch (e) {
