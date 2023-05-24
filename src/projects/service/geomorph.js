@@ -759,7 +759,7 @@ export function computeLightDoorRects(gm) {
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: typeof lightRects  }} pre previous
+   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: Geomorph.LightDoorRect[] }} pre previous
    * @param {number} depth 
    */
   function depthFirstLightRects(light, roomId, pre, depth) {
@@ -794,6 +794,7 @@ export function computeLightDoorRects(gm) {
         doorId,
         lightId: light.id,
         rect: otherRoomIntersection[0].rect.precision(0),
+        srcRoomId: light.roomId,
         preDoorIds: pre.doorIds.slice(),
         postDoorIds: [], // computed directly below
       });

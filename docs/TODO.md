@@ -3,8 +3,8 @@
 ## In progress
 
 - ✅ can toggle room lights (js api)
+- ✅ light rects have srcRoomId
 - 🚧 can toggle room lights (cli)
-- light rects have srcRoomId
 
 - non-player npc can open door
 - homepage: interesting behavioural examples, rather than formal definitions

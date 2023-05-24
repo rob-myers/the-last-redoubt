@@ -15772,6 +15772,7 @@
       "doorId": 20,
       "lightId": 0,
       "rect": {"x": 483, "y": 242, "width": 107, "height": 116},
+      "srcRoomId": 9,
       "preDoorIds": [],
       "postDoorIds": [10]
     },
@@ -15780,6 +15781,7 @@
       "doorId": 10,
       "lightId": 0,
       "rect": {"x": 468, "y": 182, "width": 63, "height": 56},
+      "srcRoomId": 9,
       "preDoorIds": [20],
       "postDoorIds": []
     },
@@ -15788,6 +15790,7 @@
       "doorId": 22,
       "lightId": 0,
       "rect": {"x": 542, "y": 482, "width": 46, "height": 35},
+      "srcRoomId": 9,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15796,6 +15799,7 @@
       "doorId": 19,
       "lightId": 1,
       "rect": {"x": 363, "y": 242, "width": 106, "height": 116},
+      "srcRoomId": 7,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15804,6 +15808,7 @@
       "doorId": 21,
       "lightId": 1,
       "rect": {"x": 422, "y": 482, "width": 46, "height": 35},
+      "srcRoomId": 7,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15812,6 +15817,7 @@
       "doorId": 8,
       "lightId": 3,
       "rect": {"x": 1022, "y": 173, "width": 50, "height": 65},
+      "srcRoomId": 1,
       "preDoorIds": [],
       "postDoorIds": [15]
     },
@@ -15820,6 +15826,7 @@
       "doorId": 15,
       "lightId": 3,
       "rect": {"x": 1002, "y": 187, "width": 16, "height": 35},
+      "srcRoomId": 1,
       "preDoorIds": [8],
       "postDoorIds": []
     },
@@ -15828,6 +15835,7 @@
       "doorId": 26,
       "lightId": 5,
       "rect": {"x": 6, "y": 1043, "width": 154, "height": 151},
+      "srcRoomId": 5,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15836,6 +15844,7 @@
       "doorId": 9,
       "lightId": 6,
       "rect": {"x": 149, "y": 168, "width": 77, "height": 125},
+      "srcRoomId": 0,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15844,6 +15853,7 @@
       "doorId": 12,
       "lightId": 7,
       "rect": {"x": 913, "y": 51, "width": 102, "height": 67},
+      "srcRoomId": 17,
       "preDoorIds": [],
       "postDoorIds": [13]
     },
@@ -15852,6 +15862,7 @@
       "doorId": 13,
       "lightId": 7,
       "rect": {"x": 973, "y": 6, "width": 93, "height": 52},
+      "srcRoomId": 17,
       "preDoorIds": [12],
       "postDoorIds": []
     },
@@ -15860,6 +15871,7 @@
       "doorId": 23,
       "lightId": 11,
       "rect": {"x": 715, "y": 285, "width": 57, "height": 73},
+      "srcRoomId": 15,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15868,6 +15880,7 @@
       "doorId": 24,
       "lightId": 11,
       "rect": {"x": 788, "y": 285, "width": 60, "height": 73},
+      "srcRoomId": 15,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15876,6 +15889,7 @@
       "doorId": 25,
       "lightId": 13,
       "rect": {"x": 861, "y": 472, "width": 97, "height": 64},
+      "srcRoomId": 21,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15884,6 +15898,7 @@
       "doorId": 29,
       "lightId": 14,
       "rect": {"x": 842, "y": 972, "width": 58, "height": 82},
+      "srcRoomId": 13,
       "preDoorIds": [],
       "postDoorIds": []
     },
@@ -15892,6 +15907,7 @@
       "doorId": 28,
       "lightId": 16,
       "rect": {"x": 857, "y": 629, "width": 101, "height": 82},
+      "srcRoomId": 23,
       "preDoorIds": [],
       "postDoorIds": []
     }

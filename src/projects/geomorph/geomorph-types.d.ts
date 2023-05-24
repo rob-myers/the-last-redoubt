@@ -395,6 +395,7 @@ declare namespace Geomorph {
     key: string;
     doorId: number;
     lightId: number;
+    srcRoomId: number;
     rect: R;
     /** Ids of prior doors i.e. closer to light source (earlier index closer)  */
     preDoorIds: number[];

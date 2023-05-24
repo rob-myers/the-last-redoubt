@@ -56,7 +56,7 @@ export default function Geomorphs(props) {
       if (!meta) {
         return;
       }
-      if (lightIsOn && (gm.lightSrcs[meta.lightId].roomId === api.fov.roomId)) {
+      if (lightIsOn && (meta.srcRoomId === api.fov.roomId)) {
         /**
          * Don't hide lights if current room has light source,
          * which fixes diagonal doors e.g. see 301 bridge.
@@ -78,8 +78,11 @@ export default function Geomorphs(props) {
       const open = api.doors.open[gmId];
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-      if (!meta || meta.preDoorIds.some(preId => !open[preId]) || !state.gmRoomLit[gmId][gm.lightSrcs[meta.lightId].roomId]) {
-        return; // Don't show light unless all requisite doors are open, and it is on
+      if (!meta
+        || meta.preDoorIds.some(preId => !open[preId]) // other doors must be open
+        || !state.gmRoomLit[gmId][meta.srcRoomId] // must be on 
+      ) {
+        return;
       }
       // Show light by clearing rect
       ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
@@ -97,11 +100,15 @@ export default function Geomorphs(props) {
       state.initGmLightRects(gmId);
     },
     setRoomLit(gmId, roomId, lit) {
-      if (state.gmRoomLit[gmId][roomId] === lit) {
+      const gm = gms[gmId];
+      if (
+        state.gmRoomLit[gmId][roomId] === lit
+        || !gm.lightSrcs.some(x => x.roomId === roomId)
+      ) {
         return;
       }
+
       // toggle light in room
-      const gm = gms[gmId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
       ctxt.setTransform(1, 0, 0, 1, 0, 0);
       if (lit) {// clear polygon
@@ -117,6 +124,9 @@ export default function Geomorphs(props) {
         ctxt.fillStyle = preDarkenCssRgba;
         fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
       }
+
+      state.gmRoomLit[gmId][roomId] = lit;
+
       // toggle light rects
       const doorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
       if (lit) {
@@ -125,8 +135,6 @@ export default function Geomorphs(props) {
       } else {
         doorIds.forEach(doorId => state.onCloseDoor(gmId, doorId, false));
       }
-
-      state.gmRoomLit[gmId][roomId] = lit;
     },
 
   }), {
