@@ -13,10 +13,10 @@ import useUpdate from "../hooks/use-update";
 export default function Doors(props) {
 
   const update = useUpdate();
-
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
-
+  
   const state = useStateRef(/** @type {() => State} */ () => ({
+    // gmGraph is ready (condition for Doors to be mounted)
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
     open: gms.map((gm, gmId) =>
@@ -174,7 +174,7 @@ export default function Doors(props) {
       update();
     },
   }), {
-    deps: [gmGraph, props.api.npcs],
+    deps: [props.api.npcs],
   });
 
   React.useEffect(() => {

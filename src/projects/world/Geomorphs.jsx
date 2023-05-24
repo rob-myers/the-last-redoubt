@@ -2,6 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { cssName, preDarkenCssRgba } from "./const";
 import { assertDefined, assertNonNull } from "../service/generic";
+import { fillPolygons } from "../service/dom";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 /**
@@ -9,11 +10,12 @@ import useStateRef from "../hooks/use-state-ref";
  * @param {Props} props 
  */
 export default function Geomorphs(props) {
-  const { api } = props;
+  const { api, api: { gmGraph: { gms } } } = props;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     canvas: [],
-    unlitImgs: [], 
+    gmRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)), // gmGraph is ready
+    unlitImgs: [],
     ready: true,
 
     drawRectImage(imgEl, srcOffset, ctxt, rect) {
@@ -30,9 +32,8 @@ export default function Geomorphs(props) {
       ctxt.fillStyle = preDarkenCssRgba;
       ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
     },
-
     initGmLightRects(gmId) {
-      const gm = api.gmGraph.gms[gmId];
+      const gm = gms[gmId];
       const canvas = state.canvas[gmId];
       const ctxt = assertNonNull(canvas.getContext('2d'));
       ctxt.setTransform(1, 0, 0, 1, 0, 0);
@@ -49,13 +50,18 @@ export default function Geomorphs(props) {
         }
       });
     },
-
-    onCloseDoor(gmId, doorId) {
-      const gm = api.gmGraph.gms[gmId];
+    onCloseDoor(gmId, doorId, lightIsOn = true) {
+      const gm = gms[gmId];
       const meta = gm.doorToLightRect[doorId];
-      if (!meta || gm.lightSrcs[meta.lightId].roomId === api.fov.roomId) {
-        // Don't hide lights if current room has light source,
-        return; // which fixes non-orthonormal doors
+      if (!meta) {
+        return;
+      }
+      if (lightIsOn && (gm.lightSrcs[meta.lightId].roomId === api.fov.roomId)) {
+        /**
+         * Don't hide lights if current room has light source,
+         * which fixes diagonal doors e.g. see 301 bridge.
+         */
+        return;
       }
       // Hide light by drawing partial image
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
@@ -68,12 +74,12 @@ export default function Geomorphs(props) {
       });
     },
     onOpenDoor(gmId, doorId) {
-      const gm = api.gmGraph.gms[gmId];
+      const gm = gms[gmId];
       const open = api.doors.open[gmId];
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
-      if (!meta || meta.preDoorIds.some(preId => !open[preId])) {
-        return; // Don't show light unless all requisite doors are open
+      if (!meta || meta.preDoorIds.some(preId => !open[preId]) || !state.gmRoomLit[gmId][gm.lightSrcs[meta.lightId].roomId]) {
+        return; // Don't show light unless all requisite doors are open, and it is on
       }
       // Show light by clearing rect
       ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
@@ -84,12 +90,43 @@ export default function Geomorphs(props) {
         ctxt.clearRect(doorRect.x, doorRect.y, doorRect.width, doorRect.height);
       });
     },
-    
     onLoadUnlitImage(e) {
       const imgEl = /** @type {HTMLImageElement} */ (e.target);
       const gmId = Number(imgEl.dataset.gmId);
       state.unlitImgs[gmId] = imgEl;
       state.initGmLightRects(gmId);
+    },
+    setRoomLit(gmId, roomId, lit) {
+      if (state.gmRoomLit[gmId][roomId] === lit) {
+        return;
+      }
+      // toggle light in room
+      const gm = gms[gmId];
+      const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
+      ctxt.setTransform(1, 0, 0, 1, 0, 0);
+      if (lit) {// clear polygon
+        ctxt.globalCompositeOperation = 'destination-out';
+        ctxt.fillStyle = 'white';
+        fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
+        ctxt.globalCompositeOperation = 'source-over';
+      } else {// fill polygon using unlit image, and also darken
+        const pattern = assertNonNull(ctxt.createPattern(state.unlitImgs[gmId], 'no-repeat'));
+        pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e: gm.pngRect.x, f: gm.pngRect.y });
+        ctxt.fillStyle = pattern;
+        fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
+        ctxt.fillStyle = preDarkenCssRgba;
+        fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
+      }
+      // toggle light rects
+      const doorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
+      if (lit) {
+        const openDoorIds = doorIds.filter(doorId => api.doors.open[gmId][doorId]);
+        openDoorIds.forEach(doorId => state.onOpenDoor(gmId, doorId));
+      } else {
+        doorIds.forEach(doorId => state.onCloseDoor(gmId, doorId, false));
+      }
+
+      state.gmRoomLit[gmId][roomId] = lit;
     },
 
   }), {
@@ -102,7 +139,7 @@ export default function Geomorphs(props) {
 
   return (
     <div className={cx("geomorphs", rootCss)}>
-      {api.gmGraph.gms.map((gm, gmId) =>
+      {gms.map((gm, gmId) =>
         <div
           key={gmId}
           style={{ transform: gm.transformStyle }}
@@ -170,11 +207,13 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
+ * @property {boolean[][]} gmRoomLit lights off <=> `gmRoomUnlit[gmId][roomId]` truthy
  * @property {HTMLImageElement[]} unlitImgs
  * @property {(imgEl: HTMLImageElement, srcOffset: Geom.VectJson, ctxt: CanvasRenderingContext2D, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
- * @property {(gmId: number, doorId: number) => void} onCloseDoor
+ * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
  * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadUnlitImage
+ * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {boolean} ready
  */

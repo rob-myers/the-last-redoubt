@@ -2,6 +2,13 @@
 
 ## In progress
 
+- ✅ can toggle room lights (js api)
+- 🚧 can toggle room lights (cli)
+- light rects have srcRoomId
+
+- non-player npc can open door
+- homepage: interesting behavioural examples, rather than formal definitions
+
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
