@@ -14,8 +14,8 @@
   - ✅ js api
   - ✅ cli `npc do foo $( click 1 ) [0|1]`
 
+- ✅ rename zhodani-a -> zhodani etc.
 - homepage: interesting behavioural examples, rather than formal definitions
-- rename zhodani-a -> zhodani etc.
 - HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal

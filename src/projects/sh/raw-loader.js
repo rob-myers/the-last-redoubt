@@ -338,7 +338,7 @@
     /**
      * Spawn character(s) at a position(s) and angle, e.g.
      * - `spawn andros "$( click 1 )"`
-     * - `spawn andros zhodani-a "$( click 1 )"`
+     * - `spawn andros zhodani "$( click 1 )"`
      * - `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
      * 
      * We also handle "do points": spawn _from_ do; spawn _to_ do.

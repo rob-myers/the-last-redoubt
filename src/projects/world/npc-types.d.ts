@@ -9,9 +9,9 @@ declare namespace NPC {
    */
   type NpcClassKey = (
     | 'first-human-npc'
-    | 'solomani-a'
-    | 'vilani-a'
-    | 'zhodani-a'
+    | 'solomani'
+    | 'vilani'
+    | 'zhodani'
   );
 
   interface NpcClassJson {

@@ -87,8 +87,9 @@ export const defaultDoorCloseMs = 7000;
 
 /** @type {NPC.NpcClassKey} */
 // export const defaultNpcClassKey = 'first-human-npc';
-export const defaultNpcClassKey = 'vilani-a';
-// export const defaultNpcClassKey = 'zhodani-a';
+// export const defaultNpcClassKey = 'solomani';
+export const defaultNpcClassKey = 'vilani';
+// export const defaultNpcClassKey = 'zhodani';
 
 export const defaultNpcInteractRadius = 70;
 

@@ -56,7 +56,7 @@ export const fovMapActionKeys = keys(fromFovMapActionKey);
 const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
 /** @type {Record<NPC.NpcClassKey, true>} */
-const fromNpcClassKey = { "first-human-npc": true, "solomani-a": true, "vilani-a": true, "zhodani-a": true };
+const fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };
 
 /**
  * @param {string} input 
