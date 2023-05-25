@@ -117,10 +117,10 @@ thinkLoop: `{
 }`,
 
 // /** Usage: world 'x => x.fov' */
-// world: `{
-//   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
-//     map "$\{1:-x=>x}"
-// }`,
+world: `{
+  call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
+    map "$\{1:-x=>x}"
+}`,
 
 },
 ];
