@@ -396,10 +396,10 @@
     /**
      * 🚧 handle multiple reads?
      */
-    view: function* ({ api, args, home }) {
+    view: async function* ({ api, args, home }) {
       const opts = Function(`return ${args[0]} `)()
       const { npcs } = api.getCached(home.WORLD_KEY)
-      npcs.panZoomTo(opts) // Returns "cancelled" or "completed"
+      await npcs.panZoomTo(opts) // Returns "cancelled" or "completed"
     },
   
     /**
