@@ -7,12 +7,12 @@
 - ✅ can toggle room lights (cli)
 
 - ✅ `click 1` should block `click`
-- 🚧 door toggle driven by `doLoop`
-  - ℹ️ currently onClick fires regardless of `click 1`
+- ✅ door toggle driven by `doLoop`
+  - ℹ️ currently 'pointerup' listener fires regardless of `click 1`
 
-- 🚧 npc can open door
+- ✅ npc can open door
   - ✅ js api
-  - 🚧 cli `npc do foo $( click 1 ) [0|1]`
+  - ✅ cli `npc do foo $( click 1 ) [0|1]`
 
 - homepage: interesting behavioural examples, rather than formal definitions
 - rename zhodani-a -> zhodani etc.
@@ -21,6 +21,7 @@
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
+- simplify individual doors
 - BUG Escape Tabs not working when click on tabs bar
   - probably interference from tab dragger
 - BUG react_devtools_backend_compact.js:2367 ERROR g-301--bridge: hull door 0: w: failed to parse transform "0,1,-1,0,1800,0" 

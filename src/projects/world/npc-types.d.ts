@@ -201,6 +201,7 @@ declare namespace NPC {
     | 'localNav'
     | 'localOutline'
     | 'omnipresent'
+    | 'scriptDoors'
     | 'showIds'
   );
 
@@ -388,7 +389,7 @@ declare namespace NPC {
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; }
+    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; params?: any[]; }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }

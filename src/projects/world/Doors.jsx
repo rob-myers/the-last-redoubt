@@ -19,11 +19,12 @@ export default function Doors(props) {
     // know gmGraph is ready (condition for Doors to be mounted)
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
-    open: gms.map((gm, gmId) =>
-      gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) || false)
-    ),
+    open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
+    touchMeta: gms.map((gm, gmId) => gm.doors.map((_, doorId) =>
+      JSON.stringify({ door: true, ui: true, gmId, doorId })
+    )),
     vis: gms.map(_ => ({})),
 
     getOpenIds(gmId) {
@@ -42,9 +43,10 @@ export default function Doors(props) {
     },
     onClickDoor(e) {
       const uiEl = /** @type {HTMLElement} */ (e.target);
-      if (uiEl.dataset.gm_id !== null) {
-        const gmId = Number(uiEl.dataset.gm_id);
-        const doorId = Number(uiEl.dataset.door_id);
+      if (uiEl.dataset.meta) {
+        const meta = JSON.parse(uiEl.dataset.meta);
+        const gmId = Number(meta.gmId);
+        const doorId = Number(meta.doorId);
         state.toggleDoor(gmId, doorId, { viaClick: true });
       }
     },
@@ -67,11 +69,11 @@ export default function Doors(props) {
       if (sealed) {
         return false;
       }
-      if (opts.close && (!wasOpen || state.closing[gmId][doorId])) {
-        return false; // Do not close if closed or closing
+      if (opts.close && !wasOpen) {
+        return true; // Do not close if closed
       }
-      if (opts.open && (wasOpen && !state.closing[gmId][doorId])) {
-        return false; // Do not open if opened and not closing
+      if (opts.open && wasOpen) {
+        return true; // Do not open if opened
       }
       if (npcKey && !state.npcNearDoor(gmId, doorId, npcKey)) {
         return false;
@@ -186,16 +188,18 @@ export default function Doors(props) {
             meta && (meta.timeoutId = window.setTimeout(() => state.tryCloseDoor(gmId, doorId)))
           }));
       });
-
-      const callback = state.onClickDoor; // ℹ️ state.onClickDoor can be mutated on HMR
-      state.rootEl.addEventListener('pointerup', callback);
-      return () => {
-        handlePause.unsubscribe();
-        state.rootEl.removeEventListener('pointerup', callback);
-      };
+      return () => void handlePause.unsubscribe();
     }
   }, [npcs.ready]);
   
+  React.useEffect(() => {// Can toggle doors without scripting
+    if (npcs.config && !npcs.config.scriptDoors) {
+      const callback = state.onClickDoor; // maybe mutated on HMR
+      state.rootEl.addEventListener('pointerup', callback);
+      return () => void state.rootEl.removeEventListener('pointerup', callback);
+    }
+  }, [npcs.config?.scriptDoors]);
+
   return (
     <div
       ref={el => el && (state.rootEl = el)}
@@ -207,14 +211,14 @@ export default function Doors(props) {
           className={`gm-${gmId}`}
           style={{ transform: gm.transformStyle }}
         >
-          {gm.doors.map((door, i) =>
-            state.vis[gmId][i] &&
+          {gm.doors.map((door, doorId) =>
+            state.vis[gmId][doorId] &&
               <div
-                key={i}
+                key={doorId}
                 className={cx(cssName.door, {
                   [cssName.hull]: door.meta.hull === true,
                   [cssName.iris]: door.meta.iris === true,
-                  [cssName.open]: state.open[gmId][i],
+                  [cssName.open]: state.open[gmId][doorId],
                 })}
                 style={{
                   left: door.baseRect.x,
@@ -227,9 +231,7 @@ export default function Doors(props) {
               >
                 <div
                   className={cssName.doorTouchUi}
-                  data-gm_id={gmId}
-                  data-door_id={i}
-                  data-meta={doorTouchUiMeta}
+                  data-meta={state.touchMeta[gmId][doorId]}
                 />
                 <div
                   className="other-door"
@@ -246,7 +248,7 @@ export default function Doors(props) {
   );
 }
 
-const doorTouchUiMeta = JSON.stringify({ ui: true });
+const doorTouchUiMeta = JSON.stringify({ door: true, ui: true });
 
 const rootCss = css`
   ${cssName.npcDoorTouchRadius}: 10px;
@@ -336,6 +338,7 @@ const rootCss = css`
  * @property {boolean[][]} open `open[gmId][doorId]`
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
+ * @property {string[][]} touchMeta `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
  * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => Promise<boolean>} toggleDoor

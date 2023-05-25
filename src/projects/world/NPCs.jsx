@@ -36,6 +36,7 @@ export default function NPCs(props) {
 
     config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
       omnipresent: /** @type {boolean} */ (false),
+      scriptDoors: /** @type {boolean} */ (true),
     }), {
       /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey | 'toJSON'} key */
       get(ctxt, key) {
@@ -55,6 +56,8 @@ export default function NPCs(props) {
           case 'localNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
           case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
           case 'omnipresent': return !!ctxt.omnipresent;
+          case 'scriptDoors':
+            return ctxt[key];
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
           case 'configKey':
           case 'decorKey':
@@ -82,6 +85,7 @@ export default function NPCs(props) {
           case 'localNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
           case 'localOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
+          case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
           case 'configKey':
           case 'decorKey':
@@ -527,16 +531,25 @@ export default function NPCs(props) {
       point.meta ??= {}; // possibly manually specified (not via `click [n]`)
       
       try {
-        if (state.isPointInNavmesh(npc.getPosition())) {
+        if (point.meta.door && typeof point.meta.gmId === 'number' && typeof point.meta.doorId === 'number') {
+          /** `undefined` -> toggle, `true` -> open, `false` -> close */
+          const extraParam = e.params?.[0] === undefined ? undefined : !!e.params[0];
+          const success = await api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: e.npcKey, close: extraParam === false, open: extraParam === true });
+          if (!success) {
+            throw Error('cannot open/close door')
+          }
+        } else if (state.isPointInNavmesh(npc.getPosition())) {
           await state.onMeshDoMeta(npc, e);
+          npc.doMeta = point.meta.do ? point.meta : null;
         } else {
           await state.offMeshDoMeta(npc, e);
+          npc.doMeta = point.meta.do ? point.meta : null;
         }
-        npc.doMeta = point.meta.do ? point.meta : null;
       } catch (e) {
-        if (e instanceof Error && e.message === 'cancelled') {
+        if (e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:'))) {
           // Swallow 'cancelled' errors e.g. start new walk, obstruction
           // All errors can be swallowed via `npc do '{ suppressThrow: true }'`
+          // 🚧 should we swallow errors due to obstruction?
         } else {
           throw e;
         }

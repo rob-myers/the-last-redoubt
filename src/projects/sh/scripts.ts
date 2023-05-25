@@ -68,7 +68,7 @@ export const gameFunctions = [
 doLoop: `{
   click |
     map '({ x, y, meta }) =>
-      (meta.do || meta.nav)
+      (meta.do || meta.nav || meta.door)
         ? { npcKey: "'$1'", point: { x, y, meta } }
         : undefined
     ' |

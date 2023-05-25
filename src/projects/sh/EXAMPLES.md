@@ -68,6 +68,12 @@ me/animateOpacity'(0.5, 0)'
 expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do '{ suppressError: 1 }'
 
 npc do '{ npcKey: "foo", point:'$( click 1 )'}'
+npc do foo $( click 1 )
+
+# foo close door at
+npc do foo $( click 1 ) 0
+# foo open door at
+npc do foo $( click 1 ) 1
 ```
 
 ```sh
