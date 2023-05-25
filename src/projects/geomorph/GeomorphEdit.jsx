@@ -67,7 +67,7 @@ function Geomorph({ def, transform, disabled }) {
       const gmGraph = gmGraphClass.fromGms([gmInstance]);
       // ℹ️ Provide state needed by gmGraph
       gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
-        getOpen(_) { return state.openDoors; },
+        getOpenIds(_) { return state.openDoors; },
         get open() { return [gm?.doors.map((_, doorId) => state.openDoors.includes(doorId))??[]]; },
       });
       return { gm, gmGraph };

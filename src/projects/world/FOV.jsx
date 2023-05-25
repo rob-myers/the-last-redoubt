@@ -142,7 +142,7 @@ export default function FOV(props) {
       }
       
       const { prev } = state;
-      const openDoorsIds = props.api.doors.getOpen(state.gmId);
+      const openDoorsIds = props.api.doors.getOpenIds(state.gmId);
 
       /** @type {CoreState} */
       const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };

@@ -6,9 +6,13 @@
 - ✅ light rects have srcRoomId
 - ✅ can toggle room lights (cli)
 
-- non-player npc can open door
+- 🚧 non-player npc can open door
+  - ✅ js api
+  - cli
 - homepage: interesting behavioural examples, rather than formal definitions
 
+- rename zhodani-a -> zhodani etc.
+- HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise

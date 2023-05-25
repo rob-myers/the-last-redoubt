@@ -16,7 +16,7 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
-    // gmGraph is ready (condition for Doors to be mounted)
+    // know gmGraph is ready (condition for Doors to be mounted)
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
     open: gms.map((gm, gmId) =>
@@ -26,38 +26,56 @@ export default function Doors(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     vis: gms.map(_ => ({})),
 
-    getClosed(gmId) {
-      return state.open[gmId].flatMap((open, doorId) => open ? [] : doorId);
-    },
-    getOpen(gmId) {
+    getOpenIds(gmId) {
       return state.open[gmId].flatMap((open, doorId) => open ? doorId : []);
     },
-    getVisible(gmId) {
+    getVisibleIds(gmId) {
       return Object.keys(state.vis[gmId]).map(Number);
+    },
+    npcNearDoor(gmId, doorId, npcKey) {
+      const npc = props.api.npcs.getNpc(npcKey);
+      const center = npc.getPosition();
+      const radius = npc.getInteractRadius();
+      const door = gms[gmId].doors[doorId];
+      const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
+      return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);
     },
     onClickDoor(e) {
       const uiEl = /** @type {HTMLElement} */ (e.target);
       if (uiEl.dataset.gm_id !== null) {
         const gmId = Number(uiEl.dataset.gm_id);
         const doorId = Number(uiEl.dataset.door_id);
-        state.onToggleDoor(gmId, doorId, true);
+        state.toggleDoor(gmId, doorId, { viaClick: true });
       }
     },
-    async onToggleDoor(gmId, doorId, byPlayer) {
-
+    safeToCloseDoor(gmId, doorId) {
+      const door = gms[gmId].doors[doorId];
+      const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
+      const closeNpcs = props.api.npcs.getNpcsIntersecting(convexPoly);
+      return closeNpcs.length === 0;
+    },
+    setVisible(gmId, doorIds) {
+      state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
+    },
+    async toggleDoor(gmId, doorId, opts = {}) {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed;
       const wasOpen = state.open[gmId][doorId];
+      const npcKey = opts.npcKey ?? (opts.viaClick && !npcs.config.omnipresent ? npcs.playerKey : null);
 
-      if (sealed) {// Sealed permanently
+      if (sealed) {
         return false;
       }
-
-      if (byPlayer && !npcs.config.omnipresent && !state.playerNearDoor(gmId, doorId)) {
+      if (opts.close && (!wasOpen || state.closing[gmId][doorId])) {
+        return false; // Do not close if closed or closing
+      }
+      if (opts.open && (wasOpen && !state.closing[gmId][doorId])) {
+        return false; // Do not open if opened and not closing
+      }
+      if (npcKey && !state.npcNearDoor(gmId, doorId, npcKey)) {
         return false;
       }
-
       if (wasOpen && !state.safeToCloseDoor(gmId, doorId)) {
         return false;
       }
@@ -69,7 +87,6 @@ export default function Doors(props) {
         const uiEl = state.rootEl.querySelector(`div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`);
         if (uiEl?.parentElement instanceof HTMLElement) {
           uiEl.parentElement.classList.remove('open');
-          // await pause(hullDoorId === -1 ? 300/2 : 600/2);
           await pause(100/2);
         }
       }
@@ -95,31 +112,9 @@ export default function Doors(props) {
 
       return true;
     },
-    playerNearDoor(gmId, doorId) {
-      const { npcs } = props.api;
-      const player = npcs.getPlayer();
-      if (!player) { // If no player, we are "everywhere"
-        return true;
-      }
-      const center = player.getPosition();
-      const radius = player.getInteractRadius();
-      const door = gms[gmId].doors[doorId];
-      const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
-      return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);
-    },
-    safeToCloseDoor(gmId, doorId) {
-      const door = gms[gmId].doors[doorId];
-      const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
-      const closeNpcs = props.api.npcs.getNpcsIntersecting(convexPoly);
-      return closeNpcs.length === 0;
-    },
-    setVisible(gmId, doorIds) {
-      state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
-      // update(); // External API can state.update() 
-    },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
-        if (state.open[gmId][doorId] && !await state.onToggleDoor(gmId, doorId, false)) {
+        if (state.open[gmId][doorId] && !await state.toggleDoor(gmId, doorId, {})) {
           state.tryCloseDoor(gmId, doorId); // try again
         } else {
           state.closing[gmId][doorId] = null;
@@ -334,17 +329,16 @@ const rootCss = css`
  * @typedef State @type {object}
  * @property {(null | { timeoutId: number; })[][]} closing Provides `closing[gmId][doorId]?.timeoutId`
  * @property {import('rxjs').Subject<DoorMessage>} events
- * @property {(gmId: number) => number[]} getClosed
- * @property {(gmId: number) => number[]} getOpen Get ids of open doors
- * @property {(gmId: number) => number[]} getVisible
+ * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
+ * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(e: PointerEvent) => void} onClickDoor
- * @property {(gmId: number, doorId: number, byPlayer: boolean) => Promise<boolean>} onToggleDoor
- * @property {(gmId: number, doorId: number) => boolean} playerNearDoor
+ * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * @property {boolean[][]} open `open[gmId][doorId]`
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
+ * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => Promise<boolean>} toggleDoor
  * @property {(gmId: number, doorId: number) => void} tryCloseDoor
  * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} update
@@ -353,8 +347,16 @@ const rootCss = css`
  */
 
 /**
- * @typedef DoorMessage @type {object}
+ * @typedef DoorMessage
  * @property {'opened-door' | 'closed-door'} key
  * @property {number} gmId
  * @property {number} doorId
+ */
+
+/**
+ * @typedef ToggleDoorOpts
+ * @property {boolean} [close] should we close the door?
+ * @property {string} [npcKey] initiated via npc?
+ * @property {boolean} [open] should we open the door?
+ * @property {boolean} [viaClick] initiated via click?
  */

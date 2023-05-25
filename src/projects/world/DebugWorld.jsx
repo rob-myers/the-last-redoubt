@@ -21,7 +21,7 @@ export default function DebugWorld(props) {
   const ctxt = React.useMemo(() => {
     if (gmId >= 0) {
       const gm = gmGraph.gms[gmId];
-      const visDoorIds = props.api.doors.getVisible(gmId);
+      const visDoorIds = props.api.doors.getVisibleIds(gmId);
       const roomNavPoly = gm.lazy.roomNavPoly[roomId];
       /** Outset for door lines (? it fixed something) */
       const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset); // 

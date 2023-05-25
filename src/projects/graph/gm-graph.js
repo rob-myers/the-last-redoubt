@@ -50,7 +50,7 @@ export class gmGraphClass extends BaseGraph {
    */
   computeDoorViews(gmId, rootRoomId) {
     const gm = this.gms[gmId];
-    const openDoorsIds = this.api.doors.getOpen(gmId);
+    const openDoorsIds = this.api.doors.getOpenIds(gmId);
 
     /** Ids of open doors connected to rootRoom */
     const doorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
@@ -474,7 +474,7 @@ export class gmGraphClass extends BaseGraph {
 
     for (const { gmId, roomId } of roomIds) {
       const gm = this.gms[gmId];
-      const openDoorIds = this.api.doors.getOpen(gmId);
+      const openDoorIds = this.api.doors.getOpenIds(gmId);
       // Non-hull doors or windows induce an adjacent room
       !output[gmId] && (output[gmId] = { gmId, roomIds: [], windowIds: [], closedDoorIds: [] });
       output[gmId].roomIds.push(...gm.roomGraph.getAdjRoomIds(roomId, doorsMustBeOpen ? openDoorIds : undefined));
