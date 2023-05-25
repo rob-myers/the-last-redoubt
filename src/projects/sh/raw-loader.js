@@ -397,9 +397,17 @@
      * 🚧 handle multiple reads?
      */
     view: async function* ({ api, args, home }) {
-      const opts = Function(`return ${args[0]} `)()
-      const { npcs } = api.getCached(home.WORLD_KEY)
-      await npcs.panZoomTo(opts) // Returns "cancelled" or "completed"
+      const [first, second, third] = args.map(api.parseJsArg);
+      const { npcs } = api.getCached(home.WORLD_KEY);
+      if (typeof first === "number") {// view {ms} [{point}] [{zoom}]
+        await npcs.panZoomTo({
+          ms: first,
+          point: typeof second === "number" ? undefined : second,
+          zoom: typeof second === "number" ? second : third,
+        });
+      } else {
+        await npcs.panZoomTo(first)
+      }
     },
   
     /**

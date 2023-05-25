@@ -2,20 +2,12 @@
 
 ## In progress
 
-- ✅ can toggle room lights (js api)
-- ✅ light rects have srcRoomId
-- ✅ can toggle room lights (cli)
 
-- ✅ `click 1` should block `click`
-- ✅ door toggle driven by `doLoop`
-  - ℹ️ currently 'pointerup' listener fires regardless of `click 1`
-
-- ✅ npc can open door
-  - ✅ js api
-  - ✅ cli `npc do foo $( click 1 ) [0|1]`
-
-- ✅ rename zhodani-a -> zhodani etc.
-- homepage: interesting behavioural examples, rather than formal definitions
+- 🚧 homepage: interesting behavioural examples, rather than formal definitions
+  - 🚧 Tabs and Terminal on homepage with custom profile
+  - ✅ support `view {ms} [{point}] [{zoom}]`
+  - player on chair; npc goes to bed; npc turns light off; npc says "good night"
+  - alt: player gets in way...
 - HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal
@@ -382,6 +374,17 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can toggle room lights (js api)
+- ✅ light rects have srcRoomId
+- ✅ can toggle room lights (cli)
+- ✅ `click 1` should block `click`
+- ✅ door toggle driven by `doLoop`
+  - ℹ️ currently 'pointerup' listener fires regardless of `click 1`
+- ✅ npc can open door
+  - ✅ js api
+  - ✅ cli `npc do foo $( click 1 ) [0|1]`
+- ✅ rename zhodani-a -> zhodani etc.
 
 - ✅ BUG click-drag pan `pointerup` should have distance
 

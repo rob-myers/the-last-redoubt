@@ -286,6 +286,7 @@ export default function CssPanZoom(props) {
       isIdle() {
         return state.idleTimeoutId === 0;
       },
+      // 🚧 clean?
       async panZoomTo(scale, worldPoint, durationMs, easing) {
         scale = scale || state.scale;
         worldPoint = worldPoint || state.getWorldAtCenter();
@@ -332,11 +333,13 @@ export default function CssPanZoom(props) {
             state.releaseAnim(trAnim, state.translateRoot);
             scAnim && state.releaseAnim(scAnim, state.scaleRoot);
             // state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
+            state.syncStyles();
           });
           trAnim.addEventListener('cancel', async () => {
             reject('cancelled');
             !finished && state.events.next({ key: 'cancelled-panzoom-to' });
             state.scaleRoot.classList.remove('hide-grid');
+            state.syncStyles();
           });
         });
       },
