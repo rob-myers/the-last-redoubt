@@ -480,7 +480,7 @@ export default function NPCs(props) {
           }
           return npc.getAngle();
         }
-        case 'lit': {
+        case 'light': {
           const result = api.gmGraph.findRoomContaining(e.point);
           if (result) {
             const next = e.lit === undefined ? !api.geomorphs.gmRoomLit[result.gmId][result.roomId] : !!e.lit;
