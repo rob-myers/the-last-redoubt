@@ -173,11 +173,13 @@
       while (numClicks > 0) {
         const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
           sub = panZoom.events.subscribe({ next(e) {
-            if (
-              e.key === "pointerup" && e.distance < 5 && process.status === 1 && (
-                e.extra.clickEpoch ? !!extra && (extra.clickEpoch === e.extra.clickEpoch) : true
-              )
-            ) {
+            if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
+              return;
+            }
+            if (!extra && e.extra.clickEpoch) {
+              return; // `click 1` overrides `click`
+            }
+            if (e.extra.clickEpoch ? (extra?.clickEpoch === e.extra.clickEpoch) : true) {
               resolve(e); // Must resolve before tear-down induced by unsubscribe 
               sub.unsubscribe();
             }

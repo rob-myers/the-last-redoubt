@@ -116,6 +116,9 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
       case "config":
         opts = { configKey: [opts].concat(extras).join(' ') };
         break;
+      case "do":
+        opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0], params: extras.slice(1) });
+        break;
       case "look-at":
         // npc look-at andros $( click 1 )
         opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });

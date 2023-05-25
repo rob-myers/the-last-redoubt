@@ -6,11 +6,15 @@
 - ✅ light rects have srcRoomId
 - ✅ can toggle room lights (cli)
 
-- 🚧 non-player npc can open door
-  - ✅ js api
-  - cli
-- homepage: interesting behavioural examples, rather than formal definitions
+- ✅ `click 1` should block `click`
+- 🚧 door toggle driven by `doLoop`
+  - ℹ️ currently onClick fires regardless of `click 1`
 
+- 🚧 npc can open door
+  - ✅ js api
+  - 🚧 cli `npc do foo $( click 1 ) [0|1]`
+
+- homepage: interesting behavioural examples, rather than formal definitions
 - rename zhodani-a -> zhodani etc.
 - HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
