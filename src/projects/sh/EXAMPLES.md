@@ -138,7 +138,7 @@ npc map show
 npc map hide
 npc map # returns real number in [0, 1]
 
-npc light $( click 1 )
-npc light $( click 1 ) 0
-npc light $( click 1 ) 1
+npc lit $( click 1 )
+npc lit $( click 1 ) 0
+npc lit $( click 1 ) 1
 ```
