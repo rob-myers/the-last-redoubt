@@ -484,6 +484,10 @@ class cmdServiceClass {
      */
     parent: this,
 
+    addCleanup(cleanup: () => void) {
+      getProcess(this.meta).cleanups.push(cleanup);
+    },
+
     getCached,
 
     getColors() {
@@ -529,6 +533,12 @@ class cmdServiceClass {
     async read(chunks = false) {
       const result = await this.parent.readOnce(this.meta, chunks);
       return result?.eof ? null : result.data;
+    },
+
+    removeCleanup(cleanup: () => void) {
+      const { cleanups } = getProcess(this.meta);
+      const index = cleanups.findIndex(x => x === cleanup);
+      index >= 0 && cleanups.splice(index, 1);
     },
 
   
