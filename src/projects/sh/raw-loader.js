@@ -398,16 +398,18 @@
      */
     view: async function* ({ api, args, home }) {
       const [first, second, third] = args.map(api.parseJsArg);
-      const { npcs } = api.getCached(home.WORLD_KEY);
-      if (typeof first === "number") {// view {ms} [{point}] [{zoom}]
-        await npcs.panZoomTo({
-          ms: first,
-          point: typeof second === "number" ? undefined : second,
-          zoom: typeof second === "number" ? second : third,
-        });
-      } else {
-        await npcs.panZoomTo(first)
-      }
+      const { npcs, panZoom } = api.getCached(home.WORLD_KEY);
+      const cancel = () => panZoom.animationAction("cancel");
+      api.addCleanup(cancel);
+      await npcs.panZoomTo(typeof first === "number"
+        ? {// view {ms} [{point}] [{zoom}]
+            ms: first,
+            point: typeof second === "number" ? undefined : second,
+            zoom: typeof second === "number" ? second : third,
+          }
+        : first,
+      );
+      api.removeCleanup(cancel);
     },
   
     /**
