@@ -399,8 +399,9 @@
     view: async function* ({ api, args, home }) {
       const [first, second, third] = args.map(api.parseJsArg);
       const { npcs, panZoom } = api.getCached(home.WORLD_KEY);
-      const cancel = () => panZoom.animationAction("cancel");
-      api.addCleanup(cancel);
+      api.addSuspend(() => { panZoom.animationAction("pause"); return true; });
+      api.addResume(() => { panZoom.animationAction("play"); return true; });
+      const cancel = api.addCleanup(() => panZoom.animationAction("cancel"));
       await npcs.panZoomTo(typeof first === "number"
         ? {// view {ms} [{point}] [{zoom}]
             ms: first,

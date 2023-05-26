@@ -7,6 +7,7 @@
   - 🚧 Tabs and Terminal on homepage with custom profile
   - ✅ support `view {ms} [{point}] [{zoom}]`
   - ✅ can cancel `view`
+  - ✅ can pause/resume `view`
   - player and npc exchange shifts
     - player on chair; npc goes to bed; npc turns light off; npc says "good night"
     - alt: player gets in way...
