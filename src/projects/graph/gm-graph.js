@@ -177,7 +177,7 @@ export class gmGraphClass extends BaseGraph {
       } else if (ime1.y === 1) {// (0, 1)
         if (ime2.x === 1) // (0, 1, 1, 0)
           return geom.getFlippedDirection(geom.getDeltaDirection(direction, 2), 'y'); 
-        if (ime1.x === -1) // (0, 1, -1, 0)
+        if (ime2.x === -1) // (0, 1, -1, 0)
           return geom.getDeltaDirection(direction, 1);
       } else if (ime1.x === -1) {// (-1, 0)
         if (ime2.y === 1) // (-1, 0, 0, 1)
