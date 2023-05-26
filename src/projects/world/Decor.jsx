@@ -282,6 +282,7 @@ function DecorInstance({ def }) {
         style={{
           transform: pointToCssTransform(def),
         }}
+        {...decorPointHandlers}
       />
     );
   } else if (def.type === 'rect') {
@@ -371,15 +372,14 @@ const cssPoint = css`
     border-radius: 50%;
     outline: 0.5px solid black;
     opacity: 0.25;
-
     transform: scale(1);
-    transition: transform 300ms ease-in-out, opacity 500ms ease-in-out;
+    /* transition: transform 300ms ease-in-out, opacity 500ms ease-in-out; */
   }
 
-  &.icon:hover::after {
+  /* &.icon:hover::after {
     transform: scale(1.75);
     opacity: 1;
-  }
+  } */
   //#endregion icon
   
 `;
@@ -398,6 +398,22 @@ const cssRect = css`
   /* transform-origin: center; */
   border: 2px dotted #ffffff55;
 `;
+
+/**
+ * Would prefer &.icon:hover::after but touch devices remain hovered,
+ * obscuring npc when faded, or leaving white circular border underneath them.
+ */
+const decorPointHandlers = {
+  onPointerOver: /** @param {React.PointerEvent<HTMLDivElement>} e */ (e) => {
+    e.currentTarget.animate([{ offset: 0 }, { offset: 1, opacity: 1, transform: 'scale(1.75)' }], { duration: 1000, pseudoElement: '::after', fill: 'forwards' });
+  },
+  onPointerOut: /** @param {React.PointerEvent<HTMLDivElement>} e */ (e) => {
+    e.currentTarget.animate([{ offset: 0 }, { offset: 1, opacity: 0.25, transform: 'scale(1)' }], { duration: 1000, pseudoElement: '::after', fill: 'forwards' });
+  },
+  onClick: /** @param {React.MouseEvent<HTMLDivElement>} e */ (e) => {
+    e.currentTarget.animate([{ offset: 0 }, { offset: 0.25, opacity: 1, transform: 'scale(1.75)' }, { offset: 1, opacity: 0.25, transform: 'scale(1)' }], { duration: 3000, pseudoElement: '::after', fill: 'forwards' });
+  },
+};
 
 /**
  * @typedef Props
