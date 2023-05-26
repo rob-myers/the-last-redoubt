@@ -413,8 +413,9 @@ export default function CssPanZoom(props) {
     props.onLoad?.(state);
 
     // Apply initial zoom and centering
+    const { init } = props;
     state.setStyles();
-    state.panZoomTo(props.initZoom || 1, props.initCenter || { x: 0, y: 0 }, 1000)?.catch(_x => {});
+    state.panZoomTo(init?.zoom ?? 1, { x: init?.x ?? 0, y: init?.y ?? 0 }, init?.ms ?? 1000)?.catch(_x => {}); // ?
 
     return () => {
       keys(cb).forEach(key => state.parent.removeEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
@@ -518,8 +519,7 @@ const rootCss = css`
  * @property {string} [className]
  * @property {string} [background]
  * @property {boolean} [grid]
- * @property {number} [initZoom] e.g. `1`
- * @property {Geom.VectJson} [initCenter]
+ * @property {{ x?: number; y?: number; ms?: number; zoom?: number }} [init]
  * @property {(api: PanZoom.CssApi) => void} [onLoad]
  */
 
