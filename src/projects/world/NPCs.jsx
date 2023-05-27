@@ -890,8 +890,6 @@ export default function NPCs(props) {
           epochMs={epochMs} // To override memoization
         />
       ))}
-
-      <PrefetchSpritesheets/>
     </div>
   );
 }
@@ -960,26 +958,3 @@ export default function NPCs(props) {
  * @typedef NpcActResult
  * @type {void | number | NPC.NPC | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
  */
-
-/**
- * e.g. load walk spritesheet before walking
- */
-const PrefetchSpritesheets = React.memo(() => {
-  return (
-    <div
-      className="prefetch-spritesheets"
-      style={{ display: 'none' }}
-    >
-      {Object.values(npcsMeta).map((meta) =>
-        Object.values(meta.parsed.animLookup)
-          .filter(({ frameCount }) => frameCount > 1)
-          .map(({ animName, pathPng, pathWebp }) =>
-            <img
-              key={`${animName}@${meta.classKey}`}
-              src={supportsWebp ? pathWebp : pathPng}
-            />
-          )
-      )}
-    </div>
-  );
-});
