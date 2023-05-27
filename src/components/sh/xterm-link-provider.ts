@@ -53,8 +53,12 @@ export class LinkProvider implements ILinkProvider {
             this._terminal.blur(); // Avoid showing keyboard on mobile
           }
           const [lineText] = translateBufferLineToStringWithWrap(y - 1, this._terminal);
-          // Importantly, this is counting unicode characters as 1 char.
-          const linkStartIndex = _link.range.start.x;
+          // this is counting unicode characters as 1 char
+          // const linkStartIndex = _link.range.start.x;
+          // ℹ️ above was not taking multi-lines into account
+          // ℹ️ BUT for below we assume links with same label have same value
+          // 🚧 do things properly using e.{x,y}
+          const linkStartIndex = 1 + lineText.indexOf(_link.text);
           return this._handler(e, text, { lineText, linkStartIndex });
         },
         ...this._options
