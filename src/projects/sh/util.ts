@@ -5,11 +5,20 @@ import { SigEnum } from './io';
 import type * as Sh from './parse';
 
 export const ansiColor = {
+  Black: '\x1b[30m',
   Blue: '\x1b[1;34m',
+  Bold: '\x1b[1m',
+  BrightGreen: '\x1b[92m',
+  BrightGreenBg: '\x1b[102m\x1b[30m',
+  DarkGreen: '\x1b[32m',
+  Purple: '\x1b[35m',
   Red: '\x1b[31;1m',
+  Reverse: '\x1b[7m',
+  ReverseReset: '\x1b[27m',
   Reset: '\x1b[0m',
   // Warn: '\x1b[30;104m',
   White: '\x1b[0;37m',
+  Underline: '\x1b[4m',
   Yellow: '\x1b[93m',
 };
 

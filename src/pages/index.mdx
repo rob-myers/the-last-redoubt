@@ -24,7 +24,7 @@ import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import Def from "components/page/Def";
 import Aside from "components/page/Aside";
-import { profileLookup } from "projects/sh/scripts";
+import { ansiColor } from "projects/sh/util";
 
 ## home
 
@@ -174,7 +174,8 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
 <Aside title="jsx-specifying-a-world">
 
-The maps above are actually _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances:
+These maps are _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances:
+
 ```jsx
 <World
   worldKey="world-map-1"
@@ -224,16 +225,30 @@ The maps above are actually _Worlds_ i.e. [World.js](https://github.com/rob-myer
 source /etc/util-1
 source /etc/game-1
 
-awaitWorld
-npc map hide
+awaitWorld # World tab must be visible
+
+# ${ansiColor.Reverse}we've loaded shell functions${ansiColor.Reset}
+# ${ansiColor.Reverse}and connected to the world at $WORLD_KEY${ansiColor.Reset}
+
+choice 'tap to [continue](-)'
 
 spawn foo '{x:-89.8,y:1075.7}'
 npc set-player foo
+view 2000 '{x:-89.8,y:1075.7}' 2
+
+# ${ansiColor.Reverse}we've spawned an npc, set them as player${ansiColor.Reset}
+# ${ansiColor.Reverse}and are now viewing them${ansiColor.Reset}
+
+choice 'tap to [continue](-)'
+
+npc map hide
+
+# ${ansiColor.Reverse}we've hidden map the overlay${ansiColor.ReverseReset}
+
+choice 'tap to [continue](-)'
+
 goLoop foo &
 doLoop foo &
-
-view 2000 '{x:-89.8,y:1075.7}' 2
-# track foo &
 `
       }},
     ],

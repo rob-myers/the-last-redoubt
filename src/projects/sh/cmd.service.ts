@@ -140,8 +140,12 @@ class cmdServiceClass {
                 linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
                 callback() {
                   clickedSomeLink = true;
-                  // links [foo]() resolve value "foo"
-                  resolve(parseJsArg(match[2] === '' ? match[1] : match[2]));
+                  
+                  resolve(parseJsArg(
+                    match[2] === '' // links [foo]() resolve value: "foo"
+                      ? match[1] // links [foo](-) resolve value: undefined
+                      : match[2] === '-' ? undefined : match[2]
+                    ));
                 },
               }));
               useSession.api.addTtyLineCtxts(meta.sessionKey, lineText, ttyLinkCtxts);

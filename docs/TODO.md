@@ -7,6 +7,8 @@
 - ✅ implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
   - ℹ️ detect if link was from specific text (possibly on earlier line)
   - `choice "$( echo '['{1..50..2}']()' )"` links fail on 2nd line
+  - ✅ `[foo]()` has value `"foo"`
+  - `[foo](-)` has value `undefined`
 - ✅ support multiline links in xterm-link-provider i.e. linkStartIndex
   - 🤔 hack: assume links with same label have same value
 
