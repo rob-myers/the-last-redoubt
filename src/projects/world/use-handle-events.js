@@ -2,6 +2,7 @@ import React from "react";
 import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
 import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
+import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansiColor } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -282,6 +283,7 @@ export default function useHandleEvents(api) {
 function mockHandleDecorClick(event, api) {
   const decor = event.decor;
   if (decor.type === 'point') {
+    const worldSessions = Object.values(api.npcs.session).filter(({ receiveMsgs }) => receiveMsgs === true);
     if (decor.tags?.includes('label')) {
       /** Assume `[...tags, label, ...labelWords]` */
       const label = decor.tags.slice(decor.tags.findIndex(tag => tag === 'label') + 1).join(' ');
@@ -290,15 +292,23 @@ function mockHandleDecorClick(event, api) {
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
       // Square brackets induces a link via `linkProviderDef`
       const line = `ℹ️  [${ansiColor.Blue}${label}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-      api.npcs.writeToTtys(line, [{// Manually record where the link was
+      
+      worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
         lineText: line, 
         linkText: label,
         linkStartIndex: visibleUnicodeLength('ℹ️  ['),
-        key: 'room', gmId, roomId,
-      }]
-    );
+        async callback() {
+          // ℹ️ could have side effect e.g. panzoom
+          const point = gm.matrix.transformPoint(gm.point[roomId].default.clone());
+          await api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
+          // ℹ️ return value is important
+        },
+      }] }));
     } else {
-      api.npcs.writeToTtys(`ℹ️  ${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`);
+      worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
+        sessionKey,
+        `ℹ️  ${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`,
+      ));
     }
   }
 

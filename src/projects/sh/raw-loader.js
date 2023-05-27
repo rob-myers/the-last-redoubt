@@ -147,7 +147,7 @@
       }
 
       const { npcs } = worldApi;
-      npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true, tty: {} };
+      npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true };
       api.info(`${ansiColor.White}found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.White}`);
     },
     

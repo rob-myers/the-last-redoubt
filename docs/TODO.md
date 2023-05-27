@@ -2,8 +2,16 @@
 
 ## In progress
 
+- ✅ move `api.npcs.session.tty` to `session.ttyLink`
+  - ℹ️ instead of send msg `on-tty-link` we'll yield a value in accordance with link
+- 🚧 implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
+  - ℹ️ detect if link was from specific text (possibly on earlier line)
+
+- clean CssPanZoom
+- npc.config.logTags
+
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
-  - 🚧 Tabs and Terminal on homepage with custom profile
+  - ✅ Tabs and Terminal on homepage with custom profile
   - ✅ support `view {ms} [{point}] [{zoom}]`
   - ✅ can cancel `view`
   - ✅ can pause/resume `view`
@@ -11,6 +19,7 @@
   - player and npc exchange shifts
     - player on chair; npc goes to bed; npc turns light off; npc says "good night"
     - alt: player gets in way...
+
 - HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal

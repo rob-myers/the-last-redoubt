@@ -2,7 +2,7 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { ansiColor, computeNormalizedParts, killProcess, resolveNormalized, ShError } from './util';
+import { ansiColor, computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
@@ -16,6 +16,8 @@ export type State = {
   
   readonly api: {
     addFunc: (sessionKey: string, funcName: string, wrappedFile: FileWithMeta) => void;
+    addTtyLineCtxts: (sessionKey: string, lineText: string, ctxts: TtyLinkCtxt[]) => void;
+    cleanTtyLink: (sessionKey: string) => void;
     createSession: (sessionKey: string, env: Record<string, any>) => Session;
     createProcess: (def: {
       sessionKey: string;
@@ -35,6 +37,7 @@ export type State = {
     getVar: <T = any>(meta: BaseMeta, varName: string) => T;
     getVarDeep: (meta: BaseMeta, varPath: string) => any | undefined;
     getSession: (sessionKey: string) => Session;
+    onTtyLink: (sessionKey: string, lineText: string, linkText: string, linkStartIndex: number) => void;
     persist: (sessionKey: string) => void;
     rehydrate: (sessionKey: string) => Rehydrated;
     removeDevice: (deviceKey: string) => void;
@@ -48,13 +51,15 @@ export type State = {
      * Returns global line number of written message,
      * i.e. the 1-based index over all lines ever output in session's tty.
      */
-    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean }) => Promise<void>;
+    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean; ttyLinkCtxts?: TtyLinkCtxt[] }) => Promise<void>;
   }
 }
 
 export interface Session {
   key: string;
+  process: KeyedLookup<ProcessMeta>;
   func: KeyedLookup<NamedFunction>;
+
   /**
    * Currently only support one tty per session,
    * i.e. cannot have two terminals in same session.
@@ -62,9 +67,10 @@ export interface Session {
    */
   ttyIo: ShellIo<MessageFromXterm, MessageFromShell>;
   ttyShell: ttyShellClass,
+  ttyLink: { [lineText: string]: TtyLinkCtxt[] };
+
   var: Record<string, any>;
   nextPid: number;
-  process: KeyedLookup<ProcessMeta>;
   lastExitCode: number;
 }
 
@@ -116,6 +122,16 @@ export interface ProcessMeta {
   inheritVar: Record<string, any>;
 }
 
+export interface TtyLinkCtxt {
+  lineText: string;
+  /** For example `[foo]` has link text `foo` */
+  linkText: string;
+  /** Where `linkText` occurs in `lineText` */
+  linkStartIndex: number;
+  /** Callback associated with link */
+  callback: () => void;
+}
+
 const useStore = create<State>()(devtools((set, get) => ({
   device: {},
   session: {},
@@ -128,6 +144,23 @@ const useStore = create<State>()(devtools((set, get) => ({
         node: file,
         src: srcService.multilineSrc(file),
       };
+    },
+
+    addTtyLineCtxts(sessionKey, lineText, ctxts) {
+      const strippedLine = stripAnsi(lineText);
+      api.getSession(sessionKey).ttyLink[strippedLine] = ctxts.map(x =>
+        // We strip ANSI colour codes for string comparison
+        ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
+      );
+    },
+
+    cleanTtyLink(sessionKey) {// 🚧 only run sporadically
+      const session = api.getSession(sessionKey);
+      const lineLookup = session.ttyShell.xterm.getLines();
+      const { ttyLink } = session;
+      Object.keys(ttyLink).forEach(lineText =>
+        !lineLookup[lineText] && delete ttyLink[lineText]
+      );
     },
 
     createFifo(key, size) {
@@ -168,6 +201,7 @@ const useStore = create<State>()(devtools((set, get) => ({
           func: {},
           ttyIo,
           ttyShell,
+          ttyLink: {},
           var: {
             PWD: 'home',
             OLDPWD: '',
@@ -245,6 +279,15 @@ const useStore = create<State>()(devtools((set, get) => ({
 
     getSession(sessionKey) {
       return get().session[sessionKey];
+    },
+
+    onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
+      // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
+      api.cleanTtyLink(sessionKey);
+      api.getSession(sessionKey).ttyLink[lineText]?.find(x =>
+        x.linkStartIndex === linkStartIndex
+        && x.linkText === linkText
+      )?.callback();
     },
 
     persist(sessionKey) {
@@ -369,6 +412,7 @@ const useStore = create<State>()(devtools((set, get) => ({
           { key: 'resolve', resolve },
         ])
       });
+      opts?.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, msg, opts.ttyLinkCtxts);
       setTimeout(() => {
         (opts?.prompt??true) && xterm.showPendingInput();
         xterm.xterm.scrollToBottom();

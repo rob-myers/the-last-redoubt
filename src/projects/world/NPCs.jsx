@@ -3,7 +3,6 @@ import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
-import { stripAnsi } from "../sh/util";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
@@ -13,7 +12,6 @@ import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-import useSessionStore from "../sh/session.store";
 import { MemoizedNPC } from "./NPC";
 import createNpc from "./create-npc";
 
@@ -106,26 +104,6 @@ export default function NPCs(props) {
       },
     })),
 
-    addTtyLineCtxts(sessionKey, lineText, ctxts) {
-      // We strip ANSI colour codes for string comparison
-      const strippedLine = stripAnsi(lineText);
-      state.session[sessionKey].tty[strippedLine] = ctxts.map(x =>
-        ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
-      );
-    },
-    cleanSessionCtxts() {// 🚧 should only run sporadically
-      const sessions = Object.keys(state.session).map(
-        sessionKey => useSessionStore.api.getSession(sessionKey)
-      ).filter(Boolean);
-
-      for (const session of sessions) {
-        const lineLookup = session.ttyShell.xterm.getLines();
-        const { tty } = state.session[session.key];
-        Object.keys(tty).forEach(lineText =>
-          !lineLookup[lineText] && delete tty[lineText]
-        );
-      }
-    },
     async fadeSpawnDo(npc, e, meta) {
       try {
         await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
@@ -616,17 +594,6 @@ export default function NPCs(props) {
         fadeOutMs: e.fadeOutMs,
       }, meta);
     },
-    onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
-      // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
-      state.cleanSessionCtxts();
-      const found = state.session[sessionKey]?.tty[lineText]?.find(x =>
-        x.linkStartIndex === linkStartIndex
-        && x.linkText === linkText
-      );
-      if (found) {
-        state.events.next({ key: 'on-tty-link', linkText, linkStartIndex, ttyCtxt: found });
-      }
-    },
     async panZoomTo(e) {
       if (!e || (e.zoom && !Number.isFinite(e.zoom)) || (e.point && !Vect.isVectJson(e.point)) || (e.ms && !Number.isFinite(e.ms))) {
         throw Error(`expected format: { zoom?: number; point?: { x: number; y: number }; ms: number; easing?: string }`);
@@ -863,14 +830,6 @@ export default function NPCs(props) {
         }
       }
     },
-    async writeToTtys(line, ttyCtxts) {
-      const sessionCtxts = Object.values(props.api.npcs.session).filter(x => x.receiveMsgs);
-
-      await Promise.all(sessionCtxts.map(async ({ key: sessionKey }) => {
-        await useSessionStore.api.writeMsgCleanly(sessionKey, line);
-        ttyCtxts && props.api.npcs.addTtyLineCtxts(sessionKey, line, ttyCtxts);
-      }));
-    },
   }), { deps: [api] });
   
   React.useEffect(() => {
@@ -911,8 +870,6 @@ export default function NPCs(props) {
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
- * @property {(sessionKey: string, lineText: string, ctxts: NPC.SessionTtyCtxt[]) => void} addTtyLineCtxts
- * @property {() => void} cleanSessionCtxts
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
@@ -934,7 +891,6 @@ export default function NPCs(props) {
  * Started off-mesh and clicked point
  * @property {(npc: NPC.NPC, e: { point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
- * @property {NPC.OnTtyLink} onTtyLink
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
@@ -945,7 +901,6 @@ export default function NPCs(props) {
  * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string; throwOnCancel?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
- * @property {(line: string, ttyCtxts?: NPC.SessionTtyCtxt[]) => Promise<void>} writeToTtys
  */
 
 /**

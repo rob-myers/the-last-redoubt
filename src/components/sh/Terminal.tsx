@@ -116,13 +116,11 @@ export default function Terminal(props: Props) {
         }}
         options={options}
         linkProviderDef={{
-          // regex: /(🔎 [^;]+);/g,
+          // links look like this: [foo bar baz]
           regex: /(\[[a-z][^\]]+\])/gi,
           async callback(_event, linkText, { lineText, linkStartIndex }) {
             // console.log('clicked link', event, linkText, { lineText, linkStartIndex });
-            const session = assertNonNull(state.session);
-            const { npcs } = getCached(session.var.WORLD_KEY) as WorldApi;
-            npcs.onTtyLink(
+            useSession.api.onTtyLink(
               props.sessionKey,
               stripAnsi(lineText),
               stripAnsi(linkText).slice(1, -1), // Omit square brackets

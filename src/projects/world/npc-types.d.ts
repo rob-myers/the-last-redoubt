@@ -299,7 +299,6 @@ declare namespace NPC {
     /** Session key */
     key: string;
     receiveMsgs: boolean;
-    tty: { [lineText: string]: SessionTtyCtxt[] }
   }
 
   export type SessionTtyCtxt = {
