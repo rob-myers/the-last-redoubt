@@ -4,8 +4,10 @@
 
 - ✅ move `api.npcs.session.tty` to `session.ttyLink`
   - ℹ️ instead of send msg `on-tty-link` we'll yield a value in accordance with link
-- 🚧 implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
+- ✅ implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
   - ℹ️ detect if link was from specific text (possibly on earlier line)
+  - `choice "$( echo '['{1..50..2}']()' )"` links fail on 2nd line
+- 🚧 support multiline links in xterm-link-provider i.e. linkStartIndex
 
 - clean CssPanZoom
 - npc.config.logTags
@@ -25,6 +27,7 @@
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
+- 🤔 BUG tty long input overflow *responsive* deformation
 - simplify individual doors
 - BUG Escape Tabs not working when click on tabs bar
   - probably interference from tab dragger

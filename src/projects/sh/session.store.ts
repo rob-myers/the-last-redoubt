@@ -43,6 +43,7 @@ export type State = {
     removeDevice: (deviceKey: string) => void;
     removeProcess: (pid: number, sessionKey: string) => void;
     removeSession: (sessionKey: string) => void;
+    removeTtyLineCtxts: (sessionKey: string, line: string) => void;
     resolve: (fd: number, meta: BaseMeta) => Device;
     setVar: (meta: BaseMeta, varName: string, varValue: any) => void;
     setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
@@ -147,7 +148,7 @@ const useStore = create<State>()(devtools((set, get) => ({
     },
 
     addTtyLineCtxts(sessionKey, lineText, ctxts) {
-      const strippedLine = stripAnsi(lineText);
+      const strippedLine = stripAnsi(lineText); // Expect stripped?
       api.getSession(sessionKey).ttyLink[strippedLine] = ctxts.map(x =>
         // We strip ANSI colour codes for string comparison
         ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
@@ -282,8 +283,8 @@ const useStore = create<State>()(devtools((set, get) => ({
     },
 
     onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
-      // console.log('onTtyLink', { lineNumber, lineText, linkText, linkStartIndex });
-      api.cleanTtyLink(sessionKey);
+      // console.log('onTtyLink', { lineText, linkText, linkStartIndex });
+      // api.cleanTtyLink(sessionKey);
       api.getSession(sessionKey).ttyLink[lineText]?.find(x =>
         x.linkStartIndex === linkStartIndex
         && x.linkText === linkText
@@ -337,6 +338,11 @@ const useStore = create<State>()(devtools((set, get) => ({
       } else {
         console.log(`removeSession: ${sessionKey}: cannot remove non-existent session`);
       }
+    },
+
+    removeTtyLineCtxts(sessionKey, lineText) {
+      const strippedLine = stripAnsi(lineText); // Expect stripped?
+      delete api.getSession(sessionKey).ttyLink[strippedLine];
     },
 
     resolve(fd, meta) {

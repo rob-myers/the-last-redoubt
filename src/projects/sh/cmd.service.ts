@@ -1,19 +1,22 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
-import useSession, { ProcessStatus } from './session.store';
+import useSession, { ProcessStatus, TtyLinkCtxt } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
 import { scriptLookup } from './scripts';
 import { getCached } from '../service/query-client';
 
+/** Shell builtins */
 const commandKeys = {
   /** Change current key prefix */
   cd: true,
+  /** Write tty message with markdown links and associated actions */
+  choice: true,
   /** List function definitions */
   declare: true,
   /** Output arguments as space-separated string */
@@ -96,6 +99,62 @@ class cmdServiceClass {
         } catch {
           useSession.api.setVar(meta, 'OLDPWD', prevPwd);
           throw new ShError(`${args[0]} not found`, 1);
+        }
+        break;
+      }
+      case 'choice': {
+        const [text, ms, defaultValue] = [args[0], parseInt(args[1]) || undefined, parseJsArg(args[2])];
+        if ((typeof text !== 'string') || (args[1] && (ms === undefined))) {
+          throw new ShError('usage: `choice {textWithLinks} [millisecondsToWait] [defaultValue]`', 1);
+        }
+
+        // compute text where each "[foo](bar)"" is replaced by "[foo]"
+        const mdLinksRegex = /\[([^()]+?)\]\((.*?)\)/g;
+        const matches = Array.from(text.matchAll(mdLinksRegex));
+        const boundaries = matches.flatMap(match => [match.index!, match.index! + match[0].length]);
+        // If added zero, links occur at odd indices of `parts` else even indices
+        const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
+        const parts = boundaries
+          .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
+          .map((part, i) => (addedZero === (i % 2)) ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]` : part)
+        ;
+        const textForTty = parts.join('');
+        
+        await useSession.api.writeMsgCleanly(meta.sessionKey, textForTty);
+
+        if (matches.length === 0) {
+          yield* sleep(meta, ms ?? 0);
+          yield defaultValue;
+        } else {
+          const lineText = stripAnsi(textForTty);
+          let clickedSomeLink = false;
+          
+          try {
+            // wait until some link clicked, or `ms` (if specified)
+            const linksPromise = new Promise<any>((resolve, reject) => {
+              getProcess(meta).cleanups.push(() => reject());
+              const ttyLinkCtxts: TtyLinkCtxt[] = matches.map((match, i) => ({
+                lineText,
+                linkText: match[1],
+                // 1 + ensures we're inside the square brackets
+                linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
+                callback() {
+                  clickedSomeLink = true;
+                  // links [foo]() resolve value "foo"
+                  resolve(parseJsArg(match[2] === '' ? match[1] : match[2]));
+                },
+              }));
+              useSession.api.addTtyLineCtxts(meta.sessionKey, lineText, ttyLinkCtxts);
+            });
+            const result = await Promise.race(typeof ms === 'number'
+              ? [linksPromise, pause(ms)] // 🚧 support pause/resume `World`
+              : [linksPromise],
+            );
+            yield clickedSomeLink ? result : defaultValue;
+          } finally {
+            // 🚧 comment out while fixing multiline links
+            // useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
+          }
         }
         break;
       }

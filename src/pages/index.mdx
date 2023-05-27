@@ -208,7 +208,7 @@ The maps above are actually _Worlds_ i.e. [World.js](https://github.com/rob-myer
     [
       { type: 'component', class: 'World', filepath: 'world@first-demo', props: {
         worldKey: 'world@first-demo',
-        init: { zoom: 1, y: 600, ms: 0 },
+        init: { zoom: 0.5 , y: 600, ms: 0 },
         gms: [
           { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
           { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
@@ -223,11 +223,17 @@ The maps above are actually _Worlds_ i.e. [World.js](https://github.com/rob-myer
 `
 source /etc/util-1
 source /etc/game-1
+
 awaitWorld
+npc map hide
+
 spawn foo '{x:-89.8,y:1075.7}'
 npc set-player foo
-npc map hide
+goLoop foo &
+doLoop foo &
+
 view 2000 '{x:-89.8,y:1075.7}' 2
+# track foo &
 `
       }},
     ],
