@@ -10,7 +10,7 @@
 - ✅ `choice` supports many initial args up to first number (if any)
   - ℹ️ for brace-expansion currently do this `choice "$( echo '['{1..50}']()' )"`
 - ✅ npc.config.logTags
-- cleanup CssPanZoom
+- ✅ cleanup CssPanZoom
 
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
   - ✅ Tabs and Terminal on homepage with custom profile

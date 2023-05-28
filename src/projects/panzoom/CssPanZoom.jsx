@@ -286,53 +286,42 @@ export default function CssPanZoom(props) {
       isIdle() {
         return state.idleTimeoutId === 0;
       },
-      // 🚧 clean?
-      async panZoomTo(scale, worldPoint, durationMs, easing) {
-        scale = scale || state.scale;
-        worldPoint = worldPoint || state.getWorldAtCenter();
-        easing = easing || 'ease';
+      async panZoomTo(scale = state.scale, worldPoint = state.getWorldAtCenter(), durationMs, easing = 'ease') {
         state.animationAction('cancel');
 
         /**
-         * Trying to compute (x, y) s.t. target transform
-         * `translate(x, y) scale(scale)` has worldPoint at screen center
-         * i.e. x + (scale * worldPoint.x) = screenWidth/2
-         * i.e. x := screenWidth/2 - (scale * worldPoint.x)
+         * Compute (x, y) s.t. `translate(x_1, y_2) scale(scale)` has `worldPoint` at screen center,
+         * i.e. x_i + (scale * worldPoint.x_i) = screenWidth/2
+         * i.e. x_i := screenWidth/2 - (scale * worldPoint.x_i)
+         * For screen center also need to take account of scroll{Left,Top}.
          */
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        // For center need to take account of scroll{Left,Top}
         const dstX = screenWidth/2 + state.parent.scrollLeft - (scale * worldPoint.x);
         const dstY = screenHeight/2 + state.parent.scrollTop - (scale * worldPoint.y);
 
-        const current = state.getCurrentTransform();
-
         state.anims[0] = state.translateRoot.animate([
-          { offset: 0, transform: `translate(${current.x}px, ${current.y}px)` },
+          { offset: 0 },
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px)` },
         ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing });
 
-        const shouldScale = scale !== current.scale;
-        if (shouldScale) {
-          state.anims[1] = state.scaleRoot.animate([
-            { offset: 0, transform: `scale(${current.scale})` },
-            { offset: 1, transform: `scale(${scale})` },
-          ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing })
-          state.events.next({ key: 'started-panzoom-to' });
-          state.scaleRoot.classList.add('hide-grid'); // Avoid Chrome flicker
-        }
+        state.anims[1] = state.scaleRoot.animate([
+          { offset: 0 },
+          { offset: 1, transform: `scale(${scale})` },
+        ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing })
+        state.events.next({ key: 'started-panzoom-to' });
+        state.scaleRoot.classList.add('hide-grid'); // Avoid Chrome flicker
 
         let finished = false;
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
-          const scAnim = shouldScale ? state.anims[1] : null;
+          const scAnim = /** @type {Animation} */ (state.anims[1]);
           trAnim.addEventListener('finish', () => {
             finished = true;
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
             state.releaseAnim(trAnim, state.translateRoot);
-            scAnim && state.releaseAnim(scAnim, state.scaleRoot);
-            // state.anims.forEach(anim => { anim?.commitStyles(); anim?.cancel(); });
+            state.releaseAnim(scAnim, state.scaleRoot);
             state.syncStyles();
           });
           trAnim.addEventListener('cancel', async () => {
