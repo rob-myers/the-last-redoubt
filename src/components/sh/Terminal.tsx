@@ -119,8 +119,7 @@ export default function Terminal(props: Props) {
           // links look like this: [foo bar] or [1]
           regex: /(\[[^\]]+\])/gi,
           async callback(_event, linkText, { lineText, linkStartIndex,  }) {
-            // 🚧 linkStartIndex not taking multilines into account?
-            console.log('clicked link', event, linkText, { lineText, linkStartIndex });
+            // console.log('clicked link', event, linkText, { lineText, linkStartIndex });
             useSession.api.onTtyLink(
               props.sessionKey,
               stripAnsi(lineText),

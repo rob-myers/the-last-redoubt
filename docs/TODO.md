@@ -2,15 +2,9 @@
 
 ## In progress
 
-- ✅ move `api.npcs.session.tty` to `session.ttyLink`
-  - ℹ️ instead of send msg `on-tty-link` we'll yield a value in accordance with link
-- ✅ implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
-  - ℹ️ detect if link was from specific text (possibly on earlier line)
-  - `choice "$( echo '['{1..50..2}']()' )"` links fail on 2nd line
-  - ✅ `[foo]()` has value `"foo"`
-  - `[foo](-)` has value `undefined`
-- ✅ support multiline links in xterm-link-provider i.e. linkStartIndex
-  - 🤔 hack: assume links with same label have same value
+- ❌ auto invert comments
+- ✅ one line preamble: session {sessionKey} running /home/PROFILE
+- 🚧 `choice` pause/resumes like *sleep
 
 - clean CssPanZoom
 - npc.config.logTags
@@ -392,6 +386,16 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ move `api.npcs.session.tty` to `session.ttyLink`
+  - ℹ️ instead of send msg `on-tty-link` we'll yield a value in accordance with link
+- ✅ implement builtin `choice {textWithMarkdownLinks} [ms] [default]`
+  - ℹ️ detect if link was from specific text (possibly on earlier line)
+  - `choice "$( echo '['{1..50..2}']()' )"` links fail on 2nd line
+  - ✅ `[foo]()` has value `"foo"`
+  - `[foo](-)` has value `undefined`
+- ✅ support multiline links in xterm-link-provider i.e. linkStartIndex
+  - 🤔 hack: assume links with same label have same value
 
 - ✅ can toggle room lights (js api)
 - ✅ light rects have srcRoomId

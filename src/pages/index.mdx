@@ -221,11 +221,10 @@ These maps are _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-re
       { type: 'terminal', filepath: 'tty@first-demo', env: {
         WORLD_KEY: 'world@first-demo',
         PROFILE:
-`
-source /etc/util-1
+`source /etc/util-1
 source /etc/game-1
 
-awaitWorld # World tab must be visible
+awaitWorld
 
 # ${ansiColor.Reverse}we've loaded shell functions${ansiColor.Reset}
 # ${ansiColor.Reverse}and connected to the world at $WORLD_KEY${ansiColor.Reset}
@@ -234,10 +233,10 @@ choice 'tap to [continue](-)'
 
 spawn foo '{x:-89.8,y:1075.7}'
 npc set-player foo
-view 2000 '{x:-89.8,y:1075.7}' 2
+view 1000 '{x:-89.8,y:1075.7}' 2
 
 # ${ansiColor.Reverse}we've spawned an npc, set them as player${ansiColor.Reset}
-# ${ansiColor.Reverse}and are now viewing them${ansiColor.Reset}
+# ${ansiColor.Reverse}and put them in view${ansiColor.Reset}
 
 choice 'tap to [continue](-)'
 

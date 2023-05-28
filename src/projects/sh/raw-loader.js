@@ -143,6 +143,7 @@
       /** @type {import('../world/World').State} */ let worldApi;
       while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
         api.info(`${ansiColor.White}polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`)
+        api.info(`${ansiColor.White}(ensure World tab is visible)${ansiColor.Reset}`)
         yield* api.sleep(1);
       }
 

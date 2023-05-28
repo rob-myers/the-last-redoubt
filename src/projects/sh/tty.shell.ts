@@ -55,8 +55,7 @@ export class ttyShellClass implements Device {
     });
     this.process = useSession.api.getSession(this.sessionKey).process[0];
 
-    useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.sessionKey}${ansiColor.Reset}`, 'info');
-
+    // useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Connected to session ${ansiColor.Blue}${this.sessionKey}${ansiColor.Reset}`, 'info');
     await this.runProfile();
   }
 
@@ -148,7 +147,7 @@ export class ttyShellClass implements Device {
 
     try {
       ttyShell.xterm.historyEnabled = false;
-      useSession.api.writeMsg(this.sessionKey, `${ansiColor.White}Running ${ansiColor.Blue}/home/PROFILE${ansiColor.Reset}`, 'info');
+      useSession.api.writeMsg(this.sessionKey, `${ansiColor.Blue}${this.sessionKey}${ansiColor.White} running ${ansiColor.Blue}/home/PROFILE${ansiColor.Reset}`, 'info');
       await ttyShell.xterm.pasteLines(profile.split('\n'), true);
       this.prompt('$');
     } catch {} finally {
