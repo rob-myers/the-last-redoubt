@@ -1,4 +1,5 @@
 import type { Terminal } from 'xterm';
+import debounce from "debounce";
 import { ansiColor } from './util';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
@@ -772,11 +773,11 @@ export class ttyXtermClass {
     }
   }
 
-  showPendingInput() {
+  showPendingInput = debounce(() => {
     if (this.promptReady) {
       this.setInput(this.input);
     }
-  }
+  }, 100)
 
   /**
    * Splice `input` into `this.input`.
