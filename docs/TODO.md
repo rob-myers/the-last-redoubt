@@ -7,7 +7,7 @@
 - ✅ `choice` pause/resumes like *sleep
 
 - ✅ cleanup `choice`
-- `choice` supports many initial args up to first number (if any)
+- ✅ `choice` supports many initial args up to first number (if any)
   - ℹ️ for brace-expansion currently do this `choice "$( echo '['{1..50}']()' )"`
 - cleanup CssPanZoom
 - npc.config.logTags

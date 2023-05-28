@@ -102,19 +102,18 @@ class cmdServiceClass {
         }
         break;
       }
-      case 'choice': {
+      case 'choice': {/** usage: `choice {textWithLinks}+ [secondsToWait] [defaultValue]` */
+        const secsIndex = args.findIndex(x => Number.isFinite(parseInt(x)));
+        const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
+        const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;
         /**
          * `defaultValue` emitted:
          * - on timeout without link selected
          * - on link selected with value undefined e.g. [foo](-) or [foo](undefined)
          */
-        const [text, secs, defaultValue] = [args[0], parseInt(args[1]) || undefined, parseJsArg(args[2])];
-        if ((typeof text !== 'string') || (args[1] && (secs === undefined))) {
-          throw new ShError('usage: `choice {textWithLinks} [secondsToWait] [defaultValue]`', 1);
-        }
+        const defaultValue = secsIndex >= 0 ? parseJsArg(args[secsIndex + 1]) : undefined;
 
         const { ttyText, ttyTextKey, linkCtxtsFactory } = parseTtyMarkdownLinks(text, defaultValue);
-
         await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
 
         try {
