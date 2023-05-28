@@ -4,23 +4,7 @@ import { ProcessMeta, ProcessStatus } from './session.store';
 import { SigEnum } from './io';
 import type * as Sh from './parse';
 
-export const ansiColor = {
-  Black: '\x1b[30m',
-  Blue: '\x1b[1;34m',
-  Bold: '\x1b[1m',
-  BrightGreen: '\x1b[92m',
-  BrightGreenBg: '\x1b[102m\x1b[30m',
-  DarkGreen: '\x1b[32m',
-  Purple: '\x1b[35m',
-  Red: '\x1b[31;1m',
-  Reverse: '\x1b[7m',
-  ReverseReset: '\x1b[27m',
-  Reset: '\x1b[0m',
-  // Warn: '\x1b[30;104m',
-  White: '\x1b[0;37m',
-  Underline: '\x1b[4m',
-  Yellow: '\x1b[93m',
-};
+//#region expansion
 
 export function normalizeWhitespace(word: string, trim = true): string[] {
   if (!word.trim()) {// Prevent [''].
@@ -74,7 +58,6 @@ export function interpretEscapeSequences(input: string): string {
     .replace(/\\\\([bfnrt])/g, '\\$1'));
 }
 
-
 const bracesOpts: braces.Options = {
   expand: true,
   rangeLimit: Infinity,
@@ -108,6 +91,10 @@ export function literal({ Value, parent }: Sh.Lit): string[] {
 export function singleQuotes({ Dollar: interpret, Value }: Sh.SglQuoted) {
   return [interpret ? interpretEscapeSequences(Value) : Value];
 }
+
+//#endregion
+
+//#region process handling
 
 export class ShError extends Error {
   constructor(message: string, public exitCode: number, public original?: Error) {
@@ -149,6 +136,10 @@ export function killProcess(p: ProcessMeta) {
   }
   p.cleanups.length = 0;
 }
+
+//#endregion
+
+//#region resolution
 
 export function resolvePath(path: string, root: any, pwd: string) {
   const absParts = path.startsWith('/')
@@ -196,9 +187,29 @@ export function matchFuncFormat(pathComponent: string) {
   return pathComponent.match(/\(([^\)]*)\)$/);
 }
 
-/**
- * Source: https://www.npmjs.com/package/ansi-regex
- */
+//#endregion
+
+//#region ansi
+
+export const ansiColor = {
+  Black: '\x1b[30m',
+  Blue: '\x1b[1;34m',
+  Bold: '\x1b[1m',
+  BrightGreen: '\x1b[92m',
+  BrightGreenBg: '\x1b[102m\x1b[30m',
+  DarkGreen: '\x1b[32m',
+  Purple: '\x1b[35m',
+  Red: '\x1b[31;1m',
+  Reverse: '\x1b[7m',
+  ReverseReset: '\x1b[27m',
+  Reset: '\x1b[0m',
+  // Warn: '\x1b[30;104m',
+  White: '\x1b[0;37m',
+  Underline: '\x1b[4m',
+  Yellow: '\x1b[93m',
+};
+
+/** Source: https://www.npmjs.com/package/ansi-regex */
 const ansiRegex = (function ansiRegex({onlyFirst = false} = {}) {
 	const pattern = [
 		'[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
@@ -211,3 +222,5 @@ const ansiRegex = (function ansiRegex({onlyFirst = false} = {}) {
 export function stripAnsi(input: string) {
   return input.replace(ansiRegex, '');
 }
+
+//#endregion
