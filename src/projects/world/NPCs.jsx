@@ -33,6 +33,7 @@ export default function NPCs(props) {
     session: {},
 
     config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
+      logTags: /** @type {boolean} */ (true),
       omnipresent: /** @type {boolean} */ (false),
       scriptDoors: /** @type {boolean} */ (true),
     }), {
@@ -53,7 +54,8 @@ export default function NPCs(props) {
           case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
           case 'localNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
           case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
-          case 'omnipresent': return !!ctxt.omnipresent;
+          case 'omnipresent':
+          case 'logTags':
           case 'scriptDoors':
             return ctxt[key];
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
@@ -82,6 +84,7 @@ export default function NPCs(props) {
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
           case 'localNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
           case 'localOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;

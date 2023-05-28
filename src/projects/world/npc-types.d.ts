@@ -200,6 +200,7 @@ declare namespace NPC {
     | 'highlightWindows'
     | 'localNav'
     | 'localOutline'
+    | 'logTags'
     | 'omnipresent'
     | 'scriptDoors'
     | 'showIds'

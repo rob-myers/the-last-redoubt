@@ -304,12 +304,11 @@ function mockHandleDecorClick(event, api) {
           // ℹ️ return value is important
         },
       }] }));
-    } else {
-      worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
-        sessionKey,
-        `ℹ️  ${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`,
-      ));
     }
+    api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
+      sessionKey,
+      `${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`,
+    ));
   }
 
 }
