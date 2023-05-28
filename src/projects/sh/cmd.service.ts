@@ -1,10 +1,10 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
+import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
-import useSession, { ProcessStatus, TtyLinkCtxt } from './session.store';
+import useSession, { ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
@@ -103,63 +103,49 @@ class cmdServiceClass {
         break;
       }
       case 'choice': {
+        /**
+         * `defaultValue` emitted:
+         * - on timeout without link selected
+         * - on link selected with value undefined e.g. [foo](-) or [foo](undefined)
+         */
         const [text, secs, defaultValue] = [args[0], parseInt(args[1]) || undefined, parseJsArg(args[2])];
         if ((typeof text !== 'string') || (args[1] && (secs === undefined))) {
           throw new ShError('usage: `choice {textWithLinks} [secondsToWait] [defaultValue]`', 1);
         }
 
-        // compute text where each "[foo](bar)" is replaced by "[foo]"
-        const mdLinksRegex = /\[([^()]+?)\]\((.*?)\)/g;
-        const matches = Array.from(text.matchAll(mdLinksRegex));
-        const boundaries = matches.flatMap(match => [match.index!, match.index! + match[0].length]);
-        // If added zero, links occur at odd indices of `parts` else even indices
-        const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
-        const parts = boundaries
-          .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
-          .map((part, i) => (addedZero === (i % 2)) ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]` : part)
-        ;
-        const textForTty = parts.join('');
-        
-        await useSession.api.writeMsgCleanly(meta.sessionKey, textForTty);
+        const { ttyText, ttyTextKey, linkCtxtsFactory } = parseTtyMarkdownLinks(text, defaultValue);
 
-        if (matches.length === 0) {
-          yield* sleep(meta, secs ?? 0);
-          yield defaultValue;
-        } else {
-          const lineText = stripAnsi(textForTty);
-          
-          try {
-            let reject = (_?: any) => {};
-            const cleanup = () => reject();
-            getProcess(meta).cleanups.push(cleanup);
+        await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
 
-            const linkPromFactory = () => new Promise<any>((resolve, currReject) => {
-              reject = currReject;
-              useSession.api.addTtyLineCtxts(meta.sessionKey, lineText, matches.map((match, i) => ({
-                lineText,
-                linkText: match[1], // 1 + ensures we're inside the square brackets
-                linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
-                callback() {
-                  const value = parseJsArg(
-                    match[2] === '' // links [foo]() has value "foo"
-                      ? match[1] // links [foo](-) has value undefined
-                      : match[2] === '-' ? undefined : match[2]
-                  );
-                  resolve(value === undefined ? defaultValue : value);
-                },
-              })));
-            });
+        try {
+          /**
+           * Avoid many cleanups if pause/resume many times:
+           * @see {sleep}
+           */
+          let reject = (_?: any) => {};
+          const cleanup = () => reject();
+          getProcess(meta).cleanups.push(cleanup);
+          // pause/resume handling not needed: cannot click links when paused
 
-            if (typeof secs === 'number') {
-              yield* sleep(meta, secs, linkPromFactory);
-            } else {
-              yield await linkPromFactory();
-            }
+          const linkPromFactory = linkCtxtsFactory ? () => new Promise<any>((resolve, currReject) => {
+            reject = currReject; // `TtyLineCtxt`s are triggered by links, so pass resolve
+            useSession.api.addTtyLineCtxts(meta.sessionKey, ttyTextKey, linkCtxtsFactory(resolve));
+          }) : undefined;
 
-          } finally {
-            // ℹ️ currently assume one time usage
-            useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
+          if (typeof secs === 'number' || !linkPromFactory) {
+            // links have timeout (also if no links, with fallback 0)
+            // yield* sleep(meta, secs, linkPromFactory);
+            let lastValue: any = undefined;
+            for await (const value of sleep(meta, secs ?? 0, linkPromFactory))
+              yield lastValue = value;
+            if (lastValue === undefined)
+              yield defaultValue;
+          } else {// some link must be clicked to proceed
+            yield await linkPromFactory();
           }
+        } finally {
+          // ℹ️ currently assume one time usage
+          useSession.api.removeTtyLineCtxts(meta.sessionKey, ttyTextKey);
         }
         break;
       }

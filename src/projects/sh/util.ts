@@ -1,6 +1,7 @@
 import braces from 'braces';
 import { last } from '../service/generic';
-import { ProcessMeta, ProcessStatus } from './session.store';
+import { ProcessMeta, ProcessStatus, TtyLinkCtxt } from './session.store';
+import { parseJsArg } from './cmd.service';
 import { SigEnum } from './io';
 import type * as Sh from './parse';
 
@@ -221,6 +222,51 @@ const ansiRegex = (function ansiRegex({onlyFirst = false} = {}) {
 
 export function stripAnsi(input: string) {
   return input.replace(ansiRegex, '');
+}
+
+//#endregion
+
+//#region misc
+
+/**
+ * We'll compute text `textForTty` where each `[foo](bar)` is replaced by `[foo]`.
+ * The relationship between foo and bar is stored in a `TtyLinkCtxt`.
+ */
+export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
+  const mdLinksRegex = /\[([^()]+?)\]\((.*?)\)/g;
+  const matches = Array.from(text.matchAll(mdLinksRegex));
+  const boundaries = matches.flatMap(match => [match.index!, match.index! + match[0].length]);
+  // If added zero, links occur at odd indices of `parts` else even indices
+  const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
+  const parts = boundaries
+    .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
+    .map((part, i) => (addedZero === (i % 2)) ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]` : part)
+  ;
+  const ttyText = parts.join('');
+  const ttyTextKey = stripAnsi(ttyText);
+
+  const linkCtxtsFactory = matches.length ? (resolve: (v: any) => void): TtyLinkCtxt[] =>
+    matches.map((match, i) => ({
+      lineText: ttyTextKey,
+      linkText: match[1], // 1 + ensures we're inside the square brackets
+      linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
+      callback() {
+        const value = parseJsArg(
+          match[2] === '' // links [foo]() has value "foo"
+            ? match[1] // links [foo](-) has value undefined
+            : match[2] === '-' ? undefined : match[2]
+        );
+        resolve(value === undefined ? defaultValue : value);
+      },
+    })
+  ) : undefined;
+
+  return {
+    ttyText,
+    /** `ttyText` with extended ansi stripped */
+    ttyTextKey,
+    linkCtxtsFactory,
+  };
 }
 
 //#endregion
