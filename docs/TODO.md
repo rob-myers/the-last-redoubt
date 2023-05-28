@@ -4,9 +4,10 @@
 
 - ❌ auto invert comments
 - ✅ one line preamble: session {sessionKey} running /home/PROFILE
-- 🚧 `choice` pause/resumes like *sleep
+- ✅ `choice` pause/resumes like *sleep
 
-- clean CssPanZoom
+- 🚧 cleanup `choice`
+- cleanup CssPanZoom
 - npc.config.logTags
 
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions

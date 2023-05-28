@@ -103,12 +103,12 @@ class cmdServiceClass {
         break;
       }
       case 'choice': {
-        const [text, ms, defaultValue] = [args[0], parseInt(args[1]) || undefined, parseJsArg(args[2])];
-        if ((typeof text !== 'string') || (args[1] && (ms === undefined))) {
-          throw new ShError('usage: `choice {textWithLinks} [millisecondsToWait] [defaultValue]`', 1);
+        const [text, secs, defaultValue] = [args[0], parseInt(args[1]) || undefined, parseJsArg(args[2])];
+        if ((typeof text !== 'string') || (args[1] && (secs === undefined))) {
+          throw new ShError('usage: `choice {textWithLinks} [secondsToWait] [defaultValue]`', 1);
         }
 
-        // compute text where each "[foo](bar)"" is replaced by "[foo]"
+        // compute text where each "[foo](bar)" is replaced by "[foo]"
         const mdLinksRegex = /\[([^()]+?)\]\((.*?)\)/g;
         const matches = Array.from(text.matchAll(mdLinksRegex));
         const boundaries = matches.flatMap(match => [match.index!, match.index! + match[0].length]);
@@ -123,41 +123,42 @@ class cmdServiceClass {
         await useSession.api.writeMsgCleanly(meta.sessionKey, textForTty);
 
         if (matches.length === 0) {
-          yield* sleep(meta, ms ?? 0);
+          yield* sleep(meta, secs ?? 0);
           yield defaultValue;
         } else {
           const lineText = stripAnsi(textForTty);
-          let clickedSomeLink = false;
           
           try {
-            // wait until some link clicked, or `ms` (if specified)
-            const linksPromise = new Promise<any>((resolve, reject) => {
-              getProcess(meta).cleanups.push(() => reject());
-              const ttyLinkCtxts: TtyLinkCtxt[] = matches.map((match, i) => ({
+            let reject = (_?: any) => {};
+            const cleanup = () => reject();
+            getProcess(meta).cleanups.push(cleanup);
+
+            const linkPromFactory = () => new Promise<any>((resolve, currReject) => {
+              reject = currReject;
+              useSession.api.addTtyLineCtxts(meta.sessionKey, lineText, matches.map((match, i) => ({
                 lineText,
-                linkText: match[1],
-                // 1 + ensures we're inside the square brackets
+                linkText: match[1], // 1 + ensures we're inside the square brackets
                 linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
                 callback() {
-                  clickedSomeLink = true;
-                  
-                  resolve(parseJsArg(
-                    match[2] === '' // links [foo]() resolve value: "foo"
-                      ? match[1] // links [foo](-) resolve value: undefined
+                  const value = parseJsArg(
+                    match[2] === '' // links [foo]() has value "foo"
+                      ? match[1] // links [foo](-) has value undefined
                       : match[2] === '-' ? undefined : match[2]
-                    ));
+                  );
+                  resolve(value === undefined ? defaultValue : value);
                 },
-              }));
-              useSession.api.addTtyLineCtxts(meta.sessionKey, lineText, ttyLinkCtxts);
+              })));
             });
-            const result = await Promise.race(typeof ms === 'number'
-              ? [linksPromise, pause(ms)] // 🚧 support pause/resume `World`
-              : [linksPromise],
-            );
-            yield clickedSomeLink ? result : defaultValue;
+
+            if (typeof secs === 'number') {
+              yield* sleep(meta, secs, linkPromFactory);
+            } else {
+              yield await linkPromFactory();
+            }
+
           } finally {
-            // 🚧 comment out while fixing multiline links
-            // useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
+            // ℹ️ currently assume one time usage
+            useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
           }
         }
         break;
@@ -764,18 +765,31 @@ function safeJsonParse(input: string) {
   }
 }
 
-async function *sleep(meta: Sh.BaseMeta, seconds = 1) {
+async function *sleep(
+  meta: Sh.BaseMeta,
+  seconds: number,
+  interruptFactory?: () => Promise<any>,
+) {
   const process = getProcess(meta);
   let duration = 1000 * seconds, startedAt = -1, reject = (_: any) => {};
   const cleanup = () => reject(killError(meta));
   process.cleanups.push(cleanup);
   do {
-    await new Promise<void>((resolve, currReject) => {
-      process.onSuspends.push(() => { duration -= (Date.now() - startedAt); resolve(); });
-      process.onResumes.push(() => { startedAt = Date.now() });
-      reject = currReject; // We update cleanup here
-      (startedAt = Date.now()) && setTimeout(resolve, duration);
-    });
+    let resolvedSleep = false;
+    const value = await Promise.race([
+      new Promise<void>((resolve, currReject) => {
+        const resolveSleep = () => { resolvedSleep = true; resolve() };
+        process.onSuspends.push(() => { duration -= (Date.now() - startedAt); resolveSleep(); });
+        process.onResumes.push(() => { startedAt = Date.now() });
+        reject = currReject; // We update cleanup here
+        (startedAt = Date.now()) && setTimeout(resolveSleep, duration);
+      }),
+      ...interruptFactory ? [interruptFactory()] : []
+    ]);
+    if (!resolvedSleep) {// Interrupted
+      yield value;
+      break;
+    }
     yield; // This yield pauses execution if process suspended
   } while (Date.now() - startedAt < duration - 1)
   // If process continually re-sleeps, avoid many cleanups
