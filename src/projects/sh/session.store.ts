@@ -133,9 +133,10 @@ export interface TtyLinkCtxt {
   callback: () => void;
 }
 
-const useStore = create<State>()(devtools((set, get) => ({
+const useStore = create<State>()(devtools((set, get): State => ({
   device: {},
   session: {},
+  //@ts-ignore
   persist: {},
 
   api: {
