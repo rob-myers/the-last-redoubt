@@ -594,10 +594,12 @@ export class ttyXtermClass {
   }
 
   reqHistoryLine(dir: -1 | 1) {
-    this.session.io.writeToReaders({
-      key: 'req-history-line',
-      historyIndex: this.historyIndex + dir,
-    });
+    if (this.promptReady) {
+      this.session.io.writeToReaders({
+        key: 'req-history-line',
+        historyIndex: this.historyIndex + dir,
+      });
+    }
   }
 
   /**
