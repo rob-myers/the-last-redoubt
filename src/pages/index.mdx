@@ -226,28 +226,21 @@ source /etc/game-1
 
 awaitWorld
 
-# ${ansiColor.Reverse}we've loaded shell functions${ansiColor.Reset}
-# ${ansiColor.Reverse}and connected to the world at $WORLD_KEY${ansiColor.Reset}
-
-choice 'tap to [continue](-)'
+NOECHO=1 echo "${ansiColor.Reverse}So far we've loaded shell functions and connected to the World.${ansiColor.ReverseReset}"
+NOECHO=1 choice 'tap to [continue](-)'
 
 spawn foo '{x:-89.8,y:1075.7}'
 npc set-player foo
 view 1000 '{x:-89.8,y:1075.7}' 2
 
-# ${ansiColor.Reverse}we've spawned an npc, set them as player${ansiColor.Reset}
-# ${ansiColor.Reverse}and put them in view${ansiColor.Reset}
-
-choice 'tap to [continue](-)'
+NOECHO=1 echo "${ansiColor.Reverse}We've spawned an npc, set them as the player, and finally pan-zoomed them into view.${ansiColor.Reset}"
+NOECHO=1 choice 'tap to [continue](-)'
 
 npc map hide
-
-# ${ansiColor.Reverse}we've hidden map the overlay${ansiColor.ReverseReset}
-
-choice 'tap to [continue](-)'
-
 goLoop foo &
 doLoop foo &
+
+NOECHO=1 echo "${ansiColor.Reverse}We've hidden the map overlay. We also setup movement (tap navmesh) and actions (tap doors or icons) via background processes.${ansiColor.Reset}"
 `
       }},
     ],
