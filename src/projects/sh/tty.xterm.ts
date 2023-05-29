@@ -659,8 +659,8 @@ export class ttyXtermClass {
           break;
         }
         case 'prompt': {
-          this.xterm.write(command.prompt);
           this.promptReady = true;
+          this.showPendingInput();
           break;
         }
         default: throw testNever(command, { suffix: 'runCommands' });
@@ -777,7 +777,7 @@ export class ttyXtermClass {
     if (this.promptReady) {
       this.setInput(this.input);
     }
-  }, 100)
+  }, 50)
 
   /**
    * Splice `input` into `this.input`.
