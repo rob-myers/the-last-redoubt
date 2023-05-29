@@ -86,7 +86,7 @@ const iconTriggerCss = css`
 const speechBubbleCss = css`
   --info-width: ${defaultInfoWidthPx}px;
   position: relative;
-  z-index: 2;
+  z-index: 3;
   top: ${-rootWidthPx}px;
   /** Prevents bubble span from wrapping to next line? */
   display: inline-block;
