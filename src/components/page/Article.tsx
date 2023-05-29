@@ -181,7 +181,6 @@ const articleCss = css`
     @media(max-width: 600px) {
       border: none;
       margin: calc(48px + 16px) 0 32px 0;
-      padding: 8px 0;
     }
   }
 
