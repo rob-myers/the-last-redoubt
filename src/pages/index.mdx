@@ -43,6 +43,7 @@ These games avoid simplistic character behaviour by employing a **tight narrativ
 Nevertheless, simplistic character behaviour is the norm.
 
 <Carousel
+  id="first-peek-video"
   baseSrc="/assets/pics/first-peek/"
   height={550}
   mobileHeight={400}
@@ -172,9 +173,8 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-<Aside title="jsx-specifying-a-world">
-
-These maps are _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances:
+These maps are actually _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
+For example, the first map amounts to the following component instantiation:
 
 ```jsx
 <World
@@ -185,20 +185,10 @@ These maps are _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-re
     { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
   ]}
 />
-
-<World
-  worldKey="world-map-2"
-  gms={[
-    { gmKey: 'g-101--multipurpose' },
-    { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
-    { gmKey: 'g-102--research-deck', transform: [-1, 0, 0, 1, 0, 0] },
-    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, 1, 0, -600] },
-    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, 0, 600 + 1200] },
-  ]}
-/>
 ```
 
-</Aside>
+These worlds look like maps because there is no _Player_.
+The Player determines the Field Of View (FOV) e.g. see the [video earlier](#first-peek-video).
 
 <Tabs
   id="tabs@first-demo"

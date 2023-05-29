@@ -79,6 +79,7 @@ export default function Carousel(props: Props) {
         }
       }}
     >
+      <span id={props.id} className="anchor" />
       {
         typeof state.fullScreen === 'number' && <>
           <div
@@ -209,6 +210,12 @@ function Slides(props: Props & {
 }
 
 const rootCss = css`
+  position: relative;
+  & > span.anchor {
+    position: absolute;
+    top: -48px;
+  }
+
   ${cssName.carouselLabelHeight}: 64px;
   .swiper.full-screen {
     ${cssName.carouselLabelHeight}: 80px;
@@ -388,6 +395,7 @@ function isImageItems(items: CarouselItems): items is ImageCarouselItem[] {
 }
 
 interface Props {
+  id?: string;
   baseSrc?: string;
   height?: number;
   mobileHeight?: number;
