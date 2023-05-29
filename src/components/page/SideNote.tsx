@@ -61,7 +61,7 @@ function close(e: React.MouseEvent, source: 'icon' | 'bubble') {
   }, 100);
 }
 
-const defaultInfoWidthPx = 240;
+const defaultInfoWidthPx = 300;
 const rootWidthPx = 16;
 const arrowDeltaX = 4;
 

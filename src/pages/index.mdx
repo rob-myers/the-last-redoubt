@@ -37,7 +37,7 @@ On the other hand, there are plenty of exceptions out there.
 Recent examples include:
 - [What Remains of Edith Finch](https://en.wikipedia.org/wiki/What_Remains_of_Edith_Finch)
 - [Observation](https://en.wikipedia.org/wiki/Observation_(video_game))
-- [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote width={300}>Admittedly very violent, but not in a meaningless way.</SideNote>
+- [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>
 
 These games avoid simplistic character behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
 Nevertheless, simplistic character behaviour is the norm.
@@ -71,7 +71,7 @@ We have a few core ideas.
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n "@new-tab"). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote width={300}>The concept of Starship Geomorph comes from Traveller.</SideNote>
+1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote>The concept of Starship Geomorph comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
 by creating and combining behaviours for their own sake.
@@ -103,7 +103,7 @@ We tackle _general interest_ in a few ways.
 For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than inner loops invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
 - Our approach to in-browser scripting is of general interest.
-We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote width={300}>Achieved via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).</SideNote>
+We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Achieved via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), plus recursively defined [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).</SideNote>
 The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) gives our website its name.
 
 - We consider gameplay relevant to a huge number of video games, presented from a top-down perspective.
@@ -173,7 +173,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-These maps are actually _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
+The above pan/zoom-able maps are actually _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
 For example, the first map amounts to the following component instantiation:
 
 ```jsx
@@ -187,18 +187,23 @@ For example, the first map amounts to the following component instantiation:
 />
 ```
 
-These worlds look like maps because there is no _Player_.
-The Player determines the Field Of View (FOV) e.g. see the [video earlier](#first-peek-video).
+The `worldKey` provides a unique identifier into a cache where the World's API is stored.
+`gms` specifies the geomorphs and their layout, as outlined above.
+But why do these worlds look like maps?
+Because there is no _Player_ and consequently no _FOV_ (Field Of View).<SideNote>We already saw the Player-sensitive FOV in the [video earlier](#first-peek-video).</SideNote>
+
+Then the next step towards behaviour is a World with a Player.
+This brings us to a very important ingredient: the `<Terminal>`.
 
 <Tabs
-  id="tabs@first-demo"
+  id="tabs@world-with-tty-1"
   initEnabled={false}
   height={[600, 600]}
   persistLayout
   tabs={[
     [
-      { type: 'component', class: 'World', filepath: 'world@first-demo', props: {
-        worldKey: 'world@first-demo',
+      { type: 'component', class: 'World', filepath: 'world@world-with-tty-1', props: {
+        worldKey: 'world@world-with-tty-1',
         init: { zoom: 0.5 , y: 600, ms: 0 },
         gms: [
           { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
@@ -208,15 +213,15 @@ The Player determines the Field Of View (FOV) e.g. see the [video earlier](#firs
       }},
     ],
     [
-      { type: 'terminal', filepath: 'tty@first-demo', env: {
-        WORLD_KEY: 'world@first-demo',
+      { type: 'terminal', filepath: 'tty@world-with-tty-1', env: {
+        WORLD_KEY: 'world@world-with-tty-1',
         PROFILE:
 `source /etc/util-1
 source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 echo "${ansiColor.Reverse}So far we've loaded shell functions and connected to the World.${ansiColor.ReverseReset}"
+NOECHO=1 echo "${ansiColor.Reverse}So far we've loaded shell functions (declare -F) and connected to the World.${ansiColor.ReverseReset}"
 NOECHO=1 choice 'tap to [continue](-)'
 
 spawn foo '{x:-89.8,y:1075.7}'
@@ -230,12 +235,18 @@ npc map hide
 goLoop foo &
 doLoop foo &
 
-NOECHO=1 echo "${ansiColor.Reverse}We've hidden the map overlay. We also setup movement (tap navmesh) and actions (tap doors or icons) via background processes.${ansiColor.Reset}"
+NOECHO=1 echo "${ansiColor.Reverse}We hid the map overlay, setup movement (tap navmesh) and actions (tap doors or icons) via background processes.${ansiColor.Reset}"
 `
       }},
     ],
   ]}
 />
+
+<Aside title="tips-and-tricks">
+
+  Foo bar
+
+</Aside>
 
 
 OLD BELOW (may move elsewhere)
