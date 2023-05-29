@@ -12,6 +12,8 @@
 - ✅ npc.config.logTags
 - ✅ cleanup CssPanZoom
 
+- ✅ replace tty touch ui "force lowercase" with "disable textarea"
+
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
   - ✅ Tabs and Terminal on homepage with custom profile
   - ✅ support `view {ms} [{point}] [{zoom}]`
@@ -22,6 +24,7 @@
     - player on chair; npc goes to bed; npc turns light off; npc says "good night"
     - alt: player gets in way...
 
+- support ansi color codes inside `choice` args
 - HMR useGeomorphs?
 - 🚧 create a new CodeSandbox
   - ✅ update src/components e.g. Terminal

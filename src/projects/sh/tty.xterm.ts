@@ -44,7 +44,7 @@ export class ttyXtermClass {
   private linesPerUpdate = 500;
   private refreshMs = 0;
 
-  /** Useful for mobile keyboard inputs */
+  /** Useful for mobile keyboard inputs (UNUSED) */
   forceLowerCase = false;
   /**
    * History will be disabled during initial profile,
@@ -73,6 +73,10 @@ export class ttyXtermClass {
     this.cursorRow = 1;
     this.historyIndex = -1;
     this.preHistory = this.input;
+  }
+
+  canType() {
+    return this.xterm.textarea!.disabled === false;
   }
 
   dispose() {
@@ -702,6 +706,10 @@ export class ttyXtermClass {
     this.session.io.writeToReaders({ key: 'send-kill-sig' });
   }
 
+  setCanType(canType: boolean) {
+    this.xterm.textarea!.disabled = !canType;
+  }
+
   /**
    * Move the terminal's cursor and update `this.cursor`.
    */
@@ -778,7 +786,7 @@ export class ttyXtermClass {
     if (this.promptReady) {
       this.setInput(this.input);
     }
-  }, 50)
+  }, 5) // Prefer small lag on show cursor
 
   /**
    * Splice `input` into `this.input`.

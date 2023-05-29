@@ -1,15 +1,17 @@
 import React from 'react';
 import { css, cx } from '@emotion/css';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
-import { zIndex } from 'projects/service/const';
+import { zIndex, localStorageKey } from 'projects/service/const';
 import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
-import useSessionStore from 'projects/sh/session.store';
+import useUpdate from 'projects/hooks/use-update';
 
 export default function TouchHelperUI(props: {
   session: Session;
   disabled?: boolean;
 }) {
+
+  const update = useUpdate();
 
   const state = useStateRef(() => {
     return {
@@ -22,12 +24,11 @@ export default function TouchHelperUI(props: {
             const textToPaste = await navigator.clipboard.readText();
             xterm.spliceInput(textToPaste);
           } catch {}
-        } else if (target.classList.contains('lowercase')) {
-          const forced = (xterm.forceLowerCase = !xterm.forceLowerCase);
-          const message = `⚠️  input ${forced ? 'forced as' : 'not forced as'} lowercase`;
-          useSessionStore.api.writeMsgCleanly(props.session.key, message);
-          target.classList.toggle('enabled');
-          tryLocalStorageSet(localStorageKey, `${forced}`);
+        } else if (target.classList.contains('can-type')) {
+          const next = !xterm.canType()
+          xterm.setCanType(next);
+          tryLocalStorageSet(localStorageKey.touchTtyCanType, `${next}`);
+          update();
         } else if (target.classList.contains('ctrl-c')) {
           xterm.sendSigKill();
         } else if (target.classList.contains('clear')) {
@@ -44,12 +45,12 @@ export default function TouchHelperUI(props: {
   
   React.useMemo(() => {
     const { xterm } = props.session.ttyShell;
-    if (!tryLocalStorageGet(localStorageKey)) {
-      // force lowercase by default on touch device
-      tryLocalStorageSet(localStorageKey, 'true');
+    if (!tryLocalStorageGet(localStorageKey.touchTtyCanType)) {
+      // tty disabled on touch devices by default
+      tryLocalStorageSet(localStorageKey.touchTtyCanType, 'false');
     }
-    xterm.forceLowerCase = tryLocalStorageGet(localStorageKey) === 'true';
-    return () => void (xterm.forceLowerCase = false);
+    xterm.setCanType(tryLocalStorageGet(localStorageKey.touchTtyCanType) === 'true');
+    return () => void (xterm.setCanType(true));
   }, []);
 
   return (
@@ -61,10 +62,10 @@ export default function TouchHelperUI(props: {
         paste
       </div>
       <div className={cx(
-        'icon lowercase',
-        { enabled: props.session.ttyShell.xterm.forceLowerCase },
+        'icon can-type',
+        { enabled: props.session.ttyShell.xterm.canType() },
       )}>
-        abc
+        $
       </div>
       <div className="icon ctrl-c">
         💀
@@ -81,8 +82,6 @@ export default function TouchHelperUI(props: {
     </div>
   );
 }
-
-const localStorageKey = 'touch-tty-force-lowercase';
 
 const rootCss = css`
   position: absolute;
@@ -113,10 +112,10 @@ const rootCss = css`
     transform: scale(1.2);
   }
 
-  .lowercase {
-    color: #999;
-    &.enabled {
-      color: white;
+  .can-type {
+    color: #0f0;
+    &:not(.enabled) {
+      color: #999;
     }
   }
 `;
