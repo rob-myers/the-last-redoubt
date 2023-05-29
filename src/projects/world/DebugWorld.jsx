@@ -2,8 +2,10 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
 import { cssName, wallOutset } from "./const";
+import { supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
+import npcsMeta from './npcs-meta.json';
 
 /**
  * 🚧 merge onClick into state?
@@ -224,6 +226,8 @@ export default function DebugWorld(props) {
 
         </div>
       )}
+
+      <PrefetchSpritesheets />
     </div>
   );
 }
@@ -326,3 +330,26 @@ const rootCss = css`
     }
   }  
 `;
+
+/**
+ * e.g. load walk spritesheet before walking
+ */
+const PrefetchSpritesheets = React.memo(() => {
+  return (
+    <div
+      className="prefetch-spritesheets"
+      style={{ display: 'none' }}
+    >
+      {Object.values(npcsMeta).map((meta) =>
+        Object.values(meta.parsed.animLookup)
+          // .filter(({ frameCount }) => frameCount > 1)
+          .map(({ animName, pathPng, pathWebp }) =>
+            <img
+              key={`${animName}@${meta.classKey}`}
+              src={supportsWebp ? pathWebp : pathPng}
+            />
+          )
+      )}
+    </div>
+  );
+});
