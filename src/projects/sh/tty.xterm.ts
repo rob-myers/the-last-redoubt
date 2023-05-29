@@ -648,7 +648,8 @@ export class ttyXtermClass {
           return;
         }
         case 'paste-line': {
-          this.xterm.writeln(command.line);
+          const shouldWrite = !command.line.startsWith('NOECHO=1 ')
+          shouldWrite && this.xterm.writeln(command.line);
           this.trackCursorRow(+1);
           this.input = command.line;
           this.sendLine();
