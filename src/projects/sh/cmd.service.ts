@@ -102,7 +102,11 @@ class cmdServiceClass {
         }
         break;
       }
-      case 'choice': {/** usage: `choice {textWithLinks}+ [secondsToWait] [defaultValue]` */
+      case 'choice': {
+        /**
+         * usage: `choice {textWithLinks}+ [secondsToWait] [defaultValue]`
+         * We currently do not support ansi colour codes in any of the args {textWithLinks}+.
+         */
         const secsIndex = args.findIndex(x => Number.isFinite(parseInt(x)));
         const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
         const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;

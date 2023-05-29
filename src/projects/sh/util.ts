@@ -240,7 +240,10 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
   const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
-    .map((part, i) => (addedZero === (i % 2)) ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]` : part)
+    .map((part, i) => (addedZero === (i % 2))
+      ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]`
+      : `${ansiColor.White}${part}${ansiColor.Reset}`
+    )
   ;
   const ttyText = parts.join('');
   const ttyTextKey = stripAnsi(ttyText);
@@ -263,7 +266,7 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
 
   return {
     ttyText,
-    /** `ttyText` with extended ansi stripped */
+    /** `ttyText` with ansi colours stripped */
     ttyTextKey,
     linkCtxtsFactory,
   };
