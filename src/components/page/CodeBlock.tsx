@@ -47,7 +47,7 @@ export const vscDarkPlusCss = css`
   pre[class*="language-"],
   code[class*="language-"] {
     color: #d4d4d4;
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0;
     line-height: 1.4;
     text-shadow: none;
