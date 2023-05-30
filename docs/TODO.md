@@ -2,17 +2,7 @@
 
 ## In progress
 
-- ❌ auto invert comments
-- ✅ one line preamble: session {sessionKey} running /home/PROFILE
-- ✅ `choice` pause/resumes like *sleep
-
-- ✅ cleanup `choice`
-- ✅ `choice` supports many initial args up to first number (if any)
-  - ℹ️ for brace-expansion currently do this `choice "$( echo '['{1..50}']()' )"`
-- ✅ npc.config.logTags
-- ✅ cleanup CssPanZoom
-
-- ✅ replace tty touch ui "force lowercase" with "disable textarea"
+- ✅ Doors: simplify to a single div which always fades
 
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
   - ✅ Tabs and Terminal on homepage with custom profile
@@ -30,6 +20,7 @@
   - ✅ update src/components e.g. Terminal
   - 🚧 update World piecewise
 
+- Doors: CSS -> WAAPI (?)
 - 🤔 BUG tty long input overflow *responsive* deformation
 - simplify individual doors
 - BUG Escape Tabs not working when click on tabs bar
@@ -393,6 +384,17 @@
 
 ## Done
 
+- ❌ auto invert comments
+- ✅ one line preamble: session {sessionKey} running /home/PROFILE
+- ✅ `choice` pause/resumes like *sleep
+
+- ✅ cleanup `choice`
+- ✅ `choice` supports many initial args up to first number (if any)
+  - ℹ️ for brace-expansion currently do this `choice "$( echo '['{1..50}']()' )"`
+- ✅ npc.config.logTags
+- ✅ cleanup CssPanZoom
+
+- ✅ replace tty touch ui "force lowercase" with "disable textarea"
 - ✅ move `api.npcs.session.tty` to `session.ttyLink`
   - ℹ️ instead of send msg `on-tty-link` we'll yield a value in accordance with link
 - ✅ implement builtin `choice {textWithMarkdownLinks} [ms] [default]`

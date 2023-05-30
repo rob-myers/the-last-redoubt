@@ -16,7 +16,7 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
-    // know gmGraph is ready (condition for Doors to be mounted)
+    // know gmGraph is ready
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
     open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
@@ -214,12 +214,10 @@ export default function Doors(props) {
           {gm.doors.map((door, doorId) =>
             state.vis[gmId][doorId] &&
               <div
-                key={doorId}
                 className={cx(cssName.door, {
-                  [cssName.hull]: door.meta.hull === true,
-                  [cssName.iris]: door.meta.iris === true,
                   [cssName.open]: state.open[gmId][doorId],
                 })}
+                data-meta={state.touchMeta[gmId][doorId]}
                 style={{
                   left: door.baseRect.x,
                   top: door.baseRect.y,
@@ -228,94 +226,29 @@ export default function Doors(props) {
                   transform: `rotate(${door.angle}rad)`,
                   transformOrigin: 'top left',
                 }}
-              >
-                <div
-                  className={cssName.doorTouchUi}
-                  data-meta={state.touchMeta[gmId][doorId]}
-                />
-                <div
-                  className="other-door"
-                  style={{
-                    transform: `translate(${door.baseRect.width}px, -1px) scale(-1, 1)`,
-                  }}
-                />
-              </div>
-            )
-          }
+            />
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-const doorTouchUiMeta = JSON.stringify({ door: true, ui: true });
-
 const rootCss = css`
   ${cssName.npcDoorTouchRadius}: 10px;
 
   position: absolute;
 
-  canvas {
+  div.${cssName.door} {
     position: absolute;
-    pointer-events: none;
-  }
+    cursor: pointer;
+    background: white;
+    border: 1px solid #000000;
 
-  div.door {
-    position: absolute;
-    pointer-events: none;
-    
-    &:not(.${cssName.iris}) {
-      /* background: #444; */
-      background: #fff;
-      border: 1px solid #000000;
-      
-      transition: width 300ms ease-in;
-      &.${cssName.open} {
-        width: 4px !important;
-      }
-      .other-door {
-        position: absolute;
-        width: inherit;
-        height: inherit;
-        border: 1px solid #000000;
-        background: #fff;
-        transform-origin: top left;
-        transform: scale(-1, 1);
-      }
-    }
-
-    &.${cssName.hull} {
-      transition: width 300ms ease-in;
-      .${cssName.doorTouchUi} {
-        top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ hullDoorWidth / 2 }px );
-      }
-    }
-
-    &.${cssName.iris} {
-      background-image: linear-gradient(45deg, #000 33.33%, #888 33.33%, #888 50%, #000 50%, #000 83.33%, #888 83.33%, #aaa 100%);
-      background-size: 4.24px 4.24px;
-      border: 1px solid #aaa;
-      
-      opacity: 1;
-      transition: opacity 300ms ease;
-      &.${cssName.open} {
-        opacity: 0.2;
-      }
-    }
-
-    .${cssName.doorTouchUi} {
-      cursor: pointer;
-      pointer-events: all;
-      position: absolute;
-
-      width: calc(100% + 2 * var(${cssName.npcDoorTouchRadius}));
-      min-width: calc( 2 * var(${cssName.npcDoorTouchRadius}) );
-      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + ${ doorWidth / 2 }px ); /** 5px for hull */
-      left: calc(-1 * var(${cssName.npcDoorTouchRadius}));
-      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
-
-      background: rgba(100, 0, 0, 0.1);
-      border-radius: var(${cssName.npcDoorTouchRadius});
+    opacity: 1;
+    transition: opacity 300ms ease;
+    &.${cssName.open} {
+      opacity: 0.1;
     }
   }
 `;
