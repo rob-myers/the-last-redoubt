@@ -242,13 +242,14 @@ const rootCss = css`
   div.${cssName.door} {
     position: absolute;
     cursor: pointer;
-    background: white;
+    background-color: white;
     border: 1px solid #000000;
 
     opacity: 1;
-    transition: opacity 500ms ease;
+    transition: opacity 500ms ease, background-color 300ms ease;
     &.${cssName.open} {
-      opacity: 0;
+      opacity: 0.25;
+      background-color: transparent;
     }
   }
 `;
