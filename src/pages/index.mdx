@@ -24,7 +24,7 @@ import SideNote from "components/page/SideNote";
 import Tabs from "components/page/Tabs";
 import Def from "components/page/Def";
 import Aside from "components/page/Aside";
-import { ansiColor } from "projects/sh/util";
+import { ansi } from "projects/sh/util";
 
 ## home
 
@@ -32,7 +32,7 @@ import { ansiColor } from "projects/sh/util";
 
 We want to make video games more meaningful.
 That is the objective of this website.
-They have become synonymous with meaningless violence, bad storytelling and **simplistic character behaviour** ([NPC](https://en.wikipedia.org/wiki/Non-player_character "@new-tab") as a [meme](https://en.wikipedia.org/wiki/NPC_(meme)  "@new-tab")).
+They have become synonymous with meaningless violence, bad storytelling and **simplistic character behaviour** (NPC as a [meme](https://en.wikipedia.org/wiki/NPC_(meme))).
 On the other hand, there are plenty of exceptions out there.
 Recent examples include:
 - [What Remains of Edith Finch](https://en.wikipedia.org/wiki/What_Remains_of_Edith_Finch)
@@ -115,7 +115,7 @@ Additional depth must be integrated into the experience.
 This can be subtle e.g. deterministic behaviour may be desirable to avoid frustration.
 A Player-centric approach is required,
 as opposed to complex simulations possibly never witnessed by the Player.
-Finally, we must take care that our desire for generality does not produce a dry abstract approach.
+Finally, we must take care our desire for generality does not produce a dry abstract approach.
 
 {/* Entertainment will arise by interacting with our little fabricated worlds. */}
 {/* We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience. */}
@@ -123,8 +123,8 @@ Finally, we must take care that our desire for generality does not produce a dry
 ### Fabricating a behaviour
 
 For behaviour to arise we need a _World_ and denizens therein.
-Defining a World amounts to choosing [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") and connecting them together.
-At present, we only support 5 geomorphs (Robert Pearce provided hundreds) constructed from about 80 of [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote> (he provided thousands).
+Defining a World amounts to choosing [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and connecting them together.
+At present, we only support 5 geomorphs (Robert Pearce provided hundreds) constructed from about 80 [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html)<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/).</SideNote> (Robert Pearce provided thousands).
 
 <Carousel
   baseSrc="/assets/geomorph/"
@@ -197,6 +197,10 @@ Because there is no _Player_ and consequently no _FOV_ (Field Of View).<SideNote
 
 Then the next step towards behaviour is a World with a Player.
 This brings us to a very important ingredient: the `<Terminal>`.
+Designing user interfaces is _hard_.
+We've gone the canonical textual route i.e. POSIX.
+Syntactically we want the look and feel of an interactive shell.
+Semantically we want to manipulate Javascript values and run async generators. 
 
 
 <Tabs
@@ -225,21 +229,22 @@ source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 echo "${ansiColor.Reverse}So far we've loaded shell functions (declare -F) and connected to the World.${ansiColor.ReverseReset}"
+NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}So far this profile has loaded various shell functions and connected to the World.${ansi.Reset}"
 NOECHO=1 choice 'tap to [continue](-)'
 
-spawn foo '{x:-89.8,y:1075.7}'
-npc set-player foo
+spawn bilem '{x:-89.8,y:1075.7}'
+npc set-player bilem
 view 1000 '{x:-89.8,y:1075.7}' 2
 
-NOECHO=1 echo "${ansiColor.Reverse}We've spawned an npc, set them as the player, and finally pan-zoomed them into view.${ansiColor.Reset}"
+NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc called \\"bilem\\", set them as the Player, and finally pan-zoomed them into view.${ansi.Reset}"
 NOECHO=1 choice 'tap to [continue](-)'
 
 npc map hide
-goLoop foo &
-doLoop foo &
+goLoop bilem &
+doLoop bilem &
+lookLoop bilem &
 
-NOECHO=1 echo "${ansiColor.Reverse}We hid the map overlay, setup movement (tap navmesh) and actions (tap doors or icons) via background processes.${ansiColor.Reset}"
+NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we've hidden the map and setup the Player. Tap the navmesh (to move), nearby doors/icons (to do things), elsewhere (to look).${ansi.Reset}"
 `
       }},
     ],
@@ -248,7 +253,16 @@ NOECHO=1 echo "${ansiColor.Reverse}We hid the map overlay, setup movement (tap n
 
 <Aside title="tips-and-tricks">
 
-  Foo bar
+  Things to try with the World and Terminal above:
+  - Sit in a chair.
+  - Open a door.
+  - Lie in a bed.
+  - Reset everything (<Icon icon="refresh" small inline />).
+  - Pause everything (<Icon icon="cross-circle" small inline />).
+  - Follow the Player by running <InlineCode copy>track bilem</InlineCode>.
+  - Stop following via Ctrl-C (💀 on mobile).
+  - List background processes <InlineCode copy>ps</InlineCode>.
+  - Kill background processes <InlineCode copy>kill 8 18 26</InlineCode>.<SideNote>You can also pause/resume processes via `--STOP` and `--CONT`</SideNote>
 
 </Aside>
 

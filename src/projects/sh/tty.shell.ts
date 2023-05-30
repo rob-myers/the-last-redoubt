@@ -3,7 +3,7 @@ import { testNever } from '../service/generic';
 import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
-import { ansiColor, ProcessError, ShError } from './util';
+import { ansi, ProcessError, ShError } from './util';
 import { parseService, srcService } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';
@@ -147,7 +147,7 @@ export class ttyShellClass implements Device {
 
     try {
       ttyShell.xterm.historyEnabled = false;
-      useSession.api.writeMsg(this.sessionKey, `${ansiColor.Blue}${this.sessionKey}${ansiColor.White} running ${ansiColor.Blue}/home/PROFILE${ansiColor.Reset}`, 'info');
+      useSession.api.writeMsg(this.sessionKey, `${ansi.Blue}${this.sessionKey}${ansi.White} running ${ansi.Blue}/home/PROFILE${ansi.Reset}`, 'info');
       await ttyShell.xterm.pasteLines(profile.split('\n'), true);
       this.prompt('$');
     } catch {} finally {

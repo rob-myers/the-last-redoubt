@@ -3,7 +3,7 @@ import { assertDefined, testNever, visibleUnicodeLength } from "../service/gener
 import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
-import { ansiColor } from "../sh/util";
+import { ansi } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
@@ -291,7 +291,7 @@ function mockHandleDecorClick(event, api) {
       const gm = api.gmGraph.gms[gmId];
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
       // Square brackets induces a link via `linkProviderDef`
-      const line = `ℹ️  [${ansiColor.Blue}${label}${ansiColor.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
+      const line = `ℹ️  [${ansi.Blue}${label}${ansi.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
       
       worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
         lineText: line, 
@@ -307,7 +307,7 @@ function mockHandleDecorClick(event, api) {
     }
     api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
       sessionKey,
-      `${ansiColor.White}tags: ${JSON.stringify(decor.tags??[])}${ansiColor.Reset}`,
+      `${ansi.White}tags: ${JSON.stringify(decor.tags??[])}${ansi.Reset}`,
     ));
   }
 

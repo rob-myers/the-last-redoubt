@@ -1,6 +1,6 @@
 import type { Terminal } from 'xterm';
 import debounce from "debounce";
-import { ansiColor } from './util';
+import { ansi } from './util';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
 
@@ -457,19 +457,19 @@ export class ttyXtermClass {
   private onMessage(msg: MessageFromShell | string) {
     if (typeof msg === 'string') {
       const lines = msg.split('\n');
-      const commands = lines.map(line => ({ key: 'line' as const, line: `${ansiColor.White}${line}${ansiColor.Reset}` }));
+      const commands = lines.map(line => ({ key: 'line' as const, line: `${ansi.White}${line}${ansi.Reset}` }));
       // this.session.rememberLastValue(lines[lines.length - 1]);
       return this.queueCommands(commands);
     } else if (msg === null) {
       this.session.rememberLastValue(null);
-      return this.queueCommands([{ key: 'line', line: `${ansiColor.Yellow}null${ansiColor.Reset}` }]);
+      return this.queueCommands([{ key: 'line', line: `${ansi.Yellow}null${ansi.Reset}` }]);
     } else if (msg === undefined) {
       return;
     } else if (isProxy(msg)) {
       this.session.rememberLastValue(msg);
       return this.queueCommands([{
         key: 'line',
-        line: `${ansiColor.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansiColor.Reset}`,
+        line: `${ansi.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansi.Reset}`,
       }]);
     }
 
@@ -512,14 +512,14 @@ export class ttyXtermClass {
       case 'error': {
         this.queueCommands([{
           key: 'line',
-          line: `${ansiColor.Red}${msg.msg}${ansiColor.Reset}`,
+          line: `${ansi.Red}${msg.msg}${ansi.Reset}`,
         }]);
         break;
       }
       case 'info': {
         this.queueCommands([{
           key: 'line',
-          line: `ℹ️  ${msg.msg}${ansiColor.Reset}`,
+          line: `ℹ️  ${msg.msg}${ansi.Reset}`,
         }]);
         break;
       }
@@ -538,7 +538,7 @@ export class ttyXtermClass {
           const stringified = safeStringify(msg);
           this.queueCommands([{
             key: 'line',
-            line: `${ansiColor.Yellow}${stringified.slice(-this.maxStringifyLength)}${ansiColor.Reset}`,
+            line: `${ansi.Yellow}${stringified.slice(-this.maxStringifyLength)}${ansi.Reset}`,
           }]);
           this.session.rememberLastValue(msg);
         }

@@ -192,7 +192,7 @@ export function matchFuncFormat(pathComponent: string) {
 
 //#region ansi
 
-export const ansiColor = {
+export const ansi = {
   Black: '\x1b[30m',
   Blue: '\x1b[1;34m',
   Bold: '\x1b[1m',
@@ -241,8 +241,8 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
     .map((part, i) => (addedZero === (i % 2))
-      ? `[${ansiColor.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansiColor.Reset}]`
-      : `${ansiColor.White}${part}${ansiColor.Reset}`
+      ? `[${ansi.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}]`
+      : `${ansi.White}${part}${ansi.Reset}`
     )
   ;
   const ttyText = parts.join('');

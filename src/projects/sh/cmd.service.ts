@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansiColor, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
+import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -180,9 +180,9 @@ class cmdServiceClass {
         if (showVars) {
           for (const [key, value] of Object.entries(vars)) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
-            yield `${ansiColor.Blue}${key}${ansiColor.Reset}=${
-              typeof value === 'string' ? ansiColor.White : ansiColor.Yellow
-            }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansiColor.Reset}`;
+            yield `${ansi.Blue}${key}${ansi.Reset}=${
+              typeof value === 'string' ? ansi.White : ansi.Yellow
+            }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansi.Reset}`;
           }
         }
         if (showFuncs) {
@@ -192,7 +192,7 @@ class cmdServiceClass {
           for (const { key, src } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
             if (exactMatch && key !== exactMatch) continue;
-            const lines = `${ansiColor.Blue}${key}${ansiColor.White} () ${src}`.split(/\r?\n/);
+            const lines = `${ansi.Blue}${key}${ansi.White} () ${src}${ansi.Reset}`.split(/\r?\n/);
             for (const line of lines) yield line;
             yield '';
           }
@@ -200,7 +200,7 @@ class cmdServiceClass {
         if (showFuncNames) {
           for (const { key } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
-            yield `declare -f ${key}${ansiColor.White}`;
+            yield `${ansi.White}declare -f ${key}${ansi.Reset}`;
           }
         }
         break;
@@ -231,9 +231,9 @@ class cmdServiceClass {
         const { ttyShell } = useSession.api.getSession(meta.sessionKey);
         yield `The following commands are supported:`;
         const commands = cliColumns(Object.keys(commandKeys), { width: ttyShell.xterm.xterm.cols }).split(/\r?\n/);
-        for (const line of commands) yield `${ansiColor.Blue}${line}`;
+        for (const line of commands) yield `${ansi.Blue}${line}`;
         // yield `Traverse context via \`ls\` or \`ls -l var.foo.bar\` (Object.keys).` 
-        yield `\n\rView shell functions via ${ansiColor.Blue}declare${ansiColor.White}.`
+        yield `\n\rView shell functions via ${ansi.Blue}declare${ansi.Reset}.`
         // yield `Use Ctrl-c to interrupt and Ctrl-l to clear screen.`
         // yield `View history via up/down or \`history\`.`
         // yield `Traverse input using Option-left/right and Ctrl-{a,e}.`
@@ -316,7 +316,7 @@ class cmdServiceClass {
             continue;
           }
 
-          if (roots.length > 1) yield `${ansiColor.Blue}${queries[i]}:`;
+          if (roots.length > 1) yield `${ansi.Blue}${queries[i]}:`;
           let keys = (opts.r ? keysDeep(obj) : Object.keys(obj)).sort();
           let items = [] as string[];
           if (pwd === 'home' && !opts.a) keys = keys.filter(x => x.toUpperCase() !== x || /^[0-9]/.test(x));
@@ -327,7 +327,7 @@ class cmdServiceClass {
               ? keys.map(x => deepGet(obj, x.split('/'))?.constructor?.name || (obj[x] === null ? 'null' : 'undefined'))
               : keys.map(x => obj[x]?.constructor?.name || (obj[x] === null ? 'null' : 'undefined'));
             const metasWidth = Math.max(...metas.map(x => x.length));
-            items = keys.map((x, i) => `${ansiColor.Yellow}${metas[i].padEnd(metasWidth)}${ansiColor.White} ${x}`);
+            items = keys.map((x, i) => `${ansi.Yellow}${metas[i].padEnd(metasWidth)}${ansi.White} ${x}${ansi.Reset}`);
           } else if (opts[1]) {
             items = keys;
           } else {
@@ -350,12 +350,12 @@ class cmdServiceClass {
           for (const { key: pid, ppid, pgid, status, src } of processes) {
             const icon = getProcessStatusIcon(status);
             const info = [pid, ppid, pgid].map(String).map(x => x.padEnd(5)).join(' ')
-            yield `${ansiColor.Blue}${title}${ansiColor.Reset}`;
+            yield `${ansi.Blue}${title}${ansi.Reset}`;
             yield `${info}${icon}`;
             yield src + '\n';
           }
         } else {
-          yield `${ansiColor.Blue}${title}${ansiColor.Reset}`;
+          yield `${ansi.Blue}${title}${ansi.Reset}`;
           for (const { key: pid, ppid, pgid, status, src } of processes) {
             const icon = getProcessStatusIcon(status);
             const info = [pid, ppid, pgid].map(String).map(x => x.padEnd(5)).join(' ');
@@ -558,7 +558,7 @@ class cmdServiceClass {
     getCached,
 
     getColors() {
-      return ansiColor;
+      return ansi;
     },
   
     getKillError() {

@@ -6,9 +6,8 @@ import loadable from '@loadable/component';
 import { ttyXtermClass } from 'projects/sh/tty.xterm';
 import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
-import { getCached } from 'projects/service/query-client';
 
-import { ansiColor, stripAnsi } from 'projects/sh/util';
+import { ansi, stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
@@ -17,7 +16,6 @@ import useStateRef from 'projects/hooks/use-state-ref';
 import XTerm from './XTerm';
 import type ActualTouchHelperUi from './TouchHelperUi';
 import useUpdate from 'projects/hooks/use-update';
-import type { State as WorldApi } from 'projects/world/World';
 
 const TouchHelperUi = loadable(
   () => import('./TouchHelperUi'),
@@ -50,7 +48,7 @@ export default function Terminal(props: Props) {
 
     if (props.disabled && state.xtermReady) {
       state.hasEverDisabled = true;
-      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansiColor.White}paused session${ansiColor.Reset}`, { prompt: false });
+      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansi.White}paused session${ansi.Reset}`, { prompt: false });
 
       // Pause running processes
       Object.values((state.session?.process)??{}).filter(
@@ -63,7 +61,7 @@ export default function Terminal(props: Props) {
     }
 
     if (!props.disabled && state.hasEverDisabled && state.xtermReady) {
-      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansiColor.White}resumed session${ansiColor.Reset}`);
+      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansi.White}resumed session${ansi.Reset}`);
 
       // Resume processes we suspended
       const processes = Object.values((state.session?.process)??{});

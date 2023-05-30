@@ -2,7 +2,7 @@ import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { ansiColor, computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
+import { ansi, computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
@@ -415,7 +415,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       xterm.prepareForCleanMsg();
       await new Promise<void>(resolve => {
         xterm.queueCommands([
-          { key: 'line', line: `${msg}${ansiColor.Reset}` },
+          { key: 'line', line: `${msg}${ansi.Reset}` },
           { key: 'resolve', resolve },
         ])
       });
