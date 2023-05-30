@@ -38,9 +38,11 @@ const rootCss = css`
     font-size: 1rem;
     color: #0f0;
     letter-spacing: 1px;
-    background-color: #222222;
-    padding: 3px;
-    border: 1px solid #eeeeee22;
+    background-color: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    vertical-align: top;
+    /* border: 1px solid #eeeeee22; */
   }
 
   /* cursor: pointer; */
