@@ -31,6 +31,11 @@ export default function TouchHelperUI(props: {
           update();
         } else if (target.classList.contains('ctrl-c')) {
           xterm.sendSigKill();
+        } else if (target.classList.contains('enter')) {
+          xterm.queueCommands([{ key: 'newline' }]);
+        } else if (target.classList.contains('delete')) {
+          xterm.clearInput();
+          xterm.showPendingInput();
         } else if (target.classList.contains('clear')) {
           xterm.clearScreen();
         } else if (target.classList.contains('up')) {
@@ -70,8 +75,14 @@ export default function TouchHelperUI(props: {
       <div className="icon ctrl-c">
         💀
       </div>
+      <div className="icon enter">
+        enter
+      </div>
+      <div className="icon delete">
+        del
+      </div>
       <div className="icon clear">
-        ∅
+        clear
       </div>
       <div className="icon up">
         ⬆️
@@ -117,5 +128,8 @@ const rootCss = css`
     &:not(.enabled) {
       color: #999;
     }
+  }
+  .paste, .enter, .delete, .clear {
+    color: #cfc;
   }
 `;
