@@ -246,9 +246,9 @@ const rootCss = css`
     border: 1px solid #000000;
 
     opacity: 1;
-    transition: opacity 300ms ease;
+    transition: opacity 500ms ease;
     &.${cssName.open} {
-      opacity: 0.1;
+      opacity: 0;
     }
   }
 `;
