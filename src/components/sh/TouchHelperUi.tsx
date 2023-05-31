@@ -157,8 +157,8 @@ const menuCss = css`
     top: 48px;
     right: calc(var(--menu-width) - 1px);
     
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     
     display: flex;
     justify-content: center;
