@@ -245,11 +245,21 @@ const rootCss = css`
     background-color: white;
     border: 1px solid #000000;
 
-    opacity: 1;
-    transition: opacity 500ms ease, background-color 300ms ease;
+    transition: border-color 300ms ease, background-color 300ms ease;
     &.${cssName.open} {
-      opacity: 0.25;
+      border-color: rgba(0, 0, 0, 0.25);
       background-color: transparent;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      border-radius: var(${cssName.npcDoorTouchRadius});
+      width: calc(2 * var(${cssName.npcDoorTouchRadius}));
+      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
+      top: calc(50% - var(${cssName.npcDoorTouchRadius}));
+      left: calc(50% - var(${cssName.npcDoorTouchRadius}));
     }
   }
 `;
