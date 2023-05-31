@@ -123,13 +123,32 @@ const menuCss = css`
   top: 0;
   right: 0;
   width: var(--menu-width);
+
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1; /** Needed for mobile viewing 'Desktop site' */
+  background-color: rgba(0, 0, 0, 0.7);
+  font-size: 0.75rem;
+  border: 1px solid #555;
+  border-width: 1px 1px 1px 1px;
+  color: white;
   
+  &.disabled {
+    filter: brightness(0.5);
+    pointer-events: none;
+  }
+
+
   transition: transform 500ms;
   &.open {
     transform: translate(0px, 0px);
   }
   &:not(.open) {
     transform: translate(var(--menu-width), 0px);
+    .menu-toggler {
+      background: rgba(0, 0, 0, 0.5);
+    }
   }
   
   .menu-toggler {
@@ -148,23 +167,8 @@ const menuCss = css`
     font-size: 12px;
     background: #222;
     color: #ddd;
-    border: 1px solid #444;
+    border: 2px solid #444;
   }
-
-  &.disabled {
-    filter: brightness(0.5);
-    pointer-events: none;
-  }
-
-  line-height: 1; /** Needed for mobile viewing 'Desktop site' */
-  background-color: rgba(0, 0, 0, 0.3);
-  font-size: 0.75rem;
-  border: 1px solid #555;
-  border-width: 1px 1px 1px 1px;
-  color: white;
-
-  display: flex;
-  flex-direction: column;
 
   .icon {
     cursor: pointer;
