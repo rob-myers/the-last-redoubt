@@ -15,7 +15,8 @@ export default function TouchHelperUI(props: {
 
   const state = useStateRef(() => {
     return {
-      async onClick(e: React.MouseEvent) {
+      open: true,
+      async onClickMenu(e: React.MouseEvent) {
         const target = e.target as HTMLElement;
         const { xterm } = props.session.ttyShell;
         xterm.xterm.scrollToBottom();
@@ -45,6 +46,12 @@ export default function TouchHelperUI(props: {
         } 
         // xterm.xterm.focus();
       },
+      onClickToggle() {
+        const next = !state.open;
+        state.open = next;
+        tryLocalStorageSet(localStorageKey.touchTtyOpen, `${next}`);
+        update();
+      },
     };
   });
   
@@ -54,17 +61,28 @@ export default function TouchHelperUI(props: {
       // tty disabled on touch devices by default
       tryLocalStorageSet(localStorageKey.touchTtyCanType, 'false');
     }
+    if (!tryLocalStorageGet(localStorageKey.touchTtyOpen)) {
+      // touch menu open on touch devices by default
+      tryLocalStorageSet(localStorageKey.touchTtyOpen, 'true');
+    }
     xterm.setCanType(tryLocalStorageGet(localStorageKey.touchTtyCanType) === 'true');
+    state.open = tryLocalStorageGet(localStorageKey.touchTtyOpen) === 'true';
     return () => void (xterm.setCanType(true));
   }, []);
 
   return (
     <div
-      className={cx(rootCss, { disabled: props.disabled })}
-      onClick={state.onClick}
+      className={cx(menuCss, {
+        disabled: props.disabled,
+        open: state.open,
+      })}
+      onClick={state.onClickMenu}
     >
-      <div className="icon paste">
-        paste
+      <div
+        className="menu-toggler"
+        onClick={state.onClickToggle}
+      >
+        {state.open ? '>' : '<'}
       </div>
       <div className={cx(
         'icon can-type',
@@ -72,14 +90,17 @@ export default function TouchHelperUI(props: {
       )}>
         $
       </div>
-      <div className="icon ctrl-c">
-        💀
+      <div className="icon paste">
+        paste
       </div>
       <div className="icon enter">
         enter
       </div>
       <div className="icon delete">
         del
+      </div>
+      <div className="icon ctrl-c">
+        💀
       </div>
       <div className="icon clear">
         clear
@@ -94,11 +115,41 @@ export default function TouchHelperUI(props: {
   );
 }
 
-const rootCss = css`
+const menuCss = css`
+  --menu-width: 54px;
+
   position: absolute;
   z-index: ${zIndex.ttyTouchHelper};
   top: 0;
   right: 0;
+  width: var(--menu-width);
+  
+  transition: transform 500ms;
+  &.open {
+    transform: translate(0px, 0px);
+  }
+  &:not(.open) {
+    transform: translate(var(--menu-width), 0px);
+  }
+  
+  .menu-toggler {
+    position: absolute;
+    z-index: ${zIndex.ttyTouchHelper};
+    top: 48px;
+    right: calc(var(--menu-width) - 1px);
+    
+    width: 24px;
+    height: 24px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    font-size: 12px;
+    background: #222;
+    color: #ddd;
+    border: 1px solid #444;
+  }
 
   &.disabled {
     filter: brightness(0.5);
@@ -106,7 +157,7 @@ const rootCss = css`
   }
 
   line-height: 1; /** Needed for mobile viewing 'Desktop site' */
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.3);
   font-size: 0.75rem;
   border: 1px solid #555;
   border-width: 1px 1px 1px 1px;

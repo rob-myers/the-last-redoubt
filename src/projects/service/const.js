@@ -5,6 +5,7 @@ export const discussionsUrl = "https://github.com/rob-myers/the-last-redoubt/dis
 export const localStorageKey = {
   darkModeEnabled: 'dark-mode-enabled',
   touchTtyCanType: 'touch-tty-can-type',
+  touchTtyOpen: 'touch-tty-open',
   windowScrollY: 'window-scroll-y',
 };
 
