@@ -654,11 +654,18 @@ export class ttyXtermClass {
           return;
         }
         case 'paste-line': {
-          const shouldWrite = !command.line.startsWith('NOECHO=1 ')
-          shouldWrite && this.xterm.writeln(command.line);
-          this.trackCursorRow(+1);
-          this.input = command.line;
-          this.sendLine();
+          const shouldEcho = !command.line.startsWith('NOECHO=1 ');
+          if (shouldEcho) {
+            this.xterm.writeln(command.line);
+            this.trackCursorRow(+1);
+            this.input = command.line;
+            this.sendLine();
+          } else {
+            this.trackCursorRow(+1);
+            this.input = command.line;
+            this.sendLine();
+            this.input = '';
+          }
           return;
         }
         case 'resolve': {
