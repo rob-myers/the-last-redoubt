@@ -36,10 +36,10 @@ export default function useGeomorphData(layoutKey, disabled = false) {
     return gmDataResult.data;
   }
   if (gmDataResult.error) {
-    console.error(`gmDataResult: ${layoutKey}`, gmDataResult.error);
+    console.error(`useGeomorphData: gmDataResult: ${layoutKey}`, gmDataResult.error);
   }
   if (pathfindingResult.error) {
-    console.error('pathfindingResult', pathfindingResult.error);
+    console.error('useGeomorphData: pathfindingResult', pathfindingResult.error);
   }
 
   return undefined;
