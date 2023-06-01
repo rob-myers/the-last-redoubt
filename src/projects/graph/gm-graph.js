@@ -688,13 +688,13 @@ export class gmGraphClass extends BaseGraph {
     });
     
     // Each door node is connected to the door node it is identified with (if any)
-    const globalEdges = gms.flatMap((srcItem, gmId) => {
+    const globalEdges = gms.flatMap((srcGm, gmId) => {
       /**
-       * Detect geomorphs whose gridRects border current one.
-       * NOTE wasting some computation because relation is symmetric
+       * Detect geomorphs whose gridRects border current one
+       * ℹ️ wasting computation because relation is symmetric
        */
-      const adjItems = gms.filter((dstItem, dstGmId) => dstGmId !== gmId && dstItem.gridRect.intersects(srcItem.gridRect));
-      // console.info('geomorph to geomorph:', srcItem, '-->', adjItems);
+      const adjItems = gms.filter((dstGm, dstGmId) => dstGmId !== gmId && dstGm.gridRect.intersects(srcGm.gridRect));
+      // console.info('geomorph to geomorph:', srcGm, '-->', adjItems);
       /**
        * For each hull door, detect any intersection with aligned geomorph hull doors.
        * - We use `door.poly.rect` instead of `door.rect` because we apply a transform to it.
@@ -702,20 +702,21 @@ export class gmGraphClass extends BaseGraph {
        */
       const [srcRect, dstRect] = [new Rect, new Rect];
       const [srcMatrix, dstMatrix] = [new Mat, new Mat];
-      return srcItem.hullDoors.flatMap((srcDoor, hullDoorId) => {
-        const srcDoorNodeId = getGmDoorNodeId(srcItem.key, srcItem.transform, hullDoorId);
-        srcMatrix.setMatrixValue(srcItem.transform);
+
+      return srcGm.hullDoors.flatMap((srcDoor, hullDoorId) => {
+        const srcDoorNodeId = getGmDoorNodeId(srcGm.key, srcGm.transform, hullDoorId);
+        srcMatrix.setMatrixValue(srcGm.transform);
         srcRect.copy(srcDoor.poly.rect.applyMatrix(srcMatrix));
 
-        const pairs = adjItems.flatMap(item => item.hullDoors.map(door => /** @type {const} */ ([item, door])));
-        const matching = pairs.find(([{ transform }, { poly }]) =>
+        const gmDoorPairs = adjItems.flatMap(gm => gm.hullDoors.map(door => /** @type {const} */ ([gm, door])));
+        const matching = gmDoorPairs.find(([{ transform }, { poly }]) =>
           srcRect.intersects(dstRect.copy(poly.rect.applyMatrix(dstMatrix.setMatrixValue(transform))))
         );
-        if (matching !== undefined) {
-          const [dstItem, dstDoor] = matching;
-          const dstHullDoorId = dstItem.hullDoors.indexOf(dstDoor);
+        if (matching !== undefined) {// Two hull doors intersect
+          const [dstGm, dstDoor] = matching;
+          const dstHullDoorId = dstGm.hullDoors.indexOf(dstDoor);
           // console.info('hull door to hull door:', srcItem, hullDoorId, '==>', dstItem, dstHullDoorId)
-          const dstDoorNodeId = getGmDoorNodeId(dstItem.key, dstItem.transform, dstHullDoorId);
+          const dstDoorNodeId = getGmDoorNodeId(dstGm.key, dstGm.transform, dstHullDoorId);
           // NOTE door nodes with global edges are not sealed
           graph.getDoorNode(srcDoorNodeId).sealed = false;
           return { src: srcDoorNodeId, dst: dstDoorNodeId };
