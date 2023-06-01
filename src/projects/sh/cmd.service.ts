@@ -637,7 +637,8 @@ class cmdServiceClass {
         if (key === 'api') {
           return new Proxy({}, {
             get: ({}, key: keyof typeof this.processApi) => {
-              if (key === 'meta' || key === 'parent') return null
+              if (key === 'meta') return meta;
+              if (key === 'parent') return null;
               return this.processApi[key]?.bind({ meta, parent: this }) || null;
             },
             // 🚧 ownKeys (requires getOwnPropertyDescriptor)
