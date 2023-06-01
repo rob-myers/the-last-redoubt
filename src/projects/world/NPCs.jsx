@@ -373,6 +373,9 @@ export default function NPCs(props) {
         throw testNever(d, { suffix: 'instantiateDecor' });
       }
     },
+    isPanZoomControlled() {
+      return Object.values(state.session).some(x => x.panzoomPids.length);
+    },
     isPointNearClosedDoor(point, radius, gmRoomId) {
       const gm = api.gmGraph.gms[gmRoomId.gmId];
       const localPoint = gm.inverseMatrix.transformPoint({...point});
@@ -884,6 +887,7 @@ export default function NPCs(props) {
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateLocalDecor
+ * @property {() => boolean} isPanZoomControlled
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
@@ -894,7 +898,7 @@ export default function NPCs(props) {
  * Started off-mesh and clicked point
  * @property {(npc: NPC.NPC, e: { point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
- * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo
+ * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey

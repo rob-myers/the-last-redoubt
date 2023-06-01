@@ -300,6 +300,8 @@ declare namespace NPC {
     /** Session key */
     key: string;
     receiveMsgs: boolean;
+    /** PIDs of processes which panzoom */
+    panzoomPids: number[];
   }
 
   export type SessionTtyCtxt = {

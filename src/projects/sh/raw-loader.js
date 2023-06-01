@@ -148,7 +148,7 @@
       }
 
       const { npcs } = worldApi;
-      npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true };
+      npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true, panzoomPids: [] };
       api.info(`${ansiColor.White}found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`);
     },
     
@@ -384,25 +384,29 @@
      */
     track: async function* ({ api, args, home }) {
       const npcKey = args[0]
-      const { npcs } = api.getCached(home.WORLD_KEY)
+      const { npcs, lib } = api.getCached(home.WORLD_KEY)
       const process = api.getProcess()
       const subscription = npcs.trackNpc({ npcKey, process })
+      const connected = npcs.session[api.meta.sessionKey];
+      
+      connected?.panzoomPids.push(api.meta.pid);
       // resolve on unsubscribe or invoke cleanups
       await /** @type {Promise<void>} */ (new Promise(resolve => {
         subscription.add(resolve);
         process.cleanups.push(() => subscription.unsubscribe(), resolve);
       }))
+      connected && lib.removeFirst(connected.panzoomPids, api.meta.pid);
     },
   
-    /**
-     * 🚧 handle multiple reads?
-     */
     view: async function* ({ api, args, home }) {
       const [first, second, third] = args.map(api.parseJsArg);
-      const { npcs, panZoom } = api.getCached(home.WORLD_KEY);
+      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
+      const connected = npcs.session[api.meta.sessionKey];
+      
+      connected?.panzoomPids.push(api.meta.pid);
       api.addSuspend(() => { panZoom.animationAction("pause"); return true; });
       api.addResume(() => { panZoom.animationAction("play"); return true; });
-      const cancel = api.addCleanup(() => panZoom.animationAction("cancel"));
+      api.addCleanup(() => panZoom.animationAction("cancel"));
       await npcs.panZoomTo(typeof first === "number"
         ? {// view {ms} [{point}] [{zoom}]
             ms: first,
@@ -411,7 +415,7 @@
           }
         : first,
       );
-      api.removeCleanup(cancel);
+      connected && lib.removeFirst(connected.panzoomPids, api.meta.pid);
     },
   
     /**

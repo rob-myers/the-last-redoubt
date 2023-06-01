@@ -3,7 +3,7 @@ import { css } from "@emotion/css";
 import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
 
-import { precision } from "../service/generic";
+import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
 import { observableToAsyncIterable } from "../service/observable-to-async-iterable";
 import { Vect } from "../geom";
@@ -55,6 +55,7 @@ export default function World(props) {
       filter, first, map, merge, take,
       observableToAsyncIterable,
       precision,
+      removeFirst,
     },
     rootCss: `hide-gms ${css`${props.gms.map((_, gmId) =>
       `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
@@ -153,6 +154,7 @@ export default function World(props) {
  * @property {typeof map} map
  * @property {typeof merge} merge
  * @property {typeof precision} precision
+ * @property {typeof removeFirst} removeFirst
  * @property {typeof take} take
  * @property {typeof observableToAsyncIterable} observableToAsyncIterable
  */
