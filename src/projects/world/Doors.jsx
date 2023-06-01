@@ -254,13 +254,14 @@ const rootCss = css`
 
     &::after {
       content: '';
+      box-sizing: border-box;
       position: absolute;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      border-radius: var(${cssName.npcDoorTouchRadius});
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
       width: calc(2 * var(${cssName.npcDoorTouchRadius}));
       height: calc(2 * var(${cssName.npcDoorTouchRadius}));
-      top: calc(50% - var(${cssName.npcDoorTouchRadius}));
       left: calc(50% - var(${cssName.npcDoorTouchRadius}));
+      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + 50%);
     }
   }
 `;
