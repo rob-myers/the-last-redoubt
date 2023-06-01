@@ -175,9 +175,14 @@ export default function useHandleEvents(api) {
           break;
         case 'disabled':
           api.fov.mapAct('pause');
+          api.panZoom.animationAction('pause');
           break;
         case 'enabled':
           api.fov.mapAct('resume');
+          if (!api.npcs.isPanZoomControlled()) {
+            // only resume when not controlled by e.g. `view` or `track`
+            api.panZoom.animationAction('play');
+          }
           break;
         case 'fov-changed':
           // console.log(e);

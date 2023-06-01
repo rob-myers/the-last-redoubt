@@ -2,6 +2,12 @@
 
 ## In progress
 
+- ✅ CssPanZoom should not initially panzoom when disabled
+
+- Link to new sandbox
+  - Can supply url params to specify layout and profile?
+  - https://codesandbox.io/s/tty-world-2-june-2023-g8tb0c?file=/src/service/geomorph.js
+
 - ✅ Doors: simplify to a single div which always fades
 
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
@@ -16,10 +22,8 @@
 
 - support ansi color codes inside `choice` args
 - HMR useGeomorphs?
-- 🚧 create a new CodeSandbox
-  - ✅ update src/components e.g. Terminal
-  - 🚧 update World piecewise
 
+- BUG some door's border flashes on npc move
 - Doors: CSS -> WAAPI (?)
 - 🤔 BUG tty long input overflow *responsive* deformation
 - simplify individual doors
@@ -383,6 +387,19 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ create a new CodeSandbox
+  - ✅ update src/components i.e. Terminal etc.
+  - ✅ update src/sh i.e. shell
+  - ✅ update src/geom
+  - ✅ update public/{geomorphs,icons,npc}
+  - ✅ update src/service
+  - ✅ update src/world
+  - ✅ update src/geomorph
+  - ✅ update src/hooks
+  - ✅ update src/graph
+  - ✅ update src/panzoom
+  - ✅ update src/pathfinding
 
 - ❌ auto invert comments
 - ✅ one line preamble: session {sessionKey} running /home/PROFILE
