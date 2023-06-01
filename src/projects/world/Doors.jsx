@@ -214,6 +214,7 @@ export default function Doors(props) {
           {gm.doors.map((door, doorId) =>
             state.vis[gmId][doorId] &&
               <div
+                key={doorId}
                 className={cx(cssName.door, {
                   [cssName.open]: state.open[gmId][doorId],
                 })}
