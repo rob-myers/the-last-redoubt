@@ -386,7 +386,7 @@ export default function CssPanZoom(props) {
     };
   }, { deeper: ['evt'] });
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const pointerup = /** @param {PointerEvent} e */ e => state.evt.pointerup(e);
     const cb = {
       wheel: /** @param {WheelEvent} e */ e => state.evt.wheel(e),
@@ -404,7 +404,8 @@ export default function CssPanZoom(props) {
     // Apply initial zoom and centering
     const { init } = props;
     state.setStyles();
-    state.panZoomTo(init?.zoom ?? 1, { x: init?.x ?? 0, y: init?.y ?? 0 }, init?.ms ?? 1000)?.catch(_x => {}); // ?
+    state.panZoomTo(init?.zoom ?? 1, { x: init?.x ?? 0, y: init?.y ?? 0 }, init?.ms ?? 1000)
+      ?.catch(_x => {}); // ?
 
     return () => {
       keys(cb).forEach(key => state.parent.removeEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
