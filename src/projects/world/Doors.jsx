@@ -256,7 +256,7 @@ const rootCss = css`
       content: '';
       box-sizing: border-box;
       position: absolute;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.02);
       border-radius: 50%;
       width: 100%;
       height: calc(2 * var(${cssName.npcDoorTouchRadius}));
