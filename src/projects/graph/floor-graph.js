@@ -86,9 +86,10 @@ export class floorGraphClass extends BaseGraph {
    * Find a path through a geomorph's navmesh
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
+   * @param {{ [doorId: number]: boolean }} doorOpen
    * @returns {null | Graph.FloorGraphNavPath}
    */
-  findPath(src, dst) {
+  findPath(src, dst, doorOpen) {
     const srcNode = this.getClosestNode(src);
     const dstNode = this.getClosestNode(dst);
     if (!srcNode || !dstNode) {
@@ -98,7 +99,7 @@ export class floorGraphClass extends BaseGraph {
      * Apply A-Star implementation originally from:
      * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L106
      */
-    const nodePath = AStar.search(this, srcNode, dstNode);
+    const nodePath = AStar.search(this, srcNode, dstNode, doorOpen);
 
     /**
      * Partition of nodePath into alternating lists of door/room nodes.

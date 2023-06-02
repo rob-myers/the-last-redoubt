@@ -2,13 +2,14 @@
 
 ## In progress
 
-- ✅ CssPanZoom should not initially panzoom when disabled
+
+- ✅ Avoid navigating into closed doors
+  - ℹ️ we don't want to weight them infinitely
+  - ✅ closed doors have large nav weights
 
 - Link to new sandbox
   - Can supply url params to specify layout and profile?
   - https://codesandbox.io/s/tty-world-2-june-2023-g8tb0c?file=/src/service/geomorph.js
-
-- ✅ Doors: simplify to a single div which always fades
 
 - 🚧 homepage: interesting behavioural examples, rather than formal definitions
   - ✅ Tabs and Terminal on homepage with custom profile
@@ -387,6 +388,9 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ CssPanZoom should not initially panzoom when disabled
+- ✅ Doors: simplify to a single div which always fades
 
 - ✅ create a new CodeSandbox
   - ✅ update src/components i.e. Terminal etc.

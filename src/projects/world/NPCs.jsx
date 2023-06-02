@@ -216,7 +216,8 @@ export default function NPCs(props) {
       const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
-      const result = gm.floorGraph.findPath(localSrc, localDst);
+      const doorOpen = api.doors.open[gmId];
+      const result = gm.floorGraph.findPath(localSrc, localDst, doorOpen);
 
       if (result) {
         return {

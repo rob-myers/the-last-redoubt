@@ -28,8 +28,8 @@ export default function SvgStringPull(props) {
     path: /** @type {Vect[]} */ ([]),
 
     updatePath: () => {
-      if (pf) {
-        const result = pf.graph.findPath(state.source, state.target);
+      if (pf && gm) {// Assume all doors are open
+        const result = pf.graph.findPath(state.source, state.target, gm.doors.map(_ => true));
         state.path = result ? result.fullPath : [state.source];
         state.pathEl = state.pathEl || state.rootEl.querySelector('polyline.navpath');
         state.pathEl?.setAttribute('points', `${state.path}`);

@@ -3,16 +3,21 @@ import { Utils } from './Utils';
 
 export class AStar {
 
-  /** @param {Graph.FloorGraph} graph  */
-  static init (graph) {
+  /**
+   * @param {Graph.FloorGraph} graph
+   * @param {{ [doorId: number]: boolean }} doorOpen 
+   */
+  static init (graph, doorOpen) {
     const nodes = graph.nodesArray;
+    const metas = graph.nodeToMeta;
     for (let x = 0; x < nodes.length; x++) {
-      //for(var x in graph) {
       const node = nodes[x];
+      const meta = metas[x];
       node.f = 0;
       node.g = 0;
       node.h = 0;
-      node.cost = 1.0;
+      // Why so large? 1000 didn't work
+      node.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
       node.visited = false;
       node.closed = false;
       node.parent = null;
@@ -46,9 +51,10 @@ export class AStar {
    * @param {Graph.FloorGraph} graph 
    * @param {Graph.FloorGraphNode} start 
    * @param {Graph.FloorGraphNode} end 
+   * @param {{ [doorId: number]: boolean }} doorOpen 
    */
-  static search (graph, start, end) {
-    this.init(graph);
+  static search (graph, start, end, doorOpen) {
+    this.init(graph, doorOpen);
     //heuristic = heuristic || astar.manhattan;
     const nodes = graph.nodesArray;
 
