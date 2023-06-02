@@ -141,14 +141,18 @@ export const npcWorldRadius =  13;
 //#endregion
 
 export const svgSymbolTag = /** @type {const} */ ({
-  /** View positions associated to a single door */
-  view: 'view',
   /** Light positions or circular/poly/rect floor-lights */
   light: 'light',
   /** Distinguish lights as floor-lights */
   floor: 'floor',
+  /** Relate parallel doors to prevent view extending through closed doors */
+  'parallel-connectors': 'parallel-connectors',
+  /** Relate doors to doors/windows to extend view */
+  'relate-connectors': 'relate-connectors',
   /** Surfaces can obscure NPC legs when sitting */
   surface: 'surface',
+  /** View positions associated to a single door */
+  view: 'view',
 });
 
 export const defaultLightDistance = 300;

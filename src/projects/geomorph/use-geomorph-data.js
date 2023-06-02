@@ -9,8 +9,6 @@ import { geom } from "../service/geom";
 import usePathfinding from "./use-pathfinding";
 
 /**
- * NOTE saw issue when `geomorphJsonPath(layoutKey)`
- * re-requested, causing doors vs hullDoors mismatch.
  * @param {Geomorph.GeomorphKey} layoutKey
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
@@ -18,7 +16,6 @@ export default function useGeomorphData(layoutKey, disabled = false) {
   const gmDataResult = useQuery(geomorphJsonPath(layoutKey), () => {
     return createGeomorphData(layoutKey)
   }, {
-    // 🚧
     cacheTime: Infinity,
     keepPreviousData: true,
     staleTime: Infinity,
@@ -60,25 +57,18 @@ export async function createGeomorphData(input) {
     ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
     : input // for GeomorphEdit
   ;
-
   const { roomGraph } = layout;
 
   const doorPolys = getNormalizedDoorPolys(layout.doors);
-  const roomsWithDoors = roomGraph.nodesArray
-    .filter(node => node.type === 'room') // Aligned to `rooms`
-    .map((node, roomNodeId) => {
-      const doors = roomGraph.getEdgesFrom(node)
-        .flatMap(({ dst }) => dst.type === 'door' ? doorPolys[dst.doorId] : []);
-      // Assume room nodes aligned with rooms
-      return Poly.union([layout.rooms[roomNodeId], ...doors])[0];
-    })
-  ;
+  const roomsWithDoors = layout.rooms.map((roomPoly, roomId) => {
+    const roomDoorPolys = roomGraph.getAdjacentDoors(roomId).map(x => doorPolys[x.doorId]);
+    return Poly.union([roomPoly, ...roomDoorPolys])[0];
+  });
 
   /**
-   * Polys/rects tagged with `view` override default fov position (i.e. offset from entry).
+   * Polys/rects tagged with `view` override default FOV position
    * - `poly` must be convex (e.g. rotated rect).
    * - `poly` must cover door and have center inside room.
-   * - 🚧 precompute in geomorph json?
    */
   const lightMetas = layout.groups.singles
     .filter(x => x.meta[svgSymbolTag.view])
@@ -88,12 +78,10 @@ export async function createGeomorphData(input) {
 
   /**
    * Each `relate-connectors` relates a doorId to other doorId(s) or windowId(s).
-   * We'll use them to extend the light polygon i.e.
-   * improve look of lighting under certain circumstances.
-   * - 🚧 move to precomputed json
+   * We'll use them to extend the view polygon e.g. when doors face one another.
    */
   const relDoorId = layout.groups.singles
-    .filter(x => x.meta['relate-connectors'])
+    .filter(x => x.meta[svgSymbolTag['relate-connectors']])
     .reduce((agg, { poly }) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
@@ -103,17 +91,16 @@ export async function createGeomorphData(input) {
         agg[doorId].windowIds.push(...windowIds);
       });
       if (doorIds.length === 0)
-        console.warn(`poly tagged 'relate-connectors' doesn't intersect any door: (windowIds ${windowIds})`);
+        console.warn(`poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);
       if (doorIds.length + windowIds.length <= 1)
-        console.warn(`poly tagged 'relate-connectors' should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
+        console.warn(`poly tagged "${svgSymbolTag['relate-connectors']}" should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
       return agg;
     },
     /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
   );
 
-  // 🚧 precompute in geomorph json?
   const parallelDoorId = layout.groups.singles
-    .filter(x => x.meta['parallel-connectors'])
+    .filter(x => x.meta[svgSymbolTag["parallel-connectors"]])
     .reduce((agg, { poly }) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       doorIds.forEach(doorId => {
@@ -122,7 +109,7 @@ export async function createGeomorphData(input) {
         agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
       });
       if (doorIds.length <= 1)
-        console.warn(`poly tagged 'parallel-connectors' should intersect ≥ 2 doors: (doorIds ${doorIds})`);
+        console.warn(`poly tagged "${svgSymbolTag["parallel-connectors"]}" should intersect ≥ 2 doors: (doorIds ${doorIds})`);
       return agg;
     },
     /** @type {Geomorph.GeomorphData['parallelDoorId']} */ ({}),
@@ -130,8 +117,7 @@ export async function createGeomorphData(input) {
 
   //#region points by room
   const pointsByRoom = layout.rooms.map(/** @returns {Geomorph.GeomorphData['point'][*]} */  x => ({
-    // Default is room's center, which may not lie inside room
-    default: x.center,
+    default: x.center, // Default is room's center, which may not lie inside room
     doorView: {},
     spawn: [],
     windowLight: {},
@@ -204,8 +190,7 @@ export async function createGeomorphData(input) {
     decor,
     lazy: /** @type {*} */ (null), // Overwritten below
 
-    // We'll overwrite this 
-    floorGraph: floorGraphClass.createMock(),
+    floorGraph: floorGraphClass.createMock(), // Overwritten later
 
     getHullDoorId(doorOrId) {
       const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId
