@@ -258,9 +258,9 @@ const rootCss = css`
       position: absolute;
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 50%;
-      width: calc(2 * var(${cssName.npcDoorTouchRadius}));
+      width: 100%;
       height: calc(2 * var(${cssName.npcDoorTouchRadius}));
-      left: calc(50% - var(${cssName.npcDoorTouchRadius}));
+      left: 0;
       top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + 50%);
     }
   }
