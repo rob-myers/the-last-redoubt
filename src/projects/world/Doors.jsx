@@ -244,13 +244,16 @@ const rootCss = css`
     position: absolute;
     cursor: pointer;
     background-color: white;
-    border: 1px solid #000000;
+    border: 1px solid #33773399;
+    opacity: 1;
 
-    transition: border-color 300ms ease, background-color 300ms ease;
+    transition: opacity 300ms;
     &.${cssName.open} {
-      border-color: rgba(0, 0, 0, 0.25);
-      background-color: transparent;
+      opacity: 0.1;
     }
+
+    background-image: linear-gradient(45deg, #000 33.33%, #444 33.33%, #444 50%, #000 50%, #000 83.33%, #444 83.33%, #444 100%);
+    background-size: 4px;
     
     &::after {
       content: '';
