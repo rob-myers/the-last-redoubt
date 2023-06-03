@@ -9,7 +9,7 @@ import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpaci
 import { geom } from "../service/geom";
 import { getLocalDecorGroupKey, getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
-import { detectReactDevToolQuery, getNumericCssVar, supportsWebp } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import { MemoizedNPC } from "./NPC";
@@ -185,15 +185,19 @@ export default function NPCs(props) {
           if (gmEdge) {
             // Future nodes exist, so final 'vertex' no longer final
             delete /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final;
-            navMetas.push({
-              key: 'exit-room',
-              index: fullPath.length - 1,
-              gmId: gmEdge.srcGmId,
-              exitedRoomId: gmEdge.srcRoomId,
-              doorId: gmEdge.srcDoorId,
-              hullDoorId: gmEdge.srcHullDoorId,
-              otherRoomId: null,
-            });
+            if (navMetas.at(-2)?.key !== 'exit-room') {
+              // Avoid dup exit-room if localNavPath did via partition [..., doorNavNodes].
+              // It probably always should i.e. we should remove the push below.
+              navMetas.push({
+                key: 'exit-room',
+                index: fullPath.length - 1,
+                gmId: gmEdge.srcGmId,
+                exitedRoomId: gmEdge.srcRoomId,
+                doorId: gmEdge.srcDoorId,
+                hullDoorId: gmEdge.srcHullDoorId,
+                otherRoomId: null,
+              });
+            }
           }
         }
 
@@ -201,6 +205,10 @@ export default function NPCs(props) {
           navMetas[navMetas.length - 1]
         ).final = true;
         
+        // 🚧 post-process, using index of 'exit-room' navMeta (?)
+        const joinIds = navMetas.flatMap(x => x.key === 'exit-room' ? x.index : []);
+        console.log('👉', joinIds, joinIds.map(joinId => fullPath.slice(Math.max(0, joinId - 2), (joinId + 2) + 1)));
+
         return {
           key: 'global-nav',
           fullPath,

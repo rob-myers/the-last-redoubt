@@ -2,6 +2,15 @@
 
 ## In progress
 
+- ❌ Try fix hull door nav issue by halving their size
+  - possible issue with two doors being too close to each other
+- Try smooth hull door navpaths using:
+  - ℹ️ hard-coded extent 22 = 12 (wall outset) + 8 (hull door width) + 2 (hull outset)
+  - ✅ For each (room, connected door) precompute { nearSeg, leftSeg, rightSeg }
+    > (left refers to door.seg[0]; leftSeg, rightSeg go _into_ other room)
+  - ✅ fix dup exit-room event
+  - 🚧 getGlobalNavPath post-process
+  - verify via graphical depiction
 
 - ✅ Avoid navigating into closed doors
   - ℹ️ we don't want to weight them infinitely

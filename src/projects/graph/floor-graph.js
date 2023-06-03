@@ -130,7 +130,7 @@ export class floorGraphClass extends BaseGraph {
     let startDoorId = -1, endDoorId = -1;
 
     for (const [i, item] of partition.entries()) {
-      if (item.key === 'door') {// door partition
+      if (item.key === 'door') {// 🚪 door partition
         const door = this.gm.doors[item.doorId];
 
         if (i > 0) {// We exited previous room
@@ -148,10 +148,13 @@ export class floorGraphClass extends BaseGraph {
         }
 
         if (!partition[i + 1]) {// Finish in door
-          // Needed otherwise if turn & re-enter, `enter-room` not triggered
-          fullPath.push(dst.clone());
-          roomIds.push(this.nodeToMeta[dstNode.index].roomId);
-          navMetas.push({ key: 'vertex', index: fullPath.length - 1, final: true });
+          if (!dst.equalsAlmost(fullPath[fullPath.length - 1], 0.01)) {
+            // ℹ️ Needed otherwise if turn & re-enter, `enter-room` not triggered
+            // ℹ️ Seen almost equal vectors, probably due to augmented precision
+            fullPath.push(dst.clone());
+            roomIds.push(this.nodeToMeta[dstNode.index].roomId);
+            navMetas.push({ key: 'vertex', index: fullPath.length - 1, final: true });
+          }
           endDoorId = item.doorId;
           break;
         } 
@@ -166,7 +169,7 @@ export class floorGraphClass extends BaseGraph {
           navMetas.push({ key: 'vertex', index: fullPath.length - 1 }); // Cannot be final
         }
 
-      } else {// room partition
+      } else {// 🛏 room partition
         const roomId = item.roomId;
 
         // Compute endpoints of path through room

@@ -251,9 +251,10 @@ const rootCss = css`
       border-color: rgba(0, 0, 0, 0.25);
       background-color: transparent;
     }
-
+    
     &::after {
       content: '';
+      cursor: pointer;
       box-sizing: border-box;
       position: absolute;
       border: 1px solid rgba(255, 255, 255, 0.02);
