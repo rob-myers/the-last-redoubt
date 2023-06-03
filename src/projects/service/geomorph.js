@@ -246,7 +246,8 @@ export async function createLayout(opts) {
    * We expect it to have exactly one group.
    */
   const navZone = buildZoneWithMeta(navDecomp, doors, rooms);
-  // Only warn when navigation non-degenerate
+
+  // Only warn when navigation service non-degenerate
   opts.triangleService && navZone.groups.forEach((tris, i) =>
     i > 0 && tris.length <= 12 && warn(`createLayout: unexpected small navZone group ${i} with ${tris.length} tris`)
   );
@@ -958,7 +959,7 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
       if (geom.lineSegIntersectsPolygon(u, v, tempTri)) {
         doorNodeIds[doorId].push(nodeId);
         if (nodeDoorIds[nodeId].push(doorId) > 1) {
-          warn('nav node', node, 'has multiple doorIds', nodeDoorIds[nodeId]);
+          warn('nav node', JSON.stringify(node), 'has multiple doorIds', nodeDoorIds[nodeId]);
         }
       }
     });
