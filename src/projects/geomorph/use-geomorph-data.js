@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Poly, Rect, Vect } from "../geom";
+import { Poly, Rect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
 import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor, tagsToMeta } from "../service/geomorph";

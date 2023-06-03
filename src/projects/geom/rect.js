@@ -74,8 +74,12 @@ export class Rect {
     return `${this.x},${this.y},${this.width},${this.height}`;
   }
 
-  get dimension() {
+  get max() {
     return Math.max(this.width, this.height);
+  }
+
+  get min() {
+    return Math.min(this.width, this.height);
   }
 
   /**

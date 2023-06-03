@@ -205,9 +205,6 @@ export default function NPCs(props) {
           navMetas[navMetas.length - 1]
         ).final = true;
         
-        // 🚧 post-process, using index of 'exit-room' navMeta (?)
-        const joinIds = navMetas.flatMap(x => x.key === 'exit-room' ? x.index : []);
-        console.log('👉', joinIds, joinIds.map(joinId => fullPath.slice(Math.max(0, joinId - 2), (joinId + 2) + 1)));
 
         return {
           key: 'global-nav',
