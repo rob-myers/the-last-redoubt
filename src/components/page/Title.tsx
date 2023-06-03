@@ -34,7 +34,7 @@ const titleCss = css`
     margin-left: 4px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 4.7rem;
+    font-size: 3.5rem;
     font-weight: 300;
     letter-spacing: 4px;
     cursor: pointer;
@@ -42,12 +42,8 @@ const titleCss = css`
     text-transform: uppercase;
     text-shadow: 0 0 4px var(--title-text-shadow-color);
     
-    @media(max-width: 1200px) {
-      font-size: 4rem;
-    }
     @media(max-width: 800px) {
       text-shadow: 0 0 4px var(--title-text-shadow-color);
-      font-size: 3.5rem;
     }
     @media(max-width: 600px) {
       /* font-family: 'Courier New', Courier, monospace; */
