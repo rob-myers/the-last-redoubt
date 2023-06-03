@@ -381,10 +381,10 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
  */
 export function getConnectorOtherSide(connector, viewPos) {
   const { baseRect, normal, seg } = connector;
-  const dim = Math.min(baseRect.width, baseRect.height);
+  const depth = baseRect.min;
   const sign = Vect.from(seg[0]).sub(viewPos).dot(normal) >= 0 ? 1 : -1
   // 🚧 0.5 ensures we at least "close the outline"
-  const delta = (sign * dim/2) * 0.5;
+  const delta = (sign * depth/2) * 0.5;
   return [
     seg[0].clone().addScaledVector(normal, delta),
     seg[1].clone().addScaledVector(normal, delta)

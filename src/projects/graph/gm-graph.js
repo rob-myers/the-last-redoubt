@@ -80,6 +80,7 @@ export class gmGraphClass extends BaseGraph {
       const areaGm = this.gms[area.gmId];
       const isOpen = this.api.doors.open[area.gmId];
       const blockedDoorIds = [
+        // ...gm.roomGraph.getAdjacentDoors(rootRoomId).map(x => x.doorId),
         ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
         ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !isOpen[doorId]),
       ];
