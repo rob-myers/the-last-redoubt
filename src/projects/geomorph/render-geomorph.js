@@ -116,16 +116,14 @@ export async function renderGeomorph(
   });
   hullSym.singles.forEach(({ poly, meta }) => {// Always above wall
     if (meta.poly) {
-      const matches = Object.keys(meta).map(key => key.match(/^([^-]*)-([^-]*)-([^-]*)$/));
-      const matched = matches.find(Boolean);
-      if (matched) {
-        const [, fill, stroke, strokeWidth] = matched;
-        setStyle(ctxt, fill || 'transparent', stroke || 'transparent', Number(strokeWidth) || 0);
-        fillPolygons(ctxt, [poly]);
-        ctxt.stroke();
-      } else {
-        warn(`render-geomorph: tag "poly" lacks style def: ${JSON.stringify(meta)}`);
-      }
+      const [fillColor, strokeColor, strokeWidth] = [
+        typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
+        typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
+        typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
+      ];
+      setStyle(ctxt, fillColor, strokeColor, strokeWidth);
+      fillPolygons(ctxt, [poly]);
+      ctxt.stroke();
     }
   });
   hullSym.singles.forEach(({ poly, meta }) => {// Always above poly

@@ -197,43 +197,43 @@
       <title>parallel-connectors</title>
     </rect>
     <path d="M 360 360 L 360 569.106 L 353.969 546.734 L 336.817 479 L 304.116 411.902 L 266 361 L 266 360 L 360 360 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
-      <title>poly #fff-#000-4</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 350 371.7 L 350 396 L 336 396 L 336 409 L 348.84 408.556 L 348.632 472.155 L 342.994 462.874 L 320.79 412.45 L 293.157 372.828 L 350 371.7 Z" style="stroke: rgb(0, 0, 0); fill: rgb(204, 204, 204);">
-      <title>poly #ccc-#000-4</title>
+      <title>poly fillColor=#ccc strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 934 569.106 L 934 360 L 927.969 382.372 L 910.817 450.106 L 878.116 517.204 L 840 568.106 L 840 569.106 L 934 569.106 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(-1, 0, 0, -1, 1773.999939, 929.106039)">
-      <title>poly #fff-#000-4</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 906.843 472.155 L 906.843 447.855 L 892.843 447.855 L 892.843 434.855 L 905.683 435.299 L 905.475 371.7 L 899.837 380.981 L 877.633 431.405 L 850 471.027 L 906.843 472.155 Z" style="stroke: rgb(0, 0, 0); fill: rgb(204, 204, 204);" transform="matrix(-1, 0, 0, -1, 1756.843014, 843.855024)">
-      <title>poly #ccc-#000-4</title>
+      <title>poly fillColor=#ccc strokeColor=#000 strokeWidth=4</title>
     </path>
     <rect x="377.9" y="240" width="24" height="120" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255);">
-      <title>poly #fff-#000-2 table surface</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 table surface</title>
     </rect>
     <rect x="410" y="253" width="14.1" height="16" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect x="410" y="293" width="14.1" height="16" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect x="411" y="333" width="14.1" height="16" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <path d="M 1197 222.4 L 1197 240 L 1188.278 240 L 1160.552 241.621 L 1131.832 246.288 L 1107.954 252.223 L 1087.33 258.358 L 1081 242.821 L 1105.312 235.097 L 1141 227.3 L 1177.027 222.761 L 1197 222.4 Z" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;">
-      <title>poly #fff-#000-2 table surface</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 table surface</title>
     </path>
     <rect x="988.811" y="176.371" width="12.91" height="13.031" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;" transform="matrix(0.95107, -0.308976, 0.308976, 0.95107, 83.280594, 358.43515)">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect x="988.811" y="176.371" width="12.91" height="13.031" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;" transform="matrix(0.970306, -0.24188, 0.24188, 0.970306, 109.43869, 279.487915)">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect x="988.811" y="176.371" width="12.91" height="13.031" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;" transform="matrix(0.990274, -0.13913, 0.13913, 0.990274, 142.254135, 167.149216)">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect x="988.811" y="176.371" width="12.91" height="13.031" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;" transform="matrix(1, 0.000044, -0.000044, 1, 192.286789, 24.02088)">
-      <title>poly #fff-#000-2 chair</title>
+      <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
     </rect>
     <rect y="236.714" width="6" height="18.921" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="145.972">
       <title>view</title>

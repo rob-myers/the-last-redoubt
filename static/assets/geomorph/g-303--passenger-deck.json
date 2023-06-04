@@ -1912,7 +1912,15 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-4": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=4": true,
+          "strokeWidth": 4
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1931,7 +1939,15 @@
         }
       },
       {
-        "meta": {"poly": true, "#ccc-#000-4": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#ccc": true,
+          "fillColor": "#ccc",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=4": true,
+          "strokeWidth": 4
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1952,7 +1968,15 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-4": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=4": true,
+          "strokeWidth": 4
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1971,7 +1995,15 @@
         }
       },
       {
-        "meta": {"poly": true, "#ccc-#000-4": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#ccc": true,
+          "fillColor": "#ccc",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=4": true,
+          "strokeWidth": 4
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1994,7 +2026,12 @@
       {
         "meta": {
           "poly": true,
-          "#fff-#000-2": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
           "table": true,
           "surface": true
         },
@@ -2006,21 +2043,48 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[424.1, 253], [424.1, 269], [410, 269], [410, 253]]]
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[424.1, 293], [424.1, 309], [410, 309], [410, 293]]]
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[425.1, 333], [425.1, 349], [411, 349], [411, 333]]]
@@ -2029,7 +2093,12 @@
       {
         "meta": {
           "poly": true,
-          "#fff-#000-2": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
           "table": true,
           "surface": true
         },
@@ -2055,7 +2124,16 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2069,7 +2147,16 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2083,7 +2170,16 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2097,7 +2193,16 @@
         }
       },
       {
-        "meta": {"poly": true, "#fff-#000-2": true, "chair": true},
+        "meta": {
+          "poly": true,
+          "fillColor=#fff": true,
+          "fillColor": "#fff",
+          "strokeColor=#000": true,
+          "strokeColor": "#000",
+          "strokeWidth=2": true,
+          "strokeWidth": 2,
+          "chair": true
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
