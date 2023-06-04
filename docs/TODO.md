@@ -2,14 +2,16 @@
 
 ## In progress
 
-- 🚧 Improve look of hull doors
-  - extra rect in between?
-  - improve door style?
-- Avoid navigating into closed hull doors
+- ✅ Improve look of hull doors
+
+- ✅ Put hull doors back to original dimension
+- ❌ Draw hull doors wider in render-geomorph
+
+- 🚧 Avoid navigating into closed hull doors
   - ℹ️ possible now we have parallel hull doors
   - also a chance to review global nav strategy
 
-- ✅ Avoid navigating into closed doors
+- ✅ Avoid navigating into closed (non-hull) doors
   - ℹ️ we don't want to weight them infinitely
   - ✅ closed doors have large nav weights
 
