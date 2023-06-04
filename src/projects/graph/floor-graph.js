@@ -99,7 +99,14 @@ export class floorGraphClass extends BaseGraph {
      * Apply A-Star implementation originally from:
      * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L106
      */
-    const nodePath = AStar.search(this, srcNode, dstNode, doorOpen);
+    const nodePath = AStar.search(this, srcNode, dstNode, (nodes) => {
+      const metas = this.nodeToMeta;
+      nodes.forEach((node, i) => {
+        const meta = metas[i];
+        // Why so large? 1000 didn't work
+        node.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
+      });
+    });
 
     /**
      * Partition of nodePath into alternating lists of door/room nodes.

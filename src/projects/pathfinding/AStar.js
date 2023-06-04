@@ -4,30 +4,31 @@ import { Utils } from './Utils';
 export class AStar {
 
   /**
-   * @param {Graph.FloorGraph} graph
-   * @param {{ [doorId: number]: boolean }} doorOpen 
+   * @param {Graph.BaseGraph<Graph.AStarNode>} graph
+   * @param {(nodes: Graph.AStarNode[]) => void} initNodeCosts
    */
-  static init (graph, doorOpen) {
+  static init (graph, initNodeCosts) {
     const nodes = graph.nodesArray;
-    const metas = graph.nodeToMeta;
+    // const metas = graph.nodeToMeta;
     for (let x = 0; x < nodes.length; x++) {
       const node = nodes[x];
-      const meta = metas[x];
+      // const meta = metas[x];
       node.f = 0;
       node.g = 0;
       node.h = 0;
-      // Why so large? 1000 didn't work
-      node.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
+      // // Why so large? 1000 didn't work
+      // node.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
       node.visited = false;
       node.closed = false;
       node.parent = null;
     }
+    initNodeCosts(nodes);
   }
 
-  /** @param {Graph.FloorGraphNode[]} graph */
+  /** @param {Graph.AStarNode[]} graph */
   static cleanUp (graph) {
     for (let x = 0; x < graph.length; x++) {
-      const node = /** @type {Partial<Graph.FloorGraphNode>} */ (graph[x]);
+      const node = /** @type {Partial<Graph.AStarNode>} */ (graph[x]);
       delete node.f;
       delete node.g;
       delete node.h;
@@ -40,7 +41,7 @@ export class AStar {
 
   static heap () {
     return new BinaryHeap(
-      /** @param {Graph.FloorGraphNode} node */
+      /** @param {Graph.AStarNode} node */
       function (node) {
         return /** @type {number} */ (node.f);
       }
@@ -48,17 +49,20 @@ export class AStar {
   }
 
   /**
-   * @param {Graph.FloorGraph} graph 
-   * @param {Graph.FloorGraphNode} start 
-   * @param {Graph.FloorGraphNode} end 
-   * @param {{ [doorId: number]: boolean }} doorOpen 
+   * @template {Graph.AStarNode} T
+   * @param {Graph.BaseGraph<Graph.AStarNode>} graph 
+   * @param {T} start 
+   * @param {T} end 
+   * @param {(nodes: Graph.AStarNode[]) => void} initNodeCosts
+   * @returns {T[]}
    */
-  static search (graph, start, end, doorOpen) {
-    this.init(graph, doorOpen);
+  // static search (graph, start, end, doorOpen) {
+  static search (graph, start, end, initNodeCosts) {
+    this.init(graph, initNodeCosts);
     //heuristic = heuristic || astar.manhattan;
     const nodes = graph.nodesArray;
 
-    const openHeap = this.heap();
+    const openHeap = /** @type {BinaryHeap<Graph.AStarNode>} */ (this.heap());
     openHeap.push(start);
 
     while (openHeap.size() > 0) {
@@ -69,9 +73,9 @@ export class AStar {
       // End case -- result has been found, return the traced path.
       if (currentNode === end) {
         let curr = currentNode;
-        const result = [];
+        const result = /** @type {T[]} */ ([]);
         while (curr.parent) {
-          result.push(curr);
+          result.push(/** @type {T} */ (curr));
           curr = curr.parent;
         }
         result.push(start); // We include start
@@ -133,8 +137,8 @@ export class AStar {
   }
 
   /**
-   * @param {Graph.FloorGraphNode[]} graph 
-   * @param {Graph.FloorGraphNode} node 
+   * @param {Graph.AStarNode[]} graph 
+   * @param {Graph.AStarNode} node 
    */
   static neighbours (graph, node) {
     const ret = [];

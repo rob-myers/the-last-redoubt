@@ -1,5 +1,7 @@
 declare namespace Graph {
 
+  export type BaseGraph<T> = import('./graph').BaseGraph<T>;
+
   export interface BaseNode {
     /** Identifies the node. */
     id: string;
@@ -222,7 +224,11 @@ declare namespace Graph {
     centroid: Geom.VectJson;
   }
   
-  interface FloorGraphNode extends FloorGraphNodeBase {
+  interface FloorGraphNode extends FloorGraphNodeBase, AStarNode {
+    centroid: Geom.Vect;
+  }
+  
+  interface AStarNode {
     centroid: Geom.Vect;
     // A* related
     f?: number;
@@ -231,7 +237,7 @@ declare namespace Graph {
     cost: number;
     visited: boolean;
     closed: boolean;
-    parent: null | FloorGraphNode;
+    parent: null | AStarNode;
     /**
      * This info is already in edges, yet used by `AStar`.
      * We could remove it, but prefer to leave `AStar` as is,
