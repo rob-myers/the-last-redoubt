@@ -243,8 +243,8 @@ const rootCss = css`
   div.${cssName.door} {
     position: absolute;
     cursor: pointer;
-    background-color: white;
-    border: 1px solid #33773399;
+    background-color: #000;
+    border: 1px solid #555;
     opacity: 1;
 
     transition: opacity 300ms;
@@ -253,7 +253,7 @@ const rootCss = css`
     }
 
     background-image: linear-gradient(45deg, #000 33.33%, #444 33.33%, #444 50%, #000 50%, #000 83.33%, #444 83.33%, #444 100%);
-    background-size: 4px;
+    background-size: cover;
     
     &::after {
       content: '';
