@@ -61,7 +61,7 @@ export async function createLayout(opts) {
 
     /**
      * Only the hull symbol (the 1st symbol) has "hull" walls.
-     * Outset the hull __inwards__ to ensure clean union with other walls.
+     * Outset the hull _inwards_ to ensure 👉 _clean union with other walls_.
      * We avoid outwards outset for cleanliness.
      */
     const transformedHull = hull.map(x => x.applyMatrix(m));

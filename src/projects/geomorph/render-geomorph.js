@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
-import { Poly, Vect } from "../geom";
-import { geom } from '../service/geom';
+import { Poly, Vect, Rect } from "../geom";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
+import { computeCliques } from "../service/generic";
 import { error, warn } from "../service/log";
 import { drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
 
@@ -172,7 +172,7 @@ export async function renderGeomorph(
   fillPolygons(ctxt, layout.hullTop);
 
   if (doors) {
-    drawDoors(ctxt, doorPolys);
+    drawDoors(ctxt, layout);
   }
   if (thinDoors) {
     drawThinDoors(ctxt, layout);
@@ -193,13 +193,23 @@ export async function renderGeomorph(
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Geom.Poly[]} doorPolys
+ * @param {Geomorph.ParsedLayout} layout
 */
-function drawDoors(ctxt, doorPolys) {
-  ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
-  fillPolygons(ctxt, doorPolys.flatMap(x => geom.createOutset(x, 1)));
+function drawDoors(ctxt, layout) {
+  ctxt.strokeStyle = 'rgba(0, 0, 0, 1)';
   ctxt.fillStyle = 'rgba(255, 255, 255, 1)';
-  fillPolygons(ctxt, doorPolys);
+  ctxt.lineWidth = 1;
+
+  // cover nearby hull doors with a single rect
+  const hullDoors = layout.doors.filter(x => x.meta.hull);
+  const rect = new Rect;
+  const cliques = computeCliques(hullDoors, (x, y) => rect.copy(x.rect).outset(30).intersects(y.rect));
+  cliques.forEach(clique => // take union of rects
+    fillPolygons(ctxt, [Poly.fromRect(Rect.fromRects(...clique.map(x => x.rect)))], true)
+  );
+  
+  const doorPolys = layout.doors.flatMap(x => !x.meta.hull ? [x.poly] : []);
+  fillPolygons(ctxt, doorPolys, true);
 }
 
 /**

@@ -45,6 +45,26 @@ export function assertNonNull(value, ensureNull = true) {
 }
 
 /**
+ * @template T
+ * @param {T[]} items
+ * @param {(x: T, y: T) => boolean} related
+ * @returns {T[][]}
+ */
+export function computeCliques(items, related) {
+  return items.reduce((agg, item) => {
+    for (const clique of agg) {
+      if (clique.some(x => related(item, x))) {
+        clique.push(item);
+        return agg;
+      }
+    }
+    agg.push([item]); // New clique
+    return agg;
+  }, /** @type {T[][]} */ ([[]]));
+}
+
+
+/**
  * 
  * @param {any} obj 
  * @param {string[]} path 
