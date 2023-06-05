@@ -11,7 +11,7 @@ export class AStar {
     const nodes = graph.nodesArray;
     // const metas = graph.nodeToMeta;
     for (let x = 0; x < nodes.length; x++) {
-      const node = nodes[x];
+      const node = nodes[x].astar;
       // const meta = metas[x];
       node.f = 0;
       node.g = 0;
@@ -28,7 +28,7 @@ export class AStar {
   /** @param {Graph.AStarNode[]} graph */
   static cleanUp (graph) {
     for (let x = 0; x < graph.length; x++) {
-      const node = /** @type {Partial<Graph.AStarNode>} */ (graph[x]);
+      const node = /** @type {Partial<Graph.AStarNode['astar']>} */ (graph[x].astar);
       delete node.f;
       delete node.g;
       delete node.h;
@@ -43,7 +43,7 @@ export class AStar {
     return new BinaryHeap(
       /** @param {Graph.AStarNode} node */
       function (node) {
-        return /** @type {number} */ (node.f);
+        return /** @type {number} */ (node.astar.f);
       }
     );
   }
@@ -74,9 +74,9 @@ export class AStar {
       if (currentNode === end) {
         let curr = currentNode;
         const result = /** @type {T[]} */ ([]);
-        while (curr.parent) {
+        while (curr.astar.parent) {
           result.push(/** @type {T} */ (curr));
-          curr = curr.parent;
+          curr = curr.astar.parent;
         }
         result.push(start); // We include start
         this.cleanUp(result);
@@ -85,7 +85,7 @@ export class AStar {
       }
 
       // Normal case -- move currentNode from open to closed, process each of its neighbours.
-      currentNode.closed = true;
+      currentNode.astar.closed = true;
 
       // Find all neighbours for the current node. Optionally find diagonal neighbours as well (false by default).
       const neighbours = this.neighbours(nodes, currentNode);
@@ -93,25 +93,25 @@ export class AStar {
       for (let i = 0, il = neighbours.length; i < il; i++) {
         const neighbour = neighbours[i];
 
-        if (neighbour.closed) {
+        if (neighbour.astar.closed) {
           // Not a valid node to process, skip to next neighbour.
           continue;
         }
 
         // The g score is the shortest distance from start to current node.
         // We need to check if the path we have arrived at this neighbour is the shortest one we have seen yet.
-        const gScore = /** @type {number} */ (currentNode.g) + neighbour.cost;
-        const beenVisited = neighbour.visited;
+        const gScore = /** @type {number} */ (currentNode.astar.g) + neighbour.astar.cost;
+        const beenVisited = neighbour.astar.visited;
 
-        if (!beenVisited || gScore < /** @type {number} */ (neighbour.g)) {
+        if (!beenVisited || gScore < /** @type {number} */ (neighbour.astar.g)) {
 
           // Found an optimal (so far) path to this node.  Take score for node to see how good it is.
-          neighbour.visited = true;
-          neighbour.parent = currentNode;
-          if (!neighbour.centroid || !end.centroid) throw new Error('Unexpected state');
-          neighbour.h = neighbour.h || this.heuristic(neighbour.centroid, end.centroid);
-          neighbour.g = gScore;
-          neighbour.f = neighbour.g + neighbour.h;
+          neighbour.astar.visited = true;
+          neighbour.astar.parent = currentNode;
+          if (!neighbour.astar.centroid || !end.astar.centroid) throw new Error('Unexpected state');
+          neighbour.astar.h = neighbour.astar.h || this.heuristic(neighbour.astar.centroid, end.astar.centroid);
+          neighbour.astar.g = gScore;
+          neighbour.astar.f = neighbour.astar.g + neighbour.astar.h;
 
           if (!beenVisited) {
             // Pushing to heap will put it in proper place based on the 'f' value.
@@ -142,8 +142,8 @@ export class AStar {
    */
   static neighbours (graph, node) {
     const ret = [];
-    for (let e = 0; e < node.neighbours.length; e++) {
-      ret.push(graph[node.neighbours[e]]);
+    for (let e = 0; e < node.astar.neighbours.length; e++) {
+      ret.push(graph[node.astar.neighbours[e]]);
     }
     return ret;
   }

@@ -224,26 +224,26 @@ declare namespace Graph {
     centroid: Geom.VectJson;
   }
   
-  interface FloorGraphNode extends FloorGraphNodeBase, AStarNode {
-    centroid: Geom.Vect;
-  }
+  interface FloorGraphNode extends FloorGraphNodeBase, AStarNode {}
   
   interface AStarNode {
-    centroid: Geom.Vect;
-    // A* related
-    f?: number;
-    g?: number;
-    h?: number;
-    cost: number;
-    visited: boolean;
-    closed: boolean;
-    parent: null | AStarNode;
-    /**
-     * This info is already in edges, yet used by `AStar`.
-     * We could remove it, but prefer to leave `AStar` as is,
-     * recalling it originally comes from three-pathfinding.
-     */
-    neighbours: number[];
+    astar: {
+      centroid: Geom.Vect;
+      // A* related
+      f?: number;
+      g?: number;
+      h?: number;
+      cost: number;
+      visited: boolean;
+      closed: boolean;
+      parent: null | AStarNode;
+      /**
+       * This info is already in edges, yet used by `AStar`.
+       * We could remove it, but prefer to leave `AStar` as is,
+       * recalling it originally comes from three-pathfinding.
+       */
+      neighbours: number[];
+    }
   }
 
   export type FloorGraphEdgeOpts = BaseEdgeOpts;

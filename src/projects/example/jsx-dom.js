@@ -11,12 +11,12 @@ export function svgNavGraph(root, graph) {
 
   root.append(
     // @ts-ignore
-    ...graph.nodesArray.flatMap(({ id, centroid, neighbours }, _, nodes) =>
+    ...graph.nodesArray.flatMap(({ astar: { id, centroid, neighbours } }, _, nodes) =>
       neighbours.map(nid => (
         <path
           key={`${id}-${nid}`}
           className="edge"
-          d={`M ${centroid.x}, ${centroid.y} L ${nodes[nid].centroid.x},${nodes[nid].centroid.y}`}
+          d={`M ${centroid.x}, ${centroid.y} L ${nodes[nid].astar.centroid.x},${nodes[nid].astar.centroid.y}`}
         />
         // https://github.com/proteriax/jsx-dom/issues/80
         // <line
@@ -44,7 +44,7 @@ export function svgNavGraph(root, graph) {
       />
     ),
     // @ts-ignore
-    ...graph.nodesArray.map(({ id, centroid }, i) =>
+    ...graph.nodesArray.map(({ id, astar: { centroid } }, i) =>
       <circle
         key={id}
         className="node"
@@ -69,12 +69,12 @@ export function svgNavGraph(root, graph) {
 export function svgStringPull(root, graph) {
   root.append(
     // @ts-ignore
-    ...graph.nodesArray.flatMap(({ id, centroid, neighbours }, _, nodes) =>
+    ...graph.nodesArray.flatMap(({ astar: { id, centroid, neighbours }}, _, nodes) =>
       neighbours.map(nid => (
         <path
           key={`${id}-${nid}`}
           className="edge"
-          d={`M ${centroid.x}, ${centroid.y} L ${nodes[nid].centroid.x},${nodes[nid].centroid.y}`}
+          d={`M ${centroid.x}, ${centroid.y} L ${nodes[nid].astar.centroid.x},${nodes[nid].astar.centroid.y}`}
         />
       ))
     ),

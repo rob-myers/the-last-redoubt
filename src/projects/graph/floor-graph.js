@@ -102,9 +102,9 @@ export class floorGraphClass extends BaseGraph {
     const nodePath = AStar.search(this, srcNode, dstNode, (nodes) => {
       const metas = this.nodeToMeta;
       nodes.forEach((node, i) => {
-        const meta = metas[i];
         // Why so large? 1000 didn't work
-        node.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
+        const meta = metas[i];
+        node.astar.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
       });
     });
 
@@ -285,13 +285,14 @@ export class floorGraphClass extends BaseGraph {
         vertexIds: node.vertexIds.slice(),
         portals: node.portals.map(x => x.slice()),
 
-        cost: 1,
-        visited: false,
-        closed: false,
-        parent: null,
-        centroid: Vect.from(node.centroid),
-
-        neighbours: node.neighbours.slice(),
+        astar: {
+          cost: 1,
+          visited: false,
+          closed: false,
+          parent: null,
+          neighbours: node.neighbours.slice(),
+          centroid: Vect.from(node.centroid),
+        },
       });
     }
 
@@ -319,7 +320,7 @@ export class floorGraphClass extends BaseGraph {
     let closestDistance = Infinity;
 
     nodes.forEach((node) => {
-      const distance = node.centroid.distanceToSquared(position);
+      const distance = node.astar.centroid.distanceToSquared(position);
       if (distance < closestDistance && Utils.isVectorInPolygon(position, node, vectors)) {
         closestNode = node;
         closestDistance = distance;
@@ -328,7 +329,7 @@ export class floorGraphClass extends BaseGraph {
 
     if (!closestNode) {// Fallback to centroids (possibly initial zig-zag)
       nodes.forEach((node) => {
-        const distance = Utils.distanceToSquared(node.centroid, position);
+        const distance = Utils.distanceToSquared(node.astar.centroid, position);
         if (distance < closestDistance) {
           closestNode = node;
           closestDistance = distance;
@@ -349,10 +350,10 @@ export class floorGraphClass extends BaseGraph {
     const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
     const result = geom.getClosestOnOutline(position, triangle);
     // move close point towards centroid, to ensure navigable
-    const delta = Vect.from(result.point).sub(node.centroid);
+    const delta = Vect.from(result.point).sub(node.astar.centroid);
     delta.normalize(Math.max(0, delta.length - 0.1));
-    result.point.x = node.centroid.x + delta.x;
-    result.point.y = node.centroid.y + delta.y;
+    result.point.x = node.astar.centroid.x + delta.x;
+    result.point.y = node.astar.centroid.y + delta.y;
     return result;
   }
 
@@ -362,8 +363,8 @@ export class floorGraphClass extends BaseGraph {
    * @param {Graph.FloorGraphNode} b
    */
   getPortalFromTo(a, b) {
-    for (let i = 0; i < a.neighbours.length; i++) {
-      if (a.neighbours[i] === b.index) {
+    for (let i = 0; i < a.astar.neighbours.length; i++) {
+      if (a.astar.neighbours[i] === b.index) {
         return a.portals[i];
       }
     }
