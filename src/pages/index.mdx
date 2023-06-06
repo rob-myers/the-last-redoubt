@@ -57,6 +57,7 @@ and the game-mechanic needn't revolve around violence.
 Rather than avoiding the problem by tightening the narrative,
 we'd prefer to develop more sophisticated behaviour.
 But how?
+
 We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
@@ -65,60 +66,64 @@ We have a few core ideas.
    
 1. Develop differently:
     - Declarative rendering via HTML, CSS and [WAAPI](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Web_Animations_API_Concepts).
-    - In-browser scripting by interpreting [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18) syntax as JavaScript.
+    - In-browser scripting via [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18) syntax interpreted as JavaScript.
 
 1. Use openly available assets:
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/).
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. Avoid an abstract approach by using the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as a backdrop.<SideNote>The concept of Starship Geomorph comes from Traveller.</SideNote>
+1. Work within the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)).<SideNote>The concept of _Starship Geomorph_ comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
-by creating and combining behaviours for their own sake.
-But this is a difficult thing to do: we risk creating something neither of **general interest** nor with much **entertainment value**.
+by creating and combining behaviours purely for their own sake.
+However, this is a difficult thing to do: we risk creating something neither of **general interest** nor with much **entertainment value**.
 
 <Carousel
   baseSrc="/assets/pics/first-peek/"
   height={600}
   mobileHeight={450}
   fullHeight={800}
-  breakpoints={{
-    300: {
-      slidesPerView: 1,
-    },
-    700: {
-      slidesPerView: 1,
-    },
-  }}
   items={[
     { src: 'npcs-1.png', webp: true, label: 'A World (left) and a Terminal (right)' },
-    { src: 'npcs-2.png', webp: true, label: 'Each World provides a birdsye view.' },
-    { src: 'npcs-3.png', webp: true, label: 'Each World is driven by one or more Terminals.' },
   ]}
 />
 
 We tackle _general interest_ in a few ways.
 
 - Our implementation uses _standard_ web development techniques,
-relevant to a wide audience: web developers.
+relevant to a wide audience.
 For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than inner loops invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
-- Our approach to in-browser scripting is generic: an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Achieved via the wonderful shell parser [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js), interpreted recursively as [async generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AsyncGenerator).</SideNote>
+- Our approach to in-browser scripting has many applications.
+We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js).</SideNote>
 The resulting Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) enriched with NPC-related shell functions gives our website its name.
 
-- We consider gameplay relevant to a huge number of video games, viewed from a top-down perspective.
+- We consider character behaviour relevant to a vast number of video games.
 
 But what about _entertainment value_?
 If we're going to make video games more meaningful,
-they need to be more entertaining too.
-Additional depth must be integrated into the experience.
-This can be subtle e.g. deterministic behaviour may be desirable to avoid frustration.
-A Player-centric approach is required,
-as opposed to complex simulations possibly never witnessed by the Player.
-Finally, we must take care our desire for generality does not produce a dry abstract approach.
+they had better be more entertaining too.
+Any additional depth must be seamlessly integrated into the experience.
+For example:
+- Sometimes deterministic behaviour is desirable to avoid frustrating the Player.
+- Complex simulations are of little value if they are never witnessed or understood by the Player.
+
+Then a _Player-centric approach_ is required in order to avoid these pitfalls.
+Finally, we must take care that our desire for generality does not produce a dry abstract approach.
 
 {/* Entertainment will arise by interacting with our little fabricated worlds. */}
 {/* We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience. */}
+
+<Carousel
+  baseSrc="/assets/pics/first-peek/"
+  height={600}
+  mobileHeight={450}
+  fullHeight={800}
+  items={[
+    { src: 'npcs-2.png', webp: true, label: 'Each World provides a birdsye view.' },
+    { src: 'npcs-3.png', webp: true, label: 'Each World is driven by one or more Terminals.' },
+  ]}
+/>
 
 ### Fabricating a behaviour
 
