@@ -3,10 +3,15 @@
 ## In progress
 
 - ✅ Split initial carousel i.e. 1 image, then 2 images
-- 🚧 start geomorph 103
+- ✅ start geomorph 103
   - ℹ️ media/symbols-png-staging/README.md
-  - hull symbol
-  - start layout
+  - ✅ hull symbol (ensuring no transforms on groups!)
+  - ✅ add cargo symbol
+  - ✅ add initial layout geomorph-layouts
+  - ✅ `yarn render-layout 103`
+  - ✅ `yarn bake-lighting 103` (currently no lighting)
+  - ✅ extend geomorph-layouts using GeomorphEdit to preview
+    - ℹ️ beware GeomorpEdit can break if you put a symbol over a door
 
 
 - 🚧 Link to new sandbox

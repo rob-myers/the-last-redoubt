@@ -99,6 +99,45 @@ const layoutDefs = {
     ],
   },
 
+  'g-103--cargo-bay': {
+    key: 'g-103--cargo-bay',
+    id: 103,
+    items: [
+      { symbol: '103--hull' },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 360, 0] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 480, 0] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 600, 0] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 720, 0] },
+
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 60, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 180, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 300, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 420, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 660, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 780, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 900, 360] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 1020, 360] },
+
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 60, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 180, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 300, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 420, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 660, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 780, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 900, 600] },
+      { symbol: 'cargo--003--2x4', transform: [1, 0, 0, 1, 1020, 600] },
+
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 0, 960] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 120, 960] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 0, 1080] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 120, 1080] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 1200 - 120, 960] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 1200 - 240, 960] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 1200 - 120, 1080] },
+      { symbol: 'cargo--002--2x2', transform: [1, 0, 0, 1, 1200 - 240, 1080] },
+    ],
+  },
+
   'g-301--bridge': {
     key: 'g-301--bridge',
     id: 301,

@@ -36,6 +36,7 @@
  * 
  * ℹ️ new folder structure
  * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Staterooms media/symbol-staterooms
+ * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Cargo' media/symbol-cargo
  * ```
  */
 import fs from 'fs';
@@ -160,7 +161,7 @@ console.log(childProcess.execSync(fileMetas.map(({ srcName, dstName }) => `
 info(`applying ImageMagick command \`convert\` in parallel`);
 
 const tempDir = `temp_${uid()}`;
-const maxConcurrentConverts = 10;
+const maxConcurrentConverts = 3;
 
 childProcess.execSync(`
   mkdir ${path.join(dstDir, tempDir)}
