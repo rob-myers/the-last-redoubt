@@ -109,7 +109,7 @@ For example:
 - Complex simulations are of little value if they are never witnessed or understood by the Player.
 
 Then a _Player-centric approach_ is required in order to avoid these pitfalls.
-Finally, we must take care that our desire for generality does not produce a dry abstract approach.
+Finally, we must ensure our desire for generality does not produce a dry abstract approach.
 
 {/* Entertainment will arise by interacting with our little fabricated worlds. */}
 {/* We'll program Non-player Characters ([NPCs](https://en.wikipedia.org/wiki/Non-player_character)) and programming requires patience. */}
@@ -127,7 +127,7 @@ Finally, we must take care that our desire for generality does not produce a dry
 
 ### Fabricating a behaviour
 
-For behaviour to arise we need a _World_ and denizens therein.
+Behaviour arises relative to a _World_.
 Defining a World amounts to choosing [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and connecting them together.
 At present, we only support 5 geomorphs (Robert Pearce provided hundreds) constructed from about 80 [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html)<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/).</SideNote> (Robert Pearce provided thousands).
 
@@ -181,8 +181,15 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   ]}
 />
 
-The above pan/zoomable maps are actually _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
-For example, the first map amounts to the following component instantiation:
+<Aside title="can-pan-zoom-tabs">
+  Concerning the maps above, you can:
+  - pan (_drag_) them.
+  - zoom (_pinch_ or _scroll_) them.
+  - drag their tabs around, or maximise them.<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
+</Aside>
+
+In fact we have just seen two _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
+The first map amounts to the following component instantiation:
 
 ```jsx
 <World
@@ -195,18 +202,19 @@ For example, the first map amounts to the following component instantiation:
 />
 ```
 
-The `worldKey` provides a unique identifier into a cache where the World's API is stored.
+`worldKey` uniquely identifies the World's API.
 `gms` specifies the geomorphs and their layout, as outlined above.
-But why do these worlds look like maps?
-Because there is no _Player_ and consequently no _FOV_ (Field Of View).<SideNote>We already saw the Player-sensitive FOV in the [video earlier](#first-peek-video).</SideNote>
+Why do these worlds look like maps?
+Because there is no _Player_ and consequently no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV in the [video earlier](#first-peek-video).</SideNote>
 
-Then the next step is a World with a Player.
+So next we need a World with a Player.
 This brings us to a very important ingredient: the `<Terminal>`.
 Designing user interfaces is _hard_.
 Insofar as textual interfaces are concerned, we've gone the canonical route i.e. POSIX.
 Syntactically we provide an interactive shell.
 Semantically we manipulate Javascript values and run async generators. 
 
+🚧
 
 <Tabs
   id="tabs@world-1"
