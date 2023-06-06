@@ -16,7 +16,7 @@ import { createKeyedComponent } from './Tab';
 import { clearModelFromStorage } from './Layout';
 
 /**
- * Possibly only imported from MDX (which lacks intellisense).
+ * Possibly only imported from MDX -- which only supports intellisense experimentally.
  */
 export default function Tabs(props: Props) {
   const update = useUpdate();
@@ -88,7 +88,11 @@ export default function Tabs(props: Props) {
       state.justResetWhileDisabled = !state.enabled;
       state.resets++; // Remount
       update();
-      setTimeout(() => { state.resetDisabled = false; update(); }, 500);
+      setTimeout(() => {
+        state.resetDisabled = false;
+        state.el.root?.focus();
+        update();
+      }, 500);
     },
 
     async toggleEnabled() {
