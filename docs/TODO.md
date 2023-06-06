@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ remove remaining large doors
+
 - ✅ Improve look of hull doors
 
 - ✅ Put hull doors back to original dimension
