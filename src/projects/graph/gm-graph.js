@@ -5,6 +5,7 @@ import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
 import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
+import { AStar } from "../pathfinding/AStar";
 
 /**
  * Geomorph Graph i.e. a graph whose nodes are geomorphs.
@@ -294,8 +295,45 @@ export class gmGraphClass extends BaseGraph {
     if (srcGmId === null || dstGmId === null) {
       return null;
     }
-    // 🚧
-    
+
+    // compute shortest path through gmGraph
+    const srcNode = this.nodesArray[srcGmId];
+    const dstNode = this.nodesArray[dstGmId];
+    const gmPath = AStar.search(this, srcNode, dstNode, (nodes) => {
+      nodes[srcNode.index].astar.centroid.copy(src);
+      nodes[dstNode.index].astar.centroid.copy(dst);
+      // closed hull doors have large cost
+      const { open } = this.api.doors;
+      this.gms.forEach((_, gmId) => {
+        const gmNode = this.nodesArray[gmId];
+        const doorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (this.getSuccs(gmNode));
+        doorNodes.forEach(node => node.astar.cost = open[gmId][node.doorId] === true ? 1 : 10000);
+      });
+    });
+
+    // convert to gm edges
+    /** @type {Graph.GmGraphNodeDoor} */ let pre;
+    /** @type {Graph.GmGraphNodeDoor} */ let post;
+    const gmEdges = /** @type {Graph.NavGmTransition[]} */ ([]);
+    for (let i = 1; i < gmPath.length - 1; i += 2) {
+      pre = /** @type {Graph.GmGraphNodeDoor} */ (gmPath[i]);
+      post = /** @type {Graph.GmGraphNodeDoor} */ (gmPath[i + 1]);
+      gmEdges.push({
+        srcGmId: pre.gmId,
+        srcRoomId: /** @type {number} */ (this.gms[pre.gmId].doors[pre.doorId].roomIds.find(x => x !== null)),
+        srcDoorId: pre.doorId,
+        srcHullDoorId: pre.hullDoorId,
+        srcDoorEntry: this.getDoorEntry(pre),
+
+        dstGmId: post.gmId,
+        dstRoomId: /** @type {number} */ (this.gms[post.gmId].doors[post.doorId].roomIds.find(x => x !== null)),
+        dstDoorId: post.doorId,
+        dstHullDoorId: post.hullDoorId,
+        dstDoorEntry: this.getDoorEntry(post),
+      });
+    }
+
+    return gmEdges;
   }
 
   /**

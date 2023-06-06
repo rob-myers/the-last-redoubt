@@ -136,6 +136,7 @@ export default function NPCs(props) {
         };
       } else {
         // Compute global strategy i.e. edges in gmGraph
+        // const gmEdges = api.gmGraph.findPathSimplistic(src, dst);
         const gmEdges = api.gmGraph.findPath(src, dst);
         if (!gmEdges) {
           throw Error(`getGlobalNavPath: gmGraph.findPath not found: ${JSON.stringify(src)} -> ${JSON.stringify(dst)}`);

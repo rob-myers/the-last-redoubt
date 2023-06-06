@@ -7,9 +7,11 @@
 - ✅ Put hull doors back to original dimension
 - ❌ Draw hull doors wider in render-geomorph
 
-- 🚧 Avoid navigating into closed hull doors
+- ✅ Avoid navigating into closed hull doors
   - ℹ️ possible now we have parallel hull doors
-  - also a chance to review global nav strategy
+  - 🤔 review global nav strategy
+  - ✅ can run astar on gmGraph
+  - ✅ extract gm edges from result
 
 - ✅ Avoid navigating into closed (non-hull) doors
   - ℹ️ we don't want to weight them infinitely
