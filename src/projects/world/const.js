@@ -97,7 +97,7 @@ export const defaultNpcInteractRadius = 70;
 export const doorWidth = 4.8;
 
 /** HMR note: use of WAPI means anim must be retriggered  */
-export const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
+export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
 export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
 /** Keep hull doors thin */
