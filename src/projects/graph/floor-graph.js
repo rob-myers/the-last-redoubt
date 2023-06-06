@@ -1,5 +1,5 @@
 import { Vect } from "../geom";
-import { BaseGraph } from "./graph";
+import { BaseGraph, createBaseAstar } from "./graph";
 import { Utils } from "../pathfinding/Utils";
 import { AStar } from "../pathfinding/AStar";
 import { Channel } from "../pathfinding/Channel";
@@ -285,14 +285,10 @@ export class floorGraphClass extends BaseGraph {
         vertexIds: node.vertexIds.slice(),
         portals: node.portals.map(x => x.slice()),
 
-        astar: {
-          cost: 1,
-          visited: false,
-          closed: false,
-          parent: null,
+        ...createBaseAstar({
           neighbours: node.neighbours.slice(),
           centroid: Vect.from(node.centroid),
-        },
+        }),
       });
     }
 

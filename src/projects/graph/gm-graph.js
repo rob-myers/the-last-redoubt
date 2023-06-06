@@ -1,5 +1,5 @@
 import { Mat, Poly, Rect, Vect } from "../geom";
-import { BaseGraph } from "./graph";
+import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
@@ -284,11 +284,26 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Find geomorph edge path using simplistic global nav strategy.
+   * Find geomorph edge path using astar.
    * @param {Geom.VectJson} src
    * @param {Geom.VectJson} dst 
    */
   findPath(src, dst) {
+    const srcGmId = this.findGeomorphIdContaining(src);
+    const dstGmId = this.findGeomorphIdContaining(dst);
+    if (srcGmId === null || dstGmId === null) {
+      return null;
+    }
+    // 🚧
+    
+  }
+
+  /**
+   * Find geomorph edge path using simplistic global nav strategy.
+   * @param {Geom.VectJson} src
+   * @param {Geom.VectJson} dst 
+   */
+  findPathSimplistic(src, dst) {
     const srcGmId = this.findGeomorphIdContaining(src);
     const dstGmId = this.findGeomorphIdContaining(dst);
     if (srcGmId === null || dstGmId === null) {
@@ -632,20 +647,29 @@ export class gmGraphClass extends BaseGraph {
    */
   static fromGms(gms) {
     const graph = new gmGraphClass(gms);
+    /** Index into nodesArray */
+    let index = 0;
 
     /** @type {Graph.GmGraphNode[]} */
     const nodes = [
 
       // ℹ️ geomorph nodes are aligned to `gms` for easy access
-      ...gms.map(/** @returns {Graph.GmGraphNodeGm} */ (x, gmIndex) => ({
+      ...gms.map(/** @returns {Graph.GmGraphNodeGm} */ (gm, gmId) => ({
         type: 'gm',
-        gmKey: x.key,
-        gmIndex,
-        id: getGmNodeId(x.key, x.transform),
-        transform: x.transform,
+        gmKey: gm.key,
+        gmIndex: gmId,
+        id: getGmNodeId(gm.key, gm.transform),
+        transform: gm.transform,
+
+        ...createBaseAstar({
+          // could change this when starting/ending at a specific geomorph
+          centroid: gm.matrix.transformPoint(gm.pngRect.center),
+          // neighbours populated further below
+        }),
+        index: index++,
       })),
 
-      ...gms.flatMap(({ key: gmKey, hullDoors, transform, pngRect, doors }, gmId) =>
+      ...gms.flatMap(({ key: gmKey, hullDoors, matrix, transform, pngRect, doors }, gmId) =>
         hullDoors.map(/** @returns {Graph.GmGraphNodeDoor} */ (hullDoor, hullDoorId) => {
           const alongNormal = hullDoor.poly.center.addScaledVector(hullDoor.normal, 20);
           const gmInFront = pngRect.contains(alongNormal);
@@ -661,6 +685,12 @@ export class gmGraphClass extends BaseGraph {
             gmInFront,
             direction,
             sealed: true, // Overwritten below
+
+            ...createBaseAstar({
+              centroid: matrix.transformPoint(hullDoor.poly.center),
+              // neighbours populated further below
+            }),
+            index: index++,
           };
         })
       ),
@@ -733,6 +763,11 @@ export class gmGraphClass extends BaseGraph {
         graph.connect({ src: dst, dst: src });
       }
     });
+
+    // Populate node.astar.neighbours
+    graph.edgesArray.forEach(({ src, dst }) =>
+      src.astar.neighbours.push(dst.index)
+    );
 
     return graph;
   }

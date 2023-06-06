@@ -93,8 +93,13 @@ declare namespace Graph {
 
 //#region GmGraph
 
+  interface BaseGmGraphNode extends AStarNode {
+    /** Index into nodesArray for easy computation of astar.neighbours */
+    index: number;
+  }
+
   /** A transformed geomorph */
-  export interface GmGraphNodeGm {
+  export interface GmGraphNodeGm extends BaseGmGraphNode {
     type: 'gm';
     /** Key of parent geomorph */
     gmKey: Geomorph.GeomorphKey;
@@ -106,7 +111,7 @@ declare namespace Graph {
   }
 
   /** A hull door of some transformed geomorph */
-  export interface GmGraphNodeDoor {
+  export interface GmGraphNodeDoor extends BaseGmGraphNode {
     type: 'door';
     /** `door-${gmKey}-[${transform}]-${hullDoorIndex}` */
     id: string;
@@ -237,11 +242,6 @@ declare namespace Graph {
       visited: boolean;
       closed: boolean;
       parent: null | AStarNode;
-      /**
-       * This info is already in edges, yet used by `AStar`.
-       * We could remove it, but prefer to leave `AStar` as is,
-       * recalling it originally comes from three-pathfinding.
-       */
       neighbours: number[];
     }
   }

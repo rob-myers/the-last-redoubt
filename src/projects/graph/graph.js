@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import { Vect } from "../geom/vect";
 import { deepClone, flatten, removeFirst } from "../service/generic";
 
 /**
@@ -413,4 +414,22 @@ export class BaseGraph {
     return this;
   }
 
+}
+
+/**
+ * @param {Partial<Graph.AStarNode['astar']>} partial
+ * @return {Graph.AStarNode}
+ */
+export function createBaseAstar(partial) {
+  return {
+    astar: {
+      cost: 1,
+      visited: false,
+      closed: false,
+      parent: null,
+      neighbours: [],
+      centroid: partial.centroid || Vect.zero,
+      ...partial,
+    },
+  };
 }
