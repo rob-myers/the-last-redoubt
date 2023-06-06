@@ -10,6 +10,8 @@ Fix a particular [Starship Symbol](http://travellerrpgblog.blogspot.com/2020/08/
 
 1. Copy the resulting file to `/static/assets/symbol/foo.png`.
 
+   > ℹ️ for full geomorph pngs, we only import it into the hull symbol e.g. `103--hull.svg`
+
 1. Create `/static/assets/symbol/foo.svg` in Boxy SVG.
 
 1. Use `/static/assets/symbol/foo.png` as background i.e. Image inside folder (SvgGroupElement) named "background".

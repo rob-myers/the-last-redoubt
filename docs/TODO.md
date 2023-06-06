@@ -2,24 +2,14 @@
 
 ## In progress
 
-- ✅ remove remaining large doors
+- ✅ Split initial carousel i.e. 1 image, then 2 images
+- 🚧 start geomorph 103
+  - ℹ️ media/symbols-png-staging/README.md
+  - hull symbol
+  - start layout
 
-- ✅ Improve look of hull doors
 
-- ✅ Put hull doors back to original dimension
-- ❌ Draw hull doors wider in render-geomorph
-
-- ✅ Avoid navigating into closed hull doors
-  - ℹ️ possible now we have parallel hull doors
-  - 🤔 review global nav strategy
-  - ✅ can run astar on gmGraph
-  - ✅ extract gm edges from result
-
-- ✅ Avoid navigating into closed (non-hull) doors
-  - ℹ️ we don't want to weight them infinitely
-  - ✅ closed doors have large nav weights
-
-- Link to new sandbox
+- 🚧 Link to new sandbox
   - Can supply url params to specify layout and profile?
   - https://codesandbox.io/s/tty-world-2-june-2023-g8tb0c?file=/src/service/geomorph.js
 
@@ -43,7 +33,6 @@
 - BUG Escape Tabs not working when click on tabs bar
   - probably interference from tab dragger
 - BUG react_devtools_backend_compact.js:2367 ERROR g-301--bridge: hull door 0: w: failed to parse transform "0,1,-1,0,1800,0" 
-- start geomorph 103
 - restyle nav menu?
 - can tag symbol decor `global`
   - ℹ️ local decor resets on re-enter
@@ -400,6 +389,21 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ remove remaining large doors
+- ✅ Improve look of hull doors
+- ✅ Put hull doors back to original dimension
+- ❌ Draw hull doors wider in render-geomorph
+
+- ✅ Avoid navigating into closed hull doors
+  - ℹ️ possible now we have parallel hull doors
+  - 🤔 review global nav strategy
+  - ✅ can run astar on gmGraph
+  - ✅ extract gm edges from result
+
+- ✅ Avoid navigating into closed (non-hull) doors
+  - ℹ️ we don't want to weight them infinitely
+  - ✅ closed doors have large nav weights
 
 - ❌ Try fix hull door nav issue by halving their size
   - possible issue with two doors being too close to each other

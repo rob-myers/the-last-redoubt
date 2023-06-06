@@ -1339,6 +1339,148 @@
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
     "lastModified": 1685887150557.1963
   },
+  "103--hull": {
+    "key": "103--hull",
+    "hull": [
+      {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-347.232, -439.084],
+            [860.768, -439.084],
+            [860.768, 768.916],
+            [-347.232, 768.916],
+            [-347.232, -439.084]
+          ],
+          [
+            [-339.232, -431.084],
+            [-339.232, 760.916],
+            [852.768, 760.916],
+            [852.768, -431.084],
+            [-339.232, -431.084]
+          ]
+        ]
+      }
+    ],
+    "obstacles": [],
+    "walls": [],
+    "singles": [
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-4, 250], [-4, 290], [4, 290], [4, 250]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-4, 310], [-4, 350], [4, 350], [4, 310]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-4, 850], [-4, 890], [4, 890], [4, 850]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[-4, 910], [-4, 950], [4, 950], [4, 910]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1196, 250], [1196, 290], [1204, 290], [1204, 250]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1196, 310], [1196, 350], [1204, 350], [1204, 310]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1196, 850], [1196, 890], [1204, 890], [1204, 850]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1196, 910], [1196, 950], [1204, 950], [1204, 910]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[850, -4], [850, 4], [890, 4], [890, -4]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[910, -4], [910, 4], [950, 4], [950, -4]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[250, -4], [250, 4], [290, 4], [290, -4]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[310, -4], [310, 4], [350, 4], [350, -4]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[850, 1196], [850, 1204], [890, 1204], [890, 1196]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[910, 1196], [910, 1204], [950, 1204], [950, 1196]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[250, 1196], [250, 1204], [290, 1204], [290, 1196]]]
+        }
+      },
+      {
+        "meta": {"door": true, "hull": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[310, 1196], [310, 1204], [350, 1204], [350, 1196]]]
+        }
+      }
+    ],
+    "pngRect": {"x": -12, "y": -12, "width": 1212, "height": 1212},
+    "lastModified": 1686057862475.1477
+  },
   "301--hull": {
     "key": "301--hull",
     "hull": [
