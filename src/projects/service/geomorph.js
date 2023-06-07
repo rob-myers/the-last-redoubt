@@ -186,6 +186,14 @@ export async function createLayout(opts) {
     );
   });
 
+  navPolyWithDoors.forEach(({ rect }, navGroupId) => {
+    doors.forEach(door => door.rect.intersects(rect) && (door.navGroupId = navGroupId));
+    windows.forEach(window => window.rect.intersects(rect) && (window.navGroupId = navGroupId));
+  });
+  doors.forEach((door, doorId) =>
+    (door.navGroupId === -1) && warn(`door ${doorId} is not attached to any navmesh`)
+  );
+
   /** Intersection of each door (angled rect) with navPoly */
   const navDoorPolys = doorPolys
     .flatMap(doorPoly => Poly.intersect([doorPoly], navPolyWithDoors))
@@ -518,6 +526,7 @@ function parseConnectorRect(x) {
     normal: normal.precision(precision),
     roomIds,
     entries: [infront, behind],
+    navGroupId: -1, // Augmented later
   };
 }
 

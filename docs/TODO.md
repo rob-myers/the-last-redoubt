@@ -2,6 +2,13 @@
 
 ## In progress
 
+- 🚧 BUG saw global navpath compute incorrect direct local path in intermediate geomorph 102
+  - repro `nav andros '{"x":-889.69,"y":1315.86'}`
+  - ℹ️ geomorph 102 has two disjoint navmeshes, and our (src, dst) reside in each partition
+  - ✅ remove degenerate small navmesh from 101, 102
+  - ✅ precompute navGroupId for each door/window
+  - 🚧 change definition of gm-graph so multiple geomorph nodes when multiple navmeshes
+
 - ✅ Split initial carousel i.e. 1 image, then 2 images
 - ✅ start geomorph 103
   - ℹ️ media/symbols-png-staging/README.md

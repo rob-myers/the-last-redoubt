@@ -389,6 +389,10 @@ declare namespace Geomorph {
      * where a room is *infront* if `normal` is pointing towards it.
      */
     entries: [V, V];
+    /**
+     * This door is connected to navmesh navZone.groups[navGroupId].
+     */
+    navGroupId: number;
   }
 
   type ParsedConnectorRect = ConnectorRect<Geom.Poly, Geom.Vect, Geom.Rect>;
