@@ -247,7 +247,7 @@ export class floorGraphClass extends BaseGraph {
     }
 
     // DEBUG 🚧
-    console.warn('findPath', {
+    console.warn('floorGraph findPath', {
       nodePath,
       nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
       partition,

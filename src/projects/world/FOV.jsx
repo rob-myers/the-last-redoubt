@@ -362,8 +362,7 @@ function compareCoreState(prev, next) {
  */
 function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
   const adjGmToPolys = /** @type {Record<number, Poly[]>} */ ({});
-  // The successors of a "geomorph node" are precisely the hull door nodes
-  const hullDoorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (gmGraph.getSuccs(gmGraph.nodesArray[gmId]));
+  const hullDoorNodes = gmGraph.doorNodeByGmId[gmId];
   for (const hullDoorNode of hullDoorNodes) {
     const adjHullDoorNode = gmGraph.getAdjacentDoor(hullDoorNode);
     if (adjHullDoorNode) {

@@ -103,11 +103,16 @@ declare namespace Graph {
     type: 'gm';
     /** Key of parent geomorph */
     gmKey: Geomorph.GeomorphKey;
-    gmIndex: number;
+    gmId: number;
     /** `gm-${gmKey}-[${transform}]` */
     id: string;
     /** Transform of parent geomorph */
     transform: [number, number, number, number, number, number];
+
+    /** Points to `gm.navPoly[navGroupId]` */
+    navGroupId: number;
+    /** `gm.navPoly[navGroupId].rect` in world coords */
+    rect: Geom.Rect;
   }
 
   /** A hull door of some transformed geomorph */

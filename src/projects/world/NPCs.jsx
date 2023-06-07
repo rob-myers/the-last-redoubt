@@ -120,8 +120,8 @@ export default function NPCs(props) {
       }
     },
     getGlobalNavPath(src, dst) {
-      const srcGmId = api.gmGraph.findGeomorphIdContaining(src);
-      const dstGmId = api.gmGraph.findGeomorphIdContaining(dst);
+      const [srcGmId] = api.gmGraph.findGeomorphIdContaining(src);
+      const [dstGmId] = api.gmGraph.findGeomorphIdContaining(dst);
 
       if (srcGmId === null || dstGmId === null) {
         throw Error(`getGlobalNavPath: src/dst must be inside some geomorph's aabb`)
@@ -394,7 +394,7 @@ export default function NPCs(props) {
       return !!closeDoor;
     },
     isPointInNavmesh(p) {
-      const gmId = api.gmGraph.findGeomorphIdContaining(p);
+      const [gmId] = api.gmGraph.findGeomorphIdContaining(p);
       if (gmId !== null) {
         const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
         const localPoint = inverseMatrix.transformPoint(Vect.from(p));

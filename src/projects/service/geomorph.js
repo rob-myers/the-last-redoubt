@@ -1158,7 +1158,7 @@ export function ensureDecorMetaGmRoomId(decor, api) {
   if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
     const decorCenter = getDecorCenter(decor);
     const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
-    decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter);
+    decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter)[0];
     decor.meta.roomId = (gmRoomId?.roomId) ?? null;
   }
   return decor;

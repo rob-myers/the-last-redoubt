@@ -4,7 +4,7 @@ import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
-import { lightDoorOffset, lightWindowOffset, precision } from "../service/const";
+import { lightDoorOffset, lightWindowOffset } from "../service/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -28,6 +28,16 @@ export class gmGraphClass extends BaseGraph {
   gmData;
 
   /**
+   * @type {{ [gmId: number]: Graph.GmGraphNodeGm[] }}
+   */
+  gmNodeByGmId;
+  /**
+   * ℹ️ a gm node needn't see all hull doors in the geomorph e.g. 102
+   * @type {{ [gmId: number]: Graph.GmGraphNodeDoor[] }}
+   */
+  doorNodeByGmId;
+
+  /**
    * World coordinates of entrypoint to hull door nodes.
    * @type {Map<Graph.GmGraphNodeDoor, Geom.Vect>}
    */
@@ -41,6 +51,8 @@ export class gmGraphClass extends BaseGraph {
     this.gms = gms;
     this.gmData = gms.reduce((agg, gm) => ({ ...agg, [gm.key]: gm }), {});
     this.entry = new Map;
+    this.gmNodeByGmId = gms.reduce((agg, _, gmId) => ({ ...agg, [gmId]: [] }), {});
+    this.doorNodeByGmId = gms.reduce((agg, _, gmId) => ({ ...agg, [gmId]: [] }), {});
   }
 
   /**
@@ -276,12 +288,16 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * A geomorph can have multiple 'gm' nodes: one per disjoint navmesh.
+   * 🚧 Probably split this into two different functions
    * @param {Geom.VectJson} point
-   * @returns {null | number} gmId
+   * @returns {[gmId: number | null, gmNodeId: number | null]} respective 'gm' node is `nodesArray[gmNodeId]`
    */
   findGeomorphIdContaining(point) {
-      const gmId = this.gms.findIndex(x => x.gridRect.contains(point));
-      return gmId === -1 ? null : gmId;
+    const gmId = this.gms.findIndex(x => x.gridRect.contains(point));
+    if (gmId === -1) return [null, null];
+    const gmNodeId = this.gmNodeByGmId[gmId].find(node => node.rect.contains(point))?.index;
+    return [gmId, gmNodeId ?? null];
   }
 
   /**
@@ -290,32 +306,31 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geom.VectJson} dst 
    */
   findPath(src, dst) {
-    const srcGmId = this.findGeomorphIdContaining(src);
-    const dstGmId = this.findGeomorphIdContaining(dst);
-    if (srcGmId === null || dstGmId === null) {
+    const [srcGmId, srcGmNodeId] = this.findGeomorphIdContaining(src);
+    const [dstGmId, dstGmNodeId] = this.findGeomorphIdContaining(dst);
+    if (srcGmNodeId === null || dstGmNodeId === null) {
       return null;
     }
 
     // compute shortest path through gmGraph
-    const srcNode = this.nodesArray[srcGmId];
-    const dstNode = this.nodesArray[dstGmId];
+    const srcNode = this.nodesArray[srcGmNodeId];
+    const dstNode = this.nodesArray[dstGmNodeId];
     const gmPath = AStar.search(this, srcNode, dstNode, (nodes) => {
       nodes[srcNode.index].astar.centroid.copy(src);
       nodes[dstNode.index].astar.centroid.copy(dst);
       // closed hull doors have large cost
       const { open } = this.api.doors;
-      this.gms.forEach((_, gmId) => {
-        const gmNode = this.nodesArray[gmId];
-        const doorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (this.getSuccs(gmNode));
-        doorNodes.forEach(node => node.astar.cost = open[gmId][node.doorId] === true ? 1 : 10000);
-      });
+      this.gms.forEach((_, gmId) =>
+        this.doorNodeByGmId[gmId].forEach(node => node.astar.cost = open[gmId][node.doorId] === true ? 1 : 10000)
+      );
     });
 
-    // convert to gm edges
+    // convert gmPath to gmEdges
+    // gmPath has form: (gm -> door -> door)+ -> gm
     /** @type {Graph.GmGraphNodeDoor} */ let pre;
     /** @type {Graph.GmGraphNodeDoor} */ let post;
     const gmEdges = /** @type {Graph.NavGmTransition[]} */ ([]);
-    for (let i = 1; i < gmPath.length - 1; i += 2) {
+    for (let i = 1; i < gmPath.length; i += 3) {
       pre = /** @type {Graph.GmGraphNodeDoor} */ (gmPath[i]);
       post = /** @type {Graph.GmGraphNodeDoor} */ (gmPath[i + 1]);
       gmEdges.push({
@@ -342,8 +357,8 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geom.VectJson} dst 
    */
   findPathSimplistic(src, dst) {
-    const srcGmId = this.findGeomorphIdContaining(src);
-    const dstGmId = this.findGeomorphIdContaining(dst);
+    const [srcGmId] = this.findGeomorphIdContaining(src);
+    const [dstGmId] = this.findGeomorphIdContaining(dst);
     if (srcGmId === null || dstGmId === null) {
       return null;
     }
@@ -414,7 +429,7 @@ export class gmGraphClass extends BaseGraph {
    * @returns {null | Geomorph.GmRoomId}
    */
   findRoomContaining(point) {
-    const gmId = this.findGeomorphIdContaining(point);
+    const [gmId] = this.findGeomorphIdContaining(point);
     if (gmId !== null) {
       const gm = this.gms[gmId];
       const roomId = findLocalRoomContaining(gm.rooms, gm.inverseMatrix.transformPoint(Vect.from(point)));
@@ -440,14 +455,13 @@ export class gmGraphClass extends BaseGraph {
    */
   getAdjacentRoomCtxt(gmId, hullDoorId) {
     const gm = this.gms[gmId];
-    const gmNode = this.nodesArray[gmId];
     const doorNodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
     const doorNode = this.getNodeById(doorNodeId);
     if (!doorNode) {
       console.error(`${gmGraphClass.name}: failed to find hull door node: ${doorNodeId}`);
       return null;
     }
-    const otherDoorNode = /** @type {undefined | Graph.GmGraphNodeDoor} */ (this.getSuccs(doorNode).find(x => x !== gmNode));
+    const otherDoorNode = /** @type {undefined | Graph.GmGraphNodeDoor} */ (this.getSuccs(doorNode).find(x => x.type === 'door'));
     if (!otherDoorNode) {
       console.info(`${gmGraphClass.name}: hull door ${doorNodeId} on boundary`);
       return null;
@@ -465,7 +479,7 @@ export class gmGraphClass extends BaseGraph {
    * @returns {Geom.ClosestOnOutlineResult | null}
    */
   getClosePoint(position) {
-    const gmId = this.findGeomorphIdContaining(position);
+    const [gmId] = this.findGeomorphIdContaining(position);
     if (gmId !== null) {
       const gm = this.gms[gmId];
       const floorGraph = gm.floorGraph;
@@ -484,9 +498,7 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geom.Direction} sideDir 
    */
   getConnectedDoorsBySide(gmId, sideDir) {
-    const gmNode = /** @type {Graph.GmGraphNodeGm} */ (this.nodesArray[gmId]);
-    const doorNodes = /** @type {Graph.GmGraphNodeDoor[]} */ (this.getSuccs(gmNode));
-    return doorNodes.filter(x => !x.sealed && x.direction === sideDir);
+    return this.doorNodeByGmId[gmId].filter(x => !x.sealed && x.direction === sideDir);
   }
 
   /**
@@ -690,22 +702,29 @@ export class gmGraphClass extends BaseGraph {
 
     /** @type {Graph.GmGraphNode[]} */
     const nodes = [
+      /**
+       * ℹ️ gm nodes are NOT aligned to `gms` because a geomorph
+       *    may contain multiple disjoint navmeshes e.g. 102
+       */
+      ...gms.flatMap((gm, gmId) =>
+        gm.navPoly.map(/** @returns {Graph.GmGraphNodeGm} */ (navPoly, navGroupId) => ({
+          type: 'gm',
+          gmKey: gm.key,
+          gmId,
+          id: getGmNodeId(gm.key, gm.transform, navGroupId),
+          transform: gm.transform,
 
-      // ℹ️ geomorph nodes are aligned to `gms` for easy access
-      ...gms.map(/** @returns {Graph.GmGraphNodeGm} */ (gm, gmId) => ({
-        type: 'gm',
-        gmKey: gm.key,
-        gmIndex: gmId,
-        id: getGmNodeId(gm.key, gm.transform),
-        transform: gm.transform,
+          navGroupId,
+          rect: navPoly.rect.applyMatrix(gm.matrix),
 
-        ...createBaseAstar({
-          // could change this when starting/ending at a specific geomorph
-          centroid: gm.matrix.transformPoint(gm.pngRect.center),
-          // neighbours populated further below
-        }),
-        index: index++,
-      })),
+          ...createBaseAstar({
+            // could change this when starting/ending at a specific geomorph
+            centroid: gm.matrix.transformPoint(gm.pngRect.center),
+            // neighbours populated further below
+          }),
+          index: index++,
+        }))
+      ),
 
       ...gms.flatMap(({ key: gmKey, hullDoors, matrix, transform, pngRect, doors }, gmId) =>
         hullDoors.map(/** @returns {Graph.GmGraphNodeDoor} */ (hullDoor, hullDoorId) => {
@@ -746,13 +765,18 @@ export class gmGraphClass extends BaseGraph {
       }
     });
 
-    // Each gm node is connected to its door nodes (hull doors it has)
+    graph.nodesArray.forEach(node => // Store for quick lookup
+      node.type === 'gm'
+        ? graph.gmNodeByGmId[node.gmId].push(node)
+        : graph.doorNodeByGmId[node.gmId].push(node)
+    );
+
+    // The gm node (gmId, navGroupId) is connected to its door nodes (hull doors it has)
     /** @type {Graph.GmGraphEdgeOpts[]} */
     const localEdges = gms.flatMap(({ key: gmKey, hullDoors, transform }) => {
-      const gmNodeKey = getGmNodeId(gmKey, transform);
-      return hullDoors.map((_, hullDoorIndex) => ({
-        src: gmNodeKey,
-        dst: getGmDoorNodeId(gmKey, transform, hullDoorIndex),
+      return hullDoors.map(({ navGroupId }, hullDoorId) => ({
+        src: getGmNodeId(gmKey, transform, navGroupId),
+        dst: getGmDoorNodeId(gmKey, transform, hullDoorId),
       }));
     });
     
@@ -821,9 +845,10 @@ export class gmGraphClass extends BaseGraph {
 /**
  * @param {Geomorph.GeomorphKey} gmKey 
  * @param {[number, number, number, number, number, number]} transform 
+ * @param {number} navGroupId
  */
-function getGmNodeId(gmKey, transform) {
-  return `gm-${gmKey}-[${transform}]`;
+function getGmNodeId(gmKey, transform, navGroupId) {
+  return `gm-${gmKey}-[${transform}]--${navGroupId}`;
 }
 
 /**
