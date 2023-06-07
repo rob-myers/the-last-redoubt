@@ -177,10 +177,14 @@ export async function createLayout(opts) {
     hullOutline,
   ).map(
     x => x.cleanFinalReps().fixOrientation().precision(precision)
-  ).filter(poly => 
-    !ignoreNavPoints.some(p => poly.contains(p))
-    && poly.rect.area > 20 * 20 // also ignore small areas
-  );
+  ).filter(poly => {
+    const { rect } = poly;
+    return (
+      !ignoreNavPoints.some(p => poly.contains(p))
+      && rect.area > 20 * 20 // also ignore small areas
+      && rect.max > 60
+    );
+  });
 
   /** Intersection of each door (angled rect) with navPoly */
   const navDoorPolys = doorPolys
