@@ -233,9 +233,14 @@ export function stripAnsi(input: string) {
  * The relationship between foo and bar is stored in a `TtyLinkCtxt`.
  */
 export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
-  const mdLinksRegex = /\[([^()]+?)\]\((.*?)\)/g;
+  /**
+   * - match[1] is either empty or the escape character (to support ansi special chars)
+   * - match[2] is the link label e.g. "[foo]"
+   * - match[3] is the link value e.g. "bar" (interprets as 'bar') or "2" (interprets as 2)
+   */
+  const mdLinksRegex = /(^|[^\x1b])\[([^()]+?)\]\((.*?)\)/g;
   const matches = Array.from(text.matchAll(mdLinksRegex));
-  const boundaries = matches.flatMap(match => [match.index!, match.index! + match[0].length]);
+  const boundaries = matches.flatMap(match => [match.index! + match[1].length, match.index! + match[1].length + match[0].length]);
   // If added zero, links occur at odd indices of `parts` else even indices
   const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
   const parts = boundaries
@@ -251,13 +256,13 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
   const linkCtxtsFactory = matches.length ? (resolve: (v: any) => void): TtyLinkCtxt[] =>
     matches.map((match, i) => ({
       lineText: ttyTextKey,
-      linkText: match[1], // 1 + ensures we're inside the square brackets
+      linkText: match[2], // 1 + ensures we're inside the square brackets
       linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
       callback() {
         const value = parseJsArg(
-          match[2] === '' // links [foo]() has value "foo"
-            ? match[1] // links [foo](-) has value undefined
-            : match[2] === '-' ? undefined : match[2]
+          match[3] === '' // links [foo]() has value "foo"
+            ? match[2] // links [foo](-) has value undefined
+            : match[3] === '-' ? undefined : match[3]
         );
         resolve(value === undefined ? defaultValue : value);
       },

@@ -14,6 +14,8 @@ tags:
 
 import Tabs from "components/page/Tabs";
 import { profileLookup } from "projects/sh/scripts";
+import { ansi } from "projects/sh/util";
+
 
 ## @test
 
@@ -42,7 +44,11 @@ import { profileLookup } from "projects/sh/scripts";
       // { type: 'component', class: 'SvgNavGraph', filepath: 'example/SvgNavGraph#102', props: { layoutKey: 'g-102--research-deck' } },
     ],
     [
-      { type: 'terminal', filepath: 'demo-1@test', env: { WORLD_KEY: 'world-demo-1', PROFILE: profileLookup.game_2() } },
+      { type: 'terminal', filepath: 'demo-1@test', env: {
+        WORLD_KEY: 'world-demo-1',
+        // PROFILE: `choice "Hello ${ansi.Reverse}there${ansi.Reset} \n\r ok [foo](bar)"`,
+        PROFILE: profileLookup.game_2()
+      } },
       // { type: 'terminal', filepath: 'demo-2@test', env: { WORLD_KEY: 'world-demo-2', PROFILE: profileLookup.game_1() } },
       // { type: 'terminal', filepath: 'demo-3@test', env: { PROFILE: profileLookup.util_0() } },
       // { type: 'component', class: 'SvgStringPull', filepath: 'example/SvgStringPull', props: { layoutKey: 'g-301--bridge' } },
@@ -51,6 +57,7 @@ import { profileLookup } from "projects/sh/scripts";
       // { type: 'component', class: '__TODO__', filepath: 'example/TriangleDev#301' },
       // { type: 'component', class: '__TODO__', filepath: 'example/SvgDoorsDemo#101' },
       // { type: 'component', class: 'SvgNavGraph', filepath: 'example/SvgNavGraph#101', props: { layoutKey: 'g-101--multipurpose', } },
+      // { type: 'component', class: 'SvgNavGraph', filepath: 'example/SvgNavGraph#301', props: { layoutKey: 'g-301--bridge', } },
       // { type: 'component', class: '__TODO__', filepath: 'example/SvgPanZoomDemo' },
       // { type: 'component', class: '__TODO__', filepath: 'example/SvgVisibilityDemo#301' },
     ],
