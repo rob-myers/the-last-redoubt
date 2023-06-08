@@ -124,7 +124,7 @@ Finally, we must ensure our desire for generality does not produce a dry abstrac
   ]}
 />
 
-### Fabricating a behaviour
+### Worlds, Players and Terminals
 
 Behaviour arises relative to a _World_.
 Defining a World amounts to choosing [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and connecting them together.
@@ -145,7 +145,7 @@ At present, we only support 5 geomorphs (Robert Pearce provided hundreds) constr
 />
 
 The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
-The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with exactly one other hull door.
+The geomorphs should arranged so each hull door either (a) touches nothing else, (b) coincides with exactly one other hull door.
 Intuitively we "glue" geomorphs together at their hull doors -- exactly their original purpose.
 Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
@@ -268,9 +268,9 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap n
 <Aside title="tips-and-tricks">
 
   Things to try with the World and Terminal above:
-  - Sit in a chair.
   - Open a door.
   - Lie in a bed.
+  - Sit on the bog.
   - Reset everything (<Icon icon="refresh" small inline />).
   - Pause everything (<Icon icon="cross-circle" small inline />).
   - Follow the Player by running <InlineCode copy>track bilem</InlineCode>.
@@ -285,13 +285,14 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap n
     height={550}
     mobileHeight={400}
     fullHeight={900}
-    items={[{ video: 'first-peek', label: 'Doing all the things' }]}
+    items={[{ video: 'do-all-the-things', label: 'Doing all the things' }]}
   />
 
 </Aside>
 
+### Fabricating a behaviour
 
-OLD BELOW (may move elsewhere)
+🚧
 
 {/* What actually _is_ a character behaviour?
 Roughly speaking, it involves the Player observing or interacting with one or more NPCs.
@@ -443,11 +444,11 @@ JavaScript is not designed to be run interactively. */}
 
 {/* In order to spawn NPCs into a World we use a Command Line Interface (CLI). */}
 
-🚧 shell command (or _command_)
+{/* 🚧 shell command (or _command_)
 
 🚧 game command: command using some World API
 
-🚧 npc behaviour (or _behaviour_): game command using some World npcs API
+🚧 npc behaviour (or _behaviour_): game command using some World npcs API */}
 
 {/* We'll **specify behaviour** using the syntax of an interactive programming language.
 We'll **execute behaviour** by running (possibly many) programs in parallel.
