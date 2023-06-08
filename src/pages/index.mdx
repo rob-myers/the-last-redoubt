@@ -44,7 +44,6 @@ Nevertheless, simplistic character behaviour is the norm.
 
 <Carousel
   id="first-peek-video"
-  baseSrc="/assets/pics/first-peek/"
   height={550}
   mobileHeight={400}
   fullHeight={900}
@@ -157,18 +156,18 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   persistLayout
   tabs={[
     [
-      { type: 'component', class: 'World', filepath: 'world-map-1', props: {
+      { type: 'component', class: 'World', filepath: 'map-only-1', props: {
           init: { y: 600, zoom: 0.3 },
-          worldKey: 'world-map-1',
+          worldKey: 'map-only-1',
           gms: [
             { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
             { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
             { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
           ],
       }},
-      { type: 'component', class: 'World', filepath: 'world-map-2', props: {
+      { type: 'component', class: 'World', filepath: 'map-only-2', props: {
           init: { x: 600, y: 600, zoom: 0.3 },
-          worldKey: 'world-map-2',
+          worldKey: 'map-only-2',
           gms: [
             { gmKey: 'g-101--multipurpose' },
             { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
@@ -182,10 +181,10 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 />
 
 <Aside title="can-pan-zoom-tabs">
-  Concerning the maps above, you can:
-  - pan (_drag_) them.
-  - zoom (_pinch_ or _scroll_) them.
-  - drag their tabs around, or maximise them.<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
+  In the maps above:
+  - you can pan (_drag_).
+  - you can zoom (_pinch_ or _scroll_).
+  - you can drag their tabs around (or maximise them).<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
 </Aside>
 
 In fact we have just seen two _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
@@ -193,7 +192,7 @@ The first map amounts to the following component instantiation:
 
 ```jsx
 <World
-  worldKey="world-map-1"
+  worldKey="map-only-1"
   gms={[
     { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
     { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
@@ -203,18 +202,20 @@ The first map amounts to the following component instantiation:
 ```
 
 The `worldKey` identifies the World's API,
-whereas `gms` specifies the geomorphs and their layout (as outlined above).
-Why do these worlds look like maps?
+whereas `gms` specifies the geomorphs and their layout.
+But why do these worlds look like maps?
 Because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
 
-So next we need a World with a Player.
+So our World needs a Player.
 This brings us to a very important ingredient: the `<Terminal>`.
 Designing user interfaces is _hard_.
-Insofar as textual interfaces are concerned, we've gone the canonical route i.e. POSIX.
+Insofar as textual user interfaces are concerned, we've gone the canonical route i.e. [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html).
 Syntactically we provide an interactive shell.
-Semantically we manipulate Javascript values and run async generators. 
+Semantically we manipulate Javascript values and run async generators.
 
-🚧
+Let's see it action.
+The Terminal's _profile_ explains what it is doing,
+and prompts the user to "tap to continue".
 
 <Tabs
   id="tabs@world-1"
@@ -242,18 +243,18 @@ source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 choice '${ansi.Reverse}${ansi.Bold}So far, this profile has loaded various shell functions and connected to the World.${ansi.Reset} tap to [continue](-)'
+NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}So far, this terminal's profile has defined shell functions and connected to world \\$WORLD_KEY.${ansi.Reset} tap to [continue](-)"
 
-spawn bilem '{x:-89.8,y:1075.7}'
-npc set-player bilem
-view 1000 '{x:-89.8,y:1075.7}' 1.6
+spawn rob '{x: -90, y: 1075}'
+npc set-player rob
+view 1 '{x: -90, y: 1075}' 1.6
 
-NOECHO=1 choice '${ansi.Reverse}${ansi.Bold}Next we have spawned an npc called "bilem", set them as the Player, and finally pan-zoomed them into view.${ansi.Reset} tap to [continue](-)'
+NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc \\"rob\\", set them as the Player, and pan-zoomed them into view.${ansi.Reset} tap to [continue](-)"
 
 npc map hide
-goLoop bilem &
-doLoop bilem &
-lookLoop bilem &
+goLoop rob &
+doLoop rob &
+lookLoop rob &
 
 NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we hide the map and setup the Player. Tap navmesh (to move), nearby doors/icons (to do things), elsewhere (to look).${ansi.Reset}"
 `
@@ -274,6 +275,16 @@ NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we hide the map and setup the 
   - Stop following via Ctrl-C (💀 on mobile).
   - List background processes <InlineCode copy>ps</InlineCode>.
   - Kill background processes <InlineCode copy>kill 8 18 26</InlineCode>.<SideNote>You can also pause/resume processes via `--STOP` and `--CONT`</SideNote>
+  - List shell functions <InlineCode copy>declare -F</InlineCode>.
+  - Inspect a shell script <InlineCode copy>/etc/util-1</InlineCode>.
+
+  <Carousel
+    id="do-all-the-things-video"
+    height={550}
+    mobileHeight={400}
+    fullHeight={900}
+    items={[{ video: 'first-peek', label: 'Doing all the things' }]}
+  />
 
 </Aside>
 

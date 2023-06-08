@@ -397,6 +397,10 @@
       connected && lib.removeFirst(connected.panzoomPids, api.meta.pid);
     },
   
+    /**
+     * - view {seconds} [{point}] [{zoom}]
+     * - view `{ ms?: number; point?: Geom.VectJson, zoom?: number }`
+     */
     view: async function* ({ api, args, home }) {
       const [first, second, third] = args.map(api.parseJsArg);
       const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
@@ -407,8 +411,8 @@
       api.addResume(() => { panZoom.animationAction("play"); return true; });
       api.addCleanup(() => panZoom.animationAction("cancel"));
       await npcs.panZoomTo(typeof first === "number"
-        ? {// view {ms} [{point}] [{zoom}]
-            ms: first,
+        ? {
+            ms: first * 1000,
             point: typeof second === "number" ? undefined : second,
             zoom: typeof second === "number" ? second : third,
           }

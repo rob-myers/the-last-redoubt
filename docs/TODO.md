@@ -3,7 +3,7 @@
 ## In progress
 
 - ✅ BUG cannot reset Tabs before ever enabled
-- do-all-the-things-video
+- 🚧 do-all-the-things-video
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
 
