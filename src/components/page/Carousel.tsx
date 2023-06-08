@@ -243,12 +243,10 @@ const rootCss = css`
     height: var(${cssName.carouselLabelHeight});
     padding: 0 32px;
 
+    background-color: var(--aside-background-color);
   }
   @media (max-width: 600px) {
     border: 1px solid var(--page-border-color);
-    .slide-label {
-      border: 1px solid var(--page-border-color);
-    }
   }
 
   .slide-img-container {
