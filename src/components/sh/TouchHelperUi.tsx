@@ -62,8 +62,8 @@ export default function TouchHelperUI(props: {
       tryLocalStorageSet(localStorageKey.touchTtyCanType, 'false');
     }
     if (!tryLocalStorageGet(localStorageKey.touchTtyOpen)) {
-      // touch menu open on touch devices by default
-      tryLocalStorageSet(localStorageKey.touchTtyOpen, 'true');
+      // touch menu closed on touch devices by default
+      tryLocalStorageSet(localStorageKey.touchTtyOpen, 'false');
     }
     xterm.setCanType(tryLocalStorageGet(localStorageKey.touchTtyCanType) === 'true');
     state.open = tryLocalStorageGet(localStorageKey.touchTtyOpen) === 'true';

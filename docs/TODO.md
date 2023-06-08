@@ -2,11 +2,6 @@
 
 ## In progress
 
-- ✅ BUG fix room label link 
-- ✅ BUG cannot reset Tabs before ever enabled
-- ✅ BUG
-  - `choice [{1..10}]'()'`
-  - `choice '[foo](bar) [baz](qux) [root](toot)'`
 
 - 🚧 do-all-the-things-video
 - update CodeSandbox
@@ -412,6 +407,12 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG fix room label link 
+- ✅ BUG cannot reset Tabs before ever enabled
+- ✅ BUG
+  - `choice [{1..10}]'()'`
+  - `choice '[foo](bar) [baz](qux) [root](toot)'`
 
 - ✅ remove remaining large doors
 - ✅ Improve look of hull doors
