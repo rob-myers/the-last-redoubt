@@ -142,14 +142,13 @@
   
       /** @type {import('../world/World').State} */ let worldApi;
       while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
-        api.info(`${ansiColor.White}polling for cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`)
-        api.info(`${ansiColor.White}(ensure World tab is visible)${ansiColor.Reset}`)
+        api.info(`${ansiColor.White}polling for world ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`)
         yield* api.sleep(1);
       }
 
       const { npcs } = worldApi;
       npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true, panzoomPids: [] };
-      api.info(`${ansiColor.White}found cached query ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`);
+      api.info(`${ansiColor.White}found world ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`);
     },
     
     /**
