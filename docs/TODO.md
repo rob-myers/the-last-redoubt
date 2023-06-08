@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 BUG fix room label link 
+- ✅ BUG fix room label link 
 - ✅ BUG cannot reset Tabs before ever enabled
 
 - 🚧 do-all-the-things-video

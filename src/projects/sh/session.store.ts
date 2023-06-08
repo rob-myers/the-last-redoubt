@@ -284,7 +284,12 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
-      // console.log('onTtyLink', { lineText, linkText, linkStartIndex });
+      // console.log(
+      //   'onTtyLink',
+      //   { lineText, linkText, linkStartIndex },
+      //   api.getSession(sessionKey).ttyLink,
+      //   api.getSession(sessionKey).ttyLink[lineText],
+      // );
       // api.cleanTtyLink(sessionKey);
       api.getSession(sessionKey).ttyLink[lineText]?.find(x =>
         x.linkStartIndex === linkStartIndex

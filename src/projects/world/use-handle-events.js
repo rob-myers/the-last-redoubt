@@ -1,5 +1,5 @@
 import React from "react";
-import { assertDefined, testNever, visibleUnicodeLength } from "../service/generic";
+import { assertDefined, testNever } from "../service/generic";
 import { decodeDecorInstanceKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
@@ -301,7 +301,8 @@ function mockHandleDecorClick(event, api) {
       worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
         lineText: line, 
         linkText: label,
-        linkStartIndex: visibleUnicodeLength('ℹ️  ['),
+        // linkStartIndex: visibleUnicodeLength('ℹ️  ['),
+        linkStartIndex: ('ℹ️  [').length,
         async callback() {
           // ℹ️ could have side effect e.g. panzoom
           const point = gm.matrix.transformPoint(gm.point[roomId].default.clone());

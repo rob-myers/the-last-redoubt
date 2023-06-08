@@ -102,9 +102,7 @@ export default function Terminal(props: Props) {
           state.xtermReady = true;
           const disposable = xterm.onKey(e => {
             if (e.domEvent.key === 'Escape') {
-              /**
-               * 🚧 trigger Tabs toggleEnabled?
-               */
+              // NOOP
             }
           });
 
