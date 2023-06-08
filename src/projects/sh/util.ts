@@ -242,8 +242,11 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
    */
   const mdLinksRegex = /(^|[^\x1b])\[([^()]+?)\]\((.*?)\)/g;
   const matches = Array.from(text.matchAll(mdLinksRegex));
-  const boundaries = matches.flatMap(match => [match.index! + match[1].length, match.index! + match[1].length + match[0].length]);
-  // If added zero, links occur at odd indices of `parts` else even indices
+  const boundaries = matches.flatMap(match =>
+    [match.index! + match[1].length, match.index! + match[0].length]
+  );
+  // Ensure `boundaries` starts with `0`.
+  // If added it then links occur at odd indices of `parts` (else even indices)
   const addedZero = (boundaries[0] === 0 ? 0 : boundaries.unshift(0) && 1);
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))

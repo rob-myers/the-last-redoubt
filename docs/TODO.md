@@ -4,6 +4,9 @@
 
 - ✅ BUG fix room label link 
 - ✅ BUG cannot reset Tabs before ever enabled
+- ✅ BUG
+  - `choice [{1..10}]'()'`
+  - `choice '[foo](bar) [baz](qux) [root](toot)'`
 
 - 🚧 do-all-the-things-video
 - update CodeSandbox
