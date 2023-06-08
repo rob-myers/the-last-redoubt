@@ -249,14 +249,16 @@ spawn rob '{x: -90, y: 1075}'
 npc set-player rob
 view 1 '{x: -90, y: 1075}' 1.6
 
-NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc \\"rob\\", set them as the Player, and pan-zoomed them into view.${ansi.Reset} tap to [continue](-)"
+NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc \\"rob\\", set them as the Player and pan-zoomed them into view.${ansi.Reset} tap to [continue](-)"
 
 npc map hide
 goLoop rob &
 doLoop rob &
 lookLoop rob &
 
-NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we hide the map and setup the Player. Tap navmesh (to move), nearby doors/icons (to do things), elsewhere (to look).${ansi.Reset}"
+NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we have faded the map and also set up the Player's controls."
+NOECHO=1 echo
+NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap nearby doors/icons (to ${ansi.Bold}do things${ansi.BoldReset}), and tap elsewhere to ${ansi.Bold}look${ansi.BoldReset}."
 `
       }},
     ],

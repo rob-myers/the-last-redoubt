@@ -312,7 +312,7 @@ function mockHandleDecorClick(event, api) {
     }
     api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
       sessionKey,
-      `${ansi.White}tags: ${JSON.stringify(decor.tags??[])}${ansi.Reset}`,
+      `${ansi.White}ℹ️  tags: ${JSON.stringify(decor.tags??[])}${ansi.Reset}`,
     ));
   }
 
