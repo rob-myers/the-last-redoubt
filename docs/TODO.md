@@ -2,6 +2,11 @@
 
 ## In progress
 
+- ✅ BUG cannot reset Tabs before ever enabled
+- do-all-the-things-video
+- update CodeSandbox
+- CodeSandbox supports url params layout, profile
+
 - ✅ BUG saw global navpath compute incorrect direct local path in intermediate geomorph 102
   - repro `nav andros '{"x":-889.69,"y":1315.86'}`
   - ℹ️ geomorph 102 has two disjoint navmeshes, and our (src, dst) reside in each partition

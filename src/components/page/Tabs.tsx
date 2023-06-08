@@ -81,8 +81,9 @@ export default function Tabs(props: Props) {
     },
 
     reset() {
-      state.resetDisabled = true;      
       const tabs = useSiteStore.getState().tabs[props.id];
+      if (!tabs) return; // Tabs has never been enabled
+      state.resetDisabled = true;      
       const componentKeys = tabs.getTabNodes().map(node => node.getId());
       useSiteStore.api.removeComponents(tabs.key, ...componentKeys);
       state.justResetWhileDisabled = !state.enabled;
