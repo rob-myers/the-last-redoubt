@@ -214,8 +214,12 @@ Syntactically we provide an interactive shell.
 Semantically we manipulate Javascript values and run async generators.
 
 Let's see it action.
-The Terminal's _profile_ explains what it is doing,
-and prompts the user to "tap to continue".
+The Terminal's _profile_ explains itself step-by-step,
+prompting the user to "tap to continue".
+
+<Aside title="mobile-tty-touch-menu">
+  `<Terminal>` has a helpful side-menu (\<).
+</Aside>
 
 <Tabs
   id="tabs@world-1"
@@ -274,7 +278,7 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap n
   - Reset everything (<Icon icon="refresh" small inline />).
   - Pause everything (<Icon icon="cross-circle" small inline />).
   - Follow the Player by running <InlineCode copy>track rob</InlineCode>.
-  - Stop following via Ctrl-C (💀 on mobile).
+  - Stop following via Ctrl-C ("kill" on mobile).
   - List background processes <InlineCode copy>ps</InlineCode>.
   - Kill background processes <InlineCode copy>kill 8 18 26</InlineCode>.<SideNote>You can also pause/resume processes via `--STOP` and `--CONT`</SideNote>
   - List shell functions <InlineCode copy>declare -F</InlineCode>.
