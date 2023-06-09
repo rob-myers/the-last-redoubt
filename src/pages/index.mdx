@@ -296,7 +296,59 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap n
 
 ### Fabricating a behaviour
 
+We're finally ready to start creating NPC (Non-Player Character) behaviours.
+The bare minimum is a World, the Player and a single additional character.
+
 🚧
+
+<Tabs
+  id="tabs@world-1+"
+  initEnabled={false}
+  height={[600, 600]}
+  persistLayout
+  tabs={[
+    [
+      { type: 'component', class: 'World', filepath: 'world-1+', props: {
+        worldKey: 'world-1+',
+        init: { zoom: 0.5 , y: 600, ms: 0 },
+        gms: [
+          { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
+          { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
+          { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
+        ],
+      }},
+    ],
+    [
+      { type: 'terminal', filepath: 'tty@world-1+', env: {
+        WORLD_KEY: 'world-1+',
+        PROFILE:
+`source /etc/util-1
+source /etc/game-1
+
+awaitWorld
+
+NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}So far, this terminal's profile has defined shell functions and connected to world \\$WORLD_KEY.${ansi.Reset} tap to [continue](-)"
+
+spawn rob '{x: -90, y: 1075}'
+npc set-player rob
+view 1 '{x: -90, y: 1075}' 1.6
+
+NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc \\"rob\\", set them as the Player and pan-zoomed them into view.${ansi.Reset} tap to [continue](-)"
+
+npc map hide
+goLoop rob &
+doLoop rob &
+lookLoop rob &
+
+NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we have faded the map and set up the Player's controls."
+NOECHO=1 echo
+NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap nearby doors/icons (to ${ansi.Bold}do things${ansi.BoldReset}), and tap elsewhere (to ${ansi.Bold}look${ansi.BoldReset})."
+`
+      }},
+    ],
+  ]}
+/>
+
 
 {/* ```jsx
 // internals and return value simplified
