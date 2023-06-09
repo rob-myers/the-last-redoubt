@@ -126,7 +126,7 @@ export default function Terminal(props: Props) {
         }}
       />
 
-      {state.isTouchDevice && state.xtermReady &&
+      {state.xtermReady &&
         <TouchHelperUi
           session={state.session}
           disabled={props.disabled}

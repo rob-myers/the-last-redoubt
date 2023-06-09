@@ -2,6 +2,7 @@ import React from 'react';
 import { css, cx } from '@emotion/css';
 import { tryLocalStorageGet, tryLocalStorageSet } from 'projects/service/generic';
 import { zIndex, localStorageKey } from 'projects/service/const';
+import { canTouchDevice } from 'projects/service/dom';
 import type { Session } from 'projects/sh/session.store';
 import useStateRef from 'projects/hooks/use-state-ref';
 import useUpdate from 'projects/hooks/use-update';
@@ -58,10 +59,10 @@ export default function TouchHelperUI(props: {
   React.useMemo(() => {
     if (!tryLocalStorageGet(localStorageKey.touchTtyCanType)) {
       // tty disabled on touch devices by default
-      tryLocalStorageSet(localStorageKey.touchTtyCanType, 'false');
+      tryLocalStorageSet(localStorageKey.touchTtyCanType, `${!canTouchDevice}`);
     }
     if (!tryLocalStorageGet(localStorageKey.touchTtyOpen)) {
-      // touch menu closed on touch devices by default
+      // touch menu closed by default
       tryLocalStorageSet(localStorageKey.touchTtyOpen, 'false');
     }
     xterm.setCanType(tryLocalStorageGet(localStorageKey.touchTtyCanType) === 'true');
@@ -83,31 +84,55 @@ export default function TouchHelperUI(props: {
       >
         {state.open ? '>' : '<'}
       </div>
-      <div className={cx(
-        'icon can-type',
-        { enabled: xterm.canType() },
-      )}>
+      <div
+        className={cx(
+          'icon can-type',
+          { enabled: xterm.canType() },
+        )}
+        title={`text input ${xterm.canType() ? 'enabled' : 'disabled'}`}
+      >
         $
       </div>
-      <div className="icon paste">
+      <div
+        className="icon paste"
+        title="or press e.g. Cmd+V"
+      >
         paste
       </div>
-      <div className="icon enter">
+      <div
+        className="icon enter"
+        title="or press Enter"
+      >
         enter
       </div>
-      <div className="icon delete">
+      <div
+        className="icon delete"
+        title="or press Backspace"
+      >
         del
       </div>
-      <div className="icon ctrl-c">
+      <div
+        className="icon ctrl-c"
+        title="or press Ctrl+C"
+        >
         kill
       </div>
-      <div className="icon clear">
+      <div
+        className="icon clear"
+        title="or press Ctrl+L"
+        >
         clear
       </div>
-      <div className="icon up">
+      <div
+        className="icon up"
+        title="or press Up"
+      >
         prev
       </div>
-      <div className="icon down">
+      <div
+        className="icon down"
+        title="or press Down"
+      >
         next
       </div>
     </div>
@@ -128,7 +153,7 @@ const menuCss = css`
 
   line-height: 1; /** Needed for mobile viewing 'Desktop site' */
   background-color: rgba(0, 0, 0, 0.7);
-  font-size: 0.75rem;
+  font-size: 10px;
   border: 1px solid #555;
   border-width: 1px 1px 1px 1px;
   color: white;
@@ -160,6 +185,7 @@ const menuCss = css`
     justify-content: center;
     align-items: center;
     
+    cursor: pointer;
     font-size: 12px;
     background: rgba(0, 0, 0, 0.5);
     color: #ddd;
