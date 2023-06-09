@@ -289,9 +289,9 @@ function mockHandleDecorClick(event, api) {
   const decor = event.decor;
   if (decor.type === 'point') {
     const worldSessions = Object.values(api.npcs.session).filter(({ receiveMsgs }) => receiveMsgs === true);
-    if (decor.tags?.includes('label')) {
+    if (decor.meta.label) {
       /** Assume `[...tags, label, ...labelWords]` */
-      const label = decor.tags.slice(decor.tags.findIndex(tag => tag === 'label') + 1).join(' ');
+      const label = `${decor.meta.label}`;
       const { gmId, roomId } = decodeDecorInstanceKey(decor.key);
       const gm = api.gmGraph.gms[gmId];
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
@@ -313,7 +313,7 @@ function mockHandleDecorClick(event, api) {
     }
     api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
       sessionKey,
-      `${ansi.White}ℹ️  tags: ${JSON.stringify(decor.tags??[])}${ansi.Reset}`,
+      `${ansi.White}ℹ️  ${JSON.stringify(decor.meta??{})}${ansi.Reset}`,
     ));
   }
 

@@ -135,11 +135,8 @@ export async function createLayout(opts) {
   measurer.font = labelMeta.font;
   const labels = groups.singles.filter(x => x.meta.label)
     .map(/** @returns {Geomorph.LayoutLabel} */ ({ poly, meta }, index) => {
-      const tags = Object.keys(meta);
       const center = poly.rect.center.precision(precision).json;
-      // Subsequent tags make up label
-      // 🚧 label=foo
-      const text = tags.slice(tags.indexOf('label') + 1).join(' ');
+      const text = `${meta.label}`;
       const noTail = !text.match(/[gjpqy]/);
       const dim = { width: measurer.measureText(text).width, height: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
       const rect = Rect.fromJson({ x: center.x - 0.5 * dim.width, y: center.y - 0.5 * dim.height, width: dim.width, height: dim.height }).precision(precision).json;
@@ -1091,10 +1088,11 @@ export function filterSingles(singles, ...tagOrTags) {
  */
 export function tagsToMeta(tags, baseMeta) {
   return tags.reduce((meta, tag) => {
-    meta[tag] = true; // Preserve tag even if foo=bar
     const eqIndex = tag.indexOf('=');
     if (eqIndex > -1) {
       meta[tag.slice(0, eqIndex)] = parseJsonArg(tag.slice(eqIndex + 1));
+    } else {
+      meta[tag] = true; // Omit tags `foo=bar`
     }
     return meta;
   }, baseMeta);

@@ -7,9 +7,12 @@
   - `ffmpeg -i 'Screen Recording 2023-06-08 at 12.53.10.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4`
 - ✅ Finish section `Worlds, Players and Terminals` 
 
+- ✅ represent labels via label={label}
+- `walk` can open doors on the way
+- Start section `Fabricating a behaviour`
+
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
-- Start section `Fabricating a behaviour`
 
 - ✅ BUG saw global navpath compute incorrect direct local path in intermediate geomorph 102
   - repro `nav andros '{"x":-889.69,"y":1315.86'}`
