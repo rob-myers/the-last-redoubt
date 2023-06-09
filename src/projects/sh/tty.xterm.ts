@@ -164,9 +164,9 @@ export class ttyXtermClass {
   }
 
   /**
-   * Delete left-most word.
+   * Delete right-most word to the left of cursor.
    */
-  private deletePreviousWord() {
+  deletePreviousWord() {
     const cursor = this.closestLeftBoundary(this.input, this.cursor);
     if (cursor != null) {
       const nextInput = this.input.slice(0, cursor) + this.input.slice(this.cursor);
@@ -793,7 +793,9 @@ export class ttyXtermClass {
 
   showPendingInput = debounce(() => {
     if (this.promptReady) {
-      this.setInput(this.input);
+      const input = this.input;
+      this.clearInput(); // Clear to avoid double prompt
+      this.setInput(input);
     }
   }, 5) // Prefer small lag on show cursor
 
@@ -810,9 +812,7 @@ export class ttyXtermClass {
       }
       this.setInput(prevInput.slice(0, prevCursor) + input + prevInput.slice(prevCursor));
     } else {
-      this.queueCommands([
-        { key: 'line', line: `ℹ️  not ready, ignored paste: ${input}` },
-      ]);
+      this.warnIfNotReady();
     }
   }
 
@@ -825,6 +825,14 @@ export class ttyXtermClass {
       this.cursorRow = 1;
     } else if (this.cursorRow > this.xterm.rows) {
       this.cursorRow = this.xterm.rows;
+    }
+  }
+
+  warnIfNotReady() {
+    if (!this.promptReady) {
+      this.queueCommands([
+        { key: 'line', line: `ℹ️  not ready` },
+      ]);  
     }
   }
 
