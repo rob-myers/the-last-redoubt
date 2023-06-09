@@ -12,13 +12,13 @@ export default function TouchHelperUI(props: {
 }) {
 
   const update = useUpdate();
+  const { xterm } = props.session.ttyShell;
 
   const state = useStateRef(() => {
     return {
       open: true,
       async onClickMenu(e: React.MouseEvent) {
         const target = e.target as HTMLElement;
-        const { xterm } = props.session.ttyShell;
         xterm.xterm.scrollToBottom();
         if (target.classList.contains('paste')) {
           try {
@@ -29,14 +29,14 @@ export default function TouchHelperUI(props: {
           const next = !xterm.canType()
           xterm.setCanType(next);
           tryLocalStorageSet(localStorageKey.touchTtyCanType, `${next}`);
+          next && xterm.warnIfNotReady();
           update();
         } else if (target.classList.contains('ctrl-c')) {
           xterm.sendSigKill();
         } else if (target.classList.contains('enter')) {
           xterm.queueCommands([{ key: 'newline' }]);
         } else if (target.classList.contains('delete')) {
-          xterm.clearInput();
-          xterm.showPendingInput();
+          xterm.deletePreviousWord();
         } else if (target.classList.contains('clear')) {
           xterm.clearScreen();
         } else if (target.classList.contains('up')) {
@@ -56,7 +56,6 @@ export default function TouchHelperUI(props: {
   });
   
   React.useMemo(() => {
-    const { xterm } = props.session.ttyShell;
     if (!tryLocalStorageGet(localStorageKey.touchTtyCanType)) {
       // tty disabled on touch devices by default
       tryLocalStorageSet(localStorageKey.touchTtyCanType, 'false');
@@ -86,7 +85,7 @@ export default function TouchHelperUI(props: {
       </div>
       <div className={cx(
         'icon can-type',
-        { enabled: props.session.ttyShell.xterm.canType() },
+        { enabled: xterm.canType() },
       )}>
         $
       </div>
@@ -100,16 +99,16 @@ export default function TouchHelperUI(props: {
         del
       </div>
       <div className="icon ctrl-c">
-        💀
+        kill
       </div>
       <div className="icon clear">
         clear
       </div>
       <div className="icon up">
-        ⬆️
+        prev
       </div>
       <div className="icon down">
-        ⬇️
+        next
       </div>
     </div>
   );
@@ -146,15 +145,12 @@ const menuCss = css`
   }
   &:not(.open) {
     transform: translate(var(--menu-width), 0px);
-    .menu-toggler {
-      background: rgba(0, 0, 0, 0.5);
-    }
   }
   
   .menu-toggler {
     position: absolute;
     z-index: ${zIndex.ttyTouchHelper};
-    top: 48px;
+    top: 0px;
     right: calc(var(--menu-width) - 1px);
     
     width: 32px;
@@ -165,7 +161,7 @@ const menuCss = css`
     align-items: center;
     
     font-size: 12px;
-    background: #222;
+    background: rgba(0, 0, 0, 0.5);
     color: #ddd;
     border: 2px solid #444;
   }
@@ -176,6 +172,7 @@ const menuCss = css`
     text-align: center;
     padding: 12px;
     transform: scale(1.2);
+    color: #cfc;
   }
 
   .can-type {
@@ -183,8 +180,5 @@ const menuCss = css`
     &:not(.enabled) {
       color: #999;
     }
-  }
-  .paste, .enter, .delete, .clear {
-    color: #cfc;
   }
 `;
