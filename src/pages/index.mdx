@@ -298,117 +298,6 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap n
 
 🚧
 
-{/* What actually _is_ a character behaviour?
-Roughly speaking, it involves the Player observing or interacting with one or more NPCs.
-We believe this is worth defining formally.
-We need other concepts i.e. World, NPC, Player and Command.
-
-<Def title="world">
-
-  #### Definition: World
-  
-  A _World_ is a component instance [`<World>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab").
-  
-  Its required props<SideNote>A.k.a. _inputs_, see [the component](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx#:~:text=@typedef%20Props).</SideNote> are `worldKey` (string) and
-  `gms` (objects `{gmKey, transform}`), specifying the geomorphs and where to put them.
-  Its [state](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx#:~:text=const%20state "@new-tab") is stored under `worldKey` in an application-wide [cache](https://tanstack.com/query/v4/docs/react/reference/QueryClient "@new-tab"). This external API is denoted `api`.
-
-</Def>
-
-At present, we support 5 geomorphs (Robert Pearce provided [hundreds](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab")) constructed from about 80 of his [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab")<SideNote>Available in PNG format on [Eric Smith's site](http://ericbsmith.no-ip.org/geomorphs/ "@new-tab").</SideNote>.
-
-<Carousel
-  baseSrc="/assets/geomorph/"
-  height={450}
-  mobileHeight={350}
-  fullHeight={800}
-  items={[
-    { src: 'g-101--multipurpose.map.png', webp: true, label: 'Geomorph 101 (Multipurpose)' },
-    { src: 'g-102--research-deck.map.png', webp: true, label: 'Geomorph 102 (Research Deck)' },
-    { src: 'g-301--bridge.map.png', webp: true, label: 'Geomorph 301 (Bridge)' },
-    { src: 'g-302--xboat-repair-bay.map.png', webp: true, label: 'Geomorph 302 (Xboat Repair Bay)' },
-    { src: 'g-303--passenger-deck.map.png', webp: true, label: 'Geomorph 303 (Passenger Deck)' },
-  ]}
-/>
-
-The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
-The geomorphs should be transformed so each hull door either (a) touches nothing else, (b) coincides with exactly one other hull door.
-Intuitively we "glue" geomorphs together at their hull doors -- exactly their original purpose.
-Below we have combined `101`, `301`, and also `101`, `102`, `303`.
-
-```jsx
-<World
-  worldKey="map-only-1"
-  gms={[
-    { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
-    { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
-    { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
-  ]}
-/>
-
-<World
-  worldKey="map-only-2"
-  gms={[
-    { gmKey: 'g-101--multipurpose' },
-    { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
-    { gmKey: 'g-102--research-deck', transform: [-1, 0, 0, 1, 0, 0] },
-    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, 1, 0, -600] },
-    { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, 0, 600 + 1200] },
-  ]}
-/>
-```
-
-<Tabs
-  id="world-map-only"
-  initEnabled={false}
-  height={[400, 500]}
-  persistLayout
-  tabs={[
-    [
-      { type: 'component', class: 'World', filepath: 'map-only-1', props: {
-          init: { x: 600, y: 600, zoom: 0.3 },
-          worldKey: 'map-only-1',
-          gms: [
-            { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
-            { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
-            { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
-          ],
-      }},
-      { type: 'component', class: 'World', filepath: 'map-only-2', props: {
-          init: { x: 600, y: 600, zoom: 0.3 },
-          worldKey: 'map-only-2',
-          gms: [
-            { gmKey: 'g-101--multipurpose' },
-            { gmKey: 'g-102--research-deck', transform: [1, 0, 0, 1, 1200, 0] },
-            { gmKey: 'g-102--research-deck', transform: [-1, 0, 0, 1, 0, 0] },
-            { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, 1, 0, -600] },
-            { gmKey: 'g-303--passenger-deck', transform: [1, 0, 0, -1, 0, 600 + 1200] },
-          ],
-      }},
-    ],
-  ]}
-/>
-
-The Worlds above lack NPCs e.g. there is no Player.
-Then there is no representation of the Player's _sensory awareness_, and the World amounts to a static pan/zoomable map.
-
-<Def title="npc-and-player">
-
-  #### Definitions: NPC, Player
-  
-  An _NPC_ is a component instance [`<NPC>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPC.jsx "@new-tab").
-  
-  Its props are `api` and `npcKey` (string) i.e. the NPC's _key_.
-  Its state is stored at `api.npcs.npc[npcKey]` and created by
-  [create-npc.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/create-npc.js "@new-tab").
-  Finally, an NPC is the _Player_ if it has key `api.npcs.playerKey`.
-
-</Def>
-
-Each World is an instance of a React function component, as is each NPC.
-We postpone the internals of World to a future blog post.
-However, it will help to look at NPC right now. */}
-
 {/* ```jsx
 // internals and return value simplified
 export default function NPC({ api, npcKey }) {
@@ -442,93 +331,19 @@ Each of the above divs has an associated purpose:
 {/* Each World instantiates subcomponents including [`<NPCs>`](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/NPCs.jsx).
 The latter has state `api.npcs` and instantiates each NPC. */}
 
-{/* How can we spawn NPCs into a World?
-Although there is a JavaScript function `api.npcs.spawn` we'd rather not invoke it directly.
-JavaScript is not designed to be run interactively. */}
-
-{/* In order to spawn NPCs into a World we use a Command Line Interface (CLI). */}
-
 {/* 🚧 shell command (or _command_)
 
 🚧 game command: command using some World API
 
 🚧 npc behaviour (or _behaviour_): game command using some World npcs API */}
 
-{/* We'll **specify behaviour** using the syntax of an interactive programming language.
-We'll **execute behaviour** by running (possibly many) programs in parallel.
-But what about **(2)** above?
-Why should the **implementation details** of our system be of general interest?
-Answering this requires some background.
-
-_Game AI_ builds control systems for Non-Player Characters (NPCs) in video games.
-Scratching beneath the surface reveals a highly fragmented subject.
-Online demos involving [navmeshes](https://www.babylonjs-playground.com/#0DQBXD#42 "@new-tab") and [steering behaviour](https://davenewt.github.io/steering-behaviours/ "@new-tab") exist, but these are ingredients, rather than the rich experiences we seek.
-Why does Game AI only seem to exist within the context of a video game?
-
-> Here's a possible reason:
->
-> Assets and animations relative to a particular setting are needed to make Game AI meaningful.
-In making these choices and constructing the respective assets, one moves away from a general AI system and towards making a video game.
-
-*/}
-
 {/* NPC behaviour may be _simulated_ i.e. task-driven imitations of human behaviour. NPC behaviour may be _fabricated_ i.e. specifically constructed in response to the Player's actions. */}
 {/* For example, if the Player enters a particular room we could spawn enemies (fabrication) which are instructed to chase after the Player (simulation). */}
-
-{/* Video games almost always need Game AI e.g. control systems for entities not under control of the Player. */}
-
-{/* This blog is about programming Non-Player Characters (aka [NPCs](https://en.wikipedia.org/wiki/Non-player_character "@new-tab")).
-An NPC is a character in a video game e.g. a human, alien, robot or animal.
-They are not controlled by the Player.
-Sometimes video games run a simulation involving individual NPCs.
-Sometimes they fabricate NPC behaviour in response to the Player's actions.
-My personal interest began with the ZX Spectrum in the late 1980s.
-In those days anything seemed possible.
-Nowadays, NPC has even become [an insult](https://en.wikipedia.org/wiki/NPC_(meme)). */}
-
-{/* <Aside title="screenshots">
-
-  _A World and a Terminal_ (1st slide above) depicts a [Tabs component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/page/Tabs.tsx#:~:text=function%20Tabs "@new-tab") with five tabs.
-  Two of the tabs are visible.
-  The left tab is an instance of a [World component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/world/World.jsx#:~:text=export%20default-,function%20World,-(props) "@new-tab") and
-  the right tab instantiates a [Terminal component](https://github.com/rob-myers/the-last-redoubt/blob/master/src/components/sh/Terminal.tsx#:~:text=function%20Terminal "@new-tab").
-  The `World` shows an NPC from a birdseye perspective.
-  The other images show the `Tabs`, `World` and `Terminal` in other states.<SideNote width={500}>Some commands shown in the terminals are out-of-date. We now run `npc config debug` to toggle debug mode, rather than `DEBUG=1; npc config`</SideNote>
-
-</Aside> */}
 
 {/* By this we mean an interactive [Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface) running in the browser.
 Graphically it amounts to [Xterm.js](https://github.com/xtermjs/xterm.js#readme).<SideNote>Keypresses are handled by our own analog of [Readline](https://en.wikipedia.org/wiki/GNU_Readline).</SideNote>
 Programmatically it interprets POSIX shell syntax as JavaScript and executes it.<SideNote>We parse shell syntax using the wonderful [mvdan-sh](https://www.npmjs.com/package/mvdan-sh).</SideNote>
-Supported syntax includes shell pipelines, shell functions and background processes.
-Let's see it in action:
-
-As mentioned in the video, every shell session begins by running the script at `/home/PROFILE`.
-In the above session this absolute path resolves to a string:
-
-```bash
-source /etc/util-1
-source /etc/game-1
-
-awaitWorld
-spawn andros '{"x":185,"y":390}'
-npc set-player andros
-
-# camera follows andros
-track andros &
-# click navmesh to move
-goLoop andros &
-# click outside navmesh to look
-lookLoop andros &
-
-npc config 'showIds debug'
-```
-
-Consider the first line of the newline-delimited string above.
-Our shell builtin `source`<SideNote width={340}>`source` behaves like the [Bash builtin](https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html#index-source), a synonym for a [Bourne shell builtin](https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-_002e).</SideNote> will run the script at `/etc/util-1`<SideNote width={360}>`/etc/util-1` resolves to a string defining various shell functions e.g. [`range`](https://github.com/rob-myers/the-last-redoubt/blob/master/src/projects/sh/scripts.ts#:~:text=%7B-,range%3A%20%60%7B "@new-tab")</SideNote>.
-The video goes through the rest of this profile, explaining the various commands and their connection to the `World`. */}
-
-{/* (a) list available shell functions, (b) inspect their definitions, and (c) chain them together using shell pipelines. */}
+Supported syntax includes shell pipelines, shell functions and background processes.*/}
 
 {/* <Aside title="interpret-js">
 
@@ -558,22 +373,6 @@ Finally, CSS permits _rich interactive debugging_.
 That is, one may directly mutate the DOM-tree in a browser devtool,
 whereas debugging `<canvas>` amounts to setting breakpoints inside JavaScript code. */}
 
-{/* Writing meaningfully about NPC behaviour will require _many_ flexible interactive demos.
-So, we're going to have to write a lot of software,
-and we're going to have to do it in a particularly clear manner.
-Importantly:
-
-- An in-browser CLI permits:
-  > writing, running and managing this software _explicitly_.
-
-- CSS-based rendering provides:
-  > performant rendering and particularly rich debugging via a browser devtool.
-
-POSIX-based CLIs are heavily used in e.g. home computing, development environments and cloud computing (infrastructure as a service).
-CSS plays a crucial role in personal websites, rich web applications, and [desktop applications](https://www.electronjs.org/) like [VSCode](https://en.wikipedia.org/wiki/Visual_Studio_Code).
-Composing these two technologies avoids many UI decisions, for which there is no correct answer. */}
-
-
 {/* We want to program NPCs, producing a catalogue of interesting behaviours.
 We are particularly interested in studying how they can be composed in response to the Player's actions.
 However, NPC behaviours need to be studied at the right level of abstraction.
@@ -586,50 +385,7 @@ It is usually brought to life via assets representing a specific situation: suit
 We definitely need this _spice_ i.e. assets and animations which bring our NPCs to life.
 > Thankfully we can use [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html "@new-tab") by Robert Pearce,
 > a large number of aerial-view assets representing Starships, Space-stations, Space-colonies etc.
-
-<Aside title="geomorph">
-
-A _geomorph_ is a rectangular section of a Starship (or Space-station etc.) connectable to others much like Lego.
-Each geomorph amounts to a layout of many different rooms of particular types e.g. staterooms (bedrooms), offices, freshers (bathrooms and toilets), labs, infirmaries, lounges etc.
-
-<Carousel
-  baseSrc="/assets/geomorph/"
-  height={350}
-  mobileHeight={300}
-  fullHeight={800}
-  invert
-  items={[
-    { src: 'g-301--bridge.map.png', label: 'Geomorph 301 (Bridge)' },
-    { src: 'g-302--xboat-repair-bay.map.png', label: 'Geomorph 302 (Xboat Repair Bay)' },
-    { src: 'g-303--passenger-deck.map.png', label: 'Geomorph 303 (Passenger Deck)' },
-    { src: 'g-101--multipurpose.map.png', label: 'Geomorph 101 (Multipurpose)' },
-    { src: 'g-102--research-deck.map.png', label: 'Geomorph 102 (Research Deck)' },
-  ]}
-/>
-
-Above we have recreated some of Robert Pearce's geomorphs using his [Starship Symbols](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html "@new-tab").
-
-</Aside>
-
-
-🚧 Starship Geomorphs provides assets, but what about _character animations_?
-Well, the term "geomorph" actually comes from a pen-and-paper Role-playing Game called Traveller....
-We use [Synfig](https://www.synfig.org/ "@new-tab") for character animation. */}
-
-
-{/* 🚧 Please [read the introduction](/intro/). Initially we need a fair amount of exposition.
-This reflects our initial work on the "game engine" before we started creating this site.
-Partial exposition is indicated by <RoadWorksIcon bottom />. */}
-
-{/* ### Demo */}
-
-{/* 🚧 Move after cli-video? */}
-
-{/* 🚧 Actions speak louder than words.
-Click to navigate or interact (e.g. open doors).
-You can drag/scroll/pinch to pan and zoom.
-Try resetting (<Icon icon="refresh" small inline />), maximising a tab or all tabs (<Icon icon="expand" small inline />), and disabling (<Icon icon="cross-circle" small inline />).
-Toggle debug circles by typing <InlineCode copy>npc config debug</InlineCode>. */}
+*/}
 
 {/* ### Changelog
 
