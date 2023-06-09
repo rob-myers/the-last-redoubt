@@ -2,7 +2,13 @@
 
 ## In progress
 
+- ✅ BUG with two terminals on same page sessionKey gets confused
+  - seems `node.meta.sessionKey` is being overwritten!
+  - doesn't require other terminal to run `choice`
+  - happens when we initiate another terminal while first terminal awaits link click
+
 - 🚧 Start section `Fabricating a behaviour`
+  - `nav foo --tryOpen $( click 1 ) | walk foo`
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile

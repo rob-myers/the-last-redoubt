@@ -697,12 +697,17 @@ export const srcService = new srcServiceClass;
  */
 class ParseShService {
 
-  private mockMeta: BaseMeta;
+  /** This is actually attached to parse trees, and then reset per-parse */
+  private mockMeta!: BaseMeta;
   private mockPos: () => Sh.Pos;
   private cache = {} as { [src: string]: FileWithMeta };
 
   constructor() {
     this.mockPos = () => ({ Line: () => 1, Col: () => 1, Offset: () => 0} as Sh.Pos);
+    this.resetMockMeta();
+  }
+
+  resetMockMeta() {
     this.mockMeta = {
       sessionKey: defaultSessionKey,
       pid: -1,
@@ -750,15 +755,25 @@ class ParseShService {
     }
     const parser = syntax.NewParser(
       syntax.KeepComments(true),
-      // syntax.Variant(syntax.LangBash),
       syntax.Variant(syntax.LangPOSIX),
+      // syntax.Variant(syntax.LangBash),
       // syntax.Variant(syntax.LangMirBSDKorn),
     );
     const parsed = parser.Parse(src, 'src.sh');
     // console.log('mvdan-sh parsed', parsed);
-    // Clean the parse, making it serializable.
-    // Also use single fresh `meta` for all nodes & attach parents.
+
+    /**
+     * Fresh `this.mockMeta` required, else other session
+     * will overwrite `meta.sessionKey`.
+     */
+    this.resetMockMeta();
+    /**
+     * Clean the parse, making it serializable.
+     * `this.mockMeta` will be attached to every node.
+     * We also attach the parent to each child node.
+     */
     const output = withParents(this.File(parsed));
+    // console.log('parse meta', JSON.stringify(this.File(parsed).meta))
 
     return cache ? this.cache[src] = output : output;
   }
