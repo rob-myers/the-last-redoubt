@@ -2,43 +2,10 @@
 
 ## In progress
 
-
-- ✅ do-all-the-things video
-  - `ffmpeg -i 'Screen Recording 2023-06-08 at 12.53.10.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4`
-- ✅ Finish section `Worlds, Players and Terminals` 
-
-- ✅ represent labels via label={label}
-- ✅ `nav --tryOpen` tries to open doors on the way
-  ```sh
-  spawn foo zhodani $( click 1 )
-  nav --tryOpen foo $( click 1 ) | walk foo
-  ```
-- Start section `Fabricating a behaviour`
+- 🚧 Start section `Fabricating a behaviour`
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
-
-- ✅ BUG saw global navpath compute incorrect direct local path in intermediate geomorph 102
-  - repro `nav andros '{"x":-889.69,"y":1315.86'}`
-  - ℹ️ geomorph 102 has two disjoint navmeshes, and our (src, dst) reside in each partition
-  - ✅ remove degenerate small navmesh from 101, 102
-  - ✅ precompute navGroupId for each door/window
-  - ✅ change definition of gm-graph so multiple geomorph nodes when multiple navmeshes
-    - remove assumption that nodesArray[gmId] is unique gm node
-
-- ✅ Split initial carousel i.e. 1 image, then 2 images
-- ✅ start geomorph 103
-  - ℹ️ media/symbols-png-staging/README.md
-  - ✅ hull symbol (ensuring no transforms on groups!)
-  - ✅ add cargo symbol
-  - ✅ add initial layout geomorph-layouts
-  - ✅ `yarn render-layout 103`
-  - ✅ `yarn bake-lighting 103` (currently no lighting)
-  - ✅ extend geomorph-layouts using GeomorphEdit to preview
-    - ℹ️ beware GeomorpEdit can break if you put a symbol over a door
-
-
-- 🚧 Link to new sandbox
   - Can supply url params to specify layout and profile?
   - https://codesandbox.io/s/tty-world-2-june-2023-g8tb0c?file=/src/service/geomorph.js
 
@@ -418,6 +385,36 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ do-all-the-things video
+  - `ffmpeg -i 'Screen Recording 2023-06-08 at 12.53.10.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4`
+- ✅ Finish section `Worlds, Players and Terminals` 
+
+- ✅ represent labels via label={label}
+- ✅ `nav --tryOpen` tries to open doors on the way
+  ```sh
+  spawn foo zhodani $( click 1 )
+  nav --tryOpen foo $( click 1 ) | walk foo
+  ```
+
+- ✅ BUG saw global navpath compute incorrect direct local path in intermediate geomorph 102
+  - repro `nav andros '{"x":-889.69,"y":1315.86'}`
+  - ℹ️ geomorph 102 has two disjoint navmeshes, and our (src, dst) reside in each partition
+  - ✅ remove degenerate small navmesh from 101, 102
+  - ✅ precompute navGroupId for each door/window
+  - ✅ change definition of gm-graph so multiple geomorph nodes when multiple navmeshes
+    - remove assumption that nodesArray[gmId] is unique gm node
+
+- ✅ Split initial carousel i.e. 1 image, then 2 images
+- ✅ start geomorph 103
+  - ℹ️ media/symbols-png-staging/README.md
+  - ✅ hull symbol (ensuring no transforms on groups!)
+  - ✅ add cargo symbol
+  - ✅ add initial layout geomorph-layouts
+  - ✅ `yarn render-layout 103`
+  - ✅ `yarn bake-lighting 103` (currently no lighting)
+  - ✅ extend geomorph-layouts using GeomorphEdit to preview
+    - ℹ️ beware GeomorpEdit can break if you put a symbol over a door
 
 - ✅ BUG fix room label link 
 - ✅ BUG cannot reset Tabs before ever enabled
