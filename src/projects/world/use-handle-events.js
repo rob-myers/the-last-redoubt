@@ -28,12 +28,17 @@ export default function useHandleEvents(api) {
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
           break;
-        case 'pre-near-door':
-          // If upcoming door is closed, stop npc
-          if (!api.doors.open[e.meta.gmId][e.meta.doorId]) {
-            await npc.cancel();
+        case 'pre-near-door': {
+          const { gmId, doorId, tryOpen } = e.meta;
+          if (!api.doors.open[gmId][doorId]) {// Upcoming door closed
+            if (tryOpen && !api.doors.locked[gmId][doorId]) {
+              api.doors.toggleDoor(gmId, doorId, { open: true });
+            } else { // Stop npc
+              await npc.cancel();
+            }
           }
           break;
+        }
       }
     },
 

@@ -149,15 +149,18 @@ export default function createNpc(
       this.anim.wayMetas.length = 0;
       window.clearTimeout(this.anim.wayTimeoutId);
     },
+    // We take advantage of precomputed this.anim.aux.sofars
     computeWayMetaLength(navMeta) {
-      // We take advantage of precomputed this.anim.aux.sofars
       if (navMeta.key === 'pre-near-door') {
-        // try to stop close to door
         const gm = api.gmGraph.gms[navMeta.gmId];
         const navPoint = gm.inverseMatrix.transformPoint(this.anim.path[navMeta.index].clone());
         const door = gm.doors[navMeta.doorId];
         const distanceToDoor = Math.abs(door.normal.dot(navPoint.sub(door.seg[0])));
-        return Math.max(0, this.anim.aux.sofars[navMeta.index] - (this.getRadius() + 5 - distanceToDoor));
+        if (navMeta.tryOpen) {// change length so npc not too close to door
+          return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 15));
+        } else {// change length so npc is close to door
+          return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
+        }
       } else {
         return this.anim.aux.sofars[navMeta.index];
       }

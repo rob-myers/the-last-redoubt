@@ -565,6 +565,8 @@ class cmdServiceClass {
       return killError(this.meta);
     },
   
+    getOpts,
+
     getProcess() {
       return getProcess(this.meta);
     },

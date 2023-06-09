@@ -1,8 +1,8 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
-import { assertNonNull, pause } from "../service/generic";
-import { cssName, defaultDoorCloseMs, doorWidth, hullDoorWidth } from "./const";
+import { pause } from "../service/generic";
+import { cssName, defaultDoorCloseMs } from "./const";
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -16,15 +16,16 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = props.api;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
-    // know gmGraph is ready
-    closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     events: new Subject,
-    open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
     touchMeta: gms.map((gm, gmId) => gm.doors.map((_, doorId) =>
       JSON.stringify({ door: true, ui: true, gmId, doorId })
     )),
+
+    closing: gms.map((gm, _) => gm.doors.map(__ => null)),
+    locked: gms.map((gm, _) => gm.doors.map(__ => false)),
+    open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
     vis: gms.map(_ => ({})),
 
     getOpenIds(gmId) {
@@ -284,12 +285,14 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {(null | { timeoutId: number; })[][]} closing Provides `closing[gmId][doorId]?.timeoutId`
+ * @property {boolean[][]} locked
+ * `locked[gmId][doorId]` <=> door is locked 
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(e: PointerEvent) => void} onClickDoor
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
- * @property {boolean[][]} open `open[gmId][doorId]`
+ * @property {boolean[][]} open `open[gmId][doorId]` <=> door is open
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {string[][]} touchMeta `touchMeta[gmId][doorId]` is stringified meta of respective door
@@ -301,6 +304,7 @@ const rootCss = css`
  * @property {() => void} update
  * @property {() => void} updateVisibleDoors
  * @property {{ [doorId: number]: true }[]} vis
+ * `vis[gmId][doorId]` <=> `door` is visible
  */
 
 /**

@@ -241,28 +241,29 @@
      * Request navpath(s) to position(s) for character(s), e.g.
      * ```sh
      * nav andros "$( click 1 )"
-     * # or:
+     * nav andros "$( click 1 )" --tryOpen
      * expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav
-     * # or:
-     * expr '{"x":300,"y":300}' | nav andros
-     * click | nav andros
+     * expr '{"x":300,"y":300}' | nav andros --tryOpen
+     * click | nav andros --tryOpen
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
+      const { opts, operands } = api.getOpts(args, { boolean: [
+        "tryOpen", /** Try to open doors */
+      ]});
+
       const { npcs } = api.getCached(home.WORLD_KEY)
       if (api.isTtyAt(0)) {
-        const npcKey = args[0]
-        const point = api.safeJsonParse(args[1])
-        yield npcs.getNpcGlobalNav({ npcKey, point })
-      } else if (args[0]) {
-        const npcKey = args[0]
-        while ((datum = await api.read()) !== null) {
-          yield npcs.getNpcGlobalNav({ npcKey, point: datum })
-        }
+        const npcKey = operands[0]
+        const point = api.safeJsonParse(operands[1])
+        yield npcs.getNpcGlobalNav({ npcKey, point, tryOpen: opts.tryOpen })
+      } else if (operands[0]) {
+        const npcKey = operands[0]
+        while ((datum = await api.read()) !== null)
+          yield npcs.getNpcGlobalNav({ npcKey, point: datum, tryOpen: opts.tryOpen })
       } else {
-        while ((datum = await api.read()) !== null) {
-          yield npcs.getNpcGlobalNav({ ...datum })
-        }
+        while ((datum = await api.read()) !== null)
+          yield npcs.getNpcGlobalNav({ tryOpen: opts.tryOpen, ...datum })
       }
     },
   
@@ -435,10 +436,10 @@
   
       npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
   
-      if (api.isTtyAt(0)) {
+      if (api.isTtyAt(0)) {// `walk {npcKey} {points}`
         const points = api.safeJsonParse(args[1])
         await npcs.walkNpc({ npcKey, key: "global-nav", fullPath: points, navMetas: [] })
-      } else {
+      } else {// `walk {npcKey}` expects to read global navPaths
         datum = await api.read()
         while (datum !== null) {
           const navPath = /** @type {NPC.GlobalNavPath} */ (datum);

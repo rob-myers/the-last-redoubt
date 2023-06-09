@@ -8,7 +8,11 @@
 - ✅ Finish section `Worlds, Players and Terminals` 
 
 - ✅ represent labels via label={label}
-- `walk` can open doors on the way
+- ✅ `nav --tryOpen` tries to open doors on the way
+  ```sh
+  spawn foo zhodani $( click 1 )
+  nav --tryOpen foo $( click 1 ) | walk foo
+  ```
 - Start section `Fabricating a behaviour`
 
 - update CodeSandbox
