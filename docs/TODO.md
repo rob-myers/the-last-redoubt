@@ -5,8 +5,10 @@
 - 🚧 Start section `Fabricating a behaviour`
   - ℹ️ `nav foo --tryOpen $( click 1 ) | walk foo`
   - ✅ `choice` supports read from non tty
+  - ✅ example of process continued by invoking shell variable
   - 🚧 example of later pipe child talking to earlier pipe child
     - store `resolve` in shell variable
+
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile

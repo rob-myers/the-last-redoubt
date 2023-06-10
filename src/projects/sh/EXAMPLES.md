@@ -9,6 +9,24 @@ __TODO__
 ( local y='{ foo: 42 }'; y/foo )
 ```
 
+## Invoke JS function
+
+```sh
+$ call '({ home }) => { home.func = () => console.log("wow") }'
+# we cannot simply `func()` because collides with shell function syntax
+$ func'()'
+```
+
+```sh
+$ run '({ api, home }) {  await new Promise(resolve => { api.addCleanup(home.resolve = resolve); }); yield "done"; }' &
+$ ps
+pid   ppid  pgid 
+0     0     0    ▶️  ps
+12    0     12   ▶️  run '({ api, home }) {  await  ...
+$ resolve'()'
+done
+```
+
 ## Builtins
 
 ```sh
