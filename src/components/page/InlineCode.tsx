@@ -39,13 +39,14 @@ const rootCss = css`
     color: #0f0;
     letter-spacing: 1px;
     background-color: #333;
-    padding: 2px 8px;
+    padding: 0 8px;
     border-radius: 4px;
     /* border: 1px solid #eeeeee22; */
   }
 
   /* cursor: pointer; */
   position: relative;
+  display: inline-block;
 
   &::after {
     display: none;
