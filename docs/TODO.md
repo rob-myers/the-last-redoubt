@@ -28,6 +28,7 @@
 - support ansi color codes inside `choice` args
 - HMR useGeomorphs?
 
+- Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move
 - Doors: CSS -> WAAPI (?)
 - 🤔 BUG tty long input overflow *responsive* deformation
