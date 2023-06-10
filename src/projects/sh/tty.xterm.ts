@@ -830,9 +830,10 @@ export class ttyXtermClass {
 
   warnIfNotReady() {
     if (!this.promptReady) {
-      this.queueCommands([
-        { key: 'line', line: `ℹ️  not ready` },
-      ]);  
+      this.queueCommands([{ key: 'line', line: `ℹ️  not ready` }]);  
+      return true; // not ready 
+    } else {
+      return false;
     }
   }
 

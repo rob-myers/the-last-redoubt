@@ -35,7 +35,10 @@ export default function TouchHelperUI(props: {
         } else if (target.classList.contains('ctrl-c')) {
           xterm.sendSigKill();
         } else if (target.classList.contains('enter')) {
-          xterm.queueCommands([{ key: 'newline' }]);
+          if (!xterm.warnIfNotReady()) {
+            // avoid sending 'newline' whilst 'await-prompt'
+            xterm.queueCommands([{ key: 'newline' }]);
+          }
         } else if (target.classList.contains('delete')) {
           xterm.deletePreviousWord();
         } else if (target.classList.contains('clear')) {
