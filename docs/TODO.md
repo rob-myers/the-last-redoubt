@@ -7,7 +7,9 @@
   - ✅ `choice` supports read from non tty
   - ✅ example of process continued by invoking shell variable
   - 🚧 example of later pipe child talking to earlier pipe child
-    - store `resolve` in shell variable
+    - can create Subject at /home/mySubject
+    - earlier process converts to async iterable: `api.observableToAsyncIterable`
+    - later process sends message to continue
 
 
 - update CodeSandbox

@@ -282,7 +282,7 @@
 
       // `npc events` yields > 1 output (potentially unbounded)
       if (action === "events") {// Never ends and must be killed (maybe implicitly)
-        const asyncIterable = lib.observableToAsyncIterable(lib.merge(
+        const asyncIterable = api.observableToAsyncIterable(lib.merge(
           doors.events,
           npcs.events,
           panZoom.events,

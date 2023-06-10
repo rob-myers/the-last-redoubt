@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
-import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
+import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -10,6 +10,7 @@ import { ttyShellClass } from './tty.shell';
 
 import { scriptLookup } from './scripts';
 import { getCached } from '../service/query-client';
+import { observableToAsyncIterable } from '../service/observable-to-async-iterable';
 
 /** Shell builtins */
 const commandKeys = {
@@ -585,6 +586,8 @@ class cmdServiceClass {
     isTtyAt(fd = 0) {
       return isTtyAt(this.meta, fd);
     },
+
+    observableToAsyncIterable,
   
     /** js parse with string fallback */
     parseJsArg,
