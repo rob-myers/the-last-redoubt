@@ -2,13 +2,11 @@
 
 ## In progress
 
-- ✅ BUG with two terminals on same page sessionKey gets confused
-  - seems `node.meta.sessionKey` is being overwritten!
-  - doesn't require other terminal to run `choice`
-  - happens when we initiate another terminal while first terminal awaits link click
-
 - 🚧 Start section `Fabricating a behaviour`
-  - `nav foo --tryOpen $( click 1 ) | walk foo`
+  - ℹ️ `nav foo --tryOpen $( click 1 ) | walk foo`
+  - ✅ `choice` supports read from non tty
+  - 🚧 example of later pipe child talking to earlier pipe child
+    - store `resolve` in shell variable
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
@@ -392,6 +390,11 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG with two terminals on same page sessionKey gets confused
+  - seems `node.meta.sessionKey` is being overwritten!
+  - doesn't require other terminal to run `choice`
+  - happens when we initiate another terminal while first terminal awaits link click
 
 - ✅ do-all-the-things video
   - `ffmpeg -i 'Screen Recording 2023-06-08 at 12.53.10.mov' -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4`

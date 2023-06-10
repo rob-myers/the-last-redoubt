@@ -103,52 +103,19 @@ class cmdServiceClass {
         break;
       }
       case 'choice': {
-        /**
-         * usage: `choice {textWithLinks}+ [secondsToWait] [defaultValue]`
-         * We currently do not support ansi colour codes in any of the args {textWithLinks}+.
-         */
-        const secsIndex = args.findIndex(x => Number.isFinite(parseInt(x)));
-        const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
-        const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;
-        /**
-         * `defaultValue` emitted:
-         * - on timeout without link selected
-         * - on link selected with value undefined e.g. [foo](-) or [foo](undefined)
-         */
-        const defaultValue = secsIndex >= 0 ? parseJsArg(args[secsIndex + 1]) : undefined;
-
-        const { ttyText, ttyTextKey, linkCtxtsFactory } = parseTtyMarkdownLinks(text, defaultValue);
-        await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
-
-        try {
-          /**
-           * Avoid many cleanups if pause/resume many times:
-           * @see {sleep}
-           */
-          let reject = (_?: any) => {};
-          const cleanup = () => reject();
-          getProcess(meta).cleanups.push(cleanup);
-          // pause/resume handling not needed: cannot click links when paused
-
-          const linkPromFactory = linkCtxtsFactory ? () => new Promise<any>((resolve, currReject) => {
-            reject = currReject; // `TtyLineCtxt`s are triggered by links, so pass resolve
-            useSession.api.addTtyLineCtxts(meta.sessionKey, ttyTextKey, linkCtxtsFactory(resolve));
-          }) : undefined;
-
-          if (typeof secs === 'number' || !linkPromFactory) {
-            // links have timeout (also if no links, with fallback 0)
-            // yield* sleep(meta, secs, linkPromFactory);
-            let lastValue: any = undefined;
-            for await (const value of sleep(meta, secs ?? 0, linkPromFactory))
-              yield lastValue = value;
-            if (lastValue === undefined)
-              yield defaultValue;
-          } else {// some link must be clicked to proceed
-            yield await linkPromFactory();
-          }
-        } finally {
-          // ℹ️ currently assume one time usage
-          useSession.api.removeTtyLineCtxts(meta.sessionKey, ttyTextKey);
+        if (isTtyAt(meta, 0)) {
+          // `choice {textWithLinks}+ [secondsToWait] [defaultValue]`
+          const secsIndex = args.findIndex(x => Number.isFinite(parseInt(x)));
+          const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
+          const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;
+          const defaultValue = secsIndex >= 0 ? parseJsArg(args[secsIndex + 1]) : undefined;
+  
+          yield* this.choice(meta, { text, defaultValue, secs });
+        } else {
+          // `choice` expects to read `ChoiceReadValue`s
+          let datum: ChoiceReadValue;
+          while ((datum = await read(meta)) !== null)
+            yield* this.choice(meta, datum);
         }
         break;
       }
@@ -479,6 +446,50 @@ class cmdServiceClass {
     }
   }
 
+  /**
+   * `defaultValue` emitted:
+   * - on timeout without link selected
+   * - on link selected with value undefined e.g. [foo](-) or [foo](undefined)
+   */
+  private async *choice(
+    meta: Sh.BaseMeta,
+    { text, defaultValue, secs }: ChoiceReadValue,
+  ) {
+    const { ttyText, ttyTextKey, linkCtxtsFactory } = parseTtyMarkdownLinks(text, defaultValue);
+    await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
+
+    try {
+      /**
+       * Avoid many cleanups if pause/resume many times:
+       * @see {sleep}
+       */
+      let reject = (_?: any) => {};
+      const cleanup = () => reject();
+      getProcess(meta).cleanups.push(cleanup);
+      // pause/resume handling not needed: cannot click links when paused
+
+      const linkPromFactory = linkCtxtsFactory ? () => new Promise<any>((resolve, currReject) => {
+        reject = currReject; // `TtyLineCtxt`s are triggered by links, so pass resolve
+        useSession.api.addTtyLineCtxts(meta.sessionKey, ttyTextKey, linkCtxtsFactory(resolve));
+      }) : undefined;
+
+      if (typeof secs === 'number' || !linkPromFactory) {
+        // links have timeout (also if no links, with fallback 0)
+        // yield* sleep(meta, secs, linkPromFactory);
+        let lastValue: any = undefined;
+        for await (const value of sleep(meta, secs ?? 0, linkPromFactory))
+          yield lastValue = value;
+        if (lastValue === undefined)
+          yield defaultValue;
+      } else {// some link must be clicked to proceed
+        yield await linkPromFactory();
+      }
+    } finally {
+      // ℹ️ currently assume one time usage
+      useSession.api.removeTtyLineCtxts(meta.sessionKey, ttyTextKey);
+    }
+  }
+
   get(node: Sh.BaseNode, args: string[]) {
     const root = this.provideProcessCtxt(node.meta);
     const pwd = useSession.api.getVar<string>(node.meta, 'PWD');
@@ -572,7 +583,7 @@ class cmdServiceClass {
     },
   
     isTtyAt(fd = 0) {
-      return this.meta.fd[fd]?.startsWith('/dev/tty-');
+      return isTtyAt(this.meta, fd);
     },
   
     /** js parse with string fallback */
@@ -599,9 +610,8 @@ class cmdServiceClass {
      * Read once from stdin. We convert `{ eof: true }` to `null` for
      * easier assignment, but beware of other falsies.
      */
-    async read(chunks = false) {
-      const result = await this.parent.readOnce(this.meta, chunks);
-      return result?.eof ? null : result.data;
+    read(chunks?: boolean) {
+      return read(this.meta, chunks);
     },
 
     removeCleanup(cleanup: () => void) {
@@ -710,7 +720,7 @@ class cmdServiceClass {
    * If there is any real data we return `{ data }`,
    * otherwise we (possibly eventually) return `{ eof: true }`.
    */
-  private async readOnce(meta: Sh.BaseMeta, chunks: boolean): Promise<ReadResult> {
+  async readOnce(meta: Sh.BaseMeta, chunks: boolean): Promise<ReadResult> {
     for await (const data of this.readLoop(meta, true, chunks)) {
       return data;
     }
@@ -723,6 +733,10 @@ class cmdServiceClass {
 
 function getProcess(meta: Sh.BaseMeta) {
   return useSession.api.getProcess(meta);
+}
+
+function isTtyAt(meta: Sh.BaseMeta, fd: number) {
+  return meta.fd[fd]?.startsWith('/dev/tty-');
 }
 
 /**
@@ -747,6 +761,15 @@ function parseJsonArg(input: string) {
 
 function prettySafe(x: any) {
   return pretty(JSON.parse(safeStringify(x)));
+}
+
+/**
+ * Read once from stdin. We convert `{ eof: true }` to `null` for
+ * easier assignment, but beware of other falsies.
+ */
+async function read(meta: Sh.BaseMeta, chunks = false) {
+  const result = await cmdService.readOnce(meta, chunks);
+  return result?.eof ? null : result.data;
 }
 
 function safeJsonParse(input: string) {
@@ -787,6 +810,7 @@ async function *sleep(
   // If process continually re-sleeps, avoid many cleanups
   removeFirst(process.cleanups, cleanup);
 }
+
 /**
  * Can prefix with `throw` for static analysis.
  * The outer throw will never be thrown.
@@ -796,6 +820,12 @@ function throwError(message: string, exitCode = 1) {
 }
 
 //#endregion
+
+interface ChoiceReadValue {
+  text: string;
+  defaultValue?: any;
+  secs?: number;
+}
 
 export const cmdService = new cmdServiceClass;
 
