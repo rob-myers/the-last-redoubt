@@ -11,6 +11,17 @@
     - earlier process converts to async iterable: `api.observableToAsyncIterable`
     - later process sends message to continue
   - ✅ implement `WhileClause` with enforced 1 second iteration length
+  - 🚧 get rooms nearby npc, with points to visit
+    - gmGraph.findRoomContaining
+      ```sh
+      world "x => x.gmGraph.findRoomContaining($( click 1 ))"
+      ```
+    - roomGraph provides nearby rooms
+      ```sh
+      gm 0 'x => x.roomGraph'
+      # ...
+      ```
+    - given nearby rooms, gm provides decor?
   - first | choice | walk {npcKey}
     - `first` sends room choices, whilst listening to `npc events`
     - events: cancelled, finished-walk

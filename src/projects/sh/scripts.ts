@@ -116,10 +116,19 @@ thinkLoop: `{
     }' $1
 }`,
 
-// /** Usage: world 'x => x.fov' */
+/**
+ * - Usage: world 'x => x.fov'
+ * - Usage: world "x => x.gmGraph.findRoomContaining($( click 1 ))"
+ */
 world: `{
   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
     map "$\{1:-x=>x}"
+}`,
+
+/** Usage: gm {gmId} [selector] */
+gm: `{
+  call '({ api, home }) => api.getCached(home.WORLD_KEY).gmGraph.gms['$1']' |
+    map "$\{2:-x=>x}"
 }`,
 
 },

@@ -166,3 +166,10 @@ npc light $( click 1 )
 npc light $( click 1 ) 0
 npc light $( click 1 ) 1
 ```
+
+
+```sh
+world 'x => x.fov'
+world "x => x.gmGraph.findRoomContaining($( click 1 ))"
+gm 0 'x => x.roomGraph'
+```
