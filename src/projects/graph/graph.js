@@ -76,8 +76,8 @@ export class BaseGraph {
   }
 
   /**
-   * @param {Node} node 
-   * @param {(node: Node) => boolean} stopWhen 
+   * @param {Node | number} node node or index into `nodesArray`
+   * @param {(node: Node, depth: number) => boolean} stopWhen 
    * @returns {Node[]}
    */
   getReachableUpto(
@@ -88,13 +88,16 @@ export class BaseGraph {
      */
     stopWhen,
   ) {
-    const reachable = new Set([node]);
-    let [count, frontier] = [0, [node]];
-    while (reachable.size > count) {
-      count = reachable.size;
-      frontier = flatten(frontier
-        .map((node) => stopWhen(node) ? [] : this.getSuccs(node)));
+    const root = typeof node === 'number' ? this.nodesArray[node] : node;
+    const reachable = new Set([root]);
+    let [total, frontier, depth] = [0, [root], 0];
+    while (reachable.size > total) {
+      total = reachable.size;
+      frontier = flatten(frontier.map(
+        (node) => stopWhen(node, depth) ? [] : this.getSuccs(node))
+      );
       frontier.forEach((node) => reachable.add(node));
+      depth++;
     }
     return Array.from(reachable.values());
   }
