@@ -4,7 +4,7 @@ import type * as Sh from './parse';
 import { last, safeStringify } from '../service/generic';
 import useSession from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
-import { cmdService, parseJsArg } from './cmd.service';
+import { cmdService, parseJsArg, sleep } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
@@ -266,6 +266,7 @@ class semanticsServiceClass {
           case 'IfClause': generator = this.IfClause(node); break;
           case 'TimeClause': generator = this.TimeClause(node); break;
           case 'Subshell': generator = this.Subshell(node); break;
+          case 'WhileClause': generator = this.WhileClause(node); break;
           default: throw new ShError('not implemented', 2);
         }
       }
@@ -571,6 +572,23 @@ class semanticsServiceClass {
     useSession.api.resolve(1, node.meta).writeData(
       `real\t${Date.now() - before}ms`
     );
+  }
+
+  private async *WhileClause(node: Sh.WhileClause) {
+    const { Cond, Do, Until } = node;
+    let itStartMs = -1, itLengthMs = 0;
+
+    while (true) {
+      // Force iteration to take at least 1 second
+      if ((itLengthMs = Date.now() - itStartMs) < 1000)
+        yield* sleep(node.meta, 1 - (itLengthMs/1000));
+      itStartMs = Date.now();
+
+      yield* this.stmts(node, Cond);
+      if (node.exitCode) break;
+
+      yield* this.stmts(node, Do);
+    }
   }
 
 }

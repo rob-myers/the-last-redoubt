@@ -338,8 +338,8 @@ class cmdServiceClass {
         break;
       }
       case 'return': {
-        // Loop constructs like WhileClause are unsupported,
-        // so we just kill the current process
+        // We simply kill the current process.
+        // 🚧 worth doing something more complex now we use WhileClause?
         const exitCode = parseInt(args[0]);
         throw killError(
           meta,
@@ -783,7 +783,7 @@ function safeJsonParse(input: string) {
   }
 }
 
-async function *sleep(
+export async function *sleep(
   meta: Sh.BaseMeta,
   seconds: number,
   interruptFactory?: () => Promise<any>,

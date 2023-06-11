@@ -10,6 +10,10 @@
     - can create Subject at /home/mySubject
     - earlier process converts to async iterable: `api.observableToAsyncIterable`
     - later process sends message to continue
+  - ✅ implement `WhileClause` with enforced 1 second iteration length
+  - first | choice | walk {npcKey}
+    - `first` sends room choices, whilst listening to `npc events`
+    - events: cancelled, finished-walk
 
 
 - update CodeSandbox
