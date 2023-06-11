@@ -54,6 +54,8 @@ const commandKeys = {
   sleep: true,
   /** Run shell code stored as a string somewhere */
   source: true,
+  /** Evaluate javascript expression and exit code 1 <=> truthy */
+  test: true,
   /** Exit with code 0 */
   true: true,
   /** Unset top-level variables and shell functions */
@@ -418,6 +420,10 @@ class cmdServiceClass {
           // We spawn a new process (unlike bash `source`), but we don't localize PWD
           await ttyShell.spawn(parsed, { posPositionals: args.slice(1) });
         }
+        break;
+      }
+      case 'test': {    
+        node.exitCode = !!parseJsArg(args.join(" ")) ? 1 : 0;
         break;
       }
       case 'true': {

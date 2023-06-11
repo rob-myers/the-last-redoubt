@@ -455,8 +455,7 @@ class semanticsServiceClass {
     for (const { Cond, Then } of collectIfClauses(node)) {
       if (Cond.length) {// if | elif i.e. have a test
         yield* sem.stmts(node, Cond);
-
-        console.log(last(Cond))
+        // console.log(last(Cond))
 
         if (last(Cond)!.exitCode === 0) {// Test succeeded
           yield* sem.stmts(node, Then);

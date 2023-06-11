@@ -9,6 +9,19 @@ __TODO__
 ( local y='{ foo: 42 }'; y/foo )
 ```
 
+## if then elif else
+
+```sh
+if true; then echo foo; else echo bar; fi
+if false; then echo foo; else echo bar; fi
+if false; then echo foo; elif true; then echo bar; else echo baz; fi
+if false; then echo foo; elif false; then echo bar; else echo baz; fi
+
+# using builtin `test`
+if test '1 > 2'; then echo TEST PASSED; else echo TEST FAILED; fi
+if test '2 > 1'; then echo TEST PASSED; else echo TEST FAILED; fi
+```
+
 ## Invoke JS function
 
 ```sh
