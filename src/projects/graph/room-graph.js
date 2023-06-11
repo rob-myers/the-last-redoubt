@@ -101,7 +101,7 @@ export class roomGraphClass extends BaseGraph {
 
   /** @param {number} roomId */
   getRoomNode(roomId) {
-    return /** @type {Graph.RoomGraphNodeRoom} */ (this.getNodeById(`room-${roomId}`));
+    return this.nodesArray[roomId];
   }
 
   /** @param {number} windowIndex */
