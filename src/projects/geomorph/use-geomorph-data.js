@@ -122,7 +122,7 @@ export async function createGeomorphData(input) {
     spawn: [],
     windowLight: {},
   }));
-  const decor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['decor'][*]} */ () => []);
+  const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ () => []);
 
   lightMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));
@@ -162,7 +162,7 @@ export async function createGeomorphData(input) {
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
-        decor[roomId].push(singleToDecor(single, i, { roomId }));
+        roomDecor[roomId].push(singleToDecor(single, i, { roomId }));
       } else if (single.meta.label) {
         // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
         // ℹ️ label could instead be placed nearby respective hull symbols
@@ -187,7 +187,7 @@ export async function createGeomorphData(input) {
     doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
 
     point: pointsByRoom,
-    decor,
+    roomDecor,
     lazy: /** @type {*} */ (null), // Overwritten below
 
     floorGraph: floorGraphClass.createMock(), // Overwritten later

@@ -802,7 +802,7 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { decor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
+        const { roomDecor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
         state.npcAct({
           action: "add-decor",
           items: [{
