@@ -29,12 +29,26 @@
       ```
   - ✅ support `npc get andros [selector]`
   - 🚧 given npc, construct choice text for nearby rooms (+ adj geomorph)
-  - first | choice | walk {npcKey}
-    - `first` sends room choices, whilst listening to `npc events`
-    - events: cancelled, finished-walk
+    ```sh
+    # could do...
+    world "x => x.gmGraph.findRoomContaining($(
+      npc get andros 'x => x.getPosition()'
+    ))" > loc
+    gm $( loc/gmId ) "x => x.roomGraph.getAdjRoomIds($( loc/roomId ))" > roomIds
+
+    # but prefer to construct choice text via `run`
+    run '({ api, home }) {
+      const { gmGraph, npcs } = api.getCached(home.WORLD_KEY);
+      const { gmId, roomId } = gmGraph.findRoomContaining(npcs.getNpc("andros").getPosition());
+      const gm = gmGraph.gms[gmId];
+      const roomId = gm.roomGraph.getAdjRoomIds(roomId);
+    }'
+    ```
+  - first | nav {npcKey} --tryOpen | walk {npcKey}
+    - `first` invokes choice and also listens to `npc events`
 
 - link labels must have spaces: `[ continue ](-)`
-  - to avoid viewing e.g. arrays as links
+  > to avoid viewing e.g. arrays as links
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
