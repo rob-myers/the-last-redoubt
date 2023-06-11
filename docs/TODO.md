@@ -27,11 +27,11 @@
       ```sh
       gm 0 'x => x.roomDecor[9].filter(x => x.meta.go)'
       ```
+  - ✅ support `npc get andros [selector]`
   - 🚧 given npc, construct choice text for nearby rooms (+ adj geomorph)
   - first | choice | walk {npcKey}
     - `first` sends room choices, whilst listening to `npc events`
     - events: cancelled, finished-walk
-
 
 - link labels must have spaces: `[ continue ](-)`
   - to avoid viewing e.g. arrays as links

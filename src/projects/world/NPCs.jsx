@@ -267,12 +267,13 @@ export default function NPCs(props) {
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
-    getNpc(npcKey) {
+    getNpc(npcKey, selector) {
       const npc = state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
+      } else {
+        return selector ? selector(npc) : npc;
       }
-      return npc;
     },
     getNpcsIntersecting(convexPoly) {
       const extraForWalk = 20;
@@ -464,7 +465,7 @@ export default function NPCs(props) {
         case 'events': // handled earlier
           break;
         case 'get':
-          return state.getNpc(e.npcKey);
+          return state.getNpc(e.npcKey, e.selector);
         case 'look-at': {
           const npc = state.getNpc(e.npcKey);
           if (!Vect.isVectJson(e.point)) {
@@ -888,7 +889,7 @@ export default function NPCs(props) {
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.LocalNavPath} getLocalNavPath
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; tryOpen?: boolean; }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
- * @property {(npcKey: string) => NPC.NPC} getNpc throws if does not exist
+ * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?

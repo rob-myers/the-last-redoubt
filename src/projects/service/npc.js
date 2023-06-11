@@ -105,13 +105,15 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
         opts = { decorKey: opts };
         break;
       case "cancel":
-      case "get":
       case "pause":
       case "resume":
       case "rm":
       case "remove":
       case "set-player":
         opts = { npcKey: opts };
+        break;
+      case "get":
+        opts = { npcKey: opts, ...typeof extras[0] === 'function' && { selector: extras[0] } };
         break;
       case "config":
         opts = { configKey: [opts].concat(extras).join(' ') };
