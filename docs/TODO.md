@@ -6,7 +6,7 @@
   - ℹ️ `nav foo --tryOpen $( click 1 ) | walk foo`
   - ✅ `choice` supports read from non tty
   - ✅ example of process continued by invoking shell variable
-  - 🚧 example of later pipe child talking to earlier pipe child
+  - ❌ example of later pipe child talking to earlier pipe child
     - can create Subject at /home/mySubject
     - earlier process converts to async iterable: `api.observableToAsyncIterable`
     - later process sends message to continue
@@ -20,17 +20,21 @@
       ```sh
       gm 0 'x => x.roomGraph'
       gm 0 'x => x.roomGraph.getAdjRoomIds(9)'
-      # has dups
-      gm 0 'x => [2,9,10].flatMap(y => x.roomGraph.getAdjRoomIds(y))'
-      # better:
       gm 0 'x => x.roomGraph.getReachableUpto(9, (_ , depth) => depth > 4)' | \
         map 'x => x.flatMap(y => y.roomId >= 0 ? y.roomId : [])'
+      ``` 
+    - given nearby rooms, find decor
+      ```sh
+      gm 0 'x => x.roomDecor[9].filter(x => x.meta.go)'
       ```
-    - 🚧 given nearby rooms, find decor
+  - 🚧 given npc, construct choice text for nearby rooms (+ adj geomorph)
   - first | choice | walk {npcKey}
     - `first` sends room choices, whilst listening to `npc events`
     - events: cancelled, finished-walk
 
+
+- link labels must have spaces: `[ continue ](-)`
+  - to avoid viewing e.g. arrays as links
 
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
