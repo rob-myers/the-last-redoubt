@@ -1531,7 +1531,42 @@
         "meta": {"decor": true, "go": true, "label": "corridor"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[310, 200], [310, 210], [300, 210], [300, 200]]]
+          "coordinates": [[[240, 230], [240, 240], [230, 240], [230, 230]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[250, 590], [250, 600], [240, 600], [240, 590]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[960, 590], [960, 600], [950, 600], [950, 590]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[910, 960], [910, 970], [900, 970], [900, 960]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[300, 960], [300, 970], [290, 970], [290, 960]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[970, 230], [970, 240], [960, 240], [960, 230]]]
         }
       },
       {
@@ -6641,200 +6676,230 @@
   "labels": [
     {
       "text": "corridor",
-      "center": {"x": 305, "y": 205},
+      "center": {"x": 235, "y": 235},
       "index": 0,
-      "rect": {"x": 285, "y": 200, "width": 40, "height": 10}
+      "rect": {"x": 215, "y": 230, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 245, "y": 595},
+      "index": 1,
+      "rect": {"x": 225, "y": 590, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 955, "y": 595},
+      "index": 2,
+      "rect": {"x": 935, "y": 590, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 905, "y": 965},
+      "index": 3,
+      "rect": {"x": 885, "y": 960, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 295, "y": 965},
+      "index": 4,
+      "rect": {"x": 275, "y": 960, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 965, "y": 235},
+      "index": 5,
+      "rect": {"x": 945, "y": 230, "width": 40, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 120, "y": 28},
-      "index": 1,
+      "index": 6,
       "rect": {"x": 110, "y": 23, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 480, "y": 28},
-      "index": 2,
+      "index": 7,
       "rect": {"x": 470, "y": 23, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 720, "y": 28},
-      "index": 3,
+      "index": 8,
       "rect": {"x": 710, "y": 23, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 1080, "y": 28},
-      "index": 4,
+      "index": 9,
       "rect": {"x": 1070, "y": 23, "width": 20, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 496.46, "y": 202.14},
-      "index": 5,
+      "index": 10,
       "rect": {"x": 473.96, "y": 197.14, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 618.64, "y": 171.38},
-      "index": 6,
+      "index": 11,
       "rect": {"x": 598.64, "y": 166.38, "width": 40, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 433, "y": 321},
-      "index": 7,
+      "index": 12,
       "rect": {"x": 410.5, "y": 316, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 780, "y": 360},
-      "index": 8,
+      "index": 13,
       "rect": {"x": 757.5, "y": 355, "width": 45, "height": 10}
     },
     {
       "text": "medical",
       "center": {"x": 317.18, "y": 479},
-      "index": 9,
+      "index": 14,
       "rect": {"x": 299.68, "y": 474, "width": 35, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 496.46, "y": 457.86},
-      "index": 10,
+      "index": 15,
       "rect": {"x": 473.96, "y": 452.86, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 703.54, "y": 457.86},
-      "index": 11,
+      "index": 16,
       "rect": {"x": 681.04, "y": 452.86, "width": 45, "height": 10}
     },
     {
       "text": "toilet",
       "center": {"x": 918.64, "y": 488.62},
-      "index": 12,
+      "index": 17,
       "rect": {"x": 903.64, "y": 483.62, "width": 30, "height": 10}
     },
     {
       "text": "cpu",
       "center": {"x": 1169, "y": 421},
-      "index": 13,
+      "index": 18,
       "rect": {"x": 1161.5, "y": 417, "width": 15, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 1089, "y": 446.16},
-      "index": 14,
+      "index": 19,
       "rect": {"x": 1074, "y": 441.16, "width": 30, "height": 10}
     },
     {
       "text": "escape",
       "center": {"x": 52.14, "y": 692.22},
-      "index": 15,
+      "index": 20,
       "rect": {"x": 37.14, "y": 688.22, "width": 30, "height": 8}
     },
     {
       "text": "medical",
       "center": {"x": 317.18, "y": 702.82},
-      "index": 16,
+      "index": 21,
       "rect": {"x": 299.68, "y": 697.82, "width": 35, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 522.82, "y": 739.18},
-      "index": 17,
+      "index": 22,
       "rect": {"x": 507.82, "y": 734.18, "width": 30, "height": 10}
     },
     {
       "text": "cpu",
       "center": {"x": 391.02, "y": 721},
-      "index": 18,
+      "index": 23,
       "rect": {"x": 383.52, "y": 717, "width": 15, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 677.18, "y": 739.18},
-      "index": 19,
+      "index": 24,
       "rect": {"x": 662.18, "y": 734.18, "width": 30, "height": 10}
     },
     {
       "text": "cpu",
       "center": {"x": 808.98, "y": 721},
-      "index": 20,
+      "index": 25,
       "rect": {"x": 801.48, "y": 717, "width": 15, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 421, "y": 860.98},
-      "index": 21,
+      "index": 26,
       "rect": {"x": 406, "y": 855.98, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 779, "y": 860.98},
-      "index": 22,
+      "index": 27,
       "rect": {"x": 764, "y": 855.98, "width": 30, "height": 10}
     },
     {
       "text": "toilet",
       "center": {"x": 918.64, "y": 711.38},
-      "index": 23,
+      "index": 28,
       "rect": {"x": 903.64, "y": 706.38, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 1091, "y": 591},
-      "index": 24,
+      "index": 29,
       "rect": {"x": 1076, "y": 586, "width": 30, "height": 10}
     },
     {
       "text": "cpu",
       "center": {"x": 1169, "y": 779},
-      "index": 25,
+      "index": 30,
       "rect": {"x": 1161.5, "y": 775, "width": 15, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 1089, "y": 753.84},
-      "index": 26,
+      "index": 31,
       "rect": {"x": 1074, "y": 748.84, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 432.3, "y": 998.36},
-      "index": 27,
+      "index": 32,
       "rect": {"x": 417.3, "y": 993.36, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 767.7, "y": 998.36},
-      "index": 28,
+      "index": 33,
       "rect": {"x": 752.7, "y": 993.36, "width": 30, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 120, "y": 1108},
-      "index": 29,
+      "index": 34,
       "rect": {"x": 110, "y": 1103, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 480, "y": 1108},
-      "index": 30,
+      "index": 35,
       "rect": {"x": 470, "y": 1103, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 720, "y": 1108},
-      "index": 31,
+      "index": 36,
       "rect": {"x": 710, "y": 1103, "width": 20, "height": 10}
     },
     {
       "text": "fuel",
       "center": {"x": 1080, "y": 1108},
-      "index": 32,
+      "index": 37,
       "rect": {"x": 1070, "y": 1103, "width": 20, "height": 10}
     }
   ],
@@ -17004,7 +17069,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [45, 46, 47, 48, 49],
+  "floorHighlightIds": [50, 51, 52, 53, 54],
   "roomSurfaceIds": {
     "6": [34],
     "7": [67],

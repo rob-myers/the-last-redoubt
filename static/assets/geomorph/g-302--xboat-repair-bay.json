@@ -271,7 +271,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[1181.1, 18.6], [1181.1, 40.6], [1159.1, 40.6], [1159.1, 18.6]]
+            [[1189.1, 28.6], [1189.1, 38.6], [1179.1, 38.6], [1179.1, 28.6]]
           ]
         }
       },
@@ -280,7 +280,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[1181.1, 79.3], [1181.1, 101.3], [1159.1, 101.3], [1159.1, 79.3]]
+            [[1189.1, 88.6], [1189.1, 98.6], [1179.1, 98.6], [1179.1, 88.6]]
           ]
         }
       },
@@ -289,7 +289,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[1181.1, 137.4], [1181.1, 159.4], [1159.1, 159.4], [1159.1, 137.4]]
+            [[1189.1, 148.6], [1189.1, 158.6], [1179.1, 158.6], [1179.1, 148.6]]
           ]
         }
       },
@@ -298,7 +298,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[1181.1, 199.2], [1181.1, 221.2], [1159.1, 221.2], [1159.1, 199.2]]
+            [[1189.1, 208.6], [1189.1, 218.6], [1179.1, 218.6], [1179.1, 208.6]]
           ]
         }
       },
@@ -307,7 +307,7 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[1140, 109.1], [1140, 131.1], [1118, 131.1], [1118, 109.1]]
+            [[1139.1, 158.6], [1139.1, 168.6], [1129.1, 168.6], [1129.1, 158.6]]
           ]
         }
       },
@@ -315,14 +315,14 @@
         "meta": {
           "decor": true,
           "go": true,
-          "label": "parts",
+          "label": "'parts",
           "or": true,
-          "cargo": true
+          "cargo'": true
         },
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[999.5, 472], [999.5, 494], [977.5, 494], [977.5, 472]]
+            [[987.5, 472], [987.5, 482], [977.5, 482], [977.5, 472]]
           ]
         }
       },
@@ -330,21 +330,57 @@
         "meta": {"decor": true, "label": "fuel"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[178, 458], [178, 478], [158, 478], [158, 458]]]
+          "coordinates": [[[168, 458], [168, 468], [158, 468], [158, 458]]]
         }
       },
       {
         "meta": {"decor": true, "go": true, "label": "airlock"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[522, 470], [522, 492], [500, 492], [500, 470]]]
+          "coordinates": [[[510, 470], [510, 480], [500, 480], [500, 470]]]
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "repair", "bay": true},
+        "meta": {"decor": true, "go": true, "label": "'repair", "bay'": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[750, 472], [750, 494], [728, 494], [728, 472]]]
+          "coordinates": [[[738, 472], [738, 482], [728, 482], [728, 472]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[1139.1, 358.6], [1139.1, 368.6], [1129.1, 368.6], [1129.1, 358.6]]
+          ]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[729.1, 558.6], [729.1, 568.6], [719.1, 568.6], [719.1, 558.6]]
+          ]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[59.1, 528.6], [59.1, 538.6], [49.1, 538.6], [49.1, 528.6]]
+          ]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "office"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[59.1, 178.6], [59.1, 188.6], [49.1, 188.6], [49.1, 178.6]]
+          ]
         }
       },
       {
@@ -2475,80 +2511,104 @@
   "labels": [
     {
       "text": "locker",
-      "center": {"x": 1170.1, "y": 29.6},
+      "center": {"x": 1184.1, "y": 33.6},
       "index": 0,
-      "rect": {"x": 1155.1, "y": 24.6, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 28.6, "width": 30, "height": 10}
     },
     {
       "text": "locker",
-      "center": {"x": 1170.1, "y": 90.3},
+      "center": {"x": 1184.1, "y": 93.6},
       "index": 1,
-      "rect": {"x": 1155.1, "y": 85.3, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 88.6, "width": 30, "height": 10}
     },
     {
       "text": "locker",
-      "center": {"x": 1170.1, "y": 148.4},
+      "center": {"x": 1184.1, "y": 153.6},
       "index": 2,
-      "rect": {"x": 1155.1, "y": 143.4, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 148.6, "width": 30, "height": 10}
     },
     {
       "text": "locker",
-      "center": {"x": 1170.1, "y": 210.2},
+      "center": {"x": 1184.1, "y": 213.6},
       "index": 3,
-      "rect": {"x": 1155.1, "y": 205.2, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 208.6, "width": 30, "height": 10}
     },
     {
       "text": "eva",
-      "center": {"x": 1129, "y": 120.1},
+      "center": {"x": 1134.1, "y": 163.6},
       "index": 4,
-      "rect": {"x": 1121.5, "y": 115.1, "width": 15, "height": 10}
+      "rect": {"x": 1126.6, "y": 158.6, "width": 15, "height": 10}
     },
     {
-      "text": "parts",
-      "center": {"x": 988.5, "y": 483},
+      "text": "'parts",
+      "center": {"x": 982.5, "y": 477},
       "index": 5,
-      "rect": {"x": 976, "y": 479, "width": 25, "height": 8}
+      "rect": {"x": 967.5, "y": 473, "width": 30, "height": 8}
     },
     {
       "text": "fuel",
-      "center": {"x": 168, "y": 468},
+      "center": {"x": 163, "y": 463},
       "index": 6,
-      "rect": {"x": 158, "y": 463, "width": 20, "height": 10}
+      "rect": {"x": 153, "y": 458, "width": 20, "height": 10}
     },
     {
       "text": "airlock",
-      "center": {"x": 511, "y": 481},
+      "center": {"x": 505, "y": 475},
       "index": 7,
-      "rect": {"x": 493.5, "y": 476, "width": 35, "height": 10}
+      "rect": {"x": 487.5, "y": 470, "width": 35, "height": 10}
     },
     {
-      "text": "repair",
-      "center": {"x": 739, "y": 483},
+      "text": "'repair",
+      "center": {"x": 733, "y": 477},
       "index": 8,
-      "rect": {"x": 724, "y": 479, "width": 30, "height": 8}
+      "rect": {"x": 715.5, "y": 473, "width": 35, "height": 8}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 1134.1, "y": 363.6},
+      "index": 9,
+      "rect": {"x": 1114.1, "y": 358.6, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 724.1, "y": 563.6},
+      "index": 10,
+      "rect": {"x": 704.1, "y": 558.6, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 54.1, "y": 533.6},
+      "index": 11,
+      "rect": {"x": 34.1, "y": 528.6, "width": 40, "height": 10}
+    },
+    {
+      "text": "office",
+      "center": {"x": 54.1, "y": 183.6},
+      "index": 12,
+      "rect": {"x": 39.1, "y": 178.6, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 39, "y": 176},
-      "index": 9,
+      "index": 13,
       "rect": {"x": 24, "y": 171, "width": 30, "height": 10}
     },
     {
       "text": "lounge",
       "center": {"x": 304, "y": 484},
-      "index": 10,
+      "index": 14,
       "rect": {"x": 289, "y": 480, "width": 30, "height": 8}
     },
     {
       "text": "toilet",
       "center": {"x": 451.64, "y": 526.92},
-      "index": 11,
+      "index": 15,
       "rect": {"x": 436.64, "y": 521.92, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 569, "y": 480},
-      "index": 12,
+      "index": 16,
       "rect": {"x": 554, "y": 475, "width": 30, "height": 10}
     }
   ],
@@ -6144,7 +6204,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [38, 39, 40],
+  "floorHighlightIds": [42, 43, 44],
   "roomSurfaceIds": {"2": [5, 8, 12, 13]},
   "hullPoly": [
     {
