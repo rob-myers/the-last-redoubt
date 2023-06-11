@@ -13200,7 +13200,7 @@
         "meta": {"decor": true, "go": true, "label": "stateroom"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[140, 50], [140, 70], [160, 70], [160, 50]]]
+          "coordinates": [[[360, 426], [360, 436], [370, 436], [370, 426]]]
         }
       },
       {
@@ -13275,7 +13275,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
-    "lastModified": 1686299910418.9775
+    "lastModified": 1686499715511.074
   },
   "stateroom--018--2x3": {
     "key": "stateroom--018--2x3",
