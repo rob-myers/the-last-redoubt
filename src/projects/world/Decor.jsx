@@ -299,6 +299,7 @@ export default function Decor(props) {
       const descendants = state.normalizeDecor(group);
       state.groupCache[group.key] = { group, descendants };
     },
+    update,
   }));
 
   React.useEffect(() => {
@@ -554,4 +555,5 @@ const decorPointHandlers = {
  * @property {(groupDecorKey: string) => void} restoreGroup
  * @property {(gmId: number, roomId: number) => void} cacheRoomGroup
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
+ * @property {() => void} update
  */

@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ BUG local decor should appear on open room
+
 - 🚧 Start section `Fabricating a behaviour`
   - ℹ️ `nav foo --tryOpen $( click 1 ) | walk foo`
   - ✅ `choice` supports read from non tty

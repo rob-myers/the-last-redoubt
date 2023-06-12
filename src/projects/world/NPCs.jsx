@@ -774,10 +774,12 @@ export default function NPCs(props) {
         }
         api.decor.restoreGroup(groupKey);
       }
-
+      
       for (const { gmId, roomId } of opts.removed??[]) {
         state.npcAct({ action: "rm-decor", items: [getLocalDecorGroupKey(gmId, roomId)] });
       }
+
+      api.decor.update();
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
