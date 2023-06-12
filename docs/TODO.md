@@ -28,6 +28,9 @@
       gm 0 'x => x.roomDecor[9].filter(x => x.meta.go)'
       ```
   - ✅ support `npc get andros [selector]`
+  - ✅ cache instantiated local decor
+  - 🚧 `npcs.getNearbyInfo(gmId, roomId, depth)`
+    > should use decor.cacheRoomGroup per room
   - 🚧 given npc, construct choice text for nearby rooms (+ adj geomorph)
     ```sh
     # could do...
@@ -37,13 +40,28 @@
     gm $( loc/gmId ) "x => x.roomGraph.getAdjRoomIds($( loc/roomId ))" > roomIds
 
     # but prefer to construct choice text via `run`
+    # 🚧 maybe factor out some reusable stuff?
     run '({ api, home }) {
       const { gmGraph, npcs } = api.getCached(home.WORLD_KEY);
-      const { gmId, roomId } = gmGraph.findRoomContaining(npcs.getNpc("andros").getPosition());
+      const gmRoomId = gmGraph.findRoomContaining(npcs.getNpc("andros").getPosition());
+      if (!gmRoomId)
+        return "Hmm... where am I?";
+      const { gmId, roomId } = gmRoomId
       const gm = gmGraph.gms[gmId];
-      const roomId = gm.roomGraph.getAdjRoomIds(roomId);
+      const roomIds = gm.roomGraph
+        .getReachableUpto(9, (_ , d) => d > 4)
+        .flatMap(y => y.roomId >= 0 ? y.roomId : [])
+      ;
+      const choiceText = roomIds.reduce((agg, roomId) => {
+        const decor = gm.roomDecor[roomId].find(x => x.label)
+        if (decor) {
+
+        }
+      }, "");
+      return choiceText;
     }'
     ```
+  - lazily compute getNearbyInfo
   - first | nav {npcKey} --tryOpen | walk {npcKey}
     - `first` invokes choice and also listens to `npc events`
 

@@ -379,7 +379,10 @@ export function verifyDecor(input) {
     case 'circle':
       return Vect.isVectJson(input.center) && typeof input.radius === 'number';
     case 'group':
-      return Array.isArray(input.items) && input.items.every(item => verifyDecor(item));
+      return Array.isArray(input.items) &&
+        typeof input.meta.gmId === 'number' && // groups must have meta.{gmId,roomId}
+        typeof input.meta.roomId === 'number' &&
+        input.items.every(item => verifyDecor(item));
     case 'path':
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':

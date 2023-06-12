@@ -237,6 +237,29 @@ export default function NPCs(props) {
         throw Error(`getLocalNavPath: no path found: ${JSON.stringify(src)} --> ${JSON.stringify(dst)}`);
       }
     },
+    getNearbyInfo(gmId, roomId, roomDepth) {
+      const gm = api.gmGraph.gms[gmId];
+      const [roomIds, doorIds, windowIds] = gm.roomGraph
+        .getReachableUpto(roomId, (_ , depth) => depth > 2 * roomDepth)
+        .reduce((agg, y) => {
+          y.type === 'room' && agg[0].push(y.roomId)
+            || y.type === 'door' && agg[1].push(y.doorId)
+            || y.type === 'window' && agg[2].push(y.windowId);
+          return agg;
+        }, /** @type {number[][]} */ ([[], [], []]))
+      ;
+
+      // const output = roomIds.map(roomId => {
+      //   return {
+      //     entries: [], // added below
+      //     vantages: [], // added below
+      //     decor: [], // use decor.cacheRoomGroup
+      //   };
+      // });
+      return {
+        // 🚧
+      };
+    },
     /**
      * Used by shell function `nav`. Wraps
      * @see {state.getGlobalNavPath}
@@ -322,64 +345,6 @@ export default function NPCs(props) {
         process.onSuspends.splice(process.onSuspends.indexOf(cb.suspend), 1);
         process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
-    },
-    instantiateLocalDecor(d, gmId, roomId, matrix) {
-      /**
-       * Override d.key now we know { gmId, roomId }.
-       * Actually, descendants will be overwritten again later.
-       */
-      const key = `${getLocalDecorGroupKey(gmId, roomId)}-${d.key}`;
-
-      if (d.type === 'rect') {
-        // 🚧 better way of computing transformed angledRect?
-        const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
-        const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
-        return {
-          ...d,
-          ...baseRect,
-          key,
-          angle,
-          meta: {...d.meta},
-        };
-      } else if (d.type === 'circle') {
-        return {
-          ...d,
-          key,
-          center: matrix.transformPoint({ ...d.center }),
-          meta: {...d.meta},
-        };
-      } else if (d.type === 'group') {
-        return {
-          ...d,
-          key,
-          meta: {...d.meta},
-          // items[*].key will be overwitten in normalizeDecor
-          items: d.items.map(item => state.instantiateLocalDecor(item, gmId, roomId, matrix)),
-        };
-      } else if (d.type === 'path') {
-        return {
-          ...d,
-          key,
-          meta: {...d.meta},
-          path: d.path.map(x => matrix.transformPoint({ ...x })),
-        };     
-      } else if (d.type === 'point') {
-        return {
-          ...d,
-          key,
-          ...matrix.transformPoint({ x: d.x, y: d.y }),
-          meta: {
-            ...d.meta,
-            // 🚧 cache?
-            orient: typeof d.meta.orient === 'number'
-              ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
-              : null,
-            ui: true,
-          },
-        };
-      } else {
-        throw testNever(d, { suffix: 'instantiateDecor' });
-      }
     },
     isPanZoomControlled() {
       return Object.values(state.session).some(x => x.panzoomPids.length);
@@ -803,18 +768,11 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { roomDecor: { [roomId]: decor }, matrix } = api.gmGraph.gms[gmId];
-        state.npcAct({
-          action: "add-decor",
-          items: [{
-            key: getLocalDecorGroupKey(gmId, roomId),
-            type: 'group',
-            meta: { gmId, roomId },
-            items: Object.values(decor).map(d =>
-              state.instantiateLocalDecor(d, gmId, roomId, matrix)
-            ),
-          }],
-        });
+        const groupKey = getLocalDecorGroupKey(gmId, roomId);
+        if (!api.decor.groupCache[groupKey]) {
+          api.decor.cacheRoomGroup(gmId, roomId);
+        }
+        api.decor.restoreGroup(groupKey);
       }
 
       for (const { gmId, roomId } of opts.removed??[]) {
@@ -887,6 +845,7 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.LocalNavPath} getLocalNavPath
+ * @property {(gmId: number, roomId: number, depth: number) => NPC.NearbyInfo} getNearbyInfo
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; tryOpen?: boolean; }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
@@ -894,7 +853,6 @@ export default function NPCs(props) {
  * @property {() => null | NPC.NPC} getPlayer
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
- * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateLocalDecor
  * @property {() => boolean} isPanZoomControlled
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?

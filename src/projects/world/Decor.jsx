@@ -1,11 +1,12 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
-import { testNever } from "../service/generic";
+import { assertDefined, testNever } from "../service/generic";
 import { cssName } from "./const";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
+import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getGmRoomKey, metaToTags } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getDecorGroupDescendants, getGmRoomKey, getLocalDecorGroupKey, metaToTags } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -19,13 +20,14 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    byGmRoomKey: {},
+    byGmRoom: {},
     decor: {},
+    groupCache: {},
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
     getDecorAtKey(gmRoomKey) {
-      return /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ (Object.keys(state.byGmRoomKey[gmRoomKey] || {})
+      return /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ (Object.keys(state.byGmRoom[gmRoomKey] || {})
         .map(decorKey => state.decor[decorKey])
       );
     },
@@ -114,6 +116,64 @@ export default function Decor(props) {
         update();
       }
     },
+    instantiateLocalDecor(d, gmId, roomId, matrix) {
+      /**
+       * Override d.key now we know { gmId, roomId }.
+       * Actually, descendants will be overwritten again later.
+       */
+      const key = `${getLocalDecorGroupKey(gmId, roomId)}-${d.key}`;
+
+      if (d.type === 'rect') {
+        // 🚧 better way of computing transformed angledRect?
+        const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+        const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+        return {
+          ...d,
+          ...baseRect,
+          key,
+          angle,
+          meta: {...d.meta},
+        };
+      } else if (d.type === 'circle') {
+        return {
+          ...d,
+          key,
+          center: matrix.transformPoint({ ...d.center }),
+          meta: {...d.meta},
+        };
+      } else if (d.type === 'group') {
+        return {
+          ...d,
+          key,
+          meta: {...d.meta},
+          // items[*].key will be overwritten in normalizeDecor
+          items: d.items.map(item => state.instantiateLocalDecor(item, gmId, roomId, matrix)),
+        };
+      } else if (d.type === 'path') {
+        return {
+          ...d,
+          key,
+          meta: {...d.meta},
+          path: d.path.map(x => matrix.transformPoint({ ...x })),
+        };     
+      } else if (d.type === 'point') {
+        return {
+          ...d,
+          key,
+          ...matrix.transformPoint({ x: d.x, y: d.y }),
+          meta: {
+            ...d.meta,
+            // 🚧 cache?
+            orient: typeof d.meta.orient === 'number'
+              ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+              : null,
+            ui: true,
+          },
+        };
+      } else {
+        throw testNever(d, { suffix: 'instantiateDecor' });
+      }
+    },
     normalizeDecor(d) {
       switch (d.type) {
         case 'circle':
@@ -150,9 +210,9 @@ export default function Decor(props) {
     removeDecor(...decorKeys) {
       const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
       decors.forEach(decor => {
-        // removing group removes its items
-        decor.type === 'group' && decors.push(...decor.items);
-        // removing child removes respective item from `items`
+        // removing group removes its descendants
+        decor.type === 'group' && decors.push(...getDecorGroupDescendants(decor));
+        // removing child (without removing parent) removes respective item from `items`
         if (decor.parentKey) {
           const parent = /** @type {NPC.DecorGroup} */ (state.decor[decor.parentKey]);
           parent.items.splice(parent.items.findIndex(item => item.key === decor.key), 1);
@@ -160,7 +220,7 @@ export default function Decor(props) {
       });
       decors.forEach(decor => {
         delete state.decor[decor.key];
-        delete state.byGmRoomKey[getGmRoomKey(
+        delete state.byGmRoom[getGmRoomKey(
           /** @type {number} */ (decor.meta.gmId),
           /** @type {number} */ (decor.meta.roomId),
         )]?.[decor.key];
@@ -178,18 +238,66 @@ export default function Decor(props) {
           d.updatedAt = Date.now();
         }
 
-        const descendants = state.normalizeDecor(d);
-        if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') {
-          const gmRoomKey = getGmRoomKey(d.meta.gmId, d.meta.roomId);
-          (state.byGmRoomKey[gmRoomKey] ||= {})[d.key] = true;
-          descendants.forEach(other => state.byGmRoomKey[gmRoomKey][other.key] = true);
+        if (d.type === 'group') {
+          if (state.groupCache[d.key]) {
+            state.restoreGroup(d.key);
+          } else {
+            const descendants = state.normalizeDecor(d);
+            const gmRoomKey = getGmRoomKey(
+              /** @type {number} */ (d.meta.gmId),
+              /** @type {number} */ (d.meta.roomId),
+            );
+            state.byGmRoom[gmRoomKey] ||= {};
+            descendants.forEach(other => {
+              state.byGmRoom[gmRoomKey][other.key] = true;
+              state.decor[other.key] = other;
+            });
+
+            if (d.cache && !state.groupCache[d.key]) {
+              state.groupCache[d.key] = { group: d, descendants };
+            }
+          }
+        } else {
+          state.normalizeDecor(d);
+          // 🚧 would prefer every decor to have {gmId, roomId}, but DecorPath cannot
+          if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') { 
+            const gmRoomKey = getGmRoomKey(d.meta.gmId, d.meta.roomId);
+            (state.byGmRoom[gmRoomKey] ||= {})[d.key] = true;
+          }
         }
 
         state.decor[d.key] = d;
-        descendants.forEach(other => state.decor[other.key] = other);
       }
       api.npcs.events.next({ key: 'decors-added', decors: decor });
       update();
+    },
+    restoreGroup(groupKey) {
+      const { group: d, descendants } = state.groupCache[groupKey];
+      const gmRoomKey = getGmRoomKey(// Assume cached groups have meta.{gmId,roomId}
+        /** @type {number} */ (d.meta.gmId),
+        /** @type {number} */ (d.meta.roomId),
+      );
+      state.decor[d.key] = d;
+      (state.byGmRoom[gmRoomKey] ||= {})[d.key] = true;
+      descendants.forEach(other => {
+        state.decor[other.key] = other;
+        state.byGmRoom[gmRoomKey][other.key] = true;
+      });
+    },
+    cacheRoomGroup(gmId, roomId) {
+      const { roomDecor: { [roomId]: roomDecor }, matrix } = api.gmGraph.gms[gmId];
+      /** @type {NPC.DecorGroup} */
+      const group = {
+        key: getLocalDecorGroupKey(gmId, roomId),
+        type: 'group',
+        meta: { gmId, roomId },
+        items: Object.values(roomDecor).map(d =>
+          state.instantiateLocalDecor(d, gmId, roomId, matrix)
+        ),
+        cache: true,
+      };
+      const descendants = state.normalizeDecor(group);
+      state.groupCache[group.key] = { group, descendants };
     },
   }));
 
@@ -430,16 +538,20 @@ const decorPointHandlers = {
 /**
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
+ * @property {Record<string, { group: NPC.DecorGroup; descendants: NPC.DecorDef[] }>} groupCache
  * @property {HTMLElement} rootEl
- * @property {Record<string, { [decorKey: string]: true }>} byGmRoomKey
+ * @property {Record<string, { [decorKey: string]: true }>} byGmRoom
  * Decor keys organised by gmRoomKey `g{gmId}-r{roomId}`.
  * @property {(gmRoomKey: string) => (NPC.DecorCircle | NPC.DecorRect)[]} getDecorAtKey
  * Get all decor in specified room `g{gmId}-r{roomId}`.
  * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
+ * @property {(d: NPC.DecorDef, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorDef} instantiateLocalDecor
  * @property {boolean} ready
  * @property {(d: NPC.DecorDef) => NPC.DecorDef[]} normalizeDecor Also returns descendants
  * @property {(...decorKeys: string[]) => void} removeDecor
+ * @property {(groupDecorKey: string) => void} restoreGroup
+ * @property {(gmId: number, roomId: number) => void} cacheRoomGroup
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  */

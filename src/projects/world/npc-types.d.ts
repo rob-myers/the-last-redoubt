@@ -367,6 +367,7 @@ declare namespace NPC {
   export interface DecorGroup extends BaseDecor {
     type: 'group';
     items: DecorDef[];
+    cache?: boolean;
   }
 
   export type DecorDef = (
@@ -383,6 +384,12 @@ declare namespace NPC {
     decorKey: string;
     type: DecorDef['type'];
     meta: DecorDef['meta'];
+  }
+
+  export interface NearbyInfo {
+    /**
+     * 🚧
+     */
   }
   
   /** Using `action` instead of `key` to avoid name-collision */

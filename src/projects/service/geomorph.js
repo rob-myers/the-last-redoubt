@@ -401,6 +401,17 @@ export function getConnectorOtherSide(connector, viewPos) {
 }
 
 /**
+ * @param {NPC.DecorGroup} decor
+ * @returns {NPC.DecorDef[]}
+ */
+export function getDecorGroupDescendants(decor) {
+  return decor.items.flatMap(item =>
+    item.type === 'group'
+      ? getDecorGroupDescendants(item)
+      : item
+  );
+}
+/**
  * @param {number} gmId 
  * @param {number} roomId 
  */
