@@ -407,7 +407,7 @@ export function getConnectorOtherSide(connector, viewPos) {
 export function getDecorGroupDescendants(decor) {
   return decor.items.flatMap(item =>
     item.type === 'group'
-      ? getDecorGroupDescendants(item)
+      ? [/** @type {NPC.DecorDef} */ (item), ...getDecorGroupDescendants(item)]
       : item
   );
 }

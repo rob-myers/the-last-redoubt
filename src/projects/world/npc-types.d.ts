@@ -385,12 +385,6 @@ declare namespace NPC {
     type: DecorDef['type'];
     meta: DecorDef['meta'];
   }
-
-  export interface NearbyInfo {
-    /**
-     * 🚧
-     */
-  }
   
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (

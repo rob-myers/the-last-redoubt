@@ -26,6 +26,26 @@ export default function Decor(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
+    ensureRoomGroup(gmId, roomId) {
+      const groupKey = getLocalDecorGroupKey(gmId, roomId);
+      if (state.groupCache[groupKey]) {
+        return state.groupCache[groupKey];
+      }
+
+      const { roomDecor: { [roomId]: roomDecor }, matrix } = api.gmGraph.gms[gmId];
+      /** @type {NPC.DecorGroup} */
+      const group = {
+        key: getLocalDecorGroupKey(gmId, roomId),
+        type: 'group',
+        meta: { gmId, roomId },
+        items: Object.values(roomDecor).map(d =>
+          state.instantiateLocalDecor(d, gmId, roomId, matrix)
+        ),
+        cache: true,
+      };
+      const descendants = state.normalizeDecor(group);
+      return state.groupCache[group.key] = { group, descendants };
+    },
     getDecorAtKey(gmRoomKey) {
       return /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */ (Object.keys(state.byGmRoom[gmRoomKey] || {})
         .map(decorKey => state.decor[decorKey])
@@ -284,21 +304,6 @@ export default function Decor(props) {
         state.byGmRoom[gmRoomKey][other.key] = true;
       });
     },
-    cacheRoomGroup(gmId, roomId) {
-      const { roomDecor: { [roomId]: roomDecor }, matrix } = api.gmGraph.gms[gmId];
-      /** @type {NPC.DecorGroup} */
-      const group = {
-        key: getLocalDecorGroupKey(gmId, roomId),
-        type: 'group',
-        meta: { gmId, roomId },
-        items: Object.values(roomDecor).map(d =>
-          state.instantiateLocalDecor(d, gmId, roomId, matrix)
-        ),
-        cache: true,
-      };
-      const descendants = state.normalizeDecor(group);
-      state.groupCache[group.key] = { group, descendants };
-    },
     update,
   }));
 
@@ -553,7 +558,8 @@ const decorPointHandlers = {
  * @property {(d: NPC.DecorDef) => NPC.DecorDef[]} normalizeDecor Also returns descendants
  * @property {(...decorKeys: string[]) => void} removeDecor
  * @property {(groupDecorKey: string) => void} restoreGroup
- * @property {(gmId: number, roomId: number) => void} cacheRoomGroup
+ * @property {(gmId: number, roomId: number) => { group: NPC.DecorGroup; descendants: NPC.DecorDef[] }} ensureRoomGroup
+ * ensure room decor group is cached and return it
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {() => void} update
  */

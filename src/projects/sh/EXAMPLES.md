@@ -135,6 +135,11 @@ bar/x
 2
 ```
 
+```sh
+# get roomGraph nodes ≤ 4 edges away from $roomId
+gm 0 "gm => gm.roomGraph.getReachableUpto($roomId, (_ , depth) => depth > 4)"
+```
+
 ## Demo
 
 ```sh

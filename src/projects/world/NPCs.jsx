@@ -237,29 +237,7 @@ export default function NPCs(props) {
         throw Error(`getLocalNavPath: no path found: ${JSON.stringify(src)} --> ${JSON.stringify(dst)}`);
       }
     },
-    getNearbyInfo(gmId, roomId, roomDepth) {
-      const gm = api.gmGraph.gms[gmId];
-      const [roomIds, doorIds, windowIds] = gm.roomGraph
-        .getReachableUpto(roomId, (_ , depth) => depth > 2 * roomDepth)
-        .reduce((agg, y) => {
-          y.type === 'room' && agg[0].push(y.roomId)
-            || y.type === 'door' && agg[1].push(y.doorId)
-            || y.type === 'window' && agg[2].push(y.windowId);
-          return agg;
-        }, /** @type {number[][]} */ ([[], [], []]))
-      ;
 
-      // const output = roomIds.map(roomId => {
-      //   return {
-      //     entries: [], // added below
-      //     vantages: [], // added below
-      //     decor: [], // use decor.cacheRoomGroup
-      //   };
-      // });
-      return {
-        // 🚧
-      };
-    },
     /**
      * Used by shell function `nav`. Wraps
      * @see {state.getGlobalNavPath}
@@ -768,11 +746,8 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const groupKey = getLocalDecorGroupKey(gmId, roomId);
-        if (!api.decor.groupCache[groupKey]) {
-          api.decor.cacheRoomGroup(gmId, roomId);
-        }
-        api.decor.restoreGroup(groupKey);
+        const { group } = api.decor.ensureRoomGroup(gmId, roomId);
+        api.decor.restoreGroup(group.key);
       }
       
       for (const { gmId, roomId } of opts.removed??[]) {
@@ -847,7 +822,6 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.LocalNavPath} getLocalNavPath
- * @property {(gmId: number, roomId: number, depth: number) => NPC.NearbyInfo} getNearbyInfo
  * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; tryOpen?: boolean; }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
