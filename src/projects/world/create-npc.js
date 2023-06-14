@@ -256,11 +256,17 @@ export default function createNpc(
       // We convert from "seconds per world-unit" to "milliseconds per world-unit"
       return 1000 * (1 / this.getSpeed());
     },
-    getGmRoomId() {
+    getGmRoomId(throwIfNull = true) {
       if (this.doMeta && typeof this.doMeta.gmId === 'number' && typeof this.doMeta.roomId === 'number') {
         return { gmId: this.doMeta.gmId, roomId: this.doMeta.roomId };
-      } else {
+      } 
+      const gmRoomId = api.gmGraph.findRoomContaining(this.getPosition());
+      if (gmRoomId) {
         return api.gmGraph.findRoomContaining(this.getPosition());
+      } else if (throwIfNull) {
+        throw new Error(`npc ${this.key}: is not in any room`)
+      } else {
+        return null;
       }
     },
     getInteractRadius() {
