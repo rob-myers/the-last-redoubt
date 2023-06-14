@@ -1415,6 +1415,27 @@
     ],
     "singles": [
       {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[190, 360], [180, 360], [180, 350], [190, 350]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[970, 420], [960, 420], [960, 410], [970, 410]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "'common", "area'": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[640, 270], [630, 270], [630, 260], [640, 260]]]
+        }
+      },
+      {
         "meta": {
           "decor": true,
           "do": true,
@@ -6430,99 +6451,117 @@
   ],
   "labels": [
     {
+      "text": "corridor",
+      "center": {"x": 185, "y": 355},
+      "index": 0,
+      "rect": {"x": 165, "y": 350, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 965, "y": 415},
+      "index": 1,
+      "rect": {"x": 945, "y": 410, "width": 40, "height": 10}
+    },
+    {
+      "text": "'common",
+      "center": {"x": 635, "y": 265},
+      "index": 2,
+      "rect": {"x": 617.5, "y": 260, "width": 35, "height": 10}
+    },
+    {
       "text": "stateroom",
       "center": {"x": 316.6, "y": 92.56},
-      "index": 0,
+      "index": 3,
       "rect": {"x": 294.1, "y": 87.56, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 436.6, "y": 92.56},
-      "index": 1,
+      "index": 4,
       "rect": {"x": 414.1, "y": 87.56, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 556.6, "y": 92.56},
-      "index": 2,
+      "index": 5,
       "rect": {"x": 534.1, "y": 87.56, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 643.4, "y": 92.56},
-      "index": 3,
+      "index": 6,
       "rect": {"x": 620.9, "y": 87.56, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 826, "y": 100},
-      "index": 4,
+      "index": 7,
       "rect": {"x": 803.5, "y": 95, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 761.2436, "y": 95.1554},
-      "index": 5,
+      "index": 8,
       "rect": {"x": 741.2436, "y": 90.1554, "width": 40, "height": 10}
     },
     {
       "text": "galley",
       "center": {"x": 1070.91, "y": 57.91},
-      "index": 6,
+      "index": 9,
       "rect": {"x": 1055.91, "y": 53.91, "width": 30, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 430, "y": 418},
-      "index": 7,
+      "index": 10,
       "rect": {"x": 407.5, "y": 413, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 389.56, "y": 570.04},
-      "index": 8,
+      "index": 11,
       "rect": {"x": 369.56, "y": 565.04, "width": 40, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 550, "y": 418},
-      "index": 9,
+      "index": 12,
       "rect": {"x": 527.5, "y": 413, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 509.56, "y": 570.04},
-      "index": 10,
+      "index": 13,
       "rect": {"x": 489.56, "y": 565.04, "width": 40, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 650, "y": 418},
-      "index": 11,
+      "index": 14,
       "rect": {"x": 627.5, "y": 413, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 690.44, "y": 570.04},
-      "index": 12,
+      "index": 15,
       "rect": {"x": 670.44, "y": 565.04, "width": 40, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 770, "y": 418},
-      "index": 13,
+      "index": 16,
       "rect": {"x": 747.5, "y": 413, "width": 45, "height": 10}
     },
     {
       "text": "bathroom",
       "center": {"x": 810.44, "y": 570.04},
-      "index": 14,
+      "index": 17,
       "rect": {"x": 790.44, "y": 565.04, "width": 40, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 1079, "y": 534.16},
-      "index": 15,
+      "index": 18,
       "rect": {"x": 1064, "y": 529.16, "width": 30, "height": 10}
     }
   ],
@@ -15467,7 +15506,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [39, 40, 41],
+  "floorHighlightIds": [42, 43, 44],
   "roomSurfaceIds": {
     "0": [15],
     "2": [69],

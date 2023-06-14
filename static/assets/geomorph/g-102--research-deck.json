@@ -1485,6 +1485,34 @@
     ],
     "singles": [
       {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[240, 240], [230, 240], [230, 230], [240, 230]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[600, 300], [590, 300], [590, 290], [600, 290]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[900, 660], [890, 660], [890, 650], [900, 650]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[70, 1140], [60, 1140], [60, 1130], [70, 1130]]]
+        }
+      },
+      {
         "meta": {"door": true, "hull": true, "hullDir": "w"},
         "poly": {
           "type": "Polygon",
@@ -6124,99 +6152,123 @@
   ],
   "labels": [
     {
+      "text": "corridor",
+      "center": {"x": 235, "y": 235},
+      "index": 0,
+      "rect": {"x": 215, "y": 230, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 595, "y": 295},
+      "index": 1,
+      "rect": {"x": 575, "y": 290, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 895, "y": 655},
+      "index": 2,
+      "rect": {"x": 875, "y": 650, "width": 40, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 65, "y": 1135},
+      "index": 3,
+      "rect": {"x": 45, "y": 1130, "width": 40, "height": 10}
+    },
+    {
       "text": "lab",
       "center": {"x": 421, "y": 180.9419},
-      "index": 0,
+      "index": 4,
       "rect": {"x": 413.5, "y": 175.9419, "width": 15, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 180.9419},
-      "index": 1,
+      "index": 5,
       "rect": {"x": 771.5, "y": 175.9419, "width": 15, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 900, "y": 180},
-      "index": 2,
+      "index": 6,
       "rect": {"x": 885, "y": 175, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 1020, "y": 31},
-      "index": 3,
+      "index": 7,
       "rect": {"x": 1005, "y": 26, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 150},
-      "index": 4,
+      "index": 8,
       "rect": {"x": 975, "y": 145, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 210},
-      "index": 5,
+      "index": 9,
       "rect": {"x": 975, "y": 205, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 437.5316, "y": 410.5648},
-      "index": 6,
+      "index": 10,
       "rect": {"x": 422.5316, "y": 405.5648, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 557.5316, "y": 410.5648},
-      "index": 7,
+      "index": 11,
       "rect": {"x": 542.5316, "y": 405.5648, "width": 30, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 459.2424, "y": 539},
-      "index": 8,
+      "index": 12,
       "rect": {"x": 436.7424, "y": 534, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 579.2424, "y": 539},
-      "index": 9,
+      "index": 13,
       "rect": {"x": 556.7424, "y": 534, "width": 45, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 539},
-      "index": 10,
+      "index": 14,
       "rect": {"x": 771.5, "y": 534, "width": 15, "height": 10}
     },
     {
       "text": "lounge",
       "center": {"x": 1081, "y": 401},
-      "index": 11,
+      "index": 15,
       "rect": {"x": 1066, "y": 397, "width": 30, "height": 8}
     },
     {
       "text": "stellar",
       "center": {"x": 379, "y": 821},
-      "index": 12,
+      "index": 16,
       "rect": {"x": 361.5, "y": 816, "width": 35, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 721, "y": 701},
-      "index": 13,
+      "index": 17,
       "rect": {"x": 713.5, "y": 696, "width": 15, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 1079, "y": 701},
-      "index": 14,
+      "index": 18,
       "rect": {"x": 1071.5, "y": 696, "width": 15, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 1114, "y": 1081},
-      "index": 15,
+      "index": 19,
       "rect": {"x": 1099, "y": 1076, "width": 30, "height": 10}
     }
   ],
@@ -16747,7 +16799,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [34, 35, 46, 47],
+  "floorHighlightIds": [38, 39, 50, 51],
   "roomSurfaceIds": {
     "0": [1],
     "1": [35, 36, 37],

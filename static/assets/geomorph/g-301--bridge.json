@@ -1498,20 +1498,6 @@
         }
       },
       {
-        "meta": {"spawn": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[70, 290], [70, 300], [60, 300], [60, 290]]]
-        }
-      },
-      {
-        "meta": {"spawn": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[1150, 290], [1150, 300], [1140, 300], [1140, 290]]]
-        }
-      },
-      {
         "meta": {"wall": true, "no-fill": true},
         "poly": {
           "type": "Polygon",

@@ -891,6 +891,34 @@
     "walls": [],
     "singles": [
       {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[240, 230], [230, 230], [230, 240], [240, 240]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[600, 290], [590, 290], [590, 300], [600, 300]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[900, 650], [890, 650], [890, 660], [900, 660]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[70, 1130], [60, 1130], [60, 1140], [70, 1140]]]
+        }
+      },
+      {
         "meta": {"door": true, "hull": true},
         "poly": {
           "type": "Polygon",
@@ -1372,7 +1400,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1685887150557.1963
+    "lastModified": 1686757460127.2214
   },
   "103--hull": {
     "key": "103--hull",
@@ -2174,20 +2202,6 @@
         }
       },
       {
-        "meta": {"spawn": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[60, 290], [60, 300], [70, 300], [70, 290]]]
-        }
-      },
-      {
-        "meta": {"spawn": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[1140, 290], [1140, 300], [1150, 300], [1150, 290]]]
-        }
-      },
-      {
         "meta": {"wall": true, "no-fill": true},
         "poly": {
           "type": "Polygon",
@@ -2281,7 +2295,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1686490675783.675
+    "lastModified": 1686757105459.8264
   },
   "302--hull": {
     "key": "302--hull",
@@ -3239,6 +3253,27 @@
     ],
     "walls": [],
     "singles": [
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[190, 350], [180, 350], [180, 360], [190, 360]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[970, 410], [960, 410], [960, 420], [970, 420]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "'common", "area'": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[640, 260], [630, 260], [630, 270], [640, 270]]]
+        }
+      },
       {
         "meta": {
           "decor": true,
@@ -4258,7 +4293,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
-    "lastModified": 1685887261448.033
+    "lastModified": 1686757613437.4263
   },
   "bridge--042--8x9": {
     "key": "bridge--042--8x9",
