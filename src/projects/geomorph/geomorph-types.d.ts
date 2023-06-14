@@ -151,17 +151,14 @@ declare namespace Geomorph {
     //#endregion
 
     /**
-     * Points indexed by `roomId`.
+     * View source overrides, indexed by `roomId`.
      * Their coords are local wrt their parent geomorph.
      */
-    point: {
-      default: Vect;
-      /** Can specify light position from room through door */
-      doorView: { [doorId?: number]: { point: Vect; meta: PointMeta; } };
-      /** Spawn points inside room */
-      spawn: (Geom.VectJson & { meta: PointMeta })[];
-      /** Can specify light position from room through window */
-      windowLight: { [windowId?: number]: Vect };
+    roomOverrides: {
+      /** Can specify view position from room through door */
+      doorView?: { [doorId?: number]: { point: Vect; meta: PointMeta; } };
+      /** Can specify view position from room through window */
+      windowView?: { [windowId?: number]: Vect };
     }[];
 
     /**

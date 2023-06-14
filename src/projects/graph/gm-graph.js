@@ -264,7 +264,7 @@ export class gmGraphClass extends BaseGraph {
       gmId,
       poly: geom.lightPolygon({
         position: (
-          gm.point[rootRoomId]?.windowLight[windowId]
+          gm.roomOverrides[rootRoomId].windowView?.[windowId]
           // We move light inside current room
           || computeViewPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
         ),
@@ -596,7 +596,7 @@ export class gmGraphClass extends BaseGraph {
   getDoorViewPosition(gmId, rootRoomId, doorId, permitReversed = true) {
     const gm = this.gms[gmId];
     // Seems some geomorphs lack gm.point[x]
-    const custom = gm.point[rootRoomId]?.doorView[doorId];
+    const custom = gm.roomOverrides[rootRoomId].doorView?.[doorId];
     return (
       custom && (permitReversed || !custom.meta.reverse)
         ? custom.point.clone()

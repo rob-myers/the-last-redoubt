@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { Poly, Rect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
-import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor, tagsToMeta } from "../service/geomorph";
+import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
@@ -116,12 +116,7 @@ export async function createGeomorphData(input) {
   );
 
   //#region points by room
-  const pointsByRoom = layout.rooms.map(/** @returns {Geomorph.GeomorphData['point'][*]} */  x => ({
-    default: x.center, // Default is room's center, which may not lie inside room
-    doorView: {},
-    spawn: [],
-    windowLight: {},
-  }));
+  const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ () => []);
 
   lightMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
@@ -140,22 +135,16 @@ export async function createGeomorphData(input) {
       } else roomId = otherRoomId;
     }// NOTE roomId could be -1
 
-    doorId >= 0 && (pointsByRoom[roomId].doorView[doorId] = {
+    doorId >= 0 && ((roomOverrides[roomId].doorView ||= [])[doorId] = {
       point: p,
       meta: {...meta},
     });
-    windowId >= 0 && (pointsByRoom[roomId].windowLight[windowId] = p);
+    windowId >= 0 && ((roomOverrides[roomId].windowView ||= [])[windowId] = p);
   });
 
   layout.groups.singles.forEach((single, i) => {
     if (single.meta.spawn) {
-      const p = single.poly.center;
-      const roomId = layout.rooms.findIndex(x => x.contains(p));
-      if (roomId >= 0) {
-        pointsByRoom[roomId].spawn.push({ x: p.x, y: p.y, meta: { roomId, ...single.meta } })
-      } else {
-        console.warn(`spawn point (single #${i} ${JSON.stringify(single.meta)}) should be inside some room (${layout.key})`)  
-      }
+      // NOOP
     }
     if (single.meta.decor) {
       const p = single.poly.center;
@@ -186,7 +175,7 @@ export async function createGeomorphData(input) {
     parallelDoorId,
     doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
 
-    point: pointsByRoom,
+    roomOverrides,
     roomDecor,
     lazy: /** @type {*} */ (null), // Overwritten below
 

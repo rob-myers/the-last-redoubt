@@ -310,7 +310,7 @@ function mockHandleDecorClick(event, api) {
         linkStartIndex: ('ℹ️  [').length,
         async callback() {
           // ℹ️ could have side effect e.g. panzoom
-          const point = gm.matrix.transformPoint(gm.point[roomId].default.clone());
+          const point = gm.matrix.transformPoint(gm.rooms[roomId].center);
           await api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
           // ℹ️ return value is important
         },
@@ -333,7 +333,7 @@ function mockOnTtyLink(event, api) {
   const ttyCtxt = event.ttyCtxt;
   if (ttyCtxt.key === 'room') {
     const gm = api.gmGraph.gms[ttyCtxt.gmId];
-    const point = gm.matrix.transformPoint(gm.point[ttyCtxt.roomId].default.clone());
+    const point = gm.matrix.transformPoint(gm.rooms[ttyCtxt.roomId].center);
     api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
   }
 }
