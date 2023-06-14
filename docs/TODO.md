@@ -3,7 +3,9 @@
 ## In progress
 
 - ✅ BUG local decor should appear on open room
-- 🚧 BUG? when async generator returns value it is not picked up?
+- ❌ BUG? when async generator returns value it is not picked up?
+  > Given `async function *generator() { yield "foo"; yield "bar"; return "baz"; }`
+  > return value is not picked up in `for await (const value of generator()) `
 
 - 🚧 homepage: "The Experiment" narrative container
 - first NPC behaviour in section "Fabricating a behaviour"
