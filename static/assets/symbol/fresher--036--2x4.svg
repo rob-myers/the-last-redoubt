@@ -35,6 +35,9 @@
     <rect x="95" y="145.681" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor do stand sink orient=270</title>
     </rect>
+    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="588.229" y="421.394">
+      <title>decor go label=freaher</title>
+    </rect>
     <rect x="40" y="585" width="220" height="30" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door s</title>
     </rect>

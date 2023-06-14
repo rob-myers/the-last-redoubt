@@ -919,6 +919,39 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [176.493, 108.825],
+              [176.493, 118.825],
+              [186.493, 118.825],
+              [186.493, 108.825]
+            ]
+          ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "'research",
+          "launch'": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1150, 120], [1140, 120], [1140, 130], [1150, 130]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[910, 70], [900, 70], [900, 80], [910, 80]]]
+        }
+      },
+      {
         "meta": {"door": true, "hull": true},
         "poly": {
           "type": "Polygon",
@@ -1400,7 +1433,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1686757460127.2214
+    "lastModified": 1686758649253.1697
   },
   "103--hull": {
     "key": "103--hull",
@@ -6371,6 +6404,20 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [899.844, 579.592],
+              [899.844, 599.592],
+              [919.844, 599.592],
+              [919.844, 579.592]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"door": true},
         "poly": {
           "type": "Polygon",
@@ -6420,7 +6467,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
-    "lastModified": 1684579072298.7095
+    "lastModified": 1686758426064.5085
   },
   "engineering--047--4x7": {
     "key": "engineering--047--4x7",
@@ -6522,14 +6569,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [917.978, 748.354],
-              [917.978, 758.354],
-              [927.978, 758.354],
-              [927.978, 748.354]
-            ]
-          ]
+          "coordinates": [[[915, 735], [915, 755], [935, 755], [935, 735]]]
         }
       },
       {
@@ -6542,14 +6582,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [917.978, 448.354],
-              [917.978, 458.354],
-              [927.978, 458.354],
-              [927.978, 448.354]
-            ]
-          ]
+          "coordinates": [[[915, 435], [915, 455], [935, 455], [935, 435]]]
         }
       },
       {
@@ -6562,14 +6595,14 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [917.978, 1048.354],
-              [917.978, 1058.354],
-              [927.978, 1058.354],
-              [927.978, 1048.354]
-            ]
-          ]
+          "coordinates": [[[915, 1035], [915, 1055], [935, 1055], [935, 1035]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[600, 900], [600, 920], [620, 920], [620, 900]]]
         }
       },
       {
@@ -6636,7 +6669,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
-    "lastModified": 1683550928464.5034
+    "lastModified": 1686758372866.227
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
@@ -6928,11 +6961,11 @@
     ],
     "singles": [
       {
-        "meta": {"decor": true, "go": true, "label": "toilet"},
+        "meta": {"decor": true, "go": true, "label": "freaher"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[251.9, 388.2], [251.9, 398.2], [261.9, 398.2], [261.9, 388.2]]
+            [[481.9, 418.2], [481.9, 428.2], [491.9, 428.2], [491.9, 418.2]]
           ]
         }
       },
@@ -7037,7 +7070,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
-    "lastModified": 1686299910419.1194
+    "lastModified": 1686758588785.0232
   },
   "fresher--036--2x4": {
     "key": "fresher--036--2x4",
@@ -7232,6 +7265,20 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": "freaher"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [588.229, 421.394],
+              [588.229, 431.394],
+              [598.229, 431.394],
+              [598.229, 421.394]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"door": true, "s": true},
         "poly": {
           "type": "Polygon",
@@ -7303,7 +7350,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
-    "lastModified": 1683550928464.337
+    "lastModified": 1686758587973.4648
   },
   "fuel--010--2x4": {
     "key": "fuel--010--2x4",

@@ -1513,6 +1513,39 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [186.493, 108.825],
+              [186.493, 118.825],
+              [176.493, 118.825],
+              [176.493, 108.825]
+            ]
+          ]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "'research",
+          "launch'": true
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[1150, 130], [1140, 130], [1140, 120], [1150, 120]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[910, 80], [900, 80], [900, 70], [910, 70]]]
+        }
+      },
+      {
         "meta": {"door": true, "hull": true, "hullDir": "w"},
         "poly": {
           "type": "Polygon",
@@ -2628,14 +2661,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [270.3292, 545.5956],
-              [268.3292, 545.5956],
-              [268.3292, 543.5956],
-              [270.3292, 543.5956]
-            ]
-          ]
+          "coordinates": [[[273, 547], [269, 547], [269, 543], [273, 543]]]
         }
       },
       {
@@ -2648,14 +2674,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [330.3292, 545.5956],
-              [328.3292, 545.5956],
-              [328.3292, 543.5956],
-              [330.3292, 543.5956]
-            ]
-          ]
+          "coordinates": [[[333, 547], [329, 547], [329, 543], [333, 543]]]
         }
       },
       {
@@ -2668,14 +2687,14 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [210.3292, 545.5956],
-              [208.3292, 545.5956],
-              [208.3292, 543.5956],
-              [210.3292, 543.5956]
-            ]
-          ]
+          "coordinates": [[[213, 547], [209, 547], [209, 543], [213, 543]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[240, 484], [236, 484], [236, 480], [240, 480]]]
         }
       },
       {
@@ -3458,6 +3477,20 @@
         }
       },
       {
+        "meta": {"decor": true, "go": true, "label": "freaher"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [1077.6458, 515.7212],
+              [1077.6458, 513.7212],
+              [1079.6458, 513.7212],
+              [1079.6458, 515.7212]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"door": true, "w": true},
         "poly": {
           "type": "Polygon",
@@ -4035,6 +4068,20 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[779, 899], [781, 899], [781, 901], [779, 901]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [715.9184, 1016.0312],
+              [719.9184, 1016.0312],
+              [719.9184, 1020.0312],
+              [715.9184, 1020.0312]
+            ]
+          ]
         }
       },
       {
@@ -6176,99 +6223,135 @@
       "rect": {"x": 45, "y": 1130, "width": 40, "height": 10}
     },
     {
+      "text": "engineering",
+      "center": {"x": 181.493, "y": 113.825},
+      "index": 4,
+      "rect": {"x": 153.993, "y": 109.825, "width": 55, "height": 8}
+    },
+    {
+      "text": "'research",
+      "center": {"x": 1145, "y": 125},
+      "index": 5,
+      "rect": {"x": 1122.5, "y": 120, "width": 45, "height": 10}
+    },
+    {
+      "text": "corridor",
+      "center": {"x": 905, "y": 75},
+      "index": 6,
+      "rect": {"x": 885, "y": 70, "width": 40, "height": 10}
+    },
+    {
       "text": "lab",
       "center": {"x": 421, "y": 180.9419},
-      "index": 4,
+      "index": 7,
       "rect": {"x": 413.5, "y": 175.9419, "width": 15, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 180.9419},
-      "index": 5,
+      "index": 8,
       "rect": {"x": 771.5, "y": 175.9419, "width": 15, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 900, "y": 180},
-      "index": 6,
+      "index": 9,
       "rect": {"x": 885, "y": 175, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 1020, "y": 31},
-      "index": 7,
+      "index": 10,
       "rect": {"x": 1005, "y": 26, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 150},
-      "index": 8,
+      "index": 11,
       "rect": {"x": 975, "y": 145, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 210},
-      "index": 9,
+      "index": 12,
       "rect": {"x": 975, "y": 205, "width": 30, "height": 10}
+    },
+    {
+      "text": "engineering",
+      "center": {"x": 238, "y": 482},
+      "index": 13,
+      "rect": {"x": 210.5, "y": 478, "width": 55, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 437.5316, "y": 410.5648},
-      "index": 10,
+      "index": 14,
       "rect": {"x": 422.5316, "y": 405.5648, "width": 30, "height": 10}
     },
     {
       "text": "office",
       "center": {"x": 557.5316, "y": 410.5648},
-      "index": 11,
+      "index": 15,
       "rect": {"x": 542.5316, "y": 405.5648, "width": 30, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 459.2424, "y": 539},
-      "index": 12,
+      "index": 16,
       "rect": {"x": 436.7424, "y": 534, "width": 45, "height": 10}
     },
     {
       "text": "stateroom",
       "center": {"x": 579.2424, "y": 539},
-      "index": 13,
+      "index": 17,
       "rect": {"x": 556.7424, "y": 534, "width": 45, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 539},
-      "index": 14,
+      "index": 18,
       "rect": {"x": 771.5, "y": 534, "width": 15, "height": 10}
     },
     {
       "text": "lounge",
       "center": {"x": 1081, "y": 401},
-      "index": 15,
+      "index": 19,
       "rect": {"x": 1066, "y": 397, "width": 30, "height": 8}
+    },
+    {
+      "text": "freaher",
+      "center": {"x": 1078.6458, "y": 514.7212},
+      "index": 20,
+      "rect": {"x": 1061.1458, "y": 509.7212, "width": 35, "height": 10}
     },
     {
       "text": "stellar",
       "center": {"x": 379, "y": 821},
-      "index": 16,
+      "index": 21,
       "rect": {"x": 361.5, "y": 816, "width": 35, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 721, "y": 701},
-      "index": 17,
+      "index": 22,
       "rect": {"x": 713.5, "y": 696, "width": 15, "height": 10}
     },
     {
       "text": "lab",
       "center": {"x": 1079, "y": 701},
-      "index": 18,
+      "index": 23,
       "rect": {"x": 1071.5, "y": 696, "width": 15, "height": 10}
+    },
+    {
+      "text": "engineering",
+      "center": {"x": 717.9184, "y": 1018.0312},
+      "index": 24,
+      "rect": {"x": 690.4184, "y": 1014.0312, "width": 55, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 1114, "y": 1081},
-      "index": 19,
+      "index": 25,
       "rect": {"x": 1099, "y": 1076, "width": 30, "height": 10}
     }
   ],
@@ -16799,7 +16882,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [38, 39, 50, 51],
+  "floorHighlightIds": [41, 42, 53, 54],
   "roomSurfaceIds": {
     "0": [1],
     "1": [35, 36, 37],

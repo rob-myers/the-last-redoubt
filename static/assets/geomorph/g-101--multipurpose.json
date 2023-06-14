@@ -3366,15 +3366,15 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "toilet"},
+        "meta": {"decor": true, "go": true, "label": "freaher"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [917.64, 487.62],
-              [919.64, 487.62],
-              [919.64, 489.62],
-              [917.64, 489.62]
+              [923.64, 441.62],
+              [925.64, 441.62],
+              [925.64, 443.62],
+              [923.64, 443.62]
             ]
           ]
         }
@@ -4277,15 +4277,15 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "toilet"},
+        "meta": {"decor": true, "go": true, "label": "freaher"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
             [
-              [917.64, 710.38],
-              [919.64, 710.38],
-              [919.64, 712.38],
-              [917.64, 712.38]
+              [923.64, 756.38],
+              [925.64, 756.38],
+              [925.64, 758.38],
+              [923.64, 758.38]
             ]
           ]
         }
@@ -6777,10 +6777,10 @@
       "rect": {"x": 681.04, "y": 452.86, "width": 45, "height": 10}
     },
     {
-      "text": "toilet",
-      "center": {"x": 918.64, "y": 488.62},
+      "text": "freaher",
+      "center": {"x": 924.64, "y": 442.62},
       "index": 17,
-      "rect": {"x": 903.64, "y": 483.62, "width": 30, "height": 10}
+      "rect": {"x": 907.14, "y": 437.62, "width": 35, "height": 10}
     },
     {
       "text": "cpu",
@@ -6843,10 +6843,10 @@
       "rect": {"x": 764, "y": 855.98, "width": 30, "height": 10}
     },
     {
-      "text": "toilet",
-      "center": {"x": 918.64, "y": 711.38},
+      "text": "freaher",
+      "center": {"x": 924.64, "y": 757.38},
       "index": 28,
-      "rect": {"x": 903.64, "y": 706.38, "width": 30, "height": 10}
+      "rect": {"x": 907.14, "y": 752.38, "width": 35, "height": 10}
     },
     {
       "text": "office",

@@ -20,14 +20,17 @@
   </g>
   <g>
     <title>singles</title>
-    <rect x="917.978" y="748.354" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+    <rect x="915" y="735" width="20" height="20" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor do sit chair orient=0</title>
     </rect>
-    <rect x="917.978" y="448.354" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+    <rect x="915" y="435" width="20" height="20" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor do sit chair orient=0</title>
     </rect>
-    <rect x="917.978" y="1048.354" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+    <rect x="915" y="1035" width="20" height="20" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor do sit chair orient=0</title>
+    </rect>
+    <rect x="600" y="900" width="20" height="20" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor go label=engineering</title>
     </rect>
     <rect x="-15" y="40" width="30" height="220" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); fill-opacity: 0.9; stroke-width: 4px;">
       <title>door</title>
