@@ -152,7 +152,7 @@ At present, we only support 5 geomorphs (Robert Pearce provided hundreds) constr
 
 The thin white rectangles are _doors_. The larger doors on the edges are called _hull doors_.
 The geomorphs should be arranged so each hull door either (a) touches nothing else, (b) coincides with exactly one other hull door.
-Intuitively we "glue" geomorphs together at their hull doors -- exactly their original purpose.
+Then we "glue" geomorphs together at their hull doors -- exactly their original purpose.
 Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 
 <Tabs
@@ -207,10 +207,10 @@ The first map amounts to the following component instantiation:
 />
 ```
 
-The `worldKey` identifies the World's API,
+The `worldKey` identifies the World's API (more on that later),
 whereas `gms` specifies the geomorphs and their layout.
 But why do these worlds look like maps?
-Because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
+Answer: there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
 
 So our World needs a Player.
 This brings us to a very important ingredient: the `<Terminal>`.
@@ -303,11 +303,11 @@ NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap d
 
 ### Fabricating a behaviour
 
-We're finally ready to create an NPC behaviour.<SideNote>Recall NPC stands for Non-Player Character.</SideNote>
-We at least need a World, the Player and one additional character.
-Check out the profile of the terminal below.
+We're finally ready to create an NPC behaviour.
+We need a _World_, the _Player_ and an additional character i.e. _NPC_.<SideNote>Recall NPC stands for Non-Player Character.</SideNote>
 
 🚧
+{/* Check out the profile of the terminal below. */}
 
 <Tabs
   id="tabs@world-1+"
