@@ -401,17 +401,6 @@ export function getConnectorOtherSide(connector, viewPos) {
 }
 
 /**
- * @param {NPC.DecorGroup} decor
- * @returns {NPC.DecorDef[]}
- */
-export function getDecorGroupDescendants(decor) {
-  return decor.items.flatMap(item =>
-    item.type === 'group'
-      ? [/** @type {NPC.DecorDef} */ (item), ...getDecorGroupDescendants(item)]
-      : item
-  );
-}
-/**
  * @param {number} gmId 
  * @param {number} roomId 
  */
@@ -1213,7 +1202,7 @@ export const localDecorSubKeyRegex = /^local-g(\d+)r(\d+)-/;
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
  * @param {number} singleIndex
  * @param {Geomorph.PointMeta} baseMeta Assumed fresh
- * @returns {NPC.DecorSansPath}
+ * @returns {NPC.DecorGroupItem}
  */
 export function singleToDecor(svgSingle, singleIndex, baseMeta) {
   const p = svgSingle.poly.center;

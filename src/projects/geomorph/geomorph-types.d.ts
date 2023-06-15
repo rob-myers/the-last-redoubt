@@ -167,7 +167,7 @@ declare namespace Geomorph {
      * - a decor occurs in exactly one room
      * - these decors will be instantiated in api.npcs.updateLocalDecor
      */
-    roomDecor: NPC.DecorSansPath[][];
+    roomDecor: NPC.DecorGroupItem[][];
 
     /** Proxy for lazy cached data */
     lazy: {

@@ -746,7 +746,7 @@ export default function NPCs(props) {
     },
     updateLocalDecor(opts) {
       for (const { gmId, roomId } of opts.added??[]) {
-        const { group } = api.decor.ensureRoomGroup(gmId, roomId);
+        const group = api.decor.ensureRoomGroup(gmId, roomId);
         api.decor.restoreGroup(group.key);
       }
       

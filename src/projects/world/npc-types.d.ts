@@ -366,7 +366,7 @@ declare namespace NPC {
 
   export interface DecorGroup extends BaseDecor {
     type: 'group';
-    items: DecorDef[];
+    items: DecorGroupItem[];
     cache?: boolean;
   }
 
@@ -379,6 +379,7 @@ declare namespace NPC {
   );
 
   export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;
+  export type DecorGroupItem = Exclude<NPC.DecorDef, NPC.DecorPath | NPC.DecorGroup>;
 
   export interface DecorRef {
     decorKey: string;

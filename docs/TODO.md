@@ -7,8 +7,16 @@
   > Given `async function *generator() { yield "foo"; yield "bar"; return "baz"; }`
   > return value is not picked up in `for await (const value of generator()) `
 
-- 🚧 homepage: "The Experiment" narrative container
-- first NPC behaviour in section "Fabricating a behaviour"
+- ✅ DecorGroup cannot contain another DecorGroup
+  - ✅ so `descendants` isn't necessary
+  - ℹ️ could still support multiple groups per room defined in svg
+
+- ✅ homepage: "The Experiment" narrative container
+- 🚧 first NPC behaviour in section "Fabricating a behaviour"
+  - 🚧 find navpath from Player to random room
+  - 🚧 npc spawns into open doorway
+  - npc walks into your current room
+  - ...
 
 - link labels must have spaces: `[ continue ](-)`
   > to avoid viewing e.g. arrays as links
@@ -18,17 +26,17 @@
   - Can supply url params to specify layout and profile?
   - https://codesandbox.io/s/tty-world-2-june-2023-g8tb0c?file=/src/service/geomorph.js
 
-- 🚧 homepage: interesting behavioural examples, rather than formal definitions
+- ❌ homepage: interesting behavioural examples, rather than formal definitions
   - ✅ Tabs and Terminal on homepage with custom profile
   - ✅ support `view {ms} [{point}] [{zoom}]`
   - ✅ can cancel `view`
   - ✅ can pause/resume `view`
   - ✅ can set initial panzoom `ms`
-  - player and npc exchange shifts
+  - ❌ player and npc exchange shifts
     - player on chair; npc goes to bed; npc turns light off; npc says "good night"
     - alt: player gets in way...
 
-- support ansi color codes inside `choice` args
+- ✅ support ansi color codes inside `choice` args
 - HMR useGeomorphs?
 
 - Do we need `component` lookup in site.store?
