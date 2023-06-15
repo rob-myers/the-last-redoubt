@@ -289,6 +289,15 @@ export async function createLayout(opts) {
     return agg;
   }, /** @type {Record<number, number[]>} */ ({}));
 
+  const roomMetas = /** @type {Geomorph.PointMeta[]} */ (rooms.map((_, roomId) => {
+    const adjDoors = roomGraph.getAdjacentDoors(roomId).map(x => doors[x.doorId]);
+    return {
+      hull: adjDoors.some(x => x.meta.hull),
+      leaf: adjDoors.length <= 1,
+      // ...
+    };
+  }));
+
   /** @type {Geomorph.ParsedLayout} */
   const output = {
     key: opts.def.key,
@@ -308,6 +317,7 @@ export async function createLayout(opts) {
     lightRects: [], // Computed below
     floorHighlightIds,
     roomSurfaceIds,
+    roomMetas,
     
     hullPoly: hullSym.hull.map(x => x.clone()),
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
@@ -531,7 +541,7 @@ function parseConnectorRect(x) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -565,6 +575,7 @@ export function serializeLayout({
     })),
     floorHighlightIds,
     roomSurfaceIds,
+    roomMetas,
 
     hullPoly: hullPoly.map(x => x.geoJson),
     hullRect,
@@ -596,7 +607,7 @@ export function matchedMap(meta, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -630,6 +641,7 @@ export function parseLayout({
     })),
     floorHighlightIds,
     roomSurfaceIds,
+    roomMetas,
 
     hullPoly: hullPoly.map(Poly.from),
     hullRect,

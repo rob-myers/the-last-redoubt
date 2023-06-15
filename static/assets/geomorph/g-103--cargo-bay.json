@@ -2592,6 +2592,7 @@
   "lightRects": [],
   "floorHighlightIds": [],
   "roomSurfaceIds": {},
+  "roomMetas": [{"hull": true, "leaf": false}],
   "hullPoly": [
     {
       "type": "Polygon",

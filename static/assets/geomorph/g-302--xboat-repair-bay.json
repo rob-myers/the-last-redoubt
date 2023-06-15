@@ -6206,6 +6206,22 @@
   ],
   "floorHighlightIds": [42, 43, 44],
   "roomSurfaceIds": {"2": [5, 8, 12, 13]},
+  "roomMetas": [
+    {"hull": false, "leaf": true},
+    {"hull": false, "leaf": false},
+    {"hull": true, "leaf": false},
+    {"hull": false, "leaf": true},
+    {"hull": true, "leaf": false},
+    {"hull": false, "leaf": false},
+    {"hull": false, "leaf": false},
+    {"hull": false, "leaf": false},
+    {"hull": true, "leaf": false},
+    {"hull": true, "leaf": false},
+    {"hull": false, "leaf": true},
+    {"hull": false, "leaf": true},
+    {"hull": false, "leaf": true},
+    {"hull": false, "leaf": true}
+  ],
   "hullPoly": [
     {
       "type": "Polygon",

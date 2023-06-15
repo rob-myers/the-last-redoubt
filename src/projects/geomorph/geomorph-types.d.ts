@@ -98,6 +98,8 @@ declare namespace Geomorph {
     floorHighlightIds: number[];
     /** Pointers into `groups.obstacles` indexed by roomId. */
     roomSurfaceIds: Record<number, number[]>;
+    /** Indexed by `roomId` */
+    roomMetas: Geomorph.PointMeta[];
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];

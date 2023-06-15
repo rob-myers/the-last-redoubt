@@ -70,7 +70,7 @@ export async function createGeomorphData(input) {
    * - `poly` must be convex (e.g. rotated rect).
    * - `poly` must cover door and have center inside room.
    */
-  const lightMetas = layout.groups.singles
+  const viewMetas = layout.groups.singles
     .filter(x => x.meta[svgSymbolTag.view])
     .map(({ poly, meta }) => /** @type {const} */ (
       { center: poly.center, poly, reverse: meta.reverse, meta }
@@ -119,7 +119,7 @@ export async function createGeomorphData(input) {
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ () => []);
 
-  lightMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
+  viewMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));
     const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
     const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
@@ -143,9 +143,6 @@ export async function createGeomorphData(input) {
   });
 
   layout.groups.singles.forEach((single, i) => {
-    if (single.meta.spawn) {
-      // NOOP
-    }
     if (single.meta.decor) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
@@ -177,8 +174,8 @@ export async function createGeomorphData(input) {
 
     roomOverrides,
     roomDecor,
-    lazy: /** @type {*} */ (null), // Overwritten below
 
+    lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
     getHullDoorId(doorOrId) {
