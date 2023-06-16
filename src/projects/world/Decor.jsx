@@ -287,7 +287,15 @@ export default function Decor(props) {
         state.byGmRoom[gmRoomKey][other.key] = true;
       });
     },
-    update,
+    updateLocalDecor(opts) {
+      for (const { gmId, roomId } of opts.added??[]) {
+        const group = api.decor.ensureRoomGroup(gmId, roomId);
+        api.decor.restoreGroup(group.key);
+      }
+      state.removeDecor(
+        ...(opts.removed??[]).map(({ gmId, roomId }) => getLocalDecorGroupKey(gmId, roomId))
+      );
+    },
   }));
 
   React.useEffect(() => {
@@ -544,5 +552,11 @@ const decorPointHandlers = {
  * @property {(gmId: number, roomId: number) => NPC.DecorGroup} ensureRoomGroup
  * ensure room decor group is cached and return it
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
- * @property {() => void} update
+ * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
+ */
+
+/**
+ * @typedef ToggleLocalDecorOpts
+ * @property {Graph.GmRoomId[]} [added]
+ * @property {Graph.GmRoomId[]} [removed]
  */

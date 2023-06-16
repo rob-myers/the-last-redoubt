@@ -755,18 +755,6 @@ export default function NPCs(props) {
 
       return subscription;
     },
-    updateLocalDecor(opts) {
-      for (const { gmId, roomId } of opts.added??[]) {
-        const group = api.decor.ensureRoomGroup(gmId, roomId);
-        api.decor.restoreGroup(group.key);
-      }
-      
-      for (const { gmId, roomId } of opts.removed??[]) {
-        state.npcAct({ action: "rm-decor", items: [getLocalDecorGroupKey(gmId, roomId)] });
-      }
-
-      api.decor.update();
-    },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
       if (!npcService.verifyGlobalNavPath(e)) {
@@ -859,15 +847,8 @@ export default function NPCs(props) {
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
- * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(e: { npcKey: string; throwOnCancel?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
- */
-
-/**
- * @typedef ToggleLocalDecorOpts
- * @property {Graph.GmRoomId[]} [added]
- * @property {Graph.GmRoomId[]} [removed]
  */
 
 /**

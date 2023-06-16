@@ -191,7 +191,7 @@ export default function useHandleEvents(api) {
           break;
         case 'fov-changed':
           // console.log(e);
-          api.npcs.updateLocalDecor({ added: e.added, removed: e.removed, });
+          api.decor.updateLocalDecor({ added: e.added, removed: e.removed, });
           break;
         case 'on-tty-link':
           mockOnTtyLink(e, api);
