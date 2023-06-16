@@ -49,7 +49,7 @@ export class Builder {
 
         newGroup[polyIndex] = /** @type {Nav.GraphNode} */ ({
           id: polyIndex,
-          centroid,
+          centroid: centroid.json,
           neighbours: neighbourIndices,
           portals,
           vertexIds: poly.vertexIds,

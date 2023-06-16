@@ -21,6 +21,11 @@ export class floorGraphClass extends BaseGraph {
    * @type {Record<number, Graph.NavNodeMeta>}
    */
   nodeToMeta;
+  /** 
+   * Flattened navZone.groups.
+   * @type {Nav.GraphNode[]}
+   */
+  navNodes;
 
   static createMock() {
     return new floorGraphClass(/** @type {Geomorph.GeomorphData} */ ({
@@ -41,13 +46,13 @@ export class floorGraphClass extends BaseGraph {
      * Compute `this.nodeToMeta` via `gm.navZone.{doorNodeIds,roomNodeIds}`.
      * Observe that a nodeId can e.g. point to a node in 2nd group.
      */
-    const navNodes = gm.navZone.groups.flatMap(x => x);
-    this.nodeToMeta = navNodes.map((_) => ({ doorId: -1, roomId: -1 }));
+    this.navNodes = gm.navZone.groups.flatMap(x => x);
+    this.nodeToMeta = this.navNodes.map((_) => ({ doorId: -1, roomId: -1 }));
     gm.navZone.doorNodeIds.forEach((nodeIds, doorId) => {
       nodeIds.forEach(nodeId => {
         this.nodeToMeta[nodeId].doorId = doorId
         // Actually includes nodes ≤ 2 steps away from one with a doorId
-        const twoStepsAwayIds = navNodes[nodeId].neighbours.flatMap(otherId => navNodes[otherId].neighbours);
+        const twoStepsAwayIds = this.navNodes[nodeId].neighbours.flatMap(otherId => this.navNodes[otherId].neighbours);
         twoStepsAwayIds.forEach(nborId => this.nodeToMeta[nborId].nearDoorId = doorId);
       });
     });
@@ -273,13 +278,9 @@ export class floorGraphClass extends BaseGraph {
    * @returns {Graph.FloorGraph}
    */
   static fromZone(gm) {
-    const zone = gm.navZone;
-
-    const { groups: navNodeGroups, vertices } = zone;
     const graph = new floorGraphClass(gm);
-    const navNodes = navNodeGroups.flatMap(x => x);
-
-    for (const [nodeId, node] of Object.entries(navNodes)) {
+    
+    for (const [nodeId, node] of Object.entries(graph.navNodes)) {
       graph.registerNode({
         type: 'tri',
         id: `tri-${nodeId}`,
@@ -294,7 +295,7 @@ export class floorGraphClass extends BaseGraph {
       });
     }
 
-    for (const [nodeId, node] of Object.entries(navNodes)) {
+    for (const [nodeId, node] of Object.entries(graph.navNodes)) {
       const graphNodeId = `tri-${nodeId}`;
       const neighbourIds = node.neighbours.map(otherNodeId => `tri-${otherNodeId}`);
       // Nav.Zone already "symmetric", so no need for double edges

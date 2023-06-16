@@ -986,7 +986,7 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
   doors.forEach(({ seg: [u, v] }, doorId) => {
     doorNodeIds[doorId] = [];
     navNodes.forEach((node, nodeId) => {
-      tempTri.outline = node.vertexIds.map(vid => navZone.vertices[vid]);
+      tempTri.outline = node.vertexIds.map(vid => Vect.from(navZone.vertices[vid]));
       if (geom.lineSegIntersectsPolygon(u, v, tempTri)) {
         doorNodeIds[doorId].push(nodeId);
         if (nodeDoorIds[nodeId].push(doorId) > 1) {

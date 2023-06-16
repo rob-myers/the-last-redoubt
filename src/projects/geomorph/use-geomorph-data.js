@@ -204,6 +204,10 @@ export async function createGeomorphData(input) {
  */
 function createLazyProxy(gm) {
   const root = {
+    /**
+     * Intersection of `navPoly` with `roomWithDoors[roomId]`,
+     * restricted to largest disconnected component (assume others are artifacts).
+     */
     roomNavPoly: /** @type {{ [roomId: number]: Geom.Poly }} */ ({}),
   };
 
@@ -212,8 +216,6 @@ function createLazyProxy(gm) {
       if (typeof key !== 'string') return;
       const roomId = Number(key);
       if (gm.roomsWithDoors[roomId] && !root.roomNavPoly[roomId]) {
-        // Intersect navPoly with roomWithDoors and take largest disconnected component,
-        // i.e. assume smaller polys are unwanted artifacts
         const intersection = Poly.intersect(gm.navPoly, [gm.roomsWithDoors[roomId]]);
         intersection.sort((a, b) => a.rect.area > b.rect.area ? -1 : 1);
         root.roomNavPoly[roomId] = intersection[0];

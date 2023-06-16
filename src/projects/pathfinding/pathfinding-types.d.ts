@@ -1,7 +1,5 @@
 declare namespace Nav {
 
-  type Vect = import('../geom').Vect;
-  
   export type Graph = GraphNode[];
 
   export interface GraphNode {
@@ -16,27 +14,19 @@ declare namespace Nav {
     parent: null | GraphNode;
     portals: number[][];
     vertexIds: number[];
-    centroid: Vect;
+    centroid: Geom.VectJson;
   }
 
   export interface NavPoly {
     vertexIds: number[];
     neighbours: Set<NavPoly>;
-    centroid: Vect;
+    centroid: Geom.VectJson;
     group?: number;
   }
 
   export interface Zone {
-    vertices: VectJson[];
+    vertices: Geom.VectJson[];
     groups: GraphNode[][];
-  }
-
-  export interface Group {
-    id: number;
-    neighbours: number[];
-    vertexIds: number[];
-    centroid: Vect;
-    portals: any[]; // ?
   }
 
   export interface ZoneWithMeta extends Zone {
