@@ -7,12 +7,23 @@
   > Given `async function *generator() { yield "foo"; yield "bar"; return "baz"; }`
   > return value is not picked up in `for await (const value of generator()) `
 
+- BUG resize terminal (make it very small) breaks display of pending input (fixed when start to type)
+
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary
   - ℹ️ could still support multiple groups per room defined in svg
 
 - ✅ homepage: "The Experiment" narrative container
 - 🚧 first NPC behaviour in section "Fabricating a behaviour"
+  - ✅ can choose random room which is not hull or leaf, in another geomorph (if there is one)
+    ```sh
+    # assuming we're inside gmId 0
+    world 'x => x.npcs.getRandomRoom(
+      (meta, gmId) => gmId === 1,
+      (meta) => !meta.hull && !meta.leaf,
+    )'
+    ```
+  - 🚧 choose random navigable world point in given room
   - 🚧 find navpath from Player to random room
   - 🚧 npc spawns into open doorway
   - npc walks into your current room

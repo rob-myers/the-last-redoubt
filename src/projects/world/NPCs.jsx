@@ -288,6 +288,17 @@ export default function NPCs(props) {
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
     },
+    getRandomRoom(filterGeomorphMeta = _ => true, filterRoomMeta = _ => true) {
+      const { gms } = api.gmGraph;
+      const gmIds = gms.flatMap(({ meta }, gmId) => filterGeomorphMeta(meta, gmId) ? gmId : []);
+      if (gmIds.length === 0)
+        throw Error(`getRandomRoom: no gmId matches filter`);
+      const gmId = gmIds[Math.floor(gmIds.length * Math.random())];
+      const roomIds = gms[gmId].roomMetas.flatMap((meta, roomId) => filterRoomMeta(meta) ? roomId : []);
+      if (roomIds.length === 0)
+        throw Error(`getRandomRoom: no roomId matches filter`);
+      return { gmId, roomId: roomIds[Math.floor(roomIds.length * Math.random())] };
+    },
     handleBunkBedCollide(nearbyMeta, dstMeta) {
       return (
         // Collide if same height (undefined except at bunk-beds)
@@ -826,7 +837,8 @@ export default function NPCs(props) {
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
- * @property {() => null | NPC.NPC} getPlayer
+ * @property {() => NPC.NPC | null} getPlayer
+ * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {() => boolean} isPanZoomControlled
