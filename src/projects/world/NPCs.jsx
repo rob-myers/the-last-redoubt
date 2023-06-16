@@ -7,7 +7,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
-import { getLocalDecorGroupKey, getGmRoomKey } from "../service/geomorph";
+import { getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -268,12 +268,12 @@ export default function NPCs(props) {
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
-    getNpc(npcKey, selector) {
+    getNpc(npcKey, selector = x => x) {
       const npc = state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
       } else {
-        return selector ? selector(npc) : npc;
+        return selector(npc);
       }
     },
     getNpcsIntersecting(convexPoly) {
@@ -287,6 +287,15 @@ export default function NPCs(props) {
     },
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
+    },
+    getRandomRoomNavpoint(gmId, roomId) {
+      const {gms} = api.gmGraph;
+      const gm = gms[gmId];
+      // const nodeIds = gm.navZone.roomNodeIds[roomId];
+      const nodeIds = gm.floorGraph.strictRoomNodeIds[roomId];
+      const nodeId = nodeIds[Math.floor(Math.random() * nodeIds.length)];
+      const navNode = gm.floorGraph.navNodes[nodeId];
+      return gm.matrix.transformPoint(Vect.from(navNode.centroid));
     },
     getRandomRoom(filterGeomorphMeta = _ => true, filterRoomMeta = _ => true) {
       const { gms } = api.gmGraph;
@@ -567,7 +576,7 @@ export default function NPCs(props) {
         throw Error(`expected format: { zoom?: number; point?: { x: number; y: number }; ms: number; easing?: string }`);
       }
       try {
-        await props.api.panZoom.panZoomTo(e.zoom, e.point, e.ms, e.easing);
+        await api.panZoom.panZoomTo(e.zoom, e.point, e.ms, e.easing);
         return 'completed';
       } catch (e) {
         return 'cancelled';
@@ -717,6 +726,7 @@ export default function NPCs(props) {
             || x.key === 'completed-panzoom-to'
             || (x.key === 'started-walking' && x.npcKey === npcKey)
             || (x.key === 'stopped-walking' && x.npcKey === npcKey)
+            || (x.key === 'spawned-npc' && x.npcKey === npcKey)
           )
         )),
       ).subscribe({
@@ -826,6 +836,7 @@ export default function NPCs(props) {
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {() => NPC.NPC | null} getPlayer
+ * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup

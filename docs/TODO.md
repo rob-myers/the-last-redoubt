@@ -23,7 +23,10 @@
       (meta) => !meta.hull && !meta.leaf,
     )'
     ```
-  - 🚧 choose random navigable world point in given room
+  - ✅ choose random navigable world point in given room
+    - ℹ️ couldn't spawn to `{"x":-649.93,"y":1654.79}` because door was closed
+      > `world 'x => x.npcs.getRandomRoomNavpoint(3, 12)'`
+      > so we use `gm.floorGraph.strictRoomNodeIds`
   - 🚧 find navpath from Player to random room
   - 🚧 npc spawns into open doorway
   - npc walks into your current room

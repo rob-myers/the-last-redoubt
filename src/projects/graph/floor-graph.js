@@ -26,6 +26,11 @@ export class floorGraphClass extends BaseGraph {
    * @type {Nav.GraphNode[]}
    */
   navNodes;
+  /**
+   * navZone.roomNodeIds without nodes near doors.
+   * @type {number[][]}
+   */
+  strictRoomNodeIds;
 
   static createMock() {
     return new floorGraphClass(/** @type {Geomorph.GeomorphData} */ ({
@@ -41,12 +46,12 @@ export class floorGraphClass extends BaseGraph {
 
     this.gm = gm;
     this.vectors = gm.navZone.vertices.map(Vect.from);
-
+    this.navNodes = gm.navZone.groups.flatMap(x => x);
+    
     /**
      * Compute `this.nodeToMeta` via `gm.navZone.{doorNodeIds,roomNodeIds}`.
      * Observe that a nodeId can e.g. point to a node in 2nd group.
      */
-    this.navNodes = gm.navZone.groups.flatMap(x => x);
     this.nodeToMeta = this.navNodes.map((_) => ({ doorId: -1, roomId: -1 }));
     gm.navZone.doorNodeIds.forEach((nodeIds, doorId) => {
       nodeIds.forEach(nodeId => {
@@ -59,6 +64,10 @@ export class floorGraphClass extends BaseGraph {
     gm.navZone.roomNodeIds.forEach((nodeIds, roomId) => {
       nodeIds.forEach(nodeId => this.nodeToMeta[nodeId].roomId = roomId);
     });
+
+    this.strictRoomNodeIds = gm.navZone.roomNodeIds.map((nodeIds, roomId) =>
+      nodeIds.filter(nodeId => this.nodeToMeta[nodeId].nearDoorId === undefined)
+    );
   }
 
   /**
