@@ -100,6 +100,7 @@ declare namespace Geomorph {
     roomSurfaceIds: Record<number, number[]>;
     /** Indexed by `roomId` */
     roomMetas: Geomorph.PointMeta[];
+    meta: Geomorph.PointMeta;
 
     /** Should probably have exactly one polygon */
     hullPoly: P[];
