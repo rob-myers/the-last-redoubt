@@ -170,6 +170,9 @@ const menuCss = css`
   transition: transform 500ms;
   &.open {
     transform: translate(0px, 0px);
+    .menu-toggler {
+      background: rgba(0, 0, 0, 0.5);
+    }
   }
   &:not(.open) {
     transform: translate(var(--menu-width), 0px);
@@ -190,7 +193,7 @@ const menuCss = css`
     
     cursor: pointer;
     font-size: 12px;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0);
     color: #ddd;
     border: 2px solid #444;
   }
