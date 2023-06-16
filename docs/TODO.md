@@ -2,12 +2,7 @@
 
 ## In progress
 
-- ✅ BUG local decor should appear on open room
-- ❌ BUG? when async generator returns value it is not picked up?
-  > Given `async function *generator() { yield "foo"; yield "bar"; return "baz"; }`
-  > return value is not picked up in `for await (const value of generator()) `
-
-- BUG resize terminal (make it very small) breaks display of pending input (fixed when start to type)
+- 🚧 BUG resize terminal (make it very small) breaks display of pending input (fixed when start to type)
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary
@@ -15,9 +10,8 @@
 
 - ✅ homepage: "The Experiment" narrative container
 - 🚧 first NPC behaviour in section "Fabricating a behaviour"
-  - ✅ can choose random room which is not hull or leaf, in another geomorph (if there is one)
+  - ✅ can choose random room which is not hull or leaf, in another geomorph (if there is one) e.g.
     ```sh
-    # assuming we're inside gmId 0
     world 'x => x.npcs.getRandomRoom(
       (meta, gmId) => gmId === 1,
       (meta) => !meta.hull && !meta.leaf,
@@ -27,8 +21,10 @@
     - ℹ️ couldn't spawn to `{"x":-649.93,"y":1654.79}` because door was closed
       > `world 'x => x.npcs.getRandomRoomNavpoint(3, 12)'`
       > so we use `gm.floorGraph.strictRoomNodeIds`
+  - ✅ can restrict global nav path to suffix via `{ startId }`
   - 🚧 find navpath from Player to random room
   - 🚧 npc spawns into open doorway
+    - maybe can operate on navpaths e.g. slice/reverse?
   - npc walks into your current room
   - ...
 
@@ -417,6 +413,12 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG local decor should appear on open room
+- ❌ BUG? when async generator returns value it is not picked up?
+  > Given `async function *generator() { yield "foo"; yield "bar"; return "baz"; }`
+  > return value is not picked up in `for await (const value of generator()) `
+
 
 - ❌ Start section `Fabricating a behaviour`
   - ℹ️ `nav foo --tryOpen $( click 1 ) | walk foo`
@@ -1641,6 +1643,13 @@ How to embed video?
 
 
 ## Future
+
+```js
+// Find length up to startId
+const [length] = fullPath.slice(1, startId + 1).reduce(([sum, prev], p) =>
+  [sum + prev.distanceTo(p), p]
+, [0, fullPath[0]]);
+```
 
 - Explain what is happening in NPCS trackNpc
 - Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
