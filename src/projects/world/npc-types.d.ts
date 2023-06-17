@@ -73,7 +73,7 @@ declare namespace NPC {
     ): Promise<void>;
     /** Radians */
     getAngle(): number;
-    getAnimDef(): NpcAnimDef;
+    getWalkAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
     getAnimScaleFactor(): number;
     getGmRoomId(throwIfNull?: boolean): Geomorph.GmRoomId | null;
@@ -121,6 +121,7 @@ declare namespace NPC {
     setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
+    setSpeedFactor(speedFactor: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateAnimAux(): void;
@@ -168,6 +169,8 @@ declare namespace NPC {
     rotate: Animation;
     sprites: Animation;
     durationMs: number;
+    /** Scale factor for speed of walking */
+    speedFactor: number;
 
     /** Aligned to `path` with format `g${gmId}-r${roomId} */
     gmRoomKeys: string[];
@@ -425,6 +428,7 @@ declare namespace NPC {
     | { key: 'spawned-npc'; npcKey: string; intoDecor: NPC.DecorRef[] }
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
+    | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
     | NPCsWayEvent
   );
 

@@ -48,6 +48,7 @@ export default function createNpc(
       rotate: new Animation(),
       sprites: new Animation(),
       durationMs: 0,
+      speedFactor: 1,
   
       gmRoomKeys: [],
       wayMetas: [],
@@ -225,7 +226,7 @@ export default function createNpc(
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
     },
-    getAnimDef() {
+    getWalkAnimDef() {
       const { aux } = this.anim;
       const { scale: npcScale } = npcsMeta[this.classKey];
       return {
@@ -247,6 +248,8 @@ export default function createNpc(
         ]),
         opts: {
           duration: aux.total * this.getAnimScaleFactor(),
+          // ℹ️ Not recognised! If it worked, would probably need to adjust `duration`
+          // playbackRate: this.anim.speedFactor,
           direction: 'normal',
           fill: 'forwards',
         },
@@ -291,7 +294,7 @@ export default function createNpc(
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
     },
     getSpeed() {
-      return this.def.speed;
+      return this.def.speed * this.anim.speedFactor;
     },
     getWalkCycleDuration(entireWalkMs) {
       const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.classKey];
@@ -351,6 +354,7 @@ export default function createNpc(
     },
     inferWalkTransform() {
       const position = new Vect;
+      // 🚧 take account of playbackRate?
       const ratio = (this.anim.translate.currentTime || 0) / this.anim.durationMs;
       // 🚧 seems our computation of angle is wrong sometimes
       let angle = 0;
@@ -410,6 +414,8 @@ export default function createNpc(
       } else if (this.anim.wayMetas[0]) {
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
+          // length is preserved when npc speed changes,
+          // 🚧 but cannot assume uniform speed
           (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - this.anim.translate.currentTime,
         );
       }
@@ -506,7 +512,7 @@ export default function createNpc(
           // isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
     
           // Animate position and rotation
-          const { translateKeyframes, rotateKeyframes, opts } = this.getAnimDef();
+          const { translateKeyframes, rotateKeyframes, opts } = this.getWalkAnimDef();
           anim.translate = this.el.root.animate(translateKeyframes, opts);
           anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           anim.durationMs = opts.duration;
@@ -531,6 +537,7 @@ export default function createNpc(
               duration: spriteMs, // 🚧 ~ npcWalkAnimDurationMs
               iterations: Infinity,
               delay: opts.delay,
+              playbackRate: opts.playbackRate,
             },
           );
           break;
@@ -591,6 +598,20 @@ export default function createNpc(
           break;
       }
       this.doMeta = meta.do ? meta : null;
+    },
+    setSpeedFactor(speedFactor) {
+      if (this.anim.spriteSheet === 'walk') {
+        /**
+         * Infer the `this.anim.speedFactor` used when creating walk animation,
+         * given `this.anim.durationMs` was `aux.total * this.getAnimScaleFactor()`.
+         */
+        const animSpeedFactor = (1 / this.anim.durationMs) * ((1000 * this.anim.aux.total) / this.def.speed);
+        this.anim.translate.updatePlaybackRate(speedFactor / animSpeedFactor);
+        this.anim.rotate.updatePlaybackRate(speedFactor / animSpeedFactor);
+        this.anim.sprites.updatePlaybackRate(speedFactor / animSpeedFactor);
+      }
+      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
+      this.anim.speedFactor = speedFactor;
     },
     updateAnimAux() {
       const { aux } = this.anim;

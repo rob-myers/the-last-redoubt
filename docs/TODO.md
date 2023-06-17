@@ -2,7 +2,16 @@
 
 ## In progress
 
-- 🚧 BUG resize terminal (make it very small) breaks display of pending input (fixed when start to type)
+- 🚧 support `npc.anim.speedFactor`
+  - ✅ can change mid-walk
+  - ✅ collisions work at different speeds
+  - 🚧 collisions work if change speed mid-walk
+    - ℹ️ cannot assume uniform speed when predicting collide time (wayTimeout)
+  - adjust tracking
+
+- npc slows down when --tryOpen and walks through door
+- move --tryOpen to `walk`?
+- BUG resize terminal (e.g. make it very small) breaks display of pending input (although fixed when start to type)
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary

@@ -213,7 +213,7 @@ export default function useHandleEvents(api) {
           if (!playerNpc) {
             /**
              * Only handle stopped NPC when a Player exists.
-             * NPC vs NPC motion should be handled separately.
+             * NPC vs NPC motion should be handled separately 🤔.
              */
             break;
           }
@@ -234,6 +234,21 @@ export default function useHandleEvents(api) {
             if (collision) {
               setTimeout(() => cancelNpcs(playerNpc.key, npc.key), collision.seconds * 1000);
             }
+          }
+          break;
+        }
+        case 'changed-speed': {
+          /**
+           * 🚧 Hopefully no need for collision test when we change speed?
+           * Try to re-compute timeoutId for wayMeta `pre-npcs-collide`
+           */
+          const npc = api.npcs.getNpc(e.npcKey);
+          const wayMeta = npc.anim.wayMetas[0];
+          // console.log('WAY META', wayMeta);
+          if (wayMeta?.key === 'pre-npcs-collide') {
+            window.clearTimeout(npc.anim.wayTimeoutId);
+            // 🚧 recomputed timeout assumes uniform speed, which is WRONG
+            npc.nextWayTimeout();
           }
           break;
         }
