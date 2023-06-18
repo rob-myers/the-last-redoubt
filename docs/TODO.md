@@ -8,7 +8,7 @@
   - ✅ npc-npc collisions work if change speed mid-walk
     - ℹ️ cannot assume uniform speed when predicting collide time (wayTimeout)
   - ✅ adjust tracking
-  - 🚧 npc-door collisions works when change speed mid-walk
+  - ✅ npc-door collisions works when change speed mid-walk
     - account for playbackRate change?
   - clean up:
     - replace `anim.updatedPlaybackRate` with `getTiming().playbackRate`.

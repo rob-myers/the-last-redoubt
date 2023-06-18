@@ -240,10 +240,8 @@ export default function useHandleEvents(api) {
         case 'changed-speed': {
           const npc = api.npcs.getNpc(e.npcKey);
           const wayMeta = npc.anim.wayMetas[0];
-          // console.log('WAY META', wayMeta);
-          if (wayMeta?.key === 'pre-npcs-collide') {
-            // We changed-speed during segment with a future collision,
-            // so we must recompute the timing:
+          if (wayMeta) {
+            // We changed speed, so we must recompute the timing:
             window.clearTimeout(npc.anim.wayTimeoutId);
             npc.nextWayTimeout();
           }
