@@ -244,9 +244,11 @@ export function predictNpcNpcCollision(npcA, npcB) {
     const speedB = npcB.getSpeed();
     const minDistSq = ((npcA.getRadius() + npcB.getRadius()) * 0.9) ** 2;
 
-    if (dpA >= 0 || dpB <= 0) {// NPCs not moving towards each other
-      return null;
-    }
+    // ℹ️ "optimization" fails if one npc catches the other up,
+    //    either via greater speed OR by walking into their side
+    // if (dpA >= 0 || dpB <= 0) {// NPCs not moving towards each other
+    //   return null;
+    // }
     if (distABSq <= minDistSq) {// Already colliding
       return { seconds: 0, distA: 0, distB: 0 };
     }

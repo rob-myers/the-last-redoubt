@@ -2,6 +2,10 @@
 
 ## In progress
 
+- ✅ BUG npc vs npc collision issue
+  - ℹ️ seems to be independent of speedFactor change
+  - ℹ️ easy repro via speedFactor 2 and run into walking npc from behind
+
 - 🚧 support `npc.anim.speedFactor`
   - ✅ can change mid-walk
   - ✅ npc-npc collisions work at different speeds
