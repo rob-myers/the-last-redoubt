@@ -299,6 +299,31 @@ export default function createNpc(
     getSpeed() {
       return this.def.speed * this.anim.speedFactor;
     },
+    getTarget() {
+      if (this.isWalking()) {
+        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
+        const initAnimScaleFactor = 1000 * (1 / (this.def.speed * this.anim.initSpeedFactor));
+        const nextIndex = this.anim.aux.sofars.findIndex(soFar => (soFar * initAnimScaleFactor) > soFarMs);
+        // Expect -1 iff at final point
+        return nextIndex === -1 ? null : this.anim.path[nextIndex].clone();
+      } else {
+        return null;
+      }
+    },
+    getTargets() {
+      if (this.isWalking()) {
+        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
+        const initAnimScaleFactor = 1000 * (1 / (this.def.speed * this.anim.initSpeedFactor));
+        return this.anim.aux.sofars
+          .map((soFar, i) => ({ point: this.anim.path[i].clone(), arriveMs: (soFar * initAnimScaleFactor) - soFarMs }))
+          .filter(x => x.arriveMs >= 0)
+      } else {
+        return [];
+      }
+    },
+    getWalkBounds() {
+      return this.anim.aux.outsetWalkBounds;
+    },
     getWalkCycleDuration(entireWalkMs) {
       const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.classKey];
       /**
@@ -327,30 +352,6 @@ export default function createNpc(
       const deltaMs = (entireWalkMs - walkCycleMs * altWalkCycles) / altWalkCycles;
       
       return walkCycleMs + deltaMs;
-    },
-    getTarget() {
-      if (this.isWalking()) {
-        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
-        const nextIndex = this.anim.aux.sofars.findIndex(sofar => (sofar * this.getAnimScaleFactor()) > soFarMs);
-        // Expect -1 iff at final point
-        return nextIndex === -1 ? null : this.anim.path[nextIndex].clone();
-      } else {
-        return null;
-      }
-    },
-    getTargets() {
-      if (this.isWalking()) {
-        const soFarMs = /** @type {number} */ (this.anim.translate.currentTime);
-        const animScaleFactor = this.getAnimScaleFactor();
-        return this.anim.aux.sofars
-          .map((sofar, i) => ({ point: this.anim.path[i].clone(), arriveMs: (sofar * animScaleFactor) - soFarMs }))
-          .filter(x => x.arriveMs >= 0)
-      } else {
-        return [];
-      }
-    },
-    getWalkBounds() {
-      return this.anim.aux.outsetWalkBounds;
     },
     getWalkSegBounds(withNpcRadius) {
       return withNpcRadius ? this.anim.aux.outsetSegBounds : this.anim.aux.segBounds;
