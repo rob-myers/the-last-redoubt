@@ -223,7 +223,8 @@ export default function useHandleEvents(api) {
             // e.g. before they start a new line segment
             Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
               const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
-              if (collision) {
+              if (collision) {// 🚧 pausable?
+                console.warn(`${e.npcKey} will collide with ${npc.key}`, collision);
                 setTimeout(() => cancelNpcs(npc.key, playerNpc.key), collision.seconds * 1000);
               }
             });
@@ -231,7 +232,8 @@ export default function useHandleEvents(api) {
             // Player may be about to collide with NPC
             const npc = api.npcs.getNpc(e.npcKey);
             const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
-            if (collision) {
+            if (collision) {// 🚧 pausable?
+              console.warn(`${npc.key} will collide with ${playerNpc.key}`, collision);
               setTimeout(() => cancelNpcs(playerNpc.key, npc.key), collision.seconds * 1000);
             }
           }
