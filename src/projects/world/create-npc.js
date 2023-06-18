@@ -48,7 +48,9 @@ export default function createNpc(
       rotate: new Animation(),
       sprites: new Animation(),
       durationMs: 0,
+      initSpeedFactor: 1,
       speedFactor: 1,
+      updatedPlaybackRate: 1,
   
       gmRoomKeys: [],
       wayMetas: [],
@@ -174,6 +176,7 @@ export default function createNpc(
       this.anim.path = path.map(Vect.from);
       // `nav` provides gmRoomKeys, needed for decor collisions
       this.anim.gmRoomKeys = opts?.gmRoomKeys ?? [];
+      this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();
       this.updateAnimAux();
@@ -410,13 +413,13 @@ export default function createNpc(
     },
     nextWayTimeout() {
       if (this.anim.translate.currentTime === null) {
-        return warn('nextWayTimeout: anim.root.currentTime is null')
+        return warn('nextWayTimeout: anim.translate.currentTime is null')
       } else if (this.anim.wayMetas[0]) {
+        // Animation has uniform speed ∴ currLength/currTime = total/durationMs 
+        const currentLength = this.anim.aux.total * (this.anim.translate.currentTime / this.anim.durationMs);
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
-          // length is preserved when npc speed changes,
-          // 🚧 but cannot assume uniform speed
-          (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - this.anim.translate.currentTime,
+          (this.anim.wayMetas[0].length - currentLength) * this.getAnimScaleFactor() * (1 / this.anim.updatedPlaybackRate),
         );
       }
     },
@@ -516,6 +519,7 @@ export default function createNpc(
           anim.translate = this.el.root.animate(translateKeyframes, opts);
           anim.rotate = this.el.body.animate(rotateKeyframes, opts);
           anim.durationMs = opts.duration;
+          anim.initSpeedFactor = anim.speedFactor;
 
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup } = npcsMeta[this.classKey].parsed;
@@ -601,14 +605,10 @@ export default function createNpc(
     },
     setSpeedFactor(speedFactor) {
       if (this.anim.spriteSheet === 'walk') {
-        /**
-         * Infer the `this.anim.speedFactor` used when creating walk animation,
-         * given `this.anim.durationMs` was `aux.total * this.getAnimScaleFactor()`.
-         */
-        const animSpeedFactor = (1 / this.anim.durationMs) * ((1000 * this.anim.aux.total) / this.def.speed);
-        this.anim.translate.updatePlaybackRate(speedFactor / animSpeedFactor);
-        this.anim.rotate.updatePlaybackRate(speedFactor / animSpeedFactor);
-        this.anim.sprites.updatePlaybackRate(speedFactor / animSpeedFactor);
+        this.anim.updatedPlaybackRate = speedFactor / this.anim.initSpeedFactor;
+        this.anim.translate.updatePlaybackRate(this.anim.updatedPlaybackRate);
+        this.anim.rotate.updatePlaybackRate(this.anim.updatedPlaybackRate);
+        this.anim.sprites.updatePlaybackRate(this.anim.updatedPlaybackRate);
       }
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
       this.anim.speedFactor = speedFactor;
@@ -662,8 +662,8 @@ export default function createNpc(
         return;
       } else if (
         this.anim.translate.currentTime >=
-        (this.anim.wayMetas[0].length * this.getAnimScaleFactor()) - 1
-        ) {
+        (this.anim.wayMetas[0].length * 1000 * (1 / (this.def.speed * this.anim.initSpeedFactor))) - 1
+      ) {
           // We've reached the wayMeta's `length`,
           // so remove it and trigger respective event
           const wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift());
@@ -671,12 +671,13 @@ export default function createNpc(
           // Also remove/trigger any adjacent meta with ≤ length
           while (this.anim.wayMetas[0]?.length <= wayMeta.length) {
             api.npcs.events.next({ key: 'way-point', npcKey: this.def.key,
-            meta: /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()),
-          });
-        }
+              meta: /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()),
+            });
+          }
       } else {
         // console.warn(
         //   'wayTimeout not ready',
+        //   this.anim.wayMetas[0],
         //   this.anim.translate.currentTime,
         //   this.anim.translate.effect?.getTiming().duration,
         //   this.anim.wayMetas[0].length * this.getAnimScaleFactor(),

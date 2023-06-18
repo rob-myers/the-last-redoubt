@@ -238,16 +238,13 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'changed-speed': {
-          /**
-           * 🚧 Hopefully no need for collision test when we change speed?
-           * Try to re-compute timeoutId for wayMeta `pre-npcs-collide`
-           */
           const npc = api.npcs.getNpc(e.npcKey);
           const wayMeta = npc.anim.wayMetas[0];
           // console.log('WAY META', wayMeta);
           if (wayMeta?.key === 'pre-npcs-collide') {
+            // We changed-speed during segment with a future collision,
+            // so we must recompute the timing:
             window.clearTimeout(npc.anim.wayTimeoutId);
-            // 🚧 recomputed timeout assumes uniform speed, which is WRONG
             npc.nextWayTimeout();
           }
           break;

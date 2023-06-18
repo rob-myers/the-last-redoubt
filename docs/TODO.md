@@ -4,10 +4,15 @@
 
 - 🚧 support `npc.anim.speedFactor`
   - ✅ can change mid-walk
-  - ✅ collisions work at different speeds
-  - 🚧 collisions work if change speed mid-walk
+  - ✅ npc-npc collisions work at different speeds
+  - ✅ npc-npc collisions work if change speed mid-walk
     - ℹ️ cannot assume uniform speed when predicting collide time (wayTimeout)
-  - adjust tracking
+  - ✅ adjust tracking
+  - 🚧 npc-door collisions works when change speed mid-walk
+    - account for playbackRate change?
+  - clean up:
+    - replace `anim.updatedPlaybackRate` with `getTiming().playbackRate`.
+    - replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
 
 - npc slows down when --tryOpen and walks through door
 - move --tryOpen to `walk`?

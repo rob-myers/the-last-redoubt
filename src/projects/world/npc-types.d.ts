@@ -169,6 +169,14 @@ declare namespace NPC {
     rotate: Animation;
     sprites: Animation;
     durationMs: number;
+    /**
+     * Seems `anim.updatePlaybackRate(...)` not recorded in `anim.playbackRate`.
+     * We only update playback rate to change the walking rate.
+     * 🚧 can probably compute via getTiming()
+     */
+    updatedPlaybackRate: number;
+    /** Value of `speedFactor` when walk animation is constructed */
+    initSpeedFactor: number;
     /** Scale factor for speed of walking */
     speedFactor: number;
 

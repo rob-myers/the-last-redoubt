@@ -753,16 +753,19 @@ export default function NPCs(props) {
             || (x.key === 'started-walking' && x.npcKey === npcKey)
             || (x.key === 'stopped-walking' && x.npcKey === npcKey)
             || (x.key === 'spawned-npc' && x.npcKey === npcKey)
+            || (x.key === 'changed-speed' && x.npcKey === npcKey)
           )
         )),
       ).subscribe({
         async next(msg) {
           // console.log('msg', msg);
-          if (msg.key === 'started-walking') {
+          if (msg.key === 'started-walking' || msg.key === 'changed-speed') {
             changeStatus('follow-walk');
             try {
               const path = npc.getTargets().map(x => x.point);
-              await panZoom.followPath(path, { animScaleFactor: npc.getAnimScaleFactor() });
+              await panZoom.followPath(path, {
+                animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
+              });
             } catch {} // Ignore Error('cancelled')
             return;
           }
@@ -781,7 +784,7 @@ export default function NPCs(props) {
           ) {
             changeStatus('panzoom-to');
             try {
-              const baseZoom = 1.8;
+              const baseZoom = 1.8; // 🚧 remove hard-coding
               await panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000);
             } catch {};
             changeStatus('no-track');
