@@ -76,7 +76,7 @@ export default function Doors(props) {
       if (opts.open && wasOpen) {
         return true; // Do not open if opened
       }
-      if (npcKey && !state.npcNearDoor(gmId, doorId, npcKey)) {
+      if (npcKey && !npcs.config.omnipresent && !state.npcNearDoor(gmId, doorId, npcKey)) {
         return false;
       }
       if (wasOpen && !state.safeToCloseDoor(gmId, doorId)) {
