@@ -26,7 +26,7 @@
     </rect>
     <path d="M 64 -4 L 124 56 L 124 122 L 116 122 L 116 60 L 60 4 L 3 4 L 3 -4 L 64 -4 Z" style=""/>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1179.1" y="28.6">
       <title>decor go label=locker</title>
@@ -166,7 +166,7 @@
     <rect x="-1.125" width="5" height="80" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="257.252">
       <title>parallel-connectors</title>
     </rect>
-    <rect x="1198.875" width="5" height="80" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="257.252">
+    <rect x="1197.5" width="5" height="80" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="257.252">
       <title>parallel-connectors</title>
     </rect>
     <rect x="260.875" width="80" height="5" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="597.252">
@@ -175,7 +175,7 @@
     <rect x="860.875" width="80" height="5" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="597.252">
       <title>parallel-connectors</title>
     </rect>
-    <rect x="1077.5" width="5" height="90" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="370">
+    <rect x="1078.5" width="3" height="90" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255); stroke-width: 0.1px;" y="370">
       <title>parallel-connectors</title>
     </rect>
     <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); stroke-width: 4px; opacity: 0.2;">
@@ -193,9 +193,6 @@
     <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377319, 222.598053)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377197, 282.598022)">
-      <title>relate-connectors</title>
-    </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
       <title>view</title>
     </rect>
@@ -211,28 +208,28 @@
     <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5; opacity: 0.5;">
       <title>wall machine no-fill</title>
     </path>
-    <rect x="1077.5" y="542" width="5" height="54" style="">
+    <rect x="1077.5" y="542" width="5" height="54" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="897.5" y="346.3" width="5" height="195.7" style="">
+    <rect x="897.5" y="346.3" width="5" height="195.7" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="897.5" y="852.6" width="5" height="481.9" style="" transform="matrix(0, 1, -1, 0, 1934.524048, -360.5)">
+    <rect x="897.5" y="852.6" width="5" height="481.9" style="opacity: 0.25;" transform="matrix(0, 1, -1, 0, 1934.524048, -360.5)">
       <title>wall</title>
     </rect>
-    <rect x="1077.5" y="300" width="5" height="242" style="">
+    <rect x="1077.5" y="300" width="5" height="242" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="1168.5" y="178" width="28.4" height="4" style="">
+    <rect x="1168.5" y="178" width="28.4" height="4" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="1168.5" y="118" width="28.4" height="4" style="">
+    <rect x="1168.5" y="118" width="28.4" height="4" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="1168.5" y="58" width="28.4" height="4" style="">
+    <rect x="1168.5" y="58" width="28.4" height="4" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
-    <rect x="1167.458" width="5.5" height="240" style="">
+    <rect x="1167.458" width="5.5" height="240" style="opacity: 0.25;">
       <title>wall</title>
     </rect>
     <rect x="240" y="409.9" width="180" height="14.1" style="fill-opacity: 0.4; opacity: 0.8;">
