@@ -169,16 +169,20 @@ declare namespace NPC {
     rotate: Animation;
     sprites: Animation;
     durationMs: number;
+    speedFactor: number;
     /**
-     * Seems `anim.updatePlaybackRate(...)` not recorded in `anim.playbackRate`.
-     * We only update playback rate to change the walking rate.
-     * 🚧 can probably compute via getTiming()
+     * Value of `this.animScaleFactor()` when walk animation is constructed.
+     * Useful because even though we use playbackRate to modify speed, we can
+     * e.g. compute how far along walk we are via currentTime / initAnimScaleFactor
+     */
+    initAnimScaleFactor: number;
+    /**
+     * - Seems `anim.updatePlaybackRate(...)` not recorded in `anim.playbackRate`,
+     *   nor in `anim.effect.getTiming().playbackRate` or similar.
+     * - We only update playback rate to change the walking rate.
      */
     updatedPlaybackRate: number;
-    /** Value of `speedFactor` when walk animation is constructed */
-    initSpeedFactor: number;
     /** Scale factor for speed of walking */
-    speedFactor: number;
 
     /** Aligned to `path` with format `g${gmId}-r${roomId} */
     gmRoomKeys: string[];

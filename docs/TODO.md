@@ -6,7 +6,7 @@
   - ℹ️ seems to be independent of speedFactor change
   - ℹ️ easy repro via speedFactor 2 and run into walking npc from behind
 
-- 🚧 support `npc.anim.speedFactor`
+- ✅ support `npc.anim.speedFactor`
   - ✅ can change mid-walk
   - ✅ npc-npc collisions work at different speeds
   - ✅ npc-npc collisions work if change speed mid-walk
@@ -14,9 +14,10 @@
   - ✅ adjust tracking
   - ✅ npc-door collisions works when change speed mid-walk
     - account for playbackRate change?
-  - clean up:
-    - replace `anim.updatedPlaybackRate` with `getTiming().playbackRate`.
-    - replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
+  - ✅ clean up:
+    - ❌ replace `anim.updatedPlaybackRate` with `effect.getTiming().playbackRate`.
+      > remains undefined after using `anim.translate.updatePlaybackRate(...)`
+    - ✅ replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
 
 - npc slows down when --tryOpen and walks through door
 - move --tryOpen to `walk`?
