@@ -28,12 +28,17 @@
   - creates fresh navPath, although share e.g. fullPath `Vect`s
 
 - `navPath | walk andros`
-  - ✅ if move player then FOV updates
-  - tracking is slow
+  - ✅ on player warp then FOV updates
+  - 🚧 tracking is slow when npc warps
+
+- ✅ support alias `npc get foo` -> `npc foo`
 
 - npc slows down when --tryOpen and walks through door
+  - alt the npc can just walk more slowly
 - move --tryOpen to `walk`?
+
 - BUG resize terminal (e.g. make it very small) breaks display of pending input (although fixed when start to type)
+  - ⏰
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary

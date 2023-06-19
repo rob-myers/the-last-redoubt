@@ -214,3 +214,7 @@ nav --tryOpen andros $(
 nav --tryOpen andros $( click 1 ) > navPath
 world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPath2
 ```
+
+```sh
+npc events | map 'x => [x.key, x.meta?.key]'
+```

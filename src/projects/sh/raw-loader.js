@@ -267,17 +267,27 @@
       }
     },
   
-    /** npc {action} [{opts}] [{args}] 🚧 Needs a refactor */
+    /** npc {action} [{opts}] [{args}] */
     npc: async function* ({ api, args, home, datum }) {
+      /**
+       * 🚧 Needs a refactor
+       * - cleanup `events`
+       * - cleanup `do`
+       */
       const { doors, npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
-      const action = args[0];
 
-      if (typeof action !== "string" || action === "") {
+      if (!args[0]) {
         throw api.throwError("first arg {action} must be a non-empty string");
-      } else if (!npcs.service.isNpcActionKey(action)) {
-        throw api.throwError("first arg {action} must be a valid key");
+      } else if (!npcs.service.isNpcActionKey(args[0])) {
+        if (args[0] in npcs.npc) {
+          // `npc {npcKey} [selector]` --> `npc get {npcKey} [selector]`
+          args[2] = args[1], args[1] = args[0], args[0] = "get";
+        } else {
+          throw api.throwError("first arg {action} must be a valid key");
+        }
       }
 
+      const action = /** @type {NPC.NpcActionKey} */ (args[0]);
       const process = api.getProcess();
 
       // `npc events` yields > 1 output (potentially unbounded)
