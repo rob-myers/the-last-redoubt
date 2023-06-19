@@ -3,6 +3,8 @@ import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 
+// 🚧 singleton service works better with HMR?
+
 /**
  * Choose scale factor s.t. npc radius becomes `14.4`.
  * - Starship Geomorphs grid is 60 * 60.
@@ -415,3 +417,59 @@ export function verifyLocalNavPath(input) {
     // TODO check navMetas
     || false;
 }
+
+//#region navpath
+
+/**
+ * - Shares vectors in fullPath.
+ * - Only constructs shallow-clone of navMetas.
+ * @param {NPC.GlobalNavPath} navPath 
+ * @return {NPC.GlobalNavPath} 
+ */
+export function cloneNavPath({ key, fullPath, navMetas, gmRoomIds }) {
+  return {
+    key,
+    fullPath: fullPath.slice(),
+    // Shallow clone sufficient?
+    // Optional chaining for safety?
+    navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
+    gmRoomIds: gmRoomIds?.slice(),
+  };
+}
+
+/**
+ * @param {NPC.GlobalNavPath} navPath 
+ * @param {number} [startId] from vertex {startId} (possibly -ve)
+ * @param {number} [endId] to (not including) vertex {endId} (possibly -ve)
+ * @returns {NPC.GlobalNavPath}
+ */
+export function sliceNavPath(navPath, startId, endId) {
+  let { key, fullPath, navMetas = [], gmRoomIds } = navPath;
+
+  fullPath = fullPath.slice(startId, endId);
+  gmRoomIds = gmRoomIds?.slice(startId, endId);
+  navMetas = navMetas.slice();
+
+  if (typeof endId === 'number') {
+    if (endId < 0) endId += navPath.fullPath.length;
+    const postMetaId = navMetas.findIndex(meta => meta.index >= /** @type {number} */ (endId));
+    postMetaId >= 0 && (navMetas = navMetas.slice(0, postMetaId));
+  }
+
+  if (typeof startId === 'number') {
+    if (startId < 0) startId += navPath.fullPath.length;
+    const preMetaId = navMetas.findIndex(meta => meta.index >= /** @type {number} */ (startId));
+    preMetaId >= 0 && (navMetas = navMetas.slice(preMetaId)
+      .map(meta => ({ ...meta, index: meta.index - /** @type {number} */ (startId) }))
+    );
+  }
+
+  return {
+    key,
+    fullPath,
+    gmRoomIds,
+    navMetas,
+  };
+}
+
+//#endregion

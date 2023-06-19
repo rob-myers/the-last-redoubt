@@ -592,32 +592,6 @@ export default function NPCs(props) {
       state.events.next({ key: 'removed-npc', npcKey });
       update();
     },
-    // 🚧 support endId?
-    restrictNavPath(navPath, { startId }) {
-      const { fullPath, navMetas } = navPath;
-
-      if (fullPath.length <= 1 || startId === undefined) {// degenerate
-        return navPath;
-      }
-      if (!navMetas || navMetas.length === 0) {// manually provided
-        return {
-          key: navPath.key,
-          fullPath: fullPath.slice(startId),
-          gmRoomIds: navPath.gmRoomIds?.slice(startId),
-          navMetas,
-        }; 
-      }
-      
-      return {
-        key: navPath.key,
-        fullPath: fullPath.slice(startId),
-        gmRoomIds: navPath.gmRoomIds?.slice(startId),
-        navMetas: navMetas
-          .slice(navMetas.findIndex(x => x.index >= startId))
-          .map(x => { x.index -= startId; return x; })
-        ,
-      };
-    },
     rootRef(el) {
       if (el) {
         state.rootEl = el;
@@ -806,7 +780,7 @@ export default function NPCs(props) {
         // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
         await npc.followNavPath(allPoints, {
           globalNavMetas: globalNavPath.navMetas,
-          gmRoomKeys: globalNavPath.gmRoomIds?.map(([gmId, roomId]) => getGmRoomKey(gmId, roomId)),
+          gmRoomIds: globalNavPath.gmRoomIds,
         });
 
       } catch (err) {
@@ -882,7 +856,6 @@ export default function NPCs(props) {
  * Started on-mesh and clicked point
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(npcKey: string) => void} removeNpc
- * @property {(navPath: NPC.GlobalNavPath, opts: { startId?: number; endId?: number }) => NPC.GlobalNavPath} restrictNavPath
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc

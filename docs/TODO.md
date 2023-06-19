@@ -19,6 +19,18 @@
       > remains undefined after using `anim.translate.updatePlaybackRate(...)`
     - ✅ replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
 
+- ✅ sliceNavPath(navPath, startId, endId)
+  - ℹ️ e.g.
+    - path into players room but make npc stop before room
+    - path from players room but make npc start outside room
+    - align npcs along disjoint parts of a path
+    - npcs walk at same pace but from different points, as if following
+  - creates fresh navPath, although share e.g. fullPath `Vect`s
+
+- `navPath | walk andros`
+  - ✅ if move player then FOV updates
+  - tracking is slow
+
 - npc slows down when --tryOpen and walks through door
 - move --tryOpen to `walk`?
 - BUG resize terminal (e.g. make it very small) breaks display of pending input (although fixed when start to type)

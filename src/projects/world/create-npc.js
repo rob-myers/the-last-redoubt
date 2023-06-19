@@ -52,7 +52,7 @@ export default function createNpc(
       initAnimScaleFactor: 1000 / (def.speed * 1),
       updatedPlaybackRate: 1,
   
-      gmRoomKeys: [],
+      gmRoomIds: [],
       wayMetas: [],
       wayTimeoutId: 0,
     },
@@ -175,7 +175,7 @@ export default function createNpc(
       // This might be a jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
       // `nav` provides gmRoomKeys, needed for decor collisions
-      this.anim.gmRoomKeys = opts?.gmRoomKeys ?? [];
+      this.anim.gmRoomIds = opts?.gmRoomIds ?? [];
       this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();

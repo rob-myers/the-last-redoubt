@@ -203,4 +203,14 @@ world 'x => x.npcs.getRandomRoomNavpoint(1, 14)'
 # {"x":674.04,"y":784.8199999999999}
 nav andros $_ --tryOpen | walk andros
 # off we go...
+
+nav --tryOpen andros $(
+  world 'x => x.npcs.getRandomRoomNavpoint(4, 5)'
+) | walk andros
+```
+
+```sh
+# slice a navPath
+nav --tryOpen andros $( click 1 ) > navPath
+world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPath2
 ```

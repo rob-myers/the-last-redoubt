@@ -68,7 +68,7 @@ declare namespace NPC {
       path: Geom.VectJson[],
       opts: {
         globalNavMetas?: NPC.GlobalNavMeta[];
-        gmRoomKeys?: string[];
+        gmRoomIds?: [number, number][];
       },
     ): Promise<void>;
     /** Radians */
@@ -184,8 +184,8 @@ declare namespace NPC {
     updatedPlaybackRate: number;
     /** Scale factor for speed of walking */
 
-    /** Aligned to `path` with format `g${gmId}-r${roomId} */
-    gmRoomKeys: string[];
+    /** Aligned to `path` with format `[gmId, roomId]` */
+    gmRoomIds: [number, number][];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
@@ -276,22 +276,22 @@ declare namespace NPC {
   }
 
   /**
-   * A `FloorGraph` nav meta enriched with id of geomorph instance it resides in.
-   * May be used e.g. to trigger light change on enter-room via a hull door.
-   */
-  export type GlobalNavMeta = Graph.FloorGraphNavMeta & {
-    gmId: number;
-  }
-
-  /**
-   * An npc way meta is a global nav meta, with `length` along the navpath it'll trigger.
+   * An `NpcWayMeta` is a `GlobalNavMeta` with a `length` along the navpath it'll trigger.
    * - `length` is naturally computed using existing npc anim computations.
    * - `length` may be earlier than distance along path to respective node,
-   *    and may also depend on npc's radius.
+   *    and may also depend on npc's radius. 🤔 shouldn't it be _later_?
    */
   export type NpcWayMeta = GlobalNavMeta & {
     /** Computed via `anim.sofars` */
     length: number;
+  }
+
+  /**
+   * A `GlobalNavMeta` is a `FloorGraphNavMeta` enriched with the id of the geomorph instance
+   * it resides in. Used e.g. to trigger light change on enter-room via a hull door.
+   */
+  export type GlobalNavMeta = Graph.FloorGraphNavMeta & {
+    gmId: number;
   }
 
   export interface NpcCollision {

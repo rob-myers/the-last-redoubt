@@ -1,6 +1,6 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
-import { decodeDecorInstanceKey, } from "../service/geomorph";
+import { decodeDecorInstanceKey, getGmRoomKey, } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
@@ -22,8 +22,9 @@ export default function useHandleEvents(api) {
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
-          if (e.meta.final) break;
-          // We know `npc` is walking
+          if ((e.meta.index + 1) === npc.anim.path.length) {
+            break; // cannot rely on `e.meta.final` when sliceNavPath
+          } // know `npc` is walking:
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
@@ -69,7 +70,8 @@ export default function useHandleEvents(api) {
 
     predictNpcDecorCollision(npc, e) {
       // Restrict to decor in line segment's rooms (1 or 2 rooms)
-      const gmRoomKeys = npc.anim.gmRoomKeys.slice(e.meta.index, (e.meta.index + 1) + 1);
+      const gmRoomKeys = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1)
+        .map(([gmId, roomId]) => getGmRoomKey(gmId, roomId)); // 🚧 precompute keys?
       gmRoomKeys.length === 2 && gmRoomKeys[0] === gmRoomKeys[1] && gmRoomKeys.pop();
       const closeDecor = gmRoomKeys.flatMap((gmRoomKey) => 
         api.decor.getDecorAtKey(gmRoomKey).filter(
@@ -201,16 +203,27 @@ export default function useHandleEvents(api) {
           break;
         case 'spawned-npc':
           // This event also happens on hot-reload NPC.jsx
-          if (api.npcs.playerKey === e.npcKey) {
+          if (e.npcKey === api.npcs.playerKey) {
+            // 🚧 Do we always need to reset this?
             api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
             api.npcs.setRoomByNpc(e.npcKey);
           }
           break;
         case 'started-walking':
+          if (e.npcKey === api.npcs.playerKey) {
+            // Player could have warped to start of navPath,
+            // in which case we need to change the FOV
+            const [id] = api.npcs.getNpc(e.npcKey).anim.gmRoomIds;
+            if (!id) {// custom navPaths needn't have gmRoomIds
+              api.npcs.setRoomByNpc(e.npcKey);
+            } else if (api.fov.gmId !== id[0] || api.fov.roomId !== id[1]) {
+              api.fov.setRoom(...id, -1);
+            }
+          }
           break;
         case 'stopped-walking': {
-          const playerNpc = api.npcs.getPlayer();
-          if (!playerNpc) {
+          const player = api.npcs.getPlayer();
+          if (!player) {
             /**
              * Only handle stopped NPC when a Player exists.
              * NPC vs NPC motion should be handled separately 🤔.
@@ -218,23 +231,23 @@ export default function useHandleEvents(api) {
             break;
           }
 
-          if (e.npcKey === playerNpc.key) {
+          if (e.npcKey === player.key) {
             // Walking NPCs may be about to collide with Player,
             // e.g. before they start a new line segment
-            Object.values(api.npcs.npc).filter(x => x !== playerNpc && x.isWalking()).forEach(npc => {
-              const collision = npcService.predictNpcNpcCollision(npc, playerNpc);
+            Object.values(api.npcs.npc).filter(x => x !== player && x.isWalking()).forEach(npc => {
+              const collision = npcService.predictNpcNpcCollision(npc, player);
               if (collision) {// 🚧 pausable?
                 console.warn(`${e.npcKey} will collide with ${npc.key}`, collision);
-                setTimeout(() => cancelNpcs(npc.key, playerNpc.key), collision.seconds * 1000);
+                setTimeout(() => cancelNpcs(npc.key, player.key), collision.seconds * 1000);
               }
             });
-          } else if (playerNpc.isWalking()) {
+          } else if (player.isWalking()) {
             // Player may be about to collide with NPC
             const npc = api.npcs.getNpc(e.npcKey);
-            const collision = npcService.predictNpcNpcCollision(playerNpc, npc);
+            const collision = npcService.predictNpcNpcCollision(player, npc);
             if (collision) {// 🚧 pausable?
-              console.warn(`${npc.key} will collide with ${playerNpc.key}`, collision);
-              setTimeout(() => cancelNpcs(playerNpc.key, npc.key), collision.seconds * 1000);
+              console.warn(`${npc.key} will collide with ${player.key}`, collision);
+              setTimeout(() => cancelNpcs(player.key, npc.key), collision.seconds * 1000);
             }
           }
           break;
