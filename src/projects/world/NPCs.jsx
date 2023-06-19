@@ -472,6 +472,7 @@ export default function NPCs(props) {
               ...Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
             );
           }
+          api.decor.update();
           break;
         case 'set-player':
           state.events.next({ key: 'set-player', npcKey: e.npcKey??null });
