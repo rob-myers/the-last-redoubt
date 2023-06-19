@@ -191,3 +191,16 @@ world 'x => x.fov'
 world "x => x.gmGraph.findRoomContaining($( click 1 ))"
 gm 0 'x => x.roomGraph'
 ```
+
+
+```sh
+world 'x => x.npcs.getRandomRoom(
+  (meta, gmId) => gmId === 1, // in geomorph 1
+  (meta) => !meta.hull && !meta.leaf, // not a hull/leaf room
+)'
+# {"gmId":1,"roomId":14}
+world 'x => x.npcs.getRandomRoomNavpoint(1, 14)'
+# {"x":674.04,"y":784.8199999999999}
+nav andros $_ --tryOpen | walk andros
+# off we go...
+```
