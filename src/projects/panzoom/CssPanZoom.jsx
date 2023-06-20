@@ -176,27 +176,21 @@ export default function CssPanZoom(props) {
        * 🚧 support changing scale
        */
       computePathKeyframes(path) {
-        const worldPoint = state.getWorldAtCenter();
-        const elens = path.map((p, i) => precision(p.distanceTo(i === 0 ? worldPoint : path[i - 1])));
-        
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        const current = state.getCurrentTransform();
+        const elens = path.map((p, i) => precision(p.distanceTo(path[i === 0 ? 0 : i -1])));
         const total = elens.reduce((sum, len) => sum + len, 0);
-        let sofar = 0;
+        let soFar = 0;
 
         /** @type {Keyframe[]} */
-        const keyframes = [
-          { offset: 0, transform: `translate(${current.x}px, ${current.y}px)` },
-          ...elens.map((elen, i) => ({
-            offset: (sofar += elen) / total,
-            // For center need to take account of scroll{Left,Top}
-            transform: `translate(${
-              screenWidth/2 + state.parent.scrollLeft - (current.scale * path[i].x)
-            }px, ${
-              screenHeight/2 + state.parent.scrollTop - (current.scale * path[i].y)
-            }px)`,
-          })),
-        ];
+        const keyframes = elens.map((elen, i) => ({
+          offset: (soFar += elen) / total,
+          // For center need to take account of scroll{Left,Top}
+          transform: `translate(${
+            screenWidth/2 + state.parent.scrollLeft - (state.scale * path[i].x)
+          }px, ${
+            screenHeight/2 + state.parent.scrollTop - (state.scale * path[i].y)
+          }px)`,
+        }));
 
         return { keyframes, distance: total };
       },

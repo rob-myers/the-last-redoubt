@@ -29,14 +29,17 @@
 
 - `navPath | walk andros`
   - ✅ on player warp then FOV updates
-  - 🚧 tracking is slow when npc warps
+  - ✅ tracking is slow when npc warps
 
 - ✅ support alias `npc get foo` -> `npc foo`
 
 - npc slows down when --tryOpen and walks through door
   - alt the npc can just walk more slowly
 - move --tryOpen to `walk`?
+- back to behaviour on homepage!
 
+- competing notion of gmRoomId
+  - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
 - BUG resize terminal (e.g. make it very small) breaks display of pending input (although fixed when start to type)
   - ⏰
 
