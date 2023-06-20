@@ -241,7 +241,8 @@ export default function createNpc(
         ]),
         rotateKeyframes: this.anim.path.flatMap((p, i) => [
           {
-            offset: (aux.sofars[i] - 0.1 * (aux.elens[i - 1] ?? 0)) / aux.total,
+            // offset: (aux.sofars[i] - 0.1 * (aux.elens[i - 1] ?? 0)) / aux.total,
+            offset: aux.sofars[i] / aux.total,
             transform: `rotateZ(${aux.angs[i - 1] || aux.angs[i] || 0}rad) scale(${npcScale})`
           },
           {
