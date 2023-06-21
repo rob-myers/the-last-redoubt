@@ -154,7 +154,7 @@ export default function createNpc(
     },
     // We take advantage of precomputed this.anim.aux.sofars
     computeWayMetaLength(navMeta) {
-      if (navMeta.key === 'pre-near-door') {
+      if (navMeta.key === 'at-door') {
         const gm = api.gmGraph.gms[navMeta.gmId];
         const navPoint = gm.inverseMatrix.transformPoint(this.anim.path[navMeta.index].clone());
         const door = gm.doors[navMeta.doorId];
@@ -324,6 +324,10 @@ export default function createNpc(
     getWalkBounds() {
       return this.anim.aux.outsetWalkBounds;
     },
+    getWalkCurrentTime() {
+      // https://github.com/microsoft/TypeScript/issues/54496
+      return /** @type {number | null} */ (this.anim.translate.currentTime);
+    },
     getWalkCycleDuration(entireWalkMs) {
       const { parsed: { animLookup }, scale: npcScale } = npcsMeta[this.classKey];
       /**
@@ -359,7 +363,7 @@ export default function createNpc(
     inferWalkTransform() {
       const position = new Vect;
       // 🚧 take account of playbackRate?
-      const ratio = (this.anim.translate.currentTime || 0) / this.anim.durationMs;
+      const ratio = (this.getWalkCurrentTime() ?? 0) / this.anim.durationMs;
       // 🚧 seems our computation of angle is wrong sometimes
       let angle = 0;
 
@@ -413,11 +417,12 @@ export default function createNpc(
       await this.animateRotate(targetRadians, 1 * 1000);
     },
     nextWayTimeout() {
-      if (this.anim.translate.currentTime === null) {
+      const currentTime = this.getWalkCurrentTime();
+      if (currentTime === null) {
         return warn('nextWayTimeout: anim.translate.currentTime is null')
       } else if (this.anim.wayMetas[0]) {
-        // Animation has uniform speed ∴ currLength/currTime = total/durationMs 
-        const currentLength = this.anim.aux.total * (this.anim.translate.currentTime / this.anim.durationMs);
+        // Animation has uniform speed ∴ currentLength/currentTime = total/durationMs 
+        const currentLength = this.anim.aux.total * (currentTime / this.anim.durationMs);
         this.anim.wayTimeoutId = window.setTimeout(
           this.wayTimeout.bind(this),
           (this.anim.wayMetas[0].length - currentLength) * this.getAnimScaleFactor() * (1 / this.anim.updatedPlaybackRate),
@@ -653,10 +658,11 @@ export default function createNpc(
      */
     wayTimeout() {
       // console.warn('wayTimeout next:', this.anim.wayMetas[0]);
+      const currentTime = this.getWalkCurrentTime();
       if (
         this.anim.wayMetas.length === 0
         || this.anim.spriteSheet !== 'walk'
-        || this.anim.translate.currentTime === null
+        || currentTime === null
         || this.anim.translate.playState === 'paused'
       ) {
         if (this.anim.wayMetas.length === 0) console.warn('wayTimeout: empty anim.wayMetas');
@@ -664,8 +670,7 @@ export default function createNpc(
         if (this.anim.spriteSheet !== 'walk') console.warn(`wayTimeout: anim.spriteSheet: ${this.anim.spriteSheet} is not "walk"`);
         return;
       } else if (
-        this.anim.translate.currentTime >=
-        (this.anim.wayMetas[0].length * this.anim.initAnimScaleFactor) - 1
+        currentTime >= (this.anim.wayMetas[0].length * this.anim.initAnimScaleFactor) - 1
       ) {
         // We've reached the wayMeta's `length`,
         // so remove it and trigger respective event

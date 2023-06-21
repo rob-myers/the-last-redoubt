@@ -126,7 +126,7 @@ export default function useHandleEvents(api) {
       const npc = api.npcs.getNpc(e.npcKey);
 
       switch (e.meta.key) {
-        case 'pre-npcs-collide':
+        case 'npcs-collide':
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
@@ -137,7 +137,7 @@ export default function useHandleEvents(api) {
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
           break;
-        case 'pre-near-door': {
+        case 'at-door': {
           const { gmId, doorId, tryOpen } = e.meta;
           if (!api.doors.open[gmId][doorId]) {// Upcoming door closed
             if (tryOpen && !api.doors.locked[gmId][doorId]) {
@@ -172,9 +172,9 @@ export default function useHandleEvents(api) {
           // Needed in case we exit-room via doorway then immediately re-enter
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
           break;
+        case 'at-door':
         case 'decor-collide':
-        case 'pre-near-door':
-        case 'pre-npcs-collide':
+        case 'npcs-collide':
         case 'vertex':
           break;
         default:
@@ -243,7 +243,7 @@ export default function useHandleEvents(api) {
           const length = e.meta.length + collision.distA;
           const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
           npc.anim.wayMetas.splice(insertIndex, 0, {
-            key: 'pre-npcs-collide',
+            key: 'npcs-collide',
             index: e.meta.index,
             otherNpcKey: other.key,
             gmId: e.meta.gmId,

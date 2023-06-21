@@ -4,8 +4,8 @@
 
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
-- `pre-near-door` -> `at-door`
-- `pre-npcs-collide` -> `npcs-collision`
+- ✅ `pre-near-door` -> `at-door`
+- ✅ `pre-npcs-collide` -> `npcs-collide`
 
 - 🚧 room local decor includes a circle per door
 - npc slows down when nav --tryOpen and "approaching door"
@@ -63,6 +63,7 @@
 
 - ✅ support ansi color codes inside `choice` args
 - HMR useGeomorphs?
+- BUG? saw collision detect fail whilst Player was still
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

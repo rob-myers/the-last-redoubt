@@ -95,6 +95,7 @@ declare namespace NPC {
     getTarget(): null | Geom.Vect;
     getTargets(): { point: Geom.Vect; arriveMs: number }[];
     getWalkBounds(): Geom.Rect;
+    getWalkCurrentTime(): number | null;
     getWalkSegBounds(withNpcRadius: boolean): Geom.Rect;
     /**
      * Given npc is walking and anim.transform.currentTime,

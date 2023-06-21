@@ -247,7 +247,7 @@ export class floorGraphClass extends BaseGraph {
           // either `partition[i + 1]` exists (door nodes), or we ended near a door
           const door = this.gm.doors[nearDoorId];
           navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
-            key: 'pre-near-door',
+            key: 'at-door',
             index: fullPath.length - 1,
             tryOpen,
             doorId: nearDoorId,
