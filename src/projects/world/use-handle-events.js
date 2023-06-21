@@ -13,6 +13,114 @@ export default function useHandleEvents(api) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
+    async handleNpcEvent(e) {
+      switch (e.key) {
+        case 'changed-speed': {
+          const npc = api.npcs.getNpc(e.npcKey);
+          if (npc.anim.wayMetas.length) {// Changed speed, so recompute timing:
+            window.clearTimeout(npc.anim.wayTimeoutId);
+            npc.nextWayTimeout();
+          }
+          break;
+        }
+        case 'decor-click':
+          mockHandleDecorClick(e, api);
+          break;
+        case 'disabled':
+          api.fov.mapAct('pause');
+          api.panZoom.animationAction('pause');
+          break;
+        case 'enabled':
+          api.fov.mapAct('resume');
+          if (!api.npcs.isPanZoomControlled()) {
+            // only resume when not controlled by e.g. `view` or `track`
+            api.panZoom.animationAction('play');
+          }
+          break;
+        case 'fov-changed':
+          // console.log(e);
+          api.decor.updateLocalDecor({ added: e.added, removed: e.removed, });
+          break;
+        case 'on-tty-link':
+          mockOnTtyLink(e, api);
+          break;
+        case 'set-player':
+          api.npcs.setPlayerKey(e.npcKey);
+          break;
+        case 'stopped-walking': {
+          const player = api.npcs.getPlayer();
+          if (player?.isWalking() && e.npcKey !== player.key) {
+            // Player may be about to collide with NPC e.npcKey
+            const npc = api.npcs.getNpc(e.npcKey);
+            const collision = npcService.predictNpcNpcCollision(player, npc);
+            if (collision) {
+              console.warn(`${npc.key} will collide with ${player.key}`, collision);
+              // 🚧 somehow pause setTimeout on World disable
+              setTimeout(() => cancelNpcs(player.key, npc.key), collision.seconds * 1000);
+            }
+          }
+          break;
+        }
+        case 'way-point':
+          await state.handleWayEvents(e);
+          break;
+        case 'decors-added':
+        case 'decors-removed':
+        case 'npc-clicked':
+        case 'npc-internal':
+        case 'removed-npc':
+        case 'spawned-npc':
+        case 'started-walking':
+          break;
+        default:
+          throw testNever(e, { suffix: 'npcsSub' });
+      }
+    },
+
+    async handlePlayerEvent(e) {
+      switch (e.key) {
+        case 'spawned-npc':
+          // 🚧 Do we always need to reset this?
+          api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
+          api.npcs.setRoomByNpc(e.npcKey);
+          break;
+        case 'started-walking':
+          // Player could have warped to start of navPath, changing FOV
+          const [id] = api.npcs.getNpc(e.npcKey).anim.gmRoomIds;
+          if (!id) {// custom navPaths needn't have gmRoomIds
+            api.npcs.setRoomByNpc(e.npcKey);
+          } else if (api.fov.gmId !== id[0] || api.fov.roomId !== id[1]) {
+            api.fov.setRoom(...id, -1);
+          }
+          break;
+        case 'stopped-walking': {
+          // Walking NPCs may be about to collide with Player,
+          // e.g. before they start a new line segment
+          const player = api.npcs.getPlayer();
+          player && Object.values(api.npcs.npc).filter(x => x !== player && x.isWalking()).forEach(npc => {
+            const collision = npcService.predictNpcNpcCollision(npc, player);
+            if (collision) {
+              console.warn(`${e.npcKey} will collide with ${npc.key}`, collision);
+              // 🚧 somehow pause setTimeout on World disable
+              setTimeout(() => cancelNpcs(npc.key, player.key), collision.seconds * 1000);
+            }
+          });
+          break;
+        }
+        case 'way-point':
+          state.handlePlayerWayEvent(e);
+          break;
+        case 'changed-speed':
+        case 'npc-clicked':
+        case 'npc-internal':
+        case 'removed-npc':
+        case 'set-player':
+          break;
+        default:
+          throw testNever(e, { suffix: 'npcsSub' });
+      }
+    },
+
     async handleWayEvents(e) {
       // console.warn('handleWayEvents', e.npcKey, e.meta);
       const npc = api.npcs.getNpc(e.npcKey);
@@ -40,6 +148,12 @@ export default function useHandleEvents(api) {
           }
           break;
         }
+        case 'decor-collide':
+        case 'enter-room':
+        case 'exit-room':
+          break;
+        default:
+          throw testNever(e.meta, { suffix: 'handleWayEvents' });
       }
     },
 
@@ -59,8 +173,8 @@ export default function useHandleEvents(api) {
           api.fov.setRoom(e.meta.gmId, e.meta.enteredRoomId, e.meta.doorId);
           break;
         case 'decor-collide':
-        case 'pre-npcs-collide':
         case 'pre-near-door':
+        case 'pre-npcs-collide':
         case 'vertex':
           break;
         default:
@@ -143,7 +257,7 @@ export default function useHandleEvents(api) {
     deps: [api.gmGraph],
   });
 
-  //#region handle door/npc events
+  //#region handle door events, npc events
   React.useEffect(() => {
 
     if (!(api.gmGraph.ready && api.doors.ready && api.npcs.ready)) {
@@ -170,107 +284,10 @@ export default function useHandleEvents(api) {
 
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
-      switch (e.key) {
-        case 'decors-added':
-        case 'decors-removed':
-        case 'npc-clicked':
-        case 'npc-internal':
-        case 'removed-npc':
-          break;
-        case 'decor-click':
-          mockHandleDecorClick(e, api);
-          break;
-        case 'disabled':
-          api.fov.mapAct('pause');
-          api.panZoom.animationAction('pause');
-          break;
-        case 'enabled':
-          api.fov.mapAct('resume');
-          if (!api.npcs.isPanZoomControlled()) {
-            // only resume when not controlled by e.g. `view` or `track`
-            api.panZoom.animationAction('play');
-          }
-          break;
-        case 'fov-changed':
-          // console.log(e);
-          api.decor.updateLocalDecor({ added: e.added, removed: e.removed, });
-          break;
-        case 'on-tty-link':
-          mockOnTtyLink(e, api);
-          break;
-        case 'set-player':
-          api.npcs.setPlayerKey(e.npcKey);
-          break;
-        case 'spawned-npc':
-          // This event also happens on hot-reload NPC.jsx
-          if (e.npcKey === api.npcs.playerKey) {
-            // 🚧 Do we always need to reset this?
-            api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
-            api.npcs.setRoomByNpc(e.npcKey);
-          }
-          break;
-        case 'started-walking':
-          if (e.npcKey === api.npcs.playerKey) {
-            // Player could have warped to start of navPath,
-            // in which case we need to change the FOV
-            const [id] = api.npcs.getNpc(e.npcKey).anim.gmRoomIds;
-            if (!id) {// custom navPaths needn't have gmRoomIds
-              api.npcs.setRoomByNpc(e.npcKey);
-            } else if (api.fov.gmId !== id[0] || api.fov.roomId !== id[1]) {
-              api.fov.setRoom(...id, -1);
-            }
-          }
-          break;
-        case 'stopped-walking': {
-          const player = api.npcs.getPlayer();
-          if (!player) {
-            /**
-             * Only handle stopped NPC when a Player exists.
-             * NPC vs NPC motion should be handled separately 🤔.
-             */
-            break;
-          }
-
-          if (e.npcKey === player.key) {
-            // Walking NPCs may be about to collide with Player,
-            // e.g. before they start a new line segment
-            Object.values(api.npcs.npc).filter(x => x !== player && x.isWalking()).forEach(npc => {
-              const collision = npcService.predictNpcNpcCollision(npc, player);
-              if (collision) {// 🚧 pausable?
-                console.warn(`${e.npcKey} will collide with ${npc.key}`, collision);
-                setTimeout(() => cancelNpcs(npc.key, player.key), collision.seconds * 1000);
-              }
-            });
-          } else if (player.isWalking()) {
-            // Player may be about to collide with NPC
-            const npc = api.npcs.getNpc(e.npcKey);
-            const collision = npcService.predictNpcNpcCollision(player, npc);
-            if (collision) {// 🚧 pausable?
-              console.warn(`${npc.key} will collide with ${player.key}`, collision);
-              setTimeout(() => cancelNpcs(player.key, npc.key), collision.seconds * 1000);
-            }
-          }
-          break;
-        }
-        case 'changed-speed': {
-          const npc = api.npcs.getNpc(e.npcKey);
-          const wayMeta = npc.anim.wayMetas[0];
-          if (wayMeta) {
-            // We changed speed, so we must recompute the timing:
-            window.clearTimeout(npc.anim.wayTimeoutId);
-            npc.nextWayTimeout();
-          }
-          break;
-        }
-        case 'way-point':
-          if (e.npcKey === api.npcs.playerKey) {
-            state.handlePlayerWayEvent(e);
-          }
-          state.handleWayEvents(e);
-          break;
-        default:
-          throw testNever(e, { suffix: 'npcsSub' });
+      if ('npcKey' in e && (e.npcKey === api.npcs.playerKey)) {
+        state.handlePlayerEvent(e);
       }
+      state.handleNpcEvent(e);
     });
 
     // React to CssPanZoom events
@@ -306,8 +323,12 @@ export default function useHandleEvents(api) {
  * @typedef State @type {object}
  * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcDecorCollision
  * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcNpcsCollision
- * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
+ * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
+ * Handle NPC event (always runs)
+ * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent
+ * Handle Player NPC events (only runs when e.npcKey is playerKey)
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent
+ * @property {(e: NPC.NPCsWayEvent) => Promise<void>} handleWayEvents
  */
 
 /**

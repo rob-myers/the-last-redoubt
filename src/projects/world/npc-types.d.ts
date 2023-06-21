@@ -444,6 +444,8 @@ declare namespace NPC {
     | NPCsWayEvent
   );
 
+  export type NPCsEventWithNpcKey = Extract<NPCsEvent, { npcKey: string | null }>;
+
   export interface NPCsWayEvent {
     key: 'way-point';
     npcKey: string;

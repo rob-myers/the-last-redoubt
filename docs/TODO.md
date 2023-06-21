@@ -2,40 +2,16 @@
 
 ## In progress
 
-- ✅ BUG npc vs npc collision issue
-  - ℹ️ seems to be independent of speedFactor change
-  - ℹ️ easy repro via speedFactor 2 and run into walking npc from behind
+- ❌ navPaths have extra vertex for "approaching door"
+- ✅ collate use-handle-events player-related stuff
+- `pre-near-door` -> `at-door`
+- `pre-npcs-collide` -> `npcs-collision`
 
-- ✅ support `npc.anim.speedFactor`
-  - ✅ can change mid-walk
-  - ✅ npc-npc collisions work at different speeds
-  - ✅ npc-npc collisions work if change speed mid-walk
-    - ℹ️ cannot assume uniform speed when predicting collide time (wayTimeout)
-  - ✅ adjust tracking
-  - ✅ npc-door collisions works when change speed mid-walk
-    - account for playbackRate change?
-  - ✅ clean up:
-    - ❌ replace `anim.updatedPlaybackRate` with `effect.getTiming().playbackRate`.
-      > remains undefined after using `anim.translate.updatePlaybackRate(...)`
-    - ✅ replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
+- 🚧 room local decor includes a circle per door
+- npc slows down when nav --tryOpen and "approaching door"
+- nav --tryOpen weights _locked_ doors (not closed doors)
 
-- ✅ sliceNavPath(navPath, startId, endId)
-  - ℹ️ e.g.
-    - path into players room but make npc stop before room
-    - path from players room but make npc start outside room
-    - align npcs along disjoint parts of a path
-    - npcs walk at same pace but from different points, as if following
-  - creates fresh navPath, although share e.g. fullPath `Vect`s
-
-- `navPath | walk andros`
-  - ✅ on player warp then FOV updates
-  - ✅ tracking is slow when npc warps
-
-- ✅ support alias `npc get foo` -> `npc foo`
-
-- npc slows down when --tryOpen and walks through door
-  - alt the npc can just walk more slowly
-- move --tryOpen to `walk`?
+- ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!
 
 - competing notion of gmRoomId
@@ -452,6 +428,37 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG npc vs npc collision issue
+  - ℹ️ seems to be independent of speedFactor change
+  - ℹ️ easy repro via speedFactor 2 and run into walking npc from behind
+
+- ✅ support `npc.anim.speedFactor`
+  - ✅ can change mid-walk
+  - ✅ npc-npc collisions work at different speeds
+  - ✅ npc-npc collisions work if change speed mid-walk
+    - ℹ️ cannot assume uniform speed when predicting collide time (wayTimeout)
+  - ✅ adjust tracking
+  - ✅ npc-door collisions works when change speed mid-walk
+    - account for playbackRate change?
+  - ✅ clean up:
+    - ❌ replace `anim.updatedPlaybackRate` with `effect.getTiming().playbackRate`.
+      > remains undefined after using `anim.translate.updatePlaybackRate(...)`
+    - ✅ replace `anim.initSpeedFactor` with `anim.initAnimScaleFactor`
+
+- ✅ sliceNavPath(navPath, startId, endId)
+  - ℹ️ e.g.
+    - path into players room but make npc stop before room
+    - path from players room but make npc start outside room
+    - align npcs along disjoint parts of a path
+    - npcs walk at same pace but from different points, as if following
+  - creates fresh navPath, although share e.g. fullPath `Vect`s
+
+- `navPath | walk andros`
+  - ✅ on player warp then FOV updates
+  - ✅ tracking is slow when npc warps
+
+- ✅ support alias `npc get foo` -> `npc foo`
 
 - ✅ BUG local decor should appear on open room
 - ❌ BUG? when async generator returns value it is not picked up?
