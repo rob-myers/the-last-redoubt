@@ -197,9 +197,8 @@ export class floorGraphClass extends BaseGraph {
         // Compute endpoints of path through room
         const pathSrc = i === 0 ? src : fullPath[fullPath.length - 1];
         let pathDst = dst;
-        if (i < partition.length - 1) {
+        if (i < partition.length - 1) {// Given next door node, pathDst should be door entry for roomId
           const door = this.gm.doors[/** @type {{ doorId: number }} */ (partition[i + 1]).doorId];
-          // Given next door node, pathDst should be door entry for roomId
           pathDst = door.entries[door.roomIds.findIndex(x => x === roomId)];
         }
 
@@ -225,7 +224,7 @@ export class floorGraphClass extends BaseGraph {
           roomIds.push(roomId);
           navMetas.push({ key: 'vertex', index: fullPath.length - 1 });
         } else {
-          // Otherwise, use "simple stupid funnel algorithm"
+          // Otherwise apply "simple stupid funnel algorithm" to path through room
           const stringPull = /** @type {Geom.VectJson[]} */ (
             this.computeStringPull(pathSrc, pathDst, item.nodes).path
           ).map(Vect.from);
@@ -244,7 +243,8 @@ export class floorGraphClass extends BaseGraph {
         }
 
         const { nearDoorId } = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
-        if (nearDoorId !== undefined && nearDoorId >= 0) {
+        if (typeof nearDoorId === 'number') {
+          // either `partition[i + 1]` exists (door nodes), or we ended near a door
           const door = this.gm.doors[nearDoorId];
           navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
             key: 'pre-near-door',
@@ -258,7 +258,6 @@ export class floorGraphClass extends BaseGraph {
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
           });
         }
-
       }
     }
 
