@@ -53,6 +53,7 @@ export default function createNpc(
       updatedPlaybackRate: 1,
   
       gmRoomIds: [],
+      prevWayMetas: [],
       wayMetas: [],
       wayTimeoutId: 0,
     },
@@ -150,6 +151,7 @@ export default function createNpc(
     },
     clearWayMetas() {
       this.anim.wayMetas.length = 0;
+      this.anim.prevWayMetas.length = 0; // 🚧 append to historical data?
       window.clearTimeout(this.anim.wayTimeoutId);
     },
     // We take advantage of precomputed this.anim.aux.sofars
@@ -659,28 +661,24 @@ export default function createNpc(
     wayTimeout() {
       // console.warn('wayTimeout next:', this.anim.wayMetas[0]);
       const currentTime = this.getWalkCurrentTime();
-      if (
-        this.anim.wayMetas.length === 0
-        || this.anim.spriteSheet !== 'walk'
-        || currentTime === null
-        || this.anim.translate.playState === 'paused'
-      ) {
-        if (this.anim.wayMetas.length === 0) console.warn('wayTimeout: empty anim.wayMetas');
-        if (this.anim.translate.currentTime === null) console.warn('wayTimeout: anim.root.currentTime is null');
-        if (this.anim.spriteSheet !== 'walk') console.warn(`wayTimeout: anim.spriteSheet: ${this.anim.spriteSheet} is not "walk"`);
-        return;
-      } else if (
-        currentTime >= (this.anim.wayMetas[0].length * this.anim.initAnimScaleFactor) - 1
-      ) {
-        // We've reached the wayMeta's `length`,
-        // so remove it and trigger respective event
-        const wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift());
-        api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
-        // Also remove/trigger any adjacent meta with ≤ length
-        while (this.anim.wayMetas[0]?.length <= wayMeta.length) {
-          api.npcs.events.next({ key: 'way-point', npcKey: this.def.key,
-            meta: /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()),
-          });
+      const metaLength = this.anim.wayMetas[0]?.length;
+
+      if (metaLength === undefined) {
+        return console.warn('wayTimeout: empty wayMetas');
+      } else if (this.anim.spriteSheet !== 'walk') {
+        return console.warn(`wayTimeout: not walking: ${this.anim.spriteSheet}`);
+      } else if (currentTime === null) {
+        return console.warn('wayTimeout: currentTime is null');
+      } else if (this.anim.translate.playState === 'paused') {
+        return; // This handles World pause
+      }
+
+      /** @type {NPC.NpcWayMeta} */ let wayMeta;
+      if (currentTime >= (metaLength * this.anim.initAnimScaleFactor) - 1) {
+        // Reached wayMeta's `length`, so remove/trigger respective event (+adjacents)
+        while (this.anim.wayMetas[0]?.length <= metaLength) {
+          this.anim.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()));
+          api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
         }
       } else {
         // console.warn(

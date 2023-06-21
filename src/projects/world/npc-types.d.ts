@@ -187,6 +187,7 @@ declare namespace NPC {
 
     /** Aligned to `path` with format `[gmId, roomId]` */
     gmRoomIds: [number, number][];
+    prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }

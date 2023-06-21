@@ -7,6 +7,8 @@
 - ✅ `pre-near-door` -> `at-door`
 - ✅ `pre-npcs-collide` -> `npcs-collide`
 
+- ✅ anim.wayMetas are shifted onto anim.prevWayMetas
+  > ℹ️ provides history
 - 🚧 room local decor includes a circle per door
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)
