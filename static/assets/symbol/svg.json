@@ -17,7 +17,7 @@
         "meta": {"decor": true, "go": true, "label": "corridor"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[230, 230], [230, 240], [240, 240], [240, 230]]]
+          "coordinates": [[[290, 230], [290, 240], [300, 240], [300, 230]]]
         }
       },
       {
@@ -52,7 +52,7 @@
         "meta": {"decor": true, "go": true, "label": "corridor"},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[960, 230], [960, 240], [970, 240], [970, 230]]]
+          "coordinates": [[[900, 230], [900, 240], [910, 240], [910, 230]]]
         }
       },
       {
@@ -874,7 +874,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1686490021824.3528
+    "lastModified": 1687428440450.568
   },
   "102--hull": {
     "key": "102--hull",
