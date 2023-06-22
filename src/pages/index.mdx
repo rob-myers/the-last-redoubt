@@ -13,7 +13,6 @@ tags:
   - cli
   - web dev
   - behaviour
-  - traveller
   - video games
 ---
 
@@ -39,7 +38,7 @@ Recent examples include:
 - [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>
 
 These games avoid simplistic character behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
-Nevertheless, simplistic character behaviour is the norm.
+Nevertheless, simplistic character behaviour is the norm for video games.
 
 <Carousel
   id="first-peek-video"
@@ -50,13 +49,19 @@ Nevertheless, simplistic character behaviour is the norm.
 />
 
 Concerning simplistic behaviour,
-both meaningless violence and bad storytelling may actually be _side-effects_. If the behaviour was more sophisticated it could help tell the story,
+both meaningless violence and bad storytelling may actually be _side-effects_.
+If the behaviour was more sophisticated it could help tell the story,
 and the game-mechanic needn't revolve around violence.
 Rather than avoiding the problem by tightening the narrative,
-we'd prefer to develop more sophisticated behaviour.
-But how?
+we'd prefer to develop more sophisticated behaviour, e.g.
 
-We have a few core ideas.
+> Following a ghost should attract attention (behaviour can be _combined_).
+
+> NPCs can do things in multiple ways (_nondeterministic_ behaviour).
+
+> NPCs remember and forget (behaviour informed by _knowledge_).
+
+But how? We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
 
@@ -70,8 +75,7 @@ We have a few core ideas.
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/).
     - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. The [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) provides the background context.<SideNote>The concept of _Starship Geomorph_ comes from Traveller.</SideNote>
-Additionally we adopt a narrative container called _The Experiment_.
+1. Use the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as background context.<SideNote>The concept of _Starship Geomorph_ comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
 by creating and combining behaviours for their own sake.
@@ -79,7 +83,7 @@ However, this is a difficult thing to do: we risk creating something neither of 
 
 <Carousel
   baseSrc="/assets/pics/first-peek/"
-  height={600}
+  height={550}
   mobileHeight={450}
   fullHeight={800}
   items={[
