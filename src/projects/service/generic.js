@@ -385,14 +385,14 @@ function zealousTrim(input) {
 }
 
 /**
- * @typedef KeyedLookup
- * @type {{ [key: string]: Value }}
  * @template {{ key: K}} Value
  * @template {string | number} [K=string|number]
+ * @typedef KeyedLookup
+ * @type {{ [key: string]: Value }}
  */
 
 /**
+ * @template {Record<string, any>} T
  * @typedef KeyedTrue
  * @type {{ [Key in keyof T]?: true }}
- * @template {Record<string, any>} T
  */
