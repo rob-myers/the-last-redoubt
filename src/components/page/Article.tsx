@@ -46,7 +46,8 @@ export default function Article(props: React.PropsWithChildren<{
 }
 
 const articleCss = css`
-  line-height: 2.8;
+  /* line-height: 2.8; */
+  line-height: 1.6;
   border: 0 solid var(--page-border-color);
   border-width: 1px 0 0 0;
   font-size: 1rem;
@@ -91,7 +92,7 @@ const articleCss = css`
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
-    line-height: 2;
+    /* line-height: 2; */
 
     p {
       margin: 12px 0;
@@ -131,7 +132,7 @@ const articleCss = css`
   }
 
   blockquote {
-    line-height: 2;
+    /* line-height: 2; */
     padding-left: 30px;
     margin: 0 0 32px 0;
 
@@ -224,7 +225,9 @@ const articleCss = css`
     > span {
       padding: 12px;
       margin-bottom: 0;
-      border: 1px solid var(--page-border-color);
+      line-height: 2;
+      border: 1px solid var(--page-background);
+      background-color: var(--aside-background-color);
       /* border-width: 1px 1px 0 0; */
     }
     
@@ -484,20 +487,20 @@ const articleComponents = (
           <span>{children}</span>
         </Link>
       </h2>
-      <time
-        dateTime={meta.dateTime}
-      />
-      {meta.tags && <div className="tags">
-        {meta.tags.map((tag, i) =>
-        <span
-            key={tag}
-            className={i === 0 && meta.dateTime ? "tag date" : "tag"}
-            title={tag}
-          >
-            {tag}
-          </span>)
-        }
-      </div>}
+      <time dateTime={meta.dateTime}/>
+      {meta.tags && (
+        <div className="tags">
+          {meta.tags.map((tag, i) =>
+            <span
+                key={tag}
+                className={i === 0 && meta.dateTime ? "tag date" : "tag"}
+                title={tag}
+              >
+              {tag}
+            </span>
+          )}
+        </div>
+      )}
     </>;
   },
 

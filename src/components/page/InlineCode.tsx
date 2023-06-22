@@ -41,6 +41,7 @@ const rootCss = css`
     background-color: #333;
     padding: 0 8px;
     border-radius: 4px;
+    line-height: 1.4;
     /* border: 1px solid #eeeeee22; */
   }
 
