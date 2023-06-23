@@ -85,6 +85,9 @@ export class ttyXtermClass {
     const unregisterWriters = this.session.io.handleWriters(this.onMessage.bind(this));
     // We need to preserve input on resize terminal width smaller than input
     const resizeDisposable = this.xterm.onResize(() => {
+      if (!this.promptReady) {
+        return;
+      }
       const input = this.input;
       if (this.xterm.buffer.active.cursorX === 0) {
         // Special case: input exactly one line with cursor just onto next line
