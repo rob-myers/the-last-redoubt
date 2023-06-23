@@ -25,9 +25,13 @@ if test '2 > 1'; then echo TEST PASSED; else echo TEST FAILED; fi
 ## Invoke JS function
 
 ```sh
-$ call '({ home }) => { home.func = () => console.log("wow") }'
+call '({ home }) => { home.func = () => console.log("wow") }'
 # we cannot simply `func()` because collides with shell function syntax
-$ func'()'
+func'()'
+```
+
+```sh
+call '() => "foo\nbar\nbaz"'
 ```
 
 ```sh
@@ -217,4 +221,12 @@ world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPa
 
 ```sh
 npc events | map 'x => [x.key, x.meta?.key]'
+```
+
+```sh
+# using brace expansion
+choice '['{a..h}{1..8}']()'
+
+# with newlines
+choice "$( call '() => "foo [1]()\n\rbar [2]()\nbaz [3]()"' )"
 ```

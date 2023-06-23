@@ -462,23 +462,27 @@ class cmdServiceClass {
     meta: Sh.BaseMeta,
     { text, defaultValue, secs }: ChoiceReadValue,
   ) {
-    const { ttyText, ttyTextKey, linkCtxtsFactory } = parseTtyMarkdownLinks(text, defaultValue);
-    await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
+    const lines = text.replace(/\r/g, '').split(/\n/);
+    const parsedLines = lines.map(text => parseTtyMarkdownLinks(text, defaultValue));
+    for (const {ttyText} of parsedLines) {
+      await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
+    }
 
     try {
-      /**
-       * Avoid many cleanups if pause/resume many times:
-       * @see {sleep}
-       */
+      /** Avoid many cleanups if pause/resume many times: @see {sleep} */
       let reject = (_?: any) => {};
       const cleanup = () => reject();
       getProcess(meta).cleanups.push(cleanup);
-      // pause/resume handling not needed: cannot click links when paused
+      // ℹ️ pause/resume handling not needed: cannot click links when paused
 
-      const linkPromFactory = linkCtxtsFactory ? () => new Promise<any>((resolve, currReject) => {
-        reject = currReject; // `TtyLineCtxt`s are triggered by links, so pass resolve
-        useSession.api.addTtyLineCtxts(meta.sessionKey, ttyTextKey, linkCtxtsFactory(resolve));
-      }) : undefined;
+      const linkPromFactory = parsedLines.some(x => x.linkCtxtsFactory)
+        ? () => new Promise<any>((resolve, currReject) => {
+            reject = currReject;
+            parsedLines.forEach(({ ttyTextKey, linkCtxtsFactory }) =>
+              linkCtxtsFactory && useSession.api.addTtyLineCtxts(meta.sessionKey, ttyTextKey, linkCtxtsFactory(resolve))
+            );
+          })
+        : undefined;
 
       if (typeof secs === 'number' || !linkPromFactory) {
         // links have timeout (also if no links, with fallback 0)
@@ -493,7 +497,7 @@ class cmdServiceClass {
       }
     } finally {
       // ℹ️ currently assume one time usage
-      useSession.api.removeTtyLineCtxts(meta.sessionKey, ttyTextKey);
+      parsedLines.forEach(({ ttyTextKey }) => useSession.api.removeTtyLineCtxts(meta.sessionKey, ttyTextKey));
     }
   }
 

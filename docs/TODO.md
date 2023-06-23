@@ -8,8 +8,10 @@
   - ℹ️ seems real terminals don't clear input from previous page,
     e.g. `echo {1..5000} | pbcopy`
 
-- 🚧 builtin `choice` supports multiple lines
+- ✅ builtin `choice` supports multiple lines
   - ℹ️ will permit cleaner line breaks
+  - normalize `\n`, `\n\r` and split
+  - links per line
 
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
