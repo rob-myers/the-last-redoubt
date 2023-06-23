@@ -19,11 +19,6 @@ export class ttyXtermClass {
    */
   private cursor: number;
   /**
-   * The viewport row the cursor is on (1-based).
-   * Needed in order to scroll up e.g. Ctrl+A on a long line.
-   */
-  private cursorRow: number;
-  /**
    * The current user input line before pressing enter.
    */
   private input: string;
@@ -70,7 +65,6 @@ export class ttyXtermClass {
     this.promptReady = false;
     this.commandBuffer = [];
     this.nextPrintId = null;
-    this.cursorRow = 1;
     this.historyIndex = -1;
     this.preHistory = this.input;
   }
@@ -89,7 +83,29 @@ export class ttyXtermClass {
   initialise() {
     const xtermDisposable = this.xterm.onData(this.handleXtermInput.bind(this));
     const unregisterWriters = this.session.io.handleWriters(this.onMessage.bind(this));
-    this.cleanups.push(() => xtermDisposable.dispose(), unregisterWriters);
+    // We need to preserve input on resize terminal width smaller than input
+    const resizeDisposable = this.xterm.onResize(() => {
+      const input = this.input;
+      if (this.xterm.buffer.active.cursorX === 0) {
+        // Special case: input exactly one line with cursor just onto next line
+        this.xterm.write('\x1b[A');
+      }
+      this.clearInput();
+      this.setInput(input);
+      /**
+       * Avoid xterm.js moving cursor onto next line for small widths.
+       * - unfortunately we lose the cursor position
+       * - see also min-width in <XTerm>
+       * - see also clearInput numLines computation
+       */
+      this.setCursor(0);
+      this.input = input;
+    });
+    this.cleanups.push(
+      () => xtermDisposable.dispose(),
+      unregisterWriters,
+      () => resizeDisposable.dispose(),
+    );
   }
 
   /**
@@ -106,7 +122,6 @@ export class ttyXtermClass {
     return this.prompt + input;
   }
 
-
   /**
    * Clears the input possibly over many lines.
    * Returns the cursor to the start of the input.
@@ -115,15 +130,30 @@ export class ttyXtermClass {
     // Return to start of input
     this.setCursor(0);
     // Compute number of lines to clear, starting at current
-    const numLines = Math.min(this.numLines(), (this.xterm.rows + 1) - this.cursorRow);
+    // const numLines = Math.min(this.numLines(), (this.xterm.rows + 1) - this.cursorRow);
+    const numLines = Math.max(
+      // Clear current input
+      this.numLines(),
+      /**
+       * Needed to cover case where terminal width is resized small,
+       * causing pending input to wrap over many lines.
+       * Don't understand why `this.numLines()` is insufficient. Maybe out of sync?
+       */
+      this.xterm.rows - this.xterm.buffer.active.cursorY - 1,
+    );
 
+    // https://xtermjs.org/docs/api/vtfeatures/
+    // ESC[E means Cursor Next Line
+    // ESC[F means Cursor Backward (upwards) -- but why not ESC[A? 
+    // ESC[2K means Erase In Line (2 means Erase entire line)
     if (numLines > 1) {
-      this.xterm.write('\r\x1b[K\x1b[E'.repeat(numLines));
+      this.xterm.write('\x1b[2K\x1b[E'.repeat(numLines));
+      this.xterm.write('\x1b[2K'); // Ensure final line deleted too
       this.xterm.write('\x1b[F'.repeat(numLines));// Return to start
     } else {
       // Seems to solve issue at final line of viewport,
       // i.e. `\x1b[E` did nothing, and `\x1b[F` moved cursor up.
-      this.xterm.write('\r\x1b[K');
+      this.xterm.write('\x1b[2K\r');
     }
     this.input = '';
   }
@@ -140,7 +170,6 @@ export class ttyXtermClass {
     // Return to start of viewport
     this.xterm.write('\x1b[F'.repeat(this.xterm.rows));
     this.xterm.scrollToBottom();
-    this.cursorRow = 1;
 
     this.showPendingInput();
   }
@@ -638,7 +667,6 @@ export class ttyXtermClass {
         }
         case 'line': {
           this.xterm.writeln(command.line);
-          this.trackCursorRow(+1);
           numLines++;
           break;
         }
@@ -649,7 +677,6 @@ export class ttyXtermClass {
           while (currentRow++ < finalRow) this.xterm.write('\r\n');
 
           this.xterm.write('\r\n');
-          this.trackCursorRow(+1);
           this.sendLine();
           return;
         }
@@ -657,11 +684,9 @@ export class ttyXtermClass {
           const shouldEcho = !command.line.startsWith('NOECHO=1 ');
           if (shouldEcho) {
             this.xterm.writeln(command.line);
-            this.trackCursorRow(+1);
             this.input = command.line;
             this.sendLine();
           } else {
-            this.trackCursorRow(+1);
             this.input = command.line;
             this.sendLine();
             this.input = '';
@@ -706,7 +731,6 @@ export class ttyXtermClass {
     this.input = '';
     this.setCursor(0);
     this.xterm.write('^C\r\n');
-    this.trackCursorRow(1);
     this.cursor = 0;
     // Immediately forget any pending output
     this.commandBuffer.forEach(cmd => cmd.key === 'resolve' || cmd.key === 'await-prompt' && cmd.reject?.());
@@ -746,7 +770,6 @@ export class ttyXtermClass {
     } else {// Cursor Up
       for (let i = nextRow; i < prevRow; ++i) this.xterm.write('\x1b[A');
     }
-    this.trackCursorRow(nextRow - prevRow);
 
     // Adjust horizontally
     if (nextCol > prevCol) {// Cursor Forward
@@ -772,7 +795,6 @@ export class ttyXtermClass {
      */
     if (realNewInput && this.inputEndsAtEdge(newInput)) {
       this.xterm.write('\r\n');
-      this.trackCursorRow(1);
     }
     this.input = newInput;
     this.cursor = newInput.length;
@@ -813,18 +835,6 @@ export class ttyXtermClass {
       this.setInput(prevInput.slice(0, prevCursor) + input + prevInput.slice(prevCursor));
     } else {
       this.warnIfNotReady();
-    }
-  }
-
-  /**
-   * Used to track cursor viewport row.
-   */
-  private trackCursorRow(delta: number) {
-    this.cursorRow += delta;
-    if (this.cursorRow < 1) {
-      this.cursorRow = 1;
-    } else if (this.cursorRow > this.xterm.rows) {
-      this.cursorRow = this.xterm.rows;
     }
   }
 

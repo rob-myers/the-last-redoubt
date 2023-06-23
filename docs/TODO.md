@@ -2,14 +2,24 @@
 
 ## In progress
 
+- ✅ BUG resizing terminal to very small breaks display of pending input
+  - attempt to `clearInput` then `setInput` adds lines, why?
+- ✅ BUG very large historical input `echo {1..1000}` doesn't get cleared properly
+  - ℹ️ seems real terminals don't clear input from previous page,
+    e.g. `echo {1..5000} | pbcopy`
+
+- builtin `choice` supports multiple lines
+
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
 - ✅ `pre-near-door` -> `at-door`
 - ✅ `pre-npcs-collide` -> `npcs-collide`
 
 - ✅ anim.wayMetas are shifted onto anim.prevWayMetas
-  > ℹ️ provides history
-- 🚧 room local decor includes a circle per door
+  > ℹ️ provides history during walk
+- ❌ room local decor includes a circle per door
+- door decor circles only collision tested when approach door
+
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)
 
@@ -18,7 +28,6 @@
 
 - competing notion of gmRoomId
   - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
-- BUG resize terminal (e.g. make it very small) breaks display of pending input (although fixed when start to type)
   - ⏰
 
 - ✅ DecorGroup cannot contain another DecorGroup
@@ -66,6 +75,7 @@
 - ✅ support ansi color codes inside `choice` args
 - HMR useGeomorphs?
 - BUG? saw collision detect fail whilst Player was still
+- BUG cannot paste into line
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

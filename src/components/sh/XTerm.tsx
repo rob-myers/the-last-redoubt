@@ -87,6 +87,12 @@ const rootCss = css`
   .xterm-helper-textarea {
     top: 0 !important;
   }
+
+  /** This hack avoids <2 col width, where cursor row breaks */
+  min-width: 100px;
+  .xterm-screen {
+    min-width: 100px;
+  }
 `;
 
 function stopKeysPropagating(e: React.KeyboardEvent) {
