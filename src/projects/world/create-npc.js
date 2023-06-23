@@ -176,14 +176,19 @@ export default function createNpc(
     async followNavPath(path, opts) {
       // This might be a jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
-      // `nav` provides gmRoomKeys, needed for decor collisions
+      // `nav` provides gmRoomIds, needed for decor collisions
       this.anim.gmRoomIds = opts?.gmRoomIds ?? [];
       this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();
       this.updateAnimAux();
       
-      if (this.anim.path.length <= 1 || this.anim.aux.total === 0) {
+      if (path.length === 0 || this.anim.aux.total === 0) {
+        if (path.length === 1) {// Jump to point
+          this.el.root.animate([{ transform: `translate(${path[0].x}px, ${path[0].y}px)` }], { duration: 0, fill: 'forwards'  });
+          api.npcs.events.next({ key: 'started-walking', npcKey: this.key });
+          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
+        }
         return;
       }
       
@@ -230,36 +235,6 @@ export default function createNpc(
     getAngle() {
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
-    },
-    getWalkAnimDef() {
-      const { aux } = this.anim;
-      const { scale: npcScale } = npcsMeta[this.classKey];
-      return {
-        translateKeyframes: this.anim.path.flatMap((p, i) => [
-          {
-            offset: aux.sofars[i] / aux.total,
-            transform: `translate(${p.x}px, ${p.y}px)`,
-          },
-        ]),
-        rotateKeyframes: this.anim.path.flatMap((p, i) => [
-          {
-            // offset: (aux.sofars[i] - 0.1 * (aux.elens[i - 1] ?? 0)) / aux.total,
-            offset: aux.sofars[i] / aux.total,
-            transform: `rotateZ(${aux.angs[i - 1] || aux.angs[i] || 0}rad) scale(${npcScale})`
-          },
-          {
-            offset: aux.sofars[i] / aux.total,
-            transform: `rotateZ(${aux.angs[i] || aux.angs[i - 1] || 0}rad) scale(${npcScale})`
-          },
-        ]),
-        opts: {
-          duration: aux.total * this.getAnimScaleFactor(),
-          // ℹ️ Not recognised! If it worked, would probably need to adjust `duration`
-          // playbackRate: this.anim.speedFactor,
-          direction: 'normal',
-          fill: 'forwards',
-        },
-      };
     },
     getAnimScaleFactor() {
       // We convert from "seconds per world-unit" to "milliseconds per world-unit"
@@ -322,6 +297,36 @@ export default function createNpc(
       } else {
         return [];
       }
+    },
+    getWalkAnimDef() {
+      const { aux } = this.anim;
+      const { scale: npcScale } = npcsMeta[this.classKey];
+      return {
+        translateKeyframes: this.anim.path.flatMap((p, i) => [
+          {
+            offset: aux.sofars[i] / aux.total,
+            transform: `translate(${p.x}px, ${p.y}px)`,
+          },
+        ]),
+        rotateKeyframes: this.anim.path.flatMap((p, i) => [
+          {
+            // offset: (aux.sofars[i] - 0.1 * (aux.elens[i - 1] ?? 0)) / aux.total,
+            offset: aux.sofars[i] / aux.total,
+            transform: `rotateZ(${aux.angs[i - 1] || aux.angs[i] || 0}rad) scale(${npcScale})`
+          },
+          {
+            offset: aux.sofars[i] / aux.total,
+            transform: `rotateZ(${aux.angs[i] || aux.angs[i - 1] || 0}rad) scale(${npcScale})`
+          },
+        ]),
+        opts: {
+          duration: aux.total * this.getAnimScaleFactor(),
+          // ℹ️ Not recognised! If it worked, would probably need to adjust `duration`
+          // playbackRate: this.anim.speedFactor,
+          direction: 'normal',
+          fill: 'forwards',
+        },
+      };
     },
     getWalkBounds() {
       return this.anim.aux.outsetWalkBounds;
