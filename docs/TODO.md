@@ -8,7 +8,8 @@
   - ℹ️ seems real terminals don't clear input from previous page,
     e.g. `echo {1..5000} | pbcopy`
 
-- builtin `choice` supports multiple lines
+- 🚧 builtin `choice` supports multiple lines
+  - ℹ️ will permit cleaner line breaks
 
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
@@ -18,7 +19,8 @@
 - ✅ anim.wayMetas are shifted onto anim.prevWayMetas
   > ℹ️ provides history during walk
 - ❌ room local decor includes a circle per door
-- door decor circles only collision tested when approach door
+- ❌ door decor circles only collision tested when approach door
+- 🚧 back to previous idea: when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
 
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)
@@ -76,6 +78,9 @@
 - HMR useGeomorphs?
 - BUG? saw collision detect fail whilst Player was still
 - BUG cannot paste into line
+- BUG resized input on last 3 lines can overwrite 1 or 2 lines
+  - ℹ️ not so bad
+  - ℹ️ should only solve once we understand `numLines` in `clearInput`
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

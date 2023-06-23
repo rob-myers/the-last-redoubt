@@ -315,6 +315,7 @@ export interface State {
 
 const rootCss = css`
   margin: 32px 0 0 0;
+  line-height: 2;
 
   position: relative;
   > span.anchor {
