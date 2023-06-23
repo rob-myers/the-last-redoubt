@@ -602,10 +602,10 @@ export class ttyXtermClass {
 
   prepareForCleanMsg() {
     if (this.promptReady && this.input.length > 0) {
-      if (this.xterm.buffer.active.cursorX > 0) {
+      if (this.xterm.buffer.active.cursorX > 0) {// ?
         this.queueCommands([{ key: 'line', line: '' }]);
       }
-    } else {
+    } else if (this.input.length === 0) {
       this.clearInput();
     }
   }
