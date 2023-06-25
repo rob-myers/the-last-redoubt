@@ -176,28 +176,16 @@ export default function CssPanZoom(props) {
        * 🚧 support changing scale
        */
       computePathKeyframes(path, animScaleFactor) {
-        /** Duration of initial pan */
+        /** Duration of initial pan (even if close) */
         const initPanMs = 500;
         /** How far npc walks along path during initial pan */
         const distAlongPath = initPanMs / animScaleFactor;
-        /**
-         * Index of path vertex whose outgoing edge first exceeds `distAlongPath`.
-         * We'll remove this vertex and all preceding ones.
-         */
-        let cutVertexId = /** @type {null | number} */ (null);
-        let soFar = 0;
 
         /** `elens[i]` is length of edge incoming to vertex `path[i]` */
-        const elens = path.map((p, i) => {
-          const elen = i === 0 ? 0 : precision(p.distanceTo(path[i - 1]));
-          if (cutVertexId === null && ((soFar += elen) >= distAlongPath)) {
-            cutVertexId = i - 1; // ≥ 0 because `distAlongPath` > 0
-          }
-          return elen;
-        });
-        const total = precision(elens.reduce((sum, len) => sum + len, 0));
+        const elens = path.map((p, i) => i === 0 ? 0 : p.distanceTo(path[i - 1]));
+        const total = elens.reduce((sum, len) => sum + len, 0);
 
-        if (cutVertexId === null || distAlongPath > total - 1) {// Pan directly to end of path
+        if (distAlongPath > total - 1) {// Pan directly to end of path
           const [transform] = state.getCenteredCssTransforms(path.slice(-1));
           return {
             keyframes: [{ offset: 0 }, { offset: 1, transform }],
@@ -205,6 +193,12 @@ export default function CssPanZoom(props) {
           };
         }
 
+        let soFar = 0;
+        /**
+         * Index of path vertex whose outgoing edge first exceeds `distAlongPath`.
+         * We'll remove this vertex and all preceding ones.
+         */
+        const cutVertexId = path.findIndex((p, i) => (soFar += elens[i + 1]) >= distAlongPath);
         /** Distance along cut vertex's outgoing edge that we'll pan to */
         const alongCutEdge = distAlongPath - (soFar - elens[cutVertexId + 1]);
         const panDst = (new Vect).copy(path[cutVertexId + 1]).sub(path[cutVertexId]).normalize(alongCutEdge).add(path[cutVertexId]);
@@ -224,7 +218,10 @@ export default function CssPanZoom(props) {
           keyframes: [
             { offset: 0 },
             ...subElens.map((elen, i) => ({
-              offset: (initPanMs / duration) + (ratio * ((soFar += elen) / subTotal)),
+              // ℹ️ final offset 0.9999 causes jerkiness
+              offset: precision(
+                (initPanMs / duration) + (ratio * ((soFar += elen) / subTotal))
+              ),
               transform: transforms[i],
             }))
           ],
