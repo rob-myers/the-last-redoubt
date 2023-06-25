@@ -16,9 +16,9 @@
   - ✅ initially pan to matching distance along path
   - ✅ cleanup approach
 
+- ✅ fix nav on path.length === 1
+  - ✅ seen spawn not working, maybe related to nav from to current position
 
-- 🚧 fix path.length === 1
-  - 🚧 seen spawn not working, maybe related to nav from to current position
 - 🚧 back to previous idea: when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
 
 - npc slows down when nav --tryOpen and "approaching door"

@@ -33,7 +33,7 @@ export default function createNpc(
         edges: [],
         elens: [],
         index: 0,
-        navPathPolys: [],
+        // navPathPolys: [],
         outsetSegBounds: new Rect,
         outsetWalkBounds: new Rect,
         segBounds: new Rect,
@@ -154,18 +154,24 @@ export default function createNpc(
       this.anim.prevWayMetas.length = 0; // 🚧 append to historical data?
       window.clearTimeout(this.anim.wayTimeoutId);
     },
-    // We take advantage of precomputed this.anim.aux.sofars
+    /**
+     * This is `anim.aux.sofars[navMeta.index]`, except
+     * `at-door` which is larger i.e. closer towards door.
+     */
     computeWayMetaLength(navMeta) {
       if (navMeta.key === 'at-door') {
         const gm = api.gmGraph.gms[navMeta.gmId];
         const navPoint = gm.inverseMatrix.transformPoint(this.anim.path[navMeta.index].clone());
         const door = gm.doors[navMeta.doorId];
         const distanceToDoor = Math.abs(door.normal.dot(navPoint.sub(door.seg[0])));
-        if (navMeta.tryOpen) {// change length so npc not too close to door
-          return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 15));
-        } else {// change length so npc is close to door
-          return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
-        }
+        // 🚧 move --tryOpen to `walk`?
+        // if (navMeta.tryOpen) {// change length so npc not too close to door
+        //   return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 15));
+        // } else {// change length so npc is close to door
+        //   return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
+        // }
+        // change length so npc is close to door
+        return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
       } else {
         return this.anim.aux.sofars[navMeta.index];
       }
@@ -183,21 +189,20 @@ export default function createNpc(
       this.clearWayMetas();
       this.updateAnimAux();
       
-      if (path.length === 0 || this.anim.aux.total === 0) {
-        if (path.length === 1) {// Jump to point
-          this.el.root.animate([{ transform: `translate(${path[0].x}px, ${path[0].y}px)` }], { duration: 0, fill: 'forwards'  });
-          api.npcs.events.next({ key: 'started-walking', npcKey: this.key });
-          api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
-        }
+      if (path.length === 0) {
         return;
       }
       
-      if (opts?.globalNavMetas) {// Convert navMetas to wayMetas
-        // We aren't reordering by length
+      if (opts?.globalNavMetas) {
+        // Convert navMetas to wayMetas
         this.anim.wayMetas = opts.globalNavMetas.map((navMeta) => ({
           ...navMeta,
           length: this.computeWayMetaLength(navMeta),
         }));
+
+        // 🚧 add navMetas `head-to-door` and `head-from-door`
+        // suppose had vertexIds/doorId partition [[0, 1], 7, [2, 3, 4], 8]
+        // then could loop thru this.anim.wayMetas adding them?
       }
       
       this.startAnimation('walk');
@@ -226,7 +231,7 @@ export default function createNpc(
         // must commitStyles, otherwise it jumps
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-        // triggers above cancel and clears wayMetas 
+        // trigger cancel and clear wayMetas 
         this.startAnimation('idle'); // 🚧 remove hard-coding?
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
@@ -304,11 +309,11 @@ export default function createNpc(
       return {
         translateKeyframes: this.anim.path.flatMap((p, i) => [
           {
-            offset: aux.sofars[i] / aux.total,
+            offset: aux.total === 0 ? 1 : (aux.sofars[i] / aux.total),
             transform: `translate(${p.x}px, ${p.y}px)`,
           },
         ]),
-        rotateKeyframes: this.anim.path.flatMap((p, i) => [
+        rotateKeyframes: aux.total === 0 ? [] : this.anim.path.flatMap((p, i) => [
           {
             // offset: (aux.sofars[i] - 0.1 * (aux.elens[i - 1] ?? 0)) / aux.total,
             offset: aux.sofars[i] / aux.total,
@@ -536,7 +541,7 @@ export default function createNpc(
 
           // Animate spritesheet, assuming `walk` anim exists
           const { animLookup } = npcsMeta[this.classKey].parsed;
-          const spriteMs = this.getWalkCycleDuration(opts.duration);
+          const spriteMs = opts.duration === 0 ? 0 : this.getWalkCycleDuration(opts.duration);
           const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
           anim.sprites = this.el.body.animate(
               firstFootLeads ?
@@ -637,10 +642,10 @@ export default function createNpc(
       // accurac needed for wayMeta length computation
       aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
       // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
-      aux.navPathPolys = aux.edges.map(e => {
-        const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
-        return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
-      });
+      // aux.navPathPolys = aux.edges.map(e => {
+      //   const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
+      //   return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
+      // });
       const reduced = aux.elens.reduce((agg, length) => {
         agg.total += length;
         agg.sofars.push(agg.sofars[agg.sofars.length - 1] + length);
