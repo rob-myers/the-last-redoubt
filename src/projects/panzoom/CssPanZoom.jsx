@@ -180,12 +180,24 @@ export default function CssPanZoom(props) {
         const initPanMs = 500;
         /** How far npc walks along path during initial pan */
         const distAlongPath = initPanMs / animScaleFactor;
+        /**
+         * Index of path vertex whose outgoing edge first exceeds `distAlongPath`.
+         * We'll remove this vertex and all preceding ones.
+         */
+        let cutVertexId = /** @type {null | number} */ (null);
+        let soFar = 0;
 
-        /** elens[i] is length of edge incoming to path[i] */
-        const elens = path.map((p, i) => precision(p.distanceTo(path[Math.max(0, i - 1)])));
+        /** `elens[i]` is length of edge incoming to vertex `path[i]` */
+        const elens = path.map((p, i) => {
+          const elen = i === 0 ? 0 : precision(p.distanceTo(path[i - 1]));
+          if (cutVertexId === null && ((soFar += elen) >= distAlongPath)) {
+            cutVertexId = i - 1; // ≥ 0 because `distAlongPath` > 0
+          }
+          return elen;
+        });
         const total = precision(elens.reduce((sum, len) => sum + len, 0));
 
-        if (distAlongPath > total - 1) {// Pan directly to end of path
+        if (cutVertexId === null || distAlongPath > total - 1) {// Pan directly to end of path
           const [transform] = state.getCenteredCssTransforms(path.slice(-1));
           return {
             keyframes: [{ offset: 0 }, { offset: 1, transform }],
@@ -193,16 +205,9 @@ export default function CssPanZoom(props) {
           };
         }
 
-        let soFar = 0;
-        /**
-         * Index of path vertex whose outgoing edge first exceeds distAlongPath.
-         * We'll remove this vertex and all preceding ones.
-         */
-        const cutVertexId = path.findIndex((p, i) => (soFar += elens[i + 1]) >= distAlongPath);
         /** Distance along cut vertex's outgoing edge that we'll pan to */
         const alongCutEdge = distAlongPath - (soFar - elens[cutVertexId + 1]);
         const panDst = (new Vect).copy(path[cutVertexId + 1]).sub(path[cutVertexId]).normalize(alongCutEdge).add(path[cutVertexId]);
-
         const subPath = [panDst].concat(path.slice(cutVertexId + 1));
         const subElens = [0, elens[cutVertexId + 1] - alongCutEdge].concat(elens.slice(cutVertexId + 2));
         /** Does not include distance of initial pan */
