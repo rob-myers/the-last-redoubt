@@ -173,62 +173,54 @@ export default function CssPanZoom(props) {
         }
       },
       /**
-       * 🚧 cleanup
        * 🚧 support changing scale
        */
       computePathKeyframes(path, animScaleFactor) {
-        const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        /** @param {Geom.VectJson} point */
-        function getCenteredTransform(point) {
-          return `translate(${screenWidth/2 + state.parent.scrollLeft - (state.scale * point.x)
-          }px, ${
-            screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)
-          }px)`
-        }
-
-        /** elens[i] is length of edge incoming to path[i] */
-        let elens = path.map((p, i) => precision(p.distanceTo(path[i === 0 ? 0 : i - 1])));
-        let total = elens.reduce((sum, len) => sum + len, 0);
-
-        // 🚧 pan to "500ms along path"
+        /** Duration of initial pan */
         const initPanMs = 500;
+        /** How far npc walks along path during initial pan */
         const distAlongPath = initPanMs / animScaleFactor;
 
-        if (distAlongPath > total - 1) {// pan directly to end of path
-          const [finalPoint] = path.slice(-1);
+        /** elens[i] is length of edge incoming to path[i] */
+        const elens = path.map((p, i) => precision(p.distanceTo(path[Math.max(0, i - 1)])));
+        const total = precision(elens.reduce((sum, len) => sum + len, 0));
+
+        if (distAlongPath > total - 1) {// Pan directly to end of path
+          const [transform] = state.getCenteredCssTransforms(path.slice(-1));
           return {
-            keyframes: [
-              { offset: 0 },
-              { offset: 1, transform: getCenteredTransform(finalPoint) },
-            ],
+            keyframes: [{ offset: 0 }, { offset: 1, transform }],
             duration: initPanMs,
           };
         }
 
         let soFar = 0;
-        /** Index of path vertex whose outgoing edge first exceeds distAlongPath */
-        const vId = path.findIndex((p, i) => (soFar += elens[i + 1]) >= distAlongPath);
-        const alongEdge = distAlongPath - (soFar - elens[vId + 1]);
-        // const currPos = Vect.from(state.getWorldAtCenter());
-        const vAlongPath = path[vId + 1].clone().sub(path[vId]).normalize(alongEdge).add(path[vId]);
-        path = [vAlongPath].concat(path.slice(vId + 1));
-        elens = [0, elens[vId + 1] - alongEdge].concat(elens.slice(vId + 2)); // ?
-        // this `total` does not include dist for initial pan
-        total -= distAlongPath;
+        /**
+         * Index of path vertex whose outgoing edge first exceeds distAlongPath.
+         * We'll remove this vertex and all preceding ones.
+         */
+        const cutVertexId = path.findIndex((p, i) => (soFar += elens[i + 1]) >= distAlongPath);
+        /** Distance along cut vertex's outgoing edge that we'll pan to */
+        const alongCutEdge = distAlongPath - (soFar - elens[cutVertexId + 1]);
+        const panDst = (new Vect).copy(path[cutVertexId + 1]).sub(path[cutVertexId]).normalize(alongCutEdge).add(path[cutVertexId]);
 
-        // initPanMs for 1st edge
-        // (total * animScaleFactor) - initMs for rest
-        const duration = initPanMs + (total * animScaleFactor);
+        const subPath = [panDst].concat(path.slice(cutVertexId + 1));
+        const subElens = [0, elens[cutVertexId + 1] - alongCutEdge].concat(elens.slice(cutVertexId + 2));
+        /** Does not include distance of initial pan */
+        const subTotal = total - distAlongPath;
+
+        /** `initPanMs` for 1st edge, `subTotal * animScaleFactor` for rest */
+        const duration = initPanMs + (subTotal * animScaleFactor);
         const ratio = 1 - (initPanMs / duration);
+        const transforms = state.getCenteredCssTransforms(subPath);
         soFar = 0;
-        
+
         return {
           duration,
           keyframes: [
             { offset: 0 },
-            ...elens.map((elen, i) => ({
-              offset: (initPanMs / duration) + (ratio * ((soFar += elen) / total)),
-              transform: getCenteredTransform(path[i]),
+            ...subElens.map((elen, i) => ({
+              offset: (initPanMs / duration) + (ratio * ((soFar += elen) / subTotal)),
+              transform: transforms[i],
             }))
           ],
         };
@@ -249,26 +241,29 @@ export default function CssPanZoom(props) {
 
         state.animationAction('cancel');
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
-        /** ℹ️ Jerky on Safari Desktop and Firefox Mobile */
         state.anims[0] = state.translateRoot.animate(keyframes, {
+          // ℹ️ Jerky on Safari Desktop and Firefox Mobile
           duration,
           direction: 'normal',
           fill: 'forwards',
           easing: 'linear',
-          // delay: cancellableAnimDelayMs,
         });
+
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
           trAnim.addEventListener('finish', () => {
             resolve('completed');
-            // state.events.next({ key: 'completed-panzoom-to' })
             state.releaseAnim(trAnim, state.translateRoot);
           });
-          trAnim.addEventListener('cancel', () => {
-            reject('cancelled');
-            // state.events.next({ key: 'cancelled-panzoom-to' })
-          });
+          trAnim.addEventListener('cancel', () => reject('cancelled'));
         });
+      },
+      getCenteredCssTransforms(worldPoints) {
+        const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
+        return worldPoints.map(point => `translate(${
+          screenWidth/2 + state.parent.scrollLeft - (state.scale * point.x)}px, ${
+          screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)}px)`
+        );
       },
       getCurrentTransform() {
         const bounds = state.parent.getBoundingClientRect();

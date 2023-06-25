@@ -14,7 +14,7 @@
 
 - 🚧 CssPanZoom track initial jump is too jerky
   - ✅ initially pan to matching distance along path
-  - cleanup approach
+  - ✅ cleanup approach
 
 - 🚧 back to previous idea: when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
 

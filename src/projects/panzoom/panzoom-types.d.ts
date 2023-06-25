@@ -42,6 +42,8 @@ declare namespace PanZoom {
     private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
     private delayIdle(): void;
     distanceTo(worldPosition: Geom.Vect): number;
+    /** CSS `transform`s placing world points at center of screen  */
+    getCenteredCssTransforms(worldPoints: Geom.VectJson[]): string[];
     /** Taking CSS animation into account */
     getCurrentTransform(): { x: number; y: number; scale: number; };
     getWorld(e: { clientX: number; clientY: number; }): Geom.VectJson;
