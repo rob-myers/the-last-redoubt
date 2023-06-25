@@ -9,7 +9,7 @@ declare namespace PanZoom {
     panning: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
     pointers: PointerEvent[];
-    origin: Vect | undefined;
+    origin: Geom.Vect | undefined;
     /** Target scale in `scaleRoot` */
     scale: number;
     start: {
@@ -39,7 +39,7 @@ declare namespace PanZoom {
     pointerUpExtras: Record<string, any>[];
     
     animationAction(type: 'cancel' | 'pause' | 'play'): void;
-    private computePathKeyframes(path: Geom.Vect[]): { keyframes: Keyframe[]; distance: number; };
+    private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
     private delayIdle(): void;
     distanceTo(worldPosition: Geom.Vect): number;
     /** Taking CSS animation into account */

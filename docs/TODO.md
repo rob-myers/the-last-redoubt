@@ -2,17 +2,6 @@
 
 ## In progress
 
-- ✅ BUG resizing terminal to very small breaks display of pending input
-  - attempt to `clearInput` then `setInput` adds lines, why?
-- ✅ BUG very large historical input `echo {1..1000}` doesn't get cleared properly
-  - ℹ️ seems real terminals don't clear input from previous page,
-    e.g. `echo {1..5000} | pbcopy`
-
-- ✅ builtin `choice` supports multiple lines
-  - ℹ️ will permit cleaner line breaks
-  - normalize `\n`, `\n\r` and split
-  - links per line
-
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
 - ✅ `pre-near-door` -> `at-door`
@@ -22,6 +11,11 @@
   > ℹ️ provides history during walk
 - ❌ room local decor includes a circle per door
 - ❌ door decor circles only collision tested when approach door
+
+- 🚧 CssPanZoom track initial jump is too jerky
+  - ✅ initially pan to matching distance along path
+  - cleanup approach
+
 - 🚧 back to previous idea: when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
 
 - npc slows down when nav --tryOpen and "approaching door"
@@ -448,6 +442,17 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG resizing terminal to very small breaks display of pending input
+  - attempt to `clearInput` then `setInput` adds lines, why?
+- ✅ BUG very large historical input `echo {1..1000}` doesn't get cleared properly
+  - ℹ️ seems real terminals don't clear input from previous page,
+    e.g. `echo {1..5000} | pbcopy`
+
+- ✅ builtin `choice` supports multiple lines
+  - ℹ️ will permit cleaner line breaks
+  - normalize `\n`, `\n\r` and split
+  - links per line
 
 - ✅ BUG npc vs npc collision issue
   - ℹ️ seems to be independent of speedFactor change

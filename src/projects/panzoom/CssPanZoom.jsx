@@ -173,26 +173,65 @@ export default function CssPanZoom(props) {
         }
       },
       /**
+       * 🚧 cleanup
        * 🚧 support changing scale
        */
-      computePathKeyframes(path) {
+      computePathKeyframes(path, animScaleFactor) {
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        const elens = path.map((p, i) => precision(p.distanceTo(path[i === 0 ? 0 : i -1])));
-        const total = elens.reduce((sum, len) => sum + len, 0);
-        let soFar = 0;
-
-        /** @type {Keyframe[]} */
-        const keyframes = elens.map((elen, i) => ({
-          offset: (soFar += elen) / total,
-          // For center need to take account of scroll{Left,Top}
-          transform: `translate(${
-            screenWidth/2 + state.parent.scrollLeft - (state.scale * path[i].x)
+        /** @param {Geom.VectJson} point */
+        function getCenteredTransform(point) {
+          return `translate(${screenWidth/2 + state.parent.scrollLeft - (state.scale * point.x)
           }px, ${
-            screenHeight/2 + state.parent.scrollTop - (state.scale * path[i].y)
-          }px)`,
-        }));
+            screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)
+          }px)`
+        }
 
-        return { keyframes, distance: total };
+        /** elens[i] is length of edge incoming to path[i] */
+        let elens = path.map((p, i) => precision(p.distanceTo(path[i === 0 ? 0 : i - 1])));
+        let total = elens.reduce((sum, len) => sum + len, 0);
+
+        // 🚧 pan to "500ms along path"
+        const initPanMs = 500;
+        const distAlongPath = initPanMs / animScaleFactor;
+
+        if (distAlongPath > total - 1) {// pan directly to end of path
+          const [finalPoint] = path.slice(-1);
+          return {
+            keyframes: [
+              { offset: 0 },
+              { offset: 1, transform: getCenteredTransform(finalPoint) },
+            ],
+            duration: initPanMs,
+          };
+        }
+
+        let soFar = 0;
+        /** Index of path vertex whose outgoing edge first exceeds distAlongPath */
+        const vId = path.findIndex((p, i) => (soFar += elens[i + 1]) >= distAlongPath);
+        const alongEdge = distAlongPath - (soFar - elens[vId + 1]);
+        // const currPos = Vect.from(state.getWorldAtCenter());
+        const vAlongPath = path[vId + 1].clone().sub(path[vId]).normalize(alongEdge).add(path[vId]);
+        path = [vAlongPath].concat(path.slice(vId + 1));
+        elens = [0, elens[vId + 1] - alongEdge].concat(elens.slice(vId + 2)); // ?
+        // this `total` does not include dist for initial pan
+        total -= distAlongPath;
+
+        // initPanMs for 1st edge
+        // (total * animScaleFactor) - initMs for rest
+        const duration = initPanMs + (total * animScaleFactor);
+        const ratio = 1 - (initPanMs / duration);
+        soFar = 0;
+        
+        return {
+          duration,
+          keyframes: [
+            { offset: 0 },
+            ...elens.map((elen, i) => ({
+              offset: (initPanMs / duration) + (ratio * ((soFar += elen) / total)),
+              transform: getCenteredTransform(path[i]),
+            }))
+          ],
+        };
       },
       delayIdle() {
         state.idleTimeoutId && window.clearTimeout(state.idleTimeoutId);
@@ -202,14 +241,15 @@ export default function CssPanZoom(props) {
         return worldPosition.distanceTo(state.getWorldAtCenter());
       },
       async followPath(path, { animScaleFactor }) {
+        if (path.length === 0) {
+          return;
+        } else if (path.length === 1) {
+          return await state.panZoomTo(undefined, path[0], 1000);
+        }
+
         state.animationAction('cancel');
-
-        const { keyframes, distance } = state.computePathKeyframes(path);
-        const duration = distance * animScaleFactor;
-
-        /**
-         * ℹ️ This is jerky on Safari Desktop and Firefox Mobile
-         */
+        const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
+        /** ℹ️ Jerky on Safari Desktop and Firefox Mobile */
         state.anims[0] = state.translateRoot.animate(keyframes, {
           duration,
           direction: 'normal',
