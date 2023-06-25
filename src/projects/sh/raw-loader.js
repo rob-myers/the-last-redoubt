@@ -255,7 +255,7 @@
       const { npcs } = api.getCached(home.WORLD_KEY)
       if (api.isTtyAt(0)) {
         const npcKey = operands[0]
-        const point = api.safeJsonParse(operands[1])
+        const point = api.parseJsArg(operands[1])
         yield npcs.getNpcGlobalNav({ npcKey, point, tryOpen: opts.tryOpen })
       } else if (operands[0]) {
         const npcKey = operands[0]
