@@ -214,6 +214,9 @@ nav --tryOpen andros $(
 ```
 
 ```sh
+# custom simple navPath
+expr '{ key: "global-nav", fullPath: ['$( click 1 )'], navMetas: []  }' >navPath3
+
 # slice a navPath
 nav --tryOpen andros $( click 1 ) > navPath
 world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPath2

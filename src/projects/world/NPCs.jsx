@@ -772,7 +772,7 @@ export default function NPCs(props) {
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
       if (!npcService.verifyGlobalNavPath(e)) {
-        throw Error(`invalid global navpath format: ${JSON.stringify(e)}`);
+        throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
       }
 
       try {// Walk along a global navpath
