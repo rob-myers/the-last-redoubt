@@ -146,8 +146,8 @@ declare namespace NPC {
       elens: number[];
       /** Last index seen of path */
       index: number;
-      /** Outset version of `origPath` to detect progress on pause */
-      navPathPolys: Geom.Poly[];
+      // /** Outset version of `origPath` to detect progress on pause */
+      // navPathPolys: Geom.Poly[];
       /** Outset by npc radius, for npc vs npc collisions */
       outsetWalkBounds: Geom.Rect;
       /** Outset by npc radius, for npc vs npc collisions */

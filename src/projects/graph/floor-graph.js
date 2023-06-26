@@ -151,6 +151,15 @@ export class floorGraphClass extends BaseGraph {
     ]);
     let startDoorId = -1, endDoorId = -1;
 
+    /**
+     * @param {Geom.Vect} point 
+     * @param {number} roomId 
+     */
+    function addVertex(point, roomId) {
+      navMetas.push({ key: 'vertex', index: fullPath.push(point) - 1 });
+      roomIds.push(roomId);
+    }
+
     for (const [i, item] of partition.entries()) {
       if (item.key === 'door') {// 🚪 door partition
         const door = this.gm.doors[item.doorId];
@@ -173,9 +182,7 @@ export class floorGraphClass extends BaseGraph {
           if (!dst.equalsAlmost(fullPath[fullPath.length - 1], 0.01)) {
             // ℹ️ Needed otherwise if turn & re-enter, `enter-room` not triggered
             // ℹ️ Seen almost equal vectors, probably due to augmented precision
-            fullPath.push(dst.clone());
-            roomIds.push(this.nodeToMeta[dstNode.index].roomId);
-            navMetas.push({ key: 'vertex', index: fullPath.length - 1, final: true });
+            addVertex(dst.clone(), this.nodeToMeta[dstNode.index].roomId);
           }
           endDoorId = item.doorId;
           break;
@@ -186,9 +193,7 @@ export class floorGraphClass extends BaseGraph {
         
         // Avoid case where just entered geomorph and doorExit ~ src
         if (!(i === 0 && src.distanceTo(doorExit) < 0.1)) {
-          fullPath.push(doorExit.clone());
-          roomIds.push(nextRoomId);
-          navMetas.push({ key: 'vertex', index: fullPath.length - 1 }); // Cannot be final
+          addVertex(doorExit.clone(), nextRoomId);
         }
 
       } else {// 🛏 room partition
@@ -220,9 +225,7 @@ export class floorGraphClass extends BaseGraph {
         const directPath = !geom.lineSegCrossesPolygon(pathSrc, pathDst, roomNavPoly);
         if (directPath) {
           // We can simply walk straight through the room
-          fullPath.push(pathDst.clone());
-          roomIds.push(roomId);
-          navMetas.push({ key: 'vertex', index: fullPath.length - 1 });
+          addVertex(pathDst.clone(), roomId);
         } else {
           // Otherwise apply "simple stupid funnel algorithm" to path through room
           const stringPull = /** @type {Geom.VectJson[]} */ (
@@ -230,9 +233,7 @@ export class floorGraphClass extends BaseGraph {
           ).map(Vect.from);
           // We remove adjacent repetitions (which can occur)
           geom.removePathReps(stringPull.slice(1)).forEach(p => {
-            fullPath.push(p);
-            roomIds.push(roomId);
-            navMetas.push({ key: 'vertex', index: fullPath.length - 1 });
+            addVertex(p, roomId);
           });
         }
 
@@ -251,7 +252,6 @@ export class floorGraphClass extends BaseGraph {
             index: fullPath.length - 1,
             tryOpen,
             doorId: nearDoorId,
-            final: !partition[i + 1],
             // Below needed?
             hullDoorId: this.gm.hullDoors.indexOf(door),
             currentRoomId: roomId,

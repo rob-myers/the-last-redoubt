@@ -19,7 +19,12 @@
 - ✅ fix nav on path.length === 1
   - ✅ seen spawn not working, maybe related to nav from to current position
 
-- 🚧 back to previous idea: when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
+- ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
+  - ℹ️ implementing this was too ugly
+- 🚧 instead, on `enter-room` figure out which door we're heading for,
+     and create special purpose collider which npcs checks against
+  - 🚧 use-handle-events listens for enter-room and infers next door via wayMetas
+  - npcs can collide with special filtered colliders
 
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)

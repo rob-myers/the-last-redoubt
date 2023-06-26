@@ -206,7 +206,6 @@ export default function NPCs(props) {
           navMetas[navMetas.length - 1]
         ).final = true;
         
-
         return {
           key: 'global-nav',
           fullPath,
