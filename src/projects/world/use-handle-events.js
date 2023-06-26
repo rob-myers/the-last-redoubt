@@ -199,13 +199,12 @@ export default function useHandleEvents(api) {
     predictNpcDecorCollision(npc, e) {
       // Restrict to decor in line segment's rooms (1 or 2 rooms)
       const gmRoomIds = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1);
-      (gmRoomIds[0] === gmRoomIds[1]) && gmRoomIds.pop(); // Avoid dup
+      // Avoid duplicate
+      gmRoomIds.length === 2 && (gmRoomIds[0].every((x, i) => x === gmRoomIds[1][i])) && gmRoomIds.pop();
       const closeDecor = gmRoomIds.flatMap(([gmId, roomId]) => 
-        api.decor.getDecorAtKey(gmId, roomId).filter(
-          /** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
-          (decor) => decor.type === 'circle' || decor.type === 'rect'
-        )
-      ,);
+        /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */
+        (api.decor.getDecorAtKey(gmId, roomId, true))
+      );
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'

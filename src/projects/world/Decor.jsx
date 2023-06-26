@@ -32,7 +32,8 @@ export default function Decor(props) {
         return state.groupCache[groupKey];
       }
 
-      const { roomDecor: { [roomId]: roomDecor }, matrix } = api.gmGraph.gms[gmId];
+      const gm = api.gmGraph.gms[gmId];
+      const { roomDecor: { [roomId]: roomDecor }, matrix } = gm;
       /** @type {NPC.DecorGroup} */
       const group = {
         key: getLocalDecorGroupKey(gmId, roomId),
@@ -46,10 +47,9 @@ export default function Decor(props) {
       state.normalizeDecor(group);
       return state.groupCache[group.key] = group;
     },
-    getDecorAtKey(gmId, roomId) {
-      return Array.from(state.byRoom[gmId][roomId]?.values() ?? [])
-        .map(decorKey => state.decor[decorKey])
-      ;
+    getDecorAtKey(gmId, roomId, onlyColliders = false) {
+      const roomDecor = state.byRoom[gmId][roomId];
+      return (onlyColliders ? roomDecor?.collide : roomDecor?.all) ?? [];
     },
     getDecorAtPoint(point) {
       const result = api.gmGraph.findRoomContaining(point);
@@ -60,7 +60,7 @@ export default function Decor(props) {
         return [];
       }
     },
-    handleDevToolEdit(els) {
+    handleDevToolEdit(els) {// 🚧 remove?
       for (const el of els) {
         const decorKey = el.dataset.key || '';
         if (el.classList.contains(cssName.decorCircle)) {
@@ -222,10 +222,14 @@ export default function Decor(props) {
       });
       decors.forEach(decor => {
         delete state.decor[decor.key];
-        state.byRoom[
+        const roomDecor = state.byRoom[
           /** @type {number} */ (decor.meta.gmId)][
           /** @type {number} */ (decor.meta.roomId)
-        ]?.delete(decor.key);
+        ];
+        if (roomDecor) {
+          roomDecor.all = roomDecor.all.filter(x => x !== decor);
+          roomDecor.collide = roomDecor.collide.filter(x => x !== decor);
+        }
       });
       // 🚧 decors can contain dups
       api.npcs.events.next({ key: 'decors-removed', decors });
@@ -245,12 +249,13 @@ export default function Decor(props) {
             state.restoreGroup(d.key);
           } else {
             state.normalizeDecor(d);
-            const localDecorKeys = (state.byRoom[
+            const roomDecor = (state.byRoom[
               /** @type {number} */ (d.meta.gmId)][
               /** @type {number} */ (d.meta.roomId)
-            ] ??= new Set);
+            ] ??= { all: [], collide: [] });
             d.items.forEach(child => {
-              localDecorKeys.add(child.key);
+              roomDecor.all.push(child);
+              npcService.isFreelyCollidable(child) && roomDecor.collide.push(child);
               state.decor[child.key] = child;
             });
 
@@ -262,7 +267,9 @@ export default function Decor(props) {
           state.normalizeDecor(d);
           // 🚧 would prefer every decor to have {gmId, roomId}, but DecorPath cannot
           if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') { 
-            (state.byRoom[d.meta.gmId][d.meta.roomId] ??= new Set).add(d.key);
+            const roomDecor = (state.byRoom[d.meta.gmId][d.meta.roomId] ??= { all: [], collide: [] });
+            roomDecor.all.push(d);
+            npcService.isFreelyCollidable(d) && roomDecor.collide.push(d);
           }
         }
 
@@ -274,14 +281,15 @@ export default function Decor(props) {
     restoreGroup(groupKey) {
       const group = state.groupCache[groupKey];
       state.decor[group.key] = group;
-      const localDecorKeys = state.byRoom[
+      const roomDecor = state.byRoom[
         /** @type {number} */ (group.meta.gmId)][
         /** @type {number} */ (group.meta.roomId)
-      ] ??= new Set;
-      localDecorKeys.add(group.key);
+      ] ??= { all: [], collide: [] };
+      roomDecor.all.push(group);
       group.items.forEach(other => {
         state.decor[other.key] = other;
-        localDecorKeys.add(other.key);
+        roomDecor.all.push(other);
+        npcService.isFreelyCollidable(other) && roomDecor.collide.push(other);
       });
     },
     update,
@@ -434,7 +442,7 @@ const rootCss = css`
 const cssCircle = css`
   position: absolute;
   border-radius: 50%;
-  border: 2px dotted #ffffff55;
+  border: 1px dotted #ffffff33;
 `;
 
 const cssPoint = css`
@@ -536,9 +544,9 @@ const decorPointHandlers = {
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {Record<string, NPC.DecorGroup>} groupCache
  * @property {HTMLElement} rootEl
- * @property {Set<string>[][]} byRoom
- * Decor keys organised byRoom[gmId][roomId].
- * @property {(gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtKey
+ * @property {{ all: NPC.DecorDef[]; collide: NPC.DecorCollidable[]; }[][]} byRoom
+ * Decor  organised byRoom[gmId][roomId].
+ * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorAtKey
  * Get all decor in specified room.
  * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.

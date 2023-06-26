@@ -8,8 +8,11 @@
 - 🚧 on `enter-room` add 1 or 2 special colliders: one immediate, one at door heading towards
   - ✅ use-handle-events listens for enter-room and infers next door via wayMetas
   - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
-  - 🚧 also handle initial case i.e. vertex 0
-  - decor roomGroup includes a circle per door
+  - ✅ decor roomGroup includes a circle per door
+  - ✅ dup decor-collide
+    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
+  - can hide decor colliders
+  - also handle initial case i.e. vertex 0
   - decor can be filtered by npcKey
   - npcs can collide with special filtered colliders
 

@@ -399,6 +399,18 @@ export function verifyDecor(input) {
   }
 }
 
+/**
+ * 🚧 also check this decor is not "filtered"
+ * @param {NPC.DecorDef} decor
+ * @return {decor is NPC.DecorCollidable}
+ */
+export function isFreelyCollidable(decor) {
+  return (
+    decor.type === 'circle'
+    || decor.type === 'rect'
+  );
+}
+
 /** @param {NPC.GlobalNavPath} input */
 export function verifyGlobalNavPath(input) {
   let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);

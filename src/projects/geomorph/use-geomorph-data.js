@@ -117,7 +117,18 @@ export async function createGeomorphData(input) {
 
   //#region points by room
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
-  const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ () => []);
+  const roomDecor = layout.rooms.map(/** @returns {NPC.DecorGroupItem[]} */ (_, roomId) =>
+  [
+      // add circle for each door adjacent to room
+      ...roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => ({
+        key: `door-${doorId}`, // overwritten
+        type: 'circle',
+        meta: { roomId, doorSensor: true }, // 🚧 more?
+        center: door.poly.center,
+        radius: 60,
+      }))
+    ]
+  );
 
   viewMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));

@@ -399,6 +399,8 @@ declare namespace NPC {
 
   export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;
   export type DecorGroupItem = Exclude<NPC.DecorDef, NPC.DecorPath | NPC.DecorGroup>;
+  /** Collidable but not necessarily "freely collidable" */
+  export type DecorCollidable = NPC.DecorCircle | NPC.DecorRect;
 
   export interface DecorRef {
     decorKey: string;
