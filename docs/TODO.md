@@ -2,29 +2,17 @@
 
 ## In progress
 
-- ❌ navPaths have extra vertex for "approaching door"
-- ✅ collate use-handle-events player-related stuff
-- ✅ `pre-near-door` -> `at-door`
-- ✅ `pre-npcs-collide` -> `npcs-collide`
-
-- ✅ anim.wayMetas are shifted onto anim.prevWayMetas
-  > ℹ️ provides history during walk
-- ❌ room local decor includes a circle per door
-- ❌ door decor circles only collision tested when approach door
-
-- ✅ CssPanZoom track initial jump is too jerky
-  - ✅ initially pan to matching distance along path
-  - ✅ cleanup approach
-
-- ✅ fix nav on path.length === 1
-  - ✅ seen spawn not working, maybe related to nav from to current position
-
 - ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
   - ℹ️ implementing this was too ugly
-- 🚧 instead, on `enter-room` figure out which door we're heading for,
-     and create special purpose collider which npcs checks against
-  - 🚧 use-handle-events listens for enter-room and infers next door via wayMetas
+
+- 🚧 on `enter-room` add 1 or 2 special colliders: one immediate, one at door heading towards
+  - ✅ use-handle-events listens for enter-room and infers next door via wayMetas
+  - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
+  - 🚧 also handle initial case i.e. vertex 0
+  - decor roomGroup includes a circle per door
+  - decor can be filtered by npcKey
   - npcs can collide with special filtered colliders
+
 
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)
@@ -450,6 +438,23 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ❌ navPaths have extra vertex for "approaching door"
+- ✅ collate use-handle-events player-related stuff
+- ✅ `pre-near-door` -> `at-door`
+- ✅ `pre-npcs-collide` -> `npcs-collide`
+
+- ✅ anim.wayMetas are shifted onto anim.prevWayMetas
+  > ℹ️ provides history during walk
+- ❌ room local decor includes a circle per door
+- ❌ door decor circles only collision tested when approach door
+
+- ✅ CssPanZoom track initial jump is too jerky
+  - ✅ initially pan to matching distance along path
+  - ✅ cleanup approach
+
+- ✅ fix nav on path.length === 1
+  - ✅ seen spawn not working, maybe related to nav from to current position
 
 - ✅ BUG resizing terminal to very small breaks display of pending input
   - attempt to `clearInput` then `setInput` adds lines, why?

@@ -288,6 +288,8 @@ declare namespace NPC {
     length: number;
   }
 
+  export type NpcWayMetaExitRoom = Extract<NPC.NpcWayMeta, { key: 'exit-room' }>
+
   /**
    * A `GlobalNavMeta` is a `FloorGraphNavMeta` enriched with the id of the geomorph instance
    * it resides in. Used e.g. to trigger light change on enter-room via a hull door.

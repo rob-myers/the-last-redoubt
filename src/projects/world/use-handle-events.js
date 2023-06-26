@@ -1,6 +1,6 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
-import { decodeDecorInstanceKey, getGmRoomKey, } from "../service/geomorph";
+import { decodeDecorInstanceKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
@@ -131,8 +131,13 @@ export default function useHandleEvents(api) {
           break;
         case 'vertex':
           if ((e.meta.index + 1) === npc.anim.path.length) {
-            break; // cannot rely on `e.meta.final` when sliceNavPath
-          } // know `npc` is walking:
+            break; // We've finished
+          } else if (e.meta.index === 0) {
+            // 🚧 if heading towards door add special collider
+            const nextExitMeta = npc.anim.wayMetas.find(/** @return {x is NPC.NpcWayMetaExitRoom} */ x => x.key === 'exit-room');
+          }
+
+          // `npc` is walking:
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc, e);
           state.predictNpcDecorCollision(npc, e);
@@ -148,8 +153,17 @@ export default function useHandleEvents(api) {
           }
           break;
         }
+        case 'enter-room': {
+          // 🚧 add special purpose collider when heading away from current door
+
+          const nextExitMeta = npc.anim.wayMetas.find(/** @return {x is NPC.NpcWayMetaExitRoom} */ x => x.key === 'exit-room');
+          if (nextExitMeta) {
+            console.log('in', e.meta.enteredRoomId, 'heading towards', nextExitMeta.doorId);
+            // 🚧 add special purpose collider when heading towards door
+          }
+          break;
+        }
         case 'decor-collide':
-        case 'enter-room':
         case 'exit-room':
           break;
         default:
@@ -184,11 +198,10 @@ export default function useHandleEvents(api) {
 
     predictNpcDecorCollision(npc, e) {
       // Restrict to decor in line segment's rooms (1 or 2 rooms)
-      const gmRoomKeys = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1)
-        .map(([gmId, roomId]) => getGmRoomKey(gmId, roomId)); // 🚧 precompute keys?
-      gmRoomKeys.length === 2 && gmRoomKeys[0] === gmRoomKeys[1] && gmRoomKeys.pop();
-      const closeDecor = gmRoomKeys.flatMap((gmRoomKey) => 
-        api.decor.getDecorAtKey(gmRoomKey).filter(
+      const gmRoomIds = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1);
+      (gmRoomIds[0] === gmRoomIds[1]) && gmRoomIds.pop(); // Avoid dup
+      const closeDecor = gmRoomIds.flatMap(([gmId, roomId]) => 
+        api.decor.getDecorAtKey(gmId, roomId).filter(
           /** @returns {decor is NPC.DecorCircle | NPC.DecorRect} */
           (decor) => decor.type === 'circle' || decor.type === 'rect'
         )

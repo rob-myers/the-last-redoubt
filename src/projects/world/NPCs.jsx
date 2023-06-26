@@ -7,7 +7,6 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
-import { getGmRoomKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";

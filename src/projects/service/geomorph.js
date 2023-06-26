@@ -418,14 +418,6 @@ export function getConnectorOtherSide(connector, viewPos) {
 }
 
 /**
- * @param {number} gmId 
- * @param {number} roomId 
- */
-export function getGmRoomKey(gmId, roomId) {
-  return `g${gmId}-r${roomId}`;
-}
-
-/**
  * Hull door polys are outset along entry to e.g. ensure they intersect room.
  * @param {Geomorph.ParsedConnectorRect[]} doors
  * @returns {Geom.Poly[]}
