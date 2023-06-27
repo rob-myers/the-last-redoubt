@@ -29,18 +29,18 @@ export default function Decor(props) {
 
     cacheNpcWalk(npcKey, gmId, roomId) {
       const cached = state.byNpcWalk[npcKey];
-      if (!cached || (cached.gmId !== gmId) || (cached.roomId !== roomId)) {
-        const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
-        const collide = (state.byRoom[gmId][roomId]?.collide ?? []).filter(decor =>
-          decor.type === 'rect'
-            // 🚧 ensure decor.derivedBounds?
-            ? decor.derivedBounds && roomWalkBounds.intersects(decor.derivedBounds)
-            : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
-        );
-        return state.byNpcWalk[npcKey] = { gmId, roomId, collide };
-      } else {
+      if (cached && (cached.gmId === gmId) && (cached.roomId === roomId)) {
         return cached;
       }
+      // Find decor in room which could collide with the npc's walk
+      // Then every segment inside the room only needs to check these colliders
+      const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
+      const collide = (state.byRoom[gmId][roomId]?.collide ?? []).filter(decor =>
+        decor.type === 'rect' // 🚧 ensure decor.derivedBounds?
+          ? decor.derivedBounds && roomWalkBounds.intersects(decor.derivedBounds)
+          : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
+      );
+      return state.byNpcWalk[npcKey] = { gmId, roomId, collide };
     },
     clearNpcWalk(npcKey) {
       delete state.byNpcWalk[npcKey];

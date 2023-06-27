@@ -655,6 +655,7 @@ export default function createNpc(
       aux.index = 0;
     },
     updateRoomWalkBounds(srcIndex) {
+      // We start from vertex 0 or an `exit-room`, and look for next `exit-room`
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;
       const points = this.anim.path.slice(srcIndex, dstIndex);
       this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);

@@ -17,13 +17,16 @@
     > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
     > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'`
   - ✅ seems decor.meta.roomId of doorSensors is null
-  - 🚧 saw a seg exit but not enter
-    > `npc andros 'x => x.anim.aux.roomWalkBounds'`
+  - ✅ saw a seg exit but not enter, repro:
+    ```sh
+    spawn andros '{ x:-423.49,y:1001.69 }'
+    npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'
+    ```
+  - 🚧 clarify/clean issue with persistent lookup decor.byRoom
   - clear byNpcWalk on remove npc
   - can hide decor colliders
-  - also handle initial case i.e. vertex 0
-  - npcs can collide with special filtered colliders
 
+- BUG see very early collisions i.e. other npc nowhere near andros, but perhaps in same segment
 
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)

@@ -150,12 +150,11 @@ export default function useHandleEvents(api) {
           }
           break;
         }
-        case 'enter-room': {
+        case 'exit-room': // 'enter-room' didn't work
           npc.updateRoomWalkBounds(e.meta.index);
           break;
-        }
         case 'decor-collide':
-        case 'exit-room':
+        case 'enter-room':
           break;
         default:
           throw testNever(e.meta, { suffix: 'handleWayEvents' });
