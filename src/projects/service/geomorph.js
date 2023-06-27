@@ -1165,12 +1165,13 @@ export function decodeDecorInstanceKey(decorKey) {
  * @returns {NPC.DecorSansPath}
  */
 export function ensureDecorMetaGmRoomId(decor, api) {
-  decor.meta ??= {}; 
+  decor.meta ??= {};
   if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
+    // 🚧 more efficient way?
     const decorCenter = getDecorCenter(decor);
     const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
     decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter)[0];
-    decor.meta.roomId = (gmRoomId?.roomId) ?? null;
+    decor.meta.roomId ??= ((gmRoomId?.roomId) ?? null);
   }
   return decor;
 }

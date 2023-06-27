@@ -151,7 +151,7 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'enter-room': {
-          npc.updateRoomWalkBounds(); // Used by decor.byNpc
+          npc.updateRoomWalkBounds(e.meta.index);
           break;
         }
         case 'decor-collide':

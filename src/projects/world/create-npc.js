@@ -201,7 +201,7 @@ export default function createNpc(
           length: this.computeWayMetaLength(navMeta),
         }));
 
-        this.updateRoomWalkBounds();
+        this.updateRoomWalkBounds(0);
       }
       
       this.startAnimation('walk');
@@ -654,12 +654,9 @@ export default function createNpc(
       aux.total = reduced.total;
       aux.index = 0;
     },
-    updateRoomWalkBounds() {
-      const points = /** @type {Geom.Vect[]} */ ([]);
-      this.anim.wayMetas.some((meta) => {
-        if (meta.key === 'exit-room') return true; // excludes door
-        if (meta.key === 'vertex') points.push(this.anim.path[meta.index]);
-      });
+    updateRoomWalkBounds(srcIndex) {
+      const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;
+      const points = this.anim.path.slice(srcIndex, dstIndex);
       this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);
     },
     updateWalkSegBounds(index) {

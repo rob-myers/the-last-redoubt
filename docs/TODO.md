@@ -10,10 +10,16 @@
   - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
   - ✅ decor roomGroup includes a circle per door
   - ✅ dup decor-collide
-    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
   - ℹ️ maybe just improve rect tests so check few colliders
   - ✅ store roomWalkBounds
   - ✅ cache decor close to npc, while walking in room
+  - ✅ `byRoom[gmId][roomId]` was being deleted... need better approach
+    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
+    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'`
+  - ✅ seems decor.meta.roomId of doorSensors is null
+  - 🚧 saw a seg exit but not enter
+    > `npc andros 'x => x.anim.aux.roomWalkBounds'`
+  - clear byNpcWalk on remove npc
   - can hide decor colliders
   - also handle initial case i.e. vertex 0
   - npcs can collide with special filtered colliders

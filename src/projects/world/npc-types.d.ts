@@ -126,8 +126,11 @@ declare namespace NPC {
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateAnimAux(): void;
-    /** Invoke initially, or just after `enter-room`. */
-    updateRoomWalkBounds(): void;
+    /**
+     * Invoke initially, or just after `enter-room`.
+     * @param srcIndex Index of 1st vertex in room.
+     */
+    updateRoomWalkBounds(srcIndex: number): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
     wayTimeout(): void;

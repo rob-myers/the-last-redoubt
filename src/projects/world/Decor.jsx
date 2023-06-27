@@ -29,7 +29,7 @@ export default function Decor(props) {
 
     cacheNpcWalk(npcKey, gmId, roomId) {
       const cached = state.byNpcWalk[npcKey];
-      if (!cached || cached.gmId !== gmId || cached.roomId !== roomId) {
+      if (!cached || (cached.gmId !== gmId) || (cached.roomId !== roomId)) {
         const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
         const collide = (state.byRoom[gmId][roomId]?.collide ?? []).filter(decor =>
           decor.type === 'rect'
@@ -37,7 +37,6 @@ export default function Decor(props) {
             ? decor.derivedBounds && roomWalkBounds.intersects(decor.derivedBounds)
             : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
         );
-        // const collide = (state.byRoom[gmId][roomId]?.collide ?? []).slice();
         return state.byNpcWalk[npcKey] = { gmId, roomId, collide };
       } else {
         return cached;
@@ -246,14 +245,20 @@ export default function Decor(props) {
 
       decors.forEach(decor => delete state.decor[decor.key]);
 
-      const roomDecor = state.byRoom[// Assume decor all resides in same room
-        /** @type {number} */ (decors[0].meta.gmId)][
-        /** @type {number} */ (decors[0].meta.roomId)
-      ];
-      if (roomDecor) {
-        roomDecor.all = roomDecor.all.filter(x => !decors.includes(x));
-        roomDecor.collide = roomDecor.collide.filter(x => !decors.includes(x));
-      }
+      // 🚧 don't remove from byRoom unless we're really deleting the decor.
+      // Removing empties it, and restoreGroup currently won't refresh it...
+
+      // 🚧 maybe need "hideDecor" and "removeDecor"
+
+      // const roomDecor = state.byRoom[// Assume decor all resides in same room
+      //   /** @type {number} */ (decors[0].meta.gmId)][
+      //   /** @type {number} */ (decors[0].meta.roomId)
+      // ];
+      // if (roomDecor) {
+      //   roomDecor.all = roomDecor.all.filter(x => !decors.includes(x));
+      //   roomDecor.collide = roomDecor.collide.filter(x => !decors.includes(x));
+      // }
+
       // 🚧 decors can contain dups
       api.npcs.events.next({ key: 'decors-removed', decors });
       update();
@@ -327,9 +332,10 @@ export default function Decor(props) {
         const group = api.decor.ensureRoomGroup(gmId, roomId);
         api.decor.restoreGroup(group.key);
       }
-      opts.removed?.forEach(({ gmId, roomId}) => 
-        state.removeDecor(getLocalDecorGroupKey(gmId, roomId))
-      );
+      opts.removed?.forEach(({ gmId, roomId}) => {
+        state.removeDecor(getLocalDecorGroupKey(gmId, roomId));
+        // 🤔 we don't remove byRoom[gmId][roomId]
+      });
       // opts.removed?.length && state.removeDecor(
       //   ...opts.removed.map(({ gmId, roomId }) => getLocalDecorGroupKey(gmId, roomId))
       // );
