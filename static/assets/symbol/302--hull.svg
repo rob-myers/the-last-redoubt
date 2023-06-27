@@ -64,9 +64,6 @@
     <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="49.1" y="528.6">
       <title>decor go label=corridor</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="49.1" y="178.6">
-      <title>decor go label=office</title>
-    </rect>
     <rect x="-4" y="250" width="8" height="40" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>door hull</title>
     </rect>

@@ -2496,15 +2496,6 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "office"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[49.1, 178.6], [49.1, 188.6], [59.1, 188.6], [59.1, 178.6]]
-          ]
-        }
-      },
-      {
         "meta": {"door": true, "hull": true},
         "poly": {
           "type": "Polygon",
@@ -3118,7 +3109,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
-    "lastModified": 1687168559816.8242
+    "lastModified": 1687874305666.1943
   },
   "303--hull": {
     "key": "303--hull",

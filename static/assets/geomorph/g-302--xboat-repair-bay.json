@@ -375,15 +375,6 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "office"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [[59.1, 178.6], [59.1, 188.6], [49.1, 188.6], [49.1, 178.6]]
-          ]
-        }
-      },
-      {
         "meta": {"door": true, "hull": true, "hullDir": "w"},
         "poly": {
           "type": "Polygon",
@@ -2569,32 +2560,26 @@
     },
     {
       "text": "office",
-      "center": {"x": 54.1, "y": 183.6},
-      "index": 12,
-      "rect": {"x": 39.1, "y": 178.6, "width": 30, "height": 10}
-    },
-    {
-      "text": "office",
       "center": {"x": 39, "y": 176},
-      "index": 13,
+      "index": 12,
       "rect": {"x": 24, "y": 171, "width": 30, "height": 10}
     },
     {
       "text": "lounge",
       "center": {"x": 304, "y": 484},
-      "index": 14,
+      "index": 13,
       "rect": {"x": 289, "y": 480, "width": 30, "height": 8}
     },
     {
       "text": "toilet",
       "center": {"x": 451.64, "y": 526.92},
-      "index": 15,
+      "index": 14,
       "rect": {"x": 436.64, "y": 521.92, "width": 30, "height": 10}
     },
     {
       "text": "locker",
       "center": {"x": 569, "y": 480},
-      "index": 16,
+      "index": 15,
       "rect": {"x": 554, "y": 475, "width": 30, "height": 10}
     }
   ],
@@ -6190,7 +6175,7 @@
       "postDoorIds": []
     }
   ],
-  "floorHighlightIds": [42, 43, 44],
+  "floorHighlightIds": [41, 42, 43],
   "roomSurfaceIds": {"2": [5, 8, 12, 13]},
   "roomMetas": [
     {"roomId": 0, "hull": false, "leaf": true},
