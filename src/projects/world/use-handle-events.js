@@ -132,15 +132,12 @@ export default function useHandleEvents(api) {
         case 'vertex':
           if ((e.meta.index + 1) === npc.anim.path.length) {
             break; // We've finished
-          } else if (e.meta.index === 0) {
-            // 🚧 if heading towards door add special collider
-            const nextExitMeta = npc.anim.wayMetas.find(/** @return {x is NPC.NpcWayMetaExitRoom} */ x => x.key === 'exit-room');
           }
 
           // `npc` is walking:
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc, e);
-          state.predictNpcDecorCollision(npc, e);
+          state.predictNpcDecorCollision(npc, e.meta);
           break;
         case 'at-door': {
           const { gmId, doorId, tryOpen } = e.meta;
@@ -154,13 +151,7 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'enter-room': {
-          // 🚧 add special purpose collider when heading away from current door
-
-          const nextExitMeta = npc.anim.wayMetas.find(/** @return {x is NPC.NpcWayMetaExitRoom} */ x => x.key === 'exit-room');
-          if (nextExitMeta) {
-            console.log('in', e.meta.enteredRoomId, 'heading towards', nextExitMeta.doorId);
-            // 🚧 add special purpose collider when heading towards door
-          }
+          npc.updateRoomWalkBounds(); // Used by decor.byNpc
           break;
         }
         case 'decor-collide':
@@ -196,15 +187,12 @@ export default function useHandleEvents(api) {
       }
     },
 
-    predictNpcDecorCollision(npc, e) {
-      // Restrict to decor in line segment's rooms (1 or 2 rooms)
-      const gmRoomIds = npc.anim.gmRoomIds.slice(e.meta.index, (e.meta.index + 1) + 1);
-      // Avoid duplicate
-      gmRoomIds.length === 2 && (gmRoomIds[0].every((x, i) => x === gmRoomIds[1][i])) && gmRoomIds.pop();
-      const closeDecor = gmRoomIds.flatMap(([gmId, roomId]) => 
-        /** @type {(NPC.DecorCircle | NPC.DecorRect)[]} */
-        (api.decor.getDecorAtKey(gmId, roomId, true))
-      );
+    predictNpcDecorCollision(npc, meta) {
+      // Restrict to decor in room containing line-segment's 1st vertex
+      // ℹ️ assume room-traversing segments end on border (?)
+      const [gmId, roomId] = npc.anim.gmRoomIds[meta.index];
+
+      const { collide: closeDecor } = api.decor.ensureNpcCache(npc.key, gmId, roomId);
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'
@@ -221,26 +209,26 @@ export default function useHandleEvents(api) {
         }
         
         collisions.forEach((collision, collisionIndex) => {
-          const length = e.meta.length + collision.distA;
+          const length = meta.length + collision.distA;
           const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
           npc.anim.wayMetas.splice(insertIndex, 0, {
             key: 'decor-collide',
-            index: e.meta.index,
+            index: meta.index,
             decorKey: decor.key,
             type: startInside
               ? collisionIndex === 0 ? 'exit' : 'enter'
               : collisionIndex === 0 ? 'enter' : 'exit',
-            gmId: e.meta.gmId,
+            gmId: meta.gmId,
             length,
           });
         });
-        startInside && (e.meta.index === 0) && npc.anim.wayMetas.unshift({
+        startInside && (meta.index === 0) && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
-          index: e.meta.index,
+          index: meta.index,
           decorKey: decor.key,
           type: 'start-inside', // start walk inside
-          gmId: e.meta.gmId,
-          length: e.meta.length,
+          gmId: meta.gmId,
+          length: meta.length,
         });
       }
     },
@@ -333,7 +321,7 @@ export default function useHandleEvents(api) {
 
 /**
  * @typedef State @type {object}
- * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcDecorCollision
+ * @property {(npc: NPC.NPC, meta: NPC.NpcWayMetaVertex) => void} predictNpcDecorCollision
  * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcNpcsCollision
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
  * Handle NPC event (always runs)

@@ -297,7 +297,7 @@ declare namespace Graph {
     | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'exit-room'; exitedRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'npcs-collide'; otherNpcKey: string; }
-    | { key: 'vertex'; final?: boolean }
+    | { key: 'vertex'; }
   );
 
   export type NavMetaKey = FloorGraphNavMeta['key'];

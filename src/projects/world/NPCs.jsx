@@ -182,28 +182,20 @@ export default function NPCs(props) {
             })));
           }
 
-          if (gmEdge) {
-            // Future nodes exist, so final 'vertex' no longer final
-            delete /** @type {Graph.FloorGraphVertexNavMeta} */ (navMetas[navMetas.length - 1]).final;
-            if (navMetas.at(-2)?.key !== 'exit-room') {
-              // Avoid dup exit-room if localNavPath did via partition [..., doorNavNodes].
-              // It probably always should i.e. we should remove the push below.
-              navMetas.push({
-                key: 'exit-room',
-                index: fullPath.length - 1,
-                gmId: gmEdge.srcGmId,
-                exitedRoomId: gmEdge.srcRoomId,
-                doorId: gmEdge.srcDoorId,
-                hullDoorId: gmEdge.srcHullDoorId,
-                otherRoomId: null,
-              });
-            }
+          if (gmEdge && navMetas.at(-2)?.key !== 'exit-room') {
+            // Avoid dup exit-room if localNavPath did via partition [..., doorNavNodes].
+            // It probably always should i.e. we should remove the push below.
+            navMetas.push({
+              key: 'exit-room',
+              index: fullPath.length - 1,
+              gmId: gmEdge.srcGmId,
+              exitedRoomId: gmEdge.srcRoomId,
+              doorId: gmEdge.srcDoorId,
+              hullDoorId: gmEdge.srcHullDoorId,
+              otherRoomId: null,
+            });
           }
         }
-
-        /** @type {Graph.FloorGraphVertexNavMeta} */ (
-          navMetas[navMetas.length - 1]
-        ).final = true;
         
         return {
           key: 'global-nav',

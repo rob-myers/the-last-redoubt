@@ -126,6 +126,8 @@ declare namespace NPC {
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateAnimAux(): void;
+    /** Invoke initially, or just after `enter-room`. */
+    updateRoomWalkBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
     wayTimeout(): void;
@@ -152,6 +154,8 @@ declare namespace NPC {
       outsetWalkBounds: Geom.Rect;
       /** Outset by npc radius, for npc vs npc collisions */
       outsetSegBounds: Geom.Rect;
+      /** For restricting npc vs decor collisions within npc's current room */
+      roomWalkBounds: Geom.Rect;
       /** For npc vs decor collisions */
       segBounds: Geom.Rect;
       sofars: number[];
@@ -289,6 +293,7 @@ declare namespace NPC {
   }
 
   export type NpcWayMetaExitRoom = Extract<NPC.NpcWayMeta, { key: 'exit-room' }>
+  export type NpcWayMetaVertex = Extract<NPC.NpcWayMeta, { key: 'vertex' }>
 
   /**
    * A `GlobalNavMeta` is a `FloorGraphNavMeta` enriched with the id of the geomorph instance
@@ -457,6 +462,8 @@ declare namespace NPC {
     npcKey: string;
     meta: NpcWayMeta;
   }
+
+
 
   //#region parse
   interface NpcClassConfig {

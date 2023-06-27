@@ -5,15 +5,17 @@
 - ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
   - ℹ️ implementing this was too ugly
 
-- 🚧 on `enter-room` add 1 or 2 special colliders: one immediate, one at door heading towards
+- towards head-towards-door and head-away-from-door events
   - ✅ use-handle-events listens for enter-room and infers next door via wayMetas
   - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
   - ✅ decor roomGroup includes a circle per door
   - ✅ dup decor-collide
     > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
+  - ℹ️ maybe just improve rect tests so check few colliders
+  - ✅ store roomWalkBounds
+  - ✅ cache decor close to npc, while walking in room
   - can hide decor colliders
   - also handle initial case i.e. vertex 0
-  - decor can be filtered by npcKey
   - npcs can collide with special filtered colliders
 
 

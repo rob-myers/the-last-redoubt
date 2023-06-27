@@ -33,9 +33,9 @@ export default function createNpc(
         edges: [],
         elens: [],
         index: 0,
-        // navPathPolys: [],
         outsetSegBounds: new Rect,
         outsetWalkBounds: new Rect,
+        roomWalkBounds: new Rect,
         segBounds: new Rect,
         sofars: [],
         total: 0,
@@ -200,9 +200,7 @@ export default function createNpc(
           length: this.computeWayMetaLength(navMeta),
         }));
 
-        // 🚧 add navMetas `head-to-door` and `head-from-door`
-        // suppose had vertexIds/doorId partition [[0, 1], 7, [2, 3, 4], 8]
-        // then could loop thru this.anim.wayMetas adding them?
+        this.updateRoomWalkBounds();
       }
       
       this.startAnimation('walk');
@@ -654,6 +652,14 @@ export default function createNpc(
       aux.sofars = reduced.sofars
       aux.total = reduced.total;
       aux.index = 0;
+    },
+    updateRoomWalkBounds() {
+      const points = /** @type {Geom.Vect[]} */ ([]);
+      this.anim.wayMetas.some((meta) => {
+        if (meta.key === 'exit-room') return true; // excludes door
+        if (meta.key === 'vertex') points.push(this.anim.path[meta.index]);
+      });
+      this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);
     },
     updateWalkSegBounds(index) {
       this.anim.aux.index = index;

@@ -166,7 +166,7 @@ export class floorGraphClass extends BaseGraph {
 
         if (i > 0) {// We exited previous room
           const roomId = /** @type {{ roomId: number }} */ (partition[i - 1]).roomId;
-          navMetas.splice(-1, 0, {
+          navMetas.splice(-1, 0, {// after any 'vertex' in room
             key: 'exit-room',
             exitedRoomId: roomId,
             index: fullPath.length - 1,
@@ -211,7 +211,7 @@ export class floorGraphClass extends BaseGraph {
           const doorId = /** @type {{ doorId: number }} */ (partition[i - 1]).doorId;
           const door = this.gm.doors[doorId];
 
-          navMetas.push({
+          navMetas.push({// before any 'vertex' in room
             key: 'enter-room',
             index: fullPath.length - 1,
             doorId,
@@ -237,11 +237,7 @@ export class floorGraphClass extends BaseGraph {
           });
         }
 
-        if (!partition[i + 1]) {// Finish in room
-          /** @type {Graph.FloorGraphVertexNavMeta} */ (
-            navMetas[navMetas.length - 1]
-          ).final = true;
-        }
+        // if (!partition[i + 1]) // Finish in room
 
         const { nearDoorId } = this.nodeToMeta[item.nodes[item.nodes.length - 1].index];
         if (typeof nearDoorId === 'number') {
