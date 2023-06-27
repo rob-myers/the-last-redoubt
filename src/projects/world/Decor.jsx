@@ -480,7 +480,7 @@ const rootCss = css`
 const cssCircle = css`
   position: absolute;
   border-radius: 50%;
-  border: 1px dotted #ffffff33;
+  border: 1px dashed #ffffff33;
 `;
 
 const cssPoint = css`
