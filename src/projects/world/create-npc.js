@@ -188,6 +188,7 @@ export default function createNpc(
 
       this.clearWayMetas();
       this.updateAnimAux();
+      api.decor.clearNpcWalk(this.key);
       
       if (path.length === 0) {
         return;

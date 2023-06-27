@@ -20,15 +20,15 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    byNpc: {},
+    byNpcWalk: {},
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
     groupCache: {},
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
-    ensureNpcCache(npcKey, gmId, roomId) {
-      const cached = state.byNpc[npcKey];
+    cacheNpcWalk(npcKey, gmId, roomId) {
+      const cached = state.byNpcWalk[npcKey];
       if (!cached || cached.gmId !== gmId || cached.roomId !== roomId) {
         const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
         const collide = (state.byRoom[gmId][roomId]?.collide ?? []).filter(decor =>
@@ -38,10 +38,13 @@ export default function Decor(props) {
             : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
         );
         // const collide = (state.byRoom[gmId][roomId]?.collide ?? []).slice();
-        return state.byNpc[npcKey] = { gmId, roomId, collide };
+        return state.byNpcWalk[npcKey] = { gmId, roomId, collide };
       } else {
         return cached;
       }
+    },
+    clearNpcWalk(npcKey) {
+      delete state.byNpcWalk[npcKey];
     },
     ensureRoomGroup(gmId, roomId) {
       const groupKey = getLocalDecorGroupKey(gmId, roomId);
@@ -573,7 +576,7 @@ const decorPointHandlers = {
  * @property {Record<string, NPC.DecorDef>} decor
  * @property {Record<string, NPC.DecorGroup>} groupCache
  * @property {HTMLElement} rootEl
- * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpc
+ * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpcWalk
  * Decor an npc may collide with, while walking in its current room.
  * @property {RoomDecorCache[][]} byRoom
  * Decor organised `byRoom[gmId][roomId]`.
@@ -588,7 +591,8 @@ const decorPointHandlers = {
  * @property {(...decorKeys: string[]) => void} removeDecor
  * Remove decor (all from same room)
  * @property {(groupDecorKey: string) => void} restoreGroup
- * @property {(npcKey: string, gmId: number, roomId: number) => State['byNpc']['']} ensureNpcCache
+ * @property {(npcKey: string, gmId: number, roomId: number) => State['byNpcWalk']['']} cacheNpcWalk
+ * @property {(npcKey: string) => void} clearNpcWalk
  * @property {(gmId: number, roomId: number) => NPC.DecorGroup} ensureRoomGroup
  * ensure room decor group is cached and return it
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor

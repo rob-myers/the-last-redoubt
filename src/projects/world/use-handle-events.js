@@ -192,7 +192,7 @@ export default function useHandleEvents(api) {
       // ℹ️ assume room-traversing segments end on border (?)
       const [gmId, roomId] = npc.anim.gmRoomIds[meta.index];
 
-      const { collide: closeDecor } = api.decor.ensureNpcCache(npc.key, gmId, roomId);
+      const { collide: closeDecor } = api.decor.cacheNpcWalk(npc.key, gmId, roomId);
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'
