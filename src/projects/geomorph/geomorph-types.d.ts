@@ -415,10 +415,10 @@ declare namespace Geomorph {
     lightId: number;
     srcRoomId: number;
     rect: R;
-    /** Ids of prior doors i.e. closer to light source (earlier index closer)  */
-    preDoorIds: number[];
-    /** Ids of later doors i.e. further to light source (earlier index closer)  */
-    postDoorIds: number[];
+    /** Ids of prior connectors i.e. closer to light source (earlier index closer)  */
+    preConnectors: { type: 'door' | 'window'; id: number }[];
+    /** Ids of later connectors i.e. further from light source (earlier index closer)  */
+    postConnectors: { type: 'door' | 'window'; id: number }[];
   }
 
   export type LightConnectorRect = BaseLightConnectorRect<Geom.Rect>;

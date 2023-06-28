@@ -270,6 +270,8 @@ export class gmGraphClass extends BaseGraph {
         ),
         range: 1000,
         exterior: this.getOpenWindowPolygon(gmId, windowId),
+        // 🚧 block all doors?
+        // extraSegs: gm.roomGraph.getAdjacentDoors(rootRoomId).map(({ doorId }) => getConnectorOtherSide(gm.doors[doorId], gm.windows[windowId].poly.center)),
       }),
     }));
 

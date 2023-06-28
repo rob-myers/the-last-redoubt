@@ -81,8 +81,9 @@ export default function Geomorphs(props) {
       const imgEl = state.unlitImgs[gmId];
       state.drawRectImage(imgEl, gm.pngRect, ctxt, meta.rect);
       
-      meta.postDoorIds.forEach(postDoorId => {// Hide light through doors
-        const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
+      meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
+        // 🚧 for window should draw polygon i.e. rect without window
+        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
         state.drawRectImage(imgEl, gm.pngRect, ctxt, rect);
       });
     },
@@ -92,18 +93,19 @@ export default function Geomorphs(props) {
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
       if (!meta
-        || meta.preDoorIds.some(preId => !open[preId]) // other doors must be open
+        // all prior connectors must be windows or open doors
+        || !meta.preConnectors.every(({ type, id }) => type === 'window' || open[id])
         || !state.gmRoomLit[gmId][meta.srcRoomId] // must be on 
       ) {
         return;
       }
       // Show light by clearing rect
       ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
-      meta.postDoorIds.forEach(postDoorId => {// Show light through doors
-        const {rect} = assertDefined(gm.doorToLightRect[postDoorId]);
+      meta.postConnectors.forEach(({ type, id }) => {// Show light through doors
+        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
         ctxt.clearRect(rect.x, rect.y, rect.width, rect.height);
-        const doorRect = gm.doors[postDoorId].rect.clone().precision(0);
-        ctxt.clearRect(doorRect.x, doorRect.y, doorRect.width, doorRect.height);
+        const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
+        ctxt.clearRect(connectorRect.x, connectorRect.y, connectorRect.width, connectorRect.height);
       });
     },
     onLoadUnlitImage(e) {

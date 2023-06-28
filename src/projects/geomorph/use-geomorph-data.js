@@ -104,7 +104,7 @@ export async function createGeomorphData(input) {
     .reduce((agg, { poly }) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       doorIds.forEach(doorId => {
-        agg[doorId] ||= { doorIds: [] };
+        agg[doorId] ??= { doorIds: [] };
         const alreadySeen = agg[doorId].doorIds;
         agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
       });

@@ -28,6 +28,8 @@
 
 - ✅ turning off light should remove light through window
   - ℹ️ don't support light thru two windows in a row (and probably other cases)
+- ✅ tidy lights i.e. doors/windows treated symmetrically
+  - ℹ️ saw issue with window adjacent to door (unfrosted window in bridge 301)
 
 - 🚧 BUG see very early collisions i.e. other npc nowhere near andros, but perhaps in same segment
 

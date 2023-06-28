@@ -778,13 +778,13 @@ export function geomorphDataToInstance(gm, transform) {
  */
 export function computeLightConnectorRects(gm) {
   const lightPolys = computeLightPolygons(gm, true);
-  /** Computed items are stored here */
+  /** Output will be stored here */
   const lightRects = /** @type {Geomorph.LightConnectorRect[]} */ ([]);
 
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: Geomorph.LightConnectorRect[] }} prev previous
+   * @param {{ connectorIds: { type: 'door' | 'window'; id: number }[]; roomIds: number[]; lightRects: Geomorph.LightConnectorRect[] }} prev previous
    * @param {number} depth 
    */
   function depthFirstLightRects(light, roomId, prev, depth) {
@@ -825,12 +825,12 @@ export function computeLightConnectorRects(gm) {
         lightId: light.id,
         rect: otherRoomIntersection[0].rect.precision(0),
         srcRoomId: light.roomId,
-        preDoorIds: prev.doorIds.slice(),
-        postDoorIds: [], // computed directly below
+        preConnectors: prev.connectorIds.slice(),
+        postConnectors: [], // computed directly below
       });
-      succ.type === 'door' && prev.lightRects.forEach(prevLightRect => prevLightRect.postDoorIds.push(succ.doorId));
+      succ.type === 'door' && prev.lightRects.forEach(prevLightRect => prevLightRect.postConnectors.push({ type: 'door', id: succ.doorId }));
       const nextPrev = {
-        doorIds: prev.doorIds.concat(succ.type === 'door' ? succ.doorId : []),
+        connectorIds: prev.connectorIds.concat(succ.type === 'door' ? { type: 'door', id: succ.doorId} : { type: 'window', id: succ.windowId}),
         roomIds: nextRoomIds,
         lightRects: prev.lightRects.concat(lightRects.slice(-1)),
       };
@@ -841,7 +841,7 @@ export function computeLightConnectorRects(gm) {
   lightPolys.forEach((lightPoly, lightId) => {
     const { roomId } = gm.lightSrcs[lightId];
     const light = { id: lightId, roomId, poly: lightPoly.clone().precision(2) }; // 🚧 broke sans precision
-    depthFirstLightRects(light, roomId, { doorIds: [], roomIds: [], lightRects: [] }, 3);
+    depthFirstLightRects(light, roomId, { connectorIds: [], roomIds: [], lightRects: [] }, 3);
   });
 
   for (let i = 0; i < lightRects.length; i++) {
@@ -885,7 +885,7 @@ export function computeLightPolygons(gm, intersectWithCircle = false) {
   });
 
   
-  if (intersectWithCircle) {// ℹ️ for GeomorphEdit
+  if (intersectWithCircle) {
 
     const restrictedLightPolys = lightPolys.map((lightPoly, lightId) => {
       const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
