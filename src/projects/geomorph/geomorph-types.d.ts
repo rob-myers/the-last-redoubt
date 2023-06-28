@@ -91,9 +91,9 @@ declare namespace Geomorph {
     }[];
     /**
      * Rects which need to overwritten when light source not visible.
-     * We'll reorganise these by door id.
+     * We'll reorganise these by door/window id.
      */
-    lightRects: BaseLightDoorRect<R>[];
+    lightRects: BaseLightConnectorRect<R>[];
     /** Pointers into `groups.singles`. */
     floorHighlightIds: number[];
     /** Pointers into `groups.obstacles` indexed by roomId. */
@@ -150,7 +150,8 @@ declare namespace Geomorph {
       doorIds: number[];
     }>;
     /** At most one light rect, viewing light as going outwards through door. */
-    doorToLightRect: (Geomorph.LightDoorRect | undefined)[];
+    doorToLightRect: (Geomorph.LightConnectorRect | undefined)[];
+    windowToLightRect: (Geomorph.LightConnectorRect | undefined)[];
     //#endregion
 
     /**
@@ -398,10 +399,19 @@ declare namespace Geomorph {
   type ParsedConnectorRect = ConnectorRect<Geom.Poly, Geom.Vect, Geom.Rect>;
   type ConnectorRectJson = ConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
 
-  export interface BaseLightDoorRect<R extends Geom.RectJson> {
-    /** `door{doorId}@light{lightId}` */
+  /**
+   * ℹ️ We currently don't support light going thru two windows in a row.
+   */
+  export interface BaseLightConnectorRect<R extends Geom.RectJson> {
+    /**
+     * `door{doorId}@light{lightId}`
+     * or `window{windowId}@light{lightId}`
+     */
     key: string;
+    /** If `windowId ≥ 0` this is `-1`. */
     doorId: number;
+    /** If `doorId ≥ 0` this is `-1`. */
+    windowId: number;
     lightId: number;
     srcRoomId: number;
     rect: R;
@@ -411,6 +421,6 @@ declare namespace Geomorph {
     postDoorIds: number[];
   }
 
-  export type LightDoorRect = BaseLightDoorRect<Geom.Rect>;
+  export type LightConnectorRect = BaseLightConnectorRect<Geom.Rect>;
 
 }

@@ -181,7 +181,9 @@ export async function createGeomorphData(input) {
 
     relDoorId,
     parallelDoorId,
+
     doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
+    windowToLightRect: layout.windows.map((_, windowId) => layout.lightRects.find(x => x.windowId === windowId)),
 
     roomOverrides,
     roomDecor,

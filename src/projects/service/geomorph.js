@@ -340,7 +340,7 @@ export async function createLayout(opts) {
     })),
   };
 
-  output.lightRects = computeLightDoorRects(output);
+  output.lightRects = computeLightConnectorRects(output);
 
   return output;
 }
@@ -773,38 +773,43 @@ export function geomorphDataToInstance(gm, transform) {
 }
 
 /**
- * @param {Geomorph.ParsedLayout} gm 
+ * @param {Geomorph.ParsedLayout} gm
+ * @return {Geomorph.LightConnectorRect[]}
  */
-export function computeLightDoorRects(gm) {
+export function computeLightConnectorRects(gm) {
   const lightPolys = computeLightPolygons(gm, true);
   /** Computed items are stored here */
-  const lightRects = /** @type {Geomorph.LightDoorRect[]} */ ([]);
+  const lightRects = /** @type {Geomorph.LightConnectorRect[]} */ ([]);
 
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: Geomorph.LightDoorRect[] }} pre previous
+   * @param {{ doorIds: number[]; roomIds: number[]; lightRects: Geomorph.LightConnectorRect[] }} prev previous
    * @param {number} depth 
    */
-  function depthFirstLightRects(light, roomId, pre, depth) {
+  function depthFirstLightRects(light, roomId, prev, depth) {
     if (depth <= 0) {
       return;
     }
-    const nextRoomIds = pre.roomIds.concat(roomId); // Avoid revisit
-    for (const { doorId } of gm.roomGraph.getAdjacentDoors(roomId)) {
-      const doorPoly = gm.doors[doorId].poly;
+    /** Used to avoid revisiting rooms */
+    const nextRoomIds = prev.roomIds.concat(roomId);
+    let otherRoomId = -1;
 
-      if (!Poly.intersect([doorPoly], [light.poly]).length) {
+    const succs = /** @type {(Graph.RoomGraphNodeDoor | Graph.RoomGraphNodeWindow)[]} */ (
+      gm.roomGraph.getSuccs(gm.roomGraph.nodesArray[roomId])
+    );
+
+    for (const succ of succs) {
+      const connectorPoly = (succ.type === 'door' ? gm.doors[succ.doorId] : gm.windows[succ.windowId]).poly;
+
+      if (!Poly.intersect([connectorPoly], [light.poly]).length) {
         continue; // can have parallel doors where light only goes thru some
-      }
-
-      const otherRoomId = getUnseenConnectorRoomId(gm.doors[doorId], nextRoomIds);
-      if (otherRoomId === -1) {
+      } else if ((otherRoomId = getUnseenConnectorRoomId(succ.type === 'door' ? gm.doors[succ.doorId] : gm.windows[succ.windowId], nextRoomIds)) === -1) {
         continue;
       }
 
       const otherRoomPoly = gm.rooms[otherRoomId];
-      const outsetDoorPoly = geom.createOutset(doorPoly, 1)[0];
+      const outsetDoorPoly = geom.createOutset(connectorPoly, 1)[0];
       const otherRoomIntersection = Poly.intersect([otherRoomPoly], [light.poly]).filter(
         // otherRoomIntersection can have disjoint pieces: choose right one
         poly => Poly.intersect([outsetDoorPoly], [poly]).length
@@ -814,23 +819,28 @@ export function computeLightDoorRects(gm) {
       }
 
       lightRects.push({
-        key: `door${doorId}@light${light.id}`,
-        doorId,
+        key: succ.type === 'door' ? `door${succ.doorId}@light${light.id}` : `window${succ.windowId}@light${light.id}`,
+        doorId: succ.type === 'door' ? succ.doorId : -1,
+        windowId: succ.type === 'window' ? succ.windowId : -1,
         lightId: light.id,
         rect: otherRoomIntersection[0].rect.precision(0),
         srcRoomId: light.roomId,
-        preDoorIds: pre.doorIds.slice(),
+        preDoorIds: prev.doorIds.slice(),
         postDoorIds: [], // computed directly below
       });
-      pre.lightRects.forEach(preLightRect => preLightRect.postDoorIds.push(doorId));
-      const nextPre = { doorIds: pre.doorIds.concat(doorId), roomIds: nextRoomIds, lightRects: pre.lightRects.concat(lightRects.slice(-1)) }
-      depthFirstLightRects(light, otherRoomId, nextPre, --depth);
+      succ.type === 'door' && prev.lightRects.forEach(prevLightRect => prevLightRect.postDoorIds.push(succ.doorId));
+      const nextPrev = {
+        doorIds: prev.doorIds.concat(succ.type === 'door' ? succ.doorId : []),
+        roomIds: nextRoomIds,
+        lightRects: prev.lightRects.concat(lightRects.slice(-1)),
+      };
+      depthFirstLightRects(light, otherRoomId, nextPrev, --depth);
     }
   }
 
   lightPolys.forEach((lightPoly, lightId) => {
     const { roomId } = gm.lightSrcs[lightId];
-    const light = { id: lightId, roomId, poly: lightPoly };
+    const light = { id: lightId, roomId, poly: lightPoly.clone().precision(2) }; // 🚧 broke sans precision
     depthFirstLightRects(light, roomId, { doorIds: [], roomIds: [], lightRects: [] }, 3);
   });
 

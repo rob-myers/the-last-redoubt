@@ -26,7 +26,22 @@
   - clear byNpcWalk on remove npc
   - can hide decor colliders
 
-- BUG see very early collisions i.e. other npc nowhere near andros, but perhaps in same segment
+- ✅ turning off light should remove light through window
+  - ℹ️ don't support light thru two windows in a row (and probably other cases)
+
+- 🚧 BUG see very early collisions i.e. other npc nowhere near andros, but perhaps in same segment
+
+- 🚧 clean Decor
+  - remove groupCache i.e. use `byRoom[gmId][roomId].group` instead
+  - byRoom persists i.e. acts like cache
+  - hideDecor vs removeDecor
+  - remove handleDevToolEdit
+  - auto gmId, roomId should be efficient
+
+
+- move `nav --tryOpen` to `walk --open`
+- walk `--open` detects approach/leave door using door sensors
+- walk `--open` changes npc speed
 
 - npc slows down when nav --tryOpen and "approaching door"
 - nav --tryOpen weights _locked_ doors (not closed doors)

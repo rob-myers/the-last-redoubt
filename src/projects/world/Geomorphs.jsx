@@ -1,6 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { cssName, preDarkenCssRgba } from "./const";
+import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons } from "../service/dom";
 import { geomorphPngPath } from "../service/geomorph";
@@ -18,6 +19,18 @@ export default function Geomorphs(props) {
     unlitImgs: [],
     ready: true,
 
+    createUnlitPattern(ctxt, gmId) {
+      const gm = gms[gmId];
+      const pattern = assertNonNull(ctxt.createPattern(state.unlitImgs[gmId], 'no-repeat'));
+      pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e: gm.pngRect.x, f: gm.pngRect.y });
+      return pattern;
+    },
+    drawUnlitPolygon(ctxt, gmId, poly) {
+      ctxt.fillStyle = state.createUnlitPattern(ctxt, gmId);
+      fillPolygons(ctxt, [poly]);
+      ctxt.fillStyle = preDarkenCssRgba;
+      fillPolygons(ctxt, [poly]);
+    },
     drawRectImage(imgEl, srcOffset, ctxt, rect) {
       // ℹ️ target canvas is 1/2 size of source image
       ctxt.drawImage(
@@ -116,24 +129,34 @@ export default function Geomorphs(props) {
         ctxt.fillStyle = 'white';
         fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
         ctxt.globalCompositeOperation = 'source-over';
-      } else {// fill polygon using unlit image, and also darken
-        const pattern = assertNonNull(ctxt.createPattern(state.unlitImgs[gmId], 'no-repeat'));
-        pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e: gm.pngRect.x, f: gm.pngRect.y });
-        ctxt.fillStyle = pattern;
-        fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
-        ctxt.fillStyle = preDarkenCssRgba;
-        fillPolygons(ctxt, [gm.roomsWithDoors[roomId]]);
+      } else {
+        state.drawUnlitPolygon(ctxt, gmId, gm.roomsWithDoors[roomId]);
       }
 
       state.gmRoomLit[gmId][roomId] = lit;
 
       // toggle light rects
       const doorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
+      const windowIds = gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowId);
       if (lit) {
         const openDoorIds = doorIds.filter(doorId => api.doors.open[gmId][doorId]);
         openDoorIds.forEach(doorId => state.onOpenDoor(gmId, doorId));
+        // Show light thru windows by clearing rect
+        windowIds.forEach(windowId => {
+          const meta = gm.windowToLightRect[windowId];
+          meta && ctxt.clearRect(meta.rect.x, meta.rect.y, meta.rect.width, meta.rect.height);
+        });
       } else {
         doorIds.forEach(doorId => state.onCloseDoor(gmId, doorId, false));
+        // Hide light thru windows by drawing partial polygonal image:
+        // windows can cover part of room polygon, so we exclude them
+        windowIds.forEach(windowId => {
+          const meta = gm.windowToLightRect[windowId];
+          if (meta) {// 🚧 could precompute this polygon
+            const [poly] = Poly.cutOut([gm.windows[windowId].poly], [Poly.fromRect(meta.rect)]);
+            state.drawUnlitPolygon(ctxt, gmId, poly);
+          }
+        });        
       }
     },
 
@@ -215,8 +238,12 @@ const rootCss = css`
 /**
  * @typedef State @type {object}
  * @property {HTMLCanvasElement[]} canvas
- * @property {boolean[][]} gmRoomLit lights off <=> `gmRoomUnlit[gmId][roomId]` truthy
+ * @property {boolean[][]} gmRoomLit
+ * Lights on <=> `gmRoomLit[gmId][roomId]` truthy.
  * @property {HTMLImageElement[]} unlitImgs
+ * @property {(ctxt: CanvasRenderingContext2D, gmId: number) => CanvasPattern} createUnlitPattern
+ * @property {(ctxt: CanvasRenderingContext2D, gmId: number, poly: Geom.Poly) => void} drawUnlitPolygon
+ * Fill polygon using unlit image, and also darken.
  * @property {(imgEl: HTMLImageElement, srcOffset: Geom.VectJson, ctxt: CanvasRenderingContext2D, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
