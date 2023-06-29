@@ -28,7 +28,11 @@ const rootCss = css`
   position: relative;
   display: flex;
   justify-content: center;
+  align-items: center;
+
   margin: 0;
+  border: 1px solid var(--page-border-color);
+  background-color: black;
 
   > span.anchor {
     position: absolute;
@@ -40,6 +44,15 @@ const rootCss = css`
     height: 100%;
     background-size: contain;
     background-repeat: no-repeat;
+    
+    max-height: calc(100% - 128px);
+    @media(max-width: 600px) {
+      max-height: unset;
+    }
+  }
+
+  .spacing {
+    min-height: 64px;
   }
 `;
 

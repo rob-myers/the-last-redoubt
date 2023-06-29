@@ -259,11 +259,16 @@ const rootCss = css`
     img {
       object-fit: contain;
       max-width: 100%;
-      padding: 32px 0;
+      padding: 64px 0;
     }
-
+    
+    border: 1px solid var(--page-border-color);
+    background-color: black;
     @media(max-width: 600px) {
-      background: var(--carousel-background);
+      /* background: var(--carousel-background); */
+      img {
+        padding: 16px 0;
+      }
     }
   }
 

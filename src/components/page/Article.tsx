@@ -162,7 +162,7 @@ const articleCss = css`
   }
 
   figure.carousel {
-    margin: 48px 0 72px 0;
+    margin: 64px 0 64px 0;
     padding: 0;
     @media(max-width: 600px) {
       margin: 32px 0;
@@ -218,7 +218,6 @@ const articleCss = css`
     color: var(--page-font-color);
     letter-spacing: 2px;
 
-    /* margin-bottom: 48px; */
     padding: 0;
     background-color: unset;
     
@@ -231,7 +230,9 @@ const articleCss = css`
       /* border-width: 1px 1px 0 0; */
     }
     
+    margin-bottom: 48px;
     @media(max-width: 600px) {
+    margin-bottom: 0;
       > span {
         flex-grow: 1;
       }
