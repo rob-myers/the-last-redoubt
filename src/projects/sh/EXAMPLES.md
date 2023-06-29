@@ -125,6 +125,8 @@ npc events | filter 'x => x.key === "way-point" && x.meta.final'
 
 npc events | filter 'x => x.key === "way-point" && x.meta.key === "exit-room"'
 
+npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'
+
 expr '{ npcKey: "foo", point: '$( click 1 )' }' | spawn
 spawn bar zhodani "$( click 1 )"
 ```

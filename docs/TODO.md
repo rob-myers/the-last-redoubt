@@ -3,10 +3,13 @@
 ## In progress
 
 - 🚧 clean/redo Decor
-  - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].group` instead
+  - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].groups` instead
   - ❌ remove handleDevToolEdit
-  - remove handleDevToolEdit path support
-    - should support decor point/circle/rect/group
+  - ✅ clean handleDevToolEdit
+    - ✅ remove handleDevToolEdit DecorPath support
+      - ℹ️ breaks navpath meaning
+    - ✅ support decor point/circle/rect
+    - ✅ support group via handle
   - decor must reside inside a room e.g. doorSensors
   - byRoom persists i.e. acts like cache
   - maybe `decor` contains all decor

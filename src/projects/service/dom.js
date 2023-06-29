@@ -137,6 +137,20 @@ export function cssStylesToCircle(el) {
 }
 
 /**
+ * @param {HTMLElement} el
+ * @returns {Geom.Vect | null}
+ */
+export function cssStylesToPoint(el) {
+	const top = parseFloat(el.style.getPropertyValue('top'));
+	const left = parseFloat(el.style.getPropertyValue('left'));
+	if (![top, left].every(x => Number.isFinite(x))) {
+		return null;
+	} else {
+		return new Vect(left, top);
+	};
+}
+
+/**
  * 🚧 Won't predict moving npc vs seg, but other uses?
  * Assume affine transform acts on `(0,0) --> (1, 0)` to produce line segment
  * @param {HTMLElement} el

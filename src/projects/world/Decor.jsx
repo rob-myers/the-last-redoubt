@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
 import { cssName } from "./const";
 import { assertDefined, testNever } from "../service/generic";
-import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
+import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
 import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, metaToTags } from "../service/geomorph";
@@ -87,70 +87,60 @@ export default function Decor(props) {
       }
     },
     handleDevToolEdit(els) {
-      for (const el of els) {
-        const decorKey = el.dataset.key || '';
-        if (el.classList.contains(cssName.decorCircle)) {
-          if (decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorDef & { type: 'circle'}} */ (state.decor[decorKey]);
-            const output = cssStylesToCircle(el);
-            if (output) {
-              [decor.radius, decor.center] = [output.radius, output.center];
-              triggerUpdate(decor);
-            }
-          }
-        } else if (el.classList.contains(cssName.decorPath)) {
-          const pathDecorKey = el.dataset.key || '';
-          if (pathDecorKey in state.decor) {
-            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            if (!decor.origPath) decor.origPath = decor.path.map(p => ({ x: p.x, y: p.y }));
-            
-            // devtool provides validation (Invalid property value)
-            const matrix = new DOMMatrix(el.style.transform);
-            decor.origPath.forEach((p, i) => {
-              const { x, y } = matrix.transformPoint(p);
-              [decor.path[i].x, decor.path[i].y] = [x, y];
-            });
+      for (const el of els.filter(el => el.dataset.key)) {
+        const decorKey = /** @type {string} */ (el.dataset.key);
 
-            if (matrix.isIdentity) delete decor.origPath;
+        // ℹ️ We don't handle DecorPath because mutating navPath breaks navMetas
+        if (el.classList.contains(cssName.decorCircle)) {
+          const decor = /** @type {NPC.DecorCircle} */ (state.decor[decorKey]);
+          const output = cssStylesToCircle(el);
+          if (output) {
+            [decor.radius, decor.center] = [output.radius, output.center];
             triggerUpdate(decor);
           }
-        // ℹ️ mutating navpath breaks navMetas
-        // } else if (el.classList.contains(cssName.decorPathPoint)) {// from DecorPath
-        //   const parentEl = /** @type {HTMLElement} */ (el.parentElement);
-        //   const pathDecorKey = parentEl.dataset.key || '';
-        //   if (pathDecorKey in state.decor) {
-        //     const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-        //     const decorPoints = /** @type {HTMLDivElement[]} */ (
-        //       Array.from(parentEl.querySelectorAll(`div.${cssName.decorPathPoint}`))
-        //     );
-        //     const points = decorPoints.map(x => cssTransformToPoint(x));
-        //     if (points.every(x => x)) {
-        //       decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
-        //       triggerUpdate(decor);
-        //     }
-        //   }
         } else if (el.classList.contains(cssName.decorPoint)) {
-          if (decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
-            const output = cssTransformToPoint(el);
-            if (output) {
-              [decor.x, decor.y] = [output.x, output.y];
-              triggerUpdate(decor);
-            }
+          const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
+          const output = cssTransformToPoint(el);
+          if (output) {
+            [decor.x, decor.y] = [output.x, output.y];
+            triggerUpdate(decor);
           }
         } else if (el.classList.contains(cssName.decorRect)) {
-          if (decorKey in state.decor) {
-            const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
-            const output = cssStylesToRect(el);
-            if (output) {
-              Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
-              decor.angle = output.angle;
-              extendDecor(decor, api);
-              triggerUpdate(decor);
-            }
+          const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
+          const output = cssStylesToRect(el);
+          if (output) {
+            Object.assign(decor, /** @type {NPC.DecorRect} */ (output.baseRect));
+            decor.angle = output.angle;
+            extendDecor(decor, api);
+            triggerUpdate(decor);
           }
         } else if (el.classList.contains(cssName.decorGroupHandle)) {
-          // 🚧 on handle change, update derivedHandlePos and items
+          const decor = /** @type {NPC.DecorGroup} */ (state.decor[decorKey]);
+          const point = cssStylesToPoint(el);
+          if (point && decor.derivedHandlePos) {
+            // update derivedHandlePos and items
+            const delta = point.clone().sub(decor.derivedHandlePos);
+            decor.derivedHandlePos = point;
+            decor.items.forEach(d => {
+              switch (d.type) {
+                case 'circle':
+                  d.center.x += delta.x;
+                  d.center.y += delta.y;
+                  break;
+                case 'point':
+                  d.x += delta.x;
+                  d.y += delta.y;
+                  break;
+                case 'rect':
+                  d.x += delta.x;
+                  d.y += delta.y;
+                  extendDecor(d, api);
+                  break;
+              }
+              triggerUpdate(d);
+            });
+            triggerUpdate(decor);
+          }
         }
       }
 
