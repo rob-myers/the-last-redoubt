@@ -59,6 +59,7 @@ export const cssName = {
 
   decorCircle: 'decor-circle',
   decorGroup: 'decor-group',
+  decorGroupHandle: 'decor-group-handle',
   decorPath: 'decor-path',
   decorPathPoint: 'decor-path-point',
   decorPoint: 'decor-point',

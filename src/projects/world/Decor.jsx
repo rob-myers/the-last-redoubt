@@ -1,12 +1,12 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
-import { assertDefined, testNever } from "../service/generic";
 import { cssName } from "./const";
+import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect } from "../service/dom";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecorRect, getLocalDecorGroupKey, metaToTags } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, metaToTags } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -86,7 +86,7 @@ export default function Decor(props) {
         return [];
       }
     },
-    handleDevToolEdit(els) {// 🚧 remove?
+    handleDevToolEdit(els) {
       for (const el of els) {
         const decorKey = el.dataset.key || '';
         if (el.classList.contains(cssName.decorCircle)) {
@@ -114,20 +114,21 @@ export default function Decor(props) {
             if (matrix.isIdentity) delete decor.origPath;
             triggerUpdate(decor);
           }
-        } else if (el.classList.contains(cssName.decorPathPoint)) {// from DecorPath
-          const parentEl = /** @type {HTMLElement} */ (el.parentElement);
-          const pathDecorKey = parentEl.dataset.key || '';
-          if (pathDecorKey in state.decor) {
-            const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
-            const decorPoints = /** @type {HTMLDivElement[]} */ (
-              Array.from(parentEl.querySelectorAll(`div.${cssName.decorPathPoint}`))
-            );
-            const points = decorPoints.map(x => cssTransformToPoint(x));
-            if (points.every(x => x)) {
-              decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
-              triggerUpdate(decor);
-            }
-          }
+        // ℹ️ mutating navpath breaks navMetas
+        // } else if (el.classList.contains(cssName.decorPathPoint)) {// from DecorPath
+        //   const parentEl = /** @type {HTMLElement} */ (el.parentElement);
+        //   const pathDecorKey = parentEl.dataset.key || '';
+        //   if (pathDecorKey in state.decor) {
+        //     const decor = /** @type {NPC.DecorPath} */ (state.decor[pathDecorKey]);
+        //     const decorPoints = /** @type {HTMLDivElement[]} */ (
+        //       Array.from(parentEl.querySelectorAll(`div.${cssName.decorPathPoint}`))
+        //     );
+        //     const points = decorPoints.map(x => cssTransformToPoint(x));
+        //     if (points.every(x => x)) {
+        //       decor.path.splice(0, decor.path.length, .../** @type {Geom.VectJson[]} */ (points));
+        //       triggerUpdate(decor);
+        //     }
+        //   }
         } else if (el.classList.contains(cssName.decorPoint)) {
           if (decorKey in state.decor) {
             const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
@@ -144,12 +145,12 @@ export default function Decor(props) {
             if (output) {
               Object.assign(decor, /** @type {typeof decor} */ (output.baseRect));
               decor.angle = output.angle;
-              extendDecorRect(decor);
+              extendDecor(decor, api);
               triggerUpdate(decor);
             }
           }
-        } else if (el.classList.contains(cssName.decorGroup)) {
-          // NOOP 
+        } else if (el.classList.contains(cssName.decorGroupHandle)) {
+          // 🚧 on handle change, update derivedHandlePos and items
         }
       }
 
@@ -220,11 +221,12 @@ export default function Decor(props) {
           d.tags = metaToTags(d.meta);
           break;
         case 'rect':
-          extendDecorRect(d); // Add derived data
+          extendDecor(d, api); // Add derived data
           ensureDecorMetaGmRoomId(d, api);
           break;
         case 'group': {
           ensureDecorMetaGmRoomId(d, api);
+          extendDecor(d, api);
           return d.items.flatMap((item, index) => {
             item.parentKey = d.key;
             item.key = `${d.key}-${index}`; // Overwrite child keys
@@ -311,14 +313,14 @@ export default function Decor(props) {
     },
     update,
     updateLocalDecor(opts) {
-      for (const { gmId, roomId } of opts.added??[]) {
+      opts.added?.forEach(({ gmId, roomId }) => {
         // 🚧 may change if visible decor driven by fov.gmRoomIds
         const { groups } = api.decor.ensureByRoom(gmId, roomId);
         groups.forEach(group => {
           state.decor[group.key] = group;
           group.items.map(item => state.decor[item.key] = item);
         });
-      }
+      });
       opts.removed?.forEach(({ gmId, roomId}) => {
         // 🚧 may change if visible decor driven by fov.gmRoomIds
         // we don't mutate byRoom[gmId][roomId]
@@ -332,7 +334,7 @@ export default function Decor(props) {
     props.onLoad(state);
   }, []);
 
-  React.useEffect(() => {
+  React.useEffect(() => {// Handle devtool edits of point/rect/circle/group 
     const observer = new MutationObserver(debounce((records) => {
       const els = records.map(x => /** @type {HTMLElement} */ (x.target));
       state.handleDevToolEdit(els);
@@ -390,14 +392,22 @@ function DecorInstance({ def }) {
       />
     );
   } else if (def.type === 'group') {
+    const handlePos = def.derivedHandlePos;
     return (
       <div
         key={def.key}
         data-key={def.key}
         data-meta={JSON.stringify(def.meta)}
-        className={cx(cssName.decorGroup, `gm-${def.meta.gmId}`)}
+        className={cx(cssName.decorGroup, cssGroup, `gm-${def.meta.gmId}`)}
       >
         {def.items.map(item => <DecorInstance key={item.key} def={item} />)}
+        {handlePos && (
+          <div
+            className={cssName.decorGroupHandle}
+            data-key={def.key}
+            style={{ left: handlePos.x, top: handlePos.y }}
+          />
+        )}
       </div>
     );
   } else if (def.type === 'path') {
@@ -449,7 +459,7 @@ const MemoizedDecorInstance = React.memo(DecorInstance);
 
 const rootCss = css`
   position: absolute;
-  /** Prevent descendent 'z-index: 1' ascension */
+  /** Prevent descendant 'z-index: 1' ascension */
   z-index: 0;
   pointer-events: all;
   canvas {
@@ -466,6 +476,15 @@ const cssCircle = css`
   position: absolute;
   border-radius: 50%;
   border: 1px dashed #ffffff33;
+`;
+
+const cssGroup = css`
+  .${cssName.decorGroupHandle} {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+  }
 `;
 
 const cssPoint = css`
@@ -516,7 +535,13 @@ const cssPoint = css`
     opacity: 1;
   } */
   //#endregion icon
-  
+`;
+
+const cssRect = css`
+  position: absolute;
+  transform-origin: left top;
+  /* transform-origin: center; */
+  border: 2px dotted #ffffff55;
 `;
 
 /** @param {Geomorph.PointMeta} meta */
@@ -527,13 +552,6 @@ function metaToIconClasses(meta) {
   if (meta.label) return 'icon info-icon';
   return undefined;
 }
-
-const cssRect = css`
-  position: absolute;
-  transform-origin: left top;
-  /* transform-origin: center; */
-  border: 2px dotted #ffffff55;
-`;
 
 /**
  * Would prefer &.icon:hover::after but touch devices remain hovered,

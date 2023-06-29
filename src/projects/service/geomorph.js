@@ -1169,6 +1169,34 @@ export function decodeDecorInstanceKey(decorKey) {
 }
 
 /**
+ * @template {NPC.DecorGroup | NPC.DecorRect} T
+ * @param {T} decor
+ * @param {import('../world/World').State} api
+ * @returns {T}
+ */
+export function extendDecor(decor, api) {
+  switch (decor.type) {
+    case 'rect': {
+      const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
+      decor.derivedPoly = poly;
+      decor.derivedBounds = poly.rect;
+      return decor;
+    }
+    case 'group': {
+      if (typeof decor.meta.gmId === 'number' && typeof decor.meta.roomId === 'number') {
+        const { rooms: { [decor.meta.roomId]: roomPoly }, matrix } = api.gmGraph.gms[decor.meta.gmId];
+        decor.derivedHandlePos = matrix.transformPoint(Vect.topLeft(...roomPoly.outline));
+      } else {// Fallback to average of `DecorPoint`s
+        decor.derivedHandlePos = Vect.average(decor.items.filter(/** @return {x is NPC.DecorPoint} */ x => x.type === 'point'));
+      }
+      return decor;
+    }
+    default:
+      throw testNever(decor);
+  }
+}
+
+/**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorSansPath} decor
  * @param {import('../world/World').State} api
@@ -1178,7 +1206,7 @@ export function ensureDecorMetaGmRoomId(decor, api) {
   decor.meta ??= {};
   if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
     // 🚧 more efficient way?
-    const decorCenter = getDecorCenter(decor);
+    const decorCenter = getDecorCenter(decor, api);
     const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
     decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter)[0];
     decor.meta.roomId ??= ((gmRoomId?.roomId) ?? null);
@@ -1187,29 +1215,19 @@ export function ensureDecorMetaGmRoomId(decor, api) {
 }
 
 /**
- * @param {NPC.DecorRect} decor
- * @returns {NPC.DecorRect}
- */
-export function extendDecorRect(decor) {
-  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
-  decor.derivedPoly = poly;
-  decor.derivedBounds = poly.rect;
-  return decor;
-}
-
-/**
  * 
  * @param {NPC.DecorDef} decor 
+ * @param {import('../world/World').State} api
  * @returns {Geom.VectJson}
  */
-export function getDecorCenter(decor) {
+export function getDecorCenter(decor, api) {
   switch (decor.type) {
     case 'circle': return decor.center;
-    case 'group': return Vect.average(decor.items.map(item => getDecorCenter(item)));
+    case 'group': return Vect.average(decor.items.map(item => getDecorCenter(item, api)));
     case 'path': return Vect.average(decor.path);
     case 'point': return decor;
     case 'rect': {
-      if (!decor.derivedPoly) extendDecorRect(decor);
+      if (!decor.derivedPoly) extendDecor(decor, api);
       return assertDefined(decor.derivedPoly).center;
     }
     default: throw testNever(decor);

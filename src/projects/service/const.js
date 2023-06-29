@@ -1,3 +1,7 @@
+/**
+ * 👋 ensure changes are suitably mirrored in projects/world/const.js
+ */
+
 export const siteTitle = 'NPC CLI';
 
 export const discussionsUrl = "https://github.com/rob-myers/the-last-redoubt/discussions";
@@ -64,6 +68,7 @@ export const cssName = /** @type {const} */ ({
 
   decorCircle: 'decor-circle',
   decorGroup: 'decor-group',
+  decorGroupHandle: 'decor-group-handle',
   decorPath: 'decor-path',
   decorPathPoint: 'decor-path-point',
   decorPoint: 'decor-point',

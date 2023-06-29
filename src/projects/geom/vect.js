@@ -126,6 +126,18 @@
     return input && typeof input.x === 'number' && typeof input.y === 'number';
   }
 
+  /**
+   * @param {Geom.VectJson[]} vectors
+   */
+  static topLeft(...vectors) {
+    return vectors.reduce(/** @param {Geom.Vect} agg */ (agg, v) =>
+      v.y < agg.y || (v.y === agg.y && v.x < agg.x)
+        ? agg.copy(v)
+        : agg,
+      new Vect(Infinity, Infinity),
+    );
+  }
+
   normalize(newLength = 1) {
     const length = this.length;
     if (length) {
