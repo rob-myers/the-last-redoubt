@@ -2,44 +2,20 @@
 
 ## In progress
 
-- ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
-  - ℹ️ implementing this was too ugly
-
-- towards head-towards-door and head-away-from-door events
-  - ✅ use-handle-events listens for enter-room and infers next door via wayMetas
-  - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
-  - ✅ decor roomGroup includes a circle per door
-  - ✅ dup decor-collide
-  - ℹ️ maybe just improve rect tests so check few colliders
-  - ✅ store roomWalkBounds
-  - ✅ cache decor close to npc, while walking in room
-  - ✅ `byRoom[gmId][roomId]` was being deleted... need better approach
-    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
-    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'`
-  - ✅ seems decor.meta.roomId of doorSensors is null
-  - ✅ saw a seg exit but not enter, repro:
-    ```sh
-    spawn andros '{ x:-423.49,y:1001.69 }'
-    npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'
-    ```
-  - 🚧 clarify/clean issue with persistent lookup decor.byRoom
-  - clear byNpcWalk on remove npc
-  - can hide decor colliders
-
-- ✅ turning off light should remove light through window
-  - ℹ️ don't support light thru two windows in a row (and probably other cases)
-- ✅ tidy lights i.e. doors/windows treated symmetrically
-  - ℹ️ saw issue with window adjacent to door (unfrosted window in bridge 301)
-
-- 🚧 BUG see very early collisions i.e. other npc nowhere near andros, but perhaps in same segment
-
-- 🚧 clean Decor
+- 🚧 clean/redo Decor
   - remove groupCache i.e. use `byRoom[gmId][roomId].group` instead
   - byRoom persists i.e. acts like cache
+  - maybe `decor` contains all decor; visible decor determined by `fov.gmRoomIds`
   - hideDecor vs removeDecor
   - remove handleDevToolEdit
-  - auto gmId, roomId should be efficient
+  - decor must reside inside a room e.g. doorSensors
+  - single rbush instance for broad-phase collisions
 
+- clear byNpcWalk on remove npc
+- can hide decor colliders
+
+- BUG see very early collisions
+  > i.e. other npc nowhere near andros, but perhaps in same segment
 
 - move `nav --tryOpen` to `walk --open`
 - walk `--open` detects approach/leave door using door sensors
@@ -469,6 +445,32 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
+  - ℹ️ implementing this was too ugly
+
+- towards head-towards-door and head-away-from-door events
+  - ✅ use-handle-events listens for enter-room and infers next door via wayMetas
+  - ✅ decor.byGmRoom -> decor.byRoom: `(Set<string>)[][]`
+  - ✅ decor roomGroup includes a circle per door
+  - ✅ dup decor-collide
+  - ℹ️ maybe just improve rect tests so check few colliders
+  - ✅ store roomWalkBounds
+  - ✅ cache decor close to npc, while walking in room
+  - ✅ `byRoom[gmId][roomId]` was being deleted... need better approach
+    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"'`
+    > `npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'`
+  - ✅ seems decor.meta.roomId of doorSensors is null
+  - ✅ saw a seg exit but not enter, repro:
+    ```sh
+    spawn andros '{ x:-423.49,y:1001.69 }'
+    npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'
+    ```
+
+- ✅ turning off light should remove light through window
+  - ℹ️ don't support light thru two windows in a row (and probably other cases)
+- ✅ tidy lights i.e. doors/windows treated symmetrically
+  - ℹ️ saw issue with window adjacent to door (unfrosted window in bridge 301)
 
 - ❌ navPaths have extra vertex for "approaching door"
 - ✅ collate use-handle-events player-related stuff
