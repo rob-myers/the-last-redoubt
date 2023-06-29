@@ -3,12 +3,16 @@
 ## In progress
 
 - 🚧 clean/redo Decor
-  - remove groupCache i.e. use `byRoom[gmId][roomId].group` instead
-  - byRoom persists i.e. acts like cache
-  - maybe `decor` contains all decor; visible decor determined by `fov.gmRoomIds`
-  - hideDecor vs removeDecor
-  - remove handleDevToolEdit
+  - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].group` instead
+  - ❌ remove handleDevToolEdit
+  - remove handleDevToolEdit path support
+    - should support decor point/circle/rect/group
   - decor must reside inside a room e.g. doorSensors
+  - byRoom persists i.e. acts like cache
+  - maybe `decor` contains all decor
+    > visible decor determined by `fov.gmRoomIds`
+  - hideDecor vs removeDecor
+    - ✅ removeDecor assumes same room
   - single rbush instance for broad-phase collisions
 
 - clear byNpcWalk on remove npc

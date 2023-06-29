@@ -451,15 +451,15 @@ export default function NPCs(props) {
         case 'remove-decor':
         case 'rm-decor':
           if (e.decorKey) {
-            api.decor.removeDecor(...e.decorKey.split(' '));
+            api.decor.removeDecor(e.decorKey.split(' '));
           }
           if (e.items) {
-            api.decor.removeDecor(...e.items);
+            api.decor.removeDecor(e.items);
           }
           if (e.regexStr) {
             const keyRegex = new RegExp(e.regexStr);
             api.decor.removeDecor(
-              ...Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
+              Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
             );
           }
           api.decor.update();

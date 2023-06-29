@@ -51,6 +51,13 @@ echo 'echo hello $@' >foo
 source foo rob m
 ```
 
+## History
+
+```sh
+history | filter 'x => /zhodani/.test(x)'
+history | filter 'x => /nav/.test(x)'
+```
+
 ## NPC
 
 ```sh

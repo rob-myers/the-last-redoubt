@@ -394,7 +394,6 @@ declare namespace NPC {
   export interface DecorGroup extends BaseDecor {
     type: 'group';
     items: DecorGroupItem[];
-    cache?: boolean;
   }
 
   export type DecorDef = (

@@ -400,11 +400,10 @@ export function verifyDecor(input) {
 }
 
 /**
- * 🚧 also check this decor is not "filtered"
  * @param {NPC.DecorDef} decor
  * @return {decor is NPC.DecorCollidable}
  */
-export function isFreelyCollidable(decor) {
+export function isCollidable(decor) {
   return (
     decor.type === 'circle'
     || decor.type === 'rect'
