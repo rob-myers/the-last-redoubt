@@ -88,11 +88,11 @@ const articleCss = css`
 
   aside {
     margin: calc(48px + 8px) 0;
-    padding: 48px 64px;
+    padding: 32px 64px;
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
-    /* line-height: 2; */
+    line-height: 2;
 
     p {
       margin: 12px 0;

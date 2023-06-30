@@ -55,13 +55,26 @@ and the game-mechanic needn't revolve around violence.
 Rather than avoiding the problem by tightening the narrative,
 we'd prefer to develop more sophisticated behaviour, e.g.
 
-> Following a ghost attracts attention (combinable).
+> A ghost attracts attention (curiosity).
 
-> NPCs do things in multiple ways (nondeterministic).
+> NPCs do things in multiple ways (choice).
 
 > NPCs remember and forget (time sensitive).
 
-But how? We have a few core ideas.
+<Aside title="clarify-sophisticated-behaviour">
+  Technically these have all been done before,
+  e.g. an NPC with two attacks has a choice.
+  But these behaviours are rarely composable.
+  For example, a polite NPC might let the Player through a door first (choice),
+  and notice something while waiting (curiosity).
+  We are particularly interested in combining behaviours.
+
+  {/* Video games have more than just NPC behaviour to contend with.
+  As things stand, it seems a better Player experience arises by tightening the narrative.
+  Maybe we need to focus on character behaviour in and of itself.  */}
+</Aside>
+
+But how are we going to create more sophisticated behaviour? We have a few core ideas.
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
 
