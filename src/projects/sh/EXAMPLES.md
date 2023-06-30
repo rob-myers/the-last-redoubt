@@ -73,6 +73,8 @@ npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96, tags:["decor"] }'
 
 npc rm-decor bar
 npc rm-decor 'foo bar'
+
+npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
 ```
 
 ```sh

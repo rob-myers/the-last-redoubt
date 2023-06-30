@@ -118,15 +118,20 @@ export async function createGeomorphData(input) {
   //#region points by room
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
   const roomDecor = layout.rooms.map(/** @returns {NPC.DecorGroupItem[]} */ (_, roomId) =>
-  [
+    [
+      // 🚧 move into own group?
       // add circle for each door adjacent to room
-      ...roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => ({
-        key: `door-${doorId}`, // overwritten
-        type: 'circle',
-        meta: { roomId, doorSensor: true }, // 🚧 more?
-        center: door.poly.center,
-        radius: 60,
-      }))
+      ...roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => {
+        const index = door.roomIds.indexOf(roomId);
+        const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
+        return {
+          key: `door-${doorId}`, // overwritten
+          type: 'circle',
+          meta: { doorId, roomId, doorSensor: true },
+          center: pointInRoom,
+          radius: 40,
+        };
+      })
     ]
   );
 

@@ -10,7 +10,9 @@
       - ℹ️ breaks navpath meaning
     - ✅ support decor point/circle/rect
     - ✅ support group via handle
-  - decor must reside inside a room e.g. doorSensors
+  - ✅ decor must reside inside a room e.g. doorSensors
+    - throw error if not
+    - only log error in decor.updateLocalDecor
   - byRoom persists i.e. acts like cache
   - maybe `decor` contains all decor
     > visible decor determined by `fov.gmRoomIds`

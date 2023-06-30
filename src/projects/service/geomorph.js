@@ -1200,18 +1200,22 @@ export function extendDecor(decor, api) {
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorSansPath} decor
  * @param {import('../world/World').State} api
- * @returns {NPC.DecorSansPath}
  */
 export function ensureDecorMetaGmRoomId(decor, api) {
   decor.meta ??= {};
-  if (typeof decor.meta.gmId !== 'number' || typeof decor.meta.roomId !== 'number') {
-    // 🚧 more efficient way?
+  if (
+    typeof decor.meta.gmId !== 'number'
+    || typeof decor.meta.roomId !== 'number'
+  ) {
     const decorCenter = getDecorCenter(decor, api);
     const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
-    decor.meta.gmId = (gmRoomId?.gmId) ?? api.gmGraph.findGeomorphIdContaining(decorCenter)[0];
-    decor.meta.roomId ??= ((gmRoomId?.roomId) ?? null);
+    if (gmRoomId) {
+      decor.meta.gmId = gmRoomId.gmId;
+      decor.meta.roomId = gmRoomId.roomId;
+    } else {
+      throw new Error(`decor center must reside in some room: ${JSON.stringify(decor)}`);
+    }
   }
-  return decor;
 }
 
 /**

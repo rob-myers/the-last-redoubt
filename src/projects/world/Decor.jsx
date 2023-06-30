@@ -2,6 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { debounce } from "debounce";
 import { cssName } from "./const";
+import { error } from "../service/log";
 import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
@@ -305,11 +306,15 @@ export default function Decor(props) {
     updateLocalDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
         // 🚧 may change if visible decor driven by fov.gmRoomIds
-        const { groups } = api.decor.ensureByRoom(gmId, roomId);
-        groups.forEach(group => {
-          state.decor[group.key] = group;
-          group.items.map(item => state.decor[item.key] = item);
-        });
+        try {
+          const { groups } = api.decor.ensureByRoom(gmId, roomId);
+          groups.forEach(group => {
+            state.decor[group.key] = group;
+            group.items.map(item => state.decor[item.key] = item);
+          });
+        } catch (e) {
+          error(`updateLocalDecor: ensureByRoom: ${e}`);
+        }
       });
       opts.removed?.forEach(({ gmId, roomId}) => {
         // 🚧 may change if visible decor driven by fov.gmRoomIds
