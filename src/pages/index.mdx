@@ -28,16 +28,13 @@ import { ansi } from "projects/sh/util";
 
 ### Introduction
 
-We want to make video games more meaningful.
-That is the objective of this website.
-They have become synonymous with meaningless violence, bad storytelling and **simplistic character behaviour** (NPC as a [meme](https://en.wikipedia.org/wiki/NPC_(meme))).
-On the other hand, there are plenty of exceptions out there.
-Recent examples include:
+We want to make video games more meaningful. That is the objective of this website. Video games suffer from an underlying problem: **simplistic character behaviour** (NPC as a [meme](https://en.wikipedia.org/wiki/NPC_(meme))). Exceptional games have circumvented this.
+Here are some recent examples:
 - [What Remains of Edith Finch](https://en.wikipedia.org/wiki/What_Remains_of_Edith_Finch)
 - [Observation](https://en.wikipedia.org/wiki/Observation_(video_game))
 - [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>
 
-These games avoid simplistic character behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
+These games avoid simplistic behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
 Nevertheless, superficial character behaviour is the norm for video games.
 
 <Carousel
@@ -48,10 +45,10 @@ Nevertheless, superficial character behaviour is the norm for video games.
   items={[{ video: 'first-peek', label: 'First peek' }]}
 />
 
-As far as more meaningful video games are concerned, behaviour is the main blocker. 
-Both meaningless violence and bad storytelling may actually be _side-effects_.
-If the behaviour was more sophisticated it could help tell the story,
-and the game-mechanic needn't revolve around violence.
+As far as more meaningful video games are concerned,
+we believe character behaviour is the main blocker. 
+For example, simplistic behaviour often yields meaningless violence (violent behaviour is easier to implement).
+For example, the story may seem disjoint from gameplay because in-game behaviour does not help to tell it.
 Rather than avoiding the problem by tightening the narrative,
 we'd prefer to develop more sophisticated behaviour, e.g.
 
@@ -62,19 +59,18 @@ we'd prefer to develop more sophisticated behaviour, e.g.
 > NPCs remember and forget (time sensitive).
 
 <Aside title="clarify-sophisticated-behaviour">
-  Technically these have all been done before,
+  Technically these have all been done many times before,
   e.g. an NPC with two attacks has a choice.
   But these behaviours are rarely composable.
   For example, a polite NPC might let the Player through a door first (choice),
-  and notice something while waiting (curiosity).
-  We are particularly interested in combining behaviours.
+  and notice something while waiting (curiosity),
+  which they later recollect (time sensitive).
 
-  {/* Video games have more than just NPC behaviour to contend with.
-  As things stand, it seems a better Player experience arises by tightening the narrative.
-  Maybe we need to focus on character behaviour in and of itself.  */}
+  We are particularly interested in combining behaviours.
 </Aside>
 
-But how are we going to create more sophisticated behaviour? We have a few core ideas.
+But how are we going to create more sophisticated behaviour?
+We have a few core ideas.<SideNote>Viewed from an aerial standpoint.</SideNote>
 
 {/* some kinds of "sophisticated" character behaviour may be incompatible with a video game e.g. players replaying scenarios in "Last of Us" may want to repeatability */}
 
