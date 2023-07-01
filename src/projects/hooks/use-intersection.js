@@ -8,13 +8,17 @@ import React from "react";
 export function useIntersection({
   elRef,
   cb,
+  trackVisible,
   threshold = 0, root = null, rootMargin = '0%',
 }) {
   const el = elRef();
 
   React.useEffect(() => {
+    const onVisibilityChange = () => trackVisible && document.visibilityState === 'hidden' && cb(false);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     if (!window.IntersectionObserver || !el) {
-      return;
+      return () => document.removeEventListener('visibilitychange', onVisibilityChange);
     }
 
     const observer = new IntersectionObserver(
@@ -35,7 +39,10 @@ export function useIntersection({
       { threshold, root, rootMargin },
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      observer.disconnect();
+    };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [el, JSON.stringify(threshold), root, rootMargin])
@@ -45,7 +52,9 @@ export function useIntersection({
 /**
  * @typedef ExtraOpts
  * @property {() => HTMLElement | null} elRef
- * @property {(intersects: boolean, entry: IntersectionObserverEntry) => void} cb
+ * @property {(intersects: boolean, entry?: IntersectionObserverEntry) => void} cb
+ * @property {boolean} [trackVisible]
+ * Invokes `cb(false)` when document.visibleState is `hidden` e.g. switch tab
  * 
  * @typedef {IntersectionObserverInit & ExtraOpts} Opts
  */

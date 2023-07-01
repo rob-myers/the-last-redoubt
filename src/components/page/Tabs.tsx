@@ -170,6 +170,7 @@ export default function Tabs(props: Props) {
   useIntersection({
     elRef: () => state.el.root,
     cb: state.onChangeIntersect,
+    trackVisible: true,
   });
 
   React.useEffect(() => {
