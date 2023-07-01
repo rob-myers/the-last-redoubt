@@ -21,9 +21,10 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    byNpcWalk: {},
+    byNpcWalk: {}, // 🚧 remove
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
+    visible: {},
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
@@ -65,8 +66,10 @@ export default function Decor(props) {
         };
         state.normalizeDecor(group);
 
+        state.decor[group.key] = group;
         atRoom.groups.push(group);
         group.items.forEach(other => {
+          state.decor[other.key] = other;
           atRoom.all.push(other);
           npcService.isCollidable(other) && atRoom.collide.push(other);
         });
@@ -228,15 +231,22 @@ export default function Decor(props) {
           throw testNever(d);
       }
     },
-    removeDecor(decorKeys, clearByRoom = true) {
-      const decors = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
-      if (!decors.length) {
+    onClick(e) {
+      const el = e.target;
+      if (el instanceof HTMLDivElement && el.dataset.key) {
+        const item = state.decor[el.dataset.key];
+        api.npcs.events.next({ key: 'decor-click', decor: item });
+      }
+    },
+    removeDecor(decorKeys) {
+      const ds = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
+      if (!ds.length) {
         return;
       }
 
-      decors.forEach(decor => {
+      ds.forEach(decor => {
         // removing group removes its children
-        decor.type === 'group' && decors.push(...decor.items);
+        decor.type === 'group' && ds.push(...decor.items);
         // removing child (without removing parent) removes respective item from `items`
         if (decor.parentKey) {
           const parent = /** @type {NPC.DecorGroup} */ (state.decor[decor.parentKey]);
@@ -244,24 +254,30 @@ export default function Decor(props) {
         }
       });
 
-      decors.forEach(decor => delete state.decor[decor.key]);
+      // Assume we are deleting decor from same room
+      const gmId = /** @type {number} */ (ds[0].meta.gmId);
+      const roomId = /** @type {number} */ (ds[0].meta.roomId);
 
-      if (clearByRoom) {
-        // don't remove from byRoom unless we're really deleting the decor,
-        // as opposed to hiding stuff in `decor`
-        const atRoom = state.byRoom[// Assume decor all resides in same room
-          /** @type {number} */ (decors[0].meta.gmId)][
-          /** @type {number} */ (decors[0].meta.roomId)
-        ];
-        if (atRoom) {
-          atRoom.groups = atRoom.groups.filter(x => !decors.includes(x));
-          atRoom.all = atRoom.all.filter(x => !decors.includes(x));
-          atRoom.collide = atRoom.collide.filter(x => !decors.includes(x));
+      ds.forEach(d => {
+        delete state.decor[d.key];
+        delete state.visible[d.key];
+      });
+      // Update visible groups in current room
+      Object.values(state.visible).forEach(d => {
+        if (d.type === 'group' && d.meta.gmId === gmId && d.meta.roomId === roomId) {
+          d.updatedAt = Date.now();
         }
+      });
+      const atRoom = state.byRoom[gmId][roomId];
+      if (atRoom) {
+        atRoom.groups = atRoom.groups.filter(x => !ds.includes(x));
+        atRoom.all = atRoom.all.filter(x => !ds.includes(x));
+        atRoom.collide = atRoom.collide.filter(x => !ds.includes(x));
       }
 
-      // 🚧 decors can contain dups
-      api.npcs.events.next({ key: 'decors-removed', decors });
+      // 🚧 `ds` can contain dups
+      api.npcs.events.next({ key: 'decors-removed', decors: ds });
+
       update();
     },
     setDecor(...decor) {
@@ -298,29 +314,26 @@ export default function Decor(props) {
         }
 
         state.decor[d.key] = d;
+        state.visible[d.key] = d;
       }
       api.npcs.events.next({ key: 'decors-added', decors: decor });
       update();
     },
     update,
-    updateLocalDecor(opts) {
+    updateVisibleDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
-        // 🚧 may change if visible decor driven by fov.gmRoomIds
         try {
           const { groups } = api.decor.ensureByRoom(gmId, roomId);
-          groups.forEach(group => {
-            state.decor[group.key] = group;
-            group.items.map(item => state.decor[item.key] = item);
-          });
+          groups.forEach(group => state.visible[group.key] = group);
         } catch (e) {
           error(`updateLocalDecor: ensureByRoom: ${e}`);
         }
       });
-      opts.removed?.forEach(({ gmId, roomId}) => {
-        // 🚧 may change if visible decor driven by fov.gmRoomIds
-        // we don't mutate byRoom[gmId][roomId]
-        state.removeDecor([getLocalDecorGroupKey(gmId, roomId)], false);
+      opts.removed?.forEach(({ gmId, roomId }) => {
+        const { groups } = api.decor.ensureByRoom(gmId, roomId);
+        groups.forEach(group => delete state.visible[group.key]);
       });
+
       update();
     },
   }));
@@ -347,19 +360,13 @@ export default function Decor(props) {
     <div
       className={cx("decor-root", rootCss)}
       ref={el => el && (state.rootEl = el)}
-      onClick={e => {
-        const el = e.target;
-        if (el instanceof HTMLDivElement && el.dataset.key) {
-          const item = state.decor[el.dataset.key];
-          api.npcs.events.next({ key: 'decor-click', decor: item });
-        }
-      }}
+      onClick={state.onClick}
     >
-      {Object.values(state.decor).filter(def => !def.parentKey).map((def) =>
+      {Object.values(state.visible).map((d) =>
         <MemoizedDecorInstance
-          key={def.key}
-          def={def}
-          updatedAt={def.updatedAt}
+          key={d.key}
+          def={d}
+          updatedAt={d.updatedAt}
         />
       )}
     </div>
@@ -578,6 +585,9 @@ const decorPointHandlers = {
 /**
  * @typedef State @type {object}
  * @property {Record<string, NPC.DecorDef>} decor
+ * All decor includes children of groups.
+ * @property {Record<string, NPC.DecorDef>} visible
+ * Visible decor.
  * @property {HTMLElement} rootEl
  * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpcWalk
  * Decor an npc may collide with, while walking in its current room.
@@ -591,15 +601,18 @@ const decorPointHandlers = {
  * @property {(d: NPC.DecorGroupItem, gmId: number, roomId: number, matrix: Geom.Mat) => NPC.DecorGroupItem} instantiateLocalDecor
  * @property {boolean} ready
  * @property {(d: NPC.DecorDef) => void} normalizeDecor
- * @property {(decorKeys: string[], clearByRoom?: boolean) => void} removeDecor
- * Remove decor, assumed to be in same room
+ * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
+ * @property {(decorKeys: string[]) => void} removeDecor
+ * Remove decor, all assumed to be in same room
  * @property {(npcKey: string, gmId: number, roomId: number) => State['byNpcWalk']['']} cacheNpcWalk
  * @property {(npcKey: string) => void} clearNpcWalk
  * @property {(gmId: number, roomId: number) => RoomDecorCache} ensureByRoom
- * ensure room decor group is cached and return it
+ * Ensure room decor resides in
+ * - `decor`
+ * - `byRoom[gmId][roomId]`
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {() => void} update
- * @property {(opts: ToggleLocalDecorOpts) => void} updateLocalDecor
+ * @property {(opts: ToggleLocalDecorOpts) => void} updateVisibleDecor
  */
 
 /**

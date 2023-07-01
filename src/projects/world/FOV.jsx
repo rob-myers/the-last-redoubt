@@ -185,8 +185,8 @@ export default function FOV(props) {
       const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: `g${x.gmId}-r${x.roomId}`}));
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
-      props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
       state.gmRoomIds = nextGmRoomIds;
+      props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
 
       state.hideUnseen();
       update();

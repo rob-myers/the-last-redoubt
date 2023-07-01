@@ -13,11 +13,12 @@
   - ✅ decor must reside inside a room e.g. doorSensors
     - throw error if not
     - only log error in decor.updateLocalDecor
-  - byRoom persists i.e. acts like cache
-  - maybe `decor` contains all decor
-    > visible decor determined by `fov.gmRoomIds`
-  - hideDecor vs removeDecor
-    - ✅ removeDecor assumes same room
+  - ℹ️ byRoom persists i.e. acts like cache
+  - ✅ visible decor determined by `fov.gmRoomIds`
+  - ✅ `decor` contains all decor and persists
+  - ✅ removeDecor assumes same room
+  - reorg `byRoom[gmId][roomId]` so doorSensors easily accessible?
+    - cleaner approach to groups in general?
   - single rbush instance for broad-phase collisions
 
 - clear byNpcWalk on remove npc
