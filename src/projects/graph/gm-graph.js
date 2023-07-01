@@ -114,7 +114,7 @@ export class gmGraphClass extends BaseGraph {
       };
     });
 
-    /** Door ids connected to root room, including related ones */
+    /** Door ids either connected to root room, or related to them */
     const allDoorIds = doorIds.concat(doorViewAreas.flatMap(x => x.relDoorIds));
 
     return {
@@ -219,12 +219,15 @@ export class gmGraphClass extends BaseGraph {
    */
   computeViewPolygons(gmId, rootRoomId) {
     const { polys: doorViews, gmRoomIds } = this.computeDoorViews(gmId, rootRoomId);
-    const windowLights = this.computeWindowViews(gmId, rootRoomId); // 🚧 provide {gmId,roomId}?
+    const windowLights = this.computeWindowViews(gmId, rootRoomId); // 🚧 provide gmRoomIds?
+
     // Combine doors and windows
     const viewPolys = doorViews.map((lights, i) => lights.concat(windowLights[i]));
+
     // Always include current room
     viewPolys[gmId].push(this.gms[gmId].roomsWithDoors[rootRoomId]);
     gmRoomIds.length === 0 && gmRoomIds.push({ gmId, roomId: rootRoomId });
+
     return {
       /**
        * Try to eliminate "small black triangular polys", arising from
@@ -519,8 +522,9 @@ export class gmGraphClass extends BaseGraph {
         if (roomId === null) {// Hull door
           const ctxt = this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(door));
           ctxt && output.push({ gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId });
-        } else {// Non-hull door (avoid dups)
-          !seen[roomId] && (seen[roomId] = true) && output.push({ gmId, roomId });
+        } else {// Non-hull door (avoid dups e.g. for root room)
+          !seen[roomId] && output.push({ gmId, roomId });
+          seen[roomId] = true;
         }
       })
     }
