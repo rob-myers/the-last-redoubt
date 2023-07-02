@@ -23,11 +23,15 @@
     - ℹ️ DecorPath does not reside in any room, and cannot be in a group
     - ℹ️ confusing to use names and groupKeys in lookup
   
-  - 🚧 redo Decor again
-    - `byRoom[gmId][roomId]` has { symbol, door, decor, colliders }
-      > where symbol/door are read-only groups
+  - ✅ redo Decor again:
+    > `byRoom[gmId][roomId]` has { symbol, door, decor, colliders } where symbol/door are read-only groups
+    
+  - redo collisions
+    - single `rbush` instance for broad-phase collisions
+    - per-seg decor collisions using `rbush`
+    - remove decor.byNpcWalk
+    - ℹ️ no need to fire decor `exit` on exit-room
   
-  - single rbush instance for broad-phase collisions
 
 - clear byNpcWalk on remove npc
 - can hide decor colliders

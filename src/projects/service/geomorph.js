@@ -1233,10 +1233,19 @@ export function getDecorCenter(decor, api) {
   }
 }
 
-/** @type {(prefix: string, gmId: number, roomId: number) => string} */
+/**
+ * Special read-only local decor group keys.
+ * @type {(prefix: 'symbol' | 'door', gmId: number, roomId: number) => string}
+ */
 export function getLocalDecorGroupKey(prefix, gmId, roomId) {
   return `${prefix}-g${gmId}r${roomId}`;
 }
+
+/**
+ * Matches special read-only local decor group keys.
+ * Also matches prefixes i.e. child keys.
+ */
+export const localDecorGroupRegex = /^(symbol|door)-g\d+r\d+/;
 
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle

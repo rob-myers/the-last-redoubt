@@ -7,7 +7,7 @@ import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
 import * as npcService from "../service/npc";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, metaToTags } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, localDecorGroupRegex, metaToTags } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -28,7 +28,7 @@ export default function Decor(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
-    // 🚧 replace by rbush query per `seg`
+    // 🚧 replace with rbush query per `seg`
     cacheNpcWalk(npcKey, gmId, roomId) {
       const cached = state.byNpcWalk[npcKey];
       if (cached && (cached.gmId === gmId) && (cached.roomId === roomId)) {
@@ -38,7 +38,7 @@ export default function Decor(props) {
       // Then every segment inside the room only needs to check these colliders
       const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
       // 🚧 temp approach before rbush
-      const collidable = Object.values(state.byRoom[gmId][roomId] ?? {}).flatMap(x => x.items.filter(npcService.isCollidable));
+      const collidable = state.byRoom[gmId][roomId]?.colliders ?? [];
       const collide = collidable.filter(decor =>
         decor.type === 'rect' // 🚧 ensure decor.derivedBounds?
           ? decor.derivedBounds && roomWalkBounds.intersects(decor.derivedBounds)
@@ -53,44 +53,26 @@ export default function Decor(props) {
       let atRoom = state.byRoom[gmId][roomId];
 
       if (!atRoom) {
-        
         const gm = api.gmGraph.gms[gmId];
-        const { roomDecor: { [roomId]: toGroup }, matrix } = gm;
-
-        const symbolGroupKey = getLocalDecorGroupKey('symbol', gmId, roomId);
-        const doorGroupKey = getLocalDecorGroupKey('door', gmId, roomId);
+        const { roomDecor: { [roomId]: base }, matrix } = gm;
 
         atRoom = state.byRoom[gmId][roomId] = {
-          symbol: {
-            key: symbolGroupKey,
-            type: 'group',
-            meta: { gmId, roomId },
-            items: toGroup.symbol.items.map(d =>
-              state.instantiateLocalDecor(d, symbolGroupKey, matrix)
-            ),
-          },
-          door: {
-            key: doorGroupKey,
-            type: 'group',
-            meta: { gmId, roomId },
-            items: toGroup.door.items.map(d =>
-              state.instantiateLocalDecor(d, doorGroupKey, matrix)
-            ),
-          },
-          misc: {
-            key: getLocalDecorGroupKey('misc', gmId, roomId),
-            type: 'group',
-            meta: { gmId, roomId },
-            items: [],
-          },
+          symbol: { key: getLocalDecorGroupKey('symbol', gmId, roomId), type: 'group', meta: { gmId, roomId }, items: [] },
+          door: { key: getLocalDecorGroupKey('door', gmId, roomId), type: 'group', meta: { gmId, roomId }, items: [] },
+          decor: {},
+          colliders: [],
         };
+        atRoom.symbol.items = base.symbol.items.map(d => state.instantiateLocalDecor(d, base.symbol, matrix));
+        atRoom.door.items = base.door.items.map(d => state.instantiateLocalDecor(d, base.door, matrix));
 
-        [atRoom.door, atRoom.misc, atRoom.symbol].forEach(group => {
+        [atRoom.door, atRoom.symbol].forEach(group => {
           state.normalizeDecor(group);
           state.decor[group.key] = group;
+          atRoom.decor[group.key] = group;
           group.items.forEach(other => {
             state.decor[other.key] = other;
-            // npcService.isCollidable(other) && atRoom.collide.push(other);
+            atRoom.decor[other.key] = other;
+            npcService.isCollidable(other) && atRoom.colliders.push(other);
           });
         });
       }
@@ -99,8 +81,9 @@ export default function Decor(props) {
     },
     getDecorAtKey(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
-      const allDecor = Object.values(atRoom || {}).flatMap(x => x.items);
-      return onlyColliders ? allDecor.filter(npcService.isCollidable) : allDecor;
+      return onlyColliders
+        ? atRoom.colliders // We exclude groups:
+        : Object.values(atRoom?.decor || {}).filter(x => x.type !== 'group');
     },
     getDecorAtPoint(point) {
       const result = api.gmGraph.findRoomContaining(point);
@@ -177,12 +160,12 @@ export default function Decor(props) {
         update();
       }
     },
-    instantiateLocalDecor(d, parentKey, matrix) {
+    instantiateLocalDecor(d, parent, matrix) {
       /**
        * Override d.key now we know { gmId, roomId }.
        * Actually, children will be overwritten again later.
        */
-      const key = `${parentKey}-${d.key}`;
+      const key = `${parent.key}-${d.key}`;
 
       if (d.type === 'rect') {
         // 🚧 better way of computing transformed angledRect?
@@ -193,14 +176,15 @@ export default function Decor(props) {
           ...baseRect,
           key,
           angle,
-          meta: {...d.meta},
+          // parent.meta provides e.g. gmId
+          meta: {...parent.meta, ...d.meta},
         };
       } else if (d.type === 'circle') {
         return {
           ...d,
           key,
           center: matrix.transformPoint({ ...d.center }),
-          meta: {...d.meta},
+          meta: {...parent.meta, ...d.meta},
         };
       } else if (d.type === 'point') {
         return {
@@ -208,6 +192,7 @@ export default function Decor(props) {
           key,
           ...matrix.transformPoint({ x: d.x, y: d.y }),
           meta: {
+            ...parent.meta,
             ...d.meta,
             // 🚧 cache?
             orient: typeof d.meta.orient === 'number'
@@ -260,7 +245,10 @@ export default function Decor(props) {
       }
     },
     removeDecor(decorKeys) {
-      const ds = decorKeys.map(decorKey => state.decor[decorKey]).filter(Boolean);
+      const ds = decorKeys.map(decorKey => state.decor[decorKey])
+        // cannot remove read-only group or its items
+        .filter(d => d && !localDecorGroupRegex.test(d.key))
+      ;
       if (!ds.length) {
         return;
       }
@@ -275,29 +263,24 @@ export default function Decor(props) {
         }
       });
 
-      // Assume all decor we are deleting comes from the same room
+      // Assume all decor we are deleting comes from same room
       const gmId = /** @type {number} */ (ds[0].meta.gmId);
       const roomId = /** @type {number} */ (ds[0].meta.roomId);
+      const atRoom = state.byRoom[gmId][roomId];
 
       ds.forEach(d => {
-        delete state.decor[d.key]; // Delete groups or children
-        delete state.visible[d.key]; // Delete groups
+        delete state.decor[d.key];
+        delete state.visible[d.key];
+        delete atRoom?.decor[d.key];
       });
       Object.values(state.visible).forEach(d => {
         if (d.type === 'group' && d.meta.gmId === gmId && d.meta.roomId === roomId) {
-          // Update visible groups in current room
-          d.updatedAt = Date.now();
+          d.updatedAt = Date.now(); // Update visible groups in current room
         }
       });
-      const atRoom = state.byRoom[gmId][roomId];
-      if (atRoom) {
-        // 🚧 we won't permit removing decor from symbol/door
-        Object.values(atRoom).forEach(group => {
-          group.items = group.items.filter(x => !ds.includes(x));
-        });
-      }
+      atRoom && (atRoom.colliders = atRoom.colliders.filter(d => !ds.includes(d)));
 
-      // 🚧 `ds` can contain dups
+      // 🚧 `ds` could contain dups e.g. `decorKeys` could mention group & child
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
 
       update();
@@ -306,37 +289,34 @@ export default function Decor(props) {
       for (const d of decor) {
         if (!d || !npcService.verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
+        } else if (localDecorGroupRegex.test(d.key)) {
+          throw Error(`read-only decor: ${JSON.stringify(d)}`);
         }
         if (state.decor[d.key]) {
           d.updatedAt = Date.now();
         }
 
         if (d.type === 'group') {
-
-          if (['symbol', 'door', 'misc'].includes(d.key)) {
-            // 🚧 instead use group key regex to prevent changing groups
-            throw Error(`group decor key not allowed: ${JSON.stringify(d.key)}`);
-          }
-
           state.normalizeDecor(d);
 
           const atRoom = state.ensureByRoom(
             /** @type {number} */ (d.meta.gmId),
             /** @type {number} */ (d.meta.roomId),
           );
-          atRoom[d.key] = d;
+          atRoom.decor[d.key] = d;
           d.items.forEach(child => {
-            // npcService.isCollidable(child) && atRoom.collide.push(child);
             state.decor[child.key] = child;
+            atRoom.decor[child.key] = child;
+            npcService.isCollidable(child) && atRoom.colliders.push(child);
           });
         } else {
           state.normalizeDecor(d);
 
           if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') { 
-            // 🚧 would prefer every decor to have {gmId, roomId}, but DecorPath cannot
+            // Every decor has meta.{gmId, roomId} except `DecorPath`s
             const atRoom = state.ensureByRoom(d.meta.gmId, d.meta.roomId);
-            atRoom.misc.items.push(/** @type {NPC.DecorGroupItem} */ (d));
-            // npcService.isCollidable(d) && atRoom.collide.push(d);
+            atRoom.decor[d.key] = d;
+            npcService.isCollidable(d) && atRoom.colliders.push(d);
           }
         }
 
@@ -350,16 +330,20 @@ export default function Decor(props) {
     updateVisibleDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
         try {
-          // 🚧 using local lookup `decor`, visible should contain groups and items not in any group
-          const toGroup = api.decor.ensureByRoom(gmId, roomId);
-          Object.values(toGroup).forEach(group => state.visible[group.key] = group);
+          const { decor } = api.decor.ensureByRoom(gmId, roomId);
+          Object.values(decor)
+            // `visible` contains groups and items not in any group (e.g. a DecorPath)
+            .filter(d => d.type === 'group' || !d.parentKey)
+            .forEach(d => state.visible[d.key] = d);
         } catch (e) {
           error(`updateLocalDecor: ensureByRoom: ${e}`);
         }
       });
       opts.removed?.forEach(({ gmId, roomId }) => {
-        const toGroup = api.decor.ensureByRoom(gmId, roomId);
-        Object.values(toGroup).forEach(group => delete state.visible[group.key]);
+        const { decor } = api.decor.ensureByRoom(gmId, roomId);
+        Object.values(decor)
+          .filter(d => d.type === 'group' || !d.parentKey)
+          .forEach(group => delete state.visible[group.key]);
       });
 
       update();
@@ -626,7 +610,7 @@ const decorPointHandlers = {
  * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
- * @property {(d: NPC.DecorGroupItem, parentKey: string, matrix: Geom.Mat) => NPC.DecorGroupItem} instantiateLocalDecor
+ * @property {(d: NPC.DecorGroupItem, parent: NPC.DecorGroup, matrix: Geom.Mat) => NPC.DecorGroupItem} instantiateLocalDecor
  * @property {boolean} ready
  * @property {(d: NPC.DecorDef) => void} normalizeDecor
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
@@ -650,11 +634,9 @@ const decorPointHandlers = {
  */
 
 /**
- * // 🚧 { symbol, door, decor, colliders }
- * @typedef {{
- *  [groupNameOrKey: string]: NPC.DecorGroup;
- *  symbol: NPC.DecorGroup;
- *  door: NPC.DecorGroup;
- *  misc: NPC.DecorGroup;
- * }} RoomDecorCache
+ * @typedef RoomDecorCache
+ * @property {NPC.DecorGroup} symbol Named read-only group
+ * @property {NPC.DecorGroup} door Named read-only group
+ * @property {Record<string, NPC.DecorDef>} decor Everything in room
+ * @property {NPC.DecorCollidable[]} colliders All colliders in room
  */

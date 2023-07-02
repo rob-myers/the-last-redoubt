@@ -121,13 +121,18 @@ export async function createGeomorphData(input) {
   //#region points by room
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
-    symbol: { key: '__overwritten__', type: 'group', meta: { roomId /** 🚧 gmId */ }, items: [] },
-    door: { key: '__overwritten__', type: 'group', meta: { roomId, /** 🚧 gmId, fromDoorId */ },
+    
+    symbol: {
+      key: '__overwritten__', type: 'group', meta: { roomId /** 🚧 gmId */ },
+      items: [], // built below
+    },
+    door: {
+      key: '__overwritten__', type: 'group', meta: { roomId, /** 🚧 gmId, fromDoorId */ },
       items: roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => {
         const index = door.roomIds.indexOf(roomId);
         const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
         return {
-          key: `door-${doorId}`, // overwritten
+          key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
           type: 'circle',
           meta: { doorId, roomId, doorSensor: true },
           center: pointInRoom,
