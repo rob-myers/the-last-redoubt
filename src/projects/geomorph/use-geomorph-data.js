@@ -9,6 +9,9 @@ import { geom } from "../service/geom";
 import usePathfinding from "./use-pathfinding";
 
 /**
+ * Extends `Geomorph.ParsedLayout` with fields to create `Geomorph.GeomorphData`.
+ * This object must not refer to `gmId`.
+ * It could refer to it via `geomorphDataToInstance`.
  * @param {Geomorph.GeomorphKey} layoutKey
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
@@ -117,11 +120,10 @@ export async function createGeomorphData(input) {
 
   //#region points by room
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
-  const roomDecor = layout.rooms.map(/** @returns {NPC.DecorGroupItem[]} */ (_, roomId) =>
-    [
-      // 🚧 move into own group?
-      // add circle for each door adjacent to room
-      ...roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => {
+  const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
+    symbol: { key: '__overwritten__', type: 'group', meta: { roomId /** 🚧 gmId */ }, items: [] },
+    door: { key: '__overwritten__', type: 'group', meta: { roomId, /** 🚧 gmId, fromDoorId */ },
+      items: roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => {
         const index = door.roomIds.indexOf(roomId);
         const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
         return {
@@ -131,9 +133,9 @@ export async function createGeomorphData(input) {
           center: pointInRoom,
           radius: 40,
         };
-      })
-    ]
-  );
+      }),
+    },
+  }));
 
   viewMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
     let roomId = layout.rooms.findIndex(poly => poly.contains(p));
@@ -158,13 +160,14 @@ export async function createGeomorphData(input) {
     windowId >= 0 && ((roomOverrides[roomId].windowView ||= [])[windowId] = p);
   });
 
+  // 🤔 pre-compute?
   layout.groups.singles.forEach((single, i) => {
     if (single.meta.decor) {
       const p = single.poly.center;
       const roomId = layout.rooms.findIndex(x => x.contains(p));
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
-        roomDecor[roomId].push(singleToDecor(single, i, { roomId }));
+        roomDecor[roomId].symbol.items.push(singleToDecor(single, i, { roomId }));
       } else if (single.meta.label) {
         // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
         // ℹ️ label could instead be placed nearby respective hull symbols

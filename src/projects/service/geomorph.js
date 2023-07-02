@@ -379,8 +379,7 @@ export function findRoomIdContaining(rooms, localPoint) {
 }
 
 /**
- * 🚧 currently unused, probably needs adaptation
- *
+ * 🚧 UNUSED probably needs adaptation
  * Find a stand point close to `target` in same room.
  * Assume the target `point` world coords, whereas stand points local to geomorph.
  * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target
@@ -392,7 +391,8 @@ export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITI
     throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
   }
   const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
-  const standPoints = gm.roomDecor[meta.roomId].flatMap(p => p.type === 'point' && p.meta.stand && !localPoint.equals(p) && p || []);
+  // 🚧 replace by rbush query
+  const standPoints = Object.values(gm.roomDecor[meta.roomId]).flatMap(x => x.items).flatMap(p => p.type === 'point' && p.meta.stand && !localPoint.equals(p) && p || []);
   const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
   if (closestStandPoint === null) {
     throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);
@@ -1162,11 +1162,6 @@ export function decorContainsPoint(decor, point) {
   }
 }
 
-/** @param {string} decorKey */
-export function decodeDecorInstanceKey(decorKey) {
-  const [, gmId, roomId] = /** @type {string[]} */ (decorKey.match(localDecorSubKeyRegex));
-  return { gmId: Number(gmId), roomId: Number(roomId) };
-}
 
 /**
  * @template {NPC.DecorGroup | NPC.DecorRect} T
@@ -1238,11 +1233,10 @@ export function getDecorCenter(decor, api) {
   }
 }
 
-/** @type {(gmId: number, roomId: number) => string} */
-export function getLocalDecorGroupKey(gmId, roomId) {
-  return `local-g${gmId}r${roomId}`;
+/** @type {(prefix: string, gmId: number, roomId: number) => string} */
+export function getLocalDecorGroupKey(prefix, gmId, roomId) {
+  return `${prefix}-g${gmId}r${roomId}`;
 }
-export const localDecorSubKeyRegex = /^local-g(\d+)r(\d+)-/;
 
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle

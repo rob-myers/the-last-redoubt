@@ -1,6 +1,5 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
-import { decodeDecorInstanceKey } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
@@ -342,7 +341,8 @@ function mockHandleDecorClick(event, api) {
     if (decor.meta.label) {
       /** Assume `[...tags, label, ...labelWords]` */
       const label = `${decor.meta.label}`;
-      const { gmId, roomId } = decodeDecorInstanceKey(decor.key);
+      const gmId = /** @type {number} */ (decor.meta.gmId);
+      const roomId = /** @type {number} */ (decor.meta.roomId);
       const gm = api.gmGraph.gms[gmId];
       const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
       // Square brackets induces a link via `linkProviderDef`

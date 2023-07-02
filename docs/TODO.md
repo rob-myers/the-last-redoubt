@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 clean/redo Decor
+- ✅ clean/redo Decor
   - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].groups` instead
   - ❌ remove handleDevToolEdit
   - ✅ clean handleDevToolEdit
@@ -13,19 +13,28 @@
   - ✅ decor must reside inside a room e.g. doorSensors
     - throw error if not
     - only log error in decor.updateLocalDecor
+    - ❌ DecorPath is exception
   - ℹ️ byRoom persists i.e. acts like cache
   - ✅ visible decor determined by `fov.gmRoomIds`
   - ✅ `decor` contains all decor and persists
   - ✅ removeDecor assumes same room
-  - reorg `byRoom[gmId][roomId]` so doorSensors easily accessible?
+  - ✅ reorg `byRoom[gmId][roomId]` so doorSensors easily accessible?
     - cleaner approach to groups in general?
+    - ℹ️ DecorPath does not reside in any room, and cannot be in a group
+    - ℹ️ confusing to use names and groupKeys in lookup
+  
+  - 🚧 redo Decor again
+    - `byRoom[gmId][roomId]` has { symbol, door, decor, colliders }
+      > where symbol/door are read-only groups
+  
   - single rbush instance for broad-phase collisions
 
 - clear byNpcWalk on remove npc
 - can hide decor colliders
 
 - BUG see very early collisions
-  > i.e. other npc nowhere near andros, but perhaps in same segment
+  - ℹ️ maybe stale collision e.g. Player was initially stationary and in the way,
+    but was moved after the NPC started walking
 
 - move `nav --tryOpen` to `walk --open`
 - walk `--open` detects approach/leave door using door sensors
