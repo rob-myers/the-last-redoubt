@@ -28,6 +28,9 @@
     
   - 🚧 redo collisions
     - ✅ remove rbush stuff
+    - ℹ️ https://www.gamedev.net/tutorials/_/technical/game-programming/spatial-hashing-r2697/
+    - ℹ️ https://zufallsgenerator.github.io/assets/code/2014-01-26/spatialhash/spatialhash.js
+    - ✅ create `SpatialHash`
     - create grid-rects mapping for large rooms e.g. hull rooms
     - per-seg decor collisions use grid
     - remove decor.byNpcWalk
