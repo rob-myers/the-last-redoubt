@@ -1234,6 +1234,21 @@ export function getDecorCenter(decor, api) {
 }
 
 /**
+ * @param {NPC.DecorCollidable} decor 
+ * @returns {Geom.RectJson}
+ */
+export function getDecorRect(decor) {
+  switch (decor.type) {
+    case 'circle':
+      return { x: decor.center.x - decor.radius, y: decor.center.y - decor.radius, width: decor.radius * 2, height: decor.radius * 2 };
+    case 'rect':
+      return assertDefined(decor.derivedBounds);
+    default:
+      throw testNever(decor);
+  }
+}
+
+/**
  * Special read-only local decor group keys.
  * @type {(prefix: 'symbol' | 'door', gmId: number, roomId: number) => string}
  */
@@ -1246,6 +1261,17 @@ export function getLocalDecorGroupKey(prefix, gmId, roomId) {
  * Also matches prefixes i.e. child keys.
  */
 export const localDecorGroupRegex = /^(symbol|door)-g\d+r\d+/;
+
+/**
+ * @param {NPC.DecorDef} decor
+ * @return {decor is NPC.DecorCollidable}
+ */
+export function isCollidable(decor) {
+  return (
+    decor.type === 'circle'
+    || decor.type === 'rect'
+  );
+}
 
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
@@ -1293,6 +1319,35 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
     };
   }
 }
+
+/**
+ * @param {NPC.DecorDef} [input]
+ * @returns {boolean}
+ */
+export function verifyDecor(input) {
+  if (!input) {
+    return false;
+  }
+  switch (input.type) {
+    case 'circle':
+      return Vect.isVectJson(input.center) && typeof input.radius === 'number';
+    case 'group':
+      return Array.isArray(input.items) &&
+        typeof input.meta.gmId === 'number' && // groups must have meta.{gmId,roomId}
+        typeof input.meta.roomId === 'number' &&
+        input.items.every(item => verifyDecor(item));
+    case 'path':
+      return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
+    case 'point':
+      // We permit `input.tags` and `input.meta` to be undefined
+      return Vect.isVectJson(input);
+    case 'rect':
+      return [input.x, input.y, input.width, input.height].every(x => Number.isFinite(x));
+    default:
+      throw testNever(input, { override: `decor has unrecognised type: ${JSON.stringify(input)}` });
+  }
+}
+
 
 //#endregion
 

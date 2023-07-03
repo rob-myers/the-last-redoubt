@@ -6,8 +6,7 @@ import { error } from "../service/log";
 import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
-import * as npcService from "../service/npc";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, localDecorGroupRegex, metaToTags } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, verifyDecor } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -52,7 +51,7 @@ export default function Decor(props) {
     ensureByRoom(gmId, roomId) {
       let atRoom = state.byRoom[gmId][roomId];
 
-      if (!atRoom) {
+      if (!atRoom) {// Build read-only named-groups 'symbol' and 'door'
         const gm = api.gmGraph.gms[gmId];
         const { roomDecor: { [roomId]: base }, matrix } = gm;
 
@@ -72,7 +71,9 @@ export default function Decor(props) {
           group.items.forEach(other => {
             state.decor[other.key] = other;
             atRoom.decor[other.key] = other;
-            npcService.isCollidable(other) && atRoom.colliders.push(other);
+            if (isCollidable(other)) {
+              atRoom.colliders.push(other);
+            }
           });
         });
       }
@@ -287,7 +288,7 @@ export default function Decor(props) {
     },
     setDecor(...decor) {
       for (const d of decor) {
-        if (!d || !npcService.verifyDecor(d)) {
+        if (!d || !verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
         } else if (localDecorGroupRegex.test(d.key)) {
           throw Error(`read-only decor: ${JSON.stringify(d)}`);
@@ -307,7 +308,7 @@ export default function Decor(props) {
           d.items.forEach(child => {
             state.decor[child.key] = child;
             atRoom.decor[child.key] = child;
-            npcService.isCollidable(child) && atRoom.colliders.push(child);
+            isCollidable(child) && atRoom.colliders.push(child);
           });
         } else {
           state.normalizeDecor(d);
@@ -316,7 +317,7 @@ export default function Decor(props) {
             // Every decor has meta.{gmId, roomId} except `DecorPath`s
             const atRoom = state.ensureByRoom(d.meta.gmId, d.meta.roomId);
             atRoom.decor[d.key] = d;
-            npcService.isCollidable(d) && atRoom.colliders.push(d);
+            isCollidable(d) && atRoom.colliders.push(d);
           }
         }
 

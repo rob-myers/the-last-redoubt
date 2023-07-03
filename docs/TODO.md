@@ -26,9 +26,10 @@
   - ✅ redo Decor again:
     > `byRoom[gmId][roomId]` has { symbol, door, decor, colliders } where symbol/door are read-only groups
     
-  - redo collisions
-    - single `rbush` instance for broad-phase collisions
-    - per-seg decor collisions using `rbush`
+  - 🚧 redo collisions
+    - ✅ remove rbush stuff
+    - create grid-rects mapping for large rooms e.g. hull rooms
+    - per-seg decor collisions use grid
     - remove decor.byNpcWalk
     - ℹ️ no need to fire decor `exit` on exit-room
   
