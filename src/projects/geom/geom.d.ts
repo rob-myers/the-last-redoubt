@@ -5,6 +5,7 @@ declare namespace Geom {
   export type Poly = import('.').Poly;
   export type Ray = import('.').Ray;
   export type Mat = import('.').Mat;
+  export type SpacialHash<T> = import('.').SpacialHash<T>;
   
   export type Coord = [number, number];
   export type Seg = { src: VectJson; dst: VectJson };

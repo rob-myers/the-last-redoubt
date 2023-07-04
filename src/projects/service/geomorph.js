@@ -1193,7 +1193,7 @@ export function extendDecor(decor, api) {
 
 /**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
- * @param {NPC.DecorSansPath} decor
+ * @param {NPC.DecorDef} decor
  * @param {import('../world/World').State} api
  */
 export function ensureDecorMetaGmRoomId(decor, api) {
@@ -1202,13 +1202,13 @@ export function ensureDecorMetaGmRoomId(decor, api) {
     typeof decor.meta.gmId !== 'number'
     || typeof decor.meta.roomId !== 'number'
   ) {
-    const decorCenter = getDecorCenter(decor, api);
-    const gmRoomId = api.gmGraph.findRoomContaining(decorCenter);
+    const decorOrigin = getDecorOrigin(decor, api);
+    const gmRoomId = api.gmGraph.findRoomContaining(decorOrigin);
     if (gmRoomId) {
       decor.meta.gmId = gmRoomId.gmId;
       decor.meta.roomId = gmRoomId.roomId;
     } else {
-      throw new Error(`decor center must reside in some room: ${JSON.stringify(decor)}`);
+      throw new Error(`decor origin must reside in some room: ${JSON.stringify(decor)}`);
     }
   }
 }
@@ -1219,11 +1219,11 @@ export function ensureDecorMetaGmRoomId(decor, api) {
  * @param {import('../world/World').State} api
  * @returns {Geom.VectJson}
  */
-export function getDecorCenter(decor, api) {
+export function getDecorOrigin(decor, api) {
   switch (decor.type) {
     case 'circle': return decor.center;
-    case 'group': return Vect.average(decor.items.map(item => getDecorCenter(item, api)));
-    case 'path': return Vect.average(decor.path);
+    case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item, api)));
+    case 'path': return decor.path[0] ?? Vect.zero;
     case 'point': return decor;
     case 'rect': {
       if (!decor.derivedPoly) extendDecor(decor, api);

@@ -207,26 +207,22 @@ export default function Decor(props) {
       }
     },
     normalizeDecor(d) {
+      ensureDecorMetaGmRoomId(d, api);
       switch (d.type) {
         case 'circle':
-          ensureDecorMetaGmRoomId(d, api);
           break;
         case 'path':
-          // Handle clones
-          delete d.origPath;
+          delete d.origPath; // Handle clones
           break;
         case 'point':
-          ensureDecorMetaGmRoomId(d, api);
           // Extend meta with any tags provided in def; normalize tags
           d.tags?.forEach(tag => d.meta[tag] = true);
           d.tags = metaToTags(d.meta);
           break;
         case 'rect':
           extendDecor(d, api); // Add derived data
-          ensureDecorMetaGmRoomId(d, api);
           break;
         case 'group': {
-          ensureDecorMetaGmRoomId(d, api);
           extendDecor(d, api);
           return d.items.flatMap((item, index) => {
             item.parentKey = d.key;
@@ -264,7 +260,7 @@ export default function Decor(props) {
         }
       });
 
-      // Assume all decor we are deleting comes from same room
+      // Assume all the decor we are deleting comes from the same room
       const gmId = /** @type {number} */ (ds[0].meta.gmId);
       const roomId = /** @type {number} */ (ds[0].meta.roomId);
       const atRoom = state.byRoom[gmId][roomId];
@@ -286,8 +282,8 @@ export default function Decor(props) {
 
       update();
     },
-    setDecor(...decor) {
-      for (const d of decor) {
+    setDecor(...ds) {
+      for (const d of ds) {
         if (!d || !verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
         } else if (localDecorGroupRegex.test(d.key)) {
@@ -297,34 +293,30 @@ export default function Decor(props) {
           d.updatedAt = Date.now();
         }
 
-        if (d.type === 'group') {
-          state.normalizeDecor(d);
+        state.normalizeDecor(d);
 
-          const atRoom = state.ensureByRoom(
-            /** @type {number} */ (d.meta.gmId),
-            /** @type {number} */ (d.meta.roomId),
-          );
-          atRoom.decor[d.key] = d;
+        // Every decor must have meta.{gmId,roomId}, even DecorPath
+        const atRoom = state.ensureByRoom(
+          /** @type {number} */ (d.meta.gmId),
+          /** @type {number} */ (d.meta.roomId),
+        );
+
+        state.decor[d.key] = d;
+        state.visible[d.key] = d;
+        atRoom.decor[d.key] = d;
+
+        if (d.type === 'group') {
           d.items.forEach(child => {
             state.decor[child.key] = child;
             atRoom.decor[child.key] = child;
             isCollidable(child) && atRoom.colliders.push(child);
           });
         } else {
-          state.normalizeDecor(d);
-
-          if (typeof d.meta.gmId === 'number' && typeof d.meta.roomId === 'number') { 
-            // Every decor has meta.{gmId, roomId} except `DecorPath`s
-            const atRoom = state.ensureByRoom(d.meta.gmId, d.meta.roomId);
-            atRoom.decor[d.key] = d;
-            isCollidable(d) && atRoom.colliders.push(d);
-          }
+          isCollidable(d) && atRoom.colliders.push(d);
         }
-
-        state.decor[d.key] = d;
-        state.visible[d.key] = d;
       }
-      api.npcs.events.next({ key: 'decors-added', decors: decor });
+
+      api.npcs.events.next({ key: 'decors-added', decors: ds });
       update();
     },
     update,
@@ -343,7 +335,7 @@ export default function Decor(props) {
       opts.removed?.forEach(({ gmId, roomId }) => {
         const { decor } = api.decor.ensureByRoom(gmId, roomId);
         Object.values(decor)
-          .filter(d => d.type === 'group' || !d.parentKey)
+          .filter(d => d.type === 'group' || (!d.parentKey && d.type !== 'path'))
           .forEach(group => delete state.visible[group.key]);
       });
 

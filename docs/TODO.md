@@ -31,8 +31,9 @@
     - ℹ️ https://www.gamedev.net/tutorials/_/technical/game-programming/spatial-hashing-r2697/
     - ℹ️ https://zufallsgenerator.github.io/assets/code/2014-01-26/spatialhash/spatialhash.js
     - ✅ create `SpatialHash`
-    - create grid-rects mapping for large rooms e.g. hull rooms
-    - per-seg decor collisions use grid
+    - 🚧 don't bother with SpatialHash (at least for now)
+      > use roomWalkBounds, possibly refined by seg
+    - per-seg decor collisions check all colliders or spacial hash
     - remove decor.byNpcWalk
     - ℹ️ no need to fire decor `exit` on exit-room
   

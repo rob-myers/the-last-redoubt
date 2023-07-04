@@ -251,8 +251,15 @@ export default function NPCs(props) {
       }
 
       const result = state.getGlobalNavPath(position, e.point, { tryOpen: !!e.tryOpen });
+
       // Always show path
-      api.decor.setDecor({ type: 'path', key: `${e.npcKey}-navpath`, meta: { /** 🚧 */ }, path: result.fullPath });
+      api.decor.setDecor({
+        type: 'path',
+        key: `${e.npcKey}-navpath`, // navpath "in" room it starts in
+        meta: { ...result.gmRoomIds?.length && { gmId: result.gmRoomIds[0][0], roomId: result.gmRoomIds[0][1] } },
+        path: result.fullPath,
+      });
+
       return result;
     },
     getNpcInteractRadius() {

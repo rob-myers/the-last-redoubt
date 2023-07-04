@@ -25,7 +25,7 @@ export default function World(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     disabled: !!props.disabled,
-    gmGraph: /** @type {Graph.GmGraph} */ ({}),
+    gmGraph: /** @type {State['gmGraph']} */ ({}),
 
     debug: /** @type {State['debug']} */ ({ ready: false }),
     decor: /** @type {State['decor']} */ ({ ready: false }),
