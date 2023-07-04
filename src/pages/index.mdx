@@ -44,11 +44,10 @@ Nevertheless, superficial character behaviour is the norm for video games.<SideN
   items={[{ video: 'first-peek', label: 'First peek' }]}
 />
 
-We believe character behaviour is the main stumbling-block for video games. 
-For example,
+We believe character behaviour is the main stumbling block for video games e.g.
 
-- The trend towards meaningless violence arises because violent behaviour is easier to implement.
-- Jarring cut-scenes reflect the inability of in-game behaviour to interactively tell the story.
+- the trend towards meaningless violence arises because violent behaviour is easier to implement.
+- jarring cut-scenes reflect the inability of in-game behaviour to interactively tell the story.
 
 Rather than avoiding the problem by tightening the narrative,
 we'd prefer to develop more sophisticated behaviour.
@@ -224,10 +223,10 @@ The first map amounts to the following component instantiation:
 />
 ```
 
-The `worldKey` identifies the World's API (more on that later),
+The `worldKey` identifies the World's API,
 whereas `gms` specifies the geomorphs and their layout.
 But why do these worlds look like maps?
-> because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
+> Because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
 
 So our World needs a Player.
 This brings us to a very important ingredient i.e. the `<Terminal>`.
@@ -310,7 +309,7 @@ and setup the Player's controls:
   - Reset everything (<Icon icon="refresh" small inline />).
   - Pause everything (<Icon icon="cross-circle" small inline />).
   - Follow the Player by running <InlineCode copy>track rob</InlineCode>.
-  - Stop following via Ctrl-C ("kill" on mobile).
+  - Stop following via Ctrl-C (_kill_ in side menu).
   - List background processes <InlineCode copy>ps</InlineCode>.
   - Kill background processes <InlineCode copy>kill 8 18 26</InlineCode>.<SideNote>You can also pause/resume processes via `--STOP` and `--CONT`</SideNote>
   - List shell functions <InlineCode copy>declare -F</InlineCode>.
