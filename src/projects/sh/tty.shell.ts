@@ -241,6 +241,7 @@ export class ttyShellClass implements Device {
 
       switch (result.key) {
         case 'failed': {
+          this.xterm.shouldEcho = true;
           const errMsg = `mvdan-sh: ${result.error.replace(/^src\.sh:/, '')}`;
           console.error(errMsg);
           this.io.write({ key: 'error', msg: errMsg });
@@ -249,6 +250,7 @@ export class ttyShellClass implements Device {
           break;
         }
         case 'complete': {
+          this.xterm.shouldEcho = true;
           this.buffer.length = 0;
           const singleLineSrc = srcService.src(result.parsed);
           if (singleLineSrc && this.xterm.historyEnabled) {

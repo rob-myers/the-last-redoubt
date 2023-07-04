@@ -271,22 +271,30 @@ source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}So far, this terminal's profile has defined shell functions and connected to world \\$WORLD_KEY.${ansi.Reset} tap to [continue](-)"
+NOECHO=1 choice "So far, this terminal's profile has:
+- defined shell functions
+- connected to world \\$WORLD_KEY
+${ansi.Bold}tap to${ansi.BoldReset} [continue](-)"
 
 spawn rob '{x: -90, y: 1075}'
 npc set-player rob
 view 1 '{x: -90, y: 1075}' 1.6
 
-NOECHO=1 choice "${ansi.Reverse}${ansi.Bold}Next we've spawned an npc \\"rob\\", set them as the Player and pan-zoomed them into view.${ansi.Reset} tap to [continue](-)"
+NOECHO=1 choice "Next we've spawned an npc \\"rob\\",
+set them as the Player and,
+brought them into view.
+Try pan-zooming & ${ansi.Bold}tap to${ansi.BoldReset} [continue](-)"
 
 npc map hide
 goLoop rob &
 doLoop rob &
 lookLoop rob &
 
-NOECHO=1 echo "${ansi.Reverse}${ansi.Bold}Finally we have faded the map and set up the Player's controls."
-NOECHO=1 echo
-NOECHO=1 echo "ℹ️  tap navmesh (to ${ansi.Bold}move${ansi.BoldReset}), tap doors/icons (to ${ansi.Bold}do things${ansi.BoldReset}), tap elsewhere (to ${ansi.Bold}look${ansi.BoldReset})."
+NOECHO=1 echo "Finally we have faded the map,
+and setup the Player's controls:
+- tap navmesh (${ansi.Bold}move${ansi.BoldReset}),
+- tap doors/icons (${ansi.Bold}do things${ansi.BoldReset}),
+- tap elsewhere (${ansi.Bold}look${ansi.BoldReset})."
 `
       }},
     ],

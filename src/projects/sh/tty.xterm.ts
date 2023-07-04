@@ -48,6 +48,8 @@ export class ttyXtermClass {
   historyEnabled = true;
   cleanups = [] as (() => void)[];
   maxStringifyLength = 2 * scrollback * 100;
+  /** Paste echo controlled via prefix `NOECHO=1 ` */
+  shouldEcho = true;
 
   constructor(
     public xterm: Terminal,
@@ -684,15 +686,18 @@ export class ttyXtermClass {
           return;
         }
         case 'paste-line': {
-          const shouldEcho = !command.line.startsWith('NOECHO=1 ');
-          if (shouldEcho) {
+          if (command.line.startsWith('NOECHO=1 ')) {
+            this.shouldEcho = false; // Turned off in tty.shell
+          }
+
+          if (this.shouldEcho) {
             this.xterm.writeln(command.line);
             this.input = command.line;
             this.sendLine();
           } else {
             this.input = command.line;
             this.sendLine();
-            this.input = '';
+            // this.input = '';
           }
           return;
         }
