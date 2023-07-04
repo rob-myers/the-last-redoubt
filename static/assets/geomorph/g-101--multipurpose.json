@@ -3639,11 +3639,11 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "escape", "pod": true},
+        "meta": {"decor": true, "go": true, "label": "escape-pod"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
-            [[53.14, 691.22], [53.14, 693.22], [51.14, 693.22], [51.14, 691.22]]
+            [[61.14, 705.22], [61.14, 707.22], [59.14, 707.22], [59.14, 705.22]]
           ]
         }
       },
@@ -6795,10 +6795,10 @@
       "rect": {"x": 1074, "y": 441.16, "width": 30, "height": 10}
     },
     {
-      "text": "escape",
-      "center": {"x": 52.14, "y": 692.22},
+      "text": "escape-pod",
+      "center": {"x": 60.14, "y": 706.22},
       "index": 20,
-      "rect": {"x": 37.14, "y": 688.22, "width": 30, "height": 8}
+      "rect": {"x": 35.14, "y": 702.22, "width": 50, "height": 8}
     },
     {
       "text": "medical",
