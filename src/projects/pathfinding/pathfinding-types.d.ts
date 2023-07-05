@@ -44,6 +44,13 @@ declare namespace Nav {
      * - we check _rooms_ as opposed to _roomsWithDoors_.
      */
     roomNodeIds: number[][];
+    gridSize: number;
+    /**
+     * Grid coord `⌊x / gridSize⌋`, `⌊y / gridSize⌋` to nav node ids
+     * intersecting rect `(x, y, gridSize, gridSize)`.
+     */
+    // gridToNodeIds: Record<`${number}-${number}`, number[]>;
+    gridToNodeIds: Record<number, Record<number, number[]>>;
   }
 
   export interface SearchContext {

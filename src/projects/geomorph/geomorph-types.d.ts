@@ -84,11 +84,7 @@ declare namespace Geomorph {
     /** Connectivity graph involving rooms and doors */
     roomGraph: G;
     /** Sources of lights rendered inside PNG  */
-    lightSrcs: {
-      position: V;
-      roomId: number;
-      distance?: number;
-    }[];
+    lightSrcs: { position: V; roomId: number; distance?: number; }[];
     /**
      * Rects which need to overwritten when light source not visible.
      * We'll reorganise these by door/window id.

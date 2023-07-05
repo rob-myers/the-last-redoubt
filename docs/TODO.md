@@ -2,47 +2,11 @@
 
 ## In progress
 
-- ✅ clean/redo Decor
-  - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].groups` instead
-  - ❌ remove handleDevToolEdit
-  - ✅ clean handleDevToolEdit
-    - ✅ remove handleDevToolEdit DecorPath support
-      - ℹ️ breaks navpath meaning
-    - ✅ support decor point/circle/rect
-    - ✅ support group via handle
-  - ✅ decor must reside inside a room e.g. doorSensors
-    - throw error if not
-    - only log error in decor.updateLocalDecor
-    - ❌ DecorPath is exception
-  - ℹ️ byRoom persists i.e. acts like cache
-  - ✅ visible decor determined by `fov.gmRoomIds`
-  - ✅ `decor` contains all decor and persists
-  - ✅ removeDecor assumes same room
-  - ✅ reorg `byRoom[gmId][roomId]` so doorSensors easily accessible?
-    - cleaner approach to groups in general?
-    - ℹ️ DecorPath does not reside in any room, and cannot be in a group
-    - ℹ️ confusing to use names and groupKeys in lookup
-  
-  - ✅ redo Decor again:
-    > `byRoom[gmId][roomId]` has { symbol, door, decor, colliders } where symbol/door are read-only groups
-    
-  - 🚧 redo collisions
-    - ✅ remove rbush stuff
-    - ℹ️ https://www.gamedev.net/tutorials/_/technical/game-programming/spatial-hashing-r2697/
-    - ℹ️ https://zufallsgenerator.github.io/assets/code/2014-01-26/spatialhash/spatialhash.js
-    - ✅ create `SpatialHash`
-    - 🚧 don't bother with SpatialHash (at least for now)
-      - ✅ cleanup roomWalkBounds approach
-      - start-inside can be inferred by tracking which ones we're inside
-      - also if you spawn inside/outside, enter/exit should be triggered
-    - per-seg decor collisions check all colliders or spacial hash
-    - ❌ remove decor.byNpcWalk
-    - ℹ️ no need to fire decor `exit` on exit-room
-  
-- ✅ navpath issue: multiple occurrences cached in different rooms
-  > it should not be cached per room
-
-- clear byNpcWalk on remove npc
+- ℹ️ nav node id approach
+- 🚧 faster nav node lookup
+  - ✅ `gm.navZone.gridToNodeIds`
+  - hook up to floorGraph.findPath
+- decor
 - can hide decor colliders
 
 - BUG see very early collisions
@@ -477,6 +441,46 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ clean/redo Decor
+  - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].groups` instead
+  - ❌ remove handleDevToolEdit
+  - ✅ clean handleDevToolEdit
+    - ✅ remove handleDevToolEdit DecorPath support
+      - ℹ️ breaks navpath meaning
+    - ✅ support decor point/circle/rect
+    - ✅ support group via handle
+  - ✅ decor must reside inside a room e.g. doorSensors
+    - throw error if not
+    - only log error in decor.updateLocalDecor
+    - ❌ DecorPath is exception
+  - ℹ️ byRoom persists i.e. acts like cache
+  - ✅ visible decor determined by `fov.gmRoomIds`
+  - ✅ `decor` contains all decor and persists
+  - ✅ removeDecor assumes same room
+  - ✅ reorg `byRoom[gmId][roomId]` so doorSensors easily accessible?
+    - cleaner approach to groups in general?
+    - ℹ️ DecorPath does not reside in any room, and cannot be in a group
+    - ℹ️ confusing to use names and groupKeys in lookup
+  
+  - ✅ redo Decor again:
+    > `byRoom[gmId][roomId]` has { symbol, door, decor, colliders } where symbol/door are read-only groups
+    
+  - ❌ redo collisions
+    - ✅ remove rbush stuff
+    - ℹ️ https://www.gamedev.net/tutorials/_/technical/game-programming/spatial-hashing-r2697/
+    - ℹ️ https://zufallsgenerator.github.io/assets/code/2014-01-26/spatialhash/spatialhash.js
+    - ✅ create `SpatialHash`
+    - 🚧 don't bother with SpatialHash (at least for now)
+      - ✅ cleanup roomWalkBounds approach
+      - start-inside can be inferred by tracking which ones we're inside
+      - also if you spawn inside/outside, enter/exit should be triggered
+    - per-seg decor collisions check all colliders or spacial hash
+    - ❌ remove decor.byNpcWalk
+    - ℹ️ no need to fire decor `exit` on exit-room
+  
+- ✅ navpath issue: multiple occurrences cached in different rooms
+  > it should not be cached per room
 
 - ❌ when provide navMetas with length, insert ones for `head-to-door` and `head-from-door`
   - ℹ️ implementing this was too ugly

@@ -34,7 +34,13 @@ export class floorGraphClass extends BaseGraph {
 
   static createMock() {
     return new floorGraphClass(/** @type {Geomorph.GeomorphData} */ ({
-      navZone: /** @type {Geomorph.GeomorphData['navZone']} */ ({ vertices: [], groups: [], doorNodeIds: [], roomNodeIds: [] }),
+      navZone: /** @type {Geomorph.GeomorphData['navZone']} */ ({
+        vertices: [],
+        groups: [],
+        doorNodeIds: [],
+        roomNodeIds: [],
+        gridSize: 0,
+        gridToNodeIds: {} }),
     }));
   }
 

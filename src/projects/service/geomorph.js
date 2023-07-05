@@ -3,7 +3,7 @@ import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { defaultLightDistance, geomorphGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
@@ -223,7 +223,6 @@ export async function createLayout(opts) {
    *   in the triangulation. If not we warn and skip the door.
    * - We do not ensure the sign of these triangles (e.g. clockwise)
    */
-  const tempVect = new Vect;
   for (const [i, { outline }] of navDoorPolys.entries()) {
     if (outline.length !== 4) {
       error(`door ${i} nav skipped: expected 4 vertices but saw ${outline.length}`);
@@ -500,7 +499,7 @@ function parseConnectorRect(x) {
  * @param {Geom.Poly[]} rooms 
  * @returns {Geomorph.ParsedConnectorRect}
  */
- function singleToConnectorRect(single, rooms) {
+function singleToConnectorRect(single, rooms) {
   const { poly, meta } = single;
   const { angle, baseRect } = poly.outline.length === 4
     ? geom.polyToAngledRect(poly)
@@ -966,9 +965,23 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
   const doorNodeIds = /** @type {number[][]} */ ([]);
   /**
    * A nav node is associated with at most one roomId i.e.
-   * when some vertex lie inside the room.
+   * when some vertex lies inside the room.
    */
   const roomNodeIds = /** @type {number[][]} */ ([]);
+
+  const gridSize = geomorphGridSize;
+
+  // Technically can reduce by testing triangle intersects with each grid square
+  const gridToNodeIds = navNodes.reduce((agg, node) => {
+    const rect = Rect.fromPoints(...node.vertexIds.map(id => navZone.vertices[id]));
+    const gridMin = { x: Math.floor(rect.x / gridSize), y: Math.floor(rect.y / gridSize) };
+    const gridMax = { x: Math.floor((rect.x + rect.width) / gridSize), y: Math.floor((rect.y + rect.height) / gridSize) };
+    for (let i = gridMin.x; i <= gridMax.x; i++)
+      for (let j = gridMin.y; j <= gridMax.y; j++)
+      // Poly.intersect([tempPoly], [Poly.fromRect({ x: i * gridSize, y: j * gridSize, width: gridSize, height: gridSize })]).length && ((agg[i] ??= {})[j] ??= []).push(node.id);
+      ((agg[i] ??= {})[j] ??= []).push(node.id);
+    return agg;
+  }, /** @type {Nav.ZoneWithMeta['gridToNodeIds']} */  ({}));
 
   /**
    * We'll also verify that:
@@ -1034,6 +1047,8 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
     ...navZone,
     doorNodeIds,
     roomNodeIds,
+    gridSize,
+    gridToNodeIds,
   };
 }
 
@@ -1148,13 +1163,13 @@ function parseJsonArg(input) {
 export function decorContainsPoint(decor, point) {
   switch (decor.type) {
     case 'circle':
-      return tempVect1.copy(point).distanceTo(decor.center) <= decor.radius;
+      return tempVect.copy(point).distanceTo(decor.center) <= decor.radius;
     case 'group':
       return decor.items.some(item => decorContainsPoint(item, point));
     case 'path':
       return false;
     case 'point':
-      return tempVect1.copy(point).equals(decor);
+      return tempVect.copy(point).equals(decor);
     case 'rect':
       return geom.outlineContains(decor.derivedPoly?.outline ?? [], point);
     default:
@@ -1350,4 +1365,4 @@ export function verifyDecor(input) {
 
 //#endregion
 
-const tempVect1 = new Vect;
+const tempVect = new Vect;
