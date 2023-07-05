@@ -11,7 +11,7 @@ export function svgNavGraph(root, graph) {
 
   root.append(
     // @ts-ignore
-    ...graph.nodesArray.flatMap(({ astar: { id, centroid, neighbours } }, _, nodes) =>
+    ...graph.nodesArray.flatMap(({ id, astar: { centroid, neighbours } }, _, nodes) =>
       neighbours.map(nid => (
         <path
           key={`${id}-${nid}`}
