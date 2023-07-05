@@ -3,11 +3,20 @@
 ## In progress
 
 - ℹ️ nav node id approach
-- 🚧 faster nav node lookup
+- ✅ faster nav node lookup
   - ✅ `gm.navZone.gridToNodeIds`
-  - hook up to floorGraph.findPath
-- decor
+  - ✅ hook up to floorGraph.findPath
+- global nav path provides nav node ids
+  - maybe per seg i.e. take account of string-pulling
+- decor colliders inferred from nav node ids
+
 - can hide decor colliders
+
+- BUG?
+  - both `click 1`s resolve at once?
+  ```sh
+  nav --tryOpen foo $( click 1 ) | walk foo & nav --tryOpen bar $( click 1 ) | walk bar
+  ```
 
 - BUG see very early collisions
   - ℹ️ maybe stale collision e.g. Player was initially stationary and in the way,

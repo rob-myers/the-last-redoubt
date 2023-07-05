@@ -3,7 +3,9 @@ import { BaseGraph, createBaseAstar } from "./graph";
 import { Utils } from "../pathfinding/Utils";
 import { AStar } from "../pathfinding/AStar";
 import { Channel } from "../pathfinding/Channel";
+import { warn } from "../service/log";
 import { geom } from "../service/geom";
+import { coordinateToGrid } from "../service/geomorph";
 
 /**
  * @extends {BaseGraph<Graph.FloorGraphNode, Graph.FloorGraphEdgeOpts>}
@@ -320,33 +322,29 @@ export class floorGraphClass extends BaseGraph {
   /**
    * Find node whose centroid is closest to the target position.
    * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L78
-   * @param  {Geom.VectJson} position
+   * @param  {Geom.VectJson} position in local geomorph coordinates 
    */
   getClosestNode(position) {
-    const nodes = this.nodesArray;
-    const vectors = this.vectors;
-    let closestNode = /** @type {null | Graph.FloorGraphNode} */ (null);
-    let closestDistance = Infinity;
+    // Restrict to few nav nodes via precomputed `gridToNodeIds`
+    const gridPos = coordinateToGrid(position.x, position.y);
+    const closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x][gridPos.y].map(nodeId => this.nodesArray[nodeId]);
+    const found = closeNodes.find((node) => Utils.isVectorInPolygon(position, node, this.vectors));
 
-    nodes.forEach((node) => {
-      const distance = node.astar.centroid.distanceToSquared(position);
-      if (distance < closestDistance && Utils.isVectorInPolygon(position, node, vectors)) {
-        closestNode = node;
-        closestDistance = distance;
-      }
-    });
-
-    if (!closestNode) {// Fallback to centroids (possibly initial zig-zag)
-      nodes.forEach((node) => {
+    if (!found) {// Fallback to centroids (possible initial zig-zag)
+      warn(`${this.gm.key}: no navnode contains: ${JSON.stringify(position)}`);
+      let closestNode = /** @type {null | Graph.FloorGraphNode} */ (null);
+      let closestDistance = Infinity;
+      (closeNodes.length === 0 ? this.nodesArray : closeNodes).forEach((node) => {
         const distance = Utils.distanceToSquared(node.astar.centroid, position);
         if (distance < closestDistance) {
           closestNode = node;
           closestDistance = distance;
         }
       });
+      return /** @type {Graph.FloorGraphNode} */ (closestNode);
+    } else {
+      return found;
     }
-
-    return /** @type {Graph.FloorGraphNode} */ (closestNode);
   }
 
   /**

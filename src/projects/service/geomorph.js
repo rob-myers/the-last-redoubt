@@ -969,13 +969,12 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
    */
   const roomNodeIds = /** @type {number[][]} */ ([]);
 
-  const gridSize = geomorphGridSize;
 
-  // Technically can reduce by testing triangle intersects with each grid square
+  // Technically could be smaller by checking triangle intersects each grid square
   const gridToNodeIds = navNodes.reduce((agg, node) => {
     const rect = Rect.fromPoints(...node.vertexIds.map(id => navZone.vertices[id]));
-    const gridMin = { x: Math.floor(rect.x / gridSize), y: Math.floor(rect.y / gridSize) };
-    const gridMax = { x: Math.floor((rect.x + rect.width) / gridSize), y: Math.floor((rect.y + rect.height) / gridSize) };
+    const gridMin = coordinateToGrid(rect.x, rect.y);
+    const gridMax = coordinateToGrid(rect.x + rect.width, rect.y + rect.height);
     for (let i = gridMin.x; i <= gridMax.x; i++)
       for (let j = gridMin.y; j <= gridMax.y; j++)
       // Poly.intersect([tempPoly], [Poly.fromRect({ x: i * gridSize, y: j * gridSize, width: gridSize, height: gridSize })]).length && ((agg[i] ??= {})[j] ??= []).push(node.id);
@@ -1047,9 +1046,17 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
     ...navZone,
     doorNodeIds,
     roomNodeIds,
-    gridSize,
+    gridSize: geomorphGridSize,
     gridToNodeIds,
   };
+}
+
+/**
+ * @param {number} x
+ * @param {number} y
+ */
+export function coordinateToGrid(x, y) {
+  return { x: Math.floor(x / geomorphGridSize), y: Math.floor(y / geomorphGridSize) };
 }
 
 /**
