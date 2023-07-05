@@ -1,3 +1,6 @@
+// 🚧 unused: originally intended for NPC collision prediction,
+// i.e. restrict to colliders in current room close to line-segment
+
 /**
  * @template {Geom.RectJson} T
  * A spacial (or spatial) hash based on:

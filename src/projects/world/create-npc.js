@@ -369,7 +369,9 @@ export default function createNpc(
       return walkCycleMs + deltaMs;
     },
     getWalkSegBounds(withNpcRadius) {
-      return withNpcRadius ? this.anim.aux.outsetSegBounds : this.anim.aux.segBounds;
+      return withNpcRadius
+        ? this.anim.aux.outsetSegBounds
+        : this.anim.aux.segBounds;
     },
     inferWalkTransform() {
       const position = new Vect;
@@ -661,14 +663,10 @@ export default function createNpc(
       this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);
     },
     updateWalkSegBounds(index) {
-      this.anim.aux.index = index;
-      this.anim.aux.segBounds.copy(
-        Rect.fromPoints(this.anim.path[index], this.anim.path[index + 1])
-      );
-      this.anim.aux.outsetSegBounds
-        .copy(this.anim.aux.segBounds)
-        .outset(this.getRadius())
-      ;
+      const { aux, path } = this.anim;
+      aux.index = index;
+      aux.segBounds.copy(Rect.fromPoints(path[index], path[index + 1]));
+      aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
     /**
      * 🚧 avoid many short timeouts?

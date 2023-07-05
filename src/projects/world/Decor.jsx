@@ -20,33 +20,38 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    byNpcWalk: {}, // 🚧 remove
+    byNpc: {},
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
     visible: {},
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
-    // 🚧 replace with rbush query per `seg`
     cacheNpcWalk(npcKey, gmId, roomId) {
-      const cached = state.byNpcWalk[npcKey];
+      const cached = state.byNpc[npcKey];
       if (cached && (cached.gmId === gmId) && (cached.roomId === roomId)) {
         return cached;
       }
+
+      const collidable = state.byRoom[gmId][roomId]?.colliders ?? [];
+      if (collidable.length <= 4) {
+        return state.byNpc[npcKey] = { gmId, roomId, collide: collidable };
+      }
+
+      // 🚧 replace with nav node id approach
       // Find decor in room which could collide with the npc's walk
       // Then every segment inside the room only needs to check these colliders
       const { roomWalkBounds } = api.npcs.getNpc(npcKey).anim.aux;
-      // 🚧 temp approach before rbush
-      const collidable = state.byRoom[gmId][roomId]?.colliders ?? [];
-      const collide = collidable.filter(decor =>
-        decor.type === 'rect' // 🚧 ensure decor.derivedBounds?
-          ? decor.derivedBounds && roomWalkBounds.intersects(decor.derivedBounds)
-          : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
-      );
-      return state.byNpcWalk[npcKey] = { gmId, roomId, collide };
+      return state.byNpc[npcKey] = { gmId, roomId,
+        collide: collidable.filter(decor =>
+          decor.type === 'rect'
+            ? roomWalkBounds.intersects(/** @type {Geom.Rect} */ (decor.derivedBounds))
+            : roomWalkBounds.intersectsCentered(decor.center.x, decor.center.y, 2 * decor.radius)
+        ),
+      };
     },
     clearNpcWalk(npcKey) {
-      delete state.byNpcWalk[npcKey];
+      delete state.byNpc[npcKey];
     },
     ensureByRoom(gmId, roomId) {
       let atRoom = state.byRoom[gmId][roomId];
@@ -302,8 +307,9 @@ export default function Decor(props) {
         );
 
         state.decor[d.key] = d;
-        state.visible[d.key] = d;
-        atRoom.decor[d.key] = d;
+        // Although DecorPath has meta.{gmId,roomId} do not cache by room
+        d.type !== 'path' && (atRoom.decor[d.key] = d);
+        (d.type === 'group' || !d.parentKey) && (state.visible[d.key] = d);
 
         if (d.type === 'group') {
           d.items.forEach(child => {
@@ -311,8 +317,8 @@ export default function Decor(props) {
             atRoom.decor[child.key] = child;
             isCollidable(child) && atRoom.colliders.push(child);
           });
-        } else {
-          isCollidable(d) && atRoom.colliders.push(d);
+        } else if (isCollidable(d)) {
+          atRoom.colliders.push(d);
         }
       }
 
@@ -592,9 +598,9 @@ const decorPointHandlers = {
  * @property {Record<string, NPC.DecorDef>} decor
  * All decor includes children of groups.
  * @property {Record<string, NPC.DecorDef>} visible
- * Visible decor.
+ * Visible decor i.e. groups and items not in any group (e.g. a DecorPath)
  * @property {HTMLElement} rootEl
- * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpcWalk
+ * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpc
  * Decor an npc may collide with, while walking in its current room.
  * @property {RoomDecorCache[][]} byRoom
  * Decor organised `byRoom[gmId][roomId]`.
@@ -609,7 +615,7 @@ const decorPointHandlers = {
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
  * @property {(decorKeys: string[]) => void} removeDecor
  * Remove decor, all assumed to be in same room
- * @property {(npcKey: string, gmId: number, roomId: number) => State['byNpcWalk']['']} cacheNpcWalk
+ * @property {(npcKey: string, gmId: number, roomId: number) => State['byNpc']['']} cacheNpcWalk
  * @property {(npcKey: string) => void} clearNpcWalk
  * @property {(gmId: number, roomId: number) => RoomDecorCache} ensureByRoom
  * Ensure room decor resides in

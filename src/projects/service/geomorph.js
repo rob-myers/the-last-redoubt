@@ -1178,12 +1178,11 @@ export function extendDecor(decor, api) {
       return decor;
     }
     case 'group': {
-      if (typeof decor.meta.gmId === 'number' && typeof decor.meta.roomId === 'number') {
-        const { rooms: { [decor.meta.roomId]: roomPoly }, matrix } = api.gmGraph.gms[decor.meta.gmId];
-        decor.derivedHandlePos = matrix.transformPoint(Vect.topLeft(...roomPoly.outline));
-      } else {// Fallback to average of `DecorPoint`s
-        decor.derivedHandlePos = Vect.average(decor.items.filter(/** @return {x is NPC.DecorPoint} */ x => x.type === 'point'));
-      }
+      const {
+        rooms: { [/** @type {number} */ (decor.meta.roomId)]: roomPoly },
+        matrix,
+      } = api.gmGraph.gms[/** @type {number} */ (decor.meta.gmId)];
+      decor.derivedHandlePos = matrix.transformPoint(Vect.topLeft(...roomPoly.outline));
       return decor;
     }
     default:

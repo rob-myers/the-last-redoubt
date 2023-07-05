@@ -187,7 +187,7 @@ export default function useHandleEvents(api) {
 
     predictNpcDecorCollision(npc, meta) {
       // Restrict to decor in room containing line-segment's 1st vertex
-      // ℹ️ assume room-traversing segments end on border (?)
+      // ℹ️ assume room-traversing segments begin/end on border
       const [gmId, roomId] = npc.anim.gmRoomIds[meta.index];
 
       const { collide: closeDecor } = api.decor.cacheNpcWalk(npc.key, gmId, roomId);

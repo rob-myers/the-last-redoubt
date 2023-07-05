@@ -4,6 +4,7 @@ import { Vect } from './vect';
  * A two dimensional rectangle where `(x, y)` is viewed as top left.
  */
 export class Rect {
+
   /**
    * @param {number} x 
    * @param {number} y 
@@ -226,7 +227,7 @@ export class Rect {
   }
 
   /**
-   * Does this filled bordered rectangle intersect with {other} filled rectangle?
+   * Does this filled bordered rectangle intersect with {other}?
    * @param {Rect} other
    */
   intersects(other) {
@@ -235,13 +236,13 @@ export class Rect {
       Math.abs(this.cy - other.cy) * 2 <= this.height + other.height
     );
   }
-  
+
   /**
-   * 
+   * Does this filled bordered rectangle intersect another centered at `cx, cy`?
    * @param {number} cx 
    * @param {number} cy 
    * @param {number} width
-   * @param {number} [height]
+   * @param {number} [height] Defaults to `width`.
    */
   intersectsCentered(cx, cy, width, height = width) {
     return (
