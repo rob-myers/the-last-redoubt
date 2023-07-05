@@ -191,8 +191,7 @@ export class Builder {
    */
   static _getSharedVerticesInOrder (a, b) {
 
-    const aList = a.vertexIds;
-    const a0 = aList[0], a1 = aList[1], a2 = aList[2];
+    const [a0, a1, a2] = a.vertexIds;
 
     const bList = b.vertexIds;
     const shared0 = bList.includes(a0);
@@ -203,7 +202,7 @@ export class Builder {
     // in the neighbor identification code, or perhaps a malformed input geometry; 3 shared vertices
     // is a kind of embarrassing but possible geometry we should handle
     if (shared0 && shared1 && shared2) {
-      return /** @type {[number, number]} */ (Array.from(aList));
+      return /** @type {[number, number]} */ (a.vertexIds.slice());
     } else if (shared0 && shared1) {
       return [a0, a1];
     } else if (shared1 && shared2) {

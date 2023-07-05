@@ -12,6 +12,10 @@ declare namespace Nav {
     visited: boolean;
     closed: boolean;
     parent: null | GraphNode;
+    /**
+     * `portals[neighbourId]` are the two vertex ids shared with adjacent node.
+     * They are ordered w.r.t their index in `vertexIds` (lower to higher).
+     */
     portals: number[][];
     vertexIds: number[];
     centroid: Geom.VectJson;

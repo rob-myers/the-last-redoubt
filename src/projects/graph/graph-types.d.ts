@@ -226,6 +226,11 @@ declare namespace Graph {
      * originally `Nav.GraphNode[]`.
      */
     index: number;
+    /**
+     * `portals[succId]` are the two vertex ids shared with their `succId`th successor.
+     * The original representation has an edge-ordering, available as `Array.from(succ.get(thisNode))`.
+     * They are ordered w.r.t their index in `vertexIds` (lower to higher).
+     */
     portals: number[][];
     vertexIds: number[];
   }

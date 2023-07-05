@@ -56,7 +56,6 @@ export class AStar {
    * @param {(nodes: Graph.AStarNode[]) => void} initNodeCosts
    * @returns {T[]}
    */
-  // static search (graph, start, end, doorOpen) {
   static search (graph, start, end, initNodeCosts) {
     this.init(graph, initNodeCosts);
     //heuristic = heuristic || astar.manhattan;
