@@ -6,7 +6,7 @@
 - ✅ faster nav node lookup
   - ✅ `gm.navZone.gridToNodeIds`
   - ✅ hook up to floorGraph.findPath
-- global nav path provides nav node ids
+- ✅ global nav path provides nav node ids
   - maybe per seg i.e. take account of string-pulling
 - decor colliders inferred from nav node ids
 

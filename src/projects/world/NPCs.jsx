@@ -130,6 +130,7 @@ export default function NPCs(props) {
         return {
           key: 'global-nav',
           fullPath: localNavPath.fullPath.slice(),
+          fullPartition: localNavPath.fullPartition,
           navMetas: localNavPath.navMetas.map(x => ({ ...x, gmId: localNavPath.gmId })),
           gmRoomIds: localNavPath.roomIds.map(roomId => [srcGmId, roomId]),
         };
@@ -143,6 +144,7 @@ export default function NPCs(props) {
         // console.log('gmEdges', gmEdges); // DEBUG
 
         const fullPath = /** @type {Geom.Vect[]} */ ([]);
+        const fullPartition = /** @type {number[][]} */ ([]);
         const navMetas = /** @type {NPC.GlobalNavMeta[]} */ ([]);
         const gmRoomIds = /** @type {[number, number][]} */ ([]);
 
@@ -160,19 +162,23 @@ export default function NPCs(props) {
 
           const gmEdge = gmEdges[k];
           
-          if (k === 0 && localNavPath.doorIds[0] >= 0) {
-            // Started in hull door, so ignore `localNavPath`
+          if (k === 0 && localNavPath.doorIds[0]?.hull) {
+            // Started in hull door, and will end in same one,
+            // so ignore `localNavPath`
             fullPath.push(Vect.from(src));
             gmRoomIds.push([srcGmId, localNavPath.roomIds[0]]);
             navMetas.push({ key: 'vertex', index: 0, gmId: srcGmId });
-          } else if (k === gmEdges.length && localNavPath.doorIds[1] >= 0) {
-            // Ended in hull door, so ignore `localNavPath`
+          } else if (k === gmEdges.length && localNavPath.doorIds[1]?.hull) {
+            // Ended in hull door, and will start in same one,
+            // so ignore `localNavPath`
             fullPath.push(Vect.from(dst));
+            fullPartition.push(...localNavPath.fullPartition); // Add singleton containing door nav nodes
             gmRoomIds.push([dstGmId, assertDefined(localNavPath.roomIds.at(-1))]);
             navMetas.push({ key: 'vertex', index: fullPath.length - 1, gmId: dstGmId });
           } else {
             const indexOffset = fullPath.length;
             fullPath.push(...localNavPath.fullPath);
+            fullPartition.push(...localNavPath.fullPartition);
             gmRoomIds.push(...localNavPath.roomIds.map(roomId => /** @type {[number, number]} */ ([localNavPath.gmId, roomId])));
             // Globalise local navMetas
             navMetas.push(...localNavPath.navMetas.map(meta => ({
@@ -200,13 +206,14 @@ export default function NPCs(props) {
         return {
           key: 'global-nav',
           fullPath,
+          fullPartition,
           navMetas,
           gmRoomIds,
         };
       }
     },
     /**
-     * Wraps @see {floorGraphClass.findPath}
+     * Wraps @see {gm.floorGraph.findPath}
      */
     getLocalNavPath(gmId, src, dst, opts) {
       const gm = api.gmGraph.gms[gmId];
@@ -243,11 +250,11 @@ export default function NPCs(props) {
           throw Error(`dst outside navmesh: ${JSON.stringify(e.point)}`);
         } else {
           console.warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
-          return { key: 'global-nav', fullPath: [], navMetas: [] };
+          return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [] };
         }
       } else if (!state.isPointInNavmesh(position)) {
         console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
-        return { key: 'global-nav', fullPath: [], navMetas: [] };
+        return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [] };
       }
 
       const result = state.getGlobalNavPath(position, e.point, { tryOpen: !!e.tryOpen });

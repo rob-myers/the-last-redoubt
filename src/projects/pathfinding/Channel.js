@@ -4,9 +4,22 @@ import { Vect } from '../geom';
 /** @typedef {{ left: Geom.VectJson; right: Geom.VectJson }} Portal */
 
 export class Channel {
-  constructor () {
+  // 🚧 generic node type?
+
+  /**
+   * Aligned to edges of `this.nodePath` i.e. the nav node ids along edge.
+   * We compute this whilst pulling the string.
+   * @type {number[][]}
+   */
+  nodePartition;
+
+  /** @param {Graph.FloorGraphNode[]} nodePath */
+  constructor (nodePath) {
     /** @type {Portal[]} */
     this.portals = [];
+    /** @type {typeof nodePath} */
+    this.nodePath = nodePath;
+    this.nodePartition = [];
   }
 
   /**
@@ -31,12 +44,19 @@ export class Channel {
     /** @type {Geom.VectJson} */ let portalRight;
     let apexIndex = 0, leftIndex = 0, rightIndex = 0;
 
+    // these are all `src`
     portalApex = portals[0].left;
     portalLeft = portals[0].left;
     portalRight = portals[0].right;
 
-    // Add start point.
-    pts.push(portalApex);
+    
+    pts.push(portalApex); // Add `src`
+
+    /**
+     * The navPath indexes whose points will appear in string-pulled path (possibly sans final).
+     * We'll use this to construct @see {nodePartition}.
+     */
+    const subPathIds = /** @type {number[]} */ ([0]);
 
     for (let i = 1; i < portals.length; i++) {
       const left = portals[i].left;
@@ -51,6 +71,8 @@ export class Channel {
         } else {
           // Right over left, insert left to path and restart scan from portal left point.
           pts.push(portalLeft);
+          subPathIds.push(leftIndex - 1);
+
           // Make current left the new apex.
           portalApex = portalLeft;
           apexIndex = leftIndex;
@@ -74,6 +96,7 @@ export class Channel {
         } else {
           // Left over right, insert right to path and restart scan from portal right point.
           pts.push(portalRight);
+          subPathIds.push(rightIndex - 1);
           // Make current right the new apex.
           portalApex = portalRight;
           apexIndex = rightIndex;
@@ -90,9 +113,12 @@ export class Channel {
     }
 
     if ((pts.length === 0) || (!Utils.vequal(pts[pts.length - 1], portals[portals.length - 1].left))) {
-      // Append last point to path.
-      pts.push(portals[portals.length - 1].left);
+      pts.push(portals[portals.length - 1].left); // Append `dst` to path
     }
+
+    this.nodePartition = subPathIds.map((pathId, i) =>
+      this.nodePath.slice(pathId, subPathIds[i + 1]).map(x => x.index)
+    );
 
     this.path = pts;
     return pts;

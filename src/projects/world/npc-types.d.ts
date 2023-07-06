@@ -276,6 +276,11 @@ declare namespace NPC {
   export interface GlobalNavPath {
     key: 'global-nav';
     fullPath: Geom.Vect[];
+    /**
+     * Aligned to edges of @see {fullPath}.
+     * i.e. the nav node ids along each edge.
+     */
+    fullPartition: number[][];
     navMetas: GlobalNavMeta[];
     /**
      * Aligned to @see {fullPath}.

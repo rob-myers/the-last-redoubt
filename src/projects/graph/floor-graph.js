@@ -84,13 +84,15 @@ export class floorGraphClass extends BaseGraph {
    * @param {Graph.FloorGraphNode[]} nodePath 
    */
   computeStringPull(src, dst, nodePath) {
-    // We have the corridor, now pull the rope
-    const channel = new Channel;
+    /**
+     * Portals correspond to shared vertex-id-pairs along the `nodePath` corridor.
+     * The `channel` consists of the respective vertex-pairs.
+     */
+    const channel = new Channel(nodePath);
     channel.push(src);
     for (let i = 0; i < nodePath.length; i++) {
       const polygon = nodePath[i];
       const nextPolygon = nodePath[i + 1];
-
       if (nextPolygon) {
         const portals = /** @type {number[]} */ (this.getPortalFromTo(polygon, nextPolygon));
         channel.push(
@@ -100,6 +102,7 @@ export class floorGraphClass extends BaseGraph {
       }
     }
     channel.push(dst);
+    // We have the corridor, now pull the rope
     channel.stringPull();
     return channel;
   }
@@ -153,6 +156,7 @@ export class floorGraphClass extends BaseGraph {
     }, /** @type {Graph.NavPartition} */ ([]));
 
     const fullPath = [src.clone()];
+    const fullPartition = /** @type {number[][]} */ ([]);
     const roomIds = [this.nodeToMeta[srcNode.index].roomId];
     const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
       { key: 'vertex', index: 0 }, // Cannot be final
@@ -160,6 +164,7 @@ export class floorGraphClass extends BaseGraph {
     let startDoorId = -1, endDoorId = -1;
 
     /**
+     * Add a vertex to `fullPath`, updating `navMetas` and `roomIds` too.
      * @param {Geom.Vect} point 
      * @param {number} roomId 
      */
@@ -191,6 +196,7 @@ export class floorGraphClass extends BaseGraph {
             // ℹ️ Needed otherwise if turn & re-enter, `enter-room` not triggered
             // ℹ️ Seen almost equal vectors, probably due to augmented precision
             addVertex(dst.clone(), this.nodeToMeta[dstNode.index].roomId);
+            fullPartition.push(item.nodes.map(x => x.index));
           }
           endDoorId = item.doorId;
           break;
@@ -199,9 +205,10 @@ export class floorGraphClass extends BaseGraph {
         const nextRoomId = /** @type {{ roomId: number }} */ (partition[i + 1]).roomId;
         const doorExit = door.entries[door.roomIds.findIndex(x => x === nextRoomId)];
         
-        // Avoid case where just entered geomorph and doorExit ~ src
+        // Avoid case where start by entering geomorph and doorExit ~ src
         if (!(i === 0 && src.distanceTo(doorExit) < 0.1)) {
           addVertex(doorExit.clone(), nextRoomId);
+          fullPartition.push(item.nodes.map(x => x.index));
         }
 
       } else {// 🛏 room partition
@@ -234,15 +241,14 @@ export class floorGraphClass extends BaseGraph {
         if (directPath) {
           // We can simply walk straight through the room
           addVertex(pathDst.clone(), roomId);
+          fullPartition.push(item.nodes.map(x => x.index));
         } else {
           // Otherwise apply "simple stupid funnel algorithm" to path through room
-          const stringPull = /** @type {Geom.VectJson[]} */ (
-            this.computeStringPull(pathSrc, pathDst, item.nodes).path
-          ).map(Vect.from);
+          const channel = this.computeStringPull(pathSrc, pathDst, item.nodes);
+          const stringPull = /** @type {Geom.VectJson[]} */ (channel.path).map(Vect.from);
           // We remove adjacent repetitions (which can occur)
-          geom.removePathReps(stringPull.slice(1)).forEach(p => {
-            addVertex(p, roomId);
-          });
+          geom.removePathReps(stringPull.slice(1)).forEach(p => addVertex(p, roomId));
+          fullPartition.push(...channel.nodePartition);
         }
 
         // if (!partition[i + 1]) // Finish in room
@@ -265,20 +271,25 @@ export class floorGraphClass extends BaseGraph {
       }
     }
 
-    // DEBUG 🚧
+    // 🚧 DEBUG
     console.warn('floorGraph findPath', {
       nodePath,
       nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
       partition,
       fullPath,
+      fullPartition, // aligned to edges of fullPath
       navMetas,
       roomIds,
     });
 
     return {
       fullPath, // May contain adjacent dups
+      fullPartition,
       navMetas,
-      doorIds: [startDoorId, endDoorId],
+      doorIds: [
+        startDoorId >= 0 ? { id: startDoorId, hull: this.gm.isHullDoor(startDoorId) } : null,
+        endDoorId >= 0 ? { id: endDoorId, hull: this.gm.isHullDoor(endDoorId) } : null,
+      ],
       roomIds,
     };
   }

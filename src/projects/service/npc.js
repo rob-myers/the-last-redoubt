@@ -398,10 +398,11 @@ export function verifyLocalNavPath(input) {
  * @param {NPC.GlobalNavPath} navPath 
  * @return {NPC.GlobalNavPath} 
  */
-export function cloneNavPath({ key, fullPath, navMetas, gmRoomIds }) {
+export function cloneNavPath({ key, fullPath, fullPartition, navMetas, gmRoomIds }) {
   return {
     key,
     fullPath: fullPath.slice(),
+    fullPartition: fullPartition.map(x => x.slice()),
     // Shallow clone sufficient?
     // Optional chaining for safety?
     navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
@@ -416,9 +417,10 @@ export function cloneNavPath({ key, fullPath, navMetas, gmRoomIds }) {
  * @returns {NPC.GlobalNavPath}
  */
 export function sliceNavPath(navPath, startId, endId) {
-  let { key, fullPath, navMetas = [], gmRoomIds } = navPath;
+  let { key, fullPath, fullPartition, navMetas = [], gmRoomIds } = navPath;
 
   fullPath = fullPath.slice(startId, endId);
+  fullPartition = fullPartition.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
   gmRoomIds = gmRoomIds?.slice(startId, endId);
   navMetas = navMetas.slice();
 
@@ -439,6 +441,7 @@ export function sliceNavPath(navPath, startId, endId) {
   return {
     key,
     fullPath,
+    fullPartition,
     gmRoomIds,
     navMetas,
   };
