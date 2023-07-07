@@ -45,6 +45,13 @@ export class gmGraphClass extends BaseGraph {
 
   api = /** @type {import('../world/World').State} */  ({ isReady() { return false; } });
 
+  /**
+   * Cache for @see {getAdjacentRoomCtxt}
+   * 🤔 could precompute?
+   * @type {Record<`${number}-${number}`, Graph.GmAdjRoomCtxt | null>}
+   */
+  adjRoomCtxt = {};
+
   /** @param {Geomorph.GeomorphDataInstance[]} gms  */
   constructor(gms) {
     super();
@@ -454,29 +461,36 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * Cached because called many times on toggle hull door.
    * @param {number} gmId 
    * @param {number} hullDoorId 
    * @returns {Graph.GmAdjRoomCtxt | null}
    */
   getAdjacentRoomCtxt(gmId, hullDoorId) {
+    const cacheKey = /** @type {const} */ (`${gmId}-${hullDoorId}`);
+    if (this.adjRoomCtxt[cacheKey]) {
+      return this.adjRoomCtxt[cacheKey];
+    }
+
     const gm = this.gms[gmId];
     const doorNodeId = getGmDoorNodeId(gm.key, gm.transform, hullDoorId);
     const doorNode = this.getNodeById(doorNodeId);
     if (!doorNode) {
       console.error(`${gmGraphClass.name}: failed to find hull door node: ${doorNodeId}`);
-      return null;
+      return this.adjRoomCtxt[cacheKey] = null;
     }
     const otherDoorNode = /** @type {undefined | Graph.GmGraphNodeDoor} */ (this.getSuccs(doorNode).find(x => x.type === 'door'));
     if (!otherDoorNode) {
-      console.info(`${gmGraphClass.name}: hull door ${doorNodeId} on boundary`);
-      return null;
+      // console.info(`${gmGraphClass.name}: hull door ${doorNodeId} on boundary`);
+      return this.adjRoomCtxt[cacheKey] = null;
     }
     // `door` is a hull door and connected to another
     // console.log({otherDoorNode});
     const { gmId: adjGmId, hullDoorId: dstHullDoorId, doorId: adjDoorId } = otherDoorNode;
     const { roomIds } = this.gms[adjGmId].hullDoors[dstHullDoorId];
     const adjRoomId = /** @type {number} */ (roomIds.find(x => typeof x === 'number'));
-    return { adjGmId, adjRoomId, adjHullId: dstHullDoorId, adjDoorId };
+    
+    return this.adjRoomCtxt[cacheKey] = { adjGmId, adjRoomId, adjHullId: dstHullDoorId, adjDoorId };
   }
 
   /**
