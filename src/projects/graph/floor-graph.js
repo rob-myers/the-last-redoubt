@@ -5,7 +5,7 @@ import { AStar } from "../pathfinding/AStar";
 import { Channel } from "../pathfinding/Channel";
 import { warn } from "../service/log";
 import { geom } from "../service/geom";
-import { coordinateToGrid } from "../service/geomorph";
+import { coordToNavNodeGrid } from "../service/geomorph";
 
 /**
  * @extends {BaseGraph<Graph.FloorGraphNode, Graph.FloorGraphEdgeOpts>}
@@ -337,7 +337,7 @@ export class floorGraphClass extends BaseGraph {
    */
   getClosestNode(position) {
     // Restrict to few nav nodes via precomputed `gridToNodeIds`
-    const gridPos = coordinateToGrid(position.x, position.y);
+    const gridPos = coordToNavNodeGrid(position.x, position.y);
     const closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x][gridPos.y].map(nodeId => this.nodesArray[nodeId]);
     const found = closeNodes.find((node) => Utils.isVectorInPolygon(position, node, this.vectors));
 

@@ -166,4 +166,6 @@ export const defaultLightDistance = 300;
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 
 /** For quick nav node lookup */
-export const geomorphGridSize = 60 / 2;
+export const navNodeGridSize = 60 / 2;
+
+export const decorGridSize = 60 * 2;

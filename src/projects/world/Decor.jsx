@@ -6,7 +6,7 @@ import { error } from "../service/log";
 import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, verifyDecor } from "../service/geomorph";
+import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, verifyDecor } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -20,13 +20,14 @@ export default function Decor(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    byNpc: {},
+    byNpc: {}, // 🚧 remove
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
     visible: {},
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
+    // 🚧 remove
     cacheNpcWalk(npcKey, gmId, roomId) {
       const cached = state.byNpc[npcKey];
       if (cached && (cached.gmId === gmId) && (cached.roomId === roomId)) {
@@ -50,9 +51,33 @@ export default function Decor(props) {
         ),
       };
     },
+    // 🚧 remove
     clearNpcWalk(npcKey) {
       delete state.byNpc[npcKey];
     },
+    // cacheDecorByNav(gmId, roomId, d) {
+    //   const gm = api.gmGraph.gms[gmId];
+    //   const { gridToNodeIds } = gm.navZone;
+    //   const { nodeToMeta } = gm.floorGraph;
+
+    //   /** aabb in geomorph local coords */
+    //   const rect = getDecorRect(d).applyMatrix(gm.inverseMatrix);
+    //   const min = coordinateToGrid(rect.x, rect.y);
+    //   const max = coordinateToGrid(rect.x + rect.width, rect.y + rect.height);
+    //   console.log({min, max}) // 🚧 make gridSize larger?
+    //   const navNodeIds = /** @type {Record<string, true>} */ ({});
+
+    //   for (let i = min.x; i <= max.x; i++) {
+    //     for (let j = min.y; j <= max.y; j++) {
+    //       gridToNodeIds[i]?.[j]?.forEach(navNodeId =>
+    //         (nodeToMeta[navNodeId].roomId === roomId) &&
+    //         (navNodeIds[navNodeId] = true)
+    //       );
+    //     }
+    //   }
+    //   // Record in `meta` for easy deletion
+    //   d.meta.navNodeIds = navNodeIds;
+    // },
     ensureByRoom(gmId, roomId) {
       let atRoom = state.byRoom[gmId][roomId];
 
@@ -73,11 +98,12 @@ export default function Decor(props) {
           state.normalizeDecor(group);
           state.decor[group.key] = group;
           atRoom.decor[group.key] = group;
-          group.items.forEach(other => {
-            state.decor[other.key] = other;
-            atRoom.decor[other.key] = other;
-            if (isCollidable(other)) {
-              atRoom.colliders.push(other);
+          group.items.forEach(child => {
+            state.decor[child.key] = child;
+            atRoom.decor[child.key] = child;
+            if (isCollidable(child)) {
+              atRoom.colliders.push(child);
+              // atRoom.colliders.push(child) && state.cacheDecorByNav(gmId, roomId, child);
             }
           });
         });
@@ -282,6 +308,8 @@ export default function Decor(props) {
       });
       atRoom && (atRoom.colliders = atRoom.colliders.filter(d => !ds.includes(d)));
 
+      // 🚧 delete from decor grid
+
       // 🚧 `ds` could contain dups e.g. `decorKeys` could mention group & child
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
 
@@ -301,10 +329,9 @@ export default function Decor(props) {
         state.normalizeDecor(d);
 
         // Every decor must have meta.{gmId,roomId}, even DecorPath
-        const atRoom = state.ensureByRoom(
-          /** @type {number} */ (d.meta.gmId),
-          /** @type {number} */ (d.meta.roomId),
-        );
+        const gmId = /** @type {number} */ (d.meta.gmId);
+        const roomId = /** @type {number} */ (d.meta.roomId);
+        const atRoom = state.ensureByRoom(gmId, roomId);
 
         state.decor[d.key] = d;
         // Although DecorPath has meta.{gmId,roomId} do not cache by room
@@ -315,10 +342,14 @@ export default function Decor(props) {
           d.items.forEach(child => {
             state.decor[child.key] = child;
             atRoom.decor[child.key] = child;
-            isCollidable(child) && atRoom.colliders.push(child);
+            if (isCollidable(child)) {
+              atRoom.colliders.push(child);
+              // 🚧 add to decor grid
+            }
           });
         } else if (isCollidable(d)) {
           atRoom.colliders.push(d);
+          // 🚧 add to decor grid
         }
       }
 

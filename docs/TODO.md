@@ -8,7 +8,10 @@
   - ✅ hook up to floorGraph.findPath
 - ✅ global nav path provides nav node ids
   - maybe per seg i.e. take account of string-pulling
-- decor colliders inferred from nav node ids
+- ❌ decor colliders inferred from nav node ids
+- 🚧 decor colliders inferred from global decor-grid
+  - store decor in global grid
+  - decode line-seg into "linear" number of grid squares
 
 - can hide decor colliders
 

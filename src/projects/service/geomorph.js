@@ -3,7 +3,7 @@ import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, geomorphGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
@@ -973,8 +973,8 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
   // Technically could be smaller by checking triangle intersects each grid square
   const gridToNodeIds = navNodes.reduce((agg, node) => {
     const rect = Rect.fromPoints(...node.vertexIds.map(id => navZone.vertices[id]));
-    const gridMin = coordinateToGrid(rect.x, rect.y);
-    const gridMax = coordinateToGrid(rect.x + rect.width, rect.y + rect.height);
+    const gridMin = coordToNavNodeGrid(rect.x, rect.y);
+    const gridMax = coordToNavNodeGrid(rect.x + rect.width, rect.y + rect.height);
     for (let i = gridMin.x; i <= gridMax.x; i++)
       for (let j = gridMin.y; j <= gridMax.y; j++)
       // Poly.intersect([tempPoly], [Poly.fromRect({ x: i * gridSize, y: j * gridSize, width: gridSize, height: gridSize })]).length && ((agg[i] ??= {})[j] ??= []).push(node.id);
@@ -1046,7 +1046,7 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
     ...navZone,
     doorNodeIds,
     roomNodeIds,
-    gridSize: geomorphGridSize,
+    gridSize: navNodeGridSize,
     gridToNodeIds,
   };
 }
@@ -1055,8 +1055,8 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
  * @param {number} x
  * @param {number} y
  */
-export function coordinateToGrid(x, y) {
-  return { x: Math.floor(x / geomorphGridSize), y: Math.floor(y / geomorphGridSize) };
+export function coordToNavNodeGrid(x, y) {
+  return { x: Math.floor(x / navNodeGridSize), y: Math.floor(y / navNodeGridSize) };
 }
 
 /**
@@ -1255,15 +1255,16 @@ export function getDecorOrigin(decor, api) {
 }
 
 /**
+ * 🚧 Unused fresh Rect.
  * @param {NPC.DecorCollidable} decor 
- * @returns {Geom.RectJson}
+ * @returns {Geom.Rect}
  */
 export function getDecorRect(decor) {
   switch (decor.type) {
     case 'circle':
-      return { x: decor.center.x - decor.radius, y: decor.center.y - decor.radius, width: decor.radius * 2, height: decor.radius * 2 };
+      return new Rect(decor.center.x - decor.radius, decor.center.y - decor.radius, decor.radius * 2, decor.radius * 2);
     case 'rect':
-      return assertDefined(decor.derivedBounds);
+      return /** @type {Geom.Rect} */ (decor.derivedBounds).clone();
     default:
       throw testNever(decor);
   }
