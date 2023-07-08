@@ -3,7 +3,7 @@ import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset } from './const';
+import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom } from './geom';
@@ -969,16 +969,10 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
    */
   const roomNodeIds = /** @type {number[][]} */ ([]);
 
-
   // Technically could be smaller by checking triangle intersects each grid square
   const gridToNodeIds = navNodes.reduce((agg, node) => {
     const rect = Rect.fromPoints(...node.vertexIds.map(id => navZone.vertices[id]));
-    const gridMin = coordToNavNodeGrid(rect.x, rect.y);
-    const gridMax = coordToNavNodeGrid(rect.x + rect.width, rect.y + rect.height);
-    for (let i = gridMin.x; i <= gridMax.x; i++)
-      for (let j = gridMin.y; j <= gridMax.y; j++)
-      // Poly.intersect([tempPoly], [Poly.fromRect({ x: i * gridSize, y: j * gridSize, width: gridSize, height: gridSize })]).length && ((agg[i] ??= {})[j] ??= []).push(node.id);
-      ((agg[i] ??= {})[j] ??= []).push(node.id);
+    addToNavNodeGrid(node.id, rect, agg);
     return agg;
   }, /** @type {Nav.ZoneWithMeta['gridToNodeIds']} */  ({}));
 
@@ -1049,14 +1043,6 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
     gridSize: navNodeGridSize,
     gridToNodeIds,
   };
-}
-
-/**
- * @param {number} x
- * @param {number} y
- */
-export function coordToNavNodeGrid(x, y) {
-  return { x: Math.floor(x / navNodeGridSize), y: Math.floor(y / navNodeGridSize) };
 }
 
 /**
@@ -1255,16 +1241,15 @@ export function getDecorOrigin(decor, api) {
 }
 
 /**
- * 🚧 Unused fresh Rect.
  * @param {NPC.DecorCollidable} decor 
- * @returns {Geom.Rect}
+ * @returns {Geom.RectJson}
  */
 export function getDecorRect(decor) {
   switch (decor.type) {
     case 'circle':
-      return new Rect(decor.center.x - decor.radius, decor.center.y - decor.radius, decor.radius * 2, decor.radius * 2);
+      return { x: decor.center.x - decor.radius, y: decor.center.y - decor.radius, width: decor.radius * 2, height: decor.radius * 2 };
     case 'rect':
-      return /** @type {Geom.Rect} */ (decor.derivedBounds).clone();
+      return /** @type {Geom.Rect} */ (decor.derivedBounds);
     default:
       throw testNever(decor);
   }
@@ -1370,6 +1355,66 @@ export function verifyDecor(input) {
   }
 }
 
+
+//#endregion
+
+//#region grid
+
+/**
+ * @param {number} item Nav node id
+ * @param {Geom.RectJson} rect Rectangle corresponding to item
+ * @param {Record<number, Record<number, number[]>>} grid 
+ */
+function addToNavNodeGrid(item, rect, grid) {
+  const min = coordToNavNodeGrid(rect.x, rect.y);
+  const max = coordToNavNodeGrid(rect.x + rect.width, rect.y + rect.height);
+  for (let i = min.x; i <= max.x; i++)
+    for (let j = min.y; j <= max.y; j++)
+      ((grid[i] ??= {})[j] ??= []).push(item);
+}
+
+/**
+ * @param {NPC.DecorCollidable} item 
+ * @param {Geom.RectJson} rect Rectangle corresponding to item e.g. bounding box.
+ * @param {Record<number, Record<number, { [key: string]: NPC.DecorCollidable }>>} grid 
+ */
+export function addToDecorGrid(item, rect, grid) {
+  const min = coordToDecorGrid(rect.x, rect.y);
+  const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
+  item.meta.gridMin = min; // For easy deletion
+  item.meta.gridMax = max;
+  for (let i = min.x; i <= max.x; i++)
+    for (let j = min.y; j <= max.y; j++)
+      ((grid[i] ??= {})[j] ??= {})[item.key] = item;
+}
+
+/**
+ * @param {NPC.DecorCollidable} d 
+ * @param {Record<number, Record<number, { [key: string]: NPC.DecorCollidable }>>} grid 
+ */
+export function removeFromDecorGrid(d, grid) {
+  const min = /** @type {Geom.VectJson} */ (d.meta.gridMin);
+  const max = /** @type {Geom.VectJson} */ (d.meta.gridMax);
+  for (let i = min.x; i <= max.x; i++)
+    for (let j = min.y; j <= max.y; j++)
+      delete grid[i][j][d.key];
+}
+
+/**
+ * @param {number} x
+ * @param {number} y
+ */
+export function coordToDecorGrid(x, y) {
+  return { x: Math.floor(x / decorGridSize), y: Math.floor(y / decorGridSize) };
+}
+
+/**
+ * @param {number} x
+ * @param {number} y
+ */
+export function coordToNavNodeGrid(x, y) {
+  return { x: Math.floor(x / navNodeGridSize), y: Math.floor(y / navNodeGridSize) };
+}
 
 //#endregion
 

@@ -6,7 +6,7 @@ import { error } from "../service/log";
 import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
-import { decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, verifyDecor } from "../service/geomorph";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -21,6 +21,7 @@ export default function Decor(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     byNpc: {}, // 🚧 remove
+    byGrid: [],
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
     visible: {},
@@ -103,7 +104,7 @@ export default function Decor(props) {
             atRoom.decor[child.key] = child;
             if (isCollidable(child)) {
               atRoom.colliders.push(child);
-              // atRoom.colliders.push(child) && state.cacheDecorByNav(gmId, roomId, child);
+              addToDecorGrid(child, getDecorRect(child), state.byGrid);
             }
           });
         });
@@ -275,7 +276,7 @@ export default function Decor(props) {
     removeDecor(decorKeys) {
       const ds = decorKeys.map(decorKey => state.decor[decorKey])
         // cannot remove read-only group or its items
-        .filter(d => d && !localDecorGroupRegex.test(d.key))
+        // .filter(d => d && !localDecorGroupRegex.test(d.key))
       ;
       if (!ds.length) {
         return;
@@ -308,7 +309,8 @@ export default function Decor(props) {
       });
       atRoom && (atRoom.colliders = atRoom.colliders.filter(d => !ds.includes(d)));
 
-      // 🚧 delete from decor grid
+      // delete from decor grid
+      ds.filter(isCollidable).forEach(d => removeFromDecorGrid(d, state.byGrid));
 
       // 🚧 `ds` could contain dups e.g. `decorKeys` could mention group & child
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
@@ -333,7 +335,6 @@ export default function Decor(props) {
         const roomId = /** @type {number} */ (d.meta.roomId);
         const atRoom = state.ensureByRoom(gmId, roomId);
 
-        state.decor[d.key] = d;
         // Although DecorPath has meta.{gmId,roomId} do not cache by room
         d.type !== 'path' && (atRoom.decor[d.key] = d);
         (d.type === 'group' || !d.parentKey) && (state.visible[d.key] = d);
@@ -344,13 +345,18 @@ export default function Decor(props) {
             atRoom.decor[child.key] = child;
             if (isCollidable(child)) {
               atRoom.colliders.push(child);
-              // 🚧 add to decor grid
+              // Handle set without remove
+              d.key in state.decor && removeFromDecorGrid(child, state.byGrid);
+              addToDecorGrid(child, getDecorRect(child), state.byGrid);
             }
           });
         } else if (isCollidable(d)) {
           atRoom.colliders.push(d);
-          // 🚧 add to decor grid
+          d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
+          addToDecorGrid(d, getDecorRect(d), state.byGrid);
         }
+
+        state.decor[d.key] = d;
       }
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
@@ -633,6 +639,9 @@ const decorPointHandlers = {
  * @property {HTMLElement} rootEl
  * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpc
  * Decor an npc may collide with, while walking in its current room.
+ * @property {{ [decorKey: string]: NPC.DecorCollidable }[][]} byGrid
+ * Collidable decors in global grid where `byGrid[x][y]` covers:
+ * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
  * @property {RoomDecorCache[][]} byRoom
  * Decor organised `byRoom[gmId][roomId]`.
  * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorAtKey

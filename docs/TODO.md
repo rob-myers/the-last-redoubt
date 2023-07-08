@@ -10,8 +10,11 @@
   - maybe per seg i.e. take account of string-pulling
 - ❌ decor colliders inferred from nav node ids
 - 🚧 decor colliders inferred from global decor-grid
-  - store decor in global grid
-  - decode line-seg into "linear" number of grid squares
+  - ✅ store/remove decor in global grid
+  - 🚧 decode line-seg into "linear" number of grid squares
+
+- 🚧 door/symbol groups needn't be read-only
+  > might break "slow down near door" but that's ok
 
 - can hide decor colliders
 
