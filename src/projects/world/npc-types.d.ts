@@ -355,6 +355,8 @@ declare namespace NPC {
     linkStartIndex: number,
   ) => void;
 
+  //#region decor
+
   interface BaseDecor {
     key: string;
     meta: Geomorph.PointMeta;
@@ -420,6 +422,14 @@ declare namespace NPC {
     type: DecorDef['type'];
     meta: DecorDef['meta'];
   }
+
+  /**
+   * grid[x][y] corresponds to square:
+   * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
+   */
+  export type DecorGrid = Set<NPC.DecorCollidable>[][];
+
+  //#endregion
   
   /** Using `action` instead of `key` to avoid name-collision */
   export type NpcAction = (
@@ -470,8 +480,6 @@ declare namespace NPC {
     npcKey: string;
     meta: NpcWayMeta;
   }
-
-
 
   //#region parse
   interface NpcClassConfig {

@@ -639,7 +639,7 @@ const decorPointHandlers = {
  * @property {HTMLElement} rootEl
  * @property {{ [npcKey: string]: { gmId: number; roomId: number; collide: NPC.DecorCollidable[]; } }} byNpc
  * Decor an npc may collide with, while walking in its current room.
- * @property {{ [decorKey: string]: NPC.DecorCollidable }[][]} byGrid
+ * @property {NPC.DecorGrid} byGrid
  * Collidable decors in global grid where `byGrid[x][y]` covers:
  * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
  * @property {RoomDecorCache[][]} byRoom

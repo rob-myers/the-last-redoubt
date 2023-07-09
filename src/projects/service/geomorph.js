@@ -1376,7 +1376,7 @@ function addToNavNodeGrid(item, rect, grid) {
 /**
  * @param {NPC.DecorCollidable} item 
  * @param {Geom.RectJson} rect Rectangle corresponding to item e.g. bounding box.
- * @param {Record<number, Record<number, { [key: string]: NPC.DecorCollidable }>>} grid 
+ * @param {NPC.DecorGrid} grid 
  */
 export function addToDecorGrid(item, rect, grid) {
   const min = coordToDecorGrid(rect.x, rect.y);
@@ -1385,19 +1385,84 @@ export function addToDecorGrid(item, rect, grid) {
   item.meta.gridMax = max;
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++)
-      ((grid[i] ??= {})[j] ??= {})[item.key] = item;
+      ((grid[i] ??= [])[j] ??= new Set).add(item);
 }
 
 /**
  * @param {NPC.DecorCollidable} d 
- * @param {Record<number, Record<number, { [key: string]: NPC.DecorCollidable }>>} grid 
+ * @param {NPC.DecorGrid} grid 
  */
 export function removeFromDecorGrid(d, grid) {
   const min = /** @type {Geom.VectJson} */ (d.meta.gridMin);
   const max = /** @type {Geom.VectJson} */ (d.meta.gridMax);
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++)
-      delete grid[i][j][d.key];
+      grid[i][j]?.delete(d);
+}
+
+/** @type {Set<NPC.DecorCollidable>} */
+const foundDecor = new Set;
+
+/**
+ * 🚧 filter by (gmId, roomId)
+ * @param {Geom.Vect} p 
+ * @param {Geom.Vect} q 
+ * @param {NPC.DecorGrid} grid
+ * @return {NPC.DecorCollidable[]}
+ */
+export function queryDecorGridLine(p, q, grid) {  
+  const tau = tempVect.copy(q).sub(p);
+  /** Single horizontal step */
+  const dx = Math.sign(tau.x);
+  /** Single vertical step */
+  const dy = Math.sign(tau.y);
+
+  /** `p`'s grid coords */
+  const gp = coordToDecorGrid(p.x, p.y);
+  // /** `q`'s grid coords */
+  // const gq = coordToDecorGrid(q.x, q.y);
+  
+  foundDecor.clear();
+  if (dx === 0 && dy === 0) {
+    grid[gp.x][gp.y]?.forEach(d => foundDecor.add(d));
+  } else {
+    /**
+     * Those λ ≥ 0 s.t. p + λ.tau on a vertical grid line.
+     * Initially minimum such, then the subsequent ones.
+     * - General form λ := ((decorGridSize * dx * n) - p.x) / tau.x where n in ℤ
+     * - λ ≥ 0 yields n := Math.ceil(± p.x / decorGridSize) 
+     */
+    let lambdaV = tau.x === 0 ? Infinity : tau.x > 0
+        ? ((decorGridSize *  1 * Math.ceil( p.x / decorGridSize)) - p.x) / tau.x
+        : ((decorGridSize * -1 * Math.ceil(-p.x / decorGridSize)) - p.x) / tau.x;
+    /**
+     * Those λ ≥ 0 s.t. p + λ.tau on a horizontal grid line.
+     * Initially the minimum such, then the subsequent ones.
+     * - General form λ := ((decorGridSize * dy * n) - p.y) / tau.y where n in ℤ
+     * - λ ≥ 0 yields n := Math.ceil(± p.y / decorGridSize) 
+     */
+    let lambdaH = tau.y === 0 ? Infinity : tau.y > 0
+      ? ((decorGridSize *  1 * Math.ceil( p.y / decorGridSize)) - p.y) / tau.y
+      : ((decorGridSize * -1 * Math.ceil(-p.y / decorGridSize)) - p.y) / tau.y;
+    
+    let cx = gp.x, cy = gp.y;
+
+    do {
+      grid[cx][cy]?.forEach(d => foundDecor.add(d));
+
+      if (lambdaV <= lambdaH) {
+        cx += dx; // Hit vert grid line 1st, so move horizontal
+        lambdaV += (decorGridSize * dx) / tau.x; // Next vert line
+      } else {
+        cy += dy; // Hit horizontal 1st, so move vert
+        lambdaH += (decorGridSize * dy) / tau.y; // Next horizontal line
+      }
+      // 🤔 (cx, cy) may not reach `max` in diagonal case?
+      // } while ((cx !== max.x) && (cy !== max.y))
+    } while (Math.min(lambdaH, lambdaV) <= 1)
+  }
+
+  return Array.from(foundDecor);
 }
 
 /**
