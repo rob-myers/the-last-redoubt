@@ -1,5 +1,6 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
+import { queryDecorGridLine } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
@@ -149,8 +150,8 @@ export default function useHandleEvents(api) {
           }
           break;
         }
-        case 'exit-room': // 'enter-room' didn't work
-          npc.updateRoomWalkBounds(e.meta.index);
+        case 'exit-room':
+          // npc.updateRoomWalkBounds(e.meta.index);
           break;
         case 'decor-collide':
         case 'enter-room':
@@ -186,11 +187,18 @@ export default function useHandleEvents(api) {
     },
 
     predictNpcDecorCollision(npc, meta) {
+      
       // Restrict to decor in room containing line-segment's 1st vertex
       // ℹ️ assume room-traversing segments begin/end on border
       const [gmId, roomId] = npc.anim.gmRoomIds[meta.index];
-
-      const { collide: closeDecor } = api.decor.cacheNpcWalk(npc.key, gmId, roomId);
+      
+      const closeDecor = queryDecorGridLine(
+        npc.anim.path[meta.index],
+        npc.anim.path[meta.index + 1],
+        api.decor.byGrid,
+      ).filter(d => d.meta.gmId === gmId && d.meta.roomId === roomId);
+      // console.log(broadPhaseDecor);
+      // const { collide: closeDecor } = api.decor.cacheNpcWalk(npc.key, gmId, roomId);
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'

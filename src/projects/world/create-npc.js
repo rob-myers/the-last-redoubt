@@ -188,7 +188,6 @@ export default function createNpc(
 
       this.clearWayMetas();
       this.updateAnimAux();
-      api.decor.clearNpcWalk(this.key);
       
       if (path.length === 0) {
         return;
@@ -201,7 +200,7 @@ export default function createNpc(
           length: this.computeWayMetaLength(navMeta),
         }));
 
-        this.updateRoomWalkBounds(0);
+        // this.updateRoomWalkBounds(0);
       }
       
       this.startAnimation('walk');

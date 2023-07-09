@@ -12,7 +12,7 @@
 - ✅ decor colliders inferred from global decor-grid
   - ✅ store/remove decor in global grid
   - ✅ decode line-seg into "linear" number of grid squares
-- 🚧 broad phase colliders replaces "cached room approach"
+- ✅ broad phase colliders replaces "cached room approach"
 
 - 🚧 door/symbol groups needn't be read-only
   > might break "slow down near door" but that's ok

@@ -157,7 +157,7 @@ declare namespace NPC {
       outsetWalkBounds: Geom.Rect;
       /** Outset by npc radius, for npc vs npc collisions */
       outsetSegBounds: Geom.Rect;
-      /** For restricting npc vs decor collisions within npc's current room */
+      /** 🚧 unused */
       roomWalkBounds: Geom.Rect;
       /** For npc vs decor collisions */
       segBounds: Geom.Rect;

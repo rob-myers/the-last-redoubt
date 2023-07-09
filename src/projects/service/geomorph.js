@@ -1404,7 +1404,7 @@ export function removeFromDecorGrid(d, grid) {
 const foundDecor = new Set;
 
 /**
- * 🚧 filter by (gmId, roomId)
+ * ℹ️ we filter by (gmId, roomId) elsewhere
  * @param {Geom.Vect} p 
  * @param {Geom.Vect} q 
  * @param {NPC.DecorGrid} grid
