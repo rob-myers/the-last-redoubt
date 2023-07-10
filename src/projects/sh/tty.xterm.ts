@@ -312,17 +312,20 @@ export class ttyXtermClass {
       const lines = text.split('\n');
       lines[0] = `${this.input}${lines[0]}`;
       const last = !text.endsWith('\n') && lines.pop();
-      await this.pasteLines(lines);
 
-      if (last) {// Set as pending input but don't send
-        this.queueCommands([{
-          key: 'resolve',
-          resolve: () => {
-            this.clearInput();
-            this.setInput(last);
-          },
-        }]);
-      }
+      try {
+        await this.pasteLines(lines);
+        if (last) {// Set as pending input but don't send
+          this.queueCommands([{
+            key: 'resolve',
+            resolve: () => {
+              this.clearInput();
+              this.setInput(last);
+            },
+          }]);
+        }
+      } catch { /** NOOP */ }
+
     } else {
       this.handleXtermKeypresses(data);
     }
