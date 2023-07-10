@@ -157,14 +157,16 @@
      * - `click 1` forwards exactly one click, suppressing other `click`s
      */
     click: async function* ({ api, args, home }) {
-      let numClicks = args[0] === "" ? Number.MAX_SAFE_INTEGER : Number(args[0])
+      let [numClicks, extra] = args[0] === ""
+        ? [Number.MAX_SAFE_INTEGER, null]
+        : [Number(args[0]), { clickHash: api.getUid(), }]
+
       if (!Number.isFinite(numClicks)) {
-        throw api.throwError("format: \`click [{numberOfClicks}] [!]\`")
+        throw api.throwError("format: \`click [{numberOfClicks}]\`")
       }
 
       const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
-      const extra = args[0] === "" ? null : { clickEpoch: Date.now() };
-      extra && panZoom.pointerUpExtras.push(extra); // This will be merged into next pointerup
+      extra && panZoom.pointerUpExtras.push(extra); // Will be merged into next pointerup
       
       const process = api.getProcess()
       /** @type {import('rxjs').Subscription} */ let sub;
@@ -176,10 +178,10 @@
             if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
               return;
             }
-            if (!extra && e.extra.clickEpoch) {
+            if (e.extra.clickHash && !extra) {
               return; // `click 1` overrides `click`
             }
-            if (e.extra.clickEpoch ? (extra?.clickEpoch === e.extra.clickEpoch) : true) {
+            if (e.extra.clickHash ? (extra?.clickHash === e.extra.clickHash) : true) {
               resolve(e); // Must resolve before tear-down induced by unsubscribe 
               sub.unsubscribe();
             }

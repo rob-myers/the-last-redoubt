@@ -20,11 +20,15 @@
 - ✅ can show/hide decor colliders via `npc config showColliders`
 - ✅ avoid `cssName` dup in service/const vs world/const
 
-- BUG?
-  - both `click 1`s resolve at once?
-  ```sh
-  nav --tryOpen foo $( click 1 ) | walk foo & nav --tryOpen bar $( click 1 ) | walk bar
-  ```
+- ✅ BUG both `click 1`s resolved at once
+```sh
+spawn foo zhodani $( click 1 )
+spawn bar solomani $( click 1 )
+# issue:
+nav --tryOpen foo $( click 1 ) |
+  walk foo & nav --tryOpen bar $( click 1 ) | walk bar
+
+```
 
 - BUG see very early collisions
   - ℹ️ maybe stale collision e.g. Player was initially stationary and in the way,

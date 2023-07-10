@@ -1,4 +1,5 @@
 import cliColumns from 'cli-columns';
+import { uid } from 'uid';
 
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
 import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
@@ -593,6 +594,15 @@ class cmdServiceClass {
       return getProcess(this.meta);
     },
   
+    /** Returns a string e.g. `60f5bfdb9b9` */
+    getUid() {
+      return uid();
+    },
+
+    info(message: string) {
+      useSession.api.writeMsg(this.meta.sessionKey, message, 'info');
+    },
+
     isTtyAt(fd = 0) {
       return isTtyAt(this.meta, fd);
     },
@@ -643,9 +653,6 @@ class cmdServiceClass {
 
     throwError,
 
-    info(message: string) {
-      useSession.api.writeMsg(this.meta.sessionKey, message, 'info');
-    },
   };
   
   private readonly processApiKeys = Object.keys(this.processApi);
