@@ -18,7 +18,7 @@
   > might break "slow down near door" but that's ok
 
 - ✅ can show/hide decor colliders via `npc config showColliders`
-- 🚧 avoid `cssName` dup in service/const vs world/const
+- ✅ avoid `cssName` dup in service/const vs world/const
 
 - BUG?
   - both `click 1`s resolve at once?

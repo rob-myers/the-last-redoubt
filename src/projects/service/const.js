@@ -1,5 +1,5 @@
 /**
- * 👋 ensure changes are suitably mirrored in projects/world/const.js
+ * 👋 `yarn types` to check projects/world/const.js mirrored changes
  */
 
 export const siteTitle = 'NPC CLI';
@@ -14,7 +14,6 @@ export const localStorageKey = {
 };
 
 export const cssName = /** @type {const} */ ({
-  //#region site
   anchor: 'anchor',
   carouselLabelHeight: '--carousel-label-height',
   central: 'central',
@@ -47,49 +46,6 @@ export const cssName = /** @type {const} */ ({
   topBar: 'top-bar',
   topBarHandle: 'handle',
   topRight: 'top-right',
-  //#endregion
-
-  //#region world
-  door: 'door',
-  doors: 'doors',
-  doorTouchUi: 'door-touch-ui',
-  iris: 'iris',
-  hull: 'hull',
-  open: 'open',
-
-  debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
-  debugGeomorphOutlineDisplay: '--debug-gm-outline-display',
-  debugHighlightWindows: '--debug-highlight-windows',
-  debugRoomNavDisplay: '--debug-room-nav-display',
-  debugRoomOutlineDisplay: '--debug-room-outline-display',
-  debugShowIds: '--debug-show-ids',
-  debugShowLabels: '--debug-show-labels',
-  // ...
-
-  decorCircle: 'decor-circle',
-  decorGroup: 'decor-group',
-  decorGroupHandle: 'decor-group-handle',
-  decorPath: 'decor-path',
-  decorPathPoint: 'decor-path-point',
-  decorPoint: 'decor-point',
-  decorRect: 'decor-rect',
-  decorCollidersDisplay: '--decor-colliders-display',
-  decorIconWidth: '--decor-icon-width',
-  decorPathColour: '--decor-path-colour',
-  
-  geomorphFilter: '--geomorph-filter',
-  geomorphMapFilter: '--geomorph-map-filter',
-  geomorphLabelsOpacity: '--geomorph-labels-opacity',
-
-  npc: 'npc',
-  npcBody: 'body',
-  npcsDebugDisplay: '--npcs-debug-display',
-  npcsDebugPlayerDisplay: '--npcs-debug-player-display',
-  npcDoorTouchRadius: '--npc-door-touch-radius',
-  npcsInteractRadius: '--npcs-interact-radius',
-  npcBoundsRadius: '--npc-bounds-radius',
-  npcHeadRadius: '--npc-head-radius',
-  //#endregion
 });
 
 export const zIndex = /** @type {const} */ ({
