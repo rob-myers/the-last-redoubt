@@ -14,7 +14,7 @@
   - ✅ decode line-seg into "linear" number of grid squares
 - ✅ broad phase colliders replaces "cached room approach"
 
-- 🚧 door/symbol groups needn't be read-only
+- ✅ door/symbol groups needn't be read-only
   > might break "slow down near door" but that's ok
 
 - can hide decor colliders
