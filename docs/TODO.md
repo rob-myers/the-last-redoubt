@@ -17,7 +17,8 @@
 - ✅ door/symbol groups needn't be read-only
   > might break "slow down near door" but that's ok
 
-- can hide decor colliders
+- ✅ can show/hide decor colliders via `npc config showColliders`
+- 🚧 avoid `cssName` dup in service/const vs world/const
 
 - BUG?
   - both `click 1`s resolve at once?

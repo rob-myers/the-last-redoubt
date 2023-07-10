@@ -265,6 +265,17 @@ export default function Decor(props) {
 
       update();
     },
+    rootRef(el) {
+      if (el) {
+        state.rootEl = el;
+        // Styles permits getPropertyValue (vs CSS and getComputedStyle)
+        !props.api.decor.ready && [
+          cssName.decorCollidersDisplay,
+        ].forEach(cssVarName =>
+          el.style.setProperty(cssVarName, 'none')
+        );
+      }
+    },
     setDecor(...ds) {
       for (const d of ds) {
         if (!d || !verifyDecor(d)) {
@@ -355,7 +366,7 @@ export default function Decor(props) {
   return (
     <div
       className={cx("decor-root", rootCss)}
-      ref={el => el && (state.rootEl = el)}
+      ref={state.rootRef}
       onClick={state.onClick}
     >
       {Object.values(state.visible).map((d) =>
@@ -471,6 +482,7 @@ const rootCss = css`
 `;
 
 const cssCircle = css`
+  display: var(${cssName.decorCollidersDisplay});
   position: absolute;
   border-radius: 50%;
   border: 1px dashed #ffffff33;
@@ -536,6 +548,7 @@ const cssPoint = css`
 `;
 
 const cssRect = css`
+  display: var(${cssName.decorCollidersDisplay});
   position: absolute;
   transform-origin: left top;
   /* transform-origin: center; */
@@ -601,6 +614,7 @@ const decorPointHandlers = {
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
  * @property {(decorKeys: string[]) => void} removeDecor
  * Remove decor, all assumed to be in same room
+ * @property {(el: HTMLDivElement) => void} rootRef
  * @property {(gmId: number, roomId: number) => RoomDecorCache} ensureByRoom
  * Ensure room decor resides in
  * - `decor`

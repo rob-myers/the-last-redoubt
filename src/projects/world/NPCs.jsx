@@ -43,6 +43,7 @@ export default function NPCs(props) {
         }
         const rootStyle = state.rootEl.style;
         const debugStyle = api.debug.rootEl.style;
+        const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
           case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
@@ -58,6 +59,7 @@ export default function NPCs(props) {
           case 'scriptDoors':
             return ctxt[key];
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
+          case 'showColliders': return decorStyle.getPropertyValue(cssName.decorCollidersDisplay) === 'none' ? false : true;
           case 'configKey':
           case 'decorKey':
           case 'mapAction':
@@ -66,13 +68,15 @@ export default function NPCs(props) {
             return undefined;
           case proxyKey: return true;
           case 'toJSON': return () => '{}'; // 🚧
-          default: throw testNever(key, { suffix: 'config.get' });
+          default:
+            throw testNever(key, { suffix: 'config.get' });
         }
       },
       /** @param {keyof NPC.NpcConfigOpts} key */
       set(ctxt, key, value) {
         const rootStyle = state.rootEl.style;
         const debugStyle = api.debug.rootEl.style;
+        const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows': debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none'); break;
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
@@ -86,6 +90,7 @@ export default function NPCs(props) {
           case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
+          case 'showColliders': decorStyle.setProperty(cssName.decorCollidersDisplay, value ? 'initial' : 'none'); break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
           case 'configKey':
           case 'decorKey':

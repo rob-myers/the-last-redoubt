@@ -227,6 +227,7 @@ declare namespace NPC {
     | 'logTags'
     | 'omnipresent'
     | 'scriptDoors'
+    | 'showColliders'
     | 'showIds'
   );
 

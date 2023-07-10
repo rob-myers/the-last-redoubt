@@ -73,6 +73,7 @@ export const cssName = /** @type {const} */ ({
   decorPathPoint: 'decor-path-point',
   decorPoint: 'decor-point',
   decorRect: 'decor-rect',
+  decorCollidersDisplay: '--decor-colliders-display',
   decorIconWidth: '--decor-icon-width',
   decorPathColour: '--decor-path-colour',
   

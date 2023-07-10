@@ -45,7 +45,7 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
 }
 
 /** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true };
+const fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true };
 
 export const fromConfigBooleanKeys = keys(fromConfigBooleanKey);
 

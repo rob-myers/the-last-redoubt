@@ -49,6 +49,7 @@ export default function DebugWorld(props) {
       rootRef(el) {
         if (el) {
           state.rootEl = el;
+          // Styles permits getPropertyValue (vs CSS and getComputedStyle)
           !props.api.debug.ready && [
             cssName.debugDoorArrowPtrEvts,
             cssName.debugGeomorphOutlineDisplay,

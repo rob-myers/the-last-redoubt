@@ -180,7 +180,7 @@ thinkLoop ${npcKey} &
 game_2: () => `
 ${profileLookup.game_1()}
 
-npc config '{ debugPlayer: true, hideGms: true, showIds: true }'
+npc config '{ debugPlayer: true, hideGms: true, showColliders: true, showIds: true }'
 `
 
 };
