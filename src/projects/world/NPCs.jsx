@@ -793,18 +793,10 @@ export default function NPCs(props) {
       }
 
       try {// Walk along a global navpath
-        const globalNavPath = e;
-        const allPoints = globalNavPath.fullPath;
-        // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
-        await npc.followNavPath(
-          allPoints,
-          globalNavPath.navMetas,
-          globalNavPath.gmRoomIds,
-        );
-
+        await npc.followNavPath(e.fullPath, e.navMetas, e.gmRoomIds);
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
-          console.info(`${e.npcKey}: walkNpc cancelled`);
+          console.info(`walkNpc cancelled: ${e.npcKey}`);
         } else {
           throw err;
         }
