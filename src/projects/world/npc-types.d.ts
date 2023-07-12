@@ -60,16 +60,18 @@ declare namespace NPC {
     cancel(): Promise<void>;
     canLook(): boolean;
     changeClass(npcClassKey: NPC.NpcClassKey): void;
+    /** Filter pending way metas e.g. stale collisions. */
+    filterWayMetas(
+      shouldRemove: (meta: NPC.NpcWayMeta) => boolean
+    ): void;
     clearWayMetas(): void;
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
     followNavPath(
       path: Geom.VectJson[],
-      opts: {
-        globalNavMetas?: NPC.GlobalNavMeta[];
-        gmRoomIds?: [number, number][];
-      },
+      globalNavMetas: NPC.GlobalNavMeta[],
+      gmRoomIds: [number, number][],
     ): Promise<void>;
     /** Radians */
     getAngle(): number;
@@ -149,7 +151,7 @@ declare namespace NPC {
       angs: number[];
       edges: ({ p: Geom.Vect; q: Geom.Vect })[];
       elens: number[];
-      /** Last index seen of path */
+      /** Last seen index of path */
       index: number;
       // /** Outset version of `origPath` to detect progress on pause */
       // navPathPolys: Geom.Poly[];
@@ -287,7 +289,7 @@ declare namespace NPC {
      * Aligned to @see {fullPath}.
      * Used to restrict decors before collision prediction.
      */
-    gmRoomIds?: [number, number][];
+    gmRoomIds: [number, number][];
   }
 
   /**
@@ -303,6 +305,7 @@ declare namespace NPC {
 
   export type NpcWayMetaExitRoom = Extract<NPC.NpcWayMeta, { key: 'exit-room' }>
   export type NpcWayMetaVertex = Extract<NPC.NpcWayMeta, { key: 'vertex' }>
+  export type NpcWayMetaNpcsCollide = Extract<NPC.NpcWayMeta, { key: 'npcs-collide' }>
 
   /**
    * A `GlobalNavMeta` is a `FloorGraphNavMeta` enriched with the id of the geomorph instance

@@ -17,9 +17,17 @@ export default function useHandleEvents(api) {
       switch (e.key) {
         case 'changed-speed': {
           const npc = api.npcs.getNpc(e.npcKey);
-          if (npc.anim.wayMetas.length) {// Changed speed, so recompute timing:
-            window.clearTimeout(npc.anim.wayTimeoutId);
-            npc.nextWayTimeout();
+          if (npc.isWalking()) {
+            // clear all pending collisions
+            npc.filterWayMetas((meta) => meta.key === 'npcs-collide' || meta.key === 'decor-collide');
+            // recompute collisions
+            state.predictNpcNpcsCollision(npc);
+            state.predictNpcDecorCollision(npc);
+            // close npcs should recompute respective collision
+            for (const other of api.npcs.getCloseNpcs(npc.key)) {
+              other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === npc.key);
+              state.predictNpcNpcCollision(other, npc);
+            }
           }
           break;
         }
@@ -48,16 +56,10 @@ export default function useHandleEvents(api) {
           api.npcs.setPlayerKey(e.npcKey);
           break;
         case 'stopped-walking': {
-          const player = api.npcs.getPlayer();
-          if (player?.isWalking() && e.npcKey !== player.key) {
-            // Player may be about to collide with NPC e.npcKey
-            const npc = api.npcs.getNpc(e.npcKey);
-            const collision = npcService.predictNpcNpcCollision(player, npc);
-            if (collision) {
-              console.warn(`${npc.key} will collide with ${player.key}`, collision);
-              // 🚧 somehow pause setTimeout on World disable
-              setTimeout(() => cancelNpcs(player.key, npc.key), collision.seconds * 1000);
-            }
+          const npc = api.npcs.getNpc(e.npcKey);
+          for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
+            other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === npc.key);
+            state.predictNpcNpcCollision(other, npc);
           }
           break;
         }
@@ -70,7 +72,12 @@ export default function useHandleEvents(api) {
         case 'npc-internal':
         case 'removed-npc':
         case 'spawned-npc':
+          break;
         case 'started-walking':
+          // remove pending collisions
+          for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
+            other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
+          }
           break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });
@@ -93,20 +100,8 @@ export default function useHandleEvents(api) {
             api.fov.setRoom(...id, -1);
           }
           break;
-        case 'stopped-walking': {
-          // Walking NPCs may be about to collide with Player,
-          // e.g. before they start a new line segment
-          const player = api.npcs.getPlayer();
-          player && Object.values(api.npcs.npc).filter(x => x !== player && x.isWalking()).forEach(npc => {
-            const collision = npcService.predictNpcNpcCollision(npc, player);
-            if (collision) {
-              console.warn(`${e.npcKey} will collide with ${npc.key}`, collision);
-              // 🚧 somehow pause setTimeout on World disable
-              setTimeout(() => cancelNpcs(npc.key, player.key), collision.seconds * 1000);
-            }
-          });
+        case 'stopped-walking':
           break;
-        }
         case 'way-point':
           state.handlePlayerWayEvent(e);
           break;
@@ -136,8 +131,8 @@ export default function useHandleEvents(api) {
 
           // `npc` is walking:
           npc.updateWalkSegBounds(e.meta.index);
-          state.predictNpcNpcsCollision(npc, e);
-          state.predictNpcDecorCollision(npc, e.meta);
+          state.predictNpcNpcsCollision(npc);
+          state.predictNpcDecorCollision(npc);
           break;
         case 'at-door': {
           const { gmId, doorId, tryOpen } = e.meta;
@@ -186,19 +181,20 @@ export default function useHandleEvents(api) {
       }
     },
 
-    predictNpcDecorCollision(npc, meta) {
+    predictNpcDecorCollision(npc) {
       
+      const { aux, path } = npc.anim;
+      const currPosition = npc.getPosition();
+      const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
       // Restrict to decor in room containing line-segment's 1st vertex
       // ℹ️ assume room-traversing segments begin/end on border
-      const [gmId, roomId] = npc.anim.gmRoomIds[meta.index];
+      const [gmId, roomId] = npc.anim.gmRoomIds[aux.index];
       
       const closeDecor = queryDecorGridLine(
-        npc.anim.path[meta.index],
-        npc.anim.path[meta.index + 1],
+        currPosition,
+        npc.anim.path[aux.index + 1],
         api.decor.byGrid,
       ).filter(d => d.meta.gmId === gmId && d.meta.roomId === roomId);
-      // console.log(broadPhaseDecor);
-      // const { collide: closeDecor } = api.decor.cacheNpcWalk(npc.key, gmId, roomId);
 
       for (const decor of closeDecor) {
         const {collisions, startInside} = decor.type === 'circle'
@@ -215,47 +211,61 @@ export default function useHandleEvents(api) {
         }
         
         collisions.forEach((collision, collisionIndex) => {
-          const length = meta.length + collision.distA;
+          const length = currLength + collision.distA;
           const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
           npc.anim.wayMetas.splice(insertIndex, 0, {
             key: 'decor-collide',
-            index: meta.index,
+            index: aux.index,
             decorKey: decor.key,
             type: startInside
               ? collisionIndex === 0 ? 'exit' : 'enter'
               : collisionIndex === 0 ? 'enter' : 'exit',
-            gmId: meta.gmId,
+            gmId,
             length,
           });
         });
-        startInside && (meta.index === 0) && npc.anim.wayMetas.unshift({
+        startInside && (aux.index === 0) && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
-          index: meta.index,
+          index: aux.index,
           decorKey: decor.key,
           type: 'start-inside', // start walk inside
-          gmId: meta.gmId,
-          length: meta.length,
+          gmId,
+          length: currLength,
         });
       }
     },
 
-    predictNpcNpcsCollision(npc, e) {
-      const otherNpcs = Object.values(api.npcs.npc).filter(x => x !== npc);
+    predictNpcNpcCollision(npc, otherNpc) {
+      const collision = npcService.predictNpcNpcCollision(npc, otherNpc);
 
-      for (const other of otherNpcs) {
-        const collision = npcService.predictNpcNpcCollision(npc, other);
-        if (collision) {// Add wayMeta cancelling motion
-          console.warn(`${npc.key} will collide with ${other.key}`, collision);
-          const length = e.meta.length + collision.distA;
-          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
-          npc.anim.wayMetas.splice(insertIndex, 0, {
-            key: 'npcs-collide',
-            index: e.meta.index,
-            otherNpcKey: other.key,
-            gmId: e.meta.gmId,
-            length,
-          });
+      if (collision) {
+        const { aux, path, wayMetas } = npc.anim;
+        console.warn(`${npc.key} will collide with ${otherNpc.key}`, collision);
+
+        const length = aux.sofars[aux.index] + (
+          npc.getPosition().distanceTo(path[aux.index]) // always account for offset
+        ) + collision.distA;
+        const insertIndex = wayMetas.findIndex(x => x.length >= length);
+        const { gmId } = wayMetas[0];
+
+        wayMetas.splice(insertIndex, 0, {// Add wayMeta cancelling motion
+          key: 'npcs-collide',
+          index: aux.index,
+          otherNpcKey: otherNpc.key,
+          gmId,
+          length,
+        });
+
+        if (insertIndex === 0) {
+          window.clearTimeout(npc.anim.wayTimeoutId);
+          npc.nextWayTimeout();
         }
+      }
+    },
+
+    predictNpcNpcsCollision(npc) {
+      for (const other of api.npcs.getCloseNpcs(npc.key)) {
+        state.predictNpcNpcCollision(npc, other);
       }
     },
 
@@ -327,8 +337,9 @@ export default function useHandleEvents(api) {
 
 /**
  * @typedef State @type {object}
- * @property {(npc: NPC.NPC, meta: NPC.NpcWayMetaVertex) => void} predictNpcDecorCollision
- * @property {(npc: NPC.NPC, e: NPC.NPCsWayEvent) => void} predictNpcNpcsCollision
+ * @property {(npc: NPC.NPC) => void} predictNpcDecorCollision
+ * @property {(npc: NPC.NPC, otherNpc: NPC.NPC) => void} predictNpcNpcCollision
+ * @property {(npc: NPC.NPC) => void} predictNpcNpcsCollision
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
  * Handle NPC event (always runs)
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent

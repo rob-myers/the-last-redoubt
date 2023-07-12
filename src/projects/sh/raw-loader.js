@@ -435,12 +435,11 @@
     },
   
     /**
-     * Move a specific npc along path(s) e.g.
-     * - `walk andros "[$( click 1 ), $( click 1 )]"`
-     * - `expr "{ key: 'global-nav', fullPath: [$( click 1 ), $( click 1 )], navMetas: [] }" | walk andros`
-     * - `nav andros $( click 1) | walk andros`
-     *
-     * `npcKey` must be fixed via 1st arg
+     * Move a specific npc along a @see {NPC.GlobalNavPath} <br/>
+     * - e.g. `nav andros $( click 1) | walk andros`
+     * - e.g. `nav andros $( click 1) > navPath; walk andros "$navPath"`
+     * - `npcKey` must be fixed via 1st arg
+     * - piped navPaths cancel previous
      */
     walk: async function* ({ api, args, home, datum, promises = [] }) {
       const { npcs } = api.getCached(home.WORLD_KEY)
@@ -448,9 +447,9 @@
   
       npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
   
-      if (api.isTtyAt(0)) {// `walk {npcKey} {points}`
-        const points = api.safeJsonParse(args[1])
-        await npcs.walkNpc({ npcKey, key: "global-nav", fullPath: points, fullPartition: [], navMetas: [] })
+      if (api.isTtyAt(0)) {
+        const navPath = api.parseJsArg(args[1]);
+        await npcs.walkNpc({ npcKey, ...navPath });
       } else {// `walk {npcKey}` expects to read global navPaths
         datum = await api.read()
         while (datum !== null) {

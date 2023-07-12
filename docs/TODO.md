@@ -2,37 +2,22 @@
 
 ## In progress
 
-- ℹ️ nav node id approach
-- ✅ faster nav node lookup
-  - ✅ `gm.navZone.gridToNodeIds`
-  - ✅ hook up to floorGraph.findPath
-- ✅ global nav path provides nav node ids
-  - maybe per seg i.e. take account of string-pulling
-- ❌ decor colliders inferred from nav node ids
-- ✅ decor colliders inferred from global decor-grid
-  - ✅ store/remove decor in global grid
-  - ✅ decode line-seg into "linear" number of grid squares
-- ✅ broad phase colliders replaces "cached room approach"
+- 🚧 BUG while not always cancellable?
+  > `while true; do walk andros $navPath; done`
 
-- ✅ door/symbol groups needn't be read-only
-  > might break "slow down near door" but that's ok
+- prevent `walk {npcKey} $navPath` from initial npcs overlap (?)
 
-- ✅ can show/hide decor colliders via `npc config showColliders`
-- ✅ avoid `cssName` dup in service/const vs world/const
-
-- ✅ BUG both `click 1`s resolved at once
+- BUG navpath malformed
 ```sh
-spawn foo zhodani $( click 1 )
-spawn bar solomani $( click 1 )
-# issue:
-nav --tryOpen foo $( click 1 ) |
-  walk foo & nav --tryOpen bar $( click 1 ) | walk bar
-
+# repro (spawn without protect state.isPointSpawnable)
+spawn foo '{ x: 219.54, y: 346 }'
+nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 ```
+- bad string-pull: on border of "doorway triangle"?
 
-- BUG see very early collisions
-  - ℹ️ maybe stale collision e.g. Player was initially stationary and in the way,
-    but was moved after the NPC started walking
+- BUG? npc-npc missed collision when other npc left navmesh
+  - both were going around table same way
+  - npc is outside navmesh: {"x":652.47,"y":465.58}
 
 - move `nav --tryOpen` to `walk --open`
 - walk `--open` detects approach/leave door using door sensors
@@ -462,6 +447,52 @@ nav --tryOpen foo $( click 1 ) |
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG see very early collisions
+  - ℹ️ stale collision e.g. Player was initially stationary and in the way,
+    but was moved after the NPC started walking
+  - ✅ handle `started-walking`
+  - ✅ handle `stopped-walking`
+  - ✅ handle `changed-speed`
+    - npc foo 'x => x.setSpeedFactor(0.5)'
+    - ✅ seems npcs-collide too early `andros will collide with foo {seconds: -2.3052919946376775, distA: -161.3704396246374, distB: -80.6852198123187}`
+      > maybe speeds wrong way around?
+```sh
+# REPRO
+# spawn behind the player
+spawn foo zhodani $( click 1 )
+# navigate in front of player
+nav --tryOpen foo $( click 1 ) | walk foo
+# walk player forward asap
+```
+
+- ℹ️ nav node id approach
+- ✅ faster nav node lookup
+  - ✅ `gm.navZone.gridToNodeIds`
+  - ✅ hook up to floorGraph.findPath
+- ✅ global nav path provides nav node ids
+  - maybe per seg i.e. take account of string-pulling
+- ❌ decor colliders inferred from nav node ids
+- ✅ decor colliders inferred from global decor-grid
+  - ✅ store/remove decor in global grid
+  - ✅ decode line-seg into "linear" number of grid squares
+- ✅ broad phase colliders replaces "cached room approach"
+
+- ✅ door/symbol groups needn't be read-only
+  > might break "slow down near door" but that's ok
+
+- ✅ can show/hide decor colliders via `npc config showColliders`
+- ✅ avoid `cssName` dup in service/const vs world/const
+
+- ✅ BUG both `click 1`s resolved at once
+```sh
+spawn foo zhodani $( click 1 )
+spawn bar solomani $( click 1 )
+# issue:
+nav --tryOpen foo $( click 1 ) |
+  walk foo & nav --tryOpen bar $( click 1 ) | walk bar
+
+```
 
 - ✅ clean/redo Decor
   - ✅ remove groupCache i.e. use `byRoom[gmId][roomId].groups` instead

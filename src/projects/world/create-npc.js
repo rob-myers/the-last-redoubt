@@ -179,11 +179,19 @@ export default function createNpc(
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
-    async followNavPath(path, opts) {
+    filterWayMetas(shouldRemove) {
+      const { wayMetas } = this.anim;
+      this.anim.wayMetas = wayMetas.filter(meta => !shouldRemove(meta));
+      if (wayMetas[0] && shouldRemove(wayMetas[0])) {
+        window.clearTimeout(this.anim.wayTimeoutId);
+        this.nextWayTimeout();
+      }
+    },
+    async followNavPath(path, globalNavMetas, gmRoomIds) {
       // This might be a jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
       // `nav` provides gmRoomIds, needed for decor collisions
-      this.anim.gmRoomIds = opts?.gmRoomIds ?? [];
+      this.anim.gmRoomIds = gmRoomIds;
       this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();
@@ -193,15 +201,12 @@ export default function createNpc(
         return;
       }
       
-      if (opts?.globalNavMetas) {
-        // Convert navMetas to wayMetas
-        this.anim.wayMetas = opts.globalNavMetas.map((navMeta) => ({
-          ...navMeta,
-          length: this.computeWayMetaLength(navMeta),
-        }));
-
-        // this.updateRoomWalkBounds(0);
-      }
+      // Convert navMetas to wayMetas
+      this.anim.wayMetas = globalNavMetas.map((navMeta) => ({
+        ...navMeta,
+        length: this.computeWayMetaLength(navMeta),
+      }));
+      // this.updateRoomWalkBounds(0);
       
       this.startAnimation('walk');
       api.npcs.events.next({ key: 'started-walking', npcKey: this.def.key });

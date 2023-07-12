@@ -273,6 +273,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
     if (
       inSqrt > 0 &&
       (t = (-b - Math.sqrt(inSqrt)) / (2 * a)) <= maxTime
+      && t >= 0 // -ve solutions possible if npcs have different speeds
     ) {// 0 <= seconds <= time to reach segA.dst
       return { seconds: t, distA: t * speedA, distB: t * speedB };
     } else {
@@ -319,6 +320,7 @@ export function predictNpcNpcCollision(npcA, npcB) {
       inSqrt > 0 &&
       (t = (-dpA - Math.sqrt(inSqrt)) * (1 / speedA)) <=
       (segA.src.distanceTo(segA.dst) / speedA)
+      // && t >= 0 // Not possible via early bounds check
     ) {
       return { seconds: t, distA: t * speedA, distB: 0 };
     } else {
@@ -408,6 +410,11 @@ export function cloneNavPath({ key, fullPath, fullPartition, navMetas, gmRoomIds
     navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
     gmRoomIds: gmRoomIds?.slice(),
   };
+}
+
+/** @returns {NPC.GlobalNavPath} */
+export function getEmptyNavPath() {
+  return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [], gmRoomIds: [] };
 }
 
 /**

@@ -255,11 +255,11 @@ export default function NPCs(props) {
           throw Error(`dst outside navmesh: ${JSON.stringify(e.point)}`);
         } else {
           console.warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
-          return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [] };
+          return npcService.getEmptyNavPath();
         }
       } else if (!state.isPointInNavmesh(position)) {
         console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
-        return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [] };
+        return npcService.getEmptyNavPath();
       }
 
       const result = state.getGlobalNavPath(position, e.point, { tryOpen: !!e.tryOpen });
@@ -293,6 +293,13 @@ export default function NPCs(props) {
           x.getRadius() + (x.isWalking() ? extraForWalk : 0),
           convexPoly
         ));
+    },
+    getCloseNpcs(npcKey, isWalking) {
+      return Object.values(state.npc).filter(
+        other => other.key !== npcKey && (
+          (isWalking === undefined) || (other.isWalking() === isWalking)
+        )
+      );
     },
     getPlayer() {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
@@ -658,6 +665,7 @@ export default function NPCs(props) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
+      // ℹ️ can comment this out for nav testing
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
         throw new Error('cancelled');
       }
@@ -788,10 +796,11 @@ export default function NPCs(props) {
         const globalNavPath = e;
         const allPoints = globalNavPath.fullPath;
         // console.log('global navMetas', globalNavPath.navMetas); // DEBUG
-        await npc.followNavPath(allPoints, {
-          globalNavMetas: globalNavPath.navMetas,
-          gmRoomIds: globalNavPath.gmRoomIds,
-        });
+        await npc.followNavPath(
+          allPoints,
+          globalNavPath.navMetas,
+          globalNavPath.gmRoomIds,
+        );
 
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
@@ -848,6 +857,8 @@ export default function NPCs(props) {
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
+ * @property {(npcKey: string, isWalking?: boolean) => NPC.NPC[]} getCloseNpcs
+ * 🚧 actually restrict to close npcs
  * @property {() => NPC.NPC | null} getPlayer
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
