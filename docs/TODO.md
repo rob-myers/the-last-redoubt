@@ -2,8 +2,10 @@
 
 ## In progress
 
-- 🚧 BUG while not always cancellable?
-  > `while true; do walk andros $navPath; done`
+- ✅ BUG while not always cancellable?
+  - bad: `while true; do walk andros $navPath; done`
+  - good: `while true; do navPath | walk andros; done`
+  - difference: pipeline triggers throw of killError
 
 - prevent `walk {npcKey} $navPath` from initial npcs overlap (?)
 
