@@ -54,7 +54,7 @@ export default function Tabs(props: Props) {
           }
           break;
         case 'Enter':
-          if (!state.expanded) {
+          if (state.enabled && !state.expanded) {
             await state.toggleExpand();
           }
           if (!state.enabled) {
@@ -103,9 +103,9 @@ export default function Tabs(props: Props) {
 
       if (state.enabled && !state.everEnabled) {
         state.everEnabled = true;
-        setTimeout(state.toggleIndividualTabs, 300);
+        setTimeout(state.toggleEachTab, 300);
       } else {
-        await state.toggleIndividualTabs();
+        await state.toggleEachTab();
       }
     },
 
@@ -122,7 +122,7 @@ export default function Tabs(props: Props) {
       update();
     },
 
-    async toggleIndividualTabs() {
+    async toggleEachTab() {
       const tabs = useSiteStore.getState().tabs[props.id];
 
       if (!tabs) {
@@ -187,6 +187,7 @@ export default function Tabs(props: Props) {
         localStorage.removeItem(expandedStorageKey);
       }
     }
+
     update();
 
     return () => {
@@ -250,6 +251,7 @@ export default function Tabs(props: Props) {
              */
             rootOrientationVertical={window.matchMedia('(max-width: 800px)').matches}
             tabs={props.tabs}
+            toggleEnabled={state.toggleEnabled}
             update={update}
           />
         )}
@@ -310,7 +312,7 @@ export interface State {
   reset(): void;
   toggleEnabled(): Promise<void>;
   toggleExpand(): Promise<void>;
-  toggleIndividualTabs(): Promise<void>;
+  toggleEachTab(): Promise<void>;
 }
 
 

@@ -100,11 +100,7 @@ export default function Terminal(props: Props) {
           ttyXterm.initialise();
           session.ttyShell.initialise(ttyXterm);
           state.xtermReady = true;
-          const disposable = xterm.onKey(e => {
-            if (e.domEvent.key === 'Escape') {
-              // NOOP
-            }
-          });
+          const disposable = xterm.onKey(e => props.onKey?.(e.domEvent));
 
           update();
 
@@ -139,9 +135,10 @@ export default function Terminal(props: Props) {
 
 interface Props {
   disabled?: boolean;
-  sessionKey: string;
   /** Can initialize variables */
   env: { [envVarName: string]: any; };
+  onKey?: (e: KeyboardEvent) => void;
+  sessionKey: string;
 }
 
 const rootCss = css`

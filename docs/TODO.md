@@ -7,6 +7,11 @@
   - good: `while true; do navPath | walk andros; done`
   - difference: pipeline triggers throw of killError
 
+- 🚧 BUG collision miss on alternating iterations of:
+  - bad: `while true; do walk andros $navPath; done`
+  - good: `while true; do walk andros $navPath; sleep 1; done`
+  - maybe late cancel?
+
 - prevent `walk {npcKey} $navPath` from initial npcs overlap (?)
 
 - BUG navpath malformed

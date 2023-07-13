@@ -16,11 +16,24 @@ export default function TabContents({
     meta.type === 'component' && (
       component && React.createElement(component, {
         disabled,
-        // we propagate props from <Tabs> prop tabs into component
-        ...meta.props,
+        ...meta.props, // propagate props from <Tabs> prop tabs
       })
     ) || meta.type === 'terminal' && (
-      <Terminal disabled={disabled} sessionKey={meta.filepath} env={meta.env || {}} />
+      <Terminal
+        disabled={disabled}
+        sessionKey={meta.filepath}
+        env={meta.env ?? {}}
+        onKey={(e) => {
+          if (e.key === 'Escape') {
+            const tabs = useSiteStore.getState().tabs[tabsKey];
+            if (!tabs.disabled) tabs.toggleEnabled();
+          }
+          if (e.key === 'Enter') {
+            const tabs = useSiteStore.getState().tabs[tabsKey];
+            if (tabs.disabled) tabs.toggleEnabled();
+          }
+        }}
+      />
     ) || (
       <div style={{ background: 'white', color: 'red' }}>
         TabMeta "{JSON.stringify(meta)}" has unexpected type

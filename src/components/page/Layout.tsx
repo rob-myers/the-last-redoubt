@@ -87,6 +87,7 @@ interface Props extends Pick<TabsProps, (
   | 'persistLayout'
 )> {
   rootOrientationVertical?: boolean;
+  toggleEnabled(): Promise<void>;
   update(): void;
 }
 
@@ -95,41 +96,43 @@ interface Props extends Pick<TabsProps, (
  * e.g. so can select a particular tab programmatically.
  */
 function useRegisterTabs(props: Props, model: Model) {
-  React.useEffect(() => {
-    const { tabs } = useSiteStore.getState();
+
+  React.useMemo(() => {
+    const site = useSiteStore.getState();
+
     if (!props.id) {
       return console.warn('Tabs has no id', props.tabs);
     }
 
     // Register tabs with state
-    if (!tabs[props.id]) {
-      tabs[props.id] = {
-        key: props.id,
-        def: props.tabs.flatMap(x => x),
-        selectTab(tabId: string) {
-          model.doAction(Actions.selectTab(tabId));
-        },
-        async scrollTo() {
-          const id = props.id;
-          const { top } = document.getElementById(id)!.getBoundingClientRect();
-          window.scrollBy({ top, behavior: 'smooth' });
-          if (! await scrollFinished(window.pageYOffset + top)) return;
-          navigate(`#${id}`);
-        },
-        getTabNodes() {
-          const output = [] as TabNode[];
-          model.visitNodes(x => x instanceof TabNode && output.push(x));
-          return output;
-        },
-        getVisibleTabNodes() {
-          const maxTabset = model.getMaximizedTabset();
-          return maxTabset ? [maxTabset.getSelectedNode() as TabNode] : this.getTabNodes().filter(x => x.isVisible());
-        },
-        disabled: !props.initEnabled,
-        pagePathname: location.pathname,
-      };
-      useSiteStore.setState({}, undefined, 'create-tabs');
-    }
+    site.tabs[props.id] ??= {
+      key: props.id,
+      def: props.tabs.flatMap(x => x),
+      disabled: !props.initEnabled,
+      pagePathname: location.pathname,
+
+      getTabNodes() {
+        const output = [] as TabNode[];
+        model.visitNodes(x => x instanceof TabNode && output.push(x));
+        return output;
+      },
+      getVisibleTabNodes() {
+        const maxTabset = model.getMaximizedTabset();
+        return maxTabset ? [maxTabset.getSelectedNode() as TabNode] : this.getTabNodes().filter(x => x.isVisible());
+      },
+      selectTab(tabId: string) {
+        model.doAction(Actions.selectTab(tabId));
+      },
+      async scrollTo() {
+        const id = props.id;
+        const { top } = document.getElementById(id)!.getBoundingClientRect();
+        window.scrollBy({ top, behavior: 'smooth' });
+        if (! await scrollFinished(window.pageYOffset + top)) return;
+        navigate(`#${id}`);
+      },
+      toggleEnabled: props.toggleEnabled,
+    };
+    useSiteStore.setState({}, undefined, 'create-tabs');
 
     return () => {
       // Remove components
