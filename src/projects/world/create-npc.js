@@ -42,6 +42,7 @@ export default function createNpc(
       },
       spriteSheet: 'idle',
       staticBounds: new Rect,
+      staticPosition: new Vect,
 
       opacity: new Animation(),
       translate: new Animation(),
@@ -273,10 +274,13 @@ export default function createNpc(
         return null;
       }
     },
-    getPosition() {
-      // TODO avoid getBoundingClientRect undefined
-      const { x: clientX, y: clientY } = Vect.from(this.el.root.getBoundingClientRect?.() || [0, 0]);
-      return Vect.from(api.panZoom.getWorld({ clientX, clientY })).precision(2);
+    getPosition(useCache = true) {
+      if (useCache && this.anim.spriteSheet !== 'walk') {
+        return this.anim.staticPosition;
+      } else {// 🚧 avoid getBoundingClientRect undefined
+        const { x: clientX, y: clientY } = Vect.from(this.el.root.getBoundingClientRect?.() || [0, 0]);
+        return Vect.from(api.panZoom.getWorld({ clientX, clientY })).precision(2);
+      }
     },
     getRadius() {
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
@@ -410,6 +414,7 @@ export default function createNpc(
       // Inherit cssName.npcsInteractRadius from <NPCS> unless specified
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
+      this.anim.staticPosition.set(this.def.position.x, this.def.position.y);
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
@@ -419,6 +424,28 @@ export default function createNpc(
     },
     isPaused() {
       return this.anim.sprites.playState === 'paused';
+    },
+    isPointBlocked(point, permitEscape = false) {
+      const { npcs } = api;
+      const closeNpcs = npcs.getCloseNpcs(this.key);
+      const { radius } = npcsMeta[this.classKey];
+
+      if (!closeNpcs.some(other =>
+        other.intersectsCircle(point, radius)
+        && npcs.handleBunkBedCollide(other.doMeta ?? undefined, point.meta)
+      )) {
+        return false;
+      }
+
+      const position = this.getPosition();
+      if (permitEscape && closeNpcs.some(other =>
+        other.intersectsCircle(position, radius)
+        && npcs.handleBunkBedCollide(other.doMeta ?? undefined, this.doMeta ?? undefined)
+      )) {
+        return false;
+      }
+
+      return true;
     },
     isWalking() {
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
@@ -572,9 +599,10 @@ export default function createNpc(
         case 'sit': {
           this.clearWayMetas();
           // Update staticBounds
-          const { x, y } = this.getPosition();
+          const { x, y } = this.getPosition(false);
           const radius = this.getRadius();
           this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
+          this.anim.staticPosition.set(x, y);
     
           if (this.anim.spriteSheet === 'sit') {
             this.obscureBySurfaces(); // Ensure feet are below surfaces

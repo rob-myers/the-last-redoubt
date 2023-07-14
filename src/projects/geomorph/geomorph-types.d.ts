@@ -205,6 +205,9 @@ declare namespace Geomorph {
   export type PointWithMeta = Geom.VectJson & {
     meta: Geomorph.PointMeta;
   }
+  export type PointMaybeMeta = Geom.VectJson & {
+    meta?: Geomorph.PointMeta;
+  }
 
   export interface UseGeomorphsDefItem {
     gmKey: GeomorphKey;

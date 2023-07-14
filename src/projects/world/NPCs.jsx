@@ -384,18 +384,9 @@ export default function NPCs(props) {
       }
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      /** @type {NPC.NPC} */ let otherNpc;
-      for (const otherNpcKey in state.npc) {
-        if (
-          otherNpcKey !== npcKey
-          && (otherNpc = state.npc[otherNpcKey]).intersectsCircle(
-            point,
-            npcsMeta[npcClassKey].radius
-          )
-          && state.handleBunkBedCollide(otherNpc.doMeta ?? undefined, point.meta)
-        ) {
-          return false;
-        }
+      // Other npcs cannot be close
+      if (state.npc[npcKey]?.isPointBlocked(point)) {
+        return false;
       }
       // Must be inside some room
       const result = api.gmGraph.findRoomContaining(point);
@@ -791,8 +782,15 @@ export default function NPCs(props) {
       if (!npcService.verifyGlobalNavPath(e)) {
         throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
       }
+      if (e.fullPath[0] && npc.isPointBlocked(e.fullPath[0], npc.getPosition().equalsAlmost(e.fullPath[0]))) {
+        throw new Error('start of navPath blocked');
+      }
 
-      try {// Walk along a global navpath
+      try {
+        /**
+         * Walk along a global navpath, possibly
+         * throwing 'cancelled' if collide with something.
+         */
         await npc.followNavPath(e.fullPath, e.navMetas, e.gmRoomIds);
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {

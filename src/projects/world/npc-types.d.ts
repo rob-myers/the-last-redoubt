@@ -81,7 +81,7 @@ declare namespace NPC {
     getGmRoomId(throwIfNull?: boolean): Geomorph.GmRoomId | null;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
-    getPosition(): Geom.Vect;
+    getPosition(useCache?: boolean): Geom.Vect;
     getRadius(): number;
     getSpeed(): number;
     /**
@@ -112,6 +112,7 @@ declare namespace NPC {
     intersectsCircle(position: Geom.VectJson, radius: number): boolean;
     isIdle(): boolean;
     isPaused(): boolean;
+    isPointBlocked(point: Geomorph.PointMaybeMeta, permitEscape?: boolean): boolean;
     isWalking(): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;
@@ -172,6 +173,10 @@ declare namespace NPC {
      * particularly when not rotated.
      */
     staticBounds: Geom.Rect;
+    /**
+     * Last static position.
+     */
+    staticPosition: Geom.Vect;
 
     spriteSheet: SpriteSheetKey;
     opacity: Animation;
@@ -278,7 +283,7 @@ declare namespace NPC {
    */
   export interface GlobalNavPath {
     key: 'global-nav';
-    fullPath: Geom.Vect[];
+    fullPath: Geom.VectJson[];
     /**
      * Aligned to edges of @see {fullPath}.
      * i.e. the nav node ids along each edge.

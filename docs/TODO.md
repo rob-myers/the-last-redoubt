@@ -12,7 +12,9 @@
   - good: `while true; do walk andros $navPath; sleep 1; done`
   - ℹ️ npc.cancel had late this.clearWayMetas()
 
-- prevent `walk {npcKey} $navPath` from initial npcs overlap (?)
+- ✅ prevent `walk {npcKey} $navPath` from initial npc overlap
+  - permit blocked walk if the navPath doesn't initially jump
+  - forbid blocked walk otherwise
 
 - BUG navpath malformed
 ```sh
@@ -21,6 +23,7 @@ spawn foo '{ x: 219.54, y: 346 }'
 nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 ```
 - bad string-pull: on border of "doorway triangle"?
+- another example occurs in doorway
 
 - BUG? npc-npc missed collision when other npc left navmesh
   - both were going around table same way
