@@ -7,10 +7,10 @@
   - good: `while true; do navPath | walk andros; done`
   - difference: pipeline triggers throw of killError
 
-- 🚧 BUG collision miss on alternating iterations of:
+- ✅ BUG collision miss on alternating iterations of:
   - bad: `while true; do walk andros $navPath; done`
   - good: `while true; do walk andros $navPath; sleep 1; done`
-  - maybe late cancel?
+  - ℹ️ npc.cancel had late this.clearWayMetas()
 
 - prevent `walk {npcKey} $navPath` from initial npcs overlap (?)
 
@@ -89,6 +89,8 @@ nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 - BUG resized input on last 3 lines can overwrite 1 or 2 lines
   - ℹ️ not so bad
   - ℹ️ should only solve once we understand `numLines` in `clearInput`
+- consider `persist` CssPanZoom animations
+  > https://developer.mozilla.org/en-US/docs/Web/API/Animation/persist
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

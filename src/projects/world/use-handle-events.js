@@ -126,10 +126,9 @@ export default function useHandleEvents(api) {
           break;
         case 'vertex':
           if ((e.meta.index + 1) === npc.anim.path.length) {
-            break; // We've finished
+            break; // npc at final vertex
           }
-
-          // `npc` is walking:
+          // npc walking
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);
           state.predictNpcDecorCollision(npc);

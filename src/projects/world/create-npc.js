@@ -123,19 +123,17 @@ export default function createNpc(
         anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.body)
       );
 
+      if (this.anim.spriteSheet === 'walk') {
+        this.clearWayMetas(); // Cancel pending actions
+      }
+
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
-        if (anim !== this.anim.sprites) {
-          anim.commitStyles();
-        }
+        anim !== this.anim.sprites && anim.commitStyles();
         return /** @type {Promise<void>} */ (new Promise(resolve => {
           anim.addEventListener('cancel', () => resolve());
           anim.cancel();
         }))
       }));
-
-      if (this.anim.spriteSheet === 'walk') {// Cancel pending actions
-        this.clearWayMetas();
-      }
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
@@ -188,6 +186,7 @@ export default function createNpc(
       }
     },
     async followNavPath(path, globalNavMetas, gmRoomIds) {
+      // warn('START followNavPath')
       // This might be a jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
       // `nav` provides gmRoomIds, needed for decor collisions
@@ -440,10 +439,8 @@ export default function createNpc(
       } else if (this.anim.wayMetas[0]) {
         // Animation has uniform speed ∴ currentLength/currentTime = total/durationMs 
         const currentLength = this.anim.aux.total * (currentTime / this.anim.durationMs);
-        this.anim.wayTimeoutId = window.setTimeout(
-          this.wayTimeout.bind(this),
-          (this.anim.wayMetas[0].length - currentLength) * this.getAnimScaleFactor() * (1 / this.anim.updatedPlaybackRate),
-        );
+        const msToWait = (this.anim.wayMetas[0].length - currentLength) * this.getAnimScaleFactor() * (1 / this.anim.updatedPlaybackRate);
+        this.anim.wayTimeoutId = window.setTimeout(this.wayTimeout.bind(this), msToWait);
       }
     },
     npcRef(rootEl) {
@@ -694,6 +691,7 @@ export default function createNpc(
       if (currentTime >= (metaLength * this.anim.initAnimScaleFactor) - 1) {
         // Reached wayMeta's `length`, so remove/trigger respective event (+adjacents)
         while (this.anim.wayMetas[0]?.length <= metaLength) {
+          // console.warn('wayMeta shift', this.anim.wayMetas[0])
           this.anim.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.anim.wayMetas.shift()));
           api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
         }
