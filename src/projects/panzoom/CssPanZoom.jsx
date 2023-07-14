@@ -152,13 +152,17 @@ export default function CssPanZoom(props) {
         switch (type) {
           case 'cancel': {
             state.syncStyles(); // Remember current translate/scale
-            const trNeedsCancel = trAnim && isAnimAttached(trAnim, state.translateRoot);
-            const scNeedsCancel = scAnim && isAnimAttached(scAnim, state.scaleRoot);
-            if (trNeedsCancel || scNeedsCancel) {
-              trNeedsCancel && trAnim.cancel();
-              scNeedsCancel && scAnim.cancel();
-              state.anims = /** @type {[null, null]} */ ([null, null]);
-            }
+            await Promise.all([
+              trAnim && isAnimAttached(trAnim, state.translateRoot) && new Promise(resolve => {
+                trAnim.addEventListener('cancel', resolve)
+                trAnim.cancel();
+              }),
+              scAnim && isAnimAttached(scAnim, state.scaleRoot) && new Promise(resolve => {
+                scAnim.addEventListener('cancel', resolve)
+                scAnim.cancel();
+              }),
+            ]);
+            state.anims = /** @type {[null, null]} */ ([null, null]);
             break;
           }
           case 'pause':
@@ -241,8 +245,8 @@ export default function CssPanZoom(props) {
           return await state.panZoomTo(undefined, path[0], 1000);
         }
 
-        state.animationAction('cancel');
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
+        await state.animationAction('cancel');
         state.anims[0] = state.translateRoot.animate(keyframes, {
           // ℹ️ Jerky on Safari Desktop and Firefox Mobile
           duration,
