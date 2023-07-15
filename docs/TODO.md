@@ -2,32 +2,14 @@
 
 ## In progress
 
-- ✅ BUG while not always cancellable?
-  - bad: `while true; do walk andros $navPath; done`
-  - good: `while true; do navPath | walk andros; done`
-  - difference: pipeline triggers throw of killError
-
-- ✅ BUG collision miss on alternating iterations of:
-  - bad: `while true; do walk andros $navPath; done`
-  - good: `while true; do walk andros $navPath; sleep 1; done`
-  - ℹ️ npc.cancel had late this.clearWayMetas()
-
-- ✅ prevent `walk {npcKey} $navPath` from initial npc overlap
-  - permit blocked walk if the navPath doesn't initially jump
-  - forbid blocked walk otherwise
-
-- BUG navpath malformed
+- ✅ BUG navpath malformed
 ```sh
 # repro (spawn without protect state.isPointSpawnable)
 spawn foo '{ x: 219.54, y: 346 }'
 nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 ```
 - bad string-pull: on border of "doorway triangle"?
-- another example occurs in doorway
-
-- BUG? npc-npc missed collision when other npc left navmesh
-  - both were going around table same way
-  - npc is outside navmesh: {"x":652.47,"y":465.58}
+- another example occurs in doorway (hopefully fixed)
 
 - move `nav --tryOpen` to `walk --open`
 - walk `--open` detects approach/leave door using door sensors
@@ -94,6 +76,9 @@ nav foo '{ x: 291.34, y: 406.76 }' | walk foo
   - ℹ️ should only solve once we understand `numLines` in `clearInput`
 - consider `persist` CssPanZoom animations
   > https://developer.mozilla.org/en-US/docs/Web/API/Animation/persist
+- BUG? npc-npc missed collision when other npc left navmesh
+  - both were going around table same way
+  - npc is outside navmesh: {"x":652.47,"y":465.58}
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move
@@ -460,6 +445,20 @@ nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 
 ## Done
 
+- ✅ BUG while not always cancellable?
+  - bad: `while true; do walk andros $navPath; done`
+  - good: `while true; do navPath | walk andros; done`
+  - difference: pipeline triggers throw of killError
+
+- ✅ BUG collision miss on alternating iterations of:
+  - bad: `while true; do walk andros $navPath; done`
+  - good: `while true; do walk andros $navPath; sleep 1; done`
+  - ℹ️ npc.cancel had late this.clearWayMetas()
+
+- ✅ prevent `walk {npcKey} $navPath` from initial npc overlap
+  - permit blocked walk if the navPath doesn't initially jump
+  - forbid blocked walk otherwise
+  
 - ✅ BUG see very early collisions
   - ℹ️ stale collision e.g. Player was initially stationary and in the way,
     but was moved after the NPC started walking
