@@ -117,7 +117,7 @@ export default function useStateRef(
 module.hot?.decline();
 
 /**
- * @template State
+ * @template {Record<string, any>} State
  * @typedef Options
  * @property {import('../service/generic').KeyedTrue<State>} [overwrite]
  * @property {any[]} [deps]

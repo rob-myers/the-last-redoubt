@@ -6,21 +6,21 @@ import React from 'react';
 // type EmptyCallback = () => void;
 
 /**
+ * @template {Element} Target
  * @typedef CallbackFunction @type {React.MouseEventHandler}
- * @template {Element} Target
  */
 /**
+ * @template {Element} Target
  * @typedef DoubleTapCallback @type {CallbackFunction<Target> | null}
- * @template {Element} Target
  */
 /**
+ * @template {Element} Target
  * @typedef DoubleTapOptions @type {{ onSingleTap?: CallbackFunction<Target> }}
- * @template {Element} Target
  */
 /**
- * @typedef DoubleTapResult @type {Callback extends CallbackFunction<Target> ? { onClick: CallbackFunction<Target>; } : Callback extends null ? {} : never}
  * @template {Element} Target
  * @template Callback
+ * @typedef DoubleTapResult @type {Callback extends CallbackFunction<Target> ? { onClick: CallbackFunction<Target>; } : Callback extends null ? {} : never}
  */
 
 /**
