@@ -128,7 +128,9 @@ export async function createGeomorphData(input) {
     },
     door: {
       key: '__overwritten__', type: 'group', meta: { roomId, /** 🚧 gmId, fromDoorId */ },
-      items: roomGraph.getAdjacentDoors(roomId).map(x => layout.doors[x.doorId]).map(/** @return {NPC.DecorCircle} */ (door, doorId) => {
+      items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle} */ (doorNode) => {
+        const { doorId } = doorNode;
+        const door = layout.doors[doorId];
         const index = door.roomIds.indexOf(roomId);
         const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
         return {
