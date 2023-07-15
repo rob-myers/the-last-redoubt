@@ -282,13 +282,13 @@ declare namespace Graph {
    * A path through a `FloorGraph`.
    */
   export interface FloorGraphNavPath {
-    fullPath: Geom.Vect[];
-    /** Aligned to edges of `fullPath` i.e. the nav node ids along each edge. */
-    fullPartition: number[][];
+    path: Geom.Vect[];
+    /** Aligned to edges of `path` i.e. the nav node ids along each edge. */
+    partition: number[][];
     navMetas: FloorGraphNavMeta[];
-    /** `[startDoorId, endDoorId]` respectively, both possibly -1 */
+    /** `[startDoorId, endDoorId]` respectively */
     doorIds: [null | { id: number; hull: boolean }, null | { id: number; hull: boolean }];
-      /** Aligned to `fullPath` */
+    /** Aligned to `path` */
     roomIds: number[];
   }
 

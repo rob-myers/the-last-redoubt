@@ -459,7 +459,7 @@
           const navPath = /** @type {NPC.GlobalNavPath} */ (datum);
           // Cancel before walking (interrupt other processes)
           // But avoid cancel on empty-paths (do not interrupt other processes)
-          navPath.fullPath.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
+          navPath.path.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
           // Subsequent reads can interrupt walk
           const resolved = await Promise.race([
             promises[0] = npcs.walkNpc({ npcKey, navPath, open: opts.open }),

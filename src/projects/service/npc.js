@@ -377,9 +377,8 @@ export function predictNpcPolygonCollision(npcA, outline, rect) {
 export function verifyGlobalNavPath(input) {
   let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
   return x?.key === 'global-nav'
-    && x.fullPath?.every?.(Vect.isVectJson)
+    && x.path?.every?.(Vect.isVectJson)
     && Array.isArray(x.navMetas)
-    // TODO check navMetas
     || false;
 }
 
@@ -387,24 +386,24 @@ export function verifyGlobalNavPath(input) {
 export function verifyLocalNavPath(input) {
   let x = /** @type {Partial<NPC.LocalNavPath>} */ (input);
   return x?.key === 'local-nav'
-    && x.fullPath?.every?.(Vect.isVectJson)
-    // TODO check navMetas
+    && x.path?.every?.(Vect.isVectJson)
+    && Array.isArray(x.navMetas)
     || false;
 }
 
 //#region navpath
 
 /**
- * - Shares vectors in fullPath.
+ * - Shares vectors in path.
  * - Only constructs shallow-clone of navMetas.
  * @param {NPC.GlobalNavPath} navPath 
  * @return {NPC.GlobalNavPath} 
  */
-export function cloneNavPath({ key, fullPath, fullPartition, navMetas, gmRoomIds }) {
+export function cloneNavPath({ key, path, partition, navMetas, gmRoomIds }) {
   return {
     key,
-    fullPath: fullPath.slice(),
-    fullPartition: fullPartition.map(x => x.slice()),
+    path: path.slice(),
+    partition: partition.map(x => x.slice()),
     // Shallow clone sufficient?
     // Optional chaining for safety?
     navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
@@ -414,7 +413,7 @@ export function cloneNavPath({ key, fullPath, fullPartition, navMetas, gmRoomIds
 
 /** @returns {NPC.GlobalNavPath} */
 export function getEmptyNavPath() {
-  return { key: 'global-nav', fullPath: [], navMetas: [], fullPartition: [], gmRoomIds: [] };
+  return { key: 'global-nav', path: [], navMetas: [], partition: [], gmRoomIds: [] };
 }
 
 /**
@@ -424,21 +423,21 @@ export function getEmptyNavPath() {
  * @returns {NPC.GlobalNavPath}
  */
 export function sliceNavPath(navPath, startId, endId) {
-  let { key, fullPath, fullPartition, navMetas = [], gmRoomIds } = navPath;
+  let { key, path, partition, navMetas = [], gmRoomIds } = navPath;
 
-  fullPath = fullPath.slice(startId, endId);
-  fullPartition = fullPartition.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
+  path = path.slice(startId, endId);
+  partition = partition.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
   gmRoomIds = gmRoomIds?.slice(startId, endId);
   navMetas = navMetas.slice();
 
   if (typeof endId === 'number') {
-    if (endId < 0) endId += navPath.fullPath.length;
+    if (endId < 0) endId += navPath.path.length;
     const postMetaId = navMetas.findIndex(meta => meta.index >= /** @type {number} */ (endId));
     postMetaId >= 0 && (navMetas = navMetas.slice(0, postMetaId));
   }
 
   if (typeof startId === 'number') {
-    if (startId < 0) startId += navPath.fullPath.length;
+    if (startId < 0) startId += navPath.path.length;
     const preMetaId = navMetas.findIndex(meta => meta.index >= /** @type {number} */ (startId));
     preMetaId >= 0 && (navMetas = navMetas.slice(preMetaId)
       .map(meta => ({ ...meta, index: meta.index - /** @type {number} */ (startId) }))
@@ -447,8 +446,8 @@ export function sliceNavPath(navPath, startId, endId) {
 
   return {
     key,
-    fullPath,
-    fullPartition,
+    path: path,
+    partition: partition,
     gmRoomIds,
     navMetas,
   };

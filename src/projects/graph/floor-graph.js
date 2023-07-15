@@ -155,7 +155,7 @@ export class floorGraphClass extends BaseGraph {
       return agg;
     }, /** @type {Graph.NavPartition} */ ([]));
 
-    const fullPath = [src.clone()];
+    const path = [src.clone()];
     const fullPartition = /** @type {number[][]} */ ([]);
     const roomIds = [this.nodeToMeta[srcNode.index].roomId];
     const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
@@ -164,12 +164,12 @@ export class floorGraphClass extends BaseGraph {
     let startDoorId = -1, endDoorId = -1;
 
     /**
-     * Add a vertex to `fullPath`, updating `navMetas` and `roomIds` too.
+     * Add a vertex to nav path, updating `navMetas` and `roomIds`.
      * @param {Geom.Vect} point 
      * @param {number} roomId 
      */
     function addVertex(point, roomId) {
-      navMetas.push({ key: 'vertex', index: fullPath.push(point) - 1 });
+      navMetas.push({ key: 'vertex', index: path.push(point) - 1 });
       roomIds.push(roomId);
     }
 
@@ -182,7 +182,7 @@ export class floorGraphClass extends BaseGraph {
           navMetas.splice(-1, 0, {// after any 'vertex' in room
             key: 'exit-room',
             exitedRoomId: roomId,
-            index: fullPath.length - 1,
+            index: path.length - 1,
             doorId: item.doorId,
             hullDoorId: this.gm.hullDoors.indexOf(door),
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
@@ -192,7 +192,7 @@ export class floorGraphClass extends BaseGraph {
         }
 
         if (!partition[i + 1]) {// Finish in door
-          if (!dst.equalsAlmost(fullPath[fullPath.length - 1], 0.01)) {
+          if (!dst.equalsAlmost(path[path.length - 1], 0.01)) {
             // ℹ️ Needed otherwise if turn & re-enter, `enter-room` not triggered
             // ℹ️ Seen almost equal vectors, probably due to augmented precision
             addVertex(dst.clone(), this.nodeToMeta[dstNode.index].roomId);
@@ -215,7 +215,7 @@ export class floorGraphClass extends BaseGraph {
         const roomId = item.roomId;
 
         // Compute endpoints of path through room
-        const pathSrc = i === 0 ? src : fullPath[fullPath.length - 1];
+        const pathSrc = i === 0 ? src : path[path.length - 1];
         let pathDst = dst;
         if (i < partition.length - 1) {// Given next door node, pathDst should be door entry for roomId
           const door = this.gm.doors[/** @type {{ doorId: number }} */ (partition[i + 1]).doorId];
@@ -228,7 +228,7 @@ export class floorGraphClass extends BaseGraph {
 
           navMetas.push({// before any 'vertex' in room
             key: 'enter-room',
-            index: fullPath.length - 1,
+            index: path.length - 1,
             doorId,
             hullDoorId: this.gm.hullDoors.indexOf(door),
             enteredRoomId: roomId,
@@ -259,7 +259,7 @@ export class floorGraphClass extends BaseGraph {
           const door = this.gm.doors[nearDoorId];
           navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
             key: 'at-door',
-            index: fullPath.length - 1,
+            index: path.length - 1,
             tryOpen,
             doorId: nearDoorId,
             // Below needed?
@@ -275,16 +275,16 @@ export class floorGraphClass extends BaseGraph {
     console.warn('floorGraph findPath', {
       nodePath,
       nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
-      partition,
-      fullPath,
-      fullPartition, // aligned to edges of fullPath
+      partition, // nav nodes grouped by door/room (alternates)
+      path,
+      fullPartition, // nav nodes grouped by path-edges
       navMetas,
       roomIds,
     });
 
     return {
-      fullPath, // May contain adjacent dups
-      fullPartition,
+      path: path, // May contain adjacent dups
+      partition: fullPartition,
       navMetas,
       doorIds: [
         startDoorId >= 0 ? { id: startDoorId, hull: this.gm.isHullDoor(startDoorId) } : null,

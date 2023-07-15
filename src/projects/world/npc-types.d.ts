@@ -283,15 +283,15 @@ declare namespace NPC {
    */
   export interface GlobalNavPath {
     key: 'global-nav';
-    fullPath: Geom.VectJson[];
+    path: Geom.VectJson[];
     /**
-     * Aligned to edges of @see {fullPath}.
+     * Aligned to edges of @see {path}.
      * i.e. the nav node ids along each edge.
      */
-    fullPartition: number[][];
+    partition: number[][];
     navMetas: GlobalNavMeta[];
     /**
-     * Aligned to @see {fullPath}.
+     * Aligned to @see {path}.
      * Used to restrict decors before collision prediction.
      */
     gmRoomIds: [number, number][];
