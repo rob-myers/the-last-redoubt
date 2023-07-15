@@ -2,28 +2,19 @@
 
 ## In progress
 
-- ✅ BUG navpath malformed
-```sh
-# repro (spawn without protect state.isPointSpawnable)
-spawn foo '{ x: 219.54, y: 346 }'
-nav foo '{ x: 291.34, y: 406.76 }' | walk foo
-```
-- bad string-pull: on border of "doorway triangle"?
-- another example occurs in doorway (hopefully fixed)
+- 🚧 walk `--open`
+  - move `nav --tryOpen` to `walk --open`
+  - walk `--open` detects approach/leave door using door sensors
+  - walk `--open` changes npc speed
+  - npc slows down when "approaching door"
 
-- move `nav --tryOpen` to `walk --open`
-- walk `--open` detects approach/leave door using door sensors
-- walk `--open` changes npc speed
-
-- npc slows down when nav --tryOpen and "approaching door"
-- nav --tryOpen weights _locked_ doors (not closed doors)
+- walk --open weights _locked_ doors (not closed doors)
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!
 
 - competing notion of gmRoomId
   - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
-  - ⏰
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary
@@ -444,6 +435,15 @@ nav foo '{ x: 291.34, y: 406.76 }' | walk foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG navpath malformed
+```sh
+# repro (spawn without protect state.isPointSpawnable)
+spawn foo '{ x: 219.54, y: 346 }'
+nav foo '{ x: 291.34, y: 406.76 }' | walk foo
+```
+- bad string-pull: on border of "doorway triangle"?
+- another example occurs in doorway (hopefully fixed)
 
 - ✅ BUG while not always cancellable?
   - bad: `while true; do walk andros $navPath; done`

@@ -561,7 +561,7 @@ export default function NPCs(props) {
 
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true, tryOpen: false });
-        await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, ...navPath });
+        await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, navPath });
         typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
         npc.startAnimationByMeta(meta);
         return;
@@ -779,10 +779,14 @@ export default function NPCs(props) {
     },
     async walkNpc(e) {
       const npc = state.getNpc(e.npcKey);
-      if (!npcService.verifyGlobalNavPath(e)) {
+      if (!npcService.verifyGlobalNavPath(e.navPath)) {
         throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
-      }
-      if (e.fullPath[0] && npc.isPointBlocked(e.fullPath[0], npc.getPosition().equalsAlmost(e.fullPath[0]))) {
+      } else if (e.navPath.fullPath.length === 0) {
+        return;
+      } else if (npc.isPointBlocked(
+        e.navPath.fullPath[0],
+        npc.getPosition().equalsAlmost(e.navPath.fullPath[0])
+      )) {
         throw new Error('start of navPath blocked');
       }
 
@@ -791,7 +795,7 @@ export default function NPCs(props) {
          * Walk along a global navpath, possibly
          * throwing 'cancelled' if collide with something.
          */
-        await npc.followNavPath(e.fullPath, e.navMetas, e.gmRoomIds);
+        await npc.followNavPath(e.navPath.fullPath, e.navPath.navMetas, e.navPath.gmRoomIds);
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           console.info(`walkNpc cancelled: ${e.npcKey}`);
@@ -873,7 +877,7 @@ export default function NPCs(props) {
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(e: { npcKey: string; throwOnCancel?: boolean } & NPC.GlobalNavPath) => Promise<void>} walkNpc
+ * @property {(e: { npcKey: string; navPath: NPC.GlobalNavPath; open?: boolean; throwOnCancel?: boolean }) => Promise<void>} walkNpc
  */
 
 /**

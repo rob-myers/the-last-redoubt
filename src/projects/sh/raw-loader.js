@@ -442,14 +442,17 @@
      * - piped navPaths cancel previous
      */
     walk: async function* ({ api, args, home, datum, promises = [] }) {
+      const { opts, operands } = api.getOpts(args, { boolean: [
+        "open", /** Try to open doors */
+      ]});
       const { npcs } = api.getCached(home.WORLD_KEY)
-      const npcKey = args[0]
+      const npcKey = operands[0]
   
       npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
   
       if (api.isTtyAt(0)) {
-        const navPath = api.parseJsArg(args[1]);
-        await npcs.walkNpc({ npcKey, ...navPath });
+        const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(operands[1]));
+        await npcs.walkNpc({ npcKey, navPath, open: opts.open });
       } else {// `walk {npcKey}` expects to read global navPaths
         datum = await api.read()
         while (datum !== null) {
@@ -459,7 +462,7 @@
           navPath.fullPath.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
           // Subsequent reads can interrupt walk
           const resolved = await Promise.race([
-            promises[0] = npcs.walkNpc({ npcKey, ...navPath }),
+            promises[0] = npcs.walkNpc({ npcKey, navPath, open: opts.open }),
             promises[1] = api.read(),
           ])
           if (resolved === undefined) {// Finished walk
