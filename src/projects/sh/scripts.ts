@@ -86,6 +86,7 @@ goLoop: `{
     filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
     nav $1 |
     walk $1
+    # walk --open $1
 }`,
 
 /** Usage: goOnce {npcKey} */
