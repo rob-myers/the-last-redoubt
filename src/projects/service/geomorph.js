@@ -1423,7 +1423,7 @@ export function queryDecorGridLine(p, q, grid) {
   // const gq = coordToDecorGrid(q.x, q.y);
 
   foundDecor.clear();
-  grid[gp.x][gp.y]?.forEach(d => foundDecor.add(d));
+  grid[gp.x]?.[gp.y]?.forEach(d => foundDecor.add(d));
   if (dx !== 0 || dy !== 0) {
     /**
      * Those λ ≥ 0 s.t. p + λ.tau on a vertical grid line.
