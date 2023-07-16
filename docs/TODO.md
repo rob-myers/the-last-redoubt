@@ -2,29 +2,29 @@
 
 ## In progress
 
-- 🚧 walk `--open`
-  - 🚧 implement `walk --open`
-    - ✅ walk `--open` subscribes
-      - ℹ️ moved to use-handle-events via npc.anim.walkStrategy
-    - ✅ doorSensors doorId is wrong
-    - ✅ walk `--open` detects approach/leave door using door sensors
-    - ✅ might approach next door before leaving previous?
-    - ✅ BUG sometimes doorSensor `enter` not triggered
-      - decor grid
-    - ✅ fix hull doors
-    - 🚧 BUG anim jumps when change speed
-      - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
-      - 🚧 why does setTimeout help?
-    - 🚧 walk `--open` changes npc speed
-      - npc slows down when "approaching door"
-      - npc speeds up when enter room
-  - ✅ remove `--tryOpen`
+- ✅ implement `walk --open`
+  - ✅ walk `--open` subscribes
+    - ℹ️ moved to use-handle-events via npc.anim.walkStrategy
+  - ✅ doorSensors doorId is wrong
+  - ✅ walk `--open` detects approach/leave door using door sensors
+  - ✅ might approach next door before leaving previous?
+  - ✅ BUG sometimes doorSensor `enter` not triggered
+    - decor grid
+  - ✅ fix hull doors
+  - ✅ walk `--open` changes npc speed
+    - npc slows down when "approaching door"
+    - npc speeds up when enter room
+- ✅ remove `--tryOpen`
 
 - ✅ BUG resumed process `track` out of sync
 
 - `nav --name` induces named DecorPath
 - `npc decor ${navPath}` induces named DecorPath
 - `walk --open` weights _locked_ doors (not closed doors)
+- BUG anim jumps when change speed without setTimeout
+  - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
+  - not setSpeedFactor collision
+  - initialization?
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!
