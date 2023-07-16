@@ -1421,11 +1421,10 @@ export function queryDecorGridLine(p, q, grid) {
   const gp = coordToDecorGrid(p.x, p.y);
   // /** `q`'s grid coords */
   // const gq = coordToDecorGrid(q.x, q.y);
-  
+
   foundDecor.clear();
-  if (dx === 0 && dy === 0) {
-    grid[gp.x][gp.y]?.forEach(d => foundDecor.add(d));
-  } else {
+  grid[gp.x][gp.y]?.forEach(d => foundDecor.add(d));
+  if (dx !== 0 || dy !== 0) {
     /**
      * Those λ ≥ 0 s.t. p + λ.tau on a vertical grid line.
      * Initially minimum such, then the subsequent ones.
@@ -1448,8 +1447,6 @@ export function queryDecorGridLine(p, q, grid) {
     let cx = gp.x, cy = gp.y;
 
     do {
-      grid[cx][cy]?.forEach(d => foundDecor.add(d));
-
       if (lambdaV <= lambdaH) {
         cx += dx; // Hit vert grid line 1st, so move horizontal
         lambdaV += (decorGridSize * dx) / tau.x; // Next vert line
@@ -1457,6 +1454,8 @@ export function queryDecorGridLine(p, q, grid) {
         cy += dy; // Hit horizontal 1st, so move vert
         lambdaH += (decorGridSize * dy) / tau.y; // Next horizontal line
       }
+      grid[cx][cy]?.forEach(d => foundDecor.add(d));
+
       // 🤔 (cx, cy) may not reach `max` in diagonal case?
       // } while ((cx !== max.x) && (cy !== max.y))
     } while (Math.min(lambdaH, lambdaV) <= 1)
