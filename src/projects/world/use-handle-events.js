@@ -18,11 +18,12 @@ export default function useHandleEvents(api) {
         case 'changed-speed': {
           const npc = api.npcs.getNpc(e.npcKey);
           if (npc.isWalking()) {
-            // clear all pending collisions
-            npc.filterWayMetas((meta) => meta.key === 'npcs-collide' || meta.key === 'decor-collide');
-            // recompute collisions
+            // recompute pending npc collisions (but not decor collisions)
+            npc.filterWayMetas((meta) => meta.key === 'npcs-collide');
             state.predictNpcNpcsCollision(npc);
-            state.predictNpcDecorCollision(npc);
+            // recompute timeout now speed has changed
+            window.clearTimeout(npc.anim.wayTimeoutId);
+            npc.nextWayTimeout();
             // close npcs should recompute respective collision
             for (const other of api.npcs.getCloseNpcs(npc.key)) {
               other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === npc.key);
@@ -147,8 +148,9 @@ export default function useHandleEvents(api) {
           if (npc.anim.walkStrategy === 'try-open' && decor.meta.doorSensor) {
             const nextDoorId = npc.getNextDoorId();
             if (type !== 'exit' && decor.meta.doorId === nextDoorId) {
-              // 🚧 slow down
-              // setTimeout(() => npc.setSpeedFactor(0.5), 30);
+              // 🚧 why does setTimeout avoid jerk?
+              setTimeout(() => npc.setSpeedFactor(0.5), 30);
+              // npc.setSpeedFactor(0.5);
               if (!api.doors.locked[gmId][nextDoorId]) {
                 api.doors.toggleDoor(gmId, nextDoorId, { open: true });
               };
@@ -157,9 +159,9 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'enter-room':
-          // if (npc.anim.walkStrategy === 'try-open') {
-          //   npc.setSpeedFactor(1);
-          // }
+          if (npc.anim.walkStrategy === 'try-open') {
+            npc.setSpeedFactor(1);
+          }
           break;
         default:
           throw testNever(e.meta, { suffix: 'handleWayEvents' });
@@ -199,6 +201,7 @@ export default function useHandleEvents(api) {
       // Restrict to decor in room containing line-segment's 1st vertex
       // ℹ️ assume room-traversing segments begin/end on border
       const [gmId, roomId] = npc.anim.gmRoomIds[aux.index];
+
       // const closeDecor = api.decor.byRoom[gmId][roomId].colliders;
       const closeDecor = queryDecorGridLine(
         currPosition,

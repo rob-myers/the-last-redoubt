@@ -130,7 +130,7 @@ export default function createNpc(
       }
 
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
-        anim !== this.anim.sprites && anim.commitStyles();
+        (anim !== this.anim.sprites) && anim.commitStyles();
         return /** @type {Promise<void>} */ (new Promise(resolve => {
           anim.addEventListener('cancel', () => resolve());
           anim.cancel();

@@ -5,17 +5,20 @@
 - 🚧 walk `--open`
   - 🚧 implement `walk --open`
     - ✅ walk `--open` subscribes
+      - ℹ️ moved to use-handle-events via npc.anim.walkStrategy
     - ✅ doorSensors doorId is wrong
     - ✅ walk `--open` detects approach/leave door using door sensors
     - ✅ might approach next door before leaving previous?
-    - 🚧 walk `--open` changes npc speed
-      - npc slows down when "approaching door"
-      - npc speeds up when enter room
     - ✅ BUG sometimes doorSensor `enter` not triggered
       - decor grid
     - ✅ fix hull doors
-    - BUG anim jumps when change speed
-    - BUG track jerky when change speed
+    - 🚧 BUG anim jumps when change speed
+      - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
+      - 🚧 why does setTimeout help?
+    - 🚧 BUG track jerky when change speed
+    - 🚧 walk `--open` changes npc speed
+      - npc slows down when "approaching door"
+      - npc speeds up when enter room
   - ✅ remove `--tryOpen`
 
 - `nav --name` induces named DecorPath
