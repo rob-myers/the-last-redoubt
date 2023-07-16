@@ -57,6 +57,7 @@ export default function createNpc(
       prevWayMetas: [],
       wayMetas: [],
       wayTimeoutId: 0,
+      walkStrategy: 'none',
     },
     
     doMeta: null,
@@ -163,12 +164,6 @@ export default function createNpc(
         const navPoint = gm.inverseMatrix.transformPoint(this.anim.path[navMeta.index].clone());
         const door = gm.doors[navMeta.doorId];
         const distanceToDoor = Math.abs(door.normal.dot(navPoint.sub(door.seg[0])));
-        // 🚧 move --tryOpen to `walk`?
-        // if (navMeta.tryOpen) {// change length so npc not too close to door
-        //   return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 15));
-        // } else {// change length so npc is close to door
-        //   return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
-        // }
         // change length so npc is close to door
         return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
       } else {
@@ -186,28 +181,28 @@ export default function createNpc(
         this.nextWayTimeout();
       }
     },
-    async followNavPath(path, globalNavMetas, gmRoomIds) {
+    async followNavPath({ path, navMetas: globalNavMetas, gmRoomIds }, openDoors) {
       // warn('START followNavPath')
-      // This might be a jump i.e. path needn't start from npc position
+      // might jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
-      // `nav` provides gmRoomIds, needed for decor collisions
+      // from `nav` for decor collisions
       this.anim.gmRoomIds = gmRoomIds;
       this.anim.updatedPlaybackRate = 1;
+      this.anim.walkStrategy = openDoors && path.length ? 'try-open' : 'none';
 
       this.clearWayMetas();
-      this.updateAnimAux();
+      this.resetAnimAux();
       
       if (path.length === 0) {
         return;
       }
-      
+
       // Convert navMetas to wayMetas
       this.anim.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
       // this.updateRoomWalkBounds(0);
-      
       this.startAnimation('walk');
       api.npcs.events.next({ key: 'started-walking', npcKey: this.def.key });
       console.log(`followNavPath: ${this.def.key} started walk`);
@@ -222,8 +217,7 @@ export default function createNpc(
             resolve();
           });
           trAnim.addEventListener('cancel', () => {
-            // We also cancel when finished via e.g. startAnimation('idle'),
-            // to release control to styles
+            // We cancel when finished e.g. startAnimation('idle'), to release control to styles
             if (trAnim.playState === 'paused' || trAnim.playState === 'running') {
               console.log(`followNavPath: ${this.def.key} cancelled walk`);
             }
@@ -274,6 +268,12 @@ export default function createNpc(
         return null;
       }
     },
+    getNextDoorId() {
+      return this.anim.wayMetas.find(
+        /** @returns {meta is NPC.NpcWayMetaExitRoom} */
+        meta => meta.key === 'exit-room' // stay in current gmId
+      )?.doorId;
+    },
     getPosition(useCache = true) {
       if (useCache && this.anim.spriteSheet !== 'walk') {
         return this.anim.staticPosition;
@@ -281,6 +281,12 @@ export default function createNpc(
         const { x: clientX, y: clientY } = Vect.from(this.el.root.getBoundingClientRect?.() || [0, 0]);
         return Vect.from(api.panZoom.getWorld({ clientX, clientY })).precision(2);
       }
+    },
+    getPrevDoorId() {
+      return this.anim.prevWayMetas.findLast(
+        /** @returns {meta is NPC.NpcWayMetaExitRoom} */
+        meta => meta.key === 'exit-room'
+      )?.doorId;
     },
     getRadius() {
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
@@ -517,6 +523,28 @@ export default function createNpc(
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
     },
+    resetAnimAux() {
+      const { aux } = this.anim;
+      const radius = this.getRadius();
+      aux.outsetWalkBounds = Rect.fromPoints(...this.anim.path).outset(radius);
+      aux.edges = this.anim.path.map((p, i) => ({ p, q: this.anim.path[i + 1] })).slice(0, -1);
+      aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
+      // accuracy needed for wayMeta length computation
+      aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
+      // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
+      // aux.navPathPolys = aux.edges.map(e => {
+      //   const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
+      //   return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
+      // });
+      const reduced = aux.elens.reduce((agg, length) => {
+        agg.total += length;
+        agg.sofars.push(agg.sofars[agg.sofars.length - 1] + length);
+        return agg;
+      }, { sofars: [0], total: 0 });
+      aux.sofars = reduced.sofars
+      aux.total = reduced.total;
+      aux.index = 0;
+    },
     resume(dueToProcessResume = false) {
       if (this.manuallyPaused && dueToProcessResume) {
         return;
@@ -660,30 +688,11 @@ export default function createNpc(
         this.anim.rotate.updatePlaybackRate(this.anim.updatedPlaybackRate);
         this.anim.sprites.updatePlaybackRate(this.anim.updatedPlaybackRate);
       }
+      if (this.anim.speedFactor === speedFactor) {
+        return; // Else infinite loop?
+      }
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
       this.anim.speedFactor = speedFactor;
-    },
-    updateAnimAux() {
-      const { aux } = this.anim;
-      const radius = this.getRadius();
-      aux.outsetWalkBounds = Rect.fromPoints(...this.anim.path).outset(radius);
-      aux.edges = this.anim.path.map((p, i) => ({ p, q: this.anim.path[i + 1] })).slice(0, -1);
-      aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
-      // accurac needed for wayMeta length computation
-      aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
-      // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
-      // aux.navPathPolys = aux.edges.map(e => {
-      //   const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
-      //   return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
-      // });
-      const reduced = aux.elens.reduce((agg, length) => {
-        agg.total += length;
-        agg.sofars.push(agg.sofars[agg.sofars.length - 1] + length);
-        return agg;
-      }, { sofars: [0], total: 0 });
-      aux.sofars = reduced.sofars
-      aux.total = reduced.total;
-      aux.index = 0;
     },
     updateRoomWalkBounds(srcIndex) {
       // We start from vertex 0 or an `exit-room`, and look for next `exit-room`

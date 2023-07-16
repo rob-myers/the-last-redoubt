@@ -243,29 +243,25 @@
      * Request navpath(s) to position(s) for character(s), e.g.
      * ```sh
      * nav andros "$( click 1 )"
-     * nav andros "$( click 1 )" --tryOpen
+     * nav andros "$( click 1 )"
      * expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav
-     * expr '{"x":300,"y":300}' | nav andros --tryOpen
-     * click | nav andros --tryOpen
+     * expr '{"x":300,"y":300}' | nav andros
+     * click | nav andros
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
-      const { opts, operands } = api.getOpts(args, { boolean: [
-        "tryOpen", /** Try to open doors */
-      ]});
-
       const { npcs } = api.getCached(home.WORLD_KEY)
       if (api.isTtyAt(0)) {
-        const npcKey = operands[0]
-        const point = api.parseJsArg(operands[1])
-        yield npcs.getNpcGlobalNav({ npcKey, point, tryOpen: opts.tryOpen })
-      } else if (operands[0]) {
-        const npcKey = operands[0]
+        const npcKey = args[0]
+        const point = api.parseJsArg(args[1])
+        yield npcs.getNpcGlobalNav({ npcKey, point })
+      } else if (args[0]) {
+        const npcKey = args[0]
         while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav({ npcKey, point: datum, tryOpen: opts.tryOpen })
+          yield npcs.getNpcGlobalNav({ npcKey, point: datum })
       } else {
         while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav({ tryOpen: opts.tryOpen, ...datum })
+          yield npcs.getNpcGlobalNav(datum)
       }
     },
   

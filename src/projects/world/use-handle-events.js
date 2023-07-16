@@ -127,28 +127,39 @@ export default function useHandleEvents(api) {
         case 'vertex':
           if ((e.meta.index + 1) === npc.anim.path.length) {
             break; // npc at final vertex
-          }
-          // npc walking
+          } // npc is walking along a line segment
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);
           state.predictNpcDecorCollision(npc);
           break;
         case 'at-door': {
-          const { gmId, doorId, tryOpen } = e.meta;
-          if (!api.doors.open[gmId][doorId]) {// Upcoming door closed
-            if (tryOpen && !api.doors.locked[gmId][doorId]) {
-              api.doors.toggleDoor(gmId, doorId, { open: true });
-            } else { // Stop npc
-              await npc.cancel();
-            }
+          const { gmId, doorId } = e.meta;
+          if (!api.doors.open[gmId][doorId]) {
+            await npc.cancel(); // Upcoming door closed and locked
           }
           break;
         }
         case 'exit-room':
           // npc.updateRoomWalkBounds(e.meta.index);
           break;
-        case 'decor-collide':
+        case 'decor-collide': {
+          const { decor, type, gmId } = e.meta;
+          if (npc.anim.walkStrategy === 'try-open' && decor.meta.doorSensor) {
+            const nextDoorId = npc.getNextDoorId();
+            if (type !== 'exit' && decor.meta.doorId === nextDoorId) {
+              // 🚧 slow down
+              // setTimeout(() => npc.setSpeedFactor(0.5), 30);
+              if (!api.doors.locked[gmId][nextDoorId]) {
+                api.doors.toggleDoor(gmId, nextDoorId, { open: true });
+              };
+            }
+          }
+          break;
+        }
         case 'enter-room':
+          // if (npc.anim.walkStrategy === 'try-open') {
+          //   npc.setSpeedFactor(1);
+          // }
           break;
         default:
           throw testNever(e.meta, { suffix: 'handleWayEvents' });
@@ -188,7 +199,7 @@ export default function useHandleEvents(api) {
       // Restrict to decor in room containing line-segment's 1st vertex
       // ℹ️ assume room-traversing segments begin/end on border
       const [gmId, roomId] = npc.anim.gmRoomIds[aux.index];
-      
+      // const closeDecor = api.decor.byRoom[gmId][roomId].colliders;
       const closeDecor = queryDecorGridLine(
         currPosition,
         npc.anim.path[aux.index + 1],
@@ -215,7 +226,7 @@ export default function useHandleEvents(api) {
           npc.anim.wayMetas.splice(insertIndex, 0, {
             key: 'decor-collide',
             index: aux.index,
-            decorKey: decor.key,
+            decor,
             type: startInside
               ? collisionIndex === 0 ? 'exit' : 'enter'
               : collisionIndex === 0 ? 'enter' : 'exit',
@@ -226,7 +237,7 @@ export default function useHandleEvents(api) {
         startInside && (aux.index === 0) && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
           index: aux.index,
-          decorKey: decor.key,
+          decor,
           type: 'start-inside', // start walk inside
           gmId,
           length: currLength,

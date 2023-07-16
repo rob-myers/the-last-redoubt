@@ -138,7 +138,7 @@ export async function createGeomorphData(input) {
           type: 'circle',
           meta: { doorId, roomId, doorSensor: true },
           center: pointInRoom,
-          radius: 40,
+          radius: 30,
         };
       }),
     },

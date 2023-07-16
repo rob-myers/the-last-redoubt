@@ -123,14 +123,14 @@ export default function NPCs(props) {
         throw e;
       }
     },
-    getGlobalNavPath(src, dst, opts = { tryOpen: false }) {
+    getGlobalNavPath(src, dst) {
       const [srcGmId] = api.gmGraph.findGeomorphIdContaining(src);
       const [dstGmId] = api.gmGraph.findGeomorphIdContaining(dst);
 
       if (srcGmId === null || dstGmId === null) {
         throw Error(`getGlobalNavPath: src/dst must be inside some geomorph's aabb`)
       } else if (srcGmId === dstGmId) {
-        const localNavPath = state.getLocalNavPath(srcGmId, src, dst, opts);
+        const localNavPath = state.getLocalNavPath(srcGmId, src, dst);
         console.info('localNavPath (single)', localNavPath);
         return {
           key: 'global-nav',
@@ -156,12 +156,12 @@ export default function NPCs(props) {
         for (let k = 0; k < gmEdges.length + 1; k++) {
           const localNavPath = k === 0
             // Initial
-            ? state.getLocalNavPath(srcGmId, src, gmEdges[0].srcDoorEntry, opts)
+            ? state.getLocalNavPath(srcGmId, src, gmEdges[0].srcDoorEntry)
             : k < gmEdges.length
               // Intermediate
-              ? state.getLocalNavPath(gmEdges[k - 1].dstGmId, gmEdges[k - 1].dstDoorEntry, gmEdges[k].srcDoorEntry, opts)
+              ? state.getLocalNavPath(gmEdges[k - 1].dstGmId, gmEdges[k - 1].dstDoorEntry, gmEdges[k].srcDoorEntry)
               // Final
-              : state.getLocalNavPath(dstGmId, gmEdges[k - 1].dstDoorEntry, dst, opts);
+              : state.getLocalNavPath(dstGmId, gmEdges[k - 1].dstDoorEntry, dst);
 
           console.warn('localNavPath', k, localNavPath);
 
@@ -220,12 +220,12 @@ export default function NPCs(props) {
     /**
      * Wraps @see {gm.floorGraph.findPath}
      */
-    getLocalNavPath(gmId, src, dst, opts) {
+    getLocalNavPath(gmId, src, dst) {
       const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
       const doorOpen = api.doors.open[gmId];
-      const result = gm.floorGraph.findPath(localSrc, localDst, { doorOpen, tryOpen: opts?.tryOpen });
+      const result = gm.floorGraph.findPath(localSrc, localDst, { doorOpen });
 
       if (result) {
         return {
@@ -262,7 +262,7 @@ export default function NPCs(props) {
         return npcService.getEmptyNavPath();
       }
 
-      const result = state.getGlobalNavPath(position, e.point, { tryOpen: !!e.tryOpen });
+      const result = state.getGlobalNavPath(position, e.point);
 
       // Always show path
       api.decor.setDecor({
@@ -560,7 +560,7 @@ export default function NPCs(props) {
       }
 
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
-        const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true, tryOpen: false });
+        const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
         await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, navPath });
         typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
         npc.startAnimationByMeta(meta);
@@ -795,7 +795,7 @@ export default function NPCs(props) {
          * Walk along a global navpath, possibly
          * throwing 'cancelled' if collide with something.
          */
-        await npc.followNavPath(e.navPath.path, e.navPath.navMetas, e.navPath.gmRoomIds);
+        await npc.followNavPath(e.navPath, e.open);
       } catch (err) {
         if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           console.info(`walkNpc cancelled: ${e.npcKey}`);
@@ -845,9 +845,9 @@ export default function NPCs(props) {
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
- * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.GlobalNavPath} getGlobalNavPath
- * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: { tryOpen?: boolean }) => NPC.LocalNavPath} getLocalNavPath
- * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; tryOpen?: boolean; }) => NPC.GlobalNavPath} getNpcGlobalNav
+ * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
+ * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
+ * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting

@@ -3,12 +3,24 @@
 ## In progress
 
 - 🚧 walk `--open`
-  - move `nav --tryOpen` to `walk --open`
-  - walk `--open` detects approach/leave door using door sensors
-  - walk `--open` changes npc speed
-  - npc slows down when "approaching door"
+  - 🚧 implement `walk --open`
+    - ✅ walk `--open` subscribes
+    - ✅ doorSensors doorId is wrong
+    - ✅ walk `--open` detects approach/leave door using door sensors
+    - ✅ might approach next door before leaving previous?
+    - 🚧 walk `--open` changes npc speed
+      - npc slows down when "approaching door"
+      - npc speeds up when enter room
+    - ✅ BUG sometimes doorSensor `enter` not triggered
+      - decor grid
+    - ✅ fix hull doors
+    - BUG anim jumps when change speed
+    - BUG track jerky when change speed
+  - ✅ remove `--tryOpen`
 
-- walk --open weights _locked_ doors (not closed doors)
+- `nav --name` induces named DecorPath
+- `npc decor ${navPath}` induces named DecorPath
+- `walk --open` weights _locked_ doors (not closed doors)
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!

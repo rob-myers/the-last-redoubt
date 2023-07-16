@@ -69,9 +69,8 @@ declare namespace NPC {
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
     followNavPath(
-      path: Geom.VectJson[],
-      globalNavMetas: NPC.GlobalNavMeta[],
-      gmRoomIds: [number, number][],
+      globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
+      openDoors?: boolean,
     ): Promise<void>;
     /** Radians */
     getAngle(): number;
@@ -81,7 +80,9 @@ declare namespace NPC {
     getGmRoomId(throwIfNull?: boolean): Geomorph.GmRoomId | null;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
+    getNextDoorId(): number | undefined;
     getPosition(useCache?: boolean): Geom.Vect;
+    getPrevDoorId(): number | undefined;
     getRadius(): number;
     getSpeed(): number;
     /**
@@ -128,7 +129,8 @@ declare namespace NPC {
     setSpeedFactor(speedFactor: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
-    updateAnimAux(): void;
+    /** Recompute anim aux based on current path. */
+    resetAnimAux(): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.
@@ -197,13 +199,17 @@ declare namespace NPC {
      * - We only update playback rate to change the walking rate.
      */
     updatedPlaybackRate: number;
-    /** Scale factor for speed of walking */
 
     /** Aligned to `path` with format `[gmId, roomId]` */
     gmRoomIds: [number, number][];
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
+    walkStrategy: (
+      | 'none'
+      | 'try-open'
+      | 'force-open'
+    );
   }
 
   /**
@@ -308,6 +314,7 @@ declare namespace NPC {
     length: number;
   }
 
+  export type NpcWayMetaEnterRoom = Extract<NPC.NpcWayMeta, { key: 'enter-room' }>
   export type NpcWayMetaExitRoom = Extract<NPC.NpcWayMeta, { key: 'exit-room' }>
   export type NpcWayMetaVertex = Extract<NPC.NpcWayMeta, { key: 'vertex' }>
   export type NpcWayMetaNpcsCollide = Extract<NPC.NpcWayMeta, { key: 'npcs-collide' }>

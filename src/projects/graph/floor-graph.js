@@ -111,13 +111,13 @@ export class floorGraphClass extends BaseGraph {
    * Find a path through a geomorph's navmesh
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
-   * @param {{ doorOpen?: { [doorId: number]: boolean }; tryOpen?: boolean; }} [opts]
+   * @param {{ doorOpen?: { [doorId: number]: boolean }; }} [opts]
    * @returns {null | Graph.FloorGraphNavPath}
    */
   findPath(src, dst, opts = {}) {
     const srcNode = this.getClosestNode(src);
     const dstNode = this.getClosestNode(dst);
-    const { tryOpen = false, doorOpen = [] } = opts;
+    const { doorOpen = [] } = opts;
     if (!srcNode || !dstNode) {
       return null;
     }
@@ -260,7 +260,6 @@ export class floorGraphClass extends BaseGraph {
           navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
             key: 'at-door',
             index: path.length - 1,
-            tryOpen,
             doorId: nearDoorId,
             // Below needed?
             hullDoorId: this.gm.hullDoors.indexOf(door),
