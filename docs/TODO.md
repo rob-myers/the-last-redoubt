@@ -15,11 +15,12 @@
     - 🚧 BUG anim jumps when change speed
       - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
       - 🚧 why does setTimeout help?
-    - 🚧 BUG track jerky when change speed
     - 🚧 walk `--open` changes npc speed
       - npc slows down when "approaching door"
       - npc speeds up when enter room
   - ✅ remove `--tryOpen`
+
+- ✅ BUG resumed process `track` out of sync
 
 - `nav --name` induces named DecorPath
 - `npc decor ${navPath}` induces named DecorPath

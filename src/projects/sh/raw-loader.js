@@ -395,9 +395,15 @@
       const { npcs, lib } = api.getCached(home.WORLD_KEY)
       const process = api.getProcess()
       const subscription = npcs.trackNpc({ npcKey, process })
-      const connected = npcs.session[api.meta.sessionKey];
       
+      const connected = npcs.session[api.meta.sessionKey];
       connected?.panzoomPids.push(api.meta.pid);
+
+      api.addResume(() => {
+        npcs.events.next({ key: "resumed-track", npcKey });
+        return true;
+      });
+
       // resolve on unsubscribe or invoke cleanups
       await /** @type {Promise<void>} */ (new Promise(resolve => {
         subscription.add(resolve);

@@ -486,6 +486,7 @@ declare namespace NPC {
     | { key: 'started-walking'; npcKey: string; }
     | { key: 'stopped-walking'; npcKey: string; }
     | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
+    | { key: 'resumed-track'; npcKey: string; }
     | NPCsWayEvent
   );
 

@@ -737,12 +737,17 @@ export default function NPCs(props) {
             || (x.key === 'stopped-walking' && x.npcKey === npcKey)
             || (x.key === 'spawned-npc' && x.npcKey === npcKey)
             || (x.key === 'changed-speed' && x.npcKey === npcKey)
+            || (x.key === 'resumed-track' && x.npcKey === npcKey)
           )
         )),
       ).subscribe({
         async next(msg) {
           // console.log('msg', msg);
-          if (msg.key === 'started-walking' || msg.key === 'changed-speed') {
+          if (
+            msg.key === 'started-walking'
+            || msg.key === 'changed-speed'
+            || msg.key === 'resumed-track'
+          ) {
             changeStatus('follow-walk');
             try {
               const path = npc.getTargets().map(x => x.point);

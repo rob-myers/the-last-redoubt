@@ -73,6 +73,7 @@ export default function useHandleEvents(api) {
         case 'npc-internal':
         case 'removed-npc':
         case 'spawned-npc':
+        case 'resumed-track':
           break;
         case 'started-walking':
           // remove pending collisions
@@ -111,6 +112,7 @@ export default function useHandleEvents(api) {
         case 'npc-internal':
         case 'removed-npc':
         case 'set-player':
+        case 'resumed-track':
           break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });
