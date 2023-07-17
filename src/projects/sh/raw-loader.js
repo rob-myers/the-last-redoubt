@@ -164,15 +164,15 @@
       if (!Number.isFinite(numClicks)) {
         throw api.throwError("format: \`click [{numberOfClicks}]\`")
       }
-
-      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
-      extra && panZoom.pointerUpExtras.push(extra); // Will be merged into next pointerup
       
       const process = api.getProcess()
       /** @type {import('rxjs').Subscription} */ let sub;
       process.cleanups.push(() => sub?.unsubscribe());
 
+      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
       while (numClicks > 0) {
+        extra && panZoom.pointerUpExtras.push(extra); // merged into next pointerup
+        
         const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
           sub = panZoom.events.subscribe({ next(e) {
             if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
