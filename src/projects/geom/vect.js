@@ -120,7 +120,8 @@
   }
 
   /**
-   * @param {any} input 
+   * @param {any} input
+   * @returns {input is Geom.VectJson} input
    */
   static isVectJson(input) {
     return input && typeof input.x === 'number' && typeof input.y === 'number';

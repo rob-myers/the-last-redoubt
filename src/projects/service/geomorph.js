@@ -1454,7 +1454,7 @@ export function queryDecorGridLine(p, q, grid) {
         cy += dy; // Hit horizontal 1st, so move vert
         lambdaH += (decorGridSize * dy) / tau.y; // Next horizontal line
       }
-      grid[cx][cy]?.forEach(d => foundDecor.add(d));
+      grid[cx]?.[cy]?.forEach(d => foundDecor.add(d));
 
       // 🤔 (cx, cy) may not reach `max` in diagonal case?
       // } while ((cx !== max.x) && (cy !== max.y))

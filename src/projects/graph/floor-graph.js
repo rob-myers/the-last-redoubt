@@ -257,7 +257,7 @@ export class floorGraphClass extends BaseGraph {
         if (typeof nearDoorId === 'number') {
           // either `partition[i + 1]` exists (door nodes), or we ended near a door
           const door = this.gm.doors[nearDoorId];
-          navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex', final: true }
+          navMetas.splice(-1, 0, {// Ensure last meta is { key: 'vertex' }
             key: 'at-door',
             index: path.length - 1,
             doorId: nearDoorId,
@@ -337,7 +337,7 @@ export class floorGraphClass extends BaseGraph {
   getClosestNode(position) {
     // Restrict to few nav nodes via precomputed `gridToNodeIds`
     const gridPos = coordToNavNodeGrid(position.x, position.y);
-    const closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x][gridPos.y].map(nodeId => this.nodesArray[nodeId]);
+    const closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x]?.[gridPos.y]?.map(nodeId => this.nodesArray[nodeId]) ?? [];
     const found = closeNodes.find((node) => Utils.isVectorInPolygon(position, node, this.vectors));
 
     if (!found) {// Fallback to centroids (possible initial zig-zag)
