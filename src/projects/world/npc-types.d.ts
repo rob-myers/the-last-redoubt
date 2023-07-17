@@ -289,6 +289,8 @@ declare namespace NPC {
    */
   export interface GlobalNavPath {
     key: 'global-nav';
+    /** Useful for creating DecorPaths */
+    name?: string;
     path: Geom.VectJson[];
     /**
      * Aligned to edges of @see {path}.
@@ -426,6 +428,11 @@ declare namespace NPC {
     | DecorPoint
     | DecorRect
     | DecorGroup
+  );
+
+  export type PseudoDecor = (
+    | DecorDef
+    | GlobalNavPath
   );
 
   export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;

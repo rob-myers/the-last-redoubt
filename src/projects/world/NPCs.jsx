@@ -7,6 +7,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
+import { warn } from '../service/log';
 import * as npcService from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -241,8 +242,8 @@ export default function NPCs(props) {
     },
 
     /**
-     * Used by shell function `nav`. Wraps
-     * @see {state.getGlobalNavPath}
+     * Used by shell function `nav`.
+     * Wraps @see {state.getGlobalNavPath}
      */
     getNpcGlobalNav(e) {
       const npc = state.getNpc(e.npcKey);
@@ -254,23 +255,19 @@ export default function NPCs(props) {
         if (e.throwOnNotNav) {
           throw Error(`dst outside navmesh: ${JSON.stringify(e.point)}`);
         } else {
-          console.warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
+          warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
           return npcService.getEmptyNavPath();
         }
       } else if (!state.isPointInNavmesh(position)) {
-        console.warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
+        warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
         return npcService.getEmptyNavPath();
       }
 
       const result = state.getGlobalNavPath(position, e.point);
+      result.name = e.name;
 
       // Always show path
-      api.decor.setDecor({
-        type: 'path',
-        key: `${e.npcKey}-navpath`, // navpath "in" room it starts in
-        meta: { ...result.gmRoomIds?.length && { gmId: result.gmRoomIds[0][0], roomId: result.gmRoomIds[0][1] } },
-        path: result.path,
-      });
+      api.decor.setPseudoDecor(result);
 
       return result;
     },
@@ -403,13 +400,13 @@ export default function NPCs(props) {
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
-          return api.decor.setDecor(...e.items);
-        case 'decor':
+          return api.decor.setPseudoDecor(...e.items);
+        case 'decor': // get decor, list decors, or add decor
           return 'decorKey' in e
-            ? api.decor.decor[e.decorKey] // get decor
+            ? api.decor.decor[e.decorKey] // get
             : Object.keys(e).length === 1
-              ? Object.values(api.decor.decor) // list all decors
-              : api.decor.setDecor(e); // add decor
+              ? Object.values(api.decor.decor) // list
+              : api.decor.setPseudoDecor(e); // add
         case 'do':
           await state.npcActDo(e);
           break;
@@ -456,10 +453,10 @@ export default function NPCs(props) {
         }
         case 'map':
           return api.fov.mapAct(e.mapAction, e.timeMs);
-        case 'pause':// Pause current animation
+        case 'pause':// pause current animation
           state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');
           break;
-        case 'resume':// Resume current animation
+        case 'resume':// resume current animation
           state.getNpc(e.npcKey).resume(e.cause === 'process-resume');
           break;
         case 'rm':
@@ -852,7 +849,7 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson) => NPC.LocalNavPath} getLocalNavPath
- * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean }) => NPC.GlobalNavPath} getNpcGlobalNav
+ * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; name?: string }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting

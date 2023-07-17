@@ -373,7 +373,10 @@ export function predictNpcPolygonCollision(npcA, outline, rect) {
   };
 }
 
-/** @param {NPC.GlobalNavPath} input */
+/**
+ * @param {any} input
+ * @returns {input is NPC.GlobalNavPath}
+ */
 export function verifyGlobalNavPath(input) {
   let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
   return x?.key === 'global-nav'

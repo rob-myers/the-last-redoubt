@@ -247,21 +247,29 @@
      * expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav
      * expr '{"x":300,"y":300}' | nav andros
      * click | nav andros
+     * 
+     * 🚧 support `nav {p1} ... {pn}` n ≥ 2
+     * 🚧 support `click | nav --from {src}`
+     * 🚧 support `click | nav --to {dst}`
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
+      const { opts, operands } = api.getOpts(args, {  string: [
+        "name", /** Create DecorPath with this key (empty-string if `name` unset) */
+      ]});
       const { npcs } = api.getCached(home.WORLD_KEY)
+
       if (api.isTtyAt(0)) {
-        const npcKey = args[0]
-        const point = api.parseJsArg(args[1])
-        yield npcs.getNpcGlobalNav({ npcKey, point })
-      } else if (args[0]) {
-        const npcKey = args[0]
+        const npcKey = operands[0]
+        const point = api.parseJsArg(operands[1])
+        yield npcs.getNpcGlobalNav({ npcKey, point, name: opts.name || `navpath-${npcKey}` })
+      } else if (operands[0]) {
+        const npcKey = operands[0]
         while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav({ npcKey, point: datum })
+          yield npcs.getNpcGlobalNav({ npcKey, point: datum, name: opts.name || `navpath-${npcKey}` })
       } else {
         while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav(datum)
+          yield npcs.getNpcGlobalNav({ ...datum, name: opts.name || `navpath-${datum.name ?? datum.npcKey}` })
       }
     },
   

@@ -75,6 +75,10 @@ npc rm-decor bar
 npc rm-decor 'foo bar'
 
 npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
+
+# given navPath created via `nav`
+navPath | map 'x => x.name = "my-navpath"'
+npc decor $navPath
 ```
 
 ```sh
@@ -216,20 +220,17 @@ world 'x => x.npcs.getRandomRoom(
 # {"gmId":1,"roomId":14}
 world 'x => x.npcs.getRandomRoomNavpoint(1, 14)'
 # {"x":674.04,"y":784.8199999999999}
-nav andros $_ --tryOpen | walk andros
+nav andros $_ | walk --open andros
 # off we go...
 
-nav --tryOpen andros $(
+nav andros $(
   world 'x => x.npcs.getRandomRoomNavpoint(4, 5)'
-) | walk andros
+) | walk --open andros
 ```
 
 ```sh
-# custom simple navPath
-expr '{ key: "global-nav", fullPath: ['$( click 1 )'], navMetas: []  }' >navPath3
-
 # slice a navPath
-nav --tryOpen andros $( click 1 ) > navPath
+nav andros $( click 1 ) > navPath
 world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPath2
 ```
 
@@ -244,3 +245,8 @@ choice '['{a..h}{1..8}']()'
 # with newlines
 choice "$( call '() => "foo [1]()\n\rbar [2]()\nbaz [3]()"' )"
 ```
+
+```sh
+while true; do
+  walk andros $navPath
+done

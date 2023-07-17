@@ -7,6 +7,7 @@ import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { verifyGlobalNavPath } from "../service/npc";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -321,6 +322,21 @@ export default function Decor(props) {
       api.npcs.events.next({ key: 'decors-added', decors: ds });
       update();
     },
+    setPseudoDecor(...pseudoDecors) {
+      /** @type {NPC.DecorDef[]} */
+      const ds = pseudoDecors.map(pd => {
+        if (verifyGlobalNavPath(pd)) {
+          return {
+            type: 'path',
+            key: pd.name ?? 'navpath-default', // navpath is "in" room it starts in:
+            meta: { ...pd.gmRoomIds.length && { gmId: pd.gmRoomIds[0][0], roomId: pd.gmRoomIds[0][1] } },
+            path: pd.path,
+          };
+        }
+        return pd;
+      });
+      state.setDecor(...ds);
+    },
     update,
     updateVisibleDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
@@ -620,6 +636,7 @@ const decorPointHandlers = {
  * - `decor`
  * - `byRoom[gmId][roomId]`
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
+ * @property {(...pseudoDecors: NPC.PseudoDecor[]) => void} setPseudoDecor
  * @property {() => void} update
  * @property {(opts: ToggleLocalDecorOpts) => void} updateVisibleDecor
  */

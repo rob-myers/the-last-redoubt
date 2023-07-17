@@ -2,25 +2,14 @@
 
 ## In progress
 
-- ✅ implement `walk --open`
-  - ✅ walk `--open` subscribes
-    - ℹ️ moved to use-handle-events via npc.anim.walkStrategy
-  - ✅ doorSensors doorId is wrong
-  - ✅ walk `--open` detects approach/leave door using door sensors
-  - ✅ might approach next door before leaving previous?
-  - ✅ BUG sometimes doorSensor `enter` not triggered
-    - decor grid
-  - ✅ fix hull doors
-  - ✅ walk `--open` changes npc speed
-    - npc slows down when "approaching door"
-    - npc speeds up when enter room
-- ✅ remove `--tryOpen`
-
-- ✅ BUG resumed process `track` out of sync
-
-- `nav --name` induces named DecorPath
-- `npc decor ${navPath}` induces named DecorPath
+- ✅ `nav --name` induces named DecorPath (default `navpath-default`)
+- ✅ `nav {npcKey}` has default name `navpath-${npcKey}`
+- ✅ `npc decor ${navPath}` induces named DecorPath
+- support `nav {p1} ... {pn}` via navpath concatentation
 - `walk --open` weights _locked_ doors (not closed doors)
+
+- rename navPath.partition -> navPath.edgeNodeIds
+
 - BUG anim jumps when change speed without setTimeout
   - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
   - not setSpeedFactor collision
@@ -451,6 +440,22 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ implement `walk --open`
+  - ✅ walk `--open` subscribes
+    - ℹ️ moved to use-handle-events via npc.anim.walkStrategy
+  - ✅ doorSensors doorId is wrong
+  - ✅ walk `--open` detects approach/leave door using door sensors
+  - ✅ might approach next door before leaving previous?
+  - ✅ BUG sometimes doorSensor `enter` not triggered
+    - decor grid
+  - ✅ fix hull doors
+  - ✅ walk `--open` changes npc speed
+    - npc slows down when "approaching door"
+    - npc speeds up when enter room
+- ✅ remove `--tryOpen`
+
+- ✅ BUG resumed process `track` out of sync
 
 - ✅ BUG navpath malformed
 ```sh
