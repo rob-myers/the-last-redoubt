@@ -243,50 +243,55 @@
      * Request navpath(s) to position(s) for character(s), e.g.
      * ```sh
      * nav andros "$( click 1 )"
-     * nav andros "$( click 1 )"
-     * expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | nav
      * expr '{"x":300,"y":300}' | nav andros
      * click | nav andros
-     * 
-     * ✅ support `nav {p1} ... {pn}` n ≥ 2
-     * 🚧 support `click | nav --from {src}`
-     * 🚧 support `click | nav --to {dst}`
+     * nav "$( click 3 )"
+     * click | nav --to andros
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
-      const { opts, operands } = api.getOpts(args, {  string: [
-        "name", /** Created DecorPath has this key */
-      ]});
+      const { opts, operands } = api.getOpts(args, {
+        string: ["name" /** Created DecorPath has this key */],
+        boolean: ["from", "to"]});
       const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 
-      if (api.isTtyAt(0)) {
-        if (operands.length < 2) {
-          throw Error("not enough points");
-        }
+      if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
+        throw Error("not enough points");
+      }
 
-        const points = operands.map(operand => api.parseMapJsArg(operand, (parsed) => {
+      function parsePoints() {
+        const points = operands.map((operand, i) => api.parseMapJsArg(operand, (parsed) => {
           if (lib.Vect.isVectJson(parsed)) return parsed;
-          if (parsed in npcs.npc) return npcs.npc[parsed].getPosition();
+          if (parsed in npcs.npc) return npcs.npc[parsed].getPosition()
           throw Error(`expected point or npcKey: "${operand}"`);
-        }));
-        points.forEach(point => {
-          if (!npcs.isPointInNavmesh(point)) throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
-        });
+        }))
+        for (const point of points) if (!npcs.isPointInNavmesh(point))
+          throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
+        ;
+        return points;
+      }
+      /** @param {Geom.VectJson[]} points  */
+      function computeNavPath(points) {
         const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point));
-
-        const resultNavPath = npcs.service.concatenateNavPaths(...navPaths)
-        decor.setPseudoDecor(resultNavPath);
-        yield resultNavPath;
-
-      } else if (operands[0]) {
-        // 🚧
-        const npcKey = operands[0]
-        while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav({ npcKey, point: datum, name: opts.name || `navpath-${npcKey}` })
+        const navPath = npcs.service.concatenateNavPaths(...navPaths)
+        typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
+        decor.setPseudoDecor(navPath);
+        return navPath;
+      }
+      
+      if (api.isTtyAt(0)) {
+        yield computeNavPath(parsePoints());
       } else {
-        // 🚧 remove
-        while ((datum = await api.read()) !== null)
-          yield npcs.getNpcGlobalNav({ ...datum, name: opts.name || `navpath-${datum.name ?? datum.npcKey}` })
+        while ((datum = await api.read()) !== null) {
+          if (typeof datum === "string" && datum in npcs.npc) {
+            datum = npcs.npc[datum].getPosition();
+          } else if (!lib.Vect.isVectJson(datum)) {
+            throw Error(`expected point or npcKey: ${JSON.stringify(datum)}`);
+          }
+          const points = parsePoints(); // Recompute in case of {npcKey}
+          opts.to ? points.unshift(datum) : points.push(datum);
+          yield computeNavPath(points);
+        }
       }
     },
   

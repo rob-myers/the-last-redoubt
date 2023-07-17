@@ -421,25 +421,22 @@ export function cloneNavPath({ key, path, partition, navMetas, gmRoomIds }) {
  * @returns {NPC.GlobalNavPath}
  */
 export function concatenateNavPaths(...navPaths) {
-  return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, partition }, i) => {
-    const vertexOffset = agg.path.length;
-    // 🚧 first navMeta always 'vertex'?
-    agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
-      .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
-    );
-    agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
-    typeof name === 'string' && (agg.name = name);
-    agg.partition.push(...partition);
-    agg.path.push(...i === 0 ? path : path.slice(1));
-    return agg;
-  }, {
-    key: 'global-nav',
-    gmRoomIds: [],
-    name: undefined,
-    navMetas: [],
-    partition: [],
-    path: [],
-  });
+  if (navPaths.length === 1) {
+    return navPaths[0];
+  } else {
+    return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, partition }, i) => {
+      const vertexOffset = agg.path.length;
+      // 🚧 first navMeta always 'vertex'?
+      agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
+        .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
+      );
+      agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
+      typeof name === 'string' && (agg.name = name);
+      agg.partition.push(...partition);
+      agg.path.push(...i === 0 ? path : path.slice(1));
+      return agg;
+    }, getEmptyNavPath());
+  }
 }
 
 /** @returns {NPC.GlobalNavPath} */

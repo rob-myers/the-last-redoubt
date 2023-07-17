@@ -7,8 +7,9 @@
 - ✅ `npc decor ${navPath}` induces named DecorPath
 
 - ✅ support `nav {p1} ... {pn}`
-- 🚧 `nav` arg can be point or npcKey
-- 🚧 support `nav {p1} ... {pn}` with piping in
+- ✅ `nav` arg can be point or npcKey
+- ✅ support `nav {p1} ... {pn}` with piping in
+- BUG interference between `click | nav ...` and `nav $( click 3 ) | walk --open andros`
 
 - `walk --open` weights _locked_ doors (not closed doors)
 - rename navPath.partition -> navPath.edgeNodeIds
