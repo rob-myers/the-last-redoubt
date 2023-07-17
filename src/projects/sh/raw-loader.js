@@ -248,26 +248,43 @@
      * expr '{"x":300,"y":300}' | nav andros
      * click | nav andros
      * 
-     * 🚧 support `nav {p1} ... {pn}` n ≥ 2
+     * ✅ support `nav {p1} ... {pn}` n ≥ 2
      * 🚧 support `click | nav --from {src}`
      * 🚧 support `click | nav --to {dst}`
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {  string: [
-        "name", /** Create DecorPath with this key (empty-string if `name` unset) */
+        "name", /** Created DecorPath has this key */
       ]});
-      const { npcs } = api.getCached(home.WORLD_KEY)
+      const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 
       if (api.isTtyAt(0)) {
-        const npcKey = operands[0]
-        const point = api.parseJsArg(operands[1])
-        yield npcs.getNpcGlobalNav({ npcKey, point, name: opts.name || `navpath-${npcKey}` })
+        if (operands.length < 2) {
+          throw Error("not enough points");
+        }
+
+        const points = operands.map(operand => api.parseMapJsArg(operand, (parsed) => {
+          if (lib.Vect.isVectJson(parsed)) return parsed;
+          if (parsed in npcs.npc) return npcs.npc[parsed].getPosition();
+          throw Error(`expected point or npcKey: "${operand}"`);
+        }));
+        points.forEach(point => {
+          if (!npcs.isPointInNavmesh(point)) throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
+        });
+        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point));
+
+        const resultNavPath = npcs.service.concatenateNavPaths(...navPaths)
+        decor.setPseudoDecor(resultNavPath);
+        yield resultNavPath;
+
       } else if (operands[0]) {
+        // 🚧
         const npcKey = operands[0]
         while ((datum = await api.read()) !== null)
           yield npcs.getNpcGlobalNav({ npcKey, point: datum, name: opts.name || `navpath-${npcKey}` })
       } else {
+        // 🚧 remove
         while ((datum = await api.read()) !== null)
           yield npcs.getNpcGlobalNav({ ...datum, name: opts.name || `navpath-${datum.name ?? datum.npcKey}` })
       }

@@ -293,7 +293,7 @@ declare namespace NPC {
     name?: string;
     path: Geom.VectJson[];
     /**
-     * Aligned to edges of @see {path}.
+     * Aligned to edges of @see {path}
      * i.e. the nav node ids along each edge.
      */
     partition: number[][];

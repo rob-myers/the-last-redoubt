@@ -5,10 +5,14 @@
 - ✅ `nav --name` induces named DecorPath (default `navpath-default`)
 - ✅ `nav {npcKey}` has default name `navpath-${npcKey}`
 - ✅ `npc decor ${navPath}` induces named DecorPath
-- support `nav {p1} ... {pn}` via navpath concatentation
-- `walk --open` weights _locked_ doors (not closed doors)
 
+- ✅ support `nav {p1} ... {pn}`
+- 🚧 `nav` arg can be point or npcKey
+- 🚧 support `nav {p1} ... {pn}` with piping in
+
+- `walk --open` weights _locked_ doors (not closed doors)
 - rename navPath.partition -> navPath.edgeNodeIds
+- track still jerky when walk slow-down/speed-up
 
 - BUG anim jumps when change speed without setTimeout
   - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)

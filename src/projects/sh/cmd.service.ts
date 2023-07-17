@@ -611,6 +611,8 @@ class cmdServiceClass {
   
     /** js parse with string fallback */
     parseJsArg,
+    /** @see {parseJsArg} acted upon by callback */
+    parseMapJsArg,
   
     // TODO use `otag` instead
     /** Output 1, 2, ... at fixed intervals */
@@ -767,6 +769,17 @@ export function parseJsArg(input?: string) {
     return Function(`return ${input}`)();
   } catch (e) {
     return input;
+  }
+}
+
+/**
+ * js parse with string fallback, applying `act` afterwards.
+ */
+export function parseMapJsArg<T>(input: string | undefined, act: (parsed: any) => T) {
+  try {
+    return act(Function(`return ${input}`)());
+  } catch (e) {
+    return act(input);
   }
 }
 

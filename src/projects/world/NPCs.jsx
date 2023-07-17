@@ -129,7 +129,7 @@ export default function NPCs(props) {
       const [dstGmId] = api.gmGraph.findGeomorphIdContaining(dst);
 
       if (srcGmId === null || dstGmId === null) {
-        throw Error(`getGlobalNavPath: src/dst must be inside some geomorph's aabb`)
+        throw Error(`getGlobalNavPath: src, dst must be inside some geomorph's aabb`)
       } else if (srcGmId === dstGmId) {
         const localNavPath = state.getLocalNavPath(srcGmId, src, dst);
         console.info('localNavPath (single)', localNavPath);
@@ -211,8 +211,8 @@ export default function NPCs(props) {
         
         return {
           key: 'global-nav',
-          path: path,
-          partition: partition,
+          path,
+          partition,
           navMetas,
           gmRoomIds,
         };
@@ -242,6 +242,7 @@ export default function NPCs(props) {
     },
 
     /**
+     * 🚧 remove?
      * Used by shell function `nav`.
      * Wraps @see {state.getGlobalNavPath}
      */
