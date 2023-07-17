@@ -74,6 +74,9 @@ export default function Doors(props) {
         return true; // Do not close if closed
       }
       if (opts.open && wasOpen) {
+        // Reset door close
+        window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
+        state.tryCloseDoor(gmId, doorId);
         return true; // Do not open if opened
       }
       if (npcKey && !npcs.config.omnipresent && !state.npcNearDoor(gmId, doorId, npcKey)) {

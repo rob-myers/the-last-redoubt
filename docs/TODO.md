@@ -14,6 +14,10 @@
   - bad `nav $( click 2 ) $( click 1 ) | walk --open andros`
   - good `nav $( click 1 ) $( click 1 ) $( click 1 ) | walk --open andros`
 
+- ✅ BUG doors sometimes not opening during `walk --open`
+  - navpath concat issue?
+  - door closing early?
+
 - `walk --open` weights _locked_ doors (not closed doors)
 - rename navPath.partition -> navPath.edgeNodeIds
 - track still jerky when walk slow-down/speed-up
