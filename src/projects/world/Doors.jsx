@@ -74,8 +74,6 @@ export default function Doors(props) {
         return false;
       }
 
-      // 🚧 cannot open door if locked
-
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
           window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
@@ -87,8 +85,13 @@ export default function Doors(props) {
         }
         // Cancel any pending close
         window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
-      } else if (opts.close) {// Do not close if closed
-        return true;
+      } else {
+        if (opts.close) {// Do not close if closed
+          return true;
+        }
+        if (!npcs.config.omnipresent && state.locked[gmId][doorId]) {
+          return false; // cannot open door if locked
+        }
       }
 
       // Toggle the door

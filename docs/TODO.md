@@ -4,7 +4,8 @@
 
 - ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
 - ✅ rename navPath.partition -> navPath.edgeNodeIds
-- npc can have door keys
+- ✅ npc cannot open locked door
+- npc can open locked door with key
 - `walk --open` weights _locked_ doors (not closed doors)
   - taking keys into account
 - track still jerky when walk slow-down/speed-up

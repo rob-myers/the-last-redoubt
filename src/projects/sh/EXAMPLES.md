@@ -250,3 +250,9 @@ choice "$( call '() => "foo [1]()\n\rbar [2]()\nbaz [3]()"' )"
 while true; do
   walk andros $navPath
 done
+```
+
+```sh
+# lock doorId 8 of gmId 0
+world 'x => x.doors.locked[0][8] = true'
+```
