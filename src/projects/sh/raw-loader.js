@@ -259,38 +259,39 @@
         throw Error("not enough points");
       }
 
-      function parsePoints() {
-        const points = operands.map((operand, i) => api.parseMapJsArg(operand, (parsed) => {
+      /** @param {any[]} parsedArgs */
+      function parsePoints(parsedArgs) {
+        const points = parsedArgs.map((parsed) => {
           if (lib.Vect.isVectJson(parsed)) return parsed;
           if (parsed in npcs.npc) return npcs.npc[parsed].getPosition()
-          throw Error(`expected point or npcKey: "${operand}"`);
-        }))
-        for (const point of points) if (!npcs.isPointInNavmesh(point))
-          throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
-        ;
+          throw Error(`expected point or npcKey: "${parsed}"`);
+        });
+        // 🚧 maybe do not throw if {npcKey} induced point is off-mesh?
+        // 🚧 maybe support flag which continues instead of throws
+        for (const point of points) {
+          if (!npcs.isPointInNavmesh(point))
+            throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
+        };
         return points;
       }
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
         const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point));
-        const navPath = npcs.service.concatenateNavPaths(...navPaths)
+        const navPath = npcs.service.concatenateNavPaths(...navPaths);
         typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
         decor.setPseudoDecor(navPath);
         return navPath;
       }
+
+      const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       
       if (api.isTtyAt(0)) {
-        yield computeNavPath(parsePoints());
+        yield computeNavPath(parsePoints(parsedArgs));
       } else {
         while ((datum = await api.read()) !== null) {
-          if (typeof datum === "string" && datum in npcs.npc) {
-            datum = npcs.npc[datum].getPosition();
-          } else if (!lib.Vect.isVectJson(datum)) {
-            throw Error(`expected point or npcKey: ${JSON.stringify(datum)}`);
-          }
-          const points = parsePoints(); // Recompute in case of {npcKey}
-          opts.to ? points.unshift(datum) : points.push(datum);
-          yield computeNavPath(points);
+          yield computeNavPath(parsePoints(
+            opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)
+          ));
         }
       }
     },
