@@ -1,6 +1,8 @@
 
 declare namespace NPC {
   
+  //#region individual npc
+
   /**
    * - Corresponds to media/NPC/class/{key}/{key}--{animKey}.png
    * - Corresponds to static/assets/npc/{key}/{key}--{animKey}.png
@@ -212,6 +214,90 @@ declare namespace NPC {
     );
   }
 
+  interface NpcLineSeg {
+    src: Geom.Vect;
+    dst: Geom.Vect;
+    tangent: Geom.Vect;
+  }
+
+  interface NpcAnimDef {
+    translateKeyframes: Keyframe[];
+    rotateKeyframes: Keyframe[];
+    opts: KeyframeAnimationOptions & { duration: number };
+  }
+
+  type SpriteSheetKey = (
+    | 'idle'
+    | 'idle-breathe'
+    | 'lie'
+    | 'sit'
+    | 'walk'
+  );
+
+  interface NPCDef {
+    /** npcKey e.g. `andros` */
+    key: string;
+    /** npc class key e.g. `first-human-npc` */
+    npcClassKey: NpcClassKey;
+    angle: number;
+    // paused: boolean;
+    position: Geom.VectJson;
+    speed: number;
+  }
+
+  interface NpcClassConfig {
+    anim: Record<string, {
+      durationMs: number;
+      frameCount: number;
+      speed: number;
+      /** Rotate each frame by 0, 90, 180 or 270 degrees */
+      rotateDeg?: 0 | 90 | 180 | 270;
+      /** Shift frame index e.g. so start from idle position when walking */
+      shiftFramesBy?: number;
+      totalDist: number;
+    }>;
+    radius: number;
+  }
+
+  interface ParsedNpc {
+    npcClassKey: NpcClassKey;
+    animLookup: {
+      [animName: string]: NpcAnimMeta;
+    };
+    radius: number;
+  }
+
+  interface NpcAnimMeta {
+    animName: string;
+    /** AABB of a single frame prior to applying rotateDeg */
+    frameAabbOrig: Geom.RectJson;
+    /** AABB of a single frame with `rotateDeg` applied */
+    frameAabb: Geom.RectJson;
+    frameCount: number;
+
+    /**
+     * Total distance walked e.g. during walk cycle,
+     * e.g. by tracking non-stationary foot and summing over a walk-cycle.
+     * - Did this for Synfig using specified contact points.
+     * - Could do this for Spriter Pro, but haven't tried doing it yet.
+     *   In the meantime we simply guess it for Spriter Pro.
+     */
+    totalDist: number;
+    
+    durationMs: number;
+    pathPng: string;
+    pathWebp: string;
+
+    /** Rotate each frame by 0, 90, 180 or 270 degrees */
+    rotateDeg?: 0 | 90 | 180 | 270;
+    /** Shift frame index e.g. so start from idle position when walking */
+    shiftFramesBy?: number;
+  }
+
+  //#endregion
+
+  //#region config
+
   /**
    * 🚧 connect these types
    */
@@ -244,36 +330,61 @@ declare namespace NPC {
     | 'showIds'
   );
 
-  interface NpcLineSeg {
-    src: Geom.Vect;
-    dst: Geom.Vect;
-    tangent: Geom.Vect;
-  }
-
-  interface NpcAnimDef {
-    translateKeyframes: Keyframe[];
-    rotateKeyframes: Keyframe[];
-    opts: KeyframeAnimationOptions & { duration: number };
-  }
-
-  type SpriteSheetKey = (
-    | 'idle'
-    | 'idle-breathe'
-    | 'lie'
-    | 'sit'
-    | 'walk'
+   /** Using `action` instead of `key` to avoid name-collision */
+   export type NpcAction = (
+    | { action: 'add-decor'; items: DecorDef[]; }
+    | { action: 'cancel'; npcKey: string }
+    | { action: 'config'; } & NPC.NpcConfigOpts
+    | { action: 'decor'; } & (DecorDef | { decorKey: string })
+    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; params?: any[]; }
+    | { action: 'events'; }
+    | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
+    | { action: 'light'; lit?: boolean; point: Geom.VectJson }
+    | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
+    | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }
+    | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
+    | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
+    | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
+    | { action: 'rm' | 'remove'; npcKey: string; }
+    | { action: 'set-player'; npcKey?: string }
   );
 
-  interface NPCDef {
-    /** npcKey e.g. `andros` */
-    key: string;
-    /** npc class key e.g. `first-human-npc` */
-    npcClassKey: NpcClassKey;
-    angle: number;
-    // paused: boolean;
-    position: Geom.VectJson;
-    speed: number;
+  export type NpcActionKey = NpcAction['action'];
+
+  export type FovMapAction = 'show' | 'hide' | 'show-for-ms' | 'pause' | 'resume';
+
+  export type NPCsEvent = (
+    | { key: 'decors-added'; decors: DecorDef[]; }
+    | { key: 'decor-click'; decor: DecorDef; }
+    | { key: 'decors-removed'; decors: DecorDef[]; }
+    | { key: 'disabled' }
+    | { key: 'enabled' }
+    | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
+    | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
+    | { key: 'npc-internal'; npcKey: string; event: 'cancelled' | 'paused' | 'resumed' }
+    | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
+    | { key: 'removed-npc'; npcKey: string; }
+    | { key: 'set-player'; npcKey: string | null; }
+    | { key: 'spawned-npc'; npcKey: string; intoDecor: NPC.DecorRef[] }
+    | { key: 'started-walking'; npcKey: string; }
+    | { key: 'stopped-walking'; npcKey: string; }
+    | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
+    | { key: 'resumed-track'; npcKey: string; }
+    | NPCsWayEvent
+  );
+
+  export type NPCsEventWithNpcKey = Extract<NPCsEvent, { npcKey: string | null }>;
+
+  export interface NPCsWayEvent {
+    key: 'way-point';
+    npcKey: string;
+    meta: NpcWayMeta;
   }
+
+  //#endregion
+
+  //#region nav
+
   
   /**
    * A path through the `FloorGraph` of some geomorph instance.
@@ -346,6 +457,10 @@ declare namespace NPC {
     distB: number;
   }
 
+  //#endregion
+
+  //#region tty
+
   export interface SessionCtxt {
     /** Session key */
     key: string;
@@ -372,6 +487,8 @@ declare namespace NPC {
     linkText: string,
     linkStartIndex: number,
   ) => void;
+
+  //#endregion
 
   //#region decor
 
@@ -453,108 +570,8 @@ declare namespace NPC {
   export type DecorGrid = Set<NPC.DecorCollidable>[][];
 
   //#endregion
-  
-  /** Using `action` instead of `key` to avoid name-collision */
-  export type NpcAction = (
-    | { action: 'add-decor'; items: DecorDef[]; }
-    | { action: 'cancel'; npcKey: string }
-    | { action: 'config'; } & NPC.NpcConfigOpts
-    | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; params?: any[]; }
-    | { action: 'events'; }
-    | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
-    | { action: 'light'; lit?: boolean; point: Geom.VectJson }
-    | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
-    | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }
-    | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
-    | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
-    | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
-    | { action: 'rm' | 'remove'; npcKey: string; }
-    | { action: 'set-player'; npcKey?: string }
-  );
 
-  export type NpcActionKey = NpcAction['action'];
-
-  export type FovMapAction = 'show' | 'hide' | 'show-for-ms' | 'pause' | 'resume';
-
-  export type NPCsEvent = (
-    | { key: 'decors-added'; decors: DecorDef[]; }
-    | { key: 'decor-click'; decor: DecorDef; }
-    | { key: 'decors-removed'; decors: DecorDef[]; }
-    | { key: 'disabled' }
-    | { key: 'enabled' }
-    | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
-    | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
-    | { key: 'npc-internal'; npcKey: string; event: 'cancelled' | 'paused' | 'resumed' }
-    | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
-    | { key: 'removed-npc'; npcKey: string; }
-    | { key: 'set-player'; npcKey: string | null; }
-    | { key: 'spawned-npc'; npcKey: string; intoDecor: NPC.DecorRef[] }
-    | { key: 'started-walking'; npcKey: string; }
-    | { key: 'stopped-walking'; npcKey: string; }
-    | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
-    | { key: 'resumed-track'; npcKey: string; }
-    | NPCsWayEvent
-  );
-
-  export type NPCsEventWithNpcKey = Extract<NPCsEvent, { npcKey: string | null }>;
-
-  export interface NPCsWayEvent {
-    key: 'way-point';
-    npcKey: string;
-    meta: NpcWayMeta;
-  }
-
-  //#region parse
-  interface NpcClassConfig {
-    anim: Record<string, {
-      durationMs: number;
-      frameCount: number;
-      speed: number;
-      /** Rotate each frame by 0, 90, 180 or 270 degrees */
-      rotateDeg?: 0 | 90 | 180 | 270;
-      /** Shift frame index e.g. so start from idle position when walking */
-      shiftFramesBy?: number;
-      totalDist: number;
-    }>;
-    radius: number;
-  }
-
-  interface ParsedNpc {
-    npcClassKey: NpcClassKey;
-    animLookup: {
-      [animName: string]: NpcAnimMeta;
-    };
-    radius: number;
-  }
-
-
-  interface NpcAnimMeta {
-    animName: string;
-    /** AABB of a single frame prior to applying rotateDeg */
-    frameAabbOrig: Geom.RectJson;
-    /** AABB of a single frame with `rotateDeg` applied */
-    frameAabb: Geom.RectJson;
-    frameCount: number;
-
-    /**
-     * Total distance walked e.g. during walk cycle,
-     * e.g. by tracking non-stationary foot and summing over a walk-cycle.
-     * - Did this for Synfig using specified contact points.
-     * - Could do this for Spriter Pro, but haven't tried doing it yet.
-     *   In the meantime we simply guess it for Spriter Pro.
-     */
-    totalDist: number;
-    
-    durationMs: number;
-    pathPng: string;
-    pathWebp: string;
-
-    /** Rotate each frame by 0, 90, 180 or 270 degrees */
-    rotateDeg?: 0 | 90 | 180 | 270;
-    /** Shift frame index e.g. so start from idle position when walking */
-    shiftFramesBy?: number;
-  }
+  //#region unused
 
   interface NpcSynfigMetaJson {
     keyframeToMeta: {

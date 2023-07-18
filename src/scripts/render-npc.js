@@ -1,4 +1,6 @@
 /**
+ * ℹ️ DEPRECATED
+ * 
  * Render NPC using Synfig CLI and generate {npc}.json.
  * We now use Spriter Pro, and the generated JSON is defunct
  * However, we may keep using the single character `first-human-npc`.
