@@ -255,8 +255,8 @@
           "name" /** Created DecorPath has this key */
         ],
         boolean: [
-          "to",   /** Piped input _before_ operands (else _after_) */
-          "safePipe", /** Pipe only: noop if any resolved point non-navigable */
+          "to",   /** Piped input goes before operands (else after) */
+          "safePipe", /** Piped noops if any resolved point non-navigable */
         ]});
       const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 

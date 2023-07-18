@@ -80,13 +80,13 @@ doLoop: `{
  * - meta.nav means the point must be on navmesh
  * - !meta.ui prevents immediate movement on open door
  * - !meta.do isolates from `doLoop`
+ * - --safePipe needed because npc $1 can be off-mesh
  */
 goLoop: `{
   click |
     filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
     nav --safePipe $1 |
     walk $1
-    # walk --open $1
 }`,
 
 /** Usage: goOnce {npcKey} */

@@ -2,29 +2,6 @@
 
 ## In progress
 
-- ✅ `nav --name` induces named DecorPath (default `navpath-default`)
-- ✅ `nav {npcKey}` has default name `navpath-${npcKey}`
-- ✅ `npc decor ${navPath}` induces named DecorPath
-
-- ✅ support `nav {p1} ... {pn}`
-- ✅ `nav` arg can be point or npcKey
-- ✅ support `nav {p1} ... {pn}` with piping in
-- ✅ BUG interference between `click | nav ...` and `nav $( click 3 ) | walk --open andros`
-  - bad `nav $( click 3 ) | walk --open andros`
-  - bad `nav $( click 2 ) $( click 1 ) | walk --open andros`
-  - good `nav $( click 1 ) $( click 1 ) $( click 1 ) | walk --open andros`
-
-- ✅ BUG doors sometimes not opening during `walk --open`
-  - navpath concat issue?
-  - door closing early?
-
-- 🚧 BUG `goLoop` dies on leave off-mesh point (e.g. get out of chair)
-  - maybe do not throw if {npcKey} induced point is off-mesh?
-  - maybe filter in script?
-
-- BUG with navPath concatenation
-  > `nav '{ x: 151.52, y: 238.77 }' '{ x: 209.61, y: 366.04 }' '{ x: 272.57, y: 229.39 }' | walk --open andros`
-
 - `decor` -> `decorKey` and `decorMeta` in decor-collide?
 - `walk --open` weights _locked_ doors (not closed doors)
 - rename navPath.partition -> navPath.edgeNodeIds
@@ -460,6 +437,28 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ `nav --name` induces named DecorPath (default `navpath-default`)
+- ✅ `nav {npcKey}` has default name `navpath-${npcKey}`
+- ✅ `npc decor ${navPath}` induces named DecorPath
+
+- ✅ support `nav {p1} ... {pn}`
+- ✅ `nav` arg can be point or npcKey
+- ✅ support `nav {p1} ... {pn}` with piping in
+- ✅ BUG interference between `click | nav ...` and `nav $( click 3 ) | walk --open andros`
+  - bad `nav $( click 3 ) | walk --open andros`
+  - bad `nav $( click 2 ) $( click 1 ) | walk --open andros`
+  - good `nav $( click 1 ) $( click 1 ) $( click 1 ) | walk --open andros`
+
+- ✅ BUG doors sometimes not opening during `walk --open`
+  - navpath concat issue?
+  - door closing early?
+
+- ✅ BUG `goLoop` dies on leave off-mesh point (e.g. get out of chair)
+  - ignore thrown errors if piping and `nav --safePipe`
+
+- ✅ BUG with navPath concatenation
+  > `nav '{ x: 151.52, y: 238.77 }' '{ x: 209.61, y: 366.04 }' '{ x: 272.57, y: 229.39 }' | walk --open andros`
 
 - ✅ implement `walk --open`
   - ✅ walk `--open` subscribes
