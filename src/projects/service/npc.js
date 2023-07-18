@@ -425,7 +425,8 @@ export function concatenateNavPaths(...navPaths) {
     return navPaths[0];
   } else {
     return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, partition }, i) => {
-      const vertexOffset = agg.path.length;
+      // -1 because remove prune vertex 0
+      const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
       // 🚧 first navMeta always 'vertex'?
       agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
         .map(meta => ({ ...meta, index: meta.index + vertexOffset }))

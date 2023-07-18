@@ -18,6 +18,14 @@
   - navpath concat issue?
   - door closing early?
 
+- 🚧 BUG `goLoop` dies on leave off-mesh point (e.g. get out of chair)
+  - maybe do not throw if {npcKey} induced point is off-mesh?
+  - maybe filter in script?
+
+- BUG with navPath concatenation
+  > `nav '{ x: 151.52, y: 238.77 }' '{ x: 209.61, y: 366.04 }' '{ x: 272.57, y: 229.39 }' | walk --open andros`
+
+- `decor` -> `decorKey` and `decorMeta` in decor-collide?
 - `walk --open` weights _locked_ doors (not closed doors)
 - rename navPath.partition -> navPath.edgeNodeIds
 - track still jerky when walk slow-down/speed-up
