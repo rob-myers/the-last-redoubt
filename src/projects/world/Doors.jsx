@@ -63,38 +63,32 @@ export default function Doors(props) {
     async toggleDoor(gmId, doorId, opts = {}) {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
-      const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed;
+      const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed; // 🤔
       const wasOpen = state.open[gmId][doorId];
       const npcKey = opts.npcKey ?? (opts.viaClick && !npcs.config.omnipresent ? npcs.playerKey : null);
 
       if (sealed) {
         return false;
       }
-      if (opts.close && !wasOpen) {
-        return true; // Do not close if closed
-      }
-      if (opts.open && wasOpen) {
-        // Reset door close
-        window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
-        state.tryCloseDoor(gmId, doorId);
-        return true; // Do not open if opened
-      }
       if (npcKey && !npcs.config.omnipresent && !state.npcNearDoor(gmId, doorId, npcKey)) {
         return false;
       }
-      if (wasOpen && !state.safeToCloseDoor(gmId, doorId)) {
-        return false;
-      }
+
+      // 🚧 cannot open door if locked
 
       if (wasOpen) {
+        if (opts.open) {// Do not open if opened
+          window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
+          state.tryCloseDoor(gmId, doorId); // Reset door close
+          return true;
+        }
+        if (!state.safeToCloseDoor(gmId, doorId)) {
+          return false;
+        }
         // Cancel any pending close
         window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
-        // Animate close slightly early
-        const uiEl = state.rootEl.querySelector(`div[data-gm_id="${gmId}"][data-door_id="${doorId}"]`);
-        if (uiEl?.parentElement instanceof HTMLElement) {
-          uiEl.parentElement.classList.remove('open');
-          await pause(100/2);
-        }
+      } else if (opts.close) {// Do not close if closed
+        return true;
       }
 
       // Toggle the door
