@@ -251,8 +251,13 @@
      */
     nav: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {
-        string: ["name" /** Created DecorPath has this key */],
-        boolean: ["from", "to"]});
+        string: [
+          "name" /** Created DecorPath has this key */
+        ],
+        boolean: [
+          "to",   /** Piped input _before_ operands (else _after_) */
+          "safePipe", /** Pipe only: noop if any resolved point non-navigable */
+        ]});
       const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
@@ -261,18 +266,14 @@
 
       /** @param {any[]} parsedArgs */
       function parsePoints(parsedArgs) {
-        const points = parsedArgs.map((parsed) => {
-          if (lib.Vect.isVectJson(parsed)) return parsed;
-          if (parsed in npcs.npc) return npcs.npc[parsed].getPosition()
-          throw Error(`expected point or npcKey: "${parsed}"`);
+        return parsedArgs.map((parsed) => {
+          let point = /** @type {undefined | Geom.VectJson} */ (undefined);
+          if (lib.Vect.isVectJson(parsed)) point = parsed;
+          if (parsed in npcs.npc) point = npcs.npc[parsed].getPosition()
+          if (!point) throw Error(`expected point or npcKey: "${parsed}"`);
+          if (!npcs.isPointInNavmesh(point)) throw Error(`point outside navmesh: ${JSON.stringify(parsed)}`)
+          return point;
         });
-        // 🚧 maybe do not throw if {npcKey} induced point is off-mesh?
-        // 🚧 maybe support flag which continues instead of throws
-        for (const point of points) {
-          if (!npcs.isPointInNavmesh(point))
-            throw Error(`point outside navmesh: ${JSON.stringify(point)}`)
-        };
-        return points;
       }
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
@@ -289,9 +290,11 @@
         yield computeNavPath(parsePoints(parsedArgs));
       } else {
         while ((datum = await api.read()) !== null) {
-          yield computeNavPath(parsePoints(
-            opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)
-          ));
+          try {
+            yield computeNavPath(parsePoints(opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)));
+          } catch (e) {// 🚧 swallows other errors?
+            if (!opts.safePipe) throw e;
+          }
         }
       }
     },
