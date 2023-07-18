@@ -26,13 +26,13 @@ export default function Doors(props) {
     closing: gms.map((gm, _) => gm.doors.map(__ => null)),
     locked: gms.map((gm, _) => gm.doors.map(__ => false)),
     open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
-    vis: gms.map(_ => ({})),
+    visible: gms.map(_ => ({})),
 
     getOpenIds(gmId) {
       return state.open[gmId].flatMap((open, doorId) => open ? doorId : []);
     },
     getVisibleIds(gmId) {
-      return Object.keys(state.vis[gmId]).map(Number);
+      return Object.keys(state.visible[gmId]).map(Number);
     },
     npcNearDoor(gmId, doorId, npcKey) {
       const npc = props.api.npcs.getNpc(npcKey);
@@ -58,7 +58,7 @@ export default function Doors(props) {
       return closeNpcs.length === 0;
     },
     setVisible(gmId, doorIds) {
-      state.vis[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
+      state.visible[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
     },
     async toggleDoor(gmId, doorId, opts = {}) {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
@@ -216,7 +216,7 @@ export default function Doors(props) {
           style={{ transform: gm.transformStyle }}
         >
           {gm.doors.map((door, doorId) =>
-            state.vis[gmId][doorId] &&
+            state.visible[gmId][doorId] &&
               <div
                 key={doorId}
                 className={cx(cssName.door, {
@@ -306,7 +306,7 @@ const rootCss = css`
  * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} update
  * @property {() => void} updateVisibleDoors
- * @property {{ [doorId: number]: true }[]} vis
+ * @property {{ [doorId: number]: true }[]} visible
  * `vis[gmId][doorId]` <=> `door` is visible
  */
 
