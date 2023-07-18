@@ -151,7 +151,7 @@ export default function useHandleEvents(api) {
             const nextDoorId = npc.getNextDoorId();
             if (type !== 'exit' && decor.meta.doorId === nextDoorId) {
               // 🚧 why does setTimeout avoid jerk?
-              setTimeout(() => npc.setSpeedFactor(0.5), 30);
+              setTimeout(() => npc.setSpeedFactor(0.6), 30);
               // npc.setSpeedFactor(0.5);
               if (!api.doors.locked[gmId][nextDoorId]) {
                 api.doors.toggleDoor(gmId, nextDoorId, { open: true });
