@@ -402,11 +402,11 @@ export function verifyLocalNavPath(input) {
  * @param {NPC.GlobalNavPath} navPath 
  * @return {NPC.GlobalNavPath} 
  */
-export function cloneNavPath({ key, path, partition, navMetas, gmRoomIds }) {
+export function cloneNavPath({ key, path, edgeNodeIds, navMetas, gmRoomIds }) {
   return {
     key,
     path: path.slice(),
-    partition: partition.map(x => x.slice()),
+    edgeNodeIds: edgeNodeIds.map(x => x.slice()),
     // Shallow clone sufficient?
     // Optional chaining for safety?
     navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
@@ -424,7 +424,7 @@ export function concatenateNavPaths(...navPaths) {
   if (navPaths.length === 1) {
     return navPaths[0];
   } else {
-    return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, partition }, i) => {
+    return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, edgeNodeIds }, i) => {
       // -1 because remove prune vertex 0
       const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
       // 🚧 first navMeta always 'vertex'?
@@ -433,7 +433,7 @@ export function concatenateNavPaths(...navPaths) {
       );
       agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
       typeof name === 'string' && (agg.name = name);
-      agg.partition.push(...partition);
+      agg.edgeNodeIds.push(...edgeNodeIds);
       agg.path.push(...i === 0 ? path : path.slice(1));
       return agg;
     }, getEmptyNavPath());
@@ -442,7 +442,7 @@ export function concatenateNavPaths(...navPaths) {
 
 /** @returns {NPC.GlobalNavPath} */
 export function getEmptyNavPath() {
-  return { key: 'global-nav', path: [], navMetas: [], partition: [], gmRoomIds: [] };
+  return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: [] };
 }
 
 /**
@@ -452,10 +452,10 @@ export function getEmptyNavPath() {
  * @returns {NPC.GlobalNavPath}
  */
 export function sliceNavPath(navPath, startId, endId) {
-  let { key, path, partition, navMetas = [], gmRoomIds } = navPath;
+  let { key, path, edgeNodeIds, navMetas = [], gmRoomIds } = navPath;
 
   path = path.slice(startId, endId);
-  partition = partition.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
+  edgeNodeIds = edgeNodeIds.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
   gmRoomIds = gmRoomIds?.slice(startId, endId);
   navMetas = navMetas.slice();
 
@@ -476,7 +476,7 @@ export function sliceNavPath(navPath, startId, endId) {
   return {
     key,
     path: path,
-    partition: partition,
+    edgeNodeIds,
     gmRoomIds,
     navMetas,
   };

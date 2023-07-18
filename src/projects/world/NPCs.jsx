@@ -136,7 +136,7 @@ export default function NPCs(props) {
         return {
           key: 'global-nav',
           path: localNavPath.path.slice(),
-          partition: localNavPath.partition,
+          edgeNodeIds: localNavPath.partition,
           navMetas: localNavPath.navMetas.map(x => ({ ...x, gmId: localNavPath.gmId })),
           gmRoomIds: localNavPath.roomIds.map(roomId => [srcGmId, roomId]),
         };
@@ -150,7 +150,7 @@ export default function NPCs(props) {
         // console.log('gmEdges', gmEdges); // DEBUG
 
         const path = /** @type {Geom.Vect[]} */ ([]);
-        const partition = /** @type {number[][]} */ ([]);
+        const edgeNodeIds = /** @type {number[][]} */ ([]);
         const navMetas = /** @type {NPC.GlobalNavMeta[]} */ ([]);
         const gmRoomIds = /** @type {[number, number][]} */ ([]);
 
@@ -178,13 +178,13 @@ export default function NPCs(props) {
             // Ended in hull door, and will start in same one,
             // so ignore `localNavPath`
             path.push(Vect.from(dst));
-            partition.push(...localNavPath.partition); // Add singleton containing door nav nodes
+            edgeNodeIds.push(...localNavPath.partition); // Add singleton containing door nav nodes
             gmRoomIds.push([dstGmId, assertDefined(localNavPath.roomIds.at(-1))]);
             navMetas.push({ key: 'vertex', index: path.length - 1, gmId: dstGmId });
           } else {
             const indexOffset = path.length;
             path.push(...localNavPath.path);
-            partition.push(...localNavPath.partition);
+            edgeNodeIds.push(...localNavPath.partition);
             gmRoomIds.push(...localNavPath.roomIds.map(roomId => /** @type {[number, number]} */ ([localNavPath.gmId, roomId])));
             // Globalise local navMetas
             navMetas.push(...localNavPath.navMetas.map(meta => ({
@@ -212,7 +212,7 @@ export default function NPCs(props) {
         return {
           key: 'global-nav',
           path,
-          partition,
+          edgeNodeIds,
           navMetas,
           gmRoomIds,
         };

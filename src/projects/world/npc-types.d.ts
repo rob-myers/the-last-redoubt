@@ -407,7 +407,7 @@ declare namespace NPC {
      * Aligned to edges of @see {path}
      * i.e. the nav node ids along each edge.
      */
-    partition: number[][];
+    edgeNodeIds: number[][];
     navMetas: GlobalNavMeta[];
     /**
      * Aligned to @see {path}.

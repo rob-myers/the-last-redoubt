@@ -3,8 +3,10 @@
 ## In progress
 
 - ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
-- 🚧 `walk --open` weights _locked_ doors (not closed doors)
-- 🚧 rename navPath.partition -> navPath.edgeNodeIds
+- ✅ rename navPath.partition -> navPath.edgeNodeIds
+- npc can have door keys
+- `walk --open` weights _locked_ doors (not closed doors)
+  - taking keys into account
 - track still jerky when walk slow-down/speed-up
 
 - ❌ move --tryOpen to `walk`?
