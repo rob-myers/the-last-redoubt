@@ -300,7 +300,7 @@ declare namespace Graph {
     index: number;
   } & (
     | { key: 'at-door'; currentRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
-    | { key: 'decor-collide'; decor: NPC.DecorCollidable; type: 'enter' | 'exit' | 'start-inside' }
+    | { key: 'decor-collide'; decor: NPC.DecorRef; type: 'enter' | 'exit' | 'start-inside' }
     | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'exit-room'; exitedRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'npcs-collide'; otherNpcKey: string; }

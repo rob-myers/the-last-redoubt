@@ -1,6 +1,6 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
-import { queryDecorGridLine } from "../service/geomorph";
+import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import * as npcService from "../service/npc";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
@@ -231,7 +231,7 @@ export default function useHandleEvents(api) {
           npc.anim.wayMetas.splice(insertIndex, 0, {
             key: 'decor-collide',
             index: aux.index,
-            decor,
+            decor: decorToRef(decor),
             type: startInside
               ? collisionIndex === 0 ? 'exit' : 'enter'
               : collisionIndex === 0 ? 'enter' : 'exit',
@@ -242,7 +242,7 @@ export default function useHandleEvents(api) {
         startInside && (aux.index === 0) && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
           index: aux.index,
-          decor,
+          decor: decorToRef(decor),
           type: 'start-inside', // start walk inside
           gmId,
           length: currLength,

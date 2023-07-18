@@ -3,6 +3,7 @@ import { css, cx } from "@emotion/css";
 
 import { cssName } from './const';
 import { supportsWebp } from '../service/dom';
+import { decorToRef } from "../service/geomorph";
 import createNpc from "./create-npc";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -19,13 +20,9 @@ export default function NPC({ api, npcKey }) {
       state.unspawned = false;
       state.initialize();
       state.startAnimation('idle');
-      /** @type {NPC.DecorRef[]} */
-      const intoDecor = api.decor.getDecorAtPoint(state.getPosition()).map(d => ({
-        decorKey: d.key,
-        type: d.type,
-        meta: d.meta,
-      }));
-      api.npcs.events.next({ key: 'spawned-npc', npcKey, intoDecor });
+      api.npcs.events.next({ key: 'spawned-npc', npcKey,
+        decors: api.decor.getDecorAtPoint(state.getPosition()).map(decorToRef)
+      });
     }
   }, [state.epochMs]);
 

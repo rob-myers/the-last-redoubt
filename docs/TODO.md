@@ -2,21 +2,20 @@
 
 ## In progress
 
-- `decor` -> `decorKey` and `decorMeta` in decor-collide?
-- `walk --open` weights _locked_ doors (not closed doors)
-- rename navPath.partition -> navPath.edgeNodeIds
+- ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
+- 🚧 `walk --open` weights _locked_ doors (not closed doors)
+- 🚧 rename navPath.partition -> navPath.edgeNodeIds
 - track still jerky when walk slow-down/speed-up
-
-- BUG anim jumps when change speed without setTimeout
-  - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
-  - not setSpeedFactor collision
-  - initialization?
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!
 
 - competing notion of gmRoomId
   - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
+- BUG anim jumps when change speed without setTimeout
+  - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
+  - not setSpeedFactor collision
+  - initialization?
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary

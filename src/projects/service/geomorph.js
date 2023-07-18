@@ -1170,6 +1170,17 @@ export function decorContainsPoint(decor, point) {
   }
 }
 
+/**
+ * @param {NPC.DecorDef} decor 
+ * @returns {NPC.DecorRef} 
+ */
+export function decorToRef(decor) {
+  return {
+    decorKey: decor.key,
+    type: decor.type,
+    meta: decor.meta,
+  };
+}
 
 /**
  * @template {NPC.DecorGroup | NPC.DecorRect} T
