@@ -61,6 +61,9 @@ export default function createNpc(
     },
     
     doMeta: null,
+    has: {
+      doorKey: api.gmGraph.gms.map(_ => ({})),
+    },
     manuallyPaused: false,
     unspawned: true,
 
@@ -385,6 +388,9 @@ export default function createNpc(
       return withNpcRadius
         ? this.anim.aux.outsetSegBounds
         : this.anim.aux.segBounds;
+    },
+    hasDoorKey(gmId, doorId) {
+      return !!this.has.doorKey[gmId]?.[doorId];
     },
     inferWalkTransform() {
       const position = new Vect;

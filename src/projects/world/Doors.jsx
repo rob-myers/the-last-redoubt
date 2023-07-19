@@ -13,7 +13,8 @@ import useUpdate from "../hooks/use-update";
 export default function Doors(props) {
 
   const update = useUpdate();
-  const { gmGraph, gmGraph: { gms }, npcs } = props.api;
+  const { gmGraph, npcs } = props.api;
+  const { gms } = props.api.gmGraph;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
     events: new Subject,
@@ -90,7 +91,9 @@ export default function Doors(props) {
           return true;
         }
         if (!npcs.config.omnipresent && state.locked[gmId][doorId]) {
-          return false; // cannot open door if locked
+          if (!(opts.npcKey && npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId))) {
+            return false; // cannot open door if locked
+          }
         }
       }
 

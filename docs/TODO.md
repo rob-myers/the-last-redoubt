@@ -5,10 +5,14 @@
 - ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
 - ✅ rename navPath.partition -> navPath.edgeNodeIds
 - ✅ npc cannot open locked door
-- npc can open locked door with key
+- ✅ npc can open locked door with key
+- simplify nav path gmRoomIds
 - `walk --open` weights _locked_ doors (not closed doors)
   - taking keys into account
 - track still jerky when walk slow-down/speed-up
+
+- BUG strange early `track` during CssPanZoom initial panzoom
+- Can unify api.doors?
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!

@@ -255,4 +255,6 @@ done
 ```sh
 # lock doorId 8 of gmId 0
 world 'x => x.doors.locked[0][8] = true'
+# give key to npc "andros"
+npc andros 'x => x.has.doorKey[0][8] = true'
 ```

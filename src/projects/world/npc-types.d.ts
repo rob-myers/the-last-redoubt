@@ -47,6 +47,11 @@ declare namespace NPC {
 
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
+    /** Inventory */
+    has: {
+      /** has key iff `doorKey[gmId][doorId]` is true */
+      doorKey: { [doorId: number]: boolean }[];
+    };
     /**
      * Process suspend/resume for e.g. `walk` will pause/resume npc,
      * often as a side-effect of disable/enable <Tabs>.
@@ -102,6 +107,7 @@ declare namespace NPC {
     getWalkBounds(): Geom.Rect;
     getWalkCurrentTime(): number | null;
     getWalkSegBounds(withNpcRadius: boolean): Geom.Rect;
+    hasDoorKey(gmId: number, doorId: number): boolean;
     /**
      * Given npc is walking and anim.transform.currentTime,
      * infer position and angle.
