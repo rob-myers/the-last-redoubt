@@ -6,17 +6,20 @@
 - ✅ rename navPath.partition -> navPath.edgeNodeIds
 - ✅ npc cannot open locked door
 - ✅ npc can open locked door with key
-- simplify nav path gmRoomIds
+
+- ✅ simplify nav path gmRoomIds
+  - ✅ only store changes
+  - ✅ set inside npc and lookup from there
+  - ✅ hookup to npc api
 - `walk --open` weights _locked_ doors (not closed doors)
   - taking keys into account
-- track still jerky when walk slow-down/speed-up
-
 - BUG strange early `track` during CssPanZoom initial panzoom
 - Can unify api.doors?
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!
 
+- track still jerky when walk slow-down/speed-up
 - competing notion of gmRoomId
   - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
 - BUG anim jumps when change speed without setTimeout

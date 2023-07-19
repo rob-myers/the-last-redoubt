@@ -4,7 +4,7 @@ import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
-import { assertDefined, assertNonNull, keys, testNever } from "../service/generic";
+import { assertDefined, assertNonNull, keys, mapValues, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { warn } from '../service/log';
@@ -138,7 +138,7 @@ export default function NPCs(props) {
           path: localNavPath.path.slice(),
           edgeNodeIds: localNavPath.partition,
           navMetas: localNavPath.navMetas.map(x => ({ ...x, gmId: localNavPath.gmId })),
-          gmRoomIds: localNavPath.roomIds.map(roomId => [srcGmId, roomId]),
+          gmRoomIds: mapValues(localNavPath.roomIds, (roomId) => ({ gmId: srcGmId, roomId })),
         };
       } else {
         // Compute global strategy i.e. edges in gmGraph
@@ -152,7 +152,7 @@ export default function NPCs(props) {
         const path = /** @type {Geom.Vect[]} */ ([]);
         const edgeNodeIds = /** @type {number[][]} */ ([]);
         const navMetas = /** @type {NPC.GlobalNavMeta[]} */ ([]);
-        const gmRoomIds = /** @type {[number, number][]} */ ([]);
+        const gmRoomIds = /** @type {NPC.GlobalNavPath['gmRoomIds']} */ ({});
 
         for (let k = 0; k < gmEdges.length + 1; k++) {
           const localNavPath = k === 0
@@ -172,20 +172,22 @@ export default function NPCs(props) {
             // Started in hull door, and will end in same one,
             // so ignore `localNavPath`
             path.push(Vect.from(src));
-            gmRoomIds.push([srcGmId, localNavPath.roomIds[0]]);
+            gmRoomIds[0] = { gmId: srcGmId, roomId: localNavPath.roomIds[0] };
             navMetas.push({ key: 'vertex', index: 0, gmId: srcGmId });
           } else if (k === gmEdges.length && localNavPath.doorIds[1]?.hull) {
             // Ended in hull door, and will start in same one,
             // so ignore `localNavPath`
             path.push(Vect.from(dst));
             edgeNodeIds.push(...localNavPath.partition); // Add singleton containing door nav nodes
-            gmRoomIds.push([dstGmId, assertDefined(localNavPath.roomIds.at(-1))]);
             navMetas.push({ key: 'vertex', index: path.length - 1, gmId: dstGmId });
+            // if end in door then gmRoom hasn't changed
           } else {
             const indexOffset = path.length;
             path.push(...localNavPath.path);
             edgeNodeIds.push(...localNavPath.partition);
-            gmRoomIds.push(...localNavPath.roomIds.map(roomId => /** @type {[number, number]} */ ([localNavPath.gmId, roomId])));
+            Object.entries(localNavPath.roomIds).forEach((k, roomId) => // we include `k === 0`
+              gmRoomIds[Number(k) + indexOffset] = { gmId: localNavPath.gmId, roomId }
+            );
             // Globalise local navMetas
             navMetas.push(...localNavPath.navMetas.map(meta => ({
               ...meta,

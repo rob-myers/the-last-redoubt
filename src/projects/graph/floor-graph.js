@@ -157,7 +157,9 @@ export class floorGraphClass extends BaseGraph {
 
     const path = [src.clone()];
     const fullPartition = /** @type {number[][]} */ ([]);
-    const roomIds = [this.nodeToMeta[srcNode.index].roomId];
+    /** Last room we entered */
+    let lastRoomId = this.nodeToMeta[srcNode.index].roomId;
+    const roomIds = /** @type {NPC.LocalNavPath['roomIds']} */ ({ 0: lastRoomId });
     const navMetas = /** @type {Graph.FloorGraphNavPath['navMetas']} */ ([
       { key: 'vertex', index: 0 }, // Cannot be final
     ]);
@@ -169,8 +171,9 @@ export class floorGraphClass extends BaseGraph {
      * @param {number} roomId 
      */
     function addVertex(point, roomId) {
-      navMetas.push({ key: 'vertex', index: path.push(point) - 1 });
-      roomIds.push(roomId);
+      const index = path.push(point) - 1;
+      navMetas.push({ key: 'vertex', index });
+      (lastRoomId !== roomId) && (roomIds[index] = lastRoomId = roomId);
     }
 
     for (const [i, item] of partition.entries()) {
@@ -282,7 +285,7 @@ export class floorGraphClass extends BaseGraph {
     });
 
     return {
-      path: path, // May contain adjacent dups
+      path, // May contain adjacent dups
       partition: fullPartition,
       navMetas,
       doorIds: [

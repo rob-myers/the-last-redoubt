@@ -61,6 +61,7 @@ export default function createNpc(
     },
     
     doMeta: null,
+    gmRoomId: { gmId: -1, roomId: -1 },
     has: {
       doorKey: api.gmGraph.gms.map(_ => ({})),
     },
@@ -245,19 +246,6 @@ export default function createNpc(
       // We convert from "seconds per world-unit" to "milliseconds per world-unit"
       return 1000 * (1 / this.getSpeed());
     },
-    getGmRoomId(throwIfNull = true) {
-      if (this.doMeta && typeof this.doMeta.gmId === 'number' && typeof this.doMeta.roomId === 'number') {
-        return { gmId: this.doMeta.gmId, roomId: this.doMeta.roomId };
-      } 
-      const gmRoomId = api.gmGraph.findRoomContaining(this.getPosition());
-      if (gmRoomId) {
-        return api.gmGraph.findRoomContaining(this.getPosition());
-      } else if (throwIfNull) {
-        throw new Error(`npc ${this.key}: is not in any room`)
-      } else {
-        return null;
-      }
-    },
     getInteractRadius() {
       // can inherit from <NPCs> root
       return parseFloat(getComputedStyle(this.el.root).getPropertyValue(cssName.npcsInteractRadius));
@@ -427,6 +415,7 @@ export default function createNpc(
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
       this.anim.staticPosition.set(this.def.position.x, this.def.position.y);
+      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position) ?? { gmId: -1, roomId: -1 };
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
@@ -489,10 +478,9 @@ export default function createNpc(
       }
     },
     obscureBySurfaces() {// 🚧 cleaner approach possible?
-      const gmRoomId = this.getGmRoomId();
-      if (gmRoomId) {
-        const gm = api.gmGraph.gms[gmRoomId.gmId];
-        const worldSurfaces = (gm.roomSurfaceIds[gmRoomId.roomId] ?? [])
+      if (this.gmRoomId.gmId >= 0) {
+        const gm = api.gmGraph.gms[this.gmRoomId.gmId];
+        const worldSurfaces = (gm.roomSurfaceIds[this.gmRoomId.roomId] ?? [])
           .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
         ;
         const position = this.getPosition();

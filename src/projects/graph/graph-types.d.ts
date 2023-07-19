@@ -288,8 +288,8 @@ declare namespace Graph {
     navMetas: FloorGraphNavMeta[];
     /** `[startDoorId, endDoorId]` respectively */
     doorIds: [null | { id: number; hull: boolean }, null | { id: number; hull: boolean }];
-    /** Aligned to `path` */
-    roomIds: number[];
+    /** Only set for vertices where roomId changes, starting from `0` */
+    roomIds: { [vertexId: number]: number };
   }
 
   /**

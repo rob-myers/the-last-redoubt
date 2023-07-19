@@ -329,7 +329,7 @@ export default function Decor(props) {
           return {
             type: 'path',
             key: pd.name ?? 'navpath-default', // navpath is "in" room it starts in:
-            meta: { ...pd.gmRoomIds.length && { gmId: pd.gmRoomIds[0][0], roomId: pd.gmRoomIds[0][1] } },
+            meta: { ...pd.path.length && pd.gmRoomIds[0] },
             path: pd.path,
           };
         }

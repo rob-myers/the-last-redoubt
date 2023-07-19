@@ -410,7 +410,7 @@ export function cloneNavPath({ key, path, edgeNodeIds, navMetas, gmRoomIds }) {
     // Shallow clone sufficient?
     // Optional chaining for safety?
     navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
-    gmRoomIds: gmRoomIds?.slice(),
+    gmRoomIds: {...gmRoomIds},
   };
 }
 
@@ -431,7 +431,11 @@ export function concatenateNavPaths(...navPaths) {
       agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
         .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
       );
-      agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
+      Object.entries(gmRoomIds).forEach(([k, v]) =>
+        // 🤔 We do not exclude `k === 0`
+        agg.gmRoomIds[Number(k) + vertexOffset] = v
+      );
+      // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
       typeof name === 'string' && (agg.name = name);
       agg.edgeNodeIds.push(...edgeNodeIds);
       agg.path.push(...i === 0 ? path : path.slice(1));
@@ -442,10 +446,11 @@ export function concatenateNavPaths(...navPaths) {
 
 /** @returns {NPC.GlobalNavPath} */
 export function getEmptyNavPath() {
-  return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: [] };
+  return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: {} };
 }
 
 /**
+ * 🚧 check gmRoomIds are properly sliced
  * @param {NPC.GlobalNavPath} navPath 
  * @param {number} [startId] from vertex {startId} (possibly -ve)
  * @param {number} [endId] to (not including) vertex {endId} (possibly -ve)
@@ -456,13 +461,15 @@ export function sliceNavPath(navPath, startId, endId) {
 
   path = path.slice(startId, endId);
   edgeNodeIds = edgeNodeIds.slice(startId, endId === undefined ? endId : Math.max(0, endId - 1));
-  gmRoomIds = gmRoomIds?.slice(startId, endId);
   navMetas = navMetas.slice();
 
   if (typeof endId === 'number') {
     if (endId < 0) endId += navPath.path.length;
     const postMetaId = navMetas.findIndex(meta => meta.index >= /** @type {number} */ (endId));
     postMetaId >= 0 && (navMetas = navMetas.slice(0, postMetaId));
+    for (const k of Object.keys(gmRoomIds)) {
+      if (Number(k) >= endId) delete gmRoomIds[/** @type {*} */ (k)];
+    }
   }
 
   if (typeof startId === 'number') {
@@ -471,11 +478,19 @@ export function sliceNavPath(navPath, startId, endId) {
     preMetaId >= 0 && (navMetas = navMetas.slice(preMetaId)
       .map(meta => ({ ...meta, index: meta.index - /** @type {number} */ (startId) }))
     );
+    for (const [k, v] of Object.entries(gmRoomIds)) {
+      delete gmRoomIds[/** @type {*} */ (k)];
+      if (Number(k) >= startId) {
+        gmRoomIds[Number(k) - startId] = v;
+      } else {// Ensure `0` has a gmRoomId
+        gmRoomIds[0] = v;
+      }
+    }
   }
 
   return {
     key,
-    path: path,
+    path,
     edgeNodeIds,
     gmRoomIds,
     navMetas,

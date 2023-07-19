@@ -93,15 +93,14 @@ export default function useHandleEvents(api) {
           api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
           api.npcs.setRoomByNpc(e.npcKey);
           break;
-        case 'started-walking':
+        case 'started-walking': {
           // Player could have warped to start of navPath, changing FOV
-          const [id] = api.npcs.getNpc(e.npcKey).anim.gmRoomIds;
-          if (!id) {// custom navPaths needn't have gmRoomIds
-            api.npcs.setRoomByNpc(e.npcKey);
-          } else if (api.fov.gmId !== id[0] || api.fov.roomId !== id[1]) {
-            api.fov.setRoom(...id, -1);
+          const gmRoomId = api.npcs.getNpc(e.npcKey).anim.gmRoomIds[0];
+          if (api.fov.gmId !== gmRoomId.gmId || api.fov.roomId !== gmRoomId.roomId) {
+            api.fov.setRoom(gmRoomId.gmId, gmRoomId.roomId, -1);
           }
           break;
+        }
         case 'stopped-walking':
           break;
         case 'way-point':
@@ -128,9 +127,13 @@ export default function useHandleEvents(api) {
           cancelNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
+          npc.gmRoomId = npc.anim.gmRoomIds[e.meta.index] ?? npc.gmRoomId;
+
           if ((e.meta.index + 1) === npc.anim.path.length) {
             break; // npc at final vertex
-          } // npc is walking along a line segment
+          }
+          
+          // npc is walking along a line segment
           npc.updateWalkSegBounds(e.meta.index);
           state.predictNpcNpcsCollision(npc);
           state.predictNpcDecorCollision(npc);
@@ -202,7 +205,7 @@ export default function useHandleEvents(api) {
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
       // Restrict to decor in room containing line-segment's 1st vertex
       // ℹ️ assume room-traversing segments begin/end on border
-      const [gmId, roomId] = npc.anim.gmRoomIds[aux.index];
+      const { gmId, roomId } = npc.gmRoomId;
 
       // const closeDecor = api.decor.byRoom[gmId][roomId].colliders;
       const closeDecor = queryDecorGridLine(

@@ -243,9 +243,9 @@
      * Request navpath(s) to position(s) for character(s), e.g.
      * ```sh
      * nav andros "$( click 1 )"
+     * nav $( click 3 )
      * expr '{"x":300,"y":300}' | nav andros
      * click | nav andros
-     * nav "$( click 3 )"
      * click | nav --to andros
      * ```
      */

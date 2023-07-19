@@ -47,6 +47,12 @@ declare namespace NPC {
 
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
+    /**
+     * Set on spawn or at vertex during walk.
+     * Can be `{gmId:-1,roomId:-1}` e.g. if spawned into doorway, or outside map.
+     * While walking, doorways will default to previously entered room.
+     */
+    gmRoomId: Geomorph.GmRoomId;
     /** Inventory */
     has: {
       /** has key iff `doorKey[gmId][doorId]` is true */
@@ -84,7 +90,6 @@ declare namespace NPC {
     getWalkAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
     getAnimScaleFactor(): number;
-    getGmRoomId(throwIfNull?: boolean): Geomorph.GmRoomId | null;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
     getNextDoorId(): number | undefined;
@@ -116,7 +121,7 @@ declare namespace NPC {
      * Nevertheless we'll keep this computation handy.
      */
     inferWalkTransform(): { position: Geom.Vect; angle: number; }
-    /** Initialise using `def` */
+    /** Initialise using `def` on (re)spawn */
     initialize(): void;
     intersectsCircle(position: Geom.VectJson, radius: number): boolean;
     isIdle(): boolean;
@@ -208,8 +213,8 @@ declare namespace NPC {
      */
     updatedPlaybackRate: number;
 
-    /** Aligned to `path` with format `[gmId, roomId]` */
-    gmRoomIds: [number, number][];
+    /** Only set when changes, starting from `0` */
+    gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
@@ -416,10 +421,11 @@ declare namespace NPC {
     edgeNodeIds: number[][];
     navMetas: GlobalNavMeta[];
     /**
-     * Aligned to @see {path}.
-     * Used to restrict decors before collision prediction.
+     * The gmRoomId of a vertex whenever it differs from previous.
+     * - May include other vertexIds e.g. due to concatenation.
+     * - Used to e.g. set npc.gmRoomId during walk.
      */
-    gmRoomIds: [number, number][];
+    gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
   }
 
   /**
