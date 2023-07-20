@@ -98,11 +98,11 @@ export class gmGraphClass extends BaseGraph {
        * but we prefer an explicit approach.
        */
       const areaGm = this.gms[area.gmId];
-      const isOpen = this.api.doors.open[area.gmId];
+      const gmDoors = this.api.doors.lookup[area.gmId];
       const blockedDoorIds = [
         // ...gm.roomGraph.getAdjacentDoors(rootRoomId).map(x => x.doorId),
         ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
-        ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !isOpen[doorId]),
+        ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !gmDoors[doorId].open),
       ];
 
       /** We imagine we are viewing from the center of the door */
@@ -331,9 +331,9 @@ export class gmGraphClass extends BaseGraph {
       nodes[srcNode.index].astar.centroid.copy(src);
       nodes[dstNode.index].astar.centroid.copy(dst);
       // closed hull doors have large cost
-      const { open } = this.api.doors;
+      const { lookup } = this.api.doors;
       this.gms.forEach((_, gmId) =>
-        this.doorNodeByGmId[gmId].forEach(node => node.astar.cost = open[gmId][node.doorId] === true ? 1 : 10000)
+        this.doorNodeByGmId[gmId].forEach(node => node.astar.cost = lookup[gmId][node.doorId].open === true ? 1 : 10000)
       );
     });
 

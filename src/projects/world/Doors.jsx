@@ -1,7 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
-import { pause } from "../service/generic";
 import { cssName, defaultDoorCloseMs } from "./const";
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
@@ -20,20 +19,20 @@ export default function Doors(props) {
     events: new Subject,
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
-    touchMeta: gms.map((gm, gmId) => gm.doors.map((_, doorId) =>
-      JSON.stringify({ door: true, ui: true, gmId, doorId })
-    )),
 
-    closing: gms.map((gm, _) => gm.doors.map(__ => null)),
-    locked: gms.map((gm, _) => gm.doors.map(__ => false)),
-    open: gms.map((gm, gmId) => gm.doors.map((_, doorId) => props.init?.[gmId]?.includes(doorId) ?? false)),
-    visible: gms.map(_ => ({})),
+    lookup: gms.map((gm, gmId) => gm.doors.map((_, doorId) => ({
+      closeTimeoutId: undefined,
+      locked: false,
+      open: props.init?.[gmId]?.includes(doorId) ?? false,
+      touchMeta: JSON.stringify({ door: true, ui: true, gmId, doorId }),
+      visible: false,
+    }))),
 
     getOpenIds(gmId) {
-      return state.open[gmId].flatMap((open, doorId) => open ? doorId : []);
+      return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
     },
     getVisibleIds(gmId) {
-      return Object.keys(state.visible[gmId]).map(Number);
+      return state.lookup[gmId].flatMap((x, i) => x.visible ? i : []);
     },
     npcNearDoor(gmId, doorId, npcKey) {
       const npc = props.api.npcs.getNpc(npcKey);
@@ -59,13 +58,13 @@ export default function Doors(props) {
       return closeNpcs.length === 0;
     },
     setVisible(gmId, doorIds) {
-      state.visible[gmId] = doorIds.reduce((agg, id) => ({ ...agg, [id]: true }), {});
+      state.lookup[gmId].forEach((x, doorId) => x.visible = doorIds.includes(doorId));
     },
     async toggleDoor(gmId, doorId, opts = {}) {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
       const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed; // 🤔
-      const wasOpen = state.open[gmId][doorId];
+      const wasOpen = state.lookup[gmId][doorId].open;
       const npcKey = opts.npcKey ?? (opts.viaClick && !npcs.config.omnipresent ? npcs.playerKey : null);
 
       if (sealed) {
@@ -77,7 +76,7 @@ export default function Doors(props) {
 
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
-          window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
+          window.clearTimeout(state.lookup[gmId][doorId]?.closeTimeoutId);
           state.tryCloseDoor(gmId, doorId); // Reset door close
           return true;
         }
@@ -85,12 +84,12 @@ export default function Doors(props) {
           return false;
         }
         // Cancel any pending close
-        window.clearTimeout(state.closing[gmId][doorId]?.timeoutId);
+        window.clearTimeout(state.lookup[gmId][doorId]?.closeTimeoutId);
       } else {
         if (opts.close) {// Do not close if closed
           return true;
         }
-        if (!npcs.config.omnipresent && state.locked[gmId][doorId]) {
+        if (!npcs.config.omnipresent && state.lookup[gmId][doorId].locked) {
           if (!(opts.npcKey && npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId))) {
             return false; // cannot open door if locked
           }
@@ -98,14 +97,14 @@ export default function Doors(props) {
       }
 
       // Toggle the door
-      state.open[gmId][doorId] = !wasOpen;
+      state.lookup[gmId][doorId].open = !wasOpen;
       const key = wasOpen ? 'closed-door' : 'opened-door';
       state.events.next({ key, gmId, doorId });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
       const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
       if (adjHull) {
-        state.open[adjHull.adjGmId][adjHull.adjDoorId] = state.open[gmId][doorId];
+        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = state.lookup[gmId][doorId].open;
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
         state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
@@ -120,13 +119,13 @@ export default function Doors(props) {
     },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
-        if (state.open[gmId][doorId] && !await state.toggleDoor(gmId, doorId, {})) {
+        if (state.lookup[gmId][doorId].open && !await state.toggleDoor(gmId, doorId, {})) {
           state.tryCloseDoor(gmId, doorId); // try again
         } else {
-          state.closing[gmId][doorId] = null;
+          delete state.lookup[gmId][doorId].closeTimeoutId;
         }
       }, defaultDoorCloseMs);// 🚧 change ms?
-      state.closing[gmId][doorId] = { timeoutId };
+      state.lookup[gmId][doorId].closeTimeoutId = timeoutId;
     },
     update,
     updateVisibleDoors() {
@@ -147,7 +146,7 @@ export default function Doors(props) {
       const extAdjDoors = gm.roomGraph.getAdjacentDoors(
         ...adjRoomIds.concat(fov.roomId)
       ).flatMap(x =>
-        gm.relDoorId[x.doorId] && state.open[fov.gmId][x.doorId]
+        gm.relDoorId[x.doorId] && state.lookup[fov.gmId][x.doorId].open
           ? [x.doorId, ...gm.relDoorId[x.doorId].doorIds]
           : x.doorId
       );
@@ -162,7 +161,7 @@ export default function Doors(props) {
         gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
       ).forEach(({ adjGmId, adjDoorId, adjRoomId }) => {
         (nextVisSet[adjGmId] ||= new Set).add(adjDoorId);
-        if (state.open[adjGmId][adjDoorId]) {
+        if (state.lookup[adjGmId][adjDoorId].open) {
           // Include adj doors, possibly seen thru hull door
           gms[adjGmId].roomGraph.getAdjacentDoors(adjRoomId).forEach(
             x => nextVisSet[adjGmId].add(x.doorId)
@@ -186,10 +185,10 @@ export default function Doors(props) {
     if (npcs.ready) {
       const handlePause = npcs.events.subscribe(e => {
         e.key === 'disabled' && // Cancel future door closings
-          state.closing.forEach(doors => doors.forEach(meta => window.clearTimeout(meta?.timeoutId)));
+          state.lookup.forEach(doors => doors.forEach(meta => window.clearTimeout(meta?.closeTimeoutId)));
         e.key === 'enabled' && // Schedule pending door closures
-          state.closing.forEach((doors, gmId) => doors.forEach((meta, doorId) => {
-            meta && (meta.timeoutId = window.setTimeout(() => state.tryCloseDoor(gmId, doorId)))
+          state.lookup.forEach((doors, gmId) => doors.forEach((meta, doorId) => {
+            meta && (meta.closeTimeoutId = window.setTimeout(() => state.tryCloseDoor(gmId, doorId)))
           }));
       });
       return () => void handlePause.unsubscribe();
@@ -216,14 +215,14 @@ export default function Doors(props) {
           style={{ transform: gm.transformStyle }}
         >
           {gm.doors.map((door, doorId) =>
-            state.visible[gmId][doorId] &&
+            state.lookup[gmId][doorId].visible &&
               <div
                 key={doorId}
                 className={cx(cssName.door, {
-                  [cssName.open]: state.open[gmId][doorId],
+                  [cssName.open]: state.lookup[gmId][doorId].open,
                   [cssName.hull]: !!door.meta.hull,
                 })}
-                data-meta={state.touchMeta[gmId][doorId]}
+                data-meta={state.lookup[gmId][doorId].touchMeta}
                 style={{
                   left: door.baseRect.x,
                   top: door.baseRect.y,
@@ -287,18 +286,16 @@ const rootCss = css`
 
 /**
  * @typedef State @type {object}
- * @property {(null | { timeoutId: number; })[][]} closing Provides `closing[gmId][doorId]?.timeoutId`
- * @property {boolean[][]} locked
  * `locked[gmId][doorId]` <=> door is locked 
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(e: PointerEvent) => void} onClickDoor
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
- * @property {boolean[][]} open `open[gmId][doorId]` <=> door is open
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {string[][]} touchMeta `touchMeta[gmId][doorId]` is stringified meta of respective door
+ * @property {{ closeTimeoutId?: number; locked: boolean; open: boolean; touchMeta: string; visible: boolean; }[][]} lookup
+ * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
  * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => Promise<boolean>} toggleDoor
@@ -306,7 +303,6 @@ const rootCss = css`
  * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} update
  * @property {() => void} updateVisibleDoors
- * @property {{ [doorId: number]: true }[]} visible
  * `vis[gmId][doorId]` <=> `door` is visible
  */
 

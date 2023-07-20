@@ -11,10 +11,12 @@
   - ✅ only store changes
   - ✅ set inside npc and lookup from there
   - ✅ hookup to npc api
+
+- ✅ unify api.doors
+- BUG strange early `track` during CssPanZoom initial panzoom
+
 - `walk --open` weights _locked_ doors (not closed doors)
   - taking keys into account
-- BUG strange early `track` during CssPanZoom initial panzoom
-- Can unify api.doors?
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!

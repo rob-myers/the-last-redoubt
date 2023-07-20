@@ -26,8 +26,8 @@ import useUpdate from "../hooks/use-update";
 
 /** @type {Geomorph.GeomorphKey} */
 // const layoutKey = 'g-101--multipurpose';
-// const layoutKey = 'g-102--research-deck';
-const layoutKey = 'g-103--cargo-bay';
+const layoutKey = 'g-102--research-deck';
+// const layoutKey = 'g-103--cargo-bay';
 // const layoutKey = 'g-301--bridge';
 // const layoutKey = 'g-302--xboat-repair-bay';
 // const layoutKey = 'g-303--passenger-deck';
@@ -69,7 +69,7 @@ function Geomorph({ def, transform, disabled }) {
       // ℹ️ Provide state needed by gmGraph
       gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
         getOpenIds(_) { return state.openDoors; },
-        get open() { return [gm?.doors.map((_, doorId) => state.openDoors.includes(doorId))??[]]; },
+        get lookup() { return [gm?.doors.map((_, doorId) => ({ open: state.openDoors.includes(doorId) })) ?? []]; },
       });
       return { gm, gmGraph };
 

@@ -139,7 +139,7 @@ export default function useHandleEvents(api) {
           break;
         case 'at-door': {
           const { gmId, doorId } = e.meta;
-          if (!api.doors.open[gmId][doorId]) {
+          if (!api.doors.lookup[gmId][doorId].open) {
             await npc.cancel(); // Upcoming door closed and locked
           }
           break;
@@ -155,7 +155,7 @@ export default function useHandleEvents(api) {
               // 🚧 why does setTimeout avoid jerk?
               setTimeout(() => npc.setSpeedFactor(0.6), 30);
               // npc.setSpeedFactor(0.5);
-              if (!api.doors.locked[gmId][nextDoorId]) {
+              if (!api.doors.lookup[gmId][nextDoorId].locked) {
                 api.doors.toggleDoor(gmId, nextDoorId, { open: true });
               };
             }

@@ -227,8 +227,8 @@ export default function NPCs(props) {
       const gm = api.gmGraph.gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
-      const doorOpen = api.doors.open[gmId];
-      const result = gm.floorGraph.findPath(localSrc, localDst, { doorOpen });
+      const gmDoors = api.doors.lookup[gmId];
+      const result = gm.floorGraph.findPath(localSrc, localDst, { doorMeta: gmDoors });
 
       if (result) {
         return {
@@ -367,7 +367,7 @@ export default function NPCs(props) {
       const gm = api.gmGraph.gms[gmRoomId.gmId];
       const localPoint = gm.inverseMatrix.transformPoint({...point});
       const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
-        !api.doors.open[gmRoomId.gmId][doorId] &&
+        !api.doors.lookup[gmRoomId.gmId][doorId].open &&
         // 🚧 check distance from line segment instead?
         geom.createOutset(gm.doors[doorId].poly, radius)[0].contains(localPoint)
       );

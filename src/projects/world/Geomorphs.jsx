@@ -89,12 +89,12 @@ export default function Geomorphs(props) {
     },
     onOpenDoor(gmId, doorId) {
       const gm = gms[gmId];
-      const open = api.doors.open[gmId];
+      const gmDoors = api.doors.lookup[gmId];
       const meta = gm.doorToLightRect[doorId];
       const ctxt = assertNonNull(state.canvas[gmId].getContext('2d'));
       if (!meta
         // all prior connectors must be windows or open doors
-        || !meta.preConnectors.every(({ type, id }) => type === 'window' || open[id])
+        || !meta.preConnectors.every(({ type, id }) => type === 'window' || gmDoors[id].open)
         || !state.gmRoomLit[gmId][meta.srcRoomId] // must be on 
       ) {
         return;
@@ -141,7 +141,7 @@ export default function Geomorphs(props) {
       const doorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
       const windowIds = gm.roomGraph.getAdjacentWindows(roomId).map(x => x.windowId);
       if (lit) {
-        const openDoorIds = doorIds.filter(doorId => api.doors.open[gmId][doorId]);
+        const openDoorIds = doorIds.filter(doorId => api.doors.lookup[gmId][doorId].open);
         openDoorIds.forEach(doorId => state.onOpenDoor(gmId, doorId));
         // Show light thru windows by clearing rect
         windowIds.forEach(windowId => {

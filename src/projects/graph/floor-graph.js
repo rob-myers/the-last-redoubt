@@ -111,13 +111,13 @@ export class floorGraphClass extends BaseGraph {
    * Find a path through a geomorph's navmesh
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
-   * @param {{ doorOpen?: { [doorId: number]: boolean }; }} [opts]
+   * @param {{ doorMeta?: { [doorId: number]: { open?: boolean; locked?: boolean; } }; }} [opts]
    * @returns {null | Graph.FloorGraphNavPath}
    */
   findPath(src, dst, opts = {}) {
     const srcNode = this.getClosestNode(src);
     const dstNode = this.getClosestNode(dst);
-    const { doorOpen = [] } = opts;
+    const { doorMeta = [] } = opts;
     if (!srcNode || !dstNode) {
       return null;
     }
@@ -130,7 +130,7 @@ export class floorGraphClass extends BaseGraph {
       nodes.forEach((node, i) => {
         // Why so large? 1000 didn't work
         const meta = metas[i];
-        node.astar.cost = doorOpen[meta.nearDoorId ?? meta.doorId] === false ? 10000 : 1.0;
+        node.astar.cost = (doorMeta[meta.nearDoorId ?? meta.doorId]?.open === false) ? 10000 : 1.0;
       });
     });
 
