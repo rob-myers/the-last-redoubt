@@ -384,16 +384,16 @@ export default function NPCs(props) {
       }
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      // Other npcs cannot be close
+      // Must not be close to another npc
       if (state.npc[npcKey]?.isPointBlocked(point)) {
         return false;
       }
-      // Must be inside some room
-      const result = api.gmGraph.findRoomContaining(point);
+      // Must be inside some room or doorway
+      const result = api.gmGraph.findRoomContaining(point, true);
       if (!result) {
         return false;
       }
-      // Door rects cannot be close
+      // Must not be close to a closed door
       const npcRadius = npcsMeta[npcClassKey].radius;
       if (state.isPointNearClosedDoor(point, npcRadius, result)) {
         return false;
@@ -635,13 +635,15 @@ export default function NPCs(props) {
     setRoomByNpc(npcKey) {
       const npc = state.getNpc(npcKey);
       const position = npc.getPosition();
-      const found = api.gmGraph.findRoomContaining(position);
+      const found = (// Fallback includes doors, picking some connected roomId
+        api.gmGraph.findRoomContaining(position, false)
+        || api.gmGraph.findRoomContaining(position, true)
+      );
       if (found) {
-        const doorId = api.gmGraph.gms[found.gmId].doors.findIndex(x => x.roomIds.includes(found.roomId));
-        props.api.fov.setRoom(found.gmId, found.roomId, doorId);
+        props.api.fov.setRoom(found.gmId, found.roomId, -1);
         return found;
-      } else {// TODO error in terminal?
-        console.error(`set-player ${npcKey}: no room contains ${JSON.stringify(position)}`)
+      } else {
+        console.error(`setRoomByNpc: ${npcKey}: no room/door contains ${JSON.stringify(position)}`)
         return null;
       }
     },
@@ -656,7 +658,6 @@ export default function NPCs(props) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
-      // ℹ️ can comment this out for nav testing
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
         throw new Error('cancelled');
       }

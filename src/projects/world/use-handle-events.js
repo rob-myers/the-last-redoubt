@@ -2,6 +2,7 @@ import React from "react";
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import * as npcService from "../service/npc";
+import { warn } from "../service/log";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
@@ -76,7 +77,7 @@ export default function useHandleEvents(api) {
         case 'resumed-track':
           break;
         case 'started-walking':
-          // remove pending collisions
+          // remove stale pending collisions
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
             other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
           }
@@ -94,10 +95,8 @@ export default function useHandleEvents(api) {
           api.npcs.setRoomByNpc(e.npcKey);
           break;
         case 'started-walking': {
-          // Player could have warped to start of navPath, changing FOV
-          const gmRoomId = api.npcs.getNpc(e.npcKey).anim.gmRoomIds[0];
-          if (api.fov.gmId !== gmRoomId.gmId || api.fov.roomId !== gmRoomId.roomId) {
-            api.fov.setRoom(gmRoomId.gmId, gmRoomId.roomId, -1);
+          if (!e.continuous) {// Player warped to navPath start
+            api.npcs.setRoomByNpc(e.npcKey);
           }
           break;
         }
@@ -199,13 +198,20 @@ export default function useHandleEvents(api) {
     },
 
     predictNpcDecorCollision(npc) {
+      /**
+       * We restrict to decor in npc's current room.
+       * - if start in doorway, this is next room or some adjacent.
+       * - if walking through doorway, this is previous room.
+       */
+      if (npc.gmRoomId === null) {
+        return warn(`predictNpcDecorCollision: npc ${npc.key} not inside any room`);
+      }
+      const { gmId, roomId } = npc.gmRoomId;
       
       const { aux, path } = npc.anim;
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
-      // Restrict to decor in room containing line-segment's 1st vertex
-      // ℹ️ assume room-traversing segments begin/end on border
-      const { gmId, roomId } = npc.gmRoomId;
+
 
       // const closeDecor = api.decor.byRoom[gmId][roomId].colliders;
       const closeDecor = queryDecorGridLine(

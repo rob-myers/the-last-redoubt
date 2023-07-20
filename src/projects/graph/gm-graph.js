@@ -438,18 +438,22 @@ export class gmGraphClass extends BaseGraph {
 
   /**
    * @param {Geom.VectJson} point
+   * @param {boolean} [includeDoors]
+   * Technically rooms do not include doors,
+   * but sometimes either adjacent room will do.
    * @returns {null | Geomorph.GmRoomId}
    */
-  findRoomContaining(point) {
+  findRoomContaining(point, includeDoors = false) {
     const [gmId] = this.findGeomorphIdContaining(point);
-    if (gmId !== null) {
-      const gm = this.gms[gmId];
-      const roomId = findLocalRoomContaining(gm.rooms, gm.inverseMatrix.transformPoint(Vect.from(point)));
-      if (roomId >= 0) {
-        return { gmId, roomId };
-      }
+    if (gmId === null) {
+      return null;
     }
-    return null;
+    const gm = this.gms[gmId];
+    const roomId = findLocalRoomContaining(
+      includeDoors ? gm.roomsWithDoors : gm.rooms,
+      gm.inverseMatrix.transformPoint(Vect.from(point)),
+    );
+    return roomId >= 0 ? { gmId, roomId } : null;
   }
 
   /**

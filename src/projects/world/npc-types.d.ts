@@ -52,7 +52,7 @@ declare namespace NPC {
      * Can be `{gmId:-1,roomId:-1}` e.g. if spawned into doorway, or outside map.
      * While walking, doorways will default to previously entered room.
      */
-    gmRoomId: Geomorph.GmRoomId;
+    gmRoomId: null | Geomorph.GmRoomId;
     /** Inventory */
     has: {
       /** has key iff `doorKey[gmId][doorId]` is true */
@@ -377,7 +377,11 @@ declare namespace NPC {
     | { key: 'removed-npc'; npcKey: string; }
     | { key: 'set-player'; npcKey: string | null; }
     | { key: 'spawned-npc'; npcKey: string; decors: NPC.DecorRef[]; }
-    | { key: 'started-walking'; npcKey: string; }
+    | {
+        key: 'started-walking';
+        npcKey: string;
+        /** Started walking from current position? */ continuous: boolean;
+      }
     | { key: 'stopped-walking'; npcKey: string; }
     | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
     | { key: 'resumed-track'; npcKey: string; }

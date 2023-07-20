@@ -61,7 +61,7 @@ export default function createNpc(
     },
     
     doMeta: null,
-    gmRoomId: { gmId: -1, roomId: -1 },
+    gmRoomId: null,
     has: {
       doorKey: api.gmGraph.gms.map(_ => ({})),
     },
@@ -207,10 +207,16 @@ export default function createNpc(
         length: this.computeWayMetaLength(navMeta),
       }));
       // this.updateRoomWalkBounds(0);
+
+      const continuous = this.getPosition().distanceTo(path[0]) <= 0.01;
       this.startAnimation('walk');
-      api.npcs.events.next({ key: 'started-walking', npcKey: this.def.key });
-      console.log(`followNavPath: ${this.def.key} started walk`);
+      api.npcs.events.next({
+        key: 'started-walking',
+        npcKey: this.def.key,
+        continuous,
+      });
       this.nextWayTimeout();
+      console.log(`followNavPath: ${this.def.key} started walk`);
 
       const trAnim = this.anim.translate;
       try {
@@ -415,7 +421,7 @@ export default function createNpc(
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
       this.anim.staticPosition.set(this.def.position.x, this.def.position.y);
-      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position) ?? { gmId: -1, roomId: -1 };
+      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position);
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
@@ -478,7 +484,7 @@ export default function createNpc(
       }
     },
     obscureBySurfaces() {// 🚧 cleaner approach possible?
-      if (this.gmRoomId.gmId >= 0) {
+      if (this.gmRoomId) {
         const gm = api.gmGraph.gms[this.gmRoomId.gmId];
         const worldSurfaces = (gm.roomSurfaceIds[this.gmRoomId.roomId] ?? [])
           .map(id => gm.groups.obstacles[id].poly.clone().applyMatrix(gm.matrix))
