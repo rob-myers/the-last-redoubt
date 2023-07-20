@@ -322,7 +322,7 @@ export default function CssPanZoom(props) {
         return state.idleTimeoutId === 0;
       },
       async panZoomTo(scale = state.scale, worldPoint = state.getWorldAtCenter(), durationMs, easing = 'ease') {
-        state.animationAction('cancel');
+        await state.animationAction('cancel');
 
         /**
          * Compute (x, y) s.t. `translate(x_1, y_2) scale(scale)` has `worldPoint` at screen center,
