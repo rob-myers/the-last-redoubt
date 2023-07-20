@@ -2003,6 +2003,13 @@
         }
       },
       {
+        "meta": {"relate-connectors": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[970, 685], [970, 695], [830, 695], [830, 685]]]
+        }
+      },
+      {
         "meta": {"light": true, "floor": true},
         "poly": {
           "type": "Polygon",
@@ -18043,7 +18050,7 @@
       "postConnectors": []
     }
   ],
-  "floorHighlightIds": [41, 42, 53, 54],
+  "floorHighlightIds": [41, 42, 54, 55],
   "roomSurfaceIds": {
     "0": [1],
     "1": [35, 36, 37],

@@ -1409,6 +1409,13 @@
         }
       },
       {
+        "meta": {"relate-connectors": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[830, 685], [830, 695], [970, 695], [970, 685]]]
+        }
+      },
+      {
         "meta": {"light": true, "floor": true},
         "poly": {
           "type": "Polygon",
@@ -1433,7 +1440,7 @@
       }
     ],
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1686758649253.1697
+    "lastModified": 1689856913741.6135
   },
   "103--hull": {
     "key": "103--hull",
