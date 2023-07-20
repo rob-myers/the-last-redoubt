@@ -111,16 +111,17 @@ export class floorGraphClass extends BaseGraph {
    * Find a path through a geomorph's navmesh
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
-   * @param {{ doorMeta?: { [doorId: number]: { open?: boolean; locked?: boolean; } }; }} [opts]
+   * @param {NPC.NavOpts} [opts]
    * @returns {null | Graph.FloorGraphNavPath}
    */
   findPath(src, dst, opts = {}) {
     const srcNode = this.getClosestNode(src);
     const dstNode = this.getClosestNode(dst);
-    const { doorMeta = [] } = opts;
     if (!srcNode || !dstNode) {
       return null;
     }
+
+    const { doorMeta = [] } = opts;
     /**
      * Apply A-Star implementation originally from:
      * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L106
@@ -128,9 +129,14 @@ export class floorGraphClass extends BaseGraph {
     const nodePath = AStar.search(this, srcNode, dstNode, (nodes) => {
       const metas = this.nodeToMeta;
       nodes.forEach((node, i) => {
-        // Why so large? 1000 didn't work
+        node.astar.cost = 1.0;
         const meta = metas[i];
-        node.astar.cost = (doorMeta[meta.nearDoorId ?? meta.doorId]?.open === false) ? 10000 : 1.0;
+        typeof opts.closedWeight !== 'undefined' && (doorMeta[meta.nearDoorId ?? meta.doorId]?.open === false) && (
+          node.astar.cost = /** @type {number} */ (opts.closedWeight)
+        );
+        typeof opts.lockedWeight !== 'undefined' && (doorMeta[meta.nearDoorId ?? meta.doorId]?.locked === true) && (
+          node.astar.cost = /** @type {number} */ (opts.lockedWeight)
+        );
       });
     });
 

@@ -15,8 +15,10 @@
 - ✅ unify api.doors
 - ✅ BUG strange early `track` during CssPanZoom initial panzoom
 
-- `walk --open` weights _locked_ doors (not closed doors)
-  - taking keys into account
+- 🚧 `nav --unlocked` weights _locked_ doors (not closed doors)
+- `nav --open` weights _closed_ doors
+- `nav --unlocked --keys=$( npc foo 'x => x.has.keys' )` takes keys into account
+- remove getNpcGlobalNavPath
 
 - ❌ move --tryOpen to `walk`?
 - back to behaviour on homepage!

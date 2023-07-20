@@ -63,7 +63,7 @@ export default function createNpc(
     doMeta: null,
     gmRoomId: null,
     has: {
-      doorKey: api.gmGraph.gms.map(_ => ({})),
+      key: api.gmGraph.gms.map(_ => ({})),
     },
     manuallyPaused: false,
     unspawned: true,
@@ -384,7 +384,7 @@ export default function createNpc(
         : this.anim.aux.segBounds;
     },
     hasDoorKey(gmId, doorId) {
-      return !!this.has.doorKey[gmId]?.[doorId];
+      return !!this.has.key[gmId]?.[doorId];
     },
     inferWalkTransform() {
       const position = new Vect;

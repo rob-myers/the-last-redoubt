@@ -256,13 +256,19 @@
         ],
         boolean: [
           "to",   /** Piped input goes before operands (else after) */
-          "safePipe", /** Piped noops if any resolved point non-navigable */
+          "safePipe", /** Pipe only: NOOPs if any resolved point non-navigable */
         ]});
       const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
         throw Error("not enough points");
       }
+
+      // 🚧 modified by --open, --unlocked, --keys={}
+      /** @type {NPC.NavOpts} */
+      const navOpts = {
+        closedWeight: 10000,
+      };
 
       /** @param {any[]} parsedArgs */
       function parsePoints(parsedArgs) {
@@ -277,7 +283,7 @@
       }
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
-        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point));
+        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, navOpts));
         const navPath = npcs.service.concatenateNavPaths(...navPaths);
         typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
         decor.setPseudoDecor(navPath);

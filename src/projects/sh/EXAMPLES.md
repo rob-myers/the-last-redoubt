@@ -256,5 +256,5 @@ done
 # lock doorId 8 of gmId 0
 world 'x => x.doors.lookup[0][8].locked = true'
 # give key to npc "andros"
-npc andros 'x => x.has.doorKey[0][8] = true'
+npc andros 'x => x.has.key[0][8] = true'
 ```

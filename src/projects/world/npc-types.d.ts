@@ -56,7 +56,7 @@ declare namespace NPC {
     /** Inventory */
     has: {
       /** has key iff `doorKey[gmId][doorId]` is true */
-      doorKey: { [doorId: number]: boolean }[];
+      key: { [doorId: number]: boolean }[];
     };
     /**
      * Process suspend/resume for e.g. `walk` will pause/resume npc,
@@ -399,8 +399,6 @@ declare namespace NPC {
   //#endregion
 
   //#region nav
-
-  
   /**
    * A path through the `FloorGraph` of some geomorph instance.
    * Global nav paths are obtained by stitching these together.
@@ -471,6 +469,15 @@ declare namespace NPC {
     distA: number;
     /** Distance from iB at which they will collide */
     distB: number;
+  }
+
+  export interface NavOpts {
+    /** Automatically provided specification of open/locked doors */
+    doorMeta?: { [doorId: number]: { open?: boolean; locked?: boolean; } };
+    /** Weight of door nodes whose door is closed  */
+    closedWeight?: number;
+    /** Weight of door nodes whose door is locked;  */
+    lockedWeight?: number;
   }
 
   //#endregion
