@@ -497,9 +497,16 @@ export default function NPCs(props) {
         if (point.meta.door && typeof point.meta.gmId === 'number' && typeof point.meta.doorId === 'number') {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
           const extraParam = e.params?.[0] === undefined ? undefined : !!e.params[0];
-          const success = await api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: e.npcKey, close: extraParam === false, open: extraParam === true });
-          if (!success) {
-            throw Error('cannot open/close door')
+          const open = extraParam === true;
+          const close = extraParam === false;
+          const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
+          const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: e.npcKey, close, open });
+          if (close) {
+            if (isOpen) throw Error('cannot close door');
+          } else if (open) {
+            if (!isOpen) throw Error('cannot open door');
+          } else {
+            if (wasOpen === isOpen) throw Error('cannot toggle door');
           }
         } else if (state.isPointInNavmesh(npc.getPosition())) {
           await state.onMeshDoMeta(npc, e);
@@ -561,7 +568,7 @@ export default function NPCs(props) {
 
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
-        await state.walkNpc({ npcKey: npc.key, throwOnCancel: true, navPath });
+        await state.walkNpc(npc.key, navPath, { throwOnCancel: true });
         typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
         npc.startAnimationByMeta(meta);
         return;
@@ -783,28 +790,28 @@ export default function NPCs(props) {
 
       return subscription;
     },
-    async walkNpc(e) {
-      const npc = state.getNpc(e.npcKey);
-      if (!npcService.verifyGlobalNavPath(e.navPath)) {
-        throw Error(`invalid global navpath: ${JSON.stringify(e)}`);
-      } else if (e.navPath.path.length === 0) {
+    async walkNpc(npcKey, navPath, opts) {
+      const npc = state.getNpc(npcKey);
+      if (!npcService.verifyGlobalNavPath(navPath)) {
+        throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
+      } else if (navPath.path.length === 0) {
         return;
       } else if (npc.isPointBlocked(
-        e.navPath.path[0],
-        npc.getPosition().equalsAlmost(e.navPath.path[0])
+        navPath.path[0],
+        npc.getPosition().equalsAlmost(navPath.path[0])
       )) {
         throw new Error('start of navPath blocked');
       }
 
       try {
         /**
-         * Walk along a global navpath, possibly
-         * throwing 'cancelled' if collide with something.
+         * Walk along a global navpath, possibly throwing
+         * Error with message 'cancelled' if collide with something.
          */
-        await npc.followNavPath(e.navPath, e.open);
+        await npc.followNavPath(navPath, opts.doorStrategy);
       } catch (err) {
-        if (!e.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
-          console.info(`walkNpc cancelled: ${e.npcKey}`);
+        if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
+          console.info(`walkNpc cancelled: ${npcKey}`);
         } else {
           throw err;
         }
@@ -883,7 +890,7 @@ export default function NPCs(props) {
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc')} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(e: { npcKey: string; navPath: NPC.GlobalNavPath; open?: boolean; throwOnCancel?: boolean }) => Promise<void>} walkNpc
+ * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts: NPC.WalkNpcOpts) => Promise<void>} walkNpc
  */
 
 /**

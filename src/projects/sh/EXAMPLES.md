@@ -261,3 +261,13 @@ npc andros 'x => x.has.key[0][8] = true'
 # navigate, weighting nav nodes near locked doors
 nav --locked=10000 $( click 2 )
 ```
+
+```sh
+# try close a door
+npc do andros $( click 1 ) 0
+# npc: run: Error: cannot close door
+
+# try toggle a door
+npc do andros $( click 1 )
+# npc: run: Error: cannot toggle door
+```

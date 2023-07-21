@@ -148,30 +148,19 @@ export default function useHandleEvents(api) {
           // npc.updateRoomWalkBounds(e.meta.index);
           break;
         case 'decor-collide': {
-          const { decor, type, gmId } = e.meta;
-
-          // 🚧 support other doorStrategies
-          if (npc.anim.doorStrategy === 'try-open' && decor.meta.doorSensor) {
-            const nextDoorId = npc.getNextDoorId();
-            if (type !== 'exit' && decor.meta.doorId === nextDoorId) {
-              // Entered or started-inside doorSensor of next door
-              setTimeout(() => npc.setSpeedFactor(0.6), 30); // 🚧 avoids jerk, why?
-              const { locked } = api.doors.lookup[gmId][nextDoorId];
-              if (locked && !npc.has.key[gmId][nextDoorId]) {
-                // 🚧 could stop early
-                // 🚧 could try to get inside if open
-                // await npc.cancel(); 
-              } else {
-                api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });
-              }
-            }
+          const { decor, type } = e.meta;
+          if (decor.meta.doorSensor
+            && type !== 'exit'
+            && decor.meta.doorId === npc.getNextDoorId()
+          ) {
+            state.onDoorSensor(npc, e.meta, decor.meta.doorId);
           }
-
           break;
         }
         case 'enter-room':
-          if (npc.anim.doorStrategy === 'try-open') {
-            npc.setSpeedFactor(1);
+          if (npc.anim.doorStrategy !== 'none') {
+             // Currently, all other strategies slow near door
+             npc.setSpeedFactor(1);
           }
           break;
         default:
@@ -300,6 +289,36 @@ export default function useHandleEvents(api) {
       }
     },
 
+    async onDoorSensor(npc, meta, nextDoorId) {
+      if (npc.anim.doorStrategy !== 'none') {
+        // Currently, all open strategies slow down near door
+        // 🚧 setTimeout avoids jerk?
+        setTimeout(() => npc.setSpeedFactor(0.6), 30);
+      }
+      
+      const { gmId } = meta;
+      const { locked } = api.doors.lookup[gmId][nextDoorId];
+
+      switch (npc.anim.doorStrategy) {
+        case 'open': // Always try to walk through open locked doors
+          if (!locked || npc.has.key[gmId][nextDoorId]) {
+            api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });
+          }
+          break;
+        case 'safeOpen': // Always stop at locked inaccessible doors
+          if (locked && !npc.has.key[gmId][nextDoorId]) {
+            await npc.cancel();
+          } else {
+            api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });
+          }
+          break;
+        case 'forceOpen': // Act as though have skeleton key
+          api.doors.toggleDoor(gmId, nextDoorId, { open: true });
+          break;
+        case 'none':
+          break;
+      }
+    },
   }), {
     deps: [api.gmGraph],
   });
@@ -371,6 +390,8 @@ export default function useHandleEvents(api) {
  * @property {(npc: NPC.NPC) => void} predictNpcDecorCollision
  * @property {(npc: NPC.NPC, otherNpc: NPC.NPC) => void} predictNpcNpcCollision
  * @property {(npc: NPC.NPC) => void} predictNpcNpcsCollision
+ * @property {(npc: NPC.NPC, collideMeta: NPC.NpcWayMetaDecorCollide, nextDoorId: number) => Promise<void>} onDoorSensor
+ * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
  * Handle NPC event (always runs)
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent

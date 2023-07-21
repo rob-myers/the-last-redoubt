@@ -83,7 +83,7 @@ declare namespace NPC {
     everAnimated(): boolean;
     followNavPath(
       globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
-      openDoors?: boolean,
+      doorStrategy?: WalkDoorStrategy,
     ): Promise<void>;
     /** Radians */
     getAngle(): number;
@@ -218,13 +218,25 @@ declare namespace NPC {
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
-    doorStrategy: (
-      | 'none'        // do not try to open doors
-      | 'try-open'    // open doors, walking into closed locked ones
-      | 'stop-open'   // open doors, stopping at locked ones (open or closed)
-      | 'bold-open'   // open doors, stopping at closed locked ones
-      | 'force-open'  // open doors, forcing them open (as if had skeleton key)
-    );
+    doorStrategy: WalkDoorStrategy;
+  }
+
+  /**
+   * - `none`: do not try to open doors
+   * - `open`: open doors, walking into closed locked ones
+   * - `safeOpen`: open doors, stopping at inaccessible locked ones (open or closed)
+   * - `forceOpen`: open doors, forcing them open (as if had skeleton key)
+   */
+  type WalkDoorStrategy = (
+    | 'none'
+    | 'open'
+    | 'safeOpen'
+    | 'forceOpen'
+  );
+
+  interface WalkNpcOpts {
+    throwOnCancel?: boolean 
+    doorStrategy?: WalkDoorStrategy;
   }
 
   interface NpcLineSeg {
@@ -447,6 +459,7 @@ declare namespace NPC {
   export type NpcWayMetaExitRoom = Extract<NPC.NpcWayMeta, { key: 'exit-room' }>
   export type NpcWayMetaVertex = Extract<NPC.NpcWayMeta, { key: 'vertex' }>
   export type NpcWayMetaNpcsCollide = Extract<NPC.NpcWayMeta, { key: 'npcs-collide' }>
+  export type NpcWayMetaDecorCollide = Extract<NPC.NpcWayMeta, { key: 'decor-collide' }>
 
   /**
    * A `GlobalNavMeta` is a `FloorGraphNavMeta` enriched with the id of the geomorph instance

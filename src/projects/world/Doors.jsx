@@ -53,7 +53,9 @@ export default function Doors(props) {
         const meta = JSON.parse(uiEl.dataset.meta);
         const gmId = Number(meta.gmId);
         const doorId = Number(meta.doorId);
-        state.toggleDoor(gmId, doorId, { viaClick: true });
+        state.toggleDoor(gmId, doorId, {// 🚧 unused?
+          npcKey: npcs.config.omnipresent ? undefined : (npcs.playerKey ?? undefined)
+        });
       }
     },
     safeToCloseDoor(gmId, doorId) {
@@ -108,7 +110,7 @@ export default function Doors(props) {
     toggleDoor(gmId, doorId, opts = {}) {
       const item = state.lookup[gmId][doorId];
       const { sealed, open: wasOpen } = item;
-      const npcKey = opts.npcKey ?? (opts.viaClick && !npcs.config.omnipresent ? npcs.playerKey : null);
+      const npcKey = opts.npcKey;
 
       if (sealed) {
         return false;
@@ -134,7 +136,9 @@ export default function Doors(props) {
         if (opts.close) {// Do not close if closed
           return false;
         }
-        if (item.locked && !(opts.npcKey && npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId))) {
+        // Ignore locks if `npcKey` unspecified
+        // 🤔 careful about omnipresent
+        if (item.locked && opts.npcKey && !npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId)) {
           return false; // cannot open door if locked
         }
       }
@@ -163,7 +167,7 @@ export default function Doors(props) {
     },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
-        if (state.lookup[gmId][doorId].open && !await state.toggleDoor(gmId, doorId, {})) {
+        if (state.lookup[gmId][doorId].open && !state.toggleDoor(gmId, doorId, {})) {
           state.tryCloseDoor(gmId, doorId); // try again
         } else {
           delete state.lookup[gmId][doorId].closeTimeoutId;
@@ -372,7 +376,6 @@ const rootCss = css`
  * @property {boolean} [close] should we close the door?
  * @property {string} [npcKey] initiated via npc?
  * @property {boolean} [open] should we open the door?
- * @property {boolean} [viaClick] initiated via click?
  */
 
 /**

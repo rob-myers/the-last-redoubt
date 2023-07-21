@@ -133,6 +133,8 @@ export default function createNpc(
         this.clearWayMetas(); // Cancel pending actions
       }
 
+      this.anim.speedFactor = 1; // Reset speed
+
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
         (anim !== this.anim.sprites) && anim.commitStyles();
         return /** @type {Promise<void>} */ (new Promise(resolve => {
@@ -185,15 +187,14 @@ export default function createNpc(
         this.nextWayTimeout();
       }
     },
-    async followNavPath({ path, navMetas: globalNavMetas, gmRoomIds }, openDoors) {
+    async followNavPath({ path, navMetas: globalNavMetas, gmRoomIds }, doorStrategy) {
       // warn('START followNavPath')
       // might jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
       // from `nav` for decor collisions
       this.anim.gmRoomIds = gmRoomIds;
       this.anim.updatedPlaybackRate = 1;
-      // 🚧 opts.doorStrategy or similar
-      this.anim.doorStrategy = openDoors && path.length ? 'try-open' : 'none';
+      this.anim.doorStrategy = doorStrategy ?? 'none';
 
       this.clearWayMetas();
       this.resetAnimAux();

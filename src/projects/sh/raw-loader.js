@@ -490,16 +490,24 @@
      */
     walk: async function* ({ api, args, home, datum, promises = [] }) {
       const { opts, operands } = api.getOpts(args, { boolean: [
-        "open", /** Try to open doors */
+        "open",       /** Try to open doors */
+        "safeOpen",   /** Do not approach locked doors without key */
+        "forceOpen",  /** Open all doors (as if had skeleton key) */
       ]});
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = operands[0]
   
       npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
-  
+
+      /** @type {NPC.WalkDoorStrategy} */
+      let doorStrategy = "none";
+      opts.open && (doorStrategy = "open");
+      opts.safeOpen && (doorStrategy = "safeOpen");
+      opts.forceOpen && (doorStrategy = "forceOpen");
+      
       if (api.isTtyAt(0)) {
         const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(operands[1]));
-        await npcs.walkNpc({ npcKey, navPath, open: opts.open });
+        await npcs.walkNpc(npcKey, navPath, { doorStrategy });
       } else {// `walk {npcKey}` expects to read global navPaths
         datum = await api.read()
         while (datum !== null) {
@@ -509,7 +517,7 @@
           navPath.path.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
           // Subsequent reads can interrupt walk
           const resolved = await Promise.race([
-            promises[0] = npcs.walkNpc({ npcKey, navPath, open: opts.open }),
+            promises[0] = npcs.walkNpc(npcKey, navPath, { doorStrategy }),
             promises[1] = api.read(),
           ])
           if (resolved === undefined) {// Finished walk

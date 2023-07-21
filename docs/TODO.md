@@ -20,7 +20,8 @@
 - ✅ `nav --locked={weight}` weights _locked_ doors (open or closed)
 
 - ✅ locked doors are indicated as such
-- `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
+- ✅ `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
+- 🚧 understand `npcs.config.scriptDoors` and possibly remove
 - 🚧 remove getNpcGlobalNavPath
 
 - back to behaviour on homepage!
