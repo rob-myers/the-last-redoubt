@@ -85,7 +85,7 @@ doLoop: `{
 goLoop: `{
   click |
     filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
-    nav --safePipe $1 |
+    nav --safeLoop --preferOpen $1 |
     walk $1
 }`,
 

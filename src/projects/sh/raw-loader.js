@@ -251,23 +251,28 @@
      */
     nav: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {
-        string: [
-          "name" /** Created DecorPath has this key */
-        ],
         boolean: [
+          "preferOpen", /** Prefer open doors i.e. --closed=10000 */
+          "safeLoop", /** Pipe mode NOOPs if path non-navigable */
           "to",   /** Piped input goes before operands (else after) */
-          "safePipe", /** Pipe only: NOOPs if any resolved point non-navigable */
-        ]});
+        ],
+        string: [
+          "closed", /** Weight nav nodes near closed doors, e.g. 10000 */
+          "locked", /** Weight nav nodes near locked doors, e.g. 10000 */
+          "name", /** Created DecorPath has this key */
+        ],
+      })
       const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
         throw Error("not enough points");
       }
 
-      // 🚧 modified by --open, --unlocked, --keys={}
       /** @type {NPC.NavOpts} */
       const navOpts = {
-        closedWeight: 10000,
+        ...opts.preferOpen && { closedWeight: 10000 },
+        ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
+        ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
 
       /** @param {any[]} parsedArgs */
@@ -299,7 +304,7 @@
           try {
             yield computeNavPath(parsePoints(opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)));
           } catch (e) {// 🚧 swallows other errors?
-            if (!opts.safePipe) throw e;
+            if (!opts.safeLoop) throw e;
           }
         }
       }

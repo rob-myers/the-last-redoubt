@@ -472,11 +472,14 @@ declare namespace NPC {
   }
 
   export interface NavOpts {
-    /** Automatically provided specification of open/locked doors */
-    doorMeta?: { [doorId: number]: { open?: boolean; locked?: boolean; } };
-    /** Weight of door nodes whose door is closed  */
+    /**
+     * Automatically provided specification of open/locked doors,
+     * i.e. `api.doors.lookup[gmId]` for respective geomorph's `gmId`.
+     */
+    doorMeta?: import('../world/Doors').State['lookup'][*];
+    /** Weight of door nodes whose door is closed */
     closedWeight?: number;
-    /** Weight of door nodes whose door is locked;  */
+    /** Weight of door nodes whose door is locked */
     lockedWeight?: number;
   }
 

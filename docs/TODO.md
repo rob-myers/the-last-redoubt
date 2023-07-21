@@ -15,12 +15,12 @@
 - ✅ unify api.doors
 - ✅ BUG strange early `track` during CssPanZoom initial panzoom
 
-- 🚧 `nav --unlocked` weights _locked_ doors (not closed doors)
-- `nav --open` weights _closed_ doors
-- `nav --unlocked --keys=$( npc foo 'x => x.has.keys' )` takes keys into account
-- remove getNpcGlobalNavPath
-
 - ❌ move --tryOpen to `walk`?
+- ✅ `nav --closed={weight}` weights _closed_ doors
+- ✅ `nav --locked={weight}` weights _locked_ doors (open or closed)
+- 🚧 remove getNpcGlobalNavPath
+- align walk strategy to `walk` options
+
 - back to behaviour on homepage!
 
 - track still jerky when walk slow-down/speed-up
@@ -85,6 +85,7 @@
 - BUG? npc-npc missed collision when other npc left navmesh
   - both were going around table same way
   - npc is outside navmesh: {"x":652.47,"y":465.58}
+- `nav --locked={weight} --keys=$( npc foo 'x => x.has.keys' )` takes keys into account
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

@@ -257,4 +257,7 @@ done
 world 'x => x.doors.lookup[0][8].locked = true'
 # give key to npc "andros"
 npc andros 'x => x.has.key[0][8] = true'
+
+# navigate, weighting nav nodes near locked doors
+nav --locked=10000 $( click 2 )
 ```
