@@ -5,6 +5,7 @@ export const cssName = /** @type {const} */ ({
   iris: 'iris',
   hull: 'hull',
   open: 'open',
+  locked: 'locked',
 
   debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
   debugGeomorphOutlineDisplay: '--debug-gm-outline-display',

@@ -18,8 +18,10 @@
 - ❌ move --tryOpen to `walk`?
 - ✅ `nav --closed={weight}` weights _closed_ doors
 - ✅ `nav --locked={weight}` weights _locked_ doors (open or closed)
+
+- ✅ locked doors are indicated as such
+- `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
 - 🚧 remove getNpcGlobalNavPath
-- align walk strategy to `walk` options
 
 - back to behaviour on homepage!
 

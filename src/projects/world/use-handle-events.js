@@ -140,7 +140,7 @@ export default function useHandleEvents(api) {
         case 'at-door': {
           const { gmId, doorId } = e.meta;
           if (!api.doors.lookup[gmId][doorId].open) {
-            await npc.cancel(); // Upcoming door closed and locked
+            await npc.cancel(); // At closed door
           }
           break;
         }
@@ -149,21 +149,28 @@ export default function useHandleEvents(api) {
           break;
         case 'decor-collide': {
           const { decor, type, gmId } = e.meta;
-          if (npc.anim.walkStrategy === 'try-open' && decor.meta.doorSensor) {
+
+          // 🚧 support other doorStrategies
+          if (npc.anim.doorStrategy === 'try-open' && decor.meta.doorSensor) {
             const nextDoorId = npc.getNextDoorId();
             if (type !== 'exit' && decor.meta.doorId === nextDoorId) {
-              // 🚧 why does setTimeout avoid jerk?
-              setTimeout(() => npc.setSpeedFactor(0.6), 30);
-              // npc.setSpeedFactor(0.5);
-              if (!api.doors.lookup[gmId][nextDoorId].locked) {
-                api.doors.toggleDoor(gmId, nextDoorId, { open: true });
-              };
+              // Entered or started-inside doorSensor of next door
+              setTimeout(() => npc.setSpeedFactor(0.6), 30); // 🚧 avoids jerk, why?
+              const { locked } = api.doors.lookup[gmId][nextDoorId];
+              if (locked && !npc.has.key[gmId][nextDoorId]) {
+                // 🚧 could stop early
+                // 🚧 could try to get inside if open
+                // await npc.cancel(); 
+              } else {
+                api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });
+              }
             }
           }
+
           break;
         }
         case 'enter-room':
-          if (npc.anim.walkStrategy === 'try-open') {
+          if (npc.anim.doorStrategy === 'try-open') {
             npc.setSpeedFactor(1);
           }
           break;

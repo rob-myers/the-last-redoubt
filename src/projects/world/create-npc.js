@@ -57,7 +57,7 @@ export default function createNpc(
       prevWayMetas: [],
       wayMetas: [],
       wayTimeoutId: 0,
-      walkStrategy: 'none',
+      doorStrategy: 'none',
     },
     
     doMeta: null,
@@ -192,7 +192,8 @@ export default function createNpc(
       // from `nav` for decor collisions
       this.anim.gmRoomIds = gmRoomIds;
       this.anim.updatedPlaybackRate = 1;
-      this.anim.walkStrategy = openDoors && path.length ? 'try-open' : 'none';
+      // 🚧 opts.doorStrategy or similar
+      this.anim.doorStrategy = openDoors && path.length ? 'try-open' : 'none';
 
       this.clearWayMetas();
       this.resetAnimAux();

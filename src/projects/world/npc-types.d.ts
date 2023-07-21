@@ -218,10 +218,12 @@ declare namespace NPC {
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
-    walkStrategy: (
-      | 'none'
-      | 'try-open'
-      | 'force-open'
+    doorStrategy: (
+      | 'none'        // do not try to open doors
+      | 'try-open'    // open doors, walking into closed locked ones
+      | 'stop-open'   // open doors, stopping at locked ones (open or closed)
+      | 'bold-open'   // open doors, stopping at closed locked ones
+      | 'force-open'  // open doors, forcing them open (as if had skeleton key)
     );
   }
 

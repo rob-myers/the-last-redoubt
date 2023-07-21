@@ -20,13 +20,18 @@ export default function Doors(props) {
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
-    lookup: gms.map((gm, gmId) => gm.doors.map((_, doorId) => ({
-      closeTimeoutId: undefined,
-      locked: false,
-      open: props.init?.[gmId]?.includes(doorId) ?? false,
-      touchMeta: JSON.stringify({ door: true, ui: true, gmId, doorId }),
-      visible: false,
-    }))),
+    lookup: gms.map((gm, gmId) => gm.doors.map(({ meta }, doorId) => {
+      const hullDoorId = gms[gmId].getHullDoorId(doorId);
+      const hullSealed = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId)?.sealed;
+      return {
+        closeTimeoutId: undefined,
+        locked: false,
+        open: props.init?.[gmId]?.includes(doorId) ?? false,
+        sealed: hullSealed || !!meta.sealed,
+        touchMeta: JSON.stringify({ door: true, ui: true, gmId, doorId }),
+        visible: false,
+      };
+    })),
 
     getOpenIds(gmId) {
       return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
@@ -60,51 +65,90 @@ export default function Doors(props) {
     setVisible(gmId, doorIds) {
       state.lookup[gmId].forEach((x, doorId) => x.visible = doorIds.includes(doorId));
     },
-    async toggleDoor(gmId, doorId, opts = {}) {
+    toggleLock(gmId, doorId, { npcKey, lock, unlock } = {}) {
+      const item = state.lookup[gmId][doorId]
+      const { sealed, locked: wasLocked } = item;
+
+      if (sealed) {
+        return false;
+      }
+      if (npcKey) {
+        const npc = npcs.getNpc(npcKey);
+        if (!state.npcNearDoor(gmId, doorId, npcKey) && !(
+          npcs.config.omnipresent && npcs.playerKey === npcKey
+        )) {
+          return wasLocked; // Too far
+        }
+        if (!npc.has.key[gmId][doorId]) {
+          return wasLocked; // No key
+        }
+      }
+
+      if (wasLocked) {
+        if (lock) return true; // Already locked
+      } else {
+        if (unlock) return false; // Already unlocked
+      }
+      item.locked = !wasLocked;
+      
+      // Unsealed hull doors have adjacent door, which must also be toggled
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
-      const gmDoorNode = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId);
-      const sealed = gmDoorNode?.sealed || gms[gmId].doors[doorId].meta.sealed; // 🤔
-      const wasOpen = state.lookup[gmId][doorId].open;
+      const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
+      if (adjHull) {
+        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].locked = item.locked;
+        // state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
+        // state.updateVisibleDoors(); // to show doors in adjacent geomorph
+      }
+      // 🚧 lock event?
+
+      update();
+
+      return item.locked;
+    },
+    toggleDoor(gmId, doorId, opts = {}) {
+      const item = state.lookup[gmId][doorId];
+      const { sealed, open: wasOpen } = item;
       const npcKey = opts.npcKey ?? (opts.viaClick && !npcs.config.omnipresent ? npcs.playerKey : null);
 
       if (sealed) {
         return false;
       }
-      if (npcKey && !npcs.config.omnipresent && !state.npcNearDoor(gmId, doorId, npcKey)) {
-        return false;
+      if (npcKey && !state.npcNearDoor(gmId, doorId, npcKey) && !(
+        npcs.config.omnipresent && npcs.playerKey === npcKey
+      )) {
+        return wasOpen;
       }
 
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
-          window.clearTimeout(state.lookup[gmId][doorId]?.closeTimeoutId);
+          window.clearTimeout(item.closeTimeoutId);
           state.tryCloseDoor(gmId, doorId); // Reset door close
           return true;
         }
         if (!state.safeToCloseDoor(gmId, doorId)) {
-          return false;
-        }
-        // Cancel any pending close
-        window.clearTimeout(state.lookup[gmId][doorId]?.closeTimeoutId);
-      } else {
-        if (opts.close) {// Do not close if closed
           return true;
         }
-        if (!npcs.config.omnipresent && state.lookup[gmId][doorId].locked) {
-          if (!(opts.npcKey && npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId))) {
-            return false; // cannot open door if locked
-          }
+        // Cancel any pending close
+        window.clearTimeout(item.closeTimeoutId);
+      } else {
+        if (opts.close) {// Do not close if closed
+          return false;
+        }
+        if (item.locked && !(opts.npcKey && npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId))) {
+          return false; // cannot open door if locked
         }
       }
 
       // Toggle the door
-      state.lookup[gmId][doorId].open = !wasOpen;
+      item.open = !wasOpen;
       const key = wasOpen ? 'closed-door' : 'opened-door';
       state.events.next({ key, gmId, doorId });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
+      const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
       if (adjHull) {
-        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = state.lookup[gmId][doorId].open;
+        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
         state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
@@ -115,7 +159,7 @@ export default function Doors(props) {
 
       update();
 
-      return true;
+      return item.open;
     },
     tryCloseDoor(gmId, doorId) {
       const timeoutId = window.setTimeout(async () => {
@@ -214,15 +258,17 @@ export default function Doors(props) {
           className={`gm-${gmId}`}
           style={{ transform: gm.transformStyle }}
         >
-          {gm.doors.map((door, doorId) =>
-            state.lookup[gmId][doorId].visible &&
+          {gm.doors.map((door, doorId) => {
+            const item = state.lookup[gmId][doorId];
+            return item.visible &&
               <div
                 key={doorId}
                 className={cx(cssName.door, {
-                  [cssName.open]: state.lookup[gmId][doorId].open,
+                  [cssName.open]: item.open,
                   [cssName.hull]: !!door.meta.hull,
+                  [cssName.locked]: item.locked,
                 })}
-                data-meta={state.lookup[gmId][doorId].touchMeta}
+                data-meta={item.touchMeta}
                 style={{
                   left: door.baseRect.x,
                   top: door.baseRect.y,
@@ -232,7 +278,7 @@ export default function Doors(props) {
                   transformOrigin: 'top left',
                 }}
             />
-          )}
+          })}
         </div>
       ))}
     </div>
@@ -257,6 +303,9 @@ const rootCss = css`
     }
     &.${cssName.hull} {
       border-width: 2px;
+    }
+    &.${cssName.locked} {
+      background-color: #ff0000;
     }
 
     /* background-image: linear-gradient(45deg, #000 33.33%, #444 33.33%, #444 50%, #000 50%, #000 83.33%, #444 83.33%, #444 100%);
@@ -294,11 +343,16 @@ const rootCss = css`
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {{ closeTimeoutId?: number; locked: boolean; open: boolean; touchMeta: string; visible: boolean; }[][]} lookup
+ * @property {{ closeTimeoutId?: number; locked: boolean; open: boolean; sealed: boolean; touchMeta: string; visible: boolean; }[][]} lookup
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
- * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => Promise<boolean>} toggleDoor
+ * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => boolean} toggleDoor
+ * Toggle between open/closed state, or directly open/close using `opts`.
+ * Returns current boolean value of `open`.
+ * @property {(gmId: number, doorId: number, opts?: ToggleLockOpts) => boolean} toggleLock
+ * Toggle between unlocked/locked state, or directly lock/unlock using `opts`.
+ * Returns current boolean value of `locked`.
  * @property {(gmId: number, doorId: number) => void} tryCloseDoor
  * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} update
@@ -319,4 +373,11 @@ const rootCss = css`
  * @property {string} [npcKey] initiated via npc?
  * @property {boolean} [open] should we open the door?
  * @property {boolean} [viaClick] initiated via click?
+ */
+
+/**
+ * @typedef ToggleLockOpts
+ * @property {boolean} [lock] should we lock the door?
+ * @property {string} [npcKey] initiated via npc? (if so, check keys)
+ * @property {boolean} [unlock] should we unlock the door?
  */
