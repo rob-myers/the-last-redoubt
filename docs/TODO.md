@@ -21,7 +21,7 @@
 
 - ✅ locked doors are indicated as such
 - ✅ `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
-- 🚧 understand `npcs.config.scriptDoors` and possibly remove
+- ✅ understand `npcs.config.scriptDoors` and possibly remove
 - 🚧 remove getNpcGlobalNavPath
 
 - back to behaviour on homepage!

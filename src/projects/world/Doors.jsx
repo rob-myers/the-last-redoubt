@@ -47,15 +47,19 @@ export default function Doors(props) {
       const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
       return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);
     },
-    onClickDoor(e) {
-      const uiEl = /** @type {HTMLElement} */ (e.target);
-      if (uiEl.dataset.meta) {
-        const meta = JSON.parse(uiEl.dataset.meta);
+    onRawDoorClick(e) {
+      /**
+       * Usually we handle door clicking via `npc do`.
+       * It can instead be handled directly via this handler,
+       * by setting `npc config { scriptDoors: false }`.
+       */
+      const { dataset } = /** @type {HTMLElement} */ (e.target);
+      if (dataset.meta) {
+        const meta = JSON.parse(dataset.meta);
         const gmId = Number(meta.gmId);
         const doorId = Number(meta.doorId);
-        state.toggleDoor(gmId, doorId, {// 🚧 unused?
-          npcKey: npcs.config.omnipresent ? undefined : (npcs.playerKey ?? undefined)
-        });
+        state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
+        state.updateVisibleDoors();
       }
     },
     safeToCloseDoor(gmId, doorId) {
@@ -166,14 +170,15 @@ export default function Doors(props) {
       return item.open;
     },
     tryCloseDoor(gmId, doorId) {
+      const item = state.lookup[gmId][doorId];
       const timeoutId = window.setTimeout(async () => {
-        if (state.lookup[gmId][doorId].open && !state.toggleDoor(gmId, doorId, {})) {
+        if (item.open && !state.toggleDoor(gmId, doorId, {})) {
           state.tryCloseDoor(gmId, doorId); // try again
         } else {
-          delete state.lookup[gmId][doorId].closeTimeoutId;
+          delete item.closeTimeoutId;
         }
       }, defaultDoorCloseMs);// 🚧 change ms?
-      state.lookup[gmId][doorId].closeTimeoutId = timeoutId;
+      item.closeTimeoutId = timeoutId;
     },
     update,
     updateVisibleDoors() {
@@ -243,13 +248,13 @@ export default function Doors(props) {
     }
   }, [npcs.ready]);
   
-  React.useEffect(() => {// Can toggle doors without scripting
+  React.useEffect(() => {// Usually already handled via `npc do`
     if (npcs.config && !npcs.config.scriptDoors) {
-      const callback = state.onClickDoor; // maybe mutated on HMR
+      const callback = state.onRawDoorClick; // maybe mutated on HMR
       state.rootEl.addEventListener('pointerup', callback);
       return () => void state.rootEl.removeEventListener('pointerup', callback);
     }
-  }, [npcs.config?.scriptDoors]);
+  }, [npcs.config && npcs.config.scriptDoors]);
 
   return (
     <div
@@ -343,7 +348,8 @@ const rootCss = css`
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
- * @property {(e: PointerEvent) => void} onClickDoor
+ * @property {(e: PointerEvent) => void} onRawDoorClick
+ * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
