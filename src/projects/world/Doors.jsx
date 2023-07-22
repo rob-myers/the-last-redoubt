@@ -20,7 +20,7 @@ export default function Doors(props) {
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
-    lookup: gms.map((gm, gmId) => gm.doors.map(({ meta }, doorId) => {
+    lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta }, doorId) => {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const hullSealed = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId)?.sealed;
       return {
@@ -33,6 +33,10 @@ export default function Doors(props) {
       };
     })),
 
+    cancelClose(doorState) {
+      window.clearTimeout(doorState.closeTimeoutId);
+      delete doorState.closeTimeoutId;
+    },
     getOpenIds(gmId) {
       return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
     },
@@ -127,7 +131,7 @@ export default function Doors(props) {
 
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
-          window.clearTimeout(item.closeTimeoutId);
+          state.cancelClose(item);
           state.tryCloseDoor(gmId, doorId); // Reset door close
           return true;
         }
@@ -135,13 +139,12 @@ export default function Doors(props) {
           return true;
         }
         // Cancel any pending close
-        window.clearTimeout(item.closeTimeoutId);
+        state.cancelClose(item);
       } else {
         if (opts.close) {// Do not close if closed
           return false;
         }
         // Ignore locks if `npcKey` unspecified
-        // 🤔 careful about omnipresent
         if (item.locked && opts.npcKey && !npcs.npc[opts.npcKey]?.hasDoorKey(gmId, doorId)) {
           return false; // cannot open door if locked
         }
@@ -171,14 +174,14 @@ export default function Doors(props) {
     },
     tryCloseDoor(gmId, doorId) {
       const item = state.lookup[gmId][doorId];
-      const timeoutId = window.setTimeout(async () => {
-        if (item.open && !state.toggleDoor(gmId, doorId, {})) {
-          state.tryCloseDoor(gmId, doorId); // try again
+      item.closeTimeoutId = window.setTimeout(() => {
+        if (item.open) {
+          state.toggleDoor(gmId, doorId, {}); // returns `false`
+          state.tryCloseDoor(gmId, doorId); // recheck in {ms}
         } else {
           delete item.closeTimeoutId;
         }
-      }, defaultDoorCloseMs);// 🚧 change ms?
-      item.closeTimeoutId = timeoutId;
+      }, defaultDoorCloseMs);// 🚧 npc.config.closeTimeoutMs
     },
     update,
     updateVisibleDoors() {
@@ -234,22 +237,24 @@ export default function Doors(props) {
     props.onLoad(state);
   }, []);
 
-  React.useEffect(() => {// Initial setup
-    if (npcs.ready) {
-      const handlePause = npcs.events.subscribe(e => {
-        e.key === 'disabled' && // Cancel future door closings
-          state.lookup.forEach(doors => doors.forEach(meta => window.clearTimeout(meta?.closeTimeoutId)));
-        e.key === 'enabled' && // Schedule pending door closures
-          state.lookup.forEach((doors, gmId) => doors.forEach((meta, doorId) => {
-            meta && (meta.closeTimeoutId = window.setTimeout(() => state.tryCloseDoor(gmId, doorId)))
-          }));
-      });
-      return () => void handlePause.unsubscribe();
+  React.useEffect(() => {// Pause/resume door closing
+    if (!npcs.ready) {
+      return;
     }
+    const handlePause = npcs.events.subscribe(e => {
+      if (e.key === 'disabled') {// Cancel future door closings
+        state.lookup.forEach(items => items.forEach(item => state.cancelClose(item)));
+      } else if (e.key === 'enabled') {// Close open doors
+        state.lookup.forEach((items, gmId) => items.forEach((item, doorId) =>
+          item.open && state.tryCloseDoor(gmId, doorId) // 🤔 preserve time to close?
+        ));
+      }
+    });
+    return () => void handlePause.unsubscribe();
   }, [npcs.ready]);
   
-  React.useEffect(() => {// Usually already handled via `npc do`
-    if (npcs.config && !npcs.config.scriptDoors) {
+  React.useEffect(() => {// Superseded by `npc do`
+    if (npcs.config && (npcs.config.scriptDoors === false)) {
       const callback = state.onRawDoorClick; // maybe mutated on HMR
       state.rootEl.addEventListener('pointerup', callback);
       return () => void state.rootEl.removeEventListener('pointerup', callback);
@@ -344,7 +349,7 @@ const rootCss = css`
 
 /**
  * @typedef State @type {object}
- * `locked[gmId][doorId]` <=> door is locked 
+ * @property {(item: DoorState) => void} cancelClose
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
@@ -353,7 +358,7 @@ const rootCss = css`
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {{ closeTimeoutId?: number; locked: boolean; open: boolean; sealed: boolean; touchMeta: string; visible: boolean; }[][]} lookup
+ * @property {DoorState[][]} lookup
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible
@@ -367,7 +372,17 @@ const rootCss = css`
  * Try close door every `N` seconds, starting in `N` seconds.
  * @property {() => void} update
  * @property {() => void} updateVisibleDoors
- * `vis[gmId][doorId]` <=> `door` is visible
+ */
+
+/**
+ * This is distinct from `gm.doors.meta`.
+ * @typedef DoorState
+ * @property {number} [closeTimeoutId]
+ * @property {boolean} locked
+ * @property {boolean} open
+ * @property {boolean} sealed
+ * @property {string} touchMeta
+ * @property {boolean} visible
  */
 
 /**

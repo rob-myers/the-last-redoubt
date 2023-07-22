@@ -2,8 +2,12 @@
 
 ## In progress
 
-- back to behaviour on homepage!
+- ✅ BUG doors closing whilst World paused
 
+- back to behaviour on homepage!
+- redo first peek video with 2 npcs
+- clean NPC shell functions
+  - doLoop
 
 - ✅ homepage: "The Experiment" narrative container
 - 🚧 first NPC behaviour in section "Fabricating a behaviour"
