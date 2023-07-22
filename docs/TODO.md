@@ -2,41 +2,8 @@
 
 ## In progress
 
-- ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
-- ✅ rename navPath.partition -> navPath.edgeNodeIds
-- ✅ npc cannot open locked door
-- ✅ npc can open locked door with key
-
-- ✅ simplify nav path gmRoomIds
-  - ✅ only store changes
-  - ✅ set inside npc and lookup from there
-  - ✅ hookup to npc api
-
-- ✅ unify api.doors
-- ✅ BUG strange early `track` during CssPanZoom initial panzoom
-
-- ❌ move --tryOpen to `walk`?
-- ✅ `nav --closed={weight}` weights _closed_ doors
-- ✅ `nav --locked={weight}` weights _locked_ doors (open or closed)
-
-- ✅ locked doors are indicated as such
-- ✅ `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
-- ✅ understand `npcs.config.scriptDoors` and possibly remove
-- ✅ remove getNpcGlobalNav
-
 - back to behaviour on homepage!
 
-- track still jerky when walk slow-down/speed-up
-- competing notion of gmRoomId
-  - `{"gmId":0,"roomId":2}` vs `[gmId, roomId]`
-- BUG anim jumps when change speed without setTimeout
-  - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
-  - not setSpeedFactor collision
-  - initialization?
-
-- ✅ DecorGroup cannot contain another DecorGroup
-  - ✅ so `descendants` isn't necessary
-  - ℹ️ could still support multiple groups per room defined in svg
 
 - ✅ homepage: "The Experiment" narrative container
 - 🚧 first NPC behaviour in section "Fabricating a behaviour"
@@ -89,6 +56,11 @@
   - both were going around table same way
   - npc is outside navmesh: {"x":652.47,"y":465.58}
 - `nav --locked={weight} --keys=$( npc foo 'x => x.has.keys' )` takes keys into account
+- track still jerky when walk slow-down/speed-up
+- BUG anim jumps when change speed without setTimeout
+  - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
+  - not setSpeedFactor collision
+  - initialization?
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move
@@ -454,6 +426,35 @@
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ DecorGroup cannot contain another DecorGroup
+  - ✅ so `descendants` isn't necessary
+  - ℹ️ could still support multiple groups per room defined in svg
+
+- ✅ `decor` -> `decor: { decorKey, type, meta }` in decor-collide
+- ✅ rename navPath.partition -> navPath.edgeNodeIds
+- ✅ npc cannot open locked door
+- ✅ npc can open locked door with key
+
+- ✅ simplify nav path gmRoomIds
+  - ✅ only store changes
+  - ✅ set inside npc and lookup from there
+  - ✅ hookup to npc api
+
+- ✅ unify api.doors
+- ✅ BUG strange early `track` during CssPanZoom initial panzoom
+
+- ❌ move --tryOpen to `walk`?
+- ✅ `nav --closed={weight}` weights _closed_ doors
+- ✅ `nav --locked={weight}` weights _locked_ doors (open or closed)
+
+- ✅ locked doors are indicated as such
+- ✅ `walk` opts reflect `doorStrategy`, forwarded to `followNavPath`
+- ✅ understand `npcs.config.scriptDoors` and possibly remove
+- ✅ remove getNpcGlobalNav
+
+- ✅ competing notion of gmRoomId
+  - `[gmId, roomId]` --> `{"gmId":0,"roomId":2}`
 
 - ✅ `nav --name` induces named DecorPath (default `navpath-default`)
 - ✅ `nav {npcKey}` has default name `navpath-${npcKey}`
