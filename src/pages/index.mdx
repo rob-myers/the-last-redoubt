@@ -34,7 +34,7 @@ We want to make video games more meaningful. That is the objective of this websi
 - [The Last of Us Part II](https://en.wikipedia.org/wiki/The_Last_of_Us_Part_II) <SideNote>Admittedly very violent, but not in a meaningless way.</SideNote>
 
 The above avoid simplistic behaviour by employing a **tight narrative**, combined with exploration, mini-games and constrained scenarios.
-Nevertheless, superficial character behaviour is the norm for video games.<SideNote width={450}>Simplistic behaviour can be "part of the game" e.g. Arcade Games and Puzzles Games.</SideNote><SideNote>On the other hand, even masterpieces like [Quake 1](https://en.wikipedia.org/wiki/Quake_1), [Fallout 2](https://en.wikipedia.org/wiki/Fallout_2), [GTA 2](https://en.wikipedia.org/wiki/GTA_2), [Thief 2](https://en.wikipedia.org/wiki/Thief_2) suffer from simplistic behaviour</SideNote>
+Nevertheless, superficial character behaviour is the norm for video games.<SideNote width={450}>Simplistic behaviour can be "part of the game" e.g. Arcade Games, Puzzles Games.</SideNote><SideNote>On the other hand, even masterpieces like [Quake 1](https://en.wikipedia.org/wiki/Quake_1), [Fallout 2](https://en.wikipedia.org/wiki/Fallout_2), [GTA 2](https://en.wikipedia.org/wiki/GTA_2), [Thief 2](https://en.wikipedia.org/wiki/Thief_2) suffer from simplistic behaviour</SideNote>
 
 <Carousel
   id="first-peek-video"
@@ -44,7 +44,7 @@ Nevertheless, superficial character behaviour is the norm for video games.<SideN
   items={[{ video: 'first-peek', label: 'First peek' }]}
 />
 
-We believe interesting character behaviour is the linchpin of meaningful gameplay.
+We believe interesting character behaviour is the lynchpin of meaningful gameplay.
 Without it, virtual worlds become stale.
 Rather than avoiding the problem by tightening the narrative,
 we'd prefer to develop more sophisticated behaviour.
@@ -83,9 +83,9 @@ But how are we going to create more sophisticated behaviour? */}
 
 1. Use openly available assets:
     - Robert Pearce's [Starship Geomorphs](http://travellerrpgblog.blogspot.com/2020/07/starship-geomorphs-20.html) and Eric Smith's [PNG format](http://ericbsmith.no-ip.org/geomorphs/).
-    - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n). <SideNote>Not free but only `$14.95` including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
+    - Robert Brook's [Top down men game asset character pack](https://www.gamedeveloperstudio.com/graphics/viewgraphic.php?page-name=Top-down-men-game-asset-character-pack&item=1r6d547z6f232v871n). <SideNote>Not free but `$14.95` (at time of writing) including [Spriter](https://brashmonkey.com/spriter-pro/) source files.</SideNote>
 
-1. Use the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as background context.<SideNote>The concept of _Starship Geomorph_ comes from Traveller.</SideNote>
+1. Use the [Traveller universe](https://en.wikipedia.org/wiki/Traveller_(role-playing_game)) as background context.<SideNote>The concept of [_Starship Geomorph_](https://wiki.travellerrpg.com/Starship_Geomorphs) comes from Traveller.</SideNote>
 
 Then we intend to approach the problem directly,
 by creating and combining behaviours for their own sake.
@@ -105,13 +105,22 @@ We tackle _general interest_ in a few ways.
 
 - Our implementation uses _standard_ web development techniques
 (relevant to a wide audience).
-For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than inner loops invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than a non-declarative approach invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
 - Our approach to in-browser scripting stands on its own.
 We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Interactively parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js).</SideNote>
 This Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) enriched with NPC-related shell functions gives our website its name.
 
-- We consider character behaviour relevant to a vast number of video games.
+
+- Our NPC shell functions have generic appeal, e.g.
+  `click`, `spawn`, `look`, `nav` and `walk`.
+  They can be naturally piped e.g.
+  ```bash
+  # walk the npc "rob" to any clicked navigable point
+  click | nav --safeLoop rob | walk rob
+  ```
+
+{/* - We consider character behaviour relevant to a vast number of video games. */}
 
 But what about _entertainment value_?
 If we're going to make more meaningful video games (via richer behaviour),
