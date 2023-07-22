@@ -109,12 +109,10 @@ For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animati
 
 - Our approach to in-browser scripting stands on its own.
 We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Interactively parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js).</SideNote>
-This Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)) enriched with NPC-related shell functions gives our website its name.
+  This amounts to a Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)).
 
-
-- Our NPC shell functions have generic appeal, e.g.
-  `click`, `spawn`, `look`, `nav` and `walk`.
-  They can be naturally piped e.g.
+- Our NPC-related shell functions combined with the above gives our website its name.
+  The latter have generic appeal, e.g. `click`, `spawn`, `look`, `nav` and `walk`, and can be naturally piped:
   ```bash
   # walk the npc "rob" to any clicked navigable point
   click | nav --safeLoop rob | walk rob
