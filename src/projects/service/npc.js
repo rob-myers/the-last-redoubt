@@ -50,10 +50,12 @@ class NpcService {
 
 
   /**
-   * 🚧 properly typed approach
+   * Extract options object from `npc {foo} {bar} {baz} {qux}`,
+   * e.g. open clicked door: `npc do andros $( click 1 ) 1`
    * @param {NPC.NpcActionKey} action
    * @param {undefined | string | NPC.NpcConfigOpts} opts
    * @param {any[]} extras 
+   * @returns {NPC.NpcConfigOpts}
    */
   normalizeNpcCommandOpts(action, opts = {}, extras) {
     if (typeof opts === "string") {
@@ -61,6 +63,7 @@ class NpcService {
         case "decor":
         case "remove-decor":
         case "rm-decor":
+          // npc {decor,remove-decor,rm-decor} {decorKey}
           opts = { decorKey: opts };
           break;
         case "cancel":
@@ -69,38 +72,54 @@ class NpcService {
         case "rm":
         case "remove":
         case "set-player":
+          // npc {cancel,pause,resume,rm,remove,set-player} {npcKey}
           opts = { npcKey: opts };
           break;
         case "get":
+          // npc get {npcKey} [selector]
           opts = { npcKey: opts, ...typeof extras[0] === 'function' && { selector: extras[0] } };
           break;
         case "config":
+          // npc config {boolOptionToToggle}+, e.g.
+          // npc config omnipresent showLabels
+          // npc config 'omnipresent showLabels'
           opts = { configKey: [opts].concat(extras).join(' ') };
           break;
         case "do":
-          opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0], params: extras.slice(1) });
+          // npc do {npcKey} 
+          opts = { npcKey: opts, point: extras[0], extraParams: extras.slice(1) };
           break;
         case "look-at":
-          // npc look-at andros $( click 1 )
-          opts = /** @type {NPC.NpcConfigOpts} */ ({ npcKey: opts, point: extras[0] });
+          // npc look-at {npcKey} {pointToLookAt}
+          opts = { npcKey: opts, point: extras[0] };
           break;
-        case "map":
-          opts = /** @type {NPC.NpcConfigOpts} */ ({ mapAction: opts, timeMs: extras[0] });
+          case "map":
+          // npc map {action} [ms]
+          opts = { mapAction: opts, timeMs: extras[0] };
           break;
         default:
           opts = {}; // we ignore key
           break;
       }
+      return opts;
     } else {
       switch (action) {
+        case "config":
+          // npc config {partialConfig}, e.g.
+          // npc config '{ omnipresent: true, interactRadius: 100 }'
+          opts = opts;
+          break;
         case "light":
-          opts = /** @type {NPC.NpcConfigOpts} */ ({ point: opts, lit: extras[0] });
+          // npc light {pointInRoom} # toggle
+          // npc light {pointInRoom} {truthy} # on
+          // npc light {pointInRoom} {falsy}  # off
+          opts = { point: /** @type {Geomorph.PointMaybeMeta} */ (opts), lit: extras[0] };
           break;
         default:
           return opts;
       }
+      return opts;
     }
-    return opts;
   }
 
   //#endregion

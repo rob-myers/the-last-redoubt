@@ -61,12 +61,19 @@ export default function NPCs(props) {
             return ctxt[key];
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
           case 'showColliders': return decorStyle.getPropertyValue(cssName.decorCollidersDisplay) === 'none' ? false : true;
+
+          // 🚧 better way
           case 'configKey':
           case 'decorKey':
+          case 'extraParams':
+          case 'lit':
           case 'mapAction':
           case 'npcKey':
+          case 'point':
           case 'suppressThrow':
+          case 'timeMs':
             return undefined;
+
           case proxyKey: return true;
           case 'toJSON': return () => '{}'; // 🚧
           default:
@@ -93,11 +100,16 @@ export default function NPCs(props) {
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
           case 'showColliders': decorStyle.setProperty(cssName.decorCollidersDisplay, value ? 'initial' : 'none'); break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
+
           case 'configKey':
           case 'decorKey':
+          case 'extraParams':
+          case 'lit':
           case 'mapAction':
           case 'npcKey':
+          case 'point':
           case 'suppressThrow':
+          case 'timeMs':
             break;
           default:
             testNever(key, { suffix: 'config.set' });
@@ -105,7 +117,7 @@ export default function NPCs(props) {
         return true;
       },
       ownKeys() {
-        return npcService.fromConfigBooleanKeys;
+        return [...npcService.fromConfigBooleanKeys, 'interactRadius'];
       },
       getOwnPropertyDescriptor() {
         return { enumerable: true, configurable: true };
@@ -464,7 +476,7 @@ export default function NPCs(props) {
       try {
         if (point.meta.door && typeof point.meta.gmId === 'number' && typeof point.meta.doorId === 'number') {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
-          const extraParam = e.params?.[0] === undefined ? undefined : !!e.params[0];
+          const extraParam = e.extraParams?.[0] === undefined ? undefined : !!e.extraParams[0];
           const open = extraParam === true;
           const close = extraParam === false;
           const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
@@ -496,8 +508,9 @@ export default function NPCs(props) {
     async offMeshDoMeta(npc, e) {
       const src = npc.getPosition();
       const point = e.point;
+      const meta = point.meta ?? {};
 
-      if (!e.suppressThrow && !point.meta.do && !point.meta.nav) {
+      if (!e.suppressThrow && !meta.do && !meta.nav) {
         throw Error('not doable nor navigable');
       }
 
@@ -510,20 +523,20 @@ export default function NPCs(props) {
 
       await state.fadeSpawnDo(npc, {
         npcKey: npc.key,
-        point: point.meta.nav
+        point: meta.nav
           ? point // if not navigable try use targetPoint:
-          : { ...point, .../** @type {Geom.VectJson} */ (point.meta.targetPos) },
-        angle: point.meta.nav && !point.meta.do
+          : { ...point, .../** @type {Geom.VectJson} */ (meta.targetPos) },
+        angle: meta.nav && !meta.do
           // use direction src --> point if entering navmesh
           ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
           // use meta.orient if staying off-mesh
-          : typeof point.meta.orient === 'number' ? point.meta.orient * (Math.PI / 180) : undefined,
+          : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         fadeOutMs: e.fadeOutMs,
-      }, point.meta);
+      }, meta);
     },
     async onMeshDoMeta(npc, e) {
       const src = npc.getPosition();
-      const meta = e.point.meta;
+      const meta = e.point.meta ?? {};
       /** The actual "do point" (e.point is somewhere on icon) */
       const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? e.point;
 
@@ -842,19 +855,19 @@ export default function NPCs(props) {
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
- * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointWithMeta) => boolean} isPointSpawnable
+ * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
  * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
- * @property {(npc: NPC.NPC,  e: { point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} offMeshDoMeta
+ * @property {(npc: NPC.NPC,  e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} offMeshDoMeta
  * Started off-mesh and clicked point
- * @property {(npc: NPC.NPC, e: { point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
+ * @property {(npc: NPC.NPC, e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
- * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
+ * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc').NpcServiceType} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts: NPC.WalkNpcOpts) => Promise<void>} walkNpc

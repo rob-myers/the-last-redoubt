@@ -9,6 +9,7 @@
 - clean `npc`
   - ✅ move `npc events` to npcService
   - 🚧 typed approach to `npc` normalizeNpcCommandOpts
+       > could `normalizeNpcCommandOpts` output `NPC.NpcAction`?
 
 - 🚧 clean NPC shell functions
   - `npc do --ignoreThrow`

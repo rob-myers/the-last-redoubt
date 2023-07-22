@@ -342,6 +342,7 @@
           cleanLongRunning = npcs.handleLongRunningNpcProcess(process, /** @type {*} */ (opts.npcKey));
         }
         try {
+          // 🚧 could `normalizeNpcCommandOpts` output `NPC.NpcAction`?
           yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
         } catch (e) {
           if (!opts.suppressThrow) throw e;

@@ -66,13 +66,11 @@ export const gameFunctions = [
 
 /** Usage: doLoop {npcKey} */
 doLoop: `{
-  click |
-    map '({ x, y, meta }) =>
-      (meta.do || meta.nav || meta.door)
-        ? { npcKey: "'$1'", point: { x, y, meta } }
-        : undefined
-    ' |
-    npc do '{ suppressThrow: true }'
+  click | map 'p =>
+    (p.meta.do || p.meta.nav || p.meta.door)
+      ? { npcKey: "'$1'", point: p }
+      : undefined
+  ' | npc do {suppressThrow:true}
 }`,
 
 /**
@@ -80,7 +78,7 @@ doLoop: `{
  * - meta.nav means the point must be on navmesh
  * - !meta.ui prevents immediate movement on open door
  * - !meta.do isolates from `doLoop`
- * - --safePipe needed because npc $1 can be off-mesh
+ * - --safeLoop needed because npc $1 can be off-mesh
  */
 goLoop: `{
   click |

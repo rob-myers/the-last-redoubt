@@ -324,7 +324,7 @@ declare namespace NPC {
   //#region config
 
   /**
-   * 🚧 connect these types
+   * 🚧 clarify these types
    */
   interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
     /** Induced by e.g. `npc config debug` or `npc config debug showIds` */
@@ -332,11 +332,15 @@ declare namespace NPC {
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
     interactRadius?: number;
+    lit?: boolean;
     mapAction?: string;
     /** Induced by e.g. `npc get andros` */
     npcKey?: string;
+    extraParams?: any[];
+    point?: Geomorph.PointMaybeMeta;
     /** Suppress all errors e.g. for loop like `foo | npc do`  */
     suppressThrow?: boolean;
+    timeMs?: number;
   }
 
   type ConfigBooleanKey = (
@@ -355,13 +359,16 @@ declare namespace NPC {
     | 'showIds'
   );
 
-   /** Using `action` instead of `key` to avoid name-collision */
+   /**
+    * Using `action` instead of `key` to avoid name-collision.
+    * 🚧 Pick<> from `NpcConfigOpts`?
+    */
    export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
     | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } & NPC.NpcConfigOpts
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geomorph.PointWithMeta; fadeOutMs?: number; suppressThrow?: boolean; params?: any[]; }
+    | { action: 'do'; npcKey: string; point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean; extraParams?: any[]; }
     | { action: 'events'; }
     | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
