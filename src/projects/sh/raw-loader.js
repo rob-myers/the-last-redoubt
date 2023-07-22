@@ -312,16 +312,10 @@
   
     /** npc {action} [{opts}] [{args}] */
     npc: async function* ({ api, args, home, datum }) {
-      /**
-       * 🚧 Needs a refactor
-       * - cleanup `events`
-       * - cleanup `do`
-       */
-      const { doors, npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
+      const worldApi = api.getCached(home.WORLD_KEY);
+      const { npcs } = worldApi;
 
-      if (!args[0]) {
-        throw api.throwError("first arg {action} must be a non-empty string");
-      } else if (!npcs.service.isNpcActionKey(args[0])) {
+      if (!npcs.service.isNpcActionKey(args[0])) {
         if (args[0] in npcs.npc) {
           // `npc {npcKey} [selector]` --> `npc get {npcKey} [selector]`
           args[2] = args[1], args[1] = args[0], args[0] = "get";
@@ -332,24 +326,11 @@
 
       const action = /** @type {NPC.NpcActionKey} */ (args[0]);
       const process = api.getProcess();
-
-      // `npc events` yields > 1 output (potentially unbounded)
-      if (action === "events") {// Never ends and must be killed (maybe implicitly)
-        const asyncIterable = api.observableToAsyncIterable(lib.merge(
-          doors.events,
-          npcs.events,
-          panZoom.events,
-        ));
-        // ℹ️ could not catch asyncIterable.throw?.(api.getKillError())
-        process.cleanups.push(() => asyncIterable.return?.());
-        for await (const event of asyncIterable) {
-          if (process.status === 1) yield event;
-        }
-        // ℹ️ we only get here via `kill` or e.g. failed pipe-sibling
-        throw api.getKillError();
-      }
-
       let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
+
+      if (action === "events") {
+        return yield* npcs.service.yieldEvents(worldApi, api);
+      }
 
       if (api.isTtyAt(0)) {
         const opts = npcs.service.normalizeNpcCommandOpts(

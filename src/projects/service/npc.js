@@ -1,7 +1,9 @@
+import { merge } from 'rxjs';
 import { assertNonNull, keys } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
+import { observableToAsyncIterable } from './observable-to-async-iterable';
 
 class NpcService {
 
@@ -146,7 +148,6 @@ class NpcService {
   }
 
   //#endregion
-
 
   //#region collision
 
@@ -501,6 +502,31 @@ class NpcService {
       && x.path?.every?.(Vect.isVectJson)
       && Array.isArray(x.navMetas)
       || false;
+  }
+
+  //#endregion
+
+  //#region process
+
+  /**
+   * For `npc events`
+   * @param {import('../world/World').State} worldApi 
+   * @param {import('../sh/cmd.service').CmdService['processApi']} processApi
+   */
+  async *yieldEvents(worldApi, processApi) {
+    const asyncIterable = observableToAsyncIterable(merge(
+      worldApi.doors.events,
+      worldApi.npcs.events,
+      worldApi.panZoom.events,
+    ));
+    // ℹ️ couldn't catch asyncIterable.throw?.(api.getKillError())
+    const process = processApi.getProcess();
+    process.cleanups.push(() => asyncIterable.return?.());
+    for await (const event of asyncIterable) {
+      if (process.status === 1) yield event;
+    }
+    // ℹ️ get here via `kill` or e.g. failed pipe-sibling
+    throw processApi.getKillError();
   }
 
   //#endregion
