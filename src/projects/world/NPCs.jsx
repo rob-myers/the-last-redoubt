@@ -242,38 +242,6 @@ export default function NPCs(props) {
         throw Error(`getLocalNavPath: no path found: ${JSON.stringify(src)} --> ${JSON.stringify(dst)}`);
       }
     },
-
-    /**
-     * 🚧 remove?
-     * Used by shell function `nav`.
-     * Wraps @see {state.getGlobalNavPath}
-     */
-    getNpcGlobalNav(e) {
-      const npc = state.getNpc(e.npcKey);
-      const position = npc?.getPosition();
-
-      if (!(Vect.isVectJson(e.point))) {
-        throw Error(`invalid point: ${JSON.stringify(e.point)}`);
-      } else if (!state.isPointInNavmesh(e.point)) {
-        if (e.throwOnNotNav) {
-          throw Error(`dst outside navmesh: ${JSON.stringify(e.point)}`);
-        } else {
-          warn(`dst outside navmesh: ${JSON.stringify(e.point)} (returned empty path)`);
-          return npcService.getEmptyNavPath();
-        }
-      } else if (!state.isPointInNavmesh(position)) {
-        warn(`npc is outside navmesh: ${JSON.stringify(position)}`);
-        return npcService.getEmptyNavPath();
-      }
-
-      const result = state.getGlobalNavPath(position, e.point);
-      result.name = e.name;
-
-      // Always show path
-      api.decor.setPseudoDecor(result);
-
-      return result;
-    },
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
@@ -567,7 +535,7 @@ export default function NPCs(props) {
       }
 
       if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
-        const navPath = state.getNpcGlobalNav({ npcKey: npc.key, point: decorPoint, throwOnNotNav: true });
+        const navPath = state.getGlobalNavPath(npc.getPosition(), decorPoint);
         await state.walkNpc(npc.key, navPath, { throwOnCancel: true });
         typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
         npc.startAnimationByMeta(meta);
@@ -860,7 +828,6 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
- * @property {(e: { npcKey: string; point: Geom.VectJson; throwOnNotNav?: boolean; name?: string }) => NPC.GlobalNavPath} getNpcGlobalNav
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
