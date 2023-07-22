@@ -8,7 +8,7 @@ import { assertDefined, assertNonNull, keys, mapValues, testNever } from "../ser
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { warn } from '../service/log';
-import * as npcService from "../service/npc";
+import { npcService } from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -855,7 +855,7 @@ export default function NPCs(props) {
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointWithMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
- * @property {import('../service/npc')} service
+ * @property {import('../service/npc').NpcServiceType} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts: NPC.WalkNpcOpts) => Promise<void>} walkNpc
  */

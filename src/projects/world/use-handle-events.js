@@ -1,7 +1,7 @@
 import React from "react";
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
-import * as npcService from "../service/npc";
+import { npcService } from "../service/npc";
 import { warn } from "../service/log";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import { ansi } from "../sh/util";

@@ -7,7 +7,7 @@ import { assertDefined, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
 import { geom } from "../service/geom";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
-import { verifyGlobalNavPath } from "../service/npc";
+import { npcService } from "../service/npc";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -325,7 +325,7 @@ export default function Decor(props) {
     setPseudoDecor(...pseudoDecors) {
       /** @type {NPC.DecorDef[]} */
       const ds = pseudoDecors.map(pd => {
-        if (verifyGlobalNavPath(pd)) {
+        if (npcService.verifyGlobalNavPath(pd)) {
           return {
             type: 'path',
             key: pd.name ?? 'navpath-default', // navpath is "in" room it starts in:

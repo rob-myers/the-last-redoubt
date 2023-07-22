@@ -4,7 +4,7 @@ import { Poly, Vect } from "../geom";
 import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
 import { assertNonNull } from "../service/generic";
 import { geomorphPngPath, labelMeta } from "../service/geomorph";
-import { fovMapActionKeys } from "../service/npc";
+import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
@@ -120,7 +120,7 @@ export default function FOV(props) {
         state.anim.labels.playState === 'paused' && state.anim.labels.play();
         state.anim.map.playState === 'paused' && state.anim.map.play();
       } else {
-        throw Error(`parameter must be in ${JSON.stringify(fovMapActionKeys)} or undefined`);
+        throw Error(`parameter must be in ${JSON.stringify(npcService.fovMapActionKeys)} or undefined`);
       }
     },
     setRoom(gmId, roomId, doorId) {

@@ -15,7 +15,7 @@ import childProcess from 'child_process';
 
 import { keys } from '../projects/service/generic';
 import { writeAsJson } from '../projects/service/file';
-import { computeNpcScale, computeSpritesheetCss } from '../projects/service/npc';
+import { npcService } from '../projects/service/npc';
 import { npcClassConfig, batchExportPrefix, spriterEntityName } from './npcs-config';
 
 const outputDir = path.resolve(__dirname, '../../src/projects/world');
@@ -68,12 +68,12 @@ const outputJson = keys(npcClassConfig).reduce(
             radius: config.radius,
         };
 
-        const scale = computeNpcScale(parsed);
+        const scale = npcService.computeNpcScale(parsed);
 
         return {
             ...agg,
             [npcClassKey]: {
-                css: computeSpritesheetCss(parsed),
+                css: npcService.computeSpritesheetCss(parsed),
                 classKey: /** @type {NPC.NpcClassKey} */ (npcClassKey),
                 parsed,
                 radius: parsed.radius * scale,

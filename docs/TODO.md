@@ -4,10 +4,15 @@
 
 - ✅ BUG doors closing whilst World paused
 
-- back to behaviour on homepage!
-- redo first peek video with 2 npcs
+- 🚧 go thru page up until first behaviour
+- ✅ npc.service -> singleton (rather than `import *`)
 - clean NPC shell functions
-  - doLoop
+  - `npc do --ignoreThrow`
+  - doLoop -> `while`?
+- typed approach to `npc` normalizeNpcCommandOpts
+- redo first peek video with 2 npcs
+
+- back to behaviour on homepage!
 
 - ✅ homepage: "The Experiment" narrative container
 - 🚧 first NPC behaviour in section "Fabricating a behaviour"
