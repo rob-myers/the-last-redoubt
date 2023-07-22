@@ -1,9 +1,11 @@
-import { assertNonNull, keys, testNever } from './generic';
+import { assertNonNull, keys } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 
 // 🚧 singleton service works better with HMR?
+
+//#region individual npc
 
 /**
  * Choose scale factor s.t. npc radius becomes `14.4`.
@@ -44,53 +46,6 @@ ${Object.values(parsed.animLookup).map(({ animName, frameAabb }) => `
 `.trim();
 }
 
-/** @type {Record<NPC.ConfigBooleanKey, true>} */
-const fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true };
-
-export const fromConfigBooleanKeys = keys(fromConfigBooleanKey);
-
-/** @type {Record<NPC.FovMapAction, true>} */
-const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };
-
-export const fovMapActionKeys = keys(fromFovMapActionKey);
-
-/** @type {Record<NPC.NpcActionKey, true>} */
-const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
-
-/** @type {Record<NPC.NpcClassKey, true>} */
-const fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };
-
-/**
- * @param {string} input 
- * @returns {input is NPC.ConfigBooleanKey}
- */
-export function isConfigBooleanKey(input) {
-  return input in fromConfigBooleanKey;
-}
-
-/**
- * @param {string} input 
- * @returns {input is NPC.FovMapAction}
- */
-export function isFovMapAction(input) {
-  return input in fromFovMapActionKey;
-}
-
-/**
- * @param {string} input 
- * @returns {input is NPC.NpcActionKey}
- */
-export function isNpcActionKey(input) {
-  return fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
-}
-
-/**
- * @param {string} input 
- * @returns {input is NPC.NpcClassKey}
- */
-export function isNpcClassKey(input) {
-  return input in fromNpcClassKey;
-}
 
 /**
  * 🚧 properly typed approach
@@ -145,6 +100,55 @@ export function normalizeNpcCommandOpts(action, opts = {}, extras) {
   }
   return opts;
 }
+
+//#endregion
+
+//#region keys
+
+/** @type {Record<NPC.ConfigBooleanKey, true>} */
+const fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true };
+
+export const fromConfigBooleanKeys = keys(fromConfigBooleanKey);
+
+/** @type {Record<NPC.FovMapAction, true>} */
+const fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };
+
+export const fovMapActionKeys = keys(fromFovMapActionKey);
+
+/** @type {Record<NPC.NpcActionKey, true>} */
+const fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+
+/** @type {Record<NPC.NpcClassKey, true>} */
+const fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.ConfigBooleanKey}
+ */
+export function isConfigBooleanKey(input) {
+  return input in fromConfigBooleanKey;
+}
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcActionKey}
+ */
+export function isNpcActionKey(input) {
+  return fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
+}
+
+/**
+ * @param {string} input 
+ * @returns {input is NPC.NpcClassKey}
+ */
+export function isNpcClassKey(input) {
+  return input in fromNpcClassKey;
+}
+
+//#endregion
+
+
+//#region collision
 
 /**
  * Npc center vs static circle.
@@ -373,26 +377,7 @@ export function predictNpcPolygonCollision(npcA, outline, rect) {
   };
 }
 
-/**
- * @param {any} input
- * @returns {input is NPC.GlobalNavPath}
- */
-export function verifyGlobalNavPath(input) {
-  let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
-  return x?.key === 'global-nav'
-    && x.path?.every?.(Vect.isVectJson)
-    && Array.isArray(x.navMetas)
-    || false;
-}
-
-/** @param {NPC.LocalNavPath} input */
-export function verifyLocalNavPath(input) {
-  let x = /** @type {Partial<NPC.LocalNavPath>} */ (input);
-  return x?.key === 'local-nav'
-    && x.path?.every?.(Vect.isVectJson)
-    && Array.isArray(x.navMetas)
-    || false;
-}
+//#endregion
 
 //#region navpath
 
@@ -495,6 +480,27 @@ export function sliceNavPath(navPath, startId, endId) {
     gmRoomIds,
     navMetas,
   };
+}
+
+/** @param {NPC.LocalNavPath} input */
+export function verifyLocalNavPath(input) {
+  let x = /** @type {Partial<NPC.LocalNavPath>} */ (input);
+  return x?.key === 'local-nav'
+    && x.path?.every?.(Vect.isVectJson)
+    && Array.isArray(x.navMetas)
+    || false;
+}
+
+/**
+ * @param {any} input
+ * @returns {input is NPC.GlobalNavPath}
+ */
+export function verifyGlobalNavPath(input) {
+  let x = /** @type {Partial<NPC.GlobalNavPath>} */ (input);
+  return x?.key === 'global-nav'
+    && x.path?.every?.(Vect.isVectJson)
+    && Array.isArray(x.navMetas)
+    || false;
 }
 
 //#endregion
