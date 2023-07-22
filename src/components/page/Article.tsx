@@ -225,14 +225,13 @@ const articleCss = css`
       padding: 12px;
       margin-bottom: 0;
       line-height: 2;
-      border: 1px solid var(--page-background);
+      border: 1px solid var(--page-border-color);
       background-color: var(--aside-background-color);
-      /* border-width: 1px 1px 0 0; */
     }
     
     margin-bottom: 48px;
     @media(max-width: 600px) {
-    margin-bottom: 0;
+      margin-bottom: 0;
       > span {
         flex-grow: 1;
       }
