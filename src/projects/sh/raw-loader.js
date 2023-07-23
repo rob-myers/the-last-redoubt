@@ -226,7 +226,7 @@
             promises[0] = npcs.npcAct({ action: "look-at", npcKey, point: datum }),
             promises[1] = api.read(),
           ])
-          if (typeof resolved === "number") {// Finished look
+          if (resolved === undefined) {// Finished look
             datum = await promises[1];
           } else if (resolved === null) {// EOF so finish look
             await promises[0]
