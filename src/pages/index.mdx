@@ -208,30 +208,32 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 />
 
 <Aside title="can-pan-zoom-tabs">
-  In the maps above:
-  - you can pan (_drag_).
-  - you can zoom (_pinch_ or _scroll_).
-  - you can drag their tabs around (or maximise them).<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
+  In the maps above
+  you can pan (_drag_),
+  you can zoom (_pinch_ or _scroll_),
+  and you can drag their tabs around (or maximise them).<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
+
+  In fact we have just seen two _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
+  The first map amounts to the following component instantiation:
+
+  ```jsx
+  <World
+    worldKey="map-only-1"
+    gms={[
+      { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
+      { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
+      { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
+    ]}
+  />
+  ```
+
+  The `worldKey` identifies the World's API,
+  whereas `gms` specifies the geomorphs and their layout.
+  But why do these worlds look like maps?
+  > Because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
+
 </Aside>
 
-In fact we have just seen two _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
-The first map amounts to the following component instantiation:
-
-```jsx
-<World
-  worldKey="map-only-1"
-  gms={[
-    { gmKey: 'g-101--multipurpose', transform: [-1, 0, 0, 1, 1200, 0] },
-    { gmKey: 'g-301--bridge', transform: [0, 1, -1, 0, 1200 + 600, 0] },
-    { gmKey: 'g-301--bridge', transform: [0, -1, 1, 0, -600, 1200], },
-  ]}
-/>
-```
-
-The `worldKey` identifies the World's API,
-whereas `gms` specifies the geomorphs and their layout.
-But why do these worlds look like maps?
-> Because there is no _Player_ and thus no _Field Of View_.<SideNote>We already saw the Player-sensitive FOV (Field Of View) in the [video earlier](#first-peek-video).</SideNote>
 
 So our World needs a Player.
 This brings us to a very important ingredient i.e. the `<Terminal>`.
@@ -243,11 +245,8 @@ Semantically we manipulate Javascript values and run async generators.
 Let's see it action.
 The Terminal's _profile_ explains itself step-by-step,
 prompting the user to "tap to continue".
-
-<Aside title="mobile-tty-touch-menu">
-  Each `<Terminal>` has a side-menu: `<`,
-  particularly helpful for mobile devices.
-</Aside>
+By the way, each `<Terminal>` has a side-menu `<`,
+particularly helpful for mobile devices.
 
 <Tabs
   id="tabs@world-1"

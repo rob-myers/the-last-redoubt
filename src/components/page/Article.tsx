@@ -88,7 +88,7 @@ const articleCss = css`
 
   aside {
     margin: calc(48px + 8px) 0;
-    padding: 32px 64px;
+    padding: 48px 64px;
     font-weight: 300;
     color: var(--page-font-color);
     background-color: var(--aside-background-color);
