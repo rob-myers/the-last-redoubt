@@ -181,7 +181,7 @@ const articleCss = css`
     /* border: 1px solid var(--page-border-color); */
     @media(max-width: 600px) {
       border: none;
-      margin: calc(48px + 16px) 0 32px 0;
+      margin: calc(48px + 16px) 0 48px 0;
     }
   }
 
