@@ -91,6 +91,8 @@ npc get andros | map 'x => x.setLookRadians(0)'
 
 ```sh
 npc look-at andros $( click 1 )
+click | map 'point => ({ npcKey: "andros", point })' | npc look-at
+click | npc look-at andros
 ```
 
 ```sh

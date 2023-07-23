@@ -418,14 +418,15 @@ export default function NPCs(props) {
         case 'get':
           return state.getNpc(e.npcKey, e.selector);
         case 'look-at': {
-          const npc = state.getNpc(e.npcKey);
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
           }
+          const npc = state.getNpc(e.npcKey);
           if (npc.canLook()) {
             await npc.lookAt(e.point);
           }
-          return npc.getAngle();
+          // return npc.getAngle();
+          break;
         }
         case 'light': {
           const result = api.gmGraph.findRoomContaining(e.point);

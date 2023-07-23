@@ -14,8 +14,8 @@
 - 🚧 go thru page up until first behaviour
 
 - ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
-- BUG `npc look-at andros $( click 1 )` should support Ctrl-C
-- BUG? `npc pause andros` goLoop, lookLoop still active
+- ✅ BUG `npc look-at andros $( click 1 )` should support Ctrl-C
+- 🚧 BUG? `npc pause andros` goLoop, lookLoop still active
 
 - BUG `npc set-player andros` lights not updated
 ```sh

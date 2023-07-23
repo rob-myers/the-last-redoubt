@@ -127,7 +127,7 @@ class NpcService {
         case "decor":
         case "add-decor":
           // npc decor {decorDef}
-          return { action: 'add-decor', items: [/** @type { NPC.DecorDef} */ (opts)] }; // add
+          return { action: 'add-decor', items: [/** @type {NPC.DecorDef} */ (opts)] }; // add
         case "light":
           // npc light {pointInRoom} # toggle
           // npc light {pointInRoom} {truthy} # on
@@ -138,9 +138,11 @@ class NpcService {
         case "do":
           // npc do {partialUpdate}
           return { action: 'do', .../** @type {NPC.NpcDoDef} */(opts) };
+        case "look-at":
+          // npc look-at '{ npcKey, point }'
+          return { action: 'look-at', .../** @type {{ npcKey: string; point: Geom.VectJson; }} */ (opts) };
         case "events":
         case "get":
-        case "look-at":
         case "pause":
         case "resume":
         case "remove-decor":

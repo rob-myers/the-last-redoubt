@@ -346,7 +346,7 @@
           operands.slice(2).map(arg => api.parseJsArg(arg)),
         );
         try {
-          if (npcAct.action === "do") {
+          if (npcAct.action === "do" || npcAct.action === "look-at") {
             cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
           }
           yield await npcs.npcAct(npcAct);
@@ -356,8 +356,12 @@
       } else {
         while ((datum = await api.read()) !== null) {
           try {
-            const npcAct = npcs.service.normalizeNpcCommandOpts(action, datum, []);
-            if (npcAct.action === "do") {
+            const npcAct = operands.length === 1
+              ? npcs.service.normalizeNpcCommandOpts(action, datum, [])
+              // support initial operand e.g. `click | npc look-at {npcKey}`
+              : npcs.service.normalizeNpcCommandOpts(action, operands[1], [datum])
+            ;
+            if (npcAct.action === "do" || npcAct.action === "look-at") {
               cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
             }
             yield await npcs.npcAct(npcAct);
