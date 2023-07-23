@@ -14,7 +14,8 @@ import useUpdate from "../hooks/use-update";
  */
 export default function FOV(props) {
 
-  const { gmGraph, gmGraph: { gms } } = props.api;
+  const { api } = props;
+  const { gmGraph, gmGraph: { gms } } = api;
 
   const update = useUpdate();
 
@@ -66,7 +67,7 @@ export default function FOV(props) {
       }
     },
     hideUnseen() {
-      const rootEl = props.api.getRootEl();
+      const rootEl = api.getRootEl();
       const visGmId = state.gmRoomIds.reduce((agg, { gmId }) => { agg[gmId] = true; return agg; }, /** @type {Record<number, true>} */ ({}))
       gms.forEach((_, gmId) => visGmId[gmId]
         ? rootEl.classList.add(`show-gm-${gmId}`)
@@ -131,8 +132,15 @@ export default function FOV(props) {
         state.roomId = roomId;
         state.doorId = doorId;
         state.updateClipPath();
-        props.api.doors.updateVisibleDoors();
-        props.api.debug.update();
+        api.doors.updateVisibleDoors();
+        api.debug.update();
+        if (doorId === -1) {
+          /**
+           * Light may come through a door from another room,
+           * due to the way we handle diagonal doors.
+           */
+          api.geomorphs.recomputeLights(gmId, roomId);
+        }
         return true;
       } else {
         return false;
@@ -144,7 +152,7 @@ export default function FOV(props) {
       }
       
       const { prev } = state;
-      const openDoorsIds = props.api.doors.getOpenIds(state.gmId);
+      const openDoorsIds = api.doors.getOpenIds(state.gmId);
 
       /** @type {CoreState} */
       const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
@@ -188,7 +196,7 @@ export default function FOV(props) {
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
       state.gmRoomIds = nextGmRoomIds;
-      props.api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
+      api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
 
       state.hideUnseen();
       update();

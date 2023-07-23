@@ -7,7 +7,6 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, assertNonNull, keys, mapValues, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
-import { warn } from '../service/log';
 import { npcService } from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -607,11 +606,11 @@ export default function NPCs(props) {
     setPlayerKey(npcKey) {
       const nextPlayerKey = npcKey || null; // Forbid empty string
 
-      if (state.playerKey) {// Remove css class (without render)
-        const prevPlayer = api.npcs.npc[state.playerKey]; // Possibly undefined
+      if (state.playerKey) {// Remove prev player CSS class (without render)
+        const prevPlayer = state.npc[state.playerKey]; // Possibly undefined
         prevPlayer?.el.root.classList.remove('player');
       }
-      if (nextPlayerKey) {// Ensure css class (without render)
+      if (nextPlayerKey) {// Ensure CSS class (without render)
         const nextPlayer = state.getNpc(nextPlayerKey); // Player must exist
         nextPlayer.el.root.classList.add('player');
       }

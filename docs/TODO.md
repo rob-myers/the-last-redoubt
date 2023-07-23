@@ -15,9 +15,8 @@
 
 - ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
 - ✅ BUG `npc look-at andros $( click 1 )` should support Ctrl-C
-- 🚧 BUG? `npc pause andros` goLoop, lookLoop still active
 
-- BUG `npc set-player andros` lights not updated
+- ✅ BUG `npc set-player andros` case where lights are not updated
 ```sh
 # REPRO in room with door with light going outwards 
 npc set-player
@@ -53,6 +52,12 @@ npc set-player andros
 - link labels must have spaces: `[ continue ](-)`
   > to avoid viewing e.g. arrays as links
 
+- `npc pause andros` should pause e.g. goLoop, lookLoop
+  - ℹ️ if only pause `walk` then e.g. `nav` in pipeline may create navPath
+  - 🤔 useful to pause player, or other npc
+  - IDEA track `npcs.session.npcToPids` and pause them too (possibly as incoming)?
+    - e.g. `foo | { bar; walk andros }` and if `walk` has bg pid then ...
+    - what about `while true; do foo; walk andros $navPath; bar; done`?
 - can reverse navPath
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile

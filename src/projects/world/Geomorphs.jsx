@@ -114,6 +114,16 @@ export default function Geomorphs(props) {
       state.unlitImgs[gmId] = imgEl;
       state.initGmLightRects(gmId);
     },
+    recomputeLights(gmId, roomId) {
+      const gmDoors = api.doors.lookup[gmId];
+      gms[gmId].roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
+        if (gmDoors[doorId].open) {
+          state.onOpenDoor(gmId, doorId);
+        } else {
+          state.onCloseDoor(gmId, doorId);
+        }
+      });
+    },
     setRoomLit(gmId, roomId, lit) {
       const gm = gms[gmId];
       if (
@@ -251,6 +261,7 @@ const rootCss = css`
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
  * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadUnlitImage
+ * @property {(gmId: number, roomId: number)  => void} recomputeLights
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {boolean} ready
  */
