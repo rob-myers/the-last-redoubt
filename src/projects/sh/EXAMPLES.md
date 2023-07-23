@@ -198,6 +198,9 @@ seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
 npc map show
 npc map hide
 npc map # returns real number in [0, 1]
+npc map show-for-secs 2
+npc map show 2
+npc map hide 2
 
 npc light $( click 1 )
 npc light $( click 1 ) 0

@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly, Vect } from "../geom";
 import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
-import { assertNonNull } from "../service/generic";
+import { assertNonNull, testNever } from "../service/generic";
 import { geomorphPngPath, labelMeta } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
@@ -73,40 +73,40 @@ export default function FOV(props) {
         : rootEl.classList.remove(`show-gm-${gmId}`)
       );
     },
-    mapAct(action, showMs = 1000) {
-      // ℹ️ hopefully, the browser clears up stale animations
+    mapAct(action, timeMs) {// ℹ️ hopefully the browser cleans stale animations
       if (action === 'show') {
         state.anim.labels = state.el.labels.animate(
           [{ opacity: 1 }],
-          { fill: 'forwards', duration: 1500 },
+          { fill: 'forwards', duration: timeMs ?? 1500 },
         );
         state.anim.map = state.el.map.animate(
           [{ filter: geomorphMapFilterShown }],
-          { fill: 'forwards', duration: 750 },
+          { fill: 'forwards', duration: timeMs ?? 750 },
         );
       } else if (action === 'hide') {
         state.anim.labels = state.el.labels.animate(
           [{ opacity: 0 }],
-          { fill: 'forwards', duration: 1500 },
+          { fill: 'forwards', duration: timeMs ?? 1500 },
         );
         state.anim.map = state.el.map.animate(
           [{ filter: geomorphMapFilterHidden }],
-          { fill: 'forwards', duration: 750 },
+          { fill: 'forwards', duration: timeMs ?? 750 },
         );
       } else if (action === 'show-for-ms') {
-        const durationMs = 500 + showMs + 500;
+        timeMs ??= 1000;
+        const durationMs = 500 + timeMs + 500; // ½ sec fade in/out
         state.anim.labels = state.el.labels.animate(
           [
-            { opacity: 1, offset: 500/durationMs },
-            { opacity: 1, offset: (500 + showMs)/durationMs },
+            { opacity: 1, offset: 500 / durationMs },
+            { opacity: 1, offset: (500 + timeMs) / durationMs },
             { opacity: 0, offset: 1 },
           ],
           { fill: 'forwards', duration: durationMs },
         );
         state.anim.map = state.el.map.animate(
           [
-            { filter: geomorphMapFilterShown, offset: 500/durationMs },
-            { filter: geomorphMapFilterShown, offset: (500 + showMs)/durationMs },
+            { filter: geomorphMapFilterShown, offset: 500 / durationMs },
+            { filter: geomorphMapFilterShown, offset: (500 + timeMs) / durationMs },
             { filter: geomorphMapFilterHidden, offset: 1 },
           ],
           { fill: 'forwards', duration: durationMs },
@@ -120,7 +120,9 @@ export default function FOV(props) {
         state.anim.labels.playState === 'paused' && state.anim.labels.play();
         state.anim.map.playState === 'paused' && state.anim.map.play();
       } else {
-        throw Error(`parameter must be in ${JSON.stringify(npcService.fovMapActionKeys)} or undefined`);
+        throw testNever(action, {
+          override: `mapAct: ${action} must be in ${JSON.stringify(npcService.fovMapActionKeys)} or undefined`,
+        });
       }
     },
     setRoom(gmId, roomId, doorId) {

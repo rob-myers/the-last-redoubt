@@ -435,7 +435,7 @@ export default function NPCs(props) {
           }
           break;
         }
-        case 'map':
+        case 'map': // view/hide world map
           return api.fov.mapAct(e.mapAction, e.timeMs);
         case 'pause':// pause current animation
           state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');

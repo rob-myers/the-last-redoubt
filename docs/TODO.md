@@ -3,8 +3,7 @@
 ## In progress
 
 - ✅ BUG doors closing whilst World paused
-
-- 🚧 go thru page up until first behaviour
+- ✅ BUG doors closing too early after manually open/closed
 
 - ✅ npc.service -> singleton (rather than `import *`)
 - ✅ clean `npc`
@@ -12,10 +11,12 @@
   - ✅ typed approach to `npc` normalizeNpcCommandOpts
        > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
 
-- ✅ BUG doors closing too early after manually open/closed
+- 🚧 go thru page up until first behaviour
 
-- clarify/fix `npc map {action} [ms]` also ms -> s
+- ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
 - BUG `npc look-at andros $( click 1 )` should support Ctrl-C
+- BUG? `npc pause andros` goLoop, lookLoop still active
+
 - BUG `npc set-player andros` lights not updated
 ```sh
 # REPRO in room with door with light going outwards 
@@ -24,9 +25,8 @@ npc set-player
 npc set-player andros
 # observe light coming thru door
 ```
-- BUG? `npc pause andros` goLoop, lookLoop still active
 
-- clean NPC shell functions
+- clean NPC shell functions (?)
 - redo first peek video with 2 npcs
 - back to behaviour on homepage!
 

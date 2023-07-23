@@ -107,8 +107,10 @@ class NpcService {
           // npc look-at {npcKey} {pointToLookAt}
           return { action: 'look-at', npcKey: opts, point: extras[0] };
         case "map":
-          // npc map {action} [ms]
-          return { action: 'map', mapAction: /** @type {*} */ (opts), timeMs: extras[0] };
+          // npc map {action} [secs]
+          // 👉 npc map show-for-secs [secs] => npc map show-for-ms [secs * 1000]
+          const mapAction = opts === "show-for-secs" ? "show-for-ms" : /** @type {NPC.FovMapAction} */ (opts);
+          return { action: 'map', mapAction, timeMs: typeof extras[0] === 'number' ? extras[0] * 1000 : undefined };
         case "add-decor":
         case "events": // Only `npc events` supported
         case "light":
