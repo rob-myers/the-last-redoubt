@@ -70,7 +70,7 @@ doLoop: `{
     (p.meta.do || p.meta.nav || p.meta.door)
       ? { npcKey: "'$1'", point: p }
       : undefined
-  ' | npc do {suppressThrow:true}
+  ' | npc --safeLoop do
 }`,
 
 /**

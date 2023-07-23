@@ -310,21 +310,28 @@
       }
     },
   
-    /** npc {action} [{opts}] [{args}] */
+    /**
+     * npc {action} [opts] [extras[i]]
+     * npc --safeLoop {action} [opts] [extras[i]]
+     */
     npc: async function* ({ api, args, home, datum }) {
+      const { opts, operands } = api.getOpts(args, { boolean: [
+        "safeLoop", /** Pipe mode NOOPs rather than throwing */
+      ]});
+
       const worldApi = api.getCached(home.WORLD_KEY);
       const { npcs } = worldApi;
 
-      if (!npcs.service.isNpcActionKey(args[0])) {
-        if (args[0] in npcs.npc) {
+      if (!npcs.service.isNpcActionKey(operands[0])) {
+        if (operands[0] in npcs.npc) {
           // `npc {npcKey} [selector]` --> `npc get {npcKey} [selector]`
-          args[2] = args[1], args[1] = args[0], args[0] = "get";
+          operands[2] = operands[1], operands[1] = operands[0], operands[0] = "get";
         } else {
-          throw api.throwError("first arg {action} must be a valid key");
+          throw api.throwError(`${operands[0]}: invalid action`);
         }
       }
 
-      const action = /** @type {NPC.NpcActionKey} */ (args[0]);
+      const action = /** @type {NPC.NpcActionKey} */ (operands[0]);
       const process = api.getProcess();
       let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
 
@@ -333,36 +340,29 @@
       }
 
       if (api.isTtyAt(0)) {
-        const opts = npcs.service.normalizeNpcCommandOpts(
+        const npcAct = npcs.service.normalizeNpcCommandOpts(
           action,
-          api.parseJsArg(args[1]),
-          args.slice(2).map(arg => api.parseJsArg(arg)),
+          api.parseJsArg(operands[1]),
+          operands.slice(2).map(arg => api.parseJsArg(arg)),
         );
-        if (action === "do") {
-          cleanLongRunning = npcs.handleLongRunningNpcProcess(process, /** @type {*} */ (opts.npcKey));
-        }
         try {
-          // 🚧 could `normalizeNpcCommandOpts` output `NPC.NpcAction`?
-          yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
-        } catch (e) {
-          if (!opts.suppressThrow) throw e;
+          if (npcAct.action === "do") {
+            cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
+          }
+          yield await npcs.npcAct(npcAct);
         } finally {
           cleanLongRunning?.();
         }
       } else {
-        /** e.g. `foo | npc do "{ suppressThrow: true }"`*/
-        const baseOpts = api.parseJsArg(args[1]) || {};
-
         while ((datum = await api.read()) !== null) {
-          if (action === "do") {
-            const { npcKey } = /** @type {NPC.NpcAction & { action: 'do' }} */ (datum);
-            cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcKey);
-          }
           try {
-            const opts = npcs.service.normalizeNpcCommandOpts(action, datum, []);
-            yield await npcs.npcAct({ action: /** @type {*} */ (action), ...opts });
+            const npcAct = npcs.service.normalizeNpcCommandOpts(action, datum, []);
+            if (npcAct.action === "do") {
+              cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
+            }
+            yield await npcs.npcAct(npcAct);
           } catch (e) {
-            if (!baseOpts.suppressThrow) throw e;
+            if (!opts.safeLoop) throw e;
           } finally {
             cleanLongRunning?.();
           }

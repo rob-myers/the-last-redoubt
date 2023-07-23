@@ -1,5 +1,5 @@
 import { merge } from 'rxjs';
-import { assertNonNull, keys } from './generic';
+import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
@@ -50,75 +50,137 @@ class NpcService {
 
 
   /**
-   * Extract options object from `npc {foo} {bar} {baz} {qux}`,
-   * e.g. open clicked door: `npc do andros $( click 1 ) 1`
+   * Compute `NPC.NpcAction` from `npc {action} {opts} [extras[i]]`.
+   *
+   * For example, we can open a clicked door via
+   * `npc do andros $( click 1 ) 1` where:
+   * - `{action}` is `do`
+   * - `{opts}` is `"andros"`
+   * - `{extras[0]}` is a point
+   * - `{extras[1]}` is `1`
+   * 
+   * Then this function would output:
+   * `{ action: 'do', npcKey: 'andros', point, extraParams: 1 }`.
    * @param {NPC.NpcActionKey} action
    * @param {undefined | string | NPC.NpcConfigOpts} opts
    * @param {any[]} extras 
-   * @returns {NPC.NpcConfigOpts}
+   * @returns {NPC.NpcAction}
    */
-  normalizeNpcCommandOpts(action, opts = {}, extras) {
+  normalizeNpcCommandOpts(action, opts, extras) {
     if (typeof opts === "string") {
       switch (action) {
         case "decor":
+          // npc decor {decorKey}
+          return { action: 'decor', decorKey: opts }; // get
         case "remove-decor":
         case "rm-decor":
-          // npc {decor,remove-decor,rm-decor} {decorKey}
-          opts = { decorKey: opts };
-          break;
+          // npc {remove-decor,rm-decor} {decorKey}
+          return { action: 'remove-decor', decorKey: opts };
         case "cancel":
+          // npc cancel {npcKey}
+          return { action: 'cancel', npcKey: opts };
         case "pause":
+          // npc pause {npcKey}
+          return { action: 'pause', npcKey: opts };
         case "resume":
+          // npc resume {npcKey}
+          return { action: 'resume', npcKey: opts };
         case "rm":
         case "remove":
+          // npc {rm,remove} {npcKey}
+          return { action: 'rm', npcKey: opts };
         case "set-player":
-          // npc {cancel,pause,resume,rm,remove,set-player} {npcKey}
-          opts = { npcKey: opts };
-          break;
+          // npc set-player {npcKey}
+          return { action: 'set-player', npcKey: opts };
         case "get":
-          // npc get {npcKey} [selector]
-          opts = { npcKey: opts, ...typeof extras[0] === 'function' && { selector: extras[0] } };
-          break;
+          // npc get {npcKey} [selectorFn]
+          return { action: 'get', npcKey: opts, selector: typeof extras[0] === 'function' ? extras[0] : undefined };
         case "config":
           // npc config {boolOptionToToggle}+, e.g.
           // npc config omnipresent showLabels
           // npc config 'omnipresent showLabels'
-          opts = { configKey: [opts].concat(extras).join(' ') };
-          break;
+          return { action: 'config', configKey: [opts].concat(extras).join(' ') };
         case "do":
-          // npc do {npcKey} 
-          opts = { npcKey: opts, point: extras[0], extraParams: extras.slice(1) };
-          break;
+          // npc do {npcKey} [point] [extras[i]]
+          return { action: 'do', npcKey: opts, point: extras[0], extraParams: extras.slice(1) };
         case "look-at":
           // npc look-at {npcKey} {pointToLookAt}
-          opts = { npcKey: opts, point: extras[0] };
-          break;
-          case "map":
+          return { action: 'look-at', npcKey: opts, point: extras[0] };
+        case "map":
           // npc map {action} [ms]
-          opts = { mapAction: opts, timeMs: extras[0] };
-          break;
+          return { action: 'map', mapAction: /** @type {*} */ (opts), timeMs: extras[0] };
+        case "add-decor":
+        case "events": // Only `npc events` supported
+        case "light":
+          throw Error(`Unsupported syntax: npc ${action} ${opts}`);
         default:
-          opts = {}; // we ignore key
-          break;
+          throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
       }
-      return opts;
-    } else {
+    } else if (opts) {// opts is `NPC.NpcConfigOpts`
       switch (action) {
         case "config":
-          // npc config {partialConfig}, e.g.
-          // npc config '{ omnipresent: true, interactRadius: 100 }'
-          opts = opts;
-          break;
+          // npc config {partialConfig}
+          // > e.g. npc config '{ omnipresent: true, interactRadius: 100 }'
+          return { action: 'config', ...opts };
+        case "decor":
+        case "add-decor":
+          // npc decor {decorDef}
+          return { action: 'add-decor', items: [/** @type { NPC.DecorDef} */ (opts)] }; // add
         case "light":
           // npc light {pointInRoom} # toggle
           // npc light {pointInRoom} {truthy} # on
           // npc light {pointInRoom} {falsy}  # off
-          opts = { point: /** @type {Geomorph.PointMaybeMeta} */ (opts), lit: extras[0] };
-          break;
+          return { action: 'light', point: /** @type {Geomorph.PointMaybeMeta} */ (opts), lit: extras[0] };
+        case "map":
+        case "cancel":
+        case "do":
+          // npc do {partialUpdate}
+          return { action: 'do', .../** @type {NPC.NpcDoDef} */(opts) };
+        case "events":
+        case "get":
+        case "look-at":
+        case "pause":
+        case "resume":
+        case "remove-decor":
+        case "rm-decor":
+        case "rm":
+        case "remove":
+        case "set-player":
+          throw Error(`Unsupported syntax: npc ${action} ${JSON.stringify(opts)}`);
         default:
-          return opts;
+          throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
       }
-      return opts;
+    } else {// opts is `undefined`
+      switch (action) {
+        case "decor":
+          // npc decor
+          return { action: 'decor' }; // list all
+        case "events":
+          // npc events
+          return { action: 'events' };
+        case "add-decor":
+        case "cancel":
+        case "config":
+          // npc config
+          return { action: 'config' }; // get all
+        case "set-player":
+          // npc set-player
+          return { action: 'set-player' }; // unset Player
+        case "do":
+        case "get":
+        case "light":
+        case "look-at":
+        case "map":
+        case "pause":
+        case "resume":
+        case "remove-decor":
+        case "rm-decor":
+        case "rm":
+        case "remove":
+          throw Error(`Unsupported syntax: npc ${action}`);
+        default:
+          throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
+      }
     }
   }
 
@@ -146,7 +208,7 @@ class NpcService {
    * @param {string} input 
    * @returns {input is NPC.ConfigBooleanKey}
    */
-  isConfigBooleanKey(input) {
+  isConfigBooleanKey = (input) => {
     return input in this.fromConfigBooleanKey;
   }
 
@@ -154,7 +216,7 @@ class NpcService {
    * @param {string} input 
    * @returns {input is NPC.NpcActionKey}
    */
-  isNpcActionKey(input) {
+  isNpcActionKey = (input) => {
     return this.fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
   }
 
@@ -162,7 +224,7 @@ class NpcService {
    * @param {string} input 
    * @returns {input is NPC.NpcClassKey}
    */
-  isNpcClassKey(input) {
+  isNpcClassKey = (input) => {
     return input in this.fromNpcClassKey;
   }
 

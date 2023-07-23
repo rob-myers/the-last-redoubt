@@ -5,18 +5,29 @@
 - ✅ BUG doors closing whilst World paused
 
 - 🚧 go thru page up until first behaviour
+
 - ✅ npc.service -> singleton (rather than `import *`)
-- clean `npc`
+- ✅ clean `npc`
   - ✅ move `npc events` to npcService
-  - 🚧 typed approach to `npc` normalizeNpcCommandOpts
-       > could `normalizeNpcCommandOpts` output `NPC.NpcAction`?
+  - ✅ typed approach to `npc` normalizeNpcCommandOpts
+       > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
 
-- 🚧 clean NPC shell functions
-  - `npc do --ignoreThrow`
-  - doLoop, goLoop etc. -> `while`?
+- BUG doors closing too early after manually open/closed
 
+- clarify/fix `npc map {action} [ms]` also ms -> s
+- BUG `npc look-at andros $( click 1 )` should support Ctrl-C
+- BUG `npc set-player andros` lights not updated
+```sh
+# REPRO in room with door with light going outwards 
+npc set-player
+# open door and go thru, wait for it to shut
+npc set-player andros
+# observe light coming thru door
+```
+- BUG? `npc pause andros` goLoop, lookLoop still active
+
+- clean NPC shell functions
 - redo first peek video with 2 npcs
-
 - back to behaviour on homepage!
 
 - ✅ homepage: "The Experiment" narrative container
@@ -42,6 +53,7 @@
 - link labels must have spaces: `[ continue ](-)`
   > to avoid viewing e.g. arrays as links
 
+- can reverse navPath
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
   - Can supply url params to specify layout and profile?

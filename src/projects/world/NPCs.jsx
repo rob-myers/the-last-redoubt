@@ -387,29 +387,30 @@ export default function NPCs(props) {
         case 'decor': // get decor, list decors, or add decor
           return 'decorKey' in e
             ? api.decor.decor[e.decorKey] // get
-            : Object.keys(e).length === 1
-              ? Object.values(api.decor.decor) // list
-              : api.decor.setPseudoDecor(e); // add
+            : 'key' in e // 🚧 verify decor?
+              ? api.decor.setPseudoDecor(e) // add
+              : Object.values(api.decor.decor) // list
         case 'do':
           await state.npcActDo(e);
           break;
         case 'cancel':
           return await state.getNpc(e.npcKey).cancel();
-        case 'config': // set multiple, toggle single, get all
-          keys(e).forEach(key => // Set
-            // 🚧 ensure correct type
-            e[key] !== undefined && (/** @type {*} */ (state.config)[key] = e[key])
-          );
-          if (e.configKey) {// Toggle (possibly many) booleans
+        case 'config': // set multiple, toggle multiple booleans, get all
+          if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(npcService.isConfigBooleanKey);
             configKeys.forEach(configKey => state.config[configKey] = !state.config[configKey]);
-          }
-          if (Object.keys(e).length === 1) {// `npc config` (only key is `action`)
+          } else if (Object.keys(e).length === 1) {// get all
             /**
              * We must wrap the proxy in a chunk to avoid errors arising
              * from various `await`s ("then" is not defined).
              */
             return dataChunk([state.config]);
+          } else {
+            const partialConfig = /** @type {NPC.NpcActionConfigPartial} */ (e);
+            keys(partialConfig).forEach(key => // set multiple
+              // 🚧 ensure correct type
+              partialConfig[key] !== undefined && (/** @type {*} */ (state.config)[key] = partialConfig[key])
+            );
           }
           break;
         case 'events': // handled earlier
@@ -579,8 +580,7 @@ export default function NPCs(props) {
       }
     },
     removeNpc(npcKey) {
-      if (state.npc[npcKey]) {
-      }
+      state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
       if (state.playerKey === npcKey) {
         state.npcAct({ action: 'set-player', npcKey: undefined });

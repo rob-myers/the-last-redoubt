@@ -324,14 +324,15 @@ declare namespace NPC {
   //#region config
 
   /**
+   * ℹ️ Here "config" refers to `npc ...`, not just `npc config ...`
    * 🚧 clarify these types
    */
   interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
+    interactRadius?: number;
     /** Induced by e.g. `npc config debug` or `npc config debug showIds` */
     configKey?: string;
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
-    interactRadius?: number;
     lit?: boolean;
     mapAction?: string;
     /** Induced by e.g. `npc get andros` */
@@ -361,14 +362,16 @@ declare namespace NPC {
 
    /**
     * Using `action` instead of `key` to avoid name-collision.
-    * 🚧 Pick<> from `NpcConfigOpts`?
     */
    export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
     | { action: 'cancel'; npcKey: string }
-    | { action: 'config'; } & NPC.NpcConfigOpts
+    | { action: 'config'; } // get all config
+    | { action: 'config'; configKey: string } // Possibly space-sep `ConfigBooleanKey`s
+    | NpcActionConfigPartial
+    | { action: 'decor'; } // get all decor
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; npcKey: string; point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean; extraParams?: any[]; }
+    | { action: 'do'; } & NpcDoDef
     | { action: 'events'; }
     | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
@@ -380,6 +383,18 @@ declare namespace NPC {
     | { action: 'rm' | 'remove'; npcKey: string; }
     | { action: 'set-player'; npcKey?: string }
   );
+
+  export type NpcActionConfigPartial =
+    & { action: 'config'; interactRadius?: number; }
+    & Partial<Record<ConfigBooleanKey, boolean>>;
+
+  export interface NpcDoDef {
+    npcKey: string;
+    point: Geomorph.PointMaybeMeta;
+    fadeOutMs?: number;
+    extraParams?: any[];
+    suppressThrow?: boolean;
+  }
 
   export type NpcActionKey = NpcAction['action'];
 
