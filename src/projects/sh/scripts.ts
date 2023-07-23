@@ -66,11 +66,9 @@ export const gameFunctions = [
 
 /** Usage: doLoop {npcKey} */
 doLoop: `{
-  click | map 'p =>
-    (p.meta.do || p.meta.nav || p.meta.door)
-      ? { npcKey: "'$1'", point: p }
-      : undefined
-  ' | npc --safeLoop do
+  click |
+    filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
+    npc do --safeLoop $1
 }`,
 
 /**
@@ -87,10 +85,10 @@ goLoop: `{
     walk $1
 }`,
 
-/** Usage: goOnce {npcKey} */
-goOnce: `{
-  nav $1 $(click 1) | walk $1
-}`,
+// /** Usage: goOnce {npcKey} */
+// goOnce: `{
+//   nav $1 $(click 1) | walk $1
+// }`,
 
 /** Usage: lookLoop {npcKey} */
 lookLoop: `{

@@ -11,8 +11,6 @@
   - ✅ typed approach to `npc` normalizeNpcCommandOpts
        > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
 
-- 🚧 go thru page up until first behaviour
-
 - ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
 - ✅ BUG `npc look-at andros $( click 1 )` should support Ctrl-C
 
@@ -25,7 +23,12 @@ npc set-player andros
 # observe light coming thru door
 ```
 
-- clean NPC shell functions (?)
+- 🚧 go thru page up until first behaviour
+
+- 🚧 clean NPC shell functions
+  - ✅ doLoop
+  - 🚧 thinkLoop
+
 - redo first peek video with 2 npcs
 - back to behaviour on homepage!
 
