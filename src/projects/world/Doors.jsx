@@ -129,17 +129,17 @@ export default function Doors(props) {
         return wasOpen;
       }
 
+      // Cancel any pending close
+      state.cancelClose(item);
+
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
-          state.cancelClose(item);
           state.tryCloseDoor(gmId, doorId); // Reset door close
           return true;
         }
         if (!state.safeToCloseDoor(gmId, doorId)) {
           return true;
         }
-        // Cancel any pending close
-        state.cancelClose(item);
       } else {
         if (opts.close) {// Do not close if closed
           return false;

@@ -12,7 +12,7 @@
   - ✅ typed approach to `npc` normalizeNpcCommandOpts
        > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
 
-- BUG doors closing too early after manually open/closed
+- ✅ BUG doors closing too early after manually open/closed
 
 - clarify/fix `npc map {action} [ms]` also ms -> s
 - BUG `npc look-at andros $( click 1 )` should support Ctrl-C
