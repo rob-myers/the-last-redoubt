@@ -44,11 +44,11 @@ export const utilFunctions = [
     }' $@
 }`,
 
-  empty: `{
-    return $(
-      call '({ args }) => args.some(Boolean) ? 1 : 0' "$@"
-    )
-}`,
+//   empty: `{
+//     return $(
+//       call '({ args }) => args.some(Boolean) ? 1 : 0' "$@"
+//     )
+// }`,
 
   clone: `{
     map 'x => JSON.parse(JSON.stringify(x))'
@@ -101,16 +101,12 @@ lookLoop: `{
 /** Usage: thinkLoop {npcKey} */
 thinkLoop: `{
   click |
-    filter 'x => x.meta.npc' |
-    run '({ api, args, home, datum }) {
-      const npcKey = args[0]
+    filter 'x => x.meta.npc && x.meta.npcKey === "'$1'"' |
+    run '({ api, home }) {
       const { fov } = api.getCached(home.WORLD_KEY)
-      while ((datum = await api.read(true)) !== null) {
-        if (datum.meta.npcKey === npcKey) {
-          fov.mapAct("show-for-ms", 3000)
-        }
-      }
-    }' $1
+      while (await api.read(true) !== null)
+        fov.mapAct("show-for-ms", 3000)
+    }'
 }`,
 
 /**

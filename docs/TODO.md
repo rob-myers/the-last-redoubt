@@ -25,9 +25,9 @@ npc set-player andros
 
 - 🚧 go thru page up until first behaviour
 
-- 🚧 clean NPC shell functions
+- ✅ clean NPC shell functions
   - ✅ doLoop
-  - 🚧 thinkLoop
+  - ✅ thinkLoop
 
 - redo first peek video with 2 npcs
 - back to behaviour on homepage!
