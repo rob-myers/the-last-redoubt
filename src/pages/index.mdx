@@ -103,35 +103,34 @@ However, this is a difficult thing to do: we risk creating something neither of 
 
 We tackle _general interest_ in a few ways.
 
-- Our implementation uses _standard_ web development techniques
-(relevant to a wide audience).
-For example we use [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering, rather than a non-declarative approach invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
+- Our implementation uses _standard_ web development techniques, e.g.
+  [CSS](https://en.wikipedia.org/wiki/CSS) and the [Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API) for rendering,
+  rather than a non-declarative approach invoking [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame).
 
-- Our approach to in-browser scripting stands on its own.
-  We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Interactively parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js).</SideNote>
-  This amounts to a Command Line Interface ([CLI](https://en.wikipedia.org/wiki/Command-line_interface)).
+- Our approach to in-browser scripting is of independent interest.
+  We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Interactively parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js),</SideNote>
 
-- Our NPC-related shell functions extend the CLI, giving our website its name.
-  The latter have generic appeal, e.g. `click`, `spawn`, `look`, `nav`, `walk`, and can be naturally piped:
-  ```bash
-  # walk npc "rob" to clicked navigable points
-  click | nav --safeLoop rob | walk rob
-  ```
+- Our CLI ([Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface)) is extended with _generic_ NPC ([Non-Player Character](https://en.wikipedia.org/wiki/Non-player_character)) related shell functions<SideNote>These shell functions give our website its name.</SideNote> e.g. `click`, `spawn`, `look`, `nav`, `walk`.
+  They can be naturally piped:
+    ```bash
+    # walk npc "rob" to clicked navigable points
+    click | nav --safeLoop rob | walk rob
+    ```
 
 {/* - We consider character behaviour relevant to a vast number of video games. */}
 
 But what about _entertainment value_?
-If we're going to make more meaningful video games (via richer behaviour),
+If we're going to make more meaningful video games,
 they'd better be more entertaining too.
-Any additional depth must be seamlessly integrated into the experience.
+Additional depth must be seamlessly integrated into the experience.
 For example:
 - Sometimes deterministic behaviour is desirable to avoid frustrating the Player.
-- Complex simulations are of little value if they are never witnessed or understood by the Player.
+- Complex simulations have little value if they are never witnessed or understood by the Player.
 
 A _Player-centric approach_ will avoid these pitfalls.
-But there is another important problem:
-**although we don't want to create a video game,
-we also don't want an abstract collection of behaviours**.
+There is another important related problem:
+although we don't want to create a video game,
+**we also don't want an abstract collection of behaviours**.
 Thus we provide context on two levels: a setting (Traveller universe) and a narrative container (joining the behaviours together).
 The latter is called "The Experiment".
 
