@@ -499,14 +499,14 @@ export class ttyXtermClass {
       return this.queueCommands(commands);
     } else if (msg === null) {
       this.session.rememberLastValue(null);
-      return this.queueCommands([{ key: 'line', line: `${ansi.Yellow}null${ansi.Reset}` }]);
+      return this.queueCommands([{ key: 'line', line: `${ansi.BrightYellow}null${ansi.Reset}` }]);
     } else if (msg === undefined) {
       return;
     } else if (isProxy(msg)) {
       this.session.rememberLastValue(msg);
       return this.queueCommands([{
         key: 'line',
-        line: `${ansi.Yellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansi.Reset}`,
+        line: `${ansi.BrightYellow}${safeStringify({...msg}).slice(-this.maxStringifyLength)}${ansi.Reset}`,
       }]);
     }
 
@@ -575,7 +575,7 @@ export class ttyXtermClass {
           const stringified = safeStringify(msg);
           this.queueCommands([{
             key: 'line',
-            line: `${ansi.Yellow}${stringified.slice(-this.maxStringifyLength)}${ansi.Reset}`,
+            line: `${ansi.BrightYellow}${stringified.slice(-this.maxStringifyLength)}${ansi.Reset}`,
           }]);
           this.session.rememberLastValue(msg);
         }

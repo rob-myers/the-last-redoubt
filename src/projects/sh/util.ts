@@ -200,18 +200,21 @@ export const ansi = {
   BoldReset: '\x1b[22m',
   BrightGreen: '\x1b[92m',
   BrightGreenBg: '\x1b[102m\x1b[30m',
+  BrightYellow: '\x1b[93m',
+  BrightWhite: '\x1b[97m',
   DarkGreen: '\x1b[32m',
-  GreyBg: '\x1b[100m',
+  GreyBg: '\x1b[47m',
+  DarkGreyBg: '\x1b[100m',
   Purple: '\x1b[35m',
   Red: '\x1b[31;1m',
   Reverse: '\x1b[7m',
   ReverseReset: '\x1b[27m',
   Reset: '\x1b[0m',
   // Warn: '\x1b[30;104m',
-  White: '\x1b[0;37m',
+  // White: '\x1b[0;37m',
+  White: '\x1b[37m',
   Underline: '\x1b[4m',
   UnderlineReset: '\x1b[24m',
-  Yellow: '\x1b[93m',
 };
 
 /** Source: https://www.npmjs.com/package/ansi-regex */
@@ -255,7 +258,7 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
     .map((part, i) => (addedZero === (i % 2))
-      ? `[${ansi.Yellow}${ansi.GreyBg}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}]`
+      ? `${ansi.DarkGreyBg}[${ansi.BrightWhite}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}${ansi.DarkGreyBg}]${ansi.Reset}`
       : `${ansi.White}${part}${ansi.Reset}`
     )
   ;

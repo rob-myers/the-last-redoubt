@@ -153,7 +153,7 @@ class cmdServiceClass {
           for (const [key, value] of Object.entries(vars)) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
             yield `${ansi.Blue}${key}${ansi.Reset}=${
-              typeof value === 'string' ? ansi.White : ansi.Yellow
+              typeof value === 'string' ? ansi.White : ansi.BrightYellow
             }${safeStringify(value).slice(-xterm.maxStringifyLength)}${ansi.Reset}`;
           }
         }
@@ -299,7 +299,7 @@ class cmdServiceClass {
               ? keys.map(x => deepGet(obj, x.split('/'))?.constructor?.name || (obj[x] === null ? 'null' : 'undefined'))
               : keys.map(x => obj[x]?.constructor?.name || (obj[x] === null ? 'null' : 'undefined'));
             const metasWidth = Math.max(...metas.map(x => x.length));
-            items = keys.map((x, i) => `${ansi.Yellow}${metas[i].padEnd(metasWidth)}${ansi.White} ${x}${ansi.Reset}`);
+            items = keys.map((x, i) => `${ansi.BrightYellow}${metas[i].padEnd(metasWidth)}${ansi.White} ${x}${ansi.Reset}`);
           } else if (opts[1]) {
             items = keys;
           } else {
