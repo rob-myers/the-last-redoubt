@@ -82,7 +82,7 @@ export const vscDarkPlusCss = css`
   }
 
   pre[class*="language-"] {
-    padding: 48px 48px 16px 48px;
+    padding: 32px 48px 16px 48px;
     @media (max-width: 600px) {
       padding: 24px 16px 8px 16px;
     }

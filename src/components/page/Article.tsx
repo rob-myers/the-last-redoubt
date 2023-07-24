@@ -298,7 +298,10 @@ const articleCss = css`
 
   pre {
     border: 1px solid var(--page-border-color);
-    margin-bottom: 24px;
+    margin: 32px 0;
+    @media(max-width: 600px) {
+      margin: 24px 0;
+    }
   }
   > pre {
     margin: 48px 0 72px 0;
@@ -372,6 +375,9 @@ const articleCss = css`
 
   ul li, ol li {
     margin: 4px 0;
+    @media(min-width: 600px) {
+      margin-bottom: 16px;
+    }
   }
 
   @keyframes fadeInOut {
