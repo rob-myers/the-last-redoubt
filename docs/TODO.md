@@ -6,7 +6,7 @@
   - ✅ clean/improve choice text in first demo
     - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
     - ✅ session can see Tabs id i.e. `DOM_ID`
-  - link labels must have spaces: `[ continue ](-)`
+  - ✅ link labels must have spaces: `[ continue ](-)`
     > to avoid viewing e.g. arrays as links
   - redo first peek video with 2 npcs
   - redo do all the things video

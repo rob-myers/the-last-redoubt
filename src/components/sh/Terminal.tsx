@@ -109,13 +109,15 @@ export default function Terminal(props: Props) {
         options={options}
         linkProviderDef={{
           // links look like this: [foo bar] or [1]
-          regex: /(\[[^\]]+\])/gi,
+          // regex: /(\[[^\]]+\])/gi,
+          regex: /(\[ [^\]]+ \])/gi,
           async callback(_event, linkText, { lineText, linkStartIndex,  }) {
             // console.log('clicked link', props.sessionKey, linkText, { lineText, linkStartIndex });
             useSession.api.onTtyLink(
               props.sessionKey,
               stripAnsi(lineText),
-              stripAnsi(linkText).slice(1, -1), // Omit square brackets
+              // stripAnsi(linkText).slice(1, -1), // Omit square brackets
+              stripAnsi(linkText).slice(2, -2), // Omit square brackets and spacing
               linkStartIndex,
             );
           },

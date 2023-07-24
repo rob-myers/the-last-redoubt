@@ -201,6 +201,7 @@ export const ansi = {
   BrightGreen: '\x1b[92m',
   BrightGreenBg: '\x1b[102m\x1b[30m',
   DarkGreen: '\x1b[32m',
+  GreyBg: '\x1b[100m',
   Purple: '\x1b[35m',
   Red: '\x1b[31;1m',
   Reverse: '\x1b[7m',
@@ -242,7 +243,8 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
    * - match[2] is the link label e.g. "[foo]"
    * - match[3] is the link value e.g. "bar" (interprets as 'bar') or "2" (interprets as 2)
    */
-  const mdLinksRegex = /(^|[^\x1b])\[([^()]+?)\]\((.*?)\)/g;
+  // const mdLinksRegex = /(^|[^\x1b])\[([^()]+?)\]\((.*?)\)/g;
+  const mdLinksRegex = /(^|[^\x1b])\[ ([^()]+?) \]\((.*?)\)/g;
   const matches = Array.from(text.matchAll(mdLinksRegex));
   const boundaries = matches.flatMap(match =>
     [match.index! + match[1].length, match.index! + match[0].length]
@@ -253,7 +255,7 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
     .map((part, i) => (addedZero === (i % 2))
-      ? `[${ansi.Yellow}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}]`
+      ? `[${ansi.Yellow}${ansi.GreyBg}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}]`
       : `${ansi.White}${part}${ansi.Reset}`
     )
   ;
