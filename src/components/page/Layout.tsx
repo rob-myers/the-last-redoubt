@@ -96,8 +96,11 @@ interface Props extends Pick<TabsProps, (
  * e.g. so can select a particular tab programmatically.
  */
 function useRegisterTabs(props: Props, model: Model) {
-
-  React.useMemo(() => {
+  /**
+   * Using React.useEffect (rather than React.useMemo) causes remount on edit Tabs['tabs'].
+   * This provides a better dev experience when e.g. editing tty PROFILE.
+   */
+  React.useEffect(() => {
     const site = useSiteStore.getState();
 
     if (!props.id) {
