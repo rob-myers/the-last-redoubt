@@ -109,6 +109,7 @@ class cmdServiceClass {
       case 'choice': {
         if (isTtyAt(meta, 0)) {
           // `choice {textWithLinks}+ [secondsToWait] [defaultValue]`
+          // text may contain newlines
           const secsIndex = args.findIndex(x => Number.isFinite(parseInt(x)));
           const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
           const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;
@@ -464,7 +465,7 @@ class cmdServiceClass {
     { text, defaultValue, secs }: ChoiceReadValue,
   ) {
     const lines = text.replace(/\r/g, '').split(/\n/);
-    const parsedLines = lines.map(text => parseTtyMarkdownLinks(text, defaultValue));
+    const parsedLines = lines.map(text => parseTtyMarkdownLinks(text, defaultValue, meta.sessionKey));
     for (const {ttyText} of parsedLines) {
       await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
     }

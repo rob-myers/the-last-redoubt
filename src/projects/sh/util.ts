@@ -1,6 +1,7 @@
 import braces from 'braces';
 import { last } from '../service/generic';
-import { ProcessMeta, ProcessStatus, TtyLinkCtxt } from './session.store';
+import { navigateFromHash } from '../service/dom';
+import useSession, { ProcessMeta, ProcessStatus, TtyLinkCtxt } from './session.store';
 import { parseJsArg } from './cmd.service';
 import { SigEnum } from './io';
 import type * as Sh from './parse';
@@ -231,10 +232,11 @@ export function stripAnsi(input: string) {
 //#region misc
 
 /**
- * We'll compute text `textForTty` where each `[foo](bar)` is replaced by `[foo]`.
- * The relationship between foo and bar is stored in a `TtyLinkCtxt`.
+ * - We'll compute text `textForTty` where each `[foo](bar)` is replaced by `[foo]`.
+ * - The relationship between `foo` and `bar` is stored in a `TtyLinkCtxt`.
+ * - We need `sessionKey` for special actions e.g. `href:#somewhere else`.
  */
-export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
+export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKey: string) {
   /**
    * - match[1] is either empty or the escape character (to support ansi special chars)
    * - match[2] is the link label e.g. "[foo]"
@@ -264,12 +266,21 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any) {
       linkText: match[2], // 1 + ensures we're inside the square brackets
       linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
       callback() {
-        const value = parseJsArg(
+        let value = parseJsArg(
           match[3] === '' // links [foo]() has value "foo"
             ? match[2] // links [foo](-) has value undefined
             : match[3] === '-' ? undefined : match[3]
         );
-        resolve(value === undefined ? defaultValue : value);
+        value === undefined && (value = defaultValue);
+
+        if (typeof value === 'string') {// We support special actions
+          if (value.startsWith('href:')) {// `"href:{navigable}"`
+            const domId = useSession.api.getSession(sessionKey).var.DOM_ID;
+            typeof domId === 'string' && navigateFromHash(`#${domId}`, value.slice('href:'.length));
+            return; // Don't resolve
+          }
+        }
+        resolve(value);
       },
     })
   ) : undefined;

@@ -70,7 +70,13 @@ export interface Session {
   ttyShell: ttyShellClass,
   ttyLink: { [lineText: string]: TtyLinkCtxt[] };
 
-  var: Record<string, any>;
+  var: {
+    [varName: string]: any;
+    PWD: string;
+    OLDPWD: string;
+    /** DOM element id to return to after `choice [foo](href:#bar)` */
+    DOM_ID?: string;
+  };
   nextPid: number;
   lastExitCode: number;
 }

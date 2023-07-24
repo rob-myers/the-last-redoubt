@@ -2,34 +2,15 @@
 
 ## In progress
 
-- ✅ BUG doors closing whilst World paused
-- ✅ BUG doors closing too early after manually open/closed
-
-- ✅ npc.service -> singleton (rather than `import *`)
-- ✅ clean `npc`
-  - ✅ move `npc events` to npcService
-  - ✅ typed approach to `npc` normalizeNpcCommandOpts
-       > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
-
-- ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
-- ✅ BUG `npc look-at andros $( click 1 )` should support Ctrl-C
-
-- ✅ BUG `npc set-player andros` case where lights are not updated
-```sh
-# REPRO in room with door with light going outwards 
-npc set-player
-# open door and go thru, wait for it to shut
-npc set-player andros
-# observe light coming thru door
-```
-
 - 🚧 go thru page up until first behaviour
+  - ✅ clean/improve choice text in first demo
+    - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
+    - ✅ session can see Tabs id i.e. `DOM_ID`
+  - link labels must have spaces: `[ continue ](-)`
+    > to avoid viewing e.g. arrays as links
+  - redo first peek video with 2 npcs
+  - redo do all the things video
 
-- ✅ clean NPC shell functions
-  - ✅ doLoop
-  - ✅ thinkLoop
-
-- redo first peek video with 2 npcs
 - back to behaviour on homepage!
 
 - ✅ homepage: "The Experiment" narrative container
@@ -52,8 +33,6 @@ npc set-player andros
   - npc walks into your current room
   - ...
 
-- link labels must have spaces: `[ continue ](-)`
-  > to avoid viewing e.g. arrays as links
 
 - `npc pause andros` should pause e.g. goLoop, lookLoop
   - ℹ️ if only pause `walk` then e.g. `nav` in pipeline may create navPath
@@ -211,7 +190,7 @@ npc set-player andros
 - split hull doors into two
 - can specify door as `split`
 
-- 🚧 Synfig https://www.synfig.org/
+- ❌ Synfig https://www.synfig.org/
   - ✅ Download and Install
   - ✅ Watch a tutorial
     > https://www.youtube.com/watch?v=5B_Aok26LKc&ab_channel=TurtleArmyJess
@@ -249,7 +228,7 @@ npc set-player andros
     - `animation-direction: alternate;`
     - better integration
 
-- 🚧 auto-min spritesheet/geomorph/etc PNGs
+- ✅ auto-min spritesheet/geomorph/etc PNGs
   - e.g. `pngquant --quality=80 -f first-human-npc--walk.png` 186k -> 44k
   - ✅ minify-pngs uses pngquant
   - ✅ pngs-to-webp script
@@ -260,7 +239,7 @@ npc set-player andros
   - ✅ spritesheet use webp with png fallback
     - ✅ `<NPC>` has `webp` or `no-webp` class
     - ✅ modify npcs-meta.json CSS
-  - geomorphs use webp with png fallback
+  - ✅ geomorphs use webp with png fallback
 
 - can specify npc filter e.g. `sepia(1)`
 - ✅ strategy for prefetching spritesheets
@@ -460,6 +439,31 @@ npc set-player andros
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG doors closing whilst World paused
+- ✅ BUG doors closing too early after manually open/closed
+
+- ✅ npc.service -> singleton (rather than `import *`)
+- ✅ clean `npc`
+  - ✅ move `npc events` to npcService
+  - ✅ typed approach to `npc` normalizeNpcCommandOpts
+       > `normalizeNpcCommandOpts` outputs `NPC.NpcAction`?
+
+- ✅ fix `npc map {action} [ms]` plus `ms` -> `secs`
+- ✅ BUG `npc look-at andros $( click 1 )` should support Ctrl-C
+
+- ✅ BUG `npc set-player andros` case where lights are not updated
+```sh
+# REPRO in room with door with light going outwards 
+npc set-player
+# open door and go thru, wait for it to shut
+npc set-player andros
+# observe light coming thru door
+```
+
+- ✅ clean NPC shell functions
+  - ✅ doLoop
+  - ✅ thinkLoop
 
 - ✅ DecorGroup cannot contain another DecorGroup
   - ✅ so `descendants` isn't necessary

@@ -22,7 +22,7 @@ export default function TabContents({
       <Terminal
         disabled={disabled}
         sessionKey={meta.filepath}
-        env={meta.env ?? {}}
+        env={{...meta.env, DOM_ID: tabsKey }}
         onKey={(e) => {
           if (e.key === 'Escape') {
             const tabs = useSiteStore.getState().tabs[tabsKey];

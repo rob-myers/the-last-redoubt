@@ -110,7 +110,7 @@ We tackle _general interest_ in a few ways.
 - Our approach to in-browser scripting is of independent interest.
   We provide an interactive shell interpreting POSIX syntax as JavaScript.<SideNote>Interactively parsed using the wonderful [mvdan-sh](https://github.com/mvdan/sh/tree/master/_js),</SideNote>
 
-- Our CLI ([Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface)) is extended with _generic_ NPC ([Non-Player Character](https://en.wikipedia.org/wiki/Non-player_character)) related shell functions<SideNote>These shell functions give our website its name.</SideNote> e.g. `click`, `spawn`, `look`, `nav`, `walk`.
+- Our CLI ([Command Line Interface](https://en.wikipedia.org/wiki/Command-line_interface)) is extended with generic NPC ([Non-Player Character](https://en.wikipedia.org/wiki/Non-player_character)) shell functions<SideNote>These shell functions give our website its name.</SideNote> e.g. `click`, `spawn`, `look`, `nav`, `walk`.
   They can be naturally piped:
     ```bash
     # walk npc "rob" to clicked navigable points
@@ -210,8 +210,7 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
   In the maps above
   you can pan (_drag_),
   you can zoom (_pinch_ or _scroll_),
-  and you can drag their tabs around (or maximise them).<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>
-
+  and you can drag or maximise their tabs<SideNote>Thanks to the wonderful tabs manager [flexlayout-react](https://www.npmjs.com/package/flexlayout-react).</SideNote>.
   In fact we have just seen two _Worlds_ i.e. [World.js](https://github.com/rob-myers/the-last-redoubt/blob/staging/src/projects/world/World.jsx "@new-tab") component instances.
   The first map amounts to the following component instantiation:
 
@@ -234,8 +233,8 @@ Below we have combined `101`, `301`, and also `101`, `102`, `303`.
 </Aside>
 
 
-So our World needs a Player.
-This brings us to a very important ingredient i.e. the `<Terminal>`.
+Our World needs a Player.
+This brings us to a very important ingredient, the `<Terminal>`.
 Designing user interfaces is _hard_.
 Insofar as textual user interfaces are concerned, we've gone the canonical route i.e. [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html).
 Syntactically we provide an interactive shell.
@@ -244,7 +243,7 @@ Semantically we manipulate Javascript values and run async generators.
 Let's see it action.
 The Terminal's _profile_ explains itself step-by-step,
 prompting the user to "tap to continue".
-By the way, each `<Terminal>` has a side-menu `<`,
+By the way, each `<Terminal>` has a side-menu `<`
 particularly helpful for mobile devices.
 
 <Tabs
@@ -273,30 +272,35 @@ source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 choice "So far, this terminal's profile has:
+NOECHO=1 choice "So far, this profile has:
 - defined shell functions
-- connected to world \\$WORLD_KEY
+- connected to a specific world
+
 ${ansi.Bold}tap to${ansi.BoldReset} [continue](-)"
 
 spawn rob '{x: -90, y: 1075}'
 npc set-player rob
 view 1 '{x: -90, y: 1075}' 1.6
 
-NOECHO=1 choice "Next we've spawned an npc \\"rob\\",
-set them as the Player and,
-brought them into view.
-Try pan-zooming & ${ansi.Bold}tap to${ansi.BoldReset} [continue](-)"
+NOECHO=1 choice "Next, we've:
+- spawned an npc \\"rob\\"
+- set them as the Player
+- brought them into view
+
+${ansi.Bold}try pan-zooming [see above](href:#aside--can-pan-zoom-tabs)
+${ansi.Bold}and [continue](-)"
 
 npc map hide
 goLoop rob &
 doLoop rob &
 lookLoop rob &
 
-NOECHO=1 echo "Finally we have faded the map,
-and setup the Player's controls:
-- tap navmesh (${ansi.Bold}move${ansi.BoldReset}),
-- tap doors/icons (${ansi.Bold}do things${ansi.BoldReset}),
-- tap elsewhere (${ansi.Bold}look${ansi.BoldReset})."
+NOECHO=1 echo "Finally, we've:
+- faded the map
+- setup the Player's controls:
+  - tap navmesh (${ansi.Bold}move${ansi.BoldReset})
+  - tap doors/icons (${ansi.Bold}do things${ansi.BoldReset})
+  - tap elsewhere (${ansi.Bold}look${ansi.BoldReset})"
 `
       }},
     ],

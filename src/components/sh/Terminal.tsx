@@ -136,7 +136,7 @@ export default function Terminal(props: Props) {
 interface Props {
   disabled?: boolean;
   /** Can initialize variables */
-  env: { [envVarName: string]: any; };
+  env: Partial<Session['var']>;
   onKey?: (e: KeyboardEvent) => void;
   sessionKey: string;
 }

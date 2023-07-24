@@ -365,6 +365,18 @@ export function loadImage(src) {
 	});
 }
 
+/**
+ * Navigate `toHash` with ensured previous state `fromHash`.
+ * @param {string} fromHash e.g. #foo
+ * @param {string} toHref e.g. bar/baz#qux
+ */
+export function navigateFromHash(fromHash, toHref) {
+    if (location.hash !== fromHash) {
+        history.pushState({}, '', fromHash);
+    }
+    location.href = toHref;
+}
+
 //#endregion
 
 //#region webp
