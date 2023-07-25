@@ -258,7 +258,7 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
     .map((part, i) => (addedZero === (i % 2))
-      ? `${ansi.DarkGreyBg}[${ansi.BrightWhite}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}${ansi.DarkGreyBg}]${ansi.Reset}`
+      ? `${ansi.DarkGreyBg}[${ansi.Bold}${ansi.BrightWhite}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}${ansi.DarkGreyBg}]${ansi.Reset}`
       : `${ansi.White}${part}${ansi.Reset}`
     )
   ;

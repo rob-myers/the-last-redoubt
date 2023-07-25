@@ -372,7 +372,7 @@ export function loadImage(src) {
  */
 export function navigateFromHash(fromHash, toHref) {
     if (location.hash !== fromHash) {
-        history.pushState({}, '', fromHash);
+        history.pushState({}, '', `${location.origin}${location.pathname}${fromHash}`);
     }
     location.href = toHref;
 }

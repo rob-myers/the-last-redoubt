@@ -245,10 +245,11 @@ npc events | map 'x => [x.key, x.meta?.key]'
 
 ```sh
 # using brace expansion
-choice '['{a..h}{1..8}']()'
-
+choice '[ '{a..h}{1..8}' ]()'
 # with newlines
-choice "$( call '() => "foo [1]()\n\rbar [2]()\nbaz [3]()"' )"
+choice "$( call '() => "foo [ 1 ]()\n\rbar [ 2 ]()\nbaz [ 3 ]()"' )"
+# using newline via `call '() => "\n"' >nl`
+choice "$nl"'[ '{a..h}{1..8}' ]()'
 ```
 
 ```sh

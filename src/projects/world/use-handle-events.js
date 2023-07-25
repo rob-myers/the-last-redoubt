@@ -405,37 +405,37 @@ export default function useHandleEvents(api) {
  * @param  {NPC.NPCsEvent & { key: 'decor-click' }} event
  * @param  {import('./World').State} api
  */
-function mockHandleDecorClick(event, api) {
-  const decor = event.decor;
+function mockHandleDecorClick({ decor }, api) {
+  const worldSessions = Object.values(api.npcs.session).filter(({ receiveMsgs }) => receiveMsgs);
+
   if (decor.type === 'point') {
-    const worldSessions = Object.values(api.npcs.session).filter(({ receiveMsgs }) => receiveMsgs === true);
-    if (decor.meta.label) {
-      /** Assume `[...tags, label, ...labelWords]` */
-      const label = `${decor.meta.label}`;
-      const gmId = /** @type {number} */ (decor.meta.gmId);
-      const roomId = /** @type {number} */ (decor.meta.roomId);
-      const gm = api.gmGraph.gms[gmId];
-      const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
-      // Square brackets induces a link via `linkProviderDef`
-      const line = `ℹ️  [${ansi.Blue}${label}${ansi.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
-      
-      worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
-        lineText: line, 
-        linkText: label,
-        // linkStartIndex: visibleUnicodeLength('ℹ️  ['),
-        linkStartIndex: ('ℹ️  [').length,
-        async callback() {
-          // ℹ️ could have side effect e.g. panzoom
-          const point = gm.matrix.transformPoint(gm.rooms[roomId].center);
-          await api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
-          // ℹ️ return value is important
-        },
-      }] }));
-    }
     api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
       sessionKey,
-      `${ansi.White}ℹ️  ${JSON.stringify(decor.meta??{})}${ansi.Reset}`,
+      `${ansi.BrightGreen}ℹ️  ${Object.entries(decor.meta??{}).map(([k, v]) => `${k} is ${ansi.BrightYellow}${v}${ansi.BrightGreen}`).join(', ')}${ansi.Reset}`,
     ));
+  }
+
+  if (decor.type === 'point' && decor.meta.label) {
+    const label = `${decor.meta.label}`;
+    const gmId = /** @type {number} */ (decor.meta.gmId);
+    const roomId = /** @type {number} */ (decor.meta.roomId);
+    const gm = api.gmGraph.gms[gmId];
+    const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
+    // Square brackets induces a link via `linkProviderDef`
+    const line = `ℹ️  [${ansi.Blue}${label}${ansi.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
+    
+    worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
+      lineText: line, 
+      linkText: label,
+      // linkStartIndex: visibleUnicodeLength('ℹ️  ['),
+      linkStartIndex: ('ℹ️  [').length,
+      async callback() {
+        // ℹ️ could have side effect e.g. panzoom
+        const point = gm.matrix.transformPoint(gm.rooms[roomId].center);
+        await api.npcs.panZoomTo({ zoom: 2, ms: 2000, point });
+        // ℹ️ return value is important
+      },
+    }] }));
   }
 
 }

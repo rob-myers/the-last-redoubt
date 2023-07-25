@@ -8,7 +8,7 @@
     - ✅ session can see Tabs id i.e. `DOM_ID`
   - ✅ link labels must have spaces: `[ continue ](-)`
     > to avoid viewing e.g. arrays as links
-  - redo first peek video with 2 npcs
+  - 🚧 redo first peek video with 2 npcs
   - redo do all the things video
 
 - back to behaviour on homepage!

@@ -272,32 +272,31 @@ source /etc/game-1
 
 awaitWorld
 
-NOECHO=1 choice "So far, this profile has:
+NOECHO=1 choice "We have ☝️
 - defined shell functions
-- connected to a specific world
+- connected to a world
 
-${ansi.Bold}tap to${ansi.BoldReset} [ continue ](-)"
+tap to [ continue ](-)"
 
 spawn rob '{x: -90, y: 1075}'
 npc set-player rob
-view 1 '{x: -90, y: 1075}' 1.6
+track rob &
 
-NOECHO=1 choice "Next, we've:
+NOECHO=1 choice "We have ☝️
 - spawned an npc \\"rob\\"
 - set them as the Player
-- brought them into view
+- started a follow camera
 
-${ansi.Bold}try pan-zooming [ see above ](href:#aside--can-pan-zoom-tabs)
-${ansi.Bold}and [ continue ](-)"
+tap to [ continue ](-)"
 
 npc map hide
 goLoop rob &
 doLoop rob &
 lookLoop rob &
 
-NOECHO=1 echo "Finally, we've:
+NOECHO=1 echo "Finally we ☝️
 - faded the map
-- setup the Player's controls:
+- set the Player's controls:
   - tap navmesh (${ansi.Bold}move${ansi.BoldReset})
   - tap doors/icons (${ansi.Bold}do things${ansi.BoldReset})
   - tap elsewhere (${ansi.Bold}look${ansi.BoldReset})"
