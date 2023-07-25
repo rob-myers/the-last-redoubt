@@ -208,8 +208,7 @@ export default function useHandleEvents(api) {
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
-
-      // const closeDecor = api.decor.byRoom[gmId][roomId].colliders;
+      // const closeDecor = api.decor.byRoom[gmId]?.[roomId]?.colliders ?? [];
       const closeDecor = queryDecorGridLine(
         currPosition,
         npc.anim.path[aux.index + 1],

@@ -196,7 +196,7 @@ export default function NPCs(props) {
             const indexOffset = path.length;
             path.push(...localNavPath.path);
             edgeNodeIds.push(...localNavPath.partition);
-            Object.entries(localNavPath.roomIds).forEach((k, roomId) => // we include `k === 0`
+            Object.entries(localNavPath.roomIds).forEach(([k, roomId]) => // we include `k === 0`
               gmRoomIds[Number(k) + indexOffset] = { gmId: localNavPath.gmId, roomId }
             );
             // Globalise local navMetas

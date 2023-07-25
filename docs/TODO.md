@@ -2,14 +2,27 @@
 
 ## In progress
 
+- ✅ clean/improve choice text in first demo
+  - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
+  - ✅ session can see Tabs id i.e. `DOM_ID`
+- ✅ link labels must have spaces: `[ continue ](-)`
+  > to avoid viewing e.g. arrays as links
+- ✅ non-iris doors slide
+- ✅ support `nav --nearNpc`
+
+- 🚧 fix `nav --nearNpc foo andros | walk --open foo`
+  - ✅ fix `nav` i.e. `gmRoomIds": {"NaN": {"gmId": 1, "roomId": 1}},`
+
+- 🚧 redo first peek video with 2 npcs
+
+```sh
+spawn foo zhodani $( click 1 )
+nav foo andros | walk --open foo
+nav --nearNpc foo andros | walk --open foo
+```
+
+- redo do all the things video
 - 🚧 go thru page up until first behaviour
-  - ✅ clean/improve choice text in first demo
-    - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
-    - ✅ session can see Tabs id i.e. `DOM_ID`
-  - ✅ link labels must have spaces: `[ continue ](-)`
-    > to avoid viewing e.g. arrays as links
-  - 🚧 redo first peek video with 2 npcs
-  - redo do all the things video
 
 - back to behaviour on homepage!
 
@@ -41,6 +54,7 @@
     - e.g. `foo | { bar; walk andros }` and if `walk` has bg pid then ...
     - what about `while true; do foo; walk andros $navPath; bar; done`?
 - can reverse navPath
+- `npc lock {point} [on/off]`
 - update CodeSandbox
 - CodeSandbox supports url params layout, profile
   - Can supply url params to specify layout and profile?
