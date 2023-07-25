@@ -136,8 +136,10 @@ const navCss = css`
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #900;
-      color: #fff;
+      background-color: #222;
+      border: 1px solid #444;
+      border-width: 1px 0;
+      color: #44ff44;
       width: inherit;
       height: inherit;
       padding: 0 0 2px 0;
