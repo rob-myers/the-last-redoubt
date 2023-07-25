@@ -20,7 +20,11 @@ export default function NavMini() {
 
   return (
     <div className={rootCss}>
-      <nav className={cssName.navMini}>
+      <nav
+        className={cx(cssName.navMini, {
+          'no-click': !meta || meta.navGroup === null
+        })}
+      >
         <ul>
           {meta && (meta.navGroup !== null) && <>
             <li>
@@ -68,6 +72,13 @@ const rootCss = css`
   nav {
     position: fixed;
     display: flex;
+  }
+
+  nav.no-click {
+    pointer-events: none;
+    span.icon {
+      pointer-events: all;
+    }
   }
 
   nav ul {
