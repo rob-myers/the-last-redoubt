@@ -160,7 +160,7 @@ export default function useHandleEvents(api) {
         case 'enter-room':
           if (npc.anim.doorStrategy !== 'none') {
              // Currently, all other strategies slow near door
-             npc.setSpeedFactor(1);
+             npc.setSpeedFactor(1); // 🚧 defaultSpeedFactor 
           }
           break;
         default:
@@ -208,6 +208,11 @@ export default function useHandleEvents(api) {
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
+      /**
+       * We already ensure decor.byRoom for the Player via FOV.
+       * But we also need to ensure it for the other npcs.
+       */
+      api.decor.ensureByRoom(gmId, roomId);
       // const closeDecor = api.decor.byRoom[gmId]?.[roomId]?.colliders ?? [];
       const closeDecor = queryDecorGridLine(
         currPosition,

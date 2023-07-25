@@ -2,19 +2,7 @@
 
 ## In progress
 
-- ✅ clean/improve choice text in first demo
-  - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
-  - ✅ session can see Tabs id i.e. `DOM_ID`
-- ✅ link labels must have spaces: `[ continue ](-)`
-  > to avoid viewing e.g. arrays as links
-- ✅ non-iris doors slide
-- ✅ support `nav --nearNpc`
-
-- 🚧 fix `nav --nearNpc foo andros | walk --open foo`
-  - ✅ fix `nav` i.e. `gmRoomIds": {"NaN": {"gmId": 1, "roomId": 1}},`
-
 - 🚧 redo first peek video with 2 npcs
-
 ```sh
 spawn foo zhodani $( click 1 )
 nav foo andros | walk --open foo
@@ -453,6 +441,25 @@ nav --nearNpc foo andros | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ clean/improve choice text in first demo
+  - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
+  - ✅ session can see Tabs id i.e. `DOM_ID`
+- ✅ link labels must have spaces: `[ continue ](-)`
+  > to avoid viewing e.g. arrays as links
+- ✅ non-iris doors slide
+- ✅ support `nav --nearNpc`
+
+- ✅ fix `nav --nearNpc foo andros | walk --open foo`
+  - ✅ fix `nav` i.e. `gmRoomIds": {"NaN": {"gmId": 1, "roomId": 1}},`
+  - ✅ stopped at a door again: `decor.byRoom[gmId][roomId]` empty
+    - `decor.ensureByRoom(gmId, roomId)` invoked whenever add/remove/set decor
+    - we should invoke it on enter room?
+    ```sh
+    spawn foo zhodani {"x":325.13,"y":544.62}
+    spawn andros {"x":625.49,"y":1463.85}
+    nav --nearNpc foo andros | walk --open foo
+    ```
 
 - ✅ BUG doors closing whilst World paused
 - ✅ BUG doors closing too early after manually open/closed
