@@ -422,7 +422,7 @@ function mockHandleDecorClick({ decor }, api) {
     const gm = api.gmGraph.gms[gmId];
     const numDoors = gm.roomGraph.getAdjacentDoors(roomId).length;
     // Square brackets induces a link via `linkProviderDef`
-    const line = `ℹ️  [${ansi.Blue}${label}${ansi.Reset}] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
+    const line = `ℹ️  [ ${ansi.Blue}${label}${ansi.Reset} ] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
     
     worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
       lineText: line, 
