@@ -411,7 +411,7 @@ function mockHandleDecorClick({ decor }, api) {
   if (decor.type === 'point') {
     api.npcs.config.logTags && worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(
       sessionKey,
-      `${ansi.BrightGreen}ℹ️  ${Object.entries(decor.meta??{}).map(([k, v]) => `${k} is ${ansi.BrightYellow}${v}${ansi.BrightGreen}`).join(', ')}${ansi.Reset}`,
+      `${ansi.BrightGreen}ℹ️  ${Object.entries(decor.meta??{}).map(([k, v]) => `${k} ${ansi.BrightYellow}${v}${ansi.BrightGreen}`).join('; ')}${ansi.Reset}`,
     ));
   }
 
