@@ -30,7 +30,7 @@ const titleCss = css`
   h1 {
     display: inline-block;
     margin: 0;
-    margin-top: 40px;
+    margin-top: 64px;
     margin-left: 4px;
 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
