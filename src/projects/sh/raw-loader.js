@@ -252,6 +252,7 @@
     nav: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {
         boolean: [
+          "nearNpc", /** For non-navigable npcs use nearest navigable */
           "preferOpen", /** Prefer open doors i.e. --closed=10000 */
           "safeLoop", /** Pipe mode NOOPs if path non-navigable */
           "to",   /** Piped input goes before operands (else after) */
@@ -262,7 +263,7 @@
           "name", /** Created DecorPath has this key */
         ],
       })
-      const { npcs, lib, decor } = api.getCached(home.WORLD_KEY)
+      const { npcs, lib, decor, gmGraph } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
         throw Error("not enough points");
@@ -276,16 +277,24 @@
       };
 
       /** @param {any[]} parsedArgs */
-      function parsePoints(parsedArgs) {
-        return parsedArgs.map((parsed) => {
-          let point = /** @type {undefined | Geom.VectJson} */ (undefined);
-          if (lib.Vect.isVectJson(parsed)) point = parsed;
-          if (parsed in npcs.npc) point = npcs.npc[parsed].getPosition()
-          if (!point) throw Error(`expected point or npcKey: "${parsed}"`);
-          if (!npcs.isPointInNavmesh(point)) throw Error(`point outside navmesh: ${JSON.stringify(parsed)}`)
-          return point;
-        });
-      }
+      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) => {
+        if (lib.Vect.isVectJson(parsed)) {
+          if (npcs.isPointInNavmesh(parsed)) return parsed;
+          throw Error(`point outside navmesh: ${JSON.stringify(parsed)}`)
+        } else if (parsed in npcs.npc) {
+          const point = npcs.npc[parsed].getPosition();
+          if (npcs.isPointInNavmesh(point)) {
+            return point;
+          } else if (opts.nearNpc) {
+            const closePoint = gmGraph.getClosePoint(point);
+            if (closePoint) return closePoint.point;
+            // 🚧 if point outside all geomorphs, use closest
+          }
+          throw Error(`npc ${parsed} outside navmesh: ${JSON.stringify(point)}`)
+        }
+        throw Error(`expected point or npcKey: "${parsed}"`);
+      });
+      
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
         const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, navOpts));
