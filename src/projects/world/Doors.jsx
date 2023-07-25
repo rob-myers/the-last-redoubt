@@ -278,8 +278,9 @@ export default function Doors(props) {
               <div
                 key={doorId}
                 className={cx(cssName.door, {
-                  [cssName.open]: item.open,
+                  [cssName.iris]: !!door.meta.iris || !!door.meta.hull,
                   [cssName.hull]: !!door.meta.hull,
+                  [cssName.open]: item.open,
                   [cssName.locked]: item.locked,
                 })}
                 data-meta={item.touchMeta}
@@ -309,12 +310,22 @@ const rootCss = css`
     cursor: pointer;
     background-color: #ddd;
     border: 1px solid #000;
-    opacity: 1;
 
-    transition: opacity 300ms;
-    &.${cssName.open} {
-      opacity: 0.1;
+    &.iris {
+      opacity: 1;
+      transition: opacity 300ms;
+      &.${cssName.open} {
+        opacity: 0.1;
+      }
     }
+    &:not(.iris) {
+      /* Non-iris doors slide */
+      transition: width 300ms ease-in;
+      &.${cssName.open} {
+        width: 4px !important;
+      }
+    }
+
     &.${cssName.hull} {
       border-width: 2px;
     }
@@ -332,7 +343,7 @@ const rootCss = css`
       position: absolute;
       border: 1px solid rgba(255, 255, 255, 0.02);
       border-radius: 50%;
-      width: 100%;
+      width: calc(100% + var(${cssName.npcDoorTouchRadius}));
       height: calc(2 * var(${cssName.npcDoorTouchRadius}));
       left: 0;
       top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + 50%);
