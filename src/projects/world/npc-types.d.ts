@@ -374,7 +374,7 @@ declare namespace NPC {
     | { action: 'do'; } & NpcDoDef
     | { action: 'events'; }
     | { action: 'get'; } // get all
-    | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
+    | { action: 'get'; npcKey: string; selector?: string | ((npc: NPC.NPC) => any); }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }

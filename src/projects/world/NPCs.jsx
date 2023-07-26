@@ -256,12 +256,12 @@ export default function NPCs(props) {
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
-    getNpc(npcKey, selector = x => x) {
+    getNpc(npcKey, selector = function id(x) { return x; }) {
       const npc = state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
       } else {
-        return selector(npc);
+        return selector.call(npc, npc);
       }
     },
     getNpcsIntersecting(convexPoly) {
@@ -416,7 +416,15 @@ export default function NPCs(props) {
           break;
         case 'get':
           if ('npcKey' in e) {
-            return state.getNpc(e.npcKey, e.selector);
+            return state.getNpc(e.npcKey,
+              typeof e.selector === 'string'
+                ? function selectByStr(x) {
+                    const selected = x[/** @type {keyof NPC.NPC} */ (e.selector)];
+                    // If we selected a function we invoke it e.g. `npc get rob getPosition`
+                    return typeof selected === 'function' ? /** @type {*} */ (selected).call(x) : selected;
+                  }
+                : e.selector,
+            );
           } else {
             return Object.values(state.npc); // list
           }

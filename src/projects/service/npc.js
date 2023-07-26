@@ -93,8 +93,9 @@ class NpcService {
           // npc set-player {npcKey}
           return { action: 'set-player', npcKey: opts };
         case "get":
-          // npc get {npcKey} [selectorFn]
-          return { action: 'get', npcKey: opts, selector: typeof extras[0] === 'function' ? extras[0] : undefined };
+          // npc get {npcKey} [selectorFunction]
+          // npc get {npcKey} [selectorString]
+          return { action: 'get', npcKey: opts, selector: extras[0] };
         case "config":
           // npc config {boolOptionToToggle}+, e.g.
           // npc config omnipresent showLabels
