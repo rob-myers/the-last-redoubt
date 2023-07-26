@@ -157,15 +157,10 @@ spawn ${npcKey} '{"x":210,"y":390}'
 npc set-player ${npcKey}
 npc map show-for-secs 2
 
-# camera follows ${npcKey}
 track ${npcKey} &
-# click navmesh to move
 goLoop ${npcKey} &
-# click outside navmesh to look
 lookLoop ${npcKey} &
-# click do points to do things
 doLoop ${npcKey} &
-# on click npc head ...
 thinkLoop ${npcKey} &
 
 `.trim(),
