@@ -4,6 +4,7 @@
 
 - ✅ `spawn foo --class=zhodani $( click 1 )`
 - ✅ `spawn foo --zhodani $( click 1 )`
+- ✅ andros -> rob
 
 - 🚧 redo first peek video with 2 npcs
 ```sh

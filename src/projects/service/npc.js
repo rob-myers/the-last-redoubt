@@ -53,14 +53,14 @@ class NpcService {
    * Compute `NPC.NpcAction` from `npc {action} {opts} [extras[i]]`.
    *
    * For example, we can open a clicked door via
-   * `npc do andros $( click 1 ) 1` where:
+   * `npc do rob $( click 1 ) 1` where:
    * - `{action}` is `do`
-   * - `{opts}` is `"andros"`
+   * - `{opts}` is `"rob"`
    * - `{extras[0]}` is a point
    * - `{extras[1]}` is `1`
    * 
    * Then this function would output:
-   * `{ action: 'do', npcKey: 'andros', point, extraParams: 1 }`.
+   * `{ action: 'do', npcKey: 'rob', point, extraParams: 1 }`.
    * @param {NPC.NpcActionKey} action
    * @param {undefined | string | NPC.NpcConfigOpts} opts
    * @param {any[]} extras 

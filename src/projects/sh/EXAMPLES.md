@@ -86,13 +86,13 @@ view '{ point:'$( click 1 )'}'
 ```
 
 ```sh
-npc get andros | map 'x => x.setLookRadians(0)'
+npc get rob | map 'x => x.setLookRadians(0)'
 ```
 
 ```sh
-npc look-at andros $( click 1 )
-click | map 'point => ({ npcKey: "andros", point })' | npc look-at
-click | npc look-at andros
+npc look-at rob $( click 1 )
+click | map 'point => ({ npcKey: "rob", point })' | npc look-at
+click | npc look-at rob
 ```
 
 ```sh
@@ -110,7 +110,7 @@ npc events |
 ```
 
 ```sh
-npc get andros >me
+npc get rob >me
 me/animateOpacity'(0.5, 0)'
 ```
 
@@ -235,17 +235,17 @@ world 'x => x.npcs.getRandomRoom(
 # {"gmId":1,"roomId":14}
 world 'x => x.npcs.getRandomRoomNavpoint(1, 14)'
 # {"x":674.04,"y":784.8199999999999}
-nav andros $_ | walk --open andros
+nav rob $_ | walk --open rob
 # off we go...
 
-nav andros $(
+nav rob $(
   world 'x => x.npcs.getRandomRoomNavpoint(4, 5)'
-) | walk --open andros
+) | walk --open rob
 ```
 
 ```sh
 # slice a navPath
-nav andros $( click 1 ) > navPath
+nav rob $( click 1 ) > navPath
 world '(x, { home }) => x.npcs.service.sliceNavPath(home.navPath, 4, -1)' >navPath2
 ```
 
@@ -264,15 +264,15 @@ choice "$nl"'[ '{a..h}{1..8}' ]()'
 
 ```sh
 while true; do
-  walk andros $navPath
+  walk rob $navPath
 done
 ```
 
 ```sh
 # lock doorId 8 of gmId 0
 world 'x => x.doors.toggleLock(0, 8)'
-# give key to npc "andros"
-npc andros 'x => x.has.key[0][8] = true'
+# give key to npc "rob"
+npc rob 'x => x.has.key[0][8] = true'
 
 # navigate, weighting nav nodes near locked doors
 nav --locked=10000 $( click 2 )
@@ -280,10 +280,10 @@ nav --locked=10000 $( click 2 )
 
 ```sh
 # try close a door
-npc do andros $( click 1 ) 0
+npc do rob $( click 1 ) 0
 # npc: run: Error: cannot close door
 
 # try toggle a door
-npc do andros $( click 1 )
+npc do rob $( click 1 )
 # npc: run: Error: cannot toggle door
 ```

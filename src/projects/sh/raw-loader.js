@@ -242,11 +242,11 @@
     /**
      * Request navpath(s) to position(s) for character(s), e.g.
      * ```sh
-     * nav andros "$( click 1 )"
+     * nav rob "$( click 1 )"
      * nav $( click 3 )
-     * expr '{"x":300,"y":300}' | nav andros
-     * click | nav andros
-     * click | nav --to andros
+     * expr '{"x":300,"y":300}' | nav rob
+     * click | nav rob
+     * click | nav --to rob
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
@@ -386,11 +386,11 @@
   
     /**
      * Spawn character(s) at a position(s) and angle, e.g.
-     * - `spawn andros "$( click 1 )"`
-     * - `spawn andros --zhodani "$( click 1 )"`
-     * - `spawn andros --class=zhodani "$( click 1 )"`
-     * - `expr '{"npcKey":"andros","point":{"x":300,"y":300}}' | spawn`
-     * - `expr '{"npcKey":"andros","class":"zhodani","point":{"x":300,"y":300}}' | spawn`
+     * - `spawn rob "$( click 1 )"`
+     * - `spawn rob --zhodani "$( click 1 )"`
+     * - `spawn rob --class=zhodani "$( click 1 )"`
+     * - `expr '{"npcKey":"rob","point":{"x":300,"y":300}}' | spawn`
+     * - `expr '{"npcKey":"rob","class":"zhodani","point":{"x":300,"y":300}}' | spawn`
      * 
      * We also handle "do points": spawn _from_ do; spawn _to_ do.
      */
@@ -490,8 +490,8 @@
   
     /**
      * Move a specific npc along a @see {NPC.GlobalNavPath} <br/>
-     * - e.g. `nav andros $( click 1) | walk andros`
-     * - e.g. `nav andros $( click 1) > navPath; walk andros "$navPath"`
+     * - e.g. `nav rob $( click 1) | walk rob`
+     * - e.g. `nav rob $( click 1) > navPath; walk rob "$navPath"`
      * - `npcKey` must be fixed via 1st arg
      * - piped navPaths cancel previous
      */

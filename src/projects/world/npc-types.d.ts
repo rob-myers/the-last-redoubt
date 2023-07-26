@@ -28,7 +28,7 @@ declare namespace NPC {
 
   /** API for a single NPC */
   export interface NPC {
-    /** User specified e.g. `andros` */
+    /** User specified e.g. `rob` */
     key: string;
     /** Refers to `static/assets/npc/{classKey}/{classKey}.json` */
     classKey: NPC.NpcClassKey;
@@ -260,7 +260,7 @@ declare namespace NPC {
   );
 
   interface NPCDef {
-    /** npcKey e.g. `andros` */
+    /** npcKey e.g. `rob` */
     key: string;
     /** npc class key e.g. `first-human-npc` */
     npcClassKey: NpcClassKey;
@@ -335,7 +335,7 @@ declare namespace NPC {
     decorKey?: string;
     lit?: boolean;
     mapAction?: string;
-    /** Induced by e.g. `npc get andros` */
+    /** Induced by e.g. `npc get rob` */
     npcKey?: string;
     extraParams?: any[];
     point?: Geomorph.PointMaybeMeta;

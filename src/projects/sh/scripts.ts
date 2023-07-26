@@ -147,7 +147,7 @@ source /etc/game-1
 
 `.trim(),
 
-game_1: (npcKey = 'andros') => `
+game_1: (npcKey = 'rob') => `
 
 source /etc/util-1
 source /etc/game-1
