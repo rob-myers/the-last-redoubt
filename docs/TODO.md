@@ -2,11 +2,12 @@
 
 ## In progress
 
-- ✅ `spawn foo zhodani $( click 1 )` --> `spawn foo --class=zhodani $( click 1 )`
+- ✅ `spawn foo --class=zhodani $( click 1 )`
+- ✅ `spawn foo --zhodani $( click 1 )`
 
 - 🚧 redo first peek video with 2 npcs
 ```sh
-spawn foo zhodani $( click 1 )
+spawn foo --zhodani $( click 1 )
 nav foo andros | walk --open foo
 nav --nearNpc foo andros | walk --open foo
 ```
