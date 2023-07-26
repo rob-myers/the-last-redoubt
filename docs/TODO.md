@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ `spawn foo zhodani $( click 1 )` --> `spawn foo --class=zhodani $( click 1 )`
+
 - 🚧 redo first peek video with 2 npcs
 ```sh
 spawn foo zhodani $( click 1 )

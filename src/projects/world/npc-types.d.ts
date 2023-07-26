@@ -366,13 +366,14 @@ declare namespace NPC {
    export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
     | { action: 'cancel'; npcKey: string }
-    | { action: 'config'; } // get all config
+    | { action: 'config'; } // get all
     | { action: 'config'; configKey: string } // Possibly space-sep `ConfigBooleanKey`s
     | NpcActionConfigPartial
-    | { action: 'decor'; } // get all decor
+    | { action: 'decor'; } // get all
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
     | { action: 'do'; } & NpcDoDef
     | { action: 'events'; }
+    | { action: 'get'; } // get all
     | { action: 'get'; npcKey: string; selector?: (npc: NPC.NPC) => any; }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
@@ -536,6 +537,7 @@ declare namespace NPC {
     receiveMsgs: boolean;
     /** PIDs of processes which panzoom */
     panzoomPids: number[];
+    // 🤔 npcKey -> related pids? for npc-wise pause/resume
   }
 
   export type SessionTtyCtxt = {

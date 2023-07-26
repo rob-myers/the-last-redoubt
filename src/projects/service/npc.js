@@ -170,8 +170,10 @@ class NpcService {
         case "set-player":
           // npc set-player
           return { action: 'set-player' }; // unset Player
-        case "do":
         case "get":
+          // npc get
+          return { action: 'get' }; // list all
+        case "do":
         case "light":
         case "look-at":
         case "map":

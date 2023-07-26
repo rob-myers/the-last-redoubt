@@ -134,9 +134,19 @@ npc events | filter 'x => x.key === "way-point" && x.meta.final'
 npc events | filter 'x => x.key === "way-point" && x.meta.key === "exit-room"'
 
 npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide"' | map 'x => x.meta.type'
+```
 
+```sh
 expr '{ npcKey: "foo", point: '$( click 1 )' }' | spawn
 spawn bar zhodani "$( click 1 )"
+
+click |
+  map 'point => ({ npcKey: `bot_${Date.now()}`, point  })' |
+  spawn --class=zhodani
+
+npc get | split | map 'x => x.key'
+# or
+npc get | map 'xs => xs.map(x => x.key)'
 ```
 
 ## Migrating

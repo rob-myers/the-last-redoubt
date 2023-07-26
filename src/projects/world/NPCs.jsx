@@ -415,7 +415,11 @@ export default function NPCs(props) {
         case 'events': // handled earlier
           break;
         case 'get':
-          return state.getNpc(e.npcKey, e.selector);
+          if ('npcKey' in e) {
+            return state.getNpc(e.npcKey, e.selector);
+          } else {
+            return Object.values(state.npc); // list
+          }
         case 'look-at': {
           if (!Vect.isVectJson(e.point)) {
             throw Error(`invalid point: ${JSON.stringify(e.point)}`);
@@ -875,5 +879,5 @@ export default function NPCs(props) {
 
 /**
  * @typedef NpcActResult
- * @type {void | number | NPC.NPC | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
+ * @type {void | number | NPC.NPC | NPC.NPC[] | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
  */
