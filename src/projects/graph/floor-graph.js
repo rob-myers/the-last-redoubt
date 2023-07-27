@@ -29,7 +29,8 @@ export class floorGraphClass extends BaseGraph {
    */
   navNodes;
   /**
-   * navZone.roomNodeIds without nodes near doors.
+   * `strictRoomNodeIds[roomId]` are the navNodeIds strictly inside the room,
+   * i.e. `navZone.roomNodeIds[roomId]` without nodes near doors.
    * @type {number[][]}
    */
   strictRoomNodeIds;
@@ -339,48 +340,93 @@ export class floorGraphClass extends BaseGraph {
   }
 
   /**
-   * Find node whose centroid is closest to the target position.
+   * Find node closest to @see {position}.
+   * - if some node contains it, return that node
+   * - can filter considered nodes
+   * - can provide fallback nodes e.g. all nodes in a room
+   * - can fallback to all nodes
+   * - can fallback to closest centroid
+   * 
    * https://github.com/donmccurdy/three-pathfinding/blob/ca62716aa26d78ad8641d6cebb393de49dd70e21/src/Pathfinding.js#L78
-   * @param  {Geom.VectJson} position in local geomorph coordinates 
+   * @param {Geom.VectJson} position in local geomorph coordinates 
+   * @param {{
+   *   filterNodeIds?(nodeId: number): boolean;
+   *   getFallbackNodes?(): Graph.FloorGraphNode[];
+   *   allNodesFallback?: boolean;
+   *   centroidsFallback?: boolean;
+   * }} [opts]
    */
-  getClosestNode(position) {
+  getClosestNode(
+    position,
+    opts = {},
+  ) {
     // Restrict to few nav nodes via precomputed `gridToNodeIds`
     const gridPos = coordToNavNodeGrid(position.x, position.y);
-    const closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x]?.[gridPos.y]?.map(nodeId => this.nodesArray[nodeId]) ?? [];
-    const found = closeNodes.find((node) => Utils.isVectorInPolygon(position, node, this.vectors));
+    let closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x]?.[gridPos.y]
+      ?.filter(opts.filterNodeIds ?? (_ => true))
+      ?.map(nodeId => this.nodesArray[nodeId]
+    ) ?? [];
 
-    if (!found) {// Fallback to centroids (possible initial zig-zag)
-      warn(`${this.gm.key}: no navnode contains: ${JSON.stringify(position)}`);
-      let closestNode = /** @type {null | Graph.FloorGraphNode} */ (null);
-      let closestDistance = Infinity;
-      (closeNodes.length === 0 ? this.nodesArray : closeNodes).forEach((node) => {
-        const distance = Utils.distanceToSquared(node.astar.centroid, position);
-        if (distance < closestDistance) {
-          closestNode = node;
-          closestDistance = distance;
-        }
-      });
-      return /** @type {Graph.FloorGraphNode} */ (closestNode);
-    } else {
-      return found;
+    // Fallback e.g. to all nav nodes in particular room
+    if (closeNodes.length === 0 && opts.getFallbackNodes) {
+      closeNodes = opts.getFallbackNodes();
     }
+
+    const found = closeNodes.find(
+      (node) => Utils.isVectorInPolygon(position, node, this.vectors),
+    );
+
+    if (found || !opts.centroidsFallback) {
+      return found ?? null;
+    }
+
+    if (closeNodes.length === 0 && opts.allNodesFallback) {
+      closeNodes = this.nodesArray;
+    }
+
+    // Find node in `closeNodes` with closest centroid
+    warn(`${this.gm.key}: no navnode contains: ${JSON.stringify(position)}`);
+    let closestNode = /** @type {null | Graph.FloorGraphNode} */ (null);
+    let closestDistance = Infinity;
+    closeNodes.forEach((node) => {
+      const distance = Utils.distanceToSquared(node.astar.centroid, position);
+      if (distance < closestDistance) {
+        closestNode = node;
+        closestDistance = distance;
+      }
+    });
+    return closestNode;
   }
 
   /**
-   * Given node with closest centroid, find closest point on triangle.
+   * Runs @see {getClosestNode} possibly restricting to roomId,
+   * returning closest point on triangle if node exists.
    * @param {Geom.VectJson} position
-   * @returns {Geom.ClosestOnOutlineResult}
+   * @param {number} [roomId]
+   * @returns {Geom.ClosestOnOutlineResult | null}
    */
-  getClosePoint(position) {
-    const node = this.getClosestNode(position);
-    const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
-    const result = geom.getClosestOnOutline(position, triangle);
-    // move close point towards centroid, to ensure navigable
-    const delta = Vect.from(result.point).sub(node.astar.centroid);
-    delta.normalize(Math.max(0, delta.length - 0.1));
-    result.point.x = node.astar.centroid.x + delta.x;
-    result.point.y = node.astar.centroid.y + delta.y;
-    return result;
+  getClosePoint(position, roomId) {
+    const node = this.getClosestNode(
+      position,
+      typeof roomId === 'number' ? {
+        filterNodeIds: (nodeId) => this.nodeToMeta[nodeId].roomId === roomId,
+        getFallbackNodes: () => this.strictRoomNodeIds[roomId].map(nodeId => this.nodesArray[nodeId]),
+        centroidsFallback: true,
+      } : undefined,
+    );
+
+    if (node) {
+      const triangle = node.vertexIds.map(vertexId => this.vectors[vertexId]);
+      const result = geom.getClosestOnOutline(position, triangle);
+      // move close point towards centroid, to ensure navigable
+      const delta = Vect.from(result.point).sub(node.astar.centroid);
+      delta.normalize(Math.max(0, delta.length - 0.1));
+      result.point.x = node.astar.centroid.x + delta.x;
+      result.point.y = node.astar.centroid.y + delta.y;
+      return result;
+    } else {
+      return null;
+    }
   }
 
   /**

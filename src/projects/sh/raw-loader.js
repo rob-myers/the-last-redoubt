@@ -286,9 +286,9 @@
           if (npcs.isPointInNavmesh(point)) {
             return point;
           } else if (opts.nearNpc) {
-            const closePoint = gmGraph.getClosePoint(point);
-            if (closePoint) return closePoint.point;
-            // 🚧 if point outside all geomorphs, use closest
+            const result = gmGraph.getClosePoint(point, npcs.npc[parsed].gmRoomId ?? undefined);
+            if (result) return result.point; // ℹ️ could fallback to "node with closest centroid"
+            throw Error(`npc ${parsed} lacks nearby navigable: ${JSON.stringify(point)}`)
           }
           throw Error(`npc ${parsed} outside navmesh: ${JSON.stringify(point)}`)
         }

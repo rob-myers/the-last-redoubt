@@ -5,17 +5,34 @@
 - ✅ `spawn foo --class=zhodani $( click 1 )`
 - ✅ `spawn foo --zhodani $( click 1 )`
 - ✅ andros -> rob
+- ✅ `npc {npcKey} [selector]` selector can be string, e.g.
+  - `npc rob classKey`
+- ✅ `npc {npcKey} [selector]` selector string invokes function
+  - `npc rob getPosition`
+  - `npc rob getAngle`
+- ✅ BUG nav --nearNpc in other room
+
+- 🚧 `npc {npcKey} [selectorStr] [fnArg]*`
+  - e.g. future `npc rob canSee foo`
+
 
 - 🚧 redo first peek video with 2 npcs
+  - play around for a while first
+
 ```sh
 spawn foo --zhodani $( click 1 )
-nav foo andros | walk --open foo
-nav --nearNpc foo andros | walk --open foo
+nav foo rob | walk --open foo
+nav --nearNpc foo rob | walk --open foo
+
+# simple follow loop
+while true; do
+  nav --nearNpc foo rob | walk --open foo
+  sleep 2
+done
 ```
 
 - redo do all the things video
-- 🚧 go thru page up until first behaviour
-
+- go thru page up until first behaviour
 - back to behaviour on homepage!
 
 - ✅ homepage: "The Experiment" narrative container
@@ -80,6 +97,13 @@ nav --nearNpc foo andros | walk --open foo
   - ✅ avoid re-predicting decor collisions (leave them + re-setTimeout)
   - not setSpeedFactor collision
   - initialization?
+- BUG? npc-npc collide miss: HMR related?
+```sh
+# REPRO ❌
+spawn foo --zhodani {"x":511.5,"y":876.5}
+spawn rob {"x":459.36,"y":796.65}
+nav --nearNpc foo rob | walk --open foo
+```
 
 - Do we need `component` lookup in site.store?
 - BUG some door's border flashes on npc move

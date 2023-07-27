@@ -499,16 +499,17 @@ export class gmGraphClass extends BaseGraph {
 
   /**
    * @param {Geom.VectJson} position in world coords
+   * @param {Geomorph.GmRoomId} [gmRoomId] can specify room
    * @returns {Geom.ClosestOnOutlineResult | null}
    */
-  getClosePoint(position) {
-    const [gmId] = this.findGeomorphIdContaining(position);
+  getClosePoint(position, gmRoomId) {
+    const gmId = gmRoomId?.gmId ?? this.findGeomorphIdContaining(position)[0];
     if (gmId !== null) {
       const gm = this.gms[gmId];
       const floorGraph = gm.floorGraph;
       gm.inverseMatrix.transformPoint(position = { x: position.x, y: position.y });
-      const result = floorGraph.getClosePoint(position);
-      gm.matrix.transformPoint(result.point);
+      const result = floorGraph.getClosePoint(position, gmRoomId?.roomId);
+      result && gm.matrix.transformPoint(result.point);
       return result;
     } else {
       return null;
