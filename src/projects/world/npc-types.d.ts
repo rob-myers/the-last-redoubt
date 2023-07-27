@@ -69,6 +69,8 @@ declare namespace NPC {
      * May also set false for cached un-rendered.
      */
     unspawned: boolean;
+    /** Normal walking pace speed factor */
+    walkSpeedFactor: number;
 
     cancel(): Promise<void>;
     canLook(): boolean;
@@ -96,6 +98,10 @@ declare namespace NPC {
     getPosition(useCache?: boolean): Geom.Vect;
     getPrevDoorId(): number | undefined;
     getRadius(): number;
+    /**
+     * - Whilst walking: current speed.
+     * - Whilst stopped: default speed `this.def.speed * this.walkSpeedFactor`.
+     */
     getSpeed(): number;
     /**
      * We want to avoid flicker when the NPC stops walking e.g.
@@ -199,6 +205,7 @@ declare namespace NPC {
     rotate: Animation;
     sprites: Animation;
     durationMs: number;
+    /** Current speed factor */
     speedFactor: number;
     /**
      * Value of `this.animScaleFactor()` when walk animation is constructed.
@@ -374,7 +381,7 @@ declare namespace NPC {
     | { action: 'do'; } & NpcDoDef
     | { action: 'events'; }
     | { action: 'get'; } // get all
-    | { action: 'get'; npcKey: string; selector?: string | ((npc: NPC.NPC) => any); }
+    | { action: 'get'; npcKey: string; selector?: string | ((npc: NPC.NPC) => any); extraArgs?: any[]; }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
     | { action: 'look-at'; npcKey: string; point: Geom.VectJson }
     | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }

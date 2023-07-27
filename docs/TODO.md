@@ -12,9 +12,17 @@
   - `npc rob getAngle`
 - ✅ BUG nav --nearNpc in other room
 
-- 🚧 `npc {npcKey} [selectorStr] [fnArg]*`
-  - e.g. future `npc rob canSee foo`
+- ✅ `npc {npcKey} [selectorStr] [fnArg]*`
+  - `npc rob setSpeedFactor 1.2`
+  - `npc rob hasDoorKey 0 2`
+  - `npc {npcKey} anim.speedFactor`
+  - `npc {npcKey} anim.path`
+  
+- `world doors.toggleLock 0 8`
 
+- `npc rob canSee foo`
+
+- BUG? saw Geomorphs drawRectImage without `imgEl`
 
 - 🚧 redo first peek video with 2 npcs
   - play around for a while first

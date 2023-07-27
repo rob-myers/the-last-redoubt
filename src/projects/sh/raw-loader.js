@@ -333,8 +333,8 @@
 
       if (!npcs.service.isNpcActionKey(operands[0])) {
         if (operands[0] in npcs.npc) {
-          // `npc {npcKey} [selector]` --> `npc get {npcKey} [selector]`
-          operands[2] = operands[1], operands[1] = operands[0], operands[0] = "get";
+          // `npc {npcKey} [selector] [args]*` --> `npc get {npcKey} [selector] [args]*`
+          operands.unshift("get");
         } else {
           throw api.throwError(`${operands[0]}: invalid action`);
         }

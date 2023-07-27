@@ -67,6 +67,7 @@ export default function createNpc(
     },
     manuallyPaused: false,
     unspawned: true,
+    walkSpeedFactor: 1,
 
     async animateOpacity(targetOpacity, durationMs) {
       this.anim.opacity.cancel(); // Ensure prev anim removed?
@@ -133,8 +134,6 @@ export default function createNpc(
         this.clearWayMetas(); // Cancel pending actions
       }
 
-      this.anim.speedFactor = 1; // Reset speed
-
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
         (anim !== this.anim.sprites) && anim.commitStyles();
         return /** @type {Promise<void>} */ (new Promise(resolve => {
@@ -193,8 +192,9 @@ export default function createNpc(
       this.anim.path = path.map(Vect.from);
       // from `nav` for decor collisions
       this.anim.gmRoomIds = gmRoomIds;
-      this.anim.updatedPlaybackRate = 1;
       this.anim.doorStrategy = doorStrategy ?? 'none';
+      this.anim.speedFactor = this.walkSpeedFactor;
+      this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();
       this.resetAnimAux();
@@ -237,6 +237,8 @@ export default function createNpc(
           });
         }));
       } finally {
+        // Reset speed to default
+        this.anim.speedFactor = this.walkSpeedFactor;
         // must commitStyles, otherwise it jumps
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
@@ -681,7 +683,7 @@ export default function createNpc(
       }
       this.doMeta = meta.do ? meta : null;
     },
-    setSpeedFactor(speedFactor) {
+    setSpeedFactor(speedFactor, temporary = true) {
       if (this.anim.spriteSheet === 'walk') {
         /** Infer initial speedFactor from initialAnimScaleFactor */
         const initSpeedFactor = (1 / this.anim.initAnimScaleFactor) * (1000 / this.def.speed);
@@ -689,6 +691,11 @@ export default function createNpc(
         this.anim.translate.updatePlaybackRate(this.anim.updatedPlaybackRate);
         this.anim.rotate.updatePlaybackRate(this.anim.updatedPlaybackRate);
         this.anim.sprites.updatePlaybackRate(this.anim.updatedPlaybackRate);
+        if (!temporary) {// By default, speed changes whilst walking are temporary
+          this.walkSpeedFactor = speedFactor;
+        }
+      } else {// If currently stopped, speed change isn't temporary
+        this.walkSpeedFactor = speedFactor;
       }
       if (this.anim.speedFactor === speedFactor) {
         return; // Else infinite loop?
