@@ -23,7 +23,7 @@
 }
 @media(max-width: 600px) {
   :root {
-    --page-background: #fff;
+    --page-background: #dddddd;
     --aside-background-color: #eee;
     --carousel-label-background: #ffffff;
   }
