@@ -28,9 +28,10 @@ gm 0 getHullDoorId 5
 ```
 - ✅ builtin `shift [n]`
 
-- `npc rob canSee foo`
+- 🚧 `npc.canSee(otherNpcKey)`
+  - `npc rob canSee foo`
 
-- BUG? saw Geomorphs drawRectImage without `imgEl`
+- ✅ BUG saw Geomorphs drawRectImage without `imgEl`
 - tidy processApi via processApi.lib
 
 - 🚧 redo first peek video with 2 npcs

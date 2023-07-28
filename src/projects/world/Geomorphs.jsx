@@ -115,6 +115,9 @@ export default function Geomorphs(props) {
       state.initGmLightRects(gmId);
     },
     recomputeLights(gmId, roomId) {
+      if (!state.unlitImgs[gmId]) {
+        return; // avoid initialization error
+      }
       const gmDoors = api.doors.lookup[gmId];
       gms[gmId].roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
         if (gmDoors[doorId].open) {
