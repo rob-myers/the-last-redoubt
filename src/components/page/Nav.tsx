@@ -42,31 +42,34 @@ export default function Nav({ frontmatter }: FrontMatterProps) {
         )}
         onClick={onClick}
       >
-        <div
-          className="article-overlay"
-        />
+        <div className={cssName.articleOverlay}/>
+
         <div
           className={cssName.topBarHandle}
           onKeyUp={onKeyUp}
           tabIndex={0}
         >
-          <div className="nav-arrow">
+          <div className={cssName.navArrow}>
             {navOpen ? '<' : '>'}
           </div>
         </div>
+
         <NavItems
           frontmatter={frontmatter}
         />
       </nav>
 
       <div
-        className={cx(cssName.topBar,topBarCss)}
+        className={cx(
+          cssName.topBar,
+          topBarCss,
+        )}
         onClick={onClick}
       />
 
       <div
         className={cx(
-          'horizontal-fill',
+          cssName.horizontalFill,
           horizFillCss,
           navOpen && 'open',
         )}
@@ -106,7 +109,7 @@ const navCss = css`
     }
   }
 
-  > .article-overlay {
+  > .${cssName.articleOverlay} {
     position: absolute;
     top: 0;
     left: ${sidebarWidth}px;
@@ -115,7 +118,7 @@ const navCss = css`
     background: rgba(0, 0, 0, .5);
   }
   @media(max-width: 1280px) {
-    &.open > .article-overlay {
+    &.open > .${cssName.articleOverlay} {
       height: 100%;
     }
   }
@@ -132,7 +135,7 @@ const navCss = css`
     align-items: center;
     user-select: none;
     
-    .nav-arrow {
+    .${cssName.navArrow} {
       display: flex;
       justify-content: center;
       align-items: center;

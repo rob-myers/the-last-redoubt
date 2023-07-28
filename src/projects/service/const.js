@@ -15,6 +15,7 @@ export const localStorageKey = {
 
 export const cssName = /** @type {const} */ ({
   anchor: 'anchor',
+  articleOverlay: 'article-overlay',
   carouselLabelHeight: '--carousel-label-height',
   central: 'central',
   clear: 'clear',
@@ -24,6 +25,7 @@ export const cssName = /** @type {const} */ ({
   expanded: 'expanded',
   enabled: 'enabled',
   faded: 'faded',
+  horizontalFill: 'horizontal-fill',
   /** see icons.css */
   iconSizeBase: '--icon-size-base',
   /** see icons.css */
@@ -35,6 +37,7 @@ export const cssName = /** @type {const} */ ({
   ignoreDark: 'ignore-dark',
   infoIcon: 'info-icon',
   justCopied: 'just-copied',
+  navArrow: 'nav-arrow',
   navMain: 'nav-main',
   navMainOpen: 'open',
   navMainClosed: 'closed',

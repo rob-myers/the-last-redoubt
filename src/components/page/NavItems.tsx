@@ -61,9 +61,9 @@ const rootCss = css`
     display: flex;
     letter-spacing: 2px;
     margin: 16px;
-
+    
     font-family: 'Courier New', Courier, monospace;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     font-weight: 300;
 
     a {
@@ -113,6 +113,16 @@ const rootCss = css`
       color: white;
     }
     background: var(--nav-selected-background);
+  }
+
+  @media(max-width: 600px) {
+    h3 {
+      font-size: 1.4rem;
+      margin-top: 8px;
+    }
+    ul a {
+      padding: 8px 12px;
+    }
   }
 `;
 
