@@ -4,7 +4,7 @@ import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
-import { assertDefined, assertNonNull, deepGet, keys, mapValues, testNever } from "../service/generic";
+import { assertDefined, keys, mapValues, generateSelector, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { npcService } from "../service/npc";
@@ -416,16 +416,9 @@ export default function NPCs(props) {
           break;
         case 'get':
           if ('npcKey' in e) {
-            return state.getNpc(e.npcKey,
-              typeof e.selector === 'string'
-                ? function selectByStr(x) {
-                    const selected = deepGet(x, /** @type {string} */ (e.selector).split('.'));
-                    // If we selected a function we invoke it e.g. `npc get rob getPosition`
-                    return typeof selected === 'function'
-                      ? /** @type {*} */ (selected).call(x, ...e.extraArgs ?? [])
-                      : selected;
-                  }
-                : e.selector,
+            return state.getNpc(
+              e.npcKey,
+              e.selector ? generateSelector(e.selector, e.extraArgs) : undefined,
             );
           } else {
             return Object.values(state.npc); // list

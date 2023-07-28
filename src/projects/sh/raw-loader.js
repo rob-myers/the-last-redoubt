@@ -73,7 +73,10 @@
     /** Apply function to each item from stdin */
     map: async function* (ctxt) {
       let { api, args, datum } = ctxt
-      const func = Function(`return ${args[0]}`)()
+      const func = api.generateSelector(
+        api.parseFnOrStr(args[0]),
+        args.slice(1).map(x => api.parseJsArg(x)),
+      );
       while ((datum = await api.read(true)) !== null) {
         if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
         else yield func(datum, ctxt)

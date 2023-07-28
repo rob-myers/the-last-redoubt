@@ -18,11 +18,20 @@
   - `npc {npcKey} anim.speedFactor`
   - `npc {npcKey} anim.path`
   
-- `world doors.toggleLock 0 8`
+- ✅ `map` deep string selector, invoke fn, pass args
+```sh
+echo foo | map length
+echo "(that's what I said)" | map slice 1 -1
+world doors.toggleLock 0 8
+gm 0 matrix
+gm 0 getHullDoorId 5
+```
+- ✅ builtin `shift [n]`
 
 - `npc rob canSee foo`
 
 - BUG? saw Geomorphs drawRectImage without `imgEl`
+- tidy processApi via processApi.lib
 
 - 🚧 redo first peek video with 2 npcs
   - play around for a while first

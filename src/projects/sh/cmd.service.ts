@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 import { uid } from 'uid';
 
-import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, testNever, truncateOneLine } from '../service/generic';
+import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
 import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
@@ -51,6 +51,8 @@ const commandKeys = {
   session: true,
   /** Set something */
   set: true,
+  /** Left-shift positional parameters */
+  shift: true,
   /** Wait for specified number of seconds */
   sleep: true,
   /** Run shell code stored as a string somewhere */
@@ -401,6 +403,15 @@ class cmdServiceClass {
         }
         break;
       }
+      case 'shift': {
+        const shiftBy = Number(args[0] || '1');
+        if (!(Number.isInteger(shiftBy) && shiftBy >= 0)) {
+          throw new ShError('usage: `shift [n]` for non-negative integer n', 1);
+        }
+        const { positionals } = useSession.api.getProcess(meta);
+        for (let i = 0; i < shiftBy; i++) positionals.shift();
+        break;
+      }
       case 'sleep': {
         const seconds = args.length ? parseFloat(parseJsonArg(args[0])) || 0 : 1;
         yield* sleep(meta, seconds);
@@ -579,6 +590,8 @@ class cmdServiceClass {
       getProcess(this.meta).onSuspends.push(cleanup);
     },
 
+    generateSelector,
+
     getCached,
 
     getColors() {
@@ -612,8 +625,8 @@ class cmdServiceClass {
   
     /** js parse with string fallback */
     parseJsArg,
-    /** @see {parseJsArg} acted upon by callback */
-    parseMapJsArg,
+    
+    parseFnOrStr,
   
     // TODO use `otag` instead
     /** Output 1, 2, ... at fixed intervals */
@@ -763,24 +776,30 @@ function isTtyAt(meta: Sh.BaseMeta, fd: number) {
 }
 
 /**
- * js parse with string fallback, preserving `undefined`
+ * Parse function, with string fallback.
  */
-export function parseJsArg(input?: string) {
+export function parseFnOrStr(input: string) {
   try {
-    return Function(`return ${input}`)();
-  } catch (e) {
-    return input;
-  }
+    const parsed = Function(`return ${input}`)();
+    // 🤔 avoid e.g. 'toString' -> window.toString
+    if (typeof parsed === 'function' && !(input in window)) {
+      return parsed;
+    }
+  } catch {}
+  return input;
 }
 
 /**
- * js parse with string fallback, applying `act` afterwards.
+ * Parse input with string fallback
+ * - preserves `undefined`
+ * - preserves empty-string
  */
-export function parseMapJsArg<T>(input: string | undefined, act: (parsed: any) => T) {
+export function parseJsArg(input?: string) {
   try {
-    return act(Function(`return ${input}`)());
+    if (input === '') return input;
+    return Function(`return ${input}`)();
   } catch (e) {
-    return act(input);
+    return input;
   }
 }
 
