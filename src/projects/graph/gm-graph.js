@@ -8,7 +8,7 @@ import { lightDoorOffset, lightWindowOffset } from "../service/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
- * Geomorph Graph i.e. a graph whose nodes are geomorphs.
+ * Geomorph Graph i.e. a graph whose nodes are geomorphs or hull doors.
  * We use lowercase:
  * @see gmGraphClass
  * to get react-refresh to update the class.
@@ -460,12 +460,13 @@ export class gmGraphClass extends BaseGraph {
    * @param {Graph.GmGraphNode} node 
    */
   getAdjacentDoor(node) {
-    const doorNode = this.getSuccs(node).find(x => x.type === 'door');
-    return doorNode ? /** @type {Graph.GmGraphNodeDoor} */ (doorNode) : null;
+    return this.getSuccs(node).find(
+      /** @returns {x is Graph.GmGraphNodeDoor} */ x => x.type === 'door'
+    ) ?? null;
   }
 
   /**
-   * Cached because called many times on toggle hull door.
+   * Cached because e.g. called many times on toggle hull door.
    * @param {number} gmId 
    * @param {number} hullDoorId 
    * @returns {Graph.GmAdjRoomCtxt | null}
@@ -529,6 +530,7 @@ export class gmGraphClass extends BaseGraph {
    * Compute every global room id connected to some door in a single geomorph.
    * @param {number} gmId 
    * @param {number[]} doorIds Doors in geomorph `gmId`
+   * @returns {Graph.GmRoomId[]}
    */
   getRoomsFromGmDoorIds(gmId, doorIds) {
     const gm = this.gms[gmId];
@@ -601,6 +603,7 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * Get door node by `hullDoorId`.
    * @param {number} gmId 
    * @param {number} hullDoorId 
    */
@@ -728,7 +731,7 @@ export class gmGraphClass extends BaseGraph {
     /** @type {Graph.GmGraphNode[]} */
     const nodes = [
       /**
-       * ℹ️ gm nodes are NOT aligned to `gms` because a geomorph
+       * ℹ️ gm nodes are _NOT_ aligned to `gms` because a geomorph
        *    may contain multiple disjoint navmeshes e.g. 102
        */
       ...gms.flatMap((gm, gmId) =>
