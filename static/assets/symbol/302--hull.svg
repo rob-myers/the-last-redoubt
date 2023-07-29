@@ -187,9 +187,9 @@
     <rect x="73.406" width="5.244" height="194.747" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.258819, 0.965926, -0.965926, 0.258819, 1064.23584, 319.02533)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 1152.377319, 222.598053)">
+    <path d="M 1202.699 319.094 L 1204.415 322.818 L 1080.6 389.737 L 1078.883 386.013 L 1202.699 319.094 Z" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-origin: 1079.74px 387.875px;">
       <title>relate-connectors</title>
-    </rect>
+    </path>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
       <title>view</title>
     </rect>
