@@ -471,28 +471,29 @@ class geomServiceClass {
   }
 
   /**
-   * Compute intersection of 2 line segments:
-   * - p0 -- p1
-   * - q0 -- q1
+   * Compute intersection of line segments
+   * `p0 -- p1` and `q0 -- q1`
    *
-   * If they intersect, return `lambda` in [0, 1] s.t. intersection is
+   * If they intersect, return `lambda` ∊ [0, 1] s.t. intersection is
    * `p0 + (p1 - p0) * lambda`, else return `null`.
    * @param {Geom.VectJson} p0
    * @param {Geom.VectJson} p1
    * @param {Geom.VectJson} q0
    * @param {Geom.VectJson} q1
+   * @param {boolean} [ignoreColinear]
    */
-  getLineSegsIntersection(p0, p1, q0, q1) {
-    let dpx = p1.x - p0.x,
-        dpy = p1.y - p0.y,
-        dqx = q1.x - q0.x,
-        dqy = q1.y - q0.y,
-        /** @type {number} */ s,
-        /** @type {number} */ t,
-        /** The z component of cross product `dp x dq` */
-        z = -dqx * dpy + dpx * dqy;
+  getLineSegsIntersection(p0, p1, q0, q1, ignoreColinear) {
+    const dpx = p1.x - p0.x,
+      dpy = p1.y - p0.y,
+      dqx = q1.x - q0.x,
+      dqy = q1.y - q0.y,
+      /** The z component of cross product `dp ｘ dq` */
+      z = -dqx * dpy + dpx * dqy;
+
+    let /** @type {number} */ s, /** @type {number} */ t;
   
     if (z === 0){
+      if (ignoreColinear) return null;
       /**
        * Line segs are parallel, so both have non-normalized
        * normal (-dpy, dpx). For colinearity they must have
@@ -513,14 +514,15 @@ class geomServiceClass {
         }
       }
       return null;
-    } else {
-      s = (-dpy * (p0.x - q0.x) + dpx * (p0.y - q0.y)) / z;
-      t = (dqx  * (p0.y - q0.y) - dqy * (p0.x - q0.x)) / z;
-      if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
-        return t;
-      }
     }
-    return null;
+
+    s = (-dpy * (p0.x - q0.x) + dpx * (p0.y - q0.y)) / z;
+    t = (dqx  * (p0.y - q0.y) - dqy * (p0.x - q0.x)) / z;
+    if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
+      return t;
+    } else {
+      return null;
+    }
   }
 
   /**
@@ -725,6 +727,42 @@ class geomServiceClass {
     radian %= (2 * Math.PI);
     // if (Math.abs(x) <= 0.001) x = 0;
     return radian >= 0 ? radian : (2 * Math.PI + radian);
+  }
+
+  /**
+   * Find intersection of line segment `[p, q]` with outline of polygon
+   * without holes, such that closest to `p`.
+   * We ignore colinear intersections.
+   *
+   * If they intersect, return `λ ∊ [0, 1]` s.t. intersection is
+   * `p + λ.(q - p)`, else return `null`.
+   * @param {Geom.VectJson} p 
+   * @param {Geom.VectJson} q 
+   * @param {Geom.Poly} poly 
+   * @returns {number | null}
+   */
+  raycastPolySansHoles(p, q, { outline: vs }) {
+    return vs.length >= 2
+      ? Math.min(...vs.map((v, i) =>
+          this.getLineSegsIntersection(p, q, v, vs[i + 1] ?? vs[0], true) ?? Infinity
+        ))
+      : null;
+  }
+
+  /**
+   * Test for intersection of line segment `[p, q]` with outline of polygon
+   * without holes. We ignore colinear intersections.
+   * @param {Geom.Poly} poly
+   * @param {Geom.VectJson} p 
+   * @param {Geom.VectJson} q 
+   * @returns {boolean}
+   */
+  outlineIntersectsSeg({ outline: vs }, p, q) {
+    return vs.length >= 2
+      ? vs.some((v, i) =>
+          this.getLineSegsIntersection(p, q, v, vs[i + 1] ?? vs[0], true) !== null
+        )
+      : false;
   }
 
   /**
