@@ -172,16 +172,7 @@ export class Rect {
    * @param {Geom.VectJson[]} items
    */
   static fromPoints(...items) {
-    if (!items.length) {
-      return Rect.zero;
-    } else {
-      const vectors = /** @type {Vect[]} */ (items);
-      const mx = Math.min(...vectors.map(({ x }) => x));
-      const my = Math.min(...vectors.map(({ y }) => y));
-      const Mx = Math.max(...vectors.map(({ x }) => x));
-      const My = Math.max(...vectors.map(({ y }) => y));
-      return new Rect(mx, my, Mx - mx, My - my);
-    }
+    return (new Rect).setFromPoints(...items);
   }
 
   /** 
@@ -318,6 +309,21 @@ export class Rect {
     this.width = width;
     this.height = height;
     return this;
+  }
+  /** 
+   * @param {Geom.VectJson[]} items
+   */
+  setFromPoints(...items) {
+    if (!items.length) {
+      return Rect.zero;
+    } else {
+      const vectors = /** @type {Vect[]} */ (items);
+      const mx = Math.min(...vectors.map(({ x }) => x));
+      const my = Math.min(...vectors.map(({ y }) => y));
+      const Mx = Math.max(...vectors.map(({ x }) => x));
+      const My = Math.max(...vectors.map(({ y }) => y));
+      return this.set(mx, my, Mx - mx, My - my);
+    }
   }
 
   /** @param {Geom.VectJson} position */
