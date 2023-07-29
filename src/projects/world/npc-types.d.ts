@@ -74,6 +74,7 @@ declare namespace NPC {
 
     cancel(): Promise<void>;
     canLook(): boolean;
+    canSee(npcKey: string): boolean;
     changeClass(npcClassKey: NPC.NpcClassKey): void;
     /** Filter pending way metas e.g. stale collisions. */
     filterWayMetas(

@@ -27,11 +27,16 @@ gm 0 matrix
 gm 0 getHullDoorId 5
 ```
 - ✅ builtin `shift [n]`
-
-- 🚧 `npc.canSee(otherNpcKey)`
-  - `npc rob canSee foo`
-
 - ✅ BUG saw Geomorphs drawRectImage without `imgEl`
+
+- 🚧 npc.canSee(otherNpcKey)
+  - ✅ `npc rob canSee foo`
+  - ✅ if in same room
+  - if in adjacent room
+  - if have shared adjacent room
+
+- BUG? relate-connectors should traverse geomorphs e.g. 302
+- saw fat door in 302
 - tidy processApi via processApi.lib
 
 - 🚧 redo first peek video with 2 npcs

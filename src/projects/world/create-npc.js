@@ -1,6 +1,7 @@
 import { css } from '@emotion/css';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
+import { geom } from '../service/geom';
 import { cssName } from './const';
 import { warn } from '../service/log';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
@@ -149,6 +150,27 @@ export default function createNpc(
         (this.anim.spriteSheet === 'idle' || this.anim.spriteSheet === 'idle-breathe')
         && !this.doMeta
       );
+    },
+    canSee(npcKey) {// 🚧
+      const other = api.npcs.getNpc(npcKey);
+      if (npcKey === this.key || this.gmRoomId === null || other.gmRoomId === null) {
+        return false;
+      }
+
+      const { gmId, roomId } = this.gmRoomId;
+      const { gmId: gmId2, roomId: roomId2 } = other.gmRoomId;
+      const gm = api.gmGraph.gms[gmId];
+      
+      // Permit same room ✅, adj room 🚧, or shared adj room 🚧
+      if (gmId === gmId2 && roomId === roomId2) {
+        const [src, dst] = [this.getPosition(), other.getPosition()].map(
+          p => gm.inverseMatrix.transformPoint(p.clone())
+        );
+        const poly = gm.roomsWithDoors[roomId];
+        return !geom.outlineIntersectsSeg(poly, src, dst);
+      }
+
+      return false;
     },
     changeClass(npcClassKey) {// we don't trigger render
       this.classKey = npcClassKey;
@@ -754,3 +776,5 @@ export default function createNpc(
     },
   };
 }
+
+const tempRect = new Rect;
