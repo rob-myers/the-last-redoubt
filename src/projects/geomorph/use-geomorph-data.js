@@ -85,7 +85,7 @@ export async function createGeomorphData(input) {
    */
   const relDoorId = layout.groups.singles
     .filter(x => x.meta[svgSymbolTag['relate-connectors']])
-    .reduce((agg, { poly }) => {
+    .reduce((agg, { poly }, i) => {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
       doorIds.forEach(doorId => {
@@ -94,9 +94,9 @@ export async function createGeomorphData(input) {
         agg[doorId].windowIds.push(...windowIds);
       });
       if (doorIds.length === 0)
-        console.warn(`poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);
+        warn(`${layout.key}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);
       if (doorIds.length + windowIds.length <= 1)
-        console.warn(`poly tagged "${svgSymbolTag['relate-connectors']}" should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
+        warn(`${layout.key}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
       return agg;
     },
     /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
