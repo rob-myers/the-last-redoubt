@@ -158,7 +158,7 @@ declare namespace Graph {
     doorId: number;
     /** For hull doors, the roomId of adjacent room in adjacent geomorph */
     adjRoomId: null | number;
-    /** The area in world coords */
+    /** The area in geomorph coords */
     poly: Geom.Poly;
   }
 
