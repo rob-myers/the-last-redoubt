@@ -89,7 +89,7 @@ export async function createGeomorphData(input) {
       const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
       doorIds.forEach(doorId => {
-        agg[doorId] = agg[doorId] || { doorIds: [], windowIds: [] };
+        agg[doorId] ??= { doorIds: [], windowIds: [] };
         agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId));
         agg[doorId].windowIds.push(...windowIds);
       });
