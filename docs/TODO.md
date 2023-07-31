@@ -2,32 +2,10 @@
 
 ## In progress
 
-- ✅ `spawn foo --class=zhodani $( click 1 )`
-- ✅ `spawn foo --zhodani $( click 1 )`
-- ✅ andros -> rob
-- ✅ `npc {npcKey} [selector]` selector can be string, e.g.
-  - `npc rob classKey`
-- ✅ `npc {npcKey} [selector]` selector string invokes function
-  - `npc rob getPosition`
-  - `npc rob getAngle`
-- ✅ BUG nav --nearNpc in other room
-
-- ✅ `npc {npcKey} [selectorStr] [fnArg]*`
-  - `npc rob setSpeedFactor 1.2`
-  - `npc rob hasDoorKey 0 2`
-  - `npc {npcKey} anim.speedFactor`
-  - `npc {npcKey} anim.path`
-  
-- ✅ `map` deep string selector, invoke fn, pass args
-```sh
-echo foo | map length
-echo "(that's what I said)" | map slice 1 -1
-world doors.toggleLock 0 8
-gm 0 matrix
-gm 0 getHullDoorId 5
-```
-- ✅ builtin `shift [n]`
-- ✅ BUG saw Geomorphs drawRectImage without `imgEl`
+- 🚧 clean `computeDoorViewArea` etc.
+- Boxy SVG issue i.e. rotated rects not parsed
+  - internal rep change: scale in transform? transform-origin?
+  - Tempfix: convert to Path and Reorient
 
 - 🚧 npc.canSee(otherNpcKey)
   - ✅ `npc rob canSee foo`
@@ -35,20 +13,12 @@ gm 0 getHullDoorId 5
   - if in adjacent room
   - if have shared adjacent room
 
-- ✅ BUG relate-connectors should traverse geomorphs e.g. 302
-  - ✅ handle hull door extensions properly: clip other geomorph
-  - ✅ other hull door should respect relation
-    - `adjAreas` handles `R(doorId, hullDoorId)`
-    - ✅ handle `R(hullDoorId, otherGmDoorId)` explicitly
-
-- Boxy SVG issue i.e. rotated rects not parsed
-  - internal rep change: scale in transform? transform-origin?
-  - Tempfix: convert to Path and Reorient; but should fix properly.
 
 - saw fat door in 302
 - tidy processApi via processApi.lib
+- prevent nearNav from blocking do point?
 
-- 🚧 redo first peek video with 2 npcs
+- redo first peek video with 2 npcs
   - play around for a while first
 
 ```sh
@@ -501,6 +471,38 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ `spawn foo --class=zhodani $( click 1 )`
+- ✅ `spawn foo --zhodani $( click 1 )`
+- ✅ andros -> rob
+- ✅ `npc {npcKey} [selector]` selector can be string, e.g.
+  - `npc rob classKey`
+- ✅ `npc {npcKey} [selector]` selector string invokes function
+  - `npc rob getPosition`
+  - `npc rob getAngle`
+- ✅ BUG nav --nearNpc in other room
+
+- ✅ `npc {npcKey} [selectorStr] [fnArg]*`
+  - `npc rob setSpeedFactor 1.2`
+  - `npc rob hasDoorKey 0 2`
+  - `npc {npcKey} anim.speedFactor`
+  - `npc {npcKey} anim.path`
+  
+- ✅ `map` deep string selector, invoke fn, pass args
+```sh
+echo foo | map length
+echo "(that's what I said)" | map slice 1 -1
+world doors.toggleLock 0 8
+gm 0 matrix
+gm 0 getHullDoorId 5
+```
+- ✅ builtin `shift [n]`
+- ✅ BUG saw Geomorphs drawRectImage without `imgEl`
+- ✅ BUG relate-connectors should traverse geomorphs e.g. 302
+  - ✅ handle hull door extensions properly: clip other geomorph
+  - ✅ other hull door should respect relation
+    - `adjAreas` handles `R(doorId, hullDoorId)`
+    - ✅ handle `R(hullDoorId, otherGmDoorId)` explicitly
 
 - ✅ clean/improve choice text in first demo
   - ✅ add tty link to early on page #aside--can-pan-zoom-tabs
