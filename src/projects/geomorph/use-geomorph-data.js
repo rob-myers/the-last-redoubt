@@ -214,6 +214,10 @@ export async function createGeomorphData(input) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.find(id => id !== roomId) ?? -1;
     },
+    getRelatedDoorIds(doorId) {
+      return this.relDoorId[doorId]?.doorIds ?? [];
+    },
+
     isHullDoor(doorOrId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.includes(null);

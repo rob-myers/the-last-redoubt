@@ -2,8 +2,9 @@
 
 ## In progress
 
-- 🚧 clean `computeDoorViewArea` etc.
-- Boxy SVG issue i.e. rotated rects not parsed
+- ✅ clean `computeDoorViewArea` etc.
+- 🚧 sealed hull doors have meta.sealed and are red
+- 🚧 Boxy SVG issue i.e. rotated rects not parsed
   - internal rep change: scale in transform? transform-origin?
   - Tempfix: convert to Path and Reorient
 
@@ -12,7 +13,6 @@
   - ✅ if in same room
   - if in adjacent room
   - if have shared adjacent room
-
 
 - saw fat door in 302
 - tidy processApi via processApi.lib

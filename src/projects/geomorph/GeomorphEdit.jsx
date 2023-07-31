@@ -104,14 +104,14 @@ function Geomorph({ def, transform, disabled }) {
             state.openDoors.push(doorId);
           }
           if (state.lastViewId && state.lastRoomId >= -1) {// Update view
-            const { polys: viewPolys } = assertDefined(data).gmGraph.computeViewPolygons(0, state.lastRoomId);
+            const viewPolys = assertDefined(data).gmGraph.computeViews(0, state.lastRoomId);
             state.viewPoly = Poly.union(viewPolys[0])[0];
           }
           update();
         } else if (meta.key === 'view') {
           const viewId = assertDefined(meta.viewId);
           const roomId = Number(meta.roomId);
-          const { polys: viewPolys } = assertDefined(data).gmGraph.computeViewPolygons(0, roomId);
+          const viewPolys = assertDefined(data).gmGraph.computeViews(0, roomId);
           if (viewId === state.lastViewId) {
             state.viewPoly = new Poly;
             state.lastViewId = '';
@@ -208,7 +208,7 @@ function Geomorph({ def, transform, disabled }) {
           {data.gmGraph.ready && data.gm.rooms.map((_, roomId) =>
             data.gm.doors.map(({ roomIds }, doorId) => {
               if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
-              const point = data.gmGraph.getDoorViewPosition(0, roomId, doorId);
+              const point = data.gmGraph.getViewDoorPosition(0, roomId, doorId);
               const viewId = `${doorId}@${roomId}`;
               return <div
                 key={viewId}

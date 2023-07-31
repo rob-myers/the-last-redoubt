@@ -185,6 +185,7 @@ declare namespace Geomorph {
      * Returns -1 if not a hull door.
      */
     getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
+    getRelatedDoorIds(doorId: number): number[];
     isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
   }
 

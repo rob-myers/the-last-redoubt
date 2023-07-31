@@ -151,12 +151,10 @@ export default function FOV(props) {
         return; // state.gmId is -1 <=> state.roomId is -1
       }
       
-      const { prev } = state;
-      const rootedOpenIds = api.gmGraph.computeViewDoorIds(state.gmId, state.roomId);
-
+      const rootedOpenIds = api.gmGraph.getViewDoorIds(state.gmId, state.roomId).map(x => Array.from(x));
       /** @type {CoreState} */
       const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, rootedOpenIds };
-      const cmp = compareCoreState(prev, curr);
+      const cmp = compareCoreState(state.prev, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
       }
@@ -165,7 +163,10 @@ export default function FOV(props) {
        * @see {viewPolys} view polygons for current/adjacent geomorphs; we include the current room.
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
-      const { polys: viewPolys, gmRoomIds } = gmGraph.computeViewPolygons(state.gmId, state.roomId);
+      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId);
+      const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(rootedOpenIds);
+      // If no door is open, we at least have current room
+      (gmRoomIds.length === 0) && (gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId }));
 
       // Must prevent adjacent geomorphs from covering hull doors (if adjacent room visible)
       const visRoomIds = gmRoomIds.flatMap(({ gmId, roomId }) => state.gmId === gmId ? roomId : []);
@@ -182,7 +183,7 @@ export default function FOV(props) {
        * Try to eliminate "small black no-light intersections" from current geomorph.
        * They often look triangular, and as part of mask they have no holes.
        * However, polygons sans holes also arise e.g. when light borders a hull door.
-       * @see {gmGraph.computeViewPolygons} for new approach
+       * @see {gmGraph.computeViews} for new approach
        */
       // maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
       //   x.holes.length > 0 || (x.outline.length > 8)
