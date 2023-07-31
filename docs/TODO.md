@@ -35,9 +35,11 @@ gm 0 getHullDoorId 5
   - if in adjacent room
   - if have shared adjacent room
 
-- 🚧 BUG relate-connectors should traverse geomorphs e.g. 302
+- ✅ BUG relate-connectors should traverse geomorphs e.g. 302
   - ✅ handle hull door extensions properly: clip other geomorph
-  - other hull door should respect relation
+  - ✅ other hull door should respect relation
+    - `adjAreas` handles `R(doorId, hullDoorId)`
+    - ✅ handle `R(hullDoorId, otherGmDoorId)` explicitly
 
 - Boxy SVG issue i.e. rotated rects not parsed
   - internal rep change: scale in transform? transform-origin?

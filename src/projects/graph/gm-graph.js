@@ -70,11 +70,11 @@ export class gmGraphClass extends BaseGraph {
    */
   computeDoorViews(gmId, rootRoomId) {
     const gm = this.gms[gmId];
-    const openDoorsIds = this.api.doors.getOpenIds(gmId);
+    const gmOpenIds = this.api.doors.getOpenIds(gmId);
 
     /** Ids of open doors connected to rootRoom */
-    const doorIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
-      ({ doorId }) => openDoorsIds.includes(doorId) ? doorId : []
+    const rootOpenIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
+      ({ doorId }) => gmOpenIds.includes(doorId) ? doorId : []
     );
 
     /**
@@ -84,8 +84,8 @@ export class gmGraphClass extends BaseGraph {
      * - `area.poly` is local to the respective geomorph.
      * - `area.poly` may have been extended via related doorIds.
      */
-    const doorViewAreas = doorIds.flatMap((doorId) =>
-      this.computeDoorViewArea(gmId, doorId, openDoorsIds, doorIds)??[]
+    const doorViewAreas = rootOpenIds.flatMap((doorId) =>
+      this.computeDoorViewArea(gmId, doorId, gmOpenIds, rootOpenIds)??[]
     );
 
     /** For each area we raycast a light from specific position. */
@@ -125,7 +125,7 @@ export class gmGraphClass extends BaseGraph {
     });
 
     /** Door ids either connected to root room, or related to them */
-    const allDoorIds = doorIds.concat(doorViewAreas.flatMap(x => x.relDoorIds));
+    const allDoorIds = rootOpenIds.concat(doorViewAreas.flatMap(x => x.relDoorIds));
 
     return {
       polys: this.gms.map((_, gmId) =>
@@ -140,52 +140,69 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * 🚧 clean/simplify
    * @param {number} gmId 
    * @param {number} doorId 
-   * @param {number[]} openDoorIds 
-   * @param {number[]} adjOpenDoorIds 
+   * @param {number[]} gmOpenIds open doors in geomorph @see {gmId}
+   * @param {number[]} rootOpenIds open door in root room
    */
-  computeDoorViewArea(gmId, doorId, openDoorIds, adjOpenDoorIds) {
+  computeDoorViewArea(gmId, doorId, gmOpenIds, rootOpenIds) {
     const gm = this.gms[gmId];
     const area = this.getOpenDoorArea(gmId, doorId);
     if (!area) {
       return null;
     }
 
-    /**
-     * - Our SVG symbols `relate-connectors` tagged rects
-     *   induce a relation R between doorIds.
-     * - We extend the light area when exactly one of x, y
-     *   in R(x, y) is in @see {adjOpenDoorIds}.
-     * - Light is extended through a door in an adjacent room,
-     *   non-adjacent to current room.
-     * - 🚧 test relations R(doorId, windowId)
-     */
-    const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
-      openDoorIds.includes(relDoorId)
-      && !adjOpenDoorIds.includes(relDoorId)
-    );
-    const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
-    const relHullDoorIds = relDoorIds.filter(x => gm.isHullDoor(x));
-    
-    /** Windows are always open, and assumed visible if related door open */
-    const relWindowIds = gm.relDoorId[doorId]?.windowIds ?? [];
-
-    // Related non-hull doors or windows extend area.poly
-    if (relDoorIds.length || relWindowIds.length) {
+    if (gm.isHullDoor(doorId)) {
+      const adjGmId = area.gmId;
+      const adjGm = this.gms[adjGmId];
+      const relDoorIds = (adjGm.relDoorId[area.doorId]?.doorIds ?? []).filter(relDoorId =>
+        this.api.doors.lookup[adjGmId][relDoorId].open
+      );
       area.poly = Poly.union([area.poly,
-        ...relNonHullDoorIds.flatMap(relDoorId => this.getOpenDoorArea(gmId, relDoorId)?.poly || []),
-        ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
+        ...relDoorIds.flatMap(relDoorId => this.getOpenDoorArea(adjGmId, relDoorId)?.poly ?? []),
+        // ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
       ])[0];
+      return [{ area, relDoorIds: [doorId] }];
+    } else {
+
+      /**
+       * - Our SVG symbols `relate-connectors` tagged rects
+       *   induce a relation R between doorIds.
+       * - We extend the light area when exactly one of x, y
+       *   in R(x, y) is in @see {rootOpenIds}.
+       * - Light is extended through a door in an adjacent room,
+       *   non-adjacent to current room.
+       */
+      const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
+        gmOpenIds.includes(relDoorId)
+        && !rootOpenIds.includes(relDoorId)
+      );
+      const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
+      const relHullDoorIds = relDoorIds.filter(x => gm.isHullDoor(x));
+      
+      /** Windows are always open, and assumed visible if related door open */
+      const relWindowIds = gm.relDoorId[doorId]?.windowIds ?? [];
+  
+      // Related non-hull doors or windows extend area.poly
+      if (relDoorIds.length || relWindowIds.length) {
+        area.poly = Poly.union([area.poly,
+          ...relNonHullDoorIds.flatMap(relDoorId => this.getOpenDoorArea(gmId, relDoorId)?.poly || []),
+          ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
+        ])[0];
+      }
+  
+      /**
+       * Handle R(doorId, hullDoorId),
+       * i.e. related hull doors induce area in adjacent geomorph.
+       */
+      const adjAreas = relHullDoorIds.map(hullDoorId => ({
+        area: /** @type {Graph.OpenDoorArea} */ (this.getOpenDoorArea(gmId, hullDoorId)),
+        relDoorIds: [hullDoorId],
+      })).filter(x => x.area);
+  
+      return [{ area, relDoorIds: relNonHullDoorIds }].concat(adjAreas);
     }
-
-    /** Related hull doors induce area in adjacent geomorph */
-    const adjAreas = relHullDoorIds.map(hullDoorId => ({
-      area: /** @type {Graph.OpenDoorArea} */ (this.getOpenDoorArea(gmId, hullDoorId)),
-      relDoorIds: [hullDoorId],
-    })).filter(x => x.area);
-
-    return [{ area, relDoorIds: relNonHullDoorIds }].concat(adjAreas);
   }
 
   /**
@@ -230,6 +247,47 @@ export class gmGraphClass extends BaseGraph {
       error(`${gmKey}: unsealed hull door ${hullDoorId}: meta.hullDir "${hullDir}" must be in {n,e,s,w}`);
     }
     return null;
+  }
+
+  /**
+   * Compute all doorIds visible from rootRoomId.
+   * ✅ use to decide whether to update FOV
+   * 🚧 use to simplify e.g. computeViewPolygons, computeDoorViewArea
+   * @param {number} gmId 
+   * @param {number} rootRoomId 
+   * @returns {number[][]} indexed by gmId
+   */
+  computeViewDoorIds(gmId, rootRoomId) {
+    const gm = this.gms[gmId];
+    const gmDoors = this.api.doors.lookup[gmId];
+    const rootOpenIds = gm.roomGraph.getAdjacentDoors(rootRoomId).flatMap(
+      ({ doorId }) => gmDoors[doorId].open ? doorId : []
+    );
+
+    const output = this.gms.map((_, id) => gmId === id ? rootOpenIds: []);
+    rootOpenIds.forEach((doorId) => {
+      if (gm.isHullDoor(doorId)) {
+        const { adjGmId, adjDoorId } = /** @type {Graph.GmAdjRoomCtxt} */ (
+          this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(doorId))
+        );
+        const adjGm = this.gms[adjGmId];
+        const adjGmDoors = this.api.doors.lookup[adjGmId];
+        // adjGmId: open related doorIds
+        output[adjGmId].push(adjDoorId, ...(
+          adjGm.relDoorId[adjDoorId]?.doorIds ?? []).filter(relDoorId =>
+            adjGmDoors[relDoorId].open
+          )
+        );
+      } else {// gmId: open/new related doorIds
+        output[gmId].push(...(
+          gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
+            gmDoors[relDoorId].open
+            && !rootOpenIds.includes(relDoorId)
+          )
+        );
+      }
+    });
+    return output;
   }
 
   /**

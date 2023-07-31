@@ -34,7 +34,7 @@ export default function FOV(props) {
     // gmId: 1, roomId: 22,
     // gmId: 2, roomId: 2,
     // gmId: 3, roomId: 26,
-    prev: { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] },
+    prev: { gmId: -1, roomId: -1, doorId: -1, rootedOpenIds: [] },
     gmRoomIds: [],
 
     ready: true,
@@ -148,14 +148,14 @@ export default function FOV(props) {
     },
     updateClipPath() {
       if (state.gmId === -1) {
-        return;
+        return; // state.gmId is -1 <=> state.roomId is -1
       }
       
       const { prev } = state;
-      const openDoorsIds = api.doors.getOpenIds(state.gmId);
+      const rootedOpenIds = api.gmGraph.computeViewDoorIds(state.gmId, state.roomId);
 
       /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, openDoorsIds };
+      const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, rootedOpenIds };
       const cmp = compareCoreState(prev, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
@@ -192,6 +192,7 @@ export default function FOV(props) {
       state.prev = curr;
 
       // Track visible rooms
+      // 🤔 we assume gmRoomIds has no dups
       const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: `g${x.gmId}-r${x.roomId}`}));
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
@@ -273,7 +274,7 @@ export default function FOV(props) {
  * @property {(fovApi: State) => void} onLoad
  */
 
-/** @typedef State @type {Omit<CoreState, 'openDoorsIds'> & AuxState} */
+/** @typedef State @type {Omit<CoreState, 'rootedOpenIds'> & AuxState} */
 
 /**
  * @typedef AuxState @type {object}
@@ -295,7 +296,7 @@ export default function FOV(props) {
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} doorId Last traversed door id (relative to geomorph)
- * @property {number[]} openDoorsIds
+ * @property {number[][]} rootedOpenIds `rootedOpenIds[gmId]` are rooted open door ids
  */
 
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
@@ -347,20 +348,26 @@ function gmMaskPolysToClipPaths(maskPolys, gms) {
  */
 function compareCoreState(prev, next) {
   const justSpawned = prev.gmId === -1;
-  const changedRoom = !justSpawned && ((prev.gmId !== next.gmId) || (prev.roomId !== next.roomId));
+  const changedRoom = !justSpawned && !(prev.gmId === next.gmId && prev.roomId === next.roomId);
   
-  // Currently only track whether doors opened/closed in Player's current geomorph
-  const openedDoorIds = justSpawned || (prev.gmId === next.gmId)
-    ? next.openDoorsIds.filter(x => !prev.openDoorsIds.includes(x)) : [];
-  const closedDoorIds = justSpawned || (prev.gmId === next.gmId)
-    ? prev.openDoorsIds.filter(x => !next.openDoorsIds.includes(x)) : [];
+  const rootedOpenedIds = next.rootedOpenIds.map((doorIds, gmId) =>
+    doorIds.filter(doorId => !prev.rootedOpenIds[gmId].includes(doorId))
+  );
+  const rootedClosedIds = prev.rootedOpenIds.map((doorIds, gmId) =>
+    doorIds.filter(doorId => !next.rootedOpenIds[gmId].includes(doorId))
+  );
 
   return {
     justSpawned,
     changedRoom,
-    openedIds: openedDoorIds.length ? openedDoorIds : null,
-    closedIds: closedDoorIds.length ? closedDoorIds : null,
-    changed: justSpawned || changedRoom || openedDoorIds.length || closedDoorIds.length,
+    rootedOpenedIds,
+    rootedClosedIds,
+    changed: (
+      justSpawned
+      || changedRoom
+      || rootedOpenedIds.some(x => x.length)
+      || rootedClosedIds.some(x => x.length)
+    ),
   };
 }
 

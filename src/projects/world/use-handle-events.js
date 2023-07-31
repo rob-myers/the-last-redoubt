@@ -91,7 +91,7 @@ export default function useHandleEvents(api) {
       switch (e.key) {
         case 'spawned-npc':
           // 🚧 Do we always need to reset this?
-          api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, openDoorsIds: [] };
+          api.fov.prev = { gmId: -1, roomId: -1, doorId: -1, rootedOpenIds: api.gmGraph.gms.map(_ => []) };
           api.npcs.setRoomByNpc(e.npcKey);
           break;
         case 'started-walking': {
