@@ -524,7 +524,7 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Cached because e.g. called many times on toggle hull door.
+   * Cached because static and e.g. called many times on toggle hull door.
    * @param {number} gmId 
    * @param {number} hullDoorId 
    * @returns {Graph.GmAdjRoomCtxt | null}
