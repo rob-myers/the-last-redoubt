@@ -23,11 +23,12 @@ export default function Doors(props) {
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta }, doorId) => {
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const hullSealed = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId)?.sealed;
+      const sealed = hullSealed || !!meta.sealed;
       return {
         closeTimeoutId: undefined,
-        locked: false,
+        locked: sealed,
         open: props.init?.[gmId]?.includes(doorId) ?? false,
-        sealed: hullSealed || !!meta.sealed,
+        sealed,
         touchMeta: JSON.stringify({ door: true, ui: true, gmId, doorId }),
         visible: false,
       };
