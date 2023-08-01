@@ -28,40 +28,40 @@
   </g>
   <g style="">
     <title>singles</title>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1179.1" y="28.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1179.1" y="28.6">
       <title>decor go label=locker</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1179.1" y="88.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1179.1" y="88.6">
       <title>decor go label=locker</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1179.1" y="148.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1179.1" y="148.6">
       <title>decor go label=locker</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1179.1" y="208.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1179.1" y="208.6">
       <title>decor go label=locker</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1129.1" y="158.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1129.1" y="158.6">
       <title>decor go label=eva</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="977.5" y="472">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="977.5" y="472">
       <title>decor go label='parts or cargo'</title>
     </rect>
-    <rect style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0);" x="158" y="458" height="10" width="10">
+    <rect style="fill-opacity: 0.5; fill: rgb(0, 255, 0);" x="158" y="458" height="10" width="10">
       <title>decor label=fuel</title>
     </rect>
-    <rect style="fill-opacity: 0.5; pointer-events: auto; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="500" y="470" height="10" width="10">
+    <rect style="fill-opacity: 0.5; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" x="500" y="470" height="10" width="10">
       <title>decor go label=airlock</title>
     </rect>
-    <rect style="fill-opacity: 0.5; pointer-events: auto; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="728" y="472" height="10" width="10">
+    <rect style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="728" y="472" height="10" width="10">
       <title>decor go label='repair bay'</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="1129.1" y="358.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="1129.1" y="358.6">
       <title>decor go label=corridor</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="719.1" y="558.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="719.1" y="558.6">
       <title>decor go label=corridor</title>
     </rect>
-    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); pointer-events: auto; fill: rgb(0, 255, 0);" x="49.1" y="528.6">
+    <rect width="10" height="10" style="fill-opacity: 0.5; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);" x="49.1" y="528.6">
       <title>decor go label=corridor</title>
     </rect>
     <rect x="-4" y="250" width="8" height="40" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
@@ -184,12 +184,12 @@
     <rect x="69.996" width="5" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0, 1, -1, 0, 1080, 395.003998)">
       <title>relate-connectors</title>
     </rect>
-    <rect x="73.406" width="5.244" height="194.747" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" transform="matrix(0.258819, 0.965926, -0.965926, 0.258819, 1064.23584, 319.02533)">
+    <rect x="73.406" width="5.244" height="194.747" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0.258819, 0.965926, -0.965926, 0.258819, 914.829954, 320.291421)">
       <title>relate-connectors</title>
     </rect>
-    <path d="M 1202.699 319.094 L 1204.415 322.818 L 1080.6 389.737 L 1078.883 386.013 L 1202.699 319.094 Z" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-origin: 1079.74px 387.875px;">
+    <rect x="73.406" width="5.244" height="146.351" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-origin: 76.028px 73.175px;" transform="matrix(0.422618, 0.906308, -0.906308, 0.422618, 1066.211832, 285.110238)">
       <title>relate-connectors</title>
-    </path>
+    </rect>
     <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
       <title>view</title>
     </rect>
