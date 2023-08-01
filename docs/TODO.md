@@ -3,10 +3,10 @@
 ## In progress
 
 - ✅ clean `computeDoorViewArea` etc.
-- 🚧 sealed hull doors have meta.sealed and are red
-- 🚧 Boxy SVG issue i.e. rotated rects not parsed
-  - internal rep change: scale in transform? transform-origin?
-  - Tempfix: convert to Path and Reorient
+- ✅ sealed doors are red (they needn't be hull doors)
+
+- ✅ Boxy SVG issue i.e. rotated rects not parsed
+  - internal rep change: need to add transform-origin
 
 - 🚧 npc.canSee(otherNpcKey)
   - ✅ `npc rob canSee foo`
