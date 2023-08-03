@@ -43,7 +43,9 @@ export default function NPC({ api, npcKey }) {
           state.key,
           supportsWebp ? 'webp' : undefined,
         )}
-      />
+      >
+        <img src="/assets/npc/fov-indicator.png" className="fov-indicator" />
+      </div>
       <div className="interact-circle" />
       <div className="bounds-circle" />
       <div
@@ -64,14 +66,30 @@ const rootCss = css`
   position: absolute;
   pointer-events: none;
 
-  &.player .body ~ div {
-    display: var(${cssName.npcsDebugPlayerDisplay});
+  &.player .body {
+    ~ div {
+      display: var(${cssName.npcsDebugPlayerDisplay});
+    }
+    .fov-indicator {
+      display: var(${cssName.npcsDebugPlayerDisplay});
+    }
   }
 
   .body {
     position: absolute;
     // Related to geomorph drop-shadow i.e. render-geomorph shadowBlur
     filter: brightness(90%) drop-shadow(0 0 72px black);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .fov-indicator {
+      display: var(${cssName.npcsDebugDisplay});
+      position: absolute;
+      transform: scale(3.2) translateX(50%);
+      opacity: 0.4;
+    }
   }
   
   .interact-circle {

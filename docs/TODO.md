@@ -12,10 +12,28 @@
   - ✅ if in same room
   - ✅ if in adjacent room
   - ❌ if have shared adjacent room
-  - 🚧 view frustum (45 deg)
+  - ✅ display view frustum (45 deg) fov-indicator via background-image
   - FOV contains all of adj room when inside door sensor?
     - ℹ️ Player's FOV should contain view frustum
   - general approach i.e. project through open door until reach target room
+
+```js
+// FOV image 1
+C.width = 200; C.height = 400
+ctxt.fillStyle = '#ff000077'
+ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.fill();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2)));
+ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.closePath(); ctxt.fill();
+
+// FOV image 2
+C.width = 200; C.height = 400;
+ctxt.strokeStyle = '#ffff00';
+ctxt.setLineDash([8, 4]);
+ctxt.lineWidth = 2;
+ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.stroke();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2))); ctxt.stroke();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.stroke();
+```
 
 - npc.isNearby(npcKey)
   - same room, adj room, or shared adj room
