@@ -151,7 +151,6 @@ declare namespace Geomorph {
     //#endregion
 
     /**
-     * 🚧 recreate this in each instance, so we can mutate it later (per instance)
      * View source overrides, indexed by `roomId`.
      * Their coords are local wrt their parent geomorph.
      */

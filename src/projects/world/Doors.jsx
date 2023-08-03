@@ -157,14 +157,14 @@ export default function Doors(props) {
       // Toggle the door
       item.open = !wasOpen;
       const key = wasOpen ? 'closed-door' : 'opened-door';
-      state.events.next({ key, gmId, doorId });
+      state.events.next({ key, gmId, doorId, npcKey });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
       const hullDoorId = gms[gmId].getHullDoorId(doorId);
       const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
-        state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
+        state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
         state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
 
@@ -406,6 +406,7 @@ const rootCss = css`
  * @property {'opened-door' | 'closed-door'} key
  * @property {number} gmId
  * @property {number} doorId
+ * @property {string} [npcKey]
  */
 
 /**

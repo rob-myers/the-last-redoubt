@@ -13,10 +13,11 @@
   - ✅ if in adjacent room
   - ❌ if have shared adjacent room
   - ✅ display view frustum (45 deg) fov-indicator via background-image
-  - 🚧 FOV door offset changes when inside door sensor?
-    - gm.roomOverrides at level of GeomorphDataInstance?
+  - ❌ FOV door offset changes when inside door sensor?
+    - ❌ gm.roomOverrides at level of GeomorphDataInstance?
+  - FOV includes adjacent room when inside door sensor
     - ℹ️ Player's FOV should contain view frustum
-      - need to account for doors and windows
+    - need to account for doors and windows
   - general approach i.e. project through open door until reach target room
 
 ```js

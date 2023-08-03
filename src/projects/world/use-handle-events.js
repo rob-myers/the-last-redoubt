@@ -344,8 +344,7 @@ export default function useHandleEvents(api) {
           break;
         }
         case 'opened-door': {
-          const { gmId, doorId } = e;
-          api.geomorphs.onOpenDoor(gmId, doorId);
+          api.geomorphs.onOpenDoor(e.gmId, e.doorId);
           api.fov.updateClipPath();
           break;
         }
