@@ -2,10 +2,11 @@ import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
-import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
+import { computeViewPosition, geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
+import { doorViewOffset, windowViewOffset } from "../world/const";
 import usePathfinding from "./use-pathfinding";
 
 /**
@@ -217,6 +218,21 @@ export async function createGeomorphData(input) {
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doorIds ?? [];
     },
+
+
+    getViewDoorPosition(rootRoomId, doorId) {
+      const custom = this.roomOverrides[rootRoomId]?.doorView?.[doorId];
+      return (custom?.point.clone()
+        || computeViewPosition(this.doors[doorId], rootRoomId, doorViewOffset)
+      );
+    },
+    getViewWindowPosition(rootRoomId, windowId) {
+      const point = this.roomOverrides[rootRoomId]?.windowView?.[windowId];
+      return (point?.clone()
+        || computeViewPosition(this.windows[windowId], rootRoomId, windowViewOffset)
+      );
+    },
+
     isHullDoor(doorOrId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.includes(null);

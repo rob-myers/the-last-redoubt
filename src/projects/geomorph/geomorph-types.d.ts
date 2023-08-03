@@ -151,6 +151,7 @@ declare namespace Geomorph {
     //#endregion
 
     /**
+     * 🚧 recreate this in each instance, so we can mutate it later (per instance)
      * View source overrides, indexed by `roomId`.
      * Their coords are local wrt their parent geomorph.
      */
@@ -182,6 +183,13 @@ declare namespace Geomorph {
    getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
    /** Get doorIds related via tag `relate-connectors` */
    getRelatedDoorIds(doorId: number): number[];
+  /**
+   * By default we move "the view" inside current room by constant amount.
+   * Sometimes this breaks (lies outside current room) or looks bad when combined,
+   * so can override via "view"-tagged rects.
+   */
+   getViewDoorPosition(rootRoomId: number, doorId: number);
+   getViewWindowPosition(rootRoomId: number, doorId: number);
   /**
    * Raycast `src -> dst` against `roomWithDoors[roomId]`, returning
    * `{ doorId, lambda }` if respective door from doorIds was earliest hit.

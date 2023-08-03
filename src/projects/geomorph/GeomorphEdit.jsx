@@ -208,7 +208,7 @@ function Geomorph({ def, transform, disabled }) {
           {data.gmGraph.ready && data.gm.rooms.map((_, roomId) =>
             data.gm.doors.map(({ roomIds }, doorId) => {
               if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
-              const point = data.gmGraph.getViewDoorPosition(0, roomId, doorId);
+              const point = data.gm.getViewDoorPosition(roomId, doorId);
               const viewId = `${doorId}@${roomId}`;
               return <div
                 key={viewId}

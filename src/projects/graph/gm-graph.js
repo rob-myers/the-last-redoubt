@@ -181,7 +181,7 @@ export class gmGraphClass extends BaseGraph {
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: this.getViewDoorPosition(area.gmId, rootRoomId, area.doorId),
+          position: areaGm.getViewDoorPosition(rootRoomId, area.doorId),
           range: 2000,
           exterior: area.poly,
           extraSegs,
@@ -331,11 +331,7 @@ export class gmGraphClass extends BaseGraph {
     const unjoinedViews = windowIds.map(windowId => ({
       gmId,
       poly: geom.lightPolygon({
-        position: (
-          gm.roomOverrides[rootRoomId]?.windowView?.[windowId]
-          // We move light inside current room
-          || computeViewPosition(gm.windows[windowId], rootRoomId, windowViewOffset)
-        ),
+        position: gm.getViewWindowPosition(rootRoomId, windowId),
         range: 1000,
         exterior: this.getOpenWindowPolygon(gmId, windowId),
         // 🚧 block all doors?
@@ -750,25 +746,6 @@ export class gmGraphClass extends BaseGraph {
       }
     });
     return output;
-  }
-
-  /**
-   * By default we move light inside current room by constant amount.
-   * Sometimes this breaks (lies outside current room) or looks bad when combined,
-   * so can override via 'view' tagged rects.
-   * @param {number} gmId
-   * @param {number} rootRoomId
-   * @param {number} doorId
-   */
-  getViewDoorPosition(gmId, rootRoomId, doorId, permitReversed = true) {
-    const gm = this.gms[gmId];
-    // Seems some geomorphs lack gm.point[x]
-    const custom = gm.roomOverrides[rootRoomId]?.doorView?.[doorId];
-    return (
-      custom && (permitReversed || !custom.meta.reverse)
-        ? custom.point.clone()
-        : computeViewPosition(gm.doors[doorId], rootRoomId, doorViewOffset)
-    );
   }
 
   /** @param {Geom.VectJson[]} points */
