@@ -178,15 +178,27 @@ declare namespace Geomorph {
 
     floorGraph: Graph.FloorGraph;
 
-    /** Returns -1 if not a hull door */
-    getHullDoorId(doorOrId: Geomorph.ParsedConnectorRect | number): number;
-    /**
-     * `roomId` must reside in non-hull-door's roomIds.
-     * Returns -1 if not a hull door.
-     */
-    getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
-    getRelatedDoorIds(doorId: number): number[];
-    isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
+   /** Returns -1 if a hull door. */
+   getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
+   /** Get doorIds related via tag `relate-connectors` */
+   getRelatedDoorIds(doorId: number): number[];
+  /**
+   * Raycast `src -> dst` against `roomWithDoors[roomId]`, returning
+   * `{ doorId, lambda }` if respective door from doorIds was earliest hit.
+   * The intersection is `src + lambda.(dst - src)`.
+   */
+  rayIntersectsDoor(
+    src: Geom.VectJson,
+    dst: Geom.VectJson,
+    roomId: number,
+    doorIds: number[],
+  ): null | { doorId: number; lambda: number; };
+
+   // 🚧 Remove
+   /** Returns -1 if not a hull door */
+   getHullDoorId(doorOrId: Geomorph.ParsedConnectorRect | number): number;
+   // 🚧 Remove
+   isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
   }
 
   export interface GmRoomId {
@@ -234,6 +246,8 @@ declare namespace Geomorph {
      * - "Edge Geomorphs" are `1200 * 600`
      */
     gridRect: Geom.Rect;
+
+    toLocalCoords(worldPoint: Geom.VectJson): Geom.Vect;
   }
 
   /**

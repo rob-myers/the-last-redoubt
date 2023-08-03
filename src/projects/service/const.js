@@ -85,10 +85,6 @@ export const wallOutset = 12;
 
 export const obstacleOutset = 8;
 
-export const lightDoorOffset = 40;
-
-export const lightWindowOffset = 20;
-
 /**
  * One grid square corresponds to 1.5 meters according to Starship Geomorphs 2.0.
  * In our approach, one grid square is 60 world units square.

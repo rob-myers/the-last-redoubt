@@ -4,15 +4,27 @@
 
 - ✅ clean `computeDoorViewArea` etc.
 - ✅ sealed doors are red (they needn't be hull doors)
-
 - ✅ Boxy SVG issue i.e. rotated rects not parsed
   - internal rep change: need to add transform-origin
 
-- 🚧 npc.canSee(otherNpcKey)
+- 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
   - ✅ if in same room
-  - if in adjacent room
-  - if have shared adjacent room
+  - ✅ if in adjacent room
+  - ❌ if have shared adjacent room
+  - 🚧 view frustum (45 deg)
+  - FOV contains all of adj room when inside door sensor?
+    - ℹ️ Player's FOV should contain view frustum
+  - general approach i.e. project through open door until reach target room
+
+- npc.isNearby(npcKey)
+  - same room, adj room, or shared adj room
+  - run 1st before general `canSee`
+
+- start assuming that hullDoorId === doorId i.e. initial doors are hull doors
+  - test based on `door.meta.hull`
+  - remove `gm.getHullDoorId`
+  - remove `gm.isHullDoor`
 
 - saw fat door in 302
 - tidy processApi via processApi.lib

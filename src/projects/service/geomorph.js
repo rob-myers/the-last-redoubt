@@ -475,6 +475,18 @@ export function isConnectorOrthonormal(connector) {
 }
 
 /**
+ * @param {Geomorph.GmRoomId} gmRoomId 
+ * @param {Geomorph.GmRoomId} otherGmRoomId 
+ * @returns {boolean}
+ */
+export function isSameGmRoom(gmRoomId, otherGmRoomId) {
+  return (
+    gmRoomId.gmId === otherGmRoomId.gmId
+    && gmRoomId.roomId === otherGmRoomId.roomId
+  );
+}
+
+/**
  * @param {Geomorph.ConnectorRectJson} x
  * @returns {Geomorph.ParsedConnectorRect}
  */
@@ -766,6 +778,10 @@ export function geomorphDataToInstance(gm, transform) {
     matrix,
     inverseMatrix,
     gridRect,
+
+    toLocalCoords(worldPoint) {
+      return output.inverseMatrix.transformPoint(Vect.from(worldPoint));
+    },
   };
 
   return output;

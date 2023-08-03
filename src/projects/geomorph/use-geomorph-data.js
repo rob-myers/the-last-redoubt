@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { Poly, Rect } from "../geom";
+import { Poly, Rect, Vect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
 import { geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
@@ -217,10 +217,19 @@ export async function createGeomorphData(input) {
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doorIds ?? [];
     },
-
     isHullDoor(doorOrId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.includes(null);
+    },
+    rayIntersectsDoor(src, dst, roomId, doorIds) {
+      const lambda = geom.raycastPolySansHoles(src, dst, this.roomsWithDoors[roomId]);
+      if (lambda === null) {
+        return null;
+      }
+      /** Slightly closer, so inside door */
+      const intersect = new Vect(src.x + (lambda - 0.01) * (dst.x - src.x), src.y + (lambda - 0.01) * (dst.y - src.y));
+      const doorId = doorIds.find(doorId => this.doors[doorId].poly.contains(intersect));
+      return doorId !== undefined ? { doorId, lambda } : null;
     },
   };
 

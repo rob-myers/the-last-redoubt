@@ -44,6 +44,9 @@ export default function Doors(props) {
     getVisibleIds(gmId) {
       return state.lookup[gmId].flatMap((x, i) => x.visible ? i : []);
     },
+    isOpen(gmId, doorId) {
+      return this.lookup[gmId][doorId].open;
+    },
     npcNearDoor(gmId, doorId, npcKey) {
       const npc = props.api.npcs.getNpc(npcKey);
       const center = npc.getPosition();
@@ -365,6 +368,7 @@ const rootCss = css`
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
+ * @property {(gmId: number, doorId: number) => boolean} isOpen
  * @property {(e: PointerEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor

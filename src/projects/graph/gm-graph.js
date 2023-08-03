@@ -4,7 +4,7 @@ import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
-import { lightDoorOffset, lightWindowOffset } from "../service/const";
+import { doorViewOffset, windowViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -334,7 +334,7 @@ export class gmGraphClass extends BaseGraph {
         position: (
           gm.roomOverrides[rootRoomId]?.windowView?.[windowId]
           // We move light inside current room
-          || computeViewPosition(gm.windows[windowId], rootRoomId, lightWindowOffset)
+          || computeViewPosition(gm.windows[windowId], rootRoomId, windowViewOffset)
         ),
         range: 1000,
         exterior: this.getOpenWindowPolygon(gmId, windowId),
@@ -667,6 +667,33 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * Get ids of doors connecting two gmRoomIds, if any.
+   * These door ids are relative to `gmRoomId.gmId`.
+   * @param {Geomorph.GmRoomId} gmRoomId 
+   * @param {Geomorph.GmRoomId} other 
+   * @returns {number[]}
+   */
+  getGmRoomsDoorIds(gmRoomId, other) {
+    const gm = this.gms[gmRoomId.gmId];
+    if (other.gmId === gmRoomId.gmId) {
+      const doorIds = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).map(x => x.doorId);
+      return gm.roomGraph.getAdjacentDoors(other.roomId).map(x => x.doorId).filter(
+        doorId => doorIds.includes(doorId)
+      );
+    } else {// ℹ️ gm.doors extends gm.hullDoors, so a hullDoorId is a doorId
+      return gm.hullDoors.flatMap((x, hullDoorId) => {
+        if (x.roomIds.includes(gmRoomId.roomId)) {
+          const ctxt = this.getAdjacentRoomCtxt(gmRoomId.gmId, hullDoorId);
+          return ctxt?.adjGmId === other.gmId && ctxt?.adjRoomId === other.roomId
+            ? hullDoorId
+            : [];
+        }
+        return [];
+      });
+    }
+  }
+
+  /**
    * Get union of window with rooms on either side of window.
    * Currently windows cannot connect distinct geomorphs.
    * @param {number} gmId 
@@ -740,7 +767,7 @@ export class gmGraphClass extends BaseGraph {
     return (
       custom && (permitReversed || !custom.meta.reverse)
         ? custom.point.clone()
-        : computeViewPosition(gm.doors[doorId], rootRoomId, lightDoorOffset)
+        : computeViewPosition(gm.doors[doorId], rootRoomId, doorViewOffset)
     );
   }
 
