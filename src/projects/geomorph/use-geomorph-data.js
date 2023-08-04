@@ -207,6 +207,7 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
+    // 🚧 remove
     getHullDoorId(doorOrId) {
       const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId
       return this.hullDoors.indexOf(door);
@@ -218,8 +219,6 @@ export async function createGeomorphData(input) {
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doorIds ?? [];
     },
-
-
     getViewDoorPosition(rootRoomId, doorId) {
       const custom = this.roomOverrides[rootRoomId]?.doorView?.[doorId];
       return (custom?.point.clone()
@@ -232,11 +231,10 @@ export async function createGeomorphData(input) {
         || computeViewPosition(this.windows[windowId], rootRoomId, windowViewOffset)
       );
     },
-
-    isHullDoor(doorOrId) {
-      return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
-        .roomIds.includes(null);
+    isHullDoor(doorId) {
+      return doorId < this.hullDoors.length;
     },
+
     rayIntersectsDoor(src, dst, roomId, doorIds) {
       const lambda = geom.raycastPolySansHoles(src, dst, this.roomsWithDoors[roomId]);
       if (lambda === null) {

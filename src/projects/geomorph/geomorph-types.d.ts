@@ -189,6 +189,8 @@ declare namespace Geomorph {
    */
    getViewDoorPosition(rootRoomId: number, doorId: number);
    getViewWindowPosition(rootRoomId: number, doorId: number);
+   isHullDoor(doorId: number): boolean;
+
   /**
    * Raycast `src -> dst` against `roomWithDoors[roomId]`, returning
    * `{ doorId, lambda }` if respective door from doorIds was earliest hit.
@@ -204,8 +206,6 @@ declare namespace Geomorph {
    // 🚧 Remove
    /** Returns -1 if not a hull door */
    getHullDoorId(doorOrId: Geomorph.ParsedConnectorRect | number): number;
-   // 🚧 Remove
-   isHullDoor(doorOrId: Geomorph.ParsedConnectorRect | number): boolean;
   }
 
   export interface GmRoomId {

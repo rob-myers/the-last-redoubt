@@ -72,19 +72,19 @@ export default function DebugWorld(props) {
     const target = (/** @type {HTMLElement} */ (e.target));
 
     if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
-      const doorId = Number(target.getAttribute('data-debug-door-id'));
+      const doorId = Number(target.dataset.debugDoorId);
       const door = ctxt.gm.doors[doorId];
 
-      const hullDoorId = ctxt.gm.getHullDoorId(door);
-      if (hullDoorId === -1) {
+      if (!ctxt.gm.isHullDoor(doorId)) {
         fov.setRoom(gmId, ctxt.gm.getOtherRoomId(door, roomId), doorId);
+        return;
       }
 
-      const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId);
+      const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
       if (roomCtxt) {
         fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
       } else {
-        console.info('hull door is isolated', gmId, hullDoorId);
+        console.info(`gm ${gmId}: hull door ${doorId} is isolated`);
       }
     }
 
@@ -255,7 +255,7 @@ export default function DebugWorld(props) {
 
 // 🚧 move to const
 const debugRadius = 3;
-const debugDoorOffset = 10;
+const debugDoorOffset = 12;
 
 const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
