@@ -27,14 +27,14 @@ export default function FOV(props) {
      */
     gmId: -1,
     roomId: -1,
-    doorId: -1,
+    lastDoorId: -1,
     // gmId: 0, roomId: 2,
     // gmId: 0, roomId: 15,
     // gmId: 1, roomId: 5,
     // gmId: 1, roomId: 22,
     // gmId: 2, roomId: 2,
     // gmId: 3, roomId: 26,
-    prev: { gmId: -1, roomId: -1, doorId: -1, rootedOpenIds: [] },
+    prev: { gmId: -1, roomId: -1, lastDoorId: -1, rootedOpenIds: [] },
     gmRoomIds: [],
 
     ready: true,
@@ -127,10 +127,10 @@ export default function FOV(props) {
       }
     },
     setRoom(gmId, roomId, doorId) {
-      if (state.gmId !== gmId || state.roomId !== roomId || state.doorId === -1) {
+      if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
         state.gmId = gmId;
         state.roomId = roomId;
-        state.doorId = doorId;
+        state.lastDoorId = doorId;
         state.updateClipPath();
         api.doors.updateVisibleDoors();
         api.debug.update();
@@ -153,7 +153,7 @@ export default function FOV(props) {
       
       const rootedOpenIds = api.gmGraph.getViewDoorIds(state.gmId, state.roomId).map(x => Array.from(x));
       /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, doorId: state.doorId, rootedOpenIds };
+      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, rootedOpenIds };
       const cmp = compareCoreState(state.prev, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
@@ -296,7 +296,7 @@ export default function FOV(props) {
  * @typedef CoreState @type {object}
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
- * @property {number} doorId Last traversed door id (relative to geomorph)
+ * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
  * @property {number[][]} rootedOpenIds `rootedOpenIds[gmId]` are rooted open door ids
  */
 
