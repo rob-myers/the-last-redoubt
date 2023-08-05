@@ -45,7 +45,10 @@
     /** Filter inputs */
     filter: async function* (ctxt) {
       let { api, args, datum } = ctxt
-      const func = Function(`return ${args[0]}`)()
+      const func = api.generateSelector(
+        api.parseFnOrStr(args[0]),
+        args.slice(1).map(x => api.parseJsArg(x)),
+      );
       while ((datum = await api.read()) !== null)
         if (func(datum, ctxt)) yield datum
     },

@@ -199,7 +199,7 @@ export function deepClone(input) {
 }
 
 /**
- * Convert a function or a string into a 'selector'.
+ * Convert a function, regexp or string into a 'selector'.
  * - for functions we merely prefix args extraArgs
  * - for strings we support e.g.
  *   - `foo.bar.baz` -> function (x) { return x.foo.bar.baz }
@@ -209,27 +209,37 @@ export function deepClone(input) {
  * Technically the latter selectors are dependent on the particular value of `x`.
  * But in practice we can often expect them to act uniformly like the examples above.
  * @template T
- * @param {((x: T) => any) | string} selector 
+ * @param {((x: T) => any) | string | RegExp} selector 
  * @param {any[]} [extraArgs] 
  */
 export function generateSelector(selector, extraArgs) {
-  return typeof selector === 'string'
-    ? /** @param {T} x @param {any[]} xs */
-      function selectByStr(x, ...xs) {
-        const selected = /** @type {string} */ (selector).split('.').reduce(
-          (agg, part) => (x = agg)[part], // x is parent of possible function
-          /** @type {*} */ (x),
-        ); // If we selected a function, invoke it
-        return typeof selected === 'function'
-          // ℹ️ Forwarding ...xs can break invocation
-          ? (selected).call(x, ...extraArgs ?? [])
-          : selected;
-      }
-    : /** @param {T} x @param {any[]} xs */
-      function selectByFn(x, ...xs) {
-        return /** @type {(...args: any[]) => any} */ (selector)(x, ...extraArgs ?? [], ...xs);
-      }
-  ;
+  if (typeof selector === 'string') {
+    /** @param {T} x @param {any[]} xs */
+    return function selectByStr(x, ...xs) {
+      const selected = /** @type {string} */ (selector).split('.').reduce(
+        (agg, part) => (x = agg)[part], // x is parent of possible function
+        /** @type {*} */ (x),
+      ); // If we selected a function, invoke it
+      return typeof selected === 'function'
+        // ℹ️ Forwarding ...xs can break invocation
+        ? (selected).call(x, ...extraArgs ?? [])
+        : selected;
+    }
+  }
+  if (typeof selector === 'function') {
+    /** @param {T} x @param {any[]} xs */
+    return function selectByFn(x, ...xs) {
+      return /** @type {(...args: any[]) => any} */ (selector)(x, ...extraArgs ?? [], ...xs);
+    };
+  }
+  if (selector instanceof RegExp) {
+    /** @param {string} x @param {any[]} xs */
+    return function selectByRegexp(x, ...xs) {
+      // 🚧 support extraArgs e.g. extract via '$2 $1'
+      return selector.test.call(selector, x);
+    }
+  }
+  throw Error(`selector ${selector} should be a function, regexp or string`)
 }
 
 /**

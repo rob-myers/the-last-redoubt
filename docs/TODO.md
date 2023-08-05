@@ -18,7 +18,7 @@
     - ❌ gm.roomOverrides at level of GeomorphDataInstance?
   - general approach i.e. project through open door until reach target room
 
-- FOV rethink:
+- 🚧 FOV rethink:
   - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
   - ❌ doorViewPosition could always be Player position
   - ❌ show all of nearby rooms i.e. no raycast
@@ -49,6 +49,11 @@ ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.stroke();
 ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2))); ctxt.stroke();
 ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.stroke();
 ```
+
+- ❌ can `filter '/events/.test'`
+  - `/events/.test("foo")` doesn't work
+- ✅ can `filter /events/`
+- can `map /(\d+),(\d+)/ '$2 $1'`
 
 - npc.isNearby(npcKey)
   - same room, adj room, or shared adj room

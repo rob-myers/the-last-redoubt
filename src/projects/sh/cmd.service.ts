@@ -776,13 +776,16 @@ function isTtyAt(meta: Sh.BaseMeta, fd: number) {
 }
 
 /**
- * Parse function, with string fallback.
+ * Parse function or regexp, with string fallback.
  */
 export function parseFnOrStr(input: string) {
   try {
     const parsed = Function(`return ${input}`)();
     // 🤔 avoid e.g. 'toString' -> window.toString
     if (typeof parsed === 'function' && !(input in window)) {
+      return parsed;
+    }
+    if (parsed instanceof RegExp) {
       return parsed;
     }
   } catch {}
