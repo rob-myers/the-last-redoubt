@@ -13,22 +13,34 @@
   - ✅ if in adjacent room
   - ❌ if have shared adjacent room
   - ✅ display view frustum (45 deg) fov-indicator via background-image
+  - ℹ️ Player's FOV should contain view frustum
   - ❌ FOV door offset changes when inside door sensor?
     - ❌ gm.roomOverrides at level of GeomorphDataInstance?
-  - FOV includes adjacent room when inside door sensor
-    - ℹ️ Player's FOV should contain view frustum
-    - need to account for doors and windows
   - general approach i.e. project through open door until reach target room
 
+- FOV rethink:
+  - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
+  - ❌ doorViewPosition could always be Player position
+  - ❌ show all of nearby rooms i.e. no raycast
+  - ℹ️ can think of closeDoorIds as "peeking"
+  - 🚧 clean decor-collide events
+  - `fov.closeDoorIds` is Player's intersecting door sensors
+  - `fov.closeDoorIds` induces close door view position
+
 ```js
-// FOV image 1
+// FOV
+C = document.createElement('canvas')
+document.body.appendChild(C)
+ctxt = C.getContext('2d')
+
+// #1
 C.width = 200; C.height = 400
 ctxt.fillStyle = '#ff000077'
 ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.fill();
 ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2)));
 ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.closePath(); ctxt.fill();
 
-// FOV image 2
+// #2
 C.width = 200; C.height = 400;
 ctxt.strokeStyle = '#ffff00';
 ctxt.setLineDash([8, 4]);
@@ -45,7 +57,6 @@ ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200
 - start assuming that hullDoorId === doorId i.e. initial doors are hull doors
   - test based on `door.meta.hull`
   - remove `gm.getHullDoorId`
-  - remove `gm.isHullDoor`
 
 - saw fat door in 302
 - tidy processApi via processApi.lib

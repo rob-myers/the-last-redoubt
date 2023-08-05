@@ -28,12 +28,7 @@ export default function FOV(props) {
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
-    // gmId: 0, roomId: 2,
-    // gmId: 0, roomId: 15,
-    // gmId: 1, roomId: 5,
-    // gmId: 1, roomId: 22,
-    // gmId: 2, roomId: 2,
-    // gmId: 3, roomId: 26,
+
     prev: { gmId: -1, roomId: -1, lastDoorId: -1, rootedOpenIds: [] },
     gmRoomIds: [],
 

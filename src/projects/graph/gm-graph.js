@@ -2,9 +2,8 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
-import { computeViewPosition, getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
+import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
-import { doorViewOffset, windowViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -116,13 +115,12 @@ export class gmGraphClass extends BaseGraph {
     const doorViews = this.computeViewsFromDoors(gmId, rootRoomId);
     const windowViews = this.computeViewWindowAreas(gmId, rootRoomId);
 
-    // Combine doors and windows, including current room
     const viewPolys = doorViews.map((polys, gmId) => polys.concat(windowViews[gmId]));
     viewPolys[gmId].push(this.gms[gmId].roomsWithDoors[rootRoomId]);
 
     /**
-     * Try eliminate "small black triangular polys", arising from intersecting view polys.
-     * Side effect: intermediate walls can become black.
+     * Try to eliminate "small black triangular polys", arising from intersecting
+     * view polys. Side effect: intermediate walls can become black.
      */
     return viewPolys.map(polys => Poly.unionSafe(polys).map(x => x.removeHoles()));
   }
@@ -175,7 +173,7 @@ export class gmGraphClass extends BaseGraph {
 
       /** We imagine we are viewing from the center of the door */
       const viewPos = areaGm.doors[area.doorId].poly.center;
-      // 🚧 These segs are not perfect i.e. part of door will be covered
+      // These segs are not perfect i.e. part of door will be covered
       const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
       return {
