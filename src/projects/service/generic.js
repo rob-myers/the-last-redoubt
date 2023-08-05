@@ -236,7 +236,7 @@ export function generateSelector(selector, extraArgs) {
     /** @param {string} x @param {any[]} xs */
     return function selectByRegexp(x, ...xs) {
       // 🚧 support extraArgs e.g. extract via '$2 $1'
-      return selector.test.call(selector, x);
+      return selector.test.call(selector, typeof x === 'string' ? x : JSON.stringify(x));
     }
   }
   throw Error(`selector ${selector} should be a function, regexp or string`)
