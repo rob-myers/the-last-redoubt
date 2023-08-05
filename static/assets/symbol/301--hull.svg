@@ -83,8 +83,8 @@
     <rect x="665" y="225" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
     </rect>
-    <rect x="1020" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 1320, -610)">
-      <title>light</title>
+    <rect x="1020" y="300" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);" transform="matrix(0, 1, -1, 0, 1321.000039, -610.000018)">
+      <title>light distance=140</title>
     </rect>
     <rect x="1105" y="95" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light</title>
