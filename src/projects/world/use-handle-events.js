@@ -157,12 +157,50 @@ export default function useHandleEvents(api) {
           }
           break;
         }
-        case 'enter-room':
+        case 'enter-room': {
           if (npc.anim.doorStrategy !== 'none') {
              // Currently, all other strategies slow near door
-             npc.setSpeedFactor(1); // 🚧 defaultSpeedFactor 
+             npc.setSpeedFactor(npc.walkSpeedFactor);
           }
+
+          const { gmId, doorId, enteredRoomId, otherRoomId } = e.meta;
+
+          // handle exit-room into doorway then turn around and enter-room
+          const firstGmRoomId = npc.anim.gmRoomIds[0];
+          if (npc.gmRoomId && firstGmRoomId.gmId === npc.gmRoomId.gmId && firstGmRoomId.roomId === npc.gmRoomId.roomId) {
+            break;
+          }
+
+          api.decor.getDecorAtPoint(
+            npc.getPosition(), gmId, enteredRoomId,
+          ).forEach(decor =>
+            api.npcs.events.next({ key: 'way-point', npcKey: e.npcKey, meta: {
+              key: 'decor-collide',
+              type: 'enter',
+              decor: decorToRef(decor),
+              gmId,
+              index: -1,
+              length: 0,
+            }})
+          );
+
+          // we 'exit' after 'enter' for contiguous contact with "adjacent" colliders
+          const prevGmRoom = api.gmGraph.getAdjacentGmRoom(gmId, enteredRoomId, doorId, otherRoomId === null);
+          prevGmRoom && api.decor.getDecorAtPoint(
+            npc.getPosition(), prevGmRoom.gmId, prevGmRoom.roomId,
+          ).forEach(decor =>
+            api.npcs.events.next({ key: 'way-point', npcKey: e.npcKey, meta: {
+              key: 'decor-collide',
+              type: 'exit',
+              decor: decorToRef(decor),
+              gmId: prevGmRoom.gmId,
+              index: -1,
+              length: 0,
+            }})
+          );
+
           break;
+        }
         default:
           throw testNever(e.meta, { suffix: 'handleWayEvents' });
       }
@@ -221,7 +259,7 @@ export default function useHandleEvents(api) {
       ).filter(d => d.meta.gmId === gmId && d.meta.roomId === roomId);
 
       for (const decor of closeDecor) {
-        const {collisions, startInside} = decor.type === 'circle'
+        const { collisions, startInside } = decor.type === 'circle'
           ? npcService.predictNpcCircleCollision(npc, decor)
           : npcService.predictNpcPolygonCollision(
               npc,
@@ -248,7 +286,8 @@ export default function useHandleEvents(api) {
             length,
           });
         });
-        startInside && (aux.index === 0) && npc.anim.wayMetas.unshift({
+
+        startInside && aux.index === 0 && npc.anim.wayMetas.unshift({
           key: 'decor-collide',
           index: aux.index,
           decor: decorToRef(decor),

@@ -23,9 +23,17 @@
   - ❌ doorViewPosition could always be Player position
   - ❌ show all of nearby rooms i.e. no raycast
   - ℹ️ can think of closeDoorIds as "peeking"
-  - 🚧 clean decor-collide events
-  - `fov.closeDoorIds` is Player's intersecting door sensors
-  - `fov.closeDoorIds` induces close door view position
+  - ✅ clean decor-collide events
+    - ✅ `npc events | filter /decor-collide/ | map meta`
+    - ✅ spawn in -> enter
+    - ✅ spawn out -> exit
+    - ❌ exit room -> exit
+    - ✅ enter room -> enter, exit
+    - ✅ can start-inside if start in door
+    - ✅ spawn into doorway -> enter
+    - ✅ spawn out-of doorway -> exit
+  - `fov.nearDoorIds` is Player's intersecting door sensors
+  - `fov.nearDoorIds` induces close door view position
 
 ```js
 // FOV

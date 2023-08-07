@@ -518,6 +518,22 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
+   * @param {number} gmId 
+   * @param {number} roomId 
+   * @param {number} doorId 
+   * @param {boolean} [isHullDoor]
+   * @returns {Geomorph.GmRoomId | null}
+   */
+  getAdjacentGmRoom(gmId, roomId, doorId, isHullDoor = this.gms[gmId].isHullDoor(doorId)) {
+    if (isHullDoor) {
+      const ctxt = this.getAdjacentRoomCtxt(gmId, doorId);
+      return ctxt === null ? null : { gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId };
+    } else {
+      return { gmId, roomId };
+    }
+  }
+
+  /**
    * Cached because static and e.g. called many times on toggle hull door.
    * @param {number} gmId 
    * @param {number} hullDoorId 

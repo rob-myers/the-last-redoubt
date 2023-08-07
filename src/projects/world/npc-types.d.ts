@@ -427,7 +427,7 @@ declare namespace NPC {
     | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }
     | { key: 'removed-npc'; npcKey: string; }
     | { key: 'set-player'; npcKey: string | null; }
-    | { key: 'spawned-npc'; npcKey: string; decors: NPC.DecorRef[]; }
+    | { key: 'spawned-npc'; npcKey: string; }
     | {
         key: 'started-walking';
         npcKey: string;

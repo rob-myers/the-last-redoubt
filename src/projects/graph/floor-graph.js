@@ -180,7 +180,7 @@ export class floorGraphClass extends BaseGraph {
     function addVertex(point, roomId) {
       const index = path.push(point) - 1;
       navMetas.push({ key: 'vertex', index });
-      (lastRoomId !== roomId) && (roomIds[index] = lastRoomId = roomId);
+      lastRoomId !== roomId && (roomIds[index] = lastRoomId = roomId);
     }
 
     for (const [i, item] of partition.entries()) {
@@ -240,7 +240,6 @@ export class floorGraphClass extends BaseGraph {
             key: 'enter-room',
             index: path.length - 1,
             doorId,
-            hullDoorId: this.gm.hullDoors.indexOf(door),
             enteredRoomId: roomId,
             otherRoomId: door.roomIds[1 - door.roomIds.findIndex(x => x === roomId)],
           });
@@ -280,16 +279,18 @@ export class floorGraphClass extends BaseGraph {
       }
     }
 
-    // 🚧 DEBUG
-    console.warn('floorGraph findPath', {
-      nodePath,
-      nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
-      partition, // nav nodes grouped by door/room (alternates)
-      path,
-      fullPartition, // nav nodes grouped by path-edges
-      navMetas,
-      roomIds,
-    });
+    // startDoorId >= 0 && (/** @type {Graph.FloorGraphNavMetaVertex} */ (navMetas.find(x => x.key === 'vertex')).doorId = startDoorId);
+    // endDoorId >= 0 && (/** @type {Graph.FloorGraphNavMetaVertex} */ (navMetas.findLast(x => x.key === 'vertex')).doorId = endDoorId);
+
+    // console.warn('floorGraph findPath', {// 🚧 DEBUG
+    //   nodePath,
+    //   nodeMetas: nodePath.map(x => this.nodeToMeta[x.index]),
+    //   partition, // nav nodes grouped by door/room (alternates)
+    //   path,
+    //   fullPartition, // nav nodes grouped by path-edges
+    //   navMetas,
+    //   roomIds,
+    // });
 
     return {
       path, // May contain adjacent dups

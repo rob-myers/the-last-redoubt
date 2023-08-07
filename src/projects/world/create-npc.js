@@ -468,7 +468,8 @@ export default function createNpc(
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
       this.anim.staticPosition.set(this.def.position.x, this.def.position.y);
-      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position);
+      // Include doors so doorways have some gmRoomId too
+      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;

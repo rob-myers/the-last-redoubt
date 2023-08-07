@@ -208,13 +208,13 @@ export function deepClone(input) {
  * 
  * Technically the latter selectors are dependent on the particular value of `x`.
  * But in practice we can often expect them to act uniformly like the examples above.
- * @template T
- * @param {((x: T) => any) | string | RegExp} selector 
- * @param {any[]} [extraArgs] 
+ * @param {((x: any) => any) | string | RegExp} selector 
+ * @param {any[]} [extraArgs]
+ * @returns {(x: any, ...xs: any[]) => any}
  */
 export function generateSelector(selector, extraArgs) {
   if (typeof selector === 'string') {
-    /** @param {T} x @param {any[]} xs */
+    /** @param {any} x @param {any[]} xs */
     return function selectByStr(x, ...xs) {
       const selected = /** @type {string} */ (selector).split('.').reduce(
         (agg, part) => (x = agg)[part], // x is parent of possible function
@@ -227,7 +227,7 @@ export function generateSelector(selector, extraArgs) {
     }
   }
   if (typeof selector === 'function') {
-    /** @param {T} x @param {any[]} xs */
+    /** @param {any} x @param {any[]} xs */
     return function selectByFn(x, ...xs) {
       return /** @type {(...args: any[]) => any} */ (selector)(x, ...extraArgs ?? [], ...xs);
     };

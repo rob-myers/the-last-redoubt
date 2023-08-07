@@ -61,20 +61,16 @@ export default function Decor(props) {
 
       return atRoom;
     },
-    getDecorAtKey(gmId, roomId, onlyColliders = false) {
+    getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
       return onlyColliders
         ? atRoom.colliders // We exclude groups:
         : Object.values(atRoom?.decor || {}).filter(x => x.type !== 'group');
     },
-    getDecorAtPoint(point) {
-      const result = api.gmGraph.findRoomContaining(point);
-      if (result) {
-        const closeDecor = state.getDecorAtKey(result.gmId, result.roomId);
-        return closeDecor.filter(decor => decorContainsPoint(decor, point));
-      } else {
-        return [];
-      }
+    getDecorAtPoint(point, gmId, roomId) {
+      // 🚧 use grid
+      const closeDecor = state.getDecorInRoom(gmId, roomId);
+      return closeDecor.filter(decor => decorContainsPoint(decor, point));
     },
     handleDevToolEdit(els) {
       for (const el of els.filter(el => el.dataset.key)) {
@@ -619,9 +615,9 @@ const decorPointHandlers = {
  * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
  * @property {RoomDecorCache[][]} byRoom
  * Decor organised by `byRoom[gmId][roomId]`.
- * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorAtKey
+ * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorInRoom
  * Get all decor in specified room.
- * @property {(point: Geom.VectJson) => NPC.DecorDef[]} getDecorAtPoint
+ * @property {(point: Geom.VectJson, gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
  * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {(d: NPC.DecorGroupItem, parent: NPC.DecorGroup, matrix: Geom.Mat) => NPC.DecorGroupItem} instantiateLocalDecor

@@ -288,7 +288,7 @@ declare namespace Graph {
     navMetas: FloorGraphNavMeta[];
     /** `[startDoorId, endDoorId]` respectively */
     doorIds: [null | { id: number; hull: boolean }, null | { id: number; hull: boolean }];
-    /** Only set for vertices where roomId changes, starting from `0` */
+    /** Only for vertices where roomId changes, starting from `0` */
     roomIds: { [vertexId: number]: number };
   }
 
@@ -301,7 +301,7 @@ declare namespace Graph {
   } & (
     | { key: 'at-door'; currentRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'decor-collide'; decor: NPC.DecorRef; type: 'enter' | 'exit' | 'start-inside' }
-    | { key: 'enter-room'; enteredRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
+    | { key: 'enter-room'; enteredRoomId: number; doorId: number; otherRoomId: null | number; }
     | { key: 'exit-room'; exitedRoomId: number; doorId: number; hullDoorId: number; otherRoomId: null | number; }
     | { key: 'npcs-collide'; otherNpcKey: string; }
     | { key: 'vertex'; }
@@ -309,7 +309,7 @@ declare namespace Graph {
 
   export type NavMetaKey = FloorGraphNavMeta['key'];
 
-  export type FloorGraphVertexNavMeta = Extract<Graph.FloorGraphNavMeta, { key: 'vertex' }>;
+  export type FloorGraphNavMetaVertex = Extract<Graph.FloorGraphNavMeta, { key: 'vertex' }>;
 
 //#endregion
 
