@@ -30,7 +30,7 @@ export default function FOV(props) {
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
-    nearDoorIds: [],
+    nearDoorIds: {},
 
     prev: { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: [] },
     //#endregion
@@ -66,6 +66,9 @@ export default function FOV(props) {
           ctxt.translate(-topLeft.x, -topLeft.y);
         }
       }
+    },
+    forgetPrev() {
+      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: {} };
     },
     hideUnseen() {
       const rootEl = api.getRootEl();
@@ -289,11 +292,12 @@ export default function FOV(props) {
  * @property {() => void} drawLabels
  * @property {() => void} hideUnseen
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
- * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
- * @property {() => void} updateClipPath
  * @property {number[][]} rootedOpenIds
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
+ * @property {() => void} forgetPrev
+ * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
+ * @property {() => void} updateClipPath
 */
 
 /**
@@ -301,7 +305,7 @@ export default function FOV(props) {
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
- * @property {number[]} nearDoorIds Doors of current room the Player is near to
+ * @property {{ [doorId: number]: true }} nearDoorIds Doors of current room the Player is near to
  */
 
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';

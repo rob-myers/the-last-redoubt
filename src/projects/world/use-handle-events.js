@@ -90,8 +90,7 @@ export default function useHandleEvents(api) {
     async handlePlayerEvent(e) {
       switch (e.key) {
         case 'spawned-npc':
-          // 🚧 Do we always need to reset this?
-          api.fov.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: [] };
+          api.fov.forgetPrev();
           api.npcs.setRoomByNpc(e.npcKey);
           break;
         case 'started-walking': {
@@ -149,12 +148,9 @@ export default function useHandleEvents(api) {
           break;
         case 'decor-collide': {
           const { decor, type } = e.meta;
-          if (decor.meta.doorSensor
-            && type !== 'exit'
-            && decor.meta.doorId === npc.getNextDoorId()
-          ) {
-            state.onDoorSensor(npc, e.meta, decor.meta.doorId);
-          }
+          decor.meta.doorSensor && state.onTriggerDoorSensor(
+            npc, type, e.meta.gmId, /** @type {number} */ (decor.meta.doorId)
+          );
           break;
         }
         case 'enter-room': {
@@ -171,20 +167,6 @@ export default function useHandleEvents(api) {
             break;
           }
 
-          api.decor.getDecorAtPoint(
-            npc.getPosition(), gmId, enteredRoomId,
-          ).forEach(decor =>
-            api.npcs.events.next({ key: 'way-point', npcKey: e.npcKey, meta: {
-              key: 'decor-collide',
-              type: 'enter',
-              decor: decorToRef(decor),
-              gmId,
-              index: -1,
-              length: 0,
-            }})
-          );
-
-          // we 'exit' after 'enter' for contiguous contact with "adjacent" colliders
           const prevGmRoom = api.gmGraph.getAdjacentGmRoom(gmId, enteredRoomId, doorId, otherRoomId === null);
           prevGmRoom && api.decor.getDecorAtPoint(
             npc.getPosition(), prevGmRoom.gmId, prevGmRoom.roomId,
@@ -194,6 +176,20 @@ export default function useHandleEvents(api) {
               type: 'exit',
               decor: decorToRef(decor),
               gmId: prevGmRoom.gmId,
+              index: -1,
+              length: 0,
+            }})
+          );
+
+          // 'enter' after 'exit'
+          api.decor.getDecorAtPoint(
+            npc.getPosition(), gmId, enteredRoomId,
+          ).forEach(decor =>
+            api.npcs.events.next({ key: 'way-point', npcKey: e.npcKey, meta: {
+              key: 'decor-collide',
+              type: 'enter',
+              decor: decorToRef(decor),
+              gmId,
               index: -1,
               length: 0,
             }})
@@ -332,14 +328,28 @@ export default function useHandleEvents(api) {
       }
     },
 
-    async onDoorSensor(npc, meta, nextDoorId) {
+    onTriggerDoorSensor(npc, event, gmId, doorId) {
+      if (npc.key === api.npcs.playerKey) {
+        if (event === 'enter') {
+          api.fov.nearDoorIds[doorId] = true;
+          api.fov.updateClipPath();
+        } else if (event === 'exit') {
+          delete api.fov.nearDoorIds[doorId];
+          api.fov.updateClipPath();
+        }
+      }
+      if (event !== 'exit' && doorId === npc.getNextDoorId()) {
+        state.preWalkThroughDoor(npc, gmId, doorId)
+      }
+    },
+
+    async preWalkThroughDoor(npc, gmId, nextDoorId) {
       if (npc.anim.doorStrategy !== 'none') {
         // Currently, all open strategies slow down near door
         // 🚧 setTimeout avoids jerk?
         setTimeout(() => npc.setSpeedFactor(0.6), 30);
       }
       
-      const { gmId } = meta;
       const { locked } = api.doors.lookup[gmId][nextDoorId];
 
       switch (npc.anim.doorStrategy) {
@@ -432,7 +442,8 @@ export default function useHandleEvents(api) {
  * @property {(npc: NPC.NPC) => void} predictNpcDecorCollision
  * @property {(npc: NPC.NPC, otherNpc: NPC.NPC) => void} predictNpcNpcCollision
  * @property {(npc: NPC.NPC) => void} predictNpcNpcsCollision
- * @property {(npc: NPC.NPC, collideMeta: NPC.NpcWayMetaDecorCollide, nextDoorId: number) => Promise<void>} onDoorSensor
+ * @property {(npc: NPC.NPC, event: NPC.NpcWayMetaDecorCollide['type'], gmId: number, doorId: number) => void} onTriggerDoorSensor
+ * @property {(npc: NPC.NPC, gmId: number, nextDoorId: number) => Promise<void>} preWalkThroughDoor
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
  * Handle NPC event (always runs)

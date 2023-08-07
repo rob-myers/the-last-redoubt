@@ -33,8 +33,8 @@
     - ✅ spawn into doorway -> enter
     - ✅ spawn out-of doorway -> exit
   - clarify navMetas with index -1
-  - 🚧 `fov.nearDoorIds` is Player's intersecting door sensors
-  - `fov.nearDoorIds` induces close door view position
+  - ✅ `fov.nearDoorIds` is Player's intersecting door sensors
+  - 🚧 `fov.nearDoorIds` induces close door view position
 
 - shell has api.argsToAction
 

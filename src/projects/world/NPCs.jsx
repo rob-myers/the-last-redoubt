@@ -616,6 +616,7 @@ export default function NPCs(props) {
       if (state.playerKey) {// Remove prev player CSS class (without render)
         const prevPlayer = state.npc[state.playerKey]; // Possibly undefined
         prevPlayer?.el.root.classList.remove('player');
+        api.fov.forgetPrev();
       }
       if (nextPlayerKey) {// Ensure CSS class (without render)
         const nextPlayer = state.getNpc(nextPlayerKey); // Player must exist
