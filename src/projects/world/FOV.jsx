@@ -25,11 +25,17 @@ export default function FOV(props) {
      * @see {state.setRoom} must be invoked to make some room visible,
      * e.g. via `spawn {npcName} $( click 1 )`.
      */
+
+    //#region core state
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
+    nearDoorIds: [],
 
-    prev: { gmId: -1, roomId: -1, lastDoorId: -1, rootedOpenIds: [] },
+    prev: { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: [] },
+    //#endregion
+
+    rootedOpenIds: gms.map(_ => []),
     gmRoomIds: [],
 
     ready: true,
@@ -146,10 +152,9 @@ export default function FOV(props) {
         return; // state.gmId is -1 <=> state.roomId is -1
       }
       
-      const rootedOpenIds = api.gmGraph.getViewDoorIds(state.gmId, state.roomId).map(x => Array.from(x));
       /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, rootedOpenIds };
-      const cmp = compareCoreState(state.prev, curr);
+      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, nearDoorIds: state.nearDoorIds };
+      const cmp = compareState(api, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
       }
@@ -159,7 +164,7 @@ export default function FOV(props) {
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
       const viewPolys = gmGraph.computeViews(state.gmId, state.roomId);
-      const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(rootedOpenIds);
+      const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(cmp.rootedOpenIds);
       // If no door is open, we at least have current room
       (gmRoomIds.length === 0) && (gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId }));
 
@@ -186,6 +191,7 @@ export default function FOV(props) {
 
       state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;
+      state.rootedOpenIds = cmp.rootedOpenIds;
 
       // Track visible rooms
       // 🤔 we assume gmRoomIds has no dups
@@ -270,7 +276,7 @@ export default function FOV(props) {
  * @property {(fovApi: State) => void} onLoad
  */
 
-/** @typedef State @type {Omit<CoreState, 'rootedOpenIds'> & AuxState} */
+/** @typedef State @type {CoreState & AuxState} */
 
 /**
  * @typedef AuxState @type {object}
@@ -285,14 +291,17 @@ export default function FOV(props) {
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
- */
+ * @property {number[][]} rootedOpenIds
+ * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
+ * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
+*/
 
 /**
  * @typedef CoreState @type {object}
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
- * @property {number[][]} rootedOpenIds `rootedOpenIds[gmId]` are rooted open door ids
+ * @property {number[]} nearDoorIds Doors of current room the Player is near to
  */
 
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
@@ -339,23 +348,27 @@ function gmMaskPolysToClipPaths(maskPolys, gms) {
 }
 
 /**
- * @param {CoreState} prev
+ * @param {import('./World').State} api
  * @param {CoreState} next
  */
-function compareCoreState(prev, next) {
+function compareState(api, next) {
+  const { prev, rootedOpenIds } = api.fov;
+  const nextRootedOpenIds = api.gmGraph.getViewDoorIds(next.gmId, next.roomId).map(x => Array.from(x));
+
   const justSpawned = prev.gmId === -1;
   const changedRoom = !justSpawned && !(prev.gmId === next.gmId && prev.roomId === next.roomId);
   
-  const rootedOpenedIds = next.rootedOpenIds.map((doorIds, gmId) =>
-    doorIds.filter(doorId => !prev.rootedOpenIds[gmId].includes(doorId))
+  const rootedOpenedIds = nextRootedOpenIds.map((doorIds, gmId) =>
+    doorIds.filter(doorId => !rootedOpenIds[gmId].includes(doorId))
   );
-  const rootedClosedIds = prev.rootedOpenIds.map((doorIds, gmId) =>
-    doorIds.filter(doorId => !next.rootedOpenIds[gmId].includes(doorId))
+  const rootedClosedIds = rootedOpenIds.map((doorIds, gmId) =>
+    doorIds.filter(doorId => !nextRootedOpenIds[gmId].includes(doorId))
   );
 
   return {
     justSpawned,
     changedRoom,
+    rootedOpenIds: nextRootedOpenIds,
     rootedOpenedIds,
     rootedClosedIds,
     changed: (
