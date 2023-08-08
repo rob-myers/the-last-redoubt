@@ -470,6 +470,8 @@ export default function createNpc(
       this.anim.staticPosition.set(this.def.position.x, this.def.position.y);
       // Include doors so doorways have some gmRoomId too
       this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);
+      // Ensure decor
+      this.gmRoomId && api.decor.ensureByRoom(this.gmRoomId.gmId, this.gmRoomId.roomId);
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;

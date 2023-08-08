@@ -243,8 +243,9 @@ export default function useHandleEvents(api) {
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
       /**
-       * We already ensure decor.byRoom for the Player via FOV.
-       * But we also need to ensure it for the other npcs.
+       * - We already decor.ensureByRoom whenever we spawn an npc.
+       * - We also decor.ensureByRoom via FOV i.e. where the Player can see.
+       * - But we must also decor.ensureByRoom for the other npcs.
        */
       api.decor.ensureByRoom(gmId, roomId);
       // const closeDecor = api.decor.byRoom[gmId]?.[roomId]?.colliders ?? [];
@@ -331,10 +332,10 @@ export default function useHandleEvents(api) {
     onTriggerDoorSensor(npc, event, gmId, doorId) {
       if (npc.key === api.npcs.playerKey) {
         if (event === 'enter') {
-          api.fov.nearDoorIds[doorId] = true;
+          api.fov.nearDoorIds.add(doorId);
           api.fov.updateClipPath();
         } else if (event === 'exit') {
-          delete api.fov.nearDoorIds[doorId];
+          api.fov.nearDoorIds.delete(doorId);
           api.fov.updateClipPath();
         }
       }

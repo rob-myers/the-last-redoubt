@@ -16,41 +16,42 @@ export default function NPC({ api, npcKey }) {
   });
   
   React.useLayoutEffect(() => {
-    if (state.unspawned) {// (Re)spawn
-      state.unspawned = false;
-
-      // 🤔 could prevent exit/enter when same collider
-
-      state.gmRoomId && api.decor.getDecorAtPoint(
-        state.getPosition(), state.gmRoomId.gmId, state.gmRoomId.roomId
-      ).forEach(decor =>
-        api.npcs.events.next({ key: 'way-point', npcKey, meta: {
-          key: 'decor-collide',
-          type: 'exit',
-          decor: decorToRef(decor),
-          gmId: /** @type {Geomorph.GmRoomId} */ (state.gmRoomId).gmId,
-          index: -1, // 🚧 support index -1
-          length: 0,
-        }})
-      );
-
-      state.initialize();
-      state.startAnimation('idle');
-      api.npcs.events.next({ key: 'spawned-npc', npcKey });
-      
-      state.gmRoomId && api.decor.getDecorAtPoint(
-        state.getPosition(), state.gmRoomId.gmId, state.gmRoomId.roomId,
-      ).forEach(decor =>
-        api.npcs.events.next({ key: 'way-point', npcKey, meta: {
-          key: 'decor-collide',
-          type: 'enter',
-          decor: decorToRef(decor),
-          gmId: /** @type {Geomorph.GmRoomId} */ (state.gmRoomId).gmId,
-          index: -1, // 🚧 support index -1
-          length: 0,
-        }})
-      );
+    if (!state.unspawned) {
+      return;
     }
+
+    // Spawn or respawn
+    state.unspawned = false;
+
+    state.gmRoomId && api.decor.getDecorAtPoint(
+      state.getPosition(), state.gmRoomId.gmId, state.gmRoomId.roomId
+    ).forEach(decor =>
+      api.npcs.events.next({ key: 'way-point', npcKey, meta: {
+        key: 'decor-collide',
+        type: 'exit',
+        decor: decorToRef(decor),
+        gmId: /** @type {Geomorph.GmRoomId} */ (state.gmRoomId).gmId,
+        index: -1, // 🚧 clarify index -1
+        length: 0,
+      }})
+    );
+
+    state.initialize();
+    state.startAnimation('idle');
+    api.npcs.events.next({ key: 'spawned-npc', npcKey });
+
+    state.gmRoomId && api.decor.getDecorAtPoint(
+      state.getPosition(), state.gmRoomId.gmId, state.gmRoomId.roomId,
+    ).forEach(decor =>
+      api.npcs.events.next({ key: 'way-point', npcKey, meta: {
+        key: 'decor-collide',
+        type: 'enter',
+        decor: decorToRef(decor),
+        gmId: /** @type {Geomorph.GmRoomId} */ (state.gmRoomId).gmId,
+        index: -1, // 🚧 clarify index -1
+        length: 0,
+      }})
+    );
   }, [state.epochMs]);
 
   return (

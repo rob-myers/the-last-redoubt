@@ -85,4 +85,6 @@ export const wallOutset = 12;
 
 export const doorViewOffset = 40;
 
+export const doorPeekViewOffset = 2;
+
 export const windowViewOffset = 20;

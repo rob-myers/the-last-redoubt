@@ -470,7 +470,8 @@ export default function NPCs(props) {
           api.decor.update();
           break;
         case 'set-player':
-          state.events.next({ key: 'set-player', npcKey: e.npcKey??null });
+          state.events.next({ key: 'set-player', npcKey: e.npcKey ?? null });
+          // 🚧 error doesn't propagate? try directly invoke state.setPlayerKey
           break;
         default:
           throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
@@ -611,24 +612,37 @@ export default function NPCs(props) {
     },
     service: npcService,
     setPlayerKey(npcKey) {
-      const nextPlayerKey = npcKey || null; // Forbid empty string
+      if (npcKey === '') {
+        throw Error(`npc key cannot be empty`);
+      }
 
-      if (state.playerKey) {// Remove prev player CSS class (without render)
-        const prevPlayer = state.npc[state.playerKey]; // Possibly undefined
+      if (state.playerKey) {
+        // Remove prev player CSS class, sans render
+        const prevPlayer = state.npc[state.playerKey]; // May not exist
         prevPlayer?.el.root.classList.remove('player');
-        api.fov.forgetPrev();
+        api.fov.forgetPrev(); // Clears fov.nearDoorIds
       }
-      if (nextPlayerKey) {// Ensure CSS class (without render)
-        const nextPlayer = state.getNpc(nextPlayerKey); // Player must exist
-        nextPlayer.el.root.classList.add('player');
-      }
-      state.playerKey = nextPlayerKey;
 
-      if (state.playerKey) {// Adjust FOV
-        state.setRoomByNpc(state.playerKey);
+      if (npcKey === null) {
+        state.playerKey = null;
+        return;
       }
+
+      const player = state.getNpc(npcKey); // Must exist
+      player.el.root.classList.add('player');
+      state.playerKey = npcKey;
+
+      // Adjust FOV
+      state.setRoomByNpc(state.playerKey);
+      // Initialize fov.nearDoorIds
+      player.gmRoomId && api.decor.getDecorAtPoint(
+        player.getPosition(), player.gmRoomId.gmId, player.gmRoomId.roomId,
+      ).forEach(decor =>
+        decor.meta.doorSensor
+        && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
+      );
     },
-    setRoomByNpc(npcKey) {
+    setRoomByNpc(npcKey) {// 🚧 move to api.fov ?
       const npc = state.getNpc(npcKey);
       const position = npc.getPosition();
       const found = (// Fallback includes doors, picking some connected roomId
@@ -690,9 +704,9 @@ export default function NPCs(props) {
       }
 
       // Must subscribe before triggering <NPC> render
-      const promise = firstValueFrom(state.events.pipe(
-        filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)
-      ));
+      const promise = firstValueFrom(
+        state.events.pipe(filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)),
+      );
       // Trigger <NPC> render and await reply
       update();
       await promise;

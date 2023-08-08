@@ -34,9 +34,16 @@
     - ✅ spawn out-of doorway -> exit
   - clarify navMetas with index -1
   - ✅ `fov.nearDoorIds` is Player's intersecting door sensors
-  - 🚧 `fov.nearDoorIds` induces close door view position
+  - 🚧 `fov.nearDoorIds` induces wider FOV through respective doors
+    - ✅ `decor-collide` triggered for first spawn
+    - ✅ initial spawn not setting fov.nearDoorIds
+      - ℹ️ because we `spawn rob ${point}` before `npc set-player rob`
+      - ✅ `npc set-player rob` should set `fov.nearDoorIds`
+    - ✅ get hull doors working too
+    - 🚧 trigger update on enter/exit door sensor
 
 - shell has api.argsToAction
+- gm 101: if can get close to windows then view offset should be small (?)
 
 ```js
 // FOV

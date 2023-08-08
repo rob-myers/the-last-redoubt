@@ -187,7 +187,7 @@ declare namespace Geomorph {
    * Sometimes this breaks (lies outside current room) or looks bad when combined,
    * so can override via "view"-tagged rects.
    */
-   getViewDoorPosition(rootRoomId: number, doorId: number);
+   getViewDoorPosition(rootRoomId: number, doorId: number, peek?: boolean);
    getViewWindowPosition(rootRoomId: number, doorId: number);
    isHullDoor(doorId: number): boolean;
 

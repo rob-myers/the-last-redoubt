@@ -109,10 +109,11 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area: extend current room by view through open doors and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
+   * @param {number[]} nearDoorIds doors adjacent to rootRoomId the Player is close to
    * @returns {Poly[][]}
    */
-  computeViews(gmId, rootRoomId) {
-    const doorViews = this.computeViewsFromDoors(gmId, rootRoomId);
+  computeViews(gmId, rootRoomId, nearDoorIds) {
+    const doorViews = this.computeViewsFromDoors(gmId, rootRoomId, nearDoorIds);
     const windowViews = this.computeViewWindowAreas(gmId, rootRoomId);
 
     const viewPolys = doorViews.map((polys, gmId) => polys.concat(windowViews[gmId]));
@@ -129,9 +130,10 @@ export class gmGraphClass extends BaseGraph {
    * Compute viewable areas determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
+   * @param {number[]} nearDoorIds doors adjacent to rootRoomId the Player is close to
    * @returns {Poly[][]}
    */
-  computeViewsFromDoors(gmId, rootRoomId) {
+  computeViewsFromDoors(gmId, rootRoomId, nearDoorIds) {
     const gm = this.gms[gmId];
     const gmOpenIds = this.api.doors.getOpenIds(gmId);
 
@@ -179,7 +181,13 @@ export class gmGraphClass extends BaseGraph {
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: areaGm.getViewDoorPosition(rootRoomId, area.doorId),
+          position: areaGm.getViewDoorPosition(
+            rootRoomId,
+            area.doorId,
+            area.gmId === gmId
+              ? nearDoorIds.includes(area.doorId)
+              : nearDoorIds.includes(/** @type {number} */ (area.otherDoorId)),
+          ),
           range: 2000,
           exterior: area.poly,
           extraSegs,
@@ -220,7 +228,7 @@ export class gmGraphClass extends BaseGraph {
       const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getDoorNode(doorId));
       const adjRooms = adjRoomNodes.map(x => gm.roomsWithDoors[x.roomId]);
       // const adjRoomsSansHoles = adjRoomNodes.map(x => new Poly(gm.roomsWithDoors[x.roomId].outline));
-      return { gmId, doorId, adjRoomId: null, poly: Poly.union(adjRooms)[0] };
+      return { gmId, doorId, otherDoorId: null, poly: Poly.union(adjRooms)[0] };
     }
 
     const adjCtxt = this.getAdjacentRoomCtxt(gmId, hullDoorId);
@@ -238,7 +246,12 @@ export class gmGraphClass extends BaseGraph {
       otherGmRoom,
     ])[0];
 
-    return { gmId: adjCtxt.adjGmId, doorId: adjCtxt.adjDoorId, adjRoomId: adjCtxt.adjRoomId, poly };
+    return {
+      gmId: adjCtxt.adjGmId,
+      doorId: adjCtxt.adjDoorId,
+      otherDoorId: doorId,
+      poly,
+    };
   }
 
   /**

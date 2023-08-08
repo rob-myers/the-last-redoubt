@@ -156,8 +156,8 @@ declare namespace Graph {
   export interface OpenDoorArea {
     gmId: number;
     doorId: number;
-    /** For hull doors, the roomId of adjacent room in adjacent geomorph */
-    adjRoomId: null | number;
+    /** For hull doors, the doorId of the other door */
+    otherDoorId: number | null;
     /** The area in geomorph coords */
     poly: Geom.Poly;
   }

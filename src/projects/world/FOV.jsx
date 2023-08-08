@@ -30,9 +30,9 @@ export default function FOV(props) {
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
-    nearDoorIds: {},
+    nearDoorIds: new Set,
 
-    prev: { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: [] },
+    prev: { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set },
     //#endregion
 
     rootedOpenIds: gms.map(_ => []),
@@ -68,7 +68,7 @@ export default function FOV(props) {
       }
     },
     forgetPrev() {
-      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: {} };
+      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set };
     },
     hideUnseen() {
       const rootEl = api.getRootEl();
@@ -166,10 +166,10 @@ export default function FOV(props) {
        * @see {viewPolys} view polygons for current/adjacent geomorphs; we include the current room.
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
-      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId);
+      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, Array.from(state.nearDoorIds));
       const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(cmp.rootedOpenIds);
       // If no door is open, we at least have current room
-      (gmRoomIds.length === 0) && (gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId }));
+      gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });
 
       // Must prevent adjacent geomorphs from covering hull doors (if adjacent room visible)
       const visRoomIds = gmRoomIds.flatMap(({ gmId, roomId }) => state.gmId === gmId ? roomId : []);
@@ -305,7 +305,7 @@ export default function FOV(props) {
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
- * @property {{ [doorId: number]: true }} nearDoorIds Doors of current room the Player is near to
+ * @property {Set<number>} nearDoorIds Doors of current room the Player is near to
  */
 
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
@@ -368,6 +368,7 @@ function compareState(api, next) {
   const rootedClosedIds = rootedOpenIds.map((doorIds, gmId) =>
     doorIds.filter(doorId => !nextRootedOpenIds[gmId].includes(doorId))
   );
+  // 🚧 nearDoorIds change triggers update
 
   return {
     justSpawned,
