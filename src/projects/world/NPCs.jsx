@@ -470,8 +470,7 @@ export default function NPCs(props) {
           api.decor.update();
           break;
         case 'set-player':
-          state.events.next({ key: 'set-player', npcKey: e.npcKey ?? null });
-          // 🚧 error doesn't propagate? try directly invoke state.setPlayerKey
+          state.setPlayerKey(e.npcKey ?? null);
           break;
         default:
           throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
@@ -625,6 +624,7 @@ export default function NPCs(props) {
 
       if (npcKey === null) {
         state.playerKey = null;
+        state.events.next({ key: 'set-player', npcKey: null });
         return;
       }
 
@@ -641,6 +641,8 @@ export default function NPCs(props) {
         decor.meta.doorSensor
         && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
       );
+
+      state.events.next({ key: 'set-player', npcKey });
     },
     setRoomByNpc(npcKey) {// 🚧 move to api.fov ?
       const npc = state.getNpc(npcKey);

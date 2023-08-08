@@ -54,9 +54,6 @@ export default function useHandleEvents(api) {
         case 'on-tty-link':
           mockOnTtyLink(e, api);
           break;
-        case 'set-player':
-          api.npcs.setPlayerKey(e.npcKey);
-          break;
         case 'stopped-walking': {
           const npc = api.npcs.getNpc(e.npcKey);
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
@@ -73,6 +70,7 @@ export default function useHandleEvents(api) {
         case 'npc-clicked':
         case 'npc-internal':
         case 'removed-npc':
+        case 'set-player':
         case 'spawned-npc':
         case 'resumed-track':
           break;

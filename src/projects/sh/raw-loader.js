@@ -405,7 +405,9 @@
         string: [
           "class", /** e.g. solomani, vilani, zhodani */
         ],
-        boolean: ["--solomani", "--vilani", "--zhodani"],
+        boolean: [
+          "--solomani", "--vilani", "--zhodani", /** shortcuts */
+        ],
       });
 
       const { npcs } = api.getCached(home.WORLD_KEY);

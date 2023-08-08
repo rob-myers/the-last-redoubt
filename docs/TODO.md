@@ -40,10 +40,13 @@
       - ℹ️ because we `spawn rob ${point}` before `npc set-player rob`
       - ✅ `npc set-player rob` should set `fov.nearDoorIds`
     - ✅ get hull doors working too
+    - ✅ npc set-player '' error should propagate
     - 🚧 trigger update on enter/exit door sensor
 
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
+- implications of error failing to propagate to shell from use-handle-events?
+  - saw set-player
 
 ```js
 // FOV
