@@ -755,7 +755,7 @@ export class gmGraphClass extends BaseGraph {
     rootOpenIds.forEach((doorId) => {
       if (gm.isHullDoor(doorId)) {
         const { adjGmId, adjDoorId } = /** @type {Graph.GmAdjRoomCtxt} */ (
-          this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(doorId))
+          this.getAdjacentRoomCtxt(gmId, doorId)
         );
         output[adjGmId].add(adjDoorId); // adjGmId: open related doorIds:
         (this.gms[adjGmId].getRelatedDoorIds(adjDoorId)).filter(relDoorId =>
@@ -771,7 +771,7 @@ export class gmGraphClass extends BaseGraph {
         // altGmId: respect hull door identification
         relDoorIds.filter(doorId => gm.isHullDoor(doorId)).forEach(doorId => {
           const { adjGmId, adjDoorId } = /** @type {Graph.GmAdjRoomCtxt} */ (
-            this.getAdjacentRoomCtxt(gmId, gm.getHullDoorId(doorId))
+            this.getAdjacentRoomCtxt(gmId, doorId)
           );
           output[adjGmId].add(adjDoorId);
         });

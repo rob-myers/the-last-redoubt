@@ -16,7 +16,12 @@
   - ℹ️ Player's FOV should contain view frustum
   - ❌ FOV door offset changes when inside door sensor?
     - ❌ gm.roomOverrides at level of GeomorphDataInstance?
-  - general approach i.e. project through open door until reach target room
+  - can test if point/npc lies in view frustum (triangle)
+  - can test if (in-same-room or in-adj-room or share-adj-room)
+    - npc.isNearby(npcKey)
+    - run 1st before general `canSee`
+  - general approach to raycast
+    - i.e. project through open door until reach target room
 
 - ✅ FOV rethink:
   - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
@@ -48,11 +53,11 @@
     - ℹ️ hull doors trigger updateClipPath twice via 2 doors (open/close)
     - ℹ️ happens when enter doorway, despite no collider exit
 
-- BUG with hull doors timeout: might need to clear both
+- ✅ BUG with hull doors timeout: might need to clear both
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?
-  - saw set-player
+  - maybe catch and send message to shell?
 - maybe `npc config hideGms` should hide FOV when true?
 - saw unresponsive click until `spawn rob $p`
 
@@ -62,13 +67,9 @@
 - ✅ can `filter /events/`
 - can `map /(\d+),(\d+)/ '$2 $1'`
 
-- npc.isNearby(npcKey)
-  - same room, adj room, or shared adj room
-  - run 1st before general `canSee`
-
-- start assuming that hullDoorId === doorId i.e. initial doors are hull doors
-  - test based on `door.meta.hull`
-  - remove `gm.getHullDoorId`
+- ✅ start assuming that hullDoorId === doorId i.e. initial doors are hull doors
+  - ℹ️ test based on `door.meta.hull` or `api.doors.lookup[gmId][doorId].hull`
+  - ✅ remove `gm.getHullDoorId`
 
 - saw fat door in 302
 - tidy processApi via processApi.lib

@@ -21,11 +21,12 @@ export default function Doors(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta }, doorId) => {
-      const hullDoorId = gms[gmId].getHullDoorId(doorId);
-      const hullSealed = hullDoorId === -1 ? null : gmGraph.getDoorNodeById(gmId, hullDoorId)?.sealed;
+      const isHullDoor = gm.isHullDoor(doorId);
+      const hullSealed = isHullDoor ? gmGraph.getDoorNodeById(gmId, doorId)?.sealed : null;
       const sealed = hullSealed || !!meta.sealed;
       return {
         closeTimeoutId: undefined,
+        hull: isHullDoor,
         locked: sealed,
         open: props.init?.[gmId]?.includes(doorId) ?? false,
         sealed,
@@ -37,6 +38,8 @@ export default function Doors(props) {
     cancelClose(doorState) {
       window.clearTimeout(doorState.closeTimeoutId);
       delete doorState.closeTimeoutId;
+      
+      // 🚧 cancel other hull door too
     },
     getOpenIds(gmId) {
       return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
@@ -106,8 +109,7 @@ export default function Doors(props) {
       item.locked = !wasLocked;
       
       // Unsealed hull doors have adjacent door, which must also be toggled
-      const hullDoorId = gms[gmId].getHullDoorId(doorId);
-      const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
+      const adjHull = item.hull ? gmGraph.getAdjacentRoomCtxt(gmId, doorId) : null;
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].locked = item.locked;
         // state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
@@ -135,6 +137,8 @@ export default function Doors(props) {
 
       // Cancel any pending close
       state.cancelClose(item);
+      const adjHull = item.hull ? gmGraph.getAdjacentRoomCtxt(gmId, doorId) : null;
+      adjHull && state.cancelClose(state.lookup[adjHull.adjGmId][adjHull.adjDoorId]);
 
       if (wasOpen) {
         if (opts.open) {// Do not open if opened
@@ -160,8 +164,6 @@ export default function Doors(props) {
       state.events.next({ key, gmId, doorId, npcKey });
 
       // Unsealed hull doors have adjacent door, which must also be toggled
-      const hullDoorId = gms[gmId].getHullDoorId(doorId);
-      const adjHull = hullDoorId !== -1 ? gmGraph.getAdjacentRoomCtxt(gmId, hullDoorId) : null;
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
@@ -394,6 +396,7 @@ const rootCss = css`
  * This is distinct from `gm.doors.meta`.
  * @typedef DoorState
  * @property {number} [closeTimeoutId]
+ * @property {boolean} hull
  * @property {boolean} locked
  * @property {boolean} open
  * @property {boolean} sealed

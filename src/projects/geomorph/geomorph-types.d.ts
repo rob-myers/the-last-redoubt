@@ -207,9 +207,6 @@ declare namespace Geomorph {
     doorIds: number[],
   ): null | { doorId: number; lambda: number; };
 
-   // 🚧 Remove
-   /** Returns -1 if not a hull door */
-   getHullDoorId(doorOrId: Geomorph.ParsedConnectorRect | number): number;
   }
 
   export interface GmRoomId {

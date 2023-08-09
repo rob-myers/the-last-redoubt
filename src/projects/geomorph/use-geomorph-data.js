@@ -207,11 +207,6 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
-    // 🚧 remove
-    getHullDoorId(doorOrId) {
-      const door = typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId
-      return this.hullDoors.indexOf(door);
-    },
     getOtherRoomId(doorOrId, roomId) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.find(id => id !== roomId) ?? -1;
