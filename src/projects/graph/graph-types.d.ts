@@ -153,13 +153,19 @@ declare namespace Graph {
 
   export type GmGraph = import('./gm-graph').gmGraphClass;
 
+  // 🤔 clean?
   export interface OpenDoorArea {
+    /** Can be Player's current geomorph or an adjacent one */
     gmId: number;
+    /** Relative to @see gmId i.e. in adjacent geomorph iff a hull door */
     doorId: number;
-    /** For hull doors, the doorId of the other door */
-    otherDoorId: number | null;
-    /** The area in geomorph coords */
+    /** The area (union of room-with-doors) in local geomorph coords */
     poly: Geom.Poly;
+
+    /** For hull doors only, this is the room in @see gmId */
+    hullRoomId: number | null;
+    /** For hull doors only, the id of the other door */
+    otherDoorId: number | null;
   }
 
   /** Given a hull door, the respective ids in adjacent geomorph */

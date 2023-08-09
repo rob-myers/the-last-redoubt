@@ -186,8 +186,12 @@ declare namespace Geomorph {
    * By default we move "the view" inside current room by constant amount.
    * Sometimes this breaks (lies outside current room) or looks bad when combined,
    * so can override via "view"-tagged rects.
+   * 
+   * Moreover:
+   * - for current gmId `roomId` is current room
+   * - for adjacent gmId `roomId` is adjacent room
    */
-   getViewDoorPosition(rootRoomId: number, doorId: number, peek?: boolean);
+   getViewDoorPosition(roomId: number, doorId: number, peek?: boolean);
    getViewWindowPosition(rootRoomId: number, doorId: number);
    isHullDoor(doorId: number): boolean;
 

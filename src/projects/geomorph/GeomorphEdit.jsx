@@ -104,14 +104,14 @@ function Geomorph({ def, transform, disabled }) {
             state.openDoors.push(doorId);
           }
           if (state.lastViewId && state.lastRoomId >= -1) {// Update view
-            const viewPolys = assertDefined(data).gmGraph.computeViews(0, state.lastRoomId);
+            const viewPolys = assertDefined(data).gmGraph.computeViews(0, state.lastRoomId, []);
             state.viewPoly = Poly.union(viewPolys[0])[0];
           }
           update();
         } else if (meta.key === 'view') {
           const viewId = assertDefined(meta.viewId);
           const roomId = Number(meta.roomId);
-          const viewPolys = assertDefined(data).gmGraph.computeViews(0, roomId);
+          const viewPolys = assertDefined(data).gmGraph.computeViews(0, roomId, []);
           if (viewId === state.lastViewId) {
             state.viewPoly = new Poly;
             state.lastViewId = '';

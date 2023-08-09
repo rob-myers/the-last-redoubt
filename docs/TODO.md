@@ -42,10 +42,10 @@
     - ✅ get hull doors working too
     - ✅ npc set-player '' error should propagate
     - ✅ trigger update on enter/exit door sensor
-  - BUG? hull doors nearDoorIds FOV flicker
+  - ✅ BUG hull doors FOV not shown from one side
+    - ✅ for hull doors (one particular side), view offset has wrong direction 
+  - BUG hull doors nearDoorIds FOV flicker
     - 🚧 fov.setRoom should update fov.nearDoorIds (?)
-  - BUG hull doors FOV not shown from one side
-    - 🚧 for hull doors (one particular side), view offset might have wrong direction 
 
 - BUG with hull doors timeout: might need to clear both
 - shell has api.argsToAction

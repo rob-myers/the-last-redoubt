@@ -157,8 +157,8 @@ export class gmGraphClass extends BaseGraph {
     const unjoinedViews = viewDoorAreas.flatMap(area => {
       /**
        * We need additional line segments for:
-       * - doors parallel to area.door
-       * - closed doors related to area.door
+       * - doors parallel to `area.doorId`
+       * - closed doors related to `area.doorId`
        *
        * They prevent light going through closed parallel doors, and
        * unsightly light patterns through open doors.
@@ -178,16 +178,16 @@ export class gmGraphClass extends BaseGraph {
       // These segs are not perfect i.e. part of door will be covered
       const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
+      const areaRoomId = area.hullRoomId === null ? rootRoomId : area.hullRoomId;
+      const shouldPeek = area.otherDoorId === null
+        ? nearDoorIds.includes(area.doorId)
+        : nearDoorIds.includes(area.otherDoorId)
+      ;
+
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: areaGm.getViewDoorPosition(
-            rootRoomId,
-            area.doorId,
-            area.gmId === gmId
-              ? nearDoorIds.includes(area.doorId)
-              : nearDoorIds.includes(/** @type {number} */ (area.otherDoorId)),
-          ),
+          position: areaGm.getViewDoorPosition(areaRoomId, area.doorId, shouldPeek),
           range: 2000,
           exterior: area.poly,
           extraSegs,
@@ -222,18 +222,22 @@ export class gmGraphClass extends BaseGraph {
   computeViewDoorArea(gmId, doorId) {
     const gm = this.gms[gmId];
     const door = gm.doors[doorId];
-    const hullDoorId = gm.getHullDoorId(door);
 
-    if (hullDoorId === -1) {
+    if (!gm.isHullDoor(doorId)) {
       const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getDoorNode(doorId));
       const adjRooms = adjRoomNodes.map(x => gm.roomsWithDoors[x.roomId]);
       // const adjRoomsSansHoles = adjRoomNodes.map(x => new Poly(gm.roomsWithDoors[x.roomId].outline));
-      return { gmId, doorId, otherDoorId: null, poly: Poly.union(adjRooms)[0] };
+      return {
+        gmId,
+        doorId,
+        hullRoomId: null,
+        otherDoorId: null,
+        poly: Poly.union(adjRooms)[0],
+      };
     }
 
-    const adjCtxt = this.getAdjacentRoomCtxt(gmId, hullDoorId);
+    const adjCtxt = this.getAdjacentRoomCtxt(gmId, doorId);
     if (!adjCtxt) {
-      console.error(`${gmGraphClass.name}: getOpenDoorArea failed to get context`, { gmId, doorId, hullDoorId });
       return null;
     }
 
@@ -249,6 +253,7 @@ export class gmGraphClass extends BaseGraph {
     return {
       gmId: adjCtxt.adjGmId,
       doorId: adjCtxt.adjDoorId,
+      hullRoomId: adjCtxt.adjRoomId,
       otherDoorId: doorId,
       poly,
     };
