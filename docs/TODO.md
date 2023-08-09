@@ -34,15 +34,20 @@
     - ✅ spawn out-of doorway -> exit
   - clarify navMetas with index -1
   - ✅ `fov.nearDoorIds` is Player's intersecting door sensors
-  - 🚧 `fov.nearDoorIds` induces wider FOV through respective doors
+  - ✅ `fov.nearDoorIds` induces wider FOV through respective doors
     - ✅ `decor-collide` triggered for first spawn
     - ✅ initial spawn not setting fov.nearDoorIds
       - ℹ️ because we `spawn rob ${point}` before `npc set-player rob`
       - ✅ `npc set-player rob` should set `fov.nearDoorIds`
     - ✅ get hull doors working too
     - ✅ npc set-player '' error should propagate
-    - 🚧 trigger update on enter/exit door sensor
+    - ✅ trigger update on enter/exit door sensor
+  - BUG? hull doors nearDoorIds FOV flicker
+    - 🚧 fov.setRoom should update fov.nearDoorIds (?)
+  - BUG hull doors FOV not shown from one side
+    - 🚧 for hull doors (one particular side), view offset might have wrong direction 
 
+- BUG with hull doors timeout: might need to clear both
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?

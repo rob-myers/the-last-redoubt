@@ -635,12 +635,7 @@ export default function NPCs(props) {
       // Adjust FOV
       state.setRoomByNpc(state.playerKey);
       // Initialize fov.nearDoorIds
-      player.gmRoomId && api.decor.getDecorAtPoint(
-        player.getPosition(), player.gmRoomId.gmId, player.gmRoomId.roomId,
-      ).forEach(decor =>
-        decor.meta.doorSensor
-        && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
-      );
+      api.fov.recomputeNearDoorIds();
 
       state.events.next({ key: 'set-player', npcKey });
     },

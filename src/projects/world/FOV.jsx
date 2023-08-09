@@ -130,11 +130,23 @@ export default function FOV(props) {
         });
       }
     },
+    recomputeNearDoorIds() {
+      state.nearDoorIds.clear();
+      const player = api.npcs.getPlayer();
+      player?.gmRoomId && api.decor.getDecorAtPoint(
+        player.getPosition(), player.gmRoomId.gmId, player.gmRoomId.roomId,
+      ).forEach(decor =>
+        decor.meta.doorSensor
+        && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
+      );
+    },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
         state.gmId = gmId;
         state.roomId = roomId;
         state.lastDoorId = doorId;
+        // state.recomputeNearDoorIds();
+
         state.updateClipPath();
         api.doors.updateVisibleDoors();
         api.debug.update();
@@ -156,7 +168,7 @@ export default function FOV(props) {
       }
       
       /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, nearDoorIds: state.nearDoorIds };
+      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, nearDoorIds: new Set(state.nearDoorIds) };
       const cmp = compareState(api, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
@@ -296,6 +308,7 @@ export default function FOV(props) {
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
  * @property {() => void} forgetPrev
+ * @property {() => void} recomputeNearDoorIds
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {() => void} updateClipPath
 */
@@ -368,7 +381,11 @@ function compareState(api, next) {
   const rootedClosedIds = rootedOpenIds.map((doorIds, gmId) =>
     doorIds.filter(doorId => !nextRootedOpenIds[gmId].includes(doorId))
   );
-  // 🚧 nearDoorIds change triggers update
+
+  // Technically, nearDoorIds need to be open to have an effect
+  const [prevNearIds, nextNearIds] = [prev.nearDoorIds, next.nearDoorIds].map(x => Array.from(x));
+  const addedNearIds = changedRoom ? nextNearIds : nextNearIds.filter(doorId => !prevNearIds.includes(doorId));
+  const removedNearIds = changedRoom ? prevNearIds : prevNearIds.filter(doorId => !nextNearIds.includes(doorId));
 
   return {
     justSpawned,
@@ -381,6 +398,7 @@ function compareState(api, next) {
       || changedRoom
       || rootedOpenedIds.some(x => x.length)
       || rootedClosedIds.some(x => x.length)
+      || (addedNearIds.length || removedNearIds.length)
     ),
   };
 }
