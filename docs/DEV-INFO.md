@@ -131,6 +131,30 @@ ffmpeg -i filename.mov -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4
 
 My Pixel 5 dimensions: `464 * 851`
 
+```js
+// Field of view image generation
+// static/assets/npc/fov-indicator.png
+C = document.createElement('canvas')
+document.body.appendChild(C)
+ctxt = C.getContext('2d')
+
+// #1
+C.width = 200; C.height = 400
+ctxt.fillStyle = '#ff000077'
+ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.fill();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2)));
+ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.closePath(); ctxt.fill();
+
+// #2
+C.width = 200; C.height = 400;
+ctxt.strokeStyle = '#ffff00';
+ctxt.setLineDash([8, 4]);
+ctxt.lineWidth = 2;
+ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.stroke();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2))); ctxt.stroke();
+ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.stroke();
+```
+
 ---
 
 Boxy SVG Shortcuts

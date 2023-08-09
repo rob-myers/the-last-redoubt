@@ -18,7 +18,7 @@
     - ❌ gm.roomOverrides at level of GeomorphDataInstance?
   - general approach i.e. project through open door until reach target room
 
-- 🚧 FOV rethink:
+- ✅ FOV rethink:
   - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
   - ❌ doorViewPosition could always be Player position
   - ❌ show all of nearby rooms i.e. no raycast
@@ -44,37 +44,18 @@
     - ✅ trigger update on enter/exit door sensor
   - ✅ BUG hull doors FOV not shown from one side
     - ✅ for hull doors (one particular side), view offset has wrong direction 
-  - BUG hull doors nearDoorIds FOV flicker
-    - 🚧 fov.setRoom should update fov.nearDoorIds (?)
+  - ✅ BUG hull doors nearDoorIds FOV flicker
+    - ℹ️ hull doors trigger updateClipPath twice via 2 doors (open/close)
+    - ℹ️ happens when enter doorway, despite no collider exit
 
 - BUG with hull doors timeout: might need to clear both
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?
   - saw set-player
+- maybe `npc config hideGms` should hide FOV when true?
+- saw unresponsive click until `spawn rob $p`
 
-```js
-// FOV
-C = document.createElement('canvas')
-document.body.appendChild(C)
-ctxt = C.getContext('2d')
-
-// #1
-C.width = 200; C.height = 400
-ctxt.fillStyle = '#ff000077'
-ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.fill();
-ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2)));
-ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.closePath(); ctxt.fill();
-
-// #2
-C.width = 200; C.height = 400;
-ctxt.strokeStyle = '#ffff00';
-ctxt.setLineDash([8, 4]);
-ctxt.lineWidth = 2;
-ctxt.beginPath(); ctxt.arc(0, 200, 200, -Math.PI/4, Math.PI/4); ctxt.stroke();
-ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 - (200 / Math.sqrt(2))); ctxt.stroke();
-ctxt.beginPath(); ctxt.moveTo(0, 200); ctxt.lineTo(0 + (200 / Math.sqrt(2)), 200 + (200 / Math.sqrt(2))); ctxt.stroke();
-```
 
 - ❌ can `filter '/events/.test'`
   - `/events/.test("foo")` doesn't work
