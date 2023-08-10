@@ -462,7 +462,9 @@ export default function NPCs(props) {
           break;
         case 'rm':
         case 'remove':
-          return state.removeNpc(e.npcKey);
+          e.npcKey !== undefined && state.removeNpc(e.npcKey);
+          e.npcKeys?.forEach(npcKey => state.removeNpc(npcKey));
+          return;
         case 'remove-decor':
         case 'rm-decor':
           if (e.decorKey) {

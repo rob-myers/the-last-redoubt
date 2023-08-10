@@ -143,6 +143,8 @@ spawn bar zhodani "$( click 1 )"
 click |
   map 'point => ({ npcKey: `bot_${Date.now()}`, point  })' |
   spawn --class=zhodani
+# then we can remove them
+npc rm $( world npcs.npc | keys | split | filter /bot_/ )
 
 npc get | split | map 'x => x.key'
 # or

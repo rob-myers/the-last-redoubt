@@ -88,7 +88,7 @@ class NpcService {
         case "rm":
         case "remove":
           // npc {rm,remove} {npcKey}
-          return { action: 'rm', npcKey: opts };
+          return { action: 'rm', npcKeys: opts.split(' ').concat(extras) };
         case "set-player":
           // npc set-player {npcKey}
           return { action: 'set-player', npcKey: opts };

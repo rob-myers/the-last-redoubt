@@ -390,7 +390,7 @@ declare namespace NPC {
     | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
     | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
-    | { action: 'rm' | 'remove'; npcKey: string; }
+    | { action: 'rm' | 'remove'; npcKey?: string; npcKeys?: string[]; }
     | { action: 'set-player'; npcKey?: string }
   );
 
