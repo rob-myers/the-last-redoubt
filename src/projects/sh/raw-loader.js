@@ -303,7 +303,8 @@
       
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
-        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, navOpts));
+        // We guarded earlier by `isPointInNavmesh`; centroidsFallback should help catch edge cases.
+        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }));
         const navPath = npcs.service.concatenateNavPaths(...navPaths);
         typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
         decor.setPseudoDecor(navPath);

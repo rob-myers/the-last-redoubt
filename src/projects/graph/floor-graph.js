@@ -116,8 +116,8 @@ export class floorGraphClass extends BaseGraph {
    * @returns {null | Graph.FloorGraphNavPath}
    */
   findPath(src, dst, opts = {}) {
-    const srcNode = this.getClosestNode(src);
-    const dstNode = this.getClosestNode(dst);
+    const srcNode = this.getClosestNode(src, { centroidsFallback: opts.centroidsFallback });
+    const dstNode = this.getClosestNode(dst, { centroidsFallback: opts.centroidsFallback });
     if (!srcNode || !dstNode) {
       return null;
     }
@@ -354,13 +354,11 @@ export class floorGraphClass extends BaseGraph {
    *   filterNodeIds?(nodeId: number): boolean;
    *   getFallbackNodes?(): Graph.FloorGraphNode[];
    *   allNodesFallback?: boolean;
-   *   centroidsFallback?: boolean;
+   *   centroidsFallback?: boolean | number;
    * }} [opts]
+   * if `centroidsFallback` is a number then `getFallbackNodes` becomes nodes in respective room
    */
-  getClosestNode(
-    position,
-    opts = {},
-  ) {
+  getClosestNode(position, opts = {}) {
     // Restrict to few nav nodes via precomputed `gridToNodeIds`
     const gridPos = coordToNavNodeGrid(position.x, position.y);
     let closeNodes = this.gm.navZone.gridToNodeIds[gridPos.x]?.[gridPos.y]
@@ -368,16 +366,22 @@ export class floorGraphClass extends BaseGraph {
       ?.map(nodeId => this.nodesArray[nodeId]
     ) ?? [];
 
-    // Fallback e.g. to all nav nodes in particular room
-    if (closeNodes.length === 0 && opts.getFallbackNodes) {
-      closeNodes = opts.getFallbackNodes();
+    if (closeNodes.length === 0) {// Fallback e.g. to all nav nodes in particular room
+      if (opts.getFallbackNodes) {
+        closeNodes = opts.getFallbackNodes();
+      }
+      if (typeof opts.centroidsFallback === 'number') {
+        closeNodes = this.strictRoomNodeIds[opts.centroidsFallback].map(x => this.nodesArray[x]);
+      }
     }
 
     const found = closeNodes.find(
       (node) => Utils.isVectorInPolygon(position, node, this.vectors),
+      // 🤔 could slightly outset nav triangle like below
+      // (node) => geom.outlineContains(geom.createOutset(new Poly(node.vertexIds.map(id => this.vectors[id])), 0.1)[0].outline, position, null),
     );
 
-    if (found || !opts.centroidsFallback) {
+    if (found || (opts.centroidsFallback === undefined)) {
       return found ?? null;
     }
 
@@ -411,8 +415,7 @@ export class floorGraphClass extends BaseGraph {
       position,
       typeof roomId === 'number' ? {
         filterNodeIds: (nodeId) => this.nodeToMeta[nodeId].roomId === roomId,
-        getFallbackNodes: () => this.strictRoomNodeIds[roomId].map(nodeId => this.nodesArray[nodeId]),
-        centroidsFallback: true,
+        centroidsFallback: roomId,
       } : undefined,
     );
 

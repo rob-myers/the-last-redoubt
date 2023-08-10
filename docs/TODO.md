@@ -19,10 +19,10 @@
   - ✅ can test if point lies in view frustum (triangle)
     - api.npcs.inFrustum(src, dst, srcRadians, fovRadians = Math.PI/4)
     - npc.inFrustum
-  - can test if `in-same-room` or `in-adj-room` or `share-adj-room`,
+  - 🚧 can test if `in-same-room` or `in-adj-room` or `share-adj-room`,
     providing open/open-related shared doors too
-    - gmGraph.getRoomsVantage(gmRoomId, other)
-    - output provided to raycast stage
+    - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
+    - output will be provided to raycast stage
   - raycast stage
 
 - ✅ FOV rethink:
@@ -56,6 +56,21 @@
     - ℹ️ happens when enter doorway, despite no collider exit
 
 - ✅ BUG with hull doors timeout: might need to clear both
+
+- ✅ BUG npc navigated off-mesh somehow
+```sh
+# REPRO
+world npcs.isPointInNavmesh {"x":-74,"y":362.47}
+# true
+
+spawn rob {"x":-74,"y":362.47}
+nav rob $( click 1 ) | walk rob
+# nav: run: Error: getLocalNavPath: no path found: {"x":-74,"y":362.47} --> {"x":-85.83,"y":364.97,"meta":{"world-root":true,"targetPos":{"x":-27.1,"y":279.05},"nav":true}}
+```
+  - decided ok to fallback to centroids of nearby nodes (via grid),
+    GIVEN we guard by navPoly containment test
+
+
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?

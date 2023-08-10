@@ -1395,6 +1395,7 @@ export function verifyDecor(input) {
 function addToNavNodeGrid(item, rect, grid) {
   const min = coordToNavNodeGrid(rect.x, rect.y);
   const max = coordToNavNodeGrid(rect.x + rect.width, rect.y + rect.height);
+  // const max = coordToNavNodeGridSupremum(rect.x + rect.width, rect.y + rect.height);
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++)
       ((grid[i] ??= {})[j] ??= []).push(item);
@@ -1408,6 +1409,7 @@ function addToNavNodeGrid(item, rect, grid) {
 export function addToDecorGrid(item, rect, grid) {
   const min = coordToDecorGrid(rect.x, rect.y);
   const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
+  // const max = coordToDecorGridSupremum(rect.x + rect.width, rect.y + rect.height);
   item.meta.gridMin = min; // For easy deletion
   item.meta.gridMax = max;
   for (let i = min.x; i <= max.x; i++)
@@ -1500,11 +1502,31 @@ export function coordToDecorGrid(x, y) {
 }
 
 /**
+ * 🤔 Unused
+ * For edge cases i.e. avoid missing decor on edges.
+ * @param {number} x
+ * @param {number} y
+ */
+export function coordToDecorGridSupremum(x, y) {
+  return { x: Math.ceil(x / decorGridSize), y: Math.ceil(y / decorGridSize) };
+}
+
+/**
  * @param {number} x
  * @param {number} y
  */
 export function coordToNavNodeGrid(x, y) {
   return { x: Math.floor(x / navNodeGridSize), y: Math.floor(y / navNodeGridSize) };
+}
+
+/**
+ * 🤔 Unused
+ * For edge cases i.e. avoid missing nav nodes on edges.
+ * @param {number} x 
+ * @param {number} y 
+ */
+export function coordToNavNodeGridSupremum(x, y) {
+  return { x: Math.ceil(x / navNodeGridSize), y: Math.ceil(y / navNodeGridSize) };
 }
 
 //#endregion

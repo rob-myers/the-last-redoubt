@@ -534,6 +534,14 @@ declare namespace NPC {
     closedWeight?: number;
     /** Weight of door nodes whose door is locked */
     lockedWeight?: number;
+    /**
+     * Non-navigable points can fallback to nav-node with
+     * closest centroid, possibly restricted by roomId.
+     *
+     * Have seen navPoly containment succeed whilst navTriangle containment fails.
+     * This option is useful for such cases i.e. after "guarded" by navPoly.
+     */
+    centroidsFallback?: boolean | number;
   }
 
   //#endregion
