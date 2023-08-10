@@ -287,3 +287,9 @@ npc do rob $( click 1 ) 0
 npc do rob $( click 1 )
 # npc: run: Error: cannot toggle door
 ```
+
+```sh
+npc rob inFrustum $( click 1 )
+npc rob inFrustum $( npc foo getPosition )
+npc foo inFrustum $( npc rob getPosition )
+```

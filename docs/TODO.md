@@ -16,12 +16,14 @@
   - ℹ️ Player's FOV should contain view frustum
   - ❌ FOV door offset changes when inside door sensor?
     - ❌ gm.roomOverrides at level of GeomorphDataInstance?
-  - can test if point/npc lies in view frustum (triangle)
-  - can test if (in-same-room or in-adj-room or share-adj-room)
-    - npc.isNearby(npcKey)
-    - run 1st before general `canSee`
-  - general approach to raycast
-    - i.e. project through open door until reach target room
+  - ✅ can test if point lies in view frustum (triangle)
+    - api.npcs.inFrustum(src, dst, srcRadians, fovRadians = Math.PI/4)
+    - npc.inFrustum
+  - can test if `in-same-room` or `in-adj-room` or `share-adj-room`,
+    providing open/open-related shared doors too
+    - gmGraph.getRoomsVantage(gmRoomId, other)
+    - output provided to raycast stage
+  - raycast stage
 
 - ✅ FOV rethink:
   - ❌ FOV always includes "raycast" from stationary Player through open doors/windows

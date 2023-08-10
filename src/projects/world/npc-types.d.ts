@@ -88,7 +88,7 @@ declare namespace NPC {
       globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
       doorStrategy?: WalkDoorStrategy,
     ): Promise<void>;
-    /** Radians */
+    /** Radians in `[-π, +π]` */
     getAngle(): number;
     getWalkAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
@@ -128,6 +128,7 @@ declare namespace NPC {
      * Nevertheless we'll keep this computation handy.
      */
     inferWalkTransform(): { position: Geom.Vect; angle: number; }
+    inFrustum(point: Geom.VectJson): boolean;
     /** Initialise using `def` on (re)spawn */
     initialize(): void;
     intersectsCircle(position: Geom.VectJson, radius: number): boolean;

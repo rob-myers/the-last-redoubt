@@ -459,6 +459,13 @@ export default function createNpc(
       // this.el.root.style.setProperty(cssName.npcTargetLookAngle, `${angle}rad`);
       return { position, angle };
     },
+    inFrustum(point) {
+      return api.npcs.inFrustum(
+        this.getPosition(),
+        point,
+        this.getAngle(),
+      );
+    },
     initialize() {
       const { radius, scale: npcScale } = npcsMeta[this.classKey];
       this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;

@@ -339,6 +339,16 @@ export default function NPCs(props) {
         process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
       };
     },
+    inFrustum(src, dst, srcRadians, fovRadians = Math.PI / 4) {
+      // 🤔 optionally outset triangle outgoing edges by npc radius?
+      const leftRayNormal = tempVect.set(-Math.sin(srcRadians - fovRadians), Math.cos(srcRadians - fovRadians));
+      const rightRayNormal = tempVect2.set(-Math.sin(srcRadians + fovRadians), Math.cos(srcRadians + fovRadians));
+      const candidate = tempVect3.set(dst.x - src.x, dst.y - src.y);
+      return (
+        candidate.dot(leftRayNormal) >= 0
+        && candidate.dot(rightRayNormal) <= 0
+      );
+    },
     isPanZoomControlled() {
       return Object.values(state.session).some(x => x.panzoomPids.length);
     },
@@ -870,6 +880,8 @@ export default function NPCs(props) {
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
  * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
+ * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
+ * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled
  * @property {(p: Geom.VectJson, radius: number, gmRoomId: Geomorph.GmRoomId) => boolean} isPointNearClosedDoor
  * Is the point near some door adjacent to specified room?
@@ -896,3 +908,5 @@ export default function NPCs(props) {
  * @typedef NpcActResult
  * @type {void | number | NPC.NPC | NPC.NPC[] | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
  */
+
+const [tempVect, tempVect2, tempVect3] = [1, 2, 3].map(_ => new Vect);
