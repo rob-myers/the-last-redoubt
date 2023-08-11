@@ -77,7 +77,9 @@ nav rob $( click 1 ) | walk rob
   - ✅ can pause/resume
   - ✅ can `echo foo{1..5} > /dev/voice`
 
-- BUG? pipe child should receive local variables (see `world`)
+- BUG with local variables
+  - not working inside functions?
+  - pipe child should receive local variables (see `world`)
 - BUG safari desktop cursor disabled by default
   - `touch-tty-can-type`
 - shell has api.argsToAction

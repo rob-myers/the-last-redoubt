@@ -110,6 +110,7 @@ thinkLoop: `{
 }`,
 
 /**
+ * 🚧 fix `local` and use instead
  * Usage:
  * - world
  * - world 'x => x.fov'
@@ -119,20 +120,22 @@ thinkLoop: `{
  * - world gmGraph.findRoomContaining $( click 1 )
  */
 world: `{
-  local firstArg
-  (
-    firstArg="$\{1:-x=>x}"
-    shift
-    call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
-      map "$firstArg" "$@"
-  )
+  __TEMP_ARG_1="$\{1:-x=>x}"
+  shift
+  call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
+    map "$__TEMP_ARG_1" "$@"
 }`,
 
-/** Usage: gm {gmId} [selector] */
+/**
+ * 🚧 fix `local` and use instead
+ * Usage: gm {gmId} [selector]
+ */
 gm: `{
-  call '({ api, home }) => api.getCached(home.WORLD_KEY).gmGraph.gms['$1']' |
-    # could shift and use "$@" instead
-    map "$\{2:-x=>x}" "$3" "$4" "$5"
+  __TEMP_ARG_1="$\{1:-0}"
+  __TEMP_ARG_2="$\{2:-x=>x}"
+  shift 2
+  call '({ api, home }) => api.getCached(home.WORLD_KEY).gmGraph.gms['$__TEMP_ARG_1']' |
+    map "$__TEMP_ARG_2" "$@"
 }`,
 
 },
