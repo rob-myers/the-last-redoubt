@@ -111,15 +111,21 @@ thinkLoop: `{
 
 /**
  * Usage:
+ * - world
  * - world 'x => x.fov'
+ * - world fov
  * - world doors.toggleLock 0 8
  * - world "x => x.gmGraph.findRoomContaining($( click 1 ))"
  * - world gmGraph.findRoomContaining $( click 1 )
  */
 world: `{
-  call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
-    # could shift and use "$@" instead
-    map "$\{1:-x=>x}" "$2" "$3" "$4" "$5"
+  local firstArg
+  (
+    firstArg="$\{1:-x=>x}"
+    shift
+    call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
+      map "$firstArg" "$@"
+  )
 }`,
 
 /** Usage: gm {gmId} [selector] */

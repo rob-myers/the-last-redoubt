@@ -70,13 +70,23 @@ nav rob $( click 1 ) | walk rob
   - decided ok to fallback to centroids of nearby nodes (via grid),
     GIVEN we guard by navPoly containment test
 
+- ✅ builtin `say`
+  - ✅ can choose voice `say --v="Google UK English Female" {1..5}Hello`
+  - ✅ can list voices `say --v=?`
+  - ✅ can ctrl-c
+  - ✅ can pause/resume
+  - ✅ can `echo foo{1..5} > /dev/voice`
 
+- BUG? pipe child should receive local variables (see `world`)
+- BUG safari desktop cursor disabled by default
+  - `touch-tty-can-type`
 - shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?
   - maybe catch and send message to shell?
 - maybe `npc config hideGms` should hide FOV when true?
 - saw unresponsive click until `spawn rob $p`
+- Grid for room polys
 
 
 - ❌ can `filter '/events/.test'`
