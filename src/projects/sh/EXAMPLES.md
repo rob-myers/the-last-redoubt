@@ -206,6 +206,7 @@ range 5 |
 
 ```sh
 seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
+seq 10 | sponge | map reverse | split
 ```
 
 ```sh

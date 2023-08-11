@@ -180,6 +180,7 @@ declare namespace Geomorph {
 
    /** Returns -1 if a hull door. */
    getOtherRoomId(doorOrId: Geomorph.ParsedConnectorRect | number, roomId: number): number;
+   getParallelDoorIds(doorId: number): number[];
    /** Get doorIds related via tag `relate-connectors` */
    getRelatedDoorIds(doorId: number): number[];
   /**

@@ -211,6 +211,9 @@ export async function createGeomorphData(input) {
       return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
         .roomIds.find(id => id !== roomId) ?? -1;
     },
+    getParallelDoorIds(doorId) {
+      return this.parallelDoorId[doorId]?.doorIds ?? [];
+    },
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doorIds ?? [];
     },

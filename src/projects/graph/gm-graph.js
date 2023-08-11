@@ -2,7 +2,7 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
-import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
+import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining, isSameGmRoom } from "../service/geomorph";
 import { error } from "../service/log";
 import { AStar } from "../pathfinding/AStar";
 
@@ -166,11 +166,17 @@ export class gmGraphClass extends BaseGraph {
        * but we prefer an explicit approach.
        */
       const areaGm = this.gms[area.gmId];
-      const gmDoors = this.api.doors.lookup[area.gmId];
+      const relDoorIds = areaGm.getRelatedDoorIds(area.doorId);
+      const doorLookup = this.api.doors.lookup[area.gmId];
       const blockedDoorIds = [
-        // ...gm.roomGraph.getAdjacentDoors(rootRoomId).map(x => x.doorId),
+        // Doors parallel to "view door"
         ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
-        ...(areaGm.relDoorId[area.doorId]?.doorIds??[]).filter(doorId => !gmDoors[doorId].open),
+        // Closed doors related to "view door"
+        ...relDoorIds.filter(doorId => !doorLookup[doorId].open),
+        // Closed doors parallel to a door related to "view door"
+        ...relDoorIds.flatMap(
+          relDoorId => areaGm.getParallelDoorIds(relDoorId).filter(doorId => !doorLookup[doorId].open)
+        ),
       ];
 
       /** We imagine we are viewing from the center of the door */
@@ -701,24 +707,47 @@ export class gmGraphClass extends BaseGraph {
    * @param {Geomorph.GmRoomId} other 
    * @returns {number[]}
    */
-  getGmRoomsDoorIds(gmRoomId, other) {
+  getGmRoomsDoorIds(gmRoomId, other, requireOpen = false) {
     const gm = this.gms[gmRoomId.gmId];
+    const output = /** @type {number[]} */ ([]);
+    const doorLookup = requireOpen ? this.api.doors.lookup[gmRoomId.gmId] : [];
+
     if (other.gmId === gmRoomId.gmId) {
-      const doorIds = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).map(x => x.doorId);
-      return gm.roomGraph.getAdjacentDoors(other.roomId).map(x => x.doorId).filter(
-        doorId => doorIds.includes(doorId)
+      const doorIds = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).flatMap(
+        x => (!requireOpen || doorLookup[x.doorId].open) ? x.doorId : []
+      );
+      doorIds.length && gm.roomGraph.getAdjacentDoors(other.roomId).forEach(
+        x => doorIds.includes(x.doorId) && output.push(x.doorId)
       );
     } else {// ℹ️ gm.doors extends gm.hullDoors, so a hullDoorId is a doorId
-      return gm.hullDoors.flatMap((x, hullDoorId) => {
-        if (x.roomIds.includes(gmRoomId.roomId)) {
+      gm.hullDoors.forEach((d, hullDoorId) => {
+        if (
+          d.roomIds.includes(gmRoomId.roomId)
+          && (!requireOpen || doorLookup[hullDoorId].open)
+        ) {
           const ctxt = this.getAdjacentRoomCtxt(gmRoomId.gmId, hullDoorId);
-          return ctxt?.adjGmId === other.gmId && ctxt?.adjRoomId === other.roomId
-            ? hullDoorId
-            : [];
+          ctxt?.adjGmId === other.gmId && ctxt?.adjRoomId === other.roomId
+            && output.push(hullDoorId);
         }
-        return [];
       });
     }
+    return output;
+  }
+
+  /**
+   * Get doors s.t.
+   * - related to some door connected to room `gmRoomId`
+   * - connected to room `other`
+   * 
+   * `doorId` is relative to `gmRoomId`.
+   * `relDoorIds` are relative to `other`.
+   * @param {Geomorph.GmRoomId} gmRoomId 
+   * @param {Geomorph.GmRoomId} other 
+   * @returns {{ doorId: number; relDoorIds: number[]; }[]}
+   */
+  getGmRoomsRelDoorIds(gmRoomId, other, requireOpen = false) {
+    // 🚧 relation respects hullDoor identification
+    return [];
   }
 
   /**
@@ -732,6 +761,26 @@ export class gmGraphClass extends BaseGraph {
     const window = gm.windows[windowId];
     const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getWindowNode(windowId));
     return Poly.union(adjRoomNodes.map(x => gm.rooms[x.roomId]).concat(window.poly))[0];
+  }
+
+  /**
+   * @param {Geomorph.GmRoomId} gmRoomId 
+   * @param {Geomorph.GmRoomId} other 
+   * @returns {{ key: 'same-room' } | { key: 'adj-room'; doorIds: number[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
+   */
+  getRoomsVantages(gmRoomId, other, requireOpen = true) {
+    if (isSameGmRoom(gmRoomId, other)) {
+      return { key: 'same-room' };
+    }
+    const doorIds = this.getGmRoomsDoorIds(gmRoomId, other, requireOpen);
+    if (doorIds.length) {
+      return { key: 'adj-room', doorIds: doorIds };
+    }
+    const relation = this.getGmRoomsRelDoorIds(gmRoomId, other, requireOpen);
+    if (relation.length) {
+      return { key: 'rel-room', relation };
+    }
+    return null;
   }
 
   /**
