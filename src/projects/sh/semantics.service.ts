@@ -271,13 +271,18 @@ class semanticsServiceClass {
         }
       }
       const process = useSession.api.getProcess(node.meta);
-      const device = useSession.api.resolve(1, node.meta);
+      let stdoutFd = node.meta.fd[1];
+      let device = useSession.api.resolve(1, node.meta);
       if (!device) {// Pipeline already failed
         throw killError(node.meta);
       }
       // Actually run the code
       for await (const item of generator) {
         await preProcessWrite(process, device);
+        if (node.meta.fd[1] !== stdoutFd && (stdoutFd = node.meta.fd[1])) {
+          // e.g. `say` redirects stdout to /dev/voice 
+          device = useSession.api.resolve(1, node.meta);
+        };
         await device.writeData(item);
       }
     } catch (e) {
@@ -514,6 +519,8 @@ class semanticsServiceClass {
       const { value } = await this.lastExpanded(sem.Expand(node.Word));
       if (value === '/dev/null') {
         return redirectNode(node.parent!, { 1: '/dev/null' });
+      } else if (value === '/dev/voice') {
+        return redirectNode(node.parent!, { 1: '/dev/voice' });
       } else {
         const varDevice = useSession.api.createVarDevice(
           node.meta,

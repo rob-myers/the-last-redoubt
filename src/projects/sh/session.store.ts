@@ -5,7 +5,7 @@ import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet
 import { ansi, computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
-import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice } from './io';
+import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice, VoiceDevice } from './io';
 import { srcService } from './parse';
 import { ttyShellClass } from './tty.shell';
 import { scriptLookup } from './scripts';
@@ -202,6 +202,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       const ttyShell = new ttyShellClass(sessionKey, ttyIo, persisted.history || []);
       get().device[ttyShell.key] = ttyShell;
       get().device['/dev/null'] = new NullDevice('/dev/null');
+      get().device['/dev/voice'] = new VoiceDevice('/dev/voice');
 
       set(({ session }) => ({
         session: addToLookup({

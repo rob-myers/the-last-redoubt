@@ -429,7 +429,7 @@ export class VarDevice implements Device {
 
 export class NullDevice implements Device {
 
-  constructor(public key: string) {}
+  constructor(public key: '/dev/null') {}
 
   public async writeData(_data: any) {
     // NOOP
@@ -443,6 +443,96 @@ export class NullDevice implements Device {
   public finishedWriting() {
     // NOOP
   }
+}
+
+//#endregion
+
+//#region voice device
+
+export class VoiceDevice implements Device {
+
+  command: null | VoiceCommand = null;
+  defaultVoice = {} as SpeechSynthesisVoice;
+  readBlocked = false;
+  synth: SpeechSynthesis = window.speechSynthesis;
+  voices: SpeechSynthesisVoice[] = [];
+
+  /**
+   * Manually queue commands, otherwise
+   * @see {SpeechSynthesis.cancel} will cancel them all.
+   */
+  pending = [] as (() => void)[];
+  speaking = false;
+
+  constructor(
+    public key: '/dev/voice',
+    defaultVoiceName = 'Google UK English Male',
+  ) {
+    // https://stackoverflow.com/a/52005323/2917822
+    setTimeout(() => {
+      this.voices = this.synth.getVoices();
+      // console.log({ voices: this.voices });
+      this.defaultVoice = 
+      this.voices.find(({ name }) => name === defaultVoiceName)
+        || this.voices.find(({ default: isDefault }) => isDefault)
+        || this.voices[0];
+    }, 100);
+  }
+
+  public finishedReading() {
+    // NOOP
+  }
+  public finishedWriting() {
+    // NOOP
+  }
+
+  /**
+   * Nothing to read. Behaves like /dev/null.
+   */
+  public async readData(): Promise<ReadResult> {
+    return { eof: true };
+  }
+
+  /**
+   * Writing takes a long time, due to speech.
+   * Moreover we write every line before returning.
+   * - `VoiceCommand` from e.g. `say foo{1..5}`
+   * - `string` from e.g. `echo foo{1..5} >/dev/voice`
+   */
+  async writeData(input: VoiceCommand | string) {
+    await this.speak(this.command = typeof input === 'string' ? { text: input } : input);
+    this.command = null;
+  }
+
+  private async speak(command: VoiceCommand) {
+    const { text, voice } = command;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.voice = this.voices.find(({ name }) => name === voice) || this.defaultVoice;
+
+    if (this.speaking) {
+      await new Promise<void>(resolve => this.pending.push(resolve));
+    }
+
+    this.speaking = true;
+    await new Promise<void>((resolve, _) => {
+      utterance.onend = () => setTimeout(() => resolve(), 100);
+      utterance.onerror = (errorEvent) => {
+        console.error(`Utterance '${text}' by '${voice}' failed.`);
+        console.error(errorEvent);
+        resolve();
+      }
+      this.synth.speak(utterance);
+    });
+    this.speaking = false;
+
+    this.pending.shift()?.();
+  }
+
+}
+
+export interface VoiceCommand {
+  voice?: string;
+  text: string;
 }
 
 //#endregion

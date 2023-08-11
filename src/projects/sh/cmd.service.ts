@@ -4,7 +4,7 @@ import { uid } from 'uid';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
 import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
-import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy } from './io';
+import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
 import useSession, { ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
@@ -47,6 +47,8 @@ const commandKeys = {
   rm: true,
   /** Run a javascript generator */
   run: true,
+  /** Speech synthesis */
+  say: true,
   /** Echo session key */
   session: true,
   /** Set something */
@@ -72,7 +74,7 @@ class cmdServiceClass {
   isCmd(word: string): word is CommandName {
     return word in commandKeys;
   }
-  
+
   async *runCmd(node: Sh.CallExpr | Sh.DeclClause, command: CommandName, args: string[]) {
     const { meta } = node;
     switch (command) {
@@ -116,7 +118,7 @@ class cmdServiceClass {
           const text = args.slice(0, secsIndex >= 0 ? secsIndex : undefined).join(' ');
           const secs = secsIndex >= 0 ? parseInt(args[secsIndex]) : undefined;
           const defaultValue = secsIndex >= 0 ? parseJsArg(args[secsIndex + 1]) : undefined;
-  
+
           yield* this.choice(meta, { text, defaultValue, secs });
         } else {
           // `choice` expects to read `ChoiceReadValue`s
@@ -206,7 +208,7 @@ class cmdServiceClass {
         yield `The following commands are supported:`;
         const commands = cliColumns(Object.keys(commandKeys), { width: ttyShell.xterm.xterm.cols }).split(/\r?\n/);
         for (const line of commands) yield `${ansi.Blue}${line}`;
-        // yield `Traverse context via \`ls\` or \`ls -l var.foo.bar\` (Object.keys).` 
+        // yield `Traverse context via \`ls\` or \`ls -l var.foo.bar\` (Object.keys).`
         yield `\n\rView shell functions via ${ansi.Blue}declare${ansi.Reset}.`
         // yield `Use Ctrl-c to interrupt and Ctrl-l to clear screen.`
         // yield `View history via up/down or \`history\`.`
@@ -388,6 +390,39 @@ class cmdServiceClass {
         }
         break;
       }
+      case 'say': {
+        const { opts, operands } = getOpts(args, {
+          string: ['v'],
+        });
+
+        if (opts.v === '?') {// List available voices
+          yield* window.speechSynthesis.getVoices().map(
+            ({ name, lang }) => `${name} (${lang})`
+          );
+          return;
+        }
+
+        redirectNode(node.parent!, { 1: '/dev/voice' });
+        
+        const process = getProcess(meta);
+        process.cleanups.push(() => window.speechSynthesis.cancel());
+        process.onSuspends.push(() => { window.speechSynthesis.pause(); return true; });
+        process.onResumes.push(() => { window.speechSynthesis.resume(); return true; });
+
+        if (!operands.length) {// Say lines from stdin
+          let datum: string | VoiceCommand | null;
+          while ((datum = await read(meta)) !== null) {
+            yield {
+              voice: opts.v,
+              ...typeof datum === 'string' ? { text: datum } : datum
+            };
+          }
+        } else {// Say operands
+          yield { voice: opts.v, text: operands.join(' ') };
+        }
+
+        break;
+      }
       case 'session': {
         yield meta.sessionKey;
         break;
@@ -435,7 +470,7 @@ class cmdServiceClass {
         }
         break;
       }
-      case 'test': {    
+      case 'test': {
         node.exitCode = !!parseJsArg(args.join(" ")) ? 1 : 0;
         break;
       }
@@ -597,17 +632,17 @@ class cmdServiceClass {
     getColors() {
       return ansi;
     },
-  
+
     getKillError() {
       return killError(this.meta);
     },
-  
+
     getOpts,
 
     getProcess() {
       return getProcess(this.meta);
     },
-  
+
     /** Returns a string e.g. `60f5bfdb9b9` */
     getUid() {
       return uid();
@@ -622,12 +657,12 @@ class cmdServiceClass {
     },
 
     observableToAsyncIterable,
-  
+
     /** js parse with string fallback */
     parseJsArg,
-    
+
     parseFnOrStr,
-  
+
     // TODO use `otag` instead
     /** Output 1, 2, ... at fixed intervals */
     async *poll(args: string[]) {
@@ -640,7 +675,7 @@ class cmdServiceClass {
         await Promise.race([pause(delayMs), deferred.promise]);
       }
     },
-  
+
     pretty(x: any) {
       return prettySafe(isProxy(x) ? {...x} : x);
     },
@@ -659,18 +694,18 @@ class cmdServiceClass {
       index >= 0 && cleanups.splice(index, 1);
     },
 
-  
+
     async *sleep(seconds: number) {
       yield* sleep(this.meta, seconds);
     },
-  
+
     /** JSON.parse which returns `undefined` on parse error */
     safeJsonParse,
 
     throwError,
 
   };
-  
+
   private readonly processApiKeys = Object.keys(this.processApi);
 
   private provideProcessCtxt(meta: Sh.BaseMeta, posPositionals: string[] = []) {
@@ -762,7 +797,7 @@ class cmdServiceClass {
     }
     return { eof: true };
   }
-  
+
 }
 
 //#region processApi related

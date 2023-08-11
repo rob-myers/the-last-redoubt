@@ -295,3 +295,9 @@ npc rob inFrustum $( click 1 )
 npc rob inFrustum $( npc foo getPosition )
 npc foo inFrustum $( npc rob getPosition )
 ```
+
+```sh
+# speech synthesis
+say --v=?
+say --v="Google UK English Female" {1..5}Hello
+```
