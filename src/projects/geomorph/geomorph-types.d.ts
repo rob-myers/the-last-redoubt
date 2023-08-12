@@ -138,13 +138,9 @@ declare namespace Geomorph {
     pngRect: Geom.Rect;
 
     //#region aligned to doors
-    relDoorId: Record<number, {
-      doorIds: number[];
-      windowIds: number[];
-    }>;
-    parallelDoorId: Record<number, {
-      doorIds: number[];
-    }>;
+    relDoorId: { [doorId: number]: { doorIds: number[]; windowIds: number[]; } };
+    parallelDoorId:{ [doorId: number]: { doorIds: number[]; } };
+    
     /** At most one light rect, viewing light as going outwards through door. */
     doorToLightRect: (Geomorph.LightConnectorRect | undefined)[];
     windowToLightRect: (Geomorph.LightConnectorRect | undefined)[];

@@ -7,6 +7,11 @@
 - ✅ Boxy SVG issue i.e. rotated rects not parsed
   - internal rep change: need to add transform-origin
 
+- ✅ fix peek i.e. need extra "parallel doors" in larger FOV
+
+- 🚧 302 has flicker when two doors open and move between sensors
+  - try move peek to "midpoint" of parallel doors
+
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
   - ✅ if in same room
@@ -77,6 +82,7 @@ nav rob $( click 1 ) | walk rob
   - ✅ can pause/resume
   - ✅ can `echo foo{1..5} > /dev/voice`
 
+- Geomorph PNGs navmesh higher contrast?
 - BUG with local variables
   - not working inside functions?
   - pipe child should receive local variables (see `world`)

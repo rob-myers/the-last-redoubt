@@ -124,6 +124,7 @@ export class gmGraphClass extends BaseGraph {
      * view polys. Side effect: intermediate walls can become black.
      */
     return viewPolys.map(polys => Poly.unionSafe(polys).map(x => x.removeHoles()));
+    // return viewPolys.map(polys => Poly.unionSafe(polys).map(x => x));
   }
 
   /**
