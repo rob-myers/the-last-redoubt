@@ -6110,14 +6110,14 @@
         "meta": {"door": true, "n": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[330, -20], [330, 20], [560, 20], [560, -20]]]
+          "coordinates": [[[330, -15], [330, 15], [560, 15], [560, -15]]]
         }
       },
       {
         "meta": {"door": true, "s": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[330, 1180], [330, 1220], [560, 1220], [560, 1180]]]
+          "coordinates": [[[330, 1185], [330, 1215], [560, 1215], [560, 1185]]]
         }
       },
       {
@@ -6136,7 +6136,7 @@
       }
     ],
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
-    "lastModified": 1666690702009.8525
+    "lastModified": 1691839124555.9954
   },
   "empty-room--039--3x4": {
     "key": "empty-room--039--3x4",
