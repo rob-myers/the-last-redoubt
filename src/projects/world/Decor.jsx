@@ -152,6 +152,8 @@ export default function Decor(props) {
         return {
           ...d,
           ...baseRect,
+          derivedPoly: transformedPoly,
+          derivedBounds: transformedPoly.rect,
           key,
           angle,
           // parent.meta provides e.g. gmId
@@ -337,7 +339,7 @@ export default function Decor(props) {
     updateVisibleDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
         try {
-          const { decor } = api.decor.ensureByRoom(gmId, roomId);
+          const { decor } = state.ensureByRoom(gmId, roomId);
           Object.values(decor)
             // `visible` contains groups and items not in any group (e.g. a DecorPath)
             .filter(d => d.type === 'group' || !d.parentKey)
