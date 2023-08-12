@@ -43,6 +43,24 @@ export default function FOV(props) {
     anim: { labels: new Animation, map: new Animation },
     clipPath: gms.map(_ => 'none'),
 
+    computeNearDoorIds(gmRoomId) {
+      const player = api.npcs.getPlayer();
+      if (player) {
+        state.nearDoorIds.clear();
+        /**
+         * On npc enter doorway, `npc.gmRoomId` doesn't change,
+         * whereas Player's FOV does i.e. `api.fov.{gmId,roomId}`.
+         * Then `gmRoomId` permits us to override `player.gmRoomId`.
+         */
+        gmRoomId ??= (player.gmRoomId ?? undefined);
+        gmRoomId && api.decor.getDecorAtPoint(
+          player.getPosition(), gmRoomId.gmId, gmRoomId.roomId,
+        ).forEach(decor =>
+          decor.meta.doorSensor
+          && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
+        );
+      }
+    },
     drawLabels() {
       for (const [gmId, canvas] of state.el.canvas.entries()) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
@@ -130,47 +148,7 @@ export default function FOV(props) {
         });
       }
     },
-    recomputeNearDoorIds(gmRoomId) {
-      const player = api.npcs.getPlayer();
-      if (player) {
-        state.nearDoorIds.clear();
-        /**
-         * On npc enter doorway, `npc.gmRoomId` doesn't change,
-         * whereas Player's FOV does i.e. `api.fov.{gmId,roomId}`.
-         * Then `gmRoomId` permits us to override `player.gmRoomId`.
-         */
-        gmRoomId ??= (player.gmRoomId ?? undefined);
-        gmRoomId && api.decor.getDecorAtPoint(
-          player.getPosition(), gmRoomId.gmId, gmRoomId.roomId,
-        ).forEach(decor =>
-          decor.meta.doorSensor
-          && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
-        );
-      }
-    },
-    setRoom(gmId, roomId, doorId) {
-      if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
-        state.gmId = gmId;
-        state.roomId = roomId;
-        state.lastDoorId = doorId;
-        state.recomputeNearDoorIds({ gmId, roomId });
-
-        state.updateClipPath();
-        api.doors.updateVisibleDoors();
-        api.debug.update();
-        if (doorId === -1) {
-          /**
-           * Light may come through a door from another room,
-           * due to the way we handle diagonal doors.
-           */
-          api.geomorphs.recomputeLights(gmId, roomId);
-        }
-        return true;
-      } else {
-        return false;
-      }
-    },
-    updateClipPath() {
+    recompute() {
       if (state.gmId === -1) {
         return; // state.gmId is -1 <=> state.roomId is -1
       }
@@ -226,6 +204,28 @@ export default function FOV(props) {
 
       state.hideUnseen();
       update();
+    },
+    setRoom(gmId, roomId, doorId) {
+      if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
+        state.gmId = gmId;
+        state.roomId = roomId;
+        state.lastDoorId = doorId;
+        state.computeNearDoorIds({ gmId, roomId });
+
+        state.recompute();
+        api.doors.updateVisibleDoors();
+        api.debug.update();
+        if (doorId === -1) {
+          /**
+           * Light may come through a door from another room,
+           * due to the way we handle diagonal doors.
+           */
+          api.geomorphs.recomputeLights(gmId, roomId);
+        }
+        return true;
+      } else {
+        return false;
+      }
     },
   }), {
     overwrite: { gmId: true, roomId: true },
@@ -316,14 +316,14 @@ export default function FOV(props) {
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
  * @property {() => void} forgetPrev
- * @property {(gmRoomId?: Geomorph.GmRoomId) => void} recomputeNearDoorIds
- * On npc enter doorway:
- * - `npc.gmRoomId` doesn't change, whereas
- * - Player's FOV does i.e. `api.fov.{gmId,roomId}`.
+ * @property {(gmRoomId?: Geomorph.GmRoomId) => void} computeNearDoorIds
+ * Calculate `state.nearDoorIds` initially or upon exit room (enter doorway).
  *
- * Then `gmRoomId` permits us to override `player.gmRoomId`.
+ * Importantly, when an NPC enters a doorway `npc.gmRoomId` doesn't change,
+ * but the Player's FOV _does_ (`api.fov.{gmId,roomId}`).
+ * Then the parameter `gmRoomId` permits us to override `player.gmRoomId`.
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
- * @property {() => void} updateClipPath
+ * @property {() => void} recompute
 */
 
 /**

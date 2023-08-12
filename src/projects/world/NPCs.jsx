@@ -647,7 +647,7 @@ export default function NPCs(props) {
       // Adjust FOV
       state.setRoomByNpc(state.playerKey);
       // Initialize fov.nearDoorIds
-      api.fov.recomputeNearDoorIds();
+      api.fov.computeNearDoorIds();
 
       state.events.next({ key: 'set-player', npcKey });
     },

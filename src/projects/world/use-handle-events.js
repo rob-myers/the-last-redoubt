@@ -331,10 +331,10 @@ export default function useHandleEvents(api) {
       if (npc.key === api.npcs.playerKey) {
         if (event === 'enter') {
           api.fov.nearDoorIds.add(doorId);
-          api.fov.updateClipPath();
+          api.fov.recompute();
         } else if (event === 'exit') {
           api.fov.nearDoorIds.delete(doorId);
-          api.fov.updateClipPath();
+          api.fov.recompute();
         }
       }
       if (event !== 'exit' && doorId === npc.getNextDoorId()) {
@@ -388,12 +388,12 @@ export default function useHandleEvents(api) {
         case 'closed-door': {
           const { gmId, doorId } = e;
           api.geomorphs.onCloseDoor(gmId, doorId);
-          api.fov.updateClipPath();
+          api.fov.recompute();
           break;
         }
         case 'opened-door': {
           api.geomorphs.onOpenDoor(e.gmId, e.doorId);
-          api.fov.updateClipPath();
+          api.fov.recompute();
           break;
         }
       }

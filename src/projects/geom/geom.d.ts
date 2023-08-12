@@ -44,6 +44,7 @@ declare namespace Geom {
     tris: [number, number, number][];
   }
 
+  /** Rotated around `(baseRect.x, baseRect.y) */
   export interface AngledRect<T> {
     /** The unrotated rectangle */
     baseRect: T;
