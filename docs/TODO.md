@@ -9,8 +9,11 @@
 
 - ✅ fix peek i.e. need extra "parallel doors" in larger FOV
 
-- 🚧 302 has flicker when two doors open and move between sensors
-  - try move peek to "midpoint" of parallel doors
+- ✅ rect colliders are not being transformed by parent geomorph
+- ✅ 302 has peek-view flicker when two doors open and move between sensors
+  - ✅ parallel doors should be double-doors (remove non-example in 101)
+  - ✅ possibly never properly transformed rect colliders?
+  - ✅ parallel doors have rect sensors?
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
@@ -82,6 +85,7 @@ nav rob $( click 1 ) | walk rob
   - ✅ can pause/resume
   - ✅ can `echo foo{1..5} > /dev/voice`
 
+- BUG? sporadic 302 related hull door failure
 - Geomorph PNGs navmesh higher contrast?
 - BUG with local variables
   - not working inside functions?
@@ -100,13 +104,13 @@ nav rob $( click 1 ) | walk rob
 - ❌ can `filter '/events/.test'`
   - `/events/.test("foo")` doesn't work
 - ✅ can `filter /events/`
-- can `map /(\d+),(\d+)/ '$2 $1'`
+- can `map /(\d+),(\d+)/ (match) => ...`
 
 - ✅ start assuming that hullDoorId === doorId i.e. initial doors are hull doors
   - ℹ️ test based on `door.meta.hull` or `api.doors.lookup[gmId][doorId].hull`
   - ✅ remove `gm.getHullDoorId`
 
-- saw fat door in 302
+- ✅ saw fat door in 302
 - tidy processApi via processApi.lib
 - prevent nearNav from blocking do point?
 

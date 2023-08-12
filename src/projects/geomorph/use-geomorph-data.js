@@ -119,7 +119,7 @@ export async function createGeomorphData(input) {
     /** @type {Geomorph.GeomorphData['parallelDoorId']} */ ({}),
   );
 
-  //#region points by room
+  //#region points by room 🚧 precompute?
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
@@ -129,18 +129,38 @@ export async function createGeomorphData(input) {
     },
     door: {
       key: '__overwritten__', type: 'group', meta: { roomId, /** gmId added later */ },
-      items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle} */ (doorNode) => {
+      items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
         const { doorId } = doorNode;
         const door = layout.doors[doorId];
         const index = door.roomIds.indexOf(roomId);
         const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
-        return {
-          key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
-          type: 'circle',
-          meta: { doorId, roomId, doorSensor: true },
-          center: pointInRoom,
-          radius: doorSensorRadius,
-        };
+
+        if (parallelDoorId[doorId]) {
+          // Use rect so nearby parallel door sensors intersect without gaps
+          const right = new Vect(doorSensorRadius * Math.cos(door.angle), doorSensorRadius * Math.sin(door.angle));
+          const down = new Vect(-right.y, right.x);
+          const baseRect = new Rect(pointInRoom.x - right.x - down.x, pointInRoom.y - right.y - down.y, 2 * doorSensorRadius, 2 * doorSensorRadius);
+          const angle = door.angle;
+          const derivedPoly = geom.angledRectToPoly({ baseRect, angle });
+
+          return {
+            type: 'rect',
+            ...baseRect,
+            angle,
+            key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
+            meta: { doorId, roomId, doorSensor: true },
+            derivedPoly,
+            derivedBounds: derivedPoly.rect,
+          };
+        } else {
+          return {
+            key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
+            type: 'circle',
+            meta: { doorId, roomId, doorSensor: true },
+            center: pointInRoom,
+            radius: doorSensorRadius,
+          };
+        }
       }),
     },
   }));
