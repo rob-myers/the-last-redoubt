@@ -6,7 +6,7 @@ import { computeViewPosition, geomorphJsonPath, getNormalizedDoorPolys, singleTo
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
-import { doorPeekViewOffset, doorViewOffset, windowViewOffset } from "../world/const";
+import { doorPeekViewOffset, doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
 import usePathfinding from "./use-pathfinding";
 
 /**
@@ -124,11 +124,11 @@ export async function createGeomorphData(input) {
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
     symbol: {
-      key: '__overwritten__', type: 'group', meta: { roomId /** 🚧 gmId */ },
+      key: '__overwritten__', type: 'group', meta: { roomId /** gmId added later */ },
       items: [], // built below
     },
     door: {
-      key: '__overwritten__', type: 'group', meta: { roomId, /** 🚧 gmId, fromDoorId */ },
+      key: '__overwritten__', type: 'group', meta: { roomId, /** gmId added later */ },
       items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle} */ (doorNode) => {
         const { doorId } = doorNode;
         const door = layout.doors[doorId];
@@ -139,7 +139,7 @@ export async function createGeomorphData(input) {
           type: 'circle',
           meta: { doorId, roomId, doorSensor: true },
           center: pointInRoom,
-          radius: 30,
+          radius: doorSensorRadius,
         };
       }),
     },
