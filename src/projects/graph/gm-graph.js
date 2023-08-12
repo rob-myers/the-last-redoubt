@@ -174,10 +174,9 @@ export class gmGraphClass extends BaseGraph {
         ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
         // Closed doors related to "view door"
         ...relDoorIds.filter(doorId => !doorLookup[doorId].open),
-        // Closed doors parallel to a door related to "view door"
-        ...relDoorIds.flatMap(
-          relDoorId => areaGm.getParallelDoorIds(relDoorId).filter(doorId => !doorLookup[doorId].open)
-        ),
+        // Doors parallel to a door related to "view door", but not directly related
+        ...relDoorIds.flatMap(relDoorId => areaGm.getParallelDoorIds(relDoorId))
+          .filter(x => !relDoorIds.includes(x)),
       ];
 
       /** We imagine we are viewing from the center of the door */
