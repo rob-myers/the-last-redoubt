@@ -727,7 +727,7 @@ export default function NPCs(props) {
       /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
       let status = /** @type {TrackStatus} */ ('no-track');
       /** @param {TrackStatus} next */
-      function changeStatus(next) { status = next; console.warn('@', status); }
+      function changeStatus(next) { status = next; console.warn(`@ ${status}`); }
       
       const npc = state.getNpc(npcKey); // throws if undefined
 

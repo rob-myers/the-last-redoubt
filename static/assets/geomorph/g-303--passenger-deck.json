@@ -6146,7 +6146,7 @@
       "meta": {"door": true},
       "seg": [{"x": 1191.2, "y": 120}, {"x": 1147.2, "y": 120}],
       "normal": {"x": 0, "y": -1},
-      "roomIds": [25, null],
+      "roomIds": [25, 25],
       "entries": [{"x": 1169.2, "y": 116.95}, {"x": 1169.2, "y": 123.05}],
       "navGroupId": 0
     },
@@ -16018,6 +16018,8 @@
       {"dst": "room-25", "src": "door-26", "id": "door-26->room-25"},
       {"src": "room-27", "dst": "door-26", "id": "room-27->door-26"},
       {"dst": "room-27", "src": "door-26", "id": "door-26->room-27"},
+      {"src": "room-25", "dst": "door-27", "id": "room-25->door-27"},
+      {"dst": "room-25", "src": "door-27", "id": "door-27->room-25"},
       {"src": "room-25", "dst": "door-27", "id": "room-25->door-27"},
       {"dst": "room-25", "src": "door-27", "id": "door-27->room-25"},
       {"src": "room-10", "dst": "door-28", "id": "room-10->door-28"},

@@ -229,8 +229,15 @@ export interface GmDoorId {
   other?: { gmId: number; doorId: number };
 }
 
+export interface GmWindowId {
+  gmId: number;
+  windowId: number;
+  // ℹ️ currently don't support hull windows
+}
+
 export interface GmRoomGraphEdgeOpts extends BaseEdgeOpts {
   doors: GmDoorId[];
+  windows: GmWindowId[];
 }
 
 export type GmRoomGraph = import('./gm-room-graph').gmRoomGraphClass;

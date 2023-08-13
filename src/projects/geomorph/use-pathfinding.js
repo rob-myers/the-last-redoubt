@@ -1,5 +1,6 @@
-import { floorGraphClass } from "../graph/floor-graph";
 import { useQuery } from "react-query";
+import { info } from "../service/log";
+import { floorGraphClass } from "../graph/floor-graph";
 
 /**
  * @param {Geomorph.GeomorphKey} zoneKey 
@@ -8,7 +9,7 @@ import { useQuery } from "react-query";
  */
 export default function usePathfinding(zoneKey, gm, disabled) {
   return useQuery(zoneKeyToQueryKey(zoneKey), () => {
-    console.info(`computing floorGraph: ${zoneKey}`);
+    info(`computing floorGraph: ${zoneKey}`);
     return {
       graph: floorGraphClass.fromZone(/** @type {Geomorph.GeomorphData} */ (gm))
     };

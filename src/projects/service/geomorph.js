@@ -536,8 +536,10 @@ function singleToConnectorRect(single, rooms) {
 
   /** @type {[null | number, null | number]} */
   const roomIds = rooms.reduce((agg, room, roomId) => {
-    if (agg[0] === null && room.contains(moreInfront)) return [roomId, agg[1]];
-    if (agg[1] === null && room.contains(moreBehind)) return [agg[0], roomId];
+    // Support doors connecting a room to itself e.g.
+    // galley-and-mess-halls--006--2x4
+    if (room.contains(moreInfront)) agg[0] = roomId;
+    if (room.contains(moreBehind)) agg[1] = roomId;
     return agg;
   }, /** @type {[null | number, null | number]} */ ([null, null]));
 

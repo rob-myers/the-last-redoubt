@@ -227,9 +227,10 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
-    getOtherRoomId(doorOrId, roomId) {
-      return (typeof doorOrId === 'number' ? this.doors[doorOrId] : doorOrId)
-        .roomIds.find(id => id !== roomId) ?? -1;
+    getOtherRoomId(doorId, roomId) {
+      // We support case where roomIds are equal e.g. gm 303
+      const { roomIds } = this.doors[doorId];
+      return roomIds.find((x, i) => typeof x === 'number' && roomIds[1 - i] === roomId) ?? -1;
     },
     getParallelDoorIds(doorId) {
       return this.parallelDoorId[doorId]?.doorIds ?? [];

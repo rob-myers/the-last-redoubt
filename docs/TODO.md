@@ -3,10 +3,15 @@
 ## In progress
 
 - 🚧 gmRoomGraph to simplify many computations
-  - whose nodes are `gmRoomId`s
-  - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
-  - built via `gm[i].roomGraph` + gmGraph
+  - ✅ create it
+    - whose nodes are `gmRoomId`s
+    - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
+    - built via `gm[i].roomGraph` + gmGraph
+  - ✅ fix connection error
+    - ℹ️ `world gmGraph.findRoomContaining $( click 1 )`
+    - 303 room 25 had self-room-door
   - also provides "relate-connectors" over GmDoorIds
+    - 101 has relation door -> window via "office 26"
   - also provides "parallel-connectors" over GmDoorIds
 
 - 🚧 npc.canSee(npcKey)

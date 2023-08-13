@@ -73,10 +73,9 @@ export default function DebugWorld(props) {
 
     if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
       const doorId = Number(target.dataset.debugDoorId);
-      const door = ctxt.gm.doors[doorId];
 
       if (!ctxt.gm.isHullDoor(doorId)) {
-        fov.setRoom(gmId, ctxt.gm.getOtherRoomId(door, roomId), doorId);
+        fov.setRoom(gmId, ctxt.gm.getOtherRoomId(doorId, roomId), doorId);
         return;
       }
 
