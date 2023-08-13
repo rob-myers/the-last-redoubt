@@ -26,6 +26,7 @@ export default function World(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     disabled: !!props.disabled,
     gmGraph: /** @type {State['gmGraph']} */ ({}),
+    gmRoomGraph: /** @type {State['gmRoomGraph']} */ ({}),
 
     debug: /** @type {State['debug']} */ ({ ready: false }),
     decor: /** @type {State['decor']} */ ({ ready: false }),
@@ -61,7 +62,7 @@ export default function World(props) {
     update,
   }));
 
-  state.gmGraph = useGeomorphs(props.gms, props.disabled);
+  ({ gmGraph: state.gmGraph, gmRoomGraph: state.gmRoomGraph } = useGeomorphs(props.gms, props.disabled));
   state.gmGraph.api = state;
   
   useHandleEvents(state);
@@ -130,6 +131,7 @@ export default function World(props) {
  * @typedef State
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
+ * @property {Graph.GmRoomGraph} gmRoomGraph
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
  * @property {import("./Doors").State} doors

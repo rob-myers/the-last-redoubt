@@ -3,7 +3,7 @@ import { css, cx } from "@emotion/css";
 import { Poly, Vect } from "../geom";
 import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
-import { geomorphPngPath, labelMeta } from "../service/geomorph";
+import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -196,7 +196,7 @@ export default function FOV(props) {
 
       // Track visible rooms
       // 🤔 we assume gmRoomIds has no dups
-      const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: `g${x.gmId}-r${x.roomId}`}));
+      const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: getGmRoomKey(x.gmId, x.roomId)}));
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
       state.gmRoomIds = nextGmRoomIds;

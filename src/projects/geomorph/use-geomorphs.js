@@ -1,6 +1,7 @@
 import React from "react";
 import { assertDefined } from "../service/generic";
 import { gmGraphClass } from "../graph/gm-graph";
+import { gmRoomGraphClass } from "../graph/gm-room-graph";
 import { geomorphDataToInstance } from "../service/geomorph";
 import useGeomorphData from "./use-geomorph-data";
 
@@ -35,11 +36,13 @@ export default function useGeomorphs(defs, disabled = false) {
         return geomorphDataToInstance(data, transform);
       });
       /**
-       * TODO ⛔️ throws on refetch a geomorph's json
+       * 🚧 fix throw on refetch a geomorph's json (?)
        */
-      return gmGraphClass.fromGms(items);
+      const gmGraph = gmGraphClass.fromGms(items);
+      const gmRoomGraph = gmRoomGraphClass.fromGmGraph(gmGraph);
+      return { gmGraph, gmRoomGraph };
     } else {
-      return new gmGraphClass([]);
+      return { gmGraph: new gmGraphClass([]), gmRoomGraph: new gmRoomGraphClass() };
     }
   }, [ready, ...queries.map(x => x)]);
 }

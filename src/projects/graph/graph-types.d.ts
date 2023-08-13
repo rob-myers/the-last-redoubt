@@ -222,7 +222,7 @@ export interface GmRoomGraphNode {
   roomId: number;
 }
 
-export interface GmDoor {
+export interface GmDoorId {
   gmId: number;
   doorId: number;
   /** Non-isolated hull doors have an associated door */
@@ -230,7 +230,7 @@ export interface GmDoor {
 }
 
 export interface GmRoomGraphEdgeOpts extends BaseEdgeOpts {
-  doors: GmDoor[];
+  doors: GmDoorId[];
 }
 
 export type GmRoomGraph = import('./gm-room-graph').gmRoomGraphClass;
