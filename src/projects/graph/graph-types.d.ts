@@ -153,7 +153,7 @@ declare namespace Graph {
 
   export type GmGraph = import('./gm-graph').gmGraphClass;
 
-  // 🤔 clean?
+  // 🚧 cleaner approach
   export interface OpenDoorArea {
     /** Can be Player's current geomorph or an adjacent one */
     gmId: number;
@@ -211,13 +211,32 @@ declare namespace Graph {
     };
   };
 
-  export interface GmRoomId {
-    gmId: number;
-    roomId: number;
-  }
+//#endregion
+
+//#region GmRoomGraph
+
+export interface GmRoomGraphNode {
+  /** `g{gmId}-r{roomId}` */
+  id: string;
+  gmId: number;
+  roomId: number;
+}
+
+export interface GmDoor {
+  gmId: number;
+  doorId: number;
+  /** Non-isolated hull doors have an associated door */
+  other?: { gmId: number; doorId: number };
+}
+
+export interface GmRoomGraphEdgeOpts extends BaseEdgeOpts {
+  doors: GmDoor[];
+}
+
+export type GmRoomGraph = import('./gm-room-graph').gmRoomGraphClass;
 
 //#endregion
-  
+
 //#region FloorGraph
 
   /**

@@ -304,7 +304,7 @@ export default function FOV(props) {
 /**
  * @typedef AuxState @type {object}
  * @property {string[]} clipPath
- * @property {(Graph.GmRoomId & { key: string })[]} gmRoomIds
+ * @property {(Geomorph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {{ map: Animation; labels: Animation; }} anim
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {boolean} ready

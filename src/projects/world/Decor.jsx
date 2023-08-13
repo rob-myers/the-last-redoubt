@@ -641,8 +641,8 @@ const decorPointHandlers = {
 
 /**
  * @typedef ToggleLocalDecorOpts
- * @property {Graph.GmRoomId[]} [added]
- * @property {Graph.GmRoomId[]} [removed]
+ * @property {Geomorph.GmRoomId[]} [added]
+ * @property {Geomorph.GmRoomId[]} [removed]
  */
 
 /**

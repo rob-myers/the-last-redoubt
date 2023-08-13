@@ -422,7 +422,7 @@ declare namespace NPC {
     | { key: 'decors-removed'; decors: DecorDef[]; }
     | { key: 'disabled' }
     | { key: 'enabled' }
-    | { key: 'fov-changed'; gmRoomIds: Graph.GmRoomId[]; added: Graph.GmRoomId[]; removed: Graph.GmRoomId[] }
+    | { key: 'fov-changed'; gmRoomIds: Geomorph.GmRoomId[]; added: Geomorph.GmRoomId[]; removed: Geomorph.GmRoomId[] }
     | { key: 'npc-clicked'; npcKey: string; position: Geom.VectJson; isPlayer: boolean; }
     | { key: 'npc-internal'; npcKey: string; event: 'cancelled' | 'paused' | 'resumed' }
     | { key: 'on-tty-link'; linkText: string; linkStartIndex: number; ttyCtxt: NPC.SessionTtyCtxt; }

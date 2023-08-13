@@ -42,7 +42,9 @@ export class gmGraphClass extends BaseGraph {
    */
   entry;
 
-  api = /** @type {import('../world/World').State} */  ({ isReady() { return false; } });
+  api = /** @type {import('../world/World').State} */  ({
+    isReady() { return false; },
+  });
 
   /**
    * Cache for @see {getAdjacentRoomCtxt}
@@ -622,10 +624,10 @@ export class gmGraphClass extends BaseGraph {
    * Compute every global room id connected to some door,
    * assuming that identified hull doors are respected.
    * @param {number[][]} gmDoorIds `gmDoorIds[gmId]` contains door ids
-   * @returns {Graph.GmRoomId[]}
+   * @returns {Geomorph.GmRoomId[]}
    */
   getGmRoomsIdsFromDoorIds(gmDoorIds) {
-    const gmRoomIds = /** @type {Graph.GmRoomId[]} */ ([]);
+    const gmRoomIds = /** @type {Geomorph.GmRoomId[]} */ ([]);
     gmDoorIds.forEach((doorIds, gmId) => {
       const gm = this.gms[gmId];
       const seen = /** @type {Record<number, true>} */ ({});
@@ -645,7 +647,7 @@ export class gmGraphClass extends BaseGraph {
    * - We handle dup roomIds e.g. via double doors.
    * - We don't ensure input roomIds are output.
    *   However they're included if they're adjacent to another such input roomId.
-   * @param {Graph.GmRoomId[]} roomIds
+   * @param {Geomorph.GmRoomId[]} roomIds
    * @param {boolean} [doorsMustBeOpen]
    * @returns {Graph.GmRoomsAdjData}
    */
