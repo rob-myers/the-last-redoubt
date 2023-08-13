@@ -88,6 +88,6 @@ export const doorSensorRadius = 30;
 export const doorViewOffset = 40;
 
 /** Under consideration: `0 | 2 | -2` */
-export const doorPeekViewOffset = -2;
+export const doorPeekViewOffset = 0;
 
 export const windowViewOffset = 20;
