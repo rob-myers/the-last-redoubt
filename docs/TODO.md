@@ -2,18 +2,12 @@
 
 ## In progress
 
-- ✅ clean `computeDoorViewArea` etc.
-- ✅ sealed doors are red (they needn't be hull doors)
-- ✅ Boxy SVG issue i.e. rotated rects not parsed
-  - internal rep change: need to add transform-origin
-
-- ✅ fix peek i.e. need extra "parallel doors" in larger FOV
-
-- ✅ rect colliders are not being transformed by parent geomorph
-- ✅ 302 has peek-view flicker when two doors open and move between sensors
-  - ✅ parallel doors should be double-doors (remove non-example in 101)
-  - ✅ possibly never properly transformed rect colliders?
-  - ✅ parallel doors have rect sensors?
+- 🚧 gmRoomGraph to simplify many computations
+  - whose nodes are `gmRoomId`s
+  - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
+  - built via `gm[i].roomGraph` + gmGraph
+  - also provides "relate-connectors" over GmDoorIds
+  - also provides "parallel-connectors" over GmDoorIds
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
@@ -29,39 +23,10 @@
     - npc.inFrustum
   - 🚧 can test if `in-same-room` or `in-adj-room` or `share-adj-room`,
     providing open/open-related shared doors too
+    - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
     - output will be provided to raycast stage
   - raycast stage
-
-- ✅ FOV rethink:
-  - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
-  - ❌ doorViewPosition could always be Player position
-  - ❌ show all of nearby rooms i.e. no raycast
-  - ℹ️ can think of closeDoorIds as "peeking"
-  - ✅ clean decor-collide events
-    - ✅ `npc events | filter /decor-collide/ | map meta`
-    - ✅ spawn in -> enter
-    - ✅ spawn out -> exit
-    - ❌ exit room -> exit
-    - ✅ enter room -> enter, exit
-    - ✅ can start-inside if start in door
-    - ✅ spawn into doorway -> enter
-    - ✅ spawn out-of doorway -> exit
-  - clarify navMetas with index -1
-  - ✅ `fov.nearDoorIds` is Player's intersecting door sensors
-  - ✅ `fov.nearDoorIds` induces wider FOV through respective doors
-    - ✅ `decor-collide` triggered for first spawn
-    - ✅ initial spawn not setting fov.nearDoorIds
-      - ℹ️ because we `spawn rob ${point}` before `npc set-player rob`
-      - ✅ `npc set-player rob` should set `fov.nearDoorIds`
-    - ✅ get hull doors working too
-    - ✅ npc set-player '' error should propagate
-    - ✅ trigger update on enter/exit door sensor
-  - ✅ BUG hull doors FOV not shown from one side
-    - ✅ for hull doors (one particular side), view offset has wrong direction 
-  - ✅ BUG hull doors nearDoorIds FOV flicker
-    - ℹ️ hull doors trigger updateClipPath twice via 2 doors (open/close)
-    - ℹ️ happens when enter doorway, despite no collider exit
 
 - ✅ BUG with hull doors timeout: might need to clear both
 
@@ -567,6 +532,49 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ clean `computeDoorViewArea` etc.
+- ✅ sealed doors are red (they needn't be hull doors)
+- ✅ Boxy SVG issue i.e. rotated rects not parsed
+  - internal rep change: need to add transform-origin
+
+- ✅ fix peek i.e. need extra "parallel doors" in larger FOV
+
+- ✅ rect colliders are not being transformed by parent geomorph
+- ✅ 302 has peek-view flicker when two doors open and move between sensors
+  - ✅ parallel doors should be double-doors (remove non-example in 101)
+  - ✅ possibly never properly transformed rect colliders?
+  - ✅ parallel doors have rect sensors?
+
+- ✅ FOV rethink:
+  - ❌ FOV always includes "raycast" from stationary Player through open doors/windows
+  - ❌ doorViewPosition could always be Player position
+  - ❌ show all of nearby rooms i.e. no raycast
+  - ℹ️ can think of closeDoorIds as "peeking"
+  - ✅ clean decor-collide events
+    - ✅ `npc events | filter /decor-collide/ | map meta`
+    - ✅ spawn in -> enter
+    - ✅ spawn out -> exit
+    - ❌ exit room -> exit
+    - ✅ enter room -> enter, exit
+    - ✅ can start-inside if start in door
+    - ✅ spawn into doorway -> enter
+    - ✅ spawn out-of doorway -> exit
+  - clarify navMetas with index -1
+  - ✅ `fov.nearDoorIds` is Player's intersecting door sensors
+  - ✅ `fov.nearDoorIds` induces wider FOV through respective doors
+    - ✅ `decor-collide` triggered for first spawn
+    - ✅ initial spawn not setting fov.nearDoorIds
+      - ℹ️ because we `spawn rob ${point}` before `npc set-player rob`
+      - ✅ `npc set-player rob` should set `fov.nearDoorIds`
+    - ✅ get hull doors working too
+    - ✅ npc set-player '' error should propagate
+    - ✅ trigger update on enter/exit door sensor
+  - ✅ BUG hull doors FOV not shown from one side
+    - ✅ for hull doors (one particular side), view offset has wrong direction 
+  - ✅ BUG hull doors nearDoorIds FOV flicker
+    - ℹ️ hull doors trigger updateClipPath twice via 2 doors (open/close)
+    - ℹ️ happens when enter doorway, despite no collider exit
 
 - ✅ `spawn foo --class=zhodani $( click 1 )`
 - ✅ `spawn foo --zhodani $( click 1 )`

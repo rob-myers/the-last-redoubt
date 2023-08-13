@@ -742,12 +742,23 @@ export class gmGraphClass extends BaseGraph {
    * `doorId` is relative to `gmRoomId`.
    * `relDoorIds` are relative to `other`.
    * @param {Geomorph.GmRoomId} gmRoomId 
-   * @param {Geomorph.GmRoomId} other 
+   * @param {Geomorph.GmRoomId} other not gmRoomId nor adjacent to it
    * @returns {{ doorId: number; relDoorIds: number[]; }[]}
    */
   getGmRoomsRelDoorIds(gmRoomId, other, requireOpen = false) {
-    // 🚧 relation respects hullDoor identification
-    return [];
+    const output = /** @type {{ doorId: number; relDoorIds: number[]; }[]} */ ([]);
+    // 🚧 better strategy i.e. graph
+    // - whose nodes are `gmRoomId`s
+    // - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
+    // - built via `gm[i].roomGraph` + gmGraph
+    // - which also provides "relate-connectors" over GmDoorId
+
+    // THEN
+    // 1. check {gmRoomId,other} share adj room
+    // 2. if so, get [gmDoors1, gmDoors2] and can
+    //    restrict using api.doors and gmRoomGraph "relate-connectors"
+
+    return output;
   }
 
   /**
