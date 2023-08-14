@@ -614,12 +614,11 @@ class geomServiceClass {
         d = this.getLineLineSegIntersect(pos, dir0, q0, q1);
         if (d !== null && d >= 0 && d < dist0) {
           dist0 = d;
-          if (i === 0 && direction) {
-            // If hit "direction barrier", assume (i) other rays will too,
-            // and (ii) there is no closer segment
-            dist1 = dist2 = d; 
-            break;
-          }
+          // ℹ️ this optimization creates FOV gaps too often
+          // if (i === 0 && direction) {
+          //   dist1 = dist2 = d; 
+          //   break;
+          // }
         }
         d = this.getLineLineSegIntersect(pos, dir1, q0, q1);
         if (d !== null && d >= 0 && d < dist1) {
