@@ -2081,6 +2081,20 @@
         }
       },
       {
+        "meta": {"relate-connectors": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [965.4887, 1040.2424],
+              [962.0685, 1049.6393],
+              [830.5115, 1001.7565],
+              [833.9317, 992.3596]
+            ]
+          ]
+        }
+      },
+      {
         "meta": {"wall": true},
         "poly": {
           "type": "Polygon",
