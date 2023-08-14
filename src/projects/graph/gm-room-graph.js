@@ -1,3 +1,4 @@
+import { mapValues } from "../service/generic";
 import { getGmRoomKey } from "../service/geomorph";
 import { BaseGraph } from "./graph";
 
@@ -7,14 +8,14 @@ import { BaseGraph } from "./graph";
 export class gmRoomGraphClass extends BaseGraph {
 
   /**
-   * e.g. relDoor[gmId][doorId].doorIds
-   * @type {{ doors: Graph.GmDoorId[]; windows: Graph.GmWindowId[]; }[][]}
+   * e.g. relDoor[gmId][doorId]?.doorIds
+   * @type {{ [doorId: number]: { doors: Graph.GmDoorId[]; windows: Graph.GmWindowId[]; }}[]}
    */
   relDoor = [];
   
   /**
    * e.g. parallelDoor[gmId][doorId]
-   * @type {Graph.GmDoorId[][][]}
+   * @type {{ [doorId: number]: Graph.GmDoorId[] }[]}
    */
   parallelDoor = [];
 
@@ -23,8 +24,6 @@ export class gmRoomGraphClass extends BaseGraph {
    * @returns {Graph.GmRoomGraph}
    */
   static fromGmGraph(gmGraph) {
-    // 🚧 relate-connectors
-    // 🚧 parallel-connectors
 
     const graph = new gmRoomGraphClass();
 
@@ -90,6 +89,45 @@ export class gmRoomGraphClass extends BaseGraph {
         }
       })
     });
+
+    // relDoor[gmId] contains gm.relDoor
+    // relDoor also contains relations with "other hull door"
+    /** @type {typeof graph.relDoor} */
+    const extras = gmGraph.gms.map(_ => ({}));
+    gmGraph.gms.forEach((gm, gmId) => {
+      graph.relDoor[gmId] = mapValues(gm.relDoorId, ({ doorIds, windowIds }, doorIdStr) => {
+        return {
+          doors: doorIds.flatMap(relDoorId => {
+            if (gm.isHullDoor(relDoorId)) {
+              const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, relDoorId);
+              if (ctxt) {// Store converse relation from identified hull door for later:
+                (extras[ctxt.adjGmId][ctxt.adjDoorId] ??= { doors: [], windows: [] }).doors.push({
+                  gmId,
+                  doorId: Number(doorIdStr),
+                  // 🤔 cannot relate hull door to another hull door
+                });
+                return [
+                  { gmId, doorId: relDoorId, other: { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId } },
+                  // Also relate to identified hull door:
+                  { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId, other: { gmId, doorId: relDoorId } },
+                ]
+              }
+            }
+            return { gmId, doorId: relDoorId };
+          }),
+          windows: windowIds.map(windowId => ({ gmId, windowId })),
+        };
+      });
+    });
+    extras.forEach((extra, gmId) => {
+      Object.entries(extra).forEach(([doorIdStr, { doors, windows }]) => {
+        const item = (graph.relDoor[gmId][/** @type {*} */ (doorIdStr)] ??= { doors: [], windows: [] });
+        item.doors.push(...doors);
+        item.windows.push(...windows);
+      });
+    });
+
+    // 🚧 parallel-connectors
 
     return graph;
   }
