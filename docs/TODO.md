@@ -13,7 +13,13 @@
   - ✅ also provides "relate-connectors" over GmDoorIds
     - 101 has relation door -> window via "office 26"
     - respects identified hull doors
-  - 🚧 also provides "parallel-connectors" over GmDoorIds
+  - ❌ also provides "parallel-connectors" over GmDoorIds
+    - can hopefully just use each `gm.parallelDoorId`
+  - ✅ 301 has extra relation so FOV can see:
+    > toilet -> stateroom -> corridor -> stateroot
+  - migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
+  - migrate getRoomsVantages to gmRoomGraph
+  - getGmRoomsRelDoorIds -> gmRoomGraph.getRoomRelDoorIds
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`

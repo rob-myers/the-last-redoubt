@@ -8,16 +8,11 @@ import { BaseGraph } from "./graph";
 export class gmRoomGraphClass extends BaseGraph {
 
   /**
+   * 🤔 optional GmDoorId.parallelDoorIds?
    * e.g. relDoor[gmId][doorId]?.doorIds
    * @type {{ [doorId: number]: { doors: Graph.GmDoorId[]; windows: Graph.GmWindowId[]; }}[]}
    */
   relDoor = [];
-  
-  /**
-   * e.g. parallelDoor[gmId][doorId]
-   * @type {{ [doorId: number]: Graph.GmDoorId[] }[]}
-   */
-  parallelDoor = [];
 
   /**
    * @param {Graph.GmGraph} gmGraph
@@ -126,8 +121,6 @@ export class gmRoomGraphClass extends BaseGraph {
         item.windows.push(...windows);
       });
     });
-
-    // 🚧 parallel-connectors
 
     return graph;
   }
