@@ -704,40 +704,6 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Get ids of doors connecting two gmRoomIds, if any.
-   * These door ids are relative to `gmRoomId.gmId`.
-   * @param {Geomorph.GmRoomId} gmRoomId 
-   * @param {Geomorph.GmRoomId} other 
-   * @returns {number[]}
-   */
-  getGmRoomsDoorIds(gmRoomId, other, requireOpen = false) {
-    const gm = this.gms[gmRoomId.gmId];
-    const output = /** @type {number[]} */ ([]);
-    const doorLookup = requireOpen ? this.api.doors.lookup[gmRoomId.gmId] : [];
-
-    if (other.gmId === gmRoomId.gmId) {
-      const doorIds = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).flatMap(
-        x => (!requireOpen || doorLookup[x.doorId].open) ? x.doorId : []
-      );
-      doorIds.length && gm.roomGraph.getAdjacentDoors(other.roomId).forEach(
-        x => doorIds.includes(x.doorId) && output.push(x.doorId)
-      );
-    } else {// ℹ️ gm.doors extends gm.hullDoors, so a hullDoorId is a doorId
-      gm.hullDoors.forEach((d, hullDoorId) => {
-        if (
-          d.roomIds.includes(gmRoomId.roomId)
-          && (!requireOpen || doorLookup[hullDoorId].open)
-        ) {
-          const ctxt = this.getAdjacentRoomCtxt(gmRoomId.gmId, hullDoorId);
-          ctxt?.adjGmId === other.gmId && ctxt?.adjRoomId === other.roomId
-            && output.push(hullDoorId);
-        }
-      });
-    }
-    return output;
-  }
-
-  /**
    * Get doors s.t.
    * - related to some door connected to room `gmRoomId`
    * - connected to room `other`
@@ -780,15 +746,16 @@ export class gmGraphClass extends BaseGraph {
   /**
    * @param {Geomorph.GmRoomId} gmRoomId 
    * @param {Geomorph.GmRoomId} other 
-   * @returns {{ key: 'same-room' } | { key: 'adj-room'; doorIds: number[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
+   * @returns {{ key: 'same-room' } | { key: 'adj-room'; gmDoorIds: Graph.GmDoorId[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
    */
   getRoomsVantages(gmRoomId, other, requireOpen = true) {
     if (isSameGmRoom(gmRoomId, other)) {
       return { key: 'same-room' };
     }
-    const doorIds = this.getGmRoomsDoorIds(gmRoomId, other, requireOpen);
-    if (doorIds.length) {
-      return { key: 'adj-room', doorIds: doorIds };
+    // const doorIds = this.getGmRoomsDoorIds(gmRoomId, other, requireOpen);
+    const gmDoorIds = this.api.gmRoomGraph.getAdjGmDoorIds(gmRoomId, other, requireOpen);
+    if (gmDoorIds.length) {
+      return { key: 'adj-room', gmDoorIds };
     }
     const relation = this.getGmRoomsRelDoorIds(gmRoomId, other, requireOpen);
     if (relation.length) {

@@ -16,10 +16,12 @@
   - ❌ also provides "parallel-connectors" over GmDoorIds
     - can hopefully just use each `gm.parallelDoorId`
   - ✅ 301 has extra relation so FOV can see:
-    > toilet -> stateroom -> corridor -> stateroot
-  - migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
-  - migrate getRoomsVantages to gmRoomGraph
-  - getGmRoomsRelDoorIds -> gmRoomGraph.getRoomRelDoorIds
+    > toilet -> stateroom -> corridor -> stateroom
+  - ✅ fast (gmId, roomId) -> gmRoomGraph node
+  - ✅ migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
+  - 🚧 understand/fix FOV issue after adding new relation to 301
+  - migrate getRoomsVantages to gmRoomGraph.getVantages
+  - getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`

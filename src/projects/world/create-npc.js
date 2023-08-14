@@ -152,44 +152,48 @@ export default function createNpc(
         && !this.doMeta
       );
     },
-    canSee(npcKey) {// 🚧 position-based check?
-      const other = api.npcs.getNpc(npcKey);
-      if (npcKey === this.key || this.gmRoomId === null || other.gmRoomId === null) {
-        return false;
-      }
-
-      const { gmId, roomId } = this.gmRoomId;
-      const gm = api.gmGraph.gms[gmId];
+    canSee(npcKey) {
       
-      if (isSameGmRoom(this.gmRoomId, other.gmRoomId)) {
-        const [src, dst] = [this.getPosition(), other.getPosition()].map(gm.toLocalCoords);
-        return !geom.outlineIntersectsSeg(gm.roomsWithDoors[roomId], src, dst);
-      }
+      // 🚧 working on getVantages first
+      // 🚧 position-based check?
 
-      const adjDoorIds = api.gmGraph.getGmRoomsDoorIds(this.gmRoomId, other.gmRoomId).filter(
-        doorId => api.doors.isOpen(gmId, doorId)
-      );
+      // const other = api.npcs.getNpc(npcKey);
+      // if (npcKey === this.key || this.gmRoomId === null || other.gmRoomId === null) {
+      //   return false;
+      // }
 
-      if (adjDoorIds.length) {// Adj rooms
-        // 🚧 clean
-
-        // Raycast from npc and check intersection is one of the open doors
-        let [src, dst] = [this.getPosition(), other.getPosition()].map(gm.toLocalCoords);
-        const result = gm.rayIntersectsDoor(src, dst, roomId, adjDoorIds);
-        if (result === null) return false;
-
-        // Raycast from intersection to other npc
-        const otherGm = api.gmGraph.gms[other.gmRoomId.gmId];
-        [src, dst] = [
-          new Vect(src.x + (result.lambda + 0.01) * (dst.x - src.x), src.y + (result.lambda + 0.01) * (dst.y - src.y)),
-          other.getPosition(),
-        ].map(otherGm.toLocalCoords);
-        return !geom.outlineIntersectsSeg(otherGm.roomsWithDoors[roomId], src, dst);
-      }
+      // const { gmId, roomId } = this.gmRoomId;
+      // const gm = api.gmGraph.gms[gmId];
       
-      if (false) {// Shared adj room
-        // 🚧
-      }
+      // if (isSameGmRoom(this.gmRoomId, other.gmRoomId)) {
+      //   const [src, dst] = [this.getPosition(), other.getPosition()].map(gm.toLocalCoords);
+      //   return !geom.outlineIntersectsSeg(gm.roomsWithDoors[roomId], src, dst);
+      // }
+
+      // const adjDoorIds = api.gmGraph.getGmRoomsDoorIds(this.gmRoomId, other.gmRoomId).filter(
+      //   doorId => api.doors.isOpen(gmId, doorId)
+      // );
+
+      // if (adjDoorIds.length) {// Adj rooms
+      //   // 🚧 clean
+
+      //   // Raycast from npc and check intersection is one of the open doors
+      //   let [src, dst] = [this.getPosition(), other.getPosition()].map(gm.toLocalCoords);
+      //   const result = gm.rayIntersectsDoor(src, dst, roomId, adjDoorIds);
+      //   if (result === null) return false;
+
+      //   // Raycast from intersection to other npc
+      //   const otherGm = api.gmGraph.gms[other.gmRoomId.gmId];
+      //   [src, dst] = [
+      //     new Vect(src.x + (result.lambda + 0.01) * (dst.x - src.x), src.y + (result.lambda + 0.01) * (dst.y - src.y)),
+      //     other.getPosition(),
+      //   ].map(otherGm.toLocalCoords);
+      //   return !geom.outlineIntersectsSeg(otherGm.roomsWithDoors[roomId], src, dst);
+      // }
+      
+      // if (false) {// Shared adj room
+      //   // 🚧
+      // }
 
       return false;
     },

@@ -7,12 +7,48 @@ import { BaseGraph } from "./graph";
  */
 export class gmRoomGraphClass extends BaseGraph {
 
+  api = /** @type {import('../world/World').State} */  ({
+    isReady() { return false; },
+  });
+
   /**
    * 🤔 optional GmDoorId.parallelDoorIds?
    * e.g. relDoor[gmId][doorId]?.doorIds
    * @type {{ [doorId: number]: { doors: Graph.GmDoorId[]; windows: Graph.GmWindowId[]; }}[]}
    */
   relDoor = [];
+
+  /**
+   * `gmNodeOffset[gmId]` is index of 1st node originally from `gmId`
+   * @type {number[]}
+   */
+  gmNodeOffset = [];
+
+  /**
+   * Get `GmDoorId`s of doors connecting two gmRoomIds, if any.
+   * @param {Geomorph.GmRoomId} srcRm 
+   * @param {Geomorph.GmRoomId} dstRm 
+   * @returns {Graph.GmDoorId[]}
+   */
+  getAdjGmDoorIds(srcRm, dstRm, requireOpen = false) {
+    const src = this.getNode(srcRm.gmId, srcRm.roomId);
+    const dst = this.getNode(dstRm.gmId, dstRm.roomId);
+    const doors = this.succ.get(src)?.get(dst)?.doors ?? [];
+    if (requireOpen) {
+      const doorApi = this.api.doors;
+      return doors.filter(p => doorApi.isOpen(p.gmId, p.doorId));
+    } else {
+      return doors;
+    }
+  }
+
+  /**
+   * @param {number} gmId 
+   * @param {number} roomId 
+   */
+  getNode(gmId, roomId) {
+    return this.nodesArray[this.gmNodeOffset[gmId] + roomId];
+  }
 
   /**
    * @param {Graph.GmGraph} gmGraph
@@ -30,6 +66,12 @@ export class gmRoomGraphClass extends BaseGraph {
         roomId,
       }))
     );
+
+    // For fast node lookup
+    graph.gmNodeOffset = gmGraph.gms.reduce((agg, gm, gmId) => {
+      agg[gmId] = gmId === 0 ? 0 : agg[gmId - 1] + gm.rooms.length;
+      return agg;
+    }, /** @type {typeof graph.gmNodeOffset} */ ([]));
 
     graph.registerNodes(nodes);
 

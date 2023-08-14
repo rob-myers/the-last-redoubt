@@ -63,7 +63,7 @@ export default function World(props) {
   }));
 
   ({ gmGraph: state.gmGraph, gmRoomGraph: state.gmRoomGraph } = useGeomorphs(props.gms, props.disabled));
-  state.gmGraph.api = state;
+  state.gmGraph.api = state.gmRoomGraph.api = state;
   
   useHandleEvents(state);
   
