@@ -1,5 +1,5 @@
 import { mapValues } from "../service/generic";
-import { getGmRoomKey } from "../service/geomorph";
+import { getGmRoomKey, isSameGmRoom } from "../service/geomorph";
 import { BaseGraph } from "./graph";
 
 /**
@@ -48,6 +48,45 @@ export class gmRoomGraphClass extends BaseGraph {
    */
   getNode(gmId, roomId) {
     return this.nodesArray[this.gmNodeOffset[gmId] + roomId];
+  }
+
+  /**
+   * 🚧
+   * Get doors s.t.
+   * - related to some door connected to room `gmRoomId`
+   * - connected to room `other`
+   * 
+   * `doorId` is relative to `gmRoomId`.
+   * `relDoorIds` are relative to `other`.
+   * @param {Geomorph.GmRoomId} gmRoomId 
+   * @param {Geomorph.GmRoomId} other not gmRoomId nor adjacent to it
+   * @returns {{ doorId: number; relDoorIds: number[]; }[]}
+   */
+  getRelDoorIds(gmRoomId, other, requireOpen = false) {
+    // 🚧
+    const output = /** @type {{ doorId: number; relDoorIds: number[]; }[]} */ ([]);
+
+    return output;
+  }
+
+  /**
+   * @param {Geomorph.GmRoomId} gmRoomId 
+   * @param {Geomorph.GmRoomId} other 
+   * @returns {{ key: 'same-room' } | { key: 'adj-room'; gmDoorIds: Graph.GmDoorId[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
+   */
+  getVantages(gmRoomId, other, requireOpen = true) {
+    if (isSameGmRoom(gmRoomId, other)) {
+      return { key: 'same-room' };
+    }
+    const gmDoorIds = this.getAdjGmDoorIds(gmRoomId, other, requireOpen);
+    if (gmDoorIds.length) {
+      return { key: 'adj-room', gmDoorIds };
+    }
+    const relation = this.getRelDoorIds(gmRoomId, other, requireOpen);
+    if (relation.length) {
+      return { key: 'rel-room', relation };
+    }
+    return null;
   }
 
   /**

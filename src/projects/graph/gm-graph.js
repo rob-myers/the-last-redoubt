@@ -2,7 +2,7 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
-import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining, isSameGmRoom } from "../service/geomorph";
+import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
 import { AStar } from "../pathfinding/AStar";
 
@@ -714,33 +714,6 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * Get doors s.t.
-   * - related to some door connected to room `gmRoomId`
-   * - connected to room `other`
-   * 
-   * `doorId` is relative to `gmRoomId`.
-   * `relDoorIds` are relative to `other`.
-   * @param {Geomorph.GmRoomId} gmRoomId 
-   * @param {Geomorph.GmRoomId} other not gmRoomId nor adjacent to it
-   * @returns {{ doorId: number; relDoorIds: number[]; }[]}
-   */
-  getGmRoomsRelDoorIds(gmRoomId, other, requireOpen = false) {
-    const output = /** @type {{ doorId: number; relDoorIds: number[]; }[]} */ ([]);
-    // 🚧 better strategy i.e. graph
-    // - whose nodes are `gmRoomId`s
-    // - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
-    // - built via `gm[i].roomGraph` + gmGraph
-    // - which also provides "relate-connectors" over GmDoorId
-
-    // THEN
-    // 1. check {gmRoomId,other} share adj room
-    // 2. if so, get [gmDoors1, gmDoors2] and can
-    //    restrict using api.doors and gmRoomGraph "relate-connectors"
-
-    return output;
-  }
-
-  /**
    * Get union of window with rooms on either side of window.
    * Currently windows cannot connect distinct geomorphs.
    * @param {number} gmId 
@@ -751,27 +724,6 @@ export class gmGraphClass extends BaseGraph {
     const window = gm.windows[windowId];
     const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getWindowNode(windowId));
     return Poly.union(adjRoomNodes.map(x => gm.rooms[x.roomId]).concat(window.poly))[0];
-  }
-
-  /**
-   * @param {Geomorph.GmRoomId} gmRoomId 
-   * @param {Geomorph.GmRoomId} other 
-   * @returns {{ key: 'same-room' } | { key: 'adj-room'; gmDoorIds: Graph.GmDoorId[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
-   */
-  getRoomsVantages(gmRoomId, other, requireOpen = true) {
-    if (isSameGmRoom(gmRoomId, other)) {
-      return { key: 'same-room' };
-    }
-    // const doorIds = this.getGmRoomsDoorIds(gmRoomId, other, requireOpen);
-    const gmDoorIds = this.api.gmRoomGraph.getAdjGmDoorIds(gmRoomId, other, requireOpen);
-    if (gmDoorIds.length) {
-      return { key: 'adj-room', gmDoorIds };
-    }
-    const relation = this.getGmRoomsRelDoorIds(gmRoomId, other, requireOpen);
-    if (relation.length) {
-      return { key: 'rel-room', relation };
-    }
-    return null;
   }
 
   /**

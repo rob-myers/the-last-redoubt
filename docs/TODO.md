@@ -21,8 +21,10 @@
   - ✅ migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
   - ✅ fix FOV issue after adding new relation to 301
     - we restrict lights by their direction
-  - migrate getRoomsVantages to gmRoomGraph.getVantages
-  - getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
+  - ✅ migrate getRoomsVantages to gmRoomGraph.getVantages
+    - ✅ `world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
+  - 🚧 getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
+    - needs implementation
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
