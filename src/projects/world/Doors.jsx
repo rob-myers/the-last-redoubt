@@ -289,6 +289,7 @@ export default function Doors(props) {
                   [cssName.open]: item.open,
                   [cssName.locked]: item.locked,
                 })}
+                // ℹ️ we see escaping in chrome devtool e.g. &quot;
                 data-meta={item.touchMeta}
                 style={{
                   left: door.baseRect.x,

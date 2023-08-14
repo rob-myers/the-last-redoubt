@@ -180,25 +180,35 @@ export class gmGraphClass extends BaseGraph {
         ...relDoorIds.flatMap(relDoorId => areaGm.getParallelDoorIds(relDoorId))
           .filter(x => !relDoorIds.includes(x)),
       ];
+      // ℹ️ Maximal possible blocked door ids
+      // const blockedDoorIds = areaGm.doors.map((_, doorId) => doorId).filter(doorId =>
+      //   doorId !== area.doorId && !(relDoorIds.includes(doorId) && doorLookup[doorId].open)
+      // );
 
       /** We imagine we are viewing from the center of the door */
       const viewPos = areaGm.doors[area.doorId].poly.center;
       // These segs are not perfect i.e. part of door will be covered
       const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
-      const areaRoomId = area.hullRoomId === null ? rootRoomId : area.hullRoomId;
-      const shouldPeek = area.otherDoorId === null
-        ? nearDoorIds.includes(area.doorId)
-        : nearDoorIds.includes(area.otherDoorId)
-      ;
+      // By restricting light direction we saves computation,
+      // and also fix an artifact seen in 301 stateroom east
+      const door = areaGm.doors[area.doorId];
+      const direction = area.gmId === gmId
+        ? door.normal.clone().scale(door.roomIds[0] === rootRoomId ? -1 : 1)
+        : undefined; // ℹ️ saw hull door issue, possibly transform related
 
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: areaGm.getViewDoorPosition(areaRoomId, area.doorId, shouldPeek),
+          position: areaGm.getViewDoorPosition(
+            area.hullRoomId ?? rootRoomId,
+            area.doorId,
+            nearDoorIds.includes(area.otherDoorId ?? area.doorId),
+          ),
           range: 2000,
           exterior: area.poly,
           extraSegs,
+          direction,
         }),
       };
     });

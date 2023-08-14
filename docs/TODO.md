@@ -19,7 +19,8 @@
     > toilet -> stateroom -> corridor -> stateroom
   - ✅ fast (gmId, roomId) -> gmRoomGraph node
   - ✅ migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
-  - 🚧 understand/fix FOV issue after adding new relation to 301
+  - ✅ fix FOV issue after adding new relation to 301
+    - we restrict lights by their direction
   - migrate getRoomsVantages to gmRoomGraph.getVantages
   - getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
 
@@ -64,6 +65,8 @@ nav rob $( click 1 ) | walk rob
   - ✅ can pause/resume
   - ✅ can `echo foo{1..5} > /dev/voice`
 
+- BUG with `npc config '{ scriptDoors: false }'`
+  - doors open then close immediately
 - BUG? sporadic 302 related hull door failure
 - Geomorph PNGs navmesh higher contrast?
 - BUG with local variables
