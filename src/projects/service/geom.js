@@ -575,29 +575,19 @@ class geomServiceClass {
    * Compute light polygon.
    * @param {LightPolyDef} def
    */
-  lightPolygon({ position: pos, direction, range, tris, exterior, extraSegs = [] }) {
-    const lightBounds = new Rect(pos.x - range, pos.y - range, 2 * range, 2 * range);
+  lightPolygon({ position: pos, direction, range, exterior, extraSegs = [] }) {
+    // const lightBounds = new Rect(pos.x - range, pos.y - range, 2 * range, 2 * range);
+    
+    const points = exterior?.allPoints ?? [];
+    const allLineSegs = (exterior?.lineSegs??[]).concat(extraSegs);
 
     if (direction) {
       const d = direction.clone().normalize();
-      extraSegs.push([
+      allLineSegs.unshift([// Put it first for early exits
         pos.clone().addScaledVector(d, -2).translate(-d.y * range * 2, d.x * range * 2),
         pos.clone().addScaledVector(d, -2).translate(-1 * -d.y * range * 2, -1 * d.x * range * 2),
       ]);
     }
-
-    const closeTris = tris??[].filter(({ rect }) => lightBounds.intersects(rect));
-    const points = new Set(
-      closeTris.reduce((agg, { outline }) => agg.concat(outline), /** @type {Geom.Vect[]} */ ([]))
-        .concat(exterior?.allPoints??[]),
-    );
-    const allLineSegs = closeTris.reduce(
-      (agg, { outline: [u, v, w] }) => agg.concat([[u, v], [v, w], [w, u]]),
-      /** @type {[Geom.Vect, Geom.Vect][]} */ ([]),
-    ).concat(
-      exterior?.lineSegs??[],
-      extraSegs,
-    );
 
     // These will be unit directional vectors.
     const dir0 = Vect.zero;
@@ -618,11 +608,18 @@ class geomServiceClass {
       dir0.copy(dir1).rotate(-0.001);
       dir2.copy(dir1).rotate(+0.001);
       dist0 = dist1 = dist2 = range;
+
       // Detect how far each ray propagates without hitting a line segment
-      allLineSegs.forEach(([q0, q1]) => {
+      for (const [i, [q0, q1]] of allLineSegs.entries()) {
         d = this.getLineLineSegIntersect(pos, dir0, q0, q1);
         if (d !== null && d >= 0 && d < dist0) {
           dist0 = d;
+          if (i === 0 && direction) {
+            // If hit "direction barrier", assume (i) other rays will too,
+            // and (ii) there is no closer segment
+            dist1 = dist2 = d; 
+            break;
+          }
         }
         d = this.getLineLineSegIntersect(pos, dir1, q0, q1);
         if (d !== null && d >= 0 && d < dist1) {
@@ -632,7 +629,7 @@ class geomServiceClass {
         if (d !== null && d >= 0 && d < dist2) {
           dist2 = d;
         }
-      });
+      };
       // Append to unsorted light polygon
       deltas.push(
         dir0.clone().scale(dist0),
@@ -877,9 +874,8 @@ export function isDirectionChar(input) {
 /**
  * @typedef LightPolyDef @type {object}
  * @property {Geom.Vect} position Position of light.
- * @property {Geom.Vect} [direction] Direction of light.
+ * @property {Geom.Vect} [direction] Direction of light, assumed to be a normal vector.
  * @property {number} range 
- * @property {Geom.Poly[]} [tris] Triangles defining obstructions
  * @property {Geom.Poly} [exterior] Simple polygon (i.e. ring) we are inside
  * @property {[Geom.Vect, Geom.Vect][]} [extraSegs] Line segs
  */
