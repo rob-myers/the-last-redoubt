@@ -51,20 +51,24 @@ export class gmRoomGraphClass extends BaseGraph {
   }
 
   /**
-   * 🚧
-   * Get doors s.t.
-   * - related to some door connected to room `gmRoomId`
-   * - connected to room `other`
+   * We assume `srcRm` ≠ `dstRm`, and `srcRm` non-adjacent to `dstRm`.
    * 
-   * `doorId` is relative to `gmRoomId`.
-   * `relDoorIds` are relative to `other`.
-   * @param {Geomorph.GmRoomId} gmRoomId 
-   * @param {Geomorph.GmRoomId} other not gmRoomId nor adjacent to it
-   * @returns {{ doorId: number; relDoorIds: number[]; }[]}
+   * We'll detect: `srcRm -d1-> rm1` `dstRm -d2-> rm2` where `R(d1, d2)` i.e.
+   * - `srcRm` has adjacent room `rm1` via door `d1`
+   * - `dstRm` has adjacent room `rm1` via door `d2`
+   * - doors `d1` and `d2` are related (relate-connectors)
+   * 
+   * `rm1` and `rm2` may be equal (often the case) or adjacent.
+   *
+   * @param {Geomorph.GmRoomId} srcRm 
+   * @param {Geomorph.GmRoomId} dstRm not gmRoomId nor adjacent to it
+   * @returns {{ srcAdj: [Graph.GmDoorId, Geomorph.GmRoomId]; dstAdj: [Graph.GmDoorId, Geomorph.GmRoomId]; }[]}
    */
-  getRelDoorIds(gmRoomId, other, requireOpen = false) {
+  getRelDoorIds(srcRm, dstRm, requireOpen = false) {
+    const output = /** @type {ReturnType<typeof this.getRelDoorIds>} */ ([]);
+    const src = this.getNode(srcRm.gmId, srcRm.roomId);
+    const dst = this.getNode(dstRm.gmId, dstRm.roomId);    
     // 🚧
-    const output = /** @type {{ doorId: number; relDoorIds: number[]; }[]} */ ([]);
 
     return output;
   }
