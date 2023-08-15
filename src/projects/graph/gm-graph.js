@@ -199,11 +199,16 @@ export class gmGraphClass extends BaseGraph {
       // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
       // We avoid including the current room, using a small "envelope" instead.
       const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId);
+      // 🚧 seen multiple disjoint polys, where 0th is not what we want
       const exterior = Poly.union([
         envelope,
-        area.poly, // room on "other side of door":
-        areaGm.roomsWithDoors[area.hullRoomId ?? areaGm.getOtherRoomId(area.doorId, rootRoomId)]
-      ])[0];
+        area.poly,
+        // 🚧 why is this room "on other side of door" required?
+        // maybe only in special cases?
+        // areaGm.roomsWithDoors[area.hullRoomId ?? areaGm.getOtherRoomId(area.doorId, rootRoomId)]
+      // ])[0];
+      // ]).findLast(Boolean);
+      ]).find(poly => poly.contains(envelope.outline[0])); // 🚧 temp fix
 
       const lightPosition = areaGm.getViewDoorPosition(
         areaRoomId,
@@ -322,13 +327,20 @@ export class gmGraphClass extends BaseGraph {
       return [area];
 
     } else {
+      // - require related door is in front
+      //   ℹ️ otherwise issue with gm 301 stateroom with "long relation"
+      // - 🚧 require related door reachable via open doors?
+      // - 🤔 maybe gmRoomGraph.relDoor has extra info?
       const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
         this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
-      // 🤔 otherwise issue with gm 301 stateroom with "long relation"
-      ).filter(relDoorId => !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId));
+      ).filter(relDoorId =>
+        !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId)
+      );
+
       const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
       const relHullDoorIds = relDoorIds.filter(x => gm.isHullDoor(x));
+
       /** Windows are always open, and assumed visible if related door open */
       const relWindowIds = gm.relDoorId[doorId]?.windowIds ?? [];
   
