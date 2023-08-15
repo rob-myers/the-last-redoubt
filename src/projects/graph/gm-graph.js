@@ -145,6 +145,18 @@ export class gmGraphClass extends BaseGraph {
       ({ doorId }) => gmOpenIds.includes(doorId) ? doorId : []
     );
 
+    // 🚧 trt apply area.poly restriction in this function
+    // /**
+    //  * Light positions aligned to rootOpenIds.
+    //  */
+    // const lightPositions = rootOpenIds.map(doorId =>
+    //   gm.getViewDoorPosition(rootRoomId, doorId, nearDoorIds.includes(doorId)),
+    // );
+    // ℹ️ may need transform in case of hull doors
+    // const adjLightPosition = this.gms[area.gmId].inverseMatrix.transformPoint(gm.matrix.transformPoint(lightPosition.clone()));
+
+    const rootGmRoomId = { gmId, roomId: rootRoomId };
+
     /**
      * Each area is initially constructed by joining two items from
      * `roomWithDoors` i.e. either side of door `doorId`.
@@ -153,7 +165,7 @@ export class gmGraphClass extends BaseGraph {
      * - `area.poly` may be extended via related doorIds.
      */
     const viewDoorAreas = rootOpenIds.flatMap((doorId) =>
-      this.computeViewDoorAreas(gmId, doorId, gmOpenIds, rootOpenIds)
+      this.computeViewDoorAreas(rootGmRoomId, doorId, rootOpenIds)
     );
 
     /** For each area we raycast a light from specific position. */
@@ -181,6 +193,7 @@ export class gmGraphClass extends BaseGraph {
           .filter(x => !relDoorIds.includes(x)),
       ];
       // ℹ️ Maximal possible blocked door ids
+      // 🚧 can restrict relDoorIds to those adjacent to rootRoom?
       // const blockedDoorIds = areaGm.doors.map((_, doorId) => doorId).filter(doorId =>
       //   doorId !== area.doorId && !(relDoorIds.includes(doorId) && doorLookup[doorId].open)
       // );
@@ -233,11 +246,11 @@ export class gmGraphClass extends BaseGraph {
    * - output gmId is adjacent gmId
    * - area is union of roomsWithDoors on either side (one from each geomorph),
    *   transformed into adjacent gmId coords
-   * @param {number} gmId 
+   * @param {Geomorph.GmRoomId} rootGmRoomId 
    * @param {number} doorId
    * @returns {null | Graph.OpenDoorArea}
    */
-  computeViewDoorArea(gmId, doorId) {
+  computeViewDoorArea({ gmId }, doorId) {
     const gm = this.gms[gmId];
     const door = gm.doors[doorId];
 
@@ -280,15 +293,14 @@ export class gmGraphClass extends BaseGraph {
   /**
    * Compute viewable area through specific (possibly hull) door.
    * This over-approximates the view i.e. we'll raycast into this.
-   * @param {number} gmId 
+   * @param {Geomorph.GmRoomId} rootGmRoomId 
    * @param {number} doorId 
-   * @param {number[]} gmOpenIds open doors in geomorph @see {gmId}
    * @param {number[]} rootOpenIds open door in root room
    * @returns {Graph.OpenDoorArea[]}
    */
-  computeViewDoorAreas(gmId, doorId, gmOpenIds, rootOpenIds) {
-    const gm = this.gms[gmId];
-    const area = this.computeViewDoorArea(gmId, doorId);
+  computeViewDoorAreas(rootGmRoomId, doorId, rootOpenIds) {
+    const gm = this.gms[rootGmRoomId.gmId];
+    const area = this.computeViewDoorArea(rootGmRoomId, doorId);
     if (!area) {
       return [];
     }
@@ -307,15 +319,14 @@ export class gmGraphClass extends BaseGraph {
       );
       // Handle R(hullDoorId, doorId) by extending area.poly (in adjGm)
       area.poly = Poly.union([area.poly,
-        ...relDoorIds.flatMap(relDoorId => this.computeViewDoorArea(area.gmId, relDoorId)?.poly ?? []),
+        ...relDoorIds.flatMap(relDoorId => this.computeViewDoorArea({ gmId: area.gmId, roomId: /** @type {number} */ (area.hullRoomId) }, relDoorId)?.poly ?? []),
         // ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
       ])[0];
       return [area];
 
     } else {
-
       const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
-        gmOpenIds.includes(relDoorId)
+        this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
       );
       const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
@@ -325,14 +336,14 @@ export class gmGraphClass extends BaseGraph {
   
       if (relDoorIds.length || relWindowIds.length) {
         area.poly = Poly.union([area.poly, // Related non-hull doors/windows extend area.poly
-          ...relNonHullDoorIds.flatMap(relDoorId => this.computeViewDoorArea(gmId, relDoorId)?.poly || []),
-          ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
+          ...relNonHullDoorIds.flatMap(relDoorId => this.computeViewDoorArea(rootGmRoomId, relDoorId)?.poly || []),
+          ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(rootGmRoomId.gmId, relWindowId)),
         ])[0];
       }
       
       return [area].concat(
         relHullDoorIds.map(// Handle R(doorId, hullDoorId) via `area.poly`s in adjGm
-          doorId => /** @type {Graph.OpenDoorArea} */ (this.computeViewDoorArea(gmId, doorId)),
+          doorId => /** @type {Graph.OpenDoorArea} */ (this.computeViewDoorArea(rootGmRoomId, doorId)),
         ).filter(Boolean)
       );
     }
