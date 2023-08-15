@@ -2,8 +2,11 @@
 
 ## In progress
 
-- 🚧 replace lightPoly `direction` with simplified area.poly
-  i.e. room before light replaced by a 4gon extending door backwards to cover the light
+- ✅ replace lightPoly `direction` with simplified area.poly
+  - ℹ️ room before light replaced by "envelope"
+    i.e. 5gon extending door backwards to cover the light
+
+- cache connector.poly.center -> connector.center
 
 - 🚧 gmRoomGraph to simplify many computations
   - ✅ create it
@@ -65,6 +68,7 @@
 - saw unresponsive click until `spawn rob $p`
 - Grid for room polys
 
+- cypress tests?
 
 - ❌ can `filter '/events/.test'`
   - `/events/.test("foo")` doesn't work

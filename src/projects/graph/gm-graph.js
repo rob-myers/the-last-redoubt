@@ -146,15 +146,6 @@ export class gmGraphClass extends BaseGraph {
       ({ doorId }) => gmOpenIds.includes(doorId) ? doorId : []
     );
 
-    // /**
-    //  * Light positions aligned to rootOpenIds.
-    //  */
-    // const lightPositions = rootOpenIds.map(doorId =>
-    //   gm.getViewDoorPosition(rootRoomId, doorId, nearDoorIds.includes(doorId)),
-    // );
-    // ℹ️ may need transform in case of hull doors
-    // const adjLightPosition = this.gms[area.gmId].inverseMatrix.transformPoint(gm.matrix.transformPoint(lightPosition.clone()));
-
     const rootGmRoomId = { gmId, roomId: rootRoomId };
 
     /**
@@ -203,25 +194,17 @@ export class gmGraphClass extends BaseGraph {
       // These segs are not perfect i.e. part of door will be covered
       const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
-      // Restricting light direction fixes an artifact seen in 301 stateroom east
-      const door = areaGm.doors[area.doorId];
-      const direction = area.gmId === gmId
-        ? door.normal.clone().scale(door.roomIds[0] === rootRoomId ? -1 : 1)
-        // ℹ️ saw hull door issue, possibly transform related
-        : undefined;
 
-      // 🚧 try different exterior in this function
-      // 🚧 maybe slightly extended convex hull?
       const areaRoomId = area.hullRoomId ?? rootRoomId;
-      const extPoly = areaGm.roomsWithDoors[areaRoomId];
-      /** Further into room than light */
-      const furtherLightPosition = areaGm.getViewDoorPosition(
-        areaRoomId,
-        area.doorId,
-        nearDoorIds.includes(area.otherDoorId ?? area.doorId)
-          ? doorPeekViewOffset + 2
-          : doorViewOffset + 2,
-      );
+      // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
+      // We avoid including the current room, using a small "envelope" instead.
+      const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId);
+      const exterior = Poly.union([
+        envelope,
+        area.poly, // room on "other side of door":
+        areaGm.roomsWithDoors[area.hullRoomId ?? areaGm.getOtherRoomId(area.doorId, rootRoomId)]
+      ])[0];
+
       const lightPosition = areaGm.getViewDoorPosition(
         areaRoomId,
         area.doorId,
@@ -233,9 +216,8 @@ export class gmGraphClass extends BaseGraph {
         poly: geom.lightPolygon({
           position: lightPosition,
           range: 2000,
-          exterior: area.poly,
+          exterior,
           extraSegs,
-          direction, // 🚧 remove
         }),
       };
     });
@@ -260,24 +242,20 @@ export class gmGraphClass extends BaseGraph {
    * - output gmId is adjacent gmId
    * - area is union of roomsWithDoors on either side (one from each geomorph),
    *   transformed into adjacent gmId coords
-   * @param {Geomorph.GmRoomId} rootGmRoomId 
+   * @param {Geomorph.GmRoomId} gmRoomId 
    * @param {number} doorId
    * @returns {null | Graph.OpenDoorArea}
    */
-  computeViewDoorArea({ gmId }, doorId) {
+  computeViewDoorArea({ gmId, roomId }, doorId) {
     const gm = this.gms[gmId];
-    const door = gm.doors[doorId];
 
     if (!gm.isHullDoor(doorId)) {
-      const adjRoomNodes = gm.roomGraph.getAdjacentRooms(gm.roomGraph.getDoorNode(doorId));
-      const adjRooms = adjRoomNodes.map(x => gm.roomsWithDoors[x.roomId]);
-      // const adjRoomsSansHoles = adjRoomNodes.map(x => new Poly(gm.roomsWithDoors[x.roomId].outline));
       return {
         gmId,
         doorId,
         hullRoomId: null,
         otherDoorId: null,
-        poly: Poly.union(adjRooms)[0],
+        poly: gm.roomsWithDoors[roomId],
       };
     }
 
@@ -286,13 +264,11 @@ export class gmGraphClass extends BaseGraph {
       return null;
     }
 
-    const srcRoomId = /** @type {number} */ (door.roomIds.find(x => typeof x === 'number'));
     const otherGm = this.gms[adjCtxt.adjGmId];
     const otherGmRoom = otherGm.roomsWithDoors[adjCtxt.adjRoomId];
     // const otherGmRoomSansHoles = new Poly(otherGm.roomsWithDoors[result.adjRoomId].outline);
     const poly = Poly.union([// We transform poly from `gm` coords to `otherGm` coords
-      gm.roomsWithDoors[srcRoomId].clone().applyMatrix(gm.matrix).applyMatrix(otherGm.inverseMatrix),
-      otherGmRoom,
+      otherGmRoom, // 🚧 get from `roomId` instead?
     ])[0];
 
     return {
@@ -314,7 +290,10 @@ export class gmGraphClass extends BaseGraph {
    */
   computeViewDoorAreas(rootGmRoomId, doorId, rootOpenIds) {
     const gm = this.gms[rootGmRoomId.gmId];
-    const area = this.computeViewDoorArea(rootGmRoomId, doorId);
+    const area = this.computeViewDoorArea({
+      gmId: rootGmRoomId.gmId,
+      roomId: gm.getOtherRoomId(doorId, rootGmRoomId.roomId),
+    }, doorId);
     if (!area) {
       return [];
     }
@@ -332,8 +311,12 @@ export class gmGraphClass extends BaseGraph {
         this.api.doors.lookup[area.gmId][relDoorId].open
       );
       // Handle R(hullDoorId, doorId) by extending area.poly (in adjGm)
-      area.poly = Poly.union([area.poly,
-        ...relDoorIds.flatMap(relDoorId => this.computeViewDoorArea({ gmId: area.gmId, roomId: /** @type {number} */ (area.hullRoomId) }, relDoorId)?.poly ?? []),
+      area.poly = Poly.union([
+        area.poly,
+        ...relDoorIds.flatMap(relDoorId => this.computeViewDoorArea({
+          gmId: area.gmId,
+          roomId: this.gms[area.gmId].getFurtherDoorRoom(area.doorId, relDoorId),
+        }, relDoorId)?.poly ?? []),
         // ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(gmId, relWindowId)),
       ])[0];
       return [area];
@@ -342,15 +325,19 @@ export class gmGraphClass extends BaseGraph {
       const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
         this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
-      );
+      // 🤔 otherwise issue with gm 301 stateroom with "long relation"
+      ).filter(relDoorId => !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId));
       const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
       const relHullDoorIds = relDoorIds.filter(x => gm.isHullDoor(x));
       /** Windows are always open, and assumed visible if related door open */
       const relWindowIds = gm.relDoorId[doorId]?.windowIds ?? [];
   
       if (relDoorIds.length || relWindowIds.length) {
-        area.poly = Poly.union([area.poly, // Related non-hull doors/windows extend area.poly
-          ...relNonHullDoorIds.flatMap(relDoorId => this.computeViewDoorArea(rootGmRoomId, relDoorId)?.poly || []),
+        area.poly = Poly.union([
+          area.poly, // Related non-hull doors/windows extend area.poly
+          ...relNonHullDoorIds.flatMap(relDoorId =>
+            this.computeViewDoorArea({ gmId: rootGmRoomId.gmId, roomId: gm.getFurtherDoorRoom(doorId, relDoorId) }, relDoorId)?.poly || []
+          ),
           ...relWindowIds.flatMap(relWindowId => this.getOpenWindowPolygon(rootGmRoomId.gmId, relWindowId)),
         ])[0];
       }

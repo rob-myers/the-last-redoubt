@@ -174,6 +174,7 @@ declare namespace Geomorph {
 
     floorGraph: Graph.FloorGraph;
 
+    /** Convex hull of door with a point "beyond" view position  */
     getViewEnvelope(srcRoomId: number, doorId: number): Geom.Poly;
     /**
      * Get non-null roomId adjacent to dstDoorId s.t. furthest from srcDoorId.
