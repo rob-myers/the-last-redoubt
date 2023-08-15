@@ -58,6 +58,38 @@ class geomServiceClass {
   }
 
   /**
+   * From npm module `monotone-chain-convex-hull`
+   * @param {Geom.VectJson[]} points 
+   * @returns {Geom.VectJson[]}
+   */
+  convexHull(points) {
+    points = points.slice().sort(sortByXThenY);
+  
+    const n = points.length;
+    const result = new Array(n);
+    let k = 0;
+  
+    for (let i = 0; i < n; i++) {
+      const point = points[i];
+      while (k >= 2 && -Poly.sign(result[k - 2], result[k - 1], point) <= 0) {
+        k--;
+      }
+      result[k++] = point;
+    }
+  
+    const t = k + 1;
+    for (let i = n - 2; i >= 0; i--) {
+      const point = points[i];
+      while (k >= t && -Poly.sign(result[k - 2], result[k - 1], point) <= 0) {
+        k--;
+      }
+      result[k++] = point;
+    }
+  
+    return result.slice(0, k - 1);
+  }
+
+  /**
    * See Separating Axis Theorem for convex polygons.
    * https://github.com/davidfig/intersects/blob/9fba4c88dcf28998ced7df7c6e744646eac1917d/polygon-polygon.js#L10
    * @param {Geom.VectJson[]} ps1 
@@ -878,3 +910,14 @@ export function isDirectionChar(input) {
  * @property {Geom.Poly} [exterior] Simple polygon (i.e. ring) we are inside
  * @property {[Geom.Vect, Geom.Vect][]} [extraSegs] Line segs
  */
+
+/**
+ * @param {Geom.VectJson} point1
+ * @param {Geom.VectJson} point2
+ */
+function sortByXThenY(point1, point2) {
+  if (point1.x === point2.x) {
+    return point1.y - point2.y;
+  }
+  return point1.x - point2.x;
+}
