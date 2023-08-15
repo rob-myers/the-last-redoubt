@@ -174,6 +174,7 @@ declare namespace Geomorph {
 
     floorGraph: Graph.FloorGraph;
 
+    getViewEnvelope(srcRoomId: number, doorId: number): Geom.Poly;
     /**
      * Get non-null roomId adjacent to dstDoorId s.t. furthest from srcDoorId.
      * For hull doors this will be the only roomId referenced.

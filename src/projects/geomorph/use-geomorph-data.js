@@ -227,6 +227,18 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
+    // 🚧 cache
+    getViewEnvelope(srcRoomId, doorId) {
+      /** Further into room than viewpoint */
+      const furtherViewPosition = this.getViewDoorPosition(
+        srcRoomId,
+        doorId,
+        doorViewOffset + 2, // Assume doorViewOffset >= doorPeekViewOffset
+      );
+      return new Poly(geom.convexHull(
+        this.doors[doorId].poly.outline.concat(furtherViewPosition)
+      ));
+    },
     getFurtherDoorRoom(srcDoorId, dstDoorId) {
       const [src] = this.doors[srcDoorId].entries;
       const { entries: [dstA, dstB], roomIds } = this.doors[dstDoorId];
