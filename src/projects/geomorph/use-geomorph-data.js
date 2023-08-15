@@ -6,7 +6,7 @@ import { computeViewPosition, geomorphJsonPath, getNormalizedDoorPolys, singleTo
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
-import { doorPeekViewOffset, doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
+import { doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
 import usePathfinding from "./use-pathfinding";
 
 /**
@@ -277,6 +277,12 @@ export async function createGeomorphData(input) {
       return (point?.clone()
         || computeViewPosition(this.windows[windowId], rootRoomId, windowViewOffset)
       );
+    },
+    // 🚧 cache
+    isOtherDoorBehind(srcRoomId, srcDoorId, dstDoorId) {
+      const srcDoor = this.doors[srcDoorId];
+      const viewDir = srcDoor.normal.clone().scale(srcDoor.roomIds[0] === srcRoomId ? -1 : 1);
+      return this.doors[dstDoorId].poly.center.sub(srcDoor.poly.center).dot(viewDir) <= 0;
     },
     isHullDoor(doorId) {
       return doorId < this.hullDoors.length;

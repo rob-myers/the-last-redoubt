@@ -196,6 +196,8 @@ declare namespace Geomorph {
      */
     getViewDoorPosition(roomId: number, doorId: number, overrideOffset?: number);
     getViewWindowPosition(rootRoomId: number, doorId: number);
+    /** Inside roomId looking through adjacent doorId, is dstDoorId behind? */
+    isOtherDoorBehind(srcRoomId: number, srcDoorId: number, dstDoorId: number): boolean;
     isHullDoor(doorId: number): boolean;
 
     /**
