@@ -59,8 +59,9 @@ class geomServiceClass {
 
   /**
    * From npm module `monotone-chain-convex-hull`
-   * @param {Geom.VectJson[]} points 
-   * @returns {Geom.VectJson[]}
+   * @template {Geom.VectJson} T
+   * @param {T[]} points 
+   * @returns {T[]}
    */
   convexHull(points) {
     points = points.slice().sort(sortByXThenY);
