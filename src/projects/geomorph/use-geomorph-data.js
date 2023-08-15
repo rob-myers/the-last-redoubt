@@ -227,6 +227,12 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
+    getFurtherDoorRoom(srcDoorId, dstDoorId) {
+      const [src] = this.doors[srcDoorId].entries;
+      const { entries: [dstA, dstB], roomIds } = this.doors[dstDoorId];
+      const index = src.distanceToSquared(dstA) >= src.distanceToSquared(dstB) ? 0 : 1;
+      return roomIds[index] ?? /** @type {number} */ (roomIds[1 - index]);
+    },
     getOtherRoomId(doorId, roomId) {
       // We support case where roomIds are equal e.g. gm 303
       const { roomIds } = this.doors[doorId];

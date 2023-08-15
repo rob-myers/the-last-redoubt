@@ -130,7 +130,7 @@ declare namespace Geomorph {
    * Geomorph.ParsedLayout with derived data.
    * This is the type of useGeomorphData's data.
    */
-   export interface GeomorphData extends Geomorph.ParsedLayout {
+  export interface GeomorphData extends Geomorph.ParsedLayout {
 
     roomsWithDoors: Poly[];
     hullDoors: ConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
@@ -174,35 +174,40 @@ declare namespace Geomorph {
 
     floorGraph: Graph.FloorGraph;
 
-   /** Returns -1 if a hull door. */
-   getOtherRoomId(doorId: number, roomId: number): number;
-   getParallelDoorIds(doorId: number): number[];
-   /** Get doorIds related via tag `relate-connectors` */
-   getRelatedDoorIds(doorId: number): number[];
-  /**
-   * By default we move "the view" inside current room by constant amount.
-   * Sometimes this breaks (lies outside current room) or looks bad when combined,
-   * so can override via "view"-tagged rects.
-   * 
-   * Moreover:
-   * - for current gmId `roomId` is current room
-   * - for adjacent gmId `roomId` is adjacent room
-   */
-   getViewDoorPosition(roomId: number, doorId: number, overrideOffset?: number);
-   getViewWindowPosition(rootRoomId: number, doorId: number);
-   isHullDoor(doorId: number): boolean;
+    /**
+     * Get non-null roomId adjacent to dstDoorId s.t. furthest from srcDoorId.
+     * For hull doors this will be the only roomId referenced.
+     */
+    getFurtherDoorRoom(srcDoorId: number, dstDoorId: number): number;
+    /** Returns -1 if a hull door. */
+    getOtherRoomId(doorId: number, roomId: number): number;
+    getParallelDoorIds(doorId: number): number[];
+    /** Get doorIds related via tag `relate-connectors` */
+    getRelatedDoorIds(doorId: number): number[];
+    /**
+     * By default we move "the view" inside current room by constant amount.
+     * Sometimes this breaks (lies outside current room) or looks bad when combined,
+     * so can override via "view"-tagged rects.
+     * 
+     * Moreover:
+     * - for current gmId `roomId` is current room
+     * - for adjacent gmId `roomId` is adjacent room
+     */
+    getViewDoorPosition(roomId: number, doorId: number, overrideOffset?: number);
+    getViewWindowPosition(rootRoomId: number, doorId: number);
+    isHullDoor(doorId: number): boolean;
 
-  /**
-   * Raycast `src -> dst` against `roomWithDoors[roomId]`, returning
-   * `{ doorId, lambda }` if respective door from doorIds was earliest hit.
-   * The intersection is `src + lambda.(dst - src)`.
-   */
-  rayIntersectsDoor(
-    src: Geom.VectJson,
-    dst: Geom.VectJson,
-    roomId: number,
-    doorIds: number[],
-  ): null | { doorId: number; lambda: number; };
+    /**
+     * Raycast `src -> dst` against `roomWithDoors[roomId]`, returning
+     * `{ doorId, lambda }` if respective door from doorIds was earliest hit.
+     * The intersection is `src + lambda.(dst - src)`.
+     */
+    rayIntersectsDoor(
+      src: Geom.VectJson,
+      dst: Geom.VectJson,
+      roomId: number,
+      doorIds: number[],
+    ): null | { doorId: number; lambda: number; };
 
   }
 
