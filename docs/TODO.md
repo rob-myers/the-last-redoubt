@@ -2,6 +2,9 @@
 
 ## In progress
 
+- 🚧 replace lightPoly `direction` with simplified area.poly
+  i.e. room before light replaced by a 4gon extending door backwards to cover the light
+
 - 🚧 gmRoomGraph to simplify many computations
   - ✅ create it
     - whose nodes are `gmRoomId`s
@@ -44,28 +47,6 @@
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
     - output will be provided to raycast stage
   - raycast stage
-
-- ✅ BUG with hull doors timeout: might need to clear both
-
-- ✅ BUG npc navigated off-mesh somehow
-```sh
-# REPRO
-world npcs.isPointInNavmesh {"x":-74,"y":362.47}
-# true
-
-spawn rob {"x":-74,"y":362.47}
-nav rob $( click 1 ) | walk rob
-# nav: run: Error: getLocalNavPath: no path found: {"x":-74,"y":362.47} --> {"x":-85.83,"y":364.97,"meta":{"world-root":true,"targetPos":{"x":-27.1,"y":279.05},"nav":true}}
-```
-  - decided ok to fallback to centroids of nearby nodes (via grid),
-    GIVEN we guard by navPoly containment test
-
-- ✅ builtin `say`
-  - ✅ can choose voice `say --v="Google UK English Female" {1..5}Hello`
-  - ✅ can list voices `say --v=?`
-  - ✅ can ctrl-c
-  - ✅ can pause/resume
-  - ✅ can `echo foo{1..5} > /dev/voice`
 
 - BUG with `npc config '{ scriptDoors: false }'`
   - doors open then close immediately
@@ -551,6 +532,27 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG with hull doors timeout: might need to clear both
+
+- ✅ BUG npc navigated off-mesh somehow
+```sh
+# REPRO
+world npcs.isPointInNavmesh {"x":-74,"y":362.47}
+# true
+spawn rob {"x":-74,"y":362.47}
+nav rob $( click 1 ) | walk rob
+# nav: run: Error: getLocalNavPath: no path found: {"x":-74,"y":362.47} --> {"x":-85.83,"y":364.97,"meta":{"world-root":true,"targetPos":{"x":-27.1,"y":279.05},"nav":true}}
+```
+  - decided ok to fallback to centroids of nearby nodes (via grid),
+    GIVEN we guard by navPoly containment test
+
+- ✅ builtin `say`
+  - ✅ can choose voice `say --v="Google UK English Female" {1..5}Hello`
+  - ✅ can list voices `say --v=?`
+  - ✅ can ctrl-c
+  - ✅ can pause/resume
+  - ✅ can `echo foo{1..5} > /dev/voice`
 
 - ✅ clean `computeDoorViewArea` etc.
 - ✅ sealed doors are red (they needn't be hull doors)

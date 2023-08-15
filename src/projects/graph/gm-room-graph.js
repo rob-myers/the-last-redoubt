@@ -76,7 +76,7 @@ export class gmRoomGraphClass extends BaseGraph {
   /**
    * @param {Geomorph.GmRoomId} gmRoomId 
    * @param {Geomorph.GmRoomId} other 
-   * @returns {{ key: 'same-room' } | { key: 'adj-room'; gmDoorIds: Graph.GmDoorId[]; } | { key: 'rel-room'; relation: { doorId: number; relDoorIds: number[]; }[]; } | null}
+   * @returns {{ key: 'same-room' } | { key: 'adj-room'; gmDoorIds: Graph.GmDoorId[]; } | { key: 'rel-room'; relation: ReturnType<Graph.GmRoomGraph['getRelDoorIds']>; } | null}
    */
   getVantages(gmRoomId, other, requireOpen = true) {
     if (isSameGmRoom(gmRoomId, other)) {

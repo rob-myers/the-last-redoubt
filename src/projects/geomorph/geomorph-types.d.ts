@@ -188,7 +188,7 @@ declare namespace Geomorph {
    * - for current gmId `roomId` is current room
    * - for adjacent gmId `roomId` is adjacent room
    */
-   getViewDoorPosition(roomId: number, doorId: number, peek?: boolean);
+   getViewDoorPosition(roomId: number, doorId: number, overrideOffset?: number);
    getViewWindowPosition(rootRoomId: number, doorId: number);
    isHullDoor(doorId: number): boolean;
 

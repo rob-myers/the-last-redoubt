@@ -4,6 +4,7 @@ import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
 import { error } from "../service/log";
+import { doorPeekViewOffset, doorViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -145,7 +146,6 @@ export class gmGraphClass extends BaseGraph {
       ({ doorId }) => gmOpenIds.includes(doorId) ? doorId : []
     );
 
-    // 🚧 trt apply area.poly restriction in this function
     // /**
     //  * Light positions aligned to rootOpenIds.
     //  */
@@ -203,25 +203,39 @@ export class gmGraphClass extends BaseGraph {
       // These segs are not perfect i.e. part of door will be covered
       const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
 
-      // By restricting light direction we saves computation,
-      // and also fix an artifact seen in 301 stateroom east
+      // Restricting light direction fixes an artifact seen in 301 stateroom east
       const door = areaGm.doors[area.doorId];
       const direction = area.gmId === gmId
         ? door.normal.clone().scale(door.roomIds[0] === rootRoomId ? -1 : 1)
-        : undefined; // ℹ️ saw hull door issue, possibly transform related
+        // ℹ️ saw hull door issue, possibly transform related
+        : undefined;
+
+      // 🚧 try different exterior in this function
+      // 🚧 maybe slightly extended convex hull?
+      const areaRoomId = area.hullRoomId ?? rootRoomId;
+      const extPoly = areaGm.roomsWithDoors[areaRoomId];
+      /** Further into room than light */
+      const furtherLightPosition = areaGm.getViewDoorPosition(
+        areaRoomId,
+        area.doorId,
+        nearDoorIds.includes(area.otherDoorId ?? area.doorId)
+          ? doorPeekViewOffset + 2
+          : doorViewOffset + 2,
+      );
+      const lightPosition = areaGm.getViewDoorPosition(
+        areaRoomId,
+        area.doorId,
+        nearDoorIds.includes(area.otherDoorId ?? area.doorId) ? doorPeekViewOffset : undefined,
+      );
 
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: areaGm.getViewDoorPosition(
-            area.hullRoomId ?? rootRoomId,
-            area.doorId,
-            nearDoorIds.includes(area.otherDoorId ?? area.doorId),
-          ),
+          position: lightPosition,
           range: 2000,
           exterior: area.poly,
           extraSegs,
-          direction,
+          direction, // 🚧 remove
         }),
       };
     });
