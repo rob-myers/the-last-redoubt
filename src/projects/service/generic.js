@@ -243,7 +243,7 @@ export function generateSelector(selector, extraArgs) {
 }
 
 /**
- * @template {string} K
+ * @template {string | number} K
  * @param {Partial<Record<K, any>> | Record<K, any>} record
  * Typed `Object.keys`, usually as finitely many string literals.
  */
@@ -262,9 +262,9 @@ export function keysDeep(obj) {
 /**
  * @template SrcValue
  * @template DstValue
- * @template {string} Key
+ * @template {string | number} Key
  * @param {Record<Key, SrcValue>} input
- * @param {(value: SrcValue, key: string) => DstValue} transform
+ * @param {(value: SrcValue, key: Key) => DstValue} transform
  * Given `{ [key]: value }`, returns fresh
  * `{ [key]: _transform_(value) }`.
  */
