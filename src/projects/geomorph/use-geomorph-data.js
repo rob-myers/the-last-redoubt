@@ -80,44 +80,7 @@ export async function createGeomorphData(input) {
       { center: poly.center, poly, reverse: meta.reverse, meta }
     ));
 
-  /**
-   * Each `relate-connectors` relates a doorId to other doorId(s) or windowId(s).
-   * We'll use them to extend the view polygon e.g. when doors face one another.
-   */
-  const relDoorId = layout.groups.singles
-    .filter(x => x.meta[svgSymbolTag['relate-connectors']])
-    .reduce((agg, { poly }, i) => {
-      const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
-      const windowIds = layout.windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
-      doorIds.forEach(doorId => {
-        agg[doorId] ??= { doorIds: [], windowIds: [] };
-        agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId));
-        agg[doorId].windowIds.push(...windowIds);
-      });
-      if (doorIds.length === 0)
-        warn(`${layout.key}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);
-      if (doorIds.length + windowIds.length <= 1)
-        warn(`${layout.key}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
-      return agg;
-    },
-    /** @type {Geomorph.GeomorphData['relDoorId']} */ ({}),
-  );
 
-  const parallelDoorId = layout.groups.singles
-    .filter(x => x.meta[svgSymbolTag["parallel-connectors"]])
-    .reduce((agg, { poly }) => {
-      const doorIds = layout.doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
-      doorIds.forEach(doorId => {
-        agg[doorId] ??= { doorIds: [] };
-        const alreadySeen = agg[doorId].doorIds;
-        agg[doorId].doorIds.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
-      });
-      if (doorIds.length <= 1)
-        console.warn(`poly tagged "${svgSymbolTag["parallel-connectors"]}" should intersect ≥ 2 doors: (doorIds ${doorIds})`);
-      return agg;
-    },
-    /** @type {Geomorph.GeomorphData['parallelDoorId']} */ ({}),
-  );
 
   //#region points by room 🚧 precompute?
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
@@ -135,7 +98,7 @@ export async function createGeomorphData(input) {
         const index = door.roomIds.indexOf(roomId);
         const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
 
-        if (parallelDoorId[doorId]) {
+        if (layout.parallelDoorId[doorId]) {
           // Use rect so nearby parallel door sensors intersect without gaps
           const right = new Vect(doorSensorRadius * Math.cos(door.angle), doorSensorRadius * Math.sin(door.angle));
           const down = new Vect(-right.y, right.x);
@@ -215,9 +178,6 @@ export async function createGeomorphData(input) {
     pngRect: Rect.fromJson(layout.items[0].pngRect),
     roomsWithDoors,
 
-    relDoorId,
-    parallelDoorId,
-
     doorToLightRect: layout.doors.map((_, doorId) => layout.lightRects.find(x => x.doorId === doorId)),
     windowToLightRect: layout.windows.map((_, windowId) => layout.lightRects.find(x => x.windowId === windowId)),
 
@@ -251,10 +211,10 @@ export async function createGeomorphData(input) {
       return roomIds.find((x, i) => typeof x === 'number' && roomIds[1 - i] === roomId) ?? -1;
     },
     getParallelDoorIds(doorId) {
-      return this.parallelDoorId[doorId]?.doorIds ?? [];
+      return this.parallelDoorId[doorId]?.doors ?? [];
     },
     getRelatedDoorIds(doorId) {
-      return this.relDoorId[doorId]?.doorIds ?? [];
+      return this.relDoorId[doorId]?.doors ?? [];
     },
     getViewDoorPosition(roomId, doorId, overrideOffset) {
       /**

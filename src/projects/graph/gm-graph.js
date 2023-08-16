@@ -176,7 +176,7 @@ export class gmGraphClass extends BaseGraph {
       const doorLookup = this.api.doors.lookup[area.gmId];
       const blockedDoorIds = [
         // Doors parallel to "view door"
-        ...(areaGm.parallelDoorId[area.doorId]?.doorIds??[]),
+        ...(areaGm.parallelDoorId[area.doorId]?.doors ?? []),
         // Closed doors related to "view door"
         ...relDoorIds.filter(doorId => !doorLookup[doorId].open),
         // Doors parallel to a door related to "view door", but not directly related
@@ -312,7 +312,7 @@ export class gmGraphClass extends BaseGraph {
      *   non-adjacent to current room.
      */
     if (gm.isHullDoor(doorId)) {// area.gmId is adjacent to gmId
-      const relDoorIds = (this.gms[area.gmId].relDoorId[area.doorId]?.doorIds ?? []).filter(relDoorId =>
+      const relDoorIds = (this.gms[area.gmId].relDoorId[area.doorId]?.doors ?? []).filter(relDoorId =>
         this.api.doors.lookup[area.gmId][relDoorId].open
       );
       // Handle R(hullDoorId, doorId) by extending area.poly (in adjGm)
@@ -331,7 +331,7 @@ export class gmGraphClass extends BaseGraph {
       //   ℹ️ otherwise issue with gm 301 stateroom with "long relation"
       // - 🚧 require related door reachable via open doors?
       // - 🤔 maybe gmRoomGraph.relDoor has extra info?
-      const relDoorIds = (gm.relDoorId[doorId]?.doorIds ?? []).filter(relDoorId =>
+      const relDoorIds = (gm.relDoorId[doorId]?.doors ?? []).filter(relDoorId =>
         this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
       ).filter(relDoorId =>
@@ -342,7 +342,7 @@ export class gmGraphClass extends BaseGraph {
       const relHullDoorIds = relDoorIds.filter(x => gm.isHullDoor(x));
 
       /** Windows are always open, and assumed visible if related door open */
-      const relWindowIds = gm.relDoorId[doorId]?.windowIds ?? [];
+      const relWindowIds = gm.relDoorId[doorId]?.windows ?? [];
   
       if (relDoorIds.length || relWindowIds.length) {
         area.poly = Poly.union([

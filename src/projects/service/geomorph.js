@@ -288,6 +288,45 @@ export async function createLayout(opts) {
     return agg;
   }, /** @type {Record<number, number[]>} */ ({}));
 
+  /**
+   * Each `relate-connectors` relates a doorId to other doorId(s) or windowId(s).
+   * We'll use them to extend the view polygon e.g. when doors face one another.
+   */
+  const relDoorId = groups.singles
+    .filter(x => x.meta[svgSymbolTag['relate-connectors']])
+    .reduce((agg, { poly }, i) => {
+      const doorIds = doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
+      const windowIds = windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
+      doorIds.forEach(doorId => {
+        agg[doorId] ??= { doors: [], windows: [], metas: [] };
+        agg[doorId].doors.push(...doorIds.filter(x => x !== doorId));
+        agg[doorId].windows.push(...windowIds);
+      });
+      if (doorIds.length === 0)
+        warn(`${opts.def.id}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);
+      if (doorIds.length + windowIds.length <= 1)
+        warn(`${opts.def.id}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" should intersect ≥ 2 doors/windows (doorIds ${doorIds}, windowIds ${windowIds})`);
+      return agg;
+    },
+    /** @type {Geomorph.RelDoor} */ ({}),
+  );
+
+  const parallelDoorId = groups.singles
+    .filter(x => x.meta[svgSymbolTag["parallel-connectors"]])
+    .reduce((agg, { poly }) => {
+      const doorIds = doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
+      doorIds.forEach(doorId => {
+        agg[doorId] ??= { doors: [] };
+        const alreadySeen = agg[doorId].doors;
+        agg[doorId].doors.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
+      });
+      if (doorIds.length <= 1)
+        console.warn(`poly tagged "${svgSymbolTag["parallel-connectors"]}" should intersect ≥ 2 doors: (doorIds ${doorIds})`);
+      return agg;
+    },
+    /** @type {Geomorph.ParallelDoor} */ ({}),
+  );
+
   const roomMetas = /** @type {Geomorph.PointMeta[]} */ (rooms.map((_, roomId) => {
     const adjDoors = roomGraph.getAdjacentDoors(roomId).map(x => doors[x.doorId]);
     return {
@@ -318,6 +357,9 @@ export async function createLayout(opts) {
     floorHighlightIds,
     roomSurfaceIds,
     roomMetas,
+    relDoorId,
+    parallelDoorId,
+
     meta: {
       standard: (101 <= opts.def.id) && (opts.def.id < 300),
       edge: (301 <= opts.def.id) && (opts.def.id < 500),
@@ -561,7 +603,9 @@ function singleToConnectorRect(single, rooms) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas, meta,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
+  relDoorId, parallelDoorId,
+  meta,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -596,6 +640,8 @@ export function serializeLayout({
     floorHighlightIds,
     roomSurfaceIds,
     roomMetas,
+    relDoorId,
+    parallelDoorId,
     meta,
 
     hullPoly: hullPoly.map(x => x.geoJson),
@@ -628,7 +674,9 @@ export function matchedMap(meta, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas, meta,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
+  relDoorId, parallelDoorId,
+  meta,
   hullPoly, hullRect, hullTop,
   items,
 }) {
@@ -663,6 +711,8 @@ export function parseLayout({
     floorHighlightIds,
     roomSurfaceIds,
     roomMetas,
+    relDoorId,
+    parallelDoorId,
     meta,
 
     hullPoly: hullPoly.map(Poly.from),

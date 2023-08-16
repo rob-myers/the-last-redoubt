@@ -3544,6 +3544,25 @@
   "floorHighlightIds": [],
   "roomSurfaceIds": {},
   "roomMetas": [{"roomId": 0, "hull": true, "leaf": false}],
+  "relDoorId": {},
+  "parallelDoorId": {
+    "0": {"doors": [1]},
+    "1": {"doors": [0]},
+    "2": {"doors": [3]},
+    "3": {"doors": [2]},
+    "4": {"doors": [5]},
+    "5": {"doors": [4]},
+    "6": {"doors": [7]},
+    "7": {"doors": [6]},
+    "8": {"doors": [9]},
+    "9": {"doors": [8]},
+    "10": {"doors": [11]},
+    "11": {"doors": [10]},
+    "12": {"doors": [13]},
+    "13": {"doors": [12]},
+    "14": {"doors": [15]},
+    "15": {"doors": [14]}
+  },
   "meta": {"standard": true, "edge": false, "corner": false},
   "hullPoly": [
     {

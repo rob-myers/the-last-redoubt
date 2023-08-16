@@ -208,8 +208,8 @@ export default function Doors(props) {
       const extAdjDoors = gm.roomGraph.getAdjacentDoors(
         ...adjRoomIds.concat(fov.roomId)
       ).flatMap(x =>
-        gm.relDoorId[x.doorId] && state.lookup[fov.gmId][x.doorId].open
-          ? [x.doorId, ...gm.relDoorId[x.doorId].doorIds]
+        gm.relDoorId[x.doorId] && state.isOpen(fov.gmId, x.doorId)
+          ? [x.doorId, ...gm.relDoorId[x.doorId].doors]
           : x.doorId
       );
       nextVis[fov.gmId] = extAdjDoors;

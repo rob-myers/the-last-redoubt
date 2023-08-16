@@ -6,6 +6,15 @@
   - ℹ️ room before light replaced by "envelope"
     i.e. 5gon extending door backwards to cover the light
 
+- 🚧 precompute relDoorId
+  - ✅ move relDoorId into geomorph.json computation
+  - ✅ move parallelDoorId into geomorph.json computation
+  - R(doorId, otherDoorId) includes infront: [boolean, boolean] aligned to roomIds
+  - long relations (3 or more related doorIds) induce depDoorIds for intermediates
+
+- 🚧 BUG: FOV: long relation when intermediate door closed
+  - either "choose correct polygon" or prevent relation
+
 - cache connector.poly.center -> connector.center
 
 - 🚧 gmRoomGraph to simplify many computations

@@ -175,9 +175,9 @@ export class gmRoomGraphClass extends BaseGraph {
     /** @type {typeof graph.relDoor} */
     const extras = gmGraph.gms.map(_ => ({}));
     gmGraph.gms.forEach((gm, gmId) => {
-      graph.relDoor[gmId] = mapValues(gm.relDoorId, ({ doorIds, windowIds }, doorIdStr) => {
+      graph.relDoor[gmId] = mapValues(gm.relDoorId, ({ doors, windows }, doorIdStr) => {
         return {
-          doors: doorIds.flatMap(relDoorId => {
+          doors: doors.flatMap(relDoorId => {
             if (gm.isHullDoor(relDoorId)) {
               const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, relDoorId);
               if (ctxt) {// Store converse relation from identified hull door for later:
@@ -195,7 +195,7 @@ export class gmRoomGraphClass extends BaseGraph {
             }
             return { gmId, doorId: relDoorId };
           }),
-          windows: windowIds.map(windowId => ({ gmId, windowId })),
+          windows: windows.map(windowId => ({ gmId, windowId })),
         };
       });
     });

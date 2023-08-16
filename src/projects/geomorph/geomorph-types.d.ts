@@ -92,10 +92,16 @@ declare namespace Geomorph {
     lightRects: BaseLightConnectorRect<R>[];
     /** Pointers into `groups.singles`. */
     floorHighlightIds: number[];
+
     /** Pointers into `groups.obstacles` indexed by roomId. */
     roomSurfaceIds: Record<number, number[]>;
     /** Indexed by `roomId` */
     roomMetas: Geomorph.PointMeta[];
+    /** Indexed by `doorId` */
+    relDoorId: Geomorph.RelDoor;
+    /** Indexed by `doorId` */
+    parallelDoorId: Geomorph.ParallelDoor;
+    
     meta: Geomorph.PointMeta;
 
     /** Should probably have exactly one polygon */
@@ -138,8 +144,6 @@ declare namespace Geomorph {
     pngRect: Geom.Rect;
 
     //#region aligned to doors
-    relDoorId: { [doorId: number]: { doorIds: number[]; windowIds: number[]; } };
-    parallelDoorId:{ [doorId: number]: { doorIds: number[]; } };
     
     /** At most one light rect, viewing light as going outwards through door. */
     doorToLightRect: (Geomorph.LightConnectorRect | undefined)[];
@@ -218,6 +222,29 @@ declare namespace Geomorph {
   export interface GmRoomId {
     gmId: number;
     roomId: number;
+  }
+
+  export interface RelDoor {
+    [doorId: number]: {
+      doors: number[];
+      windows: number[];
+      /** Aligned to `doorIds` */
+      metas: {
+        /**
+         * `relDoorId[doorId].doorIdsMeta[otherDoorId].behind[i]` <=>
+         * from `rooms[i]` of doorId whilst looking through `doorId`,
+         * `otherDoorId` is behind (via dot product).
+         */
+        behind: [boolean, boolean];
+        depIds?: number[];
+      }[];
+    }
+  }
+
+  export interface ParallelDoor {
+    [doorId: number]: {
+      doors: number[];
+    }
   }
 
   export type PointMeta = Record<string, (
