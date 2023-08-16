@@ -916,7 +916,7 @@ export function isDirectionChar(input) {
  * @param {Geom.VectJson} point1
  * @param {Geom.VectJson} point2
  */
-function sortByXThenY(point1, point2) {
+export function sortByXThenY(point1, point2) {
   if (point1.x === point2.x) {
     return point1.y - point2.y;
   }

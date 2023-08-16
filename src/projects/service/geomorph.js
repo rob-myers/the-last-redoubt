@@ -6,7 +6,7 @@ import { error, info, warn } from './log';
 import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
-import { geom } from './geom';
+import { geom, sortByXThenY } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp } from "../service/dom";
@@ -295,15 +295,26 @@ export async function createLayout(opts) {
   const relDoorId = groups.singles
     .filter(x => x.meta[svgSymbolTag['relate-connectors']])
     .reduce((agg, { poly }, i) => {
-      const doorIds = doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
+      /**
+       * Doors intersecting the "relate-connectors"-tagged rect,
+       * sorted "spatially" i.e. indices are adjacent iff the
+       * respective doors are (w.r.t. the rectangle).
+       */
+      const doorIds = doors
+        .flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : [])
+        .sort((a, b) => sortByXThenY(doors[a].entries[0], doors[b].entries[0]))
+      ;
+
       const windowIds = windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
-      doorIds.forEach(doorId => {
-        const item = agg[doorId] ??= { doors: [], windows: [], metas: {} };
-        item.doors.push(...doorIds.filter(x => x !== doorId));
+      doorIds.forEach(srcDoorId => {
+        const item = (agg[srcDoorId] ??= { doors: [], windows: [], metas: {} });
+        // ℹ️ must avoid dups e.g. relation from symbol vs relation from hull symbol
+        item.doors.push(...doorIds.filter(x => x !== srcDoorId && !item.doors.includes(x)));
         item.windows.push(...windowIds);
+        
         item.doors.forEach(dstDoorId => {
-          const srcDoor = doors[doorId];
-          item.metas[dstDoorId] = {
+          const srcDoor = doors[srcDoorId];
+          item.metas[dstDoorId] ??= {
             behind: /** @type {[boolean, boolean]} */ (srcDoor.roomIds.map(srcRoomId => {
               if (srcRoomId !== null) {
                 const viewDir = srcDoor.normal.clone().scale(srcDoor.roomIds[0] === srcRoomId ? -1 : 1);
@@ -313,6 +324,19 @@ export async function createLayout(opts) {
               }
             })),
           };
+
+          const [srcIndex, dstIndex] = [srcDoorId, dstDoorId].map(x => doorIds.indexOf(x))
+          // Ignore dstDoorId if it comes from another relation
+          // Also, avoid constructing empty depIds
+          if (dstIndex >= 0 && Math.abs(dstIndex - srcIndex) > 1) {
+            const depIds = item.metas[dstDoorId].depIds ??= [];
+            depIds.push(
+              ...(dstIndex > srcIndex
+                ? doorIds.slice(srcIndex + 1, dstIndex)
+                : doorIds.slice(dstIndex + 1, srcIndex).reverse()
+              ).filter(x => !depIds.includes(x)), // ℹ️ must avoid dups
+            );
+          }
         });
       });
       if (doorIds.length === 0)

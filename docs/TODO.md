@@ -6,16 +6,15 @@
   - ℹ️ room before light replaced by "envelope"
     i.e. 5gon extending door backwards to cover the light
 
-- 🚧 precompute relDoorId
+- ✅ precompute relDoorId
   - ✅ move relDoorId into geomorph.json computation
   - ✅ move parallelDoorId into geomorph.json computation
   - ✅ R(doorId, otherDoorId) has behind: [boolean, boolean] aligned to doorId roomIds
-  - 🚧 long relations (3 or more related doorIds) induce depDoorIds for intermediates
+  - ✅ long relations (3 or more related doorIds) induce depIds for intermediates
+    - also avoid dup relations
 
-- 🚧 BUG: FOV: long relation when intermediate door closed
+- ✅ BUG: FOV: long relation when intermediate door closed
   - either "choose correct polygon" or prevent relation
-
-- cache connector.poly.center -> connector.center
 
 - 🚧 gmRoomGraph to simplify many computations
   - ✅ create it
@@ -76,6 +75,7 @@
 - maybe `npc config hideGms` should hide FOV when true?
 - saw unresponsive click until `spawn rob $p`
 - Grid for room polys
+- cache connector.poly.center -> connector.center
 
 - cypress tests?
 

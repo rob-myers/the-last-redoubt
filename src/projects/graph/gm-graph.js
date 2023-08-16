@@ -3,8 +3,8 @@ import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
-import { error } from "../service/log";
-import { doorPeekViewOffset, doorViewOffset } from "../world/const";
+import { error, warn } from "../service/log";
+import { doorPeekViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -184,7 +184,6 @@ export class gmGraphClass extends BaseGraph {
           .filter(x => !relDoorIds.includes(x)),
       ];
       // ℹ️ Maximal possible blocked door ids
-      // 🚧 can restrict relDoorIds to those adjacent to rootRoom?
       // const blockedDoorIds = areaGm.doors.map((_, doorId) => doorId).filter(doorId =>
       //   doorId !== area.doorId && !(relDoorIds.includes(doorId) && doorLookup[doorId].open)
       // );
@@ -199,16 +198,12 @@ export class gmGraphClass extends BaseGraph {
       // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
       // We avoid including the current room, using a small "envelope" instead.
       const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId);
-      // 🚧 seen multiple disjoint polys, where 0th is not what we want
-      const exterior = Poly.union([
+      const exteriorPolys = Poly.union([
         envelope,
         area.poly,
-        // 🚧 why is this room "on other side of door" required?
-        // maybe only in special cases?
-        // areaGm.roomsWithDoors[area.hullRoomId ?? areaGm.getOtherRoomId(area.doorId, rootRoomId)]
-      // ])[0];
-      // ]).findLast(Boolean);
-      ]).find(poly => poly.contains(envelope.outline[0])); // 🚧 temp fix
+      ]);
+      // ]).find(poly => poly.contains(envelope.outline[0]));
+      exteriorPolys.length > 1 && warn(`computeViewsFromDoors: multiple disjoint exterior polys (${JSON.stringify({gmId, rootRoomId})})`);
 
       const lightPosition = areaGm.getViewDoorPosition(
         areaRoomId,
@@ -221,7 +216,7 @@ export class gmGraphClass extends BaseGraph {
         poly: geom.lightPolygon({
           position: lightPosition,
           range: 2000,
-          exterior,
+          exterior: exteriorPolys[0],
           extraSegs,
         }),
       };
@@ -327,14 +322,14 @@ export class gmGraphClass extends BaseGraph {
       return [area];
 
     } else {
-      // - require related door is in front
-      //   ℹ️ otherwise issue with gm 301 stateroom with "long relation"
-      // - 🚧 require related door reachable via open doors?
-      // - 🤔 maybe gmRoomGraph.relDoor has extra info?
-      const relDoorIds = (gm.relDoorId[doorId]?.doors ?? []).filter(relDoorId =>
+      const relItem = gm.relDoorId[doorId];
+      const relDoorIds = (relItem?.doors ?? []).filter(relDoorId =>
         this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
+        // ℹ️ avoid non-contrib relations from creating another poly later
         && !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId)
+        // ℹ️ long relations require intermediate checks 
+        && (relItem.metas[relDoorId]?.depIds ?? []).every(x => this.api.doors.isOpen(rootGmRoomId.gmId, x))
       );
 
       const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));

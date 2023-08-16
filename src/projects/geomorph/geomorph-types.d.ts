@@ -236,6 +236,10 @@ declare namespace Geomorph {
            * `otherDoorId` is behind (via dot product).
            */
           behind: [boolean, boolean];
+          /** 
+           * Intermediate doorIds which must be open for this relation to be valid.
+           * We can stop after first failure.
+           */
           depIds?: number[];
         }
       };

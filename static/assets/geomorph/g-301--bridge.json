@@ -13022,7 +13022,7 @@
       "metas": {
         "10": {"behind": [true, false]},
         "26": {"behind": [false, true]},
-        "27": {"behind": [false, true]}
+        "27": {"behind": [false, true], "depIds": [26]}
       }
     },
     "12": {
@@ -13064,7 +13064,7 @@
       "metas": {"24": {"behind": [true, false]}}
     },
     "26": {
-      "doors": [11, 27, 12, 27],
+      "doors": [11, 27, 12],
       "windows": [],
       "metas": {
         "11": {"behind": [false, true]},
@@ -13073,10 +13073,10 @@
       }
     },
     "27": {
-      "doors": [11, 26, 26],
+      "doors": [11, 26],
       "windows": [],
       "metas": {
-        "11": {"behind": [false, true]},
+        "11": {"behind": [false, true], "depIds": [26]},
         "26": {"behind": [false, true]}
       }
     },
