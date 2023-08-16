@@ -228,16 +228,17 @@ declare namespace Geomorph {
     [doorId: number]: {
       doors: number[];
       windows: number[];
-      /** Aligned to `doorIds` */
       metas: {
-        /**
-         * `relDoorId[doorId].doorIdsMeta[otherDoorId].behind[i]` <=>
-         * from `rooms[i]` of doorId whilst looking through `doorId`,
-         * `otherDoorId` is behind (via dot product).
-         */
-        behind: [boolean, boolean];
-        depIds?: number[];
-      }[];
+        [otherDoorId: number]: {
+          /**
+           * `relDoorId[doorId].metas[otherDoorId].behind[i]` <=>
+           * from `rooms[i]` of doorId whilst looking through `doorId`,
+           * `otherDoorId` is behind (via dot product).
+           */
+          behind: [boolean, boolean];
+          depIds?: number[];
+        }
+      };
     }
   }
 

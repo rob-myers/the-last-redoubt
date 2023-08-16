@@ -13006,22 +13006,104 @@
     {"roomId": 25, "hull": false, "leaf": false}
   ],
   "relDoorId": {
-    "8": {"doors": [28], "windows": [], "metas": []},
-    "10": {"doors": [11], "windows": [], "metas": []},
-    "11": {"doors": [26, 27, 10], "windows": [], "metas": []},
-    "12": {"doors": [26, 28], "windows": [], "metas": []},
-    "13": {"doors": [14], "windows": [], "metas": []},
-    "14": {"doors": [13], "windows": [], "metas": []},
-    "15": {"doors": [16], "windows": [], "metas": []},
-    "16": {"doors": [15], "windows": [], "metas": []},
-    "24": {"doors": [25], "windows": [], "metas": []},
-    "25": {"doors": [24], "windows": [], "metas": []},
-    "26": {"doors": [11, 27, 12, 27], "windows": [], "metas": []},
-    "27": {"doors": [11, 26, 26], "windows": [], "metas": []},
-    "28": {"doors": [12, 8, 29], "windows": [], "metas": []},
-    "29": {"doors": [28], "windows": [], "metas": []},
-    "30": {"doors": [31], "windows": [], "metas": []},
-    "31": {"doors": [30], "windows": [], "metas": []}
+    "8": {
+      "doors": [28],
+      "windows": [],
+      "metas": {"28": {"behind": [false, true]}}
+    },
+    "10": {
+      "doors": [11],
+      "windows": [],
+      "metas": {"11": {"behind": [false, true]}}
+    },
+    "11": {
+      "doors": [26, 27, 10],
+      "windows": [],
+      "metas": {
+        "10": {"behind": [true, false]},
+        "26": {"behind": [false, true]},
+        "27": {"behind": [false, true]}
+      }
+    },
+    "12": {
+      "doors": [26, 28],
+      "windows": [],
+      "metas": {
+        "26": {"behind": [false, true]},
+        "28": {"behind": [false, true]}
+      }
+    },
+    "13": {
+      "doors": [14],
+      "windows": [],
+      "metas": {"14": {"behind": [false, true]}}
+    },
+    "14": {
+      "doors": [13],
+      "windows": [],
+      "metas": {"13": {"behind": [true, false]}}
+    },
+    "15": {
+      "doors": [16],
+      "windows": [],
+      "metas": {"16": {"behind": [true, false]}}
+    },
+    "16": {
+      "doors": [15],
+      "windows": [],
+      "metas": {"15": {"behind": [false, true]}}
+    },
+    "24": {
+      "doors": [25],
+      "windows": [],
+      "metas": {"25": {"behind": [false, true]}}
+    },
+    "25": {
+      "doors": [24],
+      "windows": [],
+      "metas": {"24": {"behind": [true, false]}}
+    },
+    "26": {
+      "doors": [11, 27, 12, 27],
+      "windows": [],
+      "metas": {
+        "11": {"behind": [false, true]},
+        "12": {"behind": [false, true]},
+        "27": {"behind": [true, false]}
+      }
+    },
+    "27": {
+      "doors": [11, 26, 26],
+      "windows": [],
+      "metas": {
+        "11": {"behind": [false, true]},
+        "26": {"behind": [false, true]}
+      }
+    },
+    "28": {
+      "doors": [12, 8, 29],
+      "windows": [],
+      "metas": {
+        "8": {"behind": [false, true]},
+        "12": {"behind": [false, true]},
+        "29": {"behind": [true, false]}
+      }
+    },
+    "29": {
+      "doors": [28],
+      "windows": [],
+      "metas": {"28": {"behind": [false, true]}}
+    },
+    "30": {
+      "doors": [31],
+      "windows": [],
+      "metas": {"31": {"behind": [false, true]}}
+    },
+    "31": {
+      "doors": [30],
+      "windows": [],
+      "metas": {"30": {"behind": [true, false]}}
+    }
   },
   "parallelDoorId": {
     "0": {"doors": [1]},

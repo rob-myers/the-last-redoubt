@@ -6645,13 +6645,45 @@
     {"roomId": 13, "hull": false, "leaf": true}
   ],
   "relDoorId": {
-    "3": {"doors": [12], "windows": [], "metas": []},
-    "10": {"doors": [11], "windows": [], "metas": []},
-    "11": {"doors": [10, 17, 12], "windows": [], "metas": []},
-    "12": {"doors": [11, 3], "windows": [], "metas": []},
-    "17": {"doors": [11], "windows": [], "metas": []},
-    "19": {"doors": [20], "windows": [], "metas": []},
-    "20": {"doors": [19], "windows": [], "metas": []}
+    "3": {
+      "doors": [12],
+      "windows": [],
+      "metas": {"12": {"behind": [true, false]}}
+    },
+    "10": {
+      "doors": [11],
+      "windows": [],
+      "metas": {"11": {"behind": [true, false]}}
+    },
+    "11": {
+      "doors": [10, 17, 12],
+      "windows": [],
+      "metas": {
+        "10": {"behind": [false, true]},
+        "12": {"behind": [true, false]},
+        "17": {"behind": [true, false]}
+      }
+    },
+    "12": {
+      "doors": [11, 3],
+      "windows": [],
+      "metas": {"3": {"behind": [false, true]}, "11": {"behind": [true, false]}}
+    },
+    "17": {
+      "doors": [11],
+      "windows": [],
+      "metas": {"11": {"behind": [true, false]}}
+    },
+    "19": {
+      "doors": [20],
+      "windows": [],
+      "metas": {"20": {"behind": [true, false]}}
+    },
+    "20": {
+      "doors": [19],
+      "windows": [],
+      "metas": {"19": {"behind": [false, true]}}
+    }
   },
   "parallelDoorId": {
     "0": {"doors": [1]},

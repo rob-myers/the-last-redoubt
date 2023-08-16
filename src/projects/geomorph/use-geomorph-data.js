@@ -239,10 +239,9 @@ export async function createGeomorphData(input) {
       );
     },
     // 🚧 cache
-    isOtherDoorBehind(srcRoomId, srcDoorId, dstDoorId) {
-      const srcDoor = this.doors[srcDoorId];
-      const viewDir = srcDoor.normal.clone().scale(srcDoor.roomIds[0] === srcRoomId ? -1 : 1);
-      return this.doors[dstDoorId].poly.center.sub(srcDoor.poly.center).dot(viewDir) <= 0;
+    isOtherDoorBehind(srcRoomId, srcDoorId, dstDoorsId) {
+      const { behind } = this.relDoorId[srcDoorId].metas[dstDoorsId];
+      return behind[this.doors[srcDoorId].roomIds.indexOf(srcRoomId)];
     },
     isHullDoor(doorId) {
       return doorId < this.hullDoors.length;

@@ -298,9 +298,22 @@ export async function createLayout(opts) {
       const doorIds = doors.flatMap((door, doorId) => geom.convexPolysIntersect(door.poly.outline, poly.outline) ? doorId : []);
       const windowIds = windows.flatMap((window, windowId) => geom.convexPolysIntersect(window.poly.outline, poly.outline) ? windowId : []);
       doorIds.forEach(doorId => {
-        agg[doorId] ??= { doors: [], windows: [], metas: [] };
-        agg[doorId].doors.push(...doorIds.filter(x => x !== doorId));
-        agg[doorId].windows.push(...windowIds);
+        const item = agg[doorId] ??= { doors: [], windows: [], metas: {} };
+        item.doors.push(...doorIds.filter(x => x !== doorId));
+        item.windows.push(...windowIds);
+        item.doors.forEach(dstDoorId => {
+          const srcDoor = doors[doorId];
+          item.metas[dstDoorId] = {
+            behind: /** @type {[boolean, boolean]} */ (srcDoor.roomIds.map(srcRoomId => {
+              if (srcRoomId !== null) {
+                const viewDir = srcDoor.normal.clone().scale(srcDoor.roomIds[0] === srcRoomId ? -1 : 1);
+                return doors[dstDoorId].poly.center.sub(srcDoor.poly.center).dot(viewDir) <= 0;
+              } else {
+                return false;
+              }
+            })),
+          };
+        });
       });
       if (doorIds.length === 0)
         warn(`${opts.def.id}: #${i + 1} poly tagged "${svgSymbolTag['relate-connectors']}" doesn't intersect any door: (windowIds ${windowIds})`);

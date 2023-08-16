@@ -9,8 +9,8 @@
 - 🚧 precompute relDoorId
   - ✅ move relDoorId into geomorph.json computation
   - ✅ move parallelDoorId into geomorph.json computation
-  - R(doorId, otherDoorId) includes infront: [boolean, boolean] aligned to roomIds
-  - long relations (3 or more related doorIds) induce depDoorIds for intermediates
+  - ✅ R(doorId, otherDoorId) has behind: [boolean, boolean] aligned to doorId roomIds
+  - 🚧 long relations (3 or more related doorIds) induce depDoorIds for intermediates
 
 - 🚧 BUG: FOV: long relation when intermediate door closed
   - either "choose correct polygon" or prevent relation

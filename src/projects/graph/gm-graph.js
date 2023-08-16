@@ -334,8 +334,7 @@ export class gmGraphClass extends BaseGraph {
       const relDoorIds = (gm.relDoorId[doorId]?.doors ?? []).filter(relDoorId =>
         this.api.doors.isOpen(rootGmRoomId.gmId, relDoorId)
         && !rootOpenIds.includes(relDoorId)
-      ).filter(relDoorId =>
-        !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId)
+        && !gm.isOtherDoorBehind(rootGmRoomId.roomId, doorId, relDoorId)
       );
 
       const relNonHullDoorIds = relDoorIds.filter(x => !gm.isHullDoor(x));
