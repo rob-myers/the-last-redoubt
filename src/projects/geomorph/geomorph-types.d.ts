@@ -225,6 +225,8 @@ declare namespace Geomorph {
   }
 
   export interface GmDoorId {
+    /** `g{gmId}-d${doorId}` */
+    key: string;
     gmId: number;
     doorId: number;
     /** Non-isolated hull doors have an associated door */

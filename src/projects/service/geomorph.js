@@ -499,6 +499,14 @@ export function getConnectorOtherSide(connector, viewPos) {
  * @param {number} gmId 
  * @param {number} roomId 
  */
+export function getGmDoorKey(gmId, roomId) {
+  return `g${gmId}-d${roomId}`;
+}
+
+/**
+ * @param {number} gmId 
+ * @param {number} roomId 
+ */
 export function getGmRoomKey(gmId, roomId) {
   return `g${gmId}-r${roomId}`;
 }
@@ -559,18 +567,6 @@ function outsetConnectorEntry(connector, amount) {
  */
 export function isConnectorOrthonormal(connector) {
   return connector.normal.x === 0 || connector.normal.y === 0;
-}
-
-/**
- * @param {Geomorph.GmDoorId} gmDoorId 
- * @param {Geomorph.GmDoorId} other 
- * @returns {boolean}
- */
-export function isSameGmDoor(gmDoorId, other) {
-  return (
-    gmDoorId.gmId === other.gmId
-    && gmDoorId.doorId === other.doorId
-  );
 }
 
 /**

@@ -1,5 +1,5 @@
 import { mapValues } from "../service/generic";
-import { getGmRoomKey, isSameGmDoor, isSameGmRoom } from "../service/geomorph";
+import { getGmDoorKey, getGmRoomKey, isSameGmRoom } from "../service/geomorph";
 import { BaseGraph } from "./graph";
 
 /**
@@ -69,19 +69,29 @@ export class gmRoomGraphClass extends BaseGraph {
     const output = /** @type {ReturnType<typeof this.getRelDoorIds>} */ ([]);
     const src = this.getNode(srcRm.gmId, srcRm.roomId);
     const dst = this.getNode(dstRm.gmId, dstRm.roomId);
-    const dstDoors = this.getEdgesFrom(dst).flatMap(e => e.doors)
+    const dstDoors = this.getEdgesFrom(dst).flatMap(e => e.doors.map(x => x.key));
+    const checkOpen = /** @param {number} gmId @param {number} doorId */
+      (gmId, doorId) => !requireOpen || this.api.doors.isOpen(gmId, doorId)
+    ;
 
-    for (const [rm1, { doors: srcDoors }] of this.succ.get(src)?.entries() ?? []) {
-      // 🚧 prohibit relations which "jump over" dstRm
-      // 🚧 check open
+    for (const [_rm1, { doors: srcDoors }] of this.succ.get(src)?.entries() ?? []) {
       srcDoors.forEach(srcDoor => {
-        (this.relDoor[srcDoor.gmId]?.[srcDoor.doorId]?.doors ?? []).forEach(relDoor => {
-          const found = dstDoors.find((x) => isSameGmDoor(x, relDoor));
-          found && output.push({
-            src: srcDoor,
-            depDoors: relDoor.depDoors,
-            dst: relDoor,
-          });
+        (this.relDoor[srcDoor.gmId]?.[srcDoor.doorId]?.doors ?? []).forEach(relGmDoor => {
+          const found = dstDoors.includes(relGmDoor.key);
+          if (found
+            && checkOpen(srcDoor.gmId, srcDoor.doorId)
+            && (relGmDoor.depDoors ?? []).every((depDoor) =>
+              checkOpen(depDoor.gmId, depDoor.doorId)
+              && !dstDoors.includes(depDoor.key) // avoid "jumping over" dstRm
+            )
+            && checkOpen(relGmDoor.gmId, relGmDoor.doorId)
+          ) {
+            output.push({
+              src: srcDoor,
+              depDoors: relGmDoor.depDoors,
+              dst: relGmDoor,
+            });
+          }
         });
       });
     }
@@ -146,13 +156,13 @@ export class gmRoomGraphClass extends BaseGraph {
               const ctxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
               if (ctxt) {
                 (agg[JSON.stringify(gmRoomId = { gmId: ctxt.adjGmId, roomId: ctxt.adjRoomId })] ??= [[], []])[0].push(
-                  { gmId, doorId, other: { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId } }
+                  { key: getGmDoorKey(gmId, doorId), gmId, doorId, other: { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId } }
                 );
               } // ctxt `null` for unconnected hull doors
             } else {
               const otherRoomId = /** @type {number} */ (gm.getOtherRoomId(doorId, roomId));
               (agg[JSON.stringify(gmRoomId = { gmId, roomId: otherRoomId })] ??= [[], []])[0].push(
-                { gmId, doorId },
+                { key: getGmDoorKey(gmId, doorId), gmId, doorId },
               );
             }
             return agg;
@@ -191,6 +201,7 @@ export class gmRoomGraphClass extends BaseGraph {
     /** @type {typeof graph.relDoor} */
     const extras = gmGraph.gms.map(_ => ({}));
     gmGraph.gms.forEach((gm, gmId) => {
+      const depIdToDepDoor = /** @param {number} id */ id => ({ key: getGmDoorKey(gmId, id), gmId, doorId: id });
       graph.relDoor[gmId] = mapValues(gm.relDoorId, ({ doors, windows, metas }, srcDoorIdStr) => {
         return {
           doors: doors.flatMap(dstDoorId => {
@@ -201,21 +212,36 @@ export class gmRoomGraphClass extends BaseGraph {
                 const converseMeta = gm.relDoorId[dstDoorId].metas[srcDoorId];
                 // Store converse relation from identified hull door to srcDoorId (for later):
                 (extras[ctxt.adjGmId][ctxt.adjDoorId] ??= { doors: [], windows: [] }).doors.push({
+                  key: getGmDoorKey(gmId, srcDoorId),
                   gmId,
                   doorId: srcDoorId,
                   behind: converseMeta.behind,
-                  depDoors: converseMeta.depIds?.map(id => ({ gmId, doorId: id })),
+                  depDoors: converseMeta.depIds?.map(depIdToDepDoor),
                   // ℹ️ no `other` because cannot relate hull door to another hull door
                 });
                 return [
-                  { gmId, doorId: dstDoorId, other: { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId }, behind: metas[dstDoorId].behind, depDoors: metas[dstDoorId].depIds?.map(id => ({ gmId, doorId: id })) },
+                  {
+                    key: getGmDoorKey(gmId, dstDoorId), gmId, doorId: dstDoorId,
+                    other: { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId },
+                    behind: metas[dstDoorId].behind,
+                    depDoors: metas[dstDoorId].depIds?.map(depIdToDepDoor),
+                  },
                   // Also relate to identified hull door:
                   // 🤔 behind should be [true, false] | [false, true]
-                  { gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId, other: { gmId, doorId: dstDoorId }, behind: [false, false], depDoors: metas[dstDoorId].depIds?.map(id => ({ gmId, doorId: id })) },
+                  {
+                    key: getGmDoorKey(gmId, dstDoorId), gmId: ctxt.adjGmId, doorId: ctxt.adjDoorId,
+                    other: { gmId, doorId: dstDoorId },
+                    behind: [false, false],
+                    depDoors: metas[dstDoorId].depIds?.map(depIdToDepDoor),
+                  },
                 ];
               }
             }
-            return { gmId, doorId: dstDoorId, behind: metas[dstDoorId].behind, depDoors: metas[dstDoorId].depIds?.map(id => ({ gmId, doorId: id })) };
+            return {
+              key: getGmDoorKey(gmId, dstDoorId), gmId, doorId: dstDoorId,
+              behind: metas[dstDoorId].behind,
+              depDoors: metas[dstDoorId].depIds?.map(depIdToDepDoor),
+            };
           }),
           windows: windows.map(windowId => ({ gmId, windowId })),
         };
