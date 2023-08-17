@@ -3,7 +3,7 @@ import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize } from './const';
+import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
@@ -12,6 +12,8 @@ import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp } from "../service/dom";
 
 /**
+ * ℹ️ Fundamental function i.e. source of each {geomorph}.json
+ * 
  * Create a layout given a definition and all symbols.
  * Can run in browser or on server.
  * @param {CreateLayoutOpts} opts
@@ -268,7 +270,7 @@ export async function createLayout(opts) {
     .filter(x => !x.meta[svgSymbolTag.floor])
     .map(({ poly, meta }) => ({
       position: poly.center,
-      roomId: findRoomIdContaining(rooms, poly.center),
+      roomId: rooms.findIndex(room => room.contains(poly.center)),
       distance: typeof meta.distance === 'number' ? meta.distance : undefined,
     })
   );
@@ -279,6 +281,7 @@ export async function createLayout(opts) {
   const surfaceIds = groups.obstacles.flatMap(({ meta }, index) =>
     meta[svgSymbolTag.surface] ? [index] : []
   );
+
   const roomSurfaceIds = surfaceIds.reduce((agg, surfaceId) => {
     const surfaceCenter = groups.obstacles[surfaceId].poly.center;
     const roomId = rooms.findIndex(roomPoly => roomPoly.contains(surfaceCenter));
@@ -287,6 +290,14 @@ export async function createLayout(opts) {
       : (agg[roomId] ||= []).push(surfaceId);
     return agg;
   }, /** @type {Record<number, number[]>} */ ({}));
+
+  const gridToRoomIds = rooms.reduce((agg, roomPoly, roomId) => {
+    // We use AABB of roomWithDoors to permit relaxed test
+    const doorPolys = getNormalizedDoorPolys(roomGraph.getAdjacentDoors(roomId).map(x => doors[x.doorId]));
+    const { rect } = Poly.union([roomPoly, ...doorPolys])[0];
+    addToRoomGrid(roomId, rect, agg);
+    return agg;
+  }, /** @type {Nav.ZoneWithMeta['gridToNodeIds']} */  ({}));
 
   /**
    * Each `relate-connectors` relates a doorId to other doorId(s) or windowId(s).
@@ -392,8 +403,11 @@ export async function createLayout(opts) {
     lightSrcs,
     lightRects: [], // Computed below
     floorHighlightIds,
+
     roomSurfaceIds,
     roomMetas,
+    gridToRoomIds,
+
     relDoorId,
     parallelDoorId,
 
@@ -446,14 +460,6 @@ function extendHullDoorTags(door, hullRect) {
   else if (bounds.right >= hullRect.right) door.meta.hullDir = 'e';
   else if (bounds.bottom >= hullRect.bottom) door.meta.hullDir = 's';
   else if (bounds.x <= hullRect.x) door.meta.hullDir = 'w';
-}
-
-/**
- * @param {Geomorph.ParsedLayout['rooms']} rooms 
- * @param {Geom.VectJson} localPoint
- */
-export function findRoomIdContaining(rooms, localPoint) {
-  return rooms.findIndex(room => room.contains(localPoint)); 
 }
 
 /**
@@ -648,7 +654,8 @@ function singleToConnectorRect(single, rooms) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
+  lightSrcs, lightRects, floorHighlightIds,
+  roomSurfaceIds, roomMetas, gridToRoomIds,
   relDoorId, parallelDoorId,
   meta,
   hullPoly, hullRect, hullTop,
@@ -685,6 +692,7 @@ export function serializeLayout({
     floorHighlightIds,
     roomSurfaceIds,
     roomMetas,
+    gridToRoomIds,
     relDoorId,
     parallelDoorId,
     meta,
@@ -719,7 +727,7 @@ export function matchedMap(meta, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas,
+  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas, gridToRoomIds,
   relDoorId, parallelDoorId,
   meta,
   hullPoly, hullRect, hullTop,
@@ -757,6 +765,7 @@ export function parseLayout({
     roomSurfaceIds,
     roomMetas,
     relDoorId,
+    gridToRoomIds,
     parallelDoorId,
     meta,
 
@@ -1507,6 +1516,19 @@ function addToNavNodeGrid(item, rect, grid) {
 }
 
 /**
+ * @param {number} item Room id (relative to some geomorph)
+ * @param {Geom.RectJson} rect Aabb of room polygon
+ * @param {Geomorph.ParsedLayout['gridToRoomIds']} grid 
+ */
+function addToRoomGrid(item, rect, grid) {
+  const min = coordToRoomGrid(rect.x, rect.y);
+  const max = coordToRoomGrid(rect.x + rect.width, rect.y + rect.height);
+  for (let i = min.x; i <= max.x; i++)
+    for (let j = min.y; j <= max.y; j++)
+      ((grid[i] ??= {})[j] ??= []).push(item);
+}
+
+/**
  * @param {NPC.DecorCollidable} item 
  * @param {Geom.RectJson} rect Rectangle corresponding to item e.g. bounding box.
  * @param {NPC.DecorGrid} grid 
@@ -1607,16 +1629,6 @@ export function coordToDecorGrid(x, y) {
 }
 
 /**
- * 🤔 Unused
- * For edge cases i.e. avoid missing decor on edges.
- * @param {number} x
- * @param {number} y
- */
-export function coordToDecorGridSupremum(x, y) {
-  return { x: Math.ceil(x / decorGridSize), y: Math.ceil(y / decorGridSize) };
-}
-
-/**
  * @param {number} x
  * @param {number} y
  */
@@ -1625,13 +1637,11 @@ export function coordToNavNodeGrid(x, y) {
 }
 
 /**
- * 🤔 Unused
- * For edge cases i.e. avoid missing nav nodes on edges.
- * @param {number} x 
- * @param {number} y 
+ * @param {number} x
+ * @param {number} y
  */
-export function coordToNavNodeGridSupremum(x, y) {
-  return { x: Math.ceil(x / navNodeGridSize), y: Math.ceil(y / navNodeGridSize) };
+export function coordToRoomGrid(x, y) {
+  return { x: Math.floor(x / roomGridSize), y: Math.floor(y / roomGridSize) };
 }
 
 //#endregion

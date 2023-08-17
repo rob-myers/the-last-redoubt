@@ -97,6 +97,8 @@ declare namespace Geomorph {
     roomSurfaceIds: Record<number, number[]>;
     /** Indexed by `roomId` */
     roomMetas: Geomorph.PointMeta[];
+    /** `gridToRoomIds[x][y]` are roomIds  */
+    gridToRoomIds: Record<number, Record<number, number[]>>;
     /** Indexed by `doorId` */
     relDoorId: Geomorph.RelDoor;
     /** Indexed by `doorId` */
@@ -178,6 +180,8 @@ declare namespace Geomorph {
 
     floorGraph: Graph.FloorGraph;
 
+    /** Returns -1 if not found. */
+    findRoomContaining(point: Geom.VectJson, includeDoors?: boolean): number;
     /** Convex hull of door with a point "beyond" view position  */
     getViewEnvelope(srcRoomId: number, doorId: number): Geom.Poly;
     /**

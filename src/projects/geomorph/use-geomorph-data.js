@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { Poly, Rect, Vect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
-import { computeViewPosition, geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
+import { computeViewPosition, coordToRoomGrid, geomorphJsonPath, getNormalizedDoorPolys, singleToDecor } from "../service/geomorph";
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
@@ -80,7 +80,17 @@ export async function createGeomorphData(input) {
       { center: poly.center, poly, reverse: meta.reverse, meta }
     ));
 
-
+  /**
+   * Room Grid avoids checking many room polygons
+   * @param {Geom.VectJson} point 
+   * @param {boolean} [includeDoors] 
+   * @returns {number}
+   */
+  function findRoomContaining(point, includeDoors = false) {
+    const gridPos = coordToRoomGrid(point.x, point.y);
+    const roomIds = layout.gridToRoomIds[gridPos.x]?.[gridPos.y] ?? [];
+    return roomIds.find(roomId => (includeDoors ? roomsWithDoors : layout.rooms)[roomId].contains(point)) ?? -1;
+  }
 
   //#region points by room 🚧 precompute?
   const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
@@ -129,7 +139,7 @@ export async function createGeomorphData(input) {
   }));
 
   viewMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
-    let roomId = layout.rooms.findIndex(poly => poly.contains(p));
+    let roomId = findRoomContaining(p);
     const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
     const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
 
@@ -155,7 +165,7 @@ export async function createGeomorphData(input) {
   layout.groups.singles.forEach((single, i) => {
     if (single.meta.decor) {
       const p = single.poly.center;
-      const roomId = layout.rooms.findIndex(x => x.contains(p));
+      const roomId = findRoomContaining(p);
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
         roomDecor[roomId].symbol.items.push(singleToDecor(single, i, { roomId }));
@@ -187,6 +197,7 @@ export async function createGeomorphData(input) {
     lazy: /** @type {*} */ (null), // Overwritten below
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
+    findRoomContaining,
     // 🚧 cache
     getViewEnvelope(srcRoomId, doorId) {
       /** Further into room than viewpoint */

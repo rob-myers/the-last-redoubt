@@ -2,7 +2,7 @@ import { Mat, Poly, Rect, Vect } from "../geom";
 import { BaseGraph, createBaseAstar } from "./graph";
 import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
-import { getConnectorOtherSide, findRoomIdContaining as findLocalRoomContaining } from "../service/geomorph";
+import { getConnectorOtherSide } from "../service/geomorph";
 import { error, warn } from "../service/log";
 import { doorPeekViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
@@ -551,15 +551,14 @@ export class gmGraphClass extends BaseGraph {
    */
   findRoomContaining(point, includeDoors = false) {
     const [gmId] = this.findGeomorphIdContaining(point);
-    if (gmId === null) {
+    if (typeof gmId === 'number') {
+      const gm = this.gms[gmId];
+      const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
+      const roomId = gm.findRoomContaining(localPoint, includeDoors);
+      return roomId >= 0 ? { gmId, roomId } : null;
+    } else {
       return null;
     }
-    const gm = this.gms[gmId];
-    const roomId = findLocalRoomContaining(
-      includeDoors ? gm.roomsWithDoors : gm.rooms,
-      gm.inverseMatrix.transformPoint(Vect.from(point)),
-    );
-    return roomId >= 0 ? { gmId, roomId } : null;
   }
 
   /**

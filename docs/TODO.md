@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 gmRoomGraph to simplify many computations
+- ✅ gmRoomGraph to simplify many computations
   - ✅ create it
     - whose nodes are `gmRoomId`s
     - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
@@ -23,9 +23,14 @@
     - we restrict lights by their direction
   - ✅ migrate getRoomsVantages to gmRoomGraph.getVantages
     - ✅ `world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
-  - 🚧 getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
+  - ✅ getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
     - needs implementation
     - prohibit relations which jump over dstRm
+
+- 🚧 Grid for room polys
+  - ✅ precomputed per geomorph
+  - ✅ used when search for room containing point
+  - 🚧 `click` ensures `meta.{gmId,roomId}`
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
@@ -39,12 +44,13 @@
   - ✅ can test if point lies in view frustum (triangle)
     - api.npcs.inFrustum(src, dst, srcRadians, fovRadians = Math.PI/4)
     - npc.inFrustum
-  - 🚧 can test if `in-same-room` or `in-adj-room` or `share-adj-room`,
+  - ✅ can test if `same-room` or `adj-room` or `rel-room`,
     providing open/open-related shared doors too
     - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
-    - output will be provided to raycast stage
-  - raycast stage
+    - output will be used by raycast stage
+  - raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
+    - with {src,dst}?.meta?.{gmId,roomId}
 
 - Geomorph PNGs navmesh higher contrast?
 - shell has api.argsToAction
@@ -61,7 +67,6 @@
   - maybe catch and send message to shell?
 - maybe `npc config hideGms` should hide FOV when true?
 - saw unresponsive click until `spawn rob $p`
-- Grid for room polys
 - cache connector.poly.center -> connector.center
 
 - cypress tests?

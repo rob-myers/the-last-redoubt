@@ -124,4 +124,6 @@ export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 /** For quick nav node lookup */
 export const navNodeGridSize = 60 / 2;
 
+export const roomGridSize = 60;
+
 export const decorGridSize = 60 * 2;
