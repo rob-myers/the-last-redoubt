@@ -69,7 +69,10 @@ export class gmRoomGraphClass extends BaseGraph {
     const output = /** @type {ReturnType<typeof this.getRelDoorIds>} */ ([]);
     const src = this.getNode(srcRm.gmId, srcRm.roomId);
     const dst = this.getNode(dstRm.gmId, dstRm.roomId);
-    const dstDoors = this.getEdgesFrom(dst).flatMap(e => e.doors.map(x => x.key));
+    
+    const srcDoorKeys = this.getEdgesFrom(src).flatMap(e => e.doors.map(x => x.key));
+    const dstDoorKeys = this.getEdgesFrom(dst).flatMap(e => e.doors.map(x => x.key));
+
     const checkOpen = /** @param {number} gmId @param {number} doorId */
       (gmId, doorId) => !requireOpen || this.api.doors.isOpen(gmId, doorId)
     ;
@@ -77,12 +80,14 @@ export class gmRoomGraphClass extends BaseGraph {
     for (const [_rm1, { doors: srcDoors }] of this.succ.get(src)?.entries() ?? []) {
       srcDoors.forEach(srcDoor => {
         (this.relDoor[srcDoor.gmId]?.[srcDoor.doorId]?.doors ?? []).forEach(relGmDoor => {
-          const found = dstDoors.includes(relGmDoor.key);
+          const found = dstDoorKeys.includes(relGmDoor.key);
           if (found
             && checkOpen(srcDoor.gmId, srcDoor.doorId)
             && (relGmDoor.depDoors ?? []).every((depDoor) =>
               checkOpen(depDoor.gmId, depDoor.doorId)
-              && !dstDoors.includes(depDoor.key) // avoid "jumping over" dstRm
+              // avoid "jumping over" srcRm or dstRm
+              && !srcDoorKeys.includes(depDoor.key)
+              && !dstDoorKeys.includes(depDoor.key)
             )
             && checkOpen(relGmDoor.gmId, relGmDoor.doorId)
           ) {
