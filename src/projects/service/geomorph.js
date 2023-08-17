@@ -562,6 +562,18 @@ export function isConnectorOrthonormal(connector) {
 }
 
 /**
+ * @param {Geomorph.GmDoorId} gmDoorId 
+ * @param {Geomorph.GmDoorId} other 
+ * @returns {boolean}
+ */
+export function isSameGmDoor(gmDoorId, other) {
+  return (
+    gmDoorId.gmId === other.gmId
+    && gmDoorId.doorId === other.doorId
+  );
+}
+
+/**
  * @param {Geomorph.GmRoomId} gmRoomId 
  * @param {Geomorph.GmRoomId} otherGmRoomId 
  * @returns {boolean}

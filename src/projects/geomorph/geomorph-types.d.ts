@@ -224,26 +224,44 @@ declare namespace Geomorph {
     roomId: number;
   }
 
+  export interface GmDoorId {
+    gmId: number;
+    doorId: number;
+    /** Non-isolated hull doors have an associated door */
+    other?: { gmId: number; doorId: number };
+  }
+  
+  export interface GmDoorIdWithMeta extends Geomorph.GmDoorId  {
+    behind: [boolean, boolean];
+    depDoors?: Geomorph.GmDoorId[];
+  }
+
   export interface RelDoor {
     [doorId: number]: {
       doors: number[];
       windows: number[];
       metas: {
-        [otherDoorId: number]: {
-          /**
-           * `relDoorId[doorId].metas[otherDoorId].behind[i]` <=>
-           * from `rooms[i]` of doorId whilst looking through `doorId`,
-           * `otherDoorId` is behind (via dot product).
-           */
-          behind: [boolean, boolean];
-          /** 
-           * Intermediate doorIds which must be open for this relation to be valid.
-           * We can stop after first failure.
-           */
-          depIds?: number[];
-        }
+        [otherDoorId: number]: RelDoorMeta;
       };
     }
+  }
+  
+  export interface RelDoorMeta {
+    /**
+     * `relDoorId[doorId].metas[otherDoorId].behind[i]` <=>
+     * from `rooms[i]` of doorId whilst looking through `doorId`,
+     * `otherDoorId` is behind (via dot product).
+     */
+    behind: [boolean, boolean];
+    /** 
+     * Intermediate doorIds which must be open for this relation to be valid.
+     * We can stop after first failure.
+     */
+    depIds?: number[];
+  }
+
+  export interface RelDoorMeta {
+
   }
 
   export interface ParallelDoor {

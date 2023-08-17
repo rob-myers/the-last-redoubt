@@ -222,13 +222,6 @@ export interface GmRoomGraphNode {
   roomId: number;
 }
 
-export interface GmDoorId {
-  gmId: number;
-  doorId: number;
-  /** Non-isolated hull doors have an associated door */
-  other?: { gmId: number; doorId: number };
-}
-
 export interface GmWindowId {
   gmId: number;
   windowId: number;
@@ -236,7 +229,7 @@ export interface GmWindowId {
 }
 
 export interface GmRoomGraphEdgeOpts extends BaseEdgeOpts {
-  doors: GmDoorId[];
+  doors: Geomorph.GmDoorId[];
   windows: GmWindowId[];
 }
 

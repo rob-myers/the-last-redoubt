@@ -2,20 +2,6 @@
 
 ## In progress
 
-- ✅ replace lightPoly `direction` with simplified area.poly
-  - ℹ️ room before light replaced by "envelope"
-    i.e. 5gon extending door backwards to cover the light
-
-- ✅ precompute relDoorId
-  - ✅ move relDoorId into geomorph.json computation
-  - ✅ move parallelDoorId into geomorph.json computation
-  - ✅ R(doorId, otherDoorId) has behind: [boolean, boolean] aligned to doorId roomIds
-  - ✅ long relations (3 or more related doorIds) induce depIds for intermediates
-    - also avoid dup relations
-
-- ✅ BUG: FOV: long relation when intermediate door closed
-  - either "choose correct polygon" or prevent relation
-
 - 🚧 gmRoomGraph to simplify many computations
   - ✅ create it
     - whose nodes are `gmRoomId`s
@@ -39,6 +25,7 @@
     - ✅ `world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
   - 🚧 getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
     - needs implementation
+    - prohibit relations which jump over dstRm
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
@@ -59,16 +46,16 @@
     - output will be provided to raycast stage
   - raycast stage
 
-- BUG with `npc config '{ scriptDoors: false }'`
-  - doors open then close immediately
-- BUG? sporadic 302 related hull door failure
 - Geomorph PNGs navmesh higher contrast?
+- shell has api.argsToAction
 - BUG with local variables
   - not working inside functions?
   - pipe child should receive local variables (see `world`)
+- BUG with `npc config '{ scriptDoors: false }'`
+  - doors open then close immediately
+- BUG? sporadic 302 related hull door failure
 - BUG safari desktop cursor disabled by default
   - `touch-tty-can-type`
-- shell has api.argsToAction
 - gm 101: if can get close to windows then view offset should be small (?)
 - implications of error failing to propagate to shell from use-handle-events?
   - maybe catch and send message to shell?
@@ -546,6 +533,20 @@ nav --nearNpc foo rob | walk --open foo
 
 ## Done
 
+- ✅ replace lightPoly `direction` with simplified area.poly
+  - ℹ️ room before light replaced by "envelope"
+    i.e. 5gon extending door backwards to cover the light
+
+- ✅ precompute relDoorId
+  - ✅ move relDoorId into geomorph.json computation
+  - ✅ move parallelDoorId into geomorph.json computation
+  - ✅ R(doorId, otherDoorId) has behind: [boolean, boolean] aligned to doorId roomIds
+  - ✅ long relations (3 or more related doorIds) induce depIds for intermediates
+    - also avoid dup relations
+
+- ✅ BUG: FOV: long relation when intermediate door closed
+  - either "choose correct polygon" or prevent relation
+  
 - ✅ BUG with hull doors timeout: might need to clear both
 
 - ✅ BUG npc navigated off-mesh somehow
