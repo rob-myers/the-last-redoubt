@@ -175,12 +175,12 @@
       /** @type {import('rxjs').Subscription} */ let sub;
       process.cleanups.push(() => sub?.unsubscribe());
 
-      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY)
+      const worldApi = api.getCached(home.WORLD_KEY)
       while (numClicks > 0) {
-        extra && panZoom.pointerUpExtras.push(extra); // merged into next pointerup
+        extra && worldApi.panZoom.pointerUpExtras.push(extra); // merged into next pointerup
         
         const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
-          sub = panZoom.events.subscribe({ next(e) {
+          sub = worldApi.panZoom.events.subscribe({ next(e) {
             if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
               return;
             }
@@ -193,19 +193,20 @@
             }
           }});
           sub.add(() => {
-            panZoom.pointerUpExtras = panZoom.pointerUpExtras.filter(x => x !== extra); 
+            worldApi.panZoom.pointerUpExtras = worldApi.panZoom.pointerUpExtras.filter(x => x !== extra); 
             reject(api.getKillError());
           });
         }));
 
-        const meta = {...e.meta};
-        if (npcs.isPointInNavmesh(e.point)) {
+        const gmRoomId = worldApi.gmGraph.findRoomContaining(e.point);
+        const meta = /** @type {Geomorph.PointMeta} */ ({ ...e.meta, ...gmRoomId });
+        if (worldApi.npcs.isPointInNavmesh(e.point)) {
           meta.nav = true; // add "nav" tag
         }
 
         yield {
-          x: lib.precision(e.point.x),
-          y: lib.precision(e.point.y),
+          x: worldApi.lib.precision(e.point.x),
+          y: worldApi.lib.precision(e.point.y),
           meta,
         };
 

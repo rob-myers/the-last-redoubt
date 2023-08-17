@@ -27,10 +27,10 @@
     - needs implementation
     - prohibit relations which jump over dstRm
 
-- 🚧 Grid for room polys
+- ✅ Grid for room polys
   - ✅ precomputed per geomorph
   - ✅ used when search for room containing point
-  - 🚧 `click` ensures `meta.{gmId,roomId}`
+  - ✅ `click` ensures `meta.{gmId,roomId}`
 
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
