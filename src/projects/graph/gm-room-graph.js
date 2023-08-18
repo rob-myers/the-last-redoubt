@@ -144,9 +144,9 @@ export class gmRoomGraphClass extends BaseGraph {
 
     // For fast node lookup
     graph.gmNodeOffset = gmGraph.gms.reduce((agg, gm, gmId) => {
-      agg[gmId] = gmId === 0 ? 0 : agg[gmId - 1] + gm.rooms.length;
+      agg[gmId + 1] = agg[gmId] + gm.rooms.length;
       return agg;
-    }, /** @type {typeof graph.gmNodeOffset} */ ([]));
+    }, /** @type {typeof graph.gmNodeOffset} */ ([0]));
 
     graph.registerNodes(nodes);
 
