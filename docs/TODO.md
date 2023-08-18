@@ -20,8 +20,8 @@
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
     - output will be used by raycast stage
   - 🚧 raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
-    - with {src,dst}?.meta?.{gmId,roomId}
-    - 🚧 `world npcs.canSee "$( click 1 | map meta )" "$( click 1 | map meta )"`
+    - ✅ with {src,dst}?.meta?.{gmId,roomId}
+    - ✅ `world npcs.canSee "$( click 1 )" "$( click 1 )"`
 
 - Geomorph PNGs navmesh higher contrast?
 - shell has api.argsToAction

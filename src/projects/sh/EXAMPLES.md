@@ -306,6 +306,8 @@ npc foo inFrustum $( npc rob getPosition )
 ```sh
 # speech synthesis
 say --v=?
+say {a..z}
+# online only:
 say --v="Google UK English Female" {1..5}Hello
 ```
 

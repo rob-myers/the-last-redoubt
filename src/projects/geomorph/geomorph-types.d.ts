@@ -318,6 +318,7 @@ declare namespace Geomorph {
     gridRect: Geom.Rect;
 
     toLocalCoords(worldPoint: Geom.VectJson): Geom.Vect;
+    toWorldCoords(localPoint: Geom.VectJson): Geom.Vect;
   }
 
   /**

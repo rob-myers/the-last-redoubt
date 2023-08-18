@@ -20,7 +20,7 @@ import npcsMeta from './npcs-meta.json';
 /** @param {Props} props */
 export default function NPCs(props) {
 
-  const { api } = props;
+  const { api, api: { gmGraph: { gms } } } = props;
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
@@ -125,13 +125,41 @@ export default function NPCs(props) {
     })),
 
     canSee(src, dst) {
-      /** @type {Geomorph.GmRoomId | null} */ let res = null;
-      for (const p of [src, dst]) {
-        !hasGmRoomId(p.meta ??= {}) && Object.assign(p.meta, res = api.gmGraph.findRoomContaining(p));
-        if (!res) return false;
+      !hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src));
+      !hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst));
+      if (![src.meta, dst.meta].every(hasGmRoomId)) {
+        return false;
       }
-      // 🚧
-      return false;
+
+      const srcRm = /** @type {Geomorph.GmRoomId} */ (src.meta);
+      const dstRm = /** @type {Geomorph.GmRoomId} */ (dst.meta);
+      const vantages = api.gmRoomGraph.getVantages(srcRm, dstRm, true);
+
+      if (!vantages) {
+        return false;
+      } else if (vantages.key === 'same-room') {
+        const [srcL, dstL] = [src, dst].map(gms[srcRm.gmId].toLocalCoords);
+        return !geom.outlineIntersectsSeg(gms[srcRm.gmId].roomsWithDoors[srcRm.roomId], srcL, dstL);
+      } else if (vantages.key === 'adj-room') {
+        
+        // Raycast from `src` and check intersection is one of the open doors
+        let [srcL, dstL] = [src, dst].map(gms[srcRm.gmId].toLocalCoords);
+        const result = gms[srcRm.gmId].rayIntersectsDoor(srcL, dstL, srcRm.roomId, vantages.gmDoorIds.map(x => x.doorId));
+        if (result === null) return false;
+
+        // Raycast from intersection to other npc
+        srcL = new Vect(srcL.x + (result.lambda + 0.01) * (dstL.x - srcL.x), srcL.y + (result.lambda + 0.01) * (dstL.y - srcL.y));
+        if (dstRm.gmId !== srcRm.gmId) {
+          [srcL, dstL] = [srcL, dstL].map(gms[srcRm.gmId].toWorldCoords).map(gms[dstRm.gmId].toLocalCoords);
+        }
+        return !geom.outlineIntersectsSeg(gms[dstRm.gmId].roomsWithDoors[dstRm.roomId], srcL, dstL);
+
+      } else {// rel-room
+
+        // 🚧 maybe suffices to use same technique as adj-room?
+
+        return false;
+      }
     },
     async fadeSpawnDo(npc, e, meta) {
       try {
@@ -245,7 +273,7 @@ export default function NPCs(props) {
      * Wraps @see {gm.floorGraph.findPath}
      */
     getLocalNavPath(gmId, src, dst, opts) {
-      const gm = api.gmGraph.gms[gmId];
+      const gm = gms[gmId];
       const localSrc = gm.inverseMatrix.transformPoint(Vect.from(src));
       const localDst = gm.inverseMatrix.transformPoint(Vect.from(dst));
       const gmDoors = api.doors.lookup[gmId];
@@ -294,7 +322,6 @@ export default function NPCs(props) {
       return state.playerKey ? state.getNpc(state.playerKey) : null;
     },
     getRandomRoomNavpoint(gmId, roomId) {
-      const {gms} = api.gmGraph;
       const gm = gms[gmId];
       // const nodeIds = gm.navZone.roomNodeIds[roomId];
       const nodeIds = gm.floorGraph.strictRoomNodeIds[roomId];
@@ -303,7 +330,6 @@ export default function NPCs(props) {
       return gm.matrix.transformPoint(Vect.from(navNode.centroid));
     },
     getRandomRoom(filterGeomorphMeta = _ => true, filterRoomMeta = _ => true) {
-      const { gms } = api.gmGraph;
       const gmIds = gms.flatMap(({ meta }, gmId) => filterGeomorphMeta(meta, gmId) ? gmId : []);
       if (gmIds.length === 0)
         throw Error(`getRandomRoom: no gmId matches filter`);
@@ -365,7 +391,7 @@ export default function NPCs(props) {
     isPointInNavmesh(p) {
       const [gmId] = api.gmGraph.findGeomorphIdContaining(p);
       if (gmId !== null) {
-        const { navPoly, inverseMatrix } = api.gmGraph.gms[gmId];
+        const { navPoly, inverseMatrix } = gms[gmId];
         const localPoint = inverseMatrix.transformPoint(Vect.from(p));
         return navPoly.some(poly => poly.contains(localPoint));
       } else {
@@ -373,7 +399,7 @@ export default function NPCs(props) {
       }
     },
     isPointNearClosedDoor(point, radius, gmRoomId) {
-      const gm = api.gmGraph.gms[gmRoomId.gmId];
+      const gm = gms[gmRoomId.gmId];
       const localPoint = gm.inverseMatrix.transformPoint({...point});
       const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
         !api.doors.lookup[gmRoomId.gmId][doorId].open &&
@@ -802,8 +828,7 @@ export default function NPCs(props) {
           ) {
             changeStatus('panzoom-to');
             try {
-              const baseZoom = baseTrackingZoom;
-              await panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000);
+              await panZoom.panZoomTo(baseTrackingZoom, npc.getPosition(), 2000);
             } catch {};
             changeStatus('no-track');
           }

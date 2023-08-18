@@ -912,6 +912,9 @@ export function geomorphDataToInstance(gm, transform) {
     toLocalCoords(worldPoint) {
       return output.inverseMatrix.transformPoint(Vect.from(worldPoint));
     },
+    toWorldCoords(localPoint) {
+      return output.matrix.transformPoint(Vect.from(localPoint));
+    },
   };
 
   return output;

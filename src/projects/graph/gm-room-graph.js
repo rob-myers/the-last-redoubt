@@ -26,20 +26,20 @@ export class gmRoomGraphClass extends BaseGraph {
 
   /**
    * Get `GmDoorId`s of doors connecting two gmRoomIds, if any.
+   * They are relative to srcRm (adj hull doors appear as other).
    * @param {Geomorph.GmRoomId} srcRm 
    * @param {Geomorph.GmRoomId} dstRm 
-   * @returns {Geomorph.GmDoorId[]}
+   * @returns {Geomorph.GmDoorId[] | null}
    */
   getAdjGmDoorIds(srcRm, dstRm, requireOpen = false) {
     const src = this.getNode(srcRm.gmId, srcRm.roomId);
     const dst = this.getNode(dstRm.gmId, dstRm.roomId);
-    const doors = this.succ.get(src)?.get(dst)?.doors ?? [];
-    if (requireOpen) {
-      const doorApi = this.api.doors;
-      return doors.filter(p => doorApi.isOpen(p.gmId, p.doorId));
-    } else {
-      return doors;
+    const doors = this.succ.get(src)?.get(dst)?.doors;
+    if (!doors) {
+      return null; // Not adjacent
     }
+    const doorApi = this.api.doors;
+    return (doors ?? []).filter(p => !requireOpen || doorApi.isOpen(p.gmId, p.doorId));
   }
 
   /**
@@ -114,8 +114,9 @@ export class gmRoomGraphClass extends BaseGraph {
       return { key: 'same-room' };
     }
     const gmDoorIds = this.getAdjGmDoorIds(gmRoomId, other, requireOpen);
-    if (gmDoorIds.length) {
-      return { key: 'adj-room', gmDoorIds };
+    if (gmDoorIds) {
+      if (gmDoorIds.length) return { key: 'adj-room', gmDoorIds };
+      else return null; // Adjacent but no door open
     }
     const relation = this.getRelDoorIds(gmRoomId, other, requireOpen);
     if (relation.length) {
