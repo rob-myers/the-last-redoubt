@@ -2,36 +2,6 @@
 
 ## In progress
 
-- ✅ gmRoomGraph to simplify many computations
-  - ✅ create it
-    - whose nodes are `gmRoomId`s
-    - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
-    - built via `gm[i].roomGraph` + gmGraph
-  - ✅ fix connection error
-    - ℹ️ `world gmGraph.findRoomContaining $( click 1 )`
-    - 303 room 25 had self-room-door
-  - ✅ also provides "relate-connectors" over GmDoorIds
-    - 101 has relation door -> window via "office 26"
-    - respects identified hull doors
-  - ❌ also provides "parallel-connectors" over GmDoorIds
-    - can hopefully just use each `gm.parallelDoorId`
-  - ✅ 301 has extra relation so FOV can see:
-    > toilet -> stateroom -> corridor -> stateroom
-  - ✅ fast (gmId, roomId) -> gmRoomGraph node
-  - ✅ migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
-  - ✅ fix FOV issue after adding new relation to 301
-    - we restrict lights by their direction
-  - ✅ migrate getRoomsVantages to gmRoomGraph.getVantages
-    - ✅ `world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
-  - ✅ getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
-    - needs implementation
-    - prohibit relations which jump over dstRm
-
-- ✅ Grid for room polys
-  - ✅ precomputed per geomorph
-  - ✅ used when search for room containing point
-  - ✅ `click` ensures `meta.{gmId,roomId}`
-
 - 🚧 npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
   - ✅ if in same room
@@ -49,8 +19,9 @@
     - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
     - output will be used by raycast stage
-  - raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
+  - 🚧 raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
     - with {src,dst}?.meta?.{gmId,roomId}
+    - 🚧 `world npcs.canSee "$( click 1 | map meta )" "$( click 1 | map meta )"`
 
 - Geomorph PNGs navmesh higher contrast?
 - shell has api.argsToAction
@@ -537,6 +508,36 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ gmRoomGraph to simplify many computations
+  - ✅ create it
+    - whose nodes are `gmRoomId`s
+    - whose directed edges are lists of `{ gmId, doorId, [adjGmId], [adjDoorId]  }`
+    - built via `gm[i].roomGraph` + gmGraph
+  - ✅ fix connection error
+    - ℹ️ `world gmGraph.findRoomContaining $( click 1 )`
+    - 303 room 25 had self-room-door
+  - ✅ also provides "relate-connectors" over GmDoorIds
+    - 101 has relation door -> window via "office 26"
+    - respects identified hull doors
+  - ❌ also provides "parallel-connectors" over GmDoorIds
+    - can hopefully just use each `gm.parallelDoorId`
+  - ✅ 301 has extra relation so FOV can see:
+    > toilet -> stateroom -> corridor -> stateroom
+  - ✅ fast (gmId, roomId) -> gmRoomGraph node
+  - ✅ migrate getGmRoomsDoorIds to gmRoomGraph.getAdjDoorIds
+  - ✅ fix FOV issue after adding new relation to 301
+    - we restrict lights by their direction
+  - ✅ migrate getRoomsVantages to gmRoomGraph.getVantages
+    - ✅ `world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
+  - ✅ getGmRoomsRelDoorIds -> gmRoomGraph.getRelDoorIds
+    - needs implementation
+    - prohibit relations which jump over dstRm
+
+- ✅ Grid for room polys
+  - ✅ precomputed per geomorph
+  - ✅ used when search for room containing point
+  - ✅ `click` ensures `meta.{gmId,roomId}`
 
 - ✅ replace lightPoly `direction` with simplified area.poly
   - ℹ️ room before light replaced by "envelope"
