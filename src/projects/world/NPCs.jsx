@@ -7,6 +7,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever } from "../service/generic";
 import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
+import { hasGmDoorId, hasGmRoomId } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -123,6 +124,15 @@ export default function NPCs(props) {
       },
     })),
 
+    canSee(src, dst) {
+      /** @type {Geomorph.GmRoomId | null} */ let res = null;
+      for (const p of [src, dst]) {
+        !hasGmRoomId(p.meta ??= {}) && Object.assign(p.meta, res = api.gmGraph.findRoomContaining(p));
+        if (!res) return false;
+      }
+      // 🚧
+      return false;
+    },
     async fadeSpawnDo(npc, e, meta) {
       try {
         await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
@@ -352,16 +362,6 @@ export default function NPCs(props) {
     isPanZoomControlled() {
       return Object.values(state.session).some(x => x.panzoomPids.length);
     },
-    isPointNearClosedDoor(point, radius, gmRoomId) {
-      const gm = api.gmGraph.gms[gmRoomId.gmId];
-      const localPoint = gm.inverseMatrix.transformPoint({...point});
-      const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
-        !api.doors.lookup[gmRoomId.gmId][doorId].open &&
-        // 🚧 check distance from line segment instead?
-        geom.createOutset(gm.doors[doorId].poly, radius)[0].contains(localPoint)
-      );
-      return !!closeDoor;
-    },
     isPointInNavmesh(p) {
       const [gmId] = api.gmGraph.findGeomorphIdContaining(p);
       if (gmId !== null) {
@@ -371,6 +371,16 @@ export default function NPCs(props) {
       } else {
         return false;
       }
+    },
+    isPointNearClosedDoor(point, radius, gmRoomId) {
+      const gm = api.gmGraph.gms[gmRoomId.gmId];
+      const localPoint = gm.inverseMatrix.transformPoint({...point});
+      const closeDoor = gm.roomGraph.getAdjacentDoors(gmRoomId.roomId).find(({ doorId }) => 
+        !api.doors.lookup[gmRoomId.gmId][doorId].open &&
+        // 🚧 check distance from line segment instead?
+        geom.createOutset(gm.doors[doorId].poly, radius)[0].contains(localPoint)
+      );
+      return !!closeDoor;
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
       // Must not be close to another npc
@@ -494,7 +504,7 @@ export default function NPCs(props) {
       point.meta ??= {}; // possibly manually specified (not via `click [n]`)
       
       try {
-        if (point.meta.door && typeof point.meta.gmId === 'number' && typeof point.meta.doorId === 'number') {
+        if (point.meta.door && hasGmDoorId(point.meta)) {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
           const extraParam = e.extraParams?.[0] === undefined ? undefined : !!e.extraParams[0];
           const open = extraParam === true;
@@ -869,6 +879,7 @@ export default function NPCs(props) {
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
+ * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta) => boolean} canSee
  * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath

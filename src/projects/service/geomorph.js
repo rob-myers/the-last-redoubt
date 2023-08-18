@@ -568,6 +568,22 @@ function outsetConnectorEntry(connector, amount) {
 }
 
 /**
+ * @param {Record<any, any>} meta 
+ * @returns {meta is { gmId: number; doorId: number; }}
+ */
+export function hasGmDoorId(meta) {
+  return meta && typeof meta.gmId === 'number' && typeof meta.doorId === 'number';
+}
+
+/**
+ * @param {Record<any, any>} meta 
+ * @returns {meta is { gmId: number; roomId: number; }}
+ */
+export function hasGmRoomId(meta) {
+  return meta && typeof meta.gmId === 'number' && typeof meta.roomId === 'number';
+}
+
+/**
  * Is the connector aligned with horizontal or vertical axis?
  * @param {Geomorph.ParsedConnectorRect} connector 
  */
@@ -1481,9 +1497,8 @@ export function verifyDecor(input) {
       return Vect.isVectJson(input.center) && typeof input.radius === 'number';
     case 'group':
       return Array.isArray(input.items) &&
-        typeof input.meta.gmId === 'number' && // groups must have meta.{gmId,roomId}
-        typeof input.meta.roomId === 'number' &&
-        input.items.every(item => verifyDecor(item));
+        hasGmRoomId(input.meta) && // groups must have meta.{gmId,roomId}
+        input.items.every(verifyDecor);
     case 'path':
       return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':
