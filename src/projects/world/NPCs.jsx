@@ -141,24 +141,37 @@ export default function NPCs(props) {
         const [srcL, dstL] = [src, dst].map(gms[srcRm.gmId].toLocalCoords);
         return !geom.outlineIntersectsSeg(gms[srcRm.gmId].roomsWithDoors[srcRm.roomId], srcL, dstL);
       } else if (vantages.key === 'adj-room') {
-        
         // Raycast from `src` and check intersection is one of the open doors
         let [srcL, dstL] = [src, dst].map(gms[srcRm.gmId].toLocalCoords);
         const result = gms[srcRm.gmId].rayIntersectsDoor(srcL, dstL, srcRm.roomId, vantages.gmDoorIds.map(x => x.doorId));
         if (result === null) return false;
 
-        // Raycast from intersection to other npc
+        // Raycast from intersection to `dst`
         srcL = new Vect(srcL.x + (result.lambda + 0.01) * (dstL.x - srcL.x), srcL.y + (result.lambda + 0.01) * (dstL.y - srcL.y));
         if (dstRm.gmId !== srcRm.gmId) {
           [srcL, dstL] = [srcL, dstL].map(gms[srcRm.gmId].toWorldCoords).map(gms[dstRm.gmId].toLocalCoords);
         }
         return !geom.outlineIntersectsSeg(gms[dstRm.gmId].roomsWithDoors[dstRm.roomId], srcL, dstL);
 
-      } else {// rel-room
+      } else {// rel-room 🚧 technique below is sound?
+        // Raycast from `src` and check intersection is one of the open doors
+        const srcDrs = vantages.relation.map(x => x.src);
+        let [srcL, dstL] = [src, dst].map(gms[srcRm.gmId].toLocalCoords);
+        const result = gms[srcRm.gmId].rayIntersectsDoor(srcL, dstL, srcRm.roomId, srcDrs.map(x => x.doorId));
+        if (result === null) return false;
 
-        // 🚧 maybe suffices to use same technique as adj-room?
+        const { depDoors, dst: dstDr } = assertDefined(vantages.relation.find(x => x.src.doorId === result.doorId));
+        
+        // Check intermediate doors, assuming they all reside in dstRm's gm
+        [srcL, dstL] = [src, dst].map(gms[dstRm.gmId].toLocalCoords);
+        const failure = (depDoors ?? []).find(x =>
+          !geom.getLineSegsIntersection(srcL, dstL, ...gms[x.gmId].doors[x.doorId].seg)
+        );
+        if (failure) return false;
 
-        return false;
+        // Raycast from `dst` and check intersection is `dstDr`
+        [srcL, dstL] = [src, dst].map(gms[dstRm.gmId].toLocalCoords);
+        return !!gms[dstRm.gmId].rayIntersectsDoor(dstL, srcL, dstRm.roomId, [dstDr.doorId]);
       }
     },
     async fadeSpawnDo(npc, e, meta) {
