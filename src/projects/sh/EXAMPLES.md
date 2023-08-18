@@ -315,7 +315,10 @@ say --v="Google UK English Female" {1..5}Hello
 spawn --zhodani foo $( click 1 )
 world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"
 world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )" false
+world gmRoomGraph.getVantages "$( click 1 )" "$( click 1 )"
 
 # get a gmRoomId
 click 1 | map meta
+
+world npcs.canSee "$( click 1 )" "$( click 1 )"
 ```

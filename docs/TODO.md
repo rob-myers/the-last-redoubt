@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 npc.canSee(npcKey)
+- ✅ npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
   - ✅ if in same room
   - ✅ if in adjacent room
@@ -19,10 +19,11 @@
     - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
     - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
     - output will be used by raycast stage
-  - 🚧 raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
+  - ✅ raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
     - ✅ with {src,dst}?.meta?.{gmId,roomId}
     - ✅ `world npcs.canSee "$( click 1 )" "$( click 1 )"`
 
+- clarify hard-coding in rayIntersectsDoor
 - Geomorph PNGs navmesh higher contrast?
 - shell has api.argsToAction
 - BUG with local variables

@@ -125,8 +125,8 @@ export default function NPCs(props) {
     })),
 
     canSee(src, dst) {
-      !hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src));
-      !hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst));
+      !hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src, true));
+      !hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst, true));
       if (![src.meta, dst.meta].every(hasGmRoomId)) {
         return false;
       }

@@ -263,9 +263,12 @@ export async function createGeomorphData(input) {
       if (lambda === null) {
         return null;
       }
-      /** Slightly closer, so inside door */
-      const intersect = new Vect(src.x + (lambda - 0.01) * (dst.x - src.x), src.y + (lambda - 0.01) * (dst.y - src.y));
-      const doorId = doorIds.find(doorId => this.doors[doorId].poly.contains(intersect));
+      const doorId = doorIds.find(doorId => {
+        // 🚧 clarify hard-coding
+        const delta = (this.isHullDoor(doorId) ? 10 : 2) / Math.sqrt( (dst.x - src.x) ** 2 + (dst.y - src.y) ** 2 );
+        const intersect = new Vect(src.x + (lambda - delta) * (dst.x - src.x), src.y + (lambda - delta) * (dst.y - src.y));
+        return this.doors[doorId].poly.contains(intersect);
+      });
       return doorId !== undefined ? { doorId, lambda } : null;
     },
   };
