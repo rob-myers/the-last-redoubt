@@ -199,7 +199,7 @@
         }));
 
         const gmRoomId = worldApi.gmGraph.findRoomContaining(e.point);
-        const meta = /** @type {Geomorph.PointMeta} */ ({ ...e.meta, ...gmRoomId });
+        const meta = /** @type {Geomorph.PointMeta} */ ({ ...e.meta, ...gmRoomId ?? { roomId: null } });
         if (worldApi.npcs.isPointInNavmesh(e.point)) {
           meta.nav = true; // add "nav" tag
         }
