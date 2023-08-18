@@ -5,7 +5,7 @@ import { filter, tap } from "rxjs/operators";
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever } from "../service/generic";
-import { cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
+import { baseTrackingZoom, cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { hasGmDoorId, hasGmRoomId } from "../service/geomorph";
 import { npcService } from "../service/npc";
@@ -802,7 +802,7 @@ export default function NPCs(props) {
           ) {
             changeStatus('panzoom-to');
             try {
-              const baseZoom = 1.8; // 🚧 remove hard-coding
+              const baseZoom = baseTrackingZoom;
               await panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000);
             } catch {};
             changeStatus('no-track');

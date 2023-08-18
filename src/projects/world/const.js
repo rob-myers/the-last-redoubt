@@ -91,3 +91,5 @@ export const doorViewOffset = 40;
 export const doorPeekViewOffset = 0;
 
 export const windowViewOffset = 20;
+
+export const baseTrackingZoom = 2.2;
