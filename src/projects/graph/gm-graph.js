@@ -197,7 +197,7 @@ export class gmGraphClass extends BaseGraph {
       const areaRoomId = area.hullRoomId ?? rootRoomId;
       // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
       // We avoid including the current room, using a small "envelope" instead.
-      const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId);
+      const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId, nearDoorIds.includes(area.doorId));
       const exteriorPolys = Poly.union([
         envelope,
         area.poly,

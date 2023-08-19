@@ -6,7 +6,7 @@ import { computeViewPosition, coordToRoomGrid, geomorphJsonPath, getNormalizedDo
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
-import { doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
+import { doorPeekViewOffset, doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
 import usePathfinding from "./use-pathfinding";
 
 /**
@@ -199,12 +199,12 @@ export async function createGeomorphData(input) {
 
     findRoomContaining,
     // 🚧 cache
-    getViewEnvelope(srcRoomId, doorId) {
+    getViewEnvelope(srcRoomId, doorId, peek) {
       /** Further into room than viewpoint */
       const furtherViewPosition = this.getViewDoorPosition(
         srcRoomId,
         doorId,
-        doorViewOffset + 2, // Assume doorViewOffset >= doorPeekViewOffset
+        (peek ? doorPeekViewOffset : doorViewOffset) + 2,
       );
       return new Poly(geom.convexHull(
         this.doors[doorId].poly.outline.concat(furtherViewPosition)

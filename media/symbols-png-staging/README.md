@@ -2,7 +2,13 @@
 
 Fix a particular [Starship Symbol](http://travellerrpgblog.blogspot.com/2020/08/starship-symbols-book.html) PNG we wish to use.
 
-1. Put `foo.png` in this directory.
+1. If needed, get all the PNGs in the respective category:
+```sh
+# e.g. the desired PNG is a locker from "Ship's locker"
+yarn rename-pngs symbol "media/SymbolsHighRes/Symbols/Ship's Locker" media/symbol-ships-locker
+```
+
+1. Copy `foo.png` into this directory.
 
 1. Manually remove any letters from labels e.g. use OSX Preview.
    Remove doors.
@@ -10,11 +16,11 @@ Fix a particular [Starship Symbol](http://travellerrpgblog.blogspot.com/2020/08/
 
 1. Run `yarn simplify-pngs media/symbols-png-staging`.
 
-1. Copy the resulting file to `/static/assets/symbol/foo.png`.
+1. Copy the resulting file to `static/assets/symbol/foo.png`.
 
-1. Create `/static/assets/symbol/foo.svg` in Boxy SVG.
+1. Create `static/assets/symbol/foo.svg` in Boxy SVG.
 
-1. Use `/static/assets/symbol/foo.png` as background i.e. Image inside folder (SvgGroupElement) named "background".
+1. Use `static/assets/symbol/foo.png` as background i.e. Image inside folder (SvgGroupElement) named "background".
 
 1. Build the SVG e.g. obstacles, walls, singles.
 
