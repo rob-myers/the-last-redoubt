@@ -31,7 +31,7 @@ export default function GeomorphEdit({ disabled }) {
 
   return (
     <div className={rootCss}>
-      <select onChange={x => setLayoutKey(
+      <select defaultValue={layoutKey} onChange={x => setLayoutKey(
         /** @type {Geomorph.GeomorphKey} */ (x.currentTarget.value)
       )}>
         {geomorphKeys.map(gmKey => <option key={gmKey}>{gmKey}</option>)}
