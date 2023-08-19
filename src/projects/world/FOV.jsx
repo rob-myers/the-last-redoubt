@@ -80,6 +80,11 @@ export default function FOV(props) {
             topLeft.set(rect.x + (rect.width/2), rect.y + (rect.height/2))
           ).translate(-rect.width/2, -rect.height/2);
           ctxt.translate(topLeft.x, topLeft.y);
+          // label background
+          ctxt.fillStyle = '#ffffff33';
+          ctxt.fillRect(-4, -4, rect.width + 8, rect.height + 8);
+          ctxt.fillStyle = '#fff';
+          // label
           ctxt.fillText(text, 0, 0);
           ctxt.translate(-topLeft.x, -topLeft.y);
         }

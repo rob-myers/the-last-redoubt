@@ -2490,31 +2490,31 @@
       "text": "locker",
       "center": {"x": 1184.1, "y": 33.6},
       "index": 0,
-      "rect": {"x": 1169.1, "y": 28.6, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 29.6, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 1184.1, "y": 93.6},
       "index": 1,
-      "rect": {"x": 1169.1, "y": 88.6, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 89.6, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 1184.1, "y": 153.6},
       "index": 2,
-      "rect": {"x": 1169.1, "y": 148.6, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 149.6, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 1184.1, "y": 213.6},
       "index": 3,
-      "rect": {"x": 1169.1, "y": 208.6, "width": 30, "height": 10}
+      "rect": {"x": 1169.1, "y": 209.6, "width": 30, "height": 8}
     },
     {
       "text": "eva",
       "center": {"x": 1134.1, "y": 163.6},
       "index": 4,
-      "rect": {"x": 1126.6, "y": 158.6, "width": 15, "height": 10}
+      "rect": {"x": 1126.6, "y": 159.6, "width": 15, "height": 8}
     },
     {
       "text": "'parts",
@@ -2526,13 +2526,13 @@
       "text": "fuel",
       "center": {"x": 163, "y": 463},
       "index": 6,
-      "rect": {"x": 153, "y": 458, "width": 20, "height": 10}
+      "rect": {"x": 153, "y": 459, "width": 20, "height": 8}
     },
     {
       "text": "airlock",
       "center": {"x": 505, "y": 475},
       "index": 7,
-      "rect": {"x": 487.5, "y": 470, "width": 35, "height": 10}
+      "rect": {"x": 487.5, "y": 471, "width": 35, "height": 8}
     },
     {
       "text": "'repair",
@@ -2544,25 +2544,25 @@
       "text": "corridor",
       "center": {"x": 1134.1, "y": 363.6},
       "index": 9,
-      "rect": {"x": 1114.1, "y": 358.6, "width": 40, "height": 10}
+      "rect": {"x": 1114.1, "y": 359.6, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 724.1, "y": 563.6},
       "index": 10,
-      "rect": {"x": 704.1, "y": 558.6, "width": 40, "height": 10}
+      "rect": {"x": 704.1, "y": 559.6, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 54.1, "y": 533.6},
       "index": 11,
-      "rect": {"x": 34.1, "y": 528.6, "width": 40, "height": 10}
+      "rect": {"x": 34.1, "y": 529.6, "width": 40, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 39, "y": 176},
       "index": 12,
-      "rect": {"x": 24, "y": 171, "width": 30, "height": 10}
+      "rect": {"x": 24, "y": 172, "width": 30, "height": 8}
     },
     {
       "text": "lounge",
@@ -2574,13 +2574,13 @@
       "text": "toilet",
       "center": {"x": 451.64, "y": 526.92},
       "index": 14,
-      "rect": {"x": 436.64, "y": 521.92, "width": 30, "height": 10}
+      "rect": {"x": 436.64, "y": 522.92, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 569, "y": 480},
       "index": 15,
-      "rect": {"x": 554, "y": 475, "width": 30, "height": 10}
+      "rect": {"x": 554, "y": 476, "width": 30, "height": 8}
     }
   ],
   "navPoly": [

@@ -6452,55 +6452,55 @@
       "text": "corridor",
       "center": {"x": 185, "y": 355},
       "index": 0,
-      "rect": {"x": 165, "y": 350, "width": 40, "height": 10}
+      "rect": {"x": 165, "y": 351, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 965, "y": 415},
       "index": 1,
-      "rect": {"x": 945, "y": 410, "width": 40, "height": 10}
+      "rect": {"x": 945, "y": 411, "width": 40, "height": 8}
     },
     {
       "text": "'common",
       "center": {"x": 635, "y": 265},
       "index": 2,
-      "rect": {"x": 617.5, "y": 260, "width": 35, "height": 10}
+      "rect": {"x": 617.5, "y": 261, "width": 35, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 316.6, "y": 92.56},
       "index": 3,
-      "rect": {"x": 294.1, "y": 87.56, "width": 45, "height": 10}
+      "rect": {"x": 294.1, "y": 88.56, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 436.6, "y": 92.56},
       "index": 4,
-      "rect": {"x": 414.1, "y": 87.56, "width": 45, "height": 10}
+      "rect": {"x": 414.1, "y": 88.56, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 556.6, "y": 92.56},
       "index": 5,
-      "rect": {"x": 534.1, "y": 87.56, "width": 45, "height": 10}
+      "rect": {"x": 534.1, "y": 88.56, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 643.4, "y": 92.56},
       "index": 6,
-      "rect": {"x": 620.9, "y": 87.56, "width": 45, "height": 10}
+      "rect": {"x": 620.9, "y": 88.56, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 826, "y": 100},
       "index": 7,
-      "rect": {"x": 803.5, "y": 95, "width": 45, "height": 10}
+      "rect": {"x": 803.5, "y": 96, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 761.2436, "y": 95.1554},
       "index": 8,
-      "rect": {"x": 741.2436, "y": 90.1554, "width": 40, "height": 10}
+      "rect": {"x": 741.2436, "y": 91.1554, "width": 40, "height": 8}
     },
     {
       "text": "galley",
@@ -6512,55 +6512,55 @@
       "text": "stateroom",
       "center": {"x": 430, "y": 418},
       "index": 10,
-      "rect": {"x": 407.5, "y": 413, "width": 45, "height": 10}
+      "rect": {"x": 407.5, "y": 414, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 389.56, "y": 570.04},
       "index": 11,
-      "rect": {"x": 369.56, "y": 565.04, "width": 40, "height": 10}
+      "rect": {"x": 369.56, "y": 566.04, "width": 40, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 550, "y": 418},
       "index": 12,
-      "rect": {"x": 527.5, "y": 413, "width": 45, "height": 10}
+      "rect": {"x": 527.5, "y": 414, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 509.56, "y": 570.04},
       "index": 13,
-      "rect": {"x": 489.56, "y": 565.04, "width": 40, "height": 10}
+      "rect": {"x": 489.56, "y": 566.04, "width": 40, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 650, "y": 418},
       "index": 14,
-      "rect": {"x": 627.5, "y": 413, "width": 45, "height": 10}
+      "rect": {"x": 627.5, "y": 414, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 690.44, "y": 570.04},
       "index": 15,
-      "rect": {"x": 670.44, "y": 565.04, "width": 40, "height": 10}
+      "rect": {"x": 670.44, "y": 566.04, "width": 40, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 770, "y": 418},
       "index": 16,
-      "rect": {"x": 747.5, "y": 413, "width": 45, "height": 10}
+      "rect": {"x": 747.5, "y": 414, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 810.44, "y": 570.04},
       "index": 17,
-      "rect": {"x": 790.44, "y": 565.04, "width": 40, "height": 10}
+      "rect": {"x": 790.44, "y": 566.04, "width": 40, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 1079, "y": 534.16},
       "index": 18,
-      "rect": {"x": 1064, "y": 529.16, "width": 30, "height": 10}
+      "rect": {"x": 1064, "y": 530.16, "width": 30, "height": 8}
     }
   ],
   "navPoly": [

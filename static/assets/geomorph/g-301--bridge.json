@@ -5075,13 +5075,13 @@
       "text": "corridor",
       "center": {"x": 245, "y": 305},
       "index": 1,
-      "rect": {"x": 225, "y": 300, "width": 40, "height": 10}
+      "rect": {"x": 225, "y": 301, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 955, "y": 305},
       "index": 2,
-      "rect": {"x": 935, "y": 300, "width": 40, "height": 10}
+      "rect": {"x": 935, "y": 301, "width": 40, "height": 8}
     },
     {
       "text": "study",
@@ -5093,19 +5093,19 @@
       "text": "stateroom",
       "center": {"x": 70, "y": 182},
       "index": 4,
-      "rect": {"x": 47.5, "y": 177, "width": 45, "height": 10}
+      "rect": {"x": 47.5, "y": 178, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 29.56, "y": 29.96},
       "index": 5,
-      "rect": {"x": 9.56, "y": 24.96, "width": 40, "height": 10}
+      "rect": {"x": 9.56, "y": 25.96, "width": 40, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 210, "y": 148},
       "index": 6,
-      "rect": {"x": 195, "y": 143, "width": 30, "height": 10}
+      "rect": {"x": 195, "y": 144, "width": 30, "height": 8}
     },
     {
       "text": "bridge",
@@ -5117,25 +5117,25 @@
       "text": "locker",
       "center": {"x": 512.6, "y": 225},
       "index": 8,
-      "rect": {"x": 497.6, "y": 220, "width": 30, "height": 10}
+      "rect": {"x": 497.6, "y": 221, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 682.6, "y": 227},
       "index": 9,
-      "rect": {"x": 667.6, "y": 222, "width": 30, "height": 10}
+      "rect": {"x": 667.6, "y": 223, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 420.6, "y": 331.8},
       "index": 10,
-      "rect": {"x": 405.6, "y": 326.8, "width": 30, "height": 10}
+      "rect": {"x": 405.6, "y": 327.8, "width": 30, "height": 8}
     },
     {
       "text": "toilet",
       "center": {"x": 780.6, "y": 319.8},
       "index": 11,
-      "rect": {"x": 765.6, "y": 314.8, "width": 30, "height": 10}
+      "rect": {"x": 765.6, "y": 315.8, "width": 30, "height": 8}
     },
     {
       "text": "briefing",
@@ -5147,13 +5147,13 @@
       "text": "fuel",
       "center": {"x": 442.4, "y": 526},
       "index": 13,
-      "rect": {"x": 432.4, "y": 521, "width": 20, "height": 10}
+      "rect": {"x": 432.4, "y": 522, "width": 20, "height": 8}
     },
     {
       "text": "fuel",
       "center": {"x": 762, "y": 526},
       "index": 14,
-      "rect": {"x": 752, "y": 521, "width": 20, "height": 10}
+      "rect": {"x": 752, "y": 522, "width": 20, "height": 8}
     },
     {
       "text": "cpu",
@@ -5171,67 +5171,67 @@
       "text": "stateroom",
       "center": {"x": 756.4, "y": 445.8},
       "index": 17,
-      "rect": {"x": 733.9, "y": 440.8, "width": 45, "height": 10}
+      "rect": {"x": 733.9, "y": 441.8, "width": 45, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 442.6, "y": 441.8},
       "index": 18,
-      "rect": {"x": 427.6, "y": 436.8, "width": 30, "height": 10}
+      "rect": {"x": 427.6, "y": 437.8, "width": 30, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 598.5712, "y": 292.7},
       "index": 19,
-      "rect": {"x": 578.5712, "y": 287.7, "width": 40, "height": 10}
+      "rect": {"x": 578.5712, "y": 288.7, "width": 40, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 990, "y": 148},
       "index": 20,
-      "rect": {"x": 975, "y": 143, "width": 30, "height": 10}
+      "rect": {"x": 975, "y": 144, "width": 30, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 1130, "y": 182},
       "index": 21,
-      "rect": {"x": 1107.5, "y": 177, "width": 45, "height": 10}
+      "rect": {"x": 1107.5, "y": 178, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 1170.44, "y": 29.96},
       "index": 22,
-      "rect": {"x": 1150.44, "y": 24.96, "width": 40, "height": 10}
+      "rect": {"x": 1150.44, "y": 25.96, "width": 40, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 73, "y": 393.8},
       "index": 23,
-      "rect": {"x": 50.5, "y": 388.8, "width": 45, "height": 10}
+      "rect": {"x": 50.5, "y": 389.8, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 193, "y": 393.8},
       "index": 24,
-      "rect": {"x": 170.5, "y": 388.8, "width": 45, "height": 10}
+      "rect": {"x": 170.5, "y": 389.8, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 182, "y": 530},
       "index": 25,
-      "rect": {"x": 159.5, "y": 525, "width": 45, "height": 10}
+      "rect": {"x": 159.5, "y": 526, "width": 45, "height": 8}
     },
     {
       "text": "bathroom",
       "center": {"x": 29.96, "y": 570.44},
       "index": 26,
-      "rect": {"x": 9.96, "y": 565.44, "width": 40, "height": 10}
+      "rect": {"x": 9.96, "y": 566.44, "width": 40, "height": 8}
     },
     {
       "text": "stellar",
       "center": {"x": 1113.2, "y": 418},
       "index": 27,
-      "rect": {"x": 1095.7, "y": 413, "width": 35, "height": 10}
+      "rect": {"x": 1095.7, "y": 414, "width": 35, "height": 8}
     }
   ],
   "navPoly": [

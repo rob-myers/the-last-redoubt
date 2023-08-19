@@ -6201,25 +6201,25 @@
       "text": "corridor",
       "center": {"x": 235, "y": 235},
       "index": 0,
-      "rect": {"x": 215, "y": 230, "width": 40, "height": 10}
+      "rect": {"x": 215, "y": 231, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 595, "y": 295},
       "index": 1,
-      "rect": {"x": 575, "y": 290, "width": 40, "height": 10}
+      "rect": {"x": 575, "y": 291, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 895, "y": 655},
       "index": 2,
-      "rect": {"x": 875, "y": 650, "width": 40, "height": 10}
+      "rect": {"x": 875, "y": 651, "width": 40, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 65, "y": 1135},
       "index": 3,
-      "rect": {"x": 45, "y": 1130, "width": 40, "height": 10}
+      "rect": {"x": 45, "y": 1131, "width": 40, "height": 8}
     },
     {
       "text": "engineering",
@@ -6231,49 +6231,49 @@
       "text": "'research",
       "center": {"x": 1145, "y": 125},
       "index": 5,
-      "rect": {"x": 1122.5, "y": 120, "width": 45, "height": 10}
+      "rect": {"x": 1122.5, "y": 121, "width": 45, "height": 8}
     },
     {
       "text": "corridor",
       "center": {"x": 905, "y": 75},
       "index": 6,
-      "rect": {"x": 885, "y": 70, "width": 40, "height": 10}
+      "rect": {"x": 885, "y": 71, "width": 40, "height": 8}
     },
     {
       "text": "lab",
       "center": {"x": 421, "y": 180.9419},
       "index": 7,
-      "rect": {"x": 413.5, "y": 175.9419, "width": 15, "height": 10}
+      "rect": {"x": 413.5, "y": 176.9419, "width": 15, "height": 8}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 180.9419},
       "index": 8,
-      "rect": {"x": 771.5, "y": 175.9419, "width": 15, "height": 10}
+      "rect": {"x": 771.5, "y": 176.9419, "width": 15, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 900, "y": 180},
       "index": 9,
-      "rect": {"x": 885, "y": 175, "width": 30, "height": 10}
+      "rect": {"x": 885, "y": 176, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 1020, "y": 31},
       "index": 10,
-      "rect": {"x": 1005, "y": 26, "width": 30, "height": 10}
+      "rect": {"x": 1005, "y": 27, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 150},
       "index": 11,
-      "rect": {"x": 975, "y": 145, "width": 30, "height": 10}
+      "rect": {"x": 975, "y": 146, "width": 30, "height": 8}
     },
     {
       "text": "locker",
       "center": {"x": 990, "y": 210},
       "index": 12,
-      "rect": {"x": 975, "y": 205, "width": 30, "height": 10}
+      "rect": {"x": 975, "y": 206, "width": 30, "height": 8}
     },
     {
       "text": "engineering",
@@ -6285,31 +6285,31 @@
       "text": "office",
       "center": {"x": 437.5316, "y": 410.5648},
       "index": 14,
-      "rect": {"x": 422.5316, "y": 405.5648, "width": 30, "height": 10}
+      "rect": {"x": 422.5316, "y": 406.5648, "width": 30, "height": 8}
     },
     {
       "text": "office",
       "center": {"x": 557.5316, "y": 410.5648},
       "index": 15,
-      "rect": {"x": 542.5316, "y": 405.5648, "width": 30, "height": 10}
+      "rect": {"x": 542.5316, "y": 406.5648, "width": 30, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 459.2424, "y": 539},
       "index": 16,
-      "rect": {"x": 436.7424, "y": 534, "width": 45, "height": 10}
+      "rect": {"x": 436.7424, "y": 535, "width": 45, "height": 8}
     },
     {
       "text": "stateroom",
       "center": {"x": 579.2424, "y": 539},
       "index": 17,
-      "rect": {"x": 556.7424, "y": 534, "width": 45, "height": 10}
+      "rect": {"x": 556.7424, "y": 535, "width": 45, "height": 8}
     },
     {
       "text": "lab",
       "center": {"x": 779, "y": 539},
       "index": 18,
-      "rect": {"x": 771.5, "y": 534, "width": 15, "height": 10}
+      "rect": {"x": 771.5, "y": 535, "width": 15, "height": 8}
     },
     {
       "text": "lounge",
@@ -6321,25 +6321,25 @@
       "text": "freaher",
       "center": {"x": 1078.6458, "y": 514.7212},
       "index": 20,
-      "rect": {"x": 1061.1458, "y": 509.7212, "width": 35, "height": 10}
+      "rect": {"x": 1061.1458, "y": 510.7212, "width": 35, "height": 8}
     },
     {
       "text": "stellar",
       "center": {"x": 379, "y": 821},
       "index": 21,
-      "rect": {"x": 361.5, "y": 816, "width": 35, "height": 10}
+      "rect": {"x": 361.5, "y": 817, "width": 35, "height": 8}
     },
     {
       "text": "lab",
       "center": {"x": 721, "y": 701},
       "index": 22,
-      "rect": {"x": 713.5, "y": 696, "width": 15, "height": 10}
+      "rect": {"x": 713.5, "y": 697, "width": 15, "height": 8}
     },
     {
       "text": "lab",
       "center": {"x": 1079, "y": 701},
       "index": 23,
-      "rect": {"x": 1071.5, "y": 696, "width": 15, "height": 10}
+      "rect": {"x": 1071.5, "y": 697, "width": 15, "height": 8}
     },
     {
       "text": "engineering",
@@ -6351,7 +6351,7 @@
       "text": "office",
       "center": {"x": 1114, "y": 1081},
       "index": 25,
-      "rect": {"x": 1099, "y": 1076, "width": 30, "height": 10}
+      "rect": {"x": 1099, "y": 1077, "width": 30, "height": 8}
     }
   ],
   "navPoly": [

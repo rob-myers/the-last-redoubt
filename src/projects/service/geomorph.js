@@ -139,8 +139,7 @@ export async function createLayout(opts) {
     .map(/** @returns {Geomorph.LayoutLabel} */ ({ poly, meta }, index) => {
       const center = poly.rect.center.precision(precision).json;
       const text = `${meta.label}`;
-      const noTail = !text.match(/[gjpqy]/);
-      const dim = { width: measurer.measureText(text).width, height: noTail ? labelMeta.noTailPx : labelMeta.sizePx };
+      const dim = { width: measurer.measureText(text).width, height: labelMeta.sizePx };
       const rect = Rect.fromJson({ x: center.x - 0.5 * dim.width, y: center.y - 0.5 * dim.height, width: dim.width, height: dim.height }).precision(precision).json;
       return { text, center, index, rect };
     });
