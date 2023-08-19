@@ -1,5 +1,4 @@
 /**
- * 🚧 needs a clean
  * This component is used to build a geomorph step-by-step.
  * We compute the actual layout (as opposed to loading JSON).
  */
@@ -53,7 +52,10 @@ export default function GeomorphEdit({ disabled }) {
 function Geomorph({ layoutKey, transform, disabled }) {
 
   const def = layoutDefs[layoutKey];
-  /** Must recompute layout when definition changes (even with HMR) */
+  /**
+   * Must recompute layout when definition changes,
+   * so we can edit geomorph-layouts.
+   */
   const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
 
   const { data, error } = useQuery(
@@ -75,7 +77,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
       return { gm, gmGraph };
 
     },
-    { keepPreviousData: true, enabled: !disabled },
+    { enabled: !disabled },
   );
 
   const update = useUpdate();
