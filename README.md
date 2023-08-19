@@ -17,6 +17,9 @@ npx http-server
 ## Links
 
 - [TODOs](/docs/TODO.md).
+
+- [Converting a Starship Symbol into our own format](media/symbols-png-staging/README.md).
+
 - [General dev info](/docs/DEV-INFO.md).
 
 ## Scripts
