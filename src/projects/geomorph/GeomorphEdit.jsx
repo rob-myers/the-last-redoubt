@@ -1,8 +1,7 @@
 /**
+ * 🚧 needs a clean
  * This component is used to build a geomorph step-by-step.
  * We compute the actual layout (as opposed to loading JSON).
- * 
- * 🚧 needs a clean
  */
 import * as React from "react";
 import { css, cx } from "@emotion/css";
@@ -14,8 +13,7 @@ import { createGeomorphData } from "./use-geomorph-data";
 import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText } from "../service/generic";
 import { loadImage } from "../service/dom";
-import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta } from "../service/geomorph";
-import { deserializeSvgJson } from "../service/geomorph";
+import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
 import * as defaults from "../example/defaults";
@@ -24,34 +22,37 @@ import SvgPanZoom from '../panzoom/SvgPanZoom';
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
-/** @type {Geomorph.GeomorphKey} */
-// const layoutKey = 'g-101--multipurpose';
-const layoutKey = 'g-102--research-deck';
-// const layoutKey = 'g-103--cargo-bay';
-// const layoutKey = 'g-301--bridge';
-// const layoutKey = 'g-302--xboat-repair-bay';
-// const layoutKey = 'g-303--passenger-deck';
 
 /** @param {Props} props */
 export default function GeomorphEdit({ disabled }) {
+
+  const [layoutKey, setLayoutKey] = React.useState(
+    /** @returns {Geomorph.GeomorphKey} */ () => 'g-301--bridge',
+  );
+
   return (
     <div className={rootCss}>
+      <select onChange={x => setLayoutKey(
+        /** @type {Geomorph.GeomorphKey} */ (x.currentTarget.value)
+      )}>
+        {geomorphKeys.map(gmKey => <option key={gmKey}>{gmKey}</option>)}
+      </select>
       <SvgPanZoom
         initViewBox={defaults.initViewBox}
         gridBounds={defaults.gridBounds}
         minZoom={0.2}
         maxZoom={6}
       >
-        <Geomorph def={layoutDefs[layoutKey]} />
-        {/* <Geomorph def={layoutDefs["g-301--bridge"]} transform="matrix(1,0,0,1,-1200,0)" /> */}
+        <Geomorph layoutKey={layoutKey} />
       </SvgPanZoom>
     </div>
   );
 }
 
-/** @param {{ def: Geomorph.LayoutDef; transform?: string; disabled?: boolean }} _ */
-function Geomorph({ def, transform, disabled }) {
+/** @param {{ layoutKey: Geomorph.GeomorphKey; transform?: string; disabled?: boolean }} _ */
+function Geomorph({ layoutKey, transform, disabled }) {
 
+  const def = layoutDefs[layoutKey];
   /** Must recompute layout when definition changes (even with HMR) */
   const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
 
@@ -81,7 +82,6 @@ function Geomorph({ def, transform, disabled }) {
 
   const state = useStateRef(() => {
     return {
-      layoutKey,
       canvas: /** @type {HTMLCanvasElement} */ ({}),
       allLightPolys: /** @type {Geom.Poly[]} */ ([]),
       openDoors: /** @type {number[]} */ ([]),
@@ -132,7 +132,7 @@ function Geomorph({ def, transform, disabled }) {
       },
 
       reset() {
-        state.canvas.getContext('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
+        state.canvas.getContext?.('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
         state.viewPoly = new Poly;
         state.lightPoly = new Poly;
         state.lastViewId = '';
@@ -143,14 +143,11 @@ function Geomorph({ def, transform, disabled }) {
     deps: [data, layoutKey],
   });
 
-  React.useEffect(() =>
-    void (layoutKey !== state.layoutKey ) && state.reset(),
-    [layoutKey],
-  );
 
   React.useEffect(() => {
+    state.reset();
     if (data) {
-      state.canvas.getContext('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
+      state.canvas.getContext?.('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
       renderGeomorph(
         data.gm, symbolLookup, state.canvas, (pngHref) => loadImage(pngHref),
         { scale: 1, navTris: false },
@@ -277,6 +274,12 @@ const pointDim = 8;
 const rootCss = css`
   background-color: #444;
   height: 100%;
+
+  select {
+    position: absolute;
+    right: 0;
+  }
+
   g {
     image.debug {
       opacity: 0.2;

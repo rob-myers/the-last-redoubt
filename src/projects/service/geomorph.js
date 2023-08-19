@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
-import { assertDefined, testNever } from './generic';
+import { assertDefined, keys, testNever } from './generic';
 import { error, info, warn } from './log';
 import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
@@ -1193,6 +1193,18 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
     gridToNodeIds,
   };
 }
+
+/** @type {Record<Geomorph.GeomorphKey, true>} */
+const fromGmKey = {
+  "g-101--multipurpose": true,
+  'g-102--research-deck': true,
+  'g-103--cargo-bay': true,
+  'g-301--bridge': true,
+  'g-302--xboat-repair-bay': true,
+  'g-303--passenger-deck': true,
+};
+
+export const geomorphKeys = keys(fromGmKey);
 
 /**
  * @param {Geomorph.GeomorphKey} layoutKey

@@ -2,29 +2,16 @@
 
 ## In progress
 
-- ✅ npc.canSee(npcKey)
-  - ✅ `npc rob canSee foo`
-  - ✅ if in same room
-  - ✅ if in adjacent room
-  - ❌ if have shared adjacent room
-  - ✅ display view frustum (45 deg) fov-indicator via background-image
-  - ℹ️ Player's FOV should contain view frustum
-  - ❌ FOV door offset changes when inside door sensor?
-    - ❌ gm.roomOverrides at level of GeomorphDataInstance?
-  - ✅ can test if point lies in view frustum (triangle)
-    - api.npcs.inFrustum(src, dst, srcRadians, fovRadians = Math.PI/4)
-    - npc.inFrustum
-  - ✅ can test if `same-room` or `adj-room` or `rel-room`,
-    providing open/open-related shared doors too
-    - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
-    - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
-    - output will be used by raycast stage
-  - ✅ raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
-    - ✅ with {src,dst}?.meta?.{gmId,roomId}
-    - ✅ `world npcs.canSee "$( click 1 )" "$( click 1 )"`
+- 🚧 GeomorphEdit
+  - fix redraw
+  - improve perf
+  - support "groups" in layout
+  - gm 301: add more groups/symbols e.g. tables (for props later)
+
+- geomorph PNGs navmesh higher contrast?
+- GeomorphEdit works on mobile
 
 - clarify hard-coding in rayIntersectsDoor
-- Geomorph PNGs navmesh higher contrast?
 - shell has api.argsToAction
 - BUG with local variables
   - not working inside functions?
@@ -251,7 +238,7 @@ nav --nearNpc foo rob | walk --open foo
 
 - ✅ `<NPC>` supports HMR i.e. manually within useStateRef
 
-- review how `relate-connectors` extends visible rooms
+- ✅ review how `relate-connectors` extends visible rooms
   - ✅ rather explicit but probably right
   - document what is going on
   - can show lights/connectors in GeomorphEdit
@@ -509,6 +496,27 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ npc.canSee(npcKey)
+  - ✅ `npc rob canSee foo`
+  - ✅ if in same room
+  - ✅ if in adjacent room
+  - ❌ if have shared adjacent room
+  - ✅ display view frustum (45 deg) fov-indicator via background-image
+  - ℹ️ Player's FOV should contain view frustum
+  - ❌ FOV door offset changes when inside door sensor?
+    - ❌ gm.roomOverrides at level of GeomorphDataInstance?
+  - ✅ can test if point lies in view frustum (triangle)
+    - api.npcs.inFrustum(src, dst, srcRadians, fovRadians = Math.PI/4)
+    - npc.inFrustum
+  - ✅ can test if `same-room` or `adj-room` or `rel-room`,
+    providing open/open-related shared doors too
+    - ✅ `world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"`
+    - gmGraph.getRoomsVantages(gmRoomId, other, requireOpenDoors = true)
+    - output will be used by raycast stage
+  - ✅ raycast stage: `api.npcs.canSee(src, dst)` for points src, dst
+    - ✅ with {src,dst}?.meta?.{gmId,roomId}
+    - ✅ `world npcs.canSee "$( click 1 )" "$( click 1 )"`
 
 - ✅ gmRoomGraph to simplify many computations
   - ✅ create it
