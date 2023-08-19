@@ -38,6 +38,7 @@
  * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Staterooms media/symbol-staterooms
  * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Cargo' media/symbol-cargo
  * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Furniture, Consoles, & Equipment' media/symbol-furniture-consoles-equipment
+ * yarn rename-pngs symbol "media/SymbolsHighRes/Symbols/Ship's Locker" media/symbol-ships-locker
  * ```
  */
 import fs from 'fs';

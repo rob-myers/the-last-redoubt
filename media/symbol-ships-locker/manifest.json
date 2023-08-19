@@ -244,6 +244,24 @@
       "is": [],
       "has": [],
       "ids": [27]
+    },
+    {
+      "srcName": "Ship's Locker 028 [5x5] Freezer.png",
+      "dstName": "ships-locker--028--1x1.png",
+      "id": 28,
+      "gridDim": [1, 1],
+      "is": ["freezer"],
+      "has": ["freezer"],
+      "ids": [28]
+    },
+    {
+      "srcName": "Ship's Locker 029 [5x5] Refrigerator Freezer.png",
+      "dstName": "ships-locker--029--1x1.png",
+      "id": 29,
+      "gridDim": [1, 1],
+      "is": ["refrigerator-freezer"],
+      "has": ["refrigerator-freezer"],
+      "ids": [29]
     }
   ]
 }
