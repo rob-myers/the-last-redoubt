@@ -81,7 +81,7 @@ export default function FOV(props) {
           ).translate(-rect.width/2, -rect.height/2);
           ctxt.translate(topLeft.x, topLeft.y);
           // label background
-          ctxt.fillStyle = '#ffffff33';
+          ctxt.fillStyle = '#ff000022';
           ctxt.fillRect(-4, -4, rect.width + 8, rect.height + 8);
           ctxt.fillStyle = '#fff';
           // label
