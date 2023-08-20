@@ -27,6 +27,7 @@ export const cssName = /** @type {const} */ ({
   decorIconWidth: '--decor-icon-width',
   decorPathColour: '--decor-path-colour',
   
+  /** 🤔 unused due to type error when: `${cssName.geomorphFilter}: ${geomorphFilter}` */
   geomorphFilter: '--geomorph-filter',
   geomorphMapFilter: '--geomorph-map-filter',
   geomorphLabelsOpacity: '--geomorph-labels-opacity',
@@ -58,6 +59,9 @@ export const defaultNpcInteractRadius = 70;
 
 /** `24 / 5` because we scale down SVG symbols */
 export const doorWidth = 4.8;
+
+// export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.3)';
+export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.2)';
 
 /** HMR note: use of WAPI means anim must be retriggered  */
 export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
@@ -92,4 +96,4 @@ export const doorPeekViewOffset = 0;
 
 export const windowViewOffset = 20;
 
-export const baseTrackingZoom = 1.5;
+export const baseTrackingZoom = 1.7;

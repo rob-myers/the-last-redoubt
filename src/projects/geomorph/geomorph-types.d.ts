@@ -383,6 +383,7 @@ declare namespace Geomorph {
     | 'console--031--1x1.2'
     | 'couch-and-chairs--006--0.4x2'
     | 'custom--locker--001--1x0.375'
+    | 'custom--table--001--1x0.375'
     | 'empty-room--006--2x2'
     | 'empty-room--013--2x3'
     | 'empty-room--019--2x4'

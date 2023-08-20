@@ -316,7 +316,7 @@ const rootCss = css`
     position: absolute;
     cursor: pointer;
     background-color: #ddd;
-    border: 1px solid #000;
+    border: 1px solid #333;
 
     &.iris {
       opacity: 1;

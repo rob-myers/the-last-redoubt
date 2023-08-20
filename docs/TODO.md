@@ -7,7 +7,7 @@
   - ✅ improve perf
   - 🚧 gm 301: add more symbols
     - ✅ fix view envelope bug when peeking in locker
-    - try adding our own small ones
+    - ✅ experiment with side-table
     - chairs/tables
   - support "groups" in geomorph-layouts
 

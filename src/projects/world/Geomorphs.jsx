@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { cssName, preDarkenCssRgba } from "./const";
+import { geomorphFilter, preDarkenCssRgba } from "./const";
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons } from "../service/dom";
@@ -228,19 +228,19 @@ export default function Geomorphs(props) {
 const rootCss = css`
   position: absolute;
 
-  ${cssName.geomorphFilter}: brightness(50%) sepia(0.1) contrast(1.3);
+  --geomorph-filter: ${geomorphFilter};
 
   img.geomorph {
     position: absolute;
     transform-origin: top left;
     pointer-events: none;
-    filter: var(${cssName.geomorphFilter});
+    filter: var(--geomorph-filter);
   }
   canvas {
     position: absolute;
     pointer-events: none;
     // must dup filter from geomorph
-    filter: var(${cssName.geomorphFilter});
+    filter: var(--geomorph-filter);
   }
 `;
 

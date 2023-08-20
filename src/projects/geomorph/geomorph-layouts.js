@@ -154,6 +154,8 @@ const layoutDefs = {
 
       { symbol: 'stateroom--014--2x2', transform: [1, 0, 0, -1, 0, 480] },
       { symbol: 'stateroom--014--2x2', transform: [1, 0, 0, -1, 120, 480] },
+      // 🚧
+      { symbol: 'custom--table--001--1x0.375', transform: [1, 0, 0, 1, 120, 340] },
 
       { symbol: 'stateroom--036--2x4', transform: [0, -1, 1, 0, 0, 600] },
       { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },
