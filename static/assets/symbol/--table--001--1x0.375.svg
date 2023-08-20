@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;" transform="">
+    <title>background</title>
+    <image width="320" height="120" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAB4CAMAAAC0ENvsAAAA5FBMVEX///////8AAAD///////8AAAAGBgb///////02LykAAAD///////////////8VDg7//////////////d715Mf///n//////////+T////////ZybCflYL////////As5z///8ODgn//+5eV0r////////VxK2Mgm///+H///9+dGXi0baGe2uBd2e9r5jo17x0a12Og3L//+Cxoo53bl/m1bp5b2H/7tD558r/9Nbx38Pr2r7DtJ2CeGjVxaz///nLvKS4qpWkl4Sfk4CZjXqHfWz/+tvdzLKqnYmSh3X///L//+nLTapIAAAAKHRSTlPQxQD68AYay8A0D6wH9OUlFt3ck4R2Lbedm4NkYF9UTT43sEwinnk1SHAPBQAAA11JREFUeNrt3UdX3DAUhmFlOtMYaiC0kOo2RHKv0yv8//8TW8Bk5/jmZKHF9y58tH7OvfJSrCYbfb7ondR1VK0Gu7677Es5Cdi/vGDQIxr27kfvgP3PvYaOqJ1cfOvngIXfx8P4PUexZ6KykuDlfQg/fZOAl+9+0zBd7NfZGJVlieU8mb4JjnLA0fXb/obO2uXcNSxUUuZzzi0neN3i+z6r3Z3I88tM+DzbzbbeL1SSZ04cwV3hSbXeJRv15AJrqXCNxTaMbA2Vtwm8ecbXUrBxx+6ZvP4me9dw4o2GKmQHM8GF3OJr9knegPHCN3Yhpq9q0SxzneJPwpjc4OlszVcJ/KoXzLmV5HID1tHzbMfNUuwvIdsTfF7QsQ/FN1zxfaIhQoHDly8HwETwRaQhQpsJF8EB0LNcBzcgLdO3kgOgOTbmGiLlZWPzD6BhPGmI1C8LgAAkBEDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgAAkBUDVAiAASQFQtQAIQFIAVC0AApAUAFULgP8VcOzjWTRinpF5B0DP4niYj5a9ddfxATAWfBloiFA04/voABguuTA1RCjc8cXzATByfMPB66SENtvMTQu6t/eFU8HFBLdg5ex4wdehBPxYfJ+3O8NdmRCs6hc6hi+fCK+z7wP5F0mXvr+aYIsrtUnyeRNyAIfsYih3ePK08l3hmAGm8C/ZUZKucr+ZXtRhDx15CCZPS4MbYunMn1BJc2exz7i/T18KtvoZa1013gTTnfA5576BynI5d9eLiSbVTm9Y66Fdl2c73qbOUlhjA5U0tsTKmcVTaTY4+8m6x+en+mvPdhTGnolK85LQnuqyeuehxZqto7Ohjv6hevvmuMua3VzwtK4jaoP2zVGryWrN7vHRebuhI1L14Zfb3C8HLAQfb6/aw4GOquo1TjvnX49a3WYtB6wVW/x4e/6l02aoQu125+rH18fjfP5qtd/nxmx/QA+PpgAAAABJRU5ErkJggg=="/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect x="-10" y="-10" width="320" height="120.081" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+  </g>
+  <g style="" transform="matrix(1, 0, 0, 1, -5, 0)">
+    <title>singles</title>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="145" y="40">
+      <title>_decor _label=table</title>
+    </rect>
+  </g>
+</svg>
