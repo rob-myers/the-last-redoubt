@@ -8,11 +8,13 @@
   - 🚧 gm 301: add more symbols
     - ✅ fix view envelope bug when peeking in locker
     - ✅ experiment with side-table
+    - smaller side-tables(s) in gm 301 corridor
     - chairs/tables
   - support "groups" in geomorph-layouts
 
+- ✅ debugPlayer does not show frustum (but debug does)
 - geomorph PNGs navmesh higher contrast?
-- GeomorphEdit works on mobile
+- GeomorphEdit works on mobile`
 
 - clarify hard-coding in rayIntersectsDoor
 - shell has api.argsToAction

@@ -99,7 +99,7 @@ const rootCss = css`
       display: var(${cssName.npcsDebugPlayerDisplay});
     }
     .fov-indicator {
-      display: var(${cssName.npcsDebugPlayerDisplay});
+      display: var(${cssName.npcsDebugDisplay});
     }
   }
 
