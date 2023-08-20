@@ -14,14 +14,15 @@
   - ✅ experiment with side-table
   - ✅ various side-tables(s) in gm 301 corridor
   - 🚧 can change side-table colour via tags
-    - base PNG colour is white
-    - geomorph-layouts supports `filter` 
+    - ✅ base PNG colour is white
+    - 🚧 geomorph-layouts supports `filter` 
       > https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
   - other "furniture" e.g.
-    - overhead pipes
+    - ground pipes
     - pipes
     - barrels
-    - screen
+    - screens
+    - noticeboards
     - plants
 
 - ✅ debugPlayer does not show frustum (but debug does)
