@@ -7,19 +7,29 @@
   - ✅ improve perf
   - ❌ support "groups" in geomorph-layouts
 
+- ✅ move DecorPath to DebugWorld
+
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker
   - ✅ experiment with side-table
   - ✅ various side-tables(s) in gm 301 corridor
-  - can change side-table colour via tags
-    - maybe base PNG colour is white
-  - other "furniture"
-    - e.g. overhead pipes
+  - 🚧 can change side-table colour via tags
+    - base PNG colour is white
+    - geomorph-layouts supports `filter` 
+      > https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
+  - other "furniture" e.g.
+    - overhead pipes
+    - pipes
+    - barrels
+    - screen
+    - plants
 
 - ✅ debugPlayer does not show frustum (but debug does)
 - geomorph PNGs navmesh higher contrast?
 - GeomorphEdit works on mobile`
 
+- BUG saw npc-vs-npc collision failure near hull door
+  - hard to reproduce
 - clarify hard-coding in rayIntersectsDoor
 - shell has api.argsToAction
 - BUG with local variables

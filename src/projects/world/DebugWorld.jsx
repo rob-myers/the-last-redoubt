@@ -6,6 +6,7 @@ import { supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import npcsMeta from './npcs-meta.json';
+import PathIndicator from "./PathIndicator";
 
 /**
  * 🚧 merge onClick into state?
@@ -15,8 +16,7 @@ import npcsMeta from './npcs-meta.json';
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
-  const { fov, gmGraph } = props.api;
-  const { gmId, roomId } = fov;
+  const { fov, fov: { gmId, roomId }, gmGraph } = props.api;
 
   const update = useUpdate();
 
@@ -44,8 +44,17 @@ export default function DebugWorld(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
+      path: {},
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
+      addPath(navPath) {
+        const key = navPath.name ?? 'navpath-default';
+        state.path[key] = {
+          key,
+          path: navPath.path.map(Vect.from),
+        };
+        update();
+      },
       rootRef(el) {
         if (el) {
           state.rootEl = el;
@@ -113,6 +122,10 @@ export default function DebugWorld(props) {
               ...props.gmOutlines && { display: 'initial' },// Prop overrides CSS var
             }}
           />  
+        )}
+
+        {Object.values(state.path).map(navPath =>
+          <PathIndicator key={navPath.key} def={navPath} />  
         )}
       </div>
 
@@ -247,8 +260,10 @@ export default function DebugWorld(props) {
 /**
  * @typedef State @type {object}
  * @property {boolean} ready
+ * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
+ * @property {(navPath: NPC.GlobalNavPath) => void} addPath
  * @property {() => void} update
  */
 
@@ -259,6 +274,13 @@ const debugDoorOffset = 12;
 const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
 const rootCss = css`
+
+  div.debug-global {
+    svg {
+     position: absolute;
+      pointer-events: none;
+    }
+  }
 
   div.geomorph-outline {
     display: var(${cssName.debugGeomorphOutlineDisplay});

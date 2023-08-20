@@ -595,13 +595,6 @@ declare namespace NPC {
     tags?: string[];
   }
 
-  export interface DecorPath extends BaseDecor {
-    type: 'path';
-    path: Geom.VectJson[];
-    /** Added whenever `el.style.transform` has been applied (?) */
-    origPath?: Geom.VectJson[];
-  }
-
   export interface DecorCircle extends BaseDecor, Geom.Circle {
     type: 'circle';
   }
@@ -629,19 +622,12 @@ declare namespace NPC {
 
   export type DecorDef = (
     | DecorCircle
-    | DecorPath
     | DecorPoint
     | DecorRect
     | DecorGroup
   );
 
-  export type PseudoDecor = (
-    | DecorDef
-    | GlobalNavPath
-  );
-
-  export type DecorSansPath = Exclude<NPC.DecorDef, NPC.DecorPath>;
-  export type DecorGroupItem = Exclude<NPC.DecorDef, NPC.DecorPath | NPC.DecorGroup>;
+  export type DecorGroupItem = Exclude<NPC.DecorDef, NPC.DecorGroup>;
   /** Collidable but not necessarily "freely collidable" */
   export type DecorCollidable = NPC.DecorCircle | NPC.DecorRect;
 
@@ -658,9 +644,17 @@ declare namespace NPC {
   export type DecorGrid = Set<NPC.DecorCollidable>[][];
 
   //#endregion
+  
+  //#region debug
+
+  export interface PathIndicatorDef {
+    key: string;
+    path: Geom.VectJson[];
+  }
+
+  //#endregion
 
   //#region unused
-
   interface NpcSynfigMetaJson {
     keyframeToMeta: {
       [keyframe: string]: {
@@ -669,7 +663,6 @@ declare namespace NPC {
       }
     }    
   }
-
   //#endregion
 
 }

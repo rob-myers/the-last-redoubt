@@ -270,7 +270,7 @@
           "name", /** Created DecorPath has this key */
         ],
       })
-      const { npcs, lib, decor, gmGraph } = api.getCached(home.WORLD_KEY)
+      const { npcs, lib, gmGraph, debug } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
         throw Error("not enough points");
@@ -308,7 +308,7 @@
         const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }));
         const navPath = npcs.service.concatenateNavPaths(...navPaths);
         typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
-        decor.setPseudoDecor(navPath);
+        debug.addPath(navPath);
         return navPath;
       }
 

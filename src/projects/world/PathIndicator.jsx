@@ -1,29 +1,23 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-
 import { Rect } from "../geom";
 import { cssName } from "./const";
 
 /**
- * Path whose node positions are editable via chrome devtool.
- * We'll detect, mutate props (i.e. decor def), and re-render
  * @param {PathProps} props 
  */
-export default function DecorPath({ decor }) {
-
-  /** `origPath` defined iff root el has style.transform */
-  const decorPath = decor.origPath??decor.path;
-  // 🚧 avoid needless ancestral re-renders
-  const aabb = Rect.fromPoints(...decorPath);
+export default function PathIndicator({ def: decor }) {
+  const aabb = Rect.fromPoints(...decor.path);
 
   return (
     <div
-      key={decor.updatedAt}
+      // key={decor.updatedAt}
       data-key={decor.key}
-      data-meta={JSON.stringify(decor.meta)}
-      className={cx(cssName.decorPath, cssPath, `gm-${decor.meta.gmId}`)}
+      // data-meta={JSON.stringify(decor.meta)}
+      // className={cx(cssName.decorPath, cssPath, `gm-${decor.meta.gmId}`)}
+      className={cx(cssName.decorPath, cssPath)}
     >
-      {decorPath.map((p, i) =>
+      {decor.path.map((p, i) =>
         <div
           key={i}
           className={cssName.decorPathPoint}
@@ -41,7 +35,7 @@ export default function DecorPath({ decor }) {
             fill="none"
             strokeDasharray="2 2"
             strokeWidth={1}
-            points={decorPath.map(p => `${p.x},${p.y}`).join(' ')}
+            points={decor.path.map(p => `${p.x},${p.y}`).join(' ')}
           />
         </g>
       </svg>
@@ -51,10 +45,11 @@ export default function DecorPath({ decor }) {
   
   /**
    * @typedef PathProps
-   * @property {NPC.DecorPath} decor
+   * @property {NPC.PathIndicatorDef} def
    */
   
    const cssPath = css`
+    position: absolute;
     ${cssName.decorPathColour}: #ffffff44;
 
     .${cssName.decorPathPoint} {

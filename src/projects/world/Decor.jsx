@@ -11,7 +11,6 @@ import { npcService } from "../service/npc";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
-import DecorPath from "./DecorPath";
 
 /**
  * @param {Props} props
@@ -190,9 +189,6 @@ export default function Decor(props) {
       switch (d.type) {
         case 'circle':
           break;
-        case 'path':
-          delete d.origPath; // Handle clones
-          break;
         case 'point':
           // Extend meta with any tags provided in def; normalize tags
           d.tags?.forEach(tag => d.meta[tag] = true);
@@ -293,8 +289,7 @@ export default function Decor(props) {
         const roomId = /** @type {number} */ (d.meta.roomId);
         const atRoom = state.ensureByRoom(gmId, roomId);
 
-        // Although DecorPath has meta.{gmId,roomId} do not cache by room
-        d.type !== 'path' && (atRoom.decor[d.key] = d);
+        atRoom.decor[d.key] = d;
         (d.type === 'group' || !d.parentKey) && (state.visible[d.key] = d);
 
         if (d.type === 'group') {
@@ -320,21 +315,6 @@ export default function Decor(props) {
       api.npcs.events.next({ key: 'decors-added', decors: ds });
       update();
     },
-    setPseudoDecor(...pseudoDecors) {
-      /** @type {NPC.DecorDef[]} */
-      const ds = pseudoDecors.map(pd => {
-        if (npcService.verifyGlobalNavPath(pd)) {
-          return {
-            type: 'path',
-            key: pd.name ?? 'navpath-default', // navpath is "in" room it starts in:
-            meta: { ...pd.path.length && pd.gmRoomIds[0] },
-            path: pd.path,
-          };
-        }
-        return pd;
-      });
-      state.setDecor(...ds);
-    },
     update,
     updateVisibleDecor(opts) {
       opts.added?.forEach(({ gmId, roomId }) => {
@@ -351,7 +331,7 @@ export default function Decor(props) {
       opts.removed?.forEach(({ gmId, roomId }) => {
         const { decor } = api.decor.ensureByRoom(gmId, roomId);
         Object.values(decor)
-          .filter(d => d.type === 'group' || (!d.parentKey && d.type !== 'path'))
+          .filter(d => d.type === 'group' || !d.parentKey)
           .forEach(group => delete state.visible[group.key]);
       });
 
@@ -433,8 +413,6 @@ function DecorInstance({ def }) {
         )}
       </div>
     );
-  } else if (def.type === 'path') {
-    return <DecorPath key={def.key} decor={def} />;
   } else if (def.type === 'point') {
     return (
       <div
@@ -634,7 +612,6 @@ const decorPointHandlers = {
  * - `decor`
  * - `byRoom[gmId][roomId]`
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
- * @property {(...pseudoDecors: NPC.PseudoDecor[]) => void} setPseudoDecor
  * @property {() => void} update
  * @property {(opts: ToggleLocalDecorOpts) => void} updateVisibleDecor
  */

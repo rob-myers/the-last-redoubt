@@ -441,12 +441,12 @@ export default function NPCs(props) {
     async npcAct(e) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
-          return api.decor.setPseudoDecor(...e.items);
+          return api.decor.setDecor(...e.items);
         case 'decor': // get decor, list decors, or add decor
           return 'decorKey' in e
             ? api.decor.decor[e.decorKey] // get
             : 'key' in e // 🚧 verify decor?
-              ? api.decor.setPseudoDecor(e) // add
+              ? api.decor.setDecor(e) // add
               : Object.values(api.decor.decor) // list
         case 'do':
           await state.npcActDo(e);

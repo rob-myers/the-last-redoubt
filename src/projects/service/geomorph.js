@@ -1319,8 +1319,6 @@ export function decorContainsPoint(decor, point) {
       return tempVect.copy(point).distanceTo(decor.center) <= decor.radius;
     case 'group':
       return decor.items.some(item => decorContainsPoint(item, point));
-    case 'path':
-      return false;
     case 'point':
       return tempVect.copy(point).equals(decor);
     case 'rect':
@@ -1401,7 +1399,6 @@ export function getDecorOrigin(decor, api) {
   switch (decor.type) {
     case 'circle': return decor.center;
     case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item, api)));
-    case 'path': return decor.path[0] ?? Vect.zero;
     case 'point': return decor;
     case 'rect': {
       if (!decor.derivedPoly) extendDecor(decor, api);
@@ -1513,8 +1510,6 @@ export function verifyDecor(input) {
       return Array.isArray(input.items) &&
         hasGmRoomId(input.meta) && // groups must have meta.{gmId,roomId}
         input.items.every(verifyDecor);
-    case 'path':
-      return input?.path?.every(/** @param {*} x */ (x) => Vect.isVectJson(x));
     case 'point':
       // We permit `input.tags` and `input.meta` to be undefined
       return Vect.isVectJson(input);
