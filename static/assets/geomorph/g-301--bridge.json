@@ -21,7 +21,7 @@
       {"symbol": "stateroom--036--2x4", "transform": [-1, 0, 0, 1, 1200, 0]},
       {"symbol": "stateroom--014--2x2", "transform": [1, 0, 0, -1, 0, 480]},
       {"symbol": "stateroom--014--2x2", "transform": [1, 0, 0, -1, 120, 480]},
-      {"symbol": "--table--001--1x0.375", "transform": [1, 0, 0, 1, 120, 335]},
+      {"symbol": "--table--001--1x0.33", "transform": [1, 0, 0, 1, 120, 335]},
       {"symbol": "stateroom--036--2x4", "transform": [0, -1, 1, 0, 0, 600]},
       {"symbol": "iris-valves--005--1x1", "transform": [0, -1, 1, 0, 0, 360]},
       {"symbol": "iris-valves--005--1x1", "transform": [0, 1, 1, 0, 1140, 240]},
@@ -13717,8 +13717,8 @@
       "transform": "matrix(1,0,0,-1,120,480)"
     },
     {
-      "key": "--table--001--1x0.375",
-      "pngHref": "/assets/symbol/--table--001--1x0.375.png",
+      "key": "--table--001--1x0.33",
+      "pngHref": "/assets/symbol/--table--001--1x0.33.png",
       "pngRect": {"x": -10, "y": -10, "width": 320, "height": 120},
       "transformArray": [1, 0, 0, 1, 120, 335],
       "transform": "matrix(1,0,0,1,120,335)"

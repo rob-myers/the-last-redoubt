@@ -369,8 +369,8 @@ declare namespace Geomorph {
   );
 
   export type SymbolKey = (
-    | '--locker--001--1x0.375'
-    | '--table--001--1x0.375'
+    | '--locker--001--1x0.33'
+    | '--table--001--1x0.33'
     | '101--hull'
     | '102--hull'
     | '103--hull'

@@ -8,7 +8,7 @@
   - 🚧 gm 301: add more symbols
     - ✅ fix view envelope bug when peeking in locker
     - ✅ experiment with side-table
-    - smaller side-tables(s) in gm 301 corridor
+    - 🚧 smaller side-tables(s) in gm 301 corridor
     - chairs/tables
   - support "groups" in geomorph-layouts
 
