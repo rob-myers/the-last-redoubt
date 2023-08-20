@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;" transform="">
+    <title>background</title>
+    <image width="320" height="120" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAB4CAMAAAC0ENvsAAAAwFBMVEUAAAD///////////////////8AAAAKCgr///////////z///s2MScAAAD///////////////8VDg7//////////d715Mf///nYx6///////+P///+flYLAs5z///8ODgleV0qMgm///+H///9+dGXi0baBd2eGe2vo17y9r5h0a12Og3Kxoo6ilYJ3bl95b2H///f/7tD558r/9Nbx38Pr2r7DtJ3VxazLvKS4qpWZjXr/+tvdzLKqnYmSh3X//+kixm2dAAAAInRSTlMAxdD28voGGt3LwK00D1kpB+UlFpyThHZpt52DYE0+N0w17nYnfAAAA1JJREFUeNrt3dlS2zAYhmE1tclGAgEKdINWciwjyfuSPdz/XTV20pOetJqpNRrN91zCO/rsw5+c3b88TUc+65s3eJjf3BLn3N48DXxmhjed3xPH3L5MPWbO6MmxR3j78tlnF1lZRct+1Pk7O/O+3hCX3PzulxVNfORhT7iMN3V2KejSiu8fLvstFE+ESALeizAVQnCVn1c8d2jE8xFrva9lKsLDeh/1ZLlSUiQyYq2pOyO+n3YDpo1MgnhflLQ3uzzahIJ3Bb05ccV80H3+VsckUNWO9itfSyG7FT8QV3ztvoBVnAaHgvauXIeJav8kA+KKbsHZmottTQ3IN4LX7YaJKybshKokbHbUhEiKDTshrvjAToqtONbUiFyJ+N25gLUUcUmN2K2EzJ0LGPFEUUOWKa+dC7gMgw01JArDpXsBg+CNGhJxBERABERAayAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yAgAmpBQNsgIAJqQUDbICACakFA2yDgfwkYpubOogVh5FzAiAtFDdknvHIuYCVFnFMjyrU4ls4FLGIhl9SI4iDizLmApUoDVVIDdvswaZw6jzu5XFgXckUNqGLBC6cCfmYn2f4QJFsDIy5UkKp2wT5xxcP5xnoTp+l21fOKd/UhSGT3ABfEFU+LbsOrt22aSLXMaW/Kutme+q1Za0Jc8X3CWvnqLQ5EIGO1eevFRsXHUKTH5p2d+J+IK4ZfvEvB5iBTIUQa9CMRIuHxirLW6Jm4Yvh97LMWrfaNiiUPg16EXG7VuspYy/v0k7hidvc4YmcZLYsqWvYkqguasY4/+T4krrgaXn9aMKP88fPdjLjianYqOPKZOd74+Xp4RZxxNbu7fhx7zBB/Mf126udQwLbg67cv44WBhr43mjz+uB7OXOp3XvHrt8fpZDz4dx//avCn8Xjy5fnH651T7+8Xavl5Sx5iNXQAAAAASUVORK5CYII="/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect x="-10" y="-10" width="120" height="120" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+  </g>
+  <g style="" transform="matrix(1, 0, 0, 1, -5, 0)">
+    <title>singles</title>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="45" y="40">
+      <title>_decor _label=table</title>
+    </rect>
+  </g>
+</svg>

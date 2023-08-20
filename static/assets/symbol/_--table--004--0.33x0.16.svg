@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;" transform="">
+    <title>background</title>
+    <image width="120" height="70" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABGCAMAAAAwyqA9AAAAflBMVEVHcEz///v///////////////////////////////////////////////7///////n//+H////i0baBd2fo17yGe2t+dGW+sJl0a114bmCOg3L/7tCxoo7r2r7///eilYK4qpXLvKTZyK/558qViXf/9Nb/+tv//+nx38OqnYk7uDJzAAAAEHRSTlMArRbdKVn6xfIH0IOcuj52fOHP1QAAABBjYU52AAABQAAAAHgAAAAAAAAAADjPNrwAAAFoSURBVGje7dpJmoMgEAZQNNptzEQEFBDnIcn9L9gRjX0CqEXqX7nyfVXgpkpCbMLrLTj83F0nSc9xdCR7jtEtda9udhCHu3sNkru/HG5b0cfrZS+3np48c5OqfHyKPkUWjj5uPRTNKJijCN20Vb3JS7fD89bnwQglpcqFk7D3u6Uw5drt+N3s+GCfH51Wkr26njtK1hstleZWCyISBrbRtNAqb/phos4yl7xlUlg5iUmc2uPtR5Wb50zdpuy01LbbZ3KyJ/xsVP4aqPNMHVNmuWEpsZ2uOyHHinpI2UpRLb0mF3vCRrFi9gFTrmW7kOTXfkmjp4LfJRvZPHa40rKZ/MBzv16vFeZCGeopmbKHvMIZy1tfMGcs+4fzvPAGC4QRRhhhhBFG+Ovh5OtgvFwII4wwwggjjDAUDDVuAhuwgY0UIYaoYGNjsEE52GoAbBkCtv4BW3jBrfjAlppwa1ywxTXcqh7k54Q/YHkjf9pxEksAAAAASUVORK5CYII="/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect x="-10" y="-10" width="120" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+  </g>
+  <g style="" transform="matrix(1, 0, 0, 1, -5, 0)">
+    <title>singles</title>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="45" y="15">
+      <title>_decor _label=table</title>
+    </rect>
+  </g>
+</svg>

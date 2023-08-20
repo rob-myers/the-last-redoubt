@@ -61,7 +61,7 @@ export const defaultNpcInteractRadius = 70;
 export const doorWidth = 4.8;
 
 // export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.3)';
-export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.2)';
+export const geomorphFilter = 'brightness(50%) hue-rotate(0deg) sepia(0.1) contrast(1.2)';
 
 /** HMR note: use of WAPI means anim must be retriggered  */
 export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';

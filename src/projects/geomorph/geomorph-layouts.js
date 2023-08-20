@@ -146,6 +146,15 @@ const layoutDefs = {
       // { symbol: 'weaponry--013--1x2', transform: [-1, 0, 0, 1, 360, -60] },
       // { symbol: 'weaponry--013--1x2', transform: [1, 0, 0, 1, 840, -60] },
 
+      // left corridor
+      { symbol: '_--table--004--0.33x0.16', transform: [1, 0, 0, 1, 180 + 35, 240 + 5] },
+      { symbol: '_--table--001--1x0.16', transform: [1, 0, 0, 1, 120, 360 - 10 - 5] },
+      //
+      { symbol: '_--table--004--0.33x0.16', transform: [0, 1, 1, 0, 360 - 10 - 5 - 2, 360] },
+      { symbol: '_--table--004--0.33x0.16', transform: [0, 1, 1, 0, 360 - 10 - 5 - 2, 360 + 25] },
+      { symbol: '_--table--001--1x0.16',    transform: [0, 1, 1, 0, 360 - 10 - 5 - 2, 420] },
+      { symbol: '_--table--001--1x0.16',    transform: [0, 1, 1, 0, 360 - 10 - 5 - 2, 480 + 5] },
+
       { symbol: 'stateroom--036--2x4' },
       { symbol: 'office--001--2x2', transform: [-1, 0, 0, 1, 240, 120], doors: ['s'] },
       { symbol: 'bridge--042--8x9', transform: [1, 0, 0, 1, 360, 60] },
@@ -154,8 +163,6 @@ const layoutDefs = {
 
       { symbol: 'stateroom--014--2x2', transform: [1, 0, 0, -1, 0, 480] },
       { symbol: 'stateroom--014--2x2', transform: [1, 0, 0, -1, 120, 480] },
-      // 🚧
-      { symbol: '--table--001--1x0.33', transform: [1, 0, 0, 1, 120, 340 - 5] },
 
       { symbol: 'stateroom--036--2x4', transform: [0, -1, 1, 0, 0, 600] },
       { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },

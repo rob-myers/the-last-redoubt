@@ -2,15 +2,19 @@
 
 ## In progress
 
-- 🚧 GeomorphEdit
+- ✅ GeomorphEdit
   - ✅ fix redraw
   - ✅ improve perf
-  - 🚧 gm 301: add more symbols
-    - ✅ fix view envelope bug when peeking in locker
-    - ✅ experiment with side-table
-    - 🚧 smaller side-tables(s) in gm 301 corridor
-    - chairs/tables
-  - support "groups" in geomorph-layouts
+  - ❌ support "groups" in geomorph-layouts
+
+- 🚧 gm 301: add more symbols
+  - ✅ fix view envelope bug when peeking in locker
+  - ✅ experiment with side-table
+  - ✅ various side-tables(s) in gm 301 corridor
+  - can change side-table colour via tags
+    - maybe base PNG colour is white
+  - other "furniture"
+    - e.g. overhead pipes
 
 - ✅ debugPlayer does not show frustum (but debug does)
 - geomorph PNGs navmesh higher contrast?

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;" transform="">
+    <title>background</title>
+    <image width="320" height="120" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAB4CAMAAAC0ENvsAAAAkFBMVEUAAAD///////////////////////////////////////7///////////n//////////////////+H////i0baGe2uBd2fo17x+dGW9r5h0a114bmDt3MCOg3Lm1br/7tCxoo6CeGj///j558rZyK/LvKS4qpX/+tv/9Nakl4SckH2HfWz//+nDtJ2Sh3WqnYlbkej3AAAAEnRSTlMAxfH6rAcW3dAtupuDdl9UPiK+0bgxAAAB/UlEQVR42uzbyXKCQBSF4Q7BgTgzKOmBGRRweP+3SzUq2RFukUUvzrdQ139xtVwc9jTfb+zFpwfjWMvV1pmx3szZLFGPxrJ3877f3rY8oFpsDrNXv6/+8csuMvJhiIyv74dwfWCa8+6X5bf63qZHGBKoppLZq6C+4vnqdb950grORRjAgFRwzoMkfl7xbsbYduFp11IJnj7KIjrBgMgvEsWFijzNdtjc7g7YvSkR1kV+ceEP5ziqUt52Ba0t2y31h6y4izCRZxfGiEvFVXfFK7a29LusRfjIXRjpUqYi0b8kS9ZdcFa2vJEujBZXPJD6htlX9w2YiPSG+6WIFK90OvahX/OG3/EAksQJb659QKl4jd9fknPBVdwHjAKRuEDii0D2Af1jWLlAEqVH/zdgGH67QHIKEBABCRDQNAiIgCQIaBoEREASBDQNAiIgCQKaBgH/KaCFgAg4BgKaBgERkAQBTYOACEiCgKZBQPyVI0FA0yAgApIgoGkQEAFJENA0CIiAJAhoGgREQBIENI0OiJnDxJkDhjYThzaYek2cemFsOH1siLnrxLkrBtcTB9eY/P+0c8cEAAAACML6t7aDvFsPiMm/6UScTtiexO2J8U4c71g/xfWT+Vibj9nftf2dAWMcMFqA5gWoCW2Y0AIAAAAAAAAAAAAAAAAAAMBvbs1YyWzfBWQAAAAASUVORK5CYII="/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <rect x="-10" y="-10" width="320" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+  </g>
+  <g style="" transform="matrix(1, 0, 0, 1, -5, 0)">
+    <title>singles</title>
+    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="145" y="15">
+      <title>_decor _label=table</title>
+    </rect>
+  </g>
+</svg>
