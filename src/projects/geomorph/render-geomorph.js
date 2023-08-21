@@ -142,13 +142,23 @@ export async function renderGeomorph(
 
   //#region symbol PNGs
   const innerItems = layout.items.slice(1);
-  for (const { pngHref, pngRect, transformArray } of innerItems) {
-    // ctxt.save();
+  for (const { key, pngHref, pngRect, transformArray } of innerItems) {
     const image = await getPng(pngHref);
     transformArray && ctxt.transform(...transformArray);
     ctxt.scale(0.2, 0.2);
     ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
-    // ctxt.restore();
+
+    // can shade symbols e.g. "poly fillColor=#00000044"
+    const polySingles = lookup[key].singles.flatMap(x => x.meta.poly ? x : []);
+    polySingles.forEach(({ meta, poly }) => {
+      const [fillColor, strokeColor, strokeWidth] = [
+        typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
+        typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
+        typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
+      ];
+      setStyle(ctxt, fillColor, strokeColor, strokeWidth);
+      fillPolygons(ctxt, [poly]);
+    });
     ctxt.setTransform(initTransform);
   }
   //#endregion

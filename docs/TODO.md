@@ -13,10 +13,13 @@
   - ✅ fix view envelope bug when peeking in locker
   - ✅ experiment with side-table
   - ✅ various side-tables(s) in gm 301 corridor
-  - 🚧 can change side-table colour via tags
+  - 🚧 can change side-table colour
     - ✅ base PNG colour is white
-    - 🚧 geomorph-layouts supports `filter` 
+    - ❌ geomorph-layouts supports `filter` 
       > https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
+      - ℹ️ node-canvas does not support it
+    - ✅ can shade non-hull symbols via e.g. `poly fillColor=#00000044`
+    - 🚧 more shadings
   - other "furniture" e.g.
     - ground pipes
     - pipes
