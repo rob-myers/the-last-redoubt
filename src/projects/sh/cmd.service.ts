@@ -471,7 +471,7 @@ class cmdServiceClass {
         break;
       }
       case 'test': {
-        node.exitCode = !!parseJsArg(args.join(" ")) ? 1 : 0;
+        node.exitCode = !parseJsArg(args.join(" ")) ? 1 : 0;
         break;
       }
       case 'true': {
