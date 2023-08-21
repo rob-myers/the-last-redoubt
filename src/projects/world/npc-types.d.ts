@@ -650,6 +650,7 @@ declare namespace NPC {
   export interface PathIndicatorDef {
     key: string;
     path: Geom.VectJson[];
+    meta: Geomorph.PointMeta;
   }
 
   //#endregion

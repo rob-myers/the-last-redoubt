@@ -281,6 +281,7 @@ declare namespace Geomorph {
     | boolean
     | number
     | Geom.VectJson
+    | Geom.VectJson[]
     | Record<number, true>
     | null
   )>;

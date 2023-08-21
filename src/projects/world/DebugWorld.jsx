@@ -52,6 +52,7 @@ export default function DebugWorld(props) {
         state.path[key] = {
           key,
           path: navPath.path.map(Vect.from),
+          meta: { path: navPath.path },
         };
         update();
       },

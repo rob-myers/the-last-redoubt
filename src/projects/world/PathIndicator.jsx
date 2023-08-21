@@ -6,18 +6,18 @@ import { cssName } from "./const";
 /**
  * @param {PathProps} props 
  */
-export default function PathIndicator({ def: decor }) {
-  const aabb = Rect.fromPoints(...decor.path);
+export default function PathIndicator({ def }) {
+  const aabb = Rect.fromPoints(...def.path);
 
   return (
     <div
       // key={decor.updatedAt}
-      data-key={decor.key}
-      // data-meta={JSON.stringify(decor.meta)}
+      data-key={def.key}
+      data-meta={JSON.stringify(def.meta)}
       // className={cx(cssName.decorPath, cssPath, `gm-${decor.meta.gmId}`)}
       className={cx(cssName.decorPath, cssPath)}
     >
-      {decor.path.map((p, i) =>
+      {def.path.map((p, i) =>
         <div
           key={i}
           className={cssName.decorPathPoint}
@@ -35,7 +35,7 @@ export default function PathIndicator({ def: decor }) {
             fill="none"
             strokeDasharray="2 2"
             strokeWidth={1}
-            points={decor.path.map(p => `${p.x},${p.y}`).join(' ')}
+            points={def.path.map(p => `${p.x},${p.y}`).join(' ')}
           />
         </g>
       </svg>
