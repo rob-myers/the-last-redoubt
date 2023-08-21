@@ -1095,7 +1095,10 @@ export function buildZoneWithMeta(navDecomp, doors, rooms) {
    */
   let groupOffset = navZone.groups[0].length;
   for (const group of navZone.groups.slice(1)) {
-    group.forEach(node => node.neighbours = node.neighbours.map(id => id + groupOffset));
+    group.forEach(node => {
+      node.id += groupOffset;
+      node.neighbours = node.neighbours.map(id => id + groupOffset);
+    });
     groupOffset += group.length;
   }
 
