@@ -16,5 +16,8 @@
     <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="45" y="40">
       <title>_decor _label=table</title>
     </rect>
+    <path d="M 3.221 1.001 L 5.857 -5.541 L 105.857 -6.104 L 110.65 -1.525 L 110.982 97.202 L 105.857 102.551 L 5.857 102.857 L 2.937 96.115 L 3.221 1.001 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 255, 0); fill-opacity: 0.2;">
+      <title>poly fillColor=#00000022</title>
+    </path>
   </g>
 </svg>

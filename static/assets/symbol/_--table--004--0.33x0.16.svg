@@ -5,9 +5,9 @@
   </defs>
   <g style="pointer-events: none;" transform="">
     <title>background</title>
-    <image width="120" height="70" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABGCAMAAAAwyqA9AAAAflBMVEVHcEz///v///////////////////////////////////////////////7///////n//+H////i0baBd2fo17yGe2t+dGW+sJl0a114bmCOg3L/7tCxoo7r2r7///eilYK4qpXLvKTZyK/558qViXf/9Nb/+tv//+nx38OqnYk7uDJzAAAAEHRSTlMArRbdKVn6xfIH0IOcuj52fOHP1QAAABBjYU52AAABQAAAAHgAAAAAAAAAADjPNrwAAAFoSURBVGje7dpJmoMgEAZQNNptzEQEFBDnIcn9L9gRjX0CqEXqX7nyfVXgpkpCbMLrLTj83F0nSc9xdCR7jtEtda9udhCHu3sNkru/HG5b0cfrZS+3np48c5OqfHyKPkUWjj5uPRTNKJijCN20Vb3JS7fD89bnwQglpcqFk7D3u6Uw5drt+N3s+GCfH51Wkr26njtK1hstleZWCyISBrbRtNAqb/phos4yl7xlUlg5iUmc2uPtR5Wb50zdpuy01LbbZ3KyJ/xsVP4aqPNMHVNmuWEpsZ2uOyHHinpI2UpRLb0mF3vCRrFi9gFTrmW7kOTXfkmjp4LfJRvZPHa40rKZ/MBzv16vFeZCGeopmbKHvMIZy1tfMGcs+4fzvPAGC4QRRhhhhBFG+Ovh5OtgvFwII4wwwggjjDAUDDVuAhuwgY0UIYaoYGNjsEE52GoAbBkCtv4BW3jBrfjAlppwa1ywxTXcqh7k54Q/YHkjf9pxEksAAAAASUVORK5CYII="/>
+    <image width="120" height="70" x="-10" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAABGCAMAAAAwyqA9AAAAllBMVEUAAAD///////////////7///////////v///////7///v///////////r///////////////r///v///////////////+Admbi0bb///mGe2v//+Ho17z//+i+sJl4bmB0a12Vinj56Muxoo6ilYLr27/aybDLvKSOg3L///T/9Nfx38P//++qnYn36tS4qpX/997u4Mtw/IgQAAAAFnRSTlMAxfry3j0HrRS6dV3QplkpHNPKv5yDMeH3LAAAAbRJREFUaN7tmkm2gjAQRfli3/6WskITCEhvt//N/RCRyAKSDMwdeGrkPZVy9J7Og+VsvZhOPOVMprvNpzMwP6y33KoHdzebP72zhetp5Guz7L2rYV2sm+CogqCpcTBPN2Lnw9OLLMoSAmogSRYxfJpn3Lv87d+ZpYTGMQWiAui+mqSsN//wX9h+KsawKGkM5yIP1JAXZ4hpWYTC5q6d5UI8tB+VFLL8cgtVcbvkGdAy8oX529lvxXnzhEJ6DxE9VSCG9xRokguF6/yJCzcZhfOl8tRSXc5As6YbJ454aSxInJyUeaX5lMSkECs7K3HhlEIUoqcaDCOgqbiy89F9sqRbWIO4WzlhfOrFpzLOavTUg3UWlyc+9OKA8AfQIuZHJQEfevER4KpJfAU48kGKI03iyIqt+IEVW7EVW7EVv7XYfTvx+93YisdYsRVbsRVbsRVrFxuPm0wEbDJSrDz1VDJSlCFqqyFEbWWIKmNjX4PYl7GxDMrVr4ytDMpfqwHWoko1YsuGasAblSGN31aoiqr1m9cyZFz/sNpXRc1G9Y+xwstYxWeq1DRW45oqrg1W9cb+nPAPc0XlvB1OsaEAAAAASUVORK5CYII="/>
   </g>
-  <g style="">
+  <g style="pointer-events: none;">
     <title>obstacles</title>
     <rect x="-10" y="-10" width="120" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
   </g>
@@ -16,5 +16,8 @@
     <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="45" y="15">
       <title>_decor _label=table</title>
     </rect>
+    <path d="M 3.367 2.163 L 6.003 -4.379 L 104.003 -4.942 L 108.796 -0.363 L 109.128 48.364 L 104.003 53.713 L 6.003 54.019 L 3.083 47.277 L 3.367 2.163 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 255, 0); fill-opacity: 0.2;">
+      <title>poly fillColor=#00000022</title>
+    </path>
   </g>
 </svg>
