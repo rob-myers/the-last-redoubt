@@ -856,14 +856,15 @@ export default function NPCs(props) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
       } else if (navPath.path.length === 0) {
         return;
-      } else if (npc.isPointBlocked(
-        navPath.path[0],
-        npc.getPosition().equalsAlmost(navPath.path[0])
-      )) {
-        throw new Error('start of navPath blocked');
       }
 
       try {
+        if (npc.isPointBlocked(
+          navPath.path[0],
+          npc.getPosition().equalsAlmost(navPath.path[0])
+        )) {// start of navPath blocked
+          throw new Error('cancelled');
+        }
         /**
          * Walk along a global navpath, possibly throwing
          * Error with message 'cancelled' if collide with something.
