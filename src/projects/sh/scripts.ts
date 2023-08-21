@@ -81,7 +81,7 @@ doLoop: `{
 goLoop: `{
   click |
     filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
-    nav --safeLoop --preferOpen $1 |
+    nav --safeLoop --preferOpen --exactNpc $1 |
     walk $1
 }`,
 
@@ -182,7 +182,12 @@ thinkLoop ${npcKey} &
 game_2: () => `
 ${profileLookup.game_1()}
 
-npc config '{ debugPlayer: true, hideGms: true, showColliders: true, showIds: true }'
+npc config '{
+  debugPlayer: true,
+  hideGms: true,
+  showColliders: false,
+  showIds: true
+}'
 `
 
 };

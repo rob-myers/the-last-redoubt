@@ -259,7 +259,7 @@
     nav: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {
         boolean: [
-          "nearNpc", /** For non-navigable npcs use nearest navigable */
+          "exactNpc", /** Require navigable npcs (otherwise use nearest navigable) */
           "preferOpen", /** Prefer open doors i.e. --closed=10000 */
           "safeLoop", /** Pipe mode NOOPs if path non-navigable */
           "to",   /** Piped input goes before operands (else after) */
@@ -292,7 +292,7 @@
           const point = npcs.npc[parsed].getPosition();
           if (npcs.isPointInNavmesh(point)) {
             return point;
-          } else if (opts.nearNpc) {
+          } else if (!opts.exactNpc) {
             const result = gmGraph.getClosePoint(point, npcs.npc[parsed].gmRoomId ?? undefined);
             if (result) return result.point; // ℹ️ could fallback to "node with closest centroid"
             throw Error(`npc ${parsed} lacks nearby navigable: ${JSON.stringify(point)}`)

@@ -20,7 +20,7 @@
       - ℹ️ node-canvas does not support it
     - ✅ can shade non-hull symbols via e.g. `poly fillColor=#00000044`
     - 🚧 more shadings
-  - other "furniture" e.g.
+  - 🚧 other "furniture" e.g.
     - ground pipes
     - pipes
     - barrels
@@ -28,8 +28,30 @@
     - noticeboards
     - plants
 
+- gm 102: broken nav i.e. geomorph with 2 disjoint navmeshes
+
+- nearby NPC should not prevent off-mesh spawn to navmesh
+- strategies for escaping homing NPC
+  - e.g. long click to spawn nearby
+
+- ✅ BUG goLoop should not fail:
+```sh
+goLoop: walk: run: Error: start of navPath blocked
+```
+
+- ✅ BUG "nav | walk" loop should not fail
+  - invert `--nearNpc` -> `--exactNpc`
+  - off-mesh nav-mesh click should fade-spawn
+```sh
+$ while true; do nav foo rob | walk --open foo; done
+nav: run: Error: npc rob outside navmesh: {"x":-173.71,"y":1113.42}
+# rob apparently was outside navmesh
+nav '{x: -219.66, y: 1048.12}' '{x: -159.19, y: 1121.08}' | walk rob
+```
+
 - ✅ debugPlayer does not show frustum (but debug does)
-- geomorph PNGs navmesh higher contrast?
+- ❌ geomorph PNGs navmesh higher contrast?
+  - use geomorphFilter instead
 - GeomorphEdit works on mobile`
 
 - BUG saw npc-vs-npc collision failure near hull door
