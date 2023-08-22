@@ -16,7 +16,8 @@
     - gmGraph.findPath dstNode wrong, because both 102 navmeshes
       have rect which contains point...
 
-- light issue when spawn into room with diagonal door
+- ✅ light issue when spawn into room with diagonal door
+  - e.g. `spawn rob {"x":-1004.11,"y":1003.39}`
 
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker

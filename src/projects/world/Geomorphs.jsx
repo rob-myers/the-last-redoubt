@@ -120,7 +120,12 @@ export default function Geomorphs(props) {
       }
       const gmDoors = api.doors.lookup[gmId];
       gms[gmId].roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
-        if (gmDoors[doorId].open) {
+        if (
+          gmDoors[doorId].open
+          // if door diagonal, closed, and light in current room, pretend it is open,
+          // to avoid "dark square" overlapping current room
+          || gmDoors[doorId].angled && gms[gmId].lightSrcs.some(x => x.roomId === roomId)  
+        ) {
           state.onOpenDoor(gmId, doorId);
         } else {
           state.onCloseDoor(gmId, doorId);

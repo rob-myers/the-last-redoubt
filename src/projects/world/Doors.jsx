@@ -20,11 +20,12 @@ export default function Doors(props) {
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
 
-    lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta }, doorId) => {
+    lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta, normal }, doorId) => {
       const isHullDoor = gm.isHullDoor(doorId);
       const hullSealed = isHullDoor ? gmGraph.getDoorNodeById(gmId, doorId)?.sealed : null;
       const sealed = hullSealed || !!meta.sealed;
       return {
+        angled: normal.x !== 0 && normal.y !== 0,
         closeTimeoutId: undefined,
         hull: isHullDoor,
         locked: sealed,
@@ -397,6 +398,7 @@ const rootCss = css`
  * This is distinct from `gm.doors.meta`.
  * @typedef DoorState
  * @property {number} [closeTimeoutId]
+ * @property {boolean} angled
  * @property {boolean} hull
  * @property {boolean} locked
  * @property {boolean} open
