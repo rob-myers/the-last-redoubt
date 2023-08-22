@@ -28,11 +28,13 @@ export class gmGraphClass extends BaseGraph {
   gmData;
 
   /**
+   * Each array is ordered by `node.rect.area` (ascending), so a
+   * larger navmesh does not override a smaller one (e.g. 102)
    * @type {{ [gmId: number]: Graph.GmGraphNodeGm[] }}
    */
   gmNodeByGmId;
   /**
-   * ℹ️ a gm node needn't see all hull doors in the geomorph e.g. 102
+   * A gm node needn't see all hull doors in the geomorph e.g. 102
    * @type {{ [gmId: number]: Graph.GmGraphNodeDoor[] }}
    */
   doorNodeByGmId;
@@ -833,8 +835,8 @@ export class gmGraphClass extends BaseGraph {
     /** @type {Graph.GmGraphNode[]} */
     const nodes = [
       /**
-       * ℹ️ gm nodes are _NOT_ aligned to `gms` because a geomorph
-       *    may contain multiple disjoint navmeshes e.g. 102
+       * nodes are NOT aligned to `gms` because a geomorph
+       * may contain multiple disjoint navmeshes e.g. 102
        */
       ...gms.flatMap((gm, gmId) =>
         gm.navPoly.map(/** @returns {Graph.GmGraphNodeGm} */ (navPoly, navGroupId) => ({
@@ -900,6 +902,10 @@ export class gmGraphClass extends BaseGraph {
         ? graph.gmNodeByGmId[node.gmId].push(node)
         : graph.doorNodeByGmId[node.gmId].push(node)
     );
+    // Smaller rects first, otherwise larger overrides (e.g. 102)
+    Object.values(graph.gmNodeByGmId).forEach(nodes => nodes.sort(
+      (a, b) => a.rect.area < b.rect.area ? -1 : 1
+    ));
 
     // The gm node (gmId, navGroupId) is connected to its door nodes (hull doors it has)
     /** @type {Graph.GmGraphEdgeOpts[]} */

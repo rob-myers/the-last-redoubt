@@ -9,6 +9,15 @@
 
 - ✅ move DecorPath to DebugWorld
 
+- ✅ gm 102: broken nav i.e. geomorph with 2 disjoint navmeshes
+  - `spawn rob {"x":-904.18,"y":1257.07}`
+  - ✅ seems `id` is reset over different groups
+  - ✅ hull door connectivity still broken
+    - gmGraph.findPath dstNode wrong, because both 102 navmeshes
+      have rect which contains point...
+
+- light issue when spawn into room with diagonal door
+
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker
   - ✅ experiment with side-table
@@ -28,7 +37,16 @@
     - noticeboards
     - plants
 
-- gm 102: broken nav i.e. geomorph with 2 disjoint navmeshes
+```sh
+# nice example
+while true; do
+  test $(
+    world npcs.canSee $( npc rob getPosition ) $( npc foo getPosition )
+  ) || (
+    nav foo rob | walk --open foo
+  )
+done
+```
 
 - nearby NPC should not prevent off-mesh spawn to navmesh
 - strategies for escaping homing NPC
