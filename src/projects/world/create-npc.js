@@ -2,10 +2,8 @@ import { css } from '@emotion/css';
 import { cssName } from './const';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
-import { geom } from '../service/geom';
 import { warn } from '../service/log';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
-import { isSameGmRoom } from '../service/geomorph';
 
 import npcsMeta from './npcs-meta.json';
 

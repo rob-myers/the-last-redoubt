@@ -322,3 +322,21 @@ click 1 | map meta
 
 world npcs.canSee "$( click 1 )" "$( click 1 )"
 ```
+
+```sh
+spawn --zhodani foo $( click 1 )
+
+# basic follow
+while true; do
+  nav foo rob | walk --open foo
+done
+
+# follow rob when out of sight
+while true; do
+  test $(
+    world npcs.canSee $( npc rob getPosition ) $( npc foo getPosition )
+  ) || (
+    nav foo rob | walk --open foo
+  )
+done
+```

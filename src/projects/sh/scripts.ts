@@ -186,7 +186,8 @@ npc config '{
   debugPlayer: true,
   hideGms: true,
   showColliders: false,
-  showIds: true
+  showIds: true,
+  logTags: false,
 }'
 `
 

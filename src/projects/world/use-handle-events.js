@@ -120,7 +120,7 @@ export default function useHandleEvents(api) {
 
       switch (e.meta.key) {
         case 'npcs-collide':
-          cancelNpcs(e.npcKey, e.meta.otherNpcKey);
+          await stopNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
           npc.gmRoomId = npc.anim.gmRoomIds[e.meta.index] ?? npc.gmRoomId;
@@ -430,8 +430,9 @@ export default function useHandleEvents(api) {
   //#endregion
 
   /** @param {...string} npcKeys */
-  async function cancelNpcs(...npcKeys) {
-    await Promise.all(npcKeys.map(key => api.npcs.getNpc(key).cancel()));
+  function stopNpcs(...npcKeys) {
+    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking());
+    return Promise.all(walkingNpcs.map(x => x.cancel()));
   }
 
 }

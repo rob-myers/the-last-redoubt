@@ -2,76 +2,17 @@
 
 ## In progress
 
-- ✅ GeomorphEdit
-  - ✅ fix redraw
-  - ✅ improve perf
-  - ❌ support "groups" in geomorph-layouts
+- 🚧 strategies for escaping homing NPC
+  - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
+    - `npcs-collide` should not cancel non-walking npcs
+  - 🚧 long click to spawn nearby
+    - cannot go thru walls
+    - on/off mesh spawn too
 
-- ✅ move DecorPath to DebugWorld
-
-- ✅ gm 102: broken nav i.e. geomorph with 2 disjoint navmeshes
-  - `spawn rob {"x":-904.18,"y":1257.07}`
-  - ✅ seems `id` is reset over different groups
-  - ✅ hull door connectivity still broken
-    - gmGraph.findPath dstNode wrong, because both 102 navmeshes
-      have rect which contains point...
-
-- ✅ light issue when spawn into room with diagonal door
-  - e.g. `spawn rob {"x":-1004.11,"y":1003.39}`
-
-- 🚧 gm 301: add more symbols
-  - ✅ fix view envelope bug when peeking in locker
-  - ✅ experiment with side-table
-  - ✅ various side-tables(s) in gm 301 corridor
-  - 🚧 can change side-table colour
-    - ✅ base PNG colour is white
-    - ❌ geomorph-layouts supports `filter` 
-      > https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
-      - ℹ️ node-canvas does not support it
-    - ✅ can shade non-hull symbols via e.g. `poly fillColor=#00000044`
-    - 🚧 more shadings
-  - 🚧 other "furniture" e.g.
-    - ground pipes
-    - pipes
-    - barrels
-    - screens
-    - noticeboards
-    - plants
-
-```sh
-# nice example
-while true; do
-  test $(
-    world npcs.canSee $( npc rob getPosition ) $( npc foo getPosition )
-  ) || (
-    nav foo rob | walk --open foo
-  )
-done
-```
-
-- nearby NPC should not prevent off-mesh spawn to navmesh
-- strategies for escaping homing NPC
-  - e.g. long click to spawn nearby
-
-- ✅ BUG goLoop should not fail:
-```sh
-goLoop: walk: run: Error: start of navPath blocked
-```
-
-- ✅ BUG "nav | walk" loop should not fail
-  - invert `--nearNpc` -> `--exactNpc`
-  - off-mesh nav-mesh click should fade-spawn
-```sh
-$ while true; do nav foo rob | walk --open foo; done
-nav: run: Error: npc rob outside navmesh: {"x":-173.71,"y":1113.42}
-# rob apparently was outside navmesh
-nav '{x: -219.66, y: 1048.12}' '{x: -159.19, y: 1121.08}' | walk rob
-```
-
-- ✅ debugPlayer does not show frustum (but debug does)
-- ❌ geomorph PNGs navmesh higher contrast?
-  - use geomorphFilter instead
-- GeomorphEdit works on mobile`
+- BUG CssPanZoom sometimes jerky when spawn a lot
+- other NPC with `nav | walk --open` seems slow
+- cleanup NPC CLI i.e. fewer options
+- emphasise "language" and "joining behaviours" on homepage
 
 - BUG saw npc-vs-npc collision failure near hull door
   - hard to reproduce
@@ -91,6 +32,26 @@ nav '{x: -219.66, y: 1048.12}' '{x: -159.19, y: 1121.08}' | walk rob
 - maybe `npc config hideGms` should hide FOV when true?
 - saw unresponsive click until `spawn rob $p`
 - cache connector.poly.center -> connector.center
+- GeomorphEdit works on mobile
+
+- 🚧 gm 301: add more symbols
+  - ✅ fix view envelope bug when peeking in locker
+  - ✅ experiment with side-table
+  - ✅ various side-tables(s) in gm 301 corridor
+  - 🚧 can change side-table colour
+    - ✅ base PNG colour is white
+    - ❌ geomorph-layouts supports `filter` 
+      > https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/filter
+      - ℹ️ node-canvas does not support it
+    - ✅ can shade non-hull symbols via e.g. `poly fillColor=#00000044`
+    - 🚧 more shadings
+  - 🚧 other "furniture" e.g.
+    - ground pipes
+    - pipes
+    - barrels
+    - screens
+    - noticeboards
+    - plants
 
 - cypress tests?
 
@@ -560,6 +521,42 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG goLoop should not fail:
+```sh
+goLoop: walk: run: Error: start of navPath blocked
+```
+
+- ✅ BUG "nav | walk" loop should not fail
+  - invert `--nearNpc` -> `--exactNpc`
+  - off-mesh nav-mesh click should fade-spawn
+```sh
+$ while true; do nav foo rob | walk --open foo; done
+nav: run: Error: npc rob outside navmesh: {"x":-173.71,"y":1113.42}
+# rob apparently was outside navmesh
+nav '{x: -219.66, y: 1048.12}' '{x: -159.19, y: 1121.08}' | walk rob
+```
+
+- ✅ debugPlayer does not show frustum (but debug does)
+- ❌ geomorph PNGs navmesh higher contrast?
+  - use geomorphFilter instead
+
+- ✅ GeomorphEdit
+  - ✅ fix redraw
+  - ✅ improve perf
+  - ❌ support "groups" in geomorph-layouts
+
+- ✅ move DecorPath to DebugWorld
+
+- ✅ gm 102: broken nav i.e. geomorph with 2 disjoint navmeshes
+  - `spawn rob {"x":-904.18,"y":1257.07}`
+  - ✅ seems `id` is reset over different groups
+  - ✅ hull door connectivity still broken
+    - gmGraph.findPath dstNode wrong, because both 102 navmeshes
+      have rect which contains point...
+
+- ✅ light issue when spawn into room with diagonal door
+  - e.g. `spawn rob {"x":-1004.11,"y":1003.39}`
 
 - ✅ npc.canSee(npcKey)
   - ✅ `npc rob canSee foo`
