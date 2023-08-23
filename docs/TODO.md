@@ -6,6 +6,10 @@
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
     - `npcs-collide` should not cancel non-walking npcs
   - 🚧 long click to spawn nearby
+    - ✅ `click [n]` provides `meta.longClick` boolean
+    - ✅ `click --long [n]` only triggers on long click,
+       in which case it overrides `click [n]`
+    - ✅ `click --long 1` does not override short clicks
     - cannot go thru walls
     - on/off mesh spawn too
 

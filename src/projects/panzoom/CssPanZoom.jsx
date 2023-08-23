@@ -31,6 +31,7 @@ export default function CssPanZoom(props) {
         clientY: undefined,
         scale: 1,
         distance: 0,
+        epochMs: -1,
       },
       x: 0,
       y: 0,
@@ -64,6 +65,7 @@ export default function CssPanZoom(props) {
             clientY: point.clientY,
             scale: state.scale,
             distance: getDistance(state.pointers),
+            epochMs: Date.now(),
           };
         },
         pointermove(e) {
@@ -123,6 +125,7 @@ export default function CssPanZoom(props) {
           const { x, y, width, height } = el.getBoundingClientRect();
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
           meta.targetPos = { x: precision(targetPos.x), y: precision(targetPos.y) };
+          meta.longClick = (Date.now() - state.start.epochMs) >= 500;
 
           // Approx because state.scale may change
           const distance = new Vect(

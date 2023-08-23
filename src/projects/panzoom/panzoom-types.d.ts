@@ -15,6 +15,7 @@ declare namespace PanZoom {
     start: {
       clientX: number | undefined;
       clientY: number | undefined;
+      epochMs: number;
       scale: number;
       distance: number;
     },
