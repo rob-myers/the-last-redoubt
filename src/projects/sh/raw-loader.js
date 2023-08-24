@@ -46,16 +46,19 @@
     filter: async function* (ctxt) {
       let { api, args, datum } = ctxt
       const { opts, operands } = api.getOpts(args, {
-        string: ["take", /** Return after specified non-negative integer n > 0 */],
+        string: ["take", /** Return after specified non-negative integer n ≥ 0 */],
       })
       let take = Number(opts.take || Number.POSITIVE_INFINITY);
+      if (take <= 0) {// ℹ️ throw to terminate pipe siblings
+        throw api.getKillError(0)
+      }
       const func = api.generateSelector(
         api.parseFnOrStr(operands[0]),
         operands.slice(1).map(x => api.parseJsArg(x)),
       );
       while ((datum = await api.read()) !== null)
         if (func(datum, ctxt)) {
-          yield datum // ℹ️ we throw to terminate pipe siblings
+          yield datum
           if (--take <= 0) throw api.getKillError(0)
         }
     },
