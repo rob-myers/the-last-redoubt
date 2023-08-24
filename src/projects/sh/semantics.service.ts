@@ -80,6 +80,7 @@ class semanticsServiceClass {
   }
 
   private async *stmts(parent: Sh.ParsedSh, nodes: Sh.Stmt[]) {
+    parent.exitCode = 0;
     for (const node of nodes) {
       try {
         yield* sem.Stmt(node);
