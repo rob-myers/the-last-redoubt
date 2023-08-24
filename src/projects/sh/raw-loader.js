@@ -45,12 +45,19 @@
     /** Filter inputs */
     filter: async function* (ctxt) {
       let { api, args, datum } = ctxt
+      const { opts, operands } = api.getOpts(args, {
+        string: ["take", /** Return after specified non-negative integer n > 0 */],
+      })
+      let take = Number(opts.take || Number.POSITIVE_INFINITY);
       const func = api.generateSelector(
-        api.parseFnOrStr(args[0]),
-        args.slice(1).map(x => api.parseJsArg(x)),
+        api.parseFnOrStr(operands[0]),
+        operands.slice(1).map(x => api.parseJsArg(x)),
       );
       while ((datum = await api.read()) !== null)
-        if (func(datum, ctxt)) yield datum
+        if (func(datum, ctxt)) {
+          yield datum // ℹ️ we throw to terminate pipe siblings
+          if (--take <= 0) throw api.getKillError(0)
+        }
     },
 
     /** Combines map (singleton), filter (empty array) and split (of arrays) */

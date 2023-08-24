@@ -10,8 +10,20 @@
     - ✅ `click --long [n]` only triggers on long click,
        in which case it overrides `click [n]`
     - ✅ `click --long 1` does not override short clicks
+    - ✅ remove option --long, using `meta.longClick` instead
+    - ✅ can spawn on long click:
+      - `click | filter meta.longClick | map 'x => ({ point: x, npcKey: "rob" })' | spawn`
+    - ✅ implement `filter --take=n` so can:
+      > `click | filter meta.longClick --take=1`
+    - can fade spawn on long click
+      - `npc rob fadeSpawnDo $( click 1 )`
+      - `while true; do npc rob fadeSpawnDo $(click 1 --long ); done`
+    - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
     - on/off mesh spawn too
+    - maybe should be long _press_ not click
+
+- 🚧 BUG while loop broken by failed ...?
 
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow

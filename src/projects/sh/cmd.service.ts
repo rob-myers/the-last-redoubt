@@ -633,8 +633,8 @@ class cmdServiceClass {
       return ansi;
     },
 
-    getKillError() {
-      return killError(this.meta);
+    getKillError(exitCode?: number) {
+      return killError(this.meta, exitCode);
     },
 
     getOpts,

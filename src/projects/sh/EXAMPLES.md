@@ -207,6 +207,7 @@ range 5 |
 ```sh
 seq 5 | flatMap 'x => x < 2 ? [] : [x,x]'
 seq 10 | sponge | map reverse | split
+seq 10 | filter window.Boolean
 ```
 
 ```sh
@@ -339,4 +340,9 @@ while true; do
     nav foo rob | walk --open foo
   )
 done
+```
+
+```sh
+seq 100 | filter 
+click | filter meta.longClick --take=1
 ```
