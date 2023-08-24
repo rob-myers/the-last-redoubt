@@ -163,21 +163,12 @@
      * - `click 1` forwards exactly one click, suppressing other `click`s
      */
     click: async function* ({ api, args, home }) {
-      const { opts, operands } = api.getOpts(args, {
-        boolean: [
-          "long", /** Trigger on long click, and do not trigger non-long-clicks */
-        ],
-      })
-
-      /** @type {{ longClick?: boolean; clickHash?: string }} */
-      const extra = {
-        ...opts.long && { longClick: opts.long },
-        ...operands[0] && { clickHash: api.getUid() },
-      }
-      let numClicks = Number(operands[0] || Number.MAX_SAFE_INTEGER);
+      /** @type {{ clickHash?: string }} */
+      const extra = args[0] ? { clickHash: api.getUid() } : {}
+      let numClicks = Number(args[0] || Number.MAX_SAFE_INTEGER);
 
       if (!Number.isFinite(numClicks)) {
-        throw api.throwError("format: \`click [--long] [{numberOfClicks}]\`")
+        throw api.throwError("format: \`click [{numberOfClicks}]\`")
       }
       
       const process = api.getProcess()
@@ -193,31 +184,11 @@
             if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
               return;
             }
-            if ((e.extra.clickHash && !e.extra.longClick) && !extra.clickHash) {
-              // `click 1` overrides `click`
-              // `click --long 1` does not
-              return;
+            if (e.extra.clickHash && !extra.clickHash) {
+              return; // `click 1` overrides `click`
             }
-            if (opts.long && !e.meta.longClick) {
-              return; // `click --long [n]` ignores short clicks
-            }
-            if (!opts.long && e.meta.longClick && e.extra.longClick) {
-              /**
-               * `click --long [n]` overrides `click [n]` on long click
-               * - `e.meta.longClick` means this click was long
-               * - `e.extra.longClick` means there is a pending `click --long [n]`
-               * - `!opts.long` means this command is not awaiting long clicks
-               */
-              return;
-            }
-            // `click 1` overrides `click` for short/long
-            // `click --long 1` overrides `click --long` for long
-            if (
-              e.extra.clickHash // Short click should not be overridden by long click:
-              && (e.meta.longClick || !e.extra.longClick)
-              && extra.clickHash !== e.extra.clickHash
-            ) {
-              return;
+            if (e.extra.clickHash && extra.clickHash !== e.extra.clickHash) {
+              return; // later `click {n}` overrides earlier `click {n}`
             }
             resolve(e); // Must resolve before tear-down induced by unsubscribe 
             sub.unsubscribe();
