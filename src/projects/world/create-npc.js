@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { cssName } from './const';
+import { cssName, obscuredNpcOpacity, spawnFadeMs } from './const';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { warn } from '../service/log';
@@ -222,6 +222,25 @@ export default function createNpc(
     },
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
+    },
+    async fadeSpawnDo(point, opts = {}) {
+      try {
+        const meta = opts.meta ?? point.meta ?? {};
+        await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
+        point.meta ??= meta; // 🚧 can remove?
+        await api.npcs.spawn({
+          npcKey: this.key,
+          point,
+          angle: opts.angle,
+          npcClassKey: opts.npcClassKey,
+          requireNav: opts.requireNav,
+        });
+        this.startAnimationByMeta(meta);
+        await this.animateOpacity(meta.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
+      } catch (e) {
+        await this.animateOpacity(this.doMeta?.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
+        throw e;
+      }
     },
     filterWayMetas(shouldRemove) {
       const { wayMetas } = this.anim;

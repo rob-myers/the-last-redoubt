@@ -84,6 +84,13 @@ declare namespace NPC {
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
+    async fadeSpawnDo(point: Geomorph.PointMaybeMeta, opts?: {
+      angle?: number;
+      fadeOutMs?: number;
+      meta?: Geomorph.PointMeta;
+      npcClassKey?: NPC.NpcClassKey;
+      requireNav?: boolean;
+    });
     followNavPath(
       globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
       doorStrategy?: WalkDoorStrategy,

@@ -174,18 +174,6 @@ export default function NPCs(props) {
         return !!gms[dstRm.gmId].rayIntersectsDoor(dstL, srcL, dstRm.roomId, [dstDr.doorId]);
       }
     },
-    async fadeSpawnDo(npc, e, meta) {
-      try {
-        await npc.animateOpacity(0, e.fadeOutMs ?? spawnFadeMs);
-        e.point.meta ??= meta; // 🚧 can remove?
-        await state.spawn(e);
-        npc.startAnimationByMeta(meta);
-        await npc.animateOpacity(meta.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
-      } catch (e) {
-        await npc.animateOpacity(npc.doMeta?.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
-        throw e;
-      }
-    },
     getGlobalNavPath(src, dst, opts) {
       const [srcGmId] = api.gmGraph.findGeomorphIdContaining(src);
       const [dstGmId] = api.gmGraph.findGeomorphIdContaining(dst);
@@ -590,18 +578,18 @@ export default function NPCs(props) {
         throw Error('too far away');
       }
 
-      await state.fadeSpawnDo(npc, {
-        npcKey: npc.key,
-        point: meta.nav
-          ? point // if not navigable try use targetPoint:
-          : { ...point, .../** @type {Geom.VectJson} */ (meta.targetPos) },
-        angle: meta.nav && !meta.do
-          // use direction src --> point if entering navmesh
-          ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
-          // use meta.orient if staying off-mesh
-          : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
-        fadeOutMs: e.fadeOutMs,
-      }, meta);
+      await npc.fadeSpawnDo(// non-navigable uses targetPoint:
+        { ...point, ...!meta.nav && /** @type {Geom.VectJson} */ (meta.targetPos) },
+        {
+          angle: meta.nav && !meta.do
+            // use direction src --> point if entering navmesh
+            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
+            // use meta.orient if staying off-mesh
+            : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+          fadeOutMs: e.fadeOutMs,
+          meta,
+        },
+      );
     },
     async onMeshDoMeta(npc, e) {
       const src = npc.getPosition();
@@ -628,13 +616,12 @@ export default function NPCs(props) {
         throw Error('too far away');
       }
 
-      await state.fadeSpawnDo(npc, {
-        npcKey: npc.key,
-        point: { ...e.point, ...decorPoint },
+      await npc.fadeSpawnDo({ ...e.point, ...decorPoint }, {
         angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         requireNav: false,
         fadeOutMs: e.fadeOutMs,
-      }, meta);
+        meta,
+      });
     },
     async panZoomTo(e) {
       if (!e || (e.zoom && !Number.isFinite(e.zoom)) || (e.point && !Vect.isVectJson(e.point)) || (e.ms && !Number.isFinite(e.ms))) {
@@ -919,7 +906,6 @@ export default function NPCs(props) {
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta) => boolean} canSee
- * @property {(npc: NPC.NPC, opts: Parameters<State['spawn']>['0'] & { fadeOutMs?: number }, meta: Geomorph.PointMeta) => Promise<void>} fadeSpawnDo
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
