@@ -158,7 +158,7 @@ export class ttyShellClass implements Device {
   /** Spawn a process, assigning pid to non-leading ones */
   async spawn(
     parsed: Sh.FileWithMeta,
-    opts: { leading?: boolean; posPositionals?: string[]; localVar?: boolean } = {},
+    opts: { leading?: boolean; posPositionals?: string[]; localVar?: boolean; cleanups?: (() => void)[] } = {},
   ) {
     const { meta } = parsed;
 
@@ -175,6 +175,7 @@ export class ttyShellClass implements Device {
         posPositionals: opts.posPositionals || positionals.slice(1),
       });
       meta.pid = process.key;
+      opts.cleanups && process.cleanups.push(...opts.cleanups);
 
       const session = useSession.api.getSession(meta.sessionKey);
       const parent = session.process[meta.ppid]; // Exists

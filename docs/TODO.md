@@ -24,9 +24,15 @@
         click | filter meta.longClick | take $1
       }
       ```
-    - can fade spawn on long click
-      - `npc rob fadeSpawnDo $( click 1 )`
-      - `while true; do npc rob fadeSpawnDo $(click 1 --long ); done`
+    - ✅ fix pipe semantics again i.e.
+      > on final pipe-child terminate,
+      > we should NOT kill the process group,
+      > we should ONLY kill the other pipe-children
+    - 🚧 can fade spawn on long click
+      - `npc rob fadeSpawnDo $( longClick 1 )`
+      - `while true; do npc rob fadeSpawnDo $( longClick 1 ); done`
+      - `longClick | ...`
+        - restrict to navigable
     - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
     - on/off mesh spawn too
@@ -39,6 +45,8 @@
       echo foo
     }
     ```
+
+- ℹ️ can do `split` then send e.g. `foo` and see output `f`, `o`, `o`
 
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow

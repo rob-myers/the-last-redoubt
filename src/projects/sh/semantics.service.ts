@@ -168,38 +168,48 @@ class semanticsServiceClass {
           }
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           const process = useSession.api.getProcess(node.meta);
+          let exitCode = undefined as undefined | number;
 
           /**
            * `Promise.allSettled` permits awaiting all killed.
            */
-          const results = await Promise.allSettled(clones.map((file, i) =>
+          await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
                 process.cleanups.push(() => reject()); // Handle Ctrl-C
-                await ttyShell.spawn(file, { localVar: true });
+                await ttyShell.spawn(file, {
+                  localVar: true,
+                  cleanups: [() => reject()], // 🤔 what about final pipe-child?
+                });
                 stdOuts[i].finishedWriting();
                 stdOuts[i - 1]?.finishedReading();
                 if (node.exitCode = file.exitCode) {
                   throw new ShError(`pipe ${i}`, node.exitCode);
                 }
                 resolve();
-                if (i === clones.length - 1) {
-                  throw Error; // On final pipe-child termination, kill others
+                if (i === clones.length - 1) { // kill other pipe-children
+                  const processes = useSession.api.getProcesses(process.sessionKey, process.pgid)
+                    .reverse()
+                    .filter(x => x.ppid === process.key)
+                  ; // Give processes a chance to setup their cleanups
+                  setTimeout(() => processes.forEach(killProcess), 30);
+                  exitCode = 0;
                 }
               } catch (e) {
                 reject(e);
-                // Promise.allSettled won't throw on reject, so kill others
-                const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
-                // Give processes a chance to setup their cleanups, e.g. `click 1`
-                setTimeout(() => processes.forEach(proc => proc && killProcess(proc)), 30);
+                if (exitCode === undefined) {// kill entire process group
+                  const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
+                  setTimeout(() => processes.forEach(killProcess), 30);
+                  exitCode = file.exitCode;
+                }
               }
             }),
           ));
 
-          if (results.some(x => x.status === 'rejected')) {
-            const { exitCode } = clones[results.findIndex(x => x.status === 'rejected')];
+          if (exitCode) {
             throw killError(node.meta, exitCode);
           }
+          node.exitCode = 0;
 
         } finally {
           fifos.forEach(fifo => {
