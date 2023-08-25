@@ -28,11 +28,26 @@
       > on final pipe-child terminate,
       > we should NOT kill the process group,
       > we should ONLY kill the other pipe-children
-    - 🚧 can fade spawn on long click
+    - ✅ can fade spawn on long click
       - `npc rob fadeSpawnDo $( longClick 1 )`
       - `while true; do npc rob fadeSpawnDo $( longClick 1 ); done`
-      - `longClick | ...`
-        - restrict to navigable
+      - restrict to navigable
+        ```sh
+        while true; do
+          longClick 1 | filter meta.nav |
+            npc rob fadeSpawnDo
+        done
+        ```
+      - alternatively
+        ```sh
+        while true; do
+          longClick 1 >clicked
+          test $( clicked/meta/nav ) &&
+            npc rob fadeSpawnDo $( clicked )
+          rm clicked
+        done
+        ```
+    - 🚧 fix final extra loop on ctrl-c ☝️
     - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
     - on/off mesh spawn too
