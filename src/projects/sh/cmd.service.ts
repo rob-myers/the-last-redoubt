@@ -346,15 +346,13 @@ class cmdServiceClass {
         break;
       }
       case 'return': {
-        // We simply kill the current process.
-        // 🚧 worth doing something more complex now we use WhileClause?
         const exitCode = parseInt(args[0]);
         throw killError(
           meta,
           Number.isInteger(exitCode)
             ? exitCode
             : useSession.api.getSession(meta.sessionKey).lastExitCode,
-          0, // Only terminate current process (a shell function)
+          1, // Terminate parent e.g. a shell function
         );
       }
       case 'rm': {

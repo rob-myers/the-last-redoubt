@@ -32,15 +32,13 @@
     - on/off mesh spawn too
     - maybe should be long _press_ not click
 
-  - BUG `return` not working
+  - ✅ BUG `return` not working
     ```sh
     foo () {
       return
       echo foo
     }
     ```
-
-- 🚧 BUG while loop broken by failed ...?
 
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
