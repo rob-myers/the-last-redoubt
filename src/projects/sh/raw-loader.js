@@ -383,7 +383,7 @@
             const npcAct = operands.length === 1
               ? npcs.service.normalizeNpcCommandOpts(action, datum, [])
               // support initial operand e.g. `click | npc look-at {npcKey}`
-              : npcs.service.normalizeNpcCommandOpts(action, operands[1], [datum])
+              : npcs.service.normalizeNpcCommandOpts(action, operands[1], [...operands.slice(2), datum])
             ;
             if (npcAct.action === "do" || npcAct.action === "look-at") {
               cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
