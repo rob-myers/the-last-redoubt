@@ -292,14 +292,17 @@ export class FifoDevice implements Device {
       this.writerResolver = null;
 
       if (exactlyOnce) {
-        if (!isDataChunk(this.buffer[0])) {
+        if (!isDataChunk(this.buffer[0])) {// Standard case
           return { data: this.buffer.shift() };
-        } else if (chunks) {
+        } else if (chunks) {// Forward chunk
           return { data: this.buffer.shift() };
-        } else if (this.buffer[0].items.length === 1) {
-          return { data: this.buffer.shift()!.items[0] };
-        } else {
-          return { data: this.buffer[0].items.shift() };
+        } else {// Handle chunk
+          if (this.buffer[0].items.length <= 1) {
+            // returns `{ data: undefined }` for empty chunks
+            return { data: this.buffer.shift()!.items[0] };
+          } else {
+            return { data: this.buffer[0].items.shift() };
+          }
         }
       } else {
         return { data: this.buffer.shift() };
