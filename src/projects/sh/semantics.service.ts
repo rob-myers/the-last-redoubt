@@ -167,7 +167,6 @@ class semanticsServiceClass {
             clones[i + 1].meta.fd[0] = file.meta.fd[1] = fifoKey;
           }
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
-
           const process = useSession.api.getProcess(node.meta);
 
           /**
@@ -184,6 +183,9 @@ class semanticsServiceClass {
                   throw new ShError(`pipe ${i}`, node.exitCode);
                 }
                 resolve();
+                if (i === clones.length - 1) {
+                  throw Error; // On final pipe-child termination, kill others
+                }
               } catch (e) {
                 reject(e);
                 // Promise.allSettled won't throw on reject, so kill others
