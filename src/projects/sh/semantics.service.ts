@@ -147,7 +147,7 @@ class semanticsServiceClass {
         }
         break;
       }
-      case '|': {
+      case '|': {// 🚧 clean and clarify
         const fifos = [] as FifoDevice[];
         const clones = stmts.map(x => {
           const clone = wrapInFile(cloneParsed(x));
@@ -168,19 +168,13 @@ class semanticsServiceClass {
           }
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           const process = useSession.api.getProcess(node.meta);
+          
           let exitCode = undefined as undefined | number;
-
-          /**
-           * `Promise.allSettled` permits awaiting all killed.
-           */
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
                 process.cleanups.push(() => reject()); // Handle Ctrl-C
-                await ttyShell.spawn(file, {
-                  localVar: true,
-                  cleanups: [() => reject()], // 🤔 what about final pipe-child?
-                });
+                await ttyShell.spawn(file, { localVar: true, cleanups: [() => reject()] });
                 stdOuts[i].finishedWriting();
                 stdOuts[i - 1]?.finishedReading();
                 if (node.exitCode = file.exitCode) {
@@ -190,7 +184,7 @@ class semanticsServiceClass {
                 if (i === clones.length - 1) { // kill other pipe-children
                   const processes = useSession.api.getProcesses(process.sessionKey, process.pgid)
                     .reverse()
-                    .filter(x => x.ppid === process.key)
+                    .filter(x => x.ppid === process.key && x !== process)
                   ; // Give processes a chance to setup their cleanups
                   setTimeout(() => processes.forEach(killProcess), 30);
                   exitCode = 0;
