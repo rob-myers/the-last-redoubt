@@ -15,6 +15,15 @@
       - `click | filter meta.longClick | map 'x => ({ point: x, npcKey: "rob" })' | spawn`
     - ✅ implement `filter --take=n` so can:
       > `click | filter meta.longClick --take=1`
+    - ✅ move `filter --take` -> `take`
+    - ✅ fix pipe semantics
+    - ✅ implement shell function `take [n]`
+    - ✅ implement shell function `longClick [n]`
+      ```sh
+      longClick () {
+        click | filter meta.longClick | take $1
+      }
+      ```
     - can fade spawn on long click
       - `npc rob fadeSpawnDo $( click 1 )`
       - `while true; do npc rob fadeSpawnDo $(click 1 --long ); done`
@@ -22,6 +31,14 @@
     - cannot go thru walls
     - on/off mesh spawn too
     - maybe should be long _press_ not click
+
+  - BUG `return` not working
+    ```sh
+    foo () {
+      return
+      echo foo
+    }
+    ```
 
 - 🚧 BUG while loop broken by failed ...?
 

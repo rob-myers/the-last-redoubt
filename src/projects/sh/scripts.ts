@@ -80,7 +80,7 @@ doLoop: `{
  */
 goLoop: `{
   click |
-    filter 'x => x.meta.nav && !x.meta.ui && !x.meta.do' |
+    filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
     nav --safeLoop --preferOpen --exactNpc $1 |
     walk $1
 }`,
@@ -136,6 +136,15 @@ gm: `{
   shift 2
   call '({ api, home }) => api.getCached(home.WORLD_KEY).gmGraph.gms['$__TEMP_ARG_1']' |
     map "$__TEMP_ARG_2" "$@"
+}`,
+
+/**
+ * Usage:
+ * - longClick 1
+ * - longClick
+ */
+longClick: `{
+  click | filter meta.longClick | take $1
 }`,
 
 },

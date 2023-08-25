@@ -343,6 +343,8 @@ done
 ```
 
 ```sh
-seq 100 | filter 
-click | filter meta.longClick --take=1
+seq 10 | take 5
+click | take 1
+# longClick 1
+click | filter meta.longClick | take 1
 ```
