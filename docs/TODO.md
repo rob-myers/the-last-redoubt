@@ -2,15 +2,16 @@
 
 ## In progress
 
-- 🚧 redo pipe semantics
+- ✅ redo pipe semantics
   - 🤔 why throw ShError(`pipe ${i}`, node.exitCode) on non-zero-exit pipe-child?
   - ✅ why does `take 3 | true` not terminate `take 3` immediately?
     - `take 3` was "reading" from TTY,
       `ttyShell.io.writeToReaders({ key: 'send-kill-sig' })` worked
-- 🚧 various examples demonstrating pipe semantics
+- ✅ various examples demonstrating pipe semantics
   - ✅ example where first pipe child throws killError
   - ✅ example where last pipe child throws killError
 
+- 🚧 fix remaining pipe semantics examples
 
 - 🚧 strategies for escaping homing NPC
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh

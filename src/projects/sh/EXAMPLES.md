@@ -50,6 +50,8 @@ echo $?
 take 3 | true
 # ❌ should output `hi` but outputs nothing
 echo hi $( echo rob | false )
+# ❌ should output `hi` but outputs nothing
+echo hi $( echo rob | true )
 # ✅ should output `hello` continually
 while true; do echo | false; echo hello; done
 # terminates because first pipe-child killed

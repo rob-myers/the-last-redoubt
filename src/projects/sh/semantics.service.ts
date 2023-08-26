@@ -153,23 +153,25 @@ class semanticsServiceClass {
         const { ttyShell } = useSession.api.getSession(sessionKey);
         const process = useSession.api.getProcess(node.meta);
 
+        const stdIn = useSession.api.resolve(0, stmts[0].meta);
         /** At most one pipeline can be running in a process in a session */
         const fifos = stmts.slice(0, -1).map(({ meta }, i) =>
           useSession.api.createFifo(`/dev/fifo-${sessionKey}-${meta.pid}-${i}`),
         );
+        const stdOut = useSession.api.resolve(1, stmts.at(-1)!.meta);
 
         try {
           // Clone, connecting stdout to stdin of subsequent process
           const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
-          const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           
           let errors = [] as any[];
 
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
-                process.cleanups.push(() => reject()); // Handle Ctrl-C 🚧
+                // Handle Ctrl-C 🚧
+                process.cleanups.push(() => reject());
 
                 await ttyShell.spawn(file, {
                   localVar: true,
@@ -179,8 +181,8 @@ class semanticsServiceClass {
                   ],
                 });
 
-                stdOuts[i].finishedWriting(); // pipe-child `i` won't write any more
-                stdOuts[i - 1]?.finishedReading(); // pipe-child `i` won't read any more
+                (fifos[i] ?? stdOut).finishedWriting(); // pipe-child `i` won't write any more
+                (fifos[i - 1] ?? stdIn).finishedReading(); // pipe-child `i` won't read any more
 
                 resolve();
               } catch (e) {
@@ -194,7 +196,7 @@ class semanticsServiceClass {
                     .filter(x => x.ppid === process.key && x !== process)
                     .reverse()
                     .forEach(killProcess),
-                    30,
+                    30, // delay allows pipe-children to setup cleanups
                   );
                 }
               }
