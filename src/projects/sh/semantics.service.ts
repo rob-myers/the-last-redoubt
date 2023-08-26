@@ -4,7 +4,7 @@ import type * as Sh from './parse';
 import { last, safeStringify } from '../service/generic';
 import useSession from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
-import { cmdService, parseJsArg, sleep } from './cmd.service';
+import { cmdService, isTtyAt, parseJsArg, sleep } from './cmd.service';
 import { srcService } from './parse';
 import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
@@ -164,13 +164,23 @@ class semanticsServiceClass {
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           
-          // 🚧
-          let exitCode = 1 as undefined | number;
+          // let exitCode = 1 as undefined | number; // 🚧
+          let exitCode = undefined as undefined | number; // 🚧
+
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
-                process.cleanups.push(() => reject()); // Handle Ctrl-C
-                await ttyShell.spawn(file, { localVar: true, cleanups: [() => reject()] });
+                process.cleanups.push(() => reject()); // Handle Ctrl-C 🚧
+
+                await ttyShell.spawn(file, {
+                  localVar: true,
+                  cleanups: [
+                    // handle 1st process reading from TTY e.g. `take 3 | true`
+                    // 🤔 earlier ttyShell.xterm.sendSigKill doesn't work?
+                    ...i === 0 && isTtyAt(file.meta, 0) ? [() => ttyShell.io.writeToReaders({ key: 'send-kill-sig' })] : [],
+                    () => reject(),
+                  ],
+                });
                 stdOuts[i].finishedWriting();
                 stdOuts[i - 1]?.finishedReading();
                 if (node.exitCode = file.exitCode) {

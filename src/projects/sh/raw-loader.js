@@ -128,8 +128,8 @@
     },
   
     take: async function* ({ api, args, datum }) {
-      let remainder = Number(args[0] || Number.POSITIVE_INFINITY);
-      while ((remainder-- > 0) && (datum = await api.read()) !== null)
+      let remainder = Number(args[0] || Number.POSITIVE_INFINITY)
+      while ((remainder-- > 0) && ((datum = await api.read()) !== null))
         yield datum
     },
 

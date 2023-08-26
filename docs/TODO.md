@@ -3,7 +3,14 @@
 ## In progress
 
 - 🚧 redo pipe semantics
-  - 🚧 various examples demonstrating semantics
+  - 🤔 why throw ShError(`pipe ${i}`, node.exitCode) on non-zero-exit pipe-child?
+  - ✅ why does `take 3 | true` not terminate `take 3` immediately?
+    - `take 3` was "reading" from TTY,
+      `ttyShell.io.writeToReaders({ key: 'send-kill-sig' })` worked
+- 🚧 various examples demonstrating pipe semantics
+  - ✅ example where first pipe child throws killError
+  - ✅ example where last pipe child throws killError
+
 
 - 🚧 strategies for escaping homing NPC
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
@@ -58,7 +65,7 @@ while true; do
     npc rob fadeSpawnDo $( clicked )
 done
 ```
-      - ℹ️ no issue when we run as a background process
+    - ℹ️ no issue when we run as a background process
     - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
     - on/off mesh spawn too

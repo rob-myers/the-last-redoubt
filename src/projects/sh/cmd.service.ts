@@ -804,7 +804,7 @@ function getProcess(meta: Sh.BaseMeta) {
   return useSession.api.getProcess(meta);
 }
 
-function isTtyAt(meta: Sh.BaseMeta, fd: number) {
+export function isTtyAt(meta: Sh.BaseMeta, fd: number) {
   return meta.fd[fd]?.startsWith('/dev/tty-');
 }
 

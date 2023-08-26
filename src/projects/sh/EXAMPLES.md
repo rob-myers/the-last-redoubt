@@ -43,13 +43,16 @@ sleep 10 | echo foo
 { echo foo; echo bar; } | while true; do take 1; sleep 2; done
 # hi rob
 echo hi $( echo rob | take 1 )
+# take 3 terminates immediately
+take 3 | true
 # ❌ should output `hi` but outputs nothing
 echo hi $( echo rob | false )
 # ❌ should output `hello` continually
-while true; do
-  echo | false
-  echo hello
-done
+while true; do echo | false; echo hello; done
+# terminates because first pipe-child killed
+run '({ api }) { throw api.getKillError(); }' | take 1
+# terminates because last pipe-child killed
+take 1 | run '({ api }) { throw api.getKillError(); }'
 ```
 
 ## Invoke JS function
