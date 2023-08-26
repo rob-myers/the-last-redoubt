@@ -2,6 +2,9 @@
 
 ## In progress
 
+- 🚧 redo pipe semantics
+  - 🚧 various examples demonstrating semantics
+
 - 🚧 strategies for escaping homing NPC
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
     - `npcs-collide` should not cancel non-walking npcs
@@ -47,7 +50,15 @@
           rm clicked
         done
         ```
-    - 🚧 fix final extra loop on ctrl-c ☝️
+    - 🚧 fix final extra loop on ctrl-c
+```sh
+while true; do
+  longClick 1 >clicked
+  test $( clicked/meta/nav ) &&
+    npc rob fadeSpawnDo $( clicked )
+done
+      ```
+      - ℹ️ no issue when we run as a background process
     - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
     - on/off mesh spawn too

@@ -22,6 +22,31 @@ if test '1 > 2'; then echo TEST PASSED; else echo TEST FAILED; fi
 if test '2 > 1'; then echo TEST PASSED; else echo TEST FAILED; fi
 ```
 
+## Pipe semantics
+
+🚧 pipe-child termination info
+
+```sh
+# `foo`
+echo foo | map 'x => x'
+# `3`, `3`
+{ echo foo; echo bar; } | map length
+# `0`, `1`, `2`, `3`, `4`
+seq 10 | take 5
+# if type foo⏎ then `102`, `111`, `111`
+split | map charCodeAt 0
+# ctrl-c should exit early
+echo foo | sleep 10
+# `foo` then terminates immediately
+sleep 10 | echo foo
+# `foo` (pause) `bar` then hangs (can ctrl-c)
+{ echo foo; echo bar; } | while true; do take 1; sleep 2; done
+# hi rob
+echo hi $( echo rob | take 1 )
+# ❌ should output `hi` but outputs nothing
+echo hi $( echo rob | false )
+```
+
 ## Invoke JS function
 
 ```sh

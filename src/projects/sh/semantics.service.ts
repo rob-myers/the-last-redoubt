@@ -147,16 +147,13 @@ class semanticsServiceClass {
         }
         break;
       }
-      case '|': {// 🚧 clean and clarify
+      case '|': {
+        // 🚧 clean, fix and clarify
         const fifos = [] as FifoDevice[];
-        const clones = stmts.map(x => {
-          const clone = wrapInFile(cloneParsed(x));
-          clone.meta.ppid = node.meta.pid; // (pid, pgid) are set in spawn
-          return clone;
-        });
-
         try {
           const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
+          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
+
           for (const [i, file] of clones.slice(0, -1).entries()) {
             /**
              * At most one pipeline can be running in any process in a given session.
@@ -169,7 +166,7 @@ class semanticsServiceClass {
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           const process = useSession.api.getProcess(node.meta);
           
-          let exitCode = undefined as undefined | number;
+          let exitCode = 1 as undefined | number;
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
@@ -200,7 +197,7 @@ class semanticsServiceClass {
             }),
           ));
 
-          if (exitCode) {
+          if (exitCode) {// 🚧 should only throw on detect earlier kill
             throw killError(node.meta, exitCode);
           }
           node.exitCode = 0;
@@ -422,9 +419,9 @@ class semanticsServiceClass {
         break;
       }
       case 'CmdSubst': {
-        const cloned = wrapInFile(cloneParsed(node));
         const fifoKey = `/dev/fifo-cmd-${uid()}`;
         const device = useSession.api.createFifo(fifoKey);
+        const cloned = wrapInFile(cloneParsed(node));
         cloned.meta.fd[1] = device.key;
 
         const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
@@ -547,10 +544,11 @@ class semanticsServiceClass {
       /**
        * Run a background process without awaiting.
        */
-      const { ttyShell } = useSession.api.getSession(stmt.meta.sessionKey);
-      const file = wrapInFile(cloneParsed(stmt));
-      file.meta.ppid = stmt.meta.pid;
-      file.meta.pgid = useSession.api.getSession(stmt.meta.sessionKey).nextPid;
+      const { ttyShell, nextPid } = useSession.api.getSession(stmt.meta.sessionKey);
+      const file = wrapInFile(cloneParsed(stmt), {
+        ppid: stmt.meta.pid,
+        pgid: nextPid,
+      });
       ttyShell.spawn(file, { localVar: true }).catch((e) => {
           if (e instanceof ProcessError) {
             this.handleTopLevelProcessError(e);

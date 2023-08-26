@@ -158,7 +158,12 @@ export class ttyShellClass implements Device {
   /** Spawn a process, assigning pid to non-leading ones */
   async spawn(
     parsed: Sh.FileWithMeta,
-    opts: { leading?: boolean; posPositionals?: string[]; localVar?: boolean; cleanups?: (() => void)[] } = {},
+    opts: {
+      leading?: boolean;
+      posPositionals?: string[];
+      localVar?: boolean;
+      cleanups?: (() => void)[];
+    } = {},
   ) {
     const { meta } = parsed;
 
