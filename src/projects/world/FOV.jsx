@@ -352,7 +352,7 @@ export default function FOV(props) {
     * 👁 Desktop: unmax Tabs: keep walking
     * ℹ️ happened on put <FOV> after <Doors>
     */
-  will-change: transform;
+  /* will-change: transform; */
 
   > .map {
     filter: ${geomorphMapFilterShown};
