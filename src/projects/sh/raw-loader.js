@@ -207,9 +207,7 @@
 
         const gmRoomId = worldApi.gmGraph.findRoomContaining(e.point);
         const meta = /** @type {Geomorph.PointMeta} */ ({ ...e.meta, ...gmRoomId ?? { roomId: null } });
-        if (worldApi.npcs.isPointInNavmesh(e.point)) {
-          meta.nav = true; // add "nav" tag
-        }
+        meta.nav = worldApi.npcs.isPointInNavmesh(e.point); // add "nav" tag
 
         yield {
           x: worldApi.lib.precision(e.point.x),
