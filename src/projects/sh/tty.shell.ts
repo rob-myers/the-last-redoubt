@@ -311,8 +311,14 @@ export class ttyShellClass implements Device {
   public finishedWriting() {
     // NOOP
   }
+  /**
+   * Background processes are not allowed to read from TTY.
+   * We further assume there is at most one interactive process reading it.
+  */
   public finishedReading() {
-    // NOOP
+    this.buffer.length = 0;
+    this.oneTimeReaders.forEach(({ reject }) => reject());
+    this.oneTimeReaders.length = 0;
   }
   //#endregion
 }

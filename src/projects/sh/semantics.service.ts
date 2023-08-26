@@ -148,7 +148,7 @@ class semanticsServiceClass {
         break;
       }
       case '|': {
-        // 🚧 clean, fix and clarify
+        // 🚧 clarify
         const { sessionKey } = node.meta;
         const { ttyShell } = useSession.api.getSession(sessionKey);
         const process = useSession.api.getProcess(node.meta);
@@ -164,8 +164,7 @@ class semanticsServiceClass {
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
           
-          // let exitCode = 1 as undefined | number; // 🚧
-          let exitCode = undefined as undefined | number; // 🚧
+          let errors = [] as any[];
 
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
@@ -174,42 +173,38 @@ class semanticsServiceClass {
 
                 await ttyShell.spawn(file, {
                   localVar: true,
-                  cleanups: [
-                    // handle 1st process reading from TTY e.g. `take 3 | true`
-                    // 🤔 earlier ttyShell.xterm.sendSigKill doesn't work?
-                    ...i === 0 && isTtyAt(file.meta, 0) ? [() => ttyShell.io.writeToReaders({ key: 'send-kill-sig' })] : [],
+                  cleanups: [// 🤔 earlier ttyShell.xterm.sendSigKill didn't work
+                    ...i === 0 && isTtyAt(file.meta, 0) ? [() => ttyShell.finishedReading()] : [],
                     () => reject(),
                   ],
                 });
-                stdOuts[i].finishedWriting();
-                stdOuts[i - 1]?.finishedReading();
-                if (node.exitCode = file.exitCode) {
-                  throw new ShError(`pipe ${i}`, node.exitCode);
-                }
+
+                stdOuts[i].finishedWriting(); // pipe-child `i` won't write any more
+                stdOuts[i - 1]?.finishedReading(); // pipe-child `i` won't read any more
+
                 resolve();
-                if (i === clones.length - 1) { // kill other pipe-children
-                  const processes = useSession.api.getProcesses(process.sessionKey, process.pgid)
-                    .reverse()
-                    .filter(x => x.ppid === process.key && x !== process)
-                  ; // Give processes a chance to setup their cleanups
-                  setTimeout(() => processes.forEach(killProcess), 30);
-                  exitCode = 0;
-                }
               } catch (e) {
+                errors.push(e);
                 reject(e);
-                if (exitCode === undefined) {// kill entire process group
-                  const processes = useSession.api.getProcesses(process.sessionKey, process.pgid).reverse();
-                  setTimeout(() => processes.forEach(killProcess), 30);
-                  exitCode = file.exitCode;
+              } finally {
+                // On error, kill all remaining pipe-children
+                // On final pipe-child termination, also kill others
+                if (errors.length === 1 || (i === clones.length - 1)) {
+                  setTimeout(() => useSession.api.getProcesses(process.sessionKey, process.pgid)
+                    .filter(x => x.ppid === process.key && x !== process)
+                    .reverse()
+                    .forEach(killProcess),
+                    30,
+                  );
                 }
               }
             }),
           ));
 
-          if (exitCode) {// 🚧 should only throw on detect earlier kill
-            throw killError(node.meta, exitCode);
+          if (errors.length) {
+            throw killError(node.meta, 1); // 🚧 propagate exit code
           }
-          node.exitCode = 0;
+          node.exitCode = clones.at(-1)?.exitCode ?? 0;
 
         } finally {
           fifos.forEach(fifo => {

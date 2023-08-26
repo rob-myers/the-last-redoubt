@@ -86,6 +86,8 @@ done
   #
   ```
 
+- BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
+
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
 - cleanup NPC CLI i.e. fewer options
