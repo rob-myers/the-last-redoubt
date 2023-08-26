@@ -129,8 +129,14 @@
   
     take: async function* ({ api, args, datum }) {
       let remainder = Number(args[0] || Number.POSITIVE_INFINITY)
-      while ((remainder-- > 0) && ((datum = await api.read()) !== null))
-        yield datum
+      while ((remainder-- > 0) && ((datum = await api.read(true)) !== null))
+        if (datum.__chunk__) {
+          let items = datum.items.slice(0, remainder + 1)
+          remainder -= (items.length - 1)
+          yield* items 
+        } else {
+          yield datum
+        }
     },
 
   },
