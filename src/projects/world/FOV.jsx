@@ -349,10 +349,11 @@ export default function FOV(props) {
  const rootCss = css`
   /**
     * Fix Chrome over-clipping
+    * 👁 mobile: happened a lot
     * 👁 Desktop: unmax Tabs: keep walking
-    * ℹ️ happened on put <FOV> after <Doors>
+    * ℹ️ happened on put <FOV> after <Doors> 👈
     */
-  /* will-change: transform; */
+  will-change: transform;
 
   > .map {
     filter: ${geomorphMapFilterShown};
