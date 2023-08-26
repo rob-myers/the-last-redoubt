@@ -149,23 +149,22 @@ class semanticsServiceClass {
       }
       case '|': {
         // 🚧 clean, fix and clarify
-        const fifos = [] as FifoDevice[];
-        try {
-          const { ttyShell } = useSession.api.getSession(node.meta.sessionKey);
-          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
+        const { sessionKey } = node.meta;
+        const { ttyShell } = useSession.api.getSession(sessionKey);
+        const process = useSession.api.getProcess(node.meta);
 
-          for (const [i, file] of clones.slice(0, -1).entries()) {
-            /**
-             * At most one pipeline can be running in any process in a given session.
-             * Must prefix with `sessionKey` to avoid device collision.
-             */
-            const fifoKey = `/dev/fifo-${file.meta.sessionKey}-${file.meta.pid}-${i}`;
-            fifos.push(useSession.api.createFifo(fifoKey));
-            clones[i + 1].meta.fd[0] = file.meta.fd[1] = fifoKey;
-          }
+        /** At most one pipeline can be running in a process in a session */
+        const fifos = stmts.slice(0, -1).map(({ meta }, i) =>
+          useSession.api.createFifo(`/dev/fifo-${sessionKey}-${meta.pid}-${i}`),
+        );
+
+        try {
+          // Clone, connecting stdout to stdin of subsequent process
+          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
+          fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           const stdOuts = clones.map(({ meta }) => useSession.api.resolve(1, meta));
-          const process = useSession.api.getProcess(node.meta);
           
+          // 🚧
           let exitCode = 1 as undefined | number;
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
@@ -204,7 +203,7 @@ class semanticsServiceClass {
 
         } finally {
           fifos.forEach(fifo => {
-            fifo.finishedWriting(); // 🚧 clarify
+            fifo.finishedWriting();
             useSession.api.removeDevice(fifo.key);
           });
         }

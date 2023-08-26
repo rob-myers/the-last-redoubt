@@ -45,6 +45,11 @@ sleep 10 | echo foo
 echo hi $( echo rob | take 1 )
 # ❌ should output `hi` but outputs nothing
 echo hi $( echo rob | false )
+# ❌ should output `hello` continually
+while true; do
+  echo | false
+  echo hello
+done
 ```
 
 ## Invoke JS function

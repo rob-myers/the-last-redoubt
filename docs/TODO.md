@@ -57,7 +57,7 @@ while true; do
   test $( clicked/meta/nav ) &&
     npc rob fadeSpawnDo $( clicked )
 done
-      ```
+```
       - ℹ️ no issue when we run as a background process
     - fix `npc rob fadeSpawnDo` on click do point?
     - cannot go thru walls
@@ -73,6 +73,11 @@ done
     ```
 
 - ℹ️ can do `split` then send e.g. `foo` and see output `f`, `o`, `o`
+- ℹ️ BUT does not work when pasting and include a subsequent newline e.g.
+  ```sh
+  split | map charCodeAt 0
+  #
+  ```
 
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
