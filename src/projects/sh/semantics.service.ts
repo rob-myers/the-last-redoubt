@@ -170,8 +170,7 @@ class semanticsServiceClass {
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
-                // Handle Ctrl-C 🚧
-                process.cleanups.push(() => reject());
+                process.cleanups.push(() => reject()); // Handle Ctrl-C 🚧
 
                 await ttyShell.spawn(file, {
                   localVar: true,
@@ -203,10 +202,12 @@ class semanticsServiceClass {
             }),
           ));
 
-          if (errors.length) {
-            throw killError(node.meta, 1); // 🚧 propagate exit code
+          const finalChildCode = clones.at(-1)?.exitCode;
+          if (finalChildCode === undefined) {
+            throw killError(node.meta, errors[0]?.exitCode ?? 1);
+          } else {
+            node.exitCode = finalChildCode;
           }
-          node.exitCode = clones.at(-1)?.exitCode ?? 0;
 
         } finally {
           fifos.forEach(fifo => {
