@@ -11,10 +11,14 @@
   - ✅ example where first pipe child throws killError
   - ✅ example where last pipe child throws killError
 
-- 🚧 fix remaining pipe semantics examples
+- ✅ fix remaining pipe semantics examples
   - ✅ `while true; do longClick 1; echo foo; done` on ctrl-c no foo
   - ✅ `while true; do longClick 1; test $( not/found ); done`
-  - 🚧 non-zero exit code not present in some cases
+  - ✅ non-zero exit code not present in some cases
+
+- BUG on send empty command should not overwrite session.lastExitCode
+- BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
+- BUG? killError(_, exitCode) 2nd param working?
 
 - 🚧 strategies for escaping homing NPC
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
@@ -89,8 +93,6 @@ done
   split | map charCodeAt 0
   #
   ```
-
-- BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
 
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow

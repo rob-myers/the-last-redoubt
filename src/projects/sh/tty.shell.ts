@@ -159,10 +159,10 @@ export class ttyShellClass implements Device {
   async spawn(
     parsed: Sh.FileWithMeta,
     opts: {
-      leading?: boolean;
-      posPositionals?: string[];
-      localVar?: boolean;
       cleanups?: (() => void)[];
+      leading?: boolean;
+      localVar?: boolean;
+      posPositionals?: string[];
     } = {},
   ) {
     const { meta } = parsed;
@@ -195,15 +195,13 @@ export class ttyShellClass implements Device {
     }
 
     try {
-      for await (const _ of semanticsService.File(parsed)) {
-        /** NOOP */
-      }
+      for await (const _ of semanticsService.File(parsed)) { /** NOOP */ }
       parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
         console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`);
         // Ctrl-C code is 130 unless overriden
-        parsed.exitCode = e.exitCode??130;
+        parsed.exitCode = e.exitCode ?? 130; // 🚧 or 137?
       } else if (e instanceof ShError) {
         parsed.exitCode = e.exitCode;
       }
@@ -212,10 +210,11 @@ export class ttyShellClass implements Device {
       const session = useSession.api.getSession(this.sessionKey);
 
       if (!session) {
-        console.warn(`session ${this.sessionKey} no longer exists`);
-        return;
+        return console.warn(`session ${this.sessionKey} no longer exists`);
       } else if (typeof parsed.exitCode === 'number') {
-        session.lastExitCode = parsed.exitCode;
+        // 🤔 only pid 0 and parent's of pipes can set lastExitCode
+        (meta.ppid === meta.pid) && (session.lastExitCode = parsed.exitCode);
+        // session.lastExitCode = parsed.exitCode;
       } else {
         console.warn(`process ${meta.pid} had no exitCode`);
       }

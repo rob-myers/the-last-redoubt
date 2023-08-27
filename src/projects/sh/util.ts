@@ -44,10 +44,10 @@ export function expand(values: string | any[]): Expanded {
 }
 
 export function handleProcessError(node: Sh.ParsedSh, e: ProcessError) {
+  node.exitCode = e.exitCode ?? node.exitCode ?? 137;
   if (e.depth === undefined || e.depth--) {
     throw e; // Propagate signal (KILL)
   }
-  node.exitCode = e.exitCode;
 }
 
 export function interpretEscapeSequences(input: string): string {

@@ -43,24 +43,24 @@ sleep 10 | echo foo
 { echo foo; echo bar; } | while true; do take 1; sleep 2; done
 # hi rob
 echo hi $( echo rob | take 1 )
-# 1
+# exit-code should be 1
 echo | false
 echo $?
 # take 3 terminates immediately
 take 3 | true
-# ✅ should output `hi` but outputs nothing
+# should output `hi`
 echo hi $( echo rob | false )
-# ✅ should output `hi` but outputs nothing
+# should output `hi`
 echo hi $( echo rob | true )
-# ✅ should output `hello` continually
+# should output `hello` continually
 while true; do echo | false; echo hello; done
 # terminates because first pipe-child killed
-# ❌ non-zero exit code
+# non-zero exit code
 run '({ api }) { throw api.getKillError(); }' | take 1
 # terminates because last pipe-child killed
-# ❌ non-zero exit code
+# non-zero exit code
 take 1 | run '({ api }) { throw api.getKillError(); }'
-# ✅ fix ctrl-c i.e. should kill whole while loop
+# fix ctrl-c i.e. should kill whole while loop
 while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done
 ```
 

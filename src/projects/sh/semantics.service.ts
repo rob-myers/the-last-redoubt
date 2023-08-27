@@ -161,15 +161,16 @@ class semanticsServiceClass {
 
         try {
           // Clone, connecting stdout to stdin of subsequent process
+          // 🤔 maybe better for ppid to be last-child's pid
           const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           
-          let errors = [] as any[];
+          let errors = [] as any[], exitCode = undefined as undefined | number;
 
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
-                process.cleanups.push(() => reject()); // Handle Ctrl-C 🚧
+                process.cleanups.push(() => reject()); // Handle Ctrl-C
 
                 await ttyShell.spawn(file, {
                   localVar: true,
@@ -187,29 +188,31 @@ class semanticsServiceClass {
                 errors.push(e);
                 reject(e);
               } finally {
-                // On error, kill all remaining pipe-children
-                // On final pipe-child termination, also kill others
-                if (errors.length === 1 || (i === clones.length - 1)) {
-                  setTimeout(() => useSession.api.getProcesses(process.sessionKey, process.pgid)
-                    .filter(x => x.ppid === process.key && x !== process)
-                    .reverse()
-                    .forEach(killProcess),
-                    30, // delay allows pipe-children to setup cleanups
-                  );
+                if (i === clones.length - 1 && errors.length === 0) {
+                  exitCode = file.exitCode ?? 0;
+                } else if (errors.length !== 1) {
+                  return; // No error, or already handled
                 }
+                // Kill other pipe-children
+                setTimeout(() => useSession.api.getProcesses(process.sessionKey, process.pgid)
+                  .filter(x => x.ppid === process.key && x !== process)
+                  .reverse()
+                  .forEach(killProcess),
+                  30, // delay allows pipe-children to setup cleanups
+                );
               }
             }),
           ));
 
-          const finalChildCode = clones.at(-1)?.exitCode;
           if (
-            finalChildCode === undefined
-            || finalChildCode === 130
+            exitCode === undefined
+            || exitCode === 130
             || process.status === ProcessStatus.Killed
           ) {
-            throw killError(node.meta, errors[0]?.exitCode ?? 1);
+            node.exitCode = errors[0]?.exitCode ?? 1;
+            throw killError(node.meta);
           } else {
-            node.exitCode = finalChildCode;
+            node.exitCode = exitCode;
           }
 
         } finally {
@@ -230,7 +233,7 @@ class semanticsServiceClass {
   }
 
   private async *CallExpr(node: Sh.CallExpr) {
-    node.exitCode = 0;
+    node.exitCode = 0; // 🚧 justify
     const args = await sem.performShellExpansion(node.Args);
     const [command, ...cmdArgs] = args;
     node.meta.verbose && console.log('simple command', args);
