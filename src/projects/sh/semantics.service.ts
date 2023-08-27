@@ -2,7 +2,7 @@ import { uid } from 'uid';
 
 import type * as Sh from './parse';
 import { last, safeStringify } from '../service/generic';
-import useSession from './session.store';
+import useSession, { ProcessStatus } from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
 import { cmdService, isTtyAt, parseJsArg, sleep } from './cmd.service';
 import { srcService } from './parse';
@@ -148,14 +148,13 @@ class semanticsServiceClass {
         break;
       }
       case '|': {
-        // 🚧 clarify
         const { sessionKey } = node.meta;
         const { ttyShell } = useSession.api.getSession(sessionKey);
         const process = useSession.api.getProcess(node.meta);
 
         const stdIn = useSession.api.resolve(0, stmts[0].meta);
-        /** At most one pipeline can be running in a process in a session */
         const fifos = stmts.slice(0, -1).map(({ meta }, i) =>
+          // At most one pipeline can be running in a process in a session
           useSession.api.createFifo(`/dev/fifo-${sessionKey}-${meta.pid}-${i}`),
         );
         const stdOut = useSession.api.resolve(1, stmts.at(-1)!.meta);
@@ -203,7 +202,11 @@ class semanticsServiceClass {
           ));
 
           const finalChildCode = clones.at(-1)?.exitCode;
-          if (finalChildCode === undefined) {
+          if (
+            finalChildCode === undefined
+            || finalChildCode === 130
+            || process.status === ProcessStatus.Killed
+          ) {
             throw killError(node.meta, errors[0]?.exitCode ?? 1);
           } else {
             node.exitCode = finalChildCode;

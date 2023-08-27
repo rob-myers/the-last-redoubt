@@ -55,10 +55,12 @@ echo hi $( echo rob | true )
 # ✅ should output `hello` continually
 while true; do echo | false; echo hello; done
 # terminates because first pipe-child killed
+# ❌ non-zero exit code
 run '({ api }) { throw api.getKillError(); }' | take 1
 # terminates because last pipe-child killed
+# ❌ non-zero exit code
 take 1 | run '({ api }) { throw api.getKillError(); }'
-# ❌ fix ctrl-c ?
+# ✅ fix ctrl-c i.e. should kill whole while loop
 while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done
 ```
 

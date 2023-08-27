@@ -12,6 +12,9 @@
   - ✅ example where last pipe child throws killError
 
 - 🚧 fix remaining pipe semantics examples
+  - ✅ `while true; do longClick 1; echo foo; done` on ctrl-c no foo
+  - ✅ `while true; do longClick 1; test $( not/found ); done`
+  - 🚧 non-zero exit code not present in some cases
 
 - 🚧 strategies for escaping homing NPC
   - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
