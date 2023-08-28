@@ -2,7 +2,11 @@
 
 ## In progress
 
-- 🚧 BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
+- ✅ BUG lastExitCode
+  - ✅ `false; echo $?` should have exit code 1
+  - ✅ `echo | false; echo $?` should have exit code 1
+  - ✅ `false | echo $?` then `true; echo ${?}` one-step-behind
+  - ✅ on ctrl-c profile `true; echo $?` should not initially have exit code 130
 
 - try to combine player ui i.e. look/walk/do/fadeSpawn
 

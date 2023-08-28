@@ -86,6 +86,7 @@ class semanticsServiceClass {
         yield* sem.Stmt(node);
       } finally {
         parent.exitCode ||= node.exitCode;
+        useSession.api.setLastExitCode(node.meta, node.exitCode);
       }
     }
   }

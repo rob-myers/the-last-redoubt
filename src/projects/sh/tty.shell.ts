@@ -207,20 +207,7 @@ export class ttyShellClass implements Device {
       }
       throw e;
     } finally {
-      const session = useSession.api.getSession(this.sessionKey);
-
-      if (!session) {
-        return console.warn(`session ${this.sessionKey} no longer exists`);
-      } else if (typeof parsed.exitCode === 'number') {
-        // 🤔 only pid 0 and parent's of pipes can set lastExitCode
-        (meta.ppid === meta.pid) && (session.lastExitCode = parsed.exitCode);
-        // session.lastExitCode = parsed.exitCode;
-      } else {
-        console.warn(`process ${meta.pid} had no exitCode`);
-      }
-      /**
-       * Can have `!opts.leading && meta.pid === 0` because ...
-       */
+      useSession.api.setLastExitCode(parsed.meta, parsed.exitCode);
       !opts.leading && meta.pid && useSession.api.removeProcess(meta.pid, this.sessionKey);
     }
   }

@@ -45,6 +45,7 @@ export type State = {
     removeSession: (sessionKey: string) => void;
     removeTtyLineCtxts: (sessionKey: string, line: string) => void;
     resolve: (fd: number, meta: BaseMeta) => Device;
+    setLastExitCode(meta: BaseMeta, exitCode?: number): void;
     setVar: (meta: BaseMeta, varName: string, varValue: any) => void;
     setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
     writeMsg: (sessionKey: string, msg: string, level: 'info' | 'error') => void;
@@ -360,6 +361,20 @@ const useStore = create<State>()(devtools((set, get): State => ({
 
     resolve(fd, meta) {
       return get().device[meta.fd[fd]];
+    },
+
+    setLastExitCode(meta, exitCode) {
+      if (meta.ppid !== meta.pid) {
+        return; // 🤔 only pid 0 and pipe parents can set lastExitCode
+      }
+      const session = api.getSession(meta.sessionKey);
+      if (!session) {
+        return console.warn(`session ${meta.sessionKey} no longer exists`);
+      } else if (typeof exitCode === 'number') {
+        session.lastExitCode = exitCode;
+      } else {
+        console.warn(`process ${meta.pid} had no exitCode`);
+      }
     },
 
     setVar(meta, varName, varValue) {
