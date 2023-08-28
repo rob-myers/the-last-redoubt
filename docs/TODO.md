@@ -2,90 +2,14 @@
 
 ## In progress
 
-- ✅ redo pipe semantics
-  - 🤔 why throw ShError(`pipe ${i}`, node.exitCode) on non-zero-exit pipe-child?
-  - ✅ why does `take 3 | true` not terminate `take 3` immediately?
-    - `take 3` was "reading" from TTY,
-      `ttyShell.io.writeToReaders({ key: 'send-kill-sig' })` worked
-- ✅ various examples demonstrating pipe semantics
-  - ✅ example where first pipe child throws killError
-  - ✅ example where last pipe child throws killError
+- 🚧 BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
 
-- ✅ fix remaining pipe semantics examples
-  - ✅ `while true; do longClick 1; echo foo; done` on ctrl-c no foo
-  - ✅ `while true; do longClick 1; test $( not/found ); done`
-  - ✅ non-zero exit code not present in some cases
+- try to combine player ui i.e. look/walk/do/fadeSpawn
 
-- BUG on send empty command should not overwrite session.lastExitCode
-- BUG `echo | false; echo $?` not working but `echo | false` then `echo $?` does
-- BUG? killError(_, exitCode) 2nd param working?
-
-- 🚧 strategies for escaping homing NPC
-  - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
-    - `npcs-collide` should not cancel non-walking npcs
-  - 🚧 long click to spawn nearby
-    - ✅ `click [n]` provides `meta.longClick` boolean
-    - ✅ `click --long [n]` only triggers on long click,
-       in which case it overrides `click [n]`
-    - ✅ `click --long 1` does not override short clicks
-    - ✅ remove option --long, using `meta.longClick` instead
-    - ✅ can spawn on long click:
-      - `click | filter meta.longClick | map 'x => ({ point: x, npcKey: "rob" })' | spawn`
-    - ✅ implement `filter --take=n` so can:
-      > `click | filter meta.longClick --take=1`
-    - ✅ move `filter --take` -> `take`
-    - ✅ fix pipe semantics
-    - ✅ implement shell function `take [n]`
-    - ✅ implement shell function `longClick [n]`
-      ```sh
-      longClick () {
-        click | filter meta.longClick | take $1
-      }
-      ```
-    - ✅ fix pipe semantics again i.e.
-      > on final pipe-child terminate,
-      > we should NOT kill the process group,
-      > we should ONLY kill the other pipe-children
-    - ✅ can fade spawn on long click
-      - `npc rob fadeSpawnDo $( longClick 1 )`
-      - `while true; do npc rob fadeSpawnDo $( longClick 1 ); done`
-      - restrict to navigable
-        ```sh
-        while true; do
-          longClick 1 | filter meta.nav |
-            npc rob fadeSpawnDo
-        done
-        ```
-      - alternatively
-        ```sh
-        while true; do
-          longClick 1 >clicked
-          test $( clicked/meta/nav ) &&
-            npc rob fadeSpawnDo $( clicked )
-          rm clicked
-        done
-        ```
-    - 🚧 fix final extra loop on ctrl-c
-```sh
-while true; do
-  longClick 1 >clicked
-  test $( clicked/meta/nav ) &&
-    npc rob fadeSpawnDo $( clicked )
-done
-```
-    - ℹ️ no issue when we run as a background process
-    - fix `npc rob fadeSpawnDo` on click do point?
-    - cannot go thru walls
-    - on/off mesh spawn too
-    - maybe should be long _press_ not click
-
-  - ✅ BUG `return` not working
-    ```sh
-    foo () {
-      return
-      echo foo
-    }
-    ```
+- fix `npc rob fadeSpawnDo` on click do point?
+  - cannot go thru walls
+  - on/off mesh spawn too
+  - ❌ maybe should be long _press_ not click
 
 - ℹ️ can do `split` then send e.g. `foo` and see output `f`, `o`, `o`
 - ℹ️ BUT does not work when pasting and include a subsequent newline e.g.
@@ -99,7 +23,9 @@ done
 - cleanup NPC CLI i.e. fewer options
 - emphasise "language" and "joining behaviours" on homepage
 
-- BUG saw npc-vs-npc collision failure near hull door
+- BUG on send empty command should not overwrite session.lastExitCode
+- BUG? killError(_, exitCode) 2nd param working?
+- BUG? saw npc-vs-npc collision failure near hull door
   - hard to reproduce
 - clarify hard-coding in rayIntersectsDoor
 - shell has api.argsToAction
@@ -606,6 +532,83 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG `return` not working
+  ```sh
+  foo () {
+    return
+    echo foo
+  }
+  ```
+
+- ✅ strategies for escaping homing NPC
+  - ✅ nearby NPC should not prevent off-mesh spawn to navmesh
+    - `npcs-collide` should not cancel non-walking npcs
+  - ✅ long click to spawn nearby
+    - ✅ `click [n]` provides `meta.longClick` boolean
+    - ✅ `click --long [n]` only triggers on long click,
+       in which case it overrides `click [n]`
+    - ✅ `click --long 1` does not override short clicks
+    - ✅ remove option --long, using `meta.longClick` instead
+    - ✅ can spawn on long click:
+      - `click | filter meta.longClick | map 'x => ({ point: x, npcKey: "rob" })' | spawn`
+    - ✅ implement `filter --take=n` so can:
+      > `click | filter meta.longClick --take=1`
+    - ✅ move `filter --take` -> `take`
+    - ✅ fix pipe semantics
+    - ✅ implement shell function `take [n]`
+    - ✅ implement shell function `longClick [n]`
+      ```sh
+      longClick () {
+        click | filter meta.longClick | take $1
+      }
+      ```
+    - ✅ fix pipe semantics again i.e.
+      > on final pipe-child terminate,
+      > we should NOT kill the process group,
+      > we should ONLY kill the other pipe-children
+    - ✅ can fade spawn on long click
+      - `npc rob fadeSpawnDo $( longClick 1 )`
+      - `while true; do npc rob fadeSpawnDo $( longClick 1 ); done`
+      - restrict to navigable
+        ```sh
+        while true; do
+          longClick 1 | filter meta.nav |
+            npc rob fadeSpawnDo
+        done
+        ```
+      - alternatively
+        ```sh
+        while true; do
+          longClick 1 >clicked
+          test $( clicked/meta/nav ) &&
+            npc rob fadeSpawnDo $( clicked )
+          rm clicked
+        done
+        ```
+    - ✅ fix final extra loop on ctrl-c
+      ```sh
+      while true; do
+        longClick 1 >clicked
+        test $( clicked/meta/nav ) &&
+          npc rob fadeSpawnDo $( clicked )
+      done
+      ```
+    - ℹ️ no issue when we run as a background process
+
+- ✅ redo pipe semantics
+  - 🤔 why throw ShError(`pipe ${i}`, node.exitCode) on non-zero-exit pipe-child?
+  - ✅ why does `take 3 | true` not terminate `take 3` immediately?
+    - `take 3` was "reading" from TTY,
+      `ttyShell.io.writeToReaders({ key: 'send-kill-sig' })` worked
+- ✅ various examples demonstrating pipe semantics
+  - ✅ example where first pipe child throws killError
+  - ✅ example where last pipe child throws killError
+
+- ✅ fix remaining pipe semantics examples
+  - ✅ `while true; do longClick 1; echo foo; done` on ctrl-c no foo
+  - ✅ `while true; do longClick 1; test $( not/found ); done`
+  - ✅ non-zero exit code not present in some cases
 
 - ✅ BUG goLoop should not fail:
 ```sh
