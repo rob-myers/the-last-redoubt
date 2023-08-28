@@ -8,7 +8,55 @@
   - ✅ `false | echo $?` then `true; echo ${?}` one-step-behind
   - ✅ on ctrl-c profile `true; echo $?` should not initially have exit code 130
 
-- try to combine player ui i.e. look/walk/do/fadeSpawn
+- ✅ BUG dies early:
+  - ✅ `while true; do longClick 1 | filter meta.nav | npc rob fadeSpawnDo; done`
+  - ✅ `while true; do longClick 1 | map meta; done`
+  - ✅ `while true; do click 1 | map meta; done`
+    - next iteration starts BEFORE we kill pipe-children!
+    - solved by setting ppid as pid of next spawned process,
+      as opposed to ongoing parent process inside while loop
+
+- 🚧 take 1 | run '({ api }) { throw api.getKillError(); }'
+  - `run '...takeDef..' $@` is overwriting lastExitCode with `0`
+
+- 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
+  - `click | run '...'`
+  - `declare -f goLoop`
+    ```sh
+    click |
+      filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
+      nav --safeLoop --preferOpen --exactNpc ${1} |
+      walk ${1}
+    ```
+  - `declare -f lookLoop`
+    ```sh
+      click | # do not look towards navigable or doable points
+        filter 'x => !x.meta.nav && !x.meta.do' |
+        look ${1}
+    ```
+  - `declare -f doLoop`
+    ```sh
+    click |
+      filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
+      npc do --safeLoop ${1}
+    ```
+  - `declare -f thinkLoop`
+    ```sh
+    click |
+      filter 'x => x.meta.npc && x.meta.npcKey === "'${1}'"' |
+      run '({ api, home }) {
+        const { fov } = api.getCached(home.WORLD_KEY)
+        while (await api.read(true) !== null)
+          fov.mapAct("show-for-ms", 3000)
+      }'
+    ```
+  - fadeSpawn (should also restrict distance/line-of-sight)
+    ```sh
+    while true; do
+      longClick 1 | filter meta.nav |
+        npc rob fadeSpawnDo
+    done
+  ```
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls

@@ -150,8 +150,16 @@ class semanticsServiceClass {
       }
       case '|': {
         const { sessionKey } = node.meta;
-        const { ttyShell } = useSession.api.getSession(sessionKey);
+        const { ttyShell, nextPid: ppid } = useSession.api.getSession(sessionKey);
+
         const process = useSession.api.getProcess(node.meta);
+        function killPipeChildren() {
+          useSession.api.getProcesses(process.sessionKey, process.pgid)
+            .filter(x => x.ppid === ppid && x !== process)
+            .reverse()
+            .forEach(killProcess);
+        }
+        process.cleanups.push(killPipeChildren); // Handle Ctrl-C
 
         const stdIn = useSession.api.resolve(0, stmts[0].meta);
         const fifos = stmts.slice(0, -1).map(({ meta }, i) =>
@@ -162,8 +170,8 @@ class semanticsServiceClass {
 
         try {
           // Clone, connecting stdout to stdin of subsequent process
-          // 🤔 maybe better for ppid to be last-child's pid
-          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid: node.meta.pid }));
+          // 🤔 better to use ppid of final child (rather than first)
+          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid }));
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           
           let errors = [] as any[], exitCode = undefined as undefined | number;
@@ -171,8 +179,6 @@ class semanticsServiceClass {
           await Promise.allSettled(clones.map((file, i) =>
             new Promise<void>(async (resolve, reject) => {
               try {
-                process.cleanups.push(() => reject()); // Handle Ctrl-C
-
                 await ttyShell.spawn(file, {
                   localVar: true,
                   cleanups: [// 🤔 earlier ttyShell.xterm.sendSigKill didn't work
@@ -193,14 +199,8 @@ class semanticsServiceClass {
                   exitCode = file.exitCode ?? 0;
                 } else if (errors.length !== 1) {
                   return; // No error, or already handled
-                }
-                // Kill other pipe-children
-                setTimeout(() => useSession.api.getProcesses(process.sessionKey, process.pgid)
-                  .filter(x => x.ppid === process.key && x !== process)
-                  .reverse()
-                  .forEach(killProcess),
-                  30, // delay allows pipe-children to setup cleanups
-                );
+                } // Kill other pipe-children (delay permits cleanup setup)
+                setTimeout(killPipeChildren, 30);
               }
             }),
           ));

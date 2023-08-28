@@ -365,7 +365,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
 
     setLastExitCode(meta, exitCode) {
       if (meta.ppid !== meta.pid) {
-        return; // 🤔 only pid 0 and pipe parents can set lastExitCode
+        return; // 🤔 only pid 0 allowed?
       }
       const session = api.getSession(meta.sessionKey);
       if (!session) {

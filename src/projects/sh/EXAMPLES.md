@@ -31,6 +31,8 @@ if test '2 > 1'; then echo TEST PASSED; else echo TEST FAILED; fi
 echo foo | map 'x => x'
 # `3`, `3`
 { echo foo; echo bar; } | map length
+# [3,3]
+{ echo foo | map length; } | map 'x => [x,x]'
 # `0`, `1`, `2`, `3`, `4`
 seq 10 | take 5
 # if type foo⏎ then `102`, `111`, `111`
@@ -44,8 +46,7 @@ sleep 10 | echo foo
 # hi rob
 echo hi $( echo rob | take 1 )
 # exit-code should be 1
-echo | false
-echo $?
+echo | false; echo $?
 # take 3 terminates immediately
 take 3 | true
 # should output `hi`
@@ -58,7 +59,7 @@ while true; do echo | false; echo hello; done
 # non-zero exit code
 run '({ api }) { throw api.getKillError(); }' | take 1
 # terminates because last pipe-child killed
-# non-zero exit code
+# ❌ non-zero exit code
 take 1 | run '({ api }) { throw api.getKillError(); }'
 # fix ctrl-c i.e. should kill whole while loop
 while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done
