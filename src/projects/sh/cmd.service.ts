@@ -346,7 +346,11 @@ class cmdServiceClass {
         break;
       }
       case 'return': {
-        const exitCode = parseInt(args[0]);
+        let exitCode = parseInt(args[0] || '1');
+        if (!Number.isFinite(exitCode)) {
+          useSession.api.writeMsg(meta.sessionKey, `return: numeric argument required`, 'error');
+          exitCode = 2;
+        }
         throw killError(
           meta,
           Number.isInteger(exitCode)
@@ -770,7 +774,7 @@ class cmdServiceClass {
 
     if (device === undefined) {
       return;
-    } else if (device instanceof ttyShellClass && process.pgid !== 0) {
+    } else if (device instanceof ttyShellClass && meta.background) {
       throw new ShError('background process tried to read tty', 1);
     }
 
