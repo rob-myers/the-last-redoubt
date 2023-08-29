@@ -155,9 +155,14 @@ export class ttyShellClass implements Device {
     }
   }
 
-  /** Spawn a process, assigning pid to non-leading ones */
+  /**
+   * Spawn a process, assigning:
+   * - new pid
+   * - ppid as term.meta.ppid
+   * - pgid as term.meta.pgid
+   */
   async spawn(
-    parsed: Sh.FileWithMeta,
+    term: Sh.FileWithMeta,
     opts: {
       cleanups?: (() => void)[];
       leading?: boolean;
@@ -165,7 +170,7 @@ export class ttyShellClass implements Device {
       posPositionals?: string[];
     } = {},
   ) {
-    const { meta } = parsed;
+    const { meta } = term;
 
     if (opts.leading) {
       this.process.status = ProcessStatus.Running;
@@ -176,7 +181,7 @@ export class ttyShellClass implements Device {
         ppid,
         pgid,
         sessionKey: meta.sessionKey,
-        src: srcService.src(parsed),
+        src: srcService.src(term),
         posPositionals: opts.posPositionals || positionals.slice(1),
       });
       meta.pid = process.key;
@@ -195,19 +200,19 @@ export class ttyShellClass implements Device {
     }
 
     try {
-      for await (const _ of semanticsService.File(parsed)) { /** NOOP */ }
-      parsed.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${parsed.exitCode}`);
+      for await (const _ of semanticsService.File(term)) { /** NOOP */ }
+      term.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${term.exitCode}`);
     } catch (e) {
       if (e instanceof ProcessError) {
         console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`);
         // Ctrl-C code is 130 unless overriden
-        parsed.exitCode = e.exitCode ?? 130; // 🚧 or 137?
+        term.exitCode = e.exitCode ?? 130; // 🚧 or 137?
       } else if (e instanceof ShError) {
-        parsed.exitCode = e.exitCode;
+        term.exitCode = e.exitCode;
       }
       throw e;
     } finally {
-      useSession.api.setLastExitCode(parsed.meta, parsed.exitCode);
+      useSession.api.setLastExitCode(term.meta, term.exitCode);
       !opts.leading && meta.pid && useSession.api.removeProcess(meta.pid, this.sessionKey);
     }
   }

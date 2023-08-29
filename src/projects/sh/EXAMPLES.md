@@ -38,6 +38,7 @@ seq 10 | take 5
 # if type foo⏎ then `102`, `111`, `111`
 split | map charCodeAt 0
 # ctrl-c should exit early
+# exit code should be non-zero on ctrl-c
 echo foo | sleep 10
 # `foo` then terminates immediately
 sleep 10 | echo foo
@@ -47,6 +48,9 @@ sleep 10 | echo foo
 echo hi $( echo rob | take 1 )
 # exit-code should be 1
 echo | false; echo $?
+# should echo `1` `0`
+{ false; echo ${?}; } &
+echo $?
 # take 3 terminates immediately
 take 3 | true
 # should output `hi`
@@ -59,7 +63,7 @@ while true; do echo | false; echo hello; done
 # non-zero exit code
 run '({ api }) { throw api.getKillError(); }' | take 1
 # terminates because last pipe-child killed
-# ❌ non-zero exit code
+# exit code should be non-zero
 take 1 | run '({ api }) { throw api.getKillError(); }'
 # fix ctrl-c i.e. should kill whole while loop
 while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done

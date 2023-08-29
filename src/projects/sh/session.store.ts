@@ -364,8 +364,8 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     setLastExitCode(meta, exitCode) {
-      if (meta.ppid !== meta.pid) {
-        return; // 🤔 only pid 0 allowed?
+      if (meta.pgid !== meta.pid) {
+        return; // only process group leaders can set exit code
       }
       const session = api.getSession(meta.sessionKey);
       if (!session) {

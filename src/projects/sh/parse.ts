@@ -209,6 +209,11 @@ export interface BaseMeta {
   pgid: number;
   fd: Record<number, string>;
   stack: string[];
+  /**
+   * Is this a background process?
+   * This should be inherited.
+   */
+  background?: boolean;
   /** Log extra info? */
   verbose?: boolean;
 }

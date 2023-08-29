@@ -16,8 +16,11 @@
     - solved by setting ppid as pid of next spawned process,
       as opposed to ongoing parent process inside while loop
 
-- 🚧 take 1 | run '({ api }) { throw api.getKillError(); }'
+- ✅ take 1 | run '({ api }) { throw api.getKillError(); }'
   - `run '...takeDef..' $@` is overwriting lastExitCode with `0`
+
+- ✅ use pgid in pipes i.e. last pipe-child pid
+- 🚧 check spawn uses correct ppid in every case
 
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
   - `click | run '...'`

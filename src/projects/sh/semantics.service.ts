@@ -85,7 +85,7 @@ class semanticsServiceClass {
       try {
         yield* sem.Stmt(node);
       } finally {
-        parent.exitCode ||= node.exitCode;
+        parent.exitCode = node.exitCode;
         useSession.api.setLastExitCode(node.meta, node.exitCode);
       }
     }
@@ -149,35 +149,31 @@ class semanticsServiceClass {
         break;
       }
       case '|': {
-        const { sessionKey } = node.meta;
-        const { ttyShell, nextPid: ppid } = useSession.api.getSession(sessionKey);
+        const { sessionKey } = node.meta; // pgid is pid of final pipe-child
+        const { ttyShell, nextPid: pgid } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
         function killPipeChildren() {
-          useSession.api.getProcesses(process.sessionKey, process.pgid)
-            .filter(x => x.ppid === ppid && x !== process)
-            .reverse()
-            .forEach(killProcess);
+          useSession.api.getProcesses(process.sessionKey, pgid).reverse().forEach(killProcess);
         }
         process.cleanups.push(killPipeChildren); // Handle Ctrl-C
 
         const stdIn = useSession.api.resolve(0, stmts[0].meta);
         const fifos = stmts.slice(0, -1).map(({ meta }, i) =>
-          // At most one pipeline can be running in a process in a session
           useSession.api.createFifo(`/dev/fifo-${sessionKey}-${meta.pid}-${i}`),
         );
         const stdOut = useSession.api.resolve(1, stmts.at(-1)!.meta);
 
         try {
           // Clone, connecting stdout to stdin of subsequent process
-          // 🤔 better to use ppid of final child (rather than first)
-          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid }));
+          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { pgid }));
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           
           let errors = [] as any[], exitCode = undefined as undefined | number;
 
-          await Promise.allSettled(clones.map((file, i) =>
+          await Promise.allSettled(clones.slice().reverse().map((file, j) =>
             new Promise<void>(async (resolve, reject) => {
+              const i = (clones.length - 1) - j;
               try {
                 await ttyShell.spawn(file, {
                   localVar: true,
@@ -199,8 +195,8 @@ class semanticsServiceClass {
                   exitCode = file.exitCode ?? 0;
                 } else if (errors.length !== 1) {
                   return; // No error, or already handled
-                } // Kill other pipe-children (delay permits cleanup setup)
-                setTimeout(killPipeChildren, 30);
+                } // Kill other pipe-children
+                setTimeout(killPipeChildren, 30); // delay permits cleanup setup
               }
             }),
           ));
@@ -562,6 +558,7 @@ class semanticsServiceClass {
       const file = wrapInFile(cloneParsed(stmt), {
         ppid: stmt.meta.pid,
         pgid: nextPid,
+        background: true,
       });
       ttyShell.spawn(file, { localVar: true }).catch((e) => {
           if (e instanceof ProcessError) {
