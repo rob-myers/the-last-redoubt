@@ -119,7 +119,7 @@ export class ttyShellClass implements Device {
     this.io.write({
       key: 'send-xterm-prompt',
       prompt: `${prompt} `,
-    });    
+    });
   }
 
   private provideContextToParsed(parsed: Sh.FileWithMeta) {

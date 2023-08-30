@@ -315,15 +315,16 @@ export class ttyXtermClass {
 
       try {
         await this.pasteLines(lines);
-        if (last) {// Set as pending input but don't send
-          this.queueCommands([{
-            key: 'resolve',
-            resolve: () => {
+        last && this.queueCommands([{
+          key: 'resolve',
+          resolve: () => {
+            // setTimeout so xterm.println has chance to print (e.g. `echo foo\n`)
+            setTimeout(() => {// Set as pending input but don't send
               this.clearInput();
               this.setInput(last);
-            },
-          }]);
-        }
+            });
+          },
+        }]);
       } catch { /** NOOP */ }
 
     } else {
@@ -622,7 +623,6 @@ export class ttyXtermClass {
     }
   }
 
-  // NOTE have seen stack overflow for `push(...commands)`
   queueCommands(commands: XtermOutputCommand[]) {
     for (const command of commands) {
       this.commandBuffer.push(command);

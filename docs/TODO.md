@@ -9,7 +9,8 @@
   - ✅ lastExit: { fg, bg }
   - ✅ $? is foreground/background depending on ctxt
 
-- BUG 
+- ✅ BUG final pasted line was overwriting,
+  in fact xterm.writeln is not synchronous
 ```sh
 # paste this with trailing newline
 # and observe no `bar`
