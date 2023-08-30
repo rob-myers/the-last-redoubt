@@ -175,28 +175,22 @@ class semanticsServiceClass {
             new Promise<void>(async (resolve, reject) => {
               const i = (clones.length - 1) - j;
               try {
-                await ttyShell.spawn(file, {
-                  localVar: true,
-                  cleanups: [// 🤔 earlier ttyShell.xterm.sendSigKill didn't work
-                    ...i === 0 && isTtyAt(file.meta, 0) ? [() => ttyShell.finishedReading()] : [],
-                    () => reject(),
-                  ],
-                });
-
-                (fifos[i] ?? stdOut).finishedWriting(); // pipe-child `i` won't write any more
-                (fifos[i - 1] ?? stdIn).finishedReading(); // pipe-child `i` won't read any more
-
+                await ttyShell.spawn(file, { localVar: true });
                 resolve();
               } catch (e) {
                 errors.push(e);
                 reject(e);
               } finally {
+                (fifos[i] ?? stdOut).finishedWriting(); // pipe-child `i` won't write any more
+                (fifos[i - 1] ?? stdIn).finishedReading(); // pipe-child `i` won't read any more
+                
                 if (i === clones.length - 1 && errors.length === 0) {
                   exitCode = file.exitCode ?? 0;
                 } else if (errors.length !== 1) {
                   return; // No error, or already handled
-                } // Kill other pipe-children
-                setTimeout(killPipeChildren, 30); // delay permits cleanup setup
+                }
+                // Kill other pipe-children (delay permits cleanup setup)
+                setTimeout(killPipeChildren, 30);
               }
             }),
           ));

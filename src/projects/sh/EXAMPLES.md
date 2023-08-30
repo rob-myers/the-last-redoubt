@@ -46,11 +46,10 @@ sleep 10 | echo foo
 { echo foo; echo bar; } | while true; do take 1; sleep 2; done
 # hi rob
 echo hi $( echo rob | take 1 )
-# exit-code should be 1
+# `1`
 echo | false; echo $?
 # should echo `1` `0`
-{ false; echo ${?}; } &
-echo $?
+{ false; echo ${?}; } & sleep 1; echo $?
 # take 3 terminates immediately
 take 3 | true
 # should output `hi`

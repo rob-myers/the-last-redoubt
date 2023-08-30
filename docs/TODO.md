@@ -3,6 +3,8 @@
 ## In progress
 
 - 🚧 pipe semantics and lastExitCode
+  - ✅ cleaner pipe semantics
+  - maybe lastExitCode: { foreground, background }
 
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
   - format `click | run '...'`
