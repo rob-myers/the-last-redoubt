@@ -2,28 +2,11 @@
 
 ## In progress
 
-- ✅ BUG lastExitCode
-  - ✅ `false; echo $?` should have exit code 1
-  - ✅ `echo | false; echo $?` should have exit code 1
-  - ✅ `false | echo $?` then `true; echo ${?}` one-step-behind
-  - ✅ on ctrl-c profile `true; echo $?` should not initially have exit code 130
-
-- ✅ BUG dies early:
-  - ✅ `while true; do longClick 1 | filter meta.nav | npc rob fadeSpawnDo; done`
-  - ✅ `while true; do longClick 1 | map meta; done`
-  - ✅ `while true; do click 1 | map meta; done`
-    - next iteration starts BEFORE we kill pipe-children!
-    - solved by setting ppid as pid of next spawned process,
-      as opposed to ongoing parent process inside while loop
-
-- ✅ take 1 | run '({ api }) { throw api.getKillError(); }'
-  - `run '...takeDef..' $@` is overwriting lastExitCode with `0`
-
-- ✅ use pgid in pipes i.e. last pipe-child pid
-- 🚧 check spawn uses correct ppid in every case
+- 🚧 pipe semantics and lastExitCode
 
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
-  - `click | run '...'`
+  - format `click | run '...'`
+  - abstract `parsePoints`
   - `declare -f goLoop`
     ```sh
     click |
@@ -99,6 +82,7 @@
 - saw unresponsive click until `spawn rob $p`
 - cache connector.poly.center -> connector.center
 - GeomorphEdit works on mobile
+- check spawn uses correct ppid in every case
 
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker
@@ -587,6 +571,25 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG lastExitCode
+  - ✅ `false; echo $?` should have exit code 1
+  - ✅ `echo | false; echo $?` should have exit code 1
+  - ✅ `false | echo $?` then `true; echo ${?}` one-step-behind
+  - ✅ on ctrl-c profile `true; echo $?` should not initially have exit code 130
+
+- ✅ BUG dies early:
+  - ✅ `while true; do longClick 1 | filter meta.nav | npc rob fadeSpawnDo; done`
+  - ✅ `while true; do longClick 1 | map meta; done`
+  - ✅ `while true; do click 1 | map meta; done`
+    - next iteration starts BEFORE we kill pipe-children!
+    - solved by setting ppid as pid of next spawned process,
+      as opposed to ongoing parent process inside while loop
+
+- ✅ take 1 | run '({ api }) { throw api.getKillError(); }'
+  - `run '...takeDef..' $@` is overwriting lastExitCode with `0`
+
+- ✅ use pgid in pipes i.e. last pipe-child pid
 
 - ✅ BUG `return` not working
   ```sh

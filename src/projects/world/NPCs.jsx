@@ -634,6 +634,23 @@ export default function NPCs(props) {
         return 'cancelled';
       }
     },
+    parsePointRep(input, exactNpc = false) {
+      if (Vect.isVectJson(input)) {
+        if (state.isPointInNavmesh(input)) return input;
+        throw Error(`point outside navmesh: ${JSON.stringify(input)}`)
+      } else if (input in state.npc) {
+        const point = state.npc[input].getPosition();
+        if (state.isPointInNavmesh(point)) {
+          return point;
+        } else if (!exactNpc) {
+          const result = api.gmGraph.getClosePoint(point, state.npc[input].gmRoomId ?? undefined);
+          if (result) return result.point; // ℹ️ could fallback to "node with closest centroid"
+          throw Error(`npc ${input} lacks nearby navigable: ${JSON.stringify(point)}`)
+        }
+        throw Error(`npc ${input} outside navmesh: ${JSON.stringify(point)}`)
+      }
+      throw Error(`expected point or npcKey: "${input}"`);
+    },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
@@ -932,6 +949,7 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
+ * @property {(input: string | Geom.VectJson, exactNpc?: boolean) => Geom.VectJson} parsePointRep
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey

@@ -295,28 +295,16 @@
       };
 
       /** @param {any[]} parsedArgs */
-      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) => {
-        if (lib.Vect.isVectJson(parsed)) {
-          if (npcs.isPointInNavmesh(parsed)) return parsed;
-          throw Error(`point outside navmesh: ${JSON.stringify(parsed)}`)
-        } else if (parsed in npcs.npc) {
-          const point = npcs.npc[parsed].getPosition();
-          if (npcs.isPointInNavmesh(point)) {
-            return point;
-          } else if (!opts.exactNpc) {
-            const result = gmGraph.getClosePoint(point, npcs.npc[parsed].gmRoomId ?? undefined);
-            if (result) return result.point; // ℹ️ could fallback to "node with closest centroid"
-            throw Error(`npc ${parsed} lacks nearby navigable: ${JSON.stringify(point)}`)
-          }
-          throw Error(`npc ${parsed} outside navmesh: ${JSON.stringify(point)}`)
-        }
-        throw Error(`expected point or npcKey: "${parsed}"`);
-      });
+      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) =>
+        npcs.parsePointRep(parsed, opts.exactNpc)
+      );
       
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
         // We guarded earlier by `isPointInNavmesh`; centroidsFallback should help catch edge cases.
-        const navPaths = points.slice(1).map((point, i) => npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }));
+        const navPaths = points.slice(1).map((point, i) =>
+          npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
+        );
         const navPath = npcs.service.concatenateNavPaths(...navPaths);
         typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
         debug.addPath(navPath);
@@ -403,6 +391,58 @@
 
     },
   
+    playerUi: async function* ({ api, home, promises = [] }) {
+      /**
+       * 🚧
+       */
+      const w = api.getCached(home.WORLD_KEY)
+      let datum = /** @type {Geomorph.PointWithMeta | null} */ (await api.read());
+      let npcKey = /** @type {string | null} */ (null);
+
+      while (datum !== null) {
+        if (!(npcKey = w.npcs.playerKey)) {
+          datum = await api.read();
+          continue;
+        }
+
+        const { meta } = datum;
+        const [isNav, isUi, isDo, isLong, isDoor] = ["nav", "ui", "do", "longClick", "door"].map(x => meta[x]);
+
+        if (isNav && !isUi && !isDo && !isLong) {
+          // 🚧 walk
+          const src = w.npcs.parsePointRep(npcKey, true); // 
+          // const navPath = world.npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true })
+        } else if (!isNav && !isDo) {
+          // 🚧 look
+        } else if (isDo || isNav || isDoor) {
+          // 🚧 do
+        } else if (meta.npc && meta.npcKey === w.npcs.playerKey) {
+          // 🚧 think
+        }
+
+
+        // const navPath = /** @type {NPC.GlobalNavPath} */ (datum);
+        // // Cancel before walking (interrupt other processes)
+        // // But avoid cancel on empty-paths (do not interrupt other processes)
+        // navPath.path.length > 0 && await world.npcs.npcAct({ npcKey, action: "cancel" })
+        // // Subsequent reads can interrupt walk
+        const resolved = await Promise.race([
+          // promises[0] = w.npcs.walkNpc(npcKey, navPath, { doorStrategy }),
+          promises[0] = Promise.resolve(true), // 🚧
+          promises[1] = api.read(),
+        ])
+        if (resolved === undefined) {// Finished walk
+          datum = await promises[1]
+        } else if (resolved === null) {// EOF so finish walk
+          await promises[0]
+          datum = resolved
+        } else {// We read something before walk finished
+          await w.npcs.npcAct({ npcKey, action: "cancel" })
+          datum = resolved
+        }
+      }
+    },
+
     /**
      * Spawn character(s) at a position(s) and angle, e.g.
      * - `spawn rob "$( click 1 )"`
