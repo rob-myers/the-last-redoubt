@@ -63,6 +63,10 @@ class semanticsServiceClass {
 
   handleTopLevelProcessError(e: ProcessError) {
     if (e.code === SigEnum.SIGKILL) {
+      const session = useSession.api.getSession(e.sessionKey);
+      if (!session) {
+        return console.error(`session not found: ${e.sessionKey}`);
+      }
       const process = useSession.api.getProcess(
         { pid: e.pid, sessionKey: e.sessionKey } as Sh.BaseMeta,
       );
