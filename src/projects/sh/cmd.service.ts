@@ -355,7 +355,7 @@ class cmdServiceClass {
           meta,
           Number.isInteger(exitCode)
             ? exitCode
-            : useSession.api.getSession(meta.sessionKey).lastExitCode,
+            : useSession.api.getLastExitCode(meta),
           1, // Terminate parent e.g. a shell function
         );
       }

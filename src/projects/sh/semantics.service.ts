@@ -519,7 +519,7 @@ class semanticsServiceClass {
     } else if (Param.Value === '$') {
       yield expand(`${meta.pid}`);
     } else if (Param.Value === '?') {
-      yield expand(`${useSession.api.getSession(meta.sessionKey).lastExitCode}`);
+      yield expand(`${useSession.api.getLastExitCode(meta)}`);
     } else {
       yield expand(this.expandParameter(meta, Param.Value));
     }

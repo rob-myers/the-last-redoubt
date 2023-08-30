@@ -2,12 +2,12 @@
 
 ## In progress
 
-- 🚧 pipe semantics and lastExitCode
+- ✅ pipe semantics and lastExitCode
   - ✅ cleaner pipe semantics
   - ✅ fix `( false; echo ${?} )`
   - ✅ every process sets lastExitCode
-  - lastExitCode: { foreground, background }
-  - $? is foreground/background depending on ctxt
+  - ✅ lastExit: { fg, bg }
+  - ✅ $? is foreground/background depending on ctxt
 
 - BUG 
 ```sh

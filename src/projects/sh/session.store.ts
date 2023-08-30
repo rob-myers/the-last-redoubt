@@ -30,6 +30,7 @@ export type State = {
     createVarDevice: (meta: BaseMeta, varPath: string, mode: VarDeviceMode) => VarDevice;
     getFunc: (sessionKey: string, funcName: string) => NamedFunction | undefined;
     getFuncs: (sessionKey: string) => NamedFunction[];
+    getLastExitCode: (meta: BaseMeta) => number;
     getNextPid: (sessionKey: string) => number;
     getProcess: (meta: BaseMeta) => ProcessMeta;
     getProcesses: (sessionKey: string, pgid?: number) => ProcessMeta[];
@@ -79,7 +80,11 @@ export interface Session {
     DOM_ID?: string;
   };
   nextPid: number;
-  lastExitCode: number;
+  /** Last exit code: */
+  lastExit: {
+    /** Foreground */ fg: number;
+    /** Background */ bg: number;
+  };
 }
 
 interface Rehydrated {
@@ -220,7 +225,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
           },
           nextPid: 0,
           process: {},
-          lastExitCode: 0,
+          lastExit: { fg: 0, bg: 0},
         }, session),
       }));
       return get().session[sessionKey];
@@ -237,6 +242,10 @@ const useStore = create<State>()(devtools((set, get): State => ({
 
     getFuncs(sessionKey) {
       return Object.values(get().session[sessionKey].func);
+    },
+
+    getLastExitCode(meta) {
+      return get().session[meta.sessionKey].lastExit[meta.background ? 'bg' : 'fg'];
     },
 
     getNextPid(sessionKey) {
@@ -368,7 +377,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       if (!session) {
         return console.warn(`session ${meta.sessionKey} no longer exists`);
       } else if (typeof exitCode === 'number') {
-        session.lastExitCode = exitCode;
+        session.lastExit[meta.background ? 'bg' : 'fg'] = exitCode;
       } else {
         console.warn(`process ${meta.pid} had no exitCode`);
       }

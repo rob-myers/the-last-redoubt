@@ -38,7 +38,7 @@ seq 10 | take 5
 # if type foo⏎ then `102`, `111`, `111`
 split | map charCodeAt 0
 # ctrl-c should exit early
-# exit code should be non-zero on ctrl-c
+# exit code 130 on ctrl-c
 echo foo | sleep 10
 # `foo` then terminates immediately
 sleep 10 | echo foo
@@ -63,10 +63,10 @@ echo hi $( echo rob | true )
 # should output `hello` continually
 while true; do echo | false; echo hello; done
 # terminates because first pipe-child killed
-# non-zero exit code
+# exit code 130
 run '({ api }) { throw api.getKillError(); }' | take 1
 # terminates because last pipe-child killed
-# exit code should be non-zero
+# exit code 130
 take 1 | run '({ api }) { throw api.getKillError(); }'
 # fix ctrl-c i.e. should kill whole while loop
 while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done
