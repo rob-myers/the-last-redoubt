@@ -854,7 +854,7 @@ export default function NPCs(props) {
 
       return subscription;
     },
-    async walkNpc(npcKey, navPath, opts) {
+    async walkNpc(npcKey, navPath, opts = {}) {
       const npc = state.getNpc(npcKey);
       if (!npcService.verifyGlobalNavPath(navPath)) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
@@ -957,7 +957,7 @@ export default function NPCs(props) {
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc').NpcServiceType} service
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts: NPC.WalkNpcOpts) => Promise<void>} walkNpc
+ * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts) => Promise<void>} walkNpc
  */
 
 /**

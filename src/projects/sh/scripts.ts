@@ -181,10 +181,11 @@ npc set-player ${npcKey}
 npc map show-for-secs 2
 
 track ${npcKey} &
-goLoop ${npcKey} &
-lookLoop ${npcKey} &
-doLoop ${npcKey} &
-thinkLoop ${npcKey} &
+click | controlNpc ${npcKey} &
+# goLoop ${npcKey} &
+# lookLoop ${npcKey} &
+# doLoop ${npcKey} &
+# thinkLoop ${npcKey} &
 
 `.trim(),
 

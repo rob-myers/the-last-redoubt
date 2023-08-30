@@ -233,7 +233,7 @@
       npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
 
       if (api.isTtyAt(0)) {
-        const point = api.safeJsonParse(args[1])
+        const point = api.parseJsArg(args[1])
         await npcs.npcAct({ action: "look-at", npcKey, point })
       } else {
         datum = await api.read()
@@ -305,8 +305,9 @@
         const navPaths = points.slice(1).map((point, i) =>
           npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
         );
-        const navPath = npcs.service.concatenateNavPaths(...navPaths);
-        typeof api.parseJsArg(operands[0]) === "string" && (navPath.name = `navpath-${operands[0]}`);
+        const navPath = npcs.service.concatenateNavPaths(navPaths, {
+          name: typeof api.parseJsArg(operands[0]) === "string" ? `navpath-${operands[0]}` : undefined,
+        });
         debug.addPath(navPath);
         return navPath;
       }
@@ -391,54 +392,52 @@
 
     },
   
-    playerUi: async function* ({ api, home, promises = [] }) {
-      /**
-       * 🚧
-       */
+    controlNpc: async function* ({ api, args, home }) {
+      // 🚧 need npc.doMeta?
+      // 🚧 cleanup
+      const npcKey = args[0];
       const w = api.getCached(home.WORLD_KEY)
-      let datum = /** @type {Geomorph.PointWithMeta | null} */ (await api.read());
-      let npcKey = /** @type {string | null} */ (null);
+      const npc = w.npcs.getNpc(npcKey);
+      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+      let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
 
-      while (datum !== null) {
-        if (!(npcKey = w.npcs.playerKey)) {
-          datum = await api.read();
-          continue;
-        }
+      while ((datum = await api.read()) !== null) {
+        try {
+          const { meta } = datum;
+          const [isNav, isUi, isDo, isLong, isDoor] = ["nav", "ui", "do", "longClick", "door"].map(x => meta[x]);
 
-        const { meta } = datum;
-        const [isNav, isUi, isDo, isLong, isDoor] = ["nav", "ui", "do", "longClick", "door"].map(x => meta[x]);
-
-        if (isNav && !isUi && !isDo && !isLong) {
-          // 🚧 walk
-          const src = w.npcs.parsePointRep(npcKey, true); // 
-          // const navPath = world.npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true })
-        } else if (!isNav && !isDo) {
-          // 🚧 look
-        } else if (isDo || isNav || isDoor) {
-          // 🚧 do
-        } else if (meta.npc && meta.npcKey === w.npcs.playerKey) {
-          // 🚧 think
-        }
-
-
-        // const navPath = /** @type {NPC.GlobalNavPath} */ (datum);
-        // // Cancel before walking (interrupt other processes)
-        // // But avoid cancel on empty-paths (do not interrupt other processes)
-        // navPath.path.length > 0 && await world.npcs.npcAct({ npcKey, action: "cancel" })
-        // // Subsequent reads can interrupt walk
-        const resolved = await Promise.race([
-          // promises[0] = w.npcs.walkNpc(npcKey, navPath, { doorStrategy }),
-          promises[0] = Promise.resolve(true), // 🚧
-          promises[1] = api.read(),
-        ])
-        if (resolved === undefined) {// Finished walk
-          datum = await promises[1]
-        } else if (resolved === null) {// EOF so finish walk
-          await promises[0]
-          datum = resolved
-        } else {// We read something before walk finished
-          await w.npcs.npcAct({ npcKey, action: "cancel" })
-          datum = resolved
+          if (meta.npc && meta.npcKey === npcKey) {
+            // 🚧 think
+            w.fov.mapAct("show-for-ms", 3000);
+          } else if (isNav && !isUi && !isDo && !isLong && !npc.doMeta) {
+            // 🚧 walk
+            const src = w.npcs.parsePointRep(npcKey, true); 
+            const navPath = w.npcs.getGlobalNavPath(src, datum, {
+              closedWeight: 10000,
+              centroidsFallback: true,
+            });
+            w.debug.addPath(navPath);
+            await w.npcs.npcAct({ npcKey, action: "cancel" })
+            w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
+          } else if (isDo || isNav || isDoor) {
+            // 🚧 do
+            await w.npcs.npcAct({ npcKey, action: "cancel" });
+            await w.npcs.npcActDo({
+              action: "do",
+              npcKey,
+              point: datum,
+              // suppressThrow: true,
+              // extraParams
+            });
+          } else if (!isNav && !isDo) {
+            // 🚧 look
+            await w.npcs.npcAct({ npcKey, action: "cancel" });
+            w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
+          } else {
+            continue;
+          }
+        } catch (e) {
+          api.info(`playerUi ignored error: ${e}`);
         }
       }
     },

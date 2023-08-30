@@ -491,10 +491,11 @@ class NpcService {
   /**
    * Concatenate compatible nav paths i.e.
    * with matching final/initial vertices.
-   * @param {...NPC.GlobalNavPath} navPaths
+   * @param {NPC.GlobalNavPath[]} navPaths
+   * @param {{ name?: string }} [opts]
    * @returns {NPC.GlobalNavPath}
    */
-  concatenateNavPaths(...navPaths) {
+  concatenateNavPaths(navPaths, opts = {}) {
     if (navPaths.length === 1) {
       return navPaths[0];
     } else {
@@ -510,7 +511,7 @@ class NpcService {
           agg.gmRoomIds[Number(k) + vertexOffset] = v
         );
         // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
-        typeof name === 'string' && (agg.name = name);
+        agg.name = opts.name ?? name; // Fallback to name of last navpath
         agg.edgeNodeIds.push(...edgeNodeIds);
         agg.path.push(...i === 0 ? path : path.slice(1));
         return agg;

@@ -13,35 +13,34 @@
   in fact xterm.writeln is not synchronous
 ```sh
 # paste this with trailing newline
-# and observe no `bar`
+# and observe no `foo`
 echo foo
-echo bar
  
 ```
 
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
-  - format `click | run '...'`
-  - abstract `parsePoints`
-  - `declare -f goLoop`
+  - ✅ format `click | run '...'`
+  - ✅ abstract `parsePoints`
+  - ✅ `declare -f goLoop`
     ```sh
     click |
       filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
       nav --safeLoop --preferOpen --exactNpc ${1} |
       walk ${1}
     ```
-  - `declare -f lookLoop`
+  - ✅ `declare -f lookLoop`
     ```sh
       click | # do not look towards navigable or doable points
         filter 'x => !x.meta.nav && !x.meta.do' |
         look ${1}
     ```
-  - `declare -f doLoop`
+  - ✅ `declare -f doLoop`
     ```sh
     click |
       filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
       npc do --safeLoop ${1}
     ```
-  - `declare -f thinkLoop`
+  - ✅ `declare -f thinkLoop`
     ```sh
     click |
       filter 'x => x.meta.npc && x.meta.npcKey === "'${1}'"' |
@@ -51,6 +50,7 @@ echo bar
           fov.mapAct("show-for-ms", 3000)
       }'
     ```
+  - clean
   - fadeSpawn (should also restrict distance/line-of-sight)
     ```sh
     while true; do
