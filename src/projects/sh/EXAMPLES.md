@@ -47,8 +47,12 @@ sleep 10 | echo foo
 # hi rob
 echo hi $( echo rob | take 1 )
 # `1`
+false; echo ${?}
+# `1`
+( false; echo ${?} )
+# `1`
 echo | false; echo $?
-# should echo `1` `0`
+# `1` `0`
 { false; echo ${?}; } & sleep 1; echo $?
 # take 3 terminates immediately
 take 3 | true

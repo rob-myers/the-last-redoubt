@@ -175,7 +175,10 @@ class semanticsServiceClass {
             new Promise<void>(async (resolve, reject) => {
               const i = (clones.length - 1) - j;
               try {
-                await ttyShell.spawn(file, { localVar: true });
+                await ttyShell.spawn(file, {
+                  localVar: true, // cleanup for e.g. `take 3 | true`
+                  cleanups: i === 0 && isTtyAt(file.meta, 0) ? [() => ttyShell.finishedReading()] : [],
+                });
                 resolve();
               } catch (e) {
                 errors.push(e);

@@ -364,9 +364,6 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     setLastExitCode(meta, exitCode) {
-      if (meta.pgid !== meta.pid) {
-        return; // only process group leaders can set exit code
-      }
       const session = api.getSession(meta.sessionKey);
       if (!session) {
         return console.warn(`session ${meta.sessionKey} no longer exists`);

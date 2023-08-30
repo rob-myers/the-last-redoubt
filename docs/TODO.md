@@ -4,7 +4,19 @@
 
 - 🚧 pipe semantics and lastExitCode
   - ✅ cleaner pipe semantics
-  - maybe lastExitCode: { foreground, background }
+  - ✅ fix `( false; echo ${?} )`
+  - ✅ every process sets lastExitCode
+  - lastExitCode: { foreground, background }
+  - $? is foreground/background depending on ctxt
+
+- BUG 
+```sh
+# paste this with trailing newline
+# and observe no `bar`
+echo foo
+echo bar
+ 
+```
 
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
   - format `click | run '...'`
@@ -58,6 +70,8 @@
   #
   ```
 
+- BUG? multiple paste issue when reading tty?
+  - consider `split ' ' | take 3` and paste multiple lines
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
 - cleanup NPC CLI i.e. fewer options

@@ -191,21 +191,21 @@ export class ttyShellClass implements Device {
       const parent = session.process[meta.ppid]; // Exists
       // Shallow clone avoids mutation by descendants
       process.inheritVar = { ...parent.inheritVar };
-      if (opts.localVar) {
-        // Sometimes processes (e.g. background, subshell) need their own PWD
+      if (opts.localVar) {// Some processes need their own PWD e.g. background, subshell
         process.localVar.PWD = (parent.inheritVar.PWD)??session.var.PWD;
         process.localVar.OLDPWD = (parent.inheritVar.OLDPWD)??session.var.OLDPWD;
       }
-      // console.warn(ppid, 'launched', meta.pid, process, JSON.stringify(meta.fd));
     }
 
     try {
       for await (const _ of semanticsService.File(term)) { /** NOOP */ }
-      term.meta.verbose && console.warn(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: exit ${term.exitCode}`);
+      term.meta.verbose && console.warn(
+        `${meta.sessionKey}${meta.background ? ' (background)' : ''}: ${meta.pid}: exit ${term.exitCode}`,
+      );
     } catch (e) {
       if (e instanceof ProcessError) {
         console.error(`${meta.sessionKey}${meta.pgid ? ' (background)' : ''}: ${meta.pid}: ${e.code}`);
-        // Ctrl-C code is 130 unless overriden
+        // Ctrl-C code is 130 unless overridden
         term.exitCode = e.exitCode ?? 130; // 🚧 or 137?
       } else if (e instanceof ShError) {
         term.exitCode = e.exitCode;
