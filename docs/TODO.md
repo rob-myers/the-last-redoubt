@@ -2,22 +2,6 @@
 
 ## In progress
 
-- ✅ pipe semantics and lastExitCode
-  - ✅ cleaner pipe semantics
-  - ✅ fix `( false; echo ${?} )`
-  - ✅ every process sets lastExitCode
-  - ✅ lastExit: { fg, bg }
-  - ✅ $? is foreground/background depending on ctxt
-
-- ✅ BUG final pasted line was overwriting,
-  in fact xterm.writeln is not synchronous
-```sh
-# paste this with trailing newline
-# and observe no `foo`
-echo foo
- 
-```
-
 - 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
   - ✅ format `click | run '...'`
   - ✅ abstract `parsePoints`
@@ -50,14 +34,19 @@ echo foo
           fov.mapAct("show-for-ms", 3000)
       }'
     ```
-  - clean
-  - fadeSpawn (should also restrict distance/line-of-sight)
+  - 🚧 clean
+  - 🚧 fadeSpawn
     ```sh
     while true; do
       longClick 1 | filter meta.nav |
         npc rob fadeSpawnDo
     done
+  - fadeSpawn restricted by distance/line-of-sight
   ```
+
+  - cleanup commands/shell-fns
+    - replace Promise.race
+    - remove opts if possible
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls
@@ -588,6 +577,22 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ pipe semantics and lastExitCode
+  - ✅ cleaner pipe semantics
+  - ✅ fix `( false; echo ${?} )`
+  - ✅ every process sets lastExitCode
+  - ✅ lastExit: { fg, bg }
+  - ✅ $? is foreground/background depending on ctxt
+
+- ✅ BUG final pasted line was overwriting,
+  in fact xterm.writeln is not synchronous
+```sh
+# paste this with trailing newline
+# and observe no `foo`
+echo foo
+ 
+```
 
 - ✅ BUG lastExitCode
   - ✅ `false; echo $?` should have exit code 1

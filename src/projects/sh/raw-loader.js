@@ -393,24 +393,24 @@
     },
   
     controlNpc: async function* ({ api, args, home }) {
-      // 🚧 need npc.doMeta?
-      // 🚧 cleanup
-      const npcKey = args[0];
+      // 🚧 clean
+      // 🚧 warp on longClick
       const w = api.getCached(home.WORLD_KEY)
+      const npcKey = args[0];
       const npc = w.npcs.getNpc(npcKey);
-      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
+      
+      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
 
       while ((datum = await api.read()) !== null) {
         try {
           const { meta } = datum;
-          const [isNav, isUi, isDo, isLong, isDoor] = ["nav", "ui", "do", "longClick", "door"].map(x => meta[x]);
 
           if (meta.npc && meta.npcKey === npcKey) {
-            // 🚧 think
+            // think
             w.fov.mapAct("show-for-ms", 3000);
-          } else if (isNav && !isUi && !isDo && !isLong && !npc.doMeta) {
-            // 🚧 walk
+          } else if (meta.nav && !meta.ui && !meta.do && !meta.longClick && !npc.doMeta) {
+            // walk
             const src = w.npcs.parsePointRep(npcKey, true); 
             const navPath = w.npcs.getGlobalNavPath(src, datum, {
               closedWeight: 10000,
@@ -419,25 +419,24 @@
             w.debug.addPath(navPath);
             await w.npcs.npcAct({ npcKey, action: "cancel" })
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
-          } else if (isDo || isNav || isDoor) {
-            // 🚧 do
+          } else if (meta.do || meta.door || (npc.doMeta && meta.nav)) {
+            // do
             await w.npcs.npcAct({ npcKey, action: "cancel" });
             await w.npcs.npcActDo({
               action: "do",
               npcKey,
               point: datum,
               // suppressThrow: true,
-              // extraParams
             });
-          } else if (!isNav && !isDo) {
-            // 🚧 look
+          } else if (!meta.nav) {
+            // look
             await w.npcs.npcAct({ npcKey, action: "cancel" });
             w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
           } else {
             continue;
           }
         } catch (e) {
-          api.info(`playerUi ignored error: ${e}`);
+          api.info(`${e}`);
         }
       }
     },
