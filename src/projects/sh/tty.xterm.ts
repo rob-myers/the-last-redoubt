@@ -557,7 +557,7 @@ export class ttyXtermClass {
       case 'info': {
         this.queueCommands([{
           key: 'line',
-          line: `ℹ️  ${msg.msg}${ansi.Reset}`,
+          line: `ℹ️  ${ansi.Cyan}${msg.msg}${ansi.Reset}`,
         }]);
         break;
       }
