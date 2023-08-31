@@ -409,16 +409,6 @@
           if (meta.npc && meta.npcKey === npcKey) {
             // think
             w.fov.mapAct("show-for-ms", 3000);
-          } else if (meta.nav && !meta.ui && !meta.do && !meta.longClick && !npc.doMeta) {
-            // walk
-            const src = w.npcs.parsePointRep(npcKey, true); 
-            const navPath = w.npcs.getGlobalNavPath(src, datum, {
-              closedWeight: 10000,
-              centroidsFallback: true,
-            });
-            w.debug.addPath(navPath);
-            await w.npcs.npcAct({ npcKey, action: "cancel" })
-            w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           } else if (meta.do || meta.door || (npc.doMeta && meta.nav)) {
             // do
             await w.npcs.npcAct({ npcKey, action: "cancel" });
@@ -428,12 +418,20 @@
               point: datum,
               // suppressThrow: true,
             });
-          } else if (!meta.nav) {
+          } else if (meta.nav && !meta.ui && !meta.longClick && !npc.doMeta) {
+            // walk
+            const src = w.npcs.parsePointRep(npcKey, true); 
+            const navPath = w.npcs.getGlobalNavPath(src, datum, {
+              closedWeight: 10000,
+              centroidsFallback: true,
+            });
+            w.debug.addPath(navPath);
+            await w.npcs.npcAct({ npcKey, action: "cancel" })
+            w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
+          } else {
             // look
             await w.npcs.npcAct({ npcKey, action: "cancel" });
             w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
-          } else {
-            continue;
           }
         } catch (e) {
           api.info(`${e}`);
