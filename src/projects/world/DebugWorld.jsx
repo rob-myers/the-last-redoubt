@@ -3,6 +3,7 @@ import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
 import { cssName, wallOutset } from "./const";
 import { supportsWebp } from "../service/dom";
+import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import npcsMeta from './npcs-meta.json';
@@ -48,7 +49,7 @@ export default function DebugWorld(props) {
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
       addPath(navPath) {
-        const key = navPath.name ?? 'navpath-default';
+        const key = navPath.name ?? npcService.defaultNavPathName;
         state.path[key] = {
           key,
           path: navPath.path.map(Vect.from),

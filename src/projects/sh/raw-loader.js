@@ -281,12 +281,13 @@
           "name", /** Created DecorPath has this key */
         ],
       })
-      const { npcs, lib, gmGraph, debug } = api.getCached(home.WORLD_KEY)
+      const { npcs, debug } = api.getCached(home.WORLD_KEY)
 
       if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
         throw Error("not enough points");
       }
 
+      const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       /** @type {NPC.NavOpts} */
       const navOpts = {
         ...opts.preferOpen && { closedWeight: 10000 },
@@ -305,14 +306,12 @@
         const navPaths = points.slice(1).map((point, i) =>
           npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
         );
-        const navPath = npcs.service.concatenateNavPaths(navPaths, {
-          name: typeof api.parseJsArg(operands[0]) === "string" ? `navpath-${operands[0]}` : undefined,
-        });
+        const navPath = npcs.service.concatenateNavPaths(navPaths);
+        navPath.name = typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : undefined;
         debug.addPath(navPath);
         return navPath;
       }
 
-      const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       
       if (api.isTtyAt(0)) {
         yield computeNavPath(parsePoints(parsedArgs));
@@ -417,7 +416,7 @@
             await w.npcs.npcAct({ npcKey, action: "cancel" });
             if (meta.longClick) {
               if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
-                npc.fadeSpawnDo(datum); // warp
+                await npc.fadeSpawnDo(datum); // warp
               }
             } else {// walk
               const src = w.npcs.parsePointRep(npcKey, true); 
@@ -425,6 +424,7 @@
                 closedWeight: 10000,
                 centroidsFallback: true,
               });
+              navPath.name = w.npcs.service.getNpcNavPathName(npcKey);
               w.debug.addPath(navPath);
               w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
             }

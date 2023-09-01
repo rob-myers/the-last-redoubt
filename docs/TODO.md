@@ -47,8 +47,10 @@
 - ✅ mobile even more zoomed out
 - ✅ avoid hull doors intermediate black poly
   - ✅ try ignore small polys
-- BUG rob and foo should have different navpath
+- ✅ BUG rob and foo should have different navpath
   > `while true; do nav foo rob | walk --open foo; done`
+
+- controlNpc supports re-enter navmesh when off and not on do point
 
 - cleanup commands/shell-fns
   - replace Promise.race
