@@ -183,7 +183,8 @@ export default function FOV(props) {
 
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = viewPolys.map((polys, altGmId) =>
-        polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : []
+        (polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : [])
+          .filter(x => x.outline.length > 8) // exclude poly between adj-hull-doors
       );
       /**
        * Try to eliminate "small black no-light intersections" from current geomorph.

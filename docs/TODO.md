@@ -45,8 +45,8 @@
   ```
 
 - ✅ mobile even more zoomed out
-- each pair of hull doors has same viewpoint
-  - to avoid intermediate black poly
+- ✅ avoid hull doors intermediate black poly
+  - ✅ try ignore small polys
 - BUG rob and foo should have different navpath
   > `while true; do nav foo rob | walk --open foo; done`
 

@@ -154,11 +154,12 @@ export async function createGeomorphData(input) {
       } else roomId = otherRoomId;
     }// NOTE roomId could be -1
 
-    doorId >= 0 && ((roomOverrides[roomId].doorView ||= [])[doorId] = {
-      point: p,
-      meta: {...meta},
-    });
-    windowId >= 0 && ((roomOverrides[roomId].windowView ||= [])[windowId] = p);
+    doorId >= 0 && (
+      (roomOverrides[roomId].doorView ??= [])[doorId] = { point: p, meta: {...meta} }
+    );
+    windowId >= 0 && (
+      (roomOverrides[roomId].windowView ??= [])[windowId] = p
+    );
   });
 
   // 🤔 pre-compute?
