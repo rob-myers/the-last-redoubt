@@ -353,6 +353,13 @@ export function isRunning(anim) {
 	return anim.playState === 'running';
 }
 
+export function isSmallViewport() {
+	return (
+		typeof window !== 'undefined' &&
+		window.matchMedia(`(max-width: ${'400'}px)`).matches
+	);
+}
+
 /**
  * @param {string} src
  * @returns {Promise<HTMLImageElement>}

@@ -44,7 +44,7 @@
   - ✅ fadeSpawn restricted by distance/line-of-sight
   ```
 
-- mobile even more zoomed out
+- ✅ mobile even more zoomed out
 - each pair of hull doors has same viewpoint
   - to avoid intermediate black poly
 - BUG rob and foo should have different navpath

@@ -498,26 +498,21 @@
     /**
      * Track npc
      */
-    track: async function* ({ api, args, home }) {
-      const npcKey = args[0]
-      const { npcs, lib } = api.getCached(home.WORLD_KEY)
-      const process = api.getProcess()
-      const subscription = npcs.trackNpc({ npcKey, process })
-      
-      const connected = npcs.session[api.meta.sessionKey];
-      connected?.panzoomPids.push(api.meta.pid);
-
+    track: async function* ({ api, args: [npcKey], home }) {
+      const w = api.getCached(home.WORLD_KEY)
+      w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
       api.addResume(() => {
-        npcs.events.next({ key: "resumed-track", npcKey });
+        w.npcs.events.next({ key: "resumed-track", npcKey });
         return true;
       });
-
-      // resolve on unsubscribe or invoke cleanups
+      
       await /** @type {Promise<void>} */ (new Promise(resolve => {
-        subscription.add(resolve);
-        process.cleanups.push(() => subscription.unsubscribe(), resolve);
+        const subscription = w.npcs.trackNpc({ npcKey, process: api.getProcess() })
+        subscription.add(resolve); // resolve on unsubscribe or invoke cleanups
+        api.addCleanup(() => subscription.unsubscribe());
+        api.addCleanup(resolve);
       }))
-      connected && lib.removeFirst(connected.panzoomPids, api.meta.pid);
+      w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
     },
   
     /**

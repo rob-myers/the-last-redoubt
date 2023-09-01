@@ -4,12 +4,12 @@ import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
-import { assertDefined, keys, mapValues, generateSelector, testNever } from "../service/generic";
-import { baseTrackingZoom, cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
+import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
+import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
 import { geom } from "../service/geom";
 import { hasGmDoorId, hasGmRoomId } from "../service/geomorph";
 import { npcService } from "../service/npc";
-import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
+import { isSmallViewport, detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import { MemoizedNPC } from "./NPC";
@@ -174,6 +174,26 @@ export default function NPCs(props) {
         // Raycast from `dst` and check intersection is `dstDr`
         [srcL, dstL] = [src, dst].map(gms[dstRm.gmId].toLocalCoords);
         return !!gms[dstRm.gmId].rayIntersectsDoor(dstL, srcL, dstRm.roomId, [dstDr.doorId]);
+      }
+    },
+    connectSession(sessionKey, opts = {}) {
+      const connected = state.session[sessionKey] ||= {
+        key: sessionKey,
+        receiveMsgs: true,
+        panzoomPids: [],
+      };
+      if (typeof opts.panzoomPid === 'number') {
+        connected.panzoomPids.push(opts.panzoomPid);
+      }
+    },
+    disconnectSession(sessionKey, opts) {
+      const connected = state.session[sessionKey];
+      if (!connected) {
+        return;
+      } else if (!opts) {
+        delete state.session[sessionKey];
+      } else if (typeof opts.panzoomPid === 'number') {
+        removeFirst(connected.panzoomPids, opts.panzoomPid);
       }
     },
     getGlobalNavPath(src, dst, opts) {
@@ -777,19 +797,18 @@ export default function NPCs(props) {
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
-      const { panZoom } = props.api;
+      const npc = state.getNpc(npcKey); // throws if undefined
+      const baseZoom = isSmallViewport() ? baseTrackingZoomMobile : baseTrackingZoom;
       
       /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
       let status = /** @type {TrackStatus} */ ('no-track');
       /** @param {TrackStatus} next */
       function changeStatus(next) { status = next; console.warn(`@ ${status}`); }
       
-      const npc = state.getNpc(npcKey); // throws if undefined
-
       const subscription = merge(
         of({ key: /** @type {const} */ ('init-track') }),
         state.events,
-        panZoom.events,
+        api.panZoom.events,
       ).pipe(
         tap(x => {
           if (x.key === 'npc-internal' && x.npcKey === npcKey) {
@@ -824,31 +843,23 @@ export default function NPCs(props) {
             || msg.key === 'resumed-track'
           ) {
             changeStatus('follow-walk');
-            try {
-              const path = npc.getTargets().map(x => x.point);
-              await panZoom.followPath(path, {
-                animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
-              });
-            } catch {} // Ignore Error('cancelled')
-            return;
+            const path = npc.getTargets().map(x => x.point);
+            return await api.panZoom.followPath(path, {
+              animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
+            }).catch(_ => {}); // ignore Error('cancelled')
           }
 
-          if (!panZoom.isIdle()) {
-            changeStatus('no-track');
-            return;
+          if (!api.panZoom.isIdle()) {
+            return changeStatus('no-track');
           }
           
-          if (// npc not moving
+          if (// npc/camera not moving/close?
             (npc.anim.spriteSheet !== 'walk')
-            // camera not animating
-            && (panZoom.anims[0] === null || ['finished', 'idle'].includes(panZoom.anims[0].playState))
-            // camera not close
-            && panZoom.distanceTo(npc.getPosition()) > 10
+            && (api.panZoom.anims[0] === null || ['finished', 'idle'].includes(api.panZoom.anims[0].playState))
+            && api.panZoom.distanceTo(npc.getPosition()) > 10
           ) {
             changeStatus('panzoom-to');
-            try {
-              await panZoom.panZoomTo(baseTrackingZoom, npc.getPosition(), 2000);
-            } catch {};
+            await api.panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000).catch(_ => {});
             changeStatus('no-track');
           }
         },
@@ -925,6 +936,8 @@ export default function NPCs(props) {
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta, maxDistance?: number) => boolean} canSee
+ * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} connectSession
+ * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} disconnectSession
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
