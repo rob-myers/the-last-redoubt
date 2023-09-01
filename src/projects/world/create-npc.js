@@ -341,7 +341,7 @@ export default function createNpc(
     },
     getPosition(useCache = true) {
       if (useCache && this.anim.spriteSheet !== 'walk') {
-        return this.anim.staticPosition;
+        return Vect.from(this.anim.staticPosition);
       } else {// 🚧 avoid getBoundingClientRect undefined
         const { x: clientX, y: clientY } = Vect.from(this.el.root.getBoundingClientRect?.() || [0, 0]);
         return Vect.from(api.panZoom.getWorld({ clientX, clientY })).precision(2);

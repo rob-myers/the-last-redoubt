@@ -90,7 +90,7 @@ declare namespace NPC {
       meta?: Geomorph.PointMeta;
       npcClassKey?: NPC.NpcClassKey;
       requireNav?: boolean;
-    });
+    }): Promise<void>;
     followNavPath(
       globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
       doorStrategy?: WalkDoorStrategy,

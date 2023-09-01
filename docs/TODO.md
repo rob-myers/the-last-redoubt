@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 try to combine/clean player ui i.e. look/walk/do/think/fadeSpawn
+- ✅ controlNpc combines player ui i.e. look/walk/do/think/fadeSpawn
   - ✅ format `click | run '...'`
   - ✅ abstract `parsePoints`
   - ✅ `declare -f goLoop`
@@ -34,19 +34,25 @@
           fov.mapAct("show-for-ms", 3000)
       }'
     ```
-  - 🚧 clean
-  - 🚧 fadeSpawn
+  - ✅ clean
+  - ✅ fadeSpawn
     ```sh
     while true; do
       longClick 1 | filter meta.nav |
         npc rob fadeSpawnDo
     done
-  - fadeSpawn restricted by distance/line-of-sight
+  - ✅ fadeSpawn restricted by distance/line-of-sight
   ```
 
-  - cleanup commands/shell-fns
-    - replace Promise.race
-    - remove opts if possible
+- mobile even more zoomed out
+- each pair of hull doors has same viewpoint
+  - to avoid intermediate black poly
+- BUG rob and foo should have different navpath
+  > `while true; do nav foo rob | walk --open foo; done`
+
+- cleanup commands/shell-fns
+  - replace Promise.race
+  - remove opts if possible
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls

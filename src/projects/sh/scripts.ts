@@ -182,12 +182,12 @@ npc map show-for-secs 2
 
 track ${npcKey} &
 click | controlNpc ${npcKey} &
-# goLoop ${npcKey} &
-# lookLoop ${npcKey} &
-# doLoop ${npcKey} &
-# thinkLoop ${npcKey} &
 
 `.trim(),
+// # goLoop ${npcKey} &
+// # lookLoop ${npcKey} &
+// # doLoop ${npcKey} &
+// # thinkLoop ${npcKey} &
 
 game_2: () => `
 ${profileLookup.game_1()}

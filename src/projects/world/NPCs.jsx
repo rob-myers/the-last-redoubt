@@ -124,10 +124,12 @@ export default function NPCs(props) {
       },
     })),
 
-    canSee(src, dst) {
-      !hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src, true));
-      !hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst, true));
-      if (![src.meta, dst.meta].every(hasGmRoomId)) {
+    canSee(src, dst, maxDistance) {
+      if (typeof maxDistance === 'number' && tempVect.copy(src).distanceTo(dst) > maxDistance) {
+        return false;
+      } else if (!hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src, true)).roomId === undefined) {
+        return false;
+      } else if (!hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst, true)).roomId === undefined) {
         return false;
       }
 
@@ -922,7 +924,7 @@ export default function NPCs(props) {
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
- * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta) => boolean} canSee
+ * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta, maxDistance?: number) => boolean} canSee
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
