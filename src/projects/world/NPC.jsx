@@ -128,7 +128,8 @@ const rootCss = css`
     left: calc(-1 * var(${cssName.npcsInteractRadius}));
     top: calc(-1 * var(${cssName.npcsInteractRadius}));
     border-radius: calc(2 * var(${cssName.npcsInteractRadius}));
-    border: 1px solid rgba(0, 0, 255, 0.25);
+    border: 2px dashed rgba(0, 0, 255, 0.25);
+    /* background-color: rgba(0, 0, 255, 0.05); */
   }
 
   .bounds-circle {
