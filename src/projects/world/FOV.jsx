@@ -184,7 +184,9 @@ export default function FOV(props) {
       /** Compute mask polygons by cutting light from hullPolygon */
       const maskPolys = viewPolys.map((polys, altGmId) =>
         (polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : [])
-          .filter(x => x.outline.length > 8) // exclude poly between adj-hull-doors
+          // exclude poly between adj-hull-doors
+          // 🤔 must be large enough to show small rooms
+          .filter(x => x.rect.area > 30 * 30)
       );
       /**
        * Try to eliminate "small black no-light intersections" from current geomorph.
