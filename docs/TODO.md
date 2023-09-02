@@ -59,6 +59,16 @@
   - ✅ paused npc prevents other controls
   - ✅ controlNpc shows map on longClick click npc
 
+- ✅ BUG failed collision while `rob` paused and `nav foo rob | walk foo`
+```sh
+# REPRO
+spawn rob {"x":308.16,"y":426.41}
+spawn foo --zhodani '{ x: 231.23, y: 319.37 }'
+# walk towards behind foo and pause near corner
+nav foo rob | walk foo
+# observe collision failure
+```
+
 - 🚧 cleanup commands/shell-fns
   - ✅ controlNpc avoid try-catch
   - replace Promise.race

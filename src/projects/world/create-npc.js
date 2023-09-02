@@ -582,10 +582,11 @@ export default function createNpc(
       }
     },
     pause(dueToProcessSuspend = false) {
-      if (!dueToProcessSuspend) {
+      if (!dueToProcessSuspend) {// We permit re-pause when manuallyPaused
         this.manuallyPaused = true;
         this.el.root.classList.add('paused');
-      } // We permit re-pause when manuallyPaused      
+      }
+      this.updateStaticBounds();
 
       console.log(`pause: pausing ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
@@ -707,11 +708,7 @@ export default function createNpc(
         case 'lie':
         case 'sit': {
           this.clearWayMetas();
-          // Update staticBounds
-          const { x, y } = this.getPosition(false);
-          const radius = this.getRadius();
-          this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
-          this.anim.staticPosition.set(x, y);
+          this.updateStaticBounds();
     
           if (this.anim.spriteSheet === 'sit') {
             this.obscureBySurfaces(); // Ensure feet are below surfaces
@@ -785,6 +782,12 @@ export default function createNpc(
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;
       const points = this.anim.path.slice(srcIndex, dstIndex);
       this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);
+    },
+    updateStaticBounds() {
+      const { x, y } = this.getPosition(false);
+      const radius = this.getRadius();
+      this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
+      this.anim.staticPosition.set(x, y);
     },
     updateWalkSegBounds(index) {
       const { aux, path } = this.anim;

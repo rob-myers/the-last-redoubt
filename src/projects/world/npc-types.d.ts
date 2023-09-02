@@ -164,6 +164,7 @@ declare namespace NPC {
      * @param srcIndex Index of 1st vertex in room.
      */
     updateRoomWalkBounds(srcIndex: number): void;
+    updateStaticBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
     wayTimeout(): void;
