@@ -1,8 +1,9 @@
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+import { ansi } from '../service/const';
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { ansi, computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
+import { computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice, VoiceDevice } from './io';

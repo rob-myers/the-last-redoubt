@@ -1,6 +1,6 @@
 import type { Terminal } from 'xterm';
 import debounce from "debounce";
-import { ansi } from './util';
+import { ansi } from '../service/const';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
 

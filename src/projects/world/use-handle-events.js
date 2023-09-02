@@ -1,11 +1,11 @@
 import React from "react";
 import { npcSlowWalkSpeedFactor } from "./const";
+import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import { warn } from "../service/log";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
-import { ansi } from "../sh/util";
 import useStateRef from "../hooks/use-state-ref";
 
 /**

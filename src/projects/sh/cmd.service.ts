@@ -1,8 +1,9 @@
 import cliColumns from 'cli-columns';
 import { uid } from 'uid';
 
+import { ansi } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
-import { ansi, computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -604,10 +605,7 @@ class cmdServiceClass {
      * This will be overwritten via Function.prototype.bind.
      */
     meta: {} as Sh.BaseMeta,
-    /**
-     * This will be rewritten via Function.prototype.bind.
-     */
-    parent: this,
+    ansi,
 
     /** Returns provided cleanup */
     addCleanup(cleanup: () => void) {
@@ -630,10 +628,6 @@ class cmdServiceClass {
     generateSelector,
 
     getCached,
-
-    getColors() {
-      return ansi;
-    },
 
     getKillError(exitCode?: number) {
       return killError(this.meta, exitCode);
@@ -665,7 +659,6 @@ class cmdServiceClass {
 
     parseFnOrStr,
 
-    // TODO use `otag` instead
     /** Output 1, 2, ... at fixed intervals */
     async *poll(args: string[]) {
       const seconds = args.length ? parseFloat(parseJsonArg(args[0])) || 1 : 1;
@@ -720,17 +713,21 @@ class cmdServiceClass {
     }, {
       get: (_, key) => {
         if (key === 'api') {
-          return new Proxy({}, {
-            get: ({}, key: keyof typeof this.processApi) => {
-              if (key === 'meta') return meta;
-              if (key === 'parent') return null;
-              return this.processApi[key]?.bind({ meta, parent: this }) || null;
+          return new Proxy(this.processApi, {
+            get(target, key: keyof cmdServiceClass['processApi']) {
+              if (typeof target[key] === 'function') {
+                return (target[key] as Function).bind({ meta });
+              }
+              if (key === 'meta') {
+                return meta;
+              }
+              return target[key];
             },
             // 🚧 ownKeys (requires getOwnPropertyDescriptor)
             getOwnPropertyDescriptor() {
               return { enumerable: true, configurable: true };
             },
-            ownKeys: (target) => {
+            ownKeys: (_target) => {
               return this.processApiKeys;
             }
           });

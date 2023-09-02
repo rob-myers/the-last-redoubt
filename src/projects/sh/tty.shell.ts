@@ -3,7 +3,8 @@ import { testNever } from '../service/generic';
 import type { MessageFromShell, MessageFromXterm, ShellIo } from './io';
 import { Device, ReadResult, SigEnum } from './io';
 
-import { ansi, ProcessError, ShError } from './util';
+import { ansi } from '../service/const';
+import { ProcessError, ShError } from './util';
 import { parseService, srcService } from './parse';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { semanticsService } from './semantics.service';

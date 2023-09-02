@@ -155,18 +155,12 @@
   
     /** Ping per second until query {WORLD_KEY} found */
     awaitWorld: async function* ({ api, home: { WORLD_KEY } }) {
-      const ansiColor = api.getColors();
-      const { sessionKey } = api.getProcess();
-  
-      /** @type {import('../world/World').State} */ let worldApi;
-      while (!(worldApi = api.getCached(WORLD_KEY)) || !worldApi.isReady()) {
-        api.info(`${ansiColor.White}polling for world ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`)
-        yield* api.sleep(1);
+      while (!api.getCached(WORLD_KEY)?.isReady()) {
+        api.info(`polling for world ${api.ansi.White}${WORLD_KEY}`)
+        yield* api.sleep(1)
       }
-
-      const { npcs } = worldApi;
-      npcs.session[sessionKey] ||= { key: sessionKey, receiveMsgs: true, panzoomPids: [] };
-      api.info(`${ansiColor.White}found world ${ansiColor.Blue}${WORLD_KEY}${ansiColor.Reset}`);
+      api.getCached(WORLD_KEY).npcs.connectSession(api.meta.sessionKey)
+      api.info(`found world ${api.ansi.White}${WORLD_KEY}`)
     },
     
     /**
@@ -419,16 +413,13 @@
           await w.npcs.npcActDo({ npcKey, point: datum }).catch(logError);
         } else if (meta.nav && !meta.ui) {
           await w.npcs.npcAct({ npcKey, action: "cancel" });
-          if (
-            meta.longClick
-            || !w.npcs.isPointInNavmesh(npc.getPosition())
-          ) {
-            if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
+          const position = npc.getPosition();
+          if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
+            if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
               await npc.fadeSpawnDo(datum).catch(logError); // warp
             }
           } else {// walk
-            const src = w.npcs.parsePointRep(npcKey, true); 
-            const navPath = w.npcs.getGlobalNavPath(src, datum, {
+            const navPath = w.npcs.getGlobalNavPath(position, datum, {
               closedWeight: 10000,
               centroidsFallback: true,
             });

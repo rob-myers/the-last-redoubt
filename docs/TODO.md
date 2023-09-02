@@ -2,77 +2,12 @@
 
 ## In progress
 
-- ✅ controlNpc combines player ui i.e. look/walk/do/think/fadeSpawn
-  - ✅ format `click | run '...'`
-  - ✅ abstract `parsePoints`
-  - ✅ `declare -f goLoop`
-    ```sh
-    click |
-      filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
-      nav --safeLoop --preferOpen --exactNpc ${1} |
-      walk ${1}
-    ```
-  - ✅ `declare -f lookLoop`
-    ```sh
-      click | # do not look towards navigable or doable points
-        filter 'x => !x.meta.nav && !x.meta.do' |
-        look ${1}
-    ```
-  - ✅ `declare -f doLoop`
-    ```sh
-    click |
-      filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
-      npc do --safeLoop ${1}
-    ```
-  - ✅ `declare -f thinkLoop`
-    ```sh
-    click |
-      filter 'x => x.meta.npc && x.meta.npcKey === "'${1}'"' |
-      run '({ api, home }) {
-        const { fov } = api.getCached(home.WORLD_KEY)
-        while (await api.read(true) !== null)
-          fov.mapAct("show-for-ms", 3000)
-      }'
-    ```
-  - ✅ clean
-  - ✅ fadeSpawn
-    ```sh
-    while true; do
-      longClick 1 | filter meta.nav |
-        npc rob fadeSpawnDo
-    done
-  - ✅ fadeSpawn restricted by distance/line-of-sight
-  ```
-
-- ✅ mobile even more zoomed out
-- ✅ avoid hull doors intermediate black poly
-  - ✅ try ignore small polys
-- ✅ BUG rob and foo should have different navpath
-  > `while true; do nav foo rob | walk --open foo; done`
-
-- ✅ controlNpc supports re-enter navmesh when off-mesh AND not at do-point
-
-- ✅ controlNpc pauses on click npc
-  - ✅ "manually" pause npc
-  - ✅ paused npc grayscale
-    - ℹ️ uses css class without trigger `<NPC>` render
-  - ✅ paused npc prevents other controls
-  - ✅ controlNpc shows map on longClick click npc
-
-- ✅ BUG failed collision while `rob` paused and `nav foo rob | walk foo`
-```sh
-# REPRO
-spawn rob {"x":308.16,"y":426.41}
-spawn foo --zhodani '{ x: 231.23, y: 319.37 }'
-# walk towards behind foo and pause near corner
-nav foo rob | walk foo
-# observe collision failure
-```
-
 - 🚧 cleanup commands/shell-fns
-  - ✅ controlNpc avoid try-catch
+  - ✅ controlNpc avoid try-catch + clean
   - replace Promise.race
   - remove opts if possible
+
+- head radius increases whilst walking?
 
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
@@ -609,6 +544,73 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG failed collision while `rob` paused and `nav foo rob | walk foo`
+```sh
+# REPRO
+spawn rob {"x":308.16,"y":426.41}
+spawn foo --zhodani '{ x: 231.23, y: 319.37 }'
+# walk towards behind foo and pause near corner
+nav foo rob | walk foo
+# observe collision failure
+```
+
+- ✅ controlNpc combines player ui i.e. look/walk/do/think/fadeSpawn
+  - ✅ format `click | run '...'`
+  - ✅ abstract `parsePoints`
+  - ✅ `declare -f goLoop`
+    ```sh
+    click |
+      filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
+      nav --safeLoop --preferOpen --exactNpc ${1} |
+      walk ${1}
+    ```
+  - ✅ `declare -f lookLoop`
+    ```sh
+      click | # do not look towards navigable or doable points
+        filter 'x => !x.meta.nav && !x.meta.do' |
+        look ${1}
+    ```
+  - ✅ `declare -f doLoop`
+    ```sh
+    click |
+      filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
+      npc do --safeLoop ${1}
+    ```
+  - ✅ `declare -f thinkLoop`
+    ```sh
+    click |
+      filter 'x => x.meta.npc && x.meta.npcKey === "'${1}'"' |
+      run '({ api, home }) {
+        const { fov } = api.getCached(home.WORLD_KEY)
+        while (await api.read(true) !== null)
+          fov.mapAct("show-for-ms", 3000)
+      }'
+    ```
+  - ✅ clean
+  - ✅ fadeSpawn
+    ```sh
+    while true; do
+      longClick 1 | filter meta.nav |
+        npc rob fadeSpawnDo
+    done
+  - ✅ fadeSpawn restricted by distance/line-of-sight
+  ```
+
+- ✅ mobile even more zoomed out
+- ✅ avoid hull doors intermediate black poly
+  - ✅ try ignore small polys
+- ✅ BUG rob and foo should have different navpath
+  > `while true; do nav foo rob | walk --open foo; done`
+
+- ✅ controlNpc supports re-enter navmesh when off-mesh AND not at do-point
+
+- ✅ controlNpc pauses on click npc
+  - ✅ "manually" pause npc
+  - ✅ paused npc grayscale
+    - ℹ️ uses css class without trigger `<NPC>` render
+  - ✅ paused npc prevents other controls
+  - ✅ controlNpc shows map on longClick click npc
 
 - ✅ pipe semantics and lastExitCode
   - ✅ cleaner pipe semantics

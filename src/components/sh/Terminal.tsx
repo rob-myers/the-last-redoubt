@@ -4,10 +4,11 @@ import type { ITerminalOptions } from 'xterm';
 import loadable from '@loadable/component';
 
 import { ttyXtermClass } from 'projects/sh/tty.xterm';
+import { ansi } from 'projects/service/const';
 import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
 
-import { ansi, stripAnsi } from 'projects/sh/util';
+import { stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
