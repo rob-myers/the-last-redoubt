@@ -1,4 +1,5 @@
 import React from "react";
+import { npcSlowWalkSpeedFactor } from "./const";
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import { npcService } from "../service/npc";
@@ -346,7 +347,7 @@ export default function useHandleEvents(api) {
       if (npc.anim.doorStrategy !== 'none') {
         // Currently, all open strategies slow down near door
         // 🚧 setTimeout avoids jerk?
-        setTimeout(() => npc.setSpeedFactor(0.6), 30);
+        setTimeout(() => npc.setSpeedFactor(npcSlowWalkSpeedFactor), 30);
       }
       
       const { locked } = api.doors.lookup[gmId][nextDoorId];

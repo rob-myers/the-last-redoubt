@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { cssName, obscuredNpcOpacity, spawnFadeMs } from './const';
+import { cssName, npcWalkSpeedFactor, obscuredNpcOpacity, spawnFadeMs } from './const';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { warn } from '../service/log';
@@ -67,7 +67,7 @@ export default function createNpc(
     },
     manuallyPaused: false,
     unspawned: true,
-    walkSpeedFactor: 1,
+    walkSpeedFactor: npcWalkSpeedFactor,
 
     async animateOpacity(targetOpacity, durationMs) {
       this.anim.opacity.cancel(); // Ensure prev anim removed?

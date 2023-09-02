@@ -57,6 +57,10 @@ export const defaultNpcClassKey = 'vilani';
 
 export const defaultNpcInteractRadius = 70;
 
+export const npcFastWalkSpeedFactor = 1;
+export const npcWalkSpeedFactor = 0.8;
+export const npcSlowWalkSpeedFactor = 0.5;
+
 /** `24 / 5` because we scale down SVG symbols */
 export const doorWidth = 4.8;
 
