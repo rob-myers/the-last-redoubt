@@ -648,6 +648,11 @@ class cmdServiceClass {
       useSession.api.writeMsg(this.meta.sessionKey, message, 'info');
     },
 
+    /** Is the process running? */
+    isRunning() {
+      return getProcess(this.meta).status === ProcessStatus.Running;
+    },
+
     isTtyAt(fd = 0) {
       return isTtyAt(this.meta, fd);
     },

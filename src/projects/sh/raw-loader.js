@@ -1,15 +1,14 @@
 /* eslint-disable no-undef, no-useless-escape, require-yield, @typescript-eslint/ban-ts-comment */
 /**
- * This file is loaded via webpack `raw-loader` to avoid function transpilation.
+ *  ℹ️ This file is loaded via webpack `raw-loader` to avoid function transpilation.
+ * 🔔🔔🔔🔔 We MUST avoid single-quotes ANYWHERE inside function bodies 🔔🔔🔔🔔
+ *
+ * `utilFunctions` is provided by the context
+ * > We'll extend it using @see utilFunctionsRunDefs
+ * > They are both arrays in order to support future versions of the named functions.
  * 
- * __BEWARE__ currently must avoid single-quotes inside function bodies
- * 
- * - `utilFunctions` is provided by the context
- * - We'll extend it using @see utilFunctionsRunDefs
- * - They are both arrays in order to support future versions of the named functions.
- * 
- * - `gameFunctions` is provided by the context
- * - We'll extend it using @see gameFunctionsDefs
+ * `gameFunctions` is provided by the context
+ * > We'll extend it using @see gameFunctionsRunDefs
  */
 
 //#region defs
@@ -23,16 +22,17 @@
  * @property {*[]} [promises] Another shortcut
  */
 
-/**
- * Definitions of util shell functions based on builtin `run`.
- * 
- * A key-value in this lookup e.g.
- * > `['foo', function*({ args }) { 42; }]`
- * 
- * will eventually become e.g.
- * > ``['foo', `run '({ args }) { 42; }' "$@"`]``.
- * @type {Record<string, (arg: RunArg) => void>[]}
- */
+  /**
+   * Util shell functions which invoke a single builtin: `run`.
+   *
+   * In particular,
+   * > `foo: async function* (...) {...}`
+   * 
+   * becomes:
+   * > `foo() { run '(...) {...}' "$@"; }`
+   *
+   * @type {Record<string, (arg: RunArg) => void>[]}
+   */
  const utilFunctionsRunDefs = [
   {
   
@@ -143,10 +143,13 @@
   ];
   
   /**
-   * Game shell functions which invoke a single builtin i.e. `run`.
+   * Game shell functions which invoke a single builtin: `run`.
    *
-   * In particular, `foo: async function* (...) {...}` becomes
-   * `foo() { run '(...) {...}'; }`
+   * In particular,
+   * > `foo: async function* (...) {...}`
+   * 
+   * becomes:
+   * > `foo() { run '(...) {...}' "$@"; }`
    *
    * @type {Record<string, (arg: RunArg) => void>[]}
    */
@@ -168,54 +171,46 @@
      * - `click` forwards all clicks
      * - `click 1` forwards exactly one click, suppressing other `click`s
      */
-    click: async function* ({ api, args, home }) {
-      /** @type {{ clickHash?: string }} */
+    click: async function* ({ api, args, home }) {// 🚧 clean `pointerUpExtras`
       const extra = args[0] ? { clickHash: api.getUid() } : {}
-      let numClicks = Number(args[0] || Number.MAX_SAFE_INTEGER);
-
+      let numClicks = Number(args[0] || Number.MAX_SAFE_INTEGER),
+        /** @type {import('rxjs').Subscription} */ eventsSub;
       if (!Number.isFinite(numClicks)) {
         throw api.throwError("format: \`click [{numberOfClicks}]\`")
       }
       
-      const process = api.getProcess()
-      /** @type {import('rxjs').Subscription} */ let sub;
-      process.cleanups.push(() => sub?.unsubscribe());
+      const w = api.getCached(home.WORLD_KEY)
+      api.addCleanup(() => eventsSub?.unsubscribe())
 
-      const worldApi = api.getCached(home.WORLD_KEY)
-      while (numClicks > 0) {
-        worldApi.panZoom.pointerUpExtras.push(extra); // merged into next pointerup
+      while (numClicks-- > 0) {
+        w.panZoom.pointerUpExtras.push(extra); // merged into next pointerup
         
         const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
-          sub = worldApi.panZoom.events.subscribe({ next(e) {
-            if (e.key !== "pointerup" || e.distance > 5 || process.status !== 1) {
+          eventsSub = w.panZoom.events.subscribe({ next(e) {
+            if (e.key !== "pointerup" || e.distance > 5 || !api.isRunning()) {
               return;
-            }
-            if (e.extra.clickHash && !extra.clickHash) {
+            } else if (e.extra.clickHash && !extra.clickHash) {
               return; // `click 1` overrides `click`
-            }
-            if (e.extra.clickHash && extra.clickHash !== e.extra.clickHash) {
+            } else if (e.extra.clickHash && extra.clickHash !== e.extra.clickHash) {
               return; // later `click {n}` overrides earlier `click {n}`
             }
             resolve(e); // Must resolve before tear-down induced by unsubscribe 
-            sub.unsubscribe();
+            eventsSub.unsubscribe();
           }});
-          sub.add(() => {
-            worldApi.panZoom.pointerUpExtras = worldApi.panZoom.pointerUpExtras.filter(x => x !== extra);
+          eventsSub.add(() => {
+            w.panZoom.pointerUpExtras = w.panZoom.pointerUpExtras.filter(x => x !== extra);
             reject(api.getKillError());
           });
         }));
 
-        const gmRoomId = worldApi.gmGraph.findRoomContaining(e.point);
-        const meta = /** @type {Geomorph.PointMeta} */ ({ ...e.meta, ...gmRoomId ?? { roomId: null } });
-        meta.nav = worldApi.npcs.isPointInNavmesh(e.point); // add "nav" tag
-
         yield {
-          x: worldApi.lib.precision(e.point.x),
-          y: worldApi.lib.precision(e.point.y),
-          meta,
+          x: w.lib.precision(e.point.x),
+          y: w.lib.precision(e.point.y),
+          meta: { ...e.meta,
+            ...w.gmGraph.findRoomContaining(e.point) ?? { roomId: null },
+            nav: w.npcs.isPointInNavmesh(e.point),
+          },
         };
-
-        numClicks--;
       }
     },
 

@@ -127,9 +127,9 @@ export default function NPCs(props) {
     canSee(src, dst, maxDistance) {
       if (typeof maxDistance === 'number' && tempVect.copy(src).distanceTo(dst) > maxDistance) {
         return false;
-      } else if (!hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src, true)).roomId === undefined) {
+      } else if (!hasGmRoomId(src.meta ??= {}) && Object.assign(src.meta, api.gmGraph.findRoomContaining(src, true)).roomId == null) {
         return false;
-      } else if (!hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst, true)).roomId === undefined) {
+      } else if (!hasGmRoomId(dst.meta ??= {}) && Object.assign(dst.meta, api.gmGraph.findRoomContaining(dst, true)).roomId == null) {
         return false;
       }
 

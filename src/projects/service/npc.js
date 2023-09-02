@@ -620,7 +620,7 @@ class NpcService {
     const process = processApi.getProcess();
     process.cleanups.push(() => asyncIterable.return?.());
     for await (const event of asyncIterable) {
-      if (process.status === 1) yield event;
+      if (processApi.isRunning()) yield event;
     }
     // ℹ️ get here via `kill` or e.g. failed pipe-sibling
     throw processApi.getKillError();
