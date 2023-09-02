@@ -414,7 +414,10 @@
             });
           } else if (meta.nav && !meta.ui) {
             await w.npcs.npcAct({ npcKey, action: "cancel" });
-            if (meta.longClick) {
+            if (
+              meta.longClick
+              || !w.npcs.isPointInNavmesh(npc.getPosition())
+            ) {
               if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
                 await npc.fadeSpawnDo(datum); // warp
               }
