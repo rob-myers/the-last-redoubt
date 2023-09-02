@@ -398,51 +398,45 @@
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
       w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+      const logError = /** @param {any} e */ (e) => api.info(`${e}`);
 
       while ((datum = await api.read()) !== null) {
-        try {
-          const { meta } = datum;
-          if (npc.manuallyPaused) {
-            meta.npc && meta.npcKey === npcKey && npc.resume();
-            continue;
-          }
-          
-          if (meta.npc && meta.npcKey === npcKey) {
-            !meta.longClick
-              ? npc.pause()
-              : w.fov.mapAct("show-for-ms", 3000);
-          } else if (meta.do || meta.door || (npc.doMeta && meta.nav)) {
-            // do
-            await w.npcs.npcAct({ npcKey, action: "cancel" });
-            await w.npcs.npcActDo({
-              action: "do", npcKey, point: datum,
-              // suppressThrow: true,
-            });
-          } else if (meta.nav && !meta.ui) {
-            await w.npcs.npcAct({ npcKey, action: "cancel" });
-            if (
-              meta.longClick
-              || !w.npcs.isPointInNavmesh(npc.getPosition())
-            ) {
-              if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
-                await npc.fadeSpawnDo(datum); // warp
-              }
-            } else {// walk
-              const src = w.npcs.parsePointRep(npcKey, true); 
-              const navPath = w.npcs.getGlobalNavPath(src, datum, {
-                closedWeight: 10000,
-                centroidsFallback: true,
-              });
-              navPath.name = w.npcs.service.getNpcNavPathName(npcKey);
-              w.debug.addPath(navPath);
-              w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
+        const { meta } = datum;
+
+        if (meta.npc && meta.npcKey === npcKey) {// Clicked npc
+          if (meta.longClick) w.fov.mapAct("show-for-ms", 3000);
+          else if (npc.manuallyPaused) npc.resume();
+          else npc.pause();
+          continue;
+        } else if (npc.manuallyPaused) {
+          continue;
+        }
+
+        if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
+          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          await w.npcs.npcActDo({ action: "do", npcKey, point: datum }).catch(logError);
+        } else if (meta.nav && !meta.ui) {
+          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          if (
+            meta.longClick
+            || !w.npcs.isPointInNavmesh(npc.getPosition())
+          ) {
+            if (w.npcs.canSee(npc.getPosition(), datum, npc.getInteractRadius())) {
+              await npc.fadeSpawnDo(datum).catch(logError); // warp
             }
-          } else {// look
-            await w.npcs.npcAct({ npcKey, action: "cancel" });
-            w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
+          } else {// walk
+            const src = w.npcs.parsePointRep(npcKey, true); 
+            const navPath = w.npcs.getGlobalNavPath(src, datum, {
+              closedWeight: 10000,
+              centroidsFallback: true,
+            });
+            navPath.name = w.npcs.service.getNpcNavPathName(npcKey);
+            w.debug.addPath(navPath);
+            w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
-        } catch (e) {
-          api.info(`${e}`); // verbose?
+        } else {// look
+          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
         }
       }
     },

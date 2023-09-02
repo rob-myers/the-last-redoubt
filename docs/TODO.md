@@ -59,10 +59,13 @@
   - ✅ paused npc prevents other controls
   - ✅ controlNpc shows map on longClick click npc
 
-- cleanup commands/shell-fns
-  - controlNpc avoid try-catch?
+- 🚧 cleanup commands/shell-fns
+  - ✅ controlNpc avoid try-catch?
   - replace Promise.race
   - remove opts if possible
+
+- `track` jerky e.g. on click do point and immediately click navmesh
+  - whilst running controlNpc
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls
@@ -77,6 +80,8 @@
   ```
 
 - `track` should pause when tracked npc does?
+  - `track` pauses if pause npc during walk
+  - `track` does not pause if pause npc whilst stationary
 - BUG? multiple paste issue when reading tty?
   - consider `split ' ' | take 3` and paste multiple lines
 - BUG CssPanZoom sometimes jerky when spawn a lot
