@@ -411,7 +411,7 @@ export default function useHandleEvents(api) {
     // React to CssPanZoom events
     const panZoomSub = api.panZoom.events.subscribe((e) => {
       if (e.key === 'pointerup' && e.meta.npc === true && typeof e.meta.npcKey === 'string') {
-        const { npcKey } = e.meta;;
+        const { npcKey } = e.meta;
         api.npcs.events.next({
           key: 'npc-clicked',
           npcKey,

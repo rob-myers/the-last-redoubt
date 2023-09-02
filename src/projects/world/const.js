@@ -60,7 +60,8 @@ export const defaultNpcInteractRadius = 70;
 export const npcFastWalkSpeedFactor = 1;
 export const npcWalkSpeedFactor = 0.8;
 export const npcSlowWalkSpeedFactor = 0.5;
-export const npcHeadRadiusPx = 6;
+/** Now larger for mobile 🤔 maybe can change? */
+export const npcHeadRadiusPx = 10;
 
 /** `24 / 5` because we scale down SVG symbols */
 export const doorWidth = 4.8;
