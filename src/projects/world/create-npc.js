@@ -1,5 +1,5 @@
 import { css } from '@emotion/css';
-import { cssName, npcWalkSpeedFactor, obscuredNpcOpacity, spawnFadeMs } from './const';
+import { cssName, npcHeadRadiusPx, npcWalkSpeedFactor, obscuredNpcOpacity, spawnFadeMs } from './const';
 import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { warn } from '../service/log';
@@ -492,7 +492,7 @@ export default function createNpc(
       const { radius, scale: npcScale } = npcsMeta[this.classKey];
       this.el.root.style.transform = `translate(${this.def.position.x}px, ${this.def.position.y}px)`;
       this.el.root.style.setProperty(cssName.npcBoundsRadius, `${radius}px`);
-      this.el.root.style.setProperty(cssName.npcHeadRadius, `${5}px`); // 🚧 remove hard-coding
+      this.el.root.style.setProperty(cssName.npcHeadRadius, `${npcHeadRadiusPx}px`); // 🚧 remove hard-coding
       // Inherit cssName.npcsInteractRadius from <NPCS> unless specified
       this.el.body.style.transform = `rotate(${this.def.angle}rad) scale(${npcScale})`;
       this.anim.staticBounds = new Rect(this.def.position.x - radius, this.def.position.y - radius, 2 * radius, 2 * radius);
