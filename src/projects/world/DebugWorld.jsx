@@ -48,12 +48,11 @@ export default function DebugWorld(props) {
       path: {},
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
-      addPath(navPath) {
-        const key = navPath.name ?? npcService.defaultNavPathName;
+      addPath(key, navPath) {
         state.path[key] = {
           key,
           path: navPath.path.map(Vect.from),
-          meta: { path: navPath.path },
+          meta: { key, path: navPath.path },
         };
         update();
       },
@@ -265,7 +264,7 @@ export default function DebugWorld(props) {
  * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
- * @property {(navPath: NPC.GlobalNavPath) => void} addPath
+ * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addPath
  * @property {() => void} update
  */
 

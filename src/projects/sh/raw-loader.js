@@ -307,8 +307,10 @@
           npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
         );
         const navPath = npcs.service.concatenateNavPaths(navPaths);
-        navPath.name = typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : undefined;
-        debug.addPath(navPath);
+        debug.addPath(
+          typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : npcs.service.defaultNavPathName,
+          navPath,
+        );
         return navPath;
       }
 
@@ -430,8 +432,7 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            navPath.name = w.npcs.service.getNpcNavPathName(npcKey);
-            w.debug.addPath(navPath);
+            w.debug.addPath(w.npcs.service.getNpcNavPathName(npcKey), navPath);
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
         } else {// look
