@@ -414,7 +414,7 @@
 
         if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
           await w.npcs.npcAct({ npcKey, action: "cancel" });
-          await w.npcs.npcActDo({ action: "do", npcKey, point: datum }).catch(logError);
+          await w.npcs.npcActDo({ npcKey, point: datum }).catch(logError);
         } else if (meta.nav && !meta.ui) {
           await w.npcs.npcAct({ npcKey, action: "cancel" });
           if (
@@ -477,11 +477,11 @@
         const spawned = npcs.npc[npcKey];
         if (spawned?.doMeta) {// At do points delegate to `do`
           npcClassKey && spawned.changeClass(npcClassKey);
-          await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0, suppressThrow: true });
+          await npcs.npcActDo({ npcKey, point, fadeOutMs: 0, suppressThrow: true });
         } else {
           await npcs.spawn({ npcKey, point, npcClassKey });
           if (point.meta?.do) {// Going to `do`
-            await npcs.npcActDo({ npcKey, point, action: "do", fadeOutMs: 0 });
+            await npcs.npcActDo({ npcKey, point, fadeOutMs: 0 });
           }
         }
       }

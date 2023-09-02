@@ -958,7 +958,7 @@ export default function NPCs(props) {
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
- * @property {(e: Extract<NPC.NpcAction, { action: 'do' }>) => Promise<void>} npcActDo
+ * @property {(e: NPC.NpcDoDef) => Promise<void>} npcActDo
  * @property {(npc: NPC.NPC,  e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} offMeshDoMeta
  * Started off-mesh and clicked point
  * @property {(npc: NPC.NPC, e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta

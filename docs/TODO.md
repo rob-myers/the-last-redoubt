@@ -60,7 +60,7 @@
   - ✅ controlNpc shows map on longClick click npc
 
 - 🚧 cleanup commands/shell-fns
-  - ✅ controlNpc avoid try-catch?
+  - ✅ controlNpc avoid try-catch
   - replace Promise.race
   - remove opts if possible
 
