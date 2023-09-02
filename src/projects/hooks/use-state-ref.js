@@ -122,5 +122,10 @@ module.hot?.decline();
  * @property {import('../service/generic').KeyedTrue<State>} [overwrite]
  * @property {any[]} [deps]
  * @property {(keyof State)[]} [deeper]
- * @property {(current: State) => State} [updateFrom] If useStateRef's callback doesn't create a fresh object each time (e.g. it may retrieve from a lookup) we can inform the hook how a fresh object would be created, if we weren't preserving identity.
+ * @property {(current: State) => State} [updateFrom]
+ * **DEV ONLY (HMR)**
+ * 
+ * If useStateRef's callback doesn't create a fresh object each time
+ * e.g. it may retrieve from a lookup, we can inform the hook how a fresh object would be created,
+ * if we weren't preserving identity.
  */

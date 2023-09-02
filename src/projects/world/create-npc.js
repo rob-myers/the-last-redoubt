@@ -122,6 +122,7 @@ export default function createNpc(
     async cancel() {
       console.log(`cancel: cancelling ${this.def.key}`);
       this.manuallyPaused = false;
+      this.el.root.classList.remove('paused');
 
       const rootAnims = [this.anim.translate].filter(
         anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.root)
@@ -583,6 +584,7 @@ export default function createNpc(
     pause(dueToProcessSuspend = false) {
       if (!dueToProcessSuspend) {
         this.manuallyPaused = true;
+        this.el.root.classList.add('paused');
       } // We permit re-pause when manuallyPaused      
 
       console.log(`pause: pausing ${this.def.key}`);
@@ -628,6 +630,7 @@ export default function createNpc(
         return;
       }
       this.manuallyPaused = false;
+      this.el.root.classList.remove('paused');
 
       console.log(`resume: resuming ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;

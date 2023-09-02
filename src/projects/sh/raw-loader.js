@@ -402,9 +402,15 @@
       while ((datum = await api.read()) !== null) {
         try {
           const { meta } = datum;
+          if (npc.manuallyPaused) {
+            meta.npc && meta.npcKey === npcKey && npc.resume();
+            continue;
+          }
+          
           if (meta.npc && meta.npcKey === npcKey) {
-            // think
-            w.fov.mapAct("show-for-ms", 3000);
+            !meta.longClick
+              ? npc.pause()
+              : w.fov.mapAct("show-for-ms", 3000);
           } else if (meta.do || meta.door || (npc.doMeta && meta.nav)) {
             // do
             await w.npcs.npcAct({ npcKey, action: "cancel" });

@@ -50,9 +50,17 @@
 - ✅ BUG rob and foo should have different navpath
   > `while true; do nav foo rob | walk --open foo; done`
 
-- controlNpc supports re-enter navmesh when off and not on do point
+- ✅ controlNpc supports re-enter navmesh when off-mesh AND not at do-point
+
+- ✅ controlNpc pauses on click npc
+  - ✅ "manually" pause npc
+  - ✅ paused npc grayscale
+    - ℹ️ uses css class without trigger `<NPC>` render
+  - ✅ paused npc prevents other controls
+  - ✅ controlNpc shows map on longClick click npc
 
 - cleanup commands/shell-fns
+  - controlNpc avoid try-catch?
   - replace Promise.race
   - remove opts if possible
 
@@ -68,6 +76,7 @@
   #
   ```
 
+- `track` should pause when tracked npc does?
 - BUG? multiple paste issue when reading tty?
   - consider `split ' ' | take 3` and paste multiple lines
 - BUG CssPanZoom sometimes jerky when spawn a lot

@@ -61,6 +61,7 @@ export default function NPC({ api, npcKey }) {
         cssName.npc,
         rootCss,
         api.npcs.playerKey === npcKey ? 'player' : undefined,
+        state.manuallyPaused ? 'paused' : undefined,
         state.anim.css,
         state.anim.spriteSheet,
       )}
@@ -101,6 +102,10 @@ const rootCss = css`
     .fov-indicator {
       display: var(${cssName.npcsDebugDisplay});
     }
+  }
+
+  &.paused {
+    filter: grayscale(1);
   }
 
   .body {
