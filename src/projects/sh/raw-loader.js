@@ -211,35 +211,17 @@
       }
     },
 
-    // ℹ️ very similar to `walk`
-    look: async function* ({ api, args, home, datum, promises = [] }) {
-      // 🚧 remove Promise.race
-      const { npcs } = api.getCached(home.WORLD_KEY)
-      const npcKey = args[0]
-      
-      npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+    look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
+      const w = api.getCached(home.WORLD_KEY)
+      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
 
       if (api.isTtyAt(0)) {
-        const point = api.parseJsArg(args[1])
-        await npcs.npcAct({ action: "look-at", npcKey, point })
+        const point = api.parseJsArg(pointStr)
+        await w.npcs.npcAct({ action: "look-at", npcKey, point })
       } else {
-        datum = await api.read()
-        while (datum !== null) {
-          await npcs.npcAct({ npcKey, action: "cancel" })
-          // Subsequent reads can interrupt look
-          const resolved = await Promise.race([
-            promises[0] = npcs.npcAct({ action: "look-at", npcKey, point: datum }),
-            promises[1] = api.read(),
-          ])
-          if (resolved === undefined) {// Finished look
-            datum = await promises[1];
-          } else if (resolved === null) {// EOF so finish look
-            await promises[0]
-            datum = resolved
-          } else {// We read something before look finished
-            await npcs.npcAct({ npcKey, action: "cancel" })
-            datum = resolved
-          }
+        while ((datum = await api.read()) !== null) {
+          await w.npcs.npcAct({ npcKey, action: "cancel" })
+          w.npcs.npcAct({ action: "look-at", npcKey, point: datum })
         }
       }
     },
@@ -255,6 +237,7 @@
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
+      // 🚧 clean
       const { opts, operands } = api.getOpts(args, {
         boolean: [
           "exactNpc", /** Require navigable npcs (otherwise use nearest navigable) */
