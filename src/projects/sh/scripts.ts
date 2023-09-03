@@ -79,7 +79,7 @@ doLoop: `{
 goLoop: `{
   click |
     filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
-    nav --safeLoop --preferOpen $1 |
+    nav --safeLoop $1 |
     walk $1
 }`,
 

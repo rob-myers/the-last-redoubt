@@ -240,7 +240,6 @@
       // 🚧 clean
       const { opts, operands } = api.getOpts(args, {
         boolean: [
-          "preferOpen", /** Prefer open doors i.e. --closed=10000 */
           "safeLoop", /** Pipe mode NOOPs if path non-navigable */
           "to",   /** Piped input goes before operands (else after) */
         ],
@@ -258,7 +257,11 @@
 
       /** @type {NPC.NavOpts} */
       const navOpts = {
-        ...opts.preferOpen && { closedWeight: 10000 },
+        /**
+         * Prefer open doors.
+         * Particularly important when walking with doorStrategy `none`.
+         */
+        closedWeight: 10000, 
         ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
         ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
