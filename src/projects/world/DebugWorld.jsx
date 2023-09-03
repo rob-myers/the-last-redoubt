@@ -57,6 +57,10 @@ export default function DebugWorld(props) {
         };
         update();
       },
+      removePath(key) {
+        delete this.path[key];
+        update();
+      },
       rootRef(el) {
         if (el) {
           state.rootEl = el;
@@ -265,6 +269,7 @@ export default function DebugWorld(props) {
  * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
+ * @property {(key: string) => void} removePath
  * @property {(navPath: NPC.GlobalNavPath) => void} addPath
  * @property {() => void} update
  */

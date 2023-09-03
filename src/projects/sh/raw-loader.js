@@ -244,11 +244,11 @@
           "name", /** Can override navPath.name and debug.path[key] */
         ],
       })
-      const { npcs, debug } = api.getCached(home.WORLD_KEY)
-
-      if (operands.length < (api.isTtyAt(0) ? 2 : 1)) {
+      if (!api.isTtyAt(0) && operands.length < 2) {
         throw Error("not enough points");
       }
+      
+      const w = api.getCached(home.WORLD_KEY)
 
       /** @type {NPC.NavOpts} */
       const navOpts = {
@@ -261,13 +261,13 @@
       
       /** @param {(string | Geom.VectJson)[]} inputs  */
       function computeNavPath(inputs) {
-        const points = inputs.map(npcs.parseNavigable);
+        const points = inputs.map(w.npcs.parseNavigable);
         const navPaths = points.slice(1).map((point, i) =>
-          npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
+          w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
-        const navPath = npcs.service.concatenateNavPaths(navPaths);
-        navPath.name = opts.name || npcs.service.getNpcPathName(inputs[0]);
-        debug.addPath(navPath);
+        const navPath = w.npcs.service.concatenateNavPaths(navPaths);
+        navPath.name = opts.name || w.npcs.service.getNpcPathName(inputs[0]);
+        w.debug.addPath(navPath);
         return navPath;
       }
       
@@ -275,6 +275,7 @@
         yield computeNavPath(parsedArgs);
       } else {
         while ((datum = await api.read()) !== null) {
+          // ℹ️ supports lists of points
           yield computeNavPath(parsedArgs.concat(datum));
         }
       }
