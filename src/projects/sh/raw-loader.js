@@ -227,16 +227,17 @@
     },
   
     /**
-     * Request navpath(s) to position(s) for character(s), e.g.
+     * Request navpath to position(s) or npc(s), e.g.
      * ```sh
+     * nav $( click 2 )
+     * click 2 | sponge | nav
      * nav rob "$( click 1 )"
-     * nav $( click 3 )
+     * nav $( click 4 )
      * expr '{x:300,y:300}' | nav rob
      * click | nav rob
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
-      // 🚧 clean
       const { opts, operands } = api.getOpts(args, {
         string: [
           "closed", /** Weight nav nodes near closed doors, e.g. 10000 */
@@ -244,9 +245,6 @@
           "name", /** Can override navPath.name and debug.path[key] */
         ],
       })
-      if (!api.isTtyAt(0) && operands.length < 2) {
-        throw Error("not enough points");
-      }
       
       const w = api.getCached(home.WORLD_KEY)
 
@@ -266,7 +264,7 @@
           w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
         const navPath = w.npcs.service.concatenateNavPaths(navPaths);
-        navPath.name = opts.name || w.npcs.service.getNpcPathName(inputs[0]);
+        navPath.name = opts.name || w.npcs.service.getNavPathName(inputs.length >= 2 ? inputs[0] : undefined);
         w.debug.addPath(navPath);
         return navPath;
       }
@@ -275,7 +273,6 @@
         yield computeNavPath(parsedArgs);
       } else {
         while ((datum = await api.read()) !== null) {
-          // ℹ️ supports lists of points
           yield computeNavPath(parsedArgs.concat(datum));
         }
       }
@@ -382,7 +379,7 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            navPath.name = w.npcs.service.getNpcPathName(npcKey);
+            navPath.name = w.npcs.service.getNavPathName(npcKey);
             w.debug.addPath(navPath);
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
