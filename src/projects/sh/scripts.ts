@@ -73,15 +73,13 @@ doLoop: `{
 
 /**
  * Usage: goLoop {npcKey}
- * - meta.nav means the point must be on navmesh
- * - !meta.ui prevents immediate movement on open door
- * - !meta.do isolates from `doLoop`
+ * - ℹ️ when off-mesh, starts from closest navigable
  * - --safeLoop needed because npc $1 can be off-mesh
  */
 goLoop: `{
   click |
     filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
-    nav --safeLoop --preferOpen --exactNpc $1 |
+    nav --safeLoop --preferOpen $1 |
     walk $1
 }`,
 

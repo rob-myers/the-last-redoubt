@@ -5,7 +5,7 @@ import { filter, tap } from "rxjs/operators";
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
-import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius, obscuredNpcOpacity, spawnFadeMs } from "./const";
+import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 import { geom } from "../service/geom";
 import { hasGmDoorId, hasGmRoomId } from "../service/geomorph";
 import { npcService } from "../service/npc";
@@ -656,7 +656,7 @@ export default function NPCs(props) {
         return 'cancelled';
       }
     },
-    parsePointRep(input, exactNpc = false) {
+    parseNavigable(input) {
       if (Vect.isVectJson(input)) {
         if (state.isPointInNavmesh(input)) return input;
         throw Error(`point outside navmesh: ${JSON.stringify(input)}`)
@@ -664,14 +664,15 @@ export default function NPCs(props) {
         const point = state.npc[input].getPosition();
         if (state.isPointInNavmesh(point)) {
           return point;
-        } else if (!exactNpc) {
-          const result = api.gmGraph.getClosePoint(point, state.npc[input].gmRoomId ?? undefined);
-          if (result) return result.point; // ℹ️ could fallback to "node with closest centroid"
-          throw Error(`npc ${input} lacks nearby navigable: ${JSON.stringify(point)}`)
         }
-        throw Error(`npc ${input} outside navmesh: ${JSON.stringify(point)}`)
+        // Fallback to close navigable point e.g. when:
+        // (i) npc intentionally outside mesh,
+        // (ii) npc stopped at intermediate path point "just outside mesh"
+        const result = api.gmGraph.getClosePoint(point, state.npc[input].gmRoomId ?? undefined);
+        if (result) return result.point;
+        throw Error(`npc ${input} lacks nearby navigable: ${JSON.stringify(point)}`)
       }
-      throw Error(`expected point or npcKey: "${input}"`);
+      throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
     },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
@@ -964,7 +965,7 @@ export default function NPCs(props) {
  * @property {(npc: NPC.NPC, e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
  * Started on-mesh and clicked point
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
- * @property {(input: string | Geom.VectJson, exactNpc?: boolean) => Geom.VectJson} parsePointRep
+ * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey

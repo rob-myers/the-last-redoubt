@@ -7,7 +7,9 @@
   - ✅ panZoom.pointerUpExtras -> clickIds
   - replace Promise.race
   - remove opts if possible
+    - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
 
+- paused stationary npc should unpause when `look`?
 - head radius increases whilst walking?
 
 - `track` jerky e.g. on click do point and immediately click navmesh

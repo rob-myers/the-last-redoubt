@@ -231,7 +231,7 @@
      * ```sh
      * nav rob "$( click 1 )"
      * nav $( click 3 )
-     * expr '{"x":300,"y":300}' | nav rob
+     * expr '{x:300,y:300}' | nav rob
      * click | nav rob
      * click | nav --to rob
      * ```
@@ -240,7 +240,6 @@
       // 🚧 clean
       const { opts, operands } = api.getOpts(args, {
         boolean: [
-          "exactNpc", /** Require navigable npcs (otherwise use nearest navigable) */
           "preferOpen", /** Prefer open doors i.e. --closed=10000 */
           "safeLoop", /** Pipe mode NOOPs if path non-navigable */
           "to",   /** Piped input goes before operands (else after) */
@@ -257,7 +256,6 @@
         throw Error("not enough points");
       }
 
-      const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       /** @type {NPC.NavOpts} */
       const navOpts = {
         ...opts.preferOpen && { closedWeight: 10000 },
@@ -265,10 +263,9 @@
         ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
 
+      const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       /** @param {any[]} parsedArgs */
-      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) =>
-        npcs.parsePointRep(parsed, opts.exactNpc)
-      );
+      const parsedPoints = (parsedArgs) => parsedArgs.map((parsed) => npcs.parseNavigable(parsed));
       
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
@@ -277,20 +274,18 @@
           npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
         );
         const navPath = npcs.service.concatenateNavPaths(navPaths);
-        debug.addPath(
-          typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : npcs.service.defaultNavPathName,
-          navPath,
-        );
+        const navPathKey = typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : npcs.service.defaultNavPathName;
+        debug.addPath(navPathKey, navPath);
         return navPath;
       }
 
       
       if (api.isTtyAt(0)) {
-        yield computeNavPath(parsePoints(parsedArgs));
+        yield computeNavPath(parsedPoints(parsedArgs));
       } else {
         while ((datum = await api.read()) !== null) {
           try {
-            yield computeNavPath(parsePoints(opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)));
+            yield computeNavPath(parsedPoints(opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)));
           } catch (e) {// 🚧 swallows other errors?
             if (!opts.safeLoop) throw e;
           }
