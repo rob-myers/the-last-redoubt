@@ -74,12 +74,11 @@ doLoop: `{
 /**
  * Usage: goLoop {npcKey}
  * - ℹ️ when off-mesh, starts from closest navigable
- * - --safeLoop needed because npc $1 can be off-mesh
  */
 goLoop: `{
   click |
     filter '({ meta }) => meta.nav && !meta.ui && !meta.do && !meta.longClick' |
-    nav --safeLoop $1 |
+    nav $1 |
     walk $1
 }`,
 

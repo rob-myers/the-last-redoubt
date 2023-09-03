@@ -472,7 +472,7 @@ declare namespace NPC {
    */
   export interface GlobalNavPath {
     key: 'global-nav';
-    /** Useful for creating DecorPaths */
+    /** Useful for creating `DecorPath`s */
     name?: string;
     path: Geom.VectJson[];
     /**

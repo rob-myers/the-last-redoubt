@@ -238,13 +238,10 @@
     nav: async function* ({ api, args, home, datum }) {
       // 🚧 clean
       const { opts, operands } = api.getOpts(args, {
-        boolean: [
-          "safeLoop", /** Pipe mode NOOPs if path non-navigable */
-        ],
         string: [
           "closed", /** Weight nav nodes near closed doors, e.g. 10000 */
           "locked", /** Weight nav nodes near locked doors, e.g. 10000 */
-          "name", /** Created DecorPath has this key */
+          "name", /** Can override navPath.name and debug.path[key] */
         ],
       })
       const { npcs, debug } = api.getCached(home.WORLD_KEY)
@@ -255,41 +252,30 @@
 
       /** @type {NPC.NavOpts} */
       const navOpts = {
-        /**
-         * Prefer open doors.
-         * Particularly important when walking with doorStrategy `none`.
-         */
-        closedWeight: 10000, 
+        closedWeight: 10000, // Prefer open doors e.g. when doorStrategy `none`
         ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
         ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
 
       const parsedArgs = operands.map(operand => api.parseJsArg(operand));
-      /** @param {any[]} parsedArgs */
-      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) => npcs.parseNavigable(parsed));
       
-      /** @param {Geom.VectJson[]} points  */
-      function computeNavPath(points) {
-        // We guarded earlier by `isPointInNavmesh`; centroidsFallback should help catch edge cases.
+      /** @param {(string | Geom.VectJson)[]} inputs  */
+      function computeNavPath(inputs) {
+        const points = inputs.map(npcs.parseNavigable);
         const navPaths = points.slice(1).map((point, i) =>
-          npcs.getGlobalNavPath(points[i], point, {...navOpts, centroidsFallback: true }),
+          npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
         const navPath = npcs.service.concatenateNavPaths(navPaths);
-        const navPathKey = typeof parsedArgs[0] === "string" ? npcs.service.getNpcNavPathName(parsedArgs[0]) : npcs.service.defaultNavPathName;
-        debug.addPath(navPathKey, navPath);
+        navPath.name = opts.name || npcs.service.getNpcPathName(inputs[0]);
+        debug.addPath(navPath);
         return navPath;
       }
-
       
       if (api.isTtyAt(0)) {
-        yield computeNavPath(parsePoints(parsedArgs));
+        yield computeNavPath(parsedArgs);
       } else {
         while ((datum = await api.read()) !== null) {
-          try {
-            yield computeNavPath(parsePoints(parsedArgs.concat(datum)));
-          } catch (e) {// 🚧 swallows other errors?
-            if (!opts.safeLoop) throw e;
-          }
+          yield computeNavPath(parsedArgs.concat(datum));
         }
       }
     },
@@ -395,7 +381,8 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            w.debug.addPath(w.npcs.service.getNpcNavPathName(npcKey), navPath);
+            navPath.name = w.npcs.service.getNpcPathName(npcKey);
+            w.debug.addPath(navPath);
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
         } else {// look

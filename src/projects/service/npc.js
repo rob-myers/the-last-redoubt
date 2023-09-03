@@ -526,10 +526,13 @@ class NpcService {
   }
 
   /**
-   * @param {string} npcKey
+   * @param {string | Geom.VectJson} navRep
+   * Defaults to @see {NpcService.defaultNavPathName}
    */
-  getNpcNavPathName(npcKey) {
-    return `navpath-${npcKey}`;
+  getNpcPathName(navRep) {
+    return typeof navRep === 'string'
+      ? `navpath-for-${navRep}` // npcKey
+      : `navpath-from-${navRep.x},${navRep.y}`;
   }
 
   /**

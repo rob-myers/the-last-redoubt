@@ -661,18 +661,22 @@ export default function NPCs(props) {
         if (state.isPointInNavmesh(input)) return input;
         throw Error(`point outside navmesh: ${JSON.stringify(input)}`)
       } else if (input in state.npc) {
-        const point = state.npc[input].getPosition();
+        const npc =  state.npc[input];
+        const point = npc.getPosition();
         if (state.isPointInNavmesh(point)) {
           return point;
         }
         // Fallback to close navigable point e.g. when:
-        // (i) npc intentionally outside mesh,
-        // (ii) npc stopped at intermediate path point "just outside mesh"
-        const result = api.gmGraph.getClosePoint(point, state.npc[input].gmRoomId ?? undefined);
+        // (a) npc intentionally outside mesh
+        // (b) npc stopped at intermediate path point "just outside mesh"
+        const result = api.gmGraph.getClosePoint(point, npc.gmRoomId ?? undefined);
         if (result) return result.point;
-        throw Error(`npc ${input} lacks nearby navigable: ${JSON.stringify(point)}`)
+        throw Error(`npc ${input} lacks nearby navigable: ${
+          JSON.stringify({ point, gmRoomId: npc.gmRoomId })
+        }`)
+      } else {
+        throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
       }
-      throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
     },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
