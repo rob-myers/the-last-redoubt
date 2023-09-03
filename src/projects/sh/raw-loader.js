@@ -233,7 +233,6 @@
      * nav $( click 3 )
      * expr '{x:300,y:300}' | nav rob
      * click | nav rob
-     * click | nav --to rob
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
@@ -241,7 +240,6 @@
       const { opts, operands } = api.getOpts(args, {
         boolean: [
           "safeLoop", /** Pipe mode NOOPs if path non-navigable */
-          "to",   /** Piped input goes before operands (else after) */
         ],
         string: [
           "closed", /** Weight nav nodes near closed doors, e.g. 10000 */
@@ -268,7 +266,7 @@
 
       const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       /** @param {any[]} parsedArgs */
-      const parsedPoints = (parsedArgs) => parsedArgs.map((parsed) => npcs.parseNavigable(parsed));
+      const parsePoints = (parsedArgs) => parsedArgs.map((parsed) => npcs.parseNavigable(parsed));
       
       /** @param {Geom.VectJson[]} points  */
       function computeNavPath(points) {
@@ -284,11 +282,11 @@
 
       
       if (api.isTtyAt(0)) {
-        yield computeNavPath(parsedPoints(parsedArgs));
+        yield computeNavPath(parsePoints(parsedArgs));
       } else {
         while ((datum = await api.read()) !== null) {
           try {
-            yield computeNavPath(parsedPoints(opts.to ? [datum].concat(parsedArgs) : parsedArgs.concat(datum)));
+            yield computeNavPath(parsePoints(parsedArgs.concat(datum)));
           } catch (e) {// 🚧 swallows other errors?
             if (!opts.safeLoop) throw e;
           }

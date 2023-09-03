@@ -8,6 +8,8 @@
   - replace Promise.race
   - remove opts if possible
     - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
+    - ✅ remove `nav --preferOpen` (nav prefers open doors by default)
+    - ✅ remove `nav --to`
 
 - paused stationary npc should unpause when `look`?
 - head radius increases whilst walking?
