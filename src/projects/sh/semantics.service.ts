@@ -408,7 +408,10 @@ class semanticsServiceClass {
         for (const part of node.Parts) {
           const result = await this.lastExpanded(sem.ExpandPart(part));
           if (part.type === 'ParamExp' && part.Param.Value === '@') {
-            output.push(`${output.pop() || ''}${result.values[0] || ''}`, ...result.values.slice(1));
+            output.push(...node.Parts.length === 1
+              ? result.values // "$@" empty if `result.values` is
+              : [`${output.pop() || ''}${result.values[0] || ''}`, ...result.values.slice(1)]
+            );
           } else {
             output.push(`${output.pop() || ''}${result.value || ''}`);
           }
