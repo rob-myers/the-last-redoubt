@@ -169,12 +169,12 @@
     /**
      * Output world position clicks from panZoomApi.events, e.g.
      * - `click` forwards all clicks
-     * - `click 1` forwards exactly one click, suppressing other `click`s
+     * - `click 1` forwards exactly one click suppressing other `click [{n}]`s
      */
-    click: async function* ({ api, args, home }) {// 🚧 clean `pointerUpExtras`
-      const extra = args[0] ? { clickHash: api.getUid() } : {}
+    click: async function* ({ api, args, home }) {
       let numClicks = Number(args[0] || Number.MAX_SAFE_INTEGER),
         /** @type {import('rxjs').Subscription} */ eventsSub;
+      const clickId = args[0] ? api.getUid() : undefined;
       if (!Number.isFinite(numClicks)) {
         throw api.throwError("format: \`click [{numberOfClicks}]\`")
       }
@@ -183,24 +183,21 @@
       api.addCleanup(() => eventsSub?.unsubscribe())
 
       while (numClicks-- > 0) {
-        w.panZoom.pointerUpExtras.push(extra); // merged into next pointerup
+        clickId && w.panZoom.clickIds.push(clickId);
         
         const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
           eventsSub = w.panZoom.events.subscribe({ next(e) {
-            if (e.key !== "pointerup" || e.distance > 5 || !api.isRunning()) {
+            if (e.key !== "pointerup" || e.meta.distance > 5 || !api.isRunning()) {
               return;
-            } else if (e.extra.clickHash && !extra.clickHash) {
-              return; // `click 1` overrides `click`
-            } else if (e.extra.clickHash && extra.clickHash !== e.extra.clickHash) {
+            } else if (e.clickId && !clickId) {
+              return; // `click {n}` overrides `click`
+            } else if (e.clickId && clickId !== e.clickId) {
               return; // later `click {n}` overrides earlier `click {n}`
             }
             resolve(e); // Must resolve before tear-down induced by unsubscribe 
             eventsSub.unsubscribe();
           }});
-          eventsSub.add(() => {
-            w.panZoom.pointerUpExtras = w.panZoom.pointerUpExtras.filter(x => x !== extra);
-            reject(api.getKillError());
-          });
+          eventsSub.add(() => reject(api.getKillError()));
         }));
 
         yield {
@@ -216,6 +213,7 @@
 
     // ℹ️ very similar to `walk`
     look: async function* ({ api, args, home, datum, promises = [] }) {
+      // 🚧 remove Promise.race
       const { npcs } = api.getCached(home.WORLD_KEY)
       const npcKey = args[0]
       

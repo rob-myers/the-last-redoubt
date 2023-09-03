@@ -37,7 +37,11 @@ declare namespace PanZoom {
     transitionTimeoutId: number;
     /** [translate, scale] */
     anims: [null | Animation, null | Animation];
-    pointerUpExtras: Record<string, any>[];
+    /**
+     * Pending click identifiers, provided by code external to CssPanZoom.
+     * The last click identifier is the "current one".
+     */
+    clickIds: string[];
     
     animationAction(type: 'cancel' | 'pause' | 'play'): Promise<void>;
     private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
@@ -83,10 +87,14 @@ declare namespace PanZoom {
   interface CssPointerUpEvent {
     key: 'pointerup';
     point: Geom.VectJson;
-    /** Distance from pointerdown in world coords */
-    distance: number;
-    meta: Record<string, string | number | boolean | Geom.VectJson>;
-    extra: Record<string, any>;
+    meta: Record<string, string | number | boolean | Geom.VectJson> & {
+      /** Distance from pointerdown in world coords */
+      distance: number;
+      longClick: boolean;
+      /** World position of target element centre */
+      targetPos: Geom.VectJson;
+    };
+    clickId?: string;
   }
 
 }

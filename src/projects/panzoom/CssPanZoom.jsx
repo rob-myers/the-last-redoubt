@@ -40,7 +40,7 @@ export default function CssPanZoom(props) {
       idleTimeoutId: 0,
       transitionTimeoutId: 0,
       anims: [null, null],
-      pointerUpExtras: [],
+      clickIds: [],
 
       evt: {
         wheel(e) {
@@ -119,26 +119,27 @@ export default function CssPanZoom(props) {
           }
 
           const worldPointerUp = state.getWorld(e);
-          const el = /** @type {HTMLElement} */ (e.target);
-          const meta = el.dataset.meta && safeJsonParse(el.dataset.meta) || {};
           // Provide world position of target element centre
+          const el = /** @type {HTMLElement} */ (e.target);
           const { x, y, width, height } = el.getBoundingClientRect();
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
-          meta.targetPos = { x: precision(targetPos.x), y: precision(targetPos.y) };
-          meta.longClick = (Date.now() - state.start.epochMs) >= 500;
-
-          // Approx because state.scale may change
+          // Distance is approx because state.scale may change
           const distance = new Vect(
             e.clientX - /** @type {number} */ (state.start.clientX),
             e.clientY - /** @type {number} */ (state.start.clientY),
           ).scale(1 / state.scale).length;
+          /** @type {PanZoom.CssPointerUpEvent['meta']} */
+          const meta = { ...el.dataset.meta && safeJsonParse(el.dataset.meta),
+            targetPos: { x: precision(targetPos.x), y: precision(targetPos.y) },
+            longClick: (Date.now() - state.start.epochMs) >= 500,
+            distance,
+          };
 
           state.events.next({
             key: 'pointerup',
             point: worldPointerUp,
-            distance,
             meta,
-            extra: Object.assign({}, ...state.pointerUpExtras),
+            clickId: state.clickIds.pop(),
           });
 
           state.panning = false;

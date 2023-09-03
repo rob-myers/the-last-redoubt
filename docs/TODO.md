@@ -4,6 +4,7 @@
 
 - 🚧 cleanup commands/shell-fns
   - ✅ controlNpc avoid try-catch + clean
+  - ✅ panZoom.pointerUpExtras -> clickIds
   - replace Promise.race
   - remove opts if possible
 
