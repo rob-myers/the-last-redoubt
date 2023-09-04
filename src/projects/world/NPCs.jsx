@@ -701,7 +701,7 @@ export default function NPCs(props) {
         }
       }
     },
-    service: npcService,
+    svc: npcService,
     setPlayerKey(npcKey) {
       if (npcKey === '') {
         throw Error(`npc key cannot be empty`);
@@ -975,7 +975,7 @@ export default function NPCs(props) {
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
- * @property {import('../service/npc').NpcServiceType} service
+ * @property {import('../service/npc').NpcServiceType} svc
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
  * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts) => Promise<void>} walkNpc
  */

@@ -5,15 +5,25 @@
 - 🚧 cleanup commands/shell-fns
   - ✅ controlNpc avoid try-catch + clean
   - ✅ panZoom.pointerUpExtras -> clickIds
-  - replace Promise.race
-  - remove opts if possible
+  - 🚧 remove Promise.race
+  - 🚧 remove opts
     - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
     - ✅ remove `nav --preferOpen` (nav prefers open doors by default)
     - ✅ remove `nav --to`
     - ✅ remove `nav --safeLoop`
+    - ✅ remove `npc --safeLoop`
+    - `npc config verbose` to show errors in loops?
 
-- paused stationary npc should unpause when `look`?
+- cleaner api.info
+
+- 🚧 paused npc should error when `do`/`go`/`look`?
+  - if so, we must `kill --STOP {pid}` the controlNpc process
+    if we want to try look/npc/nav/walk on rob
+  - 🚧 add pause/resume/kill links inside `ps`
+
 - head radius increases whilst walking?
+
+- consider removing "peek view", or at least disabling
 
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc

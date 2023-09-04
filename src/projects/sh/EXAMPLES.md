@@ -398,3 +398,8 @@ click | take 1
 # longClick 1
 click | filter meta.longClick | take 1
 ```
+
+```sh
+# click 4 places on other side of doors
+nav rob $( click 4 ) | walk --open rob
+```

@@ -234,7 +234,7 @@
      * nav rob "$( click 1 )"
      * nav $( click 4 )
      * expr '{x:300,y:300}' | nav rob
-     * click | nav rob
+     * click | nav rob foo
      * ```
      */
     nav: async function* ({ api, args, home, datum }) {
@@ -245,16 +245,14 @@
           "name", /** Can override navPath.name and debug.path[key] */
         ],
       })
-      
-      const w = api.getCached(home.WORLD_KEY)
-
       /** @type {NPC.NavOpts} */
       const navOpts = {
         closedWeight: 10000, // Prefer open doors e.g. when doorStrategy `none`
         ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
         ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
       };
-
+      
+      const w = api.getCached(home.WORLD_KEY)
       const parsedArgs = operands.map(operand => api.parseJsArg(operand));
       
       /** @param {(string | Geom.VectJson)[]} inputs  */
@@ -263,8 +261,8 @@
         const navPaths = points.slice(1).map((point, i) =>
           w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
-        const navPath = w.npcs.service.concatenateNavPaths(navPaths);
-        navPath.name = opts.name || w.npcs.service.getNavPathName(inputs.length >= 2 ? inputs[0] : undefined);
+        const navPath = w.npcs.svc.concatenateNavPaths(navPaths);
+        navPath.name = opts.name || w.npcs.svc.getNavPathName(inputs.length >= 2 ? inputs[0] : undefined);
         w.debug.addPath(navPath);
         return navPath;
       }
@@ -279,62 +277,56 @@
     },
   
     /**
+     * 🚧 clean
      * npc {action} [opts] [extras[i]]
-     * npc --safeLoop {action} [opts] [extras[i]]
      */
     npc: async function* ({ api, args, home, datum }) {
-      const { opts, operands } = api.getOpts(args, { boolean: [
-        "safeLoop", /** Pipe mode NOOPs rather than throwing */
-      ]});
+      const w = api.getCached(home.WORLD_KEY);
 
-      const worldApi = api.getCached(home.WORLD_KEY);
-      const { npcs } = worldApi;
-
-      if (!npcs.service.isNpcActionKey(operands[0])) {
-        if (operands[0] in npcs.npc) {
-          // `npc {npcKey} [selector] [args]*` --> `npc get {npcKey} [selector] [args]*`
-          operands.unshift("get");
+      if (!w.npcs.svc.isNpcActionKey(args[0])) {
+        if (args[0] in w.npcs.npc) {
+          // `npc {npcKey} ...` --> `npc get {npcKey} ...`
+          args.unshift("get");
         } else {
-          throw api.throwError(`${operands[0]}: invalid action`);
+          throw api.throwError(`${args[0]}: invalid action`);
         }
       }
 
-      const action = /** @type {NPC.NpcActionKey} */ (operands[0]);
+      const action = /** @type {NPC.NpcActionKey} */ (args[0]);
+      if (action === "events") {
+        return yield* w.npcs.svc.yieldEvents(w, api);
+      }
+
       const process = api.getProcess();
       let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
 
-      if (action === "events") {
-        return yield* npcs.service.yieldEvents(worldApi, api);
-      }
-
       if (api.isTtyAt(0)) {
         try {
-          const npcAct = npcs.service.normalizeNpcCommandOpts(
+          const npcAct = w.npcs.svc.normalizeNpcCommandOpts(
             action,
-            api.parseJsArg(operands[1]),
-            operands.slice(2).map(arg => api.parseJsArg(arg)),
+            api.parseJsArg(args[1]),
+            args.slice(2).map(arg => api.parseJsArg(arg)),
           );
           if (npcAct.action === "do" || npcAct.action === "look-at") {
-            cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
+            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
           }
-          yield await npcs.npcAct(npcAct);
+          yield await w.npcs.npcAct(npcAct);
         } finally {
           cleanLongRunning?.();
         }
       } else {
         while ((datum = await api.read()) !== null) {
           try {
-            const npcAct = operands.length === 1
-              ? npcs.service.normalizeNpcCommandOpts(action, datum, [])
+            const npcAct = args.length === 1
+              ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
               // support initial operand e.g. `click | npc look-at {npcKey}`
-              : npcs.service.normalizeNpcCommandOpts(action, operands[1], [...operands.slice(2), datum])
+              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
             ;
             if (npcAct.action === "do" || npcAct.action === "look-at") {
-              cleanLongRunning = npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
+              cleanLongRunning = w.npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
             }
-            yield await npcs.npcAct(npcAct);
-          } catch (e) {
-            if (!opts.safeLoop) throw e;
+            yield await w.npcs.npcAct(npcAct)
+              .catch((e) => api.info(`Ignored: ${e}`));
           } finally {
             cleanLongRunning?.();
           }
@@ -350,7 +342,7 @@
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
       w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
-      const logError = /** @param {any} e */ (e) => api.info(`${e}`);
+      const logError = /** @param {any} e */ (e) => api.info(`Ignored: ${e}`);
 
       while ((datum = await api.read()) !== null) {
         const { meta } = datum;
@@ -379,7 +371,7 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            navPath.name = w.npcs.service.getNavPathName(npcKey);
+            navPath.name = w.npcs.svc.getNavPathName(npcKey);
             w.debug.addPath(navPath);
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
@@ -402,12 +394,8 @@
      */
     spawn: async function* ({ api, args, home, datum }) {
       const { opts, operands } = api.getOpts(args, {
-        string: [
-          "class", /** e.g. solomani, vilani, zhodani */
-        ],
-        boolean: [
-          "--solomani", "--vilani", "--zhodani", /** shortcuts */
-        ],
+        string: ["class", /** e.g. solomani, vilani, zhodani */],
+        boolean: ["--solomani", "--vilani", "--zhodani", /** shortcuts */],
       });
 
       const { npcs } = api.getCached(home.WORLD_KEY);
