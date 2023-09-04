@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware';
 
 import { ansi } from '../service/const';
 import { addToLookup, deepClone, mapValues, removeFromLookup, tryLocalStorageGet, tryLocalStorageSet, KeyedLookup } from '../service/generic';
-import { computeNormalizedParts, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
+import { computeNormalizedParts, formatMessage, killProcess, resolveNormalized, ShError, stripAnsi } from './util';
 import type { BaseMeta, FileWithMeta, NamedFunction } from './parse';
 import type { MessageFromShell, MessageFromXterm } from './io';
 import { Device, makeShellIo, ShellIo, FifoDevice, VarDevice, VarDeviceMode, NullDevice, VoiceDevice } from './io';
@@ -51,11 +51,11 @@ export type State = {
     setVar: (meta: BaseMeta, varName: string, varValue: any) => void;
     setVarDeep: (meta: BaseMeta, varPath: string, varValue: any) => void;
     writeMsg: (sessionKey: string, msg: string, level: 'info' | 'error') => void;
-    /**
-     * Returns global line number of written message,
-     * i.e. the 1-based index over all lines ever output in session's tty.
-     */
-    writeMsgCleanly: (sessionKey: string, msg: string, opts?: { prompt?: boolean; ttyLinkCtxts?: TtyLinkCtxt[] }) => Promise<void>;
+    writeMsgCleanly: (sessionKey: string, msg: string, opts?: {
+      level?: 'info' | 'error';
+      prompt?: boolean;
+      ttyLinkCtxts?: TtyLinkCtxt[];
+    }) => Promise<void>;
   }
 }
 
@@ -444,19 +444,17 @@ const useStore = create<State>()(devtools((set, get): State => ({
       api.getSession(sessionKey).ttyIo.write({ key: level, msg });
     },
 
-    async writeMsgCleanly(sessionKey, msg, opts) {
+    async writeMsgCleanly(sessionKey, msg, opts = {}) {
       const { xterm } = api.getSession(sessionKey).ttyShell;
       xterm.prepareForCleanMsg();
-      await new Promise<void>(resolve => {
-        xterm.queueCommands([
-          { key: 'line', line: `${msg}${ansi.Reset}` },
-          { key: 'resolve', resolve },
-        ])
-      });
-      opts?.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, msg, opts.ttyLinkCtxts);
-      setTimeout(() => {
-        (opts?.prompt??true) && xterm.showPendingInput();
-        xterm.xterm.scrollToBottom();
+      await new Promise<void>(resolve => xterm.queueCommands([
+        { key: 'line', line: opts.level ? formatMessage(msg, opts.level) : `${msg}${ansi.Reset}` },
+        { key: 'resolve', resolve },
+      ]));
+      opts.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, msg, opts.ttyLinkCtxts);
+      (opts.prompt ?? true) && setTimeout(() => {
+        xterm.showPendingInput();
+        // xterm.xterm.scrollToBottom();
       });
     },
   },

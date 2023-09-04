@@ -1,6 +1,7 @@
 import type { Terminal } from 'xterm';
 import debounce from "debounce";
 import { ansi } from '../service/const';
+import { formatMessage } from './util';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
 
@@ -550,14 +551,14 @@ export class ttyXtermClass {
       case 'error': {
         this.queueCommands([{
           key: 'line',
-          line: `${ansi.Red}${msg.msg}${ansi.Reset}`,
+          line: formatMessage(msg.msg, 'error'),
         }]);
         break;
       }
       case 'info': {
         this.queueCommands([{
           key: 'line',
-          line: `ℹ️  ${ansi.Cyan}${msg.msg}${ansi.Reset}`,
+          line: formatMessage(msg.msg, 'info'),
         }]);
         break;
       }
@@ -607,10 +608,10 @@ export class ttyXtermClass {
   }
 
   prepareForCleanMsg() {
-    if (this.promptReady && this.input.length > 0) {
-      if (this.xterm.buffer.active.cursorX > 0) {// ?
-        this.queueCommands([{ key: 'line', line: '' }]);
-      }
+    if (this.readyForInput && this.input.length > 0) {
+      const linesLeftOfInput = this.numLines() - (1 + this.offsetToColRow(this.input, this.cursor + 2).row);
+      this.queueCommands([...Array(1 + linesLeftOfInput)].map(_ => ({ key: 'line', line: '' })));
+      this.cursor = 0;
     } else if (this.input.length === 0) {
       this.clearInput();
     }
@@ -825,7 +826,7 @@ export class ttyXtermClass {
   }
 
   showPendingInput = debounce(() => {
-    if (this.promptReady) {
+    if (this.readyForInput) {
       const input = this.input;
       this.clearInput(); // Clear to avoid double prompt
       this.setInput(input);
@@ -851,7 +852,7 @@ export class ttyXtermClass {
 
   warnIfNotReady() {
     if (!this.promptReady) {
-      this.queueCommands([{ key: 'line', line: `ℹ️  not ready` }]);  
+      this.queueCommands([{ key: 'line', line: formatMessage('not ready', 'info') }]);  
       return true; // not ready 
     } else {
       return false;

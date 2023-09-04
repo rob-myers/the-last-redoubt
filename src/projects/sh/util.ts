@@ -212,6 +212,12 @@ export function stripAnsi(input: string) {
 
 //#region misc
 
+export function formatMessage(msg: string, level: 'info' | 'error') {
+  return level === 'info'
+    ? `ℹ️  ${ansi.Cyan}${msg}${ansi.Reset}`
+    : `${ansi.Red}${msg}${ansi.Reset}`
+}
+
 /**
  * - We'll compute text `textForTty` where each `[foo](bar)` is replaced by `[foo]`.
  * - The relationship between `foo` and `bar` is stored in a `TtyLinkCtxt`.

@@ -613,13 +613,15 @@ class cmdServiceClass {
       return cleanup;
     },
     /**
-     * Executed on suspend, without clearing `true` returners. The latter should be idempotent, e.g. unsubscribe, pause.
+     * Executed on suspend, without clearing `true` returners.
+     * The latter should be idempotent, e.g. unsubscribe, pause.
      */
     addResume(cleanup: () => void) {
       getProcess(this.meta).onResumes.push(cleanup);
     },
     /**
-     * Executed on suspend, without clearing `true` returners. The latter should be idempotent, e.g. unsubscribe, pause.
+     * Executed on suspend, without clearing `true` returners.
+     * The latter should be idempotent, e.g. unsubscribe, pause.
      */
     addSuspend(cleanup: () => void) {
       getProcess(this.meta).onSuspends.push(cleanup);
@@ -645,7 +647,7 @@ class cmdServiceClass {
     },
 
     info(message: string) {
-      useSession.api.writeMsg(this.meta.sessionKey, message, 'info');
+      useSession.api.writeMsgCleanly(this.meta.sessionKey, message, { level: 'info' });
     },
 
     /** Is the process running? */

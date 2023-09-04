@@ -8,7 +8,7 @@ import { ansi } from 'projects/service/const';
 import { canTouchDevice } from 'projects/service/dom';
 import { assertNonNull } from 'projects/service/generic';
 
-import { stripAnsi } from 'projects/sh/util';
+import { formatMessage, stripAnsi } from 'projects/sh/util';
 import useSession, { ProcessStatus, Session } from 'projects/sh/session.store';
 import { scrollback } from 'projects/sh/io';
 
@@ -49,7 +49,7 @@ export default function Terminal(props: Props) {
 
     if (props.disabled && state.xtermReady) {
       state.hasEverDisabled = true;
-      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansi.White}paused session${ansi.Reset}`, { prompt: false });
+      useSession.api.writeMsgCleanly(props.sessionKey, formatMessage(`${ansi.White}paused session`, 'info'), { prompt: false });
 
       // Pause running processes
       Object.values((state.session?.process)??{}).filter(
@@ -62,7 +62,7 @@ export default function Terminal(props: Props) {
     }
 
     if (!props.disabled && state.hasEverDisabled && state.xtermReady) {
-      useSession.api.writeMsgCleanly(props.sessionKey, `ℹ️  ${ansi.White}resumed session${ansi.Reset}`);
+      useSession.api.writeMsgCleanly(props.sessionKey, formatMessage(`${ansi.White}resumed session`, 'info'));
 
       // Resume processes we suspended
       const processes = Object.values((state.session?.process)??{});
