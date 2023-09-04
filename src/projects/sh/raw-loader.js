@@ -277,8 +277,11 @@
     },
   
     /**
-     * 🚧 clean
      * npc {action} [opts] [extras[i]]
+     * ```sh
+     * npc do rob $( click 1 )
+     * click | npc do rob
+     * ```
      */
     npc: async function* ({ api, args, home, datum }) {
       const w = api.getCached(home.WORLD_KEY);
@@ -297,7 +300,6 @@
         return yield* w.npcs.svc.yieldEvents(w, api);
       }
 
-      const process = api.getProcess();
       let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
 
       if (api.isTtyAt(0)) {
@@ -308,7 +310,7 @@
             args.slice(2).map(arg => api.parseJsArg(arg)),
           );
           if (npcAct.action === "do" || npcAct.action === "look-at") {
-            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
+            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcAct.npcKey);
           }
           yield await w.npcs.npcAct(npcAct);
         } finally {
@@ -316,20 +318,16 @@
         }
       } else {
         while ((datum = await api.read()) !== null) {
-          try {
-            const npcAct = args.length === 1
-              ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
-              // support initial operand e.g. `click | npc look-at {npcKey}`
-              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
-            ;
-            if (npcAct.action === "do" || npcAct.action === "look-at") {
-              cleanLongRunning = w.npcs.handleLongRunningNpcProcess(process, npcAct.npcKey);
-            }
-            yield await w.npcs.npcAct(npcAct)
-              .catch((e) => api.info(`Ignored: ${e}`));
-          } finally {
-            cleanLongRunning?.();
+          const npcAct = args.length === 1
+            ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
+            // support initial operand e.g. `click | npc look-at {npcKey}`
+            : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
+          ;
+          if (npcAct.action === "do" || npcAct.action === "look-at") {
+            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcAct.npcKey);
           }
+          yield await w.npcs.npcAct(npcAct).catch((e) => api.info(`Ignored: ${e}`));
+          cleanLongRunning?.();
         }
       }
 

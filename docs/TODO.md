@@ -12,21 +12,19 @@
     - ✅ remove `nav --to`
     - ✅ remove `nav --safeLoop`
     - ✅ remove `npc --safeLoop`
-    - `npc config verbose` to show errors in loops?
 
-- cleaner api.info
+- ✅ cleaner api.info
 
 - 🚧 paused npc should error when `do`/`go`/`look`?
   - if so, we must `kill --STOP {pid}` the controlNpc process
     if we want to try look/npc/nav/walk on rob
   - 🚧 add pause/resume/kill links inside `ps`
 
-- head radius increases whilst walking?
-
-- consider removing "peek view", or at least disabling
-
+- `npc config verbose` to show errors in loops?
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
+- ❌ head radius increases whilst walking?
+- ❌ consider removing "peek view", or at least disabling
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls
