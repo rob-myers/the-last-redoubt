@@ -600,7 +600,7 @@ export default function NPCs(props) {
         throw Error('too far away');
       }
 
-      await npc.fadeSpawnDo(// non-navigable uses targetPoint:
+      await npc.fadeSpawn(// non-navigable uses targetPoint:
         { ...point, ...!meta.nav && /** @type {Geom.VectJson} */ (meta.targetPos) },
         {
           angle: meta.nav && !meta.do
@@ -638,7 +638,7 @@ export default function NPCs(props) {
         throw Error('too far away');
       }
 
-      await npc.fadeSpawnDo({ ...e.point, ...decorPoint }, {
+      await npc.fadeSpawn({ ...e.point, ...decorPoint }, {
         angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
         requireNav: false,
         fadeOutMs: e.fadeOutMs,

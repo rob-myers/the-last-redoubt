@@ -83,7 +83,7 @@ declare namespace NPC {
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
-    async fadeSpawnDo(point: Geomorph.PointMaybeMeta, opts?: {
+    async fadeSpawn(point: Geomorph.PointMaybeMeta, opts?: {
       angle?: number;
       fadeOutMs?: number;
       meta?: Geomorph.PointMeta;
@@ -410,7 +410,6 @@ declare namespace NPC {
     point: Geomorph.PointMaybeMeta;
     fadeOutMs?: number;
     extraParams?: any[];
-    suppressThrow?: boolean;
   }
 
   export type NpcActionKey = NpcAction['action'];

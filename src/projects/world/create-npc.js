@@ -179,7 +179,7 @@ export default function createNpc(
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
-    async fadeSpawnDo(point, opts = {}) {
+    async fadeSpawn(point, opts = {}) {
       try {
         const meta = opts.meta ?? point.meta ?? {};
         await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);

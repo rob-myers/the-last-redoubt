@@ -362,7 +362,7 @@
           const position = npc.getPosition();
           if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
-              await npc.fadeSpawnDo(datum).catch(logError); // warp
+              await npc.fadeSpawn(datum).catch(logError); // warp
             }
           } else {// walk
             const navPath = w.npcs.getGlobalNavPath(position, datum, {
@@ -386,49 +386,47 @@
      * - `spawn rob --zhodani "$( click 1 )"`
      * - `spawn rob --class=zhodani "$( click 1 )"`
      * - `expr '{"npcKey":"rob","point":{"x":300,"y":300}}' | spawn`
-     * - `expr '{"npcKey":"rob","class":"zhodani","point":{"x":300,"y":300}}' | spawn`
+     * - `expr '{"npcKey":"rob","classKey":"zhodani","point":{"x":300,"y":300}}' | spawn`
      * 
      * We also handle "do points": spawn _from_ do; spawn _to_ do.
      */
     spawn: async function* ({ api, args, home, datum }) {
-      const { opts, operands } = api.getOpts(args, {
-        string: ["class", /** e.g. solomani, vilani, zhodani */],
-        boolean: ["--solomani", "--vilani", "--zhodani", /** shortcuts */],
+      const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
+        boolean: ["--solomani", "--vilani", "--zhodani", /** class */],
       });
-
-      const { npcs } = api.getCached(home.WORLD_KEY);
-      const npcClassKey = opts.class || (
+      const npcClassKey = (
         opts.solomani && "solomani"
         || opts.vilani && "vilani"
         || opts.zhodani && "zhodani"
         || undefined
       );
+      const w = api.getCached(home.WORLD_KEY);
+
       /**
        * @param {string} npcKey
        * @param {Geomorph.PointWithMeta} point
        * @param {NPC.NpcClassKey} [npcClassKey]
        */
-      async function spawnOrDo(npcKey, point, npcClassKey) {
-        const spawned = npcs.npc[npcKey];
-        if (spawned?.doMeta) {// At do points delegate to `do`
+      async function fadeSpawnDo(npcKey, point, npcClassKey) {
+        const spawned = w.npcs.npc[npcKey];
+        if (spawned?.doMeta) {
           npcClassKey && spawned.changeClass(npcClassKey);
-          await npcs.npcActDo({ npcKey, point, fadeOutMs: 0, suppressThrow: true });
+          await spawned.fadeSpawn(point);
         } else {
-          await npcs.spawn({ npcKey, point, npcClassKey });
-          if (point.meta?.do) {// Going to `do`
-            await npcs.npcActDo({ npcKey, point, fadeOutMs: 0 });
+          await w.npcs.spawn({ npcKey, point, npcClassKey });
+          if (point.meta?.do) {
+            await w.npcs.npcActDo({ npcKey, point, fadeOutMs: 0 });
           }
         }
       }
 
       if (api.isTtyAt(0)) {
-        const npcKey = operands[0];
-        const point = api.parseJsArg(operands[1]);
+        const point = api.parseJsArg(pointStr);
         point.meta ??= {};
-        await spawnOrDo(npcKey, point, npcClassKey);
+        await fadeSpawnDo(npcKey, point, npcClassKey);
       } else {
         while ((datum = await api.read()) !== null) {
-          await spawnOrDo(datum.npcKey, datum.point, datum.class ?? npcClassKey);
+          await fadeSpawnDo(datum.npcKey, datum.point, datum.classKey ?? npcClassKey);
         }
       }
     },
