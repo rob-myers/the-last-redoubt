@@ -216,12 +216,13 @@
       w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
 
       if (api.isTtyAt(0)) {
-        const point = api.parseJsArg(pointStr)
+        const point = /** @type {Geom.VectJson} */ (api.parseJsArg(pointStr))
         await w.npcs.npcAct({ action: "look-at", npcKey, point })
       } else {
         while ((datum = await api.read()) !== null) {
+          const point = /** @type {Geom.VectJson} */ (datum)
           await w.npcs.npcAct({ npcKey, action: "cancel" })
-          w.npcs.npcAct({ action: "look-at", npcKey, point: datum })
+          w.npcs.npcAct({ action: "look-at", npcKey, point })
         }
       }
     },
@@ -442,13 +443,16 @@
         return true;
       });
       
-      await /** @type {Promise<void>} */ (new Promise(resolve => {
-        const subscription = w.npcs.trackNpc({ npcKey, process: api.getProcess() })
-        subscription.add(resolve); // resolve on unsubscribe or invoke cleanups
-        api.addCleanup(() => subscription.unsubscribe());
-        api.addCleanup(resolve);
-      }))
-      w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
+      try {
+        await /** @type {Promise<void>} */ (new Promise(resolve => {
+          const subscription = w.npcs.trackNpc({ npcKey, process: api.getProcess() })
+          subscription.add(resolve); // resolve on unsubscribe or invoke cleanups
+          api.addCleanup(() => subscription.unsubscribe());
+          api.addCleanup(resolve);
+        }))
+      } finally {
+        w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid });
+      }
     },
   
     /**
@@ -456,73 +460,57 @@
      * - view `{ ms?: number; point?: Geom.VectJson, zoom?: number }`
      */
     view: async function* ({ api, args, home }) {
-      const [first, second, third] = args.map(api.parseJsArg);
-      const { npcs, panZoom, lib } = api.getCached(home.WORLD_KEY);
-      const connected = npcs.session[api.meta.sessionKey];
-      
-      connected?.panzoomPids.push(api.meta.pid);
-      api.addSuspend(() => { panZoom.animationAction("pause"); return true; });
-      api.addResume(() => { panZoom.animationAction("play"); return true; });
-      api.addCleanup(() => panZoom.animationAction("cancel"));
-      await npcs.panZoomTo(typeof first === "number"
-        ? {
-            ms: first * 1000,
-            point: typeof second === "number" ? undefined : second,
-            zoom: typeof second === "number" ? second : third,
-          }
-        : first,
-      );
-      connected && lib.removeFirst(connected.panzoomPids, api.meta.pid);
+      const [p1, p2, p3] = args.map(api.parseJsArg)
+      const w = api.getCached(home.WORLD_KEY)
+
+      w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid })
+      api.addSuspend(() => { w.panZoom.animationAction("pause"); return true; })
+      api.addResume(() => { w.panZoom.animationAction("play"); return true; })
+      api.addCleanup(() => w.panZoom.animationAction("cancel"))
+
+      try {
+        if (typeof p1 === "number") {
+          await w.npcs.panZoomTo({ ms: p1 * 1000,
+            ...typeof p2 === "number" ? { zoom: p2 } : { point: p2, zoom: p3 }
+          })
+        } else {
+          await w.npcs.panZoomTo(p1)
+        }
+      } finally {
+        w.npcs.disconnectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid })
+      }
     },
   
     /**
      * Move a specific npc along a @see {NPC.GlobalNavPath} <br/>
-     * - e.g. `nav rob $( click 1) | walk rob`
-     * - e.g. `nav rob $( click 1) > navPath; walk rob "$navPath"`
-     * - `npcKey` must be fixed via 1st arg
-     * - piped navPaths cancel previous
+     * `npcKey` must be first operand
+     * ```sh
+     * nav rob $( click 1) | walk rob
+     * nav rob $( click 1) > navPath; walk rob "$navPath"
+     * ```
      */
     walk: async function* ({ api, args, home, datum, promises = [] }) {
-      const { opts, operands } = api.getOpts(args, { boolean: [
+      const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
         "open",       /** Try to open doors */
-        "safeOpen",   /** Do not approach locked doors without key */
+        "safeOpen",   /** Open doors, avoiding locked ones */
         "forceOpen",  /** Open all doors (as if had skeleton key) */
       ]});
-      const { npcs } = api.getCached(home.WORLD_KEY)
-      const npcKey = operands[0]
-  
-      npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
-
       /** @type {NPC.WalkDoorStrategy} */
-      let doorStrategy = "none";
-      opts.open && (doorStrategy = "open");
-      opts.safeOpen && (doorStrategy = "safeOpen");
-      opts.forceOpen && (doorStrategy = "forceOpen");
-      
+      const doorStrategy = opts.open && "open" ||
+        opts.safeOpen && "safeOpen" ||
+        opts.forceOpen && "forceOpen" || "none";
+
+      const w = api.getCached(home.WORLD_KEY)
+      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+
       if (api.isTtyAt(0)) {
-        const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(operands[1]));
-        await npcs.walkNpc(npcKey, navPath, { doorStrategy });
-      } else {// `walk {npcKey}` expects to read global navPaths
-        datum = await api.read()
-        while (datum !== null) {
-          const navPath = /** @type {NPC.GlobalNavPath} */ (datum);
-          // Cancel before walking (interrupt other processes)
-          // But avoid cancel on empty-paths (do not interrupt other processes)
-          navPath.path.length > 0 && await npcs.npcAct({ npcKey, action: "cancel" })
-          // Subsequent reads can interrupt walk
-          const resolved = await Promise.race([
-            promises[0] = npcs.walkNpc(npcKey, navPath, { doorStrategy }),
-            promises[1] = api.read(),
-          ])
-          if (resolved === undefined) {// Finished walk
-            datum = await promises[1]
-          } else if (resolved === null) {// EOF so finish walk
-            await promises[0]
-            datum = resolved
-          } else {// We read something before walk finished
-            await npcs.npcAct({ npcKey, action: "cancel" })
-            datum = resolved
-          }
+        const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(navPathStr));
+        await w.npcs.walkNpc(npcKey, navPath, { doorStrategy });
+      } else {
+        while ((datum = await api.read()) !== null) {
+          const navPath = /** @type {NPC.GlobalNavPath} */ (datum)
+          navPath.path.length > 0 && await w.npcs.npcAct({ npcKey, action: "cancel" })
+          w.npcs.walkNpc(npcKey, navPath, { doorStrategy })
         }
       }
     },

@@ -2,11 +2,11 @@
 
 ## In progress
 
-- 🚧 cleanup commands/shell-fns
+- ✅ cleanup commands/shell-fns
   - ✅ controlNpc avoid try-catch + clean
   - ✅ panZoom.pointerUpExtras -> clickIds
-  - 🚧 remove Promise.race
-  - 🚧 remove opts
+  - ✅ remove Promise.race
+  - ✅ remove opts
     - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
     - ✅ remove `nav --preferOpen` (nav prefers open doors by default)
     - ✅ remove `nav --to`
@@ -20,6 +20,7 @@
     if we want to try look/npc/nav/walk on rob
   - 🚧 add pause/resume/kill links inside `ps`
 
+- `npc do` -> `act` ?
 - `npc config verbose` to show errors in loops?
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
