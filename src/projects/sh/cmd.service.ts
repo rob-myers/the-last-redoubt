@@ -3,7 +3,7 @@ import { uid } from 'uid';
 
 import { ansi } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
-import { computeNormalizedParts, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError } from './util';
+import { computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
 import useSession, { ProcessStatus } from './session.store';
@@ -323,21 +323,41 @@ class cmdServiceClass {
           .filter(({ key: pid, pgid }) => opts.a ? true : pid === pgid);
         const title = ['pid', 'ppid', 'pgid'].map(x => x.padEnd(5)).join(' ')
 
+        function getStatusText(status: ProcessStatus) {
+          return status === ProcessStatus.Killed
+            ? getProcessStatusIcon(status)
+            : `${formatLink(status === ProcessStatus.Running ? ` on ` : `${ansi.DarkGrey} off `)} ${formatLink(`${ansi.Red} x `)}`;
+        }
+
+        function registerStatusLinks(processLine: string) {
+          const strippedLine = stripAnsi(processLine);
+          useSession.api.addTtyLineCtxts(
+            meta.sessionKey,
+            strippedLine,
+            [// 🚧 pause/resume/kill processes, modifying link in-place in case of pause/resume
+              { lineText: strippedLine, linkText: 'on', linkStartIndex: strippedLine.indexOf('on') - 1, callback() { console.log('clicked on') } },
+              { lineText: strippedLine, linkText: 'off', linkStartIndex: strippedLine.indexOf('on') - 1, callback() { console.log('clicked off') } },
+              { lineText: strippedLine, linkText: 'x', linkStartIndex: strippedLine.indexOf('x') - 1, callback() { console.log('clicked x') } },
+            ],
+          );
+        }
+
         if (opts.s) {
           for (const { key: pid, ppid, pgid, status, src } of processes) {
-            const icon = getProcessStatusIcon(status);
-            const info = [pid, ppid, pgid].map(String).map(x => x.padEnd(5)).join(' ')
+            const info = [pid, ppid, pgid].map(x => `${x}`.padEnd(5)).join(' ')
             yield `${ansi.Blue}${title}${ansi.Reset}`;
-            yield `${info}${icon}`;
+            const processLine = `${info}${getStatusText(status)}`;
+            status !== ProcessStatus.Killed && registerStatusLinks(processLine);
+            yield processLine;
             yield src + '\n';
           }
         } else {
           yield `${ansi.Blue}${title}${ansi.Reset}`;
           for (const { key: pid, ppid, pgid, status, src } of processes) {
-            const icon = getProcessStatusIcon(status);
-            const info = [pid, ppid, pgid].map(String).map(x => x.padEnd(5)).join(' ');
-            const shortSrc = truncateOneLine(src.trimLeft(), 30);
-            yield `${info}${icon}  ${shortSrc}`;
+            const info = [pid, ppid, pgid].map(x => `${x}`.padEnd(5)).join(' ');
+            const processLine = `${info}${getStatusText(status)}  ${truncateOneLine(src.trimStart(), 30)}`;
+            status !== ProcessStatus.Killed && registerStatusLinks(processLine);
+            yield processLine;
           }
         }
         break;
@@ -515,7 +535,7 @@ class cmdServiceClass {
   ) {
     const lines = text.replace(/\r/g, '').split(/\n/);
     const parsedLines = lines.map(text => parseTtyMarkdownLinks(text, defaultValue, meta.sessionKey));
-    for (const {ttyText} of parsedLines) {
+    for (const { ttyText } of parsedLines) {
       await useSession.api.writeMsgCleanly(meta.sessionKey, ttyText);
     }
 

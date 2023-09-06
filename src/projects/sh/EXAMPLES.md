@@ -402,4 +402,11 @@ click | filter meta.longClick | take 1
 ```sh
 # click 4 places on other side of doors
 nav rob $( click 4 ) | walk --open rob
+
+# BASIC throwback
+echo What is your name?
+echo Hello $( take 1 )
+
+# ansi colour code
+call '() => "\u001b[36mRob"'
 ```

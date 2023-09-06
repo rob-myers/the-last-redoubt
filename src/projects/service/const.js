@@ -147,6 +147,7 @@ export const ansi = {
   Reverse: '\x1b[7m',
   ReverseReset: '\x1b[27m',
   Reset: '\x1b[0m',
+  // Strikethrough: '\x1b[9m',
   // Warn: '\x1b[30;104m',
   // White: '\x1b[0;37m',
   White: '\x1b[37m',

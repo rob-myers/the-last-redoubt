@@ -17,6 +17,7 @@ export type State = {
   
   readonly api: {
     addFunc: (sessionKey: string, funcName: string, wrappedFile: FileWithMeta) => void;
+    /** We assume `lineText` and `ctxts` have already been stripped of ansi codes. */
     addTtyLineCtxts: (sessionKey: string, lineText: string, ctxts: TtyLinkCtxt[]) => void;
     cleanTtyLink: (sessionKey: string) => void;
     createSession: (sessionKey: string, env: Record<string, any>) => Session;
@@ -137,8 +138,9 @@ export interface ProcessMeta {
 }
 
 export interface TtyLinkCtxt {
+  /** Line stripped of ansi-codes. */
   lineText: string;
-  /** For example `[foo]` has link text `foo` */
+  /** Label text stripped of ansi-codes e.g. `[ foo ]` has link text `foo` */
   linkText: string;
   /** Where `linkText` occurs in `lineText` */
   linkStartIndex: number;
@@ -162,11 +164,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     addTtyLineCtxts(sessionKey, lineText, ctxts) {
-      const strippedLine = stripAnsi(lineText); // Expect stripped?
-      api.getSession(sessionKey).ttyLink[strippedLine] = ctxts.map(x =>
-        // We strip ANSI colour codes for string comparison
-        ({ ...x, lineText: strippedLine, linkText: stripAnsi(x.linkText) })
-      );
+      api.getSession(sessionKey).ttyLink[lineText] = ctxts;
     },
 
     cleanTtyLink(sessionKey) {// 🚧 only run sporadically
@@ -451,7 +449,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
         { key: 'line', line: opts.level ? formatMessage(msg, opts.level) : `${msg}${ansi.Reset}` },
         { key: 'resolve', resolve },
       ]));
-      opts.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, msg, opts.ttyLinkCtxts);
+      opts.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, stripAnsi(msg), opts.ttyLinkCtxts);
       (opts.prompt ?? true) && setTimeout(() => {
         xterm.showPendingInput();
         // xterm.xterm.scrollToBottom();

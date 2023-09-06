@@ -5,6 +5,7 @@ import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import { warn } from "../service/log";
+import { stripAnsi } from "../sh/util";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
 import useStateRef from "../hooks/use-state-ref";
 
@@ -479,8 +480,8 @@ function mockHandleDecorClick({ decor }, api) {
     const line = `ℹ️  [ ${ansi.Blue}${label}${ansi.Reset} ] with ${numDoors} door${numDoors > 1 ? 's' : ''}`;
     
     worldSessions.map(({ key: sessionKey }) => useSession.api.writeMsgCleanly(sessionKey, line, { ttyLinkCtxts: [{// Manually record where the link was
-      lineText: line, 
-      linkText: label,
+      lineText: stripAnsi(line),
+      linkText: stripAnsi(label),
       // linkStartIndex: visibleUnicodeLength('ℹ️  ['),
       linkStartIndex: ('ℹ️  [').length,
       async callback() {

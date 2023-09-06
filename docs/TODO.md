@@ -15,10 +15,13 @@
 
 - ✅ cleaner api.info
 
+- 🚧 add pause/resume/kill links inside `ps`
+  - ✅ add working buttons
+  - pause/resume button toggles in place?
+  - button kills
 - 🚧 paused npc should error when `do`/`go`/`look`?
   - if so, we must `kill --STOP {pid}` the controlNpc process
     if we want to try look/npc/nav/walk on rob
-  - 🚧 add pause/resume/kill links inside `ps`
 
 - `npc do` -> `act` ?
 - `npc config verbose` to show errors in loops?
@@ -26,6 +29,9 @@
   - whilst running controlNpc
 - ❌ head radius increases whilst walking?
 - ❌ consider removing "peek view", or at least disabling
+- tty unicode bug after PASTING "[ ▶️ ] [ ⏸ ] [ ❌ ]"
+  - i.e. seemed one character off (prompt lost char)
+  - `choice '[ ▶️  ](play) [ ⏸  ](pause) [ ❌  ](kill) '`
 
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls

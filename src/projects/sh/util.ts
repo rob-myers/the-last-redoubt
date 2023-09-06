@@ -212,6 +212,14 @@ export function stripAnsi(input: string) {
 
 //#region misc
 
+/**
+ * `linkText` is the entire text inside the square braces.
+ */
+export function formatLink(linkText: string) {
+  return `${ansi.Reset}[${ansi.Bold}${ansi.White}${linkText}${ansi.Reset}]`;
+  // return `${ansi.Reset}${ansi.DarkGreyBg}[${ansi.Bold}${linkText}${ansi.BoldReset}]${ansi.Reset}`;
+}
+
 export function formatMessage(msg: string, level: 'info' | 'error') {
   return level === 'info'
     ? `ℹ️  ${ansi.Cyan}${msg}${ansi.Reset}`
@@ -241,7 +249,7 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
   const parts = boundaries
     .map((textIndex, i) => text.slice(textIndex, boundaries[i + 1] ?? text.length))
     .map((part, i) => (addedZero === (i % 2))
-      ? `${ansi.DarkGreyBg}[${ansi.Bold}${ansi.BrightWhite}${part.slice(1, part.indexOf('(') - 1)}${ansi.Reset}${ansi.DarkGreyBg}]${ansi.Reset}`
+      ? formatLink(part.slice(1, part.indexOf('(') - 1))
       : `${ansi.White}${part}${ansi.Reset}`
     )
   ;
@@ -251,7 +259,8 @@ export function parseTtyMarkdownLinks(text: string, defaultValue: any, sessionKe
   const linkCtxtsFactory = matches.length ? (resolve: (v: any) => void): TtyLinkCtxt[] =>
     matches.map((match, i) => ({
       lineText: ttyTextKey,
-      linkText: match[2], // 1 + ensures we're inside the square brackets
+      linkText: stripAnsi(match[2]),
+      // 1 + ensures we're inside the square brackets:
       linkStartIndex: 1 + stripAnsi(parts.slice(0, (2 * i) + addedZero).join('')).length,
       callback() {
         let value = parseJsArg(
