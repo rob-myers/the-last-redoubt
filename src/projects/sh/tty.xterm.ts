@@ -4,6 +4,7 @@ import { ansi } from '../service/const';
 import { formatMessage } from './util';
 import { MessageFromShell, MessageFromXterm, scrollback, ShellIo, DataChunk, isDataChunk, isProxy } from './io';
 import { safeStringify, testNever } from '../service/generic';
+import useSession from './session.store';
 
 /**
  * Wraps xtermjs `Terminal`.
@@ -238,8 +239,12 @@ export class ttyXtermClass {
   }
 
   /** Number of tty lines that would be spanned by `line`.  */
-  getNumWrappedLines(line: string) {
-    return 1 + this.offsetToColRow(line, line.length).row;
+  getNumWrappedLines(lineNumber: number) {
+    const initLineNumber = lineNumber;
+    const activeBuffer = this.xterm.buffer.active;
+    while (activeBuffer.getLine(lineNumber)?.isWrapped) lineNumber++;
+    return 1 + (lineNumber - initLineNumber);
+    // return 1 + this.offsetToColRow(line, line.length).row;
   }
 
   /**
@@ -645,6 +650,40 @@ export class ttyXtermClass {
       this.commandBuffer.push(command);
     }
     this.printPending();
+  }
+
+  /**
+   * Replace a line.
+   * @param lineNumber 1-based number of line in active buffer
+   * @param line the new line to write in its place
+   */
+  async replaceLine(lineNumber: number, line: string) {
+    const activeBuffer = this.xterm.buffer.active;
+
+    if (lineNumber < activeBuffer.baseY + 1) {// too far back
+      return await useSession.api.writeMsgCleanly(this.session.key, line, {
+        scrollToBottom: true,
+      });
+    }
+
+    // Move to `lineNumber` 🚧 abstract "move"
+    const startCursor = { x: activeBuffer.cursorX, y: activeBuffer.cursorY };
+    let deltaY = (lineNumber - 1) - (activeBuffer.baseY + activeBuffer.cursorY);
+    const numWrappedLines = this.getNumWrappedLines(lineNumber);
+    this.xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+
+    // Clear (possibly wrapped) line
+    this.xterm.write('\x1b[2K');
+    this.xterm.write('\x1b[E\x1b[2K'.repeat(numWrappedLines - 1));
+    this.xterm.write('\x1b[F'.repeat(numWrappedLines - 1));
+
+    // Write new line
+    this.xterm.write(line, () => {
+      // Return to previous cursor position
+      deltaY = startCursor.y - activeBuffer.cursorY;
+      this.xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+      this.xterm.write('\x1b[C'.repeat(startCursor.x));
+    });
   }
 
   reqHistoryLine(dir: -1 | 1) {

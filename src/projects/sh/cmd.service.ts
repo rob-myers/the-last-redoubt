@@ -323,7 +323,7 @@ class cmdServiceClass {
           useSession.api.addTtyLineCtxts(
             meta.sessionKey,
             lineText,
-            [// 🚧 pause/resume/kill processes, modifying link in-place in case of pause/resume
+            [// 🚧 pause/resume processes, modifying link in-place in case of pause/resume
               { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked on') } },
               { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked off') } },
               { lineText, linkText: 'x', linkStartIndex: lineText.indexOf('x') - 1, async callback(lineNumber) {
@@ -331,34 +331,10 @@ class cmdServiceClass {
                 cmdService.killProcesses(meta.sessionKey, [process.key]);
                 useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
 
-                // 🚧 ttyXterm.replaceLine(lineNumber, newLineText)
-                const { xterm: ttyXterm, xterm: { xterm } } = useSession.api.getSession(meta.sessionKey).ttyShell;
-                const activeBuffer = xterm.buffer.active;
+                const { xterm: ttyXterm } = useSession.api.getSession(meta.sessionKey).ttyShell;
                 lineNumber = ttyXterm.getWrapStartLineNumber(lineNumber);
+                ttyXterm.replaceLine(lineNumber, getProcessLineWithLinks(process));
 
-                if (lineNumber < activeBuffer.baseY + 1) {// too far back
-                  return await useSession.api.writeMsgCleanly(meta.sessionKey, getProcessLineWithLinks(process), {
-                    scrollToBottom: true,
-                  });
-                }
-
-                // Move to `lineNumber` 🚧 abstract "move"
-                const startCursor = { x: activeBuffer.cursorX, y: activeBuffer.cursorY };
-                let deltaY = (lineNumber - 1) - (activeBuffer.baseY + activeBuffer.cursorY);
-                /** Use one character less so we don't wrap onto final line */
-                const numWrappedLines = ttyXterm.getNumWrappedLines(lineText.slice(0, -1));
-                xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
-                // Clear (possibly wrapped) line
-                xterm.write('\x1b[2K');
-                xterm.write('\x1b[E\x1b[2K'.repeat(numWrappedLines - 1));
-                xterm.write('\x1b[F'.repeat(numWrappedLines - 1));
-                // Write new line
-                xterm.write(getProcessLineWithLinks(process), () => {
-                  // Return to previous cursor position
-                  deltaY = startCursor.y - activeBuffer.cursorY;
-                  xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
-                  xterm.write('\x1b[C'.repeat(startCursor.x));
-                });
               } },
             ],
           );
