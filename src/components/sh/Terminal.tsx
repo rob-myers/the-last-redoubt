@@ -112,15 +112,22 @@ export default function Terminal(props: Props) {
           // links look like this: [foo bar] or [1]
           // regex: /(\[[^\]]+\])/gi,
           regex: /(\[ [^\]]+ \])/gi,
-          async callback(_event, linkText, { lineText, linkStartIndex,  }) {
-            // console.log('clicked link', props.sessionKey, linkText, { lineText, linkStartIndex });
-            useSession.api.onTtyLink(
-              props.sessionKey,
-              stripAnsi(lineText),
-              // stripAnsi(linkText).slice(1, -1), // Omit square brackets
-              stripAnsi(linkText).slice(2, -2), // Omit square brackets and spacing
+          async callback(_event, linkText, { lineText, linkStartIndex, lineNumber }) {
+            // console.log('clicked link', {
+            //   sessionKey: props.sessionKey,
+            //   linkText,
+            //   lineText,
+            //   linkStartIndex,
+            //   lineNumber,
+            // });
+            useSession.api.onTtyLink({
+              sessionKey: props.sessionKey,
+              lineText: stripAnsi(lineText),
+              // Omit square brackets and spacing:
+              linkText: stripAnsi(linkText).slice(2, -2),
               linkStartIndex,
-            );
+              lineNumber,
+          });
           },
         }}
       />

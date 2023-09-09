@@ -5,8 +5,8 @@ import { ansi } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
 import { computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
-import { getProcessStatusIcon, ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
-import useSession, { ProcessStatus } from './session.store';
+import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
+import useSession, { ProcessMeta, ProcessStatus } from './session.store';
 import { cloneParsed, getOpts, parseService } from './parse';
 import { ttyShellClass } from './tty.shell';
 
@@ -231,32 +231,11 @@ class cmdServiceClass {
           'CONT', /** --CONT continues a paused process */
         ] });
 
-        const pids = operands.map(x => parseJsonArg(x))
-          .filter((x): x is number => Number.isFinite(x));
+        const pids = operands.map(x => parseJsonArg(x)).filter(
+          (x): x is number => Number.isFinite(x)
+        );
 
-        for (const pid of pids) {
-          const { process: { [pid]: process } } = useSession.api.getSession(meta.sessionKey);
-          const processes = process.pgid === pid
-            // Apply command to whole process group
-            ? useSession.api.getProcesses(meta.sessionKey, process.pgid).reverse()
-            // Apply command to exactly one process
-            : [process];
-
-          // NOTE on{Suspend,Resume}s are "first-in first-invoked"
-          processes.forEach(p => {
-            if (opts.STOP) {
-              p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
-              p.status = ProcessStatus.Suspended;
-            } else if (opts.CONT) {
-              p.onResumes = p.onResumes.filter(onResume => onResume());
-              p.status = ProcessStatus.Running;
-            } else {
-              p.status = ProcessStatus.Killed;
-              // Avoid immediate clean because it stops `sleep` (??)
-              window.setTimeout(() => killProcess(p));
-            }
-          });
-        }
+        this.killProcesses(meta.sessionKey, pids, { STOP: opts.STOP, CONT: opts.CONT });
         break;
       }
       case 'local': {
@@ -319,47 +298,90 @@ class cmdServiceClass {
           'a', /** Show all processes */
           's', /** Show process src */
         ], });
+        /** Process group leaders, or all processes */
         const processes = Object.values(useSession.api.getProcesses(meta.sessionKey))
-          .filter(({ key: pid, pgid }) => opts.a ? true : pid === pgid);
-        const title = ['pid', 'ppid', 'pgid'].map(x => x.padEnd(5)).join(' ')
-
-        function getStatusText(status: ProcessStatus) {
-          return status === ProcessStatus.Killed
-            ? getProcessStatusIcon(status)
-            : `${formatLink(status === ProcessStatus.Running ? ` on ` : `${ansi.DarkGrey} off `)} ${formatLink(`${ansi.Red} x `)}`;
+          .filter(({ key: pid, pgid }) => opts.a ? true : pid === pgid)
+        ;
+        const statusColour: Record<ProcessStatus, string> = { 0: ansi.DarkGrey, 1: ansi.White, 2: ansi.Red };
+        const statusLinks: Record<ProcessStatus, string> = {
+          0: `${formatLink(`${statusColour[0]} off `)} ${formatLink(`${statusColour[2]} x `)}`,
+          1: `${formatLink(`${statusColour[1]} on `)} ${formatLink(`${statusColour[2]} x `)}`,
+          2: '💀',
+        };
+        
+        function getProcessLineWithLinks(process: ProcessMeta) {
+          const info = [process.key, process.ppid, process.pgid].map(x => `${x}`.padEnd(5)).join(' ');
+          const line = `${statusColour[process.status]}${info}${ansi.Reset}${statusLinks[process.status]}${
+            opts.s ? '' : '  ' + truncateOneLine(process.src.trimStart(), 30)
+          }`;
+          process.status !== 2 && registerStatusLinks(process, line);
+          return line;
         }
 
-        function registerStatusLinks(processLine: string) {
-          const strippedLine = stripAnsi(processLine);
+        function registerStatusLinks(process: ProcessMeta, processLine: string) {
+          const lineText = stripAnsi(processLine);
           useSession.api.addTtyLineCtxts(
             meta.sessionKey,
-            strippedLine,
+            lineText,
             [// 🚧 pause/resume/kill processes, modifying link in-place in case of pause/resume
-              { lineText: strippedLine, linkText: 'on', linkStartIndex: strippedLine.indexOf('on') - 1, callback() { console.log('clicked on') } },
-              { lineText: strippedLine, linkText: 'off', linkStartIndex: strippedLine.indexOf('on') - 1, callback() { console.log('clicked off') } },
-              { lineText: strippedLine, linkText: 'x', linkStartIndex: strippedLine.indexOf('x') - 1, callback() { console.log('clicked x') } },
+              { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked on') } },
+              { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked off') } },
+              { lineText, linkText: 'x', linkStartIndex: lineText.indexOf('x') - 1, async callback(lineNumber) {
+                console.log('clicked x');
+
+                // 🚧 change tty line in-place
+                // - ✅ two lines at top
+                // - ✅ need correct text, including final blanks
+                // - 🚧 tidy
+                cmdService.killProcesses(meta.sessionKey, [process.key]);
+                useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
+
+                const { ttyShell } = useSession.api.getSession(meta.sessionKey);
+                const { xterm } = ttyShell.xterm;
+                const activeBuffer = xterm.buffer.active;
+                // Get the real lineNumber where the line began
+                while (activeBuffer.getLine(lineNumber - 1)?.isWrapped) lineNumber--;
+
+                const startCursor = { x: activeBuffer.cursorX, y: activeBuffer.cursorY };
+                if (lineNumber < activeBuffer.baseY + 1) {// too far back: we'll just print a new line
+                  // await useSession.api.writeMsgCleanly(meta.sessionKey, `${'__TODO__'} ${process.key} ${getStatusText(ProcessStatus.Killed)}`);
+                  await useSession.api.writeMsgCleanly(meta.sessionKey, getProcessLineWithLinks(process));
+                  xterm.scrollToBottom();
+                } else {
+                  // Move to line, where button might actually be on 2nd part of wrapped line...
+                  let deltaY = (lineNumber - 1) - (activeBuffer.baseY + activeBuffer.cursorY);
+                  const numWrappedLines = ttyShell.xterm.getNumWrappedLines(lineText.slice(0, -1));
+                  // console.log('clicked on line:', {
+                  //   lineText,
+                  //   numWrappedLines,
+                  // })
+                  xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+                  // clear line (may be wrapped)
+                  xterm.write('\x1b[2K');
+                  xterm.write('\x1b[E\x1b[2K'.repeat(numWrappedLines - 1));
+                  xterm.write('\x1b[F'.repeat(numWrappedLines - 1));
+                  // write new line
+                  xterm.write(getProcessLineWithLinks(process), () => {
+                    // Return to previous cursor position
+                    deltaY = startCursor.y - activeBuffer.cursorY;
+                    xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+                    xterm.write('\x1b[C'.repeat(startCursor.x));
+                  });
+                }
+              } },
             ],
           );
         }
+        
+        const title = ['pid', 'ppid', 'pgid'].map(x => x.padEnd(5)).join(' ');
+        if (!opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
 
-        if (opts.s) {
-          for (const { key: pid, ppid, pgid, status, src } of processes) {
-            const info = [pid, ppid, pgid].map(x => `${x}`.padEnd(5)).join(' ')
-            yield `${ansi.Blue}${title}${ansi.Reset}`;
-            const processLine = `${info}${getStatusText(status)}`;
-            status !== ProcessStatus.Killed && registerStatusLinks(processLine);
-            yield processLine;
-            yield src + '\n';
-          }
-        } else {
-          yield `${ansi.Blue}${title}${ansi.Reset}`;
-          for (const { key: pid, ppid, pgid, status, src } of processes) {
-            const info = [pid, ppid, pgid].map(x => `${x}`.padEnd(5)).join(' ');
-            const processLine = `${info}${getStatusText(status)}  ${truncateOneLine(src.trimStart(), 30)}`;
-            status !== ProcessStatus.Killed && registerStatusLinks(processLine);
-            yield processLine;
-          }
+        for (const process of processes) {
+          if (opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
+          yield getProcessLineWithLinks(process);
+          if (opts.s) yield process.src + '\n';
         }
+
         break;
       }
       case 'pwd': {
@@ -572,6 +594,11 @@ class cmdServiceClass {
     }
   }
 
+  private computeCwd(meta: Sh.BaseMeta, root: any) {
+    const pwd = useSession.api.getVar(meta, 'PWD');
+    return resolveNormalized(pwd.split('/'), root);
+  }
+
   get(node: Sh.BaseNode, args: string[]) {
     const root = this.provideProcessCtxt(node.meta);
     const pwd = useSession.api.getVar<string>(node.meta, 'PWD');
@@ -593,9 +620,32 @@ class cmdServiceClass {
     return outputs;
   }
 
-  private computeCwd(meta: Sh.BaseMeta, root: any) {
-    const pwd = useSession.api.getVar(meta, 'PWD');
-    return resolveNormalized(pwd.split('/'), root);
+  killProcesses(sessionKey: string, pids: number[], opts?: { STOP?: boolean; CONT?: boolean }) {
+    const session = useSession.api.getSession(sessionKey);
+    for (const pid of pids) {
+      const { [pid]: process } = session.process;
+      if (!process) {
+        continue; // Already killed
+      }
+      const processes = process.pgid === pid // Apply command to whole process group
+        ? useSession.api.getProcesses(sessionKey, process.pgid).reverse()
+        : [process]; // Apply command to exactly one process
+
+      // onSuspend onResume are "first-in first-invoked"
+      processes.forEach(p => {
+        if (opts?.STOP) {
+          p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
+          p.status = ProcessStatus.Suspended;
+        } else if (opts?.CONT) {
+          p.onResumes = p.onResumes.filter(onResume => onResume());
+          p.status = ProcessStatus.Running;
+        } else {
+          p.status = ProcessStatus.Killed;
+          // Avoid immediate clean because it stops `sleep` (??)
+          window.setTimeout(() => killProcess(p));
+        }
+      });
+    } 
   }
 
   async launchFunc(node: Sh.CallExpr, namedFunc: Sh.NamedFunction, args: string[]) {
@@ -617,9 +667,6 @@ class cmdServiceClass {
     }
   }
 
-  /**
-   * NOTE `this` must only refer to `meta` and `parent`.
-   */
   private readonly processApi = {
     /**
      * This will be overwritten via Function.prototype.bind.

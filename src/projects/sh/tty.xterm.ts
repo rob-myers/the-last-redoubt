@@ -237,6 +237,11 @@ export class ttyXtermClass {
     );
   }
 
+  /** Number of tty lines that would be spanned by `line`.  */
+  getNumWrappedLines(line: string) {
+    return 1 + this.offsetToColRow(line, line.length).row;
+  }
+
   /**
    * Erase a character at cursor location.
    */

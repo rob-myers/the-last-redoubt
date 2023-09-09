@@ -17,6 +17,12 @@ export interface ExtraHandlerContext {
    * Seems to count unicode characters as 1 char.
    */
   linkStartIndex: number;
+  /**
+   * `1`-based number of the line we clicked on.
+   * This can be a wrapped line, in which case the line
+   * actually started on an earlier `lineNumber`.
+   */
+  lineNumber: number;
 }
 
 export class LinkProvider implements ILinkProvider {
@@ -53,13 +59,8 @@ export class LinkProvider implements ILinkProvider {
             this._terminal.blur(); // Avoid showing keyboard on mobile
           }
           const [lineText] = translateBufferLineToStringWithWrap(y - 1, this._terminal);
-          // this is counting unicode characters as 1 char
-          // const linkStartIndex = _link.range.start.x;
-          // ℹ️ above was not taking multi-lines into account
-          // ℹ️ BUT for below we assume links with same label have same value
-          // 🚧 do things properly using e.{x,y}
           const linkStartIndex = 1 + lineText.indexOf(_link.text);
-          return this._handler(e, text, { lineText, linkStartIndex });
+          return this._handler(e, text, { lineText, linkStartIndex, lineNumber: y });
         },
         ...this._options
       })

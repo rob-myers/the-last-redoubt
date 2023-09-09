@@ -40,12 +40,13 @@ export type State = {
     getVar: <T = any>(meta: BaseMeta, varName: string) => T;
     getVarDeep: (meta: BaseMeta, varPath: string) => any | undefined;
     getSession: (sessionKey: string) => Session;
-    onTtyLink: (sessionKey: string, lineText: string, linkText: string, linkStartIndex: number) => void;
+    onTtyLink: (opts: { sessionKey: string; lineText: string; linkText: string; linkStartIndex: number; lineNumber: number; }) => void;
     persist: (sessionKey: string) => void;
     rehydrate: (sessionKey: string) => Rehydrated;
     removeDevice: (deviceKey: string) => void;
     removeProcess: (pid: number, sessionKey: string) => void;
     removeSession: (sessionKey: string) => void;
+    /** Expect `line` to be stripped of ansi-codes. */
     removeTtyLineCtxts: (sessionKey: string, line: string) => void;
     resolve: (fd: number, meta: BaseMeta) => Device;
     setLastExitCode(meta: BaseMeta, exitCode?: number): void;
@@ -94,6 +95,11 @@ interface Rehydrated {
   var: Record<string, any> | null;
 }
 
+/**
+ * - `0` is suspended
+ * - `1` is running
+ * - `2` is killed
+ */
 export enum ProcessStatus {
   Suspended,
   Running,
@@ -145,7 +151,7 @@ export interface TtyLinkCtxt {
   /** Where `linkText` occurs in `lineText` */
   linkStartIndex: number;
   /** Callback associated with link */
-  callback: () => void;
+  callback: (/** Line we clicked on (possibly wrapped) */ lineNumber: number) => void;
 }
 
 const useStore = create<State>()(devtools((set, get): State => ({
@@ -299,7 +305,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       return get().session[sessionKey];
     },
 
-    onTtyLink(sessionKey, lineText, linkText, linkStartIndex) {
+    onTtyLink(opts) {
       // console.log(
       //   'onTtyLink',
       //   { lineText, linkText, linkStartIndex },
@@ -307,10 +313,10 @@ const useStore = create<State>()(devtools((set, get): State => ({
       //   api.getSession(sessionKey).ttyLink[lineText],
       // );
       // api.cleanTtyLink(sessionKey);
-      api.getSession(sessionKey).ttyLink[lineText]?.find(x =>
-        x.linkStartIndex === linkStartIndex
-        && x.linkText === linkText
-      )?.callback();
+      api.getSession(opts.sessionKey).ttyLink[opts.lineText]?.find(x =>
+        x.linkStartIndex === opts.linkStartIndex
+        && x.linkText === opts.linkText
+      )?.callback(opts.lineNumber);
     },
 
     persist(sessionKey) {
@@ -363,8 +369,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     removeTtyLineCtxts(sessionKey, lineText) {
-      const strippedLine = stripAnsi(lineText); // Expect stripped?
-      delete api.getSession(sessionKey).ttyLink[strippedLine];
+      delete api.getSession(sessionKey).ttyLink[lineText];
     },
 
     resolve(fd, meta) {

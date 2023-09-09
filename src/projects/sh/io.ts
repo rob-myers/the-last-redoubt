@@ -150,14 +150,6 @@ export async function preProcessRead(
   }
 }
 
-export function getProcessStatusIcon(status: ProcessStatus) {
-  switch(status) {
-    case ProcessStatus.Killed: return '💀';
-    case ProcessStatus.Running: return '▶️';
-    case ProcessStatus.Suspended: return '⏸️';
-  }
-}
-
 //#region data chunk
 export const dataChunkKey = '__chunk__';
 export function isDataChunk(data: any): data is DataChunk {

@@ -2,26 +2,20 @@
 
 ## In progress
 
-- ✅ cleanup commands/shell-fns
-  - ✅ controlNpc avoid try-catch + clean
-  - ✅ panZoom.pointerUpExtras -> clickIds
-  - ✅ remove Promise.race
-  - ✅ remove opts
-    - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
-    - ✅ remove `nav --preferOpen` (nav prefers open doors by default)
-    - ✅ remove `nav --to`
-    - ✅ remove `nav --safeLoop`
-    - ✅ remove `npc --safeLoop`
-
-- ✅ cleaner api.info
-
 - 🚧 add pause/resume/kill links inside `ps`
   - ✅ add working buttons
-  - pause/resume button toggles in place?
-  - button kills
-- 🚧 paused npc should error when `do`/`go`/`look`?
-  - if so, we must `kill --STOP {pid}` the controlNpc process
-    if we want to try look/npc/nav/walk on rob
+  - ✅ kill button kills, clears links, updates line in place
+  - clean `ps`
+  - pause button pauses
+  - pause/resume button toggles in place
+  - resume button resumes
+
+- paused npc should error when `do`/`go`/`look`?
+  - THEN if we want to try look/npc/nav/walk on rob
+    first `kill --STOP {pid}` the controlNpc process,
+    OR use `ps` buttons
+
+- `track` animation should stop on kill?
 
 - `npc do` -> `act` ?
 - `npc config verbose` to show errors in loops?
@@ -565,6 +559,19 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ cleanup commands/shell-fns
+  - ✅ controlNpc avoid try-catch + clean
+  - ✅ panZoom.pointerUpExtras -> clickIds
+  - ✅ remove Promise.race
+  - ✅ remove opts
+    - ✅ remove `nav --exactNpc` (nav always relaxed about npcKeys)
+    - ✅ remove `nav --preferOpen` (nav prefers open doors by default)
+    - ✅ remove `nav --to`
+    - ✅ remove `nav --safeLoop`
+    - ✅ remove `npc --safeLoop`
+
+- ✅ cleaner api.info
 
 - ✅ BUG failed collision while `rob` paused and `nav foo rob | walk foo`
 ```sh
