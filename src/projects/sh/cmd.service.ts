@@ -327,47 +327,38 @@ class cmdServiceClass {
               { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked on') } },
               { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked off') } },
               { lineText, linkText: 'x', linkStartIndex: lineText.indexOf('x') - 1, async callback(lineNumber) {
-                console.log('clicked x');
 
-                // 🚧 change tty line in-place
-                // - ✅ two lines at top
-                // - ✅ need correct text, including final blanks
-                // - 🚧 tidy
                 cmdService.killProcesses(meta.sessionKey, [process.key]);
                 useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
 
-                const { ttyShell } = useSession.api.getSession(meta.sessionKey);
-                const { xterm } = ttyShell.xterm;
+                // 🚧 ttyXterm.replaceLine(lineNumber, newLineText)
+                const { xterm: ttyXterm, xterm: { xterm } } = useSession.api.getSession(meta.sessionKey).ttyShell;
                 const activeBuffer = xterm.buffer.active;
-                // Get the real lineNumber where the line began
-                while (activeBuffer.getLine(lineNumber - 1)?.isWrapped) lineNumber--;
+                lineNumber = ttyXterm.getWrapStartLineNumber(lineNumber);
 
-                const startCursor = { x: activeBuffer.cursorX, y: activeBuffer.cursorY };
-                if (lineNumber < activeBuffer.baseY + 1) {// too far back: we'll just print a new line
-                  // await useSession.api.writeMsgCleanly(meta.sessionKey, `${'__TODO__'} ${process.key} ${getStatusText(ProcessStatus.Killed)}`);
-                  await useSession.api.writeMsgCleanly(meta.sessionKey, getProcessLineWithLinks(process));
-                  xterm.scrollToBottom();
-                } else {
-                  // Move to line, where button might actually be on 2nd part of wrapped line...
-                  let deltaY = (lineNumber - 1) - (activeBuffer.baseY + activeBuffer.cursorY);
-                  const numWrappedLines = ttyShell.xterm.getNumWrappedLines(lineText.slice(0, -1));
-                  // console.log('clicked on line:', {
-                  //   lineText,
-                  //   numWrappedLines,
-                  // })
-                  xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
-                  // clear line (may be wrapped)
-                  xterm.write('\x1b[2K');
-                  xterm.write('\x1b[E\x1b[2K'.repeat(numWrappedLines - 1));
-                  xterm.write('\x1b[F'.repeat(numWrappedLines - 1));
-                  // write new line
-                  xterm.write(getProcessLineWithLinks(process), () => {
-                    // Return to previous cursor position
-                    deltaY = startCursor.y - activeBuffer.cursorY;
-                    xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
-                    xterm.write('\x1b[C'.repeat(startCursor.x));
+                if (lineNumber < activeBuffer.baseY + 1) {// too far back
+                  return await useSession.api.writeMsgCleanly(meta.sessionKey, getProcessLineWithLinks(process), {
+                    scrollToBottom: true,
                   });
                 }
+
+                // Move to `lineNumber` 🚧 abstract "move"
+                const startCursor = { x: activeBuffer.cursorX, y: activeBuffer.cursorY };
+                let deltaY = (lineNumber - 1) - (activeBuffer.baseY + activeBuffer.cursorY);
+                /** Use one character less so we don't wrap onto final line */
+                const numWrappedLines = ttyXterm.getNumWrappedLines(lineText.slice(0, -1));
+                xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+                // Clear (possibly wrapped) line
+                xterm.write('\x1b[2K');
+                xterm.write('\x1b[E\x1b[2K'.repeat(numWrappedLines - 1));
+                xterm.write('\x1b[F'.repeat(numWrappedLines - 1));
+                // Write new line
+                xterm.write(getProcessLineWithLinks(process), () => {
+                  // Return to previous cursor position
+                  deltaY = startCursor.y - activeBuffer.cursorY;
+                  xterm.write(deltaY > 0 ? '\x1b[E'.repeat(deltaY) : '\x1b[F'.repeat(-deltaY));
+                  xterm.write('\x1b[C'.repeat(startCursor.x));
+                });
               } },
             ],
           );

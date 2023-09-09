@@ -57,6 +57,7 @@ export type State = {
       level?: 'info' | 'error';
       prompt?: boolean;
       ttyLinkCtxts?: TtyLinkCtxt[];
+      scrollToBottom?: boolean;
     }) => Promise<void>;
   }
 }
@@ -457,7 +458,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       opts.ttyLinkCtxts && api.addTtyLineCtxts(sessionKey, stripAnsi(msg), opts.ttyLinkCtxts);
       (opts.prompt ?? true) && setTimeout(() => {
         xterm.showPendingInput();
-        // xterm.xterm.scrollToBottom();
+        opts.scrollToBottom && xterm.xterm.scrollToBottom();
       });
     },
   },

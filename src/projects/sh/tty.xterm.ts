@@ -243,6 +243,17 @@ export class ttyXtermClass {
   }
 
   /**
+   * Map wrapped 1-based line numbers back to actual 1-based
+   * line number they begin on.
+   */
+  getWrapStartLineNumber(wrappedLineNumber: number) {
+    const activeBuffer = this.xterm.buffer.active;
+    while (activeBuffer.getLine(wrappedLineNumber - 1)?.isWrapped)
+      wrappedLineNumber--;
+    return wrappedLineNumber;
+  }
+
+  /**
    * Erase a character at cursor location.
    */
   private handleCursorErase(backspace: boolean) {
