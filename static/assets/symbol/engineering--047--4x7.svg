@@ -9,14 +9,17 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <path d="M 990 300 L 1200.045 300 L 1200.045 1200 L 990 1200 L 990 1133.469 L 1022.46 1090.47 L 1024.951 1052.414 L 1022.46 1019.874 L 990 966.685 L 990 834.687 L 1022.417 776.09 L 1025.851 745.418 L 1022.35 711.73 L 990 666.361 L 990 534.414 L 1024 485.307 L 1027.038 450.413 L 1024 423.274 L 990 366.797 L 990 300 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" bx:origin="0.5 0.49851">
+    <path d="M 990 300 L 1200.045 300 L 1200.045 1200 L 990 1200 L 990 1133.469 L 1022.46 1090.47 L 1024.951 1052.414 L 1022.46 1019.874 L 990 966.685 L 990 834.687 L 1022.417 776.09 L 1025.851 745.418 L 1022.35 711.73 L 990 666.361 L 990 534.414 L 1024 485.307 L 1027.038 450.413 L 1024 423.274 L 990 366.797 L 990 300 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
       <title>surface</title>
     </path>
-    <rect y="375" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
-    <rect y="50" width="500" height="200" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="650" bx:origin="0.5 0.49851"/>
-    <rect y="675" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
-    <rect y="975" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840" bx:origin="0.5 0.49851"/>
+    <rect y="375" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840"/>
+    <rect y="50" width="500" height="200" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="650"/>
+    <rect y="675" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840"/>
+    <rect y="975" width="130" height="150" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" x="840"/>
     <path d="M 300 890 L 276.8 890 L 272.1 1010 L 248.8 1010 L 248.242 1140 L 50 1140 L 50 350 L 248.242 350 L 248.8 480 L 272.1 480 L 276.8 600 L 300 600 L 300 890 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 50.313 2050.993 L 50.313 1915.687 L 110 1856.7 L 110 1810.8 L 50 1810.8 L 50.313 1490.048 L 250 1490 L 250 1610.8 L 290 1610.8 L 290 1550.8 L 440 1550.8 L 477.804 1521.979 L 567.366 1494.647 L 630.448 1494.872 L 707.255 1515.424 L 760 1550.8 L 910 1550.8 L 909.636 1610.857 L 950 1610.8 L 950 1490.8 L 1150 1490.8 L 1150 1810.8 L 1090 1810.8 L 1090 1851.5 L 1150 1915.8 L 1147.8 2050.8 L 250 2051 L 50.313 2050.993 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255); transform-origin: 600px 1770.5px;">
+      <title>machine</title>
+    </path>
   </g>
   <g>
     <title>singles</title>
@@ -40,9 +43,6 @@
     </rect>
     <rect x="-5" width="10" height="1104.393" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="192.037">
       <title>parallel-connectors</title>
-    </rect>
-    <rect y="1500" width="1100" height="550" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" x="50" bx:origin="0.5 0.49851">
-      <title>wall machine no-fill</title>
     </rect>
     <rect width="20" height="2109.571" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" x="-10">
       <title>wall</title>
