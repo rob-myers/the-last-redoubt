@@ -356,7 +356,7 @@
         }
 
         if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
-          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          !meta.door && await w.npcs.npcAct({ npcKey, action: "cancel" });
           await w.npcs.npcActDo({ npcKey, point: datum }).catch(logError);
         } else if (meta.nav && !meta.ui) {
           await w.npcs.npcAct({ npcKey, action: "cancel" });

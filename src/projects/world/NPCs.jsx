@@ -574,12 +574,8 @@ export default function NPCs(props) {
           await state.offMeshDoMeta(npc, e);
           npc.doMeta = point.meta.do ? point.meta : null;
         }
-      } catch (e) {
-        if (e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:'))) {
-          // Swallow 'cancelled' errors e.g. start new walk, obstruction
-          // All errors can be swallowed via `npc do '{ suppressThrow: true }'`
-          // 🚧 should we swallow errors due to obstruction?
-        } else {
+      } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
+        if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
           throw e;
         }
       }
