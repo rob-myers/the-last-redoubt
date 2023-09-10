@@ -320,22 +320,31 @@ class cmdServiceClass {
 
         function registerStatusLinks(process: ProcessMeta, processLine: string) {
           const lineText = stripAnsi(processLine);
+
+          function updateLine(lineNumber: number) {
+            useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
+            const { xterm: ttyXterm } = useSession.api.getSession(meta.sessionKey).ttyShell;
+            lineNumber = ttyXterm.getWrapStartLineNumber(lineNumber);
+            ttyXterm.replaceLine(lineNumber, getProcessLineWithLinks(process));
+          }
+
           useSession.api.addTtyLineCtxts(
             meta.sessionKey,
             lineText,
-            [// 🚧 pause/resume processes, modifying link in-place in case of pause/resume
-              { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked on') } },
-              { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('on') - 1, callback() { console.log('clicked off') } },
+            [
+              { lineText, linkText: 'on', linkStartIndex: lineText.indexOf('on') - 1, callback(lineNumber) {
+                cmdService.killProcesses(meta.sessionKey, [process.key], { STOP: true });
+                updateLine(lineNumber);
+              }},
+              { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('off') - 1, callback(lineNumber) {
+                console.log('clicked off')
+                cmdService.killProcesses(meta.sessionKey, [process.key], { CONT: true });
+                updateLine(lineNumber);
+              }},
               { lineText, linkText: 'x', linkStartIndex: lineText.indexOf('x') - 1, async callback(lineNumber) {
-
                 cmdService.killProcesses(meta.sessionKey, [process.key]);
-                useSession.api.removeTtyLineCtxts(meta.sessionKey, lineText);
-
-                const { xterm: ttyXterm } = useSession.api.getSession(meta.sessionKey).ttyShell;
-                lineNumber = ttyXterm.getWrapStartLineNumber(lineNumber);
-                ttyXterm.replaceLine(lineNumber, getProcessLineWithLinks(process));
-
-              } },
+                updateLine(lineNumber);
+              }},
             ],
           );
         }

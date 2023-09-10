@@ -2,15 +2,15 @@
 
 ## In progress
 
-- 🚧 add pause/resume/kill links inside `ps`
+- ✅ add pause/resume/kill links inside `ps`
   - ✅ add working buttons
   - ✅ kill button kills, clears links, updates line in place
-  - clean `ps`
-  - pause button pauses
-  - pause/resume button toggles in place
-  - resume button resumes
+  - ✅ clean `ps`
+  - ✅ pause button pauses
+  - ✅ pause/resume button toggles in place
+  - ✅ resume button resumes
 
-- paused npc should error when `do`/`go`/`look`?
+- 🚧 paused npc should error when `do`/`go`/`look`?
   - THEN if we want to try look/npc/nav/walk on rob
     first `kill --STOP {pid}` the controlNpc process,
     OR use `ps` buttons
