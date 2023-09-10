@@ -190,6 +190,10 @@ export class gmGraphClass extends BaseGraph {
       //   doorId !== area.doorId && !(relDoorIds.includes(doorId) && doorLookup[doorId].open)
       // );
 
+      // 🚧 clarify `viewPos` and `getConnectorOtherSide`
+      // 🚧 clean `area.otherDoorId ?? area.doorId`
+
+
       /** We imagine we are viewing from the center of the door */
       const viewPos = areaGm.doors[area.doorId].poly.center;
       // These segs are not perfect i.e. part of door will be covered
@@ -199,19 +203,29 @@ export class gmGraphClass extends BaseGraph {
       const areaRoomId = area.hullRoomId ?? rootRoomId;
       // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
       // We avoid including the current room, using a small "envelope" instead.
-      const envelope = areaGm.getViewEnvelope(areaRoomId, area.doorId, nearDoorIds.includes(area.doorId));
+      const envelope = areaGm.getViewEnvelope(
+        areaRoomId,
+        area.doorId,
+        nearDoorIds.includes(area.otherDoorId ?? area.doorId),
+      );
       const exteriorPolys = Poly.union([
         envelope,
         area.poly,
       ]);
       // ]).find(poly => poly.contains(envelope.outline[0]));
-      exteriorPolys.length > 1 && warn(`computeViewsFromDoors: multiple disjoint exterior polys (${JSON.stringify({gmId, rootRoomId})})`);
 
       const lightPosition = areaGm.getViewDoorPosition(
         areaRoomId,
         area.doorId,
         nearDoorIds.includes(area.otherDoorId ?? area.doorId) ? doorPeekViewOffset : undefined,
       );
+
+      exteriorPolys.length > 1 && warn(
+        `${'computeViewsFromDoors'}: multiple disjoint exterior polys (${JSON.stringify({gmId, rootRoomId})})`
+      );
+      // !exteriorPolys[0].contains(lightPosition) && warn(
+      //   `${'computeViewsFromDoors'}: light should be inside exterior poly (${JSON.stringify({gmId, rootRoomId})})`
+      // );
 
       return {
         gmId: area.gmId,

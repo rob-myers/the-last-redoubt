@@ -340,7 +340,7 @@ export default function FOV(props) {
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
  * @property {Set<number>} nearDoorIds
- * Doors of "current" room the Player is near to.
+ * Doors in the current room, which the Player is near to.
  *
  * ℹ️ On walk into doorways this is the "next room",
  * unlike `player.gmRoomId` which will be the previous room.
