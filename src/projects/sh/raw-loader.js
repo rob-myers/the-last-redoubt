@@ -19,7 +19,6 @@
  * @property {string[]} args
  * @property {{ [key: string]: any; 'WORLD_KEY': '__WORLD_KEY_VALUE__'; }} home
  * @property {*} [datum] A shortcut for declaring a variable
- * @property {*[]} [promises] Another shortcut
  */
 
   /**
@@ -318,6 +317,7 @@
           cleanLongRunning?.();
         }
       } else {
+        const onError = /** @param {*} e */ (e) => w.npcs.config.verbose && api.info(`ignored: ${e}`)
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
@@ -327,7 +327,7 @@
           if (npcAct.action === "do" || npcAct.action === "look-at") {
             cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcAct.npcKey);
           }
-          yield await w.npcs.npcAct(npcAct).catch((e) => api.info(`Ignored: ${e}`));
+          yield await w.npcs.npcAct(npcAct).catch(onError);
           cleanLongRunning?.();
         }
       }
@@ -341,7 +341,7 @@
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
       w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
-      const logError = /** @param {any} e */ (e) => api.info(`Ignored: ${e}`);
+      const onError = /** @param {*} e */ (e) => w.npcs.config.verbose && api.info(`ignored: ${e}`)
 
       while ((datum = await api.read()) !== null) {
         const { meta } = datum;
@@ -357,13 +357,13 @@
 
         if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
           !meta.door && await w.npcs.npcAct({ npcKey, action: "cancel" });
-          await w.npcs.npcActDo({ npcKey, point: datum }).catch(logError);
+          await w.npcs.npcActDo({ npcKey, point: datum }).catch(onError);
         } else if (meta.nav && !meta.ui) {
           await w.npcs.npcAct({ npcKey, action: "cancel" });
           const position = npc.getPosition();
           if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
-              await npc.fadeSpawn(datum).catch(logError); // warp
+              await npc.fadeSpawn(datum).catch(onError); // warp
             }
           } else {// walk
             const navPath = w.npcs.getGlobalNavPath(position, datum, {
@@ -485,15 +485,17 @@
      * Move a specific npc along a @see {NPC.GlobalNavPath} <br/>
      * `npcKey` must be first operand
      * ```sh
+     * click | nav rob | walk rob
      * nav rob $( click 1) | walk rob
      * nav rob $( click 1) > navPath; walk rob "$navPath"
      * ```
      */
-    walk: async function* ({ api, args, home, datum, promises = [] }) {
+    walk: async function* ({ api, args, home, datum }) {
       const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
-        "open",       /** Try to open doors */
-        "safeOpen",   /** Open doors, avoiding locked ones */
-        "forceOpen",  /** Open all doors (as if had skeleton key) */
+        "open",       /** Try to open closed doors */
+        "safeOpen",   /** Try to open closed doors, except locked ones */
+        "forceOpen",  /** Try and can open any doors (as if had skeleton key) */
+        "forever",    /** Ignore errors when inside loop */
       ]});
       /** @type {NPC.WalkDoorStrategy} */
       const doorStrategy = opts.open && "open" ||
@@ -507,10 +509,17 @@
         const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(navPathStr));
         await w.npcs.walkNpc(npcKey, navPath, { doorStrategy });
       } else {
-        while ((datum = await api.read()) !== null) {
-          const navPath = /** @type {NPC.GlobalNavPath} */ (datum)
-          navPath.path.length > 0 && await w.npcs.npcAct({ npcKey, action: "cancel" })
-          w.npcs.walkNpc(npcKey, navPath, { doorStrategy })
+        let reject = /** @param {*} _ */ (_) => {};
+        const onError = /** @type {(e: any) => void} */ (opts.forever
+          ? e => w.npcs.config.verbose && api.info(`ignored: ${e}`)
+          : e => reject(e)
+        );
+
+        while ((datum = await Promise.race([
+          api.read(),
+          new Promise((_, r) => reject = r),
+        ])) !== null) {
+          w.npcs.walkNpc(npcKey, datum, { doorStrategy }).catch(onError)
         }
       }
     },
