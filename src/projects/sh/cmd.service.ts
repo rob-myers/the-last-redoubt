@@ -905,7 +905,7 @@ function prettySafe(x: any) {
 
 /**
  * Read once from stdin. We convert `{ eof: true }` to `null` for
- * easier assignment, but beware of other falsies.
+ * easier assignment, but beware of other falsy values.
  */
 async function read(meta: Sh.BaseMeta, chunks = false) {
   const result = await cmdService.readOnce(meta, chunks);

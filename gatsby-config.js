@@ -62,7 +62,7 @@ const config = {
       options: {
         headers: {
           // 🚧 Careful about caching app-data.json and page-data.json 
-          // 🚧 Cache-busting code has been introduced in gatbsy-node.js
+          // 🚧 Cache-busting code has been introduced in gatsby-node.js
           // '/*': ['Cache-Control: public, max-age=31536000, immutable'],
           // 'static/*': ['Cache-Control: public, max-age=31536000, immutable'],
         },
