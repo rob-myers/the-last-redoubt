@@ -358,6 +358,7 @@ declare namespace NPC {
     /** Suppress all errors e.g. for loop like `foo | npc do`  */
     suppressThrow?: boolean;
     timeMs?: number;
+    verbose?: boolean;
   }
 
   type ConfigBooleanKey = (
@@ -374,6 +375,7 @@ declare namespace NPC {
     | 'scriptDoors'
     | 'showColliders'
     | 'showIds'
+    | 'verbose'
   );
 
    /**

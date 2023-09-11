@@ -198,7 +198,7 @@ class NpcService {
   //#region keys
 
   /** @type {Record<NPC.ConfigBooleanKey, true>} */
-  fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true };
+  fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true, verbose: true };
 
   fromConfigBooleanKeys = keys(this.fromConfigBooleanKey);
 

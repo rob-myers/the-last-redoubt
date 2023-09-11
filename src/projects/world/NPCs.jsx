@@ -33,9 +33,10 @@ export default function NPCs(props) {
     session: {},
 
     config: /** @type {Required<NPC.NpcConfigOpts>} */ (new Proxy(({
-      logTags: /** @type {boolean} */ (true),
+      logTags: /** @type {boolean} */ (false),
       omnipresent: /** @type {boolean} */ (false),
       scriptDoors: /** @type {boolean} */ (true),
+      verbose: /** @type {boolean} */ (false),
     }), {
       /** @param {keyof NPC.NpcConfigOpts | typeof proxyKey | 'toJSON'} key */
       get(ctxt, key) {
@@ -58,6 +59,7 @@ export default function NPCs(props) {
           case 'omnipresent':
           case 'logTags':
           case 'scriptDoors':
+          case 'verbose':
             return ctxt[key];
           case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
           case 'showColliders': return decorStyle.getPropertyValue(cssName.decorCollidersDisplay) === 'none' ? false : true;
@@ -98,6 +100,7 @@ export default function NPCs(props) {
           case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
+          case 'verbose': ctxt.verbose = !!value; break;
           case 'showColliders': decorStyle.setProperty(cssName.decorCollidersDisplay, value ? 'initial' : 'none'); break;
           case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
 
@@ -874,6 +877,12 @@ export default function NPCs(props) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
       } else if (navPath.path.length === 0) {
         return;
+      } else if (npc.manuallyPaused) {
+        throw Error(`manually paused npc cannot walk`);
+      }
+      
+      if (npc.isWalking() || npc.isPaused()) {
+        await npc.cancel(); // 🤔
       }
 
       try {
