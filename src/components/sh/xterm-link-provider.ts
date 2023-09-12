@@ -60,6 +60,7 @@ export class LinkProvider implements ILinkProvider {
           }
           const [lineText] = translateBufferLineToStringWithWrap(y - 1, this._terminal);
           const linkStartIndex = 1 + lineText.indexOf(_link.text);
+          // Must return or everything breaks
           return this._handler(e, text, { lineText, linkStartIndex, lineNumber: y });
         },
         ...this._options

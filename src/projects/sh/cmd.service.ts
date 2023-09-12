@@ -320,11 +320,12 @@ class cmdServiceClass {
         
         function getProcessLineWithLinks(process: ProcessMeta) {
           const info = [process.key, process.ppid, process.pgid].map(x => `${x}`.padEnd(5)).join(' ');
-          // 🚧 merge into `registerStatusLinks`
-          let line = `${statusColour[process.status]}${info}${ansi.Reset}`;
           const hasLinks = !suppressLinks(process);
-          hasLinks && (line += statusLinks[process.status] + '  ');
-          !opts.s && (line += truncateOneLine(process.src.trimStart(), 30));
+          const line = `${statusColour[process.status]}${info}${ansi.Reset}${
+            hasLinks ? statusLinks[process.status] + '  ' : ''
+          }${
+            !opts.s ? truncateOneLine(process.src.trimStart(), 30) : ''
+          }`;
           hasLinks && registerStatusLinks(process, line);
           return line;
         }
@@ -348,7 +349,6 @@ class cmdServiceClass {
                 updateLine(lineNumber);
               }},
               { lineText, linkText: 'off', linkStartIndex: lineText.indexOf('off') - 1, callback(lineNumber) {
-                console.log('clicked off')
                 cmdService.killProcesses(meta.sessionKey, [process.key], { CONT: true });
                 updateLine(lineNumber);
               }},

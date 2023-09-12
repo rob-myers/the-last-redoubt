@@ -109,9 +109,9 @@ export default function Terminal(props: Props) {
         }}
         options={options}
         linkProviderDef={{
-          // links look like this: [foo bar] or [1]
-          // regex: /(\[[^\]]+\])/gi,
+          // links look like this: [ foo bar ] or [ 1 ]
           regex: /(\[ [^\]]+ \])/gi,
+          // regex: /(\[[^\]]+\])/gi,
           async callback(_event, linkText, { lineText, linkStartIndex, lineNumber }) {
             // console.log('clicked link', {
             //   sessionKey: props.sessionKey,
@@ -127,7 +127,7 @@ export default function Terminal(props: Props) {
               linkText: stripAnsi(linkText).slice(2, -2),
               linkStartIndex,
               lineNumber,
-          });
+            });
           },
         }}
       />
