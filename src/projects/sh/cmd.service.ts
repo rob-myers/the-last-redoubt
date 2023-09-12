@@ -298,23 +298,34 @@ class cmdServiceClass {
           'a', /** Show all processes */
           's', /** Show process src */
         ], });
-        /** Process group leaders, or all processes */
-        const processes = Object.values(useSession.api.getProcesses(meta.sessionKey))
-          .filter(({ key: pid, pgid }) => opts.a ? true : pid === pgid)
-        ;
+        const processes = { ...useSession.api.getSession(meta.sessionKey).process };
+        !opts.a && Object.values(processes).forEach(({ key: pid, pgid }) =>
+          pid !== pgid && delete processes[pid]
+        );
+
         const statusColour: Record<ProcessStatus, string> = { 0: ansi.DarkGrey, 1: ansi.White, 2: ansi.Red };
         const statusLinks: Record<ProcessStatus, string> = {
           0: `${formatLink(`${statusColour[0]} off `)} ${formatLink(`${statusColour[2]} x `)}`,
           1: `${formatLink(`${statusColour[1]} on `)} ${formatLink(`${statusColour[2]} x `)}`,
-          2: '💀',
+          2: '',
         };
+
+        function suppressLinks(process: ProcessMeta) {
+          return (
+            process.status === 2
+            || process.key === 0 // `ps` has no links for parent of pipeline:
+            || (!opts.a && !opts.s && (processes[process.key + 1]?.ppid) === process.key)
+          );
+        }
         
         function getProcessLineWithLinks(process: ProcessMeta) {
           const info = [process.key, process.ppid, process.pgid].map(x => `${x}`.padEnd(5)).join(' ');
-          const line = `${statusColour[process.status]}${info}${ansi.Reset}${statusLinks[process.status]}${
-            opts.s ? '' : '  ' + truncateOneLine(process.src.trimStart(), 30)
-          }`;
-          process.status !== 2 && registerStatusLinks(process, line);
+          // 🚧 merge into `registerStatusLinks`
+          let line = `${statusColour[process.status]}${info}${ansi.Reset}`;
+          const hasLinks = !suppressLinks(process);
+          hasLinks && (line += statusLinks[process.status] + '  ');
+          !opts.s && (line += truncateOneLine(process.src.trimStart(), 30));
+          hasLinks && registerStatusLinks(process, line);
           return line;
         }
 
@@ -352,10 +363,12 @@ class cmdServiceClass {
         const title = ['pid', 'ppid', 'pgid'].map(x => x.padEnd(5)).join(' ');
         if (!opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
 
-        for (const process of processes) {
+        for (const process of Object.values(processes)) {
           if (opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
           yield getProcessLineWithLinks(process);
-          if (opts.s) yield process.src + '\n';
+          if (opts.s) {// Avoid multiline white in tty
+            yield* process.src.split('\n').map(x => `${ansi.Reset}${x}`).concat('\n');
+          }
         }
 
         break;

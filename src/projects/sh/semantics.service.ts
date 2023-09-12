@@ -153,7 +153,8 @@ class semanticsServiceClass {
         break;
       }
       case '|': {
-        const { sessionKey } = node.meta; // pgid is pid of final pipe-child
+        const { sessionKey, pid: ppid } = node.meta;
+        // pgid is pid of final pipe-child
         const { ttyShell, nextPid: pgid } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
@@ -170,7 +171,7 @@ class semanticsServiceClass {
 
         try {
           // Clone, connecting stdout to stdin of subsequent process
-          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { pgid }));
+          const clones = stmts.map(x => wrapInFile(cloneParsed(x), { ppid, pgid }));
           fifos.forEach((fifo, i) => clones[i + 1].meta.fd[0] = clones[i].meta.fd[1] = fifo.key);
           
           let errors = [] as any[], exitCode = undefined as undefined | number;

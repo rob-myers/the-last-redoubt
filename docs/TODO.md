@@ -10,27 +10,43 @@
   - ✅ pause/resume button toggles in place
   - ✅ resume button resumes
 
+- ✅ `ps` no buttons for `0` or pipeline parent
+
 - 🚧 paused npc should error when `do`/`go`/`look`?
-  - THEN if we want to try look/npc/nav/walk on rob
-    first `kill --STOP {pid}` the controlNpc process,
-    OR use `ps` buttons
+  ℹ️ if we want rob to look/npc/nav/walk,
+    `kill --STOP {pid}` the controlNpc process,
+    or use `ps` buttons (more convenient)
+  - ✅ cannot cancel whilst paused
+  - ✅ cannot walk whilst paused
+  - cannot look whilst paused
+  - cannot do whilst paused
+  - cannot spawn whilst paused
 
-- `track` animation should stop on kill?
+- `npc rob do $( click 1 )` should open door
+- `nav rob $( click 1 ) | walk rob` should pause on pause tabs
 
-- `npc do` -> `act` ?
-- `npc config verbose` to show errors in loops?
+- clarify various types of pausing
+- `track` animation should stop on kill
+- `track` should pause when tracked npc does?
+  - `track` pauses if pause npc during walk
+  - `track` does not pause if pause npc whilst stationary
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
+- `npc config verbose` to show errors in loops
+- fix `npc rob fadeSpawnDo` on click do point?
+  - cannot go thru walls
+  - on/off mesh spawn too
+  - ❌ maybe should be long _press_ not click
+
+- return to homepage
+  - emphasise "language" and "joining behaviours" on homepage
+
+- ❌ `npc do` -> `act`
 - ❌ head radius increases whilst walking?
 - ❌ consider removing "peek view", or at least disabling
 - tty unicode bug after PASTING "[ ▶️ ] [ ⏸ ] [ ❌ ]"
   - i.e. seemed one character off (prompt lost char)
   - `choice '[ ▶️  ](play) [ ⏸  ](pause) [ ❌  ](kill) '`
-
-- fix `npc rob fadeSpawnDo` on click do point?
-  - cannot go thru walls
-  - on/off mesh spawn too
-  - ❌ maybe should be long _press_ not click
 
 - ℹ️ can do `split` then send e.g. `foo` and see output `f`, `o`, `o`
 - ℹ️ BUT does not work when pasting and include a subsequent newline e.g.
@@ -39,15 +55,11 @@
   #
   ```
 
-- `track` should pause when tracked npc does?
-  - `track` pauses if pause npc during walk
-  - `track` does not pause if pause npc whilst stationary
 - BUG? multiple paste issue when reading tty?
   - consider `split ' ' | take 3` and paste multiple lines
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
-- cleanup NPC CLI i.e. fewer options
-- emphasise "language" and "joining behaviours" on homepage
+- ✅ cleanup NPC CLI i.e. fewer options
 
 - BUG on send empty command should not overwrite session.lastExitCode
 - BUG? killError(_, exitCode) 2nd param working?
