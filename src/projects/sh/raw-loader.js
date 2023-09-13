@@ -312,7 +312,6 @@
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
-            // support initial operand e.g. `click | npc do {npcKey}`
             : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
           ;
           yield await w.npcs.npcAct(npcAct).catch(onError);
@@ -360,7 +359,7 @@
             });
             navPath.name = w.npcs.svc.getNavPathName(npcKey);
             w.debug.addPath(navPath);
-            w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
+            npc.walk(navPath, { doorStrategy: "none" });
           }
         } else {// look
           await npc.cancel();
@@ -491,10 +490,10 @@
         opts.forceOpen && "forceOpen" || "none";
 
       const w = api.getCached(home.WORLD_KEY)
-      w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const { npc } = w.npcs.handleLongRunningNpcProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        await w.npcs.walkNpc(npcKey, api.parseJsArg(navPathStr), { doorStrategy });
+        await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });
       } else {
         let reject = /** @param {*} _ */ (_) => {};
         let promise = Promise.resolve();
@@ -507,7 +506,7 @@
           api.read(),
           new Promise((_, r) => reject = r),
         ])) !== null) {
-          promise = w.npcs.walkNpc(npcKey, datum, { doorStrategy }).catch(onError)
+          promise = npc.walk(datum, { doorStrategy }).catch(onError)
         }
         await promise; // After EOF
       }

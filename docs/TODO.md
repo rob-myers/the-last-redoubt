@@ -22,7 +22,10 @@
   - ✅ `click | npc rob do`
   - ✅ removed `npc do`
 
-- `npcs.walkNpc` -> `npc.walk` ?
+- ✅ `npcs.walkNpc` -> `npc.walk`
+
+- BUG ctrl-c `look rob $( click 1 )` not releasing click
+- BUG lookLoop multi-click
 
 - 🚧 handleLongRunningNpcProcess provides api which handles pausing
   - ✅ `look rob $( click 1 )`

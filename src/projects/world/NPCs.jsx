@@ -439,9 +439,9 @@ export default function NPCs(props) {
           await handlePaused();
           await state.spawn(e);
         },
-        async walkNpc(...args) {
+        async walk(...args) {
           await handlePaused();
-          await state.walkNpc(...args);
+          await npc.walk(...args);
         },
       };
     },
@@ -803,41 +803,6 @@ export default function NPCs(props) {
 
       return subscription;
     },
-    async walkNpc(npcKey, navPath, opts = {}) {
-      const npc = state.getNpc(npcKey);
-      if (!npcService.verifyGlobalNavPath(navPath)) {
-        throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
-      } else if (navPath.path.length === 0) {
-        return;
-      }
-      
-      if (npc.manuallyPaused) {
-        throw Error('paused: cannot walk');
-      }
-      if (npc.isWalking() || npc.isPaused()) {
-        await npc.cancel(); // 🤔
-      }
-
-      try {
-        if (npc.isPointBlocked(
-          navPath.path[0],
-          npc.getPosition().equalsAlmost(navPath.path[0])
-        )) {// start of navPath blocked
-          throw new Error('cancelled');
-        }
-        /**
-         * Walk along a global navpath, possibly throwing
-         * Error with message 'cancelled' if collide with something.
-         */
-        await npc.followNavPath(navPath, opts.doorStrategy);
-      } catch (err) {
-        if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
-          console.info(`walkNpc cancelled: ${npcKey}`);
-        } else {
-          throw err;
-        }
-      }
-    },
   }), { deps: [api] });
   
   React.useEffect(() => {
@@ -910,7 +875,6 @@ export default function NPCs(props) {
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc').NpcServiceType} svc
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
- * @property {(npcKey: string, navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts) => Promise<void>} walkNpc
  */
 
 /**
@@ -926,7 +890,7 @@ export default function NPCs(props) {
  * @property {NPC.NPC['lookAt']} lookAt
  * @property {NPC.NPC['do']} do
  * @property {State['spawn']} spawn
- * @property {State['walkNpc']} walkNpc
+ * @property {NPC.NPC['walk']} walk
  */
 
 const [tempVect, tempVect2, tempVect3] = [1, 2, 3].map(_ => new Vect);

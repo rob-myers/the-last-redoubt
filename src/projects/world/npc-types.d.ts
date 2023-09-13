@@ -172,6 +172,7 @@ declare namespace NPC {
     updateStaticBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
+    walk(navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     wayTimeout(): void;
   }
 

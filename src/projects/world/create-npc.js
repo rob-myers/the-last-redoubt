@@ -627,7 +627,7 @@ export default function createNpc(
 
       if (api.npcs.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
-        await api.npcs.walkNpc(this.key, navPath, { throwOnCancel: true });
+        await this.walk(navPath, { throwOnCancel: true });
         typeof meta.orient === 'number' && await this.animateRotate(meta.orient * (Math.PI / 180), 100);
         this.startAnimationByMeta(meta);
         return;
@@ -870,6 +870,40 @@ export default function createNpc(
       aux.index = index;
       aux.segBounds.copy(Rect.fromPoints(path[index], path[index + 1]));
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
+    },
+    async walk(navPath, opts = {}) {
+      if (!api.npcs.svc.verifyGlobalNavPath(navPath)) {
+        throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
+      }
+      if (this.manuallyPaused) {
+        throw Error('paused: cannot walk');
+      }
+      if (this.isWalking() || this.isPaused()) {
+        await this.cancel(); // 🤔
+      }
+      if (navPath.path.length === 0) {
+        return;
+      }
+
+      try {
+        if (this.isPointBlocked(
+          navPath.path[0],
+          this.getPosition().equalsAlmost(navPath.path[0])
+        )) {// start of navPath blocked
+          throw new Error('cancelled');
+        }
+        /**
+         * Walk along a global navpath, possibly throwing
+         * Error with message 'cancelled' if collide with something.
+         */
+        await this.followNavPath(navPath, opts.doorStrategy);
+      } catch (err) {
+        if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
+          console.info(`walk cancelled: ${this.key}`);
+        } else {
+          throw err;
+        }
+      }
     },
     /**
      * 🚧 avoid many short timeouts?
