@@ -383,7 +383,6 @@ declare namespace NPC {
     */
    export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
-    | { action: 'cancel'; npcKey: string }
     | { action: 'config'; } // get all
     | { action: 'config'; configKey: string } // Possibly space-sep `ConfigBooleanKey`s
     | NpcActionConfigPartial
@@ -395,8 +394,6 @@ declare namespace NPC {
     | { action: 'get'; npcKey: string; selector?: string | ((npc: NPC.NPC) => any); extraArgs?: any[]; }
     | { action: 'light'; lit?: boolean; point: Geom.VectJson }
     | { action: 'map'; mapAction?: FovMapAction; timeMs?: number; }
-    | { action: 'pause'; npcKey: string; cause?: 'process-suspend'; }
-    | { action: 'resume'; npcKey: string; cause?: 'process-resume'; }
     | { action: 'remove-decor' | 'rm-decor'; items?: string[]; regexStr?: string; decorKey?: string; }
     | { action: 'rm' | 'remove'; npcKey?: string; npcKeys?: string[]; }
     | { action: 'set-player'; npcKey?: string }

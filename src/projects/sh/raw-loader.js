@@ -220,7 +220,7 @@
       } else {
         let promise = Promise.resolve(/** @type {*} */ (0));
         while ((datum = await api.read()) !== null) {
-          await w.npcs.npcAct({ npcKey, action: "cancel" })
+          await npc.cancel();
           promise = npc.lookAt(datum);
         }
         await promise; // After EOF
@@ -357,10 +357,10 @@
         }
 
         if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
-          !meta.door && await w.npcs.npcAct({ npcKey, action: "cancel" });
+          !meta.door && await npc.cancel();
           await w.npcs.npcActDo({ npcKey, point: datum }).catch(onError);
         } else if (meta.nav && !meta.ui) {
-          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          await npc.cancel();
           const position = npc.getPosition();
           if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
@@ -376,7 +376,7 @@
             w.npcs.walkNpc(npcKey, navPath, { doorStrategy: "none" });
           }
         } else {// look
-          await w.npcs.npcAct({ npcKey, action: "cancel" });
+          await npc.cancel();
           npc.lookAt(datum).catch(onError);
         }
       }

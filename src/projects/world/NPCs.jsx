@@ -377,19 +377,19 @@ export default function NPCs(props) {
       );
     },
     handleLongRunningNpcProcess(processApi, npcKey) {
-      state.getNpc(npcKey); // Throws if non-existent
+      const npc = state.getNpc(npcKey); // Throws if non-existent
       const process = processApi.getProcess();
 
       const cb = {
         cleanup() {
-          state.npcAct({ npcKey, action: "cancel" }).catch(_e => void {});
+          npc.cancel().catch(_e => {});
         },
         suspend() {
-          state.npcAct({ npcKey, action: "pause", cause: 'process-suspend' });
+          npc.pause(true);
           return true;
         },
         resume() {
-          state.npcAct({ npcKey, action: "resume", cause: 'process-resume' });
+          npc.resume(true);
           return true;
         },
       };
@@ -476,8 +476,6 @@ export default function NPCs(props) {
         case 'do':
           await state.npcActDo(e);
           break;
-        case 'cancel':
-          return await state.getNpc(e.npcKey).cancel();
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(npcService.isConfigBooleanKey);
@@ -517,12 +515,6 @@ export default function NPCs(props) {
         }
         case 'map': // view/hide world map
           return api.fov.mapAct(e.mapAction, e.timeMs);
-        case 'pause':// pause current animation
-          state.getNpc(e.npcKey).pause(e.cause === 'process-suspend');
-          break;
-        case 'resume':// resume current animation
-          state.getNpc(e.npcKey).resume(e.cause === 'process-resume');
-          break;
         case 'rm':
         case 'remove':
           e.npcKey !== undefined && state.removeNpc(e.npcKey);

@@ -13,8 +13,12 @@
   - ✅ do
   - ✅ spawn
 
+- ✅ `npc cancel rob` -> `npc rob cancel`
+- ✅ `npc pause rob` -> `npc rob pause`
+- ✅ `npc resume rob` -> `npc rob resume`
+
 - 🚧 `await handlePaused()` at level of shell functions
-  - cancel
+  - 🚧 cancel
   - walk
   - look
   - do

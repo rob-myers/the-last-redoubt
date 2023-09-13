@@ -78,15 +78,6 @@ class NpcService {
         case "rm-decor":
           // npc {remove-decor,rm-decor} {decorKey}
           return { action: 'remove-decor', decorKey: opts };
-        case "cancel":
-          // npc cancel {npcKey}
-          return { action: 'cancel', npcKey: opts };
-        case "pause":
-          // npc pause {npcKey}
-          return { action: 'pause', npcKey: opts };
-        case "resume":
-          // npc resume {npcKey}
-          return { action: 'resume', npcKey: opts };
         case "rm":
         case "remove":
           // npc {rm,remove} {npcKey}
@@ -134,14 +125,11 @@ class NpcService {
           // npc light {pointInRoom} {falsy}  # off
           return { action: 'light', point: /** @type {Geomorph.PointMaybeMeta} */ (opts), lit: extras[0] };
         case "map":
-        case "cancel":
         case "do":
           // npc do {partialUpdate}
           return { action: 'do', .../** @type {NPC.NpcDoDef} */(opts) };
         case "events":
         case "get":
-        case "pause":
-        case "resume":
         case "remove-decor":
         case "rm-decor":
         case "rm":
@@ -160,7 +148,6 @@ class NpcService {
           // npc events
           return { action: 'events' };
         case "add-decor":
-        case "cancel":
         case "config":
           // npc config
           return { action: 'config' }; // get all
@@ -173,8 +160,6 @@ class NpcService {
         case "do":
         case "light":
         case "map":
-        case "pause":
-        case "resume":
         case "remove-decor":
         case "rm-decor":
         case "rm":
@@ -201,7 +186,7 @@ class NpcService {
   fovMapActionKeys = keys(this.fromFovMapActionKey);
 
   /** @type {Record<NPC.NpcActionKey, true>} */
-  fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+  fromNpcActionKey = { "add-decor": true, config: true, decor: true, do: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
   /** @type {Record<NPC.NpcClassKey, true>} */
   fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };
