@@ -307,7 +307,8 @@
         );
         yield await w.npcs.npcAct(npcAct);
       } else {
-        const onError = /** @param {*} e */ (e) => { w.npcs.config.verbose; api.info(`ignored: ${e}`) };
+        /** @param {*} e */
+        const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
@@ -327,7 +328,8 @@
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
       w.npcs.handleLongRunningNpcProcess(api, npcKey);
-      const onError = /** @param {*} e */ (e) => { w.npcs.config.verbose; api.info(`ignored: ${e}`) };
+      /** @param {*} e */
+      const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
 
       while ((datum = await api.read()) !== null) {
         const { meta } = datum;
@@ -496,8 +498,8 @@
       } else {
         let reject = /** @param {*} _ */ (_) => {};
         let promise = Promise.resolve();
-        const onError = /** @type {(e: any) => void} */ (opts.forever
-          ? e => { w.npcs.config.verbose; api.info(`ignored: ${e}`); }
+        const onError = /** @type {(e: *) => void} */ (opts.forever
+          ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`))
           : e => reject(e)
         );
         
