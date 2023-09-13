@@ -381,17 +381,9 @@ export default function NPCs(props) {
       const process = processApi.getProcess();
 
       const cb = {
-        cleanup() {
-          npc.cancel().catch(_e => {});
-        },
-        suspend() {
-          npc.pause(true);
-          return true;
-        },
-        resume() {
-          npc.resume(true);
-          return true;
-        },
+        cleanup() { npc.cancel().catch(_e => {}); },
+        suspend() { npc.pause(true); return true; },
+        resume() { npc.resume(true); return true; },
       };
       process.cleanups.push(cb.cleanup);
       process.onSuspends.push(cb.suspend);
@@ -400,17 +392,57 @@ export default function NPCs(props) {
       // kill on remove-npc
       const subscription = this.events.subscribe({ next(x) {
         if (x.key === 'removed-npc' && x.npcKey === npcKey) {
-          processApi.kill(true); // kill process group
+          processApi.kill(true); // must kill whole process group
           subscription.unsubscribe();
         }
       }});
       process.cleanups.push(() => subscription.unsubscribe());
 
-      return () => {
-        // suspend/resume typically need to persist across Tabs pause/resume.
-        // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
-        process.onSuspends.splice(process.onSuspends.indexOf(cb.suspend), 1);
-        process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
+      // handlePaused waits until resumed, but throws on process killed
+      async function handlePaused() {
+        npc.manuallyPaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          const subscription = state.events.subscribe({ next(x) {
+            if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
+              resolve();
+              subscription.unsubscribe();
+            }
+          }});
+          process.cleanups.push(
+            () => reject(processApi.getKillError()),
+            () => subscription.unsubscribe()
+          );
+        }));
+      }
+
+      return {
+        npc,
+        cleanup() {
+          // suspend/resume typically need to persist across Tabs pause/resume.
+          // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
+          process.onSuspends.splice(process.onSuspends.indexOf(cb.suspend), 1);
+          process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
+        },
+        // 🚧 proxy?
+        async cancel() {
+          await handlePaused();
+          await npc.cancel();
+        },
+        async lookAt(point) {
+          await handlePaused();
+          await npc.lookAt(point);
+        },
+        async npcActDo(e) {
+          await handlePaused();
+          await state.npcActDo(e);
+        },
+        async spawn(e) {
+          await handlePaused();
+          await state.spawn(e);
+        },
+        async walkNpc(...args) {
+          await handlePaused();
+          await state.walkNpc(...args);
+        },
       };
     },
     inFrustum(src, dst, srcRadians, fovRadians = Math.PI / 4) {
@@ -959,7 +991,7 @@ export default function NPCs(props) {
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
- * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
+ * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => LongRunningApi} handleLongRunningNpcProcess Returns cleanup
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
  * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled
@@ -988,6 +1020,17 @@ export default function NPCs(props) {
 /**
  * @typedef NpcActResult
  * @type {void | number | NPC.NPC | NPC.NPC[] | NPC.DecorDef | NPC.DecorDef[] | import("../sh/io").DataChunk<NPC.NpcConfigOpts>}
+ */
+
+/**
+ * @typedef LongRunningApi
+ * @property {NPC.NPC} npc
+ * @property {() => void} cleanup
+ * @property {NPC.NPC['cancel']} cancel
+ * @property {NPC.NPC['lookAt']} lookAt
+ * @property {State['npcActDo']} npcActDo
+ * @property {State['spawn']} spawn
+ * @property {State['walkNpc']} walkNpc
  */
 
 const [tempVect, tempVect2, tempVect3] = [1, 2, 3].map(_ => new Vect);

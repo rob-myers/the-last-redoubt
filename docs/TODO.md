@@ -17,10 +17,11 @@
 - ✅ `npc pause rob` -> `npc rob pause`
 - ✅ `npc resume rob` -> `npc rob resume`
 
-- 🚧 `await handlePaused()` at level of shell functions
-  - 🚧 cancel
+- 🚧 handleLongRunningNpcProcess provides api which handles pausing
+  - ✅ `look rob $( click 1 )`
+    - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
+  - cancel
   - walk
-  - look
   - do
   - spawn
 

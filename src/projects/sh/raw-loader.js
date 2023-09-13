@@ -212,16 +212,14 @@
 
     look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
       const w = api.getCached(home.WORLD_KEY)
-      w.npcs.handleLongRunningNpcProcess(api, npcKey);
-      const npc = w.npcs.getNpc(npcKey);
+      const { lookAt } = w.npcs.handleLongRunningNpcProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        await npc.lookAt(api.parseJsArg(pointStr));
+        await lookAt(api.parseJsArg(pointStr));
       } else {
         let promise = Promise.resolve(/** @type {*} */ (0));
         while ((datum = await api.read()) !== null) {
-          await npc.cancel();
-          promise = npc.lookAt(datum);
+          promise = lookAt(datum);
         }
         await promise; // After EOF
       }
@@ -311,7 +309,7 @@
             args.slice(2).map(arg => api.parseJsArg(arg)),
           );
           if (npcAct.action === "do") {
-            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey);
+            ({ cleanup: cleanLongRunning } = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey));
           }
           yield await w.npcs.npcAct(npcAct);
         } finally {
@@ -326,7 +324,7 @@
             : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
           ;
           if (npcAct.action === "do") {
-            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey);
+            ({ cleanup: cleanLongRunning } = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey));
           }
           yield await w.npcs.npcAct(npcAct).catch(onError);
           cleanLongRunning?.();

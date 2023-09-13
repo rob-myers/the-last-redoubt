@@ -499,6 +499,9 @@ export default function createNpc(
       if (this.manuallyPaused) {
         throw Error('paused: cannot look');
       }
+      if (this.isWalking() || this.isPaused()) {
+        await this.cancel(); // 🤔
+      }
       if (!this.canLook()) {
         throw Error('cannot look');
       }
