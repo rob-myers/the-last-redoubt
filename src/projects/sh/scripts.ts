@@ -68,7 +68,7 @@ export const gameFunctions = [
 doLoop: `{
   click |
     filter 'p => p.meta.do || p.meta.nav || p.meta.door' |
-    npc do $1
+    npc $1 do
 }`,
 
 /**

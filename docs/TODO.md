@@ -17,13 +17,20 @@
 - ✅ `npc pause rob` -> `npc rob pause`
 - ✅ `npc resume rob` -> `npc rob resume`
 
+- ✅ `npcs.npcActDo` -> `npc.do`
+  - ✅ `npc rob do $( click 1 )`
+  - ✅ `click | npc rob do`
+  - ✅ removed `npc do`
+
+- `npcs.walkNpc` -> `npc.walk` ?
+
 - 🚧 handleLongRunningNpcProcess provides api which handles pausing
   - ✅ `look rob $( click 1 )`
     - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
-  - cancel
-  - walk
-  - do
-  - spawn
+  - 🚧 cancel
+  - 🚧 walk
+  - 🚧 do
+  - 🚧 spawn
 
 
 - BUG `walk` is getting stuck because manually paused

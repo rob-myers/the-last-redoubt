@@ -94,9 +94,6 @@ class NpcService {
           // npc config omnipresent showLabels
           // npc config 'omnipresent showLabels'
           return { action: 'config', configKey: [opts].concat(extras).join(' ') };
-        case "do":
-          // npc do {npcKey} [point] [extras[i]]
-          return { action: 'do', npcKey: opts, point: extras[0], extraParams: extras.slice(1) };
         case "map":
           // npc map {action} [secs]
           // 👉 npc map show-for-secs [secs] => npc map show-for-ms [secs * 1000]
@@ -125,9 +122,6 @@ class NpcService {
           // npc light {pointInRoom} {falsy}  # off
           return { action: 'light', point: /** @type {Geomorph.PointMaybeMeta} */ (opts), lit: extras[0] };
         case "map":
-        case "do":
-          // npc do {partialUpdate}
-          return { action: 'do', .../** @type {NPC.NpcDoDef} */(opts) };
         case "events":
         case "get":
         case "remove-decor":
@@ -157,7 +151,6 @@ class NpcService {
         case "get":
           // npc get
           return { action: 'get' }; // list all
-        case "do":
         case "light":
         case "map":
         case "remove-decor":
@@ -186,7 +179,7 @@ class NpcService {
   fovMapActionKeys = keys(this.fromFovMapActionKey);
 
   /** @type {Record<NPC.NpcActionKey, true>} */
-  fromNpcActionKey = { "add-decor": true, config: true, decor: true, do: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+  fromNpcActionKey = { "add-decor": true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
   /** @type {Record<NPC.NpcClassKey, true>} */
   fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };

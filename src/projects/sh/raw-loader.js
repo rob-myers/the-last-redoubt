@@ -299,35 +299,22 @@
         return yield* w.npcs.svc.yieldEvents(w, api);
       }
 
-      let cleanLongRunning = /** @type {undefined | (() => void)} */ (undefined);
-
       if (api.isTtyAt(0)) {
-        try {
-          const npcAct = w.npcs.svc.normalizeNpcCommandOpts(
-            action,
-            api.parseJsArg(args[1]),
-            args.slice(2).map(arg => api.parseJsArg(arg)),
-          );
-          if (npcAct.action === "do") {
-            ({ cleanup: cleanLongRunning } = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey));
-          }
-          yield await w.npcs.npcAct(npcAct);
-        } finally {
-          cleanLongRunning?.();
-        }
+        const npcAct = w.npcs.svc.normalizeNpcCommandOpts(
+          action,
+          api.parseJsArg(args[1]),
+          args.slice(2).map(arg => api.parseJsArg(arg)),
+        );
+        yield await w.npcs.npcAct(npcAct);
       } else {
-        const onError = /** @param {*} e */ (e) => w.npcs.config.verbose && api.info(`ignored: ${e}`)
+        const onError = /** @param {*} e */ (e) => { w.npcs.config.verbose; api.info(`ignored: ${e}`) };
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
             // support initial operand e.g. `click | npc do {npcKey}`
             : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
           ;
-          if (npcAct.action === "do") {
-            ({ cleanup: cleanLongRunning } = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey));
-          }
           yield await w.npcs.npcAct(npcAct).catch(onError);
-          cleanLongRunning?.();
         }
       }
 
@@ -340,7 +327,7 @@
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
       w.npcs.handleLongRunningNpcProcess(api, npcKey);
-      const onError = /** @param {*} e */ (e) => w.npcs.config.verbose && api.info(`ignored: ${e}`)
+      const onError = /** @param {*} e */ (e) => { w.npcs.config.verbose; api.info(`ignored: ${e}`) };
 
       while ((datum = await api.read()) !== null) {
         const { meta } = datum;
@@ -356,7 +343,7 @@
 
         if (meta.do || meta.door || (npc.doMeta && meta.nav)) {// do
           !meta.door && await npc.cancel();
-          await w.npcs.npcActDo({ npcKey, point: datum }).catch(onError);
+          await npc.do(datum).catch(onError);
         } else if (meta.nav && !meta.ui) {
           await npc.cancel();
           const position = npc.getPosition();
@@ -415,7 +402,7 @@
         } else {
           await w.npcs.spawn({ npcKey, point, npcClassKey });
           if (point.meta?.do) {
-            await w.npcs.npcActDo({ npcKey, point, fadeOutMs: 0 });
+            await spawned.do(point, { fadeOutMs: 0 });
           }
         }
       }
@@ -510,7 +497,7 @@
         let reject = /** @param {*} _ */ (_) => {};
         let promise = Promise.resolve();
         const onError = /** @type {(e: any) => void} */ (opts.forever
-          ? e => w.npcs.config.verbose && api.info(`ignored: ${e}`)
+          ? e => { w.npcs.config.verbose; api.info(`ignored: ${e}`); }
           : e => reject(e)
         );
         

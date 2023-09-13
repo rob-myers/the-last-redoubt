@@ -75,6 +75,7 @@ declare namespace NPC {
     cancel(): Promise<void>;
     canLook(): boolean;
     changeClass(npcClassKey: NPC.NpcClassKey): void;
+    do(point: Geomorph.PointMaybeMeta, opts?: Pick<NpcDoDef, 'fadeOutMs' | 'extraParams'>): Promise<void>;
     /** Filter pending way metas e.g. stale collisions. */
     filterWayMetas(
       shouldRemove: (meta: NPC.NpcWayMeta) => boolean
@@ -149,6 +150,11 @@ declare namespace NPC {
     nextWayTimeout(): void;
     npcRef(el: HTMLDivElement | null): void;
     obscureBySurfaces(): void;
+    /** Started off-mesh and clicked point */
+    offMeshDoMeta(point: Geomorph.PointMaybeMeta, opts: { fadeOutMs?: number; suppressThrow?: boolean }): Promise<void>;
+    /** Started on-mesh and clicked point */
+    onMeshDoMeta(point: Geomorph.PointMaybeMeta, opts: { fadeOutMs?: number; suppressThrow?: boolean }): Promise<void>;
+    
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
@@ -388,7 +394,6 @@ declare namespace NPC {
     | NpcActionConfigPartial
     | { action: 'decor'; } // get all
     | { action: 'decor'; } & (DecorDef | { decorKey: string })
-    | { action: 'do'; } & NpcDoDef
     | { action: 'events'; }
     | { action: 'get'; } // get all
     | { action: 'get'; npcKey: string; selector?: string | ((npc: NPC.NPC) => any); extraArgs?: any[]; }

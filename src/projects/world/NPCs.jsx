@@ -431,9 +431,9 @@ export default function NPCs(props) {
           await handlePaused();
           await npc.lookAt(point);
         },
-        async npcActDo(e) {
+        async do(...args) {
           await handlePaused();
-          await state.npcActDo(e);
+          await npc.do(...args);
         },
         async spawn(e) {
           await handlePaused();
@@ -505,9 +505,6 @@ export default function NPCs(props) {
             : 'key' in e // 🚧 verify decor?
               ? api.decor.setDecor(e) // add
               : Object.values(api.decor.decor) // list
-        case 'do':
-          await state.npcActDo(e);
-          break;
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(npcService.isConfigBooleanKey);
@@ -574,102 +571,6 @@ export default function NPCs(props) {
         default:
           throw Error(testNever(e, { override: `unrecognised action: "${JSON.stringify(e)}"` }));
       }
-    },
-    async npcActDo(e) {
-      const npc = state.getNpc(e.npcKey);
-      if (npc.manuallyPaused) {
-        throw Error('paused: cannot do');
-      }
-      const point = e.point;
-      point.meta ??= {}; // possibly manually specified (not via `click [n]`)
-
-      try {
-        if (point.meta.door && hasGmDoorId(point.meta)) {
-          /** `undefined` -> toggle, `true` -> open, `false` -> close */
-          const extraParam = e.extraParams?.[0] === undefined ? undefined : !!e.extraParams[0];
-          const open = extraParam === true;
-          const close = extraParam === false;
-          const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
-          const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: e.npcKey, close, open });
-          if (close) {
-            if (isOpen) throw Error('cannot close door');
-          } else if (open) {
-            if (!isOpen) throw Error('cannot open door');
-          } else {
-            if (wasOpen === isOpen) throw Error('cannot toggle door');
-          }
-        } else if (state.isPointInNavmesh(npc.getPosition())) {
-          await state.onMeshDoMeta(npc, e);
-          npc.doMeta = point.meta.do ? point.meta : null;
-        } else {
-          await state.offMeshDoMeta(npc, e);
-          npc.doMeta = point.meta.do ? point.meta : null;
-        }
-      } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
-        if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
-          throw e;
-        }
-      }
-    },
-    async offMeshDoMeta(npc, e) {
-      const src = npc.getPosition();
-      const point = e.point;
-      const meta = point.meta ?? {};
-
-      if (!e.suppressThrow && !meta.do && !meta.nav) {
-        throw Error('not doable nor navigable');
-      }
-      if (!e.suppressThrow && (
-        src.distanceTo(point) > npc.getInteractRadius()
-        || !api.gmGraph.inSameRoom(src, point)
-      )) {
-        throw Error('too far away');
-      }
-
-      await npc.fadeSpawn(// non-navigable uses targetPoint:
-        { ...point, ...!meta.nav && /** @type {Geom.VectJson} */ (meta.targetPos) },
-        {
-          angle: meta.nav && !meta.do
-            // use direction src --> point if entering navmesh
-            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
-            // use meta.orient if staying off-mesh
-            : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
-          fadeOutMs: e.fadeOutMs,
-          meta,
-        },
-      );
-    },
-    async onMeshDoMeta(npc, e) {
-      const src = npc.getPosition();
-      const meta = e.point.meta ?? {};
-      /** The actual "do point" (e.point is somewhere on icon) */
-      const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? e.point;
-
-      if (!e.suppressThrow && !meta.do) {
-        throw Error('not doable');
-      }
-      if (!api.gmGraph.inSameRoom(src, decorPoint)) {
-        throw Error('too far away');
-      }
-
-      if (state.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
-        const navPath = state.getGlobalNavPath(npc.getPosition(), decorPoint);
-        await state.walkNpc(npc.key, navPath, { throwOnCancel: true });
-        typeof meta.orient === 'number' && await npc.animateRotate(meta.orient * (Math.PI / 180), 100);
-        npc.startAnimationByMeta(meta);
-        return;
-      }
-
-      if (!e.suppressThrow && !(src.distanceTo(e.point) <= npc.getInteractRadius())) {
-        throw Error('too far away');
-      }
-
-      await npc.fadeSpawn({ ...e.point, ...decorPoint }, {
-        angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
-        requireNav: false,
-        fadeOutMs: e.fadeOutMs,
-        meta,
-      });
     },
     async panZoomTo(e) {
       if (!e || (e.zoom && !Number.isFinite(e.zoom)) || (e.point && !Vect.isVectJson(e.point)) || (e.ms && !Number.isFinite(e.ms))) {
@@ -1000,11 +901,6 @@ export default function NPCs(props) {
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
  * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
- * @property {(e: NPC.NpcDoDef) => Promise<void>} npcActDo
- * @property {(npc: NPC.NPC,  e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} offMeshDoMeta
- * Started off-mesh and clicked point
- * @property {(npc: NPC.NPC, e: { point: Geomorph.PointMaybeMeta; fadeOutMs?: number; suppressThrow?: boolean }) => Promise<void>} onMeshDoMeta
- * Started on-mesh and clicked point
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
  * @property {(npcKey: string) => void} removeNpc
@@ -1028,7 +924,7 @@ export default function NPCs(props) {
  * @property {() => void} cleanup
  * @property {NPC.NPC['cancel']} cancel
  * @property {NPC.NPC['lookAt']} lookAt
- * @property {State['npcActDo']} npcActDo
+ * @property {NPC.NPC['do']} do
  * @property {State['spawn']} spawn
  * @property {State['walkNpc']} walkNpc
  */

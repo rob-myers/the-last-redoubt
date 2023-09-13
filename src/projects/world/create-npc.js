@@ -4,6 +4,7 @@ import { Poly, Rect, Vect } from '../geom';
 import { precision, testNever } from '../service/generic';
 import { warn } from '../service/log';
 import { getNumericCssVar, isAnimAttached, isPaused, isRunning } from '../service/dom';
+import { hasGmDoorId } from '../service/geomorph';
 
 import npcsMeta from './npcs-meta.json';
 
@@ -175,6 +176,40 @@ export default function createNpc(
         return Math.max(0, this.anim.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
       } else {
         return this.anim.aux.sofars[navMeta.index];
+      }
+    },
+    async do(point, opts = {}) {
+      if (this.manuallyPaused) {
+        throw Error('paused: cannot do');
+      }
+      point.meta ??= {}; // possibly manually specified (not via `click [n]`)
+
+      try {
+        if (point.meta.door && hasGmDoorId(point.meta)) {
+          /** `undefined` -> toggle, `true` -> open, `false` -> close */
+          const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
+          const open = extraParam === true;
+          const close = extraParam === false;
+          const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
+          const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: this.key, close, open });
+          if (close) {
+            if (isOpen) throw Error('cannot close door');
+          } else if (open) {
+            if (!isOpen) throw Error('cannot open door');
+          } else {
+            if (wasOpen === isOpen) throw Error('cannot toggle door');
+          }
+        } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
+          await this.onMeshDoMeta(point, opts);
+          this.doMeta = point.meta.do ? point.meta : null;
+        } else {
+          await this.offMeshDoMeta(point, opts);
+          this.doMeta = point.meta.do ? point.meta : null;
+        }
+      } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
+        if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
+          throw e;
+        }
       }
     },
     everAnimated() {
@@ -549,6 +584,65 @@ export default function createNpc(
         warn('cannot obscure npc: npc does not reside in any room');
         this.el.root.style.clipPath = 'none';
       }
+    },
+    async offMeshDoMeta(point, opts = {}) {
+      const src = this.getPosition();
+      const meta = point.meta ?? {};
+
+      if (!opts.suppressThrow && !meta.do && !meta.nav) {
+        throw Error('not doable nor navigable');
+      }
+      if (!opts.suppressThrow && (
+        src.distanceTo(point) > this.getInteractRadius()
+        || !api.gmGraph.inSameRoom(src, point)
+      )) {
+        throw Error('too far away');
+      }
+
+      await this.fadeSpawn(// non-navigable uses targetPoint:
+        { ...point, ...!meta.nav && /** @type {Geom.VectJson} */ (meta.targetPos) },
+        {
+          angle: meta.nav && !meta.do
+            // use direction src --> point if entering navmesh
+            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
+            // use meta.orient if staying off-mesh
+            : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+          fadeOutMs: opts.fadeOutMs,
+          meta,
+        },
+      );
+    },
+    async onMeshDoMeta(point, opts = {}) {
+      const src = this.getPosition();
+      const meta = point.meta ?? {};
+      /** The actual "do point" (e.point is somewhere on icon) */
+      const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? point;
+
+      if (!opts.suppressThrow && !meta.do) {
+        throw Error('not doable');
+      }
+      if (!api.gmGraph.inSameRoom(src, decorPoint)) {
+        throw Error('too far away');
+      }
+
+      if (api.npcs.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
+        const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
+        await api.npcs.walkNpc(this.key, navPath, { throwOnCancel: true });
+        typeof meta.orient === 'number' && await this.animateRotate(meta.orient * (Math.PI / 180), 100);
+        this.startAnimationByMeta(meta);
+        return;
+      }
+
+      if (!opts.suppressThrow && !(src.distanceTo(point) <= this.getInteractRadius())) {
+        throw Error('too far away');
+      }
+
+      await this.fadeSpawn({ ...point, ...decorPoint }, {
+        angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+        requireNav: false,
+        fadeOutMs: opts.fadeOutMs,
+        meta,
+      });
     },
     pause(dueToProcessSuspend = false) {
       if (!dueToProcessSuspend) {// We permit re-pause when manuallyPaused
