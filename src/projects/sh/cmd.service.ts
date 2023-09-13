@@ -419,7 +419,7 @@ class cmdServiceClass {
           } else {
             console.error(e); // Provide JS stack
             node.exitCode = 1;
-            throw new ShError(`${e}`, 1);
+            throw new ShError(`${(e as Error)?.message ?? e}`, 1);
           }
         }
         break;
@@ -609,23 +609,28 @@ class cmdServiceClass {
     return outputs;
   }
 
-  killProcesses(sessionKey: string, pids: number[], opts?: { STOP?: boolean; CONT?: boolean }) {
+  killProcesses(
+    sessionKey: string,
+    pids: number[],
+    opts: { STOP?: boolean; CONT?: boolean; group?: boolean; } = {},
+  ) {
     const session = useSession.api.getSession(sessionKey);
     for (const pid of pids) {
       const { [pid]: process } = session.process;
       if (!process) {
         continue; // Already killed
       }
-      const processes = process.pgid === pid // Apply command to whole process group
+      const processes = process.pgid === pid || opts.group
+        // Apply command to whole process group
         ? useSession.api.getProcesses(sessionKey, process.pgid).reverse()
         : [process]; // Apply command to exactly one process
 
       // onSuspend onResume are "first-in first-invoked"
       processes.forEach(p => {
-        if (opts?.STOP) {
+        if (opts.STOP) {
           p.onSuspends = p.onSuspends.filter(onSuspend => onSuspend());
           p.status = ProcessStatus.Suspended;
-        } else if (opts?.CONT) {
+        } else if (opts.CONT) {
           p.onResumes = p.onResumes.filter(onResume => onResume());
           p.status = ProcessStatus.Running;
         } else {
@@ -713,6 +718,10 @@ class cmdServiceClass {
 
     isTtyAt(fd = 0) {
       return isTtyAt(this.meta, fd);
+    },
+
+    kill(group = false) {
+      cmdService.killProcesses(this.meta.sessionKey, [this.meta.pid], { group });
     },
 
     observableToAsyncIterable,

@@ -106,9 +106,6 @@ class NpcService {
         case "do":
           // npc do {npcKey} [point] [extras[i]]
           return { action: 'do', npcKey: opts, point: extras[0], extraParams: extras.slice(1) };
-        case "look-at":
-          // npc look-at {npcKey} {pointToLookAt}
-          return { action: 'look-at', npcKey: opts, point: extras[0] };
         case "map":
           // npc map {action} [secs]
           // 👉 npc map show-for-secs [secs] => npc map show-for-ms [secs * 1000]
@@ -141,9 +138,6 @@ class NpcService {
         case "do":
           // npc do {partialUpdate}
           return { action: 'do', .../** @type {NPC.NpcDoDef} */(opts) };
-        case "look-at":
-          // npc look-at '{ npcKey, point }'
-          return { action: 'look-at', .../** @type {{ npcKey: string; point: Geom.VectJson; }} */ (opts) };
         case "events":
         case "get":
         case "pause":
@@ -178,7 +172,6 @@ class NpcService {
           return { action: 'get' }; // list all
         case "do":
         case "light":
-        case "look-at":
         case "map":
         case "pause":
         case "resume":
@@ -208,7 +201,7 @@ class NpcService {
   fovMapActionKeys = keys(this.fromFovMapActionKey);
 
   /** @type {Record<NPC.NpcActionKey, true>} */
-  fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, "look-at": true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+  fromNpcActionKey = { "add-decor": true, cancel: true, config: true, decor: true, do: true, events: true, get: true, light: true, map: true, pause: true, resume: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
 
   /** @type {Record<NPC.NpcClassKey, true>} */
   fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };

@@ -376,8 +376,10 @@ export default function NPCs(props) {
         )
       );
     },
-    handleLongRunningNpcProcess(process, npcKey) {
+    handleLongRunningNpcProcess(processApi, npcKey) {
       state.getNpc(npcKey); // Throws if non-existent
+      const process = processApi.getProcess();
+
       const cb = {
         cleanup() {
           state.npcAct({ npcKey, action: "cancel" }).catch(_e => void {});
@@ -394,6 +396,16 @@ export default function NPCs(props) {
       process.cleanups.push(cb.cleanup);
       process.onSuspends.push(cb.suspend);
       process.onResumes.push(cb.resume);
+
+      // kill on remove-npc
+      const subscription = this.events.subscribe({ next(x) {
+        if (x.key === 'removed-npc' && x.npcKey === npcKey) {
+          processApi.kill(true); // kill process group
+          subscription.unsubscribe();
+        }
+      }});
+      process.cleanups.push(() => subscription.unsubscribe());
+
       return () => {
         // suspend/resume typically need to persist across Tabs pause/resume.
         // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
@@ -495,17 +507,6 @@ export default function NPCs(props) {
           } else {
             return Object.values(state.npc); // list
           }
-        case 'look-at': {
-          if (!Vect.isVectJson(e.point)) {
-            throw Error(`invalid point: ${JSON.stringify(e.point)}`);
-          }
-          const npc = state.getNpc(e.npcKey);
-          if (npc.canLook()) {
-            await npc.lookAt(e.point);
-          }
-          // return npc.getAngle();
-          break;
-        }
         case 'light': {
           const result = api.gmGraph.findRoomContaining(e.point);
           if (result) {
@@ -552,9 +553,12 @@ export default function NPCs(props) {
     },
     async npcActDo(e) {
       const npc = state.getNpc(e.npcKey);
+      if (npc.manuallyPaused) {
+        throw Error('paused: cannot do');
+      }
       const point = e.point;
       point.meta ??= {}; // possibly manually specified (not via `click [n]`)
-      
+
       try {
         if (point.meta.door && hasGmDoorId(point.meta)) {
           /** `undefined` -> toggle, `true` -> open, `false` -> close */
@@ -591,7 +595,6 @@ export default function NPCs(props) {
       if (!e.suppressThrow && !meta.do && !meta.nav) {
         throw Error('not doable nor navigable');
       }
-
       if (!e.suppressThrow && (
         src.distanceTo(point) > npc.getInteractRadius()
         || !api.gmGraph.inSameRoom(src, point)
@@ -756,6 +759,10 @@ export default function NPCs(props) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
+      if (state.npc[e.npcKey]?.manuallyPaused) {
+        throw Error('paused: cannot respawn');
+      }
+
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
         throw new Error('cancelled');
       }
@@ -877,10 +884,11 @@ export default function NPCs(props) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey, navPath, opts })}`);
       } else if (navPath.path.length === 0) {
         return;
-      } else if (npc.manuallyPaused) {
-        throw Error(`manually paused npc cannot walk`);
       }
       
+      if (npc.manuallyPaused) {
+        throw Error('paused: cannot walk');
+      }
       if (npc.isWalking() || npc.isPaused()) {
         await npc.cancel(); // 🤔
       }
@@ -959,7 +967,7 @@ export default function NPCs(props) {
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
- * @property {(process: import("../sh/session.store").ProcessMeta, npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
+ * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => undefined | (() => void)} handleLongRunningNpcProcess Returns cleanup
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
  * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled

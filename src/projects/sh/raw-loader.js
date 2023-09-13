@@ -212,17 +212,18 @@
 
     look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
       const w = api.getCached(home.WORLD_KEY)
-      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+      w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.getNpc(npcKey);
 
       if (api.isTtyAt(0)) {
-        const point = /** @type {Geom.VectJson} */ (api.parseJsArg(pointStr))
-        await w.npcs.npcAct({ action: "look-at", npcKey, point })
+        await npc.lookAt(api.parseJsArg(pointStr));
       } else {
+        let promise = Promise.resolve(/** @type {*} */ (0));
         while ((datum = await api.read()) !== null) {
-          const point = /** @type {Geom.VectJson} */ (datum)
           await w.npcs.npcAct({ npcKey, action: "cancel" })
-          w.npcs.npcAct({ action: "look-at", npcKey, point })
+          promise = npc.lookAt(datum);
         }
+        await promise; // After EOF
       }
     },
   
@@ -309,8 +310,8 @@
             api.parseJsArg(args[1]),
             args.slice(2).map(arg => api.parseJsArg(arg)),
           );
-          if (npcAct.action === "do" || npcAct.action === "look-at") {
-            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcAct.npcKey);
+          if (npcAct.action === "do") {
+            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey);
           }
           yield await w.npcs.npcAct(npcAct);
         } finally {
@@ -321,11 +322,11 @@
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
-            // support initial operand e.g. `click | npc look-at {npcKey}`
+            // support initial operand e.g. `click | npc do {npcKey}`
             : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
           ;
-          if (npcAct.action === "do" || npcAct.action === "look-at") {
-            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcAct.npcKey);
+          if (npcAct.action === "do") {
+            cleanLongRunning = w.npcs.handleLongRunningNpcProcess(api, npcAct.npcKey);
           }
           yield await w.npcs.npcAct(npcAct).catch(onError);
           cleanLongRunning?.();
@@ -340,7 +341,7 @@
       const npc = w.npcs.getNpc(npcKey);
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
       
-      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+      w.npcs.handleLongRunningNpcProcess(api, npcKey);
       const onError = /** @param {*} e */ (e) => w.npcs.config.verbose && api.info(`ignored: ${e}`)
 
       while ((datum = await api.read()) !== null) {
@@ -376,7 +377,7 @@
           }
         } else {// look
           await w.npcs.npcAct({ npcKey, action: "cancel" });
-          w.npcs.npcAct({ action: "look-at", npcKey, point: datum });
+          npc.lookAt(datum).catch(onError);
         }
       }
     },
@@ -503,24 +504,25 @@
         opts.forceOpen && "forceOpen" || "none";
 
       const w = api.getCached(home.WORLD_KEY)
-      w.npcs.handleLongRunningNpcProcess(api.getProcess(), npcKey);
+      w.npcs.handleLongRunningNpcProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        const navPath = /** @type {NPC.GlobalNavPath} */ (api.parseJsArg(navPathStr));
-        await w.npcs.walkNpc(npcKey, navPath, { doorStrategy });
+        await w.npcs.walkNpc(npcKey, api.parseJsArg(navPathStr), { doorStrategy });
       } else {
         let reject = /** @param {*} _ */ (_) => {};
+        let promise = Promise.resolve();
         const onError = /** @type {(e: any) => void} */ (opts.forever
           ? e => w.npcs.config.verbose && api.info(`ignored: ${e}`)
           : e => reject(e)
         );
-
+        
         while ((datum = await Promise.race([
           api.read(),
           new Promise((_, r) => reject = r),
         ])) !== null) {
-          w.npcs.walkNpc(npcKey, datum, { doorStrategy }).catch(onError)
+          promise = w.npcs.walkNpc(npcKey, datum, { doorStrategy }).catch(onError)
         }
+        await promise; // After EOF
       }
     },
   

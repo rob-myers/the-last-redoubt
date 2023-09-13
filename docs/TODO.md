@@ -2,15 +2,31 @@
 
 ## In progress
 
-- ✅ add pause/resume/kill links inside `ps`
-  - ✅ add working buttons
-  - ✅ kill button kills, clears links, updates line in place
-  - ✅ clean `ps`
-  - ✅ pause button pauses
-  - ✅ pause/resume button toggles in place
-  - ✅ resume button resumes
+- ✅ `npc look-at rob $( click 1 )` -> `npc rob lookAt $( click 1 )`
+- ✅ handleLongRunningNpcProcess kills on `removed-npc`
 
-- ✅ `ps` no buttons for `0` or pipeline parent
+- ✅ js functions throw on `npc.manuallyPaused`
+  - 🤔 cleanup `cancel` should not run if manually paused?
+  - ✅ cancel
+  - ✅ walk
+  - ✅ look
+  - ✅ do
+  - ✅ spawn
+
+- 🚧 `await handlePaused()` at level of shell functions
+  - cancel
+  - walk
+  - look
+  - do
+  - spawn
+
+
+- BUG `walk` is getting stuck because manually paused
+```sh
+npc rob pause
+nav rob $( click 1 ) | walk --open rob
+# click a navigable point, then try to ctrl-c
+```
 
 - 🚧 paused npc should error when `do`/`go`/`look`?
   ℹ️ if we want rob to look/npc/nav/walk,
@@ -571,6 +587,16 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ add pause/resume/kill links inside `ps`
+  - ✅ add working buttons
+  - ✅ kill button kills, clears links, updates line in place
+  - ✅ clean `ps`
+  - ✅ pause button pauses
+  - ✅ pause/resume button toggles in place
+  - ✅ resume button resumes
+
+- ✅ `ps` no buttons for `0` or pipeline parent
 
 - ✅ cleanup commands/shell-fns
   - ✅ controlNpc avoid try-catch + clean

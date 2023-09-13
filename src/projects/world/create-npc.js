@@ -120,9 +120,10 @@ export default function createNpc(
       }
     },
     async cancel() {
+      if (this.manuallyPaused) {
+        throw Error('paused: cannot cancel');
+      }
       console.log(`cancel: cancelling ${this.def.key}`);
-      this.manuallyPaused = false;
-      this.el.root.classList.remove('paused');
 
       const rootAnims = [this.anim.translate].filter(
         anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.root)
@@ -492,6 +493,16 @@ export default function createNpc(
       return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
     },
     async lookAt(point) {
+      if (!Vect.isVectJson(point)) {
+        throw Error(`invalid point: ${JSON.stringify(point)}`);
+      }
+      if (this.manuallyPaused) {
+        throw Error('paused: cannot look');
+      }
+      if (!this.canLook()) {
+        throw Error('cannot look');
+      }
+
       const position = this.getPosition();
       const direction = Vect.from(point).sub(position);
       if (direction.length === 0) {
@@ -548,7 +559,8 @@ export default function createNpc(
       isRunning(opacity) && opacity.pause();
       isRunning(translate) && translate.pause();
       isRunning(rotate) && rotate.pause();
-      isRunning(sprites) && sprites.pause();
+      /** @see {NPC.NPC.isPaused} */
+      sprites.pause();
       if (this.anim.spriteSheet === 'walk') {
         /**
          * Pending wayMeta is at this.anim.wayMetas[0].
@@ -732,6 +744,18 @@ export default function createNpc(
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
       this.anim.speedFactor = speedFactor;
     },
+    // 🚧 -> level of shell functions
+    // async untilReady() {
+    //   this.isPaused() && await firstValueFrom(api.npcs.events.pipe(
+    //     filter(x => {
+    //       // 🚧 also throws on ctrl-c of `walk`
+    //       // 🚧 also throws on kill process (group)
+    //       if (x.key === 'removed-npc' && x.npcKey === this.key)
+    //         throw Error('removed npc');
+    //       return x.key === 'npc-internal' && x.npcKey === this.key && x.event === 'resumed';
+    //     }),
+    //   ));
+    // },
     updateRoomWalkBounds(srcIndex) {
       // We start from vertex 0 or an `exit-room`, and look for next `exit-room`
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;

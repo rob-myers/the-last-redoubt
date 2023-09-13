@@ -140,9 +140,8 @@ npc get rob | map 'x => x.setLookRadians(0)'
 ```
 
 ```sh
-npc look-at rob $( click 1 )
-click | map 'point => ({ npcKey: "rob", point })' | npc look-at
-click | npc look-at rob
+npc rob lookAt $( click 1 )
+click | npc rob lookAt
 ```
 
 ```sh
@@ -409,4 +408,6 @@ echo Hello $( take 1 )
 
 # ansi colour code
 call '() => "\u001b[36mRob"'
+
+click | filter meta.nav | nav rob | walk --forever rob
 ```
