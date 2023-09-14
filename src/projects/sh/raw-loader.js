@@ -180,6 +180,7 @@
       
       const w = api.getCached(home.WORLD_KEY)
       api.addCleanup(() => eventsSub?.unsubscribe())
+      clickId && api.addCleanup(() => w.lib.removeFirst(w.panZoom.clickIds, clickId));
 
       while (numClicks-- > 0) {
         clickId && w.panZoom.clickIds.push(clickId);

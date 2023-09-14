@@ -24,8 +24,10 @@
 
 - ✅ `npcs.walkNpc` -> `npc.walk`
 
-- BUG ctrl-c `look rob $( click 1 )` not releasing click
+- ✅ BUG ctrl-c `click 1` not releasing click
 - BUG lookLoop multi-click
+- spawn ignores manuallyPaused
+- handleLongRunningNpcProcess provides proxied `npc`
 
 - 🚧 handleLongRunningNpcProcess provides api which handles pausing
   - ✅ `look rob $( click 1 )`
