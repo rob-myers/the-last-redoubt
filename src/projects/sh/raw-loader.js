@@ -213,14 +213,14 @@
 
     look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
       const w = api.getCached(home.WORLD_KEY)
-      const { lookAt } = w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.handleLongRunningNpcProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        await lookAt(api.parseJsArg(pointStr));
+        await npc.lookAt(api.parseJsArg(pointStr));
       } else {
         let promise = Promise.resolve(/** @type {*} */ (0));
         while ((datum = await api.read()) !== null) {
-          promise = lookAt(datum);
+          promise = npc.lookAt(datum);
         }
         await promise; // After EOF
       }
@@ -325,15 +325,15 @@
       const w = api.getCached(home.WORLD_KEY)
       const npcKey = args[0];
       const npc = w.npcs.getNpc(npcKey);
-      let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
-      
+      // Do not use returned `npc` (we handle pausing differently)
       w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      
       /** @param {*} e */
       const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
+      let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
 
       while ((datum = await api.read()) !== null) {
-        const { meta } = datum;
-
+        const { meta } = (datum);
         if (meta.npc && meta.npcKey === npcKey) {// Clicked npc
           if (meta.longClick) w.fov.mapAct("show-for-ms", 3000);
           else if (npc.manuallyPaused) npc.resume();
@@ -491,7 +491,7 @@
         opts.forceOpen && "forceOpen" || "none";
 
       const w = api.getCached(home.WORLD_KEY)
-      const { npc } = w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.handleLongRunningNpcProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
         await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });

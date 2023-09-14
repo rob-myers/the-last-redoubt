@@ -7,7 +7,7 @@ import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
 import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 import { geom } from "../service/geom";
-import { hasGmDoorId, hasGmRoomId } from "../service/geomorph";
+import { hasGmRoomId } from "../service/geomorph";
 import { npcService } from "../service/npc";
 import { isSmallViewport, detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
@@ -380,14 +380,9 @@ export default function NPCs(props) {
       const npc = state.getNpc(npcKey); // Throws if non-existent
       const process = processApi.getProcess();
 
-      const cb = {
-        cleanup() { npc.cancel().catch(_e => {}); },
-        suspend() { npc.pause(true); return true; },
-        resume() { npc.resume(true); return true; },
-      };
-      process.cleanups.push(cb.cleanup);
-      process.onSuspends.push(cb.suspend);
-      process.onResumes.push(cb.resume);
+      process.cleanups.push(() => { npc.cancel().catch(_e => {}); });
+      process.onSuspends.push(() => { npc.pause(true); return true; });
+      process.onResumes.push(() => { npc.resume(true); return true; });
 
       // kill on remove-npc
       const subscription = this.events.subscribe({ next(x) {
@@ -398,7 +393,7 @@ export default function NPCs(props) {
       }});
       process.cleanups.push(() => subscription.unsubscribe());
 
-      // handlePaused waits until resumed, but throws on process killed
+      // handlePaused waits until resumed, throws on process killed
       async function handlePaused() {
         npc.manuallyPaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           const subscription = state.events.subscribe({ next(x) {
@@ -414,15 +409,9 @@ export default function NPCs(props) {
         }));
       }
 
+      // 🚧 proxy
       return {
-        npc,
-        cleanup() {
-          // suspend/resume typically need to persist across Tabs pause/resume.
-          // However, may need to remove them e.g. if npcKey changes in `foo | npc do`
-          process.onSuspends.splice(process.onSuspends.indexOf(cb.suspend), 1);
-          process.onResumes.splice(process.onResumes.indexOf(cb.resume), 1);
-        },
-        // 🚧 proxy?
+        ...npc,
         async cancel() {
           await handlePaused();
           await npc.cancel();
@@ -434,10 +423,6 @@ export default function NPCs(props) {
         async do(...args) {
           await handlePaused();
           await npc.do(...args);
-        },
-        async spawn(e) {
-          await handlePaused();
-          await state.spawn(e);
         },
         async walk(...args) {
           await handlePaused();
@@ -850,7 +835,7 @@ export default function NPCs(props) {
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
- * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => LongRunningApi} handleLongRunningNpcProcess Returns cleanup
+ * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => NPC.NPC} handleLongRunningNpcProcess Returns cleanup
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
  * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled
@@ -878,11 +863,9 @@ export default function NPCs(props) {
 /**
  * @typedef LongRunningApi
  * @property {NPC.NPC} npc
- * @property {() => void} cleanup
  * @property {NPC.NPC['cancel']} cancel
  * @property {NPC.NPC['lookAt']} lookAt
  * @property {NPC.NPC['do']} do
- * @property {State['spawn']} spawn
  * @property {NPC.NPC['walk']} walk
  */
 

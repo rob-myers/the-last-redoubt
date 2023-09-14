@@ -28,15 +28,15 @@
 - ❌ BUG `click | look rob` or `lookLoop rob` multi-click jerky
   - no repro
 - ✅ spawn ignores manuallyPaused
-- handleLongRunningNpcProcess provides proxied `npc`
+- ✅ handleLongRunningNpcProcess provides pseudo-proxied `npc`
 
 - 🚧 handleLongRunningNpcProcess provides api which handles pausing
   - ✅ `look rob $( click 1 )`
     - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
-  - 🚧 cancel
-  - 🚧 walk
-  - 🚧 do
-  - 🚧 spawn
+  - ✅ e.g. `nav rob $( click 1 ) | walk rob`
+  - ❌ spawn
+  - 🚧 `npc rob cancel`
+  - 🚧 e.g. `npc do rob $( click 1 )`
 
 
 - BUG `walk` is getting stuck because manually paused
