@@ -719,13 +719,10 @@ export default function NPCs(props) {
         state.npc[e.npcKey].doMeta = e.point.meta?.do ? e.point.meta : null;
       }
 
-      // Must subscribe before triggering <NPC> render
-      const promise = firstValueFrom(
-        state.events.pipe(filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey)),
-      );
-      // Trigger <NPC> render and await reply
-      update();
-      await promise;
+      await Promise.allSettled([
+        firstValueFrom(state.events.pipe(filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey))),
+        update(),
+      ]);
     },
     trackNpc(opts) {
       const { npcKey, process } = opts;
