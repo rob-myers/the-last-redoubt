@@ -306,7 +306,7 @@
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
         );
-        yield await w.npcs.npcAct(npcAct);
+        yield await w.npcs.npcAct(npcAct, api);
       } else {
         /** @param {*} e */
         const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
@@ -315,7 +315,7 @@
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
             : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
           ;
-          yield await w.npcs.npcAct(npcAct).catch(onError);
+          yield await w.npcs.npcAct(npcAct, api).catch(onError);
         }
       }
 

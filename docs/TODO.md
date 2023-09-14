@@ -28,25 +28,30 @@
 - ❌ BUG `click | look rob` or `lookLoop rob` multi-click jerky
   - no repro
 - ✅ spawn ignores manuallyPaused
-- ✅ handleLongRunningNpcProcess provides pseudo-proxied `npc`
 
-- 🚧 handleLongRunningNpcProcess provides api which handles pausing
+- ✅ handleLongRunningNpcProcess provides api which handles pausing
+- ✅ handleLongRunningNpcProcess provides proxied `npc`
+- ✅ `npc rob ...` or `npc get rob ...` uses proxied `npc`
+
+- 🚧 pausing handled
   - ✅ `look rob $( click 1 )`
     - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
   - ✅ e.g. `nav rob $( click 1 ) | walk rob`
   - ❌ spawn
-  - 🚧 `npc rob cancel`
-  - 🚧 e.g. `npc do rob $( click 1 )`
+  - ✅ `npc rob cancel`
+  - ✅ `npc do rob $( click 1 )`
+  - 🚧 final check through examples
 
-
-- BUG `walk` is getting stuck because manually paused
+- ✅ BUG `walk` should pause
 ```sh
 npc rob pause
 nav rob $( click 1 ) | walk --open rob
 # click a navigable point, then try to ctrl-c
 ```
+- ✅ BUG could not ctrl-c `nav rob $( click 1 ) | walk --open rob` after unpausing
+  - had to wait for walk to finish
 
-- 🚧 paused npc should error when `do`/`go`/`look`?
+- ❌ paused npc should error when `do`/`go`/`look`?
   ℹ️ if we want rob to look/npc/nav/walk,
     `kill --STOP {pid}` the controlNpc process,
     or use `ps` buttons (more convenient)
@@ -56,8 +61,8 @@ nav rob $( click 1 ) | walk --open rob
   - cannot do whilst paused
   - cannot spawn whilst paused
 
-- `npc rob do $( click 1 )` should open door
-- `nav rob $( click 1 ) | walk rob` should pause on pause tabs
+- ✅ `npc rob do $( click 1 )` should open door
+- ✅ `nav rob $( click 1 ) | walk rob` should pause on pause tabs
 
 - clarify various types of pausing
 - `track` animation should stop on kill

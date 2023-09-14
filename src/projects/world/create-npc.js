@@ -694,10 +694,10 @@ export default function createNpc(
       if (this.manuallyPaused && dueToProcessResume) {
         return;
       }
+      console.log(`resume: resuming ${this.def.key}`);
       this.manuallyPaused = false;
       this.el.root.classList.remove('paused');
 
-      console.log(`resume: resuming ${this.def.key}`);
       const { opacity, rotate, sprites, translate } = this.anim;
       isPaused(opacity) && opacity.play();
       isPaused(translate) && translate.play();

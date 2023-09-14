@@ -320,8 +320,14 @@ export default function NPCs(props) {
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
-    getNpc(npcKey, selector = function id(x) { return x; }) {
-      const npc = state.npc[npcKey];
+    getNpc(
+      npcKey,
+      selector = function id(x) { return x; },
+      processApi,
+    ) {
+      const npc = processApi
+        ? state.handleLongRunningNpcProcess(processApi, npcKey)
+        : state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
       } else {
@@ -409,26 +415,17 @@ export default function NPCs(props) {
         }));
       }
 
-      // 🚧 proxy
-      return {
-        ...npc,
-        async cancel() {
-          await handlePaused();
-          await npc.cancel();
+      return new Proxy(npc, {
+        /** @param {keyof typeof npc} key */
+        get(target, key) {
+          if (key === 'cancel' || key === 'lookAt' || key === 'do' || key === 'walk') {
+            /** @param {[any, any]} args */
+            return async function(...args) { await handlePaused(); await target[key](...args); }
+          } else {
+            return target[key];
+          }
         },
-        async lookAt(point) {
-          await handlePaused();
-          await npc.lookAt(point);
-        },
-        async do(...args) {
-          await handlePaused();
-          await npc.do(...args);
-        },
-        async walk(...args) {
-          await handlePaused();
-          await npc.walk(...args);
-        },
-      };
+      })
     },
     inFrustum(src, dst, srcRadians, fovRadians = Math.PI / 4) {
       // 🤔 optionally outset triangle outgoing edges by npc radius?
@@ -480,7 +477,7 @@ export default function NPCs(props) {
       }
       return true;
     },
-    async npcAct(e) {
+    async npcAct(e, processApi) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
           return api.decor.setDecor(...e.items);
@@ -515,6 +512,7 @@ export default function NPCs(props) {
             return state.getNpc(
               e.npcKey,
               e.selector ? generateSelector(e.selector, e.extraArgs) : undefined,
+              processApi,
             );
           } else {
             return Object.values(state.npc); // list
@@ -827,7 +825,7 @@ export default function NPCs(props) {
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
- * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any) => NPC.NPC} getNpc throws if does not exist
+ * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any, processApi?: ProcessApi) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {(npcKey: string, isWalking?: boolean) => NPC.NPC[]} getCloseNpcs
  * 🚧 actually restrict to close npcs
@@ -835,7 +833,7 @@ export default function NPCs(props) {
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
- * @property {(processApi: import('../sh/cmd.service').CmdService['processApi'], npcKey: string) => NPC.NPC} handleLongRunningNpcProcess Returns cleanup
+ * @property {(processApi: ProcessApi, npcKey: string) => NPC.NPC} handleLongRunningNpcProcess Returns cleanup
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
  * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled
@@ -843,7 +841,7 @@ export default function NPCs(props) {
  * Is the point near some door adjacent to specified room?
  * @property {(p: Geom.VectJson) => boolean} isPointInNavmesh
  * @property {(npcKey: string, npcClassKey: NPC.NpcClassKey | undefined, p: Geomorph.PointMaybeMeta) => boolean} isPointSpawnable
- * @property {(e: NPC.NpcAction) => Promise<NpcActResult>} npcAct
+ * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
  * @property {(npcKey: string) => void} removeNpc
@@ -861,12 +859,7 @@ export default function NPCs(props) {
  */
 
 /**
- * @typedef LongRunningApi
- * @property {NPC.NPC} npc
- * @property {NPC.NPC['cancel']} cancel
- * @property {NPC.NPC['lookAt']} lookAt
- * @property {NPC.NPC['do']} do
- * @property {NPC.NPC['walk']} walk
+ * @typedef {import('../sh/cmd.service').CmdService['processApi']} ProcessApi
  */
 
 const [tempVect, tempVect2, tempVect3] = [1, 2, 3].map(_ => new Vect);
