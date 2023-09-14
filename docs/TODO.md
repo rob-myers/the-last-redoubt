@@ -25,8 +25,9 @@
 - ✅ `npcs.walkNpc` -> `npc.walk`
 
 - ✅ BUG ctrl-c `click 1` not releasing click
-- BUG lookLoop multi-click
-- spawn ignores manuallyPaused
+- ❌ BUG `click | look rob` or `lookLoop rob` multi-click jerky
+  - no repro
+- ✅ spawn ignores manuallyPaused
 - handleLongRunningNpcProcess provides proxied `npc`
 
 - 🚧 handleLongRunningNpcProcess provides api which handles pausing

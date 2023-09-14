@@ -684,17 +684,13 @@ export default function NPCs(props) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
-      if (state.npc[e.npcKey]?.manuallyPaused) {
-        throw Error('paused: cannot respawn');
-      }
-
       if (!state.isPointSpawnable(e.npcKey, e.npcClassKey, e.point)) {
         throw new Error('cancelled');
       }
 
       if (state.npc[e.npcKey]) {// Respawn
         const spawned = state.npc[e.npcKey];
-        await spawned.cancel();
+        await spawned.cancel(true);
         spawned.unspawned = true; // Crucial for <NPC>
         spawned.epochMs = Date.now();
         spawned.def = {

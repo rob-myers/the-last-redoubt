@@ -120,8 +120,8 @@ export default function createNpc(
         animation.playState === 'finished' && animation.cancel();
       }
     },
-    async cancel() {
-      if (this.manuallyPaused) {
+    async cancel(overridePaused = false) {
+      if (this.manuallyPaused && !overridePaused) {
         throw Error('paused: cannot cancel');
       }
       console.log(`cancel: cancelling ${this.def.key}`);

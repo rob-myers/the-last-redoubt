@@ -72,7 +72,7 @@ declare namespace NPC {
     /** Normal walking pace speed factor */
     walkSpeedFactor: number;
 
-    cancel(): Promise<void>;
+    cancel(overridePaused?: boolean): Promise<void>;
     canLook(): boolean;
     changeClass(npcClassKey: NPC.NpcClassKey): void;
     do(point: Geomorph.PointMaybeMeta, opts?: Pick<NpcDoDef, 'fadeOutMs' | 'extraParams'>): Promise<void>;
