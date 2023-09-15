@@ -71,7 +71,7 @@ nav rob $( click 1 ) | walk --open rob
   - `track` does not pause if pause npc whilst stationary
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
-- `npc config verbose` to show errors in loops
+- ✅ `npc config verbose` to show errors in loops
 - fix `npc rob fadeSpawnDo` on click do point?
   - cannot go thru walls
   - on/off mesh spawn too

@@ -179,6 +179,51 @@ export default function NPCs(props) {
         return !!gms[dstRm.gmId].rayIntersectsDoor(dstL, srcL, dstRm.roomId, [dstDr.doorId]);
       }
     },
+    connectNpcToProcess(processApi, npcKey) {
+      const npc = state.getNpc(npcKey); // Throws if non-existent
+      const process = processApi.getProcess();
+
+      process.cleanups.push(() => { npc.cancel().catch(_e => {}); });
+      process.onSuspends.push(() => { npc.pause(true); return true; });
+      process.onResumes.push(() => { npc.resume(true); return true; });
+
+      // kill on remove-npc 🚧 one sub elsewhere
+      const subscription = this.events.subscribe({ next(x) {
+        if (x.key === 'removed-npc' && x.npcKey === npcKey) {
+          processApi.kill(true); // must kill whole process group
+          subscription.unsubscribe();
+        }
+      }});
+      process.cleanups.push(() => subscription.unsubscribe());
+
+      // handlePaused waits until resumed, throws on process killed
+      async function handlePaused() {
+        npc.manuallyPaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+          const subscription = state.events.subscribe({ next(x) {
+            if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
+              resolve();
+              subscription.unsubscribe();
+            }
+          }});
+          process.cleanups.push(
+            () => reject(processApi.getKillError()),
+            () => subscription.unsubscribe()
+          );
+        }));
+      }
+
+      return new Proxy(npc, {
+        /** @param {keyof typeof npc} key */
+        get(target, key) {
+          if (key === 'cancel' || key === 'lookAt' || key === 'do' || key === 'walk') {
+            /** @param {[any, any]} args */
+            return async function(...args) { await handlePaused(); await target[key](...args); }
+          } else {
+            return target[key];
+          }
+        },
+      })
+    },
     connectSession(sessionKey, opts = {}) {
       const connected = state.session[sessionKey] ||= {
         key: sessionKey,
@@ -326,7 +371,7 @@ export default function NPCs(props) {
       processApi,
     ) {
       const npc = processApi
-        ? state.handleLongRunningNpcProcess(processApi, npcKey)
+        ? state.connectNpcToProcess(processApi, npcKey)
         : state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
@@ -381,51 +426,6 @@ export default function NPCs(props) {
           && !assertDefined(nearbyMeta || dstMeta).obscured
         )
       );
-    },
-    handleLongRunningNpcProcess(processApi, npcKey) {
-      const npc = state.getNpc(npcKey); // Throws if non-existent
-      const process = processApi.getProcess();
-
-      process.cleanups.push(() => { npc.cancel().catch(_e => {}); });
-      process.onSuspends.push(() => { npc.pause(true); return true; });
-      process.onResumes.push(() => { npc.resume(true); return true; });
-
-      // kill on remove-npc
-      const subscription = this.events.subscribe({ next(x) {
-        if (x.key === 'removed-npc' && x.npcKey === npcKey) {
-          processApi.kill(true); // must kill whole process group
-          subscription.unsubscribe();
-        }
-      }});
-      process.cleanups.push(() => subscription.unsubscribe());
-
-      // handlePaused waits until resumed, throws on process killed
-      async function handlePaused() {
-        npc.manuallyPaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          const subscription = state.events.subscribe({ next(x) {
-            if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
-              resolve();
-              subscription.unsubscribe();
-            }
-          }});
-          process.cleanups.push(
-            () => reject(processApi.getKillError()),
-            () => subscription.unsubscribe()
-          );
-        }));
-      }
-
-      return new Proxy(npc, {
-        /** @param {keyof typeof npc} key */
-        get(target, key) {
-          if (key === 'cancel' || key === 'lookAt' || key === 'do' || key === 'walk') {
-            /** @param {[any, any]} args */
-            return async function(...args) { await handlePaused(); await target[key](...args); }
-          } else {
-            return target[key];
-          }
-        },
-      })
     },
     inFrustum(src, dst, srcRadians, fovRadians = Math.PI / 4) {
       // 🤔 optionally outset triangle outgoing edges by npc radius?
@@ -635,26 +635,11 @@ export default function NPCs(props) {
       state.playerKey = npcKey;
 
       // Adjust FOV
-      state.setRoomByNpc(state.playerKey);
+      api.fov.setRoomByNpc(state.playerKey);
       // Initialize fov.nearDoorIds
       api.fov.computeNearDoorIds();
 
       state.events.next({ key: 'set-player', npcKey });
-    },
-    setRoomByNpc(npcKey) {// 🚧 move to api.fov ?
-      const npc = state.getNpc(npcKey);
-      const position = npc.getPosition();
-      const found = (// Fallback includes doors, picking some connected roomId
-        api.gmGraph.findRoomContaining(position, false)
-        || api.gmGraph.findRoomContaining(position, true)
-      );
-      if (found) {
-        props.api.fov.setRoom(found.gmId, found.roomId, -1);
-        return found;
-      } else {
-        console.error(`setRoomByNpc: ${npcKey}: no room/door contains ${JSON.stringify(position)}`)
-        return null;
-      }
     },
     async spawn(e) {
       if (!(e.npcKey && typeof e.npcKey === 'string' && e.npcKey.trim())) {
@@ -820,6 +805,7 @@ export default function NPCs(props) {
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
  * @property {(src: Geomorph.PointMaybeMeta, dst: Geomorph.PointMaybeMeta, maxDistance?: number) => boolean} canSee
+ * @property {(processApi: ProcessApi, npcKey: string) => NPC.NPC} connectNpcToProcess
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} connectSession
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} disconnectSession
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
@@ -833,7 +819,6 @@ export default function NPCs(props) {
  * @property {(gmId: number, roomId: number) => Geom.VectJson} getRandomRoomNavpoint
  * @property {(filterGeomorphMeta?: (meta: Geomorph.PointMeta, gmId: number) => boolean, filterRoomMeta?: (meta: Geomorph.PointMeta) => boolean) => Geomorph.GmRoomId} getRandomRoom
  * @property {(nearbyMeta?: Geomorph.PointMeta, dstMeta?: Geomorph.PointMeta) => boolean} handleBunkBedCollide Collide due to height/obscured?
- * @property {(processApi: ProcessApi, npcKey: string) => NPC.NPC} handleLongRunningNpcProcess Returns cleanup
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, srcRadians: number, fovRadians?: number) => boolean} inFrustum
  * assume `0 ≤ fovRadians ≤ π/2` (default `π/4`)
  * @property {() => boolean} isPanZoomControlled
@@ -847,7 +832,6 @@ export default function NPCs(props) {
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
- * @property {(npcKey: string) => null | { gmId: number; roomId: number }} setRoomByNpc
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc').NpcServiceType} svc
  * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc

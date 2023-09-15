@@ -213,7 +213,7 @@
 
     look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
       const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.connectNpcToProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
         await npc.lookAt(api.parseJsArg(pointStr));
@@ -321,12 +321,9 @@
 
     },
   
-    controlNpc: async function* ({ api, args, home }) {
+    controlNpc: async function* ({ api, args: [npcKey], home }) {
       const w = api.getCached(home.WORLD_KEY)
-      const npcKey = args[0];
-      const npc = w.npcs.getNpc(npcKey);
-      // Do not use returned `npc` (we handle pausing differently)
-      w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.connectNpcToProcess(api, npcKey);
       
       /** @param {*} e */
       const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
@@ -491,7 +488,7 @@
         opts.forceOpen && "forceOpen" || "none";
 
       const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.handleLongRunningNpcProcess(api, npcKey);
+      const npc = w.npcs.connectNpcToProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
         await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });

@@ -235,6 +235,21 @@ export default function FOV(props) {
         return false;
       }
     },
+    setRoomByNpc(npcKey) {
+      const npc = api.npcs.getNpc(npcKey);
+      const position = npc.getPosition();
+      const found = (// Fallback includes doors, picking some connected roomId
+        api.gmGraph.findRoomContaining(position, false)
+        || api.gmGraph.findRoomContaining(position, true)
+      );
+      if (found) {
+        props.api.fov.setRoom(found.gmId, found.roomId, -1);
+        return found;
+      } else {
+        console.error(`setRoomByNpc: ${npcKey}: no room/door contains ${JSON.stringify(position)}`)
+        return null;
+      }
+    },
   }), {
     overwrite: { gmId: true, roomId: true },
     deps: [gms, gmGraph],
@@ -331,6 +346,7 @@ export default function FOV(props) {
  * but the Player's FOV _does_ (`api.fov.{gmId,roomId}`).
  * Then the parameter `gmRoomId` permits us to override `player.gmRoomId`.
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
+ * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * @property {() => void} recompute
 */
 

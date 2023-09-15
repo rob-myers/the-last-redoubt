@@ -91,11 +91,11 @@ export default function useHandleEvents(api) {
       switch (e.key) {
         case 'spawned-npc':
           api.fov.forgetPrev();
-          api.npcs.setRoomByNpc(e.npcKey);
+          api.fov.setRoomByNpc(e.npcKey);
           break;
         case 'started-walking': {
           if (!e.continuous) {// Player warped to navPath start
-            api.npcs.setRoomByNpc(e.npcKey);
+            api.fov.setRoomByNpc(e.npcKey);
           }
           break;
         }
