@@ -5,21 +5,21 @@
 export const utilFunctions = [
 {
   range: `{
-    call '({args}) =>
-      [...Array(Number(args[0]))].map((_, i) => i)
-    ' "$1"
+  call '({args}) =>
+    [...Array(Number(args[0]))].map((_, i) => i)
+  ' "$1"
 }`,
     
   seq: `{
-    range "$1" | split
+  range "$1" | split
 }`,
     
   pretty: `{
-    map '(x, { api }) => api.pretty(x)'
+  map '(x, { api }) => api.pretty(x)'
 }`,
     
   keys: `{
-    map Object.keys
+  map Object.keys
 }`,
   
   // cat: `get "$@" | split`,
@@ -31,17 +31,17 @@ export const utilFunctions = [
    * - logs chunks larger than 1000, so e.g. `seq 1000000 | log` works
    */
   log: `{
-    run '({ api, args, datum }) {
-      args.forEach(arg => console.log(arg))
-      if (api.isTtyAt(0)) return
-      while ((datum = await api.read(true)) !== null) {
-        if (datum.__chunk__ && datum.items?.length <= 1000) {
-          datum.items.forEach(x => console.log(x))
-        } else {
-          console.log(datum)
-        }
+  run '({ api, args, datum }) {
+    args.forEach(arg => console.log(arg))
+    if (api.isTtyAt(0)) return
+    while ((datum = await api.read(true)) !== null) {
+      if (datum.__chunk__ && datum.items?.length <= 1000) {
+        datum.items.forEach(x => console.log(x))
+      } else {
+        console.log(datum)
       }
-    }' $@
+    }
+  }' $@
 }`,
 
 //   empty: `{
@@ -51,7 +51,11 @@ export const utilFunctions = [
 // }`,
 
   clone: `{
-    map 'x => JSON.parse(JSON.stringify(x))'
+  map 'x => JSON.parse(JSON.stringify(x))'
+}`,
+
+  readtty: `{
+  call '({ api, args }) => api.isTtyAt(...args.map(Number))' $1
 }`,
 
 },
@@ -121,6 +125,18 @@ world: `{
   shift
   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
     map "$selector" "$@"
+}`,
+world2: `{
+  local selector
+  selector="$\{1:-x=>x}"
+  shift
+  if test $( readtty ); then
+    call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
+      map "$selector" "$@"
+  else
+    echo __TODO__
+    # map "$selector" "$@" --ctxt="({ api, home }) => api.getCached(home.WORLD_KEY)"
+  fi
 }`,
 
 /**

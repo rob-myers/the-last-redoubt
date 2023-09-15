@@ -2,32 +2,14 @@
 
 ## In progress
 
-- ✅ raw-loader game functions handle npc (manual) pausing
-  - ✅ `look rob $( click 1 )`
-    - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
-  - ✅ e.g. `nav rob $( click 1 ) | walk rob`
-  - ❌ spawn
-  - ✅ `npc rob cancel`
-  - ✅ `npc do rob $( click 1 )`
-  - ✅ final check through examples
+- 🚧 support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
+  - ❌ could set value processApi.ctxt via option `run --ctxt="(processApi) => foo" ...`
+    - ℹ️ ugly syntax `map '(input, { ctxt }) => ...'`
+  - try special purpose function `worldMap`
+  - try absorb into `world`
 
-- ✅ BUG local variables not working inside nested functions?
-```sh
-foo () {
-  local bar
-  bar="Whatever"
-  echo "level 1: $bar"
-  baz() { echo "level 2: $bar"; }
-  baz
-}
-foo
-```
-- ✅ remove "__TEMP_ARG_1" approach in `world` and `gm`
-  - `local` variables not seen inside pipe-child
-
-- support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
 - pause/resume click for all npcs ?
-  - careful about controlNpc though
+  - careful about controlNpc though (try verbose)
 
 - ✅ BUG `walk` should pause
 ```sh
@@ -594,6 +576,29 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ raw-loader game functions handle npc (manual) pausing
+  - ✅ `look rob $( click 1 )`
+    - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
+  - ✅ e.g. `nav rob $( click 1 ) | walk rob`
+  - ❌ spawn
+  - ✅ `npc rob cancel`
+  - ✅ `npc do rob $( click 1 )`
+  - ✅ final check through examples
+
+- ✅ BUG local variables not working inside nested functions?
+```sh
+foo () {
+  local bar
+  bar="Whatever"
+  echo "level 1: $bar"
+  baz() { echo "level 2: $bar"; }
+  baz
+}
+foo
+```
+- ✅ remove "__TEMP_ARG_1" approach in `world` and `gm`
+  - `local` variables not seen inside pipe-child
 
 - ✅ `npc look-at rob $( click 1 )` -> `npc rob lookAt $( click 1 )`
 - ✅ handleLongRunningNpcProcess kills on `removed-npc`

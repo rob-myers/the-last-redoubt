@@ -210,7 +210,7 @@ class cmdServiceClass {
         const commands = cliColumns(Object.keys(commandKeys), { width: ttyShell.xterm.xterm.cols }).split(/\r?\n/);
         for (const line of commands) yield `${ansi.Blue}${line}`;
         // yield `Traverse context via \`ls\` or \`ls -l var.foo.bar\` (Object.keys).`
-        yield `\n\rView shell functions via ${ansi.Blue}declare${ansi.Reset}.`
+        yield `\n\rView shell functions via ${ansi.Blue}declare -F${ansi.Reset}.`
         // yield `Use Ctrl-c to interrupt and Ctrl-l to clear screen.`
         // yield `View history via up/down or \`history\`.`
         // yield `Traverse input using Option-left/right and Ctrl-{a,e}.`

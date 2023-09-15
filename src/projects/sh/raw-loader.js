@@ -14,7 +14,7 @@
 //#region defs
 
 /**
- * @typedef RunArg @type {object}
+ * @typedef RunArg
  * @property {import('./cmd.service').CmdService['processApi'] & { getCached(key: '__WORLD_KEY_VALUE__'): import('../world/World').State }} api
  * @property {string[]} args
  * @property {{ [key: string]: any; 'WORLD_KEY': '__WORLD_KEY_VALUE__'; }} home
