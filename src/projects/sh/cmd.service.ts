@@ -776,13 +776,14 @@ class cmdServiceClass {
 
   private provideProcessCtxt(meta: Sh.BaseMeta, posPositionals: string[] = []) {
     const session = useSession.api.getSession(meta.sessionKey);
+    const cacheShortcuts = session.var.CACHE_SHORTCUTS ?? {};
     return new Proxy({
       home: session.var,
       // cache: queryCache,
       // dev: useSession.getState().device,
       etc: scriptLookup,
     }, {
-      get: (_, key) => {
+      get: (target, key) => {
         if (key === 'api') {
           return new Proxy(this.processApi, {
             get(target, key: keyof cmdServiceClass['processApi']) {
@@ -807,8 +808,11 @@ class cmdServiceClass {
         } else if (key === '_') {// Can _ from anywhere e.g. inside root
           const lastValue = session.var._;
           return isProxy(lastValue) ? dataChunk([lastValue]) : lastValue;
+        } else if (key in cacheShortcuts) {
+          return getCached(session.var[cacheShortcuts[key as string]]);
+        } else {
+          return (target as any)[key];
         }
-        return (_ as any)[key];
       },
       set: (_, key, value) => {
         if (key === 'args') {// Assume `posPositionals` is fresh i.e. just sliced

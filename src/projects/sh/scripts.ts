@@ -126,18 +126,6 @@ world: `{
   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
     map "$selector" "$@"
 }`,
-world2: `{
-  local selector
-  selector="$\{1:-x=>x}"
-  shift
-  if test $( readtty ); then
-    call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
-      map "$selector" "$@"
-  else
-    echo __TODO__
-    # map "$selector" "$@" --ctxt="({ api, home }) => api.getCached(home.WORLD_KEY)"
-  fi
-}`,
 
 /**
  * Usage: gm {gmId} [selector]

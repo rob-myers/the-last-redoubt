@@ -82,6 +82,8 @@ export interface Session {
     OLDPWD: string;
     /** DOM element id to return to after `choice [foo](href:#bar)` */
     DOM_ID?: string;
+    /** `processApi[key]` is `processApi.getCached(home[CACHE_SHORTCUTS[key]])` */
+    CACHE_SHORTCUTS?: { [key: string]: string };
   };
   nextPid: number;
   /** Last exit code: */

@@ -2,14 +2,27 @@
 
 ## In progress
 
-- 🚧 support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
+- ❌ support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
   - ❌ could set value processApi.ctxt via option `run --ctxt="(processApi) => foo" ...`
     - ℹ️ ugly syntax `map '(input, { ctxt }) => ...'`
-  - try special purpose function `worldMap`
-  - try absorb into `world`
+  - ℹ️ use `click | map ...` instead, with easier access to world
 
-- pause/resume click for all npcs ?
+- ✅ easier access to world in `map`
+  - `env.CACHE_SHORTCUTS` is `{ w: 'WORLD_KEY' }`
+  - processApi proxy provides `api.w`
+
+- 🚧 pause/resume click for all npcs ?
   - careful about controlNpc though (try verbose)
+  - clarify isPaused vs manuallyPaused
+    - isForcePaused() vs isPaused()
+    - manuallyPaused -> forcePaused
+```sh
+click | filter meta.npc |
+  map '(p, { w }) => {
+    const npc = w.npcs.getNpc(p.meta.npcKey)
+    npc.manuallyPaused ? npc.resume() : npc.pause()
+  }'
+```
 
 - ✅ BUG `walk` should pause
 ```sh
