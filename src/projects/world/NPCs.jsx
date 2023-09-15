@@ -215,7 +215,7 @@ export default function NPCs(props) {
       return new Proxy(npc, {
         /** @param {keyof typeof npc} key */
         get(target, key) {
-          if (key === 'cancel' || key === 'lookAt' || key === 'do' || key === 'walk') {
+          if (key === 'cancel' || key === 'do' || key === 'fadeSpawn' || key === 'lookAt' || key === 'walk') {
             /** @param {[any, any]} args */
             return async function(...args) { await handlePaused(); await target[key](...args); }
           } else {

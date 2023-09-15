@@ -374,7 +374,9 @@
      * - `expr '{"npcKey":"rob","point":{"x":300,"y":300}}' | spawn`
      * - `expr '{"npcKey":"rob","classKey":"zhodani","point":{"x":300,"y":300}}' | spawn`
      * 
-     * We also handle "do points": spawn _from_ do; spawn _to_ do.
+     * Handles "do points":
+     * - spawn _from_ do
+     * - spawn _to_ do
      */
     spawn: async function* ({ api, args, home, datum }) {
       const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
@@ -394,13 +396,14 @@
        * @param {NPC.NpcClassKey} [npcClassKey]
        */
       async function fadeSpawnDo(npcKey, point, npcClassKey) {
-        const spawned = w.npcs.npc[npcKey];
-        if (spawned?.doMeta) {
+        if (w.npcs.npc[npcKey]?.doMeta) {// from `do` point
+          const spawned = w.npcs.connectNpcToProcess(api, npcKey);
           npcClassKey && spawned.changeClass(npcClassKey);
           await spawned.fadeSpawn(point);
         } else {
           await w.npcs.spawn({ npcKey, point, npcClassKey });
-          if (point.meta?.do) {
+          if (point.meta?.do) {// to `do` point
+            const spawned = w.npcs.connectNpcToProcess(api, npcKey);
             await spawned.do(point, { fadeOutMs: 0 });
           }
         }

@@ -2,45 +2,16 @@
 
 ## In progress
 
-- ✅ `npc look-at rob $( click 1 )` -> `npc rob lookAt $( click 1 )`
-- ✅ handleLongRunningNpcProcess kills on `removed-npc`
+- support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
 
-- ✅ js functions throw on `npc.manuallyPaused`
-  - 🤔 cleanup `cancel` should not run if manually paused?
-  - ✅ cancel
-  - ✅ walk
-  - ✅ look
-  - ✅ do
-  - ✅ spawn
-
-- ✅ `npc cancel rob` -> `npc rob cancel`
-- ✅ `npc pause rob` -> `npc rob pause`
-- ✅ `npc resume rob` -> `npc rob resume`
-
-- ✅ `npcs.npcActDo` -> `npc.do`
-  - ✅ `npc rob do $( click 1 )`
-  - ✅ `click | npc rob do`
-  - ✅ removed `npc do`
-
-- ✅ `npcs.walkNpc` -> `npc.walk`
-
-- ✅ BUG ctrl-c `click 1` not releasing click
-- ❌ BUG `click | look rob` or `lookLoop rob` multi-click jerky
-  - no repro
-- ✅ spawn ignores manuallyPaused
-
-- ✅ handleLongRunningNpcProcess provides api which handles pausing
-- ✅ handleLongRunningNpcProcess provides proxied `npc`
-- ✅ `npc rob ...` or `npc get rob ...` uses proxied `npc`
-
-- 🚧 pausing handled
+- ✅ raw-loader game functions handle npc (manual) pausing
   - ✅ `look rob $( click 1 )`
     - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
   - ✅ e.g. `nav rob $( click 1 ) | walk rob`
   - ❌ spawn
   - ✅ `npc rob cancel`
   - ✅ `npc do rob $( click 1 )`
-  - 🚧 final check through examples
+  - ✅ final check through examples
 
 - ✅ BUG `walk` should pause
 ```sh
@@ -610,6 +581,37 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ `npc look-at rob $( click 1 )` -> `npc rob lookAt $( click 1 )`
+- ✅ handleLongRunningNpcProcess kills on `removed-npc`
+
+- ✅ js functions throw on `npc.manuallyPaused`
+  - 🤔 cleanup `cancel` should not run if manually paused?
+  - ✅ cancel
+  - ✅ walk
+  - ✅ look
+  - ✅ do
+  - ✅ spawn
+
+- ✅ `npc cancel rob` -> `npc rob cancel`
+- ✅ `npc pause rob` -> `npc rob pause`
+- ✅ `npc resume rob` -> `npc rob resume`
+
+- ✅ `npcs.npcActDo` -> `npc.do`
+  - ✅ `npc rob do $( click 1 )`
+  - ✅ `click | npc rob do`
+  - ✅ removed `npc do`
+
+- ✅ `npcs.walkNpc` -> `npc.walk`
+
+- ✅ BUG ctrl-c `click 1` not releasing click
+- ❌ BUG `click | look rob` or `lookLoop rob` multi-click jerky
+  - no repro
+- ✅ spawn ignores manuallyPaused
+
+- ✅ handleLongRunningNpcProcess provides api which handles pausing
+- ✅ handleLongRunningNpcProcess provides proxied `npc`
+- ✅ `npc rob ...` or `npc get rob ...` uses proxied `npc`
 
 - ✅ add pause/resume/kill links inside `ps`
   - ✅ add working buttons
