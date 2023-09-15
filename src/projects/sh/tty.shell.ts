@@ -191,7 +191,7 @@ export class ttyShellClass implements Device {
       const session = useSession.api.getSession(meta.sessionKey);
       const parent = session.process[meta.ppid]; // Exists
       // Shallow clone avoids mutation by descendants
-      process.inheritVar = { ...parent.inheritVar };
+      process.inheritVar = { ...parent.inheritVar, ...parent.localVar };
       if (opts.localVar) {// Some processes need their own PWD e.g. background, subshell
         process.localVar.PWD = (parent.inheritVar.PWD)??session.var.PWD;
         process.localVar.OLDPWD = (parent.inheritVar.OLDPWD)??session.var.OLDPWD;

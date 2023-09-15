@@ -650,8 +650,7 @@ class cmdServiceClass {
       ppid: node.meta.pid,
       stack: node.meta.stack.concat(namedFunc.key), // TODO elsewhere?
     } as Sh.BaseMeta);
-    try {
-      // Run function in own process, yet without localized PWD
+    try {// Run function in own process, yet without localized PWD
       await ttyShell.spawn(cloned, { posPositionals: args.slice() });
     } finally {
       // Propagate function exitCode to callee

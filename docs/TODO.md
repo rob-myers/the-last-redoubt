@@ -2,8 +2,6 @@
 
 ## In progress
 
-- support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
-
 - ✅ raw-loader game functions handle npc (manual) pausing
   - ✅ `look rob $( click 1 )`
     - ℹ️ but not `npc rob look $( click 1 )` which directly invokes function
@@ -12,6 +10,24 @@
   - ✅ `npc rob cancel`
   - ✅ `npc do rob $( click 1 )`
   - ✅ final check through examples
+
+- ✅ BUG local variables not working inside nested functions?
+```sh
+foo () {
+  local bar
+  bar="Whatever"
+  echo "level 1: $bar"
+  baz() { echo "level 2: $bar"; }
+  baz
+}
+foo
+```
+- ✅ remove "__TEMP_ARG_1" approach in `world` and `gm`
+  - `local` variables not seen inside pipe-child
+
+- support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
+- pause/resume click for all npcs ?
+  - careful about controlNpc though
 
 - ✅ BUG `walk` should pause
 ```sh
@@ -77,9 +93,6 @@ nav rob $( click 1 ) | walk --open rob
   - hard to reproduce
 - clarify hard-coding in rayIntersectsDoor
 - shell has api.argsToAction
-- BUG with local variables
-  - not working inside functions?
-  - pipe child should receive local variables (see `world`)
 - BUG with `npc config '{ scriptDoors: false }'`
   - doors open then close immediately
 - BUG? sporadic 302 related hull door failure
