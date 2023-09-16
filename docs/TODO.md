@@ -16,19 +16,20 @@
     - ✅ clarify isPaused()
 
 - ✅ clarify various types of pausing
+- ✅ `npc config verbose` to show errors in loops
 
+- ✅ fix `npc rob do $( click 1 )` on enter/leave do point
+  - ✅ cannot go thru walls
+  - ✅ on/off mesh spawn too
+  - ❌ maybe should be long _press_ not click
 - maybe darker when paused but not forcedPaused
 - `track` animation should stop on kill
-- `track` should pause when tracked npc does?
-  - `track` pauses if pause npc during walk
-  - `track` does not pause if pause npc whilst stationary
+- `track` should "pause" when tracked npc does?
+  - currently `track` pauses if pause npc during walk
+  - currently `track` does not pause if pause npc whilst stationary
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
-- ✅ `npc config verbose` to show errors in loops
-- fix `npc rob fadeSpawnDo` on click do point?
-  - cannot go thru walls
-  - on/off mesh spawn too
-  - ❌ maybe should be long _press_ not click
+- avoid swallowing errors in any npc function: always log out when verbose
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc

@@ -595,6 +595,7 @@ export default function createNpc(
       if (!opts.suppressThrow && (
         src.distanceTo(point) > this.getInteractRadius()
         || !api.gmGraph.inSameRoom(src, point)
+        || !api.npcs.canSee(src, point, this.getInteractRadius())
       )) {
         throw Error('too far away');
       }
@@ -633,7 +634,10 @@ export default function createNpc(
         return;
       }
 
-      if (!opts.suppressThrow && !(src.distanceTo(point) <= this.getInteractRadius())) {
+      if (!opts.suppressThrow && (
+        src.distanceTo(point) > this.getInteractRadius())
+        || !api.npcs.canSee(src, point, this.getInteractRadius())
+      ) {
         throw Error('too far away');
       }
 
