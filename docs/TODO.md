@@ -7,16 +7,17 @@
   - ✅ shorter `ps -s` 
   - ✅ `ps` hides links when leader has descendant leader
 
-- 🚧 pause/resume click for all npcs
+- ✅ pause/resume click for all npcs
   - ✅ shell function pausableNpcs
   - ✅ all NPCs have clickable head
   - ✅ careful about controlNpc (try verbose)
-  - 🚧 clarify isPaused vs manuallyPaused
+  - ✅ clarify isPaused vs manuallyPaused
     - ✅ manuallyPaused -> forcePaused
-    - isForcePaused() vs isPaused()
+    - ✅ clarify isPaused()
 
-- clarify various types of pausing
-- maybe darker when (not manually) paused
+- ✅ clarify various types of pausing
+
+- maybe darker when paused but not forcedPaused
 - `track` animation should stop on kill
 - `track` should pause when tracked npc does?
   - `track` pauses if pause npc during walk

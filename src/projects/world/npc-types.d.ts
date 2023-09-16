@@ -143,6 +143,7 @@ declare namespace NPC {
     initialize(): void;
     intersectsCircle(position: Geom.VectJson, radius: number): boolean;
     isIdle(): boolean;
+    /** Is this npc paused, but not necessarily @see {forcePaused}? */
     isPaused(): boolean;
     isPointBlocked(point: Geomorph.PointMaybeMeta, permitEscape?: boolean): boolean;
     isWalking(): boolean;
