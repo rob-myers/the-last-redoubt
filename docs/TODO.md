@@ -9,12 +9,14 @@
 
 - 🚧 pause/resume click for all npcs
   - ✅ shell function pausableNpcs
-  - careful about controlNpc (try verbose)
-  - clarify isPaused vs manuallyPaused
+  - ✅ all NPCs have clickable head
+  - ✅ careful about controlNpc (try verbose)
+  - 🚧 clarify isPaused vs manuallyPaused
     - isForcePaused() vs isPaused()
     - manuallyPaused -> forcePaused
 
 - clarify various types of pausing
+- maybe darker when (not manually) paused
 - `track` animation should stop on kill
 - `track` should pause when tracked npc does?
   - `track` pauses if pause npc during walk
@@ -26,6 +28,9 @@
   - cannot go thru walls
   - on/off mesh spawn too
   - ❌ maybe should be long _press_ not click
+
+- example of picking something up
+  - e.g. spawn decor, then fade/remove it, registering something inside npc
 
 - return to homepage
   - emphasise "language" and "joining behaviours" on homepage

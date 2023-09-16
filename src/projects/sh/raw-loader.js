@@ -309,7 +309,7 @@
         yield await w.npcs.npcAct(npcAct, api);
       } else {
         /** @param {*} e */
-        const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
+        const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
         while ((datum = await api.read()) !== null) {
           const npcAct = args.length === 1
             ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
@@ -326,17 +326,15 @@
       const npc = w.npcs.connectNpcToProcess(api, npcKey);
       
       /** @param {*} e */
-      const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`));
+      const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
       let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
 
       while ((datum = await api.read()) !== null) {
         const { meta } = (datum);
-        if (meta.npc && meta.npcKey === npcKey) {// Clicked npc
-          if (meta.longClick) w.fov.mapAct("show-for-ms", 3000);
-          else if (npc.manuallyPaused) npc.resume();
-          else npc.pause();
-          continue;
-        } else if (npc.manuallyPaused) {
+        if (meta.npc || npc.manuallyPaused) {
+          if (meta.npcKey === npcKey && meta.longClick) {
+            w.fov.mapAct("show-for-ms", 3000);
+          }
           continue;
         }
 
@@ -499,7 +497,7 @@
         let reject = /** @param {*} _ */ (_) => {};
         let promise = Promise.resolve();
         const onError = /** @type {(e: *) => void} */ (opts.forever
-          ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e}`))
+          ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`))
           : e => reject(e)
         );
         

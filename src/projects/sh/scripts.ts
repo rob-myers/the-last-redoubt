@@ -148,6 +148,12 @@ longClick: `{
   click | filter meta.longClick | take $1
 }`,
 
+pausableNpcs: `click |
+  filter '({ meta }) => meta.npc && !meta.longClick' |
+  map '(p, { w }) => {
+    const npc = w.npcs.getNpc(p.meta.npcKey)
+    npc.manuallyPaused ? npc.resume() : npc.pause()
+}'`
 },
 ];
 
@@ -181,6 +187,7 @@ spawn ${npcKey} '{"x":210,"y":390}'
 npc set-player ${npcKey}
 npc map show-for-secs 2
 
+pausableNpcs &
 track ${npcKey} &
 click | controlNpc ${npcKey} &
 

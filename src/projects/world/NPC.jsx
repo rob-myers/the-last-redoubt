@@ -149,7 +149,7 @@ const rootCss = css`
   }
 
   .head-circle {
-    display: var(${cssName.npcsDebugDisplay});
+    /* display: var(${cssName.npcsDebugDisplay}); */
     pointer-events: all;
     cursor: pointer;
     position: absolute;
