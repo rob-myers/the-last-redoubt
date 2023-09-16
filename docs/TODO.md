@@ -2,14 +2,13 @@
 
 ## In progress
 
-- 🚧 avoid too many processes in listing for pause/resume
+- ✅ avoid too many processes in listing for pause/resume,
   - ❌ processes pass down "names"
-  - remove space lines from `ps -s` 
-  - `ps -l` group leaders which lack descendants
-  - `ps` allows all pausable
+  - ✅ shorter `ps -s` 
+  - ✅ `ps` hides links when leader has descendant leader
 
 - 🚧 pause/resume click for all npcs
-  - shell function pausableNpcs
+  - ✅ shell function pausableNpcs
   - careful about controlNpc (try verbose)
   - clarify isPaused vs manuallyPaused
     - isForcePaused() vs isPaused()

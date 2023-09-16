@@ -298,8 +298,11 @@ class cmdServiceClass {
           'a', /** Show all processes */
           's', /** Show process src */
         ], });
-        const processes = { ...useSession.api.getSession(meta.sessionKey).process };
-        !opts.a && Object.values(processes).forEach(({ key: pid, pgid }) =>
+
+        const allProcesses = useSession.api.getSession(meta.sessionKey).process;
+        /** Either all processes, or all group leaders */
+        const processes = {...allProcesses};
+        !opts.a && Object.values(allProcesses).forEach(({ key: pid, pgid }) =>
           pid !== pgid && delete processes[pid]
         );
 
@@ -310,11 +313,20 @@ class cmdServiceClass {
           2: '',
         };
 
+        // 🚧 better way?
+        function getDescLeaders(leader: ProcessMeta) {
+          const lookup = { [leader.key]: true };
+          Object.values(useSession.api.getSession(meta.sessionKey).process).forEach(other => {
+            if (other.ppid in lookup) lookup[other.key] = true;
+          });
+          return Object.keys(lookup).slice(1).filter(pid => processes[pid]);
+        }
+
         function suppressLinks(process: ProcessMeta) {
           return (
             process.status === 2
-            || process.key === 0 // `ps` has no links for parent of pipeline:
-            || (!opts.a && !opts.s && (processes[process.key + 1]?.ppid) === process.key)
+            || process.key === 0 // suppress links when leader has descendant leader
+            || (!opts.a && !opts.s && getDescLeaders(process).length)
           );
         }
         
@@ -361,13 +373,12 @@ class cmdServiceClass {
         }
         
         const title = ['pid', 'ppid', 'pgid'].map(x => x.padEnd(5)).join(' ');
-        if (!opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
+        yield `${ansi.Blue}${title}${ansi.Reset}`;
 
         for (const process of Object.values(processes)) {
-          if (opts.s) yield `${ansi.Blue}${title}${ansi.Reset}`;
           yield getProcessLineWithLinks(process);
           if (opts.s) {// Avoid multiline white in tty
-            yield* process.src.split('\n').map(x => `${ansi.Reset}${x}`).concat('\n');
+            yield* process.src.split('\n').map(x => `${ansi.Reset}${x}`);
           }
         }
 
