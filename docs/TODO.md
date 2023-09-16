@@ -2,49 +2,18 @@
 
 ## In progress
 
-- ❌ support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
-  - ❌ could set value processApi.ctxt via option `run --ctxt="(processApi) => foo" ...`
-    - ℹ️ ugly syntax `map '(input, { ctxt }) => ...'`
-  - ℹ️ use `click | map ...` instead, with easier access to world
+- 🚧 avoid too many processes in listing for pause/resume
+  - ❌ processes pass down "names"
+  - remove space lines from `ps -s` 
+  - `ps -l` group leaders which lack descendants
+  - `ps` allows all pausable
 
-- ✅ easier access to world in `map`
-  - `env.CACHE_SHORTCUTS` is `{ w: 'WORLD_KEY' }`
-  - processApi proxy provides `api.w`
-
-- 🚧 pause/resume click for all npcs ?
-  - careful about controlNpc though (try verbose)
+- 🚧 pause/resume click for all npcs
+  - shell function pausableNpcs
+  - careful about controlNpc (try verbose)
   - clarify isPaused vs manuallyPaused
     - isForcePaused() vs isPaused()
     - manuallyPaused -> forcePaused
-```sh
-click | filter meta.npc |
-  map '(p, { w }) => {
-    const npc = w.npcs.getNpc(p.meta.npcKey)
-    npc.manuallyPaused ? npc.resume() : npc.pause()
-  }'
-```
-
-- ✅ BUG `walk` should pause
-```sh
-npc rob pause
-nav rob $( click 1 ) | walk --open rob
-# click a navigable point, then try to ctrl-c
-```
-- ✅ BUG could not ctrl-c `nav rob $( click 1 ) | walk --open rob` after unpausing
-  - had to wait for walk to finish
-
-- ❌ paused npc should error when `do`/`go`/`look`?
-  ℹ️ if we want rob to look/npc/nav/walk,
-    `kill --STOP {pid}` the controlNpc process,
-    or use `ps` buttons (more convenient)
-  - ✅ cannot cancel whilst paused
-  - ✅ cannot walk whilst paused
-  - cannot look whilst paused
-  - cannot do whilst paused
-  - cannot spawn whilst paused
-
-- ✅ `npc rob do $( click 1 )` should open door
-- ✅ `nav rob $( click 1 ) | walk rob` should pause on pause tabs
 
 - clarify various types of pausing
 - `track` animation should stop on kill
@@ -589,6 +558,37 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ❌ support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
+  - ❌ could set value processApi.ctxt via option `run --ctxt="(processApi) => foo" ...`
+    - ℹ️ ugly syntax `map '(input, { ctxt }) => ...'`
+  - ℹ️ use `click | map ...` instead, with easier access to world
+
+- ✅ BUG `walk` should pause
+```sh
+npc rob pause
+nav rob $( click 1 ) | walk --open rob
+# click a navigable point, then try to ctrl-c
+```
+- ✅ BUG could not ctrl-c `nav rob $( click 1 ) | walk --open rob` after unpausing
+  - had to wait for walk to finish
+
+- ❌ paused npc should error when `do`/`go`/`look`?
+  ℹ️ if we want rob to look/npc/nav/walk,
+    `kill --STOP {pid}` the controlNpc process,
+    or use `ps` buttons (more convenient)
+  - ✅ cannot cancel whilst paused
+  - ✅ cannot walk whilst paused
+  - cannot look whilst paused
+  - cannot do whilst paused
+  - cannot spawn whilst paused
+
+- ✅ `npc rob do $( click 1 )` should open door
+- ✅ `nav rob $( click 1 ) | walk rob` should pause on pause tabs
+
+- ✅ easier access to world in `map`
+  - `env.CACHE_SHORTCUTS` is `{ w: 'WORLD_KEY' }`
+  - processApi proxy provides `api.w`
 
 - ✅ raw-loader game functions handle npc (manual) pausing
   - ✅ `look rob $( click 1 )`

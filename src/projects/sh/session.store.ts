@@ -82,7 +82,7 @@ export interface Session {
     OLDPWD: string;
     /** DOM element id to return to after `choice [foo](href:#bar)` */
     DOM_ID?: string;
-    /** `processApi[key]` is `processApi.getCached(home[CACHE_SHORTCUTS[key]])` */
+    /** `processApi[key]` is `processApi.getCached(var[CACHE_SHORTCUTS[key]])` */
     CACHE_SHORTCUTS?: { [key: string]: string };
   };
   nextPid: number;
@@ -117,6 +117,7 @@ export interface ProcessMeta {
   sessionKey: string;
   /** `0` is suspended, `1` is running, `2` is killed */
   status: ProcessStatus;
+  /** Source of code defining this process. */
   src: string;
   /**
    * Executed on Ctrl-C or `kill`.
@@ -140,9 +141,7 @@ export interface ProcessMeta {
    * which have their own PWD and OLDPWD.
    */
   localVar: Record<string, any>;
-  /**
-   * Inherited local variables.
-   */
+  /** Inherited local variables. */
   inheritVar: Record<string, any>;
 }
 
@@ -200,7 +199,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
         sessionKey,
         status: ProcessStatus.Running,
         src,
-        positionals: ['jsh', ...posPositionals || []],
+        positionals: ['jsh', ...posPositionals ?? []],
         cleanups: [],
         onSuspends: [],
         onResumes: [],
