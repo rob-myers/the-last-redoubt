@@ -61,7 +61,9 @@ export default function NPC({ api, npcKey }) {
         cssName.npc,
         rootCss,
         api.npcs.playerKey === npcKey ? 'player' : undefined,
-        state.forcePaused ? 'paused' : undefined,
+        state.forcePaused
+          ? cssName.forcePaused
+          : state.isPaused() ? cssName.paused : undefined,
         state.anim.css,
         state.anim.spriteSheet,
       )}
@@ -104,8 +106,12 @@ const rootCss = css`
     }
   }
 
+  transition: filter 0.5s;
   &.paused {
-    filter: grayscale(1);
+    filter: grayscale(0) brightness(70%);
+  }
+  &.force-paused {
+    filter: grayscale(1) brightness(100%);
   }
 
   .body {

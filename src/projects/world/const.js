@@ -43,6 +43,8 @@ export const cssName = /** @type {const} */ ({
   npcsInteractRadius: '--npcs-interact-radius',
   npcBoundsRadius: '--npc-bounds-radius',
   npcHeadRadius: '--npc-head-radius',
+  forcePaused: 'force-paused',
+  paused: 'paused',
 });
 
 export const defaultClipPath = 'none';

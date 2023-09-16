@@ -651,8 +651,9 @@ export default function createNpc(
     pause(forced = true) {
       if (forced) {
         this.forcePaused = true;
-        this.el.root.classList.add('paused');
       }
+      this.el.root.classList.remove(cssName.paused, cssName.forcePaused);
+      this.el.root.classList.add(forced ? cssName.forcePaused : cssName.paused);
       this.updateStaticBounds();
 
       console.log(`pause: pausing ${this.def.key}`);
@@ -700,7 +701,7 @@ export default function createNpc(
       }
       console.log(`resume: resuming ${this.def.key}`);
       this.forcePaused = false;
-      this.el.root.classList.remove('paused');
+      this.el.root.classList.remove(cssName.paused, cssName.forcePaused);
 
       const { opacity, rotate, sprites, translate } = this.anim;
       isPaused(opacity) && opacity.play();

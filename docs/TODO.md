@@ -22,9 +22,10 @@
   - ✅ cannot go thru walls
   - ✅ on/off mesh spawn too
   - ❌ maybe should be long _press_ not click
-- maybe darker when paused but not forcedPaused
-- `track` animation should stop on kill
-- `track` should "pause" when tracked npc does?
+
+- ✅ darker when paused but not forcedPaused
+- 🚧 track animation should stop on kill
+- should track "pause" when tracked npc does?
   - currently `track` pauses if pause npc during walk
   - currently `track` does not pause if pause npc whilst stationary
 - `track` jerky e.g. on click do point and immediately click navmesh
