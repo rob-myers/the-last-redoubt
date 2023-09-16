@@ -331,7 +331,7 @@
 
       while ((datum = await api.read()) !== null) {
         const { meta } = (datum);
-        if (meta.npc || npc.manuallyPaused) {
+        if (meta.npc || npc.forcePaused) {
           if (meta.npcKey === npcKey && meta.longClick) {
             w.fov.mapAct("show-for-ms", 3000);
           }

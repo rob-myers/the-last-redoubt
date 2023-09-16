@@ -61,7 +61,7 @@ export default function NPC({ api, npcKey }) {
         cssName.npc,
         rootCss,
         api.npcs.playerKey === npcKey ? 'player' : undefined,
-        state.manuallyPaused ? 'paused' : undefined,
+        state.forcePaused ? 'paused' : undefined,
         state.anim.css,
         state.anim.spriteSheet,
       )}

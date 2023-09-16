@@ -184,8 +184,8 @@ export default function NPCs(props) {
       const process = processApi.getProcess();
 
       process.cleanups.push(() => { npc.cancel().catch(_e => {}); });
-      process.onSuspends.push(() => { npc.pause(true); return true; });
-      process.onResumes.push(() => { npc.resume(true); return true; });
+      process.onSuspends.push(() => { npc.pause(false); return true; });
+      process.onResumes.push(() => { npc.resume(false); return true; });
 
       // kill on remove-npc 🚧 one sub elsewhere
       const subscription = this.events.subscribe({ next(x) {
@@ -198,7 +198,7 @@ export default function NPCs(props) {
 
       // handlePaused waits until resumed, throws on process killed
       async function handlePaused() {
-        npc.manuallyPaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
+        npc.forcePaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           const subscription = state.events.subscribe({ next(x) {
             if (x.key === 'npc-internal' && x.npcKey === npcKey && x.event === 'resumed') {
               resolve();

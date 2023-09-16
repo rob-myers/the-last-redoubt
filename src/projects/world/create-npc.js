@@ -62,11 +62,11 @@ export default function createNpc(
     },
     
     doMeta: null,
+    forcePaused: false,
     gmRoomId: null,
     has: {
       key: api.gmGraph.gms.map(_ => ({})),
     },
-    manuallyPaused: false,
     unspawned: true,
     walkSpeedFactor: npcWalkSpeedFactor,
 
@@ -121,7 +121,7 @@ export default function createNpc(
       }
     },
     async cancel(overridePaused = false) {
-      if (this.manuallyPaused && !overridePaused) {
+      if (this.forcePaused && !overridePaused) {
         throw Error('paused: cannot cancel');
       }
       console.log(`cancel: cancelling ${this.def.key}`);
@@ -179,7 +179,7 @@ export default function createNpc(
       }
     },
     async do(point, opts = {}) {
-      if (this.manuallyPaused) {
+      if (this.forcePaused) {
         throw Error('paused: cannot do');
       }
       point.meta ??= {}; // possibly manually specified (not via `click [n]`)
@@ -531,7 +531,7 @@ export default function createNpc(
       if (!Vect.isVectJson(point)) {
         throw Error(`invalid point: ${JSON.stringify(point)}`);
       }
-      if (this.manuallyPaused) {
+      if (this.forcePaused) {
         throw Error('paused: cannot look');
       }
       if (this.isWalking() || this.isPaused()) {
@@ -644,9 +644,9 @@ export default function createNpc(
         meta,
       });
     },
-    pause(dueToProcessSuspend = false) {
-      if (!dueToProcessSuspend) {// We permit re-pause when manuallyPaused
-        this.manuallyPaused = true;
+    pause(forced = true) {
+      if (forced) {
+        this.forcePaused = true;
         this.el.root.classList.add('paused');
       }
       this.updateStaticBounds();
@@ -690,12 +690,12 @@ export default function createNpc(
       aux.total = reduced.total;
       aux.index = 0;
     },
-    resume(dueToProcessResume = false) {
-      if (this.manuallyPaused && dueToProcessResume) {
+    resume(forced = true) {
+      if (this.forcePaused && !forced) {
         return;
       }
       console.log(`resume: resuming ${this.def.key}`);
-      this.manuallyPaused = false;
+      this.forcePaused = false;
       this.el.root.classList.remove('paused');
 
       const { opacity, rotate, sprites, translate } = this.anim;
@@ -875,7 +875,7 @@ export default function createNpc(
       if (!api.npcs.svc.verifyGlobalNavPath(navPath)) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
-      if (this.manuallyPaused) {
+      if (this.forcePaused) {
         throw Error('paused: cannot walk');
       }
       if (this.isWalking() || this.isPaused()) {

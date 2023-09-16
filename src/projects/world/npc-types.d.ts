@@ -59,11 +59,14 @@ declare namespace NPC {
       key: { [doorId: number]: boolean }[];
     };
     /**
-     * Process suspend/resume for e.g. `walk` will pause/resume npc,
-     * often as a side-effect of disable/enable <Tabs>.
-     * But if we manually invoked npc.pause() we must avoid auto-resuming it.
+     * _Preamble_:
+     * Process suspend/resume can pause/resume npc.
+     * If not resumed, such pausing will be overridden by next npc action.
+     * 
+     * We can also _intentionally_ pause by invoking npc.pause(),
+     * in which case we have "forced" a pause, until we resume it.
      */
-    manuallyPaused: boolean;
+    forcePaused: boolean;
     /**
      * Initially `false` until <NPC> sets it true.
      * May also set false for cached un-rendered.

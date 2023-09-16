@@ -152,7 +152,7 @@ pausableNpcs: `click |
   filter '({ meta }) => meta.npc && !meta.longClick' |
   map '(p, { w }) => {
     const npc = w.npcs.getNpc(p.meta.npcKey)
-    npc.manuallyPaused ? npc.resume() : npc.pause()
+    npc.forcePaused ? npc.resume() : npc.pause()
 }'`
 },
 ];

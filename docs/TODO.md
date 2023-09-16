@@ -12,8 +12,8 @@
   - ✅ all NPCs have clickable head
   - ✅ careful about controlNpc (try verbose)
   - 🚧 clarify isPaused vs manuallyPaused
+    - ✅ manuallyPaused -> forcePaused
     - isForcePaused() vs isPaused()
-    - manuallyPaused -> forcePaused
 
 - clarify various types of pausing
 - maybe darker when (not manually) paused
