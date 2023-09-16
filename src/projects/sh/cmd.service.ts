@@ -169,8 +169,8 @@ class cmdServiceClass {
           for (const { key, src } of funcs) {
             if (prefixes && !prefixes.some(x => key.startsWith(x))) continue;
             if (exactMatch && key !== exactMatch) continue;
-            const lines = `${ansi.Blue}${key}${ansi.White} () ${src}${ansi.Reset}`.split(/\r?\n/);
-            for (const line of lines) yield line;
+            const lines = `${ansi.Blue}${key}${ansi.White} ()${ansi.BoldReset} ${src}${ansi.Reset}`.split(/\r?\n/);
+            yield* lines;
             yield '';
           }
         }
