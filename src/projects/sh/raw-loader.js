@@ -312,13 +312,19 @@
         const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
 
         if (action === "get" && (args[2] === "walk" || args[2] === "lookAt")) {
+          const npc = w.npcs.getNpc(args[1], api);
           await api.eagerReadLoop(// look and walk need to respond immediately
             async (datum) => {
-              // 🚧 support stdin arg "-" e.g. for post arg { doorStrategy: "open" }
-              const npcAct = w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum]);
+              // 🚧 clean
+              // await w.npcs.getNpc(
+              //   args[1],
+              //   api.generateSelector(args[2], api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg))),
+              //   api,
+              // );
+              const npcAct = w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [args[2], ...api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg))]);
               await w.npcs.npcAct(npcAct, api).catch(onError);
             },
-            () => w.npcs.getNpc(args[1]).cancel(),
+            () => npc.cancel(),
           );
         } else {// Standard case
           while ((datum = await api.read()) !== null) {

@@ -365,18 +365,14 @@ export default function NPCs(props) {
     getNpcInteractRadius() {
       return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
     },
-    getNpc(
-      npcKey,
-      selector = function id(x) { return x; },
-      processApi,
-    ) {
+    getNpc(npcKey, processApi) {
       const npc = processApi
         ? state.connectNpcToProcess(processApi, npcKey)
         : state.npc[npcKey];
       if (!npc) {
         throw Error(`npc "${npcKey}" does not exist`);
       } else {
-        return selector.call(npc, npc);
+        return npc;
       }
     },
     getNpcsIntersecting(convexPoly) {
@@ -509,11 +505,8 @@ export default function NPCs(props) {
           break;
         case 'get':
           if ('npcKey' in e) {
-            return state.getNpc(
-              e.npcKey,
-              e.selector ? generateSelector(e.selector, e.extraArgs) : undefined,
-              processApi,
-            );
+            const npc = state.getNpc(e.npcKey, processApi);
+            return e.selector ? generateSelector(e.selector, e.extraArgs).call(npc, npc) : npc;
           } else {
             return Object.values(state.npc); // list
           }
@@ -811,7 +804,7 @@ export default function NPCs(props) {
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
- * @property {(npcKey: string, selector?: (npc: NPC.NPC) => any, processApi?: ProcessApi) => NPC.NPC} getNpc throws if does not exist
+ * @property {(npcKey: string, processApi?: ProcessApi) => NPC.NPC} getNpc throws if does not exist
  * @property {(convexPoly: Geom.Poly) => NPC.NPC[]} getNpcsIntersecting
  * @property {(npcKey: string, isWalking?: boolean) => NPC.NPC[]} getCloseNpcs
  * 🚧 actually restrict to close npcs

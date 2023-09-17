@@ -9,6 +9,13 @@ import type * as Sh from './parse';
 
 //#region expansion
 
+export function addStdinToArgs(dataFromStdin: any, args: any[]): any[] {
+  const index = args.indexOf('-');
+  args = args.slice();
+  index >= 0 ? args.splice(index, 1, dataFromStdin) : args.push(dataFromStdin);
+  return args;
+}
+
 export function normalizeWhitespace(word: string, trim = true): string[] {
   if (!word.trim()) {// Prevent [''].
     return [];

@@ -3,7 +3,7 @@ import { uid } from 'uid';
 
 import { ansi } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
-import { computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
+import { addStdinToArgs, computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
 import useSession, { ProcessMeta, ProcessStatus } from './session.store';
@@ -697,6 +697,8 @@ class cmdServiceClass {
     addSuspend(cleanup: () => void) {
       getProcess(this.meta).onSuspends.push(cleanup);
     },
+
+    addStdinToArgs,
 
     generateSelector,
 

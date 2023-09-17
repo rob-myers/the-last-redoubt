@@ -27,6 +27,9 @@
 - ✅ fix `nav rob $( click 1 ) | npc rob lookAt`
 - 🚧 permit `npc rob walk - '{ doorStrategy: "open" }'`
   - ℹ️ i.e. stdin represented via hyphen
+  - ✅ `npc: run: paused: cannot cancel`
+  - ✅ move "selector" out of getNpc
+  - 🚧 cleaner approach
 - `walk` wraps `npc {npcKey} walk`
 - `look {npcKey}` is `npc {npcKey} lookAt`
 
@@ -38,6 +41,7 @@
   - currently `track` does not pause if pause npc whilst stationary
 - `track` jerky e.g. on click do point and immediately click navmesh
   - whilst running controlNpc
+  - whilst `click | nav rob | npc rob walk`
 - avoid swallowing errors in any npc function: always log out when verbose
 
 - example of picking something up
