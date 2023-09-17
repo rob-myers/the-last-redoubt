@@ -23,8 +23,16 @@
   - ✅ on/off mesh spawn too
   - ❌ maybe should be long _press_ not click
 
+- ✅ fix `nav rob $( click 1 ) | npc rob walk`
+- ✅ fix `nav rob $( click 1 ) | npc rob lookAt`
+- 🚧 permit `npc rob walk - '{ doorStrategy: "open" }'`
+  - ℹ️ i.e. stdin represented via hyphen
+- `walk` wraps `npc {npcKey} walk`
+- `look {npcKey}` is `npc {npcKey} lookAt`
+
 - ✅ darker when paused but not forcedPaused
-- 🚧 track animation should stop on kill
+- fix stale CSS `paused` on unpaused npc
+- track animation should stop on kill
 - should track "pause" when tracked npc does?
   - currently `track` pauses if pause npc during walk
   - currently `track` does not pause if pause npc whilst stationary
@@ -34,6 +42,8 @@
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
+  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
+  - BUG saw issue where removed decor, but new decor in different room vanished on close door
 
 - return to homepage
   - emphasise "language" and "joining behaviours" on homepage

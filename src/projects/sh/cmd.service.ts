@@ -765,21 +765,32 @@ class cmdServiceClass {
       return read(this.meta, chunks);
     },
 
-    removeCleanup(cleanup: () => void) {
-      const { cleanups } = getProcess(this.meta);
-      const index = cleanups.findIndex(x => x === cleanup);
-      index >= 0 && cleanups.splice(index, 1);
+    async eagerReadLoop(
+      loopBody: (datum: any) => Promise<void>,
+      onInterrupt?: () => Promise<void>,
+    ) {
+      let proms = [Promise.resolve()];
+      let datum = await read(this.meta);
+      while (datum !== null) {
+        const resolved = await Promise.race(proms = [
+          loopBody(datum),
+          read(this.meta),
+        ]);
+        if (resolved === undefined) {// Finished body
+          datum = await proms[1];
+        } else if (resolved === null) {// EOF
+          await proms[0];
+          datum = resolved;
+        } else {// Read before body finished
+          await onInterrupt?.();
+          datum = resolved;
+        }
+      }
     },
-
 
     async *sleep(seconds: number) {
       yield* sleep(this.meta, seconds);
     },
-
-    /** JSON.parse which returns `undefined` on parse error */
-    safeJsonParse,
-
-    throwError,
 
   };
 

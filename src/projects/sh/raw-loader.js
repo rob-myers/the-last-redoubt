@@ -175,7 +175,7 @@
         /** @type {import('rxjs').Subscription} */ eventsSub;
       const clickId = args[0] ? api.getUid() : undefined;
       if (!Number.isFinite(numClicks)) {
-        throw api.throwError("format: \`click [{numberOfClicks}]\`")
+        throw new Error("format: \`click [{numberOfClicks}]\`")
       }
       
       const w = api.getCached(home.WORLD_KEY)
@@ -291,7 +291,7 @@
           // `npc {npcKey} ...` --> `npc get {npcKey} ...`
           args.unshift("get");
         } else {
-          throw api.throwError(`${args[0]}: invalid action`);
+          throw new Error(`${args[0]}: invalid action`);
         }
       }
 
@@ -310,12 +310,24 @@
       } else {
         /** @param {*} e */
         const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
-        while ((datum = await api.read()) !== null) {
-          const npcAct = args.length === 1
-            ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
-            : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
-          ;
-          yield await w.npcs.npcAct(npcAct, api).catch(onError);
+
+        if (action === "get" && (args[2] === "walk" || args[2] === "lookAt")) {
+          await api.eagerReadLoop(// look and walk need to respond immediately
+            async (datum) => {
+              // 🚧 support stdin arg "-" e.g. for post arg { doorStrategy: "open" }
+              const npcAct = w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum]);
+              await w.npcs.npcAct(npcAct, api).catch(onError);
+            },
+            () => w.npcs.getNpc(args[1]).cancel(),
+          );
+        } else {// Standard case
+          while ((datum = await api.read()) !== null) {
+            const npcAct = args.length === 1
+              ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
+              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
+            ;
+            yield await w.npcs.npcAct(npcAct, api).catch(onError);
+          }
         }
       }
 
