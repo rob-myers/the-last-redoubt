@@ -25,13 +25,16 @@
 
 - ✅ fix `nav rob $( click 1 ) | npc rob walk`
 - ✅ fix `nav rob $( click 1 ) | npc rob lookAt`
-- 🚧 permit `npc rob walk - '{ doorStrategy: "open" }'`
+- ✅ permit `npc rob walk - '{ doorStrategy: "open" }'`
   - ℹ️ i.e. stdin represented via hyphen
   - ✅ `npc: run: paused: cannot cancel`
   - ✅ move "selector" out of getNpc
-  - 🚧 cleaner approach
+  - ✅ cleaner approach
+-  ✅ permit stdin elsewhere e.g. `click | npc rob do - '{ fadeOutMs: 2000 }'`
 - `walk` wraps `npc {npcKey} walk`
 - `look {npcKey}` is `npc {npcKey} lookAt`
+
+- try `walk2` which "appends" navPath
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc

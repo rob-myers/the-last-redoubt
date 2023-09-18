@@ -312,17 +312,12 @@
         const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
 
         if (action === "get" && (args[2] === "walk" || args[2] === "lookAt")) {
+          // walk/look need to respond immediately
           const npc = w.npcs.getNpc(args[1], api);
-          await api.eagerReadLoop(// look and walk need to respond immediately
+          await api.eagerReadLoop(
             async (datum) => {
-              // 🚧 clean
-              // await w.npcs.getNpc(
-              //   args[1],
-              //   api.generateSelector(args[2], api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg))),
-              //   api,
-              // );
-              const npcAct = w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [args[2], ...api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg))]);
-              await w.npcs.npcAct(npcAct, api).catch(onError);
+              const selector = api.generateSelector(args[2], api.addStdinToArgs(datum, args.slice(3).map(api.parseJsArg)));
+              await selector.call(npc, npc);
             },
             () => npc.cancel(),
           );
@@ -330,7 +325,8 @@
           while ((datum = await api.read()) !== null) {
             const npcAct = args.length === 1
               ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
-              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], [...args.slice(2), datum])
+              // 🤔 careful parseJsArg does not misinterpret strings
+              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], api.addStdinToArgs(datum, args.slice(2).map(api.parseJsArg)))
             ;
             yield await w.npcs.npcAct(npcAct, api).catch(onError);
           }
