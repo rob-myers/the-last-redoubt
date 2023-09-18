@@ -210,21 +210,6 @@
         };
       }
     },
-
-    look: async function* ({ api, args: [npcKey, pointStr], home, datum }) {
-      const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.connectNpcToProcess(api, npcKey);
-
-      if (api.isTtyAt(0)) {
-        await npc.lookAt(api.parseJsArg(pointStr));
-      } else {
-        let promise = Promise.resolve(/** @type {*} */ (0));
-        while ((datum = await api.read()) !== null) {
-          promise = npc.lookAt(datum);
-        }
-        await promise; // After EOF
-      }
-    },
   
     /**
      * Request navpath to position(s) or npc(s), e.g.
@@ -490,7 +475,7 @@
      * nav rob $( click 1) > navPath; walk rob "$navPath"
      * ```
      */
-    walk: async function* ({ api, args, home, datum }) {
+    walk: async function* ({ api, args, home }) {
       const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
         "open",       /** Try to open closed doors */
         "safeOpen",   /** Try to open closed doors, except locked ones */
@@ -508,23 +493,56 @@
       if (api.isTtyAt(0)) {
         await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });
       } else {
-        let reject = /** @param {*} _ */ (_) => {};
-        let promise = Promise.resolve();
-        const onError = /** @type {(e: *) => void} */ (opts.forever
-          ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`))
-          : e => reject(e)
+        await api.eagerReadLoop(
+          async (datum) => {
+            try {
+              await npc.walk(datum, { doorStrategy });
+            } catch (e) {
+              if (opts.forever) {
+                w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
+              } else {
+                throw e;
+              }
+            }
+          },
+          () => npc.cancel(),
         );
-        
-        while ((datum = await Promise.race([
-          api.read(),
-          new Promise((_, r) => reject = r),
-        ])) !== null) {
-          promise = npc.walk(datum, { doorStrategy }).catch(onError)
-        }
-        await promise; // After EOF
       }
     },
-  
+    walk2: async function* ({ api, args, home, datum }) {
+      // const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
+      //   "open",       /** Try to open closed doors */
+      //   "safeOpen",   /** Try to open closed doors, except locked ones */
+      //   "forceOpen",  /** Try and can open any doors (as if had skeleton key) */
+      //   "forever",    /** Ignore errors when inside loop */
+      // ]});
+      // /** @type {NPC.WalkDoorStrategy} */
+      // const doorStrategy = opts.open && "open" ||
+      //   opts.safeOpen && "safeOpen" ||
+      //   opts.forceOpen && "forceOpen" || "none";
+
+      // const w = api.getCached(home.WORLD_KEY)
+      // const npc = w.npcs.connectNpcToProcess(api, npcKey);
+
+      // if (api.isTtyAt(0)) {
+      //   await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });
+      // } else {
+      //   let reject = /** @param {*} _ */ (_) => {};
+      //   let promise = Promise.resolve();
+      //   const onError = /** @type {(e: *) => void} */ (opts.forever
+      //     ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`))
+      //     : e => reject(e)
+      //   );
+        
+      //   while ((datum = await Promise.race([
+      //     api.read(),
+      //     new Promise((_, r) => reject = r),
+      //   ])) !== null) {
+      //     promise = npc.walk(datum, { doorStrategy }).catch(onError)
+      //   }
+      //   await promise; // After EOF
+      // }
+    },
   },
   ];
   

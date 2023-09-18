@@ -31,8 +31,8 @@
   - ✅ move "selector" out of getNpc
   - ✅ cleaner approach
 -  ✅ permit stdin elsewhere e.g. `click | npc rob do - '{ fadeOutMs: 2000 }'`
-- `walk` wraps `npc {npcKey} walk`
-- `look {npcKey}` is `npc {npcKey} lookAt`
+- ✅ `walk` uses `eagerReadLoop` like `npc rob walk`
+- ✅ `look {npcKey}` is `npc {npcKey} lookAt`
 
 - try `walk2` which "appends" navPath
 

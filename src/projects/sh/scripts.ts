@@ -68,6 +68,10 @@ export const utilFunctions = [
 export const gameFunctions = [
 {
 
+look: `{
+  npc $1 lookAt
+}`,
+
 /** Usage: doLoop {npcKey} */
 doLoop: `{
   click |
