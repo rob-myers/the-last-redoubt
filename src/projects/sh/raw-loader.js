@@ -467,10 +467,11 @@
     },
   
     /**
-     * Move a specific npc along a @see {NPC.GlobalNavPath} <br/>
+     * Move specific npc along a @see {NPC.GlobalNavPath} <br/>
      * `npcKey` must be first operand
      * ```sh
-     * click | nav rob | walk rob
+     * click | nav rob | walk --open rob
+     * click | nav rob | walk --forever rob
      * nav rob $( click 1) | walk rob
      * nav rob $( click 1) > navPath; walk rob "$navPath"
      * ```
@@ -509,39 +510,45 @@
         );
       }
     },
-    walk2: async function* ({ api, args, home, datum }) {
-      // const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
-      //   "open",       /** Try to open closed doors */
-      //   "safeOpen",   /** Try to open closed doors, except locked ones */
-      //   "forceOpen",  /** Try and can open any doors (as if had skeleton key) */
-      //   "forever",    /** Ignore errors when inside loop */
-      // ]});
-      // /** @type {NPC.WalkDoorStrategy} */
-      // const doorStrategy = opts.open && "open" ||
-      //   opts.safeOpen && "safeOpen" ||
-      //   opts.forceOpen && "forceOpen" || "none";
+    // 🚧 graphical rep of navpath?
+    // 🚧 fix tracking on subsequent click
+    walk2: async function* ({ api, args, home }) {
+      const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
+        boolean: ["open", "safeOpen", "forceOpen", "forever",   
+      ]});
+      /** @type {NPC.WalkDoorStrategy} */
+      const doorStrategy = opts.open && "open" ||
+        opts.safeOpen && "safeOpen" ||
+        opts.forceOpen && "forceOpen" || "none";
 
-      // const w = api.getCached(home.WORLD_KEY)
-      // const npc = w.npcs.connectNpcToProcess(api, npcKey);
+      const w = api.getCached(home.WORLD_KEY)
+      const npc = w.npcs.connectNpcToProcess(api, npcKey);
 
-      // if (api.isTtyAt(0)) {
-      //   await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });
-      // } else {
-      //   let reject = /** @param {*} _ */ (_) => {};
-      //   let promise = Promise.resolve();
-      //   const onError = /** @type {(e: *) => void} */ (opts.forever
-      //     ? e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`))
-      //     : e => reject(e)
-      //   );
-        
-      //   while ((datum = await Promise.race([
-      //     api.read(),
-      //     new Promise((_, r) => reject = r),
-      //   ])) !== null) {
-      //     promise = npc.walk(datum, { doorStrategy }).catch(onError)
-      //   }
-      //   await promise; // After EOF
-      // }
+      if (api.isTtyAt(0)) {
+        const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr));
+        await npc.walk(navPath, { doorStrategy });
+      } else {
+        const navOpts = /** @type {NPC.NavOpts} */ ({});
+        let resolved = /** @type {undefined | null | Geom.VectJson} */ (undefined);
+        let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
+        const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
+
+        while ((resolved = await Promise.race([ ...walkPromise ? [walkPromise] : [], api.read()])) !== null) {
+          if (resolved === undefined) walkPromise = undefined; // walk finished
+          else if (resolved === null) { /** EOF: keep waiting */ }
+          else futurePoints.push(resolved); // read a point
+          if (!walkPromise && futurePoints.length) {
+            const points = [npc.getPosition(), ...futurePoints.splice(0, futurePoints.length)];
+            const navPaths = points.slice(1).map((point, i) =>
+              w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
+            );
+            const navPath = w.npcs.svc.concatenateNavPaths(navPaths);
+            walkPromise = npc.walk(navPath, { doorStrategy });
+          }
+        }
+        walkPromise && await walkPromise;
+      }
+
     },
   },
   ];

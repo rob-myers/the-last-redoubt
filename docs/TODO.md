@@ -34,7 +34,11 @@
 - ✅ `walk` uses `eagerReadLoop` like `npc rob walk`
 - ✅ `look {npcKey}` is `npc {npcKey} lookAt`
 
-- try `walk2` which "appends" navPath
+- 🚧 try `walk2` which "appends" navPath
+  - ✅ basic functionality
+  - show navpath(s)
+  - tracking should not stop
+  - click 2 | walk2 --open rob
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc
@@ -51,6 +55,7 @@
   - e.g. spawn decor, then fade/remove it, registering something inside npc
   - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
   - BUG saw issue where removed decor, but new decor in different room vanished on close door
+  - icons for things we might want to pick up?
 
 - return to homepage
   - emphasise "language" and "joining behaviours" on homepage

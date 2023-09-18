@@ -771,19 +771,19 @@ class cmdServiceClass {
       loopBody: (datum: any) => Promise<void>,
       onInterrupt?: () => Promise<void>,
     ) {
-      let proms = [Promise.resolve()];
+      let proms = [] as Promise<void>[];
       let datum = await read(this.meta);
       while (datum !== null) {
         const resolved = await Promise.race(proms = [
           loopBody(datum),
           read(this.meta),
         ]);
-        if (resolved === undefined) {// Finished body
+        if (resolved === undefined) {// Finished loopBody
           datum = await proms[1];
         } else if (resolved === null) {// EOF
           await proms[0];
           datum = resolved;
-        } else {// Read before body finished
+        } else {// Read before loopBody finished
           await onInterrupt?.();
           datum = resolved;
         }
