@@ -510,8 +510,6 @@
         );
       }
     },
-    // 🚧 graphical rep of navpath?
-    // 🚧 fix tracking on subsequent click
     walk2: async function* ({ api, args, home }) {
       const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
         boolean: ["open", "safeOpen", "forceOpen", "forever",   
@@ -529,14 +527,19 @@
         await npc.walk(navPath, { doorStrategy });
       } else {
         const navOpts = /** @type {NPC.NavOpts} */ ({});
-        let resolved = /** @type {undefined | null | Geom.VectJson} */ (undefined);
-        let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
         const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
+        let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
 
-        while ((resolved = await Promise.race([ ...walkPromise ? [walkPromise] : [], api.read()])) !== null) {
-          if (resolved === undefined) walkPromise = undefined; // walk finished
-          else if (resolved === null) { /** EOF: keep waiting */ }
-          else futurePoints.push(resolved); // read a point
+        while (true) {
+          const resolved = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])
+          if (resolved === null) {// EOF
+            await walkPromise;
+            walkPromise = undefined;
+            if (!futurePoints.length) break;
+          }
+          else if (resolved === undefined) walkPromise = undefined; // walk finished
+          else futurePoints.push(resolved); // we read a point
+
           if (!walkPromise && futurePoints.length) {
             const points = [npc.getPosition(), ...futurePoints.splice(0, futurePoints.length)];
             const navPaths = points.slice(1).map((point, i) =>
@@ -546,7 +549,6 @@
             walkPromise = npc.walk(navPath, { doorStrategy });
           }
         }
-        walkPromise && await walkPromise;
       }
 
     },
