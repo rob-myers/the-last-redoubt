@@ -553,7 +553,7 @@ function metaToIconClasses(meta) {
   if (meta.sit) return 'icon sitting-silhouette';
   if (meta.lie) return 'icon lying-man-posture-silhouette';
   if (meta.label) return 'icon info-icon';
-  return undefined;
+  return 'icon road-works'; // Fallback
 }
 
 /**
