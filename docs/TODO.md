@@ -37,8 +37,9 @@
 - 🚧 try `walk2` which "appends" navPath
   - ✅ basic functionality
   - ✅ fix `click 2 | walk2 --open rob`
-  - show navpath(s)
-  - tracking should not stop
+  - ✅ ensure futurePoints are navigable
+  - ✅ show navpath(s)
+  - 🚧 tracking should not stop
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc

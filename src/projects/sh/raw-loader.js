@@ -510,45 +510,67 @@
         );
       }
     },
-    walk2: async function* ({ api, args, home }) {
+    walk2: async function* ({ api, args, home, datum }) {
       const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
-        boolean: ["open", "safeOpen", "forceOpen", "forever",   
-      ]});
+        boolean: ["open", "safeOpen", "forceOpen", "forever"],
+        string: ["closed", "locked"],
+      });
       /** @type {NPC.WalkDoorStrategy} */
       const doorStrategy = opts.open && "open" ||
         opts.safeOpen && "safeOpen" ||
-        opts.forceOpen && "forceOpen" || "none";
+        opts.forceOpen && "forceOpen" || "none"
+      ;
+      /** @type {NPC.NavOpts} */
+      const navOpts = {
+        // closedWeight: 10000, // Prefer open doors e.g. when doorStrategy `none`
+        ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
+        ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
+      };
 
       const w = api.getCached(home.WORLD_KEY)
       const npc = w.npcs.connectNpcToProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr));
+        const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr), navOpts);
+        w.debug.addPath(navPath, w.npcs.svc.getNavPathName(npcKey));
         await npc.walk(navPath, { doorStrategy });
       } else {
-        const navOpts = /** @type {NPC.NavOpts} */ ({});
         const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
         let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
+        let baseNavPath = w.npcs.svc.getEmptyNavPath();
 
-        while (true) {
-          const resolved = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])
-          if (resolved === null) {// EOF
-            await walkPromise;
-            walkPromise = undefined;
-            if (!futurePoints.length) break;
-          }
-          else if (resolved === undefined) walkPromise = undefined; // walk finished
-          else futurePoints.push(resolved); // we read a point
-
-          if (!walkPromise && futurePoints.length) {
-            const points = [npc.getPosition(), ...futurePoints.splice(0, futurePoints.length)];
-            const navPaths = points.slice(1).map((point, i) =>
-              w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
-            );
-            const navPath = w.npcs.svc.concatenateNavPaths(navPaths);
-            walkPromise = npc.walk(navPath, { doorStrategy });
-          }
+        /** @param {Geom.VectJson} src */
+        function computeNavPath(src) {
+          const points = [src, ...futurePoints];
+          const navPaths = points.slice(1).map((point, i) =>
+            w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
+          );
+          return w.npcs.svc.concatenateNavPaths(navPaths);
         }
+
+        function walkAlongPoints() {
+          baseNavPath = computeNavPath(npc.getPosition());
+          futurePoints.length = 0;
+          w.debug.addPath(baseNavPath, w.npcs.svc.getNavPathName(npcKey));
+          return walkPromise = npc.walk(baseNavPath, { doorStrategy });
+        }
+
+        while ((datum = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])) !== null) {
+          if (datum === undefined) walkPromise = undefined; // walk finished
+          else if (w.npcs.isPointInNavmesh(datum)) {
+            futurePoints.push(datum); // read a navigable point
+            if (walkPromise) {// update navPath graphic
+              const extNavPath = computeNavPath(baseNavPath.path[baseNavPath.path.length - 1]);
+              w.debug.addPath(
+                w.npcs.svc.concatenateNavPaths([baseNavPath, extNavPath]),
+                w.npcs.svc.getNavPathName(npcKey),
+              );
+            }
+          }
+          !walkPromise && futurePoints.length && walkAlongPoints();
+        }
+        await walkPromise;
+        futurePoints.length && await walkAlongPoints();
       }
 
     },
