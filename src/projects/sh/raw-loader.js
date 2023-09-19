@@ -430,7 +430,7 @@
       
       try {
         await /** @type {Promise<void>} */ (new Promise(resolve => {
-          const subscription = w.npcs.trackNpc({ npcKey, process: api.getProcess() })
+          const subscription = w.npcs.trackNpc(npcKey, api);
           subscription.add(resolve); // resolve on unsubscribe or invoke cleanups
           api.addCleanup(() => subscription.unsubscribe());
           api.addCleanup(resolve);

@@ -685,8 +685,7 @@ export default function NPCs(props) {
         update(),
       ]);
     },
-    trackNpc(opts) {
-      const { npcKey, process } = opts;
+    trackNpc(npcKey, processApi) {
       const npc = state.getNpc(npcKey); // throws if undefined
       const baseZoom = isSmallViewport() ? baseTrackingZoomMobile : baseTrackingZoom;
       
@@ -711,7 +710,7 @@ export default function NPCs(props) {
           }
         }),
         filter(x => (
-          process.status === 1 && (
+          processApi.isRunning() && (
             x.key === 'init-track'
             || x.key === 'ui-idle'
             || x.key === 'resized-bounds'
@@ -736,7 +735,7 @@ export default function NPCs(props) {
             const path = npc.getTargets().map(x => x.point);
             return await api.panZoom.followPath(path, {
               animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
-            }).catch(_ => {}); // ignore Error('cancelled')
+            }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))); // ignore Error('cancelled')
           }
 
           if (!api.panZoom.isIdle()) {
@@ -827,7 +826,7 @@ export default function NPCs(props) {
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {import('../service/npc').NpcServiceType} svc
- * @property {(e: { npcKey: string; process: import('../sh/session.store').ProcessMeta }) => import('rxjs').Subscription} trackNpc
+ * @property {(npcKey: string, processApi: ProcessApi) => import('rxjs').Subscription} trackNpc
  */
 
 /**
