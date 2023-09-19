@@ -7,6 +7,7 @@ declare namespace PanZoom {
     scaleRoot: HTMLDivElement;
     
     panning: boolean;
+    following: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
     pointers: PointerEvent[];
     origin: Geom.Vect | undefined;

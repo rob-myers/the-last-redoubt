@@ -39,7 +39,14 @@
   - ✅ fix `click 2 | walk2 --open rob`
   - ✅ ensure futurePoints are navigable
   - ✅ show navpath(s)
-  - 🚧 tracking should not stop
+  - ✅ tracking does not stop on click
+  - support immediate walk via longClick ?
+
+- zooming doesn't break tracking ?
+  - try `translate(...) scale(...)` using "translateRoot"
+  - try tracking using "scaleRoot"
+- integrate `walk2` into `controlNpc` ?
+  - npc.extendWalk(points)
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc

@@ -22,6 +22,8 @@ export default function CssPanZoom(props) {
       scaleRoot: /** @type {HTMLDivElement} */ ({}),
 
       panning: false,
+      // 🚧 could remove if tracking independent of panzoom
+      following: false,
       opts: { minScale: 0.05, maxScale: 10, step: 0.05, idleMs: 200 },
       pointers: [],
       origin: undefined,
@@ -50,9 +52,8 @@ export default function CssPanZoom(props) {
           state.zoomWithWheel(e);
         },
         pointerdown(e) {
-          // if (e.target !== state.parent) return;
           state.delayIdle();
-          state.animationAction('cancel');
+          !state.following && state.animationAction('cancel');
           // e.preventDefault();
           ensurePointer(state.pointers, e);
 
@@ -259,13 +260,18 @@ export default function CssPanZoom(props) {
           easing: 'linear',
         });
 
+        state.following = true;
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
           trAnim.addEventListener('finish', () => {
+            state.following = false;
             resolve('completed');
             state.releaseAnim(trAnim, state.translateRoot);
           });
-          trAnim.addEventListener('cancel', () => reject('cancelled'));
+          trAnim.addEventListener('cancel', () => {
+            state.following = false;
+            reject('cancelled');
+          });
         });
       },
       getCenteredCssTransforms(worldPoints) {
