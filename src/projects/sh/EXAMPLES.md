@@ -120,6 +120,7 @@ echo foo | npc decor
 npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'
 
 npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96, tags:["decor"] }'
+npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'
 
 npc rm-decor bar
 npc rm-decor 'foo bar'
