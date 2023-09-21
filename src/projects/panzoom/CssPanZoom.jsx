@@ -79,6 +79,7 @@ export default function CssPanZoom(props) {
           }
 
           if (state.following) {
+            // 🚧 breaks "door open whilst walking" (drag click)
             state.start.clientX = state.start.clientY = undefined;
             return;
           }
@@ -96,8 +97,9 @@ export default function CssPanZoom(props) {
             // to determine the current scale
             const diff = getDistance(state.pointers) - state.start.distance
             const step = 3 * state.opts.step;
-            const toScale = Math.min(Math.max(((diff * step) / 80 + state.start.scale), state.opts.minScale), state.opts.maxScale);
-            state.zoomToClient(toScale, current);
+            const currScale = state.following ? state.cenScale : state.scale;
+            const dstScale = Math.min(Math.max(((diff * step) / 80 + currScale), state.opts.minScale), state.opts.maxScale);
+            state.zoomToClient(dstScale, current);
           } else {
             // Panning during pinch zoom can cause issues
             // because the zoom has not always rendered in time
@@ -170,6 +172,7 @@ export default function CssPanZoom(props) {
               anim.cancel();
             });
             state.panZoomAnim = null;
+            state.following = false;
             break;
           }
           case 'pause': // Avoid pausing finished animation
@@ -381,45 +384,42 @@ export default function CssPanZoom(props) {
         state.cenZoomEl.style.transform = `scale(${state.cenScale})`;
       },
       zoomToClient(dstScale, e) {
-        const parentBounds = state.rootEl.getBoundingClientRect();
-        let screenX = e.clientX - parentBounds.left;
-        let screenY = e.clientY - parentBounds.top;
-        // 🚧 clarify
-        screenX = (screenX - parentBounds.width/2) / this.cenScale + parentBounds.width/2;
-        screenY = (screenY - parentBounds.height/2) / this.cenScale + parentBounds.height/2;
-        // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
-        // - world to screen is: state.x + (state.scale * worldX)
-        // - screen to world is: (screenX - state.x) / state.scale
-        const worldX = (screenX - (state.x - state.rootEl.scrollLeft)) / state.scale;
-        const worldY = (screenY - (state.y - state.rootEl.scrollTop)) / state.scale;
-        // To maintain position,
-        // - need state.x' s.t. worldX' := (screenX - state.x') / toScale = worldPoint.x
-        // - we undo scroll so that syncStyles makes sense
-        state.x = screenX - (worldX * dstScale) + state.rootEl.scrollLeft;
-        state.y = screenY - (worldY * dstScale) + state.rootEl.scrollTop;
-        state.scale = dstScale;
+        if (state.following) {
+          state.cenScale = dstScale;
+        } else {
+          const parentBounds = state.rootEl.getBoundingClientRect();
+          let screenX = e.clientX - parentBounds.left;
+          let screenY = e.clientY - parentBounds.top;
+          // 🚧 clarify
+          screenX = (screenX - parentBounds.width/2) / this.cenScale + parentBounds.width/2;
+          screenY = (screenY - parentBounds.height/2) / this.cenScale + parentBounds.height/2;
+          // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
+          // - world to screen is: state.x + (state.scale * worldX)
+          // - screen to world is: (screenX - state.x) / state.scale
+          const worldX = (screenX - (state.x - state.rootEl.scrollLeft)) / state.scale;
+          const worldY = (screenY - (state.y - state.rootEl.scrollTop)) / state.scale;
+          // To maintain position,
+          // - need state.x' s.t. worldX' := (screenX - state.x') / toScale = worldPoint.x
+          // - we undo scroll so that syncStyles makes sense
+          state.x = screenX - (worldX * dstScale) + state.rootEl.scrollLeft;
+          state.y = screenY - (worldY * dstScale) + state.rootEl.scrollTop;
+          state.scale = dstScale;
+        }
         state.setStyles();
       },
       zoomWithWheel(event) {
         event.preventDefault(); // Avoid conflict with regular page scroll
         // Normalize to deltaX in case shift modifier is used on Mac
         const delta = event.deltaY === 0 && event.deltaX ? event.deltaX : event.deltaY;
-        const wheel = delta < 0 ? 1 : -1;
-
         // Wheel has extra 0.5 scale factor (unlike pinch)
-        if (state.following) {
-          state.cenScale = Math.min(
-            Math.max(state.cenScale * Math.exp((wheel * state.opts.step * 0.5) / 3), state.opts.minScale),
-            state.opts.maxScale,
-          );
-          state.setStyles();
-        } else {
-          const dstScale = Math.min(
-            Math.max(state.scale * Math.exp((wheel * state.opts.step * 0.5) / 3), state.opts.minScale),
-            state.opts.maxScale,
-          );
-          state.zoomToClient(dstScale, event);
-        }
+        const wheel = (delta < 0 ? 1 : -1) * 0.5;
+
+        const currScale = state.following ? state.cenScale : state.scale;
+        const dstScale = Math.min(
+          Math.max(currScale * Math.exp((wheel * state.opts.step) / 3), state.opts.minScale),
+          state.opts.maxScale,
+        );
+        state.zoomToClient(dstScale, event);
       }
     };
   }, { deeper: ['evt'] });
