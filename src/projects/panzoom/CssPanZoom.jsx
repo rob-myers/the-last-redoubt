@@ -170,7 +170,7 @@ export default function CssPanZoom(props) {
               anim.addEventListener('cancel', resolve)
               anim.cancel();
             });
-            state.panZoomAnim = null;
+            state.panZoomAnim === anim && (state.panZoomAnim = null);
             break;
           }
           case 'pause': // Avoid pausing finished animation
@@ -266,6 +266,7 @@ export default function CssPanZoom(props) {
             resolve('completed');
             state.releaseAnim(anim, state.panZoomEl);
             state.syncStyles();
+            state.panZoomAnim === anim && (state.panZoomAnim = null);
           });
           anim.addEventListener('cancel', () => reject('cancelled'));
         });
