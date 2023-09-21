@@ -10,7 +10,7 @@
   - ✅ tracking does not stop on click
   - support immediate walk via longClick ?
 
-- 🚧 zooming doesn't break tracking ?
+- ✅ zooming doesn't break tracking
   - ❌ try `translate(...) scale(...)` using "translateRoot"
   - ❌ try swapping translateRoot and scaleRoot
   - ✅ outer div "centered-scale"
@@ -29,10 +29,11 @@
     - after re-walk, seems we are no longer centre-zooming
   - ❌ clearing state.start.client{X,Y} breaks drag-click door open
     - already expect "clean clicks"
-  - 🚧 mobile central-zoom
-  - reset central zoom to 1 when stop following?
 
-- integrate `walk2` into `controlNpc`
+- mobile central-zoom via pinch
+- reset central zoom to 1 when stop following?
+
+- 🚧 integrate `walk2` into `controlNpc`
   - npc.extendWalk(points)
 
 - BUG pipes
