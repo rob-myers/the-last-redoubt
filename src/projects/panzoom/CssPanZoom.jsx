@@ -17,18 +17,23 @@ export default function CssPanZoom(props) {
   const state = useStateRef(/** @type {() => PanZoom.CssApi} */ () => {
     return {
       ready: true,
+      opts: { minScale: 0.05, maxScale: 10, step: 0.05, idleMs: 200 },
+
       rootEl: /** @type {HTMLDivElement} */ ({}),
       cenZoomEl: /** @type {HTMLDivElement} */ ({}),
       panZoomEl: /** @type {HTMLDivElement} */ ({}),
 
       panZoomAnim: null,
 
+      cenScale: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      
       panning: false,
       following: false,
-      opts: { minScale: 0.05, maxScale: 10, step: 0.05, idleMs: 200 },
       pointers: [],
       origin: undefined,
-      scale: 1,
       start: {
         clientX: undefined,
         clientY: undefined,
@@ -36,12 +41,8 @@ export default function CssPanZoom(props) {
         distance: 0,
         epochMs: -1,
       },
-      x: 0,
-      y: 0,
-
       events: new Subject,
       idleTimeoutId: 0,
-      transitionTimeoutId: 0,
       clickIds: [],
 
       evt: {
@@ -53,14 +54,12 @@ export default function CssPanZoom(props) {
         },
         pointerdown(e) {
           state.delayIdle();
-          // !state.following && state.animationAction('cancel');
-          state.animationAction('cancel');
-          // e.preventDefault();
           ensurePointer(state.pointers, e);
+          !state.following && state.animationAction('cancel');
 
           state.panning = true;
           state.origin = new Vect(state.x, state.y);
-          // This works whether there are multiple pointers or not
+
           const point = getMiddle(state.pointers);
           state.start = {
             clientX: point.clientX,
@@ -79,8 +78,13 @@ export default function CssPanZoom(props) {
             return;
           }
 
+          if (state.following) {
+            state.start.clientX = state.start.clientY = undefined;
+            return;
+          }
+
           state.delayIdle();
-          ensurePointer(state.pointers, e); // Needed?
+          ensurePointer(state.pointers, e);
           const current = getMiddle(state.pointers);
 
           if (state.pointers.length > 1) {
@@ -100,9 +104,8 @@ export default function CssPanZoom(props) {
             // for accurate calculations
             // See https://github.com/timmywil/panzoom/issues/512
             // 🚧 clarify
-            const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
-            const nextX = state.origin.x + (current.clientX - state.start.clientX) / centeredScaleFactor;
-            const nextY = state.origin.y + (current.clientY - state.start.clientY) / centeredScaleFactor;
+            const nextX = state.origin.x + (current.clientX - state.start.clientX) / state.cenScale;
+            const nextY = state.origin.y + (current.clientY - state.start.clientY) / state.cenScale;
 
             if (state.x !== nextX || state.y !== nextY) {
               state.x = nextX;
@@ -127,11 +130,13 @@ export default function CssPanZoom(props) {
           const el = /** @type {HTMLElement} */ (e.target);
           const { x, y, width, height } = el.getBoundingClientRect();
           const targetPos = state.getWorld({ clientX: x + (width/2), clientY: y + (height/2) });
+
           // Distance is approx because state.scale may change
           const distance = new Vect(
             e.clientX - /** @type {number} */ (state.start.clientX),
             e.clientY - /** @type {number} */ (state.start.clientY),
           ).scale(1 / state.scale).length;
+
           /** @type {PanZoom.CssPointerUpEvent['meta']} */
           const meta = { ...el.dataset.meta && safeJsonParse(el.dataset.meta),
             targetPos: { x: precision(targetPos.x), y: precision(targetPos.y) },
@@ -243,8 +248,8 @@ export default function CssPanZoom(props) {
           return await state.panZoomTo(undefined, path[0], 1000);
         }
 
-        const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
         await state.animationAction('cancel');
+        const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
         state.panZoomAnim = state.panZoomEl.animate(keyframes, {
           // ℹ️ Jerky on Safari Desktop and Firefox Mobile
           duration,
@@ -258,8 +263,8 @@ export default function CssPanZoom(props) {
           const anim = /** @type {Animation} */ (state.panZoomAnim);
           anim.addEventListener('finish', () => {
             state.following = false;
-            resolve('completed');
             state.releaseAnim(anim, state.panZoomEl);
+            resolve('completed');
           });
           anim.addEventListener('cancel', () => {
             state.following = false;
@@ -278,22 +283,19 @@ export default function CssPanZoom(props) {
         const matrix = new DOMMatrix(getComputedStyle(state.panZoomEl).transform);
         return { x: matrix.e, y: matrix.f, scale: matrix.a };
       },
-      // Handles `state.parent.scroll{Left,Top}`
       getWorld(e) {
         const parentBounds = state.rootEl.getBoundingClientRect();
-        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
         let screenX = e.clientX - parentBounds.left;
         let screenY = e.clientY - parentBounds.top;
         // 🚧 clarify
-        screenX = (screenX - parentBounds.width/2) / centeredScaleFactor + parentBounds.width/2;
-        screenY = (screenY - parentBounds.height/2) / centeredScaleFactor + parentBounds.height/2;
+        screenX = (screenX - parentBounds.width/2) / this.cenScale + parentBounds.width/2;
+        screenY = (screenY - parentBounds.height/2) / this.cenScale + parentBounds.height/2;
         const current = state.getCurrentTransform();
         // Need scroll offset to get actual current translation
         const worldX = (screenX - (current.x - state.rootEl.scrollLeft)) / current.scale;
         const worldY = (screenY - (current.y - state.rootEl.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
-      // Handles `state.parent.scroll{Left,Top}`
       getWorldAtCenter() {
         const parentBounds = state.rootEl.getBoundingClientRect();
         const current = state.getCurrentTransform();
@@ -376,16 +378,15 @@ export default function CssPanZoom(props) {
       },
       setStyles() {
         state.panZoomEl.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        state.cenZoomEl.style.transform = `scale(${state.cenScale})`;
       },
       zoomToClient(dstScale, e) {
-        // 🚧 move to state.centeredScale
-        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
         const parentBounds = state.rootEl.getBoundingClientRect();
         let screenX = e.clientX - parentBounds.left;
         let screenY = e.clientY - parentBounds.top;
         // 🚧 clarify
-        screenX = (screenX - parentBounds.width/2) / centeredScaleFactor + parentBounds.width/2;
-        screenY = (screenY - parentBounds.height/2) / centeredScaleFactor + parentBounds.height/2;
+        screenX = (screenX - parentBounds.width/2) / this.cenScale + parentBounds.width/2;
+        screenY = (screenY - parentBounds.height/2) / this.cenScale + parentBounds.height/2;
         // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
         // - world to screen is: state.x + (state.scale * worldX)
         // - screen to world is: (screenX - state.x) / state.scale
@@ -561,7 +562,7 @@ function ensurePointer(pointers, event) {
 }
 
 /**
- * 
+ * This works whether there are multiple pointers or not
  * @param {PointerEvent[]} pointers 
  * @returns 
  */

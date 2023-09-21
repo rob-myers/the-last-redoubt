@@ -13,8 +13,6 @@ declare namespace PanZoom {
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
     pointers: PointerEvent[];
     origin: Geom.Vect | undefined;
-    /** Target scale in `scaleRoot` */
-    scale: number;
     start: {
       clientX: number | undefined;
       clientY: number | undefined;
@@ -22,10 +20,15 @@ declare namespace PanZoom {
       scale: number;
       distance: number;
     },
-    /** Target translateX in `translateRoot` */
+
+    /** scale of `div.centred-zoom */
+    cenScale: number;
+    /** translateX of `div.panzoom-transform` */
     x: number;
-    /** Target translateY in `translateRoot` */
+    /** translateY of `div.panzoom-transform` */
     y: number;
+    /** scale of `div.panzoom-transform */
+    scale: number;
     
     evt: {
       wheel(e: WheelEvent): void;
@@ -37,7 +40,6 @@ declare namespace PanZoom {
     events: import('rxjs').Subject<PanZoom.CssInternalEvent>;
     /** UI is considered idle iff this is 0 */
     idleTimeoutId: number;
-    transitionTimeoutId: number;
     /**
      * Pending click identifiers, provided by code external to CssPanZoom.
      * The last click identifier is the "current one".
