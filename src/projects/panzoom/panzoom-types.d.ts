@@ -9,7 +9,6 @@ declare namespace PanZoom {
     panZoomAnim: null | Animation;
     
     panning: boolean;
-    following: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
     pointers: PointerEvent[];
     origin: Geom.Vect | undefined;
@@ -57,8 +56,16 @@ declare namespace PanZoom {
     getWorld(e: { clientX: number; clientY: number; }): Geom.VectJson;
     getWorldAtCenter(): Geom.VectJson;
     private idleTimeout(): void;
+    isFollowing(): boolean;
     isIdle(): boolean;
-    async panZoomTo(scale?: number, worldPoint?: Geom.VectJson, durationMs: number, easing?: string): Promise<void>;
+    // 🚧 opts
+    async panZoomTo(
+      scale?: number,
+      worldPoint?: Geom.VectJson,
+      durationMs: number,
+      easing?: string,
+      id?: string,
+    ): Promise<void>;
     async followPath(path: Geom.Vect[], opts: { animScaleFactor: number }): Promise<void>;
     releaseAnim(anim: Animation, parentEl: HTMLElement): void;
     rootRef(el: null | HTMLDivElement): void;

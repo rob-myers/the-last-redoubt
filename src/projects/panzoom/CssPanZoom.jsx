@@ -31,7 +31,6 @@ export default function CssPanZoom(props) {
       scale: 1,
       
       panning: false,
-      following: false,
       pointers: [],
       origin: undefined,
       start: {
@@ -49,13 +48,13 @@ export default function CssPanZoom(props) {
         wheel(e) {
           state.isIdle() && state.events.next({ key: 'started-wheel' });
           state.delayIdle();
-          !state.following && state.animationAction('cancel');
+          !state.isFollowing() && state.animationAction('cancel');
           state.zoomWithWheel(e);
         },
         pointerdown(e) {
           state.delayIdle();
           ensurePointer(state.pointers, e);
-          !state.following && state.animationAction('cancel');
+          !state.isFollowing() && state.animationAction('cancel');
 
           state.panning = true;
           state.origin = new Vect(state.x, state.y);
@@ -78,7 +77,7 @@ export default function CssPanZoom(props) {
             return;
           }
 
-          if (state.following) {
+          if (state.isFollowing()) {
             // 🚧 breaks "door open whilst walking" (drag click)
             state.start.clientX = state.start.clientY = undefined;
             return;
@@ -97,7 +96,7 @@ export default function CssPanZoom(props) {
             // to determine the current scale
             const diff = getDistance(state.pointers) - state.start.distance
             const step = 3 * state.opts.step;
-            const currScale = state.following ? state.cenScale : state.scale;
+            const currScale = state.isFollowing() ? state.cenScale : state.scale;
             const dstScale = Math.min(Math.max(((diff * step) / 80 + currScale), state.opts.minScale), state.opts.maxScale);
             state.zoomToClient(dstScale, current);
           } else {
@@ -172,7 +171,6 @@ export default function CssPanZoom(props) {
               anim.cancel();
             });
             state.panZoomAnim = null;
-            state.following = false;
             break;
           }
           case 'pause': // Avoid pausing finished animation
@@ -248,7 +246,7 @@ export default function CssPanZoom(props) {
         if (path.length === 0) {
           return;
         } else if (path.length === 1) {
-          return await state.panZoomTo(undefined, path[0], 1000);
+          return await state.panZoomTo(undefined, path[0], 1000, undefined, 'followPath');
         }
 
         await state.animationAction('cancel');
@@ -259,20 +257,17 @@ export default function CssPanZoom(props) {
           direction: 'normal',
           fill: 'forwards',
           easing: 'linear',
+          id: 'followPath',
         });
 
-        state.following = true;
         await new Promise((resolve, reject) => {
           const anim = /** @type {Animation} */ (state.panZoomAnim);
           anim.addEventListener('finish', () => {
-            state.following = false;
-            state.releaseAnim(anim, state.panZoomEl);
             resolve('completed');
+            state.releaseAnim(anim, state.panZoomEl);
+            state.syncStyles();
           });
-          anim.addEventListener('cancel', () => {
-            state.following = false;
-            reject('cancelled');
-          });
+          anim.addEventListener('cancel', () => reject('cancelled'));
         });
       },
       getCenteredCssTransforms(worldPoints) {
@@ -315,6 +310,9 @@ export default function CssPanZoom(props) {
           state.delayIdle();
         }
       },
+      isFollowing() {
+         return this.panZoomAnim?.id === 'followPath';
+      },
       isIdle() {
         return state.idleTimeoutId === 0;
       },
@@ -323,6 +321,7 @@ export default function CssPanZoom(props) {
         worldPoint = state.getWorldAtCenter(),
         durationMs,
         easing = 'ease',
+        id = 'panZoomTo',
       ) {
         await state.animationAction('cancel');
         /**
@@ -338,7 +337,13 @@ export default function CssPanZoom(props) {
         state.panZoomAnim = state.panZoomEl.animate([
           { offset: 0 },
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px) scale(${scale})` },
-        ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing });
+        ], {
+          duration: durationMs,
+          direction: 'normal',
+          fill: 'forwards',
+          easing,
+          id,
+        });
 
         state.events.next({ key: 'started-panzoom-to' });
         state.panZoomEl.classList.add('hide-grid'); // Avoid Chrome flicker
@@ -384,7 +389,7 @@ export default function CssPanZoom(props) {
         state.cenZoomEl.style.transform = `scale(${state.cenScale})`;
       },
       zoomToClient(dstScale, e) {
-        if (state.following) {
+        if (state.isFollowing()) {
           state.cenScale = dstScale;
         } else {
           const parentBounds = state.rootEl.getBoundingClientRect();
@@ -414,7 +419,7 @@ export default function CssPanZoom(props) {
         // Wheel has extra 0.5 scale factor (unlike pinch)
         const wheel = (delta < 0 ? 1 : -1) * 0.5;
 
-        const currScale = state.following ? state.cenScale : state.scale;
+        const currScale = state.isFollowing() ? state.cenScale : state.scale;
         const dstScale = Math.min(
           Math.max(currScale * Math.exp((wheel * state.opts.step) / 3), state.opts.minScale),
           state.opts.maxScale,
