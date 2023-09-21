@@ -23,8 +23,8 @@
   - ✅ clean CssPanZoom
   - ✅ state.cenScale
   - ✅ while followPath, panning has no effect
-  - 🚧 while followPath, zooming changes cenScale
-  - replicate and fix jerkiness relating to followPath (?)
+  - ✅ while followPath, zooming changes cenScale
+  - 🤔 replicate and fix jerkiness relating to followPath (?)
 
 - integrate `walk2` into `controlNpc` ?
   - npc.extendWalk(points)
