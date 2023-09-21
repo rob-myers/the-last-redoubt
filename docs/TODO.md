@@ -24,10 +24,19 @@
   - ✅ state.cenScale
   - ✅ while followPath, panning has no effect
   - ✅ while followPath, zooming changes cenScale
-  - 🤔 replicate and fix jerkiness relating to followPath (?)
+  - isFollowing via animation ids?
+  - ✅ BUG walk, re-walk, zoom
+    - after re-walk, seems we are no longer centre-zooming
+  - ❌ clearing state.start.client{X,Y} breaks drag-click door open
+    - already expect "clean clicks"
+  - 🚧 mobile central-zoom
+  - reset central zoom to 1 when stop following?
 
-- integrate `walk2` into `controlNpc` ?
+- integrate `walk2` into `controlNpc`
   - npc.extendWalk(points)
+
+- BUG pipes
+  - `expr null | map 'x => x'`
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc

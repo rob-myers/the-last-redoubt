@@ -78,9 +78,8 @@ export default function CssPanZoom(props) {
           }
 
           if (state.isFollowing()) {
-            // 🚧 breaks "door open whilst walking" (drag click)
             state.start.clientX = state.start.clientY = undefined;
-            return;
+            return; // Also prevents small-drag-click
           }
 
           state.delayIdle();
@@ -95,9 +94,8 @@ export default function CssPanZoom(props) {
             // Use the distance between the first 2 pointers
             // to determine the current scale
             const diff = getDistance(state.pointers) - state.start.distance
-            const step = 3 * state.opts.step;
             const currScale = state.isFollowing() ? state.cenScale : state.scale;
-            const dstScale = Math.min(Math.max(((diff * step) / 80 + currScale), state.opts.minScale), state.opts.maxScale);
+            const dstScale = Math.min(Math.max(((diff * 3 * state.opts.step) / 80 + currScale), state.opts.minScale), state.opts.maxScale);
             state.zoomToClient(dstScale, current);
           } else {
             // Panning during pinch zoom can cause issues
