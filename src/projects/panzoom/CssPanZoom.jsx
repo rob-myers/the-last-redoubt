@@ -98,8 +98,10 @@ export default function CssPanZoom(props) {
             // because the zoom has not always rendered in time
             // for accurate calculations
             // See https://github.com/timmywil/panzoom/issues/512
-            const nextX = state.origin.x + (current.clientX - state.start.clientX);
-            const nextY = state.origin.y + (current.clientY - state.start.clientY);
+            // 🚧 clarify
+            const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
+            const nextX = state.origin.x + (current.clientX - state.start.clientX) / centeredScaleFactor;
+            const nextY = state.origin.y + (current.clientY - state.start.clientY) / centeredScaleFactor;
 
             if (state.x !== nextX || state.y !== nextY) {
               state.x = nextX;
@@ -161,10 +163,6 @@ export default function CssPanZoom(props) {
               trAnim && isAnimAttached(trAnim, state.translateRoot) && new Promise(resolve => {
                 trAnim.addEventListener('cancel', resolve)
                 trAnim.cancel();
-              }),
-              scAnim && isAnimAttached(scAnim, state.scaleRoot) && new Promise(resolve => {
-                scAnim.addEventListener('cancel', resolve)
-                scAnim.cancel();
               }),
             ]);
             state.anims = /** @type {[null, null]} */ ([null, null]);
@@ -278,33 +276,22 @@ export default function CssPanZoom(props) {
         const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
         return worldPoints.map(point => `translate(${
           screenWidth/2 + state.parent.scrollLeft - (state.scale * point.x)}px, ${
-          screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)}px)`
+          screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)}px) scale(${state.scale})`
         );
       },
       getCurrentTransform() {
-        const bounds = state.parent.getBoundingClientRect();
-        /**
-         * `trBounds` is offset negatively by state.parent.scroll{Left,Top}.
-         * We undo this offset below, so that
-         * @see {state.syncStyles} makes sense.
-         */
-        const trBounds = state.translateRoot.getBoundingClientRect();
-        return {
-          x: (trBounds.x + state.parent.scrollLeft) - bounds.x,
-          y: (trBounds.y + state.parent.scrollTop) - bounds.y,
-          /**
-           * This should work because state.scaleRoot.style.width is '1px'.
-           * But it is slightly wrong on mobile (Android Chrome) i.e. ~0.0068.
-           */
-          // scale: state.scaleRoot.getBoundingClientRect().width, // 🚧
-          scale: new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a,
-        }
+        const matrix = new DOMMatrix(getComputedStyle(state.translateRoot).transform);
+        return { x: matrix.e, y: matrix.f, scale: matrix.a };
       },
       // Handles `state.parent.scroll{Left,Top}`
       getWorld(e) {
         const parentBounds = state.parent.getBoundingClientRect();
-        const screenX = e.clientX - parentBounds.left;
-        const screenY = e.clientY - parentBounds.top;
+        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
+        let screenX = e.clientX - parentBounds.left;
+        let screenY = e.clientY - parentBounds.top;
+        // 🚧 clarify
+        screenX = (screenX - parentBounds.width/2) / centeredScaleFactor + parentBounds.width/2;
+        screenY = (screenY - parentBounds.height/2) / centeredScaleFactor + parentBounds.height/2;
         const current = state.getCurrentTransform();
         // Need scroll offset to get actual current translation
         const worldX = (screenX - (current.x - state.parent.scrollLeft)) / current.scale;
@@ -346,33 +333,27 @@ export default function CssPanZoom(props) {
 
         state.anims[0] = state.translateRoot.animate([
           { offset: 0 },
-          { offset: 1, transform: `translate(${dstX}px, ${dstY}px)` },
+          { offset: 1, transform: `translate(${dstX}px, ${dstY}px) scale(${scale})` },
         ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing });
 
-        state.anims[1] = state.scaleRoot.animate([
-          { offset: 0 },
-          { offset: 1, transform: `scale(${scale})` },
-        ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing })
         state.events.next({ key: 'started-panzoom-to' });
-        state.scaleRoot.classList.add('hide-grid'); // Avoid Chrome flicker
+        state.translateRoot.classList.add('hide-grid'); // Avoid Chrome flicker
 
         let finished = false;
         await new Promise((resolve, reject) => {
           const trAnim = /** @type {Animation} */ (state.anims[0]);
-          const scAnim = /** @type {Animation} */ (state.anims[1]);
           trAnim.addEventListener('finish', () => {
             finished = true;
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
             state.releaseAnim(trAnim, state.translateRoot);
-            state.releaseAnim(scAnim, state.scaleRoot);
             state.syncStyles();
           });
           trAnim.addEventListener('cancel', async () => {
             reject('cancelled');
             !finished && state.events.next({ key: 'cancelled-panzoom-to' });
-            state.scaleRoot.classList.remove('hide-grid');
+            state.translateRoot.classList.remove('hide-grid');
             state.syncStyles();
           });
         });
@@ -385,9 +366,9 @@ export default function CssPanZoom(props) {
       },
       rootRef(el) {
         if (el) {
-          state.parent = /** @type {*} */ (el.parentElement);
+          state.scaleRoot = /** @type {*} */ (el.parentElement);
+          state.parent = /** @type {*} */ (state.scaleRoot.parentElement);
           state.translateRoot = el;
-          state.scaleRoot = /** @type {*} */ (el.children[0]);
         }
       },
       syncStyles() {
@@ -395,13 +376,17 @@ export default function CssPanZoom(props) {
         state.setStyles();
       },
       setStyles() {
-        state.translateRoot.style.transform = `translate(${state.x}px, ${state.y}px)`;
-        state.scaleRoot.style.transform = `scale(${state.scale})`;
+        state.translateRoot.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
       },
       zoomToClient(dstScale, e) {
+        // 🚧 move to state.centeredScale
+        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
         const parentBounds = state.parent.getBoundingClientRect();
-        const screenX = e.clientX - parentBounds.left;
-        const screenY = e.clientY - parentBounds.top;
+        let screenX = e.clientX - parentBounds.left;
+        let screenY = e.clientY - parentBounds.top;
+        // 🚧 clarify
+        screenX = (screenX - parentBounds.width/2) / centeredScaleFactor + parentBounds.width/2;
+        screenY = (screenY - parentBounds.height/2) / centeredScaleFactor + parentBounds.height/2;
         // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
         // - world to screen is: state.x + (state.scale * worldX)
         // - screen to world is: (screenX - state.x) / state.scale
@@ -471,11 +456,11 @@ export default function CssPanZoom(props) {
       ref={measureRef}
       style={{ backgroundColor: props.background || '#fff' }}
     >
-      <div
-        ref={state.rootRef}
-        className="panzoom-translate"
-      >
-        <div className="panzoom-scale">
+      <div className="centered-scale">
+        <div
+          ref={state.rootRef}
+          className="panzoom-translate"
+        >
           <div className="origin" />
           {props.children}
           {props.grid && <div className="small-grid" />}
@@ -500,22 +485,18 @@ const rootCss = css`
   touch-action: none;
   cursor: auto;
   
+  .centered-scale {
+    transform-origin: 50% 50%;
+    width: 100%;
+    height: 100%;
+  }
+
   .panzoom-translate {
     width: 0;
     height: 0;
     user-select: none;
     touch-action: none;
     transform-origin: 0 0;
-    
-    .panzoom-scale {
-      /** So can infer scale during CSS animation via getBoundingClientRect().width */
-      width: 1px;
-      height: 1px;
-      transform-origin: 0 0;
-      /** Fixes Chrome clip-path flicker (fast zoom), but too slow on mobile */
-      /* will-change: contents; */
-      /* will-change: transform; */
-    }
 
     .hide-grid {
       .small-grid, .large-grid {

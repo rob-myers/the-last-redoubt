@@ -2,38 +2,6 @@
 
 ## In progress
 
-- ✅ avoid too many processes in listing for pause/resume,
-  - ❌ processes pass down "names"
-  - ✅ shorter `ps -s` 
-  - ✅ `ps` hides links when leader has descendant leader
-
-- ✅ pause/resume click for all npcs
-  - ✅ shell function pausableNpcs
-  - ✅ all NPCs have clickable head
-  - ✅ careful about controlNpc (try verbose)
-  - ✅ clarify isPaused vs manuallyPaused
-    - ✅ manuallyPaused -> forcePaused
-    - ✅ clarify isPaused()
-
-- ✅ clarify various types of pausing
-- ✅ `npc config verbose` to show errors in loops
-
-- ✅ fix `npc rob do $( click 1 )` on enter/leave do point
-  - ✅ cannot go thru walls
-  - ✅ on/off mesh spawn too
-  - ❌ maybe should be long _press_ not click
-
-- ✅ fix `nav rob $( click 1 ) | npc rob walk`
-- ✅ fix `nav rob $( click 1 ) | npc rob lookAt`
-- ✅ permit `npc rob walk - '{ doorStrategy: "open" }'`
-  - ℹ️ i.e. stdin represented via hyphen
-  - ✅ `npc: run: paused: cannot cancel`
-  - ✅ move "selector" out of getNpc
-  - ✅ cleaner approach
--  ✅ permit stdin elsewhere e.g. `click | npc rob do - '{ fadeOutMs: 2000 }'`
-- ✅ `walk` uses `eagerReadLoop` like `npc rob walk`
-- ✅ `look {npcKey}` is `npc {npcKey} lookAt`
-
 - 🚧 try `walk2` which "appends" navPath
   - ✅ basic functionality
   - ✅ fix `click 2 | walk2 --open rob`
@@ -42,9 +10,22 @@
   - ✅ tracking does not stop on click
   - support immediate walk via longClick ?
 
-- zooming doesn't break tracking ?
-  - try `translate(...) scale(...)` using "translateRoot"
-  - try tracking using "scaleRoot"
+- 🚧 zooming doesn't break tracking ?
+  - ❌ try `translate(...) scale(...)` using "translateRoot"
+  - ❌ try swapping translateRoot and scaleRoot
+  - ✅ outer div "centered-scale"
+  - ✅ check things work whilst centered-scale is zoomed
+    - ✅ fix manual panzoom
+    - ✅ fix `click` whilst zoomed
+    - ✅ fix animated panzoom `view`
+  - ✅ collapse translate/scaleRoot
+  - ✅ commit CssPanZoom WIP
+  - state.centeredScale
+  - clean CssPanZoom
+
+- fix jerky followPath when continually click either end
+  - maybe followPath followed by followPath not cancelled properly\
+
 - integrate `walk2` into `controlNpc` ?
   - npc.extendWalk(points)
 
@@ -595,6 +576,38 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ avoid too many processes in listing for pause/resume,
+  - ❌ processes pass down "names"
+  - ✅ shorter `ps -s` 
+  - ✅ `ps` hides links when leader has descendant leader
+
+- ✅ pause/resume click for all npcs
+  - ✅ shell function pausableNpcs
+  - ✅ all NPCs have clickable head
+  - ✅ careful about controlNpc (try verbose)
+  - ✅ clarify isPaused vs manuallyPaused
+    - ✅ manuallyPaused -> forcePaused
+    - ✅ clarify isPaused()
+
+- ✅ clarify various types of pausing
+- ✅ `npc config verbose` to show errors in loops
+
+- ✅ fix `npc rob do $( click 1 )` on enter/leave do point
+  - ✅ cannot go thru walls
+  - ✅ on/off mesh spawn too
+  - ❌ maybe should be long _press_ not click
+
+- ✅ fix `nav rob $( click 1 ) | npc rob walk`
+- ✅ fix `nav rob $( click 1 ) | npc rob lookAt`
+- ✅ permit `npc rob walk - '{ doorStrategy: "open" }'`
+  - ℹ️ i.e. stdin represented via hyphen
+  - ✅ `npc: run: paused: cannot cancel`
+  - ✅ move "selector" out of getNpc
+  - ✅ cleaner approach
+-  ✅ permit stdin elsewhere e.g. `click | npc rob do - '{ fadeOutMs: 2000 }'`
+- ✅ `walk` uses `eagerReadLoop` like `npc rob walk`
+- ✅ `look {npcKey}` is `npc {npcKey} lookAt`
 
 - ❌ support `click | filter meta.npc | world '(w, p) => w.npcs.getNpc(p.meta.npcKey).pause()`
   - ❌ could set value processApi.ctxt via option `run --ctxt="(processApi) => foo" ...`
