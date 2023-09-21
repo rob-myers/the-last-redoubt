@@ -2,9 +2,11 @@ declare namespace PanZoom {
 
   export interface CssApi {
     ready: boolean;
-    parent: HTMLDivElement;
-    translateRoot: HTMLDivElement;
-    scaleRoot: HTMLDivElement;
+    rootEl: HTMLDivElement;
+    panZoomEl: HTMLDivElement;
+    cenZoomEl: HTMLDivElement;
+    
+    panZoomAnim: null | Animation;
     
     panning: boolean;
     following: boolean;
@@ -36,8 +38,6 @@ declare namespace PanZoom {
     /** UI is considered idle iff this is 0 */
     idleTimeoutId: number;
     transitionTimeoutId: number;
-    /** [translate, scale] */
-    anims: [null | Animation, null | Animation];
     /**
      * Pending click identifiers, provided by code external to CssPanZoom.
      * The last click identifier is the "current one".

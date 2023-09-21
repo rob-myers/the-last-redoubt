@@ -37,7 +37,7 @@ export default function World(props) {
     panZoom: /** @type {PanZoom.CssApi} */ ({ ready: false }),
 
     getRootEl() {
-      return state.panZoom.parent;
+      return state.panZoom.rootEl;
     },
     isReady() {
       return [

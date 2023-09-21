@@ -17,12 +17,13 @@ export default function CssPanZoom(props) {
   const state = useStateRef(/** @type {() => PanZoom.CssApi} */ () => {
     return {
       ready: true,
-      parent: /** @type {HTMLDivElement} */ ({}),
-      translateRoot: /** @type {HTMLDivElement} */ ({}),
-      scaleRoot: /** @type {HTMLDivElement} */ ({}),
+      rootEl: /** @type {HTMLDivElement} */ ({}),
+      cenZoomEl: /** @type {HTMLDivElement} */ ({}),
+      panZoomEl: /** @type {HTMLDivElement} */ ({}),
+
+      panZoomAnim: null,
 
       panning: false,
-      // 🚧 could remove if tracking independent of panzoom
       following: false,
       opts: { minScale: 0.05, maxScale: 10, step: 0.05, idleMs: 200 },
       pointers: [],
@@ -41,7 +42,6 @@ export default function CssPanZoom(props) {
       events: new Subject,
       idleTimeoutId: 0,
       transitionTimeoutId: 0,
-      anims: [null, null],
       clickIds: [],
 
       evt: {
@@ -53,7 +53,8 @@ export default function CssPanZoom(props) {
         },
         pointerdown(e) {
           state.delayIdle();
-          !state.following && state.animationAction('cancel');
+          // !state.following && state.animationAction('cancel');
+          state.animationAction('cancel');
           // e.preventDefault();
           ensurePointer(state.pointers, e);
 
@@ -99,7 +100,7 @@ export default function CssPanZoom(props) {
             // for accurate calculations
             // See https://github.com/timmywil/panzoom/issues/512
             // 🚧 clarify
-            const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
+            const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
             const nextX = state.origin.x + (current.clientX - state.start.clientX) / centeredScaleFactor;
             const nextY = state.origin.y + (current.clientY - state.start.clientY) / centeredScaleFactor;
 
@@ -152,36 +153,30 @@ export default function CssPanZoom(props) {
       },
 
       async animationAction(type) {
-        const [trAnim, scAnim] = state.anims;
-        if (!trAnim && !scAnim) {
+        const anim = state.panZoomAnim;
+        if (!anim) {
           return;
         }
         switch (type) {
           case 'cancel': {
             state.syncStyles(); // Remember current translate/scale
-            await Promise.all([
-              trAnim && isAnimAttached(trAnim, state.translateRoot) && new Promise(resolve => {
-                trAnim.addEventListener('cancel', resolve)
-                trAnim.cancel();
-              }),
-            ]);
-            state.anims = /** @type {[null, null]} */ ([null, null]);
+            isAnimAttached(anim, state.panZoomEl) && await new Promise(resolve => {
+              anim.addEventListener('cancel', resolve)
+              anim.cancel();
+            });
+            state.panZoomAnim = null;
             break;
           }
-          case 'pause':
-            // Avoid pausing finished animation
-            state.anims.forEach(anim => anim?.playState === 'running' && anim.pause());
+          case 'pause': // Avoid pausing finished animation
+            state.panZoomAnim?.playState === 'running' && state.panZoomAnim.pause();
             break;
           case 'play':
-            state.anims.forEach(anim => anim?.playState === 'paused' && anim.play());
+            state.panZoomAnim?.playState === 'paused' && state.panZoomAnim.play();
             break;
           default:
             throw testNever(type, { suffix: 'animationAction' });
         }
       },
-      /**
-       * 🚧 support changing scale
-       */
       computePathKeyframes(path, animScaleFactor) {
         /** Duration of initial pan (even if close) */
         const initPanMs = 500;
@@ -250,7 +245,7 @@ export default function CssPanZoom(props) {
 
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
         await state.animationAction('cancel');
-        state.anims[0] = state.translateRoot.animate(keyframes, {
+        state.panZoomAnim = state.panZoomEl.animate(keyframes, {
           // ℹ️ Jerky on Safari Desktop and Firefox Mobile
           duration,
           direction: 'normal',
@@ -260,33 +255,33 @@ export default function CssPanZoom(props) {
 
         state.following = true;
         await new Promise((resolve, reject) => {
-          const trAnim = /** @type {Animation} */ (state.anims[0]);
-          trAnim.addEventListener('finish', () => {
+          const anim = /** @type {Animation} */ (state.panZoomAnim);
+          anim.addEventListener('finish', () => {
             state.following = false;
             resolve('completed');
-            state.releaseAnim(trAnim, state.translateRoot);
+            state.releaseAnim(anim, state.panZoomEl);
           });
-          trAnim.addEventListener('cancel', () => {
+          anim.addEventListener('cancel', () => {
             state.following = false;
             reject('cancelled');
           });
         });
       },
       getCenteredCssTransforms(worldPoints) {
-        const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
+        const { width: screenWidth, height: screenHeight } = state.rootEl.getBoundingClientRect();
         return worldPoints.map(point => `translate(${
-          screenWidth/2 + state.parent.scrollLeft - (state.scale * point.x)}px, ${
-          screenHeight/2 + state.parent.scrollTop - (state.scale * point.y)}px) scale(${state.scale})`
+          screenWidth/2 + state.rootEl.scrollLeft - (state.scale * point.x)}px, ${
+          screenHeight/2 + state.rootEl.scrollTop - (state.scale * point.y)}px) scale(${state.scale})`
         );
       },
       getCurrentTransform() {
-        const matrix = new DOMMatrix(getComputedStyle(state.translateRoot).transform);
+        const matrix = new DOMMatrix(getComputedStyle(state.panZoomEl).transform);
         return { x: matrix.e, y: matrix.f, scale: matrix.a };
       },
       // Handles `state.parent.scroll{Left,Top}`
       getWorld(e) {
-        const parentBounds = state.parent.getBoundingClientRect();
-        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
+        const parentBounds = state.rootEl.getBoundingClientRect();
+        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
         let screenX = e.clientX - parentBounds.left;
         let screenY = e.clientY - parentBounds.top;
         // 🚧 clarify
@@ -294,17 +289,17 @@ export default function CssPanZoom(props) {
         screenY = (screenY - parentBounds.height/2) / centeredScaleFactor + parentBounds.height/2;
         const current = state.getCurrentTransform();
         // Need scroll offset to get actual current translation
-        const worldX = (screenX - (current.x - state.parent.scrollLeft)) / current.scale;
-        const worldY = (screenY - (current.y - state.parent.scrollTop)) / current.scale;
+        const worldX = (screenX - (current.x - state.rootEl.scrollLeft)) / current.scale;
+        const worldY = (screenY - (current.y - state.rootEl.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
       // Handles `state.parent.scroll{Left,Top}`
       getWorldAtCenter() {
-        const parentBounds = state.parent.getBoundingClientRect();
+        const parentBounds = state.rootEl.getBoundingClientRect();
         const current = state.getCurrentTransform();
         // Need scroll offset to get actual current translation
-        const worldX = (parentBounds.width/2 - (current.x - state.parent.scrollLeft)) / current.scale;
-        const worldY = (parentBounds.height/2 - (current.y - state.parent.scrollTop)) / current.scale;
+        const worldX = (parentBounds.width/2 - (current.x - state.rootEl.scrollLeft)) / current.scale;
+        const worldY = (parentBounds.height/2 - (current.y - state.rootEl.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
       idleTimeout() {
@@ -318,42 +313,46 @@ export default function CssPanZoom(props) {
       isIdle() {
         return state.idleTimeoutId === 0;
       },
-      async panZoomTo(scale = state.scale, worldPoint = state.getWorldAtCenter(), durationMs, easing = 'ease') {
+      async panZoomTo(
+        scale = state.scale,
+        worldPoint = state.getWorldAtCenter(),
+        durationMs,
+        easing = 'ease',
+      ) {
         await state.animationAction('cancel');
-
         /**
          * Compute (x, y) s.t. `translate(x_1, y_2) scale(scale)` has `worldPoint` at screen center,
          * i.e. x_i + (scale * worldPoint.x_i) = screenWidth/2
          * i.e. x_i := screenWidth/2 - (scale * worldPoint.x_i)
          * For screen center also need to take account of scroll{Left,Top}.
          */
-        const { width: screenWidth, height: screenHeight } = state.parent.getBoundingClientRect();
-        const dstX = screenWidth/2 + state.parent.scrollLeft - (scale * worldPoint.x);
-        const dstY = screenHeight/2 + state.parent.scrollTop - (scale * worldPoint.y);
+        const { width: screenWidth, height: screenHeight } = state.rootEl.getBoundingClientRect();
+        const dstX = screenWidth/2 + state.rootEl.scrollLeft - (scale * worldPoint.x);
+        const dstY = screenHeight/2 + state.rootEl.scrollTop - (scale * worldPoint.y);
 
-        state.anims[0] = state.translateRoot.animate([
+        state.panZoomAnim = state.panZoomEl.animate([
           { offset: 0 },
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px) scale(${scale})` },
         ], { duration: durationMs, direction: 'normal', fill: 'forwards', easing });
 
         state.events.next({ key: 'started-panzoom-to' });
-        state.translateRoot.classList.add('hide-grid'); // Avoid Chrome flicker
+        state.panZoomEl.classList.add('hide-grid'); // Avoid Chrome flicker
 
         let finished = false;
         await new Promise((resolve, reject) => {
-          const trAnim = /** @type {Animation} */ (state.anims[0]);
-          trAnim.addEventListener('finish', () => {
+          const anim = /** @type {Animation} */ (state.panZoomAnim);
+          anim.addEventListener('finish', () => {
             finished = true;
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
             // Release animation e.g. so can manually alter styles
-            state.releaseAnim(trAnim, state.translateRoot);
+            state.releaseAnim(anim, state.panZoomEl);
             state.syncStyles();
           });
-          trAnim.addEventListener('cancel', async () => {
+          anim.addEventListener('cancel', async () => {
             reject('cancelled');
             !finished && state.events.next({ key: 'cancelled-panzoom-to' });
-            state.translateRoot.classList.remove('hide-grid');
+            state.panZoomEl.classList.remove('hide-grid');
             state.syncStyles();
           });
         });
@@ -366,9 +365,9 @@ export default function CssPanZoom(props) {
       },
       rootRef(el) {
         if (el) {
-          state.scaleRoot = /** @type {*} */ (el.parentElement);
-          state.parent = /** @type {*} */ (state.scaleRoot.parentElement);
-          state.translateRoot = el;
+          state.cenZoomEl = /** @type {*} */ (el.parentElement);
+          state.rootEl = /** @type {*} */ (state.cenZoomEl.parentElement);
+          state.panZoomEl = el;
         }
       },
       syncStyles() {
@@ -376,12 +375,12 @@ export default function CssPanZoom(props) {
         state.setStyles();
       },
       setStyles() {
-        state.translateRoot.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        state.panZoomEl.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
       },
       zoomToClient(dstScale, e) {
         // 🚧 move to state.centeredScale
-        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.scaleRoot).transform).a;
-        const parentBounds = state.parent.getBoundingClientRect();
+        const centeredScaleFactor = new DOMMatrix(getComputedStyle(state.cenZoomEl).transform).a;
+        const parentBounds = state.rootEl.getBoundingClientRect();
         let screenX = e.clientX - parentBounds.left;
         let screenY = e.clientY - parentBounds.top;
         // 🚧 clarify
@@ -390,13 +389,13 @@ export default function CssPanZoom(props) {
         // Compute world position given `translate(x, y) scale(scale)` (offset by scroll)
         // - world to screen is: state.x + (state.scale * worldX)
         // - screen to world is: (screenX - state.x) / state.scale
-        const worldX = (screenX - (state.x - state.parent.scrollLeft)) / state.scale;
-        const worldY = (screenY - (state.y - state.parent.scrollTop)) / state.scale;
+        const worldX = (screenX - (state.x - state.rootEl.scrollLeft)) / state.scale;
+        const worldY = (screenY - (state.y - state.rootEl.scrollTop)) / state.scale;
         // To maintain position,
         // - need state.x' s.t. worldX' := (screenX - state.x') / toScale = worldPoint.x
         // - we undo scroll so that syncStyles makes sense
-        state.x = screenX - (worldX * dstScale) + state.parent.scrollLeft;
-        state.y = screenY - (worldY * dstScale) + state.parent.scrollTop;
+        state.x = screenX - (worldX * dstScale) + state.rootEl.scrollLeft;
+        state.y = screenY - (worldY * dstScale) + state.rootEl.scrollTop;
         state.scale = dstScale;
         state.setStyles();
       },
@@ -427,7 +426,7 @@ export default function CssPanZoom(props) {
       pointercancel: pointerup,
       // scroll: () => { console.log('devtool scroll!'); },
     };
-    keys(cb).forEach(key => state.parent.addEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
+    keys(cb).forEach(key => state.rootEl.addEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
 
     props.onLoad?.(state);
 
@@ -438,11 +437,12 @@ export default function CssPanZoom(props) {
       ?.catch(_x => {}); // ?
 
     return () => {
-      keys(cb).forEach(key => state.parent.removeEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
+      keys(cb).forEach(key => state.rootEl.removeEventListener(key, /** @type {(e: Event) => void} */ (cb[key])));
     };
   }, []);
 
   const [measureRef, bounds] = useMeasure({ debounce: 30, scroll: false });
+  
   React.useEffect(() => {
     if (bounds.width && bounds.height) {
       state.events.next({ key: 'resized-bounds', bounds: { x: bounds.x, y: bounds.y, width: bounds.width, height: bounds.height } });
@@ -456,10 +456,10 @@ export default function CssPanZoom(props) {
       ref={measureRef}
       style={{ backgroundColor: props.background || '#fff' }}
     >
-      <div className="centered-scale">
+      <div className="centered-zoom">
         <div
           ref={state.rootRef}
-          className="panzoom-translate"
+          className="panzoom-transform"
         >
           <div className="origin" />
           {props.children}
@@ -485,13 +485,13 @@ const rootCss = css`
   touch-action: none;
   cursor: auto;
   
-  .centered-scale {
+  .centered-zoom {
     transform-origin: 50% 50%;
     width: 100%;
     height: 100%;
   }
 
-  .panzoom-translate {
+  .panzoom-transform {
     width: 0;
     height: 0;
     user-select: none;

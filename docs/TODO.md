@@ -20,11 +20,12 @@
     - ✅ fix animated panzoom `view`
   - ✅ collapse translate/scaleRoot
   - ✅ commit CssPanZoom WIP
+  - ✅ clean CssPanZoom
   - state.centeredScale
-  - clean CssPanZoom
-
-- fix jerky followPath when continually click either end
-  - maybe followPath followed by followPath not cancelled properly\
+  - replicate and fix jerkiness relating to followPath (?)
+    - click followPath twice in same place, then quickly zoom out
+      - zoom is jumping
+  - while followPath, zooming should be centred zoom
 
 - integrate `walk2` into `controlNpc` ?
   - npc.extendWalk(points)
