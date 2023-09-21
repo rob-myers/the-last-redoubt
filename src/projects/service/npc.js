@@ -465,35 +465,34 @@ class NpcService {
    * Concatenate compatible nav paths i.e.
    * with matching final/initial vertices.
    * @param {NPC.GlobalNavPath[]} navPaths
+   * @param {string} [name]
    * @returns {NPC.GlobalNavPath}
    */
-  concatenateNavPaths(navPaths) {
-    if (navPaths.length === 1) {
-      return navPaths[0];
-    } else {
-      return navPaths.reduce((agg, { name, path, gmRoomIds, navMetas, edgeNodeIds }, i) => {
-        // -1 because remove prune vertex 0
-        const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
-        // 🚧 first navMeta always 'vertex'?
-        agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
-          .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
-        );
-        Object.entries(gmRoomIds).forEach(([k, v]) =>
-          // 🤔 We do not exclude `k === 0`
-          agg.gmRoomIds[Number(k) + vertexOffset] = v
-        );
-        // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
-        agg.name = name; // name of last navpath
-        agg.edgeNodeIds.push(...edgeNodeIds);
-        agg.path.push(...i === 0 ? path : path.slice(1));
-        return agg;
-      }, this.getEmptyNavPath());
-    }
+  concatenateNavPaths(navPaths, name) {
+    return navPaths.reduce((agg, { path, gmRoomIds, navMetas, edgeNodeIds }, i) => {
+      // -1 because we prune vertex 0
+      const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
+      // 🚧 first navMeta always 'vertex'?
+      agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
+        .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
+      );
+      Object.entries(gmRoomIds).forEach(([k, v]) =>
+        // 🤔 We do not exclude `k === 0`
+        agg.gmRoomIds[Number(k) + vertexOffset] = v
+      );
+      // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
+      agg.edgeNodeIds.push(...edgeNodeIds);
+      agg.path.push(...i === 0 ? path : path.slice(1));
+      return agg;
+    }, this.getEmptyNavPath(name ?? navPaths.at(-1)?.name));
   }
 
-  /** @returns {NPC.GlobalNavPath} */
-  getEmptyNavPath() {
-    return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: {} };
+  /**
+   * @param {string} [name] 
+   * @returns {NPC.GlobalNavPath}
+   */
+  getEmptyNavPath(name) {
+    return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: {}, name };
   }
 
   /**

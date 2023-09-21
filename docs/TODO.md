@@ -34,10 +34,10 @@
 - reset central zoom to 1 when stop following?
 
 - 🚧 integrate `walk2` into `controlNpc`
+  - ✅ debug.addPath in `npc.walk` rather than `nav`
   - npc.extendWalk(points)
 
-- BUG pipes
-  - `expr null | map 'x => x'`
+- BUG pipes: `expr null | map 'x => x'` empty
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc
@@ -98,6 +98,7 @@
 - cache connector.poly.center -> connector.center
 - GeomorphEdit works on mobile
 - check spawn uses correct ppid in every case
+- BUG `click | walk2 --open rob` can fail to open door, perhaps because collides first?
 
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker

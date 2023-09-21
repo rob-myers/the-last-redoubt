@@ -897,17 +897,17 @@ export default function createNpc(
         )) {// start of navPath blocked
           throw new Error('cancelled');
         }
-        /**
-         * Walk along a global navpath, possibly throwing
-         * Error with message 'cancelled' if collide with something.
-         */
+
+        api.debug.addPath(navPath, api.npcs.svc.getNavPathName(this.key));
+        // Walk along a global navpath, possibly throwing
+        // error.message 'cancelled' if collide with something.
         await this.followNavPath(navPath, opts.doorStrategy);
+
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
-          console.info(`walk cancelled: ${this.key}`);
-        } else {
-          throw err;
+          return warn(`walk cancelled: ${this.key}`);
         }
+        throw err;
       }
     },
     /**

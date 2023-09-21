@@ -227,7 +227,7 @@
         string: [
           "closed", /** Weight nav nodes near closed doors, e.g. 10000 */
           "locked", /** Weight nav nodes near locked doors, e.g. 10000 */
-          "name", /** Can override navPath.name and debug.path[key] */
+          "name", /** Can name navPath */
         ],
       })
       /** @type {NPC.NavOpts} */
@@ -246,10 +246,7 @@
         const navPaths = points.slice(1).map((point, i) =>
           w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
-        const navPath = w.npcs.svc.concatenateNavPaths(navPaths);
-        navPath.name = opts.name || w.npcs.svc.getNavPathName(inputs.length >= 2 ? inputs[0] : undefined);
-        w.debug.addPath(navPath);
-        return navPath;
+        return w.npcs.svc.concatenateNavPaths(navPaths, opts.name);
       }
       
       if (api.isTtyAt(0)) {
@@ -352,8 +349,6 @@
               closedWeight: 10000,
               centroidsFallback: true,
             });
-            navPath.name = w.npcs.svc.getNavPathName(npcKey);
-            w.debug.addPath(navPath);
             npc.walk(navPath, { doorStrategy: "none" });
           }
         } else {// look
