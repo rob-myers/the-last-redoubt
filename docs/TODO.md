@@ -24,21 +24,22 @@
   - ✅ state.cenScale
   - ✅ while followPath, panning has no effect
   - ✅ while followPath, zooming changes cenScale
-  - isFollowing via animation ids?
+  - ✅ isFollowing via animation "id" (more like a label)
   - ✅ BUG walk, re-walk, zoom
     - after re-walk, seems we are no longer centre-zooming
   - ❌ clearing state.start.client{X,Y} breaks drag-click door open
     - already expect "clean clicks"
 
-- mobile central-zoom via pinch
-- reset central zoom to 1 when stop following?
+- 🚧 mobile central-zoom via pinch
+- clamp product of scales
+  - ℹ️ so can always zoom out after leaving follow cam
 
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - npc.extendWalk(points)
     - can add points to `npc`
+    - on add points, debug.addPath i.e. current and future concatenated
     - on finish walk, npc will walk along induced navPath
-    - as points are added, debug.addPath i.e. current and future concatenated
 
 - ✅ BUG pipes: `expr null | map 'x => x'` empty
   - use `api.eof := Symbol.for("EOF")` instead of `null` for EOF

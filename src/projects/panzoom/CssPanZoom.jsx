@@ -77,11 +77,6 @@ export default function CssPanZoom(props) {
             return;
           }
 
-          if (state.isFollowing()) {
-            state.start.clientX = state.start.clientY = undefined;
-            return; // Also prevents small-drag-click
-          }
-
           state.delayIdle();
           ensurePointer(state.pointers, e);
           const current = getMiddle(state.pointers);
@@ -102,7 +97,12 @@ export default function CssPanZoom(props) {
             // because the zoom has not always rendered in time
             // for accurate calculations
             // See https://github.com/timmywil/panzoom/issues/512
-            // 🚧 clarify
+            
+            if (state.isFollowing()) {
+              state.start.clientX = state.start.clientY = undefined;
+              return;
+            }
+
             const nextX = state.origin.x + (current.clientX - state.start.clientX) / state.cenScale;
             const nextY = state.origin.y + (current.clientY - state.start.clientY) / state.cenScale;
 
