@@ -6,7 +6,8 @@ declare namespace PanZoom {
     panZoomEl: HTMLDivElement;
     cenZoomEl: HTMLDivElement;
     
-    panZoomAnim: null | Animation;
+    /** `panZoomTo` or `followPath` */
+    anim: null | Animation;
     
     panning: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
@@ -46,38 +47,39 @@ declare namespace PanZoom {
     clickIds: string[];
     
     animationAction(type: 'cancel' | 'pause' | 'play'): Promise<void>;
+    private clampScale(input: number): number;
     private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
     private delayIdle(): void;
     distanceTo(worldPosition: Geom.Vect): number;
     /** CSS `transform`s placing world points at center of screen  */
-    getCenteredCssTransforms(worldPoints: Geom.VectJson[]): string[];
+    private getCenteredCssTransforms(worldPoints: Geom.VectJson[]): string[];
     /** Taking CSS animation into account */
-    getCurrentTransform(): { x: number; y: number; scale: number; };
+    private getCurrentTransform(): { x: number; y: number; scale: number; };
     getWorld(e: { clientX: number; clientY: number; }): Geom.VectJson;
-    getWorldAtCenter(): Geom.VectJson;
+    private getWorldAtCenter(): Geom.VectJson;
     private idleTimeout(): void;
-    isFollowing(): boolean;
+    private isFollowing(): boolean;
     isIdle(): boolean;
-    // 🚧 opts
-    async panZoomTo(
-      scale?: number,
-      worldPoint?: Geom.VectJson,
-      durationMs: number,
-      easing?: string,
-      id?: string,
-    ): Promise<void>;
+    async panZoomTo(opts: {
+      durationMs: number;
+      scale?: number;
+      worldPoint?: Geom.VectJson;
+      easing?: string;
+      /** Can override animation.id */
+      id?: string;
+    }): Promise<void>;
     async followPath(path: Geom.Vect[], opts: { animScaleFactor: number }): Promise<void>;
-    releaseAnim(anim: Animation, parentEl: HTMLElement): void;
-    rootRef(el: null | HTMLDivElement): void;
+    private releaseAnim(anim: Animation, parentEl: HTMLElement): void;
+    private rootRef(el: null | HTMLDivElement): void;
     /** Use `(x, y, scale)` to set `style.transform`s */
-    setStyles(): void;
+    private setStyles(): void;
     /**
      * - Set `(x, y, scale)` using `getCurrentTransform()`
      * - Then use `(x, y, scale)` to update `style.transform`s
      */
-    syncStyles(): void;
-    zoomToClient(toScale: number, e: { clientX: number; clientY: number; }): void;
-    zoomWithWheel(event: WheelEvent): void;
+    private syncStyles(): void;
+    private zoomToClient(toScale: number, e: { clientX: number; clientY: number; }): void;
+    private zoomWithWheel(event: WheelEvent): void;
   }
 
   type CssInternalEvent = (

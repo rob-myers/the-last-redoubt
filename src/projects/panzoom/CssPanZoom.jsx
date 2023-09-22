@@ -17,13 +17,13 @@ export default function CssPanZoom(props) {
   const state = useStateRef(/** @type {() => PanZoom.CssApi} */ () => {
     return {
       ready: true,
-      opts: { minScale: 0.05, maxScale: 10, step: 0.05, idleMs: 200 },
+      opts: { minScale: 0.5, maxScale: 10, step: 0.05, idleMs: 200 },
 
       rootEl: /** @type {HTMLDivElement} */ ({}),
       cenZoomEl: /** @type {HTMLDivElement} */ ({}),
       panZoomEl: /** @type {HTMLDivElement} */ ({}),
 
-      panZoomAnim: null,
+      anim: null,
 
       cenScale: 1,
       x: 0,
@@ -86,23 +86,21 @@ export default function CssPanZoom(props) {
             if (state.start.distance === 0) {
               state.start.distance = getDistance(state.pointers);
             }
-            // Use the distance between the first 2 pointers
-            // to determine the current scale
             const diff = getDistance(state.pointers) - state.start.distance
-            const currScale = state.isFollowing() ? state.cenScale : state.scale;
-            const dstScale = Math.min(Math.max(((diff * 3 * state.opts.step) / 80 + currScale), state.opts.minScale), state.opts.maxScale);
+            // Clamp the product of scales i.e. overall scale
+            const dstScale = state.clampScale(
+              (state.cenScale * state.scale) + (diff * 3 * state.opts.step) / 80
+            ) / (state.isFollowing() ? state.scale : state.cenScale);
             state.zoomToClient(dstScale, current);
           } else {
-            // Panning during pinch zoom can cause issues
-            // because the zoom has not always rendered in time
-            // for accurate calculations
-            // See https://github.com/timmywil/panzoom/issues/512
-            
             if (state.isFollowing()) {
+              // no dragging whilst following else discontinuous on stop follow
               state.start.clientX = state.start.clientY = undefined;
               return;
             }
 
+            // Panning during pinch zoom can cause issues 
+            // See https://github.com/timmywil/panzoom/issues/512
             const nextX = state.origin.x + (current.clientX - state.start.clientX) / state.cenScale;
             const nextY = state.origin.y + (current.clientY - state.start.clientY) / state.cenScale;
 
@@ -157,7 +155,7 @@ export default function CssPanZoom(props) {
       },
 
       async animationAction(type) {
-        const anim = state.panZoomAnim;
+        const anim = state.anim;
         if (!anim) {
           return;
         }
@@ -168,18 +166,21 @@ export default function CssPanZoom(props) {
               anim.addEventListener('cancel', resolve)
               anim.cancel();
             });
-            state.panZoomAnim === anim && (state.panZoomAnim = null);
+            state.anim === anim && (state.anim = null);
             break;
           }
           case 'pause': // Avoid pausing finished animation
-            state.panZoomAnim?.playState === 'running' && state.panZoomAnim.pause();
+            state.anim?.playState === 'running' && state.anim.pause();
             break;
           case 'play':
-            state.panZoomAnim?.playState === 'paused' && state.panZoomAnim.play();
+            state.anim?.playState === 'paused' && state.anim.play();
             break;
           default:
             throw testNever(type, { suffix: 'animationAction' });
         }
+      },
+      clampScale(input) {
+        return Math.min(Math.max(input, state.opts.minScale), state.opts.maxScale);
       },
       computePathKeyframes(path, animScaleFactor) {
         /** Duration of initial pan (even if close) */
@@ -244,12 +245,12 @@ export default function CssPanZoom(props) {
         if (path.length === 0) {
           return;
         } else if (path.length === 1) {
-          return await state.panZoomTo(undefined, path[0], 1000, undefined, 'followPath');
+          return await state.panZoomTo({ durationMs: 1000, worldPoint: path[0], id: 'followPath' });
         }
 
         await state.animationAction('cancel');
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
-        state.panZoomAnim = state.panZoomEl.animate(keyframes, {
+        state.anim = state.panZoomEl.animate(keyframes, {
           // ℹ️ Jerky on Safari Desktop and Firefox Mobile
           duration,
           direction: 'normal',
@@ -259,12 +260,12 @@ export default function CssPanZoom(props) {
         });
 
         await new Promise((resolve, reject) => {
-          const anim = /** @type {Animation} */ (state.panZoomAnim);
+          const anim = /** @type {Animation} */ (state.anim);
           anim.addEventListener('finish', () => {
             resolve('completed');
             state.releaseAnim(anim, state.panZoomEl);
             state.syncStyles();
-            state.panZoomAnim === anim && (state.panZoomAnim = null);
+            state.anim === anim && (state.anim = null);
           });
           anim.addEventListener('cancel', () => reject('cancelled'));
         });
@@ -310,18 +311,19 @@ export default function CssPanZoom(props) {
         }
       },
       isFollowing() {
-         return this.panZoomAnim?.id === 'followPath';
+         return this.anim?.id === 'followPath';
       },
       isIdle() {
         return state.idleTimeoutId === 0;
       },
-      async panZoomTo(
-        scale = state.scale,
-        worldPoint = state.getWorldAtCenter(),
-        durationMs,
-        easing = 'ease',
-        id = 'panZoomTo',
-      ) {
+      async panZoomTo(opts) {
+        const {
+          durationMs,
+          scale = state.scale,
+          worldPoint = state.getWorldAtCenter(),
+          easing = 'ease',
+          id = 'panZoomTo',
+        } = opts;
         await state.animationAction('cancel');
         /**
          * Compute (x, y) s.t. `translate(x_1, y_2) scale(scale)` has `worldPoint` at screen center,
@@ -333,7 +335,7 @@ export default function CssPanZoom(props) {
         const dstX = screenWidth/2 + state.rootEl.scrollLeft - (scale * worldPoint.x);
         const dstY = screenHeight/2 + state.rootEl.scrollTop - (scale * worldPoint.y);
 
-        state.panZoomAnim = state.panZoomEl.animate([
+        state.anim = state.panZoomEl.animate([
           { offset: 0 },
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px) scale(${scale})` },
         ], {
@@ -349,7 +351,7 @@ export default function CssPanZoom(props) {
 
         let finished = false;
         await new Promise((resolve, reject) => {
-          const anim = /** @type {Animation} */ (state.panZoomAnim);
+          const anim = /** @type {Animation} */ (state.anim);
           anim.addEventListener('finish', () => {
             finished = true;
             resolve('completed');
@@ -418,11 +420,10 @@ export default function CssPanZoom(props) {
         // Wheel has extra 0.5 scale factor (unlike pinch)
         const wheel = (delta < 0 ? 1 : -1) * 0.5;
 
-        const currScale = state.isFollowing() ? state.cenScale : state.scale;
-        const dstScale = Math.min(
-          Math.max(currScale * Math.exp((wheel * state.opts.step) / 3), state.opts.minScale),
-          state.opts.maxScale,
-        );
+        // Clamp the product of scales i.e. the overall scale
+        const dstScale = state.clampScale(
+          (state.scale * state.cenScale) * Math.exp((wheel * state.opts.step) / 3)
+        ) / (state.isFollowing() ? state.scale : state.cenScale);
         state.zoomToClient(dstScale, event);
       }
     };
@@ -446,7 +447,11 @@ export default function CssPanZoom(props) {
     // Apply initial zoom and centering
     const { init } = props;
     state.setStyles();
-    state.panZoomTo(init?.zoom ?? 1, { x: init?.x ?? 0, y: init?.y ?? 0 }, init?.ms ?? 1000)
+    state.panZoomTo({
+      durationMs:  init?.ms ?? 1000,
+      scale: init?.zoom ?? 1,
+      worldPoint: { x: init?.x ?? 0, y: init?.y ?? 0 },
+    })
       ?.catch(_x => {}); // ?
 
     return () => {

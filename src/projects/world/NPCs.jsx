@@ -553,7 +553,7 @@ export default function NPCs(props) {
         throw Error(`expected format: { zoom?: number; point?: { x: number; y: number }; ms: number; easing?: string }`);
       }
       try {
-        await api.panZoom.panZoomTo(e.zoom, e.point, e.ms, e.easing);
+        await api.panZoom.panZoomTo({ durationMs: e.ms, scale: e.zoom, worldPoint: e.point, easing: e.easing });
         return 'completed';
       } catch (e) {
         return 'cancelled';
@@ -744,11 +744,15 @@ export default function NPCs(props) {
           
           if (// npc/camera not moving/close?
             (npc.anim.spriteSheet !== 'walk')
-            && (api.panZoom.panZoomAnim === null || ['finished', 'idle'].includes(api.panZoom.panZoomAnim.playState))
+            && (api.panZoom.anim === null || ['finished', 'idle'].includes(api.panZoom.anim.playState))
             && api.panZoom.distanceTo(npc.getPosition()) > 10
           ) {
             changeStatus('panzoom-to');
-            await api.panZoom.panZoomTo(baseZoom, npc.getPosition(), 2000).catch(_ => {});
+            await api.panZoom.panZoomTo({
+              durationMs: 2000,
+              scale: baseZoom / (api.panZoom.cenScale || 1),
+              worldPoint: npc.getPosition(),
+            }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
             changeStatus('no-track');
           }
         },

@@ -2,47 +2,13 @@
 
 ## In progress
 
-- 🚧 try `walk2` which "appends" navPath
-  - ✅ basic functionality
-  - ✅ fix `click 2 | walk2 --open rob`
-  - ✅ ensure futurePoints are navigable
-  - ✅ show navpath(s)
-  - ✅ tracking does not stop on click
-  - support immediate walk via longClick ?
-
-- ✅ zooming doesn't break tracking
-  - ❌ try `translate(...) scale(...)` using "translateRoot"
-  - ❌ try swapping translateRoot and scaleRoot
-  - ✅ outer div "centered-scale"
-  - ✅ check things work whilst centered-scale is zoomed
-    - ✅ fix manual panzoom
-    - ✅ fix `click` whilst zoomed
-    - ✅ fix animated panzoom `view`
-  - ✅ collapse translate/scaleRoot
-  - ✅ commit CssPanZoom WIP
-  - ✅ clean CssPanZoom
-  - ✅ state.cenScale
-  - ✅ while followPath, panning has no effect
-  - ✅ while followPath, zooming changes cenScale
-  - ✅ isFollowing via animation "id" (more like a label)
-  - ✅ BUG walk, re-walk, zoom
-    - after re-walk, seems we are no longer centre-zooming
-  - ❌ clearing state.start.client{X,Y} breaks drag-click door open
-    - already expect "clean clicks"
-
-- 🚧 mobile central-zoom via pinch
-- clamp product of scales
-  - ℹ️ so can always zoom out after leaving follow cam
-
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - npc.extendWalk(points)
     - can add points to `npc`
     - on add points, debug.addPath i.e. current and future concatenated
     - on finish walk, npc will walk along induced navPath
-
-- ✅ BUG pipes: `expr null | map 'x => x'` empty
-  - use `api.eof := Symbol.for("EOF")` instead of `null` for EOF
+  - support immediate walk via longClick ?
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc
@@ -54,6 +20,7 @@
   - whilst running controlNpc
   - whilst `click | nav rob | npc rob walk`
 - avoid swallowing errors in any npc function: always log out when verbose
+- mobile pinch zoom too sensitive
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
@@ -592,6 +559,41 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ try `walk2` which "appends" navPath
+  - ✅ basic functionality
+  - ✅ fix `click 2 | walk2 --open rob`
+  - ✅ ensure futurePoints are navigable
+  - ✅ show navpath(s)
+  - ✅ tracking does not stop on click
+
+- ✅ zooming doesn't break tracking
+  - ❌ try `translate(...) scale(...)` using "translateRoot"
+  - ❌ try swapping translateRoot and scaleRoot
+  - ✅ outer div "centered-scale"
+  - ✅ check things work whilst centered-scale is zoomed
+    - ✅ fix manual panzoom
+    - ✅ fix `click` whilst zoomed
+    - ✅ fix animated panzoom `view`
+  - ✅ collapse translate/scaleRoot
+  - ✅ commit CssPanZoom WIP
+  - ✅ clean CssPanZoom
+  - ✅ state.cenScale
+  - ✅ while followPath, panning has no effect
+  - ✅ while followPath, zooming changes cenScale
+  - ✅ isFollowing via animation "id" (more like a label)
+  - ✅ BUG walk, re-walk, zoom
+    - after re-walk, seems we are no longer centre-zooming
+  - ❌ clearing state.start.client{X,Y} breaks drag-click door open
+    - already expect "clean clicks"
+
+- ✅ BUG pipes: `expr null | map 'x => x'` empty
+  - use `api.eof := Symbol.for("EOF")` instead of `null` for EOF
+
+- ✅ mobile central-zoom via pinch
+- ✅ clamp product of scales
+  - ℹ️ so can always zoom out after leaving follow cam
+- ✅ track panZoom resets zoom i.e. cancels cenScale
 
 - ✅ avoid too many processes in listing for pause/resume,
   - ❌ processes pass down "names"
