@@ -236,7 +236,7 @@ range 10 | split
 range 10 | split | map 'x => x + 1'
 range 10 | split | map 'x => x + 1' |
   run '({ api, datum }) {
-    while ((datum = await api.read()) !== null) {
+    while ((datum = await api.read()) !== api.eof) {
       yield* api.sleep(1);
       yield datum;
     } }'
@@ -247,7 +247,7 @@ range 10 | split | map 'x => x + 1' |
 range 5 |
   split |
   run '({ api, datum }) {
-    while ((datum = await api.read()) !== null) {
+    while ((datum = await api.read()) !== api.eof) {
       yield* api.sleep(1);
       yield datum;
     } }' |

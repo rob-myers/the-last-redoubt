@@ -48,7 +48,7 @@
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      while ((datum = await api.read()) !== null)
+      while ((datum = await api.read()) !== api.eof)
         if (func(datum, ctxt)) yield datum
     },
 
@@ -56,8 +56,8 @@
     flatMap: async function* (ctxt) {
       let { api, args, datum } = ctxt, result
       const func = Function(`return ${args[0]}`)()
-      while ((datum = await api.read(true)) !== null) { 
-        if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).flatMap(x => func(x, ctxt)) }
+      while ((datum = await api.read(true)) !== api.eof) { 
+        if (datum?.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).flatMap(x => func(x, ctxt)) }
         else {
           if (Array.isArray(result = func(datum, ctxt))) for (const item of result) yield item;
           else yield result;
@@ -79,8 +79,8 @@
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      while ((datum = await api.read(true)) !== null) {
-        if (datum.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
+      while ((datum = await api.read(true)) !== api.eof) {
+        if (datum?.__chunk__) yield { ...datum, items: /** @type {any[]} */ (datum.items).map(x => func(x, ctxt)) }
         else yield func(datum, ctxt)
       }
     },
@@ -93,7 +93,7 @@
     reduce: async function* ({ api, args, datum }) {
       const inputs = []
       const reducer = Function(`return ${args[0]}`)()
-      while ((datum = await api.read()) !== null)
+      while ((datum = await api.read()) !== api.eof)
         inputs.push(datum)
       yield args[1]
         ? inputs.reduce(reducer, api.parseJsArg(args[1]))
@@ -107,7 +107,7 @@
      */
     split: async function* ({ api, args, datum }) {
       const arg = args[0] || ""
-      while ((datum = await api.read()) !== null) {
+      while ((datum = await api.read()) !== api.eof) {
         if (datum instanceof Array) {
           // yield* datum
           yield { __chunk__: true, items: datum };
@@ -121,15 +121,15 @@
     /** Collect stdin into a single array */
     sponge: async function* ({ api, datum }) {
       const outputs = []
-      while ((datum = await api.read()) !== null)
+      while ((datum = await api.read()) !== api.eof)
         outputs.push(datum)
       yield outputs
     },
   
     take: async function* ({ api, args, datum }) {
       let remainder = Number(args[0] || Number.POSITIVE_INFINITY)
-      while ((remainder-- > 0) && ((datum = await api.read(true)) !== null))
-        if (datum.__chunk__) {
+      while ((remainder-- > 0) && ((datum = await api.read(true)) !== api.eof))
+        if (datum?.__chunk__) {
           let items = datum.items.slice(0, remainder + 1)
           remainder -= (items.length - 1)
           yield* items 
@@ -252,7 +252,7 @@
       if (api.isTtyAt(0)) {
         yield computeNavPath(parsedArgs);
       } else {
-        while ((datum = await api.read()) !== null) {
+        while ((datum = await api.read()) !== api.eof) {
           yield computeNavPath(parsedArgs.concat(datum));
         }
       }
@@ -304,7 +304,7 @@
             () => npc.cancel(),
           );
         } else {// Standard case
-          while ((datum = await api.read()) !== null) {
+          while ((datum = await api.read()) !== api.eof) {
             const npcAct = args.length === 1
               ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
               // 🤔 careful parseJsArg does not misinterpret strings
@@ -323,9 +323,9 @@
       
       /** @param {*} e */
       const onError = e => void (w.npcs.config.verbose && api.info(`ignored: ${e?.message ?? e}`));
-      let datum = /** @type {Geomorph.PointWithMeta | null} */ (null);
+      let datum = /** @type {Geomorph.PointWithMeta} */ ({});
 
-      while ((datum = await api.read()) !== null) {
+      while ((datum = await api.read()) !== api.eof) {
         const { meta } = (datum);
         if (meta.npc || npc.forcePaused) {
           if (meta.npcKey === npcKey && meta.longClick) {
@@ -406,7 +406,7 @@
         point.meta ??= {};
         await fadeSpawnDo(npcKey, point, npcClassKey);
       } else {
-        while ((datum = await api.read()) !== null) {
+        while ((datum = await api.read()) !== api.eof) {
           await fadeSpawnDo(datum.npcKey, datum.point, datum.classKey ?? npcClassKey);
         }
       }
@@ -550,7 +550,7 @@
           return walkPromise = npc.walk(baseNavPath, { doorStrategy });
         }
 
-        while ((datum = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])) !== null) {
+        while ((datum = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])) !== api.eof) {
           if (datum === undefined) walkPromise = undefined; // walk finished
           else if (w.npcs.isPointInNavmesh(datum)) {
             futurePoints.push(datum); // read a navigable point

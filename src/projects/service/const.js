@@ -154,3 +154,5 @@ export const ansi = {
   Underline: '\x1b[4m',
   UnderlineReset: '\x1b[24m',
 };
+
+export const EOF = Symbol.for('EOF');

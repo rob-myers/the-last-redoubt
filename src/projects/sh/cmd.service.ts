@@ -1,7 +1,7 @@
 import cliColumns from 'cli-columns';
 import { uid } from 'uid';
 
-import { ansi } from '../service/const';
+import { ansi, EOF } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
 import { addStdinToArgs, computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
@@ -124,7 +124,7 @@ class cmdServiceClass {
         } else {
           // `choice` expects to read `ChoiceReadValue`s
           let datum: ChoiceReadValue;
-          while ((datum = await read(meta)) !== null)
+          while ((datum = await read(meta)) !== EOF)
             yield* this.choice(meta, datum);
         }
         break;
@@ -456,7 +456,7 @@ class cmdServiceClass {
 
         if (!operands.length) {// Say lines from stdin
           let datum: string | VoiceCommand | null;
-          while ((datum = await read(meta)) !== null) {
+          while ((datum = await read(meta)) !== EOF) {
             yield {
               voice: opts.v,
               ...typeof datum === 'string' ? { text: datum } : datum
@@ -700,6 +700,8 @@ class cmdServiceClass {
 
     addStdinToArgs,
 
+    eof: EOF,
+
     generateSelector,
 
     getCached,
@@ -760,8 +762,7 @@ class cmdServiceClass {
     },
 
     /**
-     * Read once from stdin. We convert `{ eof: true }` to `null` for
-     * easier assignment, but beware of other falsies.
+     * Read once from stdin.
      */
     read(chunks?: boolean) {
       return read(this.meta, chunks);
@@ -773,7 +774,7 @@ class cmdServiceClass {
     ) {
       let proms = [] as Promise<void>[];
       let datum = await read(this.meta);
-      while (datum !== null) {
+      while (datum !== EOF) {
         const resolved = await Promise.race(proms = [
           loopBody(datum),
           read(this.meta),
@@ -958,15 +959,7 @@ function prettySafe(x: any) {
  */
 async function read(meta: Sh.BaseMeta, chunks = false) {
   const result = await cmdService.readOnce(meta, chunks);
-  return result?.eof ? null : result.data;
-}
-
-function safeJsonParse(input: string) {
-  try {
-    return JSON.parse(input);
-  } catch  {
-    return;
-  }
+  return result?.eof ? EOF : result.data;
 }
 
 export async function *sleep(

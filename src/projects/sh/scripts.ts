@@ -34,8 +34,8 @@ export const utilFunctions = [
   run '({ api, args, datum }) {
     args.forEach(arg => console.log(arg))
     if (api.isTtyAt(0)) return
-    while ((datum = await api.read(true)) !== null) {
-      if (datum.__chunk__ && datum.items?.length <= 1000) {
+    while ((datum = await api.read(true)) !== api.eof) {
+      if (datum?.__chunk__ && datum.items?.length <= 1000) {
         datum.items.forEach(x => console.log(x))
       } else {
         console.log(datum)
@@ -109,7 +109,7 @@ thinkLoop: `{
     filter 'x => x.meta.npc && x.meta.npcKey === "'$1'"' |
     run '({ api, home }) {
       const { fov } = api.getCached(home.WORLD_KEY)
-      while (await api.read(true) !== null)
+      while (await api.read(true) !== api.eof)
         fov.mapAct("show-for-ms", 3000)
     }'
 }`,

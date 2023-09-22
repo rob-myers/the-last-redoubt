@@ -36,8 +36,12 @@
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - npc.extendWalk(points)
+    - can add points to `npc`
+    - on finish walk, npc will walk along induced navPath
+    - as points are added, debug.addPath i.e. current and future concatenated
 
-- BUG pipes: `expr null | map 'x => x'` empty
+- ✅ BUG pipes: `expr null | map 'x => x'` empty
+  - use `api.eof := Symbol.for("EOF")` instead of `null` for EOF
 
 - ✅ darker when paused but not forcedPaused
 - fix stale CSS `paused` on unpaused npc
