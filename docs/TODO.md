@@ -2,17 +2,17 @@
 
 ## In progress
 
-- 🚧 BUG jittery: saw cenScale 20
+- ✅ BUG jittery: saw cenScale 20
   - ℹ️ currently we "undo scale" by panZooming, which aggregates
   - ✅ instead, try WAAPI animating centered-zoom
   - janky zoom switching if zooming whilst walk stops
-  - could we get away with a single el?!
+  - ✅ could we get away with a single el?!
     - WAAPI can combine with styles!
       > `$0.animate([{ offset: 0 }, { offset: 1, transform: 'scale(2)' }], { composite: 'accumulate', duration: 5000 })`
 
-- 🚧 try removing `centered-scale`
-  - use `composite: 'accumulate'` for panZoomTo and followPath
-  - zoom switches between "pointer target" and "centre of screen"
+- ✅ try removing `centered-scale`
+  - use `composite: 'accumulate'` for followPath
+  - ❌ zoom switches between "pointer target" and "centre of screen"
 
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`

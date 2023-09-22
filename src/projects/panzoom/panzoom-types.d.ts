@@ -3,8 +3,7 @@ declare namespace PanZoom {
   export interface CssApi {
     ready: boolean;
     rootEl: HTMLDivElement;
-    panZoomEl: HTMLDivElement;
-    cenZoomEl: HTMLDivElement;
+    transformEl: HTMLDivElement;
     
     /** `panZoomTo` or `followPath` */
     anim: null | Animation;
@@ -21,8 +20,6 @@ declare namespace PanZoom {
       distance: number;
     },
 
-    /** scale of `div.centred-zoom */
-    cenScale: number;
     /** translateX of `div.panzoom-transform` */
     x: number;
     /** translateY of `div.panzoom-transform` */
