@@ -51,24 +51,23 @@ export default function createNpc(
       sprites: new Animation(),
       durationMs: 0,
       speedFactor: 1,
+      defaultSpeedFactor: npcWalkSpeedFactor,
       initAnimScaleFactor: 1000 / (def.speed * 1),
       updatedPlaybackRate: 1,
   
+      doorStrategy: 'none',
+      extendWalkBy: [],
       gmRoomIds: [],
       prevWayMetas: [],
       wayMetas: [],
       wayTimeoutId: 0,
-      doorStrategy: 'none',
     },
     
     doMeta: null,
     forcePaused: false,
     gmRoomId: null,
-    has: {
-      key: api.gmGraph.gms.map(_ => ({})),
-    },
+    has: { key: api.gmGraph.gms.map(_ => ({})) },
     unspawned: true,
-    walkSpeedFactor: npcWalkSpeedFactor,
 
     async animateOpacity(targetOpacity, durationMs) {
       this.anim.opacity.cancel(); // Ensure prev anim removed?
@@ -215,6 +214,12 @@ export default function createNpc(
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
+    extendWalk(points) {
+      if (!this.isWalking()) {
+        return warn(`can only extendWalk when walking (${this.anim.spriteSheet})`);
+      }
+      // 🚧
+    },
     async fadeSpawn(point, opts = {}) {
       try {
         const meta = opts.meta ?? point.meta ?? {};
@@ -249,7 +254,7 @@ export default function createNpc(
       // from `nav` for decor collisions
       this.anim.gmRoomIds = gmRoomIds;
       this.anim.doorStrategy = doorStrategy ?? 'none';
-      this.anim.speedFactor = this.walkSpeedFactor;
+      this.anim.speedFactor = this.anim.defaultSpeedFactor;
       this.anim.updatedPlaybackRate = 1;
 
       this.clearWayMetas();
@@ -294,7 +299,7 @@ export default function createNpc(
         }));
       } finally {
         // Reset speed to default
-        this.anim.speedFactor = this.walkSpeedFactor;
+        this.anim.speedFactor = this.anim.defaultSpeedFactor;
         // must commitStyles, otherwise it jumps
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
@@ -525,7 +530,8 @@ export default function createNpc(
       return true;
     },
     isWalking() {
-      return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
+      // return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
+      return this.anim.spriteSheet === 'walk';
     },
     async lookAt(point) {
       if (!Vect.isVectJson(point)) {
@@ -835,10 +841,10 @@ export default function createNpc(
         this.anim.rotate.updatePlaybackRate(this.anim.updatedPlaybackRate);
         this.anim.sprites.updatePlaybackRate(this.anim.updatedPlaybackRate);
         if (!temporary) {// By default, speed changes whilst walking are temporary
-          this.walkSpeedFactor = speedFactor;
+          this.anim.defaultSpeedFactor = speedFactor;
         }
       } else {// If currently stopped, speed change isn't temporary
-        this.walkSpeedFactor = speedFactor;
+        this.anim.defaultSpeedFactor = speedFactor;
       }
       if (this.anim.speedFactor === speedFactor) {
         return; // Else infinite loop?

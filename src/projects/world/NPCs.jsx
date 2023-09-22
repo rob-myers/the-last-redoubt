@@ -750,7 +750,8 @@ export default function NPCs(props) {
             changeStatus('panzoom-to');
             await api.panZoom.panZoomTo({
               durationMs: 2000,
-              scale: baseZoom / (api.panZoom.cenScale || 1),
+              // scale: baseZoom / (api.panZoom.cenScale || 1),
+              scale: baseZoom,
               worldPoint: npc.getPosition(),
             }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
             changeStatus('no-track');

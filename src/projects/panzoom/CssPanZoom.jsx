@@ -242,6 +242,7 @@ export default function CssPanZoom(props) {
         return worldPosition.distanceTo(state.getWorldAtCenter());
       },
       async followPath(path, { animScaleFactor }) {
+        // state.cenZoomEl.style.transition = 'none';
         if (path.length === 0) {
           return;
         } else if (path.length === 1) {
@@ -249,6 +250,7 @@ export default function CssPanZoom(props) {
         }
 
         await state.animationAction('cancel');
+
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
         state.anim = state.panZoomEl.animate(keyframes, {
           // ℹ️ Jerky on Safari Desktop and Firefox Mobile
@@ -269,6 +271,11 @@ export default function CssPanZoom(props) {
           });
           anim.addEventListener('cancel', () => reject('cancelled'));
         });
+
+        // // 🚧
+        // state.cenZoomEl.style.transition = 'transform 1s';
+        // state.cenScale = 1;
+        // state.setStyles();
       },
       getCenteredCssTransforms(worldPoints) {
         const { width: screenWidth, height: screenHeight } = state.rootEl.getBoundingClientRect();
@@ -420,7 +427,7 @@ export default function CssPanZoom(props) {
         // Wheel has extra 0.5 scale factor (unlike pinch)
         const wheel = (delta < 0 ? 1 : -1) * 0.5;
 
-        // Clamp the product of scales i.e. the overall scale
+        // Clamp the product of scales i.e. overall scale
         const dstScale = state.clampScale(
           (state.scale * state.cenScale) * Math.exp((wheel * state.opts.step) / 3)
         ) / (state.isFollowing() ? state.scale : state.cenScale);

@@ -72,8 +72,6 @@ declare namespace NPC {
      * May also set false for cached un-rendered.
      */
     unspawned: boolean;
-    /** Normal walking pace speed factor */
-    walkSpeedFactor: number;
 
     cancel(overridePaused?: boolean): Promise<void>;
     canLook(): boolean;
@@ -87,6 +85,7 @@ declare namespace NPC {
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
+    extendWalk(points: Geom.VectJson[]): void;
     async fadeSpawn(point: Geomorph.PointMaybeMeta, opts?: {
       angle?: number;
       fadeOutMs?: number;
@@ -225,6 +224,8 @@ declare namespace NPC {
     rotate: Animation;
     sprites: Animation;
     durationMs: number;
+    /** Normal walking pace speed factor */
+    defaultSpeedFactor: number;
     /** Current speed factor */
     speedFactor: number;
     /**
@@ -240,12 +241,14 @@ declare namespace NPC {
      */
     updatedPlaybackRate: number;
 
-    /** Only set when changes, starting from `0` */
+    doorStrategy: WalkDoorStrategy;
+    /** Points inducing navPath of next walk */
+    extendWalkBy: Geom.VectJson[];
+    /** Only set when it changes, starting from `0` */
     gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
     prevWayMetas: NpcWayMeta[];
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
-    doorStrategy: WalkDoorStrategy;
   }
 
   /**

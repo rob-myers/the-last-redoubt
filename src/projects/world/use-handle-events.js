@@ -156,7 +156,7 @@ export default function useHandleEvents(api) {
         case 'enter-room': {
           if (npc.anim.doorStrategy !== 'none') {
              // Currently, all other strategies slow near door
-             npc.setSpeedFactor(npc.walkSpeedFactor);
+             npc.setSpeedFactor(npc.anim.defaultSpeedFactor);
           }
 
           const { gmId, doorId, enteredRoomId, otherRoomId } = e.meta;
