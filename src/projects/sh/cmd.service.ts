@@ -781,7 +781,7 @@ class cmdServiceClass {
         ]);
         if (resolved === undefined) {// Finished loopBody
           datum = await proms[1];
-        } else if (resolved === null) {// EOF
+        } else if (resolved === EOF) {
           await proms[0];
           datum = resolved;
         } else {// Read before loopBody finished
