@@ -56,7 +56,6 @@ export default function createNpc(
       updatedPlaybackRate: 1,
   
       doorStrategy: 'none',
-      extendWalkBy: [],
       gmRoomIds: [],
       prevWayMetas: [],
       wayMetas: [],
@@ -67,6 +66,7 @@ export default function createNpc(
     forcePaused: false,
     gmRoomId: null,
     has: { key: api.gmGraph.gms.map(_ => ({})) },
+    nextWalk: null,
     unspawned: true,
 
     async animateOpacity(targetOpacity, durationMs) {
@@ -214,11 +214,27 @@ export default function createNpc(
     everAnimated() {
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
-    extendWalk(points) {
-      if (!this.isWalking()) {
-        return warn(`can only extendWalk when walking (${this.anim.spriteSheet})`);
+    extendNextWalk(...points) {// 👈 often a single point
+      const currentPath = /** @type {Geom.VectJson[]} */ (this.anim.path);
+      if (!this.isWalking() || currentPath.length === 0) {
+        return warn(`extendNextWalk: ${this.anim.spriteSheet}: must be walking`);
       }
-      // 🚧
+      if (points.length === 0) {
+        return;
+      }
+      this.nextWalk ??= {  visits: [], navPath: api.npcs.svc.getEmptyNavPath() };
+      
+      // compute navPath; depict entire navPath
+      const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.VectJson} */ (currentPath.at(-1));
+      const deltaNavPath = api.npcs.getGlobalTour([src, ...points], { /** 🚧 NavOpts? */ });
+      this.nextWalk.navPath = api.npcs.svc.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
+      // 🚧 extendPath?
+      api.debug.addPath({
+        path: currentPath.concat(this.nextWalk.navPath.path),
+        name: api.npcs.svc.getNavPathName(def.key),
+      });
+
+      this.nextWalk.visits.push(...points);
     },
     async fadeSpawn(point, opts = {}) {
       try {
@@ -852,18 +868,6 @@ export default function createNpc(
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
       this.anim.speedFactor = speedFactor;
     },
-    // 🚧 -> level of shell functions
-    // async untilReady() {
-    //   this.isPaused() && await firstValueFrom(api.npcs.events.pipe(
-    //     filter(x => {
-    //       // 🚧 also throws on ctrl-c of `walk`
-    //       // 🚧 also throws on kill process (group)
-    //       if (x.key === 'removed-npc' && x.npcKey === this.key)
-    //         throw Error('removed npc');
-    //       return x.key === 'npc-internal' && x.npcKey === this.key && x.event === 'resumed';
-    //     }),
-    //   ));
-    // },
     updateRoomWalkBounds(srcIndex) {
       // We start from vertex 0 or an `exit-room`, and look for next `exit-room`
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;
@@ -883,6 +887,9 @@ export default function createNpc(
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
     async walk(navPath, opts = {}) {
+      const extendedWalk = !!this.nextWalk;
+      this.nextWalk = null;
+
       if (!api.npcs.svc.verifyGlobalNavPath(navPath)) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
@@ -904,11 +911,14 @@ export default function createNpc(
           throw new Error('cancelled');
         }
 
-        api.debug.addPath(navPath, api.npcs.svc.getNavPathName(this.key));
         // Walk along a global navpath, possibly throwing
         // error.message 'cancelled' if collide with something.
+        // 🚧 always extend?
+        !extendedWalk && api.debug.addPath(navPath, api.npcs.svc.getNavPathName(this.key));
         await this.followNavPath(navPath, opts.doorStrategy);
 
+        const nextWalk = /** @type {NPC.NPC['nextWalk']} */ (this.nextWalk);
+        nextWalk && await this.walk(nextWalk.navPath, opts);
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);

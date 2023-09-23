@@ -2,6 +2,8 @@
 
 ## In progress
 
+- `api.npcs.svc.foo` too verbose
+
 - ✅ BUG jittery: saw cenScale 20
   - ℹ️ currently we "undo scale" by panZooming, which aggregates
   - ✅ instead, try WAAPI animating centered-zoom
@@ -16,10 +18,13 @@
 
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
-  - 🚧 npc.extendWalk(points)
-    - can add points to `npc`
-    - on add points, debug.addPath i.e. current and future concatenated
-    - on finish walk, npc will walk along induced navPath
+  - 🚧 npc.extendNextWalk(points)
+    - ✅ can add points to `npc.anim.nextVisits`
+    - ✅ on add points compute next navPath + debug.addPath (current + future)
+    - ✅ on finish walk, walk along nextWalk.navPath
+    - ✅ cleanup
+    - 🚧 debug.extendPath rather than replace, possibly in walk
+    - 🚧 npc.extendNextWalk NavOpts
   - support immediate walk via longClick ?
 
 - ✅ darker when paused but not forcedPaused

@@ -340,6 +340,11 @@ export default function NPCs(props) {
         };
       }
     },
+    getGlobalTour(points, opts) {
+      return state.svc.concatenateNavPaths(points.slice(1).map((point, i) =>
+        api.npcs.getGlobalNavPath(points[i], point, { ...opts, centroidsFallback: true }),
+      ));
+    },
     /**
      * Wraps @see {gm.floorGraph.findPath}
      */
@@ -806,6 +811,8 @@ export default function NPCs(props) {
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} connectSession
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} disconnectSession
  * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
+ * @property {(visits: Geom.VectJson[], opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalTour
+ * Get a single global nav-path visiting each point in `visits`.
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath
  * @property {() => number} getNpcInteractRadius
  * @property {(npcKey: string, processApi?: ProcessApi) => NPC.NPC} getNpc throws if does not exist

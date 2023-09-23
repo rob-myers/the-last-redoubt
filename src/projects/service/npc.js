@@ -469,22 +469,25 @@ class NpcService {
    * @returns {NPC.GlobalNavPath}
    */
   concatenateNavPaths(navPaths, name) {
-    return navPaths.reduce((agg, { path, gmRoomIds, navMetas, edgeNodeIds }, i) => {
-      // -1 because we prune vertex 0
-      const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
-      // 🚧 first navMeta always 'vertex'?
-      agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
-        .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
-      );
-      Object.entries(gmRoomIds).forEach(([k, v]) =>
-        // 🤔 We do not exclude `k === 0`
-        agg.gmRoomIds[Number(k) + vertexOffset] = v
-      );
-      // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
-      agg.edgeNodeIds.push(...edgeNodeIds);
-      agg.path.push(...i === 0 ? path : path.slice(1));
-      return agg;
-    }, this.getEmptyNavPath(name ?? navPaths.at(-1)?.name));
+    return navPaths
+      .filter(({ path }) => path.length > 0)
+      .reduce((agg, { path, gmRoomIds, navMetas, edgeNodeIds }, i) => {
+        // -1 because we prune vertex 0
+        const vertexOffset = i === 0 ? 0 : agg.path.length - 1;
+        // 🚧 first navMeta always 'vertex'?
+        agg.navMetas.push(...navMetas.slice(i === 0 ? 0 : 1)
+          .map(meta => ({ ...meta, index: meta.index + vertexOffset }))
+        );
+        Object.entries(gmRoomIds).forEach(([k, v]) =>
+          // 🤔 We do not exclude `k === 0`
+          agg.gmRoomIds[Number(k) + vertexOffset] = v
+        );
+        // agg.gmRoomIds.push(...i === 0 ? gmRoomIds : gmRoomIds.slice(1));
+        agg.edgeNodeIds.push(...edgeNodeIds);
+        agg.path.push(...i === 0 ? path : path.slice(1));
+        return agg;
+      }, this.getEmptyNavPath(name ?? navPaths[0]?.name ))
+    ;
   }
 
   /**

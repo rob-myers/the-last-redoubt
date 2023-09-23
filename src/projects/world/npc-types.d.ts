@@ -48,17 +48,6 @@ declare namespace NPC {
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
     /**
-     * Set on spawn or at vertex during walk.
-     * Can be `{gmId:-1,roomId:-1}` e.g. if spawned into doorway, or outside map.
-     * While walking, doorways will default to previously entered room.
-     */
-    gmRoomId: null | Geomorph.GmRoomId;
-    /** Inventory */
-    has: {
-      /** has key iff `doorKey[gmId][doorId]` is true */
-      key: { [doorId: number]: boolean }[];
-    };
-    /**
      * _Preamble_:
      * Process suspend/resume can pause/resume npc.
      * If not resumed, such pausing will be overridden by next npc action.
@@ -67,6 +56,23 @@ declare namespace NPC {
      * in which case we have "forced" a pause, until we resume it.
      */
     forcePaused: boolean;
+    /**
+     * Set on spawn or at vertex during walk.
+     * Can be `null` e.g. if spawned into doorway, or outside map.
+     * While walking, doorways will default to previously entered room.
+     */
+    gmRoomId: null | Geomorph.GmRoomId;
+    /** Inventory */
+    has: {
+      /** has key iff `doorKey[gmId][doorId]` is true */
+      key: { [doorId: number]: boolean }[];
+    };
+    nextWalk: null | {
+      /** Future points to visit after finishing current walk */
+      visits: Geom.VectJson[];
+      /** Future navigation path induced by `visits` */
+      navPath: NPC.GlobalNavPath;
+    };
     /**
      * Initially `false` until <NPC> sets it true.
      * May also set false for cached un-rendered.
@@ -85,7 +91,7 @@ declare namespace NPC {
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     /** Has respective el ever been animated? On remount this resets. */
     everAnimated(): boolean;
-    extendWalk(points: Geom.VectJson[]): void;
+    extendNextWalk(...points: Geom.VectJson[]): void;
     async fadeSpawn(point: Geomorph.PointMaybeMeta, opts?: {
       angle?: number;
       fadeOutMs?: number;
@@ -242,8 +248,6 @@ declare namespace NPC {
     updatedPlaybackRate: number;
 
     doorStrategy: WalkDoorStrategy;
-    /** Points inducing navPath of next walk */
-    extendWalkBy: Geom.VectJson[];
     /** Only set when it changes, starting from `0` */
     gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
     prevWayMetas: NpcWayMeta[];

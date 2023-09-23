@@ -270,7 +270,7 @@ export default function DebugWorld(props) {
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string) => void} removePath
- * @property {(navPath: NPC.GlobalNavPath, name?: string) => void} addPath
+ * @property {(navPath: Pick<NPC.GlobalNavPath, 'path' | 'name'>, name?: string) => void} addPath
  * @property {() => void} update
  */
 
