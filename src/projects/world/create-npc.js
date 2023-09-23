@@ -136,6 +136,7 @@ export default function createNpc(
         anim => anim.playState !== 'idle' && isAnimAttached(anim, this.el.body)
       );
 
+      this.el.root.classList.remove(cssName.paused);
       if (this.anim.spriteSheet === 'walk') {
         this.clearWayMetas(); // Cancel pending actions
       }
@@ -184,6 +185,9 @@ export default function createNpc(
     async do(point, opts = {}) {
       if (this.forcePaused) {
         throw Error('paused: cannot do');
+      }
+      if (this.isPaused()) {
+        await this.cancel();
       }
       point.meta ??= {}; // possibly manually specified (not via `click [n]`)
 
@@ -896,7 +900,7 @@ export default function createNpc(
       if (this.forcePaused) {
         throw Error('paused: cannot walk');
       }
-      if (this.isWalking() || this.isPaused()) {
+      if (this.isWalking() || this.isPaused()) {        
         await this.cancel(); // 🤔
       }
       if (navPath.path.length === 0) {

@@ -411,4 +411,6 @@ echo Hello $( take 1 )
 call '() => "\u001b[36mRob"'
 
 click | filter meta.nav | nav rob | walk --forever rob
+
+npc rob walk $( nav rob $( click 1 ) )
 ```

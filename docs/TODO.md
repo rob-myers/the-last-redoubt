@@ -3,6 +3,17 @@
 ## In progress
 
 - `api.npcs.svc.foo` too verbose
+- BUG `ps` final line malformed somehow, wrapped?
+```sh
+$ ps
+pid   ppid  pgid 
+0     0     0    ps
+7     0     7    pausableNpcs &
+9     8     9    [ on ] [ x ]  map '(p, { w }) => { ...
+15    0     15   [ on ] [ x ]  track rob &
+17    0     17   click | controlNpc rob &
+18    17    18   [ on ] [ x ]  controlNpc rob
+```
 
 - ✅ BUG jittery: saw cenScale 20
   - ℹ️ currently we "undo scale" by panZooming, which aggregates
@@ -26,10 +37,12 @@
     - ✅ debug.extendPath rather than replace in extendNextWalk
     - ✅ npc.extendNextWalk NavOpts
       - npc.navOpts
+  - merge into `controlNpc`
   - support immediate walk via longClick ?
 
 - ✅ darker when paused but not forcedPaused
-- fix stale CSS `paused` on unpaused npc
+- ✅ fix stale CSS `paused` on unpaused npc
+
 - track animation should stop on kill
 - should track "pause" when tracked npc does?
   - currently `track` pauses if pause npc during walk
