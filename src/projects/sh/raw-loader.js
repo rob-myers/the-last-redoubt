@@ -505,6 +505,7 @@
         );
       }
     },
+    // 🚧 remove
     walk2: async function* ({ api, args, home, datum }) {
       const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
         boolean: ["open", "safeOpen", "forceOpen", "forever"],
@@ -527,7 +528,7 @@
 
       if (api.isTtyAt(0)) {
         const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr), navOpts);
-        w.debug.addPath(navPath, w.npcs.svc.getNavPathName(npcKey));
+        w.debug.addPath(w.npcs.svc.getNavPathName(npcKey), navPath.path);
         await npc.walk(navPath, { doorStrategy });
       } else {
         const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
@@ -546,7 +547,7 @@
         function walkAlongPoints() {
           baseNavPath = computeNavPath(npc.getPosition());
           futurePoints.length = 0;
-          w.debug.addPath(baseNavPath, w.npcs.svc.getNavPathName(npcKey));
+          // w.debug.addPath(w.npcs.svc.getNavPathName(npcKey), baseNavPath.path);
           return walkPromise = npc.walk(baseNavPath, { doorStrategy });
         }
 
@@ -557,8 +558,8 @@
             if (walkPromise) {// update navPath graphic
               const extNavPath = computeNavPath(baseNavPath.path[baseNavPath.path.length - 1]);
               w.debug.addPath(
-                w.npcs.svc.concatenateNavPaths([baseNavPath, extNavPath]),
                 w.npcs.svc.getNavPathName(npcKey),
+                w.npcs.svc.concatenateNavPaths([baseNavPath, extNavPath]).path,
               );
             }
           }

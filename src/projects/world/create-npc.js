@@ -227,12 +227,8 @@ export default function createNpc(
       // compute navPath; depict entire navPath
       const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.VectJson} */ (currentPath.at(-1));
       const deltaNavPath = api.npcs.getGlobalTour([src, ...points], { /** 🚧 NavOpts? */ });
+      api.debug.extendPath(api.npcs.svc.getNavPathName(def.key), deltaNavPath.path);
       this.nextWalk.navPath = api.npcs.svc.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
-      // 🚧 extendPath?
-      api.debug.addPath({
-        path: currentPath.concat(this.nextWalk.navPath.path),
-        name: api.npcs.svc.getNavPathName(def.key),
-      });
 
       this.nextWalk.visits.push(...points);
     },
@@ -373,7 +369,7 @@ export default function createNpc(
       return this.def.speed * this.anim.speedFactor;
     },
     getTarget() {
-      if (this.isWalking()) {
+      if (this.isWalking() && this.anim.translate.playState === 'running') {
         const { anim } = this;
         const soFarMs = /** @type {number} */ (anim.translate.currentTime);
         const nextIndex = anim.aux.sofars.findIndex(soFar => soFar * anim.initAnimScaleFactor > soFarMs);
@@ -913,8 +909,7 @@ export default function createNpc(
 
         // Walk along a global navpath, possibly throwing
         // error.message 'cancelled' if collide with something.
-        // 🚧 always extend?
-        !extendedWalk && api.debug.addPath(navPath, api.npcs.svc.getNavPathName(this.key));
+        !extendedWalk && api.debug.addPath(api.npcs.svc.getNavPathName(this.key), navPath.path);
         await this.followNavPath(navPath, opts.doorStrategy);
 
         const nextWalk = /** @type {NPC.NPC['nextWalk']} */ (this.nextWalk);

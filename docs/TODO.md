@@ -23,8 +23,9 @@
     - ✅ on add points compute next navPath + debug.addPath (current + future)
     - ✅ on finish walk, walk along nextWalk.navPath
     - ✅ cleanup
-    - 🚧 debug.extendPath rather than replace, possibly in walk
+    - ✅ debug.extendPath rather than replace in extendNextWalk
     - 🚧 npc.extendNextWalk NavOpts
+      - npc.navOpts
   - support immediate walk via longClick ?
 
 - ✅ darker when paused but not forcedPaused
@@ -68,6 +69,8 @@
 - other NPC with `nav | walk --open` seems slow
 - ✅ cleanup NPC CLI i.e. fewer options
 
+- BUG `click | walk2 --open rob` can fail to open door, perhaps because collides first?
+  - saw "next walk" stop immediately probably because of collision
 - BUG on send empty command should not overwrite session.lastExitCode
 - BUG? killError(_, exitCode) 2nd param working?
 - BUG? saw npc-vs-npc collision failure near hull door
@@ -87,7 +90,6 @@
 - cache connector.poly.center -> connector.center
 - GeomorphEdit works on mobile
 - check spawn uses correct ppid in every case
-- BUG `click | walk2 --open rob` can fail to open door, perhaps because collides first?
 
 - 🚧 gm 301: add more symbols
   - ✅ fix view envelope bug when peeking in locker

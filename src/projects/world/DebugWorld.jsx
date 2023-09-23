@@ -48,14 +48,22 @@ export default function DebugWorld(props) {
       path: {},
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
-      addPath(navPath, name) {
-        const key = name ?? navPath.name ?? npcService.defaultNavPathName;
+      addPath(key, path) {
         state.path[key] = {
           key,
-          path: navPath.path.map(Vect.from),
-          meta: { key, path: navPath.path },
+          path: path.map(Vect.from),
+          meta: { key, path },
         };
         update();
+      },
+      extendPath(key, extraPoints) {
+        const item = state.path[key];
+        if (item) {
+          item.path = item.meta.path = item.path.concat(extraPoints.map(Vect.from));
+          update();
+        } else {
+          state.addPath(key, extraPoints);
+        }
       },
       removePath(key) {
         delete this.path[key];
@@ -269,8 +277,9 @@ export default function DebugWorld(props) {
  * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
+ * @property {(key: string, points: Geom.VectJson[]) => void} addPath
+ * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
  * @property {(key: string) => void} removePath
- * @property {(navPath: Pick<NPC.GlobalNavPath, 'path' | 'name'>, name?: string) => void} addPath
  * @property {() => void} update
  */
 
