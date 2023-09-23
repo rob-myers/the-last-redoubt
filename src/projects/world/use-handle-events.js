@@ -3,7 +3,6 @@ import { npcSlowWalkSpeedFactor } from "./const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
-import { npcService } from "../service/npc";
 import { warn } from "../service/log";
 import { stripAnsi } from "../sh/util";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
@@ -257,8 +256,8 @@ export default function useHandleEvents(api) {
 
       for (const decor of closeDecor) {
         const { collisions, startInside } = decor.type === 'circle'
-          ? npcService.predictNpcCircleCollision(npc, decor)
-          : npcService.predictNpcPolygonCollision(
+          ? api.lib.predictNpcCircleCollision(npc, decor)
+          : api.lib.predictNpcPolygonCollision(
               npc,
               assertDefined(decor.derivedPoly?.outline),
               assertDefined(decor.derivedBounds),
@@ -296,7 +295,7 @@ export default function useHandleEvents(api) {
     },
 
     predictNpcNpcCollision(npc, otherNpc) {
-      const collision = npcService.predictNpcNpcCollision(npc, otherNpc);
+      const collision = api.lib.predictNpcNpcCollision(npc, otherNpc);
 
       if (collision) {
         const { aux, path, wayMetas } = npc.anim;

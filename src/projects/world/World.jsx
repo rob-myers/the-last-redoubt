@@ -5,6 +5,7 @@ import { merge } from "rxjs";
 
 import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
+import { npcService,  } from "../service/npc";
 import { Vect } from "../geom";
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
@@ -51,10 +52,10 @@ export default function World(props) {
       ].every(x => x.ready);
     },
     lib: {
-      Vect,
       filter, first, map, merge, take,
-      precision,
-      removeFirst,
+      Vect,
+      precision, removeFirst,
+      ...npcService,
     },
     rootCss: `hide-gms ${css`${props.gms.map((_, gmId) =>
       `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
@@ -139,7 +140,7 @@ export default function World(props) {
  * @property {import("./Geomorphs").State} geomorphs
  * @property {() => HTMLDivElement} getRootEl
  * @property {() => boolean} isReady
- * @property {StateUtil} lib
+ * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
  * @property {string} rootCss

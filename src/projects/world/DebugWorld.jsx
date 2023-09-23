@@ -3,7 +3,6 @@ import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
 import { cssName, wallOutset } from "./const";
 import { supportsWebp } from "../service/dom";
-import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import npcsMeta from './npcs-meta.json';

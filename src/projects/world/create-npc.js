@@ -230,13 +230,13 @@ export default function createNpc(
       if (points.length === 0) {
         return;
       }
-      this.nextWalk ??= {  visits: [], navPath: api.npcs.svc.getEmptyNavPath() };
+      this.nextWalk ??= {  visits: [], navPath: api.lib.getEmptyNavPath() };
       
       // compute next navPath; depict entire navPath
       const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.VectJson} */ (currentPath.at(-1));
       const deltaNavPath = api.npcs.getGlobalTour([src, ...points], this.navOpts);
-      api.debug.extendPath(api.npcs.svc.getNavPathName(def.key), deltaNavPath.path);
-      this.nextWalk.navPath = api.npcs.svc.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
+      api.debug.extendPath(api.lib.getNavPathName(def.key), deltaNavPath.path);
+      this.nextWalk.navPath = api.lib.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
 
       this.nextWalk.visits.push(...points);
     },
@@ -894,7 +894,7 @@ export default function createNpc(
       const extendedWalk = !!this.nextWalk;
       this.nextWalk = null;
 
-      if (!api.npcs.svc.verifyGlobalNavPath(navPath)) {
+      if (!api.lib.verifyGlobalNavPath(navPath)) {
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
       if (this.forcePaused) {
@@ -917,7 +917,7 @@ export default function createNpc(
 
         // Walk along a global navpath, possibly throwing
         // error.message 'cancelled' if collide with something.
-        !extendedWalk && api.debug.addPath(api.npcs.svc.getNavPathName(this.key), navPath.path);
+        !extendedWalk && api.debug.addPath(api.lib.getNavPathName(this.key), navPath.path);
         await this.followNavPath(navPath, opts.doorStrategy);
 
         const nextWalk = /** @type {NPC.NPC['nextWalk']} */ (this.nextWalk);

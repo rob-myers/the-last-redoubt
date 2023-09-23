@@ -5,9 +5,12 @@ import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 import { observableToAsyncIterable } from './observable-to-async-iterable';
 
-class NpcService {
+/**
+ * Use object so can merge into api.lib.
+ */
+export const npcService = {
 
-  defaultNavPathName = /** @type {const} */ ('navpath-default');
+  defaultNavPathName: /** @type {const} */ ('navpath-default'),
 
   //#region individual npc
 
@@ -19,13 +22,13 @@ class NpcService {
    */
   computeNpcScale(parsed) {
     return npcWorldRadius / parsed.radius;
-  }
+  },
 
   /**
    * @param {NPC.ParsedNpc} parsed
    */
   computeSpritesheetCss(parsed) {
-    const scale = this.computeNpcScale(parsed);
+    const scale = npcService.computeNpcScale(parsed);
     return `
   .body {
     transform: scale(${scale});
@@ -48,7 +51,7 @@ class NpcService {
     }
   `).join('\n\n')}
   `.trim();
-  }
+  },
 
 
   /**
@@ -162,51 +165,49 @@ class NpcService {
           throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
       }
     }
-  }
+  },
 
   //#endregion
 
   //#region keys
 
   /** @type {Record<NPC.ConfigBooleanKey, true>} */
-  fromConfigBooleanKey = { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true, verbose: true };
-
-  fromConfigBooleanKeys = keys(this.fromConfigBooleanKey);
-
+  fromConfigBooleanKey: { canClickArrows: true, debug: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showIds: true, showColliders: true, verbose: true },
+  fromConfigBooleanKeys: /** @type {NPC.ConfigBooleanKey[]} */ ([]),
+  
   /** @type {Record<NPC.FovMapAction, true>} */
-  fromFovMapActionKey = { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true };
-
-  fovMapActionKeys = keys(this.fromFovMapActionKey);
+  fromFovMapActionKey: { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true },
+  fovMapActionKeys: /** @type {NPC.FovMapAction[]} */ ([]),
 
   /** @type {Record<NPC.NpcActionKey, true>} */
-  fromNpcActionKey = { "add-decor": true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true };
+  fromNpcActionKey: { "add-decor": true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true },
 
   /** @type {Record<NPC.NpcClassKey, true>} */
-  fromNpcClassKey = { "first-human-npc": true, solomani: true, vilani: true, zhodani: true };
+  fromNpcClassKey: { "first-human-npc": true, solomani: true, vilani: true, zhodani: true },
 
   /**
    * @param {string} input 
    * @returns {input is NPC.ConfigBooleanKey}
    */
-  isConfigBooleanKey = (input) => {
-    return input in this.fromConfigBooleanKey;
-  }
+  isConfigBooleanKey: (input) => {
+    return input in npcService.fromConfigBooleanKey;
+  },
 
   /**
    * @param {string} input 
    * @returns {input is NPC.NpcActionKey}
    */
-  isNpcActionKey = (input) => {
-    return this.fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
-  }
+  isNpcActionKey: (input) => {
+    return npcService.fromNpcActionKey[/** @type {NPC.NpcActionKey} */ (input)] ?? false;
+  },
 
   /**
    * @param {string} input 
    * @returns {input is NPC.NpcClassKey}
    */
-  isNpcClassKey = (input) => {
-    return input in this.fromNpcClassKey;
-  }
+  isNpcClassKey: (input) => {
+    return input in npcService.fromNpcClassKey;
+  },
 
   //#endregion
 
@@ -271,7 +272,7 @@ class NpcService {
     }
 
     return { collisions, startInside };
-  }
+  },
 
   /**
    * @param {NPC.NPC} npcA Assumed to be moving
@@ -393,7 +394,7 @@ class NpcService {
         return null;
       }
     }
-  }
+  },
 
   /**
    * Npc center vs static polygon.
@@ -437,7 +438,7 @@ class NpcService {
       collisions: distances.map(distance => ({ seconds: distance / speedA, distA: distance, distB: 0 })),
       startInside,
     };
-  }
+  },
 
   //#endregion
 
@@ -459,7 +460,7 @@ class NpcService {
       navMetas: navMetas?.map(meta => ({ ...meta })) ?? [],
       gmRoomIds: {...gmRoomIds},
     };
-  }
+  },
 
   /**
    * Concatenate compatible nav paths i.e.
@@ -488,7 +489,7 @@ class NpcService {
         return agg;
       }, this.getEmptyNavPath(name ?? navPaths[0]?.name ))
     ;
-  }
+  },
 
   /**
    * @param {string} [name] 
@@ -496,7 +497,7 @@ class NpcService {
    */
   getEmptyNavPath(name) {
     return { key: 'global-nav', path: [], navMetas: [], edgeNodeIds: [], gmRoomIds: {}, name };
-  }
+  },
 
   /**
    * @param {string | Geom.VectJson} [navRep]
@@ -507,7 +508,7 @@ class NpcService {
       : typeof navRep === 'string'
         ? `navpath-for-${navRep}` // npcKey
         : `navpath-from-point`
-  }
+  },
 
   /**
    * 🚧 check gmRoomIds are properly sliced
@@ -555,7 +556,7 @@ class NpcService {
       gmRoomIds,
       navMetas,
     };
-  }
+  },
 
   /** @param {NPC.LocalNavPath} input */
   verifyLocalNavPath(input) {
@@ -564,7 +565,7 @@ class NpcService {
       && x.path?.every?.(Vect.isVectJson)
       && Array.isArray(x.navMetas)
       || false;
-  }
+  },
 
   /**
    * @param {any} input
@@ -576,7 +577,7 @@ class NpcService {
       && x.path?.every?.(Vect.isVectJson)
       && Array.isArray(x.navMetas)
       || false;
-  }
+  },
 
   //#endregion
 
@@ -601,13 +602,14 @@ class NpcService {
     }
     // ℹ️ get here via `kill` or e.g. failed pipe-sibling
     throw processApi.getKillError();
-  }
+  },
 
   //#endregion
 }
 
-export const npcService = new NpcService;
+npcService.fromConfigBooleanKeys = keys(npcService.fromConfigBooleanKey);
+npcService.fovMapActionKeys = keys(npcService.fromFovMapActionKey);
 
 /**
- * @typedef {NpcService} NpcServiceType
+ * @typedef {typeof npcService} NpcServiceType
  */

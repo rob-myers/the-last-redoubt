@@ -2,31 +2,6 @@
 
 ## In progress
 
-- `api.npcs.svc.foo` too verbose
-- BUG `ps` final line malformed somehow, wrapped?
-```sh
-$ ps
-pid   ppid  pgid 
-0     0     0    ps
-7     0     7    pausableNpcs &
-9     8     9    [ on ] [ x ]  map '(p, { w }) => { ...
-15    0     15   [ on ] [ x ]  track rob &
-17    0     17   click | controlNpc rob &
-18    17    18   [ on ] [ x ]  controlNpc rob
-```
-
-- ✅ BUG jittery: saw cenScale 20
-  - ℹ️ currently we "undo scale" by panZooming, which aggregates
-  - ✅ instead, try WAAPI animating centered-zoom
-  - janky zoom switching if zooming whilst walk stops
-  - ✅ could we get away with a single el?!
-    - WAAPI can combine with styles!
-      > `$0.animate([{ offset: 0 }, { offset: 1, transform: 'scale(2)' }], { composite: 'accumulate', duration: 5000 })`
-
-- ✅ try removing `centered-scale`
-  - use `composite: 'accumulate'` for followPath
-  - ❌ zoom switches between "pointer target" and "centre of screen"
-
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - ✅ npc.extendNextWalk(points)
@@ -42,6 +17,8 @@ pid   ppid  pgid
 
 - ✅ darker when paused but not forcedPaused
 - ✅ fix stale CSS `paused` on unpaused npc
+- ✅ `api.npcs.svc.foo` too verbose
+  - now use `api.lib.foo`
 
 - track animation should stop on kill
 - should track "pause" when tracked npc does?
@@ -80,6 +57,17 @@ pid   ppid  pgid
   - consider `split ' ' | take 3` and paste multiple lines
 - BUG CssPanZoom sometimes jerky when spawn a lot
 - other NPC with `nav | walk --open` seems slow
+- BUG `ps` final line malformed somehow, wrapped?
+```sh
+$ ps
+pid   ppid  pgid 
+0     0     0    ps
+7     0     7    pausableNpcs &
+9     8     9    [ on ] [ x ]  map '(p, { w }) => { ...
+15    0     15   [ on ] [ x ]  track rob &
+17    0     17   click | controlNpc rob &
+18    17    18   [ on ] [ x ]  controlNpc rob
+```
 - ✅ cleanup NPC CLI i.e. fewer options
 
 - BUG `click | walk2 --open rob` can fail to open door, perhaps because collides first?
@@ -591,6 +579,18 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG jittery: saw cenScale 20
+  - ℹ️ currently we "undo scale" by panZooming, which aggregates
+  - ✅ instead, try WAAPI animating centered-zoom
+  - janky zoom switching if zooming whilst walk stops
+  - ✅ could we get away with a single el?!
+    - WAAPI can combine with styles!
+      > `$0.animate([{ offset: 0 }, { offset: 1, transform: 'scale(2)' }], { composite: 'accumulate', duration: 5000 })`
+
+- ✅ try removing `centered-scale`
+  - use `composite: 'accumulate'` for followPath
+  - ❌ zoom switches between "pointer target" and "centre of screen"
 
 - ✅ try `walk2` which "appends" navPath
   - ✅ basic functionality

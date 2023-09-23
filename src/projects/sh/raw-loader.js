@@ -246,7 +246,7 @@
         const navPaths = points.slice(1).map((point, i) =>
           w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
         );
-        return w.npcs.svc.concatenateNavPaths(navPaths, opts.name);
+        return w.lib.concatenateNavPaths(navPaths, opts.name);
       }
       
       if (api.isTtyAt(0)) {
@@ -268,7 +268,7 @@
     npc: async function* ({ api, args, home, datum }) {
       const w = api.getCached(home.WORLD_KEY);
 
-      if (!w.npcs.svc.isNpcActionKey(args[0])) {
+      if (!w.lib.isNpcActionKey(args[0])) {
         if (args[0] in w.npcs.npc) {
           // `npc {npcKey} ...` --> `npc get {npcKey} ...`
           args.unshift("get");
@@ -279,11 +279,11 @@
 
       const action = /** @type {NPC.NpcActionKey} */ (args[0]);
       if (action === "events") {
-        return yield* w.npcs.svc.yieldEvents(w, api);
+        return yield* w.lib.yieldEvents(w, api);
       }
 
       if (api.isTtyAt(0)) {
-        const npcAct = w.npcs.svc.normalizeNpcCommandOpts(
+        const npcAct = w.lib.normalizeNpcCommandOpts(
           action,
           api.parseJsArg(args[1]),
           args.slice(2).map(arg => api.parseJsArg(arg)),
@@ -306,9 +306,9 @@
         } else {// Standard case
           while ((datum = await api.read()) !== api.eof) {
             const npcAct = args.length === 1
-              ? w.npcs.svc.normalizeNpcCommandOpts(action, datum, [])
+              ? w.lib.normalizeNpcCommandOpts(action, datum, [])
               // 🤔 careful parseJsArg does not misinterpret strings
-              : w.npcs.svc.normalizeNpcCommandOpts(action, args[1], api.addStdinToArgs(datum, args.slice(2).map(api.parseJsArg)))
+              : w.lib.normalizeNpcCommandOpts(action, args[1], api.addStdinToArgs(datum, args.slice(2).map(api.parseJsArg)))
             ;
             yield await w.npcs.npcAct(npcAct, api).catch(onError);
           }
@@ -528,12 +528,12 @@
 
       if (api.isTtyAt(0)) {
         const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr), navOpts);
-        w.debug.addPath(w.npcs.svc.getNavPathName(npcKey), navPath.path);
+        w.debug.addPath(w.lib.getNavPathName(npcKey), navPath.path);
         await npc.walk(navPath, { doorStrategy });
       } else {
         const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
         let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
-        let baseNavPath = w.npcs.svc.getEmptyNavPath();
+        let baseNavPath = w.lib.getEmptyNavPath();
 
         /** @param {Geom.VectJson} src */
         function computeNavPath(src) {
@@ -541,13 +541,13 @@
           const navPaths = points.slice(1).map((point, i) =>
             w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
           );
-          return w.npcs.svc.concatenateNavPaths(navPaths);
+          return w.lib.concatenateNavPaths(navPaths);
         }
 
         function walkAlongPoints() {
           baseNavPath = computeNavPath(npc.getPosition());
           futurePoints.length = 0;
-          // w.debug.addPath(w.npcs.svc.getNavPathName(npcKey), baseNavPath.path);
+          // w.debug.addPath(w.lib.getNavPathName(npcKey), baseNavPath.path);
           return walkPromise = npc.walk(baseNavPath, { doorStrategy });
         }
 
@@ -558,8 +558,8 @@
             if (walkPromise) {// update navPath graphic
               const extNavPath = computeNavPath(baseNavPath.path[baseNavPath.path.length - 1]);
               w.debug.addPath(
-                w.npcs.svc.getNavPathName(npcKey),
-                w.npcs.svc.concatenateNavPaths([baseNavPath, extNavPath]).path,
+                w.lib.getNavPathName(npcKey),
+                w.lib.concatenateNavPaths([baseNavPath, extNavPath]).path,
               );
             }
           }

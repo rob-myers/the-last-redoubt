@@ -4,7 +4,6 @@ import { Poly, Vect } from "../geom";
 import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
-import { npcService } from "../service/npc";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
@@ -149,7 +148,7 @@ export default function FOV(props) {
         state.anim.map.playState === 'paused' && state.anim.map.play();
       } else {
         throw testNever(action, {
-          override: `mapAct: ${action} must be in ${JSON.stringify(npcService.fovMapActionKeys)} or undefined`,
+          override: `mapAct: ${action} must be in ${JSON.stringify(api.lib.fovMapActionKeys)} or undefined`,
         });
       }
     },

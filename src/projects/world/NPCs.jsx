@@ -8,7 +8,6 @@ import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirs
 import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 import { geom } from "../service/geom";
 import { hasGmRoomId } from "../service/geomorph";
-import { npcService } from "../service/npc";
 import { isSmallViewport, detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -120,7 +119,7 @@ export default function NPCs(props) {
         return true;
       },
       ownKeys() {
-        return [...npcService.fromConfigBooleanKeys, 'interactRadius'];
+        return [...api.lib.fromConfigBooleanKeys, 'interactRadius'];
       },
       getOwnPropertyDescriptor() {
         return { enumerable: true, configurable: true };
@@ -341,7 +340,7 @@ export default function NPCs(props) {
       }
     },
     getGlobalTour(points, opts) {
-      return state.svc.concatenateNavPaths(points.slice(1).map((point, i) =>
+      return api.lib.concatenateNavPaths(points.slice(1).map((point, i) =>
         api.npcs.getGlobalNavPath(points[i], point, { ...opts, centroidsFallback: true }),
       ));
     },
@@ -490,7 +489,7 @@ export default function NPCs(props) {
               : Object.values(api.decor.decor) // list
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
-            const configKeys = e.configKey.split(' ').filter(npcService.isConfigBooleanKey);
+            const configKeys = e.configKey.split(' ').filter(api.lib.isConfigBooleanKey);
             configKeys.forEach(configKey => state.config[configKey] = !state.config[configKey]);
           } else if (Object.keys(e).length === 1) {// get all
             /**
@@ -609,7 +608,6 @@ export default function NPCs(props) {
         }
       }
     },
-    svc: npcService,
     setPlayerKey(npcKey) {
       if (npcKey === '') {
         throw Error(`npc key cannot be empty`);
@@ -646,7 +644,7 @@ export default function NPCs(props) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);
       } else if (e.requireNav && !state.isPointInNavmesh(e.point)) {
         throw Error(`cannot spawn outside navPoly: ${JSON.stringify(e.point)}`);
-      } else if (e.npcClassKey && !npcService.isNpcClassKey(e.npcClassKey)) {
+      } else if (e.npcClassKey && !api.lib.isNpcClassKey(e.npcClassKey)) {
         throw Error(`invalid npcClassKey: ${JSON.stringify(e.npcClassKey)}`);
       }
 
@@ -837,7 +835,6 @@ export default function NPCs(props) {
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
- * @property {import('../service/npc').NpcServiceType} svc
  * @property {(npcKey: string, processApi: ProcessApi) => import('rxjs').Subscription} trackNpc
  */
 
