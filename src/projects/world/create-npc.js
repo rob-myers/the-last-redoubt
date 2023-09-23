@@ -66,6 +66,10 @@ export default function createNpc(
     forcePaused: false,
     gmRoomId: null,
     has: { key: api.gmGraph.gms.map(_ => ({})) },
+    navOpts: {
+      centroidsFallback: true,
+      closedWeight: 10 * 1000, // avoid closed doors (?)
+    },
     nextWalk: null,
     unspawned: true,
 
@@ -224,9 +228,9 @@ export default function createNpc(
       }
       this.nextWalk ??= {  visits: [], navPath: api.npcs.svc.getEmptyNavPath() };
       
-      // compute navPath; depict entire navPath
+      // compute next navPath; depict entire navPath
       const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.VectJson} */ (currentPath.at(-1));
-      const deltaNavPath = api.npcs.getGlobalTour([src, ...points], { /** 🚧 NavOpts? */ });
+      const deltaNavPath = api.npcs.getGlobalTour([src, ...points], this.navOpts);
       api.debug.extendPath(api.npcs.svc.getNavPathName(def.key), deltaNavPath.path);
       this.nextWalk.navPath = api.npcs.svc.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
 
@@ -960,5 +964,3 @@ export default function createNpc(
     },
   };
 }
-
-const tempRect = new Rect;

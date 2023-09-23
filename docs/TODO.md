@@ -18,13 +18,13 @@
 
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
-  - 🚧 npc.extendNextWalk(points)
+  - ✅ npc.extendNextWalk(points)
     - ✅ can add points to `npc.anim.nextVisits`
     - ✅ on add points compute next navPath + debug.addPath (current + future)
     - ✅ on finish walk, walk along nextWalk.navPath
     - ✅ cleanup
     - ✅ debug.extendPath rather than replace in extendNextWalk
-    - 🚧 npc.extendNextWalk NavOpts
+    - ✅ npc.extendNextWalk NavOpts
       - npc.navOpts
   - support immediate walk via longClick ?
 

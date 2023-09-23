@@ -67,6 +67,7 @@ declare namespace NPC {
       /** has key iff `doorKey[gmId][doorId]` is true */
       key: { [doorId: number]: boolean }[];
     };
+    navOpts: NPC.NavOpts;
     nextWalk: null | {
       /** Future points to visit after finishing current walk */
       visits: Geom.VectJson[];
