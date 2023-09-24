@@ -2,8 +2,10 @@
 
 ## In progress
 
+- 🚧 BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
+  - ✅ try use getCurrentTransform()
 
-- 🚧 integrate `walk2` into `controlNpc`
+- ✅ merge `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - ✅ npc.extendNextWalk(points)
     - ✅ can add points to `npc.anim.nextVisits`
@@ -16,19 +18,21 @@
   - ✅ merge into `controlNpc`
     - getting stuck sometimes
   - ✅ support immediate walk via longClick
-  - 🚧 merge into `walk --extend`
-  - remove `walk2`
+  - ✅ merge into `walk` i.e. handle points as well as navPaths
+  - ✅ remove `walk2`
 
-- ✅ BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
-  - ✅ try use getCurrentTransform()
 
 - ✅ darker when paused but not forcedPaused
 - ✅ fix stale CSS `paused` on unpaused npc
 - ✅ `api.npcs.svc.foo` too verbose
   - now use `api.lib.foo`
 
+- on pause walking tracking player, permit pan
 - fadeSpawn should face direction of spawn
 - redo geomorph layout syntax
+- doors should be easier to open as player walks
+- abstract
+  > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc

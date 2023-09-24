@@ -477,27 +477,43 @@
      * ```
      */
     walk: async function* ({ api, args, home }) {
-      const { opts, operands: [npcKey, navPathStr] } = api.getOpts(args, { boolean: [
+      const { opts, operands: [npcKey, datumStr] } = api.getOpts(args, { boolean: [
         "open",       /** Try to open closed doors */
         "safeOpen",   /** Try to open closed doors, except locked ones */
-        "forceOpen",  /** Try and can open any doors (as if had skeleton key) */
-        "forever",    /** Ignore errors when inside loop */
+        "forceOpen",  /** Try/can open any doors (as if had skeleton key) */
+        "forever",    /** Ignore errors inside loop */
       ]});
       /** @type {NPC.WalkDoorStrategy} */
       const doorStrategy = opts.open && "open" ||
         opts.safeOpen && "safeOpen" ||
-        opts.forceOpen && "forceOpen" || "none";
+        opts.forceOpen && "forceOpen" || "none"
+      ;
 
       const w = api.getCached(home.WORLD_KEY)
       const npc = w.npcs.connectNpcToProcess(api, npcKey);
 
       if (api.isTtyAt(0)) {
-        await npc.walk(api.parseJsArg(navPathStr), { doorStrategy });
+        const datum = api.parseJsArg(datumStr);
+        if (w.lib.isVectJson(datum)) {
+          const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts);
+          await npc.walk(navPath, { doorStrategy });
+        } else {
+          await npc.walk(datum, { doorStrategy });
+        }
       } else {
-        await api.eagerReadLoop(
+        await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
           async (datum) => {
             try {
-              await npc.walk(datum, { doorStrategy });
+              if (w.lib.isVectJson(datum)) {
+                if (npc.isWalking(true) && !datum.meta?.longClick) {
+                  npc.extendNextWalk(datum);
+                } else  {
+                  await npc.cancel();
+                  await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
+                }
+              } else {
+                await npc.walk(datum, { doorStrategy });
+              }
             } catch (e) {
               if (opts.forever) {
                 w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
@@ -506,74 +522,9 @@
               }
             }
           },
-          () => npc.cancel(),
+          (datum) => !w.lib.isVectJson(datum) && npc.cancel(), // 🤔 could be empty
         );
       }
-    },
-    // 🚧 replace with `walk --extend`
-    walk2: async function* ({ api, args, home, datum }) {
-      const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
-        boolean: ["open", "safeOpen", "forceOpen", "forever"],
-        string: ["closed", "locked"],
-      });
-      /** @type {NPC.WalkDoorStrategy} */
-      const doorStrategy = opts.open && "open" ||
-        opts.safeOpen && "safeOpen" ||
-        opts.forceOpen && "forceOpen" || "none"
-      ;
-      /** @type {NPC.NavOpts} */
-      const navOpts = {
-        // closedWeight: 10000, // Prefer open doors e.g. when doorStrategy `none`
-        ...opts.closed && { closedWeight: Number(opts.closed) ?? undefined },
-        ...opts.locked && { lockedWeight: Number(opts.locked) ?? undefined },
-      };
-
-      const w = api.getCached(home.WORLD_KEY)
-      const npc = w.npcs.connectNpcToProcess(api, npcKey);
-
-      if (api.isTtyAt(0)) {
-        const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), api.parseJsArg(pointStr), navOpts);
-        w.debug.addPath(w.lib.getNavPathName(npcKey), navPath.path);
-        await npc.walk(navPath, { doorStrategy });
-      } else {
-        const futurePoints = /** @type {Geom.VectJson[]} */ ([]);
-        let walkPromise = /** @type {undefined | Promise<void>} */ (undefined);
-        let baseNavPath = w.lib.getEmptyNavPath();
-
-        /** @param {Geom.VectJson} src */
-        function computeNavPath(src) {
-          const points = [src, ...futurePoints];
-          const navPaths = points.slice(1).map((point, i) =>
-            w.npcs.getGlobalNavPath(points[i], point, { ...navOpts, centroidsFallback: true }),
-          );
-          return w.lib.concatenateNavPaths(navPaths);
-        }
-
-        function walkAlongPoints() {
-          baseNavPath = computeNavPath(npc.getPosition());
-          futurePoints.length = 0;
-          // w.debug.addPath(w.lib.getNavPathName(npcKey), baseNavPath.path);
-          return walkPromise = npc.walk(baseNavPath, { doorStrategy });
-        }
-
-        while ((datum = await Promise.race(walkPromise ? [walkPromise, api.read()] : [api.read()])) !== api.eof) {
-          if (datum === undefined) walkPromise = undefined; // walk finished
-          else if (w.npcs.isPointInNavmesh(datum)) {
-            futurePoints.push(datum); // read a navigable point
-            if (walkPromise) {// update navPath graphic
-              const extNavPath = computeNavPath(baseNavPath.path[baseNavPath.path.length - 1]);
-              w.debug.addPath(
-                w.lib.getNavPathName(npcKey),
-                w.lib.concatenateNavPaths([baseNavPath, extNavPath]).path,
-              );
-            }
-          }
-          !walkPromise && futurePoints.length && walkAlongPoints();
-        }
-        await walkPromise;
-        futurePoints.length && await walkAlongPoints();
-      }
-
     },
   },
   ];
