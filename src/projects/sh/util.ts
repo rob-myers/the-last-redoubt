@@ -138,11 +138,11 @@ export function killError(meta: Sh.BaseMeta | ProcessMeta, exitCode?: number, de
   );
 }
 
-export function killProcess(p: ProcessMeta) {
+export function killProcess(p: ProcessMeta, SIGINT?: boolean) {
   // console.log('KILLING', p.key, p.src);
   p.status = ProcessStatus.Killed;
   for (const cleanup of p.cleanups) {
-    cleanup();
+    cleanup(SIGINT);
   }
   p.cleanups.length = 0;
 }

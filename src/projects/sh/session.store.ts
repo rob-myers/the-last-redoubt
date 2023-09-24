@@ -123,7 +123,7 @@ export interface ProcessMeta {
    * Executed on Ctrl-C or `kill`.
    * May contain `() => reject(killError(meta))` ...
    */
-  cleanups: ((() => void) & {  })[];
+  cleanups: ((SIGINT?: boolean) => void)[];
   /**
    * Executed on suspend, without clearing `true` returners.
    * The latter should be idempotent, e.g. unsubscribe, pause.
@@ -362,7 +362,7 @@ const useStore = create<State>()(devtools((set, get): State => ({
       if (session) {
         const { process, ttyShell } = get().session[sessionKey];
         ttyShell.dispose();
-        Object.values(process).forEach(killProcess);
+        Object.values(process).forEach(x => killProcess(x));
         delete get().device[ttyShell.key];
         set(({ session }) => ({ session: removeFromLookup(sessionKey, session) }));
       } else {

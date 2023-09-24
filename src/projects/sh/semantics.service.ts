@@ -62,18 +62,10 @@ class semanticsServiceClass {
   }
 
   handleTopLevelProcessError(e: ProcessError) {
-    if (e.code === SigEnum.SIGKILL) {
-      const session = useSession.api.getSession(e.sessionKey);
-      if (!session) {
-        return console.error(`session not found: ${e.sessionKey}`);
-      }
-      const process = useSession.api.getProcess(
-        { pid: e.pid, sessionKey: e.sessionKey } as Sh.BaseMeta,
-      );
-      if (process) {// Kill all processes in process group
-        const processes = useSession.api.getProcesses(e.sessionKey, process.pgid);
-        processes.forEach(killProcess);
-      }
+    if (useSession.api.getSession(e.sessionKey)) {
+      cmdService.killProcesses(e.sessionKey, [e.pid], { group: true, SIGINT: true });
+    } else {
+      return console.error(`session not found: ${e.sessionKey}`);
     }
   }
 
@@ -158,8 +150,8 @@ class semanticsServiceClass {
         const { ttyShell, nextPid: pgid } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
-        function killPipeChildren() {
-          useSession.api.getProcesses(process.sessionKey, pgid).reverse().forEach(killProcess);
+        function killPipeChildren(SIGINT?: boolean) {
+          useSession.api.getProcesses(process.sessionKey, pgid).reverse().forEach(x => killProcess(x, SIGINT));
         }
         process.cleanups.push(killPipeChildren); // Handle Ctrl-C
 

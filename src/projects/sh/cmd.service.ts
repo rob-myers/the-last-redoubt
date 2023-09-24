@@ -623,7 +623,13 @@ class cmdServiceClass {
   killProcesses(
     sessionKey: string,
     pids: number[],
-    opts: { STOP?: boolean; CONT?: boolean; group?: boolean; } = {},
+    opts: {
+      STOP?: boolean;
+      CONT?: boolean;
+      /** From Ctrl-C? */
+      SIGINT?: boolean;
+      group?: boolean;
+    } = {},
   ) {
     const session = useSession.api.getSession(sessionKey);
     for (const pid of pids) {
@@ -647,7 +653,7 @@ class cmdServiceClass {
         } else {
           p.status = ProcessStatus.Killed;
           // Avoid immediate clean because it stops `sleep` (??)
-          window.setTimeout(() => killProcess(p));
+          window.setTimeout(() => killProcess(p, opts.SIGINT));
         }
       });
     } 
