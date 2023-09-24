@@ -151,6 +151,8 @@ export default function createNpc(
       }));
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
+      // ℹ️ issues when collided walker retained spriteSheet `walk`
+      this.startAnimation('idle');
     },
     canLook() {
       return (
