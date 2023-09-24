@@ -17,7 +17,7 @@
     - getting stuck sometimes
   - support immediate walk via longClick ?
 
-- 🚧 BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
+- ✅ BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
   - ✅ try use getCurrentTransform()
 
 - ✅ darker when paused but not forcedPaused
