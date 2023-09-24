@@ -338,18 +338,23 @@
           !meta.door && await npc.cancel();
           await npc.do(datum).catch(onError);
         } else if (meta.nav && !meta.ui) {
-          await npc.cancel();
           const position = npc.getPosition();
           if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
+            await npc.cancel();
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
               await npc.fadeSpawn(datum).catch(onError); // warp
             }
           } else {// walk
-            const navPath = w.npcs.getGlobalNavPath(position, datum, {
-              closedWeight: 10000,
-              centroidsFallback: true,
-            });
-            npc.walk(navPath, { doorStrategy: "none" });
+            if (!(npc.isWalking() && npc.anim.translate.playState === "running")) {
+              await npc.cancel();
+              const navPath = w.npcs.getGlobalNavPath(position, datum, {
+                closedWeight: 10000,
+                centroidsFallback: true,
+              });
+              npc.walk(navPath, { doorStrategy: "none" });
+            } else {
+              npc.extendNextWalk(datum);
+            }
           }
         } else {// look
           await npc.cancel();
@@ -505,7 +510,7 @@
         );
       }
     },
-    // 🚧 remove
+    // 🚧 replace with `walk --extend`
     walk2: async function* ({ api, args, home, datum }) {
       const { opts, operands: [npcKey, pointStr] } = api.getOpts(args, {
         boolean: ["open", "safeOpen", "forceOpen", "forever"],
