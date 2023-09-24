@@ -101,7 +101,7 @@ declare namespace NPC {
       requireNav?: boolean;
     }): Promise<void>;
     followNavPath(
-      globalNavPath: Pick<NPC.GlobalNavPath, 'path' | 'navMetas' | 'gmRoomIds'>,
+      globalNavPath: NPC.GlobalNavPath,
       doorStrategy?: WalkDoorStrategy,
     ): Promise<void>;
     /** Radians in `[-π, +π]` */
@@ -454,7 +454,11 @@ declare namespace NPC {
     | {
         key: 'started-walking';
         npcKey: string;
-        /** Started walking from current position? */ continuous: boolean;
+        navPath: NPC.GlobalNavPath;
+        /** Started walking from current position? */
+        continuous: boolean;
+        /** Extends a previous walk? */
+        extends: boolean;
       }
     | { key: 'stopped-walking'; npcKey: string; }
     | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }

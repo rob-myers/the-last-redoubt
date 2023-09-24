@@ -137,6 +137,7 @@ export default function createNpc(
       );
 
       this.el.root.classList.remove(cssName.paused);
+      this.nextWalk = null;
       if (this.anim.spriteSheet === 'walk') {
         this.clearWayMetas(); // Cancel pending actions
       }
@@ -267,7 +268,8 @@ export default function createNpc(
         this.nextWayTimeout();
       }
     },
-    async followNavPath({ path, navMetas: globalNavMetas, gmRoomIds }, doorStrategy) {
+    async followNavPath(navPath, doorStrategy) {
+      const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
       // warn('START followNavPath')
       // might jump i.e. path needn't start from npc position
       this.anim.path = path.map(Vect.from);
@@ -279,25 +281,23 @@ export default function createNpc(
 
       this.clearWayMetas();
       this.resetAnimAux();
-      
-      if (path.length === 0) {
-        return;
-      }
 
       // Convert navMetas to wayMetas
       this.anim.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
         length: this.computeWayMetaLength(navMeta),
       }));
-      // this.updateRoomWalkBounds(0);
 
       const continuous = this.getPosition().distanceTo(path[0]) <= 0.01;
       this.startAnimation('walk');
       api.npcs.events.next({
         key: 'started-walking',
         npcKey: this.def.key,
+        navPath,
         continuous,
+        extends: !!this.nextWalk,
       });
+      this.nextWalk = null;
       this.nextWayTimeout();
       console.log(`followNavPath: ${this.def.key} started walk`);
 
@@ -310,7 +310,7 @@ export default function createNpc(
             resolve();
           });
           trAnim.addEventListener('cancel', () => {
-            // We cancel when finished e.g. startAnimation('idle'), to release control to styles
+            // We cancel when finished to release control to styles via startAnimation('idle')
             if (trAnim.playState === 'paused' || trAnim.playState === 'running') {
               console.log(`followNavPath: ${this.def.key} cancelled walk`);
             }
@@ -318,14 +318,9 @@ export default function createNpc(
           });
         }));
       } finally {
-        // Reset speed to default
-        this.anim.speedFactor = this.anim.defaultSpeedFactor;
-        // must commitStyles, otherwise it jumps
+        this.anim.speedFactor = this.anim.defaultSpeedFactor; // Reset speed to default
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
-        // trigger cancel and clear wayMetas 
-        this.startAnimation('idle'); // 🚧 remove hard-coding?
-        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
 
     },
@@ -891,19 +886,19 @@ export default function createNpc(
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
     async walk(navPath, opts = {}) {
-      const extendedWalk = !!this.nextWalk;
-      this.nextWalk = null;
-
       if (!api.lib.verifyGlobalNavPath(navPath)) {
+        this.nextWalk = null;
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
       }
       if (this.forcePaused) {
+        this.nextWalk = null;
         throw Error('paused: cannot walk');
       }
       if (this.isWalking() || this.isPaused()) {        
         await this.cancel(); // 🤔
       }
       if (navPath.path.length === 0) {
+        this.nextWalk = null;
         return;
       }
 
@@ -915,13 +910,15 @@ export default function createNpc(
           throw new Error('cancelled');
         }
 
-        // Walk along a global navpath, possibly throwing
-        // error.message 'cancelled' if collide with something.
-        !extendedWalk && api.debug.addPath(api.lib.getNavPathName(this.key), navPath.path);
+        // Walk along navpath, possibly throwing 'cancelled' on collide
         await this.followNavPath(navPath, opts.doorStrategy);
 
-        const nextWalk = /** @type {NPC.NPC['nextWalk']} */ (this.nextWalk);
-        nextWalk && await this.walk(nextWalk.navPath, opts);
+        if (this.nextWalk) {
+          await this.walk(this.nextWalk.navPath, opts);
+        }
+
+        this.startAnimation('idle');
+        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);

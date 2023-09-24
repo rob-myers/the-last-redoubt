@@ -17,6 +17,9 @@ export default function useHandleEvents(api) {
 
     async handleNpcEvent(e) {
       switch (e.key) {
+        case 'spawned-npc':
+          api.debug.removePath(api.lib.getNavPathName(e.npcKey));
+          break;
         case 'changed-speed': {
           const npc = api.npcs.getNpc(e.npcKey);
           if (npc.isWalking()) {
@@ -55,6 +58,13 @@ export default function useHandleEvents(api) {
         case 'on-tty-link':
           mockOnTtyLink(e, api);
           break;
+        case 'started-walking':
+          !e.extends && api.debug.addPath(api.lib.getNavPathName(e.npcKey), e.navPath.path);
+          // remove stale pending collisions
+          for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
+            other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
+          }
+          break;
         case 'stopped-walking': {
           const npc = api.npcs.getNpc(e.npcKey);
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
@@ -72,14 +82,7 @@ export default function useHandleEvents(api) {
         case 'npc-internal':
         case 'removed-npc':
         case 'set-player':
-        case 'spawned-npc':
         case 'resumed-track':
-          break;
-        case 'started-walking':
-          // remove stale pending collisions
-          for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
-            other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
-          }
           break;
         default:
           throw testNever(e, { suffix: 'npcsSub' });
