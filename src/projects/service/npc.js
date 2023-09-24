@@ -280,10 +280,10 @@ export const npcService = {
    * @returns {NPC.NpcCollision | null}
    */
   predictNpcNpcCollision(npcA, npcB) {
-    if (!npcA.isWalking()) {
+    if (!npcA.isWalking(true)) {
       return null; // Maybe stopped in time for event to fire?
     }
-    if (npcB.isWalking()) {
+    if (npcB.isWalking(true)) {
       if (!npcA.getWalkSegBounds(true).intersects(npcB.getWalkSegBounds(true))) {
         return null;
       }

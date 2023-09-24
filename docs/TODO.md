@@ -4,6 +4,24 @@
 
 - 🚧 BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
   - ✅ try use getCurrentTransform()
+  - ongoing
+
+- ✅ BUG ctrl-c failure while forcePaused
+  - ctrl-c SHOULD override in this case
+  - ✅ killProcess(process, SIGINT?)
+  - ✅ npc.cancel(SIGINT) will override paused
+```sh
+$ walk rob $( click 1 )
+$ click 1 | walk rob
+$ nav rob $( click 1 ) | walk rob
+```
+
+- ✅ BUG
+  - ✅ (1) npc paused with spriteSheet `walk` can be walked through
+  - ✅ (2) on unpaused they walk on the spot...
+  - REPRO walk into another npc, forcePause (1) then unpause (2)
+
+- pausing direction issue while `click | walk foo`
 
 - ✅ merge `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
