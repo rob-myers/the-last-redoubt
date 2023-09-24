@@ -626,7 +626,7 @@ class cmdServiceClass {
     opts: {
       STOP?: boolean;
       CONT?: boolean;
-      /** From Ctrl-C? */
+      /** Ctrl-C, originating from pid 0 */
       SIGINT?: boolean;
       group?: boolean;
     } = {},
