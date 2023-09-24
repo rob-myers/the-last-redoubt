@@ -6,51 +6,13 @@
   - ✅ try use getCurrentTransform()
   - ongoing
 
-- ✅ BUG ctrl-c failure while forcePaused
-  - ctrl-c SHOULD override in this case
-  - ✅ killProcess(process, SIGINT?)
-  - ✅ npc.cancel(SIGINT) will override paused
-```sh
-$ walk rob $( click 1 )
-$ click 1 | walk rob
-$ nav rob $( click 1 ) | walk rob
-```
-
-- ✅ BUG
-  - ✅ (1) npc paused with spriteSheet `walk` can be walked through
-  - ✅ (2) on unpaused they walk on the spot...
-  - REPRO walk into another npc, forcePause (1) then unpause (2)
-
-- pausing direction issue while `click | walk foo`
-
-- ✅ merge `walk2` into `controlNpc`
-  - ✅ debug.addPath in `npc.walk` rather than `nav`
-  - ✅ npc.extendNextWalk(points)
-    - ✅ can add points to `npc.anim.nextVisits`
-    - ✅ on add points compute next navPath + debug.addPath (current + future)
-    - ✅ on finish walk, walk along nextWalk.navPath
-    - ✅ cleanup
-    - ✅ debug.extendPath rather than replace in extendNextWalk
-    - ✅ npc.extendNextWalk NavOpts
-      - npc.navOpts
-  - ✅ merge into `controlNpc`
-    - getting stuck sometimes
-  - ✅ support immediate walk via longClick
-  - ✅ merge into `walk` i.e. handle points as well as navPaths
-  - ✅ remove `walk2`
-
-
-- ✅ darker when paused but not forcedPaused
-- ✅ fix stale CSS `paused` on unpaused npc
-- ✅ `api.npcs.svc.foo` too verbose
-  - now use `api.lib.foo`
-
-- on pause walking tracking player, permit pan
-- fadeSpawn should face direction of spawn
+- ✅ on pause walking tracking player, permit pan
+- 🚧 fadeSpawn should face direction of spawn
 - redo geomorph layout syntax
 - doors should be easier to open as player walks
 - abstract
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
+- pausing direction issue while `click | walk foo` ?
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
@@ -610,6 +572,43 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG ctrl-c failure while forcePaused
+  - ctrl-c SHOULD override in this case
+  - ✅ killProcess(process, SIGINT?)
+  - ✅ npc.cancel(SIGINT) will override paused
+```sh
+$ walk rob $( click 1 )
+$ click 1 | walk rob
+$ nav rob $( click 1 ) | walk rob
+```
+
+- ✅ BUG
+  - ✅ (1) npc paused with spriteSheet `walk` can be walked through
+  - ✅ (2) on unpaused they walk on the spot...
+  - REPRO walk into another npc, forcePause (1) then unpause (2)
+
+- ✅ merge `walk2` into `controlNpc`
+  - ✅ debug.addPath in `npc.walk` rather than `nav`
+  - ✅ npc.extendNextWalk(points)
+    - ✅ can add points to `npc.anim.nextVisits`
+    - ✅ on add points compute next navPath + debug.addPath (current + future)
+    - ✅ on finish walk, walk along nextWalk.navPath
+    - ✅ cleanup
+    - ✅ debug.extendPath rather than replace in extendNextWalk
+    - ✅ npc.extendNextWalk NavOpts
+      - npc.navOpts
+  - ✅ merge into `controlNpc`
+    - getting stuck sometimes
+  - ✅ support immediate walk via longClick
+  - ✅ merge into `walk` i.e. handle points as well as navPaths
+  - ✅ remove `walk2`
+
+
+- ✅ darker when paused but not forcedPaused
+- ✅ fix stale CSS `paused` on unpaused npc
+- ✅ `api.npcs.svc.foo` too verbose
+  - now use `api.lib.foo`
 
 - ✅ BUG jittery: saw cenScale 20
   - ℹ️ currently we "undo scale" by panZooming, which aggregates

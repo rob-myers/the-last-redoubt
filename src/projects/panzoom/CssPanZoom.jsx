@@ -312,7 +312,7 @@ export default function CssPanZoom(props) {
         }
       },
       isFollowing() {
-         return this.anim?.id === 'followPath';
+         return this.anim?.id === 'followPath' && this.anim.playState === 'running';
       },
       isIdle() {
         return state.idleTimeoutId === 0;
