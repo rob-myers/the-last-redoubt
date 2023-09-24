@@ -8,6 +8,7 @@ import { Subject } from "rxjs";
 import useMeasure from "react-use-measure";
 import { Vect } from "../geom";
 import { keys, precision, safeJsonParse, testNever } from "../service/generic";
+import { longClickMs } from "../service/const";
 import { isAnimAttached } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 
@@ -133,7 +134,7 @@ export default function CssPanZoom(props) {
           /** @type {PanZoom.CssPointerUpEvent['meta']} */
           const meta = { ...el.dataset.meta && safeJsonParse(el.dataset.meta),
             targetPos: { x: precision(targetPos.x), y: precision(targetPos.y) },
-            longClick: (Date.now() - state.start.epochMs) >= 500,
+            longClick: (Date.now() - state.start.epochMs) >= longClickMs,
             distance,
           };
 

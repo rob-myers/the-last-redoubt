@@ -372,7 +372,7 @@ export default function createNpc(
       return this.def.speed * this.anim.speedFactor;
     },
     getTarget() {
-      if (this.isWalking() && this.anim.translate.playState === 'running') {
+      if (this.isWalking(true)) {
         const { anim } = this;
         const soFarMs = /** @type {number} */ (anim.translate.currentTime);
         const nextIndex = anim.aux.sofars.findIndex(soFar => soFar * anim.initAnimScaleFactor > soFarMs);
@@ -544,9 +544,11 @@ export default function createNpc(
 
       return true;
     },
-    isWalking() {
-      // return this.anim.spriteSheet === 'walk' && this.anim.translate.playState === 'running';
-      return this.anim.spriteSheet === 'walk';
+    isWalking(requireMoving = false) {
+      return this.anim.spriteSheet === 'walk' && (
+        !requireMoving
+        || this.anim.translate.playState === 'running'
+      );
     },
     async lookAt(point) {
       if (!Vect.isVectJson(point)) {

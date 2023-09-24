@@ -15,7 +15,9 @@
       - npc.navOpts
   - ✅ merge into `controlNpc`
     - getting stuck sometimes
-  - support immediate walk via longClick ?
+  - ✅ support immediate walk via longClick
+  - 🚧 merge into `walk --extend`
+  - remove `walk2`
 
 - ✅ BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
   - ✅ try use getCurrentTransform()
@@ -25,15 +27,8 @@
 - ✅ `api.npcs.svc.foo` too verbose
   - now use `api.lib.foo`
 
-- track animation should stop on kill
-- should track "pause" when tracked npc does?
-  - currently `track` pauses if pause npc during walk
-  - currently `track` does not pause if pause npc whilst stationary
-- `track` jerky e.g. on click do point and immediately click navmesh
-  - whilst running controlNpc
-  - whilst `click | nav rob | npc rob walk`
-- avoid swallowing errors in any npc function: always log out when verbose
-- mobile pinch zoom too sensitive
+- fadeSpawn should face direction of spawn
+- redo geomorph layout syntax
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
@@ -75,6 +70,15 @@ pid   ppid  pgid
 ```
 - ✅ cleanup NPC CLI i.e. fewer options
 
+- track animation should stop on kill
+- should track "pause" when tracked npc does?
+  - currently `track` pauses if pause npc during walk
+  - currently `track` does not pause if pause npc whilst stationary
+- `track` jerky e.g. on click do point and immediately click navmesh
+  - whilst running controlNpc
+  - whilst `click | nav rob | npc rob walk`
+- avoid swallowing errors in any npc function: always log out when verbose
+- mobile pinch zoom too sensitive
 - BUG `click | walk2 --open rob` can fail to open door, perhaps because collides first?
   - saw "next walk" stop immediately probably because of collision
 - BUG on send empty command should not overwrite session.lastExitCode

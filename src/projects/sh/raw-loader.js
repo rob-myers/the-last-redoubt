@@ -339,21 +339,21 @@
           await npc.do(datum).catch(onError);
         } else if (meta.nav && !meta.ui) {
           const position = npc.getPosition();
-          if (meta.longClick || !w.npcs.isPointInNavmesh(position)) {
+          if (meta.longClick && !npc.isWalking() || !w.npcs.isPointInNavmesh(position)) {
             await npc.cancel();
             if (w.npcs.canSee(position, datum, npc.getInteractRadius())) {
               await npc.fadeSpawn(datum).catch(onError); // warp
             }
           } else {// walk
-            if (!(npc.isWalking() && npc.anim.translate.playState === "running")) {
+            if (npc.isWalking(true) && !meta.longClick) {
+              npc.extendNextWalk(datum);
+            } else  {
               await npc.cancel();
               const navPath = w.npcs.getGlobalNavPath(position, datum, {
                 closedWeight: 10000,
                 centroidsFallback: true,
               });
               npc.walk(navPath, { doorStrategy: "none" });
-            } else {
-              npc.extendNextWalk(datum);
             }
           }
         } else {// look

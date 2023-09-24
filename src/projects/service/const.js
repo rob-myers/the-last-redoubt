@@ -67,6 +67,8 @@ export const cssTimeMs = /** @type {const} */ ({
   justCopied: 1000,
 });
 
+export const longClickMs = 300;
+
 /** Decimal place precision */
 export const precision = 4;
 

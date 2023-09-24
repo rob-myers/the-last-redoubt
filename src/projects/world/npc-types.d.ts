@@ -152,7 +152,7 @@ declare namespace NPC {
     /** Is this npc paused, but not necessarily @see {forcePaused}? */
     isPaused(): boolean;
     isPointBlocked(point: Geomorph.PointMaybeMeta, permitEscape?: boolean): boolean;
-    isWalking(): boolean;
+    isWalking(requireMoving?: boolean): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;
     pause(dueToProcessSuspend?: boolean): void;

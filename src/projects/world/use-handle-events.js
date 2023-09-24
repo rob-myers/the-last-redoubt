@@ -59,7 +59,8 @@ export default function useHandleEvents(api) {
           mockOnTtyLink(e, api);
           break;
         case 'started-walking':
-          !e.extends && api.debug.addPath(api.lib.getNavPathName(e.npcKey), e.navPath.path);
+          // Also overwrites extended path
+          api.debug.addPath(api.lib.getNavPathName(e.npcKey), e.navPath.path);
           // remove stale pending collisions
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
             other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
