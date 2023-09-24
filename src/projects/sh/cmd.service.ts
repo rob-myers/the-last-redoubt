@@ -770,7 +770,7 @@ class cmdServiceClass {
 
     async eagerReadLoop(
       loopBody: (datum: any) => Promise<void>,
-      onInterrupt?: () => Promise<void>,
+      onInterrupt?: (datum: any) => any,
     ) {
       let proms = [] as Promise<void>[];
       let datum = await read(this.meta);
@@ -785,7 +785,7 @@ class cmdServiceClass {
           await proms[0];
           datum = resolved;
         } else {// Read before loopBody finished
-          await onInterrupt?.();
+          await onInterrupt?.(datum);
           datum = resolved;
         }
       }
