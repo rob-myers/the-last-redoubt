@@ -182,7 +182,12 @@ export default function NPCs(props) {
       const npc = state.getNpc(npcKey); // Throws if non-existent
       const process = processApi.getProcess();
 
-      process.cleanups.push(() => { npc.cancel().catch(_e => {}); });
+      process.cleanups.push((SIGINT) => {
+        // Ctrl-C overrides forcePaused
+        npc.cancel(SIGINT).catch(e => void (
+          state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`)
+        ));
+      });
       process.onSuspends.push(() => { npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
 
