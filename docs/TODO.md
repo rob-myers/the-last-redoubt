@@ -2,6 +2,7 @@
 
 ## In progress
 
+
 - 🚧 integrate `walk2` into `controlNpc`
   - ✅ debug.addPath in `npc.walk` rather than `nav`
   - ✅ npc.extendNextWalk(points)
@@ -12,8 +13,12 @@
     - ✅ debug.extendPath rather than replace in extendNextWalk
     - ✅ npc.extendNextWalk NavOpts
       - npc.navOpts
-  - merge into `controlNpc`
+  - ✅ merge into `controlNpc`
+    - getting stuck sometimes
   - support immediate walk via longClick ?
+
+- 🚧 BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
+  - ✅ try use getCurrentTransform()
 
 - ✅ darker when paused but not forcedPaused
 - ✅ fix stale CSS `paused` on unpaused npc

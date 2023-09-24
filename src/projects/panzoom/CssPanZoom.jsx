@@ -270,12 +270,12 @@ export default function CssPanZoom(props) {
       },
       getCenteredCssTransforms(worldPoints) {
         const { width: screenWidth, height: screenHeight } = state.rootEl.getBoundingClientRect();
-        // we undo transform(state.x, state.y) scale(state.scale),
-        // so accumulation starts from right place
+        // we undo translation, so accumulation starts from right place
+        const current = state.getCurrentTransform();
         return worldPoints.map(point => `translate(${
-          screenWidth/2 + state.rootEl.scrollLeft - (state.scale * point.x) - state.x
+          screenWidth/2 + state.rootEl.scrollLeft - (state.scale * point.x) - current.x
         }px, ${
-          screenHeight/2 + state.rootEl.scrollTop - (state.scale * point.y) - state.y
+          screenHeight/2 + state.rootEl.scrollTop - (state.scale * point.y) - current.y
         }px) scale(${
           1
         })`);
