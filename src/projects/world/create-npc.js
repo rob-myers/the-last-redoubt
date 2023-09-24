@@ -246,12 +246,13 @@ export default function createNpc(
     async fadeSpawn(point, opts = {}) {
       try {
         const meta = opts.meta ?? point.meta ?? {};
-        await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
         point.meta ??= meta; // 🚧 can remove?
+        const direction = Vect.from(point).sub(this.getPosition());
+        await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
         await api.npcs.spawn({
           npcKey: this.key,
           point,
-          angle: opts.angle,
+          angle: opts.angle ?? (direction.x ? Math.atan2(direction.y, direction.x) : undefined) ,
           npcClassKey: opts.npcClassKey,
           requireNav: opts.requireNav,
         });

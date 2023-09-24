@@ -7,10 +7,10 @@
   - ongoing
 
 - ✅ on pause walking tracking player, permit pan
-- 🚧 fadeSpawn should face direction of spawn
-- redo geomorph layout syntax
+- ✅ fadeSpawn should face direction of spawn
+- 🚧 redo geomorph layout syntax
 - doors should be easier to open as player walks
-- abstract
+- abstract:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 - pausing direction issue while `click | walk foo` ?
 
