@@ -436,7 +436,8 @@ export default function useHandleEvents(api) {
 
   /** @param {...string} npcKeys */
   function stopNpcs(...npcKeys) {
-    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking());
+    /** Npcs which are walking but not paused.  */
+    const walkingNpcs = npcKeys.map(key => api.npcs.npc[key]).filter(x => x?.isWalking(true));
     return Promise.all(walkingNpcs.map(x => x.cancel()));
   }
 
