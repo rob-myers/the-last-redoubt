@@ -752,7 +752,7 @@ export default function NPCs(props) {
           
           if (// npc/camera not moving/close?
             (npc.anim.spriteSheet !== 'walk')
-            && (api.panZoom.anim === null || ['finished', 'idle'].includes(api.panZoom.anim.playState))
+            && (api.panZoom.panzoomAnim === null || ['finished', 'idle'].includes(api.panZoom.panzoomAnim.playState))
             && api.panZoom.distanceTo(npc.getPosition()) > 10
           ) {
             changeStatus('panzoom-to');

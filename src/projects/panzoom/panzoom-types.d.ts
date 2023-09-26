@@ -2,14 +2,18 @@ declare namespace PanZoom {
 
   export interface CssApi {
     ready: boolean;
+
     rootEl: HTMLDivElement;
-    transformEl: HTMLDivElement;
+    followEl: HTMLDivElement;
+    panzoomEl: HTMLDivElement;
     
-    /** `panZoomTo` or `followPath` */
-    anim: null | Animation;
+    /** For @see {followEl} (translation only) */
+    followAnim: null | Animation;
+    /** For @see {panzoomEl} (translation/scale) */
+    panzoomAnim: null | Animation;
     
-    panning: boolean;
     opts: { minScale: number; maxScale: number; step: number; idleMs: number },
+
     pointers: PointerEvent[];
     origin: Geom.Vect | undefined;
     start: {
@@ -19,6 +23,11 @@ declare namespace PanZoom {
       scale: number;
       distance: number;
     },
+    /**
+     * For single pointers: pointerdown without pointerup.
+     * For multi pointers: pointerdown(s) without any pointerup.
+     */
+    ptrsAllDown: boolean;
 
     /** translateX of `div.panzoom-transform` */
     x: number;
@@ -52,6 +61,7 @@ declare namespace PanZoom {
     private getCenteredCssTransforms(worldPoints: Geom.VectJson[]): string[];
     /** Taking CSS animation into account */
     private getCurrentTransform(): { x: number; y: number; scale: number; };
+    private getTrackingTranslate(): { x: number; y: number; };
     getWorld(e: { clientX: number; clientY: number; }): Geom.VectJson;
     private getWorldAtCenter(): Geom.VectJson;
     private idleTimeout(): void;

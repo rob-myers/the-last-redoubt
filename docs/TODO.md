@@ -2,9 +2,18 @@
 
 ## In progress
 
-- 🚧 BUG `track` jerky going thru door { gmId: 1, doorId: 16 }
+- 🚧 BUG `track` jerky, particularly on mobile 😱
   - ✅ try use getCurrentTransform()
-  - ongoing
+  - ✅ outer element for track only i.e. translation
+    - ✅ looks good on mobile
+    - ✅ fix worldPoint
+    - ✅ fix manual zoom
+    - ✅ fix animated pan/zoom
+    - ✅ fix tracking i.e. not centered
+    - ❌ fix cancel anim?
+    - ✅ tracking should pause/resume
+    - ✅ getComputedStyle is needed if we are currently following
+  - verify works well on mobile
 
 - ✅ on pause walking tracking player, permit pan
 - ✅ fadeSpawn should face direction of spawn
