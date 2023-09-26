@@ -2,24 +2,11 @@
 
 ## In progress
 
-- 🚧 BUG `track` jerky, particularly on mobile 😱
-  - ✅ try use getCurrentTransform()
-  - ✅ outer element for track only i.e. translation
-    - ✅ looks good on mobile
-    - ✅ fix worldPoint
-    - ✅ fix manual zoom
-    - ✅ fix animated pan/zoom
-    - ✅ fix tracking i.e. not centered
-    - ❌ fix cancel anim?
-    - ✅ tracking should pause/resume
-    - ✅ getComputedStyle is needed if we are currently following
-  - verify works well on mobile
-
-- ✅ on pause walking tracking player, permit pan
-- ✅ fadeSpawn should face direction of spawn
 - 🚧 redo geomorph layout syntax
+  - ✅ GeomorphEdit remembers last selected
+
 - doors should be easier to open as player walks
-- abstract:
+- abstract code:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 - pausing direction issue while `click | walk foo` ?
 
@@ -581,6 +568,22 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG `track` jerky, particularly on mobile 😱
+  - ✅ try use getCurrentTransform()
+  - ✅ outer element for track only i.e. translation
+    - ✅ looks good on mobile
+    - ✅ fix worldPoint
+    - ✅ fix manual zoom
+    - ✅ fix animated pan/zoom
+    - ✅ fix tracking i.e. not centered
+    - ❌ fix cancel anim?
+    - ✅ tracking should pause/resume
+    - ✅ getComputedStyle is needed if we are currently following
+  - ✅ verify works well on mobile
+
+- ✅ on pause walking tracking player, permit pan
+- ✅ fadeSpawn should face direction of spawn
 
 - ✅ BUG ctrl-c failure while forcePaused
   - ctrl-c SHOULD override in this case

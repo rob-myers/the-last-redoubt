@@ -373,11 +373,13 @@ function tryJsonStringify(input) {
 }
 
 /**
+ * @template {string} T
  * @param {string} key 
+ * @returns {T | null}
  */
 export function tryLocalStorageGet(key, logErr = false) {
   try {
-    return localStorage.getItem(key);
+    return /** @type {T} */ (localStorage.getItem(key));
   } catch (e) {
     logErr && console.error(e);
     return null;

@@ -10,7 +10,7 @@ import { Poly } from "../geom/poly";
 import { gmGraphClass } from "../graph/gm-graph";
 import { createGeomorphData } from "./use-geomorph-data";
 import { defaultLightDistance } from "../service/const";
-import { assertDefined, hashText } from "../service/generic";
+import { assertDefined, hashText, tryLocalStorageGet, tryLocalStorageSet } from "../service/generic";
 import { loadImage } from "../service/dom";
 import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
@@ -26,14 +26,20 @@ import useUpdate from "../hooks/use-update";
 export default function GeomorphEdit({ disabled }) {
 
   const [layoutKey, setLayoutKey] = React.useState(
-    /** @returns {Geomorph.GeomorphKey} */ () => 'g-301--bridge',
+    /** @returns {Geomorph.GeomorphKey} */ () =>
+      tryLocalStorageGet('gmKey@GeomorphEdit') ?? 'g-301--bridge',
   );
 
   return (
     <div className={rootCss}>
-      <select defaultValue={layoutKey} onChange={x => setLayoutKey(
-        /** @type {Geomorph.GeomorphKey} */ (x.currentTarget.value)
-      )}>
+      <select
+        defaultValue={layoutKey}
+        onChange={x => {
+          const gmKey = /** @type {Geomorph.GeomorphKey} */ (x.currentTarget.value);
+          setLayoutKey(gmKey);
+          tryLocalStorageSet('gmKey@GeomorphEdit', gmKey);
+        }}
+      >
         {geomorphKeys.map(gmKey => <option key={gmKey}>{gmKey}</option>)}
       </select>
       <SvgPanZoom
