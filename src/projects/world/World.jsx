@@ -1,5 +1,5 @@
 import React from "react";
-import { css } from "@emotion/css";
+import { css, cx } from "@emotion/css";
 import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
 
@@ -57,9 +57,25 @@ export default function World(props) {
       precision, removeFirst,
       ...npcService,
     },
-    rootCss: `hide-gms ${css`${props.gms.map((_, gmId) =>
-      `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
-    ).join('\n')}`}`,
+    classNames: [
+      'hide-gms',
+      css`${props.gms.map((_, gmId) =>
+        `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
+      ).join('\n')}`,
+      // 'show-gm-{gmId}'s go here
+    ],
+    setShownGms(shownGmIds) {
+      // Apply change via CSS, remembering for next render
+      const rootEl = state.getRootEl();
+      state.gmGraph.gms.forEach((_, gmId) =>
+        shownGmIds.includes(gmId)
+          ? rootEl.classList.add(`show-gm-${gmId}`)
+          : rootEl.classList.remove(`show-gm-${gmId}`)
+      );
+      state.classNames = state.classNames.slice(0, 2).concat(
+        shownGmIds.map(gmId => `show-gm-${gmId}`)
+      );
+    },
     update,
   }));
 
@@ -80,7 +96,7 @@ export default function World(props) {
 
   return state.gmGraph.ready ? (
     <CssPanZoom
-      className={state.rootCss}
+      className={cx(state.classNames)}
       init={props.init}
       background="#000"
       onLoad={api => (state.panZoom = api) && update()}
@@ -143,7 +159,8 @@ export default function World(props) {
  * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
  * @property {PanZoom.CssApi} panZoom
- * @property {string} rootCss
+ * @property {string[]} classNames
+ * @property {(shownGmIds: number[]) => void} setShownGms
  * @property {() => void} update
  */
 

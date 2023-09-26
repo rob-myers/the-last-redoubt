@@ -92,14 +92,6 @@ export default function FOV(props) {
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set };
     },
-    hideUnseen() {
-      const rootEl = api.getRootEl();
-      const visGmId = state.gmRoomIds.reduce((agg, { gmId }) => { agg[gmId] = true; return agg; }, /** @type {Record<number, true>} */ ({}))
-      gms.forEach((_, gmId) => visGmId[gmId]
-        ? rootEl.classList.add(`show-gm-${gmId}`)
-        : rootEl.classList.remove(`show-gm-${gmId}`)
-      );
-    },
     mapAct(action, timeMs) {// ℹ️ hopefully the browser cleans stale animations
       if (action === 'show') {
         state.anim.labels = state.el.labels.animate(
@@ -209,7 +201,11 @@ export default function FOV(props) {
       state.gmRoomIds = nextGmRoomIds;
       api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
 
-      state.hideUnseen();
+      api.setShownGms(state.gmRoomIds.reduce(
+        (agg, { gmId }) => { !agg.includes(gmId) && agg.push(gmId); return agg; },
+        /** @type {number[]} */ ([]),
+      ));
+
       update();
     },
     setRoom(gmId, roomId, doorId) {
@@ -332,7 +328,6 @@ export default function FOV(props) {
  * @property {boolean} ready
  * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el Labels need their own canvas because geomorphs are e.g. reflected
  * @property {() => void} drawLabels
- * @property {() => void} hideUnseen
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
  * @property {number[][]} rootedOpenIds
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
