@@ -89,7 +89,21 @@ export class Mat {
   }
 
   /**
-   * Multiply this matrix (left) against param matrix (right).
+   * Compute `param matrix` * `this matrix`.
+   * @param {SixTuple} _
+   */
+  postMultiply([a, b, c, d, e, f]) {
+    const ma = a * this.a + c * this.b + e * 0;
+    const mb = b * this.a + d * this.b + f * 0;
+    const mc = a * this.c + c * this.d + e * 0;
+    const md = b * this.c + d * this.d + f * 0;
+    const me = a * this.e + c * this.f + e * 1;
+    const mf = b * this.e + d * this.f + f * 1;
+    return this.feedFromArray([ma, mb, mc, md, me, mf]);
+  }
+
+  /**
+   * Compute `this matrix` * `param matrix`.
    * @param {SixTuple} _
    */
   preMultiply([a, b, c, d, e, f]) {
@@ -126,13 +140,13 @@ export class Mat {
     }
   }
 
-  /** @param {number} angle radians */
-  setRotation(angle) {
+  /** @param {number} radians angle */
+  setRotation(radians) {
     return this.feedFromArray([
-      Math.cos(angle),
-      Math.sin(angle),
-      -Math.sin(angle),
-      Math.cos(angle),
+      Math.cos(radians),
+      Math.sin(radians),
+      -Math.sin(radians),
+      Math.cos(radians),
       0,
       0,
     ]);
