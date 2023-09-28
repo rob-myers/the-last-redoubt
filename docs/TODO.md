@@ -4,6 +4,10 @@
 
 - 🚧 redo geomorph layout syntax
   - ✅ GeomorphEdit remembers last selected
+  - ✅ can specify { x, y, a?: 0 | 90 | 180 | 270, flip?: 'x' | 'y' | 'xy' } where { x, y } final topLeft
+  - ✅ specifications take effect inside `createLayout`
+  - 🚧 support "stacks" i.e. horizontal or vertical, where only position of first is specified
+
 
 - doors should be easier to open as player walks
 - abstract code:

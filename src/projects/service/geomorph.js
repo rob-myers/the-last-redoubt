@@ -12,7 +12,7 @@ import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp } from "../service/dom";
 
 /**
- * ℹ️ Fundamental function i.e. source of each {geomorph}.json
+ * Fundamental function i.e. source of each {geomorph}.json
  * 
  * Create a layout given a definition and all symbols.
  * Can run in browser or on server.
@@ -20,26 +20,30 @@ import { fillRing, supportsWebp } from "../service/dom";
  * @returns {Promise<Geomorph.ParsedLayout>}
  */
 export async function createLayout(opts) {
-  const m = new Mat;
   /** @type {Geomorph.ParsedLayout['groups']} */
   const groups = { obstacles: [], singles: [], walls: [] };
+  const m = new Mat;
 
   // Compute `groups`
   opts.def.items.forEach((item, i) => {
-    m.feedFromArray(item.transform || [1, 0, 0, 1, 0, 0]);
+    
     const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
-    if (i) {
+    if (i > 0) {
       /**
        * Starship symbol PNGs are 5 times larger than geomorph PNGs.
-       * We skip 1st item i.e. hull, which corresponds to a geomorph PNG.
+       * We skip 1st item i.e. hull, which corresponds to a geomorph PNG;
+       * it does not need to be transformed.
        */
+      layoutDefItemToTransform(item, opts, m);
+      item.transform = m.toArray(); // Used further below
       m.a *= 0.2,
       m.b *= 0.2,
       m.c *= 0.2,
       m.d *= 0.2;
     }
-    // Transform singles (restricting doors/walls by item.tags)
-    // Room orientation tags permit decoding orient-{deg} tags later
+
+    // Transform singles, restricting doors/walls by item.tags
+    // Room orientation tags permit decoding orient={deg} tags later
     const restrictedSingles = singles
       .map(({ meta, poly }) => ({
         meta: modifySinglesMeta({...meta}, m),
@@ -52,14 +56,13 @@ export async function createLayout(opts) {
           : (item.walls && tags.includes('wall'))
             ? tags.some(tag => /** @type {string[]} */ (item.walls).includes(tag))
             : true;
-      });
-    groups.singles.push(...restrictedSingles);
-    groups.obstacles.push(...obstacles.map(({ meta, poly }) =>
-      ({
-        meta,
-        poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
       })
-    ));
+    ;
+    groups.singles.push(...restrictedSingles);
+    groups.obstacles.push(...obstacles.map(({ meta, poly }) => ({
+      meta,
+      poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
+    })));
 
     /**
      * Only the hull symbol (the 1st symbol) has "hull" walls.
@@ -368,7 +371,7 @@ export async function createLayout(opts) {
         agg[doorId].doors.push(...doorIds.filter(x => x !== doorId && !alreadySeen.includes(x)));
       });
       if (doorIds.length <= 1)
-        console.warn(`poly tagged "${svgSymbolTag["parallel-connectors"]}" should intersect ≥ 2 doors: (doorIds ${doorIds})`);
+        warn(`poly tagged "${svgSymbolTag["parallel-connectors"]}" should intersect ≥ 2 doors: (doorIds ${doorIds})`);
       return agg;
     },
     /** @type {Geomorph.ParallelDoor} */ ({}),
@@ -438,13 +441,54 @@ export async function createLayout(opts) {
 
 /**
  * @typedef CreateLayoutOpts
- * @type {object}
  * @property {Geomorph.LayoutDef} def
  * @property {Geomorph.SymbolLookup} lookup
  * @property {null | import('./triangle').TriangleService} triangleService
  * If the triangulation service is not provided, then e.g.
  * @see {Geomorph.ParsedLayout.navZone} is degenerate.
  */
+
+/**
+ * Mutates matrix @see {m} and returns it.
+ * @param {Geomorph.LayoutDefItem} item
+ * @param {CreateLayoutOpts} opts
+ * @param {Mat} m 
+ * @returns {Mat}
+ */
+function layoutDefItemToTransform(item, opts, m) {
+  if (item.transform) {
+    return m.feedFromArray(item.transform);
+  }
+
+  m.setIdentity();
+
+  if (item.a) {
+    item.a === 90 && m.setRotation(Math.PI / 2)
+      || item.a === 180 && m.setRotation(Math.PI)
+      || item.a === 270 && m.setRotation(3/2 * Math.PI)
+  }
+  if (item.flip) {
+    item.flip === 'x' && m.postMultiply([1, 0, 0, -1, 0, 0])
+      || item.flip === 'y' && m.postMultiply([-1, 0, 0, 1, 0, 0])
+      || item.flip === 'xy' && m.postMultiply([-1, 0, 0, -1, 0, 0]);
+  }
+
+  // Compute top left of symbol's AABB _after_ transformation
+  const { pngRect } = opts.lookup[item.symbol];
+  const { x, y } = (new Rect(
+    0,
+    0,
+    // When pngRect.{x,y} < 0 we trim {width,height}, otherwise extend {width,height}
+    // This amounts to computing the original SVG's width, height.
+    pngRect.width  + 2 * pngRect.x,
+    pngRect.height + 2 * pngRect.y,
+  )).applyMatrix(m);
+
+  // Account for 5 * (-) scale factor of non-hull symbols
+  m.e = (item.x ?? 0) - x / 5;
+  m.f = (item.y ?? 0) - y / 5;
+  return m;
+}
 
 /**
  * Some hull doors shouldn't be tagged,
@@ -874,10 +918,10 @@ function extractPngOffset(api, topNodes) {
   const group = topNodes.find(x => hasTitle(api, x, 'background'));
   const { attribs: a } = api(group).children('image').toArray()[0];
   return {
-    x: Number(a.x || 0),
-    y: Number(a.y || 0),
-    width: Number(a.width || 0),
-    height: Number(a.height || 0),
+    x: Number(a.x ?? 0),
+    y: Number(a.y ?? 0),
+    width: Number(a.width ?? 0),
+    height: Number(a.height ?? 0),
   };
 }
 

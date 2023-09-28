@@ -344,20 +344,32 @@ declare namespace Geomorph {
      * `g-301--bridge` where /assets/debug/g-301--bridge.png exists.
      */
     key: GeomorphKey;
-    /**
-     * e.g. `301`
-     */
+    /** e.g. `301` */
     id: number;
     items: LayoutDefItem[];
   }
 
   export interface LayoutDefItem {
     symbol: SymbolKey;
-    transform?: [number, number, number, number, number, number];
     /** Door tags */
     doors?: string[];
     /** Wall tags */
     walls?: string[];
+    
+    /**
+     * - If manually specified, this overrides `x`, `y`, `a`, `flip`.
+     * - If unspecified, it will be computed using latter and stores in
+     *   the geomorph JSONs.
+     */
+    transform?: [number, number, number, number, number, number];
+    /** `topLeft.x` _after_ transformation by @see {a} @see {flip} */
+    x?: number;
+    /** `topLeft.y` _after_ transformation by @see {a} @see {flip} */
+    y?: number;
+    /** angle (applied first) */
+    a?: 0 | 90 | 180 | 270;
+    /** flip (post-composed) */
+    flip?: 'x' | 'y' | 'xy';
   }
 
   export type GeomorphKey = (
