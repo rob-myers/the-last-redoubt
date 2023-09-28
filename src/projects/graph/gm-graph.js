@@ -837,11 +837,11 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * The only way a
-   * @see {gmGraphClass} is constructed.
+   * The only way a @see {gmGraphClass} is constructed.
    * @param {Geomorph.GeomorphDataInstance[]} gms 
+   * @param {boolean} [permitErrors] used to keep GeomorphEdit stable
    */
-  static fromGms(gms) {
+  static fromGms(gms, permitErrors = false) {
     const graph = new gmGraphClass(gms);
     /** Index into nodesArray */
     let index = 0;
@@ -907,7 +907,13 @@ export class gmGraphClass extends BaseGraph {
         // console.log('->', node);
         const nonNullIndex = doors[node.doorId].roomIds.findIndex(x => x !== null);
         const entry = /** @type {Geom.Vect} */ (doors[node.doorId].entries[nonNullIndex]);
-        graph.entry.set(node, matrix.transformPoint(entry.clone()));
+        if (entry) {
+          graph.entry.set(node, matrix.transformPoint(entry.clone()));
+        } else if (permitErrors) {
+          error(`door ${node.doorId} lacks entry`);
+        } else {
+          throw Error(`${node.gmKey}: door ${node.doorId} lacks entry`);
+        }
       }
     });
 

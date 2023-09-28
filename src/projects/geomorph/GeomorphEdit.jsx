@@ -67,22 +67,21 @@ function Geomorph({ layoutKey, transform, disabled }) {
   const { data, error } = useQuery(
     `GeomorphEdit--${def.key}--${gmHash}`,
     async () => {
-      // compute layout and GeomorphData from def
-      const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-      /** ℹ️ no triangle service => degenerate navigation */
+      // Compute layout and GeomorphData from def,
+      // where triangle service means degenerate navigation
       const layout = await createLayout({ def, lookup: symbolLookup, triangleService: null})
       const gm = await createGeomorphData(layout);
-      // create geomorph graph
+
+      // Create geomorph graph,
+      // providing minimal state needed by gmGraph
       const gmInstance = geomorphDataToInstance(gm, [1, 0, 0, 1, 0, 0]);
-      const gmGraph = gmGraphClass.fromGms([gmInstance]);
-      // ℹ️ Provide state needed by gmGraph
+      const gmGraph = gmGraphClass.fromGms([gmInstance], true);
       gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
         getOpenIds(_) { return state.openDoors; },
         isOpen(gmId, doorId) { return state.openDoors.includes(doorId); },
         get lookup() { return [gm?.doors.map((_, doorId) => ({ open: state.openDoors.includes(doorId) })) ?? []]; },
       });
       return { gm, gmGraph };
-
     },
     { enabled: !disabled },
   );
@@ -151,7 +150,6 @@ function Geomorph({ layoutKey, transform, disabled }) {
   }, {
     deps: [data, layoutKey],
   });
-
 
   React.useEffect(() => {
     state.reset();
