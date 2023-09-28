@@ -8,7 +8,7 @@ const isBrowser = typeof window !== 'undefined';
   if (isBrowser) {
     console.info('%cERROR', 'background: #ff0000', ...args);
   } else {
-    console.info(chalk.red('ERROR:', ...args));
+    console.info('ERROR', chalk.red(...args));
   }
 }
 /**
@@ -18,7 +18,7 @@ export function info(...args) {
   if (isBrowser) {
     console.info('%cINFO', 'color: #7777ff', ...args);
   } else {
-    console.info(chalk.blueBright('INFO:', ...args));
+    console.info('INFO', chalk.blueBright( ...args));
   }
 }
 /**
@@ -28,6 +28,6 @@ export function warn(...args) {
   if (isBrowser) {
     console.info('%cWARN', 'color: #ffff00', ...args);
   } else {
-    console.info(chalk.yellowBright('WARN:', ...args));
+    console.info('WARN', chalk.yellowBright(...args));
   }
 }
