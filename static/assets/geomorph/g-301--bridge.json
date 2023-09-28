@@ -21,7 +21,7 @@
       },
       {"symbol": "_--table--001--1x0.16", "transform": [0, 1, 1, 0, 343, 420]},
       {"symbol": "_--table--001--1x0.16", "transform": [0, 1, 1, 0, 343, 485]},
-      {"symbol": "stateroom--036--2x4"},
+      {"symbol": "stateroom--036--2x4", "transform": [1, 0, 0, 1, 0, 0]},
       {
         "symbol": "office--001--2x2",
         "transform": [-1, 0, 0, 1, 240, 120],
@@ -14004,7 +14004,9 @@
     {
       "key": "stateroom--036--2x4",
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
-      "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220}
+      "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
+      "transformArray": [1, 0, 0, 1, 0, 0],
+      "transform": "matrix(1,0,0,1,0,0)"
     },
     {
       "key": "office--001--2x2",
