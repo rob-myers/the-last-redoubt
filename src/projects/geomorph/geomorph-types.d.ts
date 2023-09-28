@@ -37,6 +37,10 @@ declare namespace Geomorph {
     key: string;
     /** Hull walls, only in hull */
     hull: T[];
+    /** Original SVG's width, inferred view `viewBox` */
+    width: number;
+    /** Original SVG's height, inferred view `viewBox` */
+    height: number;
     /**
      * Bounds of original image in symbol SVG.
      * May be offset e.g. because doors are centred along edges.

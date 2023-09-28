@@ -9,18 +9,19 @@ const layoutDefs = {
     items: [
       { symbol: '101--hull' },
       { symbol: 'fuel--010--2x4' },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 360, 0] },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 600, 0] },
-      { symbol: 'iris-valves--005--1x1', transform: [1, 0, 0, 1, 840, 0] },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 960, 0] },
+      { symbol: 'fuel--010--2x4', x: 360 },
+      { symbol: 'fuel--010--2x4', x: 600 },
+      { symbol: 'iris-valves--005--1x1', x: 840 },
+      { symbol: 'fuel--010--2x4', x: 960 },
 
-      { symbol: 'machinery--158--1.8x3.6', transform: [0, -1, 1, 0, 0, 240 + 5] },
-      { symbol: 'stateroom--020--2x3', transform: [0, 1, 1, 0, 360, 120] },
-      { symbol: 'fresher--020--2x2', transform: [0, 1, 1, 0, 540, 120] },
-      { symbol: 'lounge--009--2x3', transform: [-1, 0, 0, -1, 840, 240] },
-      { symbol: 'machinery--155--1.8x3.6', transform: [0, -1, 1, 0, 960 + 12, 240 - 4] },
+      { symbol: 'machinery--158--1.8x3.6', y: 2 * 60 + 12, x: 12, a: 270 },
+      { symbol: 'stateroom--020--2x3', x: 6 * 60, y: 2 * 60, a: 90, flip: 'y' },
+      { symbol: 'fresher--020--2x2', x: 9 * 60, y: 2 * 60, a: 90, flip: 'y' },
+      { symbol: 'lounge--009--2x3', x: 11 * 60, y: 2 * 60, flip: 'xy' },
+      { symbol: 'machinery--155--1.8x3.6', x: 16 * 60 + 12, y: 2 * 60 + 8, a: 270 },
       
-      { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },
+      { symbol: 'iris-valves--005--1x1', a: 270, y: 300 },
+      // 🚧 use new spec format below
       { symbol: 'stateroom--018--2x3', transform: [1, 0, 0, 1, 360, 240] },
       { symbol: 'stateroom--019--2x3', transform: [-1, 0, 0, -1, 840, 420] },
 
@@ -66,7 +67,7 @@ const layoutDefs = {
     items: [
       { symbol: '102--hull' },
       { symbol: 'empty-room--060--4x4', transform: [1, 0, 0, -1, 0, 240] },
-      { symbol: 'machinery--158--1.8x3.6', transform: [1, 0, 0, 1, + 5, 0] },
+      { symbol: 'machinery--158--1.8x3.6', transform: [1, 0, 0, 1, + 12, 12] },
       { symbol: 'machinery--065--1.8x1.8', transform: [1, 0, 0, 1, 240 - 4, 240 - 2] },
       { symbol: 'console--018--1x1', transform: [-1, 0, 0, 1, 240, 0] },
       { symbol: 'iris-valves--005--1x1', transform: [0, -1, 1, 0, 0, 360] },

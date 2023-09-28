@@ -463,9 +463,9 @@ function layoutDefItemToTransform(item, opts, m) {
   m.setIdentity();
 
   if (item.a) {
-    item.a === 90 && m.setRotation(Math.PI / 2)
-      || item.a === 180 && m.setRotation(Math.PI)
-      || item.a === 270 && m.setRotation(3/2 * Math.PI)
+    item.a === 90 && m.feedFromArray([0, 1, -1, 0, 0, 0]) // m.setRotation(Math.PI/2)
+      || item.a === 180 && m.feedFromArray([-1, 0, 0, -1, 0, 0]) // m.setRotation(Math.PI)
+      || item.a === 270 && m.feedFromArray([0, -1, 1, 0, 0, 0]) // m.setRotation(3/2 * Math.PI)
   }
   if (item.flip) {
     item.flip === 'x' && m.postMultiply([1, 0, 0, -1, 0, 0])
@@ -474,16 +474,8 @@ function layoutDefItemToTransform(item, opts, m) {
   }
 
   // Compute top left of symbol's AABB _after_ transformation
-  const { pngRect } = opts.lookup[item.symbol];
-  const { x, y } = (new Rect(
-    0,
-    0,
-    // When pngRect.{x,y} < 0 we trim {width,height}, otherwise extend {width,height}
-    // This amounts to computing the original SVG's width, height.
-    pngRect.width  + 2 * pngRect.x,
-    pngRect.height + 2 * pngRect.y,
-  )).applyMatrix(m);
-
+  const { width, height } = opts.lookup[item.symbol];
+  const { x, y } = (new Rect(0, 0, width, height)).applyMatrix(m);
   // Account for 5 * (-) scale factor of non-hull symbols
   m.e = (item.x ?? 0) - x / 5;
   m.f = (item.y ?? 0) - y / 5;
@@ -848,6 +840,11 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
   const topNodes = Array.from($('svg > *'));
   const pngRect = extractPngOffset($, topNodes);
 
+  const [,, width, height] = $('svg').attr('viewBox')?.split(' ').map(Number) ?? [];
+  if (width === undefined || height === undefined) {
+    error(`${symbolName}: symbol must have viewBox on <svg>`);
+  }
+
   const hull = extractGeomsAt($, topNodes, 'hull');
   const obstacles = extractGeomsAt($, topNodes, 'obstacles');
   const singles = extractGeomsAt($, topNodes, 'singles');
@@ -860,6 +857,8 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
     obstacles: obstacles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),
     pngRect,
     singles: singles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),
+    width,
+    height,
     walls: Poly.union(walls).map(x => x.precision(precision)),
   };
 }
@@ -877,6 +876,8 @@ export function serializeSymbol(parsed) {
     obstacles: parsed.obstacles.map(({ meta, poly }) => ({ meta, poly: poly.geoJson })),
     walls: toJsons(parsed.walls),
     singles: parsed.singles.map(({ meta, poly }) => ({ meta, poly: poly.geoJson })),
+    width: parsed.width,
+    height: parsed.height,
     pngRect: parsed.pngRect,
     lastModified: parsed.lastModified,
   };
@@ -894,6 +895,8 @@ function deserializeSymbol(json) {
     walls: json.walls.map(Poly.from),
     singles: json.singles.map(({ meta, poly }) => ({ meta, poly: Poly.from(poly) })),
     pngRect: json.pngRect,
+    width: json.width,
+    height: json.height,
     lastModified: json.lastModified,
   };
 }
