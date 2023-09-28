@@ -27,60 +27,38 @@ export async function createLayout(opts) {
   // Compute `groups`
   opts.def.items.forEach((item, i) => {
     
-    const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
-    if (i > 0) {
-      /**
-       * Starship symbol PNGs are 5 times larger than geomorph PNGs.
-       * We skip 1st item i.e. hull, which corresponds to a geomorph PNG;
-       * it does not need to be transformed.
-       */
+    if ('items' in item) {
+      const { items: _, ...stackBase } = item;
+      /** Rightmost x of previous item */
+      let lastX = 0;
+
+      item.items.forEach((stackItem) => {
+        const { symbol, walls, doors, ...base } = stackItem;
+
+        /** @type {Geomorph.LayoutDefItem} */
+        const induced = {
+          symbol, walls, doors,
+          a: /** @type {Geomorph.BaseLayoutDefItem['a']} */ (
+            ((stackBase.a ?? 0) + (base.a ?? 0)) % 360
+          ),
+          flip: combineFlips(stackBase.flip, base.flip),
+          x: (stackBase.x ?? 0) + lastX + (base.x ?? 0),
+          y: (stackBase.y ?? 0) + (base.y ?? 0),
+          // `transform` unsupported
+        };
+
+        layoutDefItemToTransform(induced, opts, m);
+        const { width, height } = opts.lookup[symbol];
+        lastX = (induced.x ?? 0) + (new Rect(0, 0, width, height)).applyMatrix(m).width / 5;
+
+        stackItem.transform = m.toArray(); // Used further below
+        addLayoutDefItemToGroups(induced, opts, m, groups);
+      });
+    } else {
       layoutDefItemToTransform(item, opts, m);
       item.transform = m.toArray(); // Used further below
-      m.a *= 0.2,
-      m.b *= 0.2,
-      m.c *= 0.2,
-      m.d *= 0.2;
+      addLayoutDefItemToGroups(item, opts, m, groups);
     }
-
-    // Transform singles, restricting doors/walls by item.tags
-    // Room orientation tags permit decoding orient={deg} tags later
-    const restrictedSingles = singles
-      .map(({ meta, poly }) => ({
-        meta: modifySinglesMeta({...meta}, m),
-        poly: poly.clone().applyMatrix(m).precision(precision),
-      }))
-      .filter(({ meta }) => {
-        const tags = Object.keys(meta);
-        return item.doors && meta.door
-          ? tags.some(tag => /** @type {string[]} */ (item.doors).includes(tag))
-          : (item.walls && tags.includes('wall'))
-            ? tags.some(tag => /** @type {string[]} */ (item.walls).includes(tag))
-            : true;
-      })
-    ;
-    groups.singles.push(...restrictedSingles);
-    groups.obstacles.push(...obstacles.map(({ meta, poly }) => ({
-      meta,
-      poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
-    })));
-
-    /**
-     * Only the hull symbol (the 1st symbol) has "hull" walls.
-     * Outset the hull _inwards_ to ensure 👉 _clean union with other walls_.
-     * We avoid outwards outset for cleanliness.
-     */
-    const transformedHull = hull.map(x => x.applyMatrix(m));
-    const inwardsOutsetHull = Poly.intersect(
-      transformedHull.map(x => x.clone().removeHoles()),
-      transformedHull.flatMap(x => geom.createOutset(x, hullOutset)),
-    );
-    groups.walls.push(...Poly.union([
-      ...walls.map(x => x.clone().applyMatrix(m)),
-      // singles can also have walls e.g. to support optional doors
-      ...singlesToPolys(restrictedSingles, 'wall'),
-      // ...hull.flatMap(x => x.createOutset(hullOutset)).map(x => x.applyMatrix(m)),
-      ...inwardsOutsetHull,
-    ]));
   });
 
   // Ensure well-signed polygons
@@ -88,8 +66,10 @@ export async function createLayout(opts) {
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
-  const symbols = opts.def.items.map(x => opts.lookup[x.symbol]);
-  const hullSym = symbols[0];
+  // 🚧 compute these earlier
+  const flatItems = opts.def.items.flatMap(x => 'items' in x ? x.items : x);
+  const flatSymbols = flatItems.map(y => opts.lookup[y.symbol]);
+  const hullSym = flatSymbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
   /** We keep a reference to uncut walls (group.walls overwritten below) */
@@ -424,17 +404,18 @@ export async function createLayout(opts) {
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
     hullRect,
   
-    items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
+    items: flatSymbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
-      transformArray: opts.def.items[i].transform,
-      transform: opts.def.items[i].transform ? `matrix(${opts.def.items[i].transform})` : undefined,
+      transformArray: flatItems[i].transform,
+      transform: flatItems[i].transform ? `matrix(${flatItems[i].transform})` : undefined,
     })),
   };
 
   output.lightRects = computeLightConnectorRects(output);
+  // output.lightRects = [];
 
   return output;
 }
@@ -451,6 +432,68 @@ export async function createLayout(opts) {
 /**
  * Mutates matrix @see {m} and returns it.
  * @param {Geomorph.LayoutDefItem} item
+ * @param {CreateLayoutOpts} opts 
+ * @param {Mat} m 
+ * @param {Geomorph.ParsedLayout['groups']} groups
+ */
+function addLayoutDefItemToGroups(item, opts, m, groups) {
+  const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
+  
+  if (opts.def.items[0] !== item) {
+      /**
+       * Starship symbol PNGs are 5 times larger than geomorph PNGs.
+       * We skip 1st item i.e. hull, which corresponds to a geomorph PNG.
+       */
+      m.a *= 0.2,
+      m.b *= 0.2,
+      m.c *= 0.2,
+      m.d *= 0.2;
+  }
+
+  // Transform singles, restricting doors/walls by item.tags
+  // Room orientation tags permit decoding orient={deg} tags later
+  const restrictedSingles = singles
+    .map(({ meta, poly }) => ({
+      meta: modifySinglesMeta({...meta}, m),
+      poly: poly.clone().applyMatrix(m).precision(precision),
+    }))
+    .filter(({ meta }) => {
+      const tags = Object.keys(meta);
+      return item.doors && meta.door
+        ? tags.some(tag => /** @type {string[]} */ (item.doors).includes(tag))
+        : (item.walls && tags.includes('wall'))
+          ? tags.some(tag => /** @type {string[]} */ (item.walls).includes(tag))
+          : true;
+    })
+  ;
+  groups.singles.push(...restrictedSingles);
+  groups.obstacles.push(...obstacles.map(({ meta, poly }) => ({
+    meta,
+    poly: poly.clone().cleanFinalReps().applyMatrix(m).precision(precision),
+  })));
+
+  /**
+   * Only the hull symbol (the 1st symbol) has "hull" walls.
+   * Outset the hull _inwards_ to ensure 👉 _clean union with other walls_.
+   * We avoid outwards outset for cleanliness.
+   */
+  const transformedHull = hull.map(x => x.applyMatrix(m));
+  const inwardsOutsetHull = Poly.intersect(
+    transformedHull.map(x => x.clone().removeHoles()),
+    transformedHull.flatMap(x => geom.createOutset(x, hullOutset)),
+  );
+  groups.walls.push(...Poly.union([
+    ...walls.map(x => x.clone().applyMatrix(m)),
+    // singles can also have walls e.g. to support optional doors
+    ...singlesToPolys(restrictedSingles, 'wall'),
+    // ...hull.flatMap(x => x.createOutset(hullOutset)).map(x => x.applyMatrix(m)),
+    ...inwardsOutsetHull,
+  ]));
+}
+
+/**
+ * Mutates matrix @see {m} and returns it.
+ * @param {Geomorph.LayoutDefItem} item
  * @param {CreateLayoutOpts} opts
  * @param {Mat} m 
  * @returns {Mat}
@@ -458,6 +501,10 @@ export async function createLayout(opts) {
 function layoutDefItemToTransform(item, opts, m) {
   if (item.transform) {
     return m.feedFromArray(item.transform);
+  } else if (opts.def.items[0] === item) {
+    // Cannot transform hull symbol, instead
+    // one can transform resp geomorph later
+    return m.setIdentity();
   }
 
   m.setIdentity();
@@ -480,6 +527,27 @@ function layoutDefItemToTransform(item, opts, m) {
   m.e = (item.x ?? 0) - x / 5;
   m.f = (item.y ?? 0) - y / 5;
   return m;
+}
+
+/**
+ * @param {Geomorph.BaseLayoutDefItem['flip']} a 
+ * @param {Geomorph.BaseLayoutDefItem['flip']} b 
+ * @returns {Geomorph.BaseLayoutDefItem['flip']}
+ */
+function combineFlips(a, b) {
+  if (a === undefined) {
+    return b;
+  } else if (b === undefined) {
+    return a;
+  } else if (a === b) {
+    return undefined;
+  } else if (a === 'x') {
+    return b === 'y' ? 'xy' : 'y';
+  } else if (a === 'y') {
+    return b === 'x' ? 'xy' : 'x';
+  } else {// a is 'xy', b is 'x' | 'y'
+    return b === 'x' ? 'y' : 'x';
+  }
 }
 
 /**
@@ -1055,50 +1123,55 @@ export function computeLightConnectorRects(gm) {
  * @param {Geomorph.ParsedLayout} gm
  */
 export function computeLightPolygons(gm, intersectWithCircle = false) {
-  const lightSources = gm.lightSrcs;
-  /** More than one polygon can happen e.g. Geomorph 102 */
-  const allRoomsAndDoors = Poly.union([
-    ...gm.rooms,
-    ...getNormalizedDoorPolys(gm.doors), // must extrude hull doors
-    ...gm.windows.map(x => x.poly),
-  ]);
+  try {
+    const lightSources = gm.lightSrcs;
+    /** More than one polygon can happen e.g. Geomorph 102 */
+    const allRoomsAndDoors = Poly.union([
+      ...gm.rooms,
+      ...getNormalizedDoorPolys(gm.doors), // must extrude hull doors
+      ...gm.windows.map(x => x.poly),
+    ]);
 
-  const lightPolys = lightSources.map(({ position, distance: _ }, i) => {
-    const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
-    if (exterior) {
-      // 🚧 compute associated door rects and warn if needed
-      return geom.lightPolygon({
-        position,
-        range: 2000, // Must use large range (exceeding geomorph bounds) for good polygon
-        exterior,
-      });
-    } else {
-      console.error(`empty light ${i} (${JSON.stringify(position)}): no exterior found`);
-      return new Poly;
-    }
-  });
+    const lightPolys = lightSources.map(({ position, distance: _ }, i) => {
+      const exterior = allRoomsAndDoors.find(poly => poly.contains(position));
+      if (exterior) {
+        // 🚧 compute associated door rects and warn if needed
+        return geom.lightPolygon({
+          position,
+          range: 2000, // Must use large range (exceeding geomorph bounds) for good polygon
+          exterior,
+        });
+      } else {
+        console.error(`empty light ${i} (${JSON.stringify(position)}): no exterior found`);
+        return new Poly;
+      }
+    });
 
   
-  if (intersectWithCircle) {
+    if (intersectWithCircle) {
 
     const restrictedLightPolys = lightPolys.map((lightPoly, lightId) => {
       const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
       const circlePoly = Poly.circle(position, distance, 30);
-      return Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly;
+      return (Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly).precision(2);
     });
 
-    for (let i = 0; i < restrictedLightPolys.length; i++) {
-      for (let j = i + 1; j < restrictedLightPolys.length; j++) {
-        const [pi, pj] = [i, j].map(k => restrictedLightPolys[k]);
-        if (pi.rect.intersects(pj.rect) && Poly.intersect([pi], [pj]).length) {
-          warn(`computeLightPolygons: light polys ${i}, ${j} should not be intersecting`);
+      for (let i = 0; i < restrictedLightPolys.length; i++) {
+        for (let j = i + 1; j < restrictedLightPolys.length; j++) {
+          const [pi, pj] = [i, j].map(k => restrictedLightPolys[k]);
+          if (pi.rect.intersects(pj.rect) && Poly.intersect([pi], [pj]).length) {
+            warn(`computeLightPolygons: light polys ${i}, ${j} should not be intersecting`);
+          }
         }
       }
+      
+      return restrictedLightPolys;
+    } else {
+      return lightPolys;
     }
-
-    return restrictedLightPolys;
-  } else {
-    return lightPolys;
+  } catch (e) {
+    console.error('computeLightPolygons failed', e);
+    return [];
   }
 }
 

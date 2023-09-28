@@ -66,7 +66,7 @@ const changedLightsSymbols = keys(svgJsonLookup).filter((symbolName) => {
   );
 });
 const changedLayoutDefs = Object.values(layoutDefs).filter(def => {
-  const usedSymbols = def.items.map(x => x.symbol);
+  const usedSymbols = def.items.flatMap(x => 'items' in x ? x.items : x).map(x => x.symbol);
   return changedSymbols.some(symbolName => usedSymbols.includes(symbolName));
 });
 

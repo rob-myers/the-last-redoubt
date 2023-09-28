@@ -123,6 +123,7 @@ export class Mat {
     this.d = 1;
     this.e = 0;
     this.f = 0;
+    return this;
   }
 
   /** @param  {undefined | string | SixTuple | MatrixJson} source */

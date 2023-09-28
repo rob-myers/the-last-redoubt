@@ -14,6 +14,19 @@ const layoutDefs = {
       { symbol: 'iris-valves--005--1x1', x: 840 },
       { symbol: 'fuel--010--2x4', x: 960 },
 
+      {
+        y: 2 * 60,
+        // a: 90, // 🚧 should not be pointwise
+        items: [
+          { symbol: 'machinery--158--1.8x3.6', x: 12, y: 12, a: 270, },
+          { symbol: 'stateroom--020--2x3', x: 12 + 2 * 60,  a: 90, flip: 'y' },
+          { symbol: 'fresher--020--2x2', a: 90, flip: 'y' },
+          { symbol: 'lounge--009--2x3', flip: 'xy' },
+          { symbol: 'machinery--155--1.8x3.6', x: 2 * 60 + 12, y: 8, a: 270 },
+        ],
+      },
+
+      // 🚧 use stacks below
       { symbol: 'machinery--158--1.8x3.6', y: 2 * 60 + 12, x: 12, a: 270 },
       { symbol: 'stateroom--020--2x3', x: 6 * 60, y: 2 * 60, a: 90, flip: 'y' },
       { symbol: 'fresher--020--2x2', x: 9 * 60, y: 2 * 60, a: 90, flip: 'y' },

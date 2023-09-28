@@ -350,16 +350,26 @@ declare namespace Geomorph {
     key: GeomorphKey;
     /** e.g. `301` */
     id: number;
-    items: LayoutDefItem[];
+    items: (
+      | LayoutDefItem
+      | LayoutDefStack
+    )[];
   }
 
-  export interface LayoutDefItem {
+  export interface LayoutDefItem extends BaseLayoutDefItem {
     symbol: SymbolKey;
     /** Door tags */
     doors?: string[];
     /** Wall tags */
     walls?: string[];
     
+  }
+  
+  export interface LayoutDefStack extends BaseLayoutDefItem {
+    items: LayoutDefItem[];
+  }
+  
+  interface BaseLayoutDefItem {
     /**
      * - If manually specified, this overrides `x`, `y`, `a`, `flip`.
      * - If unspecified, it will be computed using latter and stores in
