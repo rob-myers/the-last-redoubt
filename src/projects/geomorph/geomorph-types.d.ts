@@ -407,11 +407,12 @@ declare namespace Geomorph {
   );
 
   export type SymbolKey = (
-    | '_--locker--001--1x0.33'
-    | '_--table--001--1x0.16' 
-    | '_--table--002--0.33x0.33'
-    | '_--table--003--1x0.33'
-    | '_--table--004--0.33x0.16'
+    | 'extra--locker--001--1x0.33'
+    | 'extra--table--001--1x0.16' 
+    | 'extra--table--002--0.33x0.33'
+    | 'extra--table--003--1x0.33'
+    | 'extra--table--004--0.33x0.16'
+    //
     | '101--hull'
     | '102--hull'
     | '103--hull'
