@@ -756,6 +756,7 @@ export default function NPCs(props) {
             && api.panZoom.distanceTo(npc.getPosition()) > 10
           ) {
             changeStatus('panzoom-to');
+            await api.panZoom.animationAction('cancelFollow');
             await api.panZoom.panZoomTo({
               durationMs: 2000,
               // scale: baseZoom / (api.panZoom.cenScale || 1),

@@ -168,6 +168,16 @@ export default function CssPanZoom(props) {
             state.panzoomAnim === anim && (state.panzoomAnim = null);
             break;
           }
+          case 'cancelFollow': {
+            const anim = state.followAnim;
+            anim && isAnimAttached(anim, state.followEl) && await new Promise(resolve => {
+              anim.addEventListener('cancel', resolve)
+              anim.commitStyles();
+              anim.cancel();
+            });
+            state.followAnim === anim && (state.followAnim = null);
+            break;
+          }
           case 'pause': // Avoid pausing finished animation
             state.panzoomAnim?.playState === 'running' && state.panzoomAnim.pause();
             state.followAnim?.playState === 'running' && state.followAnim.pause();
@@ -250,6 +260,7 @@ export default function CssPanZoom(props) {
         }
 
         await state.animationAction('cancel');
+        await state.animationAction('cancelFollow');
 
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
         state.followAnim = state.followEl.animate(keyframes, {
