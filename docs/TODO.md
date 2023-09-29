@@ -13,6 +13,7 @@
   - 🚧 redo gm302
   - redo gm303
 
+- BUG lifeboat--small-craft chairs missing?
 
 - 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?

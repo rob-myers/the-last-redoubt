@@ -44,10 +44,10 @@ const layoutDefs = {
         { symbol: 'empty-room--039--3x4', flip: 'y', walls: ['w'] },
         { symbol: 'office--061--3x4', x: 14 * 60 },
       ]},
-      { symbol: 'lifeboat--small-craft', y: 8 * 60 },
+      { symbol: 'lifeboat--small-craft', y: 8 * 60 + 12 },
       
       { y: 11 * 60, items: [
-        { symbol: 'empty-room--013--2x3', y: 1 * 60, a: 270, walls: ['n'] },
+        { symbol: 'empty-room--013--2x3', y: 1 * 60, a: 270, flip: 'y', walls: ['n'] },
         { symbol: 'medical--007--2x3', x: 1 * 60, a: 90, doors: ['w'] },
         { symbol: 'office--026--2x3', a: 90 },
         { symbol: 'office--026--2x3', x: 2 * 60, a: 90, flip: 'y' },
