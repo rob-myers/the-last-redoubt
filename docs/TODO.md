@@ -7,7 +7,10 @@
   - ✅ can specify { x, y, a?: 0 | 90 | 180 | 270, flip?: 'x' | 'y' | 'xy' } where { x, y } final topLeft
   - ✅ specifications take effect inside `createLayout`
   - ✅ support layout def "stacks" i.e. horizontal rows
-  - 🚧 stack rotation should not be pointwise i.e. apply to whole stack
+  - ✅ only support horizontal rows
+
+- 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
+  - the latter click should not be read?
 
 - doors should be easier to open as player walks
 - abstract code:

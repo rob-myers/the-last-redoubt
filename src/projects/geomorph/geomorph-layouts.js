@@ -8,69 +8,75 @@ const layoutDefs = {
     id: 101,
     items: [
       { symbol: '101--hull' },
-      { symbol: 'fuel--010--2x4' },
-      { symbol: 'fuel--010--2x4', x: 360 },
-      { symbol: 'fuel--010--2x4', x: 600 },
-      { symbol: 'iris-valves--005--1x1', x: 840 },
-      { symbol: 'fuel--010--2x4', x: 960 },
 
-      {
-        y: 2 * 60,
-        // a: 90, // 🚧 should not be pointwise
-        items: [
-          { symbol: 'machinery--158--1.8x3.6', x: 12, y: 12, a: 270, },
-          { symbol: 'stateroom--020--2x3', x: 12 + 2 * 60,  a: 90, flip: 'y' },
-          { symbol: 'fresher--020--2x2', a: 90, flip: 'y' },
-          { symbol: 'lounge--009--2x3', flip: 'xy' },
-          { symbol: 'machinery--155--1.8x3.6', x: 2 * 60 + 12, y: 8, a: 270 },
-        ],
-      },
-
-      // 🚧 use stacks below
-      { symbol: 'machinery--158--1.8x3.6', y: 2 * 60 + 12, x: 12, a: 270 },
-      { symbol: 'stateroom--020--2x3', x: 6 * 60, y: 2 * 60, a: 90, flip: 'y' },
-      { symbol: 'fresher--020--2x2', x: 9 * 60, y: 2 * 60, a: 90, flip: 'y' },
-      { symbol: 'lounge--009--2x3', x: 11 * 60, y: 2 * 60, flip: 'xy' },
-      { symbol: 'machinery--155--1.8x3.6', x: 16 * 60 + 12, y: 2 * 60 + 8, a: 270 },
+      { items: [
+        { symbol: 'fuel--010--2x4' },
+        { symbol: 'fuel--010--2x4', x: 2 * 60 },
+        { symbol: 'fuel--010--2x4' },
+        { symbol: 'fuel--010--2x4', x: 2 * 60 },
+      ]},
+      { symbol: 'iris-valves--005--1x1', x: 14 * 60 },
       
+      { y: 2 * 60, items: [
+        { symbol: 'machinery--158--1.8x3.6', x: 12, y: 12, a: 270, },
+        { symbol: 'stateroom--020--2x3', x: 12 + 2 * 60,  a: 90, flip: 'y' },
+        { symbol: 'fresher--020--2x2', a: 90, flip: 'y' },
+        { symbol: 'lounge--009--2x3', flip: 'xy' },
+        { symbol: 'machinery--155--1.8x3.6', x: 2 * 60 + 12, y: 8, a: 270 },
+      ]},
+
       { symbol: 'iris-valves--005--1x1', a: 270, y: 300 },
-      // 🚧 use new spec format below
-      { symbol: 'stateroom--018--2x3', transform: [1, 0, 0, 1, 360, 240] },
-      { symbol: 'stateroom--019--2x3', transform: [-1, 0, 0, -1, 840, 420] },
 
-      { symbol: 'empty-room--013--2x3', transform: [0, 1, -1, 0, 180, 360] },
-      { symbol: 'medical--008--2x3', transform: [0, -1, -1, 0, 360, 540], doors: ['w'] },
-      { symbol: 'stateroom--020--2x3', transform: [0, -1, 1, 0, 360, 540] },
-      { symbol: 'stateroom--020--2x3', transform: [0, -1, -1, 0, 840, 540] },
-      { symbol: 'fresher--025--2x3', transform: [0, -1, 1, 0, 840, 540] },
-      { symbol: 'office--023--2x3', transform: [0, -1, -1, 0, 1200, 480] },
+      { y: 4 * 60, x: 6 * 60, items: [
+        { symbol: 'stateroom--018--2x3' },
+        { symbol: 'stateroom--019--2x3', x: 4 * 60, flip: 'xy' },
+      ]},
+
+      { y: 6 * 60, items: [
+        { symbol: 'empty-room--013--2x3', a: 90 },
+        { symbol: 'medical--008--2x3', x: 1 * 60, a: 270, flip: 'y', doors: ['w'] },
+        { symbol: 'stateroom--020--2x3', y: 1 * 60, a: 90, flip: 'xy' },
+        { symbol: 'stateroom--020--2x3', x: 2 * 60, y: 1 * 60, a: 90, flip: 'x' },
+        { symbol: 'fresher--025--2x3', a: 270, },
+        { symbol: 'office--023--2x3', x: 1 * 60, a: 90, flip: 'x' },
+      ]},
+
+      { y: 8 * 60, items: [
+        { symbol: 'empty-room--039--3x4', flip: 'y', walls: ['w'] },
+        { symbol: 'office--061--3x4', x: 14 * 60 },
+      ]},
+      { symbol: 'lifeboat--small-craft', y: 8 * 60 },
       
-      { symbol: 'empty-room--039--3x4', transform: [-1, 0, 0, 1, 180, 480], walls: ['w'] },
-      { symbol: 'lifeboat--small-craft', transform: [1, 0, 0, 1, 0, 480 + 8] },
-      { symbol: 'medical--007--2x3', transform: [0, 1, -1, 0, 360, 660], doors: ['w'] },
-      { symbol: 'office--026--2x3', transform: [0, 1, -1, 0, 540, 660] },
-      { symbol: 'office--026--2x3', transform: [0, 1, 1, 0, 660, 660] },
-      
-      { symbol: 'office--020--2x3', transform: [1, 0, 0, 1, 360, 780] },
-      { symbol: 'office--020--2x3', transform: [-1, 0, 0, 1, 840, 780] },
+      { y: 11 * 60, items: [
+        { symbol: 'empty-room--013--2x3', y: 1 * 60, a: 270, walls: ['n'] },
+        { symbol: 'medical--007--2x3', x: 1 * 60, a: 90, doors: ['w'] },
+        { symbol: 'office--026--2x3', a: 90 },
+        { symbol: 'office--026--2x3', x: 2 * 60, a: 90, flip: 'y' },
+        { symbol: 'fresher--025--2x3', a: 90, flip: 'y' },
+        { symbol: 'office--023--2x3', x: 1 * 60, y: 1 * 60, a: 90 },
+      ]},
 
-      { symbol: 'empty-room--013--2x3', transform: [0, -1, -1, 0, 180, 840], walls: ['n'] },
-      { symbol: 'fresher--025--2x3', transform: [0, 1, 1, 0, 840, 660] },
-      { symbol: 'office--061--3x4', transform: [1, 0, 0, 1, 1020, 480] },
-      { symbol: 'office--023--2x3', transform: [0, 1, -1, 0, 1200, 720] },
-      { symbol: 'iris-valves--005--1x1', transform: [0, 1, 1, 0, 1140, 840] },
+      { y: 13 * 60, items: [
+        { symbol: 'office--020--2x3', x: 6 * 60 },
+        { symbol: 'office--020--2x3', x: 4 * 60, flip: 'y' },
+      ]},
+      { symbol: 'iris-valves--005--1x1', y: 14 * 60, x: 19 * 60, a: 90 },
 
-      { symbol: 'machinery--091--1.6x1.8', transform: [1, 0, 0, 1, 540 + 10, 960] },
-      { symbol: 'office--025--2x3', transform: [0, 1, 1, 0, 360, 960], doors: ['w'] },
-      { symbol: 'machinery--156--1.8x3.6', transform: [0, -1, 1, 0, 0, 1080 - 6] },
-      { symbol: 'office--025--2x3', transform: [0, 1, -1, 0, 840, 960], doors: ['w'] },
-      { symbol: 'machinery--357--2.2x4', transform: [1, 0, 0, 1, 960, 960] },
+      { y: 16 * 60, items: [
+        { symbol: 'machinery--156--1.8x3.6', a: 270, y: -6 },
+        { symbol: 'office--025--2x3', x: 2 * 60, a: 90, flip: 'y', doors: ['w'] },
+        { symbol: 'machinery--091--1.6x1.8', x: 12 },
+        { symbol: 'office--025--2x3', x: 12, a: 90, doors: ['w'] },
+        { symbol: 'machinery--357--2.2x4', x: 2 * 60 },
+      ]},
 
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 0, 1080] },
-      { symbol: 'iris-valves--005--1x1', transform: [-1, 0, 0, 1, 360, 1140] },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 360, 1080] },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 600, 1080] },
-      { symbol: 'fuel--010--2x4', transform: [1, 0, 0, 1, 960, 1080] },
+      { y: 18 * 60, items: [
+        { symbol: 'fuel--010--2x4' },
+        { symbol: 'fuel--010--2x4', x: 2 * 60 },
+        { symbol: 'fuel--010--2x4' },
+        { symbol: 'fuel--010--2x4', x: 2 * 60 },
+      ]},
+      { symbol: 'iris-valves--005--1x1', x: 5 * 60, y: 19 * 60, flip: 'y' },
     ],
   },
 

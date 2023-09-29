@@ -28,31 +28,19 @@ export async function createLayout(opts) {
   opts.def.items.forEach((item, i) => {
     
     if ('items' in item) {
-      const { items: _, ...stackBase } = item;
+      const row = item;
       /** Rightmost x of previous item */
-      let lastX = 0;
+      let lastX = row.x ?? 0;
 
-      item.items.forEach((stackItem) => {
-        const { symbol, walls, doors, ...base } = stackItem;
-
-        /** @type {Geomorph.LayoutDefItem} */
-        const induced = {
-          symbol, walls, doors,
-          a: /** @type {Geomorph.BaseLayoutDefItem['a']} */ (
-            ((stackBase.a ?? 0) + (base.a ?? 0)) % 360
-          ),
-          flip: combineFlips(stackBase.flip, base.flip),
-          x: (stackBase.x ?? 0) + lastX + (base.x ?? 0),
-          y: (stackBase.y ?? 0) + (base.y ?? 0),
-          // `transform` unsupported
-        };
-
-        layoutDefItemToTransform(induced, opts, m);
-        const { width, height } = opts.lookup[symbol];
-        lastX = (induced.x ?? 0) + (new Rect(0, 0, width, height)).applyMatrix(m).width / 5;
-
-        stackItem.transform = m.toArray(); // Used further below
-        addLayoutDefItemToGroups(induced, opts, m, groups);
+      row.items.forEach((rowItem) => {
+        rowItem.flip = combineFlips(row.flip, rowItem.flip);
+        rowItem.x = lastX + (rowItem.x ?? 0);
+        rowItem.y = (row.y ?? 0) + (rowItem.y ?? 0);
+        layoutDefItemToTransform(rowItem, opts, m);
+        rowItem.transform = m.toArray(); // Used further below
+        const { width, height } = opts.lookup[rowItem.symbol];
+        lastX = (rowItem.x ?? 0) + (new Rect(0, 0, width, height)).applyMatrix(m).width / 5;
+        addLayoutDefItemToGroups(rowItem, opts, m, groups);
       });
     } else {
       layoutDefItemToTransform(item, opts, m);

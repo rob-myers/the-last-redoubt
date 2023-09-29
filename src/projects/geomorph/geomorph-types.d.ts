@@ -352,7 +352,7 @@ declare namespace Geomorph {
     id: number;
     items: (
       | LayoutDefItem
-      | LayoutDefStack
+      | LayoutDefRow
     )[];
   }
 
@@ -362,10 +362,16 @@ declare namespace Geomorph {
     doors?: string[];
     /** Wall tags */
     walls?: string[];
-    
   }
   
-  export interface LayoutDefStack extends BaseLayoutDefItem {
+  /**
+   * These correspond to a row of items,
+   * where `flip` is applied pointwise.
+   */
+  export interface LayoutDefRow extends Pick<
+    BaseLayoutDefItem,
+    'transform' | 'x' | 'y' | 'flip'
+  > {
     items: LayoutDefItem[];
   }
   
