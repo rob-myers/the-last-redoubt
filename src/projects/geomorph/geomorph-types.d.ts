@@ -390,6 +390,11 @@ declare namespace Geomorph {
     a?: 0 | 90 | 180 | 270;
     /** flip (post-composed) */
     flip?: 'x' | 'y' | 'xy';
+    /**
+     * Rows items can pause aggregation of `x`,
+     * in order to create columns where `y` is aggregated.
+     */
+    pause?: boolean;
   }
 
   export type GeomorphKey = (

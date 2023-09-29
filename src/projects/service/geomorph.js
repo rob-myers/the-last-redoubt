@@ -30,16 +30,25 @@ export async function createLayout(opts) {
     if ('items' in item) {
       const row = item;
       /** Rightmost x of previous item */
-      let lastX = row.x ?? 0;
+      let prevX = row.x ?? 0;
+      /** Paused items aggregate Y */
+      let deltaY = 0;
 
       row.items.forEach((rowItem) => {
         rowItem.flip = combineFlips(row.flip, rowItem.flip);
-        rowItem.x = lastX + (rowItem.x ?? 0);
-        rowItem.y = (row.y ?? 0) + (rowItem.y ?? 0);
+        rowItem.x = prevX + (rowItem.x ?? 0);
+        rowItem.y = (row.y ?? 0) + deltaY + (rowItem.y ?? 0);
         layoutDefItemToTransform(rowItem, opts, m);
         rowItem.transform = m.toArray(); // Used further below
         const { width, height } = opts.lookup[rowItem.symbol];
-        lastX = (rowItem.x ?? 0) + (new Rect(0, 0, width, height)).applyMatrix(m).width / 5;
+        if (rowItem.pause) {
+          prevX = rowItem.x ?? 0;
+          deltaY += new Rect(0, 0, width, height).applyMatrix(m).height / 5;
+        } else {
+          prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
+          deltaY = 0;
+        }
+
         addLayoutDefItemToGroups(rowItem, opts, m, groups);
       });
     } else {
@@ -509,7 +518,7 @@ function layoutDefItemToTransform(item, opts, m) {
   }
 
   // Compute top left of symbol's AABB _after_ transformation
-  const { width, height } = opts.lookup[item.symbol];
+  const { width, height, pngRect } = opts.lookup[item.symbol];
   const { x, y } = (new Rect(0, 0, width, height)).applyMatrix(m);
   // Account for 5 * (-) scale factor of non-hull symbols
   m.e = (item.x ?? 0) - x / 5;
