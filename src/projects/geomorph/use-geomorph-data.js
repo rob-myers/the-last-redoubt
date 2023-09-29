@@ -145,6 +145,7 @@ export async function createGeomorphData(input) {
 
     if (roomId === -1 || (doorId === -1 && windowId === -1)) {
       console.warn(`useGeomorphData: light ${i} has room/door/windowId ${roomId}/${doorId}/${windowId}`);
+      return;
     } else if (reverse) {// Reversed light comes from otherRoomId
       const otherRoomId = doorId >= 0
         ? layout.doors[doorId].roomIds.find(x => x !== roomId)
