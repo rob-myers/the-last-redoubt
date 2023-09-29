@@ -35,15 +35,16 @@ export async function createLayout(opts) {
       let deltaY = 0;
 
       row.items.forEach((rowItem) => {
+        const origRowItemY  = rowItem.y ?? 0;
         rowItem.flip = combineFlips(row.flip, rowItem.flip);
         rowItem.x = prevX + (rowItem.x ?? 0);
-        rowItem.y = (row.y ?? 0) + deltaY + (rowItem.y ?? 0);
+        rowItem.y = (row.y ?? 0) + deltaY + origRowItemY;
         layoutDefItemToTransform(rowItem, opts, m);
         rowItem.transform = m.toArray(); // Used further below
         const { width, height } = opts.lookup[rowItem.symbol];
         if (rowItem.pause) {
           prevX = rowItem.x ?? 0;
-          deltaY += new Rect(0, 0, width, height).applyMatrix(m).height / 5;
+          deltaY += origRowItemY + new Rect(0, 0, width, height).applyMatrix(m).height / 5;
         } else {
           prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
           deltaY = 0;

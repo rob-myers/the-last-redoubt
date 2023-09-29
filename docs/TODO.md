@@ -9,9 +9,10 @@
   - ✅ support layout def "stacks" i.e. horizontal rows
   - ✅ only support horizontal rows
   - ✅ redo gm102 -- no need for rows, except where needed 
-  - 🚧 redo gm301
-  - redo gm302
+  - ✅ redo gm301
+  - 🚧 redo gm302
   - redo gm303
+
 
 - 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
