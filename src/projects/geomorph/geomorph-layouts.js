@@ -103,9 +103,9 @@ const layoutDefs = {
       
       { y: 6 * 60, items: [
         { symbol: 'engineering--047--4x7', a: 90 },
-        { symbol: 'office--004--2x2', a: 270, doors: ['w'], pause: true },
+        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], pause: true },
         { symbol: 'stateroom--012--2x2', a: 90, flip: 'x' },
-        { symbol: 'office--004--2x2', a: 270, doors: ['w'], pause: true },
+        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], pause: true },
         { symbol: 'stateroom--012--2x2', a: 90, flip: 'x' },
         { symbol: 'lab--012--3x4', a: 270 },
         { symbol: 'lounge--017--2x4', x: 2 * 60, pause: true },
