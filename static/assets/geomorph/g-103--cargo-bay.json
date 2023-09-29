@@ -5,7 +5,7 @@
     "key": "g-103--cargo-bay",
     "id": 103,
     "items": [
-      {"symbol": "103--hull"},
+      {"symbol": "103--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {"symbol": "cargo--003--2x4", "transform": [1, 0, 0, 1, 360, 0]},
       {"symbol": "cargo--003--2x4", "transform": [1, 0, 0, 1, 480, 0]},
       {"symbol": "cargo--003--2x4", "transform": [1, 0, 0, 1, 600, 0]},
@@ -4218,7 +4218,9 @@
     {
       "key": "103--hull",
       "pngHref": "/assets/debug/g-103--cargo-bay.png",
-      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212}
+      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+      "transformArray": [1, 0, 0, 1, 0, 0],
+      "transform": "matrix(1,0,0,1,0,0)"
     },
     {
       "key": "cargo--003--2x4",

@@ -5,7 +5,7 @@
     "key": "g-302--xboat-repair-bay",
     "id": 302,
     "items": [
-      {"symbol": "302--hull"},
+      {"symbol": "302--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
         "symbol": "office--006--2x2",
         "transform": [0, 1, -1, 0, 120, 120],
@@ -7136,7 +7136,9 @@
     {
       "key": "302--hull",
       "pngHref": "/assets/debug/g-302--xboat-repair-bay.png",
-      "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667}
+      "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
+      "transformArray": [1, 0, 0, 1, 0, 0],
+      "transform": "matrix(1,0,0,1,0,0)"
     },
     {
       "key": "office--006--2x2",

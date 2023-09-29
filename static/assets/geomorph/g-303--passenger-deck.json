@@ -5,7 +5,7 @@
     "key": "g-303--passenger-deck",
     "id": 303,
     "items": [
-      {"symbol": "303--hull"},
+      {"symbol": "303--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {"symbol": "medical-bed--006--1.6x3.6", "transform": [1, 0, 0, 1, 4, 10]},
       {"symbol": "low-berth--003--1x1", "transform": [0, 1, -1, 0, 240, 0]},
       {"symbol": "console--022--1x2", "transform": [-1, 0, 0, 1, 240, 60]},
@@ -16830,7 +16830,9 @@
     {
       "key": "303--hull",
       "pngHref": "/assets/debug/g-303--passenger-deck.png",
-      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613}
+      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
+      "transformArray": [1, 0, 0, 1, 0, 0],
+      "transform": "matrix(1,0,0,1,0,0)"
     },
     {
       "key": "medical-bed--006--1.6x3.6",

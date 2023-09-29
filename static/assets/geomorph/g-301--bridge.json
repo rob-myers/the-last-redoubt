@@ -5,7 +5,7 @@
     "key": "g-301--bridge",
     "id": 301,
     "items": [
-      {"symbol": "301--hull"},
+      {"symbol": "301--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
         "symbol": "_--table--004--0.33x0.16",
         "transform": [1, 0, 0, 1, 215, 245]
@@ -13957,7 +13957,9 @@
     {
       "key": "301--hull",
       "pngHref": "/assets/debug/g-301--bridge.png",
-      "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628}
+      "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
+      "transformArray": [1, 0, 0, 1, 0, 0],
+      "transform": "matrix(1,0,0,1,0,0)"
     },
     {
       "key": "_--table--004--0.33x0.16",
