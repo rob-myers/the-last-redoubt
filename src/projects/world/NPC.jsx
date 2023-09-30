@@ -94,8 +94,27 @@ export default function NPC({ api, npcKey }) {
  */
 
 const rootCss = css`
+  will-change: transform;
   position: absolute;
   pointer-events: none;
+
+  .body {
+    will-change: transform background-position opacity;
+    position: absolute;
+    // Related to geomorph drop-shadow i.e. render-geomorph shadowBlur
+    filter: brightness(90%) drop-shadow(0 0 72px black);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .fov-indicator {
+      display: var(${cssName.npcsDebugDisplay});
+      position: absolute;
+      transform: scale(3.2) translateX(50%);
+      opacity: 0.4;
+    }
+  }
 
   &.player .body {
     ~ div {
@@ -114,23 +133,6 @@ const rootCss = css`
     filter: grayscale(1) brightness(100%);
   }
 
-  .body {
-    position: absolute;
-    // Related to geomorph drop-shadow i.e. render-geomorph shadowBlur
-    filter: brightness(90%) drop-shadow(0 0 72px black);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    .fov-indicator {
-      display: var(${cssName.npcsDebugDisplay});
-      position: absolute;
-      transform: scale(3.2) translateX(50%);
-      opacity: 0.4;
-    }
-  }
-  
   .interact-circle {
     display: var(${cssName.npcsDebugDisplay});
     position: absolute;

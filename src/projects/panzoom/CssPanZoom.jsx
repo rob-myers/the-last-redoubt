@@ -513,7 +513,12 @@ const rootCss = css`
   touch-action: none;
   cursor: auto;
 
+  .follow {
+    will-change: transform;
+  }
+
   .panzoom {
+    will-change: transform;
     user-select: none;
     touch-action: none;
     transform-origin: 0 0;
