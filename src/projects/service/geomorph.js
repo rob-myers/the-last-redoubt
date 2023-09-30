@@ -64,7 +64,6 @@ export async function createLayout(opts) {
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
-  // 🚧 compute these earlier
   const flatItems = opts.def.items.flatMap(x => 'items' in x ? x.items : x);
   const flatSymbols = flatItems.map(y => opts.lookup[y.symbol]);
   const hullSym = flatSymbols[0];
@@ -561,28 +560,6 @@ function extendHullDoorTags(door, hullRect) {
   else if (bounds.right >= hullRect.right) door.meta.hullDir = 'e';
   else if (bounds.bottom >= hullRect.bottom) door.meta.hullDir = 's';
   else if (bounds.x <= hullRect.x) door.meta.hullDir = 'w';
-}
-
-/**
- * 🚧 UNUSED probably needs adaptation
- * Find a stand point close to `target` in same room.
- * Assume the target `point` world coords, whereas stand points local to geomorph.
- * @param {{ point: Geom.VectJson; meta: Geomorph.PointMeta }} target
- * @param {Geomorph.GeomorphDataInstance} gm 
- * @param {number} [maxDistSqr]
- */
-export function getCloseStandPoint({point, meta}, gm, maxDistSqr = Number.POSITIVE_INFINITY) {
-  if (typeof meta.roomId !== 'number') {
-    throw Error(`meta.roomId must be a number (${JSON.stringify({ point, meta })})`);
-  }
-  const localPoint = gm.inverseMatrix.transformPoint(Vect.from(point));
-  // 🚧 replace by rbush query
-  const standPoints = Object.values(gm.roomDecor[meta.roomId]).flatMap(x => x.items).flatMap(p => p.type === 'point' && p.meta.stand && !localPoint.equals(p) && p || []);
-  const closestStandPoint = geom.findClosestPoint(standPoints, localPoint, maxDistSqr);
-  if (closestStandPoint === null) {
-    throw Error(`nearby stand point not found (${gm.key}: ${JSON.stringify({ localPoint, meta })})`);
-  }
-  return gm.matrix.transformPoint(closestStandPoint);
 }
 
 /**

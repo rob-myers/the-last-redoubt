@@ -71,6 +71,9 @@ export async function renderGeomorph(
     drawTriangulation(ctxt, layout.navZone)
   }
 
+  // symbols can draw polygons on floor e.g. "poly floor fillColor=#00000044 ..."
+  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !!x.meta.floor);
+
   const { singles, obstacles, walls } = layout.groups;
   const doorPolys = singlesToPolys(singles, 'door');
 
@@ -141,26 +144,17 @@ export async function renderGeomorph(
   const initTransform = ctxt.getTransform();
 
   //#region symbol PNGs
-  const innerItems = layout.items.slice(1);
-  for (const { key, pngHref, pngRect, transformArray } of innerItems) {
+  for (const { key, pngHref, pngRect, transformArray } of layout.items.slice(1)) {
     const image = await getPng(pngHref);
-    transformArray && ctxt.transform(...transformArray);
+    ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
+    // draw symbol png
     ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
-
-    // can shade symbols e.g. "poly fillColor=#00000044"
-    const polySingles = lookup[key].singles.flatMap(x => x.meta.poly ? x : []);
-    polySingles.forEach(({ meta, poly }) => {
-      const [fillColor, strokeColor, strokeWidth] = [
-        typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
-        typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
-        typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
-      ];
-      setStyle(ctxt, fillColor, strokeColor, strokeWidth);
-      fillPolygons(ctxt, [poly]);
-    });
     ctxt.setTransform(initTransform);
   }
+  // symbols can have shading e.g. "poly fillColor=#00000044 ..."
+  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !x.meta.floor);
+
   //#endregion
 
   //#region overlay
@@ -235,4 +229,30 @@ export function drawThinDoors(ctxt, layout) {
     ctxt.lineTo(dst.x, dst.y);
     ctxt.stroke();
   });
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {Geomorph.ParsedLayout} layout
+ * @param {Geomorph.SymbolLookup} lookup
+ * @param {(x: Geomorph.SvgGroupWithTags<Poly>) => boolean} filter 
+ */
+function drawPolySingles(ctxt, layout, lookup, filter) {
+  const initTransform = ctxt.getTransform();
+  for (const { key, transformArray } of layout.items.slice(1)) {
+    ctxt.transform(...transformArray ?? [1, 0, 0, 1, 0, 0]);
+    ctxt.scale(0.2, 0.2);
+    const polySingles = lookup[key].singles.filter(filter);
+    polySingles.forEach(({ meta, poly }) => {
+      const [fillColor, strokeColor, strokeWidth] = [
+        typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
+        typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
+        typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
+      ];
+      setStyle(ctxt, fillColor, strokeColor, strokeWidth);
+      fillPolygons(ctxt, [poly]);
+    });
+    ctxt.setTransform(initTransform);
+  }
+
 }

@@ -49,9 +49,7 @@ const outputPngFilename = `${layoutDef.key}${
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
 const staticDir = path.resolve(__dirname, '../../static');
 
-main();
-
-async function main() {
+(async function main() {
   try {
     // Draw unlit geomorph
     const { layout, canvas, pngRect } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale});
@@ -87,7 +85,7 @@ async function main() {
   } catch (e) {
     error(e);
   }
-};
+})();
 
 /**
  * Compute and render layout, given layout definition.

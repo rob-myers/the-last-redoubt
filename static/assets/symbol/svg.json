@@ -8869,6 +8869,7 @@
       {
         "meta": {
           "poly": true,
+          "floor": true,
           "fillColor": "#fff",
           "strokeColor": "#000",
           "strokeWidth": 4
@@ -8950,7 +8951,7 @@
     "width": 600,
     "height": 900,
     "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
-    "lastModified": 1688474763538.0386
+    "lastModified": 1696081333118.798
   },
   "lounge--009--2x3": {
     "key": "lounge--009--2x3",
