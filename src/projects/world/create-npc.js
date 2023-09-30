@@ -902,8 +902,9 @@ export default function createNpc(
         this.nextWalk = null;
         throw Error('paused: cannot walk');
       }
-      if (this.isWalking() || this.isPaused()) {        
-        await this.cancel(); // 🤔
+      if (this.isPaused()) {
+        // ⛔️ isWalking cancel causes jerky extended walk
+        await this.cancel();
       }
       if (navPath.path.length === 0) {
         this.nextWalk = null;
