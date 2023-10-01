@@ -451,7 +451,7 @@
       w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid })
       api.addSuspend(() => { w.panZoom.animationAction("pause"); return true; })
       api.addResume(() => { w.panZoom.animationAction("play"); return true; })
-      api.addCleanup(() => w.panZoom.animationAction("cancel"))
+      api.addCleanup(() => w.panZoom.animationAction("cancelPanZoom"))
 
       try {
         if (typeof p1 === "number") {

@@ -50,13 +50,13 @@ export default function CssPanZoom(props) {
           state.isIdle() && state.events.next({ key: 'started-wheel' });
           state.delayIdle();
           // Permit manual panzoom whilst following
-          !state.isFollowing() && state.animationAction('cancel');
+          !state.isFollowing() && state.animationAction('cancelPanZoom');
           state.zoomWithWheel(e);
         },
         pointerdown(e) {
           state.delayIdle();
           ensurePointer(state.pointers, e);
-          !state.isFollowing() && state.animationAction('cancel');
+          !state.isFollowing() && state.animationAction('cancelPanZoom');
 
           state.ptrsAllDown = true;
           state.origin = new Vect(state.x, state.y);
@@ -157,10 +157,10 @@ export default function CssPanZoom(props) {
 
       async animationAction(type) {
         switch (type) {
-          case 'cancel': {
-            // 🤔 don't cancel tracking when cancelling panzoom
+          case 'cancelPanZoom': {
             state.syncStyles();
             const anim = state.panzoomAnim;
+            // await Promise.allSettled([anim?.finished, anim?.cancel()]);
             anim && isAnimAttached(anim, state.panzoomEl) && await new Promise(resolve => {
               anim.addEventListener('cancel', resolve)
               anim.cancel();
@@ -259,7 +259,7 @@ export default function CssPanZoom(props) {
           return await state.panZoomTo({ durationMs: 1000, worldPoint: path[0], id: 'followPath' });
         }
 
-        await state.animationAction('cancel');
+        await state.animationAction('cancelPanZoom');
         await state.animationAction('cancelFollow');
 
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
@@ -341,7 +341,7 @@ export default function CssPanZoom(props) {
           easing = 'ease',
           id = 'panZoomTo',
         } = opts;
-        await state.animationAction('cancel');
+        await state.animationAction('cancelPanZoom');
         /**
          * Compute (x_i, y_i) s.t. `translate(x_i, y_i) scale(scale)` has `worldPoint` at screen center,
          * i.e. x_i + (scale * worldPoint.x_i) = screenWidth/2

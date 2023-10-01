@@ -709,7 +709,8 @@ export default function NPCs(props) {
       ).pipe(
         tap(x => {
           if (x.key === 'npc-internal' && x.npcKey === npcKey) {
-            x.event === 'cancelled' && api.panZoom.animationAction('cancel')
+            // 🤔 should cancelFollow too?
+            x.event === 'cancelled' && api.panZoom.animationAction('cancelPanZoom')
             || x.event === 'paused' && api.panZoom.animationAction('pause')
             || x.event === 'resumed' && api.panZoom.animationAction('play');
           }

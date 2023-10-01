@@ -55,7 +55,7 @@ declare namespace PanZoom {
      */
     clickIds: string[];
     
-    animationAction(type: 'cancel' | 'cancelFollow' | 'pause' | 'play'): Promise<void>;
+    animationAction(type: 'cancelPanZoom' | 'cancelFollow' | 'pause' | 'play'): Promise<void>;
     private clampScale(input: number): number;
     private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
     private delayIdle(): void;
