@@ -718,7 +718,8 @@ export default function NPCs(props) {
           }
         }),
         filter(x => (
-          processApi.isRunning() && (
+          processApi.isRunning() &&
+            !npc.isPaused() &&
             x.key === 'init-track'
             || x.key === 'ui-idle'
             || x.key === 'resized-bounds'
@@ -729,7 +730,6 @@ export default function NPCs(props) {
             || (x.key === 'spawned-npc' && x.npcKey === npcKey)
             || (x.key === 'changed-speed' && x.npcKey === npcKey)
             || (x.key === 'resumed-track' && x.npcKey === npcKey)
-          )
         )),
       ).subscribe({
         async next(msg) {
