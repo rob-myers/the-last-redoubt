@@ -78,6 +78,14 @@
   copy(p) {
     return this.set(p.x, p.y);
   }
+
+  /**
+   * @param {Geom.VectJson} p 
+   * @param {Geom.VectJson} q 
+   */
+  static distanceBetween(p, q) {
+    return Math.sqrt((q.x - p.x) ** 2 + (q.y - p.y) ** 2);
+  }
   
   /** @param {Geom.VectJson} p */
   distanceTo(p) {
