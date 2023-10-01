@@ -13479,18 +13479,16 @@
         "meta": {},
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[56.5, 110], [56.5, 238], [543.5, 238], [543.5, 110]]
-          ]
+          "coordinates": [[[-3.5, -4], [-3.5, 124], [483.5, 124], [483.5, -4]]]
         }
       }
     ],
     "walls": [],
     "singles": [],
-    "width": 600,
-    "height": 300,
-    "pngRect": {"x": 56.5, "y": 110, "width": 487, "height": 128},
-    "lastModified": 1666690702031.655
+    "width": 480,
+    "height": 120,
+    "pngRect": {"x": -3.5, "y": -4, "width": 487, "height": 128},
+    "lastModified": 1696151859049.8782
   },
   "shop--028--0.8x1.6": {
     "key": "shop--028--0.8x1.6",

@@ -208,17 +208,17 @@ const layoutDefs = {
     id: 302,
     items: [
       { symbol: '302--hull' },
-      { symbol: 'office--006--2x2', transform: [0, 1, -1, 0, 120, 120], doors: ['e', 'w'] },
-      { symbol: 'empty-room--020--2x4', transform: [-1, 0, 0, 1, 1200, 0], doors: ['s'] },
+      { symbol: 'office--006--2x2', y: 2 * 60, a: 90, doors: ['e', 'w'] },
+      { symbol: 'sensors--003--1x1.4', transform: [...getAngleMatrix(45), 90 + 6, -60] },
 
-      { symbol: 'lounge--015--2x4', transform: [-1, 0, 0, -1, 480, 540] },
-      { symbol: 'window--007--0x2.4', transform: [1, 0, 0, 1, 240, 420 - 8] },
-      { symbol: 'empty-room--006--2x2', transform: [0, 1, -1, 0, 600, 420], doors: ['e'] },
-      { symbol: 'ships-locker--011--1x2', transform: [0, 1, 1, 0, 540, 420] },
-      { symbol: 'iris-valves--005--1x1', transform: [0, 1, -1, 0, 1200, 240] },
-      { symbol: 'shop--028--0.8x1.6', transform: [0, 1, -1, 0, 660, 420] },
-      { symbol: 'shop--027--0.4x1.6', transform: [-1, 0, 0, 1, 900, 480] },
-      { symbol: 'sensors--003--1x1.4', transform: [...getAngleMatrix(45), 90 + 5, -60 + 1] },
+      { y: 7 * 60, x: 4 * 60, items: [
+        { symbol: 'lounge--015--2x4', flip: 'xy' },
+        { symbol: 'ships-locker--011--1x2', a: 90, },
+        { symbol: 'empty-room--006--2x2', x: -1 * 60, a: 90, doors: ['e'] },
+        { symbol: 'shop--028--0.8x1.6', a: 90 },
+        { symbol: 'shop--027--0.4x1.6', x: 2 * 60 + 12, y: 1 * 60 + 24, flip: 'x' },
+      ]},
+      { symbol: 'window--007--0x2.4', y: 7 * 60 - 8, x: 4 * 60, },
     ],
   },
   "g-303--passenger-deck": {

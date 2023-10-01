@@ -10,8 +10,8 @@
   - ✅ only support horizontal rows
   - ✅ redo gm102 -- no need for rows, except where needed 
   - ✅ redo gm301
-  - 🚧 redo gm302
-  - redo gm303
+  - ✅ redo gm302
+  - 🚧redo gm303
 
 - ✅ BUG cancel during extendWalk is setting idle?
 - ✅ BUG lifeboat--small-craft chairs missing?
