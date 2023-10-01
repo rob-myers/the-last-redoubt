@@ -750,16 +750,16 @@ export default function NPCs(props) {
             return changeStatus('no-track');
           }
           
-          if (// npc/camera not moving/close?
-            (npc.anim.spriteSheet !== 'walk')
-            && (api.panZoom.panzoomAnim === null || ['finished', 'idle'].includes(api.panZoom.panzoomAnim.playState))
+          // npc/camera not moving/close?
+          if (msg.key === 'stopped-walking' || (
+            npc.anim.spriteSheet !== 'walk'
+            && api.panZoom.panzoomAnim === null
             && api.panZoom.distanceTo(npc.getPosition()) > 10
-          ) {
+          )) {
             changeStatus('panzoom-to');
             await api.panZoom.animationAction('cancelFollow');
             await api.panZoom.panZoomTo({
               durationMs: 2000,
-              // scale: baseZoom / (api.panZoom.cenScale || 1),
               scale: baseZoom,
               worldPoint: npc.getPosition(),
             }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));

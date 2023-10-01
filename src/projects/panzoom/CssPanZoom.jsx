@@ -352,7 +352,7 @@ export default function CssPanZoom(props) {
         const dstX = screenWidth/2 + state.rootEl.scrollLeft - (scale * worldPoint.x) - trackX;
         const dstY = screenHeight/2 + state.rootEl.scrollTop - (scale * worldPoint.y) - trackY;
 
-        state.panzoomAnim = state.panzoomEl.animate([
+        const anim = state.panzoomAnim = state.panzoomEl.animate([
           { offset: 0 },
           { offset: 1, transform: `translate(${dstX}px, ${dstY}px) scale(${scale})` },
         ], {
@@ -366,20 +366,18 @@ export default function CssPanZoom(props) {
         state.events.next({ key: 'started-panzoom-to' });
         state.panzoomEl.classList.add('hide-grid'); // Avoid Chrome flicker
 
-        let finished = false;
         await new Promise((resolve, reject) => {
-          const anim = /** @type {Animation} */ (state.panzoomAnim);
           anim.addEventListener('finish', () => {
-            finished = true;
+            this.panzoomAnim === anim && (this.panzoomAnim = null);
             resolve('completed');
             state.events.next({ key: 'completed-panzoom-to' });
-            // Release animation e.g. so can manually alter styles
             state.releaseAnim(anim, state.panzoomEl);
             state.syncStyles();
           });
           anim.addEventListener('cancel', async () => {
+            this.panzoomAnim === anim && (this.panzoomAnim = null);
             reject('cancelled');
-            !finished && state.events.next({ key: 'cancelled-panzoom-to' });
+            anim.playState !== 'finished' && state.events.next({ key: 'cancelled-panzoom-to' });
             state.panzoomEl.classList.remove('hide-grid');
             state.syncStyles();
           });

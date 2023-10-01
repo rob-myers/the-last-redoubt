@@ -927,12 +927,13 @@ export default function createNpc(
         }
 
         this.startAnimation('idle');
-        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);
         }
         throw err;
+      } finally {
+        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.def.key });
       }
     },
     /**

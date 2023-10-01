@@ -15,6 +15,8 @@
 
 - ✅ BUG cancel during extendWalk is setting idle?
 - ✅ BUG lifeboat--small-craft chairs missing?
+- ✅ BUG tracking should stop when player stopped by door
+  - `stopped-walking` not triggered on door collide?
 - 🚧 BUG tracking should pause when pause stationary player
 - BUG track: panzoom-to / no-track alternation
 
