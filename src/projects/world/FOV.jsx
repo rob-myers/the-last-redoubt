@@ -92,7 +92,7 @@ export default function FOV(props) {
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set };
     },
-    mapAct(action, timeMs) {// ℹ️ hopefully the browser cleans stale animations
+    mapAct(action, timeMs, canHideMap = false) {
       if (action === 'show') {
         state.anim.labels = state.el.labels.animate(
           [{ opacity: 1 }],
@@ -107,10 +107,10 @@ export default function FOV(props) {
           [{ opacity: 0 }],
           { fill: 'forwards', duration: timeMs ?? 1500 },
         );
-        state.anim.map = state.el.map.animate(
+        canHideMap && (state.anim.map = state.el.map.animate(
           [{ filter: geomorphMapFilterHidden }],
           { fill: 'forwards', duration: timeMs ?? 750 },
-        );
+        ));
       } else if (action === 'show-for-ms') {
         timeMs ??= 1000;
         const durationMs = 500 + timeMs + 500; // ½ sec fade in/out
@@ -122,14 +122,14 @@ export default function FOV(props) {
           ],
           { fill: 'forwards', duration: durationMs },
         );
-        state.anim.map = state.el.map.animate(
+        canHideMap && (state.anim.map = state.el.map.animate(
           [
             { filter: geomorphMapFilterShown, offset: 500 / durationMs },
             { filter: geomorphMapFilterShown, offset: (500 + timeMs) / durationMs },
             { filter: geomorphMapFilterHidden, offset: 1 },
           ],
           { fill: 'forwards', duration: durationMs },
-        );
+        ));
       } else if (action === undefined) {
         return getComputedStyle(state.el.labels).opacity;
       } else if (action === 'pause') {
@@ -160,7 +160,11 @@ export default function FOV(props) {
        * @see {viewPolys} view polygons for current/adjacent geomorphs; we include the current room.
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
-      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, Array.from(state.nearDoorIds));
+      /**
+       * 👇 we have disconnected peeking
+       */
+      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, []);
+      // const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, Array.from(state.nearDoorIds));
       const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(cmp.rootedOpenIds);
       // If no door is open, we at least have current room
       gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });

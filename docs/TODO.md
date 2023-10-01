@@ -11,15 +11,18 @@
   - ✅ redo gm102 -- no need for rows, except where needed 
   - ✅ redo gm301
   - ✅ redo gm302
-  - 🚧redo gm303
+  - 🚧 redo gm303
 
 - ✅ BUG cancel during extendWalk is setting idle?
 - ✅ BUG lifeboat--small-craft chairs missing?
-- BUG tracking should pause when pause stationary player
+- 🚧 BUG tracking should pause when pause stationary player
 - BUG track: panzoom-to / no-track alternation
 
 - 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
+
+- ✅ `npc map {show,hide,show-for-secs}` only applies to labels
+- cleanup e.g. `npc map {showLabels,hideLabels,showLabelsSecs}`
 
 - doors should be easier to open as player walks
 - abstract code:
