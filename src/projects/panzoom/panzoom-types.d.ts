@@ -44,7 +44,10 @@ declare namespace PanZoom {
     };
     
     events: import('rxjs').Subject<PanZoom.CssInternalEvent>;
-    /** UI is considered idle iff this is 0 */
+    /**
+     * UI is considered idle i.e. _not used by user_
+     * iff this is `0`.
+     */
     idleTimeoutId: number;
     /**
      * Pending click identifiers, provided by code external to CssPanZoom.
@@ -56,7 +59,7 @@ declare namespace PanZoom {
     private clampScale(input: number): number;
     private computePathKeyframes(path: Geom.Vect[], animScaleFactor: number): { keyframes: Keyframe[]; duration: number; };
     private delayIdle(): void;
-    distanceTo(worldPosition: Geom.Vect): number;
+    distanceTo(worldPosition: Geom.VectJson): number;
     /** CSS `transform`s placing world points at center of screen  */
     private getCenteredCssTransforms(worldPoints: Geom.VectJson[]): string[];
     /** Taking CSS animation into account */
@@ -66,6 +69,7 @@ declare namespace PanZoom {
     private getWorldAtCenter(): Geom.VectJson;
     private idleTimeout(): void;
     private isFollowing(): boolean;
+    /** True iff the user is NOT manually panning and zooming via pointers/mousewheel */
     isIdle(): boolean;
     async panZoomTo(opts: {
       durationMs: number;

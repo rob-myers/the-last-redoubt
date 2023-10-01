@@ -250,7 +250,7 @@ export default function CssPanZoom(props) {
         state.idleTimeoutId = window.setTimeout(state.idleTimeout, state.opts.idleMs);
       },
       distanceTo(worldPosition) {
-        return worldPosition.distanceTo(state.getWorldAtCenter());
+        return Vect.distanceBetween(worldPosition, state.getWorldAtCenter());
       },
       async followPath(path, { animScaleFactor }) {
         if (path.length === 0) {
@@ -312,10 +312,11 @@ export default function CssPanZoom(props) {
       },
       getWorldAtCenter() {
         const parentBounds = state.rootEl.getBoundingClientRect();
+        const { x: trackX, y: trackY } = state.getTrackingTranslate();
         const current = state.getCurrentTransform();
         // Need scroll offset to get actual current translation
-        const worldX = (parentBounds.width/2 - (current.x - state.rootEl.scrollLeft)) / current.scale;
-        const worldY = (parentBounds.height/2 - (current.y - state.rootEl.scrollTop)) / current.scale;
+        const worldX = (parentBounds.width/2 - trackX - (current.x - state.rootEl.scrollLeft)) / current.scale;
+        const worldY = (parentBounds.height/2 - trackY - (current.y - state.rootEl.scrollTop)) / current.scale;
         return { x: worldX, y: worldY };
       },
       idleTimeout() {
@@ -342,7 +343,7 @@ export default function CssPanZoom(props) {
         } = opts;
         await state.animationAction('cancel');
         /**
-         * Compute (x, y) s.t. `translate(x_1, y_2) scale(scale)` has `worldPoint` at screen center,
+         * Compute (x_i, y_i) s.t. `translate(x_i, y_i) scale(scale)` has `worldPoint` at screen center,
          * i.e. x_i + (scale * worldPoint.x_i) = screenWidth/2
          * i.e. x_i := screenWidth/2 - (scale * worldPoint.x_i)
          * For screen center also need to take account of scroll{Left,Top}.
@@ -362,26 +363,19 @@ export default function CssPanZoom(props) {
           easing,
           id,
         });
-
-        state.events.next({ key: 'started-panzoom-to' });
-        state.panzoomEl.classList.add('hide-grid'); // Avoid Chrome flicker
-
-        await new Promise((resolve, reject) => {
-          anim.addEventListener('finish', () => {
-            this.panzoomAnim === anim && (this.panzoomAnim = null);
-            resolve('completed');
-            state.events.next({ key: 'completed-panzoom-to' });
-            state.releaseAnim(anim, state.panzoomEl);
-            state.syncStyles();
-          });
-          anim.addEventListener('cancel', async () => {
-            this.panzoomAnim === anim && (this.panzoomAnim = null);
-            reject('cancelled');
-            anim.playState !== 'finished' && state.events.next({ key: 'cancelled-panzoom-to' });
-            state.panzoomEl.classList.remove('hide-grid');
-            state.syncStyles();
-          });
-        });
+        
+        try {
+          state.events.next({ key: 'started-panzoom-to' });
+          await anim.finished;
+          this.panzoomAnim === anim && (this.panzoomAnim = null);
+          state.events.next({ key: 'completed-panzoom-to' });
+          state.releaseAnim(anim, state.panzoomEl);
+        } catch (e) {
+          this.panzoomAnim === anim && (this.panzoomAnim = null);
+          state.events.next({ key: 'cancelled-panzoom-to' });
+        } finally {
+          state.syncStyles();
+        }
       },
       releaseAnim(anim, parentEl) {
         if (isAnimAttached(anim, parentEl)) {

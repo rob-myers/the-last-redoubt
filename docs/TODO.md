@@ -18,7 +18,7 @@
 - ✅ BUG tracking should stop when player stopped by door
   - `stopped-walking` not triggered on door collide?
 - ✅ BUG tracking should pause when pause stationary player
-- 🚧 BUG track: panzoom-to / no-track alternation
+- ✅ BUG track: panzoom-to / no-track alternation
 
 - 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
@@ -26,6 +26,7 @@
 - ✅ `npc map {show,hide,show-for-secs}` only applies to labels
 - cleanup e.g. `npc map {showLabels,hideLabels,showLabelsSecs}`
 
+- use animation.finished promise elsewhere to clean things up
 - doors should be easier to open as player walks
 - abstract code:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);

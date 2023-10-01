@@ -719,7 +719,7 @@ export default function NPCs(props) {
         }),
         filter(x => (
           processApi.isRunning() &&
-            !npc.isPaused() &&
+          !npc.isPaused() && (
             x.key === 'init-track'
             || x.key === 'ui-idle'
             || x.key === 'resized-bounds'
@@ -730,6 +730,7 @@ export default function NPCs(props) {
             || (x.key === 'spawned-npc' && x.npcKey === npcKey)
             || (x.key === 'changed-speed' && x.npcKey === npcKey)
             || (x.key === 'resumed-track' && x.npcKey === npcKey)
+            )
         )),
       ).subscribe({
         async next(msg) {
@@ -746,7 +747,7 @@ export default function NPCs(props) {
             }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))); // ignore Error('cancelled')
           }
 
-          if (!api.panZoom.isIdle()) {
+          if (!api.panZoom.isIdle()) {// User is manually pan/zooming
             return changeStatus('no-track');
           }
           

@@ -280,6 +280,7 @@ world 'x => x.fov'
 world fov
 world "x => x.gmGraph.findRoomContaining($( click 1 ))"
 world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"
+world panZoom.distanceTo $( npc rob getPosition )
 
 gm 0 'x => x.roomGraph'
 gm 0 hullDoors | map length
