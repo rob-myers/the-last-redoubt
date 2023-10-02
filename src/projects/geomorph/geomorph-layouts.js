@@ -227,41 +227,51 @@ const layoutDefs = {
     items: [
       { symbol: '303--hull' },
 
-      { symbol: 'medical-bed--006--1.6x3.6', transform: [1, 0, 0, 1, 4, 10] },
-      { symbol: 'low-berth--003--1x1', transform: [0, 1, -1, 0, 240, 0] },
-      { symbol: 'console--022--1x2', transform: [-1, 0, 0, 1, 240, 60] },
-      { symbol: 'stateroom--035--2x3', transform: [1, 0, 0, 1, 240, 0] },
-      { symbol: 'stateroom--035--2x3', transform: [1, 0, 0, 1, 360, 0] },
-      { symbol: 'stateroom--035--2x3', transform: [1, 0, 0, 1, 480, 0] },
-      { symbol: 'stateroom--035--2x3', transform: [-1, 0, 0, 1, 720, 0] },
-      { symbol: 'stateroom--100--3x4', transform: [0, -1, -1, 0, 960, 180] },
-      { symbol: 'galley-and-mess-halls--006--2x4', transform: [-1, 0, 0, 1, 1200, 0] },
-      { symbol: 'table--009--0.8x0.8', transform: [1, 0, 0, 1, 960, 120] },
-      { symbol: 'table--009--0.8x0.8', transform: [1, 0, 0, 1, 960, 240 - 2] },
-      
-      { symbol: 'iris-valves--005--1x1', transform: [0, 1, 1, 0, 1140, 240 + 2] },
-      { symbol: 'fresher--002--0.4x0.6', transform: [1, 0, 0, -1, 200, 300] },
-      { symbol: 'gaming-tables--001--1x2', transform: [1, 0, 0, 1, 480, 240] },
-      { symbol: 'couch-and-chairs--006--0.4x2', transform: [1, 0, 0, -1, 660 + 10, 360] },
-      { symbol: 'couch-and-chairs--006--0.4x2', transform: [0, 1, -1, 0, 840, 240] },
+      { items: [
+        { symbol: 'medical-bed--006--1.6x3.6', y: 12 },
+        { symbol: 'low-berth--003--1x1', x: 24 + 1 * 60, a: 90, pause: true },
+        { symbol: 'console--022--1x2', flip: 'y' },
+        { symbol: 'stateroom--035--2x3' },
+        { symbol: 'stateroom--035--2x3' },
+        { symbol: 'stateroom--035--2x3' },
+        { symbol: 'stateroom--035--2x3', flip: 'y' },
+        { symbol: 'stateroom--100--3x4', a: 90, flip: 'x' },
+        { symbol: 'galley-and-mess-halls--006--2x4', flip: 'y', pause: true },
+        { symbol: 'table--009--0.8x0.8', pause: true },
+        { symbol: 'table--009--0.8x0.8', y: 1 * 60 },
+      ]},
 
-      { symbol: 'machinery--077--1.6x1.8', transform: [0, 1, -1, 0, 160, 380] },
-      { symbol: 'machinery--077--1.6x1.8', transform: [-1, 0, 0, 1, 220, 440] },
-      { symbol: 'console--018--1x1', transform: [-1, 0, 0, 1, 120, 480] },
-      { symbol: 'iris-valves--005--1x1', transform: [-1, 0, 0, 1, 360, 540] },
-      { symbol: 'stateroom--036--2x4', transform: [1, 0, 0, -1, 360, 600] },
-      { symbol: 'stateroom--036--2x4', transform: [1, 0, 0, -1, 480, 600] },
-      { symbol: 'stateroom--036--2x4', transform: [-1, 0, 0, -1, 720, 600] },
-      { symbol: 'stateroom--036--2x4', transform: [-1, 0, 0, -1, 840, 600] },
-      { symbol: 'office--089--4x4', transform: [-1, 0, 0, 1, 1200, 360] },
-
-      // Draw later so above rooms
-      { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 90, -6] },
-      { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 270, -6] },
-      { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 390, -6] },
-      { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 510, -6] },
-      { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 630, -6] },
+      { x: 1 * 60 + 30, y: -6, items: [
+        { symbol: 'window--001--0x1' },
+        { symbol: 'window--001--0x1', x: 2 * 60 },
+        { symbol: 'window--001--0x1', x: 1 * 60 },
+        { symbol: 'window--001--0x1', x: 1 * 60 },
+        { symbol: 'window--001--0x1', x: 1 * 60 },
+      ]},
       // { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 870, -6] },
+
+      { symbol: 'iris-valves--005--1x1', x: 19 * 60, y: 4 * 60, a: 90 },
+      { symbol: 'iris-valves--005--1x1', y: 9 * 60, x: 5 * 60, flip: 'y' },
+
+      { x: 3 * 60, y: 4 * 60, items: [
+        { symbol: 'fresher--002--0.4x0.6', flip: 'x' },
+        { symbol: 'gaming-tables--001--1x2', x: 4 * 60, },
+        { symbol: 'couch-and-chairs--006--0.4x2', x: 1 * 60 + 12, flip: 'y' },
+        { symbol: 'couch-and-chairs--006--0.4x2', x: 24, a: 90 },
+      ]},
+
+      { symbol: 'machinery--077--1.6x1.8', y: 6 * 60 + 16, x: 1 * 60 - 6, a: 90 },
+      { symbol: 'machinery--077--1.6x1.8', y: 7 * 60 + 16, x: 2 * 60 + 6, flip: 'y' },
+      { symbol: 'console--018--1x1', y: 8 * 60, x: 1 * 60, flip: 'y' },
+
+      { x: 6 * 60, y: 6 * 60, items: [
+        { symbol: 'stateroom--036--2x4', flip: 'x' },
+        { symbol: 'stateroom--036--2x4', flip: 'x' },
+        { symbol: 'stateroom--036--2x4', flip: 'xy' },
+        { symbol: 'stateroom--036--2x4', flip: 'xy' },
+        { symbol: 'office--089--4x4', x: 2 * 60, flip: 'y' },
+      ]},
+
     ],
   },
 };

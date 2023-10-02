@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 redo geomorph layout syntax
+- ✅ redo geomorph layout syntax
   - ✅ GeomorphEdit remembers last selected
   - ✅ can specify { x, y, a?: 0 | 90 | 180 | 270, flip?: 'x' | 'y' | 'xy' } where { x, y } final topLeft
   - ✅ specifications take effect inside `createLayout`
@@ -11,7 +11,7 @@
   - ✅ redo gm102 -- no need for rows, except where needed 
   - ✅ redo gm301
   - ✅ redo gm302
-  - 🚧 redo gm303
+  - ✅ redo gm303
 
 - ✅ BUG cancel during extendWalk is setting idle?
 - ✅ BUG lifeboat--small-craft chairs missing?
@@ -24,12 +24,12 @@
 - ✅ BUG tracking should stop when player looks during walk
   - because were manually panzoom via click
 
-- BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
-  - the latter click should not be read?
 
 - ✅ `npc map {show,hide,show-for-secs}` only applies to labels
 - cleanup e.g. `npc map {showLabels,hideLabels,showLabelsSecs}`
 
+- BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
+  - the latter click should not be read?
 - use animation.finished promise elsewhere to clean things up
 - doors should be easier to open as player walks
 - abstract code:

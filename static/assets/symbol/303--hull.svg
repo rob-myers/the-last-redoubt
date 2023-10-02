@@ -62,7 +62,7 @@
       <title>decor go label=corridor</title>
     </rect>
     <rect x="240" y="300" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);" transform="matrix(0, 1, -1, 0, 940, 20)">
-      <title>decor go label='common area'</title>
+      <title>decor go label='common-area'</title>
     </rect>
     <rect x="412.5" y="336" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
       <title>decor do sit chair orient=180</title>
@@ -205,13 +205,13 @@
     <rect x="29.694" width="10" height="292.02" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="432.973" transform="matrix(0.707107, -0.707107, 0.707107, 0.707107, -303.789001, 81.909813)">
       <title>parallel-connectors</title>
     </rect>
-    <path d="M 360 360 L 360 569.106 L 353.969 546.734 L 336.817 479 L 304.116 411.902 L 266 361 L 266 360 L 360 360 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
+    <path d="M 360 360 L 360 569.106 L 353.969 546.734 L 336.817 479 L 322 444 L 304.116 411.902 L 286 385 L 266 361 L 266 360 L 360 360 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
       <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
-    <path d="M 350 371.7 L 350 396 L 336 396 L 336 409 L 348.84 408.556 L 348.632 472.155 L 342.994 462.874 L 320.79 412.45 L 293.157 372.828 L 350 371.7 Z" style="stroke: rgb(0, 0, 0); fill: rgb(204, 204, 204);">
+    <path d="M 350 371.7 L 350 396 L 336 396 L 336 409 L 348.84 408.556 L 348.632 472.155 L 338.089 445.236 L 320.79 412.45 L 293.157 372.828 L 350 371.7 Z" style="stroke: rgb(0, 0, 0); fill: rgb(204, 204, 204);">
       <title>poly fillColor=#ccc strokeColor=#000 strokeWidth=4</title>
     </path>
-    <path d="M 934 569.106 L 934 360 L 927.969 382.372 L 910.817 450.106 L 878.116 517.204 L 840 568.106 L 840 569.106 L 934 569.106 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);" transform="matrix(-1, 0, 0, -1, 1773.999939, 929.106039)">
+    <path d="M 840 360 L 840 569.106 L 846.031 546.734 L 863.183 479 L 878 444 L 895.884 411.902 L 914 385 L 934 361 L 934 360 L 840 360 Z" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); transform-origin: 887px 464.553px;">
       <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 906.843 472.155 L 906.843 447.855 L 892.843 447.855 L 892.843 434.855 L 905.683 435.299 L 905.475 371.7 L 899.837 380.981 L 877.633 431.405 L 850 471.027 L 906.843 472.155 Z" style="stroke: rgb(0, 0, 0); fill: rgb(204, 204, 204);" transform="matrix(-1, 0, 0, -1, 1756.843014, 843.855024)">
@@ -259,10 +259,10 @@
     <path d="M 242.387 179.7 L 242.387 240 L 242.4 240 L 242.401 299.064 L 300 299.351 L 300 302.784 L 234 302.913 L 197 302.6 L 178.265 290.105 L 120 263.4 L 80.7 251.9 L 55.8 246.8 L 35.3 244.2 L 5 243 L 0 243 L 0 239 L 238.712 239 L 238.712 179.7 L 242.387 179.7 Z M 182.063 287.655 L 200 299 L 238 299 L 238 242.5 L 181.541 242.5 L 182.063 287.655 Z M 54.4 243 L 72.2 246.5 L 120 259.1 L 178.243 285.795 L 178.021 243 L 54.4 243 Z" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);">
       <title>wall</title>
     </path>
-    <path d="M 360 359 L 360 569.106 L 353.969 546.734 L 336.817 479 L 304.116 411.902 L 266 361 L 266 360 L 360 360 L 360 359 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
+    <path d="M 360 359 L 360 569.106 L 353.969 546.734 L 336.817 479 L 322 444 L 304.116 411.902 L 286 385 L 266 361 L 266 360 L 360 360 L 360 359 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;">
       <title>wall no-fill</title>
     </path>
-    <path d="M 934 569.106 L 934 359 L 927.969 381.372 L 910.817 449.106 L 878.116 516.204 L 840 567.106 L 840 568.106 L 934 568.106 L 934 569.106 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5;" transform="matrix(-1, 0, 0, -1, 1773.999939, 928.106051)">
+    <path d="M 840 359 L 840 569.106 L 846.031 546.734 L 863.183 479 L 878 444 L 895.884 411.902 L 914 385 L 934 361 L 934 360 L 840 360 L 840 359 Z" style="fill: rgb(255, 0, 0); fill-opacity: 0.5; transform-origin: 887px 464.053px;">
       <title>wall no-fill</title>
     </path>
     <rect x="88.5" y="-6" width="62.2" height="14.1" style="fill-opacity: 0.4; fill: rgb(0, 255, 255);">
