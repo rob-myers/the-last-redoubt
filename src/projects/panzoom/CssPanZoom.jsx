@@ -334,6 +334,8 @@ export default function CssPanZoom(props) {
         return state.idleTimeoutId === 0;
       },
       async panZoomTo(opts) {
+        await state.animationAction('cancelPanZoom');
+
         const {
           durationMs,
           scale = state.scale,
@@ -341,7 +343,6 @@ export default function CssPanZoom(props) {
           easing = 'ease',
           id = 'panZoomTo',
         } = opts;
-        await state.animationAction('cancelPanZoom');
         /**
          * Compute (x_i, y_i) s.t. `translate(x_i, y_i) scale(scale)` has `worldPoint` at screen center,
          * i.e. x_i + (scale * worldPoint.x_i) = screenWidth/2
@@ -368,13 +369,13 @@ export default function CssPanZoom(props) {
           state.events.next({ key: 'started-panzoom-to' });
           await anim.finished;
           this.panzoomAnim === anim && (this.panzoomAnim = null);
-          state.events.next({ key: 'completed-panzoom-to' });
+          // otherwise animation can jerk (tracking + manually panzoom + view 1 1)
+          setTimeout(() => state.events.next({ key: 'completed-panzoom-to' }), 30);
           state.releaseAnim(anim, state.panzoomEl);
+          state.syncStyles();
         } catch (e) {
           this.panzoomAnim === anim && (this.panzoomAnim = null);
-          state.events.next({ key: 'cancelled-panzoom-to' });
-        } finally {
-          state.syncStyles();
+          setTimeout(() => state.events.next({ key: 'cancelled-panzoom-to' }), 30);
         }
       },
       releaseAnim(anim, parentEl) {

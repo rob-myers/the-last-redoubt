@@ -19,6 +19,8 @@
   - `stopped-walking` not triggered on door collide?
 - ✅ BUG tracking should pause when pause stationary player
 - ✅ BUG track: panzoom-to / no-track alternation
+- ✅ BUG manual panzoom (drag) + `view 1 1` causes jerk
+  - maybe trackNpc confused by other panzoom?
 
 - 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
