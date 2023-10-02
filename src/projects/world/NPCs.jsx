@@ -694,7 +694,7 @@ export default function NPCs(props) {
       ]);
     },
     trackNpc(npcKey, processApi) {
-      const npc = state.getNpc(npcKey); // throws if undefined
+      const npc = state.getNpc(npcKey);
       const baseZoom = isSmallViewport() ? baseTrackingZoomMobile : baseTrackingZoom;
       
       /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
@@ -702,6 +702,17 @@ export default function NPCs(props) {
       /** @param {TrackStatus} next */
       function changeStatus(next) { status = next; console.warn(`@ ${status}`); }
       
+      async function panZoomTo() {
+        changeStatus('panzoom-to');
+        await api.panZoom.animationAction('cancelFollow');
+        await api.panZoom.panZoomTo({
+          durationMs: 2000,
+          scale: baseZoom,
+          worldPoint: npc.getPosition(),
+        }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
+        changeStatus('no-track');
+      }
+
       const subscription = merge(
         of({ key: /** @type {const} */ ('init-track') }),
         state.events,
@@ -731,41 +742,34 @@ export default function NPCs(props) {
             || (x.key === 'spawned-npc' && x.npcKey === npcKey)
             || (x.key === 'changed-speed' && x.npcKey === npcKey)
             || (x.key === 'resumed-track' && x.npcKey === npcKey)
-            )
+          )
         )),
       ).subscribe({
         async next(msg) {
           // console.log('msg', msg);
-          if (
+          if (msg.key === 'stopped-walking') {
+            await panZoomTo();
+          } else if (
             msg.key === 'started-walking'
             || msg.key === 'changed-speed'
             || msg.key === 'resumed-track'
           ) {
             changeStatus('follow-walk');
             const path = npc.getTargets().map(x => x.point);
-            return await api.panZoom.followPath(path, {
+            await api.panZoom.followPath(path, {
               animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),
-            }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))); // ignore Error('cancelled')
-          }
-
-          if (!api.panZoom.isIdle()) {// User is manually pan/zooming
-            return changeStatus('no-track');
-          }
-          
-          // npc/camera not moving/close?
-          if (msg.key === 'stopped-walking' || (
+            }).catch(e => // ignore Error('cancelled')
+              void (state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`))
+            );
+          } else if (!api.panZoom.isIdle()) {
+            // User is manually pan/zooming
+            changeStatus('no-track');
+          } else if (
             npc.anim.spriteSheet !== 'walk'
             && api.panZoom.panzoomAnim === null
             && api.panZoom.distanceTo(npc.getPosition()) > 10
-          )) {
-            changeStatus('panzoom-to');
-            await api.panZoom.animationAction('cancelFollow');
-            await api.panZoom.panZoomTo({
-              durationMs: 2000,
-              scale: baseZoom,
-              worldPoint: npc.getPosition(),
-            }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
-            changeStatus('no-track');
+          ) {// npc not moving and camera not close
+            await panZoomTo();
           }
         },
       });

@@ -21,8 +21,10 @@
 - ✅ BUG track: panzoom-to / no-track alternation
 - ✅ BUG manual panzoom (drag) + `view 1 1` causes jerk
   - maybe trackNpc confused by other panzoom?
+- ✅ BUG tracking should stop when player looks during walk
+  - because were manually panzoom via click
 
-- 🚧 BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
+- BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
 
 - ✅ `npc map {show,hide,show-for-secs}` only applies to labels

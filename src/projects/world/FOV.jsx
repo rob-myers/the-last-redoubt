@@ -161,7 +161,7 @@ export default function FOV(props) {
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
       /**
-       * 👇 we have disconnected peeking
+       * ⛔️ we have disconnected peeking
        */
       const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, []);
       // const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, Array.from(state.nearDoorIds));
