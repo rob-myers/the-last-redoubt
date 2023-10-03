@@ -2,32 +2,10 @@
 
 ## In progress
 
-- ✅ redo geomorph layout syntax
-  - ✅ GeomorphEdit remembers last selected
-  - ✅ can specify { x, y, a?: 0 | 90 | 180 | 270, flip?: 'x' | 'y' | 'xy' } where { x, y } final topLeft
-  - ✅ specifications take effect inside `createLayout`
-  - ✅ support layout def "stacks" i.e. horizontal rows
-  - ✅ only support horizontal rows
-  - ✅ redo gm102 -- no need for rows, except where needed 
-  - ✅ redo gm301
-  - ✅ redo gm302
-  - ✅ redo gm303
+- 🚧 layout for gm 103
+  - need a 5 * n with top wall removed
 
-- ✅ BUG cancel during extendWalk is setting idle?
-- ✅ BUG lifeboat--small-craft chairs missing?
-- ✅ BUG tracking should stop when player stopped by door
-  - `stopped-walking` not triggered on door collide?
-- ✅ BUG tracking should pause when pause stationary player
-- ✅ BUG track: panzoom-to / no-track alternation
-- ✅ BUG manual panzoom (drag) + `view 1 1` causes jerk
-  - maybe trackNpc confused by other panzoom?
-- ✅ BUG tracking should stop when player looks during walk
-  - because were manually panzoom via click
-
-
-- ✅ `npc map {show,hide,show-for-secs}` only applies to labels
-- cleanup e.g. `npc map {showLabels,hideLabels,showLabelsSecs}`
-
+- ✅ cleanup e.g. `npc map {show-labels,hide-labels,show-labels-for}`
 - BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
 - use animation.finished promise elsewhere to clean things up
@@ -594,6 +572,30 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ redo geomorph layout syntax
+  - ✅ GeomorphEdit remembers last selected
+  - ✅ can specify { x, y, a?: 0 | 90 | 180 | 270, flip?: 'x' | 'y' | 'xy' } where { x, y } final topLeft
+  - ✅ specifications take effect inside `createLayout`
+  - ✅ support layout def "stacks" i.e. horizontal rows
+  - ✅ only support horizontal rows
+  - ✅ redo gm102 -- no need for rows, except where needed 
+  - ✅ redo gm301
+  - ✅ redo gm302
+  - ✅ redo gm303
+
+- ✅ BUG cancel during extendWalk is setting idle?
+- ✅ BUG lifeboat--small-craft chairs missing?
+- ✅ BUG tracking should stop when player stopped by door
+  - `stopped-walking` not triggered on door collide?
+- ✅ BUG tracking should pause when pause stationary player
+- ✅ BUG track: panzoom-to / no-track alternation
+- ✅ BUG manual panzoom (drag) + `view 1 1` causes jerk
+  - maybe trackNpc confused by other panzoom?
+- ✅ BUG tracking should stop when player looks during walk
+  - because were manually panzoom via click
+
+- ✅ `npc map {show,hide,show-for-secs}` only applies to labels
 
 - ✅ BUG `track` jerky, particularly on mobile 😱
   - ✅ try use getCurrentTransform()

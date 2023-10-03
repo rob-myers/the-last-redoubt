@@ -6198,22 +6198,7 @@
     "key": "empty-room--039--3x4",
     "hull": [],
     "obstacles": [],
-    "walls": [
-      {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [0, -10],
-            [910, -10],
-            [910, 1200],
-            [890, 1200],
-            [890, 10],
-            [0, 10],
-            [0, -10]
-          ]
-        ]
-      }
-    ],
+    "walls": [],
     "singles": [
       {
         "meta": {"wall": true, "w": true},
@@ -6230,17 +6215,45 @@
         }
       },
       {
-        "meta": {"door": true, "double": true},
+        "meta": {"door": true, "double": true, "w": true},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[-15, 340], [-15, 560], [15, 560], [15, 340]]]
         }
       },
       {
-        "meta": {"door": true, "double": true},
+        "meta": {"door": true, "double": true, "w": true},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[-15, 620], [-15, 840], [15, 840], [15, 620]]]
+        }
+      },
+      {
+        "meta": {"wall": true, "e": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[890, 0], [890, 1210], [910, 1210], [910, 0]]]
+        }
+      },
+      {
+        "meta": {"door": true, "double": true, "e": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[885, 340], [885, 560], [915, 560], [915, 340]]]
+        }
+      },
+      {
+        "meta": {"door": true, "double": true, "e": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[885, 620], [885, 840], [915, 840], [915, 620]]]
+        }
+      },
+      {
+        "meta": {"wall": true, "n": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[0, -10], [0, 10], [900, 10], [900, -10]]]
         }
       },
       {
@@ -6251,12 +6264,21 @@
             [[-5, 531.034], [-5, 651.034], [5, 651.034], [5, 531.034]]
           ]
         }
+      },
+      {
+        "meta": {"parallel-connectors": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [[895, 531.034], [895, 651.034], [905, 651.034], [905, 531.034]]
+          ]
+        }
       }
     ],
     "width": 900,
     "height": 1200,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1674931692894.681
+    "lastModified": 1696346919035.8013
   },
   "empty-room--060--4x4": {
     "key": "empty-room--060--4x4",
