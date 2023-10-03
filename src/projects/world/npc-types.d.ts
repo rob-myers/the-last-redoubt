@@ -431,10 +431,13 @@ declare namespace NPC {
   export type NpcActionKey = NpcAction['action'];
 
   export type FovMapAction = (
-    | 'show' 
-    | 'hide' 
-    | 'show-for-ms' 
-    | 'pause' 
+    | 'show'
+    | 'show-labels'
+    | 'hide'
+    | 'hide-labels'
+    | 'show-for'
+    | 'show-labels-for'
+    | 'pause'
     | 'resume'
   );
 

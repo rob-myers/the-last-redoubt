@@ -99,8 +99,7 @@ export const npcService = {
           return { action: 'config', configKey: [opts].concat(extras).join(' ') };
         case "map":
           // npc map {action} [secs]
-          // 👉 npc map show-for-secs [secs] => npc map show-for-ms [secs * 1000]
-          const mapAction = opts === "show-for-secs" ? "show-for-ms" : /** @type {NPC.FovMapAction} */ (opts);
+          const mapAction = /** @type {NPC.FovMapAction} */ (opts);
           return { action: 'map', mapAction, timeMs: typeof extras[0] === 'number' ? extras[0] * 1000 : undefined };
         case "add-decor":
         case "events": // Only `npc events` supported
@@ -176,7 +175,7 @@ export const npcService = {
   fromConfigBooleanKeys: /** @type {NPC.ConfigBooleanKey[]} */ ([]),
   
   /** @type {Record<NPC.FovMapAction, true>} */
-  fromFovMapActionKey: { "hide": true, "show": true, "show-for-ms": true, "pause": true, "resume": true },
+  fromFovMapActionKey: { "hide": true, "hide-labels": true, "show": true, "show-labels": true, "show-for": true, "show-labels-for": true, "pause": true, "resume": true },
   fovMapActionKeys: /** @type {NPC.FovMapAction[]} */ ([]),
 
   /** @type {Record<NPC.NpcActionKey, true>} */

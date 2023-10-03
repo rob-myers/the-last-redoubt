@@ -110,7 +110,7 @@ thinkLoop: `{
     run '({ api, home }) {
       const { fov } = api.getCached(home.WORLD_KEY)
       while (await api.read(true) !== api.eof)
-        fov.mapAct("show-for-ms", 3000)
+        fov.mapAct("show-for", 3000)
     }'
 }`,
 
@@ -189,7 +189,7 @@ source /etc/game-1
 awaitWorld
 spawn ${npcKey} '{"x":210,"y":390}'
 npc set-player ${npcKey}
-npc map show-for-secs 2
+npc map show-labels-for 2
 
 pausableNpcs &
 track ${npcKey} &

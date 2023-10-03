@@ -329,7 +329,7 @@
         const { meta } = (datum);
         if (meta.npc || npc.forcePaused) {
           if (meta.npcKey === npcKey && meta.longClick) {
-            w.fov.mapAct("show-for-ms", 3000);
+            w.fov.mapAct("show-labels-for", 3000);
           }
           continue;
         }

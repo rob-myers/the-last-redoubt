@@ -92,56 +92,66 @@ export default function FOV(props) {
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set };
     },
-    mapAct(action, timeMs, canHideMap = false) {
-      if (action === 'show') {
-        state.anim.labels = state.el.labels.animate(
-          [{ opacity: 1 }],
-          { fill: 'forwards', duration: timeMs ?? 1500 },
-        );
-        state.anim.map = state.el.map.animate(
-          [{ filter: geomorphMapFilterShown }],
-          { fill: 'forwards', duration: timeMs ?? 750 },
-        );
-      } else if (action === 'hide') {
-        state.anim.labels = state.el.labels.animate(
-          [{ opacity: 0 }],
-          { fill: 'forwards', duration: timeMs ?? 1500 },
-        );
-        canHideMap && (state.anim.map = state.el.map.animate(
-          [{ filter: geomorphMapFilterHidden }],
-          { fill: 'forwards', duration: timeMs ?? 750 },
-        ));
-      } else if (action === 'show-for-ms') {
-        timeMs ??= 1000;
-        const durationMs = 500 + timeMs + 500; // ½ sec fade in/out
-        state.anim.labels = state.el.labels.animate(
-          [
-            { opacity: 1, offset: 500 / durationMs },
-            { opacity: 1, offset: (500 + timeMs) / durationMs },
-            { opacity: 0, offset: 1 },
-          ],
-          { fill: 'forwards', duration: durationMs },
-        );
-        canHideMap && (state.anim.map = state.el.map.animate(
-          [
-            { filter: geomorphMapFilterShown, offset: 500 / durationMs },
-            { filter: geomorphMapFilterShown, offset: (500 + timeMs) / durationMs },
-            { filter: geomorphMapFilterHidden, offset: 1 },
-          ],
-          { fill: 'forwards', duration: durationMs },
-        ));
-      } else if (action === undefined) {
-        return getComputedStyle(state.el.labels).opacity;
-      } else if (action === 'pause') {
-        state.anim.labels.playState === 'running' && state.anim.labels.pause();
-        state.anim.map.playState === 'running' && state.anim.map.pause();
-      } else if (action === 'resume') {
-        state.anim.labels.playState === 'paused' && state.anim.labels.play();
-        state.anim.map.playState === 'paused' && state.anim.map.play();
-      } else {
-        throw testNever(action, {
-          override: `mapAct: ${action} must be in ${JSON.stringify(api.lib.fovMapActionKeys)} or undefined`,
-        });
+    mapAct(action, timeMs) {
+      switch (action) {
+        case 'show':
+        case 'show-labels':
+          state.anim.labels = state.el.labels.animate(
+            [{ opacity: 1 }],
+            { fill: 'forwards', duration: timeMs ?? 1500 },
+          );
+          action === 'show' && (state.anim.map = state.el.map.animate(
+            [{ filter: geomorphMapFilterShown }],
+            { fill: 'forwards', duration: timeMs ?? 750 },
+          ));
+          break;
+        case 'hide':
+        case 'hide-labels':
+          state.anim.labels = state.el.labels.animate(
+            [{ opacity: 0 }],
+            { fill: 'forwards', duration: timeMs ?? 1500 },
+          );
+          action === 'hide' && (state.anim.map = state.el.map.animate(
+            [{ filter: geomorphMapFilterHidden }],
+            { fill: 'forwards', duration: timeMs ?? 750 },
+          ));
+          break;
+        case 'show-labels-for':
+        case 'show-for': {
+          timeMs ??= 1000;
+          const durationMs = 500 + timeMs + 500; // ½ sec fade in/out
+          state.anim.labels = state.el.labels.animate(
+            [
+              { opacity: 1, offset: 500 / durationMs },
+              { opacity: 1, offset: (500 + timeMs) / durationMs },
+              { opacity: 0, offset: 1 },
+            ],
+            { fill: 'forwards', duration: durationMs },
+          );
+          action === 'show-for' && (state.anim.map = state.el.map.animate(
+            [
+              { filter: geomorphMapFilterShown, offset: 500 / durationMs },
+              { filter: geomorphMapFilterShown, offset: (500 + timeMs) / durationMs },
+              { filter: geomorphMapFilterHidden, offset: 1 },
+            ],
+            { fill: 'forwards', duration: durationMs },
+          ));
+          break;
+        }
+        case 'pause':
+          state.anim.labels.playState === 'running' && state.anim.labels.pause();
+          state.anim.map.playState === 'running' && state.anim.map.pause();
+          break;
+        case 'resume':
+          state.anim.labels.playState === 'paused' && state.anim.labels.play();
+          state.anim.map.playState === 'paused' && state.anim.map.play();
+          break;
+        case undefined:
+          return getComputedStyle(state.el.labels).opacity;
+        default:
+          throw testNever(action, {
+            override: `mapAct: ${action} must be in ${JSON.stringify(api.lib.fovMapActionKeys)} or undefined`,
+          });
       }
     },
     recompute() {
