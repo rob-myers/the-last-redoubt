@@ -40,6 +40,8 @@
  * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Furniture, Consoles, & Equipment' media/symbol-furniture-consoles-equipment
  * yarn rename-pngs symbol "media/SymbolsHighRes/Symbols/Ship's Locker" media/symbol-ships-locker
  * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Machinery media/symbol-machinery
+ * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Empty Room' media/symbol-empty-room
+ * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Misc media/symbol-misc
  * ```
  */
 import fs from 'fs';

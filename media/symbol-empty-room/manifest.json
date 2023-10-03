@@ -721,6 +721,60 @@
       "is": [],
       "has": [],
       "ids": [80]
+    },
+    {
+      "srcName": "Empty Room 081 [20x20].png",
+      "dstName": "empty-room--081--4x4.png",
+      "id": 81,
+      "gridDim": [4, 4],
+      "is": [],
+      "has": [],
+      "ids": [81]
+    },
+    {
+      "srcName": "Empty Room 082 [10x10].png",
+      "dstName": "empty-room--082--2x2.png",
+      "id": 82,
+      "gridDim": [2, 2],
+      "is": [],
+      "has": [],
+      "ids": [82]
+    },
+    {
+      "srcName": "Empty Room 083 [10x10].png",
+      "dstName": "empty-room--083--2x2.png",
+      "id": 83,
+      "gridDim": [2, 2],
+      "is": [],
+      "has": [],
+      "ids": [83]
+    },
+    {
+      "srcName": "Empty Room 084 [10x25].png",
+      "dstName": "empty-room--084--2x5.png",
+      "id": 84,
+      "gridDim": [2, 5],
+      "is": [],
+      "has": [],
+      "ids": [84]
+    },
+    {
+      "srcName": "Empty Room 085 [10x20].png",
+      "dstName": "empty-room--085--2x4.png",
+      "id": 85,
+      "gridDim": [2, 4],
+      "is": [],
+      "has": [],
+      "ids": [85]
+    },
+    {
+      "srcName": "Empty Room 086 [10x20].png",
+      "dstName": "empty-room--086--2x4.png",
+      "id": 86,
+      "gridDim": [2, 4],
+      "is": [],
+      "has": [],
+      "ids": [86]
     }
   ]
 }
