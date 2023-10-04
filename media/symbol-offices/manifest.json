@@ -1027,6 +1027,69 @@
       "is": [],
       "has": [],
       "ids": [114]
+    },
+    {
+      "srcName": "Office 115 [20x20].png",
+      "dstName": "office--115--4x4.png",
+      "id": 115,
+      "gridDim": [4, 4],
+      "is": [],
+      "has": [],
+      "ids": [115]
+    },
+    {
+      "srcName": "Office 115b [20x20].png",
+      "dstName": "office--115--4x4.png",
+      "id": 115,
+      "gridDim": [4, 4],
+      "is": ["part-b"],
+      "has": [],
+      "ids": [115]
+    },
+    {
+      "srcName": "Office 116 [20x20].png",
+      "dstName": "office--116--4x4.png",
+      "id": 116,
+      "gridDim": [4, 4],
+      "is": [],
+      "has": [],
+      "ids": [116]
+    },
+    {
+      "srcName": "Office 116b [20x20].png",
+      "dstName": "office--116--4x4.png",
+      "id": 116,
+      "gridDim": [4, 4],
+      "is": ["part-b"],
+      "has": [],
+      "ids": [116]
+    },
+    {
+      "srcName": "Office 117 [10x20].png",
+      "dstName": "office--117--2x4.png",
+      "id": 117,
+      "gridDim": [2, 4],
+      "is": [],
+      "has": [],
+      "ids": [117]
+    },
+    {
+      "srcName": "Office 118 [20x20].png",
+      "dstName": "office--118--4x4.png",
+      "id": 118,
+      "gridDim": [4, 4],
+      "is": [],
+      "has": [],
+      "ids": [118]
+    },
+    {
+      "srcName": "Office 118b [20x20].png",
+      "dstName": "office--118--4x4.png",
+      "id": 118,
+      "gridDim": [4, 4],
+      "is": ["part-b"],
+      "has": [],
+      "ids": [118]
     }
   ]
 }
