@@ -43,6 +43,7 @@
  * yarn rename-pngs symbol 'media/SymbolsHighRes/Symbols/Empty Room' media/symbol-empty-room
  * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Misc media/symbol-misc
  * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Offices media/symbol-offices
+ * yarn rename-pngs symbol media/SymbolsHighRes/Symbols/Cargo media/symbol-cargo
  * ```
  */
 import fs from 'fs';
@@ -174,7 +175,7 @@ childProcess.execSync(`
   cd '${dstDir}'
 
   time find *.png -print0 |
-    xargs -0 -I £ -P ${maxConcurrentConverts} ${
+    xargs -0 -I £ -P ${maxConcurrentConverts} -t ${
       'convert -fuzz 1%'
     } ${
       '-trim -colors 32'

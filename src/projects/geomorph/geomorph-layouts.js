@@ -41,7 +41,7 @@ const layoutDefs = {
       ]},
 
       { y: 8 * 60, items: [
-        { symbol: 'empty-room--039--3x4', flip: 'y', walls: ['w'] },
+        { symbol: 'empty-room--039--3x4', doors: ['e'], walls: [] },
         { symbol: 'office--061--3x4', x: 14 * 60 },
       ]},
       { symbol: 'lifeboat--small-craft', y: 8 * 60 + 12 },
@@ -131,13 +131,14 @@ const layoutDefs = {
       { symbol: '103--hull' },
 
       { items: [
-        { symbol: 'empty-room--020--2x4', doors: [], walls: [] },
-        { symbol: 'empty-room--039--3x4', x: -1 * 60, flip: 'y', walls: ['w', 's'] },
+        // { symbol: 'empty-room--020--2x4', doors: [], walls: [] },
+        { symbol: 'empty-room--039--3x4', x: 1 * 60, flip: 'y' },
         { symbol: 'cargo--003--2x4', x: 2 * 60 },
         { symbol: 'cargo--003--2x4', },
         { symbol: 'cargo--003--2x4', },
         { symbol: 'cargo--003--2x4', },
-        { symbol: 'office--055--2x4', x: 4 * 60 },
+        { symbol: 'cargo--010--2x4', x: 2 * 60, doors: [], walls: [] },
+        { symbol: 'office--055--2x4', },
       ]},
 
       { y: 6 * 60, x: 1 * 60, items: [
@@ -166,10 +167,10 @@ const layoutDefs = {
         { symbol: 'cargo--002--2x2', },
         { symbol: 'cargo--002--2x2', pause: true},
         { symbol: 'cargo--002--2x2', },
-      ]},
 
-      { y: 16 * 60, x: 16 * 60,  items: [
-        { symbol: 'cargo--002--2x2', pause: true },
+        { symbol: 'empty-room--074--4x8', x: 2 * 60 },
+
+        { symbol: 'cargo--002--2x2', x: 2 * 60, pause: true },
         { symbol: 'cargo--002--2x2', },
         { symbol: 'cargo--002--2x2', pause: true},
         { symbol: 'cargo--002--2x2', },

@@ -3694,7 +3694,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "freaher"},
+        "meta": {"decor": true, "go": true, "label": "fresher"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -6498,7 +6498,7 @@
       "rect": {"x": 1066, "y": 397, "width": 30, "height": 8}
     },
     {
-      "text": "freaher",
+      "text": "fresher",
       "center": {"x": 1078.6458, "y": 514.7212},
       "index": 20,
       "rect": {"x": 1061.1458, "y": 510.7212, "width": 35, "height": 8}

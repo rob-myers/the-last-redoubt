@@ -2,8 +2,7 @@
 
 ## In progress
 
-- 🚧 layout for gm 103
-  - need a 5 * n with top wall removed
+- ✅ layout for gm 103
 
 - ✅ cleanup e.g. `npc map {show-labels,hide-labels,show-labels-for}`
 - BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
