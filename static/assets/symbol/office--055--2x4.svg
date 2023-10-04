@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 600 1200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;">
+    <title>background</title>
+    <image width="634" height="1220" x="-24" y="-10" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAnoAAATEAgMAAACB1ECgAAABIHpUWHRSYXcgcHJvZmlsZSB0eXBlIHhtcAAAKJF1UktyxSAM23OKHoHIxibHSR+w60yXPX5lkr6keS2e/GwjSyLp6+MzvcUSSJKHV9m8WvNszYqrLcjxbQ/rLlGTBthiasNgRbY9/+weAHI6YZh8jy2laisZWcWGcyOyGLrkeUF63pAjSAEEN9kKVJPabf5eDA7VlZFl48zhc6E7m9DnCMeQRdYIjCRZwAR4bzsIn+IrYUnbK1oMiPLJ5c5I1UpyMWFindJWutDJ8GigL+BsOhEMacQvoGt4TRdRAWR/yZqc+mk33+mfNQo+9oS0ZZo4Xqk/BfwM2DScWa0csg8F0unUI52o/zfevcG4urObk67uXI/2bI7DVYvazL78dVFJ30ktmxa/6wauAAAACVBMVEVHcEwAAAD///8W1S+BAAAAAXRSTlMAQObYZgAADOVJREFUeNrt3Ut6o7oWhmHc8BA8H4ZAw+J5Qv804vloz0ANGOUxF9vYBhdIIH6Tj04l2VXOuwVr6YIuSVJfJyN5nZP2OhrRK0uUi+9egEb2angHXV/6Db4jvqAAxocPHz58+PBt5Oua0s/XyVyqkeveOZhynUzvX7rfn7yyZZE/flQO/PrjZr7/FbXvR9ZnLrXPFOG+41/0lXl19VVPP1LyXTV5ZV5+InV/rz5r+h+t5LvKWl/vARTztfFhcklf/eTV8VH17rCQz9VfmtpX2ULQZ+svbeszer42Lbe+R4rW8bVl1voeBSjj64qsqz3uBSjj60rMVnn/WxnfrcBuvtv3Kr5bed18t2pYxXerMu4+J+arXnyVvQj5yofq9pUrhHzulo/dw5cL+ey7rzRKvsubr1Ly3Wu5nq8xa/ju4dH3Nc+khs8N+nIdXzHgK3V89/Do+5qHUsJX9hv5D1+t1vM9+pZ1UlzeV3r4+v3Jx+e6lXzZbF8x/ElBvmI5nxvx5f6+w6K+y0o+9zIoXCzqqxb35WK+t1F1P58d8ZlAX/kaxKbw8408yjbQZ/PXD8y1fMVb7NbP5GyfWcOXD/1/29qXBvhc/5G5Ppe+vmQx36Wq8hGfU/QVcr6y7/tV8xXSvqadkT+9IlzZZ8N8i8WHWcTX5NFV8osZyquNLwnwlWaZ/Nwk1vzdd/HxrVC/jfjcPn3Lt68W9a3QPv1en5npyz/2j5y/77Kcr/jgS/18x1HfnOGDth760D/f3mc++myAr1zMlw/6nILvNO6r0+LQ0xz1/jYNaCPuG65AzMhg4kRfMegrZ/qOgx3Vx/DQ8r5svs8NPYAuyHdYyNck6MEAccVIZz++bzBA6odyeZ+b7RsbwWp+HuDLF/ElzWSmgQBpWvpmqDMT4LOXed3LxlcMthDa8PX2JUv5TiMB0oaHSQJ8Q/232b6jGR5iqx9JO5hMJ/rMYP/XzvW1AWJeC7DpCA+GR6gvSXwC5LUA7Wh4TPSdlvMV/RlrvflEpYSvCZDXAmy+HQ6PMJ+Z7Tt2ryWK1+IbCY/JvssyvkM73fSpANtvRt/9TfEdR3znxCtAngqw+3r48YvuO3VTE1+motbhkSzsM36+vDdj7faeZzQ8JvuK91ZHXnr4jt1cv9u057L7YiQ8pvvckC9LPAOkmdnevnTMqw/hMdF3WMyXdCD79J62vr3pwr7Sz3e63dnHW9r2myTQ9/Z+sHA+vuN9RcD10bsNkDsz9ihP9eXlcr77sP1/j9UCYb5kxJcmPgEy0L76EJm+Pufna7apeH0VP/r4zfDlA90jH9/hac3MP4pvss9U7z7r5UseUdtb65Os4vPhNb/ouX1lxiuiib7Tu8/6+l4L0BozfiOm+8wCzefe77z0Su9DPT7Z99aA8Wme9grQ5NWjnku1fN1S40tbeJ+Kb6pvoAHo1fzrF+DL/iSBvrcGoFfz77kAzT+Lb4bPLeg7TC2+qb5rA+HN59U86FVyU4pvju+l0x/k65Vgmqzj82wevBThecqT+m/fNeJeGjCusGG+pgjTZDlfvrBveqRP8L1VwP7V70q+y0uj6GLEfHap6m0N31sFYgLS8zq+5wSd6/mK8N75ar7XHrBn73dF33MCrNOfku+1h+Tde1vP95QA6/Qn5TuZ4slXRkl/s3z9BBgp/U33HU3e911bf1q+5xZgmccJ3zk+I+27BvBv3kt/ccJ3hu9kfnsvLX7ihO8sXy/BXK1qvqcANpHCd4avH8CBncu1fGUeuXUwz2fuE+ZtnM7bXF9xf6n3a+R89ZuzbhGcM07SZ7oVG1eooK9+s9eMyl6VJlL6m+O7PoDXtGJ+2j8yOV99g9sB4yLa7Z3lq29wM95eRbu9s3xH0y2AiXd7Z/mS+6ruaLd3nu/UvFZxJt7tnec7ThvT3syXTBzU3sx3fy2QaPqOsW/vTF8S+/bO9SWRebN99SOYJMK+yBc+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjwfY3vZPyuM77mMvjw4Rv35ZXPhQ8fvtm+xa6zuO9+J1R9Z3GfUfel+HR8J7P4lf0ln8GHb1++RfPL9VNKfEG+Srl9UH+KFW5f1Z/ihNunzaescXuX9LX/YernTTxmYzOflfdl0j6HL8g38QDbzXzVTnyLjJ/iw+fnO+EL8h3Cmt+r5+dl3v/u0Dex/sX3pb44Jyjv1+covxj9yw19ibKvlPedpX1O3pdJ+6y8L5X2RTomdq++SOnF2+fkfZm0z8r7Ummfkfclyr5S3neW9sVKL3v1xUove/XFCt+d+qKll536oqUXfJv4oqW/nfqipb+9+s7SvhJfkC9e+vsa3+Oa5EulfV16Pk2Y/odv0Nf8W6PqM/hCfLf0HNM3J//p+9r0PP5X7aY+hy/Ql+IL8Fl5XzLqs28z5PCN9d6G/qrBN7l3Keor8QX6sq5xP+TLu49w+D42Dww+b1/6ofGMb1rzRd6XV7K+LjlbfEG+wRXXl819xoxVvu7y+IgNfWd8O/aV+AJ9GT58m/mcvC/Fhw/f59FdfN6+BB8+fPhW8Rl13xkfPnz48OHDhw/fgr5S3pdt4Zs8PxYfPnz4dpb/8FH/0r7Chw8fPnz48H2pj/eD+PDh+7O+FF+Aj/l/+PB97/xs5t/jq1jf87U+1r/t3Se+PpT1yQv5WL+/Sx/7R4T66gaM+v4q6vvTHMR9I1WchE97f6QKX6Dvi/dfY3+9sP0Ty9cDhsV8zyW8jU9//84MX4CvlPfF379Yff/neftnq/u+Y/9x9f3l1ffnP4zzMgVfjIvzNTbwlfI+zp8J8XE+U6CP88HCfPESIL4tfJwvGebjfNNAH+frhvmiJZid+tTP71b3qZ8fX5lIAezrs/K+TNrn5H1naV8p7zPSvlgJxttn5X2ZtM/J+87SvkgB7O2r9H2ptC9OAIf4ztI+J+6LE8D+vjgBEuTLpH1W3BclQAJ8UQIkzJcq+yp1X4wACfHFCJAwn5H2leK+GAES5IsQIIG+s7TPiftKfLv2RegD79u3/iDbvn3rD7Lt21fi85kfiw8fPnx/Pj9T/9L+o33/tT76v/v2qY8PWXmf9vik+Piu+vi4k/dpv5+JEB57fj9Y6vsSZZ/6+/0Y4bHn+SXi83PU5zc55q8le56fqD6/U3x+rPr8YvX52S5KeOx3fYD6+goj70uUferro5y8L5P2WXlfKu0z8r5E2VfK+7TXn8dKL3v1sf9GmI/9X4J87D8U5nPyvgxfgI/968J87J8Y5GP/zn374qW/ffo22F9Zff9nH5/s/t7q+6PL7y/P+Qbf5vM6X0PUd6s+OD9ln+fjWHyBvkTap34+mLyP8/NCfCW+QF8m7WurX85f9felXeMPH+dPb+FLvsEnfP555xM9P96o+86drxzyXXR875nx8vgIfJ+bV/i8fRk+fJv5nLwvxYcP3+fRU3zevgQfPnz4VvEZdd8ZHz58+PDhw4fvq3ylvC/Dh29p3+T5sfjw4cP3d/Mz7St8+PDhw4cPH74/9X6L95f48OFbz5fiC/Ax/w8fvu+dn838e3wV63u+1sf6t737DL4Qn/0W3+D630Jlfbzs+uS7T3T9uRPfX0Dfl+EL8LUNQN39VfR9dQPhIO4bqeIEfPr7cxl8IT77xT4r4Uu/1vfYE2aZLcD3uH9nNwKIz9NXyvvO3+Fj/+yd7j8u7lPf/17d11Vwh3FetrFvsd+/Rv6T93G+y759nM8U6ON8sDBfvASIbwsf50uG+TjfNNDH+bphvmgJZqc+9fO71X3q58dXJlIA+/qsvC+T9jl531naV8r7jLSvUvdFSjC79UVKMAG+s7SvlPcZaV+l70ulfRYfvg19cSoQfFv54lRw+/VV+PDhw/dHfer5mfZBaPtU3afdfhbvX6qPHzhxn9UeHyqN9vif0fYttv5kHZ9bbP3JVN/8KxP3peK+RNuXRfWdRHneviSu7yBafDef7IUPHz58+PDhw4cPHz58+PDhw4cPH77d+3rju2d8830GHz5847486qwvfPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjw4cOHDx8+fPjwfZPvceHDF913whfkOzx8qaJP9sKHDx8+fPjw4cOHDx8+fPjwafl6gzBaV/agCvtO4j6j7TvgC/Id8eHDh+/v+VLx/PwVPuH2gXjz9Jxot09v3Q/d2/t/sr9uCyD7M2YAAAAASUVORK5CYII="/>
+  </g>
+  <g style="">
+    <title>obstacles</title>
+    <path d="M 0 305 L 181.7 305 L 188.065 321.027 L 171.214 362.543 L 148.848 448.109 L 168.033 538.203 L 199.214 586.127 L 199.645 613.802 L 175.819 649.509 L 150.949 721.33 L 160.942 808.434 L 187.709 879.683 L 170.878 900 L 0 905 L 0 305 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;">
+      <title>surface</title>
+    </path>
+    <rect x="182" width="131" height="151.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="372.9"/>
+    <rect x="182" width="131" height="151.7" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;" y="672.9"/>
+    <path d="M 96 2.9 L 206 2.9 L 202.2 60.952 L 181.136 132.93 L 164.112 146.674 L 141.905 150.347 L 121.92 137.617 L 96 60.38 L 96 2.9 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+    <path d="M 386 2.9 L 517.485 2.9 L 512.943 60.952 L 497.906 94.68 L 467.462 108.523 L 440.917 112.196 L 404.16 95.54 L 386 60.38 L 386 2.9 Z" style="fill: rgb(0, 0, 255); fill-opacity: 0.5;"/>
+  </g>
+  <g style="pointer-events: none; visibility: hidden;">
+    <title>_walls</title>
+    <rect y="147" width="67" height="307" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" x="-34">
+      <title>window</title>
+    </rect>
+  </g>
+  <g style="">
+    <title>singles</title>
+    <rect width="610" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" y="1190">
+      <title>wall</title>
+    </rect>
+    <rect width="610" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" y="-10">
+      <title>wall</title>
+    </rect>
+    <rect y="-10" width="20" height="1220" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" x="-10">
+      <title>wall</title>
+    </rect>
+    <rect x="590" y="-10" width="20" height="1220" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);">
+      <title>wall</title>
+    </rect>
+    <rect width="610" height="20" style="fill-opacity: 0.5; fill: rgb(255, 255, 0);" y="290">
+      <title>wall</title>
+    </rect>
+    <rect x="390.9" y="590.9" width="10" height="10" style="fill: rgb(216, 216, 216);">
+      <title>decor go label=office</title>
+    </rect>
+    <rect x="213.045" y="445" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient=180</title>
+    </rect>
+    <rect x="213.045" y="745" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit chair orient=180</title>
+    </rect>
+    <rect x="145" y="113.701" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do sit toilet orient=90</title>
+    </rect>
+    <rect x="445" y="125.881" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(0, 255, 0);">
+      <title>decor do stand sink orient=270</title>
+    </rect>
+    <rect y="940" width="30" height="220" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" x="-15">
+      <title>door</title>
+    </rect>
+    <rect y="300" width="47.96" height="600" style="fill-opacity: 0.5;" x="-24.565">
+      <title>window</title>
+    </rect>
+    <rect y="285" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" x="340">
+      <title>door w</title>
+    </rect>
+    <rect y="1185" width="220" height="30" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0); fill-opacity: 0.8; stroke-width: 4px;" x="340">
+      <title>door s</title>
+    </rect>
+  </g>
+</svg>

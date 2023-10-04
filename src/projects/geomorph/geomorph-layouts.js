@@ -131,15 +131,13 @@ const layoutDefs = {
       { symbol: '103--hull' },
 
       { items: [
-        { symbol: 'empty-room--039--3x4', x: 1 * 60, flip: 'y', walls: ['w', 's'] },
-        // { symbol: 'office--061--3x4', x: 14 * 60 },
-      ]},
-
-      { x: 6 * 60, items: [
+        { symbol: 'empty-room--020--2x4', doors: [], walls: [] },
+        { symbol: 'empty-room--039--3x4', x: -1 * 60, flip: 'y', walls: ['w', 's'] },
+        { symbol: 'cargo--003--2x4', x: 2 * 60 },
         { symbol: 'cargo--003--2x4', },
         { symbol: 'cargo--003--2x4', },
         { symbol: 'cargo--003--2x4', },
-        { symbol: 'cargo--003--2x4', },
+        { symbol: 'office--055--2x4', x: 4 * 60 },
       ]},
 
       { y: 6 * 60, x: 1 * 60, items: [
