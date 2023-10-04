@@ -5,10 +5,13 @@ import { cssName, zIndex } from "projects/service/const";
 import useLongPress from "projects/hooks/use-long-press";
 import type { State } from "./Tabs";
 import Icon from "./Icon";
+import Spinner from "./Spinner";
+import useSiteStore from "store/site.store";
 
 export function TabsControls({ api, tabsId }: Props) {
 
   const resetPress = useLongPress(api.onLongPressReset, api.reset, 1000);
+  const browserLoaded = useSiteStore(state => state.browserLoad);
 
   return (
     <div className={controlsCss}>
@@ -59,7 +62,7 @@ export function TabsControls({ api, tabsId }: Props) {
           className={cssName.central}
           onClick={api.toggleEnabled}
         >
-          interact
+          {browserLoaded ? 'interact' : <Spinner size={24} />}
         </div>
       )}
 
@@ -126,9 +129,15 @@ const controlsCss = css`
     background: rgba(0, 0, 0, 0.9);
     padding: 12px 32px;
     border-radius: 4px;
-    border: 1px solid #ddd;
+    border: 1px solid #888;
     font-size: 1.2rem;
     letter-spacing: 2px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 140px;
+    height: 64px;
   }
 `;
 
