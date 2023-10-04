@@ -345,16 +345,20 @@
               await npc.fadeSpawn(datum).catch(onError); // warp
             }
           } else {// walk
-            if (npc.isWalking(true) && !meta.longClick) {
-              npc.extendNextWalk(datum);
-            } else  {
-              await npc.cancel();
-              const navPath = w.npcs.getGlobalNavPath(position, datum, {
-                closedWeight: 10000,
-                centroidsFallback: true,
-              });
-              npc.walk(navPath, { doorStrategy: "none" });
+            if (npc.isWalking(true)) {// keep walking on long click or angle ≤ 90°
+              const [u, v] = npc.anim.path.slice(-2);
+              const dp = (v.x - u.x) * (datum.x - v.x) + (v.y - u.y) * (datum.y - v.y);
+              if (meta.longClick || dp >= 0) {
+                npc.extendNextWalk(datum);
+                continue;
+              }
             }
+            await npc.cancel();
+            const navPath = w.npcs.getGlobalNavPath(position, datum, {
+              closedWeight: 10000, // 🤔
+              centroidsFallback: true,
+            });
+            npc.walk(navPath, { doorStrategy: "none" });
           }
         } else {// look
           await npc.cancel();
