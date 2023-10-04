@@ -1699,20 +1699,6 @@
         }
       },
       {
-        "meta": {"light": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [100.221, 150.08],
-              [100.221, 160.08],
-              [110.221, 160.08],
-              [110.221, 150.08]
-            ]
-          ]
-        }
-      },
-      {
         "meta": {"light": true, "distance": 180},
         "poly": {
           "type": "Polygon",
@@ -1814,7 +1800,7 @@
     "width": 1200,
     "height": 1200,
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1696426660148.5706
+    "lastModified": 1696427623635.0823
   },
   "301--hull": {
     "key": "301--hull",
@@ -6695,12 +6681,19 @@
             [[895, 531.034], [895, 651.034], [905, 651.034], [905, 531.034]]
           ]
         }
+      },
+      {
+        "meta": {"light": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[300, 600], [300, 610], [310, 610], [310, 600]]]
+        }
       }
     ],
     "width": 900,
     "height": 1200,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1696425290279.4033
+    "lastModified": 1696427618464.1318
   },
   "empty-room--060--4x4": {
     "key": "empty-room--060--4x4",

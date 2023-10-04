@@ -697,20 +697,6 @@
         }
       },
       {
-        "meta": {"light": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [110.221, 150.08],
-              [110.221, 160.08],
-              [100.221, 160.08],
-              [100.221, 150.08]
-            ]
-          ]
-        }
-      },
-      {
         "meta": {"light": true, "distance": 180},
         "poly": {
           "type": "Polygon",
@@ -932,6 +918,13 @@
           "coordinates": [
             [[61, 106.2068], [61, 130.2068], [59, 130.2068], [59, 106.2068]]
           ]
+        }
+      },
+      {
+        "meta": {"light": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[180, 120], [180, 122], [178, 122], [178, 120]]]
         }
       },
       {
@@ -6768,14 +6761,14 @@
     {"position": {"x": 455.221, "y": 889.08}, "roomId": 0, "distance": 200},
     {"position": {"x": 385.221, "y": 309.08}, "roomId": 0, "distance": 200},
     {"position": {"x": 1115.221, "y": 39.08}, "roomId": 3, "distance": 200},
-    {"position": {"x": 105.221, "y": 155.08}, "roomId": 1},
     {"position": {"x": 35.221, "y": 795.08}, "roomId": 0, "distance": 180},
     {"position": {"x": 795.221, "y": 269.08}, "roomId": 0, "distance": 120},
     {"position": {"x": 1165.221, "y": 819.08}, "roomId": 0, "distance": 180},
     {"position": {"x": 805.221, "y": 999.08}, "roomId": 2, "distance": 160},
     {"position": {"x": 935.221, "y": 979.08}, "roomId": 0, "distance": 160},
     {"position": {"x": 559.221, "y": 460.08}, "roomId": 0, "distance": 120},
-    {"position": {"x": 1115.221, "y": 209.08}, "roomId": 4, "distance": 200}
+    {"position": {"x": 1115.221, "y": 209.08}, "roomId": 4, "distance": 200},
+    {"position": {"x": 179, "y": 121}, "roomId": 1}
   ],
   "lightRects": [
     {
@@ -6809,82 +6802,82 @@
       "postConnectors": []
     },
     {
-      "key": "door16@light3",
-      "doorId": 16,
-      "windowId": -1,
-      "lightId": 3,
-      "rect": {"x": 242, "y": 6, "width": 118, "height": 105},
-      "srcRoomId": 1,
-      "preConnectors": [],
-      "postConnectors": []
-    },
-    {
-      "key": "door17@light3",
-      "doorId": 17,
-      "windowId": -1,
-      "lightId": 3,
-      "rect": {"x": 242, "y": 98, "width": 118, "height": 81},
-      "srcRoomId": 1,
-      "preConnectors": [],
-      "postConnectors": []
-    },
-    {
-      "key": "door18@light3",
-      "doorId": 18,
-      "windowId": -1,
-      "lightId": 3,
-      "rect": {"x": 6, "y": 6, "width": 52, "height": 102},
-      "srcRoomId": 1,
-      "preConnectors": [],
-      "postConnectors": []
-    },
-    {
-      "key": "door19@light3",
-      "doorId": 19,
-      "windowId": -1,
-      "lightId": 3,
-      "rect": {"x": 6, "y": 90, "width": 52, "height": 92},
-      "srcRoomId": 1,
-      "preConnectors": [],
-      "postConnectors": []
-    },
-    {
-      "key": "door20@light10",
+      "key": "door20@light9",
       "doorId": 20,
       "windowId": -1,
-      "lightId": 10,
+      "lightId": 9,
       "rect": {"x": 915, "y": 111, "width": 163, "height": 202},
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
     },
     {
-      "key": "door21@light10",
+      "key": "door21@light9",
       "doorId": 21,
       "windowId": -1,
-      "lightId": 10,
+      "lightId": 9,
       "rect": {"x": 1149, "y": 15, "width": 45, "height": 43},
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
     },
     {
-      "key": "door22@light10",
+      "key": "door22@light9",
       "doorId": 22,
       "windowId": -1,
-      "lightId": 10,
+      "lightId": 9,
       "rect": {"x": 1153, "y": 242, "width": 41, "height": 36},
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
     },
     {
-      "key": "window0@light10",
+      "key": "window0@light9",
       "doorId": -1,
       "windowId": 0,
-      "lightId": 10,
+      "lightId": 9,
       "rect": {"x": 966, "y": 16, "width": 112, "height": 158},
       "srcRoomId": 4,
+      "preConnectors": [],
+      "postConnectors": []
+    },
+    {
+      "key": "door16@light10",
+      "doorId": 16,
+      "windowId": -1,
+      "lightId": 10,
+      "rect": {"x": 242, "y": 6, "width": 118, "height": 105},
+      "srcRoomId": 1,
+      "preConnectors": [],
+      "postConnectors": []
+    },
+    {
+      "key": "door17@light10",
+      "doorId": 17,
+      "windowId": -1,
+      "lightId": 10,
+      "rect": {"x": 242, "y": 124, "width": 187, "height": 176},
+      "srcRoomId": 1,
+      "preConnectors": [],
+      "postConnectors": []
+    },
+    {
+      "key": "door18@light10",
+      "doorId": 18,
+      "windowId": -1,
+      "lightId": 10,
+      "rect": {"x": 6, "y": 45, "width": 52, "height": 66},
+      "srcRoomId": 1,
+      "preConnectors": [],
+      "postConnectors": []
+    },
+    {
+      "key": "door19@light10",
+      "doorId": 19,
+      "windowId": -1,
+      "lightId": 10,
+      "rect": {"x": 6, "y": 124, "width": 52, "height": 64},
+      "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
     }

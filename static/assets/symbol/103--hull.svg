@@ -116,9 +116,6 @@
     <rect x="1110.221" y="34.08" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance=200</title>
     </rect>
-    <rect x="100.221" y="150.08" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
-      <title>light</title>
-    </rect>
     <rect x="30.221" y="790.08" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance=180</title>
     </rect>

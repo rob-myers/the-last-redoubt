@@ -4,8 +4,8 @@
 
 - ✅ layout for gm 103
 
-- 🚧 lighting issue with double doors
-  - relevant for small rooms with double doors
+- ✅ lighting issue with small room with double doors
+  - place light carefully "at centre"
 
 - ✅ cannot pan whilst tracking
 
