@@ -120,10 +120,13 @@
     return Math.abs(this.x - x) <= error && Math.abs(this.y - y) <= error;
   }
 
-  /** @param {[number, number] | Geom.VectJson} input */
-  static from(input) {
-    return Array.isArray(input)
-      ? new Vect(input[0], input[1])
+  /**
+   * @param {Geom.VectJson | number} input
+   * @param {number} [y] 
+   */
+  static from(input, y) {
+    return typeof input === 'number'
+      ? new Vect(input, y)
       : new Vect(input.x, input.y);
   }
 

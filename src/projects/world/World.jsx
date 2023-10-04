@@ -54,6 +54,7 @@ export default function World(props) {
     lib: {
       filter, first, map, merge, take,
       isVectJson: Vect.isVectJson,
+      vectFrom: Vect.from,
       precision, removeFirst,
       ...npcService,
     },
@@ -167,6 +168,7 @@ export default function World(props) {
 /**
  * @typedef StateUtil Utility classes and `rxjs` functions
  * @property {typeof import('../geom').Vect['isVectJson']} isVectJson
+ * @property {typeof import('../geom').Vect['from']} vectFrom
  * @property {typeof filter} filter
  * @property {typeof first} first
  * @property {typeof map} map
