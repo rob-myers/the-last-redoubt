@@ -17,6 +17,8 @@
 - abstract code:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 - pausing direction issue while `click | walk foo` ?
+- ✅ create an APNG
+  - still too large (like animated GIF)
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc

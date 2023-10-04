@@ -129,6 +129,24 @@ ffmpeg -i filename.mov -filter_complex "[0:v] fps=10" -b:v 0 -crf 25 output.mp4
 ffmpeg -i filename.mov -filter_complex "[0:v] fps=20" -b:v 0 -crf 25 output.mp4
 ```
 
+Fix ffmpeg APNG
+
+```sh
+$ ffmpeg -i ~/Desktop/apng-test.mov -plays 0 -t 1 -vf "setpts=PTS-STARTPTS, crop=1200:800, hqdn3d=1.5:1.5:6:6, scale=600:400" output.apng
+dyld[12926]: Library not loaded: /opt/homebrew/opt/libtiff/lib/libtiff.5.dylib
+  Referenced from: /opt/homebrew/Cellar/leptonica/1.82.0_1/lib/liblept.5.dylib
+  Reason: tried: '/opt/homebrew/opt/libtiff/lib/libtiff.5.dylib' (no such file), '/usr/local/lib/libtiff.5.dylib' (no such file), '/usr/lib/libtiff.5.dylib' (no such file), '/opt/homebrew/Cellar/libtiff/4.5.1/lib/libtiff.5.dylib' (no such file), '/usr/local/lib/libtiff.5.dylib' (no such file), '/usr/lib/libtiff.5.dylib' (no such file)
+Abort trap: 6
+
+cd /opt/homebrew/opt/libtiff/lib/
+ln -s libtiff.6.dylib libtiff.5.dylib
+
+# then...
+ffmpeg -i ~/Desktop/apng-test.mov -plays 0 -r 10 -vf "setpts=PTS-STARTPTS, crop=1200:800, hqdn3d=1.5:1.5:6:6, scale=600:400" ~/Desktop/output.apng
+ffmpeg -i ~/Desktop/apng-test.mov -plays 0 -r 1 -vf "setpts=PTS-STARTPTS, crop=1200:800, hqdn3d=1.5:1.5:6:6, scale=300:200" ~/Desktop/output.apng
+```
+
+
 My Pixel 5 dimensions: `464 * 851`
 
 ```js
