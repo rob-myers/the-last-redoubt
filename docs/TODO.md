@@ -4,6 +4,11 @@
 
 - ✅ layout for gm 103
 
+- 🚧 lighting issue with double doors
+  - relevant for small rooms with double doors
+
+- ✅ cannot pan whilst tracking
+
 - ✅ cleanup e.g. `npc map {show-labels,hide-labels,show-labels-for}`
 - BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
