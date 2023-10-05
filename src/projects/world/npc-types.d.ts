@@ -70,7 +70,7 @@ declare namespace NPC {
     navOpts: NPC.NavOpts;
     nextWalk: null | {
       /** Future points to visit after finishing current walk */
-      visits: Geom.VectJson[];
+      visits: Geom.Vect[];
       /** Future navigation path induced by `visits` */
       navPath: NPC.GlobalNavPath;
     };

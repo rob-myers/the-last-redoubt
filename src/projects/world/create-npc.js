@@ -229,7 +229,7 @@ export default function createNpc(
       return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
     },
     extendNextWalk(...points) {// 👈 often a single point
-      const currentPath = /** @type {Geom.VectJson[]} */ (this.anim.path);
+      const currentPath = this.anim.path;
       if (!this.isWalking() || currentPath.length === 0) {
         return warn(`extendNextWalk: ${this.anim.spriteSheet}: must be walking`);
       }
@@ -239,12 +239,12 @@ export default function createNpc(
       this.nextWalk ??= {  visits: [], navPath: api.lib.getEmptyNavPath() };
       
       // compute next navPath; depict entire navPath
-      const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.VectJson} */ (currentPath.at(-1));
+      const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.Vect} */ (currentPath.at(-1));
       const deltaNavPath = api.npcs.getGlobalTour([src, ...points], this.navOpts);
       api.debug.extendPath(api.lib.getNavPathName(def.key), deltaNavPath.path);
       this.nextWalk.navPath = api.lib.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
 
-      this.nextWalk.visits.push(...points);
+      this.nextWalk.visits.push(...points.map(Vect.from));
     },
     async fadeSpawn(point, opts = {}) {
       try {
