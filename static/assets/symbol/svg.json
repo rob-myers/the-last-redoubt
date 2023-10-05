@@ -1795,12 +1795,26 @@
             ]
           ]
         }
+      },
+      {
+        "meta": {"light": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [127.329, 116.667],
+              [127.329, 126.667],
+              [137.329, 126.667],
+              [137.329, 116.667]
+            ]
+          ]
+        }
       }
     ],
     "width": 1200,
     "height": 1200,
     "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
-    "lastModified": 1696427623635.0823
+    "lastModified": 1696506804938.462
   },
   "301--hull": {
     "key": "301--hull",
@@ -6616,7 +6630,7 @@
         }
       },
       {
-        "meta": {"wall": true},
+        "meta": {"wall": true, "e": true},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[890, 0], [890, 1210], [910, 1210], [910, 0]]]
@@ -6681,19 +6695,12 @@
             [[895, 531.034], [895, 651.034], [905, 651.034], [905, 531.034]]
           ]
         }
-      },
-      {
-        "meta": {"light": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[300, 600], [300, 610], [310, 610], [310, 600]]]
-        }
       }
     ],
     "width": 900,
     "height": 1200,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
-    "lastModified": 1696427618464.1318
+    "lastModified": 1696506800419.9294
   },
   "empty-room--060--4x4": {
     "key": "empty-room--060--4x4",
@@ -9517,7 +9524,7 @@
     "width": 600,
     "height": 900,
     "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
-    "lastModified": 1696081333118.798
+    "lastModified": 1696507219310.8936
   },
   "lounge--009--2x3": {
     "key": "lounge--009--2x3",

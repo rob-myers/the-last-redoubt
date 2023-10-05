@@ -5,15 +5,18 @@
 - ✅ pipe parent and children all have same process group
   - inherited from parent, except 0
 
-- BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
-  - the latter click should not be read?
+- ✅ create an APNG
+  - still too large (like animated GIF)
+- ❌ BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
+  - no repro
 - use animation.finished promise elsewhere to clean things up
 - doors should be easier to open as player walks
 - abstract code:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 - pausing direction issue while `click | walk foo` ?
-- ✅ create an APNG
-  - still too large (like animated GIF)
+- layouts have various extra stuff e.g. extras--*
+- map PNG does not include extras--*
+- avoid multiple `stopped-walking` when extend walk
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc

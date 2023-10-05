@@ -94,8 +94,7 @@ export default function CssPanZoom(props) {
             );
             state.zoomToClient(dstScale, current);
           } else {
-            if (state.isFollowing()) {
-              // no dragging whilst following else discontinuous on stop follow
+            if (state.isFollowing()) {// Prevent pan whilst following
               state.start.clientX = state.start.clientY = undefined;
               return;
             }
@@ -259,12 +258,13 @@ export default function CssPanZoom(props) {
           return await state.panZoomTo({ durationMs: 1000, worldPoint: path[0], id: 'followPath' });
         }
 
-        await state.animationAction('cancelPanZoom');
-        await state.animationAction('cancelFollow');
+        await Promise.all([
+          state.animationAction('cancelPanZoom'),
+          state.animationAction('cancelFollow'),
+        ]);
 
         const { keyframes, duration } = state.computePathKeyframes(path, animScaleFactor);
-        state.followAnim = state.followEl.animate(keyframes, {
-          // ℹ️ Jerky on Safari Desktop and Firefox Mobile
+        const anim = state.followAnim = state.followEl.animate(keyframes, {
           duration,
           direction: 'normal',
           fill: 'forwards',
@@ -272,16 +272,15 @@ export default function CssPanZoom(props) {
           id: 'followPath',
         });
 
-        await new Promise((resolve, reject) => {
-          const anim = /** @type {Animation} */ (state.followAnim);
-          anim.addEventListener('finish', () => {
-            resolve('completed');
-            state.releaseAnim(anim, state.followEl);
-            state.syncStyles();
-            state.followAnim === anim && (state.followAnim = null);
-          });
-          anim.addEventListener('cancel', () => reject('cancelled'));
-        });
+        try {
+          await anim.finished;
+          this.followAnim === anim && (this.followAnim = null);
+          state.releaseAnim(anim, state.followEl);
+          state.syncStyles();
+        } catch (e) {
+          this.followAnim === anim && (this.followAnim = null);
+          throw Error('cancelled');
+        }
       },
       getCenteredCssTransforms(worldPoints) {
         const { width: screenWidth, height: screenHeight } = state.rootEl.getBoundingClientRect();

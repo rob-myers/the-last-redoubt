@@ -59,6 +59,9 @@ export async function renderGeomorph(
     error('hull walls must exist, be connected, and have a hole');
   }
 
+  // symbols can draw polygons on floor e.g. "poly floor fillColor=#00000044 ..."
+  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !!x.meta.floor);
+
   if (navOutline) {
     ctxt.fillStyle = navColor;
     ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
@@ -71,8 +74,6 @@ export async function renderGeomorph(
     drawTriangulation(ctxt, layout.navZone)
   }
 
-  // symbols can draw polygons on floor e.g. "poly floor fillColor=#00000044 ..."
-  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !!x.meta.floor);
 
   const { singles, obstacles, walls } = layout.groups;
   const doorPolys = singlesToPolys(singles, 'door');
@@ -239,6 +240,7 @@ export function drawThinDoors(ctxt, layout) {
  */
 function drawPolySingles(ctxt, layout, lookup, filter) {
   const initTransform = ctxt.getTransform();
+  ctxt.save();
   for (const { key, transformArray } of layout.items.slice(1)) {
     ctxt.transform(...transformArray ?? [1, 0, 0, 1, 0, 0]);
     ctxt.scale(0.2, 0.2);
@@ -254,5 +256,5 @@ function drawPolySingles(ctxt, layout, lookup, filter) {
     });
     ctxt.setTransform(initTransform);
   }
-
+  ctxt.restore();
 }

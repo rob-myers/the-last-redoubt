@@ -41,7 +41,7 @@ const layoutDefs = {
       ]},
 
       { y: 8 * 60, items: [
-        { symbol: 'empty-room--039--3x4', doors: ['e'], walls: [] },
+        { symbol: 'empty-room--039--3x4', doors: ['e'], walls: ['e'] },
         { symbol: 'office--061--3x4', x: 14 * 60 },
       ]},
       { symbol: 'lifeboat--small-craft', y: 8 * 60 + 12 },
