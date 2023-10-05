@@ -9,12 +9,15 @@
   - still too large (like animated GIF)
 - ❌ BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - no repro
-- use animation.finished promise elsewhere to clean things up
-- doors should be easier to open as player walks
-- abstract code:
+- ✅ use animation.finished promise elsewhere to clean things up
+- 🚧 abstract code:
   > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
-- pausing direction issue while `click | walk foo` ?
+- 🚧 pausing direction issue while `click | walk foo`
+  - on unpause does not continue walk
+
 - layouts have various extra stuff e.g. extras--*
+
+- doors should be easier to open as player walks
 - map PNG does not include extras--*
 - avoid multiple `stopped-walking` when extend walk
 

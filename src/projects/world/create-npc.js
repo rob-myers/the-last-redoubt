@@ -83,17 +83,13 @@ export default function createNpc(
       this.anim.opacity = animation;
 
       try {
-        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          animation.addEventListener('finish', () => resolve());
-          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
-        }));
+        await animation.finished;
+      } catch (e) {// Reset opacity if cancelled
+        this.el.body.style.opacity = '1';
+        throw Error('cancelled');
       } finally {
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
-        if (animation.playState === 'finished') {
-          animation.cancel();
-        } else {// Reset opacity if cancelled
-          this.el.body.style.opacity = '1';
-        }
+        animation.cancel();
       }
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
@@ -111,13 +107,11 @@ export default function createNpc(
       ], { duration: durationMs, fill: 'forwards', easing: 'ease' });
   
       try {
-        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          animation.addEventListener('finish', () => resolve());
-          animation.addEventListener('cancel', () => reject(new Error('cancelled')));
-        }));
-      } catch (e) {
-        if (!throwOnCancel && e instanceof Error && e.message === 'cancelled') { /** NOOP */ }
-        else throw e;
+        await animation.finished;
+      } catch {
+        if (throwOnCancel) {
+          throw new Error('cancelled');
+        }
       } finally {
         isAnimAttached(animation, this.el.body) && animation.commitStyles();
         animation.playState === 'finished' && animation.cancel();
@@ -143,11 +137,11 @@ export default function createNpc(
       }
 
       await Promise.all(rootAnims.concat(bodyAnims).map(anim => {
-        (anim !== this.anim.sprites) && anim.commitStyles();
+        anim !== this.anim.sprites && anim.commitStyles();
         return /** @type {Promise<void>} */ (new Promise(resolve => {
           anim.addEventListener('cancel', () => resolve());
           anim.cancel();
-        }))
+        }));
       }));
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
@@ -294,41 +288,31 @@ export default function createNpc(
         length: this.computeWayMetaLength(navMeta),
       }));
 
-      const continuous = this.getPosition().distanceTo(path[0]) <= 0.01;
       this.startAnimation('walk');
       api.npcs.events.next({
         key: 'started-walking',
         npcKey: this.def.key,
         navPath,
-        continuous,
+        continuous: this.getPosition().distanceTo(path[0]) <= 0.01,
         extends: !!this.nextWalk,
       });
       this.nextWalk = null;
       this.nextWayTimeout();
-      console.log(`followNavPath: ${this.def.key} started walk`);
-
       const trAnim = this.anim.translate;
+
       try {
-        await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
-          trAnim.addEventListener('finish', () => {
-            console.log(`followNavPath: ${this.def.key} finished walk`);
-            this.wayTimeout(); // immediate else startAnimation('idle') will clear
-            resolve();
-          });
-          trAnim.addEventListener('cancel', () => {
-            // We cancel when finished to release control to styles via startAnimation('idle')
-            if (trAnim.playState === 'paused' || trAnim.playState === 'running') {
-              console.log(`followNavPath: ${this.def.key} cancelled walk`);
-            }
-            reject(new Error('cancelled'));
-          });
-        }));
+        console.log(`followNavPath: ${this.def.key} started walk`);
+        await trAnim.finished;
+        console.log(`followNavPath: ${this.def.key} finished walk`);
+        this.wayTimeout(); // immediate else startAnimation('idle') will clear
+      } catch (e) {
+        console.log(`followNavPath: ${this.def.key} cancelled walk`);
+        throw Error('cancelled');
       } finally {
         this.anim.speedFactor = this.anim.defaultSpeedFactor; // Reset speed to default
         isAnimAttached(trAnim, this.el.root) && trAnim.commitStyles();
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
       }
-
     },
     getAngle() {
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
