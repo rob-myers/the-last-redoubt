@@ -2,14 +2,9 @@
 
 ## In progress
 
-- ✅ layout for gm 103
+- ✅ pipe parent and children all have same process group
+  - inherited from parent, except 0
 
-- ✅ lighting issue with small room with double doors
-  - place light carefully "at centre"
-
-- ✅ cannot pan whilst tracking
-
-- ✅ cleanup e.g. `npc map {show-labels,hide-labels,show-labels-for}`
 - BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - the latter click should not be read?
 - use animation.finished promise elsewhere to clean things up
@@ -578,6 +573,12 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ layout for gm 103
+- ✅ lighting issue with small room with double doors
+  - place light carefully "at centre"
+- ✅ cannot pan whilst tracking
+- ✅ cleanup e.g. `npc map {show-labels,hide-labels,show-labels-for}`
 
 - ✅ redo geomorph layout syntax
   - ✅ GeomorphEdit remembers last selected

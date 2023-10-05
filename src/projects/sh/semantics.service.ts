@@ -146,12 +146,16 @@ class semanticsServiceClass {
       }
       case '|': {
         const { sessionKey, pid: ppid } = node.meta;
-        // pgid is pid of final pipe-child
-        const { ttyShell, nextPid: pgid } = useSession.api.getSession(sessionKey);
+        /** Inherit process group, except 0 */
+        const pgid = node.meta.pgid || ppid;
+        const { ttyShell } = useSession.api.getSession(sessionKey);
 
         const process = useSession.api.getProcess(node.meta);
         function killPipeChildren(SIGINT?: boolean) {
-          useSession.api.getProcesses(process.sessionKey, pgid).reverse().forEach(x => killProcess(x, SIGINT));
+          useSession.api.getProcesses(process.sessionKey, pgid)
+            .filter(x => x.key !== ppid)
+            .reverse().forEach(x => killProcess(x, SIGINT))
+          ;
         }
         process.cleanups.push(killPipeChildren); // Handle Ctrl-C
 

@@ -638,7 +638,7 @@ class cmdServiceClass {
         continue; // Already killed
       }
       const processes = process.pgid === pid || opts.group
-        // Apply command to whole process group
+        // Apply command to whole process group __in reverse__
         ? useSession.api.getProcesses(sessionKey, process.pgid).reverse()
         : [process]; // Apply command to exactly one process
 

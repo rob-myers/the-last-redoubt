@@ -24,7 +24,7 @@ if test '2 > 1'; then echo TEST PASSED; else echo TEST FAILED; fi
 
 ## Pipe semantics
 
-🚧 pipe-child termination info
+pipe-child termination info
 
 ```sh
 # `foo`
@@ -69,7 +69,7 @@ run '({ api }) { throw api.getKillError(); }' | take 1
 # exit code 130
 take 1 | run '({ api }) { throw api.getKillError(); }'
 # fix ctrl-c i.e. should kill whole while loop
-while true; do longClick 1 >clicked; test $( clicked/meta/nav ) && npc rob fadeSpawnDo $( clicked ); rm clicked; done
+while true; do click 1 >clicked; clicked/meta/nav; done
 ```
 
 ## Invoke JS function
