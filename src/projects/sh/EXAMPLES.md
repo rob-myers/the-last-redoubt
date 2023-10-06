@@ -415,3 +415,12 @@ click | filter meta.nav | nav rob | walk --forever rob
 
 npc rob walk $( nav rob $( click 1 ) )
 ```
+
+```sh
+# create a square i.e. 5th point is 1st point
+nav $( click 5 ) >np
+# spawn foo
+spawn --zhodani foo $( click 1 )
+# walk in a cyclic manner
+while true; do walk foo ${np}; done
+```
