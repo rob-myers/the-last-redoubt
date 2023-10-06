@@ -14,6 +14,9 @@ import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
 import { fillPolygons } from '../projects/service/dom';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
+/**
+ * 👋 This import causes `yarn render-layout {args}` 
+ */
 import { renderLayout } from './render-layout';
 
 const geomorphId = Number(process.argv[2]);
@@ -34,12 +37,10 @@ if (!fs.existsSync(geomorphJsonPath)) {
   process.exit(1);
 }
 
-main();
-
-async function main() {
+(async function main() {
 
   // Doors are open
-  const { canvas, layout } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: false });
+  const { canvas, layout } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: false, invertSymbols: true });
   // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
   
@@ -72,4 +73,4 @@ async function main() {
   await runYarnScript('minify-pngs', tempDir, '--webp' ,'--quality=90');
   childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
   fs.rmSync(tempDir, { force: true, recursive: true });
-}
+})();

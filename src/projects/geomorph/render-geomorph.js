@@ -1,9 +1,10 @@
+import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
-import { error, warn } from "../service/log";
-import { drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
+import { createMonochromaticMask, drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
+import { error } from "../service/log";
 
 /**
  * Render a single geomorph PNG,
@@ -11,7 +12,7 @@ import { drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
  * @param {Geomorph.ParsedLayout} layout
  * @param {Geomorph.SymbolLookup} lookup
  * @param {Canvas} canvas
- * @param {(pngHref: string) => Promise<Image>} getPng
+ * @param {(pngHref: string) => Promise<HTMLImageElement | (import('canvas').Image & CanvasImageSource)>} getPng
  * `pngHref` has local url format `/symbol/foo`
  * @param {Geomorph.RenderOpts} opts
  */
@@ -36,6 +37,7 @@ export async function renderGeomorph(
     obsColor = 'rgba(100, 100, 100, 0.45)',
     // wallColor = 'rgba(50, 40, 40, 0.5)',
     wallColor = 'rgba(50, 40, 40, 1)',
+    invertSymbols = false,
   },
 ) {
   const hullSym = lookup[layout.items[0].key];
@@ -73,7 +75,6 @@ export async function renderGeomorph(
     ctxt.lineWidth = 0.2;
     drawTriangulation(ctxt, layout.navZone)
   }
-
 
   const { singles, obstacles, walls } = layout.groups;
   const doorPolys = singlesToPolys(singles, 'door');
@@ -144,13 +145,23 @@ export async function renderGeomorph(
 
   const initTransform = ctxt.getTransform();
 
+  /** To invert PNG symbols we need a temporary canvas */
+  const tempCtxt = createCanvas(0, 0).getContext('2d');
+
   //#region symbol PNGs
   for (const { key, pngHref, pngRect, transformArray } of layout.items.slice(1)) {
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
     // draw symbol png
-    ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
+    if (invertSymbols) {
+      ctxt.translate(pngRect.x, pngRect.y);
+      ctxt.globalCompositeOperation = 'source-over';
+      ctxt.drawImage(image, 0, 0);
+      createMonochromaticMask(image, tempCtxt, ctxt, '#ffffff');
+    } else {
+      ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
+    }
     ctxt.setTransform(initTransform);
   }
   // symbols can have shading e.g. "poly fillColor=#00000044 ..."

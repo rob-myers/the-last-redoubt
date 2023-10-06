@@ -21,6 +21,7 @@ declare namespace Geomorph {
     navStroke?: string;
     obsColor?: string;
     wallColor?: string;
+    invertSymbols?: boolean;
   }
 
   /** Generated via `yarn svg-meta`. */

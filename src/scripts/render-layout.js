@@ -52,7 +52,7 @@ const staticDir = path.resolve(__dirname, '../../static');
 (async function main() {
   try {
     // Draw unlit geomorph
-    const { layout, canvas, pngRect } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale});
+    const { layout, canvas } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale, invertSymbols: true });
 
     /**
      * Draw map geomorph with doors and no highlights.
@@ -63,7 +63,9 @@ const staticDir = path.resolve(__dirname, '../../static');
       layout,
       symbolLookup,
       mapCanvas,
-      (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
+      (pngHref) => /** @type {Promise<import('canvas').Image & CanvasImageSource>} */ (
+        loadImage(fs.readFileSync(path.resolve(staticDir + pngHref)))
+      ),
       { scale, obsBounds: true, wallBounds: true, navTris: false, navOutline: false, doors: true, labels: false, highlights: false },
     );
 
@@ -90,9 +92,9 @@ const staticDir = path.resolve(__dirname, '../../static');
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
- * @param {{ thinDoors: boolean; debug: boolean; scale?: number}} opts
+ * @param {{ thinDoors: boolean; debug: boolean; scale?: number; invertSymbols?: boolean; }} opts
  */
-export async function renderLayout(def, { thinDoors, debug, scale = defaultScale }) {
+export async function renderLayout(def, { thinDoors, debug, scale = defaultScale, invertSymbols = false }) {
   const canvas = createCanvas(0, 0);
 
   const layout = await createLayout({
@@ -105,7 +107,9 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
     layout,
     symbolLookup,
     canvas,
-    (pngHref) => loadImage(fs.readFileSync(path.resolve(staticDir + pngHref))),
+    (pngHref) => /** @type {Promise<import('canvas').Image & CanvasImageSource>} */ (
+      loadImage(fs.readFileSync(path.resolve(staticDir + pngHref)))
+    ),
     {
       scale,
       obsBounds: true,
@@ -120,6 +124,7 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
         doors: true,
         labels: true,
       },
+      invertSymbols,
     },
   );
   return {
