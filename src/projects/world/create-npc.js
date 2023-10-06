@@ -887,7 +887,7 @@ export default function createNpc(
         throw Error('paused: cannot walk');
       }
       if (this.isPaused()) {
-        // ⛔️ isWalking cancel causes jerky extended walk
+        // isWalking cancel caused jerky extended walk?
         await this.cancel();
       }
       if (navPath.path.length === 0) {

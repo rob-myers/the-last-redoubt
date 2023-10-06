@@ -509,9 +509,12 @@
           async (datum) => {
             try {
               if (w.lib.isVectJson(datum)) {
+                if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
+                  return; // Ignore self clicks e.g. on unpause
+                }
                 if (npc.isWalking(true) && !datum.meta?.longClick) {
                   npc.extendNextWalk(datum);
-                } else  {
+                } else {
                   await npc.cancel();
                   await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
                 }

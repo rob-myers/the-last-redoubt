@@ -10,10 +10,26 @@
 - ❌ BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
   - no repro
 - ✅ use animation.finished promise elsewhere to clean things up
-- 🚧 abstract code:
-  > w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
+
 - 🚧 pausing direction issue while `click | walk foo`
-  - on unpause does not continue walk
+  - ✅ unpause should not continue walk
+    - e.g. via `click | filter 'x => !x.meta.npc' | walk foo`
+    - ✅ `walk` ignores self-clicks
+  - maybe `walk foo` should not throw on click outside nav
+  - npc should not walk offmesh onto seat
+
+- BUG collision missed when both walking and paused one of them
+  - one npc is walking along single straight line
+  - other intersects after being unpaused
+- BUG two npcs trying to open a door can toggle it open/closed immediately
+
+- support npc walk loops by continually extending walk?
+  - e.g. `click 4 >>clicks`
+  - e.g. `while true; do ... done`
+
+- processApi.verbose(...) 
+  - session.store has verbose boolean, driving npcs.config.verbose
+  - replace: w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 
 - layouts have various extra stuff e.g. extras--*
 
