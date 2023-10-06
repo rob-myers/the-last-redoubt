@@ -227,6 +227,30 @@ const pointCache = {};
 //#region canvas
 
 /**
+ * 
+ * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
+ * @param {CanvasRenderingContext2D} tempCtxt
+ * @param {CanvasRenderingContext2D} dstCtxt
+ * @param {string} [fillColor]
+ */
+export function createMonochromaticMask(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
+	// Draw opaque part of `image` in colour `fillColour`
+    tempCtxt.canvas.width = image.width;
+    tempCtxt.canvas.height = image.height;
+    tempCtxt.globalCompositeOperation = 'source-over';
+    tempCtxt.drawImage(/** @type {*} */ (image), 0, 0);
+    tempCtxt.globalCompositeOperation = 'source-in';
+    tempCtxt.fillStyle = fillColor;
+    tempCtxt.fillRect(0, 0, image.width, image.height);
+	tempCtxt.globalCompositeOperation = 'source-over';
+
+	// Take difference to obtain inverted image
+    dstCtxt.globalCompositeOperation = 'difference';
+    dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
+    dstCtxt.globalCompositeOperation = 'source-over';
+}
+
+/**
  * @param {CanvasRenderingContext2D} ctxt 
  * @param  {Geom.VectJson[]} ring 
  */
