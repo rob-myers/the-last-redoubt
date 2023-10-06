@@ -97,7 +97,7 @@ export const wallOutset = 12;
 
 export const doorSensorRadius = 30;
 
-export const doorViewOffset = 40;
+export const doorViewOffset = -2;
 
 /** Under consideration: `0 | 2 | -2` */
 export const doorPeekViewOffset = 0;
