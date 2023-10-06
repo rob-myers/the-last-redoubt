@@ -316,8 +316,8 @@ const rootCss = css`
   div.${cssName.door} {
     position: absolute;
     cursor: pointer;
-    background-color: #ddd;
-    border: 1px solid #333;
+    background-color: #000;
+    border: 1px solid #666;
 
     &.iris {
       opacity: 1;
@@ -334,9 +334,9 @@ const rootCss = css`
       }
     }
 
-    &.${cssName.hull} {
+    /* &.${cssName.hull} {
       border-width: 2px;
-    }
+    } */
     &.${cssName.locked} {
       background-color: #ff0000;
     }
