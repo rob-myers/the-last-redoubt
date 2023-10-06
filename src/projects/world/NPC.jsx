@@ -126,11 +126,12 @@ const rootCss = css`
   }
 
   transition: filter 0.5s;
+  filter: grayscale(0.9);
   &.paused {
     filter: grayscale(0) brightness(70%);
   }
   &.force-paused {
-    filter: grayscale(1) brightness(100%);
+    filter: grayscale(1) brightness(70%);
   }
 
   .interact-circle {
