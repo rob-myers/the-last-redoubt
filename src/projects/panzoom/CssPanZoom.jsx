@@ -90,7 +90,7 @@ export default function CssPanZoom(props) {
             }
             const diff = getDistance(state.pointers) - state.start.distance
             const dstScale = state.clampScale(
-              (state.scale) + (diff * 3 * state.opts.step) / 80
+              state.scale + (diff * state.opts.step) / 600
             );
             state.zoomToClient(dstScale, current);
           } else {
