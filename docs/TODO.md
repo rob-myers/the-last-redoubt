@@ -2,30 +2,29 @@
 
 ## In progress
 
-- ✅ pipe parent and children all have same process group
-  - inherited from parent, except 0
-
-- ✅ create an APNG
-  - still too large (like animated GIF)
-- ❌ BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
-  - no repro
-- ✅ use animation.finished promise elsewhere to clean things up
-
 - 🚧 pausing direction issue while `click | walk foo`
   - ✅ unpause should not continue walk
     - e.g. via `click | filter 'x => !x.meta.npc' | walk foo`
     - ✅ `walk` ignores self-clicks
-  - maybe `walk foo` should not throw on click outside nav
-  - npc should not walk offmesh onto seat
+  - 🚧 npc should not walk offmesh onto seat
+
+- 🚧 BUG 👉 seems current room is out of sync for different speed
+  - predictNpcCircleCollision `const segA = assertNonNull(npcA.getLineSeg());`
+```sh
+npc rob setSpeedFactor 2
+click | walk --open rob
+```
 
 - BUG collision missed when both walking and paused one of them
   - one npc is walking along single straight line
   - other intersects after being unpaused
 - BUG two npcs trying to open a door can toggle it open/closed immediately
+- BUG controlNpc issue with closedWeights i.e. seems to avoid closed doors even when we don't specify options
 
-- support npc walk loops by continually extending walk?
+- ✅ support npc walk loops by continually extending walk in while loop
   - e.g. `click 4 >>clicks`
   - e.g. `while true; do ... done`
+
 
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose
@@ -36,6 +35,8 @@
 - doors should be easier to open as player walks
 - map PNG does not include extras--*
 - avoid multiple `stopped-walking` when extend walk
+- FOV should release styles so we can change const via HMR
+- maybe `walk foo` should not throw on click outside nav
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
@@ -595,6 +596,22 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ try invert symbol PNGs in lit view?
+  - ❌ `convert bridge--042--8x9.png -channel RGB -negate output.png`
+  - ✅ globalCompositeOperation difference (avoid creating inverted PNGs)
+    > https://stackoverflow.com/a/39048555/2917822
+    - try draw opaque part of symbol all in white
+
+- ✅ pipe parent and children all have same process group
+  - inherited from parent, except 0
+
+- ✅ create an APNG
+  - still too large (like animated GIF)
+- ❌ BUG seems ``click | controlNpc rob` triggers walk from `spawn rob $( click 1 )`
+  - no repro
+- ✅ use animation.finished promise elsewhere to clean things up
+
 
 - ✅ layout for gm 103
 - ✅ lighting issue with small room with double doors
