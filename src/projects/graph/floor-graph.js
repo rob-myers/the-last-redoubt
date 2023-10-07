@@ -109,7 +109,10 @@ export class floorGraphClass extends BaseGraph {
   }
 
   /**
-   * Find a path through a geomorph's navmesh
+   * Find a path through a geomorph's navmesh.
+   * Both @see {src} and @see {dst} may be outside navmesh
+   * if @see {NPC.NavOpts.centroidsFallback} is used.
+   * 
    * @param {Geom.Vect} src in geomorph local coords
    * @param {Geom.Vect} dst in geomorph local coords
    * @param {NPC.NavOpts} [opts]

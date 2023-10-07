@@ -424,3 +424,19 @@ spawn --zhodani foo $( click 1 )
 # walk in a cyclic manner
 while true; do walk foo ${np}; done
 ```
+
+```sh
+# errors when click outside navmesh
+$ nav rob $( click 1 )
+nav: run: point outside navmesh: {"x":536.84,"y":435.18,"meta":{"roomId":15,"decor":true,"do":true,"sit":true,"chair":true,"orient":0,"ui":true,"gmId":0,"targetPos":{"x":534,"y":432},"longClick":false,"distance":0,"nav":false}}
+$ npc rob walk $( click 1 )
+npc: run: invalid global navpath: {"npcKey":"rob","navPath":{"x":535.98,"y":435.42,"meta":{"roomId":15,"decor":true,"do":true,"sit":true,"chair":true,"orient":0,"ui":true,"gmId":0,"targetPos":{"x":534,"y":432},"longClick":false,"distance":0,"nav":false}},"opts":{}}
+$ walk rob $( click 1 )
+walk: run: point (dst) outside navmesh: {"x":537.11,"y":432.58,"meta":{"roomId":15,"decor":true,"do":true,"sit":true,"chair":true,"orient":0,"ui":true,"gmId":0,"targetPos":{"x":534,"y":432},"longClick":false,"distance":0,"nav":false}}
+```
+
+```sh
+# 🚧 saw issue
+npc rob setSpeedFactor 2
+click | walk --open rob
+```

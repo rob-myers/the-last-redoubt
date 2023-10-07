@@ -251,12 +251,20 @@ export default function NPCs(props) {
     getGlobalNavPath(src, dst, opts) {
       const [srcGmId] = api.gmGraph.findGeomorphIdContaining(src);
       const [dstGmId] = api.gmGraph.findGeomorphIdContaining(dst);
+      if (opts?.endsNavigable) {
+        if (!state.isPointInNavmesh(src)) {
+          throw Error(`point (src) outside navmesh: ${JSON.stringify(src)}`)
+        }
+        if (!state.isPointInNavmesh(dst)) {
+          throw Error(`point (dst) outside navmesh: ${JSON.stringify(dst)}`)
+        }
+      }
 
       if (srcGmId === null || dstGmId === null) {
         throw Error(`getGlobalNavPath: src, dst must be inside some geomorph's aabb`)
       } else if (srcGmId === dstGmId) {
         const localNavPath = state.getLocalNavPath(srcGmId, src, dst, opts);
-        console.info('localNavPath (single)', localNavPath);
+        // console.info('localNavPath (single)', localNavPath);
         return {
           key: 'global-nav',
           path: localNavPath.path.slice(),
@@ -288,7 +296,7 @@ export default function NPCs(props) {
               // Final
               : state.getLocalNavPath(dstGmId, gmEdges[k - 1].dstDoorEntry, dst, opts);
 
-          console.warn('localNavPath', k, localNavPath);
+          // console.warn('localNavPath', k, localNavPath);
 
           const gmEdge = gmEdges[k];
           
@@ -571,7 +579,7 @@ export default function NPCs(props) {
     parseNavigable(input) {
       if (Vect.isVectJson(input)) {
         if (state.isPointInNavmesh(input)) return input;
-        throw Error(`point outside navmesh: ${JSON.stringify(input)}`)
+        throw Error(`point outside navmesh: ${JSON.stringify(input)}`);
       } else if (input in state.npc) {
         const npc =  state.npc[input];
         const point = npc.getPosition();
@@ -820,7 +828,7 @@ export default function NPCs(props) {
  * @property {(processApi: ProcessApi, npcKey: string) => NPC.NPC} connectNpcToProcess
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} connectSession
  * @property {(sessionKey: string, opts?: { panzoomPid?: number }) => void} disconnectSession
- * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalNavPath
+ * @property {(src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts & { endsNavigable?: boolean; }) => NPC.GlobalNavPath} getGlobalNavPath
  * @property {(visits: Geom.VectJson[], opts?: NPC.NavOpts) => NPC.GlobalNavPath} getGlobalTour
  * Get a single global nav-path visiting each point in `visits`.
  * @property {(gmId: number, src: Geom.VectJson, dst: Geom.VectJson, opts?: NPC.NavOpts) => NPC.LocalNavPath} getLocalNavPath

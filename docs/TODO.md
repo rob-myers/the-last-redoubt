@@ -2,11 +2,13 @@
 
 ## In progress
 
-- 🚧 pausing direction issue while `click | walk foo`
+- ✅ pausing direction issue while `click | walk foo`
   - ✅ unpause should not continue walk
     - e.g. via `click | filter 'x => !x.meta.npc' | walk foo`
     - ✅ `walk` ignores self-clicks
-  - 🚧 npc should not walk offmesh onto seat
+
+- ✅ npc should not walk off navmesh e.g. onto seat
+  - `walk rob $( click 1 )`
 
 - 🚧 BUG 👉 seems current room is out of sync for different speed
   - predictNpcCircleCollision `const segA = assertNonNull(npcA.getLineSeg());`
@@ -18,8 +20,8 @@ click | walk --open rob
 - BUG collision missed when both walking and paused one of them
   - one npc is walking along single straight line
   - other intersects after being unpaused
-- BUG two npcs trying to open a door can toggle it open/closed immediately
 - BUG controlNpc issue with closedWeights i.e. seems to avoid closed doors even when we don't specify options
+- BUG? two npcs trying to open a door can toggle it open/closed immediately
 
 - ✅ support npc walk loops by continually extending walk in while loop
   - e.g. `click 4 >>clicks`

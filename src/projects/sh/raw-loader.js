@@ -498,40 +498,40 @@
 
       if (api.isTtyAt(0)) {
         const datum = api.parseJsArg(datumStr);
-        if (w.lib.isVectJson(datum)) {
-          const navPath = w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts);
-          await npc.walk(navPath, { doorStrategy });
-        } else {
-          await npc.walk(datum, { doorStrategy });
-        }
-      } else {
-        await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
-          async (datum) => {
-            try {
-              if (w.lib.isVectJson(datum)) {
-                if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
-                  return; // Ignore self clicks e.g. on unpause
-                }
-                if (npc.isWalking(true) && !datum.meta?.longClick) {
-                  npc.extendNextWalk(datum);
-                } else {
-                  await npc.cancel();
-                  await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
-                }
-              } else {
-                await npc.walk(datum, { doorStrategy });
-              }
-            } catch (e) {
-              if (opts.forever) {
-                w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
-              } else {
-                throw e;
-              }
-            }
-          },
-          (datum) => !w.lib.isVectJson(datum) && npc.cancel(), // 🤔 could be empty
+        return await npc.walk(
+          w.lib.isVectJson(datum)
+            ? w.npcs.getGlobalNavPath(npc.getPosition(), datum, { ...npc.navOpts, endsNavigable: true })
+            : datum,
+          { doorStrategy },
         );
       }
+
+      await api.eagerReadLoop(/** @param {NPC.GlobalNavPath | Geomorph.PointMaybeMeta} datum */
+        async (datum) => {
+          try {
+            if (w.lib.isVectJson(datum)) {
+              if (datum.meta?.npc && datum.meta.npcKey === npc.key) {
+                return; // Ignore self clicks e.g. on unpause
+              }
+              if (npc.isWalking(true) && !datum.meta?.longClick) {
+                npc.extendNextWalk(datum);
+              } else {
+                await npc.cancel();
+                await npc.walk(w.npcs.getGlobalNavPath(npc.getPosition(), datum, npc.navOpts), { doorStrategy });
+              }
+            } else {
+              await npc.walk(datum, { doorStrategy });
+            }
+          } catch (e) {
+            if (opts.forever) {
+              w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
+            } else {
+              throw e;
+            }
+          }
+        },
+        (datum) => !w.lib.isVectJson(datum) && npc.cancel(), // 🤔 could be empty
+      );
     },
   },
   ];
