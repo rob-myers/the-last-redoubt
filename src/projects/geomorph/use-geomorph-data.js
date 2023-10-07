@@ -233,17 +233,17 @@ export async function createGeomorphData(input) {
       /**
        * If `doorId` is a hull door then `this` is actually adjacent to Player's current geomorph.
        * Then we need to flip the view offset for usage with "the other hull door".
-       * 🚧 maybe because it needs to be on the "other side" for usage in adjGm
        */
       const hullSign = this.isHullDoor(doorId) ? -1 : 1;
-      if (overrideOffset !== undefined) {
-        return computeViewPosition(this.doors[doorId], roomId, hullSign * overrideOffset);
-      } else {
-        const custom = this.roomOverrides[roomId]?.doorView?.[doorId];
-        return (custom?.point.clone()
-          || computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)
-        );
-      }
+      return computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset);
+      // if (overrideOffset !== undefined) {
+      //   return computeViewPosition(this.doors[doorId], roomId, hullSign * overrideOffset);
+      // } else {
+      //   const custom = this.roomOverrides[roomId]?.doorView?.[doorId];
+      //   return (custom?.point.clone()
+      //     || computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)
+      //   );
+      // }
     },
     getViewWindowPosition(rootRoomId, windowId) {
       const point = this.roomOverrides[rootRoomId]?.windowView?.[windowId];
