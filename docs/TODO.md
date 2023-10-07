@@ -2,16 +2,7 @@
 
 ## In progress
 
-- ✅ pausing direction issue while `click | walk foo`
-  - ✅ unpause should not continue walk
-    - e.g. via `click | filter 'x => !x.meta.npc' | walk foo`
-    - ✅ `walk` ignores self-clicks
-
-- ✅ npc should not walk off navmesh e.g. onto seat
-  - `walk rob $( click 1 )`
-
-- 🚧 BUG 👉 seems current room is out of sync for different speed
-  - predictNpcCircleCollision `const segA = assertNonNull(npcA.getLineSeg());`
+- ✅ BUG failure `const segA = assertNonNull(npcA.getLineSeg());`
 ```sh
 npc rob setSpeedFactor 2
 click | walk --open rob
@@ -39,6 +30,8 @@ click | walk --open rob
 - avoid multiple `stopped-walking` when extend walk
 - FOV should release styles so we can change const via HMR
 - maybe `walk foo` should not throw on click outside nav
+- BUG slow down at doors sometimes still going through door
+- BUG speed sometimes becomes slowed down perm
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
@@ -598,6 +591,14 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ pausing direction issue while `click | walk foo`
+  - ✅ unpause should not continue walk
+    - e.g. via `click | filter 'x => !x.meta.npc' | walk foo`
+    - ✅ `walk` ignores self-clicks
+
+- ✅ npc should not walk off navmesh e.g. onto seat
+  - `walk rob $( click 1 )`
 
 - ✅ try invert symbol PNGs in lit view?
   - ❌ `convert bridge--042--8x9.png -channel RGB -negate output.png`

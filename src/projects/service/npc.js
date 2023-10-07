@@ -219,7 +219,7 @@ export const npcService = {
    * @returns {{ collisions: NPC.NpcCollision[]; startInside: boolean; }}
   */
   predictNpcCircleCollision(npcA, decorB) {
-    if (!npcA.isWalking()) {
+    if (!npcA.isWalking(true)) {
       return { collisions: [], startInside: npcA.getPosition().distanceToSquared(decorB.center) < decorB.radius ** 2 };
     }
     if (!npcA.getWalkSegBounds(false).intersectsCentered(decorB.center.x, decorB.center.y, 2 * decorB.radius)) {
