@@ -46,12 +46,13 @@ export async function renderGeomorph(
   canvas.width = pngRect.width * scale;
   canvas.height = pngRect.height * scale;
 
-  const ctxt = /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
+  const ctxt = /** @type {CanvasRenderingContext2D | NodeCanvasContext} */ (canvas.getContext('2d'));
   ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
 
   ctxt.imageSmoothingEnabled = true;
   ctxt.imageSmoothingQuality = 'high';
   ctxt.lineJoin = 'round';
+  // 'antialias' in ctxt && (ctxt.antialias = 'subpixel'); // No difference
 
   //#region underlay
   ctxt.fillStyle = floorColor;
@@ -206,6 +207,7 @@ export async function renderGeomorph(
 
 /** @typedef {HTMLCanvasElement | import('canvas').Canvas} Canvas */
 /** @typedef {HTMLImageElement | import('canvas').Image} Image */
+/** @typedef {ReturnType<import('canvas').Canvas['getContext']>} NodeCanvasContext */
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
