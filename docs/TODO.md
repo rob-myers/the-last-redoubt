@@ -4,6 +4,12 @@
 
 - ✅ BUG cannot leave basin in gm 301 room 18
 
+- ✅ can relate-connectors door -> window
+  - already implemented
+- ✅ permit view point overrides again
+- ✅ fix/remove some view points
+- 🚧 remove peek stuff
+
 - 🚧 layouts have various extra stuff e.g. extras--*
   - create a screen symbol
   - 301: add tables/screens

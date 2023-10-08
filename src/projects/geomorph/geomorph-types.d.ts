@@ -188,7 +188,6 @@ declare namespace Geomorph {
     /** Returns -1 if not found. */
     findRoomContaining(point: Geom.VectJson, includeDoors?: boolean): number;
     /** Convex hull of door with a point "beyond" view position  */
-    getViewEnvelope(srcRoomId: number, doorId: number, peek: boolean): Geom.Poly;
     /**
      * Get non-null roomId adjacent to dstDoorId s.t. furthest from srcDoorId.
      * For hull doors this will be the only roomId referenced.
@@ -208,9 +207,9 @@ declare namespace Geomorph {
      * - for current gmId `roomId` is current room
      * - for adjacent gmId `roomId` is adjacent room
      */
-    getViewDoorPosition(roomId: number, doorId: number, overrideOffset?: number);
+    getViewDoorPosition(roomId: number, doorId: number);
     getViewWindowPosition(rootRoomId: number, doorId: number);
-    /** Inside roomId looking through adjacent doorId, is dstDoorId behind? */
+    /** Inside @see {srcRoomId} looking through adjacent @see {srcDoorId}, is @see {dstDoorId} behind? */
     isOtherDoorBehind(srcRoomId: number, srcDoorId: number, dstDoorId: number): boolean;
     isHullDoor(doorId: number): boolean;
 

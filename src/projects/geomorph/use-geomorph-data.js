@@ -6,7 +6,7 @@ import { computeViewPosition, coordToRoomGrid, geomorphJsonPath, getNormalizedDo
 import { warn } from "../service/log";
 import { parseLayout } from "../service/geomorph";
 import { geom } from "../service/geom";
-import { doorPeekViewOffset, doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
+import { doorSensorRadius, doorViewOffset, windowViewOffset } from "../world/const";
 import usePathfinding from "./use-pathfinding";
 
 /**
@@ -77,7 +77,7 @@ export async function createGeomorphData(input) {
   const viewMetas = layout.groups.singles
     .filter(x => x.meta[svgSymbolTag.view])
     .map(({ poly, meta }) => /** @type {const} */ (
-      { center: poly.center, poly, reverse: meta.reverse, meta }
+      { center: poly.center, poly, meta }
     ));
 
   /**
@@ -138,29 +138,40 @@ export async function createGeomorphData(input) {
     },
   }));
 
-  viewMetas.forEach(({ center: p, poly, reverse, meta }, i) => {
-    let roomId = findRoomContaining(p);
-    const doorId = layout.doors.findIndex((door) => geom.convexPolysIntersect(poly.outline, door.poly.outline));
-    const windowId = layout.windows.findIndex((window) => geom.convexPolysIntersect(poly.outline, window.poly.outline));
+  viewMetas.forEach(({ center: p, poly, meta }, i) => {
+    let intersects = false;
+    const roomId = findRoomContaining(p);
 
-    if (roomId === -1 || (doorId === -1 && windowId === -1)) {
-      console.warn(`useGeomorphData: light ${i} has room/door/windowId ${roomId}/${doorId}/${windowId}`);
-      return;
-    } else if (reverse) {// Reversed light comes from otherRoomId
-      const otherRoomId = doorId >= 0
-        ? layout.doors[doorId].roomIds.find(x => x !== roomId)
-        : layout.windows[windowId].roomIds.find(x => x !== roomId);
-      if (typeof otherRoomId !== 'number') {
-        console.warn(`useGeomorphData: reverse light ${i} lacks other roomId (room/doorId ${roomId}/${doorId})`);
-      } else roomId = otherRoomId;
-    }// NOTE roomId could be -1
+    // Unclear if a single 'view'-tagged rect should adjust view of each connector it intersects,
+    // i.e. unclear if this is actually useful. But it avoids bugs where only one connector gets adjusted.
 
-    doorId >= 0 && (
-      (roomOverrides[roomId].doorView ??= [])[doorId] = { point: p, meta: {...meta} }
-    );
-    windowId >= 0 && (
-      (roomOverrides[roomId].windowView ??= [])[windowId] = p
-    );
+    layout.doors.forEach((door, doorId) => {
+      if (geom.convexPolysIntersect(poly.outline, door.poly.outline)) {
+        intersects = true;
+        const otherRoomId = layout.doors[doorId].roomIds.find(x => x !== roomId);
+        if (typeof otherRoomId === 'number') {
+          (roomOverrides[otherRoomId].doorView ??= [])[doorId] = { point: p, meta: {...meta} };
+        } else {
+          warn(`${'useGeomorphData'}: view ${i} lacks other roomId (room ${roomId} door ${doorId})`);
+        }
+      }
+    });
+
+    layout.windows.forEach((window, windowId) => {
+      if (geom.convexPolysIntersect(poly.outline, window.poly.outline)) {
+        intersects = true;
+        const otherRoomId = layout.windows[windowId].roomIds.find(x => x !== roomId);
+        if (typeof otherRoomId === 'number') {
+          (roomOverrides[roomId].windowView ??= [])[windowId] = p;
+        } else {
+          warn(`${'useGeomorphData'}: view ${i} lacks other roomId (room ${roomId} window ${windowId})`);
+        }
+      }
+    });
+
+    if (!intersects) {
+      warn(`${'useGeomorphData'}: view ${i} intersects no doors/windows (room ${roomId})`);
+    }
   });
 
   // 🤔 pre-compute?
@@ -200,18 +211,6 @@ export async function createGeomorphData(input) {
     floorGraph: floorGraphClass.createMock(), // Overwritten later
 
     findRoomContaining,
-    // 🚧 cache
-    getViewEnvelope(srcRoomId, doorId, peek) {
-      /** Further into room than viewpoint */
-      const furtherViewPosition = this.getViewDoorPosition(
-        srcRoomId,
-        doorId,
-        (peek ? doorPeekViewOffset : doorViewOffset) + 2,
-      );
-      return new Poly(geom.convexHull(
-        this.doors[doorId].poly.outline.concat(furtherViewPosition)
-      ));
-    },
     getFurtherDoorRoom(srcDoorId, dstDoorId) {
       const [src] = this.doors[srcDoorId].entries;
       const { entries: [dstA, dstB], roomIds } = this.doors[dstDoorId];
@@ -229,21 +228,16 @@ export async function createGeomorphData(input) {
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doors ?? [];
     },
-    getViewDoorPosition(roomId, doorId, overrideOffset) {
+    getViewDoorPosition(roomId, doorId) {
       /**
        * If `doorId` is a hull door then `this` is actually adjacent to Player's current geomorph.
        * Then we need to flip the view offset for usage with "the other hull door".
        */
       const hullSign = this.isHullDoor(doorId) ? -1 : 1;
-      return computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset);
-      // if (overrideOffset !== undefined) {
-      //   return computeViewPosition(this.doors[doorId], roomId, hullSign * overrideOffset);
-      // } else {
-      //   const custom = this.roomOverrides[roomId]?.doorView?.[doorId];
-      //   return (custom?.point.clone()
-      //     || computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)
-      //   );
-      // }
+      const custom = this.roomOverrides[roomId]?.doorView?.[doorId];
+      return (custom?.point.clone()
+        || computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)
+      );
     },
     getViewWindowPosition(rootRoomId, windowId) {
       const point = this.roomOverrides[rootRoomId]?.windowView?.[windowId];
@@ -252,8 +246,8 @@ export async function createGeomorphData(input) {
       );
     },
     // 🚧 cache
-    isOtherDoorBehind(srcRoomId, srcDoorId, dstDoorsId) {
-      const { behind } = this.relDoorId[srcDoorId].metas[dstDoorsId];
+    isOtherDoorBehind(srcRoomId, srcDoorId, dstDoorId) {
+      const { behind } = this.relDoorId[srcDoorId].metas[dstDoorId];
       return behind[this.doors[srcDoorId].roomIds.indexOf(srcRoomId)];
     },
     isHullDoor(doorId) {

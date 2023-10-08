@@ -5,6 +5,18 @@
     <pattern id="grid-0" patternUnits="userSpaceOnUse" width="60" height="60" patternTransform="matrix(1, 0, 0, 1, 0, 0)" bx:pinned="true">
       <rect width="60" height="60" style="fill: none; stroke-width: 0.1px; stroke: rgb(0, 0, 0);"/>
     </pattern>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="925.001" cy="1050" r="150" id="gradient-0">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-color: rgb(0, 0, 0); stop-opacity: 0;"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="925.001" cy="1050" r="150" id="gradient-1">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-color: rgb(170, 170, 170); stop-opacity: 0;"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="925.001" cy="1050" r="150" id="gradient-2">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-opacity: 0; stop-color: rgb(170, 170, 170);"/>
+    </radialGradient>
   </defs>
   <g style="pointer-events: none;">
     <title>background</title>
@@ -181,13 +193,13 @@
     <rect x="144" y="45.211" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance=60</title>
     </rect>
-    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1318.581055, -533.254333)">
+    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill: url('#gradient-0');" transform="matrix(0, 1, -1, 0, 1318.581055, -533.254333)">
       <title>light floor</title>
     </rect>
-    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1978.581055, -533.254333)">
+    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill: url('#gradient-1');" transform="matrix(0, 1, -1, 0, 1978.581055, -533.254333)">
       <title>light floor</title>
     </rect>
-    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1680, -595.001038)">
+    <rect x="775.001" y="900" width="300" height="300" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill: url('#gradient-2');" transform="matrix(0, 1, -1, 0, 1680, -595.001038)">
       <title>light floor</title>
     </rect>
     <rect x="-1.125" width="5" height="80" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="257.252">
@@ -243,9 +255,6 @@
     </rect>
     <rect x="988.811" y="176.371" width="12.91" height="13.031" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 255); opacity: 0.5;" transform="matrix(1, 0.000044, -0.000044, 1, 192.286789, 24.02088)">
       <title>poly fillColor=#fff strokeColor=#000 strokeWidth=2 chair</title>
-    </rect>
-    <rect y="236.714" width="6" height="18.921" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="145.972">
-      <title>view</title>
     </rect>
     <rect x="248.964" y="247.203" width="61.982" height="3.628" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" transform="matrix(0, 1, -1, 0, 549.267517, 50.385498)">
       <title>wall</title>

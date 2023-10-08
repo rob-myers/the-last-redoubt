@@ -193,7 +193,6 @@ export class gmGraphClass extends BaseGraph {
       // 🚧 clarify `viewPos` and `getConnectorOtherSide`
       // 🚧 clean `area.otherDoorId ?? area.doorId`
 
-
       /** We imagine we are viewing from the center of the door */
       const viewPos = areaGm.doors[area.doorId].poly.center;
       // These segs are not perfect i.e. part of door will be covered
@@ -201,38 +200,19 @@ export class gmGraphClass extends BaseGraph {
 
 
       const areaRoomId = area.hullRoomId ?? rootRoomId;
-      // ℹ️ Exterior for raycast could be a union of roomWithDoors[i].
-      // We avoid including the current room, using a small "envelope" instead.
-      const envelope = areaGm.getViewEnvelope(
+
+      const viewPosition = areaGm.getViewDoorPosition(
         areaRoomId,
         area.doorId,
-        nearDoorIds.includes(area.otherDoorId ?? area.doorId),
-      );
-      const exteriorPolys = Poly.union([
-        envelope,
-        area.poly,
-      ]);
-      // ]).find(poly => poly.contains(envelope.outline[0]));
-
-      const lightPosition = areaGm.getViewDoorPosition(
-        areaRoomId,
-        area.doorId,
-        nearDoorIds.includes(area.otherDoorId ?? area.doorId) ? doorPeekViewOffset : undefined,
       );
 
-      exteriorPolys.length > 1 && warn(
-        `${'computeViewsFromDoors'}: multiple disjoint exterior polys (${JSON.stringify({gmId, rootRoomId})})`
-      );
-      // !exteriorPolys[0].contains(lightPosition) && warn(
-      //   `${'computeViewsFromDoors'}: light should be inside exterior poly (${JSON.stringify({gmId, rootRoomId})})`
-      // );
 
       return {
         gmId: area.gmId,
         poly: geom.lightPolygon({
-          position: lightPosition,
+          position: viewPosition,
           range: 2000,
-          exterior: exteriorPolys[0],
+          exterior: area.poly,
           extraSegs,
         }),
       };
@@ -316,7 +296,7 @@ export class gmGraphClass extends BaseGraph {
 
     /**
      * - Our SVG symbol's `relate-connectors` tagged rects
-     *   induce a relation R between doorIds.
+     *   induce a relation R(doorId, doorId) and R(doorId, windowId)
      * - We extend the view area when exactly one of x, y
      *   in R(x, y) is in @see {rootOpenIds}.
      * - The view is extended through a door in an adjacent room,
@@ -356,7 +336,8 @@ export class gmGraphClass extends BaseGraph {
   
       if (relDoorIds.length || relWindowIds.length) {
         area.poly = Poly.union([
-          area.poly, // Related non-hull doors/windows extend area.poly
+          area.poly,
+          // Related non-hull doors/windows extend area.poly:
           ...relNonHullDoorIds.flatMap(relDoorId =>
             this.computeViewDoorArea({ gmId: rootGmRoomId.gmId, roomId: gm.getFurtherDoorRoom(doorId, relDoorId) }, relDoorId)?.poly || []
           ),
