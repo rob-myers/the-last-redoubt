@@ -29,9 +29,8 @@ export default function FOV(props) {
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
-    nearDoorIds: new Set,
 
-    prev: { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set },
+    prev: { gmId: -1, roomId: -1, lastDoorId: -1 },
     //#endregion
 
     rootedOpenIds: gms.map(_ => []),
@@ -42,24 +41,6 @@ export default function FOV(props) {
     anim: { labels: new Animation, map: new Animation },
     clipPath: gms.map(_ => 'none'),
 
-    computeNearDoorIds(gmRoomId) {
-      const player = api.npcs.getPlayer();
-      if (player) {
-        state.nearDoorIds.clear();
-        /**
-         * On npc enter doorway, `npc.gmRoomId` doesn't change,
-         * whereas Player's FOV does i.e. `api.fov.{gmId,roomId}`.
-         * Then `gmRoomId` permits us to override `player.gmRoomId`.
-         */
-        gmRoomId ??= (player.gmRoomId ?? undefined);
-        gmRoomId && api.decor.getDecorAtPoint(
-          player.getPosition(), gmRoomId.gmId, gmRoomId.roomId,
-        ).forEach(decor =>
-          decor.meta.doorSensor
-          && api.fov.nearDoorIds.add(/** @type {number} */ (decor.meta.doorId))
-        );
-      }
-    },
     drawLabels() {
       for (const [gmId, canvas] of state.el.canvas.entries()) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
@@ -90,7 +71,7 @@ export default function FOV(props) {
       }
     },
     forgetPrev() {
-      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1, nearDoorIds: new Set };
+      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
     },
     mapAct(action, timeMs) {
       switch (action) {
@@ -160,7 +141,7 @@ export default function FOV(props) {
       }
       
       /** @type {CoreState} */
-      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId, nearDoorIds: new Set(state.nearDoorIds) };
+      const curr = { gmId: state.gmId, roomId: state.roomId, lastDoorId: state.lastDoorId };
       const cmp = compareState(api, curr);
       if (!cmp.changed) {// Avoid useless updates
         return;
@@ -170,11 +151,7 @@ export default function FOV(props) {
        * @see {viewPolys} view polygons for current/adjacent geomorphs; we include the current room.
        * @see {gmRoomIds} global room ids of every room intersecting fov
        */
-      /**
-       * ⛔️ we have disconnected peeking
-       */
-      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, []);
-      // const viewPolys = gmGraph.computeViews(state.gmId, state.roomId, Array.from(state.nearDoorIds));
+      const viewPolys = gmGraph.computeViews(state.gmId, state.roomId);
       const gmRoomIds = gmGraph.getGmRoomsIdsFromDoorIds(cmp.rootedOpenIds);
       // If no door is open, we at least have current room
       gmRoomIds.length === 0 && gmRoomIds.push({ gmId: state.gmId, roomId: state.roomId });
@@ -227,7 +204,6 @@ export default function FOV(props) {
         state.gmId = gmId;
         state.roomId = roomId;
         state.lastDoorId = doorId;
-        state.computeNearDoorIds({ gmId, roomId });
 
         state.recompute();
         api.doors.updateVisibleDoors();
@@ -347,12 +323,6 @@ export default function FOV(props) {
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
  * @property {() => void} forgetPrev
- * @property {(gmRoomId?: Geomorph.GmRoomId) => void} computeNearDoorIds
- * Calculate `state.nearDoorIds` initially or upon exit room (enter doorway).
- *
- * Importantly, when an NPC enters a doorway `npc.gmRoomId` doesn't change,
- * but the Player's FOV _does_ (`api.fov.{gmId,roomId}`).
- * Then the parameter `gmRoomId` permits us to override `player.gmRoomId`.
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * @property {() => void} recompute
@@ -363,11 +333,6 @@ export default function FOV(props) {
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
- * @property {Set<number>} nearDoorIds
- * Doors in the current room, which the Player is near to.
- *
- * ℹ️ On walk into doorways this is the "next room",
- * unlike `player.gmRoomId` which will be the previous room.
  */
 
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
@@ -432,11 +397,6 @@ function compareState(api, next) {
     doorIds.filter(doorId => !nextRootedOpenIds[gmId].includes(doorId))
   );
 
-  // Technically, nearDoorIds need to be open to have an effect
-  const [prevNearIds, nextNearIds] = [prev.nearDoorIds, next.nearDoorIds].map(x => Array.from(x));
-  const addedNearIds = changedRoom ? nextNearIds : nextNearIds.filter(doorId => !prevNearIds.includes(doorId));
-  const removedNearIds = changedRoom ? prevNearIds : prevNearIds.filter(doorId => !nextNearIds.includes(doorId));
-
   return {
     justSpawned,
     changedRoom,
@@ -448,7 +408,6 @@ function compareState(api, next) {
       || changedRoom
       || rootedOpenedIds.some(x => x.length)
       || rootedClosedIds.some(x => x.length)
-      || (addedNearIds.length || removedNearIds.length)
     ),
   };
 }

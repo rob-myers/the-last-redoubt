@@ -630,7 +630,7 @@ export default function NPCs(props) {
         // Remove prev player CSS class, sans render
         const prevPlayer = state.npc[state.playerKey]; // May not exist
         prevPlayer?.el.root.classList.remove('player');
-        api.fov.forgetPrev(); // Clears fov.nearDoorIds
+        api.fov.forgetPrev();
       }
 
       if (npcKey === null) {
@@ -643,11 +643,7 @@ export default function NPCs(props) {
       player.el.root.classList.add('player');
       state.playerKey = npcKey;
 
-      // Adjust FOV
-      api.fov.setRoomByNpc(state.playerKey);
-      // Initialize fov.nearDoorIds
-      api.fov.computeNearDoorIds();
-
+      api.fov.setRoomByNpc(state.playerKey); // Adjust FOV
       state.events.next({ key: 'set-player', npcKey });
     },
     async spawn(e) {

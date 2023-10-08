@@ -335,10 +335,8 @@ export default function useHandleEvents(api) {
     onTriggerDoorSensor(npc, event, gmId, doorId) {
       if (npc.key === api.npcs.playerKey) {
         if (event === 'enter') {
-          api.fov.nearDoorIds.add(doorId);
           api.fov.recompute();
         } else if (event === 'exit') {
-          api.fov.nearDoorIds.delete(doorId);
           api.fov.recompute();
         }
       }

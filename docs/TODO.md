@@ -2,16 +2,9 @@
 
 ## In progress
 
-- ✅ BUG cannot leave basin in gm 301 room 18
-
-- ✅ can relate-connectors door -> window
-  - already implemented
-- ✅ permit view point overrides again
-- ✅ fix/remove some view points
-- 🚧 remove peek stuff
-
+- ✅ remove peek stuff
 - 🚧 layouts have various extra stuff e.g. extras--*
-  - create a screen symbol
+  - create a screen symbol, initially inside a table symbol
   - 301: add tables/screens
 
 - processApi.verbose(...) 
@@ -585,6 +578,12 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG cannot leave basin in gm 301 room 18
+- ✅ can relate-connectors door -> window
+  - already implemented
+- ✅ permit view point overrides again
+- ✅ fix/remove some view points
 
 - ✅ BUG failure `const segA = assertNonNull(npcA.getLineSeg());`
 ```sh

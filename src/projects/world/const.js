@@ -99,9 +99,6 @@ export const doorSensorRadius = 30;
 
 export const doorViewOffset = -2;
 
-/** Under consideration: `0 | 2 | -2` */
-export const doorPeekViewOffset = 0;
-
 export const windowViewOffset = 20;
 
 export const baseTrackingZoom = 1.5;

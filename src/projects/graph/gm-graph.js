@@ -4,7 +4,6 @@ import { assertNonNull, removeDups } from "../service/generic";
 import { geom, directionChars, isDirectionChar } from "../service/geom";
 import { getConnectorOtherSide } from "../service/geomorph";
 import { error, warn } from "../service/log";
-import { doorPeekViewOffset } from "../world/const";
 import { AStar } from "../pathfinding/AStar";
 
 /**
@@ -114,11 +113,10 @@ export class gmGraphClass extends BaseGraph {
    * Compute lit area: extend current room by view through open doors and windows.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @param {number[]} nearDoorIds doors adjacent to rootRoomId the Player is close to
    * @returns {Poly[][]}
    */
-  computeViews(gmId, rootRoomId, nearDoorIds) {
-    const doorViews = this.computeViewsFromDoors(gmId, rootRoomId, nearDoorIds);
+  computeViews(gmId, rootRoomId) {
+    const doorViews = this.computeViewsFromDoors(gmId, rootRoomId);
     const windowViews = this.computeViewWindowAreas(gmId, rootRoomId);
 
     const viewPolys = doorViews.map((polys, gmId) => polys.concat(windowViews[gmId]));
@@ -136,10 +134,9 @@ export class gmGraphClass extends BaseGraph {
    * Compute viewable areas determined by current room and open doors.
    * @param {number} gmId 
    * @param {number} rootRoomId 
-   * @param {number[]} nearDoorIds doors adjacent to rootRoomId the Player is close to
    * @returns {Poly[][]}
    */
-  computeViewsFromDoors(gmId, rootRoomId, nearDoorIds) {
+  computeViewsFromDoors(gmId, rootRoomId) {
     const gm = this.gms[gmId];
     const gmOpenIds = this.api.doors.getOpenIds(gmId);
 
@@ -205,7 +202,6 @@ export class gmGraphClass extends BaseGraph {
         areaRoomId,
         area.doorId,
       );
-
 
       return {
         gmId: area.gmId,
