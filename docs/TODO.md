@@ -2,28 +2,24 @@
 
 ## In progress
 
-- ✅ BUG failure `const segA = assertNonNull(npcA.getLineSeg());`
-```sh
-npc rob setSpeedFactor 2
-click | walk --open rob
-```
+- ✅ BUG cannot leave basin in gm 301 room 18
 
-- BUG collision missed when both walking and paused one of them
-  - one npc is walking along single straight line
-  - other intersects after being unpaused
-- BUG controlNpc issue with closedWeights i.e. seems to avoid closed doors even when we don't specify options
-- BUG? two npcs trying to open a door can toggle it open/closed immediately
-
-- ✅ support npc walk loops by continually extending walk in while loop
-  - e.g. `click 4 >>clicks`
-  - e.g. `while true; do ... done`
-
+- 🚧 layouts have various extra stuff e.g. extras--*
+  - create a screen symbol
+  - 301: add tables/screens
 
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose
   - replace: w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);
 
-- layouts have various extra stuff e.g. extras--*
+- example of picking something up
+  - e.g. spawn decor, then fade/remove it, registering something inside npc
+  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
+  - 👉 BUG saw issue where removed decor, but new decor in different room vanished on close door
+  - icons for things we might want to pick up?
+
+- return to homepage
+  - emphasise "language" and "joining behaviours" on homepage
 
 - doors should be easier to open as player walks
 - map PNG does not include extras--*
@@ -32,16 +28,8 @@ click | walk --open rob
 - maybe `walk foo` should not throw on click outside nav
 - BUG slow down at doors sometimes still going through door
 - BUG speed sometimes becomes slowed down perm
-
-- example of picking something up
-  - e.g. spawn decor, then fade/remove it, registering something inside npc
-  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
-  - BUG saw issue where removed decor, but new decor in different room vanished on close door
-  - icons for things we might want to pick up?
-
-- return to homepage
-  - emphasise "language" and "joining behaviours" on homepage
-
+- BUG? controlNpc issue with closedWeights i.e. seems to avoid closed doors even when we don't specify options
+- BUG? two npcs trying to open a door can toggle it open/closed immediately
 - ❌ `npc do` -> `act`
 - ❌ head radius increases whilst walking?
 - ❌ consider removing "peek view", or at least disabling
@@ -591,6 +579,21 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ BUG failure `const segA = assertNonNull(npcA.getLineSeg());`
+```sh
+npc rob setSpeedFactor 2
+click | walk --open rob
+```
+
+- ❌ BUG collision missed when both walking and paused one of them
+  - one npc is walking along single straight line
+  - other intersects after being unpaused
+  - 🤔 no repro
+
+- ✅ support npc walk loops by continually extending walk in while loop
+  - e.g. `click 4 >>clicks`
+  - e.g. `while true; do ... done`
 
 - ✅ pausing direction issue while `click | walk foo`
   - ✅ unpause should not continue walk

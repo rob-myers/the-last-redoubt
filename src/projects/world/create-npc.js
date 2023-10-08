@@ -207,7 +207,12 @@ export default function createNpc(
             if (wasOpen === isOpen) throw Error('cannot toggle door');
           }
         } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
-          await this.onMeshDoMeta(point, opts);
+          if (this.doMeta) {// @ do point, on nav
+            const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
+            await this.walk(navPath, { throwOnCancel: false });
+          } else {
+            await this.onMeshDoMeta(point, opts);
+          }
           this.doMeta = point.meta.do ? point.meta : null;
         } else {
           await this.offMeshDoMeta(point, opts);
