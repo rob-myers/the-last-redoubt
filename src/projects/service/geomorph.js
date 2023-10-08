@@ -42,9 +42,11 @@ export async function createLayout(opts) {
         layoutDefItemToTransform(rowItem, opts, m);
         rowItem.transform = m.toArray(); // Used further below
         const { width, height } = opts.lookup[rowItem.symbol];
-        if (rowItem.pause) {
+        if (rowItem.next === 'below') {
           prevX = rowItem.x ?? 0;
           deltaY += origRowItemY + new Rect(0, 0, width, height).applyMatrix(m).height / 5;
+        } else if (rowItem.next === 'none') {
+          deltaY += origRowItemY;
         } else {
           prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
           deltaY = 0;

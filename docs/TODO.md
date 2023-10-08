@@ -3,9 +3,10 @@
 ## In progress
 
 - ✅ remove peek stuff
-- 🚧 layouts have various extra stuff e.g. extras--*
-  - create a screen symbol, initially inside a table symbol
-  - 301: add tables/screens
+- 🚧 layouts have various extra stuff e.g. extra--*
+  - ✅ create a screen symbol, initially inside a table symbol
+  - ✅ layout `pause: boolean` -> `next: 'right' | 'below' | 'none'`
+  - 🚧 301: add tables/screens
 
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose

@@ -9,14 +9,14 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <rect x="-10" y="-10" width="320" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+    <rect x="-6" y="-10" width="320" height="70" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
   </g>
   <g style="">
     <title>singles</title>
     <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="139.92" y="15">
       <title>_decor _label=table</title>
     </rect>
-    <path d="M -7.761 2.526 L -5.125 -4.016 L 294.875 -4.579 L 299.668 0 L 300 48.727 L 294.875 54.076 L -5.125 54.382 L -8.045 47.64 L -7.761 2.526 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 255, 0); fill-opacity: 0.2;">
+    <path d="M -3.761 2.526 L -1.125 -4.016 L 298.875 -4.579 L 303.668 0 L 304 48.727 L 298.875 54.076 L -1.125 54.382 L -4.045 47.64 L -3.761 2.526 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 255, 0); fill-opacity: 0.2;">
       <title>poly fillColor=#00000044</title>
     </path>
   </g>

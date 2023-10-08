@@ -94,8 +94,8 @@ const layoutDefs = {
         { symbol: 'lab--018--4x4', flip: 'x' },
         { symbol: 'lab--018--4x4', flip: 'xy' },
         { symbol: 'ships-locker--020--2x2', y: 2 * 60 },
-        { symbol: 'ships-locker--007--1x2', flip: 'x', pause: true },
-        { symbol: 'ships-locker--003--1x1', y: 1 * 60, a: 90,  pause: true },
+        { symbol: 'ships-locker--007--1x2', flip: 'x', next: 'below' },
+        { symbol: 'ships-locker--003--1x1', y: 1 * 60, a: 90,  next: 'below' },
         { symbol: 'ships-locker--003--1x1', a: 90 },
         { symbol: 'empty-room--019--2x4', x: 1 * 60, flip: 'y' },
       ]},
@@ -103,21 +103,21 @@ const layoutDefs = {
       
       { y: 6 * 60, items: [
         { symbol: 'engineering--047--4x7', a: 90 },
-        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], pause: true },
+        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], next: 'below' },
         { symbol: 'stateroom--012--2x2', a: 90, flip: 'x' },
-        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], pause: true },
+        { symbol: 'office--004--2x2', a: 270, flip: 'x', doors: ['w'], next: 'below' },
         { symbol: 'stateroom--012--2x2', a: 90, flip: 'x' },
         { symbol: 'lab--012--3x4', a: 270 },
-        { symbol: 'lounge--017--2x4', x: 2 * 60, pause: true },
+        { symbol: 'lounge--017--2x4', x: 2 * 60, next: 'below' },
         { symbol: 'fresher--036--2x4', flip: 'x', doors: ['w'] },
       ]},
 
       { y: 10 * 60, items: [
         { symbol: 'misc-stellar-cartography--020--10x10', flip: 'y' },
-        { symbol: 'lab--023--4x4', a: 90, pause: true },
+        { symbol: 'lab--023--4x4', a: 90, next: 'below' },
         { symbol: 'engineering--045--4x6', a: 270 },
-        { symbol: 'lab--023--4x4', x: 2 * 60, a: 90, flip: 'y', pause: true  },
-        { symbol: 'lab--030--1x3', y: -1 * 60, pause: true },
+        { symbol: 'lab--023--4x4', x: 2 * 60, a: 90, flip: 'y', next: 'below'  },
+        { symbol: 'lab--030--1x3', y: -1 * 60, next: 'below' },
         { symbol: 'office--074--4x4', y: 2 * 60, flip: 'y' },
       ]},
       { symbol: 'iris-valves--005--1x1', x: 19 * 60, y: 14 * 60, a: 90 },
@@ -163,16 +163,16 @@ const layoutDefs = {
       ]},
 
       { y: 16 * 60, items: [
-        { symbol: 'cargo--002--2x2', pause: true },
+        { symbol: 'cargo--002--2x2', next: 'below' },
         { symbol: 'cargo--002--2x2', },
-        { symbol: 'cargo--002--2x2', pause: true},
+        { symbol: 'cargo--002--2x2', next: 'below'},
         { symbol: 'cargo--002--2x2', },
 
         { symbol: 'empty-room--074--4x8', x: 2 * 60 },
 
-        { symbol: 'cargo--002--2x2', x: 2 * 60, pause: true },
+        { symbol: 'cargo--002--2x2', x: 2 * 60, next: 'below' },
         { symbol: 'cargo--002--2x2', },
-        { symbol: 'cargo--002--2x2', pause: true},
+        { symbol: 'cargo--002--2x2', next: 'below'},
         { symbol: 'cargo--002--2x2', },
       ]},
 
@@ -187,13 +187,19 @@ const layoutDefs = {
       // { symbol: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
       // { symbol: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
-      { symbol: 'extra--table--001--1x0.16', x: 2 * 60, y: 5 * 60 + 48 },
+      { x: 2 * 60, y: 5 * 60 + 44, items: [
+        { symbol: 'extra--table--001--1x0.16', next: 'none' },
+        { symbol: 'extra--screen--001--1x0.2', y: -4, flip: 'x' },
+      ]},
       { symbol: 'extra--table--004--0.33x0.16', x: 3 * 60 + 36, y: 4 * 60 + 6 },
-      { y: 6 * 60, x: 5 * 60 + 48, items: [
-        { symbol: 'extra--table--004--0.33x0.16', a: 90, pause: true },
-        { symbol: 'extra--table--004--0.33x0.16', y: 6, a: 90, pause: true },
-        { symbol: 'extra--table--001--1x0.16', a: 90, y: 12, pause: true },
-        { symbol: 'extra--table--001--1x0.16', a: 90, y: 6 },
+
+      { y: 6 * 60, x: 5 * 60 + 48 - 6, items: [
+        { symbol: 'extra--table--004--0.33x0.16', a: 90, next: 'below' },
+        { symbol: 'extra--table--004--0.33x0.16', y: 6, a: 90, next: 'below' },
+        { symbol: 'extra--table--001--1x0.16', a: 90, y: 12, next: 'none' },
+        { symbol: 'extra--screen--001--1x0.2', a: 90, next: 'below' },
+        { symbol: 'extra--table--001--1x0.16', a: 90, y: 6, next: 'none' },
+        // { symbol: 'extra--screen--001--1x0.2', a: 90, next: 'below' },
       ]},
 
       { items: [
@@ -207,7 +213,7 @@ const layoutDefs = {
       ]},
 
       { y: 6 * 60, items: [
-        { symbol: 'stateroom--014--2x2', flip: 'x', pause: true },
+        { symbol: 'stateroom--014--2x2', flip: 'x', next: 'below' },
         { symbol: 'stateroom--036--2x4', a: 270 },
         { symbol: 'stateroom--014--2x2', x: -2 * 60, flip: 'x' },
         { symbol: 'misc-stellar-cartography--023--4x4', x: 12 * 60, flip: 'y' },
@@ -247,15 +253,15 @@ const layoutDefs = {
 
       { items: [
         { symbol: 'medical-bed--006--1.6x3.6', y: 12 },
-        { symbol: 'low-berth--003--1x1', x: 24 + 1 * 60, a: 90, pause: true },
+        { symbol: 'low-berth--003--1x1', x: 24 + 1 * 60, a: 90, next: 'below' },
         { symbol: 'console--022--1x2', flip: 'y' },
         { symbol: 'stateroom--035--2x3' },
         { symbol: 'stateroom--035--2x3' },
         { symbol: 'stateroom--035--2x3' },
         { symbol: 'stateroom--035--2x3', flip: 'y' },
         { symbol: 'stateroom--100--3x4', a: 90, flip: 'x' },
-        { symbol: 'galley-and-mess-halls--006--2x4', flip: 'y', pause: true },
-        { symbol: 'table--009--0.8x0.8', pause: true },
+        { symbol: 'galley-and-mess-halls--006--2x4', flip: 'y', next: 'below' },
+        { symbol: 'table--009--0.8x0.8', next: 'below' },
         { symbol: 'table--009--0.8x0.8', y: 1 * 60 },
       ]},
 

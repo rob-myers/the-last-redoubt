@@ -391,10 +391,12 @@ declare namespace Geomorph {
     /** flip (post-composed) */
     flip?: 'x' | 'y' | 'xy';
     /**
-     * Rows items can pause aggregation of `x`,
-     * in order to create columns where `y` is aggregated.
+     * - `right` is default
+     * - `below` means pause aggregation of `x`,
+     *    in order to create columns where `y` is aggregated.
+     * - `none` means don't aggregate in either direction
      */
-    pause?: boolean;
+    next?: 'right' | 'below' | 'none';
   }
 
   export type GeomorphKey = (
@@ -408,6 +410,7 @@ declare namespace Geomorph {
 
   export type SymbolKey = (
     | 'extra--locker--001--1x0.33'
+    | 'extra--screen--001--1x0.2' 
     | 'extra--table--001--1x0.16' 
     | 'extra--table--002--0.33x0.33'
     | 'extra--table--003--1x0.33'
