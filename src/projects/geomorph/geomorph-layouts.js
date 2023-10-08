@@ -235,6 +235,8 @@ const layoutDefs = {
         { symbol: 'shop--027--0.4x1.6', x: 2 * 60 + 12, y: 1 * 60 + 24, flip: 'x' },
       ]},
       { symbol: 'window--007--0x2.4', y: 7 * 60 - 8, x: 4 * 60, },
+      
+      { symbol: 'empty-room--020--2x4', x: 18 * 60, flip: 'xy' },
     ],
   },
   "g-303--passenger-deck": {

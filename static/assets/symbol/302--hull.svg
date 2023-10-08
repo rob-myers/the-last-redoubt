@@ -5,6 +5,18 @@
     <pattern id="grid-0" patternUnits="userSpaceOnUse" width="60" height="60" patternTransform="matrix(1, 0, 0, 1, 0, 0)" bx:pinned="true">
       <rect width="60" height="60" style="fill: none; stroke-width: 0.1px; stroke: rgb(0, 0, 0);"/>
     </pattern>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="616.667" cy="700" r="100" id="gradient-0">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-color: rgb(170, 170, 170); stop-opacity: 0;"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="616.667" cy="700" r="100" id="gradient-1">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-color: rgb(170, 170, 170); stop-opacity: 0;"/>
+    </radialGradient>
+    <radialGradient gradientUnits="userSpaceOnUse" cx="616.667" cy="700" r="100" id="gradient-2">
+      <stop offset="0" style="stop-color: rgb(170, 170, 170);"/>
+      <stop offset="1" style="stop-color: rgb(170, 170, 170); stop-opacity: 0;"/>
+    </radialGradient>
   </defs>
   <g style="pointer-events: none;">
     <title>background</title>
@@ -151,13 +163,13 @@
     <rect x="1182.368" y="40.789" width="10" height="10" style="fill-opacity: 0.9; stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0);">
       <title>light distance=80</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1041.414429, -176.114044)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill: url('#gradient-0');" transform="matrix(0, 1, -1, 0, 1041.414429, -176.114044)">
       <title>light floor</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1500.414429, -176.114044)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill: url('#gradient-1');" transform="matrix(0, 1, -1, 0, 1500.414429, -176.114044)">
       <title>light floor</title>
     </rect>
-    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; stroke: rgb(255, 255, 0); fill-opacity: 0.1;" transform="matrix(0, 1, -1, 0, 1800, -516.666992)">
+    <rect x="516.667" y="600" width="200" height="200" style="stroke-width: 2px; fill: url('#gradient-2');" transform="matrix(0, 1, -1, 0, 1800, -516.666992)">
       <title>light floor</title>
     </rect>
     <rect x="-1.125" width="5" height="80" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; fill: rgb(0, 0, 255);" y="257.252">
@@ -189,18 +201,6 @@
     </rect>
     <rect x="73.406" width="5.244" height="146.351" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3; transform-origin: 76.028px 73.175px;" transform="matrix(0.422618, 0.906308, -0.906308, 0.422618, 1066.211832, 285.110238)">
       <title>relate-connectors</title>
-    </rect>
-    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -943.927979)">
-      <title>view</title>
-    </rect>
-    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1003.927979)">
-      <title>view</title>
-    </rect>
-    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1063.927979)">
-      <title>view</title>
-    </rect>
-    <rect y="186.709" width="5" height="40" style="stroke: rgb(0, 0, 0); fill: rgb(255, 255, 0); fill-opacity: 0.5;" x="1151.428" transform="matrix(0, 1, -1, 0, 1393.338257, -1123.927979)">
-      <title>view</title>
     </rect>
     <path d="M 60.6 240 L 60 480 L 120 540 L 240 540 L 240 420 L 120 240 L 60 240 L 60.6 240 Z" style="stroke: rgb(0, 0, 0); stroke-width: 4px; fill: rgb(255, 0, 0); fill-opacity: 0.5; opacity: 0.5;">
       <title>wall machine no-fill</title>
