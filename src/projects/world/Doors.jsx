@@ -334,11 +334,8 @@ const rootCss = css`
       }
     }
 
-    /* &.${cssName.hull} {
-      border-width: 2px;
-    } */
     &.${cssName.locked} {
-      background-color: #ff0000;
+      background-color: #530b0b;
     }
 
     /* background-image: linear-gradient(45deg, #000 33.33%, #444 33.33%, #444 50%, #000 50%, #000 83.33%, #444 83.33%, #444 100%);
