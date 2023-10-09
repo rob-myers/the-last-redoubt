@@ -227,28 +227,58 @@ const pointCache = {};
 //#region canvas
 
 /**
- * 
  * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
  * @param {CanvasRenderingContext2D} tempCtxt
  * @param {CanvasRenderingContext2D} dstCtxt
  * @param {string} [fillColor]
  */
 export function invertDrawnImage(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
-	// Create monochromatic mask,
-	//  i.e. draw opaque part of `image` in colour `fillColour`
-    tempCtxt.canvas.width = image.width;
-    tempCtxt.canvas.height = image.height;
-    tempCtxt.globalCompositeOperation = 'source-over';
-    tempCtxt.drawImage(/** @type {*} */ (image), 0, 0);
-    tempCtxt.globalCompositeOperation = 'source-in';
-    tempCtxt.fillStyle = fillColor;
-    tempCtxt.fillRect(0, 0, image.width, image.height);
-	tempCtxt.globalCompositeOperation = 'source-over';
-
+	createMonochromeMask(image, tempCtxt, fillColor);
 	// Take difference to obtain inverted image
     dstCtxt.globalCompositeOperation = 'difference';
     dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
     dstCtxt.globalCompositeOperation = 'source-over';
+}
+
+/**
+ * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
+ * @param {CanvasRenderingContext2D} tempCtxt
+ * @param {CanvasRenderingContext2D} dstCtxt
+ * @param {string} fillColor e.g. `#00000077`
+ */
+export function darkenDrawnImage(image, tempCtxt, dstCtxt, fillColor) {
+	createMonochromeMask(image, tempCtxt, fillColor);
+    dstCtxt.globalCompositeOperation = 'source-over';
+    dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
+}
+
+/**
+ * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
+ * @param {CanvasRenderingContext2D} tempCtxt
+ * @param {CanvasRenderingContext2D} dstCtxt
+ * @param {string} [fillColor]
+ */
+export function lightenDrawnImage(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
+	createMonochromeMask(image, tempCtxt, fillColor);
+    dstCtxt.globalCompositeOperation = 'lighter';
+    dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
+}
+
+/**
+ * Draw opaque part of `image` in colour `fillColour`
+ * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {string} fillColor
+ */
+function createMonochromeMask(image, ctxt, fillColor) {
+	ctxt.canvas.width = image.width;
+	ctxt.canvas.height = image.height;
+	ctxt.globalCompositeOperation = 'source-over';
+	ctxt.drawImage(/** @type {*} */ (image), 0, 0);
+	ctxt.globalCompositeOperation = 'source-in';
+	ctxt.fillStyle = fillColor;
+	ctxt.fillRect(0, 0, image.width, image.height);
+	ctxt.globalCompositeOperation = 'source-over';
 }
 
 /**

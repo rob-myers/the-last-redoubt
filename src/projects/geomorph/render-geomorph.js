@@ -3,7 +3,7 @@ import { createCanvas } from "canvas";
 import { Poly, Vect, Rect } from "../geom";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
-import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
+import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage } from '../service/dom';
 import { error } from "../service/log";
 
 /**
@@ -156,18 +156,22 @@ export async function renderGeomorph(
   const tempCtxt = createCanvas(0, 0).getContext('2d');
 
   //#region symbol PNGs
-  for (const { key, pngHref, pngRect, transformArray } of layout.items.slice(1)) {
+  for (const { key, pngHref, pngRect, transformArray, invert, lighten } of layout.items.slice(1)) {
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
+    // Draw symbol png
     ctxt.globalCompositeOperation = 'source-over';
-    // draw symbol png
     ctxt.drawImage(image, pngRect.x, pngRect.y);
-    // ℹ️ can shade symbols via e.g. `poly fillColor=#555555`
+    // ℹ️ can shade symbols via e.g. `poly fillColor=#555`
     drawSymbolPolys(key, ctxt, lookup, false);
-    if (invertSymbols) {
-      ctxt.translate(pngRect.x, pngRect.y);
+    ctxt.translate(pngRect.x, pngRect.y);
+    // ℹ️ can explicitly invert/un-invert
+    if (invertSymbols !== !!invert) {
       invertDrawnImage(image, tempCtxt, ctxt, '#ffffff');
+    }
+    if (lighten) {
+      lightenDrawnImage(image, tempCtxt, ctxt, '#ffffff44');
     }
     ctxt.setTransform(initTransform);
   }

@@ -409,6 +409,8 @@ export async function createLayout(opts) {
       pngRect: sym.pngRect,
       transformArray: flatItems[i].transform,
       transform: flatItems[i].transform ? `matrix(${flatItems[i].transform})` : undefined,
+      invert: flatItems[i].invert,
+      lighten: flatItems[i].lighten,
     })),
   };
 

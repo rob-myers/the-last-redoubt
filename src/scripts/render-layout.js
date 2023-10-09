@@ -83,6 +83,8 @@ const staticDir = path.resolve(__dirname, '../../static');
         doors: true,
         labels: false, // otherwise e.g. they'd be reflected with geomorph
         highlights: false,
+        floorColor: 'rgba(180, 180, 180, 1)',
+        navColor: 'rgba(200, 200, 200, 1)',
       },
     );
 

@@ -133,6 +133,8 @@ declare namespace Geomorph {
       transformArray?: LayoutDefItem['transform'];
       /** If absent use identity transform */
       transform?: string;
+      invert?: boolean;
+      lighten?: boolean;
     }[];
   }
   
@@ -390,6 +392,8 @@ declare namespace Geomorph {
      * - `above` i.e. next is drawn over current.
      */
     next?: 'right' | 'down' | 'above';
+    invert?: boolean;
+    lighten?: boolean;
   }
 
   export type GeomorphKey = (

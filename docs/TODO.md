@@ -6,6 +6,9 @@
 - 🚧 layouts have various extra stuff e.g. extra--*
   - ✅ create a screen symbol, initially inside a table symbol
   - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
+  - ✅ can invert symbol at layout stage
+  - ✅ can lighten symbols at layout stage
+  - ❌ darker floor/nav, lighter --geomorph-filter
   - 🚧 301: add tables/screens
 - ✅ map PNG does not include extra--*
 - 🚧 hull symbol has own field i.e. not first item
