@@ -711,7 +711,7 @@ export default function NPCs(props) {
         await api.panZoom.animationAction('cancelFollow');
         await api.panZoom.panZoomTo({
           durationMs: 2000,
-          scale: baseZoom,
+          // scale: baseZoom,
           worldPoint: npc.getPosition(),
         }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
         changeStatus('no-track');
