@@ -157,7 +157,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
       state.canvas.getContext?.('2d')?.clearRect(0, 0, state.canvas.width, state.canvas.height);
       renderGeomorph(
         data.gm, symbolLookup, state.canvas, (pngHref) => loadImage(pngHref),
-        { scale: 1, navTris: false },
+        { scale, navTris: false, invertSymbols: true },
       );
       // intersect with circles (corresponds to bake-lighting radial fill)
       state.allLightPolys = computeLightPolygons(data.gm, true);
@@ -175,6 +175,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
           className="geomorph"
           width={data.gm.pngRect.width}
           height={data.gm.pngRect.height}
+          style={{ transformOrigin: 'top left', transform: `scale(${1 / scale})` }}
         />
         <div
           onClick={state.onClick}
@@ -278,6 +279,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
   ) : null;
 }
 
+const scale = 2;
 const pointDim = 8;
 
 const rootCss = css`
