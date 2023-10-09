@@ -73,6 +73,7 @@ export async function createGeomorphData(input) {
    * Polys/rects tagged with `view` override default FOV position
    * - `poly` must be convex (e.g. rotated rect).
    * - `poly` must cover door and have center inside room.
+   * - we permit multiple `view`s per connector
    */
   const viewMetas = layout.groups.singles
     .filter(x => x.meta[svgSymbolTag.view])
@@ -93,7 +94,7 @@ export async function createGeomorphData(input) {
   }
 
   //#region points by room 🚧 precompute?
-  const roomOverrides = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomOverrides'][*]} */  x => ({}));
+  const roomOverrides = /** @type {Geomorph.GeomorphData['roomOverrides']} */ ({});
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
     symbol: {
@@ -150,7 +151,9 @@ export async function createGeomorphData(input) {
         intersects = true;
         const otherRoomId = layout.doors[doorId].roomIds.find(x => x !== roomId);
         if (typeof otherRoomId === 'number') {
-          (roomOverrides[otherRoomId].doorView ??= [])[doorId] = { point: p, meta: {...meta} };
+          (((
+            roomOverrides[otherRoomId] ??= { doorViews: {}, windowView: {} }
+          ).doorViews)[doorId] ??= []).push({ point: p, meta: {...meta} });
         } else {
           warn(`${'useGeomorphData'}: view ${i} lacks other roomId (room ${roomId} door ${doorId})`);
         }
@@ -162,7 +165,9 @@ export async function createGeomorphData(input) {
         intersects = true;
         const otherRoomId = layout.windows[windowId].roomIds.find(x => x !== roomId);
         if (typeof otherRoomId === 'number') {
-          (roomOverrides[roomId].windowView ??= [])[windowId] = p;
+          ((
+            roomOverrides[otherRoomId] ?? { doorViews: {}, windowView: {} }
+          ).windowView ??= [])[windowId] = p;
         } else {
           warn(`${'useGeomorphData'}: view ${i} lacks other roomId (room ${roomId} window ${windowId})`);
         }
@@ -228,16 +233,18 @@ export async function createGeomorphData(input) {
     getRelatedDoorIds(doorId) {
       return this.relDoorId[doorId]?.doors ?? [];
     },
-    getViewDoorPosition(roomId, doorId) {
+    getViewDoorPositions(roomId, doorId) {
       /**
        * If `doorId` is a hull door then `this` is actually adjacent to Player's current geomorph.
        * Then we need to flip the view offset for usage with "the other hull door".
        */
       const hullSign = this.isHullDoor(doorId) ? -1 : 1;
-      const custom = this.roomOverrides[roomId]?.doorView?.[doorId];
-      return (custom?.point.clone()
-        || computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)
-      );
+      const customViews = this.roomOverrides[roomId]?.doorViews?.[doorId];
+      if (customViews?.length) {
+        return customViews.map(x => x.point);
+      } else {// Default:
+        return [computeViewPosition(this.doors[doorId], roomId, hullSign * doorViewOffset)];
+      }
     },
     getViewWindowPosition(rootRoomId, windowId) {
       const point = this.roomOverrides[rootRoomId]?.windowView?.[windowId];

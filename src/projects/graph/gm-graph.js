@@ -187,23 +187,13 @@ export class gmGraphClass extends BaseGraph {
       //   doorId !== area.doorId && !(relDoorIds.includes(doorId) && doorLookup[doorId].open)
       // );
 
-      // 🚧 clarify `viewPos` and `getConnectorOtherSide`
-      // 🚧 clean `area.otherDoorId ?? area.doorId`
-
-      /** We imagine we are viewing from the center of the door */
-      const viewPos = areaGm.doors[area.doorId].poly.center;
       // These segs are not perfect i.e. part of door will be covered
-      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], viewPos));
-
-
+      const extraSegs = blockedDoorIds.map(doorId => getConnectorOtherSide(areaGm.doors[doorId], areaGm.doors[area.doorId].poly.center));
       const areaRoomId = area.hullRoomId ?? rootRoomId;
 
-      const viewPosition = areaGm.getViewDoorPosition(
-        areaRoomId,
-        area.doorId,
-      );
+      const viewPositions = areaGm.getViewDoorPositions(areaRoomId, area.doorId);
 
-      return {
+      return viewPositions.map(viewPosition => ({
         gmId: area.gmId,
         poly: geom.lightPolygon({
           position: viewPosition,
@@ -211,7 +201,7 @@ export class gmGraphClass extends BaseGraph {
           exterior: area.poly,
           extraSegs,
         }),
-      };
+      }));
     });
 
     /**

@@ -10,6 +10,8 @@
 - hull symbol has own field i.e. not first item
 - map PNG does not include extra--*
 
+- ✅ support multiple `view` per connector
+
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose
   - replace: w.npcs.config.verbose && api.info(`ignored: ${/** @type {*} */ (e)?.message ?? e}`);

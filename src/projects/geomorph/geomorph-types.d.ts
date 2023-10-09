@@ -157,16 +157,15 @@ declare namespace Geomorph {
     windowToLightRect: (Geomorph.LightConnectorRect | undefined)[];
     //#endregion
 
-    /**
-     * View source overrides, indexed by `roomId`.
-     * Their coords are local wrt their parent geomorph.
-     */
+    /** View position overrides, local wrt their parent geomorph. */
     roomOverrides: {
-      /** Can specify view position from room through door */
-      doorView?: { [doorId?: number]: { point: Vect; meta: PointMeta; } };
-      /** Can specify view position from room through window */
-      windowView?: { [windowId?: number]: Vect };
-    }[];
+      [roomId: number]: {
+        /** Can specify view position(s) from room through door */
+        doorViews: { [doorId?: number]: { point: Vect; meta: PointMeta; }[] };
+        /** Can specify view position from room through window */
+        windowView: { [windowId?: number]: Vect };
+      };
+    };
 
     /**
      * Indexed by `roomId`.
@@ -199,15 +198,10 @@ declare namespace Geomorph {
     /** Get doorIds related via tag `relate-connectors` */
     getRelatedDoorIds(doorId: number): number[];
     /**
-     * By default we move "the view" inside current room by constant amount.
-     * Sometimes this breaks (lies outside current room) or looks bad when combined,
-     * so can override via "view"-tagged rects.
-     * 
-     * Moreover:
-     * - for current gmId `roomId` is current room
-     * - for adjacent gmId `roomId` is adjacent room
+     * By default we move "the view" outside current room by constant amount.
+     * Sometimes this can look bad, so can override via "view"-tagged rect(s).
      */
-    getViewDoorPosition(roomId: number, doorId: number);
+    getViewDoorPositions(roomId: number, doorId: number): Vect[];
     getViewWindowPosition(rootRoomId: number, doorId: number);
     /** Inside @see {srcRoomId} looking through adjacent @see {srcDoorId}, is @see {dstDoorId} behind? */
     isOtherDoorBehind(srcRoomId: number, srcDoorId: number, dstDoorId: number): boolean;

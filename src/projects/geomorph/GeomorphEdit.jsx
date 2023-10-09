@@ -212,16 +212,18 @@ function Geomorph({ layoutKey, transform, disabled }) {
           {data.gmGraph.ready && data.gm.rooms.map((_, roomId) =>
             data.gm.doors.map(({ roomIds }, doorId) => {
               if (!roomIds.includes(roomId)) return null; // 🚧 use roomGraph instead?
-              const point = data.gm.getViewDoorPosition(roomId, doorId);
-              const viewId = `${doorId}@${roomId}`;
-              return <div
-                key={viewId}
-                className="view-point"
-                data-key="view"
-                data-view-id={viewId}
-                data-room-id={roomId}
-                style={{ left: point.x, top: point.y }}
-              />;
+              const points = data.gm.getViewDoorPositions(roomId, doorId);
+              return points.map((point, i) => {
+                const viewId = `${doorId}@${roomId}${points.length > 1 ? `@${i}` : ''}`;
+                return <div
+                  key={viewId}
+                  className="view-point"
+                  data-key="view"
+                  data-view-id={viewId}
+                  data-room-id={roomId}
+                  style={{ left: point.x, top: point.y }}
+                />;
+              });
             }))
           }
           {data.gm.lightSrcs.map(({ position, roomId, distance = defaultLightDistance }, i) => [
