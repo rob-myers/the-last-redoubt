@@ -14172,62 +14172,6 @@
       "transform": "matrix(1,0,0,1,0,0)"
     },
     {
-      "key": "extra--table--001--1x0.16",
-      "pngHref": "/assets/symbol/extra--table--001--1x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 320, "height": 70},
-      "transformArray": [1, 0, 0, 1, 120, 344],
-      "transform": "matrix(1,0,0,1,120,344)"
-    },
-    {
-      "key": "extra--screen--001--1x0.2",
-      "pngHref": "/assets/symbol/extra--screen--001--1x0.2.png",
-      "pngRect": {"x": 8, "y": 3, "width": 284, "height": 54},
-      "transformArray": [1, 0, 0, -1, 120, 352],
-      "transform": "matrix(1,0,0,-1,120,352)"
-    },
-    {
-      "key": "extra--table--004--0.33x0.16",
-      "pngHref": "/assets/symbol/extra--table--004--0.33x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 120, "height": 70},
-      "transformArray": [1, 0, 0, 1, 216, 246],
-      "transform": "matrix(1,0,0,1,216,246)"
-    },
-    {
-      "key": "extra--table--004--0.33x0.16",
-      "pngHref": "/assets/symbol/extra--table--004--0.33x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 120, "height": 70},
-      "transformArray": [0, 1, -1, 0, 352, 360],
-      "transform": "matrix(0,1,-1,0,352,360)"
-    },
-    {
-      "key": "extra--table--004--0.33x0.16",
-      "pngHref": "/assets/symbol/extra--table--004--0.33x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 120, "height": 70},
-      "transformArray": [0, 1, -1, 0, 352, 386],
-      "transform": "matrix(0,1,-1,0,352,386)"
-    },
-    {
-      "key": "extra--table--001--1x0.16",
-      "pngHref": "/assets/symbol/extra--table--001--1x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 320, "height": 70},
-      "transformArray": [0, 1, -1, 0, 352, 418],
-      "transform": "matrix(0,1,-1,0,352,418)"
-    },
-    {
-      "key": "extra--screen--001--1x0.2",
-      "pngHref": "/assets/symbol/extra--screen--001--1x0.2.png",
-      "pngRect": {"x": 8, "y": 3, "width": 284, "height": 54},
-      "transformArray": [0, 1, -1, 0, 354, 418],
-      "transform": "matrix(0,1,-1,0,354,418)"
-    },
-    {
-      "key": "extra--table--001--1x0.16",
-      "pngHref": "/assets/symbol/extra--table--001--1x0.16.png",
-      "pngRect": {"x": -10, "y": -10, "width": 320, "height": 70},
-      "transformArray": [0, 1, -1, 0, 352, 484],
-      "transform": "matrix(0,1,-1,0,352,484)"
-    },
-    {
       "key": "stateroom--036--2x4",
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
