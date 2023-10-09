@@ -5,8 +5,10 @@
 - ✅ remove peek stuff
 - 🚧 layouts have various extra stuff e.g. extra--*
   - ✅ create a screen symbol, initially inside a table symbol
-  - ✅ layout `pause: boolean` -> `next: 'right' | 'below' | 'none'`
+  - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
   - 🚧 301: add tables/screens
+- hull symbol has own field i.e. not first item
+- map PNG does not include extra--*
 
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose
@@ -22,7 +24,6 @@
   - emphasise "language" and "joining behaviours" on homepage
 
 - doors should be easier to open as player walks
-- map PNG does not include extras--*
 - avoid multiple `stopped-walking` when extend walk
 - FOV should release styles so we can change const via HMR
 - maybe `walk foo` should not throw on click outside nav

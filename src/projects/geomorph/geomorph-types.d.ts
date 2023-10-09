@@ -35,7 +35,7 @@ declare namespace Geomorph {
    * - `ParsedSymbol<Poly>` used in `SymbolLookup`
    */
    export interface ParsedSymbol<T> extends SvgGroups<T> {
-    key: string;
+    key: SymbolKey;
     /** Hull walls, only in hull */
     hull: T[];
     /** Original SVG's width, inferred view `viewBox` */
@@ -125,7 +125,7 @@ declare namespace Geomorph {
      * typically only used for debugging.
      */
     items: {
-      key: string;
+      key: Geomorph.SymbolKey;
       pngHref: string;
       /** Untransformed */
       pngRect: Geom.RectJson;
@@ -357,7 +357,7 @@ declare namespace Geomorph {
   }
 
   export interface LayoutDefItem extends BaseLayoutDefItem {
-    symbol: SymbolKey;
+    id: SymbolKey;
     /** Door tags */
     doors?: string[];
     /** Wall tags */
@@ -372,7 +372,7 @@ declare namespace Geomorph {
     BaseLayoutDefItem,
     'transform' | 'x' | 'y' | 'flip'
   > {
-    items: LayoutDefItem[];
+    cs: LayoutDefItem[];
   }
   
   interface BaseLayoutDefItem {
@@ -391,12 +391,11 @@ declare namespace Geomorph {
     /** flip (post-composed) */
     flip?: 'x' | 'y' | 'xy';
     /**
-     * - `right` is default
-     * - `below` means pause aggregation of `x`,
-     *    in order to create columns where `y` is aggregated.
-     * - `none` means don't aggregate in either direction
+     * - `right` (default) i.e. next is to the right of current.
+     * - `down` i.e. next is below current.
+     * - `above` i.e. next is drawn over current.
      */
-    next?: 'right' | 'below' | 'none';
+    next?: 'right' | 'down' | 'above';
   }
 
   export type GeomorphKey = (

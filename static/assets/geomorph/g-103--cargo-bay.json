@@ -5,42 +5,42 @@
     "key": "g-103--cargo-bay",
     "id": 103,
     "items": [
-      {"symbol": "103--hull", "transform": [1, 0, 0, 1, 0, 0]},
+      {"id": "103--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
-        "items": [
+        "cs": [
           {
-            "symbol": "empty-room--039--3x4",
+            "id": "empty-room--039--3x4",
             "x": 60,
             "flip": "y",
             "y": 0,
             "transform": [-1, 0, 0, 1, 240, 0]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 360,
             "y": 0,
             "transform": [1, 0, 0, 1, 360, 0]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 480,
             "y": 0,
             "transform": [1, 0, 0, 1, 480, 0]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 600,
             "y": 0,
             "transform": [1, 0, 0, 1, 600, 0]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 720,
             "y": 0,
             "transform": [1, 0, 0, 1, 720, 0]
           },
           {
-            "symbol": "cargo--010--2x4",
+            "id": "cargo--010--2x4",
             "x": 960,
             "doors": [],
             "walls": [],
@@ -48,7 +48,7 @@
             "transform": [1, 0, 0, 1, 960, 0]
           },
           {
-            "symbol": "office--055--2x4",
+            "id": "office--055--2x4",
             "x": 1080,
             "y": 0,
             "transform": [1, 0, 0, 1, 1080, 0]
@@ -58,51 +58,51 @@
       {
         "y": 360,
         "x": 60,
-        "items": [
+        "cs": [
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 60,
             "y": 360,
             "transform": [1, 0, 0, 1, 60, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 180,
             "y": 360,
             "transform": [1, 0, 0, 1, 180, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 300,
             "y": 360,
             "transform": [1, 0, 0, 1, 300, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 420,
             "y": 360,
             "transform": [1, 0, 0, 1, 420, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 660,
             "y": 360,
             "transform": [1, 0, 0, 1, 660, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 780,
             "y": 360,
             "transform": [1, 0, 0, 1, 780, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 900,
             "y": 360,
             "transform": [1, 0, 0, 1, 900, 360]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 1020,
             "y": 360,
             "transform": [1, 0, 0, 1, 1020, 360]
@@ -112,51 +112,51 @@
       {
         "y": 600,
         "x": 60,
-        "items": [
+        "cs": [
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 60,
             "y": 600,
             "transform": [1, 0, 0, 1, 60, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 180,
             "y": 600,
             "transform": [1, 0, 0, 1, 180, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 300,
             "y": 600,
             "transform": [1, 0, 0, 1, 300, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 420,
             "y": 600,
             "transform": [1, 0, 0, 1, 420, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 660,
             "y": 600,
             "transform": [1, 0, 0, 1, 660, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 780,
             "y": 600,
             "transform": [1, 0, 0, 1, 780, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 900,
             "y": 600,
             "transform": [1, 0, 0, 1, 900, 600]
           },
           {
-            "symbol": "cargo--003--2x4",
+            "id": "cargo--003--2x4",
             "x": 1020,
             "y": 600,
             "transform": [1, 0, 0, 1, 1020, 600]
@@ -165,61 +165,61 @@
       },
       {
         "y": 960,
-        "items": [
+        "cs": [
           {
-            "symbol": "cargo--002--2x2",
-            "pause": true,
+            "id": "cargo--002--2x2",
+            "next": "down",
             "x": 0,
             "y": 960,
             "transform": [1, 0, 0, 1, 0, 960]
           },
           {
-            "symbol": "cargo--002--2x2",
+            "id": "cargo--002--2x2",
             "x": 0,
             "y": 1080,
             "transform": [1, 0, 0, 1, 0, 1080]
           },
           {
-            "symbol": "cargo--002--2x2",
-            "pause": true,
+            "id": "cargo--002--2x2",
+            "next": "down",
             "x": 120,
             "y": 960,
             "transform": [1, 0, 0, 1, 120, 960]
           },
           {
-            "symbol": "cargo--002--2x2",
+            "id": "cargo--002--2x2",
             "x": 120,
             "y": 1080,
             "transform": [1, 0, 0, 1, 120, 1080]
           },
           {
-            "symbol": "empty-room--074--4x8",
+            "id": "empty-room--074--4x8",
             "x": 360,
             "y": 960,
             "transform": [1, 0, 0, 1, 360, 960]
           },
           {
-            "symbol": "cargo--002--2x2",
+            "id": "cargo--002--2x2",
             "x": 960,
-            "pause": true,
+            "next": "down",
             "y": 960,
             "transform": [1, 0, 0, 1, 960, 960]
           },
           {
-            "symbol": "cargo--002--2x2",
+            "id": "cargo--002--2x2",
             "x": 960,
             "y": 1080,
             "transform": [1, 0, 0, 1, 960, 1080]
           },
           {
-            "symbol": "cargo--002--2x2",
-            "pause": true,
+            "id": "cargo--002--2x2",
+            "next": "down",
             "x": 1080,
             "y": 960,
             "transform": [1, 0, 0, 1, 1080, 960]
           },
           {
-            "symbol": "cargo--002--2x2",
+            "id": "cargo--002--2x2",
             "x": 1080,
             "y": 1080,
             "transform": [1, 0, 0, 1, 1080, 1080]

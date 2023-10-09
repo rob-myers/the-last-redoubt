@@ -27,25 +27,26 @@ export async function createLayout(opts) {
   // Compute `groups`
   opts.def.items.forEach((item, i) => {
     
-    if ('items' in item) {
+    if ('cs' in item) {
       const row = item;
       /** Rightmost x of previous item */
       let prevX = row.x ?? 0;
       /** Paused items aggregate Y */
       let deltaY = 0;
 
-      row.items.forEach((rowItem) => {
+      row.cs.forEach((rowItem) => {
         const origRowItemY  = rowItem.y ?? 0;
         rowItem.flip = combineFlips(row.flip, rowItem.flip);
         rowItem.x = prevX + (rowItem.x ?? 0);
         rowItem.y = (row.y ?? 0) + deltaY + origRowItemY;
         layoutDefItemToTransform(rowItem, opts, m);
         rowItem.transform = m.toArray(); // Used further below
-        const { width, height } = opts.lookup[rowItem.symbol];
-        if (rowItem.next === 'below') {
+        const { width, height } = opts.lookup[rowItem.id];
+        if (rowItem.next === 'down') {
           prevX = rowItem.x ?? 0;
           deltaY += origRowItemY + new Rect(0, 0, width, height).applyMatrix(m).height / 5;
-        } else if (rowItem.next === 'none') {
+        } else if (rowItem.next === 'above') {
+          prevX = rowItem.x ?? 0;
           deltaY += origRowItemY;
         } else {
           prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
@@ -66,8 +67,8 @@ export async function createLayout(opts) {
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
   
-  const flatItems = opts.def.items.flatMap(x => 'items' in x ? x.items : x);
-  const flatSymbols = flatItems.map(y => opts.lookup[y.symbol]);
+  const flatItems = opts.def.items.flatMap(x => 'cs' in x ? x.cs : x);
+  const flatSymbols = flatItems.map(y => opts.lookup[y.id]);
   const hullSym = flatSymbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
@@ -436,7 +437,7 @@ export async function createLayout(opts) {
  * @param {Geomorph.ParsedLayout['groups']} groups
  */
 function addLayoutDefItemToGroups(item, opts, m, groups) {
-  const { singles, obstacles, walls, hull } = opts.lookup[item.symbol];
+  const { singles, obstacles, walls, hull } = opts.lookup[item.id];
   
   if (opts.def.items[0] !== item) {
       /**
@@ -520,7 +521,7 @@ function layoutDefItemToTransform(item, opts, m) {
   }
 
   // Compute top left of symbol's AABB _after_ transformation
-  const { width, height, pngRect } = opts.lookup[item.symbol];
+  const { width, height, pngRect } = opts.lookup[item.id];
   const { x, y } = (new Rect(0, 0, width, height)).applyMatrix(m);
   // Account for 5 * (-) scale factor of non-hull symbols
   m.e = (item.x ?? 0) - x / 5;
@@ -875,7 +876,7 @@ export function parseLayout({
 }
 
 /**
- * @param {string} symbolName
+ * @param {Geomorph.SymbolKey} symbolName
  * @param {string} svgContents
  * @param {number} lastModified
  * @returns {Geomorph.ParsedSymbol<Poly>}

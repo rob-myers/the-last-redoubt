@@ -3,7 +3,7 @@ import { createCanvas } from "canvas";
 import { Poly, Vect, Rect } from "../geom";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
-import { createMonochromaticMask, drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
+import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle } from '../service/dom';
 import { error } from "../service/log";
 
 /**
@@ -48,6 +48,7 @@ export async function renderGeomorph(
 
   const ctxt = /** @type {CanvasRenderingContext2D | NodeCanvasContext} */ (canvas.getContext('2d'));
   ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
+  const initTransform = ctxt.getTransform();
 
   ctxt.imageSmoothingEnabled = true;
   ctxt.imageSmoothingQuality = 'high';
@@ -63,7 +64,14 @@ export async function renderGeomorph(
   }
 
   // symbols can draw polygons on floor e.g. "poly floor fillColor=#00000044 ..."
-  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !!x.meta.floor);
+  ctxt.save();
+  for (const { key, transformArray } of layout.items.slice(1)) {
+    ctxt.transform(...transformArray ?? [1, 0, 0, 1, 0, 0]);
+    ctxt.scale(0.2, 0.2);
+    drawSymbolPolys(key, ctxt, lookup, true);
+    ctxt.setTransform(initTransform);
+  }
+  ctxt.restore();
 
   if (navOutline) {
     ctxt.fillStyle = navColor;
@@ -144,8 +152,6 @@ export async function renderGeomorph(
 
   //#endregion
 
-  const initTransform = ctxt.getTransform();
-
   /** To invert PNG symbols we need a temporary canvas */
   const tempCtxt = createCanvas(0, 0).getContext('2d');
 
@@ -154,19 +160,17 @@ export async function renderGeomorph(
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
+    ctxt.globalCompositeOperation = 'source-over';
     // draw symbol png
+    ctxt.drawImage(image, pngRect.x, pngRect.y);
+    // ℹ️ can shade symbols via e.g. `poly fillColor=#555555`
+    drawSymbolPolys(key, ctxt, lookup, false);
     if (invertSymbols) {
       ctxt.translate(pngRect.x, pngRect.y);
-      ctxt.globalCompositeOperation = 'source-over';
-      ctxt.drawImage(image, 0, 0);
-      createMonochromaticMask(image, tempCtxt, ctxt, '#ffffff');
-    } else {
-      ctxt.drawImage(/** @type {CanvasImageSource} */ (image), pngRect.x, pngRect.y);
+      invertDrawnImage(image, tempCtxt, ctxt, '#ffffff');
     }
     ctxt.setTransform(initTransform);
   }
-  // symbols can have shading e.g. "poly fillColor=#00000044 ..."
-  drawPolySingles(ctxt, layout, lookup, (x) => !!x.meta.poly && !x.meta.floor);
 
   //#endregion
 
@@ -246,28 +250,20 @@ export function drawThinDoors(ctxt, layout) {
 }
 
 /**
+ * @param {Geomorph.SymbolKey} key
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Geomorph.ParsedLayout} layout
  * @param {Geomorph.SymbolLookup} lookup
- * @param {(x: Geomorph.SvgGroupWithTags<Poly>) => boolean} filter 
+ * @param {boolean} [floor] 
  */
-function drawPolySingles(ctxt, layout, lookup, filter) {
-  const initTransform = ctxt.getTransform();
-  ctxt.save();
-  for (const { key, transformArray } of layout.items.slice(1)) {
-    ctxt.transform(...transformArray ?? [1, 0, 0, 1, 0, 0]);
-    ctxt.scale(0.2, 0.2);
-    const polySingles = lookup[key].singles.filter(filter);
-    polySingles.forEach(({ meta, poly }) => {
-      const [fillColor, strokeColor, strokeWidth] = [
-        typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
-        typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
-        typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
-      ];
-      setStyle(ctxt, fillColor, strokeColor, strokeWidth);
-      fillPolygons(ctxt, [poly]);
-    });
-    ctxt.setTransform(initTransform);
-  }
-  ctxt.restore();
+function drawSymbolPolys(key, ctxt, lookup, floor = false) {
+  const polySingles = lookup[key].singles.filter(x => x.meta.poly && (!!floor === !!x.meta.floor));
+  polySingles.forEach(({ meta, poly }) => {
+    const [fillColor, strokeColor, strokeWidth] = [
+      typeof meta.fillColor === 'string' ? meta.fillColor : 'transparent',
+      typeof meta.strokeColor === 'string' ? meta.strokeColor : 'transparent',
+      typeof meta.strokeWidth === 'number' ? meta.strokeWidth : 0,
+    ];
+    setStyle(ctxt, fillColor, strokeColor, strokeWidth);
+    fillPolygons(ctxt, [poly]);
+  });
 }

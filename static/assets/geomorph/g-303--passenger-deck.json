@@ -5,57 +5,57 @@
     "key": "g-303--passenger-deck",
     "id": 303,
     "items": [
-      {"symbol": "303--hull", "transform": [1, 0, 0, 1, 0, 0]},
+      {"id": "303--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
-        "items": [
+        "cs": [
           {
-            "symbol": "medical-bed--006--1.6x3.6",
+            "id": "medical-bed--006--1.6x3.6",
             "y": 12,
             "x": 0,
             "transform": [1, 0, 0, 1, 0, 12]
           },
           {
-            "symbol": "low-berth--003--1x1",
+            "id": "low-berth--003--1x1",
             "x": 180,
             "a": 90,
-            "pause": true,
+            "next": "down",
             "y": 0,
             "transform": [0, 1, -1, 0, 240, 0]
           },
           {
-            "symbol": "console--022--1x2",
+            "id": "console--022--1x2",
             "flip": "y",
             "x": 180,
             "y": 60,
             "transform": [-1, 0, 0, 1, 240, 60]
           },
           {
-            "symbol": "stateroom--035--2x3",
+            "id": "stateroom--035--2x3",
             "x": 240,
             "y": 0,
             "transform": [1, 0, 0, 1, 240, 0]
           },
           {
-            "symbol": "stateroom--035--2x3",
+            "id": "stateroom--035--2x3",
             "x": 360,
             "y": 0,
             "transform": [1, 0, 0, 1, 360, 0]
           },
           {
-            "symbol": "stateroom--035--2x3",
+            "id": "stateroom--035--2x3",
             "x": 480,
             "y": 0,
             "transform": [1, 0, 0, 1, 480, 0]
           },
           {
-            "symbol": "stateroom--035--2x3",
+            "id": "stateroom--035--2x3",
             "flip": "y",
             "x": 600,
             "y": 0,
             "transform": [-1, 0, 0, 1, 720, 0]
           },
           {
-            "symbol": "stateroom--100--3x4",
+            "id": "stateroom--100--3x4",
             "a": 90,
             "flip": "x",
             "x": 720,
@@ -63,22 +63,22 @@
             "transform": [0, -1, -1, 0, 960, 180]
           },
           {
-            "symbol": "galley-and-mess-halls--006--2x4",
+            "id": "galley-and-mess-halls--006--2x4",
             "flip": "y",
-            "pause": true,
+            "next": "down",
             "x": 960,
             "y": 0,
             "transform": [-1, 0, 0, 1, 1200, 0]
           },
           {
-            "symbol": "table--009--0.8x0.8",
-            "pause": true,
+            "id": "table--009--0.8x0.8",
+            "next": "down",
             "x": 960,
             "y": 120,
             "transform": [1, 0, 0, 1, 960, 120]
           },
           {
-            "symbol": "table--009--0.8x0.8",
+            "id": "table--009--0.8x0.8",
             "y": 240,
             "x": 960,
             "transform": [1, 0, 0, 1, 960, 240]
@@ -88,33 +88,33 @@
       {
         "x": 90,
         "y": -6,
-        "items": [
+        "cs": [
           {
-            "symbol": "window--001--0x1",
+            "id": "window--001--0x1",
             "x": 90,
             "y": -6,
             "transform": [1, 0, 0, 1, 90, -6]
           },
           {
-            "symbol": "window--001--0x1",
+            "id": "window--001--0x1",
             "x": 270,
             "y": -6,
             "transform": [1, 0, 0, 1, 270, -6]
           },
           {
-            "symbol": "window--001--0x1",
+            "id": "window--001--0x1",
             "x": 390,
             "y": -6,
             "transform": [1, 0, 0, 1, 390, -6]
           },
           {
-            "symbol": "window--001--0x1",
+            "id": "window--001--0x1",
             "x": 510,
             "y": -6,
             "transform": [1, 0, 0, 1, 510, -6]
           },
           {
-            "symbol": "window--001--0x1",
+            "id": "window--001--0x1",
             "x": 630,
             "y": -6,
             "transform": [1, 0, 0, 1, 630, -6]
@@ -122,14 +122,14 @@
         ]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "x": 1140,
         "y": 240,
         "a": 90,
         "transform": [0, 1, -1, 0, 1200, 240]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "y": 540,
         "x": 300,
         "flip": "y",
@@ -138,29 +138,29 @@
       {
         "x": 180,
         "y": 240,
-        "items": [
+        "cs": [
           {
-            "symbol": "fresher--002--0.4x0.6",
+            "id": "fresher--002--0.4x0.6",
             "flip": "x",
             "x": 180,
             "y": 240,
             "transform": [1, 0, 0, -1, 180, 300]
           },
           {
-            "symbol": "gaming-tables--001--1x2",
+            "id": "gaming-tables--001--1x2",
             "x": 480,
             "y": 240,
             "transform": [1, 0, 0, 1, 480, 240]
           },
           {
-            "symbol": "couch-and-chairs--006--0.4x2",
+            "id": "couch-and-chairs--006--0.4x2",
             "x": 672,
             "flip": "y",
             "y": 240,
             "transform": [-1, 0, 0, 1, 696, 240]
           },
           {
-            "symbol": "couch-and-chairs--006--0.4x2",
+            "id": "couch-and-chairs--006--0.4x2",
             "x": 720,
             "a": 90,
             "y": 240,
@@ -169,21 +169,21 @@
         ]
       },
       {
-        "symbol": "machinery--077--1.6x1.8",
+        "id": "machinery--077--1.6x1.8",
         "y": 376,
         "x": 54,
         "a": 90,
         "transform": [0, 1, -1, 0, 162, 376]
       },
       {
-        "symbol": "machinery--077--1.6x1.8",
+        "id": "machinery--077--1.6x1.8",
         "y": 436,
         "x": 126,
         "flip": "y",
         "transform": [-1, 0, 0, 1, 222, 436]
       },
       {
-        "symbol": "console--018--1x1",
+        "id": "console--018--1x1",
         "y": 480,
         "x": 60,
         "flip": "y",
@@ -192,37 +192,37 @@
       {
         "x": 360,
         "y": 360,
-        "items": [
+        "cs": [
           {
-            "symbol": "stateroom--036--2x4",
+            "id": "stateroom--036--2x4",
             "flip": "x",
             "x": 360,
             "y": 360,
             "transform": [1, 0, 0, -1, 360, 600]
           },
           {
-            "symbol": "stateroom--036--2x4",
+            "id": "stateroom--036--2x4",
             "flip": "x",
             "x": 480,
             "y": 360,
             "transform": [1, 0, 0, -1, 480, 600]
           },
           {
-            "symbol": "stateroom--036--2x4",
+            "id": "stateroom--036--2x4",
             "flip": "xy",
             "x": 600,
             "y": 360,
             "transform": [-1, 0, 0, -1, 720, 600]
           },
           {
-            "symbol": "stateroom--036--2x4",
+            "id": "stateroom--036--2x4",
             "flip": "xy",
             "x": 720,
             "y": 360,
             "transform": [-1, 0, 0, -1, 840, 600]
           },
           {
-            "symbol": "office--089--4x4",
+            "id": "office--089--4x4",
             "x": 960,
             "flip": "y",
             "y": 360,

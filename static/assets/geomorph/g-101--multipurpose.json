@@ -5,29 +5,29 @@
     "key": "g-101--multipurpose",
     "id": 101,
     "items": [
-      {"symbol": "101--hull", "transform": [1, 0, 0, 1, 0, 0]},
+      {"id": "101--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
-        "items": [
+        "cs": [
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 0,
             "y": 0,
             "transform": [1, 0, 0, 1, 0, 0]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 360,
             "y": 0,
             "transform": [1, 0, 0, 1, 360, 0]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 600,
             "y": 0,
             "transform": [1, 0, 0, 1, 600, 0]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 960,
             "y": 0,
             "transform": [1, 0, 0, 1, 960, 0]
@@ -35,22 +35,22 @@
         ]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "x": 840,
         "transform": [1, 0, 0, 1, 840, 0]
       },
       {
         "y": 120,
-        "items": [
+        "cs": [
           {
-            "symbol": "machinery--158--1.8x3.6",
+            "id": "machinery--158--1.8x3.6",
             "x": 12,
             "y": 132,
             "a": 270,
             "transform": [0, -1, 1, 0, 12, 240]
           },
           {
-            "symbol": "stateroom--020--2x3",
+            "id": "stateroom--020--2x3",
             "x": 360,
             "a": 90,
             "flip": "y",
@@ -58,7 +58,7 @@
             "transform": [0, 1, 1, 0, 360, 120]
           },
           {
-            "symbol": "fresher--020--2x2",
+            "id": "fresher--020--2x2",
             "a": 90,
             "flip": "y",
             "x": 540,
@@ -66,14 +66,14 @@
             "transform": [0, 1, 1, 0, 540, 120]
           },
           {
-            "symbol": "lounge--009--2x3",
+            "id": "lounge--009--2x3",
             "flip": "xy",
             "x": 660,
             "y": 120,
             "transform": [-1, 0, 0, -1, 840, 240]
           },
           {
-            "symbol": "machinery--155--1.8x3.6",
+            "id": "machinery--155--1.8x3.6",
             "x": 972,
             "y": 128,
             "a": 270,
@@ -82,7 +82,7 @@
         ]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "a": 270,
         "y": 300,
         "transform": [0, -1, 1, 0, 0, 360]
@@ -90,15 +90,15 @@
       {
         "y": 240,
         "x": 360,
-        "items": [
+        "cs": [
           {
-            "symbol": "stateroom--018--2x3",
+            "id": "stateroom--018--2x3",
             "x": 360,
             "y": 240,
             "transform": [1, 0, 0, 1, 360, 240]
           },
           {
-            "symbol": "stateroom--019--2x3",
+            "id": "stateroom--019--2x3",
             "x": 720,
             "flip": "xy",
             "y": 240,
@@ -108,16 +108,16 @@
       },
       {
         "y": 360,
-        "items": [
+        "cs": [
           {
-            "symbol": "empty-room--013--2x3",
+            "id": "empty-room--013--2x3",
             "a": 90,
             "x": 0,
             "y": 360,
             "transform": [0, 1, -1, 0, 180, 360]
           },
           {
-            "symbol": "medical--008--2x3",
+            "id": "medical--008--2x3",
             "x": 240,
             "a": 270,
             "flip": "y",
@@ -126,7 +126,7 @@
             "transform": [0, -1, -1, 0, 360, 540]
           },
           {
-            "symbol": "stateroom--020--2x3",
+            "id": "stateroom--020--2x3",
             "y": 420,
             "a": 90,
             "flip": "xy",
@@ -134,7 +134,7 @@
             "transform": [0, -1, 1, 0, 360, 540]
           },
           {
-            "symbol": "stateroom--020--2x3",
+            "id": "stateroom--020--2x3",
             "x": 660,
             "y": 420,
             "a": 90,
@@ -142,14 +142,14 @@
             "transform": [0, -1, -1, 0, 840, 540]
           },
           {
-            "symbol": "fresher--025--2x3",
+            "id": "fresher--025--2x3",
             "a": 270,
             "x": 840,
             "y": 360,
             "transform": [0, -1, 1, 0, 840, 540]
           },
           {
-            "symbol": "office--023--2x3",
+            "id": "office--023--2x3",
             "x": 1020,
             "a": 90,
             "flip": "x",
@@ -160,9 +160,9 @@
       },
       {
         "y": 480,
-        "items": [
+        "cs": [
           {
-            "symbol": "empty-room--039--3x4",
+            "id": "empty-room--039--3x4",
             "doors": ["e"],
             "walls": ["e"],
             "x": 0,
@@ -170,7 +170,7 @@
             "transform": [1, 0, 0, 1, 0, 480]
           },
           {
-            "symbol": "office--061--3x4",
+            "id": "office--061--3x4",
             "x": 1020,
             "y": 480,
             "transform": [1, 0, 0, 1, 1020, 480]
@@ -178,15 +178,15 @@
         ]
       },
       {
-        "symbol": "lifeboat--small-craft",
+        "id": "lifeboat--small-craft",
         "y": 492,
         "transform": [1, 0, 0, 1, 0, 492]
       },
       {
         "y": 660,
-        "items": [
+        "cs": [
           {
-            "symbol": "empty-room--013--2x3",
+            "id": "empty-room--013--2x3",
             "y": 720,
             "a": 270,
             "flip": "y",
@@ -195,7 +195,7 @@
             "transform": [0, -1, -1, 0, 180, 840]
           },
           {
-            "symbol": "medical--007--2x3",
+            "id": "medical--007--2x3",
             "x": 240,
             "a": 90,
             "doors": ["w"],
@@ -203,14 +203,14 @@
             "transform": [0, 1, -1, 0, 360, 660]
           },
           {
-            "symbol": "office--026--2x3",
+            "id": "office--026--2x3",
             "a": 90,
             "x": 360,
             "y": 660,
             "transform": [0, 1, -1, 0, 540, 660]
           },
           {
-            "symbol": "office--026--2x3",
+            "id": "office--026--2x3",
             "x": 660,
             "a": 90,
             "flip": "y",
@@ -218,7 +218,7 @@
             "transform": [0, 1, 1, 0, 660, 660]
           },
           {
-            "symbol": "fresher--025--2x3",
+            "id": "fresher--025--2x3",
             "a": 90,
             "flip": "y",
             "x": 840,
@@ -226,7 +226,7 @@
             "transform": [0, 1, 1, 0, 840, 660]
           },
           {
-            "symbol": "office--023--2x3",
+            "id": "office--023--2x3",
             "x": 1020,
             "y": 720,
             "a": 90,
@@ -236,15 +236,15 @@
       },
       {
         "y": 780,
-        "items": [
+        "cs": [
           {
-            "symbol": "office--020--2x3",
+            "id": "office--020--2x3",
             "x": 360,
             "y": 780,
             "transform": [1, 0, 0, 1, 360, 780]
           },
           {
-            "symbol": "office--020--2x3",
+            "id": "office--020--2x3",
             "x": 720,
             "flip": "y",
             "y": 780,
@@ -253,7 +253,7 @@
         ]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "y": 840,
         "x": 1140,
         "a": 90,
@@ -261,16 +261,16 @@
       },
       {
         "y": 960,
-        "items": [
+        "cs": [
           {
-            "symbol": "machinery--156--1.8x3.6",
+            "id": "machinery--156--1.8x3.6",
             "a": 270,
             "y": 954,
             "x": 0,
             "transform": [0, -1, 1, 0, 0, 1074]
           },
           {
-            "symbol": "office--025--2x3",
+            "id": "office--025--2x3",
             "x": 360,
             "a": 90,
             "flip": "y",
@@ -279,13 +279,13 @@
             "transform": [0, 1, 1, 0, 360, 960]
           },
           {
-            "symbol": "machinery--091--1.6x1.8",
+            "id": "machinery--091--1.6x1.8",
             "x": 552,
             "y": 960,
             "transform": [1, 0, 0, 1, 552, 960]
           },
           {
-            "symbol": "office--025--2x3",
+            "id": "office--025--2x3",
             "x": 660,
             "a": 90,
             "doors": ["w"],
@@ -293,7 +293,7 @@
             "transform": [0, 1, -1, 0, 840, 960]
           },
           {
-            "symbol": "machinery--357--2.2x4",
+            "id": "machinery--357--2.2x4",
             "x": 960,
             "y": 960,
             "transform": [1, 0, 0, 1, 960, 960]
@@ -302,27 +302,27 @@
       },
       {
         "y": 1080,
-        "items": [
+        "cs": [
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 0,
             "y": 1080,
             "transform": [1, 0, 0, 1, 0, 1080]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 360,
             "y": 1080,
             "transform": [1, 0, 0, 1, 360, 1080]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 600,
             "y": 1080,
             "transform": [1, 0, 0, 1, 600, 1080]
           },
           {
-            "symbol": "fuel--010--2x4",
+            "id": "fuel--010--2x4",
             "x": 960,
             "y": 1080,
             "transform": [1, 0, 0, 1, 960, 1080]
@@ -330,7 +330,7 @@
         ]
       },
       {
-        "symbol": "iris-valves--005--1x1",
+        "id": "iris-valves--005--1x1",
         "x": 300,
         "y": 1140,
         "flip": "y",

@@ -233,8 +233,9 @@ const pointCache = {};
  * @param {CanvasRenderingContext2D} dstCtxt
  * @param {string} [fillColor]
  */
-export function createMonochromaticMask(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
-	// Draw opaque part of `image` in colour `fillColour`
+export function invertDrawnImage(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
+	// Create monochromatic mask,
+	//  i.e. draw opaque part of `image` in colour `fillColour`
     tempCtxt.canvas.width = image.width;
     tempCtxt.canvas.height = image.height;
     tempCtxt.globalCompositeOperation = 'source-over';

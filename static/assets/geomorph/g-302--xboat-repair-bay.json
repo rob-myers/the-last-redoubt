@@ -5,16 +5,16 @@
     "key": "g-302--xboat-repair-bay",
     "id": 302,
     "items": [
-      {"symbol": "302--hull", "transform": [1, 0, 0, 1, 0, 0]},
+      {"id": "302--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
-        "symbol": "office--006--2x2",
+        "id": "office--006--2x2",
         "y": 120,
         "a": 90,
         "doors": ["e", "w"],
         "transform": [0, 1, -1, 0, 120, 120]
       },
       {
-        "symbol": "sensors--003--1x1.4",
+        "id": "sensors--003--1x1.4",
         "transform": [
           0.7071067811865476,
           0.7071067811865475,
@@ -27,53 +27,53 @@
       {
         "y": 420,
         "x": 240,
-        "items": [
+        "cs": [
           {
-            "symbol": "lounge--015--2x4",
+            "id": "lounge--015--2x4",
             "flip": "xy",
-            "x": 480,
-            "y": 840,
+            "x": 240,
+            "y": 420,
             "transform": [-1, 0, 0, -1, 480, 540]
           },
           {
-            "symbol": "ships-locker--011--1x2",
+            "id": "ships-locker--011--1x2",
             "a": 90,
-            "x": 1200,
-            "y": 840,
+            "x": 480,
+            "y": 420,
             "transform": [0, 1, -1, 0, 540, 420]
           },
           {
-            "symbol": "empty-room--006--2x2",
-            "x": 1740,
+            "id": "empty-room--006--2x2",
+            "x": 480,
             "a": 90,
             "doors": ["e"],
-            "y": 840,
+            "y": 420,
             "transform": [0, 1, -1, 0, 600, 420]
           },
           {
-            "symbol": "shop--028--0.8x1.6",
+            "id": "shop--028--0.8x1.6",
             "a": 90,
-            "x": 2460,
-            "y": 840,
+            "x": 600,
+            "y": 420,
             "transform": [0, 1, -1, 0, 660, 420]
           },
           {
-            "symbol": "shop--027--0.4x1.6",
-            "x": 3312,
-            "y": 924,
+            "id": "shop--027--0.4x1.6",
+            "x": 792,
+            "y": 504,
             "flip": "x",
             "transform": [1, 0, 0, -1, 792, 528]
           }
         ]
       },
       {
-        "symbol": "window--007--0x2.4",
+        "id": "window--007--0x2.4",
         "y": 412,
         "x": 240,
         "transform": [1, 0, 0, 1, 240, 412]
       },
       {
-        "symbol": "empty-room--020--2x4",
+        "id": "empty-room--020--2x4",
         "x": 1080,
         "flip": "xy",
         "transform": [-1, 0, 0, -1, 1200, 240]
