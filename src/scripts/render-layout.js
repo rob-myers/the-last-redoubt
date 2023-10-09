@@ -51,14 +51,22 @@ const staticDir = path.resolve(__dirname, '../../static');
 
 (async function main() {
   try {
-    // Draw unlit geomorph
-    const { layout, canvas } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: !!debug, scale, invertSymbols: true });
+    /**
+     * Draw unlit geomorph.
+     */
+    const { layout, canvas } = await renderLayout(foundLayoutDef, {
+      thinDoors: false,
+      debug: !!debug,
+      scale,
+      invertSymbols: true,
+    });
 
     /**
-     * Draw map geomorph with doors and no highlights.
-     * We do not include labels, because they'd be transformed with geomorph.
+     * Draw map geomorph with doors, no highlights and no `extra--*`s.
      */
     const mapCanvas = createCanvas(canvas.width, canvas.height);
+    layout.items = layout.items.filter(x => !x.key.startsWith('extra--'));
+
     await renderGeomorph(
       layout,
       symbolLookup,
@@ -66,7 +74,16 @@ const staticDir = path.resolve(__dirname, '../../static');
       (pngHref) => /** @type {Promise<import('canvas').Image & CanvasImageSource>} */ (
         loadImage(fs.readFileSync(path.resolve(staticDir + pngHref)))
       ),
-      { scale, obsBounds: true, wallBounds: true, navTris: false, navOutline: false, doors: true, labels: false, highlights: false },
+      {
+        scale,
+        obsBounds: false,
+        wallBounds: true,
+        navTris: false,
+        navOutline: false,
+        doors: true,
+        labels: false, // otherwise e.g. they'd be reflected with geomorph
+        highlights: false,
+      },
     );
 
     // Write JSON (see also svg-meta)

@@ -25,8 +25,7 @@ export async function createLayout(opts) {
   const m = new Mat;
 
   // Compute `groups`
-  opts.def.items.forEach((item, i) => {
-    
+  opts.def.items.forEach(item => {
     if ('cs' in item) {
       const row = item;
       /** Rightmost x of previous item */
@@ -52,7 +51,6 @@ export async function createLayout(opts) {
           prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
           deltaY = 0;
         }
-
         addLayoutDefItemToGroups(rowItem, opts, m, groups);
       });
     } else {

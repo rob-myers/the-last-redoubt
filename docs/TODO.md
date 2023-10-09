@@ -7,8 +7,8 @@
   - ✅ create a screen symbol, initially inside a table symbol
   - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
   - 🚧 301: add tables/screens
-- hull symbol has own field i.e. not first item
-- map PNG does not include extra--*
+- ✅ map PNG does not include extra--*
+- 🚧 hull symbol has own field i.e. not first item
 
 - ✅ support multiple `view` per connector
 
