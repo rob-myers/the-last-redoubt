@@ -7363,7 +7363,7 @@
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#cccccc"},
+        "meta": {"poly": true, "fillColor": "#aaa"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -7386,7 +7386,7 @@
     "width": 300,
     "height": 50,
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 70},
-    "lastModified": 1696845396340.6055
+    "lastModified": 1696856901712.0186
   },
   "extra--table--002--0.33x0.33": {
     "key": "extra--table--002--0.33x0.33",

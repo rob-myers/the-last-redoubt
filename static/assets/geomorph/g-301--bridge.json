@@ -13,15 +13,15 @@
           {
             "id": "extra--table--001--1x0.16",
             "next": "above",
-            "x": 120,
-            "y": 344,
+            "x": 240,
+            "y": 688,
             "transform": [1, 0, 0, 1, 120, 344]
           },
           {
             "id": "extra--screen--001--1x0.2",
-            "y": 340,
+            "y": 1028,
             "flip": "x",
-            "x": 120,
+            "x": 360,
             "transform": [1, 0, 0, -1, 120, 352]
           }
         ]
@@ -40,39 +40,39 @@
             "id": "extra--table--004--0.33x0.16",
             "a": 90,
             "next": "down",
-            "x": 342,
-            "y": 360,
+            "x": 684,
+            "y": 720,
             "transform": [0, 1, -1, 0, 352, 360]
           },
           {
             "id": "extra--table--004--0.33x0.16",
-            "y": 386,
+            "y": 1126,
             "a": 90,
             "next": "down",
-            "x": 342,
+            "x": 1026,
             "transform": [0, 1, -1, 0, 352, 386]
           },
           {
             "id": "extra--table--001--1x0.16",
             "a": 90,
-            "y": 418,
+            "y": 1564,
             "next": "above",
-            "x": 342,
+            "x": 1368,
             "transform": [0, 1, -1, 0, 352, 418]
           },
           {
             "id": "extra--screen--001--1x0.2",
             "a": 90,
             "next": "down",
-            "x": 342,
-            "y": 418,
+            "x": 1710,
+            "y": 1982,
             "transform": [0, 1, -1, 0, 354, 418]
           },
           {
             "id": "extra--table--001--1x0.16",
             "a": 90,
-            "y": 484,
-            "x": 342,
+            "y": 2526,
+            "x": 2052,
             "transform": [0, 1, -1, 0, 352, 484]
           }
         ]
@@ -90,39 +90,39 @@
             "y": 120,
             "flip": "y",
             "doors": ["s"],
-            "x": 120,
+            "x": 240,
             "transform": [-1, 0, 0, 1, 240, 120]
           },
           {
             "id": "console--031--1x1.2",
             "y": 60,
-            "x": 300,
+            "x": 660,
             "flip": "y",
             "transform": [-1, 0, 0, 1, 360, 60]
           },
           {
             "id": "bridge--042--8x9",
             "y": 60,
-            "x": 360,
+            "x": 1080,
             "transform": [1, 0, 0, 1, 360, 60]
           },
           {
             "id": "console--031--1x1.2",
             "y": 60,
-            "x": 840,
+            "x": 2400,
             "transform": [1, 0, 0, 1, 840, 60]
           },
           {
             "id": "office--001--2x2",
             "y": 120,
-            "x": 960,
+            "x": 3420,
             "doors": ["s"],
             "transform": [1, 0, 0, 1, 960, 120]
           },
           {
             "id": "stateroom--036--2x4",
             "flip": "y",
-            "x": 1080,
+            "x": 4620,
             "y": 0,
             "transform": [-1, 0, 0, 1, 1200, 0]
           }
@@ -136,28 +136,28 @@
             "flip": "x",
             "next": "down",
             "x": 0,
-            "y": 360,
+            "y": 720,
             "transform": [1, 0, 0, -1, 0, 480]
           },
           {
             "id": "stateroom--036--2x4",
             "a": 270,
             "x": 0,
-            "y": 480,
+            "y": 1320,
             "transform": [0, -1, 1, 0, 0, 600]
           },
           {
             "id": "stateroom--014--2x2",
-            "x": 120,
+            "x": 360,
             "flip": "x",
-            "y": 360,
+            "y": 720,
             "transform": [1, 0, 0, -1, 120, 480]
           },
           {
             "id": "misc-stellar-cartography--023--4x4",
-            "x": 960,
+            "x": 1440,
             "flip": "y",
-            "y": 360,
+            "y": 720,
             "transform": [-1, 0, 0, 1, 1200, 360]
           }
         ]
@@ -1866,7 +1866,7 @@
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#cccccc"},
+        "meta": {"poly": true, "fillColor": "#aaa"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1976,7 +1976,7 @@
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#cccccc"},
+        "meta": {"poly": true, "fillColor": "#aaa"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2005,7 +2005,7 @@
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#cccccc"},
+        "meta": {"poly": true, "fillColor": "#aaa"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
