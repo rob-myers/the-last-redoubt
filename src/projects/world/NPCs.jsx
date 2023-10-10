@@ -5,10 +5,10 @@ import { filter, tap } from "rxjs/operators";
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
-import { baseTrackingZoom, baseTrackingZoomMobile, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
+import { baseTrackingZoom, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 import { geom } from "../service/geom";
 import { hasGmRoomId } from "../service/geomorph";
-import { isSmallViewport, detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import { MemoizedNPC } from "./NPC";
@@ -699,7 +699,6 @@ export default function NPCs(props) {
     },
     trackNpc(npcKey, processApi) {
       const npc = state.getNpc(npcKey);
-      const baseZoom = isSmallViewport() ? baseTrackingZoomMobile : baseTrackingZoom;
       
       /** @typedef {'no-track' | 'follow-walk' | 'panzoom-to'} TrackStatus */ 
       let status = /** @type {TrackStatus} */ ('no-track');
@@ -711,7 +710,7 @@ export default function NPCs(props) {
         await api.panZoom.animationAction('cancelFollow');
         await api.panZoom.panZoomTo({
           durationMs: 2000,
-          // scale: baseZoom,
+          scale: npc.everWalked() ? undefined : baseTrackingZoom,
           worldPoint: npc.getPosition(),
         }).catch(e => void (state.config.verbose && processApi.info(`ignored: ${e.message ?? e}`)));
         changeStatus('no-track');

@@ -48,7 +48,7 @@ declare namespace NPC {
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
     /**
-     * _Preamble_:
+     * _Background_:
      * Process suspend/resume can pause/resume npc.
      * If not resumed, such pausing will be overridden by next npc action.
      * 
@@ -90,8 +90,7 @@ declare namespace NPC {
     ): void;
     clearWayMetas(): void;
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
-    /** Has respective el ever been animated? On remount this resets. */
-    everAnimated(): boolean;
+    everWalked(): boolean;
     extendNextWalk(...points: Geom.VectJson[]): void;
     async fadeSpawn(point: Geomorph.PointMaybeMeta, opts?: {
       angle?: number;

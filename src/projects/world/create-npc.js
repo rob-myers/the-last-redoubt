@@ -224,8 +224,8 @@ export default function createNpc(
         }
       }
     },
-    everAnimated() {
-      return this.el.root && isAnimAttached(this.anim.translate, this.el.root);
+    everWalked() {
+      return this.anim.wayTimeoutId !== 0;
     },
     extendNextWalk(...points) {// 👈 often a single point
       const currentPath = this.anim.path;
@@ -745,7 +745,7 @@ export default function createNpc(
         this.el.root.classList.add(spriteSheet);
         this.anim.spriteSheet = spriteSheet;
       }
-      if (this.everAnimated()) {
+      if (isAnimAttached(this.anim.translate, this.el.root)) {
         this.anim.translate.cancel();
         this.anim.rotate.cancel();
         this.anim.sprites.cancel();

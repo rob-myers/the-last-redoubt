@@ -1,3 +1,5 @@
+import { isSmallViewport } from 'projects/service/dom';
+
 export const cssName = /** @type {const} */ ({
   door: 'door',
   doors: 'doors',
@@ -101,6 +103,4 @@ export const doorViewOffset = -2;
 
 export const windowViewOffset = 20;
 
-export const baseTrackingZoom = 1.5;
-
-export const baseTrackingZoomMobile = 1;
+export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
