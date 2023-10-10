@@ -171,7 +171,7 @@ export async function renderGeomorph(
       invertDrawnImage(image, tempCtxt, ctxt, '#ffffff');
     }
     if (lighten) {
-      lightenDrawnImage(image, tempCtxt, ctxt, '#ffffff44');
+      lightenDrawnImage(image, tempCtxt, ctxt, '#ffffff66');
     }
     ctxt.setTransform(initTransform);
   }

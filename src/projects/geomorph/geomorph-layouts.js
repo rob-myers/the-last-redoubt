@@ -187,19 +187,14 @@ const layoutDefs = {
       // { symbol: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
       // { symbol: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
-      { x: 2 * 60, y: 5 * 60 + 44, cs: [
-        { id: 'extra--table--001--1x0.16', next: 'above' },
-        { id: 'extra--screen--001--1x0.2', y: -4, flip: 'x', invert: true, lighten: true },
-      ]},
+      { id: 'extra--table--001--1x0.16', x: 2 * 60, y: 5 * 60 + 44 },
       { id: 'extra--table--004--0.33x0.16', x: 3 * 60 + 36, y: 4 * 60 + 6 },
 
       { y: 6 * 60, x: 5 * 60 + 48 - 6, cs: [
         { id: 'extra--table--004--0.33x0.16', a: 90, next: 'down' },
         { id: 'extra--table--004--0.33x0.16', y: 6, a: 90, next: 'down' },
-        { id: 'extra--table--001--1x0.16', a: 90, y: 12, next: 'above' },
-        { id: 'extra--screen--001--1x0.2', a: 90, next: 'down', invert: true, lighten: true },
+        { id: 'extra--table--001--1x0.16', a: 90, y: 12, next: 'down' },
         { id: 'extra--table--001--1x0.16', a: 90, y: 6 },
-        // { symbol: 'extra--screen--001--1x0.2', a: 90, next: 'down' },
       ]},
 
       { cs: [

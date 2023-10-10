@@ -2562,7 +2562,7 @@
     "width": 1200,
     "height": 600,
     "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1696859950148.6128
+    "lastModified": 1696951962761.6143
   },
   "302--hull": {
     "key": "302--hull",
@@ -7312,32 +7312,6 @@
     "height": 100,
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 120},
     "lastModified": 1692456800695.7815
-  },
-  "extra--screen--001--1x0.2": {
-    "key": "extra--screen--001--1x0.2",
-    "hull": [],
-    "obstacles": [
-      {
-        "meta": {},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [8.685, 4.476],
-              [8.685, 56.781],
-              [292.119, 56.781],
-              [292.119, 4.476]
-            ]
-          ]
-        }
-      }
-    ],
-    "walls": [],
-    "singles": [],
-    "width": 300,
-    "height": 60,
-    "pngRect": {"x": 8, "y": 3, "width": 284, "height": 54},
-    "lastModified": 1696778633043.5383
   },
   "extra--table--001--1x0.16": {
     "key": "extra--table--001--1x0.16",
