@@ -15,7 +15,8 @@
 - ✅ map PNG does not include extra--*
 
 - ✅ 301: more tables
-- 🚧 301 hull: more tables
+- ✅ 301 hull: more tables
+- ✅ remake table 2, 3
 - 🚧 301 symbols: more tables
 - hull symbol has own field i.e. not first item
 - BUG saw issue where removed decor, but new decor in different room vanished on close door

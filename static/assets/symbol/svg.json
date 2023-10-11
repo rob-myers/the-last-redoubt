@@ -7362,25 +7362,25 @@
     "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
     "lastModified": 1697019353075.413
   },
-  "extra--table--002--0.33x0.33": {
-    "key": "extra--table--002--0.33x0.33",
+  "extra--table--002--0.2x0.2": {
+    "key": "extra--table--002--0.2x0.2",
     "hull": [],
     "obstacles": [
       {
         "meta": {},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[-10, -10], [-10, 110], [110, 110], [110, -10]]]
+          "coordinates": [[[0, 0], [0, 120], [120, 120], [120, 0]]]
         }
       }
     ],
     "walls": [],
     "singles": [
       {
-        "meta": {"_decor": true, "_label": "table"},
+        "meta": {"decor": true, "point": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[45, 40], [45, 60], [65, 60], [65, 40]]]
+          "coordinates": [[[55, 55], [55, 65], [65, 65], [65, 55]]]
         }
       },
       {
@@ -7389,52 +7389,52 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [3.221, 1.001],
-              [5.857, -5.541],
-              [105.857, -6.104],
-              [110.65, -1.525],
-              [110.982, 97.202],
-              [105.857, 102.551],
-              [5.857, 102.857],
-              [2.937, 96.115],
-              [3.221, 1.001],
-              [3.221, 1.001]
+              [7.221, 13.857],
+              [9.857, 7.448],
+              [109.857, 6.896],
+              [114.65, 11.382],
+              [114.982, 108.105],
+              [109.857, 113.345],
+              [9.857, 113.645],
+              [6.937, 107.04],
+              [7.221, 13.857],
+              [7.221, 13.857]
             ]
           ]
         }
       }
     ],
-    "width": 100,
-    "height": 100,
-    "pngRect": {"x": -10, "y": -10, "width": 320, "height": 120},
-    "lastModified": 1692630338066.106
+    "width": 120,
+    "height": 120,
+    "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
+    "lastModified": 1697027043423.7842
   },
-  "extra--table--003--1x0.33": {
-    "key": "extra--table--003--1x0.33",
+  "extra--table--003--0.1x0.1": {
+    "key": "extra--table--003--0.1x0.1",
     "hull": [],
     "obstacles": [
       {
         "meta": {},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[-10, -10], [-10, 110], [310, 110], [310, -10]]]
+          "coordinates": [[[0, 0], [0, 60], [60, 60], [60, 0]]]
         }
       }
     ],
     "walls": [],
     "singles": [
       {
-        "meta": {"_decor": true, "_label": "table"},
+        "meta": {"decor": true, "point": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[145, 40], [145, 60], [165, 60], [165, 40]]]
+          "coordinates": [[[25, 25], [25, 35], [35, 35], [35, 25]]]
         }
       }
     ],
-    "width": 300,
-    "height": 100,
-    "pngRect": {"x": -10, "y": -10, "width": 320, "height": 120},
-    "lastModified": 1692533966874.4243
+    "width": 60,
+    "height": 60,
+    "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
+    "lastModified": 1697028441357.2268
   },
   "extra--table--004--0.4x0.2": {
     "key": "extra--table--004--0.4x0.2",
