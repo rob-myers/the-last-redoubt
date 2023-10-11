@@ -3,7 +3,8 @@
 ## In progress
 
 - ✅ remove peek stuff
-- 🚧 layouts have various extra stuff e.g. extra--*
+- ✅ support multiple `view` per connector
+- ✅ layouts have various extra stuff e.g. extra--*
   - ✅ create a screen symbol, initially inside a table symbol
   - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
   - ✅ can invert symbol at layout stage
@@ -12,11 +13,16 @@
   - ❌ make a load of screen symbols
   - ✅ remove screens: we'll use decor instead
 - ✅ map PNG does not include extra--*
-- 🚧 hull symbol has own field i.e. not first item
 
-- 🚧 301: add tables
+- ✅ 301: more tables
+- 🚧 301 hull: more tables
+- 🚧 301 symbols: more tables
+- hull symbol has own field i.e. not first item
+- BUG saw issue where removed decor, but new decor in different room vanished on close door
 - 301: add decor
-- ✅ support multiple `view` per connector
+  - ✅ pre-populated via tables
+  - programmable
+  - dynamically `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
 
 - processApi.verbose(...) 
   - session.store has verbose boolean, driving npcs.config.verbose
@@ -24,8 +30,6 @@
 
 - example of picking something up
   - e.g. spawn decor, then fade/remove it, registering something inside npc
-  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
-  - 🚧 BUG saw issue where removed decor, but new decor in different room vanished on close door
   - icons for things we might want to pick up?
 
 - return to homepage

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="300" height="300"/>
+  </defs>
+  <g style="pointer-events: none;">
+    <title>background</title>
+    <image width="120" height="60" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8CAMAAACac46aAAAB41BMVEWurq4AAAAAAAACAgITExO3t7cBAQGtra0KCgoVFRQAAAALCwoBAQEAAAADAwMAAAAAAAAAAAABAQEBAQGqqqmfn54CAgIFBQUBAQGGhogAAAAAAAAAAAACAgIAAAAAAAAeHh4XFxcYGBgBAQESEhIeHh4AAAAEBAQCAgJDQ0NDQ0MAAAAAAAAJCQkAAAD///8AAAAGBAOAdmYYGBgICAgKCQj///z//+waGhrf0LX//+V2a11uZFdGQDfh0LUfHRf///n//+G+sJlsY1ammYVzalz///2rnYh5b2ENDQ0DAgLJuKCPhHOGe2t9c2RwZln///P+++CglIGHfWy6r5e6rJYyMCwfHhv///b///D++u737Nn79dj+89b569G8u7rh0bbiz7LTw6nMuqK6rJixo4+toI6lmIKckH2ShnWLgG+EeGiIemZjY2R6cWJnX1JiWU5cVEoIBwWJi415eXlUVlcSEhL4+Pjv7/Dq6+z/+Obg4OL/997/9trV1dX059DEw8To2cHZzbvVybe8va++s6XFtp7EtZ2UlpanmYWHh4WAgH98e3yVjHp7fHJ/c2V9cF45Qk5XT0VNRjxIQjg3NzcxLCYlIRsbGBMRDwr5+vvm5ubY2Nitra2ioqNtbW1GRkYTdXrwAAAAL3RSTlPWAP4T+/nm1Pvx8ezQxH9vLwn53sy1rJ+VkmZeS0M1BPTe1dXRzLutkVhXISAdBxAEHeoAAALISURBVFjD7ZnHUttQFEAlm95LAgQIpPdE10UuwSQCR7YldxtcMDhgigHTbHpvoYdQQ0n/1Dx5mBFssnsmM+gs7httdObOaKPzCJIki+9W5GXk0LQ6BdBZuQ/LquQkicTywrwS4HR+ne7snE4ocJGgz890yDLBQ0ZFEUkgbwYABylCBjChgJLyl0Rtdanw9HVse3Rzl40fHh3X4+D46DDO7m6Obu+MC/acAuL1M3SqB5emJhfXPDHWYHTW4cBpNLAxz9ri5NSPUT8y5hNFD9C+fxYo7Wp03zgU3Yjo8RDZiA4Z96OrWur7Dto5l3iRDQC/KXfTgNNh1ofcWly4Q3qzwznQ5DalcwBZxJ00AHqspbPfYreGgiYNhQuNKRiy2i39nS0fdQBq4rYKiT939LFe6wwmq+iesXrZvg5BTBO3hPmly2ExtzKUicKJiWJazRZH16ekOFOYQ711tnYXQ+GGcbXb6nqbkmJCmE4b62ljTBRuTEybh7X1XBLbLd0NDIUfpqHbYjeLYqNS2ZwicbNS+eGKuDFF4kZJLImTSGJJLIkl8b/EmdclTr9x4swb93FJ4itIYkksiSWxJL4Q/wc/5teRIsT44kpBfHGJ8UXMTdoU5CatmJsuBbYA7pVNATGwXU6KcwEsKVOMmYE5MSkmI2riIqKGtS5GgwvGpQ1fRFSVEFGf3wOAwW8oGxtQNg7Pv8XFfBhlY8NAs5v6mRCycdFjJPala4Ir5hi7t7Ue0b/DgT6yvrXHxswrQWphEBlzCXmBTLiS+DU7vdzjZYdHRoYNOBBezHp7lqdnl5BXJntCkDX56BS2PhiP1/tOTv3vceA/PfHVx8cPfDoAXgallQRZXJ0HoFZNKCAJzytwwPOQRM2pOICMAjkhXLSV5QBPcxxHK3jAB6+gOYQCZPmVchKJydpXVeWPstPSVCkgLfv+08KaNyT5F+ydoj7Szi7nAAAAAElFTkSuQmCC"/>
+  </g>
+  <g style="pointer-events: none;">
+    <title>obstacles</title>
+    <rect width="120" height="60" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
+  </g>
+  <g style="">
+    <title>singles</title>
+    <path d="M 8.034 10.566 L 10.681 4.971 L 109.07 4.849 L 113.881 8.79 L 114.215 50.541 L 109.07 55.105 L 10.681 55.006 L 7.749 49.219 L 8.034 10.566 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.08;">
+      <title>poly fillColor=#00000022</title>
+    </path>
+    <rect width="10" height="10" style="fill: rgb(255, 0, 0); fill-opacity: 0.4;" x="60" y="25">
+      <title>decor point</title>
+    </rect>
+  </g>
+</svg>
