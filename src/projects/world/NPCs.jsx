@@ -770,7 +770,7 @@ export default function NPCs(props) {
           } else if (
             npc.anim.spriteSheet !== 'walk'
             && api.panZoom.panzoomAnim === null
-            && api.panZoom.distanceTo(npc.getPosition()) > 10
+            && api.panZoom.distanceTo(npc.getPosition()) > 60
           ) {// npc not moving and camera not close
             await panZoomTo();
           }
