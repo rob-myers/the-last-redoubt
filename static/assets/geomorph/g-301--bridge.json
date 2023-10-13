@@ -7,6 +7,46 @@
     "items": [
       {"id": "301--hull", "transform": [1, 0, 0, 1, 0, 0]},
       {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 10, 242],
+        "transform": [1, 0, 0, 1, 10, 242]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 36, 242],
+        "transform": [1, 0, 0, 1, 36, 242]
+      },
+      {
+        "id": "extra--table--001--1x0.2",
+        "preTransform": [1, 0, 0, 1, 302, 242],
+        "transform": [1, 0, 0, 1, 302, 242]
+      },
+      {
+        "id": "extra--table--001--1x0.2",
+        "preTransform": [1, 0, 0, 1, 182, 242],
+        "transform": [1, 0, 0, 1, 182, 242]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 10, 242],
+        "transform": [1, 0, 0, 1, 10, 242]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 36, 242],
+        "transform": [1, 0, 0, 1, 36, 242]
+      },
+      {
+        "id": "extra--table--001--1x0.2",
+        "preTransform": [1, 0, 0, 1, 302, 242],
+        "transform": [1, 0, 0, 1, 302, 242]
+      },
+      {
+        "id": "extra--table--001--1x0.2",
+        "preTransform": [1, 0, 0, 1, 182, 242],
+        "transform": [1, 0, 0, 1, 182, 242]
+      },
+      {
         "id": "iris-valves--005--1x1",
         "y": 300,
         "a": 270,
@@ -32,36 +72,6 @@
         "x": 900,
         "a": 180,
         "transform": [-1, 0, 0, -1, 960, 600]
-      },
-      {
-        "y": 242,
-        "cs": [
-          {
-            "id": "extra--table--004--0.4x0.2",
-            "x": 10,
-            "y": 484,
-            "transform": [1, 0, 0, 1, 10, 242]
-          },
-          {
-            "id": "extra--table--004--0.4x0.2",
-            "x": 70,
-            "y": 484,
-            "transform": [1, 0, 0, 1, 36, 242]
-          },
-          {
-            "id": "extra--table--001--1x0.2",
-            "x": 276,
-            "invert": true,
-            "y": 484,
-            "transform": [1, 0, 0, 1, 182, 242]
-          },
-          {
-            "id": "extra--table--001--1x0.2",
-            "x": 638,
-            "y": 484,
-            "transform": [1, 0, 0, 1, 302, 242]
-          }
-        ]
       },
       {
         "y": 242,
@@ -397,14 +407,14 @@
         "meta": {},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[240, 240], [240, 252], [180, 252], [180, 240]]]
+          "coordinates": [[[360, 240], [360, 252], [300, 252], [300, 240]]]
         }
       },
       {
         "meta": {},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[360, 240], [360, 252], [300, 252], [300, 240]]]
+          "coordinates": [[[240, 240], [240, 252], [180, 252], [180, 240]]]
         }
       },
       {
@@ -2176,31 +2186,48 @@
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "symbol": true,
+          "key": "extra--table--004--0.4x0.2",
+          "_ownOrigin": {"x": 10, "y": 242}
+        },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[12, 320], [48, 320], [48, 356], [12, 356]]]
+          "coordinates": [[[34, 242], [34, 254], [10, 254], [10, 242]]]
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "symbol": true,
+          "key": "extra--table--004--0.4x0.2",
+          "_ownOrigin": {"x": 36, "y": 242}
+        },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[1188, 280], [1152, 280], [1152, 244], [1188, 244]]]
+          "coordinates": [[[60, 242], [60, 254], [36, 254], [36, 242]]]
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "symbol": true,
+          "key": "extra--table--001--1x0.2",
+          "invert": true,
+          "_ownOrigin": {"x": 302, "y": 242}
+        },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[320, 588], [320, 552], [356, 552], [356, 588]]]
+          "coordinates": [[[362, 242], [362, 254], [302, 254], [302, 242]]]
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "symbol": true,
+          "key": "extra--table--001--1x0.2",
+          "_ownOrigin": {"x": 182, "y": 242}
+        },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[920, 588], [920, 552], [956, 552], [956, 588]]]
+          "coordinates": [[[242, 242], [242, 254], [182, 254], [182, 242]]]
         }
       },
       {
@@ -2262,6 +2289,35 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [
+            [[333.984, 245], [333.984, 249], [329.984, 249], [329.984, 245]]
+          ]
+        }
+      },
+      {
+        "meta": {"poly": true, "fillColor": "#ccc"},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [303.055, 244.1792],
+              [303.5646, 243.0664],
+              [360.0092, 243],
+              [360.9358, 243.779],
+              [361, 252.0674],
+              [360.0092, 252.9774],
+              [303.5646, 253],
+              [303, 251.8532],
+              [303.055, 244.1792],
+              [303.055, 244.1792]
+            ]
+          ]
+        }
+      },
+      {
+        "meta": {"decor": true, "point": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
             [[213.984, 245], [213.984, 249], [209.984, 249], [209.984, 245]]
           ]
         }
@@ -2287,32 +2343,31 @@
         }
       },
       {
-        "meta": {"decor": true, "point": true},
+        "meta": {"decor": true, "circle": true, "hatch": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [[333.984, 245], [333.984, 249], [329.984, 249], [329.984, 245]]
-          ]
+          "coordinates": [[[12, 320], [48, 320], [48, 356], [12, 356]]]
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#ccc"},
+        "meta": {"decor": true, "circle": true, "hatch": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [
-            [
-              [303.055, 244.1792],
-              [303.5646, 243.0664],
-              [360.0092, 243],
-              [360.9358, 243.779],
-              [361, 252.0674],
-              [360.0092, 252.9774],
-              [303.5646, 253],
-              [303, 251.8532],
-              [303.055, 244.1792],
-              [303.055, 244.1792]
-            ]
-          ]
+          "coordinates": [[[1188, 280], [1152, 280], [1152, 244], [1188, 244]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "circle": true, "hatch": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[320, 588], [320, 552], [356, 552], [356, 588]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "circle": true, "hatch": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[920, 588], [920, 552], [956, 552], [956, 588]]]
         }
       },
       {

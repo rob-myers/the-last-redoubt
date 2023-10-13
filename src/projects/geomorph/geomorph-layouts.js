@@ -192,12 +192,6 @@ const layoutDefs = {
       { id: 'iris-valves--005--1x1', y: 9 * 60, x: 5 * 60, a: 180 },
       { id: 'iris-valves--005--1x1', y: 9 * 60, x: 15 * 60, a: 180 },
 
-      { y: 4 * 60 + 2, cs: [
-        { id: 'extra--table--004--0.4x0.2', x: 10 },
-        { id: 'extra--table--004--0.4x0.2', x: 2  },
-        { id: 'extra--table--001--1x0.2', x: 2 * 60 + 2, invert: true },
-        { id: 'extra--table--001--1x0.2', x: 1 * 60  },
-      ]},
       { y: 4 * 60 + 2, x: 14 * 60 + 12, cs: [
         { id: 'extra--table--004--0.4x0.2', x: 10 },
         { id: 'extra--table--003--0.1x0.1', x: 2 },

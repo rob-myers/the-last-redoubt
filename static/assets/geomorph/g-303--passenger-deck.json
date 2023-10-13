@@ -1610,7 +1610,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "'common-area'"},
+        "meta": {"decor": true, "go": true, "label": "common-area"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[640, 270], [630, 270], [630, 260], [640, 260]]]
@@ -6681,10 +6681,10 @@
       "rect": {"x": 945, "y": 411, "width": 40, "height": 8}
     },
     {
-      "text": "'common-area'",
+      "text": "common-area",
       "center": {"x": 635, "y": 265},
       "index": 2,
-      "rect": {"x": 602.5, "y": 261, "width": 65, "height": 8}
+      "rect": {"x": 607.5, "y": 261, "width": 55, "height": 8}
     },
     {
       "text": "stateroom",

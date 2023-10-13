@@ -8,12 +8,16 @@
   - ✅ support nested symbols in non-hull symbols
   - ✅ support nested symbols inside hull symbol
 - ✅ clean
+- 🚧 migrate tables: layout -> nested symbols
+
 - 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉`
 
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
 - try to improve performance (at least on mobile)
   - hideGms clunky on open hull door first time mobile (?)
-  - collapse onto two canvases per geomorph (including doors)
+  - collapse onto two canvases per geomorph
+    - including doors
+    - including decor
   - use PixiJS
 
 - hull symbol has own field i.e. not first item
