@@ -2,11 +2,12 @@ import { uid } from 'uid';
 
 import type * as Sh from './parse';
 import { last, safeStringify } from '../service/generic';
+import { parseJsArg } from '../service/dom';
 import useSession, { ProcessStatus } from './session.store';
 import { killError, expand, Expanded, literal, matchFuncFormat, normalizeWhitespace, ProcessError, ShError, singleQuotes, killProcess, handleProcessError } from './util';
-import { cmdService, isTtyAt, parseJsArg, sleep } from './cmd.service';
+import { cmdService, isTtyAt, sleep } from './cmd.service';
 import { srcService } from './parse';
-import { preProcessWrite, redirectNode, SigEnum, FifoDevice } from './io';
+import { preProcessWrite, redirectNode } from './io';
 import { cloneParsed, collectIfClauses, reconstructReplParamExp, wrapInFile } from './parse';
 
 class semanticsServiceClass {

@@ -4,7 +4,7 @@
  * - String format `matrix(a, b, c, d, e, f)`.
  */
 export class Mat {
-  /** @param  {string | SixTuple} [args] */
+  /** @param  {string | Geom.SixTuple} [args] */
   constructor(args) {
     this.a = 1;
     this.b = 0;
@@ -13,7 +13,7 @@ export class Mat {
     this.e = 0;
     this.f = 0;
     return args instanceof Array
-      ? this.setMatrixValue(/** @type {SixTuple} */(args))
+      ? this.setMatrixValue(/** @type {Geom.SixTuple} */(args))
       : this.setMatrixValue(/** @type {undefined | string} */(args));
   }
 
@@ -90,7 +90,7 @@ export class Mat {
 
   /**
    * Compute `param matrix` * `this matrix`.
-   * @param {SixTuple} _
+   * @param {Geom.SixTuple} _
    */
   postMultiply([a, b, c, d, e, f]) {
     const ma = a * this.a + c * this.b + e * 0;
@@ -104,7 +104,7 @@ export class Mat {
 
   /**
    * Compute `this matrix` * `param matrix`.
-   * @param {SixTuple} _
+   * @param {Geom.SixTuple} _
    */
   preMultiply([a, b, c, d, e, f]) {
     const ma = this.a * a + this.c * b + this.e * 0;
@@ -126,12 +126,12 @@ export class Mat {
     return this;
   }
 
-  /** @param  {undefined | string | SixTuple | MatrixJson} source */
+  /** @param  {undefined | string | Geom.SixTuple | MatrixJson} source */
   setMatrixValue(source) {
     if (typeof source === 'string') {
       const transform = source
         .slice('matrix('.length, -')'.length).split(',').map(Number);
-      return this.feedFromArray( /** @type {SixTuple} */ (transform));
+      return this.feedFromArray( /** @type {Geom.SixTuple} */ (transform));
     } else if (!source) {
       return this;
     } else if (Array.isArray(source)) {
@@ -153,7 +153,7 @@ export class Mat {
     ]);
   }
 
-  /** @returns {SixTuple} */
+  /** @returns {Geom.SixTuple} */
   toArray() {
     return [this.a, this.b, this.c, this.d, this.e, this.f];
   }
@@ -197,7 +197,7 @@ export class Mat {
     return v;
   }
 
-  /** @param {SixTuple} _ */
+  /** @param {Geom.SixTuple} _ */
   feedFromArray([a, b, c, d, e, f]) {
     this.a = a;
     this.b = b;
@@ -208,7 +208,5 @@ export class Mat {
     return this;
   }
 }
-
-/** @typedef {[number, number, number, number, number, number]} SixTuple */
 
 /** @typedef {{ a: number; b: number; c: number; d: number; e: number; f: number }} MatrixJson */

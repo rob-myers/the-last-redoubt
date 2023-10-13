@@ -3,6 +3,7 @@ import { uid } from 'uid';
 
 import { ansi, EOF } from '../service/const';
 import { Deferred, deepGet, keysDeep, pause, pretty, removeFirst, safeStringify, generateSelector, testNever, truncateOneLine } from '../service/generic';
+import { parseJsArg, parseJsonArg } from '../service/dom';
 import { addStdinToArgs, computeNormalizedParts, formatLink, handleProcessError, killError, killProcess, normalizeAbsParts, parseTtyMarkdownLinks, ProcessError, resolveNormalized, resolvePath, ShError, stripAnsi } from './util';
 import type * as Sh from './parse';
 import { ReadResult, preProcessRead, dataChunk, isProxy, redirectNode, VoiceCommand } from './io';
@@ -930,29 +931,6 @@ export function parseFnOrStr(input: string) {
     }
   } catch {}
   return input;
-}
-
-/**
- * Parse input with string fallback
- * - preserves `undefined`
- * - preserves empty-string
- */
-export function parseJsArg(input?: string) {
-  try {
-    if (input === '') return input;
-    return Function(`return ${input}`)();
-  } catch (e) {
-    return input;
-  }
-}
-
-/** JSON.parse with string fallback */
-function parseJsonArg(input: string) {
-  try {
-    return input === undefined ? undefined : JSON.parse(input);
-  } catch {
-    return input;
-  }
 }
 
 function prettySafe(x: any) {

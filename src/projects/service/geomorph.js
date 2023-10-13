@@ -9,7 +9,7 @@ import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
-import { fillRing, supportsWebp } from "../service/dom";
+import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
 
 /**
  * Fundamental function i.e. source of each {geomorph}.json
@@ -24,24 +24,40 @@ export async function createLayout(opts) {
   const groups = { obstacles: [], singles: [], walls: [] };
   const m = new Mat;
 
-  // Compute `groups`
-  opts.def.items.forEach(item => {
+  // Extend opts.layout
+  extendLayoutUsingNestedSymbols(opts);
+  /** Last seen transform of non-nested symbol */
+  let postTransform = /** @type {Geom.SixTuple} */ ([1, 0, 0, 1, 0, 0]);
+
+  /**
+   * 🚧 remove 'row`s
+   * - Compute `groups`.
+   * - Compute each `item.transform`.
+   */
+  opts.def.items.forEach((item, i) => {
     if ('cs' in item) {
       const row = item;
-      /** Rightmost x of previous item */
+      /** Can aggregate X */
       let prevX = row.x ?? 0;
-      /** Paused items aggregate Y */
+      /** Can aggregate Y */
       let deltaY = 0;
 
-      row.cs.forEach((rowItem) => {
+      row.cs.forEach((rowItem, i) => {
         const origRowItemY  = rowItem.y ?? 0;
         rowItem.flip = combineFlips(row.flip, rowItem.flip);
         rowItem.x = prevX + (rowItem.x ?? 0);
         rowItem.y = (row.y ?? 0) + deltaY + origRowItemY;
-        layoutDefItemToTransform(rowItem, opts, m);
-        rowItem.transform = m.toArray(); // Used further below
+        if (rowItem.preTransform) {
+          rowItem.transform = m.feedFromArray(rowItem.preTransform).postMultiply(postTransform).toArray();
+        } else {
+          rowItem.transform = layoutDefItemToTransform(rowItem, opts, m).toArray();
+          postTransform = rowItem.transform;
+        }
+        
         const { width, height } = opts.lookup[rowItem.id];
-        if (rowItem.next === 'down') {
+        if (rowItem.preTransform) {
+          // NOOP
+        } else if (rowItem.next === 'down') {
           prevX = rowItem.x ?? 0;
           deltaY += origRowItemY + new Rect(0, 0, width, height).applyMatrix(m).height / 5;
         } else if (rowItem.next === 'above') {
@@ -54,17 +70,20 @@ export async function createLayout(opts) {
         addLayoutDefItemToGroups(rowItem, opts, m, groups);
       });
     } else {
-      layoutDefItemToTransform(item, opts, m);
-      item.transform = m.toArray(); // Used further below
+      if (item.preTransform) {
+        item.transform = m.feedFromArray(item.preTransform).postMultiply(postTransform).toArray();
+      } else {
+        item.transform = layoutDefItemToTransform(item, opts, m).toArray();
+        postTransform = item.transform;
+      }
       addLayoutDefItemToGroups(item, opts, m, groups);
     }
   });
-
   // Ensure well-signed polygons
   groups.singles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
-  
+
   const flatItems = opts.def.items.flatMap(x => 'cs' in x ? x.cs : x);
   const flatSymbols = flatItems.map(y => opts.lookup[y.id]);
   const hullSym = flatSymbols[0];
@@ -566,6 +585,59 @@ function extendHullDoorTags(door, hullRect) {
 }
 
 /**
+ * Symbols can reference others:
+ * we insert the latter into the layout.
+ * This function mutates @see {opts}
+ * @param {CreateLayoutOpts} opts
+ */
+function extendLayoutUsingNestedSymbols(opts) {
+  opts.def.items = opts.def.items.reduce((agg, item) => {
+    if ('cs' in item) {
+      const row = {...item};
+      const origCs = row.cs;
+      row.cs = []; // We'll rebuild this
+      origCs.forEach(inner => {
+        row.cs.push(inner);
+        opts.lookup[inner.id].singles.forEach(x => {
+          if (x.meta.symbol) {
+            if (/** @type {string} */ (x.meta.key) in opts.lookup) {
+              row.cs.push(symbolSingleToLayoutItem(x));
+            } else warn(`inner symbol lacks valid key (${JSON.stringify(inner)})`);
+          }
+        });
+      });
+      agg.push(row);
+    } else {
+      agg.push(item);
+      opts.lookup[item.id].singles.forEach(x => {
+        if (x.meta.symbol) {
+          if (/** @type {string} */ (x.meta.key) in opts.lookup) {
+            agg.push(symbolSingleToLayoutItem(x));
+          } else warn(`inner symbol lacks valid key (${JSON.stringify(item)})`);
+        }
+      });
+    }
+    return agg;
+  }, /** @type {typeof opts.def.items} */ ([]));
+}
+/**
+ * @param {Geomorph.SvgGroupWithTags<Poly>} single 
+ * @returns {Geomorph.LayoutDefItem}
+ */
+function symbolSingleToLayoutItem({ meta, poly: { rect } }) {
+  // console.log('saw nested symbol', meta, rect);
+  const { x, y } = /** @type {Geom.VectJson} */ (meta._ownOrigin);
+  const m = new Mat([1, 0, 0, 1, x, y]);
+  if (meta._ownTransform) {
+    m.postMultiply(/** @type {Geom.SixTuple} */ (meta._ownTransform));
+  }
+  return {
+    id: /** @type {Geomorph.SymbolKey} */ (meta.key),
+    preTransform: m.toArray(),
+  };
+}
+
+/**
  * @param {Geomorph.ParsedConnectorRect} connector
  * @param {Geom.VectJson} viewPos local position inside geomorph
  * @returns {[Geom.Vect, Geom.Vect]}
@@ -891,10 +963,11 @@ export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
     error(`${symbolName}: symbol must have viewBox on <svg>`);
   }
 
-  const hull = extractGeomsAt($, topNodes, 'hull');
-  const obstacles = extractGeomsAt($, topNodes, 'obstacles');
-  const singles = extractGeomsAt($, topNodes, 'singles');
-  const walls = extractGeomsAt($, topNodes, 'walls');
+  const scale = symbolName.endsWith('--hull') ? 1 : 1 / 5;
+  const hull = extractGeomsAt($, topNodes, 'hull', scale);
+  const obstacles = extractGeomsAt($, topNodes, 'obstacles', scale);
+  const singles = extractGeomsAt($, topNodes, 'singles', scale);
+  const walls = extractGeomsAt($, topNodes, 'walls', scale);
 
   return {
     key: symbolName,
@@ -1382,7 +1455,7 @@ export function tagsToMeta(tags, baseMeta) {
   return tags.reduce((meta, tag) => {
     const eqIndex = tag.indexOf('=');
     if (eqIndex > -1) {
-      meta[tag.slice(0, eqIndex)] = parseJsonArg(tag.slice(eqIndex + 1));
+      meta[tag.slice(0, eqIndex)] = parseJsArg(tag.slice(eqIndex + 1));
     } else {
       meta[tag] = true; // Omit tags `foo=bar`
     }
@@ -1396,15 +1469,6 @@ export function tagsToMeta(tags, baseMeta) {
  */
 export function metaToTags(meta) {
   return Object.keys(meta).filter(key => meta[key] === true);
-}
-
-/** @param {string} input */
-function parseJsonArg(input) {
-  try {
-    return input === undefined ? undefined : JSON.parse(input);
-  } catch {
-    return input;
-  }
 }
 
 //#region decor

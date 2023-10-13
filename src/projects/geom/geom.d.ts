@@ -61,4 +61,6 @@ declare namespace Geom {
     dist: number;
     edgeId: number;
   }
+
+  export type SixTuple = [number, number, number, number, number, number];
 }

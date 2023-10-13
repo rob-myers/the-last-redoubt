@@ -2,22 +2,20 @@
 
 ## In progress
 
-- ✅ remove peek stuff
-- ✅ support multiple `view` per connector
-- ✅ layouts have various extra stuff e.g. extra--*
-  - ✅ create a screen symbol, initially inside a table symbol
-  - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
-  - ✅ can invert symbol at layout stage
-  - ✅ can lighten symbols at layout stage
-  - ❌ darker floor/nav, lighter --geomorph-filter
-  - ❌ make a load of screen symbols
-  - ✅ remove screens: we'll use decor instead
-- ✅ map PNG does not include extra--*
-
-- ✅ 301: more tables
-- ✅ 301 hull: more tables
-- ✅ remake table 2, 3
 - 🚧 301 symbols: more tables
+
+- ✅ support nested symbols e.g. `symbol key={symbolKey}` in SVG singles
+  - ✅ support nested symbols in non-hull symbols
+  - ✅ support nested symbols inside hull symbol
+- ✅ clean
+- 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉`
+
+- ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
+- try to improve performance (at least on mobile)
+  - hideGms clunky on open hull door first time mobile (?)
+  - collapse onto two canvases per geomorph (including doors)
+  - use PixiJS
+
 - hull symbol has own field i.e. not first item
 - BUG saw issue where removed decor, but new decor in different room vanished on close door
 - 301: add decor
@@ -593,6 +591,22 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ remove peek stuff
+- ✅ support multiple `view` per connector
+- ✅ layouts have various extra stuff e.g. extra--*
+  - ✅ create a screen symbol, initially inside a table symbol
+  - ✅ layout `pause: boolean` -> `next: 'right' | 'down' | 'above'`
+  - ✅ can invert symbol at layout stage
+  - ✅ can lighten symbols at layout stage
+  - ❌ darker floor/nav, lighter --geomorph-filter
+  - ❌ make a load of screen symbols
+  - ✅ remove screens: we'll use decor instead
+- ✅ map PNG does not include extra--*
+
+- ✅ 301: more tables
+- ✅ 301 hull: more tables
+- ✅ remake table 2, 3
 
 - ✅ BUG cannot leave basin in gm 301 room 18
 - ✅ can relate-connectors door -> window

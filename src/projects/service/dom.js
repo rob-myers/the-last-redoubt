@@ -222,6 +222,33 @@ const lineSegCache = {};
 /** @type {{ [cssTransformValue: string]: Geom.VectJson }} */
 const pointCache = {};
 
+/**
+ * Parse input with string fallback
+ * - preserves `undefined`
+ * - preserves empty-string
+ * @param {string} [input]
+ */
+export function parseJsArg(input) {
+	try {
+	  if (input === '') return input;
+	  return Function(`return ${input}`)();
+	} catch (e) {
+	  return input;
+	}
+}
+
+/**
+ * JSON.parse with string fallback
+ * @param {string} input
+ */
+export function parseJsonArg(input) {
+	try {
+		return input === undefined ? undefined : JSON.parse(input);
+	} catch {
+		return input;
+	}
+}
+
 //#endregion
 
 //#region canvas

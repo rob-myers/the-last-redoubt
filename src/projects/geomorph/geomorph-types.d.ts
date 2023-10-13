@@ -276,6 +276,9 @@ declare namespace Geomorph {
     }
   }
 
+  /**
+   * 🚧 Change name i.e. needn't arise from point.
+   */
   export type PointMeta = Record<string, (
     | string
     | boolean
@@ -283,6 +286,7 @@ declare namespace Geomorph {
     | Geom.VectJson
     | Geom.VectJson[]
     | Record<number, true>
+    | [number, number, number, number, number, number]
     | null
   )>;
 
@@ -394,6 +398,8 @@ declare namespace Geomorph {
     next?: 'right' | 'down' | 'above';
     invert?: boolean;
     lighten?: boolean;
+    /** Defined iff this is a nested symbol i.e. arises as a single `symbol key={symbolKey}` */
+    preTransform?: [number, number, number, number, number, number];
   }
 
   export type GeomorphKey = (

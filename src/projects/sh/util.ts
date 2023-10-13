@@ -1,9 +1,8 @@
 import braces from 'braces';
 import { ansi } from '../service/const';
 import { last } from '../service/generic';
-import { navigateFromHash } from '../service/dom';
+import { navigateFromHash, parseJsArg } from '../service/dom';
 import useSession, { ProcessMeta, ProcessStatus, TtyLinkCtxt } from './session.store';
-import { parseJsArg } from './cmd.service';
 import { SigEnum } from './io';
 import type * as Sh from './parse';
 

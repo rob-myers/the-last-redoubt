@@ -1,5 +1,5 @@
 import { Element } from 'cheerio';
-import { Poly, Rect, Mat, Vect } from '../geom';
+import { Poly, Rect, Mat } from '../geom';
 import { geom } from './geom';
 import { warn } from './log';
 
@@ -28,28 +28,29 @@ export function matchesTitle(api, node, regex) {
  * @param {import('cheerio').CheerioAPI} api
  * @param {Element[]} topNodes
  * @param {string} title
- * @param {number} [precisionDp]
+ * @param {number} [scale] Non hull-symbols need to be scaled down by `1/5` to obtain world coords
  */
-export function extractGeomsAt(api, topNodes, title, precisionDp) {
+export function extractGeomsAt(api, topNodes, title, scale = 1) {
   const group = topNodes.find(x => hasTitle(api, x, title));
-  return group ? extractGeoms(api, group, precisionDp) : [];
+  return group ? extractGeoms(api, group, scale) : [];
 }
 
 /**
  * @param {import('cheerio').CheerioAPI} api
  * @param {Element} parent
- * @param {number} [precisionDp]
+ * @param {number} [scale]
  */
-export function extractGeoms(api, parent, precisionDp = 4) {
+export function extractGeoms(api, parent, scale = 1) {
   const children = api(parent).children('rect, path, ellipse').toArray();
-  return children.flatMap(x => extractGeom(api, x)).map(x => x.precision(precisionDp));
+  return children.flatMap(x => extractGeom(api, x, scale)).map(x => x.precision(4));
 }
 
 /**
  * @param {import('cheerio').CheerioAPI} api
  * @param {Element} el
+ * @param {number} [scale]
  */
-export function extractGeom(api, el) {
+export function extractGeom(api, el, scale = 1) {
   const { tagName, attribs: a } = el;
   const output = /** @type {(Geom.Poly & { _ownTags: string[] })[]} */ ([]);
   const title = api(el).children('title').text() || null;
@@ -72,6 +73,12 @@ export function extractGeom(api, el) {
     console.warn('extractGeom: unexpected tagName:', tagName, a);
   }
 
+  if (_ownTags.includes('symbol')) {
+      // We can reference symbols inside other symbols,
+      // in which case we must propagate orig origin/transform
+      _ownTags.push(`_ownOrigin={x:${Number(a.x ?? 0) * scale},y:${Number(a.y ?? 0) * scale}}`);
+  }
+
   // DOMMatrix not available server-side
   const { transformOrigin, transformBox } = extractTransformData(el);
   if (a.transform && transformOrigin) {
@@ -79,6 +86,13 @@ export function extractGeom(api, el) {
     if (transformBox === 'fill-box') {
       transformOrigin.x += Number(el.attribs.x ?? '0');
       transformOrigin.y += Number(el.attribs.y ?? '0');
+    }
+    if (_ownTags.includes('symbol')) {
+      const m2 = new Mat;
+      m2.e -= transformOrigin.x * scale, m2.f -= transformOrigin.y * scale;
+      m2.postMultiply(m.toArray());
+      m2.e += transformOrigin.x * scale, m2.f += transformOrigin.y * scale;
+      _ownTags.push(`_ownTransform=[${m2.toArray()}]`);
     }
     return output.map(poly =>
       poly.translate(-transformOrigin.x, -transformOrigin.y).applyMatrix(m).translate(transformOrigin.x, transformOrigin.y)
@@ -109,7 +123,7 @@ function extractStyles(styleAttrValue) {
  * In SVG initial CSS value is `0 0` (elsewhere `50% 50% 0`)
  * @param {Element} el
  * @param {Record<string, string>} [style] previously parsed styles
- * @returns {{ transformOrigin: Geom.Vect | null; transformBox: string | null; }}
+ * @returns {{ transformOrigin: Geom.VectJson | null; transformBox: string | null; }}
  */
 function extractTransformData(el, style) {
   style ??= extractStyles(el.attribs.style ?? '');
@@ -140,7 +154,7 @@ function extractTransformData(el, style) {
   if (Number.isFinite(x) && Number.isFinite(y)) {
     // console.log({ transformOrigin }, x, y);
     return {
-      transformOrigin: tempVect.set(/** @type {number} */ (x), /** @type {number} */ (y)),
+      transformOrigin: { x: /** @type {number} */ (x), y: /** @type {number} */ (y) },
       transformBox,
     };
   } else {
@@ -149,4 +163,3 @@ function extractTransformData(el, style) {
   }
 }
 
-const tempVect = new Vect;
