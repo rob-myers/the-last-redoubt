@@ -38,9 +38,9 @@ declare namespace Geomorph {
     key: SymbolKey;
     /** Hull walls, only in hull */
     hull: T[];
-    /** Original SVG's width, inferred view `viewBox` */
+    /** Original SVG's width, inferred from `viewBox` */
     width: number;
-    /** Original SVG's height, inferred view `viewBox` */
+    /** Original SVG's height, inferred from `viewBox` */
     height: number;
     /**
      * Bounds of original image in symbol SVG.
@@ -358,6 +358,8 @@ declare namespace Geomorph {
 
   export interface LayoutDefItem extends BaseLayoutDefItem {
     id: SymbolKey;
+    /** Offset from previous */
+    at?: '👉' | '👇' | '👈👇';
     /** Door tags */
     doors?: string[];
     /** Wall tags */
@@ -365,6 +367,7 @@ declare namespace Geomorph {
   }
   
   /**
+   * 🚧 remove
    * These correspond to a row of items,
    * where `flip` is applied pointwise.
    */
@@ -378,7 +381,7 @@ declare namespace Geomorph {
   interface BaseLayoutDefItem {
     /**
      * - If manually specified, this overrides `x`, `y`, `a`, `flip`.
-     * - If unspecified, it will be computed using latter and stores in
+     * - If unspecified, it will be computed using latter and stored in
      *   the geomorph JSONs.
      */
     transform?: [number, number, number, number, number, number];

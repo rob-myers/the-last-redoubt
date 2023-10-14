@@ -2,16 +2,11 @@
 
 ## In progress
 
-- 🚧 301 symbols: more tables
-
-- ✅ support nested symbols e.g. `symbol key={symbolKey}` in SVG singles
-  - ✅ support nested symbols in non-hull symbols
-  - ✅ support nested symbols inside hull symbol
-- ✅ clean
-- ✅ 301: move `iris-valves` inside hull
-- ✅ 301: migrate tables: layout -> nested symbols
-
-- 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉`
+- 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
+  - ✅ implement new syntax `at`
+  - ✅ flatten layout 301 using new syntax
+  - 🚧 flatten other layouts using new syntax
+  - then remove all rows and associated code
 
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
 - try to improve performance (at least on mobile)
@@ -596,6 +591,14 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ support nested symbols e.g. `symbol key={symbolKey}` in SVG singles
+  - ✅ support nested symbols in non-hull symbols
+  - ✅ support nested symbols inside hull symbol
+- ✅ clean
+- ✅ 301: move `iris-valves` inside hull
+- ✅ 301: migrate tables: layout -> nested symbols
+- ✅ 301 symbols: more tables
 
 - ✅ remove peek stuff
 - ✅ support multiple `view` per connector

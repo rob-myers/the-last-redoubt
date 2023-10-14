@@ -184,25 +184,22 @@ const layoutDefs = {
     id: 301,
     items: [
       { id: '301--hull' },
-      // { symbol: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
-      // { symbol: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
+      // { id: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
+      // { id: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
-      { cs: [
-        { id: 'stateroom--036--2x4' },
-        { id: 'office--001--2x2', y: 2 * 60, flip: 'y', doors: ['s'] },
-        { id: 'console--031--1x1.2', y: 1 * 60, x: 1 * 60, flip: 'y' },
-        { id: 'bridge--042--8x9', y: 1 * 60, },
-        { id: 'console--031--1x1.2', y: 1 * 60, x: 0 },
-        { id: 'office--001--2x2', y: 2 * 60, x: 1 * 60, doors: ['s'] },
-        { id: 'stateroom--036--2x4', flip: 'y' },
-      ]},
+      { id: 'stateroom--036--2x4' },
+      { at: '👉', id: 'office--001--2x2', y: 2 * 60, flip: 'y', doors: ['s'] },
+      { at: '👉', id: 'console--031--1x1.2', x: 1 * 60, y: -1 * 60, flip: 'y' },
+      { at: '👉', id: 'bridge--042--8x9' },
+      { at: '👉', id: 'console--031--1x1.2'},
+      { at: '👉', id: 'office--001--2x2', x: 1 * 60, y: 1 * 60, doors: ['s'] },
+      { at: '👉', id: 'stateroom--036--2x4', y: -2 * 60, flip: 'y' },
 
-      { y: 6 * 60, cs: [
-        { id: 'stateroom--014--2x2', flip: 'x', next: 'down' },
-        { id: 'stateroom--036--2x4', a: 270 },
-        { id: 'stateroom--014--2x2', x: -2 * 60, flip: 'x' },
-        { id: 'misc-stellar-cartography--023--4x4', x: 12 * 60, flip: 'y' },
-      ]},
+      { id: 'stateroom--014--2x2', y: 6 * 60, flip: 'x' },
+      { at: '👉', id: 'stateroom--014--2x2', flip: 'x' },
+      { at: '👈👇', id: 'stateroom--036--2x4', a: 270 },
+
+      { id: 'misc-stellar-cartography--023--4x4', x: 16 * 60,  y: 6 * 60, flip: 'y' },
     ],
   },
   'g-302--xboat-repair-bay': {

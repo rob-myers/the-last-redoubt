@@ -28,6 +28,8 @@ export async function createLayout(opts) {
   extendLayoutUsingNestedSymbols(opts);
   /** Last seen transform of non-nested symbol */
   let postTransform = /** @type {Geom.SixTuple} */ ([1, 0, 0, 1, 0, 0]);
+  /** Previously seen non-nested symbols */
+  const standards = /** @type {Geomorph.LayoutDefItem[]} */ ([]);
 
   /**
    * 🚧 remove 'row`s
@@ -42,7 +44,7 @@ export async function createLayout(opts) {
       /** Can aggregate Y */
       let deltaY = 0;
 
-      row.cs.forEach((rowItem, i) => {
+      row.cs.forEach((rowItem) => {
         const origRowItemY  = rowItem.y ?? 0;
         rowItem.flip = combineFlips(row.flip, rowItem.flip);
         rowItem.x = prevX + (rowItem.x ?? 0);
@@ -50,7 +52,8 @@ export async function createLayout(opts) {
         if (rowItem.preTransform) {
           rowItem.transform = m.feedFromArray(rowItem.preTransform).postMultiply(postTransform).toArray();
         } else {
-          rowItem.transform = layoutDefItemToTransform(rowItem, opts, m).toArray();
+          // We'll remove this anyway...
+          rowItem.transform = layoutDefItemToTransform(rowItem, [], opts, m).toArray();
           postTransform = rowItem.transform;
         }
         
@@ -69,15 +72,21 @@ export async function createLayout(opts) {
         }
         addLayoutDefItemToGroups(rowItem, opts, m, groups);
       });
-    } else {
-      if (item.preTransform) {
-        item.transform = m.feedFromArray(item.preTransform).postMultiply(postTransform).toArray();
-      } else {
-        item.transform = layoutDefItemToTransform(item, opts, m).toArray();
-        postTransform = item.transform;
-      }
-      addLayoutDefItemToGroups(item, opts, m, groups);
+      return;
     }
+    // 🚧 remove above
+    
+    if (i === 0) {// Hull symbol
+      item.transform = [1, 0, 0, 1, 0, 0];
+      standards.push(item);
+    } else if (!item.preTransform) {// Standard symbol
+      item.transform = layoutDefItemToTransform(item, standards, opts, m).toArray();
+      postTransform = item.transform; // Record for nested symbols
+      standards.push(item);  // Record for `at`
+    } else {// Nested symbol
+      item.transform = m.feedFromArray(item.preTransform).postMultiply(postTransform).toArray();
+    }
+    addLayoutDefItemToGroups(item, opts, m, groups);
   });
   // Ensure well-signed polygons
   groups.singles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
@@ -513,17 +522,14 @@ function addLayoutDefItemToGroups(item, opts, m, groups) {
 /**
  * Mutates matrix @see {m} and returns it.
  * @param {Geomorph.LayoutDefItem} item
+ * @param {Geomorph.LayoutDefItem[]} prevItems Previous non-nested symbols
  * @param {CreateLayoutOpts} opts
  * @param {Mat} m 
  * @returns {Mat}
  */
-function layoutDefItemToTransform(item, opts, m) {
-  if (item.transform) {
+function layoutDefItemToTransform(item, prevItems, opts, m) {
+  if (item.transform) {// Can override
     return m.feedFromArray(item.transform);
-  } else if (opts.def.items[0] === item) {
-    // Cannot transform hull symbol, instead
-    // one can transform resp geomorph later
-    return m.setIdentity();
   }
 
   m.setIdentity();
@@ -539,10 +545,28 @@ function layoutDefItemToTransform(item, opts, m) {
       || item.flip === 'xy' && m.postMultiply([-1, 0, 0, -1, 0, 0]);
   }
 
+  if (item.at && prevItems.length) {
+    const prevItem = assertDefined(prevItems.at(item.at === '👈👇' ? -2 : -1));
+    const { width, height } = opts.lookup[prevItem.id];
+    const prevM = (new Mat).feedFromArray(prevItem.transform ?? [1, 0, 0, 1, 0, 0]);
+    const rect = new Rect(0, 0, width / 5, height / 5).applyMatrix(prevM);
+    if (item.at === '👉') {
+      // `x` relative to right of previous item
+      item.x = (item.x ?? 0) + rect.right;
+      // `y` relative to top of previous item
+      item.y = (item.y ?? 0) + (prevItem.y ?? 0);
+    } else if (item.at === '👇' || item.at === '👈👇') {
+      // `y` relative to bottom of previous item
+      item.y = (item.y ?? 0) + rect.bottom;
+      // `x` relative to left of previous item
+      item.x = (item.x ?? 0) + (prevItem.x ?? 0);
+    }
+  }
+
   // Compute top left of symbol's AABB _after_ transformation
-  const { width, height, pngRect } = opts.lookup[item.id];
+  const { width, height } = opts.lookup[item.id];
   const { x, y } = (new Rect(0, 0, width, height)).applyMatrix(m);
-  // Account for 5 * (-) scale factor of non-hull symbols
+  // Account for `- * 5` scale factor of non-hull symbols
   m.e = (item.x ?? 0) - x / 5;
   m.f = (item.y ?? 0) - y / 5;
   return m;
