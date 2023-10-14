@@ -32,6 +32,7 @@ export async function createLayout(opts) {
   const standards = /** @type {Geomorph.LayoutDefItem[]} */ ([]);
 
   /**
+   * 🚧 remove 'row`s
    * - Compute `groups`.
    * - Compute each `item.transform`.
    */
@@ -53,7 +54,8 @@ export async function createLayout(opts) {
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
 
-  const symbols = opts.def.items.map(y => opts.lookup[y.id]);
+  const items = opts.def.items;
+  const symbols = items.map(y => opts.lookup[y.id]);
   const hullSym = symbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
@@ -394,10 +396,10 @@ export async function createLayout(opts) {
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
-      transformArray: opts.def.items[i].transform,
-      transform: opts.def.items[i].transform ? `matrix(${opts.def.items[i].transform})` : undefined,
-      invert: opts.def.items[i].invert,
-      lighten: opts.def.items[i].lighten,
+      transformArray: items[i].transform,
+      transform: items[i].transform ? `matrix(${items[i].transform})` : undefined,
+      invert: items[i].invert,
+      lighten: items[i].lighten,
     })),
   };
 
