@@ -32,50 +32,10 @@ export async function createLayout(opts) {
   const standards = /** @type {Geomorph.LayoutDefItem[]} */ ([]);
 
   /**
-   * 🚧 remove 'row`s
    * - Compute `groups`.
    * - Compute each `item.transform`.
    */
   opts.def.items.forEach((item, i) => {
-    if ('cs' in item) {
-      const row = item;
-      /** Can aggregate X */
-      let prevX = row.x ?? 0;
-      /** Can aggregate Y */
-      let deltaY = 0;
-
-      row.cs.forEach((rowItem) => {
-        const origRowItemY  = rowItem.y ?? 0;
-        rowItem.flip = combineFlips(row.flip, rowItem.flip);
-        rowItem.x = prevX + (rowItem.x ?? 0);
-        rowItem.y = (row.y ?? 0) + deltaY + origRowItemY;
-        if (rowItem.preTransform) {
-          rowItem.transform = m.feedFromArray(rowItem.preTransform).postMultiply(postTransform).toArray();
-        } else {
-          // We'll remove this anyway...
-          rowItem.transform = layoutDefItemToTransform(rowItem, [], opts, m).toArray();
-          postTransform = rowItem.transform;
-        }
-        
-        const { width, height } = opts.lookup[rowItem.id];
-        if (rowItem.preTransform) {
-          // NOOP
-        } else if (rowItem.next === 'down') {
-          prevX = rowItem.x ?? 0;
-          deltaY += origRowItemY + new Rect(0, 0, width, height).applyMatrix(m).height / 5;
-        } else if (rowItem.next === 'above') {
-          prevX = rowItem.x ?? 0;
-          deltaY += origRowItemY;
-        } else {
-          prevX = (rowItem.x ?? 0) + new Rect(0, 0, width, height).applyMatrix(m).width / 5;
-          deltaY = 0;
-        }
-        addLayoutDefItemToGroups(rowItem, opts, m, groups);
-      });
-      return;
-    }
-    // 🚧 remove above
-    
     if (i === 0) {// Hull symbol
       item.transform = [1, 0, 0, 1, 0, 0];
       standards.push(item);
@@ -93,9 +53,8 @@ export async function createLayout(opts) {
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.walls.forEach((poly) => poly.fixOrientation().precision(precision));
 
-  const flatItems = opts.def.items.flatMap(x => 'cs' in x ? x.cs : x);
-  const flatSymbols = flatItems.map(y => opts.lookup[y.id]);
-  const hullSym = flatSymbols[0];
+  const symbols = opts.def.items.map(y => opts.lookup[y.id]);
+  const hullSym = symbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
   /** We keep a reference to uncut walls (group.walls overwritten below) */
@@ -430,15 +389,15 @@ export async function createLayout(opts) {
     hullTop: Poly.cutOut(doorPolys.concat(windowPolys), hullSym.hull),
     hullRect,
   
-    items: flatSymbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
+    items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
-      transformArray: flatItems[i].transform,
-      transform: flatItems[i].transform ? `matrix(${flatItems[i].transform})` : undefined,
-      invert: flatItems[i].invert,
-      lighten: flatItems[i].lighten,
+      transformArray: opts.def.items[i].transform,
+      transform: opts.def.items[i].transform ? `matrix(${opts.def.items[i].transform})` : undefined,
+      invert: opts.def.items[i].invert,
+      lighten: opts.def.items[i].lighten,
     })),
   };
 
@@ -586,9 +545,9 @@ function atChoiceToDelta(at) {
 }
 
 /**
- * @param {Geomorph.BaseLayoutDefItem['flip']} a 
- * @param {Geomorph.BaseLayoutDefItem['flip']} b 
- * @returns {Geomorph.BaseLayoutDefItem['flip']}
+ * @param {Geomorph.LayoutDefItem['flip']} a 
+ * @param {Geomorph.LayoutDefItem['flip']} b 
+ * @returns {Geomorph.LayoutDefItem['flip']}
  */
 function combineFlips(a, b) {
   if (a === undefined) {
@@ -629,31 +588,14 @@ function extendHullDoorTags(door, hullRect) {
  */
 function extendLayoutUsingNestedSymbols(opts) {
   opts.def.items = opts.def.items.reduce((agg, item) => {
-    if ('cs' in item) {
-      const row = {...item};
-      const origCs = row.cs;
-      row.cs = []; // We'll rebuild this
-      origCs.forEach(inner => {
-        row.cs.push(inner);
-        opts.lookup[inner.id].singles.forEach(x => {
-          if (x.meta.symbol) {
-            if (/** @type {string} */ (x.meta.key) in opts.lookup) {
-              row.cs.push(symbolSingleToLayoutItem(x));
-            } else warn(`inner symbol lacks valid key (${JSON.stringify(inner)})`);
-          }
-        });
-      });
-      agg.push(row);
-    } else {
-      agg.push(item);
-      opts.lookup[item.id].singles.forEach(x => {
-        if (x.meta.symbol) {
-          if (/** @type {string} */ (x.meta.key) in opts.lookup) {
-            agg.push(symbolSingleToLayoutItem(x));
-          } else warn(`inner symbol lacks valid key (${JSON.stringify(item)})`);
-        }
-      });
-    }
+    agg.push(item);
+    opts.lookup[item.id].singles.forEach(x => {
+      if (x.meta.symbol) {
+        if (/** @type {string} */ (x.meta.key) in opts.lookup) {
+          agg.push(symbolSingleToLayoutItem(x));
+        } else warn(`inner symbol lacks valid key (${JSON.stringify(item)})`);
+      }
+    });
     return agg;
   }, /** @type {typeof opts.def.items} */ ([]));
 }

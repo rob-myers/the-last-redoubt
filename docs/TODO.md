@@ -2,11 +2,11 @@
 
 ## In progress
 
-- 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
+- ✅ remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
   - ✅ implement new syntax `at`
   - ✅ flatten layout 301 using new syntax
   - ✅ flatten other layouts using new syntax
-  - 🚧 remove all rows and associated code
+  - ✅ remove all rows and associated code
 
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
 - try to improve performance (at least on mobile)

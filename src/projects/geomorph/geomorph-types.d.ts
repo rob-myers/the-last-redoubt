@@ -350,42 +350,11 @@ declare namespace Geomorph {
     key: GeomorphKey;
     /** e.g. `301` */
     id: number;
-    items: (
-      | LayoutDefItem
-      | LayoutDefRow
-    )[];
+    items: LayoutDefItem[];
   }
 
-  export interface LayoutDefItem extends BaseLayoutDefItem {
+  export interface LayoutDefItem {
     id: SymbolKey;
-    /** Offset from previous */
-    at?: LayoutAtChoice;
-    /** Door tags */
-    doors?: string[];
-    /** Wall tags */
-    walls?: string[];
-  }
-  export type LayoutAtChoice = (
-    | '👉'
-    | '👇'
-    | '⏪👇'
-    | '⏪👉'
-    | '⏪⏪👉'
-  );
-  
-  /**
-   * 🚧 remove
-   * These correspond to a row of items,
-   * where `flip` is applied pointwise.
-   */
-  export interface LayoutDefRow extends Pick<
-    BaseLayoutDefItem,
-    'transform' | 'x' | 'y' | 'flip'
-  > {
-    cs: LayoutDefItem[];
-  }
-  
-  interface BaseLayoutDefItem {
     /**
      * - If manually specified, this overrides `x`, `y`, `a`, `flip`.
      * - If unspecified, it will be computed using latter and stored in
@@ -410,10 +379,26 @@ declare namespace Geomorph {
     next?: 'right' | 'down' | 'above';
     invert?: boolean;
     lighten?: boolean;
+
     /** Defined iff this is a nested symbol i.e. arises as a single `symbol key={symbolKey}` */
     preTransform?: [number, number, number, number, number, number];
+    /** Offset from previous */
+    at?: LayoutAtChoice;
+
+    /** Door tags */
+    doors?: string[];
+    /** Wall tags */
+    walls?: string[];
   }
 
+  export type LayoutAtChoice = (
+    | '👉'
+    | '👇'
+    | '⏪👇'
+    | '⏪👉'
+    | '⏪⏪👉'
+  );
+  
   export type GeomorphKey = (
     | 'g-101--multipurpose'
     | 'g-102--research-deck'
