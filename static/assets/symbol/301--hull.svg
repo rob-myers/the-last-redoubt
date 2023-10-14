@@ -236,5 +236,56 @@
     <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="120">
       <title>symbol key=extra--table--001--1x0.2</title>
     </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-box: fill-box; transform-origin: 50% 50%;" x="240" transform="matrix(0, 1, -1, 0, -22, 38)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 270px 352px;" x="240" transform="matrix(0, 1, -1, 0, -22, 98)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-box: fill-box; transform-origin: 50% 50%;" x="36" transform="matrix(0, 1, -1, 0, 200, -6)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 200, 20)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 302, -186)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 302, -160)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 270px 352px;" x="240" transform="matrix(0, 1, -1, 0, 80, 100)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 270px 352px;" x="240" transform="matrix(0, 1, -1, 0, 80, 160)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 802, -186)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 802, -160)">
+      <title>symbol key=extra--table--004--0.4x0.2 invert</title>
+    </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 270px 352px;" x="240" transform="matrix(0, 1, -1, 0, 580, 100)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 802, -62)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 802, -36)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 802, 0)">
+      <title>symbol key=extra--table--004--0.4x0.2</title>
+    </rect>
+    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 270px 352px;" x="240" transform="matrix(0, 1, -1, 0, 680, 100)">
+      <title>symbol key=extra--table--001--1x0.2</title>
+    </rect>
+    <rect y="484" width="24" height="24" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 944px 496px;" x="932">
+      <title>symbol key=extra--table--002--0.4x0.4</title>
+    </rect>
+    <rect y="510" width="24" height="24" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 944px 522px;" x="932">
+      <title>symbol key=extra--table--002--0.4x0.4</title>
+    </rect>
   </g>
 </svg>

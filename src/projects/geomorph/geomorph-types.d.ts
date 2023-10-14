@@ -414,7 +414,7 @@ declare namespace Geomorph {
   export type SymbolKey = (
     | 'extra--locker--001--1x0.33'
     | 'extra--table--001--1x0.2' 
-    | 'extra--table--002--0.2x0.2'
+    | 'extra--table--002--0.4x0.4'
     | 'extra--table--003--0.1x0.1'
     | 'extra--table--004--0.4x0.2'
     //

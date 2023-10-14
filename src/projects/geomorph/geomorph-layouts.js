@@ -187,36 +187,6 @@ const layoutDefs = {
       // { symbol: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
       // { symbol: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
-      { y: 6 * 60, x: 4 * 60 + 2, cs: [
-        { id: 'extra--table--001--1x0.2', a: 90, next: 'down' },
-        { id: 'extra--table--001--1x0.2', a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 60, a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90, next: 'down' },
-      ]},
-      
-      { y: 6 * 60, x: 6 * 60 - 16, cs: [
-        { id: 'extra--table--004--0.4x0.2', a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90, next: 'down', lighten: true },
-        { id: 'extra--table--001--1x0.2', a: 90, y: 12, next: 'down' },
-        { id: 'extra--table--001--1x0.2', a: 90 },
-      ]},
-
-      { y: 6 * 60, x: 14 * 60 + 4, cs: [
-        { id: 'extra--table--004--0.4x0.2', a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90, next: 'down', invert: true },
-        { id: 'extra--table--001--1x0.2', a: 90, y: 12, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 12, a: 90, next: 'down' },
-      ]},
-
-      { y: 7 * 60, x: 16 * 60 - 12 - 4, cs: [
-        // { id: 'extra--table--002--0.2x0.2', a: 90, next: 'down' },
-        { id: 'extra--table--001--1x0.2', a: 90, y: 2, next: 'down' },
-        { id: 'extra--table--002--0.2x0.2', x: -12, y: 2, a: 90, next: 'down', lighten: true },
-        { id: 'extra--table--002--0.2x0.2', y: 2, a: 90, next: 'down', lighten: true },
-      ]},
-
       { cs: [
         { id: 'stateroom--036--2x4' },
         { id: 'office--001--2x2', y: 2 * 60, flip: 'y', doors: ['s'] },
