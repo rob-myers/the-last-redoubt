@@ -239,36 +239,30 @@ const layoutDefs = {
       { at: '👇', id: 'table--009--0.8x0.8' },
       { at: '👇', id: 'table--009--0.8x0.8', y: 1 * 60 },
 
-      { x: 1 * 60 + 30, y: -6, cs: [
-        { id: 'window--001--0x1' },
-        { id: 'window--001--0x1', x: 2 * 60 },
-        { id: 'window--001--0x1', x: 1 * 60 },
-        { id: 'window--001--0x1', x: 1 * 60 },
-        { id: 'window--001--0x1', x: 1 * 60 },
-      ]},
+      { id: 'window--001--0x1', x: 1 * 60 + 30, y: -6 },
+      { at: '👉', id: 'window--001--0x1', x: 2 * 60 },
+      { at: '👉', id: 'window--001--0x1', x: 1 * 60 },
+      { at: '👉', id: 'window--001--0x1', x: 1 * 60 },
+      { at: '👉', id: 'window--001--0x1', x: 1 * 60 },
       // { symbol: 'window--001--0x1', transform: [1, 0, 0, 1, 870, -6] },
 
       { id: 'iris-valves--005--1x1', x: 19 * 60, y: 4 * 60, a: 90 },
       { id: 'iris-valves--005--1x1', y: 9 * 60, x: 5 * 60, flip: 'y' },
 
-      { x: 3 * 60, y: 4 * 60, cs: [
-        { id: 'fresher--002--0.4x0.6', flip: 'x' },
-        { id: 'gaming-tables--001--1x2', x: 4 * 60, },
-        { id: 'couch-and-chairs--006--0.4x2', x: 1 * 60 + 12, flip: 'y' },
-        { id: 'couch-and-chairs--006--0.4x2', x: 24, a: 90 },
-      ]},
+      { id: 'fresher--002--0.4x0.6', x: 3 * 60, y: 4 * 60, flip: 'x' },
+      { at: '👉', id: 'gaming-tables--001--1x2', x: 4 * 60, },
+      { at: '👉', id: 'couch-and-chairs--006--0.4x2', x: 1 * 60 + 12, flip: 'y' },
+      { at: '👉', id: 'couch-and-chairs--006--0.4x2', x: 24, a: 90 },
 
       { id: 'machinery--077--1.6x1.8', y: 6 * 60 + 16, x: 1 * 60 - 6, a: 90 },
       { id: 'machinery--077--1.6x1.8', y: 7 * 60 + 16, x: 2 * 60 + 6, flip: 'y' },
       { id: 'console--018--1x1', y: 8 * 60, x: 1 * 60, flip: 'y' },
 
-      { x: 6 * 60, y: 6 * 60, cs: [
-        { id: 'stateroom--036--2x4', flip: 'x' },
-        { id: 'stateroom--036--2x4', flip: 'x' },
-        { id: 'stateroom--036--2x4', flip: 'xy' },
-        { id: 'stateroom--036--2x4', flip: 'xy' },
-        { id: 'office--089--4x4', x: 2 * 60, flip: 'y' },
-      ]},
+      { id: 'stateroom--036--2x4', x: 6 * 60, y: 6 * 60, flip: 'x' },
+      { at: '👉', id: 'stateroom--036--2x4', flip: 'x' },
+      { at: '👉', id: 'stateroom--036--2x4', flip: 'xy' },
+      { at: '👉', id: 'stateroom--036--2x4', flip: 'xy' },
+      { at: '👉', id: 'office--089--4x4', x: 2 * 60, flip: 'y' },
 
     ],
   },
