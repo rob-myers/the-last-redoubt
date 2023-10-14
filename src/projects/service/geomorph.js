@@ -568,7 +568,7 @@ function layoutDefItemToTransform(item, prevItems, opts, m) {
   const { x, y } = (new Rect(0, 0, width, height)).applyMatrix(m);
   // Account for `- * 5` scale factor of non-hull symbols
   m.e = (item.x ?? 0) - x / 5;
-  m.f = (item.y ?? 0) - y / 5;
+  m.f = (item.y ?? 0) + (item.dy ?? 0) - y / 5;
   return m;
 }
 

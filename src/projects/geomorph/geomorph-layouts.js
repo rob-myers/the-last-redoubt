@@ -9,73 +9,56 @@ const layoutDefs = {
     items: [
       { id: '101--hull' },
 
-      { cs: [
-        { id: 'fuel--010--2x4' },
-        { id: 'fuel--010--2x4', x: 2 * 60 },
-        { id: 'fuel--010--2x4' },
-        { id: 'fuel--010--2x4', x: 2 * 60 },
-      ]},
       { id: 'iris-valves--005--1x1', x: 14 * 60 },
+      { id: 'iris-valves--005--1x1', a: 270, y: 5 * 60 },
+      { id: 'iris-valves--005--1x1', x: 19 * 60, y: 14 * 60, a: 90 },
+      { id: 'iris-valves--005--1x1', x: 5 * 60, y: 19 * 60, flip: 'y' },
+
+      { id: 'fuel--010--2x4' },
+      { at: '👉', id: 'fuel--010--2x4', x: 2 * 60 },
+      { at: '👉', id: 'fuel--010--2x4' },
+      { at: '👉', id: 'fuel--010--2x4', x: 2 * 60 },
       
-      { y: 2 * 60, cs: [
-        { id: 'machinery--158--1.8x3.6', x: 12, y: 12, a: 270, },
-        { id: 'stateroom--020--2x3', x: 12 + 2 * 60,  a: 90, flip: 'y' },
-        { id: 'fresher--020--2x2', a: 90, flip: 'y' },
-        { id: 'lounge--009--2x3', flip: 'xy' },
-        { id: 'machinery--155--1.8x3.6', x: 2 * 60 + 12, y: 8, a: 270 },
-      ]},
-
-      { id: 'iris-valves--005--1x1', a: 270, y: 300 },
-      { y: 4 * 60, x: 6 * 60, cs: [
-        { id: 'stateroom--018--2x3' },
-        { id: 'stateroom--019--2x3', x: 4 * 60, flip: 'xy' },
-      ]},
-
-      { y: 6 * 60, cs: [
-        { id: 'empty-room--013--2x3', a: 90 },
-        { id: 'medical--008--2x3', x: 1 * 60, a: 270, flip: 'y', doors: ['w'] },
-        { id: 'stateroom--020--2x3', y: 1 * 60, a: 90, flip: 'xy' },
-        { id: 'stateroom--020--2x3', x: 2 * 60, y: 1 * 60, a: 90, flip: 'x' },
-        { id: 'fresher--025--2x3', a: 270, },
-        { id: 'office--023--2x3', x: 1 * 60, a: 90, flip: 'x' },
-      ]},
-
-      { y: 8 * 60, cs: [
-        { id: 'empty-room--039--3x4', doors: ['e'], walls: ['e'] },
-        { id: 'office--061--3x4', x: 14 * 60 },
-      ]},
+      { id: 'machinery--158--1.8x3.6', x: 12, y: 2 * 60, dy: 12, a: 270, },
+      { at: '👉', id: 'stateroom--020--2x3', x: 12 + 2 * 60, a: 90, flip: 'y' },
+      { at: '👇', id: 'stateroom--018--2x3', },
+      { at: '⏪👉', id: 'fresher--020--2x2', a: 90, flip: 'y' },
+      { at: '👉', id: 'lounge--009--2x3', flip: 'xy' },
+      { at: '👇', id: 'stateroom--019--2x3', x: 1 * 60, flip: 'xy' },
+      { at: '⏪👉', id: 'machinery--155--1.8x3.6', x: 2 * 60 + 12, y: 8, a: 270 },
+      
+      
+      { id: 'empty-room--013--2x3', y: 6 * 60, a: 90 },
+      { at: '👇', id: 'empty-room--039--3x4', doors: ['e'], walls: ['e'] },
+      { at: '⏪👉', id: 'medical--008--2x3', x: 1 * 60, a: 270, flip: 'y', doors: ['w'] },
+      { at: '👉', id: 'stateroom--020--2x3', dy: 1 * 60, a: 90, flip: 'xy' },
+      { at: '👉', id: 'stateroom--020--2x3', x: 2 * 60, dy: 1 * 60, a: 90, flip: 'x' },
+      { at: '👉', id: 'fresher--025--2x3', a: 270, },
+      { at: '👉', id: 'office--023--2x3', x: 1 * 60, a: 90, flip: 'x' },
+      { at: '👇', id: 'office--061--3x4' },
+      
       { id: 'lifeboat--small-craft', y: 8 * 60 + 12 },
       
-      { y: 11 * 60, cs: [
-        { id: 'empty-room--013--2x3', y: 1 * 60, a: 270, flip: 'y', walls: ['n'] },
-        { id: 'medical--007--2x3', x: 1 * 60, a: 90, doors: ['w'] },
-        { id: 'office--026--2x3', a: 90 },
-        { id: 'office--026--2x3', x: 2 * 60, a: 90, flip: 'y' },
-        { id: 'fresher--025--2x3', a: 90, flip: 'y' },
-        { id: 'office--023--2x3', x: 1 * 60, y: 1 * 60, a: 90 },
-      ]},
+      { id: 'empty-room--013--2x3', y: 11 * 60, dy: 1 * 60, a: 270, flip: 'y', walls: ['n'] },
+      { at: '👉', id: 'medical--007--2x3', x: 1 * 60, a: 90, doors: ['w'] },
+      { at: '👉', id: 'office--026--2x3', a: 90 },
+      { at: '👇', id: 'office--020--2x3' },
+      { at: '⏪👉', id: 'office--026--2x3', x: 2 * 60, a: 90, flip: 'y' },
+      { at: '👇', id: 'office--020--2x3', x: 1 * 60, flip: 'y' },
+      { at: '⏪👉', id: 'fresher--025--2x3', a: 90, flip: 'y' },
+      { at: '👉', id: 'office--023--2x3', x: 1 * 60, dy: 1 * 60, a: 90 },
+      
 
-      { y: 13 * 60, cs: [
-        { id: 'office--020--2x3', x: 6 * 60 },
-        { id: 'office--020--2x3', x: 4 * 60, flip: 'y' },
-      ]},
-      { id: 'iris-valves--005--1x1', y: 14 * 60, x: 19 * 60, a: 90 },
+      { id: 'machinery--156--1.8x3.6', y: 16 * 60, dy: -6, a: 270 },
+      { at: '👉', id: 'office--025--2x3', x: 2 * 60, a: 90, flip: 'y', doors: ['w'] },
+      { at: '👉', id: 'machinery--091--1.6x1.8', x: 12 },
+      { at: '👉', id: 'office--025--2x3', x: 12, a: 90, doors: ['w'] },
+      { at: '👉', id: 'machinery--357--2.2x4', x: 2 * 60 },
 
-      { y: 16 * 60, cs: [
-        { id: 'machinery--156--1.8x3.6', a: 270, y: -6 },
-        { id: 'office--025--2x3', x: 2 * 60, a: 90, flip: 'y', doors: ['w'] },
-        { id: 'machinery--091--1.6x1.8', x: 12 },
-        { id: 'office--025--2x3', x: 12, a: 90, doors: ['w'] },
-        { id: 'machinery--357--2.2x4', x: 2 * 60 },
-      ]},
-
-      { y: 18 * 60, cs: [
-        { id: 'fuel--010--2x4' },
-        { id: 'fuel--010--2x4', x: 2 * 60 },
-        { id: 'fuel--010--2x4' },
-        { id: 'fuel--010--2x4', x: 2 * 60 },
-      ]},
-      { id: 'iris-valves--005--1x1', x: 5 * 60, y: 19 * 60, flip: 'y' },
+      { id: 'fuel--010--2x4', y: 18 * 60 },
+      { at: '👉', id: 'fuel--010--2x4', x: 2 * 60 },
+      { at: '👉', id: 'fuel--010--2x4' },
+      { at: '👉', id: 'fuel--010--2x4', x: 2 * 60 },
     ],
   },
 
@@ -188,18 +171,18 @@ const layoutDefs = {
       // { id: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
       { id: 'stateroom--036--2x4' },
-      { at: '👉', id: 'office--001--2x2', y: 2 * 60, flip: 'y', doors: ['s'] },
-      { at: '👉', id: 'console--031--1x1.2', x: 1 * 60, y: -1 * 60, flip: 'y' },
-      { at: '👉', id: 'bridge--042--8x9' },
-      { at: '👉', id: 'console--031--1x1.2'},
-      { at: '👉', id: 'office--001--2x2', x: 1 * 60, y: 1 * 60, doors: ['s'] },
-      { at: '👉', id: 'stateroom--036--2x4', y: -2 * 60, flip: 'y' },
+      { at: '👉', id: 'office--001--2x2', dy: 2 * 60, flip: 'y', doors: ['s'] },
+      { at: '👉', id: 'console--031--1x1.2', x: 1 * 60, dy: 1 * 60, flip: 'y' },
+      { at: '👉', id: 'bridge--042--8x9', dy: 1 * 60},
+      { at: '👉', id: 'console--031--1x1.2', dy: 1 * 60},
+      { at: '👉', id: 'office--001--2x2', x: 1 * 60, dy: 2 * 60, doors: ['s'] },
+      { at: '👉', id: 'stateroom--036--2x4', flip: 'y' },
 
       { id: 'stateroom--014--2x2', y: 6 * 60, flip: 'x' },
       { at: '👉', id: 'stateroom--014--2x2', flip: 'x' },
       { at: '⏪👇', id: 'stateroom--036--2x4', a: 270 },
 
-      { id: 'misc-stellar-cartography--023--4x4', x: 16 * 60,  y: 6 * 60, flip: 'y' },
+      { id: 'misc-stellar-cartography--023--4x4', x: 16 * 60, y: 6 * 60, flip: 'y' },
     ],
   },
   'g-302--xboat-repair-bay': {

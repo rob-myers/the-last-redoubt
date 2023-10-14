@@ -385,10 +385,12 @@ declare namespace Geomorph {
      *   the geomorph JSONs.
      */
     transform?: [number, number, number, number, number, number];
-    /** `topLeft.x` _after_ transformation by @see {a} @see {flip} */
+    /** left _after_ transformation by @see {a} @see {flip} */
     x?: number;
-    /** `topLeft.y` _after_ transformation by @see {a} @see {flip} */
+    /** top _after_ transformation by @see {a} @see {flip} */
     y?: number;
+    /** Added to `y` but not propagated */
+    dy?: number;
     /** angle (applied first) */
     a?: 0 | 90 | 180 | 270;
     /** flip (post-composed) */
