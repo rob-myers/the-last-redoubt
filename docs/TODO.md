@@ -8,6 +8,7 @@
   - ✅ support nested symbols in non-hull symbols
   - ✅ support nested symbols inside hull symbol
 - ✅ clean
+- ✅ 301: move `iris-valves` inside hull
 - 🚧 migrate tables: layout -> nested symbols
 
 - 🚧 remove layout rows i.e. totally flat, with `next?: 👇 | 👉`

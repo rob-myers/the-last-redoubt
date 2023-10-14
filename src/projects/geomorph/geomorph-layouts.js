@@ -187,25 +187,6 @@ const layoutDefs = {
       // { symbol: 'weaponry--013--1x2', x: 3 * 60, y: -1 * 60, flip: 'y' },
       // { symbol: 'weaponry--013--1x2', x: 14 * 60, y: -1 * 60 },
 
-      { id: 'iris-valves--005--1x1', y: 5 * 60, a: 270 },
-      { id: 'iris-valves--005--1x1', y: 4 * 60, x: 19 * 60, a: 90 },
-      { id: 'iris-valves--005--1x1', y: 9 * 60, x: 5 * 60, a: 180 },
-      { id: 'iris-valves--005--1x1', y: 9 * 60, x: 15 * 60, a: 180 },
-
-      { y: 4 * 60 + 2, x: 14 * 60 + 12, cs: [
-        { id: 'extra--table--004--0.4x0.2', x: 10 },
-        { id: 'extra--table--003--0.1x0.1', x: 2 },
-        { id: 'extra--table--001--1x0.2', x: 1 * 60  },
-        { id: 'extra--table--003--0.1x0.1', x: 2 * 60 - 2, next: 'down' },
-        { id: 'extra--table--004--0.4x0.2', y: 2, a: 90  },
-      ]},
-
-      { id: 'extra--table--001--1x0.2', x: 2 * 60, y: 6 * 60 - 12 - 2, },
-      { x: 18 * 60 - 10, y: 6 * 60 - 12 - 2, cs: [
-        { id: 'extra--table--001--1x0.2', invert: true },
-        { id: 'extra--table--001--1x0.2', invert: true },
-      ]},
-
       { y: 6 * 60, x: 4 * 60 + 2, cs: [
         { id: 'extra--table--001--1x0.2', a: 90, next: 'down' },
         { id: 'extra--table--001--1x0.2', a: 90, next: 'down' },

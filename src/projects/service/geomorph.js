@@ -624,7 +624,7 @@ function extendLayoutUsingNestedSymbols(opts) {
  * @param {Geomorph.SvgGroupWithTags<Poly>} single 
  * @returns {Geomorph.LayoutDefItem}
  */
-function symbolSingleToLayoutItem({ meta, poly: { rect } }) {
+function symbolSingleToLayoutItem({ meta }) {
   // console.log('saw nested symbol', meta, rect);
   const { x, y } = /** @type {Geom.VectJson} */ (meta._ownOrigin);
   const m = new Mat([1, 0, 0, 1, x, y]);
