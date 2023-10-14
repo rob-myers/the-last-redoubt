@@ -546,11 +546,11 @@ function layoutDefItemToTransform(item, prevItems, opts, m) {
   }
 
   if (item.at && prevItems.length) {
-    const prevItem = assertDefined(prevItems.at(item.at === '⏪👇' || item.at === '⏪👉' ? -2 : -1));
+    const prevItem = assertDefined(prevItems.at(atChoiceToDelta(item.at)));
     const { width, height } = opts.lookup[prevItem.id];
     const prevM = (new Mat).feedFromArray(prevItem.transform ?? [1, 0, 0, 1, 0, 0]);
     const rect = new Rect(0, 0, width / 5, height / 5).applyMatrix(prevM);
-    if (item.at === '👉' || item.at === '⏪👉') {
+    if (item.at === '👉' || item.at === '⏪👉' || item.at === '⏪⏪👉') {
       // `x` relative to right of previous item
       item.x = (item.x ?? 0) + rect.right;
       // `y` relative to top of previous item
@@ -570,6 +570,19 @@ function layoutDefItemToTransform(item, prevItems, opts, m) {
   m.e = (item.x ?? 0) - x / 5;
   m.f = (item.y ?? 0) + (item.dy ?? 0) - y / 5;
   return m;
+}
+/**
+ * @param {Geomorph.LayoutAtChoice} at 
+ */
+function atChoiceToDelta(at) {
+  switch (at) {
+    case '👉': return -1;
+    case '👇': return -1;
+    case '⏪⏪👉': return -3;
+    case '⏪👇': return -2;
+    case '⏪👉': return -2;
+    default: throw testNever(at);
+  }
 }
 
 /**
