@@ -359,7 +359,7 @@ declare namespace Geomorph {
   export interface LayoutDefItem extends BaseLayoutDefItem {
     id: SymbolKey;
     /** Offset from previous */
-    at?: '👉' | '👇' | '👈👇';
+    at?: '👉' | '👇' | '⏪👇' | '⏪👉';
     /** Door tags */
     doors?: string[];
     /** Wall tags */

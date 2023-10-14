@@ -197,7 +197,7 @@ const layoutDefs = {
 
       { id: 'stateroom--014--2x2', y: 6 * 60, flip: 'x' },
       { at: '👉', id: 'stateroom--014--2x2', flip: 'x' },
-      { at: '👈👇', id: 'stateroom--036--2x4', a: 270 },
+      { at: '⏪👇', id: 'stateroom--036--2x4', a: 270 },
 
       { id: 'misc-stellar-cartography--023--4x4', x: 16 * 60,  y: 6 * 60, flip: 'y' },
     ],
@@ -210,13 +210,12 @@ const layoutDefs = {
       { id: 'office--006--2x2', y: 2 * 60, a: 90, doors: ['e', 'w'] },
       { id: 'sensors--003--1x1.4', transform: [...getAngleMatrix(45), 90 + 6, -60] },
 
-      { y: 7 * 60, x: 4 * 60, cs: [
-        { id: 'lounge--015--2x4', flip: 'xy' },
-        { id: 'ships-locker--011--1x2', a: 90, },
-        { id: 'empty-room--006--2x2', x: -1 * 60, a: 90, doors: ['e'] },
-        { id: 'shop--028--0.8x1.6', a: 90 },
-        { id: 'shop--027--0.4x1.6', x: 2 * 60 + 12, y: 1 * 60 + 24, flip: 'x' },
-      ]},
+      { id: 'lounge--015--2x4', x: 4 * 60, y: 7 * 60, flip: 'xy' },
+      { at: '👉', id: 'ships-locker--011--1x2', a: 90, },
+      { at: '👉', id: 'empty-room--006--2x2', x: -1 * 60, a: 90, doors: ['e'] },
+      { at: '👉', id: 'shop--028--0.8x1.6', a: 90 },
+      { at: '👉', id: 'shop--027--0.4x1.6', x: 2 * 60 + 12, y: 1 * 60 + 24, flip: 'x' },
+
       { id: 'window--007--0x2.4', y: 7 * 60 - 8, x: 4 * 60, },
       
       { id: 'empty-room--020--2x4', x: 18 * 60, flip: 'xy' },
@@ -228,19 +227,17 @@ const layoutDefs = {
     items: [
       { id: '303--hull' },
 
-      { cs: [
-        { id: 'medical-bed--006--1.6x3.6', y: 12 },
-        { id: 'low-berth--003--1x1', x: 24 + 1 * 60, a: 90, next: 'down' },
-        { id: 'console--022--1x2', flip: 'y' },
-        { id: 'stateroom--035--2x3' },
-        { id: 'stateroom--035--2x3' },
-        { id: 'stateroom--035--2x3' },
-        { id: 'stateroom--035--2x3', flip: 'y' },
-        { id: 'stateroom--100--3x4', a: 90, flip: 'x' },
-        { id: 'galley-and-mess-halls--006--2x4', flip: 'y', next: 'down' },
-        { id: 'table--009--0.8x0.8', next: 'down' },
-        { id: 'table--009--0.8x0.8', y: 1 * 60 },
-      ]},
+      { id: 'medical-bed--006--1.6x3.6', y: 12 },
+      { at: '👉', id: 'low-berth--003--1x1', x: 24 + 1 * 60, y: -12, a: 90 },
+      { at: '👇', id: 'console--022--1x2', flip: 'y' },
+      { at: '⏪👉', id: 'stateroom--035--2x3' },
+      { at: '👉', id: 'stateroom--035--2x3' },
+      { at: '👉', id: 'stateroom--035--2x3' },
+      { at: '👉', id: 'stateroom--035--2x3', flip: 'y' },
+      { at: '👉', id: 'stateroom--100--3x4', a: 90, flip: 'x' },
+      { at: '👉', id: 'galley-and-mess-halls--006--2x4', flip: 'y' },
+      { at: '👇', id: 'table--009--0.8x0.8' },
+      { at: '👇', id: 'table--009--0.8x0.8', y: 1 * 60 },
 
       { x: 1 * 60 + 30, y: -6, cs: [
         { id: 'window--001--0x1' },

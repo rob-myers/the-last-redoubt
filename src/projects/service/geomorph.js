@@ -546,16 +546,16 @@ function layoutDefItemToTransform(item, prevItems, opts, m) {
   }
 
   if (item.at && prevItems.length) {
-    const prevItem = assertDefined(prevItems.at(item.at === '👈👇' ? -2 : -1));
+    const prevItem = assertDefined(prevItems.at(item.at === '⏪👇' || item.at === '⏪👉' ? -2 : -1));
     const { width, height } = opts.lookup[prevItem.id];
     const prevM = (new Mat).feedFromArray(prevItem.transform ?? [1, 0, 0, 1, 0, 0]);
     const rect = new Rect(0, 0, width / 5, height / 5).applyMatrix(prevM);
-    if (item.at === '👉') {
+    if (item.at === '👉' || item.at === '⏪👉') {
       // `x` relative to right of previous item
       item.x = (item.x ?? 0) + rect.right;
       // `y` relative to top of previous item
       item.y = (item.y ?? 0) + (prevItem.y ?? 0);
-    } else if (item.at === '👇' || item.at === '👈👇') {
+    } else if (item.at === '👇' || item.at === '⏪👇') {
       // `y` relative to bottom of previous item
       item.y = (item.y ?? 0) + rect.bottom;
       // `x` relative to left of previous item
