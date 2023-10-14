@@ -41,7 +41,7 @@ export function extractGeomsAt(api, topNodes, title, scale = 1) {
  * @param {number} [scale]
  */
 export function extractGeoms(api, parent, scale = 1) {
-  const children = api(parent).children('rect, path, ellipse').toArray();
+  const children = api(parent).children('rect, path, ellipse, image').toArray();
   return children.flatMap(x => extractGeom(api, x, scale)).map(x => x.precision(4));
 }
 
@@ -56,7 +56,7 @@ export function extractGeom(api, el, scale = 1) {
   const title = api(el).children('title').text() || null;
   const _ownTags = title ? title.split(' ') : [];
 
-  if (tagName === 'rect') {
+  if (tagName === 'rect' || tagName === 'image') {
     const poly = Poly.fromRect(new Rect(Number(a.x ?? 0), Number(a.y ?? 0), Number(a.width ?? 0), Number(a.height ?? 0)))
     output.push(Object.assign(poly, { _ownTags }));
   } else if (tagName === 'path') {
