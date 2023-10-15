@@ -6,6 +6,10 @@ import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons } from "../service/dom";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
+
+// 🚧 "lower" canvas i.e. one per geomorph
+// - no <img> i.e. load from script instead
+
 /**
  * The images of each geomorph
  * @param {Props} props 
@@ -108,11 +112,15 @@ export default function Geomorphs(props) {
         ctxt.clearRect(connectorRect.x, connectorRect.y, connectorRect.width, connectorRect.height);
       });
     },
-    onLoadUnlitImage(e) {
-      const imgEl = /** @type {HTMLImageElement} */ (e.target);
-      const gmId = Number(imgEl.dataset.gmId);
-      state.unlitImgs[gmId] = imgEl;
-      state.initGmLightRects(gmId);
+    loadUnlitImages() {
+      gms.forEach((gm, gmId) => {
+        const img = new Image;
+        img.onload = (e) => {
+          state.unlitImgs[gmId] = /** @type {HTMLImageElement} */ (e.target);
+          state.initGmLightRects(gmId);
+        };
+        img.src = geomorphPngPath(gm.key);
+      });
     },
     recomputeLights(gmId, roomId) {
       if (!state.unlitImgs[gmId]) {
@@ -185,6 +193,7 @@ export default function Geomorphs(props) {
   });
   
   React.useEffect(() => {
+    state.loadUnlitImages();
     props.onLoad(state);
   }, []);
 
@@ -203,14 +212,6 @@ export default function Geomorphs(props) {
             width={gm.pngRect.width}
             height={gm.pngRect.height}
             style={{ left: gm.pngRect.x, top: gm.pngRect.y }}
-          />
-          <img
-            className="geomorph-unlit"
-            style={{ display: 'none' }}
-            src={geomorphPngPath(gm.key)}
-            onLoad={state.onLoadUnlitImage}
-            data-gm-key={gm.key}
-            data-gm-id={gmId}
           />
           <canvas
             ref={(el) => el && (state.canvas[gmId] = el)}
@@ -268,7 +269,7 @@ const rootCss = css`
  * @property {(gmId: number) => void} initGmLightRects
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
- * @property {(e: React.SyntheticEvent<HTMLElement>) => void} onLoadUnlitImage
+ * @property {() => void} loadUnlitImages
  * @property {(gmId: number, roomId: number)  => void} recomputeLights
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {boolean} ready
