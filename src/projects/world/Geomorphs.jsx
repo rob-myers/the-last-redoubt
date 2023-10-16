@@ -110,7 +110,6 @@ export default function Geomorphs(props) {
         return;
       }
       // Show light by drawing rect
-      const litImg = state.litImgs[gmId];
       state.drawRectImage('lit', gmId, meta.rect, false);
       meta.postConnectors.forEach(({ type, id }) => {// Show light through doors
         const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
@@ -150,18 +149,30 @@ export default function Geomorphs(props) {
       state.gmRoomLit[gmId][roomId] = nextLit; // Needed by `onOpenDoor`
       
       const doors = gm.roomGraph.getAdjacentDoors(roomId).map(x => api.doors.lookup[gmId][x.doorId]);
-      const windowIds = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
+      const windowLightRects = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
         x => gm.windowToLightRect[x.windowId] ?? [],
       );
 
       if (nextLit) {
         state.drawPolygon('lit', gmId, gm.roomsWithDoors[roomId]);
-        doors.forEach(({ open, doorId }) => open && state.onOpenDoor(gmId, doorId));
-        windowIds.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect, false));
+        doors.forEach(({ open, doorId }) =>
+          /**
+           * If door open AND light comes from roomId, open it to emit light thru doorway.
+           * Otherwise must close door to rub out light from other rooms.
+           */
+          open && (roomId === gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
+        );
+        windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect, false));
       } else {
         state.drawPolygon('unlit', gmId, gm.roomsWithDoors[roomId]);
-        doors.forEach(({ doorId }) => state.onCloseDoor(gmId, doorId, false));
-        windowIds.forEach(({ rect, windowId }) => {
+        doors.forEach(({ doorId, open }) =>
+          /**
+           * If door open AND light not from roomId, open it to emit light thru doorway.
+           * Otherwise must close door to rub out light from roomId.
+           */
+          open && (roomId !== gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId, false)
+        );
+        windowLightRects.forEach(({ rect, windowId }) => {
           const [poly] = Poly.cutOut([gm.windows[windowId].poly], [Poly.fromRect(rect)]);
           state.drawPolygon('unlit', gmId, poly);
         });
@@ -179,24 +190,24 @@ export default function Geomorphs(props) {
   return (
     <div className={cx("geomorphs", rootCss)}>
       {gms.map((gm, gmId) =>
-          <canvas
-            key={gmId}
-            ref={(el) => el && (
-              state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
-            )}
-            className={`gm-${gmId}`}
-            width={gm.pngRect.width}
-            height={gm.pngRect.height}
-            style={{ transform: gm.transformStyle }}
-            // 🚧 consider scaling up canvas for better graphics
-            // width={gm.pngRect.width * 2}
-            // height={gm.pngRect.height * 2}
-            // style={{
-              // left: gm.pngRect.x,
-              // top: gm.pngRect.y,
-              // transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
-            // }}
-          />
+        <canvas
+          key={gmId}
+          ref={(el) => el && (
+            state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
+          )}
+          className={`gm-${gmId}`}
+          width={gm.pngRect.width}
+          height={gm.pngRect.height}
+          style={{ transform: gm.transformStyle }}
+          // 🚧 consider scaling up canvas for better graphics
+          // width={gm.pngRect.width * 2}
+          // height={gm.pngRect.height * 2}
+          // style={{
+            // left: gm.pngRect.x,
+            // top: gm.pngRect.y,
+            // transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
+          // }}
+        />
       )}
     </div>
   );
