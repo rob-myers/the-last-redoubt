@@ -27,6 +27,7 @@ export default function Doors(props) {
       return {
         angled: normal.x !== 0 && normal.y !== 0,
         closeTimeoutId: undefined,
+        doorId,
         hull: isHullDoor,
         locked: sealed,
         open: props.init?.[gmId]?.includes(doorId) ?? false,
@@ -396,6 +397,7 @@ const rootCss = css`
  * @typedef DoorState
  * @property {number} [closeTimeoutId]
  * @property {boolean} angled
+ * @property {number} doorId
  * @property {boolean} hull
  * @property {boolean} locked
  * @property {boolean} open

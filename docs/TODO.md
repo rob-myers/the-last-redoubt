@@ -21,7 +21,7 @@
     - ℹ️ drawing a hole in a mask seems hard for canvas renderer
     - ❌ try move/lineTo
     - ❌ OR show/hide a sprite per "light rect"
-  - 🚧 fix `setRoomLit`
+  - ✅ fix `setRoomLit`
   - DebugWorld draws in lower canvas
   - Decor draws in lower canvas
 
