@@ -2,20 +2,31 @@
 
 ## In progress
 
-- ✅ remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
-  - ✅ implement new syntax `at`
-  - ✅ flatten layout 301 using new syntax
-  - ✅ flatten other layouts using new syntax
-  - ✅ remove all rows and associated code
-
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
-- try to improve performance (at least on mobile)
-  - hideGms clunky on open hull door first time mobile (?)
-  - collapse onto two canvases per geomorph
-    - including doors
-    - including decor
-  - use PixiJS
+  - try to improve performance (at least on mobile)
 
+- 🚧 collapse onto two canvases per geomorph
+  - ℹ️ use native canvas, including doors, decor
+- 🚧 lower canvas
+  - ✅ remove img.geomorph-unlit from `Geomorphs`
+  - ✅ collapse div?
+  - 🤔 larger canvas
+  - ❌ hook up pixi
+    - ✅ load lit images
+    - ✅ create `Pixi.Application`s
+    - ✅ remove img.geomorph from `Geomorphs`
+    - ✅ remove pixi
+  - ✅ clearRect -> drawRect from litImg
+  - ❌ redo lighting via pixi
+    - ℹ️ drawing a hole in a mask seems hard for canvas renderer
+    - ❌ try move/lineTo
+    - ❌ OR show/hide a sprite per "light rect"
+  - 🚧 fix `setRoomLit`
+  - DebugWorld draws in lower canvas
+  - Decor draws in lower canvas
+
+- `npc config fov` toggles fov
+- hideGms clunky on open hull door first time mobile (?)
 - hull symbol has own field i.e. not first item
 - BUG saw issue where removed decor, but new decor in different room vanished on close door
 - 301: add decor
@@ -591,6 +602,12 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
+  - ✅ implement new syntax `at`
+  - ✅ flatten layout 301 using new syntax
+  - ✅ flatten other layouts using new syntax
+  - ✅ remove all rows and associated code
 
 - ✅ support nested symbols e.g. `symbol key={symbolKey}` in SVG singles
   - ✅ support nested symbols in non-hull symbols
