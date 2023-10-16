@@ -206,7 +206,7 @@ ${profileLookup.game_1()}
 
 npc config '{
   debugPlayer: true,
-  hideGms: true,
+  hideGms: false,
   showColliders: false,
   showIds: true,
   logTags: false,
