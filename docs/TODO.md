@@ -6,6 +6,8 @@
   - try to improve performance (at least on mobile)
 
 - 🚧 only use DOM for `<NPCs>` i.e. multiple canvases elsewhere (per geomorph)
+  
+- ✅ `Geomorphs` only uses canvas
   - ✅ remove img.geomorph-unlit from `Geomorphs`
   - ✅ collapse div
   - 🤔 larger canvas
@@ -20,8 +22,16 @@
     - ❌ try move/lineTo
     - ❌ OR show/hide a sprite per "light rect"
   - ✅ fix `setRoomLit`
-  - 🚧 DebugWorld draws in canvases
-  - Decor draws in canvases
+
+- 🚧 try rewriting Geomorphs using `react-konva`
+  - Image for each light rect
+  - towards pattern:
+    - World > Konva.Stage > {Geomorphs,DebugWorld,Decor}
+    - World > NPCs
+    - World > Konva.Stage > {Doors,FOV}
+
+- DebugWorld draws in canvases
+- Decor draws in canvases
 
 - ✅ migrate canvas layer library
   - ℹ️ unclear if we'll use it, since multiple canvases suggested by:
