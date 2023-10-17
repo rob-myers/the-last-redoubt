@@ -40,15 +40,10 @@ if (!fs.existsSync(geomorphJsonPath)) {
 (async function main() {
 
   // Doors are open
-  const { canvas, layout } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: false, invertSymbols: true });
+  const { canvas, layout } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: false, invertSymbols: true, darken: true });
   // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
   
-  // Darken the geomorph
-  // ℹ️ thus need to darken unlit drawRects
-  const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
-  ctxt.fillStyle = preDarkenCssRgba;
-  fillPolygons(ctxt, hullPolySansHoles);
 
   //#region draw lights
   const lightSources = layout.lightSrcs;

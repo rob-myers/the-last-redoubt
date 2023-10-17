@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { geomorphFilter, preDarkenCssRgba } from "./const";
+import { geomorphFilter } from "./const";
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons, loadImage } from "../service/dom";
@@ -8,7 +8,6 @@ import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 
 /**
- * The images of each geomorph
  * @param {Props} props 
  */
 export default function Geomorphs(props) {
@@ -32,12 +31,8 @@ export default function Geomorphs(props) {
       const ctxt = state.ctxts[gmId];
       ctxt.fillStyle = state.createFillPattern(type, ctxt, gmId);
       fillPolygons(ctxt, [poly]);
-      if (type === 'unlit') {
-        ctxt.fillStyle = preDarkenCssRgba;
-        fillPolygons(ctxt, [poly]);
-      }
     },
-    drawRectImage(type, gmId, rect, darken = true) {
+    drawRectImage(type, gmId, rect) {
       // ℹ️ target canvas is 1/2 size of source image
       const ctxt = state.ctxts[gmId];
       const srcOffset = gms[gmId].pngRect;
@@ -46,17 +41,10 @@ export default function Geomorphs(props) {
         (rect.x - srcOffset.x) * 2, (rect.y - srcOffset.y) * 2, rect.width * 2, rect.height * 2,
         rect.x, rect.y, rect.width, rect.height,
       );
-      if (darken) {
-        /** We also shade by @see {preDarkenCssRgba} as per bake-lighting */
-        ctxt.fillStyle = preDarkenCssRgba;
-        ctxt.fillRect(rect.x, rect.y, rect.width, rect.height);
-      }
     },
-    initGmLightRects(gmId) {
+    initGmLightRects(gmId) {// Assumes all doors initially closed
       const gm = gms[gmId];
-      const ctxt = state.ctxts[gmId];
-      const unlitImg = state.unlitImgs[gmId];
-      gm.doorToLightRect.forEach((item, doorId) => {
+      gm.doorToLightRect.forEach((item) => {
         if (item) {
           // ctxt.strokeStyle = '#ff0000'; // ⛔️ Debug
           // ctxt.lineWidth = 1;
@@ -73,7 +61,7 @@ export default function Geomorphs(props) {
         ]);
         state.unlitImgs[gmId] = unlitImg;
         state.litImgs[gmId] = litImg;
-        state.drawRectImage('lit', gmId, gm.pngRect, false)
+        state.drawRectImage('lit', gmId, gm.pngRect)
         state.initGmLightRects(gmId);
       });
     },
@@ -87,8 +75,6 @@ export default function Geomorphs(props) {
         return; // 👈 Don't hide lights if current room has light (fixes diagonal doors)
       }
       // Hide light by drawing partial image
-      const ctxt = state.ctxts[gmId];
-      const unlitImg = state.unlitImgs[gmId];
       state.drawRectImage('unlit', gmId, meta.rect);
       
       meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
@@ -110,12 +96,12 @@ export default function Geomorphs(props) {
         return;
       }
       // Show light by drawing rect
-      state.drawRectImage('lit', gmId, meta.rect, false);
+      state.drawRectImage('lit', gmId, meta.rect);
       meta.postConnectors.forEach(({ type, id }) => {// Show light through doors
         const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
-        state.drawRectImage('lit', gmId, rect, false);
+        state.drawRectImage('lit', gmId, rect);
         const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
-        state.drawRectImage('lit', gmId, connectorRect, false);
+        state.drawRectImage('lit', gmId, connectorRect);
       });
     },
     recomputeLights(gmId, roomId) {
@@ -162,7 +148,7 @@ export default function Geomorphs(props) {
            */
           open && (roomId === gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
         );
-        windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect, false));
+        windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect));
       } else {
         state.drawPolygon('unlit', gmId, gm.roomsWithDoors[roomId]);
         doors.forEach(({ doorId, open }) =>
@@ -237,7 +223,7 @@ const rootCss = css`
  * @property {(type: 'lit' | 'unlit', ctxt: CanvasRenderingContext2D, gmId: number) => CanvasPattern} createFillPattern
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygon
  * Fill polygon using unlit image, and also darken.
- * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson, darken?: boolean) => void} drawRectImage
+ * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initGmLightRects
  * @property {() => void} loadImages
  * @property {(gmId: number, doorId: number) => void} onOpenDoor

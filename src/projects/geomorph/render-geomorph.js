@@ -1,6 +1,7 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
+import { preDarkenCssRgba } from "../service/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
 import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage } from '../service/dom';
@@ -38,6 +39,7 @@ export async function renderGeomorph(
     // wallColor = 'rgba(50, 40, 40, 0.5)',
     wallColor = 'rgba(50, 40, 40, 1)',
     invertSymbols = false,
+    darken = false,
   },
 ) {
   const hullSym = lookup[layout.items[0].key];
@@ -211,6 +213,12 @@ export async function renderGeomorph(
     }
   }
   //#endregion
+
+  if (darken) {// Darken the geomorph (for lighting)
+    const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
+    ctxt.fillStyle = preDarkenCssRgba;
+    fillPolygons(ctxt, hullPolySansHoles);
+  }
 }
 
 /** @typedef {HTMLCanvasElement | import('canvas').Canvas} Canvas */

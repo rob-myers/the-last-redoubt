@@ -23,12 +23,13 @@
     - ❌ OR show/hide a sprite per "light rect"
   - ✅ fix `setRoomLit`
 
-- 🚧 try rewriting Geomorphs using `react-konva`
-  - Image for each light rect
-  - towards pattern:
+- ❌ try rewriting Geomorphs using `react-konva`
+  - ✅ Image for each light rect
+  - ❌ towards pattern:
     - World > Konva.Stage > {Geomorphs,DebugWorld,Decor}
     - World > NPCs
     - World > Konva.Stage > {Doors,FOV}
+  - ℹ️ seems inefficient
 
 - DebugWorld draws in canvases
 - Decor draws in canvases

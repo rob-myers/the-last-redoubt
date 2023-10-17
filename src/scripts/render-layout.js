@@ -52,17 +52,18 @@ const staticDir = path.resolve(__dirname, '../../static');
 (async function main() {
   try {
     /**
-     * Draw unlit geomorph.
+     * 🌙 Draw unlit geomorph.
      */
     const { layout, canvas } = await renderLayout(foundLayoutDef, {
       thinDoors: false,
       debug: !!debug,
       scale,
       invertSymbols: true,
+      darken: true, // Darken in same way as lit geomorph
     });
 
     /**
-     * Draw map geomorph with doors, no highlights and no `extra--*`s.
+     * 🧭 Draw map geomorph with doors, no highlights and no `extra--*`s.
      */
     const mapCanvas = createCanvas(canvas.width, canvas.height);
     layout.items = layout.items.filter(x => !x.key.startsWith('extra--'));
@@ -111,9 +112,15 @@ const staticDir = path.resolve(__dirname, '../../static');
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
- * @param {{ thinDoors: boolean; debug: boolean; scale?: number; invertSymbols?: boolean; }} opts
+ * @param {RenderLayoutOpts} opts
  */
-export async function renderLayout(def, { thinDoors, debug, scale = defaultScale, invertSymbols = false }) {
+export async function renderLayout(def, {
+  thinDoors,
+  debug,
+  scale = defaultScale,
+  invertSymbols = false,
+  darken = false,
+}) {
   const canvas = createCanvas(0, 0);
 
   const layout = await createLayout({
@@ -144,6 +151,7 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
         labels: true,
       },
       invertSymbols,
+      darken,
     },
   );
   return {
@@ -152,3 +160,12 @@ export async function renderLayout(def, { thinDoors, debug, scale = defaultScale
     pngRect: symbolLookup[layout.items[0].key].pngRect,
   };
 }
+
+/**
+ * @typedef RenderLayoutOpts 
+ * @property {boolean} thinDoors
+ * @property {boolean} debug
+ * @property {number} [scale]
+ * @property {boolean} [invertSymbols]
+ * @property {boolean} [darken]
+ */
