@@ -1,4 +1,7 @@
 /**
+ * Canvas layer management, using a single canvas.
+ * Possible alternative to e.g. https://konvajs.org/.
+ * 
  * - Source: https://raw.githubusercontent.com/ant512/CanvasLayers/master/canvaslayers.js
  * - Copyright (c) 2010 Antony Dzeryn
  * - Usage: https://github.com/ant512/CanvasLayers/blob/master/canvaslayers.html

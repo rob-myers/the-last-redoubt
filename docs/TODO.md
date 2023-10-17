@@ -5,11 +5,9 @@
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
   - try to improve performance (at least on mobile)
 
-- 🚧 collapse onto two canvases per geomorph
-  - ℹ️ use native canvas, including doors, decor
-- 🚧 lower canvas
+- 🚧 only use DOM for `<NPCs>` i.e. multiple canvases elsewhere (per geomorph)
   - ✅ remove img.geomorph-unlit from `Geomorphs`
-  - ✅ collapse div?
+  - ✅ collapse div
   - 🤔 larger canvas
   - ❌ hook up pixi
     - ✅ load lit images
@@ -22,8 +20,12 @@
     - ❌ try move/lineTo
     - ❌ OR show/hide a sprite per "light rect"
   - ✅ fix `setRoomLit`
-  - DebugWorld draws in lower canvas
-  - Decor draws in lower canvas
+  - 🚧 DebugWorld draws in canvases
+  - Decor draws in canvases
+
+- ✅ migrate canvas layer library
+  - ℹ️ unclear if we'll use it, since multiple canvases suggested by:
+    - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
 
 - `npc config fov` toggles fov
 - hideGms clunky on open hull door first time mobile (?)
