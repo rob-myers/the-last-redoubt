@@ -151,6 +151,7 @@ declare namespace Geomorph {
     roomsWithDoors: Poly[];
     hullDoors: ConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
     hullOutline: Poly;
+    /** Bounds in world coordinates */
     pngRect: Geom.Rect;
 
     //#region aligned to doors

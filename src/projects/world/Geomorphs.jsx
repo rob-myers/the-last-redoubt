@@ -33,13 +33,10 @@ export default function Geomorphs(props) {
       fillPolygons(ctxt, [poly]);
     },
     drawRectImage(type, gmId, rect) {
-      // ℹ️ target canvas is 1/2 size of source image
-      const ctxt = state.ctxts[gmId];
-      const srcOffset = gms[gmId].pngRect;
-      ctxt.drawImage(
+      state.ctxts[gmId].drawImage(// Src image & target canvas are scaled by 2
         type === 'lit' ? state.litImgs[gmId] : state.unlitImgs[gmId],
-        (rect.x - srcOffset.x) * 2, (rect.y - srcOffset.y) * 2, rect.width * 2, rect.height * 2,
-        rect.x, rect.y, rect.width, rect.height,
+        2 * (rect.x - gms[gmId].pngRect.x), 2 * (rect.y - gms[gmId].pngRect.y), 2 * rect.width, 2 * rect.height,
+        2 * rect.x, 2 * rect.y, 2 * rect.width, 2 * rect.height,
       );
     },
     initGmLightRects(gmId) {// Assumes all doors initially closed
@@ -61,7 +58,7 @@ export default function Geomorphs(props) {
         ]);
         state.unlitImgs[gmId] = unlitImg;
         state.litImgs[gmId] = litImg;
-        state.drawRectImage('lit', gmId, gm.pngRect)
+        state.drawRectImage('lit', gmId, gm.pngRect);
         state.initGmLightRects(gmId);
       });
     },
@@ -182,17 +179,13 @@ export default function Geomorphs(props) {
             state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
           )}
           className={`gm-${gmId}`}
-          width={gm.pngRect.width}
-          height={gm.pngRect.height}
-          style={{ transform: gm.transformStyle }}
-          // 🚧 consider scaling up canvas for better graphics
-          // width={gm.pngRect.width * 2}
-          // height={gm.pngRect.height * 2}
-          // style={{
-            // left: gm.pngRect.x,
-            // top: gm.pngRect.y,
-            // transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
-          // }}
+          // Source PNG and this canvas are scaled by 2
+          width={gm.pngRect.width * 2}
+          height={gm.pngRect.height * 2}
+          style={{
+            transform: `${gm.transformStyle} scale(0.5)`,
+            transformOrigin: 'top left',
+          }}
         />
       )}
     </div>

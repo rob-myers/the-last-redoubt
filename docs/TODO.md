@@ -31,7 +31,17 @@
     - World > Konva.Stage > {Doors,FOV}
   - ℹ️ seems inefficient
 
-- DebugWorld draws in canvases
+- ✅ scale canvas up (x2) for better quality
+
+- http://www.concretejs.com/ replaces services/layer.js ?
+  - leave Geomorphs as is i.e. no need for layers
+  - layers could be useful for DebugWorld e.g. navPaths
+
+- 🚧 DebugWorld draws in canvases
+  - convert markup into canvas drawing code
+  - initially clear whole canvas
+  - handle navPaths e.g. split over canvases
+
 - Decor draws in canvases
 
 - ✅ migrate canvas layer library
