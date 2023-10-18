@@ -24,13 +24,15 @@ export default function Geomorphs(props) {
     createFillPattern(type, ctxt, gmId) {
       const gm = gms[gmId];
       const pattern = assertNonNull(ctxt.createPattern(type === 'unlit' ? state.unlitImgs[gmId] : state.litImgs[gmId], 'no-repeat'));
-      pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e: gm.pngRect.x, f: gm.pngRect.y });
+      pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e:  gm.pngRect.x, f:  gm.pngRect.y });
       return pattern;
     },
     drawPolygon(type, gmId, poly) {
       const ctxt = state.ctxts[gmId];
       ctxt.fillStyle = state.createFillPattern(type, ctxt, gmId);
+      ctxt.setTransform(2, 0, 0, 2, 0, 0);
       fillPolygons(ctxt, [poly]);
+      ctxt.resetTransform();
     },
     drawRectImage(type, gmId, rect) {
       state.ctxts[gmId].drawImage(// Src image & target canvas are scaled by 2
@@ -39,16 +41,8 @@ export default function Geomorphs(props) {
         2 * rect.x, 2 * rect.y, 2 * rect.width, 2 * rect.height,
       );
     },
-    initGmLightRects(gmId) {// Assumes all doors initially closed
-      const gm = gms[gmId];
-      gm.doorToLightRect.forEach((item) => {
-        if (item) {
-          // ctxt.strokeStyle = '#ff0000'; // ⛔️ Debug
-          // ctxt.lineWidth = 1;
-          // ctxt.strokeRect(item.rect.x, item.rect.y, item.rect.width, item.rect.height);
-          state.drawRectImage('unlit', gmId, item.rect);
-        }
-      });
+    initGmLightRects(gmId) {
+      gms[gmId].doorToLightRect.forEach(x => x && state.drawRectImage('unlit', gmId, x.rect));
     },
     loadImages() {
       gms.forEach(async (gm, gmId) => {
@@ -84,7 +78,6 @@ export default function Geomorphs(props) {
       const gm = gms[gmId];
       const gmDoors = api.doors.lookup[gmId];
       const meta = gm.doorToLightRect[doorId];
-      const ctxt = state.ctxts[gmId];
       if (!meta
         // all prior connectors must be windows or open doors
         || !meta.preConnectors.every(({ type, id }) => type === 'window' || gmDoors[id].open)
@@ -218,6 +211,7 @@ const rootCss = css`
  * Fill polygon using unlit image, and also darken.
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initGmLightRects
+ * Currently assumes all doors initially closed
  * @property {() => void} loadImages
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
