@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
-import { cssName, wallOutset } from "./const";
+import { cssName, hullDoorWidth, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import PathIndicator from "./PathIndicator";
@@ -13,18 +13,18 @@ import PathIndicator from "./PathIndicator";
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
-  const { api } = props;
-
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
       ready: true,
-      path: {},
-      ctxt: undefined,
       rootEl: /** @type {HTMLDivElement} */ ({}),
+      local: undefined,
+      navPath: {},
+      ctxts: [],
+
       addPath(key, path) {
-        state.path[key] = {
+        state.navPath[key] = {
           key,
           path: path.map(Vect.from),
           meta: { key, path },
@@ -32,7 +32,7 @@ export default function DebugWorld(props) {
         update();
       },
       extendPath(key, extraPoints) {
-        const item = state.path[key];
+        const item = state.navPath[key];
         if (item) {
           item.path = item.meta.path = item.path.concat(extraPoints.map(Vect.from));
           update();
@@ -41,7 +41,7 @@ export default function DebugWorld(props) {
         }
       },
       removePath(key) {
-        delete this.path[key];
+        delete this.navPath[key];
         update();
       },
       rootRef(el) {
@@ -62,9 +62,9 @@ export default function DebugWorld(props) {
         }
       },
       update,
-      updateCtxt() {
-        const { gmId, roomId } = props.api.fov;
-        const gm = api.gmGraph.gms[gmId];
+      updateLocal() {
+        const { gmGraph, fov: { gmId, roomId } } = props.api;
+        const gm = gmGraph.gms[gmId];
         const visDoorIds = props.api.doors.getVisibleIds(gmId);
         const roomNavPoly = gm.lazy.roomNavPoly[roomId];
         /** Outset for door lines (? it fixed something) */
@@ -72,7 +72,7 @@ export default function DebugWorld(props) {
         const roomAabb = gm.rooms[roomId].rect;
         const roomPoly = gm.rooms[roomId];
         const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
-        state.ctxt = {
+        state.local = {
           gmId,
           roomId,
           gm,
@@ -116,7 +116,8 @@ export default function DebugWorld(props) {
     props.onLoad(state);
   }, []);
 
-  const ctxt = state.ctxt;
+  const ctxt = state.local;
+  const { gms } = props.api.gmGraph;
 
   return (
     <div
@@ -126,7 +127,7 @@ export default function DebugWorld(props) {
     >
 
       <div className="debug-global">
-        {api.gmGraph.gms.map((gm, gmId) =>
+        {gms.map((gm, gmId) =>
           <div
             key={gmId}
             className={cx("geomorph-outline", `gm-${gmId}`)}
@@ -140,7 +141,7 @@ export default function DebugWorld(props) {
           />  
         )}
 
-        {Object.values(state.path).map(navPath =>
+        {Object.values(state.navPath).map(navPath =>
           <PathIndicator key={navPath.key} def={navPath} />  
         )}
       </div>
@@ -255,12 +256,32 @@ export default function DebugWorld(props) {
 
         </div>
       )}
+      {/* 🚧 remove above ⬆️ */}
+
+      {gms.map((gm, gmId) =>
+        <canvas
+          key={gmId}
+          ref={(el) => el && (
+            state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
+          )}
+          className={`gm-${gmId}`}
+          width={gm.pngRect.width * 2}
+          // canvas dimension should exclude "jutting-out hull doors"
+          height={gm.pngRect.height * 2}
+          style={{
+            transform: `${gm.transformStyle} scale(0.5)`,
+            transformOrigin: 'top left',
+            left: gm.pngRect.x,
+            top: gm.pngRect.y,
+          }}
+        />
+      )}
     </div>
   );
 }
 
 /**
- * @typedef Props @type {object}
+ * @typedef Props
  * @property {boolean} [canClickArrows]
  * @property {boolean} [localNav]
  * @property {boolean} [gmOutlines]
@@ -272,17 +293,19 @@ export default function DebugWorld(props) {
  */
 
 /**
- * @typedef State @type {object}
+ * @typedef State
  * @property {boolean} ready
- * @property {DebugRoomCtxt | undefined} ctxt
- * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
+ * @property {DebugRoomCtxt | undefined} local Room-specific data
+ * @property {Record<string, NPC.PathIndicatorDef>} navPath
+ * @property {CanvasRenderingContext2D[]} ctxts
+ * 
  * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string, points: Geom.VectJson[]) => void} addPath
  * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
  * @property {(key: string) => void} removePath
  * @property {() => void} update
- * @property {() => void} updateCtxt
+ * @property {() => void} updateLocal
  */
 
 /**
@@ -305,6 +328,10 @@ const debugDoorOffset = 12;
 const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
 const rootCss = css`
+  canvas {
+    position: absolute;
+    pointer-events: none;
+  }
 
   div.debug-global {
     svg {

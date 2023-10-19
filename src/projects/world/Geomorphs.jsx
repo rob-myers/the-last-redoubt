@@ -28,7 +28,7 @@ export default function Geomorphs(props) {
     drawPolygonImage(type, gmId, poly) {
       const ctxt = state.ctxts[gmId];
       ctxt.fillStyle = state.createFillPattern(type, ctxt, gmId);
-      ctxt.setTransform(2, 0, 0, 2, 0, 0);
+      ctxt.setTransform(2, 0, 0, 2, -2 * gms[gmId].pngRect.x, -2 * gms[gmId].pngRect.y);
       fillPolygons(ctxt, [poly]);
       ctxt.resetTransform();
     },
@@ -36,7 +36,7 @@ export default function Geomorphs(props) {
       state.ctxts[gmId].drawImage(// Src image & target canvas are scaled by 2
         type === 'lit' ? state.imgs.lit[gmId] : state.imgs.unlit[gmId],
         2 * (rect.x - gms[gmId].pngRect.x), 2 * (rect.y - gms[gmId].pngRect.y), 2 * rect.width, 2 * rect.height,
-        2 * rect.x, 2 * rect.y, 2 * rect.width, 2 * rect.height,
+        2 * (rect.x - gms[gmId].pngRect.x), 2 * (rect.y - gms[gmId].pngRect.y), 2 * rect.width, 2 * rect.height,
       );
     },
     initLightRects(gmId) {
@@ -182,6 +182,8 @@ export default function Geomorphs(props) {
           style={{
             transform: `${gm.transformStyle} scale(0.5)`,
             transformOrigin: 'top left',
+            left: gm.pngRect.x,
+            top: gm.pngRect.y,
           }}
         />
       )}

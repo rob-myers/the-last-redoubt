@@ -937,7 +937,7 @@ export function parseLayout({
 export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
   const $ = cheerio.load(svgContents);
   const topNodes = Array.from($('svg > *'));
-  const pngRect = extractPngOffset($, topNodes);
+  const pngRect = extractPngRect($, topNodes);
 
   const [,, width, height] = $('svg').attr('viewBox')?.split(' ').map(Number) ?? [];
   if (width === undefined || height === undefined) {
@@ -1017,7 +1017,7 @@ export function deserializeSvgJson(svgJson) {
  * @param {Element[]} topNodes
  * @returns {Geom.RectJson}
  */
-function extractPngOffset(api, topNodes) {
+function extractPngRect(api, topNodes) {
   const group = topNodes.find(x => hasTitle(api, x, 'background'));
   const { attribs: a } = api(group).children('image').toArray()[0];
   return {

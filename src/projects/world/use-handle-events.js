@@ -54,7 +54,7 @@ export default function useHandleEvents(api) {
         case 'fov-changed':
           // console.log(e);
           api.decor.updateVisibleDecor({ added: e.added, removed: e.removed, });
-          api.debug.updateCtxt();
+          api.debug.updateLocal();
           break;
         case 'on-tty-link':
           mockOnTtyLink(e, api);

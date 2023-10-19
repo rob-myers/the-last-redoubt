@@ -2,45 +2,16 @@
 
 ## In progress
 
-- ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
-  - try to improve performance (at least on mobile)
-
-- 🚧 only use DOM for `<NPCs>` i.e. multiple canvases elsewhere (per geomorph)
-  
-- ✅ `Geomorphs` only uses canvas
-  - ✅ remove img.geomorph-unlit from `Geomorphs`
-  - ✅ collapse div
-  - 🤔 larger canvas
-  - ❌ hook up pixi
-    - ✅ load lit images
-    - ✅ create `Pixi.Application`s
-    - ✅ remove img.geomorph from `Geomorphs`
-    - ✅ remove pixi
-  - ✅ clearRect -> drawRect from litImg
-  - ❌ redo lighting via pixi
-    - ℹ️ drawing a hole in a mask seems hard for canvas renderer
-    - ❌ try move/lineTo
-    - ❌ OR show/hide a sprite per "light rect"
-  - ✅ fix `setRoomLit`
-
-- ❌ try rewriting Geomorphs using `react-konva`
-  - ✅ Image for each light rect
-  - ❌ towards pattern:
-    - World > Konva.Stage > {Geomorphs,DebugWorld,Decor}
-    - World > NPCs
-    - World > Konva.Stage > {Doors,FOV}
-  - ℹ️ seems inefficient
-
-- ✅ scale canvas up (x2) for better quality
-
-- http://www.concretejs.com/ replaces services/layer.js ?
-  - leave Geomorphs as is i.e. no need for layers
-  - layers could be useful for DebugWorld e.g. navPaths
+- only use DOM for `<NPCs>`
+  i.e. multiple canvases elsewhere (per geomorph)
 
 - 🚧 DebugWorld draws in canvases
-  - convert markup into canvas drawing code
-  - initially clear whole canvas
-  - handle navPaths e.g. split over canvases
+  - gmOutlines
+    - ℹ️ 301 canvas bigger because we don't include guns
+    - 🚧 reduce canvas height via half-hull-doors
+  - navPaths: split over canvases
+  - roomNav
+  - ...
 
 - Decor draws in canvases
 
@@ -625,6 +596,39 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
+  - try to improve performance (at least on mobile)
+
+- ✅ `Geomorphs` only uses canvas
+  - ✅ remove img.geomorph-unlit from `Geomorphs`
+  - ✅ collapse div
+  - 🤔 larger canvas
+  - ❌ hook up pixi
+    - ✅ load lit images
+    - ✅ create `Pixi.Application`s
+    - ✅ remove img.geomorph from `Geomorphs`
+    - ✅ remove pixi
+  - ✅ clearRect -> drawRect from litImg
+  - ❌ redo lighting via pixi
+    - ℹ️ drawing a hole in a mask seems hard for canvas renderer
+    - ❌ try move/lineTo
+    - ❌ OR show/hide a sprite per "light rect"
+  - ✅ fix `setRoomLit`
+
+- ❌ try rewriting Geomorphs using `react-konva`
+  - ✅ Image for each light rect
+  - ❌ towards pattern:
+    - World > Konva.Stage > {Geomorphs,DebugWorld,Decor}
+    - World > NPCs
+    - World > Konva.Stage > {Doors,FOV}
+  - ℹ️ seems inefficient
+
+- ✅ scale canvas up (x2) for better quality
+
+- ❌ http://www.concretejs.com/ replaces services/layer.js ?
+  - leave Geomorphs as is i.e. no need for layers
+  - layers could be useful for DebugWorld e.g. navPaths
 
 - ✅ remove layout rows i.e. totally flat, with `next?: 👇 | 👉 | 👈👇`
   - ✅ implement new syntax `at`

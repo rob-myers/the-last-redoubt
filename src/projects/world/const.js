@@ -1,4 +1,4 @@
-import { isSmallViewport } from 'projects/service/dom';
+import { isSmallViewport } from '../service/dom';
 
 export const cssName = /** @type {const} */ ({
   door: 'door',
