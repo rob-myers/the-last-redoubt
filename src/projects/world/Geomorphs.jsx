@@ -219,7 +219,6 @@ const rootCss = css`
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
  * @property {(gmId: number, roomId: number)  => void} recomputeLights
- * //@property {()  => void} setupPixi
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {boolean} ready
  */
