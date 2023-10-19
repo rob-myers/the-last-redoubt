@@ -2,15 +2,12 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
 import { cssName, wallOutset } from "./const";
-import { supportsWebp } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-import npcsMeta from './npcs-meta.json';
 import PathIndicator from "./PathIndicator";
 
 /**
- * 🚧 merge onClick into state?
- * 🚧 useMemo to avoid recomputing VDOM?
+ * 🚧 draw to canvas(es) instead
  */
 
 /** @param {Props} props */
@@ -89,27 +86,30 @@ export default function DebugWorld(props) {
     };
   });
 
-  /* eslint-disable react-hooks/rules-of-hooks */
-  const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
-    const target = (/** @type {HTMLElement} */ (e.target));
+  // 🚧 migrate later e.g. via hit-test canvas
+  // https://github.com/ericdrowell/concrete/blob/1b431ad60fee170a141c85b3a511e9edc2e5a11b/src/concrete.js#L404
+  //
+  // /* eslint-disable react-hooks/rules-of-hooks */
+  // const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
+  //   const target = (/** @type {HTMLElement} */ (e.target));
 
-    if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
-      const doorId = Number(target.dataset.debugDoorId);
+  //   if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
+  //     const doorId = Number(target.dataset.debugDoorId);
 
-      if (!ctxt.gm.isHullDoor(doorId)) {
-        fov.setRoom(gmId, ctxt.gm.getOtherRoomId(doorId, roomId), doorId);
-        return;
-      }
+  //     if (!ctxt.gm.isHullDoor(doorId)) {
+  //       fov.setRoom(gmId, ctxt.gm.getOtherRoomId(doorId, roomId), doorId);
+  //       return;
+  //     }
 
-      const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
-      if (roomCtxt) {
-        fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
-      } else {
-        console.info(`gm ${gmId}: hull door ${doorId} is isolated`);
-      }
-    }
+  //     const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
+  //     if (roomCtxt) {
+  //       fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
+  //     } else {
+  //       console.info(`gm ${gmId}: hull door ${doorId} is isolated`);
+  //     }
+  //   }
 
-  }, [ctxt, props, gmId, roomId]);
+  // }, [ctxt, props, gmId, roomId]);
 
   React.useEffect(() => {
     props.onLoad(state);
@@ -118,7 +118,7 @@ export default function DebugWorld(props) {
   return (
     <div
       className={cx("debug", rootCss)}
-      onClick={onClick}
+      // onClick={onClick}
       ref={state.rootRef}
     >
 
@@ -252,8 +252,6 @@ export default function DebugWorld(props) {
 
         </div>
       )}
-
-      <PrefetchSpritesheets />
     </div>
   );
 }
@@ -280,6 +278,17 @@ export default function DebugWorld(props) {
  * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
  * @property {(key: string) => void} removePath
  * @property {() => void} update
+ */
+
+/**
+ * @typedef DebugRoomCtxt
+ * @property {Geomorph.GeomorphDataInstance} gm
+ * @property {number[]} visDoorIds
+ * @property {Geom.Poly} roomNavPoly
+ * @property {Geom.Rect} outsetRoomNavAabb
+ * @property {Geom.Rect} roomAabb
+ * @property {Geom.Poly} roomPoly
+ * @property {string} undoNonAffineStyle
  */
 
 // 🚧 move to const
@@ -367,26 +376,3 @@ const rootCss = css`
     }
   }  
 `;
-
-/**
- * e.g. load walk spritesheet before walking
- */
-const PrefetchSpritesheets = React.memo(() => {
-  return (
-    <div
-      className="prefetch-spritesheets"
-      style={{ display: 'none' }}
-    >
-      {Object.values(npcsMeta).map((meta) =>
-        Object.values(meta.parsed.animLookup)
-          // .filter(({ frameCount }) => frameCount > 1)
-          .map(({ animName, pathPng, pathWebp }) =>
-            <img
-              key={`${animName}@${meta.classKey}`}
-              src={supportsWebp ? pathWebp : pathPng}
-            />
-          )
-      )}
-    </div>
-  );
-});

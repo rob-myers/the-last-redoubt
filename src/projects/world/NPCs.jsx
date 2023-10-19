@@ -4,11 +4,12 @@ import { filter, tap } from "rxjs/operators";
 
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
+import { supportsWebp } from "../service/dom";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
 import { baseTrackingZoom, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 import { geom } from "../service/geom";
 import { hasGmRoomId } from "../service/geomorph";
-import { detectReactDevToolQuery, getNumericCssVar } from "../service/dom";
+import { detectReactDevToolQuery, getNumericCssVar, loadImage } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import { MemoizedNPC } from "./NPC";
@@ -598,6 +599,15 @@ export default function NPCs(props) {
         throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
       }
     },
+    async prefetchSpritesheets() {
+      await Promise.all(Object.values(npcsMeta).flatMap((meta) =>
+        Object.values(meta.parsed.animLookup)
+          // .filter(({ frameCount }) => frameCount > 1)
+          .map(({ animName, pathPng, pathWebp }) =>
+            loadImage(supportsWebp ? pathWebp : pathPng)
+          )
+      ));
+    },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
@@ -782,6 +792,7 @@ export default function NPCs(props) {
   }), { deps: [api] });
   
   React.useEffect(() => {
+    state.prefetchSpritesheets();
     props.onLoad(state);
   }, []);
 
@@ -846,6 +857,8 @@ export default function NPCs(props) {
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
+ * @property {() => Promise<void>} prefetchSpritesheets
+ * e.g. load walk spritesheet before walking
  * @property {(npcKey: string) => void} removeNpc
  * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
