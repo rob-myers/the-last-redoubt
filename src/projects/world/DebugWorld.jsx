@@ -13,36 +13,15 @@ import PathIndicator from "./PathIndicator";
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
-  const { fov, fov: { gmId, roomId }, gmGraph } = props.api;
+  const { api } = props;
 
   const update = useUpdate();
 
-  const ctxt = React.useMemo(() => {
-    if (gmId >= 0) {
-      const gm = gmGraph.gms[gmId];
-      const visDoorIds = props.api.doors.getVisibleIds(gmId);
-      const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-      /** Outset for door lines (? it fixed something) */
-      const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset); // 
-      const roomAabb = gm.rooms[roomId].rect;
-      const roomPoly = gm.rooms[roomId];
-      const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
-      return {
-        gm,
-        visDoorIds,
-        roomNavPoly,
-        outsetRoomNavAabb,
-        roomAabb,
-        roomPoly,
-        undoNonAffineStyle,
-      };
-    }
-  }, [gmId, roomId]);
-
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
-      path: {},
       ready: true,
+      path: {},
+      ctxt: undefined,
       rootEl: /** @type {HTMLDivElement} */ ({}),
       addPath(key, path) {
         state.path[key] = {
@@ -83,6 +62,28 @@ export default function DebugWorld(props) {
         }
       },
       update,
+      updateCtxt() {
+        const { gmId, roomId } = props.api.fov;
+        const gm = api.gmGraph.gms[gmId];
+        const visDoorIds = props.api.doors.getVisibleIds(gmId);
+        const roomNavPoly = gm.lazy.roomNavPoly[roomId];
+        /** Outset for door lines (? it fixed something) */
+        const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset);
+        const roomAabb = gm.rooms[roomId].rect;
+        const roomPoly = gm.rooms[roomId];
+        const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
+        state.ctxt = {
+          gmId,
+          roomId,
+          gm,
+          visDoorIds,
+          roomNavPoly,
+          outsetRoomNavAabb,
+          roomAabb,
+          roomPoly,
+          undoNonAffineStyle,
+        };
+      },
     };
   });
 
@@ -115,6 +116,8 @@ export default function DebugWorld(props) {
     props.onLoad(state);
   }, []);
 
+  const ctxt = state.ctxt;
+
   return (
     <div
       className={cx("debug", rootCss)}
@@ -123,7 +126,7 @@ export default function DebugWorld(props) {
     >
 
       <div className="debug-global">
-        {gmGraph.gms.map((gm, gmId) =>
+        {api.gmGraph.gms.map((gm, gmId) =>
           <div
             key={gmId}
             className={cx("geomorph-outline", `gm-${gmId}`)}
@@ -145,7 +148,7 @@ export default function DebugWorld(props) {
       {ctxt && (
         <div
           key={ctxt.gm.itemKey}
-          className={cx("debug-room", `gm-${gmId}`)}
+          className={cx("debug-room", `gm-${ctxt.gmId}`)}
           /** Must transform local ordinates */
           style={{ transform: ctxt.gm.transformStyle }}
         >
@@ -185,7 +188,7 @@ export default function DebugWorld(props) {
           {/* Arrows, room ids, door ids */}
           {ctxt.visDoorIds.map(doorId => {
             const { poly, normal, roomIds } = ctxt.gm.doors[doorId];
-            const sign = roomIds[0] === roomId ? 1 : -1;
+            const sign = roomIds[0] === ctxt.roomId ? 1 : -1;
             const angle = Vect.from(normal).scale(-sign).angle;
             const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
             const idIconPos = poly.center.addScaledVector(normal, -sign * debugDoorOffset);
@@ -230,7 +233,7 @@ export default function DebugWorld(props) {
               transform: ctxt.undoNonAffineStyle,
             }}
           >
-            {roomId}
+            {ctxt.roomId}
           </div>
 
           {ctxt.gm.windows.map(({ baseRect, angle }, i) => {
@@ -271,6 +274,7 @@ export default function DebugWorld(props) {
 /**
  * @typedef State @type {object}
  * @property {boolean} ready
+ * @property {DebugRoomCtxt | undefined} ctxt
  * @property {Record<string, NPC.PathIndicatorDef>} path
  * @property {HTMLDivElement} rootEl
  * @property {React.RefCallback<HTMLDivElement>} rootRef
@@ -278,10 +282,13 @@ export default function DebugWorld(props) {
  * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
  * @property {(key: string) => void} removePath
  * @property {() => void} update
+ * @property {() => void} updateCtxt
  */
 
 /**
  * @typedef DebugRoomCtxt
+ * @property {number} gmId
+ * @property {number} roomId
  * @property {Geomorph.GeomorphDataInstance} gm
  * @property {number[]} visDoorIds
  * @property {Geom.Poly} roomNavPoly
