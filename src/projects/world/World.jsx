@@ -59,7 +59,7 @@ export default function World(props) {
       ...npcService,
     },
     classNames: [
-      'hide-gms',
+      // 'hide-gms',
       css`${props.gms.map((_, gmId) =>
         `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
       ).join('\n')}`,
