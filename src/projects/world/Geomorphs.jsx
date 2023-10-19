@@ -180,10 +180,8 @@ export default function Geomorphs(props) {
           width={gm.pngRect.width * 2}
           height={gm.pngRect.height * 2}
           style={{
-            transform: `${gm.transformStyle} scale(0.5)`,
             transformOrigin: 'top left',
-            left: gm.pngRect.x,
-            top: gm.pngRect.y,
+            transform: `${gm.transformStyle} scale(0.5) translate(${2 * gm.pngRect.x}px, ${2 * gm.pngRect.y}px)`,
           }}
         />
       )}

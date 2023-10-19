@@ -266,13 +266,10 @@ export default function DebugWorld(props) {
           )}
           className={`gm-${gmId}`}
           width={gm.pngRect.width * 2}
-          // canvas dimension should exclude "jutting-out hull doors"
           height={gm.pngRect.height * 2}
           style={{
-            transform: `${gm.transformStyle} scale(0.5)`,
             transformOrigin: 'top left',
-            left: gm.pngRect.x,
-            top: gm.pngRect.y,
+            transform: `${gm.transformStyle} scale(0.5) translate(${2 * gm.pngRect.x}px, ${2 * gm.pngRect.y}px)`,
           }}
         />
       )}

@@ -247,6 +247,7 @@ export default function FOV(props) {
 
   return (
     <div
+      // style={{ display: 'none' }}
       className={cx("fov", rootCss)}
       ref={el => el && (
         [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))
@@ -256,7 +257,10 @@ export default function FOV(props) {
         {gms.map((gm, gmId) =>
           <div
             key={gmId}
-            style={{ transform: gm.transformStyle }}
+            style={{
+              transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
+              transformOrigin: 'top left',
+            }}
           >
             <img
               className="geomorph-dark"
@@ -267,8 +271,6 @@ export default function FOV(props) {
               style={{
                 clipPath: state.clipPath[gmId],
                 WebkitClipPath: state.clipPath[gmId],
-                left: gm.pngRect.x,
-                top: gm.pngRect.y,
                 // Avoid initial flicker on <Geomorphs> load first
                 background: 'white',
               }}
@@ -281,16 +283,18 @@ export default function FOV(props) {
         {gms.map((gm, gmId) =>
           <div
             key={gmId}
-            style={{ transform: gm.transformStyle }}
+            style={{
+              transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
+              transformOrigin: 'top left',
+            }}
           >
             <canvas
               ref={(el) => el && (state.el.canvas[gmId] = el)}
               width={gm.pngRect.width * 2}
               height={gm.pngRect.height * 2}
               style={{
-                left: gm.pngRect.x,
-                top: gm.pngRect.y,
-                transform: `scale(0.5) translate(-${gm.pngRect.width}px, -${gm.pngRect.height}px)`,
+                transform: `scale(0.5)`,
+                transformOrigin: 'top left',
               }}
             />
           </div>
