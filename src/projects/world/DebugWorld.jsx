@@ -19,9 +19,12 @@ export default function DebugWorld(props) {
     return {
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
-      local: undefined,
+      room: undefined,
       navPath: {},
       ctxts: [],
+      show: {
+        gmOutlines: false,
+      },
 
       addPath(key, path) {
         state.navPath[key] = {
@@ -62,7 +65,7 @@ export default function DebugWorld(props) {
         }
       },
       update,
-      updateLocal() {
+      updateRoom() {
         const { gmGraph, fov: { gmId, roomId } } = props.api;
         const gm = gmGraph.gms[gmId];
         const visDoorIds = props.api.doors.getVisibleIds(gmId);
@@ -72,7 +75,7 @@ export default function DebugWorld(props) {
         const roomAabb = gm.rooms[roomId].rect;
         const roomPoly = gm.rooms[roomId];
         const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
-        state.local = {
+        state.room = {
           gmId,
           roomId,
           gm,
@@ -84,7 +87,24 @@ export default function DebugWorld(props) {
           undoNonAffineStyle,
         };
       },
-    };
+      updateShown() {
+        const { gmGraph: { gms } } = props.api;
+        const { show, ctxts } = state;
+        gms.forEach((gm, gmId) => {
+          const ctxt = ctxts[gmId];
+          ctxt.resetTransform();
+          ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+          ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+          ctxt.transform(...gm.inverseMatrix.toArray());
+          if (show.gmOutlines) {
+            ctxt.strokeStyle = 'green';
+            ctxt.lineWidth = 4;
+            ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+          }
+          // 🚧
+        }); 
+      },
+     };
   });
 
   // 🚧 migrate later e.g. via hit-test canvas
@@ -93,15 +113,12 @@ export default function DebugWorld(props) {
   // /* eslint-disable react-hooks/rules-of-hooks */
   // const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
   //   const target = (/** @type {HTMLElement} */ (e.target));
-
   //   if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
   //     const doorId = Number(target.dataset.debugDoorId);
-
   //     if (!ctxt.gm.isHullDoor(doorId)) {
   //       fov.setRoom(gmId, ctxt.gm.getOtherRoomId(doorId, roomId), doorId);
   //       return;
   //     }
-
   //     const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
   //     if (roomCtxt) {
   //       fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
@@ -113,10 +130,11 @@ export default function DebugWorld(props) {
   // }, [ctxt, props, gmId, roomId]);
 
   React.useEffect(() => {
+    state.updateShown();
     props.onLoad(state);
   }, []);
 
-  const ctxt = state.local;
+  const ctxt = state.room;
   const { gms } = props.api.gmGraph;
 
   return (
@@ -127,19 +145,6 @@ export default function DebugWorld(props) {
     >
 
       <div className="debug-global">
-        {gms.map((gm, gmId) =>
-          <div
-            key={gmId}
-            className={cx("geomorph-outline", `gm-${gmId}`)}
-            style={{
-              left: gm.gridRect.x,
-              top: gm.gridRect.y,
-              width: gm.gridRect.width,
-              height: gm.gridRect.height,
-              ...props.gmOutlines && { display: 'initial' },// Prop overrides CSS var
-            }}
-          />  
-        )}
 
         {Object.values(state.navPath).map(navPath =>
           <PathIndicator key={navPath.key} def={navPath} />  
@@ -256,7 +261,7 @@ export default function DebugWorld(props) {
 
         </div>
       )}
-      {/* 🚧 remove above ⬆️ */}
+      {/* 🚧 remove above */}
 
       {gms.map((gm, gmId) =>
         <canvas
@@ -293,16 +298,18 @@ export default function DebugWorld(props) {
  * @typedef State
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {DebugRoomCtxt | undefined} local Room-specific data
+ * @property {DebugRoomCtxt | undefined} room Room-specific data
  * @property {Record<string, NPC.PathIndicatorDef>} navPath
  * @property {CanvasRenderingContext2D[]} ctxts
+ * @property {{ gmOutlines: boolean; }} show
  * 
  * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string, points: Geom.VectJson[]) => void} addPath
  * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
  * @property {(key: string) => void} removePath
  * @property {() => void} update
- * @property {() => void} updateLocal
+ * @property {() => void} updateRoom
+ * @property {() => void} updateShown
  */
 
 /**

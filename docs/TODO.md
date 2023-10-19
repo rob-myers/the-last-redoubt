@@ -6,10 +6,8 @@
   i.e. multiple canvases elsewhere (per geomorph)
 
 - 🚧 DebugWorld draws in canvases
-  - gmOutlines
-    - ℹ️ 301 canvas bigger because we don't include guns
-    - 🚧 reduce canvas height via half-hull-doors
-  - navPaths: split over canvases
+  - ✅ gmOutlines
+  - navPaths: store in 1 canvas, split over many
   - roomNav
   - ...
 
