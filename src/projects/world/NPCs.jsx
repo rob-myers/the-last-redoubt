@@ -530,7 +530,7 @@ export default function NPCs(props) {
         case 'light': {
           const result = api.gmGraph.findRoomContaining(e.point);
           if (result) {
-            const next = e.lit === undefined ? !api.geomorphs.gmRoomLit[result.gmId][result.roomId] : !!e.lit;
+            const next = e.lit === undefined ? !api.geomorphs.isRoomLit[result.gmId][result.roomId] : !!e.lit;
             api.geomorphs.setRoomLit(result.gmId, result.roomId, next);
           }
           break;
