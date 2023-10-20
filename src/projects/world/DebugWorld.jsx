@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Vect } from "../geom";
-import { cssName, hullDoorWidth, wallOutset } from "./const";
+import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import PathIndicator from "./PathIndicator";
@@ -19,53 +19,32 @@ export default function DebugWorld(props) {
     return {
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
-      room: undefined,
       navPath: {},
       ctxts: [],
-      show: {
+      room: undefined,
+
+      tree: {
         gmOutlines: false,
+        path: [],
       },
 
-      addPath(key, path) {
+      // 🚧
+      addNavPath(key, navPath) {
+
+        // 🚧 old
         state.navPath[key] = {
           key,
-          path: path.map(Vect.from),
-          meta: { key, path },
+          path: navPath.path.map(Vect.from),
+          meta: { key, path: navPath.path },
         };
         update();
-      },
-      extendPath(key, extraPoints) {
-        const item = state.navPath[key];
-        if (item) {
-          item.path = item.meta.path = item.path.concat(extraPoints.map(Vect.from));
-          update();
-        } else {
-          state.addPath(key, extraPoints);
-        }
       },
       removePath(key) {
         delete this.navPath[key];
         update();
       },
-      rootRef(el) {
-        if (el) {
-          state.rootEl = el;
-          // Styles permits getPropertyValue (vs CSS and getComputedStyle)
-          !props.api.debug.ready && [
-            cssName.debugDoorArrowPtrEvts,
-            cssName.debugGeomorphOutlineDisplay,
-            cssName.debugHighlightWindows,
-            cssName.debugRoomNavDisplay,
-            cssName.debugRoomOutlineDisplay,
-            cssName.debugShowIds,
-            cssName.debugShowLabels,
-          ].forEach(cssVarName =>
-            el.style.setProperty(cssVarName, 'none')
-          );
-        }
-      },
-      update,
-      updateRoom() {
+
+      changeRoom() {
         const { gmGraph, fov: { gmId, roomId } } = props.api;
         const gm = gmGraph.gms[gmId];
         const visDoorIds = props.api.doors.getVisibleIds(gmId);
@@ -87,16 +66,17 @@ export default function DebugWorld(props) {
           undoNonAffineStyle,
         };
       },
-      updateShown() {
+
+      render() {
         const { gmGraph: { gms } } = props.api;
-        const { show, ctxts } = state;
+        const { tree, ctxts } = state;
         gms.forEach((gm, gmId) => {
           const ctxt = ctxts[gmId];
           ctxt.resetTransform();
           ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
           ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
           ctxt.transform(...gm.inverseMatrix.toArray());
-          if (show.gmOutlines) {
+          if (tree.gmOutlines) {
             ctxt.strokeStyle = 'green';
             ctxt.lineWidth = 4;
             ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
@@ -104,6 +84,24 @@ export default function DebugWorld(props) {
           // 🚧
         }); 
       },
+      rootRef(el) {
+        if (el) {
+          state.rootEl = el;
+          // Styles permits getPropertyValue (vs CSS and getComputedStyle)
+          !props.api.debug.ready && [
+            cssName.debugDoorArrowPtrEvts,
+            cssName.debugGeomorphOutlineDisplay,
+            cssName.debugHighlightWindows,
+            cssName.debugRoomNavDisplay,
+            cssName.debugRoomOutlineDisplay,
+            cssName.debugShowIds,
+            cssName.debugShowLabels,
+          ].forEach(cssVarName =>
+            el.style.setProperty(cssVarName, 'none')
+          );
+        }
+      },
+      update,
      };
   });
 
@@ -130,7 +128,7 @@ export default function DebugWorld(props) {
   // }, [ctxt, props, gmId, roomId]);
 
   React.useEffect(() => {
-    state.updateShown();
+    state.render();
     props.onLoad(state);
   }, []);
 
@@ -145,7 +143,6 @@ export default function DebugWorld(props) {
     >
 
       <div className="debug-global">
-
         {Object.values(state.navPath).map(navPath =>
           <PathIndicator key={navPath.key} def={navPath} />  
         )}
@@ -298,18 +295,23 @@ export default function DebugWorld(props) {
  * @typedef State
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {DebugRoomCtxt | undefined} room Room-specific data
+ * @property {DebugRoomCtxt | undefined} room Current-room-specific data
  * @property {Record<string, NPC.PathIndicatorDef>} navPath
  * @property {CanvasRenderingContext2D[]} ctxts
- * @property {{ gmOutlines: boolean; }} show
+ * @property {DebugShow} tree
  * 
  * @property {React.RefCallback<HTMLDivElement>} rootRef
- * @property {(key: string, points: Geom.VectJson[]) => void} addPath
- * @property {(key: string, extraPoints: Geom.VectJson[]) => void} extendPath
+ * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removePath
  * @property {() => void} update
- * @property {() => void} updateRoom
- * @property {() => void} updateShown
+ * @property {() => void} changeRoom
+ * @property {() => void} render
+ */
+
+/**
+ * @typedef DebugShow
+ * @property {boolean} gmOutlines
+ * @property {{ worldRect: Geom.Rect; ctxt: CanvasRenderingContext2D }[]} path
  */
 
 /**

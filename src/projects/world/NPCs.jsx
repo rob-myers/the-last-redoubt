@@ -50,7 +50,7 @@ export default function NPCs(props) {
           case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
           case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
           case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
-          case 'gmOutlines': return api.debug.show.gmOutlines;
+          case 'gmOutlines': return api.debug.tree.gmOutlines;
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
           case 'hideGms': return api.getRootEl().classList.contains('hide-gms');
           case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
@@ -92,8 +92,8 @@ export default function NPCs(props) {
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
           case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
           case 'gmOutlines':
-            api.debug.show.gmOutlines = !!value;
-            api.debug.updateShown();
+            api.debug.tree.gmOutlines = !!value;
+            api.debug.render();
             break;
           case 'hideGms': api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms'); break;
           case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;

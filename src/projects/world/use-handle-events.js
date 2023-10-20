@@ -54,14 +54,14 @@ export default function useHandleEvents(api) {
         case 'fov-changed':
           // console.log(e);
           api.decor.updateVisibleDecor({ added: e.added, removed: e.removed, });
-          api.debug.updateRoom();
+          api.debug.changeRoom();
           break;
         case 'on-tty-link':
           mockOnTtyLink(e, api);
           break;
         case 'started-walking':
           // Also overwrites extended path
-          api.debug.addPath(api.lib.getNavPathName(e.npcKey), e.navPath.path);
+          api.debug.addNavPath(api.lib.getNavPathName(e.npcKey), e.navPath);
           // remove stale pending collisions
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
             other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);

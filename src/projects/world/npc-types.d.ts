@@ -68,6 +68,8 @@ declare namespace NPC {
       key: { [doorId: number]: boolean }[];
     };
     navOpts: NPC.NavOpts;
+    /** Current navigation path we're walking along. */
+    navPath: null | NPC.GlobalNavPath;
     nextWalk: null | {
       /** Future points to visit after finishing current walk */
       visits: Geom.Vect[];
@@ -83,6 +85,8 @@ declare namespace NPC {
     cancel(overridePaused?: boolean): Promise<void>;
     canLook(): boolean;
     changeClass(npcClassKey: NPC.NpcClassKey): void;
+    /** Recompute anim aux based on current path. */
+    computeAnimAux(): void;
     do(point: Geomorph.PointMaybeMeta, opts?: Pick<NpcDoDef, 'fadeOutMs' | 'extraParams'>): Promise<void>;
     /** Filter pending way metas e.g. stale collisions. */
     filterWayMetas(
@@ -171,8 +175,6 @@ declare namespace NPC {
     setSpeedFactor(speedFactor: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
-    /** Recompute anim aux based on current path. */
-    resetAnimAux(): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.
