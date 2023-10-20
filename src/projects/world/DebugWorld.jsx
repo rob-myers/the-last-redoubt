@@ -1,53 +1,70 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { Vect } from "../geom";
+import { Rect, Vect } from "../geom";
 import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-import PathIndicator from "./PathIndicator";
 
 /**
- * 🚧 draw to canvas(es) instead
+ * 🚧 draw to canvases instead
  */
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
   const update = useUpdate();
+  const { api } = props;
+  const { gms } = api.gmGraph;
 
   const state = useStateRef(/** @type {() => State} */ () => {
     return {
       ready: true,
       rootEl: /** @type {HTMLDivElement} */ ({}),
-      navPath: {},
       ctxts: [],
       room: undefined,
 
       tree: {
         gmOutlines: false,
-        path: [],
+        path: {},
+        pathsByGmId: gms.map(_ => []),
       },
 
-      // 🚧
       addNavPath(key, navPath) {
+        state.removeNavPath(key);
+        
+        const path = navPath.path;
+        if (path.length === 0) {
+          return;
+        }
 
-        // 🚧 old
-        state.navPath[key] = {
-          key,
-          path: navPath.path.map(Vect.from),
-          meta: { key, path: navPath.path },
-        };
-        update();
+        const ctxt = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
+        const worldRect = Rect.fromPoints(...path).outset(10);
+        const gmIds = api.lib.getNavPathGmIds(navPath);
+
+        // Draw navpath once in own canvas
+        ctxt.canvas.width = worldRect.width;
+        ctxt.canvas.height = worldRect.height;
+        ctxt.strokeStyle = 'red';
+        ctxt.lineWidth = 1;
+        ctxt.translate(-worldRect.x, -worldRect.y);
+        ctxt.moveTo(path[0].x, path[0].y);
+        path.forEach(p => ctxt.lineTo(p.x, p.y));
+        ctxt.stroke();
+
+        state.tree.path[key] = { key, ctxt, worldRect, gmIds };
+        gmIds.forEach(gmId => state.tree.pathsByGmId[gmId].push(state.tree.path[key]));
       },
-      removePath(key) {
-        delete this.navPath[key];
-        update();
+      removeNavPath(key) {
+        state.tree.path[key]?.gmIds.forEach(gmId =>
+          state.tree.pathsByGmId[gmId] = state.tree.pathsByGmId[gmId].filter(x => x.key !== key)
+        );
+        delete state.tree.path[key];
       },
 
       changeRoom() {
-        const { gmGraph, fov: { gmId, roomId } } = props.api;
+        const { gmGraph, fov: { gmId, roomId } } = api;
         const gm = gmGraph.gms[gmId];
-        const visDoorIds = props.api.doors.getVisibleIds(gmId);
+        const visDoorIds = api.doors.getVisibleIds(gmId);
         const roomNavPoly = gm.lazy.roomNavPoly[roomId];
         /** Outset for door lines (? it fixed something) */
         const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset);
@@ -68,27 +85,38 @@ export default function DebugWorld(props) {
       },
 
       render() {
-        const { gmGraph: { gms } } = props.api;
+        const { gmGraph: { gms } } = api;
         const { tree, ctxts } = state;
+
+        // 🚧 skip irrelevant canvases
         gms.forEach((gm, gmId) => {
           const ctxt = ctxts[gmId];
           ctxt.resetTransform();
           ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
           ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
           ctxt.transform(...gm.inverseMatrix.toArray());
+          
           if (tree.gmOutlines) {
             ctxt.strokeStyle = 'green';
             ctxt.lineWidth = 4;
             ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
           }
-          // 🚧
-        }); 
+
+          tree.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
+            ctxt.drawImage(
+              navPathCtxt.canvas,
+              worldRect.x, worldRect.y, worldRect.width, worldRect.height,
+            );
+          });
+        });
+
       },
       rootRef(el) {
         if (el) {
           state.rootEl = el;
+          // 🚧 remove
           // Styles permits getPropertyValue (vs CSS and getComputedStyle)
-          !props.api.debug.ready && [
+          !api.debug.ready && [
             cssName.debugDoorArrowPtrEvts,
             cssName.debugGeomorphOutlineDisplay,
             cssName.debugHighlightWindows,
@@ -133,7 +161,6 @@ export default function DebugWorld(props) {
   }, []);
 
   const ctxt = state.room;
-  const { gms } = props.api.gmGraph;
 
   return (
     <div
@@ -141,12 +168,6 @@ export default function DebugWorld(props) {
       // onClick={onClick}
       ref={state.rootRef}
     >
-
-      <div className="debug-global">
-        {Object.values(state.navPath).map(navPath =>
-          <PathIndicator key={navPath.key} def={navPath} />  
-        )}
-      </div>
 
       {ctxt && (
         <div
@@ -296,22 +317,30 @@ export default function DebugWorld(props) {
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {DebugRoomCtxt | undefined} room Current-room-specific data
- * @property {Record<string, NPC.PathIndicatorDef>} navPath
  * @property {CanvasRenderingContext2D[]} ctxts
- * @property {DebugShow} tree
+ * @property {DebugRenderTree} tree
  * 
  * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
- * @property {(key: string) => void} removePath
+ * @property {(key: string) => void} removeNavPath
  * @property {() => void} update
  * @property {() => void} changeRoom
  * @property {() => void} render
  */
 
 /**
- * @typedef DebugShow
+ * @typedef DebugRenderTree
  * @property {boolean} gmOutlines
- * @property {{ worldRect: Geom.Rect; ctxt: CanvasRenderingContext2D }[]} path
+ * @property {Record<string, DebugRenderPath>} path
+ * @property {Record<number, DebugRenderPath[]>} pathsByGmId Aligned to `gms`
+ */
+
+/**
+ * @typedef DebugRenderPath
+ * @property {string} key
+ * @property {Geom.Rect} worldRect
+ * @property {CanvasRenderingContext2D} ctxt
+ * @property {Set<number>} gmIds
  */
 
 /**
@@ -339,21 +368,7 @@ const rootCss = css`
     pointer-events: none;
   }
 
-  div.debug-global {
-    svg {
-     position: absolute;
-      pointer-events: none;
-    }
-  }
-
-  div.geomorph-outline {
-    display: var(${cssName.debugGeomorphOutlineDisplay});
-    position: absolute;
-    z-index: 1;
-    pointer-events: none;
-    border: 2px red solid;
-  }
-
+  // 🚧 old below
   div.debug-room {
     position: absolute;
 

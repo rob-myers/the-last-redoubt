@@ -7,8 +7,8 @@
 
 - 🚧 DebugWorld draws in canvases
   - ✅ gmOutlines
-  - 🚧 navPaths: store in 1 canvas, split over many
-  - roomNav
+  - ✅ navPaths: store in 1 canvas, split over many
+  - 🚧 roomNav
   - ...
 
 - Decor draws in canvases

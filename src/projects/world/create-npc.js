@@ -269,6 +269,7 @@ export default function createNpc(
 
       const extendedNavPath = api.lib.concatenateNavPaths([currentNavPath, this.nextWalk.navPath]);
       api.debug.addNavPath(api.lib.getNavPathName(def.key), extendedNavPath);
+      api.debug.render();
     },
     async fadeSpawn(point, opts = {}) {
       try {

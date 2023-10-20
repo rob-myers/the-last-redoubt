@@ -510,6 +510,16 @@ export const npcService = {
   },
 
   /**
+   * @param {NPC.GlobalNavPath} navPath 
+   */
+  getNavPathGmIds(navPath) {
+    return Object.values(navPath.gmRoomIds).reduce((agg, x) => {
+      agg.add(x.gmId);
+      return agg;
+    }, /** @type {Set<number>} */ (new Set))
+  },
+
+  /**
    * 🚧 check gmRoomIds are properly sliced
    * @param {NPC.GlobalNavPath} navPath 
    * @param {number} [startId] from vertex {startId} (possibly -ve)

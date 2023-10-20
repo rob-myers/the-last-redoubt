@@ -18,7 +18,8 @@ export default function useHandleEvents(api) {
     async handleNpcEvent(e) {
       switch (e.key) {
         case 'spawned-npc':
-          api.debug.removePath(api.lib.getNavPathName(e.npcKey));
+          api.debug.removeNavPath(api.lib.getNavPathName(e.npcKey));
+          api.debug.render();
           break;
         case 'changed-speed': {
           const npc = api.npcs.getNpc(e.npcKey);
@@ -62,6 +63,7 @@ export default function useHandleEvents(api) {
         case 'started-walking':
           // Also overwrites extended path
           api.debug.addNavPath(api.lib.getNavPathName(e.npcKey), e.navPath);
+          api.debug.render();
           // remove stale pending collisions
           for (const other of api.npcs.getCloseNpcs(e.npcKey, true)) {
             other.filterWayMetas(meta => meta.key === 'npcs-collide' && meta.otherNpcKey === e.npcKey);
