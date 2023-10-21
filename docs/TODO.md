@@ -10,9 +10,12 @@
   - ✅ navPaths: store in 1 canvas, split over many
   - ✅ room nav
   - ✅ room outline
-  - 🚧 arrows
-  - room/door ids
+  - ✅ arrows in geomorph pngs
+  - 🚧 room/door ids in geomorph pngs
   - windows (current gm)
+  - clickable arrows
+
+- try varying scale e.g. 2 -> 3 (remove hard-coding)
 
 - Decor draws in canvases
 

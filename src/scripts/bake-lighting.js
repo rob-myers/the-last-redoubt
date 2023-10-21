@@ -9,7 +9,7 @@ import path from 'path';
 import childProcess from 'child_process';
 
 import { runYarnScript } from './service';
-import { defaultLightDistance, preDarkenCssRgba } from '../projects/service/const';
+import { defaultLightDistance } from '../projects/service/const';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
 import { fillPolygons } from '../projects/service/dom';
@@ -40,7 +40,13 @@ if (!fs.existsSync(geomorphJsonPath)) {
 (async function main() {
 
   // Doors are open
-  const { canvas, layout } = await renderLayout(foundLayoutDef, { thinDoors: false, debug: false, invertSymbols: true, darken: true });
+  const { canvas, layout } = await renderLayout(foundLayoutDef, {
+    thinDoors: false,
+    debug: false,
+    invertSymbols: true,
+    darken: true,
+    arrows: true,
+  });
   // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
   

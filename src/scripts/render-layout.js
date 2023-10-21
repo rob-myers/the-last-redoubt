@@ -60,6 +60,7 @@ const staticDir = path.resolve(__dirname, '../../static');
       scale,
       invertSymbols: true,
       darken: true, // Darken in same way as lit geomorph
+      arrows: true,
     });
 
     /**
@@ -120,6 +121,7 @@ export async function renderLayout(def, {
   scale = defaultScale,
   invertSymbols = false,
   darken = false,
+  arrows = false,
 }) {
   const canvas = createCanvas(0, 0);
 
@@ -152,6 +154,7 @@ export async function renderLayout(def, {
       },
       invertSymbols,
       darken,
+      arrows,
     },
   );
   return {
@@ -168,4 +171,5 @@ export async function renderLayout(def, {
  * @property {number} [scale]
  * @property {boolean} [invertSymbols]
  * @property {boolean} [darken]
+ * @property {boolean} [arrows]
  */

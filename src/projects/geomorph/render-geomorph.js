@@ -1,6 +1,6 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
-import { Poly, Vect, Rect } from "../geom";
+import { Poly, Vect, Rect, Mat } from "../geom";
 import { preDarkenCssRgba } from "../service/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
@@ -14,7 +14,7 @@ import { error } from "../service/log";
  * @param {Geomorph.SymbolLookup} lookup
  * @param {Canvas} canvas
  * @param {(pngHref: string) => Promise<HTMLImageElement | (import('canvas').Image & CanvasImageSource)>} getPng
- * `pngHref` has local url format `/symbol/foo`
+ * - `pngHref` has local url format `/assets/symbol/foo`
  * @param {Geomorph.RenderOpts} opts
  */
 export async function renderGeomorph(
@@ -32,6 +32,7 @@ export async function renderGeomorph(
     doors = false,
     thinDoors = false,
     labels = false,
+    arrows = false,
     floorColor = 'rgba(180, 180, 180, 1)',
     navColor = 'rgba(200, 200, 200, 1)',
     navStroke = 'rgba(0, 0, 0, 0.25)',
@@ -218,6 +219,25 @@ export async function renderGeomorph(
     const hullPolySansHoles = layout.hullPoly.map(x => x.clone().removeHoles());
     ctxt.fillStyle = preDarkenCssRgba;
     fillPolygons(ctxt, hullPolySansHoles);
+  }
+
+  if (arrows) {
+    const debugDoorOffset = 12;
+    const debugRadius = 3;
+    const iconCircleRight = await getPng('/assets/icon/circle-right.svg');
+    const rotAbout = new Mat;
+    const saved = ctxt.getTransform();
+    layout.doors.forEach(({ poly, normal, roomIds }) => {
+      roomIds.forEach((_, i) => {
+        const sign = i === 0 ? 1 : -1;
+        const { angle } = Vect.from(normal).scale(-sign);
+        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).precision(0);
+        rotAbout.setRotationAbout(angle, arrowPos);
+        ctxt.transform(rotAbout.a, rotAbout.b, rotAbout.c, rotAbout.d, rotAbout.e, rotAbout.f);
+        ctxt.drawImage(iconCircleRight, arrowPos.x - debugRadius, arrowPos.y - debugRadius, debugRadius * 2, debugRadius * 2);
+        ctxt.setTransform(saved);
+      });
+    }); 
   }
 }
 

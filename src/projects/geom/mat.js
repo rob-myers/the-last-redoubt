@@ -152,6 +152,26 @@ export class Mat {
       0,
     ]);
   }
+  
+  /**
+   * 🚧 simplify
+   * @param {number} radians 
+   * @param {Geom.VectJson} point 
+   */
+  setRotationAbout(radians, point) {
+    this.feedFromArray([1, 0, 0, 1, -point.x, -point.y]);
+    this.postMultiply([
+      Math.cos(radians),
+      Math.sin(radians),
+      -Math.sin(radians),
+      Math.cos(radians),
+      0,
+      0,
+    ]);
+    this.e += point.x;
+    this.f += point.y;
+    return this;
+  }
 
   /** @returns {Geom.SixTuple} */
   toArray() {
