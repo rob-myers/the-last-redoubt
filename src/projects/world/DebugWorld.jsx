@@ -40,14 +40,16 @@ export default function DebugWorld(props) {
       }
 
       const ctxt = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-      const worldRect = Rect.fromPoints(...path).outset(10);
+      const worldRect = Rect.fromPoints(...path).outset(2);
       const gmIds = api.lib.getNavPathGmIds(navPath);
 
       // Draw navpath once in own canvas
       ctxt.canvas.width = worldRect.width;
       ctxt.canvas.height = worldRect.height;
-      ctxt.strokeStyle = '#ffffff77';
+      ctxt.strokeStyle = '#ffff0033';
       ctxt.lineWidth = 1;
+      ctxt.lineJoin = 'bevel';
+      ctxt.setLineDash([4, 4]);
       ctxt.translate(-worldRect.x, -worldRect.y);
       ctxt.moveTo(path[0].x, path[0].y);
       path.forEach(p => ctxt.lineTo(p.x, p.y));
