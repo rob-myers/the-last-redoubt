@@ -54,8 +54,8 @@ export default function NPCs(props) {
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
           case 'hideGms': return api.getRootEl().classList.contains('hide-gms');
           case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
-          case 'localNav': return debugStyle.getPropertyValue(cssName.debugRoomNavDisplay) === 'none' ? false : true;
-          case 'localOutline': return debugStyle.getPropertyValue(cssName.debugRoomOutlineDisplay) === 'none' ? false : true;
+          case 'localNav': return api.debug.tree.roomNav;
+          case 'localOutline': return api.debug.tree.roomOutline;
           case 'omnipresent':
           case 'logTags':
           case 'scriptDoors':
@@ -98,8 +98,14 @@ export default function NPCs(props) {
           case 'hideGms': api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms'); break;
           case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
-          case 'localNav': debugStyle.setProperty(cssName.debugRoomNavDisplay, value ? 'initial' : 'none'); break;
-          case 'localOutline': debugStyle.setProperty(cssName.debugRoomOutlineDisplay, value ? 'initial' : 'none'); break;
+          case 'localNav':
+            api.debug.tree.roomNav = !!value;
+            api.debug.render();
+            break;
+            case 'localOutline':
+              api.debug.tree.roomOutline = !!value;
+              api.debug.render();
+            break;
           case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;

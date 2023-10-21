@@ -10,10 +10,7 @@ export const cssName = /** @type {const} */ ({
   locked: 'locked',
 
   debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
-  debugGeomorphOutlineDisplay: '--debug-gm-outline-display',
   debugHighlightWindows: '--debug-highlight-windows',
-  debugRoomNavDisplay: '--debug-room-nav-display',
-  debugRoomOutlineDisplay: '--debug-room-outline-display',
   debugShowIds: '--debug-show-ids',
   debugShowLabels: '--debug-show-labels',
   // ...

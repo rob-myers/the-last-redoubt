@@ -1,6 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Rect, Vect } from "../geom";
+import { drawLine, fillPolygons } from "../service/dom";
 import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -25,6 +26,8 @@ export default function DebugWorld(props) {
 
       tree: {
         gmOutlines: false,
+        roomNav: false,
+        roomOutline: false,
         path: {},
         pathsByGmId: gms.map(_ => []),
       },
@@ -82,13 +85,14 @@ export default function DebugWorld(props) {
           roomPoly,
           undoNonAffineStyle,
         };
+        state.render();
       },
 
       render() {
         const { gmGraph: { gms } } = api;
-        const { tree, ctxts } = state;
+        const { tree, ctxts, room } = state;
+        if (!room) return;
 
-        // 🚧 skip irrelevant canvases
         gms.forEach((gm, gmId) => {
           const ctxt = ctxts[gmId];
           ctxt.resetTransform();
@@ -108,6 +112,23 @@ export default function DebugWorld(props) {
               worldRect.x, worldRect.y, worldRect.width, worldRect.height,
             );
           });
+
+          if (tree.roomNav) {
+            ctxt.fillStyle = 'rgba(255, 0, 0, 0.1)';
+            ctxt.strokeStyle = 'blue';
+            ctxt.lineWidth = 1;
+            fillPolygons(ctxt, [room.roomNavPoly], true);
+            ctxt.strokeStyle = 'red';
+            room.visDoorIds.forEach(doorId =>
+              drawLine(ctxt, ...room.gm.doors[doorId].seg)
+            );
+          }
+          if (tree.roomOutline) {
+            ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
+            ctxt.strokeStyle = 'red';
+            fillPolygons(ctxt, [room.roomPoly], true);
+          }
+
         });
 
       },
@@ -118,10 +139,7 @@ export default function DebugWorld(props) {
           // Styles permits getPropertyValue (vs CSS and getComputedStyle)
           !api.debug.ready && [
             cssName.debugDoorArrowPtrEvts,
-            cssName.debugGeomorphOutlineDisplay,
             cssName.debugHighlightWindows,
-            cssName.debugRoomNavDisplay,
-            cssName.debugRoomOutlineDisplay,
             cssName.debugShowIds,
             cssName.debugShowLabels,
           ].forEach(cssVarName =>
@@ -176,38 +194,6 @@ export default function DebugWorld(props) {
           /** Must transform local ordinates */
           style={{ transform: ctxt.gm.transformStyle }}
         >
-
-          <svg className="debug-room-nav"
-            width={ctxt.outsetRoomNavAabb.width}
-            height={ctxt.outsetRoomNavAabb.height}
-            style={{
-              left: ctxt.outsetRoomNavAabb.x,
-              top: ctxt.outsetRoomNavAabb.y,
-              ...props.localNav === true && { display: 'initial' },// Prop overrides CSS var
-            }}
-          >
-            <g style={{ transform: `translate(${-ctxt.outsetRoomNavAabb.x}px, ${-ctxt.outsetRoomNavAabb.y}px)` }}>
-              <path className="nav-poly" d={ctxt.roomNavPoly.svgPath} />
-              {ctxt.visDoorIds.map(doorId => {
-                const { seg: [src, dst] } = ctxt.gm.doors[doorId];
-                return <line key={doorId} stroke="red" x1={src.x} y1={src.y} x2={dst.x} y2={dst.y} />
-              })}
-            </g>
-          </svg>
-
-          <svg className="debug-room-outline"
-            width={ctxt.roomAabb.width}
-            height={ctxt.roomAabb.height}
-            style={{
-              left: ctxt.roomAabb.x,
-              top: ctxt.roomAabb.y,
-              ...props.localOutline && { display: 'initial'},
-            }}
-          >
-            <g style={{ transform: `translate(${-ctxt.roomAabb.x}px, ${-ctxt.roomAabb.y}px)` }}>
-              <path className="room-outline" d={ctxt.roomPoly.svgPath} />
-            </g>
-          </svg>
 
           {/* Arrows, room ids, door ids */}
           {ctxt.visDoorIds.map(doorId => {
@@ -331,6 +317,8 @@ export default function DebugWorld(props) {
 /**
  * @typedef DebugRenderTree
  * @property {boolean} gmOutlines
+ * @property {boolean} roomNav
+ * @property {boolean} roomOutline
  * @property {Record<string, DebugRenderPath>} path
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId Aligned to `gms`
  */
@@ -397,28 +385,6 @@ const rootCss = css`
       line-height: 1;
       border: 1px solid black;
       pointer-events: none;
-    }
-
-    svg.debug-room-nav {
-      display: var(${cssName.debugRoomNavDisplay});
-    }
-    svg.debug-room-outline {
-      display: var(${cssName.debugRoomOutlineDisplay});
-    }
-
-    svg.debug-room-nav, svg.debug-room-outline {
-      position: absolute;
-      pointer-events: none;
-      path.nav-poly {
-        pointer-events: none;
-        fill: rgba(255, 0, 0, 0.1);
-        stroke: blue;
-      }
-      path.room-outline {
-        pointer-events: none;
-        fill: rgba(0, 0, 255, 0.1);
-        stroke: red;
-      }
     }
 
     div.debug-window {
