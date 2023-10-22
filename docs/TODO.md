@@ -15,7 +15,8 @@
   - windows (current gm)
   - clickable arrows
 
-- try varying scale e.g. 2 -> 3 (remove hard-coding)
+- ✅ can vary geomorph scale e.g. 2 -> 2.5 (remove hard-coding)
+- fix shadows e.g. around tables
 
 - Decor draws in canvases
 

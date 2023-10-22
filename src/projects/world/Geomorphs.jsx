@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { geomorphFilter } from "./const";
+import { geomorphFilter, gmScale } from "./const";
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons, loadImage } from "../service/dom";
@@ -22,21 +22,21 @@ export default function Geomorphs(props) {
     createFillPattern(type, ctxt, gmId) {
       const gm = gms[gmId];
       const pattern = assertNonNull(ctxt.createPattern(type === 'unlit' ? state.imgs.unlit[gmId] : state.imgs.lit[gmId], 'no-repeat'));
-      pattern.setTransform({ a: 0.5, b: 0, c: 0, d: 0.5, e:  gm.pngRect.x, f:  gm.pngRect.y });
+      pattern.setTransform({ a: 1 / gmScale, b: 0, c: 0, d: 1 / gmScale, e: gm.pngRect.x, f: gm.pngRect.y });
       return pattern;
     },
     drawPolygonImage(type, gmId, poly) {
       const ctxt = state.ctxts[gmId];
       ctxt.fillStyle = state.createFillPattern(type, ctxt, gmId);
-      ctxt.setTransform(2, 0, 0, 2, -2 * gms[gmId].pngRect.x, -2 * gms[gmId].pngRect.y);
+      ctxt.setTransform(gmScale, 0, 0, gmScale, -gmScale * gms[gmId].pngRect.x, -gmScale * gms[gmId].pngRect.y);
       fillPolygons(ctxt, [poly]);
       ctxt.resetTransform();
     },
     drawRectImage(type, gmId, rect) {
       state.ctxts[gmId].drawImage(// Src image & target canvas are scaled by 2
         type === 'lit' ? state.imgs.lit[gmId] : state.imgs.unlit[gmId],
-        2 * (rect.x - gms[gmId].pngRect.x), 2 * (rect.y - gms[gmId].pngRect.y), 2 * rect.width, 2 * rect.height,
-        2 * (rect.x - gms[gmId].pngRect.x), 2 * (rect.y - gms[gmId].pngRect.y), 2 * rect.width, 2 * rect.height,
+        gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
+        gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
       );
     },
     initLightRects(gmId) {
@@ -177,11 +177,11 @@ export default function Geomorphs(props) {
           )}
           className={`gm-${gmId}`}
           // Source PNG and this canvas are scaled by 2
-          width={gm.pngRect.width * 2}
-          height={gm.pngRect.height * 2}
+          width={gm.pngRect.width * gmScale}
+          height={gm.pngRect.height * gmScale}
           style={{
             transformOrigin: 'top left',
-            transform: `${gm.transformStyle} scale(0.5) translate(${2 * gm.pngRect.x}px, ${2 * gm.pngRect.y}px)`,
+            transform: `${gm.transformStyle} scale(${ 1 / gmScale }) translate(${gmScale * gm.pngRect.x}px, ${gmScale * gm.pngRect.y}px)`,
           }}
         />
       )}

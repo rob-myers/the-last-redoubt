@@ -101,3 +101,9 @@ export const doorViewOffset = -2;
 export const windowViewOffset = 20;
 
 export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
+
+/**
+ * Geomorph scale factor i.e.
+ * how much we scale images up by to improve quality on zoom.
+ */
+export const gmScale = 2.5;

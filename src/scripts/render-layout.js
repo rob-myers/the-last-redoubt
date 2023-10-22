@@ -19,6 +19,7 @@ import getOpts from 'getopts';
 import svgJson from '../../static/assets/symbol/svg.json';
 import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { error } from '../projects/service/log';
+import { gmScale } from '../projects/world/const';
 import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/service/geomorph';
 import { renderGeomorph } from '../projects/geomorph/render-geomorph';
 import { triangle } from '../projects/service/triangle';
@@ -34,7 +35,9 @@ if (!layoutDef) {
 const foundLayoutDef = layoutDef; // else ts error in main
 
 const opts = getOpts(process.argv);
-const defaultScale = 2;
+
+const defaultScale = gmScale;
+
 const [
   debug,
   scale,

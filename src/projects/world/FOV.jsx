@@ -1,7 +1,7 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
 import { Poly, Vect } from "../geom";
-import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown } from "./const";
+import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown, gmScale } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
@@ -45,7 +45,7 @@ export default function FOV(props) {
       for (const [gmId, canvas] of state.el.canvas.entries()) {
         const ctxt = assertNonNull(canvas.getContext('2d'));
         const gm = gms[gmId];
-        const scale = 2;
+        const scale = gmScale;
         ctxt.setTransform(1, 0, 0, 1, 0, 0);
         ctxt.clearRect(0, 0, canvas.width, canvas.height);
         ctxt.setTransform(scale, 0, 0, scale, -scale * gm.pngRect.x, -scale * gm.pngRect.y);
@@ -290,10 +290,10 @@ export default function FOV(props) {
           >
             <canvas
               ref={(el) => el && (state.el.canvas[gmId] = el)}
-              width={gm.pngRect.width * 2}
-              height={gm.pngRect.height * 2}
+              width={gm.pngRect.width * gmScale}
+              height={gm.pngRect.height * gmScale}
               style={{
-                transform: `scale(0.5)`,
+                transform: `scale(${ 1 / gmScale })`,
                 transformOrigin: 'top left',
               }}
             />
