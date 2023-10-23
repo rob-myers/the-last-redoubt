@@ -110,32 +110,35 @@ export default function DebugWorld(props) {
         const rotAbout = new Mat;
         ctxt.textBaseline = 'top';
 
-        gm.doors.forEach(({ poly, roomIds, normal, seg }, doorId) => {
+        gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
           const center = gm.matrix.transformPoint(poly.center);
           normal = gm.matrix.transformSansTranslate(normal.clone());
 
           const doorText = `${gmId} ${doorId}`;
-          const textWidth = ctxt.measureText(doorText).width;
           ctxt.font = `${fontPx = 6}px Courier New`;
+          const textWidth = ctxt.measureText(doorText).width;
           const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
 
           if (normal.y === 0)
             ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          else if (normal.x * normal.y !== 0) // Fixes diagonal doors?
+            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/4 * Math.sign(normal.x * normal.y), center).toArray());
+
           if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
             idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
           }
 
           ctxt.fillStyle = '#222';
-          ctxt.fillRect(idPos.x - 1, idPos.y, textWidth + 2, fontPx);
+          ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
           ctxt.fillStyle = '#ffffff';
           ctxt.fillText(doorText, idPos.x, idPos.y);
           ctxt.setTransform(saved);
           
           roomIds.forEach((roomId, i) => {
             if (roomId === null) return;
-            const roomText = `${roomId}`;
-            const textWidth = ctxt.measureText(roomText).width;
             ctxt.font = `${fontPx = 7}px Courier New`;
+            const roomText = gm.isHullDoor(doorId) ? `${gmId} ${roomId}` : `${roomId}`;
+            const textWidth = ctxt.measureText(roomText).width;
             const idPos = center.clone()
               .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
               .translate(-textWidth/2, -fontPx/2)
