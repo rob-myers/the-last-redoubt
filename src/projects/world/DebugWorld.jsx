@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { Rect, Vect } from "../geom";
+import { Mat, Rect, Vect } from "../geom";
 import { drawLine, fillPolygons } from "../service/dom";
 import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
@@ -140,26 +140,32 @@ export default function DebugWorld(props) {
         });
 
         // gm/room/door ids
+        // ✅ rotate with door
         // 🚧 store in own canvas
-        const fontPx = 6;
+        // 🚧 handle hull doors differently,
+        const fontPx = 7;
         ctxt.font = `${fontPx}px Courier New`;
         ctxt.textBaseline = 'top';
         const debugIdOffset = 12;
 
+        const saved = ctxt.getTransform();
+        const rotAbout = new Mat;
+
         gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
-          // poly = poly.clone().applyMatrix(gm.matrix);
           const center = gm.matrix.transformPoint(poly.center);
           normal = gm.matrix.transformSansTranslate(normal.clone());
 
-          // 🚧 handle hull doors differently,
           // e.g. draw twice, once above other
           const doorText = `${gmId} ${doorId}`;
           const textWidth = ctxt.measureText(doorText).width;
           const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
-          ctxt.fillStyle = '#ffffff44';
+
+          if (normal.y === 0) ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          ctxt.fillStyle = '#222';
           ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
-          ctxt.fillStyle = '#000000';
+          ctxt.fillStyle = '#ffffff';
           ctxt.fillText(doorText, idPos.x, idPos.y);
+          ctxt.setTransform(saved);
           
           roomIds.forEach((roomId, i) => {
             if (roomId === null) return;
