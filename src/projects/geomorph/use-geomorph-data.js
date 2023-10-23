@@ -57,9 +57,10 @@ export default function useGeomorphData(layoutKey, disabled = false) {
  */
 export async function createGeomorphData(input) {
 
+  // Fetch existing layout, or use provided one from `GeomorphEdit`.
   const layout = typeof input === 'string'
     ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
-    : input // for GeomorphEdit
+    : input
   ;
   const { roomGraph } = layout;
 

@@ -103,7 +103,11 @@ declare namespace Geomorph {
     /** Pointers into `groups.obstacles` indexed by roomId. */
     roomSurfaceIds: Record<number, number[]>;
     /** Indexed by `roomId` */
-    roomMetas: Geomorph.PointMeta[];
+    roomMetas: Geomorph.PointMeta<{
+      roomId: number;
+      hull: boolean;
+      leaf: boolean;
+    }>[];
     /** `gridToRoomIds[x][y]` are roomIds  */
     gridToRoomIds: Record<number, Record<number, number[]>>;
     /** Indexed by `doorId` */
@@ -282,7 +286,7 @@ declare namespace Geomorph {
   /**
    * 🚧 Change name i.e. needn't arise from point.
    */
-  export type PointMeta = Record<string, (
+  export type PointMeta<T extends {} = {}> = Record<string, (
     | string
     | boolean
     | number
@@ -291,7 +295,7 @@ declare namespace Geomorph {
     | Record<number, true>
     | [number, number, number, number, number, number]
     | null
-  )>;
+  )> & T;
 
   export type PointWithMeta = Geom.VectJson & {
     meta: Geomorph.PointMeta;
@@ -383,7 +387,7 @@ declare namespace Geomorph {
     invert?: boolean;
     lighten?: boolean;
 
-    /** Defined iff this is a nested symbol i.e. arises as a single `symbol key={symbolKey}` */
+    /** Defined iff this is a nested symbol i.e. arises as a "single" `symbol key={symbolKey}` */
     preTransform?: [number, number, number, number, number, number];
     /** Offset from previous */
     at?: LayoutAtChoice;

@@ -32,7 +32,6 @@ export async function createLayout(opts) {
   const standards = /** @type {Geomorph.LayoutDefItem[]} */ ([]);
 
   /**
-   * 🚧 remove 'row`s
    * - Compute `groups`.
    * - Compute each `item.transform`.
    */
@@ -344,7 +343,8 @@ export async function createLayout(opts) {
     /** @type {Geomorph.ParallelDoor} */ ({}),
   );
 
-  const roomMetas = /** @type {Geomorph.PointMeta[]} */ (rooms.map((_, roomId) => {
+  /** @type {Geomorph.ParsedLayout['roomMetas']} */
+  const roomMetas = rooms.map((_, roomId) => {
     const adjDoors = roomGraph.getAdjacentDoors(roomId).map(x => doors[x.doorId]);
     return {
       roomId,
@@ -352,10 +352,9 @@ export async function createLayout(opts) {
       leaf: adjDoors.length <= 1,
       // ...
     };
-  }));
+  });
 
-  /** @type {Geomorph.ParsedLayout} */
-  const output = {
+  return {
     key: opts.def.key,
     id: opts.def.id,
     def: opts.def,
@@ -370,7 +369,7 @@ export async function createLayout(opts) {
     navZone,
     roomGraph,
     lightSrcs,
-    lightRects: [], // Computed below
+    lightRects: computeLightConnectorRects({ doors, lightSrcs, roomGraph, rooms, windows }),
     floorHighlightIds,
 
     roomSurfaceIds,
@@ -402,11 +401,6 @@ export async function createLayout(opts) {
       lighten: items[i].lighten,
     })),
   };
-
-  output.lightRects = computeLightConnectorRects(output);
-  // output.lightRects = [];
-
-  return output;
 }
 
 /**
@@ -1067,7 +1061,7 @@ export function geomorphDataToInstance(gm, transform) {
 }
 
 /**
- * @param {Geomorph.ParsedLayout} gm
+ * @param {Pick<Geomorph.ParsedLayout, 'roomGraph' | 'rooms' | 'doors' | 'windows' | 'lightSrcs'>} gm
  * @return {Geomorph.LightConnectorRect[]}
  */
 export function computeLightConnectorRects(gm) {
@@ -1152,7 +1146,7 @@ export function computeLightConnectorRects(gm) {
 
 /**
  * Aligned to geomorph `lightSrcs`.
- * @param {Geomorph.ParsedLayout} gm
+ * @param {Pick<Geomorph.ParsedLayout, 'lightSrcs' | 'rooms' | 'doors' | 'windows'>} gm
  */
 export function computeLightPolygons(gm, intersectWithCircle = false) {
   try {
