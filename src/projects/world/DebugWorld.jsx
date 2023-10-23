@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { Mat, Rect, Vect } from "../geom";
+import { Mat, Rect } from "../geom";
 import { drawLine, fillPolygons } from "../service/dom";
 import { cssName, wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
@@ -21,13 +21,14 @@ export default function DebugWorld(props) {
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ctxts: [],
+    idCtxts: [],
     room: undefined,
 
     tree: {
       gmOutlines: false,
       roomNav: false,
       roomOutline: false,
-      path: {},
+      pathByKey: {},
       pathsByGmId: gms.map(_ => []),
     },
 
@@ -55,16 +56,15 @@ export default function DebugWorld(props) {
       path.forEach(p => ctxt.lineTo(p.x, p.y));
       ctxt.stroke();
 
-      state.tree.path[key] = { key, ctxt, worldRect, gmIds };
-      gmIds.forEach(gmId => state.tree.pathsByGmId[gmId].push(state.tree.path[key]));
+      state.tree.pathByKey[key] = { key, ctxt, worldRect, gmIds };
+      gmIds.forEach(gmId => state.tree.pathsByGmId[gmId].push(state.tree.pathByKey[key]));
     },
     removeNavPath(key) {
-      state.tree.path[key]?.gmIds.forEach(gmId =>
+      state.tree.pathByKey[key]?.gmIds.forEach(gmId =>
         state.tree.pathsByGmId[gmId] = state.tree.pathsByGmId[gmId].filter(x => x.key !== key)
       );
-      delete state.tree.path[key];
+      delete state.tree.pathByKey[key];
     },
-
     changeRoom() {
       const { gmGraph, fov: { gmId, roomId } } = api;
       const gm = gmGraph.gms[gmId];
@@ -86,7 +86,66 @@ export default function DebugWorld(props) {
       };
       state.render();
     },
+    drawIds() {
+      const { gmGraph: { gms } } = api;
+      state.idCtxts = gms.map((gm, gmId) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = gm.pngRect.width * 2;
+        canvas.height = gm.pngRect.height * 2;
+        return /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
+      })
 
+      gms.forEach((gm, gmId) => {
+        const ctxt = state.idCtxts[gmId];
+        ctxt.resetTransform();
+        ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+        ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+        ctxt.transform(...gm.inverseMatrix.toArray());
+
+        // gm/room/door ids
+        let fontPx = 7;
+        const debugIdOffset = 12;
+        
+        const saved = ctxt.getTransform();
+        const rotAbout = new Mat;
+        ctxt.textBaseline = 'top';
+
+        gm.doors.forEach(({ poly, roomIds, normal, seg }, doorId) => {
+          const center = gm.matrix.transformPoint(poly.center);
+          normal = gm.matrix.transformSansTranslate(normal.clone());
+
+          const doorText = `${gmId} ${doorId}`;
+          const textWidth = ctxt.measureText(doorText).width;
+          ctxt.font = `${fontPx = 6}px Courier New`;
+          const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
+
+          if (normal.y === 0)
+            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
+            idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
+          }
+
+          ctxt.fillStyle = '#222';
+          ctxt.fillRect(idPos.x - 1, idPos.y, textWidth + 2, fontPx);
+          ctxt.fillStyle = '#ffffff';
+          ctxt.fillText(doorText, idPos.x, idPos.y);
+          ctxt.setTransform(saved);
+          
+          roomIds.forEach((roomId, i) => {
+            if (roomId === null) return;
+            const roomText = `${roomId}`;
+            const textWidth = ctxt.measureText(roomText).width;
+            ctxt.font = `${fontPx = 7}px Courier New`;
+            const idPos = center.clone()
+              .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
+              .translate(-textWidth/2, -fontPx/2)
+            ;
+            ctxt.fillStyle = '#ffffff88';
+            ctxt.fillText(roomText, idPos.x, idPos.y);
+          });
+        });
+      });
+    },
     render() {
       const { gmGraph: { gms } } = api;
       const { tree, ctxts, room } = state;
@@ -96,6 +155,10 @@ export default function DebugWorld(props) {
         const ctxt = ctxts[gmId];
         ctxt.resetTransform();
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+
+        // Draw gm/room/door ids
+        ctxt.drawImage(state.idCtxts[gmId].canvas, 0, 0);
+
         ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
 
         if (room.gmId === gmId) {// Work in local coordinates 
@@ -140,63 +203,16 @@ export default function DebugWorld(props) {
           );
         });
 
-        // 🚧 store in own canvas
-        // gm/room/door ids
-        let fontPx = 7;
-        const debugIdOffset = 12;
-        
-        const saved = ctxt.getTransform();
-        const rotAbout = new Mat;
-        ctxt.textBaseline = 'top';
-
-        gm.doors.forEach(({ poly, roomIds, normal, seg }, doorId) => {
-          const center = gm.matrix.transformPoint(poly.center);
-          normal = gm.matrix.transformSansTranslate(normal.clone());
-
-          const doorText = `${gmId} ${doorId}`;
-          const textWidth = ctxt.measureText(doorText).width;
-          ctxt.font = `${fontPx = 6}px Courier New`;
-          const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
-
-          if (normal.y === 0)
-            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
-          if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
-            idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
-          }
-
-          ctxt.fillStyle = '#222';
-          ctxt.fillRect(idPos.x - 1, idPos.y, textWidth + 2, fontPx);
-          ctxt.fillStyle = '#ffffff';
-          ctxt.fillText(doorText, idPos.x, idPos.y);
-          ctxt.setTransform(saved);
-          
-          roomIds.forEach((roomId, i) => {
-            if (roomId === null) return;
-            const roomText = `${roomId}`;
-            const textWidth = ctxt.measureText(roomText).width;
-            ctxt.font = `${fontPx = 7}px Courier New`;
-            const idPos = center.clone()
-              .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
-              .translate(-textWidth/2, -fontPx/2)
-            ;
-            ctxt.fillStyle = '#ffffff88';
-            ctxt.fillText(roomText, idPos.x, idPos.y);
-          });
-        });
-
       });
 
     },
+
     rootRef(el) {
       if (el) {
         state.rootEl = el;
         // 🚧 remove
-        // Styles permits getPropertyValue (vs CSS and getComputedStyle)
         !api.debug.ready && [
-          cssName.debugDoorArrowPtrEvts,
           cssName.debugHighlightWindows,
-          cssName.debugShowIds,
-          cssName.debugShowLabels,
         ].forEach(cssVarName =>
           el.style.setProperty(cssVarName, 'none')
         );
@@ -227,7 +243,10 @@ export default function DebugWorld(props) {
 
   // }, [ctxt, props, gmId, roomId]);
 
+  // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
+
   React.useEffect(() => {
+    state.drawIds();
     state.render();
     props.onLoad(state);
   }, []);
@@ -248,39 +267,6 @@ export default function DebugWorld(props) {
           /** Must transform local ordinates */
           style={{ transform: ctxt.gm.transformStyle }}
         >
-
-          {/* Arrows, room ids, door ids */}
-          {/* {ctxt.visDoorIds.map(doorId => {
-            const { poly, normal, roomIds } = ctxt.gm.doors[doorId];
-            const sign = roomIds[0] === ctxt.roomId ? 1 : -1;
-            const idIconPos = poly.center.addScaledVector(normal, -sign * debugDoorOffset);
-            return (
-              <div
-                key={"icon" + doorId}
-                className="debug-door-id-icon"
-                style={{
-                  left: idIconPos.x,
-                  top: idIconPos.y - 4,
-                  transform: ctxt.undoNonAffineStyle,
-                  ...props.showIds === true && { display: 'initial' },
-                }}
-              >
-                {doorId}
-              </div>
-            );
-          })} */}
-
-          {/* <div
-            className="debug-room-id-icon"
-            style={{
-              left: ctxt.roomAabb.x + ctxt.roomAabb.width - 8,
-              top: ctxt.roomAabb.y + 4,
-              ...props.showIds === true && { display: 'initial' },
-              transform: ctxt.undoNonAffineStyle,
-            }}
-          >
-            {ctxt.roomId}
-          </div> */}
 
           {ctxt.gm.windows.map(({ baseRect, angle }, i) => {
             return (
@@ -347,12 +333,14 @@ const debugCanvasScale = 2;
  * @property {HTMLDivElement} rootEl
  * @property {DebugRoomCtxt | undefined} room Current-room-specific data
  * @property {CanvasRenderingContext2D[]} ctxts
+ * @property {CanvasRenderingContext2D[]} idCtxts Canvases for gm/room/door ids
  * @property {DebugRenderTree} tree
  * 
  * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removeNavPath
  * @property {() => void} changeRoom
+ * @property {() => void} drawIds Draw gm/room/door ids
  * @property {() => void} render
  * @property {() => void} update
  */
@@ -362,7 +350,7 @@ const debugCanvasScale = 2;
  * @property {boolean} gmOutlines
  * @property {boolean} roomNav
  * @property {boolean} roomOutline
- * @property {Record<string, DebugRenderPath>} path
+ * @property {Record<string, DebugRenderPath>} pathByKey
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId Aligned to `gms`
  */
 
@@ -386,12 +374,6 @@ const debugCanvasScale = 2;
  * @property {Geom.Poly} roomPoly
  */
 
-// 🚧 move to const
-const debugRadius = 3;
-const debugDoorOffset = 12;
-
-const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
-
 const rootCss = css`
   canvas {
     position: absolute;
@@ -401,29 +383,6 @@ const rootCss = css`
   // 🚧 old below
   div.debug-room {
     position: absolute;
-
-    /* div.debug-door-arrow {
-      position: absolute;
-    }
-    div.debug-door-arrow {
-      pointer-events: var(${cssName.debugDoorArrowPtrEvts});
-      cursor: pointer;
-      background-image: url('/assets/icon/circle-right.svg');
-      opacity: 0.5;
-    } */
-
-    /* div.debug-room-id-icon {
-      display: var(${cssName.debugShowIds});
-      color: #4f4;
-    }
-    div.debug-room-id-icon {
-      position: absolute;
-      background: black;
-      font-size: 6px;
-      line-height: 1;
-      border: 1px solid black;
-      pointer-events: none;
-    } */
 
     div.debug-window {
       display: var(${cssName.debugHighlightWindows});

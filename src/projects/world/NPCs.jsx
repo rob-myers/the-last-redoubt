@@ -47,7 +47,9 @@ export default function NPCs(props) {
         const debugStyle = api.debug.rootEl.style;
         const decorStyle = api.decor.rootEl.style;
         switch (key) {
-          case 'canClickArrows': return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
+          case 'canClickArrows':
+            // return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
+            return false;
           case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
           case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
           case 'gmOutlines': return api.debug.tree.gmOutlines;
@@ -87,7 +89,9 @@ export default function NPCs(props) {
         const debugStyle = api.debug.rootEl.style;
         const decorStyle = api.decor.rootEl.style;
         switch (key) {
-          case 'canClickArrows': debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none'); break;
+          case 'canClickArrows':
+            // debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none');
+            break;
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
           case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
           case 'gmOutlines':

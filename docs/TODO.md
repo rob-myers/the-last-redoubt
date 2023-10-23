@@ -17,8 +17,8 @@
   - ✅ room ids
   - ✅ gm ids
   - ✅ fix hull doors gm/doorIds
-  - gm/room/door ids in own canvas
-  - windows (current gm)
+  - ✅ gm/room/door ids in own canvas
+  - 🚧 windows (current gm)
   - clickable arrows
 
 - ✅ can vary geomorph scale e.g. 2 -> 2.5 (remove hard-coding)

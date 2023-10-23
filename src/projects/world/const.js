@@ -9,10 +9,7 @@ export const cssName = /** @type {const} */ ({
   open: 'open',
   locked: 'locked',
 
-  debugDoorArrowPtrEvts: '--debug-door-arrow-ptr-evts',
   debugHighlightWindows: '--debug-highlight-windows',
-  debugShowIds: '--debug-show-ids',
-  debugShowLabels: '--debug-show-labels',
   // ...
 
   decorCircle: 'decor-circle',
