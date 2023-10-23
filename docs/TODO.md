@@ -16,7 +16,7 @@
     - ❌ better ordering via layout?
   - ✅ room ids
   - ✅ gm ids
-  - fix hull doors gm/doorIds
+  - ✅ fix hull doors gm/doorIds
   - gm/room/door ids in own canvas
   - windows (current gm)
   - clickable arrows

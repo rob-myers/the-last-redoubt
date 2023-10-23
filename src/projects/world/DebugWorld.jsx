@@ -46,7 +46,7 @@ export default function DebugWorld(props) {
       // Draw navpath once in own canvas
       ctxt.canvas.width = worldRect.width;
       ctxt.canvas.height = worldRect.height;
-      ctxt.strokeStyle = '#ffff0033';
+      ctxt.strokeStyle = '#ffffff33';
       ctxt.lineWidth = 1;
       ctxt.lineJoin = 'bevel';
       ctxt.setLineDash([4, 4]);
@@ -132,6 +132,7 @@ export default function DebugWorld(props) {
           ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
         }
 
+        // Nav paths
         tree.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
           ctxt.drawImage(
             navPathCtxt.canvas,
@@ -139,39 +140,41 @@ export default function DebugWorld(props) {
           );
         });
 
-        // gm/room/door ids
-        // ✅ rotate with door
         // 🚧 store in own canvas
-        // 🚧 handle hull doors differently,
-        const fontPx = 7;
-        ctxt.font = `${fontPx}px Courier New`;
-        ctxt.textBaseline = 'top';
+        // gm/room/door ids
+        let fontPx = 7;
         const debugIdOffset = 12;
-
+        
         const saved = ctxt.getTransform();
         const rotAbout = new Mat;
+        ctxt.textBaseline = 'top';
 
-        gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
+        gm.doors.forEach(({ poly, roomIds, normal, seg }, doorId) => {
           const center = gm.matrix.transformPoint(poly.center);
           normal = gm.matrix.transformSansTranslate(normal.clone());
 
-          // e.g. draw twice, once above other
           const doorText = `${gmId} ${doorId}`;
           const textWidth = ctxt.measureText(doorText).width;
+          ctxt.font = `${fontPx = 6}px Courier New`;
           const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
 
-          if (normal.y === 0) ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          if (normal.y === 0)
+            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
+            idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
+          }
+
           ctxt.fillStyle = '#222';
-          ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
+          ctxt.fillRect(idPos.x - 1, idPos.y, textWidth + 2, fontPx);
           ctxt.fillStyle = '#ffffff';
           ctxt.fillText(doorText, idPos.x, idPos.y);
           ctxt.setTransform(saved);
           
           roomIds.forEach((roomId, i) => {
             if (roomId === null) return;
-            // const roomText = `${gmId} ${roomId}`;
             const roomText = `${roomId}`;
             const textWidth = ctxt.measureText(roomText).width;
+            ctxt.font = `${fontPx = 7}px Courier New`;
             const idPos = center.clone()
               .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
               .translate(-textWidth/2, -fontPx/2)
