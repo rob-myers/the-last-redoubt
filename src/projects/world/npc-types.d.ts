@@ -365,7 +365,7 @@ declare namespace NPC {
    */
   interface NpcConfigOpts extends Partial<Record<ConfigBooleanKey, boolean>> {
     interactRadius?: number;
-    /** Induced by e.g. `npc config debug` or `npc config debug showIds` */
+    /** Induced by e.g. `npc config debug` or `npc config debug showColliders` */
     configKey?: string;
     /** Induced by e.g. `npc rm-decor myCircle` */
     decorKey?: string;
@@ -394,7 +394,6 @@ declare namespace NPC {
     | 'omnipresent'
     | 'scriptDoors'
     | 'showColliders'
-    | 'showIds'
     | 'verbose'
   );
 

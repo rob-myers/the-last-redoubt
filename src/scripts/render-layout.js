@@ -63,7 +63,7 @@ const staticDir = path.resolve(__dirname, '../../static');
       scale,
       invertSymbols: true,
       darken: true, // Darken in same way as lit geomorph
-      arrows: true,
+      arrows: false,
     });
 
     /**

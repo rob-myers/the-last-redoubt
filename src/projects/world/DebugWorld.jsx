@@ -74,7 +74,6 @@ export default function DebugWorld(props) {
       const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset);
       const roomAabb = gm.rooms[roomId].rect;
       const roomPoly = gm.rooms[roomId];
-      const undoNonAffineStyle = `matrix(${gm.inverseMatrix.toArray().slice(0, 4)},0, 0)`;
       state.room = {
         gmId,
         roomId,
@@ -84,7 +83,6 @@ export default function DebugWorld(props) {
         outsetRoomNavAabb,
         roomAabb,
         roomPoly,
-        undoNonAffineStyle,
       };
       state.render();
     },
@@ -99,6 +97,33 @@ export default function DebugWorld(props) {
         ctxt.resetTransform();
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
         ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+
+        if (room.gmId === gmId) {// Work in local coordinates 
+          if (tree.roomNav) {
+            ctxt.fillStyle = 'rgba(255, 0, 0, 0.1)';
+            ctxt.strokeStyle = 'blue';
+            ctxt.lineWidth = 1;
+            fillPolygons(ctxt, [room.roomNavPoly], true);
+            ctxt.strokeStyle = 'red';
+            room.visDoorIds.forEach(doorId =>
+              drawLine(ctxt, ...room.gm.doors[doorId].seg)
+            );
+          }
+  
+          if (tree.roomOutline) {
+            ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
+            ctxt.strokeStyle = 'red';
+            fillPolygons(ctxt, [room.roomPoly], true);
+          }
+        }
+
+        /**
+         * The inverseMatrix allows us to draw in world coords.
+         * - World coords will be transformed to local geomorph coords, then back by canvas transform.
+         * - Sometimes we already have world coords: gridRect or navPaths.
+         * - Sometimes we have local coords and want to do many fillTexts,
+         *   without individually transforming them (door/roomIds).
+         */
         ctxt.transform(...gm.inverseMatrix.toArray());
         
         if (tree.gmOutlines) {
@@ -114,27 +139,41 @@ export default function DebugWorld(props) {
           );
         });
 
-        if (tree.roomNav) {
-          ctxt.fillStyle = 'rgba(255, 0, 0, 0.1)';
-          ctxt.strokeStyle = 'blue';
-          ctxt.lineWidth = 1;
-          fillPolygons(ctxt, [room.roomNavPoly], true);
-          ctxt.strokeStyle = 'red';
-          room.visDoorIds.forEach(doorId =>
-            drawLine(ctxt, ...room.gm.doors[doorId].seg)
-          );
-        }
+        // gm/room/door ids
+        // 🚧 store in own canvas
+        const fontPx = 6;
+        ctxt.font = `${fontPx}px Courier New`;
+        ctxt.textBaseline = 'top';
+        const debugIdOffset = 12;
 
-        if (tree.roomOutline) {
-          ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
-          ctxt.strokeStyle = 'red';
-          fillPolygons(ctxt, [room.roomPoly], true);
-        }
+        gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
+          // poly = poly.clone().applyMatrix(gm.matrix);
+          const center = gm.matrix.transformPoint(poly.center);
+          normal = gm.matrix.transformSansTranslate(normal.clone());
 
-        // ✅ draw arrows in geomorph PNGs
-        // 🚧 draw door ids in geomorph PNGs
-        // 🚧 draw room ids in geomorph PNGs
-
+          // 🚧 handle hull doors differently,
+          // e.g. draw twice, once above other
+          const doorText = `${gmId} ${doorId}`;
+          const textWidth = ctxt.measureText(doorText).width;
+          const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
+          ctxt.fillStyle = '#ffffff44';
+          ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
+          ctxt.fillStyle = '#000000';
+          ctxt.fillText(doorText, idPos.x, idPos.y);
+          
+          roomIds.forEach((roomId, i) => {
+            if (roomId === null) return;
+            // const roomText = `${gmId} ${roomId}`;
+            const roomText = `${roomId}`;
+            const textWidth = ctxt.measureText(roomText).width;
+            const idPos = center.clone()
+              .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
+              .translate(-textWidth/2, -fontPx/2)
+            ;
+            ctxt.fillStyle = '#ffffff88';
+            ctxt.fillText(roomText, idPos.x, idPos.y);
+          });
+        });
 
       });
 
@@ -202,7 +241,7 @@ export default function DebugWorld(props) {
         >
 
           {/* Arrows, room ids, door ids */}
-          {ctxt.visDoorIds.map(doorId => {
+          {/* {ctxt.visDoorIds.map(doorId => {
             const { poly, normal, roomIds } = ctxt.gm.doors[doorId];
             const sign = roomIds[0] === ctxt.roomId ? 1 : -1;
             const idIconPos = poly.center.addScaledVector(normal, -sign * debugDoorOffset);
@@ -220,9 +259,9 @@ export default function DebugWorld(props) {
                 {doorId}
               </div>
             );
-          })}
+          })} */}
 
-          <div
+          {/* <div
             className="debug-room-id-icon"
             style={{
               left: ctxt.roomAabb.x + ctxt.roomAabb.width - 8,
@@ -232,7 +271,7 @@ export default function DebugWorld(props) {
             }}
           >
             {ctxt.roomId}
-          </div>
+          </div> */}
 
           {ctxt.gm.windows.map(({ baseRect, angle }, i) => {
             return (
@@ -262,11 +301,16 @@ export default function DebugWorld(props) {
             state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
           )}
           className={`gm-${gmId}`}
-          width={gm.pngRect.width * 2}
-          height={gm.pngRect.height * 2}
+          width={gm.pngRect.width * debugCanvasScale}
+          height={gm.pngRect.height * debugCanvasScale}
           style={{
+            /**
+             * - gm.transformStyle applies layout transform
+             * - translate by gm.pngRect because PNG may be larger (e.g. hull doors)
+             * - scale for higher quality
+             */
             transformOrigin: 'top left',
-            transform: `${gm.transformStyle} scale(0.5) translate(${2 * gm.pngRect.x}px, ${2 * gm.pngRect.y}px)`,
+            transform: `${gm.transformStyle} scale(${ 1 / debugCanvasScale }) translate(${debugCanvasScale * gm.pngRect.x}px, ${debugCanvasScale * gm.pngRect.y}px)`,
           }}
         />
       )}
@@ -274,13 +318,15 @@ export default function DebugWorld(props) {
   );
 }
 
+/** Needn't match gmScale? */
+const debugCanvasScale = 2;
+
 /**
  * @typedef Props
  * @property {boolean} [canClickArrows]
  * @property {boolean} [localNav]
  * @property {boolean} [gmOutlines]
  * @property {boolean} [localOutline]
- * @property {boolean} [showIds]
  * @property {boolean} [windows]
  * @property {import('../world/World').State} api
  * @property {(debugApi: State) => void} onLoad
@@ -329,7 +375,6 @@ export default function DebugWorld(props) {
  * @property {Geom.Rect} outsetRoomNavAabb
  * @property {Geom.Rect} roomAabb
  * @property {Geom.Poly} roomPoly
- * @property {string} undoNonAffineStyle
  */
 
 // 🚧 move to const
@@ -358,22 +403,18 @@ const rootCss = css`
       opacity: 0.5;
     } */
 
-    div.debug-door-id-icon {
-      display: var(${cssName.debugShowIds});
-      color: white;
-    }
-    div.debug-room-id-icon {
+    /* div.debug-room-id-icon {
       display: var(${cssName.debugShowIds});
       color: #4f4;
     }
-    div.debug-door-id-icon, div.debug-room-id-icon {
+    div.debug-room-id-icon {
       position: absolute;
       background: black;
       font-size: 6px;
       line-height: 1;
       border: 1px solid black;
       pointer-events: none;
-    }
+    } */
 
     div.debug-window {
       display: var(${cssName.debugHighlightWindows});

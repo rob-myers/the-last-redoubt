@@ -109,7 +109,7 @@ export default function World(props) {
       />
 
       <DebugWorld
-        // 👋 can use e.g. `npc config showIds` instead of prop showIds
+        // 👋 can use e.g. `npc config showColliders` instead of prop showColliders
         api={state}
         onLoad={api => (state.debug = api) && update()}
       />

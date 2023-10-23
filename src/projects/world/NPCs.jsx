@@ -61,7 +61,6 @@ export default function NPCs(props) {
           case 'scriptDoors':
           case 'verbose':
             return ctxt[key];
-          case 'showIds': return debugStyle.getPropertyValue(cssName.debugShowIds) === 'none' ? false : true;
           case 'showColliders': return decorStyle.getPropertyValue(cssName.decorCollidersDisplay) === 'none' ? false : true;
 
           // 🚧 better way
@@ -111,7 +110,6 @@ export default function NPCs(props) {
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
           case 'verbose': ctxt.verbose = !!value; break;
           case 'showColliders': decorStyle.setProperty(cssName.decorCollidersDisplay, value ? 'initial' : 'none'); break;
-          case 'showIds': debugStyle.setProperty(cssName.debugShowIds, value ? 'initial' : 'none'); break;
 
           case 'configKey':
           case 'decorKey':
