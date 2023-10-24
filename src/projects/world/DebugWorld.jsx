@@ -78,7 +78,7 @@ export default function DebugWorld(props) {
       };
       state.render();
     },
-    drawIds() {
+    initDrawIds() {
       const { gmGraph: { gms } } = api;
       state.idCtxts = gms.map((gm, gmId) => {
         const canvas = document.createElement('canvas');
@@ -239,7 +239,7 @@ export default function DebugWorld(props) {
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
-    state.drawIds();
+    state.initDrawIds();
     state.render();
     props.onLoad(state);
   }, []);
@@ -295,7 +295,7 @@ export default function DebugWorld(props) {
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removeNavPath
  * @property {() => void} changeRoom
- * @property {() => void} drawIds Draw gm/room/door ids
+ * @property {() => void} initDrawIds Draw gm/room/door ids
  * @property {() => void} render
  * @property {() => void} update
  */

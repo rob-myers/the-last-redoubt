@@ -1,10 +1,9 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { debounce } from "debounce";
 import { cssName } from "./const";
 import { error } from "../service/log";
 import { assertDefined, testNever } from "../service/generic";
-import { circleToCssStyles, pointToCssTransform, rectToCssStyles, cssStylesToCircle, cssTransformToPoint, cssStylesToRect, cssStylesToPoint } from "../service/dom";
+import { circleToCssStyles, pointToCssTransform, rectToCssStyles } from "../service/dom";
 import { geom } from "../service/geom";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
@@ -70,72 +69,6 @@ export default function Decor(props) {
       const closeDecor = state.getDecorInRoom(gmId, roomId);
       return closeDecor.filter(decor => decorContainsPoint(decor, point));
     },
-    handleDevToolEdit(els) {
-      for (const el of els.filter(el => el.dataset.key)) {
-        const decorKey = /** @type {string} */ (el.dataset.key);
-
-        // ℹ️ We don't handle DecorPath because mutating navPath breaks navMetas
-        if (el.classList.contains(cssName.decorCircle)) {
-          const decor = /** @type {NPC.DecorCircle} */ (state.decor[decorKey]);
-          const output = cssStylesToCircle(el);
-          if (output) {
-            [decor.radius, decor.center] = [output.radius, output.center];
-            triggerUpdate(decor);
-          }
-        } else if (el.classList.contains(cssName.decorPoint)) {
-          const decor = /** @type {NPC.DecorPoint} */ (state.decor[decorKey]);
-          const output = cssTransformToPoint(el);
-          if (output) {
-            [decor.x, decor.y] = [output.x, output.y];
-            triggerUpdate(decor);
-          }
-        } else if (el.classList.contains(cssName.decorRect)) {
-          const decor = /** @type {NPC.DecorRect} */ (state.decor[decorKey]);
-          const output = cssStylesToRect(el);
-          if (output) {
-            Object.assign(decor, /** @type {NPC.DecorRect} */ (output.baseRect));
-            decor.angle = output.angle;
-            extendDecor(decor, api);
-            triggerUpdate(decor);
-          }
-        } else if (el.classList.contains(cssName.decorGroupHandle)) {
-          const decor = /** @type {NPC.DecorGroup} */ (state.decor[decorKey]);
-          const point = cssStylesToPoint(el);
-          if (point && decor.derivedHandlePos) {
-            // update derivedHandlePos and items
-            const delta = point.clone().sub(decor.derivedHandlePos);
-            decor.derivedHandlePos = point;
-            decor.items.forEach(d => {
-              switch (d.type) {
-                case 'circle':
-                  d.center.x += delta.x;
-                  d.center.y += delta.y;
-                  break;
-                case 'point':
-                  d.x += delta.x;
-                  d.y += delta.y;
-                  break;
-                case 'rect':
-                  d.x += delta.x;
-                  d.y += delta.y;
-                  extendDecor(d, api);
-                  break;
-              }
-              triggerUpdate(d);
-            });
-            triggerUpdate(decor);
-          }
-        }
-      }
-
-      /** @param {NPC.DecorDef} decor */
-      function triggerUpdate(decor) {
-        decor.updatedAt = Date.now();
-        const parent = decor.parentKey ? state.decor[decor.parentKey] ?? null : null;
-        parent && (parent.updatedAt = decor.updatedAt)
-        update();
-      }
-    },
     instantiateLocalDecor(d, parent, matrix) {
       /**
        * Override d.key now we know { gmId, roomId }.
@@ -194,10 +127,9 @@ export default function Decor(props) {
           d.tags = metaToTags(d.meta);
           break;
         case 'rect':
-          extendDecor(d, api); // Add derived data
+          extendDecor(d); // Add derived data
           break;
         case 'group': {
-          extendDecor(d, api);
           return d.items.flatMap((item, index) => {
             item.parentKey = d.key;
             item.key = `${d.key}-${index}`; // Overwrite child keys
@@ -342,20 +274,6 @@ export default function Decor(props) {
     props.onLoad(state);
   }, []);
 
-  React.useEffect(() => {// Handle devtool edits of point/rect/circle/group 
-    const observer = new MutationObserver(debounce((records) => {
-      const els = records.map(x => /** @type {HTMLElement} */ (x.target));
-      state.handleDevToolEdit(els);
-    }, 300));
-
-    observer.observe(state.rootEl, {
-      attributes: true,
-      attributeFilter: ['style'],
-      subtree: true,
-    });
-    return () => observer.disconnect();
-  }, [api.npcs.ready]);
-
   return (
     <div
       className={cx("decor-root", rootCss)}
@@ -394,7 +312,6 @@ function DecorInstance({ def }) {
       />
     );
   } else if (def.type === 'group') {
-    const handlePos = def.derivedHandlePos;
     return (
       <div
         key={def.key}
@@ -403,13 +320,6 @@ function DecorInstance({ def }) {
         className={cx(cssName.decorGroup, cssGroup, `gm-${def.meta.gmId}`)}
       >
         {def.items.map(item => <DecorInstance key={item.key} def={item} />)}
-        {handlePos && (
-          <div
-            className={cssName.decorGroupHandle}
-            data-key={def.key}
-            style={{ left: handlePos.x, top: handlePos.y }}
-          />
-        )}
       </div>
     );
   } else if (def.type === 'point') {
@@ -444,7 +354,6 @@ function DecorInstance({ def }) {
           width,
           height,
           transform,
-          // transformOrigin: 'top left', // 👈 must have this value
         }}
       />
     );
@@ -598,7 +507,6 @@ const decorPointHandlers = {
  * Get all decor in specified room.
  * @property {(point: Geom.VectJson, gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
- * @property {(els: HTMLElement[]) => void} handleDevToolEdit
  * @property {(d: NPC.DecorGroupItem, parent: NPC.DecorGroup, matrix: Geom.Mat) => NPC.DecorGroupItem} instantiateLocalDecor
  * @property {boolean} ready
  * @property {(d: NPC.DecorDef) => void} normalizeDecor

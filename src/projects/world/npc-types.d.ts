@@ -646,7 +646,6 @@ declare namespace NPC {
   export interface DecorGroup extends BaseDecor {
     type: 'group';
     items: DecorGroupItem[];
-    derivedHandlePos?: Geom.Vect;
   }
 
   export type DecorDef = (

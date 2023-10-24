@@ -1481,30 +1481,14 @@ export function decorToRef(decor) {
 }
 
 /**
- * @template {NPC.DecorGroup | NPC.DecorRect} T
- * @param {T} decor
- * @param {import('../world/World').State} api
- * @returns {T}
+ * @param {NPC.DecorRect} decor
+ * @returns {NPC.DecorRect}
  */
-export function extendDecor(decor, api) {
-  switch (decor.type) {
-    case 'rect': {
-      const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
-      decor.derivedPoly = poly;
-      decor.derivedBounds = poly.rect;
-      return decor;
-    }
-    case 'group': {
-      const {
-        rooms: { [/** @type {number} */ (decor.meta.roomId)]: roomPoly },
-        matrix,
-      } = api.gmGraph.gms[/** @type {number} */ (decor.meta.gmId)];
-      decor.derivedHandlePos = matrix.transformPoint(Vect.topLeft(...roomPoly.outline));
-      return decor;
-    }
-    default:
-      throw testNever(decor);
-  }
+export function extendDecor(decor) {
+  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
+  decor.derivedPoly = poly;
+  decor.derivedBounds = poly.rect;
+  return decor;
 }
 
 /**
@@ -1541,7 +1525,7 @@ export function getDecorOrigin(decor, api) {
     case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item, api)));
     case 'point': return decor;
     case 'rect': {
-      if (!decor.derivedPoly) extendDecor(decor, api);
+      if (!decor.derivedPoly) extendDecor(decor);
       return assertDefined(decor.derivedPoly).center;
     }
     default: throw testNever(decor);
