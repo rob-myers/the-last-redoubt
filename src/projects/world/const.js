@@ -101,3 +101,6 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
  * how much we scale images up by to improve quality on zoom.
  */
 export const gmScale = 2.5;
+
+/** Needn't match gmScale? */
+export const debugCanvasScale = 2;

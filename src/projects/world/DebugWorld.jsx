@@ -2,7 +2,7 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Mat, Rect } from "../geom";
 import { drawLine, fillPolygons } from "../service/dom";
-import { wallOutset } from "./const";
+import { debugCanvasScale } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
@@ -67,9 +67,6 @@ export default function DebugWorld(props) {
       const gm = gmGraph.gms[gmId];
       const visDoorIds = api.doors.getVisibleIds(gmId);
       const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-      /** Outset for door lines (? it fixed something) */
-      const outsetRoomNavAabb = roomNavPoly.rect.outset(wallOutset);
-      const roomAabb = gm.rooms[roomId].rect;
       const roomPoly = gm.rooms[roomId];
       state.room = {
         gmId,
@@ -77,8 +74,6 @@ export default function DebugWorld(props) {
         gm,
         visDoorIds,
         roomNavPoly,
-        outsetRoomNavAabb,
-        roomAabb,
         roomPoly,
       };
       state.render();
@@ -249,8 +244,6 @@ export default function DebugWorld(props) {
     props.onLoad(state);
   }, []);
 
-  const ctxt = state.room;
-
   return (
     <div className={cx("debug", rootCss)}>
       {gms.map((gm, gmId) =>
@@ -277,8 +270,7 @@ export default function DebugWorld(props) {
   );
 }
 
-/** Needn't match gmScale? */
-const debugCanvasScale = 2;
+
 
 /**
  * @typedef Props
@@ -334,8 +326,6 @@ const debugCanvasScale = 2;
  * @property {Geomorph.GeomorphDataInstance} gm
  * @property {number[]} visDoorIds
  * @property {Geom.Poly} roomNavPoly
- * @property {Geom.Rect} outsetRoomNavAabb
- * @property {Geom.Rect} roomAabb
  * @property {Geom.Poly} roomPoly
  */
 
