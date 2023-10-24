@@ -1,23 +1,27 @@
 import React from "react";
 import { css, cx } from "@emotion/css";
-import { cssName } from "./const";
+import { cssName, debugCanvasScale } from "./const";
 import { error } from "../service/log";
-import { assertDefined, testNever } from "../service/generic";
+import { assertDefined, assertNonNull, testNever } from "../service/generic";
 import { circleToCssStyles, pointToCssTransform, rectToCssStyles } from "../service/dom";
 import { geom } from "../service/geom";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, extendDecor, getDecorRect, getLocalDecorGroupKey, isCollidable, localDecorGroupRegex, metaToTags, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useUpdate from "../hooks/use-update";
 import useStateRef from "../hooks/use-state-ref";
+import GmsCanvas from "./GmsCanvas";
 
 /**
  * @param {Props} props
  */
 export default function Decor(props) {
   const { api } = props;
+  const { gms } = api.gmGraph;
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    ctxts: [],
+
     byGrid: [],
     byRoom: api.gmGraph.gms.map(_ => []),
     decor: {},
@@ -287,6 +291,12 @@ export default function Decor(props) {
           updatedAt={d.updatedAt}
         />
       )}
+      {/* 🚧 remove above */}
+      <GmsCanvas
+        gms={gms}
+        scaleFactor={debugCanvasScale}
+        canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
+      />
     </div>
   );
 }
@@ -371,14 +381,6 @@ const rootCss = css`
   /** Prevent descendant 'z-index: 1' ascension */
   z-index: 0;
   pointer-events: all;
-  canvas {
-    position: absolute;
-    pointer-events: none;
-  }
-  svg {
-    position: absolute;
-    pointer-events: none;
-  }
 `;
 
 const cssCircle = css`
@@ -492,7 +494,8 @@ const decorPointHandlers = {
  */
 
 /**
- * @typedef State @type {object}
+ * @typedef State
+ * @property {CanvasRenderingContext2D[]} ctxts
  * @property {Record<string, NPC.DecorDef>} decor
  * All decor, including children of groups.
  * @property {Record<string, NPC.DecorDef>} visible
