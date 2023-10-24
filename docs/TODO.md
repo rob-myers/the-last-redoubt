@@ -2,30 +2,11 @@
 
 ## In progress
 
-- only use DOM for `<NPCs>`
+- 🚧 only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
 
-- ✅ DebugWorld draws in canvases
-  - ✅ gmOutlines
-  - ✅ navPaths: store in 1 canvas, split over many
-  - ✅ room nav
-  - ✅ room outline
-  - ✅ arrows in geomorph pngs
-  - ✅ door ids
-    - cannot put in geomorph pngs because gm may be rotated/reflected
-    - ❌ better ordering via layout?
-  - ✅ room ids
-  - ✅ gm ids
-  - ✅ fix hull doors gm/doorIds
-  - ✅ gm/room/door ids in own canvas
-  - ✅ windows (current gm)
-
+- 🚧 Decor draws in canvases
 - DebugWorld has clickable arrows via hit test canvas
-
-- ✅ can vary geomorph scale e.g. 2 -> 2.5 (remove hard-coding)
-- fix shadows e.g. around tables
-
-- Decor draws in canvases
 
 - FOV should be optional
   - need to fix diagonal lighting
@@ -35,7 +16,7 @@
 - ✅ migrate canvas layer library
   - ℹ️ unclear if we'll use it, since multiple canvases suggested by:
     - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
-- remove canvas layer library
+- ✅ remove canvas layer library
 
 - `npc config fov` toggles fov
 - hideGms clunky on open hull door first time mobile (?)
@@ -614,6 +595,24 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ DebugWorld draws in canvases
+  - ✅ gmOutlines
+  - ✅ navPaths: store in 1 canvas, split over many
+  - ✅ room nav
+  - ✅ room outline
+  - ✅ arrows in geomorph pngs
+  - ✅ door ids
+    - cannot put in geomorph pngs because gm may be rotated/reflected
+    - ❌ better ordering via layout?
+  - ✅ room ids
+  - ✅ gm ids
+  - ✅ fix hull doors gm/doorIds
+  - ✅ gm/room/door ids in own canvas
+  - ✅ windows (current gm)
+
+- ✅ can vary geomorph scale e.g. 2 -> 2.5 (remove hard-coding)
+- fix shadows e.g. around tables
 
 - ℹ️ do not restart the whole damn thing using a HTMLCanvas framework!
   - try to improve performance (at least on mobile)

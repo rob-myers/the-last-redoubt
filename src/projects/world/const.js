@@ -9,9 +9,6 @@ export const cssName = /** @type {const} */ ({
   open: 'open',
   locked: 'locked',
 
-  debugHighlightWindows: '--debug-highlight-windows',
-  // ...
-
   decorCircle: 'decor-circle',
   decorGroup: 'decor-group',
   decorGroupHandle: 'decor-group-handle',
