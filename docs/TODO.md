@@ -5,7 +5,10 @@
 - 🚧 only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
 
+- ✅ abstract gm canvases as `<GmsCanvas>`
 - 🚧 Decor draws in canvases
+  - no longer restrict to FOV
+
 - DebugWorld has clickable arrows via hit test canvas
 
 - FOV should be optional

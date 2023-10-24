@@ -6,6 +6,7 @@ import { assertNonNull, testNever } from "../service/generic";
 import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
+import GmsCanvas from "./GmsCanvas";
 
 /**
  * Field Of View, implemented via dark parts of geomorphs
@@ -280,25 +281,11 @@ export default function FOV(props) {
       </div>
 
       <div className="labels">
-        {gms.map((gm, gmId) =>
-          <div
-            key={gmId}
-            style={{
-              transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
-              transformOrigin: 'top left',
-            }}
-          >
-            <canvas
-              ref={(el) => el && (state.el.canvas[gmId] = el)}
-              width={gm.pngRect.width * gmScale}
-              height={gm.pngRect.height * gmScale}
-              style={{
-                transform: `scale(${ 1 / gmScale })`,
-                transformOrigin: 'top left',
-              }}
-            />
-          </div>
-        )}
+        <GmsCanvas
+          canvasRef={(el, gmId) => state.el.canvas[gmId] = el}
+          gms={gms}
+          scaleFactor={gmScale}
+        />
       </div>
 
     </div>
@@ -361,10 +348,6 @@ export default function FOV(props) {
   img.geomorph-dark {
     position: absolute;
     transform-origin: top left;
-    pointer-events: none;
-  }
-  canvas {
-    position: absolute;
     pointer-events: none;
   }
 `;

@@ -1,10 +1,11 @@
 import React from "react";
-import { css, cx } from "@emotion/css";
 import { Mat, Rect } from "../geom";
+import { assertNonNull } from "../service/generic";
 import { drawLine, fillPolygons } from "../service/dom";
 import { debugCanvasScale } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
+import GmsCanvas from "./GmsCanvas";
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
@@ -245,32 +246,15 @@ export default function DebugWorld(props) {
   }, []);
 
   return (
-    <div className={cx("debug", rootCss)}>
-      {gms.map((gm, gmId) =>
-        <canvas
-          key={gmId}
-          ref={(el) => el && (
-            state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
-          )}
-          className={`gm-${gmId}`}
-          width={gm.pngRect.width * debugCanvasScale}
-          height={gm.pngRect.height * debugCanvasScale}
-          style={{
-            /**
-             * - gm.transformStyle applies layout transform
-             * - translate by gm.pngRect because PNG may be larger (e.g. hull doors)
-             * - scale for higher quality
-             */
-            transformOrigin: 'top left',
-            transform: `${gm.transformStyle} scale(${ 1 / debugCanvasScale }) translate(${debugCanvasScale * gm.pngRect.x}px, ${debugCanvasScale * gm.pngRect.y}px)`,
-          }}
-        />
-      )}
+    <div className="debug">
+      <GmsCanvas
+        canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
+        gms={gms}
+        scaleFactor={debugCanvasScale}
+      />
     </div>
   );
 }
-
-
 
 /**
  * @typedef Props
@@ -328,10 +312,3 @@ export default function DebugWorld(props) {
  * @property {Geom.Poly} roomNavPoly
  * @property {Geom.Poly} roomPoly
  */
-
-const rootCss = css`
-  canvas {
-    position: absolute;
-    pointer-events: none;
-  }
-`;

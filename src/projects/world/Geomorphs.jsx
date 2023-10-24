@@ -1,11 +1,11 @@
 import React from "react";
-import { css, cx } from "@emotion/css";
 import { geomorphFilter, gmScale } from "./const";
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons, loadImage } from "../service/dom";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
+import GmsCanvas from "./GmsCanvas";
 
 /**
  * @param {Props} props 
@@ -60,13 +60,14 @@ export default function Geomorphs(props) {
       if (!meta) {
         return;
       }
-      if (lightIsOn && (meta.srcRoomId === api.fov.roomId)) {
-        /**
-         * Don't hide lights if current room has light (fixes diagonal doors).
-         * 👉 Won't work when FOV unbounded though.
-         */
-        return;
-      }
+      // 🚧 fix diagonal doors directly i.e. draw light polygons
+      // if (lightIsOn && (meta.srcRoomId === api.fov.roomId)) {
+      //   /**
+      //    * Don't hide lights if current room has light (fixes diagonal doors).
+      //    * 👉 Won't work when FOV unbounded though.
+      //    */
+      //   return;
+      // }
       // Hide light by drawing partial image
       state.drawRectImage('unlit', gmId, meta.rect);
       
@@ -168,34 +169,16 @@ export default function Geomorphs(props) {
   }, []);
 
   return (
-    <div className={cx("geomorphs", rootCss)}>
-      {gms.map((gm, gmId) =>
-        <canvas
-          key={gmId}
-          ref={(el) => el && (
-            state.ctxts[gmId] = /** @type {CanvasRenderingContext2D} */ (el.getContext('2d'))
-          )}
-          className={`gm-${gmId}`}
-          // Source PNG and this canvas are scaled by 2
-          width={gm.pngRect.width * gmScale}
-          height={gm.pngRect.height * gmScale}
-          style={{
-            transformOrigin: 'top left',
-            transform: `${gm.transformStyle} scale(${ 1 / gmScale }) translate(${gmScale * gm.pngRect.x}px, ${gmScale * gm.pngRect.y}px)`,
-          }}
-        />
-      )}
+    <div className="geomorphs">
+      <GmsCanvas
+        canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
+        gms={gms}
+        scaleFactor={gmScale}
+        style={{ filter: geomorphFilter }}
+      />
     </div>
   );
 }
-
-const rootCss = css`
-  canvas {
-    position: absolute;
-    pointer-events: none;
-    filter: ${geomorphFilter};
-  }
-`;
 
 /**
  * @typedef Props @type {object}
