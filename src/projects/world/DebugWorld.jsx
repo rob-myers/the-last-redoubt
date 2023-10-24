@@ -94,12 +94,12 @@ export default function DebugWorld(props) {
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
         ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
         ctxt.transform(...gm.inverseMatrix.toArray());
+        const localTransform = ctxt.getTransform();
 
         // gm/room/door ids
         let fontPx = 7;
         const debugIdOffset = 12;
         
-        const saved = ctxt.getTransform();
         const rotAbout = new Mat;
         ctxt.textBaseline = 'top';
 
@@ -125,7 +125,8 @@ export default function DebugWorld(props) {
           ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
           ctxt.fillStyle = '#ffffff';
           ctxt.fillText(doorText, idPos.x, idPos.y);
-          ctxt.setTransform(saved);
+          
+          ctxt.setTransform(localTransform);
           
           roomIds.forEach((roomId, i) => {
             if (roomId === null) return;
@@ -136,7 +137,7 @@ export default function DebugWorld(props) {
               .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
               .translate(-textWidth/2, -fontPx/2)
             ;
-            ctxt.fillStyle = '#ffffff88';
+            ctxt.fillStyle = '#ffffff55';
             ctxt.fillText(roomText, idPos.x, idPos.y);
           });
         });
