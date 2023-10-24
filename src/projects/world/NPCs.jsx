@@ -44,7 +44,6 @@ export default function NPCs(props) {
           return ctxt[key];
         }
         const rootStyle = state.rootEl.style;
-        const debugStyle = api.debug.rootEl.style;
         const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows':
@@ -55,7 +54,7 @@ export default function NPCs(props) {
           case 'gmOutlines': return api.debug.tree.gmOutlines;
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
           case 'hideGms': return api.getRootEl().classList.contains('hide-gms');
-          case 'highlightWindows': return debugStyle.getPropertyValue(cssName.debugHighlightWindows) === 'none' ? false : true;
+          case 'highlightWindows': return api.debug.tree.windowOutlines;
           case 'localNav': return api.debug.tree.roomNav;
           case 'localOutline': return api.debug.tree.roomOutline;
           case 'omnipresent':
@@ -86,7 +85,6 @@ export default function NPCs(props) {
       /** @param {keyof NPC.NpcConfigOpts} key */
       set(ctxt, key, value) {
         const rootStyle = state.rootEl.style;
-        const debugStyle = api.debug.rootEl.style;
         const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows':
@@ -99,7 +97,10 @@ export default function NPCs(props) {
             api.debug.render();
             break;
           case 'hideGms': api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms'); break;
-          case 'highlightWindows': debugStyle.setProperty(cssName.debugHighlightWindows, value ? 'initial' : 'none'); break;
+          case 'highlightWindows':
+            api.debug.tree.windowOutlines = !!value;
+            api.debug.render();
+            break;
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
           case 'localNav':
             api.debug.tree.roomNav = !!value;

@@ -5,7 +5,7 @@
 - only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
 
-- 🚧 DebugWorld draws in canvases
+- ✅ DebugWorld draws in canvases
   - ✅ gmOutlines
   - ✅ navPaths: store in 1 canvas, split over many
   - ✅ room nav
@@ -18,17 +18,24 @@
   - ✅ gm ids
   - ✅ fix hull doors gm/doorIds
   - ✅ gm/room/door ids in own canvas
-  - 🚧 windows (current gm)
-  - clickable arrows
+  - ✅ windows (current gm)
+
+- DebugWorld has clickable arrows via hit test canvas
 
 - ✅ can vary geomorph scale e.g. 2 -> 2.5 (remove hard-coding)
 - fix shadows e.g. around tables
 
 - Decor draws in canvases
 
+- FOV should be optional
+  - need to fix diagonal lighting
+- FOV should be unions of roomsWithDoors
+- Try pathfinding without partitioning
+
 - ✅ migrate canvas layer library
   - ℹ️ unclear if we'll use it, since multiple canvases suggested by:
     - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
+- remove canvas layer library
 
 - `npc config fov` toggles fov
 - hideGms clunky on open hull door first time mobile (?)

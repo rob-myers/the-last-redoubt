@@ -209,7 +209,6 @@ npc config '{
   debugPlayer: true,
   hideGms: false,
   showColliders: false,
-  showIds: true,
   logTags: false,
 }'
 `

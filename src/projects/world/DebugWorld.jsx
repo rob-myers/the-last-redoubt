@@ -2,13 +2,9 @@ import React from "react";
 import { css, cx } from "@emotion/css";
 import { Mat, Rect } from "../geom";
 import { drawLine, fillPolygons } from "../service/dom";
-import { cssName, wallOutset } from "./const";
+import { wallOutset } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-
-/**
- * 🚧 draw to canvases instead
- */
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
@@ -26,6 +22,7 @@ export default function DebugWorld(props) {
 
     tree: {
       gmOutlines: false,
+      windowOutlines: false,
       roomNav: false,
       roomOutline: false,
       pathByKey: {},
@@ -163,6 +160,7 @@ export default function DebugWorld(props) {
         ctxt.drawImage(state.idCtxts[gmId].canvas, 0, 0);
 
         ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+        const baseTransform = ctxt.getTransform();
 
         if (room.gmId === gmId) {// Work in local coordinates 
           if (tree.roomNav) {
@@ -175,19 +173,29 @@ export default function DebugWorld(props) {
               drawLine(ctxt, ...room.gm.doors[doorId].seg)
             );
           }
-  
           if (tree.roomOutline) {
             ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
             ctxt.strokeStyle = 'red';
             fillPolygons(ctxt, [room.roomPoly], true);
+          }
+          if (tree.windowOutlines) {
+            ctxt.fillStyle = '#0000ff40';
+            ctxt.strokeStyle = 'white';
+            const rotAbout = new Mat;
+            room.gm.windows.forEach(({ baseRect, angle }, i) => {
+              ctxt.transform(...rotAbout.setRotationAbout(angle, baseRect).toArray());
+              ctxt.fillRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
+              ctxt.strokeRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
+              ctxt.setTransform(baseTransform);
+            });
           }
         }
 
         /**
          * The inverseMatrix allows us to draw in world coords.
          * - World coords will be transformed to local geomorph coords, then back by canvas transform.
-         * - Sometimes we already have world coords: gridRect or navPaths.
-         * - Sometimes we have local coords and want to do many fillTexts,
+         * - e.g. sometimes already have world coords: gridRect or navPaths.
+         * - e.g. sometimes we have local coords and want to do many fillTexts,
          *   without individually transforming them (door/roomIds).
          */
         ctxt.transform(...gm.inverseMatrix.toArray());
@@ -209,22 +217,10 @@ export default function DebugWorld(props) {
       });
 
     },
-
-    rootRef(el) {
-      if (el) {
-        state.rootEl = el;
-        // 🚧 remove
-        !api.debug.ready && [
-          cssName.debugHighlightWindows,
-        ].forEach(cssVarName =>
-          el.style.setProperty(cssVarName, 'none')
-        );
-      }
-    },
     update,
   }));
 
-  // 🚧 migrate later e.g. via hit-test canvas
+  // 🚧 migrate via hit-test canvas
   // https://github.com/ericdrowell/concrete/blob/1b431ad60fee170a141c85b3a511e9edc2e5a11b/src/concrete.js#L404
   //
   // /* eslint-disable react-hooks/rules-of-hooks */
@@ -245,7 +241,6 @@ export default function DebugWorld(props) {
   //   }
 
   // }, [ctxt, props, gmId, roomId]);
-
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
@@ -257,41 +252,7 @@ export default function DebugWorld(props) {
   const ctxt = state.room;
 
   return (
-    <div
-      className={cx("debug", rootCss)}
-      // onClick={onClick}
-      ref={state.rootRef}
-    >
-
-      {ctxt && (
-        <div
-          key={ctxt.gm.itemKey}
-          className={cx("debug-room", `gm-${ctxt.gmId}`)}
-          /** Must transform local ordinates */
-          style={{ transform: ctxt.gm.transformStyle }}
-        >
-
-          {ctxt.gm.windows.map(({ baseRect, angle }, i) => {
-            return (
-              <div
-                key={`window-${i}`}
-                className="debug-window"
-                style={{
-                  left: baseRect.x,
-                  top: baseRect.y,
-                  width: baseRect.width,
-                  height: baseRect.height,
-                  transform: `rotate(${angle}rad)`,
-                  ...props.windows && { display: 'initial' },
-                }}
-              />
-            );
-          })}
-
-        </div>
-      )}
-      {/* 🚧 remove above */}
-
+    <div className={cx("debug", rootCss)}>
       {gms.map((gm, gmId) =>
         <canvas
           key={gmId}
@@ -339,7 +300,6 @@ const debugCanvasScale = 2;
  * @property {CanvasRenderingContext2D[]} idCtxts Canvases for gm/room/door ids
  * @property {DebugRenderTree} tree
  * 
- * @property {React.RefCallback<HTMLDivElement>} rootRef
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removeNavPath
  * @property {() => void} changeRoom
@@ -350,11 +310,13 @@ const debugCanvasScale = 2;
 
 /**
  * @typedef DebugRenderTree
- * @property {boolean} gmOutlines
- * @property {boolean} roomNav
- * @property {boolean} roomOutline
- * @property {Record<string, DebugRenderPath>} pathByKey
- * @property {Record<number, DebugRenderPath[]>} pathsByGmId Aligned to `gms`
+ * @property {boolean} gmOutlines Show gridRect of every geomorph?
+ * @property {boolean} windowOutlines Show window outlines in current geomorph? 
+ * @property {boolean} roomNav Show room navmesh?
+ * @property {boolean} roomOutline Show room outline?
+ * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
+ * @property {Record<number, DebugRenderPath[]>} pathsByGmId
+ * Nav path(s) by gmId; aligned to `gms`
  */
 
 /**
@@ -382,18 +344,4 @@ const rootCss = css`
     position: absolute;
     pointer-events: none;
   }
-
-  // 🚧 old below
-  div.debug-room {
-    position: absolute;
-
-    div.debug-window {
-      display: var(${cssName.debugHighlightWindows});
-      position: absolute;
-      background: #0000ff40;
-      border: 1px solid white;
-      pointer-events: none;
-      transform-origin: top left;
-    }
-  }  
 `;
