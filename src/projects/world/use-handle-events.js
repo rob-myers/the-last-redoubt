@@ -54,7 +54,6 @@ export default function useHandleEvents(api) {
           break;
         case 'fov-changed':
           // console.log(e);
-          api.decor.updateVisibleDecor({ added: e.added, removed: e.removed, });
           api.debug.changeRoom();
           break;
         case 'on-tty-link':
@@ -248,12 +247,6 @@ export default function useHandleEvents(api) {
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
-      /**
-       * - We already decor.ensureByRoom whenever we spawn an npc.
-       * - We also decor.ensureByRoom via FOV i.e. where the Player can see.
-       * - But we must also decor.ensureByRoom for the other npcs.
-       */
-      api.decor.ensureByRoom(gmId, roomId);
       // const closeDecor = api.decor.byRoom[gmId]?.[roomId]?.colliders ?? [];
       const closeDecor = queryDecorGridLine(
         currPosition,

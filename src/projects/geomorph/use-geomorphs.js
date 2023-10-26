@@ -29,11 +29,11 @@ export default function useGeomorphs(defs, disabled = false) {
 
   return React.useMemo(() => {
     if (ready) {
-      const items = defs.map(def => {
+      const items = defs.map((def, gmId) => {
         const queryIndex = gmKeys.findIndex(y => y === def.gmKey);
         const data = assertDefined(queries[queryIndex])
         const transform = def.transform || [1, 0, 0, 1, 0, 0];
-        return geomorphDataToInstance(data, transform);
+        return geomorphDataToInstance(data, gmId, transform);
       });
       /**
        * 🚧 fix throw on refetch a geomorph's json (?)

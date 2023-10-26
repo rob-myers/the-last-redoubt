@@ -208,7 +208,7 @@ export default function FOV(props) {
 
         state.recompute();
         api.doors.updateVisibleDoors();
-        api.debug.update();
+        api.debug.changeRoom();
         if (doorId === -1) {
           /**
            * Light may come through a door from another room,

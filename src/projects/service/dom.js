@@ -355,8 +355,19 @@ export function strokePolygons(ctxt, polys) {
 
 /**
  * @param {CanvasRenderingContext2D} ctxt
- * @param {Geom.Vect} from
- * @param {Geom.Vect} to
+ * @param {Geom.VectJson} center
+ * @param {number} radius
+ */
+export function drawCircle(ctxt, center, radius) {
+	ctxt.beginPath();
+	ctxt.ellipse(center.x, center.y, radius, radius, 0, 0, 2 * Math.PI)
+	ctxt.stroke();
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {Geom.VectJson} from
+ * @param {Geom.VectJson} to
  */
 export function drawLine(ctxt, from, to) {
 	ctxt.beginPath();

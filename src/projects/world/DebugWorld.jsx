@@ -10,7 +10,6 @@ import GmsCanvas from "./GmsCanvas";
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
-  const update = useUpdate();
   const { api } = props;
   const { gms } = api.gmGraph;
 
@@ -156,7 +155,10 @@ export default function DebugWorld(props) {
         // Draw gm/room/door ids
         ctxt.drawImage(state.idCtxts[gmId].canvas, 0, 0);
 
-        ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+        ctxt.transform(
+          debugCanvasScale, 0, 0, debugCanvasScale,
+          -debugCanvasScale * gm.pngRect.x, -debugCanvasScale * gm.pngRect.y,
+        );
         const baseTransform = ctxt.getTransform();
 
         if (room.gmId === gmId) {// Work in local coordinates 
@@ -214,7 +216,6 @@ export default function DebugWorld(props) {
       });
 
     },
-    update,
   }));
 
   // 🚧 migrate via hit-test canvas
@@ -282,7 +283,6 @@ export default function DebugWorld(props) {
  * @property {() => void} changeRoom
  * @property {() => void} initDrawIds Draw gm/room/door ids
  * @property {() => void} render
- * @property {() => void} update
  */
 
 /**

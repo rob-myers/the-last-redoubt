@@ -7,7 +7,10 @@
 
 - ✅ abstract gm canvases as `<GmsCanvas>`
 - 🚧 Decor draws in canvases
-  - no longer restrict to FOV
+  - ✅ remove FOV restriction e.g. ensureRoom
+  - ✅ render circles/rects
+  - 🚧 render points with icons
+  - 🚧 hit test canvas detects decor
 
 - DebugWorld has clickable arrows via hit test canvas
 

@@ -671,6 +671,17 @@ declare namespace NPC {
    */
   export type DecorGrid = Set<NPC.DecorCollidable>[][];
 
+  export interface RoomDecorCache {
+    /** Named read-only group */
+    symbol: NPC.DecorGroup;
+    /** Named read-only group */
+    door: NPC.DecorGroup;
+    /** Everything in room */
+    decor: Record<string, NPC.DecorDef>;
+    /** All colliders in room */
+    colliders: NPC.DecorCollidable[];
+  }
+
   //#endregion
   
   //#region debug

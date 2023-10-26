@@ -74,7 +74,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
 
       // Create geomorph graph,
       // providing minimal state needed by gmGraph
-      const gmInstance = geomorphDataToInstance(gm, [1, 0, 0, 1, 0, 0]);
+      const gmInstance = geomorphDataToInstance(gm, 0, [1, 0, 0, 1, 0, 0]);
       const gmGraph = gmGraphClass.fromGms([gmInstance], true);
       gmGraph.api.doors = /** @type {import('../world/Doors').State} */ ({
         getOpenIds(_) { return state.openDoors; },

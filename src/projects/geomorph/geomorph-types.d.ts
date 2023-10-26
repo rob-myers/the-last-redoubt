@@ -181,7 +181,12 @@ declare namespace Geomorph {
      * - `symbol` from a symbol's group.singles
      * - `door` contains "door sensors".
      */
-    roomDecor: { symbol: NPC.DecorGroup; door: NPC.DecorGroup; }[];
+    roomDecor: {
+      /** decor from room symbol's group.singles */
+      symbol: NPC.DecorGroup;
+      /** door sensors for each door */
+      door: NPC.DecorGroup;
+    }[];
 
     /** Proxy for lazy cached data */
     lazy: {
@@ -317,8 +322,6 @@ declare namespace Geomorph {
     /** `${gm.key}-[${transform}]` */
     itemKey: string;
     transform: [number, number, number, number, number, number];
-    /** For drawing inside <img>s */
-    transformOrigin: string;
     transformStyle: string;
     matrix: Geom.Mat;
     inverseMatrix: Geom.Mat;
@@ -328,6 +331,9 @@ declare namespace Geomorph {
      * - "Edge Geomorphs" are `1200 * 600`
      */
     gridRect: Geom.Rect;
+
+    /** Instantiation of @see {Geomorph.GeomorphData.roomDecor} */
+    gmRoomDecor: NPC.RoomDecorCache[];
 
     toLocalCoords(worldPoint: Geom.VectJson): Geom.Vect;
     toWorldCoords(localPoint: Geom.VectJson): Geom.Vect;

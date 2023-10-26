@@ -541,27 +541,6 @@ function atChoiceToDelta(at) {
 }
 
 /**
- * @param {Geomorph.LayoutDefItem['flip']} a 
- * @param {Geomorph.LayoutDefItem['flip']} b 
- * @returns {Geomorph.LayoutDefItem['flip']}
- */
-function combineFlips(a, b) {
-  if (a === undefined) {
-    return b;
-  } else if (b === undefined) {
-    return a;
-  } else if (a === b) {
-    return undefined;
-  } else if (a === 'x') {
-    return b === 'y' ? 'xy' : 'y';
-  } else if (a === 'y') {
-    return b === 'x' ? 'xy' : 'x';
-  } else {// a is 'xy', b is 'x' | 'y'
-    return b === 'x' ? 'y' : 'x';
-  }
-}
-
-/**
  * Some hull doors shouldn't be tagged,
  * e.g. the central and right one in geomorph 301.
  * They are not connectable to other geomorphs.
@@ -1029,11 +1008,13 @@ function toJsons(polys) {
 
 /**
  * - `GeomorphData` extends `ParsedLayout` and comes from `useGeomorph`
- * - `GeomorphDataInstance` extends `GeomorphData`, is relative to `transform` and comes from `useGeomorphs`
+ * - `GeomorphDataInstance` extends `GeomorphData`,
+ *   is relative to `transform` and comes from `useGeomorphs`
  * @param {Geomorph.GeomorphData} gm 
+ * @param {number} gmId
  * @param {[number, number, number, number, number, number]} transform 
  */
-export function geomorphDataToInstance(gm, transform) {
+export function geomorphDataToInstance(gm, gmId, transform) {
   const matrix = new Mat(transform);
   const gridRect = (new Rect(0, 0, 1200, gm.pngRect.height > 1000 ? 1200 : 600)).applyMatrix(matrix);
   const inverseMatrix = matrix.getInverseMatrix();
@@ -1043,11 +1024,12 @@ export function geomorphDataToInstance(gm, transform) {
     ...gm,
     itemKey: `${gm.key}-[${transform}]`,
     transform,
-    transformOrigin: `${-gm.pngRect.x}px ${-gm.pngRect.y}px`,
     transformStyle: `matrix(${transform})`,
     matrix,
     inverseMatrix,
     gridRect,
+
+    gmRoomDecor: instantiateRoomDecor(gm, gmId, matrix),
 
     toLocalCoords(worldPoint) {
       return output.inverseMatrix.transformPoint(Vect.from(worldPoint));
@@ -1502,7 +1484,7 @@ export function ensureDecorMetaGmRoomId(decor, api) {
     typeof decor.meta.gmId !== 'number'
     || typeof decor.meta.roomId !== 'number'
   ) {
-    const decorOrigin = getDecorOrigin(decor, api);
+    const decorOrigin = getDecorOrigin(decor);
     const gmRoomId = api.gmGraph.findRoomContaining(decorOrigin);
     if (gmRoomId) {
       decor.meta.gmId = gmRoomId.gmId;
@@ -1516,13 +1498,12 @@ export function ensureDecorMetaGmRoomId(decor, api) {
 /**
  * 
  * @param {NPC.DecorDef} decor 
- * @param {import('../world/World').State} api
  * @returns {Geom.VectJson}
  */
-export function getDecorOrigin(decor, api) {
+export function getDecorOrigin(decor) {
   switch (decor.type) {
     case 'circle': return decor.center;
-    case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item, api)));
+    case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item)));
     case 'point': return decor;
     case 'rect': {
       if (!decor.derivedPoly) extendDecor(decor);
@@ -1562,6 +1543,104 @@ export function getLocalDecorGroupKey(prefix, gmId, roomId) {
 export const localDecorGroupRegex = /^(symbol|door)-g\d+r\d+/;
 
 /**
+ * ℹ️ parent.meta can provide `gmId` to children
+ * @param {NPC.DecorGroupItem} d 
+ * @param {NPC.DecorGroup} parent 
+ * @param {Mat} matrix 
+ * @returns {NPC.DecorGroupItem}
+ */
+function instantiateLocalDecor(d, parent, matrix) {
+  /**
+   * Override d.key now we know { gmId, roomId }.
+   * Actually, children will be overwritten again later.
+   */
+  const key = `${parent.key}-${d.key}`;
+
+  if (d.type === 'rect') {
+    // 🚧 better way of computing transformed angledRect?
+    const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+    const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
+    return {
+      ...d,
+      ...baseRect,
+      derivedPoly: transformedPoly,
+      derivedBounds: transformedPoly.rect,
+      key,
+      angle,
+      meta: { ...parent.meta, ...d.meta },
+    };
+  } else if (d.type === 'circle') {
+    return {
+      ...d,
+      key,
+      center: matrix.transformPoint({ ...d.center }),
+      meta: { ...parent.meta, ...d.meta },
+    };
+  } else if (d.type === 'point') {
+    return {
+      ...d,
+      key,
+      ...matrix.transformPoint({ x: d.x, y: d.y }),
+      meta: {
+        ...parent.meta,
+        ...d.meta,
+        // 🚧 cache?
+        orient: typeof d.meta.orient === 'number'
+          ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+          : null,
+        ui: true,
+      },
+    };
+  } else {
+    throw testNever(d, { suffix: 'instantiateDecor' });
+  }
+};
+
+/**
+ * @param {Geomorph.GeomorphData} gm 
+ * @param {number} gmId 
+ * @param {Geom.Mat} matrix 
+ * @returns {NPC.RoomDecorCache[]}
+ */
+export function instantiateRoomDecor(gm, gmId, matrix) {
+  const output = /** @type {NPC.RoomDecorCache[]} */ ([]);
+
+  gm.rooms.forEach((_room, roomId) => {
+    const { [roomId]: base } = gm.roomDecor;
+
+    /** @type {NPC.RoomDecorCache} */
+    const atRoom = output[roomId] = {
+      symbol: {
+        key: getLocalDecorGroupKey('symbol', gmId, roomId),
+        type: 'group',
+        meta: { gmId, roomId },
+        items: [],
+      },
+      door: {
+        key: getLocalDecorGroupKey('door', gmId, roomId),
+        type: 'group',
+        meta: { gmId, roomId },
+        items: [],
+      },
+      decor: {},
+      colliders: [],
+    };
+    atRoom.symbol.items = base.symbol.items.map(d => instantiateLocalDecor(d, atRoom.symbol, matrix));
+    atRoom.door.items = base.door.items.map(d => instantiateLocalDecor(d, atRoom.door, matrix));
+
+    [atRoom.door, atRoom.symbol].forEach(group => {
+      normalizeDecor(group);
+      atRoom.decor[group.key] = group;
+      group.items.forEach(child => {
+        atRoom.decor[child.key] = child;
+        isCollidable(child) && atRoom.colliders.push(child);
+      });
+    });
+  });
+  return output;
+}
+
+/**
  * @param {NPC.DecorDef} decor
  * @return {decor is NPC.DecorCollidable}
  */
@@ -1570,6 +1649,36 @@ export function isCollidable(decor) {
     decor.type === 'circle'
     || decor.type === 'rect'
   );
+}
+
+/**
+ * @param {NPC.DecorDef} d 
+ * @returns {void}
+ */
+export function normalizeDecor(d) {
+  // ensureDecorMetaGmRoomId(d, api); // 🚧 use for dynamically added decor
+  switch (d.type) {
+    case 'circle':
+      break;
+    case 'point':
+      // Extend meta with any tags provided in def; normalize tags
+      d.tags?.forEach(tag => d.meta[tag] = true);
+      d.tags = metaToTags(d.meta);
+      break;
+    case 'rect':
+      extendDecor(d); // Add derived data
+      break;
+    case 'group': {
+      d.items.flatMap((item, index) => {
+        item.parentKey = d.key;
+        item.key = `${d.key}-${index}`; // Overwrite child keys
+        normalizeDecor(item);
+      });
+      break;
+    }
+    default:
+      throw testNever(d);
+  }
 }
 
 /**

@@ -9,17 +9,6 @@ export const cssName = /** @type {const} */ ({
   open: 'open',
   locked: 'locked',
 
-  decorCircle: 'decor-circle',
-  decorGroup: 'decor-group',
-  decorGroupHandle: 'decor-group-handle',
-  decorPath: 'decor-path',
-  decorPathPoint: 'decor-path-point',
-  decorPoint: 'decor-point',
-  decorRect: 'decor-rect',
-  decorCollidersDisplay: '--decor-colliders-display',
-  decorIconWidth: '--decor-icon-width',
-  decorPathColour: '--decor-path-colour',
-  
   /** 🤔 unused due to type error when: `${cssName.geomorphFilter}: ${geomorphFilter}` */
   geomorphFilter: '--geomorph-filter',
   geomorphMapFilter: '--geomorph-map-filter',

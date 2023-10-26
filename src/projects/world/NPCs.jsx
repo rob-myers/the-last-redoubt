@@ -62,7 +62,8 @@ export default function NPCs(props) {
           case 'scriptDoors':
           case 'verbose':
             return ctxt[key];
-          case 'showColliders': return decorStyle.getPropertyValue(cssName.decorCollidersDisplay) === 'none' ? false : true;
+          case 'showColliders':
+            return api.decor.showColliders;
 
           // 🚧 better way
           case 'configKey':
@@ -114,7 +115,10 @@ export default function NPCs(props) {
           case 'omnipresent': ctxt.omnipresent = !!value; break;
           case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
           case 'verbose': ctxt.verbose = !!value; break;
-          case 'showColliders': decorStyle.setProperty(cssName.decorCollidersDisplay, value ? 'initial' : 'none'); break;
+          case 'showColliders':
+            api.decor.showColliders = !!value;
+            api.decor.render();
+            break;
 
           case 'configKey':
           case 'decorKey':
@@ -569,7 +573,7 @@ export default function NPCs(props) {
               Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
             );
           }
-          api.decor.update();
+          api.decor.render();
           break;
         case 'set-player':
           state.setPlayerKey(e.npcKey ?? null);
