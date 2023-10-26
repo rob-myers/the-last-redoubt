@@ -5,6 +5,7 @@ import type { TabNode } from 'flexlayout-react';
 import type { TabMeta } from 'model/tabs/tabs.model';
 import { KeyedLookup, tryLocalStorageSet } from 'projects/service/generic';
 import { cssName, cssTimeMs, localStorageKey } from 'projects/service/const';
+import { imageService } from 'projects/service/image';
 
 export type State = {
   /** Key of currently viewed article */
@@ -25,7 +26,7 @@ export type State = {
   api: {
     clickToClipboard(e: React.MouseEvent): Promise<void>;
     initiate(allFm: AllFrontMatter): void;
-    initiateBrowser(): void;
+    initiateBrowser(): Promise<void>;
     removeComponents(tabsKey: string, ...componentKeys: string[]): void;
     setArticleKey(articleKey?: string): void
     setTabDisabled(tabsKey: string, componentKey: string, disabled: boolean): void
@@ -84,7 +85,7 @@ const useStore = create<State>()(devtools((set, get) => ({
       }, undefined, 'initiate');
     },
 
-    initiateBrowser() {
+    async initiateBrowser() {
       // setTimeout(() => {
       //   document.body.style.scrollBehavior = 'smooth';
       //   document.documentElement.style.scrollBehavior = 'smooth';
@@ -105,6 +106,8 @@ const useStore = create<State>()(devtools((set, get) => ({
         }
       });
 
+      // `<Tabs>` won't be interactive until this resolves
+      await imageService.load();
       set(() => ({ browserLoad: true }), undefined, 'browser-load');
     },
 

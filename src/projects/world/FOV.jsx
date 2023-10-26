@@ -248,7 +248,7 @@ export default function FOV(props) {
 
   return (
     <div
-      // style={{ display: 'none' }}
+      style={{ display: 'none' }}
       className={cx("fov", rootCss)}
       ref={el => el && (
         [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))

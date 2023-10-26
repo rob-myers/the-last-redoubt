@@ -92,4 +92,4 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
 export const gmScale = 2.5;
 
 /** Needn't match gmScale? */
-export const debugCanvasScale = 2;
+export const debugCanvasScale = 2.5;

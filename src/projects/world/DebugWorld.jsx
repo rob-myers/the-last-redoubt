@@ -4,7 +4,6 @@ import { assertNonNull } from "../service/generic";
 import { drawLine, fillPolygons } from "../service/dom";
 import { debugCanvasScale } from "./const";
 import useStateRef from "../hooks/use-state-ref";
-import useUpdate from "../hooks/use-update";
 import GmsCanvas from "./GmsCanvas";
 
 /** @param {Props} props */
@@ -82,8 +81,8 @@ export default function DebugWorld(props) {
       const { gmGraph: { gms } } = api;
       state.idCtxts = gms.map((gm, gmId) => {
         const canvas = document.createElement('canvas');
-        canvas.width = gm.pngRect.width * 2;
-        canvas.height = gm.pngRect.height * 2;
+        canvas.width = gm.pngRect.width * debugCanvasScale;
+        canvas.height = gm.pngRect.height * debugCanvasScale;
         return /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
       })
 
@@ -91,7 +90,7 @@ export default function DebugWorld(props) {
         const ctxt = state.idCtxts[gmId];
         ctxt.resetTransform();
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-        ctxt.transform(2, 0, 0, 2, -2 * gm.pngRect.x, -2 * gm.pngRect.y);
+        ctxt.transform(debugCanvasScale, 0, 0, debugCanvasScale, -debugCanvasScale * gm.pngRect.x, -debugCanvasScale * gm.pngRect.y);
         ctxt.transform(...gm.inverseMatrix.toArray());
         const localTransform = ctxt.getTransform();
 

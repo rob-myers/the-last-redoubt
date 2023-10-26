@@ -2,6 +2,7 @@ import React from "react";
 import { debugCanvasScale } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
+import { imageService } from "projects/service/image";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
@@ -148,20 +149,20 @@ export default function Decor(props) {
           break;
         case 'group':
           // ℹ️ byRoom[gmId].decor closed under group descendants
-          // decor.items.forEach(d => state.renderDecor(ctxt, d));
           break;
         case 'point':
-          // 🚧 icon
-          ctxt.strokeStyle = '#fff';
-          ctxt.fillStyle = '#000';
-          drawCircle(ctxt, { x: decor.x, y: decor.y }, 4);
+          const iconRadius = 4;
+          ctxt.strokeStyle = '#000';
+          ctxt.fillStyle = '#aaa';
+          drawCircle(ctxt, { x: decor.x, y: decor.y }, 5);
           ctxt.fill();
-          // className={cx(
-          //   cssName.decorPoint,
-          //   cssPoint,
-          //   metaToIconClasses(def.meta),
-          //   `gm-${def.meta.gmId}`,
-          // )}
+          ctxt.drawImage(
+            imageService.lookup[metaToImageHref(decor.meta)],
+            decor.x - iconRadius,
+            decor.y - iconRadius,
+            2 * iconRadius,
+            2 * iconRadius,
+          );
           break;
         case 'rect':
           ctxt.strokeStyle = '#ffffff33';
@@ -216,13 +217,16 @@ export default function Decor(props) {
   );
 }
 
-/** @param {Geomorph.PointMeta} meta */
-function metaToIconClasses(meta) {
-  if (meta.stand) return 'icon standing-person'; // 🚧 use const
-  if (meta.sit) return 'icon sitting-silhouette';
-  if (meta.lie) return 'icon lying-man-posture-silhouette';
-  if (meta.label) return 'icon info-icon';
-  return 'icon road-works'; // Fallback
+/**
+ * @param {Geomorph.PointMeta} meta
+ * @returns {import("projects/service/image").ImageServiceHref}
+ */
+function metaToImageHref(meta) {
+  if (meta.stand) return '/assets/icon/standing-person.png';
+  if (meta.sit) return '/assets/icon/sitting-silhouette.png';
+  if (meta.lie) return '/assets/icon/lying-man-posture-silhouette.png';
+  if (meta.label) return '/assets/icon/info-icon.png';
+  return '/assets/icon/road-works.png'; // Fallback
 }
 
 /**
