@@ -1,5 +1,5 @@
 import { assertNonNull, precision } from './generic';
-import { Vect } from '../geom/vect';
+import { Vect, Mat } from '../geom';
 
 //#region svg event
 
@@ -280,6 +280,19 @@ export function darkenDrawnImage(image, tempCtxt, dstCtxt, fillColor) {
 }
 
 /**
+ * Mutates ctxt.transform.
+ * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
+ * @param {CanvasRenderingContext2D} ctxt 
+ * @param {Geom.RectJson} rect 
+ * @param {number} radians 
+ */
+export function drawRotatedImage(image, ctxt, rect, radians) {
+	tempMat.setRotationAbout(radians, { x: rect.x + rect.width/2, y: rect.y + rect.height/2 });
+	ctxt.transform(tempMat.a, tempMat.b, tempMat.c, tempMat.d, tempMat.e, tempMat.f);
+	ctxt.drawImage(image, rect.x, rect.y, rect.width, rect.height);
+}
+
+/**
  * @param {HTMLImageElement | (import('canvas').Image & CanvasImageSource)} image 
  * @param {CanvasRenderingContext2D} tempCtxt
  * @param {CanvasRenderingContext2D} dstCtxt
@@ -525,3 +538,5 @@ function checkWebPSupport()  {
 export const supportsWebp = checkWebPSupport();
 
 //#endregion
+
+const tempMat = new Mat;

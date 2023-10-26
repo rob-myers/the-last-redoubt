@@ -1,10 +1,10 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
-import { Poly, Vect, Rect, Mat } from "../geom";
+import { Poly, Vect, Rect } from "../geom";
 import { preDarkenCssRgba } from "../service/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
-import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage } from '../service/dom';
+import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage, drawRotatedImage } from '../service/dom';
 import { error } from "../service/log";
 
 /**
@@ -225,19 +225,16 @@ export async function renderGeomorph(
     const debugDoorOffset = 12;
     const debugRadius = 3;
     const iconCircleRight = await getPng('/assets/icon/circle-right.svg');
-    const rotAbout = new Mat;
     const saved = ctxt.getTransform();
     layout.doors.forEach(({ poly, normal, roomIds }) => {
       roomIds.forEach((_, i) => {
         const sign = i === 0 ? 1 : -1;
         const { angle } = Vect.from(normal).scale(-sign);
-        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).precision(0);
-        rotAbout.setRotationAbout(angle, arrowPos);
-        ctxt.transform(rotAbout.a, rotAbout.b, rotAbout.c, rotAbout.d, rotAbout.e, rotAbout.f);
-        ctxt.drawImage(iconCircleRight, arrowPos.x - debugRadius, arrowPos.y - debugRadius, debugRadius * 2, debugRadius * 2);
+        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).translate(-debugRadius, -debugRadius);
+        drawRotatedImage(iconCircleRight, ctxt, { ...arrowPos, width: debugRadius * 2, height: debugRadius * 2 }, angle)
         ctxt.setTransform(saved);
       });
-    }); 
+    });
   }
 }
 
