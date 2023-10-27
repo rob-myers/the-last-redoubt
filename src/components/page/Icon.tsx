@@ -43,7 +43,7 @@ interface Props extends React.HTMLAttributes<HTMLSpanElement> {
     | 'hash-icon'
     | 'info-icon'
     | 'light-bulb'
-    | 'lying-man-posture-silhouette'
+    | 'lying-man'
     | 'qed-icon'
     | 'refresh'
     | 'road-works'

@@ -152,8 +152,8 @@ export default function Decor(props) {
           break;
         case 'point':
           const iconRadius = 4;
-          ctxt.strokeStyle = '#000';
-          ctxt.fillStyle = '#aaa';
+          ctxt.strokeStyle = '#888';
+          ctxt.fillStyle = '#000';
           drawCircle(ctxt, { x: decor.x, y: decor.y }, 5);
           ctxt.fill();
           ctxt.drawImage(
@@ -223,10 +223,10 @@ export default function Decor(props) {
  */
 function metaToImageHref(meta) {
   if (meta.stand) return '/assets/icon/standing-person.png';
-  if (meta.sit) return '/assets/icon/sitting-silhouette.png';
-  if (meta.lie) return '/assets/icon/lying-man-posture-silhouette.png';
-  if (meta.label) return '/assets/icon/info-icon.png';
-  return '/assets/icon/road-works.png'; // Fallback
+  if (meta.sit) return '/assets/icon/sitting-silhouette.invert.svg';
+  if (meta.lie) return '/assets/icon/lying-man.invert.svg';
+  if (meta.label) return '/assets/icon/info-icon.invert.svg';
+  return '/assets/icon/road-works.invert.svg'; // Fallback
 }
 
 /**

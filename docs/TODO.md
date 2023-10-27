@@ -11,7 +11,9 @@
   - ✅ render circles/rects
   - ✅ image service provides icons
   - ✅ render points with icons
+  - ✅ inverted icons inside ImageService
   - 🚧 hit test canvas detects decor
+  - hit test canvas changes cursor
 
 - DebugWorld has clickable arrows via hit test canvas
 

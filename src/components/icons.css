@@ -95,9 +95,9 @@
   background-image: url('/assets/icon/qed-icon.webp');
 }
 
-.icon.lying-man-posture-silhouette::after {
+.icon.lying-man::after {
   /** https://www.flaticon.com/free-icons/lying */
-  background-image: url('/assets/icon/lying-man-posture-silhouette.png');
+  background-image: url('/assets/icon/lying-man.png');
 }
 
 .icon.sitting-silhouette::after {

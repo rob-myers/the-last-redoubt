@@ -6,12 +6,12 @@ import { loadImage } from "./dom";
 class ImageService {
 
   hrefs = /** @type {const} */ ([
-    "/assets/icon/circle-right.png",
+    "/assets/icon/circle-right.invert.svg",
     "/assets/icon/standing-person.png",
-    "/assets/icon/sitting-silhouette.png",
-    "/assets/icon/lying-man-posture-silhouette.png",
-    "/assets/icon/info-icon.png",
-    "/assets/icon/road-works.png",
+    "/assets/icon/sitting-silhouette.invert.svg",
+    "/assets/icon/lying-man.invert.svg",
+    "/assets/icon/info-icon.invert.svg",
+    "/assets/icon/road-works.invert.svg",
   ]);
 
   lookup = /** @type {Record<ImageServiceHref, HTMLImageElement>} */ ({});
