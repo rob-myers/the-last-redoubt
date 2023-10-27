@@ -377,6 +377,12 @@ export default function CssPanZoom(props) {
           setTimeout(() => state.events.next({ key: 'cancelled-panzoom-to' }), 30);
         }
       },
+      redrawDebugHitTest() {
+        /** @type {HTMLCanvasElement[]} */
+        const canvases = Array.from(state.rootEl.querySelectorAll(".debug-hit-test-grid canvas"));
+        const ctxts = Object.values(props.hitTestGrid?.grid ?? {}).flatMap(v => Object.values(v).flatMap(x => x));
+        ctxts.forEach((ctxt, i) => canvases[i].getContext('2d')?.drawImage(ctxt.canvas, 0, 0));
+      },
       releaseAnim(anim, parentEl) {
         if (isAnimAttached(anim, parentEl)) {
           anim.commitStyles();
@@ -477,14 +483,18 @@ export default function CssPanZoom(props) {
       style={{ backgroundColor: props.background ?? '#fff' }}
     >
       <div className="follow">
-        <div
-          ref={state.rootRef}
-          className="panzoom"
-        >
+        <div ref={state.rootRef} className="panzoom">
           <div className="origin" />
           {props.children}
-          {props.grid && <div className="small-grid" />}
-          {props.grid && <div className="large-grid" />}
+          {props.debugHitTestGrid && (
+            <div className="debug-hit-test-grid">
+              <DebugHitTestGrid grid={props.hitTestGrid} />
+            </div>
+          )}
+          {props.showGrid && <>
+            <div className="small-grid" />
+            <div className="large-grid" />
+          </>}
         </div>
       </div>
     </div>
@@ -551,9 +561,11 @@ const rootCss = css`
  * @typedef Props @type {object}
  * @property {string} [className]
  * @property {string} [background]
- * @property {boolean} [grid]
+ * @property {boolean} [debugHitTestGrid]
+ * @property {{ dim: number; grid: Geomorph.Grid<CanvasRenderingContext2D>; }} [hitTestGrid]
  * @property {{ x?: number; y?: number; ms?: number; zoom?: number }} [init]
  * @property {(api: PanZoom.CssApi) => void} [onLoad]
+ * @property {boolean} [showGrid]
  */
 
 /**
@@ -628,5 +640,31 @@ function removePointer(pointers, event) {
   const i = pointers.findIndex(other => other.pointerId === event.pointerId);
   if (i > -1) {
     pointers.splice(i, 1)
+  }
+}
+
+/**
+ * @param {{ grid: Props['hitTestGrid'] }} props 
+ */
+function DebugHitTestGrid(props) {
+  if (props.grid) {
+    const { dim, grid } = props.grid;
+    return <>{Object.entries(grid).map(([xStr, v]) =>
+      Object.entries(v).map(([yStr, items]) => items.map(ctxt =>
+        <canvas // Expect items.length ≤ 1
+          key={xStr + "," + yStr}
+          width={ctxt.canvas.width}
+          height={ctxt.canvas.height}
+          style={{
+            position: 'absolute',
+            pointerEvents: 'none',
+            transform: `translate(${dim * Number(xStr)}px, ${dim * Number(yStr)}px)`,
+          }}
+          // ref={(el) => el?.getContext('2d')?.drawImage(ctxt.canvas, 0, 0)}
+        />
+      )),
+    )}</>
+  } else {
+    return null;
   }
 }

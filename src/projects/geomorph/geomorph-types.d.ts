@@ -109,7 +109,7 @@ declare namespace Geomorph {
       leaf: boolean;
     }>[];
     /** `gridToRoomIds[x][y]` are roomIds  */
-    gridToRoomIds: Record<number, Record<number, number[]>>;
+    gridToRoomIds: Geomorph.Grid<number>;
     /** Indexed by `doorId` */
     relDoorId: Geomorph.RelDoor;
     /** Indexed by `doorId` */
@@ -571,4 +571,16 @@ declare namespace Geomorph {
 
   export type LightConnectorRect = BaseLightConnectorRect<Geom.Rect>;
 
+  /**
+   * Fast geometric lookup via well-chosen grid dimension.
+   * `grid[x][y]` corresponds to square:
+   * > `(x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)`
+   */
+  export type Grid<T> = Record<number, Record<number, T[]>>;
+  
+  /**
+   * Fast geometric lookup via well-chosen grid dimension, @see {Grid<T>}
+   */
+  export type GridSet<T> = Record<number, Record<number, Set<T>>>;
+  
 }

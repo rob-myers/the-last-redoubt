@@ -130,6 +130,11 @@ export const roomGridSize = 60;
 
 export const decorGridSize = 60 * 2;
 
+/**
+ * Height of an edge geomorph.
+ */
+export const gmGridSize = 600;
+
 export const ansi = {
   Black: '\x1b[30m',
   Blue: '\x1b[1;34m',

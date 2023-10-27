@@ -79,6 +79,7 @@ declare namespace PanZoom {
       /** Can override animation.id */
       id?: string;
     }): Promise<void>;
+    redrawDebugHitTest(): void;
     async followPath(path: Geom.Vect[], opts: { animScaleFactor: number }): Promise<void>;
     private releaseAnim(anim: Animation, parentEl: HTMLElement): void;
     private rootRef(el: null | HTMLDivElement): void;

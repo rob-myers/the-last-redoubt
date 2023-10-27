@@ -53,8 +53,7 @@ declare namespace Nav {
      * Grid coord `⌊x / gridSize⌋`, `⌊y / gridSize⌋` to nav node ids
      * intersecting rect `(x, y, gridSize, gridSize)`.
      */
-    // gridToNodeIds: Record<`${number}-${number}`, number[]>;
-    gridToNodeIds: Record<number, Record<number, number[]>>;
+    gridToNodeIds: Geomorph.Grid<number>;
   }
 
   export interface SearchContext {

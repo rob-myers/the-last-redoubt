@@ -3,13 +3,15 @@ import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
 import { assertDefined, keys, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize } from './const';
+import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize, gmGridSize } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
+
+//#region main
 
 /**
  * Fundamental function i.e. source of each {geomorph}.json
@@ -381,7 +383,7 @@ export async function createLayout(opts) {
 
     meta: {
       standard: (101 <= opts.def.id) && (opts.def.id < 300),
-      edge: (301 <= opts.def.id) && (opts.def.id < 500),
+      edge: isEdgeGeomorph(opts.def.id),
       corner: (501 <= opts.def.id) && (opts.def.id < 700),
       // ...
     },
@@ -642,6 +644,15 @@ export function getNormalizedDoorPolys(doors) {
  */
 export function getUnseenConnectorRoomId(connector, seenRoomIds) {
   return connector.roomIds.find(id => id !== null && !seenRoomIds.includes(id)) ?? -1;
+}
+
+/**
+ * @param {Geomorph.GeomorphKey | number} idOrKey 
+ */
+function isEdgeGeomorph(idOrKey) {
+  // g-{id}--foo -> {id}
+  typeof idOrKey !== 'number' && (idOrKey = parseInt(idOrKey.slice(2)))
+  return (301 <= idOrKey) && (idOrKey < 500);
 }
 
 /**
@@ -1428,7 +1439,32 @@ export function metaToTags(meta) {
   return Object.keys(meta).filter(key => meta[key] === true);
 }
 
+//#endregion
+
 //#region decor
+
+/**
+ * @param {Geomorph.UseGeomorphsDefItem[]} gmDefs 
+ */
+export function computeHitTestGrid(gmDefs) {
+  const output = /** @type {Geomorph.Grid<CanvasRenderingContext2D>} */ ({});
+  const rect = new Rect;
+  const mat = new Mat;
+  gmDefs.forEach(({ gmKey, transform }) => {
+    /**
+     * Assume geomorph is either "standard" (1200 * 1200) or "edge" (1200 * 600).
+     * We may support corner geomorphs and others in the future.
+     */
+    rect.set(0, 0, gmGridSize * 2, gmGridSize * (isEdgeGeomorph(gmKey) ? 1 : 2));
+    transform && rect.applyMatrix(mat.feedFromArray(transform));
+    const ctxt = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
+    ctxt.canvas.width = rect.width;
+    ctxt.canvas.height = rect.height;
+    ctxt.imageSmoothingEnabled = false;
+    (output[rect.x / gmGridSize] ??= {})[rect.y / gmGridSize] = [ctxt];
+  });
+  return output;
+}
 
 /**
  * @param {NPC.DecorDef} decor 
@@ -1761,7 +1797,7 @@ export function verifyDecor(input) {
 /**
  * @param {number} item Nav node id
  * @param {Geom.RectJson} rect Rectangle corresponding to item
- * @param {Record<number, Record<number, number[]>>} grid 
+ * @param {Geomorph.Grid<number>} grid 
  */
 function addToNavNodeGrid(item, rect, grid) {
   const min = coordToNavNodeGrid(rect.x, rect.y);
@@ -1775,7 +1811,7 @@ function addToNavNodeGrid(item, rect, grid) {
 /**
  * @param {number} item Room id (relative to some geomorph)
  * @param {Geom.RectJson} rect Aabb of room polygon
- * @param {Geomorph.ParsedLayout['gridToRoomIds']} grid 
+ * @param {Geomorph.Grid<number>} grid 
  */
 function addToRoomGrid(item, rect, grid) {
   const min = coordToRoomGrid(rect.x, rect.y);

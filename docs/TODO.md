@@ -12,7 +12,10 @@
   - ✅ image service provides icons
   - ✅ render points with icons
   - ✅ inverted icons inside ImageService
-  - 🚧 hit test canvas detects decor
+  - ✅ CssPanZoom has prop `hitTestGrid` and `debugHitTestGrid`
+      - can also `api.panZoom.redrawDebugHitTest`
+  - 🚧 draw into hitTestCanvas and detect move/click
+  - hit test canvas detects decor
   - hit test canvas changes cursor
 
 - DebugWorld has clickable arrows via hit test canvas

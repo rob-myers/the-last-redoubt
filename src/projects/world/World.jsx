@@ -5,6 +5,8 @@ import { merge } from "rxjs";
 
 import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
+import { gmGridSize } from "../service/const";
+import { computeHitTestGrid } from "../service/geomorph";
 import { npcService,  } from "../service/npc";
 import { Vect } from "../geom";
 import useUpdate from "../hooks/use-update";
@@ -28,7 +30,7 @@ export default function World(props) {
     disabled: !!props.disabled,
     gmGraph: /** @type {State['gmGraph']} */ ({}),
     gmRoomGraph: /** @type {State['gmRoomGraph']} */ ({}),
-
+    hitTestGrid: { dim: gmGridSize, grid: computeHitTestGrid(props.gms) },
     debug: /** @type {State['debug']} */ ({ ready: false }),
     decor: /** @type {State['decor']} */ ({ ready: false }),
     doors: /** @type {State['doors']} */  ({ ready: false }),
@@ -101,7 +103,9 @@ export default function World(props) {
       init={props.init}
       background="#000"
       onLoad={api => (state.panZoom = api) && update()}
-      // grid // ℹ️ slow zooming
+      hitTestGrid={state.hitTestGrid}
+      // debugHitTestGrid
+      // showGrid // ℹ️ slow zooming
     >
       <Geomorphs
         api={state}
@@ -150,6 +154,7 @@ export default function World(props) {
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
  * @property {Graph.GmRoomGraph} gmRoomGraph
+ * @property {{ dim: number; grid: Geomorph.Grid<CanvasRenderingContext2D> }} hitTestGrid
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
  * @property {import("./Doors").State} doors

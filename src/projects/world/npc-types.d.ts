@@ -665,11 +665,7 @@ declare namespace NPC {
     meta: DecorDef['meta'];
   }
 
-  /**
-   * grid[x][y] corresponds to square:
-   * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
-   */
-  export type DecorGrid = Set<NPC.DecorCollidable>[][];
+  export type DecorGrid = Geomorph.GridSet<NPC.DecorCollidable>;
 
   export interface RoomDecorCache {
     /** Named read-only group */
