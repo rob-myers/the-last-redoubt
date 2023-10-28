@@ -2,7 +2,7 @@ import React from "react";
 import { Mat, Rect } from "../geom";
 import { assertNonNull } from "../service/generic";
 import { drawLine, fillPolygons } from "../service/dom";
-import { debugCanvasScale } from "./const";
+import { gmScale } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import GmsCanvas from "./GmsCanvas";
 
@@ -19,9 +19,7 @@ export default function DebugWorld(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
-    // 🚧 pool canvases
     ctxts: [],
-    idCtxts: [],
     
     debug: {
       room: undefined,
@@ -60,70 +58,6 @@ export default function DebugWorld(props) {
       state.pathByKey[key] = { key, ctxt, worldRect, gmIds };
       gmIds.forEach(gmId => state.pathsByGmId[gmId].push(state.pathByKey[key]));
     },
-    initDrawIds() {
-      const { gmGraph: { gms } } = api;
-      state.idCtxts = gms.map((gm, gmId) => {
-        const canvas = document.createElement('canvas');
-        canvas.width = gm.pngRect.width * debugCanvasScale;
-        canvas.height = gm.pngRect.height * debugCanvasScale;
-        return /** @type {CanvasRenderingContext2D} */ (canvas.getContext('2d'));
-      })
-
-      gms.forEach((gm, gmId) => {
-        const ctxt = state.idCtxts[gmId];
-        ctxt.resetTransform();
-        ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-        ctxt.transform(debugCanvasScale, 0, 0, debugCanvasScale, -debugCanvasScale * gm.pngRect.x, -debugCanvasScale * gm.pngRect.y);
-        ctxt.transform(...gm.inverseMatrix.toArray());
-        const localTransform = ctxt.getTransform();
-
-        // gm/room/door ids
-        let fontPx = 7;
-        const debugIdOffset = 12;
-        
-        const rotAbout = new Mat;
-        ctxt.textBaseline = 'top';
-
-        gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
-          const center = gm.matrix.transformPoint(poly.center);
-          normal = gm.matrix.transformSansTranslate(normal.clone());
-
-          const doorText = `${gmId} ${doorId}`;
-          ctxt.font = `${fontPx = 6}px Courier New`;
-          const textWidth = ctxt.measureText(doorText).width;
-          const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
-
-          if (normal.y === 0)
-            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
-          else if (normal.x * normal.y !== 0) // Fixes diagonal doors?
-            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/4 * Math.sign(normal.x * normal.y), center).toArray());
-
-          if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
-            idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
-          }
-
-          ctxt.fillStyle = '#222';
-          ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
-          ctxt.fillStyle = '#ffffff';
-          ctxt.fillText(doorText, idPos.x, idPos.y);
-          
-          ctxt.setTransform(localTransform);
-          
-          roomIds.forEach((roomId, i) => {
-            if (roomId === null) return;
-            ctxt.font = `${fontPx = 7}px Courier New`;
-            const roomText = gm.isHullDoor(doorId) ? `${gmId} ${roomId}` : `${roomId}`;
-            const textWidth = ctxt.measureText(roomText).width;
-            const idPos = center.clone()
-              .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
-              .translate(-textWidth/2, -fontPx/2)
-            ;
-            ctxt.fillStyle = '#ffffff55';
-            ctxt.fillText(roomText, idPos.x, idPos.y);
-          });
-        });
-      });
-    },
     removeNavPath(key) {
       state.pathByKey[key]?.gmIds.forEach(gmId =>
         state.pathsByGmId[gmId] = state.pathsByGmId[gmId].filter(x => x.key !== key)
@@ -139,12 +73,9 @@ export default function DebugWorld(props) {
         ctxt.resetTransform();
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
 
-        // Draw gm/room/door ids
-        ctxt.drawImage(state.idCtxts[gmId].canvas, 0, 0);
-
         ctxt.transform(
-          debugCanvasScale, 0, 0, debugCanvasScale,
-          -debugCanvasScale * gm.pngRect.x, -debugCanvasScale * gm.pngRect.y,
+          gmScale, 0, 0, gmScale,
+          -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
         );
         const baseTransform = ctxt.getTransform();
 
@@ -245,7 +176,6 @@ export default function DebugWorld(props) {
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
-    state.initDrawIds();
     state.render();
     props.onLoad(state);
   }, []);
@@ -255,7 +185,7 @@ export default function DebugWorld(props) {
       <GmsCanvas
         canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
         gms={gms}
-        scaleFactor={debugCanvasScale}
+        scaleFactor={gmScale}
       />
     </div>
   );
@@ -277,7 +207,6 @@ export default function DebugWorld(props) {
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
  * @property {CanvasRenderingContext2D[]} ctxts
- * @property {CanvasRenderingContext2D[]} idCtxts Canvases for gm/room/door ids
  * @property {DebugOpts} debug
  * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId
@@ -285,7 +214,6 @@ export default function DebugWorld(props) {
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removeNavPath
  * @property {() => void} updateDebugRoom
- * @property {() => void} initDrawIds Draw gm/room/door ids
  * @property {() => void} render
  */
 

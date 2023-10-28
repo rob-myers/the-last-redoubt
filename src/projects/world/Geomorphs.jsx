@@ -1,8 +1,9 @@
 import React from "react";
 import { geomorphFilter, gmScale } from "./const";
-import { Poly } from "../geom";
+import { Mat, Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
 import { fillPolygons, loadImage } from "../service/dom";
+import { imageService } from "../service/image";
 import { geomorphPngPath } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import GmsCanvas from "./GmsCanvas";
@@ -16,12 +17,12 @@ export default function Geomorphs(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
     ctxts: [],
-    imgs: { lit: [], unlit: [] },
+    offscreen: { lit: [], unlit: [] },
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
     createFillPattern(type, ctxt, gmId) {
       const gm = gms[gmId];
-      const pattern = assertNonNull(ctxt.createPattern(type === 'unlit' ? state.imgs.unlit[gmId] : state.imgs.lit[gmId], 'no-repeat'));
+      const pattern = assertNonNull(ctxt.createPattern(state.offscreen[type][gmId].canvas, 'no-repeat'));
       pattern.setTransform({ a: 1 / gmScale, b: 0, c: 0, d: 1 / gmScale, e: gm.pngRect.x, f: gm.pngRect.y });
       return pattern;
     },
@@ -33,26 +34,105 @@ export default function Geomorphs(props) {
       ctxt.resetTransform();
     },
     drawRectImage(type, gmId, rect) {
-      state.ctxts[gmId].drawImage(// Src image & target canvas are scaled by 2
-        type === 'lit' ? state.imgs.lit[gmId] : state.imgs.unlit[gmId],
+      state.ctxts[gmId].drawImage(// Src/target canvas are scaled by `gmScale`
+        state.offscreen[type][gmId].canvas,
         gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
         gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
       );
+    },
+    initDrawIds() {
+      const ctxt = imageService.getCtxt([0, 0]);
+
+      gms.forEach((gm, gmId) => {
+        ctxt.canvas.width = gm.pngRect.width * gmScale;
+        ctxt.canvas.height = gm.pngRect.height * gmScale;
+
+        ctxt.resetTransform();
+        ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+
+        ctxt.transform(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y);
+        ctxt.transform(...gm.inverseMatrix.toArray());
+        const localTransform = ctxt.getTransform();
+
+        // gm/room/door ids
+        let fontPx = 7;
+        const debugIdOffset = 12;
+        
+        const rotAbout = new Mat;
+        ctxt.textBaseline = 'top';
+
+        gm.doors.forEach(({ poly, roomIds, normal }, doorId) => {
+          const center = gm.matrix.transformPoint(poly.center);
+          normal = gm.matrix.transformSansTranslate(normal.clone());
+
+          const doorText = `${gmId} ${doorId}`;
+          ctxt.font = `${fontPx = 6}px Courier New`;
+          const textWidth = ctxt.measureText(doorText).width;
+          const idPos = center.clone().translate(-textWidth/2, -fontPx/2);
+
+          if (normal.y === 0)
+            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/2, center).toArray());
+          else if (normal.x * normal.y !== 0) // Fixes diagonal doors?
+            ctxt.transform(...rotAbout.setRotationAbout(-Math.PI/4 * Math.sign(normal.x * normal.y), center).toArray());
+
+          if (gm.isHullDoor(doorId)) {// Offset so can see both (gmId, roomId)'s
+            idPos.addScaledVector(normal.clone().rotate(normal.y === 0 ? 0 : Math.PI/2), 12 * (roomIds[0] === null ? 1 : -1));
+          }
+
+          ctxt.fillStyle = '#222';
+          ctxt.fillRect(idPos.x, idPos.y, textWidth, fontPx);
+          ctxt.fillStyle = '#ffffff';
+          ctxt.fillText(doorText, idPos.x, idPos.y);
+          
+          ctxt.setTransform(localTransform);
+          
+          roomIds.forEach((roomId, i) => {
+            if (roomId === null) return;
+            ctxt.font = `${fontPx = 7}px Courier New`;
+            const roomText = gm.isHullDoor(doorId) ? `${gmId} ${roomId}` : `${roomId}`;
+            const textWidth = ctxt.measureText(roomText).width;
+            const idPos = center.clone()
+              .addScaledVector(normal, (i === 0 ? 1 : -1) * debugIdOffset)
+              .translate(-textWidth/2, -fontPx/2)
+            ;
+            ctxt.fillStyle = '#ffffffbb';
+            ctxt.fillText(roomText, idPos.x, idPos.y);
+          });
+        });
+
+        // gmScale === gmScale
+        state.offscreen.lit[gmId].drawImage(ctxt.canvas, 0, 0);
+        state.offscreen.unlit[gmId].drawImage(ctxt.canvas, 0, 0);
+      });
+
+      imageService.freeCtxts(ctxt);
     },
     initLightRects(gmId) {
       gms[gmId].doorToLightRect.forEach(x => x && state.drawRectImage('unlit', gmId, x.rect));
     },
     loadImages() {
-      gms.forEach(async (gm, gmId) => {
-        const [unlitImg, litImg] = await Promise.all([
-          loadImage(geomorphPngPath(gm.key)),
-          loadImage(geomorphPngPath(gm.key, 'lit')),
-        ]);
-        state.imgs.unlit[gmId] = unlitImg;
-        state.imgs.lit[gmId] = litImg;
-        state.drawRectImage('lit', gmId, gm.pngRect);
-        state.initLightRects(gmId);
+      state.ctxts.forEach(ctxt => ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height)); // HMR
+
+      Promise.all(
+        gms.map(async (gm, gmId) => {
+          const [unlitImg, litImg] = await Promise.all([
+            loadImage(geomorphPngPath(gm.key)),
+            loadImage(geomorphPngPath(gm.key, 'lit')),
+          ]);
+          state.offscreen.unlit[gmId] = imageService.getCtxt(unlitImg);
+          state.offscreen.lit[gmId] = imageService.getCtxt(litImg);
+        })
+      ).then(() => {
+        state.initDrawIds(); // Draw into state.offscreen
+        gms.forEach((gm, gmId) => {
+          state.drawRectImage('lit', gmId, gm.pngRect);
+          state.initLightRects(gmId);
+        });
       });
+
+      return () => gms.forEach((_, gmId) =>
+        imageService.freeCtxts(state.offscreen.unlit[gmId], state.offscreen.lit[gmId])
+      );
     },
     onCloseDoor(gmId, doorId, lightIsOn = true) {
       const gm = gms[gmId];
@@ -100,7 +180,7 @@ export default function Geomorphs(props) {
       });
     },
     recomputeLights(gmId, roomId) {
-      if (!state.imgs.unlit[gmId]) {
+      if (!state.offscreen.unlit[gmId]) {
         return; // avoid initialization error
       }
       const gmDoors = api.doors.lookup[gmId];
@@ -164,8 +244,9 @@ export default function Geomorphs(props) {
   });
   
   React.useEffect(() => {
-    state.loadImages();
+    const cleanup = state.loadImages();
     props.onLoad(state);
+    return cleanup;
   }, []);
 
   return (
@@ -191,14 +272,15 @@ export default function Geomorphs(props) {
  * @property {CanvasRenderingContext2D[]} ctxts
  * @property {boolean[][]} isRoomLit
  * Lights on iff `isRoomLit[gmId][roomId]`.
- * @property {{ lit: HTMLImageElement[]; unlit: HTMLImageElement[]; }} imgs
+ * @property {{ lit: CanvasRenderingContext2D[]; unlit: CanvasRenderingContext2D[]; }} offscreen
  * @property {(type: 'lit' | 'unlit', ctxt: CanvasRenderingContext2D, gmId: number) => CanvasPattern} createFillPattern
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * Fill polygon using unlit image, and also darken.
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
+ * @property {() => void} initDrawIds
  * @property {(gmId: number) => void} initLightRects
  * Currently assumes all doors initially closed
- * @property {() => void} loadImages
+ * @property {() => () => void} loadImages Returns cleanup
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
  * @property {(gmId: number, roomId: number)  => void} recomputeLights

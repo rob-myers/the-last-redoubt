@@ -1,5 +1,5 @@
 import React from "react";
-import { debugCanvasScale } from "./const";
+import { gmScale } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
@@ -183,8 +183,8 @@ export default function Decor(props) {
         ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
 
         ctxt.transform(
-          debugCanvasScale, 0, 0, debugCanvasScale,
-          -debugCanvasScale * gm.pngRect.x, -debugCanvasScale * gm.pngRect.y,
+          gmScale, 0, 0, gmScale,
+          -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
         );
         ctxt.transform(...gm.inverseMatrix.toArray());
 
@@ -210,7 +210,7 @@ export default function Decor(props) {
     >
       <GmsCanvas
         gms={gms}
-        scaleFactor={debugCanvasScale}
+        scaleFactor={gmScale}
         canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
       />
     </div>

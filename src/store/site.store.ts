@@ -107,7 +107,7 @@ const useStore = create<State>()(devtools((set, get) => ({
       });
 
       // `<Tabs>` won't be interactive until this resolves
-      await imageService.load();
+      await imageService.loadRequiredAssets();
       set(() => ({ browserLoad: true }), undefined, 'browser-load');
     },
 

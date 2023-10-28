@@ -19,6 +19,11 @@
   - hit test canvas changes cursor
 
 - 🚧 absorb DebugWorld into Geomorphs
+  - ✅ Geomorphs state.imgs.un/lit -> state.offscreen.un/lit
+  - ✅ initDrawIds draws into state.offscreen canvases
+  - 🚧 move debug.gmOutlines
+  - move debug.*
+  - move navPaths ?
 - pool canvases
 - hitTest -> Geomorphs
 
