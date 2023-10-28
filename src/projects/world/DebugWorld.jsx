@@ -6,6 +6,10 @@ import { debugCanvasScale } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import GmsCanvas from "./GmsCanvas";
 
+/**
+ * 🚧 -> Geomorphs
+ */
+
 /** @param {Props} props */
 export default function DebugWorld(props) {
 
@@ -15,18 +19,19 @@ export default function DebugWorld(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
     rootEl: /** @type {HTMLDivElement} */ ({}),
+    // 🚧 pool canvases
     ctxts: [],
     idCtxts: [],
-    room: undefined,
-
-    tree: {
+    
+    debug: {
+      room: undefined,
       gmOutlines: false,
-      windowOutlines: false,
       roomNav: false,
       roomOutline: false,
-      pathByKey: {},
-      pathsByGmId: gms.map(_ => []),
+      windowOutlines: false,
     },
+    pathByKey: {},
+    pathsByGmId: gms.map(_ => []),
 
     addNavPath(key, navPath) {
       state.removeNavPath(key);
@@ -52,30 +57,8 @@ export default function DebugWorld(props) {
       path.forEach(p => ctxt.lineTo(p.x, p.y));
       ctxt.stroke();
 
-      state.tree.pathByKey[key] = { key, ctxt, worldRect, gmIds };
-      gmIds.forEach(gmId => state.tree.pathsByGmId[gmId].push(state.tree.pathByKey[key]));
-    },
-    removeNavPath(key) {
-      state.tree.pathByKey[key]?.gmIds.forEach(gmId =>
-        state.tree.pathsByGmId[gmId] = state.tree.pathsByGmId[gmId].filter(x => x.key !== key)
-      );
-      delete state.tree.pathByKey[key];
-    },
-    changeRoom() {
-      const { gmGraph, fov: { gmId, roomId } } = api;
-      const gm = gmGraph.gms[gmId];
-      const visDoorIds = api.doors.getVisibleIds(gmId);
-      const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-      const roomPoly = gm.rooms[roomId];
-      state.room = {
-        gmId,
-        roomId,
-        gm,
-        visDoorIds,
-        roomNavPoly,
-        roomPoly,
-      };
-      state.render();
+      state.pathByKey[key] = { key, ctxt, worldRect, gmIds };
+      gmIds.forEach(gmId => state.pathsByGmId[gmId].push(state.pathByKey[key]));
     },
     initDrawIds() {
       const { gmGraph: { gms } } = api;
@@ -141,10 +124,15 @@ export default function DebugWorld(props) {
         });
       });
     },
+    removeNavPath(key) {
+      state.pathByKey[key]?.gmIds.forEach(gmId =>
+        state.pathsByGmId[gmId] = state.pathsByGmId[gmId].filter(x => x.key !== key)
+      );
+      delete state.pathByKey[key];
+    },
     render() {
       const { gmGraph: { gms } } = api;
-      const { tree, ctxts, room } = state;
-      if (!room) return;
+      const { debug, ctxts, debug: { room }  } = state;
 
       gms.forEach((gm, gmId) => {
         const ctxt = ctxts[gmId];
@@ -160,8 +148,8 @@ export default function DebugWorld(props) {
         );
         const baseTransform = ctxt.getTransform();
 
-        if (room.gmId === gmId) {// Work in local coordinates 
-          if (tree.roomNav) {
+        if (room?.gmId === gmId) {// Work in local coordinates 
+          if (debug.roomNav) {
             ctxt.fillStyle = 'rgba(255, 0, 0, 0.1)';
             ctxt.strokeStyle = 'blue';
             ctxt.lineWidth = 1;
@@ -171,12 +159,12 @@ export default function DebugWorld(props) {
               drawLine(ctxt, ...room.gm.doors[doorId].seg)
             );
           }
-          if (tree.roomOutline) {
+          if (debug.roomOutline) {
             ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
             ctxt.strokeStyle = 'red';
             fillPolygons(ctxt, [room.roomPoly], true);
           }
-          if (tree.windowOutlines) {
+          if (debug.windowOutlines) {
             ctxt.fillStyle = '#0000ff40';
             ctxt.strokeStyle = 'white';
             const rotAbout = new Mat;
@@ -198,14 +186,14 @@ export default function DebugWorld(props) {
          */
         ctxt.transform(...gm.inverseMatrix.toArray());
         
-        if (tree.gmOutlines) {
+        if (debug.gmOutlines) {
           ctxt.strokeStyle = 'green';
           ctxt.lineWidth = 4;
           ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
         }
 
         // Nav paths
-        tree.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
+        state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
           ctxt.drawImage(
             navPathCtxt.canvas,
             worldRect.x, worldRect.y, worldRect.width, worldRect.height,
@@ -214,6 +202,22 @@ export default function DebugWorld(props) {
 
       });
 
+    },
+    updateDebugRoom() {
+      const { gmGraph, fov: { gmId, roomId } } = api;
+      const gm = gmGraph.gms[gmId];
+      const visDoorIds = api.doors.getVisibleIds(gmId);
+      const roomNavPoly = gm.lazy.roomNavPoly[roomId];
+      const roomPoly = gm.rooms[roomId];
+      state.debug.room = {
+        gmId,
+        roomId,
+        gm,
+        visDoorIds,
+        roomNavPoly,
+        roomPoly,
+      };
+      state.render();
     },
   }));
 
@@ -272,26 +276,26 @@ export default function DebugWorld(props) {
  * @typedef State
  * @property {boolean} ready
  * @property {HTMLDivElement} rootEl
- * @property {DebugRoomCtxt | undefined} room Current-room-specific data
  * @property {CanvasRenderingContext2D[]} ctxts
  * @property {CanvasRenderingContext2D[]} idCtxts Canvases for gm/room/door ids
- * @property {DebugRenderTree} tree
+ * @property {DebugOpts} debug
+ * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
+ * @property {Record<number, DebugRenderPath[]>} pathsByGmId
  * 
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
  * @property {(key: string) => void} removeNavPath
- * @property {() => void} changeRoom
+ * @property {() => void} updateDebugRoom
  * @property {() => void} initDrawIds Draw gm/room/door ids
  * @property {() => void} render
  */
 
 /**
- * @typedef DebugRenderTree
+ * @typedef DebugOpts
+ * @property {DebugRoomCtxt | undefined} room Current-room-specific data
  * @property {boolean} gmOutlines Show gridRect of every geomorph?
  * @property {boolean} windowOutlines Show window outlines in current geomorph? 
  * @property {boolean} roomNav Show room navmesh?
  * @property {boolean} roomOutline Show room outline?
- * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
- * @property {Record<number, DebugRenderPath[]>} pathsByGmId
  * Nav path(s) by gmId; aligned to `gms`
  */
 

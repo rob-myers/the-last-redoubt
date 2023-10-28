@@ -51,12 +51,12 @@ export default function NPCs(props) {
             return false;
           case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
           case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
-          case 'gmOutlines': return api.debug.tree.gmOutlines;
+          case 'gmOutlines': return api.debug.debug.gmOutlines;
           case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
           case 'hideGms': return api.getRootEl().classList.contains('hide-gms');
-          case 'highlightWindows': return api.debug.tree.windowOutlines;
-          case 'localNav': return api.debug.tree.roomNav;
-          case 'localOutline': return api.debug.tree.roomOutline;
+          case 'highlightWindows': return api.debug.debug.windowOutlines;
+          case 'localNav': return api.debug.debug.roomNav;
+          case 'localOutline': return api.debug.debug.roomOutline;
           case 'omnipresent':
           case 'logTags':
           case 'scriptDoors':
@@ -94,21 +94,21 @@ export default function NPCs(props) {
           case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
           case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
           case 'gmOutlines':
-            api.debug.tree.gmOutlines = !!value;
+            api.debug.debug.gmOutlines = !!value;
             api.debug.render();
             break;
           case 'hideGms': api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms'); break;
           case 'highlightWindows':
-            api.debug.tree.windowOutlines = !!value;
+            api.debug.debug.windowOutlines = !!value;
             api.debug.render();
             break;
           case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
           case 'localNav':
-            api.debug.tree.roomNav = !!value;
+            api.debug.debug.roomNav = !!value;
             api.debug.render();
             break;
             case 'localOutline':
-              api.debug.tree.roomOutline = !!value;
+              api.debug.debug.roomOutline = !!value;
               api.debug.render();
             break;
           case 'logTags': ctxt.logTags = !!value; break;

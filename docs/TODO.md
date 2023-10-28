@@ -18,6 +18,10 @@
   - hit test canvas detects decor
   - hit test canvas changes cursor
 
+- 🚧 absorb DebugWorld into Geomorphs
+- pool canvases
+- hitTest -> Geomorphs
+
 - DebugWorld has clickable arrows via hit test canvas
 
 - FOV should be optional

@@ -54,7 +54,7 @@ export default function useHandleEvents(api) {
           break;
         case 'fov-changed':
           // console.log(e);
-          api.debug.changeRoom();
+          api.debug.updateDebugRoom();
           break;
         case 'on-tty-link':
           mockOnTtyLink(e, api);
