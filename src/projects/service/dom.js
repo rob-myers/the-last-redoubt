@@ -493,6 +493,10 @@ export function navigateFromHash(fromHash, toHref) {
 //#endregion
 
 //#region webp
+
+/** @type {HTMLCanvasElement} */
+let tempCanvas;
+
 /**
  * https://github.com/ihordiachenko/supports-webp-sync/blob/master/index.ts
  * @returns {boolean}
@@ -504,7 +508,7 @@ function checkWebPSupport()  {
 
 	// Use canvas hack for webkit-based browsers
 	// Kudos to Rui Marques: https://stackoverflow.com/a/27232658/7897049
-	const e = document.createElement('canvas')
+	const e = (tempCanvas ??= document.createElement('canvas'))
 	e.width = 1
 	e.height = 1
 	if (e.toDataURL && e.toDataURL('image/webp').indexOf('data:image/webp') == 0) {
