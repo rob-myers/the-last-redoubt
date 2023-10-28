@@ -7,6 +7,7 @@ import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obst
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
+import { imageService } from './image';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
@@ -1444,31 +1445,6 @@ export function metaToTags(meta) {
 //#region decor
 
 /**
- * @param {Geomorph.UseGeomorphsDefItem[]} gmDefs 
- */
-export function computeHitTestGrid(gmDefs) {
-  /** @type {Geomorph.HitTestGlobal} */
-  const output =  { gridDim: gmGridSize, ctxts: [], grid: {} };
-  const rect = new Rect;
-  const mat = new Mat;
-  gmDefs.forEach(({ gmKey, transform }) => {
-    /**
-     * Assume geomorph is either "standard" (1200 * 1200) or "edge" (1200 * 600).
-     * We may support corner geomorphs and others in the future.
-     */
-    rect.set(0, 0, gmGridSize * 2, gmGridSize * (isEdgeGeomorph(gmKey) ? 1 : 2));
-    transform && rect.applyMatrix(mat.feedFromArray(transform));
-    const ctxt = /** @type {CanvasRenderingContext2D} */ (document.createElement('canvas').getContext('2d'));
-    ctxt.canvas.width = rect.width;
-    ctxt.canvas.height = rect.height;
-    ctxt.imageSmoothingEnabled = false;
-    output.ctxts.push(ctxt);
-    (output.grid[rect.x / gmGridSize] ??= {})[rect.y / gmGridSize] = [ctxt];
-  });
-  return output;
-}
-
-/**
  * @param {NPC.DecorDef} decor 
  * @param {Geom.VectJson} point 
  * @returns {boolean}
@@ -1795,6 +1771,32 @@ export function verifyDecor(input) {
 //#endregion
 
 //#region grid
+
+/**
+ * @param {Geomorph.UseGeomorphsDefItem[]} gmDefs 
+ */
+export function computeHitTestGrid(gmDefs) {
+  /** @type {Geomorph.HitTestGlobal} */
+  const output =  { gridDim: gmGridSize, ctxts: [], grid: {} };
+  const rect = new Rect;
+  const mat = new Mat;
+  gmDefs.forEach(({ gmKey, transform }) => {
+    /**
+     * Assume geomorph is either "standard" (1200 * 1200) or "edge" (1200 * 600).
+     * We may support corner geomorphs and others in the future.
+     */
+    rect.set(0, 0, gmGridSize * 2, gmGridSize * (isEdgeGeomorph(gmKey) ? 1 : 2));
+    transform && rect.applyMatrix(mat.feedFromArray(transform));
+    const ctxt = imageService.getCtxt([rect.width, rect.height]);
+    ctxt.imageSmoothingEnabled = false;
+    output.ctxts.push(ctxt);
+    (output.grid[rect.x / gmGridSize] ??= {})[rect.y / gmGridSize] = [ctxt];
+  });
+  return {
+    output,
+    cleanup: () => imageService.freeCtxts(...output.ctxts),
+  };
+}
 
 /**
  * @param {number} item Nav node id

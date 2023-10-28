@@ -5,7 +5,6 @@ import { merge } from "rxjs";
 
 import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
-import { gmGridSize } from "../service/const";
 import { computeHitTestGrid as computeHitTestGlobal } from "../service/geomorph";
 import { npcService,  } from "../service/npc";
 import { Vect } from "../geom";
@@ -88,10 +87,14 @@ export default function World(props) {
   useHandleEvents(state);
   
   React.useEffect(() => {
-    // 🚧 pool canvases
-    state.hitTest = computeHitTestGlobal(props.gms);
+    // 🚧 move to <Geomorphs>
+    const { output, cleanup } = computeHitTestGlobal(props.gms);
+    state.hitTest = output;
     setCached(props.worldKey, state);
-    return () => removeCached(props.worldKey);
+    return () => {
+      cleanup();
+      removeCached(props.worldKey);
+    };
   }, []);
 
   React.useEffect(() => {
