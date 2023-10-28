@@ -1447,7 +1447,8 @@ export function metaToTags(meta) {
  * @param {Geomorph.UseGeomorphsDefItem[]} gmDefs 
  */
 export function computeHitTestGrid(gmDefs) {
-  const output = /** @type {Geomorph.Grid<CanvasRenderingContext2D>} */ ({});
+  /** @type {Geomorph.HitTestGlobal} */
+  const output =  { gridDim: gmGridSize, ctxts: [], grid: {} };
   const rect = new Rect;
   const mat = new Mat;
   gmDefs.forEach(({ gmKey, transform }) => {
@@ -1461,7 +1462,8 @@ export function computeHitTestGrid(gmDefs) {
     ctxt.canvas.width = rect.width;
     ctxt.canvas.height = rect.height;
     ctxt.imageSmoothingEnabled = false;
-    (output[rect.x / gmGridSize] ??= {})[rect.y / gmGridSize] = [ctxt];
+    output.ctxts.push(ctxt);
+    (output.grid[rect.x / gmGridSize] ??= {})[rect.y / gmGridSize] = [ctxt];
   });
   return output;
 }

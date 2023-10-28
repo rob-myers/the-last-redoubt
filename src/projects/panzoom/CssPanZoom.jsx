@@ -562,7 +562,7 @@ const rootCss = css`
  * @property {string} [className]
  * @property {string} [background]
  * @property {boolean} [debugHitTestGrid]
- * @property {{ dim: number; grid: Geomorph.Grid<CanvasRenderingContext2D>; }} [hitTestGrid]
+ * @property {Geomorph.HitTestGlobal} [hitTestGrid]
  * @property {{ x?: number; y?: number; ms?: number; zoom?: number }} [init]
  * @property {(api: PanZoom.CssApi) => void} [onLoad]
  * @property {boolean} [showGrid]
@@ -648,7 +648,7 @@ function removePointer(pointers, event) {
  */
 function DebugHitTestGrid(props) {
   if (props.grid) {
-    const { dim, grid } = props.grid;
+    const { gridDim, grid } = props.grid;
     return <>{Object.entries(grid).map(([xStr, v]) =>
       Object.entries(v).map(([yStr, items]) => items.map(ctxt =>
         <canvas // Expect items.length ≤ 1
@@ -658,7 +658,7 @@ function DebugHitTestGrid(props) {
           style={{
             position: 'absolute',
             pointerEvents: 'none',
-            transform: `translate(${dim * Number(xStr)}px, ${dim * Number(yStr)}px)`,
+            transform: `translate(${gridDim * Number(xStr)}px, ${gridDim * Number(yStr)}px)`,
           }}
           // ref={(el) => el?.getContext('2d')?.drawImage(ctxt.canvas, 0, 0)}
         />

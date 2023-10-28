@@ -6,7 +6,7 @@ import { merge } from "rxjs";
 import { precision, removeFirst } from "../service/generic";
 import { removeCached, setCached } from "../service/query-client";
 import { gmGridSize } from "../service/const";
-import { computeHitTestGrid } from "../service/geomorph";
+import { computeHitTestGrid as computeHitTestGlobal } from "../service/geomorph";
 import { npcService,  } from "../service/npc";
 import { Vect } from "../geom";
 import useUpdate from "../hooks/use-update";
@@ -30,7 +30,8 @@ export default function World(props) {
     disabled: !!props.disabled,
     gmGraph: /** @type {State['gmGraph']} */ ({}),
     gmRoomGraph: /** @type {State['gmRoomGraph']} */ ({}),
-    hitTestGrid: { dim: gmGridSize, grid: computeHitTestGrid(props.gms) },
+    hitTest: /** @type {State['hitTest']} */ ({}),
+
     debug: /** @type {State['debug']} */ ({ ready: false }),
     decor: /** @type {State['decor']} */ ({ ready: false }),
     doors: /** @type {State['doors']} */  ({ ready: false }),
@@ -61,11 +62,11 @@ export default function World(props) {
       ...npcService,
     },
     classNames: [
-      // 'hide-gms',
       css`${props.gms.map((_, gmId) =>
         `&.hide-gms:not(.show-gm-${gmId}) .gm-${gmId} { display: none; };`,
-      ).join('\n')}`,
-      // 'show-gm-{gmId}'s go here
+        ).join('\n')}`,
+      // 'hide-gms', // ℹ️ not by default
+      // 'show-gm-{gmId}'s will go here
     ],
     setShownGms(shownGmIds) {
       // Apply change via CSS, remembering for next render
@@ -79,7 +80,6 @@ export default function World(props) {
         shownGmIds.map(gmId => `show-gm-${gmId}`)
       );
     },
-    update,
   }));
 
   ({ gmGraph: state.gmGraph, gmRoomGraph: state.gmRoomGraph } = useGeomorphs(props.gms, props.disabled));
@@ -88,6 +88,8 @@ export default function World(props) {
   useHandleEvents(state);
   
   React.useEffect(() => {
+    // 🚧 pool canvases
+    state.hitTest = computeHitTestGlobal(props.gms);
     setCached(props.worldKey, state);
     return () => removeCached(props.worldKey);
   }, []);
@@ -103,7 +105,7 @@ export default function World(props) {
       init={props.init}
       background="#000"
       onLoad={api => (state.panZoom = api) && update()}
-      hitTestGrid={state.hitTestGrid}
+      hitTestGrid={state.hitTest}
       // debugHitTestGrid
       // showGrid // ℹ️ slow zooming
     >
@@ -154,7 +156,7 @@ export default function World(props) {
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
  * @property {Graph.GmRoomGraph} gmRoomGraph
- * @property {{ dim: number; grid: Geomorph.Grid<CanvasRenderingContext2D> }} hitTestGrid
+ * @property {Geomorph.HitTestGlobal} hitTest
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
  * @property {import("./Doors").State} doors
@@ -167,7 +169,6 @@ export default function World(props) {
  * @property {PanZoom.CssApi} panZoom
  * @property {string[]} classNames
  * @property {(shownGmIds: number[]) => void} setShownGms
- * @property {() => void} update
  */
 
 /**

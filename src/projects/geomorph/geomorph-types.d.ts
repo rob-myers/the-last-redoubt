@@ -582,5 +582,12 @@ declare namespace Geomorph {
    * Fast geometric lookup via well-chosen grid dimension, @see {Grid<T>}
    */
   export type GridSet<T> = Record<number, Record<number, Set<T>>>;
-  
+ 
+  export interface HitTestGlobal {
+    gridDim: number;
+    /** World coords modulo @see {gridDim} */
+    grid: Geomorph.Grid<CanvasRenderingContext2D>;
+    /** Aligned to dfs of grid */
+    ctxts: CanvasRenderingContext2D[];
+  }
 }
