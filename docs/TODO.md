@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 Start using react-three-fiber for rendering only
+- ✅ Start using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`
   - ✅ Create `WorldGl` and show in `Tabs`
   - ✅ `yarn add @react-three/drei`
@@ -11,9 +11,9 @@
     - camera + plane with texture (gm lit)
     - camera at [0, 10, 0] points down i.e. [0, -1, 0]
       > so previous 2d coords (x, y) --> (x, z)
-  - Fix aspect ratio issue
-  - Can pan camera somehow
-  - Can zoom camera somehow
+  - ✅ Fix aspect ratio issue
+    - turned off `manual` attribute of `PerspectiveCamera`
+  - ✅ Can pan/zoom camera somehow
 
 - 🚧 only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
