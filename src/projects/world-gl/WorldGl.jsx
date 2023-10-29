@@ -4,6 +4,8 @@ import { PerspectiveCamera, MapControls } from "@react-three/drei";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import Geomorphs from "./Geomorphs";
+import useGeomorphs from "projects/geomorph/use-geomorphs";
+import { Origin, customPlaneGeometry } from "./Demos";
 
 /**
  * @param {Props} props
@@ -13,9 +15,18 @@ export default function WorldGl(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     disabled: !!props.disabled,
+    gmGraph: /** @type {State['gmGraph']} */ ({}),
+    gmRoomGraph: /** @type {State['gmRoomGraph']} */ ({}),
+
     geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
   }));
+
   const update = useUpdate();
+
+  ({
+    gmGraph: state.gmGraph,
+    gmRoomGraph: state.gmRoomGraph
+  } = useGeomorphs(props.gms, props.disabled));
 
   return (
     <Canvas>
@@ -25,10 +36,15 @@ export default function WorldGl(props) {
         // ref={camRef}
         // manual
         makeDefault
-        position={[0, 10, 0]}
+        position={[0, 30, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <Suspense fallback={null}>
+        <Origin/>
+        {/* <mesh {...props} geometry={customPlaneGeometry}>
+          <meshBasicMaterial attach="material" color="hotpink" />
+        </mesh> */}
+
         <Geomorphs
           api={state}
           onLoad={api => (state.geomorphs = api) && update()}
@@ -40,15 +56,16 @@ export default function WorldGl(props) {
 
 /**
  * @typedef Props
- * @property {string} worldKey
  * @property {boolean} [disabled]
+ * @property {Geomorph.UseGeomorphsDefItem[]} gms
+ * @property {string} worldKey
  */
 
 /**
  * @typedef State
  * @property {boolean} disabled
- * //@property {Graph.GmGraph} gmGraph
- * //@property {Graph.GmRoomGraph} gmRoomGraph
+ * @property {Graph.GmGraph} gmGraph
+ * @property {Graph.GmRoomGraph} gmRoomGraph
  * //@property {import("./DebugWorld").State} debug
  * //@property {import("./Decor").State} decor
  * //@property {import("./Doors").State} doors

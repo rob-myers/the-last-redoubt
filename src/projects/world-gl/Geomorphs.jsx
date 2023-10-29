@@ -1,11 +1,16 @@
 import React from "react";
 import useStateRef from "../hooks/use-state-ref";
-import { DemoScene } from "./Demos";
+import { Geomorph } from "./Demos";
 
 /**
  * @param {Props} props 
  */
 export default function Geomorphs(props) {
+  const { api } = props;
+  const { gmGraph: { gms } } = api;
+
+  // 🚧 load all textures together
+
   const state = useStateRef(
     /** @type {() => State} */ () => ({
       ready: true,
@@ -16,9 +21,11 @@ export default function Geomorphs(props) {
     props.onLoad(state);
   }, []);
 
-  return (
-    <DemoScene/>
-  );
+  return <>
+    {gms.map((gm, gmId) =>
+      <Geomorph key={gmId} gm={gm} />
+    )}
+  </>;
 }
 
 /**
