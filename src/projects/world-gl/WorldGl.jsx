@@ -1,30 +1,40 @@
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Edges, PerspectiveCamera, useTexture, MapControls } from "@react-three/drei";
-import { gmScale } from "../world/const";
+import { PerspectiveCamera, MapControls } from "@react-three/drei";
+import useStateRef from "../hooks/use-state-ref";
+import useUpdate from "../hooks/use-update";
+import Geomorphs from "./Geomorphs";
 
 /**
  * @param {Props} props
  */
 export default function WorldGl(props) {
   // const camRef = /** @type {React.RefObject<THREE.PerspectiveCamera>} */ (React.useRef(null));
+
+  const state = useStateRef(/** @type {() => State} */ () => ({
+    disabled: !!props.disabled,
+    geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
+  }));
+  const update = useUpdate();
+
   return (
-    <div style={{ backgroundColor: "white", height: "100%" }}>
-      <Canvas>
-        <MapControls />
-        <ambientLight intensity={5} />
-        <PerspectiveCamera
-          // ref={camRef}
-          makeDefault
-          // manual
-          position={[0, 10, 0]}
-          rotation={[-Math.PI / 2, 0, 0]}
+    <Canvas>
+      <MapControls />
+      <ambientLight intensity={5} />
+      <PerspectiveCamera
+        // ref={camRef}
+        // manual
+        makeDefault
+        position={[0, 10, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      />
+      <Suspense fallback={null}>
+        <Geomorphs
+          api={state}
+          onLoad={api => (state.geomorphs = api) && update()}
         />
-        <Suspense fallback={null}>
-          <DemoScene />
-        </Suspense>
-      </Canvas>
-    </div>
+      </Suspense>
+    </Canvas>
   );
 }
 
@@ -34,21 +44,18 @@ export default function WorldGl(props) {
  * @property {boolean} [disabled]
  */
 
-function DemoScene() {
-  const texture = useTexture('/assets/geomorph/g-301--bridge.lit.png');
-  const { width, height } = /** @type {HTMLImageElement} */ (texture.image);
-  const scale = (1 / gmScale) * (1 / 60);
-
-  return (
-    <mesh scale={[scale, 1, scale]}>
-      <boxGeometry args={[width, 0.1, height]} />
-      <meshStandardMaterial color={"#aaa"} map={texture} transparent />
-      <Edges
-        // scale={1}
-        scale={1.1}
-        threshold={15} // degrees
-        color="black"
-      />
-    </mesh>
-  );
-}
+/**
+ * @typedef State
+ * @property {boolean} disabled
+ * //@property {Graph.GmGraph} gmGraph
+ * //@property {Graph.GmRoomGraph} gmRoomGraph
+ * //@property {import("./DebugWorld").State} debug
+ * //@property {import("./Decor").State} decor
+ * //@property {import("./Doors").State} doors
+ * //@property {import("./FOV").State} fov
+ * @property {import("./Geomorphs").State} geomorphs
+ * //@property {() => boolean} isReady
+ * //@property {StateUtil & import("../service/npc").NpcServiceType} lib
+ * //@property {import("./NPCs").State} npcs
+ * //@property {PanZoom.CssApi} panZoom
+ */
