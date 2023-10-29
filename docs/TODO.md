@@ -2,6 +2,12 @@
 
 ## In progress
 
+- 🚧 Start using react-three-fiber for rendering only
+  - ✅ `yarn add three @types/three @react-three/fiber`
+  - ✅ Create `WorldGl` and show in `Tabs`
+  - 🚧 Basic react-three-fiber demo in `WorldGl`
+  - Basic movable camera + plane with texture (gm lit)
+
 - 🚧 only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
 
@@ -22,9 +28,11 @@
   - ✅ Geomorphs state.imgs.un/lit -> state.offscreen.un/lit
   - ✅ initDrawIds draws into state.offscreen canvases
   - 🚧 move debug.gmOutlines
-  - move debug.*
+  - move debug.room related
   - move navPaths ?
-- pool canvases
+- 🚧 garbage collect canvas contexts?
+  - maybe animations are persisting them?
+
 - hitTest -> Geomorphs
 
 - DebugWorld has clickable arrows via hit test canvas

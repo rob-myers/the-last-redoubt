@@ -11,6 +11,12 @@ const classToComponent: Record<ComponentClassKey, {
     get: (module: typeof import('projects/world/World')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} />,
+      },
+  WorldGl: {
+    loadable: loadable(() => import('projects/world-gl/WorldGl')),
+    get: (module: typeof import('projects/world-gl/WorldGl')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} />,
   },
   GeomorphEdit: {
     loadable: loadable(() => import('projects/geomorph/GeomorphEdit')),
@@ -43,6 +49,7 @@ export type ComponentClassKey = (
   | 'SvgStringPull'
   | 'SvgNavGraph'
   | 'World'
+  | 'WorldGl'
 )
 
 export interface WorldComponentDef {
