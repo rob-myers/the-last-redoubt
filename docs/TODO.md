@@ -5,8 +5,15 @@
 - 🚧 Start using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`
   - ✅ Create `WorldGl` and show in `Tabs`
-  - 🚧 Basic react-three-fiber demo in `WorldGl`
-  - Basic movable camera + plane with texture (gm lit)
+  - ✅ `yarn add @react-three/drei`
+  - ℹ️ Three. js uses a right-handed coordinate frame, where the positive x-axis points to the right, the positive y-axis points up, and the positive z-axis points towards the viewer.
+  - ✅ Basic react-three-fiber demo in `WorldGl`:
+    - camera + plane with texture (gm lit)
+    - camera at [0, 10, 0] points down i.e. [0, -1, 0]
+      > so previous 2d coords (x, y) --> (x, z)
+  - Fix aspect ratio issue
+  - Can pan camera somehow
+  - Can zoom camera somehow
 
 - 🚧 only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
