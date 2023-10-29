@@ -36,7 +36,7 @@ export default function WorldGl(props) {
         // ref={camRef}
         // manual
         makeDefault
-        position={[0, 30, 0]}
+        position={[0, 4, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
       />
       <Suspense fallback={null}>

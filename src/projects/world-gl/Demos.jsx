@@ -4,84 +4,44 @@ import { useTexture, Edges } from "@react-three/drei";
 import { gmScale } from "../world/const";
 
 /**
- * ✅ custom geometry with origin at top-left
- * 🚧 transform -> (x, y, z)
- * 
+ * - Undo image scale (i.e. `gmScale`).
+ * - Next, `1/60` -> 1 grid side -> `1.5m`
+ */
+const scale = (1 / gmScale) * (1 / 60) * (2 / 3);
+
+/**
  * @param {GeomorphProps} props 
  */
 export function Geomorph(props) {
   const { gm } = props;
 
   const texture = useTexture(`/assets/geomorph/${gm.def.key}.lit.png`);
-  const { width, height } = /** @type {HTMLImageElement} */ (texture.image);
 
-  // 🚧 precompute Mat4?
-  const scale = (1 / gmScale) * (1 / 60);
-  // const mat4 = new THREE.Matrix4;
-  // const otherMat4 = new THREE.Matrix4;
-  // // mat4.scale(new THREE.Vector3(scale, 1, scale));
+  // 🚧 precompute Mat4
+  const mat4 = new THREE.Matrix4;
+  mat4.setFromMatrix3(new THREE.Matrix3(
+    gm.transform[0], 0, gm.transform[1],
+    0, 1, 0,
+    gm.transform[2], 0, gm.transform[3],
+  ).transpose())
+  mat4.setPosition(gm.transform[4] * scale, 0,  gm.transform[5] * scale);
 
-  // mat4.makeTranslation(gm.pngRect.x * scale, 0, gm.pngRect.y * scale);
-  
-  // otherMat4.setFromMatrix3(new THREE.Matrix3(
-  //   gm.transform[0] * scale, 0, gm.transform[1] * scale,
-  //   0, 1, 0,
-  //   gm.transform[2] * scale, 0, gm.transform[3] * scale,
-  // ).transpose())
-  // otherMat4.setPosition(
-  //   // (gm.pngRect.x + gm.transform[4]) * (1/60),
-  //   gm.transform[4] * (1/60),
-  //   0,
-  //   // (gm.pngRect.y + gm.transform[5]) * (1/60),
-  //    gm.transform[5] * (1/60),
-  // );
-
-  // mat4.multiply(otherMat4);
-
-  
-  // React.useEffect(() => {
-  //   // 🚧 avoid re-run on HMR
-  //   boxRef.current?.translate(width/2, 0, height/2);
-  // }, []);
-
-  // return (
-  //   <mesh
-  //     scale={[scale, 1, scale]}
-  //     // matrix={mat4}
-  //     // matrix-copy={null}
-  //     // matrixAutoUpdate={false}
-  //   >
-  //     {/* 🚧 origin should be top-left, not centre */}
-  //     {/* <boxGeometry ref={boxRef} args={[width, 0.1, height]} /> */}
-  //     <boxGeometry args={[gm.pngRect.width * gmScale, 0.1, gm.pngRect.height * gmScale]} />
-  //     <meshStandardMaterial color={"#aaa"} map={texture} transparent />
-  //     <Edges
-  //       // scale={1}
-  //       scale={1.1}
-  //       threshold={15} // degrees
-  //       color="black"
-  //     />
-  //   </mesh>
-  // );
-  
   return (
-    <mesh
-      scale={[gm.pngRect.width * scale, 1, gm.pngRect.height * scale]}
-      geometry={customPlaneGeometry}
-      // matrix={mat4}
-      // matrix-copy={null}
-      // matrixAutoUpdate={false}
-    >
-      {/* 🚧 origin should be top-left, not centre */}
-      {/* <boxGeometry ref={boxRef} args={[width, 0.1, height]} /> */}
-      <meshStandardMaterial color={"#aaa"} map={texture} transparent />
-      <Edges
-        // scale={1.1}
-        scale={1}
-        threshold={15} // degrees
-        color="white"
-      />
-    </mesh>
+    <group onUpdate={self => self.applyMatrix4(mat4)}>
+      <mesh
+        scale={[gm.pngRect.width * scale, 1, gm.pngRect.height * scale]}
+        geometry={customPlaneGeometry}
+        position={[gm.pngRect.x * scale, 0, gm.pngRect.y * scale]}
+      >
+        <meshStandardMaterial color={"#aaa"} map={texture} transparent />
+        {/* <Edges
+          // scale={1.1}
+          scale={1}
+          threshold={15} // degrees
+          color="white"
+        /> */}
+      </mesh>
+    </group>
   );
 }
 

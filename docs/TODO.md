@@ -16,12 +16,12 @@
   - ✅ Can pan/zoom camera somehow
 
 - ✅ World has Geomorphs component
-- 🚧 Geomorphs component lays out lit geomorphs driven by `gms`
+- ✅ Geomorphs component lays out lit geomorphs driven by `gms`
   - ✅ use cube to mark origin
   - ✅ custom geometry with origin at top-left
   - ✅ redo custom geometry manually with indices
   - ✅ custom geometry has uv mapping
-  - account for pngRect.{x,y}
+  - ✅ account for pngRect.{x,y}
 - Geomorphs component initially renders texture per geomorph
   - lit gm
   - all unlit rects
