@@ -1034,6 +1034,7 @@ export function geomorphDataToInstance(gm, gmId, transform) {
   /** @type {Geomorph.GeomorphDataInstance} */
   const output = {
     ...gm,
+    gmId,
     itemKey: `${gm.key}-[${transform}]`,
     transform,
     transformStyle: `matrix(${transform})`,

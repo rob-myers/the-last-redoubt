@@ -29,9 +29,11 @@ export default function WorldGl(props) {
   } = useGeomorphs(props.gms, props.disabled));
 
   return (
-    <Canvas>
+    <Canvas
+      // gl={{ logarithmicDepthBuffer: true }}
+    >
       <MapControls />
-      <ambientLight intensity={5} />
+      <ambientLight intensity={2} />
       <PerspectiveCamera
         // ref={camRef}
         // manual

@@ -22,10 +22,15 @@
   - ✅ redo custom geometry manually with indices
   - ✅ custom geometry has uv mapping
   - ✅ account for pngRect.{x,y}
-- Geomorphs component initially renders texture per geomorph
-  - lit gm
-  - all unlit rects
-  - gm/room/door ids
+- 🚧 Work on Geomorphs
+  - ✅ fix flickering at edges
+  - load lit/unlit pngs collectively
+  - initially render texture per geomorph
+    - lit gm
+    - all unlit rects
+    - gm/room/door ids
+- Custom controls based on MapControls
+  - on zoom, fix world point at y = 0
 
 ---
 

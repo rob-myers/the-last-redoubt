@@ -24,7 +24,8 @@ export function Geomorph(props) {
     0, 1, 0,
     gm.transform[2], 0, gm.transform[3],
   ).transpose())
-  mat4.setPosition(gm.transform[4] * scale, 0,  gm.transform[5] * scale);
+  // ℹ️ y component avoids z-fighting
+  mat4.setPosition(gm.transform[4] * scale, gm.gmId * 0.00001,  gm.transform[5] * scale);
 
   return (
     <group onUpdate={self => self.applyMatrix4(mat4)}>

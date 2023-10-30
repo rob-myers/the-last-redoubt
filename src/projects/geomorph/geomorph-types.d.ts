@@ -319,6 +319,8 @@ declare namespace Geomorph {
    * and various induced data e.g. transformOrigin.
    */
   export interface GeomorphDataInstance extends Geomorph.GeomorphData {
+    /** Position in @see {Graph.GmGraph.gms} */
+    gmId: number;
     /** `${gm.key}-[${transform}]` */
     itemKey: string;
     transform: [number, number, number, number, number, number];
