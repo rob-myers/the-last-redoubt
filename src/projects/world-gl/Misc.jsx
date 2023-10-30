@@ -31,7 +31,7 @@ export function Geomorph(props) {
     <group onUpdate={self => self.applyMatrix4(mat4)}>
       <mesh
         scale={[gm.pngRect.width * scale, 1, gm.pngRect.height * scale]}
-        geometry={customPlaneGeometry}
+        geometry={customQuadGeometry}
         position={[gm.pngRect.x * scale, 0, gm.pngRect.y * scale]}
       >
         <meshStandardMaterial color={"#aaa"} map={texture} transparent />
@@ -60,33 +60,25 @@ export function Origin() {
   )
 }
 
-// https://codesandbox.io/s/react-three-fiber-custom-geometry-with-fragment-shader-material-vxswf?file=/src/index.js:2243-2262
-
-export const customPlaneGeometry = new THREE.BufferGeometry();
+export const customQuadGeometry = new THREE.BufferGeometry();
 const vertices = new Float32Array([
   0, 0, 0,
   1, 0, 1,
   1, 0, 0,
-
-  0, 0, 0,
   0, 0, 1,
-  1, 0, 1,
 ]);
 
 const uvs = new Float32Array([
   1.0, 1.0,
   0.0, 0.0,
   0.0, 1.0,
-
-  1.0, 1.0,
   1.0, 0.0,
-  0.0, 0.0,
 ]);
 
 const indices = [
   0, 1, 2,
-  3, 4, 5
+  0, 3, 1
 ];
-customPlaneGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-customPlaneGeometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
-customPlaneGeometry.setIndex(indices);
+customQuadGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+customQuadGeometry.setAttribute( 'uv', new THREE.BufferAttribute( uvs, 2 ) );
+customQuadGeometry.setIndex(indices);

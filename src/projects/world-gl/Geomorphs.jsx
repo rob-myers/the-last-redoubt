@@ -1,6 +1,6 @@
 import React from "react";
 import useStateRef from "../hooks/use-state-ref";
-import { Geomorph } from "./Demos";
+import { Geomorph } from "./Misc";
 
 /**
  * @param {Props} props 

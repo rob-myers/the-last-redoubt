@@ -5,7 +5,7 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import Geomorphs from "./Geomorphs";
 import useGeomorphs from "projects/geomorph/use-geomorphs";
-import { Origin, customPlaneGeometry } from "./Demos";
+import { Origin } from "./Misc";
 
 /**
  * @param {Props} props
