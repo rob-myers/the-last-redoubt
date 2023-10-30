@@ -1,10 +1,9 @@
 import React from "react";
 import THREE from "three";
-import { useLoader } from "@react-three/fiber";
-import { useTexture, Edges } from "@react-three/drei";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { Geomorph, customQuadGeometry } from "./Misc";
+import { useQueries, useQuery } from "react-query";
 
 /**
  * @param {Props} props 
@@ -13,9 +12,12 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
 
-  // ℹ️ tried writing to state via onLoad callback, but lighting seemed wrong
-  const unlitTex = useTexture(gms.map((gm) => `/assets/geomorph/${gm.key}.png`));
-  const litTex = useTexture(gms.map((gm) => `/assets/geomorph/${gm.key}.lit.png`));
+  const litRes = useQueries(// async texture loading
+    gms.map(gm => ({
+      queryKey: `${gm.key}.lit`,
+      queryFn: () => textLoader.loadAsync(`/assets/geomorph/${gm.key}.lit.webp`)
+    })),
+  );
 
   const state = useStateRef(
     /** @type {() => State} */ () => ({
@@ -34,8 +36,8 @@ export default function Geomorphs(props) {
   );
 
   gms.forEach((gm, gmId) => {
-    state.tex.unlit[gm.key] ??= unlitTex[gmId];
-    state.tex.lit[gm.key] ??= litTex[gmId];
+    // state.tex.unlit[gm.key] ??= unlitRes[gmId];
+    state.tex.lit[gm.key] ??= litRes[gmId].data;
   });
 
   React.useEffect(() => {
@@ -49,17 +51,18 @@ export default function Geomorphs(props) {
         key={gmId}
         onUpdate={self => self.applyMatrix4(state.mat4s[gmId])}
       >
-        <mesh
+        {state.tex.lit[gm.key] && <mesh
           scale={[gm.pngRect.width * scale, 1, gm.pngRect.height * scale]}
           geometry={customQuadGeometry}
           position={[gm.pngRect.x * scale, 0, gm.pngRect.y * scale]}
         >
           <meshStandardMaterial
-            color={"#aaa"}
+            // color={"#eee"}
             transparent
-            {...state.tex.lit[gm.key] && {map: state.tex.lit[gm.key]}}
+            map={state.tex.lit[gm.key]}
+            alphaMap={state.tex.lit[gm.key]} // Why does this improve things?
           />
-        </mesh>
+        </mesh>}
       </group>
     )}
   </>;
@@ -99,3 +102,5 @@ export default function Geomorphs(props) {
  * - Next, `1/60` -> 1 grid side -> `1.5m`
  */
 const scale = (1 / gmScale) * (1 / 60) * (2 / 3);
+
+const textLoader = new THREE.TextureLoader();

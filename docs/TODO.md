@@ -25,13 +25,15 @@
 - 🚧 Work on Geomorphs
   - ✅ fix flickering at edges
   - ✅ load lit/unlit pngs collectively
-  - create async asset loader
-  - initially render texture per geomorph
+  - ✅ async asset loader via useQueries
+  - 🚧 initially render texture per geomorph
     - lit gm
     - all unlit rects
     - gm/room/door ids
 - Custom controls based on MapControls
   - on zoom, fix world point at y = 0
+
+- useQueries in useGeomorphs ?
 
 ---
 

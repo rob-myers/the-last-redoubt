@@ -37,10 +37,14 @@ export default function WorldGl(props) {
 
   return state.gmGraph.ready ? (
     <Canvas
-      // gl={{ logarithmicDepthBuffer: true }}
+      gl={{
+        // logarithmicDepthBuffer: true,
+        powerPreference: 'low-power',
+        // outputColorSpace: 'display-p3',
+      }}
     >
       <MapControls />
-      <ambientLight intensity={2} />
+      <ambientLight intensity={1} />
       <PerspectiveCamera
         // ref={camRef}
         // manual

@@ -78,7 +78,7 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-lite-youtube-embed": "^2.3.52",
-    "react-query": "^3.39.0",
+    "react-query": "^3.39.3",
     "react-sizeme": "^3.0.2",
     "react-use-measure": "^2.1.1",
     "rehype-katex": "^4",
