@@ -24,7 +24,8 @@
   - ✅ account for pngRect.{x,y}
 - 🚧 Work on Geomorphs
   - ✅ fix flickering at edges
-  - load lit/unlit pngs collectively
+  - ✅ load lit/unlit pngs collectively
+  - create async asset loader
   - initially render texture per geomorph
     - lit gm
     - all unlit rects

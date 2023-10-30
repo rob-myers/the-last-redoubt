@@ -1,10 +1,12 @@
 import React, { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { PerspectiveCamera, MapControls } from "@react-three/drei";
+
+import { removeCached, setCached } from "../service/query-client";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
+import useGeomorphs from "../geomorph/use-geomorphs";
 import Geomorphs from "./Geomorphs";
-import useGeomorphs from "projects/geomorph/use-geomorphs";
 import { Origin } from "./Misc";
 
 /**
@@ -28,7 +30,12 @@ export default function WorldGl(props) {
     gmRoomGraph: state.gmRoomGraph
   } = useGeomorphs(props.gms, props.disabled));
 
-  return (
+  React.useEffect(() => {
+    setCached(props.worldKey, state);
+    return () => removeCached(props.worldKey);
+  }, []);
+
+  return state.gmGraph.ready ? (
     <Canvas
       // gl={{ logarithmicDepthBuffer: true }}
     >
@@ -53,7 +60,7 @@ export default function WorldGl(props) {
         />
       </Suspense>
     </Canvas>
-  );
+  ) : null;
 }
 
 /**

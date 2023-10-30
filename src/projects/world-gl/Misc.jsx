@@ -34,7 +34,11 @@ export function Geomorph(props) {
         geometry={customQuadGeometry}
         position={[gm.pngRect.x * scale, 0, gm.pngRect.y * scale]}
       >
-        <meshStandardMaterial color={"#aaa"} map={texture} transparent />
+        <meshStandardMaterial
+          color={"#aaa"}
+          transparent
+          map={texture}
+        />
         {/* <Edges
           // scale={1.1}
           scale={1}
@@ -53,7 +57,7 @@ export function Geomorph(props) {
 
 export function Origin() {
   return (
-    <mesh scale={[0.1, 0.1, 0.1]} position={[0, 0.05, 0]}>
+    <mesh scale={[0.025, 0, 0.025]} position={[0, 0.05, 0]}>
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color="red" />
     </mesh>
