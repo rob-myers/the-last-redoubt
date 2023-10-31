@@ -56,6 +56,7 @@ if (!fs.existsSync(geomorphJsonPath)) {
   const lightPolys = computeLightPolygons(layout);
 
   ctxt.globalCompositeOperation = 'lighter';
+  // ctxt.globalCompositeOperation = 'soft-light';
   // Radial fill with drop off
   lightPolys.forEach((lightPoly, i) => {
     const { position, distance = defaultLightDistance } = lightSources[i];

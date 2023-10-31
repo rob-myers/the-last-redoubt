@@ -138,6 +138,16 @@
         "transform": [0, -1, -1, 0, 434.4092, 530.0328]
       },
       {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 43.967200000000005, 105.5908],
+        "transform": [0, -1, -1, 0, 434.4092, 556.0328]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 69.9672, 105.5908],
+        "transform": [0, -1, -1, 0, 434.4092, 530.0328]
+      },
+      {
         "at": "⏪👉",
         "id": "office--004--2x2",
         "a": 270,
@@ -156,6 +166,16 @@
         "y": 480,
         "x": 540,
         "transform": [0, -1, -1, 0, 660, 600]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 43.967200000000005, 105.5908],
+        "transform": [0, -1, -1, 0, 554.4092, 556.0328]
+      },
+      {
+        "id": "extra--table--004--0.4x0.2",
+        "preTransform": [1, 0, 0, 1, 69.9672, 105.5908],
+        "transform": [0, -1, -1, 0, 554.4092, 530.0328]
       },
       {
         "id": "extra--table--004--0.4x0.2",
@@ -19381,7 +19401,7 @@
     {
       "key": "102--hull",
       "pngHref": "/assets/debug/g-102--research-deck.png",
-      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+      "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
       "transformArray": [1, 0, 0, 1, 0, 0],
       "transform": "matrix(1,0,0,1,0,0)"
     },
@@ -19505,20 +19525,6 @@
       "transform": "matrix(0,-1,-1,0,540,600)"
     },
     {
-      "key": "extra--table--004--0.4x0.2",
-      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
-      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
-      "transformArray": [0, -1, -1, 0, 434.4092, 556.0328],
-      "transform": "matrix(0,-1,-1,0,434.4092,556.0328)"
-    },
-    {
-      "key": "extra--table--004--0.4x0.2",
-      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
-      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
-      "transformArray": [0, -1, -1, 0, 434.4092, 530.0328],
-      "transform": "matrix(0,-1,-1,0,434.4092,530.0328)"
-    },
-    {
       "key": "office--004--2x2",
       "pngHref": "/assets/symbol/office--004--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
@@ -19531,20 +19537,6 @@
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, -1, -1, 0, 660, 600],
       "transform": "matrix(0,-1,-1,0,660,600)"
-    },
-    {
-      "key": "extra--table--004--0.4x0.2",
-      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
-      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
-      "transformArray": [0, -1, -1, 0, 554.4092, 556.0328],
-      "transform": "matrix(0,-1,-1,0,554.4092,556.0328)"
-    },
-    {
-      "key": "extra--table--004--0.4x0.2",
-      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
-      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
-      "transformArray": [0, -1, -1, 0, 554.4092, 530.0328],
-      "transform": "matrix(0,-1,-1,0,554.4092,530.0328)"
     },
     {
       "key": "lab--012--3x4",

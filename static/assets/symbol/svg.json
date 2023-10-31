@@ -884,7 +884,7 @@
     ],
     "width": 1200,
     "height": 1200,
-    "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+    "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1696856648944.7214
   },
   "102--hull": {
@@ -1466,7 +1466,7 @@
     ],
     "width": 1200,
     "height": 1200,
-    "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+    "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1696771011073.733
   },
   "103--hull": {
@@ -1850,7 +1850,7 @@
     ],
     "width": 1200,
     "height": 1200,
-    "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+    "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1696506804938.462
   },
   "301--hull": {
@@ -2969,8 +2969,8 @@
     ],
     "width": 1200,
     "height": 600,
-    "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
-    "lastModified": 1697275181198.0513
+    "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
+    "lastModified": 1698751202044.6765
   },
   "302--hull": {
     "key": "302--hull",
@@ -3696,7 +3696,7 @@
     ],
     "width": 1200,
     "height": 600,
-    "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
+    "pngRect": {"x": -4, "y": -61, "width": 1208, "height": 665},
     "lastModified": 1696771229574.7124
   },
   "303--hull": {
@@ -4886,7 +4886,7 @@
     ],
     "width": 1200,
     "height": 600,
-    "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
+    "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 609},
     "lastModified": 1696772417435.698
   },
   "bridge--042--8x9": {

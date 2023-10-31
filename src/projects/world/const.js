@@ -57,9 +57,6 @@ export const geomorphFilter = 'brightness(50%) hue-rotate(0deg) sepia(0.1) contr
 export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
 export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
-/** Keep hull doors thin */
-export const hullDoorWidth = 8;
-
 /** HMR note: WAPI means anim must be retriggered  */
 export const obscuredNpcOpacity = 0.25;
 

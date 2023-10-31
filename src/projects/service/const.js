@@ -74,7 +74,10 @@ export const precision = 4;
 
 //#region npcs
 
-/** Hull doors need to intersect exactly one room */
+/**
+ * Hull doors need to intersect exactly one room.
+ * > `2 + 8 + 2` is `12` which is original geomorph hull door width.
+ */
 export const hullDoorOutset = 2;
 
 /**

@@ -15757,7 +15757,7 @@
     {
       "key": "301--hull",
       "pngHref": "/assets/debug/g-301--bridge.png",
-      "pngRect": {"x": -6, "y": -22, "width": 1212, "height": 628},
+      "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
       "transformArray": [1, 0, 0, 1, 0, 0],
       "transform": "matrix(1,0,0,1,0,0)"
     },

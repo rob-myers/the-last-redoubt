@@ -134,12 +134,13 @@ export async function createLayout(opts) {
   ;
 
   /**
-   * Navigation polygon obtained by cutting outset walls and outset obstacles
-   * from `hullOutline`, thereby creating doorways (including doors).
-   * We also discard polygons intersecting ignoreNavPoints,
-   * or if they are deemed too small.
+   * 🚧
+   * - Navigation polygon obtained by cutting outset walls and outset obstacles
+   *   from `hullOutline`, thereby creating doorways (including doors, but not all of hull door).
+   * - We also discard polygons intersecting ignoreNavPoints,
+   *   or if they are deemed too small.
    */
-  const navPolyWithDoors = Poly.cutOut(
+  let navPolyWithDoors = Poly.cutOut(
     [ // Non-unioned walls avoids outset issue (self-intersection)
       ...unjoinedWalls.flatMap(x => geom.createOutset(x, wallOutset)),
       ...groups.obstacles.flatMap(x => geom.createOutset(x.poly, obstacleOutset)),
@@ -263,7 +264,6 @@ export async function createLayout(opts) {
   }, /** @type {Record<number, number[]>} */ ({}));
 
   const gridToRoomIds = rooms.reduce((agg, roomPoly, roomId) => {
-    // We use AABB of roomWithDoors to permit relaxed test
     const doorPolys = getNormalizedDoorPolys(roomGraph.getAdjacentDoors(roomId).map(x => doors[x.doorId]));
     const { rect } = Poly.union([roomPoly, ...doorPolys])[0];
     addToRoomGrid(roomId, rect, agg);
@@ -629,6 +629,7 @@ export function getGmRoomKey(gmId, roomId) {
 
 /**
  * Hull door polys are outset along entry to e.g. ensure they intersect room.
+ * Our hull doors have width 8, whereas original have width 12, so we outset by 2.
  * @param {Geomorph.ParsedConnectorRect[]} doors
  * @returns {Geom.Poly[]}
  */
@@ -654,6 +655,14 @@ function isEdgeGeomorph(idOrKey) {
   // g-{id}--foo -> {id}
   typeof idOrKey !== 'number' && (idOrKey = parseInt(idOrKey.slice(2)))
   return (301 <= idOrKey) && (idOrKey < 500);
+}
+
+/**
+ * e.g. 101--hull
+ * @param {Geomorph.SymbolKey} symbolKey 
+ */
+function isHullSymbolKey(symbolKey) {
+  return symbolKey.endsWith('--hull');
 }
 
 /**
@@ -751,8 +760,8 @@ function singleToConnectorRect(single, rooms) {
   const { poly, meta } = single;
   const { angle, baseRect } = poly.outline.length === 4
     ? geom.polyToAngledRect(poly)
-    // For curved windows we simply use aabb
-    : { baseRect: poly.rect, angle: 0 };
+    : { baseRect: poly.rect, angle: 0 } // curved windows use aabb
+  ;
   const [u, v] = geom.getAngledRectSeg({ angle, baseRect });
   const normal = v.clone().sub(u).rotate(Math.PI / 2).normalize();
 
@@ -914,29 +923,43 @@ export function parseLayout({
 }
 
 /**
- * @param {Geomorph.SymbolKey} symbolName
+ * @param {Geomorph.SymbolKey} symbolKey
  * @param {string} svgContents
  * @param {number} lastModified
  * @returns {Geomorph.ParsedSymbol<Poly>}
  */
-export function parseStarshipSymbol(symbolName, svgContents, lastModified) {
+export function parseStarshipSymbol(symbolKey, svgContents, lastModified) {
   const $ = cheerio.load(svgContents);
   const topNodes = Array.from($('svg > *'));
-  const pngRect = extractPngRect($, topNodes);
+  let pngRect = extractPngRect($, topNodes);
+  
+  if (isHullSymbolKey(symbolKey)) {// Trim hull door protrusions
+    pngRect = Rect.fromJson(pngRect).inset(hullDoorOutset).json;
+    if (isEdgeGeomorph(parseInt(symbolKey)) && (pngRect.height + 2 * hullDoorOutset) > 614) {
+      // Edge geomorphs may absorb hull door protrusion e.g. guns or satellite dish
+      pngRect.y -= hullDoorOutset;
+      pngRect.height += hullDoorOutset;
+    }
+    // if (isEdgeGeomorph(parseInt(symbolKey))) {
+    //   pngRect = { x: -4, y: -4, width: 1200 + 8, height: 600 + 8 };
+    // } else {
+    //   pngRect = { x: -4, y: -4, width: 1200 + 8, height: 1200 + 8 };
+    // }
+  }
 
   const [,, width, height] = $('svg').attr('viewBox')?.split(' ').map(Number) ?? [];
   if (width === undefined || height === undefined) {
-    error(`${symbolName}: symbol must have viewBox on <svg>`);
+    error(`${symbolKey}: symbol must have viewBox on <svg>`);
   }
 
-  const scale = symbolName.endsWith('--hull') ? 1 : 1 / 5;
+  const scale = symbolKey.endsWith('--hull') ? 1 : 1 / 5;
   const hull = extractGeomsAt($, topNodes, 'hull', scale);
   const obstacles = extractGeomsAt($, topNodes, 'obstacles', scale);
   const singles = extractGeomsAt($, topNodes, 'singles', scale);
   const walls = extractGeomsAt($, topNodes, 'walls', scale);
 
   return {
-    key: symbolName,
+    key: symbolKey,
     hull: Poly.union(hull).map(x => x.precision(precision)),
     lastModified,
     obstacles: obstacles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),

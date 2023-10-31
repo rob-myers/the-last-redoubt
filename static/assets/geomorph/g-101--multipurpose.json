@@ -19324,7 +19324,7 @@
     {
       "key": "101--hull",
       "pngHref": "/assets/debug/g-101--multipurpose.png",
-      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 1212},
+      "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
       "transformArray": [1, 0, 0, 1, 0, 0],
       "transform": "matrix(1,0,0,1,0,0)"
     },

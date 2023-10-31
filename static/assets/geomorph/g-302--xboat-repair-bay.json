@@ -7170,7 +7170,7 @@
     {
       "key": "302--hull",
       "pngHref": "/assets/debug/g-302--xboat-repair-bay.png",
-      "pngRect": {"x": -6, "y": -61, "width": 1212, "height": 667},
+      "pngRect": {"x": -4, "y": -61, "width": 1208, "height": 665},
       "transformArray": [1, 0, 0, 1, 0, 0],
       "transform": "matrix(1,0,0,1,0,0)"
     },

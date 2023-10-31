@@ -17060,7 +17060,7 @@
     {
       "key": "303--hull",
       "pngHref": "/assets/debug/g-303--passenger-deck.png",
-      "pngRect": {"x": -6, "y": -6, "width": 1212, "height": 613},
+      "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 609},
       "transformArray": [1, 0, 0, 1, 0, 0],
       "transform": "matrix(1,0,0,1,0,0)"
     },

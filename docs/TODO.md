@@ -26,9 +26,22 @@
   - ✅ fix flickering at edges
   - ✅ load lit/unlit pngs collectively
   - ✅ async asset loader via useQueries
-  - 🚧 continuing texture issues
-    - try `useTexture` and find diff via scene toJSON?
+  - ✅ geomorph edges should be aligned
+    - ❌ hull doors should have width 12 and not be outset
+      - leave our svg doors at width 8 and apply outset by 2
+    - ✅ pngRect too big: try inset by `2` (2px outset of hull door)
+    - ✅ handle edge geomorphs which absorb hull door protrusion
+    - ✅ apply to all geomorphs
+    - ℹ️ overlap looks wrong due to navmesh rect size (determined by triangulation library Triangle)
+      - navmesh rect "too wide"
+      - currently can still use `600 * n` offsets as expected
+      - will cover up problem via sprites
+  - 🚧 symbols should not be drawn above hull walls
+    - e.g. 101
+  - 🚧 fix z-fighting via sprite-per-geomorph (edge or standard)
+  - continuing texture issues
     - try removing half hull door
+    - try `useTexture` and find diff via scene toJSON?
   - initially render texture per geomorph
     - lit gm
     - all unlit rects
