@@ -1,7 +1,7 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
-import { preDarkenCssRgba } from "../world/const";
+import { gmScale, preDarkenCssRgba } from "../world/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
 import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage, drawRotatedImage } from '../service/dom';
@@ -23,7 +23,7 @@ export async function renderGeomorph(
   canvas,
   getPng,
   {
-    scale,
+    scale = gmScale,
     obsBounds = true,
     wallBounds = true,
     highlights = true,
@@ -31,6 +31,7 @@ export async function renderGeomorph(
     navOutline = navTris,
     doors = false,
     thinDoors = false,
+    hullDoorBases = false,
     labels = false,
     arrows = false,
     floorColor = 'rgba(180, 180, 180, 1)',
@@ -78,7 +79,7 @@ export async function renderGeomorph(
 
   if (navOutline) {
     ctxt.fillStyle = navColor;
-    ctxt.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    ctxt.strokeStyle = navStroke;
     fillPolygons(ctxt, layout.navPoly, true);
   }
 
@@ -205,6 +206,13 @@ export async function renderGeomorph(
   if (thinDoors) {
     drawThinDoors(ctxt, layout);
   }
+  if (hullDoorBases) {
+    ctxt.fillStyle = 'rgba(200, 200, 200, 1)';
+    ctxt.strokeStyle = navStroke;
+    ctxt.lineWidth = 1;
+    drawHullDoorBases(ctxt, layout);
+  }
+
   if (labels) {
     ctxt.font = labelMeta.font;
     ctxt.textBaseline = 'top';
@@ -258,9 +266,9 @@ function drawDoors(ctxt, layout) {
   cliques.forEach(clique => // take union of rects
     fillPolygons(ctxt, [Poly.fromRect(Rect.fromRects(...clique.map(x => x.rect)))], true)
   );
-  
-  const doorPolys = layout.doors.flatMap(x => !x.meta.hull ? [x.poly] : []);
-  fillPolygons(ctxt, doorPolys, true);
+
+  const otherPolys = layout.doors.flatMap(x => !x.meta.hull ? [x.poly] : []);
+  fillPolygons(ctxt, otherPolys, true);
 }
 
 /**
@@ -275,6 +283,31 @@ export function drawThinDoors(ctxt, layout) {
     ctxt.moveTo(src.x, src.y);
     ctxt.lineTo(dst.x, dst.y);
     ctxt.stroke();
+  });
+}
+
+/**
+ * @param {CanvasRenderingContext2D} ctxt
+ * @param {Geomorph.ParsedLayout} layout
+*/
+export function drawHullDoorBases(ctxt, layout) {
+  layout.doors.forEach(({ meta, normal, rect }) => {
+    if (meta.hull) {
+      const tangent = normal.clone().rotate(Math.PI/2);
+      const left = rect.center.addScaledVector(tangent, 8);
+      const right = rect.center.addScaledVector(tangent, -8);
+      const halfHeight = 6;
+      const basePoly = new Poly([
+        left.clone().addScaledVector(normal, -halfHeight),
+        right.clone().addScaledVector(normal, -halfHeight),
+        right.clone().addScaledVector(normal, halfHeight),
+        left.clone().addScaledVector(normal, halfHeight),
+      ]);
+      fillPolygons(ctxt, [basePoly]);
+
+      drawLine(ctxt, basePoly.outline[0], basePoly.outline[3]);
+      drawLine(ctxt, basePoly.outline[1], basePoly.outline[2]);
+    }
   });
 }
 

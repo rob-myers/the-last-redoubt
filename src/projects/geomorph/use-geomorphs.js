@@ -10,6 +10,8 @@ import useGeomorphData from "./use-geomorph-data";
  */
 export default function useGeomorphs(defs, disabled = false) {
 
+  // 🚧 useQueries instead
+
   const [gmKeys, setLayoutKeys] = React.useState(() => defs.map(x => x.gmKey));
 
   React.useMemo(() => {

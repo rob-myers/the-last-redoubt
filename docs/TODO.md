@@ -36,12 +36,12 @@
       - navmesh rect "too wide"
       - currently can still use `600 * n` offsets as expected
       - will cover up problem via sprites
-  - 🚧 symbols should not be drawn above hull walls
-    - e.g. 101
-  - 🚧 fix z-fighting via sprite-per-geomorph (edge or standard)
-  - continuing texture issues
-    - try removing half hull door
-    - try `useTexture` and find diff via scene toJSON?
+  - ✅ fill hull door area with colour
+  - ❌ symbols should not be drawn above hull walls e.g. 101
+    - doesn't seem to cause an issue anymore
+  - ✅ fix z-fighting in hull doorways
+  - ✅ fix z-fighting due to 303 windows?
+  - try `useTexture` and find diff via scene toJSON?
   - initially render texture per geomorph
     - lit gm
     - all unlit rects

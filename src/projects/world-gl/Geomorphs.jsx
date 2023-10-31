@@ -1,5 +1,6 @@
 import React from "react";
 import THREE from "three";
+import { Edges } from "@react-three/drei";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { Geomorph, customQuadGeometry } from "./Misc";
@@ -16,6 +17,7 @@ export default function Geomorphs(props) {
     gms.map(gm => ({
       queryKey: `${gm.key}.lit`,
       queryFn: () => textLoader.loadAsync(`/assets/geomorph/${gm.key}.lit.webp`)
+      // queryFn: () => textLoader.loadAsync(`/assets/geomorph/${gm.key}.webp`)
     })),
   );
 
@@ -27,7 +29,8 @@ export default function Geomorphs(props) {
       mat4s: gms.map((gm, gmId) => (
         new THREE.Matrix4(
           gm.transform[0], 0, gm.transform[2], gm.transform[4] * scale,
-          0, 1, 0, gmId * 0.00001, // hack to fix z-fighting
+          // 0, 1, 0, gmId * 0.000001, // hack to fix z-fighting
+          0, 1, 0, 0,
           gm.transform[1], 0, gm.transform[3], gm.transform[5] * scale,
           0, 0, 0, 1,
         )
@@ -55,13 +58,25 @@ export default function Geomorphs(props) {
           scale={[gm.pngRect.width * scale, 1, gm.pngRect.height * scale]}
           geometry={customQuadGeometry}
           position={[gm.pngRect.x * scale, 0, gm.pngRect.y * scale]}
+          // position={[gm.pngRect.x * scale + (gmId === 2 ? 4 * scale : 0), 0, gm.pngRect.y * scale + (gmId === 2 ? -2 * scale : 0)]}
         >
           <meshStandardMaterial
-            // color={"#eee"}
             transparent
+            // toneMapped
+            // color="#999"
+            // toneMapped={false}
             map={state.tex.lit[gm.key]}
-            alphaMap={state.tex.lit[gm.key]} // Why does this improve things?
+            // emissive={new THREE.Color(0.1, 0.1, 0.1)}
+            // Improves look, but causes issue with hull overlap
+            // 🚧 try simulating in geomorph-render instead
+            // alphaMap={state.tex.lit[gm.key]}
           />
+          {/* <Edges
+            // scale={1.1}
+            scale={1}
+            threshold={15} // degrees
+            color="red"
+          /> */}
         </mesh>}
       </group>
     )}

@@ -5,13 +5,15 @@ declare namespace Geomorph {
   type Vect = Geom.Vect;
 
   export interface RenderOpts {
-    scale: number;
+    scale?: number;
+
     obsBounds?: boolean;
     wallBounds?: boolean;
     navTris?: boolean;
     navOutline?: boolean;
     doors?: boolean;
     thinDoors?: boolean;
+    hullDoorBases?: boolean;
     labels?: boolean;
     arrows?: boolean;
     /** Floor highlights and obstacle drop-shadow */

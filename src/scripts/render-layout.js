@@ -55,19 +55,20 @@ const staticDir = path.resolve(__dirname, '../../static');
 (async function main() {
   try {
     /**
-     * 🌙 Draw unlit geomorph.
+     * 🌙 Draw UNLIT geomorph.
      */
     const { layout, canvas } = await renderLayout(foundLayoutDef, {
-      thinDoors: false,
       debug: !!debug,
+      thinDoors: false,
       scale,
       invertSymbols: true,
       darken: true, // Darken in same way as lit geomorph
       arrows: false,
+      hullDoorBases: true,
     });
 
     /**
-     * 🧭 Draw map geomorph with doors, no highlights and no `extra--*`s.
+     * 🧭 Draw MAP geomorph with doors, no highlights and no `extra--*`s.
      */
     const mapCanvas = createCanvas(canvas.width, canvas.height);
     layout.items = layout.items.filter(x => !x.key.startsWith('extra--'));
@@ -116,15 +117,15 @@ const staticDir = path.resolve(__dirname, '../../static');
 /**
  * Compute and render layout, given layout definition.
  * @param {Geomorph.LayoutDef} def
- * @param {RenderLayoutOpts} opts
+ * @param {Geomorph.RenderOpts & { debug: boolean }} opts
  */
 export async function renderLayout(def, {
-  thinDoors,
-  debug,
-  scale = defaultScale,
-  invertSymbols = false,
   darken = false,
+  debug,
   arrows = false,
+  invertSymbols = false,
+  scale = defaultScale,
+  ...opts
 }) {
   const canvas = createCanvas(0, 0);
 
@@ -147,17 +148,18 @@ export async function renderLayout(def, {
       wallBounds: true,
       navTris: true,
 
-      doors: false,
-      ...thinDoors && {
+      ...opts.thinDoors && {
         doors: true,
       },
       ...debug && {
         doors: true,
         labels: true,
       },
-      invertSymbols,
-      darken,
+
       arrows,
+      darken,
+      invertSymbols,
+      ...opts,
     },
   );
   return {
@@ -166,13 +168,3 @@ export async function renderLayout(def, {
     pngRect: symbolLookup[layout.items[0].key].pngRect,
   };
 }
-
-/**
- * @typedef RenderLayoutOpts 
- * @property {boolean} thinDoors
- * @property {boolean} debug
- * @property {number} [scale]
- * @property {boolean} [invertSymbols]
- * @property {boolean} [darken]
- * @property {boolean} [arrows]
- */

@@ -46,6 +46,7 @@ if (!fs.existsSync(geomorphJsonPath)) {
     invertSymbols: true,
     darken: true,
     arrows: false,
+    hullDoorBases: true,
   });
   // No need to scale/translate by pngRect (already done)
   const ctxt = canvas.getContext('2d');
