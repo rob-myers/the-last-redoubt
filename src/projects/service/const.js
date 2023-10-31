@@ -120,9 +120,6 @@ export const svgSymbolTag = /** @type {const} */ ({
 
 export const defaultLightDistance = 300;
 
-/** For lighting we initially darken everything */
-export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
-
 /** For quick nav node lookup */
 export const navNodeGridSize = 60 / 2;
 

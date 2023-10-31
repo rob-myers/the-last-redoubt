@@ -26,7 +26,10 @@
   - ✅ fix flickering at edges
   - ✅ load lit/unlit pngs collectively
   - ✅ async asset loader via useQueries
-  - 🚧 initially render texture per geomorph
+  - 🚧 continuing texture issues
+    - try `useTexture` and find diff via scene toJSON?
+    - try removing half hull door
+  - initially render texture per geomorph
     - lit gm
     - all unlit rects
     - gm/room/door ids

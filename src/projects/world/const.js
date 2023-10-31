@@ -63,10 +63,6 @@ export const hullDoorWidth = 8;
 /** HMR note: WAPI means anim must be retriggered  */
 export const obscuredNpcOpacity = 0.25;
 
-/**
- * We avoid directly importing for better React HMR.
- * @type {import('projects/service/const').preDarkenCssRgba}
- */
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 
 export const spawnFadeMs = 500;

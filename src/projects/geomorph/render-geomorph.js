@@ -1,7 +1,7 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
-import { preDarkenCssRgba } from "../service/const";
+import { preDarkenCssRgba } from "../world/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
 import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage, drawRotatedImage } from '../service/dom';
