@@ -41,7 +41,10 @@ export default function WorldGl(props) {
         // logarithmicDepthBuffer: true,
         powerPreference: 'low-power',
         // outputColorSpace: 'display-p3',
+        toneMapping: 4,
+        toneMappingExposure: 1,
       }}
+      // style={{ backgroundColor: 'white' }}
     >
       <MapControls />
       <ambientLight intensity={1} />

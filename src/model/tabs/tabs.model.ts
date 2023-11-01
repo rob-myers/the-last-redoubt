@@ -26,7 +26,7 @@ type TabMetaComponentProps = (
   | { class: 'SvgStringPull'; props: import('projects/example/SvgStringPull').Props; }
   | { class: 'SvgNavGraph'; props: import('projects/example/SvgNavGraph').Props; }
   | { class: 'World'; props: import('projects/world/World').Props; }
-  | { class: 'WorldGl'; props: import('projects/world-gl/WorldGl').Props; }
+  | { class: 'WorldGl'; props: import('projects/world-r3f/WorldGl').Props; }
 );
 
 export function computeJsonModel(

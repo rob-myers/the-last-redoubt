@@ -13,8 +13,8 @@ const classToComponent: Record<ComponentClassKey, {
         <module.default disabled {...props} />,
       },
   WorldGl: {
-    loadable: loadable(() => import('projects/world-gl/WorldGl')),
-    get: (module: typeof import('projects/world-gl/WorldGl')) =>
+    loadable: loadable(() => import('projects/world-r3f/WorldGl')),
+    get: (module: typeof import('projects/world-r3f/WorldGl')) =>
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} />,
   },
