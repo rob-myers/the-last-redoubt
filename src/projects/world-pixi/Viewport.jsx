@@ -1,16 +1,16 @@
-import React from "react";
-import type PIXI from "pixi.js";
+import React, { forwardRef } from "react";
 import { PixiComponent, useApp } from "@pixi/react";
 import { Viewport as PixiViewport } from "pixi-viewport";
 
 const PixiComponentViewport = PixiComponent("Viewport", {
-  create: ({ app }: PixiComponentViewportProps) => {
-    app.renderer.events.domElement = app.renderer.view as any;
+  
+  /** @param {PixiComponentViewportProps} props  */
+  create: ({ app }) => {
+    app.renderer.events.domElement = /** @type {*} */ (app.renderer.view);
 
     const viewport = new PixiViewport({
       passiveWheel: false,
       events: app.renderer.events,
-
       ticker: app.ticker,
     });
     viewport.drag({
@@ -19,26 +19,32 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       wheelZoom: true,
     }).pinch().clampZoom({
       maxScale: 4,
-      minScale: 1/4,
+      minScale: 1/8,
+    }).decelerate({
+      friction: 0.5,
     });
     return viewport;
   },
-  willUnmount: (viewport: PixiViewport) => {
+  /** @param {PixiViewport} viewport */
+  willUnmount: (viewport) => {
     // These two lines fix the `ticker` option above
     viewport.options.noTicker = true;
     viewport.destroy({ children: true, texture: true, baseTexture: true });
   },
 });
 
-export default function Viewport(props: ViewportProps) {
+/** @type {ReturnType<typeof forwardRef<PixiViewport, ViewportProps>>} */
+export const Viewport = forwardRef(/** @param {ViewportProps} props */ function Viewport(props) {
   const app = useApp();
   return <PixiComponentViewport app={app} {...props} />;
-}
+});
 
-export interface ViewportProps {
-  children?: React.ReactNode;
-}
+export default Viewport;
 
-export interface PixiComponentViewportProps extends ViewportProps {
-  app: PIXI.Application;
-}
+/**
+ * @typedef {React.PropsWithChildren<{}>} ViewportProps
+ */
+
+/**
+ * @typedef {ViewportProps & { app: import("pixi.js").Application  }} PixiComponentViewportProps
+ */
