@@ -6,6 +6,20 @@
   - ✅ Create `WorldPixi` and show in `Tabs`
   - ✅ Basic pixi demo: show a geomorph
   - 🚧 Can pan/zoom somehow
+    - ℹ️ pixi-viewport is a bit of a mess
+    - ✅ fix pixi-viewport in development
+    - PATCH `node_modules/pixi-viewport/dist/pixi_viewport.js`
+      ```js
+      destroy() {
+        this.viewport.options.events.domElement?.removeEventListener("wheel", this.wheelFunction);
+      }
+      ```
+    - PATCH `node_modules/@pixi/react/dist/index.es-dev.js`
+      ```js
+      import PropTypes from 'prop-types';
+      import '@pixi/events';
+      ```
+    - 🚧 fix pixi-viewport in production
 
 - ✅ Start using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`

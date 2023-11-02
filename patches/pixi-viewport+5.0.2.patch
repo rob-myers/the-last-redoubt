@@ -1,0 +1,13 @@
+diff --git a/node_modules/pixi-viewport/dist/pixi_viewport.js b/node_modules/pixi-viewport/dist/pixi_viewport.js
+index 5ccc10e..6309e22 100644
+--- a/node_modules/pixi-viewport/dist/pixi_viewport.js
++++ b/node_modules/pixi-viewport/dist/pixi_viewport.js
+@@ -1142,7 +1142,7 @@ class $ {
+     ), this.isMouseDown = !1;
+   }
+   destroy() {
+-    this.viewport.options.events.domElement.removeEventListener("wheel", this.wheelFunction);
++    this.viewport.options.events.domElement?.removeEventListener("wheel", this.wheelFunction);
+   }
+   down(r) {
+     if (this.viewport.pause || !this.viewport.worldVisible)

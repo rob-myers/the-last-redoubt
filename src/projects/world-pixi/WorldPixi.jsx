@@ -1,10 +1,11 @@
 import React from "react";
-import { Stage } from "@pixi/react";
+import { Sprite, Stage } from "@pixi/react";
 
 import { removeCached, setCached } from "../service/query-client";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
+import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
 
 /**
@@ -34,13 +35,33 @@ export default function WorldPixi(props) {
 
   return state.gmGraph.ready ? (
     <Stage>
-      <Geomorphs
-        api={state}
-        onLoad={api => (state.geomorphs = api) && update()}
-      />
+      <Viewport>
+        {/* <TestScene /> */}
+        <Geomorphs
+          api={state}
+          onLoad={api => (state.geomorphs = api) && update()}
+        />
+      </Viewport>
     </Stage>
   ) : null;
 }
+
+function TestScene() {
+  return (
+    // https://codepen.io/inlet/pen/NYazPq
+    <Sprite
+      x={250}
+      y={250}
+      anchor={[0.5, 0.5]}
+      interactive={true}
+      image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
+      pointerdown={(e) => {
+        console.log("click", e);
+      }}
+    />
+  );
+}
+
 
 /**
  * @typedef Props
