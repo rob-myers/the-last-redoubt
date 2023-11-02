@@ -7,6 +7,7 @@ import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
+import useMeasure from "react-use-measure";
 
 /**
  * @param {Props} props
@@ -15,13 +16,17 @@ export default function WorldPixi(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     disabled: !!props.disabled,
-    gmGraph: /** @type {State['gmGraph']} */ ({}),
-    gmRoomGraph: /** @type {State['gmRoomGraph']} */ ({}),
+    gmGraph: /** @type {*} */ ({}),
+    gmRoomGraph: /** @type {*} */ ({}),
+
+    pixiApp: /** @type {*} */ ({}),
+    viewport: /** @type {*} */ ({}),
 
     geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
   }));
 
   const update = useUpdate();
+  const [rootRef, bounds] = useMeasure();
 
   ({
     gmGraph: state.gmGraph,
@@ -33,17 +38,34 @@ export default function WorldPixi(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-  return state.gmGraph.ready ? (
-    <Stage>
-      <Viewport>
-        {/* <TestScene /> */}
-        <Geomorphs
-          api={state}
-          onLoad={api => (state.geomorphs = api) && update()}
-        />
-      </Viewport>
-    </Stage>
-  ) : null;
+
+  return (
+    <div
+      ref={rootRef}
+      style={{ width: '100%', height: '100%' }}
+    >
+      {state.gmGraph.ready && (
+        <Stage
+          options={{
+            hello: true,
+          }}
+          onMount={app => {
+            state.pixiApp = app;
+          }}
+          width={bounds.width || undefined}
+          height={bounds.height || undefined}
+        >
+          <Viewport ref={vp => vp && (state.viewport = vp)}>
+            {/* <TestScene /> */}
+            <Geomorphs
+              api={state}
+              onLoad={api => (state.geomorphs = api) && update()}
+            />
+          </Viewport>
+        </Stage>
+      )}
+    </div>
+  );
 }
 
 function TestScene() {
@@ -75,6 +97,10 @@ function TestScene() {
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
  * @property {Graph.GmRoomGraph} gmRoomGraph
+ * 
+ * @property {import("pixi.js").Application} pixiApp
+ * @property {import("pixi-viewport").Viewport} viewport
+ * 
  * //@property {import("./DebugWorld").State} debug
  * //@property {import("./Decor").State} decor
  * //@property {import("./Doors").State} doors
