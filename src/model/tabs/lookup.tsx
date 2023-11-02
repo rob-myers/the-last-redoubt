@@ -18,6 +18,12 @@ const classToComponent: Record<ComponentClassKey, {
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} />,
   },
+  WorldPixi: {
+    loadable: loadable(() => import('projects/world-pixi/WorldPixi')),
+    get: (module: typeof import('projects/world-pixi/WorldPixi')) =>
+      (props: ComponentProps<typeof module['default']>) =>
+        <module.default disabled {...props} />,
+  },
   GeomorphEdit: {
     loadable: loadable(() => import('projects/geomorph/GeomorphEdit')),
     get: (module: typeof import('projects/geomorph/GeomorphEdit')) =>
@@ -50,6 +56,7 @@ export type ComponentClassKey = (
   | 'SvgNavGraph'
   | 'World'
   | 'WorldGl'
+  | 'WorldPixi'
 )
 
 export interface WorldComponentDef {

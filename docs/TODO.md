@@ -2,6 +2,11 @@
 
 ## In progress
 
+- 🚧 Start using @pixi/react for rendering only
+  - ✅ Create `WorldPixi` and show in `Tabs`
+  - ✅ Basic pixi demo: show a geomorph
+  - 🚧 Can pan/zoom somehow
+
 - ✅ Start using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`
   - ✅ Create `WorldGl` and show in `Tabs`
@@ -14,6 +19,8 @@
   - ✅ Fix aspect ratio issue
     - turned off `manual` attribute of `PerspectiveCamera`
   - ✅ Can pan/zoom camera somehow
+- ℹ️ Decided to use pixi.js instead due to:
+  (a) hopefully better performance, (b) more suitable for our 2d approach
 
 - ✅ World has Geomorphs component
 - ✅ Geomorphs component lays out lit geomorphs driven by `gms`
