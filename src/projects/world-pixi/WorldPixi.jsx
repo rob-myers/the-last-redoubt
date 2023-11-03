@@ -1,5 +1,6 @@
 import React from "react";
-import { Sprite, Stage } from "@pixi/react";
+import { Stage } from "@pixi/react";
+import useMeasure from "react-use-measure";
 
 import { removeCached, setCached } from "../service/query-client";
 import useStateRef from "../hooks/use-state-ref";
@@ -7,7 +8,6 @@ import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
-import useMeasure from "react-use-measure";
 
 /**
  * @param {Props} props
@@ -46,17 +46,12 @@ export default function WorldPixi(props) {
     >
       {state.gmGraph.ready && (
         <Stage
-          options={{
-            hello: true,
-          }}
-          onMount={app => {
-            state.pixiApp = app;
-          }}
+          options={{ hello: true }}
+          onMount={app => state.pixiApp = app}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
         >
           <Viewport ref={vp => vp && (state.viewport = vp)}>
-            {/* <TestScene /> */}
             <Geomorphs
               api={state}
               onLoad={api => (state.geomorphs = api) && update()}
@@ -67,23 +62,6 @@ export default function WorldPixi(props) {
     </div>
   );
 }
-
-function TestScene() {
-  return (
-    // https://codepen.io/inlet/pen/NYazPq
-    <Sprite
-      x={250}
-      y={250}
-      anchor={[0.5, 0.5]}
-      interactive={true}
-      image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
-      pointerdown={(e) => {
-        console.log("click", e);
-      }}
-    />
-  );
-}
-
 
 /**
  * @typedef Props
