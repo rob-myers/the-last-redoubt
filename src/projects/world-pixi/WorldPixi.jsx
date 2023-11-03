@@ -1,8 +1,9 @@
 import React from "react";
 import { Stage } from "@pixi/react";
+import { QueryClientProvider } from "react-query";
 import useMeasure from "react-use-measure";
 
-import { removeCached, setCached } from "../service/query-client";
+import { queryClient, removeCached, setCached } from "../service/query-client";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
@@ -51,12 +52,17 @@ export default function WorldPixi(props) {
           width={bounds.width || undefined}
           height={bounds.height || undefined}
         >
-          <Viewport ref={vp => vp && (state.viewport = vp)}>
-            <Geomorphs
-              api={state}
-              onLoad={api => (state.geomorphs = api) && update()}
-            />
-          </Viewport>
+          <QueryClientProvider client={queryClient} >
+            <Viewport
+              ref={vp => vp && (state.viewport = vp)}
+              initScale={0.5}
+            >
+              <Geomorphs
+                api={state}
+                onLoad={api => (state.geomorphs = api) && update()}
+              />
+            </Viewport>
+          </QueryClientProvider>
         </Stage>
       )}
     </div>

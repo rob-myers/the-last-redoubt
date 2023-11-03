@@ -5,31 +5,33 @@ import { Viewport as PixiViewport } from "pixi-viewport";
 const PixiComponentViewport = PixiComponent("Viewport", {
   
   /** @param {PixiComponentViewportProps} props  */
-  create: ({ app }) => {
+  create: ({ app, initScale }) => {
     app.renderer.events.domElement = /** @type {*} */ (app.renderer.view);
 
     const viewport = new PixiViewport({
       passiveWheel: false,
       events: app.renderer.events,
       ticker: app.ticker,
-    });
-    viewport.drag({
+    }).drag({
       wheel: false,
     }).wheel({
       wheelZoom: true,
     }).pinch().clampZoom({
       maxScale: 4,
-      minScale: 1/8,
+      minScale: 0.1,
     }).decelerate({
       friction: 0.5,
     });
+
+    if (initScale) {
+      viewport.scale.set(initScale);
+    }
     return viewport;
   },
   /** @param {PixiViewport} viewport */
   willUnmount: (viewport) => {
-    // These two lines fix the `ticker` option above
-    viewport.options.noTicker = true;
-    viewport.destroy({ children: true, texture: true, baseTexture: true });
+    viewport.options.noTicker = true; // Fix the `ticker` option above
+    viewport.destroy({ children: true });
   },
 });
 
@@ -42,7 +44,9 @@ export const Viewport = forwardRef(/** @param {ViewportProps} props */ function 
 export default Viewport;
 
 /**
- * @typedef {React.PropsWithChildren<{}>} ViewportProps
+ * @typedef ViewportProps
+ * @property {React.ReactNode} children
+ * @property {number} [initScale]
  */
 
 /**

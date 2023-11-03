@@ -20,8 +20,8 @@
       import '@pixi/events';
       ```
     - ✅ fix pixi-viewport in production
-  - 🚧 show every lit geomorph
-  - use `RenderTexture`s
+  - ✅ show every lit geomorph
+  - 🚧 use `RenderTexture`s
 
 - ✅ Start using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`
