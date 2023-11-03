@@ -4,7 +4,7 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 /** @param {import('gatsby').CreateWebpackConfigArgs} opts */
 exports.onCreateWebpackConfig = (opts) => {
 
-  console.log({ 'GATSBY STAGE': opts.stage });
+  console.log({ 'GATSBY STAGE': opts.stage, NODE_ENV: process.env.NODE_ENV });
  
   /** @type {import('webpack').Configuration} */
   const cfg = {
@@ -21,6 +21,13 @@ exports.onCreateWebpackConfig = (opts) => {
     resolve: {
       alias: {
         'cheerio': false, // null-loader
+
+        // Force CommonJS for PixiJS
+        // https://github.com/pixijs/pixi-react/issues/452
+        'pixi.js': path.resolve(__dirname, 'node_modules/pixi.js/dist/cjs/pixi.min.js'),
+        '@pixi/react': path.resolve(__dirname, `node_modules/@pixi/react/dist/index.cjs${process.env.NODE_ENV === 'production' ? '' : '-dev'}.js`),
+        'pixi-viewport': path.resolve(__dirname, 'node_modules/pixi-viewport/dist/pixi_viewport.umd.cjs'),
+        
       },
       fallback: {
         'fs': false,
