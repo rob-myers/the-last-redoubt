@@ -21,6 +21,7 @@
       ```
     - ✅ fix pixi-viewport in production
   - ✅ show every lit geomorph
+  - ✅ fix alignment
   - 🚧 use `RenderTexture`s
 
 - ✅ Start using react-three-fiber for rendering only

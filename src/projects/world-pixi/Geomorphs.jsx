@@ -41,7 +41,7 @@ export default function Geomorphs(props) {
             width={gm.pngRect.width}
             height={gm.pngRect.height}
             texture={litRes[gmId].data}
-            anchor={{ x: gm.pngRect.x / gm.pngRect.width, y: gm.pngRect.y / gm.pngRect.height }}
+            position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
           />
         </Container>
       )
