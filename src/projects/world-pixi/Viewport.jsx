@@ -18,7 +18,7 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       wheelZoom: true,
     }).pinch().clampZoom({
       maxScale: 4,
-      minScale: 0.1,
+      minScale: 0.5,
     }).decelerate({
       friction: 0.5,
     });

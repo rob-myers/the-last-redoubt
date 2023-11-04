@@ -1,5 +1,6 @@
 import React from "react";
 import { Sprite } from "@pixi/react";
+// import { BlurFilter } from "@pixi/filter-blur";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 
 export function TestScene() {
@@ -18,8 +19,10 @@ export function TestScene() {
 }
 
 export const colorMatrixFilter = new ColorMatrixFilter();
-colorMatrixFilter.enabled = true;
-colorMatrixFilter.brightness(0.2, true);
+// colorMatrixFilter.resolution = window.devicePixelRatio;
+colorMatrixFilter.resolution = 4; // ℹ️ no zoom flicker
+// colorMatrixFilter.enabled = true;
+colorMatrixFilter.brightness(0.3, true);
 colorMatrixFilter.contrast(1.7, true);
 // colorMatrixFilter.alpha = 1;
 // colorMatrixFilter.hue(90, true);

@@ -50,6 +50,8 @@ export default function WorldPixi(props) {
           options={{
             hello: true,
             antialias: true,
+            resolution: window.devicePixelRatio,
+            // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
           onMount={app => state.pixiApp = app}
           width={bounds.width || undefined}

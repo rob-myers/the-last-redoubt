@@ -4,7 +4,9 @@
 
 - ✅ disconnect three.js from bundle
 - ✅ try a PIXI filter
-- 🚧 try to fix flickering thin lines
+- ✅ try to fix flickering thin lines while zooming
+  - use resolute 4 for gm lit filter
+  - resolution is window.devicePixelRatio
 - clean table symbols a bit
 - try Spine
 - useQueries in useGeomorphs
