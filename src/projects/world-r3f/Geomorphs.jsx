@@ -85,7 +85,7 @@ export default function Geomorphs(props) {
 
 /**
  * @typedef Props @type {object}
- * @property {import('./WorldGl').State} api
+ * @property {import('./WorldR3f').State} api
  * @property {(doorsApi: State) => void} onLoad
  */
 

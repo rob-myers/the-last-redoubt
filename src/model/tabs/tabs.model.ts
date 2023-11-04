@@ -26,7 +26,7 @@ type TabMetaComponentProps = (
   | { class: 'SvgStringPull'; props: import('projects/example/SvgStringPull').Props; }
   | { class: 'SvgNavGraph'; props: import('projects/example/SvgNavGraph').Props; }
   | { class: 'World'; props: import('projects/world/World').Props; }
-  | { class: 'WorldGl'; props: import('projects/world-r3f/WorldGl').Props; }
+  | { class: 'WorldR3f'; props: import('projects/world-r3f/WorldR3f').Props; }
   | { class: 'WorldPixi'; props: import('projects/world-pixi/WorldPixi').Props; }
 );
 

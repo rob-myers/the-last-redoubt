@@ -12,7 +12,7 @@ import { Origin } from "./Misc";
 /**
  * @param {Props} props
  */
-export default function WorldGl(props) {
+export default function WorldR3f(props) {
   // const camRef = /** @type {React.RefObject<THREE.PerspectiveCamera>} */ (React.useRef(null));
 
   const state = useStateRef(/** @type {() => State} */ () => ({

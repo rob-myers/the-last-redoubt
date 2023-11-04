@@ -2,6 +2,11 @@
 
 ## In progress
 
+- ✅ Disconnect three.js from bundle
+- Clean up table symbols
+- Try Spine
+- useQueries in useGeomorphs
+
 - 🚧 Start using @pixi/react for rendering only
   - ✅ Create `WorldPixi` and show in `Tabs`
   - ✅ Basic pixi demo: show a geomorph
@@ -24,56 +29,6 @@
   - ✅ fix alignment
   - 🚧 use `RenderTexture`s
 
-- ✅ Start using react-three-fiber for rendering only
-  - ✅ `yarn add three @types/three @react-three/fiber`
-  - ✅ Create `WorldGl` and show in `Tabs`
-  - ✅ `yarn add @react-three/drei`
-  - ℹ️ Three. js uses a right-handed coordinate frame, where the positive x-axis points to the right, the positive y-axis points up, and the positive z-axis points towards the viewer.
-  - ✅ Basic react-three-fiber demo in `WorldGl`:
-    - camera + plane with texture (gm lit)
-    - ℹ️ camera at [0, 10, 0] points down i.e. [0, -1, 0]
-      > so previous 2d coords (x, y) --> (x, z)
-  - ✅ Fix aspect ratio issue
-    - turned off `manual` attribute of `PerspectiveCamera`
-  - ✅ Can pan/zoom camera somehow
-- ℹ️ Decided to use pixi.js instead due to:
-  (a) hopefully better performance, (b) more suitable for our 2d approach
-
-- ✅ World has Geomorphs component
-- ✅ Geomorphs component lays out lit geomorphs driven by `gms`
-  - ✅ use cube to mark origin
-  - ✅ custom geometry with origin at top-left
-  - ✅ redo custom geometry manually with indices
-  - ✅ custom geometry has uv mapping
-  - ✅ account for pngRect.{x,y}
-- 🚧 Work on Geomorphs
-  - ✅ fix flickering at edges
-  - ✅ load lit/unlit pngs collectively
-  - ✅ async asset loader via useQueries
-  - ✅ geomorph edges should be aligned
-    - ❌ hull doors should have width 12 and not be outset
-      - leave our svg doors at width 8 and apply outset by 2
-    - ✅ pngRect too big: try inset by `2` (2px outset of hull door)
-    - ✅ handle edge geomorphs which absorb hull door protrusion
-    - ✅ apply to all geomorphs
-    - ℹ️ overlap looks wrong due to navmesh rect size (determined by triangulation library Triangle)
-      - navmesh rect "too wide"
-      - currently can still use `600 * n` offsets as expected
-      - will cover up problem via sprites
-  - ✅ fill hull door area with colour
-  - ❌ symbols should not be drawn above hull walls e.g. 101
-    - doesn't seem to cause an issue anymore
-  - ✅ fix z-fighting in hull doorways
-  - ✅ fix z-fighting due to 303 windows?
-  - try `useTexture` and find diff via scene toJSON?
-  - initially render texture per geomorph
-    - lit gm
-    - all unlit rects
-    - gm/room/door ids
-- Custom controls based on MapControls
-  - on zoom, fix world point at y = 0
-
-- useQueries in useGeomorphs ?
 
 ---
 
@@ -693,6 +648,55 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ ~~start~~ try using react-three-fiber for rendering only
+  - ✅ `yarn add three @types/three @react-three/fiber`
+  - ✅ Create `WorldGl` and show in `Tabs`
+  - ✅ `yarn add @react-three/drei`
+  - ℹ️ Three. js uses a right-handed coordinate frame, where the positive x-axis points to the right, the positive y-axis points up, and the positive z-axis points towards the viewer.
+  - ✅ Basic react-three-fiber demo in `WorldGl`:
+    - camera + plane with texture (gm lit)
+    - ℹ️ camera at [0, 10, 0] points down i.e. [0, -1, 0]
+      > so previous 2d coords (x, y) --> (x, z)
+  - ✅ Fix aspect ratio issue
+    - turned off `manual` attribute of `PerspectiveCamera`
+  - ✅ Can pan/zoom camera somehow
+- ℹ️ Decided to use pixi.js instead due to:
+  (a) hopefully better performance, (b) more suitable for our 2d approach
+
+- ✅ World has Geomorphs component
+- ✅ Geomorphs component lays out lit geomorphs driven by `gms`
+  - ✅ use cube to mark origin
+  - ✅ custom geometry with origin at top-left
+  - ✅ redo custom geometry manually with indices
+  - ✅ custom geometry has uv mapping
+  - ✅ account for pngRect.{x,y}
+-  Work on Geomorphs
+  - ✅ fix flickering at edges
+  - ✅ load lit/unlit pngs collectively
+  - ✅ async asset loader via useQueries
+  - ✅ geomorph edges should be aligned
+    - ❌ hull doors should have width 12 and not be outset
+      - leave our svg doors at width 8 and apply outset by 2
+    - ✅ pngRect too big: try inset by `2` (2px outset of hull door)
+    - ✅ handle edge geomorphs which absorb hull door protrusion
+    - ✅ apply to all geomorphs
+    - ℹ️ overlap looks wrong due to navmesh rect size (determined by triangulation library Triangle)
+      - navmesh rect "too wide"
+      - currently can still use `600 * n` offsets as expected
+      - will cover up problem via sprites
+  - ✅ fill hull door area with colour
+  - ❌ symbols should not be drawn above hull walls e.g. 101
+    - doesn't seem to cause an issue anymore
+  - ✅ fix z-fighting in hull doorways
+  - ✅ fix z-fighting due to 303 windows?
+  - try `useTexture` and find diff via scene toJSON?
+  - initially render texture per geomorph
+    - lit gm
+    - all unlit rects
+    - gm/room/door ids
+- Custom controls based on MapControls
+  - on zoom, fix world point at y = 0
 
 - ✅ DebugWorld draws in canvases
   - ✅ gmOutlines

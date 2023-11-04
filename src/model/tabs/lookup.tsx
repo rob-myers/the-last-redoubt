@@ -12,12 +12,12 @@ const classToComponent: Record<ComponentClassKey, {
       (props: ComponentProps<typeof module['default']>) =>
         <module.default disabled {...props} />,
       },
-  WorldGl: {
-    loadable: loadable(() => import('projects/world-r3f/WorldGl')),
-    get: (module: typeof import('projects/world-r3f/WorldGl')) =>
-      (props: ComponentProps<typeof module['default']>) =>
-        <module.default disabled {...props} />,
-  },
+  // WorldR3f: {
+  //   loadable: loadable(() => import('projects/world-r3f/WorldR3f')),
+  //   get: (module: typeof import('projects/world-r3f/WorldR3f')) =>
+  //     (props: ComponentProps<typeof module['default']>) =>
+  //       <module.default disabled {...props} />,
+  // },
   WorldPixi: {
     loadable: loadable(() => import('projects/world-pixi/WorldPixi')),
     get: (module: typeof import('projects/world-pixi/WorldPixi')) =>
@@ -55,7 +55,7 @@ export type ComponentClassKey = (
   | 'SvgStringPull'
   | 'SvgNavGraph'
   | 'World'
-  | 'WorldGl'
+  // | 'WorldR3f'
   | 'WorldPixi'
 )
 
