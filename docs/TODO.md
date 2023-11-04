@@ -7,8 +7,22 @@
 - ✅ try to fix flickering thin lines while zooming
   - use resolute 4 for gm lit filter
   - resolution is window.devicePixelRatio
+- ✅ consider Spine export
+  - https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-pixi
+  - https://github.com/EsotericSoftware/spine-runtimes/issues/2305
+    - but can at least export spritesheets
+- ✅ convert Spriter skeleton to Spine
+    - https://github.com/zhong317/spriter2spine
+    - need to change Spine to version 3.8 for json import
+```sh
+cd ~/coding/spriter2spine
+python2 ./src/spriter2spine.py \
+  -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.edit.2.for-export.scml \
+  -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine-output
+```
+- 🚧 Spine: learn how to fix right arm
+
 - clean table symbols a bit
-- try Spine
 - useQueries in useGeomorphs
 
 - 🚧 Start using @pixi/react for rendering only
@@ -31,7 +45,7 @@
     - ✅ fix pixi-viewport in production
   - ✅ show every lit geomorph
   - ✅ fix alignment
-  - 🚧 use `RenderTexture`s
+  - 🚧 use `RenderTexture`, painting all unlit rects
 
 
 ---
