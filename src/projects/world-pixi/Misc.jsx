@@ -1,5 +1,6 @@
 import React from "react";
 import { Sprite } from "@pixi/react";
+import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 
 export function TestScene() {
   return (
@@ -15,3 +16,13 @@ export function TestScene() {
     />
   );
 }
+
+export const colorMatrixFilter = new ColorMatrixFilter();
+colorMatrixFilter.enabled = true;
+colorMatrixFilter.brightness(0.2, true);
+colorMatrixFilter.contrast(1.7, true);
+// colorMatrixFilter.alpha = 1;
+// colorMatrixFilter.hue(90, true);
+// colorMatrixFilter.vintage(true);
+// colorMatrixFilter.polaroid(true);
+// colorMatrixFilter.kodachrome(true);

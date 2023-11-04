@@ -2,8 +2,8 @@ import React from "react";
 import { useQueries, useQuery } from "react-query";
 import { Container, Sprite } from "@pixi/react";
 import { Assets } from "@pixi/assets";
-import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
+import { colorMatrixFilter } from "./Misc";
 
 /**
  * @param {Props} props 
@@ -19,7 +19,6 @@ export default function Geomorphs(props) {
       queryFn: () => Assets.load(`/assets/geomorph/${gm.key}.lit.webp`)
     })),
   );
-  
   const state = useStateRef(
     /** @type {() => State} */ () => ({
       ready: true,
@@ -36,6 +35,8 @@ export default function Geomorphs(props) {
         <Container
           key={gmId}
           {...decomposeBasicTransform(gm.transform)}
+          filters={[colorMatrixFilter]}
+          // filters={[]}
         >
           <Sprite
             width={gm.pngRect.width}
@@ -50,6 +51,7 @@ export default function Geomorphs(props) {
 }
 
 /**
+ * 🚧 precompute
  * @param {Geom.SixTuple} transform
  * `[a, b, c, d]` are ±1 and invertible
  */
@@ -101,9 +103,3 @@ function decomposeBasicTransform([a, b, c, d, e, f]) {
  * //@property {(gmId: number, roomId: number)  => void} recomputeLights
  * //@property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  */
-
-/**
- * - Undo image scale (i.e. `gmScale`).
- * - Next, `1/60` -> 1 grid side -> `1.5m`
- */
-const scale = (1 / gmScale) * (1 / 60) * (2 / 3);

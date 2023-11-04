@@ -2,9 +2,11 @@
 
 ## In progress
 
-- ✅ Disconnect three.js from bundle
-- Clean up table symbols
-- Try Spine
+- ✅ disconnect three.js from bundle
+- ✅ try a PIXI filter
+- 🚧 try to fix flickering thin lines
+- clean table symbols a bit
+- try Spine
 - useQueries in useGeomorphs
 
 - 🚧 Start using @pixi/react for rendering only

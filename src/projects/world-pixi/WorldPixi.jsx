@@ -47,7 +47,10 @@ export default function WorldPixi(props) {
     >
       {state.gmGraph.ready && (
         <Stage
-          options={{ hello: true }}
+          options={{
+            hello: true,
+            antialias: true,
+          }}
           onMount={app => state.pixiApp = app}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
