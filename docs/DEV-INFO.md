@@ -64,7 +64,10 @@ https://en.esotericsoftware.com/spine-tools
   - save selection: cmd + {number} (restore: {number})
   - The selected item is adjusted by dragging the mouse. The drag should start in empty space or on the item itself. If the drag starts on a different item, that item will be selected and adjusted.
 - tree:
-  - RMB to recursively hide
+  - recursively hide: RMB dot
+  - recursively open/close: RMB icon
+  - show all bones: Cmd+H
+  - hide all bones: RMB root
 ---
 
 Fix Gimp fill colour:

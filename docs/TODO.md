@@ -26,6 +26,10 @@ python2 ./src/spriter2spine.py \
   - ✅ rename legs
   - ✅ rename spine + arms
   - create test image showing limb images
+  - reposition `right-arm`
+    - ✅ right-arm-upper-clothed
+    - 🚧 try fix `walk` for right-arm-upper
+    - right-arm-lower-bare
 
 
 - clean table symbols a bit
