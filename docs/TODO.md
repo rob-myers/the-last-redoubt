@@ -14,13 +14,18 @@
 - ✅ convert Spriter skeleton to Spine
     - https://github.com/zhong317/spriter2spine
     - need to change Spine to version 3.8 for json import
+    - needed to remove animation `die`
 ```sh
 cd ~/coding/spriter2spine
 python2 ./src/spriter2spine.py \
-  -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.edit.2.for-export.scml \
-  -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine-output
+  -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.for-export.scml \
+  -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine
 ```
 - 🚧 Spine: learn how to fix right arm
+  - pan: rmb+drag, or j+lmb+drag
+  - Setup mode: create and configure skeletons
+  - Animate mode: design your animations.
+
 
 - clean table symbols a bit
 - useQueries in useGeomorphs
