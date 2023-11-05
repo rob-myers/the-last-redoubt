@@ -24,7 +24,7 @@ python2 ./src/spriter2spine.py \
 - 🚧 Spine: learn how to fix right arm
 - 🚧 Spine: top_down_man_base: rename bones
   - ✅ rename legs
-  - rename spine + arms
+  - ✅ rename spine + arms
   - create test image showing limb images
 
 
