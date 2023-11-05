@@ -48,6 +48,14 @@ ifconfig | grep "inet " | grep -v 127.0.0.1
 
 ---
 
+Spine 2d
+
+- pan: rmb+drag, or j+lmb+drag
+- Setup mode: create and configure skeletons
+- Animate mode: design your animations.
+
+---
+
 Fix Gimp fill colour:
 > Image → Mode → RGB (rather than Indexed)
 
