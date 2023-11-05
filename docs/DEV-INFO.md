@@ -68,6 +68,8 @@ https://en.esotericsoftware.com/spine-tools
   - recursively open/close: RMB icon
   - show all bones: Cmd+H
   - hide all bones: RMB root
+- timeline:
+  - shift + LMB + drag to preview animation with interpolation
 ---
 
 Fix Gimp fill colour:
