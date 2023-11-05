@@ -22,9 +22,9 @@ python2 ./src/spriter2spine.py \
   -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine
 ```
 - 🚧 Spine: learn how to fix right arm
-  - pan: rmb+drag, or j+lmb+drag
-  - Setup mode: create and configure skeletons
-  - Animate mode: design your animations.
+- 🚧 Spine: top_down_man_base: rename bones
+  - ✅ rename legs
+  - rename spine + arms
 
 
 - clean table symbols a bit

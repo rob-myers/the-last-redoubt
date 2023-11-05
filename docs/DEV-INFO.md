@@ -50,10 +50,21 @@ ifconfig | grep "inet " | grep -v 127.0.0.1
 
 Spine 2d
 
-- pan: rmb+drag, or j+lmb+drag
+https://en.esotericsoftware.com/spine-ui
+- pan: RMB+drag, or j+LMB+drag
 - Setup mode: create and configure skeletons
 - Animate mode: design your animations.
 
+https://en.esotericsoftware.com/spine-tools
+- viewport select:
+  - RMB to switch between last tool and back
+  - deselect all: SpaceBar
+  - select multiple via Cmd+Click or Cmd+Drag (from empty)
+  - prev/next selection: fn + arrows keys
+  - save selection: cmd + {number} (restore: {number})
+  - The selected item is adjusted by dragging the mouse. The drag should start in empty space or on the item itself. If the drag starts on a different item, that item will be selected and adjusted.
+- tree:
+  - RMB to recursively hide
 ---
 
 Fix Gimp fill colour:
