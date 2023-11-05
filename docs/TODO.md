@@ -25,6 +25,7 @@ python2 ./src/spriter2spine.py \
 - 🚧 Spine: top_down_man_base: rename bones
   - ✅ rename legs
   - rename spine + arms
+  - create test image showing limb images
 
 
 - clean table symbols a bit
