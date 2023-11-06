@@ -31,12 +31,18 @@ python2 ./src/spriter2spine.py \
     - ✅ right-arm-lower-bare etc.
   - ✅ remove right-arm keys from `walk`
   - ✅ try animate right-arm in `walk` (3 keyframes)
-  - 🚧 patch walk anim?
+  - ✅ improve walk anim: twist arm round more in penultimate
+  - ✅ try bare arms/legs
+    - can toggle respective images (nothing-in-slot vs something)
+  - 🚧 try changing skins
+  - try export spritesheet
+  - try fixing other sheets
 
 - Spine: generate spritesheet at runtime
-  - https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
-  - https://esotericsoftware.com/spine-runtimes-guide
-  - https://esotericsoftware.com/spine-api-reference
+  - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
+  - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
+  - ℹ️ https://esotericsoftware.com/spine-api-reference
+  - ...
 
 
 - clean table symbols a bit
