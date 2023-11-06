@@ -28,8 +28,15 @@ python2 ./src/spriter2spine.py \
   - create test image showing limb images
   - reposition `right-arm`
     - ✅ right-arm-upper-clothed
-    - 🚧 try fix `walk` for right-arm-upper
-    - right-arm-lower-bare
+    - ✅ right-arm-lower-bare etc.
+  - ✅ remove right-arm keys from `walk`
+  - ✅ try animate right-arm in `walk` (3 keyframes)
+  - 🚧 patch walk anim?
+
+- Spine: generate spritesheet at runtime
+  - https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
+  - https://esotericsoftware.com/spine-runtimes-guide
+  - https://esotericsoftware.com/spine-api-reference
 
 
 - clean table symbols a bit
