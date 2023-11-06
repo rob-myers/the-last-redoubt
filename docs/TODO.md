@@ -34,6 +34,7 @@ python2 ./src/spriter2spine.py \
   - ✅ improve walk anim: twist arm round more in penultimate
   - ✅ try bare arms/legs
     - can toggle respective images (nothing-in-slot vs something)
+  - ✅ try adding a slot: dark head
   - 🚧 try changing skins
   - try export spritesheet
   - try fixing other sheets
