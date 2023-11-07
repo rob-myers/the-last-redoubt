@@ -243,53 +243,54 @@ export default function FOV(props) {
 
   React.useEffect(() => {
     props.onLoad(state);
-    state.drawLabels();
+    // state.drawLabels();
   }, []);
 
-  return (
-    <div
-      style={{ display: 'none' }}
-      className={cx("fov", rootCss)}
-      ref={el => el && (
-        [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))
-      )}
-    >
-      <div className="map">
-        {gms.map((gm, gmId) =>
-          <div
-            key={gmId}
-            style={{
-              transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
-              transformOrigin: 'top left',
-            }}
-          >
-            <img
-              className="geomorph-dark"
-              src={geomorphPngPath(gm.key, 'map')}
-              draggable={false}
-              width={gm.pngRect.width}
-              height={gm.pngRect.height}
-              style={{
-                clipPath: state.clipPath[gmId],
-                WebkitClipPath: state.clipPath[gmId],
-                // Avoid initial flicker on <Geomorphs> load first
-                background: 'white',
-              }}
-            />
-          </div>
-        )}
-      </div>
+  // return (
+  //   <div
+  //     style={{ display: 'none' }}
+  //     className={cx("fov", rootCss)}
+  //     ref={el => el && (
+  //       [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))
+  //     )}
+  //   >
+  //     <div className="map">
+  //       {gms.map((gm, gmId) =>
+  //         <div
+  //           key={gmId}
+  //           style={{
+  //             transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
+  //             transformOrigin: 'top left',
+  //           }}
+  //         >
+  //           <img
+  //             className="geomorph-dark"
+  //             src={geomorphPngPath(gm.key, 'map')}
+  //             draggable={false}
+  //             width={gm.pngRect.width}
+  //             height={gm.pngRect.height}
+  //             style={{
+  //               clipPath: state.clipPath[gmId],
+  //               WebkitClipPath: state.clipPath[gmId],
+  //               // Avoid initial flicker on <Geomorphs> load first
+  //               background: 'white',
+  //             }}
+  //           />
+  //         </div>
+  //       )}
+  //     </div>
 
-      <div className="labels">
-        {/* <GmsCanvas
-          canvasRef={(el, gmId) => state.el.canvas[gmId] = el}
-          gms={gms}
-          scaleFactor={gmScale}
-        /> */}
-      </div>
+  //     <div className="labels">
+  //       {/* <GmsCanvas
+  //         canvasRef={(el, gmId) => state.el.canvas[gmId] = el}
+  //         gms={gms}
+  //         scaleFactor={gmScale}
+  //       /> */}
+  //     </div>
 
-    </div>
-  );
+  //   </div>
+  // );
+  return null;
 }
 
 /**

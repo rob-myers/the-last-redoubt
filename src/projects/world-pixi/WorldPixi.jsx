@@ -19,6 +19,7 @@ import Doors from "./Doors";
 import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
+import FOV from "./FOV";
 // import { TestRenderTexture, TestSprite } from "./Misc";
 
 /**
@@ -108,6 +109,11 @@ export default function WorldPixi(props) {
                 onLoad={api => (state.doors = api) && update()}
               />
 
+              <Decor
+                api={state}
+                onLoad={api => (state.decor = api) && update()}
+              />
+
               <NPCs
                 api={state}
                 onLoad={api => (state.npcs = api) && update()}
@@ -118,9 +124,9 @@ export default function WorldPixi(props) {
                 onLoad={api => (state.debug = api) && update()}
               />
 
-              <Decor
+              <FOV
                 api={state}
-                onLoad={api => (state.decor = api) && update()}
+                onLoad={api => (state.fov = api) && update()}
               />
 
               {/* <TestSprite/> */}
