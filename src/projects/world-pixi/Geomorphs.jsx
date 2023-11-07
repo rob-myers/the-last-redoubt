@@ -22,7 +22,7 @@ export default function Geomorphs(props) {
   const update = useUpdate();
 
   useQueries(gms.map((gm, gmId) => ({
-    queryKey: `${gm.key}.lit`,
+    queryKey: `${gm.key}.${gmId}`, // Use gmId for dup geomorphs
     queryFn: async () => {
       state.initTex(gmId); // initial cheap graphics
       update();
@@ -38,7 +38,8 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
-    tex: { load: [], lit: [], unlit: [], render: [] },
+    renderTex: [],
+    tex: { lit: [], unlit: [] },
     gfx: new Graphics(),
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
@@ -62,11 +63,11 @@ export default function Geomorphs(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      state.tex.render[gmId] = RenderTexture.create({
+      state.renderTex[gmId] = RenderTexture.create({
         width: gmScale * gm.pngRect.width,
         height: gmScale * gm.pngRect.height,
       });
-      const gfx = state.tex.load[gmId] = new Graphics();
+      const gfx = state.gfx.clear();
       gfx.setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
       // gfx.lineStyle({ width: 4, color: 0xaaaaaa });
       gm.rooms.forEach(poly => {
@@ -74,11 +75,11 @@ export default function Geomorphs(props) {
         gfx.drawPolygon(poly.outline)
         gfx.endFill();
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.renderTex[gmId] });
     },
     initLightRects(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear();
+      const gfx = state.gfx.clear().setTransform();
       // draw lit
       gfx.beginTextureFill({ texture: state.tex.lit[gmId] });
       gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
@@ -91,7 +92,7 @@ export default function Geomorphs(props) {
           gfx.endFill();
         }
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.renderTex[gmId] });
     },
     onCloseDoor(gmId, doorId, lightIsOn = true) {
       const gm = gms[gmId];
@@ -205,7 +206,7 @@ export default function Geomorphs(props) {
 
   return <>
     {gms.map((gm, gmId) =>
-      state.tex.render[gmId] && (
+      state.renderTex[gmId] && (
         <Container
           key={gmId}
           {...decomposeBasicTransform(gm.transform)}
@@ -215,7 +216,7 @@ export default function Geomorphs(props) {
           <Sprite
             width={gm.pngRect.width}
             height={gm.pngRect.height}
-            texture={state.tex.render[gmId]}
+            texture={state.renderTex[gmId]}
             position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
           />
         </Container>
@@ -233,7 +234,8 @@ export default function Geomorphs(props) {
 /**
  * @typedef State @type {object}
  * @property {boolean} ready
- * @property {Tex} tex
+ * @property {import('pixi.js').RenderTexture[]} renderTex
+ * @property {{ [x in 'lit' | 'unlit']: import('pixi.js').Texture[] }} tex
  * @property {import('@pixi/graphics').Graphics} gfx Reused
  * @property {boolean[][]} isRoomLit
  * Lights on iff `isRoomLit[gmId][roomId]`.
@@ -249,14 +251,6 @@ export default function Geomorphs(props) {
  * @property {(gmId: number, roomId: number)  => void} recomputeLights
  * 
  * //@property {() => void} initDrawIds
- */
-
-/**
- * @typedef Tex
- * @property {import('pixi.js').Graphics[]} load
- * @property {import('pixi.js').Texture[]} lit
- * @property {import('pixi.js').Texture[]} unlit
- * @property {import('pixi.js').RenderTexture[]} render
  */
 
 /**
