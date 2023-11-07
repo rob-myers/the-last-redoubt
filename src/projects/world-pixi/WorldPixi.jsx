@@ -2,13 +2,23 @@ import React from "react";
 import { Stage } from "@pixi/react";
 import { QueryClientProvider } from "react-query";
 import useMeasure from "react-use-measure";
+import { filter, first, map, take } from "rxjs/operators";
+import { merge } from "rxjs";
 
+import { precision, removeFirst } from "../service/generic";
 import { queryClient, removeCached, setCached } from "../service/query-client";
+import { npcService } from "../service/npc";
+import { Vect } from "../geom";
+
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
+import Doors from "./Doors";
+import NPCs from "./NPCs";
+import DebugWorld from "./DebugWorld";
+import Decor from "./Decor";
 // import { TestRenderTexture, TestSprite } from "./Misc";
 
 /**
@@ -24,7 +34,31 @@ export default function WorldPixi(props) {
     pixiApp: /** @type {*} */ ({}),
     viewport: /** @type {*} */ ({}),
 
+    decor: /** @type {State['decor']} */  ({ ready: false }),
+    debug: /** @type {State['debug']} */  ({ ready: false }),
+    doors: /** @type {State['doors']} */  ({ ready: false }),
+    fov: /** @type {State['fov']} */  ({ ready: false }),
     geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
+    npcs: /** @type {State['npcs']} */  ({ ready: false }),
+    lib: {
+      filter, first, map, merge, take,
+      isVectJson: Vect.isVectJson,
+      vectFrom: Vect.from,
+      precision, removeFirst,
+      ...npcService,
+    },
+
+    isReady() {
+      return [
+        state.debug, 
+        state.decor, 
+        state.doors, 
+        state.fov, 
+        state.geomorphs, 
+        state.npcs, 
+        // state.panZoom,
+      ].every(x => x.ready);
+    },
   }));
 
   const update = useUpdate();
@@ -68,6 +102,27 @@ export default function WorldPixi(props) {
                 api={state}
                 onLoad={api => (state.geomorphs = api) && update()}
               />
+
+              <Doors
+                api={state}
+                onLoad={api => (state.doors = api) && update()}
+              />
+
+              <NPCs
+                api={state}
+                onLoad={api => (state.npcs = api) && update()}
+              />
+
+              <DebugWorld
+                api={state}
+                onLoad={api => (state.debug = api) && update()}
+              />
+
+              <Decor
+                api={state}
+                onLoad={api => (state.decor = api) && update()}
+              />
+
               {/* <TestSprite/> */}
               {/* <TestRenderTexture/> */}
             </Viewport>
@@ -94,13 +149,26 @@ export default function WorldPixi(props) {
  * @property {import("pixi.js").Application} pixiApp
  * @property {import("pixi-viewport").Viewport} viewport
  * 
- * //@property {import("./DebugWorld").State} debug
- * //@property {import("./Decor").State} decor
- * //@property {import("./Doors").State} doors
- * //@property {import("./FOV").State} fov
+ * @property {import("./DebugWorld").State} debug
+ * @property {import("./Decor").State} decor
+ * @property {import("./Doors").State} doors
+ * @property {import("./FOV").State} fov
  * @property {import("./Geomorphs").State} geomorphs
- * //@property {() => boolean} isReady
- * //@property {StateUtil & import("../service/npc").NpcServiceType} lib
- * //@property {import("./NPCs").State} npcs
- * //@property {PanZoom.CssApi} panZoom
+ * @property {() => boolean} isReady
+ * @property {StateUtil & import("../service/npc").NpcServiceType} lib
+ * @property {import("./NPCs").State} npcs
+ * //@property {PanZoom.CssApi} panZoom // 🚧 pixi viewport interface?
+ */
+
+/**
+ * @typedef StateUtil Utility classes and `rxjs` functions
+ * @property {typeof import('../geom').Vect['isVectJson']} isVectJson
+ * @property {typeof import('../geom').Vect['from']} vectFrom
+ * @property {typeof filter} filter
+ * @property {typeof first} first
+ * @property {typeof map} map
+ * @property {typeof merge} merge
+ * @property {typeof precision} precision
+ * @property {typeof removeFirst} removeFirst
+ * @property {typeof take} take
  */

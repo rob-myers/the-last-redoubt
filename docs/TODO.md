@@ -30,7 +30,8 @@
 - useQueries in useGeomorphs
 
 - 🚧 continue migrating Geomorphs
-- continue migrating ...
+  - ✅ add other components to WorldPixi (code, no effect yet)
+  - ...
 
 ---
 
