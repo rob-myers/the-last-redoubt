@@ -13,6 +13,7 @@ import { Vect } from "../geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
+import useHandleEvents from "./use-handle-events";
 import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
 import Doors from "./Doors";
@@ -64,11 +65,13 @@ export default function WorldPixi(props) {
 
   const update = useUpdate();
   const [rootRef, bounds] = useMeasure();
+  useHandleEvents(state);
 
   ({
     gmGraph: state.gmGraph,
     gmRoomGraph: state.gmRoomGraph
   } = useGeomorphs(props.gms, props.disabled));
+  state.gmGraph.api = state.gmRoomGraph.api = state;
 
   React.useEffect(() => {
     setCached(props.worldKey, state);

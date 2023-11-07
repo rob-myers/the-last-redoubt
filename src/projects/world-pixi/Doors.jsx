@@ -18,7 +18,7 @@ export default function Doors(props) {
   const state = useStateRef(/** @type {() => State} */ () => ({
     events: new Subject,
     ready: true,
-    rootEl: /** @type {HTMLDivElement} */ ({}),
+    renderTex: [], // 🚧 maybe just drawn door sprites!
 
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta, normal }, doorId) => {
       const isHullDoor = gm.isHullDoor(doorId);
@@ -37,6 +37,8 @@ export default function Doors(props) {
       };
     })),
 
+    
+
     cancelClose(doorState) {
       window.clearTimeout(doorState.closeTimeoutId);
       delete doorState.closeTimeoutId;
@@ -48,6 +50,9 @@ export default function Doors(props) {
     },
     getVisibleIds(gmId) {
       return state.lookup[gmId].flatMap((x, i) => x.visible ? i : []);
+    },
+    initTex(gmId) {
+      // 🚧
     },
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
@@ -63,8 +68,7 @@ export default function Doors(props) {
     onRawDoorClick(e) {
       /**
        * Usually we handle door clicking via `npc do`.
-       * It can instead be handled directly via this handler,
-       * by setting `npc config { scriptDoors: false }`.
+       * It can instead be handled directly via this handler.
        */
       const { dataset } = /** @type {HTMLElement} */ (e.target);
       if (dataset.meta) {
@@ -245,6 +249,7 @@ export default function Doors(props) {
     props.onLoad(state);
   }, []);
 
+  // 🚧 move to use-handle-events
   React.useEffect(() => {// Pause/resume door closing
     if (!npcs.ready) {
       return;
@@ -260,14 +265,6 @@ export default function Doors(props) {
     });
     return () => void handlePause.unsubscribe();
   }, [npcs.ready]);
-  
-  React.useEffect(() => {// Superseded by `npc do`
-    if (npcs.config && (npcs.config.scriptDoors === false)) {
-      const callback = state.onRawDoorClick; // maybe mutated on HMR
-      state.rootEl.addEventListener('pointerup', callback);
-      return () => void state.rootEl.removeEventListener('pointerup', callback);
-    }
-  }, [npcs.config && npcs.config.scriptDoors]);
 
   // return (
   //   <div
@@ -371,12 +368,13 @@ const rootCss = css`
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
+ * @property {(gmId: number) => void} initTex
  * @property {(gmId: number, doorId: number) => boolean} isOpen
  * @property {(e: PointerEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * @property {boolean} ready
- * @property {HTMLDivElement} rootEl
+ * @property {import('@pixi/core').RenderTexture[]} renderTex
  * @property {DoorState[][]} lookup
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor

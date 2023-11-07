@@ -10,7 +10,6 @@ import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import useUpdate from "../hooks/use-update";
 import { colorMatrixFilter } from "./Misc";
 
 /**
@@ -19,19 +18,16 @@ import { colorMatrixFilter } from "./Misc";
 export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
-  const update = useUpdate();
-
+  
   useQueries(gms.map((gm, gmId) => ({
-    queryKey: `${gm.key}.${gmId}`, // Use gmId for dup geomorphs
+    queryKey: `${gm.key}.${gmId}`, // gmId for dups
     queryFn: async () => {
-      state.initTex(gmId); // initial cheap graphics
-      update();
-      /** @type {import('pixi.js').Texture[]} */
-      const [lit, unlit] = await Promise.all(['.lit.webp', '.webp'].map(ext =>
-        Assets.load(`/assets/geomorph/${gm.key}${ext}`)
+      state.initTex(gmId);
+      await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
+        state.tex[type][gmId] = await Assets.load(
+          `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
+        )
       ));
-      state.tex.lit[gmId] = lit;
-      state.tex.unlit[gmId] = unlit;
       state.initLightRects(gmId);
     },
   })));

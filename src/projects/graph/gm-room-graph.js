@@ -7,7 +7,7 @@ import { BaseGraph } from "./graph";
  */
 export class gmRoomGraphClass extends BaseGraph {
 
-  api = /** @type {import('../world/World').State} */  ({
+  api = /** @type {{ doors: Omit<import('../world/World').State['doors'], 'rootEl'>; isReady(): boolean; }} */  ({
     isReady() { return false; },
   });
 

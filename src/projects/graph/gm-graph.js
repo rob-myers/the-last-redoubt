@@ -44,7 +44,7 @@ export class gmGraphClass extends BaseGraph {
    */
   entry;
 
-  api = /** @type {import('../world/World').State} */  ({
+  api = /** @type {{ doors: Omit<import('../world/World').State['doors'], 'rootEl'>; isReady(): boolean; }} */  ({
     isReady() { return false; },
   });
 

@@ -31,7 +31,11 @@
 
 - 🚧 continue migrating Geomorphs
   - ✅ add other components to WorldPixi (code, no effect yet)
+  - 🚧 draw doors directly as sprites in Doors (can be more efficient later)
   - ...
+
+- remove `projects/world-r3d`
+- intend to remove `projects/world`
 
 ---
 
