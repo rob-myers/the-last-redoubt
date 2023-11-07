@@ -1,14 +1,12 @@
 import React from "react";
-import { useQueries, useQuery } from "react-query";
+import { useQueries } from "react-query";
 
 import { Container, Sprite } from "@pixi/react";
 import { Assets } from "@pixi/assets";
-import { RenderTexture, autoDetectRenderer } from "@pixi/core";
+import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-// import * as PixiSprite from "@pixi/sprite";
 
 import { gmScale } from "../world/const";
-import { pause } from "../service/generic";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import { colorMatrixFilter } from "./Misc";
@@ -21,64 +19,62 @@ export default function Geomorphs(props) {
   const { gmGraph: { gms } } = api;
   const update = useUpdate();
 
-  useQueries(
-    gms.map((gm, gmId) => ({
-      queryKey: `${gm.key}.lit`,
-      queryFn: async () => {
-        state.initTex(gmId); // initial cheap graphics
-        update();
+  useQueries(gms.map((gm, gmId) => ({
+    queryKey: `${gm.key}.lit`,
+    queryFn: async () => {
+      state.initTex(gmId); // initial cheap graphics
+      update();
+      /** @type {import('pixi.js').Texture[]} */
+      const [lit, unlit] = await Promise.all(['.lit.webp', '.webp'].map(ext =>
+        Assets.load(`/assets/geomorph/${gm.key}${ext}`)
+      ));
+      state.tex.lit[gmId] = lit;
+      state.tex.unlit[gmId] = unlit;
+      state.initLightRects(gmId);
+    },
+  })));
 
-        // load lit/unlit and store in state
-        /** @type {import('pixi.js').Texture[]} */
-        const [lit, unlit] = await Promise.all(['.lit.webp', '.webp'].map(ext =>
-          Assets.load(`/assets/geomorph/${gm.key}${ext}`)
-        ));
-        state.tex.lit[gmId] = lit;
-        state.tex.unlit[gmId] = unlit;
+  const state = useStateRef(/** @type {() => State} */ () => ({
+    ready: true,
+    tex: { load: [], lit: [], unlit: [], render: [] },
+    gfx: new Graphics(),
 
-        const gfx = new Graphics();
-        // draw lit
-        gfx.beginTextureFill({ texture: lit });
-        gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+    initTex(gmId) {
+      const gm = gms[gmId];
+      state.tex.render[gmId] = RenderTexture.create({
+        width: gmScale * gm.pngRect.width,
+        height: gmScale * gm.pngRect.height,
+      });
+      const gfx = state.tex.load[gmId] = new Graphics();
+      gfx.setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
+      // gfx.lineStyle({ width: 4, color: 0xaaaaaa });
+      gm.rooms.forEach(poly => {
+        gfx.beginFill(0x222222);
+        gfx.drawPolygon(poly.outline)
         gfx.endFill();
-        // draw all unlit rects
-        gm.doorToLightRect.forEach(x => {
-          if (x) {
-            gfx.beginTextureFill({ texture: unlit });
-            gfx.drawRect(gmScale * (x.rect.x - gms[gmId].pngRect.x), gmScale * (x.rect.y - gms[gmId].pngRect.y), gmScale * x.rect.width, gmScale * x.rect.height);
-            gfx.endFill();
-          }
-        });
+      });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
+    },
 
-        // api.pixiApp.renderer.render(sprite, { renderTexture: state.tex.render[gmId] });
-        api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
-      }
-    })),
-  );
-
-  const state = useStateRef(
-    /** @type {() => State} */ () => ({
-      ready: true,
-      tex: { load: [], lit: [], unlit: [], render: [] },
-
-      initTex(gmId) {
-        const gm = gms[gmId];
-        state.tex.render[gmId] = RenderTexture.create({
-          width: gmScale * gm.pngRect.width,
-          height: gmScale * gm.pngRect.height,
-        });
-        const gfx = state.tex.load[gmId] = new Graphics();
-        gfx.setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
-        gfx.lineStyle({ width: 4, color: 0xaaaaaa });
-        gm.rooms.forEach(poly => {
-          gfx.beginFill(0x222222);
-          gfx.drawPolygon(poly.outline)
+    initLightRects(gmId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx;
+      gfx.clear();
+      // draw lit
+      gfx.beginTextureFill({ texture: state.tex.lit[gmId] });
+      gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+      gfx.endFill();
+      // draw all unlit rects
+      gm.doorToLightRect.forEach(x => {
+        if (x) {
+          gfx.beginTextureFill({ texture: state.tex.unlit[gmId] });
+          gfx.drawRect(gmScale * (x.rect.x - gms[gmId].pngRect.x), gmScale * (x.rect.y - gms[gmId].pngRect.y), gmScale * x.rect.width, gmScale * x.rect.height);
           gfx.endFill();
-        });
-        api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
-      },
-    }),
-  );
+        }
+      });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
+    },
+  }));
 
   React.useEffect(() => {
     props.onLoad(state);
@@ -142,8 +138,10 @@ function decomposeBasicTransform([a, b, c, d, e, f]) {
  * @typedef State @type {object}
  * @property {boolean} ready
  * @property {Tex} tex
+ * @property {import('@pixi/graphics').Graphics} gfx Reused
  * 
  * @property {(gmId: number) => void} initTex
+ * @property {(gmId: number) => void} initLightRects
  * 
  * //@property {boolean[][]} isRoomLit
  * Lights on iff `isRoomLit[gmId][roomId]`.
