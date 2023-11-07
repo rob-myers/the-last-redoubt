@@ -1,13 +1,15 @@
 import React from "react";
-import { Sprite } from "@pixi/react";
-// import { BlurFilter } from "@pixi/filter-blur";
+import { Sprite, useApp } from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
+import { RenderTexture } from "@pixi/core";
+import { Graphics } from "@pixi/graphics";
 
-export function TestScene() {
+export function TestSprite() {
   return (
     <Sprite
       x={250}
       y={250}
+      scale={5}
       anchor={[0.5, 0.5]}
       interactive={true}
       image="https://s3-us-west-2.amazonaws.com/s.cdpn.io/693612/IaUrttj.png"
@@ -18,12 +20,34 @@ export function TestScene() {
   );
 }
 
+export function TestRenderTexture() {
+  const app = useApp();
+
+  const rt = React.useMemo(() => {
+    const rt = RenderTexture.create({ width: 400, height: 400 });
+    const gfx = new Graphics();
+    gfx.beginFill(0xff0000);
+    gfx.drawRect(0, 0, 100, 100);
+    gfx.endFill();
+    app.renderer.render(gfx, { renderTexture: rt });
+    return rt;
+  }, []);
+
+  return (
+    <Sprite
+      x={250}
+      y={250}
+      texture={rt}
+    />
+  );
+}
+
 export const colorMatrixFilter = new ColorMatrixFilter();
 // colorMatrixFilter.resolution = window.devicePixelRatio;
 colorMatrixFilter.resolution = 4; // ℹ️ no zoom flicker
 // colorMatrixFilter.enabled = true;
-colorMatrixFilter.brightness(0.3, true);
-colorMatrixFilter.contrast(1.7, true);
+colorMatrixFilter.brightness(0.25, true);
+colorMatrixFilter.contrast(1.5, true);
 // colorMatrixFilter.alpha = 1;
 // colorMatrixFilter.hue(90, true);
 // colorMatrixFilter.vintage(true);
