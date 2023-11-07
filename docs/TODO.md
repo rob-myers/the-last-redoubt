@@ -2,26 +2,6 @@
 
 ## In progress
 
-- ✅ disconnect three.js from bundle
-- ✅ try a PIXI filter
-- ✅ try to fix flickering thin lines while zooming
-  - use resolute 4 for gm lit filter
-  - resolution is window.devicePixelRatio
-- ✅ consider Spine export
-  - https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-pixi
-  - https://github.com/EsotericSoftware/spine-runtimes/issues/2305
-    - but can at least export spritesheets
-- ✅ convert Spriter skeleton to Spine
-    - https://github.com/zhong317/spriter2spine
-    - need to change Spine to version 3.8 for json import
-    - needed to remove animation `die`
-```sh
-cd ~/coding/spriter2spine
-python2 ./src/spriter2spine.py \
-  -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.for-export.scml \
-  -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine
-```
-- ✅ Spine: learn how to fix right arm
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
   - ✅ rename spine + arms
@@ -49,29 +29,8 @@ python2 ./src/spriter2spine.py \
 - clean table symbols a bit
 - useQueries in useGeomorphs
 
-- 🚧 Start using @pixi/react for rendering only
-  - ✅ Create `WorldPixi` and show in `Tabs`
-  - ✅ Basic pixi demo: show a geomorph
-  - ✅ Can pan/zoom somehow
-    - ℹ️ pixi-viewport is a bit of a mess
-    - ✅ fix pixi-viewport in development
-    - PATCH `node_modules/pixi-viewport/dist/pixi_viewport.js`
-      ```js
-      destroy() {
-        this.viewport.options.events.domElement?.removeEventListener("wheel", this.wheelFunction);
-      }
-      ```
-    - PATCH `node_modules/@pixi/react/dist/index.es-dev.js`
-      ```js
-      import PropTypes from 'prop-types';
-      import '@pixi/events';
-      ```
-    - ✅ fix pixi-viewport in production
-  - ✅ show every lit geomorph
-  - ✅ fix alignment
-  - ✅ provided loading graphics e.g. paint rooms in grey
-  - ✅ use `RenderTexture`, painting all unlit rects
-
+- 🚧 continue migrating Geomorphs
+- continue migrating ...
 
 ---
 
@@ -691,6 +650,51 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ disconnect three.js from bundle
+- ✅ try a PIXI filter
+- ✅ try to fix flickering thin lines while zooming
+  - use resolute 4 for gm lit filter
+  - resolution is window.devicePixelRatio
+- ✅ consider Spine export
+  - https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-pixi
+  - https://github.com/EsotericSoftware/spine-runtimes/issues/2305
+    - but can at least export spritesheets
+- ✅ convert Spriter skeleton to Spine
+    - https://github.com/zhong317/spriter2spine
+    - need to change Spine to version 3.8 for json import
+    - needed to remove animation `die`
+```sh
+cd ~/coding/spriter2spine
+python2 ./src/spriter2spine.py \
+  -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.for-export.scml \
+  -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine
+```
+- ✅ Spine: learn how to fix right arm
+
+- ✅ Start using @pixi/react for rendering only
+  - ✅ Create `WorldPixi` and show in `Tabs`
+  - ✅ Basic pixi demo: show a geomorph
+  - ✅ Can pan/zoom somehow
+    - ℹ️ pixi-viewport is a bit of a mess
+    - ✅ fix pixi-viewport in development
+    - PATCH `node_modules/pixi-viewport/dist/pixi_viewport.js`
+      ```js
+      destroy() {
+        this.viewport.options.events.domElement?.removeEventListener("wheel", this.wheelFunction);
+      }
+      ```
+    - PATCH `node_modules/@pixi/react/dist/index.es-dev.js`
+      ```js
+      import PropTypes from 'prop-types';
+      import '@pixi/events';
+      ```
+    - ✅ fix pixi-viewport in production
+  - ✅ show every lit geomorph
+  - ✅ fix alignment
+  - ✅ provided loading graphics e.g. paint rooms in grey
+  - ✅ use `RenderTexture`, painting all unlit rects
+  - ℹ️ skip {gm,room,door}Ids for now
 
 - ✅ ~~start~~ try using react-three-fiber for rendering only
   - ✅ `yarn add three @types/three @react-three/fiber`
