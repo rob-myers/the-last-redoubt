@@ -1514,16 +1514,16 @@ export function extendDecor(decor) {
 /**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorDef} decor
- * @param {import('../world/World').State} api
+ * @param {Graph.GmGraph} gmGraph
  */
-export function ensureDecorMetaGmRoomId(decor, api) {
+export function ensureDecorMetaGmRoomId(decor, gmGraph) {
   decor.meta ??= {};
   if (
     typeof decor.meta.gmId !== 'number'
     || typeof decor.meta.roomId !== 'number'
   ) {
     const decorOrigin = getDecorOrigin(decor);
-    const gmRoomId = api.gmGraph.findRoomContaining(decorOrigin);
+    const gmRoomId = gmGraph.findRoomContaining(decorOrigin);
     if (gmRoomId) {
       decor.meta.gmId = gmRoomId.gmId;
       decor.meta.roomId = gmRoomId.roomId;

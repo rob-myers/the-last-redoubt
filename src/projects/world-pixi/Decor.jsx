@@ -1,12 +1,12 @@
 import React from "react";
-import { gmScale } from "./const";
+import { gmScale } from "../world/const";
 import { assertNonNull, testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
-import GmsCanvas from "./GmsCanvas";
+// import GmsCanvas from "./GmsCanvas";
 
 /**
  * @param {Props} props
@@ -197,24 +197,25 @@ export default function Decor(props) {
   }));
 
   React.useEffect(() => {
-    state.initByRoom();
-    state.render();
+    // state.initByRoom();
+    // state.render();
     props.onLoad(state);
   }, []);
 
-  return (
-    <div
-      className="decor-root"
-      ref={el => el && (state.rootEl = el)}
-      onClick={state.onClick}
-    >
-      <GmsCanvas
-        gms={gms}
-        scaleFactor={gmScale}
-        canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
-      />
-    </div>
-  );
+  // return (
+  //   <div
+  //     className="decor-root"
+  //     ref={el => el && (state.rootEl = el)}
+  //     onClick={state.onClick}
+  //   >
+  //     <GmsCanvas
+  //       gms={gms}
+  //       scaleFactor={gmScale}
+  //       canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
+  //     />
+  //   </div>
+  // );
+  return null;
 }
 
 /**
@@ -231,7 +232,7 @@ function metaToImageHref(meta) {
 
 /**
  * @typedef Props
- * @property {import('./World').State} api
+ * @property {import('./WorldPixi').State} api
  * @property {(api: State) => void} onLoad
  */
 
