@@ -21,8 +21,8 @@ python2 ./src/spriter2spine.py \
   -i  /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/top_down_man_base.for-export.scml \
   -o /Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base/spine
 ```
-- 🚧 Spine: learn how to fix right arm
-- 🚧 Spine: top_down_man_base: rename bones
+- ✅ Spine: learn how to fix right arm
+- 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
   - ✅ rename spine + arms
   - create test image showing limb images
@@ -35,16 +35,16 @@ python2 ./src/spriter2spine.py \
   - ✅ try bare arms/legs
     - can toggle respective images (nothing-in-slot vs something)
   - ✅ try adding a slot: dark head
+  - ✅ try export spritesheet
   - 🚧 try changing skins
-  - try export spritesheet
-  - try fixing other sheets
+  - 🚧 fix other sheets
+  - try creating own basic images
 
 - Spine: generate spritesheet at runtime
   - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
   - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
   - ℹ️ https://esotericsoftware.com/spine-api-reference
   - ...
-
 
 - clean table symbols a bit
 - useQueries in useGeomorphs
@@ -69,7 +69,8 @@ python2 ./src/spriter2spine.py \
     - ✅ fix pixi-viewport in production
   - ✅ show every lit geomorph
   - ✅ fix alignment
-  - 🚧 use `RenderTexture`, painting all unlit rects
+  - ✅ provided loading graphics e.g. paint rooms in grey
+  - ✅ use `RenderTexture`, painting all unlit rects
 
 
 ---

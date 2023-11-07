@@ -9,6 +9,7 @@ import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import Viewport from "./Viewport";
 import Geomorphs from "./Geomorphs";
+// import { TestRenderTexture, TestSprite } from "./Misc";
 
 /**
  * @param {Props} props
@@ -51,6 +52,7 @@ export default function WorldPixi(props) {
             hello: true,
             antialias: true,
             resolution: window.devicePixelRatio,
+            powerPreference: 'low-power',
             // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
           onMount={app => state.pixiApp = app}
@@ -66,6 +68,8 @@ export default function WorldPixi(props) {
                 api={state}
                 onLoad={api => (state.geomorphs = api) && update()}
               />
+              {/* <TestSprite/> */}
+              {/* <TestRenderTexture/> */}
             </Viewport>
           </QueryClientProvider>
         </Stage>
