@@ -63,4 +63,13 @@ declare namespace Geom {
   }
 
   export type SixTuple = [number, number, number, number, number, number];
+
+  export interface PixiTransform {
+    /** Identity is `{ x: 1, y: 1 }` */
+    scale: Geom.VectJson;
+    /** degrees */
+    angle: number;
+    x: number;
+    y: number;
+  }
 }

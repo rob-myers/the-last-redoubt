@@ -1059,12 +1059,14 @@ export function geomorphDataToInstance(gm, gmId, transform) {
     ...gm,
     gmId,
     itemKey: `${gm.key}-[${transform}]`,
+
     transform,
-    transformStyle: `matrix(${transform})`,
     matrix,
     inverseMatrix,
-    gridRect,
+    transformStyle: `matrix(${transform})`,
+    pixiTransform: geom.basicAffineToPixi(transform),
 
+    gridRect,
     gmRoomDecor: instantiateRoomDecor(gm, gmId, matrix),
 
     toLocalCoords(worldPoint) {

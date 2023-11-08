@@ -24,7 +24,7 @@ export default function Geomorphs(props) {
     queryFn: async () => {
       state.initTex(gmId);
       await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
-        state.tex[type][gmId] = await Assets.load(
+        state[type][gmId] = await Assets.load(
           `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
         )
       ));
@@ -34,24 +34,26 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
-    renderTex: [],
-    tex: { lit: [], unlit: [] },
+    tex: [],
+    lit: [],
+    unlit: [],
     gfx: new Graphics(),
+
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
     drawPolygonImage(type, gmId, poly) {
-      const gm = gms[gmId];
-      const gfx = state.gfx; // Assume transform already set
-      // const gfx = state.gfx.clear().setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
-      gfx.beginTextureFill({ texture: state.tex[type][gmId] });
+      // draw from image -> image with identity transform
+      const gfx = state.gfx.setTransform();
+      gfx.beginTextureFill({ texture: state[type][gmId] });
       gfx.drawPolygon(poly.outline);
       gfx.endFill();
       // Render into RenderTexture manually?
       // api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
     },
     drawRectImage(type, gmId, rect) {
-      const gfx = state.gfx;
-      gfx.beginTextureFill({ texture: state.tex[type][gmId] });
+      // draw from image -> image with identity transform
+      const gfx = state.gfx.setTransform();
+      gfx.beginTextureFill({ texture: state[type][gmId] });
       gfx.drawRect(// Src/target canvas are scaled by `gmScale`
         gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
       );
@@ -59,7 +61,7 @@ export default function Geomorphs(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      state.renderTex[gmId] = RenderTexture.create({
+      state.tex[gmId] = RenderTexture.create({
         width: gmScale * gm.pngRect.width,
         height: gmScale * gm.pngRect.height,
       });
@@ -71,24 +73,24 @@ export default function Geomorphs(props) {
         gfx.drawPolygon(poly.outline)
         gfx.endFill();
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.renderTex[gmId] });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
     },
     initLightRects(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
       // draw lit
-      gfx.beginTextureFill({ texture: state.tex.lit[gmId] });
+      gfx.beginTextureFill({ texture: state.lit[gmId] });
       gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
       gfx.endFill();
       // draw all unlit rects
       gm.doorToLightRect.forEach(x => {
         if (x) {
-          gfx.beginTextureFill({ texture: state.tex.unlit[gmId] });
+          gfx.beginTextureFill({ texture: state.unlit[gmId] });
           gfx.drawRect(gmScale * (x.rect.x - gms[gmId].pngRect.x), gmScale * (x.rect.y - gms[gmId].pngRect.y), gmScale * x.rect.width, gmScale * x.rect.height);
           gfx.endFill();
         }
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.renderTex[gmId] });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
     },
     onCloseDoor(gmId, doorId, lightIsOn = true) {
       const gm = gms[gmId];
@@ -136,7 +138,7 @@ export default function Geomorphs(props) {
       });
     },
     recomputeLights(gmId, roomId) {
-      if (!state.tex.unlit[gmId]) {
+      if (!state.unlit[gmId]) {
         return; // avoid initialization error
       }
       const gmDoors = api.doors.lookup[gmId];
@@ -202,17 +204,17 @@ export default function Geomorphs(props) {
 
   return <>
     {gms.map((gm, gmId) =>
-      state.renderTex[gmId] && (
+      state.tex[gmId] && (
         <Container
           key={gmId}
-          {...decomposeBasicTransform(gm.transform)}
+          {...gm.pixiTransform}
           filters={[colorMatrixFilter]}
           // filters={[]}
         >
           <Sprite
             width={gm.pngRect.width}
             height={gm.pngRect.height}
-            texture={state.renderTex[gmId]}
+            texture={state.tex[gmId]}
             position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
           />
         </Container>
@@ -230,8 +232,9 @@ export default function Geomorphs(props) {
 /**
  * @typedef State @type {object}
  * @property {boolean} ready
- * @property {import('pixi.js').RenderTexture[]} renderTex
- * @property {{ [x in 'lit' | 'unlit']: import('pixi.js').Texture[] }} tex
+ * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {import('pixi.js').Texture[]} lit
+ * @property {import('pixi.js').Texture[]} unlit
  * @property {import('@pixi/graphics').Graphics} gfx Reused
  * @property {boolean[][]} isRoomLit
  * Lights on iff `isRoomLit[gmId][roomId]`.
@@ -248,30 +251,3 @@ export default function Geomorphs(props) {
  * 
  * //@property {() => void} initDrawIds
  */
-
-/**
- * 🚧 precompute
- * @param {Geom.SixTuple} transform
- * `[a, b, c, d]` are ±1 and invertible
- */
-function decomposeBasicTransform([a, b, c, d, e, f]) {
-  let degrees = 0, scaleX = 1, scaleY = 1;
-  if (a === 1) {// degrees is 0
-    scaleY = d;
-  } else if (a === -1) {
-    degrees = 180;
-    scaleY = -d;
-  } else if (b === 1) {
-    degrees = 90;
-    scaleX = -c;
-  } else if (b === -1) {
-    degrees = 270;
-    scaleX = c;
-  }
-  return {
-    scale: { x: scaleX, y: scaleY },
-    angle: degrees,
-    x: e,
-    y: f,
-  };
-}

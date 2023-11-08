@@ -329,6 +329,7 @@ declare namespace Geomorph {
     transformStyle: string;
     matrix: Geom.Mat;
     inverseMatrix: Geom.Mat;
+    pixiTransform: Geom.PixiTransform;
     /**
      * Sub-rectangle of `600 * 600` grid
      * - "Standard Geomorphs" are `1200 * 1200`

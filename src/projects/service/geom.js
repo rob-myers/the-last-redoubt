@@ -15,6 +15,39 @@ class geomServiceClass {
   }
   
   /**
+   * By a "basic affine matrix" we mean `a, b, c, d in {-1, 1}`
+   * and the corresponding 2x2 matrix is invertible.
+   * That is, we permit arbitrary translations,
+   * scaling by -1 in either axis, rotation by 90°,
+   * and closure under composition.
+   * 
+   * We convert these matrices into a pixi.js format.
+   * @param {Geom.SixTuple} transform
+   * @returns {Geom.PixiTransform}
+   */
+  basicAffineToPixi([a, b, c, d, e, f]) {
+    let degrees = 0, scaleX = 1, scaleY = 1;
+    if (a === 1) {// degrees is 0
+      scaleY = d;
+    } else if (a === -1) {
+      degrees = 180;
+      scaleY = -d;
+    } else if (b === 1) {
+      degrees = 90;
+      scaleX = -c;
+    } else if (b === -1) {
+      degrees = 270;
+      scaleX = c;
+    }
+    return {
+      scale: { x: scaleX, y: scaleY },
+      angle: degrees,
+      x: e,
+      y: f,
+    };
+  }
+
+  /**
    * https://github.com/davidfig/intersects/blob/master/polygon-circle.js
    * @param {Geom.VectJson} center 
    * @param {number} radius 

@@ -26,16 +26,16 @@
   - ℹ️ https://esotericsoftware.com/spine-api-reference
   - ...
 
-- clean table symbols a bit
-- useQueries in useGeomorphs
-
 - 🚧 continue migrating Geomorphs
   - ✅ add other components to WorldPixi (code, no effect yet)
-  - 🚧 draw doors directly as sprites in Doors (can be more efficient later)
+  - ✅ precompute `decomposeBasicTransform`
+  - 🚧 draw closed doors in `api.doors.tex`
   - ...
 
 - ✅ remove `projects/world-r3d`
-- intend to remove `projects/world`
+- eventually remove `projects/world`
+- clean table symbols a bit
+- useQueries in useGeomorphs
 
 ---
 
