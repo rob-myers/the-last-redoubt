@@ -34,7 +34,7 @@
   - 🚧 draw doors directly as sprites in Doors (can be more efficient later)
   - ...
 
-- remove `projects/world-r3d`
+- ✅ remove `projects/world-r3d`
 - intend to remove `projects/world`
 
 ---
