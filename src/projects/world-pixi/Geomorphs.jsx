@@ -34,7 +34,10 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
-    tex: [],
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })), // async precompute?
     lit: [],
     unlit: [],
     gfx: new Graphics(),
@@ -61,18 +64,14 @@ export default function Geomorphs(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      state.tex[gmId] = RenderTexture.create({
-        width: gmScale * gm.pngRect.width,
-        height: gmScale * gm.pngRect.height,
-      });
       const gfx = state.gfx.clear();
       gfx.setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
-      // gfx.lineStyle({ width: 4, color: 0xaaaaaa });
-      gm.rooms.forEach(poly => {
-        gfx.beginFill(0x222222);
-        gfx.drawPolygon(poly.outline)
-        gfx.endFill();
-      });
+      gfx.beginFill(0x333333);
+      gfx.drawPolygon(gm.hullPoly[0].outline)
+      gfx.endFill();
+      gfx.beginFill(0x666666);
+      gfx.drawPolygon(gm.navPoly[0].outline)
+      gfx.endFill();
       api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
     },
     initLightRects(gmId) {
@@ -204,21 +203,19 @@ export default function Geomorphs(props) {
 
   return <>
     {gms.map((gm, gmId) =>
-      state.tex[gmId] && (
-        <Container
-          key={gmId}
-          {...gm.pixiTransform}
-          filters={[colorMatrixFilter]}
-          // filters={[]}
-        >
-          <Sprite
-            width={gm.pngRect.width}
-            height={gm.pngRect.height}
-            texture={state.tex[gmId]}
-            position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
-          />
-        </Container>
-      )
+      <Container
+        key={gmId}
+        {...gm.pixiTransform}
+        filters={[colorMatrixFilter]}
+        // filters={[]}
+      >
+        <Sprite
+          width={gm.pngRect.width}
+          height={gm.pngRect.height}
+          texture={state.tex[gmId]}
+          position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
+        />
+      </Container>
     )}
   </>;
 }

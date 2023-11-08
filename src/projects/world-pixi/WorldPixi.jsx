@@ -78,7 +78,6 @@ export default function WorldPixi(props) {
     return () => removeCached(props.worldKey);
   }, []);
 
-
   return (
     <div
       ref={rootRef}

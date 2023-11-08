@@ -29,6 +29,7 @@
 - 🚧 continue migrating Geomorphs
   - ✅ add other components to WorldPixi (code, no effect yet)
   - ✅ precompute `decomposeBasicTransform`
+  - ✅ provide RenderTexture initially?
   - 🚧 draw closed doors in `api.doors.tex`
   - ...
 
