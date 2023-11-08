@@ -21,7 +21,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-// import { TestRenderTexture, TestSprite } from "./Misc";
+import { Origin, TestRenderTexture, TestSprite } from "./Misc";
 
 /**
  * @param {Props} props
@@ -90,6 +90,7 @@ export default function WorldPixi(props) {
             antialias: true,
             resolution: window.devicePixelRatio,
             powerPreference: 'low-power',
+            backgroundColor: '#111',
             // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
           onMount={app => state.pixiApp = app}
@@ -131,6 +132,7 @@ export default function WorldPixi(props) {
                 onLoad={api => (state.fov = api) && update()}
               />
 
+              <Origin />
               {/* <TestSprite/> */}
               {/* <TestRenderTexture/> */}
             </Viewport>

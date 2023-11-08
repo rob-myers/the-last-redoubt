@@ -4,6 +4,24 @@ import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
+export function Origin() {
+  const app = useApp();
+
+  const rt = React.useMemo(() => {
+    const rt = RenderTexture.create({ width: 10, height: 10 });
+    const gfx = new Graphics();
+    gfx.beginFill(0xff0000);
+    gfx.drawRect(-5, -5, 10, 10);
+    gfx.endFill();
+    app.renderer.render(gfx, { renderTexture: rt });
+    return rt;
+  }, []);
+
+  return (
+    <Sprite texture={rt} />
+  );
+}
+
 export function TestSprite() {
   return (
     <Sprite

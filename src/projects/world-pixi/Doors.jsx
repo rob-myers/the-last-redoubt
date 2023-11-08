@@ -1,10 +1,14 @@
 import React from "react";
-import { css, cx } from "@emotion/css";
 import { Subject } from "rxjs";
-import { cssName, defaultDoorCloseMs } from "../world/const"; // 🚧
+import { RenderTexture } from "@pixi/core";
+import { Graphics } from "@pixi/graphics";
+import { Container, Sprite } from "@pixi/react";
+
+import { defaultDoorCloseMs, gmScale } from "../world/const"; // 🚧
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
+import GmSprites from "./GmSprites";
 
 /**
  * @param {Props} props
@@ -12,13 +16,17 @@ import useUpdate from "../hooks/use-update";
 export default function Doors(props) {
 
   const update = useUpdate();
-  const { gmGraph, npcs } = props.api;
-  const { gms } = props.api.gmGraph;
+  const { api } = props;
+  const { gmGraph, gmGraph: { gms }, npcs } = api;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
     events: new Subject,
+    gfx: new Graphics,
     ready: true,
-    renderTex: [], // 🚧 maybe just drawn door sprites!
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.gridRect.width,
+      height: gmScale * gm.gridRect.height,
+    })),
 
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta, normal }, doorId) => {
       const isHullDoor = gm.isHullDoor(doorId);
@@ -37,8 +45,6 @@ export default function Doors(props) {
       };
     })),
 
-    
-
     cancelClose(doorState) {
       window.clearTimeout(doorState.closeTimeoutId);
       delete doorState.closeTimeoutId;
@@ -52,7 +58,17 @@ export default function Doors(props) {
       return state.lookup[gmId].flatMap((x, i) => x.visible ? i : []);
     },
     initTex(gmId) {
-      // 🚧
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear().setTransform(0, 0, gmScale, gmScale);
+      gfx.lineStyle({ width: 1, color: 0x000000 });
+      gm.doors.forEach(({ poly, meta }) => {
+        gfx.beginFill(0xffffff);
+        // 🚧 precompute
+        poly = meta.hull ? geom.createOutset(poly, 1)[0] : poly;
+        gfx.drawPolygon(poly.outline);
+        gfx.endFill();
+      });
+      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
     },
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
@@ -246,6 +262,7 @@ export default function Doors(props) {
   });
 
   React.useEffect(() => {
+    gms.forEach((gm, gmId) => state.initTex(gmId));
     props.onLoad(state);
   }, []);
 
@@ -265,6 +282,14 @@ export default function Doors(props) {
     });
     return () => void handlePause.unsubscribe();
   }, [npcs.ready]);
+
+  return (
+    <GmSprites
+      gms={gms}
+      tex={state.tex}
+      alignTo="gridRect"
+    />
+  );
 
   // return (
   //   <div
@@ -304,56 +329,7 @@ export default function Doors(props) {
   //     ))}
   //   </div>
   // );
-  return null;
 }
-
-const rootCss = css`
-  ${cssName.npcDoorTouchRadius}: 10px;
-
-  position: absolute;
-
-  div.${cssName.door} {
-    position: absolute;
-    cursor: pointer;
-    background-color: #000;
-    border: 1px solid #666;
-
-    &.iris {
-      opacity: 1;
-      transition: opacity 300ms;
-      &.${cssName.open} {
-        opacity: 0.1;
-      }
-    }
-    &:not(.iris) {
-      /* Non-iris doors slide */
-      transition: width 300ms ease-in;
-      &.${cssName.open} {
-        width: 4px !important;
-      }
-    }
-
-    &.${cssName.locked} {
-      background-color: #530b0b;
-    }
-
-    /* background-image: linear-gradient(45deg, #000 33.33%, #444 33.33%, #444 50%, #000 50%, #000 83.33%, #444 83.33%, #444 100%);
-    background-size: cover; */
-    
-    &::after {
-      content: '';
-      cursor: pointer;
-      box-sizing: border-box;
-      position: absolute;
-      border: 1px solid rgba(255, 255, 255, 0.02);
-      border-radius: 50%;
-      width: calc(100% + var(${cssName.npcDoorTouchRadius}));
-      height: calc(2 * var(${cssName.npcDoorTouchRadius}));
-      left: 0;
-      top: calc(-1 * var(${cssName.npcDoorTouchRadius}) + 50%);
-    }
-  }
-`;
 
 /**
  * @typedef Props @type {object}
@@ -363,9 +339,14 @@ const rootCss = css`
  */
 
 /**
- * @typedef State @type {object}
- * @property {(item: DoorState) => void} cancelClose
+ * @typedef State
  * @property {import('rxjs').Subject<DoorMessage>} events
+ * @property {DoorState[][]} lookup
+ * @property {boolean} ready
+ * @property {import('@pixi/graphics').Graphics} gfx Reused
+ * @property {import('@pixi/core').RenderTexture[]} tex
+ * 
+ * @property {(item: DoorState) => void} cancelClose
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(gmId: number) => void} initTex
@@ -373,9 +354,6 @@ const rootCss = css`
  * @property {(e: PointerEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
- * @property {boolean} ready
- * @property {import('@pixi/core').RenderTexture[]} renderTex
- * @property {DoorState[][]} lookup
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorIds: number[]) => void} setVisible

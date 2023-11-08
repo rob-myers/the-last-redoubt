@@ -11,6 +11,7 @@ import { assertDefined } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colorMatrixFilter } from "./Misc";
+import GmSprites from "./GmSprites";
 
 /**
  * @param {Props} props 
@@ -65,7 +66,7 @@ export default function Geomorphs(props) {
     initTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.setTransform(gm.pngRect.x, gm.pngRect.y, gmScale, gmScale);
+      gfx.setTransform(-gm.pngRect.x, -gm.pngRect.y, gmScale, gmScale);
       gfx.beginFill(0x333333);
       gfx.drawPolygon(gm.hullPoly[0].outline)
       gfx.endFill();
@@ -201,23 +202,14 @@ export default function Geomorphs(props) {
     props.onLoad(state);
   }, []);
 
-  return <>
-    {gms.map((gm, gmId) =>
-      <Container
-        key={gmId}
-        {...gm.pixiTransform}
-        filters={[colorMatrixFilter]}
-        // filters={[]}
-      >
-        <Sprite
-          width={gm.pngRect.width}
-          height={gm.pngRect.height}
-          texture={state.tex[gmId]}
-          position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
-        />
-      </Container>
-    )}
-  </>;
+  return (
+    <GmSprites
+      gms={gms}
+      tex={state.tex}
+      alignTo="pngRect"
+      filters={[colorMatrixFilter]}
+    />
+  );
 }
 
 /**

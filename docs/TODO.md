@@ -30,8 +30,10 @@
   - ✅ add other components to WorldPixi (code, no effect yet)
   - ✅ precompute `decomposeBasicTransform`
   - ✅ provide RenderTexture initially?
-  - 🚧 draw closed doors in `api.doors.tex`
-  - ...
+  - ✅ draw closed doors in `api.doors.tex`
+  - 🚧 consider pointer events
+    - click -> world position
+    - can click door
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
