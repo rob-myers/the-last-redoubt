@@ -14,9 +14,13 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       ticker: app.ticker,
     }).drag({
       wheel: false,
+      // wheelScroll: 0.1,
     }).wheel({
       wheelZoom: true,
-    }).pinch().clampZoom({
+      // percent: 0.01,
+    }).pinch({
+      // percent: 0.1,
+    }).clampZoom({
       maxScale: 4,
       minScale: 0.1,
     }).decelerate({
