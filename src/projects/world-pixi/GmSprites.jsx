@@ -15,10 +15,10 @@ export default function GmSprites(props) {
           filters={props.filters ?? []}
         >
           <Sprite
-            width={gm[props.alignTo].width}
-            height={gm[props.alignTo].height}
+            width={gm.pngRect.width}
+            height={gm.pngRect.height}
             texture={props.tex[gmId]}
-            position={props.alignTo === 'pngRect' ? { x: gm.pngRect.x, y: gm.pngRect.y } : { x: 0, y: 0 }}
+            position={{ x: gm.pngRect.x, y: gm.pngRect.y }}
           />
         </Container>
       ))}
@@ -30,6 +30,5 @@ export default function GmSprites(props) {
  * @typedef Props
  * @property {Geomorph.GeomorphDataInstance[]} gms
  * @property {import('@pixi/core').RenderTexture[]} tex
- * @property {'pngRect' | 'gridRect'} alignTo
  * @property {import('@pixi/core').Filter[]} [filters]
  */

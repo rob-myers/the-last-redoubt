@@ -66,7 +66,7 @@ export default function Geomorphs(props) {
     initTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.setTransform(-gm.pngRect.x, -gm.pngRect.y, gmScale, gmScale);
+      gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gfx.beginFill(0x333333);
       gfx.drawPolygon(gm.hullPoly[0].outline)
       gfx.endFill();
@@ -76,6 +76,7 @@ export default function Geomorphs(props) {
       api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
     },
     initLightRects(gmId) {
+      // draw from image -> image with identity transform
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
       // draw lit
@@ -206,7 +207,6 @@ export default function Geomorphs(props) {
     <GmSprites
       gms={gms}
       tex={state.tex}
-      alignTo="pngRect"
       filters={[colorMatrixFilter]}
     />
   );

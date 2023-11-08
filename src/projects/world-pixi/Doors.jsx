@@ -24,8 +24,8 @@ export default function Doors(props) {
     gfx: new Graphics,
     ready: true,
     tex: gms.map(gm => RenderTexture.create({
-      width: gmScale * gm.gridRect.width,
-      height: gmScale * gm.gridRect.height,
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
     })),
 
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta, normal }, doorId) => {
@@ -59,12 +59,10 @@ export default function Doors(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear().setTransform(0, 0, gmScale, gmScale);
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gfx.lineStyle({ width: 1, color: 0x000000 });
-      gm.doors.forEach(({ poly, meta }) => {
-        gfx.beginFill(0xffffff);
-        // 🚧 precompute
-        poly = meta.hull ? geom.createOutset(poly, 1)[0] : poly;
+      gm.doors.forEach(({ poly}) => {
+        gfx.beginFill(0xaaaaaa);
         gfx.drawPolygon(poly.outline);
         gfx.endFill();
       });
@@ -287,7 +285,6 @@ export default function Doors(props) {
     <GmSprites
       gms={gms}
       tex={state.tex}
-      alignTo="gridRect"
     />
   );
 
