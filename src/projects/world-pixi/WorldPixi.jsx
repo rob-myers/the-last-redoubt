@@ -14,7 +14,7 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import useGeomorphs from "../geomorph/use-geomorphs";
 import useHandleEvents from "./use-handle-events";
-import Viewport from "./Viewport";
+import PanZoom from "./PanZoom";
 import Geomorphs from "./Geomorphs";
 import Doors from "./Doors";
 import NPCs from "./NPCs";
@@ -32,9 +32,7 @@ export default function WorldPixi(props) {
     disabled: !!props.disabled,
     gmGraph: /** @type {*} */ ({}),
     gmRoomGraph: /** @type {*} */ ({}),
-
     pixiApp: /** @type {*} */ ({}),
-    viewport: /** @type {*} */ ({}),
 
     decor: /** @type {State['decor']} */  ({ ready: false }),
     debug: /** @type {State['debug']} */  ({ ready: false }),
@@ -42,6 +40,7 @@ export default function WorldPixi(props) {
     fov: /** @type {State['fov']} */  ({ ready: false }),
     geomorphs: /** @type {State['geomorphs']} */  ({ ready: false }),
     npcs: /** @type {State['npcs']} */  ({ ready: false }),
+    panZoom: /** @type {State['panZoom']} */  ({ ready: false }),
     lib: {
       filter, first, map, merge, take,
       isVectJson: Vect.isVectJson,
@@ -58,13 +57,13 @@ export default function WorldPixi(props) {
         state.fov, 
         state.geomorphs, 
         state.npcs, 
-        // state.panZoom,
+        state.panZoom,
       ].every(x => x.ready);
     },
   }));
 
   const update = useUpdate();
-  const [rootRef, bounds] = useMeasure();
+  const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
   useHandleEvents(state);
 
   ({
@@ -98,16 +97,9 @@ export default function WorldPixi(props) {
           height={bounds.height || undefined}
         >
           <QueryClientProvider client={queryClient} >
-            <Viewport
-              ref={vp => vp && (state.viewport = vp)}
-              initScale={0.5}
-              pointerup={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
-                const worldPoint = state.viewport.transform.localTransform.applyInverse(e.global);
-                console.log('pointerup', worldPoint);
-              }}
-              // pointermove={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
-              //   console.log('pointermove', e.global, e.offset);
-              // }}
+            <PanZoom
+              api={state}
+              onLoad={api => (state.panZoom = api) && update()}
             >
               <Geomorphs
                 api={state}
@@ -142,7 +134,7 @@ export default function WorldPixi(props) {
               <Origin />
               {/* <TestSprite/> */}
               {/* <TestRenderTexture/> */}
-            </Viewport>
+            </PanZoom>
           </QueryClientProvider>
         </Stage>
       )}
@@ -164,7 +156,6 @@ export default function WorldPixi(props) {
  * @property {Graph.GmRoomGraph} gmRoomGraph
  * 
  * @property {import("pixi.js").Application} pixiApp
- * @property {import("pixi-viewport").Viewport} viewport
  * 
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
@@ -174,7 +165,7 @@ export default function WorldPixi(props) {
  * @property {() => boolean} isReady
  * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
- * //@property {PanZoom.CssApi} panZoom // 🚧 pixi viewport interface?
+ * @property {import('./PanZoom').State} panZoom
  */
 
 /**

@@ -44,15 +44,15 @@ export default function useHandleEvents(api) {
         case 'disabled':
           api.fov.mapAct('pause');
           // api.panZoom.animationAction('pause');
-          api.viewport.plugins.pause('animate'); // 🚧
-          api.viewport.plugins.pause('follow');
+          api.panZoom.viewport.plugins.pause('animate'); // 🚧
+          api.panZoom.viewport.plugins.pause('follow');
           break;
         case 'enabled':
           api.fov.mapAct('resume');
           if (!api.npcs.isPanZoomControlled()) {
             // only resume when not controlled by e.g. `view` or `track`
-            api.viewport.plugins.resume('animate'); // 🚧
-            api.viewport.plugins.resume('follow');
+            api.panZoom.viewport.plugins.resume('animate'); // 🚧
+            api.panZoom.viewport.plugins.resume('follow');
           }
           break;
         case 'fov-changed':
