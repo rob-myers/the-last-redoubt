@@ -211,7 +211,22 @@ npc config '{
   showColliders: false,
   logTags: false,
 }'
-`
+`,
+
+// 🚧 pixi profile
+game_3: (npcKey = 'rob') => `
+source /etc/util-1
+source /etc/game-1
+
+# awaitWorld
+# spawn ${npcKey} '{"x":210,"y":390}'
+# npc set-player ${npcKey}
+# npc map hide-labels
+
+# pausableNpcs &
+# track ${npcKey} &
+# click | controlNpc ${npcKey} &
+`,
 
 };
 
