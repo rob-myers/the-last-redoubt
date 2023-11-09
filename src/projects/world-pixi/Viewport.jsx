@@ -11,7 +11,8 @@ const PixiComponentViewport = PixiComponent("Viewport", {
     const viewport = new PixiViewport({
       passiveWheel: false,
       events: app.renderer.events,
-      ticker: app.ticker,
+      // ticker: app.ticker,
+      noTicker: true,
     }).drag({
       wheel: false,
       // wheelScroll: 0.1,
@@ -27,6 +28,7 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       friction: 0.5,
     });
 
+    // 🚧 move to <PanZoom>
     if (initScale) {
       viewport.scale.set(initScale);
     }
@@ -34,7 +36,9 @@ const PixiComponentViewport = PixiComponent("Viewport", {
   },
   /** @param {PixiViewport} viewport */
   willUnmount: (viewport) => {
-    // viewport.options.noTicker = true; // Fix the `ticker` option above
+    // viewport.options.noTicker = true;
+    // //@ts-expect-error
+    // viewport.options.ticker.remove(viewport.tickerFunction);
     viewport.destroy({ children: true });
   },
 });
