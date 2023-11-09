@@ -1,4 +1,5 @@
 import React from "react";
+import { Subject } from "rxjs";
 import useStateRef from "../hooks/use-state-ref";
 import Viewport from "./Viewport";
 
@@ -11,7 +12,9 @@ export default function PanZoom(props) {
   const state = useStateRef(
     /** @type {() => State} */ () => ({
       ready: true,
+      events: new Subject,
       viewport: /** @type {*} */ ({}),
+      clickIds: [],
     })
   );
 
@@ -25,9 +28,18 @@ export default function PanZoom(props) {
       initScale={0.5}
       pointerup={
         /** @param {import('@pixi/events').FederatedPointerEvent} e */ (e) => {
-          const worldPoint =
-            state.viewport.transform.localTransform.applyInverse(e.global);
-          console.log("pointerup", worldPoint);
+          const worldPoint = state.viewport.transform.localTransform.applyInverse(e.global);
+          // console.log("pointerup", worldPoint);
+          state.events.next({
+            key: 'pointerup',
+            meta: {
+              distance: 0, // 🚧
+              longClick: false, // 🚧
+              targetPos: worldPoint, // 🚧
+            },
+            point: worldPoint,
+            clickId: state.clickIds.pop(),
+          });
         }
       }
       // pointermove={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
@@ -49,5 +61,9 @@ export default function PanZoom(props) {
 /**
  * @typedef State
  * @property {boolean} ready
+ * @property {Subject<PanZoom.CssInternalEvent>} events
  * @property {import("pixi-viewport").Viewport} viewport
+ * @property {string[]} clickIds
+ * Pending click identifiers, provided by code external to CssPanZoom.
+ * The last click identifier is the "current one".
  */

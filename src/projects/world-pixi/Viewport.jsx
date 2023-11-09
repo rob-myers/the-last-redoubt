@@ -11,8 +11,8 @@ const PixiComponentViewport = PixiComponent("Viewport", {
     const viewport = new PixiViewport({
       passiveWheel: false,
       events: app.renderer.events,
-      // ticker: app.ticker,
-      noTicker: true,
+      // ticker: app.ticker, // ℹ️ breaks unmount
+      // noTicker: true, // ℹ️ breaks pointerup
     }).drag({
       wheel: false,
       // wheelScroll: 0.1,

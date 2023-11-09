@@ -36,7 +36,10 @@
   - we'll try to reuse raw-loader gameFunctionsRunDefs
 - 🚧 get `click` working
   - ✅ api.panZoom wraps pixi-viewport
-  - can `click 1` without error
+  - ✅ can `click 1` without error
+  - `click` meta has distance and longClick
+- can detect click on door
+  - e.g. via grid?
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
