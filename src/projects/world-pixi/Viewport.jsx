@@ -34,7 +34,7 @@ const PixiComponentViewport = PixiComponent("Viewport", {
   },
   /** @param {PixiViewport} viewport */
   willUnmount: (viewport) => {
-    viewport.options.noTicker = true; // Fix the `ticker` option above
+    // viewport.options.noTicker = true; // Fix the `ticker` option above
     viewport.destroy({ children: true });
   },
 });
