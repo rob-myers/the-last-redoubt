@@ -67,11 +67,11 @@ export default function Geomorphs(props) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
       gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
-      gfx.lineStyle({ width: 8, color: 0xffffff });
+      gfx.lineStyle({ width: 8, color: 0x999999 });
       gfx.beginFill(0x000000);
       gfx.drawPolygon(gm.hullPoly[0].outline)
       gfx.endFill()
-      gfx.lineStyle({ width: 4, color: 0xffffff });
+      gfx.lineStyle({ width: 4, color: 0x999999 });
       gfx.fill.alpha = 0;
       gfx.beginFill();
       gfx.drawPolygon(gm.navPoly[0].outline)
@@ -216,13 +216,13 @@ export default function Geomorphs(props) {
 }
 
 /**
- * @typedef Props @type {object}
+ * @typedef Props
  * @property {import('./WorldPixi').State} api
  * @property {(doorsApi: State) => void} onLoad
  */
 
 /**
- * @typedef State @type {object}
+ * @typedef State
  * @property {boolean} ready
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {import('pixi.js').Texture[]} lit
