@@ -260,7 +260,6 @@ export default function Doors(props) {
   });
 
   React.useEffect(() => {
-    gms.forEach((gm, gmId) => state.initTex(gmId));
     props.onLoad(state);
   }, []);
 

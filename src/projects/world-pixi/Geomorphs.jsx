@@ -1,7 +1,6 @@
 import React from "react";
 import { useQueries } from "react-query";
 
-import { Container, Sprite } from "@pixi/react";
 import { Assets } from "@pixi/assets";
 import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
@@ -30,6 +29,7 @@ export default function Geomorphs(props) {
         )
       ));
       state.initLightRects(gmId);
+      api.doors.initTex(gmId);
     },
   })));
 
@@ -67,10 +67,13 @@ export default function Geomorphs(props) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
       gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
-      gfx.beginFill(0x333333);
+      gfx.lineStyle({ width: 8, color: 0xffffff });
+      gfx.beginFill(0x000000);
       gfx.drawPolygon(gm.hullPoly[0].outline)
-      gfx.endFill();
-      gfx.beginFill(0x666666);
+      gfx.endFill()
+      gfx.lineStyle({ width: 4, color: 0xffffff });
+      gfx.fill.alpha = 0;
+      gfx.beginFill();
       gfx.drawPolygon(gm.navPoly[0].outline)
       gfx.endFill();
       api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });

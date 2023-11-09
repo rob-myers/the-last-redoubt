@@ -31,9 +31,7 @@
   - ✅ precompute `decomposeBasicTransform`
   - ✅ provide RenderTexture initially?
   - ✅ draw closed doors in `api.doors.tex`
-  - 🚧 consider pointer events
-    - click -> world position
-    - can click door
+  - 🚧 pointer/click events -> world position
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
