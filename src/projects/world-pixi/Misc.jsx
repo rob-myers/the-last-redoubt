@@ -64,7 +64,7 @@ export const colorMatrixFilter = new ColorMatrixFilter();
 // colorMatrixFilter.resolution = window.devicePixelRatio;
 colorMatrixFilter.resolution = 4; // ℹ️ no zoom flicker
 // colorMatrixFilter.enabled = true;
-colorMatrixFilter.brightness(0.25, true);
+colorMatrixFilter.brightness(0.15, true);
 colorMatrixFilter.contrast(1.5, true);
 // colorMatrixFilter.alpha = 1;
 // colorMatrixFilter.hue(90, true);
