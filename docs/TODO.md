@@ -26,12 +26,16 @@
   - ℹ️ https://esotericsoftware.com/spine-api-reference
   - ...
 
-- 🚧 continue migrating Geomorphs
+- ✅ continue migrating Geomorphs
   - ✅ add other components to WorldPixi (code, no effect yet)
   - ✅ precompute `decomposeBasicTransform`
   - ✅ provide RenderTexture initially?
   - ✅ draw closed doors in `api.doors.tex`
-  - 🚧 pointer/click events -> world position
+  - ✅ pointer/click events -> world position
+- ✅ connect to a terminal
+  - we'll try to reuse raw-loader gameFunctionsRunDefs
+- 🚧 get `click` working
+  - maybe api.panZoom wraps pixi-viewport?
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`

@@ -90,7 +90,7 @@ export default function WorldPixi(props) {
             antialias: true,
             resolution: window.devicePixelRatio,
             powerPreference: 'low-power',
-            backgroundColor: '#111',
+            backgroundColor: 0x111111,
             // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
           onMount={app => state.pixiApp = app}
@@ -101,6 +101,13 @@ export default function WorldPixi(props) {
             <Viewport
               ref={vp => vp && (state.viewport = vp)}
               initScale={0.5}
+              pointerup={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
+                const worldPoint = state.viewport.transform.localTransform.applyInverse(e.global);
+                console.log('pointerup', worldPoint);
+              }}
+              // pointermove={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
+              //   console.log('pointermove', e.global, e.offset);
+              // }}
             >
               <Geomorphs
                 api={state}

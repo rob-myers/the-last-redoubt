@@ -39,10 +39,10 @@ const PixiComponentViewport = PixiComponent("Viewport", {
   },
 });
 
-/** @type {ReturnType<typeof forwardRef<PixiViewport, ViewportProps>>} */
-export const Viewport = forwardRef(/** @param {ViewportProps} props */ function Viewport(props) {
+/** @type {ReturnType<typeof forwardRef<PixiViewport, ViewportProps & import("@pixi/react").InteractionEvents>>} */
+export const Viewport = forwardRef(/** @param {ViewportProps} props */ function Viewport(props, ref) {
   const app = useApp();
-  return <PixiComponentViewport app={app} {...props} />;
+  return <PixiComponentViewport ref={ref} app={app} {...props} />;
 });
 
 export default Viewport;
