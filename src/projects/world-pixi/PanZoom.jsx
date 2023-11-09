@@ -15,6 +15,10 @@ export default function PanZoom(props) {
     })
   );
 
+  React.useEffect(() => {
+    props.onLoad(state);
+  }, []);
+
   return (
     <Viewport
       ref={(vp) => vp && (state.viewport = vp)}

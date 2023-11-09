@@ -35,7 +35,8 @@
 - ✅ connect to a terminal
   - we'll try to reuse raw-loader gameFunctionsRunDefs
 - 🚧 get `click` working
-  - maybe api.panZoom wraps pixi-viewport?
+  - ✅ api.panZoom wraps pixi-viewport
+  - can `click 1` without error
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
