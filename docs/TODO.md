@@ -37,7 +37,7 @@
 - 🚧 get `click` working
   - ✅ api.panZoom wraps pixi-viewport
   - ✅ can `click 1` without error
-  - `click` meta has distance and longClick
+  - ✅ `click` meta has distance and longClick
 - can detect click on door
   - e.g. via grid?
 

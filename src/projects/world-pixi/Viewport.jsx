@@ -28,17 +28,13 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       friction: 0.5,
     });
 
-    // 🚧 move to <PanZoom>
-    if (initScale) {
+    if (initScale) {// 🚧 move to <PanZoom>
       viewport.scale.set(initScale);
     }
     return viewport;
   },
   /** @param {PixiViewport} viewport */
   willUnmount: (viewport) => {
-    // viewport.options.noTicker = true;
-    // //@ts-expect-error
-    // viewport.options.ticker.remove(viewport.tickerFunction);
     viewport.destroy({ children: true });
   },
 });
