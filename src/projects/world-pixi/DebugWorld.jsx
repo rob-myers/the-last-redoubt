@@ -1,9 +1,13 @@
 import React from "react";
+import { RenderTexture, Matrix, Texture } from "@pixi/core";
+import { Graphics } from "@pixi/graphics";
+
 import { Mat, Rect } from "../geom";
 import { assertNonNull } from "../service/generic";
 import { drawLine, fillPolygons } from "../service/dom";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
+import GmSprites from "./GmSprites";
 // import GmsCanvas from "./GmsCanvas";
 
 /** @param {Props} props */
@@ -14,8 +18,11 @@ export default function DebugWorld(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
-    rootEl: /** @type {HTMLDivElement} */ ({}),
-    ctxts: [],
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })),
+    gfx: new Graphics(),
     
     debug: {
       room: undefined,
@@ -62,44 +69,57 @@ export default function DebugWorld(props) {
     },
     render() {
       const { gmGraph: { gms } } = api;
-      const { debug, ctxts, debug: { room }  } = state;
-
+      const { debug, debug: { room }  } = state;
+      const gfx = state.gfx;
+      const matrix = new Matrix();
+      
       gms.forEach((gm, gmId) => {
-        const ctxt = ctxts[gmId];
-        ctxt.resetTransform();
-        ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-
-        ctxt.transform(
-          gmScale, 0, 0, gmScale,
-          -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
-        );
-        const baseTransform = ctxt.getTransform();
+        gfx.setTransform().clear();
+        
+        matrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
+        gfx.transform.setFromMatrix(matrix);
+        // const baseTransform = gfx.getTransform();
 
         if (room?.gmId === gmId) {// Work in local coordinates 
           if (debug.roomNav) {
-            ctxt.fillStyle = 'rgba(255, 0, 0, 0.1)';
-            ctxt.strokeStyle = 'blue';
-            ctxt.lineWidth = 1;
-            fillPolygons(ctxt, [room.roomNavPoly], true);
-            ctxt.strokeStyle = 'red';
-            room.visDoorIds.forEach(doorId =>
-              drawLine(ctxt, ...room.gm.doors[doorId].seg)
-            );
+            // gfx.fillStyle = 'rgba(255, 0, 0, 0.1)';
+            // gfx.strokeStyle = 'blue';
+            // gfx.lineWidth = 1;
+            // fillPolygons(gfx, [room.roomNavPoly], true);
+            gfx.lineStyle({ color: 'blue', width: 1 });
+            gfx.beginFill([255, 0, 0, 0.1]);
+            gfx.drawPolygon(room.roomNavPoly.outline);
+            gfx.endFill()
+            // gfx.strokeStyle = 'red';
+            gfx.lineStyle({ color: 'red' });
+            room.visDoorIds.forEach(doorId => {
+              const [u, v] = room.gm.doors[doorId].seg;
+              gfx.moveTo(u.x, u.y);
+              gfx.lineTo(v.x, v.y);
+            });
           }
           if (debug.roomOutline) {
-            ctxt.fillStyle = 'rgba(0, 0, 255, 0.1)';
-            ctxt.strokeStyle = 'red';
-            fillPolygons(ctxt, [room.roomPoly], true);
+            // gfx.fillStyle = 'rgba(0, 0, 255, 0.1)';
+            // gfx.strokeStyle = 'red';
+            gfx.lineStyle({ color: 'red' });
+            // fillPolygons(gfx, [room.roomPoly], true);
+            gfx.beginFill([0, 0, 255, 0.1]);
+            gfx.drawPolygon(room.roomPoly.outline);
+            gfx.endFill();
           }
           if (debug.windowOutlines) {
-            ctxt.fillStyle = '#0000ff40';
-            ctxt.strokeStyle = 'white';
-            const rotAbout = new Mat;
-            room.gm.windows.forEach(({ baseRect, angle }, i) => {
-              ctxt.transform(...rotAbout.setRotationAbout(angle, baseRect).toArray());
-              ctxt.fillRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
-              ctxt.strokeRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
-              ctxt.setTransform(baseTransform);
+            // gfx.fillStyle = '#0000ff40';
+            // gfx.strokeStyle = 'white';
+            gfx.lineStyle({ color: 'white' });
+            // const rotAbout = new Mat;
+            room.gm.windows.forEach(({ baseRect, angle, poly }, i) => {
+              // gfx.transform(...rotAbout.setRotationAbout(angle, baseRect).toArray());
+              // gfx.fillRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
+              // gfx.strokeRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
+              // gfx.setTransform(baseTransform);
+              gfx.beginFill('#0000ff40');
+              gfx.drawPolygon(poly.outline);
+              gfx.endFill();
             });
           }
         }
@@ -111,22 +131,30 @@ export default function DebugWorld(props) {
          * - e.g. sometimes we have local coords and want to do many fillTexts,
          *   without individually transforming them (door/roomIds).
          */
-        ctxt.transform(...gm.inverseMatrix.toArray());
+        // gfx.transform(...gm.inverseMatrix.toArray());
+        gfx.transform.setFromMatrix(matrix.append(new Matrix(...gm.inverseMatrix.toArray())));
         
         if (debug.gmOutlines) {
-          ctxt.strokeStyle = 'green';
-          ctxt.lineWidth = 4;
-          ctxt.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+          // gfx.strokeStyle = 'green';
+          // gfx.lineWidth = 4;
+          gfx.lineStyle({ color: 'green', width: 4 })
+          // gfx.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+          gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
         }
 
         // Nav paths
         state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
-          ctxt.drawImage(
-            navPathCtxt.canvas,
-            worldRect.x, worldRect.y, worldRect.width, worldRect.height,
-          );
+          // gfx.drawImage(
+          //   navPathCtxt.canvas,
+          //   worldRect.x, worldRect.y, worldRect.width, worldRect.height,
+          // );
+          // 🚧 textures instead of canvas ctxt
+          gfx.beginTextureFill({ texture: Texture.from(navPathCtxt.canvas) });
+          gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
+          gfx.endFill();
         });
 
+        api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
       });
 
     },
@@ -172,20 +200,15 @@ export default function DebugWorld(props) {
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
-    // state.render();
+    state.render();
     props.onLoad(state);
   }, []);
-
-  // return (
-  //   <div className="debug">
-  //     <GmsCanvas
-  //       canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
-  //       gms={gms}
-  //       scaleFactor={gmScale}
-  //     />
-  //   </div>
-  // );
-  return null;
+  return (
+    <GmSprites
+      gms={gms}
+      tex={state.tex}
+    />
+  );
 }
 
 /**
@@ -202,8 +225,8 @@ export default function DebugWorld(props) {
 /**
  * @typedef State
  * @property {boolean} ready
- * @property {HTMLDivElement} rootEl
- * @property {CanvasRenderingContext2D[]} ctxts
+ * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {import('pixi.js').Graphics} gfx
  * @property {DebugOpts} debug
  * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId

@@ -45,7 +45,12 @@
   - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
   - ℹ️ will need to transform world-to-local for hit test
   - 🚧 can show hit test canvas in `<DebugWorld>`
-- 🚧 start migrating DebugWorld
+
+- ✅ start migrating DebugWorld
+- 🚧 fix `npc config` - PIXI Npcs has no rootEl
+- verify DebugWorld rendering
+  - use api.fov.setRoom because cannot spawn yet
+- option to show hit test canvas
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
