@@ -15,17 +15,19 @@ class geomServiceClass {
   }
   
   /**
-   * By a "basic affine matrix" we mean `a, b, c, d in {-1, 1}`
+   * By assumption `a, b, c, d in {-1, 1}`
    * and the corresponding 2x2 matrix is invertible.
    * That is, we permit arbitrary translations,
    * scaling by -1 in either axis, rotation by 90°,
    * and closure under composition.
    * 
    * We convert these matrices into a pixi.js format.
+   * We also account for the pngRect offset.
    * @param {Geom.SixTuple} transform
+   * @param {Geom.VectJson} pngOffset
    * @returns {Geom.PixiTransform}
    */
-  basicAffineToPixi([a, b, c, d, e, f]) {
+  gmTransformToPixi([a, b, c, d, e, f], pngOffset) {
     let degrees = 0, scaleX = 1, scaleY = 1;
     if (a === 1) {// degrees is 0
       scaleY = d;
@@ -42,8 +44,8 @@ class geomServiceClass {
     return {
       scale: { x: scaleX, y: scaleY },
       angle: degrees,
-      x: e,
-      y: f,
+      x: e + pngOffset.x,
+      y: f + pngOffset.y,
     };
   }
 

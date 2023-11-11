@@ -1053,6 +1053,7 @@ export function geomorphDataToInstance(gm, gmId, transform) {
   const matrix = new Mat(transform);
   const gridRect = (new Rect(0, 0, 1200, gm.pngRect.height > 1000 ? 1200 : 600)).applyMatrix(matrix);
   const inverseMatrix = matrix.getInverseMatrix();
+  const pngOffset = matrix.transformSansTranslate({ x: gm.pngRect.x, y: gm.pngRect.y });
 
   /** @type {Geomorph.GeomorphDataInstance} */
   const output = {
@@ -1064,7 +1065,7 @@ export function geomorphDataToInstance(gm, gmId, transform) {
     matrix,
     inverseMatrix,
     transformStyle: `matrix(${transform})`,
-    pixiTransform: geom.basicAffineToPixi(transform),
+    pixiTransform: geom.gmTransformToPixi(transform, pngOffset),
 
     gridRect,
     gmRoomDecor: instantiateRoomDecor(gm, gmId, matrix),
