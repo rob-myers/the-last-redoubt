@@ -34,12 +34,18 @@
   - ✅ pointer/click events -> world position
 - ✅ connect to a terminal
   - we'll try to reuse raw-loader gameFunctionsRunDefs
-- 🚧 get `click` working
+- ✅ get `click` working
   - ✅ api.panZoom wraps pixi-viewport
   - ✅ can `click 1` without error
   - ✅ `click` meta has distance and longClick
-- can detect click on door
-  - e.g. via grid?
+
+- 🚧 can detect click on door via hit-test canvas
+  - ❌ draw in world coords (worldPngRect)
+  - ℹ️ will use OffscreenCanvas getImageData
+  - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
+  - ℹ️ will need to transform world-to-local for hit test
+  - 🚧 can show hit test canvas in `<DebugWorld>`
+- 🚧 start migrating DebugWorld
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`

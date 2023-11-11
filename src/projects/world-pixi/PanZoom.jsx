@@ -57,6 +57,7 @@ export default function PanZoom(props) {
       },
       pointermove(e) {
         // 🚧 emit for hit-testing in use-handle-events
+        // console.log('pointermove');
       },
       pointerup(e) {
         if (!state.start.clientOrigin) {

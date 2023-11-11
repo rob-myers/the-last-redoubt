@@ -2,11 +2,11 @@ import React from "react";
 import { useQueries } from "react-query";
 
 import { Assets } from "@pixi/assets";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
-import { assertDefined } from "../service/generic";
+import { assertDefined, assertNonNull } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colorMatrixFilter } from "./Misc";
@@ -42,6 +42,7 @@ export default function Geomorphs(props) {
     lit: [],
     unlit: [],
     gfx: new Graphics(),
+    hit: gms.map(gm => assertNonNull(new OffscreenCanvas(gm.worldPngRect.width, gm.worldPngRect.height).getContext('2d'))),
 
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
@@ -66,11 +67,12 @@ export default function Geomorphs(props) {
     initTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+      gfx.transform.setFromMatrix(new Matrix(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
       gfx.lineStyle({ width: 8, color: 0x999999 });
       gfx.beginFill(0x000000);
       gfx.drawPolygon(gm.hullPoly[0].outline)
       gfx.endFill()
+
       gfx.lineStyle({ width: 4, color: 0x999999 });
       gfx.fill.alpha = 0;
       gfx.beginFill();
@@ -227,9 +229,9 @@ export default function Geomorphs(props) {
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {import('pixi.js').Texture[]} lit
  * @property {import('pixi.js').Texture[]} unlit
+ * @property {OffscreenCanvasRenderingContext2D[]} hit
  * @property {import('@pixi/graphics').Graphics} gfx Reused
- * @property {boolean[][]} isRoomLit
- * Lights on iff `isRoomLit[gmId][roomId]`.
+ * @property {boolean[][]} isRoomLit Lights on iff `isRoomLit[gmId][roomId]`.
  * 
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
