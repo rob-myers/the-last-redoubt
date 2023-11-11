@@ -3,9 +3,7 @@ import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Mat, Rect } from "../geom";
-import { assertNonNull } from "../service/generic";
-import { drawLine, fillPolygons } from "../service/dom";
-import { gmScale } from "../world/const";
+import { defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
 // import GmsCanvas from "./GmsCanvas";
@@ -24,12 +22,15 @@ export default function DebugWorld(props) {
     })),
     gfx: new Graphics(),
     
-    debug: {
+    opts: {
       room: undefined,
+      debug: false,
+      debugPlayer: false,
       gmOutlines: false,
       roomNav: false,
       roomOutline: false,
       windowOutlines: false,
+      interactRadius: defaultNpcInteractRadius,
     },
     pathByKey: {},
     pathsByGmId: gms.map(_ => []),
@@ -69,7 +70,7 @@ export default function DebugWorld(props) {
     },
     render() {
       const { gmGraph: { gms } } = api;
-      const { debug, debug: { room }  } = state;
+      const { opts: debug, opts: { room }  } = state;
       const gfx = state.gfx;
       const matrix = new Matrix();
       
@@ -82,15 +83,10 @@ export default function DebugWorld(props) {
 
         if (room?.gmId === gmId) {// Work in local coordinates 
           if (debug.roomNav) {
-            // gfx.fillStyle = 'rgba(255, 0, 0, 0.1)';
-            // gfx.strokeStyle = 'blue';
-            // gfx.lineWidth = 1;
-            // fillPolygons(gfx, [room.roomNavPoly], true);
             gfx.lineStyle({ color: 'blue', width: 1 });
             gfx.beginFill([255, 0, 0, 0.1]);
             gfx.drawPolygon(room.roomNavPoly.outline);
             gfx.endFill()
-            // gfx.strokeStyle = 'red';
             gfx.lineStyle({ color: 'red' });
             room.visDoorIds.forEach(doorId => {
               const [u, v] = room.gm.doors[doorId].seg;
@@ -99,24 +95,14 @@ export default function DebugWorld(props) {
             });
           }
           if (debug.roomOutline) {
-            // gfx.fillStyle = 'rgba(0, 0, 255, 0.1)';
-            // gfx.strokeStyle = 'red';
             gfx.lineStyle({ color: 'red' });
-            // fillPolygons(gfx, [room.roomPoly], true);
             gfx.beginFill([0, 0, 255, 0.1]);
             gfx.drawPolygon(room.roomPoly.outline);
             gfx.endFill();
           }
           if (debug.windowOutlines) {
-            // gfx.fillStyle = '#0000ff40';
-            // gfx.strokeStyle = 'white';
             gfx.lineStyle({ color: 'white' });
-            // const rotAbout = new Mat;
             room.gm.windows.forEach(({ baseRect, angle, poly }, i) => {
-              // gfx.transform(...rotAbout.setRotationAbout(angle, baseRect).toArray());
-              // gfx.fillRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
-              // gfx.strokeRect(baseRect.x, baseRect.y, baseRect.width, baseRect.height);
-              // gfx.setTransform(baseTransform);
               gfx.beginFill('#0000ff40');
               gfx.drawPolygon(poly.outline);
               gfx.endFill();
@@ -135,19 +121,12 @@ export default function DebugWorld(props) {
         gfx.transform.setFromMatrix(matrix.append(new Matrix(...gm.inverseMatrix.toArray())));
         
         if (debug.gmOutlines) {
-          // gfx.strokeStyle = 'green';
-          // gfx.lineWidth = 4;
           gfx.lineStyle({ color: 'green', width: 4 })
-          // gfx.strokeRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
           gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
         }
 
         // Nav paths
         state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
-          // gfx.drawImage(
-          //   navPathCtxt.canvas,
-          //   worldRect.x, worldRect.y, worldRect.width, worldRect.height,
-          // );
           // 🚧 textures instead of canvas ctxt
           gfx.beginTextureFill({ texture: Texture.from(navPathCtxt.canvas) });
           gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
@@ -164,7 +143,7 @@ export default function DebugWorld(props) {
       const visDoorIds = api.doors.getVisibleIds(gmId);
       const roomNavPoly = gm.lazy.roomNavPoly[roomId];
       const roomPoly = gm.rooms[roomId];
-      state.debug.room = {
+      state.opts.room = {
         gmId,
         roomId,
         gm,
@@ -227,7 +206,7 @@ export default function DebugWorld(props) {
  * @property {boolean} ready
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {import('pixi.js').Graphics} gfx
- * @property {DebugOpts} debug
+ * @property {DebugOpts} opts
  * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId
  * 
@@ -240,11 +219,13 @@ export default function DebugWorld(props) {
 /**
  * @typedef DebugOpts
  * @property {DebugRoomCtxt | undefined} room Current-room-specific data
+ * @property {boolean} debug
+ * @property {boolean} debugPlayer
  * @property {boolean} gmOutlines Show gridRect of every geomorph?
  * @property {boolean} windowOutlines Show window outlines in current geomorph? 
  * @property {boolean} roomNav Show room navmesh?
  * @property {boolean} roomOutline Show room outline?
- * Nav path(s) by gmId; aligned to `gms`
+ * @property {number} interactRadius
  */
 
 /**

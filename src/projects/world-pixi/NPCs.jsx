@@ -44,21 +44,20 @@ export default function NPCs(props) {
         if (detectReactDevToolQuery(key)) {
           return ctxt[key];
         }
-        const rootStyle = state.rootEl.style;
         switch (key) {
           case 'canClickArrows':
             // return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
             return false;
-          case 'debug': return rootStyle.getPropertyValue(cssName.npcsDebugDisplay) === 'none' ? false : true;
-          case 'debugPlayer': return rootStyle.getPropertyValue(cssName.npcsDebugPlayerDisplay) === 'none' ? false : true;
-          case 'gmOutlines': return api.debug.debug.gmOutlines;
-          case 'interactRadius': return parseInt(rootStyle.getPropertyValue(cssName.npcsInteractRadius));
+          case 'debug': return api.debug.opts.debug;
+          case 'debugPlayer': return api.debug.opts.debugPlayer;
+          case 'gmOutlines': return api.debug.opts.gmOutlines;
+          case 'interactRadius': return api.debug.opts.interactRadius;
           case 'hideGms':
             // return api.getRootEl().classList.contains('hide-gms');
             return;
-          case 'highlightWindows': return api.debug.debug.windowOutlines;
-          case 'localNav': return api.debug.debug.roomNav;
-          case 'localOutline': return api.debug.debug.roomOutline;
+          case 'highlightWindows': return api.debug.opts.windowOutlines;
+          case 'localNav': return api.debug.opts.roomNav;
+          case 'localOutline': return api.debug.opts.roomOutline;
           case 'omnipresent':
           case 'logTags':
           case 'scriptDoors':
@@ -87,32 +86,39 @@ export default function NPCs(props) {
       },
       /** @param {keyof NPC.NpcConfigOpts} key */
       set(ctxt, key, value) {
-        const rootStyle = state.rootEl.style;
-        const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows':
             // debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none');
             break;
-          case 'debug': rootStyle.setProperty(cssName.npcsDebugDisplay, value ? 'initial' : 'none'); break;
-          case 'debugPlayer': rootStyle.setProperty(cssName.npcsDebugPlayerDisplay, value ? 'initial' : 'none'); break;
+          case 'debug':
+            api.debug.opts.debug = !!value;
+            // 🚧 update npcs
+            break;
+          case 'debugPlayer':
+            api.debug.opts.debugPlayer = !!value;
+            // 🚧 update npcs
+            break;
           case 'gmOutlines':
-            api.debug.debug.gmOutlines = !!value;
+            api.debug.opts.gmOutlines = !!value;
             api.debug.render();
             break;
           case 'hideGms':
             // api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms');
             break;
           case 'highlightWindows':
-            api.debug.debug.windowOutlines = !!value;
+            api.debug.opts.windowOutlines = !!value;
             api.debug.render();
             break;
-          case 'interactRadius': rootStyle.setProperty(cssName.npcsInteractRadius, `${value}px`); break;
+          case 'interactRadius':
+            api.debug.opts.debug = !!value;
+            // 🚧 update npcs
+            break;
           case 'localNav':
-            api.debug.debug.roomNav = !!value;
+            api.debug.opts.roomNav = !!value;
             api.debug.render();
             break;
             case 'localOutline':
-              api.debug.debug.roomOutline = !!value;
+              api.debug.opts.roomOutline = !!value;
               api.debug.render();
             break;
           case 'logTags': ctxt.logTags = !!value; break;

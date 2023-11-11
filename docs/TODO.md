@@ -47,10 +47,15 @@
   - 🚧 can show hit test canvas in `<DebugWorld>`
 
 - ✅ start migrating DebugWorld
-- 🚧 fix `npc config` - PIXI Npcs has no rootEl
-- verify DebugWorld rendering
-  - use api.fov.setRoom because cannot spawn yet
-- option to show hit test canvas
+- ✅ fix `npc config` - PIXI NPCs has no rootEl
+- ✅ verify DebugWorld rendering
+```sh
+npc config gmOutlines # ✅
+world fov.setRoom 0 9 -1
+npc config localNav localOutline highlightWindows # ✅
+world fov.setRoom 0 2 -1
+```
+- 🚧 option to show hit test canvas
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`
