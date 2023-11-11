@@ -125,6 +125,11 @@ export class Rect {
     return this;
   }
 
+  /** @param {import('./mat').Mat} m */
+  applySansTranslate(m) {
+    return this.applyMatrix(m).delta(-m.e, -m.f);
+  }
+
   clone() {
     return new Rect(this.x, this.y, this.width, this.height);
   }

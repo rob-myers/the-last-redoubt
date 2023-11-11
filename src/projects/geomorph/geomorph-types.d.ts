@@ -330,13 +330,14 @@ declare namespace Geomorph {
     matrix: Geom.Mat;
     inverseMatrix: Geom.Mat;
     pixiTransform: Geom.PixiTransform;
+
+    worldPngRect: Geom.Rect;
     /**
      * Sub-rectangle of `600 * 600` grid
      * - "Standard Geomorphs" are `1200 * 1200`
      * - "Edge Geomorphs" are `1200 * 600`
      */
     gridRect: Geom.Rect;
-
     /** Instantiation of @see {Geomorph.GeomorphData.roomDecor} */
     gmRoomDecor: NPC.RoomDecorCache[];
 
