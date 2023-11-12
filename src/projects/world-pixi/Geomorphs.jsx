@@ -7,9 +7,10 @@ import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
+import { fillPolygons } from "../service/dom";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import { colorMatrixFilter } from "./Misc";
+import { colorMatrixFilter, tempMatrix } from "./Misc";
 import GmSprites from "./GmSprites";
 
 /**
@@ -29,6 +30,7 @@ export default function Geomorphs(props) {
         )
       ));
       state.initLightRects(gmId);
+      state.initHit(gmId);
       api.doors.initTex(gmId);
     },
   })));
@@ -42,7 +44,7 @@ export default function Geomorphs(props) {
     lit: [],
     unlit: [],
     gfx: new Graphics(),
-    hit: gms.map(gm => assertNonNull(new OffscreenCanvas(gm.worldPngRect.width, gm.worldPngRect.height).getContext('2d'))),
+    hit: gms.map(gm => assertNonNull(new OffscreenCanvas(gm.pngRect.width, gm.pngRect.height).getContext('2d'))),
 
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
@@ -64,10 +66,22 @@ export default function Geomorphs(props) {
       );
       gfx.endFill();
     },
+    initHit(gmId) {
+      const gm = gms[gmId];
+      const ctxt = state.hit[gmId];
+      ctxt.setTransform();
+      ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x * 1, -gm.pngRect.y * 1);
+      // 🚧 doors, decor
+      gm.doors.forEach(({ poly }, doorId) => {
+        ctxt.fillStyle = `rgba(255, 0, ${doorId}, 1)`;
+        fillPolygons(ctxt, [poly]);
+      });
+    },
     initTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(new Matrix(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
       gfx.lineStyle({ width: 8, color: 0x999999 });
       gfx.beginFill(0x000000);
       gfx.drawPolygon(gm.hullPoly[0].outline)
@@ -235,6 +249,7 @@ export default function Geomorphs(props) {
  * 
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
+ * @property {(gmId: number) => void} initHit
  * @property {(gmId: number) => void} initTex
  * @property {(gmId: number) => void} initLightRects
  * Currently assumes all doors initially closed

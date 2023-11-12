@@ -322,7 +322,7 @@ function createMonochromeMask(image, ctxt, fillColor) {
 }
 
 /**
- * @param {CanvasRenderingContext2D} ctxt 
+ * @param {CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D} ctxt 
  * @param  {Geom.VectJson[]} ring 
  */
 export function fillRing(ctxt, ring, fill = true) {
@@ -335,7 +335,7 @@ export function fillRing(ctxt, ring, fill = true) {
 }
 
 /**
- * @param {CanvasRenderingContext2D} ctxt
+ * @param {CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D} ctxt
  * @param {Geom.Poly[]} polys
  * @param {boolean} [stroke]
  */

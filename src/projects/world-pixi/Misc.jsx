@@ -1,7 +1,7 @@
 import React from "react";
 import { Sprite, useApp } from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 export function Origin() {
@@ -71,3 +71,6 @@ colorMatrixFilter.contrast(1.5, true);
 // colorMatrixFilter.vintage(true);
 // colorMatrixFilter.polaroid(true);
 // colorMatrixFilter.kodachrome(true);
+
+
+export const tempMatrix = new Matrix();

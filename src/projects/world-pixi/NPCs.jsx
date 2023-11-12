@@ -49,6 +49,7 @@ export default function NPCs(props) {
             // return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
             return false;
           case 'debug': return api.debug.opts.debug;
+          case 'debugHit': return api.debug.opts.debugHit;
           case 'debugPlayer': return api.debug.opts.debugPlayer;
           case 'gmOutlines': return api.debug.opts.gmOutlines;
           case 'interactRadius': return api.debug.opts.interactRadius;
@@ -93,6 +94,10 @@ export default function NPCs(props) {
           case 'debug':
             api.debug.opts.debug = !!value;
             // 🚧 update npcs
+            break;
+          case 'debugHit':
+            api.debug.opts.debugHit = !!value;
+            api.debug.render();
             break;
           case 'debugPlayer':
             api.debug.opts.debugPlayer = !!value;

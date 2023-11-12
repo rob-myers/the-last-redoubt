@@ -2,13 +2,13 @@ import React from "react";
 import { Subject } from "rxjs";
 import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-import { Container, Sprite } from "@pixi/react";
 
 import { defaultDoorCloseMs, gmScale } from "../world/const"; // 🚧
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 import GmSprites from "./GmSprites";
+import { tempMatrix } from "./Misc";
 
 /**
  * @param {Props} props
@@ -59,7 +59,8 @@ export default function Doors(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+      const gfx = state.gfx.clear();
+      gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
       gfx.lineStyle({ width: 1, color: 0x000000 });
       gm.doors.forEach(({ poly}) => {
         gfx.beginFill(0xaaaaaa);

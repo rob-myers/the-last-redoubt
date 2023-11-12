@@ -44,7 +44,6 @@ export default function NPCs(props) {
           return ctxt[key];
         }
         const rootStyle = state.rootEl.style;
-        const decorStyle = api.decor.rootEl.style;
         switch (key) {
           case 'canClickArrows':
             // return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
@@ -75,6 +74,7 @@ export default function NPCs(props) {
           case 'point':
           case 'suppressThrow':
           case 'timeMs':
+          case 'debugHit': // From WorldPixi
             return undefined;
 
           case proxyKey: return true;
@@ -129,6 +129,7 @@ export default function NPCs(props) {
           case 'point':
           case 'suppressThrow':
           case 'timeMs':
+          case 'debugHit': // From WorldPixi
             break;
           default:
             testNever(key, { suffix: 'config.set' });

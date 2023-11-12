@@ -55,7 +55,12 @@ world fov.setRoom 0 9 -1
 npc config localNav localOutline highlightWindows # ✅
 world fov.setRoom 0 2 -1
 ```
-- 🚧 option to show hit test canvas
+- ✅ fix DebugWorld render for gmId > 0
+  - 🤔 rendering Graphics into RenderTexture can only handle one transform
+- ✅ option to show hit test canvas
+  - draw stuff into it
+  - provide option npc.config.debugHit
+- improve hit test canvas
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`

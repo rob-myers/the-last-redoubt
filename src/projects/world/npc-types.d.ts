@@ -384,6 +384,7 @@ declare namespace NPC {
   type ConfigBooleanKey = (
     | 'canClickArrows'
     | 'debug'
+    | 'debugHit'
     | 'debugPlayer'
     | 'gmOutlines'
     | 'hideGms'
