@@ -67,7 +67,7 @@ export default function Doors(props) {
         gfx.drawPolygon(poly.outline);
         gfx.endFill();
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
+      api.renderInto(gfx, state.tex[gmId]);
     },
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;

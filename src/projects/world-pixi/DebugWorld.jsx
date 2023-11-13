@@ -3,7 +3,7 @@ import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Container } from "@pixi/display";
 import { Graphics } from "@pixi/graphics";
 
-import { Mat, Rect } from "../geom";
+import { Rect } from "../geom";
 import { defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
@@ -82,11 +82,8 @@ export default function DebugWorld(props) {
       const matrix = new Matrix();
       const { root, local: localGfx, world: worldGfx } = state.aux;
 
-      // 🚧 set local/world transform once initially
-
       gms.forEach((gm, gmId) => {
         localGfx.clear();
-
         matrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
         localGfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
 
@@ -129,7 +126,6 @@ export default function DebugWorld(props) {
         }
 
         worldGfx.clear();
-
         /**
          * The inverseMatrix allows us to draw in world coords.
          * - World coords will be transformed to local geomorph coords, then back by canvas transform.
@@ -153,12 +149,8 @@ export default function DebugWorld(props) {
           worldGfx.endFill();
         });
 
-        api.pixiApp.renderer.render(root, { renderTexture: state.tex[gmId] });
-        
-        // ℹ️ importantly this permits partially writing to RenderTexture
-        // state.tex[gmId]._frame.copyFrom(new Rectangle(0, 0, 100, 100));
+        api.renderInto(root, state.tex[gmId]);
       });
-
     },
     updateDebugRoom() {
       const { gmGraph, fov: { gmId, roomId } } = api;

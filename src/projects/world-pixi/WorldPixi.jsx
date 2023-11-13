@@ -33,6 +33,7 @@ export default function WorldPixi(props) {
     gmGraph: /** @type {*} */ ({}),
     gmRoomGraph: /** @type {*} */ ({}),
     pixiApp: /** @type {*} */ ({}),
+    renderer: /** @type {*} */ ({}),
 
     decor: /** @type {State['decor']} */  ({ ready: false }),
     debug: /** @type {State['debug']} */  ({ ready: false }),
@@ -59,6 +60,11 @@ export default function WorldPixi(props) {
         state.npcs, 
         state.panZoom,
       ].every(x => x.ready);
+    },
+    renderInto(displayObj, tex, delta = false) {
+      delta && (state.renderer.background.clearBeforeRender = false);
+      state.renderer.render(displayObj, { renderTexture: tex });
+      delta && (state.renderer.background.clearBeforeRender = true);
     },
   }));
 
@@ -92,7 +98,10 @@ export default function WorldPixi(props) {
             backgroundColor: 0x111111,
             // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
-          onMount={app => state.pixiApp = app}
+          onMount={app => {
+            state.pixiApp = app;
+            state.renderer = /** @type {import('pixi.js').Renderer} */ (app.renderer);
+          }}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
         >
@@ -156,16 +165,19 @@ export default function WorldPixi(props) {
  * @property {Graph.GmRoomGraph} gmRoomGraph
  * 
  * @property {import("pixi.js").Application} pixiApp
+ * @property {import("pixi.js").Renderer} renderer
  * 
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
  * @property {import("./Doors").State} doors
  * @property {import("./FOV").State} fov
  * @property {import("./Geomorphs").State} geomorphs
- * @property {() => boolean} isReady
  * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
  * @property {import('./PanZoom').State} panZoom
+ *
+ * @property {() => boolean} isReady
+ * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, delta?: boolean) => void} renderInto
  */
 
 /**

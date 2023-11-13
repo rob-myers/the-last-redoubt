@@ -92,7 +92,7 @@ export default function Geomorphs(props) {
       gfx.beginFill();
       gfx.drawPolygon(gm.navPoly[0].outline)
       gfx.endFill();
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
+      api.renderInto(gfx, state.tex[gmId]);
     },
     initLightRects(gmId) {
       // draw from image -> image with identity transform
@@ -110,7 +110,7 @@ export default function Geomorphs(props) {
           gfx.endFill();
         }
       });
-      api.pixiApp.renderer.render(gfx, { renderTexture: state.tex[gmId] });
+      api.renderInto(gfx, state.tex[gmId]);
     },
     onCloseDoor(gmId, doorId, lightIsOn = true) {
       const gm = gms[gmId];
