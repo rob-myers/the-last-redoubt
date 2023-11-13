@@ -379,8 +379,7 @@ export default function useHandleEvents(api) {
 
   //#region handle door events, npc events
   React.useEffect(() => {
-
-    if (!(api.gmGraph.ready && api.doors.ready && api.npcs.ready)) {
+    if (!api.isReady()) {
       return;
     }
 
@@ -439,7 +438,7 @@ export default function useHandleEvents(api) {
       panZoomSub.unsubscribe();
     };
 
-  }, [api.gmGraph.ready, api.doors.ready, api.npcs.ready]);
+  }, [api.isReady()]);
   //#endregion
 
   /** @param {...string} npcKeys */
