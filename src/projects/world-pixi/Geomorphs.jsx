@@ -49,17 +49,13 @@ export default function Geomorphs(props) {
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
     drawPolygonImage(type, gmId, poly) {
-      // draw from image -> image with identity transform
-      const gfx = state.gfx.setTransform();
+      const gfx = state.gfx;
       gfx.beginTextureFill({ texture: state[type][gmId] });
       gfx.drawPolygon(poly.outline);
       gfx.endFill();
-      // Render into RenderTexture manually?
-      // api.pixiApp.renderer.render(gfx, { renderTexture: state.tex.render[gmId] });
     },
     drawRectImage(type, gmId, rect) {
-      // draw from image -> image with identity transform
-      const gfx = state.gfx.setTransform();
+      const gfx = state.gfx;
       gfx.beginTextureFill({ texture: state[type][gmId] });
       gfx.drawRect(// Src/target canvas are scaled by `gmScale`
         gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
@@ -126,14 +122,15 @@ export default function Geomorphs(props) {
       //    */
       //   return;
       // }
+      state.gfx.clear().setTransform();
       // Hide light by drawing partial image
       state.drawRectImage('unlit', gmId, meta.rect);
-      
       meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
         // 🚧 for window should draw polygon i.e. rect without window
         const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
         state.drawRectImage('unlit', gmId, rect);
       });
+      api.renderInto(state.gfx, state.tex[gmId], true);
     },
     onOpenDoor(gmId, doorId) {
       const gm = gms[gmId];
@@ -146,6 +143,7 @@ export default function Geomorphs(props) {
       ) {
         return;
       }
+      state.gfx.clear().setTransform();
       // Show light by drawing rect
       state.drawRectImage('lit', gmId, meta.rect);
       meta.postConnectors.forEach(({ type, id }) => {
@@ -156,6 +154,7 @@ export default function Geomorphs(props) {
         const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
         state.drawRectImage('lit', gmId, connectorRect);
       });
+      api.renderInto(state.gfx, state.tex[gmId], true);
     },
     recomputeLights(gmId, roomId) {
       if (!state.unlit[gmId]) {
@@ -174,6 +173,7 @@ export default function Geomorphs(props) {
           state.onCloseDoor(gmId, doorId);
         }
       });
+      api.renderInto(state.gfx, state.tex[gmId], true);
     },
     setRoomLit(gmId, roomId, nextLit) {
       const gm = gms[gmId];
@@ -185,7 +185,8 @@ export default function Geomorphs(props) {
       }
 
       state.isRoomLit[gmId][roomId] = nextLit; // Needed by `onOpenDoor`
-      
+
+      state.gfx.clear().setTransform();
       const doors = gm.roomGraph.getAdjacentDoors(roomId).map(x => api.doors.lookup[gmId][x.doorId]);
       const windowLightRects = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
         x => gm.windowToLightRect[x.windowId] ?? [],
@@ -215,6 +216,7 @@ export default function Geomorphs(props) {
           state.drawPolygonImage('unlit', gmId, poly);
         });
       }
+      api.renderInto(state.gfx, state.tex[gmId], true);
     },
   }));
 
