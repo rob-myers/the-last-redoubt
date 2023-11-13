@@ -185,7 +185,7 @@
       while (numClicks-- > 0) {
         clickId && w.panZoom.clickIds.push(clickId);
         
-        const e = await /** @type {Promise<PanZoom.CssPointerUpEvent>} */ (new Promise((resolve, reject) => {
+        const e = await /** @type {Promise<PanZoom.PointerUpEvent>} */ (new Promise((resolve, reject) => {
           eventsSub = w.panZoom.events.subscribe({ next(e) {
             if (e.key !== "pointerup" || e.meta.distance > 5 || !api.isRunning()) {
               return;

@@ -60,7 +60,10 @@ world fov.setRoom 0 2 -1
 - ✅ option to show hit test canvas
   - draw stuff into it
   - provide option npc.config.debugHit
-- improve hit test canvas
+- 🚧 hit test canvas 
+  - grid infers gmId from world coords
+  - transform world coords into local gm coords
+  - add more stuff
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`

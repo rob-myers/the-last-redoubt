@@ -409,24 +409,34 @@ export default function useHandleEvents(api) {
       state.handleNpcEvent(e);
     });
 
-    // 🚧
-    // // React to CssPanZoom events
-    // const panZoomSub = api.panZoom.events.subscribe((e) => {
-    //   if (e.key === 'pointerup' && e.meta.npc === true && typeof e.meta.npcKey === 'string') {
-    //     const { npcKey } = e.meta;
-    //     api.npcs.events.next({
-    //       key: 'npc-clicked',
-    //       npcKey,
-    //       position: e.point,
-    //       isPlayer: api.npcs.playerKey === npcKey,
-    //     });
-    //   }
-    // });
+    // React to PanZoom events
+    const panZoomSub = api.panZoom.events.subscribe((e) => {
+      switch (e.key) {
+        case 'pointerup':
+          // 🚧 clicking on npc sprite ensures meta.{npc,npcKey}
+          if (e.meta.npc === true && typeof e.meta.npcKey === 'string') {
+            const { npcKey } = e.meta;
+            api.npcs.events.next({
+              key: 'npc-clicked',
+              npcKey,
+              position: e.point,
+              isPlayer: api.npcs.playerKey === npcKey,
+            });
+          }
+          break;
+        case 'pointermove':
+          // 🚧 world point -> gmId
+          // 🚧 gmId -> local point in api.geomorphs.hit[gmId]
+          // 🚧 local point to pixel
+          console.log('pointermove', e);
+          break;
+      }
+    });
 
     return () => {
       doorsSub.unsubscribe();
       npcsSub.unsubscribe();
-      // panZoomSub.unsubscribe();
+      panZoomSub.unsubscribe();
     };
 
   }, [api.gmGraph.ready, api.doors.ready, api.npcs.ready]);

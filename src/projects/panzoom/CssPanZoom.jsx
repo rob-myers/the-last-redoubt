@@ -134,7 +134,7 @@ export default function CssPanZoom(props) {
             e.clientY - /** @type {number} */ (state.start.clientY),
           ).scale(1 / state.scale).length;
 
-          /** @type {PanZoom.CssPointerUpEvent['meta']} */
+          /** @type {PanZoom.PointerUpEvent['meta']} */
           const meta = { ...el.dataset.meta && safeJsonParse(el.dataset.meta),
             targetPos: { x: precision(targetPos.x), y: precision(targetPos.y) },
             longClick: (Date.now() - state.start.epochMs) >= longClickMs,

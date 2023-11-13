@@ -43,7 +43,7 @@ declare namespace PanZoom {
       pointerup(e: PointerEvent): void;
     };
     
-    events: import('rxjs').Subject<PanZoom.CssInternalEvent>;
+    events: import('rxjs').Subject<PanZoom.InternalEvent>;
     /**
      * UI is considered idle i.e. _not used by user_
      * iff this is `0`.
@@ -94,21 +94,22 @@ declare namespace PanZoom {
     private zoomWithWheel(event: WheelEvent): void;
   }
 
-  type CssInternalEvent = (
-    | CssTransitionEvent
+  type InternalEvent = (
+    | TransitionEvent
     | { key: 'started-wheel' }
-    | CssPointerUpEvent
+    | PointerUpEvent
+    | PointerMoveEvent
     | { key: "ui-idle" }
     | { key: "resized-bounds"; bounds: Geom.RectJson }
   )
 
-  type CssTransitionEvent = (
+  type TransitionEvent = (
     | { key: "cancelled-panzoom-to" }
     | { key: "completed-panzoom-to" }
     | { key: "started-panzoom-to" }
   )
 
-  interface CssPointerUpEvent {
+  interface PointerUpEvent {
     key: 'pointerup';
     point: Geom.VectJson;
     meta: Record<string, string | number | boolean | Geom.VectJson> & {
@@ -119,6 +120,11 @@ declare namespace PanZoom {
       targetPos: Geom.VectJson;
     };
     clickId?: string;
+  }
+
+  interface PointerMoveEvent {
+    key: 'pointermove';
+    point: Geom.VectJson;
   }
 
 }

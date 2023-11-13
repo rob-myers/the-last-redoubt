@@ -13,8 +13,6 @@ import debounce from "debounce";
  * @param {React.PropsWithChildren<Props>} props 
  */
 export default function PanZoom(props) {
-
-
   const state = useStateRef(
     /** @type {() => State} */ () => ({
       ready: true,
@@ -56,8 +54,7 @@ export default function PanZoom(props) {
         };
       },
       pointermove(e) {
-        // 🚧 emit for hit-testing in use-handle-events
-        // console.log('pointermove');
+        state.events.next({ key: 'pointermove', point: state.getWorld(e) });
       },
       pointerup(e) {
         if (!state.start.clientOrigin) {
@@ -96,17 +93,17 @@ export default function PanZoom(props) {
         }
       },
     })
-    );
+  );
 
-    React.useEffect(() => {
-      const { viewport: vp, onPanEnd, onZoomEnd } = state;
-      vp.addEventListener('moved-end', onPanEnd);
-      vp.addEventListener('zoomed-end', onZoomEnd);
-      props.onLoad(state);
-      return () => {
-        state.viewport.removeEventListener('moved-end', onPanEnd);
-        state.viewport.removeEventListener('zoomed-end', onZoomEnd);
-      };
+  React.useEffect(() => {
+    const { viewport: vp, onPanEnd, onZoomEnd } = state;
+    vp.addEventListener('moved-end', onPanEnd);
+    vp.addEventListener('zoomed-end', onZoomEnd);
+    props.onLoad(state);
+    return () => {
+      state.viewport.removeEventListener('moved-end', onPanEnd);
+      state.viewport.removeEventListener('zoomed-end', onZoomEnd);
+    };
   }, []);
 
   return (
@@ -135,7 +132,7 @@ export default function PanZoom(props) {
 /**
  * @typedef State
  * @property {boolean} ready
- * @property {Subject<PanZoom.CssInternalEvent>} events
+ * @property {Subject<PanZoom.InternalEvent>} events
  * @property {{ origin?: Geom.VectJson; clientOrigin?: Geom.VectJson; epochMs: number; scale: number; distance: number; }} start
  * @property {string[]} clickIds
  * Pending click identifiers, provided by code external to CssPanZoom.
