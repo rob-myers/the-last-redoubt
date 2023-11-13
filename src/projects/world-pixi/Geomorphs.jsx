@@ -67,7 +67,7 @@ export default function Geomorphs(props) {
       const ctxt = state.hit[gmId];
       ctxt.setTransform();
       ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x * 1, -gm.pngRect.y * 1);
+      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
       // 🚧 doors, decor
       gm.doors.forEach(({ poly }, doorId) => {
         ctxt.fillStyle = `rgba(255, 0, ${doorId}, 1)`;
@@ -130,7 +130,7 @@ export default function Geomorphs(props) {
         const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
         state.drawRectImage('unlit', gmId, rect);
       });
-      api.renderInto(state.gfx, state.tex[gmId], true);
+      api.renderInto(state.gfx, state.tex[gmId], false);
     },
     onOpenDoor(gmId, doorId) {
       const gm = gms[gmId];
@@ -154,7 +154,7 @@ export default function Geomorphs(props) {
         const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
         state.drawRectImage('lit', gmId, connectorRect);
       });
-      api.renderInto(state.gfx, state.tex[gmId], true);
+      api.renderInto(state.gfx, state.tex[gmId], false);
     },
     recomputeLights(gmId, roomId) {
       if (!state.unlit[gmId]) {
@@ -173,7 +173,7 @@ export default function Geomorphs(props) {
           state.onCloseDoor(gmId, doorId);
         }
       });
-      api.renderInto(state.gfx, state.tex[gmId], true);
+      api.renderInto(state.gfx, state.tex[gmId], false);
     },
     setRoomLit(gmId, roomId, nextLit) {
       const gm = gms[gmId];
@@ -216,7 +216,7 @@ export default function Geomorphs(props) {
           state.drawPolygonImage('unlit', gmId, poly);
         });
       }
-      api.renderInto(state.gfx, state.tex[gmId], true);
+      api.renderInto(state.gfx, state.tex[gmId], false);
     },
   }));
 

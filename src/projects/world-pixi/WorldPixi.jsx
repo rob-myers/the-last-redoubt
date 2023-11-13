@@ -61,10 +61,8 @@ export default function WorldPixi(props) {
         state.panZoom,
       ].every(x => x.ready);
     },
-    renderInto(displayObj, tex, delta = false) {
-      delta && (state.renderer.background.clearBeforeRender = false);
-      state.renderer.render(displayObj, { renderTexture: tex });
-      delta && (state.renderer.background.clearBeforeRender = true);
+    renderInto(displayObj, tex, clear = true) {
+      state.renderer.render(displayObj, { renderTexture: tex, clear });
     },
   }));
 
@@ -177,7 +175,7 @@ export default function WorldPixi(props) {
  * @property {import('./PanZoom').State} panZoom
  *
  * @property {() => boolean} isReady
- * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, delta?: boolean) => void} renderInto
+ * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
  */
 
 /**

@@ -1,6 +1,5 @@
 import React from "react";
 import { RenderTexture, Matrix, Texture } from "@pixi/core";
-import { Container } from "@pixi/display";
 import { Graphics } from "@pixi/graphics";
 
 import { Rect } from "../geom";
@@ -11,7 +10,6 @@ import GmSprites from "./GmSprites";
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
-
   const { api } = props;
   const { gms } = api.gmGraph;
 
@@ -21,13 +19,7 @@ export default function DebugWorld(props) {
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
     })),
-    aux: {
-      root: new Container(),
-      /** Draw in local geomorph coords */
-      local: new Graphics(),
-      /** Draw in world coords */
-      world: new Graphics(),
-    },
+    gfx: new Graphics(),
     
     opts: {
       room: undefined,
@@ -80,52 +72,58 @@ export default function DebugWorld(props) {
       const { gmGraph: { gms } } = api;
       const { opts, opts: { room }  } = state;
       const matrix = new Matrix();
-      const { root, local: localGfx, world: worldGfx } = state.aux;
+      const gfx = state.gfx;
 
       gms.forEach((gm, gmId) => {
-        localGfx.clear();
-        matrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
-        localGfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+        // 🚧 better way to clear RenderTexture
+        gfx.clear();
+        api.renderInto(gfx, state.tex[gmId]);
 
         if (opts.debugHit) {
+          gfx.setTransform(0, 0, gmScale, gmScale);
           const texture = Texture.from(api.geomorphs.hit[gmId].canvas);
-          // 🚧 explain
-          const anotherMatrix = new Matrix(1, 0, 0, 1, gm.pngRect.x, gm.pngRect.y);
-          localGfx.beginTextureFill({ texture, matrix: anotherMatrix });
-          localGfx.drawRect(gm.pngRect.x, gm.pngRect.y, gm.pngRect.width, gm.pngRect.height);
-          localGfx.endFill();
+          gfx.beginTextureFill({ texture });
+          gfx.drawRect(gm.pngRect.x, gm.pngRect.y, gm.pngRect.width, gm.pngRect.height);
+          gfx.endFill();
+          api.renderInto(gfx, state.tex[gmId], false);
         }
 
-        if (room?.gmId === gmId) {
+        matrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
+        
+        if (room?.gmId === gmId) {// Local geomorph coords
+          gfx.clear();
+          gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+
           if (opts.roomNav) {
-            localGfx.lineStyle({ color: 'blue', width: 1 });
-            localGfx.beginFill([255, 0, 0, 0.1]);
-            localGfx.drawPolygon(room.roomNavPoly.outline);
-            localGfx.endFill()
-            localGfx.lineStyle({ color: 'red' });
+            gfx.lineStyle({ color: 'blue', width: 1 });
+            gfx.beginFill([255, 0, 0, 0.1]);
+            gfx.drawPolygon(room.roomNavPoly.outline);
+            gfx.endFill()
+            gfx.lineStyle({ color: 'red' });
             room.visDoorIds.forEach(doorId => {
               const [u, v] = room.gm.doors[doorId].seg;
-              localGfx.moveTo(u.x, u.y);
-              localGfx.lineTo(v.x, v.y);
+              gfx.moveTo(u.x, u.y);
+              gfx.lineTo(v.x, v.y);
             });
           }
           if (opts.roomOutline) {
-            localGfx.lineStyle({ color: 'red' });
-            localGfx.beginFill([0, 0, 255, 0.1]);
-            localGfx.drawPolygon(room.roomPoly.outline);
-            localGfx.endFill();
+            gfx.lineStyle({ color: 'red' });
+            gfx.beginFill([0, 0, 255, 0.1]);
+            gfx.drawPolygon(room.roomPoly.outline);
+            gfx.endFill();
           }
           if (opts.windowOutlines) {
-            localGfx.lineStyle({ color: 'white' });
+            gfx.lineStyle({ color: 'white' });
             room.gm.windows.forEach(({ baseRect, angle, poly }, i) => {
-              localGfx.beginFill('#0000ff40');
-              localGfx.drawPolygon(poly.outline);
-              localGfx.endFill();
+              gfx.beginFill('#0000ff40');
+              gfx.drawPolygon(poly.outline);
+              gfx.endFill();
             });
           }
+
+          api.renderInto(gfx, state.tex[gmId], false);
         }
 
-        worldGfx.clear();
         /**
          * The inverseMatrix allows us to draw in world coords.
          * - World coords will be transformed to local geomorph coords, then back by canvas transform.
@@ -133,23 +131,24 @@ export default function DebugWorld(props) {
          * - e.g. sometimes we have local coords and want to do many fillTexts,
          *   without individually transforming them (door/roomIds).
          */
+        gfx.clear();
         const multiplied = matrix.append(new Matrix(...gm.inverseMatrix.toArray()));
-        worldGfx.transform.setFromMatrix(multiplied);
+        gfx.transform.setFromMatrix(multiplied);
         
         if (opts.gmOutlines) {
-          worldGfx.lineStyle({ color: 'green', width: 4 })
-          worldGfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+          gfx.lineStyle({ color: 'green', width: 4 })
+          gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
         }
 
         // Nav paths
         state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
           // 🚧 textures instead of canvas ctxt
-          worldGfx.beginTextureFill({ texture: Texture.from(navPathCtxt.canvas) });
-          worldGfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
-          worldGfx.endFill();
+          gfx.beginTextureFill({ texture: Texture.from(navPathCtxt.canvas) });
+          gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
+          gfx.endFill();
         });
 
-        api.renderInto(root, state.tex[gmId]);
+        api.renderInto(gfx, state.tex[gmId], false);
       });
     },
     updateDebugRoom() {
@@ -194,7 +193,6 @@ export default function DebugWorld(props) {
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
-    state.aux.root.addChild(state.aux.local, state.aux.world);
     state.render();
     props.onLoad(state);
   }, []);
@@ -222,7 +220,7 @@ export default function DebugWorld(props) {
  * @typedef State
  * @property {boolean} ready
  * @property {import('pixi.js').RenderTexture[]} tex
- * @property {{ root: import('pixi.js').Container; local: import('pixi.js').Graphics; world: import('pixi.js').Graphics }} aux
+ * @property {import('pixi.js').Graphics} gfx
  * @property {DebugOpts} opts
  * @property {Record<string, DebugRenderPath>} pathByKey Nav path by key
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId
