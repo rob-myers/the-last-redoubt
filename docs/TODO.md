@@ -2,6 +2,7 @@
 
 ## In progress
 
+
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
   - ✅ rename spine + arms
@@ -44,7 +45,12 @@
   - ℹ️ will use OffscreenCanvas getImageData
   - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
   - ℹ️ will need to transform world-to-local for hit test
-  - 🚧 can show hit test canvas in `<DebugWorld>`
+  - ✅ can show hit test canvas in `<DebugWorld>`
+  - ✅ gm-graph has gmIdGrid
+  - ✅ gm-graph findGeomorphIdContaining uses gmIdGrid
+  - ✅ use-handle-events pointermove uses gmIdGrid to find api.geomorphs.hit[gmId]
+  - ✅ use-handle-events pointermove looks up local point in hit test canvas
+  - 🚧 interpret data e.g. doorId
 
 - ✅ start migrating DebugWorld
 - ✅ fix `npc config` - PIXI NPCs has no rootEl
@@ -111,6 +117,8 @@ world fov.setRoom 0 2 -1
     - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
 - ✅ remove canvas layer library
 
+- IDEA support e.g. `click 1 | world gmGraph.findGeomorphIdContaining`
+  - if stdin a tty then create read loop?
 - `npc config fov` toggles fov
 - hideGms clunky on open hull door first time mobile (?)
 - hull symbol has own field i.e. not first item

@@ -55,14 +55,28 @@ export class gmGraphClass extends BaseGraph {
    */
   adjRoomCtxt = {};
 
+  /**
+   * Given world coordinates `(x, y)` then parent `gmId` is:
+   * `gmIdGrid[`${Math.floor(x / 600)}-${Math.floor(y / 600)}`]`
+   * @type {{ [key in `${number}-${number}`]?: number }}
+   */
+  gmIdGrid = {};
+
   /** @param {Geomorph.GeomorphDataInstance[]} gms  */
   constructor(gms) {
     super();
     this.gms = gms;
     this.gmData = gms.reduce((agg, gm) => ({ ...agg, [gm.key]: gm }), {});
     this.entry = new Map;
+
     this.gmNodeByGmId = gms.reduce((agg, _, gmId) => ({ ...agg, [gmId]: [] }), {});
     this.doorNodeByGmId = gms.reduce((agg, _, gmId) => ({ ...agg, [gmId]: [] }), {});
+
+    this.gms.forEach(({ gridRect: { x: gx, y: gy, right, bottom } }, gmId) => {
+      for (let x = Math.floor(gx / gmIdGridDim); x < Math.floor(right / gmIdGridDim); x++)
+        for (let y = Math.floor(gy / gmIdGridDim); y < Math.floor(bottom / gmIdGridDim); y++)
+          this.gmIdGrid[`${x}-${y}`] = gmId;
+    });
   }
 
   /**
@@ -381,24 +395,19 @@ export class gmGraphClass extends BaseGraph {
   }
 
   /**
-   * @param {Geom.VectJson} point
-   * @returns {null | Geomorph.GeomorphDataInstance} gmId
-   */
-  findGeomorphContaining(point) {
-      return this.gms.find(x => x.gridRect.contains(point)) ?? null;
-  }
-
-  /**
+   * 🚧 split this into two different functions?
    * A geomorph can have multiple 'gm' nodes: one per disjoint navmesh.
-   * 🚧 Probably split this into two different functions
    * @param {Geom.VectJson} point
    * @returns {[gmId: number | null, gmNodeId: number | null]} respective 'gm' node is `nodesArray[gmNodeId]`
    */
   findGeomorphIdContaining(point) {
-    const gmId = this.gms.findIndex(x => x.gridRect.contains(point));
-    if (gmId === -1) return [null, null];
-    const gmNodeId = this.gmNodeByGmId[gmId].find(node => node.rect.contains(point))?.index;
-    return [gmId, gmNodeId ?? null];
+    const gmId = this.gmIdGrid[`${Math.floor(point.x / gmIdGridDim)}-${Math.floor(point.y / gmIdGridDim)}`];
+    if (typeof gmId === 'number') {
+      const gmNodeId = this.gmNodeByGmId[gmId].find(node => node.rect.contains(point))?.index;
+      return [gmId, gmNodeId ?? null];
+    } else {
+      return [null, null];
+    }
   }
 
   /**
@@ -982,3 +991,5 @@ function getGmNodeId(gmKey, transform, navGroupId) {
 function getGmDoorNodeId(gmKey, transform, hullDoorId) {
   return `door-${gmKey}-[${transform}]-${hullDoorId}`;
 }
+
+const gmIdGridDim = 600;

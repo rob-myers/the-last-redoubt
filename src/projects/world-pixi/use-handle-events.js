@@ -423,12 +423,18 @@ export default function useHandleEvents(api) {
             });
           }
           break;
-        case 'pointermove':
-          // 🚧 world point -> gmId
-          // 🚧 gmId -> local point in api.geomorphs.hit[gmId]
-          // 🚧 local point to pixel
-          console.log('pointermove', e);
+        case 'pointermove': {
+          const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
+          if (typeof gmId === 'number') {
+            const gm = api.gmGraph.gms[gmId];
+            const local = gm.inverseMatrix.transformPoint({...e.point});
+            const canvas = api.geomorphs.hit[gmId];
+            const { data } = canvas.getImageData(local.x - gm.pngRect.x, local.y - gm.pngRect.y, 1, 1);
+            // 🚧 interpret data e.g. doorId
+            console.log('pointermove', gmId, local, Array.from(data));
+          }
           break;
+        }
       }
     });
 
