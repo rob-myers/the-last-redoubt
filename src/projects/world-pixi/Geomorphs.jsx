@@ -77,11 +77,18 @@ export default function Geomorphs(props) {
         fillPolygons(ctxt, [poly]);
       });
       // decor
+      api.decor.byRoom[gmId].forEach(({ points }, roomId) =>
+        // Assume ≤ 256 DecorPoints in a room
+        points.forEach((d, pointId) => {
+          ctxt.fillStyle = `rgba(127, ${roomId}, ${pointId}, 1)`;
+          drawCircle(ctxt, gm.toLocalCoords(d), 5); // 🚧 hard-coded radius
+          ctxt.fill();
+        })
+      );
       Object.values(api.decor.decor).forEach(d => {
         if (d.type === 'point') {
-          // const { gmId, roomId } = d.meta;
-          // const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
-          const localId = 0; // 🚧
+          const { gmId, roomId } = d.meta;
+          const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
           ctxt.fillStyle = `rgba(127, ${d.meta.roomId}, ${localId}, 1)`;
           drawCircle(ctxt, gm.toLocalCoords(d), 5); // 🚧 hard-coded radius
           ctxt.fill();
