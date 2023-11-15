@@ -23,15 +23,17 @@ export default function Geomorphs(props) {
   useQueries(gms.map((gm, gmId) => ({
     queryKey: `${gm.key}.${gmId}`, // gmId for dups
     queryFn: async () => {
-      state.initTex(gmId);
+      state.preloadTex(gmId);
       await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
         state[type][gmId] = await Assets.load(
           `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
         )
       ));
-      state.initLightRects(gmId);
-      state.initHit(gmId);
+      // Async bootstrapping
+      state.initTex(gmId);
       api.doors.initTex(gmId);
+      api.decor.initByRoom(gmId);
+      state.initHit(gmId);
     },
   })));
 
@@ -77,16 +79,17 @@ export default function Geomorphs(props) {
       // decor
       Object.values(api.decor.decor).forEach(d => {
         if (d.type === 'point') {
-          const { gmId, roomId } = d.meta;
+          // const { gmId, roomId } = d.meta;
           // const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
           const localId = 0; // 🚧
-          ctxt.fillStyle = `rgba(0, ${d.meta.roomId}, ${localId})`;
+          console.log(`rgba(0, ${d.meta.roomId}, ${localId}, 1)`)
+          ctxt.fillStyle = `rgba(127, ${d.meta.roomId}, ${localId}, 1)`;
           drawCircle(ctxt, d, 5); // 🚧 hard-coded radius
           ctxt.fill();
         }
       });
     },
-    initTex(gmId) {
+    preloadTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
@@ -102,7 +105,7 @@ export default function Geomorphs(props) {
       gfx.endFill();
       api.renderInto(gfx, state.tex[gmId]);
     },
-    initLightRects(gmId) {
+    initTex(gmId) {
       // draw from image -> image with identity transform
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
@@ -264,8 +267,8 @@ export default function Geomorphs(props) {
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initHit
+ * @property {(gmId: number) => void} preloadTex
  * @property {(gmId: number) => void} initTex
- * @property {(gmId: number) => void} initLightRects
  * Currently assumes all doors initially closed
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {(gmId: number, doorId: number) => void} onOpenDoor

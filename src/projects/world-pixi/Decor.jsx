@@ -6,7 +6,6 @@ import { imageService } from "projects/service/image";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
-// import GmsCanvas from "./GmsCanvas";
 
 /**
  * @param {Props} props
@@ -25,13 +24,12 @@ export default function Decor(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
-    initByRoom() {
-      gms.forEach((gm, gmId) => {
-        state.byRoom[gmId] = gm.gmRoomDecor;
-        gm.gmRoomDecor.forEach(({ colliders, decor }) => {
-          Object.assign(state.decor, decor);
-          colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
-        });
+    initByRoom(gmId) {
+      const gm = gms[gmId];
+      state.byRoom[gmId] = gm.gmRoomDecor;
+      gm.gmRoomDecor.forEach(({ colliders, decor }) => {
+        Object.assign(state.decor, decor);
+        colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
       });
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
@@ -197,7 +195,7 @@ export default function Decor(props) {
   }));
 
   React.useEffect(() => {
-    state.initByRoom();
+    // state.initByRoom();
     // state.render();
     props.onLoad(state);
   }, []);
@@ -261,7 +259,7 @@ function metaToImageHref(meta) {
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
  * @property {(decorKeys: string[]) => void} removeDecor
  * Remove decor, all assumed to be in same room
- * @property {() => void} initByRoom
+ * @property {(gmId: number) => void} initByRoom
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
  * @property {(ctxt: CanvasRenderingContext2D, d: NPC.DecorDef) => void} renderDecor
  * @property {() => void} render
