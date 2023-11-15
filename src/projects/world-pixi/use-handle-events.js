@@ -424,6 +424,9 @@ export default function useHandleEvents(api) {
           }
           break;
         case 'pointermove': {
+          if (e.domTarget !== /** @type {HTMLCanvasElement} */ (api.pixiApp.view)) {
+            return; // ignore pointermove outside viewport
+          }
           const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
           if (typeof gmId === 'number') {
             const gm = api.gmGraph.gms[gmId];

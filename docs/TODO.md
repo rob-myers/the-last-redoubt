@@ -62,6 +62,8 @@
     - 🚧 try to use RenderTexture instead of OffscreenCanvas
   - 🚧 interpret data: door or decor
 
+- ✅ restrict pointermove to viewport
+
 - ✅ start migrating DebugWorld
 - ✅ fix `npc config` - PIXI NPCs has no rootEl
 - ✅ verify DebugWorld rendering

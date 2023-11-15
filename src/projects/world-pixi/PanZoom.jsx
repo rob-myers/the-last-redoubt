@@ -54,7 +54,7 @@ export default function PanZoom(props) {
         };
       },
       pointermove(e) {
-        state.events.next({ key: 'pointermove', point: state.getWorld(e) });
+        state.events.next({ key: 'pointermove', domTarget: /** @type {HTMLElement} */ (e.nativeEvent.target), point: state.getWorld(e) });
       },
       pointerup(e) {
         if (!state.start.clientOrigin) {
