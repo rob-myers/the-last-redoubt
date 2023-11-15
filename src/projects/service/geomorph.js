@@ -1523,10 +1523,10 @@ export function extendDecor(decor) {
  * @param {Graph.GmGraph} gmGraph
  */
 export function ensureDecorMetaGmRoomId(decor, gmGraph) {
-  decor.meta ??= {};
+  !decor.meta && Object.assign(decor, { meta: {} });
   if (
-    typeof decor.meta.gmId !== 'number'
-    || typeof decor.meta.roomId !== 'number'
+    !(decor.meta.gmId >= 0)
+    || !(decor.meta.roomId >= 0)
   ) {
     const decorOrigin = getDecorOrigin(decor);
     const gmRoomId = gmGraph.findRoomContaining(decorOrigin);
@@ -1728,7 +1728,7 @@ export function normalizeDecor(d) {
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
  * @param {number} singleIndex
- * @param {Geomorph.PointMeta} baseMeta Assumed fresh
+ * @param {Geomorph.PointMeta<Geomorph.GmRoomId>} baseMeta Assumed fresh
  * @returns {NPC.DecorGroupItem}
  */
 export function singleToDecor(svgSingle, singleIndex, baseMeta) {

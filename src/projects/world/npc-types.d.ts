@@ -612,7 +612,7 @@ declare namespace NPC {
 
   interface BaseDecor {
     key: string;
-    meta: Geomorph.PointMeta;
+    meta: Geomorph.PointMeta<Geomorph.GmRoomId>;
     /** Epoch ms when last updated (overwritten) */
     updatedAt?: number;
     /** Decor key of parent, if exists */

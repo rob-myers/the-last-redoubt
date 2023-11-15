@@ -40,6 +40,8 @@
   - ✅ can `click 1` without error
   - ✅ `click` meta has distance and longClick
 
+- 🚧 can clear a polygon from a RenderTexture
+
 - 🚧 can detect click on door via hit-test canvas
   - ❌ draw in world coords (worldPngRect)
   - ℹ️ will use OffscreenCanvas getImageData
@@ -50,7 +52,10 @@
   - ✅ gm-graph findGeomorphIdContaining uses gmIdGrid
   - ✅ use-handle-events pointermove uses gmIdGrid to find api.geomorphs.hit[gmId]
   - ✅ use-handle-events pointermove looks up local point in hit test canvas
-  - 🚧 interpret data e.g. doorId
+  - 🚧 add decor
+    - `byRoom[gmId][roomId].points` provides local id
+    - remove decor triggers hit repaint 
+  - 🚧 interpret data: door or decor
 
 - ✅ start migrating DebugWorld
 - ✅ fix `npc config` - PIXI NPCs has no rootEl
@@ -66,10 +71,6 @@ world fov.setRoom 0 2 -1
 - ✅ option to show hit test canvas
   - draw stuff into it
   - provide option npc.config.debugHit
-- 🚧 hit test canvas 
-  - grid infers gmId from world coords
-  - transform world coords into local gm coords
-  - add more stuff
 
 - ✅ remove `projects/world-r3d`
 - eventually remove `projects/world`

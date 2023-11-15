@@ -367,7 +367,7 @@ export function strokePolygons(ctxt, polys) {
 }
 
 /**
- * @param {CanvasRenderingContext2D} ctxt
+ * @param {CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D} ctxt
  * @param {Geom.VectJson} center
  * @param {number} radius
  */

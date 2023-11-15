@@ -99,11 +99,11 @@ export async function createGeomorphData(input) {
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
     symbol: {
-      key: '__overwritten__', type: 'group', meta: { roomId /** gmId added later */ },
+      key: '__overwritten__', type: 'group', meta: { gmId: -1, roomId },
       items: [], // built below
     },
     door: {
-      key: '__overwritten__', type: 'group', meta: { roomId, /** gmId added later */ },
+      key: '__overwritten__', type: 'group', meta: { gmId: -1, roomId },
       items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
         const { doorId } = doorNode;
         const door = layout.doors[doorId];
@@ -123,7 +123,7 @@ export async function createGeomorphData(input) {
             ...baseRect,
             angle,
             key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
-            meta: { doorId, roomId, doorSensor: true },
+            meta: { gmId: -1, doorId, roomId, doorSensor: true },
             derivedPoly,
             derivedBounds: derivedPoly.rect,
           };
@@ -131,7 +131,7 @@ export async function createGeomorphData(input) {
           return {
             key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
             type: 'circle',
-            meta: { doorId, roomId, doorSensor: true },
+            meta: { gmId: -1, doorId, roomId, doorSensor: true },
             center: pointInRoom,
             radius: doorSensorRadius,
           };
@@ -187,7 +187,7 @@ export async function createGeomorphData(input) {
       const roomId = findRoomContaining(p);
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
-        roomDecor[roomId].symbol.items.push(singleToDecor(single, i, { roomId }));
+        roomDecor[roomId].symbol.items.push(singleToDecor(single, i, { gmId: -1, roomId }));
       } else if (single.meta.label) {
         // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
         // ℹ️ label could instead be placed nearby respective hull symbols

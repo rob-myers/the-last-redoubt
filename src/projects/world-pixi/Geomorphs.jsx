@@ -7,7 +7,7 @@ import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
-import { fillPolygons } from "../service/dom";
+import { drawCircle, fillPolygons } from "../service/dom";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colorMatrixFilter, tempMatrix } from "./Misc";
@@ -68,10 +68,22 @@ export default function Geomorphs(props) {
       ctxt.setTransform();
       ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
       ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
-      // 🚧 doors, decor
+      // doors
       gm.doors.forEach(({ poly }, doorId) => {
+        // Can assume ≤ 256 doors in a geomorph
         ctxt.fillStyle = `rgba(255, 0, ${doorId}, 1)`;
         fillPolygons(ctxt, [poly]);
+      });
+      // decor
+      Object.values(api.decor.decor).forEach(d => {
+        if (d.type === 'point') {
+          const { gmId, roomId } = d.meta;
+          // const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
+          const localId = 0; // 🚧
+          ctxt.fillStyle = `rgba(0, ${d.meta.roomId}, ${localId})`;
+          drawCircle(ctxt, d, 5); // 🚧 hard-coded radius
+          ctxt.fill();
+        }
       });
     },
     initTex(gmId) {

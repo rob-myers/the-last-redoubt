@@ -197,7 +197,7 @@ export default function Decor(props) {
   }));
 
   React.useEffect(() => {
-    // state.initByRoom();
+    state.initByRoom();
     // state.render();
     props.onLoad(state);
   }, []);
