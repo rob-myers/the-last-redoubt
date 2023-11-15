@@ -40,7 +40,10 @@
   - ✅ can `click 1` without error
   - ✅ `click` meta has distance and longClick
 
-- 🚧 can clear a polygon from a RenderTexture
+- ✅ can clear a polygon from a RenderTexture
+  - gfx.blendMode = BLEND_MODES.ERASE;
+  - gfx.beginFill('black')
+  - api.renderInto(gfx, state.tex[gmId], false);
 
 - 🚧 can detect click on door via hit-test canvas
   - ❌ draw in world coords (worldPngRect)
