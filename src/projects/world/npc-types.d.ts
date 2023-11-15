@@ -677,6 +677,8 @@ declare namespace NPC {
     decor: Record<string, NPC.DecorDef>;
     /** All colliders in room */
     colliders: NPC.DecorCollidable[];
+    /** All points in room */
+    points: NPC.DecorPoint[];
   }
 
   //#endregion

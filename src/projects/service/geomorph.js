@@ -1524,18 +1524,13 @@ export function extendDecor(decor) {
  */
 export function ensureDecorMetaGmRoomId(decor, gmGraph) {
   !decor.meta && Object.assign(decor, { meta: {} });
-  if (
-    !(decor.meta.gmId >= 0)
-    || !(decor.meta.roomId >= 0)
-  ) {
+  if (!(decor.meta.gmId >= 0 && decor.meta.roomId >= 0)) {
     const decorOrigin = getDecorOrigin(decor);
     const gmRoomId = gmGraph.findRoomContaining(decorOrigin);
-    if (gmRoomId) {
-      decor.meta.gmId = gmRoomId.gmId;
-      decor.meta.roomId = gmRoomId.roomId;
-    } else {
+    if (!gmRoomId) {
       throw new Error(`decor origin must reside in some room: ${JSON.stringify(decor)}`);
     }
+    Object.assign(decor.meta, gmRoomId);
   }
 }
 
@@ -1668,6 +1663,7 @@ export function instantiateRoomDecor(gm, gmId, matrix) {
       },
       decor: {},
       colliders: [],
+      points: [],
     };
     atRoom.symbol.items = base.symbol.items.map(d => instantiateLocalDecor(d, atRoom.symbol, matrix));
     atRoom.door.items = base.door.items.map(d => instantiateLocalDecor(d, atRoom.door, matrix));
@@ -1678,6 +1674,7 @@ export function instantiateRoomDecor(gm, gmId, matrix) {
       group.items.forEach(child => {
         atRoom.decor[child.key] = child;
         isCollidable(child) && atRoom.colliders.push(child);
+        child.type === 'point' && atRoom.points.push(child);
       });
     });
   });
@@ -1696,11 +1693,18 @@ export function isCollidable(decor) {
 }
 
 /**
+ * @param {NPC.DecorDef} decor
+ * @return {decor is NPC.DecorPoint}
+ */
+export function isDecorPoint(decor) {
+  return decor.type === 'point';
+}
+
+/**
  * @param {NPC.DecorDef} d 
  * @returns {void}
  */
 export function normalizeDecor(d) {
-  // ensureDecorMetaGmRoomId(d, api); // 🚧 use for dynamically added decor
   switch (d.type) {
     case 'circle':
       break;
@@ -1713,10 +1717,12 @@ export function normalizeDecor(d) {
       extendDecor(d); // Add derived data
       break;
     case 'group': {
+      const gmRoomId = { gmId: d.meta.gmId, roomId: d.meta.roomId };
       d.items.flatMap((item, index) => {
         item.parentKey = d.key;
         item.key = `${d.key}-${index}`; // Overwrite child keys
         normalizeDecor(item);
+        Object.assign(item.meta, gmRoomId);
       });
       break;
     }
