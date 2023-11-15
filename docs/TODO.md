@@ -55,9 +55,11 @@
   - ✅ gm-graph findGeomorphIdContaining uses gmIdGrid
   - ✅ use-handle-events pointermove uses gmIdGrid to find api.geomorphs.hit[gmId]
   - ✅ use-handle-events pointermove looks up local point in hit test canvas
-  - 🚧 add decor
+  - ✅ add decor
     - `byRoom[gmId][roomId].points` provides local id
-    - remove decor triggers hit repaint 
+    - add/remove decor triggers hit repaint (realign ids)
+  - 🚧 redraw hit canvas on add/remove decor
+    - 🚧 try to use RenderTexture instead of OffscreenCanvas
   - 🚧 interpret data: door or decor
 
 - ✅ start migrating DebugWorld

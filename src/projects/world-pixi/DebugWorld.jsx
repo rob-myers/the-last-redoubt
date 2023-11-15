@@ -81,7 +81,15 @@ export default function DebugWorld(props) {
 
         if (opts.debugHit) {
           gfx.setTransform(0, 0, gmScale, gmScale);
-          const texture = Texture.from(api.geomorphs.hit[gmId].canvas);
+
+          // 🚧 use RenderTexture instead of canvas,
+          // assuming we can `api.renderer.extract.pixels(..., new Rectangle(x, y, 1, 1))`
+          const imgBitmap = api.geomorphs.hit[gmId].canvas.transferToImageBitmap();
+          api.geomorphs.hit[gmId].resetTransform();
+          api.geomorphs.hit[gmId].drawImage(imgBitmap, 0, 0); // canvas gets wiped
+          api.geomorphs.hit[gmId].setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
+          const texture = Texture.from(imgBitmap);
+
           gfx.beginTextureFill({ texture });
           gfx.drawRect(gm.pngRect.x, gm.pngRect.y, gm.pngRect.width, gm.pngRect.height);
           gfx.endFill();

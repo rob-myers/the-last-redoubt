@@ -3,7 +3,7 @@ import { gmScale } from "../world/const";
 import { assertNonNull, testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
-import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
 
@@ -51,6 +51,22 @@ export default function Decor(props) {
         api.npcs.events.next({ key: 'decor-click', decor: item });
       }
     },
+    redrawHitCanvas(gmId, roomId, nextPoints) {
+      const gm = gms[gmId];
+      const ctxt = api.geomorphs.hit[gmId];
+      const radius = 5; // 🚧 hard-coded radius
+      const { points: prevPoints } = api.decor.byRoom[gmId][roomId];
+      prevPoints.forEach((d) => {
+        const local = gm.toLocalCoords(d);
+        ctxt.clearRect(local.x - (radius + 1), local.y - (radius + 1), 2 * (radius + 1), 2 * (radius + 1));
+      });
+      nextPoints.forEach((d, pointId) => {
+        ctxt.fillStyle = `rgba(127, ${roomId}, ${pointId}, 1)`;
+        drawCircle(ctxt, gm.toLocalCoords(d), radius);
+        ctxt.fill();
+      });
+      api.debug.opts.debugHit && api.debug.render();
+    },
     removeDecor(decorKeys) {
       const ds = decorKeys.map(decorKey => state.decor[decorKey])
         // cannot remove read-only group or its items
@@ -70,19 +86,27 @@ export default function Decor(props) {
         }
       });
 
-      // Assume all the decor we are deleting comes from the same room
-      const gmId = /** @type {number} */ (ds[0].meta.gmId);
-      const roomId = /** @type {number} */ (ds[0].meta.roomId);
+      // Assume all decor we are deleting comes from same room
+      const { gmId, roomId } = ds[0].meta;
       const atRoom = state.byRoom[gmId][roomId];
+
+      const points = ds.filter(isDecorPoint);
+      if (points.length) {
+        const nextPoints = atRoom.points.filter(d => !points.includes(d));
+        state.redrawHitCanvas(gmId, roomId, nextPoints);
+        atRoom.points = nextPoints;
+      }
+
+      const colliders = ds.filter(isCollidable);
+      if (colliders.length) {
+        atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
+        colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
+      }
 
       ds.forEach(d => {
         delete state.decor[d.key];
-        delete atRoom?.decor[d.key];
+        delete atRoom.decor[d.key];
       });
-      atRoom && (atRoom.colliders = atRoom.colliders.filter(d => !ds.includes(d)));
-
-      // delete from decor grid
-      ds.filter(isCollidable).forEach(d => removeFromDecorGrid(d, state.byGrid));
 
       // 🚧 `ds` could contain dups e.g. `decorKeys` could mention group & child
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
@@ -90,24 +114,30 @@ export default function Decor(props) {
       state.render();
     },
     setDecor(...ds) {
-      for (const d of ds) {
-        if (!d || !verifyDecor(d)) {
+      if (ds.length === 0) {
+        return;
+      }
+      ds.forEach(d => {
+        if (!d || !verifyDecor(d))
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        } else if (localDecorGroupRegex.test(d.key)) {
+        if (localDecorGroupRegex.test(d.key))
           throw Error(`read-only decor: ${JSON.stringify(d)}`);
-        }
+      });
+
+      // 🚧 needs a rewrite
+      // 🚧 is existing decor being removed from e.g. colliders?
+
+      // Every decor must lie in same room
+      const { gmId, roomId } = ds[0].meta;
+      const atRoom = state.byRoom[gmId][roomId];
+      const points = /** @type {NPC.DecorPoint[]} */ ([]);
+
+      for (const d of ds) {
         if (state.decor[d.key]) {
           d.updatedAt = Date.now();
         }
-
         ensureDecorMetaGmRoomId(d, api.gmGraph);
         normalizeDecor(d);
-
-        // Every decor must have meta.{gmId,roomId}, even DecorPath
-        const gmId = /** @type {number} */ (d.meta.gmId);
-        const roomId = /** @type {number} */ (d.meta.roomId);
-        const atRoom = state.byRoom[gmId][roomId];
-
         atRoom.decor[d.key] = d;
 
         if (d.type === 'group') {
@@ -116,18 +146,26 @@ export default function Decor(props) {
             atRoom.decor[child.key] = child;
             if (isCollidable(child)) {
               atRoom.colliders.push(child);
-              // Handle set without remove
+              // Handle set sans remove:
               d.key in state.decor && removeFromDecorGrid(child, state.byGrid);
               addToDecorGrid(child, getDecorRect(child), state.byGrid);
+            } else if (isDecorPoint(child)) {
+              points.push(child);
             }
           });
         } else if (isCollidable(d)) {
           atRoom.colliders.push(d);
           d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
           addToDecorGrid(d, getDecorRect(d), state.byGrid);
+        } else if (isDecorPoint(d)) {
+          points.push(d);
         }
-
         state.decor[d.key] = d;
+      }
+
+      if (points.length) {
+        state.redrawHitCanvas(gmId, roomId, points); // redraw handles updated decor
+        atRoom.points = atRoom.points.filter(x => !points.some(y => x.key === y.key)).concat(points);
       }
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
@@ -172,25 +210,25 @@ export default function Decor(props) {
           throw testNever(decor);
       }
     },
-    render() {
-      const { ctxts } = state;
+    render() {// 🚧
+      // const { ctxts } = state;
 
-      gms.forEach((gm, gmId) => {
-        const ctxt = ctxts[gmId];
-        ctxt.resetTransform();
-        ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+      // gms.forEach((gm, gmId) => {
+      //   const ctxt = ctxts[gmId];
+      //   ctxt.resetTransform();
+      //   ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
 
-        ctxt.transform(
-          gmScale, 0, 0, gmScale,
-          -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
-        );
-        ctxt.transform(...gm.inverseMatrix.toArray());
+      //   ctxt.transform(
+      //     gmScale, 0, 0, gmScale,
+      //     -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
+      //   );
+      //   ctxt.transform(...gm.inverseMatrix.toArray());
 
-        state.byRoom[gmId].forEach(({ decor }, roomId) =>
-          Object.values(decor).forEach(d => state.renderDecor(ctxt, d))
-        );
+      //   state.byRoom[gmId].forEach(({ decor }, roomId) =>
+      //     Object.values(decor).forEach(d => state.renderDecor(ctxt, d))
+      //   );
 
-      });
+      // });
     },
   }));
 
@@ -257,6 +295,7 @@ function metaToImageHref(meta) {
  * Get all decor in same room as point which intersects point.
  * @property {boolean} ready
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
+ * @property {(gmId: number, roomId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitCanvas
  * @property {(decorKeys: string[]) => void} removeDecor
  * Remove decor, all assumed to be in same room
  * @property {(gmId: number) => void} initByRoom
