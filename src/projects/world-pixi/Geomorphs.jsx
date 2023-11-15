@@ -82,9 +82,8 @@ export default function Geomorphs(props) {
           // const { gmId, roomId } = d.meta;
           // const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
           const localId = 0; // 🚧
-          console.log(`rgba(0, ${d.meta.roomId}, ${localId}, 1)`)
           ctxt.fillStyle = `rgba(127, ${d.meta.roomId}, ${localId}, 1)`;
-          drawCircle(ctxt, d, 5); // 🚧 hard-coded radius
+          drawCircle(ctxt, gm.toLocalCoords(d), 5); // 🚧 hard-coded radius
           ctxt.fill();
         }
       });
