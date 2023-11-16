@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 can detect click on door via hit-test canvas
+- ✅ can detect pointermove door/decor via hit-test canvas
   - ❌ draw in world coords (worldPngRect)
   - ℹ️ will use OffscreenCanvas getImageData
   - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
@@ -18,9 +18,9 @@
   - ✅ redraw hit canvas on add/remove decor
     - ✅ try to use RenderTexture instead of OffscreenCanvas,
       using `extract.pixels(..., new Rectangle(x, y, 1, 1))`
-  - 🚧 interpret data: door or decor
+  - ✅ interpret data: door or decor
 
-- remove DecorGroup
+- 🚧 remove DecorGroup
   - world
   - world-pixi
 

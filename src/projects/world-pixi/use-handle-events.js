@@ -431,11 +431,18 @@ export default function useHandleEvents(api) {
           }
           const gm = api.gmGraph.gms[gmId];
           const local = gm.inverseMatrix.transformPoint({...e.point});
-          const rt = api.geomorphs.hit[gmId];
-          // const { data } = canvas.getImageData(local.x - gm.pngRect.x, local.y - gm.pngRect.y, 1, 1);
-          const data = api.extract.pixels(rt, new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1));
-          // 🚧 interpret data e.g. doorId
-          console.log('pointermove', gmId, local, Array.from(data));
+          const [r, g, b, a] = Array.from(api.extract.pixels(
+            api.geomorphs.hit[gmId],
+            new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
+          ));
+          /** Decode data drawn into @see {api.geomorphs.hit} */
+          if (r === 255) {// (255, 0, doorId, 1)
+            console.log(`door: ${b}`, gm.doors[b]);
+          } else if (r === 127) {// (127, roomId, decorPointId, 1)
+            console.log(`decor: r${g}p${b}`, api.decor.byRoom[gmId][g].points[b]);
+          } else if (a > 0) {
+            console.log('pointermove', gmId, local, [r, g, b, a]);
+          }
           break;
         }
       }

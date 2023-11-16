@@ -66,14 +66,16 @@ export default function Geomorphs(props) {
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       // doors
       gm.doors.forEach(({ poly }, doorId) => {
-        // Can assume ≤ 256 doors in a geomorph
+        // (255, 0, doorId, 1)
+        // Assuming ≤ 256 doors in a geomorph
         gfx.beginFill(`rgba(255, 0, ${doorId}, 1)`);
         gfx.drawPolygon(poly.outline);
         gfx.endFill();
       });
       // decor
       api.decor.byRoom[gmId].forEach(({ points }, roomId) =>
-        // Assume ≤ 256 DecorPoints in a room
+        // (127, roomId, decorPointId, 1)
+        // Assuming ≤ 256 DecorPoints in a room
         points.forEach((d, pointId) => {
           const center = gm.toLocalCoords(d);
           gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
