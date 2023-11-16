@@ -1,5 +1,6 @@
 import React from "react";
 import { Stage } from "@pixi/react";
+import { Extract } from "@pixi/extract";
 import { QueryClientProvider } from "react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
@@ -32,8 +33,10 @@ export default function WorldPixi(props) {
     disabled: !!props.disabled,
     gmGraph: /** @type {*} */ ({}),
     gmRoomGraph: /** @type {*} */ ({}),
+
     pixiApp: /** @type {*} */ ({}),
     renderer: /** @type {*} */ ({}),
+    extract: /** @type {*} */ ({}),
 
     decor: /** @type {State['decor']} */  ({ ready: false }),
     debug: /** @type {State['debug']} */  ({ ready: false }),
@@ -105,6 +108,7 @@ export default function WorldPixi(props) {
           onMount={app => {
             state.pixiApp = app;
             state.renderer = /** @type {import('pixi.js').Renderer} */ (app.renderer);
+            state.extract = new Extract(state.renderer);
           }}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
@@ -170,6 +174,7 @@ export default function WorldPixi(props) {
  * 
  * @property {import("pixi.js").Application} pixiApp
  * @property {import("pixi.js").Renderer} renderer
+ * @property {import("pixi.js").Extract} extract
  * 
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor

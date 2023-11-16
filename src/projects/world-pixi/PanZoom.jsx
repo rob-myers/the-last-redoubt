@@ -54,7 +54,9 @@ export default function PanZoom(props) {
         };
       },
       pointermove(e) {
-        state.events.next({ key: 'pointermove', domTarget: /** @type {HTMLElement} */ (e.nativeEvent.target), point: state.getWorld(e) });
+        if (e.nativeEvent.target === props.api.pixiApp.view) {
+          state.events.next({ key: 'pointermove', point: state.getWorld(e) });
+        } // ignore pointermove outside viewport
       },
       pointerup(e) {
         if (!state.start.clientOrigin) {

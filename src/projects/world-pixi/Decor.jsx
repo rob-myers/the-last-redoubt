@@ -1,6 +1,6 @@
 import React from "react";
-import { gmScale } from "../world/const";
-import { assertNonNull, testNever } from "../service/generic";
+import { BLEND_MODES } from "@pixi/core";
+import { testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
@@ -53,18 +53,26 @@ export default function Decor(props) {
     },
     redrawHitCanvas(gmId, roomId, nextPoints) {
       const gm = gms[gmId];
-      const ctxt = api.geomorphs.hit[gmId];
       const radius = 5; // 🚧 hard-coded radius
+      const gfx = api.geomorphs.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
+      gfx.blendMode = BLEND_MODES.ERASE; // clear
       const { points: prevPoints } = api.decor.byRoom[gmId][roomId];
       prevPoints.forEach((d) => {
         const local = gm.toLocalCoords(d);
-        ctxt.clearRect(local.x - (radius + 1), local.y - (radius + 1), 2 * (radius + 1), 2 * (radius + 1));
+        gfx.beginFill('black');
+        gfx.drawRect(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
+        gfx.endFill();
       });
+      api.renderInto(gfx, api.geomorphs.hit[gmId], false);
+      gfx.clear().blendMode = BLEND_MODES.NORMAL;
+
       nextPoints.forEach((d, pointId) => {
-        ctxt.fillStyle = `rgba(127, ${roomId}, ${pointId}, 1)`;
-        drawCircle(ctxt, gm.toLocalCoords(d), radius);
-        ctxt.fill();
+        const center = gm.toLocalCoords(d);
+        gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
+        gfx.drawCircle(center.x, center.y, radius);
+        gfx.endFill();
       });
+      api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       api.debug.opts.debugHit && api.debug.render();
     },
     removeDecor(decorKeys) {

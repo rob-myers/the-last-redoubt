@@ -125,7 +125,6 @@ declare namespace PanZoom {
   interface PointerMoveEvent {
     key: 'pointermove';
     point: Geom.VectJson;
-    domTarget: HTMLElement;
   }
 
 }

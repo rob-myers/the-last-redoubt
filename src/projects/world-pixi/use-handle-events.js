@@ -1,4 +1,5 @@
 import React from "react";
+import { Rectangle } from "@pixi/core";
 import { npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
@@ -424,18 +425,17 @@ export default function useHandleEvents(api) {
           }
           break;
         case 'pointermove': {
-          if (e.domTarget !== /** @type {HTMLCanvasElement} */ (api.pixiApp.view)) {
-            return; // ignore pointermove outside viewport
-          }
           const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
-          if (typeof gmId === 'number') {
-            const gm = api.gmGraph.gms[gmId];
-            const local = gm.inverseMatrix.transformPoint({...e.point});
-            const canvas = api.geomorphs.hit[gmId];
-            const { data } = canvas.getImageData(local.x - gm.pngRect.x, local.y - gm.pngRect.y, 1, 1);
-            // 🚧 interpret data e.g. doorId
-            console.log('pointermove', gmId, local, Array.from(data));
+          if (gmId === null) {
+            return; // Outside World bounds 
           }
+          const gm = api.gmGraph.gms[gmId];
+          const local = gm.inverseMatrix.transformPoint({...e.point});
+          const rt = api.geomorphs.hit[gmId];
+          // const { data } = canvas.getImageData(local.x - gm.pngRect.x, local.y - gm.pngRect.y, 1, 1);
+          const data = api.extract.pixels(rt, new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1));
+          // 🚧 interpret data e.g. doorId
+          console.log('pointermove', gmId, local, Array.from(data));
           break;
         }
       }

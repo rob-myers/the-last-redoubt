@@ -25,25 +25,7 @@
   - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
   - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
   - ℹ️ https://esotericsoftware.com/spine-api-reference
-  - ...
-
-- ✅ continue migrating Geomorphs
-  - ✅ add other components to WorldPixi (code, no effect yet)
-  - ✅ precompute `decomposeBasicTransform`
-  - ✅ provide RenderTexture initially?
-  - ✅ draw closed doors in `api.doors.tex`
-  - ✅ pointer/click events -> world position
-- ✅ connect to a terminal
-  - we'll try to reuse raw-loader gameFunctionsRunDefs
-- ✅ get `click` working
-  - ✅ api.panZoom wraps pixi-viewport
-  - ✅ can `click 1` without error
-  - ✅ `click` meta has distance and longClick
-
-- ✅ can clear a polygon from a RenderTexture
-  - gfx.blendMode = BLEND_MODES.ERASE;
-  - gfx.beginFill('black')
-  - api.renderInto(gfx, state.tex[gmId], false);
+  - Maybe later: spritesheets first
 
 - 🚧 can detect click on door via hit-test canvas
   - ❌ draw in world coords (worldPngRect)
@@ -59,10 +41,16 @@
     - `byRoom[gmId][roomId].points` provides local id
     - add/remove decor triggers hit repaint (realign ids)
   - 🚧 redraw hit canvas on add/remove decor
-    - 🚧 try to use RenderTexture instead of OffscreenCanvas
+    - ✅ try to use RenderTexture instead of OffscreenCanvas,
+      using `api.renderer.extract.pixels(..., new Rectangle(x, y, 1, 1))`
   - 🚧 interpret data: door or decor
 
 - ✅ restrict pointermove to viewport
+- ✅ find way to extract pixels from a RenderTexture
+  ```tsx
+  const e = new Extract(api.renderer);
+  const out = e.pixels(state.tex[gmId], new Rectangle(0, 0, 1, 1));
+  ```
 
 - ✅ start migrating DebugWorld
 - ✅ fix `npc config` - PIXI NPCs has no rootEl
@@ -704,6 +692,24 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ continue migrating Geomorphs
+  - ✅ add other components to WorldPixi (code, no effect yet)
+  - ✅ precompute `decomposeBasicTransform`
+  - ✅ provide RenderTexture initially?
+  - ✅ draw closed doors in `api.doors.tex`
+  - ✅ pointer/click events -> world position
+- ✅ connect to a terminal
+  - we'll try to reuse raw-loader gameFunctionsRunDefs
+- ✅ get `click` working
+  - ✅ api.panZoom wraps pixi-viewport
+  - ✅ can `click 1` without error
+  - ✅ `click` meta has distance and longClick
+
+- ✅ can clear a polygon from a RenderTexture
+  - gfx.blendMode = BLEND_MODES.ERASE;
+  - gfx.beginFill('black')
+  - api.renderInto(gfx, state.tex[gmId], false);
 
 - ✅ disconnect three.js from bundle
 - ✅ try a PIXI filter

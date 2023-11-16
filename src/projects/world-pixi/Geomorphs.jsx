@@ -2,12 +2,11 @@ import React from "react";
 import { useQueries } from "react-query";
 
 import { Assets } from "@pixi/assets";
-import { RenderTexture, Matrix } from "@pixi/core";
+import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
 import { assertDefined, assertNonNull } from "../service/generic";
-import { drawCircle, fillPolygons } from "../service/dom";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colorMatrixFilter, tempMatrix } from "./Misc";
@@ -39,14 +38,12 @@ export default function Geomorphs(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
-    tex: gms.map(gm => RenderTexture.create({
-      width: gmScale * gm.pngRect.width,
-      height: gmScale * gm.pngRect.height,
-    })), // async precompute?
     lit: [],
     unlit: [],
     gfx: new Graphics(),
-    hit: gms.map(gm => assertNonNull(new OffscreenCanvas(gm.pngRect.width, gm.pngRect.height).getContext('2d'))),
+    
+    tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height })),
+    hit: gms.map(gm => RenderTexture.create({ width: gm.pngRect.width, height: gm.pngRect.height })),
 
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
@@ -66,34 +63,25 @@ export default function Geomorphs(props) {
     },
     initHit(gmId) {
       const gm = gms[gmId];
-      const ctxt = state.hit[gmId];
-      ctxt.setTransform();
-      ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-      ctxt.setTransform(1, 0, 0, 1, -gm.pngRect.x, -gm.pngRect.y);
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       // doors
       gm.doors.forEach(({ poly }, doorId) => {
         // Can assume ≤ 256 doors in a geomorph
-        ctxt.fillStyle = `rgba(255, 0, ${doorId}, 1)`;
-        fillPolygons(ctxt, [poly]);
+        gfx.beginFill(`rgba(255, 0, ${doorId}, 1)`);
+        gfx.drawPolygon(poly.outline);
+        gfx.endFill();
       });
       // decor
       api.decor.byRoom[gmId].forEach(({ points }, roomId) =>
         // Assume ≤ 256 DecorPoints in a room
         points.forEach((d, pointId) => {
-          ctxt.fillStyle = `rgba(127, ${roomId}, ${pointId}, 1)`;
-          drawCircle(ctxt, gm.toLocalCoords(d), 5); // 🚧 hard-coded radius
-          ctxt.fill();
+          const center = gm.toLocalCoords(d);
+          gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
+          gfx.drawCircle(center.x, center.y, 5); // 🚧 hard-coded radius
+          gfx.endFill();
         })
       );
-      Object.values(api.decor.decor).forEach(d => {
-        if (d.type === 'point') {
-          const { gmId, roomId } = d.meta;
-          const localId = api.decor.byRoom[gmId][roomId].points.indexOf(d);
-          ctxt.fillStyle = `rgba(127, ${d.meta.roomId}, ${localId}, 1)`;
-          drawCircle(ctxt, gm.toLocalCoords(d), 5); // 🚧 hard-coded radius
-          ctxt.fill();
-        }
-      });
+      api.renderInto(gfx, state.hit[gmId]);
     },
     preloadTex(gmId) {
       const gm = gms[gmId];
@@ -266,7 +254,7 @@ export default function Geomorphs(props) {
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {import('pixi.js').Texture[]} lit
  * @property {import('pixi.js').Texture[]} unlit
- * @property {OffscreenCanvasRenderingContext2D[]} hit
+ * @property {import('pixi.js').RenderTexture[]} hit
  * @property {import('@pixi/graphics').Graphics} gfx Reused
  * @property {boolean[][]} isRoomLit Lights on iff `isRoomLit[gmId][roomId]`.
  * 
