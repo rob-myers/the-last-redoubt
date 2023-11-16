@@ -185,9 +185,9 @@ declare namespace Geomorph {
      */
     roomDecor: {
       /** decor from room symbol's group.singles */
-      symbol: NPC.DecorGroup;
+      symbol: NPC.DecorDef[];
       /** door sensors for each door */
-      door: NPC.DecorGroup;
+      door: NPC.DecorDef[];
     }[];
 
     /** Proxy for lazy cached data */

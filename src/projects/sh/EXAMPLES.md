@@ -441,3 +441,8 @@ walk: run: point (dst) outside navmesh: {"x":537.11,"y":432.58,"meta":{"roomId":
 npc rob setSpeedFactor 2
 click | walk --open rob
 ```
+
+```sh
+world decor.byRoom.0 | map length
+world decor.byRoom.0.1.points | split
+```

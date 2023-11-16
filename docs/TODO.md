@@ -20,7 +20,7 @@
       using `extract.pixels(..., new Rectangle(x, y, 1, 1))`
   - ✅ interpret data: door or decor
 
-- 🚧 remove DecorGroup
+- ✅ remove DecorGroup
   - world
   - world-pixi
 

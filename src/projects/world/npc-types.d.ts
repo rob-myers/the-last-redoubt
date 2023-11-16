@@ -644,19 +644,12 @@ declare namespace NPC {
     derivedBounds?: Geom.Rect;
   }
   
-  export interface DecorGroup extends BaseDecor {
-    type: 'group';
-    items: DecorGroupItem[];
-  }
-
   export type DecorDef = (
     | DecorCircle
     | DecorPoint
     | DecorRect
-    | DecorGroup
   );
 
-  export type DecorGroupItem = Exclude<NPC.DecorDef, NPC.DecorGroup>;
   /** Collidable but not necessarily "freely collidable" */
   export type DecorCollidable = NPC.DecorCircle | NPC.DecorRect;
 
@@ -669,10 +662,8 @@ declare namespace NPC {
   export type DecorGrid = Geomorph.GridSet<NPC.DecorCollidable>;
 
   export interface RoomDecorCache {
-    /** Named read-only group */
-    symbol: NPC.DecorGroup;
-    /** Named read-only group */
-    door: NPC.DecorGroup;
+    symbol: NPC.DecorDef[];
+    door: NPC.DecorDef[];
     /** Everything in room */
     decor: Record<string, NPC.DecorDef>;
     /** All colliders in room */

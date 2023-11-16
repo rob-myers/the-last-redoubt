@@ -3,7 +3,7 @@ import { BLEND_MODES } from "@pixi/core";
 import { testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
-import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
 
@@ -34,10 +34,7 @@ export default function Decor(props) {
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
-      return onlyColliders
-        ? atRoom.colliders // We exclude groups:
-        : Object.values(atRoom?.decor || {}).filter(x => x.type !== 'group')
-      ;
+      return onlyColliders ? atRoom.colliders : Object.values(atRoom.decor);
     },
     getDecorAtPoint(point, gmId, roomId) {
       // 🚧 use grid
@@ -84,16 +81,6 @@ export default function Decor(props) {
         return;
       }
 
-      ds.forEach(decor => {
-        // removing group removes its children
-        decor.type === 'group' && ds.push(...decor.items);
-        // removing child (without removing parent) removes respective item from `items`
-        if (decor.parentKey) {
-          const parent = /** @type {NPC.DecorGroup} */ (state.decor[decor.parentKey]);
-          parent.items.splice(parent.items.findIndex(item => item.key === decor.key), 1);
-        }
-      });
-
       // Assume all decor we are deleting comes from same room
       const { gmId, roomId } = ds[0].meta;
       const atRoom = state.byRoom[gmId][roomId];
@@ -128,8 +115,6 @@ export default function Decor(props) {
       ds.forEach(d => {
         if (!d || !verifyDecor(d))
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        if (localDecorGroupRegex.test(d.key))
-          throw Error(`read-only decor: ${JSON.stringify(d)}`);
       });
 
       // 🚧 needs a rewrite
@@ -148,20 +133,7 @@ export default function Decor(props) {
         normalizeDecor(d);
         atRoom.decor[d.key] = d;
 
-        if (d.type === 'group') {
-          d.items.forEach(child => {
-            state.decor[child.key] = child;
-            atRoom.decor[child.key] = child;
-            if (isCollidable(child)) {
-              atRoom.colliders.push(child);
-              // Handle set sans remove:
-              d.key in state.decor && removeFromDecorGrid(child, state.byGrid);
-              addToDecorGrid(child, getDecorRect(child), state.byGrid);
-            } else if (isDecorPoint(child)) {
-              points.push(child);
-            }
-          });
-        } else if (isCollidable(d)) {
+        if (isCollidable(d)) {
           atRoom.colliders.push(d);
           d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
           addToDecorGrid(d, getDecorRect(d), state.byGrid);
@@ -190,9 +162,6 @@ export default function Decor(props) {
           ctxt.setLineDash([2, 2]);
           drawCircle(ctxt, decor.center, decor.radius);
           ctxt.setLineDash([]);
-          break;
-        case 'group':
-          // ℹ️ byRoom[gmId].decor closed under group descendants
           break;
         case 'point':
           const iconRadius = 4;

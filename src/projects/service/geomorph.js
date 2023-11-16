@@ -1483,8 +1483,6 @@ export function decorContainsPoint(decor, point) {
   switch (decor.type) {
     case 'circle':
       return tempVect.copy(point).distanceTo(decor.center) <= decor.radius;
-    case 'group':
-      return decor.items.some(item => decorContainsPoint(item, point));
     case 'point':
       return tempVect.copy(point).equals(decor);
     case 'rect':
@@ -1542,7 +1540,6 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
 export function getDecorOrigin(decor) {
   switch (decor.type) {
     case 'circle': return decor.center;
-    case 'group': return Vect.average(decor.items.map(item => getDecorOrigin(item)));
     case 'point': return decor;
     case 'rect': {
       if (!decor.derivedPoly) extendDecor(decor);
@@ -1568,36 +1565,23 @@ export function getDecorRect(decor) {
 }
 
 /**
- * Special read-only local decor group keys.
  * @type {(prefix: 'symbol' | 'door', gmId: number, roomId: number) => string}
  */
-export function getLocalDecorGroupKey(prefix, gmId, roomId) {
+export function getLocalDecorPrefix(prefix, gmId, roomId) {
   return `${prefix}-g${gmId}r${roomId}`;
 }
 
 /**
- * Matches special read-only local decor group keys.
- * Also matches prefixes i.e. child keys.
+ * @param {NPC.DecorDef} d 
+ * @param {{ key: string; meta: Geomorph.PointMeta; matrix: Mat }} ctxt 
+ * @returns {NPC.DecorDef}
  */
-export const localDecorGroupRegex = /^(symbol|door)-g\d+r\d+/;
-
-/**
- * ℹ️ parent.meta can provide `gmId` to children
- * @param {NPC.DecorGroupItem} d 
- * @param {NPC.DecorGroup} parent 
- * @param {Mat} matrix 
- * @returns {NPC.DecorGroupItem}
- */
-function instantiateLocalDecor(d, parent, matrix) {
-  /**
-   * Override d.key now we know { gmId, roomId }.
-   * Actually, children will be overwritten again later.
-   */
-  const key = `${parent.key}-${d.key}`;
+function instantiateLocalDecor(d, ctxt) {
+  const key = ctxt.key;
 
   if (d.type === 'rect') {
     // 🚧 better way of computing transformed angledRect?
-    const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(matrix).fixOrientation();
+    const transformedPoly = assertDefined(d.derivedPoly).clone().applyMatrix(ctxt.matrix).fixOrientation();
     const { angle, baseRect } = geom.polyToAngledRect(transformedPoly);
     return {
       ...d,
@@ -1606,26 +1590,26 @@ function instantiateLocalDecor(d, parent, matrix) {
       derivedBounds: transformedPoly.rect,
       key,
       angle,
-      meta: { ...parent.meta, ...d.meta },
+      meta: { ...d.meta, ...ctxt.meta },
     };
   } else if (d.type === 'circle') {
     return {
       ...d,
       key,
-      center: matrix.transformPoint({ ...d.center }),
-      meta: { ...parent.meta, ...d.meta },
+      center: ctxt.matrix.transformPoint({ ...d.center }),
+      meta: { ...d.meta, ...ctxt.meta },
     };
   } else if (d.type === 'point') {
     return {
       ...d,
       key,
-      ...matrix.transformPoint({ x: d.x, y: d.y }),
+      ...ctxt.matrix.transformPoint({ x: d.x, y: d.y }),
       meta: {
-        ...parent.meta,
         ...d.meta,
+        ...ctxt.meta,
         // 🚧 cache?
         orient: typeof d.meta.orient === 'number'
-          ? Math.round(matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+          ? Math.round(ctxt.matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
           : null,
         ui: true,
       },
@@ -1643,39 +1627,24 @@ function instantiateLocalDecor(d, parent, matrix) {
  */
 export function instantiateRoomDecor(gm, gmId, matrix) {
   const output = /** @type {NPC.RoomDecorCache[]} */ ([]);
-
   gm.rooms.forEach((_room, roomId) => {
     const { [roomId]: base } = gm.roomDecor;
-
+    const gmRoomId = { gmId, roomId };
+    
     /** @type {NPC.RoomDecorCache} */
     const atRoom = output[roomId] = {
-      symbol: {
-        key: getLocalDecorGroupKey('symbol', gmId, roomId),
-        type: 'group',
-        meta: { gmId, roomId },
-        items: [],
-      },
-      door: {
-        key: getLocalDecorGroupKey('door', gmId, roomId),
-        type: 'group',
-        meta: { gmId, roomId },
-        items: [],
-      },
+      symbol: base.symbol.map((d, localId) => instantiateLocalDecor(d, { key: `${getLocalDecorPrefix('symbol', gmId, roomId)}-${localId}`, meta: gmRoomId, matrix })),
+      door: base.door.map((d, localId) => instantiateLocalDecor(d, { key: `${getLocalDecorPrefix('door', gmId, roomId)}-${localId}`, meta: gmRoomId, matrix })),
       decor: {},
       colliders: [],
       points: [],
     };
-    atRoom.symbol.items = base.symbol.items.map(d => instantiateLocalDecor(d, atRoom.symbol, matrix));
-    atRoom.door.items = base.door.items.map(d => instantiateLocalDecor(d, atRoom.door, matrix));
 
-    [atRoom.door, atRoom.symbol].forEach(group => {
-      normalizeDecor(group);
-      atRoom.decor[group.key] = group;
-      group.items.forEach(child => {
-        atRoom.decor[child.key] = child;
-        isCollidable(child) && atRoom.colliders.push(child);
-        child.type === 'point' && atRoom.points.push(child);
-      });
+    atRoom.door.concat(atRoom.symbol).forEach(d => {
+      normalizeDecor(d);
+      atRoom.decor[d.key] = d;
+      isCollidable(d) && atRoom.colliders.push(d);
+      isDecorPoint(d) && atRoom.points.push(d);
     });
   });
   return output;
@@ -1716,16 +1685,6 @@ export function normalizeDecor(d) {
     case 'rect':
       extendDecor(d); // Add derived data
       break;
-    case 'group': {
-      const gmRoomId = { gmId: d.meta.gmId, roomId: d.meta.roomId };
-      d.items.flatMap((item, index) => {
-        item.parentKey = d.key;
-        item.key = `${d.key}-${index}`; // Overwrite child keys
-        normalizeDecor(item);
-        Object.assign(item.meta, gmRoomId);
-      });
-      break;
-    }
     default:
       throw testNever(d);
   }
@@ -1735,7 +1694,7 @@ export function normalizeDecor(d) {
  * @param {Geomorph.SvgGroupWithTags<Poly>} svgSingle
  * @param {number} singleIndex
  * @param {Geomorph.PointMeta<Geomorph.GmRoomId>} baseMeta Assumed fresh
- * @returns {NPC.DecorGroupItem}
+ * @returns {NPC.DecorDef}
  */
 export function singleToDecor(svgSingle, singleIndex, baseMeta) {
   const p = svgSingle.poly.center;
@@ -1789,10 +1748,6 @@ export function verifyDecor(input) {
   switch (input.type) {
     case 'circle':
       return Vect.isVectJson(input.center) && typeof input.radius === 'number';
-    case 'group':
-      return Array.isArray(input.items) &&
-        hasGmRoomId(input.meta) && // groups must have meta.{gmId,roomId}
-        input.items.every(verifyDecor);
     case 'point':
       // We permit `input.tags` and `input.meta` to be undefined
       return Vect.isVectJson(input);

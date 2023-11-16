@@ -3,7 +3,7 @@ import { gmScale } from "./const";
 import { assertNonNull, testNever } from "../service/generic";
 import { drawCircle, strokePolygons } from "../service/dom";
 import { imageService } from "projects/service/image";
-import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, localDecorGroupRegex, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 
 import useStateRef from "../hooks/use-state-ref";
 import GmsCanvas from "./GmsCanvas";
@@ -36,10 +36,7 @@ export default function Decor(props) {
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
-      return onlyColliders
-        ? atRoom.colliders // We exclude groups:
-        : Object.values(atRoom?.decor || {}).filter(x => x.type !== 'group')
-      ;
+      return onlyColliders ? atRoom.colliders : Object.values(atRoom.decor);
     },
     getDecorAtPoint(point, gmId, roomId) {
       // 🚧 use grid
@@ -54,32 +51,18 @@ export default function Decor(props) {
       }
     },
     removeDecor(decorKeys) {
-      const ds = decorKeys.map(decorKey => state.decor[decorKey])
-        // cannot remove read-only group or its items
-        // .filter(d => d && !localDecorGroupRegex.test(d.key))
-      ;
+      const ds = decorKeys.map(decorKey => state.decor[decorKey]);
       if (!ds.length) {
         return;
       }
 
-      ds.forEach(decor => {
-        // removing group removes its children
-        decor.type === 'group' && ds.push(...decor.items);
-        // removing child (without removing parent) removes respective item from `items`
-        if (decor.parentKey) {
-          const parent = /** @type {NPC.DecorGroup} */ (state.decor[decor.parentKey]);
-          parent.items.splice(parent.items.findIndex(item => item.key === decor.key), 1);
-        }
-      });
-
-      // Assume all the decor we are deleting comes from the same room
       const gmId = /** @type {number} */ (ds[0].meta.gmId);
       const roomId = /** @type {number} */ (ds[0].meta.roomId);
       const atRoom = state.byRoom[gmId][roomId];
 
       ds.forEach(d => {
         delete state.decor[d.key];
-        delete atRoom?.decor[d.key];
+        delete atRoom.decor[d.key];
       });
       atRoom && (atRoom.colliders = atRoom.colliders.filter(d => !ds.includes(d)));
 
@@ -95,35 +78,21 @@ export default function Decor(props) {
       for (const d of ds) {
         if (!d || !verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        } else if (localDecorGroupRegex.test(d.key)) {
-          throw Error(`read-only decor: ${JSON.stringify(d)}`);
-        }
-        if (state.decor[d.key]) {
+        } else if (state.decor[d.key]) {
           d.updatedAt = Date.now();
         }
 
         ensureDecorMetaGmRoomId(d, api.gmGraph);
         normalizeDecor(d);
 
-        // Every decor must have meta.{gmId,roomId}, even DecorPath
+        // Every decor must have meta.{gmId,roomId}
         const gmId = /** @type {number} */ (d.meta.gmId);
         const roomId = /** @type {number} */ (d.meta.roomId);
         const atRoom = state.byRoom[gmId][roomId];
 
         atRoom.decor[d.key] = d;
 
-        if (d.type === 'group') {
-          d.items.forEach(child => {
-            state.decor[child.key] = child;
-            atRoom.decor[child.key] = child;
-            if (isCollidable(child)) {
-              atRoom.colliders.push(child);
-              // Handle set without remove
-              d.key in state.decor && removeFromDecorGrid(child, state.byGrid);
-              addToDecorGrid(child, getDecorRect(child), state.byGrid);
-            }
-          });
-        } else if (isCollidable(d)) {
+        if (isCollidable(d)) {
           atRoom.colliders.push(d);
           d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
           addToDecorGrid(d, getDecorRect(d), state.byGrid);
@@ -146,9 +115,6 @@ export default function Decor(props) {
           ctxt.setLineDash([2, 2]);
           drawCircle(ctxt, decor.center, decor.radius);
           ctxt.setLineDash([]);
-          break;
-        case 'group':
-          // ℹ️ byRoom[gmId].decor closed under group descendants
           break;
         case 'point':
           const iconRadius = 4;

@@ -98,46 +98,40 @@ export async function createGeomorphData(input) {
   const roomOverrides = /** @type {Geomorph.GeomorphData['roomOverrides']} */ ({});
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
-    symbol: {
-      key: '__overwritten__', type: 'group', meta: { gmId: -1, roomId },
-      items: [], // built below
-    },
-    door: {
-      key: '__overwritten__', type: 'group', meta: { gmId: -1, roomId },
-      items: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
-        const { doorId } = doorNode;
-        const door = layout.doors[doorId];
-        const index = door.roomIds.indexOf(roomId);
-        const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
+    symbol: [],
+    door: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
+      const { doorId } = doorNode;
+      const door = layout.doors[doorId];
+      const index = door.roomIds.indexOf(roomId);
+      const pointInRoom = door.entries[index].clone().addScaledVector(door.normal, 5 * (index === 0 ? 1 : -1));
 
-        if (layout.parallelDoorId[doorId]) {
-          // Use rect so nearby parallel door sensors intersect without gaps
-          const right = new Vect(doorSensorRadius * Math.cos(door.angle), doorSensorRadius * Math.sin(door.angle));
-          const down = new Vect(-right.y, right.x);
-          const baseRect = new Rect(pointInRoom.x - right.x - down.x, pointInRoom.y - right.y - down.y, 2 * doorSensorRadius, 2 * doorSensorRadius);
-          const angle = door.angle;
-          const derivedPoly = geom.angledRectToPoly({ baseRect, angle });
+      if (layout.parallelDoorId[doorId]) {
+        // Use rect so nearby parallel door sensors intersect without gaps
+        const right = new Vect(doorSensorRadius * Math.cos(door.angle), doorSensorRadius * Math.sin(door.angle));
+        const down = new Vect(-right.y, right.x);
+        const baseRect = new Rect(pointInRoom.x - right.x - down.x, pointInRoom.y - right.y - down.y, 2 * doorSensorRadius, 2 * doorSensorRadius);
+        const angle = door.angle;
+        const derivedPoly = geom.angledRectToPoly({ baseRect, angle });
 
-          return {
-            type: 'rect',
-            ...baseRect,
-            angle,
-            key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
-            meta: { gmId: -1, doorId, roomId, doorSensor: true },
-            derivedPoly,
-            derivedBounds: derivedPoly.rect,
-          };
-        } else {
-          return {
-            key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
-            type: 'circle',
-            meta: { gmId: -1, doorId, roomId, doorSensor: true },
-            center: pointInRoom,
-            radius: doorSensorRadius,
-          };
-        }
-      }),
-    },
+        return {
+          type: 'rect',
+          ...baseRect,
+          angle,
+          key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
+          meta: { gmId: -1, doorId, roomId, doorSensor: true },
+          derivedPoly,
+          derivedBounds: derivedPoly.rect,
+        };
+      } else {
+        return {
+          key: `door-${doorId}`, // instance key will be: ${parent.key}-${key}
+          type: 'circle',
+          meta: { gmId: -1, doorId, roomId, doorSensor: true },
+          center: pointInRoom,
+          radius: doorSensorRadius,
+        };
+      }
+    }),
   }));
 
   viewMetas.forEach(({ center: p, poly, meta }, i) => {
@@ -187,7 +181,7 @@ export async function createGeomorphData(input) {
       const roomId = findRoomContaining(p);
       if (roomId >= 0) {
         // ℹ️ decor is restricted to a single room
-        roomDecor[roomId].symbol.items.push(singleToDecor(single, i, { gmId: -1, roomId }));
+        roomDecor[roomId].symbol.push(singleToDecor(single, i, { gmId: -1, roomId }));
       } else if (single.meta.label) {
         // ℹ️ ignore "label" e.g. fuel is a solid wall (not a room)
         // ℹ️ label could instead be placed nearby respective hull symbols
