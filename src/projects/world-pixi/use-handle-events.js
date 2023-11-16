@@ -125,6 +125,47 @@ export default function useHandleEvents(api) {
       }
     },
 
+    handlePanZoomEvents(e) {
+      switch (e.key) {
+        case 'pointerup':
+          // 🚧 clicking on npc sprite ensures meta.{npc,npcKey}
+          if (e.meta.npc === true && typeof e.meta.npcKey === 'string') {
+            const { npcKey } = e.meta;
+            api.npcs.events.next({
+              key: 'npc-clicked',
+              npcKey,
+              position: e.point,
+              isPlayer: api.npcs.playerKey === npcKey,
+            });
+          }
+          break;
+        case 'pointermove': {
+          const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
+          if (gmId === null) {
+            return; // Outside World bounds 
+          }
+          const gm = api.gmGraph.gms[gmId];
+          const local = gm.inverseMatrix.transformPoint({...e.point});
+          const [r, g, b, a] = Array.from(api.extract.pixels(
+            api.geomorphs.hit[gmId],
+            new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
+          ));
+          /** Decode data drawn into @see {api.geomorphs.hit} */
+          if (r === 255) {// (255, 0, doorId, 1)
+            console.log(`door: ${b}`, gm.doors[b]);
+            api.setCursor('pointer');
+          } else if (r === 127) {// (127, roomId, decorPointId, 1)
+            api.setCursor('pointer');
+            console.log(`decor: r${g}p${b}`, api.decor.byRoom[gmId][g].points[b]);
+          } else {
+            api.setCursor('auto');
+            if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);
+          }
+          break;
+        }
+      }
+    },
+
     async handleWayEvents(e) {
       // console.warn('handleWayEvents', e.npcKey, e.meta);
       const npc = api.npcs.getNpc(e.npcKey);
@@ -410,43 +451,9 @@ export default function useHandleEvents(api) {
     });
 
     // React to PanZoom events
-    const panZoomSub = api.panZoom.events.subscribe((e) => {
-      switch (e.key) {
-        case 'pointerup':
-          // 🚧 clicking on npc sprite ensures meta.{npc,npcKey}
-          if (e.meta.npc === true && typeof e.meta.npcKey === 'string') {
-            const { npcKey } = e.meta;
-            api.npcs.events.next({
-              key: 'npc-clicked',
-              npcKey,
-              position: e.point,
-              isPlayer: api.npcs.playerKey === npcKey,
-            });
-          }
-          break;
-        case 'pointermove': {
-          const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
-          if (gmId === null) {
-            return; // Outside World bounds 
-          }
-          const gm = api.gmGraph.gms[gmId];
-          const local = gm.inverseMatrix.transformPoint({...e.point});
-          const [r, g, b, a] = Array.from(api.extract.pixels(
-            api.geomorphs.hit[gmId],
-            new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
-          ));
-          /** Decode data drawn into @see {api.geomorphs.hit} */
-          if (r === 255) {// (255, 0, doorId, 1)
-            console.log(`door: ${b}`, gm.doors[b]);
-          } else if (r === 127) {// (127, roomId, decorPointId, 1)
-            console.log(`decor: r${g}p${b}`, api.decor.byRoom[gmId][g].points[b]);
-          } else if (a > 0) {
-            console.log('pointermove', gmId, local, [r, g, b, a]);
-          }
-          break;
-        }
-      }
-    });
+    const panZoomSub = api.panZoom.events.subscribe((e) => 
+      state.handlePanZoomEvents(e)
+    );
 
     return () => {
       doorsSub.unsubscribe();
@@ -476,6 +483,7 @@ export default function useHandleEvents(api) {
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
  * Handle NPC event (always runs)
+ * @property {(e: PanZoom.InternalEvent) => void} handlePanZoomEvents
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent
  * Handle Player NPC events (only runs when e.npcKey is playerKey)
  * @property {(e: NPC.NPCsWayEvent) => void} handlePlayerWayEvent

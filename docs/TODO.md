@@ -2,27 +2,12 @@
 
 ## In progress
 
-- ✅ can detect pointermove door/decor via hit-test canvas
-  - ❌ draw in world coords (worldPngRect)
-  - ℹ️ will use OffscreenCanvas getImageData
-  - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
-  - ℹ️ will need to transform world-to-local for hit test
-  - ✅ can show hit test canvas in `<DebugWorld>`
-  - ✅ gm-graph has gmIdGrid
-  - ✅ gm-graph findGeomorphIdContaining uses gmIdGrid
-  - ✅ use-handle-events pointermove uses gmIdGrid to find api.geomorphs.hit[gmId]
-  - ✅ use-handle-events pointermove looks up local point in hit test canvas
-  - ✅ add decor
-    - `byRoom[gmId][roomId].points` provides local id
-    - add/remove decor triggers hit repaint (realign ids)
-  - ✅ redraw hit canvas on add/remove decor
-    - ✅ try to use RenderTexture instead of OffscreenCanvas,
-      using `extract.pixels(..., new Rectangle(x, y, 1, 1))`
-  - ✅ interpret data: door or decor
+- ✅ hook up hit test to CSS cursor
 
-- ✅ remove DecorGroup
-  - world
-  - world-pixi
+- 🚧 can open doors on click door
+  - `click` has meta.{door,doorId}
+  - use `onRawDoorClick` somehow
+  - animate door opening/closing
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -672,6 +657,29 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can detect pointermove door/decor via hit-test canvas
+  - ❌ draw in world coords (worldPngRect)
+  - ℹ️ will use OffscreenCanvas getImageData
+  - ℹ️ keep uniform approach: draw local gm coords (possibly scaled)
+  - ℹ️ will need to transform world-to-local for hit test
+  - ✅ can show hit test canvas in `<DebugWorld>`
+  - ✅ gm-graph has gmIdGrid
+  - ✅ gm-graph findGeomorphIdContaining uses gmIdGrid
+  - ✅ use-handle-events pointermove uses gmIdGrid to find api.geomorphs.hit[gmId]
+  - ✅ use-handle-events pointermove looks up local point in hit test canvas
+  - ✅ add decor
+    - `byRoom[gmId][roomId].points` provides local id
+    - add/remove decor triggers hit repaint (realign ids)
+  - ✅ redraw hit canvas on add/remove decor
+    - ✅ try to use RenderTexture instead of OffscreenCanvas,
+      using `extract.pixels(..., new Rectangle(x, y, 1, 1))`
+  - ✅ interpret data: door or decor
+
+- ✅ remove DecorGroup
+  - world
+  - world-pixi
+
 
 - ✅ restrict pointermove to viewport
 - ✅ find way to extract pixels from a RenderTexture

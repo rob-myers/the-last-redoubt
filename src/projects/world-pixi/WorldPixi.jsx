@@ -35,6 +35,7 @@ export default function WorldPixi(props) {
     gmRoomGraph: /** @type {*} */ ({}),
 
     pixiApp: /** @type {*} */ ({}),
+    canvas: /** @type {*} */ ({}),
     renderer: /** @type {*} */ ({}),
     extract: /** @type {*} */ ({}),
 
@@ -66,6 +67,9 @@ export default function WorldPixi(props) {
     },
     renderInto(displayObj, tex, clear = true) {
       state.renderer.render(displayObj, { renderTexture: tex, clear });
+    },
+    setCursor(cssValue) {
+      state.canvas.style.cursor = cssValue;
     },
   }));
 
@@ -107,6 +111,7 @@ export default function WorldPixi(props) {
           }}
           onMount={app => {
             state.pixiApp = app;
+            state.canvas = /** @type {*} */ (app.view);
             state.renderer = /** @type {import('pixi.js').Renderer} */ (app.renderer);
             state.extract = new Extract(state.renderer);
           }}
@@ -173,6 +178,7 @@ export default function WorldPixi(props) {
  * @property {Graph.GmRoomGraph} gmRoomGraph
  * 
  * @property {import("pixi.js").Application} pixiApp
+ * @property {HTMLCanvasElement} canvas
  * @property {import("pixi.js").Renderer} renderer
  * @property {import("pixi.js").Extract} extract
  * 
@@ -187,6 +193,7 @@ export default function WorldPixi(props) {
  *
  * @property {() => boolean} isReady
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
+ * @property {(cssCursorValue: string) => void} setCursor
  */
 
 /**
