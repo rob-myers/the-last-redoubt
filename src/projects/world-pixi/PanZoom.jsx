@@ -72,7 +72,7 @@ export default function PanZoom(props) {
           meta: {
             distance,
             longClick: (Date.now() - state.start.epochMs) >= longClickMs,
-            targetPos: worldPoint, // 🚧 needs ctxt
+            targetPos: worldPoint, // 🚧 remove?
           },
           point: worldPoint,
           clickId: state.clickIds.pop(),

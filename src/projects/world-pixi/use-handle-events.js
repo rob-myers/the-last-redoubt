@@ -1,6 +1,6 @@
 import React from "react";
 import { Rectangle } from "@pixi/core";
-import { npcSlowWalkSpeedFactor } from "../world/const";
+import { npcHeadRadiusPx, npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
 import { decorToRef, queryDecorGridLine } from "../service/geomorph";
@@ -128,39 +128,24 @@ export default function useHandleEvents(api) {
     handlePanZoomEvents(e) {
       switch (e.key) {
         case 'pointerup':
-          // 🚧 clicking on npc sprite ensures meta.{npc,npcKey}
-          if (e.meta.npc === true && typeof e.meta.npcKey === 'string') {
-            const { npcKey } = e.meta;
-            api.npcs.events.next({
-              key: 'npc-clicked',
-              npcKey,
-              position: e.point,
-              isPlayer: api.npcs.playerKey === npcKey,
-            });
+          // mutate meta on click door/decor
+          const meta = api.geomorphs.testHit(e.point);
+          Object.assign(e.meta, meta);
+
+          // mutate meta on click npc
+          // 🚧 restrict to gmRoomId
+          // 🚧 trigger 'npc-clicked'?
+          for (const npc of Object.values(api.npcs.npc)) {
+            if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
+              Object.assign(e.meta, { npc: true, npcKey: npc.key });
+              break;
+            }
           }
           break;
         case 'pointermove': {
-          const [gmId] = api.gmGraph.findGeomorphIdContaining(e.point)
-          if (gmId === null) {
-            return; // Outside World bounds 
-          }
-          const gm = api.gmGraph.gms[gmId];
-          const local = gm.inverseMatrix.transformPoint({...e.point});
-          const [r, g, b, a] = Array.from(api.extract.pixels(
-            api.geomorphs.hit[gmId],
-            new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
-          ));
-          /** Decode data drawn into @see {api.geomorphs.hit} */
-          if (r === 255) {// (255, 0, doorId, 1)
-            console.log(`door: ${b}`, gm.doors[b]);
-            api.setCursor('pointer');
-          } else if (r === 127) {// (127, roomId, decorPointId, 1)
-            api.setCursor('pointer');
-            console.log(`decor: r${g}p${b}`, api.decor.byRoom[gmId][g].points[b]);
-          } else {
-            api.setCursor('auto');
-            if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);
-          }
+          const meta = api.geomorphs.testHit(e.point);
+          api.setCursor(meta ? 'pointer' : 'auto');
+          // meta && console.log('pointermove', meta);
           break;
         }
       }

@@ -5,8 +5,8 @@
 - ✅ hook up hit test to CSS cursor
 
 - 🚧 can open doors on click door
-  - `click` has meta.{door,doorId}
-  - use `onRawDoorClick` somehow
+  - ✅ `click` has meta.{door,doorId}
+  - 🚧 use `onRawDoorClick` somehow
   - animate door opening/closing
 
 - 🚧 Spine: top_down_man_base: fix stuff

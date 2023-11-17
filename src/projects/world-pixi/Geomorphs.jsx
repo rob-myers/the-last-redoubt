@@ -2,11 +2,11 @@ import React from "react";
 import { useQueries } from "react-query";
 
 import { Assets } from "@pixi/assets";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, Rectangle } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
-import { assertDefined, assertNonNull } from "../service/generic";
+import { assertDefined } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colorMatrixFilter, tempMatrix } from "./Misc";
@@ -229,6 +229,30 @@ export default function Geomorphs(props) {
       }
       api.renderInto(state.gfx, state.tex[gmId], false);
     },
+    testHit(worldPoint) {
+      const [gmId] = api.gmGraph.findGeomorphIdContaining(worldPoint)
+      if (gmId === null) {
+        return null; // Outside World bounds 
+      }
+      const gm = api.gmGraph.gms[gmId];
+      const local = gm.inverseMatrix.transformPoint({...worldPoint});
+      const [r, g, b, a] = Array.from(api.extract.pixels(
+        api.geomorphs.hit[gmId],
+        new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
+      ));
+      /** Decode data drawn into @see {api.geomorphs.hit} */
+      if (r === 255) {// (255, 0, doorId, 1)
+        // console.log(`door: ${b}`, gm.doors[b]);
+        return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b });
+      } else if (r === 127) {// (127, roomId, decorPointId, 1)
+        const decor = api.decor.byRoom[gmId][g].points[b];
+        // console.log(`decor: r${g}p${b}`, decor);
+        return /** @type {Geomorph.PointMeta} */ ({ decor: true, gmId, roomId: g, decorKey: decor.key });
+      } else {
+        // if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);
+        return null;
+      }
+    },
   }));
 
   React.useEffect(() => {
@@ -267,6 +291,7 @@ export default function Geomorphs(props) {
  * @property {(gmId: number) => void} initTex
  * Currently assumes all doors initially closed
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
+ * @property {(worldPoint: Geom.VectJson)  => null | Geomorph.PointMeta} testHit
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
  * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
  * @property {(gmId: number, roomId: number)  => void} recomputeLights

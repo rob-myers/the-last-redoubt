@@ -589,6 +589,7 @@ declare namespace Geomorph {
    */
   export type GridSet<T> = Record<number, Record<number, Set<T>>>;
  
+  // 🚧 remove
   export interface HitTestGlobal {
     gridDim: number;
     /** World coords modulo @see {gridDim} */
