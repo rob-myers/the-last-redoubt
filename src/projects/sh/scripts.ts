@@ -122,13 +122,37 @@ thinkLoop: `{
  * - world doors.toggleLock 0 8
  * - world "x => x.gmGraph.findRoomContaining($( click 1 ))"
  * - world gmGraph.findRoomContaining $( click 1 )
+ * - click | world gmGraph.findRoomContaining
  */
+// world: `{
+//   local selector
+//   selector="$\{1:-x=>x}"
+//   shift
+//   call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
+//     map "$selector" "$@"
+// }`,
 world: `{
-  local selector
-  selector="$\{1:-x=>x}"
-  shift
-  call '({ api, home }) => api.getCached(home.WORLD_KEY)' |
-    map "$selector" "$@"
+  run '(ctxt) {
+    let { api, args, home, datum } = ctxt;
+    const world = api.getCached(home.WORLD_KEY);
+    let func = api.generateSelector(
+      api.parseFnOrStr(args[0]),
+      args.slice(1).map(x => api.parseJsArg(x)),
+    );
+
+    if (api.isTtyAt(0)) {
+      yield func(world, ctxt);
+    } else {
+      !args.includes("-") && args.push("-");
+      while ((datum = await api.read()) !== api.eof) {
+        func = api.generateSelector(
+          api.parseFnOrStr(args[0]),
+          args.slice(1).map(x => x === "-" ? datum : api.parseJsArg(x)),
+        );
+        yield func(world, ctxt);
+      }
+    }
+  }' "$@"
 }`,
 
 /**

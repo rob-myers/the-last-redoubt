@@ -368,7 +368,7 @@ say --v="Google UK English Female" {1..5}Hello
 spawn --zhodani foo $( click 1 )
 world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"
 world gmRoomGraph.getVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )" false
-world gmRoomGraph.getVantages "$( click 1 )" "$( click 1 )"
+world gmRoomGraph.getVantages "$( click 1 | map meta )" "$( click 1 | map meta )"
 
 # get a gmRoomId
 click 1 | map meta
@@ -445,4 +445,7 @@ click | walk --open rob
 ```sh
 world decor.byRoom.0 | map length
 world decor.byRoom.0.1.points | split
+
+click 1 >fixed
+click | world npcs.canSee $fixed -
 ```

@@ -6,8 +6,13 @@
 
 - 🚧 can open doors on click door
   - ✅ `click` has meta.{door,doorId}
-  - 🚧 use `onRawDoorClick` somehow
-  - animate door opening/closing
+  - `<Doors>` has PIXI.ParticleContainer
+    - ℹ️ trigger via `click | world doors.onRawDoorClick`
+    - write into RenderTexture (no animation)
+    - use PIXI.ParticleContainer
+      - opening/closing doors are children
+      - animate via alpha only (fade out/in)
+  - ...
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -78,7 +83,7 @@
     - https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas
 - ✅ remove canvas layer library
 
-- IDEA support e.g. `click 1 | world gmGraph.findGeomorphIdContaining`
+- ✅ IDEA support e.g. `click 1 | world gmGraph.findGeomorphIdContaining`
   - if stdin a tty then create read loop?
 - `npc config fov` toggles fov
 - hideGms clunky on open hull door first time mobile (?)
