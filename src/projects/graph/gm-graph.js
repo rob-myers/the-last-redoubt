@@ -44,7 +44,7 @@ export class gmGraphClass extends BaseGraph {
    */
   entry;
 
-  api = /** @type {{ doors: Omit<import('../world/World').State['doors'], 'rootEl'>; isReady(): boolean; }} */  ({
+  api = /** @type {{ doors: Pick<import('../world/Doors').State, 'getOpenIds' | 'isOpen' | 'lookup'>; isReady(): boolean; }} */ ({
     isReady() { return false; },
   });
 

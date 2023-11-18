@@ -85,14 +85,13 @@ export default function Doors(props) {
        * Usually we handle door clicking via `npc do`.
        * It can instead be handled directly via this handler.
        */
-      const { dataset } = /** @type {HTMLElement} */ (e.target);
-      if (dataset.meta) {
-        const meta = JSON.parse(dataset.meta);
-        const gmId = Number(meta.gmId);
-        const doorId = Number(meta.doorId);
-        state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
-        state.updateVisibleDoors();
-      }
+      const meta = e.meta;
+      const gmId = Number(meta.gmId);
+      const doorId = Number(meta.doorId);
+      console.log({ gmId, doorId });
+      // 🚧
+      // state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
+      // state.updateVisibleDoors();
     },
     safeToCloseDoor(gmId, doorId) {
       const door = gms[gmId].doors[doorId];
@@ -348,7 +347,7 @@ export default function Doors(props) {
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(gmId: number) => void} initTex
  * @property {(gmId: number, doorId: number) => boolean} isOpen
- * @property {(e: PointerEvent) => void} onRawDoorClick
+ * @property {(e: PanZoom.PointerUpEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
