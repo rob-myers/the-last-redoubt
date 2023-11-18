@@ -2,17 +2,19 @@
 
 ## In progress
 
-- ✅ hook up hit test to CSS cursor
-
 - 🚧 can open doors on click door
   - ✅ `click` has meta.{door,doorId}
   - `<Doors>` has PIXI.ParticleContainer
     - ℹ️ trigger via `click | world doors.onRawDoorClick`
-    - write into RenderTexture (no animation)
-    - use PIXI.ParticleContainer
+    - ✅ can initially draw closed or open door
+    - ✅ draw into RenderTexture on `{opened,closed}-door`
+    - 🚧 draw delta into RenderTexture
+    - 🚧 fix lights when door is initially open
+    - ❌ use PIXI.ParticleContainer
       - opening/closing doors are children
       - animate via alpha only (fade out/in)
-  - ...
+  - ℹ️ FOV will be a union of roomsWithDoors[*]
+    hopefully computable by simplifying `gmGraph.computeViewDoorAreas`
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -28,19 +30,19 @@
     - can toggle respective images (nothing-in-slot vs something)
   - ✅ try adding a slot: dark head
   - ✅ try export spritesheet
+  - ✅ fix other sheet: lie
   - 🚧 try changing skins
-  - 🚧 fix other sheets
   - try creating own basic images
 
-- Spine: generate spritesheet at runtime
-  - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
-  - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
-  - ℹ️ https://esotericsoftware.com/spine-api-reference
-  - Maybe later: spritesheets first
-
+- gmGraph.computeViewableGmRoomIds
 - eventually remove `projects/world`
 - clean table symbols a bit
 - useQueries in useGeomorphs
+- Spine: generate spritesheet at runtime
+  - Maybe later: spritesheets first
+  - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
+  - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
+  - ℹ️ https://esotericsoftware.com/spine-api-reference
 
 ---
 
@@ -662,6 +664,8 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ hook up hit test to CSS cursor
 
 - ✅ can detect pointermove door/decor via hit-test canvas
   - ❌ draw in world coords (worldPngRect)

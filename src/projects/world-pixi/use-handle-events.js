@@ -16,6 +16,25 @@ export default function useHandleEvents(api) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
+    handleDoorsEvent(e) {
+      switch (e.key) {
+        case 'closed-door': {
+          api.geomorphs.onCloseDoor(e.gmId, e.doorId);
+          api.fov.recompute();
+          // 🚧 partial update texture
+          api.doors.initTex(e.gmId);
+          break;
+        }
+        case 'opened-door': {
+          api.geomorphs.onOpenDoor(e.gmId, e.doorId);
+          api.fov.recompute();
+          // 🚧 partial update texture
+          api.doors.initTex(e.gmId);
+          break;
+        }
+      }
+    },
+
     async handleNpcEvent(e) {
       switch (e.key) {
         case 'spawned-npc':
@@ -411,21 +430,9 @@ export default function useHandleEvents(api) {
     }
 
     // Update doors and lights on change
-    const doorsSub = api.doors.events.subscribe((e) => {
-      switch (e.key) {
-        case 'closed-door': {
-          const { gmId, doorId } = e;
-          api.geomorphs.onCloseDoor(gmId, doorId);
-          api.fov.recompute();
-          break;
-        }
-        case 'opened-door': {
-          api.geomorphs.onOpenDoor(e.gmId, e.doorId);
-          api.fov.recompute();
-          break;
-        }
-      }
-    });
+    const doorsSub = api.doors.events.subscribe((e) =>
+      state.handleDoorsEvent(e)
+    );
 
     // React to NPC events
     const npcsSub = api.npcs.events.subscribe((e) => {
@@ -466,8 +473,8 @@ export default function useHandleEvents(api) {
  * @property {(npc: NPC.NPC, event: NPC.NpcWayMetaDecorCollide['type'], gmId: number, doorId: number) => void} onTriggerDoorSensor
  * @property {(npc: NPC.NPC, gmId: number, nextDoorId: number) => Promise<void>} preWalkThroughDoor
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
- * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent
- * Handle NPC event (always runs)
+ * @property {(e: import('./Doors').DoorMessage) => void} handleDoorsEvent
+ * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent Handle NPC event (always runs)
  * @property {(e: PanZoom.InternalEvent) => void} handlePanZoomEvents
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent
  * Handle Player NPC events (only runs when e.npcKey is playerKey)

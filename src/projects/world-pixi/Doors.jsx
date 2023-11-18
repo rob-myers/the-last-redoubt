@@ -15,7 +15,6 @@ import { tempMatrix } from "./Misc";
  */
 export default function Doors(props) {
 
-  const update = useUpdate();
   const { api } = props;
   const { gmGraph, gmGraph: { gms }, npcs } = api;
   
@@ -59,11 +58,13 @@ export default function Doors(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      const lookup = state.lookup[gmId];
+
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gfx.lineStyle({ width: 1, color: 0x000000 });
-      gm.doors.forEach(({ poly}) => {
+      gm.doors.forEach(({ poly }, doorId) => {// 🚧
         gfx.beginFill(0xaaaaaa);
+        gfx.fill.alpha = gfx.line.alpha = lookup[doorId].open ? 0.2 : 1;
         gfx.drawPolygon(poly.outline);
         gfx.endFill();
       });
@@ -80,18 +81,14 @@ export default function Doors(props) {
       const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
       return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);
     },
-    onRawDoorClick(e) {
+    onRawDoorClick({ meta }) {
       /**
-       * Usually we handle door clicking via `npc do`.
-       * It can instead be handled directly via this handler.
+       * We usually handle door clicking via `npc do`.
+       * Alternatively we can `click | world doors.onRawDoorClick`.
        */
-      const meta = e.meta;
-      const gmId = Number(meta.gmId);
-      const doorId = Number(meta.doorId);
-      console.log({ gmId, doorId });
-      // 🚧
-      // state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
-      // state.updateVisibleDoors();
+      const [gmId, doorId] = [Number(meta.gmId), Number(meta.doorId)];
+      state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
+      // console.log({ gmId, doorId });
     },
     safeToCloseDoor(gmId, doorId) {
       const door = gms[gmId].doors[doorId];
@@ -137,8 +134,6 @@ export default function Doors(props) {
       }
       // 🚧 lock event?
 
-      update();
-
       return item.locked;
     },
     toggleDoor(gmId, doorId, opts = {}) {
@@ -155,8 +150,7 @@ export default function Doors(props) {
         return wasOpen;
       }
 
-      // Cancel any pending close
-      state.cancelClose(item);
+      state.cancelClose(item); // Cancel any pending close
       const adjHull = item.hull ? gmGraph.getAdjacentRoomCtxt(gmId, doorId) : null;
       adjHull && state.cancelClose(state.lookup[adjHull.adjGmId][adjHull.adjDoorId]);
 
@@ -187,14 +181,12 @@ export default function Doors(props) {
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
-        state.updateVisibleDoors(); // to show doors in adjacent geomorph
+        // state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
 
       if (key === 'opened-door') {
         state.tryCloseDoor(gmId, doorId);
       }
-
-      update();
 
       return item.open;
     },
@@ -208,52 +200,6 @@ export default function Doors(props) {
           delete item.closeTimeoutId;
         }
       }, defaultDoorCloseMs);// 🚧 npc.config.closeTimeoutMs
-    },
-    update,
-    updateVisibleDoors() {
-      /**
-       * Visible doors in current geomorph including related doors.
-       * - includes all doors in current/adj rooms
-       * - extended by relDoorId (relate-connector)
-       * - possibly includes hull doors from other geomorphs
-       * - over-approx but only computed on change current room
-       */
-      const nextVis = /** @type {number[][]} */ (gms.map(_ => []));
-
-      const { fov } = props.api;
-      const gm = gms[fov.gmId];
-
-      const adjRoomIds = gm.roomGraph.getAdjRoomIds(fov.roomId);
-      /** All doors in curr/adj rooms, extended 1-step by relDoorId */
-      const extAdjDoors = gm.roomGraph.getAdjacentDoors(
-        ...adjRoomIds.concat(fov.roomId)
-      ).flatMap(x =>
-        gm.relDoorId[x.doorId] && state.isOpen(fov.gmId, x.doorId)
-          ? [x.doorId, ...gm.relDoorId[x.doorId].doors]
-          : x.doorId
-      );
-      nextVis[fov.gmId] = extAdjDoors;
-
-      /**
-       * - Include hull doors from neighbouring geomorphs
-       * - If hull door open, include doors from room in adjacent geomorph
-       */
-      const nextVisSet = /** @type {Set<number>[]} */ ([]);
-      gm.roomGraph.getAdjacentHullDoorIds(gm, fov.roomId).flatMap(({ hullDoorId }) =>
-        gmGraph.getAdjacentRoomCtxt(fov.gmId, hullDoorId)??[]
-      ).forEach(({ adjGmId, adjDoorId, adjRoomId }) => {
-        (nextVisSet[adjGmId] ||= new Set).add(adjDoorId);
-        if (state.lookup[adjGmId][adjDoorId].open) {
-          // Include adj doors, possibly seen thru hull door
-          gms[adjGmId].roomGraph.getAdjacentDoors(adjRoomId).forEach(
-            x => nextVisSet[adjGmId].add(x.doorId)
-          );
-        }
-      });
-      nextVisSet.forEach((set, altGmId) => (nextVis[altGmId] ||= []).push(...set.values()));
-
-      gms.forEach((_, gmId) => state.setVisible(gmId, nextVis[gmId]));
-      update();
     },
   }), {
     deps: [props.api.npcs],
@@ -286,45 +232,6 @@ export default function Doors(props) {
       tex={state.tex}
     />
   );
-
-  // return (
-  //   <div
-  //     ref={el => el && (state.rootEl = el)}
-  //     className={cx(cssName.doors, rootCss)}
-  //   >
-  //     {gms.map((gm, gmId) => (
-  //       <div
-  //         key={gm.itemKey}
-  //         className={`gm-${gmId}`}
-  //         style={{ transform: gm.transformStyle }}
-  //       >
-  //         {gm.doors.map((door, doorId) => {
-  //           const item = state.lookup[gmId][doorId];
-  //           return item.visible &&
-  //             <div
-  //               key={doorId}
-  //               className={cx(cssName.door, {
-  //                 [cssName.iris]: !!door.meta.iris || !!door.meta.hull,
-  //                 [cssName.hull]: !!door.meta.hull,
-  //                 [cssName.open]: item.open,
-  //                 [cssName.locked]: item.locked,
-  //               })}
-  //               // ℹ️ we see escaping in chrome devtool e.g. &quot;
-  //               data-meta={item.touchMeta}
-  //               style={{
-  //                 left: door.baseRect.x,
-  //                 top: door.baseRect.y,
-  //                 width: door.baseRect.width,
-  //                 height: door.baseRect.height,
-  //                 transform: `rotate(${door.angle}rad)`,
-  //                 transformOrigin: 'top left',
-  //               }}
-  //           />
-  //         })}
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
 }
 
 /**
@@ -361,8 +268,6 @@ export default function Doors(props) {
  * Returns current boolean value of `locked`.
  * @property {(gmId: number, doorId: number) => void} tryCloseDoor
  * Try close door every `N` seconds, starting in `N` seconds.
- * @property {() => void} update
- * @property {() => void} updateVisibleDoors
  */
 
 /**

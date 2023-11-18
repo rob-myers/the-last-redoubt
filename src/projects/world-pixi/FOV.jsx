@@ -207,7 +207,6 @@ export default function FOV(props) {
         state.lastDoorId = doorId;
 
         state.recompute();
-        api.doors.updateVisibleDoors();
         api.debug.updateDebugRoom();
         if (doorId === -1) {
           /**

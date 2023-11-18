@@ -128,7 +128,10 @@ export default function NPCs(props) {
             break;
           case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;
-          case 'scriptDoors': ctxt.scriptDoors = !!value; api.doors.update(); break;
+          case 'scriptDoors':
+            ctxt.scriptDoors = !!value; // 🚧 remove?
+            // api.doors.update();
+            break;
           case 'verbose': ctxt.verbose = !!value; break;
           case 'showColliders':
             api.decor.showColliders = !!value;
