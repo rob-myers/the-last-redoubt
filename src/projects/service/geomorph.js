@@ -547,7 +547,7 @@ function atChoiceToDelta(at) {
  * Some hull doors shouldn't be tagged,
  * e.g. the central and right one in geomorph 301.
  * They are not connectable to other geomorphs.
- * @param {Geomorph.ParsedConnectorRect} door 
+ * @param {Geomorph.ConnectorRect} door 
  * @param {Geom.Rect} hullRect 
  */
 function extendHullDoorTags(door, hullRect) {
@@ -595,7 +595,7 @@ function symbolSingleToLayoutItem({ meta }) {
 }
 
 /**
- * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {Geomorph.ConnectorRect} connector
  * @param {Geom.VectJson} viewPos local position inside geomorph
  * @returns {[Geom.Vect, Geom.Vect]}
  */
@@ -630,7 +630,7 @@ export function getGmRoomKey(gmId, roomId) {
 /**
  * Hull door polys are outset along entry to e.g. ensure they intersect room.
  * Our hull doors have width 8, whereas original have width 12, so we outset by 2.
- * @param {Geomorph.ParsedConnectorRect[]} doors
+ * @param {Geomorph.ConnectorRect[]} doors
  * @returns {Geom.Poly[]}
  */
 export function getNormalizedDoorPolys(doors) {
@@ -641,7 +641,7 @@ export function getNormalizedDoorPolys(doors) {
 
 /**
  * Returns -1 if no unseen room id found.
- * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {Geomorph.ConnectorRect} connector
  * @param {number[]} seenRoomIds could be frontier array of bfs
  */
 export function getUnseenConnectorRoomId(connector, seenRoomIds) {
@@ -680,7 +680,7 @@ function modifySinglesMeta(meta, roomTransformMatrix) {
 
 /**
  * Outset connector rect along entry normal.
- * @param {Geomorph.ParsedConnectorRect} connector
+ * @param {Geomorph.ConnectorRect} connector
  * @param {number} amount
  * @returns {Geom.Poly}
  */
@@ -713,7 +713,7 @@ export function hasGmRoomId(meta) {
 
 /**
  * Is the connector aligned with horizontal or vertical axis?
- * @param {Geomorph.ParsedConnectorRect} connector 
+ * @param {Geomorph.ConnectorRect} connector 
  */
 export function isConnectorOrthonormal(connector) {
   return connector.normal.x === 0 || connector.normal.y === 0;
@@ -733,7 +733,7 @@ export function isSameGmRoom(gmRoomId, otherGmRoomId) {
 
 /**
  * @param {Geomorph.ConnectorRectJson} x
- * @returns {Geomorph.ParsedConnectorRect}
+ * @returns {Geomorph.ConnectorRect}
  */
 function parseConnectorRect(x) {
   const poly = Poly.from(x.poly);
@@ -754,7 +754,7 @@ function parseConnectorRect(x) {
 /**
  * @param {Geomorph.SvgGroupWithTags<Geom.Poly>} single 
  * @param {Geom.Poly[]} rooms 
- * @returns {Geomorph.ParsedConnectorRect}
+ * @returns {Geomorph.ConnectorRect}
  */
 function singleToConnectorRect(single, rooms) {
   const { poly, meta } = single;
@@ -1230,7 +1230,7 @@ export function computeLightPolygons(gm, intersectWithCircle = false) {
 }
 
 /**
- * @param {Geomorph.ParsedConnectorRect} connector 
+ * @param {Geomorph.ConnectorRect} connector 
  * @param {number} srcRoomId Must lie in @see connector roomIds
  * @param {number} lightOffset In direction from @see srcRoomId through @see connector 
  */
@@ -1246,7 +1246,7 @@ export function computeViewPosition(connector, srcRoomId, lightOffset) {
  * - Compute roomId -> navNodeId mapping
  * - Verify various constraints
  * @param {Geom.TriangulationJson} navDecomp
- * @param {Geomorph.ParsedConnectorRect[]} doors
+ * @param {Geomorph.ConnectorRect[]} doors
  * @param {Geom.Poly[]} rooms
  * @returns {Nav.ZoneWithMeta}
  */

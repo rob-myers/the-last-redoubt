@@ -83,8 +83,8 @@ declare namespace Geomorph {
 
     /** Arise from holes in hull polygon and referenced in `roomGraph`. */
     rooms: P[];
-    doors: ConnectorRect<P, V, R>[];
-    windows: ConnectorRect<P, V, R>[];
+    doors: BaseConnectorRect<P, V, R>[];
+    windows: BaseConnectorRect<P, V, R>[];
     labels: LayoutLabel[];
     /** The navigable area including doorways. */
     navPoly: P[];
@@ -155,7 +155,7 @@ declare namespace Geomorph {
   export interface GeomorphData extends Geomorph.ParsedLayout {
 
     roomsWithDoors: Poly[];
-    hullDoors: ConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
+    hullDoors: BaseConnectorRect<Poly, Geom.Vect, Geom.Rect>[];
     hullOutline: Poly;
     /** Bounds in world coordinates */
     pngRect: Geom.Rect;
@@ -521,7 +521,7 @@ declare namespace Geomorph {
     | 'window--007--0x2.4'
   );
 
-  export interface ConnectorRect<P, V, R> extends Geom.AngledRect<R> {
+  export interface BaseConnectorRect<P, V, R> extends Geom.AngledRect<R> {
     poly: P;
     /** `poly.rect` i.e. rotated rectangle */
     rect: R;
@@ -549,8 +549,8 @@ declare namespace Geomorph {
     navGroupId: number;
   }
 
-  type ParsedConnectorRect = ConnectorRect<Geom.Poly, Geom.Vect, Geom.Rect>;
-  type ConnectorRectJson = ConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
+  type ConnectorRect = BaseConnectorRect<Geom.Poly, Geom.Vect, Geom.Rect>;
+  type ConnectorRectJson = BaseConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
 
   /**
    * Polygon cast by light going through `doorId` (or `windowId`) into adjacent room.

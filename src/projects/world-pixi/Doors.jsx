@@ -1,6 +1,6 @@
 import React from "react";
 import { Subject } from "rxjs";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, BLEND_MODES } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { defaultDoorCloseMs, gmScale } from "../world/const"; // 🚧
@@ -20,19 +20,20 @@ export default function Doors(props) {
   
   const state = useStateRef(/** @type {() => State} */ () => ({
     events: new Subject,
-    gfx: new Graphics,
+    gfx: gms.map(_ => new Graphics),
     ready: true,
     tex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
     })),
 
-    lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ ({ meta, normal }, doorId) => {
+    lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ (door, doorId) => {
       const isHullDoor = gm.isHullDoor(doorId);
       const hullSealed = isHullDoor ? gmGraph.getDoorNodeById(gmId, doorId)?.sealed : null;
-      const sealed = hullSealed || !!meta.sealed;
+      const sealed = hullSealed || !!door.meta.sealed;
       return {
-        angled: normal.x !== 0 && normal.y !== 0,
+        door,
+        angled: door.normal.x !== 0 && door.normal.y !== 0,
         closeTimeoutId: undefined,
         doorId,
         hull: isHullDoor,
@@ -50,6 +51,18 @@ export default function Doors(props) {
       
       // 🚧 cancel other hull door too
     },
+    drawDoor(gmId, doorId) {
+      const { open, door } = state.lookup[gmId][doorId];
+      const gfx = state.gfx[gmId].clear();
+      gfx.blendMode = BLEND_MODES.DST_ATOP; // Discard extant pixels
+      gfx.lineStyle({ width: 1, color: 0x000000 });
+      gfx.beginFill(0xaaaaaa);
+      gfx.fill.alpha = gfx.line.alpha = open ? 0.2 : 1;
+      gfx.drawPolygon(door.poly.outline);
+      gfx.endFill();
+      api.renderInto(gfx, state.tex[gmId], false);
+      gfx.blendMode = BLEND_MODES.NORMAL;
+    },
     getOpenIds(gmId) {
       return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
     },
@@ -59,9 +72,11 @@ export default function Doors(props) {
     initTex(gmId) {
       const gm = gms[gmId];
       const lookup = state.lookup[gmId];
-
-      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+      
+      // Transform once and for all
+      const gfx = state.gfx[gmId].clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gfx.lineStyle({ width: 1, color: 0x000000 });
+
       gm.doors.forEach(({ poly }, doorId) => {// 🚧
         gfx.beginFill(0xaaaaaa);
         gfx.fill.alpha = gfx.line.alpha = lookup[doorId].open ? 0.2 : 1;
@@ -246,10 +261,11 @@ export default function Doors(props) {
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {DoorState[][]} lookup
  * @property {boolean} ready
- * @property {import('@pixi/graphics').Graphics} gfx Reused
+ * @property {import('@pixi/graphics').Graphics[]} gfx Reused
  * @property {import('@pixi/core').RenderTexture[]} tex
  * 
  * @property {(item: DoorState) => void} cancelClose
+ * @property {(gmId: number, doorId: number) => void} drawDoor
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(gmId: number) => void} initTex
@@ -273,6 +289,7 @@ export default function Doors(props) {
 /**
  * This is distinct from `gm.doors.meta`.
  * @typedef DoorState
+ * @property {Geomorph.ConnectorRect} door
  * @property {number} [closeTimeoutId]
  * @property {boolean} angled
  * @property {number} doorId

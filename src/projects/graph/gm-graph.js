@@ -82,7 +82,7 @@ export class gmGraphClass extends BaseGraph {
   /**
    * TODO 🚧 verify
    * Assume `transform` is non-singular and [±1, ±1, ±1, ±1, x, y]
-   * @param {Geomorph.ConnectorRect<Poly, Vect, Rect>} hullDoor
+   * @param {Geomorph.BaseConnectorRect<Poly, Vect, Rect>} hullDoor
    * @param {number} hullDoorId
    * @param {[number, number, number, number, number, number]} transform
    * @param {Geomorph.GeomorphKey} gmKey
@@ -274,6 +274,17 @@ export class gmGraphClass extends BaseGraph {
       otherDoorId: doorId,
       poly,
     };
+  }
+
+  /**
+   * 🚧 new approach to FOV i.e. union of roomsWithDoors[*]
+   * 🚧 try to compute this using `computeViewDoorAreas`
+   * @param {Geomorph.GmRoomId} rootGmRoomId 
+   * @param {number[]} rootOpenIds open doors in root room
+   * @returns {Geomorph.GmRoomId[]}
+   */
+  computeViewableGmRoomIds(rootGmRoomId, rootOpenIds) {
+    return [];
   }
 
   /**
