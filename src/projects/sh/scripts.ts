@@ -149,7 +149,11 @@ world: `{
           api.parseFnOrStr(args[0]),
           args.slice(1).map(x => x === "-" ? datum : api.parseJsArg(x)),
         );
-        yield func(world, ctxt);
+        try {
+          yield func(world, ctxt);
+        } catch (e) {
+          api.info(\`\${e}\`);
+        }
       }
     }
   }' "$@"
