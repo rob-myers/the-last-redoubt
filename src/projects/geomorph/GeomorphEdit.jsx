@@ -250,18 +250,6 @@ function Geomorph({ layoutKey, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
-          {data.gm.lightThrus.map(({ key, lightId, doorId, rect }, i) =>
-            <div
-              // Saw two light rects with same key -- shouldn't happen?
-              // key={key}
-              key={i}
-              className="light-rect"
-              data-key="light-rect"
-              data-light-id={lightId}
-              data-door-id={doorId}
-              style={{ left: rect.x, top: rect.y, width: rect.width, height: rect.height }}
-            />
-          )}
         </div>
       </foreignObject>
 
@@ -276,6 +264,16 @@ function Geomorph({ layoutKey, transform, disabled }) {
         fill="#0000ff99"
         stroke="blue"
       />
+
+      {data.gm.lightThrus.map(({ poly }, i) =>
+        <path
+          key={i}
+          d={poly.svgPath}
+          stroke="blue"
+          fill="none"
+          strokeDasharray="2 2"
+        />
+      )}
 
       <image className="debug" href={data.gm.items[0].pngHref} x={data.gm.pngRect.x} y={data.gm.pngRect.y}/>
 

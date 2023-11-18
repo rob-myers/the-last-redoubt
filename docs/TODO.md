@@ -18,7 +18,7 @@
 
 - ✅ all lightRects have poly (needed by diagonal doors)
 - ✅ fix lights in diagonal doors
-- this relaxes the constraint, so update GeomorphEdit
+- ✅ this relaxes the constraint, so update GeomorphEdit
 - check can turn off room light
 - fix error swallowing of useQueries e.g. by upgrading react-query
 - draw decor
