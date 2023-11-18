@@ -8,8 +8,8 @@
     - ℹ️ trigger via `click | world doors.onRawDoorClick`
     - ✅ can initially draw closed or open door
     - ✅ draw into RenderTexture on `{opened,closed}-door`
+    - ✅ fix lights when door is initially open
     - 🚧 draw delta into RenderTexture
-    - 🚧 fix lights when door is initially open
     - ❌ use PIXI.ParticleContainer
       - opening/closing doors are children
       - animate via alpha only (fade out/in)

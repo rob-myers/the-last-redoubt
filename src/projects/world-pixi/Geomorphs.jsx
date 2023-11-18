@@ -109,9 +109,10 @@ export default function Geomorphs(props) {
       gfx.beginTextureFill({ texture: state.lit[gmId] });
       gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
       gfx.endFill();
-      // draw all unlit rects
+      // draw unlit rects when light blocked by some door
+      const lookup = api.doors.lookup[gmId];
       gm.doorToLightRect.forEach(x => {
-        if (x) {
+        if (x && !(lookup[x.doorId].open && x.preConnectors.every(y => lookup[y.id].open))) {
           gfx.beginTextureFill({ texture: state.unlit[gmId] });
           gfx.drawRect(gmScale * (x.rect.x - gms[gmId].pngRect.x), gmScale * (x.rect.y - gms[gmId].pngRect.y), gmScale * x.rect.width, gmScale * x.rect.height);
           gfx.endFill();
