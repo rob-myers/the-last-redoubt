@@ -247,7 +247,7 @@ source /etc/util-1
 source /etc/game-1
 
 awaitWorld
-click | world doors.onRawDoorClick # temp
+click | world doors.onRawDoorClick & # temp
 
 # spawn ${npcKey} '{"x":210,"y":390}'
 # npc set-player ${npcKey}
