@@ -112,6 +112,7 @@ export default function PanZoom(props) {
     <Viewport
       ref={state.viewportRef}
       initScale={0.5}
+      eventMode="static"
       pointerdown={state.pointerdown}
       pointermove={state.pointermove}
       pointerup={state.pointerup}

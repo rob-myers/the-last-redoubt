@@ -12,7 +12,7 @@ export default function GmSprites(props) {
         key={gmId}
         {...gm.pixiTransform}
         filters={props.filters ?? []}
-        interactive={false}
+        eventMode="auto"
         width={gm.pngRect.width}
         height={gm.pngRect.height}
         texture={props.tex[gmId]}

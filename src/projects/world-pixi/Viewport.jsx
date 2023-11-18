@@ -39,11 +39,14 @@ const PixiComponentViewport = PixiComponent("Viewport", {
   },
 });
 
-/** @type {ReturnType<typeof forwardRef<PixiViewport, ViewportProps & import("@pixi/react").InteractionEvents>>} */
-export const Viewport = forwardRef(/** @param {ViewportProps} props */ function Viewport(props, ref) {
-  const app = useApp();
-  return <PixiComponentViewport ref={ref} app={app} {...props} />;
-});
+/** @type {ReturnType<typeof forwardRef<PixiViewport, ViewportProps & PickedContainerProps>>} */
+export const Viewport = forwardRef(
+  /** @param {ViewportProps} props */
+  function Viewport(props, ref) {
+    const app = useApp();
+    return <PixiComponentViewport ref={ref} app={app} {...props} />;
+  },
+);
 
 export default Viewport;
 
@@ -55,4 +58,10 @@ export default Viewport;
 
 /**
  * @typedef {ViewportProps & { app: import("pixi.js").Application  }} PixiComponentViewportProps
+ */
+
+/**
+ * @typedef {import("@pixi/react").InteractionEvents &
+ *  Partial<Pick<import("@pixi/display").Container, 'eventMode'>>
+ * } PickedContainerProps
  */
