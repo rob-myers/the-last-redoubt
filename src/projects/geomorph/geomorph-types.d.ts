@@ -95,10 +95,9 @@ declare namespace Geomorph {
     /** Sources of lights rendered inside PNG  */
     lightSrcs: { position: V; roomId: number; distance?: number; }[];
     /**
-     * Rects which need to overwritten when light source not visible.
-     * We'll reorganise these by door/window id.
+     * Polygons cast by light going through `doorId` (or `windowId`) into adjacent room.
      */
-    lightRects: BaseLightConnectorRect<R>[];
+    lightThrus: BaseLightThruConnector<R, P>[];
     /** Pointers into `groups.singles`. */
     floorHighlightIds: number[];
 
@@ -164,8 +163,8 @@ declare namespace Geomorph {
     //#region aligned to doors
     
     /** At most one light rect, viewing light as going outwards through door. */
-    doorToLightRect: (Geomorph.LightConnectorRect | undefined)[];
-    windowToLightRect: (Geomorph.LightConnectorRect | undefined)[];
+    doorToLightThru: (Geomorph.LightThruConnector | undefined)[];
+    windowToLightThru: (Geomorph.LightThruConnector | undefined)[];
     //#endregion
 
     /** View position overrides, local wrt their parent geomorph. */
@@ -554,9 +553,9 @@ declare namespace Geomorph {
   type ConnectorRectJson = ConnectorRect<Geom.GeoJsonPolygon, Geom.VectJson, Geom.RectJson>;
 
   /**
-   * ℹ️ We currently don't support light going thru two windows in a row.
+   * Polygon cast by light going through `doorId` (or `windowId`) into adjacent room.
    */
-  export interface BaseLightConnectorRect<R extends Geom.RectJson> {
+  export interface BaseLightThruConnector<R extends Geom.RectJson, P> {
     /**
      * `door{doorId}@light{lightId}`
      * or `window{windowId}@light{lightId}`
@@ -569,13 +568,17 @@ declare namespace Geomorph {
     lightId: number;
     srcRoomId: number;
     rect: R;
+    poly: P;
     /** Ids of prior connectors i.e. closer to light source (earlier index closer)  */
     preConnectors: { type: 'door' | 'window'; id: number }[];
     /** Ids of later connectors i.e. further from light source (earlier index closer)  */
     postConnectors: { type: 'door' | 'window'; id: number }[];
   }
 
-  export type LightConnectorRect = BaseLightConnectorRect<Geom.Rect>;
+  /**
+   * Polygon cast by light going through `doorId` (or `windowId`) into adjacent room.
+   */
+  export type LightThruConnector = BaseLightThruConnector<Geom.Rect, Geom.Poly>;
 
   /**
    * Fast geometric lookup via well-chosen grid dimension.

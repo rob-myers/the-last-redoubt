@@ -19,6 +19,7 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
   
+  // 🚧 this is swallowing errors
   useQueries(gms.map((gm, gmId) => ({
     queryKey: `${gm.key}.${gmId}`, // gmId for dups
     queryFn: async () => {
@@ -49,15 +50,25 @@ export default function Geomorphs(props) {
 
     drawPolygonImage(type, gmId, poly) {
       const gfx = state.gfx;
+      const gm = gms[gmId];
+      // Alternatively:
+      // - setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale),
+      // - beginTextureFill uses inverse matrix
       gfx.beginTextureFill({ texture: state[type][gmId] });
-      gfx.drawPolygon(poly.outline);
+      gfx.drawPolygon(poly.outline.map(p => ({
+        x: gmScale * (p.x - gm.pngRect.x),
+        y: gmScale * (p.y - gm.pngRect.y),
+      })));
       gfx.endFill();
     },
     drawRectImage(type, gmId, rect) {
       const gfx = state.gfx;
       gfx.beginTextureFill({ texture: state[type][gmId] });
       gfx.drawRect(// Src/target canvas are scaled by `gmScale`
-        gmScale * (rect.x - gms[gmId].pngRect.x), gmScale * (rect.y - gms[gmId].pngRect.y), gmScale * rect.width, gmScale * rect.height,
+        gmScale * (rect.x - gms[gmId].pngRect.x),
+        gmScale * (rect.y - gms[gmId].pngRect.y),
+        gmScale * rect.width,
+        gmScale * rect.height,
       );
       gfx.endFill();
     },
@@ -108,51 +119,43 @@ export default function Geomorphs(props) {
     },
     initTex(gmId) {
       // draw from image -> image with identity transform
+      // ℹ️ cannot setTransform multiple times when rendering Graphics to RenderTexture
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
-      // draw lit
       gfx.beginTextureFill({ texture: state.lit[gmId] });
       gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
       gfx.endFill();
-      // draw unlit rects when light blocked by some door
+
+      // draw unlit polys when light blocked by some door
       const lookup = api.doors.lookup[gmId];
-      gm.doorToLightRect.forEach(x => {
-        if (x && !(lookup[x.doorId].open && x.preConnectors.every(y => lookup[y.id].open))) {
-          gfx.beginTextureFill({ texture: state.unlit[gmId] });
-          gfx.drawRect(gmScale * (x.rect.x - gms[gmId].pngRect.x), gmScale * (x.rect.y - gms[gmId].pngRect.y), gmScale * x.rect.width, gmScale * x.rect.height);
-          gfx.endFill();
+      gm.lightThrus.forEach(x => {
+        if (x.windowId === -1 && !(lookup[x.doorId].open && x.preConnectors.every(y => lookup[y.id].open))) {
+          // state.drawRectImage('unlit', gmId, x.rect);
+          state.drawPolygonImage('unlit', gmId, x.poly);
         }
       });
       api.renderInto(gfx, state.tex[gmId]);
     },
-    onCloseDoor(gmId, doorId, lightIsOn = true) {
+    onCloseDoor(gmId, doorId) {
       const gm = gms[gmId];
-      const meta = gm.doorToLightRect[doorId];
+      const meta = gm.doorToLightThru[doorId];
       if (!meta) {
         return;
       }
-      // 🚧 fix diagonal doors directly i.e. draw light polygons
-      // if (lightIsOn && (meta.srcRoomId === api.fov.roomId)) {
-      //   /**
-      //    * Don't hide lights if current room has light (fixes diagonal doors).
-      //    * 👉 Won't work when FOV unbounded though.
-      //    */
-      //   return;
-      // }
       state.gfx.clear().setTransform();
       // Hide light by drawing partial image
-      state.drawRectImage('unlit', gmId, meta.rect);
+      state.drawPolygonImage('unlit', gmId, meta.poly);
       meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
         // 🚧 for window should draw polygon i.e. rect without window
-        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
-        state.drawRectImage('unlit', gmId, rect);
+        const { rect, poly } = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
+        state.drawPolygonImage('unlit', gmId, poly);
       });
       api.renderInto(state.gfx, state.tex[gmId], false);
     },
     onOpenDoor(gmId, doorId) {
       const gm = gms[gmId];
       const doors = api.doors.lookup[gmId];
-      const meta = gm.doorToLightRect[doorId];
+      const meta = gm.doorToLightThru[doorId];
       if (!meta
         // all prior connectors must be windows or open doors
         || !meta.preConnectors.every(({ type, id }) => type === 'window' || doors[id].open)
@@ -165,7 +168,7 @@ export default function Geomorphs(props) {
       state.drawRectImage('lit', gmId, meta.rect);
       meta.postConnectors.forEach(({ type, id }) => {
         // Show light through doors, and possibly windows
-        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
+        const {rect} = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
         state.drawRectImage('lit', gmId, rect);
         // Show light in doorway/window
         const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
@@ -206,7 +209,7 @@ export default function Geomorphs(props) {
       state.gfx.clear().setTransform();
       const doors = gm.roomGraph.getAdjacentDoors(roomId).map(x => api.doors.lookup[gmId][x.doorId]);
       const windowLightRects = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
-        x => gm.windowToLightRect[x.windowId] ?? [],
+        x => gm.windowToLightThru[x.windowId] ?? [],
       );
 
       if (nextLit) {
@@ -216,7 +219,7 @@ export default function Geomorphs(props) {
            * If door open AND light comes from roomId, open it to emit light thru doorway.
            * Otherwise must close door to rub out light from other rooms.
            */
-          open && (roomId === gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
+          open && (roomId === gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
         );
         windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect));
       } else {
@@ -226,7 +229,7 @@ export default function Geomorphs(props) {
            * If door open AND light not from roomId, open it to emit light thru doorway.
            * Otherwise must close door to rub out light from roomId.
            */
-          open && (roomId !== gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId, false)
+          open && (roomId !== gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
         );
         windowLightRects.forEach(({ rect, windowId }) => {
           const [poly] = Poly.cutOut([gm.windows[windowId].poly], [Poly.fromRect(rect)]);
@@ -295,11 +298,10 @@ export default function Geomorphs(props) {
  * @property {(gmId: number) => void} initHit
  * @property {(gmId: number) => void} preloadTex
  * @property {(gmId: number) => void} initTex
- * Currently assumes all doors initially closed
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {(worldPoint: Geom.VectJson)  => null | Geomorph.PointMeta} testHit
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
- * @property {(gmId: number, doorId: number, lightCurrent?: boolean) => void} onCloseDoor
+ * @property {(gmId: number, doorId: number) => void} onCloseDoor
  * @property {(gmId: number, roomId: number)  => void} recomputeLights
  * 
  * //@property {() => void} initDrawIds

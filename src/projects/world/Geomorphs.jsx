@@ -107,8 +107,8 @@ export default function Geomorphs(props) {
 
       imageService.freeCtxts(ctxt);
     },
-    initLightRects(gmId) {
-      gms[gmId].doorToLightRect.forEach(x => x && state.drawRectImage('unlit', gmId, x.rect));
+    initLightThrus(gmId) {
+      gms[gmId].doorToLightThru.forEach(x => x && state.drawRectImage('unlit', gmId, x.rect));
     },
     loadImages() {
       state.ctxts.forEach(ctxt => ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height)); // HMR
@@ -126,7 +126,7 @@ export default function Geomorphs(props) {
         state.initDrawIds(); // Draw into state.offscreen
         gms.forEach((gm, gmId) => {
           state.drawRectImage('lit', gmId, gm.pngRect);
-          state.initLightRects(gmId);
+          state.initLightThrus(gmId);
         });
       });
 
@@ -136,7 +136,7 @@ export default function Geomorphs(props) {
     },
     onCloseDoor(gmId, doorId, lightIsOn = true) {
       const gm = gms[gmId];
-      const meta = gm.doorToLightRect[doorId];
+      const meta = gm.doorToLightThru[doorId];
       if (!meta) {
         return;
       }
@@ -153,14 +153,14 @@ export default function Geomorphs(props) {
       
       meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
         // 🚧 for window should draw polygon i.e. rect without window
-        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
+        const {rect} = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
         state.drawRectImage('unlit', gmId, rect);
       });
     },
     onOpenDoor(gmId, doorId) {
       const gm = gms[gmId];
       const doors = api.doors.lookup[gmId];
-      const meta = gm.doorToLightRect[doorId];
+      const meta = gm.doorToLightThru[doorId];
       if (!meta
         // all prior connectors must be windows or open doors
         || !meta.preConnectors.every(({ type, id }) => type === 'window' || doors[id].open)
@@ -172,7 +172,7 @@ export default function Geomorphs(props) {
       state.drawRectImage('lit', gmId, meta.rect);
       meta.postConnectors.forEach(({ type, id }) => {
         // Show light through doors, and possibly windows
-        const {rect} = assertDefined(type === 'door' ? gm.doorToLightRect[id] : gm.windowToLightRect[id]);
+        const {rect} = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
         state.drawRectImage('lit', gmId, rect);
         // Show light in doorway/window
         const connectorRect = (type === 'door' ? gm.doors[id] : gm.windows[id]).rect.clone().precision(0);
@@ -211,7 +211,7 @@ export default function Geomorphs(props) {
       
       const doors = gm.roomGraph.getAdjacentDoors(roomId).map(x => api.doors.lookup[gmId][x.doorId]);
       const windowLightRects = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
-        x => gm.windowToLightRect[x.windowId] ?? [],
+        x => gm.windowToLightThru[x.windowId] ?? [],
       );
 
       if (nextLit) {
@@ -221,7 +221,7 @@ export default function Geomorphs(props) {
            * If door open AND light comes from roomId, open it to emit light thru doorway.
            * Otherwise must close door to rub out light from other rooms.
            */
-          open && (roomId === gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
+          open && (roomId === gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
         );
         windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect));
       } else {
@@ -231,7 +231,7 @@ export default function Geomorphs(props) {
            * If door open AND light not from roomId, open it to emit light thru doorway.
            * Otherwise must close door to rub out light from roomId.
            */
-          open && (roomId !== gm.doorToLightRect[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId, false)
+          open && (roomId !== gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId, false)
         );
         windowLightRects.forEach(({ rect, windowId }) => {
           const [poly] = Poly.cutOut([gm.windows[windowId].poly], [Poly.fromRect(rect)]);
@@ -278,7 +278,7 @@ export default function Geomorphs(props) {
  * Fill polygon using unlit image, and also darken.
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {() => void} initDrawIds
- * @property {(gmId: number) => void} initLightRects
+ * @property {(gmId: number) => void} initLightThrus
  * Currently assumes all doors initially closed
  * @property {() => () => void} loadImages Returns cleanup
  * @property {(gmId: number, doorId: number) => void} onOpenDoor

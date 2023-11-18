@@ -185,185 +185,6 @@
         "preTransform": [1, 0, 0, 1, 932, 510],
         "transform": [1, 0, 0, 1, 932, 510]
       },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [0, -1, 1, 0, 0, 360],
-        "transform": [0, -1, 1, 0, 0, 360]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [-1, 0, 0, -1, 360.00006099999996, 599.9998780000001],
-        "transform": [-1, 0, 0, -1, 360.00006099999996, 599.9998780000001]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [0, 1, -1, 0, 1200, 240],
-        "transform": [0, 1, -1, 0, 1200, 240]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [-1, 0, 0, -1, 960, 600],
-        "transform": [-1, 0, 0, -1, 960, 600]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 10, 242],
-        "transform": [1, 0, 0, 1, 10, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 36, 242],
-        "transform": [1, 0, 0, 1, 36, 242]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 302, 242],
-        "transform": [1, 0, 0, 1, 302, 242]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 182, 242],
-        "transform": [1, 0, 0, 1, 182, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 862, 242],
-        "transform": [1, 0, 0, 1, 862, 242]
-      },
-      {
-        "id": "extra--table--003--0.1x0.1",
-        "preTransform": [1, 0, 0, 1, 888, 242],
-        "transform": [1, 0, 0, 1, 888, 242]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 960, 242],
-        "transform": [1, 0, 0, 1, 960, 242]
-      },
-      {
-        "id": "extra--table--003--0.1x0.1",
-        "preTransform": [1, 0, 0, 1, 1138, 242],
-        "transform": [1, 0, 0, 1, 1138, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [
-          0.000007,
-          1,
-          -1,
-          0.000007,
-          1150.0001539999998,
-          256.00016800000003
-        ],
-        "transform": [
-          0.000007,
-          1,
-          -1,
-          0.000007,
-          1150.0001539999998,
-          256.00016800000003
-        ]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 1070, 346],
-        "transform": [1, 0, 0, 1, 1070, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 1140, 346],
-        "transform": [1, 0, 0, 1, 1140, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 120, 346],
-        "transform": [1, 0, 0, 1, 120, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 360],
-        "transform": [0, 1, -1, 0, 254, 360]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 420],
-        "transform": [0, 1, -1, 0, 254, 420]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 540],
-        "transform": [0, 1, -1, 0, 254, 540]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 566],
-        "transform": [0, 1, -1, 0, 254, 566]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 360],
-        "transform": [0, 1, -1, 0, 356, 360]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 386],
-        "transform": [0, 1, -1, 0, 356, 386]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 422],
-        "transform": [0, 1, -1, 0, 356, 422]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 482],
-        "transform": [0, 1, -1, 0, 356, 482]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 360],
-        "transform": [0, 1, -1, 0, 856, 360]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 386],
-        "transform": [0, 1, -1, 0, 856, 386]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 422],
-        "transform": [0, 1, -1, 0, 856, 422]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 484],
-        "transform": [0, 1, -1, 0, 856, 484]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 510],
-        "transform": [0, 1, -1, 0, 856, 510]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 546],
-        "transform": [0, 1, -1, 0, 856, 546]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 956, 422],
-        "transform": [0, 1, -1, 0, 956, 422]
-      },
-      {
-        "id": "extra--table--002--0.4x0.4",
-        "preTransform": [1, 0, 0, 1, 932, 484],
-        "transform": [1, 0, 0, 1, 932, 484]
-      },
-      {
-        "id": "extra--table--002--0.4x0.4",
-        "preTransform": [1, 0, 0, 1, 932, 510],
-        "transform": [1, 0, 0, 1, 932, 510]
-      },
       {"id": "stateroom--036--2x4", "transform": [1, 0, 0, 1, 0, 0]},
       {
         "at": "👉",
@@ -14908,13 +14729,28 @@
     {"position": {"x": 810, "y": 308}, "roomId": 18, "distance": 200},
     {"position": {"x": 230, "y": 475}, "roomId": 10, "distance": 60}
   ],
-  "lightRects": [
+  "lightThrus": [
     {
       "key": "door28@light0",
       "doorId": 28,
       "windowId": -1,
       "lightId": 0,
       "rect": {"x": 188, "y": 242, "width": 119, "height": 116},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [188.086, 358],
+            [219.58, 242],
+            [248.00589668615984, 242],
+            [270, 251.79],
+            [303.83, 276.37],
+            [306.75, 279.62],
+            [233.12211820150299, 358],
+            [188.086, 358]
+          ]
+        ]
+      },
       "srcRoomId": 9,
       "preConnectors": [],
       "postConnectors": []
@@ -14925,6 +14761,18 @@
       "windowId": -1,
       "lightId": 1,
       "rect": {"x": 69, "y": 346, "width": 25, "height": 12},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [69.13844252163165, 358],
+            [75.65, 345.82],
+            [80, 347.76],
+            [94.0978604651163, 358],
+            [69.13844252163165, 358]
+          ]
+        ]
+      },
       "srcRoomId": 3,
       "preConnectors": [],
       "postConnectors": []
@@ -14935,6 +14783,23 @@
       "windowId": -1,
       "lightId": 2,
       "rect": {"x": 482, "y": 306, "width": 118, "height": 55},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [482, 307],
+            [599.75, 305.62],
+            [600, 308],
+            [595.63, 349.58],
+            [592.1139314194578, 360.4],
+            [547.2082164821647, 360.4],
+            [541.56, 358.4],
+            [491.8713579758845, 358.4],
+            [482, 353],
+            [482, 307]
+          ]
+        ]
+      },
       "srcRoomId": 12,
       "preConnectors": [],
       "postConnectors": [{"type": "door", "id": 19}]
@@ -14945,6 +14810,22 @@
       "windowId": -1,
       "lightId": 2,
       "rect": {"x": 500, "y": 363, "width": 85, "height": 41},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [499.54908084601703, 362.6],
+            [533, 362.6],
+            [540, 365.48699029126215],
+            [540, 372.8],
+            [557.7316384180791, 372.8],
+            [584.5, 383.84],
+            [582.71, 389.35],
+            [574.48, 403.59],
+            [499.54908084601703, 362.6]
+          ]
+        ]
+      },
       "srcRoomId": 12,
       "preConnectors": [{"type": "door", "id": 16}],
       "postConnectors": []
@@ -14955,6 +14836,22 @@
       "windowId": 1,
       "lightId": 2,
       "rect": {"x": 500, "y": 363, "width": 85, "height": 41},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [499.54908084601703, 362.6],
+            [533, 362.6],
+            [540, 365.48699029126215],
+            [540, 372.8],
+            [557.7316384180791, 372.8],
+            [584.5, 383.84],
+            [582.71, 389.35],
+            [574.48, 403.59],
+            [499.54908084601703, 362.6]
+          ]
+        ]
+      },
       "srcRoomId": 12,
       "preConnectors": [{"type": "door", "id": 16}],
       "postConnectors": []
@@ -14965,6 +14862,25 @@
       "windowId": -1,
       "lightId": 3,
       "rect": {"x": 482, "y": 408, "width": 148, "height": 129},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [482, 426],
+            [627.68, 407.96],
+            [630, 430],
+            [626.07, 467.42],
+            [614.44, 503.21],
+            [595.62, 535.8],
+            [594.7829589041096, 536.7366888454012],
+            [541.4, 530.2],
+            [541.1, 530.07],
+            [519.4, 520.9],
+            [482, 472],
+            [482, 426]
+          ]
+        ]
+      },
       "srcRoomId": 14,
       "preConnectors": [],
       "postConnectors": []
@@ -14975,6 +14891,65 @@
       "windowId": -1,
       "lightId": 4,
       "rect": {"x": 648, "y": 69, "width": 153, "height": 140},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [647.9205407375216, 68.52395917357299],
+            [659.9076, 70.8631],
+            [693.1976021567998, 83.34602719611999],
+            [699.18, 85.59],
+            [699.2204668103188, 85.60445243225672],
+            [699.3166, 85.6405],
+            [699.3599140333054, 85.66456248203406],
+            [699.45, 85.72],
+            [714.4625443839274, 94.05460939631007],
+            [734.7282, 105.3129],
+            [756.4093727801749, 123.38056829523215],
+            [764.35, 130],
+            [764.45, 130.09],
+            [764.56, 130.17],
+            [769.39, 134.04],
+            [769.4559634074215, 134.0879733872156],
+            [769.5006, 134.1237],
+            [769.5428206322804, 134.15746805324528],
+            [769.58, 134.19],
+            [769.6010007518795, 134.204000501253],
+            [769.8157845000003, 134.3757845000003],
+            [769.82, 134.38],
+            [770.09, 134.6],
+            [770.157533375156, 134.64911518193165],
+            [770.1999, 134.683],
+            [772.0385339587251, 136.15334596622967],
+            [772.12, 136.22],
+            [772.1376335673256, 136.23259540523253],
+            [772.2967, 136.3598],
+            [772.2981153846154, 136.35838461538464],
+            [772.3, 136.36],
+            [776.33, 132.86],
+            [778.5, 135.1],
+            [778.6, 135.2],
+            [778.69, 135.31],
+            [792.02, 151.59],
+            [792.11, 151.7],
+            [792.21, 151.82],
+            [792.2685714285401, 151.8914285713903],
+            [798.8651428571433, 159.9468571428576],
+            [798.95, 160.06],
+            [799.06, 160.19],
+            [799.1028571428577, 160.23714285714357],
+            [799.2217142857144, 160.3822857142858],
+            [799.25, 160.42],
+            [799.2643478260869, 160.43434782608696],
+            [799.4, 160.6],
+            [799.8232558139764, 161.2930232558514],
+            [801.12, 163.42],
+            [713, 208.22],
+            [667, 208.22],
+            [647.9205407375216, 68.52395917357299]
+          ]
+        ]
+      },
       "srcRoomId": 17,
       "preConnectors": [],
       "postConnectors": []
@@ -14985,6 +14960,24 @@
       "windowId": -1,
       "lightId": 5,
       "rect": {"x": 882, "y": 282, "width": 120, "height": 120},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [882.33, 375.83],
+            [888.1, 358.06],
+            [902.74, 332.71],
+            [922.32, 310.96],
+            [946, 293.76],
+            [971.55, 282.38],
+            [1002.46, 374.49],
+            [1002.4631113662457, 374.4931113662457],
+            [974.1921848506258, 402.7918727291078],
+            [974.19, 402.79],
+            [882.33, 375.83]
+          ]
+        ]
+      },
       "srcRoomId": 23,
       "preConnectors": [],
       "postConnectors": []
@@ -14995,6 +14988,19 @@
       "windowId": -1,
       "lightId": 6,
       "rect": {"x": 1082, "y": 6, "width": 77, "height": 52},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1082, 6],
+            [1159.12, 6],
+            [1132, 58],
+            [1088, 58],
+            [1082, 46.42],
+            [1082, 6]
+          ]
+        ]
+      },
       "srcRoomId": 25,
       "preConnectors": [],
       "postConnectors": []
@@ -15005,6 +15011,18 @@
       "windowId": -1,
       "lightId": 6,
       "rect": {"x": 1070, "y": 242, "width": 83, "height": 116},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1070.29, 358],
+            [1088, 242],
+            [1134, 242],
+            [1153.61, 358],
+            [1070.29, 358]
+          ]
+        ]
+      },
       "srcRoomId": 25,
       "preConnectors": [],
       "postConnectors": []
@@ -15015,6 +15033,19 @@
       "windowId": -1,
       "lightId": 7,
       "rect": {"x": 6, "y": 482, "width": 52, "height": 62},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [6, 482],
+            [32.91, 482],
+            [58, 487.9035294117647],
+            [58, 532.0972390765121],
+            [6, 544.43],
+            [6, 482]
+          ]
+        ]
+      },
       "srcRoomId": 6,
       "preConnectors": [],
       "postConnectors": []
@@ -15025,6 +15056,36 @@
       "windowId": -1,
       "lightId": 7,
       "rect": {"x": 242, "y": 461, "width": 115, "height": 103},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [242, 487.92369273645704],
+            [356.5, 460.62],
+            [356.5, 460.67],
+            [356.50502079931135, 460.75535358829336],
+            [356.51, 468.25374677004316],
+            [356.51, 475.1],
+            [356.5151867788527, 476.06474086660893],
+            [356.52, 483.31317829461227],
+            [356.52, 487.47],
+            [356.5249607442858, 490.7837771829417],
+            [356.53, 498.3726098191527],
+            [356.53, 505.74],
+            [356.534961395437, 505.84418930417735],
+            [356.54, 513.4320413437852],
+            [356.54, 520.87],
+            [356.5454814077088, 521.6867297486071],
+            [356.55, 528.4914728682969],
+            [356.55, 535.88],
+            [356.55497562961887, 535.9844882219967],
+            [356.56497579099437, 551.0441627688439],
+            [356.57, 563.67],
+            [242, 534],
+            [242, 487.92369273645704]
+          ]
+        ]
+      },
       "srcRoomId": 6,
       "preConnectors": [],
       "postConnectors": []
@@ -15035,6 +15096,19 @@
       "windowId": -1,
       "lightId": 8,
       "rect": {"x": 675, "y": 435, "width": 43, "height": 89},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [674.8, 523.52],
+            [718, 434.6410126582279],
+            [718, 472],
+            [710.8800812301745, 508.2695862052767],
+            [701.7844338359394, 512.114439689632],
+            [674.8, 523.52]
+          ]
+        ]
+      },
       "srcRoomId": 19,
       "preConnectors": [],
       "postConnectors": []
@@ -15045,6 +15119,12 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 33, "y": 6, "width": 81, "height": 52},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [[32.94, 6], [113.56, 6], [112, 58], [68, 58], [32.94, 6]]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -15055,6 +15135,20 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 42, "y": 242, "width": 71, "height": 77},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [42.47, 307.66],
+            [66, 242],
+            [112, 242],
+            [113.19, 318.9],
+            [89.09, 318.9],
+            [48.2, 310.21],
+            [42.47, 307.66]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -15065,6 +15159,19 @@
       "windowId": -1,
       "lightId": 11,
       "rect": {"x": 144, "y": 242, "width": 29, "height": 11},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [143.86181078331637, 242],
+            [173.24213663764232, 242],
+            [170.98, 252.93],
+            [162.28, 251.08],
+            [147, 244.28],
+            [143.86181078331637, 242]
+          ]
+        ]
+      },
       "srcRoomId": 8,
       "preConnectors": [],
       "postConnectors": []
@@ -15075,6 +15182,49 @@
       "windowId": -1,
       "lightId": 13,
       "rect": {"x": 315, "y": 240, "width": 43, "height": 78},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [315, 271],
+            [316.31, 258.53],
+            [320.19, 246.6],
+            [323.7887935560093, 240.3620911695839],
+            [323.9978921482493, 240.36],
+            [324.44, 240.36],
+            [328.21159786696575, 240.3178592417099],
+            [329.9973651853133, 240.3],
+            [330, 240.3],
+            [330.0048944554641, 240.29992470068518],
+            [331.55465640365156, 240.28442571997192],
+            [332.13, 240.28],
+            [332.31, 240.28],
+            [336.21, 240.24],
+            [336.37, 240.24],
+            [336.8450279905112, 240.2315173573123],
+            [336.99675039522435, 240.23],
+            [337.24, 240.23],
+            [337.5373631092959, 240.2245933980128],
+            [342.9163942998659, 240.170798361442],
+            [345.02, 240.15],
+            [345.42, 240.15],
+            [345.53270869051846, 240.14463291949912],
+            [347.7477253340875, 240.12248080750643],
+            [348.1, 240.12],
+            [348.21, 240.12],
+            [353.04, 240.07],
+            [353.09, 240.07],
+            [358, 246.94399999999996],
+            [358, 293],
+            [338.47, 318.22],
+            [334.85, 315.59],
+            [326.46, 306.27],
+            [320.19, 295.4],
+            [316.31, 283.47],
+            [315, 271]
+          ]
+        ]
+      },
       "srcRoomId": 11,
       "preConnectors": [],
       "postConnectors": []
@@ -15085,6 +15235,19 @@
       "windowId": -1,
       "lightId": 14,
       "rect": {"x": 488, "y": 212, "width": 51, "height": 26},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [487.580450629556, 212.02],
+            [533, 212.02],
+            [538.2, 213.87],
+            [538.2, 238.4],
+            [491.61, 238.4],
+            [487.580450629556, 212.02]
+          ]
+        ]
+      },
       "srcRoomId": 13,
       "preConnectors": [],
       "postConnectors": []
@@ -15095,6 +15258,21 @@
       "windowId": -1,
       "lightId": 15,
       "rect": {"x": 610, "y": 306, "width": 108, "height": 55},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [610, 308],
+            [610.22, 305.9],
+            [718, 307],
+            [718, 345.99915310898155],
+            [683.0721081081083, 360.4],
+            [617.8868134414832, 360.4],
+            [614.37, 349.58],
+            [610, 308]
+          ]
+        ]
+      },
       "srcRoomId": 18,
       "preConnectors": [],
       "postConnectors": []
@@ -15105,6 +15283,17 @@
       "windowId": 1,
       "lightId": 15,
       "rect": {"x": 622, "y": 373, "width": 31, "height": 11},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [621.9171726535342, 372.8],
+            [652.9970810810811, 372.8],
+            [625.59, 384.1],
+            [621.9171726535342, 372.8]
+          ]
+        ]
+      },
       "srcRoomId": 18,
       "preConnectors": [{"type": "door", "id": 15}],
       "postConnectors": []
@@ -15115,6 +15304,19 @@
       "windowId": -1,
       "lightId": 16,
       "rect": {"x": 211, "y": 415, "width": 22, "height": 3},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [211.32517647058825, 418],
+            [211.46, 417.94],
+            [223.73, 415.33],
+            [233.14, 415.33],
+            [233, 418],
+            [211.32517647058825, 418]
+          ]
+        ]
+      },
       "srcRoomId": 10,
       "preConnectors": [],
       "postConnectors": []
@@ -15788,6 +15990,216 @@
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, -1, 960, 600],
       "transform": "matrix(-1,0,0,-1,960,600)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [1, 0, 0, 1, 10, 242],
+      "transform": "matrix(1,0,0,1,10,242)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [1, 0, 0, 1, 36, 242],
+      "transform": "matrix(1,0,0,1,36,242)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 302, 242],
+      "transform": "matrix(1,0,0,1,302,242)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 182, 242],
+      "transform": "matrix(1,0,0,1,182,242)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [1, 0, 0, 1, 862, 242],
+      "transform": "matrix(1,0,0,1,862,242)"
+    },
+    {
+      "key": "extra--table--003--0.1x0.1",
+      "pngHref": "/assets/symbol/extra--table--003--0.1x0.1.png",
+      "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
+      "transformArray": [1, 0, 0, 1, 888, 242],
+      "transform": "matrix(1,0,0,1,888,242)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 960, 242],
+      "transform": "matrix(1,0,0,1,960,242)"
+    },
+    {
+      "key": "extra--table--003--0.1x0.1",
+      "pngHref": "/assets/symbol/extra--table--003--0.1x0.1.png",
+      "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
+      "transformArray": [1, 0, 0, 1, 1138, 242],
+      "transform": "matrix(1,0,0,1,1138,242)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [
+        0.000007,
+        1,
+        -1,
+        0.000007,
+        1150.0001539999998,
+        256.00016800000003
+      ],
+      "transform": "matrix(0.000007,1,-1,0.000007,1150.0001539999998,256.00016800000003)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 1070, 346],
+      "transform": "matrix(1,0,0,1,1070,346)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 1140, 346],
+      "transform": "matrix(1,0,0,1,1140,346)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [1, 0, 0, 1, 120, 346],
+      "transform": "matrix(1,0,0,1,120,346)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 254, 360],
+      "transform": "matrix(0,1,-1,0,254,360)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 254, 420],
+      "transform": "matrix(0,1,-1,0,254,420)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 254, 540],
+      "transform": "matrix(0,1,-1,0,254,540)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 254, 566],
+      "transform": "matrix(0,1,-1,0,254,566)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 356, 360],
+      "transform": "matrix(0,1,-1,0,356,360)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 356, 386],
+      "transform": "matrix(0,1,-1,0,356,386)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 356, 422],
+      "transform": "matrix(0,1,-1,0,356,422)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 356, 482],
+      "transform": "matrix(0,1,-1,0,356,482)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 360],
+      "transform": "matrix(0,1,-1,0,856,360)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 386],
+      "transform": "matrix(0,1,-1,0,856,386)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 422],
+      "transform": "matrix(0,1,-1,0,856,422)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 484],
+      "transform": "matrix(0,1,-1,0,856,484)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 510],
+      "transform": "matrix(0,1,-1,0,856,510)"
+    },
+    {
+      "key": "extra--table--004--0.4x0.2",
+      "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "transformArray": [0, 1, -1, 0, 856, 546],
+      "transform": "matrix(0,1,-1,0,856,546)"
+    },
+    {
+      "key": "extra--table--001--1x0.2",
+      "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
+      "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "transformArray": [0, 1, -1, 0, 956, 422],
+      "transform": "matrix(0,1,-1,0,956,422)"
+    },
+    {
+      "key": "extra--table--002--0.4x0.4",
+      "pngHref": "/assets/symbol/extra--table--002--0.4x0.4.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
+      "transformArray": [1, 0, 0, 1, 932, 484],
+      "transform": "matrix(1,0,0,1,932,484)"
+    },
+    {
+      "key": "extra--table--002--0.4x0.4",
+      "pngHref": "/assets/symbol/extra--table--002--0.4x0.4.png",
+      "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
+      "transformArray": [1, 0, 0, 1, 932, 510],
+      "transform": "matrix(1,0,0,1,932,510)"
     },
     {
       "key": "stateroom--036--2x4",

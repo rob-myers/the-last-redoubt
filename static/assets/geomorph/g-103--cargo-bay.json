@@ -6774,13 +6774,26 @@
     {"position": {"x": 1115.221, "y": 209.08}, "roomId": 4, "distance": 200},
     {"position": {"x": 132.329, "y": 121.667}, "roomId": 1}
   ],
-  "lightRects": [
+  "lightThrus": [
     {
       "key": "door23@light0",
       "doorId": 23,
       "windowId": -1,
       "lightId": 0,
       "rect": {"x": 553, "y": 962, "width": 77, "height": 46},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [553.4003590664273, 962],
+            [592, 962],
+            [630.81, 982.77],
+            [617.02, 1006.64],
+            [615.68, 1008.13],
+            [553.4003590664273, 962]
+          ]
+        ]
+      },
       "srcRoomId": 0,
       "preConnectors": [],
       "postConnectors": []
@@ -6791,6 +6804,18 @@
       "windowId": -1,
       "lightId": 0,
       "rect": {"x": 617, "y": 962, "width": 24, "height": 9},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [616.9070294784581, 962],
+            [640.6686371636912, 962],
+            [637.93, 970.43],
+            [637.46, 971.23],
+            [616.9070294784581, 962]
+          ]
+        ]
+      },
       "srcRoomId": 0,
       "preConnectors": [],
       "postConnectors": []
@@ -6801,6 +6826,18 @@
       "windowId": -1,
       "lightId": 2,
       "rect": {"x": 1155, "y": 62, "width": 39, "height": 22},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1154.9565217391305, 62],
+            [1192, 62],
+            [1194, 62.68],
+            [1194, 84.45],
+            [1154.9565217391305, 62]
+          ]
+        ]
+      },
       "srcRoomId": 3,
       "preConnectors": [],
       "postConnectors": []
@@ -6811,6 +6848,23 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 915, "y": 111, "width": 163, "height": 202},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [915.22, 209.08],
+            [919.59, 167.5],
+            [932.51, 127.73],
+            [942.05, 111.21],
+            [1078, 188],
+            [1078, 232.04924332904977],
+            [945.79, 313.43],
+            [932.51, 290.43],
+            [919.59, 250.66],
+            [915.22, 209.08]
+          ]
+        ]
+      },
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
@@ -6821,6 +6875,20 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 1149, "y": 15, "width": 45, "height": 43},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1148.9066553263874, 58],
+            [1158.66, 14.97],
+            [1177.02, 18.87],
+            [1194, 26.43],
+            [1194, 53.68],
+            [1192, 58],
+            [1148.9066553263874, 58]
+          ]
+        ]
+      },
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
@@ -6831,6 +6899,18 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 1153, "y": 242, "width": 41, "height": 36},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1152.5481278180748, 242],
+            [1192, 242],
+            [1194, 242.95],
+            [1194, 278.45620689655175],
+            [1152.5481278180748, 242]
+          ]
+        ]
+      },
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
@@ -6841,6 +6921,22 @@
       "windowId": 0,
       "lightId": 9,
       "rect": {"x": 966, "y": 16, "width": 112, "height": 158},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [965.66, 77.92],
+            [981.39, 60.45],
+            [1015.22, 35.87],
+            [1053.42, 18.87],
+            [1066.84, 16.02],
+            [1078, 60],
+            [1075.087, 60],
+            [1075.087, 173.93433866254082],
+            [965.66, 77.92]
+          ]
+        ]
+      },
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
@@ -6851,6 +6947,18 @@
       "windowId": -1,
       "lightId": 10,
       "rect": {"x": 242, "y": 10, "width": 118, "height": 101},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [241.8, 67.8630667345899],
+            [359.3, 10.4],
+            [359.3, 100.63],
+            [241.8, 111.62567901234569],
+            [241.8, 67.8630667345899]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -6861,6 +6969,18 @@
       "windowId": -1,
       "lightId": 10,
       "rect": {"x": 242, "y": 124, "width": 118, "height": 93},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [241.8, 124.08987654320988],
+            [359.3, 126.73],
+            [359.3, 217.46],
+            [241.8, 168],
+            [241.8, 124.08987654320988]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -6871,6 +6991,18 @@
       "windowId": -1,
       "lightId": 10,
       "rect": {"x": 6, "y": 31, "width": 52, "height": 81},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [6, 30.65],
+            [58, 68],
+            [58, 111.44071428571428],
+            [6, 104.17],
+            [6, 30.65]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -6881,6 +7013,18 @@
       "windowId": -1,
       "lightId": 10,
       "rect": {"x": 6, "y": 124, "width": 52, "height": 76},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [6, 125.98],
+            [58, 124.14142857142858],
+            [58, 168],
+            [6, 200.24],
+            [6, 125.98]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []

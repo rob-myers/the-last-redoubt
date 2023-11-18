@@ -18329,13 +18329,25 @@
     {"position": {"x": 329.312, "y": 460.935}, "roomId": 6, "distance": 200},
     {"position": {"x": 509.312, "y": 680.935}, "roomId": 11, "distance": 120}
   ],
-  "lightRects": [
+  "lightThrus": [
     {
       "key": "door18@light0",
       "doorId": 18,
       "windowId": -1,
       "lightId": 0,
       "rect": {"x": 985, "y": 832, "width": 33, "height": 6},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [984.6520644511581, 838.4],
+            [1018, 831.97],
+            [1018, 837.53],
+            [1013.3088235294117, 838.4],
+            [984.6520644511581, 838.4]
+          ]
+        ]
+      },
       "srcRoomId": 25,
       "preConnectors": [],
       "postConnectors": []
@@ -18346,6 +18358,21 @@
       "windowId": -1,
       "lightId": 1,
       "rect": {"x": 490, "y": 282, "width": 144, "height": 136},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [489.9259153725602, 418],
+            [555.59, 281.62],
+            [569.31, 287.73],
+            [603.14, 312.31],
+            [631.12, 343.38],
+            [633.82, 348.06],
+            [532, 418],
+            [489.9259153725602, 418]
+          ]
+        ]
+      },
       "srcRoomId": 10,
       "preConnectors": [],
       "postConnectors": []
@@ -18356,6 +18383,21 @@
       "windowId": -1,
       "lightId": 2,
       "rect": {"x": 630, "y": 819, "width": 88, "height": 93},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [630, 875],
+            [633.5, 841.73],
+            [640.85, 819.09],
+            [718, 848],
+            [718, 892.07543130227],
+            [634.62, 911.73],
+            [633.5, 908.27],
+            [630, 875]
+          ]
+        ]
+      },
       "srcRoomId": 21,
       "preConnectors": [],
       "postConnectors": []
@@ -18366,6 +18408,18 @@
       "windowId": -1,
       "lightId": 3,
       "rect": {"x": 182, "y": 715, "width": 56, "height": 61},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [182, 728],
+            [238, 715.28],
+            [238, 776.34],
+            [182, 772.0821163279608],
+            [182, 728]
+          ]
+        ]
+      },
       "srcRoomId": 2,
       "preConnectors": [],
       "postConnectors": []
@@ -18376,6 +18430,18 @@
       "windowId": -1,
       "lightId": 4,
       "rect": {"x": 182, "y": 819, "width": 43, "height": 19},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [182, 819.36],
+            [224.65838509316768, 838.4],
+            [186.5, 838.4],
+            [182, 836.81],
+            [182, 819.36]
+          ]
+        ]
+      },
       "srcRoomId": 4,
       "preConnectors": [],
       "postConnectors": []
@@ -18386,6 +18452,21 @@
       "windowId": -1,
       "lightId": 5,
       "rect": {"x": 482, "y": 798, "width": 95, "height": 93},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [482, 848],
+            [541.02, 798.3],
+            [548.75, 806.89],
+            [565.48, 835.86],
+            [575.82, 867.67],
+            [576.78, 876.84],
+            [482, 891.3861105486941],
+            [482, 848]
+          ]
+        ]
+      },
       "srcRoomId": 12,
       "preConnectors": [],
       "postConnectors": []
@@ -18396,6 +18477,18 @@
       "windowId": -1,
       "lightId": 7,
       "rect": {"x": 182, "y": 362, "width": 42, "height": 18},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [182, 363.13],
+            [186.5, 361.6],
+            [224.2637465051258, 361.6],
+            [182, 379.56],
+            [182, 363.13]
+          ]
+        ]
+      },
       "srcRoomId": 0,
       "preConnectors": [],
       "postConnectors": []
@@ -18406,6 +18499,19 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 968, "y": 362, "width": 50, "height": 98},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [968.1874509033778, 361.9],
+            [1012.5, 361.9],
+            [1018, 367.43],
+            [1018, 459.17216630196936],
+            [1015.6, 460.24],
+            [968.1874509033778, 361.9]
+          ]
+        ]
+      },
       "srcRoomId": 22,
       "preConnectors": [],
       "postConnectors": [{"type": "door", "id": 35}]
@@ -18416,6 +18522,18 @@
       "windowId": -1,
       "lightId": 9,
       "rect": {"x": 1022, "y": 435, "width": 10, "height": 23},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [1022, 434.6927374301676],
+            [1032.32, 451.96],
+            [1029.31, 454.14],
+            [1022, 457.3924434719183],
+            [1022, 434.6927374301676]
+          ]
+        ]
+      },
       "srcRoomId": 22,
       "preConnectors": [{"type": "door", "id": 19}],
       "postConnectors": []
@@ -18426,6 +18544,18 @@
       "windowId": -1,
       "lightId": 10,
       "rect": {"x": 182, "y": 429, "width": 56, "height": 75},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [182, 429.288],
+            [238, 447.32],
+            [238, 504.52],
+            [182, 472],
+            [182, 429.288]
+          ]
+        ]
+      },
       "srcRoomId": 1,
       "preConnectors": [],
       "postConnectors": []
@@ -18436,6 +18566,19 @@
       "windowId": -1,
       "lightId": 11,
       "rect": {"x": 122, "y": 534, "width": 55, "height": 68},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [122, 560],
+            [149.6, 534.1],
+            [164.94, 551.13],
+            [177.08, 572.17],
+            [122, 601.8449559918754],
+            [122, 560]
+          ]
+        ]
+      },
       "srcRoomId": 3,
       "preConnectors": [],
       "postConnectors": []
@@ -18446,6 +18589,19 @@
       "windowId": -1,
       "lightId": 12,
       "rect": {"x": 661, "y": 393, "width": 46, "height": 25},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [661.38, 413.99],
+            [667.51, 403.38],
+            [677.16, 392.66],
+            [707.2501704158146, 418],
+            [667.6408962264151, 418],
+            [661.38, 413.99]
+          ]
+        ]
+      },
       "srcRoomId": 17,
       "preConnectors": [],
       "postConnectors": []
@@ -18456,6 +18612,20 @@
       "windowId": -1,
       "lightId": 13,
       "rect": {"x": 649, "y": 292, "width": 69, "height": 76},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [649.31, 330.94],
+            [653.25, 293.51],
+            [653.83, 291.72],
+            [718, 306],
+            [718, 354],
+            [653.14, 367.37],
+            [649.31, 330.94]
+          ]
+        ]
+      },
       "srcRoomId": 20,
       "preConnectors": [],
       "postConnectors": []
@@ -18466,6 +18636,23 @@
       "windowId": -1,
       "lightId": 15,
       "rect": {"x": 933, "y": 609, "width": 85, "height": 81},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [932.98, 625.85],
+            [1018, 608.9739788811503],
+            [1018, 652.18],
+            [962, 689.53],
+            [962, 660],
+            [960, 660],
+            [960, 658],
+            [942.8758232445521, 658],
+            [933.25, 628.36],
+            [932.98, 625.85]
+          ]
+        ]
+      },
       "srcRoomId": 27,
       "preConnectors": [],
       "postConnectors": [{"type": "door", "id": 34}]
@@ -18476,6 +18663,17 @@
       "windowId": -1,
       "lightId": 15,
       "rect": {"x": 938, "y": 538, "width": 1, "height": 0},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [938.2818702290076, 538],
+            [938.35, 537.79],
+            [939.0308788598576, 538],
+            [938.2818702290076, 538]
+          ]
+        ]
+      },
       "srcRoomId": 27,
       "preConnectors": [{"type": "door", "id": 36}],
       "postConnectors": []
@@ -18486,6 +18684,24 @@
       "windowId": -1,
       "lightId": 15,
       "rect": {"x": 929, "y": 522, "width": 89, "height": 71},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [929.31, 590.93],
+            [933.25, 553.51],
+            [936.9841603053435, 542],
+            [960, 542],
+            [960, 540],
+            [962, 540],
+            [962, 521.97],
+            [1018, 548.18],
+            [1018, 592.18],
+            [929.57, 593.35],
+            [929.31, 590.93]
+          ]
+        ]
+      },
       "srcRoomId": 27,
       "preConnectors": [],
       "postConnectors": [{"type": "door", "id": 34}]
@@ -18496,6 +18712,17 @@
       "windowId": -1,
       "lightId": 15,
       "rect": {"x": 938, "y": 538, "width": 1, "height": 0},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [938.2818702290076, 538],
+            [938.35, 537.79],
+            [939.0308788598576, 538],
+            [938.2818702290076, 538]
+          ]
+        ]
+      },
       "srcRoomId": 27,
       "preConnectors": [{"type": "door", "id": 37}],
       "postConnectors": []
@@ -18506,6 +18733,19 @@
       "windowId": -1,
       "lightId": 16,
       "rect": {"x": 492, "y": 918, "width": 61, "height": 40},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [491.8881791316208, 958],
+            [531.76, 918.01],
+            [548.75, 936.89],
+            [553.06, 944.35],
+            [532, 958],
+            [491.8881791316208, 958]
+          ]
+        ]
+      },
       "srcRoomId": 13,
       "preConnectors": [],
       "postConnectors": []
@@ -18516,6 +18756,18 @@
       "windowId": -1,
       "lightId": 17,
       "rect": {"x": 652, "y": 951, "width": 39, "height": 7},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [651.99, 955.44],
+            [652.51, 950.51],
+            [691.289817232376, 958],
+            [667.6932950191574, 958],
+            [651.99, 955.44]
+          ]
+        ]
+      },
       "srcRoomId": 19,
       "preConnectors": [],
       "postConnectors": []
@@ -18526,6 +18778,20 @@
       "windowId": -1,
       "lightId": 18,
       "rect": {"x": 279, "y": 542, "width": 104, "height": 116},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [278.87, 653.56],
+            [308, 542],
+            [352.0865278402446, 542],
+            [383.03, 652.86],
+            [358.87, 658],
+            [299.75, 658],
+            [278.87, 653.56]
+          ]
+        ]
+      },
       "srcRoomId": 6,
       "preConnectors": [],
       "postConnectors": []
@@ -18536,6 +18802,20 @@
       "windowId": -1,
       "lightId": 19,
       "rect": {"x": 485, "y": 782, "width": 51, "height": 18},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [484.76, 797.72],
+            [488, 782],
+            [532, 782],
+            [535.43, 797.39],
+            [521.86, 800.28],
+            [496.77, 800.28],
+            [484.76, 797.72]
+          ]
+        ]
+      },
       "srcRoomId": 11,
       "preConnectors": [],
       "postConnectors": []
@@ -18546,6 +18826,27 @@
       "windowId": 0,
       "lightId": 19,
       "rect": {"x": 398, "y": 562, "width": 118, "height": 96},
+      "poly": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [397.65, 638.39],
+            [399.69, 632.13],
+            [412.23, 610.4],
+            [429.02, 591.76],
+            [449.31, 577.01],
+            [472.23, 566.81],
+            [496.77, 561.59],
+            [515.9, 561.59],
+            [510.6, 658],
+            [510.6, 653.2],
+            [449.2, 653.2],
+            [449.2, 658],
+            [449.0166412601625, 658],
+            [397.65, 638.39]
+          ]
+        ]
+      },
       "srcRoomId": 11,
       "preConnectors": [],
       "postConnectors": []

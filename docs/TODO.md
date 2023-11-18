@@ -16,6 +16,14 @@
   - ℹ️ FOV will be a union of roomsWithDoors[*]
     hopefully computable by simplifying `gmGraph.computeViewDoorAreas`
 
+- ✅ all lightRects have poly (needed by diagonal doors)
+- ✅ fix lights in diagonal doors
+- this relaxes the constraint, so update GeomorphEdit
+- check can turn off room light
+- fix error swallowing of useQueries e.g. by upgrading react-query
+- draw decor
+
+
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
   - ✅ rename spine + arms

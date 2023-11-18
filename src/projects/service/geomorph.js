@@ -372,7 +372,7 @@ export async function createLayout(opts) {
     navZone,
     roomGraph,
     lightSrcs,
-    lightRects: computeLightConnectorRects({ doors, lightSrcs, roomGraph, rooms, windows }),
+    lightThrus: computeLightThruConnectors({ doors, lightSrcs, roomGraph, rooms, windows }),
     floorHighlightIds,
 
     roomSurfaceIds,
@@ -740,7 +740,7 @@ function parseConnectorRect(x) {
   return {
     ...x,
     baseRect: Rect.fromJson(x.baseRect),
-    poly: poly,
+    poly,
     rect: poly.rect,
     normal: Vect.from(x.normal),
     seg: [Vect.from(x.seg[0]), Vect.from(x.seg[1])],
@@ -798,7 +798,7 @@ function singleToConnectorRect(single, rooms) {
 export function serializeLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds,
+  lightSrcs, lightThrus, floorHighlightIds,
   roomSurfaceIds, roomMetas, gridToRoomIds,
   relDoorId, parallelDoorId,
   meta,
@@ -829,9 +829,10 @@ export function serializeLayout({
       roomId,
       distance,
     })),
-    lightRects: lightRects.map(x => ({
+    lightThrus: lightThrus.map(x => ({
       ...x,
       rect: x.rect.json,
+      poly: x.poly.geoJson,
     })),
     floorHighlightIds,
     roomSurfaceIds,
@@ -871,7 +872,7 @@ export function matchedMap(meta, regex, transform) {
 export function parseLayout({
   def, groups,
   rooms, doors, windows, labels, navPoly, navZone, roomGraph,
-  lightSrcs, lightRects, floorHighlightIds, roomSurfaceIds, roomMetas, gridToRoomIds,
+  lightSrcs, lightThrus, floorHighlightIds, roomSurfaceIds, roomMetas, gridToRoomIds,
   relDoorId, parallelDoorId,
   meta,
   hullPoly, hullRect, hullTop,
@@ -901,9 +902,10 @@ export function parseLayout({
       distance: x.distance,
       roomId: x.roomId,
     })),
-    lightRects: lightRects.map(x => ({
+    lightThrus: lightThrus.map(x => ({
       ...x,
       rect: Rect.fromJson(x.rect),
+      poly: Poly.from(x.poly),
     })),
     floorHighlightIds,
     roomSurfaceIds,
@@ -1086,17 +1088,17 @@ export function geomorphDataToInstance(gm, gmId, transform) {
 
 /**
  * @param {Pick<Geomorph.ParsedLayout, 'roomGraph' | 'rooms' | 'doors' | 'windows' | 'lightSrcs'>} gm
- * @return {Geomorph.LightConnectorRect[]}
+ * @return {Geomorph.LightThruConnector[]}
  */
-export function computeLightConnectorRects(gm) {
+export function computeLightThruConnectors(gm) {
   const lightPolys = computeLightPolygons(gm, true);
   /** Output will be stored here */
-  const lightRects = /** @type {Geomorph.LightConnectorRect[]} */ ([]);
+  const lightThrus = /** @type {Geomorph.LightThruConnector[]} */ ([]);
 
   /**
    * @param {{ id: number; poly: Geom.Poly; roomId: number; }} light 
    * @param {number} roomId 
-   * @param {{ connectorIds: { type: 'door' | 'window'; id: number }[]; roomIds: number[]; lightRects: Geomorph.LightConnectorRect[] }} prev previous
+   * @param {{ connectorIds: { type: 'door' | 'window'; id: number }[]; roomIds: number[]; lightThrus: Geomorph.LightThruConnector[] }} prev previous
    * @param {number} depth 
    */
   function depthFirstLightRects(light, roomId, prev, depth) {
@@ -1130,21 +1132,23 @@ export function computeLightConnectorRects(gm) {
         continue;
       }
 
-      lightRects.push({
+      lightThrus.push({
         key: succ.type === 'door' ? `door${succ.doorId}@light${light.id}` : `window${succ.windowId}@light${light.id}`,
         doorId: succ.type === 'door' ? succ.doorId : -1,
         windowId: succ.type === 'window' ? succ.windowId : -1,
         lightId: light.id,
         rect: otherRoomIntersection[0].rect.precision(0),
+        // Needed for diagonal doors, but we can start using it instead of rect
+        poly: otherRoomIntersection[0],
         srcRoomId: light.roomId,
         preConnectors: prev.connectorIds.slice(),
         postConnectors: [], // computed directly below
       });
-      succ.type === 'door' && prev.lightRects.forEach(prevLightRect => prevLightRect.postConnectors.push({ type: 'door', id: succ.doorId }));
+      succ.type === 'door' && prev.lightThrus.forEach(prevLightRect => prevLightRect.postConnectors.push({ type: 'door', id: succ.doorId }));
       const nextPrev = {
         connectorIds: prev.connectorIds.concat(succ.type === 'door' ? { type: 'door', id: succ.doorId} : { type: 'window', id: succ.windowId}),
         roomIds: nextRoomIds,
-        lightRects: prev.lightRects.concat(lightRects.slice(-1)),
+        lightThrus: prev.lightThrus.concat(lightThrus.slice(-1)),
       };
       depthFirstLightRects(light, otherRoomId, nextPrev, --depth);
     }
@@ -1153,19 +1157,19 @@ export function computeLightConnectorRects(gm) {
   lightPolys.forEach((lightPoly, lightId) => {
     const { roomId } = gm.lightSrcs[lightId];
     const light = { id: lightId, roomId, poly: lightPoly.clone().precision(2) }; // 🚧 broke sans precision
-    depthFirstLightRects(light, roomId, { connectorIds: [], roomIds: [], lightRects: [] }, 3);
+    depthFirstLightRects(light, roomId, { connectorIds: [], roomIds: [], lightThrus: [] }, 3);
   });
 
-  for (let i = 0; i < lightRects.length; i++) {
-    for (let j = i + 1; j < lightRects.length; j++) {
-      const [ri, rj] = [i, j].map(k => lightRects[k]);
+  for (let i = 0; i < lightThrus.length; i++) {
+    for (let j = i + 1; j < lightThrus.length; j++) {
+      const [ri, rj] = [i, j].map(k => lightThrus[k]);
       if ((ri.lightId !== rj.lightId) && ri.rect.intersects(rj.rect)) {
         warn(`computeLightDoorRects: light rects for lights ${ri.lightId}, ${rj.lightId} should not be intersecting`);
       }
     }
   }
 
-  return lightRects;
+  return lightThrus;
 }
 
 /**
@@ -1200,11 +1204,11 @@ export function computeLightPolygons(gm, intersectWithCircle = false) {
   
     if (intersectWithCircle) {
 
-    const restrictedLightPolys = lightPolys.map((lightPoly, lightId) => {
-      const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
-      const circlePoly = Poly.circle(position, distance, 30);
-      return (Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly).precision(2);
-    });
+      const restrictedLightPolys = lightPolys.map((lightPoly, lightId) => {
+        const { distance = defaultLightDistance, position } = gm.lightSrcs[lightId];
+        const circlePoly = Poly.circle(position, distance, 30);
+        return (Poly.intersect([circlePoly], [lightPoly])[0] ?? new Poly).precision(2);
+      });
 
       for (let i = 0; i < restrictedLightPolys.length; i++) {
         for (let j = i + 1; j < restrictedLightPolys.length; j++) {

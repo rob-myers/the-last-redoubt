@@ -250,7 +250,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
-          {data.gm.lightRects.map(({ key, lightId, doorId, rect }, i) =>
+          {data.gm.lightThrus.map(({ key, lightId, doorId, rect }, i) =>
             <div
               // Saw two light rects with same key -- shouldn't happen?
               // key={key}
