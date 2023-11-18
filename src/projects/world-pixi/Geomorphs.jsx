@@ -65,11 +65,16 @@ export default function Geomorphs(props) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       // doors
-      gm.doors.forEach(({ poly }, doorId) => {
+      gm.doors.forEach(({ poly, seg: [u, v], normal }, doorId) => {
         // (255, 0, doorId, 1)
         // Assuming ≤ 256 doors in a geomorph
         gfx.beginFill(`rgba(255, 0, ${doorId}, 1)`);
-        gfx.drawPolygon(poly.outline);
+        gfx.drawPolygon([
+          u.clone().addScaledVector(normal, 4),
+          v.clone().addScaledVector(normal, 4),
+          v.clone().addScaledVector(normal, -4),
+          u.clone().addScaledVector(normal, -4),
+        ]);
         gfx.endFill();
       });
       // decor
