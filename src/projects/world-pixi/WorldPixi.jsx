@@ -101,12 +101,7 @@ export default function WorldPixi(props) {
             resolution: window.devicePixelRatio,
             powerPreference: 'low-power',
             backgroundColor: 0x111111,
-            eventFeatures: {
-              globalMove: false,
-              move: true,
-              click: true,
-              wheel: true,
-            },
+            eventFeatures: { globalMove: true, move: true, click: true, wheel: true },
             // resolution: 4, // ℹ️ no zoom flicker, but can set on filter
           }}
           onMount={app => {
