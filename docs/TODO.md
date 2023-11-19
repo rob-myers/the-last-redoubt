@@ -19,10 +19,12 @@
 - ✅ all lightRects have poly (needed by diagonal doors)
 - ✅ fix lights in diagonal doors
 - ✅ this relaxes the constraint, so update GeomorphEdit
-- check can turn off room light
-- fix error swallowing of useQueries e.g. by upgrading react-query
-- draw decor
+- ✅ can turn off/on room light
+  - `npc light $( click 1 )`
 
+- fix error swallowing of useQueries e.g. by upgrading react-query
+
+- draw decor
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -42,6 +44,7 @@
   - 🚧 try changing skins
   - try creating own basic images
 
+- door/hull-door sprite instead of Graphics
 - gmGraph.computeViewableGmRoomIds
 - eventually remove `projects/world`
 - clean table symbols a bit

@@ -6,9 +6,7 @@ import { Graphics } from "@pixi/graphics";
 import { defaultDoorCloseMs, gmScale } from "../world/const"; // 🚧
 import { geom } from "../service/geom";
 import useStateRef from "../hooks/use-state-ref";
-import useUpdate from "../hooks/use-update";
 import GmSprites from "./GmSprites";
-import { tempMatrix } from "./Misc";
 
 /**
  * @param {Props} props
@@ -110,9 +108,6 @@ export default function Doors(props) {
       const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
       const closeNpcs = props.api.npcs.getNpcsIntersecting(convexPoly);
       return closeNpcs.length === 0;
-    },
-    setVisible(gmId, doorIds) {
-      state.lookup[gmId].forEach((x, doorId) => x.visible = doorIds.includes(doorId));
     },
     toggleLock(gmId, doorId, { npcKey, lock, unlock } = {}) {
       const item = state.lookup[gmId][doorId]
@@ -275,7 +270,6 @@ export default function Doors(props) {
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
- * @property {(gmId: number, doorIds: number[]) => void} setVisible
  * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => boolean} toggleDoor
  * Toggle between open/closed state, or directly open/close using `opts`.
  * Returns current boolean value of `open`.

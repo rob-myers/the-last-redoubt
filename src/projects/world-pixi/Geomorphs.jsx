@@ -118,10 +118,11 @@ export default function Geomorphs(props) {
       api.renderInto(gfx, state.tex[gmId]);
     },
     initTex(gmId) {
-      // draw from image -> image with identity transform
-      // ℹ️ cannot setTransform multiple times when rendering Graphics to RenderTexture
-      const gm = gms[gmId];
+      //  image -> image
       const gfx = state.gfx.clear().setTransform();
+      const gm = gms[gmId];
+
+      // draw entire lit geomorph
       gfx.beginTextureFill({ texture: state.lit[gmId] });
       gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
       gfx.endFill();
@@ -146,8 +147,8 @@ export default function Geomorphs(props) {
       // Hide light by drawing partial image
       state.drawPolygonImage('unlit', gmId, meta.poly);
       meta.postConnectors.forEach(({ type, id }) => {// Hide light through doors
-        // 🚧 for window should draw polygon i.e. rect without window
-        const { rect, poly } = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
+        // 🚧 handle windows properly?
+        const { poly } = assertDefined(type === 'door' ? gm.doorToLightThru[id] : gm.windowToLightThru[id]);
         state.drawPolygonImage('unlit', gmId, poly);
       });
       api.renderInto(state.gfx, state.tex[gmId], false);
@@ -204,39 +205,40 @@ export default function Geomorphs(props) {
         return;
       }
 
-      state.isRoomLit[gmId][roomId] = nextLit; // Needed by `onOpenDoor`
+      state.isRoomLit[gmId][roomId] = nextLit;
 
-      state.gfx.clear().setTransform();
       const doors = gm.roomGraph.getAdjacentDoors(roomId).map(x => api.doors.lookup[gmId][x.doorId]);
       const windowLightRects = gm.roomGraph.getAdjacentWindows(roomId).flatMap(
         x => gm.windowToLightThru[x.windowId] ?? [],
       );
-
+        
+      state.gfx.clear().setTransform();;
       if (nextLit) {
         state.drawPolygonImage('lit', gmId, gm.roomsWithDoors[roomId]);
-        doors.forEach(({ open, doorId }) =>
-          /**
-           * If door open AND light comes from roomId, open it to emit light thru doorway.
-           * Otherwise must close door to rub out light from other rooms.
-           */
-          open && (roomId === gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
-        );
         windowLightRects.forEach(({ rect }) => state.drawRectImage('lit', gmId, rect));
+        api.renderInto(state.gfx, state.tex[gmId], false);
+        doors.forEach(({ open, doorId }) =>
+          open && (roomId === gm.doorToLightThru[doorId]?.srcRoomId)
+            // If door open AND light comes from roomId, open it to emit light thru doorway
+            ? state.onOpenDoor(gmId, doorId)
+            // Otherwise must close door to rub out light from other rooms.
+            : state.onCloseDoor(gmId, doorId)
+        );
       } else {
         state.drawPolygonImage('unlit', gmId, gm.roomsWithDoors[roomId]);
-        doors.forEach(({ doorId, open }) =>
-          /**
-           * If door open AND light not from roomId, open it to emit light thru doorway.
-           * Otherwise must close door to rub out light from roomId.
-           */
-          open && (roomId !== gm.doorToLightThru[doorId]?.srcRoomId) ? state.onOpenDoor(gmId, doorId) : state.onCloseDoor(gmId, doorId)
-        );
         windowLightRects.forEach(({ rect, windowId }) => {
           const [poly] = Poly.cutOut([gm.windows[windowId].poly], [Poly.fromRect(rect)]);
           state.drawPolygonImage('unlit', gmId, poly);
         });
+        api.renderInto(state.gfx, state.tex[gmId], false);
+        doors.forEach(({ doorId, open }) =>
+          open && (roomId !== gm.doorToLightThru[doorId]?.srcRoomId)
+            // If door open AND light not from roomId, open it to emit light thru doorway.
+            ? state.onOpenDoor(gmId, doorId)
+            // Otherwise must close door to rub out light from roomId
+            : state.onCloseDoor(gmId, doorId)
+        );
       }
-      api.renderInto(state.gfx, state.tex[gmId], false);
     },
     testHit(worldPoint) {
       const [gmId] = api.gmGraph.findGeomorphIdContaining(worldPoint)
