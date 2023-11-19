@@ -113,7 +113,7 @@ export default function WorldPixi(props) {
           width={bounds.width || undefined}
           height={bounds.height || undefined}
         >
-          <QueryClientProvider client={queryClient} >
+          <QueryClientProvider client={queryClient}>
             <PanZoom
               api={state}
               onLoad={api => (state.panZoom = api) && update()}
