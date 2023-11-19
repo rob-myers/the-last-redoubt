@@ -90,10 +90,10 @@ export default function World(props) {
     // 🚧 move to <Geomorphs>
     const { output, cleanup } = computeHitTestGlobal(props.gms);
     state.hitTest = output;
-    setCached(props.worldKey, state);
+    setCached([props.worldKey], state);
     return () => {
       cleanup();
-      removeCached(props.worldKey);
+      removeCached([props.worldKey]);
     };
   }, []);
 

@@ -4,7 +4,7 @@
  */
 import * as React from "react";
 import { css, cx } from "@emotion/css";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Poly } from "../geom/poly";
 import { gmGraphClass } from "../graph/gm-graph";
@@ -64,9 +64,9 @@ function Geomorph({ layoutKey, transform, disabled }) {
    */
   const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
 
-  const { data, error } = useQuery(
-    `GeomorphEdit--${def.key}--${gmHash}`,
-    async () => {
+  const { data, error } = useQuery({
+    queryKey: [`GeomorphEdit--${def.key}--${gmHash}`],
+    queryFn: async () => {
       // Compute layout and GeomorphData from def,
       // where triangle service means degenerate navigation
       const layout = await createLayout({ def, lookup: symbolLookup, triangleService: null})
@@ -83,8 +83,8 @@ function Geomorph({ layoutKey, transform, disabled }) {
       });
       return { gm, gmGraph };
     },
-    { enabled: !disabled },
-  );
+    enabled: !disabled,
+  });
 
   const update = useUpdate();
 

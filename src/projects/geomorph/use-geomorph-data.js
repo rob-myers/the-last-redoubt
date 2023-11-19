@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Poly, Rect, Vect } from "../geom";
 import { floorGraphClass } from "../graph/floor-graph";
 import { svgSymbolTag } from "../service/const";
@@ -17,11 +17,11 @@ import usePathfinding from "./use-pathfinding";
  */
 export default function useGeomorphData(layoutKey, disabled = false) {
 
-  const gmDataResult = useQuery(geomorphJsonPath(layoutKey), () => {
-    return createGeomorphData(layoutKey)
-  }, {
-    cacheTime: Infinity,
-    keepPreviousData: true,
+  const gmDataResult = useQuery({
+    queryKey: [geomorphJsonPath(layoutKey)],
+    queryFn: () => createGeomorphData(layoutKey),
+    gcTime: Infinity,
+    // placeholderData: x => x,
     staleTime: Infinity,
     enabled: !disabled,
   });

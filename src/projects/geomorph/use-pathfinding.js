@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { info } from "../service/log";
 import { floorGraphClass } from "../graph/floor-graph";
 
@@ -8,14 +8,16 @@ import { floorGraphClass } from "../graph/floor-graph";
  * @param {boolean} [disabled]
  */
 export default function usePathfinding(zoneKey, gm, disabled) {
-  return useQuery(zoneKeyToQueryKey(zoneKey), () => {
-    info(`computing floorGraph: ${zoneKey}`);
-    return {
-      graph: floorGraphClass.fromZone(/** @type {Geomorph.GeomorphData} */ (gm))
-    };
-  }, {
+  return useQuery({
+    queryKey: [zoneKeyToQueryKey(zoneKey)],
+    queryFn() {
+      info(`computing floorGraph: ${zoneKey}`);
+      return {
+        graph: floorGraphClass.fromZone(/** @type {Geomorph.GeomorphData} */ (gm))
+      };
+    },
     enabled: !!gm && !disabled,
-    keepPreviousData: true,
+    // keepPreviousData: true,
     staleTime: Infinity,
   });
 }

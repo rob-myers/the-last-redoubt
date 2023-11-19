@@ -1,5 +1,5 @@
 import React from "react";
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 
 import { Assets } from "@pixi/assets";
 import { RenderTexture, Rectangle } from "@pixi/core";
@@ -19,23 +19,27 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
   
-  // 🚧 this is swallowing errors
-  useQueries(gms.map((gm, gmId) => ({
-    queryKey: `${gm.key}.${gmId}`, // gmId for dups
-    queryFn: async () => {
-      state.preloadTex(gmId);
-      await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
-        state[type][gmId] = await Assets.load(
-          `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
-        )
-      ));
-      // Async bootstrapping
-      state.initTex(gmId);
-      api.doors.initTex(gmId);
-      api.decor.initByRoom(gmId);
-      state.initHit(gmId);
-    },
-  })));
+  useQueries({
+    /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
+    queries: gms.map((gm, gmId) => ({
+      queryKey: [`${gm.key}.${gmId}`], // gmId for dups
+      queryFn: async () => {
+        state.preloadTex(gmId);
+        await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
+          state[type][gmId] = await Assets.load(
+            `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
+          )
+        ));
+        // Async bootstrapping
+        state.initTex(gmId);
+        api.doors.initTex(gmId);
+        api.decor.initByRoom(gmId);
+        state.initHit(gmId);
+        return null;
+      },
+      throwOnError: true,
+    })),
+  });
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,

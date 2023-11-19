@@ -22,9 +22,11 @@
 - ✅ can turn off/on room light
   - `npc light $( click 1 )`
 
-- fix error swallowing of useQueries e.g. by upgrading react-query
+- ✅ fix error swallowing of useQueries e.g. by upgrading react-query
 
 - draw decor
+  - decor points are circular icons
+  - decor colliders are dashed outlines
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs

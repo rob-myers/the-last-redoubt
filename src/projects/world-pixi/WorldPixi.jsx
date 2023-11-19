@@ -1,7 +1,7 @@
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
-import { QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
@@ -84,8 +84,8 @@ export default function WorldPixi(props) {
   state.gmGraph.api = state.gmRoomGraph.api = state;
 
   React.useEffect(() => {
-    setCached(props.worldKey, state);
-    return () => removeCached(props.worldKey);
+    setCached([props.worldKey], state);
+    return () => removeCached([props.worldKey]);
   }, []);
 
   return (

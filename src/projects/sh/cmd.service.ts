@@ -841,7 +841,7 @@ class cmdServiceClass {
           const lastValue = session.var._;
           return isProxy(lastValue) ? dataChunk([lastValue]) : lastValue;
         } else if (key in cacheShortcuts) {
-          return getCached(session.var[cacheShortcuts[key as string]]);
+          return getCached([session.var[cacheShortcuts[key as string]]]);
         } else {
           return (target as any)[key];
         }
