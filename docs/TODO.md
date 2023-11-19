@@ -2,29 +2,12 @@
 
 ## In progress
 
-- ✅ can open doors on click door
-  - ✅ `click` has meta.{door,doorId}
-  - `<Doors>` has PIXI.ParticleContainer
-    - ℹ️ trigger via `click | world doors.onRawDoorClick`
-    - ✅ can initially draw closed or open door
-    - ✅ draw into RenderTexture on `{opened,closed}-door`
-    - ✅ fix lights when door is initially open
-    - ✅ draw delta into RenderTexture
-    - ❌ use PIXI.ParticleContainer
-      - opening/closing doors are children
-      - animate via alpha only (fade out/in)
-  - ℹ️ FOV will be a union of roomsWithDoors[*]
-    hopefully computable by simplifying `gmGraph.computeViewDoorAreas`
+- ✅ filter pointermove from `npc events`
+- 🚧 try to fix sporadic pointerevents failure
+  - ℹ️ useEffect in use-handle-events not running
+- mobile click should not flash blue
 
-- ✅ all lightRects have poly (needed by diagonal doors)
-- ✅ fix lights in diagonal doors
-- ✅ this relaxes the constraint, so update GeomorphEdit
-- ✅ can turn off/on room light
-  - `npc light $( click 1 )`
-
-- ✅ fix error swallowing of useQueries e.g. by upgrading react-query
-
-- draw decor
+- 🚧 draw decor
   - decor points are circular icons
   - decor colliders are dashed outlines
 
@@ -677,6 +660,28 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can open doors on click door
+  - ✅ `click` has meta.{door,doorId}
+  - `<Doors>` has PIXI.ParticleContainer
+    - ℹ️ trigger via `click | world doors.onRawDoorClick`
+    - ✅ can initially draw closed or open door
+    - ✅ draw into RenderTexture on `{opened,closed}-door`
+    - ✅ fix lights when door is initially open
+    - ✅ draw delta into RenderTexture
+    - ❌ use PIXI.ParticleContainer
+      - opening/closing doors are children
+      - animate via alpha only (fade out/in)
+  - ℹ️ FOV will be a union of roomsWithDoors[*]
+    hopefully computable by simplifying `gmGraph.computeViewDoorAreas`
+
+- ✅ all lightRects have poly (needed by diagonal doors)
+- ✅ fix lights in diagonal doors
+- ✅ this relaxes the constraint, so update GeomorphEdit
+- ✅ can turn off/on room light
+  - `npc light $( click 1 )`
+
+- ✅ fix error swallowing of useQueries e.g. by upgrading react-query
 
 - ✅ hook up hit test to CSS cursor
 

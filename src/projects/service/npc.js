@@ -1,4 +1,5 @@
 import { merge } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
@@ -602,7 +603,7 @@ export const npcService = {
       worldApi.doors.events,
       worldApi.npcs.events,
       worldApi.panZoom.events,
-    ));
+    ).pipe(filter(x => x.key !== 'pointermove')));
     // ℹ️ couldn't catch asyncIterable.throw?.(api.getKillError())
     const process = processApi.getProcess();
     process.cleanups.push(() => asyncIterable.return?.());
