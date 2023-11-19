@@ -29,14 +29,13 @@ export default function PanZoom(props) {
       viewport: /** @type {*} */ ({}),
       input: /** @type {*} */ ({}),
       transform: /** @type {*} */ ({}),
-      plugins: /** @type {*} */ ({}),
       animate: /** @type {*} */ ({}),
 
       getWorld(e) {
         return state.transform.localTransform.applyInverse(e.global);
       },
       isFollowing() {
-        return !!state.plugins.get('follow');
+        return !!state.viewport.plugins.get('follow');
       },
       isIdle() {
         const { touches, isMouseDown } = state.input;
@@ -89,9 +88,6 @@ export default function PanZoom(props) {
           state.viewport = vp;
           state.input = vp.input;
           state.transform = vp.transform;
-          state.plugins = vp.plugins;
-          state.animate = new Animate(vp);
-          vp.plugins.add('animate', state.animate);
         }
       },
     })
@@ -99,10 +95,12 @@ export default function PanZoom(props) {
 
   React.useEffect(() => {
     const { viewport: vp, onPanEnd, onZoomEnd } = state;
+    vp.plugins.add('animate', state.animate = new Animate(vp));
     vp.addEventListener('moved-end', onPanEnd);
     vp.addEventListener('zoomed-end', onZoomEnd);
     props.onLoad(state);
     return () => {
+      vp.plugins.remove('animate');
       state.viewport.removeEventListener('moved-end', onPanEnd);
       state.viewport.removeEventListener('zoomed-end', onZoomEnd);
     };
@@ -116,9 +114,6 @@ export default function PanZoom(props) {
       pointerdown={state.pointerdown}
       pointermove={state.pointermove}
       pointerup={state.pointerup}
-      // pointermove={/** @param {import('@pixi/events').FederatedPointerEvent} e */ e => {
-      //   console.log('pointermove', e.global, e.offset);
-      // }}
     >
       {props.children}
     </Viewport>
@@ -144,7 +139,6 @@ export default function PanZoom(props) {
  * @property {import("pixi-viewport").Viewport} viewport
  * @property {import("pixi-viewport").Viewport['input']} input
  * @property {import("pixi-viewport").Viewport['transform']} transform
- * @property {import("pixi-viewport").Viewport['plugins']} plugins
  * @property {import("pixi-viewport").Animate} animate
  * 
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => Geom.VectJson} getWorld
