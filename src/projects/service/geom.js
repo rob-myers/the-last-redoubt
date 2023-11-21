@@ -356,15 +356,22 @@ class geomServiceClass {
       u.distanceToSquared(v) - (u.distanceToSquared(p) + v.distanceToSquared(p))
     ) <= tolerance;
   }
+  
+  /**
+   * @param {Geom.AngledRect<Geom.RectJson>} angledRect
+   */
+  getAngledRectCenter(angledRect) {
+    return this.getAngledRectSeg(angledRect).reduce((agg, x) => agg.add(x)).scale(0.5);
+  }
 
   /**
    * Get segment through center along 'x+'.
-   * @param {Geom.AngledRect<Geom.Rect>} _ 
+   * @param {Geom.AngledRect<Geom.RectJson>} _ 
    */
   getAngledRectSeg({ angle, baseRect }) {
     const widthNormal = tempVect.set(Math.cos(angle), Math.sin(angle));
     const heightNormal = tempVect2.set(-Math.sin(angle), Math.cos(angle));
-    const src = baseRect.topLeft.addScaledVector(heightNormal, 0.5 * baseRect.height);
+    const src = new Vect(baseRect.x, baseRect.y).addScaledVector(heightNormal, 0.5 * baseRect.height);
     return [src, src.clone().addScaledVector(widthNormal, baseRect.width)];
   }
 
