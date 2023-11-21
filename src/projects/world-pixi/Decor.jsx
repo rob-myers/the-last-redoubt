@@ -1,8 +1,9 @@
 import React from "react";
 import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-import { testNever } from "../service/generic";
+import { Sprite } from "@pixi/sprite";
 
+import { testNever } from "../service/generic";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 import { gmScale } from "../world/const";
 
@@ -52,6 +53,7 @@ export default function Decor(props) {
     },
     initTex(gmId) {
       state.gfx.clear();
+      api.renderInto(state.gfx, state.tex[gmId]); // Clear
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
       state.byRoom[gmId].forEach((_, roomId) => state.renderDecor(gmId, roomId));
     },
@@ -128,17 +130,17 @@ export default function Decor(props) {
       state.renderDecor(gmId, roomId);
     },
     renderDecor(gmId, roomId) {
-      // 🚧 restrict drawing to room somehow...
       const ds = Object.values(state.byRoom[gmId][roomId].decor);
-      
-      const gfx = state.gfx.clear(); // clear loses transform?
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear();
+
       for (const decor of ds) {
         if (isCollidable(decor) && !state.showColliders) {
           continue;
         }
         switch (decor.type) {
           case 'circle':
-            gfx.lineStyle({ color: '#ffffff11', width: 1 });
+            gfx.lineStyle({ color: '#ffffff33', width: 1 });
             // ctxt.setLineDash([2, 2]);
             gfx.beginFill(0, 0);
             gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
@@ -169,7 +171,42 @@ export default function Decor(props) {
             throw testNever(decor);
         }
       }
+
       api.renderInto(gfx, state.tex[gmId], false);
+      
+      // 🚧 fix transformed geomorphs
+      // // Cannot mask Graphics with Graphics, must create intermediary Sprite
+      // const gfxBounds = gfx.getBounds();
+
+      // const sprite = Sprite.from(api.pixiApp.renderer.generateTexture(gfx));
+      // sprite.transform.setFromMatrix(
+      //   state.mat[gmId]
+      // );
+      // // 🚧 is this wrong in transformed geomorphs?
+      // sprite.position.set(gfxBounds.x, gfxBounds.y); // 👈
+      
+      // const roomPoly = gm.rooms[roomId].clone()
+      //   .applyMatrix(gm.matrix);
+      // // const roomPoly = gm.rooms[roomId].clone();
+
+      // const mask = new Graphics;
+      // const gfxLocalBounds = gfx.getLocalBounds();
+      // mask.transform.setFromMatrix(
+      //   new Matrix()
+      //     .translate(-gfxLocalBounds.x, -gfxLocalBounds.y) // 👈
+      //     // // translation of matrix is correct...
+      //     // // but the rest isn't
+      //     // .append(new Matrix(...gm.matrix.toArray()))
+      //   );
+      // mask.beginFill('#ff000055');
+      // // mask.drawPolygon(gm.rooms[roomId].outline);
+      // mask.drawPolygon(roomPoly.outline);
+      // mask.endFill();
+      // sprite.addChild(mask); // mask MUST be descendent of subject
+      // // sprite.mask = mask;
+
+      // api.renderInto(sprite, state.tex[gmId], false);
+      // sprite.texture.destroy(); // gc
     },
     setDecor(...ds) {
       // 🚧 is existing decor being removed from e.g. colliders?

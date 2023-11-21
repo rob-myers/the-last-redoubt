@@ -11,8 +11,12 @@
   - ✅ decor colliders are outlines
   - ✅ decor points are circular
   - ✅ can `npc config showColliders`
-  - decor points have icons
+  - ✅ get a basic mask working
+  - 🚧 Sprite.from(Graphics) rendered correctly into RenderTexture
   - decor restricted to its room via mask
+    - ℹ️ mask situated at top-left of Graphics
+  - fix `npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'`
+  - decor points have icons
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
