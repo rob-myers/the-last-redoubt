@@ -9,7 +9,7 @@ import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import { colorMatrixFilter, tempMatrix } from "./Misc";
+import { colorMatrixFilter, tempMatrix1 } from "./Misc";
 import GmSprites from "./GmSprites";
 
 /**
@@ -34,6 +34,7 @@ export default function Geomorphs(props) {
         state.initTex(gmId);
         api.doors.initTex(gmId);
         api.decor.initByRoom(gmId);
+        api.decor.initTex(gmId);
         state.initHit(gmId);
         return null;
       },
@@ -108,7 +109,7 @@ export default function Geomorphs(props) {
     preloadTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
       gfx.lineStyle({ width: 8, color: 0x999999 });
       gfx.beginFill(0x000000);
       gfx.drawPolygon(gm.hullPoly[0].outline)

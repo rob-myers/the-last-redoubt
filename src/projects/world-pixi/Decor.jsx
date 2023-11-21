@@ -1,11 +1,14 @@
 import React from "react";
-import { BLEND_MODES } from "@pixi/core";
+import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
+import { Graphics } from "@pixi/graphics";
 import { testNever } from "../service/generic";
-import { drawCircle, strokePolygons } from "../service/dom";
-import { imageService } from "projects/service/image";
+
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { gmScale } from "../world/const";
 
 import useStateRef from "../hooks/use-state-ref";
+import GmSprites from "./GmSprites";
+import { tempMatrix1 } from "./Misc";
 
 /**
  * @param {Props} props
@@ -15,7 +18,12 @@ export default function Decor(props) {
   const { gms } = api.gmGraph;
 
   const state = useStateRef(/** @type {() => State} */ () => ({
-    ctxts: [],
+    gfx: new Graphics(),
+    mat: gms.map(gm =>
+      new Matrix(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y)
+        .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
+    ),
+    tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height, resolution: window.devicePixelRatio })),
     showColliders: false,
 
     byGrid: [],
@@ -24,6 +32,16 @@ export default function Decor(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
+    clearDecor(gmId, roomId) {
+      const gfx = state.gfx.clear();
+      gfx.transform.setFromMatrix(state.mat[gmId]);
+      gfx.blendMode = BLEND_MODES.ERASE;
+      gfx.beginFill();
+      gfx.drawPolygon(gms[gmId].roomsWithDoors[roomId].outline);
+      gfx.endFill();
+      api.renderInto(state.gfx, state.tex[gmId], false);
+      gfx.blendMode = BLEND_MODES.NORMAL;
+    },
     initByRoom(gmId) {
       const gm = gms[gmId];
       state.byRoom[gmId] = gm.gmRoomDecor;
@@ -31,6 +49,12 @@ export default function Decor(props) {
         Object.assign(state.decor, decor);
         colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
       });
+    },
+    initTex(gmId) {
+      state.gfx.clear();
+      state.gfx.transform.setFromMatrix(state.mat[gmId]);
+      state.byRoom[gmId].forEach((_, roomId) => state.renderDecor(gmId, roomId));
+      api.renderInto(state.gfx, state.tex[gmId]);
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
@@ -51,8 +75,9 @@ export default function Decor(props) {
     redrawHitCanvas(gmId, roomId, nextPoints) {
       const gm = gms[gmId];
       const radius = 5; // 🚧 hard-coded radius
-      const gfx = api.geomorphs.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
-      gfx.blendMode = BLEND_MODES.ERASE; // clear
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
+
+      gfx.blendMode = BLEND_MODES.ERASE;
       const { points: prevPoints } = api.decor.byRoom[gmId][roomId];
       prevPoints.forEach((d) => {
         const local = gm.toLocalCoords(d);
@@ -69,19 +94,15 @@ export default function Decor(props) {
         gfx.drawCircle(center.x, center.y, radius);
         gfx.endFill();
       });
+
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       api.debug.opts.debugHit && api.debug.render();
     },
-    removeDecor(decorKeys) {
-      const ds = decorKeys.map(decorKey => state.decor[decorKey])
-        // cannot remove read-only group or its items
-        // .filter(d => d && !localDecorGroupRegex.test(d.key))
-      ;
+    removeDecor(decorKeys) {// Assume all decor in same room
+      const ds = decorKeys.map(decorKey => state.decor[decorKey]);
       if (!ds.length) {
         return;
       }
-
-      // Assume all decor we are deleting comes from same room
       const { gmId, roomId } = ds[0].meta;
       const atRoom = state.byRoom[gmId][roomId];
 
@@ -102,13 +123,57 @@ export default function Decor(props) {
         delete state.decor[d.key];
         delete atRoom.decor[d.key];
       });
-
-      // 🚧 `ds` could contain dups e.g. `decorKeys` could mention group & child
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
-
-      state.render();
+      
+      state.clearDecor(gmId, roomId);
+      state.renderDecor(gmId, roomId);
+    },
+    renderDecor(gmId, roomId) {
+      const ds = Object.values(state.byRoom[gmId][roomId].decor);
+      
+      // 🚧 restrict to room via mask
+      const gfx = state.gfx;
+      for (const decor of ds) {
+        if (isCollidable(decor) && !state.showColliders) {
+          continue;
+        }
+        switch (decor.type) {
+          case 'circle':
+            gfx.lineStyle({ color: '#ffffff11', width: 1 });
+            // ctxt.setLineDash([2, 2]);
+            gfx.beginFill(0, 0);
+            gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
+            gfx.endFill();
+            break;
+          case 'point':
+            const iconRadius = 4;
+            gfx.lineStyle({ color: '#77777733', width: 2 });
+            gfx.beginFill(0);
+            gfx.drawCircle(decor.x, decor.y, 5);
+            gfx.endFill();
+            // 🚧 render icons
+            // imageService.lookup[metaToImageHref(decor.meta)]
+            // gfx.beginTextureFill({ texture: iconTex });
+            // gfx.drawRect(decor.x - iconRadius,decor.y - iconRadius,2 * iconRadius,2 * iconRadius);
+            // gfx.endFill();
+            break;
+          case 'rect':
+            gfx.lineStyle({ color: '#ffffff33', width: 1 });
+            // ctxt.setLineDash([2, 2]);
+            if (decor.derivedPoly) {// Should always exist
+              gfx.beginFill(0, 0);
+              gfx.drawPolygon(decor.derivedPoly.outline);
+              gfx.endFill();
+            }
+            break;
+          default:
+            throw testNever(decor);
+        }
+      }
+      api.renderInto(gfx, state.tex[gmId], false);
     },
     setDecor(...ds) {
+      // 🚧 is existing decor being removed from e.g. colliders?
       if (ds.length === 0) {
         return;
       }
@@ -116,9 +181,6 @@ export default function Decor(props) {
         if (!d || !verifyDecor(d))
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
       });
-
-      // 🚧 needs a rewrite
-      // 🚧 is existing decor being removed from e.g. colliders?
 
       // Every decor must lie in same room
       const { gmId, roomId } = ds[0].meta;
@@ -149,86 +211,20 @@ export default function Decor(props) {
       }
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
-      state.render();
-    },
-
-    renderDecor(ctxt, decor) {
-      if (!state.showColliders && isCollidable(decor)) {
-        return;
-      }
-      switch (decor.type) {
-        case 'circle':
-          ctxt.strokeStyle = '#ffffff33';
-          ctxt.setLineDash([2, 2]);
-          drawCircle(ctxt, decor.center, decor.radius);
-          ctxt.setLineDash([]);
-          break;
-        case 'point':
-          const iconRadius = 4;
-          ctxt.strokeStyle = '#888';
-          ctxt.fillStyle = '#000';
-          drawCircle(ctxt, { x: decor.x, y: decor.y }, 5);
-          ctxt.fill();
-          ctxt.drawImage(
-            imageService.lookup[metaToImageHref(decor.meta)],
-            decor.x - iconRadius,
-            decor.y - iconRadius,
-            2 * iconRadius,
-            2 * iconRadius,
-          );
-          break;
-        case 'rect':
-          ctxt.strokeStyle = '#ffffff33';
-          ctxt.setLineDash([2, 2]);
-          decor.derivedPoly && strokePolygons(ctxt, [decor.derivedPoly]);
-          ctxt.setLineDash([]);
-          break;
-        default:
-          throw testNever(decor);
-      }
-    },
-    render() {// 🚧
-      // const { ctxts } = state;
-
-      // gms.forEach((gm, gmId) => {
-      //   const ctxt = ctxts[gmId];
-      //   ctxt.resetTransform();
-      //   ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
-
-      //   ctxt.transform(
-      //     gmScale, 0, 0, gmScale,
-      //     -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y,
-      //   );
-      //   ctxt.transform(...gm.inverseMatrix.toArray());
-
-      //   state.byRoom[gmId].forEach(({ decor }, roomId) =>
-      //     Object.values(decor).forEach(d => state.renderDecor(ctxt, d))
-      //   );
-
-      // });
+      state.renderDecor(gmId, roomId);
     },
   }));
 
   React.useEffect(() => {
-    // state.initByRoom();
-    // state.render();
     props.onLoad(state);
   }, []);
 
-  // return (
-  //   <div
-  //     className="decor-root"
-  //     ref={el => el && (state.rootEl = el)}
-  //     onClick={state.onClick}
-  //   >
-  //     <GmsCanvas
-  //       gms={gms}
-  //       scaleFactor={gmScale}
-  //       canvasRef={(el, gmId) => state.ctxts[gmId] = assertNonNull(el.getContext('2d'))}
-  //     />
-  //   </div>
-  // );
-  return null;
+  return (
+    <GmSprites
+      gms={gms}
+      tex={state.tex}
+    />
+  );
 }
 
 /**
@@ -256,29 +252,32 @@ function metaToImageHref(meta) {
 
 /**
  * @typedef State
- * @property {CanvasRenderingContext2D[]} ctxts
- * @property {boolean} showColliders
- * @property {Record<string, NPC.DecorDef>} decor
- * All decor, including children of groups.
- * @property {HTMLElement} rootEl
  * @property {NPC.DecorGrid} byGrid
  * Collidable decors in global grid where `byGrid[x][y]` covers the square:
  * (x * decorGridSize, y * decorGridSize, decorGridSize, decorGridSize)
  * @property {NPC.RoomDecorCache[][]} byRoom
  * Decor organised by `byRoom[gmId][roomId]`.
+ * @property {import('pixi.js').Graphics} gfx
+ * @property {import('pixi.js').Matrix[]} mat
+ * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {boolean} showColliders
+ * @property {Record<string, NPC.DecorDef>} decor
+ * All decor, including children of groups.
+ * @property {boolean} ready
+ * @property {HTMLElement} rootEl
+ *
+ * @property {(gmId: number, roomId: number) => void} clearDecor
  * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorInRoom
  * Get all decor in specified room.
  * @property {(point: Geom.VectJson, gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
- * @property {boolean} ready
+ * @property {(gmId: number) => void} initByRoom
+ * @property {(gmId: number) => void} initTex
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
  * @property {(gmId: number, roomId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitCanvas
- * @property {(decorKeys: string[]) => void} removeDecor
- * Remove decor, all assumed to be in same room
- * @property {(gmId: number) => void} initByRoom
+ * @property {(decorKeys: string[]) => void} removeDecor Assumed to be in same room
+ * @property {(gmId: number, roomId: number) => void} renderDecor
  * @property {(...decor: NPC.DecorDef[]) => void} setDecor
- * @property {(ctxt: CanvasRenderingContext2D, d: NPC.DecorDef) => void} renderDecor
- * @property {() => void} render
  */
 
 /**

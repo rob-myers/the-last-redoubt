@@ -135,7 +135,7 @@ export default function NPCs(props) {
           case 'verbose': ctxt.verbose = !!value; break;
           case 'showColliders':
             api.decor.showColliders = !!value;
-            api.decor.render();
+            gms.map((_, gmId) => setTimeout(() => api.decor.initTex(gmId)));
             break;
 
           case 'configKey':
@@ -591,7 +591,7 @@ export default function NPCs(props) {
               Object.keys(api.decor.decor).filter(decorKey => keyRegex.test(decorKey))
             );
           }
-          api.decor.render();
+          // api.decor.render();
           break;
         case 'set-player':
           state.setPlayerKey(e.npcKey ?? null);

@@ -8,8 +8,11 @@
 - mobile click should not flash blue
 
 - 🚧 draw decor
-  - decor points are circular icons
-  - decor colliders are dashed outlines
+  - ✅ decor colliders are outlines
+  - ✅ decor points are circular
+  - ✅ can `npc config showColliders`
+  - decor points have icons
+  - decor restricted to its room via mask
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
