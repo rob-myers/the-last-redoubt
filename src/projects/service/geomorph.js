@@ -1509,35 +1509,25 @@ export function decorToRef(decor) {
 }
 
 /**
- * @param {NPC.DecorRect} decor
- * @returns {NPC.DecorRect}
- */
-export function extendDecor(decor) {
-  const poly = Poly.fromAngledRect({ angle: decor.angle ?? 0, baseRect: decor });
-  decor.derivedPoly = poly;
-  decor.derivedBounds = poly.rect;
-  return decor;
-}
-
-/**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorDef} decor
  * @param {Graph.GmGraph} gmGraph
  */
 export function ensureDecorMetaGmRoomId(decor, gmGraph) {
+  // Safety e.g. decor may arise from untyped CLI
   !decor.meta && Object.assign(decor, { meta: {} });
+
   if (!(decor.meta.gmId >= 0 && decor.meta.roomId >= 0)) {
     const decorOrigin = getDecorOrigin(decor);
     const gmRoomId = gmGraph.findRoomContaining(decorOrigin);
-    if (!gmRoomId) {
+    if (!gmRoomId)
       throw new Error(`decor origin must reside in some room: ${JSON.stringify(decor)}`);
-    }
     Object.assign(decor.meta, gmRoomId);
   }
 }
 
 /**
- * 
+ * Each decor lies in precisely one room, this being determined by its center.
  * @param {NPC.DecorDef} decor 
  * @returns {Geom.VectJson}
  */
@@ -1545,10 +1535,7 @@ export function getDecorOrigin(decor) {
   switch (decor.type) {
     case 'circle': return decor.center;
     case 'point': return decor;
-    case 'rect': {
-      if (!decor.derivedPoly) extendDecor(decor);
-      return assertDefined(decor.derivedPoly).center;
-    }
+    case 'rect': return geom.getAngledRectCenter({ baseRect: decor, angle: decor.angle ?? 0 });
     default: throw testNever(decor);
   }
 }
@@ -1674,20 +1661,26 @@ export function isDecorPoint(decor) {
 }
 
 /**
+ * Assume `d.meta` is a gmRoomId.
  * @param {NPC.DecorDef} d 
  * @returns {void}
  */
 export function normalizeDecor(d) {
+  // Extend meta with tags from def; normalize
+  d.tags?.forEach(tag => d.meta[tag] = true);
+  d.tags = metaToTags(d.meta);
+
   switch (d.type) {
     case 'circle':
-      break;
-    case 'point':
-      // Extend meta with any tags provided in def; normalize tags
-      d.tags?.forEach(tag => d.meta[tag] = true);
-      d.tags = metaToTags(d.meta);
+      // d.derivedPoly = Poly.circle(d.center, d.radius, 32);
       break;
     case 'rect':
-      extendDecor(d); // Add derived data
+      // rect needn't be aabb
+      d.derivedPoly = Poly.fromAngledRect({ angle: d.angle ?? 0, baseRect: d });
+      d.derivedBounds = d.derivedPoly.rect;
+      break;
+    case 'point':
+      // d.derivedPoly = Poly.circle(d, 5, 32); // 🚧 hard-coding
       break;
     default:
       throw testNever(d);

@@ -617,12 +617,16 @@ declare namespace NPC {
     updatedAt?: number;
     /** Decor key of parent, if exists */
     parentKey?: string;
+
+    /** Can be provided when defining decor via CLI -- shorter than writing meta. */
+    tags?: string[];
+    /** Avoid recomputation for collisions */
+    derivedPoly?: Geom.Poly;
+    derivedBounds?: Geom.Rect;
   }
 
   export interface DecorPoint extends BaseDecor, Geom.VectJson {
     type: 'point';
-    /** Can be provided in def (shorter than writing meta) */
-    tags?: string[];
   }
 
   export interface DecorCircle extends BaseDecor, Geom.Circle {
@@ -632,16 +636,6 @@ declare namespace NPC {
   export interface DecorRect extends BaseDecor, Geom.RectJson {
     type: 'rect';
     angle?: number;
-    /**
-     * Induced by `{ x, y, width, height, angle }`.
-     * Avoids recomputation for collisions.
-     */
-    derivedPoly?: Geom.Poly;
-    /**
-     * Aabb for `derivedPoly`.
-     * Avoids recomputation for collisions.
-     */
-    derivedBounds?: Geom.Rect;
   }
   
   export type DecorDef = (
