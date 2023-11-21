@@ -54,7 +54,6 @@ export default function Decor(props) {
       state.gfx.clear();
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
       state.byRoom[gmId].forEach((_, roomId) => state.renderDecor(gmId, roomId));
-      api.renderInto(state.gfx, state.tex[gmId]);
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
@@ -129,10 +128,10 @@ export default function Decor(props) {
       state.renderDecor(gmId, roomId);
     },
     renderDecor(gmId, roomId) {
+      // 🚧 restrict drawing to room somehow...
       const ds = Object.values(state.byRoom[gmId][roomId].decor);
       
-      // 🚧 restrict to room via mask
-      const gfx = state.gfx;
+      const gfx = state.gfx.clear(); // clear loses transform?
       for (const decor of ds) {
         if (isCollidable(decor) && !state.showColliders) {
           continue;
