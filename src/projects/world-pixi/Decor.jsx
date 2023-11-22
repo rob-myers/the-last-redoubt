@@ -10,7 +10,7 @@ import { decorIconRadius, gmScale } from "../world/const";
 
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { tempMatrix1 } from "./Misc";
+import { colMatFilter2, tempMatrix1 } from "./Misc";
 
 /**
  * @param {Props} props
@@ -299,6 +299,7 @@ export default function Decor(props) {
     <GmSprites
       gms={gms}
       tex={state.tex}
+      filters={[colMatFilter2]}
     />
   );
 }

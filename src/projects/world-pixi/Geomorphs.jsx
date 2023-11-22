@@ -9,7 +9,7 @@ import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
 import { gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import { colorMatrixFilter, tempMatrix1 } from "./Misc";
+import { colMatFilter1, tempMatrix1 } from "./Misc";
 import GmSprites from "./GmSprites";
 
 /**
@@ -282,7 +282,7 @@ export default function Geomorphs(props) {
     <GmSprites
       gms={gms}
       tex={state.tex}
-      filters={[colorMatrixFilter]}
+      filters={[colMatFilter1]}
     />
   );
 }

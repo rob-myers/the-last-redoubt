@@ -60,17 +60,24 @@ export function TestRenderTexture() {
   );
 }
 
-export const colorMatrixFilter = new ColorMatrixFilter();
+export const colMatFilter1 = new ColorMatrixFilter();
 // colorMatrixFilter.resolution = window.devicePixelRatio;
-colorMatrixFilter.resolution = 4; // ℹ️ no zoom flicker
+colMatFilter1.resolution = 4; // ℹ️ no zoom flicker
 // colorMatrixFilter.enabled = true;
-colorMatrixFilter.brightness(0.18, true);
-colorMatrixFilter.contrast(1.5, true);
-// colorMatrixFilter.alpha = 1;
-// colorMatrixFilter.hue(90, true);
-// colorMatrixFilter.vintage(true);
-// colorMatrixFilter.polaroid(true);
-// colorMatrixFilter.kodachrome(true);
+colMatFilter1.brightness(0.18, true);
+colMatFilter1.contrast(1.5, true);
+// colMatFilter1.alpha = 1;
+// colMatFilter1.hue(90, true);
+// colMatFilter1.vintage(true);
+// colMatFilter1.polaroid(true);
+// colMatFilter1.kodachrome(true);
+
+export const colMatFilter2 = new ColorMatrixFilter();
+
+// colMatFilter2.vintage(true);
+colMatFilter2.alpha = 0.2;
+colMatFilter2.tint(0x00ff00, true);
+// colMatFilter2.contrast(0.2, true);
 
 
 export const tempMatrix1 = new Matrix();
