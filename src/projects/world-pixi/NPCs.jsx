@@ -835,7 +835,7 @@ export default function NPCs(props) {
   }), { deps: [api] });
   
   React.useEffect(() => {
-    state.prefetchSpritesheets();
+    // state.prefetchSpritesheets();
     props.onLoad(state);
   }, []);
 

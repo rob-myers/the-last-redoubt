@@ -1,6 +1,8 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
+import { Assets } from "@pixi/assets";
 
 import { removeDups, removeFirst, testNever } from "../service/generic";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, getGmRoomKey, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
@@ -16,6 +18,27 @@ import { tempMatrix1 } from "./Misc";
 export default function Decor(props) {
   const { api } = props;
   const { gms } = api.gmGraph;
+  
+  useQuery({
+    queryKey: [`decor-icon-textures`],
+    queryFn: async () => {
+      await Promise.all(/** @type {const} */ ([
+        { key: 'standing', filename: 'standing-person.png'},
+        { key: 'sitting', filename: 'sitting-silhouette.invert.svg'},
+        { key: 'lying', filename: 'lying-man.invert.svg'},
+        { key: 'info', filename: 'info-icon.invert.svg'},
+        { key: 'road-works', filename: 'road-works.invert.svg'},
+      ]).map(async ({ key, filename }) =>
+        state.icon[key] = await Assets.load(`/assets/icon/${filename}`)
+      ));
+
+      console.log(state.icon)
+
+      props.onLoad(state); // ready when icons loaded
+      return null;
+    },
+    throwOnError: true,
+  });
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     gfx: new Graphics(),
@@ -24,6 +47,7 @@ export default function Decor(props) {
         .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
     ),
     tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height, resolution: window.devicePixelRatio })),
+    icon: /** @type {*} */ ({}),
     showColliders: false,
 
     byGrid: [],
@@ -214,15 +238,22 @@ export default function Decor(props) {
           gfx.endFill();
           break;
         case 'point':
+          const radius = decorIconRadius;
+
           gfx.lineStyle({ color: '#77777733', width: 2 });
           gfx.beginFill(0);
-          gfx.drawCircle(decor.x, decor.y, decorIconRadius + 1);
+          gfx.drawCircle(decor.x, decor.y, radius + 1);
           gfx.endFill();
-          // 🚧 render icons
-          // imageService.lookup[metaToImageHref(decor.meta)]
-          // gfx.beginTextureFill({ texture: iconTex });
-          // gfx.drawRect(decor.x - iconRadius,decor.y - iconRadius,2 * iconRadius,2 * iconRadius);
-          // gfx.endFill();
+
+          // render icons
+          const texture = state.icon["road-works"];
+          const scale = (2 * radius) / texture.width;
+          // ℹ️ can ignore transform of `gfx`
+          const matrix = tempMatrix1.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
+          gfx.line.width = 0;
+          gfx.beginTextureFill({ texture, matrix });
+          gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
+          gfx.endFill();
           break;
         case 'rect':
           if (!state.showColliders) break;
@@ -240,9 +271,9 @@ export default function Decor(props) {
     },
   }));
 
-  React.useEffect(() => {
-    props.onLoad(state);
-  }, []);
+  // React.useEffect(() => {
+  //   props.onLoad(state);
+  // }, []);
 
   return (
     <GmSprites
@@ -250,18 +281,6 @@ export default function Decor(props) {
       tex={state.tex}
     />
   );
-}
-
-/**
- * @param {Geomorph.PointMeta} meta
- * @returns {import("projects/service/image").ImageServiceHref}
- */
-function metaToImageHref(meta) {
-  if (meta.stand) return '/assets/icon/standing-person.png';
-  if (meta.sit) return '/assets/icon/sitting-silhouette.invert.svg';
-  if (meta.lie) return '/assets/icon/lying-man.invert.svg';
-  if (meta.label) return '/assets/icon/info-icon.invert.svg';
-  return '/assets/icon/road-works.invert.svg'; // Fallback
 }
 
 /**
@@ -285,6 +304,8 @@ function metaToImageHref(meta) {
  * @property {import('pixi.js').Graphics} gfx
  * @property {import('pixi.js').Matrix[]} mat
  * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {Record<DecorIconKey, import('pixi.js').Texture<import('pixi.js').Resource>>} icon
+ * 
  * @property {boolean} showColliders
  * @property {Record<string, NPC.DecorDef>} decor
  * All decor, including children of groups.
@@ -311,4 +332,14 @@ function metaToImageHref(meta) {
  * @typedef ToggleLocalDecorOpts
  * @property {Geomorph.GmRoomId[]} [added]
  * @property {Geomorph.GmRoomId[]} [removed]
+ */
+
+/**
+ * @typedef {(
+ *  | 'standing'
+ *  | 'sitting'
+ *  | 'lying'
+ *  | 'info'
+ *  | 'road-works'
+ * )} DecorIconKey
  */
