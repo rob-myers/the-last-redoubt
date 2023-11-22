@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
+import { BLEND_MODES, RenderTexture, Matrix, MIPMAP_MODES } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 
@@ -44,11 +44,10 @@ export default function Decor(props) {
       new Matrix(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y)
         .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
     ),
-    // 🚧 `resolution: window.devicePixelRatio` breaks mobile
     tex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
-      resolution: window.devicePixelRatio > 1 ? 2 : 1,
+      // resolution: window.devicePixelRatio > 1 ? 2 : 1,
     })),
     icon: /** @type {*} */ ({}),
     showColliders: false,
@@ -252,7 +251,7 @@ export default function Decor(props) {
           gfx.endFill();
           break;
         case 'point':
-          const radius = decorIconRadius;
+          const radius = decorIconRadius + 1;
           // background circle
           gfx.lineStyle({ color: '#77777777', width: 1 });
           gfx.beginFill(0);
