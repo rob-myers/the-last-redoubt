@@ -173,40 +173,6 @@ export default function Decor(props) {
       }
 
       api.renderInto(gfx, state.tex[gmId], false);
-      
-      // 🚧 fix transformed geomorphs
-      // // Cannot mask Graphics with Graphics, must create intermediary Sprite
-      // const gfxBounds = gfx.getBounds();
-
-      // const sprite = Sprite.from(api.pixiApp.renderer.generateTexture(gfx));
-      // sprite.transform.setFromMatrix(
-      //   state.mat[gmId]
-      // );
-      // // 🚧 is this wrong in transformed geomorphs?
-      // sprite.position.set(gfxBounds.x, gfxBounds.y); // 👈
-      
-      // const roomPoly = gm.rooms[roomId].clone()
-      //   .applyMatrix(gm.matrix);
-      // // const roomPoly = gm.rooms[roomId].clone();
-
-      // const mask = new Graphics;
-      // const gfxLocalBounds = gfx.getLocalBounds();
-      // mask.transform.setFromMatrix(
-      //   new Matrix()
-      //     .translate(-gfxLocalBounds.x, -gfxLocalBounds.y) // 👈
-      //     // // translation of matrix is correct...
-      //     // // but the rest isn't
-      //     // .append(new Matrix(...gm.matrix.toArray()))
-      //   );
-      // mask.beginFill('#ff000055');
-      // // mask.drawPolygon(gm.rooms[roomId].outline);
-      // mask.drawPolygon(roomPoly.outline);
-      // mask.endFill();
-      // sprite.addChild(mask); // mask MUST be descendent of subject
-      // // sprite.mask = mask;
-
-      // api.renderInto(sprite, state.tex[gmId], false);
-      // sprite.texture.destroy(); // gc
     },
     setDecor(...ds) {
       // 🚧 is existing decor being removed from e.g. colliders?
