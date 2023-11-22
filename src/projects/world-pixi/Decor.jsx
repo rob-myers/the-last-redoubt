@@ -32,8 +32,6 @@ export default function Decor(props) {
         state.icon[key] = await Assets.load(`/assets/icon/${filename}`)
       ));
 
-      console.log(state.icon)
-
       props.onLoad(state); // ready when icons loaded
       return null;
     },
@@ -46,7 +44,9 @@ export default function Decor(props) {
       new Matrix(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y)
         .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
     ),
-    tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height, resolution: window.devicePixelRatio })),
+    // 🚧 `resolution: window.devicePixelRatio` breaks mobile
+    // tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height, resolution: window.devicePixelRatio })),
+    tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height })),
     icon: /** @type {*} */ ({}),
     showColliders: false,
 
