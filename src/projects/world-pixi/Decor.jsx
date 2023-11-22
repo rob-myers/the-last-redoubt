@@ -58,23 +58,33 @@ export default function Decor(props) {
 
     addDecor(ds) {
       const grouped = ds.reduce((agg, d) => {
-        if (!d || !verifyDecor(d)) throw Error(`invalid decor: ${JSON.stringify(d)}`);
+        if (!verifyDecor(d)) {
+          throw Error(`invalid decor: ${JSON.stringify(d)}`);
+        }
+        // Add decor to addition group
         const { gmId, roomId } = ensureDecorMetaGmRoomId(d, api.gmGraph);
-        (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, ds }).ds.push(d);
+        (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, add: [], remove: [] }).add.push(d);
+        
+        // Add pre-existing decor to removal group
+        const prev = state.decor[d.key];
+        if (prev) {
+          d.updatedAt = Date.now();
+          const { gmId, roomId } = prev.meta;
+          (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, add: [], remove: [] }).remove.push(prev);
+        }
         return agg;
-      }, /** @type {Record<string, { gmId: number; roomId: number; ds: NPC.DecorDef[] }>} */ ({}));
+      }, /** @type {Record<string, { gmId: number; roomId: number; add: NPC.DecorDef[]; remove: NPC.DecorDef[]; }>} */ ({}));
 
-      Object.values(grouped).forEach(({ gmId, roomId, ds }) =>
-        state.addRoomDecor(gmId, roomId, ds)
-      );
+      Object.values(grouped).forEach(({ gmId, roomId, add, remove }) => {
+        state.removeRoomDecor(gmId, roomId, remove);
+        state.addRoomDecor(gmId, roomId, add);
+      });
     },
     addRoomDecor(gmId, roomId, ds) {
+      // We assume the provided decor does not currently exist
       if (ds.length === 0) {
         return;
       }
-
-      const existing = ds.flatMap(d => state.decor[d.key] ?? []);
-      state.removeRoomDecor(gmId, roomId, existing);
 
       const roomIds = removeDups(ds.map(d => d.meta.roomId));
       roomIds.forEach(roomId => state.clearHitTestRoom(gmId, roomId));
@@ -84,7 +94,7 @@ export default function Decor(props) {
       for (const d of ds) {
         normalizeDecor(d);
 
-        d.key in state.decor && removeFromDecorGrid(state.decor[d.key], state.byGrid);
+        // d.key in state.decor && removeFromDecorGrid(state.decor[d.key], state.byGrid);
         addToDecorGrid(d, getDecorRect(d), state.byGrid);
 
         state.decor[d.key] = d;
@@ -95,7 +105,7 @@ export default function Decor(props) {
         state.renderDecor(d);
       }
 
-      existing.forEach(d => state.decor[d.key].updatedAt = Date.now());
+      // existing.forEach(d => state.decor[d.key].updatedAt = Date.now());
       api.renderInto(state.gfx, state.tex[gmId], false);
       roomIds.forEach(roomId => state.redrawHitTestRoom(gmId, roomId));
 
@@ -213,6 +223,7 @@ export default function Decor(props) {
 
       const points = ds.filter(isDecorPoint);
       atRoom.points = atRoom.points.filter(d => !points.includes(d));
+      points.forEach(d => removeFromDecorGrid(d, state.byGrid));
 
       const colliders = ds.filter(isCollidable);
       atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));

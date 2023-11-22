@@ -26,7 +26,7 @@
   - ✅ decor points have placeholder icons
   - ✅ decor points have respective icons
 
-- fix decor update bug
+- ✅ fix decor update bug: different gmIds
   - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
 
 - 🚧 Spine: top_down_man_base: fix stuff
