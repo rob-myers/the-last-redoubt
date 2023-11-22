@@ -223,13 +223,13 @@ export class Rect {
   }
 
   /**
-   * Does this filled bordered rectangle intersect with {other}?
-   * @param {Rect} other
+   * Does this filled bordered rectangle intersect with @see {other}?
+   * @param {Geom.RectJson} other
    */
   intersects(other) {
     return (
-      Math.abs(this.cx - other.cx) * 2 <= this.width + other.width &&
-      Math.abs(this.cy - other.cy) * 2 <= this.height + other.height
+      Math.abs(this.cx - (other.x + 0.5 * other.width)) * 2 <= this.width + other.width &&
+      Math.abs(this.cy - (other.y + 0.5 * other.height)) * 2 <= this.height + other.height
     );
   }
 
