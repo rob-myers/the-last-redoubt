@@ -83,3 +83,5 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
  * how much we scale images up by to improve quality on zoom.
  */
 export const gmScale = 2.5;
+
+export const decorIconRadius = 4;

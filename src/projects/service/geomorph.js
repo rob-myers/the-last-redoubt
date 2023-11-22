@@ -8,6 +8,7 @@ import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
 import { imageService } from './image';
+import { decorIconRadius } from '../world/const';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
@@ -1541,18 +1542,11 @@ export function getDecorOrigin(decor) {
 }
 
 /**
- * @param {NPC.DecorCollidable} decor 
+ * @param {NPC.DecorDef} decor 
  * @returns {Geom.RectJson}
  */
 export function getDecorRect(decor) {
-  switch (decor.type) {
-    case 'circle':
-      return { x: decor.center.x - decor.radius, y: decor.center.y - decor.radius, width: decor.radius * 2, height: decor.radius * 2 };
-    case 'rect':
-      return /** @type {Geom.Rect} */ (decor.derivedBounds);
-    default:
-      throw testNever(decor);
-  }
+  return /** @type {Geom.Rect} */ (decor.derivedBounds);
 }
 
 /**
@@ -1671,17 +1665,23 @@ export function normalizeDecor(d) {
   d.tags = metaToTags(d.meta);
 
   switch (d.type) {
-    case 'circle':
+    case 'circle': {
       // d.derivedPoly = Poly.circle(d.center, d.radius, 32);
+      const radius = d.radius + 2;
+      d.derivedBounds = new Rect(d.center.x - radius, d.center.y - radius, 2 * radius, 2 * radius);
       break;
+    }
     case 'rect':
       // rect needn't be aabb
       d.derivedPoly = Poly.fromAngledRect({ angle: d.angle ?? 0, baseRect: d });
-      d.derivedBounds = d.derivedPoly.rect;
+      d.derivedBounds = d.derivedPoly.rect.outset(2);
       break;
-    case 'point':
-      // d.derivedPoly = Poly.circle(d, 5, 32); // 🚧 hard-coding
+    case 'point': {
+      // d.derivedPoly = Poly.circle(d, 5, 32);
+      const radius = decorIconRadius + 2;
+      d.derivedBounds = new Rect(d.x - radius, d.y - radius, 2 * radius, 2 * radius);
       break;
+    }
     default:
       throw testNever(d);
   }
@@ -1814,7 +1814,7 @@ function addToRoomGrid(item, rect, grid) {
 }
 
 /**
- * @param {NPC.DecorCollidable} item 
+ * @param {NPC.DecorDef} item 
  * @param {Geom.RectJson} rect Rectangle corresponding to item e.g. bounding box.
  * @param {NPC.DecorGrid} grid 
  */
@@ -1826,7 +1826,9 @@ export function addToDecorGrid(item, rect, grid) {
   item.meta.gridMax = max;
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++)
-      ((grid[i] ??= [])[j] ??= new Set).add(item);
+      ((grid[i] ??= [])[j] ??= { points: new Set, colliders: new Set })[
+        isDecorPoint(item) ? 'points' : 'colliders'
+      ].add(/** @type {*} */ (item));
 }
 
 /**
@@ -1838,14 +1840,17 @@ export function removeFromDecorGrid(d, grid) {
   const max = /** @type {Geom.VectJson} */ (d.meta.gridMax);
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++)
-      grid[i][j]?.delete(d);
+      grid[i][j]?.[
+        isDecorPoint(d) ? 'points' : 'colliders'
+      ].delete(/** @type {*} */ (d))
 }
 
 /** @type {Set<NPC.DecorCollidable>} */
 const foundDecor = new Set;
 
 /**
- * ℹ️ we filter by (gmId, roomId) elsewhere
+ * - We only return colliders
+ * - We filter by (gmId, roomId) elsewhere
  * @param {Geom.Vect} p 
  * @param {Geom.Vect} q 
  * @param {NPC.DecorGrid} grid
@@ -1864,7 +1869,7 @@ export function queryDecorGridLine(p, q, grid) {
   // const gq = coordToDecorGrid(q.x, q.y);
 
   foundDecor.clear();
-  grid[gp.x]?.[gp.y]?.forEach(d => foundDecor.add(d));
+  grid[gp.x]?.[gp.y]?.colliders.forEach(d => foundDecor.add(d));
   if (dx !== 0 || dy !== 0) {
     /**
      * Those λ ≥ 0 s.t. p + λ.tau on a vertical grid line.
@@ -1895,7 +1900,7 @@ export function queryDecorGridLine(p, q, grid) {
         cy += dy; // Hit horizontal 1st, so move vert
         lambdaH += (decorGridSize * dy) / tau.y; // Next horizontal line
       }
-      grid[cx]?.[cy]?.forEach(d => foundDecor.add(d));
+      grid[cx]?.[cy]?.colliders.forEach(d => foundDecor.add(d));
 
       // 🤔 (cx, cy) may not reach `max` in diagonal case?
       // } while ((cx !== max.x) && (cy !== max.y))
@@ -1903,6 +1908,15 @@ export function queryDecorGridLine(p, q, grid) {
   }
 
   return Array.from(foundDecor);
+}
+
+/**
+ * 
+ * @param {Geom.Rect} rect 
+ * @param {NPC.DecorGrid} grid 
+ */
+export function queryDecorGridRect(rect, grid) {
+  // 🚧
 }
 
 /**

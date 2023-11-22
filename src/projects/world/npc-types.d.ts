@@ -653,7 +653,10 @@ declare namespace NPC {
     meta: DecorDef['meta'];
   }
 
-  export type DecorGrid = Geomorph.GridSet<NPC.DecorCollidable>;
+  export type DecorGrid = Record<number, Record<number, {
+    points: Set<NPC.DecorPoint>;
+    colliders: Set<NPC.DecorCollidable>;
+  }>>;
 
   export interface RoomDecorCache {
     symbol: NPC.DecorDef[];

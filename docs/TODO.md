@@ -16,8 +16,9 @@
     - however, uses identity transform on Graphics
   - ❌ decor restricted to its room via mask
     - ℹ️ mask situated at top-left of Graphics
-  - 🚧 can render subset of decor in room
+  - ✅ can render subset of decor in room
   - 🚧 can remove subset of decor in room, check grid for intersects
+    - ✅ decor grid has {points,colliders}
   - fix `npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'`
   - decor points have icons
 
