@@ -262,7 +262,10 @@ export default function Geomorphs(props) {
         return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b });
       } else if (r === 127) {// (127, roomId, decorPointId, 1)
         const decor = api.decor.byRoom[gmId][g].points[b];
-        // console.log(`decor: r${g}p${b}`, decor);
+        if (!decor) {
+          console.error(`decor not found: g${gmId}r${g}p${b}`);
+          return null;
+        }
         return /** @type {Geomorph.PointMeta} */ ({ decor: true, gmId, roomId: g, decorKey: decor.key });
       } else {
         // if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);

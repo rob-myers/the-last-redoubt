@@ -1510,6 +1510,21 @@ export function decorToRef(decor) {
 }
 
 /**
+ * @param {{ gmGraph: Graph.GmGraph }} api 
+ * @param {NPC.DecorDef} [d]
+ */
+export function getDecorDefGmId(api, d) {
+  if (!d) {
+    throw Error('expected DecorDef');
+  }
+  const result = api.gmGraph.findGeomorphIdContaining(getDecorOrigin(d))[0];
+  if (result === null) {
+    throw Error(`decor: ${JSON.stringify(d)} is not inside a geomorph`);
+  }
+  return result;
+}
+
+/**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorDef} decor
  * @param {Graph.GmGraph} gmGraph
@@ -1525,10 +1540,12 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
       throw new Error(`decor origin must reside in some room: ${JSON.stringify(decor)}`);
     Object.assign(decor.meta, gmRoomId);
   }
+  return decor.meta;
 }
 
 /**
  * Each decor lies in precisely one room, this being determined by its center.
+ * We compute this origin without using `derivedBounds`.
  * @param {NPC.DecorDef} decor 
  * @returns {Geom.VectJson}
  */
@@ -1543,7 +1560,6 @@ export function getDecorOrigin(decor) {
 
 /**
  * @param {NPC.DecorDef} decor 
- * @returns {Geom.RectJson}
  */
 export function getDecorRect(decor) {
   return /** @type {Geom.Rect} */ (decor.derivedBounds);
@@ -1735,6 +1751,7 @@ export function singleToDecor(svgSingle, singleIndex, baseMeta) {
 }
 
 /**
+ * We don't verify `meta` yet.
  * @param {NPC.DecorDef} [input]
  * @returns {boolean}
  */
@@ -1832,7 +1849,7 @@ export function addToDecorGrid(item, rect, grid) {
 }
 
 /**
- * @param {NPC.DecorCollidable} d 
+ * @param {NPC.DecorDef} d 
  * @param {NPC.DecorGrid} grid 
  */
 export function removeFromDecorGrid(d, grid) {
@@ -1849,12 +1866,12 @@ export function removeFromDecorGrid(d, grid) {
 const foundDecor = new Set;
 
 /**
- * - We only return colliders
- * - We filter by (gmId, roomId) elsewhere
+ * - Returns colliders in same tiles as line
+ * - Does not filter by gmRoomId
  * @param {Geom.Vect} p 
  * @param {Geom.Vect} q 
  * @param {NPC.DecorGrid} grid
- * @return {NPC.DecorCollidable[]}
+ * @returns {NPC.DecorCollidable[]}
  */
 export function queryDecorGridLine(p, q, grid) {  
   const tau = tempVect.copy(q).sub(p);
@@ -1911,12 +1928,23 @@ export function queryDecorGridLine(p, q, grid) {
 }
 
 /**
- * 
+ * - Returns colliders and points intersecting rect
+ * - Does not filter by gmRoomId
  * @param {Geom.Rect} rect 
- * @param {NPC.DecorGrid} grid 
+ * @param {NPC.DecorGrid} grid
  */
-export function queryDecorGridRect(rect, grid) {
-  // 🚧
+export function queryDecorGridInterects(rect, grid) {
+  const output = /** @type {NPC.DecorDef[]} */ ([]);
+  const min = coordToDecorGrid(rect.x, rect.y);
+  const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
+  /** @type {NPC.DecorGrid[*][*]} */ let tile;
+  for (let i = min.x; i <= max.x; i++)
+    for (let j = min.y; j <= max.y; j++) {
+      tile = grid[i]?.[j];
+      tile.colliders.forEach(x => rect.intersects(getDecorRect(x)) && output.push(x));
+      tile.points.forEach(x => rect.intersects(getDecorRect(x)) && output.push(x));
+    }
+  return output;
 }
 
 /**

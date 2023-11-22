@@ -6,9 +6,9 @@ import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
 import { supportsWebp } from "../service/dom";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
-import { baseTrackingZoom, cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "../world/const";
+import { cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "../world/const";
 import { geom } from "../service/geom";
-import { hasGmRoomId } from "../service/geomorph";
+import { getDecorDefGmId, getDecorOrigin, hasGmRoomId } from "../service/geomorph";
 import { detectReactDevToolQuery, getNumericCssVar, loadImage } from "../service/dom";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
@@ -528,13 +528,12 @@ export default function NPCs(props) {
     async npcAct(e, processApi) {
       switch (e.action) {
         case 'add-decor': // add decor(s)
-          return api.decor.setDecor(...e.items);
-        case 'decor': // get decor, list decors, or add decor
-          return 'decorKey' in e
-            ? api.decor.decor[e.decorKey] // get
-            : 'key' in e // 🚧 verify decor?
-              ? api.decor.setDecor(e) // add
-              : Object.values(api.decor.decor) // list
+          return api.decor.setDecor(getDecorDefGmId(api, e.items[0]), ...e.items);
+        case 'decor': { // get decor, list decors, or add decor
+          if ('decorKey' in e) return api.decor.decor[e.decorKey] // get
+          else if ('key' in e) return api.decor.setDecor(getDecorDefGmId(api, e), e); // add
+          else return Object.values(api.decor.decor); // list
+        }
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(api.lib.isConfigBooleanKey);

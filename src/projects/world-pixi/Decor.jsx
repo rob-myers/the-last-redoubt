@@ -1,11 +1,10 @@
 import React from "react";
 import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-import { Sprite } from "@pixi/sprite";
 
-import { testNever } from "../service/generic";
-import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, normalizeDecor, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
-import { gmScale } from "../world/const";
+import { removeDups, removeFirst, testNever } from "../service/generic";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridInterects as queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { decorIconRadius, gmScale } from "../world/const";
 
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
@@ -33,29 +32,49 @@ export default function Decor(props) {
     rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
 
-    clearDecor(gmId, roomId) {
+    eraseDecor(gmId, decorKeys) {
+      const ds = decorKeys.map(x => state.decor[x]);
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(state.mat[gmId]);
       gfx.blendMode = BLEND_MODES.ERASE;
-      gfx.beginFill();
-      gfx.drawPolygon(gms[gmId].roomsWithDoors[roomId].outline);
-      gfx.endFill();
+      const needRedraw = /** @type {{ [decorKey: string]: NPC.DecorDef }} */ ({});
+      
+      for (const d of ds) {
+        const rect = getDecorRect(d);
+        gfx.beginFill();
+        gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+        gfx.endFill();
+
+        // find overlapping for redraw
+        queryDecorGridIntersect(rect, state.byGrid).forEach(other =>
+          !decorKeys.includes(other.key) && (needRedraw[other.key] = other)
+        );
+      }
       api.renderInto(state.gfx, state.tex[gmId], false);
+      gfx.blendMode = BLEND_MODES.NORMAL;
+
+      gfx.blendMode = BLEND_MODES.DST_ATOP;
+      gfx.clear(); // Redraw any overlapping:
+      Object.values(needRedraw).forEach(d => state.renderDecor(d));
+      api.renderInto(gfx, state.tex[gmId], false);
       gfx.blendMode = BLEND_MODES.NORMAL;
     },
     initByRoom(gmId) {
       const gm = gms[gmId];
       state.byRoom[gmId] = gm.gmRoomDecor;
-      gm.gmRoomDecor.forEach(({ colliders, decor }) => {
+      gm.gmRoomDecor.forEach(({ colliders, points, decor }) => {
         Object.assign(state.decor, decor);
+        points.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
         colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
       });
     },
     initTex(gmId) {
-      state.gfx.clear();
-      api.renderInto(state.gfx, state.tex[gmId]); // Clear
-      state.gfx.transform.setFromMatrix(state.mat[gmId]);
-      state.byRoom[gmId].forEach((_, roomId) => state.renderDecor(gmId, roomId));
+      const gfx = state.gfx.clear();
+      gfx.transform.setFromMatrix(state.mat[gmId]);
+      state.byRoom[gmId].forEach(({ decor }, _roomId) => {
+        Object.values(decor).map(d => state.renderDecor(d));
+      });
+      api.renderInto(gfx, state.tex[gmId], true);
     },
     getDecorInRoom(gmId, roomId, onlyColliders = false) {
       const atRoom = state.byRoom[gmId][roomId];
@@ -73,9 +92,14 @@ export default function Decor(props) {
         api.npcs.events.next({ key: 'decor-click', decor: item });
       }
     },
+    redrawHitPoints(gmId, nextPoints) {
+      removeDups(nextPoints.map(x => x.meta.roomId)).forEach(roomId =>
+        state.redrawHitCanvas(gmId, roomId, nextPoints)
+      );
+    },
     redrawHitCanvas(gmId, roomId, nextPoints) {
       const gm = gms[gmId];
-      const radius = 5; // 🚧 hard-coded radius
+      const radius = decorIconRadius + 1;
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
 
       gfx.blendMode = BLEND_MODES.ERASE;
@@ -90,35 +114,38 @@ export default function Decor(props) {
       gfx.clear().blendMode = BLEND_MODES.NORMAL;
 
       nextPoints.forEach((d, pointId) => {
-        const center = gm.toLocalCoords(d);
-        gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
-        gfx.drawCircle(center.x, center.y, radius);
-        gfx.endFill();
+        // 🚧 currently need to filter nextPoints
+        if (d.meta.gmId === gmId && d.meta.roomId === roomId) {
+          const center = gm.toLocalCoords(d);
+          gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
+          gfx.drawCircle(center.x, center.y, radius);
+          gfx.endFill();
+        }
       });
 
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       api.debug.opts.debugHit && api.debug.render();
     },
     removeDecor(decorKeys) {// Assume all decor in same room
-      const ds = decorKeys.map(decorKey => state.decor[decorKey]);
+      const ds = decorKeys.map(x => state.decor[x]).filter(Boolean);
+      decorKeys = ds.map(d => d.key); // Normalization
       if (!ds.length) {
         return;
       }
+      
       const { gmId, roomId } = ds[0].meta;
       const atRoom = state.byRoom[gmId][roomId];
 
+      // Also redraw any overlapping
+      state.eraseDecor(gmId, decorKeys);
+
       const points = ds.filter(isDecorPoint);
-      if (points.length) {
-        const nextPoints = atRoom.points.filter(d => !points.includes(d));
-        state.redrawHitCanvas(gmId, roomId, nextPoints);
-        atRoom.points = nextPoints;
-      }
+      atRoom.points = atRoom.points.filter(d => !points.includes(d));
+      state.redrawHitPoints(gmId, points);
 
       const colliders = ds.filter(isCollidable);
-      if (colliders.length) {
-        atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
-        colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
-      }
+      atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
+      colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
 
       ds.forEach(d => {
         delete state.decor[d.key];
@@ -126,94 +153,84 @@ export default function Decor(props) {
       });
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
       
-      state.clearDecor(gmId, roomId);
-      state.renderDecor(gmId, roomId);
     },
-    renderDecor(gmId, roomId) {
-      const ds = Object.values(state.byRoom[gmId][roomId].decor);
-      const gm = gms[gmId];
-      const gfx = state.gfx.clear();
-
-      for (const decor of ds) {
-        if (isCollidable(decor) && !state.showColliders) {
-          continue;
-        }
-        switch (decor.type) {
-          case 'circle':
-            gfx.lineStyle({ color: '#ffffff33', width: 1 });
-            // ctxt.setLineDash([2, 2]);
+    renderDecor(decor) {// Texture manipulation done elsewhere
+      const gfx = state.gfx;
+      switch (decor.type) {
+        case 'circle':
+          if (!state.showColliders) break;
+          gfx.lineStyle({ color: '#ffffff11', width: 1 });
+          gfx.beginFill(0, 0);
+          gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
+          gfx.endFill();
+          break;
+        case 'point':
+          gfx.lineStyle({ color: '#77777733', width: 2 });
+          gfx.beginFill(0);
+          gfx.drawCircle(decor.x, decor.y, decorIconRadius + 1);
+          gfx.endFill();
+          // 🚧 render icons
+          // imageService.lookup[metaToImageHref(decor.meta)]
+          // gfx.beginTextureFill({ texture: iconTex });
+          // gfx.drawRect(decor.x - iconRadius,decor.y - iconRadius,2 * iconRadius,2 * iconRadius);
+          // gfx.endFill();
+          break;
+        case 'rect':
+          if (!state.showColliders) break;
+          gfx.lineStyle({ color: '#ffffff11', width: 1 });
+          // ctxt.setLineDash([2, 2]);
+          if (decor.derivedPoly) {// Should always exist
             gfx.beginFill(0, 0);
-            gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
+            gfx.drawPolygon(decor.derivedPoly.outline);
             gfx.endFill();
-            break;
-          case 'point':
-            const iconRadius = 4;
-            gfx.lineStyle({ color: '#77777733', width: 2 });
-            gfx.beginFill(0);
-            gfx.drawCircle(decor.x, decor.y, 5);
-            gfx.endFill();
-            // 🚧 render icons
-            // imageService.lookup[metaToImageHref(decor.meta)]
-            // gfx.beginTextureFill({ texture: iconTex });
-            // gfx.drawRect(decor.x - iconRadius,decor.y - iconRadius,2 * iconRadius,2 * iconRadius);
-            // gfx.endFill();
-            break;
-          case 'rect':
-            gfx.lineStyle({ color: '#ffffff33', width: 1 });
-            // ctxt.setLineDash([2, 2]);
-            if (decor.derivedPoly) {// Should always exist
-              gfx.beginFill(0, 0);
-              gfx.drawPolygon(decor.derivedPoly.outline);
-              gfx.endFill();
-            }
-            break;
-          default:
-            throw testNever(decor);
-        }
+          }
+          break;
+        default:
+          throw testNever(decor);
       }
-
-      api.renderInto(gfx, state.tex[gmId], false);
     },
-    setDecor(...ds) {
-      // 🚧 is existing decor being removed from e.g. colliders?
+    setDecor(gmId, ...ds) {
+      /**
+       * Decor needn't reside in same room,
+       * e.g. because this is directly connected to CLI.
+       * However, we __do__ assume `gmId` is constant.
+       */
       if (ds.length === 0) {
         return;
       }
-      ds.forEach(d => {
-        if (!d || !verifyDecor(d))
-          throw Error(`invalid decor: ${JSON.stringify(d)}`);
+
+      // Cannot absorb these Graphics operations below
+      ds.filter(d => d.key in state.decor).forEach(d => {
+        d.updatedAt = Date.now();
+        state.removeDecor([d.key]); // ℹ️ cannot batch: must be in same room
       });
 
-      // Every decor must lie in same room
-      const { gmId, roomId } = ds[0].meta;
-      const atRoom = state.byRoom[gmId][roomId];
-      const points = /** @type {NPC.DecorPoint[]} */ ([]);
+      state.gfx.clear();
+      state.gfx.transform.setFromMatrix(state.mat[gmId]);
 
       for (const d of ds) {
-        if (state.decor[d.key]) {
-          d.updatedAt = Date.now();
+        if (!d || !verifyDecor(d)) {
+          throw Error(`invalid decor: ${JSON.stringify(d)}`);
         }
-        ensureDecorMetaGmRoomId(d, api.gmGraph);
+        const { roomId } = ensureDecorMetaGmRoomId(d, api.gmGraph);
         normalizeDecor(d);
-        atRoom.decor[d.key] = d;
 
-        if (isCollidable(d)) {
-          atRoom.colliders.push(d);
-          d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
-          addToDecorGrid(d, getDecorRect(d), state.byGrid);
-        } else if (isDecorPoint(d)) {
-          points.push(d);
-        }
+        d.key in state.decor && removeFromDecorGrid(state.decor[d.key], state.byGrid);
+        addToDecorGrid(d, getDecorRect(d), state.byGrid);
+
         state.decor[d.key] = d;
+        const atRoom = state.byRoom[gmId][roomId];
+        atRoom.decor[d.key] = d;
+        removeFirst(atRoom[isDecorPoint(d) ? 'points' : 'colliders'], d).push(d);
+        
+        state.renderDecor(d);
       }
 
-      if (points.length) {
-        state.redrawHitCanvas(gmId, roomId, points); // redraw handles updated decor
-        atRoom.points = atRoom.points.filter(x => !points.some(y => x.key === y.key)).concat(points);
-      }
+      api.renderInto(state.gfx, state.tex[gmId], false);
+      // Must redraw hit canvas rooms when points are added/updated
+      state.redrawHitPoints(gmId, ds.filter(isDecorPoint));
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
-      state.renderDecor(gmId, roomId);
     },
   }));
 
@@ -268,7 +285,7 @@ function metaToImageHref(meta) {
  * @property {boolean} ready
  * @property {HTMLElement} rootEl
  *
- * @property {(gmId: number, roomId: number) => void} clearDecor
+ * @property {(gmId: number, decorKeys: string[]) => void} eraseDecor
  * @property {(gmId: number, roomId: number, onlyColliders?: boolean) => NPC.DecorDef[]} getDecorInRoom
  * Get all decor in specified room.
  * @property {(point: Geom.VectJson, gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtPoint
@@ -276,10 +293,11 @@ function metaToImageHref(meta) {
  * @property {(gmId: number) => void} initByRoom
  * @property {(gmId: number) => void} initTex
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
+ * @property {(gmId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitPoints
  * @property {(gmId: number, roomId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitCanvas
- * @property {(decorKeys: string[]) => void} removeDecor Assumed to be in same room
- * @property {(gmId: number, roomId: number) => void} renderDecor
- * @property {(...decor: NPC.DecorDef[]) => void} setDecor
+ * @property {(decorKeys: string[]) => void} removeDecor Must all be in same room
+ * @property {(decor: NPC.DecorDef) => void} renderDecor
+ * @property {(gmId: number, ...decor: NPC.DecorDef[]) => void} setDecor
  */
 
 /**
