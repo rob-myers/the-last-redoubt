@@ -1,6 +1,7 @@
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
+import { settings } from "@pixi/settings";
 import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
@@ -23,6 +24,8 @@ import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
 import { Origin, TestRenderTexture, TestSprite } from "./Misc";
+
+settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 
 /**
  * @param {Props} props
