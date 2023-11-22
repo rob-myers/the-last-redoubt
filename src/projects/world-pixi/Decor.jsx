@@ -92,19 +92,14 @@ export default function Decor(props) {
         api.npcs.events.next({ key: 'decor-click', decor: item });
       }
     },
-    redrawHitPoints(gmId, nextPoints) {
-      removeDups(nextPoints.map(x => x.meta.roomId)).forEach(roomId =>
-        state.redrawHitCanvas(gmId, roomId, nextPoints)
-      );
-    },
-    redrawHitCanvas(gmId, roomId, nextPoints) {
+    clearHitTestRoom(gmId, roomId) {
       const gm = gms[gmId];
       const radius = decorIconRadius + 1;
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
 
       gfx.blendMode = BLEND_MODES.ERASE;
-      const { points: prevPoints } = api.decor.byRoom[gmId][roomId];
-      prevPoints.forEach((d) => {
+      const { points } = api.decor.byRoom[gmId][roomId];
+      points.forEach((d) => {
         const local = gm.toLocalCoords(d);
         gfx.beginFill('black');
         gfx.drawRect(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
@@ -112,15 +107,18 @@ export default function Decor(props) {
       });
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       gfx.clear().blendMode = BLEND_MODES.NORMAL;
+    },
+    redrawHitTestRoom(gmId, roomId) {
+      const gm = gms[gmId];
+      const radius = decorIconRadius + 1;
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
 
-      nextPoints.forEach((d, pointId) => {
-        // 🚧 currently need to filter nextPoints
-        if (d.meta.gmId === gmId && d.meta.roomId === roomId) {
-          const center = gm.toLocalCoords(d);
-          gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
-          gfx.drawCircle(center.x, center.y, radius);
-          gfx.endFill();
-        }
+      const { points } = api.decor.byRoom[gmId][roomId];
+      points.forEach((d, pointId) => {
+        const center = gm.toLocalCoords(d);
+        gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
+        gfx.drawCircle(center.x, center.y, radius);
+        gfx.endFill();
       });
 
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
@@ -136,12 +134,12 @@ export default function Decor(props) {
       const { gmId, roomId } = ds[0].meta;
       const atRoom = state.byRoom[gmId][roomId];
 
+      state.clearHitTestRoom(gmId, roomId);
       // Also redraw any overlapping
       state.eraseDecor(gmId, decorKeys);
 
       const points = ds.filter(isDecorPoint);
       atRoom.points = atRoom.points.filter(d => !points.includes(d));
-      state.redrawHitPoints(gmId, points);
 
       const colliders = ds.filter(isCollidable);
       atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
@@ -151,6 +149,8 @@ export default function Decor(props) {
         delete state.decor[d.key];
         delete atRoom.decor[d.key];
       });
+
+      state.redrawHitTestRoom(gmId, roomId);
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
       
     },
@@ -199,11 +199,15 @@ export default function Decor(props) {
         return;
       }
 
+      // Remove existing decor
       // Cannot absorb these Graphics operations below
       ds.filter(d => d.key in state.decor).forEach(d => {
         d.updatedAt = Date.now();
         state.removeDecor([d.key]); // ℹ️ cannot batch: must be in same room
       });
+
+      const roomIds = removeDups(ds.map(d => d.meta.roomId));
+      roomIds.forEach(roomId => state.clearHitTestRoom(gmId, roomId));
 
       state.gfx.clear();
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
@@ -227,8 +231,12 @@ export default function Decor(props) {
       }
 
       api.renderInto(state.gfx, state.tex[gmId], false);
-      // Must redraw hit canvas rooms when points are added/updated
-      state.redrawHitPoints(gmId, ds.filter(isDecorPoint));
+      // // 🚧 If points are updated they need to be cleared...
+      // // Must redraw hit canvas rooms when points are added/updated
+      // removeDups(ds.map(d => d.meta.roomId)).forEach(roomId =>
+      //   state.redrawHitCanvas(gmId, roomId, state.byRoom[gmId][roomId].points)
+      // );
+      roomIds.forEach(roomId => state.redrawHitTestRoom(gmId, roomId));
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
     },
@@ -293,8 +301,8 @@ function metaToImageHref(meta) {
  * @property {(gmId: number) => void} initByRoom
  * @property {(gmId: number) => void} initTex
  * @property {(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void} onClick
- * @property {(gmId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitPoints
- * @property {(gmId: number, roomId: number, nextPoints: NPC.DecorPoint[]) => void} redrawHitCanvas
+ * @property {(gmId: number, roomId: number) => void} clearHitTestRoom
+ * @property {(gmId: number, roomId: number) => void} redrawHitTestRoom
  * @property {(decorKeys: string[]) => void} removeDecor Must all be in same room
  * @property {(decor: NPC.DecorDef) => void} renderDecor
  * @property {(gmId: number, ...decor: NPC.DecorDef[]) => void} setDecor

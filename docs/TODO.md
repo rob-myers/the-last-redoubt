@@ -21,8 +21,8 @@
     - ✅ decor grid has {points,colliders}
   - ✅ fix `npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'`
     - ✅ `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
-  - 🚧 `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
-  - decor points have icons
+  - ✅ `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
+  - 🚧 decor points have icons
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
