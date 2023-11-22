@@ -1,7 +1,7 @@
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
-import { settings } from "@pixi/settings";
+// import { settings } from "@pixi/settings";
 import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
@@ -25,7 +25,7 @@ import Decor from "./Decor";
 import FOV from "./FOV";
 import { Origin, TestRenderTexture, TestSprite } from "./Misc";
 
-settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
+// settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 
 /**
  * @param {Props} props
@@ -101,7 +101,7 @@ export default function WorldPixi(props) {
           options={{
             hello: true,
             antialias: true,
-            resolution: window.devicePixelRatio,
+            resolution: window.devicePixelRatio > 1 ? 2 : 1,
             powerPreference: 'low-power',
             backgroundColor: 0x111111,
             eventFeatures: { globalMove: true, move: true, click: true, wheel: true },

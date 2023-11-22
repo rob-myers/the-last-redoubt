@@ -45,8 +45,11 @@ export default function Decor(props) {
         .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
     ),
     // 🚧 `resolution: window.devicePixelRatio` breaks mobile
-    // tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height, resolution: window.devicePixelRatio })),
-    tex: gms.map(gm => RenderTexture.create({ width: gmScale * gm.pngRect.width, height: gmScale * gm.pngRect.height })),
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+      resolution: window.devicePixelRatio > 1 ? 2 : 1,
+    })),
     icon: /** @type {*} */ ({}),
     showColliders: false,
 
