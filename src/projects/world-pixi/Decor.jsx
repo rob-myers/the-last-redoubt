@@ -23,7 +23,7 @@ export default function Decor(props) {
     queryKey: [`decor-icon-textures`],
     queryFn: async () => {
       await Promise.all(/** @type {const} */ ([
-        { key: 'standing', filename: 'standing-person.png'},
+        { key: 'standing', filename: 'standing-person.invert.svg'},
         { key: 'sitting', filename: 'sitting-silhouette.invert.svg'},
         { key: 'lying', filename: 'lying-man.invert.svg'},
         { key: 'info', filename: 'info-icon.invert.svg'},

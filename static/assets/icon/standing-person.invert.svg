@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+<svg filter="invert(1)" width="24" height="24" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
   <image width="216" height="216" x="12" y="12" style="visibility: hidden;" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADuSURBVEiJ7dU9TsNAEIbhJwkSiIIakKDiBBwAWiiQotyEk3CAcA1uQBm4AT0lLnCKCEIzUSLHwmMnCAnxSaux5+9de3ftgbz6uMIZXlrUpXWPeYzxtpv3UK4AyvA1qp8EzPG0cj8JX6MGSQA8RNNH3OI9U5R5zPNoeFjxv+IOz/k5rusYheW7r44CR981aFqDCxxgVhObRexyE8B+2LptOa7kdAIs9Jn0dQZ01t8HlGGnNbFpJaeT9nCNkfUzMIrY7iaAhYbRdGL5HRpmCndagj5a5v/+Iv8Dfh6Q3UVFxcLbNifSww1OcBrXqZ/+F/OrMua21tGCAAAAAElFTkSuQmCC">
     <title>standing-man</title>
   </image>
