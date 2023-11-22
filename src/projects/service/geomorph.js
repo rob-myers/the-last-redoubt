@@ -1510,21 +1510,6 @@ export function decorToRef(decor) {
 }
 
 /**
- * @param {{ gmGraph: Graph.GmGraph }} api 
- * @param {NPC.DecorDef} [d]
- */
-export function getDecorDefGmId(api, d) {
-  if (!d) {
-    throw Error('expected DecorDef');
-  }
-  const result = api.gmGraph.findGeomorphIdContaining(getDecorOrigin(d))[0];
-  if (result === null) {
-    throw Error(`decor: ${JSON.stringify(d)} is not inside a geomorph`);
-  }
-  return result;
-}
-
-/**
  * Ensure decor.meta.{gmId,roomId} (possibly null)
  * @param {NPC.DecorDef} decor
  * @param {Graph.GmGraph} gmGraph
@@ -1933,7 +1918,7 @@ export function queryDecorGridLine(p, q, grid) {
  * @param {Geom.Rect} rect 
  * @param {NPC.DecorGrid} grid
  */
-export function queryDecorGridInterects(rect, grid) {
+export function queryDecorGridIntersect(rect, grid) {
   const output = /** @type {NPC.DecorDef[]} */ ([]);
   const min = coordToDecorGrid(rect.x, rect.y);
   const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
