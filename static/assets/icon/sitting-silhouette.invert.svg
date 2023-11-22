@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg width="24" height="24" filter="invert(1)" viewBox="66.0856 15 107.568 210" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
-  <g style="">
+<svg width="24" height="24" filter="invert(1)" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+  <image width="216" height="216" x="12" y="12" style="visibility: hidden;" transform="matrix(1, 0, 0, 1, 8.881784197001252e-16, 0)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAsQAAALEBxi1JjQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADuSURBVEiJ7dU9TsNAEIbhJwkSiIIakKDiBBwAWiiQotyEk3CAcA1uQBm4AT0lLnCKCEIzUSLHwmMnCAnxSaux5+9de3ftgbz6uMIZXlrUpXWPeYzxtpv3UK4AyvA1qp8EzPG0cj8JX6MGSQA8RNNH3OI9U5R5zPNoeFjxv+IOz/k5rusYheW7r44CR981aFqDCxxgVhObRexyE8B+2LptOa7kdAIs9Jn0dQZ01t8HlGGnNbFpJaeT9nCNkfUzMIrY7iaAhYbRdGL5HRpmCndagj5a5v/+Iv8Dfh6Q3UVFxcLbNifSww1OcBrXqZ/+F/OrMua21tGCAAAAAElFTkSuQmCC">
+    <title>standing-man</title>
+  </image>
+  <image width="216" height="216" x="12" y="12" style="pointer-events: none; visibility: hidden;" transform="matrix(1, 0, 0, 1, 8.881784197001252e-16, 0)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAACpQAAAqUB5N8bEgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADuSURBVEiJ7dShS0NRFMfxz12QYbOJIgObxSqCYSAYxGgSBMG/wmAwrhmtBv8OwWK1aDCIYVEEiy6Ix3IHj7c3timvjHfgB5dzzv19D/fCSRGhzmjV6t4AGkC9gJTSfkqp+29CRIwIN4iss6qeaVVlflEwH+o019roYA2rWMEyFgr3W9hBewSAo+LkuMznb/TQr4AH3nGCDbzm3Bv2YBFbOMQgF+/RxS5expiW9YGrUu4OHqc0mKTP0t8FHuAaX3n6SRpn/oNzbGfQ8FmP0yzrOqW0ifWK0nNEPOWeJRzgNiL6MwH+EnO8KhrA/AB+AYLNyNyfdt4VAAAAAElFTkSuQmCC">
+    <title>lying-down</title>
+  </image>
+  <image width="216" height="216" x="12" y="11.722" style="visibility: hidden;" transform="matrix(1, 0, 0, 1, 8.881784197001252e-16, 0)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAABqwAAAasBc/jzKAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEZSURBVEiJ7ZW/agJBEIe/CVcEY2ch1oldIOQB8kpi6xukDFgE7NIpeYY8g1XSXK8RtREUCeKkyArrsbNkj7tUGRh2b+Z3+93sv0NVCTnQAZ6BGTACOpY25nYCngD1fFg14L0AyMsALrBtUngeR7S2RSpoAn3gzbVXVVdwDeyBV9felilA3NeeB0UawBq49MI7oKWq+xSAVUFWGBygwc/WTbIgQFU3wDaQqgbgbF43YPYP+BNAlgi4E5HHQmwFvKjqMjhK5Kp44Pyyi/kH7tCm3KYZME2A3ITGMadIVQ/AvYi0ATFkA6Dn+sH1jK3BCbSwciLy6UtDmtgu+o357x/rAPhTV3sFtQAOXv8rqCjzG/S2chfIgbGl+QbUlLal/ZYfygAAAABJRU5ErkJggg==">
+    <title>sitting-down</title>
+  </image>
+  <g style="visibility: hidden; pointer-events: none;" transform="matrix(1, 0, 0, 1, 8.881784197001252e-16, 0)">
+    <title>lying-down</title>
+    <ellipse style="" cx="209.843" cy="129.112" rx="20" ry="20"/>
+    <path style="" d="M 20.445 130 H 110.877 V 145 H 20.445 A 8.6 7.5 0 0 1 11.845 137.5 V 137.5 A 8.6 7.5 0 0 1 20.445 130 Z" bx:shape="rect 11.845 130 99.032 15 8.6 0 0 8.6 1@76dcc972"/>
+    <path style="transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0.707126, -0.707088, 0.707088, 0.707126, 21.422212, -23.594919)" d="M 7.411 129.566 H 58.703 A 8.6 8.587 0 0 1 67.303 138.153 V 146.739 H 7.411 V 129.566 Z" bx:shape="rect 7.411 129.566 59.892 17.173 0 8.6 0 0 1@1da07a21"/>
+    <path style="transform-origin: 37.81px 138.152px;" transform="matrix(0.707088, 0.707126, -0.707126, 0.707088, 53.484851, -21.556203)" d="M 16.101 129.566 H 68.119 V 146.739 H 7.501 V 138.153 A 8.6 8.587 0 0 1 16.101 129.566 Z" bx:shape="rect 7.501 129.566 60.618 17.173 8.6 0 0 0 1@e88e42db"/>
+    <path style="" d="M 115 115 H 170 A 10 10 0 0 1 180 125 V 135 A 10 10 0 0 1 170 145 H 110 V 120 A 5 5 0 0 1 115 115 Z" bx:shape="rect 110 115 70 30 5 10 10 0 1@cb518a4b"/>
+    <path style="" d="M 115 125 H 190 A 10 5 0 0 1 200 130 V 130 A 10 5 0 0 1 190 135 H 110 V 130 A 5 5 0 0 1 115 125 Z" bx:shape="rect 110 125 90 10 5 10 10 0 1@24ffbf9a"/>
+  </g>
+  <g style="" transform="matrix(1, 0, 0, 1, 8.881784197001252e-16, 0)">
     <title>sitting-down</title>
     <ellipse style="" cx="87.5" cy="32.5" rx="17.5" ry="17.5"/>
     <path style="" d="M 88.626 140 H 161.73 A 10 10 0 0 1 171.73 150 V 161.14 H 98.626 A 10 10 0 0 1 88.626 151.14 V 140 Z" bx:shape="rect 88.626 140 83.104 21.14 0 10 0 10 1@ded0ab0e"/>
     <rect style="transform-box: fill-box; transform-origin: 50% 50%;" transform="matrix(0, 1, -1, 0, 29.813615, -25.567017)" x="89.73" y="196.457" width="85" height="23.22" rx="10" ry="10"/>
     <path style="" d="M 88 31.722 H 88 A 5 8.7 0 0 1 93 40.422 V 163.389 H 88 A 5 10 0 0 1 83 153.389 V 41.722 A 5 10 0 0 1 88 31.722 Z" bx:shape="rect 83 31.722 10 131.667 10 8.7 0 10 1@a69a8bd4"/>
     <path style="transform-box: fill-box; transform-origin: 50% 50%;" d="M 108.628 58.182 H 128.065 A 10 10 0 0 1 138.065 68.182 V 161.182 H 108.628 A 10 10 0 0 1 98.628 151.182 V 68.182 A 10 10 0 0 1 108.628 58.182 Z" transform="matrix(0.984808, -0.173648, 0.173648, 0.984808, -23.899047, 4.213978)" bx:shape="rect 98.628 58.182 39.437 103 10 10 0 10 1@bb447064"/>
+  </g>
+  <g style="visibility: hidden;" transform="matrix(1, 0, 0, 1, -2.4999999999999996, 0)">
+    <title>standing-man</title>
+    <ellipse style="" cx="122.5" cy="32.5" rx="17.5" ry="17.5"/>
+    <path style="" d="M 122.5 31.722 H 122.5 A 5 8.7 0 0 1 127.5 40.422 V 134.86 H 122.5 A 5 10 0 0 1 117.5 124.86 V 41.722 A 5 10 0 0 1 122.5 31.722 Z" bx:shape="rect 117.5 31.722 10 103.138 10 8.7 0 10 1@c5740045"/>
+    <path style="transform-box: fill-box; transform-origin: 50% 50%;" d="M 117.5 62.396 H 127.5 A 10 10 0 0 1 137.5 72.396 V 142.756 H 107.5 V 72.396 A 10 10 0 0 1 117.5 62.396 Z" bx:shape="rect 107.5 62.396 30 80.36 10 10 0 0 1@50239c48"/>
+    <path style="transform-box: fill-box; transform-origin: 50% 50%;" d="M 107.5 140 H 117.5 V 210 A 5 10 0 0 1 112.5 220 H 112.5 A 5 10 0 0 1 107.5 210 V 140 Z" bx:shape="rect 107.5 140 10 80 0 0 10 10 1@f82d1027"/>
+    <path style="transform-origin: 107.5px 180px;" d="M 127.5 140 H 137.5 V 210 A 5 10 0 0 1 132.5 220 H 132.5 A 5 10 0 0 1 127.5 210 V 140 Z" bx:shape="rect 127.5 140 10 80 0 0 10 10 1@31107ce7"/>
+    <path style="transform-origin: 112.5px 180px;" d="M 92.5 70 H 97.5 V 130 A 5 10 0 0 1 92.5 140 H 92.5 A 5 10 0 0 1 87.5 130 V 75 A 5 5 0 0 1 92.5 70 Z" bx:shape="rect 87.5 70 10 70 5 0 10 10 1@4a78c006"/>
+    <path style="transform-origin: 112.5px 180px;" d="M 147.5 70 H 152.5 A 5 5 0 0 1 157.5 75 V 130 A 5 10 0 0 1 152.5 140 H 152.5 A 5 10 0 0 1 147.5 130 V 70 Z" bx:shape="rect 147.5 70 10 70 0 5 10 10 1@1b362835"/>
+    <path style="transform-origin: 122.5px 102.576px;" d="M 106.783 66.627 H 138.256 A 10 6.26 0 0 1 148.256 72.887 V 79.146 H 96.783 V 72.887 A 10 6.26 0 0 1 106.783 66.627 Z" bx:shape="rect 96.783 66.627 51.473 12.519 10 10 0 0 1@e88bdee7"/>
   </g>
 </svg>

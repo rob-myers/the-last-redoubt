@@ -18,7 +18,7 @@
     <path style="" d="M 115 115 H 170 A 10 10 0 0 1 180 125 V 135 A 10 10 0 0 1 170 145 H 110 V 120 A 5 5 0 0 1 115 115 Z" bx:shape="rect 110 115 70 30 5 10 10 0 1@cb518a4b"/>
     <path style="" d="M 115 125 H 190 A 10 5 0 0 1 200 130 V 130 A 10 5 0 0 1 190 135 H 110 V 130 A 5 5 0 0 1 115 125 Z" bx:shape="rect 110 125 90 10 5 10 10 0 1@24ffbf9a"/>
   </g>
-  <g style="visibility: hidden;">
+  <g style="">
     <title>sitting-down</title>
     <ellipse style="" cx="87.5" cy="32.5" rx="17.5" ry="17.5"/>
     <path style="" d="M 88.626 140 H 161.73 A 10 10 0 0 1 171.73 150 V 161.14 H 98.626 A 10 10 0 0 1 88.626 151.14 V 140 Z" bx:shape="rect 88.626 140 83.104 21.14 0 10 0 10 1@ded0ab0e"/>
@@ -26,7 +26,7 @@
     <path style="" d="M 88 31.722 H 88 A 5 8.7 0 0 1 93 40.422 V 163.389 H 88 A 5 10 0 0 1 83 153.389 V 41.722 A 5 10 0 0 1 88 31.722 Z" bx:shape="rect 83 31.722 10 131.667 10 8.7 0 10 1@a69a8bd4"/>
     <path style="transform-box: fill-box; transform-origin: 50% 50%;" d="M 108.628 58.182 H 128.065 A 10 10 0 0 1 138.065 68.182 V 161.182 H 108.628 A 10 10 0 0 1 98.628 151.182 V 68.182 A 10 10 0 0 1 108.628 58.182 Z" transform="matrix(0.984808, -0.173648, 0.173648, 0.984808, -23.899047, 4.213978)" bx:shape="rect 98.628 58.182 39.437 103 10 10 0 10 1@bb447064"/>
   </g>
-  <g style="" transform="matrix(1, 0, 0, 1, -2.5, 0)">
+  <g style="visibility: hidden;" transform="matrix(1, 0, 0, 1, -2.5, 0)">
     <title>standing-man</title>
     <ellipse style="" cx="122.5" cy="32.5" rx="17.5" ry="17.5"/>
     <path style="" d="M 122.5 31.722 H 122.5 A 5 8.7 0 0 1 127.5 40.422 V 134.86 H 122.5 A 5 10 0 0 1 117.5 124.86 V 41.722 A 5 10 0 0 1 122.5 31.722 Z" bx:shape="rect 117.5 31.722 10 103.138 10 8.7 0 10 1@c5740045"/>
