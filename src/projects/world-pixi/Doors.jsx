@@ -50,14 +50,18 @@ export default function Doors(props) {
       // 🚧 cancel other hull door too
     },
     drawDoor(gmId, doorId) {
-      const { open, door } = state.lookup[gmId][doorId];
+      const gfx = state.gfx[gmId]
+      const item = state.lookup[gmId][doorId];
+      gfx.lineStyle({ width: 2, color: 0x666666 });
+      gfx.beginFill(0x111111);
+      gfx.fill.alpha = gfx.line.alpha = item.open ? 0.2 : 1;
+      gfx.drawPolygon(item.door.poly.outline);
+      gfx.endFill();
+    },
+    renderDoor(gmId, doorId) {
       const gfx = state.gfx[gmId].clear();
       gfx.blendMode = BLEND_MODES.DST_ATOP; // Discard extant pixels
-      gfx.lineStyle({ width: 1, color: 0x000000 });
-      gfx.beginFill(0xaaaaaa);
-      gfx.fill.alpha = gfx.line.alpha = open ? 0.2 : 1;
-      gfx.drawPolygon(door.poly.outline);
-      gfx.endFill();
+      state.drawDoor(gmId, doorId);
       api.renderInto(gfx, state.tex[gmId], false);
       gfx.blendMode = BLEND_MODES.NORMAL;
     },
@@ -75,13 +79,10 @@ export default function Doors(props) {
       const gfx = state.gfx[gmId].clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gfx.lineStyle({ width: 1, color: 0x000000 });
 
-      gm.doors.forEach(({ poly }, doorId) => {// 🚧
-        gfx.beginFill(0xaaaaaa);
-        gfx.fill.alpha = gfx.line.alpha = lookup[doorId].open ? 0.2 : 1;
-        gfx.drawPolygon(poly.outline);
-        gfx.endFill();
-      });
+      gfx.blendMode = BLEND_MODES.DST_ATOP;
+      gm.doors.forEach((_, doorId) => state.drawDoor(gmId, doorId));
       api.renderInto(gfx, state.tex[gmId]);
+      gfx.blendMode = BLEND_MODES.NORMAL;
     },
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
@@ -261,6 +262,7 @@ export default function Doors(props) {
  * 
  * @property {(item: DoorState) => void} cancelClose
  * @property {(gmId: number, doorId: number) => void} drawDoor
+ * @property {(gmId: number, doorId: number) => void} renderDoor
  * @property {(gmId: number) => number[]} getOpenIds Get ids of open doors
  * @property {(gmId: number) => number[]} getVisibleIds
  * @property {(gmId: number) => void} initTex

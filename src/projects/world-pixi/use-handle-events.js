@@ -21,13 +21,13 @@ export default function useHandleEvents(api) {
         case 'closed-door': {
           api.geomorphs.onCloseDoor(e.gmId, e.doorId);
           api.fov.recompute();
-          api.doors.drawDoor(e.gmId, e.doorId);
+          api.doors.renderDoor(e.gmId, e.doorId);
           break;
         }
         case 'opened-door': {
           api.geomorphs.onOpenDoor(e.gmId, e.doorId);
           api.fov.recompute();
-          api.doors.drawDoor(e.gmId, e.doorId);
+          api.doors.renderDoor(e.gmId, e.doorId);
           break;
         }
       }
