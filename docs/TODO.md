@@ -7,7 +7,7 @@
   - ℹ️ useEffect in use-handle-events not running
 - mobile click should not flash blue
 
-- 🚧 draw decor
+- ✅ draw decor
   - ✅ decor colliders are outlines
   - ✅ decor points are circular
   - ✅ can `npc config showColliders`
@@ -24,7 +24,10 @@
   - ✅ `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
   - ✅ all non-CLI Decor functions should be relative to (gmId, roomId)
   - ✅ decor points have placeholder icons
-  - decor points have respective icons
+  - ✅ decor points have respective icons
+
+- fix decor update bug
+  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs

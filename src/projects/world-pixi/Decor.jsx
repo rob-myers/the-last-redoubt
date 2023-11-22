@@ -239,14 +239,21 @@ export default function Decor(props) {
           break;
         case 'point':
           const radius = decorIconRadius;
-
-          gfx.lineStyle({ color: '#77777733', width: 2 });
+          // background circle
+          gfx.lineStyle({ color: '#77777777', width: 1 });
           gfx.beginFill(0);
           gfx.drawCircle(decor.x, decor.y, radius + 1);
           gfx.endFill();
 
-          // render icons
-          const texture = state.icon["road-works"];
+          // icon
+          const { meta } = decor;
+          const texture = state.icon[
+            meta.stand && 'standing' || 
+            meta.sit && 'sitting' || 
+            meta.lie && 'lying' || 
+            meta.label && 'info' || 
+              'road-works'
+          ];
           const scale = (2 * radius) / texture.width;
           // ℹ️ can ignore transform of `gfx`
           const matrix = tempMatrix1.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
