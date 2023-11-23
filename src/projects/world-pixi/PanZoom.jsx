@@ -1,6 +1,6 @@
 import React from "react";
 import { Subject } from "rxjs";
-import { Animate } from "pixi-viewport";
+import { Animate, Viewport as PixiViewport } from "pixi-viewport";
 
 import { Vect } from "../geom";
 import { longClickMs } from "../service/const";
@@ -83,10 +83,11 @@ export default function PanZoom(props) {
       state.isIdle() && state.events.next({ key: 'ui-idle' });
     }, 100),
     viewportRef(vp) {
-      if (vp) {
+      if (vp && !(state.viewport instanceof PixiViewport)) {
         state.viewport = vp;
         state.input = vp.input;
         state.transform = vp.transform;
+        props.initScale && state.viewport.scale.set(props.initScale);
       }
     },
   }));
@@ -122,6 +123,7 @@ export default function PanZoom(props) {
  * @typedef Props
  * @property {import('./WorldPixi').State} api
  * @property {(panZoomApi: State) => void} onLoad
+ * @property {number} [initScale]
  */
 
 

@@ -5,7 +5,7 @@ import { Viewport as PixiViewport } from "pixi-viewport";
 const PixiComponentViewport = PixiComponent("Viewport", {
   
   /** @param {PixiComponentViewportProps} props  */
-  create: ({ app, initScale }) => {
+  create: ({ app }) => {
     app.renderer.events.domElement = /** @type {*} */ (app.renderer.view);
 
     const viewport = new PixiViewport({
@@ -28,9 +28,6 @@ const PixiComponentViewport = PixiComponent("Viewport", {
       friction: 0.5,
     });
 
-    if (initScale) {// 🚧 move to <PanZoom>
-      viewport.scale.set(initScale);
-    }
     return viewport;
   },
   /** @param {PixiViewport} viewport */
@@ -53,7 +50,6 @@ export default Viewport;
 /**
  * @typedef ViewportProps
  * @property {React.ReactNode} children
- * @property {number} [initScale]
  */
 
 /**
