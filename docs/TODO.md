@@ -3,31 +3,11 @@
 ## In progress
 
 - ✅ filter pointermove from `npc events`
-- 🚧 try to fix sporadic pointerevents failure
+- ✅ try to fix sporadic pointerevents failure
   - ℹ️ useEffect in use-handle-events not running
 - mobile click should not flash blue
 
-- ✅ draw decor
-  - ✅ decor colliders are outlines
-  - ✅ decor points are circular
-  - ✅ can `npc config showColliders`
-  - ✅ get a basic mask working
-  - ✅ Sprite.from(Graphics) rendered correctly into RenderTexture
-    - however, uses identity transform on Graphics
-  - ❌ decor restricted to its room via mask
-    - ℹ️ mask situated at top-left of Graphics
-  - ✅ can render subset of decor in room
-  - ✅ can remove subset of decor in room, check grid for intersects
-    - ✅ decor grid has {points,colliders}
-  - ✅ fix `npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'`
-    - ✅ `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
-  - ✅ `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
-  - ✅ all non-CLI Decor functions should be relative to (gmId, roomId)
-  - ✅ decor points have placeholder icons
-  - ✅ decor points have respective icons
-
-- ✅ fix decor update bug: different gmIds
-  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
+- start migrating NPCs
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -678,6 +658,28 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ draw decor
+  - ✅ decor colliders are outlines
+  - ✅ decor points are circular
+  - ✅ can `npc config showColliders`
+  - ✅ get a basic mask working
+  - ✅ Sprite.from(Graphics) rendered correctly into RenderTexture
+    - however, uses identity transform on Graphics
+  - ❌ decor restricted to its room via mask
+    - ℹ️ mask situated at top-left of Graphics
+  - ✅ can render subset of decor in room
+  - ✅ can remove subset of decor in room, check grid for intersects
+    - ✅ decor grid has {points,colliders}
+  - ✅ fix `npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'`
+    - ✅ `npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'`
+  - ✅ `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
+  - ✅ all non-CLI Decor functions should be relative to (gmId, roomId)
+  - ✅ decor points have placeholder icons
+  - ✅ decor points have respective icons
+
+- ✅ fix decor update bug: different gmIds
+  - `npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'`
 
 - ✅ can open doors on click door
   - ✅ `click` has meta.{door,doorId}
