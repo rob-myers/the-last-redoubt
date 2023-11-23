@@ -82,6 +82,9 @@ export default function PanZoom(props) {
     onZoomEnd: debounce(() => {
       state.isIdle() && state.events.next({ key: 'ui-idle' });
     }, 100),
+    onZoom() {
+      // console.log(state.viewport.scale.x);
+    },
     viewportRef(vp) {
       if (vp && !(state.viewport instanceof PixiViewport)) {
         state.viewport = vp;
@@ -93,15 +96,17 @@ export default function PanZoom(props) {
   }));
 
   React.useEffect(() => {
-    const { viewport: vp, onPanEnd, onZoomEnd } = state;
+    const { viewport: vp, onPanEnd, onZoomEnd, onZoom } = state;
     vp.plugins.add('animate', state.animate = new Animate(vp));
     vp.addEventListener('moved-end', onPanEnd);
     vp.addEventListener('zoomed-end', onZoomEnd);
+    vp.addEventListener('zoomed', onZoom);
     props.onLoad(state);
     return () => {
       vp.plugins.remove('animate');
       state.viewport.removeEventListener('moved-end', onPanEnd);
       state.viewport.removeEventListener('zoomed-end', onZoomEnd);
+      state.viewport.removeEventListener('zoomed', onZoom);
     };
   }, []);
 
@@ -149,6 +154,7 @@ export default function PanZoom(props) {
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => void} pointerup
  * @property {() => void} onPanEnd
  * @property {() => void} onZoomEnd
+ * @property {() => void} onZoom
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */
 
