@@ -403,8 +403,8 @@ declare namespace NPC {
     */
    export type NpcAction = (
     | { action: 'add-decor'; items: DecorDef[]; }
-    | { action: 'config'; } // get all
-    | { action: 'config'; configKey: string } // Possibly space-sep `ConfigBooleanKey`s
+    | { action: 'config' | 'cfg'; } // get all
+    | { action: 'config' | 'cfg'; configKey: string } // Possibly space-sep `ConfigBooleanKey`s
     | NpcActionConfigPartial
     | { action: 'decor'; } // get all
     | { action: 'decor'; } & (DecorDef | { decorKey: string })

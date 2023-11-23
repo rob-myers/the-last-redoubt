@@ -518,6 +518,7 @@ export default function NPCs(props) {
             : 'key' in e // 🚧 verify decor?
               ? api.decor.setDecor(e) // add
               : Object.values(api.decor.decor) // list
+        case 'cfg':
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(api.lib.isConfigBooleanKey);

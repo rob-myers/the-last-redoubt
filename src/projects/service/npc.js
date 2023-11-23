@@ -93,6 +93,7 @@ export const npcService = {
           // npc get {npcKey} [selectorFunction]
           // npc get {npcKey} [selectorString] [args]*
           return { action: 'get', npcKey: opts, selector: extras[0], extraArgs: extras.slice(1) };
+        case "cfg":
         case "config":
           // npc config {boolOptionToToggle}+, e.g.
           // npc config omnipresent showLabels
@@ -111,6 +112,7 @@ export const npcService = {
       }
     } else if (opts) {// opts is `NPC.NpcConfigOpts`
       switch (action) {
+        case "cfg":
         case "config":
           // npc config {partialConfig}
           // > e.g. npc config '{ omnipresent: true, interactRadius: 100 }'
@@ -145,6 +147,7 @@ export const npcService = {
           // npc events
           return { action: 'events' };
         case "add-decor":
+        case "cfg":
         case "config":
           // npc config
           return { action: 'config' }; // get all
@@ -180,7 +183,7 @@ export const npcService = {
   fovMapActionKeys: /** @type {NPC.FovMapAction[]} */ ([]),
 
   /** @type {Record<NPC.NpcActionKey, true>} */
-  fromNpcActionKey: { "add-decor": true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true },
+  fromNpcActionKey: { "add-decor": true, cfg: true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true },
 
   /** @type {Record<NPC.NpcClassKey, true>} */
   fromNpcClassKey: { "first-human-npc": true, solomani: true, vilani: true, zhodani: true },
