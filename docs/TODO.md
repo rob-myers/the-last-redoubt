@@ -7,6 +7,7 @@
   - ℹ️ useEffect in use-handle-events not running
 - mobile click should not flash blue
 
+- ✅ fix viewport zoom flicker
 - start migrating NPCs
 
 - 🚧 Spine: top_down_man_base: fix stuff

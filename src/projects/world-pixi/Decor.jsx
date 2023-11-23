@@ -291,10 +291,6 @@ export default function Decor(props) {
     },
   }));
 
-  // React.useEffect(() => {
-  //   props.onLoad(state);
-  // }, []);
-
   return (
     <GmSprites
       gms={gms}
