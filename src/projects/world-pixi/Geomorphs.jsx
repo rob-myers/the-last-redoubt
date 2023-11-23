@@ -18,7 +18,7 @@ import GmSprites from "./GmSprites";
 export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
-  
+
   useQueries({
     /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
     queries: gms.map((gm, gmId) => ({
@@ -39,6 +39,9 @@ export default function Geomorphs(props) {
         return null;
       },
       throwOnError: true,
+      gcTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: 'always',
     })),
   });
 

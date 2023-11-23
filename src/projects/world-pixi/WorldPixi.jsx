@@ -23,7 +23,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin, TestRenderTexture, TestSprite } from "./Misc";
+import { Origin } from "./Misc";
 
 // settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 

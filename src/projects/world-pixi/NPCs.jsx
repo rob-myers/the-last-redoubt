@@ -135,7 +135,7 @@ export default function NPCs(props) {
           case 'verbose': ctxt.verbose = !!value; break;
           case 'showColliders':
             api.decor.showColliders = !!value;
-            gms.map((_, gmId) => setTimeout(() => api.decor.initTex(gmId)));
+            api.decor.refreshAll();
             break;
 
           case 'configKey':
@@ -534,6 +534,7 @@ export default function NPCs(props) {
           else if ('key' in e) return api.decor.addDecor([e]); // add
           else return Object.values(api.decor.decor); // list
         }
+        case 'cfg':
         case 'config': // set multiple, toggle multiple booleans, get all
           if ('configKey' in e) {// toggle multiple booleans
             const configKeys = e.configKey.split(' ').filter(api.lib.isConfigBooleanKey);

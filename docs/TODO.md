@@ -8,6 +8,16 @@
 - mobile click should not flash blue
 
 - ✅ fix viewport zoom flicker
+- ✅ prevent react-query from refetching without breaking remount
+- 🚧 decor update broken
+  - repro
+```sh
+npc cfg showColliders
+npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
+npc rm-decor foo
+# point icons get rubbed out
+```
+
 - start migrating NPCs
 
 - 🚧 Spine: top_down_man_base: fix stuff

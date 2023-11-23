@@ -36,6 +36,9 @@ export default function Decor(props) {
       return null;
     },
     throwOnError: true,
+    gcTime: Infinity,
+    staleTime: Infinity,
+    refetchOnMount: 'always',
   });
 
   const state = useStateRef(/** @type {() => State} */ () => ({
@@ -95,8 +98,6 @@ export default function Decor(props) {
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
       for (const d of ds) {
         normalizeDecor(d);
-
-        // d.key in state.decor && removeFromDecorGrid(state.decor[d.key], state.byGrid);
         addToDecorGrid(d, getDecorRect(d), state.byGrid);
 
         state.decor[d.key] = d;
@@ -107,7 +108,6 @@ export default function Decor(props) {
         state.renderDecor(d);
       }
 
-      // existing.forEach(d => state.decor[d.key].updatedAt = Date.now());
       api.renderInto(state.gfx, state.tex[gmId], false);
       roomIds.forEach(roomId => state.redrawHitTestRoom(gmId, roomId));
 
@@ -200,6 +200,9 @@ export default function Decor(props) {
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       api.debug.opts.debugHit && api.debug.render();
     },
+    refreshAll() {
+      gms.map((_, gmId) => setTimeout(() => api.decor.initTex(gmId)));;
+    },
     removeDecor(decorKeys) {
       const ds = decorKeys.map(x => state.decor[x]).filter(Boolean);
       decorKeys = ds.map(d => d.key);
@@ -221,7 +224,8 @@ export default function Decor(props) {
 
       const atRoom = state.byRoom[gmId][roomId];
       state.clearHitTestRoom(gmId, roomId);
-      state.eraseDecor(gmId, ds); // redraws overlapping
+      // redraws overlapping
+      state.eraseDecor(gmId, state.showColliders ? ds : ds.filter(isDecorPoint));
 
       const points = ds.filter(isDecorPoint);
       atRoom.points = atRoom.points.filter(d => !points.includes(d));
@@ -246,7 +250,7 @@ export default function Decor(props) {
         case 'circle':
           if (!state.showColliders) break;
           gfx.lineStyle({ color: '#ffffff11', width: 1 });
-          gfx.beginFill(0, 0);
+          gfx.beginFill(0xff0000, 0.05);
           gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
           gfx.endFill();
           break;
@@ -278,9 +282,8 @@ export default function Decor(props) {
         case 'rect':
           if (!state.showColliders) break;
           gfx.lineStyle({ color: '#ffffff11', width: 1 });
-          // ctxt.setLineDash([2, 2]);
           if (decor.derivedPoly) {// Should always exist
-            gfx.beginFill(0, 0);
+            gfx.beginFill(0xff0000, 0.1);
             gfx.drawPolygon(decor.derivedPoly.outline);
             gfx.endFill();
           }
@@ -290,6 +293,12 @@ export default function Decor(props) {
       }
     },
   }));
+
+  // process.env.NODE_ENV === 'development' && React.useEffect(() => {
+  //   if (api.isReady()) {
+  //     state.refreshAll();
+  //   }
+  // }, []);
 
   return (
     <GmSprites
@@ -339,6 +348,7 @@ export default function Decor(props) {
  * @property {(gmId: number) => void} initTex
  * @property {(gmId: number, roomId: number) => void} clearHitTestRoom
  * @property {(gmId: number, roomId: number) => void} redrawHitTestRoom
+ * @property {() => void} refreshAll
  * @property {(decorKeys: string[]) => void} removeDecor
  * @property {(gmId: number, roomId: number, decors: NPC.DecorDef[]) => void} removeRoomDecor
  * @property {(decor: NPC.DecorDef) => void} renderDecor
