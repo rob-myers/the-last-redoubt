@@ -1919,17 +1919,18 @@ export function queryDecorGridLine(p, q, grid) {
  * @param {NPC.DecorGrid} grid
  */
 export function queryDecorGridIntersect(rect, grid) {
-  const output = /** @type {NPC.DecorDef[]} */ ([]);
+  const colliders = /** @type {{ [decorKey: string]: NPC.DecorDef }} */ ({});
+  const points = /** @type {{ [decorKey: string]: NPC.DecorDef }} */ ({});
   const min = coordToDecorGrid(rect.x, rect.y);
   const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
   /** @type {NPC.DecorGrid[*][*]} */ let tile;
   for (let i = min.x; i <= max.x; i++)
     for (let j = min.y; j <= max.y; j++) {
       tile = grid[i]?.[j];
-      tile.colliders.forEach(x => rect.intersects(getDecorRect(x)) && output.push(x));
-      tile.points.forEach(x => rect.intersects(getDecorRect(x)) && output.push(x));
+      tile.colliders.forEach(x => rect.intersects(getDecorRect(x)) && (colliders[x.key] = x));
+      tile.points.forEach(x => rect.intersects(getDecorRect(x)) && (points[x.key] = x));
     }
-  return output;
+  return { colliders, points };
 }
 
 /**

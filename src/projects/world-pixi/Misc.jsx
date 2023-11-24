@@ -3,6 +3,7 @@ import { Sprite, useApp } from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
+import { Container } from "@pixi/display";
 
 export function Origin() {
   const app = useApp();
@@ -78,3 +79,6 @@ colMatFilter2.tint(0x00ff00, true);
 colMatFilter2.resolution = 2; // better zoom flicker
 
 export const tempMatrix1 = new Matrix();
+
+export const emptyContainer = new Container();
+export const emptyGraphics = new Graphics();

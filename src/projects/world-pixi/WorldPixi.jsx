@@ -23,7 +23,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin } from "./Misc";
+import { Origin, emptyGraphics, emptyContainer } from "./Misc";
 
 // settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 
@@ -68,8 +68,20 @@ export default function WorldPixi(props) {
         state.panZoom,
       ].every(x => x.ready);
     },
+    clearInto(tex) {
+      state.renderer.render(emptyGraphics, { renderTexture: tex, clear: true });
+    },
     renderInto(displayObj, tex, clear = true) {
       state.renderer.render(displayObj, { renderTexture: tex, clear });
+    },
+    renderRect(displayObj, tex, rect) {
+      const mask = emptyGraphics.beginFill().drawRect(rect.x, rect.y, rect.width, rect.height);
+      displayObj.mask = mask;
+      emptyContainer.addChild(displayObj, mask);
+      state.renderer.render(emptyContainer, { renderTexture: tex, clear: false });
+      displayObj.mask = null;
+      emptyGraphics.clear();
+      emptyContainer.removeChildren();
     },
     setCursor(cssValue) {
       state.canvas.style.cursor = cssValue;
@@ -192,7 +204,9 @@ export default function WorldPixi(props) {
  * @property {import('./PanZoom').State} panZoom
  *
  * @property {() => boolean} isReady
+ * @property {(tex: import("pixi.js").RenderTexture) => void} clearInto
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
+ * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
  */
 

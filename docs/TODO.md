@@ -10,8 +10,10 @@
 - ✅ fix viewport zoom flicker
 - ✅ prevent react-query from refetching without breaking remount
 - 🚧 decor update broken
-  - repro
+  - ✅ fix `npc rm-decor foo`
+  - fix direct update
 ```sh
+# broken decor repro
 npc cfg showColliders
 npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
 npc rm-decor foo

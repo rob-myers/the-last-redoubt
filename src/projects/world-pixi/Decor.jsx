@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { BLEND_MODES, RenderTexture, Matrix, MIPMAP_MODES } from "@pixi/core";
+import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 
@@ -130,33 +130,27 @@ export default function Decor(props) {
       gfx.clear().blendMode = BLEND_MODES.NORMAL;
     },
     eraseDecor(gmId, ds) {
-      // Not restricted by roomId e.g. overlapping decor can be from other rooms
+      // Not restricted by roomId (overlapping decor can be from other rooms)
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(state.mat[gmId]);
-      gfx.blendMode = BLEND_MODES.ERASE;
-      const needRedraw = /** @type {{ [decorKey: string]: NPC.DecorDef }} */ ({});
-      const decorKeys = ds.map(d => d.key);
+      const isDecorKey = ds.reduce((agg, d) => (agg[d.key] = true, agg), /** @type {Record<string, true>} */ ({}));
       
       for (const d of ds) {
+        // erase `rect` bounding decor `d`
         const rect = getDecorRect(d);
-        gfx.beginFill();
-        gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
-        gfx.endFill();
+        gfx.clear().blendMode = BLEND_MODES.ERASE;
+        gfx.beginFill(); gfx.drawRect(rect.x, rect.y, rect.width, rect.height);
+        api.renderInto(gfx, state.tex[gmId], false);
 
-        // find overlapping for redraw
-        queryDecorGridIntersect(rect, state.byGrid).forEach(other =>
-          !decorKeys.includes(other.key) && (needRedraw[other.key] = other)
-        );
+        // redraw close decor into `rect`
+        const { colliders, points } = queryDecorGridIntersect(rect, state.byGrid);
+        const topLeft = state.mat[gmId].apply({ x: rect.x, y: rect.y });
+        const texRect = { x: topLeft.x, y: topLeft.y, width: rect.width * gmScale, height: rect.height * gmScale };
+        gfx.clear().blendMode = BLEND_MODES.NORMAL;
+        Object.values(colliders).forEach(d => !isDecorKey[d.key] && state.renderDecor(d));
+        Object.values(points).forEach(d => !isDecorKey[d.key] && state.renderDecor(d));
+        api.renderRect(gfx, state.tex[gmId], texRect);
       }
-      api.renderInto(state.gfx, state.tex[gmId], false);
-      gfx.blendMode = BLEND_MODES.NORMAL;
-
-      // Redraw any overlapping
-      gfx.blendMode = BLEND_MODES.DST_ATOP;
-      gfx.clear();
-      Object.values(needRedraw).forEach(d => state.renderDecor(d));
-      api.renderInto(gfx, state.tex[gmId], false);
-      gfx.blendMode = BLEND_MODES.NORMAL;
     },
     initByRoom(gmId) {
       const gm = gms[gmId];
@@ -205,11 +199,10 @@ export default function Decor(props) {
     },
     removeDecor(decorKeys) {
       const ds = decorKeys.map(x => state.decor[x]).filter(Boolean);
-      decorKeys = ds.map(d => d.key);
 
       const grouped = ds.reduce((agg, d) => {
         const { gmId, roomId } = d.meta;
-        (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, ds }).ds.push(d);
+        (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, ds: [] }).ds.push(d);
         return agg;
       }, /** @type {Record<string, { gmId: number; roomId: number; ds: NPC.DecorDef[] }>} */ ({}));
 
@@ -222,19 +215,18 @@ export default function Decor(props) {
         return;
       }
 
-      const atRoom = state.byRoom[gmId][roomId];
       state.clearHitTestRoom(gmId, roomId);
-      // redraws overlapping
+      // erase and redraw overlapping
       state.eraseDecor(gmId, state.showColliders ? ds : ds.filter(isDecorPoint));
-
+      
+      // update data structures
+      const atRoom = state.byRoom[gmId][roomId];
       const points = ds.filter(isDecorPoint);
       atRoom.points = atRoom.points.filter(d => !points.includes(d));
       points.forEach(d => removeFromDecorGrid(d, state.byGrid));
-
       const colliders = ds.filter(isCollidable);
       atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
       colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
-
       ds.forEach(d => {
         delete state.decor[d.key];
         delete atRoom.decor[d.key];
@@ -242,7 +234,6 @@ export default function Decor(props) {
 
       state.redrawHitTestRoom(gmId, roomId);
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
-      
     },
     renderDecor(decor) {// Texture manipulation done elsewhere
       const gfx = state.gfx;
