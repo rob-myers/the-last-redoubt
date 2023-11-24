@@ -133,7 +133,7 @@ export default function Decor(props) {
         case 'circle':
           if (!state.showColliders) break;
           gfx.lineStyle({ color: '#ffffff11', width: 1 });
-          gfx.beginFill(0xff0000, 0.05);
+          gfx.beginFill(0xff0000, 0.025);
           gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
           gfx.endFill();
           break;
@@ -164,9 +164,9 @@ export default function Decor(props) {
           break;
         case 'rect':
           if (!state.showColliders) break;
-          gfx.lineStyle({ color: '#ffffff11', width: 1 });
+          gfx.lineStyle({ color: '#ffffff22', width: 1 });
           if (decor.derivedPoly) {// Should always exist
-            gfx.beginFill(0xff0000, 0.1);
+            gfx.beginFill(0xff0000, 0.025);
             gfx.drawPolygon(decor.derivedPoly.outline);
             gfx.endFill();
           }
@@ -193,8 +193,8 @@ export default function Decor(props) {
         const topLeft = state.mat[gmId].apply({ x: rect.x, y: rect.y });
         const texRect = { x: topLeft.x, y: topLeft.y, width: rect.width * gmScale, height: rect.height * gmScale };
         gfx.clear().blendMode = BLEND_MODES.NORMAL;
-        Object.values(colliders).forEach(d => !shouldErase[d.key] && state.drawDecor(d));
-        Object.values(points).forEach(d => !shouldErase[d.key] && state.drawDecor(d));
+        Object.values(colliders).forEach(d => !shouldErase[d.key] && (gmId === d.meta.gmId) && state.drawDecor(d));
+        Object.values(points).forEach(d => !shouldErase[d.key] && (gmId === d.meta.gmId) && state.drawDecor(d));
         api.renderRect(gfx, state.tex[gmId], texRect);
       }
     },

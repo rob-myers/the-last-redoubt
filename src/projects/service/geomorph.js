@@ -1572,10 +1572,10 @@ function instantiateLocalDecor(d, ctxt) {
     return {
       ...d,
       ...baseRect,
+      angle,
       derivedPoly: transformedPoly,
       derivedBounds: transformedPoly.rect,
       key,
-      angle,
       meta: { ...d.meta, ...ctxt.meta },
     };
   } else if (d.type === 'circle') {
@@ -1641,10 +1641,7 @@ export function instantiateRoomDecor(gm, gmId, matrix) {
  * @return {decor is NPC.DecorCollidable}
  */
 export function isCollidable(decor) {
-  return (
-    decor.type === 'circle'
-    || decor.type === 'rect'
-  );
+  return decor.type === 'circle' || decor.type === 'rect';
 }
 
 /**
