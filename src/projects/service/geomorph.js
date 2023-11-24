@@ -1817,10 +1817,10 @@ function addToRoomGrid(item, rect, grid) {
 
 /**
  * @param {NPC.DecorDef} item 
- * @param {Geom.RectJson} rect Rectangle corresponding to item e.g. bounding box.
  * @param {NPC.DecorGrid} grid 
  */
-export function addToDecorGrid(item, rect, grid) {
+export function addToDecorGrid(item, grid) {
+  const rect = getDecorRect(item);
   const min = coordToDecorGrid(rect.x, rect.y);
   const max = coordToDecorGrid(rect.x + rect.width, rect.y + rect.height);
   // const max = coordToDecorGridSupremum(rect.x + rect.width, rect.y + rect.height);

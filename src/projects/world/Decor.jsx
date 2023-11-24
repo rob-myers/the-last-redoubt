@@ -30,7 +30,7 @@ export default function Decor(props) {
         state.byRoom[gmId] = gm.gmRoomDecor;
         gm.gmRoomDecor.forEach(({ colliders, decor }) => {
           Object.assign(state.decor, decor);
-          colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
+          colliders.forEach(d => addToDecorGrid(d, state.byGrid))
         });
       });
     },
@@ -95,7 +95,7 @@ export default function Decor(props) {
         if (isCollidable(d)) {
           atRoom.colliders.push(d);
           d.key in state.decor && removeFromDecorGrid(d, state.byGrid);
-          addToDecorGrid(d, getDecorRect(d), state.byGrid);
+          addToDecorGrid(d, state.byGrid);
         }
 
         state.decor[d.key] = d;

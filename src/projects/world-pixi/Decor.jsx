@@ -91,25 +91,23 @@ export default function Decor(props) {
         return;
       }
 
-      const roomIds = removeDups(ds.map(d => d.meta.roomId));
-      roomIds.forEach(roomId => state.clearHitTestRoom(gmId, roomId));
+      state.clearHitTestRoom(gmId, roomId);
 
       state.gfx.clear();
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
       for (const d of ds) {
         normalizeDecor(d);
-        addToDecorGrid(d, getDecorRect(d), state.byGrid);
+        addToDecorGrid(d, state.byGrid);
+        state.drawDecor(d);
 
         state.decor[d.key] = d;
         const atRoom = state.byRoom[gmId][roomId];
         atRoom.decor[d.key] = d;
-        removeFirst(atRoom[isDecorPoint(d) ? 'points' : 'colliders'], d).push(d);
-        
-        state.renderDecor(d);
+        isDecorPoint(d) ? atRoom.points.push(d) : atRoom.colliders.push(d);
       }
 
       api.renderInto(state.gfx, state.tex[gmId], false);
-      roomIds.forEach(roomId => state.redrawHitTestRoom(gmId, roomId));
+      state.redrawHitTestRoom(gmId, roomId);
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
     },
@@ -129,11 +127,59 @@ export default function Decor(props) {
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       gfx.clear().blendMode = BLEND_MODES.NORMAL;
     },
+    drawDecor(decor) {// Render elsewhere
+      const gfx = state.gfx;
+      switch (decor.type) {
+        case 'circle':
+          if (!state.showColliders) break;
+          gfx.lineStyle({ color: '#ffffff11', width: 1 });
+          gfx.beginFill(0xff0000, 0.05);
+          gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
+          gfx.endFill();
+          break;
+        case 'point':
+          const radius = decorIconRadius + 1;
+          // background circle
+          gfx.lineStyle({ color: '#77777777', width: 1 });
+          gfx.beginFill(0);
+          gfx.drawCircle(decor.x, decor.y, radius + 1);
+          gfx.endFill();
+
+          // icon
+          const { meta } = decor;
+          const texture = state.icon[
+            meta.stand && 'standing' || 
+            meta.sit && 'sitting' || 
+            meta.lie && 'lying' || 
+            meta.label && 'info' || 
+              'road-works'
+          ];
+          const scale = (2 * radius) / texture.width;
+          // ℹ️ can ignore transform of `gfx`
+          const matrix = tempMatrix1.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
+          gfx.line.width = 0;
+          gfx.beginTextureFill({ texture, matrix });
+          gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
+          gfx.endFill();
+          break;
+        case 'rect':
+          if (!state.showColliders) break;
+          gfx.lineStyle({ color: '#ffffff11', width: 1 });
+          if (decor.derivedPoly) {// Should always exist
+            gfx.beginFill(0xff0000, 0.1);
+            gfx.drawPolygon(decor.derivedPoly.outline);
+            gfx.endFill();
+          }
+          break;
+        default:
+          throw testNever(decor);
+      }
+    },
     eraseDecor(gmId, ds) {
       // Not restricted by roomId (overlapping decor can be from other rooms)
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(state.mat[gmId]);
-      const isDecorKey = ds.reduce((agg, d) => (agg[d.key] = true, agg), /** @type {Record<string, true>} */ ({}));
+      const shouldErase = ds.reduce((agg, d) => (agg[d.key] = true, agg), /** @type {Record<string, true>} */ ({}));
       
       for (const d of ds) {
         // erase `rect` bounding decor `d`
@@ -147,8 +193,8 @@ export default function Decor(props) {
         const topLeft = state.mat[gmId].apply({ x: rect.x, y: rect.y });
         const texRect = { x: topLeft.x, y: topLeft.y, width: rect.width * gmScale, height: rect.height * gmScale };
         gfx.clear().blendMode = BLEND_MODES.NORMAL;
-        Object.values(colliders).forEach(d => !isDecorKey[d.key] && state.renderDecor(d));
-        Object.values(points).forEach(d => !isDecorKey[d.key] && state.renderDecor(d));
+        Object.values(colliders).forEach(d => !shouldErase[d.key] && state.drawDecor(d));
+        Object.values(points).forEach(d => !shouldErase[d.key] && state.drawDecor(d));
         api.renderRect(gfx, state.tex[gmId], texRect);
       }
     },
@@ -157,15 +203,15 @@ export default function Decor(props) {
       state.byRoom[gmId] = gm.gmRoomDecor;
       gm.gmRoomDecor.forEach(({ colliders, points, decor }) => {
         Object.assign(state.decor, decor);
-        points.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
-        colliders.forEach(d => addToDecorGrid(d, getDecorRect(d), state.byGrid))
+        points.forEach(d => addToDecorGrid(d, state.byGrid))
+        colliders.forEach(d => addToDecorGrid(d, state.byGrid))
       });
     },
     initTex(gmId) {
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(state.mat[gmId]);
       state.byRoom[gmId].forEach(({ decor }, _roomId) => {
-        Object.values(decor).map(d => state.renderDecor(d));
+        Object.values(decor).map(d => state.drawDecor(d));
       });
       api.renderInto(gfx, state.tex[gmId], true);
     },
@@ -221,67 +267,19 @@ export default function Decor(props) {
       
       // update data structures
       const atRoom = state.byRoom[gmId][roomId];
+      ds.forEach(d => {
+        delete state.decor[d.key];
+        delete atRoom.decor[d.key];
+      });
       const points = ds.filter(isDecorPoint);
       atRoom.points = atRoom.points.filter(d => !points.includes(d));
       points.forEach(d => removeFromDecorGrid(d, state.byGrid));
       const colliders = ds.filter(isCollidable);
       atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
       colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
-      ds.forEach(d => {
-        delete state.decor[d.key];
-        delete atRoom.decor[d.key];
-      });
 
       state.redrawHitTestRoom(gmId, roomId);
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
-    },
-    renderDecor(decor) {// Texture manipulation done elsewhere
-      const gfx = state.gfx;
-      switch (decor.type) {
-        case 'circle':
-          if (!state.showColliders) break;
-          gfx.lineStyle({ color: '#ffffff11', width: 1 });
-          gfx.beginFill(0xff0000, 0.05);
-          gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
-          gfx.endFill();
-          break;
-        case 'point':
-          const radius = decorIconRadius + 1;
-          // background circle
-          gfx.lineStyle({ color: '#77777777', width: 1 });
-          gfx.beginFill(0);
-          gfx.drawCircle(decor.x, decor.y, radius + 1);
-          gfx.endFill();
-
-          // icon
-          const { meta } = decor;
-          const texture = state.icon[
-            meta.stand && 'standing' || 
-            meta.sit && 'sitting' || 
-            meta.lie && 'lying' || 
-            meta.label && 'info' || 
-              'road-works'
-          ];
-          const scale = (2 * radius) / texture.width;
-          // ℹ️ can ignore transform of `gfx`
-          const matrix = tempMatrix1.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
-          gfx.line.width = 0;
-          gfx.beginTextureFill({ texture, matrix });
-          gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
-          gfx.endFill();
-          break;
-        case 'rect':
-          if (!state.showColliders) break;
-          gfx.lineStyle({ color: '#ffffff11', width: 1 });
-          if (decor.derivedPoly) {// Should always exist
-            gfx.beginFill(0xff0000, 0.1);
-            gfx.drawPolygon(decor.derivedPoly.outline);
-            gfx.endFill();
-          }
-          break;
-        default:
-          throw testNever(decor);
-      }
     },
   }));
 
@@ -342,7 +340,7 @@ export default function Decor(props) {
  * @property {() => void} refreshAll
  * @property {(decorKeys: string[]) => void} removeDecor
  * @property {(gmId: number, roomId: number, decors: NPC.DecorDef[]) => void} removeRoomDecor
- * @property {(decor: NPC.DecorDef) => void} renderDecor
+ * @property {(decor: NPC.DecorDef) => void} drawDecor
  * @property {(gmId: number, roomId: number, decors: NPC.DecorDef[]) => void} addRoomDecor
  */
 
