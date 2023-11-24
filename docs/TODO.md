@@ -9,13 +9,14 @@
 
 - ✅ fix viewport zoom flicker
 - ✅ prevent react-query from refetching without breaking remount
-- 🚧 decor update broken
-  - ✅ fix `npc rm-decor foo`
-  - ✅ erase only redraws decor in current gmId
-  - ✅ `npc cfg showColliders` -> `npc cfg colliders`
-  - 🚧 `npc cfg localColliders` shows intersections
-  - fix direct update (happens after moving twice)
-  - flatten decor grid again: { colliders, points } -> colliders.concat(points)
+- ✅ fix `npc rm-decor foo`
+- ✅ decor: erase only redraws decor in current gmId
+- ✅ `npc cfg showColliders` -> `npc cfg colliders`
+- ✅ fix decor direct update
+    - happens after moving twice between rooms
+    - decor not appearing in `api.decor.decor`
+- 🚧 `npc cfg localColliders` shows decor intersections in current room
+- flatten decor grid again: { colliders, points } -> colliders.concat(points)
 ```sh
 # broken decor repro
 npc cfg showColliders

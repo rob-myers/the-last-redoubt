@@ -65,25 +65,25 @@ export default function Decor(props) {
       const grouped = ds.reduce((agg, d) => {
         if (!verifyDecor(d)) {
           throw Error(`invalid decor: ${JSON.stringify(d)}`);
-        }
-        // Add decor to addition group
+        }// Add decor to addition group
         const { gmId, roomId } = ensureDecorMetaGmRoomId(d, api.gmGraph);
         (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, add: [], remove: [] }).add.push(d);
         
-        // Add pre-existing decor to removal group
         const prev = state.decor[d.key];
-        if (prev) {
+        if (prev) {// Add pre-existing decor to removal group
           d.updatedAt = Date.now();
           const { gmId, roomId } = prev.meta;
           (agg[getGmRoomKey(gmId, roomId)] ??= { gmId, roomId, add: [], remove: [] }).remove.push(prev);
         }
         return agg;
-      }, /** @type {Record<string, { gmId: number; roomId: number; add: NPC.DecorDef[]; remove: NPC.DecorDef[]; }>} */ ({}));
+      }, /** @type {{ [key: string]: Geomorph.GmRoomId & { [x in 'add' | 'remove']: NPC.DecorDef[] }}} */ ({}));
 
-      Object.values(grouped).forEach(({ gmId, roomId, add, remove }) => {
-        state.removeRoomDecor(gmId, roomId, remove);
-        state.addRoomDecor(gmId, roomId, add);
-      });
+      Object.values(grouped).forEach(({ gmId, roomId, remove }) =>
+        state.removeRoomDecor(gmId, roomId, remove)
+      );
+      Object.values(grouped).forEach(({ gmId, roomId, add }) =>
+        state.addRoomDecor(gmId, roomId, add)
+      );
     },
     addRoomDecor(gmId, roomId, ds) {
       // We assume the provided decor does not currently exist
