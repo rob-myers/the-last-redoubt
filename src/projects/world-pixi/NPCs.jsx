@@ -64,7 +64,7 @@ export default function NPCs(props) {
           case 'scriptDoors':
           case 'verbose':
             return ctxt[key];
-          case 'showColliders':
+          case 'colliders':
             return api.decor.showColliders;
 
           // 🚧 better way
@@ -133,7 +133,7 @@ export default function NPCs(props) {
             // api.doors.update();
             break;
           case 'verbose': ctxt.verbose = !!value; break;
-          case 'showColliders':
+          case 'colliders':
             api.decor.showColliders = !!value;
             api.decor.refreshAll();
             break;

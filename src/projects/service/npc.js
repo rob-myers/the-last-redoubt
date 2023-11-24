@@ -175,7 +175,7 @@ export const npcService = {
   //#region keys
 
   /** @type {Record<NPC.ConfigBooleanKey, true>} */
-  fromConfigBooleanKey: { canClickArrows: true, debug: true, debugHit: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, showColliders: true, verbose: true },
+  fromConfigBooleanKey: { canClickArrows: true, debug: true, debugHit: true, debugPlayer: true, gmOutlines: true, hideGms: true, highlightWindows: true, localNav: true, localOutline: true, logTags: true, omnipresent: true, scriptDoors: true, colliders: true, verbose: true },
   fromConfigBooleanKeys: /** @type {NPC.ConfigBooleanKey[]} */ ([]),
   
   /** @type {Record<NPC.FovMapAction, true>} */

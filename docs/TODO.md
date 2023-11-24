@@ -11,8 +11,10 @@
 - ✅ prevent react-query from refetching without breaking remount
 - 🚧 decor update broken
   - ✅ fix `npc rm-decor foo`
-  - fix direct update: `meta` is mutated?
-  - erase redraw does change gmId (hull doors being drawn)
+  - ✅ erase only redraws decor in current gmId
+  - ✅ `npc cfg showColliders` -> `npc cfg colliders`
+  - 🚧 `npc cfg localColliders` shows intersections
+  - fix direct update (happens after moving twice)
   - flatten decor grid again: { colliders, points } -> colliders.concat(points)
 ```sh
 # broken decor repro
