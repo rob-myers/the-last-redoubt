@@ -34,6 +34,7 @@
     - dark-skin
   - 🚧 create more skins
     - ✅ original-clothes i.e. lumberjack clothing
+      - includes black-trousers
     - ✅ blonde-hair
     - ✅ skin-head
     - ✅ blue-shirt
@@ -41,8 +42,7 @@
     - ✅ mask
     - ✅ eyebrows
     - ✅ hi-vis
-    - 🚧 black-trousers
-    - brown-jumper
+    - ✅ brown-jumper
     - black-hi-vis
 
 - start migrating NPCs
