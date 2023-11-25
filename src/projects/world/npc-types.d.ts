@@ -389,6 +389,7 @@ declare namespace NPC {
     | 'gmOutlines'
     | 'hideGms'
     | 'highlightWindows'
+    | 'localColliders'
     | 'localNav'
     | 'localOutline'
     | 'logTags'

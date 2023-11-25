@@ -57,6 +57,7 @@ export default function NPCs(props) {
             // return api.getRootEl().classList.contains('hide-gms');
             return;
           case 'highlightWindows': return api.debug.opts.windowOutlines;
+          case 'localColliders': return api.debug.opts.roomColliders;
           case 'localNav': return api.debug.opts.roomNav;
           case 'localOutline': return api.debug.opts.roomOutline;
           case 'omnipresent':
@@ -118,13 +119,17 @@ export default function NPCs(props) {
             api.debug.opts.debug = !!value;
             // 🚧 update npcs
             break;
+          case 'localColliders':
+            api.debug.opts.roomColliders = !!value;
+            api.debug.render();
+            break;
           case 'localNav':
             api.debug.opts.roomNav = !!value;
             api.debug.render();
             break;
-            case 'localOutline':
-              api.debug.opts.roomOutline = !!value;
-              api.debug.render();
+          case 'localOutline':
+            api.debug.opts.roomOutline = !!value;
+            api.debug.render();
             break;
           case 'logTags': ctxt.logTags = !!value; break;
           case 'omnipresent': ctxt.omnipresent = !!value; break;

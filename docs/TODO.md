@@ -2,11 +2,11 @@
 
 ## In progress
 
-- mobile click should not flash blue
-- `npc cfg localColliders` shows decor intersections in current room
+- ✅ `npc cfg localColliders` shows decor intersections in current room
 - flatten decor grid again: { colliders, points } -> colliders.concat(points)
-
-- 🚧 start migrating NPCs
+- mobile click should not flash blue
+- support `npc cfg canClickArrows`
+  - draw into hit test canvas, invoking `api.fov.setRoom`
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -26,9 +26,13 @@
   - ✅ try changing skins
     - light-skin
     - dark-skin
-  - 🚧 skin clothing
-  - try creating own basic images
+  - 🚧 create 2 skins for clothing
+    - original one i.e. lumberjack
+    - another
 
+- start migrating NPCs
+
+- spine: first attempt at our own images
 - door/hull-door sprite instead of Graphics
 - gmGraph.computeViewableGmRoomIds
 - eventually remove `projects/world`

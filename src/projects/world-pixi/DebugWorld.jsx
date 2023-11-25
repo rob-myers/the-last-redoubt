@@ -2,7 +2,7 @@ import React from "react";
 import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
-import { Rect } from "../geom";
+import { Poly, Rect } from "../geom";
 import { defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
@@ -27,6 +27,7 @@ export default function DebugWorld(props) {
       debugHit: false,
       debugPlayer: false,
       gmOutlines: false,
+      roomColliders: false,
       roomNav: false,
       roomOutline: false,
       windowOutlines: false,
@@ -75,9 +76,7 @@ export default function DebugWorld(props) {
       const gfx = state.gfx;
 
       gms.forEach((gm, gmId) => {
-        // 🚧 better way to clear RenderTexture
-        gfx.clear();
-        api.renderInto(gfx, state.tex[gmId]);
+        api.renderInto(gfx.clear(), state.tex[gmId]);
 
         if (opts.debugHit) {
           gfx.setTransform(0, 0, gmScale, gmScale);
@@ -124,11 +123,8 @@ export default function DebugWorld(props) {
         }
 
         /**
-         * The inverseMatrix allows us to draw in world coords.
-         * - World coords will be transformed to local geomorph coords, then back by canvas transform.
-         * - e.g. sometimes already have world coords: gridRect or navPaths.
-         * - e.g. sometimes we have local coords and want to do many fillTexts,
-         *   without individually transforming them (door/roomIds).
+         * World coords via inverseMatrix.
+         * They will be transformed to local geomorph coords, then back by Sprite transform.
          */
         gfx.clear();
         const multiplied = matrix.append(new Matrix(...gm.inverseMatrix.toArray()));
@@ -137,6 +133,21 @@ export default function DebugWorld(props) {
         if (opts.gmOutlines) {
           gfx.lineStyle({ color: 'green', width: 4 })
           gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+        }
+
+        if (room?.gmId === gmId) {
+          if (opts.roomColliders) {// 🚧 Cache computation
+            const roomPoly = gm.roomsWithDoors[room.roomId].clone().applyMatrix(gm.matrix);
+            const { colliders } = api.decor.byRoom[gmId][room.roomId];
+            const intersects = Poly.intersect(colliders.map(x =>
+              x.type === 'rect'
+                ? /** @type {Geom.Poly} */ (x.derivedPoly)
+                : Poly.circle(x.center, x.radius, 32)
+            ), [roomPoly]);
+            intersects.forEach(poly => {
+              gfx.beginFill(0x00ff00, 0.1); gfx.drawPolygon(poly.outline); gfx.endFill();
+            });
+          }
         }
 
         // Nav paths
@@ -169,9 +180,6 @@ export default function DebugWorld(props) {
   }));
 
   // 🚧 migrate via hit-test canvas
-  // https://github.com/ericdrowell/concrete/blob/1b431ad60fee170a141c85b3a511e9edc2e5a11b/src/concrete.js#L404
-  //
-  // /* eslint-disable react-hooks/rules-of-hooks */
   // const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
   //   const target = (/** @type {HTMLElement} */ (e.target));
   //   if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
@@ -238,6 +246,7 @@ export default function DebugWorld(props) {
  * @property {boolean} debugPlayer
  * @property {boolean} gmOutlines Show gridRect of every geomorph?
  * @property {boolean} windowOutlines Show window outlines in current geomorph? 
+ * @property {boolean} roomColliders Show room colliders (intersected against room)?
  * @property {boolean} roomNav Show room navmesh?
  * @property {boolean} roomOutline Show room outline?
  * @property {number} interactRadius
