@@ -37,7 +37,11 @@
     - ✅ blonde-hair
     - ✅ skin-head
     - ✅ blue-shirt
-    - black-trousers
+    - ✅ helmet
+    - ✅ mask
+    - ✅ eyebrows
+    - ✅ hi-vis
+    - 🚧 black-trousers
     - brown-jumper
     - black-hi-vis
 
