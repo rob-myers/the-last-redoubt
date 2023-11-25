@@ -7,6 +7,12 @@
 - mobile click should not flash blue
 - support `npc cfg canClickArrows`
   - draw into hit test canvas, invoking `api.fov.setRoom`
+- gms prop uses geomorph layout format e.g.
+  ```ts
+  { gmKey: 'g-301--bridge' },
+  { at: '👇', gmKey: 'g-101--multipurpose' },
+  { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
+  ```
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -26,9 +32,14 @@
   - ✅ try changing skins
     - light-skin
     - dark-skin
-  - 🚧 create 2 skins for clothing
-    - original one i.e. lumberjack
-    - another
+  - 🚧 create more skins
+    - ✅ original-clothes i.e. lumberjack clothing
+    - ✅ blonde-hair
+    - ✅ skin-head
+    - ✅ blue-shirt
+    - black-trousers
+    - brown-jumper
+    - black-hi-vis
 
 - start migrating NPCs
 

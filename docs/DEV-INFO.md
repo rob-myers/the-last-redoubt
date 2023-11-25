@@ -52,6 +52,8 @@ Spine 2d
 
 https://en.esotericsoftware.com/spine-cheat-sheet
 
+https://en.esotericsoftware.com/spine-examples-mix-and-match
+
 https://en.esotericsoftware.com/spine-ui
 - pan: RMB+drag, or j+LMB+drag
 - Setup mode: create and configure skeletons
