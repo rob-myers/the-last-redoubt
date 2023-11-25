@@ -14,7 +14,7 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
-- 🚧 Spine: top_down_man_base: fix stuff
+- ✅ Spine: top_down_man_base: fix stuff
   - ✅ rename legs
   - ✅ rename spine + arms
   - create test image showing limb images
@@ -32,7 +32,7 @@
   - ✅ try changing skins
     - light-skin
     - dark-skin
-  - 🚧 create more skins
+  - ✅ create more skins
     - ✅ original-clothes i.e. lumberjack clothing
       - includes black-trousers
     - ✅ blonde-hair
@@ -43,7 +43,13 @@
     - ✅ eyebrows
     - ✅ hi-vis
     - ✅ brown-jumper
-    - black-hi-vis
+    - ✅ black-bomber
+
+- export {vilani,solomani,zhodani} spritesheets
+  - idle
+  - lie
+  - sit
+  - walk
 
 - start migrating NPCs
 
