@@ -70,6 +70,7 @@ https://en.esotericsoftware.com/spine-tools
   - recursively open/close: RMB icon
   - show all bones: Cmd+H
   - hide all bones: RMB root
+  - select all found: Cmd+Enter e.g. `body/light`
 - timeline:
   - shift + LMB + drag to preview animation with interpolation
 - dopesheet:

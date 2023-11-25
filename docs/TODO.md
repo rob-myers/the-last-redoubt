@@ -2,30 +2,11 @@
 
 ## In progress
 
-- ✅ filter pointermove from `npc events`
-- ✅ try to fix sporadic pointerevents failure
-  - ℹ️ useEffect in use-handle-events not running
 - mobile click should not flash blue
-
-- ✅ fix viewport zoom flicker
-- ✅ prevent react-query from refetching without breaking remount
-- ✅ fix `npc rm-decor foo`
-- ✅ decor: erase only redraws decor in current gmId
-- ✅ `npc cfg showColliders` -> `npc cfg colliders`
-- ✅ fix decor direct update
-    - happens after moving twice between rooms
-    - decor not appearing in `api.decor.decor`
-- 🚧 `npc cfg localColliders` shows decor intersections in current room
+- `npc cfg localColliders` shows decor intersections in current room
 - flatten decor grid again: { colliders, points } -> colliders.concat(points)
-```sh
-# broken decor repro
-npc cfg showColliders
-npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
-npc rm-decor foo
-# point icons get rubbed out
-```
 
-- start migrating NPCs
+- 🚧 start migrating NPCs
 
 - 🚧 Spine: top_down_man_base: fix stuff
   - ✅ rename legs
@@ -42,7 +23,10 @@ npc rm-decor foo
   - ✅ try adding a slot: dark head
   - ✅ try export spritesheet
   - ✅ fix other sheet: lie
-  - 🚧 try changing skins
+  - ✅ try changing skins
+    - light-skin
+    - dark-skin
+  - 🚧 skin clothing
   - try creating own basic images
 
 - door/hull-door sprite instead of Graphics
@@ -676,6 +660,26 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ filter pointermove from `npc events`
+- ✅ try to fix sporadic pointerevents failure
+  - ℹ️ useEffect in use-handle-events not running
+
+- ✅ fix viewport zoom flicker
+- ✅ prevent react-query from refetching without breaking remount
+- ✅ fix `npc rm-decor foo`
+- ✅ decor: erase only redraws decor in current gmId
+- ✅ `npc cfg showColliders` -> `npc cfg colliders`
+- ✅ fix decor direct update
+    - happens after moving twice between rooms
+    - decor not appearing in `api.decor.decor`
+```sh
+# broken decor repro
+npc cfg showColliders
+npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
+npc rm-decor foo
+# point icons get rubbed out
+```
 
 - ✅ draw decor
   - ✅ decor colliders are outlines
