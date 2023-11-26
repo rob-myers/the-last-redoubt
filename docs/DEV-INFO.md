@@ -50,11 +50,10 @@ ifconfig | grep "inet " | grep -v 127.0.0.1
 
 Spine 2d
 
-https://en.esotericsoftware.com/spine-cheat-sheet
+- https://en.esotericsoftware.com/spine-cheat-sheet
+- https://en.esotericsoftware.com/spine-examples-mix-and-match
+- https://en.esotericsoftware.com/spine-ui
 
-https://en.esotericsoftware.com/spine-examples-mix-and-match
-
-https://en.esotericsoftware.com/spine-ui
 - pan: RMB+drag, or j+LMB+drag
 - Setup mode: create and configure skeletons
 - Animate mode: design your animations.
@@ -73,6 +72,7 @@ https://en.esotericsoftware.com/spine-tools
   - show all bones: Cmd+H
   - hide all bones: RMB root
   - select all found: Cmd+Enter e.g. `body/light`
+  - can hide slot during animation via alpha=0 
 - timeline:
   - shift + LMB + drag to preview animation with interpolation
 - dopesheet:
