@@ -54,6 +54,13 @@ Spine 2d
 - https://en.esotericsoftware.com/spine-examples-mix-and-match
 - https://en.esotericsoftware.com/spine-ui
 
+- CLI
+```sh
+cd /Applications/Spine.app/Contents/MacOS
+./Spine --help
+# https://en.esotericsoftware.com/spine-command-line-interface#Export
+```
+
 - pan: RMB+drag, or j+LMB+drag
 - Setup mode: create and configure skeletons
 - Animate mode: design your animations.
