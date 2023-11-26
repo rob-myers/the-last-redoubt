@@ -14,6 +14,8 @@
  * - yarn minify-pngs static/assets/npc/first-human-npc
  * - yarn minify-pngs static/assets/npc/man-base-variant --webp
  * - yarn minify-pngs static/assets/pics/first-peek --webp
+ * 
+ * - yarn minify-pngs media/NPC/spine/exported --webp
  */
 import fs from 'fs';
 import path from 'path';
