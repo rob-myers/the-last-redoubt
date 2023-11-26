@@ -14,37 +14,6 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
-- ✅ Spine: top_down_man_base: fix stuff
-  - ✅ rename legs
-  - ✅ rename spine + arms
-  - create test image showing limb images
-  - reposition `right-arm`
-    - ✅ right-arm-upper-clothed
-    - ✅ right-arm-lower-bare etc.
-  - ✅ remove right-arm keys from `walk`
-  - ✅ try animate right-arm in `walk` (3 keyframes)
-  - ✅ improve walk anim: twist arm round more in penultimate
-  - ✅ try bare arms/legs
-    - can toggle respective images (nothing-in-slot vs something)
-  - ✅ try adding a slot: dark head
-  - ✅ try export spritesheet
-  - ✅ fix other sheet: lie
-  - ✅ try changing skins
-    - light-skin
-    - dark-skin
-  - ✅ create more skins
-    - ✅ original-clothes i.e. lumberjack clothing
-      - includes black-trousers
-    - ✅ blonde-hair
-    - ✅ skin-head
-    - ✅ blue-shirt
-    - ✅ helmet
-    - ✅ mask
-    - ✅ eyebrows
-    - ✅ hi-vis
-    - ✅ brown-jumper
-    - ✅ black-bomber
-
 - export {vilani,solomani,zhodani} spritesheets
   - idle
   - lie
@@ -685,6 +654,37 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ Spine: top_down_man_base: fix stuff
+  - ✅ rename legs
+  - ✅ rename spine + arms
+  - create test image showing limb images
+  - reposition `right-arm`
+    - ✅ right-arm-upper-clothed
+    - ✅ right-arm-lower-bare etc.
+  - ✅ remove right-arm keys from `walk`
+  - ✅ try animate right-arm in `walk` (3 keyframes)
+  - ✅ improve walk anim: twist arm round more in penultimate
+  - ✅ try bare arms/legs
+    - can toggle respective images (nothing-in-slot vs something)
+  - ✅ try adding a slot: dark head
+  - ✅ try export spritesheet
+  - ✅ fix other sheet: lie
+  - ✅ try changing skins
+    - light-skin
+    - dark-skin
+  - ✅ create more skins
+    - ✅ original-clothes i.e. lumberjack clothing
+      - includes black-trousers
+    - ✅ blonde-hair
+    - ✅ skin-head
+    - ✅ blue-shirt
+    - ✅ helmet
+    - ✅ mask
+    - ✅ eyebrows
+    - ✅ hi-vis
+    - ✅ brown-jumper
+    - ✅ black-bomber
 
 - ✅ filter pointermove from `npc events`
 - ✅ try to fix sporadic pointerevents failure
@@ -3086,64 +3086,7 @@ nav --tryOpen foo $( click 1 ) |
   (jsonModel.global = jsonModel.global || {}).splitterExtra = 12;
   ```
 
-# Video Notes
-
-## First CLI video
-
-- Web browser right, devtools left, mainly zoom right
-- Tabs component: Left tab `World`, Right tab `Terminal`.
-- `World` quick summary:
-  - open door, see more, move through door, view from above
-  - Starship Geomorphs by Robert Pearce 
-  - zoom out to see "big world" built from Geomorphs
-- Now `Terminal`, which "runs the NPCs"
-- ... <!-- cli-frontpage-test-3.mov @1 min -->
-
-## 🚧 Homepage CSS video
-
-Camera via CSS transforms:
-- `.panzoom-parent`
-- Can edit transforms (translate/scale)
-
-geomorphs
-- `.panzoom-parent .geomorphs`
-- position `absolute` is relative to `.flexlayout__tab`
-- can remove image and undo
-- can remove shade and undo
-- can change filter: brightness, sepia, invert(1)
-
-debug
-- --debug-gm-outline-display `npc config gmOutlines`
-- --debug-room-nav-display `npc config localNav`
-- --debug-room-outline-display `npc config localOutline`
-- --debug-show-ids `npc config showIds`
-
-npcs
-- `.decor-root`
-  - move navpath nodes
-  - witness mutation `npc decor andros-navpath | map 'x => x.path'`
-  - 🚧 collective translate
-- `.npc.andros` 🚧
-  - manually translate
-  - `<img>` included to load walk animation early
-  - --npc-bounds-radius
-    - not configurable via `npc config`
-    - `spawn foo $( click 1 )` + use adjusted bounds
-- --npc-target-look-angle
-  - not configurable via `npc config`
-  - `npc get andros | map Object.keys | split`
-  - `npc get andros | map 'x => x.setLookRadians(0)'`
-
-fov
-- observe clip-path changing
-- remove and undo
-- change filter
-
-doors
-- toggle door via click
-- toggle door via class `open` on `div.door`
-
-## 🚧 Another CLI video
+# Misc
 
 ```sh
 # view shell function names
@@ -3166,93 +3109,7 @@ range 10 | split | map 'x => x + 1' |
   }'
 ```
 
-## Screen captures
-
-✅ Convert a screen recording to MP4 or GIF
-
-- ```sh
-  # Convert mov to mp4
-  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.mp4
-  # Convert mov to gif
-  ffmpeg -i ~/Desktop/first-attempt.mov -qscale 0 output.gif
-  ```
-- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
-
-✅ Smaller + Faster GIF
-
-- https://www.baeldung.com/linux/convert-videos-gifs-ffmpeg#creating-a-custom-palette
-- ```sh
-  # 20 seconds (orig 19s), output 4.3mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=720:-1" output.gif
-  # 1.3Mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.gif
-  # 1.1Mb
-  ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=300:-1" output.gif
-  ```
-- file:///Users/robmyers/coding/the-last-redoubt/public/output.gif
-
-- too large
-
-- ❌ CSS GIF pause-reset/play https://css-tricks.com/pause-gif-details-summary/
-
-✅ Try MP4 and WebM
-
-```sh
-# 210kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.mp4
-# 300kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" output.webm
-```
-
-Useful info here too
-> https://www.smashingmagazine.com/2018/11/gif-to-video/
-
-```sh
-# 250kb
-ffmpeg -i ~/Desktop/first-attempt.mov -t 20 -filter_complex "[0:v] fps=10,scale=400:-1" -b:v 0 -crf 25 output.mp4
-```
-
-How to embed video?
-> https://www.smashingmagazine.com/2018/11/gif-to-video/#replace-animated-gifs-with-video-in-the-browser
-
-
-## Future
-
-```js
-// Find length up to startId
-const [length] = fullPath.slice(1, startId + 1).reduce(([sum, prev], p) =>
-  [sum + prev.distanceTo(p), p]
-, [0, fullPath[0]]);
-```
-
-- Explain what is happening in NPCS trackNpc
 - Generate GraphViz graphs from FloorGraph, RoomGraph and GeomorphGraph
-- ✅ BUG CssPanZoom zoom out with pointer down and drag around
-  - Also issues when click on `HTMLImageElement`s in devtools
-- Alt approach to g302 light issue
-  - add extra wall/door to "break loop"
-  - support "always open doors" i.e. not even visible
-- BUG can open hull door late whilst walks so npc underneath
-- GeomorphEdit: windows: fix console errors 
-- More efficient light shade
-  - own component
-  - avoid recompute when irrelevant doors opened/closed
-- Tabs remember scroll (use case?)
-- BUG CssPanZoom zoom via info is a bit jerky at one point
-- ✅ Always show navpath (no need for DEBUG=true)
-- ❌ CodeMirror highlighting for JSDoc types?
-- Fix eslint warns
 - Start using `_` i.e. last value shortcut
 - Nav should weight closed doors
-- Fix HMR of NPC (walks without going anywhere)
 - Spawn should trigger a player collision test
-- Avoid overwrite e.g. public/geomorph via pages/geomorph.mdx
-- Saw `World` fail silently due to use-geomorph-data bug
-- anchor/action link sends user back to Tabs, displaying text in session
-  - perhaps text added to "queue", and opens respective `Terminal`?
-- BUG firefox mobile jerky
-  - problem with `track andros &`
-  - perhaps a race-condition between two transforms (camera, npc)
-- Terminal Context-Menu Copy/Paste missing
-  - Works at xterm-helper-textarea, at top of terminal
-  - Even if we got this to sync with cursor, wouldn't be enough
