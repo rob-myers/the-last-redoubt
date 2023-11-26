@@ -14,8 +14,14 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
-- export {vilani,solomani,zhodani} spritesheets
+- ✅ can switch off bare arms/legs
+  - light-exposed
+  - dark-exposed
+
+- ✅ test export
+- ✅ export {vilani,solomani,zhodani} spritesheets
   - idle
+  - idle-breathe
   - lie
   - sit
   - walk

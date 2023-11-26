@@ -32,3 +32,4 @@ media/NPC/spriter/top_down_humans_svg/spriter_file_body_parts/*.autosave.scml
 
 media/NPC/spine/top_down_man_base/**/*.png
 media/NPC/spine/top_down_man_base/**/*.atlas
+media/NPC/spine/exported/**/*.png
