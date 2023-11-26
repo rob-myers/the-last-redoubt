@@ -26,6 +26,10 @@
   - sit
   - walk
 
+- ✅ can parse a spine atlas file
+  - using `pixi-spine`
+- load a PIXI SpriteSheet using a `TextureAtlas`
+
 - start migrating NPCs
 
 - spine: first attempt at our own images
@@ -66,6 +70,7 @@
   - move navPaths ?
 - 🚧 garbage collect canvas contexts?
   - maybe animations are persisting them?
+- could switch spritesheet load from png to webp
 
 - hitTest -> Geomorphs
 

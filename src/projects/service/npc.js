@@ -1,13 +1,21 @@
 import { merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { TextureAtlas } from '@pixi-spine/base';
+import { Assets } from '@pixi/assets';
+
 import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 import { observableToAsyncIterable } from './observable-to-async-iterable';
 
+import solomaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/solomani.atlas';
+import vilaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/vilani.atlas';
+import zhodaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/zhodani.atlas';
+const runtimeAtlasBasePath = '/assets/npc/top_down_man_base';
+
 /**
- * Use object so can merge into api.lib.
+ * Use object so can merge into `api.lib`.
  */
 export const npcService = {
 
@@ -26,6 +34,7 @@ export const npcService = {
   },
 
   /**
+   * 🚧 old
    * @param {NPC.ParsedNpc} parsed
    */
   computeSpritesheetCss(parsed) {
@@ -168,6 +177,40 @@ export const npcService = {
           throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
       }
     }
+  },
+
+  async loadTextureAtlases() {
+    const [vilaniAtlas, solomaniAtlas, zhodaniAtlas] = await Promise.all([
+      vilaniAtlasContents,
+      solomaniAtlasContents,
+      zhodaniAtlasContents,
+    ].map(fileContents => this.loadSpineTextureAtlas(fileContents)))
+    return { vilaniAtlas, solomaniAtlas, zhodaniAtlas };
+  },
+
+  /**
+   * @param {string} atlasContents 
+   * @returns {Promise<TextureAtlas>}
+   */
+  async loadSpineTextureAtlas(atlasContents) {
+    const atlas = new TextureAtlas();
+    return await new Promise((resolve, reject) => {
+      atlas.addSpineAtlas(
+        atlasContents,
+        /**
+         * @param {string} pageName 
+         * @param {(tex: import('pixi.js').BaseTexture) => void} onTextureLoad 
+         */
+        async (pageName, onTextureLoad) => {
+          // console.log('loading spritesheet as texture:', { pageName });
+          const texture = await Assets.load({ src: `${runtimeAtlasBasePath}/${pageName}`, data: {} });
+          onTextureLoad(texture);
+        },
+        /** @param {TextureAtlas} atlas */ (atlas) =>
+          atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`
+        ),
+      );
+    });
   },
 
   //#endregion

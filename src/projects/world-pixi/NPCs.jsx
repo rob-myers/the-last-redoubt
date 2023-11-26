@@ -14,9 +14,9 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 // import { MemoizedNPC } from "./NPC";
 
-// 🚧
-import createNpc from "../world/create-npc";
-import npcsMeta from '../world/npcs-meta.json';
+
+import createNpc from "../world/create-npc"; // 🚧 create new
+import npcsMeta from '../world/npcs-meta.json'; // 🚧 redo
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -640,13 +640,9 @@ export default function NPCs(props) {
       }
     },
     async prefetchSpritesheets() {
-      await Promise.all(Object.values(npcsMeta).flatMap((meta) =>
-        Object.values(meta.parsed.animLookup)
-          // .filter(({ frameCount }) => frameCount > 1)
-          .map(({ animName, pathPng, pathWebp }) =>
-            loadImage(supportsWebp ? pathWebp : pathPng)
-          )
-      ));
+      const atlases = await api.lib.loadTextureAtlases();
+      console.log(atlases);
+      // 🚧 store atlases
     },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
@@ -841,7 +837,7 @@ export default function NPCs(props) {
   }), { deps: [api] });
   
   React.useEffect(() => {
-    // state.prefetchSpritesheets();
+    state.prefetchSpritesheets();
     props.onLoad(state);
   }, []);
 

@@ -65,12 +65,12 @@ export const colMatFilter1 = new ColorMatrixFilter();
 // colorMatrixFilter.resolution = window.devicePixelRatio;
 colMatFilter1.resolution = 4; // ℹ️ no zoom flicker
 // colorMatrixFilter.enabled = true;
+// colMatFilter1.polaroid(true);
 colMatFilter1.brightness(0.18, true);
 colMatFilter1.contrast(1.5, true);
 // colMatFilter1.alpha = 1;
 // colMatFilter1.hue(90, true);
 // colMatFilter1.vintage(true);
-// colMatFilter1.polaroid(true);
 // colMatFilter1.kodachrome(true);
 
 export const colMatFilter2 = new ColorMatrixFilter();
