@@ -17,17 +17,19 @@
 - ✅ can switch off bare arms/legs
   - light-exposed
   - dark-exposed
-
-- ✅ test export
+- ✅ test spine spritesheet export
 - ✅ export {vilani,solomani,zhodani} spritesheets
   - idle
   - idle-breathe
   - lie
   - sit
   - walk
+- ✅ export atlas/png/json at scale `0.1` (single PNG)
+  - man_01_base.{atlas,png,json}
 
-- ✅ can parse a spine atlas file
-  - using `pixi-spine`
+- ✅ can load spine json/atlas/png using `pixi-spine`
+- 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
+
 - load a PIXI SpriteSheet using a `TextureAtlas`
 
 - start migrating NPCs

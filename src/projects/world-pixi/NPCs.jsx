@@ -640,9 +640,9 @@ export default function NPCs(props) {
       }
     },
     async prefetchSpritesheets() {
-      const atlases = await api.lib.loadTextureAtlases();
-      console.log(atlases);
-      // 🚧 store atlases
+      const spine = await api.lib.loadSpineNpc();
+      console.log(spine);
+      // 🚧 ...
     },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas

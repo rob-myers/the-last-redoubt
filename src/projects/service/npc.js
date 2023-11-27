@@ -1,7 +1,8 @@
 import { merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { TextureAtlas } from '@pixi-spine/base';
 import { Assets } from '@pixi/assets';
+import { TextureAtlas } from '@pixi-spine/base';
+import { AtlasAttachmentLoader, SkeletonJson, Spine } from '@pixi-spine/runtime-4.1';
 
 import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
@@ -9,10 +10,7 @@ import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 import { observableToAsyncIterable } from './observable-to-async-iterable';
 
-import solomaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/solomani.atlas';
-import vilaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/vilani.atlas';
-import zhodaniAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/zhodani.atlas';
-const runtimeAtlasBasePath = '/assets/npc/top_down_man_base';
+import topDownManAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/man_01_base.atlas';
 
 /**
  * Use object so can merge into `api.lib`.
@@ -62,7 +60,6 @@ export const npcService = {
   `).join('\n\n')}
   `.trim();
   },
-
 
   /**
    * Compute `NPC.NpcAction` from `npc {action} {opts} [extras[i]]`.
@@ -179,38 +176,25 @@ export const npcService = {
     }
   },
 
-  async loadTextureAtlases() {
-    const [vilaniAtlas, solomaniAtlas, zhodaniAtlas] = await Promise.all([
-      vilaniAtlasContents,
-      solomaniAtlasContents,
-      zhodaniAtlasContents,
-    ].map(fileContents => this.loadSpineTextureAtlas(fileContents)))
-    return { vilaniAtlas, solomaniAtlas, zhodaniAtlas };
-  },
-
   /**
-   * @param {string} atlasContents 
-   * @returns {Promise<TextureAtlas>}
+   * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md
    */
-  async loadSpineTextureAtlas(atlasContents) {
-    const atlas = new TextureAtlas();
-    return await new Promise((resolve, reject) => {
-      atlas.addSpineAtlas(
-        atlasContents,
-        /**
-         * @param {string} pageName 
-         * @param {(tex: import('pixi.js').BaseTexture) => void} onTextureLoad 
-         */
-        async (pageName, onTextureLoad) => {
-          // console.log('loading spritesheet as texture:', { pageName });
-          const texture = await Assets.load({ src: `${runtimeAtlasBasePath}/${pageName}`, data: {} });
-          onTextureLoad(texture);
-        },
-        /** @param {TextureAtlas} atlas */ (atlas) =>
-          atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`
-        ),
-      );
-    });
+  async loadSpineNpc() {
+    const runtimeSpineFolder = '/assets/npc/top_down_man_base';
+    const skeletonData = await Assets.load(`${runtimeSpineFolder}/man_01_base.json`);
+
+    const textureAtlas = new TextureAtlas();
+    await new Promise((resolve, reject) => textureAtlas.addSpineAtlas(
+      topDownManAtlasContents,
+      async (line, callback) => Assets.load(`${runtimeSpineFolder}/${line}`).then((tex) => callback(tex)),
+      atlas => atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`),
+    ));
+
+    const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
+    const skeletonParser = new SkeletonJson(atlasLoader);
+    // skeletonParser.scale = 0.1;
+    const spine = new Spine(skeletonParser.readSkeletonData(skeletonData));
+    return spine;
   },
 
   //#endregion
