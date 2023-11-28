@@ -1,3 +1,4 @@
+import { css } from "@emotion/css";
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
@@ -106,7 +107,7 @@ export default function WorldPixi(props) {
   return (
     <div
       ref={rootRef}
-      style={{ width: '100%', height: '100%', userSelect: 'none' }}
+      className={rootCss}
     >
       {state.gmGraph.ready && (
         <Stage
@@ -222,3 +223,13 @@ export default function WorldPixi(props) {
  * @property {typeof removeFirst} removeFirst
  * @property {typeof take} take
  */
+
+const rootCss = css`
+  width: 100%;
+  height: 100%;
+  
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+`;
