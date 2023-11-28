@@ -6,7 +6,7 @@ import { Poly, Rect } from "../geom";
 import { defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-// import GmsCanvas from "./GmsCanvas";
+import { tempMatrix1 } from "./Misc";
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
@@ -23,15 +23,16 @@ export default function DebugWorld(props) {
     
     opts: {
       room: undefined,
+      canClickArrows: false,
       debug: false,
       debugHit: false,
       debugPlayer: false,
       gmOutlines: false,
+      interactRadius: defaultNpcInteractRadius,
       roomColliders: false,
       roomNav: false,
       roomOutline: false,
       windowOutlines: false,
-      interactRadius: defaultNpcInteractRadius,
     },
     pathByKey: {},
     pathsByGmId: gms.map(_ => []),
@@ -71,7 +72,7 @@ export default function DebugWorld(props) {
     },
     render() {
       const { gmGraph: { gms } } = api;
-      const { opts, opts: { room }  } = state;
+      const { opts, opts: { room } } = state;
       const matrix = new Matrix();
       const gfx = state.gfx;
 
@@ -86,12 +87,11 @@ export default function DebugWorld(props) {
           api.renderInto(gfx, state.tex[gmId], false);
         }
 
+        // Draw in local geomorph coords
         matrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
+        gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
         
-        if (room?.gmId === gmId) {// Local geomorph coords
-          gfx.clear();
-          gfx.setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
-
+        if (room?.gmId === gmId) {
           if (opts.roomNav) {
             gfx.lineStyle({ color: 'blue', width: 1 });
             gfx.beginFill([255, 0, 0, 0.1]);
@@ -118,17 +118,34 @@ export default function DebugWorld(props) {
               gfx.endFill();
             });
           }
-
-          api.renderInto(gfx, state.tex[gmId], false);
         }
 
-        /**
-         * World coords via inverseMatrix.
-         * They will be transformed to local geomorph coords, then back by Sprite transform.
-         */
-        gfx.clear();
+        if (opts.canClickArrows) {
+          const debugDoorOffset = 10;
+          const debugRadius = 4;
+          const texture = api.decor.icon["circle-right"];
+          const scale = (2 * debugRadius) / texture.width;
+
+          gm.doors.forEach(({ poly, normal }) => {
+            [-1, +1].forEach(sign => {
+              const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
+              const { angle } = normal.clone().scale(-sign);
+              tempMatrix1.identity() // 🚧 simplify
+                .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
+                .scale(scale, scale).translate(arrowPos.x - debugRadius, arrowPos.y - debugRadius)
+              ;
+              gfx.beginTextureFill({ texture, matrix: tempMatrix1, alpha: 0.4 });
+              gfx.drawRect(arrowPos.x - debugRadius, arrowPos.y - debugRadius, 2 * debugRadius, 2 * debugRadius);
+              gfx.endFill();
+            });
+          });
+        }
+
+        api.renderInto(gfx, state.tex[gmId], false);
+        
+        // Draw in world coords
         const multiplied = matrix.append(new Matrix(...gm.inverseMatrix.toArray()));
-        gfx.transform.setFromMatrix(multiplied);
+        gfx.clear().transform.setFromMatrix(multiplied);
         
         if (opts.gmOutlines) {
           gfx.lineStyle({ color: 'green', width: 4 })
@@ -214,11 +231,6 @@ export default function DebugWorld(props) {
 
 /**
  * @typedef Props
- * @property {boolean} [canClickArrows]
- * @property {boolean} [localNav]
- * @property {boolean} [gmOutlines]
- * @property {boolean} [localOutline]
- * @property {boolean} [windows]
  * @property {import('./WorldPixi').State} api
  * @property {(debugApi: State) => void} onLoad
  */
@@ -241,6 +253,7 @@ export default function DebugWorld(props) {
 /**
  * @typedef DebugOpts
  * @property {DebugRoomCtxt | undefined} room Current-room-specific data
+ * @property {boolean} canClickArrows
  * @property {boolean} debug
  * @property {boolean} debugHit
  * @property {boolean} debugPlayer

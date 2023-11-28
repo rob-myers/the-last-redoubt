@@ -45,9 +45,7 @@ export default function NPCs(props) {
           return ctxt[key];
         }
         switch (key) {
-          case 'canClickArrows':
-            // return debugStyle.getPropertyValue(cssName.debugDoorArrowPtrEvts) === 'none' ? false : true;
-            return false;
+          case 'canClickArrows': return api.debug.opts.canClickArrows;
           case 'debug': return api.debug.opts.debug;
           case 'debugHit': return api.debug.opts.debugHit;
           case 'debugPlayer': return api.debug.opts.debugPlayer;
@@ -90,7 +88,8 @@ export default function NPCs(props) {
       set(ctxt, key, value) {
         switch (key) {
           case 'canClickArrows':
-            // debugStyle.setProperty(cssName.debugDoorArrowPtrEvts, value ? 'all' : 'none');
+            api.debug.opts.canClickArrows = !!value;
+            api.debug.render();
             break;
           case 'debug':
             api.debug.opts.debug = !!value;

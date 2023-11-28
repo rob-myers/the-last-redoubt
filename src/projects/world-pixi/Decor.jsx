@@ -4,7 +4,7 @@ import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 
-import { removeDups, removeFirst, testNever } from "../service/generic";
+import { testNever } from "../service/generic";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, getGmRoomKey, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 import { decorIconRadius, gmScale } from "../world/const";
 
@@ -23,6 +23,7 @@ export default function Decor(props) {
     queryKey: [`decor-icon-textures`],
     queryFn: async () => {
       await Promise.all(/** @type {const} */ ([
+        { key: 'circle-right', filename: 'circle-right.svg'},
         { key: 'standing', filename: 'standing-person.invert.svg'},
         { key: 'sitting', filename: 'sitting-silhouette.invert.svg'},
         { key: 'lying', filename: 'lying-man.invert.svg'},
@@ -352,6 +353,7 @@ export default function Decor(props) {
 
 /**
  * @typedef {(
+ *  | 'circle-right'
  *  | 'standing'
  *  | 'sitting'
  *  | 'lying'

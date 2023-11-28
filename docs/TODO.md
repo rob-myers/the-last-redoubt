@@ -3,9 +3,11 @@
 ## In progress
 
 - ✅ `npc cfg localColliders` shows decor intersections in current room
-- flatten decor grid again: { colliders, points } -> colliders.concat(points)
-- mobile click should not flash blue
-- support `npc cfg canClickArrows`
+- ❌ flatten decor grid again: { colliders, points } -> colliders.concat(points)
+  - prefer to quickly get colliders rather than filter out points
+- ✅ mobile click should not flash blue
+- 🚧 support `npc cfg canClickArrows`
+  - ✅ draw into DebugWorld
   - draw into hit test canvas, invoking `api.fov.setRoom`
 - gms prop uses geomorph layout format e.g.
   ```ts
@@ -29,6 +31,8 @@
 
 - ✅ can load spine json/atlas/png using `pixi-spine`
 - 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
+  - Spine extends SpineBase extends PIXI.Container
+  - try `spine.state.setAnimation(0, 'idle', true);`
 
 - load a PIXI SpriteSheet using a `TextureAtlas`
 
