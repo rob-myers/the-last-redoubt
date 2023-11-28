@@ -52,9 +52,9 @@ export default function Doors(props) {
     drawDoor(gmId, doorId) {
       const gfx = state.gfx[gmId]
       const item = state.lookup[gmId][doorId];
-      gfx.lineStyle({ width: 0, color: 0x666666 });
-      gfx.beginFill(0xaaaaaa);
-      gfx.fill.alpha = gfx.line.alpha = item.open ? 0.2 : 1;
+      gfx.lineStyle({ width: 2, color: 0x666666 });
+      gfx.beginFill(0x111111);
+      gfx.fill.alpha = gfx.line.alpha = item.open ? 0.1 : 1;
       gfx.drawPolygon(item.door.poly.outline);
       gfx.endFill();
     },
