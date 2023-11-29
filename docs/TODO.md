@@ -8,7 +8,9 @@
 - ✅ mobile click should not flash blue
 - 🚧 support `npc cfg canClickArrows`
   - ✅ draw into DebugWorld
-  - draw into hit test canvas, invoking `api.fov.setRoom`
+  - ✅ move/refactor hit redraw into Geomorphs
+  - 🚧 include in hit test canvas
+  - invoke `api.fov.setRoom` on click
 - gms prop uses geomorph layout format e.g.
   ```ts
   { gmKey: 'g-301--bridge' },

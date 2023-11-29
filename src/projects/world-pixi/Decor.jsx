@@ -92,10 +92,10 @@ export default function Decor(props) {
         return;
       }
 
-      state.clearHitTestRoom(gmId, roomId);
-
+      api.geomorphs.clearHitRoom(gmId, roomId);
       state.gfx.clear();
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
+
       for (const d of ds) {
         normalizeDecor(d);
         addToDecorGrid(d, state.byGrid);
@@ -108,25 +108,10 @@ export default function Decor(props) {
       }
 
       api.renderInto(state.gfx, state.tex[gmId], false);
-      state.redrawHitTestRoom(gmId, roomId);
+      api.geomorphs.renderHitRoom(gmId, roomId);
+      api.debug.opts.debugHit && api.debug.render();
 
       api.npcs.events.next({ key: 'decors-added', decors: ds });
-    },
-    clearHitTestRoom(gmId, roomId) {
-      const gm = gms[gmId];
-      const radius = decorIconRadius + 1;
-      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
-
-      gfx.blendMode = BLEND_MODES.ERASE;
-      const { points } = api.decor.byRoom[gmId][roomId];
-      points.forEach((d) => {
-        const local = gm.toLocalCoords(d);
-        gfx.beginFill('black');
-        gfx.drawRect(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
-        gfx.endFill();
-      });
-      api.renderInto(gfx, api.geomorphs.hit[gmId], false);
-      gfx.clear().blendMode = BLEND_MODES.NORMAL;
     },
     drawDecor(decor) {// Render elsewhere
       const gfx = state.gfx;
@@ -225,22 +210,6 @@ export default function Decor(props) {
       const atRoom = state.byRoom[gmId][roomId];
       return onlyColliders ? atRoom.colliders : Object.values(atRoom.decor);
     },
-    redrawHitTestRoom(gmId, roomId) {
-      const gm = gms[gmId];
-      const radius = decorIconRadius + 1;
-      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
-
-      const { points } = api.decor.byRoom[gmId][roomId];
-      points.forEach((d, pointId) => {
-        const center = gm.toLocalCoords(d);
-        gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
-        gfx.drawCircle(center.x, center.y, radius);
-        gfx.endFill();
-      });
-
-      api.renderInto(gfx, api.geomorphs.hit[gmId], false);
-      api.debug.opts.debugHit && api.debug.render();
-    },
     refreshAll() {
       gms.map((_, gmId) => setTimeout(() => api.decor.initTex(gmId)));;
     },
@@ -262,7 +231,7 @@ export default function Decor(props) {
         return;
       }
 
-      state.clearHitTestRoom(gmId, roomId);
+      api.geomorphs.clearHitRoom(gmId, roomId);
       // erase and redraw overlapping
       state.eraseDecor(gmId, state.showColliders ? ds : ds.filter(isDecorPoint));
       
@@ -279,7 +248,9 @@ export default function Decor(props) {
       atRoom.colliders = atRoom.colliders.filter(d => !colliders.includes(d));
       colliders.forEach(d => removeFromDecorGrid(d, state.byGrid));
 
-      state.redrawHitTestRoom(gmId, roomId);
+      api.geomorphs.renderHitRoom(gmId, roomId);
+      api.debug.opts.debugHit && api.debug.render();
+
       api.npcs.events.next({ key: 'decors-removed', decors: ds });
     },
   }));
@@ -336,8 +307,6 @@ export default function Decor(props) {
  * Get all decor in same room as point which intersects point.
  * @property {(gmId: number) => void} initByRoom
  * @property {(gmId: number) => void} initTex
- * @property {(gmId: number, roomId: number) => void} clearHitTestRoom
- * @property {(gmId: number, roomId: number) => void} redrawHitTestRoom
  * @property {() => void} refreshAll
  * @property {(decorKeys: string[]) => void} removeDecor
  * @property {(gmId: number, roomId: number, decors: NPC.DecorDef[]) => void} removeRoomDecor

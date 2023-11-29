@@ -2,12 +2,12 @@ import React from "react";
 import { useQueries } from "@tanstack/react-query";
 
 import { Assets } from "@pixi/assets";
-import { RenderTexture, Rectangle } from "@pixi/core";
+import { RenderTexture, Rectangle, BLEND_MODES } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
-import { gmScale } from "../world/const";
+import { decorIconRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colMatFilter1, tempMatrix1 } from "./Misc";
 import GmSprites from "./GmSprites";
@@ -56,6 +56,22 @@ export default function Geomorphs(props) {
 
     isRoomLit: gms.map(({ rooms }) => rooms.map(_ => true)),
 
+    clearHitRoom(gmId, roomId) {
+      const gm = gms[gmId];
+      const radius = decorIconRadius + 1;
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
+
+      gfx.blendMode = BLEND_MODES.ERASE;
+      const { points } = api.decor.byRoom[gmId][roomId];
+      points.forEach((d) => {
+        const local = gm.toLocalCoords(d);
+        gfx.beginFill('black');
+        gfx.drawRect(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
+        gfx.endFill();
+      });
+      api.renderInto(gfx, api.geomorphs.hit[gmId], false);
+      gfx.clear().blendMode = BLEND_MODES.NORMAL;
+    },
     drawPolygonImage(type, gmId, poly) {
       const gfx = state.gfx;
       const gm = gms[gmId];
@@ -81,49 +97,7 @@ export default function Geomorphs(props) {
       gfx.endFill();
     },
     initHit(gmId) {
-      const gm = gms[gmId];
-      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
-      // doors
-      gm.doors.forEach(({ poly, seg: [u, v], normal }, doorId) => {
-        // (255, 0, doorId, 1)
-        // Assuming ≤ 256 doors in a geomorph
-        gfx.beginFill(`rgba(255, 0, ${doorId}, 1)`);
-        gfx.drawPolygon([
-          u.clone().addScaledVector(normal, 4),
-          v.clone().addScaledVector(normal, 4),
-          v.clone().addScaledVector(normal, -4),
-          u.clone().addScaledVector(normal, -4),
-        ]);
-        gfx.endFill();
-      });
-      // decor
-      api.decor.byRoom[gmId].forEach(({ points }, roomId) =>
-        // (127, roomId, decorPointId, 1)
-        // Assuming ≤ 256 DecorPoints in a room
-        points.forEach((d, pointId) => {
-          const center = gm.toLocalCoords(d);
-          gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
-          gfx.drawCircle(center.x, center.y, 5); // 🚧 hard-coded radius
-          gfx.endFill();
-        })
-      );
-      api.renderInto(gfx, state.hit[gmId]);
-    },
-    preloadTex(gmId) {
-      const gm = gms[gmId];
-      const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
-      gfx.lineStyle({ width: 8, color: 0x999999 });
-      gfx.beginFill(0x000000);
-      gfx.drawPolygon(gm.hullPoly[0].outline)
-      gfx.endFill()
-
-      gfx.lineStyle({ width: 4, color: 0x999999 });
-      gfx.fill.alpha = 0;
-      gfx.beginFill();
-      gfx.drawPolygon(gm.navPoly[0].outline)
-      gfx.endFill();
-      api.renderInto(gfx, state.tex[gmId]);
+      gms[gmId].rooms.forEach((_, roomId) => state.renderHitRoom(gmId, roomId));
     },
     initTex(gmId) {
       //  image -> image
@@ -185,6 +159,22 @@ export default function Geomorphs(props) {
       });
       api.renderInto(state.gfx, state.tex[gmId], false);
     },
+    preloadTex(gmId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear();
+      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      gfx.lineStyle({ width: 8, color: 0x999999 });
+      gfx.beginFill(0x000000);
+      gfx.drawPolygon(gm.hullPoly[0].outline)
+      gfx.endFill()
+
+      gfx.lineStyle({ width: 4, color: 0x999999 });
+      gfx.fill.alpha = 0;
+      gfx.beginFill();
+      gfx.drawPolygon(gm.navPoly[0].outline)
+      gfx.endFill();
+      api.renderInto(gfx, state.tex[gmId]);
+    },
     recomputeLights(gmId, roomId) {
       if (!state.unlit[gmId]) {
         return; // avoid initialization error
@@ -203,6 +193,39 @@ export default function Geomorphs(props) {
         }
       });
       api.renderInto(state.gfx, state.tex[gmId], false);
+    },
+    renderHitRoom(gmId, roomId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
+      
+      // decor in room
+      const { points } = api.decor.byRoom[gmId][roomId];
+      const radius = decorIconRadius + 1;
+      points.forEach((d, pointId) => {
+        const center = gm.toLocalCoords(d);
+        // (127, roomId, decorPointId, 1)
+        // Assuming ≤ 256 DecorPoints in a room
+        gfx.beginFill(`rgba(127, ${roomId}, ${pointId}, 1)`);
+        gfx.drawCircle(center.x, center.y, radius);
+        gfx.endFill();
+      });
+
+      // doors adjacent to room
+      gm.roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
+        const { poly, seg: [u, v], normal } = gm.doors[doorId];
+        // (255, 0, doorId, 1)
+        // Assuming ≤ 256 doors in a geomorph
+        gfx.beginFill(`rgba(255, 0, ${doorId}, 1)`);
+        gfx.drawPolygon([
+          u.clone().addScaledVector(normal, 4),
+          v.clone().addScaledVector(normal, 4),
+          v.clone().addScaledVector(normal, -4),
+          u.clone().addScaledVector(normal, -4),
+        ]);
+        gfx.endFill();
+      });
+
+      api.renderInto(gfx, state.hit[gmId], false);
     },
     setRoomLit(gmId, roomId, nextLit) {
       const gm = gms[gmId];
@@ -306,11 +329,13 @@ export default function Geomorphs(props) {
  * @property {import('@pixi/graphics').Graphics} gfx Reused
  * @property {boolean[][]} isRoomLit Lights on iff `isRoomLit[gmId][roomId]`.
  * 
+ * @property {(gmId: number, roomId: number) => void} clearHitRoom
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initHit
  * @property {(gmId: number) => void} preloadTex
  * @property {(gmId: number) => void} initTex
+ * @property {(gmId: number, roomId: number) => void} renderHitRoom
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit
  * @property {(worldPoint: Geom.VectJson)  => null | Geomorph.PointMeta} testHit
  * @property {(gmId: number, doorId: number) => void} onOpenDoor
