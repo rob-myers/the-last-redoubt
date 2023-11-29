@@ -85,3 +85,17 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
 export const gmScale = 2.5;
 
 export const decorIconRadius = 4;
+
+/**
+ * Each value is an integer in [0, 255]
+ */
+export const hitTestRed = {
+  /** rgba encoding `(255, 0, doorId, 1)` */
+  door: 255,
+  /** rgba encoding `(254, roomId, decorPointId, 1)` */
+  decorPoint: 254,
+  /** rgba encoding `(253, roomId, doorId, 1)` */
+  debugArrow: 253,
+};
+
+export const debugDoorOffset = 10;

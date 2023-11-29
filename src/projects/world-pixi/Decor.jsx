@@ -184,7 +184,7 @@ export default function Decor(props) {
         api.renderRect(gfx, state.tex[gmId], texRect);
       }
     },
-    initByRoom(gmId) {
+    initLookups(gmId) {
       const gm = gms[gmId];
       state.byRoom[gmId] = gm.gmRoomDecor;
       gm.gmRoomDecor.forEach(({ colliders, points, decor }) => {
@@ -305,7 +305,7 @@ export default function Decor(props) {
  * Get all decor in specified room.
  * @property {(point: Geom.VectJson, gmId: number, roomId: number) => NPC.DecorDef[]} getDecorAtPoint
  * Get all decor in same room as point which intersects point.
- * @property {(gmId: number) => void} initByRoom
+ * @property {(gmId: number) => void} initLookups
  * @property {(gmId: number) => void} initTex
  * @property {() => void} refreshAll
  * @property {(decorKeys: string[]) => void} removeDecor

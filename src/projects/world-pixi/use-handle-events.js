@@ -1,5 +1,4 @@
 import React from "react";
-import { Rectangle } from "@pixi/core";
 import { npcHeadRadiusPx, npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
@@ -146,7 +145,7 @@ export default function useHandleEvents(api) {
       switch (e.key) {
         case 'pointerup':
           // mutate meta on click door/decor
-          const meta = api.geomorphs.testHit(e.point);
+          const meta = api.geomorphs.getHitMeta(e.point);
           Object.assign(e.meta, meta);
 
           // mutate meta on click npc
@@ -160,7 +159,7 @@ export default function useHandleEvents(api) {
           }
           break;
         case 'pointermove': {
-          const meta = api.geomorphs.testHit(e.point);
+          const meta = api.geomorphs.getHitMeta(e.point);
           api.setCursor(meta ? 'pointer' : 'auto');
           // meta && console.log('pointermove', meta);
           break;
@@ -421,7 +420,7 @@ export default function useHandleEvents(api) {
     deps: [api.gmGraph],
   });
 
-  //#region handle door events, npc events
+  //#region bootstrap on world ready
   React.useEffect(() => {
     if (!api.isReady()) {
       return;
@@ -444,6 +443,8 @@ export default function useHandleEvents(api) {
     const panZoomSub = api.panZoom.events.subscribe((e) => 
       state.handlePanZoomEvents(e)
     );
+
+    api.debug.render();
 
     return () => {
       doorsSub.unsubscribe();

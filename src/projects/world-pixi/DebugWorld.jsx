@@ -3,7 +3,7 @@ import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly, Rect } from "../geom";
-import { defaultNpcInteractRadius, gmScale } from "../world/const";
+import { debugDoorOffset, defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
 import { tempMatrix1 } from "./Misc";
@@ -119,7 +119,6 @@ export default function DebugWorld(props) {
             });
           }
           if (opts.canClickArrows) {
-            const debugDoorOffset = 10;
             const debugRadius = 4;
             const texture = api.decor.icon["circle-right"];
             const scale = (2 * debugRadius) / texture.width;
@@ -138,6 +137,8 @@ export default function DebugWorld(props) {
               gfx.drawRect(arrowPos.x - debugRadius, arrowPos.y - debugRadius, 2 * debugRadius, 2 * debugRadius);
               gfx.endFill();
             });
+
+            api.geomorphs.renderHitRoom(gmId, room.roomId);
           }
         }
 
@@ -181,6 +182,11 @@ export default function DebugWorld(props) {
     updateDebugRoom() {
       const { gmGraph, fov: { gmId, roomId } } = api;
       const gm = gmGraph.gms[gmId];
+      
+      // canClickArrows modifies hit canvas
+      const prevRoom = state.opts.room;
+      prevRoom && api.geomorphs.clearHitRoom(prevRoom.gmId, prevRoom.roomId);
+
       state.opts.room = {
         gmId,
         roomId,
@@ -189,6 +195,8 @@ export default function DebugWorld(props) {
         roomNavPoly: gm.lazy.roomNavPoly[roomId],
         roomPoly: gm.rooms[roomId],
       };
+
+      prevRoom && api.geomorphs.renderHitRoom(prevRoom.gmId, prevRoom.roomId);
       state.render();
     },
   }));
@@ -214,7 +222,6 @@ export default function DebugWorld(props) {
   // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
-    state.render();
     props.onLoad(state);
   }, []);
 

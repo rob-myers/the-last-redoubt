@@ -9,8 +9,11 @@
 - 🚧 support `npc cfg canClickArrows`
   - ✅ draw into DebugWorld
   - ✅ move/refactor hit redraw into Geomorphs
-  - 🚧 include in hit test canvas
+  - ✅ add/remove from hit test canvas
+  - 🚧 precompute debugArrows in opts.room
   - invoke `api.fov.setRoom` on click
+  - useNonProd(...) in `DebugWorld` and `Decor`?
+
 - gms prop uses geomorph layout format e.g.
   ```ts
   { gmKey: 'g-301--bridge' },
