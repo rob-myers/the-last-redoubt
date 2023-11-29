@@ -97,37 +97,37 @@ export default function DebugWorld(props) {
             gfx.beginFill([255, 0, 0, 0.1]);
             gfx.drawPolygon(room.roomNavPoly.outline);
             gfx.endFill()
-            gfx.lineStyle({ color: 'red' });
-            room.visDoorIds.forEach(doorId => {
-              const [u, v] = room.gm.doors[doorId].seg;
-              gfx.moveTo(u.x, u.y);
-              gfx.lineTo(v.x, v.y);
-            });
+            // gfx.lineStyle({ color: 'red', width: 1 });
+            // room.adjDoorIds.forEach(doorId => {
+            //   const [u, v] = room.gm.doors[doorId].seg;
+            //   gfx.moveTo(u.x, u.y);
+            //   gfx.lineTo(v.x, v.y);
+            // });
           }
           if (opts.roomOutline) {
-            gfx.lineStyle({ color: 'red' });
+            gfx.lineStyle({ width: 0 });
             gfx.beginFill([0, 0, 255, 0.1]);
             gfx.drawPolygon(room.roomPoly.outline);
             gfx.endFill();
           }
           if (opts.windowOutlines) {
-            gfx.lineStyle({ color: 'white' });
+            gfx.lineStyle({ color: 'white', width: 1 });
             room.gm.windows.forEach(({ baseRect, angle, poly }, i) => {
               gfx.beginFill('#0000ff40');
               gfx.drawPolygon(poly.outline);
               gfx.endFill();
             });
           }
-        }
+          if (opts.canClickArrows) {
+            const debugDoorOffset = 10;
+            const debugRadius = 4;
+            const texture = api.decor.icon["circle-right"];
+            const scale = (2 * debugRadius) / texture.width;
+            gfx.lineStyle({ width: 0 });
 
-        if (opts.canClickArrows) {
-          const debugDoorOffset = 10;
-          const debugRadius = 4;
-          const texture = api.decor.icon["circle-right"];
-          const scale = (2 * debugRadius) / texture.width;
-
-          gm.doors.forEach(({ poly, normal }) => {
-            [-1, +1].forEach(sign => {
+            room.adjDoorIds.forEach(doorId => {
+              const { poly, normal, roomIds } = gm.doors[doorId];
+              const sign = roomIds[0] === room.roomId ? 1 : -1;
               const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
               const { angle } = normal.clone().scale(-sign);
               tempMatrix1.identity() // 🚧 simplify
@@ -138,7 +138,7 @@ export default function DebugWorld(props) {
               gfx.drawRect(arrowPos.x - debugRadius, arrowPos.y - debugRadius, 2 * debugRadius, 2 * debugRadius);
               gfx.endFill();
             });
-          });
+          }
         }
 
         api.renderInto(gfx, state.tex[gmId], false);
@@ -181,16 +181,13 @@ export default function DebugWorld(props) {
     updateDebugRoom() {
       const { gmGraph, fov: { gmId, roomId } } = api;
       const gm = gmGraph.gms[gmId];
-      const visDoorIds = api.doors.getVisibleIds(gmId);
-      const roomNavPoly = gm.lazy.roomNavPoly[roomId];
-      const roomPoly = gm.rooms[roomId];
       state.opts.room = {
         gmId,
         roomId,
         gm,
-        visDoorIds,
-        roomNavPoly,
-        roomPoly,
+        adjDoorIds: gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId),
+        roomNavPoly: gm.lazy.roomNavPoly[roomId],
+        roomPoly: gm.rooms[roomId],
       };
       state.render();
     },
@@ -278,7 +275,7 @@ export default function DebugWorld(props) {
  * @property {number} gmId
  * @property {number} roomId
  * @property {Geomorph.GeomorphDataInstance} gm
- * @property {number[]} visDoorIds
+ * @property {number[]} adjDoorIds
  * @property {Geom.Poly} roomNavPoly
  * @property {Geom.Poly} roomPoly
  */
