@@ -89,6 +89,7 @@ export default function NPCs(props) {
         switch (key) {
           case 'canClickArrows':
             api.debug.opts.canClickArrows = !!value;
+            api.fov.gmId >= 0 && api.debug.updateDebugRoom();
             api.debug.render();
             break;
           case 'debug':

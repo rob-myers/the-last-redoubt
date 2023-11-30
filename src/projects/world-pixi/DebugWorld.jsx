@@ -64,6 +64,20 @@ export default function DebugWorld(props) {
       state.pathByKey[key] = { key, ctxt, worldRect, gmIds };
       gmIds.forEach(gmId => state.pathsByGmId[gmId].push(state.pathByKey[key]));
     },
+    onClick(e) {
+      const { room } = state.opts;
+      if (e.meta.debugArrow && room) {
+        const doorId = Number(e.meta.doorId);
+        if (!room.gm.isHullDoor(doorId)) {
+          return api.fov.setRoom(room.gmId, room.gm.getOtherRoomId(doorId, room.roomId), doorId);
+        }
+        const ctxt = api.gmGraph.getAdjacentRoomCtxt(room.gmId, doorId);
+        if (ctxt) {
+          return api.fov.setRoom(ctxt.adjGmId, ctxt.adjRoomId, ctxt.adjDoorId);
+        }
+        console.info(`gm ${room.gmId}: hull door ${doorId} is isolated`);
+      }
+    },
     removeNavPath(key) {
       state.pathByKey[key]?.gmIds.forEach(gmId =>
         state.pathsByGmId[gmId] = state.pathsByGmId[gmId].filter(x => x.key !== key)
@@ -180,7 +194,7 @@ export default function DebugWorld(props) {
     updateDebugRoom() {
       const { gmGraph, fov: { gmId, roomId } } = api;
       const gm = gmGraph.gms[gmId];
-      
+
       // canClickArrows modifies hit canvas
       const prevRoom = state.opts.room;
       prevRoom && api.geomorphs.clearHitRoom(prevRoom.gmId, prevRoom.roomId);
@@ -207,26 +221,6 @@ export default function DebugWorld(props) {
       state.render();
     },
   }));
-
-  // 🚧 migrate via hit-test canvas
-  // const onClick = React.useCallback(/** @param {React.MouseEvent<HTMLDivElement>} e */ async (e) => {
-  //   const target = (/** @type {HTMLElement} */ (e.target));
-  //   if (ctxt && target.classList.contains('debug-door-arrow')) {// Manual light control
-  //     const doorId = Number(target.dataset.debugDoorId);
-  //     if (!ctxt.gm.isHullDoor(doorId)) {
-  //       fov.setRoom(gmId, ctxt.gm.getOtherRoomId(doorId, roomId), doorId);
-  //       return;
-  //     }
-  //     const roomCtxt = gmGraph.getAdjacentRoomCtxt(gmId, doorId);
-  //     if (roomCtxt) {
-  //       fov.setRoom(roomCtxt.adjGmId, roomCtxt.adjRoomId, roomCtxt.adjDoorId);
-  //     } else {
-  //       console.info(`gm ${gmId}: hull door ${doorId} is isolated`);
-  //     }
-  //   }
-
-  // }, [ctxt, props, gmId, roomId]);
-  // const debugDoorArrowMeta = JSON.stringify({ ui: true, debug: true, 'door-arrow': true });
 
   React.useEffect(() => {
     props.onLoad(state);
@@ -256,6 +250,7 @@ export default function DebugWorld(props) {
  * @property {Record<number, DebugRenderPath[]>} pathsByGmId
  * 
  * @property {(key: string, navPath: NPC.GlobalNavPath) => void} addNavPath
+ * @property {(e: PanZoom.PointerUpEvent) => void} onClick
  * @property {(key: string) => void} removeNavPath
  * @property {() => void} updateDebugRoom
  * @property {() => void} render

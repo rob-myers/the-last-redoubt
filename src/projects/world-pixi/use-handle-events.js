@@ -144,7 +144,7 @@ export default function useHandleEvents(api) {
     handlePanZoomEvents(e) {
       switch (e.key) {
         case 'pointerup':
-          // mutate meta on click door/decor
+          // mutate meta on click door/decor/debug
           const meta = api.geomorphs.getHitMeta(e.point);
           Object.assign(e.meta, meta);
 
@@ -156,6 +156,10 @@ export default function useHandleEvents(api) {
               Object.assign(e.meta, { npc: true, npcKey: npc.key });
               break;
             }
+          }
+
+          if (e.meta.debug) {
+            api.debug.onClick(e);
           }
           break;
         case 'pointermove': {
@@ -444,7 +448,7 @@ export default function useHandleEvents(api) {
       state.handlePanZoomEvents(e)
     );
 
-    api.debug.render();
+    api.debug.render(); // Initial debug render
 
     return () => {
       doorsSub.unsubscribe();

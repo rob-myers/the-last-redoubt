@@ -72,9 +72,9 @@ export default function Geomorphs(props) {
         gfx.endFill();
       });
       
-      // canClickArrows
+      // canClickArrows (also after set false)
       const { opts } = api.debug;
-      if (opts.canClickArrows && opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
+      if (opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
         opts.room.navArrows.forEach(({ arrowPos }) => {
           gfx.beginFill('black');
           gfx.drawRect(arrowPos.x - radius, arrowPos.y - radius, 2 * radius, 2 * radius);
@@ -133,7 +133,7 @@ export default function Geomorphs(props) {
           return /** @type {Geomorph.PointMeta} */ ({ decor: true, gmId, roomId: g, decorKey: decor.key });
         }
         case hitTestRed.debugArrow:
-          return /** @type {Geomorph.PointMeta} */ ({ debugArrow: true, gmId, roomId: g, doorId: b });
+          return /** @type {Geomorph.PointMeta} */ ({ debug: true, debugArrow: true, gmId, roomId: g, doorId: b });
         default:
           // if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);
           return null;

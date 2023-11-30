@@ -11,7 +11,7 @@
   - ✅ move/refactor hit redraw into Geomorphs
   - ✅ add/remove from hit test canvas
   - ✅ simplify canClickArrows code
-  - invoke `api.fov.setRoom` on click
+  - ✅ invoke `api.fov.setRoom` on click
   - useNonProd(...) in `DebugWorld` and `Decor`?
 
 - gms prop uses geomorph layout format e.g.
