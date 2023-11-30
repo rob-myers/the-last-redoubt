@@ -845,34 +845,6 @@
         }
       },
       {
-        "meta": {"view": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [590.2675, 655.9998],
-              [583.1968, 663.0715],
-              [422.4449, 579.4278],
-              [429.5156, 572.3561]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"view": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [620.2677, 655.9997],
-              [624.823, 664.9019],
-              [776.6819, 587.1945],
-              [772.1266, 578.2923]
-            ]
-          ]
-        }
-      },
-      {
         "meta": {"relate-connectors": true},
         "poly": {
           "type": "Polygon",
@@ -885,7 +857,7 @@
     "width": 1200,
     "height": 1200,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
-    "lastModified": 1696856648944.7214
+    "lastModified": 1701358938620.549
   },
   "102--hull": {
     "key": "102--hull",

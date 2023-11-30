@@ -38,7 +38,7 @@
       <title>hull--20x20</title>
     </path>
   </g>
-  <g style="pointer-events: none;">
+  <g style="">
     <title>singles</title>
     <rect x="290" y="230" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor go label=corridor</title>
@@ -296,12 +296,6 @@
       <title>view</title>
     </rect>
     <rect y="418.313" width="10" height="119.998" style="stroke: rgb(0, 0, 0); fill-opacity: 0.5; fill: rgb(0, 255, 0); transform-origin: -550px 418.313px;" x="-555" transform="matrix(1, 0.000072, 0.000072, -1, 1170.000455, 241.686901)">
-      <title>view</title>
-    </rect>
-    <rect x="-362.42" width="181.211" height="9.537" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; transform-origin: -362.42px -510.219px; fill: rgb(0, 255, 0);" y="-510.219" transform="matrix(-0.887098, -0.461582, -0.7414, 0.7415, 952.687498, 1166.218803)">
-      <title>view</title>
-    </rect>
-    <rect x="-341.171" width="170.586" height="10" style="stroke: rgb(0, 0, 0); fill-opacity: 0.3; transform-origin: -341.171px -535px; fill: rgb(0, 255, 0);" y="-535" transform="matrix(0.890219, -0.455532, 0.455532, 0.890219, 961.438716, 1190.99969)">
       <title>view</title>
     </rect>
     <rect x="507.566" width="10" height="240" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="320" transform="matrix(0, 1, -1, 0, 1039.999878, 147.43399)">
