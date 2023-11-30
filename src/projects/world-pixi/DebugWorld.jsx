@@ -119,22 +119,19 @@ export default function DebugWorld(props) {
             });
           }
           if (opts.canClickArrows) {
-            // 🚧 simplify
             const debugRadius = 4;
             const texture = api.decor.icon["circle-right"];
             const scale = (2 * debugRadius) / texture.width;
+            
             gfx.lineStyle({ width: 0 });
-
-            room.adjDoorIds.forEach(doorId => {
-              const { poly, normal, roomIds } = gm.doors[doorId];
-              const sign = roomIds[0] === room.roomId ? 1 : -1;
-              const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
-              const { angle } = normal.clone().scale(-sign);
-              tempMatrix1.identity() // 🚧 simplify
-                .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
-                .scale(scale, scale).translate(arrowPos.x - debugRadius, arrowPos.y - debugRadius)
-              ;
-              gfx.beginTextureFill({ texture, matrix: tempMatrix1, alpha: 0.4 });
+            room.navArrows.forEach(({ arrowPos, angle }) => {
+              gfx.beginTextureFill({
+                texture,
+                matrix: tempMatrix1.identity()
+                  .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
+                  .scale(scale, scale).translate(arrowPos.x - debugRadius, arrowPos.y - debugRadius),
+                alpha: 0.4,
+              });
               gfx.drawRect(arrowPos.x - debugRadius, arrowPos.y - debugRadius, 2 * debugRadius, 2 * debugRadius);
               gfx.endFill();
             });
@@ -188,11 +185,20 @@ export default function DebugWorld(props) {
       const prevRoom = state.opts.room;
       prevRoom && api.geomorphs.clearHitRoom(prevRoom.gmId, prevRoom.roomId);
 
+      const adjDoorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
       state.opts.room = {
         gmId,
         roomId,
         gm,
-        adjDoorIds: gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId),
+        adjDoorIds,
+        navArrows: adjDoorIds.map(doorId => {
+          const { poly, normal, roomIds } = gm.doors[doorId];
+          /** Have seen hull doors where normal is "inverted" */
+          const sign = roomIds[0] === roomId ? 1 : -1;
+          const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
+          const { angle } = normal.clone().scale(-sign);
+          return { doorId, arrowPos, angle };
+        }),
         roomNavPoly: gm.lazy.roomNavPoly[roomId],
         roomPoly: gm.rooms[roomId],
       };
@@ -284,6 +290,7 @@ export default function DebugWorld(props) {
  * @property {number} roomId
  * @property {Geomorph.GeomorphDataInstance} gm
  * @property {number[]} adjDoorIds
+ * @property {{ doorId: number; arrowPos: Geom.VectJson; angle: number; }[]} navArrows
  * @property {Geom.Poly} roomNavPoly
  * @property {Geom.Poly} roomPoly
  */

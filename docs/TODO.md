@@ -10,7 +10,7 @@
   - ✅ draw into DebugWorld
   - ✅ move/refactor hit redraw into Geomorphs
   - ✅ add/remove from hit test canvas
-  - 🚧 precompute debugArrows in opts.room
+  - ✅ simplify canClickArrows code
   - invoke `api.fov.setRoom` on click
   - useNonProd(...) in `DebugWorld` and `Decor`?
 
@@ -38,6 +38,7 @@
 - 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
   - Spine extends SpineBase extends PIXI.Container
   - try `spine.state.setAnimation(0, 'idle', true);`
+  - render into RenderTexture
 
 - load a PIXI SpriteSheet using a `TextureAtlas`
 

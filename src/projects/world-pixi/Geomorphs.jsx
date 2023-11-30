@@ -75,10 +75,7 @@ export default function Geomorphs(props) {
       // canClickArrows
       const { opts } = api.debug;
       if (opts.canClickArrows && opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
-        opts.room.adjDoorIds.forEach(doorId => {
-          const { poly, roomIds, normal } = gm.doors[doorId];
-          const sign = roomIds[0] === opts.room?.roomId ? 1 : -1;
-          const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
+        opts.room.navArrows.forEach(({ arrowPos }) => {
           gfx.beginFill('black');
           gfx.drawRect(arrowPos.x - radius, arrowPos.y - radius, 2 * radius, 2 * radius);
           gfx.endFill();
@@ -258,10 +255,7 @@ export default function Geomorphs(props) {
       // canClickArrows
       const { opts } = api.debug;
       if (opts.canClickArrows && opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
-        opts.room.adjDoorIds.forEach(doorId => {
-          const { poly, roomIds, normal } = gm.doors[doorId];
-          const sign = roomIds[0] === opts.room?.roomId ? 1 : -1;
-          const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
+        opts.room.navArrows.forEach(({ doorId, arrowPos }) => {
           gfx.beginFill(`rgba(${hitTestRed.debugArrow}, ${roomId}, ${doorId}, 1)`);
           gfx.drawCircle(arrowPos.x, arrowPos.y, radius);
           gfx.endFill();
