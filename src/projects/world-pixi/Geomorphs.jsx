@@ -26,8 +26,8 @@ export default function Geomorphs(props) {
       queryFn: async () => {
         state.preloadTex(gmId);
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
-          state[type][gmId] = await Assets.load(
-            `/assets/geomorph/${gm.key}${type === 'lit' ? '.lit.webp' : '.webp'}`
+          state[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
+            `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
           )
         ));
         state.initTex(gmId);

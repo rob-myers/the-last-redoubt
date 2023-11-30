@@ -151,14 +151,14 @@ export default function WorldPixi(props) {
                 onLoad={api => (state.decor = api) && update()}
               />
 
-              <NPCs
-                api={state}
-                onLoad={api => (state.npcs = api) && update()}
-              />
-
               <DebugWorld
                 api={state}
                 onLoad={api => (state.debug = api) && update()}
+              />
+
+              <NPCs
+                api={state}
+                onLoad={api => (state.npcs = api) && update()}
               />
 
               <FOV
@@ -167,8 +167,6 @@ export default function WorldPixi(props) {
               />
 
               <Origin />
-              {/* <TestSprite/> */}
-              {/* <TestRenderTexture/> */}
             </PanZoom>
           </QueryClientProvider>
         </Stage>

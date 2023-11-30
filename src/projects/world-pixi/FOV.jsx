@@ -1,15 +1,22 @@
 import React from "react";
-import { css, cx } from "@emotion/css";
+import { RenderTexture } from "@pixi/core";
+import { Graphics } from "@pixi/graphics";
+
 import { Poly, Vect } from "../geom";
-import { defaultClipPath, geomorphMapFilterHidden, geomorphMapFilterShown, gmScale } from "../world/const";
+import { geomorphMapFilterHidden, geomorphMapFilterShown, gmScale } from "../world/const";
 import { assertNonNull, testNever } from "../service/generic";
-import { geomorphPngPath, getGmRoomKey, labelMeta } from "../service/geomorph";
+import { getGmRoomKey, labelMeta } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
-import useUpdate from "../hooks/use-update";
-// import GmsCanvas from "./GmsCanvas";
+import GmSprites from "./GmSprites";
+import { colMatFilter3, tempMatrix1 } from "./Misc";
 
 /**
- * Field Of View, implemented via dark parts of geomorphs
+ * Field Of View, implemented by covering dark parts.
+ * 
+ * Initially all rooms are dark.
+ * `state.setRoom` must be invoked to make some room visible,
+ * e.g. via `spawn {npcName} $( click 1 )`.
+ *
  * @param {Props} props 
  */
 export default function FOV(props) {
@@ -17,20 +24,11 @@ export default function FOV(props) {
   const { api } = props;
   const { gmGraph, gmGraph: { gms } } = api;
 
-  const update = useUpdate();
-
   const state = useStateRef(/** @type {() => State} */ () => ({
-    /**
-     * Initially all rooms are dark.
-     * @see {state.setRoom} must be invoked to make some room visible,
-     * e.g. via `spawn {npcName} $( click 1 )`.
-     */
-
     //#region core state
     gmId: -1,
     roomId: -1,
     lastDoorId: -1,
-
     prev: { gmId: -1, roomId: -1, lastDoorId: -1 },
     //#endregion
 
@@ -38,9 +36,16 @@ export default function FOV(props) {
     gmRoomIds: [],
 
     ready: true,
+    gfx: new Graphics(),
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })),
+    maskPolys: gms.map(_ => []),
+
+    // 🚧 remove below
     el: /** @type {State['el']} */ ({ canvas: /** @type {HTMLCanvasElement[]} */ ([]) }),
     anim: { labels: new Animation, map: new Animation },
-    clipPath: gms.map(_ => 'none'),
 
     drawLabels() {
       for (const [gmId, canvas] of state.el.canvas.entries()) {
@@ -165,28 +170,17 @@ export default function FOV(props) {
       );
 
       /** Compute mask polygons by cutting light from hullPolygon */
-      const maskPolys = viewPolys.map((polys, altGmId) =>
+      state.maskPolys = viewPolys.map((polys, altGmId) =>
         (polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : [])
           // exclude poly between adj-hull-doors
           // 🤔 must be large enough to show small rooms
           .filter(x => x.rect.area > 30 * 30)
       );
-      /**
-       * Try to eliminate "small black no-light intersections" from current geomorph.
-       * They often look triangular, and as part of mask they have no holes.
-       * However, polygons sans holes also arise e.g. when light borders a hull door.
-       * @see {gmGraph.computeViews} for new approach
-       */
-      // maskPolys[state.gmId] = maskPolys[state.gmId].filter(x =>
-      //   x.holes.length > 0 || (x.outline.length > 8)
-      // );
 
-      state.clipPath = gmMaskPolysToClipPaths(maskPolys, gms);
       state.prev = curr;
       state.rootedOpenIds = cmp.rootedOpenIds;
 
-      // Track visible rooms
-      // 🤔 we assume gmRoomIds has no dups
+      // Track visible rooms (assuming gmRoomIds has no dups)
       const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: getGmRoomKey(x.gmId, x.roomId)}));
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
@@ -198,23 +192,38 @@ export default function FOV(props) {
       //   /** @type {number[]} */ ([]),
       // ));
 
-      update();
+      state.render();
+    },
+    render() {
+      const gfx = state.gfx;
+      gms.forEach((gm, gmId) => {
+        const polys = state.maskPolys[gmId];
+        gfx.clear();
+        if (polys.length) {
+          gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
+          polys.forEach(poly => {
+            gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId], matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
+            gfx.drawPolygon(poly.outline);
+            poly.holes.forEach(hole => {
+              gfx.beginHole();
+              gfx.drawPolygon(hole);
+              gfx.endHole();
+            })
+            gfx.endFill();
+          });
+        } else {
+          gfx.setTransform().beginTextureFill({ texture: api.geomorphs.unlit[gmId] });
+          gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+          gfx.endFill();
+        }
+        api.renderInto(gfx, state.tex[gmId], true);
+      });
     },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
-        state.gmId = gmId;
-        state.roomId = roomId;
-        state.lastDoorId = doorId;
-
+        [state.gmId, state.roomId, state.lastDoorId] = [gmId, roomId, doorId];
         state.recompute();
         api.debug.updateDebugRoom();
-        if (doorId === -1) {
-          /**
-           * Light may come through a door from another room,
-           * due to the way we handle diagonal doors.
-           */
-          api.geomorphs.recomputeLights(gmId, roomId);
-        }
         return true;
       } else {
         return false;
@@ -245,51 +254,13 @@ export default function FOV(props) {
     // state.drawLabels();
   }, []);
 
-  // return (
-  //   <div
-  //     style={{ display: 'none' }}
-  //     className={cx("fov", rootCss)}
-  //     ref={el => el && (
-  //       [state.el.map, state.el.labels] = /** @type {HTMLDivElement[]} */ (Array.from(el.children))
-  //     )}
-  //   >
-  //     <div className="map">
-  //       {gms.map((gm, gmId) =>
-  //         <div
-  //           key={gmId}
-  //           style={{
-  //             transform: `${gm.transformStyle} translate(${gm.pngRect.x}px, ${gm.pngRect.y}px)`,
-  //             transformOrigin: 'top left',
-  //           }}
-  //         >
-  //           <img
-  //             className="geomorph-dark"
-  //             src={geomorphPngPath(gm.key, 'map')}
-  //             draggable={false}
-  //             width={gm.pngRect.width}
-  //             height={gm.pngRect.height}
-  //             style={{
-  //               clipPath: state.clipPath[gmId],
-  //               WebkitClipPath: state.clipPath[gmId],
-  //               // Avoid initial flicker on <Geomorphs> load first
-  //               background: 'white',
-  //             }}
-  //           />
-  //         </div>
-  //       )}
-  //     </div>
-
-  //     <div className="labels">
-  //       {/* <GmsCanvas
-  //         canvasRef={(el, gmId) => state.el.canvas[gmId] = el}
-  //         gms={gms}
-  //         scaleFactor={gmScale}
-  //       /> */}
-  //     </div>
-
-  //   </div>
-  // );
-  return null;
+  return (
+    <GmSprites
+      gms={gms}
+      tex={state.tex}
+      filters={[colMatFilter3]}
+    />
+  );
 }
 
 /**
@@ -302,11 +273,14 @@ export default function FOV(props) {
 
 /**
  * @typedef AuxState @type {object}
- * @property {string[]} clipPath
  * @property {(Geomorph.GmRoomId & { key: string })[]} gmRoomIds
  * @property {{ map: Animation; labels: Animation; }} anim
  * @property {CoreState} prev Previous state, last time we updated clip path
  * @property {boolean} ready
+ * @property {import('pixi.js').Graphics} gfx
+ * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {Geom.Poly[][]} maskPolys
+ * 
  * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el Labels need their own canvas because geomorphs are e.g. reflected
  * @property {() => void} drawLabels
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
@@ -314,6 +288,7 @@ export default function FOV(props) {
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
  * @property {() => void} forgetPrev
+ * @property {() => void} render
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * @property {() => void} recompute
@@ -329,42 +304,6 @@ export default function FOV(props) {
 // const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
 // const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
- const rootCss = css`
-  /**
-    * Fix Chrome over-clipping
-    * 👁 mobile: happened a lot
-    * 👁 Desktop: unmax Tabs: keep walking
-    * ℹ️ happened on put <FOV> after <Doors> 👈
-    */
-  will-change: transform;
-
-  > .map {
-    filter: ${geomorphMapFilterShown};
-  }
-  > .labels {
-    opacity: 1;
-  }
-  
-  img.geomorph-dark {
-    position: absolute;
-    transform-origin: top left;
-    pointer-events: none;
-  }
-`;
-
-/**
- * Convert geomorph masks into a CSS format.
- * @param {Poly[][]} maskPolys 
- * @param {Geomorph.GeomorphDataInstance[]} gms 
- */
-function gmMaskPolysToClipPaths(maskPolys, gms) {
-  return maskPolys.map((maskPoly, gmId) => {
-    // <img> top-left needn't be at world origin
-    const polys = maskPoly.map(poly => poly.clone().translate(-gms[gmId].pngRect.x, -gms[gmId].pngRect.y));
-    const svgPaths = polys.map(poly => `${poly.svgPath}`).join(' ');
-    return maskPoly.length && svgPaths.length ? `path('${svgPaths}')` : defaultClipPath;
-  });
-}
 
 /**
  * @param {import('./WorldPixi').State} api

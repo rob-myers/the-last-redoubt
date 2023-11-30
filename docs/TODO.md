@@ -2,17 +2,18 @@
 
 ## In progress
 
-- ✅ `npc cfg localColliders` shows decor intersections in current room
-- ❌ flatten decor grid again: { colliders, points } -> colliders.concat(points)
-  - prefer to quickly get colliders rather than filter out points
-- ✅ mobile click should not flash blue
-- ✅ support `npc cfg canClickArrows`
-  - ✅ draw into DebugWorld
-  - ✅ move/refactor hit redraw into Geomorphs
-  - ✅ add/remove from hit test canvas
-  - ✅ simplify canClickArrows code
-  - ✅ invoke `api.fov.setRoom` on click
-  - ✅ HMR in `DebugWorld` and `Decor`
+- 🚧 migrate api.fov
+  - ❌ load geomorph map image
+    - looks worse
+  - ❌ fov should be a union of roomsWithDoors
+  - ✅ draw fov via beginTextureFill, drawPolygon
+    - current approach looks good
+  - 🚧 pre-render darkened texture
+    - so can draw doors
+    - so can add labels later
+  - can show labels
+  - can show gmOutlines
+
 
 - gms prop uses geomorph layout format e.g.
   ```ts
@@ -44,6 +45,7 @@
 
 - start migrating NPCs
 
+- do not render "covered" geomorphs
 - spine: first attempt at our own images
 - door/hull-door sprite instead of Graphics
 - gmGraph.computeViewableGmRoomIds
@@ -677,6 +679,18 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ `npc cfg localColliders` shows decor intersections in current room
+- ❌ flatten decor grid again: { colliders, points } -> colliders.concat(points)
+  - prefer to quickly get colliders rather than filter out points
+- ✅ mobile click should not flash blue
+- ✅ support `npc cfg canClickArrows`
+  - ✅ draw into DebugWorld
+  - ✅ move/refactor hit redraw into Geomorphs
+  - ✅ add/remove from hit test canvas
+  - ✅ simplify canClickArrows code
+  - ✅ invoke `api.fov.setRoom` on click
+  - ✅ HMR in `DebugWorld` and `Decor`
 
 - ✅ Spine: top_down_man_base: fix stuff
   - ✅ rename legs
