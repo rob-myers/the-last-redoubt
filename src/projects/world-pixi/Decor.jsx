@@ -255,11 +255,9 @@ export default function Decor(props) {
     },
   }));
 
-  // process.env.NODE_ENV === 'development' && React.useEffect(() => {
-  //   if (api.isReady()) {
-  //     state.refreshAll();
-  //   }
-  // }, []);
+  React.useEffect(() => {
+    process.env.NODE_ENV === 'development' && api.isReady() && state.refreshAll();
+  }, []);
 
   return (
     <GmSprites

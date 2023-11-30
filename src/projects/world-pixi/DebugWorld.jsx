@@ -223,6 +223,7 @@ export default function DebugWorld(props) {
   }));
 
   React.useEffect(() => {
+    process.env.NODE_ENV === 'development' && api.isReady() && state.render();
     props.onLoad(state);
   }, []);
 

@@ -247,8 +247,11 @@ source /etc/util-1
 source /etc/game-1
 
 awaitWorld
-click | filter meta.door | world doors.onRawDoorClick & # 👈 temp
-npc config colliders
+# temp
+click | filter meta.door | world doors.onRawDoorClick &
+world fov.setRoom 0 2
+npc config colliders canClickArrows
+
 
 # spawn ${npcKey} '{"x":210,"y":390}'
 # npc set-player ${npcKey}

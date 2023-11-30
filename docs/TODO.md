@@ -6,13 +6,13 @@
 - ❌ flatten decor grid again: { colliders, points } -> colliders.concat(points)
   - prefer to quickly get colliders rather than filter out points
 - ✅ mobile click should not flash blue
-- 🚧 support `npc cfg canClickArrows`
+- ✅ support `npc cfg canClickArrows`
   - ✅ draw into DebugWorld
   - ✅ move/refactor hit redraw into Geomorphs
   - ✅ add/remove from hit test canvas
   - ✅ simplify canClickArrows code
   - ✅ invoke `api.fov.setRoom` on click
-  - useNonProd(...) in `DebugWorld` and `Decor`?
+  - ✅ HMR in `DebugWorld` and `Decor`
 
 - gms prop uses geomorph layout format e.g.
   ```ts
