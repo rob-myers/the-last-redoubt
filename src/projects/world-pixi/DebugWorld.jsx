@@ -82,7 +82,7 @@ export default function DebugWorld(props) {
         if (opts.debugHit) {
           gfx.setTransform(0, 0, gmScale, gmScale);
           gfx.beginTextureFill({ texture: api.geomorphs.hit[gmId] });
-          gfx.drawRect(gm.pngRect.x, gm.pngRect.y, gm.pngRect.width, gm.pngRect.height);
+          gfx.drawRect(0, 0, gm.pngRect.width, gm.pngRect.height);
           gfx.endFill();
           api.renderInto(gfx, state.tex[gmId], false);
         }
@@ -119,6 +119,7 @@ export default function DebugWorld(props) {
             });
           }
           if (opts.canClickArrows) {
+            // 🚧 simplify
             const debugRadius = 4;
             const texture = api.decor.icon["circle-right"];
             const scale = (2 * debugRadius) / texture.width;
