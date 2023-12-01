@@ -11,11 +11,11 @@ import GmSprites from "./GmSprites";
 import { colMatFilter3, tempMatrix1 } from "./Misc";
 
 /**
- * Field Of View, implemented by covering dark parts.
+ * Field Of View (covers unseen parts of geomorph).
  * 
- * Initially all rooms are dark.
- * `state.setRoom` must be invoked to make some room visible,
- * e.g. via `spawn {npcName} $( click 1 )`.
+ * - initially all rooms are unseen.
+ * - `state.setRoom` must be invoked to make some room visible,
+ *   e.g. via `spawn {npcName} $( click 1 )`.
  *
  * @param {Props} props 
  */
@@ -141,6 +141,25 @@ export default function FOV(props) {
           });
       }
     },
+    preloadTex(gmId) {
+      if (state.gmId >= 0) {
+        return;
+      }
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear();
+      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      gfx.lineStyle({ width: 8, color: 0x999999 });
+      gfx.beginFill(0x000000);
+      gfx.drawPolygon(gm.hullPoly[0].outline)
+      gfx.endFill()
+
+      gfx.lineStyle({ width: 4, color: 0x999999 });
+      gfx.fill.alpha = 0;
+      gfx.beginFill();
+      gfx.drawPolygon(gm.navPoly[0].outline)
+      gfx.endFill();
+      api.renderInto(gfx, state.tex[gmId]);
+    },
     recompute() {
       if (state.gmId === -1) {
         return; // state.gmId is -1 <=> state.roomId is -1
@@ -264,7 +283,7 @@ export default function FOV(props) {
 }
 
 /**
- * @typedef Props @type {object}
+ * @typedef Props
  * @property {import('./WorldPixi').State} api
  * @property {(fovApi: State) => void} onLoad
  */
@@ -272,30 +291,33 @@ export default function FOV(props) {
 /** @typedef State @type {CoreState & AuxState} */
 
 /**
- * @typedef AuxState @type {object}
- * @property {(Geomorph.GmRoomId & { key: string })[]} gmRoomIds
- * @property {{ map: Animation; labels: Animation; }} anim
- * @property {CoreState} prev Previous state, last time we updated clip path
+ * @typedef AuxState
  * @property {boolean} ready
+ * @property {CoreState} prev Previous state, last time we updated clip path
+ * @property {(Geomorph.GmRoomId & { key: string })[]} gmRoomIds
+ * @property {number[][]} rootedOpenIds
+ * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
+ * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
+ * 
  * @property {import('pixi.js').Graphics} gfx
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {Geom.Poly[][]} maskPolys
  * 
- * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el Labels need their own canvas because geomorphs are e.g. reflected
- * @property {() => void} drawLabels
- * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
- * @property {number[][]} rootedOpenIds
- * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
- * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
  * @property {() => void} forgetPrev
+ * @property {(gmId: number) => void} preloadTex
+ * @property {() => void} recompute
  * @property {() => void} render
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
- * @property {() => void} recompute
+ * 
+ * @property {{ map: HTMLDivElement; labels: HTMLDivElement; canvas: HTMLCanvasElement[] }} el Labels need their own canvas because geomorphs are e.g. reflected
+ * @property {{ map: Animation; labels: Animation; }} anim
+ * @property {() => void} drawLabels
+ * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
 */
 
 /**
- * @typedef CoreState @type {object}
+ * @typedef CoreState
  * @property {number} gmId Current geomorph id
  * @property {number} roomId Current room id (relative to geomorph)
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`

@@ -6,7 +6,7 @@ import { RenderTexture, Rectangle, BLEND_MODES } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
-import { assertDefined } from "../service/generic";
+import { assertDefined, pause } from "../service/generic";
 import { debugDoorOffset, decorIconRadius, gmScale, hitTestRed } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import { colMatFilter1, tempMatrix1 } from "./Misc";
@@ -19,12 +19,14 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
 
+  // 🚧 move to WorldPixi?
   const loaded = useQueries({
     /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
     queries: gms.map((gm, gmId) => ({
       queryKey: [`${gm.key}.${gmId}`], // gmId for dups
       queryFn: async () => {
-        state.preloadTex(gmId);
+        await pause(30);
+        api.fov.preloadTex(gmId);
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
           state[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
             `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
@@ -202,22 +204,6 @@ export default function Geomorphs(props) {
       });
       api.renderInto(state.gfx, state.tex[gmId], false);
     },
-    preloadTex(gmId) {
-      const gm = gms[gmId];
-      const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
-      gfx.lineStyle({ width: 8, color: 0x999999 });
-      gfx.beginFill(0x000000);
-      gfx.drawPolygon(gm.hullPoly[0].outline)
-      gfx.endFill()
-
-      gfx.lineStyle({ width: 4, color: 0x999999 });
-      gfx.fill.alpha = 0;
-      gfx.beginFill();
-      gfx.drawPolygon(gm.navPoly[0].outline)
-      gfx.endFill();
-      api.renderInto(gfx, state.tex[gmId]);
-    },
     recomputeLights(gmId, roomId) {
       if (!state.unlit[gmId]) {
         return; // avoid initialization error
@@ -358,7 +344,6 @@ export default function Geomorphs(props) {
  * @property {(type: 'lit' | 'unlit', gmId: number, poly: Geom.Poly) => void} drawPolygonImage
  * @property {(type: 'lit' | 'unlit', gmId: number, rect: Geom.RectJson) => void} drawRectImage
  * @property {(gmId: number) => void} initHit
- * @property {(gmId: number) => void} preloadTex
  * @property {(gmId: number) => void} initTex
  * @property {(gmId: number, roomId: number) => void} renderHitRoom
  * @property {(gmId: number, roomId: number, lit: boolean)  => void} setRoomLit

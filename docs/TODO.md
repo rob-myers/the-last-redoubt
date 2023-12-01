@@ -17,11 +17,11 @@
 - 🚧 change initial load
   - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
   - ✅ Geomorphs/Doors/Decor/DebugWorld shown in response to fov
-  - preload tex drawn inside api.fov
+  - ✅ preload tex drawn inside api.fov
+  - avoid initTex until geomorph first shown?
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
-
 - gms prop uses geomorph layout format e.g.
   ```ts
   { gmKey: 'g-301--bridge' },
@@ -29,18 +29,6 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
-- ✅ can switch off bare arms/legs
-  - light-exposed
-  - dark-exposed
-- ✅ test spine spritesheet export
-- ✅ export {vilani,solomani,zhodani} spritesheets
-  - idle
-  - idle-breathe
-  - lie
-  - sit
-  - walk
-- ✅ export atlas/png/json at scale `0.1` (single PNG)
-  - man_01_base.{atlas,png,json}
 
 - ✅ can load spine json/atlas/png using `pixi-spine`
 - 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
@@ -52,6 +40,7 @@
 
 - start migrating NPCs
 
+- `world` command -> `api`
 - do not render "covered" geomorphs
 - spine: first attempt at our own images
 - door/hull-door sprite instead of Graphics
@@ -686,6 +675,19 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can switch off bare arms/legs
+  - light-exposed
+  - dark-exposed
+- ✅ test spine spritesheet export
+- ✅ export {vilani,solomani,zhodani} spritesheets
+  - idle
+  - idle-breathe
+  - lie
+  - sit
+  - walk
+- ✅ export atlas/png/json at scale `0.1` (single PNG)
+  - man_01_base.{atlas,png,json}
 
 - ✅ `npc cfg localColliders` shows decor intersections in current room
 - ❌ flatten decor grid again: { colliders, points } -> colliders.concat(points)

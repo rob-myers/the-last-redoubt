@@ -16,7 +16,7 @@ export default function GmSprites(props) {
         width={gm.pngRect.width}
         height={gm.pngRect.height}
         texture={props.tex[gmId]}
-        visible={props.visible?.[gmId]}
+        visible={props.visible?.[gmId] ?? true}
       />
     ))}
   </>;
