@@ -187,10 +187,10 @@ export default function FOV(props) {
       state.gmRoomIds = nextGmRoomIds;
       api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
 
-      // api.setShownGms(state.gmRoomIds.reduce(
-      //   (agg, { gmId }) => { !agg.includes(gmId) && agg.push(gmId); return agg; },
-      //   /** @type {number[]} */ ([]),
-      // ));
+      api.setVisibleGms(state.gmRoomIds.reduce(
+        (agg, { gmId }) => { agg[gmId] = true; return agg; },
+        gms.map(_ => false),
+      ));
 
       state.render();
     },

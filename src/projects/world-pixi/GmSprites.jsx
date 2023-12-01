@@ -16,6 +16,7 @@ export default function GmSprites(props) {
         width={gm.pngRect.width}
         height={gm.pngRect.height}
         texture={props.tex[gmId]}
+        visible={props.visible?.[gmId]}
       />
     ))}
   </>;
@@ -24,6 +25,7 @@ export default function GmSprites(props) {
 /**
  * @typedef Props
  * @property {Geomorph.GeomorphDataInstance[]} gms
- * @property {import('@pixi/core').RenderTexture[]} tex
+ * @property {import('@pixi/core').RenderTexture[]} tex Aligned to `gms`
  * @property {import('@pixi/core').Filter[]} [filters]
+ * @property {boolean[]} [visible] Aligned to `gms`
  */

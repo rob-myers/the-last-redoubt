@@ -10,10 +10,17 @@
     - current approach looks good
   - 🚧 pre-render darkened texture
     - so can draw doors
-    - so can add labels later
+    - so can add labels/gmOutlines
   - can show labels
   - can show gmOutlines
 
+- 🚧 change initial load
+  - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
+  - ✅ Geomorphs/Doors/Decor/DebugWorld shown in response to fov
+  - preload tex drawn inside api.fov
+
+- debug arrows have larger hit area
+- can toggle fov `npc cfg fov`
 
 - gms prop uses geomorph layout format e.g.
   ```ts

@@ -264,6 +264,7 @@ export default function Decor(props) {
       gms={gms}
       tex={state.tex}
       filters={[colMatFilter2]}
+      visible={api.visibleGms}
     />
   );
 }

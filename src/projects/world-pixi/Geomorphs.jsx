@@ -333,6 +333,7 @@ export default function Geomorphs(props) {
       gms={gms}
       tex={state.tex}
       filters={[colMatFilter1]}
+      visible={api.visibleGms}
     />
   );
 }

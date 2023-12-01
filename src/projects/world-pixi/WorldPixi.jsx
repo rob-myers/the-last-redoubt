@@ -37,6 +37,7 @@ export default function WorldPixi(props) {
     disabled: !!props.disabled,
     gmGraph: /** @type {*} */ ({}),
     gmRoomGraph: /** @type {*} */ ({}),
+    visibleGms: props.gms.map(_ => false),
 
     pixiApp: /** @type {*} */ ({}),
     canvas: /** @type {*} */ ({}),
@@ -86,6 +87,10 @@ export default function WorldPixi(props) {
     },
     setCursor(cssValue) {
       state.canvas.style.cursor = cssValue;
+    },
+    setVisibleGms(visibleGms) {
+      state.visibleGms = visibleGms;
+      update();
     },
   }));
 
@@ -187,6 +192,7 @@ export default function WorldPixi(props) {
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
  * @property {Graph.GmRoomGraph} gmRoomGraph
+ * @property {boolean[]} visibleGms Aligned to `props.gms`
  * 
  * @property {import("pixi.js").Application} pixiApp
  * @property {HTMLCanvasElement} canvas
@@ -207,6 +213,7 @@ export default function WorldPixi(props) {
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
+ * @property {(visibleGms: boolean[]) => void} setVisibleGms
  */
 
 /**
