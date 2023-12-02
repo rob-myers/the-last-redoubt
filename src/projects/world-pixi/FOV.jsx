@@ -47,9 +47,6 @@ export default function FOV(props) {
       height: gmScale * gm.pngRect.height,
     })),
 
-    // el: /** @type {State['el']} */ ({ canvas: /** @type {HTMLCanvasElement[]} */ ([]) }),
-    // anim: { labels: new Animation, map: new Animation },
-
     drawLabels() {
       // for (const [gmId, canvas] of state.el.canvas.entries()) {
       //   const ctxt = assertNonNull(canvas.getContext('2d'));
@@ -168,16 +165,23 @@ export default function FOV(props) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
-      gfx.lineStyle({ width: 8, color: 0x999999 });
-      gfx.beginFill(0x000000);
-      gfx.drawPolygon(gm.hullPoly[0].outline)
-      gfx.endFill()
 
-      gfx.lineStyle({ width: 4, color: 0x999999 });
-      gfx.fill.alpha = 0;
-      gfx.beginFill();
-      gfx.drawPolygon(gm.navPoly[0].outline)
-      gfx.endFill();
+      gfx.lineStyle({ width: 8, color: 0x999999 })
+        .beginFill(0)
+        .drawPolygon(gm.hullPoly[0].outline)
+        .endFill();
+        
+      gm.roomsWithDoors.forEach(poly => {
+        gfx.lineStyle({ width: 4, color: 0x777777, alpha: 0.4 })
+          .beginFill(0, 0)
+          .drawPolygon(poly.outline)
+          .endFill();
+      });
+
+      gfx.lineStyle({ width: 4, color: 0x555555, alpha: 0.4 })
+        .beginFill(0, 0)
+        .drawPolygon(gm.navPoly[0].outline)
+        .endFill();
       api.renderInto(gfx, state.tex[gmId]);
     },
     recompute() {
