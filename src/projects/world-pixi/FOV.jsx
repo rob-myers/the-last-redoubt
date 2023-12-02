@@ -1,6 +1,8 @@
 import React from "react";
 import { RenderTexture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
+import { Assets } from "@pixi/assets";
+import { useQueries } from "@tanstack/react-query";
 
 import { Poly, Vect } from "../geom";
 import { geomorphMapFilterHidden, geomorphMapFilterShown, gmScale } from "../world/const";
@@ -201,42 +203,43 @@ export default function FOV(props) {
 
       // Track visible rooms (assuming gmRoomIds has no dups)
       const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: getGmRoomKey(x.gmId, x.roomId)}));
-      const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
+      const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
+
+      const visibleGms = nextGmRoomIds.reduce(
+        (agg, { gmId }) => (agg[gmId] = true, agg), gms.map(_ => false),
+      );
+      const mentionedGms = state.gmRoomIds.reduce(
+        (agg, { gmId }) => (agg[gmId] = true, agg), visibleGms.slice(),
+      );
+      mentionedGms.forEach((mentioned, gmId) => mentioned && state.render(gmId));
+      api.setVisibleGms(visibleGms);
+
       state.gmRoomIds = nextGmRoomIds;
       api.npcs.events.next({ key: 'fov-changed', gmRoomIds: nextGmRoomIds, added, removed });
-
-      api.setVisibleGms(state.gmRoomIds.reduce(
-        (agg, { gmId }) => { agg[gmId] = true; return agg; },
-        gms.map(_ => false),
-      ));
-
-      state.render();
     },
-    render() {
-      const gfx = state.gfx;
-      gms.forEach((gm, gmId) => {
-        const polys = state.maskPolys[gmId];
-        gfx.clear();
-        if (polys.length) {
-          gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
-          polys.forEach(poly => {
-            gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId], matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
-            gfx.drawPolygon(poly.outline);
-            poly.holes.forEach(hole => {
-              gfx.beginHole();
-              gfx.drawPolygon(hole);
-              gfx.endHole();
-            })
-            gfx.endFill();
-          });
-        } else {
-          gfx.setTransform().beginTextureFill({ texture: api.geomorphs.unlit[gmId] });
-          gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+    render(gmId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear();
+      const polys = state.maskPolys[gmId];
+      if (polys.length) {
+        gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
+        polys.forEach(poly => {
+          gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId], matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
+          gfx.drawPolygon(poly.outline);
+          poly.holes.forEach(hole => {
+            gfx.beginHole();
+            gfx.drawPolygon(hole);
+            gfx.endHole();
+          })
           gfx.endFill();
-        }
-        api.renderInto(gfx, state.tex[gmId], true);
-      });
+        });
+      } else {
+        gfx.setTransform().beginTextureFill({ texture: api.geomorphs.unlit[gmId] });
+        gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+        gfx.endFill();
+      }
+      api.renderInto(gfx, state.tex[gmId], true);
     },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
@@ -265,13 +268,40 @@ export default function FOV(props) {
     },
   }), {
     overwrite: { gmId: true, roomId: true },
-    deps: [gms, gmGraph],
+  });
+
+  const loaded = useQueries({
+    /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
+    queries: gms.map((gm, gmId) => ({
+      queryKey: [`${gm.key}.${gmId}`], // gmId for dups
+      queryFn: async () => {
+        state.preloadTex(gmId);
+        await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
+          api.geomorphs[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
+            `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
+          )
+        ));
+        state.render(gmId);
+
+        api.geomorphs.initTex(gmId);
+        api.doors.initTex(gmId);
+        api.decor.initLookups(gmId);
+        api.decor.initTex(gmId);
+        api.geomorphs.initHit(gmId);
+        return null;
+      },
+      throwOnError: true,
+      gcTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: 'always',
+    })),
+    combine: x => x.every(y => y.isSuccess && !y.isFetching),
   });
 
   React.useEffect(() => {
-    props.onLoad(state);
+    loaded && props.onLoad(state);
     // state.drawLabels();
-  }, []);
+  }, [loaded]);
 
   return (
     <GmSprites
@@ -306,7 +336,7 @@ export default function FOV(props) {
  * @property {() => void} forgetPrev
  * @property {(gmId: number) => void} preloadTex
  * @property {() => void} recompute
- * @property {() => void} render
+ * @property {(gmId: number) => void} render
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * 
@@ -323,8 +353,6 @@ export default function FOV(props) {
  * @property {number} lastDoorId Last traversed doorId in geomorph `gmId`
  */
 
-// const geomorphMapFilterShown = 'invert(100%) brightness(30%) contrast(120%)';
-// const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
 
 /**

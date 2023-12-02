@@ -1,15 +1,12 @@
 import React from "react";
-import { useQueries } from "@tanstack/react-query";
-
-import { Assets } from "@pixi/assets";
 import { RenderTexture, Rectangle, BLEND_MODES } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
-import { assertDefined, pause } from "../service/generic";
-import { debugDoorOffset, decorIconRadius, gmScale, hitTestRed } from "../world/const";
+import { assertDefined } from "../service/generic";
+import { decorIconRadius, gmScale, hitTestRed } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import { colMatFilter1, tempMatrix1 } from "./Misc";
+import { colMatFilter1 } from "./Misc";
 import GmSprites from "./GmSprites";
 
 /**
@@ -19,33 +16,6 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
 
-  // 🚧 move to WorldPixi?
-  const loaded = useQueries({
-    /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
-    queries: gms.map((gm, gmId) => ({
-      queryKey: [`${gm.key}.${gmId}`], // gmId for dups
-      queryFn: async () => {
-        await pause(30);
-        api.fov.preloadTex(gmId);
-        await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
-          state[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
-            `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
-          )
-        ));
-        state.initTex(gmId);
-        api.doors.initTex(gmId);
-        api.decor.initLookups(gmId);
-        api.decor.initTex(gmId);
-        state.initHit(gmId);
-        return null;
-      },
-      throwOnError: true,
-      gcTime: Infinity,
-      staleTime: Infinity,
-      refetchOnMount: 'always',
-    })),
-    combine: x => x.every(y => y.isSuccess && !y.isFetching),
-  });
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     ready: true,
@@ -311,8 +281,8 @@ export default function Geomorphs(props) {
   }));
 
   React.useEffect(() => {
-    loaded && props.onLoad(state);
-  }, [loaded]);
+    props.onLoad(state);
+  }, []);
 
   return (
     <GmSprites

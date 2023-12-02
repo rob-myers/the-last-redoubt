@@ -2,7 +2,7 @@ import { css } from "@emotion/css";
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
-// import { settings } from "@pixi/settings";
+
 import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
@@ -25,8 +25,6 @@ import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
 import { Origin, emptyGraphics, emptyContainer } from "./Misc";
-
-// settings.RESOLUTION = typeof window === 'undefined' ? 1 : window.devicePixelRatio;
 
 /**
  * @param {Props} props
@@ -61,13 +59,13 @@ export default function WorldPixi(props) {
 
     isReady() {
       return [
+        state.panZoom,
+        state.geomorphs, 
         state.debug, 
         state.decor, 
-        state.doors, 
-        state.fov, 
-        state.geomorphs, 
         state.npcs, 
-        state.panZoom,
+        state.doors, 
+        state.fov,
       ].every(x => x.ready);
     },
     clearInto(tex) {
@@ -128,7 +126,7 @@ export default function WorldPixi(props) {
           onMount={app => {
             state.pixiApp = app;
             state.canvas = /** @type {*} */ (app.view);
-            state.renderer = /** @type {import('pixi.js').Renderer} */ (app.renderer);
+            state.renderer = /** @type {*} */ (app.renderer);
             state.extract = new Extract(state.renderer);
           }}
           width={bounds.width || undefined}

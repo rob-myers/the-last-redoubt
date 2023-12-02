@@ -14,11 +14,12 @@
   - can show labels
   - can show gmOutlines
 
-- 🚧 change initial load
+- ✅ change initial load
   - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
   - ✅ Geomorphs/Doors/Decor/DebugWorld shown in response to fov
   - ✅ preload tex drawn inside api.fov
-  - avoid initTex until geomorph first shown?
+  - ❌ avoid initTex until geomorph first shown
+  - ✅ fov.render during initialization
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
