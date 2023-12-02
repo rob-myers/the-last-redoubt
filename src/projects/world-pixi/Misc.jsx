@@ -78,13 +78,6 @@ colMatFilter2.alpha = 0.2;
 // colMatFilter2.tint(0, true);
 colMatFilter2.resolution = 2; // better zoom flicker
 
-export const colMatFilter3 = new ColorMatrixFilter();
-colMatFilter3.resolution = 2; // better zoom flicker
-// colMatFilter3.kodachrome(true);
-// colMatFilter3.negative(true);
-// colMatFilter3.polaroid(true);
-colMatFilter3.brightness(0.2, true);
-
 export const tempMatrix1 = new Matrix();
 
 export const emptyContainer = new Container();

@@ -4,16 +4,16 @@ import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 import { useQueries } from "@tanstack/react-query";
 
-import { testNever } from "../service/generic";
+import { pause, testNever } from "../service/generic";
 import { Poly } from "../geom";
 import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { colMatFilter3, tempMatrix1 } from "./Misc";
+import { tempMatrix1 } from "./Misc";
 
 /**
- * Field Of View (covers unseen parts of geomorph).
+ * Field Of View (covers unseen parts of geomorphs).
  * 
  * - initially all rooms are unseen.
  * - `state.setRoom` must be invoked to make some room visible,
@@ -35,13 +35,17 @@ export default function FOV(props) {
 
     gmRoomIds: [],
     rootedOpenIds: gms.map(_ => []),
+    polys: gms.map(_ => []),
 
     gfx: new Graphics(),
+    srcTex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })),
     tex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
     })),
-    polys: gms.map(_ => []),
 
     // el: /** @type {State['el']} */ ({ canvas: /** @type {HTMLCanvasElement[]} */ ([]) }),
     // anim: { labels: new Animation, map: new Animation },
@@ -77,6 +81,25 @@ export default function FOV(props) {
     },
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
+    },
+    initSrcTex(gmId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear().setTransform();
+      // draw darkened unlit geomorph
+      gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId] })
+        .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
+        .endFill();
+      gfx.beginFill(0, 0.8)
+        .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
+        .endFill();
+      api.renderInto(gfx, state.srcTex[gmId]);
+      // draw doors as black rects
+      gfx.clear().setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
+      gfx.lineStyle({ width: 1, alignment: 1 });
+      gm.doors.forEach(door =>
+        gfx.beginFill(0).drawPolygon(door.poly.outline).endFill()
+      );
+      api.renderInto(gfx, state.srcTex[gmId], false);
     },
     mapAct(action, timeMs) {
       switch (action) {
@@ -141,7 +164,7 @@ export default function FOV(props) {
           });
       }
     },
-    preRender(gmId) {
+    preloadRender(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
@@ -216,12 +239,14 @@ export default function FOV(props) {
     },
     render(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear();
       const polys = state.polys[gmId];
+      const gfx = state.gfx.clear();
+      // const texture = api.geomorphs.unlit[gmId];
+      const texture = state.srcTex[gmId];
       if (polys.length) {
         gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
         polys.forEach(poly => {
-          gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId], matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
+          gfx.beginTextureFill({ texture, matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
           gfx.drawPolygon(poly.outline);
           poly.holes.forEach(hole => {
             gfx.beginHole();
@@ -231,11 +256,11 @@ export default function FOV(props) {
           gfx.endFill();
         });
       } else {
-        gfx.setTransform().beginTextureFill({ texture: api.geomorphs.unlit[gmId] });
+        gfx.setTransform().beginTextureFill({ texture });
         gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
         gfx.endFill();
       }
-      api.renderInto(gfx, state.tex[gmId], true);
+      api.renderInto(gfx, state.tex[gmId]);
     },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
@@ -272,16 +297,17 @@ export default function FOV(props) {
       queryKey: [`${gm.key}.${gmId}`], // gmId for dups
       queryFn: async () => {
 
-        state.preRender(gmId);
+        state.preloadRender(gmId);
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
           api.geomorphs[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
             `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
           )
         ));
+        api.doors.initTex(gmId);
+        state.initSrcTex(gmId);
         state.render(gmId);
 
         api.geomorphs.initTex(gmId);
-        api.doors.initTex(gmId);
         api.decor.initLookups(gmId);
         api.decor.initTex(gmId);
         api.geomorphs.initHit(gmId);
@@ -305,7 +331,7 @@ export default function FOV(props) {
     <GmSprites
       gms={gms}
       tex={state.tex}
-      filters={[colMatFilter3]}
+      // visible={gms.map(_ => false)}
     />
   );
 }
@@ -326,13 +352,15 @@ export default function FOV(props) {
  * @property {number[][]} rootedOpenIds
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
- * 
- * @property {import('pixi.js').Graphics} gfx
- * @property {import('pixi.js').RenderTexture[]} tex
  * @property {Geom.Poly[][]} polys
  * 
+ * @property {import('pixi.js').Graphics} gfx
+ * @property {import('pixi.js').RenderTexture[]} srcTex
+ * @property {import('pixi.js').RenderTexture[]} tex
+ * 
  * @property {() => void} forgetPrev
- * @property {(gmId: number) => void} preRender
+ * @property {(gmId: number) => void} initSrcTex
+ * @property {(gmId: number) => void} preloadRender
  * @property {() => void} recompute
  * @property {(gmId: number) => void} render
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom

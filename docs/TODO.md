@@ -8,9 +8,9 @@
   - ❌ fov should be a union of roomsWithDoors
   - ✅ draw fov via beginTextureFill, drawPolygon
     - current approach looks good
-  - 🚧 pre-render darkened texture
-    - so can draw doors
-    - so can add labels/gmOutlines
+  - ✅ pre-render darkened texture with doors into fov.srcTex
+    - so can add labels/gmOutlines on-top
+  - 🚧 hull doors should not be initially covered
   - can show labels
   - can show gmOutlines
 

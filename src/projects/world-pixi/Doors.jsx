@@ -17,14 +17,8 @@ export default function Doors(props) {
   const { gmGraph, gmGraph: { gms }, npcs } = api;
   
   const state = useStateRef(/** @type {() => State} */ () => ({
-    events: new Subject,
-    gfx: gms.map(_ => new Graphics),
     ready: true,
-    tex: gms.map(gm => RenderTexture.create({
-      width: gmScale * gm.pngRect.width,
-      height: gmScale * gm.pngRect.height,
-    })),
-
+    events: new Subject,
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ (door, doorId) => {
       const isHullDoor = gm.isHullDoor(doorId);
       const hullSealed = isHullDoor ? gmGraph.getDoorNodeById(gmId, doorId)?.sealed : null;
@@ -43,6 +37,12 @@ export default function Doors(props) {
       };
     })),
 
+    gfx: new Graphics(),
+    tex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })),
+
     cancelClose(doorState) {
       window.clearTimeout(doorState.closeTimeoutId);
       delete doorState.closeTimeoutId;
@@ -50,20 +50,12 @@ export default function Doors(props) {
       // 🚧 cancel other hull door too
     },
     drawDoor(gmId, doorId) {
-      const gfx = state.gfx[gmId]
-      const item = state.lookup[gmId][doorId];
-      gfx.lineStyle({ width: 0, color: 0x666666 });
-      gfx.beginFill(0x111111);
-      gfx.fill.alpha = gfx.line.alpha = item.open ? 0.1 : 1;
-      gfx.drawPolygon(item.door.poly.outline);
-      gfx.endFill();
-    },
-    renderDoor(gmId, doorId) {
-      const gfx = state.gfx[gmId].clear();
-      gfx.blendMode = BLEND_MODES.DST_ATOP; // Discard extant pixels
-      state.drawDoor(gmId, doorId);
-      api.renderInto(gfx, state.tex[gmId], false);
-      gfx.blendMode = BLEND_MODES.NORMAL;
+      const { open, door, locked } = state.lookup[gmId][doorId];
+      state.gfx
+        .lineStyle({ width: 1, color: 0, alignment: 1, alpha: open ? 0.1 : 1 })
+        .beginFill(locked ? 0x220000 : 0x101f11, open ? 0.1 : 1)
+        .drawPolygon(door.poly.outline)
+        .endFill();
     },
     getOpenIds(gmId) {
       return state.lookup[gmId].flatMap((item, doorId) => item.open ? doorId : []);
@@ -73,16 +65,9 @@ export default function Doors(props) {
     },
     initTex(gmId) {
       const gm = gms[gmId];
-      const lookup = state.lookup[gmId];
-      
-      // Transform once and for all
-      const gfx = state.gfx[gmId].clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
-      gfx.lineStyle({ width: 1, color: 0x000000 });
-
-      gfx.blendMode = BLEND_MODES.DST_ATOP;
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
       gm.doors.forEach((_, doorId) => state.drawDoor(gmId, doorId));
       api.renderInto(gfx, state.tex[gmId]);
-      gfx.blendMode = BLEND_MODES.NORMAL;
     },
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
@@ -103,6 +88,18 @@ export default function Doors(props) {
       const [gmId, doorId] = [Number(meta.gmId), Number(meta.doorId)];
       state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
       // console.log({ gmId, doorId });
+    },
+    renderDoor(gmId, doorId) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+      // erase door
+      gfx.blendMode = BLEND_MODES.ERASE;
+      gfx.lineStyle({ width: 1, alignment: 1 }).beginFill(0).drawPolygon(gm.doors[doorId].poly.outline);
+      api.renderInto(gfx, state.tex[gmId], false);
+      // render door
+      gfx.clear().blendMode = BLEND_MODES.NORMAL;
+      state.drawDoor(gmId, doorId);
+      api.renderInto(gfx, state.tex[gmId], false);
     },
     safeToCloseDoor(gmId, doorId) {
       const door = gms[gmId].doors[doorId];
@@ -134,16 +131,17 @@ export default function Doors(props) {
       } else {
         if (unlock) return false; // Already unlocked
       }
+
       item.locked = !wasLocked;
+      const key = wasLocked ? 'unlocked-door' : 'locked-door';
+      state.events.next({ key, gmId, doorId, npcKey });
       
       // Unsealed hull doors have adjacent door, which must also be toggled
       const adjHull = item.hull ? gmGraph.getAdjacentRoomCtxt(gmId, doorId) : null;
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].locked = item.locked;
-        // state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
-        // state.updateVisibleDoors(); // to show doors in adjacent geomorph
+        state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
       }
-      // 🚧 lock event?
 
       return item.locked;
     },
@@ -192,7 +190,6 @@ export default function Doors(props) {
       if (adjHull) {
         state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
         state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
-        // state.updateVisibleDoors(); // to show doors in adjacent geomorph
       }
 
       if (key === 'opened-door') {
@@ -217,6 +214,11 @@ export default function Doors(props) {
   });
 
   React.useEffect(() => {
+    process.env.NODE_ENV === 'development' && api.isReady() && gms.forEach((_, gmId) => {
+      state.initTex(gmId);
+      api.fov.initSrcTex(gmId);
+      api.fov.render(gmId);
+    });
     props.onLoad(state);
   }, []);
 
@@ -258,7 +260,7 @@ export default function Doors(props) {
  * @property {import('rxjs').Subject<DoorMessage>} events
  * @property {DoorState[][]} lookup
  * @property {boolean} ready
- * @property {import('@pixi/graphics').Graphics[]} gfx Reused
+ * @property {import('@pixi/graphics').Graphics} gfx
  * @property {import('@pixi/core').RenderTexture[]} tex
  * 
  * @property {(item: DoorState) => void} cancelClose
@@ -300,7 +302,7 @@ export default function Doors(props) {
 
 /**
  * @typedef DoorMessage
- * @property {'opened-door' | 'closed-door'} key
+ * @property {'opened-door' | 'closed-door' | 'unlocked-door' | 'locked-door'} key
  * @property {number} gmId
  * @property {number} doorId
  * @property {string} [npcKey]

@@ -333,6 +333,7 @@ done
 ```sh
 # lock doorId 8 of gmId 0
 world 'x => x.doors.toggleLock(0, 8)'
+world doors.toggleLock 0 8
 # give key to npc "rob"
 npc rob 'x => x.has.key[0][8] = true'
 
