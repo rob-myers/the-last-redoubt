@@ -1,5 +1,5 @@
 import React from "react";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 import { useQueries } from "@tanstack/react-query";
@@ -247,26 +247,33 @@ export default function FOV(props) {
       const gm = gms[gmId];
       const polys = state.polys[gmId];
       const gfx = state.gfx.clear();
-      // const texture = api.geomorphs.unlit[gmId];
       const texture = state.srcTex[gmId];
+
       if (polys.length) {
         gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
         polys.forEach(poly => {
           gfx.beginTextureFill({ texture, matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
           gfx.drawPolygon(poly.outline);
-          poly.holes.forEach(hole => {
-            gfx.beginHole();
-            gfx.drawPolygon(hole);
-            gfx.endHole();
-          })
+          poly.holes.forEach(hole => gfx.beginHole().drawPolygon(hole).endHole());
           gfx.endFill();
         });
       } else {
-        gfx.setTransform().beginTextureFill({ texture });
-        gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
-        gfx.endFill();
+        gfx.setTransform().beginTextureFill({ texture })
+          .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
       }
       api.renderInto(gfx, state.tex[gmId]);
+
+      if (api.debug.opts.gmOutlines) {
+        tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
+        const multiplied = tempMatrix1.append(new Matrix(...gm.inverseMatrix.toArray()));
+        gfx.clear().transform.setFromMatrix(multiplied);
+        gfx.lineStyle({ color: 'green', width: 4 })
+        gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
+        api.renderInto(gfx, state.tex[gmId], false);
+      }
+    },
+    renderAll() {
+      gms.map((_, gmId) => setTimeout(() => state.render(gmId)));
     },
     setRoom(gmId, roomId, doorId) {
       if (state.gmId !== gmId || state.roomId !== roomId || state.lastDoorId === -1) {
@@ -370,6 +377,7 @@ export default function FOV(props) {
  * @property {(gmId: number) => void} preloadRender
  * @property {() => void} recompute
  * @property {(gmId: number) => void} render
+ * @property {() => void} renderAll
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * 

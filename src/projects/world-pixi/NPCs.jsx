@@ -106,7 +106,7 @@ export default function NPCs(props) {
             break;
           case 'gmOutlines':
             api.debug.opts.gmOutlines = !!value;
-            api.debug.render();
+            api.fov.renderAll();
             break;
           case 'hideGms':
             // api.getRootEl().classList[value ? 'add' : 'remove']('hide-gms');
@@ -140,7 +140,7 @@ export default function NPCs(props) {
           case 'verbose': ctxt.verbose = !!value; break;
           case 'colliders':
             api.decor.showColliders = !!value;
-            api.decor.refreshAll();
+            api.decor.renderAll();
             break;
 
           case 'configKey':

@@ -11,8 +11,8 @@
   - ✅ pre-render darkened texture with doors into fov.srcTex
     - so can add labels/gmOutlines on-top
   - ✅ hull doors should not be initially covered
+  - ✅ can show gmOutlines
   - 🚧 can show labels
-  - 🚧 can show gmOutlines
 
 - ✅ change initial load
   - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden

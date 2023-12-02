@@ -210,8 +210,8 @@ export default function Decor(props) {
       const atRoom = state.byRoom[gmId][roomId];
       return onlyColliders ? atRoom.colliders : Object.values(atRoom.decor);
     },
-    refreshAll() {
-      gms.map((_, gmId) => setTimeout(() => api.decor.initTex(gmId)));;
+    renderAll() {
+      gms.map((_, gmId) => setTimeout(() => state.initTex(gmId)));
     },
     removeDecor(decorKeys) {
       const ds = decorKeys.map(x => state.decor[x]).filter(Boolean);
@@ -256,7 +256,7 @@ export default function Decor(props) {
   }));
 
   React.useEffect(() => {
-    process.env.NODE_ENV === 'development' && api.isReady() && state.refreshAll();
+    process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
   }, []);
 
   return (
@@ -306,7 +306,7 @@ export default function Decor(props) {
  * Get all decor in same room as point which intersects point.
  * @property {(gmId: number) => void} initLookups
  * @property {(gmId: number) => void} initTex
- * @property {() => void} refreshAll
+ * @property {() => void} renderAll
  * @property {(decorKeys: string[]) => void} removeDecor
  * @property {(gmId: number, roomId: number, decors: NPC.DecorDef[]) => void} removeRoomDecor
  * @property {(decor: NPC.DecorDef) => void} drawDecor

@@ -160,11 +160,6 @@ export default function DebugWorld(props) {
         const multiplied = matrix.append(new Matrix(...gm.inverseMatrix.toArray()));
         gfx.clear().transform.setFromMatrix(multiplied);
         
-        if (opts.gmOutlines) {
-          gfx.lineStyle({ color: 'green', width: 4 })
-          gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
-        }
-
         if (room?.gmId === gmId) {
           if (opts.roomColliders) {// 🚧 Cache computation
             const roomPoly = gm.roomsWithDoors[room.roomId].clone().applyMatrix(gm.matrix);
@@ -183,9 +178,11 @@ export default function DebugWorld(props) {
         // Nav paths
         state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
           // 🚧 textures instead of canvas ctxt
-          gfx.beginTextureFill({ texture: Texture.from(navPathCtxt.canvas) });
+          const texture = Texture.from(navPathCtxt.canvas);
+          gfx.beginTextureFill({ texture });
           gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
           gfx.endFill();
+          texture.destroy();
         });
 
         api.renderInto(gfx, state.tex[gmId], false);
