@@ -10,7 +10,7 @@ import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { tempMatrix1 } from "./Misc";
+import { colMatFilter3, tempMatrix1 } from "./Misc";
 
 /**
  * Field Of View (covers unseen parts of geomorphs).
@@ -87,16 +87,13 @@ export default function FOV(props) {
       gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId] })
         .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
         .endFill();
-      gfx.beginFill(0, 0.8)
-        .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
-        .endFill();
-      api.renderInto(gfx, state.srcTex[gmId]);
+      gfx.filters = [colMatFilter3];
+      api.renderInto(gfx, state.srcTex[gmId], true);
+      gfx.filters = [];
       // draw doors as black rects
       gfx.clear().setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
       gfx.lineStyle({ width: 1, alignment: 1 });
-      gm.doors.forEach(door =>
-        gfx.beginFill(0).drawPolygon(door.poly.outline).endFill()
-      );
+      gm.doors.forEach(door => gfx.beginFill(0).drawPolygon(door.poly.outline).endFill());
       api.renderInto(gfx, state.srcTex[gmId], false);
     },
     mapAct(action, timeMs) {
@@ -259,7 +256,8 @@ export default function FOV(props) {
         });
       } else {
         gfx.setTransform().beginTextureFill({ texture })
-          .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+          .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
+          .endFill()
       }
       api.renderInto(gfx, state.tex[gmId]);
 
