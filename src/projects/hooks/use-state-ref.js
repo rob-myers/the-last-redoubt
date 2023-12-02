@@ -29,7 +29,7 @@ export default function useStateRef(
         /**
          * Initial mount
          */
-        // 🚧 avoid this invocation in production
+        // 🚧 avoid invocation in production
         state._prevFn = initializer.toString();
         // state._prevInit = initializer();
         state._prevInit = { ...state };
@@ -46,7 +46,7 @@ export default function useStateRef(
          * - add new properties
          * - remove stale keys
          */
-        const newInit = opts.updateFrom ?  opts.updateFrom(state) : initializer();
+        const newInit = opts.updateFrom ? opts.updateFrom(state) : initializer();
 
         for (const [k, v] of Object.entries(newInit)) {
           // console.log({ key: k })
@@ -109,7 +109,7 @@ export default function useStateRef(
           state._prevInit = newInit;
         }
       }
-    }, opts.deps || []);
+    }, opts.deps ?? []);
 
     return /** @type {State} */ (state);
 }
