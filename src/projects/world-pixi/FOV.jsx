@@ -36,6 +36,7 @@ export default function FOV(props) {
     gmRoomIds: [],
     rootedOpenIds: gms.map(_ => []),
     polys: gms.map(_ => []),
+    hadPolys: gms.map(_ => false),
 
     gfx: new Graphics(),
     srcTex: gms.map(gm => RenderTexture.create({
@@ -166,7 +167,7 @@ export default function FOV(props) {
       const gfx = state.gfx.clear();
       gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
 
-      gfx.lineStyle({ width: 8, color: 0x999999 })
+      gfx.lineStyle({ width: 8, color: 0x999999, alpha: 0.4 })
         .beginFill(0)
         .drawPolygon(gm.hullPoly[0].outline)
         .endFill();
@@ -207,39 +208,40 @@ export default function FOV(props) {
       // Must prevent adjacent geomorphs from covering hull doors (if adjacent room visible)
       const visRoomIds = gmRoomIds.flatMap(({ gmId, roomId }) => state.gmId === gmId ? roomId : []);
       const adjGmToPolys = computeAdjHullDoorPolys(state.gmId, visRoomIds, gmGraph);
-      Object.entries(adjGmToPolys).forEach(([gmStr, polys]) =>
-        viewPolys[Number(gmStr)] = Poly.union(viewPolys[Number(gmStr)].concat(polys))
+      adjGmToPolys.forEach((polys, adjGmId) =>
+        viewPolys[adjGmId] = polys ? Poly.union(viewPolys[adjGmId].concat(polys)) : []
       );
 
-      /** Compute masking polygons by cutting light from hullPolygon */
+      /**
+       * Compute masking polygons by cutting views from hullPolygon.
+       * - we exclude polys between adjacent hull-doors
+       * - we must be careful not to exclude small rooms
+       */
+      state.hadPolys = state.polys.map(x => x.length > 0);
       state.polys = viewPolys.map((polys, altGmId) =>
         (polys.length ? Poly.cutOutSafely(polys, [gms[altGmId].hullOutline]) : [])
-          // ℹ️ exclude poly between adj-hull-doors
-          // ℹ️ must be large enough to show small rooms
           .filter(x => x.rect.area > 30 * 30)
       );
 
       state.prev = curr;
       state.rootedOpenIds = cmp.rootedOpenIds;
 
-      // Track visible rooms - assuming gmRoomIds has no dups
+      // Render FOV if has non-empty polys or previously non-empty polys
+      gms.forEach((_, gmId) => (state.polys.length || state.hadPolys[gmId]) &&
+        state.render(gmId)
+      );
+      
+      // Track visible rooms (assuming gmRoomIds has no dups)
       const nextGmRoomIds = gmRoomIds.map(x => ({ ...x, key: getGmRoomKey(x.gmId, x.roomId)}));
       const visibleGms = nextGmRoomIds.reduce(
         (agg, { gmId }) => (agg[gmId] = true, agg), gms.map(_ => false),
       );
-      const mentionedGms = state.gmRoomIds.reduce(
-        (agg, { gmId }) => (agg[gmId] = true, agg), visibleGms.slice(),
-      );
-      mentionedGms.forEach((mentioned, gmId) => mentioned && state.render(gmId));
       api.setVisibleGms(visibleGms);
-      state.gmRoomIds = nextGmRoomIds;
 
-      api.npcs.events.next({
-        key: 'fov-changed',
-        gmRoomIds: state.gmRoomIds,
-        added: nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key)),
-        removed: state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key)),
-      });
+      const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
+      const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));
+      state.gmRoomIds = nextGmRoomIds;
+      api.npcs.events.next({ key: 'fov-changed', gmRoomIds: state.gmRoomIds, added, removed });
     },
     render(gmId) {
       const gm = gms[gmId];
@@ -356,7 +358,8 @@ export default function FOV(props) {
  * @property {number[][]} rootedOpenIds
  * `rootedOpenIds[gmId]` are the open door ids in `gmId` reachable from the FOV "root room".
  * They are induced by `state.gmId`, `state.roomId` and also the currently open doors.
- * @property {Geom.Poly[][]} polys
+ * @property {boolean[]} hadPolys Aligned to gms
+ * @property {Geom.Poly[][]} polys Aligned to gms
  * 
  * @property {import('pixi.js').Graphics} gfx
  * @property {import('pixi.js').RenderTexture[]} srcTex
@@ -417,13 +420,13 @@ function compareState(api, next) {
 }
 
 /**
- * adj geomorph id to hullDoor polys we should remove
+ * Adjacent gmId to hullDoor polys we should remove
  * @param {number} gmId 
  * @param {number[]} visRoomIds 
  * @param {Graph.GmGraph} gmGraph 
  */
 function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
-  const adjGmToPolys = /** @type {Record<number, Poly[]>} */ ({});
+  const adjGmToPolys = /** @type {(Poly[] | undefined)[]} */ ([]);
   const hullDoorNodes = gmGraph.doorNodeByGmId[gmId];
   for (const hullDoorNode of hullDoorNodes) {
     const adjHullDoorNode = gmGraph.getAdjacentDoor(hullDoorNode);
@@ -432,7 +435,7 @@ function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
       const otherHullDoor = gmGraph.gms[adjHullDoorNode.gmId].hullDoors[adjHullDoorNode.hullDoorId];
       // only add if adjacent room is visible
       if (hullDoor.roomIds.some(roomId => roomId !== null && visRoomIds.includes(roomId))) {
-        (adjGmToPolys[adjHullDoorNode.gmId] ||= []).push(otherHullDoor.poly);
+        (adjGmToPolys[adjHullDoorNode.gmId] ??= []).push(otherHullDoor.poly);
       }
     }
   }
