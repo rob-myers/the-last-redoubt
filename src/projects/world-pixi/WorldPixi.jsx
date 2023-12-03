@@ -136,7 +136,7 @@ export default function WorldPixi(props) {
             <PanZoom
               api={state}
               onLoad={api => (state.panZoom = api) && update()}
-              initScale={0.5}
+              initScale={1}
             >
               <Geomorphs
                 api={state}
