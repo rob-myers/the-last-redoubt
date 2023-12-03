@@ -90,7 +90,8 @@ export const emptyContainer = new Container();
 export const emptyGraphics = new Graphics();
 
 export const textStyle1 = new TextStyle({
-  fontFamily: 'Courier new',
+  fontFamily: 'Gill sans',
+  letterSpacing: 1,
   fontSize: 8,
   // fontStyle: 'italic',
   // fontWeight: 'bold',
