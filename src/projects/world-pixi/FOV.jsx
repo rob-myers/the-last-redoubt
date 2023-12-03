@@ -2,15 +2,16 @@ import React from "react";
 import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
+import { Text } from "@pixi/text";
 import { useQueries } from "@tanstack/react-query";
 
 import { pause, testNever } from "../service/generic";
-import { Poly } from "../geom";
+import { Mat, Poly, Vect } from "../geom";
 import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { colMatFilter3, tempMatrix1 } from "./Misc";
+import { colMatFilter3, emptyContainer, tempMatrix1, textStyle1 } from "./Misc";
 
 /**
  * Field Of View (covers unseen parts of geomorphs).
@@ -37,9 +38,14 @@ export default function FOV(props) {
     rootedOpenIds: gms.map(_ => []),
     polys: gms.map(_ => []),
     hadPolys: gms.map(_ => false),
+    showLabels: false,
 
     gfx: new Graphics(),
-    srcTex: gms.map(gm => RenderTexture.create({
+    darkTex: gms.map(gm => RenderTexture.create({
+      width: gmScale * gm.pngRect.width,
+      height: gmScale * gm.pngRect.height,
+    })),
+    labelsTex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
     })),
@@ -48,39 +54,31 @@ export default function FOV(props) {
       height: gmScale * gm.pngRect.height,
     })),
 
-    drawLabels() {
-      // for (const [gmId, canvas] of state.el.canvas.entries()) {
-      //   const ctxt = assertNonNull(canvas.getContext('2d'));
-      //   const gm = gms[gmId];
-      //   const scale = gmScale;
-      //   ctxt.setTransform(1, 0, 0, 1, 0, 0);
-      //   ctxt.clearRect(0, 0, canvas.width, canvas.height);
-      //   ctxt.setTransform(scale, 0, 0, scale, -scale * gm.pngRect.x, -scale * gm.pngRect.y);
-      //   ctxt.transform(gm.inverseMatrix.a, gm.inverseMatrix.b, gm.inverseMatrix.c, gm.inverseMatrix.d, 0, 0);
-      //   ctxt.font = labelMeta.font;
-      //   ctxt.textBaseline = 'top';
-      //   ctxt.fillStyle = '#fff';
-      //   const topLeft = new Vect();
-      //   for (const { text, rect } of gm.labels) {
-      //     // Compute transform of rect center then translate to top-left
-      //     gm.matrix.transformSansTranslate(
-      //       topLeft.set(rect.x + (rect.width/2), rect.y + (rect.height/2))
-      //     ).translate(-rect.width/2, -rect.height/2);
-      //     ctxt.translate(topLeft.x, topLeft.y);
-      //     // label background
-      //     ctxt.fillStyle = '#00004422';
-      //     ctxt.fillRect(-4, -4, rect.width + 8, rect.height + 8);
-      //     ctxt.fillStyle = '#fff';
-      //     // label
-      //     ctxt.fillText(text, 0, 0);
-      //     ctxt.translate(-topLeft.x, -topLeft.y);
-      //   }
-      // }
+    initLabels(gmId) {
+      const gm = gms[gmId];
+      
+      const topLeft = new Vect();
+      for (const { text, rect } of gm.labels) {
+        const pixiText = new Text(text, textStyle1);
+        topLeft.set(rect.x + (rect.width/2), rect.y + (rect.height/2));
+        gm.matrix.transformSansTranslate(topLeft).translate(-rect.width/2, -rect.height/2);
+        // mat.transformPoint(topLeft);
+        pixiText.position.copyFrom(topLeft);
+        pixiText.anchor.set(0, 0);
+        emptyContainer.addChild(pixiText);
+      }
+
+      emptyContainer.transform.setFromMatrix(
+        (new Matrix(gm.inverseMatrix.a, gm.inverseMatrix.b, gm.inverseMatrix.c, gm.inverseMatrix.d))
+          .prepend(new Matrix(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale))
+      );
+      api.renderInto(emptyContainer, state.labelsTex[gmId])
+      emptyContainer.removeChildren();
     },
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
     },
-    initSrcTex(gmId) {
+    initDarkTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
       // draw darkened unlit geomorph
@@ -88,13 +86,13 @@ export default function FOV(props) {
         .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
         .endFill();
       gfx.filters = [colMatFilter3];
-      api.renderInto(gfx, state.srcTex[gmId], true);
+      api.renderInto(gfx, state.darkTex[gmId], true);
       gfx.filters = [];
       // draw doors as black rects
       gfx.clear().setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
       gfx.lineStyle({ width: 1, alignment: 1 });
       gm.doors.forEach(door => gfx.beginFill(0).drawPolygon(door.poly.outline).endFill());
-      api.renderInto(gfx, state.srcTex[gmId], false);
+      api.renderInto(gfx, state.darkTex[gmId], false);
     },
     mapAct(action, timeMs) {
       switch (action) {
@@ -244,7 +242,7 @@ export default function FOV(props) {
       const gm = gms[gmId];
       const polys = state.polys[gmId];
       const gfx = state.gfx.clear();
-      const texture = state.srcTex[gmId];
+      const texture = state.darkTex[gmId];
 
       if (polys.length) {
         gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
@@ -260,6 +258,14 @@ export default function FOV(props) {
           .endFill()
       }
       api.renderInto(gfx, state.tex[gmId]);
+
+      if (state.showLabels) {
+        gfx.clear().setTransform();
+        gfx.beginTextureFill({ texture: state.labelsTex[gmId] });
+        gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale);
+        gfx.endFill();
+        api.renderInto(gfx, state.tex[gmId], false);
+      }
 
       if (api.debug.opts.gmOutlines) {
         tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
@@ -315,7 +321,8 @@ export default function FOV(props) {
           )
         ));
         api.doors.initTex(gmId);
-        state.initSrcTex(gmId);
+        state.initDarkTex(gmId);
+        state.initLabels(gmId);
         state.render(gmId);
 
         api.geomorphs.initTex(gmId);
@@ -334,7 +341,7 @@ export default function FOV(props) {
 
   React.useEffect(() => {
     loaded && props.onLoad(state);
-    process.env.NODE_ENV === 'development' && api.isReady() && gms.forEach((_, gmId) => state.render(gmId));
+    process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
     // state.drawLabels();
   }, [loaded]);
 
@@ -367,11 +374,14 @@ export default function FOV(props) {
  * @property {Geom.Poly[][]} polys Aligned to gms
  * 
  * @property {import('pixi.js').Graphics} gfx
- * @property {import('pixi.js').RenderTexture[]} srcTex
+ * @property {import('pixi.js').RenderTexture[]} darkTex
+ * @property {import('pixi.js').RenderTexture[]} labelsTex
  * @property {import('pixi.js').RenderTexture[]} tex
+ * @property {boolean} showLabels
  * 
+ * @property {(gmId: number) => void} initLabels
  * @property {() => void} forgetPrev
- * @property {(gmId: number) => void} initSrcTex
+ * @property {(gmId: number) => void} initDarkTex
  * @property {(gmId: number) => void} preloadRender
  * @property {() => void} recompute
  * @property {(gmId: number) => void} render
@@ -379,7 +389,6 @@ export default function FOV(props) {
  * @property {(gmId: number, roomId: number, doorId: number) => boolean} setRoom
  * @property {(npcKey: string) => Geomorph.GmRoomId | null} setRoomByNpc
  * 
- * @property {() => void} drawLabels
  * @property {(action?: NPC.FovMapAction, showMs?: number) => void} mapAct
 */
 

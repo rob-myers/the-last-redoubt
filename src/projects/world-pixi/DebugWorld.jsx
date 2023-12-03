@@ -29,6 +29,7 @@ export default function DebugWorld(props) {
       debugPlayer: false,
       gmOutlines: false,
       interactRadius: defaultNpcInteractRadius,
+      labels: false,
       roomColliders: false,
       roomNav: false,
       roomOutline: false,
@@ -263,11 +264,12 @@ export default function DebugWorld(props) {
  * @property {boolean} debugHit
  * @property {boolean} debugPlayer
  * @property {boolean} gmOutlines Show gridRect of every geomorph?
- * @property {boolean} windowOutlines Show window outlines in current geomorph? 
+ * @property {number} interactRadius
+ * @property {boolean} labels
  * @property {boolean} roomColliders Show room colliders (intersected against room)?
  * @property {boolean} roomNav Show room navmesh?
  * @property {boolean} roomOutline Show room outline?
- * @property {number} interactRadius
+ * @property {boolean} windowOutlines Show window outlines in current geomorph? 
  */
 
 /**

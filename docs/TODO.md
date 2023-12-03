@@ -12,7 +12,8 @@
     - so can add labels/gmOutlines on-top
   - ✅ hull doors should not be initially covered
   - ✅ can show gmOutlines
-  - 🚧 can show labels
+  - ✅ can show labels
+  - adjust labels + cleanup
 
 - ✅ change initial load
   - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden

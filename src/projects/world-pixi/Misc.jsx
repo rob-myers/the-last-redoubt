@@ -4,6 +4,7 @@ import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
+import { TextStyle } from "@pixi/text";
 
 export function Origin() {
   const app = useApp();
@@ -87,3 +88,21 @@ export const tempMatrix1 = new Matrix();
 
 export const emptyContainer = new Container();
 export const emptyGraphics = new Graphics();
+
+export const textStyle1 = new TextStyle({
+  fontFamily: 'Courier new',
+  fontSize: 8,
+  // fontStyle: 'italic',
+  // fontWeight: 'bold',
+  fill: ['#ffffff'],
+  stroke: '#000000',
+  strokeThickness: 2,
+  dropShadow: false,
+  dropShadowColor: '#000000',
+  dropShadowBlur: 4,
+  dropShadowAngle: Math.PI / 6,
+  dropShadowDistance: 6,
+  wordWrap: true,
+  wordWrapWidth: 440,
+  lineJoin: 'round',
+});
