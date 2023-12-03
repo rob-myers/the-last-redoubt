@@ -58,13 +58,12 @@ export default function NPCs(props) {
           case 'localColliders': return api.debug.opts.roomColliders;
           case 'localNav': return api.debug.opts.roomNav;
           case 'localOutline': return api.debug.opts.roomOutline;
+          case 'colliders': return api.decor.showColliders;
           case 'omnipresent':
           case 'logTags':
           case 'scriptDoors':
           case 'verbose':
             return ctxt[key];
-          case 'colliders': return api.decor.showColliders;
-          case 'labels': return api.fov.showLabels;
 
           // 🚧 better way
           case 'configKey':
@@ -141,10 +140,6 @@ export default function NPCs(props) {
           case 'colliders':
             api.decor.showColliders = !!value;
             api.decor.renderAll();
-            break;
-          case 'labels':
-            api.fov.showLabels = !!value;
-            api.fov.renderAll();
             break;
 
           case 'configKey':

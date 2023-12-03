@@ -250,8 +250,7 @@ awaitWorld
 # temp
 click | filter meta.door | world doors.onRawDoorClick &
 world fov.setRoom 0 2
-npc config canClickArrows labels
-
+npc config canClickArrows
 
 # spawn ${npcKey} '{"x":210,"y":390}'
 # npc set-player ${npcKey}

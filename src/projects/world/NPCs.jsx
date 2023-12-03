@@ -64,7 +64,6 @@ export default function NPCs(props) {
           case 'colliders':
             return api.decor.showColliders;
 
-          case 'labels':
           case 'localColliders':
           case 'configKey':
           case 'decorKey':
@@ -122,7 +121,6 @@ export default function NPCs(props) {
             break;
 
           case 'localColliders':
-          case 'labels':
           case 'configKey':
           case 'decorKey':
           case 'extraParams':

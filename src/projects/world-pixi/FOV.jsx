@@ -38,7 +38,9 @@ export default function FOV(props) {
     rootedOpenIds: gms.map(_ => []),
     polys: gms.map(_ => []),
     hadPolys: gms.map(_ => false),
+
     showLabels: false,
+    showMask: true,
 
     gfx: new Graphics(),
     darkTex: gms.map(gm => RenderTexture.create({
@@ -94,63 +96,31 @@ export default function FOV(props) {
       api.renderInto(gfx, state.darkTex[gmId], false);
     },
     mapAct(action, timeMs) {
-      // 🚧
       switch (action) {
         case 'show':
+          state.showMask = true;
+          state.renderAll();
+          break;
         case 'show-labels':
-          // state.anim.labels = state.el.labels.animate(
-          //   [{ opacity: 1 }],
-          //   { fill: 'forwards', duration: timeMs ?? 1500 },
-          // );
-          // action === 'show' && (state.anim.map = state.el.map.animate(
-          //   [{ filter: geomorphMapFilterShown }],
-          //   { fill: 'forwards', duration: timeMs ?? 750 },
-          // ));
+          state.showLabels = true;
+          state.renderAll();
           break;
         case 'hide':
+          state.showMask = false;
+          state.renderAll();
+          break;
         case 'hide-labels':
-          // state.anim.labels = state.el.labels.animate(
-          //   [{ opacity: 0 }],
-          //   { fill: 'forwards', duration: timeMs ?? 1500 },
-          // );
-          // action === 'hide' && (state.anim.map = state.el.map.animate(
-          //   [{ filter: geomorphMapFilterHidden }],
-          //   { fill: 'forwards', duration: timeMs ?? 750 },
-          // ));
+          state.showLabels = false;
+          state.renderAll();
           break;
+        // 🚧 eventually remove below:
         case 'show-labels-for':
-        case 'show-for': {
-          // timeMs ??= 1000;
-          // const durationMs = 500 + timeMs + 500; // ½ sec fade in/out
-          // state.anim.labels = state.el.labels.animate(
-          //   [
-          //     { opacity: 1, offset: 500 / durationMs },
-          //     { opacity: 1, offset: (500 + timeMs) / durationMs },
-          //     { opacity: 0, offset: 1 },
-          //   ],
-          //   { fill: 'forwards', duration: durationMs },
-          // );
-          // action === 'show-for' && (state.anim.map = state.el.map.animate(
-          //   [
-          //     { filter: geomorphMapFilterShown, offset: 500 / durationMs },
-          //     { filter: geomorphMapFilterShown, offset: (500 + timeMs) / durationMs },
-          //     { filter: geomorphMapFilterHidden, offset: 1 },
-          //   ],
-          //   { fill: 'forwards', duration: durationMs },
-          // ));
-          break;
-        }
+        case 'show-for':
         case 'pause':
-          // state.anim.labels.playState === 'running' && state.anim.labels.pause();
-          // state.anim.map.playState === 'running' && state.anim.map.pause();
-          break;
         case 'resume':
-          // state.anim.labels.playState === 'paused' && state.anim.labels.play();
-          // state.anim.map.playState === 'paused' && state.anim.map.play();
           break;
         case undefined:
-          // return getComputedStyle(state.el.labels).opacity;
-          return 1;
+          return this.showLabels ? 1 : 0;
         default:
           throw testNever(action, {
             override: `mapAct: ${action} must be in ${JSON.stringify(api.lib.fovMapActionKeys)} or undefined`,
@@ -247,15 +217,19 @@ export default function FOV(props) {
       if (polys.length) {
         gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
         polys.forEach(poly => {
-          gfx.beginTextureFill({ texture, matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) });
+          state.showMask
+            ? gfx.beginTextureFill({ texture, matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) })
+            : gfx.beginFill(0xffffff);
           gfx.drawPolygon(poly.outline);
           poly.holes.forEach(hole => gfx.beginHole().drawPolygon(hole).endHole());
           gfx.endFill();
         });
       } else {
-        gfx.setTransform().beginTextureFill({ texture })
-          .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
-          .endFill()
+        gfx.setTransform();
+        state.showMask
+          ? gfx.beginTextureFill({ texture })
+          : gfx.beginFill(0xffffff);
+        gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale).endFill()
       }
       api.renderInto(gfx, state.tex[gmId]);
 
@@ -378,6 +352,7 @@ export default function FOV(props) {
  * @property {import('pixi.js').RenderTexture[]} labelsTex
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {boolean} showLabels
+ * @property {boolean} showMask
  * 
  * @property {(gmId: number) => void} initLabelsTex
  * @property {() => void} forgetPrev

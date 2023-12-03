@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 migrate api.fov
+- ✅ migrate api.fov
   - ❌ load geomorph map image
     - looks worse
   - ❌ fov should be a union of roomsWithDoors
@@ -13,7 +13,9 @@
   - ✅ hull doors should not be initially covered
   - ✅ can show gmOutlines
   - ✅ can show labels
-  - adjust labels + cleanup
+  - ✅ adjust labels
+  - ✅ can hide/show map/labels
+
 
 - ✅ change initial load
   - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
@@ -21,6 +23,12 @@
   - ✅ preload tex drawn inside api.fov
   - ❌ avoid initTex until geomorph first shown
   - ✅ fov.render during initialization
+
+- ✅ can load spine json/atlas/png using `pixi-spine`
+- 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
+  - Spine extends SpineBase extends PIXI.Container
+  - try `spine.state.setAnimation(0, 'idle', true);`
+  - render into RenderTexture
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -31,12 +39,6 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
-
-- ✅ can load spine json/atlas/png using `pixi-spine`
-- 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
-  - Spine extends SpineBase extends PIXI.Container
-  - try `spine.state.setAnimation(0, 'idle', true);`
-  - render into RenderTexture
 
 - load a PIXI SpriteSheet using a `TextureAtlas`
 
