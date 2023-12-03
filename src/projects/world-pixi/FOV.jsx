@@ -85,9 +85,9 @@ export default function FOV(props) {
       gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId] })
         .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
         .endFill();
-      // gfx.filters = [colMatFilter3];
+      gfx.filters = [colMatFilter3];
       api.renderInto(gfx, state.darkTex[gmId], true);
-      // gfx.filters = [];
+      gfx.filters = [];
       // draw doors as black rects
       gfx.clear().setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
       gfx.lineStyle({ width: 1, alignment: 1 });
@@ -350,7 +350,7 @@ export default function FOV(props) {
       gms={gms}
       tex={state.tex}
       // visible={gms.map(_ => false)}
-      filters={[colMatFilter3]}
+      // filters={[colMatFilter3]}
     />
   );
 }
