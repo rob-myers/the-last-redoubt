@@ -5,8 +5,8 @@ import { Assets } from "@pixi/assets";
 import { Text } from "@pixi/text";
 import { useQueries } from "@tanstack/react-query";
 
-import { pause, testNever } from "../service/generic";
-import { Mat, Poly, Vect } from "../geom";
+import { testNever } from "../service/generic";
+import { Poly, Vect } from "../geom";
 import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
@@ -54,15 +54,14 @@ export default function FOV(props) {
       height: gmScale * gm.pngRect.height,
     })),
 
-    initLabels(gmId) {
+    initLabelsTex(gmId) {
       const gm = gms[gmId];
       
       const topLeft = new Vect();
       for (const { text, rect } of gm.labels) {
         const pixiText = new Text(text, textStyle1);
         topLeft.set(rect.x + (rect.width/2), rect.y + (rect.height/2));
-        gm.matrix.transformSansTranslate(topLeft).translate(-rect.width/2, -rect.height/2);
-        // mat.transformPoint(topLeft);
+        gm.matrix.transformSansTranslate(topLeft).translate(-rect.width/2, -rect.height);
         pixiText.position.copyFrom(topLeft);
         pixiText.anchor.set(0, 0);
         emptyContainer.addChild(pixiText);
@@ -78,7 +77,7 @@ export default function FOV(props) {
     forgetPrev() {
       state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
     },
-    initDarkTex(gmId) {
+    initMaskTex(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform();
       // draw unlit geomorph
@@ -95,6 +94,7 @@ export default function FOV(props) {
       api.renderInto(gfx, state.darkTex[gmId], false);
     },
     mapAct(action, timeMs) {
+      // 🚧
       switch (action) {
         case 'show':
         case 'show-labels':
@@ -321,8 +321,8 @@ export default function FOV(props) {
           )
         ));
         api.doors.initTex(gmId);
-        state.initDarkTex(gmId);
-        state.initLabels(gmId);
+        state.initMaskTex(gmId);
+        state.initLabelsTex(gmId);
         state.render(gmId);
 
         api.geomorphs.initTex(gmId);
@@ -341,7 +341,7 @@ export default function FOV(props) {
 
   React.useEffect(() => {
     loaded && props.onLoad(state);
-    process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
+    // process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
     // state.drawLabels();
   }, [loaded]);
 
@@ -350,7 +350,6 @@ export default function FOV(props) {
       gms={gms}
       tex={state.tex}
       // visible={gms.map(_ => false)}
-      // filters={[colMatFilter3]}
     />
   );
 }
@@ -380,9 +379,9 @@ export default function FOV(props) {
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {boolean} showLabels
  * 
- * @property {(gmId: number) => void} initLabels
+ * @property {(gmId: number) => void} initLabelsTex
  * @property {() => void} forgetPrev
- * @property {(gmId: number) => void} initDarkTex
+ * @property {(gmId: number) => void} initMaskTex
  * @property {(gmId: number) => void} preloadRender
  * @property {() => void} recompute
  * @property {(gmId: number) => void} render

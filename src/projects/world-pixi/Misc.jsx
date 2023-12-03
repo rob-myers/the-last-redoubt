@@ -93,6 +93,7 @@ export const textStyle1 = new TextStyle({
   fontFamily: 'Gill sans',
   letterSpacing: 1,
   fontSize: 8,
+  // textBaseline: 'bottom',
   // fontStyle: 'italic',
   // fontWeight: 'bold',
   fill: ['#ffffff'],

@@ -216,7 +216,7 @@ export default function Doors(props) {
   React.useEffect(() => {
     process.env.NODE_ENV === 'development' && api.isReady() && gms.forEach((_, gmId) => {
       state.initTex(gmId);
-      api.fov.initDarkTex(gmId);
+      api.fov.initMaskTex(gmId);
       api.fov.render(gmId);
     });
     props.onLoad(state);
