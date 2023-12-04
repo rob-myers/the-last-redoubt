@@ -24,7 +24,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin, emptyGraphics, emptyContainer } from "./Misc";
+import { Origin, emptyGraphics, emptyContainer, TestNpc } from "./Misc";
 
 /**
  * @param {Props} props
@@ -128,6 +128,10 @@ export default function WorldPixi(props) {
             state.canvas = /** @type {*} */ (app.view);
             state.renderer = /** @type {*} */ (app.renderer);
             state.extract = new Extract(state.renderer);
+            // https://chromewebstore.google.com/detail/pixijs-devtools/aamddddknhcagpehecnhphigffljadon
+            process.env.NODE_ENV === 'development' && (
+              /** @type {*} */ (globalThis).__PIXI_APP__ = app
+            );
           }}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
@@ -170,6 +174,8 @@ export default function WorldPixi(props) {
               />
 
               <Origin />
+
+              <TestNpc api={state} />
             </PanZoom>
           </QueryClientProvider>
         </Stage>

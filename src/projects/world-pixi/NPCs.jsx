@@ -639,9 +639,9 @@ export default function NPCs(props) {
       }
     },
     async prefetchSpritesheets() {
-      const spine = await api.lib.loadSpineNpc();
-      console.log(spine);
-      // 🚧 ...
+      // 🚧
+      const baseName = 'man_01_base';
+      await api.lib.loadSpineNpc(baseName);
     },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas

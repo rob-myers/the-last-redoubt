@@ -1,8 +1,8 @@
 import { merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Assets } from '@pixi/assets';
-import { TextureAtlas } from '@pixi-spine/base';
-import { AtlasAttachmentLoader, SkeletonJson, Spine } from '@pixi-spine/runtime-4.1';
+import { TextureAtlas, SpineDebugRenderer } from '@pixi-spine/base';
+import { AtlasAttachmentLoader, SkeletonJson, Spine, Skin, SkeletonData } from '@pixi-spine/runtime-4.1';
 
 import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
@@ -174,27 +174,6 @@ export const npcService = {
           throw testNever(action, { suffix: 'normalizeNpcCommandOpts' });
       }
     }
-  },
-
-  /**
-   * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md
-   */
-  async loadSpineNpc() {
-    const runtimeSpineFolder = '/assets/npc/top_down_man_base';
-    const skeletonData = await Assets.load(`${runtimeSpineFolder}/man_01_base.json`);
-
-    const textureAtlas = new TextureAtlas();
-    await new Promise((resolve, reject) => textureAtlas.addSpineAtlas(
-      topDownManAtlasContents,
-      async (line, callback) => Assets.load(`${runtimeSpineFolder}/${line}`).then((tex) => callback(tex)),
-      atlas => atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`),
-    ));
-
-    const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
-    const skeletonParser = new SkeletonJson(atlasLoader);
-    // skeletonParser.scale = 0.1;
-    const spine = new Spine(skeletonParser.readSkeletonData(skeletonData));
-    return spine;
   },
 
   //#endregion
@@ -644,6 +623,70 @@ export const npcService = {
     throw processApi.getKillError();
   },
 
+  //#endregion
+
+  //#region spine
+
+  /**
+   * @type {{ [baseName: string]: { data: SkeletonData; atlasLoader: AtlasAttachmentLoader; } }}
+   * e.g. `man_01_base` as in `man_01_base.json`
+   */
+  spine: {},
+
+  atlasLoader: /** @type {AtlasAttachmentLoader} */ ({}),
+  skeletonParser: /** @type {SkeletonJson} */ ({}),
+
+  /**
+   * @param {string} baseName
+   * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md
+   */
+  async loadSpineNpc(baseName) {
+    if (this.spine[baseName]) {
+      return;
+    }
+
+    const runtimeSpineFolder = '/assets/npc/top_down_man_base';
+    const skeletonDataJson = await Assets.load(`${runtimeSpineFolder}/${baseName}.json`);
+
+    const textureAtlas = new TextureAtlas();
+    await new Promise((resolve, reject) => textureAtlas.addSpineAtlas(
+      topDownManAtlasContents,
+      async (line, callback) => Assets.load(`${runtimeSpineFolder}/${line}`).then((tex) => callback(tex)),
+      atlas => atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`),
+    ));
+
+    const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
+    const skeletonParser = new SkeletonJson(atlasLoader);
+    skeletonParser.scale = 0.1;
+
+    const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson)
+    // Add to lookup
+    this.spine[baseName] = { atlasLoader, data: skeletonData };
+  },
+
+  /**
+   * @param {string} baseName
+   */
+  instantiateSpineNpc(baseName) {
+    const spine = new Spine(this.spine[baseName].data);
+  
+    // Default skins
+    const newSkin = new Skin("npc-default-skin");
+    newSkin.addSkin(spine.spineData.findSkin("base/original-clothes"));
+    newSkin.addSkin(spine.spineData.findSkin("bare/light-exposed"));
+    newSkin.addSkin(spine.spineData.findSkin("hair/skin-head"));
+    spine.skeleton.setSkin(newSkin);
+    spine.skeleton.setSlotsToSetupPose();
+  
+    // const debugRenderer = new SpineDebugRenderer();
+    // debugRenderer.drawBones = false;
+    // debugRenderer.drawBoundingBoxes = true;
+    // debugRenderer.drawClipping = true;
+    // spine.debug = debugRenderer;
+  
+    return spine;
+  },
+ 
   //#endregion
 }
 

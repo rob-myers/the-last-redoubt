@@ -2,33 +2,20 @@
 
 ## In progress
 
-- ✅ migrate api.fov
-  - ❌ load geomorph map image
-    - looks worse
-  - ❌ fov should be a union of roomsWithDoors
-  - ✅ draw fov via beginTextureFill, drawPolygon
-    - current approach looks good
-  - ✅ pre-render darkened texture with doors into fov.srcTex
-    - so can add labels/gmOutlines on-top
-  - ✅ hull doors should not be initially covered
-  - ✅ can show gmOutlines
-  - ✅ can show labels
-  - ✅ adjust labels
-  - ✅ can hide/show map/labels
-
-
-- ✅ change initial load
-  - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
-  - ✅ Geomorphs/Doors/Decor/DebugWorld shown in response to fov
-  - ✅ preload tex drawn inside api.fov
-  - ❌ avoid initTex until geomorph first shown
-  - ✅ fov.render during initialization
-
 - ✅ can load spine json/atlas/png using `pixi-spine`
-- 🚧 try reconstructing a spritesheet animation e.g. vilani idle/walk 
-  - Spine extends SpineBase extends PIXI.Container
-  - try `spine.state.setAnimation(0, 'idle', true);`
-  - render into RenderTexture
+- ❌ move skins into "default" skin
+  - original-clothes, light-exposed, skin-head
+  - ℹ️ breaks animations because "current slots" should be a skin-placeholder, not a specific image
+
+- ✅ can display spine skeleton with specific skins
+- ✅ can scale by `(2 * 13) / frame width`
+  - frame width `spine.skeleton.getBoundsRect()`
+- ✅ test component renders npc
+- 🚧 test render spine skeleton into RenderTexture and display
+
+- load a PIXI SpriteSheet using a `TextureAtlas`
+
+- start migrating NPCs
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -38,11 +25,6 @@
   { at: '👇', gmKey: 'g-101--multipurpose' },
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
-
-
-- load a PIXI SpriteSheet using a `TextureAtlas`
-
-- start migrating NPCs
 
 - `world` command -> `api`
 - do not render "covered" geomorphs
@@ -679,6 +661,27 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ migrate api.fov
+  - ❌ load geomorph map image
+    - looks worse
+  - ❌ fov should be a union of roomsWithDoors
+  - ✅ draw fov via beginTextureFill, drawPolygon
+    - current approach looks good
+  - ✅ pre-render darkened texture with doors into fov.srcTex
+    - so can add labels/gmOutlines on-top
+  - ✅ hull doors should not be initially covered
+  - ✅ can show gmOutlines
+  - ✅ can show labels
+  - ✅ adjust labels
+  - ✅ can hide/show map/labels
+
+- ✅ change initial load
+  - ✅ Geomorphs/Doors/Decor/DebugWorld initially hidden
+  - ✅ Geomorphs/Doors/Decor/DebugWorld shown in response to fov
+  - ✅ preload tex drawn inside api.fov
+  - ❌ avoid initTex until geomorph first shown
+  - ✅ fov.render during initialization
 
 - ✅ can switch off bare arms/legs
   - light-exposed

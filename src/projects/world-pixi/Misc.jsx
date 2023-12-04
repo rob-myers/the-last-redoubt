@@ -1,10 +1,11 @@
 import React from "react";
-import { Sprite, useApp } from "@pixi/react";
+import { Sprite, useApp, Container as ContainerComponent, PixiComponent  } from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { TextStyle } from "@pixi/text";
+import { useQuery } from "@tanstack/react-query";
 
 export function Origin() {
   const app = useApp();
@@ -107,4 +108,34 @@ export const textStyle1 = new TextStyle({
   wordWrap: true,
   wordWrapWidth: 440,
   lineJoin: 'round',
+});
+
+/**
+ * @param {{ api: import('./WorldPixi').State }} param0 
+ */
+export function TestNpc({ api }) {
+  const ready = useQuery({
+    queryKey: ['test-npc'],
+    async queryFn() {
+      await api.lib.loadSpineNpc('man_01_base');
+      return null;
+    },
+    refetchOnMount: 'always',
+    gcTime: Infinity,
+    staleTime: Infinity,
+  }).data === null;
+
+  return ready ? <TestInstantiateSpine api={api} /> : null;
+}
+
+const TestInstantiateSpine = PixiComponent('FromComponent', {
+  /** @param {{ api: import('./WorldPixi').State }} props  */
+  create(props) {
+    const spine = props.api.lib.instantiateSpineNpc('man_01_base');
+    spine.state.setAnimation(0, 'idle', false);
+    const { width: frameWidth } = spine.skeleton.getBoundsRect();
+    spine.scale.set((2 * 13) / frameWidth);
+    spine.position.set(spine.width/2, 0);
+    return spine;
+  },
 });
