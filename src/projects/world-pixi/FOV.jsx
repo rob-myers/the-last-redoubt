@@ -138,14 +138,14 @@ export default function FOV(props) {
         .endFill();
         
       gm.roomsWithDoors.forEach(poly => {
-        gfx.lineStyle({ width: 4, color: 0x777777, alpha: 0.4 })
+        gfx.lineStyle({ width: 2, color: 0x333333, alpha: 1 })
           .beginFill(0, 0)
           .drawPolygon(poly.outline)
           .endFill();
       });
 
-      gfx.lineStyle({ width: 4, color: 0x555555, alpha: 0.4 })
-        .beginFill(0, 0)
+      gfx.lineStyle({ width: 0 })
+        .beginFill(0x777777, 0.2)
         .drawPolygon(gm.navPoly[0].outline)
         .endFill();
       api.renderInto(gfx, state.tex[gmId]);
