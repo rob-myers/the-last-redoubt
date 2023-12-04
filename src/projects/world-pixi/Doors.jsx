@@ -53,7 +53,7 @@ export default function Doors(props) {
       const { open, door, locked } = state.lookup[gmId][doorId];
       state.gfx
         .lineStyle({ width: 1, color: 0, alignment: 1, alpha: open ? 0.1 : 1 })
-        .beginFill(locked ? 0x220000 : 0x101f11, open ? 0.1 : 1)
+        .beginFill(locked ? 0x220000 : 0x444444, open ? 0.1 : 1)
         .drawPolygon(door.poly.outline)
         .endFill();
     },
