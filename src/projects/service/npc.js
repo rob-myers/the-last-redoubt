@@ -640,9 +640,9 @@ export const npcService = {
    * @param {string} baseName
    * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md
    */
-  async loadSpineNpc(baseName) {
+  async loadSpine(baseName) {
     if (this.spine[baseName]) {
-      return;
+      return this.spine[baseName];
     }
 
     const runtimeSpineFolder = '/assets/npc/top_down_man_base';
@@ -661,13 +661,13 @@ export const npcService = {
 
     const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson)
     // Add to lookup
-    this.spine[baseName] = { atlasLoader, data: skeletonData };
+    return this.spine[baseName] = { atlasLoader, data: skeletonData };
   },
 
   /**
    * @param {string} baseName
    */
-  instantiateSpineNpc(baseName) {
+  instantiateSpine(baseName) {
     const spine = new Spine(this.spine[baseName].data);
   
     // Default skins

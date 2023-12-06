@@ -6,13 +6,20 @@
 - ❌ move skins into "default" skin
   - original-clothes, light-exposed, skin-head
   - ℹ️ breaks animations because "current slots" should be a skin-placeholder, not a specific image
-
 - ✅ can display spine skeleton with specific skins
 - ✅ can scale by `(2 * 13) / frame width`
   - frame width `spine.skeleton.getBoundsRect()`
 - ✅ test component renders npc
-- 🚧 test render spine skeleton into RenderTexture and display
 
+- 🚧 new npc spritesheet strategy
+  - ℹ️ a single spritesheet with body anims and different heads
+  - ℹ️ we hope to use a single PIXI.ParticleContainer
+  - 🚧 new skin via new images
+    - ℹ️ blackish body, white hands
+  - 🚧 start `<TestPreRenderNpc>`
+  - ...
+
+- test render spine skeleton into RenderTexture and display
 - load a PIXI SpriteSheet using a `TextureAtlas`
 
 - start migrating NPCs
