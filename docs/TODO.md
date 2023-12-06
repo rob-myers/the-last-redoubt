@@ -11,11 +11,22 @@
   - frame width `spine.skeleton.getBoundsRect()`
 - ✅ test component renders npc
 
+- 🚧 fix right arm bone direction
+  - ✅ fix initial pose (top clothed)
+  - ✅ understand -1 scaled right-arm-lower-clothed
+    - needed to make angle "symmetric"
+    - does not have children so perhaps doesn't matter
+  - ✅ fix initial pose (top/bare)
+  - ✅ fix lie
+  - ✅ fix idle-breathe
+  - 🚧 fix walk
+    - work towards it
+
 - 🚧 new npc spritesheet strategy
   - ℹ️ a single spritesheet with body anims and different heads
   - ℹ️ we hope to use a single PIXI.ParticleContainer
-  - 🚧 new skin via new images
-    - ℹ️ blackish body, white hands
+  - 🚧 new skin `black-clothes`
+  - 🚧 new skin `white-hands` via new images e.g. `npc/white_hands_07`
   - 🚧 start `<TestPreRenderNpc>`
   - ...
 
