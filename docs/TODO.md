@@ -19,7 +19,7 @@
   - ✅ fix initial pose (top/bare)
   - ✅ fix lie
   - ✅ fix idle-breathe
-  - 🚧 fix walk
+  - ✅ fix walk
     - work towards it
 
 - 🚧 new npc spritesheet strategy
