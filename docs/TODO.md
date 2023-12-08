@@ -29,7 +29,9 @@
   - ✅ new skin `black-shirt`
   - ✅ fix black bare leg
   - ✅ shoes -> skin `black-trainers`
-  - 🚧 new skin `white-hands` via new images e.g. `npc/white_hands_07`
+  - ✅ create new images `top_down_man_base/grey_gloves`
+  - ✅ new skin `grey-gloves`
+  - 🚧 move trousers into skin `black-trousers`
   - 🚧 start `<TestPreRenderNpc>`
   - ...
 
