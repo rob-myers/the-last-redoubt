@@ -29,6 +29,13 @@ optipng *.png
 
 # extract pdf page 20 as high quality PNG
 convert -density 1164 'Starship Geomorphs 2.0.pdf'[19] -quality 100 unsorted/output.png
+
+# greyscale
+convert -colorspace Gray hand_07.png  hand_07.gray.png
+# or
+mkdir temp_dir
+time find *.png -print0 | 
+  xargs -0 -I £ -P 3 -t convert -colorspace Gray £ ./temp_dir/£
 ```
 
 ---
