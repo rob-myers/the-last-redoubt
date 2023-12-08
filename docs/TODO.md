@@ -31,7 +31,7 @@
   - ✅ shoes -> skin `black-trainers`
   - ✅ create new images `top_down_man_base/grey_gloves`
   - ✅ new skin `grey-gloves`
-  - 🚧 move trousers into skin `black-trousers`
+  - ✅ move trousers into skin `black-trousers`
   - 🚧 start `<TestPreRenderNpc>`
   - ...
 
