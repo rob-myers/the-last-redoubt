@@ -32,6 +32,11 @@
   - ✅ create new images `top_down_man_base/grey_gloves`
   - ✅ new skin `grey-gloves`
   - ✅ move trousers into skin `black-trousers`
+  - ✅ skin `hair/skin-head` -> `hair/shaved`
+  - ✅ new skin `head/skin-head-light`
+  - ✅ new skin `head/skin-head-dark`
+  - ✅ new skin `head/blonde-light`
+  - 🚧 re-export json/atlas/png
   - 🚧 start `<TestPreRenderNpc>`
   - ...
 
