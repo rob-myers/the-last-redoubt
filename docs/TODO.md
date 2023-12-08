@@ -27,6 +27,8 @@
   - ℹ️ a single spritesheet with body anims and different heads
   - ℹ️ we hope to use a single PIXI.ParticleContainer
   - ✅ new skin `black-shirt`
+  - ✅ fix black bare leg
+  - ✅ shoes -> skin `black-trainers`
   - 🚧 new skin `white-hands` via new images e.g. `npc/white_hands_07`
   - 🚧 start `<TestPreRenderNpc>`
   - ...
