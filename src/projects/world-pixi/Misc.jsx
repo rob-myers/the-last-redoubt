@@ -5,6 +5,8 @@ import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { TextStyle } from "@pixi/text";
+import { Vector2 } from "@pixi-spine/base";
+import { pause } from "../service/generic";
 import useQueryOnce from "../hooks/use-query-once";
 
 export function Origin() {
@@ -124,10 +126,32 @@ export function TestNpc({ api }) {
  */
 export function TestPreRenderNpc({ api }) {
 
-  useQueryOnce('test-pre-render-npc', async () => {
-    await api.lib.loadSpine('man_01_base');
+   useQueryOnce('test-pre-render-npc', async () => {
+    const { data } = await api.lib.loadSpine('man_01_base');
     const spine = api.lib.instantiateSpine('man_01_base');
-    // 🚧
+    const animToFrames = { idle: 1, sit: 1, lie: 1, 'idle-breathe': 20, walk: 20 };
+
+    spine.state.setAnimation(0, 'idle', false);
+    spine.autoUpdate = false;
+    spine.update(0);
+    // api.panZoom.viewport.addChild(spine); // 🚧 TEST
+    const offset = new Vector2, size = new Vector2;
+
+    // 🚧 provide bounds inside file
+    for (const anim of data.animations) {
+      const frCnt = animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
+      const frDur = anim.duration / frCnt;
+      spine.state.setAnimation(0, anim.name, false);
+
+      for (let frame = 0; frame < frCnt; frame++) {
+        spine.update(frame === 0 ? 0 : frDur);
+        spine.skeleton.getBounds(offset, size);
+        console.log(anim.name, frame, size.x, size.y);
+        await pause(30);
+      }
+    }
+
+    return null;
   });
 
   return null;
@@ -138,7 +162,10 @@ const TestInstantiateSpine = PixiComponent('TestInstantiateSpine', {
   create(props) {
     const spine = props.api.lib.instantiateSpine('man_01_base');
     spine.state.setAnimation(0, 'idle', false);
+    // spine.state.setAnimation(0, 'lie', false);
+    spine.update(0);
     const { width: frameWidth } = spine.skeleton.getBoundsRect();
+    console.log({ frameWidth })
     spine.scale.set((2 * 13) / frameWidth);
     spine.position.set(spine.width/2, 0);
     return spine;

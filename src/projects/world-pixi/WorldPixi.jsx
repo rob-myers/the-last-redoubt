@@ -24,7 +24,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin, emptyGraphics, emptyContainer, TestNpc } from "./Misc";
+import { Origin, emptyGraphics, emptyContainer, TestNpc, TestPreRenderNpc } from "./Misc";
 
 /**
  * @param {Props} props
@@ -175,7 +175,9 @@ export default function WorldPixi(props) {
 
               <Origin />
 
-              <TestNpc api={state} />
+              {/* <TestNpc api={state} /> */}
+              <TestPreRenderNpc api={state} />
+
             </PanZoom>
           </QueryClientProvider>
         </Stage>
