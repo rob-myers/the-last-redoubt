@@ -98,7 +98,7 @@ export default async function main() {
     outputJson.anim[anim.name] = {
       frameCount: frCnt,
       frameDuration: anim.duration / frCnt,
-      origRect: maxFrameRect,
+      maxFrameRect: maxFrameRect,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
     };
 
@@ -182,7 +182,7 @@ async function loadSpineServerSide(folderName, baseName) {
  * @property {Record<string, {
  *   frameCount: number;
  *   frameDuration: number;
- *   origRect: Geom.RectJson;
+ *   maxFrameRect: Geom.RectJson;
  *   packedRect: Geom.RectJson;
  * }>} anim Animation name to metadata.
  * @property {number} packedWidth

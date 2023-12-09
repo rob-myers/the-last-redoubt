@@ -129,24 +129,25 @@ export function TestPreRenderNpc({ api }) {
    useQueryOnce('test-pre-render-npc', async () => {
     const { data } = await api.lib.loadSpine('man_01_base');
     const spine = api.lib.instantiateSpine('man_01_base');
-    const animToFrames = { idle: 1, sit: 1, lie: 1, 'idle-breathe': 20, walk: 20 };
-
     spine.state.setAnimation(0, 'idle', false);
     spine.autoUpdate = false;
     spine.update(0);
-    // api.panZoom.viewport.addChild(spine); // 🚧 TEST
-    const offset = new Vector2, size = new Vector2;
 
-    // 🚧 provide bounds inside file
+    // we have precomputed e.g. bounds of animations
+    /** @type {import("src/scripts/spine-meta").SpineMeta} */
+    const meta = await fetch('/assets/npc/top_down_man_base/spine-meta.json').then(x => x.json());
+
+    // 🚧 use bounds to render into RenderTexture
+    const offset = new Vector2, dim = new Vector2;
     for (const anim of data.animations) {
-      const frCnt = animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
-      const frDur = anim.duration / frCnt;
+      const { frameCount, frameDuration, maxFrameRect: bounds } = meta.anim[anim.name];
       spine.state.setAnimation(0, anim.name, false);
 
-      for (let frame = 0; frame < frCnt; frame++) {
-        spine.update(frame === 0 ? 0 : frDur);
-        spine.skeleton.getBounds(offset, size);
-        console.log(anim.name, frame, size.x, size.y);
+      for (let frame = 0; frame < frameCount; frame++) {
+        spine.update(frame === 0 ? 0 : frameDuration);
+        spine.skeleton.getBounds(offset, dim);
+        console.log(anim.name, frame, dim.x, dim.y);
+        // 🚧 draw into RenderTexture
         await pause(30);
       }
     }
