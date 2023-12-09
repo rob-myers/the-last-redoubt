@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "QdDO9hfCCCE",
+	"hash": "yJsG5RxbCTY",
 	"spine": "4.1.24",
-	"x": -516.15,
-	"y": -635.25,
-	"width": 1040.58,
-	"height": 1192.72,
+	"x": -395.33,
+	"y": -338.4,
+	"width": 790.65,
+	"height": 544.79,
 	"fps": 2,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -137,8 +137,8 @@
 "slots": [
 	{ "name": "right-hand-muzzle-flash", "bone": "right-hand-muzzle-flash", "attachment": "right-hand-muzzle-flash" },
 	{ "name": "muzzle-flash", "bone": "muzzle-flash", "attachment": "weapons/muzzle_flash" },
-	{ "name": "left-shoe", "bone": "left-shoe", "attachment": "left-shoe-lie" },
-	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe-lie" },
+	{ "name": "left-shoe", "bone": "left-shoe", "attachment": "left-shoe" },
+	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe" },
 	{ "name": "left-leg-lower-bare", "bone": "left-leg-lower-bare", "attachment": "leg_lower" },
 	{ "name": "right-leg-lower-bare", "bone": "right-leg-lower-bare", "attachment": "leg_lower" },
 	{ "name": "right-leg-lower-clothed", "bone": "right-leg-lower-clothed", "attachment": "right-leg-lower-clothed" },
@@ -592,11 +592,6 @@
 					{}
 				]
 			},
-			"left-shoe": {
-				"attachment": [
-					{ "name": "left-shoe" }
-				]
-			},
 			"mask-lie": {
 				"attachment": [
 					{}
@@ -620,11 +615,6 @@
 			"right-hand-muzzle-flash": {
 				"attachment": [
 					{}
-				]
-			},
-			"right-shoe": {
-				"attachment": [
-					{ "name": "right-shoe" }
 				]
 			},
 			"waist-accessory": {
@@ -649,11 +639,6 @@
 					{}
 				]
 			},
-			"left-shoe": {
-				"attachment": [
-					{ "time": 0.552, "name": "left-shoe" }
-				]
-			},
 			"mask-lie": {
 				"attachment": [
 					{}
@@ -677,11 +662,6 @@
 			"right-hand-muzzle-flash": {
 				"attachment": [
 					{}
-				]
-			},
-			"right-shoe": {
-				"attachment": [
-					{ "time": 0.552, "name": "right-shoe" }
 				]
 			},
 			"waist-accessory": {
@@ -837,6 +817,11 @@
 					{ "name": "hand_03" }
 				]
 			},
+			"left-shoe": {
+				"attachment": [
+					{ "name": "left-shoe-lie" }
+				]
+			},
 			"muzzle-flash": {
 				"attachment": [
 					{}
@@ -875,6 +860,11 @@
 			"right-hand-muzzle-flash": {
 				"attachment": [
 					{}
+				]
+			},
+			"right-shoe": {
+				"attachment": [
+					{ "name": "right-shoe-lie" }
 				]
 			},
 			"shoulders": {
@@ -1130,11 +1120,6 @@
 					{}
 				]
 			},
-			"left-shoe": {
-				"attachment": [
-					{ "name": "left-shoe" }
-				]
-			},
 			"mask-lie": {
 				"attachment": [
 					{}
@@ -1158,11 +1143,6 @@
 			"right-hand-muzzle-flash": {
 				"attachment": [
 					{}
-				]
-			},
-			"right-shoe": {
-				"attachment": [
-					{ "name": "right-shoe" }
 				]
 			},
 			"waist-accessory": {
@@ -1221,7 +1201,6 @@
 			},
 			"left-shoe": {
 				"attachment": [
-					{ "name": "left-shoe" },
 					{ "time": 0.293, "name": "shoes/trainer_black_01" },
 					{ "time": 0.594, "name": "shoes/trainer_black_03" }
 				]
