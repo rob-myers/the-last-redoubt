@@ -670,11 +670,13 @@ export const npcService = {
   instantiateSpine(baseName) {
     const spine = new Spine(this.spine[baseName].data);
   
-    // Default skins
     const newSkin = new Skin("npc-default-skin");
-    newSkin.addSkin(spine.spineData.findSkin("base/original-clothes"));
-    newSkin.addSkin(spine.spineData.findSkin("bare/light-exposed"));
-    newSkin.addSkin(spine.spineData.findSkin("hair/skin-head"));
+    // Black body with grey gloves
+    newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
+    newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
+    newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
+    // The head will change
+    newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
     spine.skeleton.setSkin(newSkin);
     spine.skeleton.setSlotsToSetupPose();
   
