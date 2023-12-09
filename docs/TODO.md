@@ -42,7 +42,7 @@
     - ✅ can update skeleton to specification animation/time and compute bounds
     - ❌ provide bounds inside file
     - ✅ precompute spine animation bounds via script (watching changes)
-      - outputs `projects/world-pixi/spine-meta.json`
+      - outputs `assets/npc/top_down_man_base/spine-meta.json`
     - use https://www.npmjs.com/package/maxrects-packer
     - keep animation frames adjacent i.e. one big rect for them all
 

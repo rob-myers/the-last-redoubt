@@ -3,5 +3,6 @@
     "watch": [
       "static/assets/npc/",
       "src/scripts/spine-meta.js"
-    ]
+    ],
+    "ignore": ["**/spine-meta.json"]
   }

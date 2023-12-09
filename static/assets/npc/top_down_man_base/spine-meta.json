@@ -1,6 +1,7 @@
 {
   "folderName": "top_down_man_base",
   "baseName": "man_01_base",
+  "skeletonScale": 0.1,
   "anim": {
     "idle": {
       "frameCount": 1,

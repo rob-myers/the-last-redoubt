@@ -21,13 +21,15 @@ import { Rect } from "../projects/geom";
 
 const repoRoot = path.resolve(__dirname, "../..");
 const npcFolder = path.resolve(repoRoot, `static/assets/npc`);
-const outputDir = path.resolve(repoRoot, "src/projects/world-pixi");
-const outputJsonFilepath = path.resolve(outputDir, "spine-meta.json");
 
 // 🚧 hard-coded
+const animToFrames = { idle: 1, sit: 1, lie: 1, "idle-breathe": 20, walk: 20 };
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
-const animToFrames = { idle: 1, sit: 1, lie: 1, "idle-breathe": 20, walk: 20 };
+const spineExportFolder = `${npcFolder}/${folderName}`;
+/** We must exclude this file from being watched to avoid) infinite loop */
+const outputJsonFilepath = `${npcFolder}/${folderName}/spine-meta.json`;
+const skeletonScale = 0.1;
 
 main();
 
@@ -37,6 +39,7 @@ export default async function main() {
   const outputJson = {
     folderName,
     baseName,
+    skeletonScale,
     anim: {},
   };
 
@@ -95,7 +98,6 @@ export default async function main() {
  * @param {string} baseName e.g. `man_01_base`
  */
 async function loadSpineServerSide(folderName, baseName) {
-  const spineExportFolder = `${npcFolder}/${folderName}`;
   const topDownManAtlasContents = fs
     .readFileSync(`${spineExportFolder}/${baseName}.atlas`)
     .toString();
@@ -120,7 +122,7 @@ async function loadSpineServerSide(folderName, baseName) {
 
   const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
   const skeletonParser = new SkeletonJson(atlasLoader);
-  skeletonParser.scale = 0.1;
+  skeletonParser.scale = skeletonScale;
 
   const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson);
   return { atlasLoader, data: skeletonData };
@@ -130,6 +132,7 @@ async function loadSpineServerSide(folderName, baseName) {
  * @typedef SpineMeta
  * @property {string} folderName
  * @property {string} baseName
+ * @property {number} skeletonScale
  * @property {Record<string, {
  *   frameCount: number;
  *   bounds: Geom.RectJson;
