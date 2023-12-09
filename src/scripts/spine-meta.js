@@ -6,7 +6,6 @@
 
 import fs from "fs";
 import path from "path";
-
 import { Assets } from "@pixi/node";
 import { TextureAtlas } from "@pixi-spine/base";
 import {
@@ -16,7 +15,10 @@ import {
   Skin,
   SkeletonData,
 } from "@pixi-spine/runtime-4.1";
+import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
+
 import { writeAsJson } from "../projects/service/file";
+import { error, info } from "../projects/service/log";
 import { Rect } from "../projects/geom";
 
 const repoRoot = path.resolve(__dirname, "../..");
@@ -41,6 +43,8 @@ export default async function main() {
     baseName,
     skeletonScale,
     anim: {},
+    packedWidth: 0,
+    packedHeight: 0,
   };
 
   await Assets.init({
@@ -65,11 +69,18 @@ export default async function main() {
   spine.skeleton.setSlotsToSetupPose();
 
   // Compute bounding box per animation
+  // Compute rect packing
+
+  const packerPadding = 2;
+  const packer = new MaxRectsPacker(4096, 4096, packerPadding, { pot: false });
+  const items = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
+
+  const { animations } = spine.spineData;
   spine.state.setAnimation(0, "idle", false);
   spine.autoUpdate = false;
   spine.update(0);
 
-  for (const anim of spine.spineData.animations) {
+  for (const anim of animations) {
     const frCnt = animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
     const frDur = anim.duration / frCnt;
     spine.state.setAnimation(0, anim.name, false);
@@ -82,13 +93,47 @@ export default async function main() {
       // console.log(anim.name, frame, frameRect.width, frameRect.height);
     }
 
-    const animRect = Rect.fromRects(...frameRects).integerOrds();
+    const maxFrameRect = Rect.fromRects(...frameRects).integerOrds();
     // console.log(anim.name, animRect.width, animRect.height);
     outputJson.anim[anim.name] = {
       frameCount: frCnt,
-      bounds: animRect,
+      frameDuration: anim.duration / frCnt,
+      origRect: maxFrameRect,
+      packedRect: { x: 0, y: 0, width: 0, height: 0 },
     };
+
+    const r = new Rectangle(
+      (packerPadding + maxFrameRect.width) * frCnt + packerPadding,
+      (packerPadding + maxFrameRect.height) * frCnt + packerPadding
+    );
+    r.data = { name: anim.name };
+    items.push(r);
   }
+
+  packer.addArray(items);
+  packer.repack();
+  const { bins } = packer;
+
+  if (bins.length !== 1) {
+    error(`spine-meta: expected exactly one bin (${bins.length})`);
+  } else if (bins[0].rects.length !== animations.length) {
+    error(`spine-meta: expected every animation to be packed (${bins.length} of ${animations.length})`);
+  }
+
+  const bin = bins[0];
+  // console.log(bins[0]);
+
+  animations.forEach(anim => {
+    const r = bin.rects.find(x => x.data.name === anim.name);
+    r && (outputJson.anim[anim.name].packedRect = {
+      x: r.x,
+      y: r.y,
+      width: r.width,
+      height: r.height,
+    });
+  });
+  outputJson.packedWidth = bin.width;
+  outputJson.packedHeight = bin.height;
 
   writeAsJson(outputJson, outputJsonFilepath);
 }
@@ -133,8 +178,13 @@ async function loadSpineServerSide(folderName, baseName) {
  * @property {string} folderName
  * @property {string} baseName
  * @property {number} skeletonScale
+ * @property {number} skeletonScale
  * @property {Record<string, {
  *   frameCount: number;
- *   bounds: Geom.RectJson;
+ *   frameDuration: number;
+ *   origRect: Geom.RectJson;
+ *   packedRect: Geom.RectJson;
  * }>} anim Animation name to metadata.
+ * @property {number} packedWidth
+ * @property {number} packedHeight
  */

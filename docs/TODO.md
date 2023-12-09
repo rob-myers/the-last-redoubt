@@ -43,7 +43,8 @@
     - ❌ provide bounds inside file
     - ✅ precompute spine animation bounds via script (watching changes)
       - outputs `assets/npc/top_down_man_base/spine-meta.json`
-    - use https://www.npmjs.com/package/maxrects-packer
+    - ✅ precompute rects packing
+      - use https://www.npmjs.com/package/maxrects-packer
     - keep animation frames adjacent i.e. one big rect for them all
 
 - test render spine skeleton into RenderTexture and display

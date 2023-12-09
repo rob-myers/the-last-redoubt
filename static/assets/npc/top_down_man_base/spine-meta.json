@@ -5,23 +5,35 @@
   "anim": {
     "idle": {
       "frameCount": 1,
-      "bounds": {"x": -58, "y": -18, "width": 116, "height": 34}
+      "frameDuration": 0,
+      "origRect": {"x": -58, "y": -18, "width": 116, "height": 34},
+      "packedRect": {"x": 2497, "y": 0, "width": 120, "height": 38}
     },
     "idle-breathe": {
       "frameCount": 20,
-      "bounds": {"x": -67, "y": -23, "width": 131, "height": 33}
+      "frameDuration": 0.1,
+      "origRect": {"x": -67, "y": -23, "width": 131, "height": 33},
+      "packedRect": {"x": 0, "y": 2764, "width": 2662, "height": 702}
     },
     "lie": {
       "frameCount": 1,
-      "bounds": {"x": -63, "y": -205, "width": 127, "height": 211}
+      "frameDuration": 0,
+      "origRect": {"x": -63, "y": -205, "width": 127, "height": 211},
+      "packedRect": {"x": 2364, "y": 0, "width": 131, "height": 215}
     },
     "sit": {
       "frameCount": 1,
-      "bounds": {"x": -58, "y": -30, "width": 116, "height": 39}
+      "frameDuration": 0,
+      "origRect": {"x": -58, "y": -30, "width": 116, "height": 39},
+      "packedRect": {"x": 2497, "y": 40, "width": 120, "height": 43}
     },
     "walk": {
       "frameCount": 20,
-      "bounds": {"x": -57, "y": -58, "width": 116, "height": 136}
+      "frameDuration": 0.04000000059604645,
+      "origRect": {"x": -57, "y": -58, "width": 116, "height": 136},
+      "packedRect": {"x": 0, "y": 0, "width": 2362, "height": 2762}
     }
-  }
+  },
+  "packedWidth": 2662,
+  "packedHeight": 3466
 }
