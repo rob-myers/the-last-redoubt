@@ -1,0 +1,26 @@
+{
+  "folderName": "top_down_man_base",
+  "baseName": "man_01_base",
+  "anim": {
+    "idle": {
+      "frameCount": 1,
+      "bounds": {"x": -58, "y": -18, "width": 116, "height": 34}
+    },
+    "idle-breathe": {
+      "frameCount": 20,
+      "bounds": {"x": -67, "y": -23, "width": 131, "height": 33}
+    },
+    "lie": {
+      "frameCount": 1,
+      "bounds": {"x": -63, "y": -205, "width": 127, "height": 211}
+    },
+    "sit": {
+      "frameCount": 1,
+      "bounds": {"x": -58, "y": -30, "width": 116, "height": 39}
+    },
+    "walk": {
+      "frameCount": 20,
+      "bounds": {"x": -57, "y": -58, "width": 116, "height": 136}
+    }
+  }
+}

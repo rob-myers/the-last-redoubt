@@ -1,0 +1,7 @@
+{
+    "ext": "json atlas",
+    "watch": [
+      "static/assets/npc/",
+      "src/scripts/spine-meta.js"
+    ]
+  }

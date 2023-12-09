@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "develop": "gatsby develop -p 8010 -H 0.0.0.0",
-    "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta'",
+    "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta' 'yarn watch-spine-meta'",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -31,8 +31,10 @@
     "pngs-to-webp": "yarn ts-script src/scripts/pngs-to-webp",
     "process-sheets": "yarn ts-script src/scripts/process-sheets",
     "simplify-pngs": "yarn ts-script src/scripts/simplify-pngs",
+    "spine-meta": "yarn ts-script src/scripts/spine-meta",
     "svg-meta": "yarn ts-script src/scripts/svg-meta",
     "ts-script": "NODE_OPTIONS=\"--no-experimental-fetch\" ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",
+    "watch-spine-meta": "nodemon --delay 2s --config src/scripts/spine-meta.nodemon.json --exec 'yarn spine-meta'",
     "watch-svg-meta": "nodemon --delay 2s --config src/scripts/svg-meta.nodemon.json --exec 'yarn svg-meta'"
   },
   "dependencies": {
@@ -44,6 +46,7 @@
     "@loadable/component": "^5.15.2",
     "@mdx-js/mdx": "^2.1.5",
     "@mdx-js/react": "^2.1.5",
+    "@pixi/node": "^7.2.0",
     "@pixi/react": "^7.1.1",
     "@tanstack/react-query": "^5.8.4",
     "@tanstack/react-query-devtools": "^5.8.4",

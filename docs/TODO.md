@@ -40,7 +40,9 @@
   - 🚧 `<TestPreRenderNpc>`: pre-render every frame from every animation (with some head)
     - ✅ hard-code number of frames chosen for now
     - ✅ can update skeleton to specification animation/time and compute bounds
-    - 🚧 provide bounds inside file
+    - ❌ provide bounds inside file
+    - ✅ precompute spine animation bounds via script (watching changes)
+      - outputs `projects/world-pixi/spine-meta.json`
     - use https://www.npmjs.com/package/maxrects-packer
     - keep animation frames adjacent i.e. one big rect for them all
 
