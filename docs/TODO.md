@@ -50,7 +50,7 @@
     - ✅ each spine animation has anim-bounds defined manually
     - ✅ read `anim-bounds` from file
     - ✅ packing induces RenderTexture
-    - 🚧 fix idle-breathe bounds
+    - ✅ fix idle-breathe bounds
     - 🚧 fix missing shoes (skin issue)
   - `<TestPreRenderNpc>` continued
     - precompute head positions too

@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "PlpGHEf2a8o",
+	"hash": "HeRtUTAHnx8",
 	"spine": "4.1.24",
 	"x": -508.36,
 	"y": -448.26,
@@ -744,6 +744,19 @@
 					{ "time": 1, "x": 36.36, "y": -0.25 },
 					{ "time": 2 }
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"anim-bounds": {
+					"anim-bounds": {
+						"deform": [
+							{
+								"vertices": [ -99.55914, 48.44452, 49.53369, 48.44452, 49.53369, -50.6799, -99.55914, -50.6799 ]
+							}
+						]
+					}
+				}
 			}
 		},
 		"drawOrder": [

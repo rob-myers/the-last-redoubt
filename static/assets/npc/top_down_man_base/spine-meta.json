@@ -8,38 +8,38 @@
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -75, "y": -46, "width": 150, "height": 96},
-      "packedRect": {"x": 179, "y": 298, "width": 150, "height": 96}
+      "packedRect": {"x": 3142, "y": 110, "width": 150, "height": 96}
     },
     "idle-breathe": {
       "animName": "idle-breathe",
       "frameCount": 20,
       "frameDuration": 0.1,
-      "animBounds": {"x": -75, "y": -46, "width": 150, "height": 96},
-      "packedRect": {"x": 2, "y": 200, "width": 3038, "height": 96}
+      "animBounds": {"x": -85, "y": -50, "width": 165, "height": 106},
+      "packedRect": {"x": 2, "y": 2, "width": 3338, "height": 106}
     },
     "lie": {
       "animName": "lie",
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -85, "y": -260, "width": 175, "height": 310},
-      "packedRect": {"x": 2, "y": 298, "width": 175, "height": 310}
+      "packedRect": {"x": 2, "y": 308, "width": 175, "height": 310}
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -75, "y": -80, "width": 150, "height": 130},
-      "packedRect": {"x": 179, "y": 396, "width": 150, "height": 130}
+      "packedRect": {"x": 3142, "y": 208, "width": 150, "height": 130}
     },
     "walk": {
       "animName": "walk",
       "frameCount": 20,
       "frameDuration": 0.04000000059604645,
       "animBounds": {"x": -75, "y": -101, "width": 155, "height": 196},
-      "packedRect": {"x": 2, "y": 2, "width": 3138, "height": 196}
+      "packedRect": {"x": 2, "y": 110, "width": 3138, "height": 196}
     }
   },
-  "packedWidth": 3142,
-  "packedHeight": 610,
+  "packedWidth": 3342,
+  "packedHeight": 620,
   "packedPadding": 2
 }
