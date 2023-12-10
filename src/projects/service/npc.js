@@ -10,6 +10,7 @@ import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 import { observableToAsyncIterable } from './observable-to-async-iterable';
 
+import { skeletonScale } from '../world/const';
 import topDownManAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/man_01_base.atlas';
 
 /**
@@ -657,7 +658,7 @@ export const npcService = {
 
     const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
     const skeletonParser = new SkeletonJson(atlasLoader);
-    skeletonParser.scale = 0.1;
+    skeletonParser.scale = skeletonScale;
 
     const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson)
     // Add to lookup

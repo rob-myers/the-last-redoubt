@@ -99,3 +99,5 @@ export const hitTestRed = {
 };
 
 export const debugDoorOffset = 10;
+
+export const skeletonScale = 0.1;
