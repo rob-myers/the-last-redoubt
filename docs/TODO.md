@@ -54,10 +54,14 @@
     - ✅ fix missing shoes (skin issue)
 
 - 🚧 `<TestPreRenderNpc>` test ParticleContainer
-  - has ParticleContainer with a sprite
+  - ✅ has ParticleContainer with a sprite
+  - ✅ sprite animates idle-breath manually
+  - refactor so can animate any animation
+  - can scale correctly
+  - can add multiple
     
 - `<TestPreRenderNpc>`: precompute head positions too
-- load a PIXI SpriteSheet using a `TextureAtlas`
+- ❌ load a PIXI SpriteSheet using a `TextureAtlas`
 
 - start migrating NPCs
 
