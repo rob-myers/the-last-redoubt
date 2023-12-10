@@ -673,6 +673,7 @@ export const npcService = {
   
     const newSkin = new Skin("npc-default-skin");
     // Black body with grey gloves
+    newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
     newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
     newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
     newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));

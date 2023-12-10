@@ -143,12 +143,12 @@ export function TestPreRenderNpc({ api }) {
     tex.resize(meta.packedWidth, meta.packedHeight, true);
     
     // 👇 Debug Rectangle Packing
-    const gfx = (new Graphics).lineStyle({ width: 0 });
+    const gfx = (new Graphics).lineStyle({ width: 1 });
     gfx.beginFill(0xffffff, 1).drawRect(0, 0, meta.packedWidth, meta.packedHeight).endFill();
     Object.values(meta.anim).forEach(({ animName, packedRect, animBounds, frameCount }) => {
-      gfx.beginFill(0xff0000, 0.5).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
+      gfx.beginFill(0xff0000, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
       for (let i = 0; i < frameCount; i++)
-        gfx.beginFill(0).drawRect(packedRect.x + (i * (animBounds.width + meta.packedPadding)), packedRect.y, animBounds.width, animBounds.height);
+        gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + meta.packedPadding)), packedRect.y, animBounds.width, animBounds.height);
     });
     api.renderInto(gfx, tex);
 

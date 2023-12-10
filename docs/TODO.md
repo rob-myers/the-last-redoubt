@@ -23,7 +23,7 @@
   - ✅ fix walk
     - work towards it
 
-- 🚧 new npc spritesheet strategy
+- ✅ start new npc spritesheet strategy
   - ℹ️ a single spritesheet with body anims and different heads
   - ℹ️ we hope to use a single PIXI.ParticleContainer
   - ✅ new skin `black-shirt`
@@ -37,7 +37,7 @@
   - ✅ new skin `head/skin-head-dark`
   - ✅ new skin `head/blonde-light`
   - ✅ re-export json/atlas/png
-  - 🚧 `<TestPreRenderNpc>`: pre-render every frame from every animation (with same head)
+  - ✅ `<TestPreRenderNpc>`: pre-render every frame from every animation (with same head)
     - ✅ hard-code number of frames chosen for now
     - ✅ can update skeleton to specification animation/time and compute bounds
     - ❌ provide bounds inside file
@@ -51,11 +51,12 @@
     - ✅ read `anim-bounds` from file
     - ✅ packing induces RenderTexture
     - ✅ fix idle-breathe bounds
-    - 🚧 fix missing shoes (skin issue)
-  - `<TestPreRenderNpc>` continued
-    - precompute head positions too
+    - ✅ fix missing shoes (skin issue)
 
-- test render spine skeleton into RenderTexture and display
+- 🚧 `<TestPreRenderNpc>` test ParticleContainer
+  - has ParticleContainer with a sprite
+    
+- `<TestPreRenderNpc>`: precompute head positions too
 - load a PIXI SpriteSheet using a `TextureAtlas`
 
 - start migrating NPCs

@@ -58,6 +58,7 @@ export default async function main() {
 
   // ℹ️ currently we only read attachment "anim-bounds" so skin doesn't matter
   // const newSkin = new Skin("npc-default-skin");
+  // newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
   // newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
   // newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
   // newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
