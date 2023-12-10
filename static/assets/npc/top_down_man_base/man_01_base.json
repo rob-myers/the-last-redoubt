@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "yJsG5RxbCTY",
+	"hash": "HP3qhb2iTok",
 	"spine": "4.1.24",
-	"x": -395.33,
-	"y": -338.4,
-	"width": 790.65,
-	"height": 544.79,
+	"x": -508.36,
+	"y": -448.26,
+	"width": 1040.91,
+	"height": 654.66,
 	"fps": 2,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -14,15 +14,6 @@
 	{ "name": "root" },
 	{ "name": "right-hip", "parent": "root", "length": 418.23, "rotation": 90, "x": 272, "y": -494 },
 	{ "name": "left-hip", "parent": "root", "length": 333.33, "rotation": 90, "x": -272, "y": -494 },
-	{
-		"name": "muzzle-flash",
-		"parent": "root",
-		"rotation": 90.15,
-		"x": 49.86,
-		"y": 2373.81,
-		"scaleX": 0.6216,
-		"scaleY": 0.6254
-	},
 	{
 		"name": "waist-accessory",
 		"parent": "root",
@@ -136,7 +127,6 @@
 ],
 "slots": [
 	{ "name": "right-hand-muzzle-flash", "bone": "right-hand-muzzle-flash", "attachment": "right-hand-muzzle-flash" },
-	{ "name": "muzzle-flash", "bone": "muzzle-flash", "attachment": "weapons/muzzle_flash" },
 	{ "name": "left-shoe", "bone": "left-shoe", "attachment": "left-shoe" },
 	{ "name": "right-shoe", "bone": "right-shoe", "attachment": "right-shoe" },
 	{ "name": "left-leg-lower-bare", "bone": "left-leg-lower-bare", "attachment": "leg_lower" },
@@ -169,7 +159,8 @@
 	{ "name": "left-eyebrow-birdseye", "bone": "left-eyebrow-birdseye", "attachment": "left-eyebrow-lie" },
 	{ "name": "right-hand-gun", "bone": "right-hand-gun", "attachment": "right-hand-gun" },
 	{ "name": "mask-lie", "bone": "mask-birdseye", "attachment": "mask-lie" },
-	{ "name": "waist-accessory", "bone": "waist-accessory", "attachment": "waist-accessory" }
+	{ "name": "waist-accessory", "bone": "waist-accessory", "attachment": "waist-accessory" },
+	{ "name": "root", "bone": "root" }
 ],
 "skins": [
 	{
@@ -179,9 +170,6 @@
 				"shoes/boot_brown_02": { "width": 408, "height": 838 },
 				"shoes/trainer_black_01": { "width": 340, "height": 275 },
 				"shoes/trainer_black_03": { "width": 364, "height": 850 }
-			},
-			"muzzle-flash": {
-				"weapons/muzzle_flash": { "width": 987, "height": 1533 }
 			},
 			"right-shoe": {
 				"shoes/boot_brown_02": { "width": 408, "height": 838 },
@@ -597,11 +585,6 @@
 					{}
 				]
 			},
-			"muzzle-flash": {
-				"attachment": [
-					{}
-				]
-			},
 			"right-eyebrow-birdseye": {
 				"attachment": [
 					{}
@@ -626,8 +609,7 @@
 		"drawOrder": [
 			{
 				"offsets": [
-					{ "slot": "right-hand-muzzle-flash", "offset": 28 },
-					{ "slot": "muzzle-flash", "offset": 28 }
+					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
 				]
 			}
 		]
@@ -640,11 +622,6 @@
 				]
 			},
 			"mask-lie": {
-				"attachment": [
-					{}
-				]
-			},
-			"muzzle-flash": {
 				"attachment": [
 					{}
 				]
@@ -724,7 +701,7 @@
 			},
 			"right-foot": {
 				"translate": [
-					{ "x": -149.81, "y": 1.77 }
+					{ "x": -149.61, "y": 7.48 }
 				]
 			},
 			"left-arm": {
@@ -764,8 +741,7 @@
 		"drawOrder": [
 			{
 				"offsets": [
-					{ "slot": "right-hand-muzzle-flash", "offset": 28 },
-					{ "slot": "muzzle-flash", "offset": 28 }
+					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
 				]
 			}
 		]
@@ -820,11 +796,6 @@
 			"left-shoe": {
 				"attachment": [
 					{ "name": "left-shoe-lie" }
-				]
-			},
-			"muzzle-flash": {
-				"attachment": [
-					{}
 				]
 			},
 			"right-arm-lower-bare": {
@@ -1103,12 +1074,11 @@
 		"drawOrder": [
 			{
 				"offsets": [
-					{ "slot": "right-hand-muzzle-flash", "offset": 32 },
-					{ "slot": "muzzle-flash", "offset": 32 },
-					{ "slot": "left-leg-upper-clothed", "offset": -1 },
-					{ "slot": "waist", "offset": -1 },
-					{ "slot": "hat", "offset": 1 },
-					{ "slot": "right-hand-gun", "offset": 2 }
+					{ "slot": "right-hand-muzzle-flash", "offset": 33 },
+					{ "slot": "left-leg-upper-clothed", "offset": 0 },
+					{ "slot": "waist", "offset": 0 },
+					{ "slot": "hat", "offset": 2 },
+					{ "slot": "right-hand-gun", "offset": 3 }
 				]
 			}
 		]
@@ -1121,11 +1091,6 @@
 				]
 			},
 			"mask-lie": {
-				"attachment": [
-					{}
-				]
-			},
-			"muzzle-flash": {
 				"attachment": [
 					{}
 				]
@@ -1186,8 +1151,7 @@
 		"drawOrder": [
 			{
 				"offsets": [
-					{ "slot": "right-hand-muzzle-flash", "offset": 28 },
-					{ "slot": "muzzle-flash", "offset": 28 }
+					{ "slot": "right-hand-muzzle-flash", "offset": 28 }
 				]
 			}
 		]
@@ -1206,11 +1170,6 @@
 				]
 			},
 			"mask-lie": {
-				"attachment": [
-					{}
-				]
-			},
-			"muzzle-flash": {
 				"attachment": [
 					{}
 				]
