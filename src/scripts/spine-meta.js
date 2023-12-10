@@ -72,7 +72,7 @@ export default async function main() {
   /**
    * Extract bounding box per animation, stored as attachment "anim-bounds".
    * We did not use spine.skeleton.getBoundsRect() because it was too big:
-   * attachments are bounded by their transformed rect, rather than occurring pixesl.
+   * attachments are bounded by their transformed rect, rather than occurring pixels.
    */
   const { animations } = spine.spineData;
   spine.autoUpdate = false;
@@ -94,7 +94,7 @@ export default async function main() {
     }
     rect.width = max.x - rect.x;
     rect.height = max.y - rect.y;
-    const maxFrameRect = rect.integerOrds();
+    const animBounds = rect.integerOrds();
 
     const frameCount = animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
 
@@ -102,14 +102,14 @@ export default async function main() {
       animName: anim.name,
       frameCount,
       frameDuration: anim.duration / frameCount,
-      maxFrameRect,
+      animBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
     };
 
     const r = new Rectangle(
       // Ensure horizontal padding between frames
-      (maxFrameRect.width * frameCount) + (packedPadding * (frameCount - 1)),
-      maxFrameRect.height,
+      (animBounds.width * frameCount) + (packedPadding * (frameCount - 1)),
+      animBounds.height,
     );
     r.data = { name: anim.name };
     items.push(r);
@@ -192,12 +192,12 @@ async function loadSpineServerSide(folderName, baseName) {
  *   animName: string;
  *   frameCount: number;
  *   frameDuration: number;
- *   maxFrameRect: Geom.RectJson;
+ *   animBounds: Geom.RectJson;
  *   packedRect: Geom.RectJson;
  * }>} anim
  * Animation name to metadata.
- * - `packedRect` has width `frameCount * maxFrameRect.width` plus inter-frame padding `packedPadding`.
- * - `packedRect` has height `maxFrameRect.height`
+ * - `packedRect` has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
+ * - `packedRect` has height `animBounds.height`
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding

@@ -5,9 +5,10 @@ import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { TextStyle } from "@pixi/text";
-import { Vector2 } from "@pixi-spine/base";
+import { BoundingBoxAttachment } from "@pixi-spine/runtime-4.1";
 import { pause } from "../service/generic";
-import useQueryOnce from "../hooks/use-query-once";
+import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";
+import { Rect, Vect } from "../geom";
 
 export function Origin() {
   const app = useApp();
@@ -90,6 +91,7 @@ colMatFilter3.brightness(0.2, true);
 export const tempMatrix1 = new Matrix();
 
 export const emptyContainer = new Container();
+/** Must be cleared after use */
 export const emptyGraphics = new Graphics();
 
 export const textStyle1 = new TextStyle({
@@ -126,47 +128,71 @@ export function TestNpc({ api }) {
  */
 export function TestPreRenderNpc({ api }) {
 
-   useQueryOnce('test-pre-render-npc', async () => {
+  const [tex] = React.useState(() => RenderTexture.create({ width: 1, height: 1 }));
+
+  useQueryWrap('test-pre-render-npc', async () => {
     const { data } = await api.lib.loadSpine('man_01_base');
     const spine = api.lib.instantiateSpine('man_01_base');
     spine.state.setAnimation(0, 'idle', false);
     spine.autoUpdate = false;
     spine.update(0);
 
-    // we have precomputed e.g. bounds of animations
     /** @type {import("src/scripts/spine-meta").SpineMeta} */
     const meta = await fetch('/assets/npc/top_down_man_base/spine-meta.json').then(x => x.json());
+    
+    tex.resize(meta.packedWidth, meta.packedHeight, true);
+    
+    // 👇 Debug Rectangle Packing
+    const gfx = (new Graphics).lineStyle({ width: 0 });
+    gfx.beginFill(0xffffff, 1).drawRect(0, 0, meta.packedWidth, meta.packedHeight).endFill();
+    Object.values(meta.anim).forEach(({ animName, packedRect, animBounds, frameCount }) => {
+      gfx.beginFill(0xff0000, 0.5).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
+      for (let i = 0; i < frameCount; i++)
+        gfx.beginFill(0).drawRect(packedRect.x + (i * (animBounds.width + meta.packedPadding)), packedRect.y, animBounds.width, animBounds.height);
+    });
+    api.renderInto(gfx, tex);
 
     // 🚧 use bounds to render into RenderTexture
-    const offset = new Vector2, dim = new Vector2;
     for (const anim of data.animations) {
-      const { frameCount, frameDuration, maxFrameRect: bounds } = meta.anim[anim.name];
+      const { frameCount, frameDuration, animBounds, packedRect } = meta.anim[anim.name];
+      
       spine.state.setAnimation(0, anim.name, false);
-
       for (let frame = 0; frame < frameCount; frame++) {
         spine.update(frame === 0 ? 0 : frameDuration);
-        spine.skeleton.getBounds(offset, dim);
-        console.log(anim.name, frame, dim.x, dim.y);
-        // 🚧 draw into RenderTexture
+        /**
+         * - `animBounds` where root attachment is at `(0, 0)`.
+         * - `animBounds` for frame `frame` is at:
+         *   - packedRect.x + frame * (animBounds.width + meta.packedPadding)
+         *   - packedRect.y
+         *   - animBounds.width
+         *   - animBounds.height
+         */
+        spine.position.set(
+          packedRect.x + (frame * (animBounds.width + meta.packedPadding)) + Math.abs(animBounds.x),
+          packedRect.y + Math.abs(animBounds.y),
+        );
+        api.renderInto(spine, tex, false);
         await pause(30);
       }
     }
 
-    return null;
+    return null
   });
 
-  return null;
+  return <Sprite texture={tex} />;
 }
 
 const TestInstantiateSpine = PixiComponent('TestInstantiateSpine', {
   /** @param {{ api: import('./WorldPixi').State }} props  */
   create(props) {
     const spine = props.api.lib.instantiateSpine('man_01_base');
+    // console.log(spine);
+
     spine.state.setAnimation(0, 'idle', false);
     // spine.state.setAnimation(0, 'lie', false);
     spine.update(0);
+
     const { width: frameWidth } = spine.skeleton.getBoundsRect();
-    console.log({ frameWidth })
     spine.scale.set((2 * 13) / frameWidth);
     spine.position.set(spine.width/2, 0);
     return spine;

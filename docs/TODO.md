@@ -49,7 +49,9 @@
     - ℹ️ cannot use spine.skeleton.getBoundsRect() to get exact max frame bounds
     - ✅ each spine animation has anim-bounds defined manually
     - ✅ read `anim-bounds` from file
-    - 🚧 packing induces RenderTexture
+    - ✅ packing induces RenderTexture
+    - 🚧 fix idle-breathe bounds
+    - 🚧 fix missing shoes (skin issue)
   - `<TestPreRenderNpc>` continued
     - precompute head positions too
 
