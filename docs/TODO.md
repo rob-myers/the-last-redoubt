@@ -37,7 +37,7 @@
   - ✅ new skin `head/skin-head-dark`
   - ✅ new skin `head/blonde-light`
   - ✅ re-export json/atlas/png
-  - 🚧 `<TestPreRenderNpc>`: pre-render every frame from every animation (with some head)
+  - 🚧 `<TestPreRenderNpc>`: pre-render every frame from every animation (with same head)
     - ✅ hard-code number of frames chosen for now
     - ✅ can update skeleton to specification animation/time and compute bounds
     - ❌ provide bounds inside file
@@ -45,7 +45,13 @@
       - outputs `assets/npc/top_down_man_base/spine-meta.json`
     - ✅ precompute rects packing
       - use https://www.npmjs.com/package/maxrects-packer
-    - keep animation frames adjacent i.e. one big rect for them all
+      - keep animation frames adjacent i.e. one big rect for them all
+    - ℹ️ cannot use spine.skeleton.getBoundsRect() to get exact max frame bounds
+    - ✅ each spine animation has anim-bounds defined manually
+    - ✅ read `anim-bounds` from file
+    - 🚧 packing induces RenderTexture
+  - `<TestPreRenderNpc>` continued
+    - precompute head positions too
 
 - test render spine skeleton into RenderTexture and display
 - load a PIXI SpriteSheet using a `TextureAtlas`

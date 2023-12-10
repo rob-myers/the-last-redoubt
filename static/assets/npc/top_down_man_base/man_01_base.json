@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "HP3qhb2iTok",
+	"hash": "PlpGHEf2a8o",
 	"spine": "4.1.24",
 	"x": -508.36,
 	"y": -448.26,
@@ -160,12 +160,20 @@
 	{ "name": "right-hand-gun", "bone": "right-hand-gun", "attachment": "right-hand-gun" },
 	{ "name": "mask-lie", "bone": "mask-birdseye", "attachment": "mask-lie" },
 	{ "name": "waist-accessory", "bone": "waist-accessory", "attachment": "waist-accessory" },
-	{ "name": "root", "bone": "root" }
+	{ "name": "root", "bone": "root" },
+	{ "name": "anim-bounds", "bone": "root", "attachment": "anim-bounds" }
 ],
 "skins": [
 	{
 		"name": "default",
 		"attachments": {
+			"anim-bounds": {
+				"anim-bounds": {
+					"type": "boundingbox",
+					"vertexCount": 4,
+					"vertices": [ -749.32, 450.62, 749.66, 450.74, 749.01, -499.2, -749.27, -500.44 ]
+				}
+			},
 			"left-shoe": {
 				"shoes/boot_brown_02": { "width": 408, "height": 838 },
 				"shoes/trainer_black_01": { "width": 340, "height": 275 },
@@ -1071,14 +1079,27 @@
 				]
 			}
 		},
+		"attachments": {
+			"default": {
+				"anim-bounds": {
+					"anim-bounds": {
+						"deform": [
+							{
+								"vertices": [ -97.89005, 2148.7158, 150.25974, 2148.7158, 150.25964, 0, -97.89014 ]
+							}
+						]
+					}
+				}
+			}
+		},
 		"drawOrder": [
 			{
 				"offsets": [
-					{ "slot": "right-hand-muzzle-flash", "offset": 33 },
+					{ "slot": "right-hand-muzzle-flash", "offset": 34 },
 					{ "slot": "left-leg-upper-clothed", "offset": 0 },
 					{ "slot": "waist", "offset": 0 },
 					{ "slot": "hat", "offset": 2 },
-					{ "slot": "right-hand-gun", "offset": 3 }
+					{ "slot": "right-hand-gun", "offset": 4 }
 				]
 			}
 		]
@@ -1146,6 +1167,20 @@
 				"translate": [
 					{ "x": -68.11, "y": 0.8 }
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"anim-bounds": {
+					"anim-bounds": {
+						"deform": [
+							{
+								"offset": 1,
+								"vertices": [ 348.79407, 2.0E-5, 348.79407 ]
+							}
+						]
+					}
+				}
 			}
 		},
 		"drawOrder": [
@@ -1525,6 +1560,19 @@
 					{ "time": 0.396, "x": -78.85, "y": 67.52 },
 					{ "time": 0.8 }
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"anim-bounds": {
+					"anim-bounds": {
+						"deform": [
+							{
+								"vertices": [ 5.22493, 551.20685, 50.9479, 551.20685, 50.94786, -450.07666, 5.2249, -450.07666 ]
+							}
+						]
+					}
+				}
 			}
 		}
 	}
