@@ -13,14 +13,12 @@ import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 import { skeletonScale } from "../projects/world/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
-import { loadSpineServerSide } from "./service";
+import { loadSpineServerSide, npcAssetsFolder } from "./service";
 
-const repoRoot = path.resolve(__dirname, "../..");
-const npcFolder = path.resolve(repoRoot, `static/assets/npc`);
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
 /** Exclude this file from being watched to avoid infinite loop */
-const outputJsonFilepath = `${npcFolder}/${folderName}/spine-meta.json`;
+const outputJsonFilepath = `${npcAssetsFolder}/${folderName}/spine-meta.json`;
 
 const animToFrames = {
   idle: 1,

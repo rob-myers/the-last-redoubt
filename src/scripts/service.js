@@ -7,16 +7,14 @@ import { TextureAtlas } from "@pixi-spine/base";
 import {
   AtlasAttachmentLoader,
   SkeletonJson,
-  Spine,
-  Skin,
-  BoundingBoxAttachment,
 } from "@pixi-spine/runtime-4.1";
 import { Assets } from "@pixi/node";
 
 import { assertDefined } from "../projects/service/generic";
 import { skeletonScale } from '../projects/world/const';
 
-const repoRoot = path.resolve(__dirname, "../..");
+export const repoRoot = path.resolve(__dirname, "../..");
+export const npcAssetsFolder = path.resolve(repoRoot, `static/assets/npc`);
 
 /**
  * @param {string} scriptName
@@ -187,8 +185,7 @@ function normalizeChars(word) {
  * @param {string} baseName e.g. `man_01_base`
  */
 export async function loadSpineServerSide(folderName, baseName) {
-  const npcFolder = path.resolve(repoRoot, `static/assets/npc`);
-  const spineExportFolder = `${npcFolder}/${folderName}`;
+  const spineExportFolder = `${npcAssetsFolder}/${folderName}`;
   const topDownManAtlasContents = fs
     .readFileSync(`${spineExportFolder}/${baseName}.atlas`)
     .toString();

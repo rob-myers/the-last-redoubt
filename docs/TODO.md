@@ -53,15 +53,17 @@
     - ✅ fix idle-breathe bounds
     - ✅ fix missing shoes (skin issue)
 
-- 🚧 `<TestPreRenderNpc>` test ParticleContainer
+- ❌ load a PIXI SpriteSheet using a `TextureAtlas`
+
+- 🚧 `<TestPreRenderNpc>` uses ParticleContainer
   - ✅ has ParticleContainer with a sprite
   - ✅ sprite animates idle-breath manually
-  - refactor so can animate any animation
+  - ✅ new script `spine-render` renders `spine-render.{png,webp}`
+  - 🚧 refactor so can animate any animation
   - can scale correctly
-  - can add multiple
-    
-- `<TestPreRenderNpc>`: precompute head positions too
-- ❌ load a PIXI SpriteSheet using a `TextureAtlas`
+  - can add multiple npcs
+  - precompute head positions too
+  - sprite for body, sprite for head
 
 - start migrating NPCs
 
