@@ -1,6 +1,22 @@
 /// <reference path="./deps.d.ts"/>
 import childProcess from 'child_process';
+import fs from 'fs';
+import path from 'path';
+
+import { TextureAtlas } from "@pixi-spine/base";
+import {
+  AtlasAttachmentLoader,
+  SkeletonJson,
+  Spine,
+  Skin,
+  BoundingBoxAttachment,
+} from "@pixi-spine/runtime-4.1";
+import { Assets } from "@pixi/node";
+
 import { assertDefined } from "../projects/service/generic";
+import { skeletonScale } from '../projects/world/const';
+
+const repoRoot = path.resolve(__dirname, "../..");
 
 /**
  * @param {string} scriptName
@@ -165,6 +181,45 @@ function normalizeChars(word) {
   ;
 }
 
+
+/**
+ * @param {string} folderName e.g. `top_down_man_base`
+ * @param {string} baseName e.g. `man_01_base`
+ */
+export async function loadSpineServerSide(folderName, baseName) {
+  const npcFolder = path.resolve(repoRoot, `static/assets/npc`);
+  const spineExportFolder = `${npcFolder}/${folderName}`;
+  const topDownManAtlasContents = fs
+    .readFileSync(`${spineExportFolder}/${baseName}.atlas`)
+    .toString();
+  const skeletonDataJson = fs
+    .readFileSync(`${spineExportFolder}/${baseName}.json`)
+    .toString();
+
+  const textureAtlas = new TextureAtlas();
+  await new Promise((resolve, reject) =>
+    textureAtlas.addSpineAtlas(
+      topDownManAtlasContents,
+      async (line, callback) =>
+        Assets.load(`${spineExportFolder}/${line}`).then((tex) =>
+          callback(tex)
+        ),
+      (atlas) =>
+        atlas
+          ? resolve(atlas)
+          : reject(`something went wrong e.g. texture failed to load`)
+    )
+  );
+
+  const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
+  const skeletonParser = new SkeletonJson(atlasLoader);
+  skeletonParser.scale = skeletonScale;
+
+  const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson);
+  return { atlasLoader, data: skeletonData };
+}
+
+
 /**
  * @typedef FileMeta @type {object}
  * @property {string} srcName
@@ -182,4 +237,24 @@ function normalizeChars(word) {
  * @property {string} label
  * @property {string[]} is
  * @property {string[]} has
+ */
+
+/**
+ * @typedef SpineMeta
+ * @property {string} folderName
+ * @property {string} baseName
+ * @property {number} skeletonScale
+ * @property {Record<string, {
+ *   animName: string;
+ *   frameCount: number;
+ *   frameDuration: number;
+ *   animBounds: Geom.RectJson;
+ *   packedRect: Geom.RectJson;
+ * }>} anim
+ * Animation name to metadata.
+ * - `packedRect` has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
+ * - `packedRect` has height `animBounds.height`
+ * @property {number} packedWidth
+ * @property {number} packedHeight
+ * @property {number} packedPadding
  */

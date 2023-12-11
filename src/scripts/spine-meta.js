@@ -5,48 +5,35 @@
  */
 /// <reference path="./deps.d.ts"/>
 
-import fs from "fs";
 import path from "path";
 import { Assets } from "@pixi/node";
-import { TextureAtlas } from "@pixi-spine/base";
-import {
-  AtlasAttachmentLoader,
-  SkeletonJson,
-  Spine,
-  Skin,
-  BoundingBoxAttachment,
-} from "@pixi-spine/runtime-4.1";
+import { Spine, BoundingBoxAttachment } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 
 import { skeletonScale } from "../projects/world/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
+import { loadSpineServerSide } from "./service";
 
 const repoRoot = path.resolve(__dirname, "../..");
 const npcFolder = path.resolve(repoRoot, `static/assets/npc`);
-
-// 🚧 hard-coded
-const animToFrames = { idle: 1, sit: 1, lie: 1, "idle-breathe": 20, walk: 20 };
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
-/** We must exclude this file from being watched to avoid infinite loop */
+/** Exclude this file from being watched to avoid infinite loop */
 const outputJsonFilepath = `${npcFolder}/${folderName}/spine-meta.json`;
+
+const animToFrames = {
+  idle: 1,
+  sit: 1,
+  lie: 1,
+  "idle-breathe": 20,
+  walk: 20,
+};
 const packedPadding = 2;
 
 main();
 
 export default async function main() {
-
-  /** @type {SpineMeta} */
-  const outputJson = {
-    folderName,
-    baseName,
-    skeletonScale,
-    anim: {},
-    packedWidth: 0,
-    packedHeight: 0,
-    packedPadding,
-  };
 
   await Assets.init({
     skipDetections: true,
@@ -78,6 +65,8 @@ export default async function main() {
   const { animations } = spine.spineData;
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
+  const outputAnimMeta = /** @type {import("./service").SpineMeta['anim']} */ ({});
+
   for (const anim of animations) {
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
@@ -99,7 +88,7 @@ export default async function main() {
 
     const frameCount = animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
 
-    outputJson.anim[anim.name] = {
+    outputAnimMeta[anim.name] = {
       animName: anim.name,
       frameCount,
       frameDuration: anim.duration / frameCount,
@@ -130,76 +119,19 @@ export default async function main() {
 
   for (const anim of animations) {
     const r = bin.rects.find(x => x.data.name === anim.name);
-    if (r) {
-      outputJson.anim[anim.name].packedRect = {
-        x: r.x,
-        y: r.y,
-        width: r.width,
-        height: r.height,
-      };
-    } else {
-      throw Error(`spine-meta: ${anim.name}: packed rect not found`);
-    }
+    if (!r) throw Error(`spine-meta: ${anim.name}: packed rect not found`);
+    outputAnimMeta[anim.name].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
   }
 
-  outputJson.packedWidth = bin.width;
-  outputJson.packedHeight = bin.height;
-
+  /** @type {import("./service").SpineMeta} */
+  const outputJson = {
+    folderName,
+    baseName,
+    skeletonScale,
+    anim: outputAnimMeta,
+    packedWidth: bin.width,
+    packedHeight: bin.height,
+    packedPadding,
+  };
   writeAsJson(outputJson, outputJsonFilepath);
 }
-
-/**
- * @param {string} folderName e.g. `top_down_man_base`
- * @param {string} baseName e.g. `man_01_base`
- */
-async function loadSpineServerSide(folderName, baseName) {
-  const spineExportFolder = `${npcFolder}/${folderName}`;
-  const topDownManAtlasContents = fs
-    .readFileSync(`${spineExportFolder}/${baseName}.atlas`)
-    .toString();
-  const skeletonDataJson = fs
-    .readFileSync(`${spineExportFolder}/${baseName}.json`)
-    .toString();
-
-  const textureAtlas = new TextureAtlas();
-  await new Promise((resolve, reject) =>
-    textureAtlas.addSpineAtlas(
-      topDownManAtlasContents,
-      async (line, callback) =>
-        Assets.load(`${spineExportFolder}/${line}`).then((tex) =>
-          callback(tex)
-        ),
-      (atlas) =>
-        atlas
-          ? resolve(atlas)
-          : reject(`something went wrong e.g. texture failed to load`)
-    )
-  );
-
-  const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
-  const skeletonParser = new SkeletonJson(atlasLoader);
-  skeletonParser.scale = skeletonScale;
-
-  const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson);
-  return { atlasLoader, data: skeletonData };
-}
-
-/**
- * @typedef SpineMeta
- * @property {string} folderName
- * @property {string} baseName
- * @property {number} skeletonScale
- * @property {Record<string, {
- *   animName: string;
- *   frameCount: number;
- *   frameDuration: number;
- *   animBounds: Geom.RectJson;
- *   packedRect: Geom.RectJson;
- * }>} anim
- * Animation name to metadata.
- * - `packedRect` has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
- * - `packedRect` has height `animBounds.height`
- * @property {number} packedWidth
- * @property {number} packedHeight
- * @property {number} packedPadding
- */
