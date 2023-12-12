@@ -64,11 +64,15 @@
   - ✅ can scale correctly
     - resize idle anim-bounds to fit exactly
   - ✅ use Pixi Ticker
-  - 🚧 center sprite around head
-    - ✅ spine-meta has head/neck position/scale
+  - ✅ spine-meta has head position/scale per frame
+    - idle-breathe changes head position/scale
+  - ✅ spine-meta has neck position per frame
+    - for rotation e.g. look side-to-side whilst idle
+    - idle-breathe changes neck position
+  - ✅ precompute head positions too
+  - ✅ center sprite around root (0, 0)
   - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
-  - precompute head positions too
   - sprite for body, sprite for head
 
 - start migrating NPCs

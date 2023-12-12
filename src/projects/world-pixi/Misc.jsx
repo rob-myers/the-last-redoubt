@@ -129,7 +129,7 @@ export function TestPreRenderNpc({ api }) {
     const animName = 'walk';
     const rects = state.animRects[animName];
     
-    const { frameCount } = spineMeta.anim[animName];
+    const { frameCount, animBounds } = spineMeta.anim[animName];
     const framesPerSec = 0.5;
     /** Animation's current time in R[0, numFrames - 1] */
     let currentTime = 0, currentFrame = 0;
@@ -137,8 +137,10 @@ export function TestPreRenderNpc({ api }) {
     const sprite = new Sprite(new Texture(state.tex.baseTexture));
     // ℹ️ Changing frame width/height later deforms image
     sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
-    // sprite.anchor.set(0.5);
-    state.npcContainer.addChild(sprite).scale.set(npcScaleFactor);
+    // Set (0, 0) in `animBounds` as origin
+    sprite.anchor.set(-animBounds.x / animBounds.width, -animBounds.y / animBounds.height);
+    sprite.scale.set(npcScaleFactor);
+    state.npcContainer.addChild(sprite);
     
     /** @param {number} deltaSecs */
     function updateFrame(deltaSecs) {
