@@ -7,39 +7,39 @@
       "animName": "idle",
       "frameCount": 1,
       "frameDuration": 0,
-      "animBounds": {"x": -75, "y": -46, "width": 150, "height": 96},
-      "packedRect": {"x": 3142, "y": 110, "width": 150, "height": 96}
+      "animBounds": {"x": -73, "y": -42, "width": 143, "height": 87},
+      "packedRect": {"x": 179, "y": 410, "width": 143, "height": 87}
     },
     "idle-breathe": {
       "animName": "idle-breathe",
       "frameCount": 20,
       "frameDuration": 0.1,
-      "animBounds": {"x": -85, "y": -50, "width": 165, "height": 106},
-      "packedRect": {"x": 2, "y": 2, "width": 3338, "height": 106}
+      "animBounds": {"x": -76, "y": -46, "width": 151, "height": 96},
+      "packedRect": {"x": 2, "y": 2, "width": 3058, "height": 96}
     },
     "lie": {
       "animName": "lie",
       "frameCount": 1,
       "frameDuration": 0,
-      "animBounds": {"x": -85, "y": -260, "width": 175, "height": 310},
-      "packedRect": {"x": 2, "y": 308, "width": 175, "height": 310}
+      "animBounds": {"x": -85, "y": -261, "width": 175, "height": 311},
+      "packedRect": {"x": 2, "y": 278, "width": 175, "height": 311}
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
       "frameDuration": 0,
-      "animBounds": {"x": -75, "y": -80, "width": 150, "height": 130},
-      "packedRect": {"x": 3142, "y": 208, "width": 150, "height": 130}
+      "animBounds": {"x": -76, "y": -80, "width": 150, "height": 130},
+      "packedRect": {"x": 179, "y": 278, "width": 150, "height": 130}
     },
     "walk": {
       "animName": "walk",
       "frameCount": 20,
       "frameDuration": 0.04000000059604645,
-      "animBounds": {"x": -75, "y": -101, "width": 155, "height": 196},
-      "packedRect": {"x": 2, "y": 110, "width": 3138, "height": 196}
+      "animBounds": {"x": -71, "y": -86, "width": 146, "height": 176},
+      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 176}
     }
   },
-  "packedWidth": 3342,
-  "packedHeight": 620,
+  "packedWidth": 3062,
+  "packedHeight": 591,
   "packedPadding": 2
 }
