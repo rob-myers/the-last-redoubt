@@ -165,16 +165,21 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     if (ready) {
+      /** Npc radius is 13 in our notion of "world coords" */
+      const scaleFactor = (2 * 13) / spineMeta.anim.idle.animBounds.width;
+
       /** @type {keyof spineMeta['anim']} */
-      const animName = 'walk';
+      const animName = 'idle-breathe';
       const { frameCount } = spineMeta.anim[animName]
       const rects = state.animRects[animName];
 
       const sprite = new Sprite();
       sprite.texture = new Texture(state.tex.baseTexture);
+      // ℹ️ Changing frame width/height later deforms image
       sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
+
       state.npcContainer.addChild(sprite);
-      sprite.scale.set((2 * 13) / 140);
+      sprite.scale.set(scaleFactor);
 
 
       let frame = 0;

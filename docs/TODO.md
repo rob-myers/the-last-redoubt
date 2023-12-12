@@ -61,9 +61,10 @@
   - ✅ new script `spine-render` renders `spine-render.{png,webp}`
   - ✅ spine-meta precomputes uvs via `(new Texture(base, frame))._uvs.uvsFloat32`
   - ✅ refactor so can animate any animation
-  - can scale correctly
+  - ✅ can scale correctly
     - resize idle anim-bounds to fit exactly
-  - can add multiple npcs
+  - 🚧 can add multiple npcs
+    - animate multiple npcs in tandem
   - precompute head positions too
   - sprite for body, sprite for head
 
