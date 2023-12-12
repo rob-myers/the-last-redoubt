@@ -63,8 +63,11 @@
   - ✅ refactor so can animate any animation
   - ✅ can scale correctly
     - resize idle anim-bounds to fit exactly
+  - ✅ use Pixi Ticker
+  - 🚧 center sprite around head
+    - ✅ spine-meta has head/neck position/scale
   - 🚧 can add multiple npcs
-    - animate multiple npcs in tandem
+    - animate multiple npcs in tandem via ticker
   - precompute head positions too
   - sprite for body, sprite for head
 

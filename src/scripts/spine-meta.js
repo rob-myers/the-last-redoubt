@@ -11,13 +11,14 @@ import {
   Texture,
   Rectangle as PixiRectangle,
 } from "@pixi/node";
-import { Spine, BoundingBoxAttachment } from "@pixi-spine/runtime-4.1";
+import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 
+import { precision } from "../projects/service/generic";
 import { skeletonScale } from "../projects/world/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
-import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
+import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
@@ -32,7 +33,6 @@ const animToFrames = {
   walk: 20,
 };
 const packedPadding = 2;
-const uvPrecision = 4;
 
 main();
 
@@ -45,14 +45,13 @@ export default async function main() {
   const { data } = await loadSpineServerSide(folderName, baseName);
   const spine = new Spine(data);
 
-  // ℹ️ currently we only read attachment "anim-bounds" so skin doesn't matter
-  // const newSkin = new Skin("npc-default-skin");
-  // newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
-  // newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
-  // newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
-  // newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
-  // newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
-  // spine.skeleton.setSkin(newSkin);
+  const newSkin = new Skin("npc-default-skin");
+  newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
+  newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
+  newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
+  newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
+  newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
+  spine.skeleton.setSkin(newSkin);
   spine.skeleton.setSlotsToSetupPose();
 
   // For rect packing
@@ -65,45 +64,48 @@ export default async function main() {
   const outputAnimMeta =
     /** @type {import("./service").SpineMeta['anim']} */ ({});
 
-  /**
-   * Extract bounding box per animation, stored as attachment "anim-bounds".
-   * We did not use spine.skeleton.getBoundsRect() because it was too big:
-   * attachments are bounded by their transformed rect, rather than occurring pixels.
-   */
   const { animations } = spine.spineData;
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
   for (const anim of animations) {
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
-
-    const slot = spine.skeleton.findSlot("anim-bounds");
-    const attachment = /** @type {BoundingBoxAttachment} */ (
-      slot.getAttachment()
-    );
-    const output = /** @type {number[]} */ ([]);
-    attachment.computeWorldVerticesOld(slot, output);
-    const rect = new Rect(),
-      max = new Vect();
-    for (let i = 0; i < output.length; i += 2) {
-      rect.x = Math.min(rect.x, output[i]);
-      rect.y = Math.min(rect.y, output[i + 1]);
-      max.x = Math.max(max.x, output[i]);
-      max.y = Math.max(max.y, output[i + 1]);
-    }
-    rect.width = max.x - rect.x;
-    rect.height = max.y - rect.y;
-    const animBounds = rect.integerOrds();
+      
+    /**
+     * Extract bounding box per animation, stored as attachment "anim-bounds".
+     * We did not use spine.skeleton.getBoundsRect() because it was too big:
+     * attachments are bounded by their transformed rect, not occurring pixels.
+     */
+    const animBounds = computeSpineAttachmentBounds(spine, 'anim-bounds');
+    const headBounds = computeSpineAttachmentBounds(spine, 'head');
 
     const frameCount =
       animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
+    const frameDurSecs = anim.duration / frameCount;
+
+    /**
+     * Compute head/neck position/scale per frame.
+     */
+    const bust = /** @type {import("./service").SpineAnimMeta['bust']} */ ([]);
+    for (let i = 0; i < frameCount; i++) {
+      spine.update(i === 0 ? 0 : frameDurSecs);
+      const neck = spine.skeleton.findBone('neck');
+      const head = spine.skeleton.findBone('head');
+      bust.push({
+        neck: (new Vect(neck.x, neck.y)).precision(4),
+        head: (new Vect(head.x, head.y)).precision(4),
+        scale: precision(head.scaleX),
+      });
+    }
 
     outputAnimMeta[anim.name] = {
       animName: anim.name,
       frameCount,
-      frameDuration: anim.duration / frameCount,
+      frameDurSecs: anim.duration / frameCount,
       animBounds,
+      headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
+      bust,
     };
 
     const r = new Rectangle(
@@ -133,11 +135,6 @@ export default async function main() {
 
   const packedWidth = bin.width;
   const packedHeight = bin.height;
-  /** Dummy texture with correct dimensions */
-  const dummyTex = RenderTexture.create({
-    width: packedWidth,
-    height: packedHeight,
-  });
 
   for (const anim of animations) {
     const r = bin.rects.find((x) => x.data.name === anim.name);

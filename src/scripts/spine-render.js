@@ -75,12 +75,11 @@ export default async function main() {
   spine.skeleton.setBonesToSetupPose();
 
   for (const anim of animations) {
-    const { frameCount, frameDuration, animBounds, packedRect } = animMeta[anim.name];
+    const { frameCount, frameDurSecs, animBounds, packedRect } = animMeta[anim.name];
     spine.state.setAnimation(0, anim.name, false);
     
-    // 🚧
     for (let frame = 0; frame < frameCount; frame++) {
-      spine.update(frame === 0 ? 0 : frameDuration);
+      spine.update(frame === 0 ? 0 : frameDurSecs);
       // `animBounds` where root attachment is at `(0, 0)`.
       /**
        * `animBounds` for frame `frame` is at:

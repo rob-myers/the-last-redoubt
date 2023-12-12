@@ -7,9 +7,13 @@ import { TextureAtlas } from "@pixi-spine/base";
 import {
   AtlasAttachmentLoader,
   SkeletonJson,
+  Spine,
+  BoundingBoxAttachment,
+  RegionAttachment,
 } from "@pixi-spine/runtime-4.1";
 import { Assets } from "@pixi/node";
 
+import { Rect, Vect } from "../projects/geom";
 import { assertDefined } from "../projects/service/generic";
 import { skeletonScale } from '../projects/world/const';
 
@@ -179,7 +183,6 @@ function normalizeChars(word) {
   ;
 }
 
-
 /**
  * @param {string} folderName e.g. `top_down_man_base`
  * @param {string} baseName e.g. `man_01_base`
@@ -216,6 +219,42 @@ export async function loadSpineServerSide(folderName, baseName) {
   return { atlasLoader, data: skeletonData };
 }
 
+/**
+ * @param {Spine} spine 
+ * @param {string} slotName 
+ */
+export function computeSpineAttachmentBounds(spine, slotName) {
+  const slot = spine.skeleton.findSlot(slotName);
+  const attachment = slot.getAttachment();
+  // console.log('attachment', slot, attachment);
+
+  if (attachment instanceof BoundingBoxAttachment) {
+    const output = /** @type {number[]} */ ([]);
+    attachment.computeWorldVerticesOld(slot, output);
+    const rect = new Rect(),
+      max = new Vect();
+    for (let i = 0; i < output.length; i += 2) {
+      rect.x = Math.min(rect.x, output[i]);
+      rect.y = Math.min(rect.y, output[i + 1]);
+      max.x = Math.max(max.x, output[i]);
+      max.y = Math.max(max.y, output[i + 1]);
+    }
+    rect.width = max.x - rect.x;
+    rect.height = max.y - rect.y;
+    return rect.integerOrds();
+  }
+
+  if (attachment instanceof RegionAttachment) {
+    return new Rect(
+      attachment.x,
+      attachment.y,
+      attachment.width,
+      attachment.height,
+    ).integerOrds();
+  }
+
+  throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
+}
 
 /**
  * @typedef FileMeta @type {object}
@@ -241,18 +280,25 @@ export async function loadSpineServerSide(folderName, baseName) {
  * @property {string} folderName
  * @property {string} baseName
  * @property {number} skeletonScale
- * @property {Record<string, {
- *   animName: string;
- *   frameCount: number;
- *   frameDuration: number;
- *   animBounds: Geom.RectJson;
- *   packedRect: Geom.RectJson;
- * }>} anim
+ * @property {Record<string, SpineAnimMeta>} anim
  * Animation name to metadata.
- * - `packedRect` has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
- * - `packedRect` has height `animBounds.height`
- * - `frameUvs[frame]` are uvs for 0-based `frame`
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding
+ */
+
+/**
+ * @typedef SpineAnimMeta
+ * @property {string} animName
+ * @property {number} frameCount
+ * @property {number} frameDurSecs
+ * @property {Geom.RectJson} animBounds
+ * @property {Geom.RectJson} headBounds
+ * @property {Geom.RectJson} packedRect
+ * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
+ * - has height `animBounds.height`
+ * @property {{ neck: Geom.VectJson; head: Geom.VectJson; scale: number; }[]} bust
+ * - head and neck, aligned to `[0, ..., frameCount - 1]`
+ * - only support uniform head scale
+ * - positions are relative to `animBounds`
  */

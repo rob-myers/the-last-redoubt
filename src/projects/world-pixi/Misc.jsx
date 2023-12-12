@@ -2,7 +2,7 @@ import React from "react";
 import PixiReact from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { Assets } from "@pixi/assets";
-import { RenderTexture, Matrix, Texture, Rectangle } from "@pixi/core";
+import { RenderTexture, Matrix, Texture, Rectangle, Ticker } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { Sprite } from "@pixi/sprite";
@@ -13,6 +13,8 @@ import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
 
 import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
+/** Npc radius is 13 in our notion of "world coords" */
+const npcScaleFactor = (2 * 13) / spineMeta.anim.idle.animBounds.width;
 
 export function Origin() {
   const app = PixiReact.useApp();
@@ -126,21 +128,28 @@ export function TestNpc({ api }) {
  */
 export function TestPreRenderNpc({ api }) {
 
-  const state = useStateRef(() => ({
-    /** Pre-rendered spritesheet (`yarn spine-render`) */
-    srcTex: /** @type {import('pixi.js').Texture} */ ({}),
-    /** Contains `srcTex`, possibly with debug stuff */
-    tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
-    animRects: mapValues(spineMeta.anim, ({ animBounds, packedRect, frameCount }) =>
-      [...new Array(frameCount)].map((_, frame) => ({
-        x: packedRect.x + frame * (animBounds.width + spineMeta.packedPadding),
-        y: packedRect.y,
-        width: animBounds.width,
-        height: animBounds.height,
-      }))
-    ),
-    npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
-  }));
+  const state = useStateRef(() => {
+    const ticker = new Ticker;
+    ticker.autoStart = false;
+    ticker.stop();
+    return {
+      /** Pre-rendered spritesheet i.e. `yarn spine-render` */
+      srcTex: /** @type {import('pixi.js').Texture} */ ({}),
+      /** `srcTex`, possibly with debug stuff */
+      tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
+      /** Given anim and 0-based frame, bounding rect in spritesheet  */
+      animRects: mapValues(spineMeta.anim, ({ animBounds, packedRect, frameCount }) =>
+        [...new Array(frameCount)].map((_, frame) => ({
+          x: packedRect.x + frame * (animBounds.width + spineMeta.packedPadding),
+          y: packedRect.y,
+          width: animBounds.width,
+          height: animBounds.height,
+        }))
+      ),
+      npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
+      ticker,
+    };
+  });
 
   const query = useQueryWrap('test-pre-render-npc', async () => {
     // copy spritesheet into a RenderTexture
@@ -164,34 +173,38 @@ export function TestPreRenderNpc({ api }) {
   const ready = query.isFetched && !query.isFetching;
 
   React.useEffect(() => {
-    if (ready) {
-      /** Npc radius is 13 in our notion of "world coords" */
-      const scaleFactor = (2 * 13) / spineMeta.anim.idle.animBounds.width;
-
-      /** @type {keyof spineMeta['anim']} */
-      const animName = 'idle-breathe';
-      const { frameCount } = spineMeta.anim[animName]
-      const rects = state.animRects[animName];
-
-      const sprite = new Sprite();
-      sprite.texture = new Texture(state.tex.baseTexture);
-      // ℹ️ Changing frame width/height later deforms image
-      sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
-
-      state.npcContainer.addChild(sprite);
-      sprite.scale.set(scaleFactor);
-
-
-      let frame = 0;
-      const timeoutId = window.setInterval(() => {
-        sprite.texture._uvs.set(/** @type {Rectangle} */ (rects[frame]), state.tex.baseTexture, 0);
-        frame = (frame + 1) % frameCount;
-      }, 100);
-      return () => {
-        window.clearInterval(timeoutId);
-        state.npcContainer.removeChild(sprite);
-      };
+    if (!ready) {
+      return;
     }
+    /** @type {keyof spineMeta['anim']} */
+    const animName = 'walk';
+    const rects = state.animRects[animName];
+    
+    const { frameCount } = spineMeta.anim[animName];
+    const framesPerSec = 0.5;
+    /** Animation's current time in R[0, numFrames - 1] */
+    let currentTime = 0, currentFrame = 0;
+
+    const sprite = new Sprite(new Texture(state.tex.baseTexture));
+    // ℹ️ Changing frame width/height later deforms image
+    sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
+    // sprite.anchor.set(0.5);
+    state.npcContainer.addChild(sprite).scale.set(npcScaleFactor);
+    
+    /** @param {number} deltaSecs */
+    function updateFrame(deltaSecs) {
+      currentTime += (deltaSecs * framesPerSec);
+      currentFrame = Math.floor(currentTime) % frameCount;
+      sprite.texture._uvs.set(/** @type {Rectangle} */ (rects[currentFrame]), state.tex.baseTexture, 0);
+    }
+
+    state.ticker.add(updateFrame);
+    state.ticker.start();
+    return () => {
+      state.ticker.stop();
+      state.ticker.remove(updateFrame);
+      state.npcContainer.removeChild(sprite);
+    };
   }, [ready]);
 
   return <>

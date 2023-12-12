@@ -6,37 +6,267 @@
     "idle": {
       "animName": "idle",
       "frameCount": 1,
-      "frameDuration": 0,
+      "frameDurSecs": 0,
       "animBounds": {"x": -73, "y": -42, "width": 143, "height": 87},
-      "packedRect": {"x": 179, "y": 429, "width": 143, "height": 87}
+      "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
+      "packedRect": {"x": 179, "y": 429, "width": 143, "height": 87},
+      "bust": [
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        }
+      ]
     },
     "idle-breathe": {
       "animName": "idle-breathe",
       "frameCount": 20,
-      "frameDuration": 0.1,
+      "frameDurSecs": 0.1,
       "animBounds": {"x": -76, "y": -46, "width": 151, "height": 96},
-      "packedRect": {"x": 2, "y": 2, "width": 3058, "height": 96}
+      "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
+      "packedRect": {"x": 2, "y": 2, "width": 3058, "height": 96},
+      "bust": [
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.2104, "y": -0.0027},
+          "head": {"x": 9.7547, "y": -0.5662},
+          "scale": 1.01
+        },
+        {
+          "neck": {"x": -2.3988, "y": -0.0083},
+          "head": {"x": 10.0208, "y": -0.2354},
+          "scale": 1.02
+        },
+        {
+          "neck": {"x": -1.5872, "y": -0.0138},
+          "head": {"x": 10.2869, "y": 0.0954},
+          "scale": 1.03
+        },
+        {
+          "neck": {"x": -0.7756, "y": -0.0194},
+          "head": {"x": 10.5529, "y": 0.4262},
+          "scale": 1.04
+        },
+        {
+          "neck": {"x": 0.036, "y": -0.025},
+          "head": {"x": 10.819, "y": 0.757},
+          "scale": 1.05
+        },
+        {
+          "neck": {"x": -0.3276, "y": -0.0225},
+          "head": {"x": 10.6998, "y": 0.6088},
+          "scale": 1.04
+        },
+        {
+          "neck": {"x": -0.6912, "y": -0.02},
+          "head": {"x": 10.5806, "y": 0.4606},
+          "scale": 1.04
+        },
+        {
+          "neck": {"x": -1.0548, "y": -0.0175},
+          "head": {"x": 10.4614, "y": 0.3124},
+          "scale": 1.03
+        },
+        {
+          "neck": {"x": -1.4184, "y": -0.015},
+          "head": {"x": 10.3422, "y": 0.1642},
+          "scale": 1.03
+        },
+        {
+          "neck": {"x": -1.782, "y": -0.0125},
+          "head": {"x": 10.223, "y": 0.016},
+          "scale": 1.02
+        },
+        {
+          "neck": {"x": -2.1456, "y": -0.01},
+          "head": {"x": 10.1038, "y": -0.1322},
+          "scale": 1.02
+        },
+        {
+          "neck": {"x": -2.5092, "y": -0.0075},
+          "head": {"x": 9.9846, "y": -0.2804},
+          "scale": 1.01
+        },
+        {
+          "neck": {"x": -2.8728, "y": -0.005},
+          "head": {"x": 9.8654, "y": -0.4286},
+          "scale": 1.01
+        },
+        {
+          "neck": {"x": -3.2364, "y": -0.0025},
+          "head": {"x": 9.7462, "y": -0.5768},
+          "scale": 1
+        }
+      ]
     },
     "lie": {
       "animName": "lie",
       "frameCount": 1,
-      "frameDuration": 0,
+      "frameDurSecs": 0,
       "animBounds": {"x": -85, "y": -261, "width": 175, "height": 311},
-      "packedRect": {"x": 2, "y": 297, "width": 175, "height": 311}
+      "headBounds": {"x": 0, "y": 0, "width": 92, "height": 102},
+      "packedRect": {"x": 2, "y": 297, "width": 175, "height": 311},
+      "bust": [
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 10.356, "y": -1.467},
+          "scale": 0.9
+        }
+      ]
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
-      "frameDuration": 0,
+      "frameDurSecs": 0,
       "animBounds": {"x": -76, "y": -80, "width": 150, "height": 130},
-      "packedRect": {"x": 179, "y": 297, "width": 150, "height": 130}
+      "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
+      "packedRect": {"x": 179, "y": 297, "width": 150, "height": 130},
+      "bust": [
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        }
+      ]
     },
     "walk": {
       "animName": "walk",
       "frameCount": 20,
-      "frameDuration": 0.04000000059604645,
+      "frameDurSecs": 0.04000000059604645,
       "animBounds": {"x": -71, "y": -100, "width": 146, "height": 195},
-      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 195}
+      "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
+      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 195},
+      "bust": [
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        },
+        {
+          "neck": {"x": -3.6, "y": 0},
+          "head": {"x": 9.627, "y": -0.725},
+          "scale": 1
+        }
+      ]
     }
   },
   "packedWidth": 3062,
