@@ -2,6 +2,8 @@ import { css } from "@emotion/css";
 import React from "react";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
+import { Graphics } from "@pixi/graphics";
+import { Container } from "@pixi/display";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
@@ -24,7 +26,7 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin, emptyGraphics, emptyContainer, TestNpc, TestPreRenderNpc } from "./Misc";
+import { Origin, TestNpc, TestPreRenderNpc } from "./Misc";
 
 /**
  * @param {Props} props
@@ -244,3 +246,6 @@ const rootCss = css`
   -webkit-touch-callout: none;
   -webkit-user-select: none;
 `;
+
+const emptyGraphics = new Graphics;
+const emptyContainer = new Container;

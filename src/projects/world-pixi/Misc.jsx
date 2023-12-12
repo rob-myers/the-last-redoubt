@@ -1,12 +1,9 @@
 import React from "react";
 import PixiReact from "@pixi/react";
-import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { Assets } from "@pixi/assets";
 import { RenderTexture, Matrix, Texture, Rectangle, Ticker } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-import { Container } from "@pixi/display";
 import { Sprite } from "@pixi/sprite";
-import { TextStyle } from "@pixi/text";
 
 import { mapValues } from "../service/generic";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
@@ -65,54 +62,6 @@ export function TestRenderTexture() {
     />
   );
 }
-
-export const colMatFilter1 = new ColorMatrixFilter();
-// colorMatrixFilter.resolution = window.devicePixelRatio;
-colMatFilter1.resolution = 4; // ℹ️ no zoom flicker
-// colorMatrixFilter.enabled = true;
-// colMatFilter1.polaroid(true);
-colMatFilter1.brightness(0.18, true);
-colMatFilter1.contrast(1.5, true);
-// colMatFilter1.alpha = 1;
-// colMatFilter1.hue(90, true);
-// colMatFilter1.vintage(true);
-// colMatFilter1.kodachrome(true);
-
-export const colMatFilter2 = new ColorMatrixFilter();
-colMatFilter2.alpha = 0.2;
-// colMatFilter2.tint(0, true);
-colMatFilter2.resolution = 2; // better zoom flicker
-
-export const colMatFilter3 = new ColorMatrixFilter();
-// colMatFilter3.resolution = 2; // better zoom flicker
-// colMatFilter3.kodachrome(true);
-colMatFilter3.brightness(0.2, true);
-
-export const tempMatrix1 = new Matrix();
-
-export const emptyContainer = new Container();
-/** Must be cleared after use */
-export const emptyGraphics = new Graphics();
-
-export const textStyle1 = new TextStyle({
-  fontFamily: 'Gill sans',
-  letterSpacing: 1,
-  fontSize: 8,
-  // textBaseline: 'bottom',
-  // fontStyle: 'italic',
-  // fontWeight: 'bold',
-  fill: ['#ffffff'],
-  stroke: '#000000',
-  strokeThickness: 2,
-  dropShadow: false,
-  dropShadowColor: '#000000',
-  dropShadowBlur: 4,
-  dropShadowAngle: Math.PI / 6,
-  dropShadowDistance: 6,
-  wordWrap: true,
-  wordWrapWidth: 440,
-  lineJoin: 'round',
-});
 
 /**
  * @param {{ api: import('./WorldPixi').State }} param0 

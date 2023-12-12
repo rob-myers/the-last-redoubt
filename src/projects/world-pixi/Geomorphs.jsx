@@ -6,7 +6,7 @@ import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
 import { decorIconRadius, gmScale, hitTestRed } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
-import { colMatFilter1 } from "./Misc";
+import { colMatFilter1 } from "./const";
 import GmSprites from "./GmSprites";
 
 /**

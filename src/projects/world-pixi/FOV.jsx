@@ -3,6 +3,7 @@ import { RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 import { Text } from "@pixi/text";
+import { Container } from "@pixi/display";
 import { useQueries } from "@tanstack/react-query";
 
 import { testNever } from "../service/generic";
@@ -11,7 +12,7 @@ import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { colMatFilter3, emptyContainer, tempMatrix1, textStyle1 } from "./Misc";
+import { colMatFilter3, textStyle1 } from "./const";
 
 /**
  * Field Of View (covers unseen parts of geomorphs).
@@ -130,7 +131,7 @@ export default function FOV(props) {
     preloadRender(gmId) {
       const gm = gms[gmId];
       const gfx = state.gfx.clear();
-      gfx.transform.setFromMatrix(tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
+      gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
 
       gfx.lineStyle({ width: 8, color: 0x999999, alpha: 0.4 })
         .beginFill(0)
@@ -218,7 +219,7 @@ export default function FOV(props) {
         gfx.setTransform(-gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y, gmScale, gmScale);
         polys.forEach(poly => {
           state.showMask
-            ? gfx.beginTextureFill({ texture, matrix: tempMatrix1.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) })
+            ? gfx.beginTextureFill({ texture, matrix: tempMatrix.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) })
             : gfx.beginFill(0xffffff);
           gfx.drawPolygon(poly.outline);
           poly.holes.forEach(hole => gfx.beginHole().drawPolygon(hole).endHole());
@@ -242,8 +243,8 @@ export default function FOV(props) {
       }
 
       if (api.debug.opts.gmOutlines) {
-        tempMatrix1.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
-        const multiplied = tempMatrix1.append(new Matrix(...gm.inverseMatrix.toArray()));
+        tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale);
+        const multiplied = tempMatrix.append(new Matrix(...gm.inverseMatrix.toArray()));
         gfx.clear().transform.setFromMatrix(multiplied);
         gfx.lineStyle({ color: 'green', width: 4 })
         gfx.drawRect(gm.gridRect.x, gm.gridRect.y, gm.gridRect.width, gm.gridRect.height);
@@ -431,3 +432,7 @@ function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
   }
   return adjGmToPolys;
 }
+
+const emptyContainer = new Container;
+
+export const tempMatrix = new Matrix();

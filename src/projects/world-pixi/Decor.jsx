@@ -10,7 +10,7 @@ import { decorIconRadius, gmScale } from "../world/const";
 
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { colMatFilter2, tempMatrix1 } from "./Misc";
+import { colMatFilter2 } from "./const";
 
 /**
  * @param {Props} props
@@ -46,7 +46,7 @@ export default function Decor(props) {
     gfx: new Graphics(),
     mat: gms.map(gm =>
       new Matrix(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y)
-        .append(tempMatrix1.set(...gm.inverseMatrix.toArray()))  
+        .append(tempMatrix.set(...gm.inverseMatrix.toArray()))  
     ),
     tex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
@@ -142,7 +142,7 @@ export default function Decor(props) {
           ];
           const scale = (2 * radius) / texture.width;
           // ℹ️ can ignore transform of `gfx`
-          const matrix = tempMatrix1.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
+          const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
           gfx.line.width = 0;
           gfx.beginTextureFill({ texture, matrix });
           gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
@@ -329,3 +329,5 @@ export default function Decor(props) {
  *  | 'road-works'
  * )} DecorIconKey
  */
+
+const tempMatrix = new Matrix;

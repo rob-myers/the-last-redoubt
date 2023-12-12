@@ -6,7 +6,6 @@ import { Poly, Rect } from "../geom";
 import { debugDoorOffset, defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
-import { tempMatrix1 } from "./Misc";
 
 /** @param {Props} props */
 export default function DebugWorld(props) {
@@ -142,7 +141,7 @@ export default function DebugWorld(props) {
             room.navArrows.forEach(({ arrowPos, angle }) => {
               gfx.beginTextureFill({
                 texture,
-                matrix: tempMatrix1.identity()
+                matrix: tempMatrix.identity()
                   .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
                   .scale(scale, scale).translate(arrowPos.x - debugRadius, arrowPos.y - debugRadius),
                 alpha: 0.4,
@@ -290,3 +289,5 @@ export default function DebugWorld(props) {
  * @property {Geom.Poly} roomNavPoly
  * @property {Geom.Poly} roomPoly
  */
+
+const tempMatrix = new Matrix;
