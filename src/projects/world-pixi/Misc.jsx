@@ -7,6 +7,8 @@ import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { Sprite } from "@pixi/sprite";
 import { TextStyle } from "@pixi/text";
+
+import { mapValues } from "../service/generic";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
 
@@ -125,18 +127,28 @@ export function TestNpc({ api }) {
 export function TestPreRenderNpc({ api }) {
 
   const state = useStateRef(() => ({
-    spritesheet: /** @type {import('pixi.js').Texture} */ ({}),
+    /** Pre-rendered spritesheet (`yarn spine-render`) */
+    srcTex: /** @type {import('pixi.js').Texture} */ ({}),
+    /** Contains `srcTex`, possibly with debug stuff */
     tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
+    animRects: mapValues(spineMeta.anim, ({ animBounds, packedRect, frameCount }) =>
+      [...new Array(frameCount)].map((_, frame) => ({
+        x: packedRect.x + frame * (animBounds.width + spineMeta.packedPadding),
+        y: packedRect.y,
+        width: animBounds.width,
+        height: animBounds.height,
+      }))
+    ),
     npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
   }));
 
   const query = useQueryWrap('test-pre-render-npc', async () => {
     // copy spritesheet into a RenderTexture
-    state.spritesheet = await Assets.load(
+    state.srcTex = await Assets.load(
       `/assets/npc/top_down_man_base/spine-render/spritesheet.webp`
     );
-    const gfx = (new Graphics())
-      .beginTextureFill({ texture: state.spritesheet })
+    const gfx = (new Graphics)
+      .beginTextureFill({ texture: state.srcTex })
       .drawRect(0, 0, state.tex.width, state.tex.height)
       .endFill();
     api.renderInto(gfx, state.tex);
@@ -153,17 +165,22 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     if (ready) {
+      /** @type {keyof spineMeta['anim']} */
+      const animName = 'walk';
+      const { frameCount } = spineMeta.anim[animName]
+      const rects = state.animRects[animName];
+
       const sprite = new Sprite();
       sprite.texture = new Texture(state.tex.baseTexture);
-      sprite.texture.frame = new Rectangle(2, 0, 165, 106);
+      sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
       state.npcContainer.addChild(sprite);
       sprite.scale.set((2 * 13) / 140);
 
-      let i = 0;
+
+      let frame = 0;
       const timeoutId = window.setInterval(() => {
-        const x = 2 + (165 + 2) * (i >= 20 ? i = 0 : i++);
-        sprite.texture.frame = new Rectangle(x, 0, 165, 106);
-        sprite.texture.updateUvs();
+        sprite.texture._uvs.set(/** @type {Rectangle} */ (rects[frame]), state.tex.baseTexture, 0);
+        frame = (frame + 1) % frameCount;
       }, 100);
       return () => {
         window.clearInterval(timeoutId);

@@ -247,7 +247,6 @@ export async function loadSpineServerSide(folderName, baseName) {
  *   frameDuration: number;
  *   animBounds: Geom.RectJson;
  *   packedRect: Geom.RectJson;
- *   frameUvs: number[][];
  * }>} anim
  * Animation name to metadata.
  * - `packedRect` has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.

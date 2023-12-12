@@ -60,8 +60,7 @@
   - ✅ sprite animates idle-breath manually
   - ✅ new script `spine-render` renders `spine-render.{png,webp}`
   - ✅ spine-meta precomputes uvs via `(new Texture(base, frame))._uvs.uvsFloat32`
-  - 🚧 refactor so can animate any animation
-    - try precompute all uvs and set instead
+  - ✅ refactor so can animate any animation
   - can scale correctly
     - resize idle anim-bounds to fit exactly
   - can add multiple npcs
