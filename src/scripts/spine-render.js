@@ -2,17 +2,23 @@
  * Render spritesheet using:
  * - spine export
  * - spine-meta.json created by script spine-meta
+ * 
+ * Usage:
+ * - yarn spine-render
+ * - yarn spine-render debug
  */
 /// <reference path="./deps.d.ts"/>
 
 import fs from "fs";
 
-import { Assets, RenderTexture, Application, Sprite, Rectangle } from "@pixi/node";
+import { Assets, RenderTexture, Application, Sprite, Graphics } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
 import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
+
+const debug = process.argv[2] === 'debug';
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
@@ -38,6 +44,18 @@ export default async function main() {
   await Assets.init({
     skipDetections: true,
   });
+
+  if (debug) {
+    // Debug Rectangle Packing
+    const gfx = (new Graphics).lineStyle({ width: 1 });
+    gfx.beginFill(0xffffff, 1).drawRect(0, 0, packedWidth, packedHeight).endFill();
+    Object.values(animMeta).forEach(({ animName, packedRect, animBounds, frameCount }) => {
+      gfx.beginFill(0xff0000, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
+      for (let i = 0; i < frameCount; i++)
+        gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + packedPadding)), packedRect.y, animBounds.width, animBounds.height);
+    });
+    app.renderer.render(gfx, { renderTexture: tex });
+  }
 
   // Load skeleton
   const { data } = await loadSpineServerSide(folderName, baseName);
