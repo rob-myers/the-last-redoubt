@@ -9,7 +9,7 @@
       "frameDurSecs": 0,
       "animBounds": {"x": -73, "y": -42, "width": 143, "height": 87},
       "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
-      "packedRect": {"x": 179, "y": 429, "width": 143, "height": 87},
+      "packedRect": {"x": 179, "y": 438, "width": 143, "height": 87},
       "bust": [
         {
           "neck": {"x": -3.6, "y": 0},
@@ -22,9 +22,9 @@
       "animName": "idle-breathe",
       "frameCount": 20,
       "frameDurSecs": 0.1,
-      "animBounds": {"x": -76, "y": -46, "width": 151, "height": 96},
+      "animBounds": {"x": -85, "y": -50, "width": 165, "height": 105},
       "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
-      "packedRect": {"x": 2, "y": 2, "width": 3058, "height": 96},
+      "packedRect": {"x": 2, "y": 2, "width": 3338, "height": 105},
       "bust": [
         {
           "neck": {"x": -3.6, "y": 0},
@@ -134,7 +134,7 @@
       "frameDurSecs": 0,
       "animBounds": {"x": -85, "y": -261, "width": 175, "height": 311},
       "headBounds": {"x": 0, "y": 0, "width": 92, "height": 102},
-      "packedRect": {"x": 2, "y": 297, "width": 175, "height": 311},
+      "packedRect": {"x": 2, "y": 306, "width": 175, "height": 311},
       "bust": [
         {
           "neck": {"x": -3.6, "y": 0},
@@ -149,7 +149,7 @@
       "frameDurSecs": 0,
       "animBounds": {"x": -76, "y": -80, "width": 150, "height": 130},
       "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
-      "packedRect": {"x": 179, "y": 297, "width": 150, "height": 130},
+      "packedRect": {"x": 179, "y": 306, "width": 150, "height": 130},
       "bust": [
         {
           "neck": {"x": -3.6, "y": 0},
@@ -164,7 +164,7 @@
       "frameDurSecs": 0.04000000059604645,
       "animBounds": {"x": -71, "y": -100, "width": 146, "height": 195},
       "headBounds": {"x": 0, "y": 0, "width": 93, "height": 87},
-      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 195},
+      "packedRect": {"x": 2, "y": 109, "width": 2958, "height": 195},
       "bust": [
         {
           "neck": {"x": -3.6, "y": 0},
@@ -269,7 +269,7 @@
       ]
     }
   },
-  "packedWidth": 3062,
-  "packedHeight": 610,
+  "packedWidth": 3342,
+  "packedHeight": 619,
   "packedPadding": 2
 }
