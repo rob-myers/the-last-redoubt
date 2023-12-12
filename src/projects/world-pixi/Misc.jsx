@@ -1,33 +1,27 @@
 import React from "react";
 import PixiReact from "@pixi/react";
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
+import { Assets } from "@pixi/assets";
 import { RenderTexture, Matrix, Texture, Rectangle } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Container } from "@pixi/display";
 import { Sprite } from "@pixi/sprite";
 import { TextStyle } from "@pixi/text";
-// import { BoundingBoxAttachment } from "@pixi-spine/runtime-4.1";
-import { pause } from "../service/generic";
-import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";
-// import { Rect, Vect } from "../geom";
-import useStateRef from "projects/hooks/use-state-ref";
+import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
+import useStateRef from "../hooks/use-state-ref";
+
+import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
 
 export function Origin() {
   const app = PixiReact.useApp();
-
   const rt = React.useMemo(() => {
-    const rt = RenderTexture.create({ width: 10, height: 10 });
+    const rt = RenderTexture.create({ width: 5, height: 5 });
     const gfx = new Graphics();
-    gfx.beginFill(0xff0000);
-    gfx.drawRect(-5, -5, 10, 10);
-    gfx.endFill();
+    gfx.beginFill(0xff0000).drawRect(0, 0, 5, 5).endFill();
     app.renderer.render(gfx, { renderTexture: rt });
     return rt;
   }, []);
-
-  return (
-    <PixiReact.Sprite texture={rt} />
-  );
+  return <PixiReact.Sprite texture={rt} x={-2.5} y={-2.5} />;
 }
 
 export function TestSprite() {
@@ -131,57 +125,27 @@ export function TestNpc({ api }) {
 export function TestPreRenderNpc({ api }) {
 
   const state = useStateRef(() => ({
-    /** Spritesheet */
-    tex: RenderTexture.create({ width: 1, height: 1 }),
-    pc: /** @type {import('pixi.js').ParticleContainer} */ ({}),
-    meta: /** @type {import("src/scripts/spine-meta").SpineMeta} */ ({}),
+    spritesheet: /** @type {import('pixi.js').Texture} */ ({}),
+    tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
+    npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
   }));
 
   const query = useQueryWrap('test-pre-render-npc', async () => {
-    const { data } = await api.lib.loadSpine('man_01_base');
-    const spine = api.lib.instantiateSpine('man_01_base');
-    spine.autoUpdate = false;
-    spine.state.setAnimation(0, 'idle', false);
-    spine.update(0);
+    // copy spritesheet into a RenderTexture
+    state.spritesheet = await Assets.load(
+      `/assets/npc/top_down_man_base/spine-render/spritesheet.webp`
+    );
+    const gfx = (new Graphics())
+      .beginTextureFill({ texture: state.spritesheet })
+      .drawRect(0, 0, state.tex.width, state.tex.height)
+      .endFill();
+    api.renderInto(gfx, state.tex);
 
-    /** @type {import("src/scripts/spine-meta").SpineMeta} */
-    state.meta = await fetch('/assets/npc/top_down_man_base/spine-meta.json').then(x => x.json());
-    const { packedWidth, packedHeight, packedPadding, anim: animMeta } = state.meta;
-
-    state.tex.resize(packedWidth, packedHeight, true);
-    
-    // 👇 Debug Rectangle Packing
-    // const gfx = (new Graphics).lineStyle({ width: 1 });
-    // gfx.beginFill(0xffffff, 1).drawRect(0, 0, meta.packedWidth, meta.packedHeight).endFill();
-    // Object.values(meta.anim).forEach(({ animName, packedRect, animBounds, frameCount }) => {
-    //   gfx.beginFill(0xff0000, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
-    //   for (let i = 0; i < frameCount; i++)
-    //     gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + meta.packedPadding)), packedRect.y, animBounds.width, animBounds.height);
-    // });
-    // api.renderInto(gfx, tex);
-
-    for (const anim of data.animations) {
-      const { frameCount, frameDuration, animBounds, packedRect } = animMeta[anim.name];
-      spine.state.setAnimation(0, anim.name, false);
-      for (let frame = 0; frame < frameCount; frame++) {
-        spine.update(frame === 0 ? 0 : frameDuration);
-        // `animBounds` where root attachment is at `(0, 0)`.
-        /**
-         * `animBounds` for frame `frame` is at:
-         * - packedRect.x + frame * (animBounds.width + meta.packedPadding)
-         * - packedRect.y
-         * - animBounds.width
-         * - animBounds.height
-         */
-        spine.position.set(
-          packedRect.x + (frame * (animBounds.width + packedPadding)) + Math.abs(animBounds.x),
-          packedRect.y + Math.abs(animBounds.y),
-        );
-        api.renderInto(spine, state.tex, false);
-        await pause(30);
-      }
-    }
-
+    // const { data } = await api.lib.loadSpine('man_01_base');
+    // const spine = api.lib.instantiateSpine('man_01_base');
+    // spine.autoUpdate = false;
+    // spine.state.setAnimation(0, 'idle', false);
+    // spine.update(0);
     return null;
   });
 
@@ -192,7 +156,9 @@ export function TestPreRenderNpc({ api }) {
       const sprite = new Sprite();
       sprite.texture = new Texture(state.tex.baseTexture);
       sprite.texture.frame = new Rectangle(2, 0, 165, 106);
-      state.pc.addChild(sprite);
+      state.npcContainer.addChild(sprite);
+      sprite.scale.set((2 * 13) / 140);
+
       let i = 0;
       const timeoutId = window.setInterval(() => {
         const x = 2 + (165 + 2) * (i >= 20 ? i = 0 : i++);
@@ -201,7 +167,7 @@ export function TestPreRenderNpc({ api }) {
       }, 100);
       return () => {
         window.clearInterval(timeoutId);
-        state.pc.removeChild(sprite);
+        state.npcContainer.removeChild(sprite);
       };
     }
   }, [ready]);
@@ -209,7 +175,7 @@ export function TestPreRenderNpc({ api }) {
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}
     <PixiReact.ParticleContainer
-      ref={x => x && (state.pc = x)}
+      ref={x => x && (state.npcContainer = x)}
       properties={{
         alpha: true,
         position: true,
@@ -228,7 +194,6 @@ const TestInstantiateSpine = PixiReact.PixiComponent('TestInstantiateSpine', {
   create(props) {
     const spine = props.api.lib.instantiateSpine('man_01_base');
     // console.log(spine);
-
     spine.state.setAnimation(0, 'idle', false);
     // spine.state.setAnimation(0, 'lie', false);
     spine.update(0);
