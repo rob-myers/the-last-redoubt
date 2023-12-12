@@ -8,7 +8,7 @@
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -73, "y": -42, "width": 143, "height": 87},
-      "packedRect": {"x": 179, "y": 410, "width": 143, "height": 87}
+      "packedRect": {"x": 179, "y": 429, "width": 143, "height": 87}
     },
     "idle-breathe": {
       "animName": "idle-breathe",
@@ -22,24 +22,24 @@
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -85, "y": -261, "width": 175, "height": 311},
-      "packedRect": {"x": 2, "y": 278, "width": 175, "height": 311}
+      "packedRect": {"x": 2, "y": 297, "width": 175, "height": 311}
     },
     "sit": {
       "animName": "sit",
       "frameCount": 1,
       "frameDuration": 0,
       "animBounds": {"x": -76, "y": -80, "width": 150, "height": 130},
-      "packedRect": {"x": 179, "y": 278, "width": 150, "height": 130}
+      "packedRect": {"x": 179, "y": 297, "width": 150, "height": 130}
     },
     "walk": {
       "animName": "walk",
       "frameCount": 20,
       "frameDuration": 0.04000000059604645,
-      "animBounds": {"x": -71, "y": -86, "width": 146, "height": 176},
-      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 176}
+      "animBounds": {"x": -71, "y": -100, "width": 146, "height": 195},
+      "packedRect": {"x": 2, "y": 100, "width": 2958, "height": 195}
     }
   },
   "packedWidth": 3062,
-  "packedHeight": 591,
+  "packedHeight": 610,
   "packedPadding": 2
 }

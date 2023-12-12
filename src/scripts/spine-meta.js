@@ -17,7 +17,7 @@ import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 import { skeletonScale } from "../projects/world/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
-import { loadSpineServerSide, npcAssetsFolder } from "./service";
+import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
@@ -163,4 +163,9 @@ export default async function main() {
     packedPadding,
   };
   writeAsJson(outputJson, outputJsonFilepath);
+
+  /**
+   * Finally, re-render spritesheet
+   */
+  await runYarnScript('spine-render');
 }
