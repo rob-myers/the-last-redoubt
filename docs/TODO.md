@@ -59,8 +59,11 @@
   - ✅ has ParticleContainer with a sprite
   - ✅ sprite animates idle-breath manually
   - ✅ new script `spine-render` renders `spine-render.{png,webp}`
+  - ✅ spine-meta precomputes uvs via `(new Texture(base, frame))._uvs.uvsFloat32`
   - 🚧 refactor so can animate any animation
+    - try precompute all uvs and set instead
   - can scale correctly
+    - resize idle anim-bounds to fit exactly
   - can add multiple npcs
   - precompute head positions too
   - sprite for body, sprite for head

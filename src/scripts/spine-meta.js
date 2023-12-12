@@ -5,8 +5,7 @@
  */
 /// <reference path="./deps.d.ts"/>
 
-import path from "path";
-import { Assets } from "@pixi/node";
+import { Assets, RenderTexture, Texture, Rectangle as PixiRectangle } from "@pixi/node";
 import { Spine, BoundingBoxAttachment } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from 'maxrects-packer';
 
@@ -28,6 +27,7 @@ const animToFrames = {
   walk: 20,
 };
 const packedPadding = 2;
+const uvPrecision = 4;
 
 main();
 
@@ -55,6 +55,8 @@ export default async function main() {
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, { pot: false, border: packedPadding });
   const items = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
 
+  const outputAnimMeta = /** @type {import("./service").SpineMeta['anim']} */ ({});
+
   /**
    * Extract bounding box per animation, stored as attachment "anim-bounds".
    * We did not use spine.skeleton.getBoundsRect() because it was too big:
@@ -63,8 +65,6 @@ export default async function main() {
   const { animations } = spine.spineData;
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
-  const outputAnimMeta = /** @type {import("./service").SpineMeta['anim']} */ ({});
-
   for (const anim of animations) {
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
@@ -92,6 +92,7 @@ export default async function main() {
       frameDuration: anim.duration / frameCount,
       animBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
+      frameUvs: [],
     };
 
     const r = new Rectangle(
@@ -103,11 +104,14 @@ export default async function main() {
     items.push(r);
   }
 
+  /**
+   * Compute rectangle packing.
+   * Also compute each animation frame's uvs.
+   */
   packer.addArray(items);
   packer.repack();
   const { bins } = packer;
   const bin = bins[0];
-  // console.log(bin);
 
   if (bins.length !== 1) {
     throw Error(`spine-meta: expected exactly one bin (${bins.length})`);
@@ -115,11 +119,36 @@ export default async function main() {
     throw Error(`spine-meta: expected every animation to be packed (${bins.length} of ${animations.length})`);
   }
 
+  const packedWidth = bin.width;
+  const packedHeight = bin.height;
+  /** Dummy texture with correct dimensions */
+  const dummyTex = RenderTexture.create({ width: packedWidth, height: packedHeight });
+
   for (const anim of animations) {
     const r = bin.rects.find(x => x.data.name === anim.name);
-    if (!r) throw Error(`spine-meta: ${anim.name}: packed rect not found`);
+    if (!r) {
+      throw Error(`spine-meta: ${anim.name}: packed rect not found`);
+    }
     outputAnimMeta[anim.name].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
+
+    // Compute uvs per frame
+    const { frameCount, packedRect, animBounds } = outputAnimMeta[anim.name]
+    for (let i = 0; i < frameCount; i++) {
+      const frameTex = new Texture(
+        dummyTex.baseTexture,
+        new PixiRectangle(
+          packedRect.x + (i * (animBounds.width + packedPadding)),
+          packedRect.y,
+          animBounds.width,
+          animBounds.height,
+        ),
+      );
+      outputAnimMeta[anim.name].frameUvs.push(
+        Array.from(frameTex._uvs.uvsFloat32).map(x => Number(x.toFixed(uvPrecision)))
+      );
+    }
   }
+
 
   /** @type {import("./service").SpineMeta} */
   const outputJson = {
@@ -127,8 +156,8 @@ export default async function main() {
     baseName,
     skeletonScale,
     anim: outputAnimMeta,
-    packedWidth: bin.width,
-    packedHeight: bin.height,
+    packedWidth,
+    packedHeight,
     packedPadding,
   };
   writeAsJson(outputJson, outputJsonFilepath);
