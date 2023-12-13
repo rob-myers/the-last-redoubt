@@ -229,32 +229,32 @@ export function computeSpineAttachmentBounds(spine, slotName) {
   // console.log('attachment', slot, attachment);
 
   if (attachment instanceof BoundingBoxAttachment) {
-    const output = /** @type {number[]} */ ([]);
-    attachment.computeWorldVerticesOld(slot, output);
-    const rect = new Rect(),
-      max = new Vect();
-    for (let i = 0; i < output.length; i += 2) {
-      rect.x = Math.min(rect.x, output[i]);
-      rect.y = Math.min(rect.y, output[i + 1]);
-      max.x = Math.max(max.x, output[i]);
-      max.y = Math.max(max.y, output[i + 1]);
-    }
-    rect.width = max.x - rect.x;
-    rect.height = max.y - rect.y;
-    return rect.integerOrds();
+    const vertices = /** @type {number[]} */ ([]);
+    attachment.computeWorldVerticesOld(slot, vertices);
+    return Rect.fromPoints(...Vect.fromCoords(vertices)).integerOrds();
   }
 
   if (attachment instanceof RegionAttachment) {
-    return new Rect(
-      attachment.x,
-      attachment.y,
-      attachment.width,
-      attachment.height,
-    ).integerOrds();
+    const vertices = /** @type {number[]} */ ([]);
+    attachment.updateRegion();
+    attachment.computeWorldVertices(slot, vertices, 0, 2);
+    return Rect.fromPoints(...Vect.fromCoords(vertices)).integerOrds();
   }
 
   throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
 }
+
+/**
+ * - vilani
+ * - solomani
+ * - zhodani
+ */
+export const spineHeadSkinNames = /** @type {const} */ ([
+  'skin-head-light',
+  'blonde-light',
+  'skin-head-dark',
+]);
+
 
 /**
  * @typedef FileMeta @type {object}

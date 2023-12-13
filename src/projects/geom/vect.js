@@ -131,6 +131,17 @@
   }
 
   /**
+   * @param {number[]} coords 
+   */
+  static fromCoords(coords) {
+    return coords.reduce((agg, z, i) => {
+      if (i % 2 === 0) agg.push({ x: z, y: z });
+      else agg[agg.length - 1].y = z;
+      return agg;
+    }, /** @type {Geom.VectJson[]} */ ([]));
+  }
+
+  /**
    * @param {any} input
    * @returns {input is Geom.VectJson} input
    */
