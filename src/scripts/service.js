@@ -250,9 +250,9 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * - zhodani
  */
 export const spineHeadSkinNames = /** @type {const} */ ([
-  'skin-head-light',
-  'blonde-light',
-  'skin-head-dark',
+  'head/skin-head-light',
+  'head/blonde-light',
+  'head/skin-head-dark',
 ]);
 
 
@@ -282,6 +282,8 @@ export const spineHeadSkinNames = /** @type {const} */ ([
  * @property {number} skeletonScale
  * @property {Record<string, SpineAnimMeta>} anim
  * Animation name to metadata.
+ * @property {Record<NPC.NpcClassKeyNew, SpineNpcMeta>} npc
+ * Npc class to head metadata.
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding
@@ -301,4 +303,10 @@ export const spineHeadSkinNames = /** @type {const} */ ([
  * - head and neck, aligned to `[0, ..., frameCount - 1]`
  * - only support uniform head scale
  * - positions are relative to `animBounds`
+ */
+
+/**
+ * @typedef SpineNpcMeta
+ * @property {NPC.NpcClassKeyNew} npcClass
+ * @property {Geom.RectJson} packedHeadRect
  */

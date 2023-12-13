@@ -16,6 +16,12 @@ declare namespace NPC {
     | 'zhodani'
   );
 
+  type NpcClassKeyNew = (
+    | 'solomani'
+    | 'vilani'
+    | 'zhodani'
+  );
+
   interface NpcClassJson {
     classKey: NpcClassKey;
     parsed: NPC.ParsedNpc;

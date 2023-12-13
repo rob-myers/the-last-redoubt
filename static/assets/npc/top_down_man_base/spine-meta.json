@@ -269,6 +269,20 @@
       ]
     }
   },
+  "npc": {
+    "solomani": {
+      "npcClass": "solomani",
+      "packedHeadRect": {"x": 274, "y": 527, "width": 93, "height": 88}
+    },
+    "vilani": {
+      "npcClass": "vilani",
+      "packedHeadRect": {"x": 179, "y": 527, "width": 93, "height": 88}
+    },
+    "zhodani": {
+      "npcClass": "zhodani",
+      "packedHeadRect": {"x": 331, "y": 306, "width": 93, "height": 88}
+    }
+  },
   "packedWidth": 3342,
   "packedHeight": 619,
   "packedPadding": 2

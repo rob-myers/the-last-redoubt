@@ -71,9 +71,14 @@
     - idle-breathe changes neck position
   - ✅ precompute head positions too
   - ✅ center sprite around root (0, 0)
-  - 🚧 can add multiple npcs
+  - 🚧 sprite for body, sprite for head
+    - ✅ spine-meta computes spaces for heads
+    - 🚧 spritesheet has heads
+    - animate heads in correct place
+    - remove heads from main spritesx
+  - can add multiple npcs
     - animate multiple npcs in tandem via ticker
-  - sprite for body, sprite for head
+  - spritesheet has circle (for debug npc bounds/interact)
 
 - start migrating NPCs
 

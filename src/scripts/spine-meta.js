@@ -18,7 +18,7 @@ import { precision } from "../projects/service/generic";
 import { skeletonScale } from "../projects/world/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
-import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
+import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadSkinNames } from "./service";
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
@@ -32,6 +32,13 @@ const animToFrames = {
   "idle-breathe": 20,
   walk: 20,
 };
+/** @type {Record<typeof spineHeadSkinNames[*], NPC.NpcClassKeyNew>} */
+const headSkinToNpcClass = {
+  "head/blonde-light": "solomani",
+  "head/skin-head-dark": "zhodani",
+  "head/skin-head-light": "vilani",
+};
+
 const packedPadding = 2;
 
 main();
@@ -58,8 +65,17 @@ export default async function main() {
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
     pot: false,
     border: packedPadding,
+    // smart: false,
   });
-  const items = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
+  const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
+  /** @param {number} width @param {number} height @param {string} name */
+  function addRectToPack(width, height, name) {
+    console.log('adding', width, height, name);
+    const r = new Rectangle(width, height);
+    r.data = { name };
+    rectsToPack.push(r);
+  }
+
 
   const outputAnimMeta =
     /** @type {import("./service").SpineMeta['anim']} */ ({});
@@ -108,28 +124,35 @@ export default async function main() {
       bust,
     };
 
-    const r = new Rectangle(
-      // Ensure horizontal padding between frames
+    addRectToPack(// Ensure horizontal padding between frames
       animBounds.width * frameCount + packedPadding * (frameCount - 1),
-      animBounds.height
+      animBounds.height,
+      anim.name,
     );
-    r.data = { name: anim.name };
-    items.push(r);
+  }
+
+  const headSkins = spineHeadSkinNames.map(x => spine.spineData.findSkin(x));
+  for (const headSkin of headSkins) {
+    spine.skeleton.setSkin(headSkin);
+    spine.state.setAnimation(0, 'idle', false);
+    spine.update(0);
+    const bounds = computeSpineAttachmentBounds(spine, 'head');
+    addRectToPack(bounds.width, bounds.height, headSkin.name);
   }
 
   /**
    * Compute rectangle packing.
    */
-  packer.addArray(items);
-  packer.repack();
+  packer.addArray(rectsToPack);
+  // packer.repack();
   const { bins } = packer;
   const bin = bins[0];
 
   if (bins.length !== 1) {
     throw Error(`spine-meta: expected exactly one bin (${bins.length})`);
-  } else if (bins[0].rects.length !== animations.length) {
+  } else if (bins[0].rects.length !== rectsToPack.length) {
     throw Error(
-      `spine-meta: expected every animation to be packed (${bins.length} of ${animations.length})`
+      `spine-meta: expected every animation to be packed (${bins.length} of ${rectsToPack.length})`
     );
   }
 
@@ -148,6 +171,24 @@ export default async function main() {
       height: r.height,
     };
   }
+  /** @type {import("./service").SpineMeta['npc']} */
+  const outputNpcMeta = {
+    solomani: { npcClass: 'solomani', packedHeadRect: { x: 0, y: 0, width: 0, height: 0 } },
+    vilani: { npcClass: 'vilani', packedHeadRect: { x: 0, y: 0, width: 0, height: 0 } },
+    zhodani: { npcClass: 'zhodani', packedHeadRect: { x: 0, y: 0, width: 0, height: 0 } },
+  };
+  for (const skinName of spineHeadSkinNames) {
+    const r = bin.rects.find((x) => x.data.name === skinName);
+    if (!r) {
+      throw Error(`spine-meta: ${skinName}: packed rect not found`);
+    }
+    outputNpcMeta[headSkinToNpcClass[skinName]].packedHeadRect = {
+      x: r.x,
+      y: r.y,
+      width: r.width,
+      height: r.height,
+    };
+  }
 
   /** @type {import("./service").SpineMeta} */
   const outputJson = {
@@ -155,6 +196,7 @@ export default async function main() {
     baseName,
     skeletonScale,
     anim: outputAnimMeta,
+    npc: outputNpcMeta,
     packedWidth,
     packedHeight,
     packedPadding,
