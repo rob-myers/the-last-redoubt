@@ -244,33 +244,20 @@ export function computeSpineAttachmentBounds(spine, slotName) {
   throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
 }
 
-/** @type {NPC.NpcClassKeyNew[]} */
-export const npcClassKeys = [
-  'solomani',
-  'vilani',
-  'zhodani',
-];
-/**
- * Must be aligned to @see {npcClassKeys}.
- */
 export const spineHeadSkinNames = /** @type {const} */ ([
   'head/skin-head-light',
   'head/blonde-light',
   'head/skin-head-dark',
 ]);
 
+/**
+ * @typedef {typeof spineHeadSkinNames[*]} SpineHeadSkinName
+ */
+
 export const spineHeadOrients = /** @type {const} */ ([
   { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair',  },
   { headOrientKey: 'face', animName: 'lie', headAttachmentName: 'head-lie', hairAttachmentName: 'hair-lie', },
 ]);
-
-/**
- * @param {typeof spineHeadSkinNames[*]} skinName
- * @returns {NPC.NpcClassKeyNew}
- */
-export function headSkinToNpcClass(skinName) {
-  return npcClassKeys[spineHeadSkinNames.indexOf(skinName)];
-}
 
 /**
  * @typedef FileMeta @type {object}
@@ -298,8 +285,8 @@ export function headSkinToNpcClass(skinName) {
  * @property {number} skeletonScale
  * @property {Record<string, SpineAnimMeta>} anim
  * Animation name to metadata.
- * @property {Record<NPC.NpcClassKeyNew, SpineNpcMeta>} npc
- * Npc class to head metadata.
+ * @property {Record<SpineHeadSkinName, SpineHeadMeta>} head
+ * Head skin name to head metadata.
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding
@@ -322,8 +309,8 @@ export function headSkinToNpcClass(skinName) {
  */
 
 /**
- * @typedef SpineNpcMeta
- * @property {NPC.NpcClassKeyNew} npcClass
+ * @typedef SpineHeadMeta
+ * @property {SpineHeadSkinName} headSkinName
  * @property {{ [x in 'top' | 'face']: Geom.RectJson}} packedHead
  * - Top of head e.g. when walking
  * - Face of head e.g. when lying down

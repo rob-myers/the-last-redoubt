@@ -634,9 +634,6 @@ export const npcService = {
    */
   spine: {},
 
-  atlasLoader: /** @type {AtlasAttachmentLoader} */ ({}),
-  skeletonParser: /** @type {SkeletonJson} */ ({}),
-
   /**
    * @param {string} baseName
    * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md

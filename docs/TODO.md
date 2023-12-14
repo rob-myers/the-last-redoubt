@@ -74,7 +74,9 @@
   - 🚧 sprite for body, sprite for head
     - ✅ spine-meta computes spaces for heads
     - ✅ spritesheet has heads
-    - animate heads in correct place
+    - ✅ decouple heads from npc classes
+    - 🚧 move spine data/utils out of scripts/service into service/npc
+    - 🚧 animate heads in correct place
     - remove heads from main spritesx
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker

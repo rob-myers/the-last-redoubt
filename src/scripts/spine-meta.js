@@ -21,10 +21,8 @@ import { Rect, Vect } from "../projects/geom";
 import {
   computeSpineAttachmentBounds,
   spineHeadOrients,
-  headSkinToNpcClass,
   loadSpineServerSide,
   npcAssetsFolder,
-  npcClassKeys,
   runYarnScript,
   spineHeadSkinNames,
 } from "./service";
@@ -138,7 +136,6 @@ export default async function main() {
   const hairSlot = spine.skeleton.findSlot('hair');
   for (const headSkinName of spineHeadSkinNames) {
     const headSkin = spine.spineData.findSkin(headSkinName);
-    const classKey = headSkinToNpcClass(headSkinName);
     
     for (const { headOrientKey, animName, headAttachmentName, hairAttachmentName } of spineHeadOrients) {
       spine.skeleton.setSkin(headSkin);
@@ -154,7 +151,7 @@ export default async function main() {
         // head skin may not have hair
         hairSlot.attachment ? computeSpineAttachmentBounds(spine, 'hair') : Rect.zero,
       );
-      addRectToPack(bounds.width, bounds.height, `${classKey}:${headOrientKey}`);
+      addRectToPack(bounds.width, bounds.height, `${headSkinName}:${headOrientKey}`);
     }
   }
 
@@ -183,24 +180,23 @@ export default async function main() {
     outputAnimMeta[anim.name].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
   }
 
-  const outputNpcMeta = npcClassKeys.reduce((agg, classKey) => {
-    agg[classKey] = {
-      npcClass: classKey,
+  const outputNpcMeta = spineHeadSkinNames.reduce((agg, headSkinName) => {
+    agg[headSkinName] = {
+      headSkinName,
       packedHead: {
         face: { x: 0, y: 0, width: 0, height: 0 },
         top: { x: 0, y: 0, width: 0, height: 0 },
       }
     };
     return agg;
-  }, /** @type {import("./service").SpineMeta['npc']} */ ({}));
+  }, /** @type {import("./service").SpineMeta['head']} */ ({}));
 
-  for (const skinName of spineHeadSkinNames) {
-    const classKey = headSkinToNpcClass(skinName);
+  for (const headSkinName of spineHeadSkinNames) {
     for (const orient of /** @type {const} */ (['top', 'face'])) {
-      const rectName = `${classKey}:${orient}`;
+      const rectName = `${headSkinName}:${orient}`;
       const r = bin.rects.find((x) => x.data.name === rectName);
       if (!r) throw Error(`spine-meta: ${rectName}: packed rect not found`);
-      outputNpcMeta[classKey].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
+      outputNpcMeta[headSkinName].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
     }
   }
 
@@ -210,7 +206,7 @@ export default async function main() {
     baseName,
     skeletonScale,
     anim: outputAnimMeta,
-    npc: outputNpcMeta,
+    head: outputNpcMeta,
     packedWidth,
     packedHeight,
     packedPadding,

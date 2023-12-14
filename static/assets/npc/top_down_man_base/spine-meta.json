@@ -269,23 +269,23 @@
       ]
     }
   },
-  "npc": {
-    "solomani": {
-      "npcClass": "solomani",
+  "head": {
+    "head/skin-head-light": {
+      "headSkinName": "head/skin-head-light",
       "packedHead": {
         "face": {"x": 331, "y": 306, "width": 84, "height": 93},
         "top": {"x": 179, "y": 527, "width": 93, "height": 88}
       }
     },
-    "vilani": {
-      "npcClass": "vilani",
+    "head/blonde-light": {
+      "headSkinName": "head/blonde-light",
       "packedHead": {
         "face": {"x": 324, "y": 438, "width": 83, "height": 109},
         "top": {"x": 409, "y": 401, "width": 93, "height": 90}
       }
     },
-    "zhodani": {
-      "npcClass": "zhodani",
+    "head/skin-head-dark": {
+      "headSkinName": "head/skin-head-dark",
       "packedHead": {
         "face": {"x": 409, "y": 493, "width": 84, "height": 93},
         "top": {"x": 417, "y": 306, "width": 93, "height": 88}

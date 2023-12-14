@@ -16,7 +16,7 @@ import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
-import { headSkinToNpcClass, loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadOrients, spineHeadSkinNames } from "./service";
+import { loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadOrients, spineHeadSkinNames } from "./service";
 
 const debug = process.argv[2] === 'debug';
 
@@ -33,7 +33,7 @@ export default async function main() {
   /** @type {import("./service").SpineMeta} */
   const {
     anim: animMeta,
-    npc: npcMeta,
+    head: headMeta,
     packedWidth,
     packedHeight,
     packedPadding,
@@ -54,7 +54,7 @@ export default async function main() {
       for (let i = 0; i < frameCount; i++)
         gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + packedPadding)), packedRect.y, animBounds.width, animBounds.height);
     });
-    Object.values(npcMeta).forEach(({ packedHead: { face, top } }) => {
+    Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
       gfx.beginFill(0xff0000, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
       gfx.beginFill(0xff0000, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
     });
@@ -105,10 +105,10 @@ export default async function main() {
 
   const headSlot = spine.skeleton.findSlot('head');
   const hairSlot = spine.skeleton.findSlot('hair');
-  for (const skinName of spineHeadSkinNames) {
-    const headSkin = spine.spineData.findSkin(skinName);
+  for (const headSkinName of spineHeadSkinNames) {
+    const headSkin = spine.spineData.findSkin(headSkinName);
 
-    const { npcClass, packedHead } = npcMeta[headSkinToNpcClass(skinName)];
+    const { packedHead } = headMeta[headSkinName];
     for (const { headOrientKey, animName, headAttachmentName, hairAttachmentName } of spineHeadOrients) {
       const { animBounds, headBounds } = animMeta[animName];
 
