@@ -69,6 +69,7 @@ export default async function main() {
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
   for (const anim of animations) {
+    const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
 
@@ -80,33 +81,37 @@ export default async function main() {
     const animBounds = computeSpineAttachmentBounds(spine, "anim-bounds");
     const headBounds = computeSpineAttachmentBounds(spine, "head");
 
-    const frameCount =
-      spineAnimToFrames[/** @type {NPC.SpineAnimName} */ (anim.name)];
+    const frameCount = spineAnimToFrames[animName];
     const frameDurSecs = anim.duration / frameCount;
 
     /**
      * Compute head/neck position/scale per frame.
      */
-    const bust = /** @type {import("./service").SpineAnimMeta['bust']} */ ([]);
+    const headTransforms = /** @type {import("./service").SpineAnimMeta['headTransforms']} */ ([]);
+    const neckTransforms = /** @type {import("./service").SpineAnimMeta['neckTransforms']} */ ([]);
+    const head = spine.skeleton.findBone("head");
+    const neck = spine.skeleton.findBone("neck");
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
-      const neck = spine.skeleton.findBone("neck");
-      const head = spine.skeleton.findBone("head");
-      bust.push({
-        neck: new Vect(neck.x, neck.y).precision(4),
-        head: new Vect(head.x, head.y).precision(4),
-        scale: precision(head.scaleX),
+      headTransforms.push({
+        position: Vect.from({ x: head.worldX, y: head.worldY, }).precision(4),
+        scale: precision(head.getWorldScaleX(), 4),
+      });
+      neckTransforms.push({
+        position: Vect.from({ x: neck.worldX, y: neck.worldY, }).precision(4),
+        angle: precision(neck.getWorldRotationX() * (Math.PI / 180), 4),
       });
     }
 
     outputAnimMeta[anim.name] = {
-      animName: anim.name,
+      animName,
       frameCount,
       frameDurSecs: anim.duration / frameCount,
       animBounds,
       headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
-      bust,
+      headTransforms,
+      neckTransforms,
     };
 
     addRectToPack(

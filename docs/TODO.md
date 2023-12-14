@@ -78,7 +78,9 @@
     - ✅ move spine data/utils out of scripts/service into world-pixi/const
     - ✅ put heads in correct place
     - 🚧 animate heads in correct place
-      - need to record world position/rotation/scale in spine-meta
+      - 🚧 spine-meta has head world position/rotation/scale
+    - ✅ spine: `lie` head in setup pose
+      - relevant if we create more animations which are "lying down"
     - remove heads from main sprites
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker

@@ -282,15 +282,17 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {string} animName
  * @property {number} frameCount
  * @property {number} frameDurSecs
- * @property {Geom.RectJson} animBounds
- * @property {Geom.RectJson} headBounds
+ * @property {Geom.RectJson} animBounds Over all frames (manually specified inside Spine)
+ * @property {Geom.RectJson} headBounds Initial, dimension unchanging over frames.
  * @property {Geom.RectJson} packedRect
  * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
  * - has height `animBounds.height`
- * @property {{ neck: Geom.VectJson; head: Geom.VectJson; scale: number; }[]} bust
- * - head and neck, aligned to `[0, ..., frameCount - 1]`
+ * @property {{ position: Geom.VectJson; scale: number; }[]} headTransforms
+ * - world coords
+ * - aligned to `[0, ..., frameCount - 1]`
  * - only support uniform head scale
- * - positions are relative to `animBounds`
+ * @property {{ position: Geom.VectJson; angle: number; }[]} neckTransforms
+ * - world coords
  */
 
 /**
