@@ -94,13 +94,13 @@ export default async function main() {
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
       headTransforms.push({
-        position: Vect.from({ x: head.worldX, y: head.worldY, }).precision(4),
+        ...Vect.from({ x: head.worldX, y: head.worldY, }).precision(4).json,
         scale: precision(head.getWorldScaleX(), 4),
-      });
-      neckTransforms.push({
-        position: Vect.from({ x: neck.worldX, y: neck.worldY, }).precision(4),
         angle: precision(neck.getWorldRotationX() * (Math.PI / 180), 4),
       });
+      neckTransforms.push(
+        Vect.from({ x: neck.worldX, y: neck.worldY, }).precision(4),
+      );
     }
 
     outputAnimMeta[anim.name] = {
