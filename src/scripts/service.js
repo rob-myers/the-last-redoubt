@@ -244,10 +244,15 @@ export function computeSpineAttachmentBounds(spine, slotName) {
   throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
 }
 
+/** @type {NPC.NpcClassKeyNew[]} */
+export const npcClassKeys = [
+  'solomani',
+  'vilani',
+  'zhodani',
+];
+
 /**
- * - vilani
- * - solomani
- * - zhodani
+ * Must be aligned to @see {npcClassKeys}.
  */
 export const spineHeadSkinNames = /** @type {const} */ ([
   'head/skin-head-light',
@@ -255,6 +260,13 @@ export const spineHeadSkinNames = /** @type {const} */ ([
   'head/skin-head-dark',
 ]);
 
+/**
+ * @param {typeof spineHeadSkinNames[*]} skinName
+ * @returns {NPC.NpcClassKeyNew}
+ */
+export function headSkinToNpcClass(skinName) {
+  return npcClassKeys[spineHeadSkinNames.indexOf(skinName)];
+}
 
 /**
  * @typedef FileMeta @type {object}
@@ -308,5 +320,7 @@ export const spineHeadSkinNames = /** @type {const} */ ([
 /**
  * @typedef SpineNpcMeta
  * @property {NPC.NpcClassKeyNew} npcClass
- * @property {Geom.RectJson} packedHeadRect
+ * @property {{ [x in 'top' | 'face']: Geom.RectJson}} packedHead
+ * - Top of head e.g. when walking
+ * - Face of head e.g. when lying down
  */

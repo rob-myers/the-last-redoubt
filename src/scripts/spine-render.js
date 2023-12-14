@@ -16,7 +16,7 @@ import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
-import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
+import { headSkinToNpcClass, loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadSkinNames } from "./service";
 
 const debug = process.argv[2] === 'debug';
 
@@ -33,6 +33,7 @@ export default async function main() {
   /** @type {import("./service").SpineMeta} */
   const {
     anim: animMeta,
+    npc: npcMeta,
     packedWidth,
     packedHeight,
     packedPadding,
@@ -97,6 +98,29 @@ export default async function main() {
         clear: false,
       });
     }
+  }
+
+  const { headBounds } = animMeta.idle;
+  for (const skinName of spineHeadSkinNames) {
+    /**
+     * 🚧 only show head
+     * 🚧 draw head in correct place
+     * 🚧 top/face
+     */
+    const headSkin =spine.spineData.findSkin(skinName);
+    spine.skeleton.setSkin(headSkin);
+    spine.state.setAnimation(0, 'idle', false);
+    spine.update(0);
+    const { npcClass, packedHead } = npcMeta[headSkinToNpcClass(skinName)];
+    spine.position.set(
+      packedHead.top.x + Math.abs(headBounds.x),
+      packedHead.top.y + Math.abs(headBounds.y),
+    );
+    // 🚧 WIP
+    // app.renderer.render(spine, {
+    //   renderTexture: tex,
+    //   clear: false,
+    // });
   }
 
   app.stage.addChild(new Sprite(tex));
