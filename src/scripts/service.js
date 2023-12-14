@@ -250,7 +250,6 @@ export const npcClassKeys = [
   'vilani',
   'zhodani',
 ];
-
 /**
  * Must be aligned to @see {npcClassKeys}.
  */
@@ -258,6 +257,11 @@ export const spineHeadSkinNames = /** @type {const} */ ([
   'head/skin-head-light',
   'head/blonde-light',
   'head/skin-head-dark',
+]);
+
+export const spineHeadOrients = /** @type {const} */ ([
+  { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair',  },
+  { headOrientKey: 'face', animName: 'lie', headAttachmentName: 'head-lie', hairAttachmentName: 'hair-lie', },
 ]);
 
 /**

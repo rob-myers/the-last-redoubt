@@ -16,7 +16,7 @@ import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
-import { headSkinToNpcClass, loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadSkinNames } from "./service";
+import { headSkinToNpcClass, loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadOrients, spineHeadSkinNames } from "./service";
 
 const debug = process.argv[2] === 'debug';
 
@@ -46,14 +46,17 @@ export default async function main() {
     skipDetections: true,
   });
 
-  if (debug) {
-    // Debug Rectangle Packing
+  if (debug) {// Debug Rectangle Packing
     const gfx = (new Graphics).lineStyle({ width: 1 });
     gfx.beginFill(0xffffff, 1).drawRect(0, 0, packedWidth, packedHeight).endFill();
     Object.values(animMeta).forEach(({ animName, packedRect, animBounds, frameCount }) => {
       gfx.beginFill(0xff0000, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
       for (let i = 0; i < frameCount; i++)
         gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + packedPadding)), packedRect.y, animBounds.width, animBounds.height);
+    });
+    Object.values(npcMeta).forEach(({ packedHead: { face, top } }) => {
+      gfx.beginFill(0xff0000, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
+      gfx.beginFill(0xff0000, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
     });
     app.renderer.render(gfx, { renderTexture: tex });
   }
@@ -100,27 +103,30 @@ export default async function main() {
     }
   }
 
-  const { headBounds } = animMeta.idle;
+  const headSlot = spine.skeleton.findSlot('head');
+  const hairSlot = spine.skeleton.findSlot('hair');
   for (const skinName of spineHeadSkinNames) {
-    /**
-     * 🚧 only show head
-     * 🚧 draw head in correct place
-     * 🚧 top/face
-     */
-    const headSkin =spine.spineData.findSkin(skinName);
-    spine.skeleton.setSkin(headSkin);
-    spine.state.setAnimation(0, 'idle', false);
-    spine.update(0);
+    const headSkin = spine.spineData.findSkin(skinName);
+
     const { npcClass, packedHead } = npcMeta[headSkinToNpcClass(skinName)];
-    spine.position.set(
-      packedHead.top.x + Math.abs(headBounds.x),
-      packedHead.top.y + Math.abs(headBounds.y),
-    );
-    // 🚧 WIP
-    // app.renderer.render(spine, {
-    //   renderTexture: tex,
-    //   clear: false,
-    // });
+    for (const { headOrientKey, animName, headAttachmentName, hairAttachmentName } of spineHeadOrients) {
+      const { animBounds, headBounds } = animMeta[animName];
+
+      spine.skeleton.setSkin(headSkin);
+      spine.skeleton.setSlotsToSetupPose();
+      spine.skeleton.setBonesToSetupPose();
+      spine.state.setAnimation(0, animName, false);
+
+      headSlot.setAttachment(spine.skeleton.getAttachmentByName('head', headAttachmentName));
+      hairSlot.setAttachment(spine.skeleton.getAttachmentByName('hair', hairAttachmentName));
+      spine.update(0);
+
+      spine.position.set(
+        packedHead[headOrientKey].x + Math.abs(animBounds.x) - Math.abs(headBounds.x - animBounds.x),
+        packedHead[headOrientKey].y + Math.abs(animBounds.y) - Math.abs(headBounds.y - animBounds.y),
+      );
+      app.renderer.render(spine, { renderTexture: tex, clear: false });
+    }
   }
 
   app.stage.addChild(new Sprite(tex));

@@ -73,11 +73,15 @@
   - ✅ center sprite around root (0, 0)
   - 🚧 sprite for body, sprite for head
     - ✅ spine-meta computes spaces for heads
-    - 🚧 spritesheet has heads
+    - ✅ spritesheet has heads
     - animate heads in correct place
     - remove heads from main spritesx
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker
+  - head/neck data only provided for specified animations i.e. idle-breathe
+  - spine has events for left/right foot down
+  - spine-meta has foot offsets and walk frame durations for const speed
+  - try animating `walk` with specific frame durations
   - spritesheet has circle (for debug npc bounds/interact)
 
 - start migrating NPCs

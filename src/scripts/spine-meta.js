@@ -20,6 +20,7 @@ import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
 import {
   computeSpineAttachmentBounds,
+  spineHeadOrients,
   headSkinToNpcClass,
   loadSpineServerSide,
   npcAssetsFolder,
@@ -133,22 +134,28 @@ export default async function main() {
     );
   }
 
-  for (const skinName of spineHeadSkinNames) {
-    const headSkin = spine.spineData.findSkin(skinName);
-    const headSlot = spine.skeleton.findSlot('head');
+  const headSlot = spine.skeleton.findSlot('head');
+  const hairSlot = spine.skeleton.findSlot('hair');
+  for (const headSkinName of spineHeadSkinNames) {
+    const headSkin = spine.spineData.findSkin(headSkinName);
+    const classKey = headSkinToNpcClass(headSkinName);
     
-    spine.skeleton.setSkin(headSkin);
-    spine.state.setAnimation(0, "idle", false);
-    spine.update(0);
-    
-    const classKey = headSkinToNpcClass(skinName);
-    const topBounds = computeSpineAttachmentBounds(spine, "head");
-    addRectToPack(topBounds.width, topBounds.height, `${classKey}:top`); // top of head
-    
-    headSlot.setAttachment(spine.skeleton.getAttachmentByName('head', 'head-lie'));
-    const faceBounds = computeSpineAttachmentBounds(spine, "head");
-    addRectToPack(faceBounds.width, faceBounds.height, `${classKey}:face`); // face of head
-    headSlot.setAttachment(spine.skeleton.getAttachmentByName('head', 'head'));
+    for (const { headOrientKey, animName, headAttachmentName, hairAttachmentName } of spineHeadOrients) {
+      spine.skeleton.setSkin(headSkin);
+      spine.skeleton.setSlotsToSetupPose();
+      spine.skeleton.setBonesToSetupPose();
+      spine.state.setAnimation(0, animName, false);
+      headSlot.setAttachment(spine.skeleton.getAttachmentByName('head', headAttachmentName));
+      hairSlot.setAttachment(spine.skeleton.getAttachmentByName('hair', hairAttachmentName));
+      spine.update(0);
+
+      const bounds = Rect.fromRects(
+        computeSpineAttachmentBounds(spine, 'head'),
+        // head skin may not have hair
+        hairSlot.attachment ? computeSpineAttachmentBounds(spine, 'hair') : Rect.zero,
+      );
+      addRectToPack(bounds.width, bounds.height, `${classKey}:${headOrientKey}`);
+    }
   }
 
   /**
