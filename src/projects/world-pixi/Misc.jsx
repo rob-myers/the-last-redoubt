@@ -6,6 +6,7 @@ import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
 import { mapValues } from "../service/generic";
+import { spineAnimToHeadOrient } from "./const";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
 
@@ -105,48 +106,51 @@ export function TestPreRenderNpc({ api }) {
     state.srcTex = await Assets.load(
       `/assets/npc/top_down_man_base/spine-render/spritesheet.webp`
     );
-    const gfx = (new Graphics)
+    api.renderInto((new Graphics)
       .beginTextureFill({ texture: state.srcTex })
       .drawRect(0, 0, state.tex.width, state.tex.height)
-      .endFill();
-    api.renderInto(gfx, state.tex);
-
-    // const { data } = await api.lib.loadSpine('man_01_base');
-    // const spine = api.lib.instantiateSpine('man_01_base');
-    // spine.autoUpdate = false;
-    // spine.state.setAnimation(0, 'idle', false);
-    // spine.update(0);
+      .endFill(), state.tex);
     return null;
   });
 
   const ready = query.isFetched && !query.isFetching;
 
   React.useEffect(() => {
-    if (!ready) {
-      return;
-    }
+    if (!ready) return;
+
     /** @type {keyof spineMeta['anim']} */
     const animName = 'walk';
-    const rects = state.animRects[animName];
-    
-    const { frameCount, animBounds } = spineMeta.anim[animName];
+    /** @type {NPC.SpineHeadSkinName} */
+    const headSkinName = 'head/skin-head-dark';
     const framesPerSec = 0.5;
+    
+    const orient = spineAnimToHeadOrient[animName]
+    const { frameCount, animBounds, headBounds } = spineMeta.anim[animName];
+    const bodyRects = state.animRects[animName];
+    const headRect = spineMeta.head[headSkinName].packedHead[orient];
+    
     /** Animation's current time in R[0, numFrames - 1] */
     let currentTime = 0, currentFrame = 0;
 
-    const sprite = new Sprite(new Texture(state.tex.baseTexture));
+    const body = new Sprite(new Texture(state.tex.baseTexture));
+    const head = new Sprite(new Texture(state.tex.baseTexture));
+
     // ℹ️ Changing frame width/height later deforms image
-    sprite.texture.frame = new Rectangle(rects[0].x, rects[0].y, rects[0].width, rects[0].height);
+    body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
+    head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
     // Set (0, 0) in `animBounds` as origin
-    sprite.anchor.set(-animBounds.x / animBounds.width, -animBounds.y / animBounds.height);
-    sprite.scale.set(npcScaleFactor);
-    state.npcContainer.addChild(sprite);
+    body.anchor.set(-animBounds.x / animBounds.width, -animBounds.y / animBounds.height);
+    head.anchor.set(-headBounds.x / headBounds.width, -headBounds.y / headBounds.height);
+    
+    body.scale.set(npcScaleFactor);
+    head.scale.set(npcScaleFactor);
+    state.npcContainer.addChild(body, head);
     
     /** @param {number} deltaSecs */
     function updateFrame(deltaSecs) {
       currentTime += (deltaSecs * framesPerSec);
       currentFrame = Math.floor(currentTime) % frameCount;
-      sprite.texture._uvs.set(/** @type {Rectangle} */ (rects[currentFrame]), state.tex.baseTexture, 0);
+      body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currentFrame]), state.tex.baseTexture, 0);
     }
 
     state.ticker.add(updateFrame);
@@ -154,7 +158,7 @@ export function TestPreRenderNpc({ api }) {
     return () => {
       state.ticker.stop();
       state.ticker.remove(updateFrame);
-      state.npcContainer.removeChild(sprite);
+      state.npcContainer.removeChild(body);
     };
   }, [ready]);
 

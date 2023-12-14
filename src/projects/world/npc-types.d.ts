@@ -715,6 +715,22 @@ declare namespace NPC {
     | "head/skin-head-light"
   );
 
+  /**
+   * - head `top` is the top of the head, as seen during e.g. `idle`, `walking`.
+   * - head `face` is the head's face e.g. `lie`.
+   */
+  type SpineHeadOrientKey = (
+    | 'top'
+    | 'face'
+  );
+
+  interface SpineHeadOrient {
+    headOrientKey: SpineHeadOrientKey;
+    animName: SpineAnimName;
+    headAttachmentName: 'head' | 'head-lie';
+    hairAttachmentName: 'hair' | 'hair-lie';
+  }
+
   //#endregion
 
 }

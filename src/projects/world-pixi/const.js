@@ -61,10 +61,13 @@ const fromSpineAnimName = { "idle": true, "idle-breathe": true, "lie": true, "si
 
 export const spineAnimNames = keys(fromSpineAnimName);
 
-export const spineHeadOrients = /** @type {const} */ ([
-  { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair',  },
-  { headOrientKey: 'face', animName: 'lie', headAttachmentName: 'head-lie', hairAttachmentName: 'hair-lie', },
-]);
+/** @type {Record<NPC.SpineHeadOrientKey, NPC.SpineHeadOrient>} */
+const toSpineHeadOrient = {
+  face: { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair' },
+  top: { headOrientKey: 'face', animName: 'lie', headAttachmentName: 'head-lie', hairAttachmentName: 'hair-lie' },
+};
+
+export const spineHeadOrients = Object.values(toSpineHeadOrient);
 
 /** @type {Record<NPC.SpineAnimName, number>} */
 export const spineAnimToFrames = {
@@ -73,6 +76,15 @@ export const spineAnimToFrames = {
   lie: 1,
   "idle-breathe": 20,
   walk: 20,
+};
+
+/** @type {Record<NPC.SpineAnimName, NPC.SpineHeadOrientKey>} */
+export const spineAnimToHeadOrient = {
+  idle: 'top',
+  sit: 'top',
+  lie: 'face',
+  "idle-breathe": 'top',
+  walk: 'top',
 };
 
 //#endregion

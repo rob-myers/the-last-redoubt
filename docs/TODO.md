@@ -76,11 +76,14 @@
     - ✅ spritesheet has heads
     - ✅ decouple heads from npc classes
     - ✅ move spine data/utils out of scripts/service into world-pixi/const
+    - ✅ put heads in correct place
     - 🚧 animate heads in correct place
-    - remove heads from main spritesx
+      - need to record world position/rotation/scale in spine-meta
+    - remove heads from main sprites
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker
-  - head/neck data only provided for specified animations i.e. idle-breathe
+  - ❌ head/neck data only provided for specified animations i.e. idle-breathe
+    - probably need for all i.e. we actually need global positions etc
   - spine has events for left/right foot down
   - spine-meta has foot offsets and walk frame durations for const speed
   - try animating `walk` with specific frame durations
