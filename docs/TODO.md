@@ -75,7 +75,7 @@
     - ✅ spine-meta computes spaces for heads
     - ✅ spritesheet has heads
     - ✅ decouple heads from npc classes
-    - 🚧 move spine data/utils out of scripts/service into service/npc
+    - ✅ move spine data/utils out of scripts/service into world-pixi/const
     - 🚧 animate heads in correct place
     - remove heads from main spritesx
   - can add multiple npcs

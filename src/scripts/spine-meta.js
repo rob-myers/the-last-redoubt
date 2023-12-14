@@ -5,41 +5,26 @@
  */
 /// <reference path="./deps.d.ts"/>
 
-import {
-  Assets,
-  RenderTexture,
-  Texture,
-  Rectangle as PixiRectangle,
-} from "@pixi/node";
+import { Assets } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 
 import { precision } from "../projects/service/generic";
 import { skeletonScale } from "../projects/world/const";
+import { spineAnimToFrames, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
 import {
   computeSpineAttachmentBounds,
-  spineHeadOrients,
   loadSpineServerSide,
   npcAssetsFolder,
   runYarnScript,
-  spineHeadSkinNames,
 } from "./service";
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
 /** Exclude this file from being watched to avoid infinite loop */
 const outputJsonFilepath = `${npcAssetsFolder}/${folderName}/spine-meta.json`;
-
-const animToFrames = {
-  idle: 1,
-  sit: 1,
-  lie: 1,
-  "idle-breathe": 20,
-  walk: 20,
-};
-
 const packedPadding = 2;
 
 main();
@@ -96,7 +81,7 @@ export default async function main() {
     const headBounds = computeSpineAttachmentBounds(spine, "head");
 
     const frameCount =
-      animToFrames[/** @type {keyof animToFrames} */ (anim.name)];
+      spineAnimToFrames[/** @type {NPC.SpineAnimName} */ (anim.name)];
     const frameDurSecs = anim.duration / frameCount;
 
     /**

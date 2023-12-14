@@ -698,5 +698,23 @@ declare namespace NPC {
     }    
   }
   //#endregion
+  
+  //#region spine
+
+  type SpineAnimName = (
+    | "idle"
+    | "idle-breathe"
+    | "lie"
+    | "sit"
+    | "walk"
+  );
+
+  type SpineHeadSkinName = (
+    | "head/blonde-light"
+    | "head/skin-head-dark"
+    | "head/skin-head-light"
+  );
+
+  //#endregion
 
 }

@@ -16,7 +16,8 @@ import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
-import { loadSpineServerSide, npcAssetsFolder, runYarnScript, spineHeadOrients, spineHeadSkinNames } from "./service";
+import { spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
+import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
 
 const debug = process.argv[2] === 'debug';
 

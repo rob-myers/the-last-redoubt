@@ -1,5 +1,8 @@
 import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { TextStyle } from "@pixi/text";
+import { keys } from "../service/generic";
+
+//#region pixi
 
 export const colMatFilter1 = new ColorMatrixFilter();
 // colorMatrixFilter.resolution = window.devicePixelRatio;
@@ -42,3 +45,34 @@ export const textStyle1 = new TextStyle({
   wordWrapWidth: 440,
   lineJoin: 'round',
 });
+
+//#endregion
+
+
+//#region spine
+
+/** @type {Record<NPC.SpineHeadSkinName, true>} */
+const fromSpineHeadSkinName = { "head/blonde-light": true, "head/skin-head-dark": true, "head/skin-head-light": true };
+
+export const spineHeadSkinNames = keys(fromSpineHeadSkinName);
+
+/** @type {Record<NPC.SpineAnimName, true>} */
+const fromSpineAnimName = { "idle": true, "idle-breathe": true, "lie": true, "sit": true, "walk": true };
+
+export const spineAnimNames = keys(fromSpineAnimName);
+
+export const spineHeadOrients = /** @type {const} */ ([
+  { headOrientKey: 'top', animName: 'idle', headAttachmentName: 'head', hairAttachmentName: 'hair',  },
+  { headOrientKey: 'face', animName: 'lie', headAttachmentName: 'head-lie', hairAttachmentName: 'hair-lie', },
+]);
+
+/** @type {Record<NPC.SpineAnimName, number>} */
+export const spineAnimToFrames = {
+  idle: 1,
+  sit: 1,
+  lie: 1,
+  "idle-breathe": 20,
+  walk: 20,
+};
+
+//#endregion
