@@ -273,22 +273,22 @@
     "solomani": {
       "npcClass": "solomani",
       "packedHead": {
-        "face": {"x": 324, "y": 438, "width": 93, "height": 103},
+        "face": {"x": 331, "y": 306, "width": 84, "height": 93},
         "top": {"x": 179, "y": 527, "width": 93, "height": 88}
       }
     },
     "vilani": {
       "npcClass": "vilani",
       "packedHead": {
-        "face": {"x": 331, "y": 306, "width": 92, "height": 103},
-        "top": {"x": 419, "y": 516, "width": 93, "height": 88}
+        "face": {"x": 324, "y": 438, "width": 83, "height": 109},
+        "top": {"x": 409, "y": 401, "width": 93, "height": 90}
       }
     },
     "zhodani": {
       "npcClass": "zhodani",
       "packedHead": {
-        "face": {"x": 419, "y": 411, "width": 93, "height": 103},
-        "top": {"x": 425, "y": 306, "width": 93, "height": 88}
+        "face": {"x": 409, "y": 493, "width": 84, "height": 93},
+        "top": {"x": 417, "y": 306, "width": 93, "height": 88}
       }
     }
   },
