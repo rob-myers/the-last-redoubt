@@ -6,6 +6,7 @@ import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
 import { mapValues } from "../service/generic";
+import { Vect } from "../geom";
 import { spineAnimToHeadOrient } from "./const";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
@@ -119,7 +120,7 @@ export function TestPreRenderNpc({ api }) {
     if (!ready) return;
 
     /** @type {keyof spineMeta['anim']} */
-    const animName = 'walk';
+    const animName = 'idle-breathe';
     /** @type {NPC.SpineHeadSkinName} */
     const headSkinName = 'head/skin-head-dark';
     const framesPerSec = 0.5;
@@ -140,10 +141,12 @@ export function TestPreRenderNpc({ api }) {
     head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
     // Set (0, 0) in `animBounds` as origin
     body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-    head.anchor.set(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
+    // head.anchor.set(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
+    head.anchor.set(0, 0);
     
     body.scale.set(npcScaleFactor);
     head.scale.set(npcScaleFactor);
+    const initHeadWidth = head.width;
     state.npcContainer.addChild(body, head);
     
     /** @param {number} deltaSecs */
@@ -152,11 +155,11 @@ export function TestPreRenderNpc({ api }) {
       currentFrame = Math.floor(currentTime) % frameCount;
       body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currentFrame]), state.tex.baseTexture, 0);
 
-      // 🚧 align head sprite with head poly
-      const fourPoints = headPolys[currentFrame];
-      // const { x, y, angle, scale } = headTransforms[currentFrame];
-      // head.position.set( x, y );
-      // head.angle = angle + Math.PI/2;
+      // align head sprite: position/rotation/scale
+      const [, nw, ne] = headPolys[currentFrame];
+      head.position.set(nw.x * npcScaleFactor, nw.y * npcScaleFactor);
+      head.rotation = Math.atan2(ne.y - nw.y, ne.x - nw.x);
+      head.scale.set(npcScaleFactor * ((npcScaleFactor * Vect.distanceBetween(ne, nw)) / initHeadWidth));
     }
 
     state.ticker.add(updateFrame);

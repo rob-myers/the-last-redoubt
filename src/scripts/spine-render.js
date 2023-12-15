@@ -98,15 +98,14 @@ export default async function main() {
         packedRect.y + Math.abs(animBounds.y),
       );
       app.renderer.render(spine, { renderTexture: tex, clear: false });
+
       // 🚧 debug draw head attachment bounds
       const { poly } = computeSpineAttachmentBounds(spine, 'head');
-      // console.log(anim.name, frame, poly.outline);
       poly.translate(spine.x, spine.y);
       app.renderer.render(
         (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
         { renderTexture: tex, clear: false },
       );
-
     }
   }
 
@@ -133,6 +132,14 @@ export default async function main() {
         packedHead[headOrientKey].y + Math.abs(animBounds.y) - Math.abs(headBounds.y - animBounds.y),
       );
       app.renderer.render(spine, { renderTexture: tex, clear: false });
+
+      // 🚧 debug draw head attachment bounds
+      const { poly } = computeSpineAttachmentBounds(spine, 'head');
+      poly.translate(spine.x, spine.y);
+      app.renderer.render(
+        (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
+        { renderTexture: tex, clear: false },
+      );
     }
   }
 

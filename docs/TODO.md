@@ -79,12 +79,12 @@
     - ✅ put heads in correct place
     - 🚧 animate heads in correct place
       - ✅ spine-render: debug: draw rect rects around head attachments
-      - ✅ region attachment vertex convention: [nw, sw, se, ne]
-        - ℹ️ vs[1] -> vs[2] aligns with x-axis
-        - ℹ️ anchor corresponds to point:
-          > vs[0] + (vs[2] - vs[1]) * anchor.x + (vs[1] - vs[0]) * anchor.y
+      - ✅ region attachment vertex convention: `[nw, sw, se, ne]`
+        - HOWEVER in pixi.js "y is down", so get `[sw, nw, ne, se]`
       - ✅ spine-meta: record head polys per frame
-      - 🚧 `<TestPreRenderNpc>`: align head sprite with rect
+      - ✅ `<TestPreRenderNpc>`: align head sprite with rect
+      - ✅ align head sprite scale too
+      - 🚧 clean up approach
     - ✅ spine: `lie` head in setup pose
       - relevant if we create more animations which are "lying down"
     - remove heads from main sprites
