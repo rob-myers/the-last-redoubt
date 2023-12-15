@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "dQG1cmyGioM",
+	"hash": "c+RCIZkiEOI",
 	"spine": "4.1.24",
-	"x": -395.33,
-	"y": -338.4,
-	"width": 790.65,
-	"height": 544.79,
+	"x": -512.86,
+	"y": -632.39,
+	"width": 1034,
+	"height": 1187,
 	"fps": 2,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -69,7 +69,7 @@
 	{
 		"name": "left-eyebrow-birdseye",
 		"parent": "neck",
-		"rotation": 269.52,
+		"rotation": 270,
 		"x": -112.46,
 		"y": 200.76,
 		"scaleX": 0.864,
@@ -77,24 +77,24 @@
 	},
 	{ "name": "left-arm-upper-bare", "parent": "left-arm", "rotation": -94.92, "x": 320.31, "y": 2.67 },
 	{ "name": "left-foot", "parent": "left-leg-lower", "length": 288.02, "rotation": -0.25, "x": 279.13, "y": -13 },
-	{ "name": "hat", "parent": "neck", "rotation": 269.52, "x": 105.34, "y": -7.54 },
+	{ "name": "hat", "parent": "neck", "rotation": 270, "x": 105.34, "y": -7.54 },
 	{ "name": "right-arm-upper-clothed", "parent": "right-arm", "rotation": -98.08, "x": 308.18, "y": -20.27, "scaleX": 0.938 },
 	{ "name": "right-foot", "parent": "right-leg-lower", "length": 257.58, "rotation": 357.14, "x": 318.41, "y": -8.04 },
-	{ "name": "mask-birdseye", "parent": "neck", "rotation": 269.6, "x": 357.75, "y": 4.83 },
-	{ "name": "head", "parent": "neck", "rotation": 269.52, "x": 96.27, "y": -7.25 },
+	{ "name": "mask-birdseye", "parent": "neck", "rotation": 270, "x": 357.75, "y": 4.83 },
+	{ "name": "head", "parent": "neck", "rotation": 270, "x": 96.27, "y": -7.25 },
 	{ "name": "left-leg-lower-bare", "parent": "left-leg-lower", "rotation": 270, "x": 131.44, "y": -3.95 },
 	{ "name": "right-leg-lower-bare", "parent": "right-leg-lower", "rotation": 267.14, "x": 173.07, "y": -0.72 },
 	{ "name": "left-arm-lower", "parent": "left-arm", "length": 256.69, "rotation": -34.65, "x": 185.22, "y": 6.79 },
 	{
 		"name": "right-eyebrow-birdseye",
 		"parent": "neck",
-		"rotation": -90.32,
+		"rotation": -90,
 		"x": -116.53,
 		"y": -162.24,
 		"scaleX": 0.93,
 		"scaleY": 0.7873
 	},
-	{ "name": "hair", "parent": "neck", "rotation": -90.32, "x": 80.61, "y": -4.14 },
+	{ "name": "hair", "parent": "neck", "rotation": -90, "x": 80.61, "y": -4.14 },
 	{ "name": "left-hand-accessory", "parent": "left-arm-lower", "rotation": 270.78, "x": 169.57, "y": 15.99 },
 	{
 		"name": "right-hand",
@@ -376,7 +376,7 @@
 			},
 			"head": {
 				"head-lie": { "name": "body/light/head_dead", "rotation": 0.48, "width": 918, "height": 1020 },
-				"head": { "name": "body/light/head_top", "x": 0.5, "width": 921, "height": 868 }
+				"head": { "name": "body/light/head_top", "x": 0.5, "rotation": 0.48, "width": 921, "height": 868 }
 			}
 		}
 	},
