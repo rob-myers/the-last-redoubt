@@ -13,7 +13,7 @@ import {
 } from "@pixi-spine/runtime-4.1";
 import { Assets } from "@pixi/node";
 
-import { Rect, Vect } from "../projects/geom";
+import { Poly, Rect, Vect } from "../projects/geom";
 import { assertDefined } from "../projects/service/generic";
 import { skeletonScale } from '../projects/world/const';
 
@@ -221,7 +221,8 @@ export async function loadSpineServerSide(folderName, baseName) {
 
 /**
  * @param {Spine} spine 
- * @param {string} slotName 
+ * @param {string} slotName
+ * @returns {{ poly: Geom.Poly; bounds: Geom.Rect }}
  */
 export function computeSpineAttachmentBounds(spine, slotName) {
   const slot = spine.skeleton.findSlot(slotName);
@@ -231,14 +232,16 @@ export function computeSpineAttachmentBounds(spine, slotName) {
   if (attachment instanceof BoundingBoxAttachment) {
     const vertices = /** @type {number[]} */ ([]);
     attachment.computeWorldVerticesOld(slot, vertices);
-    return Rect.fromPoints(...Vect.fromCoords(vertices)).integerOrds();
+    const poly = new Poly(Vect.fromCoords(vertices))
+    return { poly, bounds: poly.rect.precision(1) }
   }
 
   if (attachment instanceof RegionAttachment) {
     const vertices = /** @type {number[]} */ ([]);
     attachment.updateRegion();
     attachment.computeWorldVertices(slot, vertices, 0, 2);
-    return Rect.fromPoints(...Vect.fromCoords(vertices)).integerOrds();
+    const poly = new Poly(Vect.fromCoords(vertices))
+    return { poly, bounds: poly.rect.precision(1) }
   }
 
   throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
@@ -271,7 +274,7 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {Record<string, SpineAnimMeta>} anim
  * Animation name to metadata.
  * @property {Record<NPC.SpineHeadSkinName, SpineHeadMeta>} head
- * Head skin name to head metadata.
+ * Head skin name to metadata.
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding
@@ -287,12 +290,9 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {Geom.RectJson} packedRect
  * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
  * - has height `animBounds.height`
- * @property {{ x: number; y: number; scale: number; angle: number; }[]} headTransforms
- * - world coords
+ * @property {Geom.VectJson[][]} headPolys
  * - aligned to `[0, ..., frameCount - 1]`
- * - only support uniform head scale
- * @property {Geom.VectJson[]} neckTransforms
- * - world coords
+ * - head attachment in spine world coords
  */
 
 /**

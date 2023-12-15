@@ -11,6 +11,7 @@
     /** @type {number} */ this.y = y;
   }
 
+  /** Radians */
   get angle() {
     return Math.atan2(this.y, this.x);
   }
@@ -132,13 +133,14 @@
 
   /**
    * @param {number[]} coords 
+   * @returns {Geom.Vect[]}
    */
   static fromCoords(coords) {
     return coords.reduce((agg, z, i) => {
-      if (i % 2 === 0) agg.push({ x: z, y: z });
+      if (i % 2 === 0) agg.push(new Vect(z, z));
       else agg[agg.length - 1].y = z;
       return agg;
-    }, /** @type {Geom.VectJson[]} */ ([]));
+    }, /** @type {Geom.Vect[]} */ ([]));
   }
 
   /**

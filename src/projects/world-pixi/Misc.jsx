@@ -125,7 +125,7 @@ export function TestPreRenderNpc({ api }) {
     const framesPerSec = 0.5;
     
     const orient = spineAnimToHeadOrient[animName]
-    const { frameCount, animBounds, headBounds } = spineMeta.anim[animName];
+    const { frameCount, animBounds, headBounds, headPolys } = spineMeta.anim[animName];
     const bodyRects = state.animRects[animName];
     const headRect = spineMeta.head[headSkinName].packedHead[orient];
     
@@ -139,8 +139,8 @@ export function TestPreRenderNpc({ api }) {
     body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
     head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
     // Set (0, 0) in `animBounds` as origin
-    body.anchor.set(-animBounds.x / animBounds.width, -animBounds.y / animBounds.height);
-    head.anchor.set(-headBounds.x / headBounds.width, -headBounds.y / headBounds.height);
+    body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
+    head.anchor.set(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
     
     body.scale.set(npcScaleFactor);
     head.scale.set(npcScaleFactor);
@@ -151,6 +151,12 @@ export function TestPreRenderNpc({ api }) {
       currentTime += (deltaSecs * framesPerSec);
       currentFrame = Math.floor(currentTime) % frameCount;
       body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currentFrame]), state.tex.baseTexture, 0);
+
+      // 🚧 align head sprite with head poly
+      const fourPoints = headPolys[currentFrame];
+      // const { x, y, angle, scale } = headTransforms[currentFrame];
+      // head.position.set( x, y );
+      // head.angle = angle + Math.PI/2;
     }
 
     state.ticker.add(updateFrame);
@@ -158,7 +164,7 @@ export function TestPreRenderNpc({ api }) {
     return () => {
       state.ticker.stop();
       state.ticker.remove(updateFrame);
-      state.npcContainer.removeChild(body);
+      state.npcContainer.removeChild(body, head);
     };
   }, [ready]);
 

@@ -78,7 +78,13 @@
     - ✅ move spine data/utils out of scripts/service into world-pixi/const
     - ✅ put heads in correct place
     - 🚧 animate heads in correct place
-      - 🚧 spine-meta has head world position/rotation/scale
+      - ✅ spine-render: debug: draw rect rects around head attachments
+      - ✅ region attachment vertex convention: [nw, sw, se, ne]
+        - ℹ️ vs[1] -> vs[2] aligns with x-axis
+        - ℹ️ anchor corresponds to point:
+          > vs[0] + (vs[2] - vs[1]) * anchor.x + (vs[1] - vs[0]) * anchor.y
+      - ✅ spine-meta: record head polys per frame
+      - 🚧 `<TestPreRenderNpc>`: align head sprite with rect
     - ✅ spine: `lie` head in setup pose
       - relevant if we create more animations which are "lying down"
     - remove heads from main sprites

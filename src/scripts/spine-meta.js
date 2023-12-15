@@ -78,8 +78,8 @@ export default async function main() {
      * We did not use spine.skeleton.getBoundsRect() because it was too big:
      * attachments are bounded by their transformed rect, not occurring pixels.
      */
-    const animBounds = computeSpineAttachmentBounds(spine, "anim-bounds");
-    const headBounds = computeSpineAttachmentBounds(spine, "head");
+    const { bounds: animBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
+    const { bounds: headBounds } = computeSpineAttachmentBounds(spine, "head");
 
     const frameCount = spineAnimToFrames[animName];
     const frameDurSecs = anim.duration / frameCount;
@@ -87,22 +87,23 @@ export default async function main() {
     /**
      * Compute head/neck position/scale per frame.
      */
-    const headTransforms = /** @type {import("./service").SpineAnimMeta['headTransforms']} */ ([]);
-    const neckTransforms = /** @type {import("./service").SpineAnimMeta['neckTransforms']} */ ([]);
-    const head = spine.skeleton.findBone("head");
-    const neck = spine.skeleton.findBone("neck");
+    const headPolys = /** @type {Geom.VectJson[][]} */ ([]);
+    // const head = spine.skeleton.findBone("head");
+    // const neck = spine.skeleton.findBone("neck");
+    // const headAnchor = new Vect(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
-      headTransforms.push({
-        x: precision(head.worldX, 6),
-        y: precision(head.worldX, 6),
-        scale: precision(head.getWorldScaleX(), 6),
-        angle: precision(neck.getWorldRotationX() * (Math.PI / 180), 6),
-      });
-      neckTransforms.push({
-        x: precision(neck.worldX, 6),
-        y: precision(neck.worldX, 6),
-      });
+      // 🚧
+      const { poly } = computeSpineAttachmentBounds(spine, 'head');
+      poly.precision(2);
+      // // vs[0] + (vs[2] - vs[1]) * anchor.x + (vs[1] - vs[0]) * anchor.y
+      // const position = new Vect(
+      //   vs[0].x + (headAnchor.x * (vs[2].x - vs[1].x)) + (headAnchor.y * (vs[1].x - vs[0].x)),
+      //   vs[0].y + (headAnchor.x * (vs[2].y - vs[1].y)) + (headAnchor.y * (vs[1].y - vs[0].y)),
+      // );
+      // // vs[1] -> vs[2] is initially the x-axis
+      // const angleDegrees = vs[2].clone().sub(vs[1]).angle * (180 / Math.PI);
+      headPolys.push(poly.outline);
     }
 
     outputAnimMeta[anim.name] = {
@@ -112,8 +113,7 @@ export default async function main() {
       animBounds,
       headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
-      headTransforms,
-      neckTransforms,
+      headPolys,
     };
 
     addRectToPack(
@@ -139,9 +139,9 @@ export default async function main() {
       spine.update(0);
 
       const bounds = Rect.fromRects(
-        computeSpineAttachmentBounds(spine, 'head'),
+        computeSpineAttachmentBounds(spine, 'head').bounds,
         // head skin may not have hair
-        hairSlot.attachment ? computeSpineAttachmentBounds(spine, 'hair') : Rect.zero,
+        hairSlot.attachment ? computeSpineAttachmentBounds(spine, 'hair').bounds : Rect.zero,
       );
       addRectToPack(bounds.width, bounds.height, `${headSkinName}:${headOrientKey}`);
     }

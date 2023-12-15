@@ -17,7 +17,7 @@ import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
 import { spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
-import { loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
+import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
 
 const debug = process.argv[2] === 'debug';
 
@@ -97,10 +97,16 @@ export default async function main() {
         packedRect.x + (frame * (animBounds.width + packedPadding)) + Math.abs(animBounds.x),
         packedRect.y + Math.abs(animBounds.y),
       );
-      app.renderer.render(spine, {
-        renderTexture: tex,
-        clear: false,
-      });
+      app.renderer.render(spine, { renderTexture: tex, clear: false });
+      // 🚧 debug draw head attachment bounds
+      const { poly } = computeSpineAttachmentBounds(spine, 'head');
+      // console.log(anim.name, frame, poly.outline);
+      poly.translate(spine.x, spine.y);
+      app.renderer.render(
+        (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
+        { renderTexture: tex, clear: false },
+      );
+
     }
   }
 
