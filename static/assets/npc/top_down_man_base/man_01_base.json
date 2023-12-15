@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "7vSR0Wqk/1w",
+	"hash": "zH3a8xu0TUA",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -580,6 +580,9 @@
 		}
 	}
 ],
+"events": {
+	"footstep": {}
+},
 "animations": {
 	"idle": {
 		"slots": {
@@ -1575,7 +1578,12 @@
 					}
 				}
 			}
-		}
+		},
+		"events": [
+			{ "name": "footstep", "string": "left-down" },
+			{ "time": 0.428, "name": "footstep", "string": "right-down" },
+			{ "time": 0.8, "name": "footstep", "string": "left-down" }
+		]
 	}
 }
 }
