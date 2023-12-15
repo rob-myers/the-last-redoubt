@@ -5,11 +5,13 @@
  * 
  * Usage:
  * - yarn spine-render
- * - yarn spine-render debug
+ * - yarn spine-render --debug
  */
 /// <reference path="./deps.d.ts"/>
 
 import fs from "fs";
+import getOpts from 'getopts';
+const opts = getOpts(process.argv);
 
 import { Assets, RenderTexture, Application, Sprite, Graphics } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
@@ -47,17 +49,17 @@ export default async function main() {
     skipDetections: true,
   });
 
-  if (debug) {// Debug Rectangle Packing
-    const gfx = (new Graphics).lineStyle({ width: 1 });
-    gfx.beginFill(0xffffff, 1).drawRect(0, 0, packedWidth, packedHeight).endFill();
+  if (opts.debug) {// Debug Rectangle Packing
+    const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
+    gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
     Object.values(animMeta).forEach(({ animName, packedRect, animBounds, frameCount }) => {
-      gfx.beginFill(0xff0000, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
+      gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
       for (let i = 0; i < frameCount; i++)
         gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + packedPadding)), packedRect.y, animBounds.width, animBounds.height);
     });
     Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
-      gfx.beginFill(0xff0000, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
-      gfx.beginFill(0xff0000, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
+      gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
+      gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
     });
     app.renderer.render(gfx, { renderTexture: tex });
   }
@@ -99,13 +101,14 @@ export default async function main() {
       );
       app.renderer.render(spine, { renderTexture: tex, clear: false });
 
-      // 🚧 debug draw head attachment bounds
-      const { poly } = computeSpineAttachmentBounds(spine, 'head');
-      poly.translate(spine.x, spine.y);
-      app.renderer.render(
-        (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
-        { renderTexture: tex, clear: false },
-      );
+      if (opts.debug) {
+        const { poly } = computeSpineAttachmentBounds(spine, 'head');
+        poly.translate(spine.x, spine.y);
+        app.renderer.render(
+          (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
+          { renderTexture: tex, clear: false },
+        );
+      }
     }
   }
 
@@ -133,13 +136,14 @@ export default async function main() {
       );
       app.renderer.render(spine, { renderTexture: tex, clear: false });
 
-      // 🚧 debug draw head attachment bounds
-      const { poly } = computeSpineAttachmentBounds(spine, 'head');
-      poly.translate(spine.x, spine.y);
-      app.renderer.render(
-        (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
-        { renderTexture: tex, clear: false },
-      );
+      if (opts.debug) {
+        const { poly } = computeSpineAttachmentBounds(spine, 'head');
+        poly.translate(spine.x, spine.y);
+        app.renderer.render(
+          (new Graphics).lineStyle({ width: 1, color: 0xff0000 }).beginFill(0, 0).drawPolygon(poly.outline), 
+          { renderTexture: tex, clear: false },
+        );
+      }
     }
   }
 

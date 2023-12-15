@@ -38,6 +38,7 @@ export default async function main() {
   const { data } = await loadSpineServerSide(folderName, baseName);
   const spine = new Spine(data);
 
+  // Set skin for body animations
   const newSkin = new Skin("npc-default-skin");
   newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
   newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
@@ -46,6 +47,10 @@ export default async function main() {
   newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
   spine.skeleton.setSkin(newSkin);
   spine.skeleton.setSlotsToSetupPose();
+
+  // Compute global body scale
+  const { bounds: idleAnimBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
+  const npcScaleFactor = precision((2 * 13) / idleAnimBounds.width, 4);
 
   // For rect packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
@@ -87,23 +92,20 @@ export default async function main() {
     /**
      * Compute head/neck position/scale per frame.
      */
-    const headPolys = /** @type {Geom.VectJson[][]} */ ([]);
-    // const head = spine.skeleton.findBone("head");
-    // const neck = spine.skeleton.findBone("neck");
-    // const headAnchor = new Vect(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
+    const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
       // 🚧
-      const { poly } = computeSpineAttachmentBounds(spine, 'head');
-      poly.precision(2);
-      // // vs[0] + (vs[2] - vs[1]) * anchor.x + (vs[1] - vs[0]) * anchor.y
-      // const position = new Vect(
-      //   vs[0].x + (headAnchor.x * (vs[2].x - vs[1].x)) + (headAnchor.y * (vs[1].x - vs[0].x)),
-      //   vs[0].y + (headAnchor.x * (vs[2].y - vs[1].y)) + (headAnchor.y * (vs[1].y - vs[0].y)),
-      // );
-      // // vs[1] -> vs[2] is initially the x-axis
-      // const angleDegrees = vs[2].clone().sub(vs[1]).angle * (180 / Math.PI);
-      headPolys.push(poly.outline);
+      const poly = computeSpineAttachmentBounds(spine, 'head').poly.precision(2);
+      // [nw, sw, se, ne] becomes [sw, nw, ne, se] in pixi.js (y flips)
+      const [, nw, ne] = poly.outline;
+      headFrames.push({
+        x: precision(nw.x * npcScaleFactor, 4),
+        y: precision(nw.y * npcScaleFactor, 4),
+        angle: precision(Math.atan2(ne.y - nw.y, ne.x - nw.x) * (180 / Math.PI), 4),
+        // Used to scale (head-skin-specific) head
+        width: precision(npcScaleFactor * npcScaleFactor * Vect.distanceBetween(ne, nw), 4),
+      });
     }
 
     outputAnimMeta[anim.name] = {
@@ -113,7 +115,7 @@ export default async function main() {
       animBounds,
       headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
-      headPolys,
+      headFrames,
     };
 
     addRectToPack(
@@ -142,7 +144,7 @@ export default async function main() {
         computeSpineAttachmentBounds(spine, 'head').bounds,
         // head skin may not have hair
         hairSlot.attachment ? computeSpineAttachmentBounds(spine, 'hair').bounds : Rect.zero,
-      );
+      ).precision(4);
       addRectToPack(bounds.width, bounds.height, `${headSkinName}:${headOrientKey}`);
     }
   }
@@ -197,6 +199,7 @@ export default async function main() {
     folderName,
     baseName,
     skeletonScale,
+    npcScaleFactor,
     anim: outputAnimMeta,
     head: outputNpcMeta,
     packedWidth,

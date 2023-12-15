@@ -126,11 +126,11 @@ export function TestPreRenderNpc({ api }) {
     const framesPerSec = 0.5;
     
     const orient = spineAnimToHeadOrient[animName]
-    const { frameCount, animBounds, headBounds, headPolys } = spineMeta.anim[animName];
+    const { frameCount, animBounds, headFrames } = spineMeta.anim[animName];
     const bodyRects = state.animRects[animName];
     const headRect = spineMeta.head[headSkinName].packedHead[orient];
     
-    /** Animation's current time in R[0, numFrames - 1] */
+    /** Animation's real-valued current time in [0, numFrames - 1] */
     let currentTime = 0, currentFrame = 0;
 
     const body = new Sprite(new Texture(state.tex.baseTexture));
@@ -141,7 +141,6 @@ export function TestPreRenderNpc({ api }) {
     head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
     // Set (0, 0) in `animBounds` as origin
     body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-    // head.anchor.set(Math.abs(headBounds.x) / headBounds.width, Math.abs(headBounds.y) / headBounds.height);
     head.anchor.set(0, 0);
     
     body.scale.set(npcScaleFactor);
@@ -156,10 +155,10 @@ export function TestPreRenderNpc({ api }) {
       body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currentFrame]), state.tex.baseTexture, 0);
 
       // align head sprite: position/rotation/scale
-      const [, nw, ne] = headPolys[currentFrame];
-      head.position.set(nw.x * npcScaleFactor, nw.y * npcScaleFactor);
-      head.rotation = Math.atan2(ne.y - nw.y, ne.x - nw.x);
-      head.scale.set(npcScaleFactor * ((npcScaleFactor * Vect.distanceBetween(ne, nw)) / initHeadWidth));
+      const { x, y, angle, width } = headFrames[currentFrame];
+      head.position.set(x, y);
+      head.angle = angle;
+      head.scale.set(width / initHeadWidth);
     }
 
     state.ticker.add(updateFrame);

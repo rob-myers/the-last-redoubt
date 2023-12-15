@@ -77,25 +77,25 @@
     - ✅ decouple heads from npc classes
     - ✅ move spine data/utils out of scripts/service into world-pixi/const
     - ✅ put heads in correct place
-    - 🚧 animate heads in correct place
+    - ✅ animate heads in correct place
       - ✅ spine-render: debug: draw rect rects around head attachments
       - ✅ region attachment vertex convention: `[nw, sw, se, ne]`
         - HOWEVER in pixi.js "y is down", so get `[sw, nw, ne, se]`
       - ✅ spine-meta: record head polys per frame
       - ✅ `<TestPreRenderNpc>`: align head sprite with rect
       - ✅ align head sprite scale too
-      - 🚧 clean up approach
+      - ✅ clean up approach 
     - ✅ spine: `lie` head in setup pose
       - relevant if we create more animations which are "lying down"
-    - remove heads from main sprites
+  - 🚧 spine has events for left/right foot down
+  - spine-meta has foot offsets and walk frame durations for const speed
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - ❌ head/neck data only provided for specified animations i.e. idle-breathe
     - probably need for all i.e. we actually need global positions etc
-  - spine has events for left/right foot down
-  - spine-meta has foot offsets and walk frame durations for const speed
   - try animating `walk` with specific frame durations
   - spritesheet has circle (for debug npc bounds/interact)
+  - remove heads from body sprites
 
 - start migrating NPCs
 

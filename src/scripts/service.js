@@ -271,6 +271,9 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {string} folderName
  * @property {string} baseName
  * @property {number} skeletonScale
+ * @property {number} npcScaleFactor
+ * Enforces a radius of `13` in our notion of world coords (based on Starship Geomorphs).
+ * > `(2 * 13) / anim.idle.animBounds.width`
  * @property {Record<string, SpineAnimMeta>} anim
  * Animation name to metadata.
  * @property {Record<NPC.SpineHeadSkinName, SpineHeadMeta>} head
@@ -285,14 +288,19 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {string} animName
  * @property {number} frameCount
  * @property {number} frameDurSecs
- * @property {Geom.RectJson} animBounds Over all frames (manually specified inside Spine)
- * @property {Geom.RectJson} headBounds Initial, dimension unchanging over frames.
+ * @property {Geom.RectJson} animBounds
+ * Taken over all frames of animation,
+ * in fact manually specified inside Spine.
+ * @property {Geom.RectJson} headBounds The bounds from first frame.
  * @property {Geom.RectJson} packedRect
  * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
  * - has height `animBounds.height`
- * @property {Geom.VectJson[][]} headPolys
+ * @property {{ x: number; y: number; angle: number; width: number; }[]} headFrames
  * - aligned to `[0, ..., frameCount - 1]`
- * - head attachment in spine world coords
+ * - (x, y) is world position of 2nd vertex of head attachment 4-gon,
+ *   which in pixi.js corresponds to top-left (unrotated)
+ * - `angle` (degrees) of head attachment 4-gon in world coords
+ * - `width` of head attachment 4-gon (unrotated)
  */
 
 /**
