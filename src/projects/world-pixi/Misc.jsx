@@ -110,17 +110,19 @@ export function TestPreRenderNpc({ api }) {
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
       headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
+      /** Degrees */
+      angle: 0,
 
       /**
        * @param {NPC.SpineAnimName} animName 
        * @param {NPC.SpineHeadSkinName} headSkinName 
        */
       setAnim(animName, headSkinName) {
-        const orient = spineAnimToHeadOrient[animName]
+        const headOrient = spineAnimToHeadOrient[animName]
         const { animBounds, headFrames, frameCount } = spineMeta.anim[animName];
         const bodyRects = state.bodyRects = state.animRects[animName];
         state.headFrames = headFrames;
-        const headRect = spineMeta.head[headSkinName].packedHead[orient];
+        const headRect = spineMeta.head[headSkinName].packedHead[headOrient];
         state.frameCount = frameCount;
 
         // ℹ️ Changing frame width/height later deforms image
@@ -132,9 +134,8 @@ export function TestPreRenderNpc({ api }) {
         state.head.anchor.set(0, 0);
         
         state.body.scale.set(npcScaleFactor);
+        state.body.angle = state.angle;
         state.initHeadWidth = state.head.width;
-
-        state.body.angle = 45;
       },
       ticker,
       /** @param {number} deltaSecs */
@@ -174,7 +175,8 @@ export function TestPreRenderNpc({ api }) {
   React.useEffect(() => {
     if (!ready) return;
 
-    state.setAnim('idle-breathe', 'head/blonde-light');
+    state.angle = 90;
+    state.setAnim('idle-breathe', 'head/skin-head-dark');
     const { updateFrame } = state;
     updateFrame(0); // Avoid initial flicker
     state.ticker.add(updateFrame).start();
