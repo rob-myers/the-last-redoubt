@@ -88,8 +88,9 @@
     - ✅ spine: `lie` head in setup pose
       - relevant if we create more animations which are "lying down"
   - ✅ abstract `<TestPreRenderNpc>` a bit
-  - 🚧 can rotate body and head
+  - ✅ can rotate body and head
   - ✅ spine has events for left/right foot down
+  - 🚧 cleanup angle choice
   - spine-meta has foot offsets and walk frame durations for const speed
     - ℹ️ spine export can have e.g. `skeleton.fps` as `2` (so times are halved)
     - ℹ️ `footstep` event: 0 `left-down`, 0.856 `right-down`, 1.6 ~ 0

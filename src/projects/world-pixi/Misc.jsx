@@ -126,12 +126,15 @@ export function TestPreRenderNpc({ api }) {
         // ℹ️ Changing frame width/height later deforms image
         state.body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
         state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
-        // Set (0, 0) in `animBounds` as origin
+
+        // Body anchor is (0, 0) in spine world coords
         state.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
         state.head.anchor.set(0, 0);
         
         state.body.scale.set(npcScaleFactor);
         state.head.scale.set(npcScaleFactor); // 🚧 remove scale, also from spine-meta
+
+        state.body.angle = 45;
 
         state.initHeadWidth = state.head.width;
       },
@@ -144,9 +147,14 @@ export function TestPreRenderNpc({ api }) {
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
         // head
         const { x, y, angle, width } = state.headFrames[state.currentFrame];
-        state.head.position.set(x, y);
-        state.head.angle = angle;
+        state.head.angle = angle + state.body.angle;
         state.head.scale.set(width / state.initHeadWidth);
+
+        const radians = state.body.rotation;
+        state.head.position.set(
+          Math.cos(radians) * x - Math.sin(radians) * y,
+          Math.sin(radians) * x + Math.cos(radians) * y,
+        );
       },
     };
   });
@@ -168,7 +176,7 @@ export function TestPreRenderNpc({ api }) {
   React.useEffect(() => {
     if (!ready) return;
 
-    state.setAnim('idle-breathe', 'head/skin-head-dark');
+    state.setAnim('idle-breathe', 'head/blonde-light');
     const { updateFrame } = state;
     state.ticker.add(updateFrame).start();
     return () => {
