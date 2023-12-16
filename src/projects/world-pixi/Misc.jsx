@@ -132,11 +132,9 @@ export function TestPreRenderNpc({ api }) {
         state.head.anchor.set(0, 0);
         
         state.body.scale.set(npcScaleFactor);
-        state.head.scale.set(npcScaleFactor); // 🚧 remove scale, also from spine-meta
+        state.initHeadWidth = state.head.width;
 
         state.body.angle = 45;
-
-        state.initHeadWidth = state.head.width;
       },
       ticker,
       /** @param {number} deltaSecs */
@@ -178,6 +176,7 @@ export function TestPreRenderNpc({ api }) {
 
     state.setAnim('idle-breathe', 'head/blonde-light');
     const { updateFrame } = state;
+    updateFrame(0); // Avoid initial flicker
     state.ticker.add(updateFrame).start();
     return () => {
       state.ticker.stop();

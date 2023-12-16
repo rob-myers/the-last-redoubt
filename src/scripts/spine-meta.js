@@ -104,7 +104,7 @@ export default async function main() {
         y: precision(nw.y * npcScaleFactor, 4),
         angle: precision(Math.atan2(ne.y - nw.y, ne.x - nw.x) * (180 / Math.PI), 4),
         // Used to scale (head-skin-specific) head
-        width: precision(npcScaleFactor * npcScaleFactor * Vect.distanceBetween(ne, nw), 4),
+        width: precision(npcScaleFactor * Vect.distanceBetween(ne, nw), 4),
       });
     }
 
