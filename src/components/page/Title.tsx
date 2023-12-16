@@ -13,7 +13,7 @@ export default function Title() {
         {siteTitle}
       </h1>
       <p>
-        Making videos games more meaningful
+        Towards believable NPCs
       </p>
     </header>
   );
