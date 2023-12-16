@@ -61,7 +61,7 @@ export default async function main() {
   const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
   /** @param {number} width @param {number} height @param {string} name */
   function addRectToPack(width, height, name) {
-    console.log("adding", width, height, name);
+    console.log("➕", width, height, name);
     const r = new Rectangle(width, height);
     r.data = { name };
     rectsToPack.push(r);
