@@ -90,11 +90,12 @@
   - ✅ abstract `<TestPreRenderNpc>` a bit
   - ✅ can rotate body and head
   - ✅ spine has events for left/right foot down
-  - 🚧 cleanup angle choice
+  - ✅ cleanup angle choice
   - spine-meta has foot offsets and walk frame durations for const speed
     - ℹ️ spine export can have e.g. `skeleton.fps` as `2` (so times are halved)
     - ℹ️ `footstep` event: 0 `left-down`, 0.856 `right-down`, 1.6 ~ 0
-    - 🚧 compute root offset per frame using `footstep` event
+    - ✅ spine-meta: detect footstep events
+    - 🚧 spine-meta: compute root offset per frame using `footstep` event
     - use it to translate during walk
     - constant speed: try animating `walk` with specific frame durations
   - can animate translation too

@@ -1,7 +1,7 @@
 /**
  * Compute json with:
  * - per-anim packing for runtime spritesheets
- * - per-anim frame count
+ * - per-anim frame count, head frames, ...
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -75,6 +75,16 @@ export default async function main() {
   spine.skeleton.setBonesToSetupPose();
   for (const anim of animations) {
     const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
+
+    /**
+     * Listen for events e.g. footsteps.
+     * @type {import('@pixi-spine/runtime-4.1').AnimationStateListener}
+     */
+    const spineListener = { event(_entry, event) {
+      console.log('event', event);
+    }};
+    spine.state.addListener(spineListener);
+
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
 
@@ -85,17 +95,17 @@ export default async function main() {
      */
     const { bounds: animBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
     const { bounds: headBounds } = computeSpineAttachmentBounds(spine, "head");
-
+    
+    /**
+     * Compute head attachment top-left position, angle, scale per frame.
+     * 🚧 Compute root offset per frame when `footstep` event available (i.e. walk).
+    */
     const frameCount = spineAnimToFrames[animName];
     const frameDurSecs = anim.duration / frameCount;
-
-    /**
-     * Compute head/neck position/scale per frame.
-     */
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
-      // 🚧
+
       const poly = computeSpineAttachmentBounds(spine, 'head').poly.precision(2);
       // [nw, sw, se, ne] becomes [sw, nw, ne, se] in pixi.js (y flips)
       const [, nw, ne] = poly.outline;
@@ -106,7 +116,10 @@ export default async function main() {
         // Used to scale (head-skin-specific) head
         width: precision(npcScaleFactor * Vect.distanceBetween(ne, nw), 4),
       });
+      // console.log('events', spine.state.events);
     }
+
+    spine.state.removeListener(spineListener);
 
     outputAnimMeta[anim.name] = {
       animName,
@@ -174,7 +187,7 @@ export default async function main() {
     outputAnimMeta[anim.name].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
   }
 
-  const outputNpcMeta = spineHeadSkinNames.reduce((agg, headSkinName) => {
+  const outputHeadMeta = spineHeadSkinNames.reduce((agg, headSkinName) => {
     agg[headSkinName] = {
       headSkinName,
       packedHead: {
@@ -190,7 +203,7 @@ export default async function main() {
       const rectName = `${headSkinName}:${orient}`;
       const r = bin.rects.find((x) => x.data.name === rectName);
       if (!r) throw Error(`spine-meta: ${rectName}: packed rect not found`);
-      outputNpcMeta[headSkinName].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
+      outputHeadMeta[headSkinName].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
     }
   }
 
@@ -201,7 +214,7 @@ export default async function main() {
     skeletonScale,
     npcScaleFactor,
     anim: outputAnimMeta,
-    head: outputNpcMeta,
+    head: outputHeadMeta,
     packedWidth,
     packedHeight,
     packedPadding,
