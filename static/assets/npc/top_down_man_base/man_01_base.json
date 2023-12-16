@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "zH3a8xu0TUA",
+	"hash": "GqTt3TDje0c",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1581,8 +1581,7 @@
 		},
 		"events": [
 			{ "name": "footstep", "string": "left-down" },
-			{ "time": 0.428, "name": "footstep", "string": "right-down" },
-			{ "time": 0.8, "name": "footstep", "string": "left-down" }
+			{ "time": 0.425, "name": "footstep", "string": "right-down" }
 		]
 	}
 }
