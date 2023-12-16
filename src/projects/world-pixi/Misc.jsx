@@ -105,7 +105,7 @@ export function TestPreRenderNpc({ api }) {
       currentFrame: 0,
       body: new Sprite(new Texture(tex.baseTexture)),
       head: new Sprite(new Texture(tex.baseTexture)),
-      framesPerSec: 0.5,
+      framesPerSec: 0.25,
       frameCount: 1,
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
@@ -156,6 +156,8 @@ export function TestPreRenderNpc({ api }) {
         );
       },
     };
+  }, {
+    overwrite: { framesPerSec: true },
   });
 
   const query = useQueryWrap('test-pre-render-npc', async () => {
