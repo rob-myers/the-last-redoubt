@@ -87,13 +87,18 @@
       - ✅ clean up approach 
     - ✅ spine: `lie` head in setup pose
       - relevant if we create more animations which are "lying down"
-  - 🚧 spine has events for left/right foot down
+  - ✅ abstract `<TestPreRenderNpc>` a bit
+  - 🚧 can rotate body and head
+  - ✅ spine has events for left/right foot down
   - spine-meta has foot offsets and walk frame durations for const speed
+    - ℹ️ spine export can have e.g. `skeleton.fps` as `2` (so times are halved)
+    - ℹ️ `footstep` event: 0 `left-down`, 0.856 `right-down`, 1.6 ~ 0
+    - 🚧 compute root offset per frame using `footstep` event
+    - use it to translate during walk
+    - constant speed: try animating `walk` with specific frame durations
+  - can animate translation too
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker
-  - ❌ head/neck data only provided for specified animations i.e. idle-breathe
-    - probably need for all i.e. we actually need global positions etc
-  - try animating `walk` with specific frame durations
   - spritesheet has circle (for debug npc bounds/interact)
   - remove heads from body sprites
 

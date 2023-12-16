@@ -6,7 +6,6 @@ import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
 import { mapValues } from "../service/generic";
-import { Vect } from "../geom";
 import { spineAnimToHeadOrient } from "./const";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
@@ -80,14 +79,16 @@ export function TestNpc({ api }) {
 export function TestPreRenderNpc({ api }) {
 
   const state = useStateRef(() => {
+    const tex = RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight });
     const ticker = new Ticker;
     ticker.autoStart = false;
     ticker.stop();
+
     return {
       /** Pre-rendered spritesheet i.e. `yarn spine-render` */
       srcTex: /** @type {import('pixi.js').Texture} */ ({}),
-      /** `srcTex`, possibly with debug stuff */
-      tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
+      /** A copy of `srcTex` possibly with debug stuff */
+      tex,
       /** Given anim and 0-based frame, bounding rect in spritesheet  */
       animRects: mapValues(spineMeta.anim, ({ animBounds, packedRect, frameCount }) =>
         [...new Array(frameCount)].map((_, frame) => ({
@@ -98,7 +99,55 @@ export function TestPreRenderNpc({ api }) {
         }))
       ),
       npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
+
+      /** Animation's real-valued current time in [0, numFrames - 1] */
+      currentTime: 0,
+      currentFrame: 0,
+      body: new Sprite(new Texture(tex.baseTexture)),
+      head: new Sprite(new Texture(tex.baseTexture)),
+      framesPerSec: 0.5,
+      frameCount: 1,
+      initHeadWidth: 0,
+      bodyRects: /** @type {Geom.RectJson[]} */ ([]),
+      headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
+
+      /**
+       * @param {NPC.SpineAnimName} animName 
+       * @param {NPC.SpineHeadSkinName} headSkinName 
+       */
+      setAnim(animName, headSkinName) {
+        const orient = spineAnimToHeadOrient[animName]
+        const { animBounds, headFrames, frameCount } = spineMeta.anim[animName];
+        const bodyRects = state.bodyRects = state.animRects[animName];
+        state.headFrames = headFrames;
+        const headRect = spineMeta.head[headSkinName].packedHead[orient];
+        state.frameCount = frameCount;
+
+        // ℹ️ Changing frame width/height later deforms image
+        state.body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
+        state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
+        // Set (0, 0) in `animBounds` as origin
+        state.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
+        state.head.anchor.set(0, 0);
+        
+        state.body.scale.set(npcScaleFactor);
+        state.head.scale.set(npcScaleFactor); // 🚧 remove scale, also from spine-meta
+
+        state.initHeadWidth = state.head.width;
+      },
       ticker,
+      /** @param {number} deltaSecs */
+      updateFrame(deltaSecs) {
+        state.currentTime += (deltaSecs * state.framesPerSec);
+        state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
+        // body
+        state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
+        // head
+        const { x, y, angle, width } = state.headFrames[state.currentFrame];
+        state.head.position.set(x, y);
+        state.head.angle = angle;
+        state.head.scale.set(width / state.initHeadWidth);
+      },
     };
   });
 
@@ -119,61 +168,24 @@ export function TestPreRenderNpc({ api }) {
   React.useEffect(() => {
     if (!ready) return;
 
-    /** @type {keyof spineMeta['anim']} */
-    const animName = 'idle-breathe';
-    /** @type {NPC.SpineHeadSkinName} */
-    const headSkinName = 'head/skin-head-dark';
-    const framesPerSec = 0.5;
-    
-    const orient = spineAnimToHeadOrient[animName]
-    const { frameCount, animBounds, headFrames } = spineMeta.anim[animName];
-    const bodyRects = state.animRects[animName];
-    const headRect = spineMeta.head[headSkinName].packedHead[orient];
-    
-    /** Animation's real-valued current time in [0, numFrames - 1] */
-    let currentTime = 0, currentFrame = 0;
-
-    const body = new Sprite(new Texture(state.tex.baseTexture));
-    const head = new Sprite(new Texture(state.tex.baseTexture));
-
-    // ℹ️ Changing frame width/height later deforms image
-    body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
-    head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
-    // Set (0, 0) in `animBounds` as origin
-    body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-    head.anchor.set(0, 0);
-    
-    body.scale.set(npcScaleFactor);
-    head.scale.set(npcScaleFactor);
-    const initHeadWidth = head.width;
-    state.npcContainer.addChild(body, head);
-    
-    /** @param {number} deltaSecs */
-    function updateFrame(deltaSecs) {
-      currentTime += (deltaSecs * framesPerSec);
-      currentFrame = Math.floor(currentTime) % frameCount;
-      body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currentFrame]), state.tex.baseTexture, 0);
-
-      // align head sprite: position/rotation/scale
-      const { x, y, angle, width } = headFrames[currentFrame];
-      head.position.set(x, y);
-      head.angle = angle;
-      head.scale.set(width / initHeadWidth);
-    }
-
-    state.ticker.add(updateFrame);
-    state.ticker.start();
+    state.setAnim('idle-breathe', 'head/skin-head-dark');
+    const { updateFrame } = state;
+    state.ticker.add(updateFrame).start();
     return () => {
       state.ticker.stop();
       state.ticker.remove(updateFrame);
-      state.npcContainer.removeChild(body, head);
     };
   }, [ready]);
 
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}
     <PixiReact.ParticleContainer
-      ref={x => x && (state.npcContainer = x)}
+      ref={x => {
+        if (x) {
+          state.npcContainer = x;
+          x.addChild(state.body, state.head);
+        }
+      }}
       properties={{
         alpha: true,
         position: true,
