@@ -97,7 +97,8 @@
     - ✅ spine-meta: detect footstep events
     - ✅ spine: change fps to 1 in "animation > playback view"
     - ✅ spine-meta: compute rootDeltas per frame using `footstep` event
-    - 🚧 use it to translate during walk
+    - ✅ use it to translate during walk
+    - 🚧 account for body rotation
     - constant speed: try animating `walk` with specific frame durations
   - can animate translation too
   - can add multiple npcs

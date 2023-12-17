@@ -109,11 +109,12 @@ export function TestPreRenderNpc({ api }) {
       currentFrame: 0,
       body,
       head,
-      framesPerSec: 0.1,
+      framesPerSec: 0.25,
       frameCount: 1,
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
       headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
+      rootDeltas: /** @type {number[]} */ ([]),
       /** Degrees */
       angle: 0,
 
@@ -123,11 +124,12 @@ export function TestPreRenderNpc({ api }) {
        */
       setAnim(animName, headSkinName) {
         const headOrient = spineAnimToHeadOrient[animName]
-        const { animBounds, headFrames, frameCount } = spineMeta.anim[animName];
+        const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
         const bodyRects = state.bodyRects = state.animRects[animName];
         state.headFrames = headFrames;
         const headRect = spineMeta.head[headSkinName].packedHead[headOrient];
         state.frameCount = frameCount;
+        state.rootDeltas = rootDeltas;
 
         // ℹ️ Changing frame width/height later deforms image
         state.body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
@@ -145,18 +147,24 @@ export function TestPreRenderNpc({ api }) {
       /** @param {number} deltaSecs */
       updateFrame(deltaSecs) {
         state.currentTime += (deltaSecs * state.framesPerSec);
+        const prevFrame = state.currentFrame;
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
         // body
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
+        // ✅ can translate
+        // 🚧 can translate relative to angle
+        if (state.rootDeltas.length && (prevFrame !== state.currentFrame)) {
+          state.body.y += state.rootDeltas[state.currentFrame];
+        }
+
         // head
         const { x, y, angle, width } = state.headFrames[state.currentFrame];
         state.head.angle = angle + state.body.angle;
         state.head.scale.set(width / state.initHeadWidth);
-
         const radians = state.body.rotation;
         state.head.position.set(
           Math.cos(radians) * x - Math.sin(radians) * y,
-          Math.sin(radians) * x + Math.cos(radians) * y,
+          state.body.y + Math.sin(radians) * x + Math.cos(radians) * y,
         );
       },
     };
@@ -177,17 +185,14 @@ export function TestPreRenderNpc({ api }) {
   const ready = query.isFetched && !query.isFetching;
 
   React.useEffect(() => {
-    if (!ready) return;
-
-    state.angle = 90;
-    state.setAnim('walk', 'head/skin-head-dark');
-    const { updateFrame } = state;
-    updateFrame(0); // Avoid initial flicker
-    state.ticker.add(updateFrame).start();
-    return () => {
-      state.ticker.stop();
-      state.ticker.remove(updateFrame);
-    };
+    if (ready) {
+      state.angle = 180; // 🚧
+      state.setAnim('walk', 'head/skin-head-dark');
+      const { updateFrame } = state;
+      updateFrame(0); // Avoid initial flicker
+      state.ticker.add(updateFrame).start();
+      return () => state.ticker.remove(updateFrame).stop();
+    }
   }, [ready]);
 
   return <>
