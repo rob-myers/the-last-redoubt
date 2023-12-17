@@ -289,18 +289,20 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {number} frameCount
  * @property {number} frameDurSecs
  * @property {Geom.RectJson} animBounds
- * Taken over all frames of animation,
- * in fact manually specified inside Spine.
+ * Over all frames of animation (manually specified in Spine).
  * @property {Geom.RectJson} headBounds The bounds from first frame.
  * @property {Geom.RectJson} packedRect
  * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
  * - has height `animBounds.height`
  * @property {{ x: number; y: number; angle: number; width: number; }[]} headFrames
- * - aligned to `[0, ..., frameCount - 1]`
+ * - aligned to frames
  * - (x, y) is world position of 2nd vertex of head attachment 4-gon,
  *   which in pixi.js corresponds to top-left (unrotated)
  * - `angle` (degrees) of head attachment 4-gon in world coords
  * - `width` of head attachment 4-gon (unrotated)
+ * @property {number[]} rootDeltas
+ * - root motion in 'y direction' per frame
+ * - empty iff no motion
  */
 
 /**

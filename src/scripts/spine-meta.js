@@ -9,7 +9,9 @@ import { Assets } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 
-import { precision } from "../projects/service/generic";
+import { pause, precision } from "../projects/service/generic";
+import { warn } from "../projects/service/log";
+import { ansi } from "../projects/service/const";
 import { skeletonScale } from "../projects/world/const";
 import { spineAnimToFrames, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
 import { writeAsJson } from "../projects/service/file";
@@ -61,7 +63,7 @@ export default async function main() {
   const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
   /** @param {number} width @param {number} height @param {string} name */
   function addRectToPack(width, height, name) {
-    console.log("➕", width, height, name);
+    console.log(`${ansi.Blue}will pack${ansi.Reset}:`, width, height, name);
     const r = new Rectangle(width, height);
     r.data = { name };
     rectsToPack.push(r);
@@ -73,18 +75,41 @@ export default async function main() {
   const { animations } = spine.spineData;
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
+
   for (const anim of animations) {
     const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
+    
+    /** Track motion of moving animations e.g. `walk`. */
+    const motion = {
+      /** Current foot down */
+      footDown: /** @type {null | 'left' | 'right'} */ (null),
+      /** Previous position of foot */
+      prevFootPos: new Vect,
+      /** The output: amount root moves per frame */
+      rootDeltas: /** @type {number[]} */ ([]),
+    };
 
-    /**
-     * Listen for events e.g. footsteps.
-     * @type {import('@pixi-spine/runtime-4.1').AnimationStateListener}
-     */
+    /** @type {import('@pixi-spine/runtime-4.1').AnimationStateListener} */
     const spineListener = { event(_entry, event) {
       console.log('event', event);
+      const { data: { name: eventName }, stringValue: eventValue } = event;
+      switch (eventName) {
+        case 'footstep':
+          if (eventValue === 'left' || eventValue === 'right') {
+            // We track 1st vertex of region attachment (won't be the heel)
+            const { poly } = computeSpineAttachmentBounds(spine, `${eventValue}-shoe`);
+            motion.footDown = eventValue;
+            motion.prevFootPos.copy(poly.outline[0]);
+            break;
+          }
+          warn(`${animName}: footstep: unhandled stringValue: ${eventValue}`);
+          break;
+        default:
+          warn(`${animName}: unhandled spine event: ${eventName}`);
+      }
     }};
-    spine.state.addListener(spineListener);
 
+    spine.state.addListener(spineListener);
     spine.state.setAnimation(0, anim.name, false);
     spine.update(0);
 
@@ -98,13 +123,23 @@ export default async function main() {
     
     /**
      * Compute head attachment top-left position, angle, scale per frame.
-     * 🚧 Compute root offset per frame when `footstep` event available (i.e. walk).
+     * Compute rootDeltas per frame when footstep event available
     */
     const frameCount = spineAnimToFrames[animName];
     const frameDurSecs = anim.duration / frameCount;
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
     for (let i = 0; i < frameCount; i++) {
       spine.update(i === 0 ? 0 : frameDurSecs);
+
+      if (motion.footDown) {
+        const { poly } = computeSpineAttachmentBounds(spine, `${motion.footDown}-shoe`);
+        const trackedPosition = poly.outline[0].clone();
+        // ℹ️ assume motion is purely within y-axis
+        const rootDelta = precision(Math.abs(trackedPosition.y - motion.prevFootPos.y) * npcScaleFactor, 4);
+        motion.rootDeltas.push(rootDelta);
+        motion.prevFootPos = trackedPosition
+        await pause(); // Try avoid late events
+      }
 
       const poly = computeSpineAttachmentBounds(spine, 'head').poly.precision(2);
       // [nw, sw, se, ne] becomes [sw, nw, ne, se] in pixi.js (y flips)
@@ -129,6 +164,7 @@ export default async function main() {
       headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
       headFrames,
+      rootDeltas: motion.rootDeltas,
     };
 
     addRectToPack(

@@ -11,7 +11,10 @@
       "animBounds": {"x": -72.1, "y": -41, "width": 143, "height": 86.9},
       "headBounds": {"x": -46, "y": -41, "width": 92.1, "height": 86.8},
       "packedRect": {"x": 3130.6, "y": 240.5, "width": 143, "height": 86.9},
-      "headFrames": [{"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}]
+      "headFrames": [
+        {"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}
+      ],
+      "rootDeltas": []
     },
     "idle-breathe": {
       "animName": "idle-breathe",
@@ -41,7 +44,8 @@
         {"x": -8.5701, "y": -7.4429, "angle": 0, "width": 16.9947},
         {"x": -8.501, "y": -7.4483, "angle": 0, "width": 16.911},
         {"x": -8.4319, "y": -7.4538, "angle": 0, "width": 16.8274}
-      ]
+      ],
+      "rootDeltas": []
     },
     "lie": {
       "animName": "lie",
@@ -50,7 +54,10 @@
       "animBounds": {"x": -84.7, "y": -260, "width": 174.6, "height": 310},
       "headBounds": {"x": -45.9, "y": -48.6, "width": 91.8, "height": 102},
       "packedRect": {"x": 2954, "y": 108.7, "width": 174.6, "height": 310},
-      "headFrames": [{"x": -8.3446, "y": -8.8409, "angle": 0, "width": 16.6892}]
+      "headFrames": [
+        {"x": -8.3446, "y": -8.8409, "angle": 0, "width": 16.6892}
+      ],
+      "rootDeltas": []
     },
     "sit": {
       "animName": "sit",
@@ -59,7 +66,10 @@
       "animBounds": {"x": -75.1, "y": -79.9, "width": 150, "height": 129.8},
       "headBounds": {"x": -46, "y": -41, "width": 92.1, "height": 86.8},
       "packedRect": {"x": 3130.6, "y": 108.7, "width": 150, "height": 129.8},
-      "headFrames": [{"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}]
+      "headFrames": [
+        {"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}
+      ],
+      "rootDeltas": []
     },
     "walk": {
       "animName": "walk",
@@ -89,6 +99,28 @@
         {"x": -8.7119, "y": -7.232, "angle": -1.4745, "width": 16.7439},
         {"x": -9.0991, "y": -6.9011, "angle": -3.567, "width": 16.7435},
         {"x": -9.4736, "y": -6.5557, "angle": -5.658, "width": 16.7435}
+      ],
+      "rootDeltas": [
+        1.743,
+        2.1265,
+        2.1265,
+        2.1265,
+        2.1265,
+        2.1265,
+        2.1265,
+        2.1265,
+        3.15,
+        2.1233,
+        1.7233,
+        2.6219,
+        2.1829,
+        2.1834,
+        2.1839,
+        2.1843,
+        2.1848,
+        2.1852,
+        2.0521,
+        1.8267
       ]
     }
   },
