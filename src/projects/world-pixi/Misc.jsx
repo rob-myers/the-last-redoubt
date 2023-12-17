@@ -84,6 +84,11 @@ export function TestPreRenderNpc({ api }) {
     ticker.autoStart = false;
     ticker.stop();
 
+    const body = new Sprite(new Texture(tex.baseTexture));
+    const head = new Sprite(new Texture(tex.baseTexture));
+    body.texture.frame = new Rectangle();
+    head.texture.frame = new Rectangle(); // Avoid initial flicker
+
     return {
       /** Pre-rendered spritesheet i.e. `yarn spine-render` */
       srcTex: /** @type {import('pixi.js').Texture} */ ({}),
@@ -98,14 +103,13 @@ export function TestPreRenderNpc({ api }) {
           height: animBounds.height,
         }))
       ),
-      npcContainer: /** @type {import('pixi.js').ParticleContainer} */ ({}),
 
       /** Animation's real-valued current time in [0, numFrames - 1] */
       currentTime: 0,
       currentFrame: 0,
-      body: new Sprite(new Texture(tex.baseTexture)),
-      head: new Sprite(new Texture(tex.baseTexture)),
-      framesPerSec: 0.25,
+      body,
+      head,
+      framesPerSec: 0.1,
       frameCount: 1,
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
@@ -160,11 +164,9 @@ export function TestPreRenderNpc({ api }) {
     overwrite: { framesPerSec: true },
   });
 
+  // load spritesheet into RenderTexture
   const query = useQueryWrap('test-pre-render-npc', async () => {
-    // copy spritesheet into a RenderTexture
-    state.srcTex = await Assets.load(
-      `/assets/npc/top_down_man_base/spine-render/spritesheet.webp`
-    );
+    state.srcTex = await Assets.load(`/assets/npc/top_down_man_base/spine-render/spritesheet.webp`);
     api.renderInto((new Graphics)
       .beginTextureFill({ texture: state.srcTex })
       .drawRect(0, 0, state.tex.width, state.tex.height)
@@ -178,7 +180,7 @@ export function TestPreRenderNpc({ api }) {
     if (!ready) return;
 
     state.angle = 90;
-    state.setAnim('idle-breathe', 'head/skin-head-dark');
+    state.setAnim('walk', 'head/skin-head-dark');
     const { updateFrame } = state;
     updateFrame(0); // Avoid initial flicker
     state.ticker.add(updateFrame).start();
@@ -191,12 +193,7 @@ export function TestPreRenderNpc({ api }) {
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}
     <PixiReact.ParticleContainer
-      ref={x => {
-        if (x) {
-          state.npcContainer = x;
-          x.addChild(state.body, state.head);
-        }
-      }}
+      ref={x => x?.addChild(state.body, state.head)}
       properties={{
         alpha: true,
         position: true,
