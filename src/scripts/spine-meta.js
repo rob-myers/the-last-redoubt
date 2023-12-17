@@ -83,10 +83,23 @@ export default async function main() {
     const motion = {
       /** Current foot down */
       footDown: /** @type {null | 'left' | 'right'} */ (null),
-      /** Previous position of foot */
+      /** For final frame diff */
+      firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
+      /** Previous position of foot (initially wrong) */
       prevFootPos: new Vect,
-      /** The output: amount root moves per frame */
+      /** The output: root motion per frame */
       rootDeltas: /** @type {number[]} */ ([]),
+      /** Assume motion is purely within y-axis */
+      computeDelta() {
+        const prev = motion.prevFootPos;
+        const curr = motion.getFootPos();
+        // console.log(Math.abs(curr.y - prev.y), prev, curr);
+        return precision(Math.abs(curr.y - prev.y) * npcScaleFactor, 4);
+      },
+      getFootPos() {
+        const bone = spine.skeleton.findBone(`${motion.footDown}-shoe`);
+        return new Vect(bone.worldX, bone.worldY);
+      },
     };
 
     /** @type {import('@pixi-spine/runtime-4.1').AnimationStateListener} */
@@ -96,10 +109,9 @@ export default async function main() {
       switch (eventName) {
         case 'footstep':
           if (eventValue === 'left' || eventValue === 'right') {
-            // We track 1st vertex of region attachment (won't be the heel)
-            const { poly } = computeSpineAttachmentBounds(spine, `${eventValue}-shoe`);
             motion.footDown = eventValue;
-            motion.prevFootPos.copy(poly.outline[0]);
+            motion.firstFootDown ??= eventValue;
+            motion.prevFootPos.copy(motion.getFootPos());
             break;
           }
           warn(`${animName}: footstep: unhandled stringValue: ${eventValue}`);
@@ -110,7 +122,7 @@ export default async function main() {
     }};
 
     spine.state.addListener(spineListener);
-    spine.state.setAnimation(0, anim.name, false);
+    spine.state.setAnimation(0, animName, false);
     spine.update(0);
 
     /**
@@ -128,16 +140,12 @@ export default async function main() {
     const frameCount = spineAnimToFrames[animName];
     const frameDurSecs = anim.duration / frameCount;
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
-    for (let i = 0; i < frameCount; i++) {
-      spine.update(i === 0 ? 0 : frameDurSecs);
+    for (let frame = 0; frame < frameCount; frame++) {
+      spine.update(frame === 0 ? 0 : frameDurSecs);
 
       if (motion.footDown) {
-        const { poly } = computeSpineAttachmentBounds(spine, `${motion.footDown}-shoe`);
-        const trackedPosition = poly.outline[0].clone();
-        // ℹ️ assume motion is purely within y-axis
-        const rootDelta = precision(Math.abs(trackedPosition.y - motion.prevFootPos.y) * npcScaleFactor, 4);
-        motion.rootDeltas.push(rootDelta);
-        motion.prevFootPos = trackedPosition
+        motion.rootDeltas.push(motion.computeDelta());
+        motion.prevFootPos = motion.getFootPos();
         await pause(); // Try avoid late events
       }
 
@@ -155,6 +163,14 @@ export default async function main() {
     }
 
     spine.state.removeListener(spineListener);
+
+    if (motion.rootDeltas.length) {
+      // 🚧 replace 0th with diff between current frame and next (~ frame 0)
+      motion.footDown = motion.firstFootDown;
+      motion.prevFootPos = motion.getFootPos();
+      spine.update(frameDurSecs);
+      motion.rootDeltas.splice(0, 1, motion.computeDelta());
+    }
 
     outputAnimMeta[anim.name] = {
       animName,
