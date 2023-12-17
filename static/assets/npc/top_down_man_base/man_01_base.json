@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "24zjHEAueCI",
+	"hash": "dwyPXvHwVOI",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1205,7 +1205,8 @@
 			"left-shoe": {
 				"attachment": [
 					{ "time": 0.586, "name": "shoes/trainer_black_01" },
-					{ "time": 1.188, "name": "shoes/trainer_black_03" }
+					{ "time": 1.188, "name": "shoes/trainer_black_03" },
+					{ "time": 1.6, "name": "left-shoe" }
 				]
 			},
 			"mask-lie": {
@@ -1299,7 +1300,6 @@
 					{ "time": 0.792, "x": 58.97, "y": -21.18 },
 					{ "time": 0.856, "x": 28.39, "y": -17.72 },
 					{ "time": 1.376, "x": 3.86, "y": 31.12 },
-					{ "time": 1.39, "x": -128.74, "y": 21.56 },
 					{ "time": 1.6, "x": -86.41, "y": 9.74 }
 				]
 			},
