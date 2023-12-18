@@ -125,14 +125,15 @@ export function TestPreRenderNpc({ api }) {
       setAnim(animName, headSkinName) {
         const headOrient = spineAnimToHeadOrient[animName]
         const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
-        const bodyRects = state.bodyRects = state.animRects[animName];
+        state.bodyRects = state.animRects[animName];
         state.headFrames = headFrames;
-        const headRect = spineMeta.head[headSkinName].packedHead[headOrient];
         state.frameCount = frameCount;
         state.rootDeltas = rootDeltas;
-
+        
         // ℹ️ Changing frame width/height later deforms image
-        state.body.texture.frame = new Rectangle(bodyRects[0].x, bodyRects[0].y, bodyRects[0].width, bodyRects[0].height);
+        const [bodyRect] = state.bodyRects;
+        const headRect = spineMeta.head[headSkinName].packedHead[headOrient];
+        state.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
         state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
         // Body anchor is (0, 0) in spine world coords
@@ -145,14 +146,18 @@ export function TestPreRenderNpc({ api }) {
       },
       ticker,
       /** @param {number} deltaSecs */
-      updateFrame(deltaSecs) {
-        state.currentTime += (deltaSecs * state.framesPerSec);
+      updateFrame(deltaSecs, force = false) {
         const prevFrame = state.currentFrame;
+        state.currentTime += (deltaSecs * state.framesPerSec);
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
+        if (state.currentFrame === prevFrame && !force) {
+          return;
+        }
+
         // body
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
         const radians = state.body.rotation;
-        if (state.rootDeltas.length && (prevFrame !== state.currentFrame)) {
+        if (state.rootDeltas.length) {
           // pixi.js convention: 0 degrees ~ north ~ negative y-axis
           const rootDelta = state.rootDeltas[state.currentFrame];
           state.body.x += rootDelta * Math.sin(radians);
@@ -188,9 +193,9 @@ export function TestPreRenderNpc({ api }) {
   React.useEffect(() => {
     if (ready) {
       state.angle = 135;
-      state.setAnim('walk', 'head/skin-head-dark');
+      state.setAnim('idle-breathe', 'head/skin-head-dark');
       const { updateFrame } = state;
-      updateFrame(0); // Avoid initial flicker
+      updateFrame(0, true); // Avoid initial flicker
       state.ticker.add(updateFrame).start();
       return () => state.ticker.remove(updateFrame).stop();
     }
