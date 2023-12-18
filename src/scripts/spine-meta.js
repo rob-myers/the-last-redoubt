@@ -54,20 +54,23 @@ export default async function main() {
   const { bounds: idleAnimBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
   const npcScaleFactor = precision((2 * 13) / idleAnimBounds.width, 4);
 
-  // For rect packing
+  //#region rect packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
     pot: false,
     border: packedPadding,
     // smart: false,
   });
+
   const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
+
   /** @param {number} width @param {number} height @param {string} name */
   function addRectToPack(width, height, name) {
-    console.log(`${ansi.Blue}will pack${ansi.Reset}:`, width, height, name);
+    console.log(`${ansi.Blue}will pack${ansi.Reset}:`, name, { width, height });
     const r = new Rectangle(width, height);
     r.data = { name };
     rectsToPack.push(r);
   }
+  //#endregion
 
   const outputAnimMeta =
     /** @type {import("./service").SpineMeta['anim']} */ ({});

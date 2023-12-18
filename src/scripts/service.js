@@ -220,6 +220,7 @@ export async function loadSpineServerSide(folderName, baseName) {
 }
 
 /**
+ * `bounds` is actually the smallest integer-ordinate rectangle containing `poly.rect`.
  * @param {Spine} spine 
  * @param {string} slotName
  * @returns {{ poly: Geom.Poly; bounds: Geom.Rect }}
@@ -233,7 +234,7 @@ export function computeSpineAttachmentBounds(spine, slotName) {
     const vertices = /** @type {number[]} */ ([]);
     attachment.computeWorldVerticesOld(slot, vertices);
     const poly = new Poly(Vect.fromCoords(vertices))
-    return { poly, bounds: poly.rect.precision(1) }
+    return { poly, bounds: poly.rect.integerOrds() };
   }
 
   if (attachment instanceof RegionAttachment) {
@@ -241,7 +242,7 @@ export function computeSpineAttachmentBounds(spine, slotName) {
     attachment.updateRegion();
     attachment.computeWorldVertices(slot, vertices, 0, 2);
     const poly = new Poly(Vect.fromCoords(vertices))
-    return { poly, bounds: poly.rect.precision(1) }
+    return { poly, bounds: poly.rect.integerOrds() };
   }
 
   throw Error(`${slotName}: unhandled attachment: ${attachment?.name || attachment}`);
