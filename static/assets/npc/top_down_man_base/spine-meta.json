@@ -128,22 +128,22 @@
     "head/blonde-light": {
       "headSkinName": "head/blonde-light",
       "packedHead": {
-        "face": {"x": 324, "y": 438, "width": 87, "height": 103},
-        "top": {"x": 179, "y": 527, "width": 93, "height": 89}
+        "face": {"x": 179, "y": 527, "width": 75, "height": 98},
+        "top": {"x": 256, "y": 527, "width": 93, "height": 89}
       }
     },
     "head/skin-head-dark": {
       "headSkinName": "head/skin-head-dark",
       "packedHead": {
-        "face": {"x": 274, "y": 543, "width": 74, "height": 82},
-        "top": {"x": 331, "y": 306, "width": 93, "height": 87}
+        "face": {"x": 331, "y": 306, "width": 74, "height": 82},
+        "top": {"x": 324, "y": 438, "width": 93, "height": 87}
       }
     },
     "head/skin-head-light": {
       "headSkinName": "head/skin-head-light",
       "packedHead": {
-        "face": {"x": 350, "y": 543, "width": 74, "height": 82},
-        "top": {"x": 413, "y": 395, "width": 93, "height": 87}
+        "face": {"x": 407, "y": 306, "width": 74, "height": 82},
+        "top": {"x": 351, "y": 527, "width": 93, "height": 87}
       }
     }
   },

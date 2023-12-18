@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "aU64kywETug",
+	"hash": "M8qRHrM3sbc",
 	"spine": "4.1.24",
 	"x": -661.96,
 	"y": -338.4,
@@ -997,6 +997,9 @@
 			"hair": {
 				"translate": [
 					{ "x": -366.16, "y": -1.68 }
+				],
+				"scale": [
+					{ "x": 0.8, "y": 0.8 }
 				],
 				"shear": [
 					{ "x": 1 }
