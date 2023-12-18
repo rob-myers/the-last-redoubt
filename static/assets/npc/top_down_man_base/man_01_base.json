@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "ASljuJqPEB8",
+	"hash": "aU64kywETug",
 	"spine": "4.1.24",
-	"x": -518.15,
-	"y": -633.39,
-	"width": 1036.31,
-	"height": 1189.01,
+	"x": -661.96,
+	"y": -338.4,
+	"width": 1398.96,
+	"height": 795.18,
 	"fps": 1,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -884,6 +884,22 @@
 			}
 		},
 		"bones": {
+			"left-leg-lower-clothed": {
+				"translate": [
+					{ "x": 65.2, "y": -0.66 }
+				],
+				"scale": [
+					{ "y": 1.325 }
+				]
+			},
+			"left-leg-lower-bare": {
+				"translate": [
+					{ "x": 65.2, "y": -0.66 }
+				],
+				"scale": [
+					{ "y": 1.325 }
+				]
+			},
 			"left-leg-upper-clothed": {
 				"translate": [
 					{ "x": -206.01, "y": -39.88 }
@@ -898,6 +914,22 @@
 				],
 				"scale": [
 					{ "y": 2.869 }
+				]
+			},
+			"right-leg-lower-clothed": {
+				"translate": [
+					{ "x": 65.16, "y": -2.31 }
+				],
+				"scale": [
+					{ "y": 1.325 }
+				]
+			},
+			"right-leg-lower-bare": {
+				"translate": [
+					{ "x": 65.16, "y": -2.31 }
+				],
+				"scale": [
+					{ "y": 1.325 }
 				]
 			},
 			"right-leg-upper-clothed": {
@@ -977,22 +1009,22 @@
 			},
 			"waist": {
 				"translate": [
-					{ "x": 62.83 }
+					{ "x": -2.37 }
 				]
 			},
 			"trunk": {
 				"translate": [
-					{ "x": -748.01 }
+					{ "x": -813.21 }
 				]
 			},
 			"shoulders-accessory": {
 				"translate": [
-					{ "x": -982.85, "y": 19.06 }
+					{ "x": -1048.05, "y": 19.06 }
 				]
 			},
 			"shoulders": {
 				"translate": [
-					{ "x": -772.01, "y": 1.75 }
+					{ "x": -837.21, "y": 1.75 }
 				]
 			},
 			"waist-accessory": {
@@ -1008,7 +1040,7 @@
 					{ "value": 9.8 }
 				],
 				"translate": [
-					{ "x": 552.09, "y": -153.12 }
+					{ "x": 641.31, "y": -198.93 }
 				]
 			},
 			"right-hand": {
@@ -1016,7 +1048,7 @@
 					{ "value": -7.58 }
 				],
 				"translate": [
-					{ "x": 347.76, "y": 108.46 }
+					{ "x": 299.21, "y": 109.84 }
 				],
 				"scale": [
 					{ "x": 0.847, "y": 0.847 }
@@ -1024,15 +1056,15 @@
 			},
 			"left-arm-lower": {
 				"rotate": [
-					{ "value": 15.23 }
+					{ "value": 31.34 }
 				],
 				"translate": [
-					{ "x": 474.59, "y": -131.61 }
+					{ "x": 539.53, "y": -164.84 }
 				]
 			},
 			"left-hand": {
 				"translate": [
-					{ "x": 448.68, "y": -53.82 }
+					{ "x": 373.97, "y": -54.05 }
 				],
 				"scale": [
 					{ "x": 0.847, "y": 0.847 }
@@ -1040,18 +1072,24 @@
 			},
 			"right-arm": {
 				"rotate": [
-					{ "value": 18.18 }
+					{ "value": 22.8 }
 				],
 				"translate": [
-					{ "x": -498.17, "y": 30.39 }
+					{ "x": -694.19, "y": 30.39 }
+				],
+				"scale": [
+					{ "x": 0.8, "y": 0.8 }
 				]
 			},
 			"left-arm": {
 				"rotate": [
-					{ "value": -17.55 }
+					{ "value": -26.51 }
 				],
 				"translate": [
-					{ "x": -498.94, "y": -45.47 }
+					{ "x": -694.96, "y": -45.47 }
+				],
+				"scale": [
+					{ "x": 0.8, "y": 0.8 }
 				]
 			},
 			"right-leg-lower": {
@@ -1066,7 +1104,7 @@
 			},
 			"right-foot": {
 				"translate": [
-					{ "x": 252.67, "y": -137.48 }
+					{ "x": 431.69, "y": -143.83 }
 				],
 				"scale": [
 					{ "x": -1, "y": -1 }
@@ -1087,7 +1125,7 @@
 			},
 			"left-foot": {
 				"translate": [
-					{ "x": 274.23, "y": 155.84 }
+					{ "x": 428.77, "y": 154.29 }
 				],
 				"scale": [
 					{ "x": -1, "y": -1 }
@@ -1100,7 +1138,7 @@
 					"anim-bounds": {
 						"deform": [
 							{
-								"vertices": [ -125.41208, 2189.9358, 190.62546, 2189.9358, 190.62537, -41.38062, -125.41217, -41.38062 ]
+								"vertices": [ -125.41208, 2330.0315, 190.62546, 2330.0315, 190.62537, -0.63037, -125.41217, -0.63037 ]
 							}
 						]
 					}
@@ -1113,6 +1151,8 @@
 					{ "slot": "right-hand-muzzle-flash", "offset": 34 },
 					{ "slot": "left-leg-upper-clothed", "offset": 0 },
 					{ "slot": "waist", "offset": 0 },
+					{ "slot": "left-arm-lower-clothed", "offset": 0 },
+					{ "slot": "right-arm-lower-clothed", "offset": 0 },
 					{ "slot": "hat", "offset": 2 },
 					{ "slot": "right-hand-gun", "offset": 4 }
 				]
