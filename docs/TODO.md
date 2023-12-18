@@ -99,7 +99,8 @@
     - ✅ spine-meta: compute rootDeltas per frame using `footstep` event
     - ✅ use it to translate during walk
     - ✅ account for body rotation
-    - 🚧 fix lie 1-frame animation (e.g. smaller head)
+    - ✅ improve lie 1-frame animation (e.g. smaller head)
+      - ℹ️ we use `lie` to draw the "head-face" so its scale factor will effect other "lying down" animations (currently `lie` is the only such animation)
     - 🚧 constant speed: try animating `walk` with specific frame durations
   - can animate translation too
   - can add multiple npcs
