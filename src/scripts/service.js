@@ -292,9 +292,8 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {Geom.RectJson} animBounds
  * Over all frames of animation (manually specified in Spine).
  * @property {Geom.RectJson} headBounds The bounds from first frame.
- * @property {Geom.RectJson} packedRect
- * - has width `frameCount * animBounds.width` plus inter-frame padding `packedPadding`.
- * - has height `animBounds.height`
+ * @property {Geom.RectJson[]} packedRects
+ * - each has width/height of `animBounds`
  * @property {{ x: number; y: number; angle: number; width: number; }[]} headFrames
  * - aligned to frames
  * - (x, y) is world position of 2nd vertex of head attachment 4-gon,

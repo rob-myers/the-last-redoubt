@@ -1,6 +1,7 @@
 /**
  * Compute json with:
- * - per-anim packing for runtime spritesheets
+ * - per-anim packing for spritesheets
+ *   - rendered in spine-render
  * - per-anim frame count, head frames, ...
  */
 /// <reference path="./deps.d.ts"/>
@@ -54,7 +55,7 @@ export default async function main() {
   const { bounds: idleAnimBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
   const npcScaleFactor = precision((2 * 13) / idleAnimBounds.width, 4);
 
-  //#region rect packing
+  //#region initiate packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
     pot: false,
     border: packedPadding,
@@ -79,6 +80,7 @@ export default async function main() {
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
 
+  //#region body animation: rects, headFrames, motion tracking
   for (const anim of animations) {
     const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
     
@@ -175,25 +177,25 @@ export default async function main() {
       motion.rootDeltas.splice(0, 1, motion.computeDelta());
     }
 
-    outputAnimMeta[anim.name] = {
+    outputAnimMeta[animName] = {
       animName,
       frameCount: numFrames,
       frameDurSecs: anim.duration / numFrames,
       animBounds,
       headBounds,
-      packedRect: { x: 0, y: 0, width: 0, height: 0 },
+      packedRects: [...Array(numFrames)].map(_ => unOverriddenRect),
       headFrames,
       rootDeltas: motion.rootDeltas,
     };
 
-    addRectToPack(
-      // Ensure horizontal padding between frames
-      animBounds.width * numFrames + packedPadding * (numFrames - 1),
-      animBounds.height,
-      anim.name
+    // not necessarily contiguous animations
+    [...Array(numFrames)].forEach((_, frame) =>
+      addRectToPack(animBounds.width, animBounds.height, `${animName}:${frame}`)
     );
   }
+  //#endregion
 
+  //#region head rects
   const headSlot = spine.skeleton.findSlot('head');
   const hairSlot = spine.skeleton.findSlot('hair');
   for (const headSkinName of spineHeadSkinNames) {
@@ -216,10 +218,9 @@ export default async function main() {
       addRectToPack(bounds.width, bounds.height, `${headSkinName}:${headOrientKey}`);
     }
   }
+  //#endregion
 
-  /**
-   * Compute rectangle packing.
-   */
+  //#region compute packing
   packer.addArray(rectsToPack);
   // packer.repack();
   const { bins } = packer;
@@ -236,18 +237,21 @@ export default async function main() {
   const packedWidth = bin.width;
   const packedHeight = bin.height;
 
-  for (const anim of animations) {
-    const r = bin.rects.find((x) => x.data.name === anim.name);
-    if (!r) throw Error(`spine-meta: ${anim.name}: packed rect not found`);
-    outputAnimMeta[anim.name].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
+  for (const { animName, frameCount } of Object.values(outputAnimMeta)) {
+    for (let frame = 0; frame < frameCount; frame++) {
+      const rectName = `${animName}:${frame}`;
+      const r = bin.rects.find((x) => x.data.name === rectName);
+      if (!r) throw Error(`spine-meta: ${rectName}: packed rect not found`);
+      outputAnimMeta[animName].packedRects[frame] = { x: r.x, y: r.y, width: r.width, height: r.height };
+    }
   }
 
   const outputHeadMeta = spineHeadSkinNames.reduce((agg, headSkinName) => {
     agg[headSkinName] = {
       headSkinName,
       packedHead: {
-        face: { x: 0, y: 0, width: 0, height: 0 },
-        top: { x: 0, y: 0, width: 0, height: 0 },
+        face: unOverriddenRect,
+        top: unOverriddenRect,
       }
     };
     return agg;
@@ -261,6 +265,7 @@ export default async function main() {
       outputHeadMeta[headSkinName].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
     }
   }
+  //#endregion
 
   /** @type {import("./service").SpineMeta} */
   const outputJson = {
@@ -281,3 +286,5 @@ export default async function main() {
    */
   await runYarnScript("spine-render");
 }
+
+const unOverriddenRect = Rect.zero;

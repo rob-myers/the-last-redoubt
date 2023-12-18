@@ -94,15 +94,8 @@ export function TestPreRenderNpc({ api }) {
       srcTex: /** @type {import('pixi.js').Texture} */ ({}),
       /** A copy of `srcTex` possibly with debug stuff */
       tex,
-      /** Given anim and 0-based frame, bounding rect in spritesheet  */
-      animRects: mapValues(spineMeta.anim, ({ animBounds, packedRect, frameCount }) =>
-        [...new Array(frameCount)].map((_, frame) => ({
-          x: packedRect.x + frame * (animBounds.width + spineMeta.packedPadding),
-          y: packedRect.y,
-          width: animBounds.width,
-          height: animBounds.height,
-        }))
-      ),
+      // not necessarily contiguous packedRects
+      animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
 
       /** Meters per second */
       speed: 0.3,
@@ -163,13 +156,8 @@ export function TestPreRenderNpc({ api }) {
       ticker,
       /** @param {number} deltaRatio */
       updateFrame(deltaRatio, force = false) {
-        // console.log(deltaMs, Date.now());
         const deltaSecs = deltaRatio * (1 / 60);
         const prevFrame = state.currentFrame;
-        // // 🚧 change frame once current duration reached
-        // if (state.rootDeltas.length) {
-        //   state.framesPerSec = 1 / state.durations[prevFrame];
-        // }
 
         state.currentTime += (deltaSecs * state.framesPerSec);
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
@@ -216,7 +204,7 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     if (ready) {
-      state.setAnim('walk', 'head/blonde-light');
+      state.setAnim('walk', 'head/skin-head-dark');
       const { updateFrame } = state;
       updateFrame(0, true); // Avoid initial flicker
       state.ticker.add(updateFrame).start();

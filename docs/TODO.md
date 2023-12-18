@@ -106,6 +106,10 @@
       - where `deltaMs` is milliseconds since previous invocation
       - where `1000/60` ~ `16.66` is number of milliseconds in 60 fps render
   - ✅ can animate translation too
+  - ✅ support non-contiguous animations in spritesheet
+    - would like more frames in `walk` so can slow it down more,
+      without invalidating 4096 * 4096 texture bound
+  - 🚧 left foot animation issue?
   - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
@@ -122,6 +126,10 @@
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
 
+- save more space in spritesheet
+  - needn't use `animBounds` for every frame of animation
+  - try intersecting animBounds with skeleton.getBoundsRect()
+  - will need to store its original (x, y) for spine-render
 - `world` command -> `api`
 - do not render "covered" geomorphs
 - spine: first attempt at our own images

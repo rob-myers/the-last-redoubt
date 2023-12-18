@@ -52,11 +52,11 @@ export default async function main() {
   if (opts.debug) {// Debug Rectangle Packing
     const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
     gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
-    Object.values(animMeta).forEach(({ animName, packedRect, animBounds, frameCount }) => {
-      gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill();
-      for (let i = 0; i < frameCount; i++)
-        gfx.beginFill(0, 0).drawRect(packedRect.x + (i * (animBounds.width + packedPadding)), packedRect.y, animBounds.width, animBounds.height);
-    });
+    Object.values(animMeta).forEach(({ packedRects }) =>
+      packedRects.forEach(packedRect =>
+        gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill()
+      )
+    );
     Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
       gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
       gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
@@ -84,22 +84,19 @@ export default async function main() {
   spine.skeleton.setBonesToSetupPose();
 
   for (const anim of animations) {
-    const { frameCount, frameDurSecs, animBounds, packedRect } = animMeta[anim.name];
+    const { frameCount, frameDurSecs, animBounds, packedRects } = animMeta[anim.name];
     spine.state.setAnimation(0, anim.name, false);
     
     for (let frame = 0; frame < frameCount; frame++) {
+      const packedRect = packedRects[frame];
       spine.update(frame === 0 ? 0 : frameDurSecs);
       /**
-       * `animBounds` has root attachment at `(0, 0)`.
-       * 
-       * `animBounds` for frame `frame` is at:
-       * - packedRect.x + frame * (animBounds.width + meta.packedPadding)
-       * - packedRect.y
-       * - animBounds.width
-       * - animBounds.height
+       * - each `packedRect` has some width/height as `animBounds`
+       * - `animBounds` has root attachment at `(0, 0)`.
+       * - rects from same animation not necessarily contiguous
        */
       spine.position.set(
-        packedRect.x + (frame * (animBounds.width + packedPadding)) + Math.abs(animBounds.x),
+        packedRect.x + Math.abs(animBounds.x),
         packedRect.y + Math.abs(animBounds.y),
       );
       app.renderer.render(spine, { renderTexture: tex, clear: false });
