@@ -13,7 +13,7 @@ import { pause, precision } from "../projects/service/generic";
 import { warn } from "../projects/service/log";
 import { ansi } from "../projects/service/const";
 import { skeletonScale } from "../projects/world/const";
-import { spineAnimToFrames, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
+import { spineAnimToSetup, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
 import {
@@ -140,10 +140,10 @@ export default async function main() {
      * Compute head attachment top-left position, angle, scale per frame.
      * Compute rootDeltas per frame when footstep event available
     */
-    const frameCount = spineAnimToFrames[animName];
-    const frameDurSecs = anim.duration / frameCount;
+    const { numFrames } = spineAnimToSetup[animName];
+    const frameDurSecs = anim.duration / numFrames;
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
-    for (let frame = 0; frame < frameCount; frame++) {
+    for (let frame = 0; frame < numFrames; frame++) {
       spine.update(frame === 0 ? 0 : frameDurSecs);
 
       if (motion.footDown) {
@@ -168,7 +168,7 @@ export default async function main() {
     spine.state.removeListener(spineListener);
 
     if (motion.rootDeltas.length) {
-      // 🚧 replace 0th with diff between current frame and next (~ frame 0)
+      // replace inaccurate 0th with diff between current frame and next (~ frame 0)
       motion.footDown = motion.firstFootDown;
       motion.prevFootPos = motion.getFootPos();
       spine.update(frameDurSecs);
@@ -177,8 +177,8 @@ export default async function main() {
 
     outputAnimMeta[anim.name] = {
       animName,
-      frameCount,
-      frameDurSecs: anim.duration / frameCount,
+      frameCount: numFrames,
+      frameDurSecs: anim.duration / numFrames,
       animBounds,
       headBounds,
       packedRect: { x: 0, y: 0, width: 0, height: 0 },
@@ -188,7 +188,7 @@ export default async function main() {
 
     addRectToPack(
       // Ensure horizontal padding between frames
-      animBounds.width * frameCount + packedPadding * (frameCount - 1),
+      animBounds.width * numFrames + packedPadding * (numFrames - 1),
       animBounds.height,
       anim.name
     );

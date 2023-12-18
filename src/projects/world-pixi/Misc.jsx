@@ -6,7 +6,7 @@ import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 
 import { mapValues } from "../service/generic";
-import { spineAnimToHeadOrient } from "./const";
+import { spineAnimToSetup } from "./const";
 import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
 
@@ -104,35 +104,51 @@ export function TestPreRenderNpc({ api }) {
         }))
       ),
 
+      /** Meters per second */
+      speed: 0.3,
+      /** Degrees */
+      angle: 135,
+
       /** Animation's real-valued current time in [0, numFrames - 1] */
       currentTime: 0,
       currentFrame: 0,
+      framesPerSec: 0,
       body,
       head,
-      framesPerSec: 0.25,
       frameCount: 1,
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
       headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
       rootDeltas: /** @type {number[]} */ ([]),
-      /** Degrees */
-      angle: 0,
+      /** Length of frames in seconds */
+      durations: /** @type {number[]} */ ([]),
 
       /**
        * @param {NPC.SpineAnimName} animName 
        * @param {NPC.SpineHeadSkinName} headSkinName 
        */
       setAnim(animName, headSkinName) {
-        const headOrient = spineAnimToHeadOrient[animName]
+        state.currentFrame = 0;
+        const { headOrientKey, motionlessFps } = spineAnimToSetup[animName]
         const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
         state.bodyRects = state.animRects[animName];
         state.headFrames = headFrames;
         state.frameCount = frameCount;
         state.rootDeltas = rootDeltas;
+        // rootDelta in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
+        state.durations = rootDeltas.map(delta => (delta / 40) / state.speed);
+        /**
+         * - Moving animations have specific durations, ensuring feet placement and desired constant speed.
+         * - Motionless animations have specified frames per seconds.
+         * - Single frame animations don't need a fps.
+         */
+        state.framesPerSec = state.rootDeltas.length
+          ? 1 / state.durations[state.currentFrame]
+          : (motionlessFps ?? 0);
         
         // ℹ️ Changing frame width/height later deforms image
-        const [bodyRect] = state.bodyRects;
-        const headRect = spineMeta.head[headSkinName].packedHead[headOrient];
+        const bodyRect = state.bodyRects[state.currentFrame];
+        const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
         state.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
         state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
@@ -145,9 +161,16 @@ export function TestPreRenderNpc({ api }) {
         state.initHeadWidth = state.head.width;
       },
       ticker,
-      /** @param {number} deltaSecs */
-      updateFrame(deltaSecs, force = false) {
+      /** @param {number} deltaRatio */
+      updateFrame(deltaRatio, force = false) {
+        // console.log(deltaMs, Date.now());
+        const deltaSecs = deltaRatio * (1 / 60);
         const prevFrame = state.currentFrame;
+        // // 🚧 change frame once current duration reached
+        // if (state.rootDeltas.length) {
+        //   state.framesPerSec = 1 / state.durations[prevFrame];
+        // }
+
         state.currentTime += (deltaSecs * state.framesPerSec);
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
         if (state.currentFrame === prevFrame && !force) {
@@ -158,6 +181,7 @@ export function TestPreRenderNpc({ api }) {
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
         const radians = state.body.rotation;
         if (state.rootDeltas.length) {
+          state.framesPerSec = 1 / state.durations[state.currentFrame];
           // pixi.js convention: 0 degrees ~ north ~ negative y-axis
           const rootDelta = state.rootDeltas[state.currentFrame];
           state.body.x += rootDelta * Math.sin(radians);
@@ -175,7 +199,7 @@ export function TestPreRenderNpc({ api }) {
       },
     };
   }, {
-    overwrite: { framesPerSec: true },
+    overwrite: { angle: true, speed: true },
   });
 
   // load spritesheet into RenderTexture
@@ -192,8 +216,7 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     if (ready) {
-      state.angle = 135;
-      state.setAnim('idle-breathe', 'head/skin-head-dark');
+      state.setAnim('walk', 'head/blonde-light');
       const { updateFrame } = state;
       updateFrame(0, true); // Avoid initial flicker
       state.ticker.add(updateFrame).start();

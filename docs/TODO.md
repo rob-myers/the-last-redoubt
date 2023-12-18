@@ -101,7 +101,10 @@
     - ✅ account for body rotation
     - ✅ improve lie 1-frame animation (e.g. smaller head)
       - ℹ️ we use `lie` to draw the "head-face" so its scale factor will effect other "lying down" animations (currently `lie` is the only such animation)
-    - 🚧 constant speed: try animating `walk` with specific frame durations
+    - ✅ constant speed: try animating `walk` with specific frame durations
+    - ℹ️ Seems PIXI Ticker callback receives `deltaMs / (1000/60)`
+      - where `deltaMs` is milliseconds since previous invocation
+      - where `1000/60` ~ `16.66` is number of milliseconds in 60 fps render
   - can animate translation too
   - can add multiple npcs
     - animate multiple npcs in tandem via ticker

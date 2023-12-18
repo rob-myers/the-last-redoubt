@@ -724,11 +724,19 @@ declare namespace NPC {
     | 'face'
   );
 
-  interface SpineHeadOrient {
+  interface SpineHeadOrientMapping {
     headOrientKey: SpineHeadOrientKey;
     animName: SpineAnimName;
     headAttachmentName: 'head' | 'head-lie';
     hairAttachmentName: 'hair' | 'hair-lie';
+  }
+
+  interface SpineAnimSetup {
+    animName: SpineAnimName;
+    headOrientKey: SpineHeadOrientKey;
+    numFrames: number;
+    /** If this animation is motionless and has more than one frame, the desired fps. */
+    motionlessFps: null | number;
   }
 
   //#endregion
