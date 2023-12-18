@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "M8qRHrM3sbc",
+	"hash": "mInbe48Pw4w",
 	"spine": "4.1.24",
-	"x": -661.96,
-	"y": -338.4,
-	"width": 1398.96,
-	"height": 795.18,
+	"x": -517,
+	"y": -632.39,
+	"width": 1034,
+	"height": 1187,
 	"fps": 1,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -1277,7 +1277,7 @@
 					{ "name": "shoes/trainer_black_01" },
 					{ "time": 0.394, "name": "right-shoe" },
 					{ "time": 0.586, "name": "shoes/trainer_black_03" },
-					{ "time": 0.856, "name": "right-shoe" },
+					{ "time": 0.792, "name": "right-shoe" },
 					{ "time": 1.39, "name": "shoes/trainer_black_01" }
 				]
 			},
@@ -1633,7 +1633,7 @@
 		},
 		"events": [
 			{ "name": "footstep", "string": "left" },
-			{ "time": 0.85, "name": "footstep", "string": "right" }
+			{ "time": 0.792, "name": "footstep", "string": "right" }
 		]
 	}
 }
