@@ -151,19 +151,20 @@ export function TestPreRenderNpc({ api }) {
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
         // body
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
-        // ✅ can translate
-        // 🚧 can translate relative to angle
+        const radians = state.body.rotation;
         if (state.rootDeltas.length && (prevFrame !== state.currentFrame)) {
-          state.body.y += state.rootDeltas[state.currentFrame];
+          // pixi.js convention: 0 degrees ~ north ~ negative y-axis
+          const rootDelta = state.rootDeltas[state.currentFrame];
+          state.body.x += rootDelta * Math.sin(radians);
+          state.body.y -= rootDelta * Math.cos(radians);
         }
 
         // head
         const { x, y, angle, width } = state.headFrames[state.currentFrame];
         state.head.angle = angle + state.body.angle;
         state.head.scale.set(width / state.initHeadWidth);
-        const radians = state.body.rotation;
         state.head.position.set(
-          Math.cos(radians) * x - Math.sin(radians) * y,
+          state.body.x + Math.cos(radians) * x - Math.sin(radians) * y,
           state.body.y + Math.sin(radians) * x + Math.cos(radians) * y,
         );
       },
@@ -186,7 +187,7 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     if (ready) {
-      state.angle = 180; // 🚧
+      state.angle = 135;
       state.setAnim('walk', 'head/skin-head-dark');
       const { updateFrame } = state;
       updateFrame(0); // Avoid initial flicker
