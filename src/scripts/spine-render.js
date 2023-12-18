@@ -73,7 +73,9 @@ export default async function main() {
   newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
   newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
   newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
-  newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
+  if (opts.debug) {
+    newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
+  }
   spine.skeleton.setSkin(newSkin);
   spine.skeleton.setSlotsToSetupPose();
 
@@ -87,8 +89,9 @@ export default async function main() {
     
     for (let frame = 0; frame < frameCount; frame++) {
       spine.update(frame === 0 ? 0 : frameDurSecs);
-      // `animBounds` where root attachment is at `(0, 0)`.
       /**
+       * `animBounds` has root attachment at `(0, 0)`.
+       * 
        * `animBounds` for frame `frame` is at:
        * - packedRect.x + frame * (animBounds.width + meta.packedPadding)
        * - packedRect.y

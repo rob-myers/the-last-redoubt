@@ -71,7 +71,7 @@
     - idle-breathe changes neck position
   - ✅ precompute head positions too
   - ✅ center sprite around root (0, 0)
-  - 🚧 sprite for body, sprite for head
+  - ✅ sprite for body, sprite for head
     - ✅ spine-meta computes spaces for heads
     - ✅ spritesheet has heads
     - ✅ decouple heads from npc classes
@@ -105,11 +105,11 @@
     - ℹ️ Seems PIXI Ticker callback receives `deltaMs / (1000/60)`
       - where `deltaMs` is milliseconds since previous invocation
       - where `1000/60` ~ `16.66` is number of milliseconds in 60 fps render
-  - can animate translation too
-  - can add multiple npcs
+  - ✅ can animate translation too
+  - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
-  - remove heads from body sprites
+  - ✅ remove heads from body sprites
 
 - start migrating NPCs
 
