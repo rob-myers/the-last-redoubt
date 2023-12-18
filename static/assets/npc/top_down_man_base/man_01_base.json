@@ -1,11 +1,11 @@
 {
 "skeleton": {
-	"hash": "dwyPXvHwVOI",
+	"hash": "ASljuJqPEB8",
 	"spine": "4.1.24",
-	"x": -517,
-	"y": -632.39,
-	"width": 1034,
-	"height": 1187,
+	"x": -518.15,
+	"y": -633.39,
+	"width": 1036.31,
+	"height": 1189.01,
 	"fps": 1,
 	"images": "",
 	"audio": "/Users/Robert.Myers/coding/the-last-redoubt/media/NPC/spine/top_down_man_base"
@@ -970,19 +970,29 @@
 					{ "x": 1 }
 				]
 			},
+			"head": {
+				"scale": [
+					{ "x": 0.8, "y": 0.8 }
+				]
+			},
+			"waist": {
+				"translate": [
+					{ "x": 62.83 }
+				]
+			},
 			"trunk": {
 				"translate": [
-					{ "x": -747.37 }
+					{ "x": -748.01 }
 				]
 			},
 			"shoulders-accessory": {
 				"translate": [
-					{ "x": -1045.68, "y": 19.06 }
+					{ "x": -982.85, "y": 19.06 }
 				]
 			},
 			"shoulders": {
 				"translate": [
-					{ "x": -834.84, "y": 1.75 }
+					{ "x": -772.01, "y": 1.75 }
 				]
 			},
 			"waist-accessory": {
@@ -1006,7 +1016,7 @@
 					{ "value": -7.58 }
 				],
 				"translate": [
-					{ "x": 387.48, "y": 107.34 }
+					{ "x": 347.76, "y": 108.46 }
 				],
 				"scale": [
 					{ "x": 0.847, "y": 0.847 }
@@ -1022,7 +1032,7 @@
 			},
 			"left-hand": {
 				"translate": [
-					{ "x": 488.06, "y": -59.14 }
+					{ "x": 448.68, "y": -53.82 }
 				],
 				"scale": [
 					{ "x": 0.847, "y": 0.847 }
@@ -1033,7 +1043,7 @@
 					{ "value": 18.18 }
 				],
 				"translate": [
-					{ "x": -561, "y": 30.39 }
+					{ "x": -498.17, "y": 30.39 }
 				]
 			},
 			"left-arm": {
@@ -1041,7 +1051,7 @@
 					{ "value": -17.55 }
 				],
 				"translate": [
-					{ "x": -561.77, "y": -45.47 }
+					{ "x": -498.94, "y": -45.47 }
 				]
 			},
 			"right-leg-lower": {
@@ -1051,7 +1061,7 @@
 			},
 			"right-hip": {
 				"translate": [
-					{ "x": -102.3, "y": 1759.35 }
+					{ "x": -102.3, "y": 1764 }
 				]
 			},
 			"right-foot": {
@@ -1067,7 +1077,7 @@
 					{ "value": 0.58 }
 				],
 				"translate": [
-					{ "x": 72.95, "y": 1754.98 }
+					{ "x": 72.95, "y": 1764 }
 				]
 			},
 			"left-leg-lower": {
