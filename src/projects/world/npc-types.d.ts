@@ -735,8 +735,8 @@ declare namespace NPC {
     animName: SpineAnimName;
     headOrientKey: SpineHeadOrientKey;
     numFrames: number;
-    /** If this animation is motionless and has more than one frame, the desired fps. */
-    motionlessFps: null | number;
+    /** If this animation is not moving, the desired fps. */
+    stationaryFps: number;
   }
 
   //#endregion

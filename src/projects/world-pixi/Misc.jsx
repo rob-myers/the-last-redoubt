@@ -98,11 +98,11 @@ export function TestPreRenderNpc({ api }) {
       animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
 
       /** Meters per second */
-      speed: 0.3,
+      speed: .3,
       /** Degrees */
-      angle: 135,
+      angle: 180,
 
-      /** Animation's real-valued current time in [0, numFrames - 1] */
+      /** Animation's normalized real-valued current time in [0, numFrames - 1] */
       currentTime: 0,
       currentFrame: 0,
       framesPerSec: 0,
@@ -112,8 +112,9 @@ export function TestPreRenderNpc({ api }) {
       initHeadWidth: 0,
       bodyRects: /** @type {Geom.RectJson[]} */ ([]),
       headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
+      /** Only non-empty for animations with motion e.g. `walk` */
       rootDeltas: /** @type {number[]} */ ([]),
-      /** Length of frames in seconds */
+      /** Duration of each frame in seconds */
       durations: /** @type {number[]} */ ([]),
 
       /**
@@ -122,14 +123,19 @@ export function TestPreRenderNpc({ api }) {
        */
       setAnim(animName, headSkinName) {
         state.currentFrame = 0;
-        const { headOrientKey, motionlessFps } = spineAnimToSetup[animName]
+        const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
         const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
         state.bodyRects = state.animRects[animName];
         state.headFrames = headFrames;
         state.frameCount = frameCount;
         state.rootDeltas = rootDeltas;
-        // rootDelta in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
-        state.durations = rootDeltas.map(delta => (delta / 40) / state.speed);
+        if (rootDeltas.length) {
+          // rootDelta is in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
+          state.durations = rootDeltas.map(delta => (delta / 40) / state.speed);
+        } else {
+          state.durations = [...Array(numFrames)].map(_ => 1 / stationaryFps);
+        }
+     
         /**
          * - Moving animations have specific durations, ensuring feet placement and desired constant speed.
          * - Motionless animations have specified frames per seconds.
@@ -137,7 +143,7 @@ export function TestPreRenderNpc({ api }) {
          */
         state.framesPerSec = state.rootDeltas.length
           ? 1 / state.durations[state.currentFrame]
-          : (motionlessFps ?? 0);
+          : (stationaryFps ?? 0);
         
         // ℹ️ Changing frame width/height later deforms image
         const bodyRect = state.bodyRects[state.currentFrame];
@@ -158,6 +164,11 @@ export function TestPreRenderNpc({ api }) {
       updateFrame(deltaRatio, force = false) {
         const deltaSecs = deltaRatio * (1 / 60);
         const prevFrame = state.currentFrame;
+
+        // 🚧 handle skipped frames (in case of low fps)
+        // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
+        // const elapsed = deltaSecs * state.framesPerSec;
+        // const lag = (state.currentTime % 1) * state.durations[this.currentFrame] + elapsed;
 
         state.currentTime += (deltaSecs * state.framesPerSec);
         state.currentFrame = Math.floor(state.currentTime) % state.frameCount;

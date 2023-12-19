@@ -109,13 +109,18 @@
   - ✅ support non-contiguous animations in spritesheet
     - would like more frames in `walk` so can slow it down more,
       without invalidating 4096 * 4096 texture bound
-  - 🚧 left foot animation issue?
+  - ✅ fix midway footstep animation issues
+  - ✅ remove heads from body sprites
+  - ✅ both moving/motionless animations have durations
+  - 🚧 motionless animations needn't be translated e.g. `idle-breathe`
+  - 🚧 handle skipped frames
   - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
-  - ✅ remove heads from body sprites
 
 - start migrating NPCs
+- 🚧 1-frame animations needn't be updated e.g. `idle`, `sit`, `lie`
+  - handle this elsewhere i.e. skip `update` after first one
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`

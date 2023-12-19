@@ -71,11 +71,11 @@ export const spineHeadOrients = Object.values(toSpineHeadOrient);
 
 /** @type {Record<NPC.SpineAnimName, NPC.SpineAnimSetup>} */
 export const spineAnimToSetup = {
-  idle: { animName: 'idle', numFrames: 1, headOrientKey: 'top', motionlessFps: null },
-  sit: { animName: 'sit', numFrames: 1, headOrientKey: 'top', motionlessFps: null },
-  lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', motionlessFps: null },
-  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', motionlessFps: 8 },
-  walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', motionlessFps: null },
+  idle: { animName: 'idle', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
+  sit: { animName: 'sit', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
+  lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', stationaryFps: 0 },
+  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', stationaryFps: 10 },
+  walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
 };
 
 //#endregion
