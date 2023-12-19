@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "QRBSdXu6llc",
+	"hash": "YcvyPBK6BhQ",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1257,7 +1257,7 @@
 			},
 			"left-shoe": {
 				"attachment": [
-					{ "time": 0.586, "name": "shoes/trainer_black_01" },
+					{ "time": 0.4927, "name": "shoes/trainer_black_01" },
 					{ "time": 1.188, "name": "shoes/trainer_black_03" },
 					{ "time": 1.6, "name": "left-shoe" }
 				]
@@ -1278,7 +1278,7 @@
 					{ "time": 0.394, "name": "right-shoe" },
 					{ "time": 0.586, "name": "shoes/trainer_black_03" },
 					{ "time": 0.792, "name": "right-shoe" },
-					{ "time": 1.39, "name": "shoes/trainer_black_01" }
+					{ "time": 1.23, "name": "shoes/trainer_black_01" }
 				]
 			},
 			"waist-accessory": {
