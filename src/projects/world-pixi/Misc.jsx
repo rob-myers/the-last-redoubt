@@ -98,7 +98,7 @@ export function TestPreRenderNpc({ api }) {
       animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
 
       /** Meters per second */
-      speed: .3,
+      speed: 0.5,
       /** Degrees */
       angle: 180,
 
@@ -175,6 +175,7 @@ export function TestPreRenderNpc({ api }) {
         if (state.currentFrame === prevFrame && !force) {
           return;
         }
+        console.log(state.currentFrame);
 
         // body
         state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
