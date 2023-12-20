@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "hz5l3ALOV98",
+	"hash": "E8p68IX0YwI",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -12,8 +12,8 @@
 },
 "bones": [
 	{ "name": "root" },
-	{ "name": "right-hip", "parent": "root", "length": 418.23, "rotation": 90, "x": 272, "y": -494 },
-	{ "name": "left-hip", "parent": "root", "length": 333.33, "rotation": 90, "x": -272, "y": -494 },
+	{ "name": "right-hip", "parent": "root", "length": 418.23, "rotation": 90, "x": 272, "y": -163 },
+	{ "name": "left-hip", "parent": "root", "length": 333.33, "rotation": 90, "x": -272, "y": -163 },
 	{
 		"name": "waist-accessory",
 		"parent": "root",
@@ -34,22 +34,22 @@
 		"scaleY": 0.7467
 	},
 	{ "name": "shoulders-accessory", "parent": "spine", "rotation": 90, "x": -96, "scaleY": 1.0572 },
-	{ "name": "right-leg-upper-bare", "parent": "right-hip", "rotation": 269.17, "x": 385.83, "y": 11.49, "scaleY": 0.4881 },
+	{ "name": "right-leg-upper-bare", "parent": "right-hip", "rotation": 269.17, "x": 70, "y": 11.49, "scaleY": 0.4881 },
 	{ "name": "neck", "parent": "spine", "length": 571.45, "rotation": 180, "x": -36 },
 	{ "name": "shoulders", "parent": "spine", "rotation": 90, "x": -59 },
-	{ "name": "right-leg-lower", "parent": "right-hip", "length": 285.25, "rotation": 2.03, "x": 170.45, "y": 0.04 },
+	{ "name": "right-leg-lower", "parent": "right-hip", "length": 285.25, "x": -126, "y": 0.04 },
 	{ "name": "trunk", "parent": "spine", "rotation": 90, "x": -83 },
 	{
 		"name": "left-leg-upper-bare",
 		"parent": "left-hip",
 		"rotation": 270,
-		"x": 401.27,
+		"x": 70,
 		"y": 1.44,
 		"scaleX": -1,
 		"scaleY": 0.488
 	},
-	{ "name": "left-leg-lower", "parent": "left-hip", "length": 266.74, "x": 205.39, "y": 8.74 },
-	{ "name": "left-leg-upper-clothed", "parent": "left-hip", "rotation": 270, "x": 414.73, "y": -12.14, "scaleY": 0.4287 },
+	{ "name": "left-leg-lower", "parent": "left-hip", "length": 266.74, "x": -126, "y": 8.74 },
+	{ "name": "left-leg-upper-clothed", "parent": "left-hip", "rotation": 270, "x": 83, "y": -12.14, "scaleY": 0.4287 },
 	{
 		"name": "right-arm",
 		"parent": "spine",
@@ -60,12 +60,12 @@
 		"scaleY": -1
 	},
 	{ "name": "left-arm", "parent": "spine", "length": 314.47, "rotation": 224.65, "x": 7, "y": -373 },
-	{ "name": "right-leg-upper-clothed", "parent": "right-hip", "rotation": 269.17, "x": 418.09, "y": -8.11, "scaleY": 0.3975 },
+	{ "name": "right-leg-upper-clothed", "parent": "right-hip", "rotation": 269.17, "x": 83, "y": -8.11, "scaleY": 0.4288 },
 	{ "name": "right-arm-lower", "parent": "right-arm", "length": 256.69, "rotation": -35.35, "x": 185.29, "y": 4.52 },
 	{ "name": "left-leg-lower-clothed", "parent": "left-leg-lower", "rotation": 270, "x": 129.35, "y": -5.71 },
 	{ "name": "right-arm-upper-bare", "parent": "right-arm", "rotation": -95.8, "x": 320.32, "y": -1.25 },
 	{ "name": "left-arm-upper-clothed", "parent": "left-arm", "rotation": 265.14, "x": 308.41, "y": -16.5, "scaleX": 0.9381 },
-	{ "name": "right-leg-lower-clothed", "parent": "right-leg-lower", "rotation": 267.14, "x": 174.74, "y": -2.32 },
+	{ "name": "right-leg-lower-clothed", "parent": "right-leg-lower", "rotation": 270, "x": 129.35, "y": -2.32 },
 	{
 		"name": "left-eyebrow-birdseye",
 		"parent": "neck",
@@ -76,10 +76,10 @@
 		"scaleY": 0.6883
 	},
 	{ "name": "left-arm-upper-bare", "parent": "left-arm", "rotation": -94.92, "x": 320.31, "y": 2.67 },
-	{ "name": "left-foot", "parent": "left-leg-lower", "length": 288.02, "rotation": -0.25, "x": 279.13, "y": -13 },
+	{ "name": "left-foot", "parent": "left-leg-lower", "length": 288.02, "rotation": -0.25, "x": 279, "y": -13.74 },
 	{ "name": "hat", "parent": "neck", "rotation": 270, "x": 105.34 },
 	{ "name": "right-arm-upper-clothed", "parent": "right-arm", "rotation": -98.08, "x": 308.18, "y": -20.27, "scaleX": 0.938 },
-	{ "name": "right-foot", "parent": "right-leg-lower", "length": 257.58, "rotation": 357.14, "x": 318.41, "y": -8.04 },
+	{ "name": "right-foot", "parent": "right-leg-lower", "length": 257.58, "rotation": 360, "x": 279, "y": 4.96 },
 	{ "name": "mask-birdseye", "parent": "neck", "rotation": 270, "x": 357.75 },
 	{ "name": "head", "parent": "neck", "rotation": 270, "x": 96.27 },
 	{ "name": "left-leg-lower-bare", "parent": "left-leg-lower", "rotation": 270, "x": 131.44, "y": -3.95 },
