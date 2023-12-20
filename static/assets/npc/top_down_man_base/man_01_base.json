@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "E8p68IX0YwI",
+	"hash": "wL+dsDBN9vQ",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1275,8 +1275,7 @@
 			"right-shoe": {
 				"attachment": [
 					{ "name": "shoes/trainer_black_01" },
-					{ "time": 0.394, "name": "right-shoe" },
-					{ "time": 0.586, "name": "shoes/trainer_black_03" },
+					{ "time": 0.394, "name": "shoes/trainer_black_03" },
 					{ "time": 0.792, "name": "right-shoe" },
 					{ "time": 1.23, "name": "shoes/trainer_black_01" }
 				]
