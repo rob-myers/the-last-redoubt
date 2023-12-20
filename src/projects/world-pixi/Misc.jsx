@@ -82,6 +82,7 @@ export function TestPreRenderNpc({ api }) {
     const tex = RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight });
     const ticker = new Ticker;
     ticker.autoStart = false;
+    // ticker.minFPS = 1, ticker.maxFPS = 30;
     ticker.stop();
 
     const body = new Sprite(new Texture(tex.baseTexture));
@@ -102,10 +103,8 @@ export function TestPreRenderNpc({ api }) {
       /** Degrees */
       angle: 180,
 
-      /** Animation's normalized real-valued current time in [0, numFrames - 1] */
-      currentTime: 0,
-      currentFrame: 0,
-      framesPerSec: 0,
+      /** Animation's normalized real-valued current time i.e. 0 ≤ t < numFrames - 1 */
+      currTime: 0,
       body,
       head,
       frameCount: 1,
@@ -117,12 +116,15 @@ export function TestPreRenderNpc({ api }) {
       /** Duration of each frame in seconds */
       durations: /** @type {number[]} */ ([]),
 
+      getFrame() {
+        return Math.floor(state.currTime) % state.frameCount;
+      },
       /**
        * @param {NPC.SpineAnimName} animName 
        * @param {NPC.SpineHeadSkinName} headSkinName 
        */
       setAnim(animName, headSkinName) {
-        state.currentFrame = 0;
+        state.currTime = 0;
         const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
         const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
         state.bodyRects = state.animRects[animName];
@@ -136,17 +138,9 @@ export function TestPreRenderNpc({ api }) {
           state.durations = [...Array(numFrames)].map(_ => 1 / stationaryFps);
         }
      
-        /**
-         * - Moving animations have specific durations, ensuring feet placement and desired constant speed.
-         * - Motionless animations have specified frames per seconds.
-         * - Single frame animations don't need a fps.
-         */
-        state.framesPerSec = state.rootDeltas.length
-          ? 1 / state.durations[state.currentFrame]
-          : (stationaryFps ?? 0);
         
         // ℹ️ Changing frame width/height later deforms image
-        const bodyRect = state.bodyRects[state.currentFrame];
+        const bodyRect = state.bodyRects[state.currTime];
         const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
         state.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
         state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
@@ -161,35 +155,36 @@ export function TestPreRenderNpc({ api }) {
       },
       ticker,
       /** @param {number} deltaRatio */
-      updateFrame(deltaRatio, force = false) {
+      updateFrame(deltaRatio) {
         const deltaSecs = deltaRatio * (1 / 60);
-        const prevFrame = state.currentFrame;
+        const prevFrame = state.getFrame();
 
-        // 🚧 handle skipped frames (in case of low fps)
+        // Could skip multiple frames in single update via low fps
         // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-        // const elapsed = deltaSecs * state.framesPerSec;
-        // const lag = (state.currentTime % 1) * state.durations[this.currentFrame] + elapsed;
-
-        state.currentTime += (deltaSecs * state.framesPerSec);
-        state.currentFrame = Math.floor(state.currentTime) % state.frameCount;
-        if (state.currentFrame === prevFrame && !force) {
-          return;
+        let lag = ((state.currTime % 1) * state.durations[prevFrame]) + deltaSecs;
+        while (lag >= state.durations[state.getFrame()]) {
+          lag -= state.durations[state.getFrame()];
+          state.currTime++;
         }
-        console.log(state.currentFrame);
+        state.currTime = Math.floor(state.currTime) + lag / state.durations[state.getFrame()];
 
+        if (state.getFrame() !== prevFrame) {
+          state.updateSprites();
+        }
+      },
+      updateSprites() {
+        const currFrame = state.getFrame();
         // body
-        state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[state.currentFrame]), state.tex.baseTexture, 0);
+        state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[currFrame]), state.tex.baseTexture, 0);
         const radians = state.body.rotation;
         if (state.rootDeltas.length) {
-          state.framesPerSec = 1 / state.durations[state.currentFrame];
           // pixi.js convention: 0 degrees ~ north ~ negative y-axis
-          const rootDelta = state.rootDeltas[state.currentFrame];
+          const rootDelta = state.rootDeltas[currFrame];
           state.body.x += rootDelta * Math.sin(radians);
           state.body.y -= rootDelta * Math.cos(radians);
         }
-
         // head
-        const { x, y, angle, width } = state.headFrames[state.currentFrame];
+        const { x, y, angle, width } = state.headFrames[currFrame];
         state.head.angle = angle + state.body.angle;
         state.head.scale.set(width / state.initHeadWidth);
         state.head.position.set(
@@ -215,10 +210,12 @@ export function TestPreRenderNpc({ api }) {
   const ready = query.isFetched && !query.isFetching;
 
   React.useEffect(() => {
-    if (ready) {
-      state.setAnim('walk', 'head/skin-head-dark');
+    if (!ready) return;
+    state.setAnim('walk', 'head/skin-head-dark');
+    state.updateSprites(); // Avoid initial flicker
+    if (state.frameCount > 1) {
+      // ℹ️ updateFrame cannot handle infinite durations (1-frame animations)
       const { updateFrame } = state;
-      updateFrame(0, true); // Avoid initial flicker
       state.ticker.add(updateFrame).start();
       return () => state.ticker.remove(updateFrame).stop();
     }

@@ -111,12 +111,25 @@
       without invalidating 4096 * 4096 texture bound
   - ✅ fix midway footstep animation issues
   - ✅ remove heads from body sprites
-  - ✅ both moving/motionless animations have durations
-  - 🚧 motionless animations needn't be translated e.g. `idle-breathe`
-  - 🚧 handle skipped frames
-  - 🚧 can add multiple npcs
+  - ✅ both moving/stationary animations have durations
+    - stationary animations needn't be translated e.g. `idle-breathe`
+  - ✅ try normalize "first half of walk"
+  - ✅ handle skipped frames
+    - test via ticker {min,max}FPS
+  - can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
+
+- ✅ spine: fix hip positions
+  - ✅ fix left/right hip setup pose
+  - ✅ re-adjust animations
+- ✅ try fix walk asymmetry again 
+  - much better, although perhaps still improvement possible
+
+- try provide alternative view of existing World
+  - another `World` with api driven by original
+  - reuse RenderTextures
+  - reuse ParticleContainer
 
 - start migrating NPCs
 - 🚧 1-frame animations needn't be updated e.g. `idle`, `sit`, `lie`
