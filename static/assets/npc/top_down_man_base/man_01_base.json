@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "wL+dsDBN9vQ",
+	"hash": "tNj8Q3CMBc8",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -1257,7 +1257,7 @@
 			},
 			"left-shoe": {
 				"attachment": [
-					{ "time": 0.4927, "name": "shoes/trainer_black_01" },
+					{ "time": 0.4193, "name": "shoes/trainer_black_01" },
 					{ "time": 1.188, "name": "shoes/trainer_black_03" },
 					{ "time": 1.6, "name": "left-shoe" }
 				]
@@ -1290,8 +1290,7 @@
 			"left-shoe": {
 				"translate": [
 					{ "x": -2.55, "y": -5.68 },
-					{ "time": 0.582, "x": 245.74, "y": -5.68 },
-					{ "time": 0.792, "x": 151.45, "y": -5.68 },
+					{ "time": 0.792, "x": 245.74, "y": -5.68 },
 					{ "time": 1.188, "x": -2.55, "y": -5.68 }
 				]
 			},
@@ -1345,12 +1344,12 @@
 			},
 			"right-shoe": {
 				"translate": [
-					{ "x": -86.41, "y": 9.74 },
+					{ "x": -41.83, "y": 9.74 },
 					{ "time": 0.586, "x": -58.71, "y": 9.74 },
-					{ "time": 0.792, "x": 3.01, "y": 9.74 },
+					{ "time": 0.792, "x": 25.34, "y": 10.11 },
 					{ "time": 0.856, "x": 28.39, "y": 9.74 },
 					{ "time": 1.376, "x": 3.86, "y": 9.74 },
-					{ "time": 1.6, "x": -86.41, "y": 9.74 }
+					{ "time": 1.6, "x": -41.83, "y": 9.74 }
 				]
 			},
 			"right-leg-lower-clothed": {
