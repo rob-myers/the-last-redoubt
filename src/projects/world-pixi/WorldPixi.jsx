@@ -1,5 +1,5 @@
-import { css } from "@emotion/css";
 import React from "react";
+import { css } from "@emotion/css";
 import { Stage } from "@pixi/react";
 import { Extract } from "@pixi/extract";
 import { Graphics } from "@pixi/graphics";
@@ -11,7 +11,7 @@ import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
 
 import { precision, removeFirst } from "../service/generic";
-import { queryClient, removeCached, setCached } from "../service/query-client";
+import { getCached, queryClient, removeCached, setCached } from "../service/query-client";
 import { npcService } from "../service/npc";
 import { Vect } from "../geom";
 
@@ -34,10 +34,12 @@ import { Origin, TestNpc, TestPreRenderNpc } from "./Misc";
 export default function WorldPixi(props) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    key: props.worldKey,
     disabled: !!props.disabled,
     gmGraph: /** @type {*} */ ({}),
     gmRoomGraph: /** @type {*} */ ({}),
     visibleGms: props.gms.map(_ => false),
+    parentApi: undefined,
 
     pixiApp: /** @type {*} */ ({}),
     canvas: /** @type {*} */ ({}),
@@ -92,17 +94,33 @@ export default function WorldPixi(props) {
       state.visibleGms = visibleGms;
       update();
     },
+    useViewWorldKey() {
+      if (!props.viewWorldKey) {
+        throw Error(`${props.worldKey} cannot use undefined prop: viewWorldKey`);
+      }
+      const parentApi = getCached(props.viewWorldKey);
+      if (!parentApi) {
+        throw Error(`${props.worldKey} cannot use undefined world: ${props.viewWorldKey}`);
+      }
+      state.parentApi = parentApi;
+      state.gmGraph = parentApi.gmGraph;
+      state.gmRoomGraph = parentApi.gmRoomGraph;
+      state.visibleGms = state.gmGraph.gms.map(_ => false);
+      // 🚧 try to get e.g. Geomorphs rendering
+      update();
+    },
   }));
 
   const update = useUpdate();
   const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
+
   useHandleEvents(state);
 
-  ({
-    gmGraph: state.gmGraph,
-    gmRoomGraph: state.gmRoomGraph
-  } = useGeomorphs(props.gms, props.disabled));
-  state.gmGraph.api = state.gmRoomGraph.api = state;
+  const { gmGraph, gmRoomGraph } = useGeomorphs(props.gms, props.disabled || !!props.viewWorldKey);
+  if (!props.viewWorldKey) {
+    (state.gmGraph = gmGraph).api = state;
+    (state.gmRoomGraph = gmRoomGraph).api = state;
+  }
 
   React.useEffect(() => {
     setCached([props.worldKey], state);
@@ -191,16 +209,19 @@ export default function WorldPixi(props) {
 /**
  * @typedef Props
  * @property {boolean} [disabled]
+ * @property {string} [viewWorldKey] view another existing world
  * @property {Geomorph.UseGeomorphsDefItem[]} gms
  * @property {string} worldKey
  */
 
 /**
  * @typedef State
+ * @property {string} key
  * @property {boolean} disabled
  * @property {Graph.GmGraph} gmGraph
  * @property {Graph.GmRoomGraph} gmRoomGraph
  * @property {boolean[]} visibleGms Aligned to `props.gms`
+ * @property {State} [parentApi]
  * 
  * @property {import("pixi.js").Application} pixiApp
  * @property {HTMLCanvasElement} canvas
@@ -222,6 +243,7 @@ export default function WorldPixi(props) {
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
  * @property {(visibleGms: boolean[]) => void} setVisibleGms
+ * @property {() => void} useViewWorldKey
  */
 
 /**

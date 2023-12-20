@@ -28,7 +28,7 @@ export default function FOV(props) {
   const { api } = props;
   const { gmGraph, gmGraph: { gms } } = api;
 
-  const state = useStateRef(/** @type {() => State} */ () => ({
+  const state = useStateRef(/** @type {() => State} */ () => api.parentApi?.fov ?? ({
     ready: true,
     gmId: -1,
     roomId: -1,
@@ -203,6 +203,7 @@ export default function FOV(props) {
         (agg, { gmId }) => (agg[gmId] = true, agg), gms.map(_ => false),
       );
       api.setVisibleGms(visibleGms);
+      // api.setVisibleGms(visibleGms.map(_ => true));
 
       const added = nextGmRoomIds.filter(x => !state.gmRoomIds.some(y => y.key === x.key));
       const removed = state.gmRoomIds.filter(x => !nextGmRoomIds.some(y => y.key === x.key));

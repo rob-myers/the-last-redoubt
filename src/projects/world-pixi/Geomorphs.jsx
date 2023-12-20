@@ -16,7 +16,7 @@ export default function Geomorphs(props) {
   const { api } = props;
   const { gmGraph: { gms } } = api;
 
-  const state = useStateRef(/** @type {() => State} */ () => ({
+  const state = useStateRef(/** @type {() => State} */ () => api.parentApi?.geomorphs ?? ({
     ready: true,
 
     lit: [],

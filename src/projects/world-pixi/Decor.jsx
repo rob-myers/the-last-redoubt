@@ -42,7 +42,7 @@ export default function Decor(props) {
     refetchOnMount: 'always',
   });
 
-  const state = useStateRef(/** @type {() => State} */ () => ({
+  const state = useStateRef(/** @type {() => State} */ () => api.parentApi?.decor ?? ({
     gfx: new Graphics(),
     mat: gms.map(gm =>
       new Matrix(gmScale, 0, 0, gmScale, -gmScale * gm.pngRect.x, -gmScale * gm.pngRect.y)

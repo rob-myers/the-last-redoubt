@@ -12,7 +12,7 @@ export default function DebugWorld(props) {
   const { api } = props;
   const { gms } = api.gmGraph;
 
-  const state = useStateRef(/** @type {() => State} */ () => ({
+  const state = useStateRef(/** @type {() => State} */ () => api.parentApi?.debug ?? ({
     ready: true,
     tex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,

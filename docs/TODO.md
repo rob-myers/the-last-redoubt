@@ -2,58 +2,16 @@
 
 ## In progress
 
-- ✅ can load spine json/atlas/png using `pixi-spine`
-- ❌ move skins into "default" skin
-  - original-clothes, light-exposed, skin-head
-  - ℹ️ breaks animations because "current slots" should be a skin-placeholder, not a specific image
-- ✅ can display spine skeleton with specific skins
-- ✅ can scale by `(2 * 13) / frame width`
-  - frame width `spine.skeleton.getBoundsRect()`
-- ✅ test component renders npc
-
-- ✅ fix bone orientations
-  - ✅ fix right arm bone direction
-  - ✅ fix initial pose (top clothed)
-  - ✅ understand -1 scaled right-arm-lower-clothed
-    - needed to make angle "symmetric"
-    - does not have children so perhaps doesn't matter
-  - ✅ fix initial pose (top/bare)
-  - ✅ fix lie
-  - ✅ fix idle-breathe
-  - ✅ fix walk
-    - work towards it
-
-- ✅ start new npc spritesheet strategy
-  - ℹ️ a single spritesheet with body anims and different heads
-  - ℹ️ we hope to use a single PIXI.ParticleContainer
-  - ✅ new skin `black-shirt`
-  - ✅ fix black bare leg
-  - ✅ shoes -> skin `black-trainers`
-  - ✅ create new images `top_down_man_base/grey_gloves`
-  - ✅ new skin `grey-gloves`
-  - ✅ move trousers into skin `black-trousers`
-  - ✅ skin `hair/skin-head` -> `hair/shaved`
-  - ✅ new skin `head/skin-head-light`
-  - ✅ new skin `head/skin-head-dark`
-  - ✅ new skin `head/blonde-light`
-  - ✅ re-export json/atlas/png
-  - ✅ `<TestPreRenderNpc>`: pre-render every frame from every animation (with same head)
-    - ✅ hard-code number of frames chosen for now
-    - ✅ can update skeleton to specification animation/time and compute bounds
-    - ❌ provide bounds inside file
-    - ✅ precompute spine animation bounds via script (watching changes)
-      - outputs `assets/npc/top_down_man_base/spine-meta.json`
-    - ✅ precompute rects packing
-      - use https://www.npmjs.com/package/maxrects-packer
-      - keep animation frames adjacent i.e. one big rect for them all
-    - ℹ️ cannot use spine.skeleton.getBoundsRect() to get exact max frame bounds
-    - ✅ each spine animation has anim-bounds defined manually
-    - ✅ read `anim-bounds` from file
-    - ✅ packing induces RenderTexture
-    - ✅ fix idle-breathe bounds
-    - ✅ fix missing shoes (skin issue)
-
-- ❌ load a PIXI SpriteSheet using a `TextureAtlas`
+- 🚧 alt view of existing World: another `World` with api driven by original
+  - ✅ start another World with `viewWorldKey` and empty `gms`
+    - it never mounts subcomponents
+  - ✅ `api.useViewWorldKey()` triggers load
+  - ℹ️ seems cannot use different renderers and same RenderTexture
+  - 🚧 try re-using WebGl Renderer and drawing something to "alt canvas"
+    - maybe need custom PIXI Application class
+  - ℹ️ should
+    - reuse RenderTextures, ParticleContainer
+    - avoid useHandleEvents talking to original
 
 - 🚧 `<TestPreRenderNpc>` uses ParticleContainer
   - ✅ has ParticleContainer with a sprite
@@ -116,8 +74,9 @@
   - ✅ try normalize "first half of walk"
   - ✅ handle skipped frames
     - test via ticker {min,max}FPS
-  - can add multiple npcs
+  - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
+    - animate many e.g. 1000
   - spritesheet has circle (for debug npc bounds/interact)
 
 - ✅ spine: fix hip positions
@@ -125,11 +84,6 @@
   - ✅ re-adjust animations
 - ✅ try fix walk asymmetry again 
   - much better, although perhaps still improvement possible
-
-- try provide alternative view of existing World
-  - another `World` with api driven by original
-  - reuse RenderTextures
-  - reuse ParticleContainer
 
 - start migrating NPCs
 - 🚧 1-frame animations needn't be updated e.g. `idle`, `sit`, `lie`
@@ -783,6 +737,59 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can load spine json/atlas/png using `pixi-spine`
+- ❌ move skins into "default" skin
+  - original-clothes, light-exposed, skin-head
+  - ℹ️ breaks animations because "current slots" should be a skin-placeholder, not a specific image
+- ✅ can display spine skeleton with specific skins
+- ✅ can scale by `(2 * 13) / frame width`
+  - frame width `spine.skeleton.getBoundsRect()`
+- ✅ test component renders npc
+
+- ✅ fix bone orientations
+  - ✅ fix right arm bone direction
+  - ✅ fix initial pose (top clothed)
+  - ✅ understand -1 scaled right-arm-lower-clothed
+    - needed to make angle "symmetric"
+    - does not have children so perhaps doesn't matter
+  - ✅ fix initial pose (top/bare)
+  - ✅ fix lie
+  - ✅ fix idle-breathe
+  - ✅ fix walk
+    - work towards it
+
+- ✅ start new npc spritesheet strategy
+  - ℹ️ a single spritesheet with body anims and different heads
+  - ℹ️ we hope to use a single PIXI.ParticleContainer
+  - ✅ new skin `black-shirt`
+  - ✅ fix black bare leg
+  - ✅ shoes -> skin `black-trainers`
+  - ✅ create new images `top_down_man_base/grey_gloves`
+  - ✅ new skin `grey-gloves`
+  - ✅ move trousers into skin `black-trousers`
+  - ✅ skin `hair/skin-head` -> `hair/shaved`
+  - ✅ new skin `head/skin-head-light`
+  - ✅ new skin `head/skin-head-dark`
+  - ✅ new skin `head/blonde-light`
+  - ✅ re-export json/atlas/png
+  - ✅ `<TestPreRenderNpc>`: pre-render every frame from every animation (with same head)
+    - ✅ hard-code number of frames chosen for now
+    - ✅ can update skeleton to specification animation/time and compute bounds
+    - ❌ provide bounds inside file
+    - ✅ precompute spine animation bounds via script (watching changes)
+      - outputs `assets/npc/top_down_man_base/spine-meta.json`
+    - ✅ precompute rects packing
+      - use https://www.npmjs.com/package/maxrects-packer
+      - keep animation frames adjacent i.e. one big rect for them all
+    - ℹ️ cannot use spine.skeleton.getBoundsRect() to get exact max frame bounds
+    - ✅ each spine animation has anim-bounds defined manually
+    - ✅ read `anim-bounds` from file
+    - ✅ packing induces RenderTexture
+    - ✅ fix idle-breathe bounds
+    - ✅ fix missing shoes (skin issue)
+
+- ❌ load a PIXI SpriteSheet using a `TextureAtlas`
 
 - ✅ migrate api.fov
   - ❌ load geomorph map image

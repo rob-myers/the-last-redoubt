@@ -16,7 +16,7 @@ export default function Doors(props) {
   const { api } = props;
   const { gmGraph, gmGraph: { gms }, npcs } = api;
   
-  const state = useStateRef(/** @type {() => State} */ () => ({
+  const state = useStateRef(/** @type {() => State} */ () => api.parentApi?.doors ?? ({
     ready: true,
     events: new Subject,
     lookup: gms.map((gm, gmId) => gm.doors.map(/** @returns {DoorState} */ (door, doorId) => {
