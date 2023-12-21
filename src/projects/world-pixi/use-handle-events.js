@@ -30,9 +30,11 @@ export default function useHandleEvents(api) {
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'locked-door':
+          api.doors.mutateItem(e.gmId, e.doorId, { locked: true });
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'unlocked-door':
+          api.doors.mutateItem(e.gmId, e.doorId, { locked: false });
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         default:

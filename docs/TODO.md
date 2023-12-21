@@ -81,7 +81,8 @@
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
-  - 🚧 Doors: toggleLock, toggleDoor should not mutate item
+  - ✅ Doors: toggleLock, toggleDoor should not mutate item
+  - 🚧 ...
 
 - start migrating NPCs
 - 🚧 1-frame animations needn't be updated e.g. `idle`, `sit`, `lie`

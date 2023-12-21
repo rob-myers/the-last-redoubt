@@ -118,12 +118,12 @@ export default function Doors(props) {
         return false;
       }
       if (npcKey) {
-        const npc = npcs.getNpc(npcKey);
         if (!state.npcNearDoor(gmId, doorId, npcKey) && !(
           npcs.config.omnipresent && npcs.playerKey === npcKey
         )) {
           return wasLocked; // Too far
         }
+        const npc = npcs.getNpc(npcKey);
         if (!npc.has.key[gmId][doorId]) {
           return wasLocked; // No key
         }
@@ -135,18 +135,12 @@ export default function Doors(props) {
         if (unlock) return false; // Already unlocked
       }
 
-      item.locked = !wasLocked;
       const key = wasLocked ? 'unlocked-door' : 'locked-door';
       state.events.next({ key, gmId, doorId, npcKey });
-      
-      // Unsealed hull doors have adjacent door, which must also be toggled
       const adjHull = item.hull ? gmGraph.getAdjacentRoomCtxt(gmId, doorId) : null;
-      if (adjHull) {
-        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].locked = item.locked;
-        state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
-      }
+      adjHull && state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId });
 
-      return item.locked;
+      return !wasLocked;
     },
     toggleDoor(gmId, doorId, opts = {}) {
       const item = state.lookup[gmId][doorId];
