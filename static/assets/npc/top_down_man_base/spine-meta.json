@@ -3,6 +3,7 @@
   "baseName": "man_01_base",
   "skeletonScale": 0.1,
   "npcScaleFactor": 0.1818,
+  "npcRadius": 13,
   "anim": {
     "idle": {
       "animName": "idle",

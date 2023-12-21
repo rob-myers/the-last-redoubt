@@ -178,7 +178,7 @@ export default function WorldPixi(props) {
               <Origin />
 
               {/* <TestNpc api={state} /> */}
-              <TestPreRenderNpc api={state} />
+              {state.npcs.ready && <TestPreRenderNpc api={state} />}
 
             </PanZoom>
           </QueryClientProvider>

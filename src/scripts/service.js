@@ -272,6 +272,7 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {string} folderName
  * @property {string} baseName
  * @property {number} skeletonScale
+ * @property {13} npcRadius In Starship Geomorph coordinates
  * @property {number} npcScaleFactor
  * Enforces a radius of `13` in our notion of world coords (based on Starship Geomorphs).
  * > `(2 * 13) / anim.idle.animBounds.width`

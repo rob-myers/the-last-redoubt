@@ -63,30 +63,20 @@
   - ✅ try normalize "first half of walk"
   - ✅ handle skipped frames
     - test via ticker {min,max}FPS
-  - can add multiple npcs
+  - ✅ `<NPCs>` loads spritesheet
+  - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
 
-- ✅ spine: fix hip positions
-  - ✅ fix left/right hip setup pose
-  - ✅ re-adjust animations
-- ✅ try fix walk asymmetry again 
-  - much better, although perhaps still improvement possible
-
-- ❌ try alt view of existing World: another `World` with api driven by original
-  - ✅ start another World with `viewWorldKey` and empty `gms`
-    - it never mounts subcomponents
-  - ✅ `api.useViewWorldKey()` triggers load
-  - ℹ️ cannot use different gl renderers and same RenderTexture
-
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
+  - ℹ️ hopefully can share some data e.g. decor/npc lookups,
   - ✅ Doors: toggleLock, toggleDoor should not mutate item
+  - 🚧 Geomorphs: setRoomLit should only be triggered by event
+  - 🚧 Decor: ...
   - 🚧 ...
 
 - start migrating NPCs
-- 🚧 1-frame animations needn't be updated e.g. `idle`, `sit`, `lie`
-  - handle this elsewhere i.e. skip `update` after first one
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -736,6 +726,18 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ spine: fix hip positions
+  - ✅ fix left/right hip setup pose
+  - ✅ re-adjust animations
+- ✅ try fix walk asymmetry again 
+  - much better, although perhaps still improvement possible
+
+- ❌ try alt view of existing World: another `World` with api driven by original
+  - ✅ start another World with `viewWorldKey` and empty `gms`
+    - it never mounts subcomponents
+  - ✅ `api.useViewWorldKey()` triggers load
+  - ℹ️ cannot use different gl renderers and same RenderTexture
 
 - ✅ can load spine json/atlas/png using `pixi-spine`
 - ❌ move skins into "default" skin

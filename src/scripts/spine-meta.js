@@ -273,6 +273,7 @@ export default async function main() {
     baseName,
     skeletonScale,
     npcScaleFactor,
+    npcRadius: 13,
     anim: outputAnimMeta,
     head: outputHeadMeta,
     packedWidth,

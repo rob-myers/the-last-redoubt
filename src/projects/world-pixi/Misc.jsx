@@ -79,21 +79,18 @@ export function TestNpc({ api }) {
 export function TestPreRenderNpc({ api }) {
 
   const state = useStateRef(() => {
-    const tex = RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight });
     const ticker = new Ticker;
     ticker.autoStart = false;
     // ticker.minFPS = 1, ticker.maxFPS = 30;
     ticker.stop();
 
+    const tex = api.npcs.tex;
     const body = new Sprite(new Texture(tex.baseTexture));
     const head = new Sprite(new Texture(tex.baseTexture));
     body.texture.frame = new Rectangle();
     head.texture.frame = new Rectangle(); // Avoid initial flicker
 
     return {
-      /** Pre-rendered spritesheet i.e. `yarn spine-render` */
-      srcTex: /** @type {import('pixi.js').Texture} */ ({}),
-      /** A copy of `srcTex` possibly with debug stuff */
       tex,
       // not necessarily contiguous packedRects
       animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
@@ -197,20 +194,7 @@ export function TestPreRenderNpc({ api }) {
     overwrite: { angle: true, speed: true },
   });
 
-  // load spritesheet into RenderTexture
-  const query = useQueryWrap('test-pre-render-npc', async () => {
-    state.srcTex = await Assets.load(`/assets/npc/top_down_man_base/spine-render/spritesheet.webp`);
-    api.renderInto((new Graphics)
-      .beginTextureFill({ texture: state.srcTex })
-      .drawRect(0, 0, state.tex.width, state.tex.height)
-      .endFill(), state.tex);
-    return null;
-  });
-
-  const ready = query.isFetched && !query.isFetching;
-
   React.useEffect(() => {
-    if (!ready) return;
     state.setAnim('walk', 'head/skin-head-dark');
     state.updateSprites(); // Avoid initial flicker
     if (state.frameCount > 1) {
@@ -219,7 +203,7 @@ export function TestPreRenderNpc({ api }) {
       state.ticker.add(updateFrame).start();
       return () => state.ticker.remove(updateFrame).stop();
     }
-  }, [ready]);
+  }, []);
 
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}

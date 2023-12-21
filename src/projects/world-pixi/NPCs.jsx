@@ -2,21 +2,25 @@ import React from "react";
 import { merge, of, Subject, firstValueFrom } from "rxjs";
 import { filter, tap } from "rxjs/operators";
 
+import { Graphics } from "@pixi/graphics";
+import { Assets } from "@pixi/assets";
+import { RenderTexture } from "@pixi/core";
+import { ParticleContainer } from "@pixi/react";
+
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
-import { supportsWebp } from "../service/dom";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
-import { cssName, defaultNpcClassKey, defaultNpcInteractRadius } from "../world/const";
 import { geom } from "../service/geom";
 import { hasGmRoomId } from "../service/geomorph";
-import { detectReactDevToolQuery, getNumericCssVar, loadImage } from "../service/dom";
+import { detectReactDevToolQuery } from "../service/dom";
+import { defaultNpcSpeed, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
+
+import { useQueryOnce } from "../hooks/use-query-utils";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
-// import { MemoizedNPC } from "./NPC";
-
 
 import createNpc from "../world/create-npc"; // 🚧 create new
-import npcsMeta from '../world/npcs-meta.json'; // 🚧 redo
+import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -25,11 +29,13 @@ export default function NPCs(props) {
   const update = useUpdate();
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+    srcTex: /** @type {*} */ ({}),
+    tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
+    pc: /** @type {*} */ ({}),
+
     events: new Subject,
     npc: {},
-
     playerKey: null,
-    rootEl: /** @type {HTMLDivElement} */ ({}),
     ready: true,
     session: {},
 
@@ -418,8 +424,8 @@ export default function NPCs(props) {
         throw Error(`getLocalNavPath: no path found: ${JSON.stringify(src)} --> ${JSON.stringify(dst)}`);
       }
     },
-    getNpcInteractRadius() {
-      return getNumericCssVar(state.rootEl, cssName.npcsInteractRadius);
+    getNpcInteractRadius() {// 🚧 can vary
+      return defaultNpcInteractRadius;
     },
     getNpc(npcKey, processApi) {
       const npc = processApi
@@ -523,7 +529,7 @@ export default function NPCs(props) {
         return false;
       }
       // Must not be close to a closed door
-      const npcRadius = npcsMeta[npcClassKey].radius;
+      const npcRadius = spineMeta.npcRadius;
       if (state.isPointNearClosedDoor(point, npcRadius, result)) {
         return false;
       }
@@ -638,11 +644,6 @@ export default function NPCs(props) {
         throw Error(`expected point or npcKey: "${JSON.stringify(input)}"`);
       }
     },
-    async prefetchSpritesheets() {
-      // 🚧
-      const baseName = 'man_01_base';
-      await api.lib.loadSpine(baseName);
-    },
     removeNpc(npcKey) {
       state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
@@ -651,20 +652,6 @@ export default function NPCs(props) {
       }
       state.events.next({ key: 'removed-npc', npcKey });
       update();
-    },
-    rootRef(el) {
-      if (el) {
-        state.rootEl = el;
-        if (!api.npcs.ready) {
-          /**
-           * Why set CSS variables here, not in css`...` below?
-           * 1. ts-styled-plugin error for ${cssName.foo}: ${bar};
-           * 2. setting style avoids `getComputedStyle`
-           */
-          el.style.setProperty(cssName.npcsInteractRadius, `${defaultNpcInteractRadius}px`);
-          el.style.setProperty(cssName.npcsDebugDisplay, 'none');
-        }
-      }
     },
     setPlayerKey(npcKey) {
       if (npcKey === '') {
@@ -716,7 +703,7 @@ export default function NPCs(props) {
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
           npcClassKey: spawned.classKey,
           position: e.point,
-          speed: npcsMeta[spawned.classKey].speed,
+          speed: defaultNpcSpeed,
         };
         if (e.npcClassKey) {
           spawned.changeClass(e.npcClassKey);
@@ -732,7 +719,7 @@ export default function NPCs(props) {
           angle: e.angle ?? 0,
           npcClassKey,
           position: e.point,
-          speed: npcsMeta[npcClassKey].speed,
+          speed: defaultNpcSpeed,
           //@ts-ignore 🚧 need to migrate create-npc
         }, { api });
         state.npc[e.npcKey].doMeta = e.point.meta?.do ? e.point.meta : null;
@@ -835,27 +822,33 @@ export default function NPCs(props) {
     },
   }), { deps: [api] });
   
-  React.useEffect(() => {
-    state.prefetchSpritesheets();
-    props.onLoad(state);
-  }, []);
+  useQueryOnce('spritesheet',
+    async function queryFn() {
+      state.srcTex = await Assets.load(`/assets/npc/top_down_man_base/spine-render/spritesheet.webp`);
+      api.renderInto((new Graphics)
+        .beginTextureFill({ texture: state.srcTex })
+        .drawRect(0, 0, state.tex.width, state.tex.height)
+        .endFill(), state.tex);
 
-  // return (
-  //   <div
-  //     className="npcs"
-  //     ref={state.rootRef}
-  //   >
-  //     {Object.values(state.npc).map(({ key, epochMs }) => (
-  //       <MemoizedNPC
-  //         key={key}
-  //         api={props.api}
-  //         npcKey={key}
-  //         epochMs={epochMs} // To override memoization
-  //       />
-  //     ))}
-  //   </div>
-  // );
-  return null;
+      props.onLoad(state);
+      return null;
+    },
+  );
+
+  return (
+    <ParticleContainer
+      ref={pc => pc && (state.pc = pc)}
+      properties={{
+        alpha: true,
+        position: true,
+        rotation: true,
+        scale: true,
+        tint: true,
+        uvs: true,
+        vertices: true,
+      }}
+    />
+  );
 }
 
 /**
@@ -866,12 +859,14 @@ export default function NPCs(props) {
 
 /**
  * @typedef State @type {object}
+ * @property {import('pixi.js').Texture} srcTex
+ * @property {RenderTexture} tex
+ * @property {import('pixi.js').ParticleContainer} pc
+ * 
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc
- *
  * @property {null | string} playerKey
  * @property {boolean} ready
- * @property {HTMLElement} rootEl
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session
  * @property {Required<NPC.NpcConfigOpts>} config Proxy
  *
@@ -902,10 +897,7 @@ export default function NPCs(props) {
  * @property {(e: NPC.NpcAction, processApi?: ProcessApi) => Promise<NpcActResult>} npcAct
  * @property {(e: { zoom?: number; point?: Geom.VectJson; ms: number; easing?: string }) => Promise<'cancelled' | 'completed'>} panZoomTo Always resolves
  * @property {(input: string | Geom.VectJson) => Geom.VectJson} parseNavigable
- * @property {() => Promise<void>} prefetchSpritesheets
- * e.g. load walk spritesheet before walking
  * @property {(npcKey: string) => void} removeNpc
- * @property {(el: null | HTMLDivElement) => void} rootRef
  * @property {(npcKey: string | null) => void} setPlayerKey
  * @property {(e: { npcKey: string; npcClassKey?: NPC.NpcClassKey; point: Geomorph.PointMaybeMeta; angle?: number; requireNav?: boolean }) => Promise<void>} spawn
  * @property {(npcKey: string, processApi: ProcessApi) => import('rxjs').Subscription} trackNpc

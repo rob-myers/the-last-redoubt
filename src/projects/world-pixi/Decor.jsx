@@ -19,6 +19,7 @@ export default function Decor(props) {
   const { api } = props;
   const { gms } = api.gmGraph;
   
+  // 🚧 move into "decor spritesheet"
   useQuery({
     queryKey: [`decor-icon-textures`],
     queryFn: async () => {

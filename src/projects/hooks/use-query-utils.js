@@ -12,6 +12,7 @@ export function useQueryOnce(queryKey, queryFn) {
     refetchOnMount: "always",
     gcTime: Infinity,
     staleTime: Infinity,
+    throwOnError: true,
   });
 }
 
