@@ -57,6 +57,9 @@ export default function FOV(props) {
       height: gmScale * gm.pngRect.height,
     })),
 
+    forgetPrev() {
+      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
+    },
     initLabelsTex(gmId) {
       const gm = gms[gmId];
       
@@ -76,9 +79,6 @@ export default function FOV(props) {
       );
       api.renderInto(emptyContainer, state.labelsTex[gmId])
       emptyContainer.removeChildren();
-    },
-    forgetPrev() {
-      state.prev = { gmId: -1, roomId: -1, lastDoorId: -1 };
     },
     initMaskTex(gmId) {
       const gm = gms[gmId];
@@ -317,7 +317,6 @@ export default function FOV(props) {
   React.useEffect(() => {
     loaded && props.onLoad(state);
     // process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
-    // state.drawLabels();
   }, [loaded]);
 
   return (
