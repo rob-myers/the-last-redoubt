@@ -72,6 +72,9 @@ export default function Doors(props) {
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
     },
+    mutateItem(gmId, doorId, partial) {
+      return Object.assign(state.lookup[gmId][doorId], partial);
+    },
     npcNearDoor(gmId, doorId, npcKey) {
       const npc = props.api.npcs.getNpc(npcKey);
       const center = npc.getPosition();
@@ -182,27 +185,19 @@ export default function Doors(props) {
       }
 
       // Toggle the door
-      item.open = !wasOpen;
       const key = wasOpen ? 'closed-door' : 'opened-door';
       state.events.next({ key, gmId, doorId, npcKey });
-
-      // Unsealed hull doors have adjacent door, which must also be toggled
-      if (adjHull) {
-        state.lookup[adjHull.adjGmId][adjHull.adjDoorId].open = item.open;
-        state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
-      }
-
+      adjHull && state.events.next({ key, gmId: adjHull.adjGmId, doorId: adjHull.adjDoorId, npcKey });
       if (key === 'opened-door') {
         state.tryCloseDoor(gmId, doorId);
       }
-
-      return item.open;
+      return !wasOpen;
     },
     tryCloseDoor(gmId, doorId) {
       const item = state.lookup[gmId][doorId];
       item.closeTimeoutId = window.setTimeout(() => {
         if (item.open) {
-          state.toggleDoor(gmId, doorId, {}); // returns `false`
+          state.toggleDoor(gmId, doorId, {});
           state.tryCloseDoor(gmId, doorId); // recheck in {ms}
         } else {
           delete item.closeTimeoutId;
@@ -272,13 +267,15 @@ export default function Doors(props) {
  * @property {(gmId: number, doorId: number) => boolean} isOpen
  * @property {(e: PanZoom.PointerUpEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
+ * @property {(gmId: number, doorId: number, partial: Partial<DoorState>) => DoorState} mutateItem
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => boolean} toggleDoor
- * Toggle between open/closed state, or directly open/close using `opts`.
- * Returns current boolean value of `open`.
- * @property {(gmId: number, doorId: number, opts?: ToggleLockOpts) => boolean} toggleLock
+ * - Toggle open/closed state, or directly open/close using `opts`
+ * - Triggers an event which changes the value of `open`.
+ * - Returns next boolean value of `open`.
+ * @property {(gmId: number, doorId: number, opts?: ToggleLockOpts) => void} toggleLock
  * Toggle between unlocked/locked state, or directly lock/unlock using `opts`.
  * Returns current boolean value of `locked`.
  * @property {(gmId: number, doorId: number) => void} tryCloseDoor

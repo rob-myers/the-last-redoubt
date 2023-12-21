@@ -18,11 +18,13 @@ export default function useHandleEvents(api) {
     handleDoorsEvent(e) {
       switch (e.key) {
         case 'closed-door':
+          api.doors.mutateItem(e.gmId, e.doorId, { open: false });
           api.geomorphs.onCloseDoor(e.gmId, e.doorId);
           api.fov.recompute();
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'opened-door':
+          api.doors.mutateItem(e.gmId, e.doorId, { open: true });
           api.geomorphs.onOpenDoor(e.gmId, e.doorId);
           api.fov.recompute();
           api.doors.renderDoor(e.gmId, e.doorId);
