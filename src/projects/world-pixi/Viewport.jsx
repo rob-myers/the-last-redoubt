@@ -22,7 +22,7 @@ const PixiComponentViewport = PixiComponent("Viewport", {
     }).pinch({
       // percent: 0.1,
     }).clampZoom({
-      maxScale: 8,
+      maxScale: 4,
       minScale: 0.1,
     }).decelerate({
       friction: 0.5,
