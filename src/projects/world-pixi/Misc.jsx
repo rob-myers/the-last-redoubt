@@ -7,12 +7,10 @@ import { Sprite } from "@pixi/sprite";
 
 import { mapValues } from "../service/generic";
 import { spineAnimToSetup } from "./const";
-import { useQueryOnce, useQueryWrap } from "../hooks/use-query-utils";;
+import { useQueryOnce } from "../hooks/use-query-utils";;
 import useStateRef from "../hooks/use-state-ref";
 
 import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
-/** Npc radius is 13 in our notion of "world coords" */
-const npcScaleFactor = (2 * 13) / spineMeta.anim.idle.animBounds.width;
 
 export function Origin() {
   const app = PixiReact.useApp();
@@ -78,23 +76,28 @@ export function TestNpc({ api }) {
  */
 export function TestPreRenderNpc({ api }) {
 
+  // 🚧 multiple npcs
+
   const state = useStateRef(() => ({
     tex: api.npcs.tex,
     ticker: createTicker(),
-    // not necessarily contiguous packedRects
     animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
-
+    
+    /** @type {NPC.SpineAnimName} */
+    animName: 'idle',
+    /** @type {NPC.SpineHeadSkinName} */
+    headSkinName: 'head/skin-head-dark',
     /** Meters per second */
     speed: 0.5,
     /** Degrees */
     angle: 180,
-
     /** Animation's normalized real-valued current time i.e. 0 ≤ t < numFrames - 1 */
     currTime: 0,
     body: new Sprite(new Texture(api.npcs.tex.baseTexture)),
     head: new Sprite(new Texture(api.npcs.tex.baseTexture)),
     frameCount: 1,
     initHeadWidth: 0,
+    
     bodyRects: /** @type {Geom.RectJson[]} */ ([]),
     headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
     /** Only non-empty for animations with motion e.g. `walk` */
@@ -110,6 +113,8 @@ export function TestPreRenderNpc({ api }) {
      * @param {NPC.SpineHeadSkinName} headSkinName 
      */
     setAnim(animName, headSkinName) {
+      state.animName = animName;
+      state.headSkinName = headSkinName;
       state.currTime = 0;
       const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
       const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
@@ -134,7 +139,7 @@ export function TestPreRenderNpc({ api }) {
       state.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
       state.head.anchor.set(0, 0);
       
-      state.body.scale.set(npcScaleFactor);
+      state.body.scale.set(spineMeta.npcScaleFactor);
       state.body.angle = state.angle;
       state.head.scale.set(1);
       state.initHeadWidth = state.head.width;
@@ -192,8 +197,7 @@ export function TestPreRenderNpc({ api }) {
   }, []);
 
   React.useEffect(() => {
-    if (api.disabled) state.ticker.stop();
-    else state.ticker.start();
+    api.disabled ? state.ticker.stop() : state.ticker.start();
   }, [api.disabled]);
 
   return <>
