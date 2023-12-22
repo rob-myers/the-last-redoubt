@@ -65,7 +65,7 @@
     - test via ticker {min,max}FPS
   - ✅ `<NPCs>` loads spritesheet
   - ✅ `<NPCs>` has ticker (unused)
-  - 🚧 pause/unpause when disabled/enabled
+  - ✅ pause/unpause when disabled/enabled
   - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)

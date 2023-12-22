@@ -180,8 +180,6 @@ export function TestPreRenderNpc({ api }) {
     overwrite: { angle: true, speed: true },
   });
 
-  // console.log(api.disabled);
-
   React.useEffect(() => {
     state.setAnim('walk', 'head/skin-head-dark');
     state.updateSprites(); // Avoid initial flicker
@@ -192,6 +190,11 @@ export function TestPreRenderNpc({ api }) {
       return () => state.ticker.remove(updateFrame).stop();
     }
   }, []);
+
+  React.useEffect(() => {
+    if (api.disabled) state.ticker.stop();
+    else state.ticker.start();
+  }, [api.disabled]);
 
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}
