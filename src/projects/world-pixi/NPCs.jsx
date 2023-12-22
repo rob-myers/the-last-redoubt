@@ -4,7 +4,7 @@ import { filter, tap } from "rxjs/operators";
 
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
-import { RenderTexture } from "@pixi/core";
+import { RenderTexture, Ticker } from "@pixi/core";
 import { ParticleContainer } from "@pixi/react";
 
 import { Vect } from "../geom";
@@ -21,6 +21,7 @@ import useUpdate from "../hooks/use-update";
 
 import createNpc from "../world/create-npc"; // 🚧 create new
 import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
+import { createTicker } from "./Misc";
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -32,6 +33,7 @@ export default function NPCs(props) {
     srcTex: /** @type {*} */ ({}),
     tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
     pc: /** @type {*} */ ({}),
+    ticker: createTicker(),
 
     events: new Subject,
     npc: {},
@@ -862,6 +864,7 @@ export default function NPCs(props) {
  * @property {import('pixi.js').Texture} srcTex
  * @property {RenderTexture} tex
  * @property {import('pixi.js').ParticleContainer} pc
+ * @property {Ticker} ticker
  * 
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc

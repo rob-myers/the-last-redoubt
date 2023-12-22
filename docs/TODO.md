@@ -64,16 +64,19 @@
   - ✅ handle skipped frames
     - test via ticker {min,max}FPS
   - ✅ `<NPCs>` loads spritesheet
+  - ✅ `<NPCs>` has ticker (unused)
+  - 🚧 pause/unpause when disabled/enabled
   - 🚧 can add multiple npcs
     - animate multiple npcs in tandem via ticker
   - spritesheet has circle (for debug npc bounds/interact)
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
-  - ℹ️ hopefully can share some data e.g. decor/npc lookups,
+  - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
   - ✅ Doors: toggleLock, toggleDoor should not mutate item
+    - instead, useHandleEvents mutates in response to an event
   - 🚧 Geomorphs: setRoomLit should only be triggered by event
-  - 🚧 Decor: ...
+  - 🚧 Decor: 
   - 🚧 ...
 
 - start migrating NPCs

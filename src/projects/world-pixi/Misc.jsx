@@ -78,119 +78,106 @@ export function TestNpc({ api }) {
  */
 export function TestPreRenderNpc({ api }) {
 
-  const state = useStateRef(() => {
-    const ticker = new Ticker;
-    ticker.autoStart = false;
-    // ticker.minFPS = 1, ticker.maxFPS = 30;
-    ticker.stop();
+  const state = useStateRef(() => ({
+    tex: api.npcs.tex,
+    ticker: createTicker(),
+    // not necessarily contiguous packedRects
+    animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
 
-    const tex = api.npcs.tex;
-    const body = new Sprite(new Texture(tex.baseTexture));
-    const head = new Sprite(new Texture(tex.baseTexture));
-    body.texture.frame = new Rectangle();
-    head.texture.frame = new Rectangle(); // Avoid initial flicker
+    /** Meters per second */
+    speed: 0.5,
+    /** Degrees */
+    angle: 180,
 
-    return {
-      tex,
-      // not necessarily contiguous packedRects
-      animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
+    /** Animation's normalized real-valued current time i.e. 0 ≤ t < numFrames - 1 */
+    currTime: 0,
+    body: new Sprite(new Texture(api.npcs.tex.baseTexture)),
+    head: new Sprite(new Texture(api.npcs.tex.baseTexture)),
+    frameCount: 1,
+    initHeadWidth: 0,
+    bodyRects: /** @type {Geom.RectJson[]} */ ([]),
+    headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
+    /** Only non-empty for animations with motion e.g. `walk` */
+    rootDeltas: /** @type {number[]} */ ([]),
+    /** Duration of each frame in seconds */
+    durations: /** @type {number[]} */ ([]),
 
-      /** Meters per second */
-      speed: 0.5,
-      /** Degrees */
-      angle: 180,
+    getFrame() {
+      return Math.floor(state.currTime) % state.frameCount;
+    },
+    /**
+     * @param {NPC.SpineAnimName} animName 
+     * @param {NPC.SpineHeadSkinName} headSkinName 
+     */
+    setAnim(animName, headSkinName) {
+      state.currTime = 0;
+      const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
+      const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
+      state.bodyRects = state.animRects[animName];
+      state.headFrames = headFrames;
+      state.frameCount = frameCount;
+      state.rootDeltas = rootDeltas;
+      if (rootDeltas.length) {
+        // rootDelta is in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
+        state.durations = rootDeltas.map(delta => (delta / 40) / state.speed);
+      } else {
+        state.durations = [...Array(numFrames)].map(_ => 1 / stationaryFps);
+      }
+      
+      // ℹ️ Changing frame width/height later deforms image
+      const bodyRect = state.bodyRects[state.currTime];
+      const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
+      state.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
+      state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 
-      /** Animation's normalized real-valued current time i.e. 0 ≤ t < numFrames - 1 */
-      currTime: 0,
-      body,
-      head,
-      frameCount: 1,
-      initHeadWidth: 0,
-      bodyRects: /** @type {Geom.RectJson[]} */ ([]),
-      headFrames: /** @type {import("src/scripts/service").SpineAnimMeta['headFrames']} */ ([]),
-      /** Only non-empty for animations with motion e.g. `walk` */
-      rootDeltas: /** @type {number[]} */ ([]),
-      /** Duration of each frame in seconds */
-      durations: /** @type {number[]} */ ([]),
+      // Body anchor is (0, 0) in spine world coords
+      state.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
+      state.head.anchor.set(0, 0);
+      
+      state.body.scale.set(npcScaleFactor);
+      state.body.angle = state.angle;
+      state.head.scale.set(1);
+      state.initHeadWidth = state.head.width;
+    },
+    /** @param {number} deltaRatio */
+    updateFrame(deltaRatio) {
+      const deltaSecs = deltaRatio * (1 / 60);
+      const prevFrame = state.getFrame();
 
-      getFrame() {
-        return Math.floor(state.currTime) % state.frameCount;
-      },
-      /**
-       * @param {NPC.SpineAnimName} animName 
-       * @param {NPC.SpineHeadSkinName} headSkinName 
-       */
-      setAnim(animName, headSkinName) {
-        state.currTime = 0;
-        const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
-        const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
-        state.bodyRects = state.animRects[animName];
-        state.headFrames = headFrames;
-        state.frameCount = frameCount;
-        state.rootDeltas = rootDeltas;
-        if (rootDeltas.length) {
-          // rootDelta is in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
-          state.durations = rootDeltas.map(delta => (delta / 40) / state.speed);
-        } else {
-          state.durations = [...Array(numFrames)].map(_ => 1 / stationaryFps);
-        }
-     
-        
-        // ℹ️ Changing frame width/height later deforms image
-        const bodyRect = state.bodyRects[state.currTime];
-        const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
-        state.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
-        state.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
+      // Could skip multiple frames in single update via low fps
+      // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
+      let lag = ((state.currTime % 1) * state.durations[prevFrame]) + deltaSecs;
+      while (lag >= state.durations[state.getFrame()]) {
+        lag -= state.durations[state.getFrame()];
+        state.currTime++;
+      }
+      state.currTime = Math.floor(state.currTime) + lag / state.durations[state.getFrame()];
 
-        // Body anchor is (0, 0) in spine world coords
-        state.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-        state.head.anchor.set(0, 0);
-        
-        state.body.scale.set(npcScaleFactor);
-        state.body.angle = state.angle;
-        state.initHeadWidth = state.head.width;
-      },
-      ticker,
-      /** @param {number} deltaRatio */
-      updateFrame(deltaRatio) {
-        const deltaSecs = deltaRatio * (1 / 60);
-        const prevFrame = state.getFrame();
-
-        // Could skip multiple frames in single update via low fps
-        // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-        let lag = ((state.currTime % 1) * state.durations[prevFrame]) + deltaSecs;
-        while (lag >= state.durations[state.getFrame()]) {
-          lag -= state.durations[state.getFrame()];
-          state.currTime++;
-        }
-        state.currTime = Math.floor(state.currTime) + lag / state.durations[state.getFrame()];
-
-        if (state.getFrame() !== prevFrame) {
-          state.updateSprites();
-        }
-      },
-      updateSprites() {
-        const currFrame = state.getFrame();
-        // body
-        state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[currFrame]), state.tex.baseTexture, 0);
-        const radians = state.body.rotation;
-        if (state.rootDeltas.length) {
-          // pixi.js convention: 0 degrees ~ north ~ negative y-axis
-          const rootDelta = state.rootDeltas[currFrame];
-          state.body.x += rootDelta * Math.sin(radians);
-          state.body.y -= rootDelta * Math.cos(radians);
-        }
-        // head
-        const { x, y, angle, width } = state.headFrames[currFrame];
-        state.head.angle = angle + state.body.angle;
-        state.head.scale.set(width / state.initHeadWidth);
-        state.head.position.set(
-          state.body.x + Math.cos(radians) * x - Math.sin(radians) * y,
-          state.body.y + Math.sin(radians) * x + Math.cos(radians) * y,
-        );
-      },
-    };
-  }, {
+      if (state.getFrame() !== prevFrame) {
+        state.updateSprites();
+      }
+    },
+    updateSprites() {
+      const currFrame = state.getFrame();
+      // body
+      state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[currFrame]), state.tex.baseTexture, 0);
+      const radians = state.body.rotation;
+      if (state.rootDeltas.length) {
+        // pixi.js convention: 0 degrees ~ north ~ negative y-axis
+        const rootDelta = state.rootDeltas[currFrame];
+        state.body.x += rootDelta * Math.sin(radians);
+        state.body.y -= rootDelta * Math.cos(radians);
+      }
+      // head
+      const { x, y, angle, width } = state.headFrames[currFrame];
+      state.head.angle = angle + state.body.angle;
+      state.head.scale.set(width / state.initHeadWidth);
+      state.head.position.set(
+        state.body.x + Math.cos(radians) * x - Math.sin(radians) * y,
+        state.body.y + Math.sin(radians) * x + Math.cos(radians) * y,
+      );
+    },
+  }), {
     overwrite: { angle: true, speed: true },
   });
 
@@ -237,3 +224,11 @@ const TestInstantiateSpine = PixiReact.PixiComponent('TestInstantiateSpine', {
     return spine;
   },
 });
+
+export function createTicker() {
+  const ticker = new Ticker;
+  ticker.autoStart = false;
+  // state.ticker.minFPS = 1, state.ticker.maxFPS = 30;
+  ticker.stop();
+  return ticker;
+}
