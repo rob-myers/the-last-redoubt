@@ -83,6 +83,8 @@ export function TestPreRenderNpc({ api }) {
     ticker: createTicker(),
     animRects: mapValues(spineMeta.anim, ({ packedRects }) => packedRects),
     
+    npc: /** @type {{ [npcKey: string]: TestNpc }} */ ({}),
+
     /** @type {NPC.SpineAnimName} */
     animName: 'idle',
     /** @type {NPC.SpineHeadSkinName} */
@@ -141,11 +143,10 @@ export function TestPreRenderNpc({ api }) {
       
       state.body.scale.set(spineMeta.npcScaleFactor);
       state.body.angle = state.angle;
-      state.head.scale.set(1);
-      state.initHeadWidth = state.head.width;
+      state.initHeadWidth = headRect.width;
     },
     /** @param {number} deltaRatio */
-    updateFrame(deltaRatio) {
+    updateTime(deltaRatio) {
       const deltaSecs = deltaRatio * (1 / 60);
       let frame = state.getFrame(), shouldUpdate = false;
 
@@ -159,9 +160,9 @@ export function TestPreRenderNpc({ api }) {
         shouldUpdate = true;
       }
       state.currTime = Math.floor(state.currTime) + lag / state.durations[frame];
-      shouldUpdate && state.updateSprites();
+      shouldUpdate && state.updateNpc();
     },
-    updateSprites() {
+    updateNpc() {
       const currFrame = state.getFrame();
       // body
       state.body.texture._uvs.set(/** @type {Rectangle} */ (state.bodyRects[currFrame]), state.tex.baseTexture, 0);
@@ -187,10 +188,10 @@ export function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     state.setAnim('walk', 'head/skin-head-dark');
-    state.updateSprites(); // Avoid initial flicker
+    state.updateNpc(); // Avoid initial flicker
     if (state.frameCount > 1) {
       // ℹ️ updateFrame cannot handle infinite durations (1-frame animations)
-      const { updateFrame } = state;
+      const { updateTime: updateFrame } = state;
       state.ticker.add(updateFrame).start();
       return () => state.ticker.remove(updateFrame).stop();
     }
@@ -216,6 +217,132 @@ export function TestPreRenderNpc({ api }) {
     />
   </>;
 }
+
+/**
+ * @typedef TestNpcDef
+ * @property {string} npcKey
+ * @property {NPC.SpineHeadSkinName} headSkinName
+ * @property {number} speed Meters per second
+ */
+
+/**
+ * @typedef TestNpc
+ * @property {string} npcKey
+ * @property {TestNpcDef} def
+ * 
+ * @property {TestNpcSpriteLookup} sprite
+ * @property {number} speed Meters per second
+ * @property {number} angle Degrees
+ * @property {number} currTime
+ * Normalized real-valued time of current animation.
+ * Non-negative integers correspond to frames.
+ * @property {TestNpcAnim} anim
+ *
+ * @property {() => number} getFrame
+ * @property {(pixiDelta: number) => void} updateTime
+ * @property {() => void} updateNpc
+ */
+
+/**
+ * @typedef TestNpcSpriteLookup
+ * @property {Sprite} body
+ * @property {Sprite} head
+ * @property {Sprite} [bodyCircle] Debug
+ */
+
+/**
+ * @typedef TestNpcAnim
+ * @property {NPC.SpineAnimName} animName
+ * @property {number} frameCount Total number of frames
+ * @property {number} initHeadWidth
+ * @property {Geom.RectJson[]} bodyRects
+ * @property {import("src/scripts/service").SpineAnimMeta['headFrames']} headFrames
+ * @property {number[]} rootDeltas
+ * @property {number[]} durations
+ */
+
+/**
+ * @param {TestNpcDef} def
+ * @param {import('./WorldPixi').State} api
+ * @returns {TestNpc}
+ */
+function createNpc(def, api) {
+  const { packedRects, frameCount, headFrames, rootDeltas } = spineMeta.anim.idle;
+  const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup.idle;
+  const headRect = spineMeta.head[def.headSkinName].packedHead[headOrientKey];
+
+  const { baseTexture } = api.npcs.tex;
+
+  /** @type {TestNpc} */
+  const npc = {
+    npcKey: def.npcKey,
+    def,
+    speed: 0,
+    angle: 0,
+    currTime: 0,
+    sprite: {
+      body: new Sprite(new Texture(baseTexture)),
+      head: new Sprite(new Texture(baseTexture)),
+    },
+    anim: {
+      animName: 'idle',
+      frameCount,
+      bodyRects: packedRects,
+      durations: [], // 🚧 use setAnim somehow?
+      headFrames,
+      initHeadWidth: headRect.width,
+      rootDeltas,
+    },
+    getFrame() {
+      return Math.floor(npc.currTime) % npc.anim.frameCount;
+    },
+    updateTime(deltaRatio) {
+      const deltaSecs = deltaRatio * (1 / 60);
+      let frame = npc.getFrame(), shouldUpdate = false;
+
+      // Could skip multiple frames in single update via low fps
+      // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
+      let lag = ((npc.currTime % 1) * npc.anim.durations[frame]) + deltaSecs;
+      while (lag >= npc.anim.durations[frame]) {
+        lag -= npc.anim.durations[frame];
+        npc.currTime++;
+        frame = npc.getFrame();
+        shouldUpdate = true;
+      }
+      npc.currTime = Math.floor(npc.currTime) + lag / npc.anim.durations[frame];
+      shouldUpdate && npc.updateNpc();
+    },
+    updateNpc() {
+      const currFrame = npc.getFrame();
+      const { bodyRects, rootDeltas, headFrames, initHeadWidth } = npc.anim;
+      const { body, head } = npc.sprite;
+      // body
+      body.texture._uvs.set(
+        /** @type {Rectangle} */ (bodyRects[currFrame]),
+        baseTexture,
+        0,
+      );
+      const radians = body.rotation;
+      if (rootDeltas.length) {
+        // pixi.js convention: 0 degrees ~ north ~ negative y-axis
+        const rootDelta = rootDeltas[currFrame];
+        body.x += rootDelta * Math.sin(radians);
+        body.y -= rootDelta * Math.cos(radians);
+      }
+      // head
+      const { x, y, angle, width } = headFrames[currFrame];
+      head.angle = angle + body.angle;
+      head.scale.set(width / initHeadWidth);
+      head.position.set(
+        body.x + Math.cos(radians) * x - Math.sin(radians) * y,
+        body.y + Math.sin(radians) * x + Math.cos(radians) * y,
+      );
+    },
+  };
+
+  return npc;
+}
+
 
 const TestInstantiateSpine = PixiReact.PixiComponent('TestInstantiateSpine', {
   /** @param {{ api: import('./WorldPixi').State }} props  */

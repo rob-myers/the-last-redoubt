@@ -67,7 +67,9 @@
   - ✅ `<NPCs>` has ticker (unused)
   - ✅ pause/unpause when disabled/enabled
   - 🚧 can add multiple npcs
-    - animate multiple npcs in tandem via ticker
+    - ✅ lookup with values of type TestNpc
+    - ✅ TestNpc has methods getFrame, updateTime, updateNpc
+    - 🚧 replace current approach with `createNpc`
   - spritesheet has circle (for debug npc bounds/interact)
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
