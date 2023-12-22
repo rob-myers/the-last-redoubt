@@ -96,6 +96,7 @@ export default function WorldPixi(props) {
 
   const update = useUpdate();
   const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
+  state.disabled = !!props.disabled;
   useHandleEvents(state);
 
   ({
