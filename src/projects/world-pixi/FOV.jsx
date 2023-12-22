@@ -220,7 +220,7 @@ export default function FOV(props) {
         polys.forEach(poly => {
           state.showMask
             ? gfx.beginTextureFill({ texture, matrix: tempMatrix.set(1/gmScale, 0, 0, 1/gmScale, gm.pngRect.x, gm.pngRect.y) })
-            : gfx.beginFill(0xffffff);
+            : gfx.beginFill(0);
           gfx.drawPolygon(poly.outline);
           poly.holes.forEach(hole => gfx.beginHole().drawPolygon(hole).endHole());
           gfx.endFill();
@@ -229,7 +229,7 @@ export default function FOV(props) {
         gfx.setTransform();
         state.showMask
           ? gfx.beginTextureFill({ texture })
-          : gfx.beginFill(0xffffff);
+          : gfx.beginFill(0);
         gfx.drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale).endFill()
       }
       api.renderInto(gfx, state.tex[gmId]);
