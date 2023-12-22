@@ -142,20 +142,19 @@ export function TestPreRenderNpc({ api }) {
     /** @param {number} deltaRatio */
     updateFrame(deltaRatio) {
       const deltaSecs = deltaRatio * (1 / 60);
-      const prevFrame = state.getFrame();
+      let frame = state.getFrame(), shouldUpdate = false;
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
-      let lag = ((state.currTime % 1) * state.durations[prevFrame]) + deltaSecs;
-      while (lag >= state.durations[state.getFrame()]) {
-        lag -= state.durations[state.getFrame()];
+      let lag = ((state.currTime % 1) * state.durations[frame]) + deltaSecs;
+      while (lag >= state.durations[frame]) {
+        lag -= state.durations[frame];
         state.currTime++;
+        frame = state.getFrame();
+        shouldUpdate = true;
       }
-      state.currTime = Math.floor(state.currTime) + lag / state.durations[state.getFrame()];
-
-      if (state.getFrame() !== prevFrame) {
-        state.updateSprites();
-      }
+      state.currTime = Math.floor(state.currTime) + lag / state.durations[frame];
+      shouldUpdate && state.updateSprites();
     },
     updateSprites() {
       const currFrame = state.getFrame();
@@ -180,6 +179,8 @@ export function TestPreRenderNpc({ api }) {
   }), {
     overwrite: { angle: true, speed: true },
   });
+
+  // console.log(api.disabled);
 
   React.useEffect(() => {
     state.setAnim('walk', 'head/skin-head-dark');
