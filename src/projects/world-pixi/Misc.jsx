@@ -115,11 +115,10 @@ export function TestPreRenderNpc({ api }) {
       walkSpeed: 0.6,
       angle: 180,
     });
-    npc.setAnim('idle');
+    npc.setAnim('sit');
     const { update } = state;
     state.ticker.add(update).start();
     return () => {
-      // state.removeNpc(npc.key);
       state.ticker.remove(update).stop();
     };
   }, []);
@@ -254,6 +253,8 @@ function createTestNpc(def, api) {
       sprite.body.scale.set(spineMeta.npcScaleFactor);
       sprite.body.angle = npc.angle;
       anim.initHeadWidth = headRect.width;
+
+      npc.updateSprites();
     },
     updateTime(deltaRatio) {
       const deltaSecs = deltaRatio * (1 / 60);
