@@ -92,11 +92,15 @@ export function TestPreRenderNpc({ api }) {
     },
     /** @param {TestNpcDef} def */
     spawnNpc(def) {
-      const npc = createTestNpc(def, api);
-      state.pc.addChild(...Object.values(npc.sprite));
+      let npc = state.npc[def.npcKey];
+      if (npc) {// respawn
+      } else {// spawn
+        npc = createTestNpc(def, api);
+        state.pc.addChild(...Object.values(npc.sprite));
+      }
       npc.setAnim('idle');
       npc.updateSprites(); // Avoid initial flicker
-      return state.npc[npc.key] = npc;
+      return state.npc[def.npcKey] = npc;
     },
     /** @param {number} deltaRatio */
     update(deltaRatio) {
@@ -109,17 +113,20 @@ export function TestPreRenderNpc({ api }) {
   }));
 
   React.useEffect(() => {
-    const npc = state.npc.rob ?? state.spawnNpc({
-      npcKey: 'rob',
+    const npcs = [...Array(500)].map((_, i) => state.spawnNpc({
+      npcKey: `rob-${i}`,
       headSkinName: 'head/skin-head-dark',
       walkSpeed: 0.6,
       angle: 180,
-    });
-    npc.setAnim('sit');
+      x: 40 * (i % 5),
+      y: 40 * Math.floor(i / 5),
+    }));
+    npcs.forEach(npc => npc.setAnim('walk'));
     const { update } = state;
     state.ticker.add(update).start();
     return () => {
       state.ticker.remove(update).stop();
+      npcs.forEach(npc => state.removeNpc(npc.key));
     };
   }, []);
 
@@ -150,6 +157,8 @@ export function TestPreRenderNpc({ api }) {
  * @property {NPC.SpineHeadSkinName} headSkinName
  * @property {number} walkSpeed Meters per second
  * @property {number} [angle] Degrees
+ * @property {number} [x]
+ * @property {number} [y]
  */
 
 /**
@@ -299,6 +308,8 @@ function createTestNpc(def, api) {
       );
     },
   };
+
+  npc.sprite.body.position.set(def.x, def.y);
 
   return npc;
 }

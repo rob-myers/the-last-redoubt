@@ -66,12 +66,13 @@
   - ✅ `<NPCs>` loads spritesheet
   - ✅ `<NPCs>` has ticker (unused)
   - ✅ pause/unpause when disabled/enabled
-  - 🚧 can add multiple npcs
+  - ✅ can add multiple npcs
     - ✅ lookup with values of type TestNpc
     - ✅ TestNpc has methods getFrame, updateTime, updateNpc
     - ✅ replace current approach with `createTestNpc`
-    - fix rotated head when go from e.g. `walk` -> `idle`
-    - add multiple
+    - ✅ fix rotated head when go from e.g. `walk` -> `idle`
+    - ✅ add multiple
+    - ✅ add many: 500 npcs
   - change walk initial frame so nearly idle
   - spritesheet has circle (for debug npc bounds/interact)
 
@@ -81,8 +82,11 @@
   - ✅ Doors: toggleLock, toggleDoor should not mutate item
     - instead, useHandleEvents mutates in response to an event
   - 🚧 Geomorphs: setRoomLit should only be triggered by event
-  - 🚧 Decor: 
+  - 🚧 Decor:
   - 🚧 ...
+
+- ✅ FOV fades out/in using anime.js
+- 🚧 too many web contexts when keep resetting
 
 - start migrating NPCs
 
