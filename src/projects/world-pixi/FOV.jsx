@@ -285,8 +285,6 @@ export default function FOV(props) {
       queryKey: [`${gm.key}.${gmId}`], // gmId for dups
       queryFn: async () => {
         state.preloadRender(gmId);
-        const sprite = state.sprites[gmId];
-        const fadeInOut = anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 800, direction: 'alternate', loop: true });
 
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
           api.geomorphs[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
@@ -297,10 +295,8 @@ export default function FOV(props) {
         state.initMaskTex(gmId);
         state.initLabelsTex(gmId);
 
-        await pause(800 - fadeInOut.progress % 800);
-        fadeInOut.pause();
-        sprite.alpha = 1;
-
+        const sprite = state.sprites[gmId];
+        await anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 800, direction: 'alternate', loop: 2 }).finished;
         state.render(gmId);
         api.geomorphs.initTex(gmId);
         api.decor.initLookups(gmId);
