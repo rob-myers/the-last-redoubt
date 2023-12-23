@@ -7,7 +7,7 @@ import { Container } from "@pixi/display";
 import { useQueries } from "@tanstack/react-query";
 import anime from 'animejs';
 
-import { testNever } from "../service/generic";
+import { pause, testNever } from "../service/generic";
 import { Poly, Vect } from "../geom";
 import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
@@ -35,6 +35,7 @@ export default function FOV(props) {
     roomId: -1,
     lastDoorId: -1,
     prev: { gmId: -1, roomId: -1, lastDoorId: -1 },
+
     gmRoomIds: [],
     rootedOpenIds: gms.map(_ => []),
     polys: gms.map(_ => []),
@@ -44,7 +45,7 @@ export default function FOV(props) {
     showMask: true,
 
     container: /** @type {*} */ ({}),
-    gfx: new Graphics(),
+    sprites: /** @type {*} */ ([]),
     darkTex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
       height: gmScale * gm.pngRect.height,
@@ -71,19 +72,19 @@ export default function FOV(props) {
         gm.matrix.transformSansTranslate(topLeft).translate(-rect.width/2, -rect.height);
         pixiText.position.copyFrom(topLeft);
         pixiText.anchor.set(0, 0);
-        emptyContainer.addChild(pixiText);
+        tempContainer.addChild(pixiText);
       }
 
-      emptyContainer.transform.setFromMatrix(
+      tempContainer.transform.setFromMatrix(
         (new Matrix(gm.inverseMatrix.a, gm.inverseMatrix.b, gm.inverseMatrix.c, gm.inverseMatrix.d))
           .prepend(new Matrix(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale))
       );
-      api.renderInto(emptyContainer, state.labelsTex[gmId])
-      emptyContainer.removeChildren();
+      api.renderInto(tempContainer, state.labelsTex[gmId])
+      tempContainer.removeChildren();
     },
     initMaskTex(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear().setTransform();
+      const gfx = tempGfx.clear().setTransform();
       // draw unlit geomorph
       gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId] })
         .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
@@ -131,11 +132,11 @@ export default function FOV(props) {
     },
     preloadRender(gmId) {
       const gm = gms[gmId];
-      const gfx = state.gfx.clear();
+      const gfx = tempGfx.clear();
       gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
 
       gfx.lineStyle({ width: 8, color: 0x999999, alpha: 0.4 })
-        .beginFill(0x111111).drawPolygon(gm.hullPoly[0].outline).endFill()
+        .beginFill(0x222222).drawPolygon(gm.hullPoly[0].outline).endFill()
       ;
       gm.roomsWithDoors.forEach(poly =>
         gfx.lineStyle({ width: 2, color: 0x333333, alpha: 1 })
@@ -207,7 +208,7 @@ export default function FOV(props) {
     render(gmId) {
       const gm = gms[gmId];
       const polys = state.polys[gmId];
-      const gfx = state.gfx.clear();
+      const gfx = tempGfx.clear();
       const texture = state.darkTex[gmId];
 
       if (polys.length) {
@@ -283,8 +284,10 @@ export default function FOV(props) {
     queries: gms.map((gm, gmId) => ({
       queryKey: [`${gm.key}.${gmId}`], // gmId for dups
       queryFn: async () => {
-
         state.preloadRender(gmId);
+        const sprite = state.sprites[gmId];
+        const fadeInOut = anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 800, direction: 'alternate', loop: true });
+
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
           api.geomorphs[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
             `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
@@ -293,10 +296,12 @@ export default function FOV(props) {
         api.doors.initTex(gmId);
         state.initMaskTex(gmId);
         state.initLabelsTex(gmId);
-        await anime({ targets: state.container, alpha: 0.1, easing: 'linear', duration: 1000 }).finished;
-        state.render(gmId);
-        await anime({ targets: state.container, alpha: 1, easing: 'linear', duration: 1000 }).finished;
 
+        await pause(800 - fadeInOut.progress % 800);
+        fadeInOut.pause();
+        sprite.alpha = 1;
+
+        state.render(gmId);
         api.geomorphs.initTex(gmId);
         api.decor.initLookups(gmId);
         api.decor.initTex(gmId);
@@ -318,7 +323,12 @@ export default function FOV(props) {
 
   return (
     <GmSprites
-      ref={x => x && (state.container = x)}
+      ref={container => {
+        if (container) {
+          state.container = container;
+          state.sprites = container.children;
+        }
+      }}
       gms={gms}
       tex={state.tex}
       // visible={gms.map(_ => false)}
@@ -346,7 +356,7 @@ export default function FOV(props) {
  * @property {Geom.Poly[][]} polys Aligned to gms
  * 
  * @property {import('pixi.js').Container} container
- * @property {import('pixi.js').Graphics} gfx
+ * @property {import('pixi.js').Sprite[]} sprites
  * @property {import('pixi.js').RenderTexture[]} darkTex
  * @property {import('pixi.js').RenderTexture[]} labelsTex
  * @property {import('pixi.js').RenderTexture[]} tex
@@ -431,6 +441,6 @@ function computeAdjHullDoorPolys(gmId, visRoomIds, gmGraph) {
   return adjGmToPolys;
 }
 
-const emptyContainer = new Container;
-
-export const tempMatrix = new Matrix();
+const tempContainer = new Container;
+const tempMatrix = new Matrix;
+const tempGfx = new Graphics;
