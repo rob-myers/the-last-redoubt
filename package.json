@@ -51,6 +51,7 @@
     "@pixi/react": "^7.1.1",
     "@tanstack/react-query": "^5.8.4",
     "@tanstack/react-query-devtools": "^5.8.4",
+    "animejs": "^3.2.2",
     "body-scroll-lock": "^4.0.0-beta.0",
     "braces": "^3.0.2",
     "canvas": "^2.9.3",
@@ -103,6 +104,7 @@
     "zustand": "^4.1.1"
   },
   "devDependencies": {
+    "@types/animejs": "^3.1.12",
     "@types/body-scroll-lock": "^3.1.0",
     "@types/braces": "^3.0.1",
     "@types/debounce": "^1.2.1",
