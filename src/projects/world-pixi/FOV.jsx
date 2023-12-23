@@ -296,8 +296,10 @@ export default function FOV(props) {
         state.initLabelsTex(gmId);
 
         const sprite = state.sprites[gmId];
-        await anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 800, direction: 'alternate', loop: 2 }).finished;
+        await anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 400 }).finished;
         state.render(gmId);
+        await anime({ targets: sprite, alpha: 1, easing: 'linear', duration: 800 }).finished;
+
         api.geomorphs.initTex(gmId);
         api.decor.initLookups(gmId);
         api.decor.initTex(gmId);
