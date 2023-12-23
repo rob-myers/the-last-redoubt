@@ -5,6 +5,7 @@ import { Assets } from "@pixi/assets";
 import { Text } from "@pixi/text";
 import { Container } from "@pixi/display";
 import { useQueries } from "@tanstack/react-query";
+import anime from 'animejs';
 
 import { testNever } from "../service/generic";
 import { Poly, Vect } from "../geom";
@@ -34,7 +35,6 @@ export default function FOV(props) {
     roomId: -1,
     lastDoorId: -1,
     prev: { gmId: -1, roomId: -1, lastDoorId: -1 },
-
     gmRoomIds: [],
     rootedOpenIds: gms.map(_ => []),
     polys: gms.map(_ => []),
@@ -43,6 +43,7 @@ export default function FOV(props) {
     showLabels: false,
     showMask: true,
 
+    container: /** @type {*} */ ({}),
     gfx: new Graphics(),
     darkTex: gms.map(gm => RenderTexture.create({
       width: gmScale * gm.pngRect.width,
@@ -87,7 +88,7 @@ export default function FOV(props) {
       gfx.beginTextureFill({ texture: api.geomorphs.unlit[gmId] })
         .drawRect(0, 0, gm.pngRect.width * gmScale, gm.pngRect.height * gmScale)
         .endFill();
-      gfx.filters = [colMatFilter3];
+      gfx.filters = [colMatFilter3]; // resolution > 1 breaks mobile
       api.renderInto(gfx, state.darkTex[gmId], true);
       gfx.filters = [];
       // draw doors as black rects
@@ -134,14 +135,14 @@ export default function FOV(props) {
       gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
 
       gfx.lineStyle({ width: 8, color: 0x999999, alpha: 0.4 })
-        .beginFill(0x333333).drawPolygon(gm.hullPoly[0].outline).endFill()
+        .beginFill(0x111111).drawPolygon(gm.hullPoly[0].outline).endFill()
       ;
       gm.roomsWithDoors.forEach(poly =>
         gfx.lineStyle({ width: 2, color: 0x333333, alpha: 1 })
           .beginFill(0).drawPolygon(poly.outline).endFill()
       );
       gm.doors.forEach(({poly}) =>
-        gfx.beginFill(0x666666).drawPolygon(poly.outline).endFill()
+        gfx.beginFill(0x444444).drawPolygon(poly.outline).endFill()
       );
       api.renderInto(gfx, state.tex[gmId]);
     },
@@ -292,7 +293,9 @@ export default function FOV(props) {
         api.doors.initTex(gmId);
         state.initMaskTex(gmId);
         state.initLabelsTex(gmId);
+        await anime({ targets: state.container, alpha: 0.1, easing: 'linear', duration: 1000 }).finished;
         state.render(gmId);
+        await anime({ targets: state.container, alpha: 1, easing: 'linear', duration: 1000 }).finished;
 
         api.geomorphs.initTex(gmId);
         api.decor.initLookups(gmId);
@@ -315,6 +318,7 @@ export default function FOV(props) {
 
   return (
     <GmSprites
+      ref={x => x && (state.container = x)}
       gms={gms}
       tex={state.tex}
       // visible={gms.map(_ => false)}
@@ -341,6 +345,7 @@ export default function FOV(props) {
  * @property {boolean[]} hadPolys Aligned to gms
  * @property {Geom.Poly[][]} polys Aligned to gms
  * 
+ * @property {import('pixi.js').Container} container
  * @property {import('pixi.js').Graphics} gfx
  * @property {import('pixi.js').RenderTexture[]} darkTex
  * @property {import('pixi.js').RenderTexture[]} labelsTex
