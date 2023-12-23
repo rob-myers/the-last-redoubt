@@ -69,7 +69,10 @@
   - 🚧 can add multiple npcs
     - ✅ lookup with values of type TestNpc
     - ✅ TestNpc has methods getFrame, updateTime, updateNpc
-    - 🚧 replace current approach with `createNpc`
+    - ✅ replace current approach with `createTestNpc`
+    - fix rotated head when go from e.g. `walk` -> `idle`
+    - add multiple
+  - change walk initial frame so nearly idle
   - spritesheet has circle (for debug npc bounds/interact)
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
