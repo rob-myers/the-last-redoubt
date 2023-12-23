@@ -1,6 +1,7 @@
 import React, { forwardRef } from "react";
 import { Sprite, Container } from "@pixi/react";
 
+/** @type {ReturnType<typeof forwardRef<import('pixi.js').Container<import('pixi.js').Sprite>, Props>>} */
 const GmSprites = forwardRef(
   /**
    * For Geomorphs, Doors, DebugWorld, Decor, FOV
