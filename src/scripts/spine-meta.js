@@ -86,10 +86,13 @@ export default async function main() {
     
     /** Track motion of moving animations e.g. `walk`. */
     const motion = {
+      // 🚧 temp hack
       /** Current foot down */
-      footDown: /** @type {null | 'left' | 'right'} */ (null),
+      // footDown: /** @type {null | 'left' | 'right'} */ (null),
+      footDown: /** @type {null | 'left' | 'right'} */ ('left'),
       /** For final frame diff */
-      firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
+      // firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
+      firstFootDown: /** @type {null | 'left' | 'right'} */ ('left'),
       /** Previous position of foot (initially wrong) */
       prevFootPos: new Vect,
       /** The output: root motion per frame */
