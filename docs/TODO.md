@@ -73,11 +73,11 @@
     - ✅ fix rotated head when go from e.g. `walk` -> `idle`
     - ✅ add multiple
     - ✅ add many: 500 npcs
-  - 🚧 change walk initial frame so nearly idle
+  - ✅ change walk initial frame so nearly idle
     - ✅ rotate spine walk animation instead
     - ✅ temp fix root deltas in spine-meta by assuming left foot already down
     - ✅ fix idle-breathe
-    - 🚧 better spine-meta fix
+    - ✅ better spine-meta fix
   - spritesheet has circle (for debug npc bounds/interact)
 
 - 🚧 preparation for `World`-syncing i.e. multiple views

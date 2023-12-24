@@ -90,11 +90,11 @@ export default async function main() {
       footDown: /** @type {null | 'left' | 'right'} */ (null),
       /** For final frame diff */
       firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
-      /** Previous position of foot (initially wrong) */
+      /** Previous position of foot */
       prevFootPos: new Vect,
       /** The output: root motion per frame */
       rootDeltas: /** @type {number[]} */ ([]),
-      /** Assume motion is purely within y-axis */
+      /** ℹ️ Assume motion is purely within y-axis */
       computeDelta() {
         const prev = motion.prevFootPos;
         const curr = motion.getFootPos();
@@ -105,16 +105,12 @@ export default async function main() {
         const bone = spine.skeleton.findBone(`${motion.footDown}-shoe`);
         return new Vect(bone.worldX, bone.worldY);
       },
+      logEvent: false,
     };
-
-    // 🚧 temp hack
-    if (animName === 'walk') {
-      motion.footDown = motion.firstFootDown = 'left';
-    }
 
     /** @type {import('@pixi-spine/runtime-4.1').AnimationStateListener} */
     const spineListener = { event(_entry, event) {
-      console.log('event', event);
+      motion.logEvent && console.log('event', event);
       const { data: { name: eventName }, stringValue: eventValue } = event;
       switch (eventName) {
         case 'footstep':
@@ -135,6 +131,18 @@ export default async function main() {
     spine.state.setAnimation(0, animName, false);
     spine.update(0);
 
+    // run through animation so that `motion` is initially set
+    const { numFrames } = spineAnimToSetup[animName];
+    const frameDurSecs = anim.duration / numFrames;
+    for (let frame = 0; frame < numFrames; frame++) {
+      spine.update(frame === 0 ? 0 : frameDurSecs);
+      motion.footDown && (motion.prevFootPos = motion.getFootPos());
+    }
+
+    spine.state.setAnimation(0, animName, false);
+    spine.update(0);
+    motion.logEvent = true;
+
     /**
      * Extract bounding box per animation, stored as attachment "anim-bounds".
      * We did not use spine.skeleton.getBoundsRect() because it was too big:
@@ -147,8 +155,6 @@ export default async function main() {
      * Compute head attachment top-left position, angle, scale per frame.
      * Compute rootDeltas per frame when footstep event available
     */
-    const { numFrames } = spineAnimToSetup[animName];
-    const frameDurSecs = anim.duration / numFrames;
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
     for (let frame = 0; frame < numFrames; frame++) {
       spine.update(frame === 0 ? 0 : frameDurSecs);
@@ -173,14 +179,6 @@ export default async function main() {
     }
 
     spine.state.removeListener(spineListener);
-
-    if (motion.rootDeltas.length) {
-      // replace inaccurate 0th with diff between current frame and next (~ frame 0)
-      motion.footDown = motion.firstFootDown;
-      motion.prevFootPos = motion.getFootPos();
-      spine.update(frameDurSecs);
-      motion.rootDeltas.splice(0, 1, motion.computeDelta());
-    }
 
     outputAnimMeta[animName] = {
       animName,
@@ -288,7 +286,7 @@ export default async function main() {
   writeAsJson(outputJson, outputJsonFilepath);
 
   /**
-   * Finally, re-render spritesheet
+   * Finally, render spritesheet
    */
   await runYarnScript("spine-render");
 }
