@@ -86,13 +86,10 @@ export default async function main() {
     
     /** Track motion of moving animations e.g. `walk`. */
     const motion = {
-      // 🚧 temp hack
       /** Current foot down */
-      // footDown: /** @type {null | 'left' | 'right'} */ (null),
-      footDown: /** @type {null | 'left' | 'right'} */ ('left'),
+      footDown: /** @type {null | 'left' | 'right'} */ (null),
       /** For final frame diff */
-      // firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
-      firstFootDown: /** @type {null | 'left' | 'right'} */ ('left'),
+      firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
       /** Previous position of foot (initially wrong) */
       prevFootPos: new Vect,
       /** The output: root motion per frame */
@@ -109,6 +106,11 @@ export default async function main() {
         return new Vect(bone.worldX, bone.worldY);
       },
     };
+
+    // 🚧 temp hack
+    if (animName === 'walk') {
+      motion.footDown = motion.firstFootDown = 'left';
+    }
 
     /** @type {import('@pixi-spine/runtime-4.1').AnimationStateListener} */
     const spineListener = { event(_entry, event) {

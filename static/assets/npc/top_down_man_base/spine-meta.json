@@ -15,7 +15,7 @@
       "headFrames": [
         {"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}
       ],
-      "rootDeltas": [0]
+      "rootDeltas": []
     },
     "idle-breathe": {
       "animName": "idle-breathe",
@@ -67,7 +67,7 @@
         {"x": -8.501, "y": -7.4483, "angle": 0, "width": 16.911},
         {"x": -8.4319, "y": -7.4538, "angle": 0, "width": 16.8274}
       ],
-      "rootDeltas": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      "rootDeltas": []
     },
     "lie": {
       "animName": "lie",
@@ -79,7 +79,7 @@
       "headFrames": [
         {"x": -6.6757, "y": -6.9866, "angle": 0, "width": 13.3514}
       ],
-      "rootDeltas": [0]
+      "rootDeltas": []
     },
     "sit": {
       "animName": "sit",
@@ -91,7 +91,7 @@
       "headFrames": [
         {"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}
       ],
-      "rootDeltas": [0]
+      "rootDeltas": []
     },
     "walk": {
       "animName": "walk",
