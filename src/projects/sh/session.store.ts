@@ -308,17 +308,26 @@ const useStore = create<State>()(devtools((set, get): State => ({
     },
 
     onTtyLink(opts) {
-      // console.log(
-      //   'onTtyLink',
-      //   { lineText, linkText, linkStartIndex },
-      //   api.getSession(sessionKey).ttyLink,
-      //   api.getSession(sessionKey).ttyLink[lineText],
+      // console.log('onTtyLink', opts,
+      //   api.getSession(opts.sessionKey).ttyLink,
+      //   api.getSession(opts.sessionKey).ttyLink[opts.lineText],
       // );
-      // api.cleanTtyLink(sessionKey);
       api.getSession(opts.sessionKey).ttyLink[opts.lineText]?.find(x =>
         x.linkStartIndex === opts.linkStartIndex
         && x.linkText === opts.linkText
       )?.callback(opts.lineNumber);
+
+      try {// HACK: permit toggle link (e.g. on/off) without leaving link first
+        const { xterm } = api.getSession(opts.sessionKey).ttyShell.xterm;
+        const linkifier = (xterm as any)._core.linkifier2;
+        // console.log(linkifier);
+        setTimeout(() => {
+          const position = linkifier._positionFromMouseEvent(linkifier._lastMouseEvent, linkifier._element, linkifier._mouseService!);
+          position && linkifier._askForLink(position, false);
+        });
+      } catch (e) {
+        console.warn('HACK: permit toggle link: failed', e);
+      }
     },
 
     persist(sessionKey) {

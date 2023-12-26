@@ -109,7 +109,11 @@ export default function Terminal(props: Props) {
         }}
         options={options}
         linkProviderDef={{
-          // links look like this: [ foo bar ] or [ 1 ]
+          /**
+           * Links look like this:
+           * - [ foo bar ]
+           * - [ 1 ]
+           */
           regex: /(\[ [^\]]+ \])/gi,
           // regex: /(\[[^\]]+\])/gi,
           async callback(_event, linkText, { lineText, linkStartIndex, lineNumber }) {

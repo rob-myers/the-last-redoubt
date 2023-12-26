@@ -2,6 +2,9 @@
 
 ## In progress
 
+- ✅ Fix xterm links toggling
+  - Can now toggle on/off without leaving hover first
+
 - 🚧 `<TestPreRenderNpc>` uses ParticleContainer
   - ✅ has ParticleContainer with a sprite
   - ✅ sprite animates idle-breath manually
@@ -78,7 +81,7 @@
     - ✅ temp fix root deltas in spine-meta by assuming left foot already down
     - ✅ fix idle-breathe
     - ✅ better spine-meta fix
-  - spritesheet has circle (for debug npc bounds/interact)
+  - 🚧 spritesheet has circle (for debug npc bounds/interact)
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
@@ -3212,7 +3215,6 @@ nav --tryOpen foo $( click 1 ) |
 - ✅ Better fix for non-maximised Terminal on Mobile
   - ✅ https://developer.chrome.com/docs/devtools/remote-debugging/
   - ✅ https://developer.android.com/studio/debug/dev-options
-- Fix xterm links on mobile (Chrome Android)
 - ✅ BUG non-maximised Terminal on Mobile
   - ⛔️ xterm fit addon has an issue
     - avoid tall TouchHelperUI
