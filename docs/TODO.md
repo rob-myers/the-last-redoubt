@@ -5,7 +5,7 @@
 - ✅ Fix xterm links toggling
   - Can now toggle on/off without leaving hover first
 
-- 🚧 `<TestPreRenderNpc>` uses ParticleContainer
+- ✅ `<TestPreRenderNpc>` uses ParticleContainer
   - ✅ has ParticleContainer with a sprite
   - ✅ sprite animates idle-breath manually
   - ✅ new script `spine-render` renders `spine-render.{png,webp}`
@@ -85,7 +85,6 @@
   - ✅ can show npc bounds
   - ✅ can turn npc head
     - ✅ try move anchor to neck position
-  - share npc.anim object between npcs
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
@@ -101,8 +100,9 @@
 - 🚧 too many web contexts when keep resetting
 
 - start migrating NPCs
-  - 🚧 TestPreRenderNpc has enough features 
-  - start new create-npc.js
+  - ✅ TestPreRenderNpc has enough features 
+  - 🚧 start new create-npc.js
+  - share npc.anim object between npcs
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
