@@ -10,7 +10,7 @@ import { Assets } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 
-import { pause, precision } from "../projects/service/generic";
+import { keys, pause, precision } from "../projects/service/generic";
 import { warn } from "../projects/service/log";
 import { ansi } from "../projects/service/const";
 import { skeletonScale } from "../projects/world/const";
@@ -223,6 +223,11 @@ export default async function main() {
   }
   //#endregion
 
+  //#region extras
+  const radius = 13 / npcScaleFactor;
+  addRectToPack(2 * (radius + 2), 2 * (radius + 2), 'circular-bounds');
+  //#endregion
+
   //#region compute packing
   packer.addArray(rectsToPack);
   // packer.repack();
@@ -268,7 +273,18 @@ export default async function main() {
       outputHeadMeta[headSkinName].packedHead[orient] = { x: r.x, y: r.y, width: r.width, height: r.height };
     }
   }
+
+  /** @type {import("./service").SpineMeta['extra']} */
+  const outputExtraMeta = {
+    'circular-bounds': { packedRect: Rect.zero },
+  };
+  for (const key of keys(outputExtraMeta)) {
+    const r = bin.rects.find((x) => x.data.name === key);
+    if (!r) throw Error(`spine-meta: ${key}: packed rect not found`);
+    outputExtraMeta[key].packedRect = { x: r.x, y: r.y, width: r.width, height: r.height };
+  }
   //#endregion
+
 
   /** @type {import("./service").SpineMeta} */
   const outputJson = {
@@ -279,6 +295,7 @@ export default async function main() {
     npcRadius: 13,
     anim: outputAnimMeta,
     head: outputHeadMeta,
+    extra: outputExtraMeta,
     packedWidth,
     packedHeight,
     packedPadding,

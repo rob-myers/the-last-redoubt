@@ -280,6 +280,8 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * Animation name to metadata.
  * @property {Record<NPC.SpineHeadSkinName, SpineHeadMeta>} head
  * Head skin name to metadata.
+ * @property {Record<'circular-bounds', { packedRect: Geom.RectJson }>} extra
+ * Head skin name to metadata.
  * @property {number} packedWidth
  * @property {number} packedHeight
  * @property {number} packedPadding

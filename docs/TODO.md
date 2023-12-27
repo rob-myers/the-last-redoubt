@@ -81,7 +81,9 @@
     - ✅ temp fix root deltas in spine-meta by assuming left foot already down
     - ✅ fix idle-breathe
     - ✅ better spine-meta fix
-  - 🚧 spritesheet has circle (for debug npc bounds/interact)
+  - ✅ spritesheet has circle
+  - 🚧 can show npc bounds/interact
+  - can turn npc head
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
@@ -93,9 +95,12 @@
   - 🚧 ...
 
 - ✅ FOV fades out/in using anime.js
+- ✅ avoid light walls e.g. in bridge symbol of 301
 - 🚧 too many web contexts when keep resetting
 
 - start migrating NPCs
+  - 🚧 TestPreRenderNpc has enough features 
+  - start new create-npc.js
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`

@@ -11,7 +11,9 @@
       "frameDurSecs": 0,
       "animBounds": {"x": -73, "y": -42, "width": 143, "height": 87},
       "headBounds": {"x": -47, "y": -42, "width": 93, "height": 87},
-      "packedRects": [{"x": 154, "y": 1094, "width": 143, "height": 87}],
+      "packedRects": [
+        {"x": 303.01430143014306, "y": 1094, "width": 143, "height": 87}
+      ],
       "headFrames": [
         {"x": -8.3628, "y": -7.4593, "angle": 0, "width": 16.7438}
       ],
@@ -201,22 +203,32 @@
     "head/blonde-light": {
       "headSkinName": "head/blonde-light",
       "packedHead": {
-        "face": {"x": 299, "y": 1094, "width": 75, "height": 98},
+        "face": {"x": 448.01430143014306, "y": 1094, "width": 75, "height": 98},
         "top": {"x": 919, "y": 199, "width": 93, "height": 89}
       }
     },
     "head/skin-head-dark": {
       "headSkinName": "head/skin-head-dark",
       "packedHead": {
-        "face": {"x": 471, "y": 1094, "width": 74, "height": 82},
+        "face": {"x": 620.0143014301431, "y": 1094, "width": 74, "height": 82},
         "top": {"x": 919, "y": 290, "width": 93, "height": 87}
       }
     },
     "head/skin-head-light": {
       "headSkinName": "head/skin-head-light",
       "packedHead": {
-        "face": {"x": 547, "y": 1094, "width": 74, "height": 82},
-        "top": {"x": 376, "y": 1094, "width": 93, "height": 87}
+        "face": {"x": 696.0143014301431, "y": 1094, "width": 74, "height": 82},
+        "top": {"x": 525.0143014301431, "y": 1094, "width": 93, "height": 87}
+      }
+    }
+  },
+  "extra": {
+    "circular-bounds": {
+      "packedRect": {
+        "x": 154,
+        "y": 1094,
+        "width": 147.01430143014304,
+        "height": 147.01430143014304
       }
     }
   },

@@ -1,7 +1,7 @@
 /**
  * Render spritesheet using:
  * - spine export
- * - spine-meta.json created by script spine-meta
+ * - spine-meta.json created by script `yarn spine-meta`
  * 
  * Usage:
  * - yarn spine-render
@@ -18,10 +18,9 @@ import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
 import { saveCanvasAsFile } from "../projects/service/file";
+import { Rect } from "../projects/geom";
 import { spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
 import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
-
-const debug = process.argv[2] === 'debug';
 
 const folderName = "top_down_man_base";
 const baseName = "man_01_base";
@@ -39,7 +38,7 @@ export default async function main() {
     head: headMeta,
     packedWidth,
     packedHeight,
-    packedPadding,
+    extra: extraMeta,
   } = JSON.parse(fs.readFileSync(spineMetaJsonPath).toString());
   
   const app = new Application();
@@ -83,6 +82,7 @@ export default async function main() {
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
 
+  // Render bodies
   for (const anim of animations) {
     const { frameCount, frameDurSecs, animBounds, packedRects } = animMeta[anim.name];
     spine.state.setAnimation(0, anim.name, false);
@@ -112,6 +112,7 @@ export default async function main() {
     }
   }
 
+  // Render heads
   const headSlot = spine.skeleton.findSlot('head');
   const hairSlot = spine.skeleton.findSlot('hair');
   for (const headSkinName of spineHeadSkinNames) {
@@ -147,8 +148,15 @@ export default async function main() {
     }
   }
 
-  app.stage.addChild(new Sprite(tex));
+  // Render extras:
+  // - circular bounds
+  const circBoundsRect = Rect.fromJson(extraMeta["circular-bounds"].packedRect);
+  app.renderer.render(
+    (new Graphics).lineStyle({ width: 4, color: '#ffffff' }).drawCircle(circBoundsRect.cx, circBoundsRect.cy, circBoundsRect.width/2 - 4),
+    { renderTexture: tex, clear: false },
+  );
 
+  app.stage.addChild(new Sprite(tex));
   const pixels = new Uint8ClampedArray(app.renderer.extract.pixels(app.stage));
   const canvas = new Canvas(tex.width, tex.height);
   const ctxt = canvas.getContext('2d');
