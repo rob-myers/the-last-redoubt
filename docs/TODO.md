@@ -82,7 +82,7 @@
     - ✅ fix idle-breathe
     - ✅ better spine-meta fix
   - ✅ spritesheet has circle
-  - 🚧 can show npc bounds/interact
+  - ✅ can show npc bounds
   - can turn npc head
 
 - 🚧 preparation for `World`-syncing i.e. multiple views

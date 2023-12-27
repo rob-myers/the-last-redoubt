@@ -31,8 +31,7 @@ export default function TestPreRenderNpc({ api }) {
     /** @param {TestNpcDef} def */
     spawnNpc(def) {
       let npc = state.npc[def.npcKey];
-      if (npc) {// respawn
-      } else {// spawn
+      if (!npc) {
         npc = createTestNpc(def, api);
         state.pc.addChild(...Object.values(npc.sprite));
       }
@@ -51,7 +50,9 @@ export default function TestPreRenderNpc({ api }) {
   }));
 
   React.useEffect(() => {
-    const npcs = [...Array(500)].map((_, i) => state.spawnNpc({
+    const npcs = [...Array(
+      500
+    )].map((_, i) => state.spawnNpc({
       npcKey: `rob-${i}`,
       headSkinName: 'head/skin-head-dark',
       walkSpeed: 0.6,
@@ -60,6 +61,9 @@ export default function TestPreRenderNpc({ api }) {
       y: 40 * Math.floor(i / 5),
     }));
     npcs.forEach(npc => npc.setAnim('walk'));
+    // npcs.forEach(npc => npc.showBounds(true));
+    // npcs[0].showBounds(true);
+
     const { update } = state;
     state.ticker.add(update).start();
     return () => {
@@ -85,6 +89,7 @@ export default function TestPreRenderNpc({ api }) {
         uvs: true,
         vertices: true,
       }}
+      // maxSize={3000}
     />
   </>;
 }
@@ -114,6 +119,7 @@ export default function TestPreRenderNpc({ api }) {
  *
  * @property {() => number} getFrame
  * @property {(animName: NPC.SpineAnimName) => void} setAnim
+ * @property {(shouldShow: boolean) => void} showBounds
  * @property {(pixiDelta: number) => void} updateTime
  * @property {() => void} updateSprites
  */
@@ -122,7 +128,7 @@ export default function TestPreRenderNpc({ api }) {
  * @typedef TestNpcSpriteLookup
  * @property {Sprite} body
  * @property {Sprite} head
- * @property {Sprite} [bodyCircle] Debug
+ * @property {Sprite} [circularBounds] Debug
  */
 
 /**
@@ -203,6 +209,24 @@ function createTestNpc(def, api) {
 
       npc.updateSprites();
     },
+    showBounds(shouldShow) {
+      const { circularBounds } = npc.sprite;
+      if (!shouldShow && circularBounds) {
+        delete npc.sprite.circularBounds;
+        circularBounds.removeFromParent();
+      }
+      if (shouldShow && !circularBounds) {
+        const sprite = new Sprite(new Texture(baseTexture));
+        const { packedRect } = spineMeta.extra["circular-bounds"];
+        sprite.texture.frame = new Rectangle(packedRect.x, packedRect.y, packedRect.width, packedRect.height);
+        sprite.scale.set(spineMeta.npcScaleFactor);
+        npc.sprite.body.parent.addChild(sprite);
+        sprite.anchor.set(0.5);
+        sprite.tint = '#ff0000';
+        sprite.alpha = 0.5;
+        npc.sprite.circularBounds = sprite;
+      }
+    },
     updateTime(deltaRatio) {
       const deltaSecs = deltaRatio * (1 / 60);
       let frame = npc.getFrame(), shouldUpdate = false;
@@ -222,7 +246,7 @@ function createTestNpc(def, api) {
     updateSprites() {
       const currFrame = npc.getFrame();
       const { bodyRects, rootDeltas, headFrames, initHeadWidth } = npc.anim;
-      const { body, head } = npc.sprite;
+      const { body, head, circularBounds } = npc.sprite;
       // body
       body.texture._uvs.set(
         /** @type {Rectangle} */ (bodyRects[currFrame]),
@@ -244,6 +268,10 @@ function createTestNpc(def, api) {
         body.x + Math.cos(radians) * x - Math.sin(radians) * y,
         body.y + Math.sin(radians) * x + Math.cos(radians) * y,
       );
+      // extras
+      if (circularBounds) {
+        circularBounds.position.copyFrom(body.position);
+      }
     },
   };
 
