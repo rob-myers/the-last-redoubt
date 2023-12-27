@@ -136,7 +136,7 @@ export default function FOV(props) {
       gfx.transform.setFromMatrix(tempMatrix.set(gmScale, 0, 0, gmScale, -gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale));
 
       gfx.lineStyle({ width: 8, color: 0x999999, alpha: 0.4 })
-        .beginFill(0x222222).drawPolygon(gm.hullPoly[0].outline).endFill()
+        .beginFill(0x111111).drawPolygon(gm.hullPoly[0].outline).endFill()
       ;
       gm.roomsWithDoors.forEach(poly =>
         gfx.lineStyle({ width: 2, color: 0x333333, alpha: 1 })
