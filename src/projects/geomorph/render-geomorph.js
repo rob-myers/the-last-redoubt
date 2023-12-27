@@ -199,6 +199,7 @@ export async function renderGeomorph(
 
   ctxt.fillStyle = 'rgba(0, 0, 0, 1)';
   fillPolygons(ctxt, layout.hullTop);
+  fillPolygons(ctxt, singlesToPolys(singles, ['wall', 'dark']));
 
   if (doors) {
     drawDoors(ctxt, layout);
