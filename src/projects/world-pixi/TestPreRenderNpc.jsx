@@ -62,7 +62,7 @@ export default function TestPreRenderNpc({ api }) {
     }));
     npcs.forEach(npc => npc.setAnim('walk'));
     // npcs.forEach(npc => npc.showBounds(true));
-    // npcs[0].showBounds(true);
+    npcs[0].showBounds(true);
 
     const { update } = state;
     state.ticker.add(update).start();
