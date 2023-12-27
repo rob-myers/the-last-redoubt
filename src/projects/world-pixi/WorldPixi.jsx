@@ -26,7 +26,8 @@ import NPCs from "./NPCs";
 import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
-import { Origin, TestNpc, TestPreRenderNpc } from "./Misc";
+import { Origin } from "./Misc";
+import TestPreRenderNpc from "./TestPreRenderNpc";
 
 /**
  * @param {Props} props
