@@ -48,20 +48,20 @@ export default async function main() {
     skipDetections: true,
   });
 
-  if (opts.debug) {// Debug Rectangle Packing
-    const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
-    gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
-    Object.values(animMeta).forEach(({ packedRects }) =>
-      packedRects.forEach(packedRect =>
-        gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill()
-      )
-    );
-    Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
-      gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
-      gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
-    });
-    app.renderer.render(gfx, { renderTexture: tex });
-  }
+  // if (opts.debug) {// Debug Rectangle Packing
+  //   const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
+  //   gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
+  //   Object.values(animMeta).forEach(({ packedRects }) =>
+  //     packedRects.forEach(packedRect =>
+  //       gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill()
+  //     )
+  //   );
+  //   Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
+  //     gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
+  //     gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
+  //   });
+  //   app.renderer.render(gfx, { renderTexture: tex });
+  // }
 
   // Load skeleton
   const { data } = await loadSpineServerSide(folderName, baseName);

@@ -83,7 +83,9 @@
     - ✅ better spine-meta fix
   - ✅ spritesheet has circle
   - ✅ can show npc bounds
-  - 🚧 can turn npc head
+  - ✅ can turn npc head
+    - ✅ try move anchor to neck position
+  - share npc.anim object between npcs
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds

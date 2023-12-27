@@ -152,10 +152,13 @@ export default async function main() {
     const { bounds: headBounds } = computeSpineAttachmentBounds(spine, "head");
     
     /**
-     * Compute head attachment top-left position, angle, scale per frame.
-     * Compute rootDeltas per frame when footstep event available
+     * Compute
+     * - head attachment top-left position, angle, scale per frame.
+     * - rootDeltas per frame when footstep event available
+     * - neckPositions per frame
     */
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
+    const neckPositions = /** @type {import("./service").SpineAnimMeta['neckPositions']} */ ([]);
     for (let frame = 0; frame < numFrames; frame++) {
       spine.update(frame === 0 ? 0 : frameDurSecs);
 
@@ -167,15 +170,18 @@ export default async function main() {
 
       const poly = computeSpineAttachmentBounds(spine, 'head').poly.precision(2);
       // [nw, sw, se, ne] becomes [sw, nw, ne, se] in pixi.js (y flips)
-      const [, nw, ne] = poly.outline;
+      const [sw, nw, ne] = poly.outline;
       headFrames.push({
         x: precision(nw.x * npcScaleFactor, 4),
         y: precision(nw.y * npcScaleFactor, 4),
         angle: precision(Math.atan2(ne.y - nw.y, ne.x - nw.x) * (180 / Math.PI), 4),
         // Used to scale (head-skin-specific) head
         width: precision(npcScaleFactor * Vect.distanceBetween(ne, nw), 4),
+        height: precision(npcScaleFactor * Vect.distanceBetween(sw, nw), 4),
       });
-      // console.log('events', spine.state.events);
+      
+      const neckBone = spine.skeleton.findBone(`neck`);
+      neckPositions.push(new Vect(neckBone.worldX, neckBone.worldY).scale(npcScaleFactor).precision(4));
     }
 
     spine.state.removeListener(spineListener);
@@ -186,6 +192,7 @@ export default async function main() {
       frameDurSecs: anim.duration / numFrames,
       animBounds,
       headBounds,
+      neckPositions,
       packedRects: [...Array(numFrames)].map(_ => unOverriddenRect),
       headFrames,
       rootDeltas: motion.rootDeltas,

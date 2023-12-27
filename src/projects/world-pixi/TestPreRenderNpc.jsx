@@ -51,7 +51,9 @@ export default function TestPreRenderNpc({ api }) {
 
   React.useEffect(() => {
     const npcs = [...Array(
-      500
+      // 500
+      5,
+      // 1,
     )].map((_, i) => state.spawnNpc({
       npcKey: `rob-${i}`,
       headSkinName: 'head/skin-head-dark',
@@ -61,8 +63,10 @@ export default function TestPreRenderNpc({ api }) {
       y: 40 * Math.floor(i / 5),
     }));
     npcs.forEach(npc => npc.setAnim('walk'));
+    // npcs.forEach(npc => npc.setAnim('idle-breathe'));
     // npcs.forEach(npc => npc.showBounds(true));
     npcs[0].showBounds(true);
+    npcs[0].headAngle = -25;
 
     const { update } = state;
     state.ticker.add(update).start();
@@ -112,6 +116,7 @@ export default function TestPreRenderNpc({ api }) {
  * @property {TestNpcSpriteLookup} sprite
  * @property {number} speed Meters per second
  * @property {number} angle Degrees
+ * @property {number} headAngle Degrees
  * @property {number} currTime
  * Normalized real-valued time of current animation.
  * Non-negative integers correspond to frames.
@@ -128,7 +133,7 @@ export default function TestPreRenderNpc({ api }) {
  * @typedef TestNpcSpriteLookup
  * @property {Sprite} body
  * @property {Sprite} head
- * @property {Sprite} [circularBounds] Debug
+ * @property {Sprite} [bounds] Debug: circular body bounds
  */
 
 /**
@@ -138,6 +143,7 @@ export default function TestPreRenderNpc({ api }) {
  * @property {number} initHeadWidth
  * @property {Geom.RectJson[]} bodyRects
  * @property {import("src/scripts/service").SpineAnimMeta['headFrames']} headFrames
+ * @property {Geom.VectJson[]} neckPositions
  * @property {number[]} rootDeltas
  * @property {number[]} durations
  */
@@ -156,6 +162,7 @@ function createTestNpc(def, api) {
     def,
     speed: 0,
     angle: def.angle ?? 0,
+    headAngle: 0,
     currTime: 0,
     sprite: {
       body: new Sprite(new Texture(baseTexture)),
@@ -168,6 +175,7 @@ function createTestNpc(def, api) {
       bodyRects: [],
       durations: [],
       headFrames: [],
+      neckPositions: [],
       initHeadWidth: 0,
       rootDeltas: [],
     },
@@ -181,9 +189,10 @@ function createTestNpc(def, api) {
       npc.currTime = 0;
 
       const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
-      const { animBounds, headFrames, frameCount, rootDeltas } = spineMeta.anim[animName];
+      const { animBounds, headFrames, frameCount, rootDeltas, neckPositions } = spineMeta.anim[animName];
       anim.bodyRects = spineMeta.anim[animName].packedRects;
       anim.headFrames = headFrames;
+      anim.neckPositions = neckPositions;
       anim.frameCount = frameCount;
       anim.rootDeltas = rootDeltas;
       if (rootDeltas.length) {
@@ -201,7 +210,11 @@ function createTestNpc(def, api) {
 
       // Body anchor is (0, 0) in spine world coords
       sprite.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
-      sprite.head.anchor.set(0, 0);
+      // sprite.head.anchor.set(0, 0);
+      sprite.head.anchor.set(
+        (neckPositions[0].x - headFrames[0].x) / headFrames[0].width,
+        (neckPositions[0].y - headFrames[0].y) / headFrames[0].height,
+      );
       
       sprite.body.scale.set(spineMeta.npcScaleFactor);
       sprite.body.angle = npc.angle;
@@ -210,21 +223,21 @@ function createTestNpc(def, api) {
       npc.updateSprites();
     },
     showBounds(shouldShow) {
-      const { circularBounds } = npc.sprite;
-      if (!shouldShow && circularBounds) {
-        delete npc.sprite.circularBounds;
-        circularBounds.removeFromParent();
+      const { bounds } = npc.sprite;
+      if (!shouldShow && bounds) {
+        delete npc.sprite.bounds;
+        bounds.removeFromParent();
       }
-      if (shouldShow && !circularBounds) {
+      if (shouldShow && !bounds) {
         const sprite = new Sprite(new Texture(baseTexture));
         const { packedRect } = spineMeta.extra["circular-bounds"];
         sprite.texture.frame = new Rectangle(packedRect.x, packedRect.y, packedRect.width, packedRect.height);
         sprite.scale.set(spineMeta.npcScaleFactor);
         npc.sprite.body.parent.addChild(sprite);
         sprite.anchor.set(0.5);
-        sprite.tint = '#ff0000';
+        sprite.tint = '#00ff00';
         sprite.alpha = 0.5;
-        npc.sprite.circularBounds = sprite;
+        npc.sprite.bounds = sprite;
       }
     },
     updateTime(deltaRatio) {
@@ -245,8 +258,8 @@ function createTestNpc(def, api) {
     },
     updateSprites() {
       const currFrame = npc.getFrame();
-      const { bodyRects, rootDeltas, headFrames, initHeadWidth } = npc.anim;
-      const { body, head, circularBounds } = npc.sprite;
+      const { bodyRects, rootDeltas, headFrames, initHeadWidth, neckPositions } = npc.anim;
+      const { body, head, bounds: circularBounds } = npc.sprite;
       // body
       body.texture._uvs.set(
         /** @type {Rectangle} */ (bodyRects[currFrame]),
@@ -260,13 +273,15 @@ function createTestNpc(def, api) {
         body.x += rootDelta * Math.sin(radians);
         body.y -= rootDelta * Math.cos(radians);
       }
+
       // head
-      const { x, y, angle, width } = headFrames[currFrame];
-      head.angle = angle + body.angle;
+      const { angle, width } = headFrames[currFrame];
+      const neckPos = neckPositions[currFrame];
+      head.angle = angle + body.angle + npc.headAngle;
       head.scale.set(width / initHeadWidth);
       head.position.set(
-        body.x + Math.cos(radians) * x - Math.sin(radians) * y,
-        body.y + Math.sin(radians) * x + Math.cos(radians) * y,
+        body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y,
+        body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y,
       );
       // extras
       if (circularBounds) {
