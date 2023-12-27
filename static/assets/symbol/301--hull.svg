@@ -147,13 +147,13 @@
       <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 309.4 133 L 334.4 133 L 334.4 145 L 346.4 145 L 346.4 131 L 369.4 131 L 369.4 90 L 409.107 129.654 L 397.951 143.613 L 386.91 159.669 L 376.519 176.538 L 366.8 195 L 359.341 211.517 L 352.4 229.1 L 309 229 L 309.4 205 L 320.4 205 L 320.4 193 L 309.4 193 L 309.4 168.8 L 322.4 168.5 L 322.4 156 L 309.4 156 L 309.4 133 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204);">
-      <title>poly fillColor=#ccc strokeColor=#000 strokeWidth=4</title>
+      <title>poly fillColor=#444 strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 903 119 L 843 119 L 843 59 L 779 127.1 L 789 141.3 L 800 156.3 L 813 175.9 L 824 197.6 L 832 215.6 L 840 238 L 843 238 L 903 238.6 L 903 119 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill-opacity: 0.5; fill: rgb(255, 0, 0); transform-origin: 841px 148.8px;">
       <title>poly fillColor=#fff strokeColor=#000 strokeWidth=4</title>
     </path>
     <path d="M 890.706 131 L 865.706 131 L 865.706 143 L 853.706 143 L 853.706 129 L 830.706 129 L 830.706 88 L 790.999 127.654 L 802.155 141.613 L 813.196 157.669 L 823.587 174.538 L 833.306 193 L 840.765 209.517 L 847.706 227.1 L 891.106 227 L 890.706 203 L 879.706 203 L 879.706 191 L 890.706 191 L 890.706 166.8 L 877.706 166.5 L 877.706 154 L 890.706 154 L 890.706 131 Z" style="stroke: rgb(0, 0, 0); stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204); transform-origin: 841.053px 157.55px;">
-      <title>poly fillColor=#ccc strokeColor=#000 strokeWidth=4</title>
+      <title>poly fillColor=#444 strokeColor=#000 strokeWidth=4</title>
     </path>
     <rect x="85.78" width="10" height="180" style="stroke: rgb(0, 0, 0); fill: rgb(221, 221, 221); fill-opacity: 0.3;" y="240">
       <title>relate-connectors</title>
