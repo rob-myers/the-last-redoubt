@@ -10,13 +10,6 @@ declare namespace NPC {
    *   whereas npcClassKey corresponds to their "character class".
    */
   type NpcClassKey = (
-    | 'first-human-npc'
-    | 'solomani'
-    | 'vilani'
-    | 'zhodani'
-  );
-
-  type NpcClassKeyNew = (
     | 'solomani'
     | 'vilani'
     | 'zhodani'
@@ -304,7 +297,7 @@ declare namespace NPC {
   interface NPCDef {
     /** npcKey e.g. `rob` */
     key: string;
-    /** npc class key e.g. `first-human-npc` */
+    /** npc class key e.g. `solomani` */
     npcClassKey: NpcClassKey;
     angle: number;
     // paused: boolean;

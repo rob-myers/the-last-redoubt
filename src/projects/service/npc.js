@@ -193,7 +193,7 @@ export const npcService = {
   fromNpcActionKey: { "add-decor": true, cfg: true, config: true, decor: true, events: true, get: true, light: true, map: true, rm: true, "remove": true, "remove-decor": true, "rm-decor": true, "set-player": true },
 
   /** @type {Record<NPC.NpcClassKey, true>} */
-  fromNpcClassKey: { "first-human-npc": true, solomani: true, vilani: true, zhodani: true },
+  fromNpcClassKey: { solomani: true, vilani: true, zhodani: true },
 
   /**
    * @param {string} input 

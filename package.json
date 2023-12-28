@@ -26,7 +26,6 @@
     "rename-pngs": "yarn ts-script src/scripts/rename-pngs",
     "bake-lighting": "yarn ts-script src/scripts/bake-lighting",
     "render-layout": "yarn ts-script src/scripts/render-layout",
-    "render-npc": "yarn ts-script src/scripts/render-npc",
     "npcs-meta": "yarn ts-script src/scripts/npcs-meta",
     "pngs-to-webp": "yarn ts-script src/scripts/pngs-to-webp",
     "process-sheets": "yarn ts-script src/scripts/process-sheets",

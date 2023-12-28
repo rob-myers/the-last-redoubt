@@ -34,9 +34,9 @@ yarn svg-meta --all
 ## Optional Dependencies
 
 ```sh
-# Synfig CLI https://www.synfig.org/
-# Used by `yarn render-npc`
-brew install synfig
+# # Synfig CLI https://www.synfig.org/
+# # Used by `yarn render-npc`
+# brew install synfig
 
 # Convert PNGs to WEBP
 # Provides cwebp

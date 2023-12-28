@@ -50,7 +50,7 @@ export const textStyle1 = new TextStyle({
 
 //#region npc
 
-/** @type {NPC.NpcClassKeyNew} */
+/** @type {NPC.NpcClassKey} */
 export const defaultNpcClassKey = 'vilani';
 export const defaultNpcInteractRadius = 70;
 export const defaultNpcSpeed = 0.8;

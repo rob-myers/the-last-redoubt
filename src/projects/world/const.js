@@ -34,7 +34,6 @@ export const defaultClipPath = 'none';
 export const defaultDoorCloseMs = 7000;
 
 /** @type {NPC.NpcClassKey} */
-// export const defaultNpcClassKey = 'first-human-npc';
 // export const defaultNpcClassKey = 'solomani';
 export const defaultNpcClassKey = 'vilani';
 // export const defaultNpcClassKey = 'zhodani';
