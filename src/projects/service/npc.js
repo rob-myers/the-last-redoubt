@@ -1,17 +1,12 @@
 import { merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { Assets } from '@pixi/assets';
-import { TextureAtlas, SpineDebugRenderer } from '@pixi-spine/base';
-import { AtlasAttachmentLoader, SkeletonJson, Spine, Skin, SkeletonData } from '@pixi-spine/runtime-4.1';
+import { Ticker } from "@pixi/core";
 
 import { assertNonNull, keys, testNever } from './generic';
 import { npcWorldRadius } from './const';
 import { Rect, Vect } from '../geom';
 import { geom } from './geom';
 import { observableToAsyncIterable } from './observable-to-async-iterable';
-
-import { skeletonScale } from '../world/const';
-import topDownManAtlasContents from '!!raw-loader!../../../static/assets/npc/top_down_man_base/man_01_base.atlas';
 
 /**
  * Use object so can merge into `api.lib`.
@@ -625,69 +620,19 @@ export const npcService = {
   },
 
   //#endregion
+  
+  //#region animation
 
-  //#region spine
-
-  /**
-   * @type {{ [baseName: string]: { data: SkeletonData; atlasLoader: AtlasAttachmentLoader; } }}
-   * e.g. `man_01_base` as in `man_01_base.json`
-   */
-  spine: {},
-
-  /**
-   * @param {string} baseName
-   * https://github.com/pixijs/spine/blob/master/examples/preloaded_json.md
-   */
-  async loadSpine(baseName) {
-    if (this.spine[baseName]) {
-      return this.spine[baseName];
-    }
-
-    const runtimeSpineFolder = '/assets/npc/top_down_man_base';
-    const skeletonDataJson = await Assets.load(`${runtimeSpineFolder}/${baseName}.json`);
-
-    const textureAtlas = new TextureAtlas();
-    await new Promise((resolve, reject) => textureAtlas.addSpineAtlas(
-      topDownManAtlasContents,
-      async (line, callback) => Assets.load(`${runtimeSpineFolder}/${line}`).then((tex) => callback(tex)),
-      atlas => atlas ? resolve(atlas) : reject(`something went wrong e.g. texture failed to load`),
-    ));
-
-    const atlasLoader = new AtlasAttachmentLoader(textureAtlas);
-    const skeletonParser = new SkeletonJson(atlasLoader);
-    skeletonParser.scale = skeletonScale;
-
-    const skeletonData = skeletonParser.readSkeletonData(skeletonDataJson)
-    // Add to lookup
-    return this.spine[baseName] = { atlasLoader, data: skeletonData };
+  createTicker() {
+    const ticker = new Ticker;
+    ticker.autoStart = false;
+    // state.ticker.minFPS = 1, state.ticker.maxFPS = 30;
+    ticker.stop();
+    return ticker;
   },
 
-  /**
-   * @param {string} baseName
-   */
-  instantiateSpine(baseName) {
-    const spine = new Spine(this.spine[baseName].data);
-  
-    const newSkin = new Skin("npc-default-skin");
-    // Black body with grey gloves
-    newSkin.addSkin(spine.spineData.findSkin("shoes/black-trainers"));
-    newSkin.addSkin(spine.spineData.findSkin("trousers/black-trousers"));
-    newSkin.addSkin(spine.spineData.findSkin("torso/black-shirt"));
-    newSkin.addSkin(spine.spineData.findSkin("gloves/grey-gloves"));
-    // The head will change
-    newSkin.addSkin(spine.spineData.findSkin("head/skin-head-light"));
-    spine.skeleton.setSkin(newSkin);
-    spine.skeleton.setSlotsToSetupPose();
-  
-    // const debugRenderer = new SpineDebugRenderer();
-    // debugRenderer.drawBones = false;
-    // debugRenderer.drawBoundingBoxes = true;
-    // debugRenderer.drawClipping = true;
-    // spine.debug = debugRenderer;
-  
-    return spine;
-  },
- 
+  // 🚧 tween.js
+
   //#endregion
 }
 

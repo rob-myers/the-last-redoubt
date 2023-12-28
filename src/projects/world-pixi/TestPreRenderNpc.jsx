@@ -5,7 +5,6 @@ import { Texture, Rectangle } from "@pixi/core";
 
 import { spineAnimToSetup } from "./const";
 import useStateRef from "../hooks/use-state-ref";
-import { createTicker } from "./Misc";
 
 import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
 
@@ -16,7 +15,7 @@ export default function TestPreRenderNpc({ api }) {
 
   const state = useStateRef(() => ({
     tex: api.npcs.tex,
-    ticker: createTicker(),
+    ticker: api.lib.createTicker(),
     pc: /** @type {import('pixi.js').ParticleContainer} */ ({}),
     npc: /** @type {{ [npcKey: string]: TestNpc }} */ ({}),
 

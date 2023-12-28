@@ -21,7 +21,6 @@ import useUpdate from "../hooks/use-update";
 
 import createNpc from "../world/create-npc"; // 🚧 create new
 import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
-import { createTicker } from "./Misc";
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -33,7 +32,7 @@ export default function NPCs(props) {
     srcTex: /** @type {*} */ ({}),
     tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
     pc: /** @type {*} */ ({}),
-    ticker: createTicker(),
+    ticker: api.lib.createTicker(),
 
     events: new Subject,
     npc: {},

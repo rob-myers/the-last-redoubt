@@ -75,6 +75,23 @@ export default function createNpc(def, api) {
     unspawned: true,
 
     // 🚧 methods
+    
+    // @ts-ignore
+    async animateOpacity(targetOpacity, durationMs) {
+      // 🚧 tween.js
+      try {
+        await (this.a.opacity = anime({
+          targets: [this.s.body, this.s.head],
+          duration: durationMs,
+          alpha: targetOpacity,
+        })).finished;
+      } catch (e) {// Reset opacity if cancelled
+        [this.s.body, this.s.head].forEach(s => s.alpha = 1);
+        throw Error('cancelled');
+      }
+    },
+
+
   };
 }
 

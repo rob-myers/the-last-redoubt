@@ -27,7 +27,9 @@ import DebugWorld from "./DebugWorld";
 import Decor from "./Decor";
 import FOV from "./FOV";
 import { Origin } from "./Misc";
+
 import TestPreRenderNpc from "./TestPreRenderNpc";
+// import TestSpine from "./TestSpine";
 
 /**
  * @param {Props} props
@@ -179,7 +181,7 @@ export default function WorldPixi(props) {
 
               <Origin />
 
-              {/* <TestNpc api={state} /> */}
+              {/* <TestSpine api={state} /> */}
               {state.npcs.ready && <TestPreRenderNpc api={state} />}
 
             </PanZoom>

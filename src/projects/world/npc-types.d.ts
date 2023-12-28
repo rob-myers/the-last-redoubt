@@ -1,7 +1,5 @@
-
 declare namespace NPC {
   
-  import { AnimeInstance } from 'animejs';
 
   //#region individual npc
 
@@ -303,9 +301,9 @@ declare namespace NPC {
 
     animName: SpineAnimName;
 
-    opacity: AnimeInstance;
-    rotate: AnimeInstance;
-    translate: AnimeInstance;
+    opacity: import('animejs').AnimeInstance;
+    rotate: import('animejs').AnimeInstance;
+    translate: import('animejs').AnimeInstance;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
