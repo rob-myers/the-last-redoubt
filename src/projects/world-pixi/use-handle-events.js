@@ -73,6 +73,7 @@ export default function useHandleEvents(api) {
           // api.panZoom.animationAction('pause');
           api.panZoom.viewport.plugins.pause('animate'); // 🚧
           api.panZoom.viewport.plugins.pause('follow');
+          api.setTicker(false);
           break;
         case 'enabled':
           api.fov.mapAct('resume');
@@ -81,6 +82,7 @@ export default function useHandleEvents(api) {
             api.panZoom.viewport.plugins.resume('animate'); // 🚧
             api.panZoom.viewport.plugins.resume('follow');
           }
+          api.setTicker(true);
           break;
         case 'fov-changed':
           // console.log(e);
@@ -435,8 +437,10 @@ export default function useHandleEvents(api) {
   });
 
   //#region bootstrap on world ready
+  const worldReady = api.isReady();
+
   React.useEffect(() => {
-    if (!api.isReady()) {
+    if (!worldReady) {
       return;
     }
 
@@ -465,8 +469,15 @@ export default function useHandleEvents(api) {
       npcsSub.unsubscribe();
       panZoomSub.unsubscribe();
     };
+  }, [worldReady]);
 
-  }, [api.isReady()]);
+  React.useEffect(() => {
+    if (worldReady) {
+      api.npcs.events.next({ key: api.disabled ? 'disabled' : 'enabled' });
+    } else {// Start ticker early for loading tweens
+      api.setTicker(true);
+    }
+  }, [worldReady, api.disabled]);
   //#endregion
 
   /** @param {...string} npcKeys */

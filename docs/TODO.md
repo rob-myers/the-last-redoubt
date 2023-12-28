@@ -104,6 +104,10 @@
   - ✅ start new create-npc.js
     - extend `NPC.NPC` type (remove old CSS stuff later)
   - ✅ share npc.anim object between npcs
+  - ❌ test if can reject anime js promise via `anime.remove`
+  - ✅ setup tween.js for promises
+  - ✅ migrate anime.js to tween.js
+  - 🚧 clean tween out of World?
   - 🚧 migrate methods (first approximation)
 
 - debug arrows have larger hit area

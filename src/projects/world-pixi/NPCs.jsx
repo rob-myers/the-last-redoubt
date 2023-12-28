@@ -32,7 +32,6 @@ export default function NPCs(props) {
     srcTex: /** @type {*} */ ({}),
     tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
     pc: /** @type {*} */ ({}),
-    ticker: api.lib.createTicker(),
 
     events: new Subject,
     npc: {},
@@ -863,7 +862,6 @@ export default function NPCs(props) {
  * @property {import('pixi.js').Texture} srcTex
  * @property {RenderTexture} tex
  * @property {import('pixi.js').ParticleContainer} pc
- * @property {Ticker} ticker
  * 
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc

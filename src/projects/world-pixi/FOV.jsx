@@ -5,7 +5,6 @@ import { Assets } from "@pixi/assets";
 import { Text } from "@pixi/text";
 import { Container } from "@pixi/display";
 import { useQueries } from "@tanstack/react-query";
-import anime from 'animejs';
 
 import { pause, testNever } from "../service/generic";
 import { Poly, Vect } from "../geom";
@@ -296,9 +295,9 @@ export default function FOV(props) {
         state.initLabelsTex(gmId);
 
         const sprite = state.sprites[gmId];
-        await anime({ targets: sprite, alpha: 0, easing: 'linear', duration: 400 }).finished;
+        await api.tween(sprite).to({ alpha: 0 }, 400).promise();
         state.render(gmId);
-        await anime({ targets: sprite, alpha: 1, easing: 'linear', duration: 800 }).finished;
+        await api.tween(sprite).to({ alpha: 1 }, 800).promise();
 
         api.geomorphs.initTex(gmId);
         api.decor.initLookups(gmId);

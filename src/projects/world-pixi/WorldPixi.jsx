@@ -9,6 +9,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import useMeasure from "react-use-measure";
 import { filter, first, map, take } from "rxjs/operators";
 import { merge } from "rxjs";
+import * as TWEEN from "@tweenjs/tween.js";
 
 import { precision, removeFirst } from "../service/generic";
 import { queryClient, removeCached, setCached } from "../service/query-client";
@@ -46,6 +47,8 @@ export default function WorldPixi(props) {
     canvas: /** @type {*} */ ({}),
     renderer: /** @type {*} */ ({}),
     extract: /** @type {*} */ ({}),
+    ticker: npcService.createTicker(),
+    tweenGroup: new TWEEN.Group(),
 
     decor: /** @type {State['decor']} */  ({ ready: false }),
     debug: /** @type {State['debug']} */  ({ ready: false }),
@@ -91,9 +94,24 @@ export default function WorldPixi(props) {
     setCursor(cssValue) {
       state.canvas.style.cursor = cssValue;
     },
+    setTicker(enabled) {
+      state.ticker.remove(state.updateTicker).stop();
+      enabled && state.ticker.add(state.updateTicker).start();
+    },
     setVisibleGms(visibleGms) {
       state.visibleGms = visibleGms;
       update();
+    },
+    tween(target) {
+      const tween = new TWEEN.Tween(target, state.tweenGroup);
+      return Object.assign(tween, {
+        promise: () => new Promise((resolve, reject) =>
+          tween.onComplete(resolve).onStop(reject).start()
+        ),
+      });
+    },
+    updateTicker() {
+      state.tweenGroup.update();
     },
   }));
 
@@ -210,7 +228,9 @@ export default function WorldPixi(props) {
  * @property {HTMLCanvasElement} canvas
  * @property {import("pixi.js").Renderer} renderer
  * @property {import("pixi.js").Extract} extract
- * 
+ * @property {import('pixi.js').Ticker} ticker
+ * @property {import('@tweenjs/tween.js').Group} tweenGroup
+ *
  * @property {import("./DebugWorld").State} debug
  * @property {import("./Decor").State} decor
  * @property {import("./Doors").State} doors
@@ -225,7 +245,10 @@ export default function WorldPixi(props) {
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
  * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
+ * @property {(enabled: boolean) => void} setTicker
  * @property {(visibleGms: boolean[]) => void} setVisibleGms
+ * @property {<T extends Record<string, any>>(target: any) => import('@tweenjs/tween.js').Tween<T> & { promise: () => Promise<T> }} tween
+ * @property {() => void} updateTicker
  */
 
 /**

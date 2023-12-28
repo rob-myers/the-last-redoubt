@@ -1,6 +1,6 @@
 import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
-import anime from 'animejs';
+import TWEEN from '@tweenjs/tween.js';
 
 import { Rect, Vect } from '../geom';
 import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
@@ -51,9 +51,8 @@ export default function createNpc(def, api) {
       staticPosition: new Vect,
       
       animName: 'idle',
-      opacity: emptyAnimation,
-      rotate: emptyAnimation,
-      translate: emptyAnimation,
+      opacity: emptyTween,
+      rotate: emptyTween,
       
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -78,13 +77,11 @@ export default function createNpc(def, api) {
     
     // @ts-ignore
     async animateOpacity(targetOpacity, durationMs) {
-      // 🚧 tween.js
       try {
-        await (this.a.opacity = anime({
-          targets: [this.s.body, this.s.head],
-          duration: durationMs,
-          alpha: targetOpacity,
-        })).finished;
+        await (this.a.opacity = api.tween([this.s.body, this.s.head]).to([
+          { alpha: targetOpacity },
+          { alpha: targetOpacity },
+        ], durationMs)).promise();
       } catch (e) {// Reset opacity if cancelled
         [this.s.body, this.s.head].forEach(s => s.alpha = 1);
         throw Error('cancelled');
@@ -95,7 +92,10 @@ export default function createNpc(def, api) {
   };
 }
 
-const emptyAnimation = anime({});
+/** @type {NPC.TweenWithPromise} */
+const emptyTween = Object.assign(new TWEEN.Tween({}), {
+  promise: () => Promise.resolve({}),
+});
 
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
   {}

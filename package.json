@@ -51,7 +51,6 @@
     "@tanstack/react-query": "^5.8.4",
     "@tanstack/react-query-devtools": "^5.8.4",
     "@tweenjs/tween.js": "19.0.0",
-    "animejs": "^3.2.2",
     "body-scroll-lock": "^4.0.0-beta.0",
     "braces": "^3.0.2",
     "canvas": "^2.9.3",

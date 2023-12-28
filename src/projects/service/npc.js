@@ -631,8 +631,6 @@ export const npcService = {
     return ticker;
   },
 
-  // 🚧 tween.js
-
   //#endregion
 }
 

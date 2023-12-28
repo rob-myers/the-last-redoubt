@@ -301,9 +301,8 @@ declare namespace NPC {
 
     animName: SpineAnimName;
 
-    opacity: import('animejs').AnimeInstance;
-    rotate: import('animejs').AnimeInstance;
-    translate: import('animejs').AnimeInstance;
+    opacity: TweenWithPromise;
+    rotate: TweenWithPromise;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
@@ -801,5 +800,9 @@ declare namespace NPC {
   }
 
   //#endregion
+
+  type TweenWithPromise = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
+    promise: () => Promise<Record<string, any>>
+  }
 
 }
