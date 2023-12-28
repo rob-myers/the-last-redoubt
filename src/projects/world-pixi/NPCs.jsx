@@ -703,9 +703,9 @@ export default function NPCs(props) {
         spawned.def = {
           key: e.npcKey,
           angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
-          npcClassKey: spawned.classKey,
+          classKey: spawned.classKey,
           position: e.point,
-          speed: defaultNpcSpeed,
+          walkSpeed: defaultNpcSpeed,
         };
         if (e.npcClassKey) {
           spawned.changeClass(e.npcClassKey);
@@ -719,9 +719,9 @@ export default function NPCs(props) {
         state.npc[e.npcKey] = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
-          npcClassKey,
+          classKey: npcClassKey,
           position: e.point,
-          speed: defaultNpcSpeed,
+          walkSpeed: defaultNpcSpeed,
           //@ts-ignore 🚧 need to migrate create-npc
         }, { api });
         state.npc[e.npcKey].doMeta = e.point.meta?.do ? e.point.meta : null;

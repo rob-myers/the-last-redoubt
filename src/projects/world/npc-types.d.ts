@@ -1,6 +1,8 @@
 
 declare namespace NPC {
   
+  import { AnimeInstance } from 'animejs';
+
   //#region individual npc
 
   /**
@@ -38,11 +40,20 @@ declare namespace NPC {
      * so methods should refer to `this.def`
      */
     def: NPCDef;
-    el: {
+
+    el: {// 🚧 old
       root: HTMLDivElement;
       body: HTMLDivElement;
     };
-    anim: NPCAnimData;
+    /** Sprites */
+    s: {
+      body: import('pixi.js').Sprite;
+      head: import('pixi.js').Sprite;
+      bounds?: import('pixi.js').Sprite;
+    };
+
+    anim: NPCAnimData; // 🚧 old
+    a: AnimData; 
 
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
@@ -186,6 +197,7 @@ declare namespace NPC {
     wayTimeout(): void;
   }
 
+  // 🚧 old
   interface NPCAnimData {
     /** Sprite sheet related CSS */
     css: string;
@@ -255,6 +267,65 @@ declare namespace NPC {
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
+  // 🚧 new
+  interface AnimData {
+    shared: SharedAnimData;
+    /** Depends on walkSpeed */
+    durations: number[];
+    /** Depends on head skin */
+    initHeadWidth: number;
+
+    /** Path for walking along */
+    path: Geom.Vect[];
+    /**
+     * Data derived entirely from `anim.path`, although
+     * `outsetBounds` and `outsetSegBounds` depend on npc radius.
+     */
+    aux: {
+      angs: number[];
+      edges: ({ p: Geom.Vect; q: Geom.Vect })[];
+      elens: number[];
+      /** Last seen index of path */
+      index: number;
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetWalkBounds: Geom.Rect;
+      /** Outset by npc radius, for npc vs npc collisions */
+      outsetSegBounds: Geom.Rect;
+      /** For npc vs decor collisions */
+      segBounds: Geom.Rect;
+      sofars: number[];
+      total: number;
+    };
+    /** Bounds when stationary. */
+    staticBounds: Geom.Rect;
+    /** Last static position. */
+    staticPosition: Geom.Vect;
+
+    animName: SpineAnimName;
+
+    opacity: AnimeInstance;
+    rotate: AnimeInstance;
+    translate: AnimeInstance;
+
+    doorStrategy: WalkDoorStrategy;
+    /** Only set when it changes, starting from `0` */
+    gmRoomIds: { [vertexId: number]: Geomorph.GmRoomId };
+    prevWayMetas: NpcWayMeta[];
+    wayMetas: NpcWayMeta[];
+    wayTimeoutId: number;
+  }
+  /** Shared amongst possibly many npcs */
+  interface SharedAnimData {
+    animName: SpineAnimName;
+    frameCount: number;
+    bodyRects: Geom.RectJson[];
+    headFrames: (Geom.RectJson & { angle: number; })[];
+    neckPositions: Geom.VectJson[];
+    rootDeltas: number[];
+    /** From `spineAnimToSetup` */
+    headOrientKey: NPC.SpineHeadOrientKey;
+    stationaryFps: number;
+  }
 
   /**
    * - `none`: do not try to open doors
@@ -295,14 +366,13 @@ declare namespace NPC {
   );
 
   interface NPCDef {
-    /** npcKey e.g. `rob` */
+    /** e.g. `rob` */
     key: string;
-    /** npc class key e.g. `solomani` */
-    npcClassKey: NpcClassKey;
+    /** e.g. `solomani` which determines "head skin" */
+    classKey: NpcClassKey;
     angle: number;
-    // paused: boolean;
     position: Geom.VectJson;
-    speed: number;
+    walkSpeed: number;
   }
 
   interface NpcClassConfig {

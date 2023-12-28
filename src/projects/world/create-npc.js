@@ -19,15 +19,18 @@ export default function createNpc(
 ) {
   return {
     key: def.key,
-    classKey: def.npcClassKey,
+    classKey: def.classKey,
     epochMs: Date.now(),
     def,
+
     el: {
       root: /** @type {HTMLDivElement} */ ({}),
       body: /** @type {HTMLDivElement} */ ({}),
     },
+    s: /** @type {*} */ ({}), // Fix types during migration
+
     anim: {
-      css: css`${npcsMeta[def.npcClassKey].css}`,
+      css: css`${npcsMeta[def.classKey].css}`,
       path: [],
       aux: {
         angs: [],
@@ -41,6 +44,7 @@ export default function createNpc(
         sofars: [],
         total: 0,
       },
+
       spriteSheet: 'idle',
       staticBounds: new Rect,
       staticPosition: new Vect,
@@ -52,7 +56,7 @@ export default function createNpc(
       durationMs: 0,
       speedFactor: 1,
       defaultSpeedFactor: npcWalkSpeedFactor,
-      initAnimScaleFactor: 1000 / (def.speed * 1),
+      initAnimScaleFactor: 1000 / (def.walkSpeed * 1),
       updatedPlaybackRate: 1,
   
       doorStrategy: 'none',
@@ -61,7 +65,8 @@ export default function createNpc(
       wayMetas: [],
       wayTimeoutId: 0,
     },
-    
+    a: /** @type {*} */ ({}),
+
     doMeta: null,
     forcePaused: false,
     gmRoomId: null,
@@ -391,7 +396,7 @@ export default function createNpc(
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
     },
     getSpeed() {
-      return this.def.speed * this.anim.speedFactor;
+      return this.def.walkSpeed * this.anim.speedFactor;
     },
     getTarget() {
       if (this.isWalking(true)) {
@@ -617,7 +622,7 @@ export default function createNpc(
         ;
         const position = this.getPosition();
         const npcSurfaces = worldSurfaces.map(x => x.translate(-position.x, -position.y));
-        const { scale } = npcsMeta[this.def.npcClassKey];
+        const { scale } = npcsMeta[this.def.classKey];
         // Interact radius should contain everything, including CSS drop-shadow
         const maxDim = 2 * (this.getInteractRadius() / scale);
         const localBounds = Poly.fromRect(new Rect(-maxDim/2, -maxDim/2, maxDim, maxDim)).scale(scale);
@@ -850,7 +855,7 @@ export default function createNpc(
     setSpeedFactor(speedFactor, temporary = true) {
       if (this.anim.spriteSheet === 'walk') {
         /** Infer initial speedFactor from initialAnimScaleFactor */
-        const initSpeedFactor = (1 / this.anim.initAnimScaleFactor) * (1000 / this.def.speed);
+        const initSpeedFactor = (1 / this.anim.initAnimScaleFactor) * (1000 / this.def.walkSpeed);
         this.anim.updatedPlaybackRate = speedFactor / initSpeedFactor;
         this.anim.translate.updatePlaybackRate(this.anim.updatedPlaybackRate);
         this.anim.rotate.updatePlaybackRate(this.anim.updatedPlaybackRate);

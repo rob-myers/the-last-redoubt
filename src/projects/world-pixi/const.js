@@ -87,4 +87,11 @@ export const spineAnimToSetup = {
   walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
 };
 
+/** @type {Record<NPC.NpcClassKey, NPC.SpineHeadSkinName>} */
+export const npcClassToSpineHeadSkin = {
+  solomani: 'head/blonde-light',
+  vilani: 'head/skin-head-light',
+  zhodani: 'head/skin-head-dark',
+};
+
 //#endregion

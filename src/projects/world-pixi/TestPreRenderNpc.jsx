@@ -7,7 +7,7 @@ import { spineAnimToSetup } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 import { createTicker } from "./Misc";
 
-import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
+import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
 
 /**
  * @param {{ api: import('./WorldPixi').State }} param0 
