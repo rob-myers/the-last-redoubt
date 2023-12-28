@@ -99,10 +99,12 @@
 - ✅ avoid light walls e.g. in bridge symbol of 301
 - 🚧 too many web contexts when keep resetting
 
-- start migrating NPCs
-  - ✅ TestPreRenderNpc has enough features 
-  - 🚧 start new create-npc.js
-  - share npc.anim object between npcs
+- 🚧 start migrating NPCs
+  - ✅ TestPreRenderNpc has enough features
+  - ✅ start new create-npc.js
+    - extend `NPC.NPC` type (remove old CSS stuff later)
+  - ✅ share npc.anim object between npcs
+  - 🚧 migrate methods (first approximation)
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
