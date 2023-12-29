@@ -10,8 +10,9 @@ import useStateRef from "../hooks/use-state-ref";
 
 /**
  * @param {import('./WorldPixi').State} api
+ * @param {boolean} [disabled]
  */
-export default function useHandleEvents(api) {
+export default function useHandleEvents(api, disabled) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
@@ -69,6 +70,7 @@ export default function useHandleEvents(api) {
           mockHandleDecorClick(e, api);
           break;
         case 'disabled':
+          api.disabled = true;
           api.fov.mapAct('pause');
           // api.panZoom.animationAction('pause');
           api.panZoom.viewport.plugins.pause('animate'); // 🚧
@@ -76,6 +78,7 @@ export default function useHandleEvents(api) {
           api.setTicker(false);
           break;
         case 'enabled':
+          api.disabled = false;
           api.fov.mapAct('resume');
           if (!api.npcs.isPanZoomControlled()) {
             // only resume when not controlled by e.g. `view` or `track`
@@ -471,13 +474,13 @@ export default function useHandleEvents(api) {
     };
   }, [worldReady]);
 
-  React.useEffect(() => {
+  React.useMemo(() => {
     if (worldReady) {
-      api.npcs.events.next({ key: api.disabled ? 'disabled' : 'enabled' });
+      api.npcs.events.next({ key: disabled ? 'disabled' : 'enabled' });
     } else {// Start ticker early for loading tweens
       api.setTicker(true);
     }
-  }, [worldReady, api.disabled]);
+  }, [worldReady, disabled]);
   //#endregion
 
   /** @param {...string} npcKeys */

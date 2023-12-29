@@ -9,9 +9,9 @@ import useStateRef from "../hooks/use-state-ref";
 import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
 
 /**
- * @param {{ api: import('./WorldPixi').State }} param0 
+ * @param {{ api: import('./WorldPixi').State; disabled?: boolean; }} param0 
  */
-export default function TestPreRenderNpc({ api }) {
+export default function TestPreRenderNpc({ api, disabled }) {
 
   const state = useStateRef(() => ({
     tex: api.npcs.tex,
@@ -76,8 +76,8 @@ export default function TestPreRenderNpc({ api }) {
   }, []);
 
   React.useEffect(() => {
-    api.disabled ? state.ticker.stop() : state.ticker.start();
-  }, [api.disabled]);
+    disabled ? state.ticker.stop() : state.ticker.start();
+  }, [disabled]);
 
   return <>
     {/* <PixiReact.Sprite texture={state.tex} /> */}

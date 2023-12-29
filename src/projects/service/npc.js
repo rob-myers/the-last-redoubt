@@ -613,7 +613,8 @@ export const npcService = {
     const process = processApi.getProcess();
     process.cleanups.push(() => asyncIterable.return?.());
     for await (const event of asyncIterable) {
-      if (processApi.isRunning()) yield event;
+      // if (processApi.isRunning()) yield event;
+      yield event; // 'enabled' fires when process not yet running
     }
     // ℹ️ get here via `kill` or e.g. failed pipe-sibling
     throw processApi.getKillError();

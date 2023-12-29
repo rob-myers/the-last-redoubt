@@ -115,21 +115,21 @@ export default function WorldPixi(props) {
     },
   }));
 
-  const update = useUpdate();
-  const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
-  state.disabled = !!props.disabled;
-  useHandleEvents(state);
+  useHandleEvents(state, props.disabled);
 
-  ({
-    gmGraph: state.gmGraph,
-    gmRoomGraph: state.gmRoomGraph
-  } = useGeomorphs(props.gms, props.disabled));
+  ({ gmGraph: state.gmGraph,
+     gmRoomGraph: state.gmRoomGraph,
+   } = useGeomorphs(props.gms, props.disabled));
   state.gmGraph.api = state.gmRoomGraph.api = state;
 
   React.useEffect(() => {
     setCached([props.worldKey], state);
     return () => removeCached([props.worldKey]);
   }, []);
+
+  const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
+  
+  const update = useUpdate();
 
   return (
     <div
@@ -200,7 +200,7 @@ export default function WorldPixi(props) {
               <Origin />
 
               {/* <TestSpine api={state} /> */}
-              {state.npcs.ready && <TestPreRenderNpc api={state} />}
+              {state.npcs.ready && <TestPreRenderNpc api={state} disabled={props.disabled} />}
 
             </PanZoom>
           </QueryClientProvider>
