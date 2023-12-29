@@ -79,6 +79,10 @@ export default function WorldPixi(props) {
     clearInto(tex) {
       state.renderer.render(emptyGraphics, { renderTexture: tex, clear: true });
     },
+    onTick() {
+      state.tweenGroup.update();
+      // 🚧 update npcs too
+    },
     renderInto(displayObj, tex, clear = true) {
       state.renderer.render(displayObj, { renderTexture: tex, clear });
     },
@@ -95,8 +99,8 @@ export default function WorldPixi(props) {
       state.canvas.style.cursor = cssValue;
     },
     setTicker(enabled) {
-      state.ticker.remove(state.updateTicker).stop();
-      enabled && state.ticker.add(state.updateTicker).start();
+      state.ticker.remove(state.onTick).stop();
+      enabled && state.ticker.add(state.onTick).start();
     },
     setVisibleGms(visibleGms) {
       state.visibleGms = visibleGms;
@@ -110,9 +114,6 @@ export default function WorldPixi(props) {
         ),
         cancel: () => tween.stopChainedTweens(),
       });
-    },
-    updateTicker() {
-      state.tweenGroup.update();
     },
   }));
 
@@ -240,16 +241,16 @@ export default function WorldPixi(props) {
  * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
  * @property {import('./PanZoom').State} panZoom
- *
- * @property {() => boolean} isReady
- * @property {(tex: import("pixi.js").RenderTexture) => void} clearInto
- * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
- * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
+*
+* @property {() => boolean} isReady
+* @property {(tex: import("pixi.js").RenderTexture) => void} clearInto
+* @property {() => void} onTick
+* @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
+* @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
  * @property {(enabled: boolean) => void} setTicker
  * @property {(visibleGms: boolean[]) => void} setVisibleGms
  * @property {(target: any) => NPC.TweenExt} tween
- * @property {() => void} updateTicker
  */
 
 /**

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
@@ -12,7 +13,7 @@ import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
 /**
  * @param {NPC.NPCDef} def
  * @param {import('./WorldPixi').State} api
- * //@returns {NPC.NPC}
+ * @returns {NPC.NPC}
  */
 export default function createNpc(def, api) {
   const { baseTexture } = api.npcs.tex;
@@ -55,6 +56,8 @@ export default function createNpc(def, api) {
       animName: 'idle',
       opacity: emptyTween,
       rotate: emptyTween,
+      time: 0,
+      neckAngle: 0,
       
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -77,7 +80,6 @@ export default function createNpc(def, api) {
 
     // 🚧 methods
     
-    // @ts-ignore
     async animateOpacity(targetOpacity, durationMs) {
       this.a.opacity.cancel();
       try {
@@ -90,8 +92,6 @@ export default function createNpc(def, api) {
         throw Error('cancelled');
       }
     },
-
-    // @ts-ignore
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
       this.a.rotate.cancel();
     
@@ -109,7 +109,6 @@ export default function createNpc(def, api) {
         if (throwOnCancel) throw new Error('cancelled');
       }
     },
-    // @ts-ignore
     async cancel(overridePaused = false) {
       if (this.forcePaused && !overridePaused) {
         throw Error('paused: cannot cancel');
@@ -128,20 +127,33 @@ export default function createNpc(def, api) {
       
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
     },
-
+    canLook() {
+      return (this.a.animName === 'idle' ||
+        this.a.animName === 'idle-breathe') && !this.doMeta;
+    },
+    changeClass(npcClassKey) {// we don't trigger render
+      this.classKey = npcClassKey;
+    },
     clearWayMetas() {
       this.a.wayMetas.length = 0;
       this.a.prevWayMetas.length = 0;
       window.clearTimeout(this.a.wayTimeoutId);
     },
+
     getAngle() {
       return this.s.body.rotation;
+    },
+    getFrame() {
+      return Math.floor(this.a.time) % this.a.shared.frameCount;
     },
     getPosition() {
       return Vect.from(this.s.body.position);
     },
     getRadius() {
       return npcRadius;
+    },
+    getSpeed() {
+      return this.def.walkSpeed * this.anim.speedFactor;
     },
     obscureBySurfaces() {
       if (!this.gmRoomId) {
@@ -160,9 +172,39 @@ export default function createNpc(def, api) {
       );
       api.doors.obscureNpc(gmId, intersection);
     },
+    setupAnim(animName) {
+      const { a, s } = this;
+      a.animName = animName;
+      a.time = 0;
+
+      const { headOrientKey } = spineAnimToSetup[animName]
+      const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
+      
+      a.shared = getSharedAnimData(animName);
+      a.durations = getAnimDurations(a.shared, this.getSpeed());
+
+      // Changing frame width/height later deforms image
+      const bodyRect = a.shared.bodyRects[a.time];
+      const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
+      s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
+      s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
+
+      // Body anchor is (0, 0) in spine world coords
+      s.body.anchor.set(Math.abs(animBounds.x) / animBounds.width, Math.abs(animBounds.y) / animBounds.height);
+      // Head anchor is neck position
+      s.head.anchor.set(
+        (neckPositions[0].x - headFrames[0].x) / headFrames[0].width,
+        (neckPositions[0].y - headFrames[0].y) / headFrames[0].height,
+      );
+      
+      s.body.scale.set(spineMeta.npcScaleFactor);
+      s.body.angle = this.getAngle();
+      a.initHeadWidth = headRect.width;
+
+      this.updateSprites();
+    },
     // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
     // 🚧 fix "final walk frame jerk" elsewhere
-    // @ts-ignore
     startAnimation(animName) {
       this.a.animName = animName;
       this.a.rotate.cancel();
@@ -170,10 +212,8 @@ export default function createNpc(def, api) {
       switch (animName) {
         case 'walk': {
           this.a.rotate.cancel(); // fix `npc do` orientation
-          
-          // 🚧 setAnim
+          this.setupAnim(animName);
           // 🚧 chained rotate tween
-
           break;
         }
         case 'idle':
@@ -186,13 +226,43 @@ export default function createNpc(def, api) {
             this.obscureBySurfaces();
           }
           this.a.rotate = emptyTween;
-  
-          // 🚧 setAnim
+          this.setupAnim(animName);
           break;
         }
         default:
-          // @ts-ignore
           throw testNever(animName, { suffix: 'create-npc.startAnimation' });
+      }
+    },
+    updateSprites() {
+      const currFrame = this.getFrame();
+      const { bodyRects, rootDeltas, headFrames, neckPositions } = this.a.shared;
+      const { body, head, bounds: circularBounds } = this.s;
+
+      // body
+      body.texture._uvs.set(
+        /** @type {Rectangle} */ (bodyRects[currFrame]),
+        baseTexture,
+        0,
+      );
+      const radians = body.rotation;
+      if (rootDeltas.length) {
+        // pixi.js convention: 0 degrees ~ north ~ negative y-axis
+        const rootDelta = rootDeltas[currFrame];
+        body.x += rootDelta * Math.sin(radians);
+        body.y -= rootDelta * Math.cos(radians);
+      }
+      // head
+      const { angle, width } = headFrames[currFrame];
+      const neckPos = neckPositions[currFrame];
+      head.angle = angle + body.angle + this.a.neckAngle;
+      head.scale.set(width / this.a.initHeadWidth);
+      head.position.set(
+        body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y,
+        body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y,
+      );
+      // extras
+      if (circularBounds) {
+        circularBounds.position.copyFrom(body.position);
       }
     },
     updateStaticBounds() {

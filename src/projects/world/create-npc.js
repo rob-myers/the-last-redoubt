@@ -355,6 +355,10 @@ export default function createNpc(
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
     },
+    getFrame() {
+      // Fix types during migration
+      return 0;
+    },
     getAnimScaleFactor() {
       // We convert from "seconds per world-unit" to "milliseconds per world-unit"
       return 1000 * (1 / this.getSpeed());
@@ -740,6 +744,9 @@ export default function createNpc(
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
     },
+    setupAnim(animName) {
+      // Fix types during migration
+    },
     setInteractRadius(radius) {
       if (typeof radius === 'number') {
         this.el.root.style.setProperty(cssName.npcsInteractRadius, `${radius}px`);
@@ -877,6 +884,9 @@ export default function createNpc(
       const dstIndex = this.anim.wayMetas.find(x => x.key === 'exit-room')?.index;
       const points = this.anim.path.slice(srcIndex, dstIndex);
       this.anim.aux.roomWalkBounds = Rect.fromPoints(...points);
+    },
+    updateSprites() {
+      // Fix types during migration
     },
     updateStaticBounds() {
       const { x, y } = this.getPosition(false);

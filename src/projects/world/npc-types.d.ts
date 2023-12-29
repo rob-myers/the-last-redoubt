@@ -56,8 +56,7 @@ declare namespace NPC {
     /** From current do point */
     doMeta: null | Geomorph.PointMeta;
     /**
-     * _Background_:
-     * Process suspend/resume can pause/resume npc.
+     * _Background_: Process suspend/resume can pause/resume npc.
      * If not resumed, such pausing will be overridden by next npc action.
      * 
      * We can also _intentionally_ pause by invoking npc.pause(),
@@ -117,6 +116,7 @@ declare namespace NPC {
     ): Promise<void>;
     /** Radians in `[-π, +π]` */
     getAngle(): number;
+    getFrame(): number;
     getWalkAnimDef(): NpcAnimDef;
     /** Used to scale up how long it takes to move along navpath */
     getAnimScaleFactor(): number;
@@ -179,6 +179,7 @@ declare namespace NPC {
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
+    setupAnim(animName: SpineAnimName): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
     setSpeedFactor(speedFactor: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
@@ -188,6 +189,7 @@ declare namespace NPC {
      * @param srcIndex Index of 1st vertex in room.
      */
     updateRoomWalkBounds(srcIndex: number): void;
+    updateSprites(): void;
     updateStaticBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateWalkSegBounds(index: number): void;
@@ -301,6 +303,10 @@ declare namespace NPC {
 
     opacity: TweenExt;
     rotate: TweenExt;
+    /** Spritesheet-normalized time in `[0, shared.frameCount)` */
+    time: number;
+    /** Degrees */
+    neckAngle: number;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
