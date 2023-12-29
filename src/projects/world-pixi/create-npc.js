@@ -567,7 +567,21 @@ export default function createNpc(def, api) {
 
       api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
     },
+    resume(forced = true) {
+      if (this.forcePaused && !forced) {
+        return;
+      }
+      console.log(`resume: resuming ${this.def.key}`);
+      this.forcePaused = false;
 
+      this.a.opacity.resume();
+      this.a.rotate.resume();
+      if (this.a.animName === 'walk') {
+        this.nextWayTimeout();
+      }
+
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'resumed' });
+    },
     setupAnim(animName) {
       const { a, s } = this;
       a.animName = animName;
@@ -598,6 +612,9 @@ export default function createNpc(def, api) {
       a.initHeadWidth = headRect.width;
 
       this.updateSprites();
+    },
+    setInteractRadius(radius) {
+      // 🚧 currently unsupported
     },
     // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
     // 🚧 fix "final walk frame jerk" elsewhere
@@ -635,6 +652,26 @@ export default function createNpc(def, api) {
           throw testNever(animName, { suffix: 'create-npc.startAnimation' });
       }
     },
+    startAnimationByMeta(meta) {
+      switch (true) {
+        case meta.sit:
+          this.startAnimation('sit');
+          break;
+        case meta.stand:
+          this.startAnimation('idle-breathe');
+          break;
+        case meta.lie:
+          this.startAnimation('lie');
+          break;
+      }
+      this.doMeta = meta.do ? meta : null;
+    },
+    setSpeedFactor(speedFactor, temporary = true) {
+      // 🚧
+    },
+    updateRoomWalkBounds(srcIndex) {
+      // Fix types during migration
+    },
     updateSprites() {
       const currFrame = this.getFrame();
       const { bodyRects, rootDeltas, headFrames, neckPositions } = this.a.shared;
@@ -671,6 +708,41 @@ export default function createNpc(def, api) {
       const pos = this.getPosition();
       const radius = this.getRadius();
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
+    },
+    async walk() {
+      // 🚧
+    },
+    // 🚧 avoid many short timeouts?
+    wayTimeout() {
+      // console.warn('wayTimeout next:', this.anim.wayMetas[0]);
+      const metaLength = this.a.wayMetas[0]?.length;
+
+      if (metaLength === undefined) {
+        return console.warn('wayTimeout: empty wayMetas');
+      } else if (this.a.animName !== 'walk') {
+        return console.warn(`wayTimeout: not walking: ${this.a.animName}`);
+      } else if (this.a.paused) {
+        return; // This handles World pause
+      }
+
+      /** @type {NPC.NpcWayMeta} */ let wayMeta;
+      if (this.a.distance >= metaLength - 1) {
+        // Reached wayMeta's `length`, so remove/trigger respective event (+adjacents)
+        while (this.a.wayMetas[0]?.length <= metaLength) {
+          // console.warn('wayMeta shift', this.anim.wayMetas[0])
+          this.a.prevWayMetas.push(wayMeta = /** @type {NPC.NpcWayMeta} */ (this.a.wayMetas.shift()));
+          api.npcs.events.next({ key: 'way-point', npcKey: this.def.key, meta: wayMeta });
+        }
+      } else {
+        // console.warn(
+        //   'wayTimeout not ready',
+        //   this.anim.wayMetas[0],
+        //   this.anim.translate.currentTime,
+        //   this.anim.translate.effect?.getTiming().duration,
+        //   this.anim.wayMetas[0].length * this.getAnimScaleFactor(),
+        // );
+      }
+      this.nextWayTimeout();
     },
   };
 }

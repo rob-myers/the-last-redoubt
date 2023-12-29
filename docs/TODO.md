@@ -30,7 +30,7 @@
       - latter happens when process not running yet
   - ❌ clean tween out of World?
   - 🚧 verify functions work when npc speed changes
-    - compute npc.a.distance
+    - compute `npc.a.distance` during `npc.updateTime`
     - can "remake" chained tweens by stop(), remake, start()
   - 🚧 migrate methods (first approximation)
 
