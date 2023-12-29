@@ -77,6 +77,7 @@ export default function createNpc(def, api) {
     
     // @ts-ignore
     async animateOpacity(targetOpacity, durationMs) {
+      this.a.opacity.stop();
       try {
         await (this.a.opacity = api.tween([this.s.body, this.s.head]).to([
           { alpha: targetOpacity },
@@ -88,7 +89,144 @@ export default function createNpc(def, api) {
       }
     },
 
+    // @ts-ignore
+    async animateRotate(targetRadians, durationMs, throwOnCancel) {
+      this.a.rotate.stop();
+    
+      // Assume {source,target}Radians in [-π, π]
+      const sourceRadians = this.getAngle();
+      if (targetRadians - sourceRadians > Math.PI) targetRadians -= 2 * Math.PI;
+      if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
 
+      try {
+        await (this.a.rotate = api.tween([this.s.body, this.s.head]).to([
+          { rotation: targetRadians },
+          { rotation: targetRadians },
+        ], durationMs).easing(TWEEN.Easing.Quadratic.In)).promise();
+      } catch {
+        if (throwOnCancel) throw new Error('cancelled');
+      }
+    },
+    // @ts-ignore
+    async cancel(overridePaused = false) {
+      if (this.forcePaused && !overridePaused) {
+        throw Error('paused: cannot cancel');
+      }
+
+      console.log(`cancel: cancelling ${this.def.key}`);
+
+      this.a.opacity.stop();
+      this.a.rotate.stop();
+
+      if (this.a.animName === 'walk') {
+        this.nextWalk = null;
+        this.clearWayMetas(); // Cancel pending actions
+        this.startAnimation('idle'); // Must change to stop walking?
+      }
+      
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'cancelled' });
+    },
+
+    clearWayMetas() {
+      this.a.wayMetas.length = 0;
+      this.a.prevWayMetas.length = 0;
+      window.clearTimeout(this.a.wayTimeoutId);
+    },
+    getAngle() {
+      return this.s.body.rotation;
+    },
+    // @ts-ignore
+    startAnimation(animName) {
+    //   if (spriteSheet !== this.anim.spriteSheet) {
+    //     this.el.root.classList.remove(this.anim.spriteSheet);
+    //     this.el.root.classList.add(spriteSheet);
+    //     this.anim.spriteSheet = spriteSheet;
+    //   }
+    //   if (isAnimAttached(this.anim.translate, this.el.root)) {
+    //     this.anim.translate.cancel();
+    //     this.anim.rotate.cancel();
+    //     this.anim.sprites.cancel();
+    //   }
+    //   switch (this.anim.spriteSheet) {
+    //     case 'walk': {
+    //       const { anim } = this;
+    //       // this.el.root.getAnimations().forEach(x => x.cancel());
+    //       isAnimAttached(anim.rotate, this.el.body) && anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
+    //       anim.rotate.cancel(); // else `npc do` orientation doesn't work
+    //       // isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
+    
+    //       // Animate position and rotation
+    //       const { translateKeyframes, rotateKeyframes, opts } = this.getWalkAnimDef();
+    //       anim.translate = this.el.root.animate(translateKeyframes, opts);
+    //       anim.rotate = this.el.body.animate(rotateKeyframes, opts);
+    //       anim.durationMs = opts.duration;
+    //       anim.initAnimScaleFactor = this.getAnimScaleFactor();
+
+    //       // Animate spritesheet, assuming `walk` anim exists
+    //       const { animLookup } = npcsMeta[this.classKey].parsed;
+    //       const spriteMs = opts.duration === 0 ? 0 : this.getWalkCycleDuration(opts.duration);
+    //       const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
+    //       anim.sprites = this.el.body.animate(
+    //           firstFootLeads ?
+    //             [
+    //               { offset: 0, backgroundPosition: '0px' },
+    //               { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.frameAabb.width}px` },
+    //             ] :
+    //             [// We assume an even number of frames
+    //               { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.frameAabb.width}px` },
+    //               { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.frameAabb.width}px` },
+    //             ] 
+    //         ,
+    //         {
+    //           easing: `steps(${animLookup.walk.frameCount})`,
+    //           duration: spriteMs, // 🚧 ~ npcWalkAnimDurationMs
+    //           iterations: Infinity,
+    //           delay: opts.delay,
+    //           playbackRate: opts.playbackRate,
+    //         },
+    //       );
+    //       break;
+    //     }
+    //     case 'idle':
+    //     case 'idle-breathe':
+    //     case 'lie':
+    //     case 'sit': {
+    //       this.clearWayMetas();
+    //       this.updateStaticBounds();
+    
+    //       if (this.anim.spriteSheet === 'sit') {
+    //         this.obscureBySurfaces(); // Ensure feet are below surfaces
+    //       } else {
+    //         this.el.root.style.clipPath = 'none';
+    //       }
+
+    //       // - Maybe fixes "this.anim.translate.addEventListener is not a function"
+    //       // - Maybe fixes "this.anim.rotate.cancel is not a function" on HMR
+    //       this.anim.translate = new Animation();
+    //       this.anim.rotate = new Animation();
+          
+    //       // ℹ️ relax type of keys
+    //       // 🚧 npc classes should have same Object.keys(animLookup)
+    //       const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.classKey].parsed.animLookup);
+
+    //       // Always play an animation so can detect if paused
+    //       this.anim.sprites = this.el.body.animate(
+    //         [
+    //           { offset: 0, backgroundPosition: '0px' },
+    //           // Works even if frameCount is 1 because easing is `steps(1)`
+    //           { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * animLookup[this.anim.spriteSheet].frameAabb.width}px` },
+    //         ], {
+    //           easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
+    //           duration: animLookup[this.anim.spriteSheet].durationMs,
+    //           iterations: Infinity,
+    //         },
+    //       );
+    //       break;
+    //     }
+    //     default:
+    //       throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
+    //   }
+    },
   };
 }
 

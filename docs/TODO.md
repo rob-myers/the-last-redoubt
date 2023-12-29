@@ -108,8 +108,8 @@
   - ✅ setup tween.js for promises
   - ✅ migrate anime.js to tween.js
   - ✅ `npc events` outputs both `disabled` and `enabled`
-    -latter happens when process not running yet
-  - 🚧 clean tween out of World?
+      - latter happens when process not running yet
+  - ❌ clean tween out of World?
   - 🚧 migrate methods (first approximation)
 
 - debug arrows have larger hit area
