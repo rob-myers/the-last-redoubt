@@ -351,17 +351,16 @@ export default function createNpc(
         isAnimAttached(this.anim.rotate, this.el.body) && this.anim.rotate.commitStyles();
       }
     },
+    getAnimScaleFactor() {
+      // We convert from "seconds per world-unit" to "milliseconds per world-unit"
+      return 1000 * (1 / this.getSpeed());
+    },
     getAngle() {
       const matrix = new DOMMatrixReadOnly(window.getComputedStyle(this.el.body).transform);
       return Math.atan2(matrix.m12, matrix.m11);
     },
     getFrame() {
-      // Fix types during migration
-      return 0;
-    },
-    getAnimScaleFactor() {
-      // We convert from "seconds per world-unit" to "milliseconds per world-unit"
-      return 1000 * (1 / this.getSpeed());
+      return 0; // Fix types during migration
     },
     getInteractRadius() {
       // can inherit from <NPCs> root

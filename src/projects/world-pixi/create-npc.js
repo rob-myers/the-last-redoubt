@@ -1,12 +1,14 @@
-// @ts-nocheck
+/// @ts-nocheck
 import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { testNever } from "../service/generic";
+import { precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
-import { npcRadius, npcClassToSpineHeadSkin, spineAnimToSetup } from "./const";
+import { hasGmDoorId } from "../service/geomorph";
+import { npcRadius, npcClassToSpineHeadSkin, spineAnimToSetup, defaultNpcInteractRadius } from "./const";
+import { obscuredNpcOpacity, spawnFadeMs } from "../world/const";
 
 import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
 
@@ -57,7 +59,10 @@ export default function createNpc(def, api) {
       opacity: emptyTween,
       rotate: emptyTween,
       time: 0,
+
       neckAngle: 0,
+      speedFactor: 1,
+      defaultSpeedFactor: 1,
       
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -139,21 +144,224 @@ export default function createNpc(def, api) {
       this.a.prevWayMetas.length = 0;
       window.clearTimeout(this.a.wayTimeoutId);
     },
+    computeAnimAux() {
+      const { aux } = this.a;
+      const radius = this.getRadius();
+      aux.outsetWalkBounds = Rect.fromPoints(...this.a.path).outset(radius);
+      aux.edges = this.a.path.map((p, i) => ({ p, q: this.a.path[i + 1] })).slice(0, -1);
+      aux.angs = aux.edges.map(e => precision(Math.atan2(e.q.y - e.p.y, e.q.x - e.p.x)));
+      // accuracy needed for wayMeta length computation
+      aux.elens = aux.edges.map(({ p, q }) => p.distanceTo(q));
+      // aux.elens = aux.edges.map(({ p, q }) => precision(p.distanceTo(q)));
+      // aux.navPathPolys = aux.edges.map(e => {
+      //   const normal = e.q.clone().sub(e.p).rotate(Math.PI/2).normalize(0.01);
+      //   return new Poly([e.p.clone().add(normal), e.q.clone().add(normal), e.q.clone().sub(normal), e.p.clone().sub(normal)]);
+      // });
+      const reduced = aux.elens.reduce((agg, length) => {
+        agg.total += length;
+        agg.sofars.push(agg.sofars[agg.sofars.length - 1] + length);
+        return agg;
+      }, { sofars: [0], total: 0 });
+      aux.sofars = reduced.sofars
+      aux.total = reduced.total;
+      aux.index = 0;
+    },
+    computeWayMetaLength(navMeta) {
+      if (navMeta.key === 'at-door') {
+        const gm = api.gmGraph.gms[navMeta.gmId];
+        const navPoint = gm.inverseMatrix.transformPoint(this.a.path[navMeta.index].clone());
+        const door = gm.doors[navMeta.doorId];
+        const distanceToDoor = Math.abs(door.normal.dot(navPoint.sub(door.seg[0])));
+        // change length so npc is close to door
+        return Math.max(0, this.a.aux.sofars[navMeta.index] + distanceToDoor - (this.getRadius() + 5));
+      } else {
+        return this.a.aux.sofars[navMeta.index];
+      }
+    },
+    async do(point, opts = {}) {
+      if (this.forcePaused) {
+        throw Error('paused: cannot do');
+      }
+      if (this.isPaused()) {
+        await this.cancel();
+      }
+      point.meta ??= {}; // possibly manually specified (not via `click [n]`)
 
+      try {
+        if (point.meta.door && hasGmDoorId(point.meta)) {
+          /** `undefined` -> toggle, `true` -> open, `false` -> close */
+          const extraParam = opts.extraParams?.[0] === undefined ? undefined : !!opts.extraParams[0];
+          const open = extraParam === true;
+          const close = extraParam === false;
+          const wasOpen = api.doors.lookup[point.meta.gmId][point.meta.doorId].open;
+          const isOpen = api.doors.toggleDoor(point.meta.gmId, point.meta.doorId, { npcKey: this.key, close, open });
+          if (close) {
+            if (isOpen) throw Error('cannot close door');
+          } else if (open) {
+            if (!isOpen) throw Error('cannot open door');
+          } else {
+            if (wasOpen === isOpen) throw Error('cannot toggle door');
+          }
+        } else if (api.npcs.isPointInNavmesh(this.getPosition())) {
+          if (this.doMeta) {// @ do point, on nav
+            const navPath = api.npcs.getGlobalNavPath(this.getPosition(), point);
+            await this.walk(navPath, { throwOnCancel: false });
+          } else {
+            await this.onMeshDoMeta(point, opts);
+          }
+          this.doMeta = point.meta.do ? point.meta : null;
+        } else {
+          await this.offMeshDoMeta(point, opts);
+          this.doMeta = point.meta.do ? point.meta : null;
+        }
+      } catch (e) {// Swallow 'cancelled' errors e.g. start new walk, obstruction
+        if (!(e instanceof Error && (e.message === 'cancelled' || e.message.startsWith('cancelled:')))) {
+          throw e;
+        }
+      }
+    },
+    everWalked() {
+      return this.a.wayTimeoutId !== 0;
+    },
+    extendNextWalk(...points) {// 👈 often a single point
+      const currentNavPath = this.navPath;
+      if (!this.isWalking() || !currentNavPath || currentNavPath.path.length === 0) {
+        return warn(`extendNextWalk: ${this.a.animName}: must be walking`);
+      }
+      if (points.length === 0) {
+        return;
+      }
+
+      const currentPath = currentNavPath.path;
+      this.nextWalk ??= { visits: [], navPath: api.lib.getEmptyNavPath() };
+      
+      const src = this.nextWalk.visits.at(-1) ?? /** @type {Geom.Vect} */ (currentPath.at(-1));
+      const deltaNavPath = api.npcs.getGlobalTour([src, ...points], this.navOpts);
+      this.nextWalk.navPath = api.lib.concatenateNavPaths([this.nextWalk.navPath, deltaNavPath]);
+      this.nextWalk.visits.push(...points.map(Vect.from));
+
+      const extendedNavPath = api.lib.concatenateNavPaths([currentNavPath, this.nextWalk.navPath]);
+      api.debug.addNavPath(api.lib.getNavPathName(def.key), extendedNavPath);
+      api.debug.render();
+    },
+    async fadeSpawn(point, opts = {}) {
+      try {
+        const meta = opts.meta ?? point.meta ?? {};
+        point.meta ??= meta; // 🚧 can remove?
+        const direction = Vect.from(point).sub(this.getPosition());
+        await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
+        await api.npcs.spawn({
+          npcKey: this.key,
+          point,
+          angle: opts.angle ?? (direction.x ? Math.atan2(direction.y, direction.x) : undefined) ,
+          npcClassKey: opts.npcClassKey,
+          requireNav: opts.requireNav,
+        });
+        this.startAnimationByMeta(meta);
+        await this.animateOpacity(meta.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
+      } catch (e) {
+        await this.animateOpacity(this.doMeta?.obscured ? obscuredNpcOpacity : 1, spawnFadeMs);
+        throw e;
+      }
+    },
+    filterWayMetas(shouldRemove) {
+      const { wayMetas } = this.a;
+      this.a.wayMetas = wayMetas.filter(meta => !shouldRemove(meta));
+      if (wayMetas[0] && shouldRemove(wayMetas[0])) {
+        window.clearTimeout(this.a.wayTimeoutId);
+        this.nextWayTimeout();
+      }
+    },
+    async followNavPath(navPath, doorStrategy) {
+      const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
+      // warn('START followNavPath')
+      // might jump i.e. path needn't start from npc position
+      this.navPath = navPath;
+      this.a.path = path.map(Vect.from);
+      // from `nav` for decor collisions
+      this.a.gmRoomIds = gmRoomIds;
+      this.a.doorStrategy = doorStrategy ?? 'none';
+      this.a.speedFactor = this.a.defaultSpeedFactor;
+
+      this.clearWayMetas();
+      this.computeAnimAux();
+
+      // Convert navMetas to wayMetas
+      this.a.wayMetas = globalNavMetas.map((navMeta) => ({
+        ...navMeta,
+        length: this.computeWayMetaLength(navMeta),
+      }));
+
+      this.startAnimation('walk');
+      api.npcs.events.next({
+        key: 'started-walking',
+        npcKey: this.key,
+        navPath,
+        continuous: this.getPosition().distanceTo(path[0]) <= 0.01,
+        extends: !!this.nextWalk,
+      });
+      this.nextWalk = null;
+      this.nextWayTimeout();
+
+      // ℹ️ detecting walk finish via rotate tween...
+      try {
+        console.log(`followNavPath: ${this.key} started walk`);
+        await this.a.rotate.promise();
+        console.log(`followNavPath: ${this.key} finished walk`);
+        this.wayTimeout(); // immediate else startAnimation('idle') will clear
+      } catch (e) {
+        console.log(`followNavPath: ${this.key} cancelled walk`);
+        throw Error('cancelled');
+      } finally {
+        this.a.speedFactor = this.a.defaultSpeedFactor; // Reset speed to default
+      }
+    },
+    getAnimScaleFactor() {
+      return 0; // Fix types during migration
+    },
     getAngle() {
       return this.s.body.rotation;
     },
     getFrame() {
       return Math.floor(this.a.time) % this.a.shared.frameCount;
     },
+    getInteractRadius() {
+      return defaultNpcInteractRadius;
+    },
+    getLineSeg() {
+      const dst = this.getTarget();
+      if (dst) {
+        const src = this.getPosition();
+        return { src, dst, tangent: dst.clone().sub(src).normalize() };
+      } else {
+        return null;
+      }
+    },
+    getNextDoorId() {
+      return this.a.wayMetas.find(
+        /** @returns {meta is NPC.NpcWayMetaExitRoom} */
+        meta => meta.key === 'exit-room' // stay in current gmId
+      )?.doorId;
+    },
     getPosition() {
       return Vect.from(this.s.body.position);
+    },
+    getPrevDoorId() {
+      return this.a.prevWayMetas.findLast(
+        /** @returns {meta is NPC.NpcWayMetaExitRoom} */
+        meta => meta.key === 'exit-room'
+      )?.doorId;
     },
     getRadius() {
       return npcRadius;
     },
     getSpeed() {
-      return this.def.walkSpeed * this.anim.speedFactor;
+      return this.def.walkSpeed * this.a.speedFactor;
+    },
+    // 🚧
+
+    isWalking() {
+      return this.a.animName === 'walk';
     },
     obscureBySurfaces() {
       if (!this.gmRoomId) {
@@ -172,6 +380,7 @@ export default function createNpc(def, api) {
       );
       api.doors.obscureNpc(gmId, intersection);
     },
+
     setupAnim(animName) {
       const { a, s } = this;
       a.animName = animName;
@@ -213,7 +422,10 @@ export default function createNpc(def, api) {
         case 'walk': {
           this.a.rotate.cancel(); // fix `npc do` orientation
           this.setupAnim(animName);
+
           // 🚧 chained rotate tween
+          const totalMs = (1 / this.getSpeed()) * (this.a.aux.total / 40) * 1000;
+          this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
           break;
         }
         case 'idle':

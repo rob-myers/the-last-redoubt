@@ -100,6 +100,10 @@ declare namespace NPC {
       shouldRemove: (meta: NPC.NpcWayMeta) => boolean
     ): void;
     clearWayMetas(): void;
+    /**
+     * This is `anim.aux.sofars[navMeta.index]`, except
+     * `at-door` which is larger i.e. closer towards door.
+     */
     computeWayMetaLength(navMeta: NPC.GlobalNavMeta): number;
     everWalked(): boolean;
     extendNextWalk(...points: Geom.VectJson[]): void;
@@ -127,8 +131,7 @@ declare namespace NPC {
     getPrevDoorId(): number | undefined;
     getRadius(): number;
     /**
-     * - Whilst walking: current speed.
-     * - Whilst stopped: default speed `this.def.speed * this.walkSpeedFactor`.
+     * Meters per second i.e. `this.def.speed * this.walkSpeedFactor`.
      */
     getSpeed(): number;
     /**
@@ -294,6 +297,7 @@ declare namespace NPC {
       /** For npc vs decor collisions */
       segBounds: Geom.Rect;
       sofars: number[];
+      /** Length of path */
       total: number;
     };
     /** Bounds when stationary. */
@@ -305,8 +309,11 @@ declare namespace NPC {
     rotate: TweenExt;
     /** Spritesheet-normalized time in `[0, shared.frameCount)` */
     time: number;
+
     /** Degrees */
     neckAngle: number;
+    speedFactor: number;
+    defaultSpeedFactor: number;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
@@ -373,6 +380,7 @@ declare namespace NPC {
     classKey: NpcClassKey;
     angle: number;
     position: Geom.VectJson;
+    /** Meters per second */
     walkSpeed: number;
   }
 
