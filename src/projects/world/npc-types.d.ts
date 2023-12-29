@@ -131,7 +131,7 @@ declare namespace NPC {
     getPrevDoorId(): number | undefined;
     getRadius(): number;
     /**
-     * Meters per second i.e. `this.def.speed * this.walkSpeedFactor`.
+     * World units per second i.e. `this.def.speed * this.speedFactor`.
      */
     getSpeed(): number;
     /**
@@ -309,6 +309,7 @@ declare namespace NPC {
     rotate: TweenExt;
     /** Spritesheet-normalized time in `[0, shared.frameCount)` */
     time: number;
+    paused: boolean;
 
     /** Degrees */
     neckAngle: number;
@@ -380,7 +381,7 @@ declare namespace NPC {
     classKey: NpcClassKey;
     angle: number;
     position: Geom.VectJson;
-    /** Meters per second */
+    /** World units per second */
     walkSpeed: number;
   }
 
@@ -815,8 +816,7 @@ declare namespace NPC {
 
   type TweenExt = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
     promise(): Promise<Record<string, any>>;
-    /** Invokes `tween.stopChainedTweens` */
-    cancel(): void;
+    getTime(): number;
   }
 
 }

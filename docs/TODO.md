@@ -5,87 +5,6 @@
 - ✅ Fix xterm links toggling
   - Can now toggle on/off without leaving hover first
 
-- ✅ `<TestPreRenderNpc>` uses ParticleContainer
-  - ✅ has ParticleContainer with a sprite
-  - ✅ sprite animates idle-breath manually
-  - ✅ new script `spine-render` renders `spine-render.{png,webp}`
-  - ✅ spine-meta precomputes uvs via `(new Texture(base, frame))._uvs.uvsFloat32`
-  - ✅ refactor so can animate any animation
-  - ✅ can scale correctly
-    - resize idle anim-bounds to fit exactly
-  - ✅ use Pixi Ticker
-  - ✅ spine-meta has head position/scale per frame
-    - idle-breathe changes head position/scale
-  - ✅ spine-meta has neck position per frame
-    - for rotation e.g. look side-to-side whilst idle
-    - idle-breathe changes neck position
-  - ✅ precompute head positions too
-  - ✅ center sprite around root (0, 0)
-  - ✅ sprite for body, sprite for head
-    - ✅ spine-meta computes spaces for heads
-    - ✅ spritesheet has heads
-    - ✅ decouple heads from npc classes
-    - ✅ move spine data/utils out of scripts/service into world-pixi/const
-    - ✅ put heads in correct place
-    - ✅ animate heads in correct place
-      - ✅ spine-render: debug: draw rect rects around head attachments
-      - ✅ region attachment vertex convention: `[nw, sw, se, ne]`
-        - HOWEVER in pixi.js "y is down", so get `[sw, nw, ne, se]`
-      - ✅ spine-meta: record head polys per frame
-      - ✅ `<TestPreRenderNpc>`: align head sprite with rect
-      - ✅ align head sprite scale too
-      - ✅ clean up approach 
-    - ✅ spine: `lie` head in setup pose
-      - relevant if we create more animations which are "lying down"
-  - ✅ abstract `<TestPreRenderNpc>` a bit
-  - ✅ can rotate body and head
-  - ✅ spine has events for left/right foot down
-  - ✅ cleanup angle choice
-  - spine-meta has foot offsets and walk frame durations for const speed
-    - ℹ️ spine export can have e.g. `skeleton.fps` as `2` (so times are halved)
-    - ℹ️ `footstep` event: 0 `left-down`, 0.856 `right-down`, 1.6 ~ 0
-    - ✅ spine-meta: detect footstep events
-    - ✅ spine: change fps to 1 in "animation > playback view"
-    - ✅ spine-meta: compute rootDeltas per frame using `footstep` event
-    - ✅ use it to translate during walk
-    - ✅ account for body rotation
-    - ✅ improve lie 1-frame animation (e.g. smaller head)
-      - ℹ️ we use `lie` to draw the "head-face" so its scale factor will effect other "lying down" animations (currently `lie` is the only such animation)
-    - ✅ constant speed: try animating `walk` with specific frame durations
-    - ℹ️ Seems PIXI Ticker callback receives `deltaMs / (1000/60)`
-      - where `deltaMs` is milliseconds since previous invocation
-      - where `1000/60` ~ `16.66` is number of milliseconds in 60 fps render
-  - ✅ can animate translation too
-  - ✅ support non-contiguous animations in spritesheet
-    - would like more frames in `walk` so can slow it down more,
-      without invalidating 4096 * 4096 texture bound
-  - ✅ fix midway footstep animation issues
-  - ✅ remove heads from body sprites
-  - ✅ both moving/stationary animations have durations
-    - stationary animations needn't be translated e.g. `idle-breathe`
-  - ✅ try normalize "first half of walk"
-  - ✅ handle skipped frames
-    - test via ticker {min,max}FPS
-  - ✅ `<NPCs>` loads spritesheet
-  - ✅ `<NPCs>` has ticker (unused)
-  - ✅ pause/unpause when disabled/enabled
-  - ✅ can add multiple npcs
-    - ✅ lookup with values of type TestNpc
-    - ✅ TestNpc has methods getFrame, updateTime, updateNpc
-    - ✅ replace current approach with `createTestNpc`
-    - ✅ fix rotated head when go from e.g. `walk` -> `idle`
-    - ✅ add multiple
-    - ✅ add many: 500 npcs
-  - ✅ change walk initial frame so nearly idle
-    - ✅ rotate spine walk animation instead
-    - ✅ temp fix root deltas in spine-meta by assuming left foot already down
-    - ✅ fix idle-breathe
-    - ✅ better spine-meta fix
-  - ✅ spritesheet has circle
-  - ✅ can show npc bounds
-  - ✅ can turn npc head
-    - ✅ try move anchor to neck position
-
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
   - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
@@ -111,6 +30,7 @@
       - latter happens when process not running yet
   - ❌ clean tween out of World?
   - 🚧 migrate methods (first approximation)
+  - verify `tween.getTime()`
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -760,6 +680,88 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ `<TestPreRenderNpc>` uses ParticleContainer
+  - ✅ has ParticleContainer with a sprite
+  - ✅ sprite animates idle-breath manually
+  - ✅ new script `spine-render` renders `spine-render.{png,webp}`
+  - ✅ spine-meta precomputes uvs via `(new Texture(base, frame))._uvs.uvsFloat32`
+  - ✅ refactor so can animate any animation
+  - ✅ can scale correctly
+    - resize idle anim-bounds to fit exactly
+  - ✅ use Pixi Ticker
+  - ✅ spine-meta has head position/scale per frame
+    - idle-breathe changes head position/scale
+  - ✅ spine-meta has neck position per frame
+    - for rotation e.g. look side-to-side whilst idle
+    - idle-breathe changes neck position
+  - ✅ precompute head positions too
+  - ✅ center sprite around root (0, 0)
+  - ✅ sprite for body, sprite for head
+    - ✅ spine-meta computes spaces for heads
+    - ✅ spritesheet has heads
+    - ✅ decouple heads from npc classes
+    - ✅ move spine data/utils out of scripts/service into world-pixi/const
+    - ✅ put heads in correct place
+    - ✅ animate heads in correct place
+      - ✅ spine-render: debug: draw rect rects around head attachments
+      - ✅ region attachment vertex convention: `[nw, sw, se, ne]`
+        - HOWEVER in pixi.js "y is down", so get `[sw, nw, ne, se]`
+      - ✅ spine-meta: record head polys per frame
+      - ✅ `<TestPreRenderNpc>`: align head sprite with rect
+      - ✅ align head sprite scale too
+      - ✅ clean up approach 
+    - ✅ spine: `lie` head in setup pose
+      - relevant if we create more animations which are "lying down"
+  - ✅ abstract `<TestPreRenderNpc>` a bit
+  - ✅ can rotate body and head
+  - ✅ spine has events for left/right foot down
+  - ✅ cleanup angle choice
+  - spine-meta has foot offsets and walk frame durations for const speed
+    - ℹ️ spine export can have e.g. `skeleton.fps` as `2` (so times are halved)
+    - ℹ️ `footstep` event: 0 `left-down`, 0.856 `right-down`, 1.6 ~ 0
+    - ✅ spine-meta: detect footstep events
+    - ✅ spine: change fps to 1 in "animation > playback view"
+    - ✅ spine-meta: compute rootDeltas per frame using `footstep` event
+    - ✅ use it to translate during walk
+    - ✅ account for body rotation
+    - ✅ improve lie 1-frame animation (e.g. smaller head)
+      - ℹ️ we use `lie` to draw the "head-face" so its scale factor will effect other "lying down" animations (currently `lie` is the only such animation)
+    - ✅ constant speed: try animating `walk` with specific frame durations
+    - ℹ️ Seems PIXI Ticker callback receives `deltaMs / (1000/60)`
+      - where `deltaMs` is milliseconds since previous invocation
+      - where `1000/60` ~ `16.66` is number of milliseconds in 60 fps render
+  - ✅ can animate translation too
+  - ✅ support non-contiguous animations in spritesheet
+    - would like more frames in `walk` so can slow it down more,
+      without invalidating 4096 * 4096 texture bound
+  - ✅ fix midway footstep animation issues
+  - ✅ remove heads from body sprites
+  - ✅ both moving/stationary animations have durations
+    - stationary animations needn't be translated e.g. `idle-breathe`
+  - ✅ try normalize "first half of walk"
+  - ✅ handle skipped frames
+    - test via ticker {min,max}FPS
+  - ✅ `<NPCs>` loads spritesheet
+  - ✅ `<NPCs>` has ticker (unused)
+  - ✅ pause/unpause when disabled/enabled
+  - ✅ can add multiple npcs
+    - ✅ lookup with values of type TestNpc
+    - ✅ TestNpc has methods getFrame, updateTime, updateNpc
+    - ✅ replace current approach with `createTestNpc`
+    - ✅ fix rotated head when go from e.g. `walk` -> `idle`
+    - ✅ add multiple
+    - ✅ add many: 500 npcs
+  - ✅ change walk initial frame so nearly idle
+    - ✅ rotate spine walk animation instead
+    - ✅ temp fix root deltas in spine-meta by assuming left foot already down
+    - ✅ fix idle-breathe
+    - ✅ better spine-meta fix
+  - ✅ spritesheet has circle
+  - ✅ can show npc bounds
+  - ✅ can turn npc head
+    - ✅ try move anchor to neck position
+
 
 - ✅ spine: fix hip positions
   - ✅ fix left/right hip setup pose

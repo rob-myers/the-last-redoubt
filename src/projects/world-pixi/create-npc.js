@@ -59,6 +59,7 @@ export default function createNpc(def, api) {
       opacity: emptyTween,
       rotate: emptyTween,
       time: 0,
+      paused: false, // 👈 new
 
       neckAngle: 0,
       speedFactor: 1,
@@ -86,7 +87,7 @@ export default function createNpc(def, api) {
     // 🚧 methods
     
     async animateOpacity(targetOpacity, durationMs) {
-      this.a.opacity.cancel();
+      this.a.opacity.stop();
       try {
         await (this.a.opacity = api.tween([this.s.body, this.s.head]).to([
           { alpha: targetOpacity },
@@ -98,7 +99,7 @@ export default function createNpc(def, api) {
       }
     },
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
-      this.a.rotate.cancel();
+      this.a.rotate.stop();
     
       // Assume {source,target}Radians in [-π, π]
       const sourceRadians = this.getAngle();
@@ -121,8 +122,8 @@ export default function createNpc(def, api) {
 
       console.log(`cancel: cancelling ${this.def.key}`);
 
-      this.a.opacity.cancel();
-      this.a.rotate.cancel();
+      this.a.opacity.stop();
+      this.a.rotate.stop();
 
       if (this.a.animName === 'walk') {
         this.nextWalk = null;
@@ -358,8 +359,86 @@ export default function createNpc(def, api) {
     getSpeed() {
       return this.def.walkSpeed * this.a.speedFactor;
     },
-    // 🚧
+    getTarget() {
+      if (this.isWalking()) {
+        const { a } = this;
+        const currDist = a.rotate.getTime() * this.getSpeed();
+        const nextIndex = a.aux.sofars.findIndex(soFar => soFar > currDist);
+        return nextIndex === -1 ? null : a.path[nextIndex].clone(); // Expect -1 iff at final point
+      } else {
+        return null;
+      }
+    },
+    getTargets() {
+      if (this.isWalking()) {
+        const { a } = this;
+        const soFarMs = a.rotate.getTime();
+        const invSpeed = 1 / this.getSpeed();
+        return a.aux.sofars
+          .map((soFar, i) => ({ point: a.path[i].clone(), arriveMs: (soFar * invSpeed) - soFarMs }))
+          .filter(x => x.arriveMs >= 0);
+      } else {
+        return [];
+      }
+    },
+    getWalkAnimDef() {// Fix types during migration
+      return /** @type {*} */ ({});
+    },
+    getWalkBounds() {
+      return this.anim.aux.outsetWalkBounds;
+    },
+    getWalkCurrentTime() {
+      return 0; // Fix types during migration
+    },
+    getWalkCycleDuration(entireWalkMs) {
+      return 0; // Fix types during migration
+    },
+    getWalkSegBounds(withNpcRadius) {
+      return withNpcRadius ? this.a.aux.outsetSegBounds : this.a.aux.segBounds;
+    },
+    hasDoorKey(gmId, doorId) {
+      return !!this.has.key[gmId]?.[doorId];
+    },
+    inferWalkTransform() {
+      return { position: Vect.zero, angle: 0 }; // Fix types during migration
+    },
+    inFrustum(point) {
+      return api.npcs.inFrustum(this.getPosition(), point, this.getAngle());
+    },
+    initialize() {
+      this.a.staticBounds = new Rect(this.def.position.x - npcRadius, this.def.position.y - npcRadius, 2 * npcRadius, 2 * npcRadius);
+      // Include doors so doorways have some gmRoomId too
+      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);
+    },
+    intersectsCircle(position, radius) {
+      return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
+    },
+    isIdle() {
+      return ['idle', 'idle-breathe'].includes(this.a.animName);
+    },
+    isPaused() {
+      return this.a.paused;
+    },
+    isPointBlocked(point, permitEscape = false) {
+      const closeNpcs = api.npcs.getCloseNpcs(this.key);
 
+      if (!closeNpcs.some(other =>
+        other.intersectsCircle(point, npcRadius)
+        && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, point.meta)
+      )) {
+        return false;
+      }
+
+      const position = this.getPosition();
+      if (permitEscape && closeNpcs.some(other =>
+        other.intersectsCircle(position, npcRadius)
+        && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, this.doMeta ?? undefined)
+      )) {
+        return false;
+      }
+
+      return true;
+    },
     isWalking() {
       return this.a.animName === 'walk';
     },
@@ -416,16 +495,18 @@ export default function createNpc(def, api) {
     // 🚧 fix "final walk frame jerk" elsewhere
     startAnimation(animName) {
       this.a.animName = animName;
-      this.a.rotate.cancel();
+      this.a.rotate.stop();
       
       switch (animName) {
         case 'walk': {
-          this.a.rotate.cancel(); // fix `npc do` orientation
+          this.a.rotate.stop(); // fix `npc do` orientation
           this.setupAnim(animName);
 
           // 🚧 chained rotate tween
-          const totalMs = (1 / this.getSpeed()) * (this.a.aux.total / 40) * 1000;
+          // e.g. using aux.sofars[i] / aux.total
+          const totalMs = (1 / this.getSpeed()) * this.a.aux.total * 1000;
           this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
+          
           break;
         }
         case 'idle':
@@ -488,7 +569,7 @@ export default function createNpc(def, api) {
 /** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
-  cancel: () => {},
+  getTime: () => 0,
 });
 
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
@@ -496,7 +577,6 @@ const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>}
 );
 
 /**
- * @param {NPC.SpineAnimName} animName
  * @param {NPC.SpineAnimName} animName
  * @returns {NPC.SharedAnimData}
  */
@@ -517,12 +597,11 @@ function getSharedAnimData(animName) {
 /**
  * 
  * @param {NPC.SharedAnimData} shared 
- * @param {number} walkSpeed
+ * @param {number} walkSpeed World units per second
  */
 function getAnimDurations(shared, walkSpeed) {
-  if (shared.rootDeltas.length) {
-    // rootDelta is in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
-    return shared.rootDeltas.map(delta => (delta / 40) / walkSpeed);
+  if (shared.rootDeltas.length) {// rootDeltas in our world coords
+    return shared.rootDeltas.map(delta => delta / walkSpeed);
   } else {
     return [...Array(shared.frameCount)].map(_ => 1 / shared.stationaryFps);
   }

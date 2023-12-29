@@ -2,6 +2,8 @@ import { ColorMatrixFilter } from "@pixi/filter-color-matrix";
 import { TextStyle } from "@pixi/text";
 import { keys } from "../service/generic";
 
+export const worldUnitsPerMeter = 40;
+
 //#region pixi
 
 export const colMatFilter1 = new ColorMatrixFilter();
@@ -53,7 +55,8 @@ export const textStyle1 = new TextStyle({
 /** @type {NPC.NpcClassKey} */
 export const defaultNpcClassKey = 'vilani';
 export const defaultNpcInteractRadius = 70;
-export const defaultNpcSpeed = 0.8;
+/** World units per second */
+export const defaultNpcSpeed = 0.8 * worldUnitsPerMeter;
 
 // 🚧 import into spine-{meta,render} scripts
 export const npcRadius = 13;

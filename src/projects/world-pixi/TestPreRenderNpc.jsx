@@ -3,7 +3,7 @@ import PixiReact from "@pixi/react";
 import { Sprite } from "@pixi/sprite";
 import { Texture, Rectangle } from "@pixi/core";
 
-import { spineAnimToSetup } from "./const";
+import { spineAnimToSetup, worldUnitsPerMeter } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 
 import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
@@ -196,7 +196,7 @@ function createTestNpc(def, api) {
       anim.rootDeltas = rootDeltas;
       if (rootDeltas.length) {
         // rootDelta is in our world coords, where 60 ~ 1.5 meter (so 40 ~ 1 meter)
-        anim.durations = rootDeltas.map(delta => (delta / 40) / npc.def.walkSpeed);
+        anim.durations = rootDeltas.map(delta => (delta / worldUnitsPerMeter) / npc.def.walkSpeed);
       } else {
         anim.durations = [...Array(numFrames)].map(_ => 1 / stationaryFps);
       }
