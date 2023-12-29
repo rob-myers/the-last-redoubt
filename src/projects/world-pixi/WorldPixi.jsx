@@ -112,7 +112,6 @@ export default function WorldPixi(props) {
         promise: () => new Promise((resolve, reject) =>
           tween.onComplete(resolve).onStop(reject).start()
         ),
-        getTime: () => Date.now() - /** @type {*} */ (tween)._startTime,
       });
     },
   }));

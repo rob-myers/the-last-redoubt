@@ -797,7 +797,7 @@ export default function NPCs(props) {
             || msg.key === 'resumed-track'
           ) {
             changeStatus('follow-walk');
-            const path = npc.getTargets().map(x => x.point);
+            const path = npc.getTargets();
             // 🚧 use pixi viewport
             // await api.panZoom.followPath(path, {
             //   animScaleFactor: npc.getAnimScaleFactor() * (1 / npc.anim.updatedPlaybackRate),

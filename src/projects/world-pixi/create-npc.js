@@ -36,9 +36,8 @@ export default function createNpc(def, api) {
 
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
+      animName: 'idle',
       shared: sharedAnimData,
-      durations: getAnimDurations(sharedAnimData, def.walkSpeed),
-      initHeadWidth: spineMeta.head[headSkinName].packedHead.top.width,
 
       path: [],
       aux: {
@@ -55,15 +54,18 @@ export default function createNpc(def, api) {
       },
       staticBounds: new Rect,
       
-      animName: 'idle',
       opacity: emptyTween,
       rotate: emptyTween,
-      time: 0,
+
+      durations: getAnimDurations(sharedAnimData, def.walkSpeed),
+      normalizedTime: 0,
+      distance: 0, // 👈 implement during sprite update
+      speedFactor: 1,
+      defaultSpeedFactor: 1,
       paused: false, // 👈 new
 
       neckAngle: 0,
-      speedFactor: 1,
-      defaultSpeedFactor: 1,
+      initHeadWidth: spineMeta.head[headSkinName].packedHead.top.width,
       
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -318,13 +320,13 @@ export default function createNpc(def, api) {
       }
     },
     getAnimScaleFactor() {
-      return 0; // Fix types during migration
+      return 1000 * (1 / this.getSpeed()); // ms per world-unit
     },
     getAngle() {
       return this.s.body.rotation;
     },
     getFrame() {
-      return Math.floor(this.a.time) % this.a.shared.frameCount;
+      return Math.floor(this.a.normalizedTime) % this.a.shared.frameCount;
     },
     getInteractRadius() {
       return defaultNpcInteractRadius;
@@ -361,22 +363,17 @@ export default function createNpc(def, api) {
     },
     getTarget() {
       if (this.isWalking()) {
-        const { a } = this;
-        const currDist = a.rotate.getTime() * this.getSpeed();
-        const nextIndex = a.aux.sofars.findIndex(soFar => soFar > currDist);
-        return nextIndex === -1 ? null : a.path[nextIndex].clone(); // Expect -1 iff at final point
+        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.a.distance);
+        // Expect -1 iff at final point
+        return nextIndex === -1 ? null : this.a.path[nextIndex].clone();
       } else {
         return null;
       }
     },
     getTargets() {
       if (this.isWalking()) {
-        const { a } = this;
-        const soFarMs = a.rotate.getTime();
-        const invSpeed = 1 / this.getSpeed();
-        return a.aux.sofars
-          .map((soFar, i) => ({ point: a.path[i].clone(), arriveMs: (soFar * invSpeed) - soFarMs }))
-          .filter(x => x.arriveMs >= 0);
+        const nextIndex = this.a.aux.sofars.findIndex(soFar => soFar > this.a.distance);
+        return nextIndex === -1 ? [] : this.a.path.slice(nextIndex).map(p => p.clone());
       } else {
         return [];
       }
@@ -385,7 +382,7 @@ export default function createNpc(def, api) {
       return /** @type {*} */ ({});
     },
     getWalkBounds() {
-      return this.anim.aux.outsetWalkBounds;
+      return this.a.aux.outsetWalkBounds;
     },
     getWalkCurrentTime() {
       return 0; // Fix types during migration
@@ -442,6 +439,37 @@ export default function createNpc(def, api) {
     isWalking() {
       return this.a.animName === 'walk';
     },
+    async lookAt(point) {
+      if (!Vect.isVectJson(point)) {
+        throw Error(`invalid point: ${JSON.stringify(point)}`);
+      }
+      if (this.forcePaused) {
+        throw Error('paused: cannot look');
+      }
+      if (this.isWalking() || this.isPaused()) {
+        await this.cancel(); // 🤔
+      }
+      if (!this.canLook()) {
+        throw Error('cannot look');
+      }
+
+      const position = this.getPosition();
+      const direction = Vect.from(point).sub(position);
+      if (direction.length === 0) {
+        return; // Don't animate
+      }
+      const targetRadians = Math.atan2(direction.y, direction.x);
+      await this.animateRotate(targetRadians, 1 * 1000);
+    },
+    nextWayTimeout() {
+      if (this.a.wayMetas[0]) {
+        const msToWait = (this.a.wayMetas[0].length - this.a.distance) * this.getAnimScaleFactor();
+        this.a.wayTimeoutId = window.setTimeout(this.wayTimeout.bind(this), msToWait);
+      }
+    },
+    npcRef() {
+      // Fix types during migration
+    },
     obscureBySurfaces() {
       if (!this.gmRoomId) {
         return warn(`${this.key}: cannot obscure npc outside any room`);
@@ -459,11 +487,91 @@ export default function createNpc(def, api) {
       );
       api.doors.obscureNpc(gmId, intersection);
     },
+    async offMeshDoMeta(point, opts = {}) {
+      const src = this.getPosition();
+      const meta = point.meta ?? {};
+
+      if (!opts.suppressThrow && !meta.do && !meta.nav) {
+        throw Error('not doable nor navigable');
+      }
+      if (!opts.suppressThrow && (
+        src.distanceTo(point) > this.getInteractRadius()
+        || !api.gmGraph.inSameRoom(src, point)
+        || !api.npcs.canSee(src, point, this.getInteractRadius())
+      )) {
+        throw Error('too far away');
+      }
+
+      await this.fadeSpawn(// non-navigable uses targetPoint:
+        { ...point, ...!meta.nav && /** @type {Geom.VectJson} */ (meta.targetPos) },
+        {
+          angle: meta.nav && !meta.do
+            // use direction src --> point if entering navmesh
+            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
+            // use meta.orient if staying off-mesh
+            : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+          fadeOutMs: opts.fadeOutMs,
+          meta,
+        },
+      );
+    },
+    async onMeshDoMeta(point, opts = {}) {
+      const src = this.getPosition();
+      const meta = point.meta ?? {};
+      /** The actual "do point" (e.point is somewhere on icon) */
+      const decorPoint = /** @type {Geom.VectJson} */ (meta.targetPos) ?? point;
+
+      if (!opts.suppressThrow && !meta.do) {
+        throw Error('not doable');
+      }
+      if (!api.gmGraph.inSameRoom(src, decorPoint)) {
+        throw Error('too far away');
+      }
+
+      if (api.npcs.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
+        const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
+        await this.walk(navPath, { throwOnCancel: true });
+        typeof meta.orient === 'number' && await this.animateRotate(meta.orient * (Math.PI / 180), 100);
+        this.startAnimationByMeta(meta);
+        return;
+      }
+
+      if (!opts.suppressThrow && (
+        src.distanceTo(point) > this.getInteractRadius())
+        || !api.npcs.canSee(src, point, this.getInteractRadius())
+      ) {
+        throw Error('too far away');
+      }
+
+      await this.fadeSpawn({ ...point, ...decorPoint }, {
+        angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+        requireNav: false,
+        fadeOutMs: opts.fadeOutMs,
+        meta,
+      });
+    },
+    pause(forced = true) {
+      if (forced) {
+        this.forcePaused = true;
+      }
+      this.updateStaticBounds();
+
+      console.log(`pause: pausing ${this.def.key}`);
+      this.a.opacity.pause();
+      this.a.rotate.pause();
+      this.a.paused = true;
+
+      if (this.a.animName === 'walk') {
+        window.clearTimeout(this.a.wayTimeoutId);
+      }
+
+      api.npcs.events.next({ key: 'npc-internal', npcKey: this.key, event: 'paused' });
+    },
 
     setupAnim(animName) {
       const { a, s } = this;
       a.animName = animName;
-      a.time = 0;
+      a.normalizedTime = 0;
 
       const { headOrientKey } = spineAnimToSetup[animName]
       const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
@@ -472,7 +580,7 @@ export default function createNpc(def, api) {
       a.durations = getAnimDurations(a.shared, this.getSpeed());
 
       // Changing frame width/height later deforms image
-      const bodyRect = a.shared.bodyRects[a.time];
+      const bodyRect = a.shared.bodyRects[a.normalizedTime];
       const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
       s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
       s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
@@ -502,9 +610,10 @@ export default function createNpc(def, api) {
           this.a.rotate.stop(); // fix `npc do` orientation
           this.setupAnim(animName);
 
-          // 🚧 chained rotate tween
-          // e.g. using aux.sofars[i] / aux.total
-          const totalMs = (1 / this.getSpeed()) * this.a.aux.total * 1000;
+          // 🚧 chained tweens
+          // - e.g. using aux.sofars[i] / aux.total
+          // - tween will be remade if speed changes
+          const totalMs = this.a.aux.total * this.getAnimScaleFactor();
           this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
           
           break;
@@ -569,7 +678,6 @@ export default function createNpc(def, api) {
 /** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
-  getTime: () => 0,
 });
 
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (

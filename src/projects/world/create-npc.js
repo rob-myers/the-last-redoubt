@@ -416,8 +416,7 @@ export default function createNpc(
         const { anim } = this;
         const soFarMs = /** @type {number} */ (anim.translate.currentTime);
         return anim.aux.sofars
-          .map((soFar, i) => ({ point: anim.path[i].clone(), arriveMs: (soFar * anim.initAnimScaleFactor) - soFarMs }))
-          .filter(x => x.arriveMs >= 0);
+          .flatMap((soFar, i) => (soFar * anim.initAnimScaleFactor) >= soFarMs ? anim.path[i].clone() : [])
       } else {
         return [];
       }

@@ -29,8 +29,10 @@
   - ✅ `npc events` outputs both `disabled` and `enabled`
       - latter happens when process not running yet
   - ❌ clean tween out of World?
+  - 🚧 verify functions work when npc speed changes
+    - compute npc.a.distance
+    - can "remake" chained tweens by stop(), remake, start()
   - 🚧 migrate methods (first approximation)
-  - verify `tween.getTime()`
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`

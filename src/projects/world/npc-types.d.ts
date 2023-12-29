@@ -122,7 +122,10 @@ declare namespace NPC {
     getAngle(): number;
     getFrame(): number;
     getWalkAnimDef(): NpcAnimDef;
-    /** Used to scale up how long it takes to move along navpath */
+    /**
+     * - Used to scale up how long it takes to move along navpath.
+     * - Converts world units to ms elapsed.
+     */
     getAnimScaleFactor(): number;
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
@@ -145,7 +148,7 @@ declare namespace NPC {
      */
     getWalkCycleDuration(entireWalkMs: number): number;
     getTarget(): null | Geom.Vect;
-    getTargets(): { point: Geom.Vect; arriveMs: number }[];
+    getTargets(): Geom.Vect[];
     getWalkBounds(): Geom.Rect;
     getWalkCurrentTime(): number | null;
     getWalkSegBounds(withNpcRadius: boolean): Geom.Rect;
@@ -272,9 +275,8 @@ declare namespace NPC {
   }
   // 🚧 new
   interface AnimData {
+    animName: SpineAnimName;
     shared: SharedAnimData;
-    /** Depends on walkSpeed */
-    durations: number[];
     /** Depends on head skin */
     initHeadWidth: number;
 
@@ -303,12 +305,21 @@ declare namespace NPC {
     /** Bounds when stationary. */
     staticBounds: Geom.Rect;
 
-    animName: SpineAnimName;
-
     opacity: TweenExt;
     rotate: TweenExt;
-    /** Spritesheet-normalized time in `[0, shared.frameCount)` */
-    time: number;
+
+    /** The duration of each frame in ms */
+    durations: number[];
+    /**
+     * SpriteSheet-normalized time.
+     * - starts from `0` when walk begins
+     * - non-negative integers correspond to frames
+     * - time between increments follows from `durations`
+     */
+    normalizedTime: number;
+    /** Total distance travelled since animation began (world units). */
+    distance: number;
+
     paused: boolean;
 
     /** Degrees */
@@ -323,6 +334,7 @@ declare namespace NPC {
     wayMetas: NpcWayMeta[];
     wayTimeoutId: number;
   }
+
   /** Shared amongst possibly many npcs */
   interface SharedAnimData {
     animName: SpineAnimName;
@@ -816,7 +828,6 @@ declare namespace NPC {
 
   type TweenExt = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
     promise(): Promise<Record<string, any>>;
-    getTime(): number;
   }
 
 }
