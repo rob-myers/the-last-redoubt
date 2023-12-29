@@ -108,6 +108,7 @@ export default function WorldPixi(props) {
         promise: () => new Promise((resolve, reject) =>
           tween.onComplete(resolve).onStop(reject).start()
         ),
+        cancel: () => tween.stopChainedTweens(),
       });
     },
     updateTicker() {
@@ -171,12 +172,6 @@ export default function WorldPixi(props) {
                 onLoad={api => (state.geomorphs = api) && update()}
               />
 
-              <Doors
-                api={state}
-                onLoad={api => (state.doors = api) && update()}
-                init={{ 0: [28] }} // 🚧 test
-              />
-
               <Decor
                 api={state}
                 onLoad={api => (state.decor = api) && update()}
@@ -190,6 +185,12 @@ export default function WorldPixi(props) {
               <NPCs
                 api={state}
                 onLoad={api => (state.npcs = api) && update()}
+              />
+
+              <Doors
+                api={state}
+                onLoad={api => (state.doors = api) && update()}
+                init={{ 0: [28] }} // 🚧 test
               />
 
               <FOV
@@ -247,7 +248,7 @@ export default function WorldPixi(props) {
  * @property {(cssCursorValue: string) => void} setCursor
  * @property {(enabled: boolean) => void} setTicker
  * @property {(visibleGms: boolean[]) => void} setVisibleGms
- * @property {<T extends Record<string, any>>(target: any) => import('@tweenjs/tween.js').Tween<T> & { promise: () => Promise<T> }} tween
+ * @property {(target: any) => NPC.TweenExt} tween
  * @property {() => void} updateTicker
  */
 

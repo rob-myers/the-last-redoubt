@@ -19,23 +19,23 @@ export default function useHandleEvents(api, disabled) {
     handleDoorsEvent(e) {
       switch (e.key) {
         case 'closed-door':
-          api.doors.mutateItem(e.gmId, e.doorId, { open: false });
+          api.doors.mutateDoor(e.gmId, e.doorId, { open: false });
           api.geomorphs.onCloseDoor(e.gmId, e.doorId);
           api.fov.recompute();
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'opened-door':
-          api.doors.mutateItem(e.gmId, e.doorId, { open: true });
+          api.doors.mutateDoor(e.gmId, e.doorId, { open: true });
           api.geomorphs.onOpenDoor(e.gmId, e.doorId);
           api.fov.recompute();
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'locked-door':
-          api.doors.mutateItem(e.gmId, e.doorId, { locked: true });
+          api.doors.mutateDoor(e.gmId, e.doorId, { locked: true });
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         case 'unlocked-door':
-          api.doors.mutateItem(e.gmId, e.doorId, { locked: false });
+          api.doors.mutateDoor(e.gmId, e.doorId, { locked: false });
           api.doors.renderDoor(e.gmId, e.doorId);
           break;
         default:

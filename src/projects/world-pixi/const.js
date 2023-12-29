@@ -55,6 +55,9 @@ export const defaultNpcClassKey = 'vilani';
 export const defaultNpcInteractRadius = 70;
 export const defaultNpcSpeed = 0.8;
 
+// 🚧 import into spine-{meta,render} scripts
+export const npcRadius = 13;
+
 //#endregion
 
 

@@ -2,9 +2,12 @@ import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
-import { Rect, Vect } from '../geom';
+import { Poly, Rect, Vect } from '../geom';
+import { testNever } from "../service/generic";
+import { warn } from "../service/log";
+import { npcRadius, npcClassToSpineHeadSkin, spineAnimToSetup } from "./const";
+
 import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
-import { npcClassToSpineHeadSkin, spineAnimToSetup } from "./const";
 
 /**
  * @param {NPC.NPCDef} def
@@ -48,7 +51,6 @@ export default function createNpc(def, api) {
         total: 0,
       },
       staticBounds: new Rect,
-      staticPosition: new Vect,
       
       animName: 'idle',
       opacity: emptyTween,
@@ -77,7 +79,7 @@ export default function createNpc(def, api) {
     
     // @ts-ignore
     async animateOpacity(targetOpacity, durationMs) {
-      this.a.opacity.stop();
+      this.a.opacity.cancel();
       try {
         await (this.a.opacity = api.tween([this.s.body, this.s.head]).to([
           { alpha: targetOpacity },
@@ -91,7 +93,7 @@ export default function createNpc(def, api) {
 
     // @ts-ignore
     async animateRotate(targetRadians, durationMs, throwOnCancel) {
-      this.a.rotate.stop();
+      this.a.rotate.cancel();
     
       // Assume {source,target}Radians in [-π, π]
       const sourceRadians = this.getAngle();
@@ -115,8 +117,8 @@ export default function createNpc(def, api) {
 
       console.log(`cancel: cancelling ${this.def.key}`);
 
-      this.a.opacity.stop();
-      this.a.rotate.stop();
+      this.a.opacity.cancel();
+      this.a.rotate.cancel();
 
       if (this.a.animName === 'walk') {
         this.nextWalk = null;
@@ -135,104 +137,76 @@ export default function createNpc(def, api) {
     getAngle() {
       return this.s.body.rotation;
     },
+    getPosition() {
+      return Vect.from(this.s.body.position);
+    },
+    getRadius() {
+      return npcRadius;
+    },
+    obscureBySurfaces() {
+      if (!this.gmRoomId) {
+        return warn(`${this.key}: cannot obscure npc outside any room`);
+      }
+      const { gmId, roomId } = this.gmRoomId;
+      const gm = api.gmGraph.gms[gmId];
+      // 🚧 use better approx e.g. angled 4-gon
+      const npcBounds = this.a.staticBounds.clone().applyMatrix(gm.inverseMatrix);
+
+      const intersection = Poly.intersect(
+        (gm.roomSurfaceIds[roomId] ?? [])
+          .map(id => gm.groups.obstacles[id].poly)
+          .filter(x => x.rect.intersects(npcBounds)),
+        [Poly.fromRect(npcBounds)],
+      );
+      api.doors.obscureNpc(gmId, intersection);
+    },
+    // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
+    // 🚧 fix "final walk frame jerk" elsewhere
     // @ts-ignore
     startAnimation(animName) {
-    //   if (spriteSheet !== this.anim.spriteSheet) {
-    //     this.el.root.classList.remove(this.anim.spriteSheet);
-    //     this.el.root.classList.add(spriteSheet);
-    //     this.anim.spriteSheet = spriteSheet;
-    //   }
-    //   if (isAnimAttached(this.anim.translate, this.el.root)) {
-    //     this.anim.translate.cancel();
-    //     this.anim.rotate.cancel();
-    //     this.anim.sprites.cancel();
-    //   }
-    //   switch (this.anim.spriteSheet) {
-    //     case 'walk': {
-    //       const { anim } = this;
-    //       // this.el.root.getAnimations().forEach(x => x.cancel());
-    //       isAnimAttached(anim.rotate, this.el.body) && anim.rotate.commitStyles(); // else sometimes jerky on start/end walk
-    //       anim.rotate.cancel(); // else `npc do` orientation doesn't work
-    //       // isAnimAttached(anim.sprites, this.el.body) && anim.sprites.cancel();
-    
-    //       // Animate position and rotation
-    //       const { translateKeyframes, rotateKeyframes, opts } = this.getWalkAnimDef();
-    //       anim.translate = this.el.root.animate(translateKeyframes, opts);
-    //       anim.rotate = this.el.body.animate(rotateKeyframes, opts);
-    //       anim.durationMs = opts.duration;
-    //       anim.initAnimScaleFactor = this.getAnimScaleFactor();
-
-    //       // Animate spritesheet, assuming `walk` anim exists
-    //       const { animLookup } = npcsMeta[this.classKey].parsed;
-    //       const spriteMs = opts.duration === 0 ? 0 : this.getWalkCycleDuration(opts.duration);
-    //       const firstFootLeads = Math.random() < 0.5; // TODO spriteMs needs modifying?
-    //       anim.sprites = this.el.body.animate(
-    //           firstFootLeads ?
-    //             [
-    //               { offset: 0, backgroundPosition: '0px' },
-    //               { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * animLookup.walk.frameAabb.width}px` },
-    //             ] :
-    //             [// We assume an even number of frames
-    //               { offset: 0, backgroundPosition: `${-animLookup.walk.frameCount * 1/2 * animLookup.walk.frameAabb.width}px` },
-    //               { offset: 1, backgroundPosition: `${-animLookup.walk.frameCount * 3/2 * animLookup.walk.frameAabb.width}px` },
-    //             ] 
-    //         ,
-    //         {
-    //           easing: `steps(${animLookup.walk.frameCount})`,
-    //           duration: spriteMs, // 🚧 ~ npcWalkAnimDurationMs
-    //           iterations: Infinity,
-    //           delay: opts.delay,
-    //           playbackRate: opts.playbackRate,
-    //         },
-    //       );
-    //       break;
-    //     }
-    //     case 'idle':
-    //     case 'idle-breathe':
-    //     case 'lie':
-    //     case 'sit': {
-    //       this.clearWayMetas();
-    //       this.updateStaticBounds();
-    
-    //       if (this.anim.spriteSheet === 'sit') {
-    //         this.obscureBySurfaces(); // Ensure feet are below surfaces
-    //       } else {
-    //         this.el.root.style.clipPath = 'none';
-    //       }
-
-    //       // - Maybe fixes "this.anim.translate.addEventListener is not a function"
-    //       // - Maybe fixes "this.anim.rotate.cancel is not a function" on HMR
-    //       this.anim.translate = new Animation();
-    //       this.anim.rotate = new Animation();
+      this.a.animName = animName;
+      this.a.rotate.cancel();
+      
+      switch (animName) {
+        case 'walk': {
+          this.a.rotate.cancel(); // fix `npc do` orientation
           
-    //       // ℹ️ relax type of keys
-    //       // 🚧 npc classes should have same Object.keys(animLookup)
-    //       const animLookup = /** @type {Record<string, NPC.NpcAnimMeta>} */ (npcsMeta[this.classKey].parsed.animLookup);
+          // 🚧 setAnim
+          // 🚧 chained rotate tween
 
-    //       // Always play an animation so can detect if paused
-    //       this.anim.sprites = this.el.body.animate(
-    //         [
-    //           { offset: 0, backgroundPosition: '0px' },
-    //           // Works even if frameCount is 1 because easing is `steps(1)`
-    //           { offset: 1, backgroundPosition: `${-animLookup[this.anim.spriteSheet].frameCount * animLookup[this.anim.spriteSheet].frameAabb.width}px` },
-    //         ], {
-    //           easing: `steps(${animLookup[this.anim.spriteSheet].frameCount})`,
-    //           duration: animLookup[this.anim.spriteSheet].durationMs,
-    //           iterations: Infinity,
-    //         },
-    //       );
-    //       break;
-    //     }
-    //     default:
-    //       throw testNever(this.anim.spriteSheet, { suffix: 'create-npc.startAnimation' });
-    //   }
+          break;
+        }
+        case 'idle':
+        case 'idle-breathe':
+        case 'lie':
+        case 'sit': {
+          this.clearWayMetas();
+          this.updateStaticBounds();
+          if (animName === 'sit') {// Ensure feet are below surfaces
+            this.obscureBySurfaces();
+          }
+          this.a.rotate = emptyTween;
+  
+          // 🚧 setAnim
+          break;
+        }
+        default:
+          // @ts-ignore
+          throw testNever(animName, { suffix: 'create-npc.startAnimation' });
+      }
+    },
+    updateStaticBounds() {
+      const pos = this.getPosition();
+      const radius = this.getRadius();
+      this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
   };
 }
 
-/** @type {NPC.TweenWithPromise} */
+/** @type {NPC.TweenExt} */
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
+  cancel: () => {},
 });
 
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (

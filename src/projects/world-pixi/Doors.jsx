@@ -72,7 +72,7 @@ export default function Doors(props) {
     isOpen(gmId, doorId) {
       return this.lookup[gmId][doorId].open;
     },
-    mutateItem(gmId, doorId, partial) {
+    mutateDoor(gmId, doorId, partial) {
       return Object.assign(state.lookup[gmId][doorId], partial);
     },
     npcNearDoor(gmId, doorId, npcKey) {
@@ -82,6 +82,13 @@ export default function Doors(props) {
       const door = gms[gmId].doors[doorId];
       const convexPoly = door.poly.clone().applyMatrix(gms[gmId].matrix);
       return geom.circleIntersectsConvexPolygon(center, radius, convexPoly);
+    },
+    obscureNpc(gmId, polys) {
+      const gm = gms[gmId];
+      const gfx = state.gfx.clear().setTransform(-gm.pngRect.x * gmScale, -gm.pngRect.y * gmScale, gmScale, gmScale);
+      // 🚧 copy floor from api.geomorphs.tex
+      polys.forEach(poly => gfx.beginFill(0xff0000).drawPolygon(poly.outline));
+      api.renderInto(gfx, state.tex[gmId], false);
     },
     onRawDoorClick({ meta }) {
       /**
@@ -261,8 +268,9 @@ export default function Doors(props) {
  * @property {(gmId: number, doorId: number) => boolean} isOpen
  * @property {(e: PanZoom.PointerUpEvent) => void} onRawDoorClick
  * Alternative door open/close handler, enabled via `npc config { scriptDoors: false }`.
- * @property {(gmId: number, doorId: number, partial: Partial<DoorState>) => DoorState} mutateItem
+ * @property {(gmId: number, doorId: number, partial: Partial<DoorState>) => DoorState} mutateDoor
  * @property {(gmId: number, doorId: number, npcKey: string) => boolean} npcNearDoor
+ * @property {(gmId: number, polys: Geom.Poly[]) => void} obscureNpc
  * `touchMeta[gmId][doorId]` is stringified meta of respective door
  * @property {(gmId: number, doorId: number) => boolean} safeToCloseDoor
  * @property {(gmId: number, doorId: number, opts?: ToggleDoorOpts) => boolean} toggleDoor

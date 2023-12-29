@@ -296,13 +296,11 @@ declare namespace NPC {
     };
     /** Bounds when stationary. */
     staticBounds: Geom.Rect;
-    /** Last static position. */
-    staticPosition: Geom.Vect;
 
     animName: SpineAnimName;
 
-    opacity: TweenWithPromise;
-    rotate: TweenWithPromise;
+    opacity: TweenExt;
+    rotate: TweenExt;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
@@ -801,8 +799,10 @@ declare namespace NPC {
 
   //#endregion
 
-  type TweenWithPromise = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
-    promise: () => Promise<Record<string, any>>
+  type TweenExt = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
+    promise(): Promise<Record<string, any>>;
+    /** Invokes `tween.stopChainedTweens` */
+    cancel(): void;
   }
 
 }
