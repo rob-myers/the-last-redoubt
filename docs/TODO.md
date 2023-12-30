@@ -2,10 +2,10 @@
 
 ## In progress
 
-- 🚧 get api.debug.addNavPath working
+- ✅ get api.debug.addNavPath working
   - ✅ `world debug.addNavPath foo ${navPath} && world debug.render`
   - ✅ can see navPath
-  - 🚧 textures instead of intermediate canvas ctxt
+  - ✅ textures instead of intermediate canvas ctxt
 
 - 🚧 continue migrating NPCs
   - can look

@@ -1,6 +1,6 @@
 import React from "react";
 import { RenderTexture, Matrix, Texture } from "@pixi/core";
-import { Graphics } from "@pixi/graphics";
+import { Graphics, LINE_JOIN } from "@pixi/graphics";
 
 import { Poly, Rect } from "../geom";
 import { debugDoorOffset, defaultNpcInteractRadius, gmScale } from "../world/const";
@@ -39,7 +39,6 @@ export default function DebugWorld(props) {
 
     addNavPath(key, navPath) {
       state.removeNavPath(key);
-      
       const path = navPath.path;
       if (path.length === 0) {
         return;
@@ -62,7 +61,7 @@ export default function DebugWorld(props) {
       path.forEach(p => ctxt.lineTo(p.x, p.y));
       ctxt.stroke();
 
-      state.pathByKey[key] = { key, ctxt, worldRect, gmIds };
+      state.pathByKey[key] = { key, worldRect, gmIds, texture: Texture.from(ctxt.canvas) };
       gmIds.forEach(gmId => state.pathsByGmId[gmId].push(state.pathByKey[key]));
     },
     onClick(e) {
@@ -178,11 +177,8 @@ export default function DebugWorld(props) {
         }
 
         // Nav paths
-        // 🚧 use textures instead of canvas ctxt
-        state.pathsByGmId[gmId].forEach((meta) => {
-          const { ctxt: navPathCtxt, worldRect } = meta;
-          meta.texture ??= Texture.from(navPathCtxt.canvas);
-          gfx.beginTextureFill({ texture: meta.texture, matrix: new Matrix(1, 0, 0, 1, worldRect.x, worldRect.y) });
+        state.pathsByGmId[gmId].forEach(({ worldRect, texture }) => {
+          gfx.beginTextureFill({ texture, matrix: tempMatrix.set(1, 0, 0, 1, worldRect.x, worldRect.y) });
           gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
           gfx.endFill();
           // gfx.beginFill(0, 0).lineStyle({ width: 2, color: 0xff0000 });
@@ -279,9 +275,8 @@ export default function DebugWorld(props) {
 /**
  * @typedef DebugRenderPath
  * @property {string} key
- * @property {CanvasRenderingContext2D} ctxt
  * @property {Set<number>} gmIds
- * @property {Texture} [texture]
+ * @property {Texture} texture
  * @property {Geom.Rect} worldRect
  */
 
