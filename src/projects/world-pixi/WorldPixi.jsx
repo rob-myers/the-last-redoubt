@@ -114,7 +114,7 @@ export default function WorldPixi(props) {
         /** @param {Record<string, any>} [initValue] */
         promise: (initValue) => new Promise((resolve, reject) => {
           initValue && Object.assign(target, initValue);
-          tween.onComplete(resolve).onStop(reject).start();
+          tween.onComplete(resolve).onStop(() => reject('cancelled')).start();
         }),
       });
     },

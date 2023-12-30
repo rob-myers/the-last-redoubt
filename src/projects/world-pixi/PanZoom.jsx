@@ -1,6 +1,7 @@
 import React from "react";
 import { Subject } from "rxjs";
-import { Animate, Viewport as PixiViewport } from "pixi-viewport";
+import { Viewport as PixiViewport } from "pixi-viewport";
+import TWEEN from "@tweenjs/tween.js";
 
 import { Vect } from "../geom";
 import { longClickMs } from "../service/const";
@@ -28,8 +29,47 @@ export default function PanZoom(props) {
     viewport: /** @type {*} */ ({}),
     input: /** @type {*} */ ({}),
     transform: /** @type {*} */ ({}),
-    animate: /** @type {*} */ ({}),
+    tween: emptyTween,
 
+    async animationAction(type) {
+      // 🚧
+      // switch (type) {
+      //   case 'cancelPanZoom': {
+      //     state.syncStyles();
+      //     const anim = state.panzoomAnim;
+      //     // await Promise.allSettled([anim?.finished, anim?.cancel()]);
+      //     anim && isAnimAttached(anim, state.panzoomEl) && await new Promise(resolve => {
+      //       anim.addEventListener('cancel', resolve)
+      //       anim.cancel();
+      //     });
+      //     state.panzoomAnim === anim && (state.panzoomAnim = null);
+      //     break;
+      //   }
+      //   case 'cancelFollow': {
+      //     const anim = state.followAnim;
+      //     anim && isAnimAttached(anim, state.followEl) && await new Promise(resolve => {
+      //       anim.addEventListener('cancel', resolve)
+      //       anim.commitStyles();
+      //       anim.cancel();
+      //     });
+      //     state.followAnim === anim && (state.followAnim = null);
+      //     break;
+      //   }
+      //   case 'pause': // Avoid pausing finished animation
+      //     state.panzoomAnim?.playState === 'running' && state.panzoomAnim.pause();
+      //     state.followAnim?.playState === 'running' && state.followAnim.pause();
+      //     break;
+      //   case 'play':
+      //     state.panzoomAnim?.playState === 'paused' && state.panzoomAnim.play();
+      //     state.followAnim?.playState === 'paused' && state.followAnim.play();
+      //     break;
+      //   default:
+      //     throw testNever(type, { suffix: 'animationAction' });
+      // }
+    },
+    getDomBounds() {
+      return /** @type {HTMLDivElement} */ (props.api.canvas.parentElement).getBoundingClientRect();
+    },
     getWorld(e) {
       return state.transform.localTransform.applyInverse(e.global);
     },
@@ -40,8 +80,23 @@ export default function PanZoom(props) {
       const { touches, isMouseDown } = state.input;
       return touches.length === 0 && !isMouseDown && !state.viewport.zooming;
     },
+    async panZoomTo(opts) {
+      state.tween.stop();
+
+      const scale = opts.scale ?? state.viewport.scale.x;
+      const point = opts.point ?? state.viewport.position.clone();
+      const { width, height } = state.getDomBounds();
+
+      state.tween = props.api.tween(state.viewport).to({
+        scale: { x: scale, y: scale },
+        x: -point.x * scale + width/2,
+        y: -point.y * scale + height/2,
+      }, opts.ms ?? 0).easing(TWEEN.Easing.Quadratic.Out);
+      return state.tween.promise();
+    },
     pointerdown(e) {
-      !state.isFollowing() && state.animate.complete(); // cancel?
+      // !state.isFollowing() && state.animate.complete(); // cancel?
+      state.tween.stop();
       const origin = state.getWorld(e);
       state.start = {
         origin,
@@ -90,20 +145,20 @@ export default function PanZoom(props) {
         state.viewport = vp;
         state.input = vp.input;
         state.transform = vp.transform;
-        props.initScale && state.viewport.scale.set(props.initScale);
+        state.viewport.scale.set(props.initScale ?? 1);
       }
     },
   }));
 
   React.useEffect(() => {
     const { viewport: vp, onPanEnd, onZoomEnd, onZoom } = state;
-    vp.plugins.add('animate', state.animate = new Animate(vp));
+    // vp.plugins.add('animate', state.animate = new Animate(vp));
     vp.addEventListener('moved-end', onPanEnd);
     vp.addEventListener('zoomed-end', onZoomEnd);
     vp.addEventListener('zoomed', onZoom);
     props.onLoad(state);
     return () => {
-      vp.plugins.remove('animate');
+      // vp.plugins.remove('animate');
       state.viewport.removeEventListener('moved-end', onPanEnd);
       state.viewport.removeEventListener('zoomed-end', onZoomEnd);
       state.viewport.removeEventListener('zoomed', onZoom);
@@ -144,11 +199,14 @@ export default function PanZoom(props) {
  * @property {import("pixi-viewport").Viewport} viewport
  * @property {import("pixi-viewport").Viewport['input']} input
  * @property {import("pixi-viewport").Viewport['transform']} transform
- * @property {import("pixi-viewport").Animate} animate
+ * @property {NPC.TweenExt} tween For pan-zoom
  * 
+ * @property {(type: 'cancelPanZoom' | 'cancelFollow' | 'pause' | 'play') => Promise<void>} animationAction
+ * @property {() => DOMRect} getDomBounds
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => Geom.VectJson} getWorld
  * @property {() => boolean} isFollowing
  * @property {() => boolean} isIdle
+ * @property {(opts: PanZoomOpts) => Promise<any>} panZoomTo
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => void} pointerdown
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => void} pointermove
  * @property {(e: import('@pixi/events').FederatedPointerEvent) => void} pointerup
@@ -158,4 +216,17 @@ export default function PanZoom(props) {
  * @property {(vp: null | import("pixi-viewport").Viewport) => void} viewportRef
  */
 
+/**
+ * @typedef PanZoomOpts
+ * @property {number} ms
+ * @property {number} [scale]
+ * @property {Geom.VectJson} [point]
+ * @property {string} [easing]
+*/
+
 const tempVect = new Vect;
+
+/** @type {NPC.TweenExt} */
+const emptyTween = Object.assign(new TWEEN.Tween({}), {
+  promise: () => Promise.resolve({}),
+});

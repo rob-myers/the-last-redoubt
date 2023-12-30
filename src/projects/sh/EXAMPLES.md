@@ -130,17 +130,19 @@ npc rm-decor foo
 
 nav $( click 2 ) >navPath # then click twice
 world debug.addNavPath foo ${navPath} && world debug.render
-
-```
-
-🚧 testing from here
-
-```sh
-view '{ point:'$( click 1 )'}'
 ```
 
 ```sh
+view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'
+view 2 "$( click 1 )" 2
+```
+
+🚧 test from here
+
+```sh
+spawn rob $( click 1 )
 npc get rob | map 'x => x.setLookRadians(0)'
+npc rob | map 'x => x.setLookRadians(0)'
 ```
 
 ```sh
@@ -163,7 +165,7 @@ npc events |
 ```
 
 ```sh
-npc get rob >me
+npc rob >me
 me/animateOpacity'(0.5, 0)'
 ```
 

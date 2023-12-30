@@ -7,6 +7,14 @@
   - ✅ can see navPath
   - ✅ textures instead of intermediate canvas ctxt
 
+- 🚧 implement api.npcs.panZoomTo
+  - ✅ `world panZoom.panZoomTo '{ scale: 0.5, ms: 1000, point: { x:0, y: 0 }}' >/dev/null`
+  - ✅ `view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'`
+  - avoid tty crashes e.g. on print `Viewport` or `Tween`
+  - ctrl-c?
+
+- api.tween should be generic
+
 - 🚧 continue migrating NPCs
   - can look
   - try sharp rotate during walk i.e. via events instead of tween
@@ -56,7 +64,7 @@
 
 ---
 
-- 🚧 only use DOM for `<NPCs>`
+- ❌ only use DOM for `<NPCs>`
   i.e. multiple canvases elsewhere (per geomorph)
 
 - ✅ abstract gm canvases as `<GmsCanvas>`
@@ -72,15 +80,15 @@
   - hit test canvas detects decor
   - hit test canvas changes cursor
 
-- 🚧 absorb DebugWorld into Geomorphs
+- ❌ absorb DebugWorld into Geomorphs
   - ✅ Geomorphs state.imgs.un/lit -> state.offscreen.un/lit
   - ✅ initDrawIds draws into state.offscreen canvases
-  - 🚧 move debug.gmOutlines
+  - ❌ move debug.gmOutlines
   - move debug.room related
   - move navPaths ?
-- 🚧 garbage collect canvas contexts?
+- ❌ garbage collect canvas contexts?
   - maybe animations are persisting them?
-- could switch spritesheet load from png to webp
+- ✅ could switch spritesheet load from png to webp
 
 - hitTest -> Geomorphs
 

@@ -615,8 +615,7 @@ export default function NPCs(props) {
         throw Error(`expected format: { zoom?: number; point?: { x: number; y: number }; ms: number; easing?: string }`);
       }
       try {
-        // 🚧 use pixi viewport
-        // await api.panZoom.panZoomTo({ durationMs: e.ms, scale: e.zoom, worldPoint: e.point, easing: e.easing });
+        await api.panZoom.panZoomTo({ ms: e.ms, scale: e.zoom, point: e.point, easing: e.easing });
         return 'completed';
       } catch (e) {
         return 'cancelled';
