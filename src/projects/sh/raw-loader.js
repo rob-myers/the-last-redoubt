@@ -14,10 +14,14 @@
 //#region defs
 
 /**
+ * 🚧 can migrate using WORLD_KEY_ALT
  * @typedef RunArg
- * @property {import('./cmd.service').CmdService['processApi'] & { getCached(key: '__WORLD_KEY_VALUE__'): import('../world/World').State }} api
+ * @property {import('./cmd.service').CmdService['processApi'] & {
+ *   getCached(key: '__WORLD_KEY_VALUE__'): import('../world/World').State;
+ *   getCached(key: '__WORLD_KEY_ALT_VALUE__'): import('../world-pixi/WorldPixi').State;
+ * }} api
  * @property {string[]} args
- * @property {{ [key: string]: any; 'WORLD_KEY': '__WORLD_KEY_VALUE__'; }} home
+ * @property {{ [key: string]: any; WORLD_KEY: '__WORLD_KEY_VALUE__'; WORLD_KEY_ALT: '__WORLD_KEY_ALT_VALUE__' }} home
  * @property {*} [datum] A shortcut for declaring a variable
  */
 
@@ -450,6 +454,7 @@
     view: async function* ({ api, args, home }) {
       const [p1, p2, p3] = args.map(api.parseJsArg)
       const w = api.getCached(home.WORLD_KEY)
+      // const w = api.getCached(home.WORLD_KEY_ALT)
 
       w.npcs.connectSession(api.meta.sessionKey, { panzoomPid: api.meta.pid })
       api.addSuspend(() => { w.panZoom.animationAction("pause"); return true; })
