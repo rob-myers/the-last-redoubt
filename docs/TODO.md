@@ -2,22 +2,6 @@
 
 ## In progress
 
-- ✅ Fix xterm links toggling
-  - Can now toggle on/off without leaving hover first
-
-- 🚧 preparation for `World`-syncing i.e. multiple views
-  - ℹ️ hopefully can simply duplicate events between worlds
-  - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
-  - ✅ Doors: toggleLock, toggleDoor should not mutate item
-    - instead, useHandleEvents mutates in response to an event
-  - 🚧 Geomorphs: setRoomLit should only be triggered by event
-  - 🚧 Decor:
-  - 🚧 ...
-
-- ✅ FOV fades out/in using anime.js
-- ✅ avoid light walls e.g. in bridge symbol of 301
-- 🚧 too many web contexts when keep resetting
-
 - 🚧 start migrating NPCs
   - ✅ TestPreRenderNpc has enough features
   - ✅ start new create-npc.js
@@ -31,7 +15,17 @@
   - ❌ clean tween out of World?
   - ✅ compute `npc.a.distance` during `npc.updateTime`
   - ✅ migrate methods (first approximation)
+  - ✅ npc.a.paused prevent updateTime from running
   - 🚧 get spawn working
+
+- 🚧 preparation for `World`-syncing i.e. multiple views
+  - ℹ️ hopefully can simply duplicate events between worlds
+  - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
+  - ✅ Doors: toggleLock, toggleDoor should not mutate item
+    - instead, useHandleEvents mutates in response to an event
+  - 🚧 Geomorphs: setRoomLit should only be triggered by event
+  - 🚧 Decor:
+  - 🚧 ...
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -41,6 +35,10 @@
   { at: '👇', gmKey: 'g-101--multipurpose' },
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
+- too many web contexts when keep resetting
+- Fix xterm links toggling
+  - ✅ can now toggle on/off without leaving hover first
+  - permit mobile re-click at same point
 
 - save more space in spritesheet
   - needn't use `animBounds` for every frame of animation
@@ -54,7 +52,7 @@
 - eventually remove `projects/world`
 - clean table symbols a bit
 - useQueries in useGeomorphs
-- Spine: generate spritesheet at runtime
+- ❌ Spine: generate spritesheet at runtime
   - Maybe later: spritesheets first
   - ℹ️ https://github.com/EsotericSoftware/spine-runtimes/tree/4.1/spine-ts/spine-core
   - ℹ️ https://esotericsoftware.com/spine-runtimes-guide
@@ -763,6 +761,9 @@ nav --nearNpc foo rob | walk --open foo
   - ✅ can turn npc head
     - ✅ try move anchor to neck position
 
+
+- ✅ FOV fades out/in using anime.js
+- ✅ avoid light walls e.g. in bridge symbol of 301
 
 - ✅ spine: fix hip positions
   - ✅ fix left/right hip setup pose

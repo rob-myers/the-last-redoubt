@@ -571,10 +571,12 @@ export default function createNpc(def, api) {
         return;
       }
       console.log(`resume: resuming ${this.def.key}`);
-      this.forcePaused = false;
 
       this.a.opacity.resume();
       this.a.rotate.resume();
+      this.forcePaused = false;
+      this.a.paused = false;
+
       if (this.a.animName === 'walk') {
         this.nextWayTimeout();
       }
@@ -727,6 +729,9 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
+      if (this.a.paused === true) {
+        return;
+      }
       const deltaSecs = deltaRatio * (1 / 60);
       let frame = this.getFrame(), shouldUpdate = false;
 
