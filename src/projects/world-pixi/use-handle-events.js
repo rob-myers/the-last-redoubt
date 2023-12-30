@@ -56,7 +56,7 @@ export default function useHandleEvents(api, disabled) {
             npc.filterWayMetas((meta) => meta.key === 'npcs-collide');
             state.predictNpcNpcsCollision(npc);
             // recompute timeout now speed has changed
-            window.clearTimeout(npc.anim.wayTimeoutId);
+            window.clearTimeout(npc.a.wayTimeoutId);
             npc.nextWayTimeout();
             // close npcs should recompute respective collision
             for (const other of api.npcs.getCloseNpcs(npc.key)) {
@@ -195,10 +195,12 @@ export default function useHandleEvents(api, disabled) {
           await stopNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
-          npc.gmRoomId = npc.anim.gmRoomIds[e.meta.index] ?? npc.gmRoomId;
+          npc.gmRoomId = npc.a.gmRoomIds[e.meta.index] ?? npc.gmRoomId;
 
-          if ((e.meta.index + 1) === npc.anim.path.length) {
-            break; // npc at final vertex
+          if ((e.meta.index + 1) === npc.a.path.length) {
+            // npc at final vertex
+            npc.a.deferred.resolve();
+            break;
           }
           
           // npc is walking along a line segment
@@ -224,15 +226,14 @@ export default function useHandleEvents(api, disabled) {
           break;
         }
         case 'enter-room': {
-          if (npc.anim.doorStrategy !== 'none') {
-             // Currently, all other strategies slow near door
-             npc.setSpeedFactor(npc.anim.defaultSpeedFactor);
+          if (npc.a.doorStrategy !== 'none') {
+             npc.setWalkSpeed(npc.def.walkSpeed); // Speed back up
           }
 
           const { gmId, doorId, enteredRoomId, otherRoomId } = e.meta;
 
           // handle exit-room into doorway then turn around and enter-room
-          const firstGmRoomId = npc.anim.gmRoomIds[0];
+          const firstGmRoomId = npc.a.gmRoomIds[0];
           if (npc.gmRoomId && firstGmRoomId.gmId === npc.gmRoomId.gmId && firstGmRoomId.roomId === npc.gmRoomId.roomId) {
             break;
           }
@@ -308,14 +309,14 @@ export default function useHandleEvents(api, disabled) {
       }
       const { gmId, roomId } = npc.gmRoomId;
       
-      const { aux, path } = npc.anim;
+      const { aux, path } = npc.a;
       const currPosition = npc.getPosition();
       const currLength = aux.sofars[aux.index] + path[aux.index].distanceTo(currPosition);
 
       // const closeDecor = api.decor.byRoom[gmId]?.[roomId]?.colliders ?? [];
       const closeDecor = queryDecorGridLine(
         currPosition,
-        npc.anim.path[aux.index + 1],
+        npc.a.path[aux.index + 1],
         api.decor.byGrid,
       ).filter(d => d.meta.gmId === gmId && d.meta.roomId === roomId);
 
@@ -335,8 +336,8 @@ export default function useHandleEvents(api, disabled) {
         
         collisions.forEach((collision, collisionIndex) => {
           const length = currLength + collision.distA;
-          const insertIndex = npc.anim.wayMetas.findIndex(x => x.length >= length);
-          npc.anim.wayMetas.splice(insertIndex, 0, {
+          const insertIndex = npc.a.wayMetas.findIndex(x => x.length >= length);
+          npc.a.wayMetas.splice(insertIndex, 0, {
             key: 'decor-collide',
             index: aux.index,
             decor: decorToRef(decor),
@@ -348,7 +349,7 @@ export default function useHandleEvents(api, disabled) {
           });
         });
 
-        startInside && aux.index === 0 && npc.anim.wayMetas.unshift({
+        startInside && aux.index === 0 && npc.a.wayMetas.unshift({
           key: 'decor-collide',
           index: aux.index,
           decor: decorToRef(decor),
@@ -363,7 +364,7 @@ export default function useHandleEvents(api, disabled) {
       const collision = api.lib.predictNpcNpcCollision(npc, otherNpc);
 
       if (collision) {
-        const { aux, path, wayMetas } = npc.anim;
+        const { aux, path, wayMetas } = npc.a;
         console.warn(`${npc.key} will collide with ${otherNpc.key}`, collision);
 
         const length = aux.sofars[aux.index] + (
@@ -381,7 +382,7 @@ export default function useHandleEvents(api, disabled) {
         });
 
         if (insertIndex === 0) {
-          window.clearTimeout(npc.anim.wayTimeoutId);
+          window.clearTimeout(npc.a.wayTimeoutId);
           npc.nextWayTimeout();
         }
       }
@@ -407,15 +408,14 @@ export default function useHandleEvents(api, disabled) {
     },
 
     async preWalkThroughDoor(npc, gmId, nextDoorId) {
-      if (npc.anim.doorStrategy !== 'none') {
-        // Currently, all open strategies slow down near door
-        // 🚧 setTimeout avoids jerk?
-        setTimeout(() => npc.setSpeedFactor(npcSlowWalkSpeedFactor), 30);
+      if (npc.a.doorStrategy !== 'none') {
+        // setTimeout avoids jerk?
+        setTimeout(() => npc.setWalkSpeed(npcSlowWalkSpeedFactor * npc.def.walkSpeed), 30);
       }
       
       const { locked } = api.doors.lookup[gmId][nextDoorId];
 
-      switch (npc.anim.doorStrategy) {
+      switch (npc.a.doorStrategy) {
         case 'open': // Always try to walk through open locked doors
           if (!locked || npc.has.key[gmId][nextDoorId]) {
             api.doors.toggleDoor(gmId, nextDoorId, { open: true, npcKey: npc.key });

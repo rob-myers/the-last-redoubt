@@ -1,4 +1,4 @@
-/// @ts-nocheck
+//// @ts-nocheck
 import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
@@ -37,6 +37,9 @@ export default function createNpc(def, api) {
     anim: /** @type {*} */ ({}), // Fix types during migration
     a: {
       animName: 'idle',
+      paused: false, // 👈 new
+      walkSpeed: def.walkSpeed,
+
       shared: sharedAnimData,
 
       path: [],
@@ -56,13 +59,11 @@ export default function createNpc(def, api) {
       
       opacity: emptyTween,
       rotate: emptyTween,
+      deferred: { resolve: emptyFn, reject: emptyFn },
 
       durations: getAnimDurations(sharedAnimData, def.walkSpeed),
       normalizedTime: 0,
       distance: 0, // 👈 implement during sprite update
-      speedFactor: 1,
-      defaultSpeedFactor: 1,
-      paused: false, // 👈 new
 
       neckAngle: 0,
       initHeadWidth: spineMeta.head[headSkinName].packedHead.top.width,
@@ -78,10 +79,8 @@ export default function createNpc(def, api) {
     forcePaused: false,
     gmRoomId: null,
     has: { key: api.gmGraph.gms.map(_ => ({})) },
-    navOpts: {
-      centroidsFallback: true,
-      closedWeight: 10 * 1000, // avoid closed doors (?)
-    },
+    // avoid closed doors?
+    navOpts: { centroidsFallback: true, closedWeight: 10 * 1000 },
     navPath: null,
     nextWalk: null,
     unspawned: true,
@@ -126,6 +125,7 @@ export default function createNpc(def, api) {
 
       this.a.opacity.stop();
       this.a.rotate.stop();
+      this.a.deferred.reject('cancelled');
 
       if (this.a.animName === 'walk') {
         this.nextWalk = null;
@@ -278,17 +278,17 @@ export default function createNpc(def, api) {
     async followNavPath(navPath, doorStrategy) {
       const { path, navMetas: globalNavMetas, gmRoomIds } = navPath;
       // warn('START followNavPath')
-      // might jump i.e. path needn't start from npc position
+      // can jump: path needn't start from npc position
       this.navPath = navPath;
       this.a.path = path.map(Vect.from);
-      // from `nav` for decor collisions
+      // for decor collisions
       this.a.gmRoomIds = gmRoomIds;
       this.a.doorStrategy = doorStrategy ?? 'none';
-      this.a.speedFactor = this.a.defaultSpeedFactor;
+      // reset to default speed?
+      this.a.walkSpeed = this.def.walkSpeed;
 
       this.clearWayMetas();
       this.computeAnimAux();
-
       // Convert navMetas to wayMetas
       this.a.wayMetas = globalNavMetas.map((navMeta) => ({
         ...navMeta,
@@ -306,17 +306,19 @@ export default function createNpc(def, api) {
       this.nextWalk = null;
       this.nextWayTimeout();
 
-      // ℹ️ detecting walk finish via rotate tween...
       try {
         console.log(`followNavPath: ${this.key} started walk`);
-        await this.a.rotate.promise();
+        await new Promise((resolve, reject) => {
+          this.a.deferred.resolve = resolve;
+          this.a.deferred.reject = reject;
+        });
         console.log(`followNavPath: ${this.key} finished walk`);
         this.wayTimeout(); // immediate else startAnimation('idle') will clear
       } catch (e) {
         console.log(`followNavPath: ${this.key} cancelled walk`);
         throw Error('cancelled');
-      } finally {
-        this.a.speedFactor = this.a.defaultSpeedFactor; // Reset speed to default
+      } finally {// Reset speed to default?
+        this.a.walkSpeed = this.def.walkSpeed;
       }
     },
     getAnimScaleFactor() {
@@ -359,7 +361,7 @@ export default function createNpc(def, api) {
       return npcRadius;
     },
     getSpeed() {
-      return this.def.walkSpeed * this.a.speedFactor;
+      return this.a.walkSpeed;
     },
     getTarget() {
       if (this.isWalking()) {
@@ -627,9 +629,9 @@ export default function createNpc(def, api) {
           this.a.rotate.stop(); // fix `npc do` orientation
           this.setupAnim(animName);
 
-          // 🚧 chained tweens
-          // - e.g. using aux.sofars[i] / aux.total
-          // - tween will be remade if speed changes
+          // 🚧 chained rotation tweens
+          // - can use `aux.sofars[i] / aux.total`
+          // - tween remade if speed changes
           const totalMs = this.a.aux.total * this.getAnimScaleFactor();
           this.a.rotate = api.tween(this.s.body).to({}, totalMs).start();
           
@@ -667,7 +669,24 @@ export default function createNpc(def, api) {
       this.doMeta = meta.do ? meta : null;
     },
     setSpeedFactor(speedFactor, temporary = true) {
-      // 🚧
+      // Fix types during migration
+    },
+    setWalkSpeed(walkSpeed, temporary = true) {
+      // By default, speed changes whilst walking are temporary
+      if (!(this.a.animName === 'walk' && temporary)) {
+        this.def.walkSpeed = walkSpeed;
+      }
+      if (this.a.walkSpeed === walkSpeed) {
+        return; // Avoid infinite loop?
+      }
+      if (this.a.animName === 'walk') {
+        this.a.durations = getAnimDurations(this.a.shared, walkSpeed);
+        // 🚧 chained rotate tween
+        const totalMs = (this.a.aux.total - this.a.distance) * this.getAnimScaleFactor();
+        this.a.rotate.stop().to({}, totalMs).start();
+      }
+      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.a.walkSpeed, speed: walkSpeed });
+      this.a.walkSpeed = walkSpeed;
     },
     updateRoomWalkBounds(srcIndex) {
       // Fix types during migration
@@ -708,6 +727,15 @@ export default function createNpc(def, api) {
       const pos = this.getPosition();
       const radius = this.getRadius();
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
+    },
+    updateTime() {
+      // 🚧
+    },
+    updateWalkSegBounds(index) {
+      const { aux, path } = this.a;
+      aux.index = index;
+      aux.segBounds.copy(Rect.fromPoints(path[index], path[index + 1]));
+      aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
     async walk() {
       // 🚧
@@ -751,6 +779,8 @@ export default function createNpc(def, api) {
 const emptyTween = Object.assign(new TWEEN.Tween({}), {
   promise: () => Promise.resolve({}),
 });
+
+const emptyFn = () => {};
 
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
   {}

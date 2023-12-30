@@ -874,8 +874,11 @@ export default function createNpc(
       if (this.anim.speedFactor === speedFactor) {
         return; // Else infinite loop?
       }
-      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeedFactor: this.anim.speedFactor, speedFactor });
+      api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.anim.speedFactor * this.def.walkSpeed, speed: speedFactor * this.def.walkSpeed });
       this.anim.speedFactor = speedFactor;
+    },
+    setWalkSpeed() {
+      // Fix types during migration
     },
     updateRoomWalkBounds(srcIndex) {
       // We start from vertex 0 or an `exit-room`, and look for next `exit-room`
@@ -891,6 +894,9 @@ export default function createNpc(
       const radius = this.getRadius();
       this.anim.staticBounds.set(x - radius, y - radius, 2 * radius, 2 * radius);
       this.anim.staticPosition.set(x, y);
+    },
+    updateTime() {
+      // Fix types during migration
     },
     updateWalkSegBounds(index) {
       const { aux, path } = this.anim;

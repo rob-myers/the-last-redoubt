@@ -1,5 +1,4 @@
 declare namespace NPC {
-  
 
   //#region individual npc
 
@@ -134,7 +133,7 @@ declare namespace NPC {
     getPrevDoorId(): number | undefined;
     getRadius(): number;
     /**
-     * World units per second i.e. `this.def.speed * this.speedFactor`.
+     * Walking speed in world units per second.
      */
     getSpeed(): number;
     /**
@@ -188,6 +187,7 @@ declare namespace NPC {
     setupAnim(animName: SpineAnimName): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
     setSpeedFactor(speedFactor: number): void;
+    setWalkSpeed(walkSpeed: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     /**
@@ -198,6 +198,7 @@ declare namespace NPC {
     updateSprites(): void;
     updateStaticBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
+    updateTime(): void;
     updateWalkSegBounds(index: number): void;
     walk(navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     wayTimeout(): void;
@@ -276,9 +277,11 @@ declare namespace NPC {
   // 🚧 new
   interface AnimData {
     animName: SpineAnimName;
+    paused: boolean;
+    /** Initially `npc.def.walkSpeed` */
+    walkSpeed: number;
+
     shared: SharedAnimData;
-    /** Depends on head skin */
-    initHeadWidth: number;
 
     /** Path for walking along */
     path: Geom.Vect[];
@@ -307,25 +310,24 @@ declare namespace NPC {
 
     opacity: TweenExt;
     rotate: TweenExt;
+    deferred: { resolve(value?: any): void; reject(reason: any): void };
 
-    /** The duration of each frame in ms */
+    /** The duration of each frame in ms. Depends on walk speed. */
     durations: number[];
     /**
      * SpriteSheet-normalized time.
      * - starts from `0` when walk begins
      * - non-negative integers correspond to frames
-     * - time between increments follows from `durations`
+     * - actual time between increments follows from `durations`
      */
     normalizedTime: number;
     /** Total distance travelled since animation began (world units). */
     distance: number;
 
-    paused: boolean;
-
     /** Degrees */
     neckAngle: number;
-    speedFactor: number;
-    defaultSpeedFactor: number;
+    /** Depends on head skin */
+    initHeadWidth: number;
 
     doorStrategy: WalkDoorStrategy;
     /** Only set when it changes, starting from `0` */
@@ -557,7 +559,7 @@ declare namespace NPC {
         extends: boolean;
       }
     | { key: 'stopped-walking'; npcKey: string; }
-    | { key: 'changed-speed'; npcKey: string; prevSpeedFactor: number; speedFactor: number; }
+    | { key: 'changed-speed'; npcKey: string; prevSpeed: number; speed: number; }
     | { key: 'resumed-track'; npcKey: string; }
     | NPCsWayEvent
   );
