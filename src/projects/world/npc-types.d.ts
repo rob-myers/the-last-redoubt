@@ -323,6 +323,7 @@ declare namespace NPC {
 
     /** Degrees */
     neckAngle: number;
+    headSkinName: SpineHeadSkinName;
     /** Depends on head skin */
     initHeadWidth: number;
 

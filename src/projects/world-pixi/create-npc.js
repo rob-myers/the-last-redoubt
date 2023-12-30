@@ -19,7 +19,6 @@ import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
 export default function createNpc(def, api) {
   const { baseTexture } = api.npcs.tex;
   const sharedAnimData = getSharedAnimData('idle');
-  const headSkinName = npcClassToSpineHeadSkin[def.classKey];
 
   return {
     key: def.key,
@@ -65,7 +64,8 @@ export default function createNpc(def, api) {
       distance: 0, // 👈 implement during sprite update
 
       neckAngle: 0,
-      initHeadWidth: spineMeta.head[headSkinName].packedHead.top.width,
+      headSkinName: npcClassToSpineHeadSkin[def.classKey],
+      initHeadWidth: 0,
       
       doorStrategy: 'none',
       gmRoomIds: [],
@@ -136,8 +136,9 @@ export default function createNpc(def, api) {
       return (this.a.animName === 'idle' ||
         this.a.animName === 'idle-breathe') && !this.doMeta;
     },
-    changeClass(npcClassKey) {// we don't trigger render
+    changeClass(npcClassKey) {
       this.classKey = npcClassKey;
+      this.a.headSkinName = npcClassToSpineHeadSkin[npcClassKey];
     },
     clearWayMetas() {
       this.a.wayMetas.length = 0;
@@ -589,7 +590,7 @@ export default function createNpc(def, api) {
       a.animName = animName;
       a.normalizedTime = 0;
       a.distance = 0;
-
+      
       const { headOrientKey } = spineAnimToSetup[animName]
       const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
       
@@ -598,7 +599,7 @@ export default function createNpc(def, api) {
 
       // Changing frame width/height later deforms image
       const bodyRect = a.shared.bodyRects[a.normalizedTime];
-      const headRect = spineMeta.head[headSkinName].packedHead[headOrientKey];
+      const headRect = spineMeta.head[a.headSkinName].packedHead[headOrientKey];
       s.body.texture.frame = new Rectangle(bodyRect.x, bodyRect.y, bodyRect.width, bodyRect.height);
       s.head.texture.frame = new Rectangle(headRect.x, headRect.y, headRect.width, headRect.height);
 

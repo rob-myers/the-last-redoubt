@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 start migrating NPCs
+- ✅ start migrating NPCs
   - ✅ TestPreRenderNpc has enough features
   - ✅ start new create-npc.js
     - extend `NPC.NPC` type (remove old CSS stuff later)
@@ -16,7 +16,12 @@
   - ✅ compute `npc.a.distance` during `npc.updateTime`
   - ✅ migrate methods (first approximation)
   - ✅ npc.a.paused prevent updateTime from running
-  - 🚧 get spawn working
+  - ✅ get spawn working
+    - ✅ appears ✅ fix initial position ✅ respawn changes skin
+
+- 🚧 continue migrating NPCs
+  - can look
+  - try sharp rotate during walk i.e. via events instead of tween
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
