@@ -30,7 +30,8 @@
       - latter happens when process not running yet
   - ❌ clean tween out of World?
   - ✅ compute `npc.a.distance` during `npc.updateTime`
-  - 🚧 migrate methods (first approximation)
+  - ✅ migrate methods (first approximation)
+  - 🚧 get spawn working
 
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`

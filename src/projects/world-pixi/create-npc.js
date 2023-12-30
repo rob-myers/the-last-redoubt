@@ -1,4 +1,3 @@
-//// @ts-nocheck
 import { Texture, Rectangle } from "@pixi/core";
 import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
@@ -85,8 +84,6 @@ export default function createNpc(def, api) {
     nextWalk: null,
     unspawned: true,
 
-    // 🚧 methods
-    
     async animateOpacity(targetOpacity, durationMs) {
       this.a.opacity.stop();
       try {
@@ -753,8 +750,48 @@ export default function createNpc(def, api) {
       aux.segBounds.copy(Rect.fromPoints(path[index], path[index + 1]));
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
-    async walk() {
-      // 🚧
+    async walk(navPath, opts = {}) {
+      if (!api.lib.verifyGlobalNavPath(navPath)) {
+        this.nextWalk = null;
+        throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);
+      }
+      if (this.forcePaused) {
+        this.nextWalk = null;
+        throw Error('paused: cannot walk');
+      }
+      if (this.isPaused()) {
+        // isWalking cancel caused jerky extended walk?
+        await this.cancel();
+      }
+      if (navPath.path.length === 0) {
+        this.nextWalk = null;
+        return;
+      }
+
+      try {
+        if (this.isPointBlocked(
+          navPath.path[0],
+          this.getPosition().equalsAlmost(navPath.path[0])
+        )) {// start of navPath blocked
+          throw new Error('cancelled');
+        }
+
+        // Walk along navpath, possibly throwing 'cancelled' on collide
+        await this.followNavPath(navPath, opts.doorStrategy);
+
+        if (this.nextWalk) {
+          await this.walk(this.nextWalk.navPath, opts);
+        }
+
+        this.startAnimation('idle');
+      } catch (err) {
+        if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
+          return warn(`walk cancelled: ${this.key}`);
+        }
+        throw err;
+      } finally {
+        api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
+      }
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {
