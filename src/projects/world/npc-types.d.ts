@@ -198,7 +198,7 @@ declare namespace NPC {
     updateSprites(): void;
     updateStaticBounds(): void;
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
-    updateTime(): void;
+    updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
     walk(navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     wayTimeout(): void;

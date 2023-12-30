@@ -79,9 +79,11 @@ export default function WorldPixi(props) {
     clearInto(tex) {
       state.renderer.render(emptyGraphics, { renderTexture: tex, clear: true });
     },
-    onTick() {
+    onTick(deltaRatio) {
       state.tweenGroup.update();
-      // 🚧 update npcs too
+      for (const npcKey in state.npcs.npc) {
+        state.npcs.npc[npcKey].updateTime(deltaRatio);
+      }
     },
     renderInto(displayObj, tex, clear = true) {
       state.renderer.render(displayObj, { renderTexture: tex, clear });
@@ -240,12 +242,12 @@ export default function WorldPixi(props) {
  * @property {StateUtil & import("../service/npc").NpcServiceType} lib
  * @property {import("./NPCs").State} npcs
  * @property {import('./PanZoom').State} panZoom
-*
-* @property {() => boolean} isReady
-* @property {(tex: import("pixi.js").RenderTexture) => void} clearInto
-* @property {() => void} onTick
-* @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
-* @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
+ *
+ * @property {() => boolean} isReady
+ * @property {(tex: import("pixi.js").RenderTexture) => void} clearInto
+ * @property {(deltaRatio: number) => void} onTick
+ * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, clear?: boolean) => void} renderInto
+ * @property {(displayObj: import("pixi.js").DisplayObject, tex: import("pixi.js").RenderTexture, rect: Geom.RectJson) => void} renderRect
  * @property {(cssCursorValue: string) => void} setCursor
  * @property {(enabled: boolean) => void} setTicker
  * @property {(visibleGms: boolean[]) => void} setVisibleGms

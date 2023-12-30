@@ -29,9 +29,7 @@
   - ✅ `npc events` outputs both `disabled` and `enabled`
       - latter happens when process not running yet
   - ❌ clean tween out of World?
-  - 🚧 verify functions work when npc speed changes
-    - compute `npc.a.distance` during `npc.updateTime`
-    - can "remake" chained tweens by stop(), remake, start()
+  - ✅ compute `npc.a.distance` during `npc.updateTime`
   - 🚧 migrate methods (first approximation)
 
 - debug arrows have larger hit area

@@ -588,6 +588,7 @@ export default function createNpc(def, api) {
       const { a, s } = this;
       a.animName = animName;
       a.normalizedTime = 0;
+      a.distance = 0;
 
       const { headOrientKey } = spineAnimToSetup[animName]
       const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
@@ -728,8 +729,23 @@ export default function createNpc(def, api) {
       const radius = this.getRadius();
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
-    updateTime() {
-      // 🚧
+    updateTime(deltaRatio) {
+      const deltaSecs = deltaRatio * (1 / 60);
+      let frame = this.getFrame(), shouldUpdate = false;
+
+      // Could skip multiple frames in single update via low fps
+      // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
+      let lag = ((this.a.normalizedTime % 1) * this.a.durations[frame]) + deltaSecs;
+      while (lag >= this.a.durations[frame]) {
+        lag -= this.a.durations[frame];
+        this.a.normalizedTime++;
+        this.a.distance += this.a.shared.rootDeltas[frame];
+        frame = this.getFrame();
+        shouldUpdate = true;
+      }
+      this.a.normalizedTime = Math.floor(this.a.normalizedTime) + lag / this.a.durations[frame];
+
+      shouldUpdate && this.updateSprites();
     },
     updateWalkSegBounds(index) {
       const { aux, path } = this.a;
