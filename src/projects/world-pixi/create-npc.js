@@ -402,6 +402,7 @@ export default function createNpc(def, api) {
       return api.npcs.inFrustum(this.getPosition(), point, this.getAngle());
     },
     initialize() {
+      this.s.body.position.copyFrom(this.def.position);
       this.a.staticBounds = new Rect(this.def.position.x - npcRadius, this.def.position.y - npcRadius, 2 * npcRadius, 2 * npcRadius);
       // Include doors so doorways have some gmRoomId too
       this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);

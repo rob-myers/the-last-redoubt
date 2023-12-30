@@ -4,14 +4,14 @@ import { filter, tap } from "rxjs/operators";
 
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
-import { RenderTexture, Ticker } from "@pixi/core";
+import { RenderTexture } from "@pixi/core";
 import { ParticleContainer } from "@pixi/react";
 
 import { Vect } from "../geom";
 import { dataChunk, proxyKey } from "../sh/io";
 import { assertDefined, keys, mapValues, generateSelector, testNever, removeFirst } from "../service/generic";
 import { geom } from "../service/geom";
-import { hasGmRoomId } from "../service/geomorph";
+import { decorToRef, hasGmRoomId } from "../service/geomorph";
 import { detectReactDevToolQuery } from "../service/dom";
 import { defaultNpcSpeed, defaultNpcClassKey, defaultNpcInteractRadius } from "./const";
 
@@ -19,8 +19,8 @@ import { useQueryOnce } from "../hooks/use-query-utils";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
-import createNpc from "../world/create-npc"; // 🚧 create new
-import spineMeta from '../../../static/assets/npc/top_down_man_base/spine-meta.json';
+import createNpc from "./create-npc";
+import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
 
 /** @param {Props} props */
 export default function NPCs(props) {
@@ -645,11 +645,12 @@ export default function NPCs(props) {
       }
     },
     removeNpc(npcKey) {
-      state.getNpc(npcKey); // Throw if n'exist pas
+      const npc = state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
       if (state.playerKey === npcKey) {
         state.npcAct({ action: 'set-player', npcKey: undefined });
       }
+      state.pc.removeChild(...Object.values(npc.s));
       state.events.next({ key: 'removed-npc', npcKey });
       update();
     },
@@ -693,10 +694,9 @@ export default function NPCs(props) {
         throw new Error('cancelled');
       }
 
-      if (state.npc[e.npcKey]) {// Respawn
-        const spawned = state.npc[e.npcKey];
+      let spawned = state.npc[e.npcKey];
+      if (spawned) {// Respawn
         await spawned.cancel(true);
-        spawned.unspawned = true; // Crucial for <NPC>
         spawned.epochMs = Date.now();
         spawned.def = {
           key: e.npcKey,
@@ -714,21 +714,46 @@ export default function NPCs(props) {
         spawned.doMeta = e.point.meta?.do ? e.point.meta : null;
       } else {// Create
         const npcClassKey = e.npcClassKey || defaultNpcClassKey;
-        state.npc[e.npcKey] = createNpc({
+        state.npc[e.npcKey] = spawned = createNpc({
           key: e.npcKey,
           angle: e.angle ?? 0,
           classKey: npcClassKey,
           position: e.point,
           walkSpeed: defaultNpcSpeed,
-          //@ts-ignore 🚧 need to migrate create-npc
-        }, { api });
-        state.npc[e.npcKey].doMeta = e.point.meta?.do ? e.point.meta : null;
+        }, api);
+        spawned.doMeta = e.point.meta?.do ? e.point.meta : null;
+        state.pc.addChild(...Object.values(spawned.s));
       }
 
-      await Promise.allSettled([
-        firstValueFrom(state.events.pipe(filter(x => x.key === 'spawned-npc' && x.npcKey === e.npcKey))),
-        update(),
-      ]);
+      spawned.gmRoomId && api.decor.getDecorAtPoint(
+        spawned.getPosition(), spawned.gmRoomId.gmId, spawned.gmRoomId.roomId
+      ).forEach(decor =>
+        api.npcs.events.next({ key: 'way-point', npcKey: spawned.key, meta: {
+          key: 'decor-collide',
+          type: 'exit',
+          decor: decorToRef(decor),
+          gmId: /** @type {Geomorph.GmRoomId} */ (spawned.gmRoomId).gmId,
+          index: -1, // 🚧 clarify index -1
+          length: 0,
+        }})
+      );
+
+      spawned.initialize();
+      spawned.startAnimation('idle');
+      api.npcs.events.next({ key: 'spawned-npc', npcKey: spawned.key });
+
+      spawned.gmRoomId && api.decor.getDecorAtPoint(
+        spawned.getPosition(), spawned.gmRoomId.gmId, spawned.gmRoomId.roomId,
+      ).forEach(decor =>
+        api.npcs.events.next({ key: 'way-point', npcKey: spawned.key, meta: {
+          key: 'decor-collide',
+          type: 'enter',
+          decor: decorToRef(decor),
+          gmId: /** @type {Geomorph.GmRoomId} */ (spawned.gmRoomId).gmId,
+          index: -1, // 🚧 clarify index -1
+          length: 0,
+        }})
+      );
     },
     trackNpc(npcKey, processApi) {
     // 🚧 use pixi viewport, possibly complete rewrite?

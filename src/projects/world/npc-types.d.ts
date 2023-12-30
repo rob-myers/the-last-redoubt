@@ -32,10 +32,7 @@ declare namespace NPC {
     classKey: NPC.NpcClassKey;
     /** Epoch ms when spawned */
     epochMs: number;
-    /**
-     * Definition of NPC. This is mutated on spawn,
-     * so methods should refer to `this.def`
-     */
+    /** Definition of NPC */
     def: NPCDef;
 
     el: {// 🚧 old
