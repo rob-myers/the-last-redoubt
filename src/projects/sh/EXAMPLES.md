@@ -111,26 +111,29 @@ history | filter 'x => /nav/.test(x)'
 ## NPC
 
 ```sh
-npc decor | split
+world decor.decor.door-g0r0-0
+npc decor | map 0
 
-npc decor '{ key: "foo", type: "circle", center: {"x":207.83,"y":384.43}, radius: 30 }'
+npc cfg '{ colliders: true }'
+
+npc decor '{ key: "foo", type: "circle", center: {"x":207,"y":384}, radius: 30 }'
 npc decor foo
 echo foo | npc decor
+npc decor '{ key: "bar", type: "rect", "x":207,"y":384,"width":100,"height":50 }'
+npc rm-decor foo bar
 
-npc decor '{ key: "bar", type: "rect", "x":207.83,"y":384.43,"width":100,"height":50 }'
-
-npc decor '{ key: "bar", type: "point", "x":148.95,"y":393.96, tags:["decor"] }'
-npc decor '{ key: "bar", type: "point", ...'$( click 1 )', tags:["decor"] }'
-
-npc rm-decor bar
-npc rm-decor 'foo bar'
+npc decor '{ key: "foo", type: "point", ...'$( click 1 )', tags:["decor"] }'
+npc rm-decor foo
 
 npc decor '{ key: "foo", type: "circle", center: '$( click 1 )', radius: 60 }'
+npc rm-decor foo
 
-# given navPath created via `nav`
-navPath | map 'x => x.name = "my-navpath"'
-npc decor $navPath
+nav $( click 2 ) >navPath # then click twice
+world debug.addNavPath foo ${navPath} && world debug.render
+
 ```
+
+🚧 testing from here
 
 ```sh
 view '{ point:'$( click 1 )'}'

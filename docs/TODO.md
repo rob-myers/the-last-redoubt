@@ -2,22 +2,10 @@
 
 ## In progress
 
-- ✅ start migrating NPCs
-  - ✅ TestPreRenderNpc has enough features
-  - ✅ start new create-npc.js
-    - extend `NPC.NPC` type (remove old CSS stuff later)
-  - ✅ share npc.anim object between npcs
-  - ❌ test if can reject anime js promise via `anime.remove`
-  - ✅ setup tween.js for promises
-  - ✅ migrate anime.js to tween.js
-  - ✅ `npc events` outputs both `disabled` and `enabled`
-      - latter happens when process not running yet
-  - ❌ clean tween out of World?
-  - ✅ compute `npc.a.distance` during `npc.updateTime`
-  - ✅ migrate methods (first approximation)
-  - ✅ npc.a.paused prevent updateTime from running
-  - ✅ get spawn working
-    - ✅ appears ✅ fix initial position ✅ respawn changes skin
+- 🚧 get api.debug.addNavPath working
+  - ✅ `world debug.addNavPath foo ${navPath} && world debug.render`
+  - ✅ can see navPath
+  - 🚧 textures instead of intermediate canvas ctxt
 
 - 🚧 continue migrating NPCs
   - can look
@@ -32,6 +20,9 @@
   - 🚧 Decor:
   - 🚧 ...
 
+- `npc cfg fov`
+- sh: count like `wc -l`?
+  - can `foo | sponge | map length`
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
 - gms prop uses geomorph layout format e.g.
@@ -684,6 +675,23 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ start migrating NPCs
+  - ✅ TestPreRenderNpc has enough features
+  - ✅ start new create-npc.js
+    - extend `NPC.NPC` type (remove old CSS stuff later)
+  - ✅ share npc.anim object between npcs
+  - ❌ test if can reject anime js promise via `anime.remove`
+  - ✅ setup tween.js for promises
+  - ✅ migrate anime.js to tween.js
+  - ✅ `npc events` outputs both `disabled` and `enabled`
+      - latter happens when process not running yet
+  - ❌ clean tween out of World?
+  - ✅ compute `npc.a.distance` during `npc.updateTime`
+  - ✅ migrate methods (first approximation)
+  - ✅ npc.a.paused prevent updateTime from running
+  - ✅ get spawn working
+    - ✅ appears ✅ fix initial position ✅ respawn changes skin
 
 - ✅ `<TestPreRenderNpc>` uses ParticleContainer
   - ✅ has ParticleContainer with a sprite

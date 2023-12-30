@@ -330,7 +330,7 @@ export default function FOV(props) {
       }}
       gms={gms}
       tex={state.tex}
-      // visible={gms.map(_ => false)}
+      // visible={gms.map(_ => false)} // 🚧 `npc cfg fov`
     />
   );
 }

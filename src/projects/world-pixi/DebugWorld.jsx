@@ -53,6 +53,7 @@ export default function DebugWorld(props) {
       ctxt.canvas.width = worldRect.width;
       ctxt.canvas.height = worldRect.height;
       ctxt.strokeStyle = '#ffffff33';
+      // ctxt.strokeStyle = '#ff0000';
       ctxt.lineWidth = 1;
       ctxt.lineJoin = 'bevel';
       ctxt.setLineDash([4, 4]);
@@ -82,6 +83,7 @@ export default function DebugWorld(props) {
       state.pathByKey[key]?.gmIds.forEach(gmId =>
         state.pathsByGmId[gmId] = state.pathsByGmId[gmId].filter(x => x.key !== key)
       );
+      state.pathByKey[key]?.texture?.destroy();
       delete state.pathByKey[key];
     },
     render() {
@@ -176,13 +178,16 @@ export default function DebugWorld(props) {
         }
 
         // Nav paths
-        state.pathsByGmId[gmId].forEach(({ ctxt: navPathCtxt, worldRect }) => {
-          // 🚧 textures instead of canvas ctxt
-          const texture = Texture.from(navPathCtxt.canvas);
-          gfx.beginTextureFill({ texture });
+        // 🚧 use textures instead of canvas ctxt
+        state.pathsByGmId[gmId].forEach((meta) => {
+          const { ctxt: navPathCtxt, worldRect } = meta;
+          meta.texture ??= Texture.from(navPathCtxt.canvas);
+          gfx.beginTextureFill({ texture: meta.texture, matrix: new Matrix(1, 0, 0, 1, worldRect.x, worldRect.y) });
           gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
           gfx.endFill();
-          texture.destroy();
+          // gfx.beginFill(0, 0).lineStyle({ width: 2, color: 0xff0000 });
+          // gfx.drawRect(worldRect.x, worldRect.y, worldRect.width, worldRect.height);
+          // gfx.endFill();
         });
 
         api.renderInto(gfx, state.tex[gmId], false);
@@ -274,9 +279,10 @@ export default function DebugWorld(props) {
 /**
  * @typedef DebugRenderPath
  * @property {string} key
- * @property {Geom.Rect} worldRect
  * @property {CanvasRenderingContext2D} ctxt
  * @property {Set<number>} gmIds
+ * @property {Texture} [texture]
+ * @property {Geom.Rect} worldRect
  */
 
 /**
