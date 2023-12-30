@@ -270,8 +270,7 @@
 
       if (!w.lib.isNpcActionKey(args[0])) {
         if (args[0] in w.npcs.npc) {
-          // `npc {npcKey} ...` --> `npc get {npcKey} ...`
-          args.unshift("get");
+          args.unshift("get"); // npc {npcKey} [*] -> npc get {npcKey} [*]
         } else {
           throw new Error(`${args[0]}: invalid action`);
         }

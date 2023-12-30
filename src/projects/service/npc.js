@@ -83,7 +83,7 @@ export const npcService = {
         case "remove-decor":
         case "rm-decor":
           // npc {remove-decor,rm-decor} {decorKey}
-          return { action: 'remove-decor', decorKey: opts };
+          return { action: 'remove-decor', decorKey: opts, items: extras };
         case "rm":
         case "remove":
           // npc {rm,remove} {npcKey}
