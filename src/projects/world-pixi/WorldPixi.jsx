@@ -111,9 +111,11 @@ export default function WorldPixi(props) {
     tween(target) {
       const tween = new TWEEN.Tween(target, state.tweenGroup);
       return Object.assign(tween, {
-        promise: () => new Promise((resolve, reject) =>
-          tween.onComplete(resolve).onStop(reject).start()
-        ),
+        /** @param {Record<string, any>} [initValue] */
+        promise: (initValue) => new Promise((resolve, reject) => {
+          initValue && Object.assign(target, initValue);
+          tween.onComplete(resolve).onStop(reject).start();
+        }),
       });
     },
   }));

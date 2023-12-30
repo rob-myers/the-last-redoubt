@@ -829,7 +829,7 @@ declare namespace NPC {
   //#endregion
 
   type TweenExt = import('@tweenjs/tween.js').Tween<Record<string, any>> & {
-    promise(): Promise<Record<string, any>>;
+    promise(initValue?: Record<string, any>): Promise<Record<string, any>>;
   }
 
 }
