@@ -116,13 +116,16 @@ thinkLoop: `{
 
 /**
  * Usage:
- * - world
- * - world 'x => x.fov'
- * - world fov
- * - world doors.toggleLock 0 8
- * - world "x => x.gmGraph.findRoomContaining($( click 1 ))"
- * - world gmGraph.findRoomContaining $( click 1 )
- * - click | world gmGraph.findRoomContaining
+ * - `world`
+ * - `world 'x => x.fov'`
+ * - `world fov`
+ * - `world doors.toggleLock 0 8`
+ * - `world "x => x.gmGraph.findRoomContaining($( click 1 ))"`
+ * - `world gmGraph.findRoomContaining $( click 1 )`
+ * - `click | world gmGraph.findRoomContaining`
+ * 
+ * Supports `Ctrl-C` -- however, lacking context we
+ * cannot cleanup ongoing computations.
  */
 // world: `{
 //   local selector
@@ -135,13 +138,16 @@ world: `{
   run '(ctxt) {
     const { api, args, home } = ctxt;
     const world = api.getCached(home.WORLD_KEY);
-    
+    const handleKill = new Promise((_, reject) => api.addCleanup(
+      () => reject("potential ongoing computation")
+    ));
+
     if (api.isTtyAt(0)) {
       const func = api.generateSelector(
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      yield func(world, ctxt);
+      yield Promise.race([func(world, ctxt), handleKill]);
     } else {
       let datum;
       !args.includes("-") && args.push("-");
@@ -151,7 +157,7 @@ world: `{
           args.slice(1).map(x => x === "-" ? datum : api.parseJsArg(x)),
         );
         try {
-          yield func(world, ctxt);
+          yield Promise.race([func(world, ctxt), handleKill]);
         } catch (e) {
           api.info(\`\${e}\`);
         }
