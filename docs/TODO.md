@@ -4,6 +4,10 @@
 
 - 🚧 continue migrating NPCs
   - ✅ can look
+  - ✅ `decor-click` event
+  - ✅ animateOpacity
+  - ✅ fadeSpawn
+  - fadeSpawn preserves angle
   - try HMR create-npc somehow?
   - try sharp rotate during walk i.e. via events instead of tween
 

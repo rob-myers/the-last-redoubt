@@ -143,26 +143,29 @@ npc rob lookAt $( click 1 )
 click | npc rob lookAt
 ```
 
-🚧 test from here
-
 ```sh
+# spawn close to stand/sit point
+spawn rob $( click 1 )
+npc set-player rob
 npc events |
-  filter 'e => e.key === "decor-click" && (
-    e.decor.meta.stand || e.decor.meta.sit
-  )' |
+  filter '({ key, decor }) =>
+    key === "decor-click" && (decor.meta.stand || decor.meta.sit)' |
   filter '(e, { api, home }) => {
     const { npcs } = api.getCached(home.WORLD_KEY);
     const player = npcs.getPlayer();
-    if (player) {
-      return player.getPosition().distanceTo(e.decor) <= player.getInteractRadius()
-    }
+    return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
   }'
 ```
 
 ```sh
 npc rob >me
+me/animateRotate'(0.5, 0)'
+npc rob animateRotate -0.5 0
 me/animateOpacity'(0.5, 0)'
+npc rob animateOpacity 0.5 1000
 ```
+
+🚧 test from here
 
 ```sh
 expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do '{ suppressError: 1 }'
