@@ -129,7 +129,10 @@ export default function WorldPixi(props) {
 
   React.useEffect(() => {
     setCached([props.worldKey], state);
-    return () => removeCached([props.worldKey]);
+    return () => {
+      removeCached([props.worldKey]);
+      state.tweenGroup.removeAll();
+    };
   }, []);
 
   const [rootRef, bounds] = useMeasure({ debounce: 30, scroll: false });
