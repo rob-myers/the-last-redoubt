@@ -176,6 +176,11 @@ export default function useHandleEvents(api, disabled) {
           if (e.meta.debug) {
             api.debug.onClick(e);
           }
+          if (e.meta.decor && typeof e.meta.decorKey === 'string') {
+            const item = api.decor.decor[e.meta.decorKey];
+            api.npcs.events.next({ key: 'decor-click', decor: item });
+          }
+
           break;
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
