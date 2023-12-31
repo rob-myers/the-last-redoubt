@@ -137,18 +137,13 @@ view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'
 view 2 "$( click 1 )" 2
 ```
 
-🚧 test from here
-
 ```sh
 spawn rob $( click 1 )
-npc get rob | map 'x => x.setLookRadians(0)'
-npc rob | map 'x => x.setLookRadians(0)'
-```
-
-```sh
 npc rob lookAt $( click 1 )
 click | npc rob lookAt
 ```
+
+🚧 test from here
 
 ```sh
 npc events |

@@ -187,6 +187,7 @@ declare namespace NPC {
     setWalkSpeed(walkSpeed: number): void;
     animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
+    updateHead(): void;
     /**
      * Invoke initially, or just after `enter-room`.
      * @param srcIndex Index of 1st vertex in room.

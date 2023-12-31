@@ -105,10 +105,12 @@ export default function createNpc(def, api) {
       if (sourceRadians - targetRadians > Math.PI) targetRadians += 2 * Math.PI;
 
       try {
-        await (this.a.rotate = api.tween([this.s.body, this.s.head]).to([
-          { rotation: targetRadians },
-          { rotation: targetRadians },
-        ], durationMs).easing(TWEEN.Easing.Quadratic.In)).promise();
+        await (this.a.rotate = api.tween(this.s.body)
+          .to({ rotation: targetRadians }, durationMs)
+          .onUpdate(() => this.updateHead())
+          .easing(TWEEN.Easing.Quadratic.Out))
+          .promise()
+        ;
       } catch {
         if (throwOnCancel) throw new Error('cancelled');
       }
@@ -459,7 +461,7 @@ export default function createNpc(def, api) {
       if (direction.length === 0) {
         return; // Don't animate
       }
-      const targetRadians = Math.atan2(direction.y, direction.x);
+      const targetRadians = Math.PI/2 + Math.atan2(direction.y, direction.x);
       await this.animateRotate(targetRadians, 1 * 1000);
     },
     nextWayTimeout() {
@@ -690,40 +692,40 @@ export default function createNpc(def, api) {
       api.npcs.events.next({ key: 'changed-speed', npcKey: this.key, prevSpeed: this.a.walkSpeed, speed: walkSpeed });
       this.a.walkSpeed = walkSpeed;
     },
-    updateRoomWalkBounds(srcIndex) {
-      // Fix types during migration
-    },
-    updateSprites() {
-      const currFrame = this.getFrame();
-      const { bodyRects, rootDeltas, headFrames, neckPositions } = this.a.shared;
-      const { body, head, bounds: circularBounds } = this.s;
+    updateHead() {
+      const { body, head } = this.s;
+      const { headFrames, neckPositions } = this.a.shared;
 
-      // body
-      body.texture._uvs.set(
-        /** @type {Rectangle} */ (bodyRects[currFrame]),
-        baseTexture,
-        0,
-      );
-      const radians = body.rotation;
-      if (rootDeltas.length) {
-        // pixi.js convention: 0 degrees ~ north ~ negative y-axis
-        const rootDelta = rootDeltas[currFrame];
-        body.x += rootDelta * Math.sin(radians);
-        body.y -= rootDelta * Math.cos(radians);
-      }
-      // head
+      const currFrame = this.getFrame();
       const { angle, width } = headFrames[currFrame];
       const neckPos = neckPositions[currFrame];
+      const radians = body.rotation;
+
       head.angle = angle + body.angle + this.a.neckAngle;
       head.scale.set(width / this.a.initHeadWidth);
       head.position.set(
         body.x + Math.cos(radians) * neckPos.x - Math.sin(radians) * neckPos.y,
         body.y + Math.sin(radians) * neckPos.x + Math.cos(radians) * neckPos.y,
       );
-      // extras
-      if (circularBounds) {
-        circularBounds.position.copyFrom(body.position);
+    },
+    updateRoomWalkBounds(srcIndex) {
+      // Fix types during migration
+    },
+    updateSprites() {
+      const currFrame = this.getFrame();
+      const { bodyRects, rootDeltas } = this.a.shared;
+      const { body, bounds } = this.s;
+
+      body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currFrame]), baseTexture, 0);
+      const radians = body.rotation;
+      if (rootDeltas.length) {// in pixi.js 0 degrees ~ north ~ negative y-axis
+        const rootDelta = rootDeltas[currFrame];
+        body.x += rootDelta * Math.sin(radians);
+        body.y -= rootDelta * Math.cos(radians);
       }
+
+      this.updateHead();
+      bounds?.position.copyFrom(body.position);
     },
     updateStaticBounds() {
       const pos = this.getPosition();
@@ -731,7 +733,7 @@ export default function createNpc(def, api) {
       this.a.staticBounds.set(pos.x - radius, pos.y - radius, 2 * radius, 2 * radius);
     },
     updateTime(deltaRatio) {
-      if (this.a.paused === true) {
+      if (this.a.paused === true || this.a.shared.frameCount === 1) {
         return;
       }
       const deltaSecs = deltaRatio * (1 / 60);

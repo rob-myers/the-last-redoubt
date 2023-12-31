@@ -2,26 +2,9 @@
 
 ## In progress
 
-- ✅ get api.debug.addNavPath working
-  - ✅ `world debug.addNavPath foo ${navPath} && world debug.render`
-  - ✅ can see navPath
-  - ✅ textures instead of intermediate canvas ctxt
-
-- ✅ implement api.npcs.panZoomTo
-  - ✅ `world panZoom.panZoomTo '{ scale: 0.5, ms: 1000, point: { x:0, y: 0 }}' >/dev/null`
-  - ✅ `view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'`
-  - ✅ ctrl-c for `view` i.e. implement panZoom.animationAction
-  - ✅ can ctrl-c `world ...` (without stopping panzoom)
-
-- ✅ avoid tty crashes e.g. on print `api`, `Viewport` or `Tween`
-  - fix `safeStringify` by carefully stepping through a problematic object
-  - detect EventEmitter i.e. `eventemitter3`
-  - can `world`
-
-- api.tween should be generic
-
 - 🚧 continue migrating NPCs
-  - can look
+  - ✅ can look
+  - try HMR create-npc somehow?
   - try sharp rotate during walk i.e. via events instead of tween
 
 - 🚧 preparation for `World`-syncing i.e. multiple views
@@ -33,6 +16,7 @@
   - 🚧 Decor:
   - 🚧 ...
 
+- api.tween should be generic
 - `npc cfg fov`
 - sh: count like `wc -l`?
   - can `foo | sponge | map length`
@@ -689,6 +673,22 @@ nav --nearNpc foo rob | walk --open foo
 
 ## Done
 
+- ✅ avoid tty crashes e.g. on print `api`, `Viewport` or `Tween`
+  - fix `safeStringify` by carefully stepping through a problematic object
+  - detect EventEmitter i.e. `eventemitter3`
+  - can `world`
+
+- ✅ get api.debug.addNavPath working
+  - ✅ `world debug.addNavPath foo ${navPath} && world debug.render`
+  - ✅ can see navPath
+  - ✅ textures instead of intermediate canvas ctxt
+
+- ✅ implement api.npcs.panZoomTo
+  - ✅ `world panZoom.panZoomTo '{ scale: 0.5, ms: 1000, point: { x:0, y: 0 }}' >/dev/null`
+  - ✅ `view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'`
+  - ✅ ctrl-c for `view` i.e. implement panZoom.animationAction
+  - ✅ can ctrl-c `world ...` (without stopping panzoom)
+  
 - ✅ start migrating NPCs
   - ✅ TestPreRenderNpc has enough features
   - ✅ start new create-npc.js
