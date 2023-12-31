@@ -228,15 +228,15 @@ export default function NPCs(props) {
       const process = processApi.getProcess();
 
       process.cleanups.push((SIGINT) => {
-        // Ctrl-C overrides forcePaused
-        npc.cancel(SIGINT).catch(e => void (
+        npc.cancel(SIGINT).catch(e => void (// Ctrl-C overrides forcePaused
           state.config.verbose && processApi.info(`ignored: ${e?.message ?? e}`)
         ));
       });
       process.onSuspends.push(() => { npc.pause(false); return true; });
       process.onResumes.push(() => { npc.resume(false); return true; });
 
-      // kill on remove-npc 🚧 one sub elsewhere
+      // kill on remove-npc
+      // 🚧 create a single subscription elsewhere
       const subscription = this.events.subscribe({ next(x) {
         if (x.key === 'removed-npc' && x.npcKey === npcKey) {
           processApi.kill(true); // must kill whole process group
@@ -245,7 +245,7 @@ export default function NPCs(props) {
       }});
       process.cleanups.push(() => subscription.unsubscribe());
 
-      // handlePaused waits until resumed, throws on process killed
+      // waits for a "forcePaused npc" to be resumed; throws on process killed
       async function handlePaused() {
         npc.forcePaused && await /** @type {Promise<void>} */ (new Promise((resolve, reject) => {
           const subscription = state.events.subscribe({ next(x) {
