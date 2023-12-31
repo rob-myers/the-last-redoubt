@@ -2,12 +2,13 @@ import React from "react";
 import { Subject } from "rxjs";
 import { Viewport as PixiViewport } from "pixi-viewport";
 import TWEEN from "@tweenjs/tween.js";
+import debounce from "debounce";
 
 import { Vect } from "../geom";
 import { longClickMs } from "../service/const";
+import { testNever } from "../service/generic";
 import useStateRef from "../hooks/use-state-ref";
 import Viewport from "./Viewport";
-import debounce from "debounce";
 
 /**
  * API wrapper for <Viewport> i.e. pixi-viewport
@@ -32,40 +33,24 @@ export default function PanZoom(props) {
     tween: emptyTween,
 
     async animationAction(type) {
-      // 🚧
-      // switch (type) {
-      //   case 'cancelPanZoom': {
-      //     state.syncStyles();
-      //     const anim = state.panzoomAnim;
-      //     // await Promise.allSettled([anim?.finished, anim?.cancel()]);
-      //     anim && isAnimAttached(anim, state.panzoomEl) && await new Promise(resolve => {
-      //       anim.addEventListener('cancel', resolve)
-      //       anim.cancel();
-      //     });
-      //     state.panzoomAnim === anim && (state.panzoomAnim = null);
-      //     break;
-      //   }
-      //   case 'cancelFollow': {
-      //     const anim = state.followAnim;
-      //     anim && isAnimAttached(anim, state.followEl) && await new Promise(resolve => {
-      //       anim.addEventListener('cancel', resolve)
-      //       anim.commitStyles();
-      //       anim.cancel();
-      //     });
-      //     state.followAnim === anim && (state.followAnim = null);
-      //     break;
-      //   }
-      //   case 'pause': // Avoid pausing finished animation
-      //     state.panzoomAnim?.playState === 'running' && state.panzoomAnim.pause();
-      //     state.followAnim?.playState === 'running' && state.followAnim.pause();
-      //     break;
-      //   case 'play':
-      //     state.panzoomAnim?.playState === 'paused' && state.panzoomAnim.play();
-      //     state.followAnim?.playState === 'paused' && state.followAnim.play();
-      //     break;
-      //   default:
-      //     throw testNever(type, { suffix: 'animationAction' });
-      // }
+      switch (type) {
+        case 'cancelPanZoom':
+          state.tween.stop();
+          break;
+        case 'cancelFollow':
+          // 🚧 cancel follow
+          break;
+        case 'pause':
+          state.tween.pause();
+          // 🚧 pause follow
+          break;
+        case 'play':
+          state.tween.resume();
+          // 🚧 resume follow
+          break;
+        default:
+          throw testNever(type, { suffix: 'animationAction' });
+      }
     },
     getDomBounds() {
       return /** @type {HTMLDivElement} */ (props.api.canvas.parentElement).getBoundingClientRect();
