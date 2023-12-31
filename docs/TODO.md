@@ -10,8 +10,13 @@
 - 🚧 implement api.npcs.panZoomTo
   - ✅ `world panZoom.panZoomTo '{ scale: 0.5, ms: 1000, point: { x:0, y: 0 }}' >/dev/null`
   - ✅ `view '{ point:'$( click 1 )', ms: 2000, zoom: 2 }'`
-  - avoid tty crashes e.g. on print `Viewport` or `Tween`
-  - ctrl-c?
+  - ctrl-c for `view` i.e. implement panZoom.animationAction
+  - can ctrl-c `world ...` (without stopping panzoom)
+
+- ✅ avoid tty crashes e.g. on print `api`, `Viewport` or `Tween`
+  - fix `safeStringify` by carefully stepping through a problematic object
+  - detect EventEmitter i.e. `eventemitter3`
+  - can `world`
 
 - api.tween should be generic
 

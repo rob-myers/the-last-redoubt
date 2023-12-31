@@ -133,19 +133,20 @@ thinkLoop: `{
 // }`,
 world: `{
   run '(ctxt) {
-    let { api, args, home, datum } = ctxt;
+    const { api, args, home } = ctxt;
     const world = api.getCached(home.WORLD_KEY);
-    let func = api.generateSelector(
-      api.parseFnOrStr(args[0]),
-      args.slice(1).map(x => api.parseJsArg(x)),
-    );
-
+    
     if (api.isTtyAt(0)) {
+      const func = api.generateSelector(
+        api.parseFnOrStr(args[0]),
+        args.slice(1).map(x => api.parseJsArg(x)),
+      );
       yield func(world, ctxt);
     } else {
+      let datum;
       !args.includes("-") && args.push("-");
       while ((datum = await api.read()) !== api.eof) {
-        func = api.generateSelector(
+        const func = api.generateSelector(
           api.parseFnOrStr(args[0]),
           args.slice(1).map(x => x === "-" ? datum : api.parseJsArg(x)),
         );

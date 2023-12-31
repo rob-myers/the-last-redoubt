@@ -1,4 +1,5 @@
 import prettyCompact from 'json-stringify-pretty-compact';
+import { EventEmitter } from 'eventemitter3';
 import safeStableStringify from 'safe-stable-stringify';
 
 /**
@@ -239,6 +240,9 @@ export function generateSelector(selector, extraArgs) {
       return selector.test.call(selector, typeof x === 'string' ? x : JSON.stringify(x));
     }
   }
+  if (selector === undefined) {
+    return x => x;
+  }
   throw Error(`selector ${selector} should be a function, regexp or string`)
 }
 
@@ -332,9 +336,13 @@ export function safeStringify(input) {
     return zealousTrim(`${input}`);
   }
   return tryJsonStringify(input) || safeStableStringify(input, (_k, v) => {
-    if (v instanceof HTMLElement) return `[${v.constructor.name}]`;
-    if (v instanceof Animation) return '[Animation]';
-    if (typeof v === 'function') return zealousTrim(`${v}`);
+    if (v instanceof HTMLElement || v instanceof Animation)
+      return `'[${v.constructor.name}]'`;
+    if (typeof v === 'function')
+      return zealousTrim(`${v}`);
+    if (v instanceof EventEmitter) {// Fix pixi.js
+      return `'[${v.constructor?.name ?? 'EventEmitter'}]'`;
+    }
     return v;
   });
 }
