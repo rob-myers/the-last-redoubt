@@ -657,25 +657,17 @@ export default function NPCs(props) {
       if (npcKey === '') {
         throw Error(`npc key cannot be empty`);
       }
-
       if (state.playerKey) {
-        // Remove prev player CSS class, sans render
-        const prevPlayer = state.npc[state.playerKey]; // May not exist
-        prevPlayer?.el.root.classList.remove('player');
         api.fov.forgetPrev();
       }
-
       if (npcKey === null) {
         state.playerKey = null;
         state.events.next({ key: 'set-player', npcKey: null });
         return;
       }
 
-      const player = state.getNpc(npcKey); // Must exist
-      player.el.root.classList.add('player');
       state.playerKey = npcKey;
-
-      api.fov.setRoomByNpc(state.playerKey); // Adjust FOV
+      api.fov.setRoomByNpc(state.playerKey);
       state.events.next({ key: 'set-player', npcKey });
     },
     async spawn(e) {
