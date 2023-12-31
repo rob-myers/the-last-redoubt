@@ -124,8 +124,7 @@ thinkLoop: `{
  * - `world gmGraph.findRoomContaining $( click 1 )`
  * - `click | world gmGraph.findRoomContaining`
  * 
- * Supports `Ctrl-C` -- however, lacking context we
- * cannot cleanup ongoing computations.
+ * Supports `Ctrl-C` without cleaning ongoing computations.
  */
 // world: `{
 //   local selector
@@ -138,7 +137,7 @@ world: `{
   run '(ctxt) {
     const { api, args, home } = ctxt;
     const world = api.getCached(home.WORLD_KEY);
-    const handleKill = new Promise((_, reject) => api.addCleanup(
+    const handleProm = () => new Promise((resolve, reject) => api.addCleanup(
       () => reject("potential ongoing computation")
     ));
 
@@ -147,7 +146,8 @@ world: `{
         api.parseFnOrStr(args[0]),
         args.slice(1).map(x => api.parseJsArg(x)),
       );
-      yield Promise.race([func(world, ctxt), handleKill]);
+      const v = func(world, ctxt);
+      yield v instanceof Promise ? Promise.race([v, getHandleProm()]) : v;
     } else {
       let datum;
       !args.includes("-") && args.push("-");
@@ -157,7 +157,8 @@ world: `{
           args.slice(1).map(x => x === "-" ? datum : api.parseJsArg(x)),
         );
         try {
-          yield Promise.race([func(world, ctxt), handleKill]);
+          const v = func(world, ctxt);
+          yield v instanceof Promise ? Promise.race([v, getHandleProm()]) : v;
         } catch (e) {
           api.info(\`\${e}\`);
         }
