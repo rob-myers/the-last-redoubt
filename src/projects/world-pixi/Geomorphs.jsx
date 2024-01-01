@@ -101,7 +101,7 @@ export default function Geomorphs(props) {
             console.error(`decor not found: g${gmId}r${g}p${b}`);
             return null;
           }
-          return /** @type {Geomorph.PointMeta} */ ({ decor: true, gmId, roomId: g, decorKey: decor.key });
+          return /** @type {Geomorph.PointMeta} */ ({ decor: true, ...decor.meta, gmId, roomId: g, decorKey: decor.key });
         }
         case hitTestRed.debugArrow:
           return /** @type {Geomorph.PointMeta} */ ({ debug: true, debugArrow: true, gmId, roomId: g, doorId: b });

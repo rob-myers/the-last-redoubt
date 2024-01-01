@@ -11,9 +11,10 @@
     - `npc rob startAnimation idle-breathe` preserves angle
   - 🚧 `npc rob do $( click 1 )`
     - ✅ opens door
-    - 🚧 decor points have tags e.g. lie, sit
-    - fade from nav-mesh to do-point
-    - fade from do-point to nav-mesh
+    - ✅ decor points have tags e.g. lie, sit
+    - ✅ fade from nav-mesh to do-point
+    - ✅ fade from do-point to nav-mesh
+    - 🚧 orient on sit/lie
   - get HMR working for create-npc?
   - try sharp rotate during walk i.e. via events instead of tween
 

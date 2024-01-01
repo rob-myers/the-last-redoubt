@@ -274,7 +274,7 @@ export default function NPCs(props) {
       })
     },
     connectSession(sessionKey, opts = {}) {
-      const connected = state.session[sessionKey] ||= {
+      const connected = state.session[sessionKey] ??= {
         key: sessionKey,
         receiveMsgs: true,
         panzoomPids: [],
@@ -746,8 +746,8 @@ export default function NPCs(props) {
         }})
       );
     },
-    trackNpc(npcKey, processApi) {
     // 🚧 use pixi viewport, possibly complete rewrite?
+    trackNpc(npcKey, processApi) {
 
       const npc = state.getNpc(npcKey);
       
