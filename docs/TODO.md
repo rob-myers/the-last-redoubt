@@ -7,11 +7,45 @@
   - ✅ `decor-click` event
   - ✅ animateOpacity
   - ✅ fadeSpawn
-  - fadeSpawn preserves angle
-  - try HMR create-npc somehow?
+  - ✅ fadeSpawn preserves angle
+    - `npc rob startAnimation idle-breathe` preserves angle
+  - 🚧 `npc rob do $( click 1 )`
+    - ✅ opens door
+    - 🚧 decor points have tags e.g. lie, sit
+    - fade from nav-mesh to do-point
+    - fade from do-point to nav-mesh
+  - get HMR working for create-npc?
   - try sharp rotate during walk i.e. via events instead of tween
 
-- 🚧 preparation for `World`-syncing i.e. multiple views
+- can detect local room via hit test canvas
+  - IDEA draw rooms as background
+  - already drawing doors
+
+- detect npcs on pointer{move,down}
+  - detect room from hit test canvas
+  - maintain gmRoom -> npcKeys mapping (overlap?)
+  - `npc-clicked` event
+
+- BUG tty history with multiple lines loses row, e.g.
+```sh
+npc events | filter '({ key, decor }) =>
+  key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {
+  const { npcs } = api.getCached(home.WORLD_KEY);
+  const player = npcs.getPlayer();
+  return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
+}'
+```
+
+- ✅ example where ppid non-zero
+```sh
+foo() {
+  { sleep 10; echo DONE; } &
+  echo Invoked
+}
+foo
+```
+
+- 🚧 prepare for `World`-syncing i.e. multiple views
   - ℹ️ hopefully can simply duplicate events between worlds
   - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
   - ✅ Doors: toggleLock, toggleDoor should not mutate item

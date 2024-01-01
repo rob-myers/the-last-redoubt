@@ -89,7 +89,7 @@ export const spineAnimToSetup = {
   idle: { animName: 'idle', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
   sit: { animName: 'sit', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
   lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', stationaryFps: 0 },
-  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', stationaryFps: 15 },
+  "idle-breathe": { animName: 'idle-breathe', numFrames: 20, headOrientKey: 'top', stationaryFps: 10 },
   walk: { animName: 'walk', numFrames: 30, headOrientKey: 'top', stationaryFps: 20 },
 };
 

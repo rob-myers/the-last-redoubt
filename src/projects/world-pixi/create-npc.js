@@ -617,7 +617,7 @@ export default function createNpc(def, api) {
       );
       
       s.body.scale.set(spineMeta.npcScaleFactor);
-      s.body.angle = this.getAngle();
+      s.body.rotation = this.getAngle();
       a.initHeadWidth = headRect.width;
 
       this.updateSprites();
