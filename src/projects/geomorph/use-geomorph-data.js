@@ -56,17 +56,16 @@ export default function useGeomorphData(layoutKey, disabled = false) {
  * @returns {Promise<Geomorph.GeomorphData>}
  */
 export async function createGeomorphData(input) {
-
   // Fetch existing layout, or use provided one from `GeomorphEdit`.
   const layout = typeof input === 'string'
     ? parseLayout(await fetch(geomorphJsonPath(input)).then(x => x.json()))
     : input
   ;
-  const { roomGraph } = layout;
 
   const doorPolys = getNormalizedDoorPolys(layout.doors);
+
   const roomsWithDoors = layout.rooms.map((roomPoly, roomId) => {
-    const roomDoorPolys = roomGraph.getAdjacentDoors(roomId).map(x => doorPolys[x.doorId]);
+    const roomDoorPolys = layout.roomGraph.getAdjacentDoors(roomId).map(x => doorPolys[x.doorId]);
     return Poly.union([roomPoly, ...roomDoorPolys])[0];
   });
 
@@ -91,15 +90,19 @@ export async function createGeomorphData(input) {
   function findRoomContaining(point, includeDoors = false) {
     const gridPos = coordToRoomGrid(point.x, point.y);
     const roomIds = layout.gridToRoomIds[gridPos.x]?.[gridPos.y] ?? [];
-    return roomIds.find(roomId => (includeDoors ? roomsWithDoors : layout.rooms)[roomId].contains(point)) ?? -1;
+    // return roomIds.find(roomId => (includeDoors ? roomsWithDoors : layout.rooms)[roomId].contains(point)) ?? -1;
+    return roomIds.find(roomId =>
+      geom.outlineContains((includeDoors ? roomsWithDoors : layout.rooms)[roomId].outline, point)
+    ) ?? -1;
   }
 
-  //#region points by room 🚧 precompute?
+  //#region points by room
+  // 🚧 precompute?
   const roomOverrides = /** @type {Geomorph.GeomorphData['roomOverrides']} */ ({});
   const roomDecor = layout.rooms.map(/** @returns {Geomorph.GeomorphData['roomDecor'][*]} */ (_, roomId) => ({
     
     symbol: [],
-    door: roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
+    door: layout.roomGraph.getAdjacentDoors(roomId).map(/** @return {NPC.DecorCircle | NPC.DecorRect} */ (doorNode) => {
       const { doorId } = doorNode;
       const door = layout.doors[doorId];
       const index = door.roomIds.indexOf(roomId);
