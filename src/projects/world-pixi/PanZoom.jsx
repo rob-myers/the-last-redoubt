@@ -56,7 +56,7 @@ export default function PanZoom(props) {
       return /** @type {HTMLDivElement} */ (props.api.canvas.parentElement).getBoundingClientRect();
     },
     getWorld(e) {
-      return state.transform.localTransform.applyInverse(e.global);
+      return Vect.from(state.transform.localTransform.applyInverse(e.global)).precision(2);
     },
     isFollowing() {
       return !!state.viewport.plugins.get('follow');

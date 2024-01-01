@@ -165,6 +165,10 @@ me/animateOpacity'(0.5, 0)'
 npc rob animateOpacity 0.5 1000
 ```
 
+```sh
+click | npc rob fadeSpawn
+```
+
 🚧 test from here
 
 ```sh

@@ -182,13 +182,16 @@ export default function createNpc(def, api) {
       }
     },
     async do(point, opts = {}) {
+      if (!Vect.isVectJson(point)) {
+        throw Error('point expected');
+      }
       if (this.forcePaused) {
         throw Error('paused: cannot do');
       }
       if (this.isPaused()) {
         await this.cancel();
       }
-      point.meta ??= {}; // possibly manually specified (not via `click [n]`)
+      point.meta ??= {};
 
       try {
         if (point.meta.door && hasGmDoorId(point.meta)) {
