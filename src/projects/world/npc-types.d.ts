@@ -392,6 +392,7 @@ declare namespace NPC {
     key: string;
     /** e.g. `solomani` which determines "head skin" */
     classKey: NpcClassKey;
+    /** Radians */
     angle: number;
     position: Geom.VectJson;
     /** World units per second */

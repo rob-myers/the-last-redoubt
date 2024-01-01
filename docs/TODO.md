@@ -14,7 +14,10 @@
     - ✅ decor points have tags e.g. lie, sit
     - ✅ fade from nav-mesh to do-point
     - ✅ fade from do-point to nav-mesh
-    - 🚧 orient on sit/lie
+    - ✅ orient on sit/lie
+      - `+90` hard-coding during migration
+    - ✅ fix fadeSpawn direction via `+PI/2`
+    - 🚧 sit/lie is centred
   - get HMR working for create-npc?
   - try sharp rotate during walk i.e. via events instead of tween
 

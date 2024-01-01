@@ -259,7 +259,7 @@ export default function createNpc(def, api) {
         await api.npcs.spawn({
           npcKey: this.key,
           point,
-          angle: opts.angle ?? (direction.x ? Math.atan2(direction.y, direction.x) : undefined) ,
+          angle: opts.angle ?? (direction.x ? Math.PI/2 + Math.atan2(direction.y, direction.x) : undefined) ,
           npcClassKey: opts.npcClassKey,
           requireNav: opts.requireNav,
         });
@@ -409,6 +409,7 @@ export default function createNpc(def, api) {
     },
     initialize() {
       this.s.body.position.copyFrom(this.def.position);
+      this.s.body.rotation = this.def.angle;
       this.a.staticBounds = new Rect(this.def.position.x - npcRadius, this.def.position.y - npcRadius, 2 * npcRadius, 2 * npcRadius);
       // Include doors so doorways have some gmRoomId too
       this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);
@@ -515,7 +516,7 @@ export default function createNpc(def, api) {
             // use direction src --> point if entering navmesh
             ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
             // use meta.orient if staying off-mesh
-            : typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+            : typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
           fadeOutMs: opts.fadeOutMs,
           meta,
         },
@@ -537,7 +538,7 @@ export default function createNpc(def, api) {
       if (api.npcs.isPointInNavmesh(decorPoint)) {// Walk, [Turn], Do
         const navPath = api.npcs.getGlobalNavPath(this.getPosition(), decorPoint);
         await this.walk(navPath, { throwOnCancel: true });
-        typeof meta.orient === 'number' && await this.animateRotate(meta.orient * (Math.PI / 180), 100);
+        typeof meta.orient === 'number' && await this.animateRotate((meta.orient + 90) * (Math.PI / 180), 100);
         this.startAnimationByMeta(meta);
         return;
       }
@@ -550,7 +551,7 @@ export default function createNpc(def, api) {
       }
 
       await this.fadeSpawn({ ...point, ...decorPoint }, {
-        angle: typeof meta.orient === 'number' ? meta.orient * (Math.PI / 180) : undefined,
+        angle: typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
         requireNav: false,
         fadeOutMs: opts.fadeOutMs,
         meta,
