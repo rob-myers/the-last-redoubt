@@ -729,7 +729,7 @@ class geomServiceClass {
    * - Maximum distance of point to polygon's edges that triggers collision (see pointLine).
    * - We can ignore edges by setting `tolerance` as `null`.
    */
-  outlineContains(outline, p, tolerance = 0.1) {
+  outlineContains(outline, p, tolerance = null) {
     const length = outline.length
     let c = false
     let i, j
