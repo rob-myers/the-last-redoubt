@@ -2,7 +2,7 @@ import React from "react";
 import { npcHeadRadiusPx, npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
-import { decorToRef, queryDecorGridLine } from "../service/geomorph";
+import { decorToRef, getDecorOrigin, queryDecorGridLine } from "../service/geomorph";
 import { warn } from "../service/log";
 import { stripAnsi } from "../sh/util";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
@@ -164,8 +164,9 @@ export default function useHandleEvents(api, disabled) {
           Object.assign(e.meta, meta);
 
           // mutate meta on click npc
-          // 🚧 restrict to gmRoomId
-          // 🚧 trigger 'npc-clicked'?
+          // 🚧 getHitMeta provides gmRoomId
+          // 🚧 iterate through api.npcs.byRoom[gmId][roomId]
+          // 🚧 trigger 'npc-clicked'
           for (const npc of Object.values(api.npcs.npc)) {
             if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
               Object.assign(e.meta, { npc: true, npcKey: npc.key });
@@ -178,6 +179,7 @@ export default function useHandleEvents(api, disabled) {
           }
           if (e.meta.decor && typeof e.meta.decorKey === 'string') {
             const item = api.decor.decor[e.meta.decorKey];
+            e.meta.targetPos = getDecorOrigin(item);
             api.npcs.events.next({ key: 'decor-click', decor: item });
           }
 

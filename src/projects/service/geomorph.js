@@ -1536,9 +1536,12 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
  */
 export function getDecorOrigin(decor) {
   switch (decor.type) {
-    case 'circle': return decor.center;
-    case 'point': return decor;
-    case 'rect': return geom.getAngledRectCenter({ baseRect: decor, angle: decor.angle ?? 0 });
+    case 'circle':
+      return decor.center;
+    case 'point':
+      return { x: decor.x, y: decor.y };
+    case 'rect':
+      return geom.getAngledRectCenter({ baseRect: decor, angle: decor.angle ?? 0 }).json;
     default: throw testNever(decor);
   }
 }

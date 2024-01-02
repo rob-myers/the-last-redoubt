@@ -254,12 +254,12 @@ export default function createNpc(def, api) {
       try {
         const meta = opts.meta ?? point.meta ?? {};
         point.meta ??= meta;
-        const direction = Vect.from(point).sub(this.getPosition());
         await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
+        const position = this.getPosition();
         await api.npcs.spawn({
           npcKey: this.key,
           point,
-          angle: opts.angle ?? (direction.x ? Math.PI/2 + Math.atan2(direction.y, direction.x) : undefined) ,
+          angle: opts.angle ?? (position.equals(point) ? undefined : Math.PI/2 + Vect.from(point).sub(position).angle),
           npcClassKey: opts.npcClassKey,
           requireNav: opts.requireNav,
         });

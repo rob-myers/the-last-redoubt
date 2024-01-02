@@ -17,13 +17,19 @@
     - ✅ orient on sit/lie
       - `+90` hard-coding during migration
     - ✅ fix fadeSpawn direction via `+PI/2`
-    - 🚧 sit/lie is centred
-  - get HMR working for create-npc?
+    - ℹ️ permit spawn/fadeSpawn onto beds/tables/chairs
+    - ✅ fix orient when fadeSpawn onto beds/tables/chairs
+      - ℹ️ `npc rob do` has correct orient
+      - ℹ️ `spawn rob $( click 1)` has correct orient
+    - ✅ sit/lie is centred
+      - ✅ fix decor click targetPos
+  - 🚧 try get HMR working for create-npc
+    - try class instantiate instead, just in case HMR works?
+    - manually overwrite functions?
   - try sharp rotate during walk i.e. via events instead of tween
 
 - can detect local room via hit test canvas
-  - IDEA draw rooms as background
-  - already drawing doors
+  - draw rooms as background (already drawing doors)
 
 - detect npcs on pointer{move,down}
   - detect room from hit test canvas

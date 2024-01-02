@@ -103,14 +103,13 @@ export default function PanZoom(props) {
 
       const worldPoint = state.getWorld(e);
       const distance = tempVect.copy(e.client).distanceTo(state.start.clientOrigin);
-      // console.log("pointerup", worldPoint);
 
       state.events.next({
         key: 'pointerup',
-        meta: {
+        meta: {// will be mutated by useHandleEvents
           distance,
           longClick: (Date.now() - state.start.epochMs) >= longClickMs,
-          targetPos: worldPoint, // 🚧 remove?
+          targetPos: {...worldPoint},
         },
         point: worldPoint,
         clickId: state.clickIds.pop(),

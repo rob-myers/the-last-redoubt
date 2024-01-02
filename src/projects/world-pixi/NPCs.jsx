@@ -682,14 +682,19 @@ export default function NPCs(props) {
       }
 
       let spawned = state.npc[e.npcKey];
+      const { meta } = e.point;
+      const position = meta && api.lib.isVectJson(meta.targetPos) ? {...meta.targetPos} : e.point;
+      const angle = typeof meta?.orient === 'number'
+        ? (meta.orient + 90) * (Math.PI / 180) : e.angle ?? spawned?.getAngle() ?? 0;
+
       if (spawned) {// Respawn
         await spawned.cancel(true);
         spawned.epochMs = Date.now();
         spawned.def = {
           key: e.npcKey,
-          angle: e.angle ?? spawned?.getAngle() ?? 0, // Previous angle fallback
+          angle,
           classKey: spawned.classKey,
-          position: e.point,
+          position,
           walkSpeed: defaultNpcSpeed,
         };
         if (e.npcClassKey) {
@@ -698,17 +703,17 @@ export default function NPCs(props) {
         // Reorder keys
         delete state.npc[e.npcKey];
         state.npc[e.npcKey] = spawned;
-        spawned.doMeta = e.point.meta?.do ? e.point.meta : null;
+        spawned.doMeta = meta?.do ? meta : null;
       } else {// Create
         const npcClassKey = e.npcClassKey || defaultNpcClassKey;
         state.npc[e.npcKey] = spawned = createNpc({
           key: e.npcKey,
-          angle: e.angle ?? 0,
+          angle,
           classKey: npcClassKey,
-          position: e.point,
+          position,
           walkSpeed: defaultNpcSpeed,
         }, api);
-        spawned.doMeta = e.point.meta?.do ? e.point.meta : null;
+        spawned.doMeta = meta?.do ? meta : null;
         state.pc.addChild(...Object.values(spawned.s));
       }
 
