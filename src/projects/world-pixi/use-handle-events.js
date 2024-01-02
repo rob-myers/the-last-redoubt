@@ -186,7 +186,7 @@ export default function useHandleEvents(api, disabled) {
           break;
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
-          api.setCursor(meta ? 'pointer' : 'auto');
+          api.setCursor(meta?.ui ? 'pointer' : 'auto');
           // meta && console.log('pointermove', meta);
           break;
         }

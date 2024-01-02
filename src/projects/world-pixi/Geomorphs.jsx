@@ -76,17 +76,17 @@ export default function Geomorphs(props) {
         case hitTestRed.room:
           return /** @type {Geomorph.PointMeta} */ ({ gmId, roomId: g });
         case hitTestRed.door:
-          return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b });
+          return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b, ui: true });
         case hitTestRed.decorPoint: {
           const decor = api.decor.byRoom[gmId][g].points[b];
           if (!decor) {
             console.error(`decor not found: g${gmId}r${g}p${b}`);
             return null;
           }
-          return /** @type {Geomorph.PointMeta} */ ({ decor: true, ...decor.meta, gmId, roomId: g, decorKey: decor.key });
+          return /** @type {Geomorph.PointMeta} */ ({ decor: true, ...decor.meta, gmId, roomId: g, decorKey: decor.key, ui: true, });
         }
         case hitTestRed.debugArrow:
-          return /** @type {Geomorph.PointMeta} */ ({ debug: true, debugArrow: true, gmId, roomId: g, doorId: b });
+          return /** @type {Geomorph.PointMeta} */ ({ debug: true, debugArrow: true, gmId, roomId: g, doorId: b, ui: true });
         default:
           // if (a > 0) console.log('pointermove', gmId, local, [r, g, b, a]);
           return null;
