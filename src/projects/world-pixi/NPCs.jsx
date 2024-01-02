@@ -474,12 +474,11 @@ export default function NPCs(props) {
         throw Error(`getRandomRoom: no roomId matches filter`);
       return { gmId, roomId: roomIds[Math.floor(roomIds.length * Math.random())] };
     },
+    // 🚧 needs clarity
     handleBunkBedCollide(nearbyMeta, dstMeta) {
-      return (
-        // Collide if same height (undefined except at bunk-beds)
-        (nearbyMeta?.height === dstMeta?.height)
-        // Height differs; collide if exactly one "do point" and obscured
-        || (
+      return (// Collide if at same height
+        (nearbyMeta?.height === dstMeta?.height) ||
+        (// Otherwise, collide if exactly one "do point" and obscured (?)
           (!!nearbyMeta !== !!dstMeta?.do)
           && !assertDefined(nearbyMeta || dstMeta).obscured
         )
@@ -519,19 +518,16 @@ export default function NPCs(props) {
       return !!closeDoor;
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      // Must not be close to another npc
       if (state.npc[npcKey]?.isPointBlocked(point)) {
-        return false;
+        return false; // Must not be close to another npc
       }
-      // Must be inside some room or doorway
-      const result = api.gmGraph.findRoomContaining(point, true);
-      if (!result) {
-        return false;
+      const gmRoomId = api.gmGraph.findRoomContaining(point, true);
+      if (!gmRoomId) {
+        return false; // Must be inside some room or doorway
       }
-      // Must not be close to a closed door
       const npcRadius = spineMeta.npcRadius;
-      if (state.isPointNearClosedDoor(point, npcRadius, result)) {
-        return false;
+      if (state.isPointNearClosedDoor(point, npcRadius, gmRoomId)) {
+        return false; // Must not be close to a closed door
       }
       return true;
     },
@@ -671,7 +667,7 @@ export default function NPCs(props) {
       state.events.next({ key: 'set-player', npcKey });
     },
     async spawn(e) {
-      if (!(e.npcKey && typeof e.npcKey === 'string' && e.npcKey.trim())) {
+      if (!(typeof e.npcKey === 'string' && e.npcKey.trim())) {
         throw Error(`invalid npc key: ${JSON.stringify(e.npcKey)}`);
       } else if (!(e.point && typeof e.point.x === 'number' && typeof e.point.y === 'number')) {
         throw Error(`invalid point: ${JSON.stringify(e.point)}`);

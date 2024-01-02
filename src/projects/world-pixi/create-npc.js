@@ -253,7 +253,7 @@ export default function createNpc(def, api) {
     async fadeSpawn(point, opts = {}) {
       try {
         const meta = opts.meta ?? point.meta ?? {};
-        point.meta ??= meta; // 🚧 can remove?
+        point.meta ??= meta;
         const direction = Vect.from(point).sub(this.getPosition());
         await this.animateOpacity(0, opts.fadeOutMs ?? spawnFadeMs);
         await api.npcs.spawn({
@@ -423,25 +423,17 @@ export default function createNpc(def, api) {
     isPaused() {
       return this.a.paused;
     },
-    isPointBlocked(point, permitEscape = false) {
+    isPointBlocked(point) {
+      // Check if blocked by nearby NPC
       const closeNpcs = api.npcs.getCloseNpcs(this.key);
-
-      if (!closeNpcs.some(other =>
+      if (closeNpcs.some(other =>
         other.intersectsCircle(point, npcRadius)
         && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, point.meta)
       )) {
+        return true;
+      } else {
         return false;
       }
-
-      const position = this.getPosition();
-      if (permitEscape && closeNpcs.some(other =>
-        other.intersectsCircle(position, npcRadius)
-        && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, this.doMeta ?? undefined)
-      )) {
-        return false;
-      }
-
-      return true;
     },
     isWalking() {
       return this.a.animName === 'walk';
