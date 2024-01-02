@@ -25,9 +25,11 @@
       - ✅ fix decor click targetPos
   - ✅ get HMR working for create-npc
     - manually overwrite
+  - detect decor-{circle,rect} click?
+    - maybe collideKeys?
   - try sharp rotate during walk i.e. via events instead of tween
 
-- 🚧 can detect local room via hit test canvas
+- ✅ can detect local room via hit test canvas
   - draw rooms as background (already drawing doors)
 
 - detect npcs on pointer{move,down}

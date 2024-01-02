@@ -30,29 +30,9 @@ export default function Geomorphs(props) {
 
     clearHitRoom(gmId, roomId) {
       const gm = gms[gmId];
-      const radius = decorIconRadius + 1;
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       gfx.blendMode = BLEND_MODES.ERASE;
-
-      // decor points
-      const { points } = api.decor.byRoom[gmId][roomId];
-      points.forEach((d) => {
-        const local = gm.toLocalCoords(d);
-        gfx.beginFill('black');
-        gfx.drawRect(local.x - radius, local.y - radius, 2 * radius, 2 * radius);
-        gfx.endFill();
-      });
-      
-      // canClickArrows (also after set false)
-      const { opts } = api.debug;
-      if (opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
-        opts.room.navArrows.forEach(({ arrowPos }) => {
-          gfx.beginFill('black');
-          gfx.drawRect(arrowPos.x - radius, arrowPos.y - radius, 2 * radius, 2 * radius);
-          gfx.endFill();
-        });
-      }
-
+      gfx.beginFill().drawPolygon(gm.rooms[roomId].outline).endFill();
       api.renderInto(gfx, api.geomorphs.hit[gmId], false);
       gfx.clear().blendMode = BLEND_MODES.NORMAL;
     },
@@ -93,6 +73,8 @@ export default function Geomorphs(props) {
       ));
 
       switch (r) {// Decode data previously drawn into `state.hit`
+        case hitTestRed.room:
+          return /** @type {Geomorph.PointMeta} */ ({ gmId, roomId: g });
         case hitTestRed.door:
           return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b });
         case hitTestRed.decorPoint: {
@@ -111,7 +93,10 @@ export default function Geomorphs(props) {
       }
     },
     initHit(gmId) {
-      gms[gmId].rooms.forEach((_, roomId) => state.renderHitRoom(gmId, roomId));
+      gms[gmId].rooms.forEach((_, roomId) => {
+        api.clearInto(state.hit[roomId]);
+        state.renderHitRoom(gmId, roomId);
+      });
     },
     initTex(gmId) {
       //  image -> image
@@ -193,27 +178,33 @@ export default function Geomorphs(props) {
       api.renderInto(state.gfx, state.tex[gmId], false);
     },
     renderHitRoom(gmId, roomId) {
+      state.clearHitRoom(gmId, roomId); // Always clear first
       const gm = gms[gmId];
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       
+      // room itself
+      gfx.beginFill(`rgb(${hitTestRed.room}, ${roomId}, 255)`, 0.2)
+        .drawPolygon(gm.rooms[roomId].outline)
+        .endFill();
+
       // decor in room
       const { points } = api.decor.byRoom[gmId][roomId];
       const radius = decorIconRadius + 1;
       points.forEach((d, pointId) => {
         const center = gm.toLocalCoords(d);
         // Assuming ≤ 256 DecorPoints in a room
-        gfx.beginFill(`rgba(${hitTestRed.decorPoint}, ${roomId}, ${pointId}, 1)`);
-        gfx.drawCircle(center.x, center.y, radius);
-        gfx.endFill();
+        gfx.beginFill(`rgb(${hitTestRed.decorPoint}, ${roomId}, ${pointId})`, 1)
+          .drawCircle(center.x, center.y, radius)
+          .endFill();
       });
 
       // canClickArrows
       const { opts } = api.debug;
       if (opts.canClickArrows && opts.room && opts.room.gmId === gmId && opts.room.roomId === roomId) {
         opts.room.navArrows.forEach(({ doorId, arrowPos }) => {
-          gfx.beginFill(`rgba(${hitTestRed.debugArrow}, ${roomId}, ${doorId}, 1)`);
-          gfx.drawCircle(arrowPos.x, arrowPos.y, radius);
-          gfx.endFill();
+          gfx.beginFill(`rgb(${hitTestRed.debugArrow}, ${roomId}, ${doorId})`, 1)
+            .drawCircle(arrowPos.x, arrowPos.y, radius)
+            .endFill();
         });
       }
 
@@ -221,14 +212,14 @@ export default function Geomorphs(props) {
       gm.roomGraph.getAdjacentDoors(roomId).forEach(({ doorId }) => {
         const { poly, seg: [u, v], normal } = gm.doors[doorId];
         // Assuming ≤ 256 doors in a geomorph
-        gfx.beginFill(`rgba(${hitTestRed.door}, 0, ${doorId}, 1)`);
-        gfx.drawPolygon([
-          u.clone().addScaledVector(normal, 4),
-          v.clone().addScaledVector(normal, 4),
-          v.clone().addScaledVector(normal, -4),
-          u.clone().addScaledVector(normal, -4),
-        ]);
-        gfx.endFill();
+        gfx.beginFill(`rgb(${hitTestRed.door}, 0, ${doorId})`, 1)
+          .drawPolygon([
+            u.clone().addScaledVector(normal, 4),
+            v.clone().addScaledVector(normal, 4),
+            v.clone().addScaledVector(normal, -4),
+            u.clone().addScaledVector(normal, -4),
+          ])
+          .endFill();
       });
 
       api.renderInto(gfx, state.hit[gmId], false);

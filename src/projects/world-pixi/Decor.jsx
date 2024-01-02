@@ -93,7 +93,6 @@ export default function Decor(props) {
         return;
       }
 
-      api.geomorphs.clearHitRoom(gmId, roomId);
       state.gfx.clear();
       state.gfx.transform.setFromMatrix(state.mat[gmId]);
 
@@ -232,7 +231,6 @@ export default function Decor(props) {
         return;
       }
 
-      api.geomorphs.clearHitRoom(gmId, roomId);
       // erase and redraw overlapping
       state.eraseDecor(gmId, state.showColliders ? ds : ds.filter(isDecorPoint));
       

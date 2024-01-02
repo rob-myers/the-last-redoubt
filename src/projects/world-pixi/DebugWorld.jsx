@@ -193,10 +193,7 @@ export default function DebugWorld(props) {
       const { gmGraph, fov: { gmId, roomId } } = api;
       const gm = gmGraph.gms[gmId];
 
-      // canClickArrows modifies hit canvas
       const prevRoom = state.opts.room;
-      prevRoom && api.geomorphs.clearHitRoom(prevRoom.gmId, prevRoom.roomId);
-
       const adjDoorIds = gm.roomGraph.getAdjacentDoors(roomId).map(x => x.doorId);
       state.opts.room = {
         gmId,
@@ -215,6 +212,7 @@ export default function DebugWorld(props) {
         roomPoly: gm.rooms[roomId],
       };
 
+      // canClickArrows modifies hit canvas
       prevRoom && api.geomorphs.renderHitRoom(prevRoom.gmId, prevRoom.roomId);
       state.render();
     },
