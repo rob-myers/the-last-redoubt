@@ -9,7 +9,7 @@
   - ✅ fadeSpawn
   - ✅ fadeSpawn preserves angle
     - `npc rob startAnimation idle-breathe` preserves angle
-  - 🚧 `npc rob do $( click 1 )`
+  - ✅ `npc rob do $( click 1 )`
     - ✅ opens door
     - ✅ decor points have tags e.g. lie, sit
     - ✅ fade from nav-mesh to do-point
@@ -23,12 +23,11 @@
       - ℹ️ `spawn rob $( click 1)` has correct orient
     - ✅ sit/lie is centred
       - ✅ fix decor click targetPos
-  - 🚧 try get HMR working for create-npc
-    - try class instantiate instead, just in case HMR works?
-    - manually overwrite functions?
+  - ✅ get HMR working for create-npc
+    - manually overwrite
   - try sharp rotate during walk i.e. via events instead of tween
 
-- can detect local room via hit test canvas
+- 🚧 can detect local room via hit test canvas
   - draw rooms as background (already drawing doors)
 
 - detect npcs on pointer{move,down}

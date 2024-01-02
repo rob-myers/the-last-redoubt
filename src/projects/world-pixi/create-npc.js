@@ -82,7 +82,7 @@ export default function createNpc(def, api) {
     navOpts: { centroidsFallback: true, closedWeight: 10 * 1000 },
     navPath: null,
     nextWalk: null,
-    unspawned: true,
+    unspawned: true, // old
 
     async animateOpacity(targetOpacity, durationMs) {
       this.a.opacity.stop();
@@ -833,16 +833,16 @@ export default function createNpc(def, api) {
   };
 }
 
-/** @type {NPC.TweenExt} */
-const emptyTween = Object.assign(new TWEEN.Tween({}), {
-  promise: () => Promise.resolve({}),
-});
-
-const emptyFn = () => {};
-
-const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
-  {}
-);
+/**
+ * Mutates provided @see npc
+ * @param {NPC.NPC} npc 
+ * @param {import('./WorldPixi').State} api
+ * @returns {NPC.NPC}
+ */
+export function hotModuleReloadNpc(npc, api) {
+  const { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk } = npc;
+  return Object.assign(npc, createNpc(def, api), { def, epochMs, s, a, doMeta, forcePaused, gmRoomId, has, navOpts, navPath, nextWalk });
+}
 
 /**
  * @param {NPC.SpineAnimName} animName
@@ -874,3 +874,14 @@ function getAnimDurations(shared, walkSpeed) {
     return [...Array(shared.frameCount)].map(_ => 1 / shared.stationaryFps);
   }
 }
+
+/** @type {NPC.TweenExt} */
+const emptyTween = Object.assign(new TWEEN.Tween({}), {
+  promise: () => Promise.resolve({}),
+});
+
+const emptyFn = () => {};
+
+const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
+  {}
+);

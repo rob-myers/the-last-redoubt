@@ -19,7 +19,7 @@ import { useQueryOnce } from "../hooks/use-query-utils";
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
-import createNpc from "./create-npc";
+import createNpc, { hotModuleReloadNpc } from "./create-npc";
 import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
 
 /** @param {Props} props */
@@ -851,6 +851,10 @@ export default function NPCs(props) {
       return null;
     },
   );
+
+  React.useEffect(() => {
+    process.env.NODE_ENV === 'development' && Object.values(state.npc).forEach(x => hotModuleReloadNpc(x, api));
+  }, []);
 
   return (
     <ParticleContainer
