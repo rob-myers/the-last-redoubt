@@ -30,7 +30,7 @@
 - ✅ can detect local room via hit test canvas
   - draw rooms as background (already drawing doors)
 
-- BUG hitTest canvas missing rooms?
+- ✅ BUG hitTest canvas missing rooms?
 
 - 🚧 detect npcs on pointer{move,down}
   - ✅ detect room from hit test canvas

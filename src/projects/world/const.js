@@ -95,7 +95,7 @@ export const hitTestRed = {
   decorPoint: 254,
   /** rgba encoding `(253, roomId, doorId, 1)` */
   debugArrow: 253,
-  /** rgba encoding `(0, roomId, 255, 0.2)` */
+  /** rgba encoding `(0, roomId, 255, 0.1)` */
   room: 0,
 };
 

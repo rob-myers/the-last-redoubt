@@ -93,10 +93,8 @@ export default function Geomorphs(props) {
       }
     },
     initHit(gmId) {
-      gms[gmId].rooms.forEach((_, roomId) => {
-        api.clearInto(state.hit[roomId]);
-        state.renderHitRoom(gmId, roomId);
-      });
+      api.clearInto(state.hit[gmId]);
+      gms[gmId].rooms.forEach((_, roomId) => state.renderHitRoom(gmId, roomId));
     },
     initTex(gmId) {
       //  image -> image
@@ -183,7 +181,7 @@ export default function Geomorphs(props) {
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       
       // room itself
-      gfx.beginFill(`rgb(${hitTestRed.room}, ${roomId}, 255)`, 0.2)
+      gfx.beginFill(`rgb(${hitTestRed.room}, ${roomId}, 255)`, 0.1)
         .drawPolygon(gm.rooms[roomId].outline)
         .endFill();
 
