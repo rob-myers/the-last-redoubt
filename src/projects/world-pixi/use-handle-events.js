@@ -2,7 +2,7 @@ import React from "react";
 import { npcHeadRadiusPx, npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
-import { decorToRef, getDecorOrigin, queryDecorGridLine } from "../service/geomorph";
+import { decorToRef, queryDecorGridLine } from "../service/geomorph";
 import { warn } from "../service/log";
 import { stripAnsi } from "../sh/util";
 import useSession from "../sh/session.store"; // 🤔 avoid dep?
@@ -15,6 +15,32 @@ import useStateRef from "../hooks/use-state-ref";
 export default function useHandleEvents(api, disabled) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
+
+    detectNpcClick(e) {
+      // 🚧 mutate meta on click npc
+      // 🚧 trigger 'npc-clicked'
+      const { meta } = e;
+      const npcs = /** @type {NPC.NPC[]} */ ([]);
+      if (typeof meta.gmId !== 'number') {
+        return;
+      }
+      if (typeof meta.roomId === 'number') {
+        // check npcs in room
+        // 🚧 and possibly near door(s)
+        for (const npcKey in api.npcs.byRoom[meta.gmId][meta.roomId])
+          npcs.push(api.npcs.npc[npcKey]);
+      } else if (typeof meta.doorId === 'number') {// check npcs near door
+        for (const npcKey in api.npcs.nearDoor[meta.gmId][meta.doorId])
+          npcs.push(api.npcs.npc[npcKey]);
+      }
+
+      for (const npc of npcs) {
+        if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
+          Object.assign(e.meta, { npc: true, npcKey: npc.key });
+          break;
+        }
+      }
+    },
 
     handleDoorsEvent(e) {
       switch (e.key) {
@@ -161,32 +187,20 @@ export default function useHandleEvents(api, disabled) {
         case 'pointerup':
           // mutate meta on click door/decor/debug
           const meta = api.geomorphs.getHitMeta(e.point);
+          console.log(JSON.stringify(meta));
           Object.assign(e.meta, meta);
-
-          // 🚧 mutate meta on click npc
-          // - move to own function
-          // - getHitMeta provides gmRoomId or gmDoorId
-          // - iterate through api.npcs.byRoom[gmId][roomId]
-          // - in pointmove too
-          // - trigger 'npc-clicked'
-          if (meta && typeof meta.roomId === 'number') {
-            for (const npc of Object.values(api.npcs.npc)) {
-              if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
-                Object.assign(e.meta, { npc: true, npcKey: npc.key });
-                break;
-              }
-            }
-          }
 
           if (e.meta.debug) {
             api.debug.onClick(e);
           }
-          if (e.meta.decor && typeof e.meta.decorKey === 'string') {
-            const item = api.decor.decor[e.meta.decorKey];
-            e.meta.targetPos = getDecorOrigin(item);
-            api.npcs.events.next({ key: 'decor-click', decor: item });
+          if (typeof e.meta.decorKey === 'string') {
+            api.npcs.events.next({
+              key: 'decor-click',
+              decor: api.decor.decor[e.meta.decorKey],
+            });
           }
 
+          state.detectNpcClick(e);
           break;
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
@@ -511,6 +525,7 @@ export default function useHandleEvents(api, disabled) {
  * @property {(npc: NPC.NPC, gmId: number, nextDoorId: number) => Promise<void>} preWalkThroughDoor
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: import('./Doors').DoorMessage) => void} handleDoorsEvent
+ * @property {(e: PanZoom.PointerUpEvent) => void} detectNpcClick
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent Handle NPC event (always runs)
  * @property {(e: PanZoom.InternalEvent) => void} handlePanZoomEvents
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent

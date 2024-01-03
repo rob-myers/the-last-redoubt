@@ -111,6 +111,7 @@ declare namespace PanZoom {
 
   interface PointerUpEvent {
     key: 'pointerup';
+    /** World coords */
     point: Geom.VectJson;
     meta: Record<string, string | number | boolean | Geom.VectJson> & {
       /** Distance from pointerdown in world coords */

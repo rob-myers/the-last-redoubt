@@ -4,9 +4,10 @@ import { Graphics } from "@pixi/graphics";
 
 import { Poly } from "../geom";
 import { assertDefined } from "../service/generic";
+import { getDecorOrigin } from "../service/geomorph";
 import { decorIconRadius, gmScale, hitTestRed } from "../world/const";
-import useStateRef from "../hooks/use-state-ref";
 import { colMatFilter1 } from "./const";
+import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
 
 /**
@@ -67,6 +68,7 @@ export default function Geomorphs(props) {
       }
       const gm = api.gmGraph.gms[gmId];
       const local = gm.inverseMatrix.transformPoint({...worldPoint});
+      // ℹ️ fix alpha=1 otherwise get pre-multiplied values?
       const [r, g, b, _a] = Array.from(api.extract.pixels(
         api.geomorphs.hit[gmId],
         new Rectangle(local.x - gm.pngRect.x - 1, local.y - gm.pngRect.y - 1, 1, 1),
@@ -79,11 +81,12 @@ export default function Geomorphs(props) {
           return /** @type {Geomorph.PointMeta} */ ({ door: true, gmId, doorId: b, ui: true });
         case hitTestRed.decorPoint: {
           const decor = api.decor.byRoom[gmId][g].points[b];
-          if (!decor) {
+          if (decor) {
+            return /** @type {Geomorph.PointMeta} */ ({ decor: true, ...decor.meta, gmId, roomId: g, decorKey: decor.key, ui: true, targetPos: getDecorOrigin(decor) });
+          } else {
             console.error(`decor not found: g${gmId}r${g}p${b}`);
             return null;
           }
-          return /** @type {Geomorph.PointMeta} */ ({ decor: true, ...decor.meta, gmId, roomId: g, decorKey: decor.key, ui: true, });
         }
         case hitTestRed.debugArrow:
           return /** @type {Geomorph.PointMeta} */ ({ debug: true, debugArrow: true, gmId, roomId: g, doorId: b, ui: true });
@@ -181,7 +184,7 @@ export default function Geomorphs(props) {
       const gfx = state.gfx.clear().setTransform(-gm.pngRect.x, -gm.pngRect.y);
       
       // room itself
-      gfx.beginFill(`rgb(${hitTestRed.room}, ${roomId}, 255)`, 0.1)
+      gfx.beginFill(`rgb(${hitTestRed.room}, ${roomId}, 255)`, 1)
         .drawPolygon(gm.rooms[roomId].outline)
         .endFill();
 

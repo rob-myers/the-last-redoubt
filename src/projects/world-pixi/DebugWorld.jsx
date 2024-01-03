@@ -96,7 +96,7 @@ export default function DebugWorld(props) {
 
         if (opts.debugHit) {
           gfx.setTransform(0, 0, gmScale, gmScale);
-          gfx.beginTextureFill({ texture: api.geomorphs.hit[gmId] });
+          gfx.beginTextureFill({ texture: api.geomorphs.hit[gmId], alpha: 0.2 });
           gfx.drawRect(0, 0, gm.pngRect.width, gm.pngRect.height);
           gfx.endFill();
           api.renderInto(gfx, state.tex[gmId], false);
