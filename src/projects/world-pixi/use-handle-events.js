@@ -1,4 +1,5 @@
 import React from "react";
+import { filter, debounceTime } from "rxjs/operators";
 import { npcHeadRadiusPx, npcSlowWalkSpeedFactor } from "../world/const";
 import { ansi } from '../service/const';
 import { assertDefined, testNever } from "../service/generic";
@@ -16,26 +17,30 @@ export default function useHandleEvents(api, disabled) {
 
   const state = useStateRef(/** @type {() => State} */ () => ({
 
-    detectNpcClick(e) {
-      // 🚧 mutate meta on click npc
-      // 🚧 trigger 'npc-clicked'
+    detectOverNpc(e) {
       const { meta } = e;
-      const npcs = /** @type {NPC.NPC[]} */ ([]);
+      const npcKeys = /** @type {Record<string, true>} */ ({});
       if (typeof meta.gmId !== 'number') {
         return;
       }
       if (typeof meta.roomId === 'number') {
         // check npcs in room
-        // 🚧 and possibly near door(s)
-        for (const npcKey in api.npcs.byRoom[meta.gmId][meta.roomId])
-          npcs.push(api.npcs.npc[npcKey]);
+        Object.assign(npcKeys, api.npcs.byRoom[meta.gmId][meta.roomId]);
+        // and nearby door(s)
+        api.decor.getDecorAtPoint(e.point, meta.gmId, meta.roomId).forEach(decor =>
+          decor.meta.doorSensor && Object.assign(npcKeys, api.npcs.nearDoor
+            [/** @type {number} */ (meta.gmId)]
+            [/** @type {number} */ (decor.meta.doorId)]
+          )
+        );
       } else if (typeof meta.doorId === 'number') {// check npcs near door
-        for (const npcKey in api.npcs.nearDoor[meta.gmId][meta.doorId])
-          npcs.push(api.npcs.npc[npcKey]);
+        Object.assign(npcKeys, api.npcs.nearDoor[meta.gmId][meta.doorId]);
       }
 
-      for (const npc of npcs) {
+      for (const npcKey in npcKeys) {
+        const npc = api.npcs.npc[npcKey];
         if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
+          // Mutate meta
           Object.assign(e.meta, { npc: true, npcKey: npc.key });
           break;
         }
@@ -66,6 +71,13 @@ export default function useHandleEvents(api, disabled) {
           break;
         default:
           throw testNever(e.key);
+      }
+    },
+
+    handleHover(e) {
+      state.detectOverNpc(e);
+      if (e.meta.npcKey) {
+        api.setCursor('pointer');
       }
     },
 
@@ -201,7 +213,7 @@ export default function useHandleEvents(api, disabled) {
             break;
           }
 
-          state.detectNpcClick(e);
+          state.detectOverNpc(e);
 
           if (typeof e.meta.npcKey === 'string') {
             api.npcs.events.next({
@@ -215,6 +227,7 @@ export default function useHandleEvents(api, disabled) {
           break;
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
+          Object.assign(e.meta, meta);
           api.setCursor(meta?.ui ? 'pointer' : 'auto');
           // meta && console.log('pointermove', meta);
           break;
@@ -500,12 +513,20 @@ export default function useHandleEvents(api, disabled) {
       state.handlePanZoomEvents(e)
     );
 
+    const hoverSub = api.panZoom.events.pipe(
+      filter(/** @returns {x is PanZoom.PointerMoveEvent} */
+        x => x.key === 'pointermove'
+      ),
+      debounceTime(300),
+    ).subscribe(e => state.handleHover(e));
+
     api.debug.render(); // Initial debug render
 
     return () => {
       doorsSub.unsubscribe();
       npcsSub.unsubscribe();
       panZoomSub.unsubscribe();
+      hoverSub.unsubscribe();
     };
   }, [worldReady]);
 
@@ -536,8 +557,10 @@ export default function useHandleEvents(api, disabled) {
  * @property {(npc: NPC.NPC, gmId: number, nextDoorId: number) => Promise<void>} preWalkThroughDoor
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: import('./Doors').DoorMessage) => void} handleDoorsEvent
- * @property {(e: PanZoom.PointerUpEvent) => void} detectNpcClick
+ * @property {(e: PanZoom.PointerUpEvent | PanZoom.PointerMoveEvent) => void} detectOverNpc
+ * Check whether pointer is currently over an npc.
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent Handle NPC event (always runs)
+ * @property {(e: PanZoom.PointerMoveEvent) => void} handleHover
  * @property {(e: PanZoom.InternalEvent) => void} handlePanZoomEvents
  * @property {(e: NPC.NPCsEventWithNpcKey) => Promise<void>} handlePlayerEvent
  * Handle Player NPC events (only runs when e.npcKey is playerKey)

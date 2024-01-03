@@ -38,7 +38,8 @@
   - ✅ maintain gmDoor -> npcKeys mapping
     - api.npcs.nearDoor
   - ✅ `npc-clicked` event
-- 🚧 detect npcs on debounced pointermove
+- ✅ finish detectNpcClick in case of room door sensors
+- ✅ detect npcs on debounced pointermove
 - ❌ detect decor-{circle,rect} on pointerdown
   - ℹ️ did not previously exist
 

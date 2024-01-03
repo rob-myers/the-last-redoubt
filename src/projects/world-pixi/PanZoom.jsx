@@ -93,7 +93,7 @@ export default function PanZoom(props) {
     },
     pointermove(e) {
       if (e.nativeEvent.target === props.api.canvas) {
-        state.events.next({ key: 'pointermove', point: state.getWorld(e) });
+        state.events.next({ key: 'pointermove', point: state.getWorld(e), meta: {} });
       } // ignore pointermove outside viewport
     },
     pointerup(e) {
