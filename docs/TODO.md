@@ -25,19 +25,24 @@
       - ✅ fix decor click targetPos
   - ✅ get HMR working for create-npc
     - manually overwrite
-  - detect decor-{circle,rect} click?
-    - maybe collideKeys?
   - try sharp rotate during walk i.e. via events instead of tween
 
 - ✅ can detect local room via hit test canvas
   - draw rooms as background (already drawing doors)
 
-- detect npcs on pointer{move,down}
-  - detect room from hit test canvas
-  - maintain gmRoom -> npcKeys mapping (overlap?)
-  - `npc-clicked` event
+- BUG hitTest canvas missing rooms?
 
-- BUG tty history with multiple lines loses row, e.g.
+- 🚧 detect npcs on pointer{move,down}
+  - ✅ detect room from hit test canvas
+  - 🚧 maintain gmRoom -> npcKeys mapping
+    - api.npcs.byRoom
+  - maintain gmDoor -> npcKeys mapping
+    - api.npcs.nearDoor
+  - `npc-clicked` event
+- ❌ detect decor-{circle,rect} on pointerdown
+  - ℹ️ did not previously exist
+
+- BUG tty history with multiple lines loses row(s), e.g.
 ```sh
 npc events | filter '({ key, decor }) =>
   key === "decor-click" && (decor.meta.stand || decor.meta.sit)' | filter '(e, { api, home }) => {

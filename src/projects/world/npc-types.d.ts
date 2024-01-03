@@ -182,6 +182,7 @@ declare namespace NPC {
     setInteractRadius(radius: number | null): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     setupAnim(animName: SpineAnimName): void;
+    setGmRoomId(gmRoomId: Geomorph.GmRoomId | null): void;
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
     setSpeedFactor(speedFactor: number): void;
     setWalkSpeed(walkSpeed: number): void;

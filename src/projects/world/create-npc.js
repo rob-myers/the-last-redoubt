@@ -745,6 +745,9 @@ export default function createNpc(
     setupAnim(animName) {
       // Fix types during migration
     },
+    setGmRoomId(next) {
+      this.gmRoomId = next;
+    },
     setInteractRadius(radius) {
       if (typeof radius === 'number') {
         this.el.root.style.setProperty(cssName.npcsInteractRadius, `${radius}px`);

@@ -412,7 +412,7 @@ export default function createNpc(def, api) {
       this.s.body.rotation = this.def.angle;
       this.a.staticBounds = new Rect(this.def.position.x - npcRadius, this.def.position.y - npcRadius, 2 * npcRadius, 2 * npcRadius);
       // Include doors so doorways have some gmRoomId too
-      this.gmRoomId = api.gmGraph.findRoomContaining(this.def.position, true);
+      this.setGmRoomId(api.gmGraph.findRoomContaining(this.def.position, true));
     },
     intersectsCircle(position, radius) {
       return this.getPosition().distanceTo(position) <= this.getRadius() + radius;
@@ -614,6 +614,15 @@ export default function createNpc(def, api) {
       a.initHeadWidth = headRect.width;
 
       this.updateSprites();
+    },
+    setGmRoomId(next) {
+      if (this.gmRoomId) {
+        delete api.npcs.byRoom[this.gmRoomId.gmId][this.gmRoomId.roomId][this.key];
+      }
+      if (next) {
+        api.npcs.byRoom[next.gmId][next.roomId][this.key] = true;
+      }
+      this.gmRoomId = next;
     },
     setInteractRadius(radius) {
       // 🚧 currently unsupported

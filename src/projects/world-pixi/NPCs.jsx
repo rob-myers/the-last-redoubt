@@ -33,8 +33,10 @@ export default function NPCs(props) {
     tex: RenderTexture.create({ width: spineMeta.packedWidth, height: spineMeta.packedHeight }),
     pc: /** @type {*} */ ({}),
 
-    events: new Subject,
     npc: {},
+    byRoom: gms.map(gm => gm.rooms.map(_ => ({}))),
+
+    events: new Subject,
     playerKey: null,
     ready: true,
     session: {},
@@ -622,7 +624,7 @@ export default function NPCs(props) {
         if (state.isPointInNavmesh(input)) return input;
         throw Error(`point outside navmesh: ${JSON.stringify(input)}`);
       } else if (input in state.npc) {
-        const npc =  state.npc[input];
+        const npc = state.npc[input];
         const point = npc.getPosition();
         if (state.isPointInNavmesh(point)) {
           return point;
@@ -642,6 +644,7 @@ export default function NPCs(props) {
     removeNpc(npcKey) {
       const npc = state.getNpc(npcKey); // Throw if n'exist pas
       delete state.npc[npcKey];
+      npc.setGmRoomId(null);
       if (state.playerKey === npcKey) {
         state.npcAct({ action: 'set-player', npcKey: undefined });
       }
@@ -884,8 +887,11 @@ export default function NPCs(props) {
  * @property {RenderTexture} tex
  * @property {import('pixi.js').ParticleContainer} pc
  * 
- * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {Record<string, NPC.NPC>} npc
+ * @property {{ [npcKey: string]: true }[][]} byRoom
+ * NPCs organised `byRoom[gmId][roomId]`.
+ *
+ * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {null | string} playerKey
  * @property {boolean} ready
  * @property {{ [sessionKey: string]: NPC.SessionCtxt }} session

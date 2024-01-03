@@ -163,14 +163,18 @@ export default function useHandleEvents(api, disabled) {
           const meta = api.geomorphs.getHitMeta(e.point);
           Object.assign(e.meta, meta);
 
-          // mutate meta on click npc
-          // 🚧 getHitMeta provides gmRoomId
-          // 🚧 iterate through api.npcs.byRoom[gmId][roomId]
-          // 🚧 trigger 'npc-clicked'
-          for (const npc of Object.values(api.npcs.npc)) {
-            if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
-              Object.assign(e.meta, { npc: true, npcKey: npc.key });
-              break;
+          // 🚧 mutate meta on click npc
+          // - move to own function
+          // - getHitMeta provides gmRoomId or gmDoorId
+          // - iterate through api.npcs.byRoom[gmId][roomId]
+          // - in pointmove too
+          // - trigger 'npc-clicked'
+          if (meta && typeof meta.roomId === 'number') {
+            for (const npc of Object.values(api.npcs.npc)) {
+              if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
+                Object.assign(e.meta, { npc: true, npcKey: npc.key });
+                break;
+              }
             }
           }
 
@@ -202,11 +206,10 @@ export default function useHandleEvents(api, disabled) {
           await stopNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
-          npc.gmRoomId = npc.a.gmRoomIds[e.meta.index] ?? npc.gmRoomId;
+          e.meta.index in npc.a.gmRoomIds && npc.setGmRoomId(npc.a.gmRoomIds[e.meta.index]);
 
           if ((e.meta.index + 1) === npc.a.path.length) {
-            // npc at final vertex
-            npc.a.deferred.resolve();
+            npc.a.deferred.resolve(); // npc at final vertex
             break;
           }
           
