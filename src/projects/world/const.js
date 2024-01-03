@@ -42,7 +42,7 @@ export const defaultNpcInteractRadius = 70;
 
 export const npcFastWalkSpeedFactor = 1;
 export const npcWalkSpeedFactor = 0.7;
-export const npcSlowWalkSpeedFactor = 0.5;
+export const npcSlowWalkSpeedFactor = 1;
 /** Now larger for mobile 🤔 maybe can change? */
 export const npcHeadRadiusPx = 10;
 

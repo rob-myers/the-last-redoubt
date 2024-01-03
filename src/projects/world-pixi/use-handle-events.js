@@ -244,12 +244,19 @@ export default function useHandleEvents(api, disabled) {
           await stopNpcs(e.npcKey, e.meta.otherNpcKey);
           break;
         case 'vertex':
-          e.meta.index in npc.a.gmRoomIds && npc.setGmRoomId(npc.a.gmRoomIds[e.meta.index]);
-
+          if (e.meta.index === 0) {
+            npc.s.body.position.copyFrom(npc.a.path[0]);
+          }
+          if (e.meta.index in npc.a.gmRoomIds) {
+            npc.setGmRoomId(npc.a.gmRoomIds[e.meta.index]);
+          }
           if ((e.meta.index + 1) === npc.a.path.length) {
             npc.a.deferred.resolve(); // npc at final vertex
             break;
           }
+
+          npc.s.body.rotation = npc.a.aux.angs[e.meta.index] + Math.PI/2;
+          npc.updateHead(); // 🚧 bounds too?
           
           // npc is walking along a line segment
           npc.updateWalkSegBounds(e.meta.index);

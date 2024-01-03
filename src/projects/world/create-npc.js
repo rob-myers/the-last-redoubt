@@ -549,6 +549,9 @@ export default function createNpc(
     isPaused() {
       return this.anim.sprites.playState === 'paused';
     },
+    isPlayer() {
+      return this.key === api.npcs.playerKey;
+    },
     isPointBlocked(point, permitEscape = false) {
       const { npcs } = api;
       const closeNpcs = npcs.getCloseNpcs(this.key);

@@ -164,6 +164,7 @@ declare namespace NPC {
     isIdle(): boolean;
     /** Is this npc paused, but not necessarily @see {forcePaused}? */
     isPaused(): boolean;
+    isPlayer(): boolean;
     isPointBlocked(point: Geomorph.PointMaybeMeta, permitEscape?: boolean): boolean;
     isWalking(requireMoving?: boolean): boolean;
     /** Returns destination angle in radians */
@@ -289,6 +290,7 @@ declare namespace NPC {
      * `outsetBounds` and `outsetSegBounds` depend on npc radius.
      */
     aux: {
+      /** Radians */
       angs: number[];
       edges: ({ p: Geom.Vect; q: Geom.Vect })[];
       elens: number[];

@@ -423,6 +423,9 @@ export default function createNpc(def, api) {
     isPaused() {
       return this.a.paused;
     },
+    isPlayer() {
+      return this.key === api.npcs.playerKey;
+    },
     isPointBlocked(point) {
       // Check if blocked by nearby NPC
       const closeNpcs = api.npcs.getCloseNpcs(this.key);

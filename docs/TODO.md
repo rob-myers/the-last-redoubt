@@ -2,7 +2,7 @@
 
 ## In progress
 
-- 🚧 continue migrating NPCs
+- ✅ continue migrating NPCs
   - ✅ can look
   - ✅ `decor-click` event
   - ✅ animateOpacity
@@ -25,23 +25,20 @@
       - ✅ fix decor click targetPos
   - ✅ get HMR working for create-npc
     - manually overwrite
-  - try sharp rotate during walk i.e. via events instead of tween
 
-- ✅ can detect local room via hit test canvas
-  - draw rooms as background (already drawing doors)
-- ✅ BUG hitTest canvas missing rooms?
+- 🚧 get `walk` working
+  - ℹ️ `walk rob $navPath`
+  - ℹ️ `navPath $( click 2 ) | walk rob`
+  - ℹ️ `click | walk rob --open`
+  - ✅ move to start of navPath
+  - ✅ sharp rotate during walk i.e. via events instead of tween
+    - try chained tween instead?
+  - understand bugs: HMR related?
 
-- ✅ detect npcs on pointerdown
-  - ✅ detect room from hit test canvas
-  - ✅ maintain gmRoom -> npcKeys mapping
-    - api.npcs.byRoom
-  - ✅ maintain gmDoor -> npcKeys mapping
-    - api.npcs.nearDoor
-  - ✅ `npc-clicked` event
-- ✅ finish detectNpcClick in case of room door sensors
-- ✅ detect npcs on debounced pointermove
-- ❌ detect decor-{circle,rect} on pointerdown
-  - ℹ️ did not previously exist
+- easy way to see navPaths
+  - `world debug.addNavPath foo ${navPath} && world debug.render`
+
+- BUG? `take | map 'x => "Hello " + x'`
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
@@ -727,6 +724,22 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ can detect local room via hit test canvas
+  - draw rooms as background (already drawing doors)
+- ✅ BUG hitTest canvas missing rooms?
+
+- ✅ detect npcs on pointerdown
+  - ✅ detect room from hit test canvas
+  - ✅ maintain gmRoom -> npcKeys mapping
+    - api.npcs.byRoom
+  - ✅ maintain gmDoor -> npcKeys mapping
+    - api.npcs.nearDoor
+  - ✅ `npc-clicked` event
+- ✅ finish detectNpcClick in case of room door sensors
+- ✅ detect npcs on debounced pointermove
+- ❌ detect decor-{circle,rect} on pointerdown
+  - ℹ️ did not previously exist
 
 - ✅ avoid tty crashes e.g. on print `api`, `Viewport` or `Tween`
   - fix `safeStringify` by carefully stepping through a problematic object

@@ -158,6 +158,7 @@ npc events |
 ```
 
 ```sh
+spawn rob $( click 1 )
 npc rob >me
 me/animateRotate'(0.5, 0)'
 npc rob animateRotate -0.5 0
@@ -169,24 +170,33 @@ npc rob animateOpacity 0.5 1000
 click | npc rob fadeSpawn
 ```
 
+```sh
+spawn rob $( click 1 ) --zhodani
+npc rob do $( click 1 )
+click | npc rob do
+
+# foo close door at
+npc rob do "$( click 1 )" '{ extraParams: [0] }'
+# foo open door at
+npc rob do "$( click 1 )" '{ extraParams: [1] }'
+```
+
 🚧 test from here
 
 ```sh
-expr '{ npcKey: "foo", point:'$( click 1 )'}' | npc do '{ suppressError: 1 }'
+spawn rob $( click 1 ) --zhodani
+npc set-player rob
+nav $( click 2 ) >navPath
+walk rob "$navPath"
+```
 
-npc do '{ npcKey: "foo", point:'$( click 1 )'}'
-npc do foo $( click 1 )
-
-# foo close door at
-npc do foo $( click 1 ) 0
-# foo open door at
-npc do foo $( click 1 ) 1
+```sh
+# multiple spawn
 ```
 
 ```sh
 npc events | filter 'x => x.key === "stopped-walking"'
-# versus
-npc events | filter 'x => x.key === "way-point" && x.meta.final'
+npc events | filter /stopped-walking/
 
 npc events | filter 'x => x.key === "way-point" && x.meta.key === "exit-room"'
 
@@ -206,6 +216,12 @@ npc rm $( world npcs.npc | keys | split | filter /bot_/ )
 npc get | split | map 'x => x.key'
 # or
 npc get | map 'xs => xs.map(x => x.key)'
+```
+
+```sh
+spawn rob $( click 1 )
+spawn rob2 $( click 1 ) --zhodani
+npc rob lookAt $( npc rob2 getPosition)
 ```
 
 ## Migrating
@@ -289,12 +305,12 @@ world "x => x.gmGraph.findRoomContaining($( click 1 ))"
 world gmGraph.findRoomContaining $( click 1 ) true
 world gmGraph.getRoomsVantages "$( npc rob gmRoomId )" "$( npc foo gmRoomId )"
 world panZoom.distanceTo $( npc rob getPosition )
+call 'x => x.w' # see CACHE_SHORTCUTS
 
 gm 0 'x => x.roomGraph'
 gm 0 hullDoors | map length
 gm 0 hullDoors | split | map meta
 ```
-
 
 ```sh
 world 'x => x.npcs.getRandomRoom(
