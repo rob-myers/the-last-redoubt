@@ -35,6 +35,7 @@ export default function NPCs(props) {
 
     npc: {},
     byRoom: gms.map(gm => gm.rooms.map(_ => ({}))),
+    nearDoor: gms.map(gm => gm.doors.map(_ => ({}))),
 
     events: new Subject,
     playerKey: null,
@@ -643,8 +644,23 @@ export default function NPCs(props) {
     },
     removeNpc(npcKey) {
       const npc = state.getNpc(npcKey); // Throw if n'exist pas
-      delete state.npc[npcKey];
+      
+      // clean lookups
+      npc.gmRoomId && api.decor.getDecorAtPoint(
+        npc.getPosition(), npc.gmRoomId.gmId, npc.gmRoomId.roomId
+      ).forEach(decor =>
+        api.npcs.events.next({ key: 'way-point', npcKey: npc.key, meta: {
+          key: 'decor-collide',
+          type: 'exit',
+          decor: decorToRef(decor),
+          gmId: /** @type {Geomorph.GmRoomId} */ (npc.gmRoomId).gmId,
+          index: -1,
+          length: 0,
+        }})
+      );
       npc.setGmRoomId(null);
+      delete state.npc[npcKey]; // after event handling
+
       if (state.playerKey === npcKey) {
         state.npcAct({ action: 'set-player', npcKey: undefined });
       }
@@ -890,6 +906,8 @@ export default function NPCs(props) {
  * @property {Record<string, NPC.NPC>} npc
  * @property {{ [npcKey: string]: true }[][]} byRoom
  * NPCs organised `byRoom[gmId][roomId]`.
+ * @property {{ [npcKey: string]: true }[][]} nearDoor
+ * NPCs organised `nearRoom[gmId][doorId]`.
  *
  * @property {import('rxjs').Subject<NPC.NPCsEvent>} events
  * @property {null | string} playerKey

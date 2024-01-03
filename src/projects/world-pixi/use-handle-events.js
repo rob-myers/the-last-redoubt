@@ -405,12 +405,12 @@ export default function useHandleEvents(api, disabled) {
     },
 
     onTriggerDoorSensor(npc, event, gmId, doorId) {
-      if (npc.key === api.npcs.playerKey) {
-        if (event === 'enter') {
-          api.fov.recompute();
-        } else if (event === 'exit') {
-          api.fov.recompute();
-        }
+      if (event === 'enter') {
+        if (npc.key === api.npcs.playerKey) api.fov.recompute();
+        api.npcs.nearDoor[gmId][doorId][npc.key] = true;
+      } else if (event === 'exit') {
+        if (npc.key === api.npcs.playerKey) api.fov.recompute();
+        delete api.npcs.nearDoor[gmId][doorId][npc.key];
       }
       if (event !== 'exit' && doorId === npc.getNextDoorId()) {
         state.preWalkThroughDoor(npc, gmId, doorId)
