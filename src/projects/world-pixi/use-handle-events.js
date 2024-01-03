@@ -187,20 +187,31 @@ export default function useHandleEvents(api, disabled) {
         case 'pointerup':
           // mutate meta on click door/decor/debug
           const meta = api.geomorphs.getHitMeta(e.point);
-          console.log(JSON.stringify(meta));
           Object.assign(e.meta, meta);
 
           if (e.meta.debug) {
             api.debug.onClick(e);
+            break;
           }
           if (typeof e.meta.decorKey === 'string') {
             api.npcs.events.next({
               key: 'decor-click',
               decor: api.decor.decor[e.meta.decorKey],
             });
+            break;
           }
 
           state.detectNpcClick(e);
+
+          if (typeof e.meta.npcKey === 'string') {
+            api.npcs.events.next({
+              key: 'npc-clicked',
+              npcKey: e.meta.npcKey,
+              isPlayer: api.npcs.playerKey === e.meta.npcKey,
+              position: e.point,
+            });
+          }
+
           break;
         case 'pointermove': {
           const meta = api.geomorphs.getHitMeta(e.point);
