@@ -167,6 +167,8 @@ world: `{
   }' "$@"
 }`,
 
+api: `world "$@"`,
+
 /**
  * Usage: gm {gmId} [selector]
  */
