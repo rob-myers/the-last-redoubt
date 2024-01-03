@@ -309,7 +309,8 @@ export class ttyShellClass implements Device {
   */
   public finishedReading() {
     this.buffer.length = 0;
-    this.oneTimeReaders.forEach(({ reject }) => reject());
+    // this.oneTimeReaders.forEach(({ reject }) => reject());
+    this.oneTimeReaders.forEach(({ resolve }) => resolve(undefined));
     this.oneTimeReaders.length = 0;
   }
   //#endregion

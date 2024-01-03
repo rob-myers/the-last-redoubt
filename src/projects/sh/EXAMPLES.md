@@ -192,6 +192,15 @@ walk rob "$navPath"
 
 ```sh
 # multiple spawn
+# 🚧 support classKey e.g. {name}:{shortcut}
+multiSpawn () {
+  echo Enter npc name, then click somewhere:
+  while true; do
+    npcKey=$( take 1 )
+    spawn ${npcKey} $( click 1 )
+  done
+}
+multiSpawn
 ```
 
 ```sh
