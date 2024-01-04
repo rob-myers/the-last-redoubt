@@ -257,18 +257,13 @@ source /etc/util-1
 source /etc/game-1
 
 awaitWorld
-# temp
-click | filter meta.door | world doors.onRawDoorClick &
-world fov.setRoom 0 2
+spawn ${npcKey} '{"x":210,"y":390}' --zhodani
+npc set-player ${npcKey}
 npc config '{canClickArrows:true}'
 
-# spawn ${npcKey} '{"x":210,"y":390}'
-# npc set-player ${npcKey}
-# npc map hide-labels
-
+click | controlNpc ${npcKey} &
 # pausableNpcs &
 # track ${npcKey} &
-# click | controlNpc ${npcKey} &
 `,
 
 };
