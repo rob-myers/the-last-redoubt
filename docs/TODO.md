@@ -2,29 +2,9 @@
 
 ## In progress
 
-- ✅ continue migrating NPCs
-  - ✅ can look
-  - ✅ `decor-click` event
-  - ✅ animateOpacity
-  - ✅ fadeSpawn
-  - ✅ fadeSpawn preserves angle
-    - `npc rob startAnimation idle-breathe` preserves angle
-  - ✅ `npc rob do $( click 1 )`
-    - ✅ opens door
-    - ✅ decor points have tags e.g. lie, sit
-    - ✅ fade from nav-mesh to do-point
-    - ✅ fade from do-point to nav-mesh
-    - ✅ orient on sit/lie
-      - `+90` hard-coding during migration
-    - ✅ fix fadeSpawn direction via `+PI/2`
-    - ℹ️ permit spawn/fadeSpawn onto beds/tables/chairs
-    - ✅ fix orient when fadeSpawn onto beds/tables/chairs
-      - ℹ️ `npc rob do` has correct orient
-      - ℹ️ `spawn rob $( click 1)` has correct orient
-    - ✅ sit/lie is centred
-      - ✅ fix decor click targetPos
-  - ✅ get HMR working for create-npc
-    - manually overwrite
+- ✅ branch off previously working CSS-based system
+  - css-based-system-working
+  - but we'll try to keep both systems working for as long as possible
 
 - 🚧 get `walk` working
   - ℹ️ `walk rob $navPath`
@@ -34,11 +14,14 @@
   - ✅ sharp rotate during walk i.e. via events instead of tween
     - try chained tween instead?
   - understand bugs: HMR related?
+  - 🚧 fix `npc rob walk $( click 1 )`
+  - getting stuck on other npcs
 
 - easy way to see navPaths
   - `world debug.addNavPath foo ${navPath} && world debug.render`
 
-- BUG? `take | map 'x => "Hello " + x'`
+- ✅ BUG? `take | map 'x => x` terminates
+  - we `resolve(undefined)` instead of reject
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
@@ -48,15 +31,6 @@ npc events | filter '({ key, decor }) =>
   const player = npcs.getPlayer();
   return player?.getPosition().distanceTo(e.decor) <= player?.getInteractRadius();
 }'
-```
-
-- ✅ example where ppid non-zero
-```sh
-foo() {
-  { sleep 10; echo DONE; } &
-  echo Invoked
-}
-foo
 ```
 
 - 🚧 prepare for `World`-syncing i.e. multiple views
@@ -724,6 +698,39 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ example where ppid non-zero
+```sh
+foo() {
+  { sleep 10; echo DONE; } &
+  echo Invoked
+}
+foo
+```
+
+- ✅ continue migrating NPCs
+  - ✅ can look
+  - ✅ `decor-click` event
+  - ✅ animateOpacity
+  - ✅ fadeSpawn
+  - ✅ fadeSpawn preserves angle
+    - `npc rob startAnimation idle-breathe` preserves angle
+  - ✅ `npc rob do $( click 1 )`
+    - ✅ opens door
+    - ✅ decor points have tags e.g. lie, sit
+    - ✅ fade from nav-mesh to do-point
+    - ✅ fade from do-point to nav-mesh
+    - ✅ orient on sit/lie
+      - `+90` hard-coding during migration
+    - ✅ fix fadeSpawn direction via `+PI/2`
+    - ℹ️ permit spawn/fadeSpawn onto beds/tables/chairs
+    - ✅ fix orient when fadeSpawn onto beds/tables/chairs
+      - ℹ️ `npc rob do` has correct orient
+      - ℹ️ `spawn rob $( click 1)` has correct orient
+    - ✅ sit/lie is centred
+      - ✅ fix decor click targetPos
+  - ✅ get HMR working for create-npc
+    - manually overwrite
 
 - ✅ can detect local room via hit test canvas
   - draw rooms as background (already drawing doors)
