@@ -30,6 +30,7 @@ export default function createNpc(def, api) {
     s: {
       body: new Sprite(new Texture(baseTexture)),
       head: new Sprite(new Texture(baseTexture)),
+      // bounds: new Sprite(new Texture(baseTexture)),
     },
 
     anim: /** @type {*} */ ({}), // Fix types during migration
@@ -635,6 +636,24 @@ export default function createNpc(def, api) {
     },
     setInteractRadius(radius) {
       // 🚧 currently unsupported
+    },
+    showBounds(shouldShow) {
+      const { bounds } = this.s;
+      if (!shouldShow && bounds) {
+        delete this.s.bounds;
+        bounds.removeFromParent();
+      } else if (shouldShow && !bounds) {
+        const { packedRect } = spineMeta.extra["circular-bounds"];
+        const sprite = new Sprite(new Texture(baseTexture));
+        sprite.texture.frame = new Rectangle(packedRect.x, packedRect.y, packedRect.width, packedRect.height);
+        sprite.scale.set(spineMeta.npcScaleFactor);
+        sprite.anchor.set(0.5);
+        sprite.tint = '#00ff00';
+        sprite.alpha = 0.5;
+        this.s.bounds = sprite;
+        sprite.position.copyFrom(this.s.body.position);
+        api.npcs.pc.addChild(sprite);
+      }
     },
     // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
     // 🚧 fix "final walk frame jerk" elsewhere

@@ -892,6 +892,12 @@ export default function createNpc(
     setWalkSpeed() {
       // Fix types during migration
     },
+    showBounds(shouldShow) {
+      this.el.root.style.setProperty(cssName.npcsDebugDisplay, shouldShow ? 'initial' : 'none');
+      if (this.isPlayer()) {
+        this.el.root.style.setProperty(cssName.npcsDebugPlayerDisplay, shouldShow ? 'initial' : 'none');
+      }
+    },
     updateHead() {
       // Fix types during migration
     },

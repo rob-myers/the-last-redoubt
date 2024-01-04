@@ -16,8 +16,11 @@
   - ✅ fix `npc rob walk $( click 1 )`
     - not a bug: never worked
     - now supported, also `click | npc rob walk`
+  - ✅ can show bounds `npc.showBounds(true)`
+  - 🚧 getting stuck on other npcs
+  - chained rotate tween instead of sharp rotate
+  - darker shoes; maybe not so far back
   - understand bugs: HMR related?
-  - getting stuck on other npcs
 
 - easy way to see navPaths
   - `world debug.addNavPath foo ${navPath} && world debug.render`
@@ -44,6 +47,7 @@ npc events | filter '({ key, decor }) =>
   - 🚧 Decor:
   - 🚧 ...
 
+- npc cfg debug/debugPlayer show npc(s) bounds
 - api.tween should be generic
 - `npc cfg fov`
 - sh: count like `wc -l`?

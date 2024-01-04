@@ -183,6 +183,7 @@ declare namespace NPC {
     
     /** Setting null effectively reverts to default */
     setInteractRadius(radius: number | null): void;
+    showBounds(shouldShow: boolean): void;
     startAnimation(spriteSheet: SpriteSheetKey): void;
     setupAnim(animName: SpineAnimName): void;
     setGmRoomId(gmRoomId: Geomorph.GmRoomId | null): void;
