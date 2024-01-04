@@ -13,8 +13,10 @@
   - ✅ move to start of navPath
   - ✅ sharp rotate during walk i.e. via events instead of tween
     - try chained tween instead?
+  - ✅ fix `npc rob walk $( click 1 )`
+    - not a bug: never worked
+    - now supported, also `click | npc rob walk`
   - understand bugs: HMR related?
-  - 🚧 fix `npc rob walk $( click 1 )`
   - getting stuck on other npcs
 
 - easy way to see navPaths

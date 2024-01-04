@@ -774,6 +774,9 @@ export default function createNpc(def, api) {
       aux.outsetSegBounds.copy(aux.segBounds).outset(this.getRadius());
     },
     async walk(navPath, opts = {}) {
+      if (api.lib.isVectJson(navPath)) {
+        navPath = api.npcs.getGlobalNavPath(this.getPosition(), navPath, this.navOpts);
+      }
       if (!api.lib.verifyGlobalNavPath(navPath)) {
         this.nextWalk = null;
         throw Error(`invalid global navpath: ${JSON.stringify({ npcKey: this.key, navPath, opts })}`);

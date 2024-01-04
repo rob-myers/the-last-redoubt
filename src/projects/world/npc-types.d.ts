@@ -202,7 +202,7 @@ declare namespace NPC {
     /** Update `anim.aux.index` and `anim.aux.index.segBounds` */
     updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
-    walk(navPath: NPC.GlobalNavPath, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
+    walk(navPath: NPC.GlobalNavPath | Geom.VectJson, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
     wayTimeout(): void;
   }
 
