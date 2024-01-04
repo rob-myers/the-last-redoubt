@@ -349,7 +349,7 @@
             }
           } else {// walk
             if (npc.isWalking(true)) {// keep walking on long click or angle ≤ 90°
-              const [u, v] = (npc.anim.path).concat(npc.nextWalk?.visits ?? []).slice(-2);
+              const [u, v] = npc.getPath().concat(npc.nextWalk?.visits ?? []).slice(-2);
               const dp = (v.x - u.x) * (datum.x - v.x) + (v.y - u.y) * (datum.y - v.y);
               if (meta.longClick || dp >= 0) {
                 npc.extendNextWalk(datum);

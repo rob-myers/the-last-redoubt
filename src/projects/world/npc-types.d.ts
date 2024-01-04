@@ -126,6 +126,7 @@ declare namespace NPC {
     getInteractRadius(): number;
     getLineSeg(): null | NpcLineSeg;
     getNextDoorId(): number | undefined;
+    getPath(): Geom.Vect[];
     getPosition(useCache?: boolean): Geom.Vect;
     getPrevDoorId(): number | undefined;
     getRadius(): number;
@@ -133,6 +134,7 @@ declare namespace NPC {
      * Walking speed in world units per second.
      */
     getSpeed(): number;
+    getStaticBounds(): Geom.Rect;
     /**
      * We want to avoid flicker when the NPC stops walking e.g.
      * the leg should not be extended. Observe that

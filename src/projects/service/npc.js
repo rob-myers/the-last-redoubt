@@ -353,7 +353,7 @@ export const npcService = {
       }
 
     } else {// npcB is standing still
-      if (!npcA.getWalkSegBounds(true).intersects(npcB.anim.staticBounds)) {
+      if (!npcA.getWalkSegBounds(true).intersects(npcB.getStaticBounds())) {
         return null;
       }
       /**

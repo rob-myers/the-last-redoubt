@@ -351,6 +351,9 @@ export default function createNpc(def, api) {
         meta => meta.key === 'exit-room' // stay in current gmId
       )?.doorId;
     },
+    getPath() {
+      return this.a.path;
+    },
     getPosition() {
       return Vect.from(this.s.body.position);
     },
@@ -365,6 +368,9 @@ export default function createNpc(def, api) {
     },
     getSpeed() {
       return this.a.walkSpeed;
+    },
+    getStaticBounds() {
+      return this.a.staticBounds;
     },
     getTarget() {
       if (this.isWalking()) {

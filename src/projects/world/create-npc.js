@@ -381,6 +381,9 @@ export default function createNpc(
         meta => meta.key === 'exit-room' // stay in current gmId
       )?.doorId;
     },
+    getPath() {
+      return this.anim.path;
+    },
     getPosition(useCache = true) {
       if (useCache && this.anim.spriteSheet !== 'walk') {
         return Vect.from(this.anim.staticPosition);
@@ -397,6 +400,9 @@ export default function createNpc(
     },
     getRadius() {
       return getNumericCssVar(this.el.root, cssName.npcBoundsRadius);
+    },
+    getStaticBounds() {
+      return this.anim.staticBounds;
     },
     getSpeed() {
       return this.def.walkSpeed * this.anim.speedFactor;
