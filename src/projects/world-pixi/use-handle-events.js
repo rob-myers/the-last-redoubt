@@ -42,7 +42,7 @@ export default function useHandleEvents(api, disabled) {
         if (npc.getPosition().distanceTo(e.point) < npcHeadRadiusPx) {
           // Mutate meta
           Object.assign(e.meta, { npc: true, npcKey: npc.key });
-          break;
+          return npc;
         }
       }
     },
@@ -75,8 +75,8 @@ export default function useHandleEvents(api, disabled) {
     },
 
     handleHover(e) {
-      state.detectOverNpc(e);
-      if (e.meta.npcKey) {
+      const npc = state.detectOverNpc(e);
+      if (npc?.isWalking() === false) {
         api.setCursor('pointer');
       }
     },
@@ -564,7 +564,7 @@ export default function useHandleEvents(api, disabled) {
  * @property {(npc: NPC.NPC, gmId: number, nextDoorId: number) => Promise<void>} preWalkThroughDoor
  * On 'enter' or 'start-inside' doorSensor of next door in current walk
  * @property {(e: import('./Doors').DoorMessage) => void} handleDoorsEvent
- * @property {(e: PanZoom.PointerUpEvent | PanZoom.PointerMoveEvent) => void} detectOverNpc
+ * @property {(e: PanZoom.PointerUpEvent | PanZoom.PointerMoveEvent) => undefined | NPC.NPC} detectOverNpc
  * Check whether pointer is currently over an npc.
  * @property {(e: NPC.NPCsEvent) => Promise<void>} handleNpcEvent Handle NPC event (always runs)
  * @property {(e: PanZoom.PointerMoveEvent) => void} handleHover
