@@ -521,7 +521,7 @@ export default function NPCs(props) {
       return !!closeDoor;
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
-      if (state.npc[npcKey]?.isPointBlocked(point)) {
+      if (state.npc[npcKey]?.isBlockedByOthers(point)) {
         return false; // Must not be close to another npc
       }
       const gmRoomId = api.gmGraph.findRoomContaining(point, true);

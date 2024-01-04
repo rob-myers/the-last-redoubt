@@ -163,11 +163,11 @@ declare namespace NPC {
     /** Initialise using `def` on (re)spawn */
     initialize(): void;
     intersectsCircle(position: Geom.VectJson, radius: number): boolean;
+    isBlockedByOthers(start: Geomorph.PointMaybeMeta, next?: Geom.VectJson): boolean;
     isIdle(): boolean;
     /** Is this npc paused, but not necessarily @see {forcePaused}? */
     isPaused(): boolean;
     isPlayer(): boolean;
-    isPointBlocked(point: Geomorph.PointMaybeMeta, permitEscape?: boolean): boolean;
     isWalking(requireMoving?: boolean): boolean;
     /** Returns destination angle in radians */
     lookAt(point: Geom.VectJson): Promise<void>;

@@ -494,7 +494,7 @@ export default function NPCs(props) {
     },
     isPointSpawnable(npcKey, npcClassKey = defaultNpcClassKey, point) {
       // Must not be close to another npc
-      if (state.npc[npcKey]?.isPointBlocked(point)) {
+      if (state.npc[npcKey]?.isBlockedByOthers(point)) {
         return false;
       }
       // Must be inside some room or doorway

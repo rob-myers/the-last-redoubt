@@ -558,27 +558,25 @@ export default function createNpc(
     isPlayer() {
       return this.key === api.npcs.playerKey;
     },
-    isPointBlocked(point, permitEscape = false) {
-      const { npcs } = api;
-      const closeNpcs = npcs.getCloseNpcs(this.key);
-      const { radius } = npcsMeta[this.classKey];
-
-      if (!closeNpcs.some(other =>
-        other.intersectsCircle(point, radius)
-        && npcs.handleBunkBedCollide(other.doMeta ?? undefined, point.meta)
-      )) {
-        return false;
+    isBlockedByOthers(start, next) {
+      if (next) {
+        const pos = this.getPosition();
+        return api.npcs.getCloseNpcs(this.key).some(other => {
+          const otherPos = other.getPosition();
+          if (
+            other.intersectsCircle(start, this.getRadius())
+            && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, start.meta)
+            && (next.x - start.x) * (otherPos.x - pos.x) + (next.y - start.y) * (otherPos.y - pos.y) >= 0
+          ) {
+            return true;
+          }
+        });
+      } else {
+        return api.npcs.getCloseNpcs(this.key).some(other =>
+          other.intersectsCircle(start, this.getRadius())
+          && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, start.meta)
+        );
       }
-
-      const position = this.getPosition();
-      if (permitEscape && closeNpcs.some(other =>
-        other.intersectsCircle(position, radius)
-        && npcs.handleBunkBedCollide(other.doMeta ?? undefined, this.doMeta ?? undefined)
-      )) {
-        return false;
-      }
-
-      return true;
     },
     isWalking(requireMoving = false) {
       return this.anim.spriteSheet === 'walk' && (
@@ -947,10 +945,7 @@ export default function createNpc(
       }
 
       try {
-        if (this.isPointBlocked(
-          navPath.path[0],
-          this.getPosition().equalsAlmost(navPath.path[0])
-        )) {// start of navPath blocked
+        if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {// start of navPath blocked
           throw new Error('cancelled');
         }
 

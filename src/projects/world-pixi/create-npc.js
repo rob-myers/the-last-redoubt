@@ -433,16 +433,24 @@ export default function createNpc(def, api) {
     isPlayer() {
       return this.key === api.npcs.playerKey;
     },
-    isPointBlocked(point) {
-      // Check if blocked by nearby NPC
-      const closeNpcs = api.npcs.getCloseNpcs(this.key);
-      if (closeNpcs.some(other =>
-        other.intersectsCircle(point, npcRadius)
-        && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, point.meta)
-      )) {
-        return true;
+    isBlockedByOthers(start, next) {
+      if (next) {
+        const pos = this.getPosition();
+        return api.npcs.getCloseNpcs(this.key).some(other => {
+          const otherPos = other.getPosition();
+          if (
+            other.intersectsCircle(start, npcRadius)
+            && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, start.meta)
+            && (next.x - start.x) * (otherPos.x - pos.x) + (next.y - start.y) * (otherPos.y - pos.y) >= 0
+          ) {
+            return true;
+          }
+        });
       } else {
-        return false;
+        return api.npcs.getCloseNpcs(this.key).some(other =>
+          other.intersectsCircle(start, npcRadius)
+          && api.npcs.handleBunkBedCollide(other.doMeta ?? undefined, start.meta)
+        );
       }
     },
     isWalking() {
@@ -654,8 +662,8 @@ export default function createNpc(def, api) {
         sprite.anchor.set(0.5);
         sprite.tint = '#00ff00';
         sprite.alpha = 0.5;
-        this.s.bounds = sprite;
         sprite.position.copyFrom(this.s.body.position);
+        this.s.bounds = sprite;
         api.npcs.pc.addChild(sprite);
       }
     },
@@ -818,10 +826,7 @@ export default function createNpc(def, api) {
       }
 
       try {
-        if (this.isPointBlocked(
-          navPath.path[0],
-          this.getPosition().equalsAlmost(navPath.path[0])
-        )) {// start of navPath blocked
+        if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {// start of navPath blocked
           throw new Error('cancelled');
         }
 
@@ -929,3 +934,5 @@ const emptyFn = () => {};
 const sharedAnimData = /** @type {Record<NPC.SpineAnimName, NPC.SharedAnimData>} */ (
   {}
 );
+
+const tempVec = new Vect;

@@ -17,8 +17,9 @@
     - not a bug: never worked
     - now supported, also `click | npc rob walk`
   - ✅ can show bounds `npc.showBounds(true)`
-  - 🚧 getting stuck on other npcs
-  - chained rotate tween instead of sharp rotate
+  - ✅ getting stuck on other npcs
+    - `npc.isPointBlocked` is causing error throw
+  - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - understand bugs: HMR related?
 
@@ -47,6 +48,7 @@ npc events | filter '({ key, decor }) =>
   - 🚧 Decor:
   - 🚧 ...
 
+- sh generates named generators?
 - npc cfg debug/debugPlayer show npc(s) bounds
 - api.tween should be generic
 - `npc cfg fov`
