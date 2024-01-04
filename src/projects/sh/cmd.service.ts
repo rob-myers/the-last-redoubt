@@ -420,7 +420,8 @@ class cmdServiceClass {
       /** e.g. run '({ api:{read} }) { yield "foo"; yield await read(); }' */
       case 'run': {
         try {
-          const func = Function('_', `return async function *generator ${args[0]}`);
+          const fnName = meta.stack.at(-1) || 'generator';
+          const func = Function('_', `return async function *${fnName} ${args[0]}`);
           yield* func()(this.provideProcessCtxt(meta, args.slice(1)));
         } catch (e) {
           if (e instanceof ProcessError) {
