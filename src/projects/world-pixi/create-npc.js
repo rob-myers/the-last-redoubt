@@ -639,10 +639,14 @@ export default function createNpc(def, api) {
     },
     showBounds(shouldShow) {
       const { bounds } = this.s;
+      if (shouldShow === undefined) {
+        shouldShow = !bounds;
+      }
       if (!shouldShow && bounds) {
         delete this.s.bounds;
         bounds.removeFromParent();
-      } else if (shouldShow && !bounds) {
+      }
+      if (shouldShow && !bounds) {
         const { packedRect } = spineMeta.extra["circular-bounds"];
         const sprite = new Sprite(new Texture(baseTexture));
         sprite.texture.frame = new Rectangle(packedRect.x, packedRect.y, packedRect.width, packedRect.height);
