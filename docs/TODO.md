@@ -2,31 +2,12 @@
 
 ## In progress
 
-- ✅ branch off previously working CSS-based system
-  - css-based-system-working
-  - but we'll try to keep both systems working for as long as possible
-
-- 🚧 get `walk` working
-  - ℹ️ `walk rob $navPath`
-  - ℹ️ `navPath $( click 2 ) | walk rob`
-  - ℹ️ `click | walk rob --open`
-  - ✅ move to start of navPath
-  - ✅ sharp rotate during walk i.e. via events instead of tween
-    - try chained tween instead?
-  - ✅ fix `npc rob walk $( click 1 )`
-    - not a bug: never worked
-    - now supported, also `click | npc rob walk`
-  - ✅ can show bounds `npc.showBounds(true)`
-  - ✅ getting stuck on other npcs
-    - `npc.isPointBlocked` is causing error throw
-  - 🚧 chained rotate tween instead of sharp rotate
+- 🚧 improve npc walking
+  - 🚧 better transition from walk -> idle
+  - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
-  - better transition from walk -> idle
   - understand HMR bugs e.g. speed
-
-- ✅ BUG? `take | map 'x => x` terminates
-  - we `resolve(undefined)` instead of `reject()`
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
@@ -708,6 +689,27 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ get `walk` working
+  - ℹ️ `walk rob $navPath`
+  - ℹ️ `navPath $( click 2 ) | walk rob`
+  - ℹ️ `click | walk rob --open`
+  - ✅ move to start of navPath
+  - ✅ sharp rotate during walk i.e. via events instead of tween
+    - try chained tween instead?
+  - ✅ fix `npc rob walk $( click 1 )`
+    - not a bug: never worked
+    - now supported, also `click | npc rob walk`
+  - ✅ can show bounds `npc.showBounds(true)`
+  - ✅ getting stuck on other npcs
+    - `npc.isPointBlocked` is causing error throw
+
+- ✅ branch off previously working CSS-based system
+  - css-based-system-working
+  - but we'll try to keep both systems working for as long as possible
+  
+- ✅ BUG? `take | map 'x => x` terminates
+  - we `resolve(undefined)` instead of `reject()`
 
 - ✅ example where ppid non-zero
 ```sh
