@@ -21,13 +21,12 @@
     - `npc.isPointBlocked` is causing error throw
   - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
-  - understand bugs: HMR related?
-
-- easy way to see navPaths
-  - `world debug.addNavPath foo ${navPath} && world debug.render`
+  - darker npc
+  - better transition from walk -> idle
+  - understand HMR bugs e.g. speed
 
 - ✅ BUG? `take | map 'x => x` terminates
-  - we `resolve(undefined)` instead of reject
+  - we `resolve(undefined)` instead of `reject()`
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
@@ -39,16 +38,10 @@ npc events | filter '({ key, decor }) =>
 }'
 ```
 
-- 🚧 prepare for `World`-syncing i.e. multiple views
-  - ℹ️ hopefully can simply duplicate events between worlds
-  - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
-  - ✅ Doors: toggleLock, toggleDoor should not mutate item
-    - instead, useHandleEvents mutates in response to an event
-  - 🚧 Geomorphs: setRoomLit should only be triggered by event
-  - 🚧 Decor:
-  - 🚧 ...
+- pause "npc" process pauses npc ✅ and 🚧 darkens npc
+- new "npc" process unpauses npc
 
-- sh generates named generators?
+- ✅ sh generates named generators
 - npc cfg debug/debugPlayer show npc(s) bounds
 - api.tween should be generic
 - `npc cfg fov`
@@ -66,6 +59,15 @@ npc events | filter '({ key, decor }) =>
 - Fix xterm links toggling
   - ✅ can now toggle on/off without leaving hover first
   - permit mobile re-click at same point
+
+- 🚧 prepare for `World`-syncing i.e. multiple views
+  - ℹ️ hopefully can simply duplicate events between worlds
+  - ℹ️ share some data e.g. shallow clones of decor/npc lookups,
+  - ✅ Doors: toggleLock, toggleDoor should not mutate item
+    - instead, useHandleEvents mutates in response to an event
+  - 🚧 Geomorphs: setRoomLit should only be triggered by event
+  - 🚧 Decor:
+  - 🚧 ...
 
 - save more space in spritesheet
   - needn't use `animBounds` for every frame of animation
