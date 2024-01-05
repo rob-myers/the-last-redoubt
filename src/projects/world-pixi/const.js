@@ -26,7 +26,7 @@ colMatFilter2.resolution = 2; // better zoom flicker
 export const colMatFilter3 = new ColorMatrixFilter();
 // colMatFilter3.resolution = 2; // better zoom flicker
 // colMatFilter3.kodachrome(true);
-colMatFilter3.brightness(0.2, true);
+colMatFilter3.brightness(0.15, true);
 
 export const textStyle1 = new TextStyle({
   fontFamily: 'Gill sans',
@@ -35,7 +35,7 @@ export const textStyle1 = new TextStyle({
   // textBaseline: 'bottom',
   // fontStyle: 'italic',
   // fontWeight: 'bold',
-  fill: ['#ffffff'],
+  fill: ['#888888'],
   stroke: '#000000',
   strokeThickness: 2,
   dropShadow: false,
@@ -56,7 +56,7 @@ export const textStyle1 = new TextStyle({
 export const defaultNpcClassKey = 'vilani';
 export const defaultNpcInteractRadius = 70;
 /** World units per second */
-export const defaultNpcSpeed = 0.8 * worldUnitsPerMeter;
+export const defaultNpcSpeed = 1 * worldUnitsPerMeter;
 
 // 🚧 import into spine-{meta,render} scripts
 export const npcRadius = 13;
