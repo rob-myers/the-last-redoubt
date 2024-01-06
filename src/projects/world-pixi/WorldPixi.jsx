@@ -197,7 +197,7 @@ export default function WorldPixi(props) {
               <Doors
                 api={state}
                 onLoad={api => (state.doors = api) && update()}
-                init={{ 0: [28] }} // 🚧 test
+                // init={{ 0: [28] }} // 🚧 test
               />
 
               <FOV
