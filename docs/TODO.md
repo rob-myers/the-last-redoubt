@@ -10,11 +10,18 @@
   - ✅ try briefly show intermediate frame
   - 🚧 intermediate idle frame with arms further back?
 
-- 🚧 improve npc walking
+- 🚧 improve npc
   - chained rotate tween instead of sharp rotate
+  - drop shadow
   - darker shoes; maybe not so far back
   - darker npc
-  - understand HMR bugs e.g. speed
+  - understand HMR bugs?
+
+- 🚧 improve props
+  - 🚧 improve table symbols
+    - add as sub-symbols of hull symbols
+  - create television symbol
+    - add as sub-symbols of hull 301
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
@@ -27,7 +34,7 @@ npc events | filter '({ key, decor }) =>
 ```
 
 - pause "npc" process pauses npc ✅ and 🚧 darkens npc
-- new "npc" process unpauses npc
+- ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
 - ✅ sh generates named generators
 - npc cfg debug/debugPlayer show npc(s) bounds
