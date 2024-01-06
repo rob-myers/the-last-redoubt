@@ -83,6 +83,11 @@ export default async function main() {
   //#region body animation: rects, headFrames, motion tracking
   for (const anim of animations) {
     const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
+
+    if (!(animName in spineAnimToSetup)) {
+      warn(`animation ${animName} not specified in spineAnimToSetup`);
+      continue;
+    }
     
     /** Track motion of moving animations e.g. `walk`. */
     const motion = {

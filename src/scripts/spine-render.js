@@ -17,6 +17,7 @@ import { Assets, RenderTexture, Application, Sprite, Graphics } from "@pixi/node
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
 import { Canvas, ImageData } from "canvas";
 
+import { warn } from "../projects/service/log";
 import { saveCanvasAsFile } from "../projects/service/file";
 import { Rect } from "../projects/geom";
 import { spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
@@ -84,6 +85,11 @@ export default async function main() {
 
   // Render bodies
   for (const anim of animations) {
+    if (!(anim.name in animMeta)) {
+      warn(`animation ${anim.name} not specified in animMeta`);
+      continue;
+    }
+
     const { frameCount, frameDurSecs, animBounds, packedRects } = animMeta[anim.name];
     spine.state.setAnimation(0, anim.name, false);
     
