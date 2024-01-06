@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "fRmazGgxUDw",
+	"hash": "CPO7Oc+TLVA",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -76,10 +76,10 @@
 		"scaleY": 0.6883
 	},
 	{ "name": "left-arm-upper-bare", "parent": "left-arm", "rotation": -94.92, "x": 320.31, "y": 2.67 },
-	{ "name": "left-foot", "parent": "left-leg-lower", "length": 288.02, "rotation": -0.25, "x": 279, "y": -13.74 },
+	{ "name": "left-foot", "parent": "left-leg-lower", "length": 288.02, "rotation": -0.25, "x": 251.38, "y": -13.74 },
 	{ "name": "hat", "parent": "neck", "rotation": 270, "x": 105.34 },
 	{ "name": "right-arm-upper-clothed", "parent": "right-arm", "rotation": -98.08, "x": 308.18, "y": -20.27, "scaleX": 0.938 },
-	{ "name": "right-foot", "parent": "right-leg-lower", "length": 257.58, "rotation": 360, "x": 279, "y": 4.96 },
+	{ "name": "right-foot", "parent": "right-leg-lower", "length": 257.58, "rotation": 360, "x": 251.38, "y": 4.96 },
 	{ "name": "mask-birdseye", "parent": "neck", "rotation": 270, "x": 357.75 },
 	{ "name": "head", "parent": "neck", "rotation": 270, "x": 96.27 },
 	{ "name": "left-leg-lower-bare", "parent": "left-leg-lower", "rotation": 270, "x": 131.44, "y": -3.95 },
@@ -769,6 +769,26 @@
 				]
 			}
 		]
+	},
+	"idle-test": {
+		"bones": {
+			"right-arm-lower": {
+				"rotate": [
+					{ "value": -14.65 }
+				],
+				"translate": [
+					{ "x": -59.26, "y": 59.99 }
+				]
+			},
+			"left-arm-lower": {
+				"rotate": [
+					{ "value": -15.35 }
+				],
+				"translate": [
+					{ "x": -59.99, "y": 59.26 }
+				]
+			}
+		}
 	},
 	"lie": {
 		"slots": {
