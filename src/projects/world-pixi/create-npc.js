@@ -3,7 +3,7 @@ import { Sprite } from "@pixi/sprite";
 import TWEEN from '@tweenjs/tween.js';
 
 import { Poly, Rect, Vect } from '../geom';
-import { precision, testNever } from "../service/generic";
+import { pause, precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
 import { npcRadius, npcClassToSpineHeadSkin, spineAnimToSetup, defaultNpcInteractRadius } from "./const";
@@ -38,6 +38,7 @@ export default function createNpc(def, api) {
       animName: 'idle',
       paused: false, // 👈 new
       walkSpeed: def.walkSpeed,
+      rootMotion: false,
 
       shared: sharedAnimData,
 
@@ -62,7 +63,7 @@ export default function createNpc(def, api) {
 
       durations: getAnimDurations(sharedAnimData, def.walkSpeed),
       normalizedTime: 0,
-      distance: 0, // 👈 implement during sprite update
+      distance: 0,
 
       neckAngle: 0,
       headSkinName: npcClassToSpineHeadSkin[def.classKey],
@@ -123,6 +124,7 @@ export default function createNpc(def, api) {
 
       console.log(`cancel: cancelling ${this.def.key}`);
 
+      this.a.paused = false;
       this.a.opacity.stop();
       this.a.rotate.stop();
       this.a.deferred.reject('cancelled');
@@ -524,7 +526,7 @@ export default function createNpc(def, api) {
         {
           angle: meta.nav && !meta.do
             // use direction src --> point if entering navmesh
-            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle
+            ? src.equals(point) ? undefined : Vect.from(point).sub(src).angle + Math.PI/2
             // use meta.orient if staying off-mesh
             : typeof meta.orient === 'number' ? (meta.orient + 90) * (Math.PI / 180) : undefined,
           fadeOutMs: opts.fadeOutMs,
@@ -670,14 +672,13 @@ export default function createNpc(def, api) {
     // ℹ️ currently NPC.SpriteSheetKey equals NPC.SpineAnimName
     // 🚧 fix "final walk frame jerk" elsewhere
     startAnimation(animName) {
-      this.a.animName = animName;
       this.a.rotate.stop();
+      this.a.animName = animName;
       
       switch (animName) {
         case 'walk': {
-          this.a.rotate.stop(); // fix `npc do` orientation
+          this.a.rootMotion = true;
           this.setupAnim(animName);
-
           // 🚧 chained rotation tweens
           // - can use `aux.sofars[i] / aux.total`
           // - tween remade if speed changes
@@ -689,7 +690,8 @@ export default function createNpc(def, api) {
         case 'idle':
         case 'idle-breathe':
         case 'lie':
-        case 'sit': {
+        case 'sit':
+          this.a.rootMotion = false;
           this.clearWayMetas();
           this.updateStaticBounds();
           if (animName === 'sit') {// Ensure feet are below surfaces
@@ -698,7 +700,6 @@ export default function createNpc(def, api) {
           this.a.rotate = emptyTween;
           this.setupAnim(animName);
           break;
-        }
         default:
           throw testNever(animName, { suffix: 'create-npc.startAnimation' });
       }
@@ -763,9 +764,9 @@ export default function createNpc(def, api) {
 
       body.texture._uvs.set(/** @type {Rectangle} */ (bodyRects[currFrame]), baseTexture, 0);
       const radians = body.rotation;
-      if (rootDeltas.length) {// in pixi.js 0 degrees ~ north ~ negative y-axis
+      if (this.a.rootMotion === true) {
         const rootDelta = rootDeltas[currFrame];
-        body.x += rootDelta * Math.sin(radians);
+        body.x += rootDelta * Math.sin(radians); // pixi.js angle CW from north
         body.y -= rootDelta * Math.cos(radians);
       }
 
@@ -782,7 +783,8 @@ export default function createNpc(def, api) {
         return;
       }
       const deltaSecs = deltaRatio * (1 / 60);
-      let frame = this.getFrame(), shouldUpdate = false;
+      let frame = this.getFrame();
+      let shouldUpdate = false;
 
       // Could skip multiple frames in single update via low fps
       // https://github.com/pixijs/pixijs/blob/dev/packages/sprite-animated/src/AnimatedSprite.ts
@@ -790,7 +792,9 @@ export default function createNpc(def, api) {
       while (lag >= this.a.durations[frame]) {
         lag -= this.a.durations[frame];
         this.a.normalizedTime++;
-        this.a.distance += this.a.shared.rootDeltas[frame];
+        if (this.a.rootMotion === true) {
+          this.a.distance += this.a.shared.rootDeltas[frame];
+        }
         frame = this.getFrame();
         shouldUpdate = true;
       }
@@ -817,8 +821,7 @@ export default function createNpc(def, api) {
         throw Error('paused: cannot walk');
       }
       if (this.isPaused()) {
-        // isWalking cancel caused jerky extended walk?
-        await this.cancel();
+        await this.cancel(); // causes jerky extended walk?
       }
       if (navPath.path.length === 0) {
         this.nextWalk = null;
@@ -826,7 +829,7 @@ export default function createNpc(def, api) {
       }
 
       try {
-        if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {// start of navPath blocked
+        if (this.isBlockedByOthers(navPath.path[0], navPath.path[1])) {
           throw new Error('cancelled');
         }
 
@@ -835,9 +838,13 @@ export default function createNpc(def, api) {
 
         if (this.nextWalk) {
           await this.walk(this.nextWalk.navPath, opts);
+        } else {
+          // 🚧 transition walk -> idle
+          await this.walkToIdle();
         }
 
         this.startAnimation('idle');
+        // this.startAnimation('idle-breathe');
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);
@@ -846,6 +853,47 @@ export default function createNpc(def, api) {
       } finally {
         api.npcs.events.next({ key: 'stopped-walking', npcKey: this.key });
       }
+    },
+    async walkToIdle() {
+
+      // 🚧 -> npc.showFrameFor
+      /** @param {number} toFr */
+      const showFrame = async (toFr, ms = 100) => {
+        this.a.normalizedTime = toFr;
+        this.updateSprites();
+        await new Promise((resolve, reject) => {
+          this.a.deferred.resolve = resolve;
+          this.a.deferred.reject = reject;
+          pause(ms).then(resolve);
+        });
+      }
+
+      this.a.paused = true;
+      this.a.rootMotion = false;
+      const fc = this.a.shared.frameCount;
+      const fr = this.getFrame();
+
+      console.log(// 🚧 Debug: 1/8 ... 8/8
+        `${(fr % fc === 0 ? 0 : 1) + Math.floor((fr / fc) * 8)}/${8}`
+      );
+
+      if (fr <= fc/8) {
+        await showFrame(0);
+      } else if (fr <= fc/4 ) {
+        await showFrame(fc/8);
+      } else if (fr <= fc * 3/8) {
+        await showFrame(fr * 3/8);
+      } else if (fr <= fc * 1/2) {
+        await showFrame(fc/2);
+      } else if (fr <= fc * 5/8) {
+      } else if (fr <= fc * 3/4) {
+        await showFrame(fc * 5/8);
+      } else if (fr <= fc * 7/8) {
+        await showFrame(fc * 7/8);
+      } else {
+        // NOOP
+      }
+      this.a.paused = false;
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {
@@ -912,7 +960,7 @@ function getSharedAnimData(animName) {
 }
 
 /**
- * 
+ * Get anim duration per frame, in seconds.
  * @param {NPC.SharedAnimData} shared 
  * @param {number} walkSpeed World units per second
  */

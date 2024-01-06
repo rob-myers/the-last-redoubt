@@ -204,6 +204,8 @@ declare namespace NPC {
     updateTime(deltaRatio: number): void;
     updateWalkSegBounds(index: number): void;
     walk(navPath: NPC.GlobalNavPath | Geom.VectJson, opts?: NPC.WalkNpcOpts | undefined): Promise<void>;
+    /** Transition animation from walking to idle */
+    walkToIdle(): Promise<void>;
     wayTimeout(): void;
   }
 
@@ -283,6 +285,11 @@ declare namespace NPC {
     paused: boolean;
     /** Initially `npc.def.walkSpeed` */
     walkSpeed: number;
+    /**
+     * - Only `walk` contributes root motion (changes `npc.s.body.position`).
+     * - Moreover, sometimes we want to "walk-in-place" by setting this `false`.
+     */
+    rootMotion: boolean;
 
     shared: SharedAnimData;
 
@@ -316,7 +323,7 @@ declare namespace NPC {
     rotate: TweenExt;
     deferred: { resolve(value?: any): void; reject(reason: any): void };
 
-    /** The duration of each frame in ms. Depends on walk speed. */
+    /** The duration of each frame in seconds. Depends on walk speed. */
     durations: number[];
     /**
      * SpriteSheet-normalized time.

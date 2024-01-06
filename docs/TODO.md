@@ -2,8 +2,15 @@
 
 ## In progress
 
+- 🚧 improve walk -> idle transition
+  - ❌ try temp change walk speed so end at nearest idle
+    - not possible because rootDeltas are fixed
+  - ❌ try walk-on-spot to nearest idle (forward or backward)
+    - didn't look good
+  - ✅ try briefly show intermediate frame
+  - 🚧 intermediate idle frame with arms further back?
+
 - 🚧 improve npc walking
-  - 🚧 better transition from walk -> idle
   - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
