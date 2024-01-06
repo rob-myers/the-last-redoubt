@@ -47,13 +47,12 @@ export async function renderGeomorph(
   const hullSym = lookup[layout.items[0].key];
   const hullPoly = hullSym.hull[0];
   const pngRect = hullSym.pngRect;
+
   canvas.width = pngRect.width * scale;
   canvas.height = pngRect.height * scale;
-
   const ctxt = /** @type {CanvasRenderingContext2D | NodeCanvasContext} */ (canvas.getContext('2d'));
   ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
   const initTransform = ctxt.getTransform();
-
   ctxt.imageSmoothingEnabled = true;
   ctxt.imageSmoothingQuality = 'high';
   ctxt.lineJoin = 'round';
@@ -156,7 +155,7 @@ export async function renderGeomorph(
 
   //#endregion
 
-  /** To invert PNG symbols we need a temporary canvas */
+  /** For inverting PNG symbols */
   const tempCtxt = createCanvas(0, 0).getContext('2d');
 
   //#region symbol PNGs
@@ -164,14 +163,20 @@ export async function renderGeomorph(
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
+
     // Draw symbol png
     ctxt.globalCompositeOperation = 'source-over';
     ctxt.drawImage(image, pngRect.x, pngRect.y);
-    // ℹ️ can shade symbols via e.g. `poly fillColor=#555`
+
+    // Can shade symbols e.g. `poly fillColor=#555`
     drawSymbolPolys(key, ctxt, lookup, false);
+
     ctxt.translate(pngRect.x, pngRect.y);
-    // ℹ️ can explicitly invert/un-invert
-    if (invertSymbols !== !!invert) {
+    if (
+      key.startsWith('extra--')
+        ? !!invert // "Extra" symbols not inverted unless specified
+        : invertSymbols !== !!invert // Can flip invert
+    ) {
       invertDrawnImage(image, tempCtxt, ctxt, '#ffffff');
     }
     if (lighten) {

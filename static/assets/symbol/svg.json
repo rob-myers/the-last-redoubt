@@ -2644,7 +2644,6 @@
         "meta": {
           "symbol": true,
           "key": "extra--table--001--1x0.2",
-          "invert": true,
           "_ownOrigin": {"x": 302, "y": 242}
         },
         "poly": {
@@ -2730,7 +2729,6 @@
         "meta": {
           "symbol": true,
           "key": "extra--table--001--1x0.2",
-          "invert": true,
           "_ownOrigin": {"x": 1070, "y": 346}
         },
         "poly": {
@@ -2742,7 +2740,6 @@
         "meta": {
           "symbol": true,
           "key": "extra--table--001--1x0.2",
-          "invert": true,
           "_ownOrigin": {"x": 1140, "y": 346}
         },
         "poly": {
@@ -2873,7 +2870,6 @@
         "meta": {
           "symbol": true,
           "key": "extra--table--004--0.4x0.2",
-          "invert": true,
           "_ownOrigin": {"x": 36, "y": 552},
           "_ownTransform": [0, 1, -1, 0, 1408, 350]
         },
@@ -2968,7 +2964,7 @@
     "width": 1200,
     "height": 600,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1703668610998.3286
+    "lastModified": 1704554977958.468
   },
   "302--hull": {
     "key": "302--hull",

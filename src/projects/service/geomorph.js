@@ -592,6 +592,7 @@ function symbolSingleToLayoutItem({ meta }) {
   return {
     id: /** @type {Geomorph.SymbolKey} */ (meta.key),
     preTransform: m.toArray(),
+    ...typeof meta.invert === 'boolean' && { invert: meta.invert },
   };
 }
 
