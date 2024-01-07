@@ -50,6 +50,7 @@ export async function renderGeomorph(
 
   canvas.width = pngRect.width * scale;
   canvas.height = pngRect.height * scale;
+
   const ctxt = /** @type {CanvasRenderingContext2D | NodeCanvasContext} */ (canvas.getContext('2d'));
   ctxt.setTransform(scale, 0, 0, scale, -scale * pngRect.x, -scale * pngRect.y);
   const initTransform = ctxt.getTransform();
@@ -59,6 +60,8 @@ export async function renderGeomorph(
   // 'antialias' in ctxt && (ctxt.antialias = 'subpixel'); // No difference
 
   //#region underlay
+
+  // Floor
   ctxt.fillStyle = floorColor;
   if (hullSym.hull.length === 1 && hullPoly.holes.length) {
     fillRing(ctxt, hullPoly.outline);
@@ -66,7 +69,8 @@ export async function renderGeomorph(
     error('hull walls must exist, be connected, and have a hole');
   }
 
-  // symbols can draw polygons on floor e.g. "poly floor fillColor=#00000044 ..."
+  // Floor polygons from non-hull symbols
+  // e.g. `poly floor fillColor=#00000044`
   ctxt.save();
   for (const { key, transformArray } of layout.items.slice(1)) {
     ctxt.transform(...transformArray ?? [1, 0, 0, 1, 0, 0]);
@@ -92,12 +96,11 @@ export async function renderGeomorph(
   const doorPolys = singlesToPolys(singles, 'door');
 
   ctxt.lineJoin = 'round';
-
+  
+  // Light grey under obstacles, possibly with drop shadow
   if (obsBounds) {
-    /** Draw light grey under obstacles */
     ctxt.fillStyle = obsColor;
     if (highlights) {
-      /** Draw drop-shadow i.e. basic 3d effect */
       ctxt.shadowBlur = 10;
       ctxt.shadowColor = 'rgba(0, 0, 0, 1)';
     }
@@ -106,6 +109,7 @@ export async function renderGeomorph(
     ctxt.shadowColor = '';
   }
 
+  // Floor highlights via radial fills
   if (highlights) {
     const floorHighlights = layout.floorHighlightIds.map(index => layout.groups.singles[index]);
     const hullOutlinePoly = new Poly(hullPoly.outline);
@@ -125,12 +129,14 @@ export async function renderGeomorph(
     ctxt.globalCompositeOperation = 'source-over';
   }
 
+  // Hull wall singles
   hullSym.singles.forEach(({ poly, meta }) => {
-    if (meta.wall) {// Hull wall singles
-      setStyle(ctxt, '#000');
+    if (meta.wall) {
+      setStyle(ctxt, '#000000');
       fillPolygons(ctxt, Poly.cutOut(doorPolys, [poly]));
     }
   });
+  // Hull polygons drawn above hull walls
   hullSym.singles.forEach(({ poly, meta }) => {// Always above wall
     if (meta.poly) {
       const [fillColor, strokeColor, strokeWidth] = [
@@ -143,7 +149,8 @@ export async function renderGeomorph(
       ctxt.stroke();
     }
   });
-  hullSym.singles.forEach(({ poly, meta }) => {// Always above poly
+  // 🚧 Replace with decal
+  hullSym.singles.forEach(({ poly, meta }) => {
     if (meta.fuel) {
       setStyle(ctxt, '#aaa', '#000', 2);
       fillPolygons(ctxt, [poly]), ctxt.stroke();
@@ -155,33 +162,29 @@ export async function renderGeomorph(
 
   //#endregion
 
-  /** For inverting PNG symbols */
-  const tempCtxt = createCanvas(0, 0).getContext('2d');
 
   //#region symbol PNGs
-  for (const { key, pngHref, pngRect, transformArray, invert, lighten } of layout.items.slice(1)) {
+  for (const { key, pngHref, pngRect, transformArray, invert } of layout.items.slice(1)) {    
+    // Draw symbol png
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     ctxt.scale(0.2, 0.2);
-
-    // Draw symbol png
     ctxt.globalCompositeOperation = 'source-over';
     ctxt.drawImage(image, pngRect.x, pngRect.y);
 
-    // Can shade symbols e.g. `poly fillColor=#555`
-    drawSymbolPolys(key, ctxt, lookup, false);
 
-    ctxt.translate(pngRect.x, pngRect.y);
-    if (
-      key.startsWith('extra--')
-        ? !!invert // "Extra" symbols not inverted unless specified
-        : invertSymbols !== !!invert // Can flip invert
+    /**
+     * Can invert symbols by default, except `extra--*`.
+     * Can toggle inversion of individual symbols.
+     */
+    if (key.startsWith('extra--')
+      ? !!invert
+      : invertSymbols !== !!invert
     ) {
+      ctxt.translate(pngRect.x, pngRect.y);
       invertDrawnImage(image, tempCtxt, ctxt, '#ffffff');
     }
-    if (lighten) {
-      lightenDrawnImage(image, tempCtxt, ctxt, '#ffffff22');
-    }
+
     ctxt.setTransform(initTransform);
   }
 
@@ -335,3 +338,6 @@ function drawSymbolPolys(key, ctxt, lookup, floor = false) {
     fillPolygons(ctxt, [poly]);
   });
 }
+
+/** For inverting PNG symbols */
+const tempCtxt = createCanvas(0, 0).getContext('2d');
