@@ -284,18 +284,14 @@ export class ttyShellClass implements Device {
 
   //#region Device
   public async readData(): Promise<ReadResult> {
-    try {
-      return await new Promise((resolve, reject) => {
-        this.oneTimeReaders.push({
-          resolve: (msg: string) => resolve({ data: msg }),
-          reject,
-        });
-        this.input?.resolve();
-        this.input = null;
+    return await new Promise((resolve, reject) => {
+      this.oneTimeReaders.push({
+        resolve: (msg: string) => resolve({ data: msg }),
+        reject,
       });
-    } catch {
-      return { eof: true };
-    }
+      this.input?.resolve();
+      this.input = null;
+    });
   }
   public async writeData(data: any) {
     this.io.write(data);

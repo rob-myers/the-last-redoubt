@@ -13,7 +13,6 @@
     - ✅ `extra--table--004--0.4x0.2`
   - 🚧 "extra--" symbols which can be placed on tables
   - support `decor point outline-ui`
-  - sporadic inner symbols inside json?
   - useQueries to improve GeomorphEdit?
 
 - 🚧 improve walk -> idle transition
@@ -32,8 +31,7 @@
   - darker npc
   - understand HMR bugs?
 
-- BUG `echo $( take 1 ) $( take 1 )` should not need two Ctrl-C
-
+- ✅ BUG `echo $( take 1 ) $( take 1 )` should only need one Ctrl-C
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
