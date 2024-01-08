@@ -935,8 +935,12 @@ export function parseLayout({
 export function parseStarshipSymbol(symbolKey, svgContents, lastModified) {
   const $ = cheerio.load(svgContents);
   const topNodes = Array.from($('svg > *'));
-  let pngRect = extractPngRect($, topNodes);
-  
+
+  let pngRect = tryExtractPngRect($);
+  if (pngRect === null) {
+    pngRect = getSvgViewBoxRect($);
+    info(`${symbolKey} is using viewBox for pngRect ${JSON.stringify(pngRect)}`);
+  }
   if (isHullSymbolKey(symbolKey)) {// Trim hull door protrusions
     pngRect = Rect.fromJson(pngRect).inset(hullDoorOutset).json;
     if (isEdgeGeomorph(parseInt(symbolKey)) && (pngRect.height + 2 * hullDoorOutset) > 614) {
@@ -944,11 +948,6 @@ export function parseStarshipSymbol(symbolKey, svgContents, lastModified) {
       pngRect.y -= hullDoorOutset;
       pngRect.height += hullDoorOutset;
     }
-    // if (isEdgeGeomorph(parseInt(symbolKey))) {
-    //   pngRect = { x: -4, y: -4, width: 1200 + 8, height: 600 + 8 };
-    // } else {
-    //   pngRect = { x: -4, y: -4, width: 1200 + 8, height: 1200 + 8 };
-    // }
   }
 
   const [,, width, height] = $('svg').attr('viewBox')?.split(' ').map(Number) ?? [];
@@ -1022,23 +1021,39 @@ export function deserializeSvgJson(svgJson) {
 }
 
 /**
- * Each symbol has a copy of the original PNG in group `background`.
- * It may have been offset e.g. so doors are aligned along border.
- * Then we need to extract the respective rectangle.
+ * Each symbol can have a copy of the original PNG in group `background`.
+ * It may have been offset e.g. so doors are aligned along border,
+ * and we return the respective rectangle.
  * @param {import('cheerio').CheerioAPI} api
- * @param {Element[]} topNodes
- * @returns {Geom.RectJson}
+ * @returns {Geom.RectJson | null}
  */
-function extractPngRect(api, topNodes) {
+function tryExtractPngRect(api) {
+  const topNodes = Array.from(api('svg > *'));
   const group = topNodes.find(x => hasTitle(api, x, 'background'));
-  const { attribs: a } = api(group).children('image').toArray()[0];
-  return {
-    x: Number(a.x ?? 0),
-    y: Number(a.y ?? 0),
-    width: Number(a.width ?? 0),
-    height: Number(a.height ?? 0),
-  };
+  const image = group ? api(group).children('image').toArray()[0] : null;
+  if (image) {
+    const { attribs: a } = image;
+    return {
+      x: Number(a.x ?? 0),
+      y: Number(a.y ?? 0),
+      width: Number(a.width ?? 0),
+      height: Number(a.height ?? 0),
+    };
+  } else {
+    return null;
+  }
 }
+
+/**
+ * @param {import('cheerio').CheerioAPI} api
+ * @returns {Geom.RectJson}
+*/
+function getSvgViewBoxRect(api) {
+  const { viewBox } = api('svg').toArray()[0].attribs;
+  const [x, y, width, height] = viewBox.split(' ').map(Number);
+  return { x, y, width, height };
+}
+
 
 /** @param {Poly[]} polys */
 function toJsons(polys) {
