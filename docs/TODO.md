@@ -2,13 +2,28 @@
 
 ## In progress
 
+- 🚧 improve layouts
+  - ✅ extra symbols are not inverted by default
+  - ✅ cannot shade over symbols
+  - ✅ remove `poly` tag from inner symbols
+  - ✅ remake "extra--" tables without decor points
+    - ✅ `extra--table--001--1x0.2`
+    - ✅ `extra--table--002--0.4x0.4`
+    - ✅ `extra--table--003--0.1x0.1`
+    - ✅ `extra--table--004--0.4x0.2`
+  - 🚧 "extra--" symbols which can be placed on tables
+  - support `decor point outline-ui`
+  - sporadic inner symbols inside json?
+  - useQueries to improve GeomorphEdit?
+
 - 🚧 improve walk -> idle transition
   - ❌ try temp change walk speed so end at nearest idle
     - not possible because rootDeltas are fixed
   - ❌ try walk-on-spot to nearest idle (forward or backward)
     - didn't look good
   - ✅ try briefly show intermediate frame
-  - 🚧 intermediate idle frame with arms further back?
+  - 🚧 intermediate idle with arms further back?
+    - `idle-test`
 
 - 🚧 improve npc
   - chained rotate tween instead of sharp rotate
@@ -17,11 +32,8 @@
   - darker npc
   - understand HMR bugs?
 
-- 🚧 improve props
-  - 🚧 improve table symbols
-    - add as sub-symbols of hull symbols
-  - create television symbol
-    - add as sub-symbols of hull 301
+- BUG `echo $( take 1 ) $( take 1 )` should not need two Ctrl-C
+
 
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
