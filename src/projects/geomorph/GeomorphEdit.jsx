@@ -161,6 +161,7 @@ function Geomorph({ layoutKey, transform, disabled }) {
           scale,
           navTris: false,
           invertSymbols: true,
+          arrows: true,
         },
       );
       // intersect with circles (corresponds to bake-lighting radial fill)

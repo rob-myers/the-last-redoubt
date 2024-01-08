@@ -91,6 +91,7 @@ const staticDir = path.resolve(__dirname, '../../static');
         highlights: false,
         floorColor: 'rgba(180, 180, 180, 1)',
         navColor: 'rgba(200, 200, 200, 1)',
+        arrows: false,
       },
     );
 

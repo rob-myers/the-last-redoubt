@@ -3,7 +3,7 @@ import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics, LINE_JOIN } from "@pixi/graphics";
 
 import { Poly, Rect } from "../geom";
-import { debugDoorOffset, defaultNpcInteractRadius, gmScale } from "../world/const";
+import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
 
@@ -133,26 +133,25 @@ export default function DebugWorld(props) {
               gfx.endFill();
             });
           }
-          if (opts.canClickArrows) {
-            const debugRadius = 4;
-            const texture = api.decor.icon["circle-right"];
-            const scale = (2 * debugRadius) / texture.width;
-            
-            gfx.lineStyle({ width: 0 });
-            room.navArrows.forEach(({ arrowPos, angle }) => {
-              gfx.beginTextureFill({
-                texture,
-                matrix: tempMatrix.identity()
-                  .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
-                  .scale(scale, scale).translate(arrowPos.x - debugRadius, arrowPos.y - debugRadius),
-                alpha: 0.4,
-              });
-              gfx.drawRect(arrowPos.x - debugRadius, arrowPos.y - debugRadius, 2 * debugRadius, 2 * debugRadius);
-              gfx.endFill();
-            });
 
-            api.geomorphs.renderHitRoom(gmId, room.roomId);
-          }
+          // Arrows (always drawn, optionally clickable)
+          const texture = api.decor.icon["circle-right"];
+          const scale = (2 * debugArrowRadius) / texture.width;
+          
+          gfx.lineStyle({ width: 0 });
+          room.navArrows.forEach(({ arrowPos, angle }) => {
+            gfx.beginTextureFill({
+              texture,
+              matrix: tempMatrix.identity()
+                .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
+                .scale(scale, scale).translate(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius),
+              alpha: debugArrowAlpha,
+            });
+            gfx.drawRect(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius, 2 * debugArrowRadius, 2 * debugArrowRadius);
+            gfx.endFill();
+          });
+          api.geomorphs.renderHitRoom(gmId, room.roomId);
+
         }
 
         api.renderInto(gfx, state.tex[gmId], false);

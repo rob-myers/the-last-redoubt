@@ -259,7 +259,7 @@ source /etc/game-1
 awaitWorld
 spawn ${npcKey} '{"x":210,"y":390}' --zhodani
 npc set-player ${npcKey}
-npc config '{canClickArrows:true}'
+# npc config '{canClickArrows:true}'
 
 click | controlNpc ${npcKey} &
 # pausableNpcs &

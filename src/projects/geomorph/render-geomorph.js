@@ -1,7 +1,7 @@
 import { createCanvas } from "canvas";
 /* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
-import { gmScale, preDarkenCssRgba } from "../world/const";
+import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, gmScale, preDarkenCssRgba } from "../world/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
 import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage, drawRotatedImage } from '../service/dom';
@@ -239,19 +239,19 @@ export async function renderGeomorph(
   }
 
   if (arrows) {
-    const debugDoorOffset = 12;
-    const debugRadius = 3;
     const iconCircleRight = await getPng('/assets/icon/circle-right.svg');
     const saved = ctxt.getTransform();
+    ctxt.globalAlpha = debugArrowAlpha;
     layout.doors.forEach(({ poly, normal, roomIds }) => {
       roomIds.forEach((_, i) => {
         const sign = i === 0 ? 1 : -1;
         const { angle } = Vect.from(normal).scale(-sign);
-        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).translate(-debugRadius, -debugRadius);
-        drawRotatedImage(iconCircleRight, ctxt, { ...arrowPos, width: debugRadius * 2, height: debugRadius * 2 }, angle)
+        const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset).translate(-debugArrowRadius, -debugArrowRadius);
+        drawRotatedImage(iconCircleRight, ctxt, { ...arrowPos, width: debugArrowRadius * 2, height: debugArrowRadius * 2 }, angle);
         ctxt.setTransform(saved);
       });
     });
+    ctxt.globalAlpha = 1;
   }
 }
 

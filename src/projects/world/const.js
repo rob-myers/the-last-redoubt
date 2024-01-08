@@ -101,5 +101,7 @@ export const hitTestRed = {
 };
 
 export const debugDoorOffset = 10;
+export const debugArrowRadius = 4;
+export const debugArrowAlpha = 0.25;
 
 export const skeletonScale = 0.1;
