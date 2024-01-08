@@ -2,6 +2,8 @@
 
 ## In progress
 
+- ✅ fix npc HMR issue by recreating Ticker
+
 - 🚧 improve layouts
   - ✅ extra symbols are not inverted by default
   - ✅ cannot shade over symbols
@@ -30,6 +32,7 @@
   - darker shoes; maybe not so far back
   - darker npc
   - understand HMR bugs?
+    - `api ticker.count` should be `1`
 
 - ✅ BUG `echo $( take 1 ) $( take 1 )` should only need one Ctrl-C
 

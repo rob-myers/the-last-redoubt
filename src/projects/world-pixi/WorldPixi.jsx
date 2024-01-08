@@ -100,8 +100,10 @@ export default function WorldPixi(props) {
     setCursor(cssValue) {
       state.canvas.style.cursor = cssValue;
     },
-    setTicker(enabled) {
-      state.ticker.remove(state.onTick).stop();
+    setTicker(enabled) {// recreate fixes HMR
+      state.ticker.stop();
+      state.ticker.destroy();
+      state.ticker = npcService.createTicker();
       enabled && state.ticker.add(state.onTick).start();
     },
     setVisibleGms(visibleGms) {
