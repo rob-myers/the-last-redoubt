@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 300 60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
-  <defs>
-    <bx:grid x="0" y="0" width="300" height="300"/>
-  </defs>
-  <g style="pointer-events: none;" transform="">
-    <title>background</title>
-    <image width="300" height="60" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAA8CAMAAADrAndoAAABp1BMVEUAAAAAAAAYGBcGBwcNDQwbGxsMDAwICAgSEhIYGBgwMDAQEBA5OThFRUUYGBgaGhoVFRUvLy89PT23t7caGhpnZ2cgICBiYmF6eno0NDQkJCRoaGhWVlZvbmsqKiojIyOQkJBVVVV4eHcTExM5OTkTExNiY2NvcW8wMDCWlpSqqqo7OzuAfX1VVVIGBgYDAwN1dXUcHBxERETLy8uSkpK/v7+CgoIMDAz///8AAAAFBQVcXFwAAAPx8fH9/f2jo5heXVsDAwL//+j+/vjq5cklIhwBAQF2bmGXh3VoYFMjIBpbVUqWhnT//+L///55b2FtZVeQhXP///r+/vX//+z//+T89tno28Cyoo1waVtdV0xlXVBXUUZBPjkeGRb+/vH9/uX36czo5Mjm4cbu38XDsZqjo5GUhHOLemp8cmN0a11OSDw8NSshHRgTEA2EemqAdmdLRTsVFRP+/ff9/O/+/e3x8ezx8ODh07ng0rnMv6ajo5ejnoqhmIaJfm1eXl5cW1hbV1JiW04/OzMxMC0uKiMICAitnYirmoaajHpqYlVNS0UrJiAOXKK7AAAAOHRSTlMA/f78/h4N+O/hvuXcvZSAbWwxDgX9/fvy6urp493QzcvLyL+yrKeTioaEfnRXVVFISEA7LywrFjw4vLcAAALNSURBVHja7dvFWxtBGMfxmQguReru7pZ3S2knIROkGyFOhARCgAguxaFQqn90d6f4Jnk6p17ez2n3+n1m9vRbomtvfVh3oRpQaabzjS1Wsqeq5aoFUCVn6p63E521qQY45YDK4QqH2lNVWqu3TWYQqTjnjCnoCMa4BgAYhRqtVlVzNVAAPFgV6L0o1D8hT+v3WlmKM8lCPr61+REJm1vxfCFpcjonRB/Kb5LbTHtgMFGIx7qXM4sL79GBhcXM8g9vbCDRAUwLZia1IFrlva5IJuiwoWMcwUzENTUZB/1IAanWkjFIeD2RtB1bGTjs6Yhrcn0bFD2WuIS9fVFfWPXbkIFfDftyPq9eCQiAFu3rl+hIKNBpQwadgdBIdN2T3I/FtFjjS+qg24YM3IPqZ89UrvcwlnNgbNg+a0MlzNqHx8a9x2KNDuHnvdwnfmjU0+M8jNXb192FscrF6up2Yax/jvUJY2EsG8aSgLEkYCwJGEsCxpKAsSRgLAkYSwLGkoCxJGAsCRhLAsaSgLEkYCwJGEsCxpKAsSRgLAkYSwLGkoCxJGAsCRhLAsaSgLEkYCwJGOs/Mk6OxJgN97cl+U+O2cRMch43pSW458VM8kis3wOeJTXVb0MG/Sl9gBstilhcnKy4Nu1WA1jL2CqgatPuyZ8WEcsMwIElvL6wqo+73XgX92kt9GG3Gva5xqfF/yikRtzDYj4XSQeDeLZOnqtgMB3x5PomgAEAuQLiIianY9/DITU153d0IsHhn0upofA3b2w6KVoBaTZxBnow507Mt7aaza58QMJKNru65uvZLhRBb0WhlljrFMrwT9ZKRB2Fztwj5EUDo7vaO2eKwjh0oAOgN+Ea4GZqumUlhDxusFCzgkerPLartWpsJbpn13eAUgWVQykk7rwhf726eykxA6gc06/Lj9rIvraX929cPLvxDhltnD537cFrovsDCPG/riJIr9AAAAAASUVORK5CYII="/>
+<svg viewBox="0 0 300 60" xmlns="http://www.w3.org/2000/svg">
+  <g style="">
+    <title>original</title>
+    <path d="M 298 16 L 298 44 L 278.267 58 L 21.733 58 L 2 44 L 2 16 L 21.733 2 L 278.267 2 L 298 16 Z" style="stroke-linecap: round; stroke-linejoin: round; fill: rgb(87, 87, 87); stroke-width: 4px; stroke: rgb(255, 255, 255);"/>
+    <path d="M 6 42 L 6 18 L 21.998 6 L 278.002 6 L 294 18 L 294 42 L 278.002 54 L 21.998 54 Z" style="stroke: rgb(68, 68, 68); stroke-width: 3px;"/>
   </g>
-  <g transform="matrix(1, 0, 0, 1, 10, 10)">
+  <g style="visibility: hidden;">
     <title>obstacles</title>
-    <rect x="-10" y="-10" width="300" height="60" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
-  </g>
-  <g style="pointer-events: none;">
-    <title>singles</title>
-    <rect width="20" height="20" style="fill: rgb(216, 216, 216); fill-opacity: 0.5;" x="139.92" y="15">
-      <title>decor point</title>
-    </rect>
-    <path d="M 5.275 10.896 L 7.823 5.332 L 290.046 5 L 294.679 8.895 L 295 50.337 L 290.046 54.887 L 7.823 55 L 5 49.266 L 5.275 10.896 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(204, 204, 204); fill-opacity: 0.5;">
-      <title>poly fillColor=#ccc</title>
-    </path>
+    <path d="M 300 15 L 300 45 L 280 60 L 20 60 L 0 45 L 0 15 L 20 0 L 280 0 L 300 15 Z" style="stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 0, 255); fill-opacity: 0.2;"/>
   </g>
 </svg>

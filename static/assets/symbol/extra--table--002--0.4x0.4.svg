@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
-  <defs>
-    <bx:grid x="0" y="0" width="300" height="300"/>
-  </defs>
-  <g style="" transform="">
-    <title>background</title>
-    <image width="120" height="120" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAMAAAAOusbgAAABIHpUWHRSYXcgcHJvZmlsZSB0eXBlIHhtcAAAKJF1UktyxSAM23OKHoHIxibHSR+w60yXPX5lkr6keS2e/GwjSyLp6+MzvcUSSJKHV9m8WvNszYqrLcjxbQ/rLlGTBthiasNgRbY9/+weAHI6YZh8jy2laisZWcWGcyOyGLrkeUF63pAjSAEEN9kKVJPabf5eDA7VlZFl48zhc6E7m9DnCMeQRdYIjCRZwAR4bzsIn+IrYUnbK1oMiPLJ5c5I1UpyMWFindJWutDJ8GigL+BsOhEMacQvoGt4TRdRAWR/yZqc+mk33+mfNQo+9oS0ZZo4Xqk/BfwM2DScWa0csg8F0unUI52o/zfevcG4urObk67uXI/2bI7DVYvazL78dVFJ30ktmxa/6wauAAAC4lBMVEVHcEwBAQEKCgoAAAAAAAAAAAAAAAAAAABAQEBJSUk2MScBAQEAAAAAAAAAAAAAAAAUDQ0AAAAAAACPj48ICAhBQUEfGxYICAgAAAAAAAAAAAAAAAAAAAAnJyczMzOflIIODgkEBAMCAgJVVVU/Pz8ZFhI3NzYbGxpeXl4+Pj45OTheXl7///+Pj4+Li4tBQUFzc3NYWFiwsLARDwoAAAAAAAAaFxIAAAAAAAAAAAAWFA4SEAxEREMAAAAAAAAAAABEREQAAAAiHxoHBwQSEhIoJB4pKShLS0EmIho5NS0fGxZGQDgcHBtQUFDR0dFVVVWmpqb15Mfx8NGSkpKKiorp6MuPj49qamjn2LxJSUlSUlKioqK+sZmTk5B+fn7Hx7H///8AAABzaltBOzN3bmDUy7x+dGWGe2vo17xIQjn///WGfGvX1M90a13///13bl////uOg3J5b2H///T///iRh3YCAgKqnouBd2exoo7RyLtKRDpuZVh3bV+/tqkWFhb/+OeZjnwpKSmHfGyQhHMR8D8LCwsRERD28Oc/Pz8BAQH/+erMvaVGRkbx4MTV0Mn+/fvMwrRSS0EMDAylmIViWk3//+/JvrD//PaBeGnq3cn8+fS8r5yEe2yilYK4qpb/9N0EBARDPTWKf296cWFNRj1/dWVEPjVGQDeRh3VxaFpLRz0hHxqelopKSkOQhXRPT0/cz7rDtJ2snYqgk4AuLi5qamrdzLL//+qekoE7Ozv56Mvw6d0kJCS5rJbr2r/Vxayiop1mZmaoqKjn1ruEfm2YjHqilIJjY1bFwbuMgXBZUkeUiXdeVkuom4euqaD59fBLS0iPj35vZlhlXFBISEionIk0MCh4bmB7e3i4qpRISEZ2dnbi0bZYWFixpJNoYFMnIx1+fn7IuaI0NDSurqnW1r3Ly8vg4M3Pv6fy4sWzs66Ng3NYWEyjloP//+F+fnqzpZDGuKGvo452dmy+vr6wqVBTAAAAYHRSTlMA/RoPBfICcPP9NFci4K8SJXsXDB/y1fxACW07LP3+YDf4izyWwc/kXPHp4Qe/Y+pv8zpnXWCRT5nPW+HsVfll8nO9Rvx+89tE1Yyz8u7U/emEl/D4mezjiPj73ZbL5K1gotvNAAADbklEQVRo3u3bRVQbURQG4BcIFahQd3d3d3d3TyhMaqNJGiMhAQ4OhZbiVvfSFupQd3d3d+++eZOek8qi3bzXLu6/mcki55v7Zpb3RwghZb36jRRqOvEq5VO2CHKlXOOGldT0UrJMCZdcrnXThWqa8aory81btnK54dsjb29Yu3w2mayxbI7dU7jMJZcp64TbNluCf4RFfvicL6Za/QjFyoTu3nfwULA8ZEmfKgi1qIFvg3Z8ytPwLMszGiIxSizLakxxh2PloUtVR6gNfoawLx9FiTUaYnbOIZS7B0wiy4tHvsZiz6t9FVQTP8HbdyLPZO3cm5OUpJ1HIlptdM7+bCOrOXI4GIOdS6Ag/F3lvuEZU9z7JJ3AcSoi4QSdNidGZMW4Q/iwu1RDeHKLRmIMe3fNE1Qkw+miDxh508FCfNadEB586Q3WsX+XjlMRjmDPYDX79mCygwu+bNxm16nIRyjQs7tjMVlVhk8H6uO0HAVYlZLMhm7GZFEZXhyYaBdouCqugGEsbnjV+gytik4ubLKuccMW/2QdJTjF5jfbDc/1NwuU4Hjzz3AARwnmFv0Cq2hlAcAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAAAwwwwAADDDDAAAMMMMAA/w+w+d/s7Fn8EgRKcPxJv+U/LIQG2mjtZaaft679cQXWYKcER+hTN7jhs4H6NDpnHb9ICr3ohq+sZ7KjaXxeXISDz7vqXnNemsqKW2nsOafbeE1MJCZ7ud6xnuEdacRlLj0hUzK93u4Ue/ZAuJ7xMDdfkhxbo8m+ZyHClsmLrx6F44pGZSS3Bx4YHBIvZqfZdQKZsTkhJSLAYOTFmOeR3xsaW6Kc140h97MYltEbbAnmABIxJ2dsymQl/bYXO8KcnqJPaTQeFyXU10NM10RcG5EYMsF1F03Wy2d3ZK5bNYRGjpJ7MRutieeOHwtZvdKfSFauDlmXeOvx03t4XnWdjqURGjP6SZRcBgo+cTQ3dMV8Qllx6sylm1vCZUnRoDJCyHvsuOAoqkUrRUUf58DIw3vCxCc0K16VKrYrr3TCnr7ek6dNDaI1tGJ4367llRhWevrWrjVr5pQaS8irC/sPHDJ0sIenUi7TKT09vGvXmj5j0ojeFYr9bYr/Mb/9pUmF7oOGDejn6yHPi74BDiIfgtcTYscAAAAASUVORK5CYII="/>
-  </g>
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
   <g style="">
+    <title>original</title>
+    <path d="M 2 2 L 60 2 L 118 2 L 118 60 L 118 118 L 60 118 L 2 118 L 2 60 L 2 2 Z" style="fill: rgb(68, 68, 68); stroke-width: 4px; stroke-linecap: round; stroke-linejoin: round; stroke: rgb(255, 255, 255);"/>
+    <path d="M 15 15 L 105 15 L 105 105 L 15 105 L 15 15 Z" style="vector-effect: non-scaling-stroke; stroke-linecap: square; stroke-width: 4px; fill: rgb(34, 34, 34); stroke: rgb(153, 153, 153);"/>
+  </g>
+  <g style="visibility: hidden;">
     <title>obstacles</title>
-    <rect width="120" height="120" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
-  </g>
-  <g style="">
-    <title>singles</title>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" x="55" y="55">
-      <title>decor point</title>
-    </rect>
-    <path d="M 7.221 13.857 L 9.857 7.448 L 109.857 6.896 L 114.65 11.382 L 114.982 108.105 L 109.857 113.345 L 9.857 113.645 L 6.937 107.04 L 7.221 13.857 Z" style="stroke-width: 3px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 255, 0); fill-opacity: 0.2;">
-      <title>poly fillColor=#00000022</title>
-    </path>
+    <rect width="120" height="120" style="fill: rgb(0, 0, 255); fill-opacity: 0.2;"/>
   </g>
 </svg>

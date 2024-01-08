@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
-  <defs>
-    <bx:grid x="0" y="0" width="300" height="300"/>
-  </defs>
-  <g style="" transform="">
-    <title>background</title>
-    <image width="60" height="60" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAMAAAANIilAAAABfVBMVEUAAAAHBgQwLy42NjUAAAAAAAAODAk8ODIAAA4yMjEAAAAMCgkuLCoLCQcAAACKiopycGxWUk1PTEcQHCUPAgBraWaGhIQVFBJcW1gyMSwAAAALCQdBQUFra2uHg3gICAgHBwW6taXLyLgaFxCjoJMAAAAmIhoAAABcZikbDQ3///8AAAD+/v3n5N6AdGBfWE4KCQb9/f+Bcl0pKCbx6dmxraYPEhXp5d9hVkQYGBYUEhD///yTh3SIe2h7bllhVkMAAgkHBgP9/f6yqJmIfm+FeGdvZlpkXVE/PTkEAQD48+fl4dnj3tXPxrTIvqyzrKGkmoqek4SKiYKilYGWjX19cV51aVpQS0NGQz5ZTTsuLCn9+/j///Xx7un/+uP89ePs6OHx6tnw6Nju59TW0Mfi2MXd0bnQx7fDvbTHv6y5sKK6r56inJO3qZKvooybjnmOgm5ycG18cmRmZ2RwbWJ3bmBiWk9hVkVQRTdOQzY3NzY1NC4eHx8OEBIECAxNY3c8AAAAKnRSTlP8t/n+AAb+/f74u7WoXCwa/vz8/Pz79+/s5NzZz7i3npaRj21hT0QaGROSbY0RAAABVElEQVRIx+3WRVPDUBDA8S2kLXXc3XlbRZu0Sd3dS3F3d/3shAMcGA55vTDM5H978+Y3u8cFxqTnfEhbjNMaGQZM/THEarQ2J71atNKEXK+RgQGEajFYFmalJ5SDgSvgtEp4xpdiqLC/szUvue29cz7djNwE+DB8fbbuIlStpvlAU2wYkLVdbBCHmSriCgRbUSfipxRxELrMZNOqRgX4vMtJ8UHbSq7dqwA7PljqwCQDb5/Ys0SNRbAAi/Vixxd2yljGMpaxjGUsYxn/d+z5M+y01I3F2zNBj4nrFN4VgOzjAfFTX49rvBpFzEXcceI30yTOyrhbUAcqvAtl47RLH4aO23AIXlFd4C9TSYv0ErtZ4SgPrAE6ESo5d0mwUlRyn+RB1TcDozcIbCQcsUnvPnwbBbvKwMD0SIcX6WO7xpQMKKfGB7s1Db/V+LPvH02PflLJMB+/l1hOX2tjWgAAAABJRU5ErkJggg=="/>
-  </g>
+<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
   <g style="">
+    <title>original</title>
+    <path d="M 2 2 L 30 2 L 58 2 L 58 30 L 58 58 L 30 58 L 2 58 L 2 30 L 2 2 Z" style="stroke-width: 4px; stroke-linecap: round; stroke-linejoin: round; fill: rgb(51, 51, 51); stroke: rgb(255, 255, 255);"/>
+    <rect x="28.864" y="3.972" width="4" height="52.095" style="fill: rgb(170, 170, 170);"/>
+  </g>
+  <g style="visibility: hidden;">
     <title>obstacles</title>
-    <rect width="60" height="60" style="fill: rgb(0, 0, 255); fill-opacity: 0.1;"/>
-  </g>
-  <g style="">
-    <title>singles</title>
-    <rect width="10" height="10" style="fill-opacity: 0.5; fill: rgb(255, 0, 0);" y="25" x="25">
-      <title>decor point</title>
-    </rect>
+    <rect width="60" height="60" style="fill: rgb(0, 0, 255); fill-opacity: 0.2;"/>
   </g>
 </svg>
