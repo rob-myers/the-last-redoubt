@@ -877,23 +877,25 @@ export default function createNpc(def, api) {
         `${(fr % fc === 0 ? 0 : 1) + Math.floor((fr / fc) * 8)}/${8}`
       );
 
-      if (fr <= fc/8) {
-        await showFrame(0);
-      } else if (fr <= fc/4 ) {
-        await showFrame(fc/8);
-      } else if (fr <= fc * 3/8) {
-        await showFrame(fr * 3/8);
-      } else if (fr <= fc * 1/2) {
-        await showFrame(fc/2);
-      } else if (fr <= fc * 5/8) {
-      } else if (fr <= fc * 3/4) {
-        await showFrame(fc * 5/8);
-      } else if (fr <= fc * 7/8) {
-        await showFrame(fc * 7/8);
-      } else {
-        // NOOP
-      }
-      this.a.paused = false;
+      try {
+        if (fr <= fc/8) {
+          await showFrame(0);
+        } else if (fr <= fc/4 ) {
+          await showFrame(fc/8);
+        } else if (fr <= fc * 3/8) {
+          await showFrame(fr * 3/8);
+        } else if (fr <= fc * 1/2) {
+          await showFrame(fc/2);
+        } else if (fr <= fc * 5/8) {
+        } else if (fr <= fc * 3/4) {
+          await showFrame(fc * 5/8);
+        } else if (fr <= fc * 7/8) {
+          await showFrame(fc * 7/8);
+        } else {
+          // NOOP
+        }
+        this.a.paused = false;
+      } catch {}
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {
