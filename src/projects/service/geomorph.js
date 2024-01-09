@@ -396,6 +396,9 @@ export async function createLayout(opts) {
   
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
+      // e.g. `foo--bar--3x2` becomes `{ x: 3, y: 2 }`
+      gridDim: getGridDimFromSymbolKey(sym.key),
+      baseRect: { x: 0, y: 0, width: sym.width, height: sym.height },
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
@@ -578,6 +581,22 @@ function extendLayoutUsingNestedSymbols(opts) {
     return agg;
   }, /** @type {typeof opts.def.items} */ ([]));
 }
+
+/**
+ * @param {Geomorph.SymbolKey} key 
+ * @returns {[number, number]}
+ */
+function getGridDimFromSymbolKey(key) {
+  if (key.endsWith('--hull')) {
+    const gmId = Number(key.split('--')[0]);
+    return isEdgeGeomorph(gmId) ? [20, 10] : [20, 20];
+  } else {
+    return /** @type {[number ,number]} */ (
+      /** @type {string} */ (key.split('--').pop()).split('x').map(Number)
+    );
+  }
+}
+
 /**
  * @param {Geomorph.SvgGroupWithTags<Poly>} single 
  * @returns {Geomorph.LayoutDefItem}

@@ -127,14 +127,24 @@ declare namespace Geomorph {
 
     /**
      * Symbol instances i.e. PNGs with transforms.
-     * The first is always the hull symbol,
-     * whose PNG is the original geomorph,
-     * typically only used for debugging.
+     * The first is always the hull symbol, and corresponds to the respective original geomorph.
      */
     items: {
       key: Geomorph.SymbolKey;
+      /**
+       * Dimensions provided in `pngHref` e.g. `foo--bar--3x2.png`
+       * yields `(3, 2)` in Geomorph Grid Coordinates.
+       */
+      gridDim: [number, number];
+      /**
+       * Dimensions excluding overflow (e.g. doors).
+       * - `x = y = 0`.
+       * - `width / height` equals `gridDim.x / gridDim.y`.
+       */
+      baseRect: Geom.RectJson;
+      /** Path to PNG */
       pngHref: string;
-      /** Untransformed */
+      /** True bounds including overflow (e.g. doors) */
       pngRect: Geom.RectJson;
       /** If absent use identity transform */
       transformArray?: LayoutDefItem['transform'];
@@ -445,7 +455,7 @@ declare namespace Geomorph {
     | 'cargo--010--2x4'
     | 'console--018--1x1'
     | 'console--022--1x2'
-    | 'console--031--1x1.2'
+    | 'console--031--1x1'
     | 'couch-and-chairs--006--0.4x2'
     | 'empty-room--006--2x2'
     | 'empty-room--013--2x3'

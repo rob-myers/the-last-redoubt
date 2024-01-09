@@ -13,9 +13,19 @@
     - ✅ `extra--table--002--0.4x0.4`
     - ✅ `extra--table--003--0.1x0.1`
     - ✅ `extra--table--004--0.4x0.2`
-  - 🚧 "extra--" symbols which can be placed on tables
-  - support `decor point outline-ui`
-  - useQueries to improve GeomorphEdit?
+  - ❌ `extra--*` don't need PNG i.e. infer from SVG
+    - prefer simpler code
+
+- 🚧 `extra--*` can be scaled up more than 5x e.g. 10x
+  - ℹ️ do this because small symbols are too pixelated
+  - we can compare PNG dimension to filename dim
+
+- 🚧 `extra--*` symbols which can be placed on tables
+- more tables in 301
+- more tables in 101
+
+- support `decor point outline-ui`
+- useQueries to improve GeomorphEdit?
 
 - 🚧 improve walk -> idle transition
   - ❌ try temp change walk speed so end at nearest idle

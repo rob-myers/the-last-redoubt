@@ -3251,74 +3251,6 @@
         }
       },
       {
-        "meta": {"poly": true, "fillColor": "#00000022"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [432.296, 554.426],
-              [432.296, 554.426],
-              [424.5654, 554.483],
-              [423.408, 553.8966],
-              [423.3882, 534.2188],
-              [424.301, 533.1898],
-              [432.6512, 533.2566],
-              [433.4394, 534.2188],
-              [433.415, 553.8966],
-              [432.296, 554.426]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"decor": true, "point": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [429.4092, 544.0328],
-              [427.4092, 544.0328],
-              [427.4092, 542.0328],
-              [429.4092, 542.0328]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"poly": true, "fillColor": "#00000022"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [432.296, 528.426],
-              [432.296, 528.426],
-              [424.5654, 528.483],
-              [423.408, 527.8966],
-              [423.3882, 508.2188],
-              [424.301, 507.1898],
-              [432.6512, 507.2566],
-              [433.4394, 508.2188],
-              [433.415, 527.8966],
-              [432.296, 528.426]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"decor": true, "point": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [429.4092, 518.0328],
-              [427.4092, 518.0328],
-              [427.4092, 516.0328],
-              [429.4092, 516.0328]
-            ]
-          ]
-        }
-      },
-      {
         "meta": {"decor": true, "go": true, "label": "office"},
         "poly": {
           "type": "Polygon",
@@ -3482,74 +3414,6 @@
               [542.4092, 530.0328],
               [542.4092, 506.0328],
               [554.4092, 506.0328]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"poly": true, "fillColor": "#00000022"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [552.296, 554.426],
-              [552.296, 554.426],
-              [544.5654, 554.483],
-              [543.408, 553.8966],
-              [543.3882, 534.2188],
-              [544.301, 533.1898],
-              [552.6512, 533.2566],
-              [553.4394, 534.2188],
-              [553.415, 553.8966],
-              [552.296, 554.426]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"decor": true, "point": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [549.4092, 544.0328],
-              [547.4092, 544.0328],
-              [547.4092, 542.0328],
-              [549.4092, 542.0328]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"poly": true, "fillColor": "#00000022"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [552.296, 528.426],
-              [552.296, 528.426],
-              [544.5654, 528.483],
-              [543.408, 527.8966],
-              [543.3882, 508.2188],
-              [544.301, 507.1898],
-              [552.6512, 507.2566],
-              [553.4394, 508.2188],
-              [553.415, 527.8966],
-              [552.296, 528.426]
-            ]
-          ]
-        }
-      },
-      {
-        "meta": {"decor": true, "point": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [549.4092, 518.0328],
-              [547.4092, 518.0328],
-              [547.4092, 516.0328],
-              [549.4092, 516.0328]
             ]
           ]
         }
@@ -19601,6 +19465,8 @@
   "items": [
     {
       "key": "102--hull",
+      "gridDim": [20, 20],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/debug/g-102--research-deck.png",
       "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -19608,6 +19474,8 @@
     },
     {
       "key": "iris-valves--005--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [1, 0, 0, 1, 840, 0],
@@ -19615,6 +19483,8 @@
     },
     {
       "key": "iris-valves--005--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, -1, 0, 1200, 840],
@@ -19622,6 +19492,8 @@
     },
     {
       "key": "iris-valves--005--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, -1, 1, 0, 0, 360],
@@ -19629,6 +19501,8 @@
     },
     {
       "key": "empty-room--060--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/empty-room--060--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [1, 0, 0, -1, 0, 240],
@@ -19636,6 +19510,8 @@
     },
     {
       "key": "machinery--158--1.8x3.6",
+      "gridDim": [1.8, 3.6],
+      "baseRect": {"x": 0, "y": 0, "width": 540, "height": 1080},
       "pngHref": "/assets/symbol/machinery--158--1.8x3.6.png",
       "pngRect": {"x": -10, "y": -10, "width": 560, "height": 1100},
       "transformArray": [1, 0, 0, 1, 12, 12],
@@ -19643,6 +19519,8 @@
     },
     {
       "key": "machinery--065--1.8x1.8",
+      "gridDim": [1.8, 1.8],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/machinery--065--1.8x1.8.png",
       "pngRect": {"x": 20, "y": 20, "width": 560, "height": 560},
       "transformArray": [1, 0, 0, 1, 234, 234],
@@ -19650,6 +19528,8 @@
     },
     {
       "key": "console--018--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/console--018--1x1.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 307},
       "transformArray": [-1, 0, 0, 1, 240, 0],
@@ -19657,6 +19537,8 @@
     },
     {
       "key": "lab--018--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/lab--018--4x4.png",
       "pngRect": {"x": -10, "y": -32.5, "width": 1220, "height": 1243},
       "transformArray": [1, 0, 0, -1, 360, 240],
@@ -19664,6 +19546,8 @@
     },
     {
       "key": "lab--018--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/lab--018--4x4.png",
       "pngRect": {"x": -10, "y": -32.5, "width": 1220, "height": 1243},
       "transformArray": [-1, 0, 0, -1, 840, 240],
@@ -19671,6 +19555,8 @@
     },
     {
       "key": "ships-locker--020--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/ships-locker--020--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, 1, 840, 120],
@@ -19678,6 +19564,8 @@
     },
     {
       "key": "ships-locker--007--1x2",
+      "gridDim": [1, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 300},
       "pngHref": "/assets/symbol/ships-locker--007--1x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
       "transformArray": [1, 0, 0, -1, 960, 60],
@@ -19685,6 +19573,8 @@
     },
     {
       "key": "ships-locker--003--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/ships-locker--003--1x1.png",
       "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
       "transformArray": [0, 1, -1, 0, 1020, 120],
@@ -19692,6 +19582,8 @@
     },
     {
       "key": "ships-locker--003--1x1",
+      "gridDim": [1, 1],
+      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
       "pngHref": "/assets/symbol/ships-locker--003--1x1.png",
       "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
       "transformArray": [0, 1, -1, 0, 1020, 180],
@@ -19699,6 +19591,8 @@
     },
     {
       "key": "empty-room--019--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/empty-room--019--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 0],
@@ -19706,6 +19600,8 @@
     },
     {
       "key": "engineering--047--4x7",
+      "gridDim": [4, 7],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 2100},
       "pngHref": "/assets/symbol/engineering--047--4x7.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
       "transformArray": [0, 1, -1, 0, 420, 360],
@@ -19713,6 +19609,8 @@
     },
     {
       "key": "office--004--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/office--004--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, 1, 0, 420, 360],
@@ -19720,6 +19618,8 @@
     },
     {
       "key": "stateroom--012--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/stateroom--012--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, -1, -1, 0, 540, 600],
@@ -19727,6 +19627,8 @@
     },
     {
       "key": "extra--table--004--0.4x0.2",
+      "gridDim": [0.4, 0.2],
+      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, -1, -1, 0, 434.4092, 556.0328],
@@ -19734,6 +19636,8 @@
     },
     {
       "key": "extra--table--004--0.4x0.2",
+      "gridDim": [0.4, 0.2],
+      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, -1, -1, 0, 434.4092, 530.0328],
@@ -19741,6 +19645,8 @@
     },
     {
       "key": "office--004--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/office--004--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, 1, 0, 540, 360],
@@ -19748,6 +19654,8 @@
     },
     {
       "key": "stateroom--012--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/stateroom--012--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, -1, -1, 0, 660, 600],
@@ -19755,6 +19663,8 @@
     },
     {
       "key": "extra--table--004--0.4x0.2",
+      "gridDim": [0.4, 0.2],
+      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, -1, -1, 0, 554.4092, 556.0328],
@@ -19762,6 +19672,8 @@
     },
     {
       "key": "extra--table--004--0.4x0.2",
+      "gridDim": [0.4, 0.2],
+      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, -1, -1, 0, 554.4092, 530.0328],
@@ -19769,6 +19681,8 @@
     },
     {
       "key": "lab--012--3x4",
+      "gridDim": [3, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 900},
       "pngHref": "/assets/symbol/lab--012--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 920},
       "transformArray": [0, -1, 1, 0, 660, 600],
@@ -19776,6 +19690,8 @@
     },
     {
       "key": "lounge--017--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
       "pngHref": "/assets/symbol/lounge--017--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
       "transformArray": [1, 0, 0, 1, 960, 360],
@@ -19783,6 +19699,8 @@
     },
     {
       "key": "fresher--036--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
       "pngHref": "/assets/symbol/fresher--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
       "transformArray": [1, 0, 0, -1, 960, 600],
@@ -19790,6 +19708,8 @@
     },
     {
       "key": "misc-stellar-cartography--020--10x10",
+      "gridDim": [10, 10],
+      "baseRect": {"x": 0, "y": 0, "width": 3000, "height": 3000},
       "pngHref": "/assets/symbol/misc-stellar-cartography--020--10x10.png",
       "pngRect": {"x": -10, "y": -10, "width": 3020, "height": 3020},
       "transformArray": [-1, 0, 0, 1, 600, 600],
@@ -19797,6 +19717,8 @@
     },
     {
       "key": "lab--023--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/lab--023--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [0, 1, -1, 0, 840, 600],
@@ -19804,6 +19726,8 @@
     },
     {
       "key": "engineering--045--4x6",
+      "gridDim": [4, 6],
+      "baseRect": {"x": 0, "y": 0, "width": 1800, "height": 1200},
       "pngHref": "/assets/symbol/engineering--045--4x6.png",
       "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
       "transformArray": [0, -1, 1, 0, 600, 1200],
@@ -19811,6 +19735,8 @@
     },
     {
       "key": "lab--023--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/lab--023--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [0, 1, 1, 0, 960, 600],
@@ -19818,6 +19744,8 @@
     },
     {
       "key": "lab--030--1x3",
+      "gridDim": [1, 3],
+      "baseRect": {"x": 0, "y": 0, "width": 900, "height": 300},
       "pngHref": "/assets/symbol/lab--030--1x3.png",
       "pngRect": {"x": 0, "y": 0, "width": 907, "height": 307},
       "transformArray": [1, 0, 0, 1, 960, 780],
@@ -19825,6 +19753,8 @@
     },
     {
       "key": "office--074--4x4",
+      "gridDim": [4, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/symbol/office--074--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 960],

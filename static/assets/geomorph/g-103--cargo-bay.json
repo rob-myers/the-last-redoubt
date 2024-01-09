@@ -7718,6 +7718,8 @@
   "items": [
     {
       "key": "103--hull",
+      "gridDim": [20, 20],
+      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
       "pngHref": "/assets/debug/g-103--cargo-bay.png",
       "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -7725,6 +7727,8 @@
     },
     {
       "key": "empty-room--039--3x4",
+      "gridDim": [3, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 900, "height": 1200},
       "pngHref": "/assets/symbol/empty-room--039--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 240, 0],
@@ -7732,6 +7736,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 360, 0],
@@ -7739,6 +7745,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 480, 0],
@@ -7746,6 +7754,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 600, 0],
@@ -7753,6 +7763,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 720, 0],
@@ -7760,6 +7772,8 @@
     },
     {
       "key": "cargo--010--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--010--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [1, 0, 0, 1, 960, 0],
@@ -7767,6 +7781,8 @@
     },
     {
       "key": "office--055--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/office--055--2x4.png",
       "pngRect": {"x": -24, "y": -10, "width": 634, "height": 1220},
       "transformArray": [1, 0, 0, 1, 1080, 0],
@@ -7774,6 +7790,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 60, 360],
@@ -7781,6 +7799,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 180, 360],
@@ -7788,6 +7808,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 300, 360],
@@ -7795,6 +7817,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 420, 360],
@@ -7802,6 +7826,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 660, 360],
@@ -7809,6 +7835,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 780, 360],
@@ -7816,6 +7844,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 900, 360],
@@ -7823,6 +7853,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 1020, 360],
@@ -7830,6 +7862,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 60, 600],
@@ -7837,6 +7871,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 180, 600],
@@ -7844,6 +7880,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 300, 600],
@@ -7851,6 +7889,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 420, 600],
@@ -7858,6 +7898,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 660, 600],
@@ -7865,6 +7907,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 780, 600],
@@ -7872,6 +7916,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 900, 600],
@@ -7879,6 +7925,8 @@
     },
     {
       "key": "cargo--003--2x4",
+      "gridDim": [2, 4],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
       "pngHref": "/assets/symbol/cargo--003--2x4.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
       "transformArray": [1, 0, 0, 1, 1020, 600],
@@ -7886,6 +7934,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 0, 960],
@@ -7893,6 +7943,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 0, 1080],
@@ -7900,6 +7952,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 120, 960],
@@ -7907,6 +7961,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 120, 1080],
@@ -7914,6 +7970,8 @@
     },
     {
       "key": "empty-room--074--4x8",
+      "gridDim": [4, 8],
+      "baseRect": {"x": 0, "y": 0, "width": 2400, "height": 1200},
       "pngHref": "/assets/symbol/empty-room--074--4x8.png",
       "pngRect": {"x": -10, "y": -10, "width": 2420, "height": 1220},
       "transformArray": [1, 0, 0, 1, 360, 960],
@@ -7921,6 +7979,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 960, 960],
@@ -7928,6 +7988,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 960, 1080],
@@ -7935,6 +7997,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 1080, 960],
@@ -7942,6 +8006,8 @@
     },
     {
       "key": "cargo--002--2x2",
+      "gridDim": [2, 2],
+      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
       "pngHref": "/assets/symbol/cargo--002--2x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
       "transformArray": [1, 0, 0, 1, 1080, 1080],

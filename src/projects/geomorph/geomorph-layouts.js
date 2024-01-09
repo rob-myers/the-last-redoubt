@@ -160,9 +160,9 @@ const layoutDefs = {
 
       { id: 'stateroom--036--2x4' },
       { at: '👉', id: 'office--001--2x2', dy: 2 * 60, flip: 'y', doors: ['s'] },
-      { at: '👉', id: 'console--031--1x1.2', x: 1 * 60, dy: 1 * 60, flip: 'y' },
+      { at: '👉', id: 'console--031--1x1', x: 1 * 60, dy: 1 * 60, flip: 'y' },
       { at: '👉', id: 'bridge--042--8x9', dy: 1 * 60},
-      { at: '👉', id: 'console--031--1x1.2', dy: 1 * 60},
+      { at: '👉', id: 'console--031--1x1', dy: 1 * 60},
       { at: '👉', id: 'office--001--2x2', x: 1 * 60, dy: 2 * 60, doors: ['s'] },
       { at: '👉', id: 'stateroom--036--2x4', flip: 'y' },
 

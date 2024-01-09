@@ -6685,8 +6685,8 @@
     "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 607},
     "lastModified": 1683550928463.7507
   },
-  "console--031--1x1.2": {
-    "key": "console--031--1x1.2",
+  "console--031--1x1": {
+    "key": "console--031--1x1",
     "hull": [],
     "obstacles": [
       {
@@ -6738,8 +6738,8 @@
     ],
     "width": 300,
     "height": 300,
-    "pngRect": {"x": -9, "y": -4, "width": 377, "height": 307},
-    "lastModified": 1696011711636.3445
+    "pngRect": {"x": -3.5, "y": -3.5, "width": 377, "height": 307},
+    "lastModified": 1704826533017.6897
   },
   "couch-and-chairs--006--0.4x2": {
     "key": "couch-and-chairs--006--0.4x2",
@@ -7717,66 +7717,6 @@
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
     "lastModified": 1694352713612.0083
   },
-  "extra--locker--001--1x0.33": {
-    "key": "extra--locker--001--1x0.33",
-    "hull": [],
-    "obstacles": [],
-    "walls": [
-      {
-        "type": "Polygon",
-        "coordinates": [
-          [[-10, -10], [10, -10], [10, 110.081], [-10, 110.081], [-10, -10]]
-        ]
-      },
-      {
-        "type": "Polygon",
-        "coordinates": [
-          [[290, -10], [310, -10], [310, 110.081], [290, 110.081], [290, -10]]
-        ]
-      }
-    ],
-    "singles": [
-      {
-        "meta": {"wall": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[-10, -10], [-10, 10], [310, 10], [310, -10]]]
-        }
-      },
-      {
-        "meta": {"door": true, "iris": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[50, -15], [50, 15], [250, 15], [250, -15]]]
-        }
-      },
-      {
-        "meta": {"decor": true, "label": "locker"},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[125, 25], [125, 75], [175, 75], [175, 25]]]
-        }
-      },
-      {
-        "meta": {"view": true},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [144.399, 7.007],
-              [144.399, 78.142],
-              [154.399, 78.142],
-              [154.399, 7.007]
-            ]
-          ]
-        }
-      }
-    ],
-    "width": 300,
-    "height": 100,
-    "pngRect": {"x": -10, "y": -10, "width": 320, "height": 120},
-    "lastModified": 1692456800695.7815
-  },
   "extra--table--001--1x0.2": {
     "key": "extra--table--001--1x0.2",
     "hull": [],
@@ -7865,6 +7805,38 @@
     "height": 60,
     "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
     "lastModified": 1704717997162.0076
+  },
+  "extra--tv--001--0.5x0.1": {
+    "key": "extra--tv--001--0.5x0.1",
+    "hull": [],
+    "obstacles": [
+      {
+        "meta": {},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [300, 15],
+              [300, 45],
+              [280, 60],
+              [20, 60],
+              [0, 45],
+              [0, 15],
+              [20, 0],
+              [280, 0],
+              [300, 15],
+              [300, 15]
+            ]
+          ]
+        }
+      }
+    ],
+    "walls": [],
+    "singles": [],
+    "width": 150,
+    "height": 30,
+    "pngRect": {"x": 0, "y": 0, "width": 150, "height": 30},
+    "lastModified": 1704735736862.6914
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
