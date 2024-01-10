@@ -45,7 +45,7 @@
       {"at": "👉", "id": "lab--023--4x4", "a": 90},
       {"at": "👇", "id": "engineering--045--6x4", "a": 270},
       {"at": "⏪👉", "id": "lab--023--4x4", "x": 120, "a": 90, "flip": "y"},
-      {"at": "👇", "id": "lab--030--1x3", "y": -60},
+      {"at": "👇", "id": "lab--030--3x1", "y": -60},
       {"at": "👇", "id": "office--074--4x4", "y": 120, "flip": "y"}
     ]
   },
@@ -19553,10 +19553,10 @@
       "transform": "matrix(0,1,1,0,960,600)"
     },
     {
-      "key": "lab--030--1x3",
-      "gridDim": [1, 3],
+      "key": "lab--030--3x1",
+      "gridDim": [3, 1],
       "trimSvgDim": [900, 300],
-      "pngHref": "/assets/symbol/lab--030--1x3.png",
+      "pngHref": "/assets/symbol/lab--030--3x1.png",
       "pngRect": {"x": 0, "y": 0, "width": 907, "height": 307},
       "transformArray": [1, 0, 0, 1, 960, 780],
       "transform": "matrix(1,0,0,1,960,780)"

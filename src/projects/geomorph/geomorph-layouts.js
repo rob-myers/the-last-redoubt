@@ -140,7 +140,7 @@ const layoutDefs = {
       { at: '⏪👉', id: 'cargo--002--2x2'},
       { at: '👇', id: 'cargo--002--2x2', },
       //
-      { at: '⏪👉', id: 'empty-room--074--4x8', x: 2 * 60 },
+      { at: '⏪👉', id: 'empty-room--074--8x4', x: 2 * 60 },
       //
       { at: '👉', id: 'cargo--002--2x2', x: 2 * 60 },
       { at: '👇', id: 'cargo--002--2x2', },
@@ -179,15 +179,15 @@ const layoutDefs = {
     items: [
       { id: '302--hull' },
       { id: 'office--006--2x2', y: 2 * 60, a: 90, doors: ['e', 'w'] },
-      { id: 'sensors--003--1x1.4', transform: [...getAngleMatrix(45), 90 + 6, -60] },
+      { id: 'sensors--003--1.4x1', transform: [...getAngleMatrix(45), 100 + 6, -50] },
 
-      { id: 'lounge--015--2x4', x: 4 * 60, y: 7 * 60, flip: 'xy' },
-      { at: '👉', id: 'ships-locker--011--1x2', a: 90, },
+      { id: 'lounge--015--4x2', x: 4 * 60, y: 7 * 60, flip: 'xy' },
+      { at: '👉', id: 'ships-locker--011--2x1', a: 90, },
       { at: '👉', id: 'empty-room--006--2x2', x: -1 * 60, a: 90, doors: ['e'] },
-      { at: '👉', id: 'shop--028--0.8x1.6', a: 90 },
-      { at: '👉', id: 'shop--027--0.4x1.6', x: 2 * 60 + 12, y: 1 * 60 + 24, flip: 'x' },
+      { at: '👉', id: 'shop--028--1.6x0.8', a: 90, x: 8, y: 12 },
+      { at: '👉', id: 'shop--027--1.6x0.4', x: 2 * 60 + 20, y: 1 * 60 + 12, flip: 'x' },
 
-      { id: 'window--007--0x2.4', y: 7 * 60 - 8, x: 4 * 60, },
+      { id: 'window--007--3x0.2', y: 7 * 60 - 8, x: 4 * 60, },
       
       { id: 'empty-room--020--2x4', x: 18 * 60, flip: 'xy' },
     ],

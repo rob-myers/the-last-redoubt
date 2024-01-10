@@ -33,7 +33,7 @@
       {"at": "👇", "id": "cargo--002--2x2"},
       {"at": "⏪👉", "id": "cargo--002--2x2"},
       {"at": "👇", "id": "cargo--002--2x2"},
-      {"at": "⏪👉", "id": "empty-room--074--4x8", "x": 120},
+      {"at": "⏪👉", "id": "empty-room--074--8x4", "x": 120},
       {"at": "👉", "id": "cargo--002--2x2", "x": 120},
       {"at": "👇", "id": "cargo--002--2x2"},
       {"at": "⏪👉", "id": "cargo--002--2x2"},
@@ -7784,10 +7784,10 @@
       "transform": "matrix(1,0,0,1,120,1080)"
     },
     {
-      "key": "empty-room--074--4x8",
-      "gridDim": [4, 8],
+      "key": "empty-room--074--8x4",
+      "gridDim": [8, 4],
       "trimSvgDim": [2400, 1200],
-      "pngHref": "/assets/symbol/empty-room--074--4x8.png",
+      "pngHref": "/assets/symbol/empty-room--074--8x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 2420, "height": 1220},
       "transformArray": [1, 0, 0, 1, 360, 960],
       "transform": "matrix(1,0,0,1,360,960)"

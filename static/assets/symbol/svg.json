@@ -7196,8 +7196,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1670952491244.2512
   },
-  "empty-room--074--4x8": {
-    "key": "empty-room--074--4x8",
+  "empty-room--074--8x4": {
+    "key": "empty-room--074--8x4",
     "hull": [],
     "obstacles": [],
     "walls": [],
@@ -10189,8 +10189,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1683550928464.4395
   },
-  "lounge--015--2x4": {
-    "key": "lounge--015--2x4",
+  "lounge--015--4x2": {
+    "key": "lounge--015--4x2",
     "hull": [],
     "obstacles": [
       {
@@ -14405,16 +14405,16 @@
     "pngRect": {"x": 7.5, "y": 12.6, "width": 1181, "height": 1182},
     "lastModified": 1696264133732.1494
   },
-  "sensors--003--1x1.4": {
-    "key": "sensors--003--1x1.4",
+  "sensors--003--1.4x1": {
+    "key": "sensors--003--1.4x1",
     "hull": [],
     "obstacles": [],
     "walls": [],
     "singles": [],
-    "width": 600,
+    "width": 420,
     "height": 300,
-    "pngRect": {"x": 88.5, "y": -10, "width": 423, "height": 319},
-    "lastModified": 1666690702029.522
+    "pngRect": {"x": -1.5, "y": -10, "width": 423, "height": 319},
+    "lastModified": 1704903399966.2966
   },
   "ships-locker--003--1x1": {
     "key": "ships-locker--003--1x1",
@@ -14518,8 +14518,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
     "lastModified": 1686299910419.08
   },
-  "ships-locker--011--1x2": {
-    "key": "ships-locker--011--1x2",
+  "ships-locker--011--2x1": {
+    "key": "ships-locker--011--2x1",
     "hull": [],
     "obstacles": [],
     "walls": [
@@ -14645,8 +14645,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910311.3281
   },
-  "shop--027--0.4x1.6": {
-    "key": "shop--027--0.4x1.6",
+  "shop--027--1.6x0.4": {
+    "key": "shop--027--1.6x0.4",
     "hull": [],
     "obstacles": [
       {
@@ -14664,8 +14664,8 @@
     "pngRect": {"x": -3.5, "y": -4, "width": 487, "height": 128},
     "lastModified": 1696151859049.8782
   },
-  "shop--028--0.8x1.6": {
-    "key": "shop--028--0.8x1.6",
+  "shop--028--1.6x0.8": {
+    "key": "shop--028--1.6x0.8",
     "hull": [],
     "obstacles": [],
     "walls": [],
@@ -14674,14 +14674,14 @@
         "meta": {"wall": true, "no-fill": true},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[57.5, 33], [57.5, 267], [542.5, 267], [542.5, 33]]]
+          "coordinates": [[[-2.5, 3], [-2.5, 237], [482.5, 237], [482.5, 3]]]
         }
       }
     ],
-    "width": 600,
-    "height": 300,
-    "pngRect": {"x": 57.5, "y": 33, "width": 485, "height": 234},
-    "lastModified": 1674569933437.7578
+    "width": 480,
+    "height": 240,
+    "pngRect": {"x": -2.5, "y": 3, "width": 485, "height": 234},
+    "lastModified": 1704904253458.8577
   },
   "stateroom--012--2x2": {
     "key": "stateroom--012--2x2",
@@ -16506,8 +16506,8 @@
     "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
     "lastModified": 1666690702037.4478
   },
-  "window--007--0x2.4": {
-    "key": "window--007--0x2.4",
+  "window--007--3x0.2": {
+    "key": "window--007--3x0.2",
     "hull": [],
     "obstacles": [
       {

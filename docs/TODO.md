@@ -19,8 +19,8 @@
     - ✅ 301
     - ✅ 101
     - ✅ 102
-    - 🚧 103
-    - 🚧 302
+    - ✅ 103
+    - ✅ 302
     - 🚧 303
   - 🚧 `extra--*` can be scaled up more than 5x e.g. 10x
     - ℹ️ do this because small symbols are too pixelated
