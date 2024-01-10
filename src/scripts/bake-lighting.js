@@ -9,6 +9,7 @@ import path from 'path';
 import childProcess from 'child_process';
 
 import { runYarnScript } from './service';
+import { deepClone } from '../projects/service/generic';
 import { defaultLightDistance } from '../projects/service/const';
 import { saveCanvasAsFile } from '../projects/service/file';
 import { computeLightPolygons } from '../projects/service/geomorph';
@@ -38,9 +39,9 @@ if (!fs.existsSync(geomorphJsonPath)) {
 }
 
 (async function main() {
-
-  // Doors are open
-  const { canvas, layout } = await renderLayout(foundLayoutDef, {
+  /** def.items can be extended by inner symbols */
+  const clonedDef = deepClone(foundLayoutDef);
+  const { canvas, layout } = await renderLayout(clonedDef, {
     thinDoors: false,
     debug: false,
     invertSymbols: true,

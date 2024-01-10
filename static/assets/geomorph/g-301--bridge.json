@@ -5,262 +5,34 @@
     "key": "g-301--bridge",
     "id": 301,
     "items": [
-      {"id": "301--hull", "transform": [1, 0, 0, 1, 0, 0]},
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [0, -1, 1, 0, 0, 360],
-        "transform": [0, -1, 1, 0, 0, 360]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [-1, 0, 0, -1, 360.00006099999996, 599.9998780000001],
-        "transform": [-1, 0, 0, -1, 360.00006099999996, 599.9998780000001]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [0, 1, -1, 0, 1200, 240],
-        "transform": [0, 1, -1, 0, 1200, 240]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "preTransform": [-1, 0, 0, -1, 960, 600],
-        "transform": [-1, 0, 0, -1, 960, 600]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 10, 242],
-        "transform": [1, 0, 0, 1, 10, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 36, 242],
-        "transform": [1, 0, 0, 1, 36, 242]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 182, 242],
-        "transform": [1, 0, 0, 1, 182, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [1, 0, 0, 1, 862, 242],
-        "transform": [1, 0, 0, 1, 862, 242]
-      },
-      {
-        "id": "extra--table--003--0.1x0.1",
-        "preTransform": [1, 0, 0, 1, 888, 242],
-        "transform": [1, 0, 0, 1, 888, 242]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 960, 242],
-        "transform": [1, 0, 0, 1, 960, 242]
-      },
-      {
-        "id": "extra--table--003--0.1x0.1",
-        "preTransform": [1, 0, 0, 1, 1138, 242],
-        "transform": [1, 0, 0, 1, 1138, 242]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [
-          0.000007,
-          1,
-          -1,
-          0.000007,
-          1150.0001539999998,
-          256.00016800000003
-        ],
-        "transform": [
-          0.000007,
-          1,
-          -1,
-          0.000007,
-          1150.0001539999998,
-          256.00016800000003
-        ]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 1070, 346],
-        "transform": [1, 0, 0, 1, 1070, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 1140, 346],
-        "transform": [1, 0, 0, 1, 1140, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [1, 0, 0, 1, 120, 346],
-        "transform": [1, 0, 0, 1, 120, 346]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 360],
-        "transform": [0, 1, -1, 0, 254, 360]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 420],
-        "transform": [0, 1, -1, 0, 254, 420]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 540],
-        "transform": [0, 1, -1, 0, 254, 540]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 254, 566],
-        "transform": [0, 1, -1, 0, 254, 566]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 360],
-        "transform": [0, 1, -1, 0, 356, 360]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 386],
-        "transform": [0, 1, -1, 0, 356, 386]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 422],
-        "transform": [0, 1, -1, 0, 356, 422]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 356, 482],
-        "transform": [0, 1, -1, 0, 356, 482]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 360],
-        "transform": [0, 1, -1, 0, 856, 360]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 386],
-        "transform": [0, 1, -1, 0, 856, 386]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 422],
-        "transform": [0, 1, -1, 0, 856, 422]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 484],
-        "transform": [0, 1, -1, 0, 856, 484]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 510],
-        "transform": [0, 1, -1, 0, 856, 510]
-      },
-      {
-        "id": "extra--table--004--0.4x0.2",
-        "preTransform": [0, 1, -1, 0, 856, 546],
-        "transform": [0, 1, -1, 0, 856, 546]
-      },
-      {
-        "id": "extra--table--001--1x0.2",
-        "preTransform": [0, 1, -1, 0, 956, 422],
-        "transform": [0, 1, -1, 0, 956, 422]
-      },
-      {
-        "id": "extra--table--002--0.4x0.4",
-        "preTransform": [1, 0, 0, 1, 932, 484],
-        "transform": [1, 0, 0, 1, 932, 484]
-      },
-      {
-        "id": "extra--table--002--0.4x0.4",
-        "preTransform": [1, 0, 0, 1, 932, 510],
-        "transform": [1, 0, 0, 1, 932, 510]
-      },
-      {"id": "stateroom--036--2x4", "transform": [1, 0, 0, 1, 0, 0]},
+      {"id": "301--hull"},
+      {"id": "stateroom--036--2x4"},
       {
         "at": "👉",
         "id": "office--001--2x2",
         "dy": 120,
         "flip": "y",
-        "doors": ["s"],
-        "x": 120,
-        "y": 0,
-        "transform": [-1, 0, 0, 1, 240, 120]
+        "doors": ["s"]
       },
-      {
-        "at": "👉",
-        "id": "console--031--1x1",
-        "x": 300,
-        "dy": 60,
-        "flip": "y",
-        "y": 0,
-        "transform": [-1, 0, 0, 1, 360, 60]
-      },
-      {
-        "at": "👉",
-        "id": "bridge--042--8x9",
-        "dy": 60,
-        "x": 360,
-        "y": 0,
-        "transform": [1, 0, 0, 1, 360, 60]
-      },
-      {
-        "at": "👉",
-        "id": "console--031--1x1",
-        "dy": 60,
-        "x": 840,
-        "y": 0,
-        "transform": [1, 0, 0, 1, 840, 60]
-      },
+      {"at": "👉", "id": "console--031--1x1", "x": 60, "dy": 60, "flip": "y"},
+      {"at": "👉", "id": "bridge--042--8x9", "dy": 60},
+      {"at": "👉", "id": "console--031--1x1", "dy": 60},
       {
         "at": "👉",
         "id": "office--001--2x2",
-        "x": 960,
+        "x": 60,
         "dy": 120,
-        "doors": ["s"],
-        "y": 0,
-        "transform": [1, 0, 0, 1, 960, 120]
+        "doors": ["s"]
       },
-      {
-        "at": "👉",
-        "id": "stateroom--036--2x4",
-        "flip": "y",
-        "x": 1080,
-        "y": 0,
-        "transform": [-1, 0, 0, 1, 1200, 0]
-      },
-      {
-        "id": "stateroom--014--2x2",
-        "y": 360,
-        "flip": "x",
-        "transform": [1, 0, 0, -1, 0, 480]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--014--2x2",
-        "flip": "x",
-        "x": 120,
-        "y": 360,
-        "transform": [1, 0, 0, -1, 120, 480]
-      },
-      {
-        "at": "⏪👇",
-        "id": "stateroom--036--2x4",
-        "a": 270,
-        "y": 480,
-        "x": 0,
-        "transform": [0, -1, 1, 0, 0, 600]
-      },
+      {"at": "👉", "id": "stateroom--036--2x4", "flip": "y"},
+      {"id": "stateroom--014--2x2", "y": 360, "flip": "x"},
+      {"at": "👉", "id": "stateroom--014--2x2", "flip": "x"},
+      {"at": "⏪👇", "id": "stateroom--036--2x4", "a": 270},
       {
         "id": "misc-stellar-cartography--023--4x4",
         "x": 960,
         "y": 360,
-        "flip": "y",
-        "transform": [-1, 0, 0, 1, 1200, 360]
+        "flip": "y"
       }
     ]
   },

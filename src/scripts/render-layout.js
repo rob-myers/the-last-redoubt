@@ -1,12 +1,14 @@
 /**
- * - We output geomorph with thin doors png/webp, and also unlit.doorways,
- *   the latter being used for lighting.
- * - Usage:
- *   - `yarn render-layout 301`
- *   - `yarn render-layout 301 --debug`
- *   - `yarn render-layout 101 --debug --scale=4`
- *   - `yarn render-layout 301 --scale=1 --suffix=x1`
- * - Outputs a PNG and JSON in static/assets/geomorph.
+ * Outputs:
+ * - unlit geomorph `static/assets/geomorph/{gmKey}.{png,webp}`
+ * - map geomorph `static/assets/geomorph/{gmKey}.map.{png,webp}`
+ * - `static/assets/geomorph/{gmKey}.json`
+ *
+ * Usage:
+ * - `yarn render-layout 301`
+ * - `yarn render-layout 301 --debug`
+ * - `yarn render-layout 101 --debug --scale=4`
+ * - `yarn render-layout 301 --scale=1 --suffix=x1`
  * - Debug option creates a .debug.png with all features.
  */
 /// <reference path="./deps.d.ts"/>
@@ -16,27 +18,29 @@ import childProcess from 'child_process';
 import { createCanvas, loadImage } from 'canvas';
 import getOpts from 'getopts';
 
-import svgJson from '../../static/assets/symbol/svg.json';
-import layoutDefs from '../projects/geomorph/geomorph-layouts';
 import { error } from '../projects/service/log';
-import { gmScale } from '../projects/world/const';
 import { createLayout, deserializeSvgJson, serializeLayout } from '../projects/service/geomorph';
-import { renderGeomorph } from '../projects/geomorph/render-geomorph';
+import { deepClone } from '../projects/service/generic';
 import { triangle } from '../projects/service/triangle';
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 import { runYarnScript } from './service';
 
+import { gmScale } from '../projects/world/const';
+import { renderGeomorph } from '../projects/geomorph/render-geomorph';
+import layoutDefs from '../projects/geomorph/geomorph-layouts';
+
+import svgJson from '../../static/assets/symbol/svg.json';
+
 const geomorphId = Number(process.argv[2]);
+const opts = getOpts(process.argv);
+const defaultScale = gmScale;
+
 const layoutDef = Object.values(layoutDefs).find(x => x.id === geomorphId);
 if (!layoutDef) {
   console.error(`No geomorph found with id "${geomorphId}"`);
   process.exit(1);
 }
-const foundLayoutDef = layoutDef; // else ts error in main
-
-const opts = getOpts(process.argv);
-
-const defaultScale = gmScale;
+const foundLayoutDef = layoutDef;
 
 const [
   debug,
@@ -54,10 +58,10 @@ const staticDir = path.resolve(__dirname, '../../static');
 
 (async function main() {
   try {
-    /**
-     * 🌙 Draw UNLIT geomorph.
-     */
-    const { layout, canvas } = await renderLayout(foundLayoutDef, {
+    // UNLIT geomorph
+    /** def.items can be extended by inner symbols */
+    const clonedDef = deepClone(foundLayoutDef);
+    const { layout, canvas } = await renderLayout(clonedDef, {
       debug: !!debug,
       thinDoors: false,
       scale,
@@ -67,14 +71,14 @@ const staticDir = path.resolve(__dirname, '../../static');
       hullDoorBases: true,
     });
 
-    /**
-     * 🧭 Draw MAP geomorph with doors, no highlights and no `extra--*`s.
-     */
+    // MAP geomorph
     const mapCanvas = createCanvas(canvas.width, canvas.height);
-    layout.items = layout.items.filter(x => !x.key.startsWith('extra--'));
-
     await renderGeomorph(
-      layout,
+      {
+        ...layout,
+        // map doesn't show extra--* symbols
+        items: layout.items.filter(x => !x.key.startsWith('extra--')),
+      },
       symbolLookup,
       mapCanvas,
       (pngHref) => /** @type {Promise<import('canvas').Image & CanvasImageSource>} */ (
@@ -95,9 +99,9 @@ const staticDir = path.resolve(__dirname, '../../static');
       },
     );
 
-    // Write JSON (see also svg-meta)
+    // Write JSON (see also `yarn svg-meta`)
     const geomorphJsonPath = path.resolve(outputDir, `${foundLayoutDef.key}.json`);
-    writeAsJson(serializeLayout(layout), geomorphJsonPath);
+    writeAsJson(serializeLayout({ ...layout, def: foundLayoutDef }), geomorphJsonPath);
 
     /**
      * For both geomorph and map,
