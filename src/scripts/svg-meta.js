@@ -16,7 +16,7 @@ import asyncPool from 'tiny-async-pool';
 import chalk from 'chalk';
 
 import { svgSymbolTag } from '../projects/service/const';
-import { keys } from '../projects/service/generic';
+import { deepClone, keys } from '../projects/service/generic';
 import { createLayout, deserializeSvgJson, filterSingles, parseStarshipSymbol, serializeLayout, serializeSymbol } from '../projects/service/geomorph';
 import { triangle } from '../projects/service/triangle';
 import { writeAsJson } from '../projects/service/file';
@@ -83,12 +83,14 @@ console.log({
   asyncPool(
     1, // One at a time aids debugging
     layoutDefsToUpdate.map(def => {
+      /** Avoid def.items being mutated by inner symbols */
+      const clonedDef = deepClone(def);
       return async () => {
         console.log(chalk.blue('creating layout'), chalk.yellow(def.key), '...');
-        const layout = await createLayout({ def, lookup: symbolLookup, triangleService: triangle });
+        const layout = await createLayout({ def: clonedDef, lookup: symbolLookup, triangleService: triangle });
         const filename = path.resolve(geomorphsDir, `${def.key}.json`);
         console.log(chalk.blue('writing'), chalk.yellow(filename), '...');
-        writeAsJson(serializeLayout(layout), filename);
+        writeAsJson(serializeLayout({...layout, def }), filename);
       };
     }),
     action => action(),
