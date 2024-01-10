@@ -570,15 +570,20 @@ function extendHullDoorTags(door, hullRect) {
  */
 function extendLayoutUsingNestedSymbols(opts) {
   opts.def.items = opts.def.items.reduce((agg, item) => {
-    agg.push(item);
-    opts.lookup[item.id].singles.forEach(x => {
-      if (x.meta.symbol) {
-        if (/** @type {string} */ (x.meta.key) in opts.lookup) {
-          agg.push(symbolSingleToLayoutItem(x));
-        } else warn(`inner symbol lacks valid key (${JSON.stringify(item)})`);
-      }
-    });
-    return agg;
+    try {
+      agg.push(item);
+      opts.lookup[item.id].singles.forEach(x => {
+        if (x.meta.symbol) {
+          if (/** @type {string} */ (x.meta.key) in opts.lookup) {
+            agg.push(symbolSingleToLayoutItem(x));
+          } else warn(`inner symbol lacks valid key (${JSON.stringify(item)})`);
+        }
+      });
+      return agg;
+    } catch (e) {
+      error(`${item.id}: ${e}`);
+      throw e;
+    }
   }, /** @type {typeof opts.def.items} */ ([]));
 }
 
