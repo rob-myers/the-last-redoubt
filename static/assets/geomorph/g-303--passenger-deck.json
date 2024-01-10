@@ -5,226 +5,37 @@
     "key": "g-303--passenger-deck",
     "id": 303,
     "items": [
-      {"id": "303--hull", "transform": [1, 0, 0, 1, 0, 0]},
-      {
-        "id": "medical-bed--006--1.6x3.6",
-        "y": 12,
-        "transform": [1, 0, 0, 1, 0, 12]
-      },
-      {
-        "at": "👉",
-        "id": "low-berth--003--1x1",
-        "x": 180,
-        "y": 0,
-        "a": 90,
-        "transform": [0, 1, -1, 0, 240, 0]
-      },
-      {
-        "at": "👇",
-        "id": "console--022--1x2",
-        "flip": "y",
-        "y": 60,
-        "x": 180,
-        "transform": [-1, 0, 0, 1, 240, 60]
-      },
-      {
-        "at": "⏪👉",
-        "id": "stateroom--035--2x3",
-        "x": 240,
-        "y": 0,
-        "transform": [1, 0, 0, 1, 240, 0]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--035--2x3",
-        "x": 360,
-        "y": 0,
-        "transform": [1, 0, 0, 1, 360, 0]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--035--2x3",
-        "x": 480,
-        "y": 0,
-        "transform": [1, 0, 0, 1, 480, 0]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--035--2x3",
-        "flip": "y",
-        "x": 600,
-        "y": 0,
-        "transform": [-1, 0, 0, 1, 720, 0]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--100--3x4",
-        "a": 90,
-        "flip": "x",
-        "x": 720,
-        "y": 0,
-        "transform": [0, -1, -1, 0, 960, 180]
-      },
-      {
-        "at": "👉",
-        "id": "galley-and-mess-halls--006--2x4",
-        "flip": "y",
-        "x": 960,
-        "y": 0,
-        "transform": [-1, 0, 0, 1, 1200, 0]
-      },
-      {
-        "at": "👇",
-        "id": "table--009--0.8x0.8",
-        "y": 120,
-        "x": 960,
-        "transform": [1, 0, 0, 1, 960, 120]
-      },
-      {
-        "at": "👇",
-        "id": "table--009--0.8x0.8",
-        "y": 240,
-        "x": 960,
-        "transform": [1, 0, 0, 1, 960, 240]
-      },
-      {
-        "id": "window--001--0x1",
-        "x": 90,
-        "y": -6,
-        "transform": [1, 0, 0, 1, 90, -6]
-      },
-      {
-        "at": "👉",
-        "id": "window--001--0x1",
-        "x": 270,
-        "y": -6,
-        "transform": [1, 0, 0, 1, 270, -6]
-      },
-      {
-        "at": "👉",
-        "id": "window--001--0x1",
-        "x": 390,
-        "y": -6,
-        "transform": [1, 0, 0, 1, 390, -6]
-      },
-      {
-        "at": "👉",
-        "id": "window--001--0x1",
-        "x": 510,
-        "y": -6,
-        "transform": [1, 0, 0, 1, 510, -6]
-      },
-      {
-        "at": "👉",
-        "id": "window--001--0x1",
-        "x": 630,
-        "y": -6,
-        "transform": [1, 0, 0, 1, 630, -6]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "x": 1140,
-        "y": 240,
-        "a": 90,
-        "transform": [0, 1, -1, 0, 1200, 240]
-      },
-      {
-        "id": "iris-valves--005--1x1",
-        "y": 540,
-        "x": 300,
-        "flip": "y",
-        "transform": [-1, 0, 0, 1, 360, 540]
-      },
-      {
-        "id": "fresher--002--0.4x0.6",
-        "x": 180,
-        "y": 240,
-        "flip": "x",
-        "transform": [1, 0, 0, -1, 180, 300]
-      },
-      {
-        "at": "👉",
-        "id": "gaming-tables--001--1x2",
-        "x": 480,
-        "y": 240,
-        "transform": [1, 0, 0, 1, 480, 240]
-      },
-      {
-        "at": "👉",
-        "id": "couch-and-chairs--006--0.4x2",
-        "x": 672,
-        "flip": "y",
-        "y": 240,
-        "transform": [-1, 0, 0, 1, 696, 240]
-      },
-      {
-        "at": "👉",
-        "id": "couch-and-chairs--006--0.4x2",
-        "x": 720,
-        "a": 90,
-        "y": 240,
-        "transform": [0, 1, -1, 0, 840, 240]
-      },
-      {
-        "id": "machinery--077--1.6x1.8",
-        "y": 376,
-        "x": 54,
-        "a": 90,
-        "transform": [0, 1, -1, 0, 162, 376]
-      },
-      {
-        "id": "machinery--077--1.6x1.8",
-        "y": 436,
-        "x": 126,
-        "flip": "y",
-        "transform": [-1, 0, 0, 1, 222, 436]
-      },
-      {
-        "id": "console--018--1x1",
-        "y": 480,
-        "x": 60,
-        "flip": "y",
-        "transform": [-1, 0, 0, 1, 120, 480]
-      },
-      {
-        "id": "stateroom--036--2x4",
-        "x": 360,
-        "y": 360,
-        "flip": "x",
-        "transform": [1, 0, 0, -1, 360, 600]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--036--2x4",
-        "flip": "x",
-        "x": 480,
-        "y": 360,
-        "transform": [1, 0, 0, -1, 480, 600]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--036--2x4",
-        "flip": "xy",
-        "x": 600,
-        "y": 360,
-        "transform": [-1, 0, 0, -1, 720, 600]
-      },
-      {
-        "at": "👉",
-        "id": "stateroom--036--2x4",
-        "flip": "xy",
-        "x": 720,
-        "y": 360,
-        "transform": [-1, 0, 0, -1, 840, 600]
-      },
-      {
-        "at": "👉",
-        "id": "office--089--4x4",
-        "x": 960,
-        "flip": "y",
-        "y": 360,
-        "transform": [-1, 0, 0, 1, 1200, 360]
-      }
+      {"id": "303--hull"},
+      {"id": "medical-bed--006--1.6x3.6", "y": 12},
+      {"at": "👉", "id": "low-berth--003--1x1", "x": 84, "y": -12, "a": 90},
+      {"at": "👇", "id": "console--022--1x2", "flip": "y"},
+      {"at": "⏪👉", "id": "stateroom--035--2x3"},
+      {"at": "👉", "id": "stateroom--035--2x3"},
+      {"at": "👉", "id": "stateroom--035--2x3"},
+      {"at": "👉", "id": "stateroom--035--2x3", "flip": "y"},
+      {"at": "👉", "id": "stateroom--100--3x4", "a": 90, "flip": "x"},
+      {"at": "👉", "id": "galley-and-mess-halls--006--2x4", "flip": "y"},
+      {"at": "👇", "id": "table--009--0.8x0.8"},
+      {"at": "👇", "id": "table--009--0.8x0.8", "y": 60},
+      {"id": "window--001--0x1", "x": 90, "y": -6},
+      {"at": "👉", "id": "window--001--0x1", "x": 120},
+      {"at": "👉", "id": "window--001--0x1", "x": 60},
+      {"at": "👉", "id": "window--001--0x1", "x": 60},
+      {"at": "👉", "id": "window--001--0x1", "x": 60},
+      {"id": "iris-valves--005--1x1", "x": 1140, "y": 240, "a": 90},
+      {"id": "iris-valves--005--1x1", "y": 540, "x": 300, "flip": "y"},
+      {"id": "fresher--002--0.4x0.6", "x": 180, "y": 240, "flip": "x"},
+      {"at": "👉", "id": "gaming-tables--001--1x2", "x": 240},
+      {"at": "👉", "id": "couch-and-chairs--006--0.4x2", "x": 72, "flip": "y"},
+      {"at": "👉", "id": "couch-and-chairs--006--0.4x2", "x": 24, "a": 90},
+      {"id": "machinery--077--1.6x1.8", "y": 376, "x": 54, "a": 90},
+      {"id": "machinery--077--1.6x1.8", "y": 436, "x": 126, "flip": "y"},
+      {"id": "console--018--1x1", "y": 480, "x": 60, "flip": "y"},
+      {"id": "stateroom--036--2x4", "x": 360, "y": 360, "flip": "x"},
+      {"at": "👉", "id": "stateroom--036--2x4", "flip": "x"},
+      {"at": "👉", "id": "stateroom--036--2x4", "flip": "xy"},
+      {"at": "👉", "id": "stateroom--036--2x4", "flip": "xy"},
+      {"at": "👉", "id": "office--089--4x4", "x": 120, "flip": "y"}
     ]
   },
   "groups": {
@@ -17364,7 +17175,7 @@
     {
       "key": "303--hull",
       "gridDim": [20, 10],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
+      "trimSvgDim": [1200, 600],
       "pngHref": "/assets/debug/g-303--passenger-deck.png",
       "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 609},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -17373,7 +17184,7 @@
     {
       "key": "medical-bed--006--1.6x3.6",
       "gridDim": [1.6, 3.6],
-      "baseRect": {"x": 0, "y": 0, "width": 480, "height": 1080},
+      "trimSvgDim": [480, 1080],
       "pngHref": "/assets/symbol/medical-bed--006--1.6x3.6.png",
       "pngRect": {"x": 15, "y": -7, "width": 450, "height": 1094},
       "transformArray": [1, 0, 0, 1, 0, 12],
@@ -17382,7 +17193,7 @@
     {
       "key": "low-berth--003--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/low-berth--003--1x1.png",
       "pngRect": {"x": -3.5, "y": -3, "width": 307, "height": 356},
       "transformArray": [0, 1, -1, 0, 240, 0],
@@ -17391,7 +17202,7 @@
     {
       "key": "console--022--1x2",
       "gridDim": [1, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 600},
+      "trimSvgDim": [300, 600],
       "pngHref": "/assets/symbol/console--022--1x2.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 607},
       "transformArray": [-1, 0, 0, 1, 240, 60],
@@ -17400,7 +17211,7 @@
     {
       "key": "stateroom--035--2x3",
       "gridDim": [2, 3],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 900},
+      "trimSvgDim": [600, 900],
       "pngHref": "/assets/symbol/stateroom--035--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 240, 0],
@@ -17409,7 +17220,7 @@
     {
       "key": "stateroom--035--2x3",
       "gridDim": [2, 3],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 900},
+      "trimSvgDim": [600, 900],
       "pngHref": "/assets/symbol/stateroom--035--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 360, 0],
@@ -17418,7 +17229,7 @@
     {
       "key": "stateroom--035--2x3",
       "gridDim": [2, 3],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 900},
+      "trimSvgDim": [600, 900],
       "pngHref": "/assets/symbol/stateroom--035--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 480, 0],
@@ -17427,7 +17238,7 @@
     {
       "key": "stateroom--035--2x3",
       "gridDim": [2, 3],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 900},
+      "trimSvgDim": [600, 900],
       "pngHref": "/assets/symbol/stateroom--035--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [-1, 0, 0, 1, 720, 0],
@@ -17436,7 +17247,7 @@
     {
       "key": "stateroom--100--3x4",
       "gridDim": [3, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 900, "height": 1200},
+      "trimSvgDim": [900, 1200],
       "pngHref": "/assets/symbol/stateroom--100--3x4.png",
       "pngRect": {"x": -10, "y": -20, "width": 944, "height": 1239},
       "transformArray": [0, -1, -1, 0, 960, 180],
@@ -17445,7 +17256,7 @@
     {
       "key": "galley-and-mess-halls--006--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
+      "trimSvgDim": [1200, 600],
       "pngHref": "/assets/symbol/galley-and-mess-halls--006--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 643},
       "transformArray": [-1, 0, 0, 1, 1200, 0],
@@ -17454,7 +17265,7 @@
     {
       "key": "table--009--0.8x0.8",
       "gridDim": [0.8, 0.8],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/table--009--0.8x0.8.png",
       "pngRect": {"x": 23.131, "y": 21.383, "width": 255, "height": 254},
       "transformArray": [1, 0, 0, 1, 960, 120],
@@ -17463,7 +17274,7 @@
     {
       "key": "table--009--0.8x0.8",
       "gridDim": [0.8, 0.8],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/table--009--0.8x0.8.png",
       "pngRect": {"x": 23.131, "y": 21.383, "width": 255, "height": 254},
       "transformArray": [1, 0, 0, 1, 960, 240],
@@ -17472,7 +17283,7 @@
     {
       "key": "window--001--0x1",
       "gridDim": [0, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/window--001--0x1.png",
       "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
       "transformArray": [1, 0, 0, 1, 90, -6],
@@ -17481,7 +17292,7 @@
     {
       "key": "window--001--0x1",
       "gridDim": [0, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/window--001--0x1.png",
       "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
       "transformArray": [1, 0, 0, 1, 270, -6],
@@ -17490,7 +17301,7 @@
     {
       "key": "window--001--0x1",
       "gridDim": [0, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/window--001--0x1.png",
       "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
       "transformArray": [1, 0, 0, 1, 390, -6],
@@ -17499,7 +17310,7 @@
     {
       "key": "window--001--0x1",
       "gridDim": [0, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/window--001--0x1.png",
       "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
       "transformArray": [1, 0, 0, 1, 510, -6],
@@ -17508,7 +17319,7 @@
     {
       "key": "window--001--0x1",
       "gridDim": [0, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/window--001--0x1.png",
       "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
       "transformArray": [1, 0, 0, 1, 630, -6],
@@ -17517,7 +17328,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, -1, 0, 1200, 240],
@@ -17526,7 +17337,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, 1, 360, 540],
@@ -17535,7 +17346,7 @@
     {
       "key": "fresher--002--0.4x0.6",
       "gridDim": [0.4, 0.6],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/fresher--002--0.4x0.6.png",
       "pngRect": {"x": 97.004, "y": 0, "width": 106, "height": 180},
       "transformArray": [1, 0, 0, -1, 180, 300],
@@ -17544,7 +17355,7 @@
     {
       "key": "gaming-tables--001--1x2",
       "gridDim": [1, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 300},
+      "trimSvgDim": [600, 300],
       "pngHref": "/assets/symbol/gaming-tables--001--1x2.png",
       "pngRect": {"x": 0, "y": -7, "width": 592, "height": 322},
       "transformArray": [1, 0, 0, 1, 480, 240],
@@ -17553,7 +17364,7 @@
     {
       "key": "couch-and-chairs--006--0.4x2",
       "gridDim": [0.4, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 600},
+      "trimSvgDim": [120, 600],
       "pngHref": "/assets/symbol/couch-and-chairs--006--0.4x2.png",
       "pngRect": {"x": -8.097, "y": 14.064, "width": 137, "height": 575},
       "transformArray": [-1, 0, 0, 1, 696, 240],
@@ -17562,7 +17373,7 @@
     {
       "key": "couch-and-chairs--006--0.4x2",
       "gridDim": [0.4, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 600},
+      "trimSvgDim": [120, 600],
       "pngHref": "/assets/symbol/couch-and-chairs--006--0.4x2.png",
       "pngRect": {"x": -8.097, "y": 14.064, "width": 137, "height": 575},
       "transformArray": [0, 1, -1, 0, 840, 240],
@@ -17571,7 +17382,7 @@
     {
       "key": "machinery--077--1.6x1.8",
       "gridDim": [1.6, 1.8],
-      "baseRect": {"x": 0, "y": 0, "width": 480, "height": 540},
+      "trimSvgDim": [480, 540],
       "pngHref": "/assets/symbol/machinery--077--1.6x1.8.png",
       "pngRect": {"x": -10.5, "y": 14.5, "width": 501, "height": 511},
       "transformArray": [0, 1, -1, 0, 162, 376],
@@ -17580,7 +17391,7 @@
     {
       "key": "machinery--077--1.6x1.8",
       "gridDim": [1.6, 1.8],
-      "baseRect": {"x": 0, "y": 0, "width": 480, "height": 540},
+      "trimSvgDim": [480, 540],
       "pngHref": "/assets/symbol/machinery--077--1.6x1.8.png",
       "pngRect": {"x": -10.5, "y": 14.5, "width": 501, "height": 511},
       "transformArray": [-1, 0, 0, 1, 222, 436],
@@ -17589,7 +17400,7 @@
     {
       "key": "console--018--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/console--018--1x1.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 307},
       "transformArray": [-1, 0, 0, 1, 120, 480],
@@ -17598,7 +17409,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [1, 0, 0, -1, 360, 600],
@@ -17607,7 +17418,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [1, 0, 0, -1, 480, 600],
@@ -17616,7 +17427,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, -1, 720, 600],
@@ -17625,7 +17436,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, -1, 840, 600],
@@ -17634,7 +17445,7 @@
     {
       "key": "office--089--4x4",
       "gridDim": [4, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
+      "trimSvgDim": [1200, 1200],
       "pngHref": "/assets/symbol/office--089--4x4.png",
       "pngRect": {"x": 7.5, "y": 12.6, "width": 1181, "height": 1182},
       "transformArray": [-1, 0, 0, 1, 1200, 360],

@@ -396,9 +396,9 @@ export async function createLayout(opts) {
   
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
-      // e.g. `foo--bar--3x2` becomes `{ x: 3, y: 2 }`
+      // e.g. `foo--bar--3x2` becomes `[3, 2]`
       gridDim: getGridDimFromSymbolKey(sym.key),
-      baseRect: { x: 0, y: 0, width: sym.width, height: sym.height },
+      trimSvgDim: [sym.width, sym.height],
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,

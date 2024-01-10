@@ -5,14 +5,8 @@
     "key": "g-302--xboat-repair-bay",
     "id": 302,
     "items": [
-      {"id": "302--hull", "transform": [1, 0, 0, 1, 0, 0]},
-      {
-        "id": "office--006--2x2",
-        "y": 120,
-        "a": 90,
-        "doors": ["e", "w"],
-        "transform": [0, 1, -1, 0, 120, 120]
-      },
+      {"id": "302--hull"},
+      {"id": "office--006--2x2", "y": 120, "a": 90, "doors": ["e", "w"]},
       {
         "id": "sensors--003--1x1.4",
         "transform": [
@@ -24,58 +18,19 @@
           -60
         ]
       },
-      {
-        "id": "lounge--015--2x4",
-        "x": 240,
-        "y": 420,
-        "flip": "xy",
-        "transform": [-1, 0, 0, -1, 480, 540]
-      },
-      {
-        "at": "👉",
-        "id": "ships-locker--011--1x2",
-        "a": 90,
-        "x": 480,
-        "y": 420,
-        "transform": [0, 1, -1, 0, 540, 420]
-      },
+      {"id": "lounge--015--2x4", "x": 240, "y": 420, "flip": "xy"},
+      {"at": "👉", "id": "ships-locker--011--1x2", "a": 90},
       {
         "at": "👉",
         "id": "empty-room--006--2x2",
-        "x": 480,
+        "x": -60,
         "a": 90,
-        "doors": ["e"],
-        "y": 420,
-        "transform": [0, 1, -1, 0, 600, 420]
+        "doors": ["e"]
       },
-      {
-        "at": "👉",
-        "id": "shop--028--0.8x1.6",
-        "a": 90,
-        "x": 600,
-        "y": 420,
-        "transform": [0, 1, -1, 0, 660, 420]
-      },
-      {
-        "at": "👉",
-        "id": "shop--027--0.4x1.6",
-        "x": 792,
-        "y": 504,
-        "flip": "x",
-        "transform": [1, 0, 0, -1, 792, 528]
-      },
-      {
-        "id": "window--007--0x2.4",
-        "y": 412,
-        "x": 240,
-        "transform": [1, 0, 0, 1, 240, 412]
-      },
-      {
-        "id": "empty-room--020--2x4",
-        "x": 1080,
-        "flip": "xy",
-        "transform": [-1, 0, 0, -1, 1200, 240]
-      }
+      {"at": "👉", "id": "shop--028--0.8x1.6", "a": 90},
+      {"at": "👉", "id": "shop--027--0.4x1.6", "x": 132, "y": 84, "flip": "x"},
+      {"id": "window--007--0x2.4", "y": 412, "x": 240},
+      {"id": "empty-room--020--2x4", "x": 1080, "flip": "xy"}
     ]
   },
   "groups": {
@@ -7356,7 +7311,7 @@
     {
       "key": "302--hull",
       "gridDim": [20, 10],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
+      "trimSvgDim": [1200, 600],
       "pngHref": "/assets/debug/g-302--xboat-repair-bay.png",
       "pngRect": {"x": -4, "y": -61, "width": 1208, "height": 665},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -7365,7 +7320,7 @@
     {
       "key": "office--006--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/office--006--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, -1, 0, 120, 120],
@@ -7374,7 +7329,7 @@
     {
       "key": "sensors--003--1x1.4",
       "gridDim": [1, 1.4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 300},
+      "trimSvgDim": [600, 300],
       "pngHref": "/assets/symbol/sensors--003--1x1.4.png",
       "pngRect": {"x": 88.5, "y": -10, "width": 423, "height": 319},
       "transformArray": [
@@ -7390,7 +7345,7 @@
     {
       "key": "lounge--015--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
+      "trimSvgDim": [1200, 600],
       "pngHref": "/assets/symbol/lounge--015--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
       "transformArray": [-1, 0, 0, -1, 480, 540],
@@ -7399,7 +7354,7 @@
     {
       "key": "ships-locker--011--1x2",
       "gridDim": [1, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 300},
+      "trimSvgDim": [600, 300],
       "pngHref": "/assets/symbol/ships-locker--011--1x2.png",
       "pngRect": {"x": -10, "y": -20, "width": 620, "height": 334},
       "transformArray": [0, 1, -1, 0, 540, 420],
@@ -7408,7 +7363,7 @@
     {
       "key": "empty-room--006--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/empty-room--006--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, -1, 0, 600, 420],
@@ -7417,7 +7372,7 @@
     {
       "key": "shop--028--0.8x1.6",
       "gridDim": [0.8, 1.6],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 300},
+      "trimSvgDim": [600, 300],
       "pngHref": "/assets/symbol/shop--028--0.8x1.6.png",
       "pngRect": {"x": 57.5, "y": 33, "width": 485, "height": 234},
       "transformArray": [0, 1, -1, 0, 660, 420],
@@ -7426,7 +7381,7 @@
     {
       "key": "shop--027--0.4x1.6",
       "gridDim": [0.4, 1.6],
-      "baseRect": {"x": 0, "y": 0, "width": 480, "height": 120},
+      "trimSvgDim": [480, 120],
       "pngHref": "/assets/symbol/shop--027--0.4x1.6.png",
       "pngRect": {"x": -3.5, "y": -4, "width": 487, "height": 128},
       "transformArray": [1, 0, 0, -1, 792, 528],
@@ -7435,7 +7390,7 @@
     {
       "key": "window--007--0x2.4",
       "gridDim": [0, 2.4],
-      "baseRect": {"x": 0, "y": 0, "width": 900, "height": 60},
+      "trimSvgDim": [900, 60],
       "pngHref": "/assets/symbol/window--007--0x2.4.png",
       "pngRect": {"x": -4, "y": -4, "width": 907, "height": 67},
       "transformArray": [1, 0, 0, 1, 240, 412],
@@ -7444,7 +7399,7 @@
     {
       "key": "empty-room--020--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/empty-room--020--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, -1, 1200, 240],

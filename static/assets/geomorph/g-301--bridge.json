@@ -15468,7 +15468,7 @@
     {
       "key": "301--hull",
       "gridDim": [20, 10],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 600},
+      "trimSvgDim": [1200, 600],
       "pngHref": "/assets/debug/g-301--bridge.png",
       "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -15477,7 +15477,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, -1, 1, 0, 0, 360],
@@ -15486,7 +15486,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, -1, 360.00006099999996, 599.9998780000001],
@@ -15495,7 +15495,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, -1, 0, 1200, 240],
@@ -15504,7 +15504,7 @@
     {
       "key": "iris-valves--005--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, -1, 960, 600],
@@ -15513,7 +15513,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [1, 0, 0, 1, 10, 242],
@@ -15522,7 +15522,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [1, 0, 0, 1, 36, 242],
@@ -15531,7 +15531,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [1, 0, 0, 1, 182, 242],
@@ -15540,7 +15540,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [1, 0, 0, 1, 862, 242],
@@ -15549,7 +15549,7 @@
     {
       "key": "extra--table--003--0.1x0.1",
       "gridDim": [0.1, 0.1],
-      "baseRect": {"x": 0, "y": 0, "width": 60, "height": 60},
+      "trimSvgDim": [60, 60],
       "pngHref": "/assets/symbol/extra--table--003--0.1x0.1.png",
       "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
       "transformArray": [1, 0, 0, 1, 888, 242],
@@ -15558,7 +15558,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [1, 0, 0, 1, 960, 242],
@@ -15567,7 +15567,7 @@
     {
       "key": "extra--table--003--0.1x0.1",
       "gridDim": [0.1, 0.1],
-      "baseRect": {"x": 0, "y": 0, "width": 60, "height": 60},
+      "trimSvgDim": [60, 60],
       "pngHref": "/assets/symbol/extra--table--003--0.1x0.1.png",
       "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
       "transformArray": [1, 0, 0, 1, 1138, 242],
@@ -15576,7 +15576,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [
@@ -15592,7 +15592,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [1, 0, 0, 1, 1070, 346],
@@ -15601,7 +15601,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [1, 0, 0, 1, 1140, 346],
@@ -15610,7 +15610,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [1, 0, 0, 1, 120, 346],
@@ -15619,7 +15619,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 254, 360],
@@ -15628,7 +15628,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 254, 420],
@@ -15637,7 +15637,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 254, 540],
@@ -15646,7 +15646,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 254, 566],
@@ -15655,7 +15655,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 356, 360],
@@ -15664,7 +15664,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 356, 386],
@@ -15673,7 +15673,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 356, 422],
@@ -15682,7 +15682,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 356, 482],
@@ -15691,7 +15691,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 360],
@@ -15700,7 +15700,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 386],
@@ -15709,7 +15709,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 422],
@@ -15718,7 +15718,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 484],
@@ -15727,7 +15727,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 510],
@@ -15736,7 +15736,7 @@
     {
       "key": "extra--table--004--0.4x0.2",
       "gridDim": [0.4, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 60},
+      "trimSvgDim": [120, 60],
       "pngHref": "/assets/symbol/extra--table--004--0.4x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
       "transformArray": [0, 1, -1, 0, 856, 546],
@@ -15745,7 +15745,7 @@
     {
       "key": "extra--table--001--1x0.2",
       "gridDim": [1, 0.2],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 60},
+      "trimSvgDim": [300, 60],
       "pngHref": "/assets/symbol/extra--table--001--1x0.2.png",
       "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
       "transformArray": [0, 1, -1, 0, 956, 422],
@@ -15754,7 +15754,7 @@
     {
       "key": "extra--table--002--0.4x0.4",
       "gridDim": [0.4, 0.4],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 120},
+      "trimSvgDim": [120, 120],
       "pngHref": "/assets/symbol/extra--table--002--0.4x0.4.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
       "transformArray": [1, 0, 0, 1, 932, 484],
@@ -15763,7 +15763,7 @@
     {
       "key": "extra--table--002--0.4x0.4",
       "gridDim": [0.4, 0.4],
-      "baseRect": {"x": 0, "y": 0, "width": 120, "height": 120},
+      "trimSvgDim": [120, 120],
       "pngHref": "/assets/symbol/extra--table--002--0.4x0.4.png",
       "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
       "transformArray": [1, 0, 0, 1, 932, 510],
@@ -15772,7 +15772,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -15781,7 +15781,7 @@
     {
       "key": "office--001--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/office--001--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [-1, 0, 0, 1, 240, 120],
@@ -15790,7 +15790,7 @@
     {
       "key": "console--031--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/console--031--1x1.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 377, "height": 307},
       "transformArray": [-1, 0, 0, 1, 360, 60],
@@ -15799,7 +15799,7 @@
     {
       "key": "bridge--042--8x9",
       "gridDim": [8, 9],
-      "baseRect": {"x": 0, "y": 0, "width": 2400, "height": 2700},
+      "trimSvgDim": [2400, 2700],
       "pngHref": "/assets/symbol/bridge--042--8x9.png",
       "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
       "transformArray": [1, 0, 0, 1, 360, 60],
@@ -15808,7 +15808,7 @@
     {
       "key": "console--031--1x1",
       "gridDim": [1, 1],
-      "baseRect": {"x": 0, "y": 0, "width": 300, "height": 300},
+      "trimSvgDim": [300, 300],
       "pngHref": "/assets/symbol/console--031--1x1.png",
       "pngRect": {"x": -3.5, "y": -3.5, "width": 377, "height": 307},
       "transformArray": [1, 0, 0, 1, 840, 60],
@@ -15817,7 +15817,7 @@
     {
       "key": "office--001--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/office--001--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, 1, 960, 120],
@@ -15826,7 +15826,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 0],
@@ -15835,7 +15835,7 @@
     {
       "key": "stateroom--014--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/stateroom--014--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, -1, 0, 480],
@@ -15844,7 +15844,7 @@
     {
       "key": "stateroom--014--2x2",
       "gridDim": [2, 2],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 600},
+      "trimSvgDim": [600, 600],
       "pngHref": "/assets/symbol/stateroom--014--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [1, 0, 0, -1, 120, 480],
@@ -15853,7 +15853,7 @@
     {
       "key": "stateroom--036--2x4",
       "gridDim": [2, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 600, "height": 1200},
+      "trimSvgDim": [600, 1200],
       "pngHref": "/assets/symbol/stateroom--036--2x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
       "transformArray": [0, -1, 1, 0, 0, 600],
@@ -15862,7 +15862,7 @@
     {
       "key": "misc-stellar-cartography--023--4x4",
       "gridDim": [4, 4],
-      "baseRect": {"x": 0, "y": 0, "width": 1200, "height": 1200},
+      "trimSvgDim": [1200, 1200],
       "pngHref": "/assets/symbol/misc-stellar-cartography--023--4x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
       "transformArray": [-1, 0, 0, 1, 1200, 360],

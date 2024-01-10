@@ -137,11 +137,10 @@ declare namespace Geomorph {
        */
       gridDim: [number, number];
       /**
-       * Dimensions excluding overflow (e.g. doors).
-       * - `x = y = 0`.
-       * - `width / height` equals `gridDim.x / gridDim.y`.
+       * Dimensions of SVG excluding overflow (e.g. doors).
+       * Should have same aspect ratio as `gridDim`.
        */
-      baseRect: Geom.RectJson;
+      trimSvgDim: [number, number];
       /** Path to PNG */
       pngHref: string;
       /** True bounds including overflow (e.g. doors) */
