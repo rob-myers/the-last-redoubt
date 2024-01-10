@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 480 520" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
+<svg viewBox="0 0 480 540" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:bx="https://boxy-svg.com">
   <defs>
     <bx:grid x="0" y="0" width="300" height="300"/>
   </defs>
@@ -9,6 +9,6 @@
   </g>
   <g style="">
     <title>obstacles</title>
-    <path d="M 93.6 35.3 L 180.3 0 L 300 0 L 381.6 30.1 L 457.8 113.9 L 480 173.3 L 490 550 L -10 550 L 0 174.4 L 27.9 103.9 L 93.6 35.3 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
+    <path d="M 466.05 136.15 L 480 171.4 L 483.154 289.85 L 480 308.656 L 466.921 342.821 L 448.839 373.814 L 423.403 408.357 L 480 409 L 484.2 409 L 486.374 410.799 L 490 547 L -10 547 L -6.374 410.799 L -4.2 409 L 0 409 L 56.597 408.357 L 31.161 373.814 L 13.079 342.821 L 0 308.656 L -3.154 289.85 L 0 171.4 L 13.95 136.15 L 29.476 106.604 L 60.3 69 L 82.208 48.583 L 96.495 36.588 L 133.815 14.881 L 137.288 13.055 L 180.3 -3 L 201.808 -6.5 L 223.317 -10 L 256.683 -10 L 278.192 -6.5 L 299.7 -3 L 342.712 13.055 L 346.185 14.881 L 383.505 36.588 L 397.792 48.583 L 419.7 69 L 450.524 106.604 L 466.05 136.15 Z" style="fill-opacity: 0.5; fill: rgb(0, 0, 255);"/>
   </g>
 </svg>
