@@ -18,7 +18,10 @@
   - 🚧 ensure `gridDim` and `trimSvgDim` have same aspect ratio for all gms
     - ✅ 301
     - ✅ 101
-    - 102
+    - ✅ 102
+    - 🚧 103
+    - 🚧 302
+    - 🚧 303
   - 🚧 `extra--*` can be scaled up more than 5x e.g. 10x
     - ℹ️ do this because small symbols are too pixelated
     - we can compare PNG dimension to filename dim

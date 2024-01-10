@@ -7315,8 +7315,8 @@
     "pngRect": {"x": -10, "y": -9, "width": 1533, "height": 920},
     "lastModified": 1696410761050.7231
   },
-  "engineering--045--4x6": {
-    "key": "engineering--045--4x6",
+  "engineering--045--6x4": {
+    "key": "engineering--045--6x4",
     "hull": [],
     "obstacles": [
       {
@@ -8245,8 +8245,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1686758588785.0232
   },
-  "fresher--036--2x4": {
-    "key": "fresher--036--2x4",
+  "fresher--036--4x2": {
+    "key": "fresher--036--4x2",
     "hull": [],
     "obstacles": [
       {
@@ -8819,8 +8819,8 @@
     "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
     "lastModified": 1695905669444.501
   },
-  "lab--012--3x4": {
-    "key": "lab--012--3x4",
+  "lab--012--4x3": {
+    "key": "lab--012--4x3",
     "hull": [],
     "obstacles": [
       {
@@ -9499,8 +9499,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1686299910310.8792
   },
-  "lab--030--1x3": {
-    "key": "lab--030--1x3",
+  "lab--030--3x1": {
+    "key": "lab--030--3x1",
     "hull": [],
     "obstacles": [
       {
@@ -10538,8 +10538,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
     "lastModified": 1686299910419.34
   },
-  "lounge--017--2x4": {
-    "key": "lounge--017--2x4",
+  "lounge--017--4x2": {
+    "key": "lounge--017--4x2",
     "hull": [],
     "obstacles": [
       {
@@ -11045,11 +11045,11 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [578.251, 17.075],
-              [578.573, 579.346],
-              [23.652, 572.633],
-              [578.251, 17.075],
-              [578.251, 17.075]
+              [544.599, -10],
+              [544.921, 552.271],
+              [-10, 545.558],
+              [544.599, -10],
+              [544.599, -10]
             ]
           ]
         }
@@ -11057,10 +11057,10 @@
     ],
     "walls": [],
     "singles": [],
-    "width": 600,
-    "height": 600,
-    "pngRect": {"x": 20, "y": 20, "width": 560, "height": 560},
-    "lastModified": 1666690702020.3247
+    "width": 540,
+    "height": 540,
+    "pngRect": {"x": -10, "y": -10, "width": 560, "height": 560},
+    "lastModified": 1704901035172.7866
   },
   "machinery--077--1.6x1.8": {
     "key": "machinery--077--1.6x1.8",
@@ -14462,8 +14462,8 @@
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
     "lastModified": 1686299910418.7847
   },
-  "ships-locker--007--1x2": {
-    "key": "ships-locker--007--1x2",
+  "ships-locker--007--2x1": {
+    "key": "ships-locker--007--2x1",
     "hull": [],
     "obstacles": [],
     "walls": [

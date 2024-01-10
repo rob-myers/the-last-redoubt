@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 150 30" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <g style="opacity: 0.5; visibility: hidden;" transform="matrix(1, 0, 0, 1, -70, -15)">
+    <title>old</title>
+    <path d="M 298 16 L 298 44 L 278.267 58 L 21.733 58 L 2 44 L 2 16 L 21.733 2 L 278.267 2 L 298 16 Z" style="stroke-linecap: round; stroke-linejoin: round; fill: rgb(87, 87, 87); stroke-width: 4px; stroke: rgb(255, 255, 255);"/>
+    <path d="M 6 42 L 6 18 L 21.998 6 L 278.002 6 L 294 18 L 294 42 L 278.002 54 L 21.998 54 Z" style="stroke: rgb(68, 68, 68); stroke-width: 3px;"/>
+  </g>
+  <g style="visibility: hidden;">
+    <title>obstacles</title>
+    <path d="M 300 15 L 300 45 L 280 60 L 20 60 L 0 45 L 0 15 L 20 0 L 280 0 L 300 15 Z" style="stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; fill: rgb(0, 0, 255); fill-opacity: 0.2;"/>
+  </g>
+  <path style="fill: rgb(17, 17, 17); stroke: rgb(255, 255, 255);" d="M 75 1 H 75 A 15 14 0 0 1 90 15 V 24 A 5 5 0 0 1 85 29 H 65 A 5 5 0 0 1 60 24 V 15 A 15 14 0 0 1 75 1 Z" bx:shape="rect 60 1 30 28 15 15 5 5 1@8ff7a954"/>
+  <path style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);" d="M 50 6.5 L 100 6.5 C 102.419 6.5 104.437 8.218 104.9 10.5 L 144 10.5 C 146.209 10.5 148 12.291 148 14.5 L 148 20.5 L 2 20.5 L 2 14.5 C 2 12.291 3.791 10.5 6 10.5 L 45.1 10.5 C 45.563 8.218 47.581 6.5 50 6.5 Z"/>
+  <path d="M 2 16.566 L 148 16.566 L 148 24.5 L 2 24.5 L 2 16.566 Z" style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);"/>
+</svg>

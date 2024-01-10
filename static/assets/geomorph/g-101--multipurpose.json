@@ -87,7 +87,7 @@
       },
       {"at": "👉", "id": "machinery--091--1.6x1.8", "x": 12},
       {"at": "👉", "id": "office--025--2x3", "x": 12, "a": 90, "doors": ["w"]},
-      {"at": "👉", "id": "machinery--357--2.2x4", "x": 120},
+      {"at": "👉", "id": "machinery--357--4x2", "x": 120},
       {"id": "fuel--010--4x2", "y": 1080},
       {"at": "👉", "id": "fuel--010--4x2", "x": 120},
       {"at": "👉", "id": "fuel--010--4x2"},
@@ -19908,10 +19908,10 @@
       "transform": "matrix(0,1,-1,0,840,960)"
     },
     {
-      "key": "machinery--357--2.2x4",
-      "gridDim": [2.2, 4],
+      "key": "machinery--357--4x2",
+      "gridDim": [4, 2],
       "trimSvgDim": [1200, 600],
-      "pngHref": "/assets/symbol/machinery--357--2.2x4.png",
+      "pngHref": "/assets/symbol/machinery--357--4x2.png",
       "pngRect": {"x": -10, "y": -72.5, "width": 1220, "height": 683},
       "transformArray": [1, 0, 0, 1, 960, 960],
       "transform": "matrix(1,0,0,1,960,960)"
