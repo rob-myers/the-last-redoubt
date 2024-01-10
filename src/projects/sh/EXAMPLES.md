@@ -213,6 +213,11 @@ npc events | filter 'x => x.key === "way-point" && x.meta.key === "decor-collide
 ```
 
 ```sh
+npc set-player
+click | filter meta.door | api doors.onRawDoorClick
+```
+
+```sh
 expr '{ npcKey: "foo", point: '$( click 1 )' }' | spawn
 spawn bar zhodani "$( click 1 )"
 
