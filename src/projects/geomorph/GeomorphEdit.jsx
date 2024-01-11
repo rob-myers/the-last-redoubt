@@ -26,8 +26,8 @@ import useUpdate from "../hooks/use-update";
 export default function GeomorphEdit({ disabled }) {
 
   const [layoutKey, setLayoutKey] = React.useState(
-    /** @returns {Geomorph.GeomorphKey} */ () =>
-      tryLocalStorageGet('gmKey@GeomorphEdit') ?? 'g-301--bridge',
+    /** @returns {Geomorph.GeomorphKey} */
+    () => tryLocalStorageGet('gmKey@GeomorphEdit') ?? 'g-301--bridge',
   );
 
   return (

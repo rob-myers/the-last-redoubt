@@ -42,7 +42,7 @@ export function extractGeomsAt(api, topNodes, title, scale = 1) {
  */
 export function extractGeoms(api, parent, scale = 1) {
   const children = api(parent).children('rect, path, ellipse, image').toArray();
-  return children.flatMap(x => extractGeom(api, x, scale)).map(x => x.precision(4));
+  return children.flatMap(x => extractGeom(api, x, scale)).map(x => x.precision(4).cleanFinalReps());
 }
 
 /**

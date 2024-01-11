@@ -81,15 +81,9 @@ export class Poly {
     const [outer, ...inner] = rings.map(ring =>
       // Append first to get final tangent
       ring.concat(ring[0]).reduce(
-        (agg, p, i, ps) => {
-
-          if (i) {
-            const pointLength = p.clone().sub(ps[i - 1]).length;
-            pointLength < 0.01 && console.log('saw point length', pointLength);
-          }
-
-          return i > 0 ? agg.concat(p.clone().sub(ps[i - 1]).normalize()) : []
-        },
+        (agg, p, i, ps) =>
+          i > 0 ? agg.concat(p.clone().sub(ps[i - 1]).normalize()) : []
+        ,
         /** @type {Vect[]} */ ([])
       )
     );
@@ -274,10 +268,7 @@ export class Poly {
   }
 
   fixOrientation() {
-    if (this.anticlockwise()) {
-      this.reverse();
-    }
-    return this;
+    return this.anticlockwise() ? this.reverse() : this;
   }
 
   /** @param {Geom.GeoJsonPolygon | Geom.GeoJsonPolygon['coordinates']} input  */
