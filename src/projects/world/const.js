@@ -56,6 +56,9 @@ export const geomorphFilter = 'brightness(50%) hue-rotate(0deg) sepia(0.1) contr
 export const geomorphMapFilterShown = 'invert(100%) brightness(35%) contrast(120%)';
 export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120%)';
 
+/** Following the convention from Starship Geomorphs by Robert Pearce */
+export const gridDimWorld = 60;
+
 /** HMR note: WAPI means anim must be retriggered  */
 export const obscuredNpcOpacity = 0.25;
 

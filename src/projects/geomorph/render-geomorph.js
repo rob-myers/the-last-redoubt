@@ -1,11 +1,10 @@
 import { createCanvas } from "canvas";
-/* eslint-disable no-unused-expressions */
 import { Poly, Vect, Rect } from "../geom";
-import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, gmScale, preDarkenCssRgba } from "../world/const";
+import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, gmScale, preDarkenCssRgba, gridDimWorld } from "../world/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
-import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, lightenDrawnImage, drawRotatedImage } from '../service/dom';
-import { error } from "../service/log";
+import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, drawRotatedImage } from '../service/dom';
+import { error, warn } from "../service/log";
 
 /**
  * Render a single geomorph PNG,
@@ -38,7 +37,6 @@ export async function renderGeomorph(
     navColor = 'rgba(200, 200, 200, 1)',
     navStroke = 'rgba(0, 0, 0, 0.25)',
     obsColor = 'rgba(100, 100, 100, 0.45)',
-    // wallColor = 'rgba(50, 40, 40, 0.5)',
     wallColor = 'rgba(50, 40, 40, 1)',
     invertSymbols = false,
     darken = false,
@@ -57,7 +55,6 @@ export async function renderGeomorph(
   ctxt.imageSmoothingEnabled = true;
   ctxt.imageSmoothingQuality = 'high';
   ctxt.lineJoin = 'round';
-  // 'antialias' in ctxt && (ctxt.antialias = 'subpixel'); // No difference
 
   //#region underlay
 
@@ -164,14 +161,21 @@ export async function renderGeomorph(
 
 
   //#region symbol PNGs
-  for (const { key, pngHref, pngRect, transformArray, invert } of layout.items.slice(1)) {    
+  for (const { key, pngHref, pngRect, transformArray, invert, trimSvgDim, gridDim } of layout.items.slice(1)) {    
     // Draw symbol png
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
-    ctxt.scale(0.2, 0.2);
+    
+    // Detect scale factor
+    const scaleX = trimSvgDim[0] / (gridDim[0] * gridDimWorld);
+    const scaleY = trimSvgDim[1] / (gridDim[1] * gridDimWorld);
+    if (scaleX !== scaleY) {
+      warn(`${key}: symbol aspect ratio should match filename`);
+    }
+    ctxt.scale(1 / scaleX, 1 / scaleX);
+
     ctxt.globalCompositeOperation = 'source-over';
     ctxt.drawImage(image, pngRect.x, pngRect.y);
-
 
     /**
      * Can invert symbols by default, except `extra--*`.

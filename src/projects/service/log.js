@@ -28,6 +28,6 @@ export function warn(...args) {
   if (isBrowser) {
     console.info('%cWARN', 'color: #ffff00', ...args);
   } else {
-    console.info('WARN', chalk.yellowBright(...args));
+    console.info(chalk.yellowBright('WARN'), chalk.yellowBright(...args));
   }
 }

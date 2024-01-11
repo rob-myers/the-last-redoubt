@@ -2658,7 +2658,7 @@
       {
         "meta": {
           "symbol": true,
-          "key": "extra--table--003--0.1x0.1",
+          "key": "extra--table--003--0.2x0.2",
           "_ownOrigin": {"x": 888, "y": 242}
         },
         "poly": {
@@ -2680,7 +2680,7 @@
       {
         "meta": {
           "symbol": true,
-          "key": "extra--table--003--0.1x0.1",
+          "key": "extra--table--003--0.2x0.2",
           "_ownOrigin": {"x": 1138, "y": 242}
         },
         "poly": {
@@ -2946,7 +2946,7 @@
     "width": 1200,
     "height": 600,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1704717732396.311
+    "lastModified": 1704979120654.6777
   },
   "302--hull": {
     "key": "302--hull",
@@ -7708,8 +7708,8 @@
     "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
     "lastModified": 1704718703042.0916
   },
-  "extra--table--003--0.1x0.1": {
-    "key": "extra--table--003--0.1x0.1",
+  "extra--table--003--0.2x0.2": {
+    "key": "extra--table--003--0.2x0.2",
     "hull": [],
     "obstacles": [
       {

@@ -2,7 +2,8 @@
 
 ## In progress
 
-- ✅ fix npc HMR issue by recreating Ticker
+- start new repo `npc-cli`
+  - new layout i.e. right-pane with Tabs
 
 - 🚧 improve layouts
   - ✅ extra symbols are not inverted by default
@@ -24,8 +25,9 @@
     - ✅ 303
   - 🚧 `extra--*` can be scaled up more than 5x e.g. 10x
     - ℹ️ do this because small symbols are too pixelated
-    - 🚧 infer scale by comparing `gridDim` to `trimSvgDim`
-    - 🚧 warn if their aspect ratio differ
+    - ✅ infer scale by comparing `gridDim` to `trimSvgDim`
+    - ✅ warn if their aspect ratio differ
+    - add some x10 scaled tvs
   - 🚧 `extra--*` symbols which can be placed on tables
   - more tables in 301
   - more tables in 101
@@ -733,6 +735,8 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ fix npc HMR issue by recreating Ticker
 
 - ✅ get `walk` working
   - ℹ️ `walk rob $navPath`
