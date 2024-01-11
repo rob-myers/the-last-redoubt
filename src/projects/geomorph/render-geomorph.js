@@ -161,18 +161,13 @@ export async function renderGeomorph(
 
 
   //#region symbol PNGs
-  for (const { key, pngHref, pngRect, transformArray, invert, trimSvgDim, gridDim } of layout.items.slice(1)) {    
+  for (const { key, pngHref, pngRect, transformArray, invert, svgPngScale } of layout.items.slice(1)) {    
     // Draw symbol png
     const image = await getPng(pngHref);
     ctxt.transform(...transformArray ?? [1, 0, 0 ,1, 0, 0]);
     
-    // Detect scale factor
-    const scaleX = trimSvgDim[0] / (gridDim[0] * gridDimWorld);
-    const scaleY = trimSvgDim[1] / (gridDim[1] * gridDimWorld);
-    if (scaleX !== scaleY) {
-      warn(`${key}: symbol aspect ratio should match filename`);
-    }
-    ctxt.scale(1 / scaleX, 1 / scaleX);
+    ctxt.scale(0.2, 0.2);
+    ctxt.scale(1 / svgPngScale, 1 / svgPngScale);
 
     ctxt.globalCompositeOperation = 'source-over';
     ctxt.drawImage(image, pngRect.x, pngRect.y);

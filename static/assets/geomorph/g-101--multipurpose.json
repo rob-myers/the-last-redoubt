@@ -19575,8 +19575,7 @@
   "items": [
     {
       "key": "101--hull",
-      "gridDim": [20, 20],
-      "trimSvgDim": [1200, 1200],
+      "svgPngScale": 1,
       "pngHref": "/assets/debug/g-101--multipurpose.png",
       "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -19584,8 +19583,7 @@
     },
     {
       "key": "iris-valves--005--1x1",
-      "gridDim": [1, 1],
-      "trimSvgDim": [300, 300],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [1, 0, 0, 1, 840, 0],
@@ -19593,8 +19591,7 @@
     },
     {
       "key": "iris-valves--005--1x1",
-      "gridDim": [1, 1],
-      "trimSvgDim": [300, 300],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, -1, 1, 0, 0, 360],
@@ -19602,8 +19599,7 @@
     },
     {
       "key": "iris-valves--005--1x1",
-      "gridDim": [1, 1],
-      "trimSvgDim": [300, 300],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [0, 1, -1, 0, 1200, 840],
@@ -19611,8 +19607,7 @@
     },
     {
       "key": "iris-valves--005--1x1",
-      "gridDim": [1, 1],
-      "trimSvgDim": [300, 300],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/iris-valves--005--1x1.png",
       "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
       "transformArray": [-1, 0, 0, 1, 360, 1140],
@@ -19620,8 +19615,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 0, 0],
@@ -19629,8 +19623,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 360, 0],
@@ -19638,8 +19631,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 600, 0],
@@ -19647,8 +19639,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 960, 0],
@@ -19656,8 +19647,7 @@
     },
     {
       "key": "machinery--158--1.8x3.6",
-      "gridDim": [1.8, 3.6],
-      "trimSvgDim": [540, 1080],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/machinery--158--1.8x3.6.png",
       "pngRect": {"x": -10, "y": -10, "width": 560, "height": 1100},
       "transformArray": [0, -1, 1, 0, 12, 240],
@@ -19665,8 +19655,7 @@
     },
     {
       "key": "stateroom--020--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, 1, 0, 360, 120],
@@ -19674,8 +19663,7 @@
     },
     {
       "key": "stateroom--018--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/stateroom--018--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 360, 240],
@@ -19683,8 +19671,7 @@
     },
     {
       "key": "fresher--020--2x2",
-      "gridDim": [2, 2],
-      "trimSvgDim": [600, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fresher--020--2x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
       "transformArray": [0, 1, 1, 0, 540, 120],
@@ -19692,8 +19679,7 @@
     },
     {
       "key": "lounge--009--3x2",
-      "gridDim": [3, 2],
-      "trimSvgDim": [900, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/lounge--009--3x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [-1, 0, 0, -1, 840, 240],
@@ -19701,8 +19687,7 @@
     },
     {
       "key": "stateroom--019--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 0.9794628751974723,
       "pngHref": "/assets/symbol/stateroom--019--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 633, "height": 920},
       "transformArray": [-1, 0, 0, -1, 840, 420],
@@ -19710,8 +19695,7 @@
     },
     {
       "key": "machinery--155--1.8x3.6",
-      "gridDim": [1.8, 3.6],
-      "trimSvgDim": [540, 1080],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/machinery--155--1.8x3.6.png",
       "pngRect": {"x": 10, "y": -10, "width": 520, "height": 1100},
       "transformArray": [0, -1, 1, 0, 972, 236],
@@ -19719,8 +19703,7 @@
     },
     {
       "key": "empty-room--013--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/empty-room--013--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, -1, 0, 180, 360],
@@ -19728,8 +19711,7 @@
     },
     {
       "key": "empty-room--039--3x4",
-      "gridDim": [3, 4],
-      "trimSvgDim": [900, 1200],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/empty-room--039--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
       "transformArray": [1, 0, 0, 1, 0, 480],
@@ -19737,8 +19719,7 @@
     },
     {
       "key": "medical--008--3x2",
-      "gridDim": [3, 2],
-      "trimSvgDim": [900, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/medical--008--3x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, -1, -1, 0, 360, 540],
@@ -19746,8 +19727,7 @@
     },
     {
       "key": "stateroom--020--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, 1, 0, 360, 540],
@@ -19755,8 +19735,7 @@
     },
     {
       "key": "stateroom--020--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/stateroom--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, -1, 0, 840, 540],
@@ -19764,8 +19743,7 @@
     },
     {
       "key": "fresher--025--3x2",
-      "gridDim": [3, 2],
-      "trimSvgDim": [900, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fresher--025--3x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, -1, 1, 0, 840, 540],
@@ -19773,8 +19751,7 @@
     },
     {
       "key": "office--023--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--023--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, -1, 0, 1200, 480],
@@ -19782,8 +19759,7 @@
     },
     {
       "key": "office--061--3x4",
-      "gridDim": [3, 4],
-      "trimSvgDim": [900, 1200],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--061--3x4.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
       "transformArray": [1, 0, 0, 1, 1020, 480],
@@ -19791,8 +19767,7 @@
     },
     {
       "key": "lifeboat--small-craft--2x4",
-      "gridDim": [2, 4],
-      "trimSvgDim": [600, 1200],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/lifeboat--small-craft--2x4.png",
       "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
       "transformArray": [1, 0, 0, 1, 0, 492],
@@ -19800,8 +19775,7 @@
     },
     {
       "key": "empty-room--013--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/empty-room--013--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, -1, -1, 0, 180, 840],
@@ -19809,8 +19783,7 @@
     },
     {
       "key": "medical--007--3x2",
-      "gridDim": [3, 2],
-      "trimSvgDim": [900, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/medical--007--3x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, 1, -1, 0, 360, 660],
@@ -19818,8 +19791,7 @@
     },
     {
       "key": "office--026--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--026--2x3.png",
       "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
       "transformArray": [0, 1, -1, 0, 540, 660],
@@ -19827,8 +19799,7 @@
     },
     {
       "key": "office--020--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [1, 0, 0, 1, 360, 780],
@@ -19836,8 +19807,7 @@
     },
     {
       "key": "office--026--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--026--2x3.png",
       "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
       "transformArray": [0, 1, 1, 0, 660, 660],
@@ -19845,8 +19815,7 @@
     },
     {
       "key": "office--020--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--020--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [-1, 0, 0, 1, 840, 780],
@@ -19854,8 +19823,7 @@
     },
     {
       "key": "fresher--025--3x2",
-      "gridDim": [3, 2],
-      "trimSvgDim": [900, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fresher--025--3x2.png",
       "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
       "transformArray": [0, 1, 1, 0, 840, 660],
@@ -19863,8 +19831,7 @@
     },
     {
       "key": "office--023--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--023--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, -1, 0, 1200, 720],
@@ -19872,8 +19839,7 @@
     },
     {
       "key": "machinery--156--2x4",
-      "gridDim": [2, 4],
-      "trimSvgDim": [600, 1200],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/machinery--156--2x4.png",
       "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
       "transformArray": [0, -1, 1, 0, 0, 1074],
@@ -19881,8 +19847,7 @@
     },
     {
       "key": "office--025--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, 1, 0, 360, 960],
@@ -19890,8 +19855,7 @@
     },
     {
       "key": "machinery--091--1.6x1.8",
-      "gridDim": [1.6, 1.8],
-      "trimSvgDim": [480, 540],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/machinery--091--1.6x1.8.png",
       "pngRect": {"x": -10, "y": -10, "width": 500, "height": 559},
       "transformArray": [1, 0, 0, 1, 552, 960],
@@ -19899,8 +19863,7 @@
     },
     {
       "key": "office--025--2x3",
-      "gridDim": [2, 3],
-      "trimSvgDim": [600, 900],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/office--025--2x3.png",
       "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
       "transformArray": [0, 1, -1, 0, 840, 960],
@@ -19908,8 +19871,7 @@
     },
     {
       "key": "machinery--357--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/machinery--357--4x2.png",
       "pngRect": {"x": -10, "y": -72.5, "width": 1220, "height": 683},
       "transformArray": [1, 0, 0, 1, 960, 960],
@@ -19917,8 +19879,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 0, 1080],
@@ -19926,8 +19887,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 360, 1080],
@@ -19935,8 +19895,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 600, 1080],
@@ -19944,8 +19903,7 @@
     },
     {
       "key": "fuel--010--4x2",
-      "gridDim": [4, 2],
-      "trimSvgDim": [1200, 600],
+      "svgPngScale": 1,
       "pngHref": "/assets/symbol/fuel--010--4x2.png",
       "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
       "transformArray": [1, 0, 0, 1, 960, 1080],

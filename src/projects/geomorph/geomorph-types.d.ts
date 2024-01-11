@@ -46,6 +46,8 @@ declare namespace Geomorph {
     width: number;
     /** Original SVG's height, inferred from `viewBox` */
     height: number;
+    /** How much larger `{symbol}.png` is than `{symbol}.svg`. */
+    svgPngScale: number;
     /**
      * Bounds of original image in symbol SVG.
      * May be offset e.g. because doors are centred along edges.
@@ -131,16 +133,8 @@ declare namespace Geomorph {
      */
     items: {
       key: Geomorph.SymbolKey;
-      /**
-       * Dimensions provided in `pngHref` e.g. `foo--bar--3x2.png`
-       * yields `(3, 2)` in Geomorph Grid Coordinates.
-       */
-      gridDim: [number, number];
-      /**
-       * Dimensions of SVG excluding overflow (e.g. doors).
-       * Should have same aspect ratio as `gridDim`.
-       */
-      trimSvgDim: [number, number];
+      /** How much larger `{symbol}.png` is than `{symbol}.svg`. */
+      svgPngScale: number;
       /** Path to PNG */
       pngHref: string;
       /** True bounds including overflow (e.g. doors) */
@@ -441,6 +435,7 @@ declare namespace Geomorph {
     | 'extra--table--002--0.4x0.4'
     | 'extra--table--003--0.2x0.2'
     | 'extra--table--004--0.4x0.2'
+    | 'extra--tv--001--0.5x0.1'
     //
     | '101--hull'
     | '102--hull'

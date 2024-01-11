@@ -23,11 +23,15 @@
     - ✅ 103
     - ✅ 302
     - ✅ 303
-  - 🚧 `extra--*` can be scaled up more than 5x e.g. 10x
+  - ✅ `extra--*` can be scaled up more than 5x e.g. 10x
     - ℹ️ do this because small symbols are too pixelated
     - ✅ infer scale by comparing `gridDim` to `trimSvgDim`
     - ✅ warn if their aspect ratio differ
-    - add some x10 scaled tvs
+  - ✅ symbols have `svgPngScale` i.e. SVG to PNG scaling factor (≥1)
+    - ✅ compute `svgPngScale`
+    - ✅ assume non-hull SVG symbols always 5x larger
+    - ✅ `gridDim` vs `trimSvgDim` warning at symbol creation
+    - ✅ remove `gridDim`, `trimSvgDim`
   - 🚧 `extra--*` symbols which can be placed on tables
   - more tables in 301
   - more tables in 101

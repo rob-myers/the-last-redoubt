@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-expressions */
 import cheerio, { Element } from 'cheerio';
 import { createCanvas } from 'canvas';
+import { imageSize } from 'image-size';
+
 import { assertDefined, keys, testNever } from './generic';
 import { error, info, warn } from './log';
 import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize, gmGridSize } from './const';
@@ -8,7 +10,7 @@ import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
 import { imageService } from './image';
-import { decorIconRadius } from '../world/const';
+import { decorIconRadius, gridDimWorld } from '../world/const';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
@@ -396,9 +398,7 @@ export async function createLayout(opts) {
   
     items: symbols.map(/** @returns {Geomorph.ParsedLayout['items'][0]} */  (sym, i) => ({
       key: sym.key,
-      // e.g. `foo--bar--3x2` becomes `[3, 2]`
-      gridDim: getGridDimFromSymbolKey(sym.key),
-      trimSvgDim: [sym.width, sym.height],
+      svgPngScale: sym.svgPngScale,
       // `/assets/...` is a live URL, and also a dev env path if inside `/static`
       pngHref: i ? `/assets/symbol/${sym.key}.png` : `/assets/debug/${opts.def.key}.png`,
       pngRect: sym.pngRect,
@@ -588,6 +588,7 @@ function extendLayoutUsingNestedSymbols(opts) {
 }
 
 /**
+ * e.g. `foo--bar--3x2.png` yields `[3, 2]` in Geomorph Grid Coordinates.
  * @param {Geomorph.SymbolKey} key 
  * @returns {[number, number]}
  */
@@ -951,6 +952,7 @@ export function parseLayout({
 }
 
 /**
+ * Server-side only.
  * @param {Geomorph.SymbolKey} symbolKey
  * @param {string} svgContents
  * @param {number} lastModified
@@ -985,6 +987,21 @@ export function parseStarshipSymbol(symbolKey, svgContents, lastModified) {
   const singles = extractGeomsAt($, topNodes, 'singles', scale);
   const walls = extractGeomsAt($, topNodes, 'walls', scale);
 
+  const gridDim = getGridDimFromSymbolKey(symbolKey);
+  if ((width / gridDim[0]) !== (height / gridDim[1])) {
+    warn(`${symbolKey}: symbol aspect ratio does not match filename`);
+  }
+
+  let svgPngScale = 1;
+  if (!isHullSymbolKey(symbolKey)) {
+    try {// compare PNG size to `pngRect` to infer `svgPngScale`
+      const imgDim = imageSize(`static/assets/symbol/${symbolKey}.png`);
+      typeof imgDim.width === 'number' && (svgPngScale = imgDim.width / pngRect.width);
+    } catch {
+      warn(`${symbolKey}: ignored missing png`)
+    }
+  }
+
   return {
     key: symbolKey,
     hull: Poly.union(hull).map(x => x.precision(precision)),
@@ -994,6 +1011,7 @@ export function parseStarshipSymbol(symbolKey, svgContents, lastModified) {
     singles: singles.map((/** @type {*} */ poly) => ({ meta: tagsToMeta(poly._ownTags, {}), poly })),
     width,
     height,
+    svgPngScale,
     walls: Poly.union(walls).map(x => x.precision(precision)),
   };
 }
@@ -1013,6 +1031,7 @@ export function serializeSymbol(parsed) {
     singles: parsed.singles.map(({ meta, poly }) => ({ meta, poly: poly.geoJson })),
     width: parsed.width,
     height: parsed.height,
+    svgPngScale: parsed.svgPngScale,
     pngRect: parsed.pngRect,
     lastModified: parsed.lastModified,
   };
@@ -1032,6 +1051,7 @@ function deserializeSymbol(json) {
     pngRect: json.pngRect,
     width: json.width,
     height: json.height,
+    svgPngScale: json.svgPngScale,
     lastModified: json.lastModified,
   };
 }

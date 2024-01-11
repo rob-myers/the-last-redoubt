@@ -856,6 +856,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1701358938620.549
   },
@@ -1438,6 +1439,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1696771011073.733
   },
@@ -1822,6 +1824,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 1208},
     "lastModified": 1696506804938.462
   },
@@ -2941,12 +2944,37 @@
           "type": "Polygon",
           "coordinates": [[[932, 510], [932, 534], [956, 534], [956, 510]]]
         }
+      },
+      {
+        "meta": {
+          "symbol": true,
+          "key": "extra--tv--001--0.5x0.1",
+          "_ownOrigin": {"x": -147, "y": -355},
+          "_ownTransform": [-1, 0, 0, -1, 0, 0]
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[147, 355], [147, 349], [117, 349], [117, 355]]]
+        }
+      },
+      {
+        "meta": {
+          "symbol": true,
+          "key": "extra--tv--001--0.5x0.1",
+          "_ownOrigin": {"x": -183, "y": -355},
+          "_ownTransform": [-1, 0, 0, -1, 0, 0]
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[183, 355], [183, 349], [153, 349], [153, 355]]]
+        }
       }
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1704979120654.6777
+    "lastModified": 1704985632048.7688
   },
   "302--hull": {
     "key": "302--hull",
@@ -3669,6 +3697,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -61, "width": 1208, "height": 665},
     "lastModified": 1696771229574.7124
   },
@@ -4846,6 +4875,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 1208, "height": 609},
     "lastModified": 1696772417435.698
   },
@@ -6249,6 +6279,7 @@
     ],
     "width": 2400,
     "height": 2700,
+    "svgPngScale": 1,
     "pngRect": {"x": -19, "y": -69, "width": 2439, "height": 2790},
     "lastModified": 1703668940325.662
   },
@@ -6270,6 +6301,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 607},
     "lastModified": 1686062894395.51
   },
@@ -6291,6 +6323,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3.5, "width": 607, "height": 1207},
     "lastModified": 1686062968364.323
   },
@@ -6508,6 +6541,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
     "lastModified": 1696424461216.483
   },
@@ -6575,6 +6609,7 @@
     ],
     "width": 300,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 307},
     "lastModified": 1683550928464.2483
   },
@@ -6630,6 +6665,7 @@
     ],
     "width": 300,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3.5, "width": 307, "height": 607},
     "lastModified": 1683550928463.7507
   },
@@ -6685,6 +6721,7 @@
     ],
     "width": 300,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3.5, "width": 377, "height": 307},
     "lastModified": 1704826533017.6897
   },
@@ -6769,6 +6806,7 @@
     ],
     "width": 120,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -8.097, "y": 14.064, "width": 137, "height": 575},
     "lastModified": 1683550928571.2373
   },
@@ -6817,6 +6855,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1670790900913.831
   },
@@ -6867,6 +6906,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1670434408226.2039
   },
@@ -6937,6 +6977,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
     "lastModified": 1686051700837.1196
   },
@@ -6991,6 +7032,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
     "lastModified": 1696411978280.509
   },
@@ -7077,6 +7119,7 @@
     ],
     "width": 900,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
     "lastModified": 1696506800419.9294
   },
@@ -7139,6 +7182,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1670952491244.2512
   },
@@ -7211,6 +7255,7 @@
     ],
     "width": 2400,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 2420, "height": 1220},
     "lastModified": 1696422556762.3455
   },
@@ -7258,6 +7303,7 @@
     ],
     "width": 1500,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -9, "width": 1533, "height": 920},
     "lastModified": 1696410761050.7231
   },
@@ -7422,6 +7468,7 @@
     ],
     "width": 1800,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1820, "height": 1220},
     "lastModified": 1686758426064.5085
   },
@@ -7655,6 +7702,7 @@
     ],
     "width": 1200,
     "height": 2100,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 2120},
     "lastModified": 1694352713612.0083
   },
@@ -7686,6 +7734,7 @@
     "singles": [],
     "width": 300,
     "height": 60,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 300, "height": 60},
     "lastModified": 1704717294293.5532
   },
@@ -7705,6 +7754,7 @@
     "singles": [],
     "width": 120,
     "height": 120,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 120, "height": 120},
     "lastModified": 1704718703042.0916
   },
@@ -7724,6 +7774,7 @@
     "singles": [],
     "width": 60,
     "height": 60,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 60, "height": 60},
     "lastModified": 1704718498644.068
   },
@@ -7743,6 +7794,7 @@
     "singles": [],
     "width": 120,
     "height": 60,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
     "lastModified": 1704717997162.0076
   },
@@ -7756,15 +7808,24 @@
           "type": "Polygon",
           "coordinates": [
             [
-              [300, 15],
-              [300, 45],
-              [280, 60],
-              [20, 60],
-              [0, 45],
-              [0, 15],
-              [20, 0],
-              [280, 0],
-              [300, 15]
+              [75, 1],
+              [86.92, 6.5],
+              [100, 6.5],
+              [104.9, 10.5],
+              [144, 10.5],
+              [148, 14.5],
+              [148, 24.5],
+              [89.975, 24.5],
+              [85, 29],
+              [65, 29],
+              [60.025, 24.5],
+              [2, 24.5],
+              [2, 14.5],
+              [6, 10.5],
+              [45.1, 10.5],
+              [50, 6.5],
+              [63.08, 6.5],
+              [75, 1]
             ]
           ]
         }
@@ -7774,8 +7835,9 @@
     "singles": [],
     "width": 150,
     "height": 30,
+    "svgPngScale": 2,
     "pngRect": {"x": 0, "y": 0, "width": 150, "height": 30},
-    "lastModified": 1704735736862.6914
+    "lastModified": 1704985551556.2812
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
@@ -7833,6 +7895,7 @@
     ],
     "width": 120,
     "height": 180,
+    "svgPngScale": 1,
     "pngRect": {"x": 7, "y": 0, "width": 106, "height": 180},
     "lastModified": 1704972823486.5024
   },
@@ -7954,6 +8017,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910418.9602
   },
@@ -8176,6 +8240,7 @@
     ],
     "width": 900,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1686758588785.0232
   },
@@ -8454,6 +8519,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
     "lastModified": 1696420386140.7253
   },
@@ -8482,6 +8548,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -19, "y": -19.6, "width": 1238, "height": 639},
     "lastModified": 1686299910419.256
   },
@@ -8609,6 +8676,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 643},
     "lastModified": 1686299910419.0984
   },
@@ -8706,6 +8774,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910419.178
   },
@@ -8727,6 +8796,7 @@
     "singles": [],
     "width": 600,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": -7, "width": 592, "height": 322},
     "lastModified": 1696262189343.7896
   },
@@ -8746,6 +8816,7 @@
     ],
     "width": 300,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 40, "width": 221, "height": 220},
     "lastModified": 1695905669444.501
   },
@@ -8929,6 +9000,7 @@
     ],
     "width": 1200,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 920},
     "lastModified": 1686299910419.0552
   },
@@ -9211,6 +9283,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -32.5, "width": 1220, "height": 1243},
     "lastModified": 1695994205958.9219
   },
@@ -9413,6 +9486,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1686299910310.8792
   },
@@ -9432,6 +9506,7 @@
     "singles": [],
     "width": 900,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 907, "height": 307},
     "lastModified": 1666690702016.7502
   },
@@ -9753,6 +9828,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -20, "y": -20, "width": 640, "height": 1238},
     "lastModified": 1704895738694.5464
   },
@@ -10084,6 +10160,7 @@
     ],
     "width": 900,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1683550928464.4395
   },
@@ -10428,6 +10505,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
     "lastModified": 1686299910419.34
   },
@@ -10849,6 +10927,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 620},
     "lastModified": 1686299910418.2856
   },
@@ -10870,6 +10949,7 @@
     "singles": [],
     "width": 300,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -3, "width": 307, "height": 356},
     "lastModified": 1666690702018.7026
   },
@@ -10896,6 +10976,7 @@
     "singles": [],
     "width": 300,
     "height": 120,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -9.5, "width": 320, "height": 139},
     "lastModified": 1666690702019.274
   },
@@ -10915,6 +10996,7 @@
     "singles": [],
     "width": 500,
     "height": 290,
+    "svgPngScale": 1,
     "pngRect": {"x": -1.5, "y": 0, "width": 503, "height": 290},
     "lastModified": 1666690702019.9397
   },
@@ -10936,6 +11018,7 @@
     "singles": [],
     "width": 540,
     "height": 540,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 560, "height": 560},
     "lastModified": 1704901035172.7866
   },
@@ -10964,6 +11047,7 @@
     "singles": [],
     "width": 480,
     "height": 540,
+    "svgPngScale": 1,
     "pngRect": {"x": -10.5, "y": 14.5, "width": 501, "height": 511},
     "lastModified": 1696263736118.7417
   },
@@ -11027,6 +11111,7 @@
     "singles": [],
     "width": 480,
     "height": 540,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 500, "height": 559},
     "lastModified": 1704896607018.8572
   },
@@ -11067,6 +11152,7 @@
     "singles": [],
     "width": 540,
     "height": 1080,
+    "svgPngScale": 1,
     "pngRect": {"x": 10, "y": -10, "width": 520, "height": 1100},
     "lastModified": 1682523087736.9324
   },
@@ -11117,6 +11203,7 @@
     "singles": [],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": 20, "y": 50, "width": 560, "height": 1100},
     "lastModified": 1691854962860.1982
   },
@@ -11157,6 +11244,7 @@
     "singles": [],
     "width": 540,
     "height": 1080,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 560, "height": 1100},
     "lastModified": 1695907162765.1426
   },
@@ -11176,6 +11264,7 @@
     ],
     "width": 1200,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -72.5, "width": 1220, "height": 683},
     "lastModified": 1674570265655.193
   },
@@ -11332,6 +11421,7 @@
     ],
     "width": 900,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1686299910419.5854
   },
@@ -11458,6 +11548,7 @@
     ],
     "width": 900,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 620},
     "lastModified": 1686299910310.8555
   },
@@ -11503,6 +11594,7 @@
     ],
     "width": 380,
     "height": 200,
+    "svgPngScale": 1,
     "pngRect": {"x": -1, "y": -1, "width": 382, "height": 202},
     "lastModified": 1683888243183.4773
   },
@@ -11628,6 +11720,7 @@
     ],
     "width": 480,
     "height": 1080,
+    "svgPngScale": 1,
     "pngRect": {"x": 15, "y": -7, "width": 450, "height": 1094},
     "lastModified": 1696260771801.9253
   },
@@ -11920,6 +12013,7 @@
     ],
     "width": 3000,
     "height": 3000,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 3020, "height": 3020},
     "lastModified": 1686299910418.9404
   },
@@ -12070,6 +12164,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1696012518215.7268
   },
@@ -12160,6 +12255,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910311.172
   },
@@ -12274,6 +12370,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910419.2708
   },
@@ -12441,6 +12538,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910418.89
   },
@@ -12555,6 +12653,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910418.9902
   },
@@ -12689,6 +12788,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910418.841
   },
@@ -12792,6 +12892,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910419.3987
   },
@@ -12929,6 +13030,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -34, "y": -10, "width": 644, "height": 920},
     "lastModified": 1686299910419.5
   },
@@ -13157,6 +13259,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -24, "y": -10, "width": 634, "height": 1220},
     "lastModified": 1696421845559.5012
   },
@@ -13399,6 +13502,7 @@
     ],
     "width": 900,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 920, "height": 1220},
     "lastModified": 1686299910418.7607
   },
@@ -13939,6 +14043,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 1220, "height": 1220},
     "lastModified": 1686299910419.1528
   },
@@ -14236,6 +14341,7 @@
     ],
     "width": 1200,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": 7.5, "y": 12.6, "width": 1181, "height": 1182},
     "lastModified": 1696264133732.1494
   },
@@ -14247,6 +14353,7 @@
     "singles": [],
     "width": 420,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -1.5, "y": -10, "width": 423, "height": 319},
     "lastModified": 1704903399966.2966
   },
@@ -14293,6 +14400,7 @@
     ],
     "width": 300,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 320, "height": 320},
     "lastModified": 1686299910418.7847
   },
@@ -14349,6 +14457,7 @@
     ],
     "width": 600,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 320},
     "lastModified": 1686299910419.08
   },
@@ -14420,6 +14529,7 @@
     ],
     "width": 600,
     "height": 300,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -20, "width": 620, "height": 334},
     "lastModified": 1686299910419.2126
   },
@@ -14476,6 +14586,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1686299910311.3281
   },
@@ -14495,6 +14606,7 @@
     "singles": [],
     "width": 480,
     "height": 120,
+    "svgPngScale": 1,
     "pngRect": {"x": -3.5, "y": -4, "width": 487, "height": 128},
     "lastModified": 1696151859049.8782
   },
@@ -14514,6 +14626,7 @@
     ],
     "width": 480,
     "height": 240,
+    "svgPngScale": 1,
     "pngRect": {"x": -2.5, "y": 3, "width": 485, "height": 234},
     "lastModified": 1704904253458.8577
   },
@@ -14664,6 +14777,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1697209181599.9316
   },
@@ -14809,6 +14923,7 @@
     ],
     "width": 600,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 620},
     "lastModified": 1697208047774.8362
   },
@@ -14949,6 +15064,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910310.9036
   },
@@ -15101,6 +15217,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 0.9794628751974723,
     "pngRect": {"x": -10, "y": -10, "width": 633, "height": 920},
     "lastModified": 1686299910310.9192
   },
@@ -15287,6 +15404,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910418.9143
   },
@@ -15476,6 +15594,7 @@
     ],
     "width": 600,
     "height": 900,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 920},
     "lastModified": 1686299910419.3037
   },
@@ -15756,6 +15875,7 @@
     ],
     "width": 600,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -10, "width": 620, "height": 1220},
     "lastModified": 1686558431463.2632
   },
@@ -16132,6 +16252,7 @@
     ],
     "width": 900,
     "height": 1200,
+    "svgPngScale": 1,
     "pngRect": {"x": -10, "y": -20, "width": 944, "height": 1239},
     "lastModified": 1686299910419.4812
   },
@@ -16292,6 +16413,7 @@
     ],
     "width": 240,
     "height": 240,
+    "svgPngScale": 1,
     "pngRect": {"x": -7.5, "y": -7, "width": 255, "height": 254},
     "lastModified": 1704972237663.6614
   },
@@ -16303,6 +16425,7 @@
     "singles": [],
     "width": 900,
     "height": 600,
+    "svgPngScale": 1,
     "pngRect": {"x": 25, "y": 195, "width": 852, "height": 417},
     "lastModified": 1666690702037.1028
   },
@@ -16324,6 +16447,7 @@
     "singles": [],
     "width": 300,
     "height": 60,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": 0, "width": 307, "height": 67},
     "lastModified": 1666690702037.4478
   },
@@ -16343,6 +16467,7 @@
     "singles": [],
     "width": 900,
     "height": 60,
+    "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -4, "width": 907, "height": 67},
     "lastModified": 1666690702037.8333
   }
