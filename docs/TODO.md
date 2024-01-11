@@ -69,7 +69,7 @@ npc events | filter '({ key, decor }) =>
 - npc cfg debug/debugPlayer show npc(s) bounds
 - api.tween should be generic
 - `npc cfg fov`
-- sh: count like `wc -l`?
+- ✅ sh: count like `wc -l`?
   - can `foo | sponge | map length`
 - debug arrows have larger hit area
 - can toggle fov `npc cfg fov`
@@ -79,7 +79,8 @@ npc events | filter '({ key, decor }) =>
   { at: '👇', gmKey: 'g-101--multipurpose' },
   { at: '👇', gmKey: 'g-301--bridge', flip: 'x' },
   ```
-- too many web contexts when keep resetting
+- 🚧 too many web contexts when keep resetting
+  - seems to work: `state.renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();`
 - Fix xterm links toggling
   - ✅ can now toggle on/off without leaving hover first
   - permit mobile re-click at same point

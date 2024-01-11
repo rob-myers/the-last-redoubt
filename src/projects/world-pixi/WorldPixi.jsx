@@ -134,6 +134,7 @@ export default function WorldPixi(props) {
     return () => {
       removeCached([props.worldKey]);
       state.tweenGroup.removeAll();
+      state.renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);
 
