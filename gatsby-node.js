@@ -30,6 +30,7 @@ exports.onCreateWebpackConfig = (opts) => {
         
       },
       fallback: {
+        'child_process': false,
         'fs': false,
         'path': false,
         'stream': false,
