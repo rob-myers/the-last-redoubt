@@ -471,8 +471,8 @@ declare namespace Geomorph {
     | 'fresher--025--3x2'
     | 'fresher--036--4x2'
     | 'fuel--010--4x2'
-    | 'gaming-tables--001--1x2'
-    | 'galley-and-mess-halls--006--2x4'
+    | 'gaming-tables--001--2x1'
+    | 'galley-and-mess-halls--006--4x2'
     | 'galley-and-mess-halls--025--2x3'
     | 'iris-valves--005--1x1'
     | 'lifeboat--small-craft--2x4'
@@ -526,7 +526,7 @@ declare namespace Geomorph {
     | 'stateroom--100--3x4'
     | 'table--009--0.8x0.8'
     | 'weaponry--013--1x2'
-    | 'window--001--0x1'
+    | 'window--001--1x0.2'
     | 'window--007--3x0.2'
   );
 

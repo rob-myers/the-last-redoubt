@@ -800,7 +800,7 @@ function singleToConnectorRect(single, rooms) {
   /** @type {[null | number, null | number]} */
   const roomIds = rooms.reduce((agg, room, roomId) => {
     // Support doors connecting a room to itself e.g.
-    // galley-and-mess-halls--006--2x4
+    // galley-and-mess-halls--006--4x2
     if (room.contains(moreInfront)) agg[0] = roomId;
     if (room.contains(moreBehind)) agg[1] = roomId;
     return agg;
