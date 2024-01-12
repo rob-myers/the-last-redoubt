@@ -2,51 +2,20 @@
 
 ## In progress
 
-- start new repo `npc-cli`
+- 🚧 start new repo `npc-cli`
   - new layout i.e. right-pane with Tabs
 
-- 🚧 improve layouts
-  - ✅ extra symbols are not inverted by default
-  - ✅ cannot shade over symbols
-  - ✅ remove `poly` tag from inner symbols
-  - ✅ remake "extra--" tables without decor points
-    - ✅ `extra--table--001--1x0.2`
-    - ✅ `extra--table--002--0.4x0.4`
-    - ✅ `extra--table--003--0.1x0.1`
-    - ✅ `extra--table--004--0.4x0.2`
-  - ❌ `extra--*` don't need PNG i.e. infer from SVG
-    - prefer simpler code
-  - ✅ ensure `gridDim` and `trimSvgDim` have same aspect ratio for all gms
-    - ✅ 301
-    - ✅ 101
-    - ✅ 102
-    - ✅ 103
-    - ✅ 302
-    - ✅ 303
-  - ✅ `extra--*` can be scaled up more than 5x e.g. 10x
-    - ℹ️ do this because small symbols are too pixelated
-    - ✅ infer scale by comparing `gridDim` to `trimSvgDim`
-    - ✅ warn if their aspect ratio differ
-  - ✅ symbols have `svgPngScale` i.e. SVG to PNG scaling factor (≥1)
-    - ✅ compute `svgPngScale`
-    - ✅ assume non-hull SVG symbols always 5x larger
-    - ✅ `gridDim` vs `trimSvgDim` warning at symbol creation
-    - ✅ remove `gridDim`, `trimSvgDim`
-  - 🚧 `extra--*` symbols which can be placed on tables
-  - more tables in 301
-  - more tables in 101
+- 🚧 improve decor points
+  - have folder of icons
+  - load as single spritesheet
+  - have computer icon
+  - place on many tables
 
-- support `decor point outline-ui`
+- more tables in 301
+- more tables in 101
+
+- ❌ support `decor point outline-ui`
 - useQueries to improve GeomorphEdit?
-
-- 🚧 improve walk -> idle transition
-  - ❌ try temp change walk speed so end at nearest idle
-    - not possible because rootDeltas are fixed
-  - ❌ try walk-on-spot to nearest idle (forward or backward)
-    - didn't look good
-  - ✅ try briefly show intermediate frame
-  - 🚧 intermediate idle with arms further back?
-    - `idle-test`
 
 - 🚧 improve npc
   - chained rotate tween instead of sharp rotate
@@ -739,6 +708,46 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ improve walk -> idle transition
+  - ❌ try temp change walk speed so end at nearest idle
+    - not possible because rootDeltas are fixed
+  - ❌ try walk-on-spot to nearest idle (forward or backward)
+    - didn't look good
+  - ✅ try briefly show intermediate frame
+  - ❌ intermediate idle with arms further back?
+    - didn't look better
+
+- ❌ improve layouts
+  - ✅ extra symbols are not inverted by default
+  - ✅ cannot shade over symbols
+  - ✅ remove `poly` tag from inner symbols
+  - ✅ remake "extra--" tables without decor points
+    - ✅ `extra--table--001--1x0.2`
+    - ✅ `extra--table--002--0.4x0.4`
+    - ✅ `extra--table--003--0.1x0.1`
+    - ✅ `extra--table--004--0.4x0.2`
+  - ❌ `extra--*` don't need PNG i.e. infer from SVG
+    - prefer simpler code
+  - ✅ ensure `gridDim` and `trimSvgDim` have same aspect ratio for all gms
+    - ✅ 301
+    - ✅ 101
+    - ✅ 102
+    - ✅ 103
+    - ✅ 302
+    - ✅ 303
+  - ✅ `extra--*` can be scaled up more than 5x e.g. 10x
+    - ℹ️ do this because small symbols are too pixelated
+    - ✅ infer scale by comparing `gridDim` to `trimSvgDim`
+    - ✅ warn if their aspect ratio differ
+  - ✅ symbols have `svgPngScale` i.e. SVG to PNG scaling factor (≥1)
+    - ✅ compute `svgPngScale`
+    - ✅ assume non-hull SVG symbols always 5x larger
+    - ✅ `gridDim` vs `trimSvgDim` warning at symbol creation
+    - ✅ remove `gridDim`, `trimSvgDim`
+  - ❌ `extra--*` symbols which can be placed on tables
+    - ℹ️ decided to use decor points instead
+
 
 - ✅ fix npc HMR issue by recreating Ticker
 

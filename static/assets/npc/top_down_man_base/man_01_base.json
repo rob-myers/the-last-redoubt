@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "CPO7Oc+TLVA",
+	"hash": "2yrO5tDHdkU",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -769,26 +769,6 @@
 				]
 			}
 		]
-	},
-	"idle-test": {
-		"bones": {
-			"right-arm-lower": {
-				"rotate": [
-					{ "value": -14.65 }
-				],
-				"translate": [
-					{ "x": -59.26, "y": 59.99 }
-				]
-			},
-			"left-arm-lower": {
-				"rotate": [
-					{ "value": -15.35 }
-				],
-				"translate": [
-					{ "x": -59.99, "y": 59.26 }
-				]
-			}
-		}
 	},
 	"lie": {
 		"slots": {
