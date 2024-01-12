@@ -14,8 +14,11 @@ import { createCanvas, loadImage } from 'canvas';
 import { ansi } from "../projects/service/const";
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 import { assertDefined } from '../projects/service/generic';
+import { runYarnScript } from './service';
 
 const decorSvgsFolder = 'static/assets/decor';
+const outputPngPath = `${decorSvgsFolder}/spritesheet.png`;
+const outputJsonPath = `${decorSvgsFolder}/spritesheet.json`;
 const packedPadding = 2;
 const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
 const imageDim = 128;
@@ -51,7 +54,15 @@ const ctxt = canvas.getContext('2d');
   canvas.width = packedWidth;
   canvas.height = packedHeight;
 
-  // Create spritesheet.png
+  // Create JSON
+  const json = /** @type {NPC.DecorSpriteSheet} */ ({ lookup: {} });
+  bin.rects.forEach(r => json.lookup[/** @type {NPC.DecorPointClassKey} */ (r.data.name)] = {
+    name: r.data.name,
+    x: r.x, y: r.y, width: r.width, height: r.height,
+  });
+  writeAsJson(json, outputJsonPath);
+
+  // Create PNG, WEBP
   for (const filename of files) {
     const rect = assertDefined(bin.rects.find((x) => x.data.name === filename));
 
@@ -68,15 +79,8 @@ const ctxt = canvas.getContext('2d');
     const image = await loadImage(dataUrl);
     ctxt.drawImage(image, rect.x, rect.y);
   }
-  await saveCanvasAsFile(canvas, `${decorSvgsFolder}/spritesheet.png`);
-
-  // Create spritesheet.json
-  const json = /** @type {NPC.DecorSpriteSheet} */ ({ lookup: {} });
-  bin.rects.forEach(r => json.lookup[/** @type {NPC.DecorPointClassKey} */ (r.data.name)] = {
-    name: r.data.name,
-    x: r.x, y: r.y, width: r.width, height: r.height,
-  });
-  writeAsJson(json, `${decorSvgsFolder}/spritesheet.json`);
+  await saveCanvasAsFile(canvas, outputPngPath);
+  await runYarnScript('pngs-to-webp', outputPngPath);
 
 })();
 

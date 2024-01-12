@@ -1,44 +1,51 @@
 {
   "lookup": {
+    "circle-right.svg": {
+      "name": "circle-right.svg",
+      "x": 2,
+      "y": 2,
+      "width": 128,
+      "height": 128
+    },
     "computer.svg": {
       "name": "computer.svg",
-      "x": 2,
+      "x": 132,
       "y": 2,
       "width": 128,
       "height": 128
     },
     "info.svg": {
       "name": "info.svg",
-      "x": 132,
-      "y": 2,
+      "x": 2,
+      "y": 132,
       "width": 128,
       "height": 128
     },
     "lying-man.svg": {
       "name": "lying-man.svg",
-      "x": 2,
+      "x": 132,
       "y": 132,
       "width": 128,
       "height": 128
     },
     "road-works.svg": {
       "name": "road-works.svg",
-      "x": 132,
-      "y": 132,
+      "x": 262,
+      "y": 2,
       "width": 128,
       "height": 128
     },
     "sitting-man.svg": {
       "name": "sitting-man.svg",
       "x": 262,
-      "y": 2,
+      "y": 132,
       "width": 128,
       "height": 128
     },
     "standing-man.svg": {
       "name": "standing-man.svg",
-      "x": 262,
-      "y": 132,
+      "x": 2,
+      "y": 262,
       "width": 128,
       "height": 128
     }

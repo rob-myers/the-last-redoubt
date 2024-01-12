@@ -10,6 +10,7 @@
   - ✅ have computer icon SVG
   - ✅ create spritesheet via script `decor-sheet`
   - ✅ `decor-sheet` outputs image spritesheet.json
+  - ✅ `decor-sheet` outputs webp
   - 🚧 load spritesheet into Decor
   - place on many tables
 
