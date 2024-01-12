@@ -776,6 +776,21 @@ declare namespace NPC {
     points: NPC.DecorPoint[];
   }
 
+  export type DecorPointClassKey = (
+    | 'computer'
+    | 'info'
+    | 'lying-man'
+    | 'road-works'
+    | 'sitting-man'
+    | 'standing-man'
+  );
+
+  export interface DecorSpriteSheet {
+    lookup: Record<DecorPointClassKey, Geom.RectJson & {
+      name: string;
+    }>;
+  }
+
   //#endregion
   
   //#region debug

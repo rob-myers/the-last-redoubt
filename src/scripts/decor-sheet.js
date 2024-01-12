@@ -1,6 +1,8 @@
 /**
  * Create decor spritesheet
- * > `yarn decor-sheet`
+ * - `yarn decor-sheet`
+ * - inputs /assets/decor/*.svg
+ * - outputs /assets/decor/spritesheet.{png,json}
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -10,22 +12,21 @@ import { MaxRectsPacker, Rectangle } from "maxrects-packer";
 import { createCanvas, loadImage } from 'canvas';
 
 import { ansi } from "../projects/service/const";
-import { saveCanvasAsFile } from '../projects/service/file';
+import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 import { assertDefined } from '../projects/service/generic';
 
 const decorSvgsFolder = 'static/assets/decor';
 const packedPadding = 2;
+const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
 const imageDim = 128;
 const canvas = createCanvas(1, 1);
 const ctxt = canvas.getContext('2d');
-
-const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
 
 (async function main() {
 
   const files = fs.readdirSync(decorSvgsFolder).filter(x => x.endsWith('.svg'));
 
-  // Create spritesheet packing
+  // Infer spritesheet packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
     pot: false,
     border: packedPadding,
@@ -50,7 +51,7 @@ const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
   canvas.width = packedWidth;
   canvas.height = packedHeight;
 
-  // Draw into spritesheet
+  // Create spritesheet.png
   for (const filename of files) {
     const rect = assertDefined(bin.rects.find((x) => x.data.name === filename));
 
@@ -67,8 +68,15 @@ const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
     const image = await loadImage(dataUrl);
     ctxt.drawImage(image, rect.x, rect.y);
   }
-
   await saveCanvasAsFile(canvas, `${decorSvgsFolder}/spritesheet.png`);
+
+  // Create spritesheet.json
+  const json = /** @type {NPC.DecorSpriteSheet} */ ({ lookup: {} });
+  bin.rects.forEach(r => json.lookup[/** @type {NPC.DecorPointClassKey} */ (r.data.name)] = {
+    name: r.data.name,
+    x: r.x, y: r.y, width: r.width, height: r.height,
+  });
+  writeAsJson(json, `${decorSvgsFolder}/spritesheet.json`);
 
 })();
 

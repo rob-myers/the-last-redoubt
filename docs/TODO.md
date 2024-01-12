@@ -3,12 +3,14 @@
 ## In progress
 
 - 🚧 start new repo `npc-cli`
-  - new layout i.e. right-pane with Tabs
+  - 🚧 new layout i.e. right-pane with Tabs
 
 - 🚧 improve decor points
-  - have folder of icons
-  - load as single spritesheet
-  - have computer icon
+  - ✅ have folder of SVGs
+  - ✅ have computer icon SVG
+  - ✅ create spritesheet via script `decor-sheet`
+  - ✅ `decor-sheet` outputs image spritesheet.json
+  - 🚧 load spritesheet into Decor
   - place on many tables
 
 - more tables in 301
@@ -37,7 +39,8 @@ npc events | filter '({ key, decor }) =>
 }'
 ```
 
-- pause "npc" process pauses npc ✅ and 🚧 darkens npc
+- 🚧 pause "npc" process darkens npc
+- ✅ pause "npc" process pauses npc
 - ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
 - ✅ sh generates named generators
