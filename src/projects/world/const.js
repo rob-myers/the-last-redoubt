@@ -70,7 +70,7 @@ export const spawnFadeMs = 500;
  * We avoid directly importing for better React HMR.
  * @type {import('projects/service/const').wallOutset}
  */
-export const wallOutset = 12;
+export const wallOutset = 14;
 
 export const doorSensorRadius = 30;
 

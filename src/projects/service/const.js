@@ -86,7 +86,7 @@ export const hullDoorOutset = 2;
  */
 export const hullOutset = 2;
 
-export const wallOutset = 12;
+export const wallOutset = 14;
 
 export const obstacleOutset = 8;
 
