@@ -36,7 +36,7 @@ const ctxt = canvas.getContext('2d');
     // smart: false,
   });
   for (const filename of files) {
-    addRectToPack(imageDim, imageDim, filename);
+    addRectToPack(imageDim, imageDim, filenameToKey(filename));
   }
   packer.addArray(rectsToPack);
   const { bins } = packer;
@@ -64,7 +64,7 @@ const ctxt = canvas.getContext('2d');
 
   // Create PNG, WEBP
   for (const filename of files) {
-    const rect = assertDefined(bin.rects.find((x) => x.data.name === filename));
+    const rect = assertDefined(bin.rects.find((x) => x.data.name === filenameToKey(filename)));
 
     // transform SVG to specified dimension
     const svgContents = fs.readFileSync(`${decorSvgsFolder}/${filename}`).toString();
@@ -90,4 +90,12 @@ function addRectToPack(width, height, name) {
   const r = new Rectangle(width, height);
   r.data = { name };
   rectsToPack.push(r);
+}
+
+/**
+ * e.g. `foo.svg` -> `foo`
+ * @param {string} filename 
+ */
+function filenameToKey(filename) {
+  return filename.split('.').slice(0, -1).join('.');
 }

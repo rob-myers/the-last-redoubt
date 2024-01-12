@@ -1,49 +1,43 @@
 {
   "lookup": {
-    "circle-right.svg": {
-      "name": "circle-right.svg",
+    "circle-right": {
+      "name": "circle-right",
       "x": 2,
       "y": 2,
       "width": 128,
       "height": 128
     },
-    "computer.svg": {
-      "name": "computer.svg",
+    "computer": {
+      "name": "computer",
       "x": 132,
       "y": 2,
       "width": 128,
       "height": 128
     },
-    "info.svg": {
-      "name": "info.svg",
-      "x": 2,
-      "y": 132,
-      "width": 128,
-      "height": 128
-    },
-    "lying-man.svg": {
-      "name": "lying-man.svg",
+    "info": {"name": "info", "x": 2, "y": 132, "width": 128, "height": 128},
+    "lying-man": {
+      "name": "lying-man",
       "x": 132,
       "y": 132,
       "width": 128,
       "height": 128
     },
-    "road-works.svg": {
-      "name": "road-works.svg",
+    "road-works": {
+      "name": "road-works",
       "x": 262,
       "y": 2,
       "width": 128,
       "height": 128
     },
-    "sitting-man.svg": {
-      "name": "sitting-man.svg",
+    "sitting-man": {
+      "name": "sitting-man",
       "x": 262,
       "y": 132,
       "width": 128,
       "height": 128
     },
-    "standing-man.svg": {
-      "name": "standing-man.svg",
+    "standing-man": {
+      "name": "standing-man",
       "x": 2,
       "y": 262,
       "width": 128,
