@@ -11,7 +11,8 @@
   - ✅ create spritesheet via script `decor-sheet`
   - ✅ `decor-sheet` outputs image spritesheet.json
   - ✅ `decor-sheet` outputs webp
-  - 🚧 load spritesheet into Decor
+  - ✅ load spritesheet into Decor
+  - 🚧 use spritesheet instead of `decor.icon`
   - place on many tables
 
 - more tables in 301

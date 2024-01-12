@@ -54,7 +54,8 @@ export default function Decor(props) {
       height: gmScale * gm.pngRect.height,
       // resolution: window.devicePixelRatio > 1 ? 2 : 1,
     })),
-    icon: /** @type {*} */ ({}),
+    icon: /** @type {*} */ ({}), // 🚧 remove
+    sheet: /** @type {*} */ ({}),
     showColliders: false,
 
     byGrid: [],
@@ -290,6 +291,7 @@ export default function Decor(props) {
  * @property {import('pixi.js').Matrix[]} mat
  * @property {import('pixi.js').RenderTexture[]} tex
  * @property {Record<DecorIconKey, import('pixi.js').Texture<import('pixi.js').Resource>>} icon
+ * @property {{ tex: import('pixi.js').Texture; lookup: NPC.DecorSpriteSheet['lookup'] }} sheet
  * 
  * @property {boolean} showColliders
  * @property {Record<string, NPC.DecorDef>} decor

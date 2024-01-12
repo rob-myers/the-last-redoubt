@@ -279,7 +279,6 @@ export default function FOV(props) {
   });
 
   const loaded = useQueries({
-    /** @type {import("@tanstack/react-query").QueriesOptions<void>} */
     queries: gms.map((gm, gmId) => ({
       queryKey: [`${gm.key}.${gmId}`], // gmId for dups
       queryFn: async () => {
@@ -309,8 +308,22 @@ export default function FOV(props) {
       throwOnError: true,
       gcTime: Infinity,
       staleTime: Infinity,
-      refetchOnMount: 'always',
-    })),
+      refetchOnMount: /** @type {const} */ ('always'),
+    })).concat({
+      queryKey: ['decor-spritesheet'],
+      async queryFn() {
+        const tex = await Assets.load(`/assets/decor/spritesheet.webp`);
+        const { lookup }  = /** @type {NPC.DecorSpriteSheet} */ (
+          await Assets.load(`/assets/decor/spritesheet.json`)
+        );
+        api.decor.sheet = { tex, lookup };
+        return null;
+      },
+      throwOnError: true,
+      gcTime: Infinity,
+      staleTime: Infinity,
+      refetchOnMount: /** @type {const} */ ('always'),
+    }),
     combine: x => x.every(y => y.isSuccess && !y.isFetching),
   });
 
