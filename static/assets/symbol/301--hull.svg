@@ -284,11 +284,5 @@
     <rect y="510" width="24" height="24" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 944px 522px;" x="932">
       <title>symbol key=extra--table--002--0.4x0.4</title>
     </rect>
-    <rect y="-355" width="30" height="6" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); transform-box: fill-box; transform-origin: 50% 50%;" x="-147" transform="matrix(-1, 0, 0, -1, 264, 704)">
-      <title>symbol key=extra--tv--001--0.5x0.1</title>
-    </rect>
-    <rect y="-355" width="30" height="6" style="stroke: rgb(0, 0, 0); fill: rgb(0, 0, 255); transform-origin: -168px -352px;" x="-183" transform="matrix(-1, 0, 0, -1, 336, 704)">
-      <title>symbol key=extra--tv--001--0.5x0.1</title>
-    </rect>
   </g>
 </svg>

@@ -435,7 +435,6 @@ declare namespace Geomorph {
     | 'extra--table--002--0.4x0.4'
     | 'extra--table--003--0.2x0.2'
     | 'extra--table--004--0.4x0.2'
-    | 'extra--tv--001--0.5x0.1'
     //
     | '101--hull'
     | '102--hull'

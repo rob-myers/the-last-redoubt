@@ -2944,37 +2944,13 @@
           "type": "Polygon",
           "coordinates": [[[932, 510], [932, 534], [956, 534], [956, 510]]]
         }
-      },
-      {
-        "meta": {
-          "symbol": true,
-          "key": "extra--tv--001--0.5x0.1",
-          "_ownOrigin": {"x": -147, "y": -355},
-          "_ownTransform": [-1, 0, 0, -1, 0, 0]
-        },
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[147, 355], [147, 349], [117, 349], [117, 355]]]
-        }
-      },
-      {
-        "meta": {
-          "symbol": true,
-          "key": "extra--tv--001--0.5x0.1",
-          "_ownOrigin": {"x": -183, "y": -355},
-          "_ownTransform": [-1, 0, 0, -1, 0, 0]
-        },
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[183, 355], [183, 349], [153, 349], [153, 355]]]
-        }
       }
     ],
     "width": 1200,
     "height": 600,
     "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1704985632048.7688
+    "lastModified": 1705151597176.2751
   },
   "302--hull": {
     "key": "302--hull",
@@ -7797,47 +7773,6 @@
     "svgPngScale": 1,
     "pngRect": {"x": 0, "y": 0, "width": 120, "height": 60},
     "lastModified": 1704717997162.0076
-  },
-  "extra--tv--001--0.5x0.1": {
-    "key": "extra--tv--001--0.5x0.1",
-    "hull": [],
-    "obstacles": [
-      {
-        "meta": {},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [75, 1],
-              [86.92, 6.5],
-              [100, 6.5],
-              [104.9, 10.5],
-              [144, 10.5],
-              [148, 14.5],
-              [148, 24.5],
-              [89.975, 24.5],
-              [85, 29],
-              [65, 29],
-              [60.025, 24.5],
-              [2, 24.5],
-              [2, 14.5],
-              [6, 10.5],
-              [45.1, 10.5],
-              [50, 6.5],
-              [63.08, 6.5],
-              [75, 1]
-            ]
-          ]
-        }
-      }
-    ],
-    "walls": [],
-    "singles": [],
-    "width": 150,
-    "height": 30,
-    "svgPngScale": 2,
-    "pngRect": {"x": 0, "y": 0, "width": 150, "height": 30},
-    "lastModified": 1704985551556.2812
   },
   "fresher--002--0.4x0.6": {
     "key": "fresher--002--0.4x0.6",
