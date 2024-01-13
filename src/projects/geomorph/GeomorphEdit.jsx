@@ -1,6 +1,6 @@
 /**
  * This component is used to build a geomorph step-by-step.
- * We compute the actual layout (as opposed to loading JSON).
+ * We compute the layout, as opposed to loading JSON.
  */
 import * as React from "react";
 import { css, cx } from "@emotion/css";
@@ -12,7 +12,7 @@ import { createGeomorphData } from "./use-geomorph-data";
 import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText, tryLocalStorageGet, tryLocalStorageSet } from "../service/generic";
 import { loadImage } from "../service/dom";
-import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys } from "../service/geomorph";
+import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys, isDecorPoint } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
 import * as defaults from "../example/defaults";
@@ -22,9 +22,8 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 
-/** @param {Props} props */
+/** @param {{ disabled?: boolean }} props */
 export default function GeomorphEdit({ disabled }) {
-
   const [layoutKey, setLayoutKey] = React.useState(
     /** @returns {Geomorph.GeomorphKey} */
     () => tryLocalStorageGet('gmKey@GeomorphEdit') ?? 'g-301--bridge',
@@ -57,11 +56,9 @@ export default function GeomorphEdit({ disabled }) {
 /** @param {{ layoutKey: Geomorph.GeomorphKey; transform?: string; disabled?: boolean }} _ */
 function Geomorph({ layoutKey, transform, disabled }) {
 
+  // Must recompute layout when definition changes,
+  // so we can edit geomorph-layouts.
   const def = layoutDefs[layoutKey];
-  /**
-   * Must recompute layout when definition changes,
-   * so we can edit geomorph-layouts.
-   */
   const gmHash = React.useMemo(() => hashText(JSON.stringify(def)), [def]);
 
   const { data, error } = useQuery({
@@ -169,7 +166,11 @@ function Geomorph({ layoutKey, transform, disabled }) {
     }
   }, [data]);
 
-  return data ? (
+  if (!data) {
+    return null;
+  }
+
+  return (
     <g
       className={cx("geomorph", def.key)}
       transform={transform}
@@ -251,20 +252,28 @@ function Geomorph({ layoutKey, transform, disabled }) {
             //   style={{ left: position.x, top: position.y, width: distance * 2, height: distance * 2,  transform: `translate(-${distance}px, -${distance}px)` }}
             // />,
           ])}
+
+          {/* 🚧 decor points */}
+          {data.gm.roomDecor.map(({ symbol: defs }, roomId) => {
+            const points = defs.filter(isDecorPoint);
+            // 🚧 use spritesheet.{webp,json} to draw icon
+            return points.map((def) => (
+              <div
+                key={def.key}
+                className="decor-point"
+                data-key="decor-point"
+                data-decor-key={def.key}
+                data-room-id={roomId}
+                style={{ left: def.x, top: def.y }}
+              />
+            ));
+          })}
         </div>
       </foreignObject>
 
-      <path
-        d={state.viewPoly.svgPath}
-        fill="#ff000055"
-        stroke="red"
-      />
+      <path d={state.viewPoly.svgPath} fill="#ff000055" stroke="red" />
 
-      <path
-        d={state.lightPoly.svgPath}
-        fill="#0000ff99"
-        stroke="blue"
-      />
+      <path d={state.lightPoly.svgPath} fill="#0000ff99" stroke="blue" />
 
       {data.gm.lightThrus.map(({ poly }, i) =>
         <path
@@ -277,9 +286,8 @@ function Geomorph({ layoutKey, transform, disabled }) {
       )}
 
       <image className="debug" href={data.gm.items[0].pngHref} x={data.gm.pngRect.x} y={data.gm.pngRect.y}/>
-
     </g>
-  ) : null;
+  );
 }
 
 const scale = 2;
@@ -355,6 +363,16 @@ const rootCss = css`
       border-radius: 50%;
       border: 1px solid black;
     }
+    div.decor-point {
+      position: absolute;
+      cursor: pointer;
+      background: #0000ff;
+      width: ${pointDim}px;
+      height: ${pointDim}px;
+      transform: translate(-${pointDim/2}px, -${pointDim/2}px);
+      border-radius: 50%;
+      border: 1px solid black;
+    }
     div.light-circ {
       position: absolute;
       background: #0000ff11;
@@ -371,8 +389,3 @@ const rootCss = css`
 `;
 
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
-
-/**
- * @typedef Props
- * @property {boolean} [disabled]
- */
