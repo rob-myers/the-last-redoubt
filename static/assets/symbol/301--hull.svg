@@ -284,5 +284,11 @@
     <rect y="510" width="24" height="24" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 944px 522px;" x="932">
       <title>symbol key=extra--table--002--0.4x0.4</title>
     </rect>
+    <rect x="160" y="341" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor cpu</title>
+    </rect>
+    <rect x="130" y="341" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor cpu</title>
+    </rect>
   </g>
 </svg>

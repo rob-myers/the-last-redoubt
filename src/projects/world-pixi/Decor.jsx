@@ -1,11 +1,9 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
 import { BLEND_MODES, RenderTexture, Matrix } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
-import { Assets } from "@pixi/assets";
 
 import { testNever } from "../service/generic";
-import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorRect, getGmRoomKey, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
+import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorClassByMeta, getDecorRect, getGmRoomKey, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 import { decorIconRadius, gmScale } from "../world/const";
 
 import useStateRef from "../hooks/use-state-ref";
@@ -102,25 +100,19 @@ export default function Decor(props) {
         case 'point':
           const radius = decorIconRadius;
           // background circle
-          gfx.lineStyle({ color: '#77777777', width: 1 });
+          gfx.lineStyle({ color: '#ffffff', width: 0, alpha: 0.25 });
           gfx.beginFill(0);
           gfx.drawCircle(decor.x, decor.y, radius + 2);
           gfx.endFill();
 
           // icon
           const { meta } = decor;
-          const texture = state.sheet.lookup[
-            meta.stand && 'standing-man' || 
-            meta.sit && 'sitting-man' || 
-            meta.lie && 'lying-man' || 
-            meta.label && 'info' || 
-              'road-works'
-          ];
+          const texture = state.sheet.lookup[getDecorClassByMeta(meta)];
           const scale = (2 * radius) / texture.width;
           // ℹ️ can ignore transform of `gfx`
           const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
           gfx.line.width = 0;
-          gfx.beginTextureFill({ texture, matrix });
+          gfx.beginTextureFill({ texture, matrix, alpha: 0.5 });
           gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
           gfx.endFill();
           break;
@@ -296,17 +288,6 @@ export default function Decor(props) {
  * @typedef ToggleLocalDecorOpts
  * @property {Geomorph.GmRoomId[]} [added]
  * @property {Geomorph.GmRoomId[]} [removed]
- */
-
-/**
- * @typedef {(
- *  | 'circle-right'
- *  | 'standing'
- *  | 'sitting'
- *  | 'lying'
- *  | 'info'
- *  | 'road-works'
- * )} DecorIconKey
  */
 
 const tempMatrix = new Matrix;

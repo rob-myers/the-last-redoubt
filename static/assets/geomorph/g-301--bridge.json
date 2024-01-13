@@ -2370,6 +2370,20 @@
         }
       },
       {
+        "meta": {"decor": true, "cpu": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[170, 341], [170, 351], [160, 351], [160, 341]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "cpu": true},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[140, 341], [140, 351], [130, 351], [130, 341]]]
+        }
+      },
+      {
         "meta": {"decor": true, "circle": true, "hatch": true},
         "poly": {
           "type": "Polygon",
@@ -4043,7 +4057,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "stateroom"},
+        "meta": {"_decor": true, "go": true, "label": "stateroom"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[72, 394.8], [72, 392.8], [74, 392.8], [74, 394.8]]]
@@ -4151,7 +4165,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "stateroom"},
+        "meta": {"_decor": true, "go": true, "label": "stateroom"},
         "poly": {
           "type": "Polygon",
           "coordinates": [

@@ -1589,6 +1589,22 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
 }
 
 /**
+ * 🚧 could pre-compute, setting `meta.icon`
+ * @param {Geomorph.PointMeta} meta 
+ * @returns {NPC.DecorPointClassKey}
+ */
+export function getDecorClassByMeta(meta) {
+  return (
+    meta.stand && 'standing-man' || 
+    meta.sit && 'sitting-man' || 
+    meta.lie && 'lying-man' || 
+    meta.label && 'info' || 
+    meta.cpu && 'computer' || 
+    'road-works'
+  );
+}
+
+/**
  * Each decor lies in precisely one room, this being determined by its center.
  * We compute this origin without using `derivedBounds`.
  * @param {NPC.DecorDef} decor 
