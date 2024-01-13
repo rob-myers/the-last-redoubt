@@ -1,12 +1,12 @@
 import React from "react";
-import { RenderTexture, Matrix } from "@pixi/core";
+import { RenderTexture, Matrix, Rectangle } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 import { Assets } from "@pixi/assets";
 import { Text } from "@pixi/text";
 import { Container } from "@pixi/display";
 import { useQueries } from "@tanstack/react-query";
 
-import { pause, testNever } from "../service/generic";
+import { mapValues, testNever } from "../service/generic";
 import { Poly, Vect } from "../geom";
 import { gmScale } from "../world/const";
 import { getGmRoomKey } from "../service/geomorph";
@@ -312,10 +312,15 @@ export default function FOV(props) {
     })).concat({
       queryKey: ['decor-spritesheet'],
       async queryFn() {
+        /** @type {import('pixi.js').Texture} */
         const tex = await Assets.load(`/assets/decor/spritesheet.webp`);
-        const { lookup }  = /** @type {NPC.DecorSpriteSheet} */ (
-          await Assets.load(`/assets/decor/spritesheet.json`)
-        );
+        /** @type {NPC.DecorSpriteSheet} */
+        const meta  = await Assets.load(`/assets/decor/spritesheet.json`);
+        const lookup = mapValues(meta.lookup, ({ x, y, width, height }) => {
+          const texture = tex.clone();
+          texture.frame = new Rectangle(x, y, width, height);
+          return texture;
+        });
         api.decor.sheet = { tex, lookup };
         return null;
       },

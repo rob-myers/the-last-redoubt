@@ -19,29 +19,6 @@ export default function Decor(props) {
   const { api } = props;
   const { gms } = api.gmGraph;
   
-  // 🚧 move into "decor spritesheet"
-  useQuery({
-    queryKey: [`decor-icon-textures`],
-    queryFn: async () => {
-      await Promise.all(/** @type {const} */ ([
-        { key: 'circle-right', filename: 'circle-right.svg'},
-        { key: 'standing', filename: 'standing-person.invert.svg'},
-        { key: 'sitting', filename: 'sitting-silhouette.invert.svg'},
-        { key: 'lying', filename: 'lying-man.invert.svg'},
-        { key: 'info', filename: 'info-icon.invert.svg'},
-        { key: 'road-works', filename: 'road-works.invert.svg'},
-      ]).map(async ({ key, filename }) =>
-        state.icon[key] = await Assets.load(`/assets/icon/${filename}`)
-      ));
-
-      props.onLoad(state); // ready when icons loaded
-      return null;
-    },
-    throwOnError: true,
-    gcTime: Infinity,
-    staleTime: Infinity,
-    refetchOnMount: 'always',
-  });
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     gfx: new Graphics(),
@@ -54,7 +31,6 @@ export default function Decor(props) {
       height: gmScale * gm.pngRect.height,
       // resolution: window.devicePixelRatio > 1 ? 2 : 1,
     })),
-    icon: /** @type {*} */ ({}), // 🚧 remove
     sheet: /** @type {*} */ ({}),
     showColliders: false,
 
@@ -125,19 +101,19 @@ export default function Decor(props) {
           gfx.endFill();
           break;
         case 'point':
-          const radius = decorIconRadius + 1;
+          const radius = decorIconRadius;
           // background circle
           gfx.lineStyle({ color: '#77777777', width: 1 });
           gfx.beginFill(0);
-          gfx.drawCircle(decor.x, decor.y, radius + 1);
+          gfx.drawCircle(decor.x, decor.y, radius + 2);
           gfx.endFill();
 
           // icon
           const { meta } = decor;
-          const texture = state.icon[
-            meta.stand && 'standing' || 
-            meta.sit && 'sitting' || 
-            meta.lie && 'lying' || 
+          const texture = state.sheet.lookup[
+            meta.stand && 'standing-man' || 
+            meta.sit && 'sitting-man' || 
+            meta.lie && 'lying-man' || 
             meta.label && 'info' || 
               'road-works'
           ];
@@ -290,8 +266,10 @@ export default function Decor(props) {
  * @property {import('pixi.js').Graphics} gfx
  * @property {import('pixi.js').Matrix[]} mat
  * @property {import('pixi.js').RenderTexture[]} tex
- * @property {Record<DecorIconKey, import('pixi.js').Texture<import('pixi.js').Resource>>} icon
- * @property {{ tex: import('pixi.js').Texture; lookup: NPC.DecorSpriteSheet['lookup'] }} sheet
+ * @property {{
+ *   tex: import('pixi.js').Texture;
+ *   lookup: Record<NPC.DecorPointClassKey, import('pixi.js').Texture>;
+ * }} sheet
  * 
  * @property {boolean} showColliders
  * @property {Record<string, NPC.DecorDef>} decor

@@ -777,6 +777,7 @@ declare namespace NPC {
   }
 
   export type DecorPointClassKey = (
+    | 'circle-right'
     | 'computer'
     | 'info'
     | 'lying-man'

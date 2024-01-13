@@ -135,8 +135,8 @@ export default function DebugWorld(props) {
           }
 
           // Arrows (always drawn, optionally clickable)
-          const texture = api.decor.icon["circle-right"];
-          const scale = (2 * debugArrowRadius) / texture.width;
+          const texture = api.decor.sheet.lookup["circle-right"];
+          const scale = (2 * debugArrowRadius) / texture.frame.width;
           
           gfx.lineStyle({ width: 0 });
           room.navArrows.forEach(({ arrowPos, angle }) => {

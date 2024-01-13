@@ -12,8 +12,8 @@
   - ✅ `decor-sheet` outputs image spritesheet.json
   - ✅ `decor-sheet` outputs webp
   - ✅ load spritesheet into Decor
-  - 🚧 use spritesheet instead of `decor.icon`
-  - place on many tables
+  - ✅ use spritesheet instead of `decor.icon`
+  - 🚧 place on many tables
 
 - more tables in 301
 - more tables in 101
