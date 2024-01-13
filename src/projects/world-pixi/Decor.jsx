@@ -18,7 +18,6 @@ import { colMatFilter2 } from "./const";
 export default function Decor(props) {
   const { api } = props;
   const { gms } = api.gmGraph;
-  
 
   const state = useStateRef(/** @type {() => State} */ () => ({
     gfx: new Graphics(),
@@ -233,6 +232,7 @@ export default function Decor(props) {
 
   React.useEffect(() => {
     process.env.NODE_ENV === 'development' && api.isReady() && state.renderAll();
+    props.onLoad(state);
   }, []);
 
   return (
