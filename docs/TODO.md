@@ -5,6 +5,9 @@
 - 🚧 start new repo `npc-cli`
   - 🚧 new layout i.e. right-pane with Tabs
 
+- ✅ fix navmesh inside hull doors when wallOutset is not 12
+  - ℹ️ it was just drawn incorrectly
+
 - 🚧 improve decor points
   - ✅ have folder of SVGs
   - ✅ have computer icon SVG
@@ -13,8 +16,19 @@
   - ✅ `decor-sheet` outputs webp
   - ✅ load spritesheet into Decor
   - ✅ use spritesheet instead of `decor.icon`
-  - 🚧 place on many tables
+  - ✅ remove extra--tv
+  - 🚧 better tv "icon"
+    - i.e. top-down tv rather than icon
 
+- npc should only barely intersect tables
+  - outset obstacles more
+- show decor in GeomorphEdit
+  - ✅ show points
+  - 🚧 show correct icon
+
+- BUG pointerdown not detected after resized to full screen
+
+- place decor points on many tables
 - more tables in 301
 - more tables in 101
 
