@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 150 30" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 150 32" xmlns="http://www.w3.org/2000/svg">
   <g style="" transform="">
     <title>original</title>
-    <path style="fill: rgb(17, 17, 17); stroke: rgb(255, 255, 255);" d="M 75 1 H 75 A 15 14 0 0 1 90 15 V 24 A 5 5 0 0 1 85 29 H 65 A 5 5 0 0 1 60 24 V 15 A 15 14 0 0 1 75 1 Z"/>
-    <path style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);" d="M 50 6.5 L 100 6.5 C 102.419 6.5 104.437 8.218 104.9 10.5 L 144 10.5 C 146.209 10.5 148 12.291 148 14.5 L 148 20.5 L 2 20.5 L 2 14.5 C 2 12.291 3.791 10.5 6 10.5 L 45.1 10.5 C 45.563 8.218 47.581 6.5 50 6.5 Z"/>
-    <path d="M 2 16.566 L 148 16.566 L 148 24.5 L 2 24.5 L 2 16.566 Z" style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);"/>
+    <path style="fill: rgb(17, 17, 17); stroke: rgb(255, 255, 255);" d="M 75 2 C 83.284 2 90 8.268 90 16 L 90 25 C 90 27.761 87.761 30 85 30 L 65 30 C 62.239 30 60 27.761 60 25 L 60 16 C 60 8.268 66.716 2 75 2 Z"/>
+    <path style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);" d="M 50 7.5 L 100 7.5 C 102.419 7.5 104.437 9.218 104.9 11.5 L 144 11.5 C 146.209 11.5 148 13.291 148 15.5 L 148 21.5 L 2 21.5 L 2 15.5 C 2 13.291 3.791 11.5 6 11.5 L 45.1 11.5 C 45.563 9.218 47.581 7.5 50 7.5 Z"/>
+    <path d="M 2 17.566 L 148 17.566 L 148 25.5 L 2 25.5 L 2 17.566 Z" style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);"/>
   </g>
   <g style="pointer-events: none; visibility: hidden;">
     <title>obstacles</title>

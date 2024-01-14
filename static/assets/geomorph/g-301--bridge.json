@@ -2284,31 +2284,17 @@
         }
       },
       {
-        "meta": {"decor": true, "cpu": true, "width": 30},
+        "meta": {"decor": true, "cpu": true, "width": 40},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[170, 347], [170, 357], [160, 357], [160, 347]]]
-        }
-      },
-      {
-        "meta": {"decor": true, "cpu": true, "width": 30},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[140, 347], [140, 357], [130, 357], [130, 347]]]
+          "coordinates": [[[155, 347], [155, 357], [145, 357], [145, 347]]]
         }
       },
       {
         "meta": {"decor": true, "do": true, "stand": true, "orient": 90},
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[170, 330], [170, 340], [160, 340], [160, 330]]]
-        }
-      },
-      {
-        "meta": {"decor": true, "do": true, "stand": true, "orient": 90},
-        "poly": {
-          "type": "Polygon",
-          "coordinates": [[[140, 330], [140, 340], [130, 340], [130, 330]]]
+          "coordinates": [[[155, 330], [155, 340], [145, 340], [145, 330]]]
         }
       },
       {
