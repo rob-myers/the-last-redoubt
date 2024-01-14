@@ -2,7 +2,6 @@ import React from "react";
 import useSiteStore, { KeyedComponent } from "store/site.store";
 import { getTabIdentifier, TabMeta } from "model/tabs/tabs.model";
 import { getComponent } from "model/tabs/lookup";
-import { useQueryOnce } from "projects/hooks/use-query-utils";
 import TabContents from "./TabContents";
 
 export default function Tab(props: Props) {
@@ -23,38 +22,33 @@ function useEnsureComponent(
   { tabsKey, ...meta }: Props,
   component: KeyedComponent | null,
 ) {
-  // 🤔 have we fixed this:
-  // site.store.ts:135 Warning: Cannot update a component (`Tab`) while rendering a different component (`Layout`). To locate the bad setState() call inside `Layout`,
-  useQueryOnce(
-    `ensure-component-${meta.filepath}`,
-    async function queryFn() {
-      if (component) {
-        if (JSON.stringify(component.meta) !== JSON.stringify(meta)) {
-          console.warn('Saw different TabMeta\'s with same induced name', component.meta, meta);
-        }
-        component.instances++;
-        component.disabled[tabsKey] = true; // ?
-      } else {
-        await createKeyedComponent(tabsKey, meta).then(
-          createdComponent => {
-            window.setTimeout(() => {
-              // If parent tabs not disabled, wake this component, e.g.
-              // - wake 1st tab if tabs initially enabled
-              // - wake 2nd tab on 1st show
-              // - don't wake 1st tab when initially disabled
-              const parentTabs = useSiteStore.getState().tabs[tabsKey];
-              if (parentTabs?.disabled === false) {
-                setTimeout(() => {
-                  useSiteStore.api.setTabDisabled(parentTabs.key, createdComponent.key, false);
-                }, 300);
-              }
-            });
-          }
-        );
+  // 🚧 site.store.ts:135 Warning: Cannot update a component (`Tab`) while rendering a different component (`Layout`). To locate the bad setState() call inside `Layout`,
+  React.useEffect(() => {
+    if (component) {
+      if (JSON.stringify(component.meta) !== JSON.stringify(meta)) {
+        console.warn('Saw different TabMeta\'s with same induced name', component.meta, meta);
       }
-      return null;
-    },
-  );
+      component.instances++;
+      component.disabled[tabsKey] = true; // ?
+    } else {
+      createKeyedComponent(tabsKey, meta).then(
+        createdComponent => {
+          window.setTimeout(() => {
+            // If parent tabs not disabled, wake this component, e.g.
+            // - wake 1st tab if tabs initially enabled
+            // - wake 2nd tab on 1st show
+            // - don't wake 1st tab when initially disabled
+            const parentTabs = useSiteStore.getState().tabs[tabsKey];
+            if (parentTabs?.disabled === false) {
+              setTimeout(() => {
+                useSiteStore.api.setTabDisabled(parentTabs.key, createdComponent.key, false);
+              }, 300);
+            }
+          });
+        }
+      );
+    }
+  }, []);
 }
 
 type Props = TabMeta & { tabsKey: string };
