@@ -14,6 +14,8 @@ import { createCanvas, loadImage } from 'canvas';
 import { ansi } from "../projects/service/const";
 import { saveCanvasAsFile, writeAsJson } from '../projects/service/file';
 import { assertDefined } from '../projects/service/generic';
+import { decorSheetSetup } from '../projects/service/const';
+import { warn } from '../projects/service/log';
 import { runYarnScript } from './service';
 
 const decorSvgsFolder = 'static/assets/decor';
@@ -21,13 +23,31 @@ const outputPngPath = `${decorSvgsFolder}/spritesheet.png`;
 const outputJsonPath = `${decorSvgsFolder}/spritesheet.json`;
 const packedPadding = 2;
 const rectsToPack = /** @type {import("maxrects-packer").Rectangle[]} */ ([]);
-const imageDim = 128;
 const canvas = createCanvas(1, 1);
 const ctxt = canvas.getContext('2d');
 
 (async function main() {
 
-  const files = fs.readdirSync(decorSvgsFolder).filter(x => x.endsWith('.svg'));
+  const filenames = fs.readdirSync(decorSvgsFolder).filter(x => x.endsWith('.svg'));
+
+  /**
+   * Compute each SVG contents, and intended width/height.
+   * Aligned to @see {filenames}
+   */
+  const metas = filenames.map(filename => {
+    const svgContents = fs.readFileSync(`${decorSvgsFolder}/${filename}`).toString();
+    const viewBox = cheerio.load(svgContents)('svg').first().attr('viewBox');
+    const key = filenameToKey(filename);
+    let { width, height } = decorSheetSetup[key];
+    if (height === undefined && viewBox) {
+      const [,, w, h] = viewBox.split(' ').map(Number);
+      height = Math.ceil((h/w) * width);
+    } else {
+      warn(`${filename}: SVG lacks viewBox`);
+      height = width;
+    }
+    return { key, svgContents, width, height, viewBox };
+  });
 
   // Infer spritesheet packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
@@ -35,8 +55,9 @@ const ctxt = canvas.getContext('2d');
     border: packedPadding,
     // smart: false,
   });
-  for (const filename of files) {
-    addRectToPack(imageDim, imageDim, filenameToKey(filename));
+  for (const [index, filename] of filenames.entries()) {
+    const { width, height } = metas[index];
+    addRectToPack(width, height, filenameToKey(filename));
   }
   packer.addArray(rectsToPack);
   const { bins } = packer;
@@ -51,9 +72,7 @@ const ctxt = canvas.getContext('2d');
   const bin = bins[0];
   const packedWidth = bin.width;
   const packedHeight = bin.height;
-  canvas.width = packedWidth;
-  canvas.height = packedHeight;
-
+  
   // Create JSON
   const json = /** @type {NPC.DecorSpriteSheet} */ ({ lookup: {} });
   bin.rects.forEach(r => json.lookup[/** @type {NPC.DecorPointClassKey} */ (r.data.name)] = {
@@ -61,17 +80,19 @@ const ctxt = canvas.getContext('2d');
     x: r.x, y: r.y, width: r.width, height: r.height,
   });
   writeAsJson(json, outputJsonPath);
+  canvas.width = packedWidth;
+  canvas.height = packedHeight;
 
   // Create PNG, WEBP
-  for (const filename of files) {
+  for (const [index, filename] of filenames.entries()) {
     const rect = assertDefined(bin.rects.find((x) => x.data.name === filenameToKey(filename)));
+    const { svgContents, width, height } = metas[index];
 
     // transform SVG to specified dimension
-    const svgContents = fs.readFileSync(`${decorSvgsFolder}/${filename}`).toString();
     const $ = cheerio.load(svgContents);
     const svgEl = $('svg').first();
-    svgEl.attr('width', `${imageDim}`);
-    svgEl.attr('height', `${imageDim}`);
+    svgEl.attr('width', `${width}`);
+    svgEl.attr('height', `${height}`);
     const transformedSvgContents = svgEl.toString();
 
     // draw image via data url
@@ -94,8 +115,10 @@ function addRectToPack(width, height, name) {
 
 /**
  * e.g. `foo.svg` -> `foo`
- * @param {string} filename 
+ * @param {string} filename
  */
 function filenameToKey(filename) {
-  return filename.split('.').slice(0, -1).join('.');
+  return /** @type {NPC.DecorPointClassKey} */ (
+    filename.split('.').slice(0, -1).join('.')
+  );
 }

@@ -99,22 +99,32 @@ export default function Decor(props) {
           break;
         case 'point':
           const radius = decorIconRadius;
-          // background circle
-          gfx.lineStyle({ color: '#ffffff', width: 0, alpha: 0.25 });
-          gfx.beginFill(0);
-          gfx.drawCircle(decor.x, decor.y, radius + 2);
-          gfx.endFill();
-
-          // icon
           const { meta } = decor;
           const texture = state.sheet.lookup[getDecorClassByMeta(meta)];
-          const scale = (2 * radius) / texture.width;
-          // ℹ️ can ignore transform of `gfx`
-          const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
-          gfx.line.width = 0;
-          gfx.beginTextureFill({ texture, matrix, alpha: 0.5 });
-          gfx.drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius);
-          gfx.endFill();
+
+          if (typeof meta.width !== 'number') {
+            // background circle and icon
+            gfx.lineStyle({ color: '#ffffff', width: 0, alpha: 0.25 })
+              .beginFill(0, 0.25)
+              .drawCircle(decor.x, decor.y, radius + 2).endFill();
+            const scale = (2 * radius) / texture.width;
+            const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - radius, decor.y - radius);
+            gfx.line.width = 0;
+            gfx.beginTextureFill({ texture, matrix, alpha: 0.5 })
+              .drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius)
+              .endFill();
+          } else {
+            // image scaled to specified width
+            // 🚧 support meta.angle
+            const scale = meta.width / texture.width;
+            const width = meta.width;
+            const height = width * (texture.height / texture.width);
+            const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - width/2, decor.y - height/2);
+            gfx.beginTextureFill({ texture, matrix })
+              .drawRect(decor.x - width/2, decor.y - height/2, width, height)
+              .endFill();
+          }
+          
           break;
         case 'rect':
           if (!state.showColliders) break;

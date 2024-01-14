@@ -22,7 +22,7 @@ import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
 
-/** @param {{ disabled?: boolean }} props */
+/** @param {Props} props */
 export default function GeomorphEdit({ disabled }) {
   const [layoutKey, setLayoutKey] = React.useState(
     /** @returns {Geomorph.GeomorphKey} */
@@ -389,3 +389,7 @@ const rootCss = css`
 `;
 
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
+
+/**
+ * @typedef {{ disabled?: boolean }} Props
+ */

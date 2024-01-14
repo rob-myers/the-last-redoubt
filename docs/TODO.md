@@ -4,9 +4,7 @@
 
 - 🚧 start new repo `npc-cli`
   - 🚧 new layout i.e. right-pane with Tabs
-
-- ✅ fix navmesh inside hull doors when wallOutset is not 12
-  - ℹ️ it was just drawn incorrectly
+  - redo Tabs avoiding "cannot update component" error?
 
 - 🚧 improve decor points
   - ✅ have folder of SVGs
@@ -17,8 +15,14 @@
   - ✅ load spritesheet into Decor
   - ✅ use spritesheet instead of `decor.icon`
   - ✅ remove extra--tv
-  - 🚧 better tv "icon"
-    - i.e. top-down tv rather than icon
+  - 🚧 better computer "icon"
+    - ✅ decor spritesheet images have specified width
+    - ✅ can specify height too
+    - ✅ top-down computer rather than icon
+    - ✅ `decor point cpu width=100`
+    - 🚧 `decor point cpu width=100 angle=90`
+    - 🚧 use larger image (svgPngScale under-the-hood)
+
 
 - npc should only barely intersect tables
   - outset obstacles more
@@ -727,6 +731,9 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ fix navmesh inside hull doors when wallOutset is not 12
+  - ℹ️ it was just drawn incorrectly
 
 - ✅ improve walk -> idle transition
   - ❌ try temp change walk speed so end at nearest idle

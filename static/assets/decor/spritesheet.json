@@ -1,47 +1,47 @@
 {
   "lookup": {
+    "computer": {
+      "name": "computer",
+      "x": 2,
+      "y": 2,
+      "width": 256,
+      "height": 52
+    },
     "circle-right": {
       "name": "circle-right",
       "x": 2,
-      "y": 2,
-      "width": 128,
-      "height": 128
+      "y": 56,
+      "width": 64,
+      "height": 64
     },
-    "computer": {
-      "name": "computer",
-      "x": 132,
-      "y": 2,
-      "width": 128,
-      "height": 128
-    },
-    "info": {"name": "info", "x": 2, "y": 132, "width": 128, "height": 128},
+    "info": {"name": "info", "x": 68, "y": 56, "width": 64, "height": 64},
     "lying-man": {
       "name": "lying-man",
-      "x": 132,
-      "y": 132,
-      "width": 128,
-      "height": 128
+      "x": 134,
+      "y": 56,
+      "width": 64,
+      "height": 64
     },
     "road-works": {
       "name": "road-works",
-      "x": 262,
-      "y": 2,
-      "width": 128,
-      "height": 128
+      "x": 2,
+      "y": 122,
+      "width": 64,
+      "height": 64
     },
     "sitting-man": {
       "name": "sitting-man",
-      "x": 262,
-      "y": 132,
-      "width": 128,
-      "height": 128
+      "x": 68,
+      "y": 122,
+      "width": 64,
+      "height": 64
     },
     "standing-man": {
       "name": "standing-man",
-      "x": 2,
-      "y": 262,
-      "width": 128,
-      "height": 128
+      "x": 134,
+      "y": 122,
+      "width": 64,
+      "height": 64
     }
   }
 }
