@@ -262,9 +262,9 @@ export function parseJsonArg(input) {
 export function invertDrawnImage(image, tempCtxt, dstCtxt, fillColor = '#ffffff') {
 	createMonochromeMask(image, tempCtxt, fillColor);
 	// Take difference to obtain inverted image
-    dstCtxt.globalCompositeOperation = 'difference';
-    dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
-    dstCtxt.globalCompositeOperation = 'source-over';
+	dstCtxt.globalCompositeOperation = 'difference';
+	dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
+	dstCtxt.globalCompositeOperation = 'source-over';
 }
 
 /**
@@ -275,8 +275,8 @@ export function invertDrawnImage(image, tempCtxt, dstCtxt, fillColor = '#ffffff'
  */
 export function darkenDrawnImage(image, tempCtxt, dstCtxt, fillColor) {
 	createMonochromeMask(image, tempCtxt, fillColor);
-    dstCtxt.globalCompositeOperation = 'source-over';
-    dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
+	dstCtxt.globalCompositeOperation = 'source-over';
+	dstCtxt.drawImage(/** @type {CanvasImageSource} */ (tempCtxt.canvas), 0, 0);
 }
 
 /**

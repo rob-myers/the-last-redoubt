@@ -1,6 +1,6 @@
 import React from "react";
 import { RenderTexture, Matrix, Texture } from "@pixi/core";
-import { Graphics, LINE_JOIN } from "@pixi/graphics";
+import { Graphics } from "@pixi/graphics";
 
 import { Poly, Rect } from "../geom";
 import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, defaultNpcInteractRadius, gmScale } from "../world/const";

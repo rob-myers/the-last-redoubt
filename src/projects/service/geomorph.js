@@ -27,11 +27,15 @@ import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
  */
 export async function createLayout(opts) {
   /** @type {Geomorph.ParsedLayout['groups']} */
-  const groups = { obstacles: [], singles: [], walls: [] };
-  const m = new Mat;
+  const groups = {
+    obstacles: [],
+    singles: [],
+    walls: [],
+  };
+  const m = new Mat();
 
-  // Extend opts.layout
   extendLayoutUsingNestedSymbols(opts);
+  
   /** Last seen transform of non-nested symbol */
   let postTransform = /** @type {Geom.SixTuple} */ ([1, 0, 0, 1, 0, 0]);
   /** Previously seen non-nested symbols */
@@ -54,6 +58,7 @@ export async function createLayout(opts) {
     }
     addLayoutDefItemToGroups(item, opts, m, groups);
   });
+
   // Ensure well-signed polygons
   groups.singles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
   groups.obstacles.forEach(({ poly }) => poly.fixOrientation().precision(precision));
@@ -64,8 +69,7 @@ export async function createLayout(opts) {
   const hullSym = symbols[0];
   const hullOutline = hullSym.hull.map(x => x.clone().removeHoles()); // Not transformed
   const windowPolys = singlesToPolys(groups.singles, 'window');
-  /** We keep a reference to uncut walls (group.walls overwritten below) */
-  const uncutWalls = groups.walls;
+  const uncutWalls = groups.walls; // group.walls overwritten below
 
   // Rooms (induced by all walls)
   const allWalls = Poly.union(hullSym.hull.concat(uncutWalls, windowPolys)).map(x => x.precision(precision));
@@ -106,7 +110,6 @@ export async function createLayout(opts) {
     )
   , /** @type {typeof groups['singles']} */ ([]));
 
-
   // Labels
   const measurer = createCanvas(0, 0).getContext('2d');
   measurer.font = labelMeta.font;
@@ -131,27 +134,22 @@ export async function createLayout(opts) {
     extendHullDoorTags(door, hullRect);
   });
 
-  /** Sometimes large disjoint nav areas must be discarded  */
-  const ignoreNavPoints = groups.singles
-    .filter(x => x.meta['ignore-nav']).map(x => x.poly.center)
-  ;
+  // Can discard disjoint nav areas
+  const ignoreNavPoints = groups.singles.filter(x => x.meta['ignore-nav']).map(x => x.poly.center);
 
   /**
-   * 🚧
-   * - Navigation polygon obtained by cutting outset walls and outset obstacles
-   *   from `hullOutline`, thereby creating doorways (including doors, but not all of hull door).
-   * - We also discard polygons intersecting ignoreNavPoints,
-   *   or if they are deemed too small.
+   * Navigation polygon obtained by cutting outset walls and outset obstacles
+   * from `hullOutline`, thereby creating doorways (including doors, but not all of hull door).
+   * 
+   * Also discard polygons intersecting ignoreNavPoints, and "small areas".
    */
-  let navPolyWithDoors = Poly.cutOut(
+  const navPolyWithDoors = Poly.cutOut(
     [ // Non-unioned walls avoids outset issue (self-intersection)
       ...unjoinedWalls.flatMap(x => geom.createOutset(x, wallOutset)),
       ...groups.obstacles.flatMap(x => geom.createOutset(x.poly, obstacleOutset)),
     ],
     hullOutline,
-  ).map(
-    x => x.cleanFinalReps().fixOrientation().precision(precision)
-  ).filter(poly => {
+  ).map(x => x.fixOrientation().precision(precision).cleanFinalReps()).filter(poly => {
     const { rect } = poly;
     return (
       !ignoreNavPoints.some(p => poly.contains(p))
@@ -164,11 +162,11 @@ export async function createLayout(opts) {
     doors.forEach(door => door.rect.intersects(rect) && (door.navGroupId = navGroupId));
     windows.forEach(window => window.rect.intersects(rect) && (window.navGroupId = navGroupId));
   });
-  doors.forEach((door, doorId) =>
-    (door.navGroupId === -1) && warn(`door ${doorId} is not attached to any navmesh`)
+  doors.forEach((door, doorId) => door.navGroupId === -1
+    && warn(`door ${doorId} is not attached to any navmesh`)
   );
 
-  /** Intersection of each door (angled rect) with navPoly */
+  /** Intersection of each door with navPoly */
   const navDoorPolys = doorPolys
     .flatMap(doorPoly => Poly.intersect([doorPoly], navPolyWithDoors))
     .map(x => x.cleanFinalReps())
@@ -179,7 +177,6 @@ export async function createLayout(opts) {
   /**
    * Apply Triangle triangulation library to `navPolySansDoors`.
    * - We add the doors back manually further below
-   * - Currently triangle-wasm runs server-side only
    * - Errors thrown by other code seems to trigger error at:
    *   > `{REPO_ROOT}/node_modules/triangle-wasm/triangle.out.js:9`
    */
@@ -196,7 +193,7 @@ export async function createLayout(opts) {
 
   /**
    * Extend navDecomp with 2 triangles for each door
-   * - We assume well-formedness i.e. exactly 2 edges already present
+   * - Assume well-formed i.e. exactly 2 edges already present
    *   in the triangulation. If not we warn and skip the door.
    * - We do not ensure the sign of these triangles (e.g. clockwise)
    */
