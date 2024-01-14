@@ -84,7 +84,7 @@ const toSpineHeadOrient = {
 export const spineHeadOrients = Object.values(toSpineHeadOrient);
 
 /** @type {Record<NPC.SpineAnimName, NPC.SpineAnimSetup>} */
-export const spineAnimToSetup = {
+export const spineAnimSetup = {
   idle: { animName: 'idle', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
   sit: { animName: 'sit', numFrames: 1, headOrientKey: 'top', stationaryFps: 0 },
   lie: { animName: 'lie', numFrames: 1, headOrientKey: 'face', stationaryFps: 0 },

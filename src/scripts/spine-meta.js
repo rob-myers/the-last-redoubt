@@ -14,7 +14,7 @@ import { keys, pause, precision } from "../projects/service/generic";
 import { warn } from "../projects/service/log";
 import { ansi } from "../projects/service/const";
 import { skeletonScale } from "../projects/world/const";
-import { spineAnimToSetup, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
+import { spineAnimSetup, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
 import {
@@ -84,7 +84,7 @@ export default async function main() {
   for (const anim of animations) {
     const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
 
-    if (!(animName in spineAnimToSetup)) {
+    if (!(animName in spineAnimSetup)) {
       warn(`animation ${animName} not specified in spineAnimToSetup`);
       continue;
     }
@@ -137,7 +137,7 @@ export default async function main() {
     spine.update(0);
 
     // run through animation so that `motion` is initially set
-    const { numFrames } = spineAnimToSetup[animName];
+    const { numFrames } = spineAnimSetup[animName];
     const frameDurSecs = anim.duration / numFrames;
     for (let frame = 0; frame < numFrames; frame++) {
       spine.update(frame === 0 ? 0 : frameDurSecs);

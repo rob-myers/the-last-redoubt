@@ -6,7 +6,7 @@ import { Poly, Rect, Vect } from '../geom';
 import { pause, precision, testNever } from "../service/generic";
 import { warn } from "../service/log";
 import { hasGmDoorId } from "../service/geomorph";
-import { npcRadius, npcClassToSpineHeadSkin, spineAnimToSetup, defaultNpcInteractRadius } from "./const";
+import { npcRadius, npcClassToSpineHeadSkin, spineAnimSetup, defaultNpcInteractRadius } from "./const";
 import { obscuredNpcOpacity, spawnFadeMs } from "../world/const";
 
 import spineMeta from "static/assets/npc/top_down_man_base/spine-meta.json";
@@ -609,7 +609,7 @@ export default function createNpc(def, api) {
       a.normalizedTime = 0;
       a.distance = 0;
       
-      const { headOrientKey } = spineAnimToSetup[animName]
+      const { headOrientKey } = spineAnimSetup[animName]
       const { animBounds, headFrames, neckPositions } = spineMeta.anim[animName];
       
       a.shared = getSharedAnimData(animName);
@@ -956,8 +956,8 @@ function getSharedAnimData(animName) {
     headFrames,
     neckPositions,
     rootDeltas,
-    headOrientKey: spineAnimToSetup[animName].headOrientKey,
-    stationaryFps: spineAnimToSetup[animName].stationaryFps,
+    headOrientKey: spineAnimSetup[animName].headOrientKey,
+    stationaryFps: spineAnimSetup[animName].stationaryFps,
   };
 }
 

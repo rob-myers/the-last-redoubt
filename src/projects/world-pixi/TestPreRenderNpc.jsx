@@ -3,7 +3,7 @@ import PixiReact from "@pixi/react";
 import { Sprite } from "@pixi/sprite";
 import { Texture, Rectangle } from "@pixi/core";
 
-import { spineAnimToSetup, worldUnitsPerMeter } from "./const";
+import { spineAnimSetup, worldUnitsPerMeter } from "./const";
 import useStateRef from "../hooks/use-state-ref";
 
 import spineMeta from 'static/assets/npc/top_down_man_base/spine-meta.json';
@@ -187,7 +187,7 @@ function createTestNpc(def, api) {
       // anim.headSkinName = headSkinName;
       npc.currTime = 0;
 
-      const { headOrientKey, stationaryFps, numFrames } = spineAnimToSetup[animName]
+      const { headOrientKey, stationaryFps, numFrames } = spineAnimSetup[animName]
       const { animBounds, headFrames, frameCount, rootDeltas, neckPositions } = spineMeta.anim[animName];
       anim.bodyRects = spineMeta.anim[animName].packedRects;
       anim.headFrames = headFrames;
