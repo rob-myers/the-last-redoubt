@@ -1,6 +1,6 @@
 import { createCanvas } from "canvas";
 import { Poly, Vect, Rect } from "../geom";
-import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, gmScale, preDarkenCssRgba, wallOutset } from "../world/const";
+import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, gmScale, preDarkenCssRgba, wallOutset, hullDoorLength } from "../world/const";
 import { labelMeta, singlesToPolys, drawTriangulation } from '../service/geomorph';
 import { computeCliques } from "../service/generic";
 import { invertDrawnImage, drawLine, fillPolygons, fillRing, setStyle, drawRotatedImage } from '../service/dom';
@@ -299,8 +299,7 @@ export function drawThinDoors(ctxt, layout) {
  * @param {Geomorph.ParsedLayout} layout
 */
 export function drawHullDoorBases(ctxt, layout) {
-  const hullDoorWidth = 40;
-  const navWidth = hullDoorWidth - 2 * wallOutset;
+  const navWidth = hullDoorLength - 2 * wallOutset;
   layout.doors.forEach(({ meta, normal, rect }) => {
     if (meta.hull) {
       const tangent = normal.clone().rotate(Math.PI/2);

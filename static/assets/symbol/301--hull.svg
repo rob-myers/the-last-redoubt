@@ -29,7 +29,7 @@
     <rect x="950" y="300" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor go label=corridor</title>
     </rect>
-    <rect x="930" y="194" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+    <rect x="931" y="194" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor go label=study</title>
     </rect>
     <rect x="-4" y="250" width="8" height="40" style="fill: rgb(255, 255, 255); stroke: rgb(0, 0, 0);">
@@ -200,20 +200,14 @@
     <image width="60" height="60" y="-600" style="transform-origin: -930px -570px;" x="-960" transform="matrix(-1, 0, 0, -1, 1860, 1140)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8BAMAAADI0sRBAAAAJ1BMVEUAAAAAAAAAAAArKysREREfHx9dXV0rKyvY2NhsbGwAAACioqI2NjbZIjHMAAAACHRSTlMAgEDvz9/fn1TGOWkAAADCSURBVDjLndW9DYNADIZhHEVKG+m662mYgBVuBhbIKB8beIX8DEC2i04UVpB4C7t9ZMSdz/ZwiHofIOyDXL/EtqzERcQ2IxcR3x7ITcRXR24iHp348hTx5MA9mbhuxPYWcd2IbRFxEbHNyEXAvZDBr7/Ya3EW615I4ibi0YF7LYgnR45kZv44/xofjK8lf6lcEi5oPIfcY4p0fsjcBrkminRu4Gz7RzqPHh5cqbEX6amRG5XJjHteFrxqeFHxmuMl+QPv2X6y8muj7gAAAABJRU5ErkJggg==">
       <title>symbol key=iris-valves--005--1x1</title>
     </image>
-    <rect y="242" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="10">
-      <title>symbol key=extra--table--004--0.4x0.2</title>
-    </rect>
     <rect y="242" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="36">
       <title>symbol key=extra--table--004--0.4x0.2</title>
     </rect>
     <rect y="242" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="182">
       <title>symbol key=extra--table--001--1x0.2</title>
     </rect>
-    <rect y="242" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="862">
+    <rect y="242" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="872">
       <title>symbol key=extra--table--004--0.4x0.2</title>
-    </rect>
-    <rect y="242" width="12" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="888">
-      <title>symbol key=extra--table--003--0.2x0.2</title>
     </rect>
     <rect y="242" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="960">
       <title>symbol key=extra--table--001--1x0.2</title>
@@ -227,9 +221,6 @@
     <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="1070">
       <title>symbol key=extra--table--001--1x0.2</title>
     </rect>
-    <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="1140">
-      <title>symbol key=extra--table--001--1x0.2</title>
-    </rect>
     <rect y="346" width="60" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);" x="120">
       <title>symbol key=extra--table--001--1x0.2</title>
     </rect>
@@ -240,9 +231,6 @@
       <title>symbol key=extra--table--001--1x0.2</title>
     </rect>
     <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-box: fill-box; transform-origin: 50% 50%;" x="36" transform="matrix(0, 1, -1, 0, 200, -6)">
-      <title>symbol key=extra--table--004--0.4x0.2</title>
-    </rect>
-    <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 200, 20)">
       <title>symbol key=extra--table--004--0.4x0.2</title>
     </rect>
     <rect y="552" width="24" height="12" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 48px 558px;" x="36" transform="matrix(0, 1, -1, 0, 302, -186)">
@@ -284,11 +272,17 @@
     <rect y="510" width="24" height="24" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0); transform-origin: 944px 522px;" x="932">
       <title>symbol key=extra--table--002--0.4x0.4</title>
     </rect>
-    <rect x="160" y="341" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
-      <title>decor cpu</title>
+    <rect x="160" y="347" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor cpu width=30</title>
     </rect>
-    <rect x="130" y="341" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
-      <title>decor cpu</title>
+    <rect x="130" y="347" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor cpu width=30</title>
+    </rect>
+    <rect x="160" y="330" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor do stand orient=90</title>
+    </rect>
+    <rect x="130" y="330" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
+      <title>decor do stand orient=90</title>
     </rect>
   </g>
 </svg>

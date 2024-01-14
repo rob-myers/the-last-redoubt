@@ -63,7 +63,6 @@ export const npcRadius = 13;
 
 //#endregion
 
-
 //#region spine
 
 /** @type {Record<NPC.SpineHeadSkinName, true>} */

@@ -88,7 +88,7 @@ export const hullOutset = 2;
 
 export const wallOutset = 14;
 
-export const obstacleOutset = 8;
+export const obstacleOutset = 12;
 
 /**
  * One grid square corresponds to 1.5 meters according to Starship Geomorphs 2.0.

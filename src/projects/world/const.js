@@ -46,8 +46,12 @@ export const npcSlowWalkSpeedFactor = 1;
 /** Now larger for mobile 🤔 maybe can change? */
 export const npcHeadRadiusPx = 10;
 
-/** `24 / 5` because we scale down SVG symbols */
+/** `24 / 5` after scaling down non-hull symbols */
 export const doorWidth = 4.8;
+/** `230 / 5` after scaling down non-hull symbols */
+export const doorLength = 46;
+
+export const hullDoorLength = 40;
 
 // export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.3)';
 export const geomorphFilter = 'brightness(50%) hue-rotate(0deg) sepia(0.1) contrast(1.2)';
@@ -86,7 +90,7 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
  */
 export const gmScale = 2.5;
 
-export const decorIconRadius = 6;
+export const decorIconRadius = 5;
 
 /**
  * - Each value is an integer in [0, 255].
@@ -105,6 +109,6 @@ export const hitTestRed = {
 
 export const debugDoorOffset = 10;
 export const debugArrowRadius = 4;
-export const debugArrowAlpha = 0.25;
+export const debugArrowAlpha = 0.1;
 
 export const skeletonScale = 0.1;

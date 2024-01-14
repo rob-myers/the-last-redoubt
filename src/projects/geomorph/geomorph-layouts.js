@@ -189,7 +189,7 @@ const layoutDefs = {
 
       { id: 'window--007--3x0.2', y: 7 * 60 - 8, x: 4 * 60, },
       
-      { id: 'empty-room--020--2x4', x: 18 * 60, flip: 'xy' },
+      { id: 'empty-room--020--2x4', x: 18 * 60, flip: 'xy', doors: ['n'] },
     ],
   },
   "g-303--passenger-deck": {
