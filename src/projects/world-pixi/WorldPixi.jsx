@@ -134,7 +134,6 @@ export default function WorldPixi(props) {
     return () => {
       removeCached([props.worldKey]);
       state.tweenGroup.removeAll();
-      state.renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);
 
@@ -167,6 +166,9 @@ export default function WorldPixi(props) {
             process.env.NODE_ENV === 'development' && (
               /** @type {*} */ (globalThis).__PIXI_APP__ = app
             );
+          }}
+          onUnmount={() => {
+            state.renderer.gl.getExtension('WEBGL_lose_context')?.loseContext();
           }}
           width={bounds.width || undefined}
           height={bounds.height || undefined}
