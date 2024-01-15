@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 150 32" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-1" gradientTransform="matrix(1.000068, -0.000707, 0.008987, 1.263325, -0.072498, -1.921843)">
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-1" gradientTransform="matrix(1.000068, -0.000707, 0.008987, 1.263325, -0.072498, 0.078157)">
       <stop offset="0" style=""/>
-      <stop offset="0.394" style="stop-color: rgb(102, 102, 102);"/>
+      <stop offset="0.394" style="stop-color: rgb(68, 68, 68);"/>
+      <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
+      <stop offset="1" style=""/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-2" gradientTransform="matrix(1.000068, -0.000707, 0.008987, 1.263325, -0.072498, -4.921843)">
+      <stop offset="0" style=""/>
+      <stop offset="0.394" style="stop-color: rgb(68, 68, 68);"/>
       <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
       <stop offset="1" style=""/>
     </linearGradient>
   </defs>
   <g style="" transform="">
     <title>original</title>
-    <path style="stroke: rgb(0, 0, 0); fill: rgb(51, 51, 51); stroke-width: 2px;" d="M 75 22.82 C 83.284 22.82 90 17.935 90 11.91 L 90 4.896 C 90 2.745 87.761 1 85 1 L 65 1 C 62.239 1 60 2.745 60 4.896 L 60 11.91 C 60 17.935 66.716 22.82 75 22.82 Z"/>
-    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-1');" d="M 50 7.5 L 100 7.5 C 102.419 7.5 104.437 9.261 104.9 11.6 L 144 11.6 C 146.209 11.6 148 13.435 148 15.698 L 148 21.847 L 2 21.847 L 2 15.698 C 2 13.435 3.791 11.6 6 11.6 L 45.1 11.6 C 45.563 9.261 47.581 7.5 50 7.5 Z"/>
-    <path style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 255); stroke-opacity: 0.25; stroke-width: 2px; fill-opacity: 0.5;" d="M 1.5 22 L 148.5 22 L 148.5 24.5 C 148.499 25.881 147.313 27 145.85 27 L 4.15 27 C 2.687 27 1.501 25.881 1.5 24.5 L 1.5 22 Z"/>
-    <rect x="55" y="14.327" width="42.397" height="3.472" style="fill: rgb(136, 136, 136);"/>
+    <path style="fill: rgb(51, 51, 51); stroke-width: 2px;" d="M 75 22.82 C 83.284 22.82 90 17.935 90 11.91 L 90 4.896 C 90 2.745 87.761 1 85 1 L 65 1 C 62.239 1 60 2.745 60 4.896 L 60 11.91 C 60 17.935 66.716 22.82 75 22.82 Z"/>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-1');" d="M 50 9.5 L 100 9.5 C 102.419 9.5 104.437 11.261 104.9 13.6 L 144 13.6 C 146.209 13.6 148 15.435 148 17.698 L 148 23.847 L 2 23.847 L 2 17.698 C 2 15.435 3.791 13.6 6 13.6 L 45.1 13.6 C 45.563 11.261 47.581 9.5 50 9.5 Z"/>
+    <path style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 255); stroke-opacity: 0.25; stroke-width: 2px; fill-opacity: 0.5;" d="M 1.5 24 L 148.5 24 L 148.5 26.5 C 148.499 27.881 147.313 29 145.85 29 L 4.15 29 C 2.687 29 1.501 27.881 1.5 26.5 L 1.5 24 Z"/>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-2'); mix-blend-mode: soft-light; opacity: 0.58;" d="M 50 4.5 L 100 4.5 C 102.419 4.5 104.437 6.261 104.9 8.6 L 144 8.6 C 146.209 8.6 148 10.435 148 12.698 L 148 18.847 L 2 18.847 L 2 12.698 C 2 10.435 3.791 8.6 6 8.6 L 45.1 8.6 C 45.563 6.261 47.581 4.5 50 4.5 Z"/>
   </g>
   <g style="pointer-events: none; visibility: hidden;">
     <title>obstacles</title>
