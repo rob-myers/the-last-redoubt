@@ -48,9 +48,8 @@ export const npcHeadRadiusPx = 10;
 
 /** `24 / 5` after scaling down non-hull symbols */
 export const doorWidth = 4.8;
-/** `230 / 5` after scaling down non-hull symbols */
-export const doorLength = 46;
 
+/** Hull door length is fixed, unlike non-hull doors. */
 export const hullDoorLength = 40;
 
 // export const geomorphFilter = 'brightness(50%) sepia(0.1) contrast(1.3)';

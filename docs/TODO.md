@@ -6,6 +6,8 @@
   - 🚧 new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
 
+- ✅ ensure 4-vertex doorways for current (obstacle, wall) outset
+
 - 🚧 improve decor points
   - ✅ have folder of SVGs
   - ✅ have computer icon SVG
@@ -93,6 +95,9 @@ npc events | filter '({ key, decor }) =>
   - 🚧 Decor:
   - 🚧 ...
 
+- add decor stand points when navmesh not possible
+  - e.g. 301 bridge fresher
+- support `transform-box: fill-box` in SVG symbols (or Re-orient each path)
 - save more space in spritesheet
   - needn't use `animBounds` for every frame of animation
   - try intersecting animBounds with skeleton.getBoundsRect()

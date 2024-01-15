@@ -10,7 +10,7 @@ import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
 import { imageService } from './image';
-import { decorIconRadius, gridDimWorld } from '../world/const';
+import { decorIconRadius } from '../world/const';
 import { roomGraphClass } from '../graph/room-graph';
 import { Builder } from '../pathfinding/Builder';
 import { fillRing, supportsWebp, parseJsArg } from "../service/dom";
@@ -181,18 +181,12 @@ export async function createLayout(opts) {
    *   > `{REPO_ROOT}/node_modules/triangle-wasm/triangle.out.js:9`
    */
   const navDecomp = opts.triangleService
-    ? await opts.triangleService.triangulate(
-        navPolySansDoors,
-        {
-          // minAngle: 10,
-          // maxSteiner: 100,
-          // maxArea: 750,
-        },
-      )
-    : { vs: [], tris: [] };
+    ? await opts.triangleService.triangulate(navPolySansDoors, { /** nav opts */ })
+    : { vs: [], tris: [] }
+  ;
 
   /**
-   * Extend navDecomp with 2 triangles for each door
+   * Extend @see navDecomp with 2 triangles for each door
    * - Assume well-formed i.e. exactly 2 edges already present
    *   in the triangulation. If not we warn and skip the door.
    * - We do not ensure the sign of these triangles (e.g. clockwise)
