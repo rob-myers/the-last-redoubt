@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 150 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-1" gradientTransform="matrix(1.000068, -0.000707, 0.008987, 1.263325, -0.072498, -1.921843)">
+      <stop offset="0" style=""/>
+      <stop offset="0.394" style="stop-color: rgb(102, 102, 102);"/>
+      <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
+      <stop offset="1" style=""/>
+    </linearGradient>
+  </defs>
   <g style="" transform="">
     <title>original</title>
-    <path style="fill: rgb(17, 17, 17); stroke: rgb(255, 255, 255);" d="M 75 2 C 83.284 2 90 8.268 90 16 L 90 25 C 90 27.761 87.761 30 85 30 L 65 30 C 62.239 30 60 27.761 60 25 L 60 16 C 60 8.268 66.716 2 75 2 Z"/>
-    <path style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);" d="M 50 7.5 L 100 7.5 C 102.419 7.5 104.437 9.218 104.9 11.5 L 144 11.5 C 146.209 11.5 148 13.291 148 15.5 L 148 21.5 L 2 21.5 L 2 15.5 C 2 13.291 3.791 11.5 6 11.5 L 45.1 11.5 C 45.563 9.218 47.581 7.5 50 7.5 Z"/>
-    <path d="M 2 17.566 L 148 17.566 L 148 25.5 L 2 25.5 L 2 17.566 Z" style="stroke-width: 2px; fill: rgb(255, 255, 255); stroke: rgb(68, 68, 68);"/>
+    <path style="stroke: rgb(0, 0, 0); fill: rgb(51, 51, 51); stroke-width: 2px;" d="M 75 22.82 C 83.284 22.82 90 17.935 90 11.91 L 90 4.896 C 90 2.745 87.761 1 85 1 L 65 1 C 62.239 1 60 2.745 60 4.896 L 60 11.91 C 60 17.935 66.716 22.82 75 22.82 Z"/>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-1');" d="M 50 7.5 L 100 7.5 C 102.419 7.5 104.437 9.261 104.9 11.6 L 144 11.6 C 146.209 11.6 148 13.435 148 15.698 L 148 21.847 L 2 21.847 L 2 15.698 C 2 13.435 3.791 11.6 6 11.6 L 45.1 11.6 C 45.563 9.261 47.581 7.5 50 7.5 Z"/>
+    <path style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 255); stroke-opacity: 0.25; stroke-width: 2px; fill-opacity: 0.5;" d="M 1.5 22 L 148.5 22 L 148.5 24.5 C 148.499 25.881 147.313 27 145.85 27 L 4.15 27 C 2.687 27 1.501 25.881 1.5 24.5 L 1.5 22 Z"/>
+    <rect x="55" y="14.327" width="42.397" height="3.472" style="fill: rgb(136, 136, 136);"/>
   </g>
   <g style="pointer-events: none; visibility: hidden;">
     <title>obstacles</title>
