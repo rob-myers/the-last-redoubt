@@ -7,7 +7,7 @@
       <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
       <stop offset="1" style=""/>
     </linearGradient>
-    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-2" gradientTransform="matrix(1.000068, -0.000707, 0.008987, 1.263325, -0.072498, -4.921843)">
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-2" gradientTransform="matrix(0.684978, -0.000707, 0.006155, 1.263325, 23.580481, -4.921843)">
       <stop offset="0" style=""/>
       <stop offset="0.394" style="stop-color: rgb(68, 68, 68);"/>
       <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
@@ -19,7 +19,7 @@
     <path style="fill: rgb(51, 51, 51); stroke-width: 2px;" d="M 75 22.82 C 83.284 22.82 90 17.935 90 11.91 L 90 4.896 C 90 2.745 87.761 1 85 1 L 65 1 C 62.239 1 60 2.745 60 4.896 L 60 11.91 C 60 17.935 66.716 22.82 75 22.82 Z"/>
     <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-1');" d="M 50 9.5 L 100 9.5 C 102.419 9.5 104.437 11.261 104.9 13.6 L 144 13.6 C 146.209 13.6 148 15.435 148 17.698 L 148 23.847 L 2 23.847 L 2 17.698 C 2 15.435 3.791 13.6 6 13.6 L 45.1 13.6 C 45.563 11.261 47.581 9.5 50 9.5 Z"/>
     <path style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 255); stroke-opacity: 0.25; stroke-width: 2px; fill-opacity: 0.5;" d="M 1.5 24 L 148.5 24 L 148.5 26.5 C 148.499 27.881 147.313 29 145.85 29 L 4.15 29 C 2.687 29 1.501 27.881 1.5 26.5 L 1.5 24 Z"/>
-    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-2'); mix-blend-mode: soft-light; opacity: 0.58;" d="M 50 4.5 L 100 4.5 C 102.419 4.5 104.437 6.261 104.9 8.6 L 144 8.6 C 146.209 8.6 148 10.435 148 12.698 L 148 18.847 L 2 18.847 L 2 12.698 C 2 10.435 3.791 8.6 6 8.6 L 45.1 8.6 C 45.563 6.261 47.581 4.5 50 4.5 Z"/>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-2'); opacity: 0.5;" d="M 57.877 4.5 L 92.123 4.5 C 93.78 4.5 95.162 6.261 95.479 8.6 L 122.26 8.6 C 123.773 8.6 125 10.435 125 12.698 L 125 18.847 L 25 18.847 L 25 12.698 C 25 10.435 26.227 8.6 27.74 8.6 L 54.521 8.6 C 54.838 6.261 56.22 4.5 57.877 4.5 Z"/>
   </g>
   <g style="pointer-events: none; visibility: hidden;">
     <title>obstacles</title>
