@@ -20,9 +20,8 @@
     - ✅ can specify height too
     - ✅ top-down computer rather than icon
     - ✅ `decor point cpu width=100`
-    - 🚧 `decor point cpu width=100 angle=90`
-    - 🚧 use larger image (svgPngScale under-the-hood)
-
+    - ✅ `decor point cpu width=100 angle=180`
+    - 🚧 darker and sharper?
 
 - npc should only barely intersect tables
   - outset obstacles more

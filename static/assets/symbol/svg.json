@@ -2901,7 +2901,7 @@
         }
       },
       {
-        "meta": {"decor": true, "cpu": true, "width": 40},
+        "meta": {"decor": true, "cpu": true, "width": 40, "angle": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[145, 347], [145, 357], [155, 357], [155, 347]]]
@@ -2919,7 +2919,7 @@
     "height": 600,
     "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1705247596041.4631
+    "lastModified": 1705322446185.356
   },
   "302--hull": {
     "key": "302--hull",

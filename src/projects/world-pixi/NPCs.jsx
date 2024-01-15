@@ -703,9 +703,10 @@ export default function NPCs(props) {
       let spawned = state.npc[e.npcKey];
       const { meta } = e.point;
       const position = meta && api.lib.isVectJson(meta.targetPos) ? {...meta.targetPos} : e.point;
+      // convert to pixi angle via `+90°`
       const angle = typeof meta?.orient === 'number'
-        ? (meta.orient + 90) * (Math.PI / 180) : e.angle ?? spawned?.getAngle() ?? 0;
-
+        ? (meta.orient + 90) * (Math.PI / 180) : e.angle ?? spawned?.getAngle() ?? 0
+      ;
       if (spawned) {// Respawn
         await spawned.cancel(true);
         spawned.epochMs = Date.now();

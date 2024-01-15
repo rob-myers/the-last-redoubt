@@ -2284,7 +2284,7 @@
         }
       },
       {
-        "meta": {"decor": true, "cpu": true, "width": 40},
+        "meta": {"decor": true, "cpu": true, "width": 40, "angle": 180},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[155, 347], [155, 357], [145, 357], [145, 347]]]

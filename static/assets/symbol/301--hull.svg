@@ -273,7 +273,7 @@
       <title>symbol key=extra--table--002--0.4x0.4</title>
     </rect>
     <rect x="145" y="347" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
-      <title>decor cpu width=40</title>
+      <title>decor cpu width=40 angle=180</title>
     </rect>
     <rect x="145" y="330" width="10" height="10" style="fill-opacity: 0.9; fill: rgb(0, 255, 0); stroke: rgb(0, 0, 0);">
       <title>decor do stand orient=90</title>

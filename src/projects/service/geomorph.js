@@ -694,10 +694,13 @@ function isHullSymbolKey(symbolKey) {
  * @param {Mat} roomTransformMatrix 
  */
 function modifySinglesMeta(meta, roomTransformMatrix) {
-  if (typeof meta.orient === 'number') {
-    // orientation must reflect parent room's transformation
+  if (typeof meta.orient === 'number') {// orientation must reflect parent room's transformation
     const newDegrees = roomTransformMatrix.transformAngle(meta.orient * (Math.PI / 180)) * (180 / Math.PI);
     meta.orient = Math.round(newDegrees < 0 ? 360 + newDegrees : newDegrees);
+  }
+  if (typeof meta.angle === 'number') {
+    const newDegrees = roomTransformMatrix.transformAngle(meta.angle * (Math.PI / 180)) * (180 / Math.PI);
+    meta.angle = Math.round(newDegrees < 0 ? 360 + newDegrees : newDegrees);
   }
   return meta;
 }
@@ -1670,9 +1673,12 @@ function instantiateLocalDecor(d, ctxt) {
         ...d.meta,
         ...ctxt.meta,
         // 🚧 cache?
-        orient: typeof d.meta.orient === 'number'
-          ? Math.round(ctxt.matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
-          : null,
+        ...typeof d.meta.orient === 'number' && {
+          orient: Math.round(ctxt.matrix.transformAngle(d.meta.orient * (Math.PI / 180)) * (180 / Math.PI))
+        },
+        ...typeof d.meta.angle === 'number' && {
+          angle: Math.round(ctxt.matrix.transformAngle(d.meta.angle * (Math.PI / 180)) * (180 / Math.PI)),
+        },
         ui: true,
       },
     };

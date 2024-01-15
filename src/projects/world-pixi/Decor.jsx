@@ -5,6 +5,7 @@ import { Graphics } from "@pixi/graphics";
 import { testNever } from "../service/generic";
 import { addToDecorGrid, decorContainsPoint, ensureDecorMetaGmRoomId, getDecorClassByMeta, getDecorRect, getGmRoomKey, isCollidable, isDecorPoint, normalizeDecor, queryDecorGridIntersect, removeFromDecorGrid, verifyDecor } from "../service/geomorph";
 import { decorIconRadius, gmScale } from "../world/const";
+import { Mat, Poly, Rect } from "../geom";
 
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
@@ -114,15 +115,19 @@ export default function Decor(props) {
               .drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius)
               .endFill();
           } else {
-            // image scaled to specified width
-            // 🚧 support meta.angle
-            const scale = meta.width / texture.width;
+            // image rotated + scaled to specified width
             const width = meta.width;
+            const scale = width / texture.width;
             const height = width * (texture.height / texture.width);
-            const matrix = tempMatrix.set(scale, 0, 0, scale, decor.x - width/2, decor.y - height/2);
-            gfx.beginTextureFill({ texture, matrix })
-              .drawRect(decor.x - width/2, decor.y - height/2, width, height)
-              .endFill();
+            const angle = typeof meta.angle === 'number' ? (Math.PI / 180) * meta.angle : 0;
+            const poly = Poly.fromRect(new Rect(decor.x - width/2, decor.y - height/2, width, height)).applyMatrix(
+              tempMat.setRotationAbout(angle, decor)
+            );
+
+            gfx.beginTextureFill({ texture, matrix: tempMatrix.identity()
+              .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
+              .scale(scale, scale).translate(decor.x - width/2, decor.y - height/2),
+            }).drawPolygon(poly.outline).endFill();
           }
           
           break;
@@ -301,3 +306,4 @@ export default function Decor(props) {
  */
 
 const tempMatrix = new Matrix;
+const tempMat = new Mat;
