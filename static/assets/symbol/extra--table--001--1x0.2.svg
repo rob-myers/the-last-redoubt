@@ -3,7 +3,7 @@
   <g style="">
     <title>original</title>
     <path d="M 298 16 L 298 44 L 278.267 58 L 21.733 58 L 2 44 L 2 16 L 21.733 2 L 278.267 2 L 298 16 Z" style="stroke-linecap: round; stroke-linejoin: round; fill: rgb(87, 87, 87); stroke-width: 4px; stroke: rgb(255, 255, 255);"/>
-    <path d="M 6 42 L 6 18 L 21.998 6 L 278.002 6 L 294 18 L 294 42 L 278.002 54 L 21.998 54 Z" style="stroke: rgb(68, 68, 68); stroke-width: 3px;"/>
+    <path d="M 6 42 L 6 18 L 21.998 6 L 278.002 6 L 294 18 L 294 42 L 278.002 54 L 21.998 54 Z" style="stroke-width: 3px; fill: rgb(68, 68, 68); stroke: rgb(34, 34, 34);"/>
   </g>
   <g style="visibility: hidden;">
     <title>obstacles</title>
