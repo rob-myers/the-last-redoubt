@@ -1757,8 +1757,8 @@ export function normalizeDecor(d) {
       d.derivedBounds = d.derivedPoly.rect.outset(2);
       break;
     case 'point': {
-      // d.derivedPoly = Poly.circle(d, 5, 32);
       const radius = decorIconRadius + 2;
+      // Overwritten if d.meta.width numeric
       d.derivedBounds = new Rect(d.x - radius, d.y - radius, 2 * radius, 2 * radius);
       break;
     }

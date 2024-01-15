@@ -21,7 +21,9 @@
     - ✅ top-down computer rather than icon
     - ✅ `decor point cpu width=100`
     - ✅ `decor point cpu width=100 angle=180`
-    - 🚧 darker and sharper?
+    - ✅ better looking
+    - ✅ ensure remove decor clears it
+    - 🚧 shadow underneath?
 
 - npc should only barely intersect tables
   - outset obstacles more

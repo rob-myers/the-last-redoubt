@@ -103,8 +103,7 @@ export default function Decor(props) {
           const { meta } = decor;
           const texture = state.sheet.lookup[getDecorClassByMeta(meta)];
 
-          if (typeof meta.width !== 'number') {
-            // background circle and icon
+          if (typeof meta.width !== 'number') {// Icon with bg circle
             gfx.lineStyle({ color: '#ffffff', width: 0, alpha: 0.25 })
               .beginFill(0, 0.25)
               .drawCircle(decor.x, decor.y, radius + 2).endFill();
@@ -114,8 +113,7 @@ export default function Decor(props) {
             gfx.beginTextureFill({ texture, matrix, alpha: 0.5 })
               .drawRect(decor.x - radius, decor.y - radius, 2 * radius, 2 * radius)
               .endFill();
-          } else {
-            // image rotated + scaled to specified width
+          } else {// Image (scalable, rotatable)
             const width = meta.width;
             const scale = width / texture.width;
             const height = width * (texture.height / texture.width);
@@ -128,6 +126,8 @@ export default function Decor(props) {
               .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
               .scale(scale, scale).translate(decor.x - width/2, decor.y - height/2),
             }).drawPolygon(poly.outline).endFill();
+
+            decor.derivedBounds = poly.rect; // For removal
           }
           
           break;
