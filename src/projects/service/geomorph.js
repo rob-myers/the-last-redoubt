@@ -5,7 +5,7 @@ import { imageSize } from 'image-size';
 
 import { assertDefined, keys, testNever } from './generic';
 import { error, info, warn } from './log';
-import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize, gmGridSize } from './const';
+import { defaultLightDistance, navNodeGridSize, hullDoorOutset, hullOutset, obstacleOutset, precision, svgSymbolTag, wallOutset, decorGridSize, roomGridSize, gmGridSize, decorSheetSetup } from './const';
 import { Poly, Rect, Mat, Vect } from '../geom';
 import { extractGeomsAt, hasTitle } from './cheerio';
 import { geom, sortByXThenY } from './geom';
@@ -695,6 +695,9 @@ function modifySinglesMeta(meta, roomTransformMatrix) {
   if (typeof meta.angle === 'number') {
     const newDegrees = roomTransformMatrix.transformAngle(meta.angle * (Math.PI / 180)) * (180 / Math.PI);
     meta.angle = Math.round(newDegrees < 0 ? 360 + newDegrees : newDegrees);
+  }
+  if (meta.decor && !meta.icon) {
+    meta.icon = getDecorClassByMeta(meta);
   }
   return meta;
 }
@@ -1582,17 +1585,22 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
   return decor.meta;
 }
 
+/** @type {Record<NPC.DecorPointClassKey, true>} */
+const fromDecorClassKey = { 'circle-right': true, 'info': true, 'lying-man': true, 'road-works': true, 'sitting-man': true, 'standing-man': true, 'computer-1': true };
+
 /**
  * @param {Geomorph.PointMeta} meta 
  * @returns {NPC.DecorPointClassKey}
  */
 export function getDecorClassByMeta(meta) {
+  if (isDecorClassKey(meta.icon)) {
+    return meta.icon;
+  }
   return (
     meta.stand && 'standing-man' || 
     meta.sit && 'sitting-man' || 
     meta.lie && 'lying-man' || 
     meta.label && 'info' || 
-    meta.cpu && 'computer-1' || 
     'road-works'
   );
 }
@@ -1717,6 +1725,14 @@ export function instantiateRoomDecor(gm, gmId, matrix) {
  */
 export function isCollidable(decor) {
   return decor.type === 'circle' || decor.type === 'rect';
+}
+
+/**
+ * @param {*} input
+ * @return {input is NPC.DecorPointClassKey}
+ */
+export function isDecorClassKey(input) {
+  return input in fromDecorClassKey;
 }
 
 /**

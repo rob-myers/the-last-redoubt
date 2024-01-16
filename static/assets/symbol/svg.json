@@ -2901,7 +2901,12 @@
         }
       },
       {
-        "meta": {"decor": true, "cpu": true, "width": 40, "angle": 180},
+        "meta": {
+          "decor": true,
+          "icon": "computer-1",
+          "width": 40,
+          "angle": 180
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[145, 345], [145, 355], [155, 355], [155, 345]]]
@@ -2919,7 +2924,7 @@
     "height": 600,
     "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1705330411292.934
+    "lastModified": 1705410548196.2654
   },
   "302--hull": {
     "key": "302--hull",

@@ -11,8 +11,14 @@
 - ✅ scale up geomorphs towards 4096 * 4096?
   - ✅ scale factor `2.5` -> `3.3`
   - ✅ lower quality webp `75` (default) -> `50`
-- `decor computer width=40` -> `decor icon=cpu-1 width=40`
-- decor image `cpu-2`
+
+- ✅ `decor computer width=40` -> `decor icon=computer-1 width=40`
+- ✅ precompute `meta.icon` e.g. for `decor stand`
+- 🚧 decor images
+  - `computer-2`
+  - `speaker-1`
+  - `communicator-1`
+  - `fabricator-1`
 - more decor images
 - place decor points on many tables
 - more tables in 301

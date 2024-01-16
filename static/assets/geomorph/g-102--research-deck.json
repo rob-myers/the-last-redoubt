@@ -1591,35 +1591,60 @@
     ],
     "singles": [
       {
-        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "corridor",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[240, 240], [230, 240], [230, 230], [240, 230]]]
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "corridor",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[600, 300], [590, 300], [590, 290], [600, 290]]]
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "corridor",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[900, 660], [890, 660], [890, 650], [900, 650]]]
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "corridor",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[70, 1140], [60, 1140], [60, 1130], [70, 1130]]]
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "engineering",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -1637,7 +1662,8 @@
           "decor": true,
           "go": true,
           "label": "'research",
-          "launch'": true
+          "launch'": true,
+          "icon": "info"
         },
         "poly": {
           "type": "Polygon",
@@ -1645,7 +1671,12 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "corridor"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "corridor",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[910, 80], [900, 80], [900, 70], [910, 70]]]
@@ -2174,21 +2205,36 @@
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "decor": true,
+          "circle": true,
+          "hatch": true,
+          "icon": "road-works"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[880, 12], [880, 48], [844, 48], [844, 12]]]
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "decor": true,
+          "circle": true,
+          "hatch": true,
+          "icon": "road-works"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1188, 880], [1152, 880], [1152, 844], [1188, 844]]]
         }
       },
       {
-        "meta": {"decor": true, "circle": true, "hatch": true},
+        "meta": {
+          "decor": true,
+          "circle": true,
+          "hatch": true,
+          "icon": "road-works"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[12, 320], [48, 320], [48, 356], [12, 356]]]
@@ -2248,7 +2294,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2263,7 +2310,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lab"},
+        "meta": {"decor": true, "go": true, "label": "lab", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2277,7 +2324,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2297,7 +2345,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 225
+          "orient": 225,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2317,7 +2366,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 135
+          "orient": 135,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2337,7 +2387,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 45
+          "orient": 45,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2405,7 +2456,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lab"},
+        "meta": {"decor": true, "go": true, "label": "lab", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2419,7 +2470,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 225
+          "orient": 225,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2439,7 +2491,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2459,7 +2512,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 45
+          "orient": 45,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2479,7 +2533,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 135
+          "orient": 135,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2572,7 +2627,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "locker"},
+        "meta": {"decor": true, "go": true, "label": "locker", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[905, 175], [905, 185], [895, 185], [895, 175]]]
@@ -2604,7 +2659,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "locker"},
+        "meta": {"decor": true, "go": true, "label": "locker", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1015, 36], [1015, 26], [1025, 26], [1025, 36]]]
@@ -2636,7 +2691,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "locker"},
+        "meta": {"decor": true, "go": true, "label": "locker", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[995, 155], [985, 155], [985, 145], [995, 145]]]
@@ -2668,7 +2723,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "locker"},
+        "meta": {"decor": true, "go": true, "label": "locker", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[995, 215], [985, 215], [985, 205], [995, 205]]]
@@ -2771,7 +2826,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2784,7 +2840,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2797,7 +2854,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2805,7 +2863,12 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "engineering",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [[[240, 484], [236, 484], [236, 480], [240, 480]]]
@@ -2893,7 +2956,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "office"},
+        "meta": {"decor": true, "go": true, "label": "office", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -2955,7 +3018,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 0
+          "orient": 0,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -2990,7 +3054,12 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "stateroom"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "stateroom",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3004,7 +3073,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "lying-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3017,7 +3087,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3061,7 +3132,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "office"},
+        "meta": {"decor": true, "go": true, "label": "office", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3123,7 +3194,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 0
+          "orient": 0,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3158,7 +3230,12 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "stateroom"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "stateroom",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3172,7 +3249,8 @@
           "do": true,
           "lie": true,
           "bed": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "lying-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3185,7 +3263,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3243,7 +3322,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lab"},
+        "meta": {"decor": true, "go": true, "label": "lab", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[778, 538], [780, 538], [780, 540], [778, 540]]]
@@ -3255,7 +3334,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 360
+          "orient": 360,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3270,7 +3350,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3402,7 +3483,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lounge"},
+        "meta": {"decor": true, "go": true, "label": "lounge", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1082, 400], [1082, 402], [1080, 402], [1080, 400]]]
@@ -3414,7 +3495,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 340
+          "orient": 340,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3427,7 +3509,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 20
+          "orient": 20,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3440,7 +3523,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 45
+          "orient": 45,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3453,7 +3537,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3466,7 +3551,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 225
+          "orient": 225,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3479,7 +3565,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 135
+          "orient": 135,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3492,7 +3579,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 45
+          "orient": 45,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3505,7 +3593,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3518,7 +3607,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 225
+          "orient": 225,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3531,7 +3621,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 135
+          "orient": 135,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3544,7 +3635,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3564,7 +3656,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3584,7 +3677,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3604,7 +3698,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3624,7 +3719,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "standing-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3644,7 +3740,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient": 90
+          "orient": 90,
+          "icon": "standing-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3654,7 +3751,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "fresher"},
+        "meta": {"decor": true, "go": true, "label": "fresher", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -3760,7 +3857,8 @@
           "decor": true,
           "go": true,
           "label": "stellar",
-          "cartography": true
+          "cartography": true,
+          "icon": "info"
         },
         "poly": {
           "type": "Polygon",
@@ -3886,7 +3984,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 0
+          "orient": 0,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3906,7 +4005,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3921,7 +4021,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lab"},
+        "meta": {"decor": true, "go": true, "label": "lab", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[722, 700], [722, 702], [720, 702], [720, 700]]]
@@ -3933,7 +4033,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3946,7 +4047,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -3959,7 +4061,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4083,7 +4186,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4091,7 +4195,12 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "engineering"},
+        "meta": {
+          "decor": true,
+          "go": true,
+          "label": "engineering",
+          "icon": "info"
+        },
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -4166,7 +4275,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "lab"},
+        "meta": {"decor": true, "go": true, "label": "lab", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [[[1080, 700], [1080, 702], [1078, 702], [1078, 700]]]
@@ -4178,7 +4287,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4191,7 +4301,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 270
+          "orient": 270,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4204,7 +4315,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 0
+          "orient": 0,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4323,7 +4435,7 @@
         }
       },
       {
-        "meta": {"decor": true, "go": true, "label": "office"},
+        "meta": {"decor": true, "go": true, "label": "office", "icon": "info"},
         "poly": {
           "type": "Polygon",
           "coordinates": [
@@ -4337,7 +4449,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4357,7 +4470,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4377,7 +4491,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4397,7 +4512,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4417,7 +4533,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4437,7 +4554,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4457,7 +4575,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4477,7 +4596,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 135
+          "orient": 135,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4492,7 +4612,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 45
+          "orient": 45,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4507,7 +4628,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 315
+          "orient": 315,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4522,7 +4644,8 @@
           "do": true,
           "sit": true,
           "chair": true,
-          "orient": 225
+          "orient": 225,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4537,7 +4660,8 @@
           "do": true,
           "sit": true,
           "toilet": true,
-          "orient": 180
+          "orient": 180,
+          "icon": "sitting-man"
         },
         "poly": {
           "type": "Polygon",
@@ -4557,7 +4681,8 @@
           "do": true,
           "stand": true,
           "sink": true,
-          "orient": 0
+          "orient": 0,
+          "icon": "standing-man"
         },
         "poly": {
           "type": "Polygon",
