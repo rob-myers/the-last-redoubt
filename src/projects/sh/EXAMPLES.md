@@ -488,6 +488,7 @@ world decor.byRoom.0 | map length
 world decor.byRoom.0.1.points | split
 
 api decor.byRoom.0.2.points | split | map key
+npc rm-decor $( foo/key )
 
 click 1 >fixed
 click | world npcs.canSee $fixed -

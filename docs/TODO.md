@@ -6,41 +6,18 @@
   - 🚧 new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
 
-- ✅ warn in case of `transform-box: fill-box` without `x`, `y` e.g. `<path>`
-  - each case can be solved via `Reorient Transform` inside Boxy
-  - should probably support these cases e.g. by inferring bounds from `pathEl.d`
-- ✅ ensure 4-vertex doorways for current (obstacle, wall) outset
+- `decor computer width=40` -> `decor icon=cpu-1 width=40`
+- decor image `cpu-2`
+- more decor images
+- place decor points on many tables
+- more tables in 301
+- more tables in 101
 
-- ✅ improve decor points
-  - ✅ have folder of SVGs
-  - ✅ have computer icon SVG
-  - ✅ create spritesheet via script `decor-sheet`
-  - ✅ `decor-sheet` outputs image spritesheet.json
-  - ✅ `decor-sheet` outputs webp
-  - ✅ load spritesheet into Decor
-  - ✅ use spritesheet instead of `decor.icon`
-  - ✅ remove extra--tv
-  - ✅ better computer "icon"
-    - ✅ decor spritesheet images have specified width
-    - ✅ can specify height too
-    - ✅ top-down computer rather than icon
-    - ✅ `decor point cpu width=100`
-    - ✅ `decor point cpu width=100 angle=180`
-    - ✅ better looking
-    - ✅ ensure remove decor clears it
-    - ✅ shadow underneath
-
-- npc should only barely intersect tables
-  - outset obstacles more
 - show decor in GeomorphEdit
   - ✅ show points
   - 🚧 show correct icon
 
 - BUG pointerdown not detected after resized to full screen
-
-- place decor points on many tables
-- more tables in 301
-- more tables in 101
 
 - ❌ support `decor point outline-ui`
 - useQueries to improve GeomorphEdit?
@@ -739,6 +716,33 @@ nav --nearNpc foo rob | walk --open foo
 - Remove rotation transition during walk, to fix web animations API polyfill
 
 ## Done
+
+- ✅ warn in case of `transform-box: fill-box` without `x`, `y` e.g. `<path>`
+  - each case can be solved via `Reorient Transform` inside Boxy
+  - should probably support these cases e.g. by inferring bounds from `pathEl.d`
+- ✅ ensure 4-vertex doorways for current (obstacle, wall) outset
+
+- ✅ improve decor points
+  - ✅ have folder of SVGs
+  - ✅ have computer icon SVG
+  - ✅ create spritesheet via script `decor-sheet`
+  - ✅ `decor-sheet` outputs image spritesheet.json
+  - ✅ `decor-sheet` outputs webp
+  - ✅ load spritesheet into Decor
+  - ✅ use spritesheet instead of `decor.icon`
+  - ✅ remove extra--tv
+  - ✅ better computer "icon"
+    - ✅ decor spritesheet images have specified width
+    - ✅ can specify height too
+    - ✅ top-down computer rather than icon
+    - ✅ `decor point cpu width=100`
+    - ✅ `decor point cpu width=100 angle=180`
+    - ✅ better looking
+    - ✅ ensure remove decor clears it
+    - ✅ shadow underneath
+
+- ✅ npc should only barely intersect tables
+  - outset obstacles more
 
 - ✅ fix navmesh inside hull doors when wallOutset is not 12
   - ℹ️ it was just drawn incorrectly
