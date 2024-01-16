@@ -11,7 +11,7 @@
   - should probably support these cases e.g. by inferring bounds from `pathEl.d`
 - ✅ ensure 4-vertex doorways for current (obstacle, wall) outset
 
-- 🚧 improve decor points
+- ✅ improve decor points
   - ✅ have folder of SVGs
   - ✅ have computer icon SVG
   - ✅ create spritesheet via script `decor-sheet`
@@ -20,7 +20,7 @@
   - ✅ load spritesheet into Decor
   - ✅ use spritesheet instead of `decor.icon`
   - ✅ remove extra--tv
-  - 🚧 better computer "icon"
+  - ✅ better computer "icon"
     - ✅ decor spritesheet images have specified width
     - ✅ can specify height too
     - ✅ top-down computer rather than icon
@@ -28,7 +28,7 @@
     - ✅ `decor point cpu width=100 angle=180`
     - ✅ better looking
     - ✅ ensure remove decor clears it
-    - 🚧 shadow underneath?
+    - ✅ shadow underneath
 
 - npc should only barely intersect tables
   - outset obstacles more
