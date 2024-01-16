@@ -28,11 +28,13 @@ if (childProcess.execSync(`cwebp -version >/dev/null && echo $?`).toString().tri
   process.exit(1);
 }
 
+const quality = 50;
+
 if (!fs.statSync(srcDirOrFile).isDirectory()) {
   // Output file
   const srcFile = srcDirOrFile;
   const outputPath = `${srcDirOrFile.slice(0, -path.extname(srcFile).length)}.webp`;
-  childProcess.execSync(`cwebp -noasm ${srcFile} -o ${outputPath}`);
+  childProcess.execSync(`cwebp -q ${quality} -noasm ${srcFile} -o ${outputPath}`);
 } else {
   // Output file(s)
   const srcDir = srcDirOrFile;
@@ -46,7 +48,7 @@ if (!fs.statSync(srcDirOrFile).isDirectory()) {
   // cwebp first-human-npc--walk.png -o first-human-npc--walk.webp
   childProcess.execSync(`
     time find ${path.join(`'${tempDir}'`, '*.png')} -print0 |
-      xargs -0 -I{} -n 1 -P 3 cwebp -noasm "{}" -o "{}".webp
+      xargs -0 -I{} -n 1 -P 3 cwebp -q ${quality} -noasm "{}" -o "{}".webp
   `);
   
   // .png.webp -> .webp

@@ -8,7 +8,9 @@
 
 - ✅ `{gmKey}.webp` -> `{gmKey}.unlit.webp`
   - fix CSS version too
-- scale up geomorphs e.g. towards 4096 * 4096?
+- ✅ scale up geomorphs towards 4096 * 4096?
+  - ✅ scale factor `2.5` -> `3.3`
+  - ✅ lower quality webp `75` (default) -> `50`
 - `decor computer width=40` -> `decor icon=cpu-1 width=40`
 - decor image `cpu-2`
 - more decor images

@@ -87,7 +87,7 @@ export const baseTrackingZoom = isSmallViewport() ? 1 : 1.5;
  * Geomorph scale factor i.e.
  * how much we scale images up by to improve quality on zoom.
  */
-export const gmScale = 2.5;
+export const gmScale = 3.3;
 
 export const decorIconRadius = 5;
 
