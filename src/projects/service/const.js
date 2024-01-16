@@ -140,6 +140,7 @@ export const decorSheetSetup = {
   'standing-man': { width: 64, height: 64 },
 
   'computer-1': { width: 256 },
+  'computer-2': { width: 128 },
  };
 
 /**

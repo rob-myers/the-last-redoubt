@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 75 34" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-1" gradientTransform="matrix(0.496632, -0.000707, 0.004463, 1.263325, 0.2191, 4.078157)">
+      <stop offset="0" style=""/>
+      <stop offset="0.394" style="stop-color: rgb(68, 68, 68);"/>
+      <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
+      <stop offset="1" style=""/>
+    </linearGradient>
+    <linearGradient gradientUnits="userSpaceOnUse" x1="75" y1="7.5" x2="75" y2="19.5" id="gradient-2" gradientTransform="matrix(0.340159, -0.000707, 0.003057, 1.263325, 11.965136, -0.921843)">
+      <stop offset="0" style=""/>
+      <stop offset="0.394" style="stop-color: rgb(68, 68, 68);"/>
+      <stop offset="0.671" style="stop-color: rgb(119, 119, 119);"/>
+      <stop offset="1" style=""/>
+    </linearGradient>
+    <filter id="gaussian-blur-filter-0" color-interpolation-filters="sRGB" x="-50%" y="-50%" width="200%" height="200%" bx:preset="gaussian-blur 1 6.4">
+      <feGaussianBlur stdDeviation="6.4 6.4" edgeMode="none"/>
+    </filter>
+  </defs>
+  <g style="" transform="">
+    <title>original</title>
+    <rect x="7.517" y="7.125" width="59.363" height="15.261" style="filter: url('#gaussian-blur-filter-0'); fill: rgb(34, 34, 34);">
+      <title>shadow</title>
+    </rect>
+    <path style="fill: rgb(51, 51, 51); stroke-width: 2px;" d="M 37.5 26.82 C 41.614 26.82 44.949 21.935 44.949 15.91 L 44.949 8.896 C 44.949 6.745 43.837 5 42.466 5 L 32.534 5 C 31.163 5 30.051 6.745 30.051 8.896 L 30.051 15.91 C 30.051 21.935 33.386 26.82 37.5 26.82 Z">
+      <title>base</title>
+    </path>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-1'); filter: none;" d="M 25.085 13.5 L 49.915 13.5 C 51.116 13.5 52.118 15.261 52.348 17.6 L 71.765 17.6 C 72.862 17.6 73.752 19.435 73.752 21.698 L 73.752 27.847 L 1.248 27.847 L 1.248 21.698 C 1.248 19.435 2.138 17.6 3.235 17.6 L 22.652 17.6 C 22.882 15.261 23.884 13.5 25.085 13.5 Z">
+      <title>screen-case</title>
+    </path>
+    <path style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 255); stroke-opacity: 0.25; stroke-width: 2px; fill-opacity: 0.5;" d="M 1 28 L 74 28 L 74 30.5 C 74 31.881 73.411 33 72.684 33 L 2.316 33 C 1.589 33 1 31.881 1 30.5 L 1 28 Z">
+      <title>screen</title>
+    </path>
+    <path style="stroke-width: 2px; stroke: rgb(0, 0, 0); fill: url('#gradient-2'); opacity: 0.5; filter: none;" d="M 28.997 8.5 L 46.003 8.5 C 46.826 8.5 47.512 10.261 47.67 12.6 L 60.969 12.6 C 61.721 12.6 62.33 14.435 62.33 16.698 L 62.33 22.847 L 12.67 22.847 L 12.67 16.698 C 12.67 14.435 13.279 12.6 14.031 12.6 L 27.33 12.6 C 27.488 10.261 28.174 8.5 28.997 8.5 Z">
+      <title>computer</title>
+    </path>
+  </g>
+</svg>

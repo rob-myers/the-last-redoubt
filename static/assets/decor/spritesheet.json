@@ -7,14 +7,21 @@
       "width": 256,
       "height": 59
     },
+    "computer-2": {
+      "name": "computer-2",
+      "x": 2,
+      "y": 63,
+      "width": 128,
+      "height": 59
+    },
     "circle-right": {
       "name": "circle-right",
       "x": 2,
-      "y": 63,
+      "y": 124,
       "width": 64,
       "height": 64
     },
-    "info": {"name": "info", "x": 68, "y": 63, "width": 64, "height": 64},
+    "info": {"name": "info", "x": 68, "y": 124, "width": 64, "height": 64},
     "lying-man": {
       "name": "lying-man",
       "x": 134,
@@ -25,14 +32,14 @@
     "road-works": {
       "name": "road-works",
       "x": 2,
-      "y": 129,
+      "y": 190,
       "width": 64,
       "height": 64
     },
     "sitting-man": {
       "name": "sitting-man",
       "x": 68,
-      "y": 129,
+      "y": 190,
       "width": 64,
       "height": 64
     },

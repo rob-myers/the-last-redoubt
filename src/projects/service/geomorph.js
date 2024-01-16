@@ -1585,9 +1585,6 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
   return decor.meta;
 }
 
-/** @type {Record<NPC.DecorPointClassKey, true>} */
-const fromDecorClassKey = { 'circle-right': true, 'info': true, 'lying-man': true, 'road-works': true, 'sitting-man': true, 'standing-man': true, 'computer-1': true };
-
 /**
  * @param {Geomorph.PointMeta} meta 
  * @returns {NPC.DecorPointClassKey}
@@ -1732,7 +1729,7 @@ export function isCollidable(decor) {
  * @return {input is NPC.DecorPointClassKey}
  */
 export function isDecorClassKey(input) {
-  return input in fromDecorClassKey;
+  return input in decorSheetSetup;
 }
 
 /**
