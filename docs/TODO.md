@@ -6,6 +6,9 @@
   - 🚧 new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
 
+- ✅ warn in case of `transform-box: fill-box` without `x`, `y` e.g. `<path>`
+  - each case can be solved via `Reorient Transform` inside Boxy
+  - should probably support these cases e.g. by inferring bounds from `pathEl.d`
 - ✅ ensure 4-vertex doorways for current (obstacle, wall) outset
 
 - 🚧 improve decor points
@@ -97,7 +100,6 @@ npc events | filter '({ key, decor }) =>
 
 - add decor stand points when navmesh not possible
   - e.g. 301 bridge fresher
-- support `transform-box: fill-box` in SVG symbols (or Re-orient each path)
 - save more space in spritesheet
   - needn't use `animBounds` for every frame of animation
   - try intersecting animBounds with skeleton.getBoundsRect()

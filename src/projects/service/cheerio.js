@@ -84,6 +84,11 @@ export function extractGeom(api, el, scale = 1) {
   if (a.transform && transformOrigin) {
     const m = new Mat(a.transform);
     if (transformBox === 'fill-box') {
+      if (!el.attribs.x || !el.attribs.y) {
+        // broken when <path> lacks attribs x, y
+        // 🚧 try computing bounding box of `pathEl.d`
+        warn(`${title}: ${tagName}: unsupported "transform-box: fill-box" without x and y`);
+      }
       transformOrigin.x += Number(el.attribs.x ?? '0');
       transformOrigin.y += Number(el.attribs.y ?? '0');
     }
