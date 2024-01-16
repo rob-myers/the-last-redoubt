@@ -133,12 +133,13 @@ export const decorGridSize = 60 * 2;
 /** @type {Record<NPC.DecorPointClassKey, { width: number; height?: number }>} */
 export const decorSheetSetup = {
   'circle-right': { width: 64, height: 64 },
-  'computer': { width: 256 },
   'info': { width: 64, height: 64 },
   'lying-man': { width: 64, height: 64 },
   'road-works': { width: 64, height: 64 },
   'sitting-man': { width: 64, height: 64 },
   'standing-man': { width: 64, height: 64 },
+
+  'computer-1': { width: 256 },
  };
 
 /**

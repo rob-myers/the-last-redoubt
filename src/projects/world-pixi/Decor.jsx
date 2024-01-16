@@ -98,7 +98,7 @@ export default function Decor(props) {
           gfx.drawCircle(decor.center.x, decor.center.y, decor.radius);
           gfx.endFill();
           break;
-        case 'point':
+        case 'point': {
           const radius = decorIconRadius;
           const { meta } = decor;
           const texture = state.sheet.lookup[getDecorClassByMeta(meta)];
@@ -131,6 +131,7 @@ export default function Decor(props) {
           }
           
           break;
+        }
         case 'rect':
           if (!state.showColliders) break;
           gfx.lineStyle({ color: '#ffffff22', width: 1 });

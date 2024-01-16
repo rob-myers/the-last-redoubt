@@ -1,7 +1,7 @@
 {
   "lookup": {
-    "computer": {
-      "name": "computer",
+    "computer-1": {
+      "name": "computer-1",
       "x": 2,
       "y": 2,
       "width": 256,

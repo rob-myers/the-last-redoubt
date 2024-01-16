@@ -777,13 +777,17 @@ declare namespace NPC {
   }
 
   export type DecorPointClassKey = (
+    //#region icon
     | 'circle-right'
-    | 'computer'
     | 'info'
     | 'lying-man'
     | 'road-works'
     | 'sitting-man'
     | 'standing-man'
+    //#endregion
+    //#region image
+    | 'computer-1'
+    //#endregion
   );
 
   export interface DecorSpriteSheet {

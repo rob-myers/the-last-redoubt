@@ -1583,7 +1583,6 @@ export function ensureDecorMetaGmRoomId(decor, gmGraph) {
 }
 
 /**
- * 🚧 could pre-compute, setting `meta.icon`
  * @param {Geomorph.PointMeta} meta 
  * @returns {NPC.DecorPointClassKey}
  */
@@ -1593,7 +1592,7 @@ export function getDecorClassByMeta(meta) {
     meta.sit && 'sitting-man' || 
     meta.lie && 'lying-man' || 
     meta.label && 'info' || 
-    meta.cpu && 'computer' || 
+    meta.cpu && 'computer-1' || 
     'road-works'
   );
 }
