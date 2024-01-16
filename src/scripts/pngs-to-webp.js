@@ -12,6 +12,7 @@
 import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
+import getopts from 'getopts';
 import { error, info } from '../projects/service/log';
 
 const [,, srcDirOrFile] = process.argv;
@@ -28,7 +29,8 @@ if (childProcess.execSync(`cwebp -version >/dev/null && echo $?`).toString().tri
   process.exit(1);
 }
 
-const quality = 50;
+const opts = getopts(process.argv, { string: ['quality'] });
+const quality = opts.quality || '75';
 
 if (!fs.statSync(srcDirOrFile).isDirectory()) {
   // Output file

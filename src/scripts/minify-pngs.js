@@ -1,5 +1,5 @@
 /**
- * yarn minify-pngs {src_dir} [--webp] [--quality={integer}]
+ * yarn minify-pngs {src_dir} [--webp={integer}] [--quality={integer}]
  * - {src_dir} is relative to repo root
  * - {src_dir} must exist
  * - optionally generates webp files (100% quality)
@@ -12,10 +12,10 @@
  * - yarn minify-pngs static/assets/symbol
  *   > maybe better to do `yarn simplify-pngs static/assets/symbol`
  * - yarn minify-pngs static/assets/npc/first-human-npc
- * - yarn minify-pngs static/assets/npc/man-base-variant --webp
- * - yarn minify-pngs static/assets/pics/first-peek --webp
+ * - yarn minify-pngs static/assets/npc/man-base-variant --webp=50
+ * - yarn minify-pngs static/assets/pics/first-peek --webp=75
  * 
- * - yarn minify-pngs media/NPC/spine/exported --webp
+ * - yarn minify-pngs media/NPC/spine/exported --webp=50
  */
 import fs from 'fs';
 import path from 'path';
@@ -26,12 +26,11 @@ import { runYarnScript } from './service';
 
 const [,, srcDir] = process.argv;
 
-const opts = getopts(process.argv, { boolean: ['webp'], string: ['quality'] });
-const webp = /** @type {boolean} */ (opts.webp);
+const opts = getopts(process.argv, { string: ['quality', 'webp'] });
 const quality = opts.quality ? parseInt(opts.quality) : 80;
 
 if (!srcDir || !fs.existsSync(srcDir) || !Number.isInteger(quality)) {
-  error(`error: usage: yarn minify-pngs {src_dir} [--webp] [--quality={integer}] where
+  error(`error: usage: yarn minify-pngs {src_dir} [--webp={integer_in_[0, 100]}] [--quality={integer_in_[0, 100]}] where
     - {src_dir} is relative to repo root
     - {src_dir} exists
   `);
@@ -56,8 +55,8 @@ async function main() {
   //#endregion
 
   // Create webp files first
-  if (webp === true) {
-    await runYarnScript('pngs-to-webp', srcDir);
+  if (opts.webp) {
+    await runYarnScript('pngs-to-webp', srcDir, `--quality=${opts.webp}`);
   }
 
   //#region pngquant

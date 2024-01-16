@@ -113,7 +113,7 @@ async function main() {
         npcClassKey => runYarnScript(
             'minify-pngs',
             `${staticAssetsDir}/npc/${npcClassKey}`,
-            '--webp',
+            '--webp=75',
         )
     ));
 }

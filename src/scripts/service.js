@@ -22,6 +22,7 @@ export const repoRoot = path.resolve(__dirname, "../..");
 export const npcAssetsFolder = path.resolve(repoRoot, `static/assets/npc`);
 
 /**
+ * Options can be provided as single args like `--quality=75`.
  * @param {string} scriptName
  * @param {string[]} args
  */

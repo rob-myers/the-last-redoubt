@@ -112,7 +112,7 @@ const staticDir = path.resolve(__dirname, '../../static');
       saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename.slice(0, -'.png'.length)}.unlit.png`),
       saveCanvasAsFile(mapCanvas, `${tempDir}/${outputPngFilename.slice(0, -'.png'.length)}.map.png`),
     ]);
-    await runYarnScript('minify-pngs', tempDir, '--webp', '--quality=90');
+    await runYarnScript('minify-pngs', tempDir, '--webp=50', '--quality=90');
     childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
     fs.rmSync(tempDir, { force: true, recursive: true });
   } catch (e) {

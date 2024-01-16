@@ -74,7 +74,7 @@ if (!fs.existsSync(geomorphJsonPath)) {
   // Temp dir avoids breaking gatsby (watching static/assets)
   const tempDir = fs.mkdtempSync('pngquant-');
   await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
-  await runYarnScript('minify-pngs', tempDir, '--webp' ,'--quality=90');
+  await runYarnScript('minify-pngs', tempDir, '--webp=50' ,'--quality=90');
   childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
   fs.rmSync(tempDir, { force: true, recursive: true });
 })();
