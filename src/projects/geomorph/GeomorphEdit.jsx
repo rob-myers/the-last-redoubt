@@ -12,15 +12,17 @@ import { createGeomorphData } from "./use-geomorph-data";
 import { defaultLightDistance } from "../service/const";
 import { assertDefined, hashText, tryLocalStorageGet, tryLocalStorageSet } from "../service/generic";
 import { loadImage } from "../service/dom";
-import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys, isDecorPoint } from "../service/geomorph";
+import { computeLightPolygons, createLayout, geomorphDataToInstance, labelMeta, deserializeSvgJson, geomorphKeys, isDecorPoint, getDecorClassByMeta } from "../service/geomorph";
 import layoutDefs from "../geomorph/geomorph-layouts";
 import { renderGeomorph } from "../geomorph/render-geomorph";
 import * as defaults from "../example/defaults";
-import svgJson from '../../../static/assets/symbol/svg.json'; // CodeSandbox?
+import { decorIconRadius } from "../world/const";
 import SvgPanZoom from '../panzoom/SvgPanZoom';
 import useStateRef from "../hooks/use-state-ref";
 import useUpdate from "../hooks/use-update";
 
+import svgJson from '../../../static/assets/symbol/svg.json';
+import decorJson from '../../../static/assets/decor/spritesheet.json';
 
 /** @param {Props} props */
 export default function GeomorphEdit({ disabled }) {
@@ -260,11 +262,10 @@ function Geomorph({ layoutKey, transform, disabled }) {
             return points.map((def) => (
               <div
                 key={def.key}
-                className="decor-point"
+                className={cx(getDecorPointCss(def))}
                 data-key="decor-point"
                 data-decor-key={def.key}
                 data-room-id={roomId}
-                style={{ left: def.x, top: def.y }}
               />
             ));
           })}
@@ -363,16 +364,6 @@ const rootCss = css`
       border-radius: 50%;
       border: 1px solid black;
     }
-    div.decor-point {
-      position: absolute;
-      cursor: pointer;
-      background: #0000ff;
-      width: ${pointDim}px;
-      height: ${pointDim}px;
-      transform: translate(-${pointDim/2}px, -${pointDim/2}px);
-      border-radius: 50%;
-      border: 1px solid black;
-    }
     div.light-circ {
       position: absolute;
       background: #0000ff11;
@@ -387,6 +378,49 @@ const rootCss = css`
   }
 
 `;
+
+/**
+ * Extract decor icon/image from SpriteSheet.
+ * @param {NPC.DecorPoint} decor
+ */
+function getDecorPointCss(decor) {
+  const iconKey = getDecorClassByMeta(decor.meta);
+  const rect = decorJson.lookup[iconKey];
+
+  if (typeof decor.meta.width === 'number') {
+    return css`
+      position: absolute;
+      background-image: url('/assets/decor/spritesheet.webp');
+      background-position: ${-rect.x}px ${-rect.y}px;
+      /* filter: drop-shadow(0px 0px 0px red); */
+
+      width: ${rect.width}px;
+      height: ${rect.height}px;
+      transform:
+        translate(${decor.x - rect.width/2}px, ${decor.y - rect.height/2}px)
+        scale(${ decor.meta.width / rect.width })
+        rotate(${/** @type {*} */ (decor.meta.angle) ?? 0}deg)
+      ;
+    `;
+  } else {// Icon
+    return css`
+      position: absolute;
+      background-image: url('/assets/decor/spritesheet.webp');
+      background-position: ${-rect.x}px ${-rect.y}px;
+
+      width: ${rect.width}px;
+      height: ${rect.height}px;
+      transform: translate(
+        ${decor.x - rect.width/2}px,
+        ${decor.y - rect.height/2}px
+      ) scale(${ (2 * decorIconRadius) / rect.width });
+
+      border: 1px solid black;
+      border-radius: 50%;
+      background-color: black;
+    `;
+  }
+}
 
 const symbolLookup = deserializeSvgJson(/** @type {*} */ (svgJson));
 

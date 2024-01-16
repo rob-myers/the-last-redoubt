@@ -14,6 +14,10 @@
 
 - ✅ `decor computer width=40` -> `decor icon=computer-1 width=40`
 - ✅ precompute `meta.icon` e.g. for `decor stand`
+- ✅ show decor in GeomorphEdit
+  - ✅ show points
+  - ✅ show correct icon
+
 - 🚧 decor images
   - `computer-2`
   - `speaker-1`
@@ -23,10 +27,6 @@
 - place decor points on many tables
 - more tables in 301
 - more tables in 101
-
-- show decor in GeomorphEdit
-  - ✅ show points
-  - 🚧 show correct icon
 
 - BUG pointerdown not detected after resized to full screen
 

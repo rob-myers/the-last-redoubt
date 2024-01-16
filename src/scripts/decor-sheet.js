@@ -107,7 +107,7 @@ const ctxt = canvas.getContext('2d');
 
 /** @param {number} width @param {number} height @param {string} name */
 function addRectToPack(width, height, name) {
-  console.log(`${ansi.Blue}will pack${ansi.Reset}:`, name, { width, height });
+  console.log(`decor-sheet: ${ansi.Blue}will pack${ansi.Reset}:`, name, { width, height });
   const r = new Rectangle(width, height);
   r.data = { name };
   rectsToPack.push(r);

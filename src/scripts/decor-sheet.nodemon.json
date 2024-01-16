@@ -1,0 +1,7 @@
+{
+  "ext": "svg",
+  "watch": [
+    "static/assets/decor/",
+    "src/scripts/decor-sheet.js"
+  ]
+}

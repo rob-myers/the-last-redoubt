@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "develop": "gatsby develop -p 8010 -H 0.0.0.0",
-    "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta' 'yarn watch-spine-meta'",
+    "dev": "concurrently 'yarn develop' 'yarn watch-svg-meta' 'yarn watch-spine-meta' 'yarn watch-decor-sheet'",
     "start": "gatsby develop",
     "build": "gatsby build",
     "serve": "gatsby serve",
@@ -37,7 +37,8 @@
     "svg-meta": "yarn ts-script src/scripts/svg-meta",
     "ts-script": "NODE_OPTIONS=\"--no-experimental-fetch\" ts-node -O '{ \"module\": \"commonjs\", \"isolatedModules\": false }'",
     "watch-spine-meta": "nodemon --delay 2s --config src/scripts/spine-meta.nodemon.json --exec 'yarn spine-meta'",
-    "watch-svg-meta": "nodemon --delay 2s --config src/scripts/svg-meta.nodemon.json --exec 'yarn svg-meta'"
+    "watch-svg-meta": "nodemon --delay 2s --config src/scripts/svg-meta.nodemon.json --exec 'yarn svg-meta'",
+    "watch-decor-sheet": "nodemon --delay 2s --config src/scripts/decor-sheet.nodemon.json --exec 'yarn decor-sheet'"
   },
   "dependencies": {
     "@emotion/css": "^11.9.0",
