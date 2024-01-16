@@ -6,6 +6,9 @@
   - 🚧 new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
 
+- ✅ `{gmKey}.webp` -> `{gmKey}.unlit.webp`
+  - fix CSS version too
+- scale up geomorphs e.g. towards 4096 * 4096?
 - `decor computer width=40` -> `decor icon=cpu-1 width=40`
 - decor image `cpu-2`
 - more decor images

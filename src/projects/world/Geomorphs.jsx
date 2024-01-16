@@ -116,7 +116,7 @@ export default function Geomorphs(props) {
       Promise.all(
         gms.map(async (gm, gmId) => {
           const [unlitImg, litImg] = await Promise.all([
-            loadImage(geomorphPngPath(gm.key)),
+            loadImage(geomorphPngPath(gm.key, 'unlit')),
             loadImage(geomorphPngPath(gm.key, 'lit')),
           ]);
           state.offscreen.unlit[gmId] = imageService.getCtxt(unlitImg);

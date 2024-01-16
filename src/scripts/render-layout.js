@@ -104,13 +104,14 @@ const staticDir = path.resolve(__dirname, '../../static');
     writeAsJson(serializeLayout({ ...layout, def: foundLayoutDef }), geomorphJsonPath);
 
     /**
-     * For both geomorph and map,
-     * save PNG, WEBP, and finally Optimize PNG.
-     * Using temp dir avoids breaking gatsby (watching static/assets)
+     * Save png, webp for both geomorph and map.
+     * Temp dir avoids breaking gatsby (watching static/assets)?
      */
     const tempDir = fs.mkdtempSync('pngquant-');
-    await saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename}`);
-    await saveCanvasAsFile(mapCanvas, `${tempDir}/${outputPngFilename.slice(0, -3)}map.png`);
+    await Promise.all([
+      saveCanvasAsFile(canvas, `${tempDir}/${outputPngFilename.slice(0, -'.png'.length)}.unlit.png`),
+      saveCanvasAsFile(mapCanvas, `${tempDir}/${outputPngFilename.slice(0, -'.png'.length)}.map.png`),
+    ]);
     await runYarnScript('minify-pngs', tempDir, '--webp', '--quality=90');
     childProcess.execSync(`cp ${tempDir}/* ${outputDir}`);
     fs.rmSync(tempDir, { force: true, recursive: true });

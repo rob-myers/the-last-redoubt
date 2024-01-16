@@ -287,9 +287,7 @@ export default function FOV(props) {
         api.tween(sprite).to({ alpha: 1 }, 800).promise({ alpha: 0 });
 
         await Promise.all(/** @type {const} */ (['lit', 'unlit']).map(async type =>
-          api.geomorphs[type][gmId] = await Assets.load(// 🚧 .webp -> .unlit.webp
-            `/assets/geomorph/${gm.key}${type === 'unlit' ? '.webp' : `.${type}.webp`}`
-          )
+          api.geomorphs[type][gmId] = await Assets.load(`/assets/geomorph/${gm.key}.${type}.webp`)
         ));
         api.doors.initTex(gmId);
         state.initMaskTex(gmId);
