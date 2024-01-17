@@ -190,7 +190,7 @@ declare namespace NPC {
     startAnimationByMeta(meta: Geomorph.PointMeta): void;
     setSpeedFactor(speedFactor: number): void;
     setWalkSpeed(walkSpeed: number): void;
-    animateOpacity(targetOpacity: number, durationMs: number): Promise<void>;
+    animateOpacity(targetOpacity: number, durationMs: number, onlyBody?: boolean): Promise<void>;
     animateRotate(targetRadians: number, durationMs: number, throwOnCancel?: boolean): Promise<void>;
     updateHead(): void;
     /**

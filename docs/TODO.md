@@ -17,10 +17,10 @@
 
 - 🚧 improve npc
   - ✅ drop shadow
-  - chained rotate tween instead of sharp rotate
+  - ✅ better transition walk -> idle
+  - 🚧 chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
-  - better transition walk -> idle
   - understand HMR bugs?
     - `api ticker.count` should be `1`
 

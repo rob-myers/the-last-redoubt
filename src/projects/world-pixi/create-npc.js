@@ -86,13 +86,15 @@ export default function createNpc(def, api) {
     nextWalk: null,
     unspawned: true, // old
 
-    async animateOpacity(targetOpacity, durationMs) {
+    async animateOpacity(targetOpacity, durationMs, onlyBody = false) {
       this.a.opacity.stop();
       try {
-        await (this.a.opacity = api.tween([this.s.body, this.s.head]).to([
-          { alpha: targetOpacity },
-          { alpha: targetOpacity },
-        ], durationMs)).promise();
+        await (this.a.opacity = api.tween(
+          onlyBody ? this.s.body : [this.s.body, this.s.head]
+        ).to(
+          onlyBody ? {alpha: targetOpacity} : [{ alpha: targetOpacity }, { alpha: targetOpacity }],
+          durationMs,
+        )).promise();
       } catch (e) {// Reset opacity if cancelled
         [this.s.body, this.s.head].forEach(s => s.alpha = 1);
         throw Error('cancelled');
@@ -855,47 +857,17 @@ export default function createNpc(def, api) {
       }
     },
     async walkToIdle() {
-
-      // 🚧 -> npc.showFrameFor
-      /** @param {number} toFr */
-      const showFrame = async (toFr, ms = 100) => {
-        this.a.normalizedTime = toFr;
-        this.updateSprites();
-        await new Promise((resolve, reject) => {
-          this.a.deferred.resolve = resolve;
-          this.a.deferred.reject = reject;
-          pause(ms).then(resolve);
-        });
-      }
-
-      this.a.paused = true;
-      this.a.rootMotion = false;
-      const fc = this.a.shared.frameCount;
       const fr = this.getFrame();
-
-      console.log(// 🚧 Debug: 1/8 ... 8/8
-        `${(fr % fc === 0 ? 0 : 1) + Math.floor((fr / fc) * 8)}/${8}`
-      );
-
-      try {
-        if (fr <= fc/8) {
-          await showFrame(0);
-        } else if (fr <= fc/4 ) {
-          await showFrame(fc/8);
-        } else if (fr <= fc * 3/8) {
-          await showFrame(fr * 3/8);
-        } else if (fr <= fc * 1/2) {
-          await showFrame(fc/2);
-        } else if (fr <= fc * 5/8) {
-        } else if (fr <= fc * 3/4) {
-          await showFrame(fc * 5/8);
-        } else if (fr <= fc * 7/8) {
-          await showFrame(fc * 7/8);
-        } else {
-          // NOOP
-        }
-        this.a.paused = false;
-      } catch {}
+      const fc = this.a.shared.frameCount;
+      this.a.paused = true;
+      if (
+        (fr > fc * (1/8) && fr < fc * (3/8))
+        || (fr > fc * (5/8) && fr < fc * (7/8))
+      ) {// Front foot "far forwards"
+        await this.animateOpacity(0.5, 200, true);
+        this.animateOpacity(1, 100, true);
+      }
+      this.a.paused = false;
     },
     // 🚧 avoid many short timeouts?
     wayTimeout() {
