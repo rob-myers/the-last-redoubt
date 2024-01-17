@@ -63,7 +63,7 @@ export const geomorphMapFilterHidden = 'invert(100%) brightness(0%) contrast(120
 export const gridDimWorld = 60;
 
 /** HMR note: WAPI means anim must be retriggered  */
-export const obscuredNpcOpacity = 0.25;
+export const obscuredNpcOpacity = 0.4;
 
 export const preDarkenCssRgba = 'rgba(0, 0, 0, 0.3)';
 
