@@ -3,46 +3,31 @@
 ## In progress
 
 - 🚧 start new repo `npc-cli`
-  - 🚧 new layout i.e. right-pane with Tabs
+  - new layout i.e. right-pane with Tabs
   - redo Tabs avoiding "cannot update component" error?
 
-- ✅ `{gmKey}.webp` -> `{gmKey}.unlit.webp`
-  - fix CSS version too
-- ✅ scale up geomorphs towards 4096 * 4096?
-  - ✅ scale factor `2.5` -> `3.3`
-  - ✅ lower quality webp `75` (default) -> `50`
-
-- ✅ `decor computer width=40` -> `decor icon=computer-1 width=40`
-- ✅ precompute `meta.icon` e.g. for `decor stand`
-- ✅ show decor in GeomorphEdit
-  - ✅ show points
-  - ✅ show correct icon
-
-- 🚧 decor images
-  - `computer-2`
+- 🚧 more decor images
+  - 🚧 `computer-2`
   - `speaker-1`
   - `communicator-1`
   - `fabricator-1`
-- more decor images
 - place decor points on many tables
 - more tables in 301
 - more tables in 101
 
-- BUG pointerdown not detected after resized to full screen
-
-- ❌ support `decor point outline-ui`
-- useQueries to improve GeomorphEdit?
-
 - 🚧 improve npc
-  - chained rotate tween instead of sharp rotate
   - drop shadow
+  - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
   - understand HMR bugs?
     - `api ticker.count` should be `1`
 
-- ✅ BUG `echo $( take 1 ) $( take 1 )` should only need one Ctrl-C
-
+- BUG saw doors not opening when other npc is `walk --open`
+  - compare to CSS version
+- BUG saw npc vs npc collisions not working when other npc walking
+  - compare to CSS version
+- BUG pointerdown not detected after resized to full screen
 - BUG tty history with multiple lines loses row(s), e.g.
 ```sh
 npc events | filter '({ key, decor }) =>
@@ -57,6 +42,7 @@ npc events | filter '({ key, decor }) =>
 - ✅ pause "npc" process pauses npc
 - ✅ npc.cancel() unpauses npc (unless forcedPaused)
 
+- useQueries to improve GeomorphEdit?
 - ✅ sh generates named generators
 - npc cfg debug/debugPlayer show npc(s) bounds
 - api.tween should be generic
@@ -728,6 +714,18 @@ nav --nearNpc foo rob | walk --open foo
 
 ## Done
 
+- ✅ `{gmKey}.webp` -> `{gmKey}.unlit.webp`
+  - fix CSS version too
+- ✅ scale up geomorphs towards 4096 * 4096?
+  - ✅ scale factor `2.5` -> `3.3`
+  - ✅ lower quality webp `75` (default) -> `50`
+
+- ✅ `decor computer width=40` -> `decor icon=computer-1 width=40`
+- ✅ precompute `meta.icon` e.g. for `decor stand`
+- ✅ show decor in GeomorphEdit
+  - ✅ show points
+  - ✅ show correct icon
+
 - ✅ warn in case of `transform-box: fill-box` without `x`, `y` e.g. `<path>`
   - each case can be solved via `Reorient Transform` inside Boxy
   - should probably support these cases e.g. by inferring bounds from `pathEl.d`
@@ -754,6 +752,10 @@ nav --nearNpc foo rob | walk --open foo
 
 - ✅ npc should only barely intersect tables
   - outset obstacles more
+
+- ✅ BUG `echo $( take 1 ) $( take 1 )` should only need one Ctrl-C
+
+- ❌ support `decor point outline-ui`
 
 - ✅ fix navmesh inside hull doors when wallOutset is not 12
   - ℹ️ it was just drawn incorrectly
