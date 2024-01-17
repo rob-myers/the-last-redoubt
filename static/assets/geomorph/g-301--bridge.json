@@ -2302,7 +2302,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[155, 345], [155, 355], [145, 355], [145, 345]]]
+          "coordinates": [[[155, 347], [155, 357], [145, 357], [145, 347]]]
         }
       },
       {
@@ -2316,6 +2316,46 @@
         "poly": {
           "type": "Polygon",
           "coordinates": [[[155, 330], [155, 340], [145, 340], [145, 330]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "icon": "computer-2", "width": 30},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[199, 242], [199, 252], [189, 252], [189, 242]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "icon": "computer-2", "width": 30},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[234, 242], [234, 252], [224, 252], [224, 242]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "stand": true,
+          "orient": 270,
+          "icon": "standing-man"
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[199, 262], [199, 272], [189, 272], [189, 262]]]
+        }
+      },
+      {
+        "meta": {
+          "decor": true,
+          "do": true,
+          "stand": true,
+          "orient": 270,
+          "icon": "standing-man"
+        },
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[234, 262], [234, 272], [224, 272], [224, 262]]]
         }
       },
       {

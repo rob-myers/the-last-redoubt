@@ -2909,7 +2909,7 @@
         },
         "poly": {
           "type": "Polygon",
-          "coordinates": [[[145, 345], [145, 355], [155, 355], [155, 345]]]
+          "coordinates": [[[145, 347], [145, 357], [155, 357], [155, 347]]]
         }
       },
       {
@@ -2918,13 +2918,41 @@
           "type": "Polygon",
           "coordinates": [[[145, 330], [145, 340], [155, 340], [155, 330]]]
         }
+      },
+      {
+        "meta": {"decor": true, "icon": "computer-2", "width": 30},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[189, 242], [189, 252], [199, 252], [199, 242]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "icon": "computer-2", "width": 30},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[224, 242], [224, 252], [234, 252], [234, 242]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "do": true, "stand": true, "orient": 270},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[189, 262], [189, 272], [199, 272], [199, 262]]]
+        }
+      },
+      {
+        "meta": {"decor": true, "do": true, "stand": true, "orient": 270},
+        "poly": {
+          "type": "Polygon",
+          "coordinates": [[[224, 262], [224, 272], [234, 272], [234, 262]]]
+        }
       }
     ],
     "width": 1200,
     "height": 600,
     "svgPngScale": 1,
     "pngRect": {"x": -4, "y": -22, "width": 1208, "height": 626},
-    "lastModified": 1705410548196.2654
+    "lastModified": 1705484706345.6963
   },
   "302--hull": {
     "key": "302--hull",
