@@ -841,12 +841,11 @@ export default function createNpc(def, api) {
         if (this.nextWalk) {
           await this.walk(this.nextWalk.navPath, opts);
         } else {
-          // 🚧 transition walk -> idle
           await this.walkToIdle();
         }
 
-        this.startAnimation('idle');
-        // this.startAnimation('idle-breathe');
+        // this.startAnimation('idle');
+        this.startAnimation('idle-breathe');
       } catch (err) {
         if (!opts.throwOnCancel && err instanceof Error && err.message === 'cancelled') {
           return warn(`walk cancelled: ${this.key}`);
@@ -865,7 +864,7 @@ export default function createNpc(def, api) {
         || (fr > fc * (5/8) && fr < fc * (7/8))
       ) {// Front foot "far forwards"
         await this.animateOpacity(0.5, 200, true);
-        this.animateOpacity(1, 100, true);
+        this.animateOpacity(1, 100, true).catch(_ => {});
       }
       this.a.paused = false;
     },
