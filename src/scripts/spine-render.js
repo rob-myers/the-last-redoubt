@@ -13,14 +13,15 @@ import fs from "fs";
 import getOpts from 'getopts';
 const opts = getOpts(process.argv);
 
-import { Assets, RenderTexture, Application, Sprite, Graphics } from "@pixi/node";
+import { Assets, RenderTexture, Application, Sprite, Graphics, Container } from "@pixi/node";
 import { Spine, Skin } from "@pixi-spine/runtime-4.1";
+import { OutlineFilter } from "@pixi/filter-outline";
 import { Canvas, ImageData } from "canvas";
 
 import { warn } from "../projects/service/log";
 import { saveCanvasAsFile } from "../projects/service/file";
 import { Rect } from "../projects/geom";
-import { spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
+import { spineAnimSetup, spineHeadOrients, spineHeadSkinNames, spineShadowOutset } from "../projects/world-pixi/const";
 import { computeSpineAttachmentBounds, loadSpineServerSide, npcAssetsFolder, runYarnScript } from "./service";
 
 const folderName = "top_down_man_base";
@@ -29,9 +30,7 @@ const spineMetaJsonPath = `${npcAssetsFolder}/${folderName}/spine-meta.json`;
 const outputFolder = `${npcAssetsFolder}/${folderName}/spine-render`;
 const outputFilepath = `${outputFolder}/spritesheet.png`;
 
-main();
-
-export default async function main() {
+(async function main() {
 
   /** @type {import("./service").SpineMeta} */
   const {
@@ -49,20 +48,20 @@ export default async function main() {
     skipDetections: true,
   });
 
-  // if (opts.debug) {// Debug Rectangle Packing
-  //   const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
-  //   gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
-  //   Object.values(animMeta).forEach(({ packedRects }) =>
-  //     packedRects.forEach(packedRect =>
-  //       gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill()
-  //     )
-  //   );
-  //   Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
-  //     gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
-  //     gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
-  //   });
-  //   app.renderer.render(gfx, { renderTexture: tex });
-  // }
+  if (opts.debug) {// Debug Rectangle Packing
+    const gfx = (new Graphics).lineStyle({ width: 1, color: 0x00ff00 });
+    gfx.beginFill(0, 0).drawRect(0, 0, packedWidth, packedHeight).endFill();
+    Object.values(animMeta).forEach(({ packedRects }) =>
+      packedRects.forEach(packedRect =>
+        gfx.beginFill(0, 0).drawRect(packedRect.x, packedRect.y, packedRect.width, packedRect.height).endFill()
+      )
+    );
+    Object.values(headMeta).forEach(({ packedHead: { face, top } }) => {
+      gfx.beginFill(0, 0).drawRect(face.x, face.y, face.width, face.height).endFill();
+      gfx.beginFill(0, 0).drawRect(top.x, top.y, top.width, top.height).endFill();
+    });
+    app.renderer.render(gfx, { renderTexture: tex });
+  }
 
   // Load skeleton
   const { data } = await loadSpineServerSide(folderName, baseName);
@@ -83,29 +82,40 @@ export default async function main() {
   spine.autoUpdate = false;
   spine.skeleton.setBonesToSetupPose();
 
+  // Extra container and filter permits drop-shadow
+  const container = new Container;
+  container.addChild(spine);
+  const outlineFilter = new OutlineFilter(spineShadowOutset, 0, 1, 0.2);
+
   // Render bodies
   for (const anim of animations) {
-    if (!(anim.name in animMeta)) {
-      warn(`animation ${anim.name} not specified in animMeta`);
+    const animName = /** @type {NPC.SpineAnimName} */ (anim.name);
+
+    if (!(animName in animMeta)) {
+      warn(`animation ${animName} not specified in animMeta`);
       continue;
     }
-
-    const { frameCount, frameDurSecs, animBounds, packedRects } = animMeta[anim.name];
-    spine.state.setAnimation(0, anim.name, false);
     
+    const { frameCount, frameDurSecs, animBounds, packedRects } = animMeta[animName];
+    spine.state.setAnimation(0, animName, false);
+    
+    // drop shadow via outline
+    container.filters = spineAnimSetup[animName].headOrientKey === 'top' ? [outlineFilter] : [];
+
     for (let frame = 0; frame < frameCount; frame++) {
       const packedRect = packedRects[frame];
       spine.update(frame === 0 ? 0 : frameDurSecs);
+
       /**
-       * - each `packedRect` has some width/height as `animBounds`
-       * - `animBounds` has root attachment at `(0, 0)`.
-       * - rects from same animation not necessarily contiguous
+       * `animBounds`:
+       * - is constant for entire animation (a bit wasteful).
+       * - has root attachment at `(0, 0)`.
+       * - has same width/height as `packedRect`.
+       * 
+       * `packedRect`s need not be adjacent in SpriteSheet.
        */
-      spine.position.set(
-        packedRect.x + Math.abs(animBounds.x),
-        packedRect.y + Math.abs(animBounds.y),
-      );
-      app.renderer.render(spine, { renderTexture: tex, clear: false });
+      spine.position.set(packedRect.x + Math.abs(animBounds.x), packedRect.y + Math.abs(animBounds.y));
+      app.renderer.render(container, { renderTexture: tex, clear: false });
 
       if (opts.debug) {
         const { poly } = computeSpineAttachmentBounds(spine, 'head');
@@ -155,7 +165,7 @@ export default async function main() {
   }
 
   // Render extras:
-  // - circular bounds
+  // - `circular-bounds`
   const circBoundsRect = Rect.fromJson(extraMeta["circular-bounds"].packedRect);
   app.renderer.render(
     (new Graphics).lineStyle({ width: 4, color: '#ffffff' }).drawCircle(circBoundsRect.cx, circBoundsRect.cy, circBoundsRect.width/2 - 4),
@@ -176,4 +186,4 @@ export default async function main() {
 
   await runYarnScript('pngs-to-webp', outputFolder);
   
-}
+})();

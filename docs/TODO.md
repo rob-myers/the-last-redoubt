@@ -16,10 +16,11 @@
 - more tables in 101
 
 - 🚧 improve npc
-  - drop shadow
+  - ✅ drop shadow
   - chained rotate tween instead of sharp rotate
   - darker shoes; maybe not so far back
   - darker npc
+  - better transition walk -> idle
   - understand HMR bugs?
     - `api ticker.count` should be `1`
 

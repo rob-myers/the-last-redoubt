@@ -14,7 +14,7 @@ import { keys, pause, precision } from "../projects/service/generic";
 import { warn } from "../projects/service/log";
 import { ansi } from "../projects/service/const";
 import { skeletonScale } from "../projects/world/const";
-import { spineAnimSetup, spineHeadOrients, spineHeadSkinNames } from "../projects/world-pixi/const";
+import { npcRadius, spineAnimSetup, spineHeadOrients, spineHeadSkinNames, spineShadowOutset } from "../projects/world-pixi/const";
 import { writeAsJson } from "../projects/service/file";
 import { Rect, Vect } from "../projects/geom";
 import {
@@ -30,9 +30,7 @@ const baseName = "man_01_base";
 const outputJsonFilepath = `${npcAssetsFolder}/${folderName}/spine-meta.json`;
 const packedPadding = 2;
 
-main();
-
-export default async function main() {
+(async function main() {
   await Assets.init({
     skipDetections: true,
   });
@@ -53,7 +51,8 @@ export default async function main() {
 
   // Compute global body scale
   const { bounds: idleAnimBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
-  const npcScaleFactor = precision((2 * 13) / idleAnimBounds.width, 4);
+  idleAnimBounds.outset(spineShadowOutset); // for "outline shadow"
+  const npcScaleFactor = precision((2 * npcRadius) / idleAnimBounds.width, 4);
 
   //#region initiate packing
   const packer = new MaxRectsPacker(4096, 4096, packedPadding, {
@@ -155,6 +154,7 @@ export default async function main() {
      */
     const { bounds: animBounds } = computeSpineAttachmentBounds(spine, "anim-bounds");
     const { bounds: headBounds } = computeSpineAttachmentBounds(spine, "head");
+    animBounds.outset(spineShadowOutset);
     
     /**
      * Compute
@@ -318,6 +318,6 @@ export default async function main() {
    * Finally, render spritesheet
    */
   await runYarnScript("spine-render");
-}
+})();
 
 const unOverriddenRect = Rect.zero;

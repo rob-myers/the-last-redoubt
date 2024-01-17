@@ -99,4 +99,6 @@ export const npcClassToSpineHeadSkin = {
   zhodani: 'head/skin-head-dark',
 };
 
+export const spineShadowOutset = 8;
+
 //#endregion
