@@ -53,7 +53,7 @@ export default function Doors(props) {
       const { open, door, locked } = state.lookup[gmId][doorId];
       state.gfx
         .lineStyle({ width: 1, color: 0, alignment: 1, alpha: open ? 0.1 : 1 })
-        .beginFill(locked ? 0x220000 : 0x252525, open ? 0.1 : 1)
+        .beginFill(locked ? 0x220000 : 0x252525, open ? 0 : 1)
         .drawPolygon(door.poly.outline)
         .endFill();
     },
@@ -93,7 +93,7 @@ export default function Doors(props) {
     onRawDoorClick({ meta }) {
       /**
        * We usually handle door clicking via `npc do`.
-       * Alternatively we can `click | world doors.onRawDoorClick`.
+       * Alternatively `click | api doors.onRawDoorClick`.
        */
       const [gmId, doorId] = [Number(meta.gmId), Number(meta.doorId)];
       state.toggleDoor(gmId, doorId, { npcKey: npcs.playerKey ?? undefined });
