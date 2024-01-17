@@ -2,7 +2,7 @@ import React from "react";
 import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
-import { Poly, Rect } from "../geom";
+import { Mat, Poly, Rect } from "../geom";
 import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, defaultNpcInteractRadius, gmScale } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
@@ -139,16 +139,13 @@ export default function DebugWorld(props) {
           const scale = (2 * debugArrowRadius) / texture.frame.width;
           
           gfx.lineStyle({ width: 0 });
-          room.navArrows.forEach(({ arrowPos, angle }) => {
-            gfx.beginTextureFill({
-              texture,
+          room.navArrows.forEach(({ arrowPos, angle, poly }) => {
+            gfx.beginTextureFill({ texture,
               matrix: tempMatrix.identity()
                 .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
                 .scale(scale, scale).translate(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius),
               alpha: debugArrowAlpha,
-            });
-            gfx.drawRect(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius, 2 * debugArrowRadius, 2 * debugArrowRadius);
-            gfx.endFill();
+            }).drawPolygon(poly.outline).endFill();
           });
           api.geomorphs.renderHitRoom(gmId, room.roomId);
 
@@ -203,9 +200,13 @@ export default function DebugWorld(props) {
           const { poly, normal, roomIds } = gm.doors[doorId];
           /** Have seen hull doors where normal is "inverted" */
           const sign = roomIds[0] === roomId ? 1 : -1;
-          const arrowPos = poly.center.addScaledVector(normal, sign * debugDoorOffset);
-          const { angle } = normal.clone().scale(-sign);
-          return { doorId, arrowPos, angle };
+          const n = normal.clone().scale(-sign);
+          const arrowPos = poly.center.addScaledVector(n, -debugDoorOffset);
+          const angle = n.angle;
+          const arrowPoly = Poly.fromRect(new Rect(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius, 2 * debugArrowRadius, 2 * debugArrowRadius)).applyMatrix(
+            tempMat.setRotationAbout(angle, arrowPos)
+          );
+          return { doorId, arrowPos, angle, poly: arrowPoly };
         }),
         roomNavPoly: gm.lazy.roomNavPoly[roomId],
         roomPoly: gm.rooms[roomId],
@@ -283,9 +284,10 @@ export default function DebugWorld(props) {
  * @property {number} roomId
  * @property {Geomorph.GeomorphDataInstance} gm
  * @property {number[]} adjDoorIds
- * @property {{ doorId: number; arrowPos: Geom.VectJson; angle: number; }[]} navArrows
+ * @property {{ doorId: number; arrowPos: Geom.VectJson; angle: number; poly: Geom.Poly; }[]} navArrows
  * @property {Geom.Poly} roomNavPoly
  * @property {Geom.Poly} roomPoly
  */
 
 const tempMatrix = new Matrix;
+const tempMat = new Mat;
