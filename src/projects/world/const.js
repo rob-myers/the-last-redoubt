@@ -31,7 +31,7 @@ export const cssName = /** @type {const} */ ({
 
 export const defaultClipPath = 'none';
 
-export const defaultDoorCloseMs = 7000;
+export const defaultDoorCloseMs = 12000;
 
 /** @type {NPC.NpcClassKey} */
 // export const defaultNpcClassKey = 'solomani';
