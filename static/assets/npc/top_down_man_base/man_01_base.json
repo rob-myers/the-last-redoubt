@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "2yrO5tDHdkU",
+	"hash": "fZN6di5tRqE",
 	"spine": "4.1.24",
 	"x": -517,
 	"y": -632.39,
@@ -581,6 +581,7 @@
 	}
 ],
 "events": {
+	"feet-cross": {},
 	"footstep": {}
 },
 "animations": {
@@ -1677,7 +1678,9 @@
 			}
 		},
 		"events": [
+			{ "name": "feet-cross" },
 			{ "time": 0.412, "name": "footstep", "string": "right" },
+			{ "time": 0.8267, "name": "feet-cross" },
 			{ "time": 1.22, "name": "footstep", "string": "left" }
 		]
 	}
