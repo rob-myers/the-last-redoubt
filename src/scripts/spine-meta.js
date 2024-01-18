@@ -1,8 +1,9 @@
 /**
  * Compute json with:
- * - per-anim packing for spritesheets
- *   - rendered in spine-render
+ * - per-anim packing for SpriteSheets
  * - per-anim frame count, head frames, ...
+ * 
+ * We'll render using `spine-render`.
  */
 /// <reference path="./deps.d.ts"/>
 
@@ -92,13 +93,13 @@ const packedPadding = 2;
     const motion = {
       /** Current foot down */
       footDown: /** @type {null | 'left' | 'right'} */ (null),
-      /** For final frame diff */
-      firstFootDown: /** @type {null | 'left' | 'right'} */ (null),
       /** Previous position of foot */
       prevFootPos: new Vect,
       /** The output: root motion per frame */
       rootDeltas: /** @type {number[]} */ ([]),
-      /** ℹ️ Assume motion is purely within y-axis */
+      /** Events seen during last frame (clear manually at end of frame) */
+      justSawEvents: /** @type {import('@pixi-spine/runtime-4.1').Event[]} */ ([]),
+      /** 🔔 Assume motion is purely within y-axis 🔔 */
       computeDelta() {
         const prev = motion.prevFootPos;
         const curr = motion.getFootPos();
@@ -120,14 +121,18 @@ const packedPadding = 2;
         case 'footstep':
           if (eventValue === 'left' || eventValue === 'right') {
             motion.footDown = eventValue;
-            motion.firstFootDown ??= eventValue;
             motion.prevFootPos.copy(motion.getFootPos());
+            motion.justSawEvents.push(event);
             break;
           }
-          warn(`${animName}: footstep: unhandled stringValue: ${eventValue}`);
+          warn(`unhandled spine stringValue: ${animName}: footstep: ${eventValue}`);
+          break;
+        case 'feet-cross':
+          // 🚧
+          motion.justSawEvents.push(event);
           break;
         default:
-          warn(`${animName}: unhandled spine event: ${eventName}`);
+          warn(`unhandled spine event: ${animName}: ${eventName}`);
       }
     }};
 
@@ -135,12 +140,27 @@ const packedPadding = 2;
     spine.state.setAnimation(0, animName, false);
     spine.update(0);
 
-    // run through animation so that `motion` is initially set
     const { numFrames } = spineAnimSetup[animName];
     const frameDurSecs = anim.duration / numFrames;
-    for (let frame = 0; frame < numFrames; frame++) {
-      spine.update(frame === 0 ? 0 : frameDurSecs);
-      motion.footDown && (motion.prevFootPos = motion.getFootPos());
+    const extremeFrames = /** @type {number[]} */ ([]);
+
+    if (animName === 'walk') {
+      /**
+       * Run through animation so `motion` initially setup.
+       * 
+       * Also compute extreme frames:
+       * - feet-cross, footstep, feet-cross, footstep
+       * - 🔔🔔 Assume `feet-cross` before `footstep` 🔔🔔
+       */
+      for (let frame = 0; frame < numFrames; frame++) {
+        spine.update(frame === 0 ? 0 : frameDurSecs);
+        motion.footDown && (motion.prevFootPos = motion.getFootPos());
+        if (motion.justSawEvents.find(x => ['feet-cross', 'footstep'].includes(x.data.name))) {
+          // console.log(frame, motion.justSawEvents.slice());
+          extremeFrames.push(frame);
+        }
+        motion.justSawEvents = [];
+      }
     }
 
     spine.state.setAnimation(0, animName, false);
@@ -157,10 +177,10 @@ const packedPadding = 2;
     animBounds.outset(spineShadowOutset);
     
     /**
-     * Compute
-     * - head attachment top-left position, angle, scale per frame.
-     * - rootDeltas per frame when footstep event available
-     * - neckPositions per frame
+     * Compute (per frame):
+     * - head attachment top-left position, angle, scale.
+     * - rootDeltas when footstep event available.
+     * - neckPositions.
     */
     const headFrames = /** @type {import("./service").SpineAnimMeta['headFrames']} */ ([]);
     const neckPositions = /** @type {import("./service").SpineAnimMeta['neckPositions']} */ ([]);
@@ -187,6 +207,8 @@ const packedPadding = 2;
       
       const neckBone = spine.skeleton.findBone(`neck`);
       neckPositions.push(new Vect(neckBone.worldX, neckBone.worldY).scale(npcScaleFactor).precision(4));
+
+      motion.justSawEvents = [];
     }
 
     spine.state.removeListener(spineListener);
@@ -201,6 +223,7 @@ const packedPadding = 2;
       packedRects: [...Array(numFrames)].map(_ => unOverriddenRect),
       headFrames,
       rootDeltas: motion.rootDeltas,
+      extremeFrames,
     };
 
     // not necessarily contiguous animations

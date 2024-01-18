@@ -22,7 +22,8 @@
           "height": 14.1918
         }
       ],
-      "rootDeltas": []
+      "rootDeltas": [],
+      "extremeFrames": []
     },
     "idle-breathe": {
       "animName": "idle-breathe",
@@ -216,7 +217,8 @@
           "height": 14.2621
         }
       ],
-      "rootDeltas": []
+      "rootDeltas": [],
+      "extremeFrames": []
     },
     "lie": {
       "animName": "lie",
@@ -235,7 +237,8 @@
           "height": 13.3416
         }
       ],
-      "rootDeltas": []
+      "rootDeltas": [],
+      "extremeFrames": []
     },
     "sit": {
       "animName": "sit",
@@ -254,7 +257,8 @@
           "height": 14.1918
         }
       ],
-      "rootDeltas": []
+      "rootDeltas": [],
+      "extremeFrames": []
     },
     "walk": {
       "animName": "walk",
@@ -569,7 +573,8 @@
         1.3737,
         1.3737,
         1.3737
-      ]
+      ],
+      "extremeFrames": [0, 8, 16, 23]
     }
   },
   "head": {

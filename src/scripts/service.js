@@ -300,15 +300,18 @@ export function computeSpineAttachmentBounds(spine, slotName) {
  * @property {Geom.VectJson[]} neckPositions
  * @property {Geom.RectJson[]} packedRects
  * - each has width/height of `animBounds`
- * @property {{ x: number; y: number; angle: number; width: number; height: number; }[]} headFrames
+ * @property {(Geom.RectJson & { angle: number; })[]} headFrames
  * - aligned to frames
  * - (x, y) is world position of 2nd vertex of head attachment 4-gon,
  *   which in pixi.js corresponds to top-left (unrotated)
  * - `angle` (degrees) of head attachment 4-gon in world coords
  * - `width` of head attachment 4-gon (unrotated)
  * @property {number[]} rootDeltas
- * - root motion in 'y direction' per frame
- * - empty iff no motion
+ * Currently only non-empty for `walk`:
+ * root motion _"in y direction"_ per frame
+ * @property {number[]} extremeFrames
+ * Currently only for `walk`:
+ * `[feet-cross, footstep, feet-cross, footstep]`
  */
 
 /**
