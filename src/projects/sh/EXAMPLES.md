@@ -493,3 +493,30 @@ npc rm-decor $( foo/key )
 click 1 >fixed
 click | world npcs.canSee $fixed -
 ```
+
+```sh
+# try spawn a bunch of bots and make them all look at some point
+
+# spawner
+multiSpawn() {
+  echo Enter name then click, e.g. "rob" or "rob --zhodani"
+  local npcKey
+  while true; do
+    npcKey=$( take 1 )
+    spawn ${npcKey} $( click 1 )
+  done
+}
+multiSpawn
+
+# using js
+click 1 | run '({ api, w: { npcs } }) {
+  const point = await api.read()
+  for (const npcKey in npcs.npc) {
+    const npc = npcs.getNpc(npcKey);
+    npc.lookAt(point);
+  }
+}'
+
+# using cli without while delay?
+# try `api ...` reading from stdin
+```
