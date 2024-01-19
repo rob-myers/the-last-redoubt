@@ -108,6 +108,7 @@ export const hitTestRed = {
 
 export const debugDoorOffset = 10;
 export const debugArrowRadius = 4;
-export const debugArrowAlpha = 0.1;
+export const debugArrowAlpha = 0.2;
+export const debugArrowColor = 0xffffff;
 
 export const skeletonScale = 0.1;

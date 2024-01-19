@@ -3,7 +3,7 @@ import { RenderTexture, Matrix, Texture } from "@pixi/core";
 import { Graphics } from "@pixi/graphics";
 
 import { Mat, Poly, Rect } from "../geom";
-import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, defaultNpcInteractRadius, gmScale } from "../world/const";
+import { debugArrowAlpha, debugDoorOffset, debugArrowRadius, defaultNpcInteractRadius, gmScale, debugArrowColor } from "../world/const";
 import useStateRef from "../hooks/use-state-ref";
 import GmSprites from "./GmSprites";
 
@@ -145,6 +145,7 @@ export default function DebugWorld(props) {
                 .translate(-texture.width/2, -texture.height/2).rotate(angle).translate(texture.width/2, texture.height/2)
                 .scale(scale, scale).translate(arrowPos.x - debugArrowRadius, arrowPos.y - debugArrowRadius),
               alpha: debugArrowAlpha,
+              color: debugArrowColor,
             }).drawPolygon(poly.outline).endFill();
           });
           api.geomorphs.renderHitRoom(gmId, room.roomId);
